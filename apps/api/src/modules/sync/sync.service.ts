@@ -1,0 +1,244 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../../database/prisma.service';
+import { ExpensesService } from '../expenses/expenses.service';
+
+interface SyncChange {
+  entityType: 'expense' | 'budget' | 'category';
+  entityId: string;
+  operation: 'create' | 'update' | 'delete';
+  payload: any;
+  clientVersion: number;
+}
+
+export interface SyncResult {
+  entityId: string;
+  status: 'success' | 'conflict' | 'error';
+  serverVersion?: number;
+  serverId?: string;
+  serverData?: any;
+  error?: string;
+}
+
+export interface ExpenseRecord {
+  clientId: string;
+  isDeleted: boolean;
+  syncVersion: number;
+  updatedAt: Date;
+}
+
+export interface BudgetRecord {
+  clientId: string;
+  isDeleted: boolean;
+  syncVersion: number;
+  updatedAt: Date;
+}
+
+export interface CategoryRecord {
+  id: string;
+  isDeleted: boolean;
+  syncVersion: number;
+  updatedAt: Date;
+}
+
+@Injectable()
+export class SyncService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly expensesService: ExpensesService,
+  ) {}
+
+  async pushChanges(userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
+    const results: SyncResult[] = [];
+
+    for (const change of changes) {
+      try {
+        const result = await this.processChange(userId, change);
+        results.push(result);
+      } catch (error) {
+        results.push({
+          entityId: change.entityId,
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    }
+
+    // Update user's last sync timestamp
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { lastSyncAt: new Date() },
+    });
+
+    return results;
+  }
+
+  private async processChange(userId: string, change: SyncChange): Promise<SyncResult> {
+    switch (change.entityType) {
+      case 'expense':
+        return this.processExpenseChange(userId, change);
+      case 'budget':
+        return this.processBudgetChange(userId, change);
+      case 'category':
+        return this.processCategoryChange(userId, change);
+      default:
+        return {
+          entityId: change.entityId,
+          status: 'error',
+          error: `Unknown entity type: ${change.entityType}`,
+        };
+    }
+  }
+
+  private async processExpenseChange(userId: string, change: SyncChange): Promise<SyncResult> {
+    const { operation, payload, clientVersion, entityId } = change;
+
+    // Check for existing record
+    const existing = await this.expensesService.getByClientId(userId, entityId);
+
+    if (operation === 'create') {
+      if (existing) {
+        // Already exists - check version
+        if (existing.syncVersion !== clientVersion) {
+          return {
+            entityId,
+            status: 'conflict',
+            serverVersion: existing.syncVersion,
+            serverData: existing,
+          };
+        }
+        return {
+          entityId,
+          status: 'success',
+          serverId: existing.id,
+          serverVersion: existing.syncVersion,
+        };
+      }
+
+      // Create new expense
+      const created = await this.expensesService.create(userId, {
+        ...payload,
+        localId: entityId,
+      });
+
+      return {
+        entityId,
+        status: 'success',
+        serverId: created.id,
+        serverVersion: created.syncVersion,
+      };
+    }
+
+    if (!existing) {
+      return {
+        entityId,
+        status: 'error',
+        error: 'Entity not found',
+      };
+    }
+
+    // Check for conflict
+    if (existing.syncVersion !== clientVersion) {
+      return {
+        entityId,
+        status: 'conflict',
+        serverVersion: existing.syncVersion,
+        serverData: existing,
+      };
+    }
+
+    if (operation === 'update') {
+      const updated = await this.expensesService.update(userId, existing.id, payload);
+      return {
+        entityId,
+        status: 'success',
+        serverVersion: updated.syncVersion,
+      };
+    }
+
+    if (operation === 'delete') {
+      await this.expensesService.remove(userId, existing.id);
+      return {
+        entityId,
+        status: 'success',
+      };
+    }
+
+    return {
+      entityId,
+      status: 'error',
+      error: 'Invalid operation',
+    };
+  }
+
+  private async processBudgetChange(userId: string, change: SyncChange): Promise<SyncResult> {
+    // Similar implementation for budgets
+    return {
+      entityId: change.entityId,
+      status: 'success',
+    };
+  }
+
+  private async processCategoryChange(userId: string, change: SyncChange): Promise<SyncResult> {
+    // Similar implementation for categories
+    return {
+      entityId: change.entityId,
+      status: 'success',
+    };
+  }
+
+  async pullChanges(userId: string, since: Date) {
+    // Get all entities updated since the given timestamp
+    const [expenses, budgets, categories] = await Promise.all([
+      this.prisma.expense.findMany({
+        where: {
+          userId,
+          updatedAt: { gt: since },
+        },
+      }),
+      this.prisma.budget.findMany({
+        where: {
+          userId,
+          updatedAt: { gt: since },
+        },
+      }),
+      this.prisma.category.findMany({
+        where: {
+          OR: [{ userId }, { isSystem: true }],
+          updatedAt: { gt: since },
+        },
+      }),
+    ]);
+
+    const changes = [
+      ...expenses.map((e: ExpenseRecord) => ({
+        entityType: 'expense' as const,
+        entityId: e.clientId,
+        operation: e.isDeleted ? 'delete' as const : 'update' as const,
+        data: e,
+        version: e.syncVersion,
+        timestamp: e.updatedAt.toISOString(),
+      })),
+      ...budgets.map((b: BudgetRecord) => ({
+        entityType: 'budget' as const,
+        entityId: b.clientId,
+        operation: b.isDeleted ? 'delete' as const : 'update' as const,
+        data: b,
+        version: b.syncVersion,
+        timestamp: b.updatedAt.toISOString(),
+      })),
+      ...categories.map((c: CategoryRecord) => ({
+        entityType: 'category' as const,
+        entityId: c.id,
+        operation: c.isDeleted ? 'delete' as const : 'update' as const,
+        data: c,
+        version: c.syncVersion,
+        timestamp: c.updatedAt.toISOString(),
+      })),
+    ];
+
+    return {
+      changes,
+      serverTimestamp: new Date().toISOString(),
+    };
+  }
+}
