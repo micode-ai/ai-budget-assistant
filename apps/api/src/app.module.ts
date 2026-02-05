@@ -1,0 +1,44 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
+import { BudgetsModule } from './modules/budgets/budgets.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { SyncModule } from './modules/sync/sync.module';
+import { AiModule } from './modules/ai/ai.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { DatabaseModule } from './database/database.module';
+
+@Module({
+  imports: [
+    // Configuration
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
+    }),
+
+    // Rate limiting
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 minute
+        limit: 100, // 100 requests per minute
+      },
+    ]),
+
+    // Database
+    DatabaseModule,
+
+    // Feature modules
+    AuthModule,
+    UsersModule,
+    ExpensesModule,
+    BudgetsModule,
+    CategoriesModule,
+    SyncModule,
+    AiModule,
+    AnalyticsModule,
+  ],
+})
+export class AppModule {}

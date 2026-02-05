@@ -1,0 +1,124 @@
+// Core domain entities
+
+export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB';
+
+export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
+
+export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import';
+
+export type BudgetPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
+
+export type CategoryType = 'income' | 'expense';
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  currencyCode: Currency;
+  timezone: string;
+  createdAt: Date;
+  updatedAt: Date;
+  lastSyncAt?: Date;
+}
+
+export interface Category {
+  id: string;
+  userId?: string; // null for system categories
+  name: string;
+  icon?: string;
+  color?: string;
+  type: CategoryType;
+  isSystem: boolean;
+  parentId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncVersion: number;
+}
+
+export interface Expense {
+  id: string;
+  localId: string;
+  serverId?: string;
+  userId: string;
+  amount: number;
+  currencyCode: Currency;
+  description?: string;
+  notes?: string;
+  categoryId?: string;
+  date: Date;
+  time?: string;
+  location?: {
+    lat: number;
+    lng: number;
+    name?: string;
+  };
+  receiptUrl?: string;
+  isRecurring: boolean;
+  recurringId?: string;
+  source: ExpenseSource;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
+export interface Budget {
+  id: string;
+  localId: string;
+  serverId?: string;
+  userId: string;
+  name: string;
+  amount: number;
+  currencyCode: Currency;
+  period: BudgetPeriod;
+  startDate: Date;
+  endDate?: Date;
+  categoryId?: string; // null = overall budget
+  alertThreshold: number; // percentage (0-100)
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
+export interface BudgetProgress {
+  budget: Budget;
+  spent: number;
+  remaining: number;
+  percentageUsed: number;
+  isOverBudget: boolean;
+  daysRemaining: number;
+  projectedTotal: number;
+}
+
+export interface ChatConversation {
+  id: string;
+  userId: string;
+  title?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  tokensUsed?: number;
+  createdAt: Date;
+}
+
+export interface Insight {
+  id: string;
+  userId: string;
+  type: 'warning' | 'tip' | 'achievement' | 'anomaly';
+  title: string;
+  message: string;
+  data?: Record<string, unknown>;
+  isRead: boolean;
+  createdAt: Date;
+}
