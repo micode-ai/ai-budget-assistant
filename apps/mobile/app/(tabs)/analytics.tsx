@@ -2,21 +2,23 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
 import { BarChart, PieChart } from '@/components/charts';
 
-const TIME_RANGES: { key: TimeRange; label: string }[] = [
-  { key: 'week', label: 'Week' },
-  { key: 'month', label: 'Month' },
-  { key: 'year', label: 'Year' },
-];
-
 export default function AnalyticsScreen() {
+  const { t } = useTranslation();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
   const { user } = useAuthStore();
   const { dailySpending, categorySpending, summary } = useAnalytics(selectedRange);
+
+  const TIME_RANGES: { key: TimeRange; label: string }[] = [
+    { key: 'week', label: t('analytics.week') },
+    { key: 'month', label: t('analytics.month') },
+    { key: 'year', label: t('analytics.year') },
+  ];
 
   const currency = user?.currencyCode || 'USD';
 
@@ -57,27 +59,27 @@ export default function AnalyticsScreen() {
         {/* Summary Cards */}
         <View style={styles.summaryRow}>
           <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Total Spent</Text>
+            <Text style={styles.summaryLabel}>{t('analytics.totalSpent')}</Text>
             <Text style={styles.summaryValue}>{formatCurrency(summary.totalSpent, currency)}</Text>
             <View style={styles.statsRow}>
               <Ionicons name="receipt-outline" size={14} color="#999" />
-              <Text style={styles.statsText}>{summary.transactionCount} transactions</Text>
+              <Text style={styles.statsText}>{summary.transactionCount} {t('analytics.transactions')}</Text>
             </View>
           </View>
 
           <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Avg per Day</Text>
+            <Text style={styles.summaryLabel}>{t('analytics.avgPerDay')}</Text>
             <Text style={styles.summaryValue}>
               {formatCurrency(summary.averagePerDay, currency)}
             </Text>
-            <Text style={styles.summarySubtext}>This {selectedRange}</Text>
+            <Text style={styles.summarySubtext}>{t('analytics.this')} {selectedRange}</Text>
           </View>
         </View>
 
         {/* Spending Trend Chart */}
         <View style={styles.chartContainer}>
           <Text style={styles.chartTitle}>
-            Spending {selectedRange === 'year' ? 'by Month' : 'Trend'}
+            {selectedRange === 'year' ? t('analytics.spendingByMonth') : t('analytics.spendingTrend')}
           </Text>
           <BarChart
             data={dailySpending.map((d) => ({
@@ -94,13 +96,13 @@ export default function AnalyticsScreen() {
 
         {/* Category Breakdown */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Spending by Category</Text>
+          <Text style={styles.sectionTitle}>{t('analytics.spendingByCategory')}</Text>
 
           {categorySpending.length === 0 ? (
             <View style={styles.emptyCategory}>
               <Ionicons name="pie-chart-outline" size={48} color="#ccc" />
-              <Text style={styles.emptyCategoryText}>No expense data available</Text>
-              <Text style={styles.emptyCategorySubtext}>Add expenses to see category breakdown</Text>
+              <Text style={styles.emptyCategoryText}>{t('analytics.noData')}</Text>
+              <Text style={styles.emptyCategorySubtext}>{t('analytics.addExpensesHint')}</Text>
             </View>
           ) : (
             <View style={styles.chartContainer}>
@@ -120,7 +122,7 @@ export default function AnalyticsScreen() {
         {/* Category List */}
         {categorySpending.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Category Details</Text>
+            <Text style={styles.sectionTitle}>{t('analytics.categoryDetails')}</Text>
             {categorySpending.map((category, index) => (
               <View key={category.categoryId || index} style={styles.categoryItem}>
                 <View style={styles.categoryInfo}>
@@ -140,16 +142,15 @@ export default function AnalyticsScreen() {
 
         {/* Insights */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Insights</Text>
+          <Text style={styles.sectionTitle}>{t('analytics.quickInsights')}</Text>
 
           {summary.mostExpensiveCategory && (
             <View style={styles.insightCard}>
               <Ionicons name="trending-up-outline" size={24} color="#FF6B6B" />
               <View style={styles.insightContent}>
-                <Text style={styles.insightTitle}>Top Category</Text>
+                <Text style={styles.insightTitle}>{t('analytics.topCategory')}</Text>
                 <Text style={styles.insightText}>
-                  "{summary.mostExpensiveCategory}" is your highest spending category this{' '}
-                  {selectedRange}.
+                  {t('analytics.topCategoryText', { category: summary.mostExpensiveCategory, period: selectedRange })}
                 </Text>
               </View>
             </View>
@@ -159,15 +160,15 @@ export default function AnalyticsScreen() {
             <View style={styles.insightCard}>
               <Ionicons name="calendar-outline" size={24} color="#45B7D1" />
               <View style={styles.insightContent}>
-                <Text style={styles.insightTitle}>Peak Spending Day</Text>
+                <Text style={styles.insightTitle}>{t('analytics.peakSpendingDay')}</Text>
                 <Text style={styles.insightText}>
-                  Your highest spending was on{' '}
-                  {new Date(summary.highestSpendingDay).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'short',
-                    day: 'numeric',
+                  {t('analytics.peakSpendingDayText', {
+                    date: new Date(summary.highestSpendingDay).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'short',
+                      day: 'numeric',
+                    }),
                   })}
-                  .
                 </Text>
               </View>
             </View>
@@ -176,10 +177,9 @@ export default function AnalyticsScreen() {
           <View style={styles.insightCard}>
             <Ionicons name="bulb-outline" size={24} color="#FFEAA7" />
             <View style={styles.insightContent}>
-              <Text style={styles.insightTitle}>Daily Budget Tip</Text>
+              <Text style={styles.insightTitle}>{t('analytics.dailyBudgetTip')}</Text>
               <Text style={styles.insightText}>
-                To stay on track, try to keep daily spending under{' '}
-                {formatCurrency(summary.averagePerDay * 0.9, currency)}.
+                {t('analytics.dailyBudgetTipText', { amount: formatCurrency(summary.averagePerDay * 0.9, currency) })}
               </Text>
             </View>
           </View>
@@ -188,7 +188,7 @@ export default function AnalyticsScreen() {
         {/* Export Button */}
         <TouchableOpacity style={styles.exportButton}>
           <Ionicons name="download-outline" size={20} color="#4ECDC4" />
-          <Text style={styles.exportButtonText}>Export Report</Text>
+          <Text style={styles.exportButtonText}>{t('analytics.exportReport')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

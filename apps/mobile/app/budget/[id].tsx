@@ -9,11 +9,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
 export default function BudgetDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { budgets, deleteBudget, getBudgetProgress } = useBudgetStore();
   const budget = budgets.find((b) => b.id === id);
@@ -24,9 +26,9 @@ export default function BudgetDetailScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
           <Ionicons name="alert-circle-outline" size={64} color="#ccc" />
-          <Text style={styles.notFoundText}>Budget not found</Text>
+          <Text style={styles.notFoundText}>{t('budgetDetail.notFound')}</Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Text style={styles.backButtonText}>Go Back</Text>
+            <Text style={styles.backButtonText}>{t('common.back')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -34,10 +36,10 @@ export default function BudgetDetailScreen() {
   }
 
   const handleDelete = () => {
-    Alert.alert('Delete Budget', 'Are you sure you want to delete this budget?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('budgetDetail.deleteTitle'), t('budgetDetail.deleteConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Delete',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: () => {
           deleteBudget(budget.id);
@@ -64,7 +66,7 @@ export default function BudgetDetailScreen() {
           <Text style={styles.budgetName}>{budget.name}</Text>
           <View style={[styles.statusBadge, isOverBudget && styles.statusBadgeOver]}>
             <Text style={[styles.statusText, isOverBudget && styles.statusTextOver]}>
-              {isOverBudget ? 'Over Budget' : 'On Track'}
+              {isOverBudget ? t('budgetDetail.overBudget') : t('budgetDetail.onTrack')}
             </Text>
           </View>
         </View>
@@ -105,7 +107,7 @@ export default function BudgetDetailScreen() {
         {/* Details Card */}
         <View style={styles.detailsCard}>
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Period</Text>
+            <Text style={styles.detailLabel}>{t('budgetDetail.period')}</Text>
             <Text style={styles.detailValue}>
               {budget.period.charAt(0).toUpperCase() + budget.period.slice(1)}
             </Text>
@@ -113,25 +115,25 @@ export default function BudgetDetailScreen() {
 
           {budget.categoryId && (
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Category</Text>
+              <Text style={styles.detailLabel}>{t('budgetDetail.category')}</Text>
               <Text style={styles.detailValue}>{budget.categoryId}</Text>
             </View>
           )}
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Alert Threshold</Text>
+            <Text style={styles.detailLabel}>{t('budgetDetail.alertThreshold')}</Text>
             <Text style={styles.detailValue}>{budget.alertThreshold}%</Text>
           </View>
 
           {progress && (
             <>
               <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Days Remaining</Text>
+                <Text style={styles.detailLabel}>{t('budgetDetail.daysRemaining')}</Text>
                 <Text style={styles.detailValue}>{progress.daysRemaining}</Text>
               </View>
 
               <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Projected Total</Text>
+                <Text style={styles.detailLabel}>{t('budgetDetail.projectedTotal')}</Text>
                 <Text
                   style={[
                     styles.detailValue,
@@ -145,9 +147,9 @@ export default function BudgetDetailScreen() {
           )}
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Status</Text>
+            <Text style={styles.detailLabel}>{t('budgetDetail.status')}</Text>
             <Text style={[styles.detailValue, { color: budget.isActive ? '#4ECDC4' : '#999' }]}>
-              {budget.isActive ? 'Active' : 'Inactive'}
+              {budget.isActive ? t('budgetDetail.active') : t('budgetDetail.inactive')}
             </Text>
           </View>
         </View>
@@ -156,7 +158,7 @@ export default function BudgetDetailScreen() {
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <Ionicons name="trash" size={20} color="#FF6B6B" />
-            <Text style={styles.deleteButtonText}>Delete Budget</Text>
+            <Text style={styles.deleteButtonText}>{t('budgetDetail.deleteTitle')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

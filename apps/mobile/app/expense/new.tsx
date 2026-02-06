@@ -13,12 +13,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { DEFAULT_EXPENSE_CATEGORIES, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
 export default function NewExpenseScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams<{
     amount?: string;
     description?: string;
@@ -41,12 +43,12 @@ export default function NewExpenseScreen() {
   const handleSubmit = async () => {
     const numericAmount = parseFloat(amount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert('Error', 'Please enter a valid amount');
+      Alert.alert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
     if (!description.trim()) {
-      Alert.alert('Error', 'Please enter a description');
+      Alert.alert(t('common.error'), t('validation.noDescription'));
       return;
     }
 
@@ -65,7 +67,7 @@ export default function NewExpenseScreen() {
 
       router.back();
     } catch (err) {
-      Alert.alert('Error', 'Failed to save expense');
+      Alert.alert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -93,7 +95,7 @@ export default function NewExpenseScreen() {
               style={styles.amountInput}
               value={amount}
               onChangeText={setAmount}
-              placeholder="0.00"
+              placeholder={t('expenseNew.amountPlaceholder')}
               placeholderTextColor="#ccc"
               keyboardType="decimal-pad"
               autoFocus={!params.amount}
@@ -126,19 +128,19 @@ export default function NewExpenseScreen() {
 
           {/* Description */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Description</Text>
+            <Text style={styles.fieldLabel}>{t('expenseNew.description')}</Text>
             <TextInput
               style={styles.textInput}
               value={description}
               onChangeText={setDescription}
-              placeholder="What was this expense for?"
+              placeholder={t('expenseNew.descriptionPlaceholder')}
               placeholderTextColor="#999"
             />
           </View>
 
           {/* Category */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Category</Text>
+            <Text style={styles.fieldLabel}>{t('expenseNew.category')}</Text>
             <View style={styles.categoryGrid}>
               {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
                 <TouchableOpacity
@@ -177,7 +179,7 @@ export default function NewExpenseScreen() {
           >
             <Ionicons name="checkmark" size={22} color="#fff" />
             <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'Saving...' : 'Save Expense'}
+              {isSubmitting ? t('expenseNew.saving') : t('expenseNew.saveExpense')}
             </Text>
           </TouchableOpacity>
         </View>

@@ -87,7 +87,10 @@ class ApiClient {
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(error.message || `HTTP ${response.status}`);
+      const message = Array.isArray(error.message)
+        ? error.message.join('\n')
+        : error.message || `HTTP ${response.status}`;
+      throw new Error(message);
     }
 
     return response.json();
@@ -105,12 +108,12 @@ class ApiClient {
     );
   }
 
-  async register(email: string, password: string, name: string) {
+  async register(email: string, password: string, name: string, currencyCode?: string) {
     return this.request<{ accessToken: string; refreshToken: string; user: any }>(
       '/auth/register',
       {
         method: 'POST',
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, password, name, currencyCode }),
         skipAuth: true,
       },
     );

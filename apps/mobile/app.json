@@ -51,7 +51,8 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice expense entry."
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-localization"
     ],
     "newArchEnabled": true
   }

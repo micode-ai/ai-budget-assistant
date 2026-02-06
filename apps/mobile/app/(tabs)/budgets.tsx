@@ -3,11 +3,13 @@ import { useState, useCallback } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Budget } from '@budget/shared-types';
 
 export default function BudgetsScreen() {
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const { budgets, getBudgetProgress } = useBudgetStore();
 
@@ -34,17 +36,17 @@ export default function BudgetsScreen() {
           </View>
           <View style={[styles.statusBadge, isOverBudget && styles.statusBadgeOver]}>
             <Text style={[styles.statusText, isOverBudget && styles.statusTextOver]}>
-              {isOverBudget ? 'Over Budget' : 'On Track'}
+              {isOverBudget ? t('budgets.overBudget') : t('budgets.onTrack')}
             </Text>
           </View>
         </View>
 
         <View style={styles.amountRow}>
           <Text style={styles.spentText}>
-            {formatCurrency(progress?.spent || 0, item.currencyCode)} spent
+            {formatCurrency(progress?.spent || 0, item.currencyCode)} {t('budgets.spent')}
           </Text>
           <Text style={styles.budgetText}>
-            of {formatCurrency(item.amount, item.currencyCode)}
+            {t('common.of')} {formatCurrency(item.amount, item.currencyCode)}
           </Text>
         </View>
 
@@ -65,7 +67,7 @@ export default function BudgetsScreen() {
 
         {progress && progress.remaining > 0 && (
           <Text style={styles.remainingText}>
-            {formatCurrency(progress.remaining, item.currencyCode)} remaining
+            {formatCurrency(progress.remaining, item.currencyCode)} {t('budgets.remaining')}
           </Text>
         )}
       </TouchableOpacity>
@@ -75,15 +77,15 @@ export default function BudgetsScreen() {
   const ListEmptyComponent = () => (
     <View style={styles.emptyState}>
       <Ionicons name="wallet-outline" size={64} color="#ccc" />
-      <Text style={styles.emptyTitle}>No budgets set</Text>
+      <Text style={styles.emptyTitle}>{t('budgets.noBudgets')}</Text>
       <Text style={styles.emptySubtitle}>
-        Create a budget to start tracking your spending limits
+        {t('budgets.createHint')}
       </Text>
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => router.push('/budget/new')}
       >
-        <Text style={styles.addButtonText}>Create Budget</Text>
+        <Text style={styles.addButtonText}>{t('budgets.createBudget')}</Text>
       </TouchableOpacity>
     </View>
   );

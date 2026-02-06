@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { Audio } from 'expo-av';
 import { File } from 'expo-file-system/next';
 import { api } from '@/services/api';
+import i18n from '@/i18n';
 
 export interface VoiceInputState {
   isRecording: boolean;
@@ -39,7 +40,7 @@ export function useVoiceInput() {
       const { status } = await Audio.requestPermissionsAsync();
       console.log('[VoiceInput] Permission status:', status);
       if (status !== 'granted') {
-        setState((s) => ({ ...s, error: 'Microphone permission denied' }));
+        setState((s) => ({ ...s, error: i18n.t('errors.micPermissionDenied') }));
         return false;
       }
 
@@ -66,7 +67,7 @@ export function useVoiceInput() {
       console.error('[VoiceInput] Failed to start recording:', err);
       setState((s) => ({
         ...s,
-        error: 'Failed to start recording',
+        error: i18n.t('errors.startRecordingFailed'),
         isRecording: false,
       }));
       return false;
@@ -122,7 +123,7 @@ export function useVoiceInput() {
       setState((s) => ({
         ...s,
         isProcessing: false,
-        error: err instanceof Error ? err.message : 'Failed to process recording',
+        error: err instanceof Error ? err.message : i18n.t('errors.processRecordingFailed'),
       }));
       return null;
     }

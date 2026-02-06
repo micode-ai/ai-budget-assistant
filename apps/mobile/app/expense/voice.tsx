@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -17,6 +18,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
 export default function VoiceExpenseScreen() {
+  const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
@@ -35,7 +37,7 @@ export default function VoiceExpenseScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert('Error', error, [{ text: 'OK', onPress: reset }]);
+      Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
     }
   }, [error, reset]);
 
@@ -68,12 +70,12 @@ export default function VoiceExpenseScreen() {
         isRecurring: false,
       });
 
-      Alert.alert('Success', 'Expense added successfully!', [
-        { text: 'Add Another', onPress: reset },
-        { text: 'Done', onPress: () => router.back() },
+      Alert.alert(t('common.success'), t('voice.success'), [
+        { text: t('voice.addAnother'), onPress: reset },
+        { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch (err) {
-      Alert.alert('Error', 'Failed to save expense');
+      Alert.alert(t('common.error'), t('voice.saveFailed'));
     }
   };
 
@@ -107,7 +109,7 @@ export default function VoiceExpenseScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <Ionicons name="close" size={28} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.title}>Voice Expense</Text>
+        <Text style={styles.title}>{t('voice.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -122,13 +124,13 @@ export default function VoiceExpenseScreen() {
               />
               <Text style={styles.instructionText}>
                 {isProcessing
-                  ? 'Processing...'
+                  ? t('voice.processing')
                   : isRecording
-                    ? 'Listening... Tap to stop'
-                    : 'Tap to start speaking'}
+                    ? t('voice.listening')
+                    : t('voice.tapToStart')}
               </Text>
               <Text style={styles.exampleText}>
-                Example: "Coffee at Starbucks, five dollars"
+                {t('voice.example')}
               </Text>
             </View>
 
@@ -136,7 +138,7 @@ export default function VoiceExpenseScreen() {
               <View style={styles.processingContainer}>
                 <ActivityIndicator size="large" color="#4ECDC4" />
                 <Text style={styles.processingText}>
-                  Analyzing your expense...
+                  {t('voice.analyzing')}
                 </Text>
               </View>
             ) : (
@@ -155,44 +157,44 @@ export default function VoiceExpenseScreen() {
 
             {isRecording && (
               <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
             )}
 
             {transcription && !isProcessing && (
               <View style={styles.transcriptionContainer}>
-                <Text style={styles.transcriptionLabel}>You said:</Text>
+                <Text style={styles.transcriptionLabel}>{t('voice.youSaid')}</Text>
                 <Text style={styles.transcriptionText}>"{transcription}"</Text>
               </View>
             )}
           </>
         ) : (
           <View style={styles.confirmContainer}>
-            <Text style={styles.confirmTitle}>Confirm Expense</Text>
+            <Text style={styles.confirmTitle}>{t('voice.confirmTitle')}</Text>
 
             <View style={styles.expenseCard}>
               <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>Amount</Text>
+                <Text style={styles.expenseLabel}>{t('voice.amount')}</Text>
                 <Text style={styles.expenseAmount}>
                   {formatCurrency(parsedExpense?.amount || 0, (parsedExpense?.currencyCode || 'USD') as Currency)}
                 </Text>
               </View>
 
               <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>Description</Text>
+                <Text style={styles.expenseLabel}>{t('voice.description')}</Text>
                 <Text style={styles.expenseValue}>{parsedExpense?.description}</Text>
               </View>
 
               <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>Category</Text>
+                <Text style={styles.expenseLabel}>{t('voice.category')}</Text>
                 <Text style={styles.expenseValue}>
-                  {parsedExpense?.categorySuggestion || 'Uncategorized'}
+                  {parsedExpense?.categorySuggestion || t('common.uncategorized')}
                 </Text>
               </View>
 
               {parsedExpense?.merchant && (
                 <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>Merchant</Text>
+                  <Text style={styles.expenseLabel}>{t('voice.merchant')}</Text>
                   <Text style={styles.expenseValue}>{parsedExpense.merchant}</Text>
                 </View>
               )}
@@ -204,7 +206,7 @@ export default function VoiceExpenseScreen() {
                   color={parsedExpense && parsedExpense.confidence > 0.8 ? '#4ECDC4' : '#FFEAA7'}
                 />
                 <Text style={styles.confidenceText}>
-                  {parsedExpense && parsedExpense.confidence > 0.8 ? 'High' : 'Medium'} confidence
+                  {parsedExpense && parsedExpense.confidence > 0.8 ? t('voice.highConfidence') : t('voice.mediumConfidence')}
                 </Text>
               </View>
             </View>
@@ -215,7 +217,7 @@ export default function VoiceExpenseScreen() {
                 onPress={handleEditExpense}
               >
                 <Ionicons name="pencil" size={20} color="#4ECDC4" />
-                <Text style={styles.editButtonText}>Edit</Text>
+                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -223,13 +225,13 @@ export default function VoiceExpenseScreen() {
                 onPress={handleConfirmExpense}
               >
                 <Ionicons name="checkmark" size={20} color="#fff" />
-                <Text style={styles.confirmButtonText}>Save Expense</Text>
+                <Text style={styles.confirmButtonText}>{t('voice.saveExpense')}</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.retryButton} onPress={reset}>
               <Ionicons name="refresh" size={20} color="#666" />
-              <Text style={styles.retryButtonText}>Try Again</Text>
+              <Text style={styles.retryButtonText}>{t('voice.tryAgain')}</Text>
             </TouchableOpacity>
           </View>
         )}
