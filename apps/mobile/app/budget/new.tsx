@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import {
@@ -23,6 +24,7 @@ import {
 import type { Currency, BudgetPeriod } from '@budget/shared-types';
 
 export default function NewBudgetScreen() {
+  const { t } = useTranslation();
   const { addBudget } = useBudgetStore();
   const { user } = useAuthStore();
 
@@ -37,13 +39,13 @@ export default function NewBudgetScreen() {
 
   const handleSubmit = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter a budget name');
+      Alert.alert(t('common.error'), t('budgetNew.errorName'));
       return;
     }
 
     const numericAmount = parseFloat(amount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert('Error', 'Please enter a valid amount');
+      Alert.alert(t('common.error'), t('budgetNew.errorAmount'));
       return;
     }
 
@@ -63,7 +65,7 @@ export default function NewBudgetScreen() {
 
       router.back();
     } catch (err) {
-      Alert.alert('Error', 'Failed to create budget');
+      Alert.alert(t('common.error'), t('budgetNew.errorFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -80,12 +82,12 @@ export default function NewBudgetScreen() {
         <ScrollView style={styles.flex} contentContainerStyle={styles.scrollContent}>
           {/* Name */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Budget Name</Text>
+            <Text style={styles.fieldLabel}>{t('budgetNew.name')}</Text>
             <TextInput
               style={styles.textInput}
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Monthly Groceries"
+              placeholder={t('budgetNew.namePlaceholder')}
               placeholderTextColor="#999"
               autoFocus
             />
@@ -93,7 +95,7 @@ export default function NewBudgetScreen() {
 
           {/* Amount */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Amount</Text>
+            <Text style={styles.fieldLabel}>{t('budgetNew.amount')}</Text>
             <View style={styles.amountRow}>
               <TouchableOpacity
                 style={styles.currencyButton}
@@ -108,7 +110,7 @@ export default function NewBudgetScreen() {
                 style={styles.amountInput}
                 value={amount}
                 onChangeText={setAmount}
-                placeholder="0.00"
+                placeholder={t('budgetNew.amountPlaceholder')}
                 placeholderTextColor="#999"
                 keyboardType="decimal-pad"
               />
@@ -141,7 +143,7 @@ export default function NewBudgetScreen() {
 
           {/* Period */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Period</Text>
+            <Text style={styles.fieldLabel}>{t('budgetNew.period')}</Text>
             <View style={styles.periodRow}>
               {BUDGET_PERIODS.filter((p) => p.value !== 'custom').map((p) => (
                 <TouchableOpacity
@@ -167,8 +169,8 @@ export default function NewBudgetScreen() {
 
           {/* Category (optional) */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Category (Optional)</Text>
-            <Text style={styles.fieldHint}>Leave empty for an overall budget</Text>
+            <Text style={styles.fieldLabel}>{t('budgetNew.categoryOptional')}</Text>
+            <Text style={styles.fieldHint}>{t('budgetNew.categoryHint')}</Text>
             <View style={styles.categoryGrid}>
               {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
                 <TouchableOpacity
@@ -199,24 +201,24 @@ export default function NewBudgetScreen() {
 
           {/* Alert Threshold */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Alert At</Text>
+            <Text style={styles.fieldLabel}>{t('budgetNew.alertAt')}</Text>
             <View style={styles.thresholdRow}>
-              {thresholdOptions.map((t) => (
+              {thresholdOptions.map((th) => (
                 <TouchableOpacity
-                  key={t}
+                  key={th}
                   style={[
                     styles.thresholdChip,
-                    alertThreshold === t && styles.thresholdChipSelected,
+                    alertThreshold === th && styles.thresholdChipSelected,
                   ]}
-                  onPress={() => setAlertThreshold(t)}
+                  onPress={() => setAlertThreshold(th)}
                 >
                   <Text
                     style={[
                       styles.thresholdChipText,
-                      alertThreshold === t && styles.thresholdChipTextSelected,
+                      alertThreshold === th && styles.thresholdChipTextSelected,
                     ]}
                   >
-                    {t}%
+                    {th}%
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -233,7 +235,7 @@ export default function NewBudgetScreen() {
           >
             <Ionicons name="checkmark" size={22} color="#fff" />
             <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'Creating...' : 'Create Budget'}
+              {isSubmitting ? t('budgetNew.creating') : t('budgetNew.createBudget')}
             </Text>
           </TouchableOpacity>
         </View>

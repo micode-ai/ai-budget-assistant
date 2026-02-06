@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -19,6 +20,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
 export default function ReceiptExpenseScreen() {
+  const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
@@ -35,7 +37,7 @@ export default function ReceiptExpenseScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert('Error', error, [{ text: 'OK', onPress: reset }]);
+      Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
     }
   }, [error, reset]);
 
@@ -77,12 +79,12 @@ export default function ReceiptExpenseScreen() {
         isRecurring: false,
       });
 
-      Alert.alert('Success', 'Expense added successfully!', [
-        { text: 'Scan Another', onPress: handleReset },
-        { text: 'Done', onPress: () => router.back() },
+      Alert.alert(t('common.success'), t('receipt.success'), [
+        { text: t('receipt.scanAnother'), onPress: handleReset },
+        { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch (err) {
-      Alert.alert('Error', 'Failed to save expense');
+      Alert.alert(t('common.error'), t('receipt.saveFailed'));
     }
   };
 
@@ -111,7 +113,7 @@ export default function ReceiptExpenseScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <Ionicons name="close" size={28} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.title}>Scan Receipt</Text>
+        <Text style={styles.title}>{t('receipt.title')}</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -121,10 +123,10 @@ export default function ReceiptExpenseScreen() {
             <View style={styles.instructionContainer}>
               <Ionicons name="receipt-outline" size={80} color="#4ECDC4" />
               <Text style={styles.instructionText}>
-                {isProcessing ? 'Analyzing receipt...' : 'Take a photo or choose from gallery'}
+                {isProcessing ? t('receipt.analyzing') : t('receipt.instructions')}
               </Text>
               <Text style={styles.exampleText}>
-                Point your camera at a receipt for best results
+                {t('receipt.hint')}
               </Text>
             </View>
 
@@ -135,7 +137,7 @@ export default function ReceiptExpenseScreen() {
                 )}
                 <ActivityIndicator size="large" color="#4ECDC4" style={styles.loader} />
                 <Text style={styles.processingText}>
-                  Extracting data with AI...
+                  {t('receipt.extracting')}
                 </Text>
               </View>
             ) : (
@@ -146,7 +148,7 @@ export default function ReceiptExpenseScreen() {
                   activeOpacity={0.8}
                 >
                   <Ionicons name="camera" size={32} color="#fff" />
-                  <Text style={styles.scanButtonText}>Take Photo</Text>
+                  <Text style={styles.scanButtonText}>{t('receipt.takePhoto')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -155,14 +157,14 @@ export default function ReceiptExpenseScreen() {
                   activeOpacity={0.8}
                 >
                   <Ionicons name="images" size={28} color="#4ECDC4" />
-                  <Text style={styles.galleryButtonText}>Choose from Gallery</Text>
+                  <Text style={styles.galleryButtonText}>{t('receipt.chooseGallery')}</Text>
                 </TouchableOpacity>
               </View>
             )}
           </>
         ) : (
           <View style={styles.confirmContainer}>
-            <Text style={styles.confirmTitle}>Receipt Scanned</Text>
+            <Text style={styles.confirmTitle}>{t('receipt.scannedTitle')}</Text>
 
             {imageUri && (
               <Image source={{ uri: imageUri }} style={styles.receiptImage} />
@@ -170,7 +172,7 @@ export default function ReceiptExpenseScreen() {
 
             <View style={styles.expenseCard}>
               <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>Total Amount</Text>
+                <Text style={styles.expenseLabel}>{t('receipt.totalAmount')}</Text>
                 <Text style={styles.expenseAmount}>
                   {formatCurrency(
                     scannedReceipt?.amount || 0,
@@ -180,27 +182,27 @@ export default function ReceiptExpenseScreen() {
               </View>
 
               <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>Description</Text>
+                <Text style={styles.expenseLabel}>{t('receipt.description')}</Text>
                 <Text style={styles.expenseValue}>{scannedReceipt?.description}</Text>
               </View>
 
               {scannedReceipt?.merchant && (
                 <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>Merchant</Text>
+                  <Text style={styles.expenseLabel}>{t('receipt.merchant')}</Text>
                   <Text style={styles.expenseValue}>{scannedReceipt.merchant}</Text>
                 </View>
               )}
 
               <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>Category</Text>
+                <Text style={styles.expenseLabel}>{t('receipt.category')}</Text>
                 <Text style={styles.expenseValue}>
-                  {scannedReceipt?.categorySuggestion || 'Uncategorized'}
+                  {scannedReceipt?.categorySuggestion || t('common.uncategorized')}
                 </Text>
               </View>
 
               {scannedReceipt?.date && (
                 <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>Date</Text>
+                  <Text style={styles.expenseLabel}>{t('receipt.date')}</Text>
                   <Text style={styles.expenseValue}>
                     {new Date(scannedReceipt.date).toLocaleDateString()}
                   </Text>
@@ -209,7 +211,7 @@ export default function ReceiptExpenseScreen() {
 
               {scannedReceipt?.receiptItems && scannedReceipt.receiptItems.length > 0 && (
                 <View style={styles.itemsSection}>
-                  <Text style={styles.itemsTitle}>Items ({scannedReceipt.receiptItems.length})</Text>
+                  <Text style={styles.itemsTitle}>{t('receipt.items', { count: scannedReceipt.receiptItems.length })}</Text>
                   {scannedReceipt.receiptItems.slice(0, 5).map((item, index) => (
                     <View key={index} style={styles.itemRow}>
                       <Text style={styles.itemDescription} numberOfLines={1}>
@@ -225,7 +227,7 @@ export default function ReceiptExpenseScreen() {
                   ))}
                   {scannedReceipt.receiptItems.length > 5 && (
                     <Text style={styles.moreItems}>
-                      +{scannedReceipt.receiptItems.length - 5} more items
+                      {t('receipt.moreItems', { count: scannedReceipt.receiptItems.length - 5 })}
                     </Text>
                   )}
                 </View>
@@ -244,7 +246,7 @@ export default function ReceiptExpenseScreen() {
                   }
                 />
                 <Text style={styles.confidenceText}>
-                  {scannedReceipt && scannedReceipt.confidence > 0.8 ? 'High' : 'Medium'} confidence
+                  {scannedReceipt && scannedReceipt.confidence > 0.8 ? t('receipt.highConfidence') : t('receipt.mediumConfidence')}
                 </Text>
               </View>
             </View>
@@ -252,18 +254,18 @@ export default function ReceiptExpenseScreen() {
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.editButton} onPress={handleEditExpense}>
                 <Ionicons name="pencil" size={20} color="#4ECDC4" />
-                <Text style={styles.editButtonText}>Edit</Text>
+                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmExpense}>
                 <Ionicons name="checkmark" size={20} color="#fff" />
-                <Text style={styles.confirmButtonText}>Save Expense</Text>
+                <Text style={styles.confirmButtonText}>{t('receipt.saveExpense')}</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
               <Ionicons name="refresh" size={20} color="#666" />
-              <Text style={styles.retryButtonText}>Scan Again</Text>
+              <Text style={styles.retryButtonText}>{t('receipt.scanAgain')}</Text>
             </TouchableOpacity>
           </View>
         )}

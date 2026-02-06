@@ -10,11 +10,13 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  hasSavedSession: boolean;
 
   // Actions
   initialize: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (email: string, password: string, name: string, currencyCode?: string) => Promise<void>;
+  biometricLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
@@ -28,6 +30,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       isAuthenticated: false,
       isLoading: true,
       error: null,
+      hasSavedSession: false,
 
       initialize: async () => {
         set({ isLoading: true });
@@ -35,16 +38,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           const accessToken = await secureStorage.getItem('accessToken');
           const refreshToken = await secureStorage.getItem('refreshToken');
           const userJson = await secureStorage.getItem('user');
+          const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
           if (accessToken && userJson) {
-            const user = JSON.parse(userJson) as User;
-            set({
-              user,
-              accessToken,
-              refreshToken,
-              isAuthenticated: true,
-              isLoading: false,
-            });
+            if (biometricEnabled === 'true') {
+              // Session exists but biometric required — wait for biometric verification
+              set({ hasSavedSession: true, isLoading: false });
+            } else {
+              const user = JSON.parse(userJson) as User;
+              set({
+                user,
+                accessToken,
+                refreshToken,
+                isAuthenticated: true,
+                isLoading: false,
+              });
+            }
           } else {
             set({ isLoading: false });
           }
@@ -72,6 +81,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await secureStorage.setItem('accessToken', response.accessToken);
           await secureStorage.setItem('refreshToken', response.refreshToken);
           await secureStorage.setItem('user', JSON.stringify(user));
+          // Auto-enable biometric for next login
+          await secureStorage.setItem('biometricEnabled', 'true');
 
           set({
             user,
@@ -79,6 +90,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             refreshToken: response.refreshToken,
             isAuthenticated: true,
             isLoading: false,
+            hasSavedSession: false,
           });
         } catch (error) {
           set({
@@ -89,10 +101,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       },
 
-      register: async (email: string, password: string, name: string) => {
+      register: async (email: string, password: string, name: string, currencyCode?: string) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await api.register(email, password, name);
+          const response = await api.register(email, password, name, currencyCode);
 
           const user: User = {
             id: response.user.id,
@@ -107,6 +119,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await secureStorage.setItem('accessToken', response.accessToken);
           await secureStorage.setItem('refreshToken', response.refreshToken);
           await secureStorage.setItem('user', JSON.stringify(user));
+          // Auto-enable biometric for next login
+          await secureStorage.setItem('biometricEnabled', 'true');
 
           set({
             user,
@@ -114,6 +128,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             refreshToken: response.refreshToken,
             isAuthenticated: true,
             isLoading: false,
+            hasSavedSession: false,
           });
         } catch (error) {
           set({
@@ -124,18 +139,59 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       },
 
+      biometricLogin: async () => {
+        try {
+          const accessToken = await secureStorage.getItem('accessToken');
+          const refreshToken = await secureStorage.getItem('refreshToken');
+          const userJson = await secureStorage.getItem('user');
+
+          if (accessToken && userJson) {
+            const user = JSON.parse(userJson) as User;
+            set({
+              user,
+              accessToken,
+              refreshToken,
+              isAuthenticated: true,
+              hasSavedSession: false,
+            });
+          } else {
+            throw new Error('No saved session found');
+          }
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Biometric login failed',
+            hasSavedSession: false,
+          });
+          throw error;
+        }
+      },
+
       logout: async () => {
         try {
-          await secureStorage.removeItem('accessToken');
-          await secureStorage.removeItem('refreshToken');
-          await secureStorage.removeItem('user');
+          const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
-          set({
-            user: null,
-            accessToken: null,
-            refreshToken: null,
-            isAuthenticated: false,
-          });
+          if (biometricEnabled === 'true') {
+            // Keep tokens in storage for biometric re-login
+            set({
+              user: null,
+              accessToken: null,
+              refreshToken: null,
+              isAuthenticated: false,
+              hasSavedSession: true,
+            });
+          } else {
+            await secureStorage.removeItem('accessToken');
+            await secureStorage.removeItem('refreshToken');
+            await secureStorage.removeItem('user');
+
+            set({
+              user: null,
+              accessToken: null,
+              refreshToken: null,
+              isAuthenticated: false,
+              hasSavedSession: false,
+            });
+          }
         } catch (error) {
           console.error('Failed to logout:', error);
         }

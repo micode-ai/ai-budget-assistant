@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,20 +11,25 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { useBiometric } from '@/features/auth/useBiometric';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const { login, isLoading } = useAuthStore();
-  const { isBiometricAvailable, authenticate: biometricAuth } = useBiometric();
+  const { login, biometricLogin, isLoading, hasSavedSession } = useAuthStore();
+  const { isBiometricAvailable, authenticate: biometricAuth, getBiometricTypeName } = useBiometric();
+
+  const showBiometric = isBiometricAvailable && hasSavedSession;
+  const showQuickLogin = hasSavedSession && !isBiometricAvailable;
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Please fill in all fields');
+      setError(t('validation.fillAllFields'));
       return;
     }
 
@@ -34,7 +39,7 @@ export default function LoginScreen() {
       await login(email, password);
       router.replace('/(tabs)');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Login failed');
+      setError(e instanceof Error ? e.message : t('errors.loginFailed'));
     }
   };
 
@@ -42,11 +47,33 @@ export default function LoginScreen() {
     setError(null);
     const success = await biometricAuth();
     if (success) {
-      router.replace('/(tabs)');
+      try {
+        await biometricLogin();
+        router.replace('/(tabs)');
+      } catch (e) {
+        setError(e instanceof Error ? e.message : t('errors.biometricLoginFailed'));
+      }
     } else {
-      setError('Biometric authentication failed');
+      setError(t('errors.biometricFailed'));
     }
   };
+
+  const handleQuickLogin = async () => {
+    setError(null);
+    try {
+      await biometricLogin();
+      router.replace('/(tabs)');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t('errors.quickLoginFailed'));
+    }
+  };
+
+  // Auto-trigger biometric on mount when saved session exists
+  useEffect(() => {
+    if (showBiometric) {
+      handleBiometricLogin();
+    }
+  }, [showBiometric]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -55,8 +82,8 @@ export default function LoginScreen() {
         style={styles.content}
       >
         <View style={styles.header}>
-          <Text style={styles.title}>AI Budget</Text>
-          <Text style={styles.subtitle}>Track your expenses with AI</Text>
+          <Text style={styles.title}>{t('auth.appName')}</Text>
+          <Text style={styles.subtitle}>{t('auth.appTagline')}</Text>
         </View>
 
         <View style={styles.form}>
@@ -68,7 +95,7 @@ export default function LoginScreen() {
 
           <TextInput
             style={styles.input}
-            placeholder="Email"
+            placeholder={t('auth.email')}
             placeholderTextColor="#999"
             value={email}
             onChangeText={setEmail}
@@ -79,7 +106,7 @@ export default function LoginScreen() {
 
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder={t('auth.password')}
             placeholderTextColor="#999"
             value={password}
             onChangeText={setPassword}
@@ -94,24 +121,35 @@ export default function LoginScreen() {
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Sign In</Text>
+              <Text style={styles.buttonText}>{t('auth.signIn')}</Text>
             )}
           </TouchableOpacity>
 
-          {isBiometricAvailable && (
+          {showBiometric && (
             <TouchableOpacity
               style={styles.biometricButton}
               onPress={handleBiometricLogin}
             >
-              <Text style={styles.biometricButtonText}>Use Face ID / Touch ID</Text>
+              <Text style={styles.biometricButtonText}>
+                {t('auth.useBiometric', { type: getBiometricTypeName() })}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {showQuickLogin && (
+            <TouchableOpacity
+              style={styles.biometricButton}
+              onPress={handleQuickLogin}
+            >
+              <Text style={styles.biometricButtonText}>{t('auth.quickLogin')}</Text>
             </TouchableOpacity>
           )}
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don't have an account? </Text>
+            <Text style={styles.footerText}>{t('auth.noAccount')}</Text>
             <Link href="/(auth)/register" asChild>
               <TouchableOpacity>
-                <Text style={styles.linkText}>Sign Up</Text>
+                <Text style={styles.linkText}>{t('auth.signUp')}</Text>
               </TouchableOpacity>
             </Link>
           </View>

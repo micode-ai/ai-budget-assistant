@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { File } from 'expo-file-system/next';
 import { api } from '@/services/api';
+import i18n from '@/i18n';
 
 export interface ReceiptItem {
   description: string;
@@ -42,7 +43,7 @@ export function useReceiptScanner() {
       // Request camera permissions
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== 'granted') {
-        setState((s) => ({ ...s, error: 'Camera permission denied' }));
+        setState((s) => ({ ...s, error: i18n.t('errors.cameraPermissionDenied') }));
         return null;
       }
 
@@ -64,7 +65,7 @@ export function useReceiptScanner() {
       console.error('Failed to capture image:', error);
       setState((s) => ({
         ...s,
-        error: error instanceof Error ? error.message : 'Failed to capture image',
+        error: error instanceof Error ? error.message : i18n.t('errors.captureImageFailed'),
       }));
       return null;
     }
@@ -75,7 +76,7 @@ export function useReceiptScanner() {
       // Request media library permissions
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        setState((s) => ({ ...s, error: 'Gallery permission denied' }));
+        setState((s) => ({ ...s, error: i18n.t('errors.galleryPermissionDenied') }));
         return null;
       }
 
@@ -97,7 +98,7 @@ export function useReceiptScanner() {
       console.error('Failed to pick image:', error);
       setState((s) => ({
         ...s,
-        error: error instanceof Error ? error.message : 'Failed to pick image',
+        error: error instanceof Error ? error.message : i18n.t('errors.pickImageFailed'),
       }));
       return null;
     }
@@ -132,7 +133,7 @@ export function useReceiptScanner() {
       setState((s) => ({
         ...s,
         isProcessing: false,
-        error: error instanceof Error ? error.message : 'Failed to process receipt',
+        error: error instanceof Error ? error.message : i18n.t('errors.processReceiptFailed'),
       }));
       return null;
     }

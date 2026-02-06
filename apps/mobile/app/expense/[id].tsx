@@ -11,11 +11,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
 export default function ExpenseDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { expenses, updateExpense, deleteExpense } = useExpenseStore();
   const expense = expenses.find((e) => e.id === id);
@@ -29,9 +31,9 @@ export default function ExpenseDetailScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
           <Ionicons name="alert-circle-outline" size={64} color="#ccc" />
-          <Text style={styles.notFoundText}>Expense not found</Text>
+          <Text style={styles.notFoundText}>{t('expenseDetail.notFound')}</Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Text style={styles.backButtonText}>Go Back</Text>
+            <Text style={styles.backButtonText}>{t('common.back')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -39,10 +41,10 @@ export default function ExpenseDetailScreen() {
   }
 
   const handleDelete = () => {
-    Alert.alert('Delete Expense', 'Are you sure you want to delete this expense?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('expenseDetail.deleteTitle'), t('expenseDetail.deleteConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Delete',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: () => {
           deleteExpense(expense.id);
@@ -55,7 +57,7 @@ export default function ExpenseDetailScreen() {
   const handleSaveEdit = () => {
     const numericAmount = parseFloat(editAmount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert('Error', 'Please enter a valid amount');
+      Alert.alert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
@@ -67,10 +69,10 @@ export default function ExpenseDetailScreen() {
   };
 
   const sourceLabel: Record<string, string> = {
-    manual: 'Manual Entry',
-    voice: 'Voice Input',
-    ocr: 'Receipt Scan',
-    import: 'Imported',
+    manual: t('expenseDetail.sourceManual'),
+    voice: t('expenseDetail.sourceVoice'),
+    ocr: t('expenseDetail.sourceOcr'),
+    import: t('expenseDetail.sourceImport'),
   };
 
   const sourceIcon: Record<string, string> = {
@@ -111,7 +113,7 @@ export default function ExpenseDetailScreen() {
         {/* Details */}
         <View style={styles.detailsCard}>
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Description</Text>
+            <Text style={styles.detailLabel}>{t('expenseDetail.description')}</Text>
             {isEditing ? (
               <TextInput
                 style={styles.detailEditInput}
@@ -119,31 +121,31 @@ export default function ExpenseDetailScreen() {
                 onChangeText={setEditDescription}
               />
             ) : (
-              <Text style={styles.detailValue}>{expense.description || 'No description'}</Text>
+              <Text style={styles.detailValue}>{expense.description || t('expenseDetail.noDescription')}</Text>
             )}
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Date</Text>
+            <Text style={styles.detailLabel}>{t('expenseDetail.date')}</Text>
             <Text style={styles.detailValue}>{formatDate(expense.date)}</Text>
           </View>
 
           {expense.categoryId && (
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Category</Text>
+              <Text style={styles.detailLabel}>{t('expenseDetail.category')}</Text>
               <Text style={styles.detailValue}>{expense.categoryId}</Text>
             </View>
           )}
 
           {expense.notes && (
             <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Notes</Text>
+              <Text style={styles.detailLabel}>{t('expenseDetail.notes')}</Text>
               <Text style={styles.detailValue}>{expense.notes}</Text>
             </View>
           )}
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Sync Status</Text>
+            <Text style={styles.detailLabel}>{t('expenseDetail.syncStatus')}</Text>
             <View style={styles.syncStatusContainer}>
               <Ionicons
                 name={
@@ -179,11 +181,11 @@ export default function ExpenseDetailScreen() {
                   setEditAmount(expense.amount.toString());
                 }}
               >
-                <Text style={styles.cancelEditText}>Cancel</Text>
+                <Text style={styles.cancelEditText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.saveEditButton} onPress={handleSaveEdit}>
                 <Ionicons name="checkmark" size={20} color="#fff" />
-                <Text style={styles.saveEditText}>Save</Text>
+                <Text style={styles.saveEditText}>{t('common.save')}</Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -193,11 +195,11 @@ export default function ExpenseDetailScreen() {
                 onPress={() => setIsEditing(true)}
               >
                 <Ionicons name="pencil" size={20} color="#4ECDC4" />
-                <Text style={styles.editButtonText}>Edit</Text>
+                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                 <Ionicons name="trash" size={20} color="#FF6B6B" />
-                <Text style={styles.deleteButtonText}>Delete</Text>
+                <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
               </TouchableOpacity>
             </View>
           )}

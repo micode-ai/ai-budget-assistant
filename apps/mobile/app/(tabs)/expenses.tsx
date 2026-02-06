@@ -3,11 +3,13 @@ import { useState, useCallback, useRef } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { Expense } from '@budget/shared-types';
 
 export default function ExpensesScreen() {
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
   const { expenses, isLoading } = useExpenseStore();
@@ -80,15 +82,15 @@ export default function ExpensesScreen() {
   const ListEmptyComponent = () => (
     <View style={styles.emptyState}>
       <Ionicons name="receipt-outline" size={64} color="#ccc" />
-      <Text style={styles.emptyTitle}>No expenses yet</Text>
+      <Text style={styles.emptyTitle}>{t('expenses.noExpenses')}</Text>
       <Text style={styles.emptySubtitle}>
-        Add your first expense by tapping the + button
+        {t('expenses.addFirst')}
       </Text>
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => router.push('/expense/new')}
       >
-        <Text style={styles.addButtonText}>Add Expense</Text>
+        <Text style={styles.addButtonText}>{t('expenses.addExpense')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -151,7 +153,7 @@ export default function ExpensesScreen() {
               },
             ]}
           >
-            Scan Receipt
+            {t('expenses.scanReceipt')}
           </Animated.Text>
         </Animated.View>
 
@@ -189,7 +191,7 @@ export default function ExpensesScreen() {
               },
             ]}
           >
-            Voice Input
+            {t('expenses.voiceInput')}
           </Animated.Text>
         </Animated.View>
 
@@ -227,7 +229,7 @@ export default function ExpensesScreen() {
               },
             ]}
           >
-            Manual Entry
+            {t('expenses.manualEntry')}
           </Animated.Text>
         </Animated.View>
 

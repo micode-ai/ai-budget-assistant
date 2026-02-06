@@ -7,9 +7,11 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency, formatRelativeDate } from '@budget/shared-utils';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const { expenses, totalThisMonth } = useExpenseStore();
   const { activeBudgets, getTotalBudget } = useBudgetStore();
@@ -36,13 +38,13 @@ export default function DashboardScreen() {
       >
         {/* Welcome Header */}
         <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeText}>Hello, {user?.name || 'User'}!</Text>
+          <Text style={styles.welcomeText}>{t('dashboard.hello', { name: user?.name || 'User' })}</Text>
           <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
         </View>
 
         {/* Budget Overview Card */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Monthly Budget</Text>
+          <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
           <View style={styles.budgetOverview}>
             <View style={styles.budgetAmount}>
               <Text style={styles.spentAmount}>{formatCurrency(totalThisMonth, currency)}</Text>
@@ -60,7 +62,7 @@ export default function DashboardScreen() {
                   ]}
                 />
               </View>
-              <Text style={styles.progressText}>{budgetUsedPercent.toFixed(0)}% used</Text>
+              <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
             </View>
           </View>
         </View>
@@ -72,7 +74,7 @@ export default function DashboardScreen() {
             onPress={() => router.push('/expense/new')}
           >
             <Ionicons name="add-circle" size={32} color="#4ECDC4" />
-            <Text style={styles.quickActionText}>Add Expense</Text>
+            <Text style={styles.quickActionText}>{t('dashboard.addExpense')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -80,7 +82,7 @@ export default function DashboardScreen() {
             onPress={() => router.push('/expense/voice')}
           >
             <Ionicons name="mic" size={32} color="#96CEB4" />
-            <Text style={styles.quickActionText}>Voice Input</Text>
+            <Text style={styles.quickActionText}>{t('dashboard.voiceInput')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -88,24 +90,24 @@ export default function DashboardScreen() {
             onPress={() => router.push('/expense/receipt')}
           >
             <Ionicons name="camera" size={32} color="#45B7D1" />
-            <Text style={styles.quickActionText}>Scan Receipt</Text>
+            <Text style={styles.quickActionText}>{t('dashboard.scanReceipt')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Recent Expenses */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recent Expenses</Text>
+            <Text style={styles.sectionTitle}>{t('dashboard.recentExpenses')}</Text>
             <TouchableOpacity onPress={() => router.push('/(tabs)/expenses')}>
-              <Text style={styles.seeAllText}>See All</Text>
+              <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
             </TouchableOpacity>
           </View>
 
           {recentExpenses.length === 0 ? (
             <View style={styles.emptyState}>
               <Ionicons name="receipt-outline" size={48} color="#ccc" />
-              <Text style={styles.emptyStateText}>No expenses yet</Text>
-              <Text style={styles.emptyStateSubtext}>Add your first expense to get started</Text>
+              <Text style={styles.emptyStateText}>{t('dashboard.noExpenses')}</Text>
+              <Text style={styles.emptyStateSubtext}>{t('dashboard.addFirstExpense')}</Text>
             </View>
           ) : (
             recentExpenses.map((expense) => (
@@ -115,7 +117,7 @@ export default function DashboardScreen() {
                 onPress={() => router.push(`/expense/${expense.id}`)}
               >
                 <View style={styles.expenseInfo}>
-                  <Text style={styles.expenseDescription}>{expense.description || 'Expense'}</Text>
+                  <Text style={styles.expenseDescription}>{expense.description || t('dashboard.expense')}</Text>
                   <Text style={styles.expenseDate}>{formatRelativeDate(expense.date)}</Text>
                 </View>
                 <Text style={styles.expenseAmount}>
@@ -129,17 +131,17 @@ export default function DashboardScreen() {
         {/* Active Budgets */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Active Budgets</Text>
+            <Text style={styles.sectionTitle}>{t('dashboard.activeBudgets')}</Text>
             <TouchableOpacity onPress={() => router.push('/(tabs)/budgets')}>
-              <Text style={styles.seeAllText}>See All</Text>
+              <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
             </TouchableOpacity>
           </View>
 
           {activeBudgets.length === 0 ? (
             <View style={styles.emptyState}>
               <Ionicons name="wallet-outline" size={48} color="#ccc" />
-              <Text style={styles.emptyStateText}>No budgets set</Text>
-              <Text style={styles.emptyStateSubtext}>Create a budget to track your spending</Text>
+              <Text style={styles.emptyStateText}>{t('dashboard.noBudgets')}</Text>
+              <Text style={styles.emptyStateSubtext}>{t('dashboard.createBudgetHint')}</Text>
             </View>
           ) : (
             activeBudgets.slice(0, 3).map((budget) => (

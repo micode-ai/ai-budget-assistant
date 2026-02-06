@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 
 export default function ChatScreen() {
+  const { t } = useTranslation();
   const [inputText, setInputText] = useState('');
   const flatListRef = useRef<FlatList>(null);
 
@@ -41,7 +43,7 @@ export default function ChatScreen() {
   useEffect(() => {
     // Show voice error if any
     if (voiceError) {
-      Alert.alert('Voice Input Error', voiceError);
+      Alert.alert(t('common.error'), voiceError);
     }
   }, [voiceError]);
 
@@ -97,21 +99,21 @@ export default function ChatScreen() {
     <View style={styles.quickActions}>
       <TouchableOpacity
         style={styles.quickActionButton}
-        onPress={() => sendMessage('What did I spend the most on this month?')}
+        onPress={() => sendMessage(t('chat.topExpensesQ'))}
       >
-        <Text style={styles.quickActionText}>Top expenses</Text>
+        <Text style={styles.quickActionText}>{t('chat.topExpenses')}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.quickActionButton}
-        onPress={() => sendMessage('Am I on track with my budget?')}
+        onPress={() => sendMessage(t('chat.budgetStatusQ'))}
       >
-        <Text style={styles.quickActionText}>Budget status</Text>
+        <Text style={styles.quickActionText}>{t('chat.budgetStatus')}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.quickActionButton}
-        onPress={() => sendMessage('Give me tips to save money')}
+        onPress={() => sendMessage(t('chat.savingTipsQ'))}
       >
-        <Text style={styles.quickActionText}>Saving tips</Text>
+        <Text style={styles.quickActionText}>{t('chat.savingTips')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -121,9 +123,9 @@ export default function ChatScreen() {
       <View style={styles.emptyIconContainer}>
         <Ionicons name="chatbubble-ellipses-outline" size={64} color="#4ECDC4" />
       </View>
-      <Text style={styles.emptyTitle}>AI Budget Assistant</Text>
+      <Text style={styles.emptyTitle}>{t('chat.title')}</Text>
       <Text style={styles.emptySubtitle}>
-        Ask me anything about your finances, spending patterns, or get personalized budget advice.
+        {t('chat.subtitle')}
       </Text>
       <QuickActions />
     </View>
@@ -152,14 +154,14 @@ export default function ChatScreen() {
         {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="small" color="#4ECDC4" />
-            <Text style={styles.loadingText}>Thinking...</Text>
+            <Text style={styles.loadingText}>{t('chat.thinking')}</Text>
           </View>
         )}
 
         {isProcessing && (
           <View style={styles.processingOverlay}>
             <ActivityIndicator size="large" color="#4ECDC4" />
-            <Text style={styles.processingText}>Processing voice...</Text>
+            <Text style={styles.processingText}>{t('chat.processingVoice')}</Text>
           </View>
         )}
 
@@ -185,7 +187,7 @@ export default function ChatScreen() {
             style={styles.textInput}
             value={inputText}
             onChangeText={setInputText}
-            placeholder="Ask about your budget..."
+            placeholder={t('chat.placeholder')}
             placeholderTextColor="#999"
             multiline
             maxLength={4000}

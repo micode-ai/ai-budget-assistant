@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { ChatConversation } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import { api } from '@/services/api';
+import i18n from '@/i18n';
 
 // Re-export ChatMessage type for use in components
 export interface ChatMessage {
@@ -81,13 +82,13 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       const errorMessage: ChatMessage = {
         id: generateUUID(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please check your connection and try again.',
+        content: i18n.t('errors.chatError'),
         createdAt: new Date(),
       };
 
       set((state) => ({
         messages: [...state.messages, errorMessage],
-        error: error instanceof Error ? error.message : 'Failed to send message',
+        error: error instanceof Error ? error.message : i18n.t('errors.sendMessageFailed'),
         isLoading: false,
       }));
     }
@@ -122,7 +123,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       });
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Failed to load conversation',
+        error: error instanceof Error ? error.message : i18n.t('errors.loadConversationFailed'),
         isLoading: false,
       });
     }

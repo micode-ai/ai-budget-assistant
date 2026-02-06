@@ -5,8 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { DatabaseProvider } from '@/db/DatabaseProvider';
+import { loadSavedLanguage } from '@/i18n';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -22,10 +24,12 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const { isLoading, initialize } = useAuthStore();
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function prepare() {
       try {
+        await loadSavedLanguage();
         await initialize();
       } catch (e) {
         console.warn('Error initializing app:', e);
@@ -54,14 +58,14 @@ export default function RootLayout() {
                 options={{
                   presentation: 'modal',
                   headerShown: true,
-                  title: 'New Expense',
+                  title: t('nav.newExpense'),
                 }}
               />
               <Stack.Screen
                 name="expense/[id]"
                 options={{
                   headerShown: true,
-                  title: 'Expense Details',
+                  title: t('nav.expenseDetails'),
                 }}
               />
               <Stack.Screen
@@ -69,14 +73,14 @@ export default function RootLayout() {
                 options={{
                   presentation: 'modal',
                   headerShown: true,
-                  title: 'New Budget',
+                  title: t('nav.newBudget'),
                 }}
               />
               <Stack.Screen
                 name="budget/[id]"
                 options={{
                   headerShown: true,
-                  title: 'Budget Details',
+                  title: t('nav.budgetDetails'),
                 }}
               />
             </Stack>
