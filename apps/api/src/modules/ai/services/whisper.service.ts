@@ -12,14 +12,17 @@ export class WhisperService {
     });
   }
 
-  async transcribe(audioBuffer: Buffer, language?: string): Promise<{ text: string; language: string; duration: number }> {
-    // Convert Buffer to ArrayBuffer for Blob creation
+  async transcribe(audioBuffer: Buffer, language?: string, mimeType?: string): Promise<{ text: string; language: string; duration: number }> {
+    // Detect format from buffer magic bytes or use provided mimeType
+    const detectedMime = mimeType || this.detectMimeType(audioBuffer);
+    const ext = this.mimeToExt(detectedMime);
+
     const arrayBuffer = audioBuffer.buffer.slice(
       audioBuffer.byteOffset,
       audioBuffer.byteOffset + audioBuffer.byteLength,
     ) as ArrayBuffer;
-    const blob = new Blob([arrayBuffer], { type: 'audio/webm' });
-    const file = new File([blob], 'audio.webm', { type: 'audio/webm' });
+    const blob = new Blob([arrayBuffer], { type: detectedMime });
+    const file = new File([blob], `audio.${ext}`, { type: detectedMime });
 
     const response = await this.openai.audio.transcriptions.create({
       file,
@@ -33,5 +36,35 @@ export class WhisperService {
       language: response.language || language || 'en',
       duration: response.duration || 0,
     };
+  }
+
+  private detectMimeType(buffer: Buffer): string {
+    if (buffer.length < 12) return 'audio/m4a';
+    // ftyp box = MP4/M4A container
+    if (buffer.slice(4, 8).toString() === 'ftyp') return 'audio/m4a';
+    // RIFF = WAV
+    if (buffer.slice(0, 4).toString() === 'RIFF') return 'audio/wav';
+    // OggS = OGG
+    if (buffer.slice(0, 4).toString() === 'OggS') return 'audio/ogg';
+    // webm/matroska
+    if (buffer[0] === 0x1a && buffer[1] === 0x45 && buffer[2] === 0xdf && buffer[3] === 0xa3) return 'audio/webm';
+    // ID3 or sync bits = MP3
+    if (buffer.slice(0, 3).toString() === 'ID3' || (buffer[0] === 0xff && (buffer[1] & 0xe0) === 0xe0)) return 'audio/mpeg';
+    // fLaC
+    if (buffer.slice(0, 4).toString() === 'fLaC') return 'audio/flac';
+    return 'audio/m4a';
+  }
+
+  private mimeToExt(mime: string): string {
+    const map: Record<string, string> = {
+      'audio/m4a': 'm4a',
+      'audio/mp4': 'm4a',
+      'audio/wav': 'wav',
+      'audio/ogg': 'ogg',
+      'audio/webm': 'webm',
+      'audio/mpeg': 'mp3',
+      'audio/flac': 'flac',
+    };
+    return map[mime] || 'm4a';
   }
 }

@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { json } from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Increase body size limit for base64 audio/image uploads
+  app.use(json({ limit: '50mb' }));
 
   // Global prefix
   app.setGlobalPrefix('api/v1');

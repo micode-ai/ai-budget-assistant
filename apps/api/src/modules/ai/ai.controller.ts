@@ -4,10 +4,7 @@ import {
   Body,
   UseGuards,
   Req,
-  UseInterceptors,
-  UploadedFile,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { WhisperService } from './services/whisper.service';
@@ -30,12 +27,11 @@ export class AiController {
   ) {}
 
   @Post('transcribe')
-  @UseInterceptors(FileInterceptor('audio'))
   async transcribe(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: { language?: string },
+    @Body() body: { audio: string; language?: string },
   ) {
-    return this.whisperService.transcribe(file.buffer, body.language);
+    const buffer = Buffer.from(body.audio, 'base64');
+    return this.whisperService.transcribe(buffer, body.language);
   }
 
   @Post('parse-expense')

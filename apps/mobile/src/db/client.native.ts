@@ -1,8 +1,8 @@
 import * as SQLite from 'expo-sqlite';
 import * as schema from './schema';
 
-// Open database using expo-sqlite legacy API (Expo SDK 50)
-const expoDb = SQLite.openDatabase('budget.db');
+// Open database using expo-sqlite new API (Expo SDK 54)
+const expoDb = SQLite.openDatabaseSync('budget.db');
 
 // Export the raw database for direct access
 export const db = expoDb;
@@ -18,62 +18,14 @@ export function executeSql<T = Record<string, unknown>>(
   sql: string,
   params: (string | number | null)[] = []
 ): Promise<QueryResult<T>> {
-  return new Promise((resolve, reject) => {
-    expoDb.transaction(
-      (tx) => {
-        tx.executeSql(
-          sql,
-          params,
-          (_, result) => {
-            const rows: T[] = [];
-            for (let i = 0; i < result.rows.length; i++) {
-              rows.push(result.rows.item(i) as T);
-            }
-            resolve(rows);
-          },
-          (_, error) => {
-            reject(error);
-            return false;
-          }
-        );
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
-}
-
-// Helper to run multiple SQL statements (for migrations)
-function execMultipleStatements(sql: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    expoDb.transaction(
-      (tx) => {
-        // Split multiple statements and execute each
-        const statements = sql
-          .split(';')
-          .map((s) => s.trim())
-          .filter((s) => s.length > 0 && !s.startsWith('--'));
-
-        statements.forEach((statement) => {
-          tx.executeSql(statement + ';');
-        });
-      },
-      (error) => {
-        reject(error);
-      },
-      () => {
-        resolve();
-      }
-    );
-  });
+  return Promise.resolve(expoDb.getAllSync<T>(sql, ...params));
 }
 
 // Database initialization
 export async function initializeDatabase(): Promise<void> {
   try {
-    // Run migrations using the legacy expo-sqlite API
-    await execMultipleStatements(`
+    // Run migrations using the new expo-sqlite API
+    expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS expenses (
         id TEXT PRIMARY KEY,
         local_id TEXT NOT NULL,
@@ -169,10 +121,10 @@ export async function initializeDatabase(): Promise<void> {
         content TEXT NOT NULL,
         tokens_used INTEGER,
         created_at INTEGER NOT NULL
-      )
+      );
     `);
 
-    // Create indexes separately (they can fail if they exist)
+    // Create indexes
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date DESC)',
       'CREATE INDEX IF NOT EXISTS idx_expenses_category ON expenses(category_id)',
@@ -184,7 +136,7 @@ export async function initializeDatabase(): Promise<void> {
 
     for (const indexSql of indexes) {
       try {
-        await execMultipleStatements(indexSql);
+        expoDb.execSync(indexSql);
       } catch (e) {
         // Index might already exist, continue
         console.warn('Index creation warning:', e);
