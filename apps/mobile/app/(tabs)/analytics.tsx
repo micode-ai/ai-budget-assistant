@@ -31,7 +31,7 @@ export default function AnalyticsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Time Range Selector */}
         <View style={styles.rangeSelector}>

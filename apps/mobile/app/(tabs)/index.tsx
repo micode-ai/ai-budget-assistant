@@ -30,7 +30,7 @@ export default function DashboardScreen() {
   const recentExpenses = expenses.slice(0, 5);
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
