@@ -1,6 +1,7 @@
 import { Tabs, Redirect, router } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +10,7 @@ type IconName = keyof typeof Ionicons.glyphMap;
 export default function TabLayout() {
   const { isAuthenticated, logout } = useAuthStore();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   // If user is not authenticated, redirect to login
   if (!isAuthenticated) {
@@ -24,8 +26,8 @@ export default function TabLayout() {
           backgroundColor: '#fff',
           borderTopColor: '#e0e0e0',
           paddingTop: 8,
-          paddingBottom: 8,
-          height: 60,
+          paddingBottom: 8 + insets.bottom,
+          height: 60 + insets.bottom,
         },
         tabBarLabelStyle: {
           fontSize: 12,

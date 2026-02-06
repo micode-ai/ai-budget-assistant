@@ -91,7 +91,7 @@ export default function BudgetsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <FlatList
         data={budgets.filter(b => !b.isDeleted)}
         renderItem={renderBudgetItem}

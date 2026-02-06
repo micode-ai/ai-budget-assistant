@@ -96,7 +96,7 @@ export default function ExpensesScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={[]}>
       <FlatList
         data={expenses}
         renderItem={renderExpenseItem}
