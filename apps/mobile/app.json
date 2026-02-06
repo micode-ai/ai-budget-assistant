@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#4ECDC4"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.budget.assistant",
@@ -27,7 +29,12 @@
         "backgroundColor": "#4ECDC4"
       },
       "package": "com.budget.assistant",
-      "permissions": ["RECORD_AUDIO", "USE_BIOMETRIC", "USE_FINGERPRINT", "DETECT_SCREEN_CAPTURE"]
+      "permissions": [
+        "RECORD_AUDIO",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "DETECT_SCREEN_CAPTURE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -43,10 +50,9 @@
         {
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice expense entry."
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    "newArchEnabled": true
   }
 }

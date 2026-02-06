@@ -56,7 +56,16 @@
       "Bash(ANDROID_HOME=\"D:/ProgramData/Local/Android/Sdk\" npx expo run:android:*)",
       "Bash(npm uninstall:*)",
       "Bash(\"D:/ProgramData/Local/Android/Sdk/platform-tools/adb.exe\" shell \"dumpsys activity activities | grep -E ''mFocusedApp''\")",
-      "Bash(\"D:/ProgramData/Local/Android/Sdk/platform-tools/adb.exe\" shell am start -n com.budget.assistant/.MainActivity)"
+      "Bash(\"D:/ProgramData/Local/Android/Sdk/platform-tools/adb.exe\" shell am start -n com.budget.assistant/.MainActivity)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(powershell:*)",
+      "Bash(npx expo install:*)",
+      "Bash(npx expo-doctor)",
+      "Bash(node -e:*)",
+      "Bash(npm ls:*)",
+      "Bash(npx expo start)",
+      "Bash(ipconfig:*)"
     ]
   }
 }

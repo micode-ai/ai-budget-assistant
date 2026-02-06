@@ -178,23 +178,14 @@ class ApiClient {
   }
 
   // AI endpoints
-  async transcribeAudio(audioBlob: Blob, language?: string) {
-    const formData = new FormData();
-    formData.append('audio', audioBlob, 'recording.webm');
-    if (language) formData.append('language', language);
-
-    const token = await this.getAuthToken();
-    const response = await fetch(`${this.baseUrl}/ai/transcribe`, {
-      method: 'POST',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error('Transcription failed');
-    }
-
-    return response.json() as Promise<{ text: string; language: string; duration: number }>;
+  async transcribeAudio(audioBase64: string, language?: string) {
+    return this.request<{ text: string; language: string; duration: number }>(
+      '/ai/transcribe',
+      {
+        method: 'POST',
+        body: JSON.stringify({ audio: audioBase64, language }),
+      },
+    );
   }
 
   async parseExpense(text: string) {

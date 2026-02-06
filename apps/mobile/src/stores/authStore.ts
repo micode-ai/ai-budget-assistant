@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { secureStorage } from '../services/secureStorage';
+import { api } from '../services/api';
 import type { User, Currency } from '@budget/shared-types';
 
 interface AuthState {
@@ -56,33 +57,26 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       login: async (email: string, password: string) => {
         set({ isLoading: true, error: null });
         try {
-          // TODO: Replace with actual API call
-          // const response = await authApi.login({ email, password });
+          const response = await api.login(email, password);
 
-          // Mock login for development
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          const mockUser: User = {
-            id: '1',
-            email,
-            name: email.split('@')[0],
-            currencyCode: 'USD' as Currency,
+          const user: User = {
+            id: response.user.id,
+            email: response.user.email,
+            name: response.user.name,
+            currencyCode: (response.user.currencyCode || 'USD') as Currency,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
 
-          const mockAccessToken = 'mock-access-token';
-          const mockRefreshToken = 'mock-refresh-token';
-
-          await secureStorage.setItem('accessToken', mockAccessToken);
-          await secureStorage.setItem('refreshToken', mockRefreshToken);
-          await secureStorage.setItem('user', JSON.stringify(mockUser));
+          await secureStorage.setItem('accessToken', response.accessToken);
+          await secureStorage.setItem('refreshToken', response.refreshToken);
+          await secureStorage.setItem('user', JSON.stringify(user));
 
           set({
-            user: mockUser,
-            accessToken: mockAccessToken,
-            refreshToken: mockRefreshToken,
+            user,
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
             isAuthenticated: true,
             isLoading: false,
           });
@@ -98,33 +92,26 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       register: async (email: string, password: string, name: string) => {
         set({ isLoading: true, error: null });
         try {
-          // TODO: Replace with actual API call
-          // const response = await authApi.register({ email, password, name });
+          const response = await api.register(email, password, name);
 
-          // Mock registration for development
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-
-          const mockUser: User = {
-            id: '1',
-            email,
-            name,
-            currencyCode: 'USD' as Currency,
+          const user: User = {
+            id: response.user.id,
+            email: response.user.email,
+            name: response.user.name,
+            currencyCode: (response.user.currencyCode || 'USD') as Currency,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
 
-          const mockAccessToken = 'mock-access-token';
-          const mockRefreshToken = 'mock-refresh-token';
-
-          await secureStorage.setItem('accessToken', mockAccessToken);
-          await secureStorage.setItem('refreshToken', mockRefreshToken);
-          await secureStorage.setItem('user', JSON.stringify(mockUser));
+          await secureStorage.setItem('accessToken', response.accessToken);
+          await secureStorage.setItem('refreshToken', response.refreshToken);
+          await secureStorage.setItem('user', JSON.stringify(user));
 
           set({
-            user: mockUser,
-            accessToken: mockAccessToken,
-            refreshToken: mockRefreshToken,
+            user,
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
             isAuthenticated: true,
             isLoading: false,
           });

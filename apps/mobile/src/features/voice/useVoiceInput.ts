@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { Audio } from 'expo-av';
+import { File } from 'expo-file-system/next';
 import { api } from '@/services/api';
 
 export interface VoiceInputState {
@@ -32,21 +33,21 @@ export function useVoiceInput() {
   const recordingRef = useRef<Audio.Recording | null>(null);
 
   const startRecording = useCallback(async () => {
+    console.log('[VoiceInput] startRecording called');
     try {
-      // Request permissions
+      console.log('[VoiceInput] Requesting microphone permission...');
       const { status } = await Audio.requestPermissionsAsync();
+      console.log('[VoiceInput] Permission status:', status);
       if (status !== 'granted') {
         setState((s) => ({ ...s, error: 'Microphone permission denied' }));
         return false;
       }
 
-      // Configure audio mode for recording
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
 
-      // Create and start recording
       const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY,
       );
@@ -61,8 +62,8 @@ export function useVoiceInput() {
       }));
 
       return true;
-    } catch (error) {
-      console.error('Failed to start recording:', error);
+    } catch (err) {
+      console.error('[VoiceInput] Failed to start recording:', err);
       setState((s) => ({
         ...s,
         error: 'Failed to start recording',
@@ -96,12 +97,12 @@ export function useVoiceInput() {
         throw new Error('No recording URI');
       }
 
-      // Read the file and create blob for upload
-      const response = await fetch(uri);
-      const blob = await response.blob();
+      // Read the recording file as base64 string
+      const file = new File(uri);
+      const base64Audio = await file.base64();
 
       // Transcribe audio
-      const transcriptionResult = await api.transcribeAudio(blob);
+      const transcriptionResult = await api.transcribeAudio(base64Audio);
       const transcription = transcriptionResult.text;
 
       setState((s) => ({ ...s, transcription }));
@@ -116,12 +117,12 @@ export function useVoiceInput() {
       }));
 
       return parsedExpense;
-    } catch (error) {
-      console.error('Failed to process recording:', error);
+    } catch (err) {
+      console.error('Failed to process recording:', err);
       setState((s) => ({
         ...s,
         isProcessing: false,
-        error: error instanceof Error ? error.message : 'Failed to process recording',
+        error: err instanceof Error ? err.message : 'Failed to process recording',
       }));
       return null;
     }
