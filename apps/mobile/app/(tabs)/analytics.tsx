@@ -72,7 +72,7 @@ export default function AnalyticsScreen() {
             <Text style={styles.summaryValue}>
               {formatCurrency(summary.averagePerDay, currency)}
             </Text>
-            <Text style={styles.summarySubtext}>{t('analytics.this')} {selectedRange}</Text>
+            <Text style={styles.summarySubtext}>{t('analytics.thisRange', { range: t(`analytics.${selectedRange}`) })}</Text>
           </View>
         </View>
 
@@ -150,7 +150,7 @@ export default function AnalyticsScreen() {
               <View style={styles.insightContent}>
                 <Text style={styles.insightTitle}>{t('analytics.topCategory')}</Text>
                 <Text style={styles.insightText}>
-                  {t('analytics.topCategoryText', { category: summary.mostExpensiveCategory, period: selectedRange })}
+                  {t('analytics.topCategoryText', { category: summary.mostExpensiveCategory, range: t(`analytics.${selectedRange}`) })}
                 </Text>
               </View>
             </View>
@@ -162,8 +162,8 @@ export default function AnalyticsScreen() {
               <View style={styles.insightContent}>
                 <Text style={styles.insightTitle}>{t('analytics.peakSpendingDay')}</Text>
                 <Text style={styles.insightText}>
-                  {t('analytics.peakSpendingDayText', {
-                    date: new Date(summary.highestSpendingDay).toLocaleDateString('en-US', {
+                  {t('analytics.peakSpendingText', {
+                    date: new Date(summary.highestSpendingDay).toLocaleDateString(undefined, {
                       weekday: 'long',
                       month: 'short',
                       day: 'numeric',
@@ -179,7 +179,7 @@ export default function AnalyticsScreen() {
             <View style={styles.insightContent}>
               <Text style={styles.insightTitle}>{t('analytics.dailyBudgetTip')}</Text>
               <Text style={styles.insightText}>
-                {t('analytics.dailyBudgetTipText', { amount: formatCurrency(summary.averagePerDay * 0.9, currency) })}
+                {t('analytics.dailyBudgetText', { amount: formatCurrency(summary.averagePerDay * 0.9, currency) })}
               </Text>
             </View>
           </View>

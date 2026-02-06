@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 
@@ -41,6 +42,7 @@ const CATEGORY_COLORS = [
 ];
 
 export function useAnalytics(timeRange: TimeRange = 'month') {
+  const { t } = useTranslation();
   const { expenses } = useExpenseStore();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -123,13 +125,13 @@ export function useAnalytics(timeRange: TimeRange = 'month') {
       let dayLabel: string;
 
       if (timeRange === 'year') {
-        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
         const monthIndex = parseInt(dateKey.split('-')[1]) - 1;
-        dayLabel = monthNames[monthIndex];
+        dayLabel = t(`analytics.months.${monthKeys[monthIndex]}`);
       } else if (timeRange === 'week') {
         const date = new Date(dateKey);
-        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        dayLabel = dayNames[date.getDay()];
+        const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
+        dayLabel = t(`analytics.days.${dayKeys[date.getDay()]}`);
       } else {
         const date = new Date(dateKey);
         dayLabel = date.getDate().toString();
@@ -139,7 +141,7 @@ export function useAnalytics(timeRange: TimeRange = 'month') {
     });
 
     return result.sort((a, b) => a.date.localeCompare(b.date));
-  }, [filteredExpenses, timeRange, dateRange]);
+  }, [filteredExpenses, timeRange, dateRange, t]);
 
   const categorySpending = useMemo((): CategorySpending[] => {
     const total = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
@@ -159,7 +161,7 @@ export function useAnalytics(timeRange: TimeRange = 'month') {
     categoryMap.forEach((amount, categoryId) => {
       result.push({
         categoryId,
-        name: categoryId || 'Uncategorized',
+        name: categoryId || t('common.uncategorized'),
         amount,
         percentage: (amount / total) * 100,
         color: CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],
@@ -168,7 +170,7 @@ export function useAnalytics(timeRange: TimeRange = 'month') {
     });
 
     return result.sort((a, b) => b.amount - a.amount);
-  }, [filteredExpenses]);
+  }, [filteredExpenses, t]);
 
   const summary = useMemo((): AnalyticsSummary => {
     const totalSpent = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);

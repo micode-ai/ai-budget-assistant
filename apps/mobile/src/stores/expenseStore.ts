@@ -2,6 +2,12 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Expense, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
+import {
+  loadAllExpenses,
+  insertExpense,
+  updateExpenseInDb,
+  softDeleteExpenseInDb,
+} from '@/db/expenseRepository';
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -28,6 +34,7 @@ interface ExpenseState {
   totalThisMonth: number;
 
   // Actions
+  loadExpenses: () => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
   addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Expense;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
@@ -65,6 +72,17 @@ export const useExpenseStore = create<ExpenseState>()(
         .reduce((sum, e) => sum + e.amount, 0);
     },
 
+    loadExpenses: async () => {
+      set({ isLoading: true, error: null });
+      try {
+        const expenses = await loadAllExpenses();
+        set({ expenses, isLoading: false });
+      } catch (e) {
+        console.error('Failed to load expenses from SQLite:', e);
+        set({ error: 'Failed to load expenses', isLoading: false });
+      }
+    },
+
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: (expenseData) => {
@@ -86,8 +104,9 @@ export const useExpenseStore = create<ExpenseState>()(
         expenses: [newExpense, ...state.expenses],
       }));
 
-      // TODO: Add to sync queue
-      // syncService.queueCreate('expense', newExpense);
+      insertExpense(newExpense).catch((e) =>
+        console.error('Failed to insert expense into SQLite:', e),
+      );
 
       return newExpense;
     },
@@ -106,8 +125,17 @@ export const useExpenseStore = create<ExpenseState>()(
         ),
       }));
 
-      // TODO: Add to sync queue
-      // syncService.queueUpdate('expense', id, updates);
+      const updatedExpense = get().expenses.find((e) => e.id === id);
+      if (updatedExpense) {
+        updateExpenseInDb(
+          id,
+          updates,
+          updatedExpense.updatedAt,
+          updatedExpense.syncStatus,
+        ).catch((e) =>
+          console.error('Failed to update expense in SQLite:', e),
+        );
+      }
     },
 
     deleteExpense: (id) => {
@@ -124,8 +152,12 @@ export const useExpenseStore = create<ExpenseState>()(
         ),
       }));
 
-      // TODO: Add to sync queue
-      // syncService.queueDelete('expense', id);
+      const deletedExpense = get().expenses.find((e) => e.id === id);
+      if (deletedExpense) {
+        softDeleteExpenseInDb(id, deletedExpense.updatedAt).catch((e) =>
+          console.error('Failed to soft-delete expense in SQLite:', e),
+        );
+      }
     },
 
     setFilters: (filters) =>
