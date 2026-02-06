@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system/next';
 import { api } from '@/services/api';
 
 export interface ReceiptItem {
@@ -114,9 +114,8 @@ export function useReceiptScanner() {
 
     try {
       // Read image as base64
-      const base64 = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
+      const file = new File(imageUri);
+      const base64 = await file.base64();
 
       // Send to API for OCR
       const scannedReceipt = await api.scanReceipt(base64);
