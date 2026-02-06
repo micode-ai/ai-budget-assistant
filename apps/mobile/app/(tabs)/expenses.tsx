@@ -12,14 +12,17 @@ export default function ExpensesScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
-  const { expenses, isLoading } = useExpenseStore();
+  const { expenses, isLoading, loadExpenses } = useExpenseStore();
   const fabAnimation = useRef(new Animated.Value(0)).current;
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    // Trigger sync
-    setRefreshing(false);
-  }, []);
+    try {
+      await loadExpenses();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [loadExpenses]);
 
   const toggleFab = () => {
     const toValue = fabOpen ? 0 : 1;

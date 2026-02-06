@@ -13,7 +13,7 @@ export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const { user } = useAuthStore();
-  const { expenses, totalThisMonth } = useExpenseStore();
+  const { expenses, totalThisMonth, loadExpenses } = useExpenseStore();
   const { activeBudgets, getTotalBudget } = useBudgetStore();
 
   const currency = user?.currencyCode || 'USD';
@@ -22,10 +22,12 @@ export default function DashboardScreen() {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    // Trigger data refresh
-    // await sync();
-    setRefreshing(false);
-  }, []);
+    try {
+      await loadExpenses();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [loadExpenses]);
 
   const recentExpenses = expenses.slice(0, 5);
 
