@@ -198,24 +198,12 @@ export const useExpenseStore = create<ExpenseState>()(
 
     deleteExpense: (id) => {
       set((state) => ({
-        expenses: state.expenses.map((e) =>
-          e.id === id
-            ? {
-                ...e,
-                isDeleted: true,
-                updatedAt: new Date(),
-                syncStatus: 'pending' as SyncStatus,
-              }
-            : e
-        ),
+        expenses: state.expenses.filter((e) => e.id !== id),
       }));
 
-      const deletedExpense = get().expenses.find((e) => e.id === id);
-      if (deletedExpense) {
-        softDeleteExpenseInDb(id, deletedExpense.updatedAt).catch((e) =>
-          console.error('Failed to soft-delete expense in SQLite:', e),
-        );
-      }
+      softDeleteExpenseInDb(id, new Date()).catch((e) =>
+        console.error('Failed to soft-delete expense in SQLite:', e),
+      );
     },
 
     setFilters: (filters) =>
@@ -307,6 +295,7 @@ export const useExpenseStore = create<ExpenseState>()(
       softDeleteExpenseItemInDb(itemId, now).catch((e) =>
         console.error('Failed to delete expense item:', e),
       );
+
     },
 
     // ---- Receipt Image ----

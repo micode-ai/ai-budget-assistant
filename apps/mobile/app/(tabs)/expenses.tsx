@@ -12,7 +12,8 @@ export default function ExpensesScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
-  const { expenses, isLoading, loadExpenses } = useExpenseStore();
+  const { isLoading, loadExpenses, getFilteredExpenses } = useExpenseStore();
+  const expenses = getFilteredExpenses();
   const fabAnimation = useRef(new Animated.Value(0)).current;
 
   const onRefresh = useCallback(async () => {
@@ -65,16 +66,6 @@ export default function ExpensesScreen() {
           {item.description || 'Expense'}
         </Text>
         <Text style={styles.expenseDate}>{formatDate(item.date)}</Text>
-        {item.syncStatus !== 'synced' && (
-          <View style={styles.syncBadge}>
-            <Ionicons
-              name={item.syncStatus === 'pending' ? 'cloud-upload-outline' : 'alert-circle-outline'}
-              size={12}
-              color={item.syncStatus === 'pending' ? '#999' : '#FF6B6B'}
-            />
-            <Text style={styles.syncText}>{item.syncStatus}</Text>
-          </View>
-        )}
       </View>
       <Text style={styles.expenseAmount}>
         -{formatCurrency(item.amount, item.currencyCode)}
@@ -301,17 +292,6 @@ const styles = StyleSheet.create({
   expenseDate: {
     fontSize: 14,
     color: '#999',
-  },
-  syncBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    marginTop: 4,
-  },
-  syncText: {
-    fontSize: 12,
-    color: '#999',
-    textTransform: 'capitalize',
   },
   expenseAmount: {
     fontSize: 16,
