@@ -298,29 +298,6 @@ export default function ExpenseDetailScreen() {
             </View>
           )}
 
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>{t('expenseDetail.syncStatus')}</Text>
-            <View style={styles.syncStatusContainer}>
-              <Ionicons
-                name={
-                  expense.syncStatus === 'synced'
-                    ? 'checkmark-circle'
-                    : expense.syncStatus === 'pending'
-                      ? 'cloud-upload-outline'
-                      : 'alert-circle'
-                }
-                size={16}
-                color={
-                  expense.syncStatus === 'synced'
-                    ? '#4ECDC4'
-                    : expense.syncStatus === 'pending'
-                      ? '#999'
-                      : '#FF6B6B'
-                }
-              />
-              <Text style={styles.syncStatusText}>{expense.syncStatus}</Text>
-            </View>
-          </View>
         </View>
 
         {/* Receipt Items (for OCR expenses) */}
@@ -625,16 +602,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#4ECDC4',
     paddingVertical: 4,
-  },
-  syncStatusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  syncStatusText: {
-    fontSize: 14,
-    color: '#666',
-    textTransform: 'capitalize',
   },
   actionsContainer: {
     marginTop: 8,
