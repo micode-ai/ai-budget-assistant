@@ -18,6 +18,7 @@ import {
   updateExpenseItemInDb,
   softDeleteExpenseItemInDb,
 } from '@/db/expenseItemRepository';
+import { api } from '@/services/api';
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -63,6 +64,9 @@ interface ExpenseState {
   saveReceiptImage: (expenseId: string, imageBase64: string) => Promise<void>;
   deleteReceiptImage: (expenseId: string) => Promise<void>;
 
+  // Sync
+  syncPendingExpenses: () => Promise<void>;
+
   // Selectors
   getFilteredExpenses: () => Expense[];
   getExpensesByCategory: () => CategoryBreakdown[];
@@ -100,6 +104,8 @@ export const useExpenseStore = create<ExpenseState>()(
       try {
         const expenses = await loadAllExpenses();
         set({ expenses, isLoading: false });
+        // Sync pending expenses in background
+        get().syncPendingExpenses();
       } catch (e) {
         console.error('Failed to load expenses from SQLite:', e);
         set({ error: 'Failed to load expenses', isLoading: false });
@@ -166,6 +172,28 @@ export const useExpenseStore = create<ExpenseState>()(
         );
       }
 
+      // Sync to server
+      api.createExpense({
+        localId: id,
+        amount: newExpense.amount,
+        currencyCode: newExpense.currencyCode,
+        description: newExpense.description,
+        notes: newExpense.notes,
+        categoryId: newExpense.categoryId,
+        date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
+        source: newExpense.source,
+        items,
+        receiptImageBase64,
+      }).then(() => {
+        set((state) => ({
+          expenses: state.expenses.map((e) =>
+            e.id === id ? { ...e, syncStatus: 'synced' as SyncStatus } : e
+          ),
+        }));
+      }).catch((e) =>
+        console.error('Failed to sync expense to server:', e),
+      );
+
       return newExpense;
     },
 
@@ -193,6 +221,10 @@ export const useExpenseStore = create<ExpenseState>()(
         ).catch((e) =>
           console.error('Failed to update expense in SQLite:', e),
         );
+
+        api.updateExpense(id, updates).catch((e) =>
+          console.error('Failed to update expense on server:', e),
+        );
       }
     },
 
@@ -203,6 +235,10 @@ export const useExpenseStore = create<ExpenseState>()(
 
       softDeleteExpenseInDb(id, new Date()).catch((e) =>
         console.error('Failed to soft-delete expense in SQLite:', e),
+      );
+
+      api.deleteExpense(id).catch((e) =>
+        console.error('Failed to delete expense on server:', e),
       );
     },
 
@@ -296,6 +332,9 @@ export const useExpenseStore = create<ExpenseState>()(
         console.error('Failed to delete expense item:', e),
       );
 
+      api.deleteExpenseItem(expenseId, itemId).catch((e) =>
+        console.error('Failed to delete expense item on server:', e),
+      );
     },
 
     // ---- Receipt Image ----
@@ -320,8 +359,42 @@ export const useExpenseStore = create<ExpenseState>()(
     deleteReceiptImage: async (expenseId: string) => {
       try {
         await deleteReceiptImageLocally(expenseId);
+        await api.deleteReceiptImage(expenseId);
       } catch (e) {
         console.error('Failed to delete receipt image:', e);
+      }
+    },
+
+    // ---- Sync ----
+
+    syncPendingExpenses: async () => {
+      const pending = get().expenses.filter(
+        (e) => e.syncStatus === 'pending' && !e.isDeleted,
+      );
+      if (pending.length === 0) return;
+
+      for (const expense of pending) {
+        try {
+          await api.createExpense({
+            localId: expense.localId || expense.id,
+            amount: expense.amount,
+            currencyCode: expense.currencyCode,
+            description: expense.description,
+            notes: expense.notes,
+            categoryId: expense.categoryId,
+            date: expense.date instanceof Date ? expense.date.toISOString() : String(expense.date),
+            source: expense.source,
+          });
+        } catch {
+          // upsert handles duplicates, other errors skip silently
+        }
+        // Mark as synced in state and SQLite
+        set((state) => ({
+          expenses: state.expenses.map((e) =>
+            e.id === expense.id ? { ...e, syncStatus: 'synced' as SyncStatus } : e
+          ),
+        }));
+        updateExpenseInDb(expense.id, {}, new Date(), 'synced').catch(() => {});
       }
     },
 

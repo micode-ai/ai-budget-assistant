@@ -16,11 +16,9 @@ class ApiClient {
 
   private async getAuthToken(): Promise<string | null> {
     try {
-      const token = await secureStorage.getItem('accessToken');
-      console.log('[API] getAuthToken:', token ? `${token.substring(0, 20)}...` : 'null');
-      return token;
+      return await secureStorage.getItem('accessToken');
     } catch (e) {
-      console.log('[API] getAuthToken error:', e);
+      console.error('[API] getAuthToken error');
       return null;
     }
   }
@@ -28,17 +26,14 @@ class ApiClient {
   private async refreshToken(): Promise<boolean> {
     try {
       const refreshToken = await secureStorage.getItem('refreshToken');
-      console.log('[API] refreshToken stored:', refreshToken ? `${refreshToken.substring(0, 20)}...` : 'null');
       if (!refreshToken) return false;
 
-      console.log('[API] Attempting token refresh at:', `${this.baseUrl}/auth/refresh`);
       const response = await fetch(`${this.baseUrl}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
       });
 
-      console.log('[API] Refresh response status:', response.status);
       if (!response.ok) return false;
 
       const data = await response.json();
@@ -46,10 +41,9 @@ class ApiClient {
       if (data.refreshToken) {
         await secureStorage.setItem('refreshToken', data.refreshToken);
       }
-      console.log('[API] Token refresh successful');
       return true;
     } catch (e) {
-      console.log('[API] refreshToken error:', e);
+      console.error('[API] Token refresh failed');
       return false;
     }
   }

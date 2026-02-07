@@ -12,21 +12,35 @@ export class ExpensesService {
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
 
-      const expense = await tx.expense.create({
-        data: {
-          userId,
-          clientId: dto.localId,
+      const expenseData = {
+        userId,
+        clientId: dto.localId,
+        amount: dto.amount,
+        currencyCode: dto.currencyCode,
+        description: dto.description,
+        notes: dto.notes,
+        categoryId: dto.categoryId,
+        date: new Date(dto.date),
+        time: dto.time,
+        locationLat: dto.location?.lat,
+        locationLng: dto.location?.lng,
+        source: dto.source,
+        receiptImage,
+      };
+
+      const expense = await tx.expense.upsert({
+        where: { userId_clientId: { userId, clientId: dto.localId } },
+        create: expenseData,
+        update: {
           amount: dto.amount,
           currencyCode: dto.currencyCode,
           description: dto.description,
           notes: dto.notes,
           categoryId: dto.categoryId,
           date: new Date(dto.date),
-          time: dto.time,
-          locationLat: dto.location?.lat,
-          locationLng: dto.location?.lng,
           source: dto.source,
           receiptImage,
+          isDeleted: false,
         },
         include: { category: true },
       });
@@ -41,6 +55,7 @@ export class ExpensesService {
             totalPrice: item.totalPrice,
             sortOrder: item.sortOrder ?? index,
           })),
+          skipDuplicates: true,
         });
       }
 
@@ -127,7 +142,11 @@ export class ExpensesService {
 
   async findOne(userId: string, id: string) {
     const expense = await this.prisma.expense.findFirst({
-      where: { id, userId, isDeleted: false },
+      where: {
+        userId,
+        isDeleted: false,
+        OR: [{ id }, { clientId: id }],
+      },
       include: {
         category: true,
         items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
@@ -247,7 +266,11 @@ export class ExpensesService {
 
   async getReceiptImage(userId: string, expenseId: string) {
     const expense = await this.prisma.expense.findFirst({
-      where: { id: expenseId, userId, isDeleted: false },
+      where: {
+        userId,
+        isDeleted: false,
+        OR: [{ id: expenseId }, { clientId: expenseId }],
+      },
       select: { receiptImage: true },
     });
     if (!expense) throw new NotFoundException('Expense not found');
