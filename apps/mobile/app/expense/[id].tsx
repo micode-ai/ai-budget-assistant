@@ -10,6 +10,7 @@ import {
   Image,
   Modal,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -19,8 +20,9 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { File, Paths } from 'expo-file-system/next';
 import * as Sharing from 'expo-sharing';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { useExpenseStore } from '@/stores/expenseStore';
-import { formatCurrency, formatDate } from '@budget/shared-utils';
+import { formatCurrency, formatDate, DEFAULT_EXPENSE_CATEGORIES } from '@budget/shared-utils';
 import type { Currency, ExpenseItem } from '@budget/shared-types';
 
 export default function ExpenseDetailScreen() {
@@ -44,6 +46,9 @@ export default function ExpenseDetailScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [editDescription, setEditDescription] = useState(expense?.description || '');
   const [editAmount, setEditAmount] = useState(expense?.amount?.toString() || '');
+  const [editCategory, setEditCategory] = useState(expense?.categoryId || '');
+  const [editDate, setEditDate] = useState(expense?.date ? new Date(expense.date) : new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Items state
   const [itemModalVisible, setItemModalVisible] = useState(false);
@@ -218,6 +223,8 @@ export default function ExpenseDetailScreen() {
     updateExpense(expense.id, {
       amount: numericAmount,
       description: editDescription.trim(),
+      categoryId: editCategory || undefined,
+      date: editDate,
     });
     setIsEditing(false);
   };
@@ -281,15 +288,67 @@ export default function ExpenseDetailScreen() {
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('expenseDetail.date')}</Text>
-            <Text style={styles.detailValue}>{formatDate(expense.date)}</Text>
+            {isEditing ? (
+              <>
+                <TouchableOpacity
+                  style={styles.datePickerButton}
+                  onPress={() => setShowDatePicker(true)}
+                >
+                  <Ionicons name="calendar-outline" size={18} color="#4ECDC4" />
+                  <Text style={styles.datePickerText}>{formatDate(editDate)}</Text>
+                </TouchableOpacity>
+                {showDatePicker && (
+                  <DateTimePicker
+                    value={editDate}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={(_event: any, selectedDate?: Date) => {
+                      setShowDatePicker(Platform.OS === 'ios');
+                      if (selectedDate) setEditDate(selectedDate);
+                    }}
+                  />
+                )}
+              </>
+            ) : (
+              <Text style={styles.detailValue}>{formatDate(expense.date)}</Text>
+            )}
           </View>
 
-          {expense.categoryId && (
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>{t('expenseDetail.category')}</Text>
-              <Text style={styles.detailValue}>{expense.categoryId}</Text>
-            </View>
-          )}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>{t('expenseDetail.category')}</Text>
+            {isEditing ? (
+              <View style={styles.categoryGrid}>
+                {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
+                  <TouchableOpacity
+                    key={cat.name}
+                    style={[
+                      styles.categoryChip,
+                      editCategory === cat.name && {
+                        backgroundColor: cat.color,
+                        borderColor: cat.color,
+                      },
+                    ]}
+                    onPress={() =>
+                      setEditCategory(editCategory === cat.name ? '' : cat.name)
+                    }
+                  >
+                    <Text
+                      style={[
+                        styles.categoryChipText,
+                        editCategory === cat.name && styles.categoryChipTextSelected,
+                      ]}
+                    >
+                      {cat.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.detailValue}>
+                {expense.categoryId || t('common.uncategorized')}
+              </Text>
+            )}
+          </View>
 
           {expense.notes && (
             <View style={styles.detailRow}>
@@ -467,6 +526,9 @@ export default function ExpenseDetailScreen() {
                   setIsEditing(false);
                   setEditDescription(expense.description || '');
                   setEditAmount(expense.amount.toString());
+                  setEditCategory(expense.categoryId || '');
+                  setEditDate(new Date(expense.date));
+                  setShowDatePicker(false);
                 }}
               >
                 <Text style={styles.cancelEditText}>{t('common.cancel')}</Text>
@@ -602,6 +664,43 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#4ECDC4',
     paddingVertical: 4,
+  },
+  datePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+  },
+  datePickerText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '500',
+  },
+  categoryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  categoryChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#ddd',
+    backgroundColor: '#fff',
+  },
+  categoryChipText: {
+    fontSize: 13,
+    color: '#666',
+  },
+  categoryChipTextSelected: {
+    color: '#fff',
+    fontWeight: '600',
   },
   actionsContainer: {
     marginTop: 8,
