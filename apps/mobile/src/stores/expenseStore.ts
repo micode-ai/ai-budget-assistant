@@ -173,6 +173,13 @@ export const useExpenseStore = create<ExpenseState>()(
       }
 
       // Sync to server
+      const sanitizedItems = items?.map((item) => ({
+        description: item.description,
+        quantity: Math.max(0, item.quantity ?? 1),
+        unitPrice: Math.max(0, item.unitPrice ?? 0),
+        totalPrice: Math.max(0, item.totalPrice ?? 0),
+        sortOrder: item.sortOrder,
+      }));
       api.createExpense({
         localId: id,
         amount: newExpense.amount,
@@ -182,7 +189,7 @@ export const useExpenseStore = create<ExpenseState>()(
         categoryId: newExpense.categoryId,
         date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
         source: newExpense.source,
-        items,
+        items: sanitizedItems,
         receiptImageBase64,
       }).then(() => {
         set((state) => ({
