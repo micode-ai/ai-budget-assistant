@@ -3,7 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 
 interface SyncChange {
-  entityType: 'expense' | 'budget' | 'category';
+  entityType: 'expense' | 'expense_item' | 'budget' | 'category';
   entityId: string;
   operation: 'create' | 'update' | 'delete';
   payload: any;
@@ -76,6 +76,8 @@ export class SyncService {
     switch (change.entityType) {
       case 'expense':
         return this.processExpenseChange(userId, change);
+      case 'expense_item':
+        return this.processExpenseItemChange(userId, change);
       case 'budget':
         return this.processBudgetChange(userId, change);
       case 'category':
@@ -119,6 +121,10 @@ export class SyncService {
         ...payload,
         localId: entityId,
       });
+
+      if (!created) {
+        return { entityId, status: 'error', error: 'Failed to create expense' };
+      }
 
       return {
         entityId,
@@ -170,6 +176,76 @@ export class SyncService {
     };
   }
 
+  private async processExpenseItemChange(userId: string, change: SyncChange): Promise<SyncResult> {
+    const { operation, payload, clientVersion, entityId } = change;
+
+    // Verify that the parent expense belongs to this user
+    if (payload?.expenseId) {
+      const parentExpense = await this.prisma.expense.findFirst({
+        where: { id: payload.expenseId, userId },
+      });
+      if (!parentExpense) {
+        return { entityId, status: 'error', error: 'Parent expense not found' };
+      }
+    }
+
+    const existing = await this.prisma.expenseItem.findUnique({
+      where: { id: entityId },
+    });
+
+    if (operation === 'create') {
+      if (existing) {
+        if (existing.syncVersion !== clientVersion) {
+          return { entityId, status: 'conflict', serverVersion: existing.syncVersion, serverData: existing };
+        }
+        return { entityId, status: 'success', serverId: existing.id, serverVersion: existing.syncVersion };
+      }
+
+      const created = await this.prisma.expenseItem.create({
+        data: {
+          id: entityId,
+          expenseId: payload.expenseId,
+          description: payload.description,
+          quantity: payload.quantity ?? 1,
+          unitPrice: payload.unitPrice ?? 0,
+          totalPrice: payload.totalPrice,
+          sortOrder: payload.sortOrder ?? 0,
+        },
+      });
+
+      return { entityId, status: 'success', serverId: created.id, serverVersion: created.syncVersion };
+    }
+
+    if (!existing) {
+      return { entityId, status: 'error', error: 'Entity not found' };
+    }
+
+    if (existing.syncVersion !== clientVersion) {
+      return { entityId, status: 'conflict', serverVersion: existing.syncVersion, serverData: existing };
+    }
+
+    if (operation === 'update') {
+      const updated = await this.prisma.expenseItem.update({
+        where: { id: entityId },
+        data: {
+          ...payload,
+          syncVersion: { increment: 1 },
+        },
+      });
+      return { entityId, status: 'success', serverVersion: updated.syncVersion };
+    }
+
+    if (operation === 'delete') {
+      await this.prisma.expenseItem.update({
+        where: { id: entityId },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+      return { entityId, status: 'success' };
+    }
+
+    return { entityId, status: 'error', error: 'Invalid operation' };
+  }
+
   private async processBudgetChange(userId: string, change: SyncChange): Promise<SyncResult> {
     // Similar implementation for budgets
     return {
@@ -188,10 +264,16 @@ export class SyncService {
 
   async pullChanges(userId: string, since: Date) {
     // Get all entities updated since the given timestamp
-    const [expenses, budgets, categories] = await Promise.all([
+    const [expenses, expenseItems, budgets, categories] = await Promise.all([
       this.prisma.expense.findMany({
         where: {
           userId,
+          updatedAt: { gt: since },
+        },
+      }),
+      this.prisma.expenseItem.findMany({
+        where: {
+          expense: { userId },
           updatedAt: { gt: since },
         },
       }),
@@ -217,6 +299,14 @@ export class SyncService {
         data: e,
         version: e.syncVersion,
         timestamp: e.updatedAt.toISOString(),
+      })),
+      ...expenseItems.map((item: { id: string; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'expense_item' as const,
+        entityId: item.id,
+        operation: item.isDeleted ? 'delete' as const : 'update' as const,
+        data: item,
+        version: item.syncVersion,
+        timestamp: item.updatedAt.toISOString(),
       })),
       ...budgets.map((b: BudgetRecord) => ({
         entityType: 'budget' as const,

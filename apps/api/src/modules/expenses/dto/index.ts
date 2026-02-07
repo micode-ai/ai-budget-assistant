@@ -4,7 +4,7 @@ import {
   IsOptional,
   IsUUID,
   IsDateString,
-  IsEnum,
+  IsArray,
   Min,
   Max,
   ValidateNested,
@@ -25,6 +25,59 @@ class LocationDto {
   @IsOptional()
   @IsString()
   name?: string;
+}
+
+export class CreateExpenseItemDto {
+  @IsString()
+  description: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  quantity?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  unitPrice?: number;
+
+  @IsNumber()
+  @Min(0)
+  totalPrice: number;
+
+  @IsOptional()
+  @IsNumber()
+  sortOrder?: number;
+}
+
+export class UpdateExpenseItemDto {
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  quantity?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  unitPrice?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  totalPrice?: number;
+
+  @IsOptional()
+  @IsNumber()
+  sortOrder?: number;
+}
+
+export class SaveReceiptImageDto {
+  @IsString()
+  imageBase64: string;
 }
 
 export class CreateExpenseDto {
@@ -64,6 +117,16 @@ export class CreateExpenseDto {
 
   @IsString()
   source: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateExpenseItemDto)
+  items?: CreateExpenseItemDto[];
+
+  @IsOptional()
+  @IsString()
+  receiptImageBase64?: string;
 }
 
 export class UpdateExpenseDto {

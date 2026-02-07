@@ -12,7 +12,7 @@ export default function AnalyticsScreen() {
   const { t } = useTranslation();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
   const { user } = useAuthStore();
-  const { dailySpending, categorySpending, summary } = useAnalytics(selectedRange);
+  const { dailySpending, categorySpending, summary, itemBreakdown } = useAnalytics(selectedRange);
 
   const TIME_RANGES: { key: TimeRange; label: string }[] = [
     { key: 'week', label: t('analytics.week') },
@@ -184,6 +184,29 @@ export default function AnalyticsScreen() {
             </View>
           </View>
         </View>
+
+        {/* Top Receipt Items */}
+        {itemBreakdown.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('analytics.topItems')}</Text>
+            {itemBreakdown.slice(0, 10).map((item, index) => (
+              <View key={item.description} style={styles.topItemRow}>
+                <View style={styles.topItemRank}>
+                  <Text style={styles.topItemRankText}>{index + 1}</Text>
+                </View>
+                <View style={styles.topItemInfo}>
+                  <Text style={styles.topItemName} numberOfLines={1}>{item.description}</Text>
+                  <Text style={styles.topItemMeta}>
+                    {t('analytics.itemPurchaseCount')}: {item.count}
+                  </Text>
+                </View>
+                <Text style={styles.topItemAmount}>
+                  {formatCurrency(item.totalSpent, currency)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* Export Button */}
         <TouchableOpacity style={styles.exportButton}>
@@ -360,6 +383,48 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 20,
+  },
+  topItemRow: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  topItemRank: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#4ECDC4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  topItemRankText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  topItemInfo: {
+    flex: 1,
+    marginRight: 12,
+  },
+  topItemName: {
+    fontSize: 15,
+    color: '#333',
+    fontWeight: '500',
+    textTransform: 'capitalize',
+  },
+  topItemMeta: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 2,
+  },
+  topItemAmount: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#333',
   },
   exportButton: {
     flexDirection: 'row',

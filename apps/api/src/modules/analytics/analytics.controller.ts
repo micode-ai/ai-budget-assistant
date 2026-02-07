@@ -21,6 +21,19 @@ export class AnalyticsController {
     );
   }
 
+  @Get('items')
+  async getItemBreakdown(
+    @Req() req: AuthenticatedRequest,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ) {
+    return this.analyticsService.getItemBreakdown(
+      req.user.id,
+      new Date(startDate),
+      new Date(endDate),
+    );
+  }
+
   @Get('trends')
   async getTrends(
     @Req() req: AuthenticatedRequest,

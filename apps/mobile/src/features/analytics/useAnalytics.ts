@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { loadItemsByExpenseId } from '@/db/expenseItemRepository';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 
 export type TimeRange = 'week' | 'month' | 'year';
@@ -26,6 +27,13 @@ export interface AnalyticsSummary {
   trend: number;
   highestSpendingDay: string | null;
   mostExpensiveCategory: string | null;
+}
+
+export interface ItemBreakdown {
+  description: string;
+  totalSpent: number;
+  count: number;
+  avgPrice: number;
 }
 
 const CATEGORY_COLORS = [
@@ -216,11 +224,57 @@ export function useAnalytics(timeRange: TimeRange = 'month') {
     };
   }, [filteredExpenses, dateRange, categorySpending]);
 
+  // Item breakdown for OCR expenses
+  const [itemBreakdown, setItemBreakdown] = useState<ItemBreakdown[]>([]);
+
+  useEffect(() => {
+    const computeItemBreakdown = async () => {
+      const ocrExpenses = filteredExpenses.filter((e) => e.source === 'ocr');
+      if (ocrExpenses.length === 0) {
+        setItemBreakdown([]);
+        return;
+      }
+
+      const itemMap = new Map<string, { totalSpent: number; count: number }>();
+
+      for (const expense of ocrExpenses) {
+        try {
+          const items = await loadItemsByExpenseId(expense.id);
+          for (const item of items) {
+            const key = item.description.toLowerCase().trim();
+            const existing = itemMap.get(key) || { totalSpent: 0, count: 0 };
+            itemMap.set(key, {
+              totalSpent: existing.totalSpent + item.totalPrice,
+              count: existing.count + (item.quantity || 1),
+            });
+          }
+        } catch {
+          // skip failed loads
+        }
+      }
+
+      const result: ItemBreakdown[] = Array.from(itemMap.entries())
+        .map(([description, data]) => ({
+          description,
+          totalSpent: data.totalSpent,
+          count: data.count,
+          avgPrice: data.count > 0 ? data.totalSpent / data.count : 0,
+        }))
+        .sort((a, b) => b.totalSpent - a.totalSpent)
+        .slice(0, 20);
+
+      setItemBreakdown(result);
+    };
+
+    computeItemBreakdown();
+  }, [filteredExpenses]);
+
   return {
     isLoading,
     dailySpending,
     categorySpending,
     summary,
     dateRange,
+    itemBreakdown,
   };
 }

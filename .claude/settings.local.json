@@ -65,7 +65,8 @@
       "Bash(node -e:*)",
       "Bash(npm ls:*)",
       "Bash(npx expo start)",
-      "Bash(ipconfig:*)"
+      "Bash(ipconfig:*)",
+      "Bash(npx prisma migrate dev:*)"
     ]
   }
 }

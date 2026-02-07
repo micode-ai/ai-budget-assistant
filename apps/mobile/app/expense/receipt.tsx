@@ -13,15 +13,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { File } from 'expo-file-system/next';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
+async function compressAndEncodeImage(uri: string): Promise<string> {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 800 } }],
+    { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG },
+  );
+  const file = new File(result.uri);
+  return await file.base64();
+}
+
 export default function ReceiptExpenseScreen() {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [saveImage, setSaveImage] = useState(false);
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
 
@@ -68,6 +81,25 @@ export default function ReceiptExpenseScreen() {
         }
       }
 
+      // Prepare receipt items
+      const items = scannedReceipt.receiptItems?.map((item, index) => ({
+        description: item.description,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        totalPrice: item.totalPrice,
+        sortOrder: index,
+      }));
+
+      // Compress and encode receipt image if checkbox is checked
+      let receiptImageBase64: string | undefined;
+      if (saveImage && imageUri) {
+        try {
+          receiptImageBase64 = await compressAndEncodeImage(imageUri);
+        } catch (e) {
+          console.error('Failed to compress receipt image:', e);
+        }
+      }
+
       await addExpense({
         userId: user?.id || '',
         amount: scannedReceipt.amount,
@@ -77,6 +109,8 @@ export default function ReceiptExpenseScreen() {
         date: expenseDate,
         source: 'ocr',
         isRecurring: false,
+        items,
+        receiptImageBase64,
       });
 
       Alert.alert(t('common.success'), t('receipt.success'), [
@@ -105,6 +139,7 @@ export default function ReceiptExpenseScreen() {
   const handleReset = () => {
     reset();
     setShowConfirm(false);
+    setSaveImage(false);
   };
 
   return (
@@ -250,6 +285,19 @@ export default function ReceiptExpenseScreen() {
                 </Text>
               </View>
             </View>
+
+            <TouchableOpacity
+              style={styles.saveImageCheckbox}
+              onPress={() => setSaveImage(!saveImage)}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={saveImage ? 'checkbox' : 'square-outline'}
+                size={24}
+                color={saveImage ? '#4ECDC4' : '#999'}
+              />
+              <Text style={styles.saveImageText}>{t('receipt.saveImage')}</Text>
+            </TouchableOpacity>
 
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.editButton} onPress={handleEditExpense}>
@@ -476,6 +524,17 @@ const styles = StyleSheet.create({
   confidenceText: {
     fontSize: 12,
     color: '#666',
+  },
+  saveImageCheckbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20,
+    paddingHorizontal: 8,
+  },
+  saveImageText: {
+    fontSize: 16,
+    color: '#333',
   },
   confirmActions: {
     flexDirection: 'row',
