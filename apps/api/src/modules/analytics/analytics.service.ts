@@ -93,6 +93,43 @@ export class AnalyticsService {
     };
   }
 
+  async getItemBreakdown(userId: string, startDate: Date, endDate: Date) {
+    const expenses = await this.prisma.expense.findMany({
+      where: {
+        userId,
+        date: { gte: startDate, lte: endDate },
+        isDeleted: false,
+        source: 'ocr',
+      },
+      include: {
+        items: { where: { isDeleted: false } },
+      },
+    });
+
+    const itemMap = new Map<string, { totalSpent: number; count: number }>();
+
+    for (const expense of expenses) {
+      for (const item of expense.items) {
+        const key = item.description.toLowerCase().trim();
+        const existing = itemMap.get(key) || { totalSpent: 0, count: 0 };
+        itemMap.set(key, {
+          totalSpent: existing.totalSpent + Number(item.totalPrice),
+          count: existing.count + Number(item.quantity || 1),
+        });
+      }
+    }
+
+    return Array.from(itemMap.entries())
+      .map(([description, data]) => ({
+        description,
+        totalSpent: data.totalSpent,
+        count: data.count,
+        avgPrice: data.count > 0 ? data.totalSpent / data.count : 0,
+      }))
+      .sort((a, b) => b.totalSpent - a.totalSpent)
+      .slice(0, 50);
+  }
+
   async getTrends(userId: string, startDate: Date, endDate: Date) {
     // Get daily totals
     const expenses = await this.prisma.expense.findMany({

@@ -145,17 +145,45 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           const refreshToken = await secureStorage.getItem('refreshToken');
           const userJson = await secureStorage.getItem('user');
 
-          if (accessToken && userJson) {
-            const user = JSON.parse(userJson) as User;
+          if (!accessToken || !userJson) {
+            throw new Error('No saved session found');
+          }
+
+          const user = JSON.parse(userJson) as User;
+
+          // Set tokens in state so api.request() can use them
+          set({
+            user,
+            accessToken,
+            refreshToken,
+            isAuthenticated: true,
+            hasSavedSession: false,
+          });
+
+          // Validate session — getProfile() will trigger token refresh if accessToken is expired
+          try {
+            const profile = await api.getProfile();
+            const updatedUser: User = {
+              ...user,
+              name: profile.name || user.name,
+              currencyCode: (profile.currencyCode || user.currencyCode) as Currency,
+            };
+            set({ user: updatedUser });
+            await secureStorage.setItem('user', JSON.stringify(updatedUser));
+          } catch {
+            // Tokens are invalid and refresh also failed — need full re-login
+            await secureStorage.removeItem('accessToken');
+            await secureStorage.removeItem('refreshToken');
+            await secureStorage.removeItem('user');
+            await secureStorage.removeItem('biometricEnabled');
             set({
-              user,
-              accessToken,
-              refreshToken,
-              isAuthenticated: true,
+              user: null,
+              accessToken: null,
+              refreshToken: null,
+              isAuthenticated: false,
               hasSavedSession: false,
             });
-          } else {
-            throw new Error('No saved session found');
+            throw new Error('Session expired, please login again');
           }
         } catch (error) {
           set({

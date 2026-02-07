@@ -36,6 +36,22 @@ export interface Category {
   syncVersion: number;
 }
 
+export interface ExpenseItem {
+  id: string;
+  localId: string;
+  expenseId: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
 export interface Expense {
   id: string;
   localId: string;
@@ -57,6 +73,8 @@ export interface Expense {
   isRecurring: boolean;
   recurringId?: string;
   source: ExpenseSource;
+  items?: ExpenseItem[];
+  receiptImageBase64?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;

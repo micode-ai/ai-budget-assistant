@@ -16,8 +16,11 @@ class ApiClient {
 
   private async getAuthToken(): Promise<string | null> {
     try {
-      return await secureStorage.getItem('accessToken');
-    } catch {
+      const token = await secureStorage.getItem('accessToken');
+      console.log('[API] getAuthToken:', token ? `${token.substring(0, 20)}...` : 'null');
+      return token;
+    } catch (e) {
+      console.log('[API] getAuthToken error:', e);
       return null;
     }
   }
@@ -25,14 +28,17 @@ class ApiClient {
   private async refreshToken(): Promise<boolean> {
     try {
       const refreshToken = await secureStorage.getItem('refreshToken');
+      console.log('[API] refreshToken stored:', refreshToken ? `${refreshToken.substring(0, 20)}...` : 'null');
       if (!refreshToken) return false;
 
+      console.log('[API] Attempting token refresh at:', `${this.baseUrl}/auth/refresh`);
       const response = await fetch(`${this.baseUrl}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
       });
 
+      console.log('[API] Refresh response status:', response.status);
       if (!response.ok) return false;
 
       const data = await response.json();
@@ -40,8 +46,10 @@ class ApiClient {
       if (data.refreshToken) {
         await secureStorage.setItem('refreshToken', data.refreshToken);
       }
+      console.log('[API] Token refresh successful');
       return true;
-    } catch {
+    } catch (e) {
+      console.log('[API] refreshToken error:', e);
       return false;
     }
   }
@@ -61,25 +69,41 @@ class ApiClient {
       }
     }
 
-    let response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...fetchOptions,
-      headers,
-    });
+    const url = `${this.baseUrl}${endpoint}`;
+    console.log(`[API] ${options.method || 'GET'} ${url} (skipAuth: ${skipAuth})`);
+
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...fetchOptions,
+        headers,
+      });
+    } catch (e) {
+      console.log('[API] Network error:', e);
+      throw e;
+    }
+
+    console.log(`[API] Response: ${response.status} ${response.statusText}`);
 
     // Handle token expiration
     if (response.status === 401 && !skipAuth) {
+      console.log('[API] Got 401, attempting token refresh...');
       const refreshed = await this.refreshToken();
       if (refreshed) {
         const newToken = await this.getAuthToken();
         if (newToken) {
           (headers as Record<string, string>)['Authorization'] = `Bearer ${newToken}`;
         }
-        response = await fetch(`${this.baseUrl}${endpoint}`, {
+        response = await fetch(url, {
           ...fetchOptions,
           headers,
         });
+        console.log(`[API] Retry response: ${response.status}`);
       } else {
-        // Logout user if refresh fails
+        // Refresh failed — clear dead tokens so biometric login won't reuse them
+        console.log('[API] Token refresh failed, clearing tokens and logging out');
+        await secureStorage.removeItem('accessToken');
+        await secureStorage.removeItem('refreshToken');
         useAuthStore.getState().logout();
         throw new Error('Session expired');
       }
@@ -90,6 +114,7 @@ class ApiClient {
       const message = Array.isArray(error.message)
         ? error.message.join('\n')
         : error.message || `HTTP ${response.status}`;
+      console.log(`[API] Error response:`, message);
       throw new Error(message);
     }
 
@@ -242,6 +267,49 @@ class ApiClient {
     });
   }
 
+  // Expense Items endpoints
+  async getExpenseItems(expenseId: string) {
+    return this.request<any[]>(`/expenses/${expenseId}/items`);
+  }
+
+  async createExpenseItem(expenseId: string, data: any) {
+    return this.request<any>(`/expenses/${expenseId}/items`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateExpenseItem(expenseId: string, itemId: string, data: any) {
+    return this.request<any>(`/expenses/${expenseId}/items/${itemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteExpenseItem(expenseId: string, itemId: string) {
+    return this.request<void>(`/expenses/${expenseId}/items/${itemId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Receipt Image endpoints
+  async getReceiptImage(expenseId: string) {
+    return this.request<{ imageBase64: string }>(`/expenses/${expenseId}/receipt-image`);
+  }
+
+  async saveReceiptImage(expenseId: string, imageBase64: string) {
+    return this.request<{ success: boolean }>(`/expenses/${expenseId}/receipt-image`, {
+      method: 'PUT',
+      body: JSON.stringify({ imageBase64 }),
+    });
+  }
+
+  async deleteReceiptImage(expenseId: string) {
+    return this.request<{ success: boolean }>(`/expenses/${expenseId}/receipt-image`, {
+      method: 'DELETE',
+    });
+  }
+
   // Analytics endpoints
   async getAnalyticsSummary(startDate: string, endDate: string) {
     return this.request<any>(`/analytics/summary?startDate=${startDate}&endDate=${endDate}`);
@@ -249,6 +317,10 @@ class ApiClient {
 
   async getAnalyticsTrends(startDate: string, endDate: string) {
     return this.request<any>(`/analytics/trends?startDate=${startDate}&endDate=${endDate}`);
+  }
+
+  async getAnalyticsItemBreakdown(startDate: string, endDate: string) {
+    return this.request<any[]>(`/analytics/items?startDate=${startDate}&endDate=${endDate}`);
   }
 
   // Sync endpoints

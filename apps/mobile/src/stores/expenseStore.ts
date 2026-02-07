@@ -1,13 +1,23 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Expense, Currency, SyncStatus } from '@budget/shared-types';
+import type { Expense, ExpenseItem, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
 import {
   loadAllExpenses,
   insertExpense,
   updateExpenseInDb,
   softDeleteExpenseInDb,
+  saveReceiptImageLocally,
+  getReceiptImageFromDb,
+  deleteReceiptImageLocally,
 } from '@/db/expenseRepository';
+import {
+  loadItemsByExpenseId,
+  insertExpenseItems,
+  insertExpenseItem,
+  updateExpenseItemInDb,
+  softDeleteExpenseItemInDb,
+} from '@/db/expenseItemRepository';
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -29,6 +39,7 @@ interface ExpenseState {
   isLoading: boolean;
   error: string | null;
   filters: ExpenseFilters;
+  expenseItems: Record<string, ExpenseItem[]>;
 
   // Computed values
   totalThisMonth: number;
@@ -36,10 +47,21 @@ interface ExpenseState {
   // Actions
   loadExpenses: () => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Expense;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string }) => Expense;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
+
+  // Expense Items actions
+  loadExpenseItems: (expenseId: string) => Promise<ExpenseItem[]>;
+  addExpenseItem: (expenseId: string, itemData: { description: string; quantity: number; unitPrice: number; totalPrice: number; sortOrder: number }) => ExpenseItem;
+  updateExpenseItem: (expenseId: string, itemId: string, updates: Partial<ExpenseItem>) => void;
+  deleteExpenseItem: (expenseId: string, itemId: string) => void;
+
+  // Receipt Image actions
+  loadReceiptImage: (expenseId: string) => Promise<string | null>;
+  saveReceiptImage: (expenseId: string, imageBase64: string) => Promise<void>;
+  deleteReceiptImage: (expenseId: string) => Promise<void>;
 
   // Selectors
   getFilteredExpenses: () => Expense[];
@@ -57,6 +79,7 @@ export const useExpenseStore = create<ExpenseState>()(
       categoryId: null,
       searchQuery: '',
     },
+    expenseItems: {},
 
     get totalThisMonth() {
       const now = new Date();
@@ -86,11 +109,12 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: (expenseData) => {
+      const { items, receiptImageBase64, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
 
       const newExpense: Expense = {
-        ...expenseData,
+        ...coreData,
         id,
         localId: id,
         createdAt: now,
@@ -107,6 +131,40 @@ export const useExpenseStore = create<ExpenseState>()(
       insertExpense(newExpense).catch((e) =>
         console.error('Failed to insert expense into SQLite:', e),
       );
+
+      // Save receipt image if provided
+      if (receiptImageBase64) {
+        saveReceiptImageLocally(id, receiptImageBase64).catch((e) =>
+          console.error('Failed to save receipt image:', e),
+        );
+      }
+
+      // Save expense items if provided
+      if (items && items.length > 0) {
+        const expenseItems: ExpenseItem[] = items.map((item, index) => ({
+          id: generateUUID(),
+          localId: generateUUID(),
+          expenseId: id,
+          description: item.description,
+          quantity: item.quantity ?? 1,
+          unitPrice: item.unitPrice ?? 0,
+          totalPrice: item.totalPrice,
+          sortOrder: item.sortOrder ?? index,
+          createdAt: now,
+          updatedAt: now,
+          isDeleted: false,
+          syncStatus: 'pending' as SyncStatus,
+          syncVersion: 0,
+        }));
+
+        set((state) => ({
+          expenseItems: { ...state.expenseItems, [id]: expenseItems },
+        }));
+
+        insertExpenseItems(expenseItems).catch((e) =>
+          console.error('Failed to insert expense items into SQLite:', e),
+        );
+      }
 
       return newExpense;
     },
@@ -164,6 +222,121 @@ export const useExpenseStore = create<ExpenseState>()(
       set((state) => ({
         filters: { ...state.filters, ...filters },
       })),
+
+    // ---- Expense Items ----
+
+    loadExpenseItems: async (expenseId: string) => {
+      try {
+        const items = await loadItemsByExpenseId(expenseId);
+        set((state) => ({
+          expenseItems: { ...state.expenseItems, [expenseId]: items },
+        }));
+        return items;
+      } catch (e) {
+        console.error('Failed to load expense items:', e);
+        return [];
+      }
+    },
+
+    addExpenseItem: (expenseId: string, itemData) => {
+      const id = generateUUID();
+      const now = new Date();
+
+      const newItem: ExpenseItem = {
+        ...itemData,
+        id,
+        localId: id,
+        expenseId,
+        createdAt: now,
+        updatedAt: now,
+        isDeleted: false,
+        syncStatus: 'pending' as SyncStatus,
+        syncVersion: 0,
+      };
+
+      set((state) => {
+        const currentItems = state.expenseItems[expenseId] || [];
+        return {
+          expenseItems: {
+            ...state.expenseItems,
+            [expenseId]: [...currentItems, newItem],
+          },
+        };
+      });
+
+      insertExpenseItem(newItem).catch((e) =>
+        console.error('Failed to insert expense item:', e),
+      );
+
+      return newItem;
+    },
+
+    updateExpenseItem: (expenseId: string, itemId: string, updates: Partial<ExpenseItem>) => {
+      const now = new Date();
+      set((state) => {
+        const currentItems = state.expenseItems[expenseId] || [];
+        return {
+          expenseItems: {
+            ...state.expenseItems,
+            [expenseId]: currentItems.map((item) =>
+              item.id === itemId
+                ? { ...item, ...updates, updatedAt: now, syncStatus: 'pending' as SyncStatus }
+                : item
+            ),
+          },
+        };
+      });
+
+      updateExpenseItemInDb(itemId, updates, now, 'pending').catch((e) =>
+        console.error('Failed to update expense item:', e),
+      );
+    },
+
+    deleteExpenseItem: (expenseId: string, itemId: string) => {
+      const now = new Date();
+      set((state) => {
+        const currentItems = state.expenseItems[expenseId] || [];
+        return {
+          expenseItems: {
+            ...state.expenseItems,
+            [expenseId]: currentItems.filter((item) => item.id !== itemId),
+          },
+        };
+      });
+
+      softDeleteExpenseItemInDb(itemId, now).catch((e) =>
+        console.error('Failed to delete expense item:', e),
+      );
+    },
+
+    // ---- Receipt Image ----
+
+    loadReceiptImage: async (expenseId: string) => {
+      try {
+        return await getReceiptImageFromDb(expenseId);
+      } catch (e) {
+        console.error('Failed to load receipt image:', e);
+        return null;
+      }
+    },
+
+    saveReceiptImage: async (expenseId: string, imageBase64: string) => {
+      try {
+        await saveReceiptImageLocally(expenseId, imageBase64);
+      } catch (e) {
+        console.error('Failed to save receipt image:', e);
+      }
+    },
+
+    deleteReceiptImage: async (expenseId: string) => {
+      try {
+        await deleteReceiptImageLocally(expenseId);
+      } catch (e) {
+        console.error('Failed to delete receipt image:', e);
+      }
+    },
+
+    // ---- Selectors ----
 
     getFilteredExpenses: () => {
       const { expenses, filters } = get();

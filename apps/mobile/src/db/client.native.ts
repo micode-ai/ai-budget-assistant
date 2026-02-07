@@ -88,6 +88,23 @@ export async function initializeDatabase(): Promise<void> {
         sync_version INTEGER DEFAULT 0
       );
 
+      CREATE TABLE IF NOT EXISTS expense_items (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        expense_id TEXT NOT NULL,
+        description TEXT NOT NULL,
+        quantity REAL NOT NULL DEFAULT 1,
+        unit_price REAL NOT NULL DEFAULT 0,
+        total_price REAL NOT NULL,
+        sort_order INTEGER NOT NULL DEFAULT 0,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE
+      );
+
       CREATE TABLE IF NOT EXISTS sync_queue (
         id TEXT PRIMARY KEY,
         entity_type TEXT NOT NULL,
@@ -124,6 +141,13 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Add receipt_image column to expenses (migration for existing DBs)
+    try {
+      expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image TEXT`);
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
     // Create indexes
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date DESC)',
@@ -132,6 +156,7 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE INDEX IF NOT EXISTS idx_budgets_user ON budgets(user_id)',
       'CREATE INDEX IF NOT EXISTS idx_sync_queue_entity ON sync_queue(entity_type, entity_id)',
       'CREATE INDEX IF NOT EXISTS idx_chat_messages_conversation ON chat_messages(conversation_id)',
+      'CREATE INDEX IF NOT EXISTS idx_expense_items_expense ON expense_items(expense_id)',
     ];
 
     for (const indexSql of indexes) {
