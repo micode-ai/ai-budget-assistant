@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
+import { AccountSwitcher } from '@/components/AccountSwitcher';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -40,6 +41,7 @@ export default function TabLayout() {
         headerTitleStyle: {
           fontWeight: '600',
         },
+        headerLeft: () => <AccountSwitcher />,
         headerRight: () => (
           <TouchableOpacity
             onPress={async () => { await logout(); router.replace('/(auth)/login'); }}

@@ -21,10 +21,10 @@ export class CategorizationService {
     });
   }
 
-  async parseExpenseFromText(text: string, userId: string) {
+  async parseExpenseFromText(text: string, userId: string, accountId: string) {
     const categories = await this.prisma.category.findMany({
       where: {
-        OR: [{ isSystem: true }, { userId }],
+        OR: [{ isSystem: true }, { accountId }],
         type: 'expense',
         isDeleted: false,
       },
@@ -79,10 +79,10 @@ Only return valid JSON, no other text.`;
     };
   }
 
-  async categorize(description: string, userId: string) {
+  async categorize(description: string, userId: string, accountId: string) {
     const categories = await this.prisma.category.findMany({
       where: {
-        OR: [{ isSystem: true }, { userId }],
+        OR: [{ isSystem: true }, { accountId }],
         type: 'expense',
         isDeleted: false,
       },

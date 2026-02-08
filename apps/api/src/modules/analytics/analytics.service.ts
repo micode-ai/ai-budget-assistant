@@ -14,11 +14,11 @@ interface ExpenseWithCategory {
 export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getSummary(userId: string, startDate: Date, endDate: Date) {
+  async getSummary(accountId: string, startDate: Date, endDate: Date) {
     // Get expenses in date range
     const expenses = await this.prisma.expense.findMany({
       where: {
-        userId,
+        accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
       },
@@ -66,14 +66,14 @@ export class AnalyticsService {
 
     const previousExpenses = await this.prisma.expense.aggregate({
       where: {
-        userId,
+        accountId,
         date: { gte: previousStartDate, lt: previousEndDate },
         isDeleted: false,
       },
       _sum: { amount: true },
     });
 
-    const previousTotal = Number(previousExpenses._sum.amount || 0);
+    const previousTotal = Number(previousExpenses._sum?.amount || 0);
     const vsLastPeriod = previousTotal > 0 ? ((totalExpenses - previousTotal) / previousTotal) * 100 : 0;
 
     return {
@@ -93,10 +93,10 @@ export class AnalyticsService {
     };
   }
 
-  async getItemBreakdown(userId: string, startDate: Date, endDate: Date) {
+  async getItemBreakdown(accountId: string, startDate: Date, endDate: Date) {
     const expenses = await this.prisma.expense.findMany({
       where: {
-        userId,
+        accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
         source: 'ocr',
@@ -130,11 +130,11 @@ export class AnalyticsService {
       .slice(0, 50);
   }
 
-  async getTrends(userId: string, startDate: Date, endDate: Date) {
+  async getTrends(accountId: string, startDate: Date, endDate: Date) {
     // Get daily totals
     const expenses = await this.prisma.expense.findMany({
       where: {
-        userId,
+        accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
       },
@@ -152,5 +152,109 @@ export class AnalyticsService {
       date,
       amount,
     }));
+  }
+
+  async getAggregatedSummary(userId: string, startDate: Date, endDate: Date) {
+    // Find all accounts where the user is a member
+    const memberships = await this.prisma.accountMember.findMany({
+      where: { userId },
+      select: { accountId: true },
+    });
+
+    const accountIds = memberships.map((m) => m.accountId);
+
+    if (accountIds.length === 0) {
+      return {
+        period: {
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
+        },
+        totalIncome: 0,
+        totalExpenses: 0,
+        netSavings: 0,
+        expensesByCategory: [],
+        topExpenses: [],
+        trends: { vsLastPeriod: 0, vsAverage: 0 },
+        accountCount: 0,
+      };
+    }
+
+    // Get expenses across all accounts in date range
+    const expenses = await this.prisma.expense.findMany({
+      where: {
+        accountId: { in: accountIds },
+        date: { gte: startDate, lte: endDate },
+        isDeleted: false,
+      },
+      include: { category: true },
+      orderBy: { amount: 'desc' },
+    });
+
+    const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
+
+    // Group by category
+    const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
+    for (const expense of expenses) {
+      const categoryId = expense.categoryId || 'uncategorized';
+      const categoryName = expense.category?.name || 'Uncategorized';
+      const current = categoryMap.get(categoryId) || { amount: 0, count: 0, name: categoryName };
+      categoryMap.set(categoryId, {
+        amount: current.amount + Number(expense.amount),
+        count: current.count + 1,
+        name: categoryName,
+      });
+    }
+
+    const expensesByCategory = Array.from(categoryMap.entries())
+      .map(([categoryId, data]) => ({
+        categoryId,
+        categoryName: data.name,
+        amount: data.amount,
+        percentage: totalExpenses > 0 ? (data.amount / totalExpenses) * 100 : 0,
+        count: data.count,
+      }))
+      .sort((a, b) => b.amount - a.amount);
+
+    const topExpenses = expenses.slice(0, 10).map((e: ExpenseWithCategory) => ({
+      id: e.id,
+      description: e.description,
+      amount: Number(e.amount),
+      date: e.date.toISOString(),
+      categoryName: e.category?.name || 'Uncategorized',
+    }));
+
+    // Calculate trend vs previous period
+    const periodLength = endDate.getTime() - startDate.getTime();
+    const previousStartDate = new Date(startDate.getTime() - periodLength);
+    const previousEndDate = startDate;
+
+    const previousExpenses = await this.prisma.expense.aggregate({
+      where: {
+        accountId: { in: accountIds },
+        date: { gte: previousStartDate, lt: previousEndDate },
+        isDeleted: false,
+      },
+      _sum: { amount: true },
+    });
+
+    const previousTotal = Number(previousExpenses._sum?.amount || 0);
+    const vsLastPeriod = previousTotal > 0 ? ((totalExpenses - previousTotal) / previousTotal) * 100 : 0;
+
+    return {
+      period: {
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+      },
+      totalIncome: 0,
+      totalExpenses,
+      netSavings: 0 - totalExpenses,
+      expensesByCategory,
+      topExpenses,
+      trends: {
+        vsLastPeriod,
+        vsAverage: 0,
+      },
+      accountCount: accountIds.length,
+    };
   }
 }

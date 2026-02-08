@@ -6,20 +6,40 @@ import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseIte
 export class ExpensesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId: string, dto: CreateExpenseDto) {
+  /**
+   * Resolve categoryId: if it's a valid UUID, use as-is.
+   * If it's a category name, look up by name. Otherwise return null.
+   */
+  private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
+    if (!categoryId) return null;
+    // UUID v4 pattern
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId)) {
+      return categoryId;
+    }
+    // Try to find by name
+    const category = await this.prisma.category.findFirst({
+      where: { name: { equals: categoryId, mode: 'insensitive' } },
+    });
+    return category?.id ?? null;
+  }
+
+  async create(accountId: string, userId: string, dto: CreateExpenseDto) {
     return this.prisma.$transaction(async (tx) => {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
 
+      const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
+
       const expenseData = {
+        accountId,
         userId,
         clientId: dto.localId,
         amount: dto.amount,
         currencyCode: dto.currencyCode,
         description: dto.description,
         notes: dto.notes,
-        categoryId: dto.categoryId,
+        categoryId: resolvedCategoryId,
         date: new Date(dto.date),
         time: dto.time,
         locationLat: dto.location?.lat,
@@ -29,14 +49,14 @@ export class ExpensesService {
       };
 
       const expense = await tx.expense.upsert({
-        where: { userId_clientId: { userId, clientId: dto.localId } },
+        where: { accountId_clientId: { accountId, clientId: dto.localId } },
         create: expenseData,
         update: {
           amount: dto.amount,
           currencyCode: dto.currencyCode,
           description: dto.description,
           notes: dto.notes,
-          categoryId: dto.categoryId,
+          categoryId: resolvedCategoryId,
           date: new Date(dto.date),
           source: dto.source,
           receiptImage,
@@ -69,12 +89,12 @@ export class ExpensesService {
     });
   }
 
-  async findAll(userId: string, filters: ExpenseFiltersDto) {
+  async findAll(accountId: string, filters: ExpenseFiltersDto) {
     const { page = 1, limit = 20, startDate, endDate, categoryId, search } = filters;
     const skip = (page - 1) * limit;
 
     const where: any = {
-      userId,
+      accountId,
       isDeleted: false,
     };
 
@@ -100,6 +120,7 @@ export class ExpensesService {
         select: {
           id: true,
           userId: true,
+          accountId: true,
           clientId: true,
           categoryId: true,
           amount: true,
@@ -140,10 +161,10 @@ export class ExpensesService {
     };
   }
 
-  async findOne(userId: string, id: string) {
+  async findOne(accountId: string, id: string) {
     const expense = await this.prisma.expense.findFirst({
       where: {
-        userId,
+        accountId,
         isDeleted: false,
         OR: [{ id }, { clientId: id }],
       },
@@ -160,8 +181,11 @@ export class ExpensesService {
     return expense;
   }
 
-  async update(userId: string, id: string, dto: UpdateExpenseDto) {
-    const expense = await this.findOne(userId, id);
+  async update(accountId: string, id: string, dto: UpdateExpenseDto) {
+    const expense = await this.findOne(accountId, id);
+    const resolvedCategoryId = dto.categoryId !== undefined
+      ? await this.resolveCategoryId(dto.categoryId, accountId)
+      : undefined;
 
     return this.prisma.expense.update({
       where: { id: expense.id },
@@ -170,7 +194,7 @@ export class ExpensesService {
         currencyCode: dto.currencyCode,
         description: dto.description,
         notes: dto.notes,
-        categoryId: dto.categoryId,
+        categoryId: resolvedCategoryId,
         date: dto.date ? new Date(dto.date) : undefined,
         time: dto.time,
         locationLat: dto.location?.lat,
@@ -184,8 +208,8 @@ export class ExpensesService {
     });
   }
 
-  async remove(userId: string, id: string) {
-    const expense = await this.findOne(userId, id);
+  async remove(accountId: string, id: string) {
+    const expense = await this.findOne(accountId, id);
 
     await this.prisma.expense.update({
       where: { id: expense.id },
@@ -198,24 +222,24 @@ export class ExpensesService {
     return { success: true };
   }
 
-  async getByClientId(userId: string, clientId: string) {
+  async getByClientId(accountId: string, clientId: string) {
     return this.prisma.expense.findUnique({
-      where: { userId_clientId: { userId, clientId } },
+      where: { accountId_clientId: { accountId, clientId } },
     });
   }
 
   // ---- Expense Items CRUD ----
 
-  async getItems(userId: string, expenseId: string) {
-    await this.findOne(userId, expenseId);
+  async getItems(accountId: string, expenseId: string) {
+    await this.findOne(accountId, expenseId);
     return this.prisma.expenseItem.findMany({
       where: { expenseId, isDeleted: false },
       orderBy: { sortOrder: 'asc' },
     });
   }
 
-  async createItem(userId: string, expenseId: string, dto: CreateExpenseItemDto) {
-    await this.findOne(userId, expenseId);
+  async createItem(accountId: string, expenseId: string, dto: CreateExpenseItemDto) {
+    await this.findOne(accountId, expenseId);
     return this.prisma.expenseItem.create({
       data: {
         expenseId,
@@ -228,8 +252,8 @@ export class ExpensesService {
     });
   }
 
-  async updateItem(userId: string, expenseId: string, itemId: string, dto: UpdateExpenseItemDto) {
-    await this.findOne(userId, expenseId);
+  async updateItem(accountId: string, expenseId: string, itemId: string, dto: UpdateExpenseItemDto) {
+    await this.findOne(accountId, expenseId);
     const item = await this.prisma.expenseItem.findFirst({
       where: { id: itemId, expenseId, isDeleted: false },
     });
@@ -248,8 +272,8 @@ export class ExpensesService {
     });
   }
 
-  async removeItem(userId: string, expenseId: string, itemId: string) {
-    await this.findOne(userId, expenseId);
+  async removeItem(accountId: string, expenseId: string, itemId: string) {
+    await this.findOne(accountId, expenseId);
     const item = await this.prisma.expenseItem.findFirst({
       where: { id: itemId, expenseId, isDeleted: false },
     });
@@ -264,10 +288,10 @@ export class ExpensesService {
 
   // ---- Receipt Image ----
 
-  async getReceiptImage(userId: string, expenseId: string) {
+  async getReceiptImage(accountId: string, expenseId: string) {
     const expense = await this.prisma.expense.findFirst({
       where: {
-        userId,
+        accountId,
         isDeleted: false,
         OR: [{ id: expenseId }, { clientId: expenseId }],
       },
@@ -278,8 +302,8 @@ export class ExpensesService {
     return { imageBase64: expense.receiptImage.toString('base64') };
   }
 
-  async saveReceiptImage(userId: string, expenseId: string, imageBase64: string) {
-    await this.findOne(userId, expenseId);
+  async saveReceiptImage(accountId: string, expenseId: string, imageBase64: string) {
+    await this.findOne(accountId, expenseId);
     const imageBuffer = Buffer.from(imageBase64, 'base64');
 
     await this.prisma.expense.update({
@@ -289,8 +313,8 @@ export class ExpensesService {
     return { success: true };
   }
 
-  async deleteReceiptImage(userId: string, expenseId: string) {
-    await this.findOne(userId, expenseId);
+  async deleteReceiptImage(accountId: string, expenseId: string) {
+    await this.findOne(accountId, expenseId);
     await this.prisma.expense.update({
       where: { id: expenseId },
       data: { receiptImage: null, syncVersion: { increment: 1 } },

@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, formatRelativeDate } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +16,7 @@ export default function DashboardScreen() {
   const { user } = useAuthStore();
   const { expenses, totalThisMonth, loadExpenses } = useExpenseStore();
   const { activeBudgets, getTotalBudget } = useBudgetStore();
+  const canEdit = useAccountStore((s) => s.canEdit());
 
   const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
@@ -69,8 +71,8 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* Quick Actions */}
-        <View style={styles.quickActions}>
+        {/* Quick Actions (hidden for viewers) */}
+        {canEdit && <View style={styles.quickActions}>
           <TouchableOpacity
             style={styles.quickActionButton}
             onPress={() => router.push('/expense/new')}
@@ -94,7 +96,7 @@ export default function DashboardScreen() {
             <Ionicons name="camera" size={32} color="#45B7D1" />
             <Text style={styles.quickActionText}>{t('dashboard.scanReceipt')}</Text>
           </TouchableOpacity>
-        </View>
+        </View>}
 
         {/* Recent Expenses */}
         <View style={styles.section}>

@@ -100,7 +100,7 @@ export class CreateExpenseDto {
   notes?: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsString()
   categoryId?: string;
 
   @IsDateString()
@@ -148,7 +148,7 @@ export class UpdateExpenseDto {
   notes?: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsString()
   categoryId?: string;
 
   @IsOptional()

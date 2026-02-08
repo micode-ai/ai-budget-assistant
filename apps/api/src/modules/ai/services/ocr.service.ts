@@ -58,11 +58,12 @@ export class OcrService {
   async parseReceipt(
     imageBase64: string,
     userId: string,
+    accountId: string,
   ): Promise<ReceiptExpense> {
-    // Get user's categories for categorization
+    // Get account's categories for categorization
     const categories = await this.prisma.category.findMany({
       where: {
-        OR: [{ isSystem: true }, { userId }],
+        OR: [{ isSystem: true }, { accountId }],
         type: 'expense',
         isDeleted: false,
       },

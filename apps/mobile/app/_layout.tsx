@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { DatabaseProvider } from '@/db/DatabaseProvider';
+import { initializeDatabase } from '@/db/client';
 import { loadSavedLanguage } from '@/i18n';
 
 // Keep the splash screen visible while we fetch resources
@@ -29,6 +30,7 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
+        await initializeDatabase();
         await loadSavedLanguage();
         await initialize();
       } catch (e) {
@@ -81,6 +83,44 @@ export default function RootLayout() {
                 options={{
                   headerShown: true,
                   title: t('nav.budgetDetails'),
+                }}
+              />
+              <Stack.Screen
+                name="account/list"
+                options={{
+                  headerShown: true,
+                  title: t('nav.accounts'),
+                }}
+              />
+              <Stack.Screen
+                name="account/create"
+                options={{
+                  presentation: 'modal',
+                  headerShown: true,
+                  title: t('nav.createAccount'),
+                }}
+              />
+              <Stack.Screen
+                name="account/[id]"
+                options={{
+                  headerShown: true,
+                  title: t('nav.accountSettings'),
+                }}
+              />
+              <Stack.Screen
+                name="account/invite"
+                options={{
+                  presentation: 'modal',
+                  headerShown: true,
+                  title: t('nav.inviteMember'),
+                }}
+              />
+              <Stack.Screen
+                name="account/join"
+                options={{
+                  presentation: 'modal',
+                  headerShown: true,
+                  title: t('nav.joinAccount'),
                 }}
               />
             </Stack>

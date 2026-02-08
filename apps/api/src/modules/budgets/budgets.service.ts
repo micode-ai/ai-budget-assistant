@@ -5,9 +5,10 @@ import { PrismaService } from '../../database/prisma.service';
 export class BudgetsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId: string, dto: any) {
+  async create(accountId: string, userId: string, dto: any) {
     return this.prisma.budget.create({
       data: {
+        accountId,
         userId,
         clientId: dto.localId,
         name: dto.name,
@@ -23,8 +24,8 @@ export class BudgetsService {
     });
   }
 
-  async findAll(userId: string, filters: any = {}) {
-    const where: any = { userId, isDeleted: false };
+  async findAll(accountId: string, filters: any = {}) {
+    const where: any = { accountId, isDeleted: false };
 
     if (filters.isActive !== undefined) {
       where.isActive = filters.isActive;
@@ -40,9 +41,9 @@ export class BudgetsService {
     });
   }
 
-  async findOne(userId: string, id: string) {
+  async findOne(accountId: string, id: string) {
     const budget = await this.prisma.budget.findFirst({
-      where: { id, userId, isDeleted: false },
+      where: { id, accountId, isDeleted: false },
       include: { category: true },
     });
 
@@ -53,8 +54,8 @@ export class BudgetsService {
     return budget;
   }
 
-  async update(userId: string, id: string, dto: any) {
-    const budget = await this.findOne(userId, id);
+  async update(accountId: string, id: string, dto: any) {
+    const budget = await this.findOne(accountId, id);
 
     return this.prisma.budget.update({
       where: { id: budget.id },
@@ -67,8 +68,8 @@ export class BudgetsService {
     });
   }
 
-  async remove(userId: string, id: string) {
-    const budget = await this.findOne(userId, id);
+  async remove(accountId: string, id: string) {
+    const budget = await this.findOne(accountId, id);
 
     await this.prisma.budget.update({
       where: { id: budget.id },
@@ -81,15 +82,15 @@ export class BudgetsService {
     return { success: true };
   }
 
-  async getProgress(userId: string, id: string) {
-    const budget = await this.findOne(userId, id);
+  async getProgress(accountId: string, id: string) {
+    const budget = await this.findOne(accountId, id);
 
     // Calculate spent amount for this budget period
     const periodStart = budget.startDate;
     const periodEnd = budget.endDate || new Date();
 
     const whereExpenses: any = {
-      userId,
+      accountId,
       isDeleted: false,
       date: {
         gte: periodStart,
@@ -106,7 +107,7 @@ export class BudgetsService {
       _sum: { amount: true },
     });
 
-    const spentAmount = Number(spent._sum.amount || 0);
+    const spentAmount = Number(spent._sum?.amount || 0);
     const budgetAmount = Number(budget.amount);
     const remaining = Math.max(0, budgetAmount - spentAmount);
     const percentageUsed = budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;

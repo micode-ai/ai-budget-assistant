@@ -105,12 +105,37 @@ export async function initializeDatabase(): Promise<void> {
         FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE
       );
 
+      CREATE TABLE IF NOT EXISTS accounts (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL DEFAULT 'personal',
+        currency_code TEXT NOT NULL DEFAULT 'USD',
+        owner_id TEXT NOT NULL,
+        icon TEXT,
+        is_active INTEGER DEFAULT 1,
+        my_role TEXT NOT NULL DEFAULT 'owner',
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS account_members (
+        id TEXT PRIMARY KEY,
+        account_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'owner',
+        user_name TEXT,
+        user_email TEXT,
+        joined_at INTEGER NOT NULL,
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+      );
+
       CREATE TABLE IF NOT EXISTS sync_queue (
         id TEXT PRIMARY KEY,
         entity_type TEXT NOT NULL,
         entity_id TEXT NOT NULL,
         operation TEXT NOT NULL,
         payload TEXT NOT NULL,
+        account_id TEXT,
         created_at INTEGER NOT NULL,
         attempts INTEGER DEFAULT 0,
         last_error TEXT,
@@ -148,6 +173,27 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Add account_id column to expenses (multi-account migration)
+    try {
+      expoDb.execSync(`ALTER TABLE expenses ADD COLUMN account_id TEXT NOT NULL DEFAULT ''`);
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
+    // Add account_id column to budgets
+    try {
+      expoDb.execSync(`ALTER TABLE budgets ADD COLUMN account_id TEXT NOT NULL DEFAULT ''`);
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
+    // Add account_id column to categories
+    try {
+      expoDb.execSync(`ALTER TABLE categories ADD COLUMN account_id TEXT`);
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
     // Create indexes
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date DESC)',
@@ -157,6 +203,10 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE INDEX IF NOT EXISTS idx_sync_queue_entity ON sync_queue(entity_type, entity_id)',
       'CREATE INDEX IF NOT EXISTS idx_chat_messages_conversation ON chat_messages(conversation_id)',
       'CREATE INDEX IF NOT EXISTS idx_expense_items_expense ON expense_items(expense_id)',
+      'CREATE INDEX IF NOT EXISTS idx_expenses_account ON expenses(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_budgets_account ON budgets(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_accounts_owner ON accounts(owner_id)',
+      'CREATE INDEX IF NOT EXISTS idx_account_members_account ON account_members(account_id)',
     ];
 
     for (const indexSql of indexes) {

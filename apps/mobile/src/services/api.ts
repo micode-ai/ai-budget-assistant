@@ -1,5 +1,6 @@
 import { secureStorage } from './secureStorage';
-import { useAuthStore } from '@/stores/authStore';
+import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -9,9 +10,19 @@ interface RequestOptions extends RequestInit {
 
 class ApiClient {
   private baseUrl: string;
+  private accountIdGetter: (() => string | null) | null = null;
+  private logoutHandler: (() => void) | null = null;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
+  }
+
+  setAccountIdGetter(getter: () => string | null) {
+    this.accountIdGetter = getter;
+  }
+
+  setLogoutHandler(handler: () => void) {
+    this.logoutHandler = handler;
   }
 
   private async getAuthToken(): Promise<string | null> {
@@ -61,6 +72,12 @@ class ApiClient {
       if (token) {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
       }
+
+      // Inject account context
+      const accountId = this.accountIdGetter?.();
+      if (accountId) {
+        (headers as Record<string, string>)['X-Account-Id'] = accountId;
+      }
     }
 
     const url = `${this.baseUrl}${endpoint}`;
@@ -98,7 +115,7 @@ class ApiClient {
         console.log('[API] Token refresh failed, clearing tokens and logging out');
         await secureStorage.removeItem('accessToken');
         await secureStorage.removeItem('refreshToken');
-        useAuthStore.getState().logout();
+        this.logoutHandler?.();
         throw new Error('Session expired');
       }
     }
@@ -117,7 +134,7 @@ class ApiClient {
 
   // Auth endpoints
   async login(email: string, password: string) {
-    return this.request<{ accessToken: string; refreshToken: string; user: any }>(
+    return this.request<{ accessToken: string; refreshToken: string; user: any; accounts: Account[] }>(
       '/auth/login',
       {
         method: 'POST',
@@ -128,7 +145,7 @@ class ApiClient {
   }
 
   async register(email: string, password: string, name: string, currencyCode?: string) {
-    return this.request<{ accessToken: string; refreshToken: string; user: any }>(
+    return this.request<{ accessToken: string; refreshToken: string; user: any; accounts: Account[] }>(
       '/auth/register',
       {
         method: 'POST',
@@ -327,6 +344,81 @@ class ApiClient {
 
   async pullChanges(since: string) {
     return this.request<any>(`/sync/pull?since=${since}`);
+  }
+
+  // Account endpoints
+  async getAccounts() {
+    return this.request<Account[]>('/accounts');
+  }
+
+  async createAccount(dto: CreateAccountDto) {
+    return this.request<Account>('/accounts', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async updateAccount(id: string, dto: UpdateAccountDto) {
+    return this.request<Account>(`/accounts/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async deleteAccount(id: string) {
+    return this.request<void>(`/accounts/${id}`, { method: 'DELETE' });
+  }
+
+  async getMembers(accountId: string) {
+    return this.request<AccountMember[]>(`/accounts/${accountId}/members`);
+  }
+
+  async updateMemberRole(accountId: string, memberId: string, role: string) {
+    return this.request<AccountMember>(`/accounts/${accountId}/members/${memberId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ role }),
+    });
+  }
+
+  async removeMember(accountId: string, memberId: string) {
+    return this.request<void>(`/accounts/${accountId}/members/${memberId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async leaveAccount(accountId: string) {
+    return this.request<void>(`/accounts/${accountId}/leave`, { method: 'POST' });
+  }
+
+  async createInvitation(accountId: string, dto: CreateInvitationDto) {
+    return this.request<AccountInvitation>(`/accounts/${accountId}/invitations`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async getInvitations(accountId: string) {
+    return this.request<AccountInvitation[]>(`/accounts/${accountId}/invitations`);
+  }
+
+  async cancelInvitation(accountId: string, invitationId: string) {
+    return this.request<void>(`/accounts/${accountId}/invitations/${invitationId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async acceptInvitation(inviteCode: string) {
+    return this.request<any>('/accounts/invitations/accept', {
+      method: 'POST',
+      body: JSON.stringify({ inviteCode }),
+    });
+  }
+
+  async declineInvitation(inviteCode: string) {
+    return this.request<any>('/accounts/invitations/decline', {
+      method: 'POST',
+      body: JSON.stringify({ inviteCode }),
+    });
   }
 }
 

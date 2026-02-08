@@ -5,13 +5,13 @@ import { PrismaService } from '../../database/prisma.service';
 export class CategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(userId: string) {
-    // Get system categories and user's custom categories
+  async findAll(accountId: string) {
+    // Get system categories and account's custom categories
     return this.prisma.category.findMany({
       where: {
         OR: [
           { isSystem: true },
-          { userId },
+          { accountId },
         ],
         isDeleted: false,
       },
@@ -19,9 +19,10 @@ export class CategoriesService {
     });
   }
 
-  async create(userId: string, dto: any) {
+  async create(accountId: string, userId: string, dto: any) {
     return this.prisma.category.create({
       data: {
+        accountId,
         userId,
         name: dto.name,
         icon: dto.icon,
@@ -32,14 +33,22 @@ export class CategoriesService {
     });
   }
 
-  async update(userId: string, id: string, dto: any) {
+  async update(accountId: string, id: string, dto: any) {
+    const category = await this.prisma.category.findFirst({
+      where: { id, accountId },
+    });
+    if (!category) throw new Error('Category not found');
     return this.prisma.category.update({
       where: { id },
       data: dto,
     });
   }
 
-  async remove(userId: string, id: string) {
+  async remove(accountId: string, id: string) {
+    const category = await this.prisma.category.findFirst({
+      where: { id, accountId },
+    });
+    if (!category) throw new Error('Category not found');
     return this.prisma.category.update({
       where: { id },
       data: { isDeleted: true },

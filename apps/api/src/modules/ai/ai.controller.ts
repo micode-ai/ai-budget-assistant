@@ -5,19 +5,16 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { AuthenticatedRequest } from '../../common/types';
 import { WhisperService } from './services/whisper.service';
 import { ChatService } from './services/chat.service';
 import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
 
-interface AuthenticatedRequest extends Request {
-  user: { id: string; email: string };
-}
-
 @Controller('ai')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, AccountContextGuard)
 export class AiController {
   constructor(
     private readonly whisperService: WhisperService,
@@ -39,7 +36,7 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { text: string },
   ) {
-    return this.categorizationService.parseExpenseFromText(body.text, req.user.id);
+    return this.categorizationService.parseExpenseFromText(body.text, req.user.id, req.accountId);
   }
 
   @Post('categorize')
@@ -47,7 +44,7 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { description: string },
   ) {
-    return this.categorizationService.categorize(body.description, req.user.id);
+    return this.categorizationService.categorize(body.description, req.user.id, req.accountId);
   }
 
   @Post('chat')
@@ -63,7 +60,7 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { imageBase64: string },
   ) {
-    return this.ocrService.parseReceipt(body.imageBase64, req.user.id);
+    return this.ocrService.parseReceipt(body.imageBase64, req.user.id, req.accountId);
   }
 
   @Post('extract-text')

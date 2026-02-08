@@ -1,11 +1,37 @@
 import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
 
+// Accounts table
+export const accounts = sqliteTable('accounts', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  type: text('type').notNull(), // 'personal' | 'business' | 'shared'
+  currencyCode: text('currency_code').notNull().default('USD'),
+  ownerId: text('owner_id').notNull(),
+  icon: text('icon'),
+  isActive: integer('is_active', { mode: 'boolean' }).default(true),
+  myRole: text('my_role').notNull().default('owner'), // cached role for current user
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Account members table
+export const accountMembers = sqliteTable('account_members', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  userId: text('user_id').notNull(),
+  role: text('role').notNull(), // 'owner' | 'editor' | 'viewer'
+  userName: text('user_name'),
+  userEmail: text('user_email'),
+  joinedAt: integer('joined_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Expenses table
 export const expenses = sqliteTable('expenses', {
   id: text('id').primaryKey(),
   localId: text('local_id').notNull(),
   serverId: text('server_id'),
   userId: text('user_id').notNull(),
+  accountId: text('account_id').notNull(),
   amount: real('amount').notNull(),
   currencyCode: text('currency_code').notNull().default('USD'),
   description: text('description'),
@@ -31,6 +57,7 @@ export const expenses = sqliteTable('expenses', {
 export const categories = sqliteTable('categories', {
   id: text('id').primaryKey(),
   userId: text('user_id'),
+  accountId: text('account_id'),
   name: text('name').notNull(),
   icon: text('icon'),
   color: text('color'),
@@ -49,6 +76,7 @@ export const budgets = sqliteTable('budgets', {
   localId: text('local_id').notNull(),
   serverId: text('server_id'),
   userId: text('user_id').notNull(),
+  accountId: text('account_id').notNull(),
   name: text('name').notNull(),
   amount: real('amount').notNull(),
   currencyCode: text('currency_code').notNull().default('USD'),
@@ -72,6 +100,7 @@ export const syncQueue = sqliteTable('sync_queue', {
   entityId: text('entity_id').notNull(),
   operation: text('operation').notNull(),
   payload: text('payload').notNull(),
+  accountId: text('account_id'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   attempts: integer('attempts').default(0),
   lastError: text('last_error'),
@@ -105,6 +134,10 @@ export const chatMessages = sqliteTable('chat_messages', {
 });
 
 // Type exports
+export type AccountRecord = typeof accounts.$inferSelect;
+export type NewAccountRecord = typeof accounts.$inferInsert;
+export type AccountMemberRecord = typeof accountMembers.$inferSelect;
+export type NewAccountMemberRecord = typeof accountMembers.$inferInsert;
 export type ExpenseRecord = typeof expenses.$inferSelect;
 export type NewExpenseRecord = typeof expenses.$inferInsert;
 export type CategoryRecord = typeof categories.$inferSelect;

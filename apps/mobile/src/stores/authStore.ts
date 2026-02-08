@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
 import type { User, Currency } from '@budget/shared-types';
+import { useAccountStore } from './accountStore';
 
 interface AuthState {
   user: User | null;
@@ -53,6 +54,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 isAuthenticated: true,
                 isLoading: false,
               });
+              // Restore account context from local DB
+              await useAccountStore.getState().loadAccounts();
             }
           } else {
             set({ isLoading: false });
@@ -74,6 +77,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             name: response.user.name,
             currencyCode: (response.user.currencyCode || 'USD') as Currency,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            defaultAccountId: response.user.defaultAccountId,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -92,6 +96,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             isLoading: false,
             hasSavedSession: false,
           });
+
+          // Initialize account store with accounts from auth response
+          if (response.accounts) {
+            await useAccountStore.getState().initialize(
+              response.accounts,
+              response.user.defaultAccountId || '',
+              user.id,
+            );
+          }
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Login failed',
@@ -112,6 +125,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             name: response.user.name,
             currencyCode: (response.user.currencyCode || 'USD') as Currency,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            defaultAccountId: response.user.defaultAccountId,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -130,6 +144,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             isLoading: false,
             hasSavedSession: false,
           });
+
+          // Initialize account store with accounts from auth response
+          if (response.accounts) {
+            await useAccountStore.getState().initialize(
+              response.accounts,
+              response.user.defaultAccountId || '',
+              user.id,
+            );
+          }
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
@@ -170,6 +193,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             };
             set({ user: updatedUser });
             await secureStorage.setItem('user', JSON.stringify(updatedUser));
+            // Restore account context from local DB
+            await useAccountStore.getState().loadAccounts();
           } catch {
             // Tokens are invalid and refresh also failed — need full re-login
             await secureStorage.removeItem('accessToken');
@@ -211,6 +236,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             await secureStorage.removeItem('accessToken');
             await secureStorage.removeItem('refreshToken');
             await secureStorage.removeItem('user');
+            await secureStorage.removeItem('currentAccountId');
 
             set({
               user: null,
@@ -220,6 +246,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               hasSavedSession: false,
             });
           }
+
+          // Reset account store
+          useAccountStore.getState().reset();
         } catch (error) {
           console.error('Failed to logout:', error);
         }
@@ -242,3 +271,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       clearError: () => set({ error: null }),
     }));
+
+// Wire up logout handler for API client (avoids circular import: authStore → accountStore → api → authStore)
+api.setLogoutHandler(() => useAuthStore.getState().logout());
