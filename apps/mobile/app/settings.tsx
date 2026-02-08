@@ -1,0 +1,459 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  Linking,
+} from 'react-native';
+import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuthStore } from '@/stores/authStore';
+import { useThemeStore } from '@/stores/themeStore';
+import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
+import { api } from '@/services/api';
+import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
+import type { Currency } from '@budget/shared-types';
+import Constants from 'expo-constants';
+
+type IconName = keyof typeof Ionicons.glyphMap;
+
+const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB'];
+
+export default function SettingsScreen() {
+  const { t, i18n } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const { user, updateUser, logout } = useAuthStore();
+  const { mode, setMode } = useThemeStore();
+
+  const [name, setName] = useState(user?.name || '');
+  const [editingName, setEditingName] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const appVersion = Constants.expoConfig?.version || '1.0.0';
+
+  const handleSaveName = async () => {
+    const trimmed = name.trim();
+    if (!trimmed || trimmed.length < 2) {
+      Alert.alert(t('common.error'), t('validation.nameMin2'));
+      return;
+    }
+    setIsSaving(true);
+    try {
+      await api.updateProfile({ name: trimmed });
+      updateUser({ name: trimmed });
+      setEditingName(false);
+      Alert.alert(t('common.success'), t('settings.profileUpdated'));
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCurrencyChange = async (currency: Currency) => {
+    if (currency === user?.currencyCode) return;
+    try {
+      await api.updateProfile({ currencyCode: currency });
+      updateUser({ currencyCode: currency });
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleLanguageChange = async (langCode: string) => {
+    if (langCode === i18n.language) return;
+    await changeLanguage(langCode);
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      t('settings.logout'),
+      t('settings.logoutConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.logout'),
+          style: 'destructive',
+          onPress: async () => {
+            await logout();
+            router.replace('/(auth)/login');
+          },
+        },
+      ],
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={[]}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+        {/* Profile Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.profile')}</Text>
+
+          {/* Avatar */}
+          <View style={styles.avatarRow}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {(user?.name || 'U')[0].toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.avatarInfo}>
+              <Text style={styles.userName}>{user?.name}</Text>
+              <Text style={styles.userEmail}>{user?.email}</Text>
+            </View>
+          </View>
+
+          {/* Name */}
+          <View style={styles.card}>
+            <View style={styles.fieldRow}>
+              <Text style={styles.fieldLabel}>{t('settings.name')}</Text>
+              {editingName ? (
+                <View style={styles.editRow}>
+                  <TextInput
+                    style={styles.editInput}
+                    value={name}
+                    onChangeText={setName}
+                    placeholderTextColor={theme.colors.textTertiary}
+                    autoFocus
+                  />
+                  <TouchableOpacity
+                    style={styles.saveButton}
+                    onPress={handleSaveName}
+                    disabled={isSaving}
+                  >
+                    <Ionicons name="checkmark" size={18} color={theme.colors.textInverse} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => { setEditingName(false); setName(user?.name || ''); }}
+                  >
+                    <Ionicons name="close" size={18} color={theme.colors.textSecondary} />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity style={styles.fieldValueRow} onPress={() => setEditingName(true)}>
+                  <Text style={styles.fieldValue}>{user?.name}</Text>
+                  <Ionicons name="pencil-outline" size={16} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Email */}
+            <View style={styles.fieldRow}>
+              <Text style={styles.fieldLabel}>{t('settings.email')}</Text>
+              <Text style={styles.fieldValue}>{user?.email}</Text>
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Timezone */}
+            <View style={styles.fieldRow}>
+              <Text style={styles.fieldLabel}>{t('settings.timezone')}</Text>
+              <Text style={styles.fieldValue}>{user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone}</Text>
+            </View>
+          </View>
+
+          {/* Currency */}
+          <Text style={styles.fieldLabelOutside}>{t('settings.currency')}</Text>
+          <View style={styles.chipRow}>
+            {CURRENCIES.map((c) => (
+              <TouchableOpacity
+                key={c}
+                style={[styles.chip, user?.currencyCode === c && styles.chipActive]}
+                onPress={() => handleCurrencyChange(c)}
+              >
+                <Text style={[styles.chipText, user?.currencyCode === c && styles.chipTextActive]}>
+                  {c}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* App Settings Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.appSettings')}</Text>
+
+          {/* Language */}
+          <Text style={styles.fieldLabelOutside}>{t('settings.language')}</Text>
+          <View style={styles.chipRow}>
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <TouchableOpacity
+                key={lang.code}
+                style={[styles.chip, i18n.language === lang.code && styles.chipActive]}
+                onPress={() => handleLanguageChange(lang.code)}
+              >
+                <Text style={[styles.chipText, i18n.language === lang.code && styles.chipTextActive]}>
+                  {lang.flag}
+                </Text>
+                <Text style={[styles.chipText, i18n.language === lang.code && styles.chipTextActive]}>
+                  {lang.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Theme */}
+          <Text style={styles.fieldLabelOutside}>{t('settings.appearance')}</Text>
+          <View style={styles.themeRow}>
+            {([
+              { key: 'system' as const, icon: 'phone-portrait-outline' as IconName, label: t('settings.system') },
+              { key: 'light' as const, icon: 'sunny-outline' as IconName, label: t('settings.light') },
+              { key: 'dark' as const, icon: 'moon-outline' as IconName, label: t('settings.dark') },
+            ]).map((item) => (
+              <TouchableOpacity
+                key={item.key}
+                style={[styles.themeChip, mode === item.key && styles.themeChipActive]}
+                onPress={() => setMode(item.key)}
+              >
+                <Ionicons
+                  name={item.icon}
+                  size={20}
+                  color={mode === item.key ? theme.colors.primary : theme.colors.textTertiary}
+                />
+                <Text style={[styles.themeChipText, mode === item.key && styles.themeChipTextActive]}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* About Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
+          <View style={styles.card}>
+            <View style={styles.fieldRow}>
+              <Text style={styles.fieldLabel}>{t('settings.version')}</Text>
+              <Text style={styles.fieldValue}>{appVersion}</Text>
+            </View>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => Linking.openURL('mailto:support@aibudget.app')}
+            >
+              <Text style={styles.fieldLabel}>{t('settings.support')}</Text>
+              <Ionicons name="mail-outline" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Logout */}
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color={theme.colors.danger} />
+            <Text style={styles.logoutButtonText}>{t('settings.logout')}</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const createStyles = (theme: Theme) => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  content: {
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[10],
+  },
+  section: {
+    marginBottom: theme.spacing[6],
+  },
+  sectionTitle: {
+    ...theme.textStyles.label,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[3],
+  },
+
+  // Avatar
+  avatarRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  avatarText: {
+    ...theme.textStyles.h2,
+    color: theme.colors.textInverse,
+  },
+  avatarInfo: {
+    marginLeft: theme.spacing[4],
+    flex: 1,
+  },
+  userName: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+  },
+  userEmail: {
+    ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[0.5],
+  },
+
+  // Card
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+  },
+  fieldRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    minHeight: 32,
+  },
+  fieldLabel: {
+    ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
+  },
+  fieldLabelOutside: {
+    ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+  },
+  fieldValue: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+  },
+  fieldValueRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  divider: {
+    height: 1,
+    backgroundColor: theme.colors.divider,
+    marginVertical: theme.spacing[3],
+  },
+
+  // Edit name
+  editRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    flex: 1,
+    marginLeft: theme.spacing[3],
+  },
+  editInput: {
+    flex: 1,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing[2],
+    fontSize: 15,
+    color: theme.colors.textPrimary,
+  },
+  saveButton: {
+    backgroundColor: theme.colors.primary,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  cancelButton: {
+    backgroundColor: theme.colors.surfaceSecondary,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+
+  // Chips (currency, language)
+  chipRow: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+  },
+  chip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+  },
+  chipActive: {
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  chipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textTertiary,
+  },
+  chipTextActive: {
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
+  },
+
+  // Theme
+  themeRow: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  themeChip: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[1.5],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[3],
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+  },
+  themeChipActive: {
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  themeChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textTertiary,
+  },
+  themeChipTextActive: {
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
+  },
+
+  // Logout
+  logoutButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    borderWidth: 1,
+    borderColor: theme.colors.danger,
+    gap: theme.spacing[2],
+  },
+  logoutButtonText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.danger,
+  },
+});

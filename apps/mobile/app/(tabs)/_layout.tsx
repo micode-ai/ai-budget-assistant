@@ -10,7 +10,7 @@ import { useTheme } from '@/theme';
 type IconName = keyof typeof Ionicons.glyphMap;
 
 export default function TabLayout() {
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -46,10 +46,10 @@ export default function TabLayout() {
         headerLeft: () => <AccountSwitcher />,
         headerRight: () => (
           <TouchableOpacity
-            onPress={async () => { await logout(); router.replace('/(auth)/login'); }}
+            onPress={() => router.push('/settings')}
             style={{ marginRight: 16 }}
           >
-            <Ionicons name="log-out-outline" size={24} color={theme.colors.textInverse} />
+            <Ionicons name="settings-outline" size={24} color={theme.colors.textInverse} />
           </TouchableOpacity>
         ),
       }}
