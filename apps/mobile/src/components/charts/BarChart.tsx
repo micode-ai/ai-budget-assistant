@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface BarChartData {
   label: string;
@@ -17,11 +18,15 @@ interface BarChartProps {
 export function BarChart({
   data,
   height = 150,
-  barColor = '#4ECDC4',
+  barColor,
   showLabels = true,
   showValues = false,
   formatValue = (v) => v.toFixed(0),
 }: BarChartProps) {
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const resolvedBarColor = barColor || theme.colors.primary;
+
   if (data.length === 0) {
     return (
       <View style={[styles.container, { height }]}>
@@ -51,7 +56,7 @@ export function BarChart({
                     {
                       height: Math.max(2, barHeight),
                       width: barWidth,
-                      backgroundColor: barColor,
+                      backgroundColor: resolvedBarColor,
                     },
                   ]}
                 />
@@ -65,44 +70,46 @@ export function BarChart({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
-    width: '100%',
+    width: '100%' as const,
   },
   chartArea: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-    paddingHorizontal: 4,
+    flexDirection: 'row' as const,
+    alignItems: 'flex-end' as const,
+    justifyContent: 'space-around' as const,
+    paddingHorizontal: theme.spacing[1],
   },
   barContainer: {
-    alignItems: 'center',
+    alignItems: 'center' as const,
     flex: 1,
   },
   barWrapper: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: 'center' as const,
+    justifyContent: 'flex-end' as const,
     flex: 1,
   },
   bar: {
-    borderRadius: 4,
+    borderRadius: theme.borderRadius.sm,
     minHeight: 2,
   },
   label: {
+    ...theme.textStyles.caption,
     fontSize: 10,
-    color: '#999',
-    marginTop: 4,
-    textAlign: 'center',
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
+    textAlign: 'center' as const,
   },
   valueLabel: {
     fontSize: 8,
-    color: '#666',
-    marginBottom: 2,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[0.5],
   },
   emptyText: {
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 20,
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[5],
   },
 });

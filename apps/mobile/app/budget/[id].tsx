@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Alert,
@@ -13,9 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function BudgetDetailScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { budgets, deleteBudget, getBudgetProgress } = useBudgetStore();
   const budget = budgets.find((b) => b.id === id);
@@ -25,7 +27,7 @@ export default function BudgetDetailScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={64} color="#ccc" />
+          <Ionicons name="alert-circle-outline" size={64} color={theme.colors.textDisabled} />
           <Text style={styles.notFoundText}>{t('budgetDetail.notFound')}</Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Text style={styles.backButtonText}>{t('common.back')}</Text>
@@ -53,10 +55,10 @@ export default function BudgetDetailScreen() {
   const isOverBudget = progress?.isOverBudget || false;
 
   const progressColor = isOverBudget
-    ? '#FF6B6B'
+    ? theme.colors.danger
     : percentUsed > 80
-      ? '#FFEAA7'
-      : '#4ECDC4';
+      ? theme.colors.warning
+      : theme.colors.primary;
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -137,7 +139,7 @@ export default function BudgetDetailScreen() {
                 <Text
                   style={[
                     styles.detailValue,
-                    progress.projectedTotal > budget.amount && { color: '#FF6B6B' },
+                    progress.projectedTotal > budget.amount && { color: theme.colors.danger },
                   ]}
                 >
                   {formatCurrency(progress.projectedTotal, budget.currencyCode)}
@@ -148,7 +150,7 @@ export default function BudgetDetailScreen() {
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('budgetDetail.status')}</Text>
-            <Text style={[styles.detailValue, { color: budget.isActive ? '#4ECDC4' : '#999' }]}>
+            <Text style={[styles.detailValue, { color: budget.isActive ? theme.colors.primary : theme.colors.textTertiary }]}>
               {budget.isActive ? t('budgetDetail.active') : t('budgetDetail.inactive')}
             </Text>
           </View>
@@ -157,7 +159,7 @@ export default function BudgetDetailScreen() {
         {/* Actions */}
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-            <Ionicons name="trash" size={20} color="#FF6B6B" />
+            <Ionicons name="trash" size={20} color={theme.colors.danger} />
             <Text style={styles.deleteButtonText}>{t('budgetDetail.deleteTitle')}</Text>
           </TouchableOpacity>
         </View>
@@ -166,173 +168,161 @@ export default function BudgetDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
   },
   notFoundText: {
     fontSize: 18,
-    color: '#999',
-    marginTop: 16,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[4],
   },
   backButton: {
-    marginTop: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: '#4ECDC4',
-    borderRadius: 12,
+    marginTop: theme.spacing[4],
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[3],
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
   },
   backButtonText: {
-    color: '#fff',
+    color: theme.colors.textInverse,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600' as const,
   },
   scrollContent: {
-    padding: 16,
+    padding: theme.spacing[4],
   },
   headerCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   budgetName: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   statusBadge: {
-    backgroundColor: '#E8F8F7',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    backgroundColor: theme.colors.primaryLight,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.lg,
   },
   statusBadgeOver: {
-    backgroundColor: '#FFE5E5',
+    backgroundColor: theme.colors.dangerLight,
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
   },
   statusTextOver: {
-    color: '#FF6B6B',
+    color: theme.colors.danger,
   },
   progressCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[6],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   amountRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
-    marginBottom: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'baseline' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[4],
   },
   spentAmount: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
   },
   totalAmount: {
     fontSize: 16,
-    color: '#999',
+    color: theme.colors.textTertiary,
   },
   progressBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
   },
   progressBar: {
     flex: 1,
     height: 10,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: theme.colors.progressTrack,
     borderRadius: 5,
-    overflow: 'hidden',
+    overflow: 'hidden' as const,
   },
   progressFill: {
-    height: '100%',
+    height: '100%' as const,
     borderRadius: 5,
   },
   percentText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: '600' as const,
+    color: theme.colors.textSecondary,
     width: 45,
-    textAlign: 'right',
+    textAlign: 'right' as const,
   },
   remainingText: {
     fontSize: 15,
-    color: '#4ECDC4',
-    marginTop: 12,
-    fontWeight: '500',
+    color: theme.colors.primary,
+    marginTop: theme.spacing[3],
+    fontWeight: '500' as const,
   },
   detailsCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 14,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: theme.colors.divider,
   },
   detailLabel: {
     fontSize: 14,
-    color: '#999',
+    color: theme.colors.textTertiary,
   },
   detailValue: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   actionsContainer: {
-    marginTop: 8,
+    marginTop: theme.spacing[2],
   },
   deleteButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#FF6B6B',
-    gap: 8,
+    borderColor: theme.colors.danger,
+    gap: theme.spacing[2],
   },
   deleteButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FF6B6B',
+    fontWeight: '600' as const,
+    color: theme.colors.danger,
   },
 });

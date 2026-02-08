@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   TextInput,
   TouchableOpacity,
@@ -16,11 +15,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ChatScreen() {
   const { t } = useTranslation();
   const [inputText, setInputText] = useState('');
   const flatListRef = useRef<FlatList>(null);
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const { messages, isLoading, sendMessage } = useChatStore();
   const {
@@ -83,7 +85,7 @@ export default function ChatScreen() {
       <View style={[styles.messageContainer, isUser && styles.userMessageContainer]}>
         {!isUser && (
           <View style={styles.avatarContainer}>
-            <Ionicons name="sparkles" size={20} color="#4ECDC4" />
+            <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
           </View>
         )}
         <View style={[styles.messageBubble, isUser && styles.userMessageBubble]}>
@@ -121,7 +123,7 @@ export default function ChatScreen() {
   const EmptyChat = () => (
     <View style={styles.emptyContainer}>
       <View style={styles.emptyIconContainer}>
-        <Ionicons name="chatbubble-ellipses-outline" size={64} color="#4ECDC4" />
+        <Ionicons name="chatbubble-ellipses-outline" size={64} color={theme.colors.primary} />
       </View>
       <Text style={styles.emptyTitle}>{t('chat.title')}</Text>
       <Text style={styles.emptySubtitle}>
@@ -153,14 +155,14 @@ export default function ChatScreen() {
 
         {isLoading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color="#4ECDC4" />
+            <ActivityIndicator size="small" color={theme.colors.primary} />
             <Text style={styles.loadingText}>{t('chat.thinking')}</Text>
           </View>
         )}
 
         {isProcessing && (
           <View style={styles.processingOverlay}>
-            <ActivityIndicator size="large" color="#4ECDC4" />
+            <ActivityIndicator size="large" color={theme.colors.primary} />
             <Text style={styles.processingText}>{t('chat.processingVoice')}</Text>
           </View>
         )}
@@ -173,12 +175,12 @@ export default function ChatScreen() {
             disabled={isProcessing}
           >
             {isProcessing ? (
-              <ActivityIndicator size="small" color="#4ECDC4" />
+              <ActivityIndicator size="small" color={theme.colors.primary} />
             ) : (
               <Ionicons
                 name={isRecording ? 'stop' : 'mic'}
                 size={24}
-                color={isRecording ? '#FF6B6B' : '#4ECDC4'}
+                color={isRecording ? theme.colors.danger : theme.colors.primary}
               />
             )}
           </TouchableOpacity>
@@ -188,7 +190,7 @@ export default function ChatScreen() {
             value={inputText}
             onChangeText={setInputText}
             placeholder={t('chat.placeholder')}
-            placeholderTextColor="#999"
+            placeholderTextColor={theme.colors.textTertiary}
             multiline
             maxLength={4000}
             onSubmitEditing={handleSend}
@@ -199,7 +201,7 @@ export default function ChatScreen() {
             onPress={handleSend}
             disabled={!inputText.trim() || isLoading}
           >
-            <Ionicons name="send" size={20} color="#fff" />
+            <Ionicons name="send" size={20} color={theme.colors.textInverse} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -207,175 +209,170 @@ export default function ChatScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   keyboardView: {
     flex: 1,
   },
   messageList: {
-    padding: 16,
-    paddingBottom: 8,
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[2],
   },
   emptyList: {
     flexGrow: 1,
   },
   emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.spacing[8],
   },
   emptyIconContainer: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#E8F8F7',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
+    backgroundColor: theme.colors.primaryLight,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[6],
   },
   emptyTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 12,
+    ...theme.textStyles.h2,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[3],
   },
   emptySubtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
     lineHeight: 24,
-    marginBottom: 32,
+    marginBottom: theme.spacing[8],
   },
   quickActions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
   },
   quickActionButton: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1,
-    borderColor: '#4ECDC4',
+    borderColor: theme.colors.primary,
   },
   quickActionText: {
-    fontSize: 14,
-    color: '#4ECDC4',
-    fontWeight: '500',
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
   messageContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    alignItems: 'flex-end',
+    flexDirection: 'row' as const,
+    marginBottom: theme.spacing[4],
+    alignItems: 'flex-end' as const,
   },
   userMessageContainer: {
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end' as const,
   },
   avatarContainer: {
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: '#E8F8F7',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
+    borderRadius: theme.borderRadius.xl,
+    backgroundColor: theme.colors.primaryLight,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    marginRight: theme.spacing[2],
   },
   messageBubble: {
-    maxWidth: '80%',
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    borderBottomLeftRadius: 4,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    maxWidth: '80%' as const,
+    backgroundColor: theme.colors.messageBubbleAI,
+    borderRadius: theme.borderRadius.xl,
+    borderBottomLeftRadius: theme.spacing[1],
+    padding: theme.spacing[3],
+    ...theme.shadows.sm,
   },
   userMessageBubble: {
-    backgroundColor: '#4ECDC4',
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 4,
+    backgroundColor: theme.colors.messageBubbleUser,
+    borderBottomLeftRadius: theme.borderRadius.xl,
+    borderBottomRightRadius: theme.spacing[1],
   },
   messageText: {
-    fontSize: 16,
-    color: '#333',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.messageBubbleAIText,
     lineHeight: 22,
   },
   userMessageText: {
-    color: '#fff',
+    color: theme.colors.messageBubbleUserText,
   },
   loadingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
-    gap: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[2],
+    gap: theme.spacing[2],
   },
   loadingText: {
-    fontSize: 14,
-    color: '#999',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    padding: 12,
-    backgroundColor: '#fff',
+    flexDirection: 'row' as const,
+    alignItems: 'flex-end' as const,
+    padding: theme.spacing[3],
+    backgroundColor: theme.colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    gap: 8,
+    borderTopColor: theme.colors.border,
+    gap: theme.spacing[2],
   },
   voiceButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#E8F8F7',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: theme.colors.primaryLight,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
   },
   voiceButtonActive: {
-    backgroundColor: '#FFE5E5',
+    backgroundColor: theme.colors.dangerLight,
   },
   textInput: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    fontSize: 16,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius['2xl'],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2.5],
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
     maxHeight: 100,
   },
   sendButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#4ECDC4',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
   },
   sendButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: theme.colors.textDisabled,
   },
   processingOverlay: {
-    position: 'absolute',
+    position: 'absolute' as const,
     bottom: 80,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    padding: 20,
-    alignItems: 'center',
+    backgroundColor: theme.isDark ? 'rgba(15, 17, 23, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+    padding: theme.spacing[5],
+    alignItems: 'center' as const,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: theme.colors.border,
   },
   processingText: {
-    marginTop: 12,
-    fontSize: 16,
-    color: '#666',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[3],
   },
 });

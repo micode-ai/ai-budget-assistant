@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,12 +7,15 @@ import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
 import { BarChart, PieChart } from '@/components/charts';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function AnalyticsScreen() {
   const { t } = useTranslation();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
   const { user } = useAuthStore();
   const { dailySpending, categorySpending, summary, itemBreakdown } = useAnalytics(selectedRange);
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const TIME_RANGES: { key: TimeRange; label: string }[] = [
     { key: 'week', label: t('analytics.week') },
@@ -62,7 +65,7 @@ export default function AnalyticsScreen() {
             <Text style={styles.summaryLabel}>{t('analytics.totalSpent')}</Text>
             <Text style={styles.summaryValue}>{formatCurrency(summary.totalSpent, currency)}</Text>
             <View style={styles.statsRow}>
-              <Ionicons name="receipt-outline" size={14} color="#999" />
+              <Ionicons name="receipt-outline" size={14} color={theme.colors.textTertiary} />
               <Text style={styles.statsText}>{summary.transactionCount} {t('analytics.transactions')}</Text>
             </View>
           </View>
@@ -87,7 +90,7 @@ export default function AnalyticsScreen() {
               value: d.amount,
             }))}
             height={150}
-            barColor="#4ECDC4"
+            barColor={theme.colors.primary}
             showLabels={true}
             showValues={dailySpending.length <= 12}
             formatValue={formatChartValue}
@@ -100,7 +103,7 @@ export default function AnalyticsScreen() {
 
           {categorySpending.length === 0 ? (
             <View style={styles.emptyCategory}>
-              <Ionicons name="pie-chart-outline" size={48} color="#ccc" />
+              <Ionicons name="pie-chart-outline" size={48} color={theme.colors.textDisabled} />
               <Text style={styles.emptyCategoryText}>{t('analytics.noData')}</Text>
               <Text style={styles.emptyCategorySubtext}>{t('analytics.addExpensesHint')}</Text>
             </View>
@@ -146,7 +149,7 @@ export default function AnalyticsScreen() {
 
           {summary.mostExpensiveCategory && (
             <View style={styles.insightCard}>
-              <Ionicons name="trending-up-outline" size={24} color="#FF6B6B" />
+              <Ionicons name="trending-up-outline" size={24} color={theme.colors.danger} />
               <View style={styles.insightContent}>
                 <Text style={styles.insightTitle}>{t('analytics.topCategory')}</Text>
                 <Text style={styles.insightText}>
@@ -158,7 +161,7 @@ export default function AnalyticsScreen() {
 
           {summary.highestSpendingDay && (
             <View style={styles.insightCard}>
-              <Ionicons name="calendar-outline" size={24} color="#45B7D1" />
+              <Ionicons name="calendar-outline" size={24} color={theme.colors.info} />
               <View style={styles.insightContent}>
                 <Text style={styles.insightTitle}>{t('analytics.peakSpendingDay')}</Text>
                 <Text style={styles.insightText}>
@@ -175,7 +178,7 @@ export default function AnalyticsScreen() {
           )}
 
           <View style={styles.insightCard}>
-            <Ionicons name="bulb-outline" size={24} color="#FFEAA7" />
+            <Ionicons name="bulb-outline" size={24} color={theme.colors.warning} />
             <View style={styles.insightContent}>
               <Text style={styles.insightTitle}>{t('analytics.dailyBudgetTip')}</Text>
               <Text style={styles.insightText}>
@@ -210,7 +213,7 @@ export default function AnalyticsScreen() {
 
         {/* Export Button */}
         <TouchableOpacity style={styles.exportButton}>
-          <Ionicons name="download-outline" size={20} color="#4ECDC4" />
+          <Ionicons name="download-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.exportButtonText}>{t('analytics.exportReport')}</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -218,228 +221,229 @@ export default function AnalyticsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   scrollView: {
     flex: 1,
   },
   content: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[8],
   },
   rangeSelector: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 4,
-    marginBottom: 20,
+    flexDirection: 'row' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[1],
+    marginBottom: theme.spacing[5],
   },
   rangeButton: {
     flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderRadius: 8,
+    paddingVertical: theme.spacing[2.5],
+    alignItems: 'center' as const,
+    borderRadius: theme.borderRadius.md,
   },
   rangeButtonActive: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: theme.colors.primary,
   },
   rangeButtonText: {
+    ...theme.textStyles.bodyMedium,
     fontSize: 14,
-    fontWeight: '500',
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   rangeButtonTextActive: {
-    color: '#fff',
+    color: theme.colors.textInverse,
   },
   summaryRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[5],
   },
   summaryCard: {
     flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[4],
+    ...theme.shadows.sm,
   },
   summaryLabel: {
+    ...theme.textStyles.bodyMedium,
     fontSize: 14,
-    color: '#999',
-    marginBottom: 8,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[2],
   },
   summaryValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
+    ...theme.textStyles.h2,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[2],
   },
   statsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
   },
   statsText: {
-    fontSize: 12,
-    color: '#999',
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   summarySubtext: {
-    fontSize: 12,
-    color: '#999',
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   chartContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 20,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[5],
+    ...theme.shadows.sm,
   },
   chartTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 16,
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[4],
   },
   section: {
-    marginBottom: 20,
+    marginBottom: theme.spacing[5],
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 12,
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[3],
   },
   emptyCategory: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 32,
-    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[8],
+    alignItems: 'center' as const,
   },
   emptyCategoryText: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 12,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[3],
   },
   emptyCategorySubtext: {
+    ...theme.textStyles.bodyMedium,
     fontSize: 14,
-    color: '#999',
-    marginTop: 4,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   categoryItem: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[2],
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
   },
   categoryInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
   },
   categoryDot: {
     width: 12,
     height: 12,
-    borderRadius: 6,
+    borderRadius: theme.borderRadius.sm,
   },
   categoryName: {
-    fontSize: 16,
-    color: '#333',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
   },
   categoryValues: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-end' as const,
   },
   categoryAmount: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
   },
   categoryPercent: {
+    ...theme.textStyles.bodyMedium,
     fontSize: 14,
-    color: '#999',
-    marginTop: 2,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[0.5],
   },
   insightCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    gap: 12,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[3],
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+    ...theme.shadows.sm,
   },
   insightContent: {
     flex: 1,
   },
   insightTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[1],
   },
   insightText: {
+    ...theme.textStyles.bodyMedium,
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.textSecondary,
     lineHeight: 20,
   },
   topItemRow: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3.5],
+    marginBottom: theme.spacing[2],
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
   },
   topItemRank: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#4ECDC4',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    marginRight: theme.spacing[3],
   },
   topItemRankText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#fff',
+    ...theme.textStyles.bodySmMedium,
+    fontWeight: '700' as const,
+    color: theme.colors.textInverse,
   },
   topItemInfo: {
     flex: 1,
-    marginRight: 12,
+    marginRight: theme.spacing[3],
   },
   topItemName: {
-    fontSize: 15,
-    color: '#333',
-    fontWeight: '500',
-    textTransform: 'capitalize',
+    ...theme.textStyles.body,
+    fontWeight: '500' as const,
+    color: theme.colors.textPrimary,
+    textTransform: 'capitalize' as const,
   },
   topItemMeta: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 2,
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[0.5],
   },
   topItemAmount: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.body,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
   },
   exportButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     borderWidth: 1,
-    borderColor: '#4ECDC4',
+    borderColor: theme.colors.primary,
   },
   exportButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.primary,
   },
 });

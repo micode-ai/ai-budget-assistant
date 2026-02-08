@@ -18,6 +18,7 @@
     "@babel/runtime": "^7.28.6",
     "@budget/shared-types": "*",
     "@budget/shared-utils": "*",
+    "@expo-google-fonts/inter": "^0.4.2",
     "@expo/metro-runtime": "~6.1.2",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-community/datetimepicker": "8.4.4",

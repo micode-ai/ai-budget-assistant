@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
+import { useTheme } from '@/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -12,6 +13,7 @@ export default function TabLayout() {
   const { isAuthenticated, logout } = useAuthStore();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const theme = useTheme();
 
   // If user is not authenticated, redirect to login
   if (!isAuthenticated) {
@@ -21,25 +23,25 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#4ECDC4',
-        tabBarInactiveTintColor: '#999',
+        tabBarActiveTintColor: theme.colors.tabBarActive,
+        tabBarInactiveTintColor: theme.colors.tabBarInactive,
         tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopColor: '#e0e0e0',
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.borderLight,
           paddingTop: 8,
           paddingBottom: 8 + insets.bottom,
           height: 60 + insets.bottom,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
+          ...theme.textStyles.tabLabel,
         },
         headerStyle: {
-          backgroundColor: '#4ECDC4',
+          backgroundColor: theme.colors.primary,
         },
-        headerTintColor: '#fff',
+        headerTintColor: theme.colors.textInverse,
         headerTitleStyle: {
-          fontWeight: '600',
+          fontFamily: theme.fonts.semiBold,
+          fontSize: 18,
         },
         headerLeft: () => <AccountSwitcher />,
         headerRight: () => (
@@ -47,7 +49,7 @@ export default function TabLayout() {
             onPress={async () => { await logout(); router.replace('/(auth)/login'); }}
             style={{ marginRight: 16 }}
           >
-            <Ionicons name="log-out-outline" size={24} color="#fff" />
+            <Ionicons name="log-out-outline" size={24} color={theme.colors.textInverse} />
           </TouchableOpacity>
         ),
       }}

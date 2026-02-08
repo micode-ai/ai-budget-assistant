@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -15,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import i18n, { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 const CURRENCIES = [
   { code: 'USD', label: '$ USD' },
@@ -27,6 +27,8 @@ const CURRENCIES = [
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -105,7 +107,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder={t('auth.fullName')}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.colors.textTertiary}
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
@@ -114,7 +116,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder={t('auth.email')}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.colors.textTertiary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -125,7 +127,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder={t('auth.password')}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.colors.textTertiary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -134,7 +136,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder={t('auth.confirmPassword')}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.colors.textTertiary}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry
@@ -142,20 +144,20 @@ export default function RegisterScreen() {
 
             <View>
               <Text style={styles.fieldLabel}>{t('auth.currency')}</Text>
-              <View style={styles.currencyRow}>
+              <View style={styles.chipRow}>
                 {CURRENCIES.map((c) => (
                   <TouchableOpacity
                     key={c.code}
                     style={[
-                      styles.currencyChip,
-                      currencyCode === c.code && styles.currencyChipActive,
+                      styles.chip,
+                      currencyCode === c.code && styles.chipActive,
                     ]}
                     onPress={() => setCurrencyCode(c.code)}
                   >
                     <Text
                       style={[
-                        styles.currencyChipText,
-                        currencyCode === c.code && styles.currencyChipTextActive,
+                        styles.chipText,
+                        currencyCode === c.code && styles.chipTextActive,
                       ]}
                     >
                       {c.label}
@@ -167,13 +169,13 @@ export default function RegisterScreen() {
 
             <View>
               <Text style={styles.fieldLabel}>{t('auth.language')}</Text>
-              <View style={styles.currencyRow}>
+              <View style={styles.chipRow}>
                 {SUPPORTED_LANGUAGES.map((lang) => (
                   <TouchableOpacity
                     key={lang.code}
                     style={[
-                      styles.currencyChip,
-                      language === lang.code && styles.currencyChipActive,
+                      styles.chip,
+                      language === lang.code && styles.chipActive,
                     ]}
                     onPress={() => {
                       setLanguage(lang.code);
@@ -182,8 +184,8 @@ export default function RegisterScreen() {
                   >
                     <Text
                       style={[
-                        styles.currencyChipText,
-                        language === lang.code && styles.currencyChipTextActive,
+                        styles.chipText,
+                        language === lang.code && styles.chipTextActive,
                       ]}
                     >
                       {lang.flag}
@@ -199,7 +201,7 @@ export default function RegisterScreen() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={theme.colors.textInverse} />
               ) : (
                 <Text style={styles.buttonText}>{t('auth.createAccount')}</Text>
               )}
@@ -220,115 +222,114 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    justifyContent: 'center' as const,
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[8],
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 48,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[12],
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[2],
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textSecondary,
   },
   form: {
-    gap: 16,
+    gap: theme.spacing[4],
   },
   errorContainer: {
-    backgroundColor: '#FFE5E5',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: theme.colors.dangerLight,
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.md,
     borderWidth: 1,
-    borderColor: '#FF6B6B',
+    borderColor: theme.colors.danger,
   },
   errorText: {
-    color: '#FF6B6B',
-    textAlign: 'center',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.danger,
+    textAlign: 'center' as const,
   },
   input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-    fontSize: 16,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
   fieldLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#666',
-    marginBottom: 8,
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
   },
-  currencyRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+  chipRow: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
-  currencyChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 10,
-    backgroundColor: '#fff',
+  chip: {
+    paddingHorizontal: theme.spacing[3.5],
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
-  currencyChipActive: {
-    backgroundColor: '#4ECDC4',
-    borderColor: '#4ECDC4',
+  chipActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
-  currencyChipText: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
+  chipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
   },
-  currencyChipTextActive: {
-    color: '#fff',
+  chipTextActive: {
+    color: theme.colors.textInverse,
   },
   button: {
-    backgroundColor: '#4ECDC4',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 8,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[2],
   },
   buttonDisabled: {
     opacity: 0.7,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
+    ...theme.textStyles.h3,
+    color: theme.colors.textInverse,
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 24,
+    flexDirection: 'row' as const,
+    justifyContent: 'center' as const,
+    marginTop: theme.spacing[6],
   },
   footerText: {
-    color: '#666',
-    fontSize: 14,
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
   },
   linkText: {
-    color: '#4ECDC4',
-    fontSize: 14,
-    fontWeight: '600',
+    ...theme.textStyles.bodySm,
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
   },
 });

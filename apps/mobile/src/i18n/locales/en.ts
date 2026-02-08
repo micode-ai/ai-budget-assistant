@@ -320,6 +320,13 @@ export default {
       viewer: 'Can only view data',
     },
   },
+  settings: {
+    appearance: 'Appearance',
+    theme: 'Theme',
+    system: 'System',
+    light: 'Light',
+    dark: 'Dark',
+  },
   errors: {
     loginFailed: 'Login failed',
     registrationFailed: 'Registration failed',

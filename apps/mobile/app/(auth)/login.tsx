@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
@@ -14,12 +13,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { useBiometric } from '@/features/auth/useBiometric';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const { login, biometricLogin, isLoading, hasSavedSession } = useAuthStore();
   const { isBiometricAvailable, authenticate: biometricAuth, getBiometricTypeName } = useBiometric();
@@ -96,7 +98,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder={t('auth.email')}
-            placeholderTextColor="#999"
+            placeholderTextColor={theme.colors.textTertiary}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -107,7 +109,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder={t('auth.password')}
-            placeholderTextColor="#999"
+            placeholderTextColor={theme.colors.textTertiary}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -119,7 +121,7 @@ export default function LoginScreen() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={theme.colors.textInverse} />
             ) : (
               <Text style={styles.buttonText}>{t('auth.signIn')}</Text>
             )}
@@ -159,89 +161,89 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
+    justifyContent: 'center' as const,
+    paddingHorizontal: theme.spacing[6],
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 48,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[12],
   },
   title: {
     fontSize: 36,
-    fontWeight: 'bold',
-    color: '#4ECDC4',
-    marginBottom: 8,
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.primary,
+    marginBottom: theme.spacing[2],
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textSecondary,
   },
   form: {
-    gap: 16,
+    gap: theme.spacing[4],
   },
   errorContainer: {
-    backgroundColor: '#FFE5E5',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: theme.colors.dangerLight,
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.md,
     borderWidth: 1,
-    borderColor: '#FF6B6B',
+    borderColor: theme.colors.danger,
   },
   errorText: {
-    color: '#FF6B6B',
-    textAlign: 'center',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.danger,
+    textAlign: 'center' as const,
   },
   input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-    fontSize: 16,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
   button: {
-    backgroundColor: '#4ECDC4',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 8,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[2],
   },
   buttonDisabled: {
     opacity: 0.7,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
+    ...theme.textStyles.h3,
+    color: theme.colors.textInverse,
   },
   biometricButton: {
-    paddingVertical: 16,
-    alignItems: 'center',
+    paddingVertical: theme.spacing[4],
+    alignItems: 'center' as const,
   },
   biometricButtonText: {
-    color: '#4ECDC4',
-    fontSize: 16,
-    fontWeight: '500',
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.primary,
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 24,
+    flexDirection: 'row' as const,
+    justifyContent: 'center' as const,
+    marginTop: theme.spacing[6],
   },
   footerText: {
-    color: '#666',
-    fontSize: 14,
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
   },
   linkText: {
-    color: '#4ECDC4',
-    fontSize: 14,
-    fontWeight: '600',
+    ...theme.textStyles.bodySm,
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
   },
 });

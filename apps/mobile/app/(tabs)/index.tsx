@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { useState, useCallback } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, formatRelativeDate } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -17,6 +18,8 @@ export default function DashboardScreen() {
   const { expenses, totalThisMonth, loadExpenses } = useExpenseStore();
   const { activeBudgets, getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
@@ -33,6 +36,12 @@ export default function DashboardScreen() {
 
   const recentExpenses = expenses.slice(0, 5);
 
+  const progressColor = budgetUsedPercent > 90
+    ? theme.colors.danger
+    : budgetUsedPercent > 70
+      ? theme.colors.warning
+      : theme.colors.primary;
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView
@@ -40,13 +49,11 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        {/* Welcome Header */}
         <View style={styles.welcomeSection}>
           <Text style={styles.welcomeText}>{t('dashboard.hello', { name: user?.name || 'User' })}</Text>
           <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
         </View>
 
-        {/* Budget Overview Card */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
           <View style={styles.budgetOverview}>
@@ -59,10 +66,7 @@ export default function DashboardScreen() {
                 <View
                   style={[
                     styles.progressFill,
-                    {
-                      width: `${Math.min(budgetUsedPercent, 100)}%`,
-                      backgroundColor: budgetUsedPercent > 90 ? '#FF6B6B' : budgetUsedPercent > 70 ? '#FFEAA7' : '#4ECDC4',
-                    },
+                    { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
                   ]}
                 />
               </View>
@@ -71,34 +75,23 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* Quick Actions (hidden for viewers) */}
-        {canEdit && <View style={styles.quickActions}>
-          <TouchableOpacity
-            style={styles.quickActionButton}
-            onPress={() => router.push('/expense/new')}
-          >
-            <Ionicons name="add-circle" size={32} color="#4ECDC4" />
-            <Text style={styles.quickActionText}>{t('dashboard.addExpense')}</Text>
-          </TouchableOpacity>
+        {canEdit && (
+          <View style={styles.quickActions}>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
+              <Ionicons name="add-circle" size={32} color={theme.colors.primary} />
+              <Text style={styles.quickActionText}>{t('dashboard.addExpense')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
+              <Ionicons name="mic" size={32} color={theme.colors.accent} />
+              <Text style={styles.quickActionText}>{t('dashboard.voiceInput')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
+              <Ionicons name="camera" size={32} color={theme.colors.secondary} />
+              <Text style={styles.quickActionText}>{t('dashboard.scanReceipt')}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
-          <TouchableOpacity
-            style={styles.quickActionButton}
-            onPress={() => router.push('/expense/voice')}
-          >
-            <Ionicons name="mic" size={32} color="#96CEB4" />
-            <Text style={styles.quickActionText}>{t('dashboard.voiceInput')}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.quickActionButton}
-            onPress={() => router.push('/expense/receipt')}
-          >
-            <Ionicons name="camera" size={32} color="#45B7D1" />
-            <Text style={styles.quickActionText}>{t('dashboard.scanReceipt')}</Text>
-          </TouchableOpacity>
-        </View>}
-
-        {/* Recent Expenses */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('dashboard.recentExpenses')}</Text>
@@ -106,33 +99,25 @@ export default function DashboardScreen() {
               <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
             </TouchableOpacity>
           </View>
-
           {recentExpenses.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="receipt-outline" size={48} color="#ccc" />
+              <Ionicons name="receipt-outline" size={48} color={theme.colors.textTertiary} />
               <Text style={styles.emptyStateText}>{t('dashboard.noExpenses')}</Text>
               <Text style={styles.emptyStateSubtext}>{t('dashboard.addFirstExpense')}</Text>
             </View>
           ) : (
             recentExpenses.map((expense) => (
-              <TouchableOpacity
-                key={expense.id}
-                style={styles.expenseItem}
-                onPress={() => router.push(`/expense/${expense.id}`)}
-              >
+              <TouchableOpacity key={expense.id} style={styles.expenseItem} onPress={() => router.push(`/expense/${expense.id}`)}>
                 <View style={styles.expenseInfo}>
                   <Text style={styles.expenseDescription}>{expense.description || t('dashboard.expense')}</Text>
                   <Text style={styles.expenseDate}>{formatRelativeDate(expense.date)}</Text>
                 </View>
-                <Text style={styles.expenseAmount}>
-                  -{formatCurrency(expense.amount, expense.currencyCode)}
-                </Text>
+                <Text style={styles.expenseAmount}>-{formatCurrency(expense.amount, expense.currencyCode)}</Text>
               </TouchableOpacity>
             ))
           )}
         </View>
 
-        {/* Active Budgets */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('dashboard.activeBudgets')}</Text>
@@ -140,27 +125,20 @@ export default function DashboardScreen() {
               <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
             </TouchableOpacity>
           </View>
-
           {activeBudgets.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="wallet-outline" size={48} color="#ccc" />
+              <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
               <Text style={styles.emptyStateText}>{t('dashboard.noBudgets')}</Text>
               <Text style={styles.emptyStateSubtext}>{t('dashboard.createBudgetHint')}</Text>
             </View>
           ) : (
             activeBudgets.slice(0, 3).map((budget) => (
-              <TouchableOpacity
-                key={budget.id}
-                style={styles.budgetItem}
-                onPress={() => router.push(`/budget/${budget.id}`)}
-              >
+              <TouchableOpacity key={budget.id} style={styles.budgetItem} onPress={() => router.push(`/budget/${budget.id}`)}>
                 <View style={styles.budgetInfo}>
                   <Text style={styles.budgetName}>{budget.name}</Text>
                   <Text style={styles.budgetPeriod}>{budget.period}</Text>
                 </View>
-                <Text style={styles.budgetAmountText}>
-                  {formatCurrency(budget.amount, budget.currencyCode)}
-                </Text>
+                <Text style={styles.budgetAmountText}>{formatCurrency(budget.amount, budget.currencyCode)}</Text>
               </TouchableOpacity>
             ))
           )}
@@ -170,186 +148,172 @@ export default function DashboardScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   scrollView: {
     flex: 1,
   },
   content: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[8],
   },
   welcomeSection: {
-    marginBottom: 24,
+    marginBottom: theme.spacing[6],
   },
   welcomeText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    ...theme.textStyles.h1,
+    color: theme.colors.textPrimary,
   },
   dateText: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 4,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[1],
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[5],
+    ...theme.shadows.md,
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 12,
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[3],
   },
   budgetOverview: {
-    gap: 16,
+    gap: theme.spacing[4],
   },
   budgetAmount: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'baseline' as const,
+    gap: theme.spacing[2],
   },
   spentAmount: {
+    ...theme.textStyles.h2,
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#333',
+    color: theme.colors.textPrimary,
   },
   budgetTotal: {
-    fontSize: 16,
-    color: '#999',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
   },
   progressContainer: {
-    gap: 8,
+    gap: theme.spacing[2],
   },
   progressBar: {
     height: 8,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 4,
-    overflow: 'hidden',
+    backgroundColor: theme.colors.progressTrack,
+    borderRadius: theme.borderRadius.sm,
+    overflow: 'hidden' as const,
   },
   progressFill: {
-    height: '100%',
-    borderRadius: 4,
+    height: '100%' as const,
+    borderRadius: theme.borderRadius.sm,
   },
   progressText: {
-    fontSize: 14,
-    color: '#666',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
   },
   quickActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 24,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-around' as const,
+    marginBottom: theme.spacing[6],
   },
   quickActionButton: {
-    alignItems: 'center',
-    gap: 8,
-    padding: 12,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    padding: theme.spacing[3],
   },
   quickActionText: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '500',
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: theme.spacing[6],
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[3],
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
   },
   seeAllText: {
-    fontSize: 14,
-    color: '#4ECDC4',
-    fontWeight: '500',
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textLink,
   },
   emptyState: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 32,
-    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[8],
+    alignItems: 'center' as const,
   },
   emptyStateText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#666',
-    marginTop: 12,
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[3],
   },
   emptyStateSubtext: {
-    fontSize: 14,
-    color: '#999',
-    marginTop: 4,
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   expenseItem: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[2],
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
   },
   expenseInfo: {
     flex: 1,
   },
   expenseDescription: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
   },
   expenseDate: {
-    fontSize: 14,
-    color: '#999',
-    marginTop: 4,
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   expenseAmount: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FF6B6B',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.danger,
   },
   budgetItem: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[2],
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
   },
   budgetInfo: {
     flex: 1,
   },
   budgetName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
   },
   budgetPeriod: {
-    fontSize: 14,
-    color: '#999',
-    marginTop: 4,
-    textTransform: 'capitalize',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
+    textTransform: 'capitalize' as const,
   },
   budgetAmountText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.primary,
   },
 });

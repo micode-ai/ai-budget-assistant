@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   ScrollView,
@@ -14,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -28,6 +28,8 @@ const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB'];
 
 export default function CreateAccountScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { createAccount, isLoading } = useAccountStore();
 
   const [name, setName] = useState('');
@@ -58,6 +60,7 @@ export default function CreateAccountScreen() {
           value={name}
           onChangeText={setName}
           placeholder={t('accounts.namePlaceholder')}
+          placeholderTextColor={theme.colors.textTertiary}
           autoFocus
         />
 
@@ -76,7 +79,7 @@ export default function CreateAccountScreen() {
               <Ionicons
                 name={item.icon}
                 size={28}
-                color={type === item.type ? '#4ECDC4' : '#999'}
+                color={type === item.type ? theme.colors.primary : theme.colors.textTertiary}
               />
               <Text
                 style={[
@@ -121,7 +124,7 @@ export default function CreateAccountScreen() {
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={theme.colors.textInverse} />
           ) : (
             <Text style={styles.submitButtonText}>{t('accounts.create')}</Text>
           )}
@@ -131,100 +134,97 @@ export default function CreateAccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   scrollView: {
     flex: 1,
   },
   content: {
-    padding: 20,
+    padding: theme.spacing[5],
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-    marginTop: 16,
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+    marginTop: theme.spacing[4],
   },
   input: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 14,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3.5],
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
   typeRow: {
-    flexDirection: 'row',
-    gap: 12,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
   },
   typeCard: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     borderWidth: 2,
-    borderColor: '#e0e0e0',
-    gap: 8,
+    borderColor: theme.colors.border,
+    gap: theme.spacing[2],
   },
   typeCardActive: {
-    borderColor: '#4ECDC4',
-    backgroundColor: '#f0faf9',
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
   },
   typeLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    color: '#999',
+    fontWeight: '500' as const,
+    color: theme.colors.textTertiary,
   },
   typeLabelActive: {
-    color: '#4ECDC4',
-    fontWeight: '600',
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   currencyRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
   currencyChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2.5],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
   currencyChipActive: {
-    borderColor: '#4ECDC4',
-    backgroundColor: '#f0faf9',
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
   },
   currencyText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#666',
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
   },
   currencyTextActive: {
-    color: '#4ECDC4',
-    fontWeight: '600',
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   submitButton: {
-    backgroundColor: '#4ECDC4',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 32,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[8],
   },
   submitButtonDisabled: {
     opacity: 0.7,
   },
   submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
 });

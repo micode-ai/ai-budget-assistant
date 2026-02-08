@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   TouchableOpacity,
   Alert,
@@ -12,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, AccountRole } from '@budget/shared-types';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -22,15 +22,17 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, IconName> = {
   shared: 'people-outline',
 };
 
-const ROLE_COLORS: Record<AccountRole, string> = {
-  owner: '#4ECDC4',
-  editor: '#45B7D1',
-  viewer: '#999',
-};
-
 export default function AccountListScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { accounts, currentAccountId, deleteAccount } = useAccountStore();
+
+  const ROLE_COLORS: Record<AccountRole, string> = {
+    owner: theme.colors.primary,
+    editor: theme.colors.secondary,
+    viewer: theme.colors.textTertiary,
+  };
 
   const handleDelete = (id: string, name: string) => {
     Alert.alert(
@@ -71,7 +73,7 @@ export default function AccountListScreen() {
               <Ionicons
                 name={ACCOUNT_TYPE_ICONS[item.type]}
                 size={24}
-                color={item.id === currentAccountId ? '#4ECDC4' : '#666'}
+                color={item.id === currentAccountId ? theme.colors.primary : theme.colors.textSecondary}
               />
             </View>
             <View style={styles.accountInfo}>
@@ -89,11 +91,11 @@ export default function AccountListScreen() {
             </View>
             <View style={styles.actions}>
               {item.id === currentAccountId && (
-                <Ionicons name="checkmark-circle" size={20} color="#4ECDC4" style={{ marginRight: 8 }} />
+                <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} style={{ marginRight: theme.spacing[2] }} />
               )}
               {item.myRole === 'owner' && (
                 <TouchableOpacity onPress={() => handleDelete(item.id, item.name)}>
-                  <Ionicons name="trash-outline" size={20} color="#FF6B6B" />
+                  <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
                 </TouchableOpacity>
               )}
             </View>
@@ -105,14 +107,14 @@ export default function AccountListScreen() {
               style={styles.createButton}
               onPress={() => router.push('/account/create')}
             >
-              <Ionicons name="add-circle-outline" size={24} color="#4ECDC4" />
+              <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} />
               <Text style={styles.createButtonText}>{t('accounts.create')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.joinButton}
               onPress={() => router.push('/account/join')}
             >
-              <Ionicons name="enter-outline" size={24} color="#45B7D1" />
+              <Ionicons name="enter-outline" size={24} color={theme.colors.secondary} />
               <Text style={styles.joinButtonText}>{t('accounts.joinAccount')}</Text>
             </TouchableOpacity>
           </View>
@@ -122,107 +124,100 @@ export default function AccountListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   list: {
-    padding: 16,
+    padding: theme.spacing[4],
   },
   accountCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[3],
+    ...theme.shadows.sm,
   },
   accountCardActive: {
-    borderColor: '#4ECDC4',
+    borderColor: theme.colors.primary,
     borderWidth: 2,
   },
   accountIcon: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    marginRight: theme.spacing[3],
   },
   accountInfo: {
     flex: 1,
   },
   accountName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
   },
   accountMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-    gap: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[1],
+    gap: theme.spacing[2],
   },
   accountType: {
-    fontSize: 13,
-    color: '#999',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
   },
   roleBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[0.5],
+    borderRadius: theme.spacing[2.5],
   },
   roleText: {
-    fontSize: 11,
-    fontWeight: '600',
+    ...theme.textStyles.caption,
+    fontWeight: '600' as const,
   },
   actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
   },
   footerButtons: {
-    gap: 12,
-    marginTop: 4,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[1],
   },
   createButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     borderWidth: 2,
-    borderColor: '#4ECDC4',
-    borderStyle: 'dashed',
-    gap: 8,
+    borderColor: theme.colors.primary,
+    borderStyle: 'dashed' as const,
+    gap: theme.spacing[2],
   },
   createButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.primary,
   },
   joinButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     borderWidth: 2,
-    borderColor: '#45B7D1',
-    borderStyle: 'dashed',
-    gap: 8,
+    borderColor: theme.colors.secondary,
+    borderStyle: 'dashed' as const,
+    gap: theme.spacing[2],
   },
   joinButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#45B7D1',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.secondary,
   },
 });
