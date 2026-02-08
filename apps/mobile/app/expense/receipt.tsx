@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
@@ -20,6 +19,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 async function compressAndEncodeImage(uri: string): Promise<string> {
   const result = await ImageManipulator.manipulateAsync(
@@ -33,6 +33,8 @@ async function compressAndEncodeImage(uri: string): Promise<string> {
 
 export default function ReceiptExpenseScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const [showConfirm, setShowConfirm] = useState(false);
   const [saveImage, setSaveImage] = useState(false);
   const { addExpense } = useExpenseStore();
@@ -146,7 +148,7 @@ export default function ReceiptExpenseScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
-          <Ionicons name="close" size={28} color="#333" />
+          <Ionicons name="close" size={28} color={theme.colors.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.title}>{t('receipt.title')}</Text>
         <View style={styles.placeholder} />
@@ -156,7 +158,7 @@ export default function ReceiptExpenseScreen() {
         {!showConfirm ? (
           <>
             <View style={styles.instructionContainer}>
-              <Ionicons name="receipt-outline" size={80} color="#4ECDC4" />
+              <Ionicons name="receipt-outline" size={80} color={theme.colors.primary} />
               <Text style={styles.instructionText}>
                 {isProcessing ? t('receipt.analyzing') : t('receipt.instructions')}
               </Text>
@@ -170,7 +172,7 @@ export default function ReceiptExpenseScreen() {
                 {imageUri && (
                   <Image source={{ uri: imageUri }} style={styles.previewImage} />
                 )}
-                <ActivityIndicator size="large" color="#4ECDC4" style={styles.loader} />
+                <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />
                 <Text style={styles.processingText}>
                   {t('receipt.extracting')}
                 </Text>
@@ -182,7 +184,7 @@ export default function ReceiptExpenseScreen() {
                   onPress={handleCameraPress}
                   activeOpacity={0.8}
                 >
-                  <Ionicons name="camera" size={32} color="#fff" />
+                  <Ionicons name="camera" size={32} color={theme.colors.textInverse} />
                   <Text style={styles.scanButtonText}>{t('receipt.takePhoto')}</Text>
                 </TouchableOpacity>
 
@@ -191,7 +193,7 @@ export default function ReceiptExpenseScreen() {
                   onPress={handleGalleryPress}
                   activeOpacity={0.8}
                 >
-                  <Ionicons name="images" size={28} color="#4ECDC4" />
+                  <Ionicons name="images" size={28} color={theme.colors.primary} />
                   <Text style={styles.galleryButtonText}>{t('receipt.chooseGallery')}</Text>
                 </TouchableOpacity>
               </View>
@@ -277,7 +279,7 @@ export default function ReceiptExpenseScreen() {
                   }
                   size={16}
                   color={
-                    scannedReceipt && scannedReceipt.confidence > 0.8 ? '#4ECDC4' : '#FFEAA7'
+                    scannedReceipt && scannedReceipt.confidence > 0.8 ? theme.colors.primary : theme.colors.warning
                   }
                 />
                 <Text style={styles.confidenceText}>
@@ -294,25 +296,25 @@ export default function ReceiptExpenseScreen() {
               <Ionicons
                 name={saveImage ? 'checkbox' : 'square-outline'}
                 size={24}
-                color={saveImage ? '#4ECDC4' : '#999'}
+                color={saveImage ? theme.colors.primary : theme.colors.textTertiary}
               />
               <Text style={styles.saveImageText}>{t('receipt.saveImage')}</Text>
             </TouchableOpacity>
 
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.editButton} onPress={handleEditExpense}>
-                <Ionicons name="pencil" size={20} color="#4ECDC4" />
+                <Ionicons name="pencil" size={20} color={theme.colors.primary} />
                 <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmExpense}>
-                <Ionicons name="checkmark" size={20} color="#fff" />
+                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
                 <Text style={styles.confirmButtonText}>{t('receipt.saveExpense')}</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
-              <Ionicons name="refresh" size={20} color="#666" />
+              <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
               <Text style={styles.retryButtonText}>{t('receipt.scanAgain')}</Text>
             </TouchableOpacity>
           </View>
@@ -322,26 +324,25 @@ export default function ReceiptExpenseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.surface,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    padding: theme.spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   closeButton: {
-    padding: 4,
+    padding: theme.spacing[1],
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
   },
   placeholder: {
     width: 36,
@@ -350,234 +351,226 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 24,
-    alignItems: 'center',
+    padding: theme.spacing[6],
+    alignItems: 'center' as const,
   },
   instructionContainer: {
-    alignItems: 'center',
-    marginBottom: 48,
-    marginTop: 24,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[12],
+    marginTop: theme.spacing[6],
   },
   instructionText: {
     fontSize: 18,
-    color: '#333',
-    marginTop: 24,
-    fontWeight: '500',
-    textAlign: 'center',
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing[6],
+    fontWeight: '500' as const,
+    textAlign: 'center' as const,
   },
   exampleText: {
     fontSize: 14,
-    color: '#999',
-    marginTop: 8,
-    textAlign: 'center',
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[2],
+    textAlign: 'center' as const,
   },
   buttonContainer: {
-    width: '100%',
-    gap: 16,
+    width: '100%' as const,
+    gap: theme.spacing[4],
   },
   scanButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#4ECDC4',
-    paddingVertical: 20,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    gap: 12,
-    shadowColor: '#4ECDC4',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing[5],
+    paddingHorizontal: theme.spacing[8],
+    borderRadius: theme.borderRadius.xl,
+    gap: theme.spacing[3],
+    ...theme.shadows.xl,
   },
   scanButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
+    ...theme.textStyles.h3,
+    color: theme.colors.textInverse,
   },
   galleryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[6],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#4ECDC4',
-    gap: 10,
+    borderColor: theme.colors.primary,
+    gap: theme.spacing[2.5],
   },
   galleryButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    ...theme.textStyles.button,
+    color: theme.colors.primary,
   },
   processingContainer: {
-    alignItems: 'center',
-    padding: 24,
-    width: '100%',
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
+    width: '100%' as const,
   },
   previewImage: {
     width: 200,
     height: 280,
-    borderRadius: 12,
-    marginBottom: 24,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[6],
   },
   loader: {
-    marginBottom: 16,
+    marginBottom: theme.spacing[4],
   },
   processingText: {
     fontSize: 16,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   confirmContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: '100%' as const,
+    alignItems: 'center' as const,
   },
   confirmTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 16,
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[4],
   },
   receiptImage: {
     width: 120,
     height: 160,
-    borderRadius: 8,
-    marginBottom: 20,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing[5],
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
   expenseCard: {
-    width: '100%',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 24,
+    width: '100%' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[6],
   },
   expenseRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   expenseLabel: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   expenseAmount: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
   },
   expenseValue: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
-    maxWidth: '60%',
-    textAlign: 'right',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
+    maxWidth: '60%' as const,
+    textAlign: 'right' as const,
   },
   itemsSection: {
-    marginTop: 16,
-    paddingTop: 16,
+    marginTop: theme.spacing[4],
+    paddingTop: theme.spacing[4],
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: theme.colors.border,
   },
   itemsTitle: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 12,
+    fontWeight: '600' as const,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[3],
   },
   itemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 6,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[1.5],
   },
   itemDescription: {
     fontSize: 14,
-    color: '#333',
+    color: theme.colors.textPrimary,
     flex: 1,
-    marginRight: 12,
+    marginRight: theme.spacing[3],
   },
   itemPrice: {
     fontSize: 14,
-    color: '#333',
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   moreItems: {
     fontSize: 12,
-    color: '#999',
-    marginTop: 8,
-    textAlign: 'center',
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[2],
+    textAlign: 'center' as const,
   },
   confidenceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 12,
-    gap: 6,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingTop: theme.spacing[3],
+    gap: theme.spacing[1.5],
   },
   confidenceText: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   saveImageCheckbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 20,
-    paddingHorizontal: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2.5],
+    marginBottom: theme.spacing[5],
+    paddingHorizontal: theme.spacing[2],
   },
   saveImageText: {
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
   },
   confirmActions: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[4],
   },
   editButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[6],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#4ECDC4',
-    gap: 8,
+    borderColor: theme.colors.primary,
+    gap: theme.spacing[2],
   },
   editButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    ...theme.textStyles.button,
+    color: theme.colors.primary,
   },
   confirmButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    backgroundColor: '#4ECDC4',
-    gap: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[6],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    gap: theme.spacing[2],
   },
   confirmButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
   retryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    gap: 6,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3],
+    gap: theme.spacing[1.5],
   },
   retryButtonText: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
 });

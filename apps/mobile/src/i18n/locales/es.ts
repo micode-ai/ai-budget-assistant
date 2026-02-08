@@ -320,6 +320,13 @@ export default {
       viewer: 'Solo puede ver los datos',
     },
   },
+  settings: {
+    appearance: 'Apariencia',
+    theme: 'Tema',
+    system: 'Sistema',
+    light: 'Claro',
+    dark: 'Oscuro',
+  },
   errors: {
     loginFailed: 'Error al iniciar sesión',
     registrationFailed: 'Error en el registro',

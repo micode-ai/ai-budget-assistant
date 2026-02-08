@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   ScrollView,
@@ -18,9 +17,12 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { DEFAULT_EXPENSE_CATEGORIES, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function NewExpenseScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const params = useLocalSearchParams<{
     amount?: string;
     description?: string;
@@ -89,14 +91,14 @@ export default function NewExpenseScreen() {
               <Text style={styles.currencyText}>
                 {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.symbol || '$'}
               </Text>
-              <Ionicons name="chevron-down" size={16} color="#666" />
+              <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
             </TouchableOpacity>
             <TextInput
               style={styles.amountInput}
               value={amount}
               onChangeText={setAmount}
               placeholder={t('expenseNew.amountPlaceholder')}
-              placeholderTextColor="#ccc"
+              placeholderTextColor={theme.colors.textDisabled}
               keyboardType="decimal-pad"
               autoFocus={!params.amount}
             />
@@ -119,7 +121,7 @@ export default function NewExpenseScreen() {
                   <Text style={styles.pickerSymbol}>{currency.symbol}</Text>
                   <Text style={styles.pickerLabel}>{currency.name}</Text>
                   {currencyCode === currency.code && (
-                    <Ionicons name="checkmark" size={20} color="#4ECDC4" />
+                    <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -134,7 +136,7 @@ export default function NewExpenseScreen() {
               value={description}
               onChangeText={setDescription}
               placeholder={t('expenseNew.descriptionPlaceholder')}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.colors.textTertiary}
             />
           </View>
 
@@ -177,7 +179,7 @@ export default function NewExpenseScreen() {
             onPress={handleSubmit}
             disabled={isSubmitting}
           >
-            <Ionicons name="checkmark" size={22} color="#fff" />
+            <Ionicons name="checkmark" size={22} color={theme.colors.textInverse} />
             <Text style={styles.submitButtonText}>
               {isSubmitting ? t('expenseNew.saving') : t('expenseNew.saveExpense')}
             </Text>
@@ -188,132 +190,128 @@ export default function NewExpenseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.surface,
   },
   flex: {
     flex: 1,
   },
   scrollContent: {
-    padding: 24,
+    padding: theme.spacing[6],
   },
   amountContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 32,
-    paddingVertical: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    marginBottom: theme.spacing[8],
+    paddingVertical: theme.spacing[4],
   },
   currencyButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginRight: 12,
-    gap: 4,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+    marginRight: theme.spacing[3],
+    gap: theme.spacing[1],
   },
   currencyText: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
   },
   amountInput: {
     fontSize: 48,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
     minWidth: 120,
-    textAlign: 'center',
+    textAlign: 'center' as const,
   },
   pickerContainer: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    marginBottom: 24,
-    overflow: 'hidden',
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[6],
+    overflow: 'hidden' as const,
   },
   pickerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3.5],
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   pickerItemSelected: {
-    backgroundColor: '#E8F8F7',
+    backgroundColor: theme.colors.primaryLight,
   },
   pickerSymbol: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
     width: 30,
   },
   pickerLabel: {
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   fieldContainer: {
-    marginBottom: 24,
+    marginBottom: theme.spacing[6],
   },
   fieldLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
   },
   textInput: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
   },
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
   categoryChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: theme.spacing[3.5],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1.5,
-    borderColor: '#e0e0e0',
-    backgroundColor: '#fff',
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   categoryChipText: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   categoryChipTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
   },
   footer: {
-    padding: 16,
+    padding: theme.spacing[4],
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: theme.colors.divider,
   },
   submitButton: {
-    backgroundColor: '#4ECDC4',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
+    backgroundColor: theme.colors.primary,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing[2],
   },
   submitButtonDisabled: {
     opacity: 0.6,
   },
   submitButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
+    ...theme.textStyles.h3,
+    color: theme.colors.textInverse,
   },
 });

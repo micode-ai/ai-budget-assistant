@@ -320,6 +320,13 @@ export default {
       viewer: 'Kann nur Daten anzeigen',
     },
   },
+  settings: {
+    appearance: 'Erscheinungsbild',
+    theme: 'Design',
+    system: 'System',
+    light: 'Hell',
+    dark: 'Dunkel',
+  },
   errors: {
     loginFailed: 'Anmeldung fehlgeschlagen',
     registrationFailed: 'Registrierung fehlgeschlagen',

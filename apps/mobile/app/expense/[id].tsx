@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Alert,
@@ -24,9 +23,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { formatCurrency, formatDate, DEFAULT_EXPENSE_CATEGORIES } from '@budget/shared-utils';
 import type { Currency, ExpenseItem } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ExpenseDetailScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const {
     expenses,
@@ -189,7 +191,7 @@ export default function ExpenseDetailScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={64} color="#ccc" />
+          <Ionicons name="alert-circle-outline" size={64} color={theme.colors.textDisabled} />
           <Text style={styles.notFoundText}>{t('expenseDetail.notFound')}</Text>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Text style={styles.backButtonText}>{t('common.back')}</Text>
@@ -265,7 +267,7 @@ export default function ExpenseDetailScreen() {
             <Ionicons
               name={(sourceIcon[expense.source] || 'help-circle-outline') as any}
               size={14}
-              color="#666"
+              color={theme.colors.textSecondary}
             />
             <Text style={styles.sourceText}>{sourceLabel[expense.source] || expense.source}</Text>
           </View>
@@ -294,7 +296,7 @@ export default function ExpenseDetailScreen() {
                   style={styles.datePickerButton}
                   onPress={() => setShowDatePicker(true)}
                 >
-                  <Ionicons name="calendar-outline" size={18} color="#4ECDC4" />
+                  <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
                   <Text style={styles.datePickerText}>{formatDate(editDate)}</Text>
                 </TouchableOpacity>
                 {showDatePicker && (
@@ -365,7 +367,7 @@ export default function ExpenseDetailScreen() {
             <View style={styles.itemsHeader}>
               <Text style={styles.itemsTitle}>{t('expenseDetail.receiptItems')}</Text>
               <TouchableOpacity onPress={openAddItem} style={styles.addItemButton}>
-                <Ionicons name="add-circle-outline" size={24} color="#4ECDC4" />
+                <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} />
               </TouchableOpacity>
             </View>
 
@@ -386,10 +388,10 @@ export default function ExpenseDetailScreen() {
                     </Text>
                     <View style={styles.itemButtons}>
                       <TouchableOpacity onPress={() => openEditItem(item)} style={styles.itemIconBtn}>
-                        <Ionicons name="pencil-outline" size={16} color="#4ECDC4" />
+                        <Ionicons name="pencil-outline" size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => handleDeleteItem(item)} style={styles.itemIconBtn}>
-                        <Ionicons name="trash-outline" size={16} color="#FF6B6B" />
+                        <Ionicons name="trash-outline" size={16} color={theme.colors.danger} />
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -405,7 +407,7 @@ export default function ExpenseDetailScreen() {
             <Text style={styles.imageSectionTitle}>{t('expenseDetail.receiptImage')}</Text>
 
             {imageLoading ? (
-              <ActivityIndicator size="small" color="#4ECDC4" style={{ marginVertical: 16 }} />
+              <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginVertical: 16 }} />
             ) : receiptImageBase64 ? (
               <>
                 <TouchableOpacity onPress={() => setImageViewVisible(true)}>
@@ -417,26 +419,26 @@ export default function ExpenseDetailScreen() {
                 </TouchableOpacity>
                 <View style={styles.imageActions}>
                   <TouchableOpacity style={styles.imageActionBtn} onPress={() => setImageViewVisible(true)}>
-                    <Ionicons name="eye-outline" size={18} color="#4ECDC4" />
+                    <Ionicons name="eye-outline" size={18} color={theme.colors.primary} />
                     <Text style={styles.imageActionText}>{t('expenseDetail.viewImage')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.imageActionBtn} onPress={handleDownloadImage}>
-                    <Ionicons name="download-outline" size={18} color="#4ECDC4" />
+                    <Ionicons name="download-outline" size={18} color={theme.colors.primary} />
                     <Text style={styles.imageActionText}>{t('expenseDetail.downloadImage')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.imageActionBtn} onPress={handleReplaceImage}>
-                    <Ionicons name="swap-horizontal-outline" size={18} color="#45B7D1" />
-                    <Text style={[styles.imageActionText, { color: '#45B7D1' }]}>{t('expenseDetail.replaceImage')}</Text>
+                    <Ionicons name="swap-horizontal-outline" size={18} color={theme.colors.secondary} />
+                    <Text style={[styles.imageActionText, { color: theme.colors.secondary }]}>{t('expenseDetail.replaceImage')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.imageActionBtn} onPress={handleDeleteImage}>
-                    <Ionicons name="trash-outline" size={18} color="#FF6B6B" />
-                    <Text style={[styles.imageActionText, { color: '#FF6B6B' }]}>{t('expenseDetail.deleteImage')}</Text>
+                    <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
+                    <Text style={[styles.imageActionText, { color: theme.colors.danger }]}>{t('expenseDetail.deleteImage')}</Text>
                   </TouchableOpacity>
                 </View>
               </>
             ) : (
               <TouchableOpacity style={styles.addImageBtn} onPress={handleReplaceImage}>
-                <Ionicons name="image-outline" size={32} color="#ccc" />
+                <Ionicons name="image-outline" size={32} color={theme.colors.textDisabled} />
                 <Text style={styles.addImageText}>{t('expenseDetail.replaceImage')}</Text>
               </TouchableOpacity>
             )}
@@ -534,7 +536,7 @@ export default function ExpenseDetailScreen() {
                 <Text style={styles.cancelEditText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.saveEditButton} onPress={handleSaveEdit}>
-                <Ionicons name="checkmark" size={20} color="#fff" />
+                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
                 <Text style={styles.saveEditText}>{t('common.save')}</Text>
               </TouchableOpacity>
             </View>
@@ -544,11 +546,11 @@ export default function ExpenseDetailScreen() {
                 style={styles.editButton}
                 onPress={() => setIsEditing(true)}
               >
-                <Ionicons name="pencil" size={20} color="#4ECDC4" />
+                <Ionicons name="pencil" size={20} color={theme.colors.primary} />
                 <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                <Ionicons name="trash" size={20} color="#FF6B6B" />
+                <Ionicons name="trash" size={20} color={theme.colors.danger} />
                 <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
               </TouchableOpacity>
             </View>
@@ -559,429 +561,413 @@ export default function ExpenseDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
   },
   notFoundText: {
     fontSize: 18,
-    color: '#999',
-    marginTop: 16,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[4],
   },
   backButton: {
-    marginTop: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: '#4ECDC4',
-    borderRadius: 12,
+    marginTop: theme.spacing[4],
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[3],
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
   },
   backButtonText: {
-    color: '#fff',
+    color: theme.colors.textInverse,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600' as const,
   },
   scrollContent: {
-    padding: 16,
+    padding: theme.spacing[4],
   },
   amountCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[6],
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   amountText: {
     fontSize: 36,
-    fontWeight: 'bold',
-    color: '#FF6B6B',
+    fontWeight: 'bold' as const,
+    color: theme.colors.danger,
   },
   amountEditInput: {
     fontSize: 36,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    textAlign: 'center' as const,
     borderBottomWidth: 2,
-    borderBottomColor: '#4ECDC4',
-    paddingBottom: 4,
+    borderBottomColor: theme.colors.primary,
+    paddingBottom: theme.spacing[1],
     minWidth: 150,
   },
   sourceBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 12,
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    marginTop: theme.spacing[3],
+    backgroundColor: theme.colors.surfaceSecondary,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.lg,
   },
   sourceText: {
     fontSize: 13,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   detailsCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   detailRow: {
-    paddingVertical: 14,
+    paddingVertical: theme.spacing[3.5],
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: theme.colors.divider,
   },
   detailLabel: {
     fontSize: 13,
-    color: '#999',
-    marginBottom: 4,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1],
   },
   detailValue: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   detailEditInput: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
     borderBottomWidth: 1,
-    borderBottomColor: '#4ECDC4',
-    paddingVertical: 4,
+    borderBottomColor: theme.colors.primary,
+    paddingVertical: theme.spacing[1],
   },
   datePickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    alignSelf: 'flex-start',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[3],
+    backgroundColor: theme.colors.divider,
+    borderRadius: theme.borderRadius.md,
+    alignSelf: 'flex-start' as const,
   },
   datePickerText: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 4,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[1],
   },
   categoryChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.xl,
     borderWidth: 1.5,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   categoryChipText: {
     fontSize: 13,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   categoryChipTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
   },
   actionsContainer: {
-    marginTop: 8,
+    marginTop: theme.spacing[2],
   },
   editActions: {
-    flexDirection: 'row',
-    gap: 12,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
   },
   editButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#4ECDC4',
-    gap: 8,
+    borderColor: theme.colors.primary,
+    gap: theme.spacing[2],
   },
   editButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
   },
   deleteButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#FF6B6B',
-    gap: 8,
+    borderColor: theme.colors.danger,
+    gap: theme.spacing[2],
   },
   deleteButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FF6B6B',
+    fontWeight: '600' as const,
+    color: theme.colors.danger,
   },
   cancelEditButton: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: theme.colors.textDisabled,
   },
   cancelEditText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: '600' as const,
+    color: theme.colors.textSecondary,
   },
   saveEditButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: '#4ECDC4',
-    gap: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    gap: theme.spacing[2],
   },
   saveEditText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: '600' as const,
+    color: theme.colors.textInverse,
   },
   // Items section
   itemsCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   itemsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[3],
   },
   itemsTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
   },
   addItemButton: {
-    padding: 4,
+    padding: theme.spacing[1],
   },
   noItemsText: {
     fontSize: 14,
-    color: '#999',
-    textAlign: 'center',
-    paddingVertical: 12,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    paddingVertical: theme.spacing[3],
   },
   itemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[2.5],
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: theme.colors.divider,
   },
   itemInfo: {
     flex: 1,
-    marginRight: 12,
+    marginRight: theme.spacing[3],
   },
   itemName: {
     fontSize: 15,
-    color: '#333',
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   itemMeta: {
     fontSize: 12,
-    color: '#999',
+    color: theme.colors.textTertiary,
     marginTop: 2,
   },
   itemActions: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-end' as const,
   },
   itemTotal: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
   },
   itemButtons: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 4,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[1],
   },
   itemIconBtn: {
-    padding: 4,
+    padding: theme.spacing[1],
   },
   // Receipt image section
   imageCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
   },
   imageSectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 12,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[3],
   },
   receiptThumbnail: {
-    width: '100%',
+    width: '100%' as const,
     height: 200,
-    borderRadius: 12,
-    marginBottom: 12,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[3],
   },
   imageActions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
   imageActionBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    backgroundColor: '#f5f5f5',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingVertical: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surfaceSecondary,
   },
   imageActionText: {
     fontSize: 13,
-    color: '#4ECDC4',
-    fontWeight: '500',
+    color: theme.colors.primary,
+    fontWeight: '500' as const,
   },
   addImageBtn: {
-    alignItems: 'center',
-    paddingVertical: 24,
-    borderRadius: 12,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[6],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderStyle: 'dashed',
+    borderColor: theme.colors.border,
+    borderStyle: 'dashed' as const,
   },
   addImageText: {
     fontSize: 14,
-    color: '#999',
-    marginTop: 8,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[2],
   },
   // Image viewer modal
   imageModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.9)' as const,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
   },
   imageModalClose: {
-    position: 'absolute',
+    position: 'absolute' as const,
     top: 50,
     right: 20,
     zIndex: 10,
   },
   imageModalFull: {
-    width: '95%',
-    height: '80%',
+    width: '95%' as const,
+    height: '80%' as const,
   },
   // Item modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: theme.colors.overlay,
+    justifyContent: 'flex-end' as const,
   },
   modalContent: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 24,
-    paddingBottom: 40,
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius['2xl'],
+    borderTopRightRadius: theme.borderRadius['2xl'],
+    padding: theme.spacing[6],
+    paddingBottom: theme.spacing[10],
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 20,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[5],
   },
   modalLabel: {
     fontSize: 13,
-    color: '#999',
-    marginBottom: 6,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1.5],
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.md + 2,
+    paddingHorizontal: theme.spacing[3.5],
+    paddingVertical: theme.spacing[2.5],
     fontSize: 16,
-    color: '#333',
-    marginBottom: 14,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[3.5],
   },
   modalRow: {
-    flexDirection: 'row',
-    gap: 12,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
   },
   modalHalf: {
     flex: 1,
   },
   modalActions: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[2],
   },
   modalCancel: {
     flex: 1,
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: theme.colors.textDisabled,
   },
   modalCancelText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: '600' as const,
+    color: theme.colors.textSecondary,
   },
   modalSave: {
     flex: 1,
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: '#4ECDC4',
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
   },
   modalSaveText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: '600' as const,
+    color: theme.colors.textInverse,
   },
 });

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { useState, useCallback } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency } from '@budget/shared-utils';
+import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Budget } from '@budget/shared-types';
 
 export default function BudgetsScreen() {
@@ -14,6 +15,8 @@ export default function BudgetsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { budgets, getBudgetProgress } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -59,7 +62,7 @@ export default function BudgetsScreen() {
                 styles.progressFill,
                 {
                   width: `${Math.min(percentUsed, 100)}%`,
-                  backgroundColor: isOverBudget ? '#FF6B6B' : percentUsed > 80 ? '#FFEAA7' : '#4ECDC4',
+                  backgroundColor: isOverBudget ? theme.colors.danger : percentUsed > 80 ? theme.colors.warning : theme.colors.primary,
                 },
               ]}
             />
@@ -78,7 +81,7 @@ export default function BudgetsScreen() {
 
   const ListEmptyComponent = () => (
     <View style={styles.emptyState}>
-      <Ionicons name="wallet-outline" size={64} color="#ccc" />
+      <Ionicons name="wallet-outline" size={64} color={theme.colors.textDisabled} />
       <Text style={styles.emptyTitle}>{t('budgets.noBudgets')}</Text>
       <Text style={styles.emptySubtitle}>
         {t('budgets.createHint')}
@@ -112,161 +115,148 @@ export default function BudgetsScreen() {
           style={styles.fab}
           onPress={() => router.push('/budget/new')}
         >
-          <Ionicons name="add" size={28} color="#fff" />
+          <Ionicons name="add" size={28} color={theme.colors.textInverse} />
         </TouchableOpacity>
       )}
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   listContent: {
-    padding: 16,
+    padding: theme.spacing[4],
     paddingBottom: 100,
     flexGrow: 1,
   },
   budgetCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    ...theme.shadows.md,
   },
   budgetHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 16,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'flex-start' as const,
+    marginBottom: theme.spacing[4],
   },
   budgetInfo: {
     flex: 1,
   },
   budgetName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
   },
   budgetPeriod: {
-    fontSize: 14,
-    color: '#999',
-    marginTop: 4,
-    textTransform: 'capitalize',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
+    textTransform: 'capitalize' as const,
   },
   statusBadge: {
-    backgroundColor: '#E8F8F7',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    backgroundColor: theme.colors.primaryLight,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.lg,
   },
   statusBadgeOver: {
-    backgroundColor: '#FFE5E5',
+    backgroundColor: theme.colors.dangerLight,
   },
   statusText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#4ECDC4',
+    ...theme.textStyles.caption,
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
   },
   statusTextOver: {
-    color: '#FF6B6B',
+    color: theme.colors.danger,
   },
   amountRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
-    marginBottom: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'baseline' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[3],
   },
   spentText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    ...theme.textStyles.h2,
+    color: theme.colors.textPrimary,
   },
   budgetText: {
-    fontSize: 16,
-    color: '#999',
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
   },
   progressContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
   },
   progressBar: {
     flex: 1,
     height: 8,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 4,
-    overflow: 'hidden',
+    backgroundColor: theme.colors.progressTrack,
+    borderRadius: theme.borderRadius.sm,
+    overflow: 'hidden' as const,
   },
   progressFill: {
-    height: '100%',
-    borderRadius: 4,
+    height: '100%' as const,
+    borderRadius: theme.borderRadius.sm,
   },
   progressText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
     width: 40,
-    textAlign: 'right',
+    textAlign: 'right' as const,
   },
   remainingText: {
-    fontSize: 14,
-    color: '#4ECDC4',
-    marginTop: 12,
-    fontWeight: '500',
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
+    marginTop: theme.spacing[3],
   },
   separator: {
-    height: 12,
+    height: theme.spacing[3],
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.spacing[8],
   },
   emptyTitle: {
+    ...theme.textStyles.h3,
     fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
-    marginTop: 16,
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing[4],
   },
   emptySubtitle: {
-    fontSize: 16,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 24,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[2],
+    marginBottom: theme.spacing[6],
   },
   addButton: {
-    backgroundColor: '#4ECDC4',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius['3xl'],
   },
   addButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
   fab: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
+    position: 'absolute' as const,
+    right: theme.spacing[5],
+    bottom: theme.spacing[5],
     width: 56,
     height: 56,
-    borderRadius: 28,
-    backgroundColor: '#4ECDC4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    ...theme.shadows.xl,
   },
 });

@@ -320,6 +320,13 @@ export default {
       viewer: 'Może tylko przeglądać dane',
     },
   },
+  settings: {
+    appearance: 'Wygląd',
+    theme: 'Motyw',
+    system: 'Systemowy',
+    light: 'Jasny',
+    dark: 'Ciemny',
+  },
   errors: {
     loginFailed: 'Logowanie nie powiodło się',
     registrationFailed: 'Rejestracja nie powiodła się',

@@ -320,6 +320,13 @@ export default {
       viewer: 'Може лише переглядати дані',
     },
   },
+  settings: {
+    appearance: 'Зовнішній вигляд',
+    theme: 'Тема',
+    system: 'Системна',
+    light: 'Світла',
+    dark: 'Темна',
+  },
   errors: {
     loginFailed: 'Не вдалося увійти',
     registrationFailed: 'Не вдалося зареєструватися',

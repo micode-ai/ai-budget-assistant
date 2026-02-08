@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   ScrollView,
@@ -22,9 +21,12 @@ import {
   DEFAULT_EXPENSE_CATEGORIES,
 } from '@budget/shared-utils';
 import type { Currency, BudgetPeriod } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function NewBudgetScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { addBudget } = useBudgetStore();
   const { user } = useAuthStore();
 
@@ -88,7 +90,7 @@ export default function NewBudgetScreen() {
               value={name}
               onChangeText={setName}
               placeholder={t('budgetNew.namePlaceholder')}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.colors.textTertiary}
               autoFocus
             />
           </View>
@@ -104,14 +106,14 @@ export default function NewBudgetScreen() {
                 <Text style={styles.currencyText}>
                   {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.symbol || '$'}
                 </Text>
-                <Ionicons name="chevron-down" size={14} color="#666" />
+                <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
               </TouchableOpacity>
               <TextInput
                 style={styles.amountInput}
                 value={amount}
                 onChangeText={setAmount}
                 placeholder={t('budgetNew.amountPlaceholder')}
-                placeholderTextColor="#999"
+                placeholderTextColor={theme.colors.textTertiary}
                 keyboardType="decimal-pad"
               />
             </View>
@@ -134,7 +136,7 @@ export default function NewBudgetScreen() {
                   <Text style={styles.pickerSymbol}>{currency.symbol}</Text>
                   <Text style={styles.pickerLabel}>{currency.name}</Text>
                   {currencyCode === currency.code && (
-                    <Ionicons name="checkmark" size={20} color="#4ECDC4" />
+                    <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -233,7 +235,7 @@ export default function NewBudgetScreen() {
             onPress={handleSubmit}
             disabled={isSubmitting}
           >
-            <Ionicons name="checkmark" size={22} color="#fff" />
+            <Ionicons name="checkmark" size={22} color={theme.colors.textInverse} />
             <Text style={styles.submitButtonText}>
               {isSubmitting ? t('budgetNew.creating') : t('budgetNew.createBudget')}
             </Text>
@@ -244,188 +246,184 @@ export default function NewBudgetScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.surface,
   },
   flex: {
     flex: 1,
   },
   scrollContent: {
-    padding: 24,
+    padding: theme.spacing[6],
   },
   fieldContainer: {
-    marginBottom: 24,
+    marginBottom: theme.spacing[6],
   },
   fieldLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
   },
   fieldHint: {
     fontSize: 13,
-    color: '#999',
-    marginBottom: 8,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[2],
   },
   textInput: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
   },
   amountRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
   },
   currencyButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 12,
-    paddingVertical: 14,
-    borderRadius: 12,
-    gap: 4,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing[1],
   },
   currencyText: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
   },
   amountInput: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
   },
   pickerContainer: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    marginBottom: 24,
-    overflow: 'hidden',
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[6],
+    overflow: 'hidden' as const,
   },
   pickerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 14,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3.5],
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   pickerItemSelected: {
-    backgroundColor: '#E8F8F7',
+    backgroundColor: theme.colors.primaryLight,
   },
   pickerSymbol: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
     width: 30,
   },
   pickerLabel: {
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   periodRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
   periodChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1.5,
-    borderColor: '#e0e0e0',
-    backgroundColor: '#fff',
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   periodChipSelected: {
-    backgroundColor: '#4ECDC4',
-    borderColor: '#4ECDC4',
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   periodChipText: {
     fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
+    color: theme.colors.textSecondary,
+    fontWeight: '500' as const,
   },
   periodChipTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
   },
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
   categoryChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: theme.spacing[3.5],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1.5,
-    borderColor: '#e0e0e0',
-    backgroundColor: '#fff',
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   categoryChipText: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   categoryChipTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
   },
   thresholdRow: {
-    flexDirection: 'row',
-    gap: 8,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[2],
   },
   thresholdChip: {
     flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 12,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1.5,
-    borderColor: '#e0e0e0',
-    backgroundColor: '#fff',
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   thresholdChipSelected: {
-    backgroundColor: '#FFEAA7',
-    borderColor: '#FFEAA7',
+    backgroundColor: theme.colors.warning,
+    borderColor: theme.colors.warning,
   },
   thresholdChipText: {
     fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
+    color: theme.colors.textSecondary,
+    fontWeight: '500' as const,
   },
   thresholdChipTextSelected: {
-    color: '#333',
-    fontWeight: '600',
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
   },
   footer: {
-    padding: 16,
+    padding: theme.spacing[4],
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
+    borderTopColor: theme.colors.divider,
   },
   submitButton: {
-    backgroundColor: '#4ECDC4',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
+    backgroundColor: theme.colors.primary,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing[2],
   },
   submitButtonDisabled: {
     opacity: 0.6,
   },
   submitButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
+    ...theme.textStyles.h3,
+    color: theme.colors.textInverse,
   },
 });

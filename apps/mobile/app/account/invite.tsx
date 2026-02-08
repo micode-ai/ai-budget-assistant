@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   ScrollView,
@@ -15,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole } from '@budget/shared-types';
 import * as Clipboard from 'expo-clipboard';
 
@@ -26,6 +26,8 @@ const ROLES: { role: AccountRole; icon: keyof typeof Ionicons.glyphMap }[] = [
 export default function InviteScreen() {
   const { accountId } = useLocalSearchParams<{ accountId: string }>();
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { inviteMember } = useAccountStore();
 
   const [mode, setMode] = useState<'email' | 'link'>('link');
@@ -75,7 +77,7 @@ export default function InviteScreen() {
     return (
       <SafeAreaView style={styles.container} edges={[]}>
         <View style={styles.successContainer}>
-          <Ionicons name="checkmark-circle" size={64} color="#4ECDC4" />
+          <Ionicons name="checkmark-circle" size={64} color={theme.colors.primary} />
           <Text style={styles.successTitle}>{t('accounts.inviteSent')}</Text>
           <Text style={styles.successSubtitle}>
             {mode === 'email'
@@ -89,11 +91,11 @@ export default function InviteScreen() {
 
           <View style={styles.actionRow}>
             <TouchableOpacity style={styles.actionButton} onPress={handleCopyCode}>
-              <Ionicons name="copy-outline" size={20} color="#4ECDC4" />
+              <Ionicons name="copy-outline" size={20} color={theme.colors.primary} />
               <Text style={styles.actionButtonText}>{t('common.copy')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
-              <Ionicons name="share-outline" size={20} color="#4ECDC4" />
+              <Ionicons name="share-outline" size={20} color={theme.colors.primary} />
               <Text style={styles.actionButtonText}>{t('common.share')}</Text>
             </TouchableOpacity>
           </View>
@@ -121,7 +123,7 @@ export default function InviteScreen() {
             <Ionicons
               name="link-outline"
               size={20}
-              color={mode === 'link' ? '#4ECDC4' : '#999'}
+              color={mode === 'link' ? theme.colors.primary : theme.colors.textTertiary}
             />
             <Text style={[styles.modeText, mode === 'link' && styles.modeTextActive]}>
               {t('accounts.inviteByLink')}
@@ -134,7 +136,7 @@ export default function InviteScreen() {
             <Ionicons
               name="mail-outline"
               size={20}
-              color={mode === 'email' ? '#4ECDC4' : '#999'}
+              color={mode === 'email' ? theme.colors.primary : theme.colors.textTertiary}
             />
             <Text style={[styles.modeText, mode === 'email' && styles.modeTextActive]}>
               {t('accounts.inviteByEmail')}
@@ -151,6 +153,7 @@ export default function InviteScreen() {
               value={email}
               onChangeText={setEmail}
               placeholder={t('accounts.emailPlaceholder')}
+              placeholderTextColor={theme.colors.textTertiary}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -172,7 +175,7 @@ export default function InviteScreen() {
               <Ionicons
                 name={item.icon}
                 size={24}
-                color={role === item.role ? '#4ECDC4' : '#999'}
+                color={role === item.role ? theme.colors.primary : theme.colors.textTertiary}
               />
               <Text
                 style={[
@@ -196,7 +199,7 @@ export default function InviteScreen() {
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={theme.colors.textInverse} />
           ) : (
             <Text style={styles.submitButtonText}>{t('accounts.sendInvite')}</Text>
           )}
@@ -206,171 +209,164 @@ export default function InviteScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   scrollView: {
     flex: 1,
   },
   content: {
-    padding: 20,
+    padding: theme.spacing[5],
   },
   modeRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[5],
   },
   modeButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 14,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3.5],
     borderWidth: 2,
-    borderColor: '#e0e0e0',
-    gap: 6,
+    borderColor: theme.colors.border,
+    gap: theme.spacing[1.5],
   },
   modeButtonActive: {
-    borderColor: '#4ECDC4',
-    backgroundColor: '#f0faf9',
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
   },
   modeText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#999',
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textTertiary,
   },
   modeTextActive: {
-    color: '#4ECDC4',
-    fontWeight: '600',
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
-    marginTop: 16,
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+    marginTop: theme.spacing[4],
   },
   input: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 14,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3.5],
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: theme.colors.border,
   },
   roleRow: {
-    flexDirection: 'row',
-    gap: 12,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
   },
   roleCard: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     borderWidth: 2,
-    borderColor: '#e0e0e0',
-    gap: 6,
+    borderColor: theme.colors.border,
+    gap: theme.spacing[1.5],
   },
   roleCardActive: {
-    borderColor: '#4ECDC4',
-    backgroundColor: '#f0faf9',
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
   },
   roleLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#999',
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textTertiary,
   },
   roleLabelActive: {
-    color: '#4ECDC4',
-    fontWeight: '600',
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   roleDescription: {
-    fontSize: 11,
-    color: '#aaa',
-    textAlign: 'center',
+    ...theme.textStyles.caption,
+    color: theme.colors.textDisabled,
+    textAlign: 'center' as const,
   },
   submitButton: {
-    backgroundColor: '#4ECDC4',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 32,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[8],
   },
   submitButtonDisabled: {
     opacity: 0.7,
   },
   submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
   // Success state
   successContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 40,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[10],
   },
   successTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#333',
-    marginTop: 16,
+    ...theme.textStyles.h2,
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing[4],
   },
   successSubtitle: {
-    fontSize: 14,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 8,
+    ...theme.textStyles.body,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[2],
   },
   codeBox: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    marginTop: 24,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[8],
+    paddingVertical: theme.spacing[4],
+    marginTop: theme.spacing[6],
   },
   codeText: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#333',
+    fontWeight: '700' as const,
+    color: theme.colors.textPrimary,
     letterSpacing: 4,
   },
   actionRow: {
-    flexDirection: 'row',
-    gap: 16,
-    marginTop: 20,
+    flexDirection: 'row' as const,
+    gap: theme.spacing[4],
+    marginTop: theme.spacing[5],
   },
   actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#f0faf9',
-    borderRadius: 20,
-    gap: 6,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.spacing[5],
+    paddingVertical: theme.spacing[2.5],
+    backgroundColor: theme.colors.primaryLight,
+    borderRadius: theme.borderRadius['2xl'],
+    gap: theme.spacing[1.5],
   },
   actionButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#4ECDC4',
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.primary,
   },
   doneButton: {
-    backgroundColor: '#4ECDC4',
-    borderRadius: 12,
-    paddingHorizontal: 48,
-    paddingVertical: 14,
-    marginTop: 32,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[12],
+    paddingVertical: theme.spacing[3.5],
+    marginTop: theme.spacing[8],
   },
   doneButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
 });

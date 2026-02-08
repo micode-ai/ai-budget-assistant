@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
@@ -20,9 +19,12 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { DEFAULT_EXPENSE_CATEGORIES } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function VoiceExpenseScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const [showConfirm, setShowConfirm] = useState(false);
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
@@ -127,7 +129,7 @@ export default function VoiceExpenseScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
-          <Ionicons name="close" size={28} color="#333" />
+          <Ionicons name="close" size={28} color={theme.colors.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.title}>{t('voice.title')}</Text>
         <View style={styles.placeholder} />
@@ -139,7 +141,7 @@ export default function VoiceExpenseScreen() {
             <Ionicons
               name={isRecording ? 'radio-button-on' : 'mic-outline'}
               size={80}
-              color={isRecording ? '#FF6B6B' : '#4ECDC4'}
+              color={isRecording ? theme.colors.danger : theme.colors.primary}
             />
             <Text style={styles.instructionText}>
               {isProcessing
@@ -155,7 +157,7 @@ export default function VoiceExpenseScreen() {
 
           {isProcessing ? (
             <View style={styles.processingContainer}>
-              <ActivityIndicator size="large" color="#4ECDC4" />
+              <ActivityIndicator size="large" color={theme.colors.primary} />
               <Text style={styles.processingText}>
                 {t('voice.analyzing')}
               </Text>
@@ -169,7 +171,7 @@ export default function VoiceExpenseScreen() {
               <Ionicons
                 name={isRecording ? 'stop' : 'mic'}
                 size={48}
-                color="#fff"
+                color={theme.colors.textInverse}
               />
             </TouchableOpacity>
           )}
@@ -216,7 +218,7 @@ export default function VoiceExpenseScreen() {
                   value={editDescription}
                   onChangeText={setEditDescription}
                   placeholder={t('voice.description')}
-                  placeholderTextColor="#999"
+                  placeholderTextColor={theme.colors.textTertiary}
                 />
               </View>
 
@@ -228,7 +230,7 @@ export default function VoiceExpenseScreen() {
                   value={editMerchant}
                   onChangeText={setEditMerchant}
                   placeholder={t('voice.merchant')}
-                  placeholderTextColor="#999"
+                  placeholderTextColor={theme.colors.textTertiary}
                 />
               </View>
 
@@ -268,7 +270,7 @@ export default function VoiceExpenseScreen() {
                 <Ionicons
                   name={parsedExpense && parsedExpense.confidence > 0.8 ? 'checkmark-circle' : 'alert-circle'}
                   size={16}
-                  color={parsedExpense && parsedExpense.confidence > 0.8 ? '#4ECDC4' : '#FFEAA7'}
+                  color={parsedExpense && parsedExpense.confidence > 0.8 ? theme.colors.primary : theme.colors.warning}
                 />
                 <Text style={styles.confidenceText}>
                   {parsedExpense && parsedExpense.confidence > 0.8 ? t('voice.highConfidence') : t('voice.mediumConfidence')}
@@ -278,7 +280,7 @@ export default function VoiceExpenseScreen() {
 
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
-                <Ionicons name="refresh" size={20} color="#666" />
+                <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
                 <Text style={styles.retryButtonText}>{t('voice.tryAgain')}</Text>
               </TouchableOpacity>
 
@@ -286,7 +288,7 @@ export default function VoiceExpenseScreen() {
                 style={styles.confirmButton}
                 onPress={handleConfirmExpense}
               >
-                <Ionicons name="checkmark" size={20} color="#fff" />
+                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
                 <Text style={styles.confirmButtonText}>{t('voice.saveExpense')}</Text>
               </TouchableOpacity>
             </View>
@@ -297,212 +299,202 @@ export default function VoiceExpenseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.surface,
   },
   flex: {
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    padding: theme.spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   closeButton: {
-    padding: 4,
+    padding: theme.spacing[1],
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
   },
   placeholder: {
     width: 36,
   },
   content: {
     flex: 1,
-    padding: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: theme.spacing[6],
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   instructionContainer: {
-    alignItems: 'center',
-    marginBottom: 48,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[12],
   },
   instructionText: {
     fontSize: 18,
-    color: '#333',
-    marginTop: 24,
-    fontWeight: '500',
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing[6],
+    fontWeight: '500' as const,
   },
   exampleText: {
     fontSize: 14,
-    color: '#999',
-    marginTop: 8,
-    fontStyle: 'italic',
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[2],
+    fontStyle: 'italic' as const,
   },
   recordButton: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#4ECDC4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#4ECDC4',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    ...theme.shadows.xl,
   },
   recordButtonActive: {
-    backgroundColor: '#FF6B6B',
-    shadowColor: '#FF6B6B',
+    backgroundColor: theme.colors.danger,
   },
   cancelButton: {
-    marginTop: 24,
-    padding: 12,
+    marginTop: theme.spacing[6],
+    padding: theme.spacing[3],
   },
   cancelButtonText: {
     fontSize: 16,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   processingContainer: {
-    alignItems: 'center',
-    padding: 24,
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
   },
   processingText: {
     fontSize: 16,
-    color: '#666',
-    marginTop: 16,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[4],
   },
   transcriptionContainer: {
-    marginTop: 32,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    width: '100%',
+    marginTop: theme.spacing[8],
+    padding: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    width: '100%' as const,
   },
   transcriptionLabel: {
     fontSize: 12,
-    color: '#999',
-    marginBottom: 4,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1],
   },
   transcriptionText: {
     fontSize: 16,
-    color: '#333',
-    fontStyle: 'italic',
+    color: theme.colors.textPrimary,
+    fontStyle: 'italic' as const,
   },
   // Confirmation screen
   confirmScrollContent: {
-    padding: 24,
+    padding: theme.spacing[6],
   },
   confirmTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 24,
-    textAlign: 'center',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[6],
+    textAlign: 'center' as const,
   },
   expenseCard: {
-    width: '100%',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 24,
+    width: '100%' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[6],
   },
   fieldGroup: {
-    marginBottom: 16,
+    marginBottom: theme.spacing[4],
   },
   fieldLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 6,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[1.5],
   },
   amountInput: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#333',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    textAlign: 'center',
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3],
+    textAlign: 'center' as const,
   },
   textInput: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3],
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.textPrimary,
   },
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
   },
   categoryChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.xl,
     borderWidth: 1.5,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   categoryChipText: {
     fontSize: 13,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   categoryChipTextSelected: {
-    color: '#fff',
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
   },
   confidenceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 8,
-    gap: 6,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingTop: theme.spacing[2],
+    gap: theme.spacing[1.5],
   },
   confidenceText: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   confirmActions: {
-    flexDirection: 'row',
-    gap: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   retryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    gap: 6,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[5],
+    gap: theme.spacing[1.5],
   },
   retryButtonText: {
     fontSize: 16,
-    color: '#666',
+    color: theme.colors.textSecondary,
   },
   confirmButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    backgroundColor: '#4ECDC4',
-    gap: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[6],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    gap: theme.spacing[2],
   },
   confirmButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
 });

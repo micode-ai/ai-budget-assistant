@@ -320,6 +320,13 @@ export default {
       viewer: 'Может только просматривать данные',
     },
   },
+  settings: {
+    appearance: 'Внешний вид',
+    theme: 'Тема',
+    system: 'Системная',
+    light: 'Светлая',
+    dark: 'Тёмная',
+  },
   errors: {
     loginFailed: 'Ошибка входа',
     registrationFailed: 'Ошибка регистрации',

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Animated } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated } from 'react-native';
 import { useState, useCallback, useRef } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +8,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { Expense } from '@budget/shared-types';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ExpensesScreen() {
   const { t } = useTranslation();
@@ -17,6 +18,8 @@ export default function ExpensesScreen() {
   const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();
   const fabAnimation = useRef(new Animated.Value(0)).current;
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -61,7 +64,7 @@ export default function ExpensesScreen() {
       onPress={() => router.push(`/expense/${item.id}`)}
     >
       <View style={styles.expenseIcon}>
-        <Ionicons name="receipt-outline" size={24} color="#4ECDC4" />
+        <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
       </View>
       <View style={styles.expenseDetails}>
         <Text style={styles.expenseDescription} numberOfLines={1}>
@@ -77,7 +80,7 @@ export default function ExpensesScreen() {
 
   const ListEmptyComponent = () => (
     <View style={styles.emptyState}>
-      <Ionicons name="receipt-outline" size={64} color="#ccc" />
+      <Ionicons name="receipt-outline" size={64} color={theme.colors.textDisabled} />
       <Text style={styles.emptyTitle}>{t('expenses.noExpenses')}</Text>
       <Text style={styles.emptySubtitle}>
         {t('expenses.addFirst')}
@@ -139,7 +142,7 @@ export default function ExpensesScreen() {
           ]}
         >
           <TouchableOpacity style={styles.fabOptionButton} onPress={handleScanReceipt}>
-            <Ionicons name="camera" size={22} color="#fff" />
+            <Ionicons name="camera" size={22} color={theme.colors.textInverse} />
           </TouchableOpacity>
           <Animated.Text
             style={[
@@ -176,8 +179,8 @@ export default function ExpensesScreen() {
             },
           ]}
         >
-          <TouchableOpacity style={[styles.fabOptionButton, { backgroundColor: '#96CEB4' }]} onPress={handleVoiceInput}>
-            <Ionicons name="mic" size={22} color="#fff" />
+          <TouchableOpacity style={[styles.fabOptionButton, { backgroundColor: theme.colors.accent }]} onPress={handleVoiceInput}>
+            <Ionicons name="mic" size={22} color={theme.colors.textInverse} />
           </TouchableOpacity>
           <Animated.Text
             style={[
@@ -214,8 +217,8 @@ export default function ExpensesScreen() {
             },
           ]}
         >
-          <TouchableOpacity style={[styles.fabOptionButton, { backgroundColor: '#4ECDC4' }]} onPress={handleAddExpense}>
-            <Ionicons name="create" size={22} color="#fff" />
+          <TouchableOpacity style={[styles.fabOptionButton, { backgroundColor: theme.colors.primary }]} onPress={handleAddExpense}>
+            <Ionicons name="create" size={22} color={theme.colors.textInverse} />
           </TouchableOpacity>
           <Animated.Text
             style={[
@@ -243,7 +246,7 @@ export default function ExpensesScreen() {
               ],
             }}
           >
-            <Ionicons name="add" size={28} color="#fff" />
+            <Ionicons name="add" size={28} color={theme.colors.textInverse} />
           </Animated.View>
         </TouchableOpacity>
       </View>}
@@ -251,141 +254,128 @@ export default function ExpensesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   listContent: {
-    padding: 16,
+    padding: theme.spacing[4],
     paddingBottom: 100,
-    flexGrow: 1,
+    flexGrow: 1 as const,
   },
   expenseCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    ...theme.shadows.sm,
   },
   expenseIcon: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#E8F8F7',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+    backgroundColor: theme.colors.primaryLight,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    marginRight: theme.spacing[3],
   },
   expenseDetails: {
     flex: 1,
   },
   expenseDescription: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
-    marginBottom: 4,
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[1],
   },
   expenseDate: {
-    fontSize: 14,
-    color: '#999',
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
   },
   expenseAmount: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FF6B6B',
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.danger,
   },
   separator: {
-    height: 8,
+    height: theme.spacing[2],
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.spacing[8],
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
-    marginTop: 16,
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing[4],
   },
   emptySubtitle: {
-    fontSize: 16,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 24,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[2],
+    marginBottom: theme.spacing[6],
   },
   addButton: {
-    backgroundColor: '#4ECDC4',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius['3xl'],
   },
   addButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
   fabOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: theme.colors.scrim,
   },
   fabContainer: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    alignItems: 'flex-end',
+    position: 'absolute' as const,
+    right: theme.spacing[5],
+    bottom: theme.spacing[5],
+    alignItems: 'flex-end' as const,
   },
   fab: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#4ECDC4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    ...theme.shadows.xl,
   },
   fabOption: {
-    position: 'absolute',
+    position: 'absolute' as const,
     right: 4,
     bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
   },
   fabOptionButton: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#45B7D1',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    backgroundColor: theme.colors.secondary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    ...theme.shadows.lg,
   },
   fabOptionLabel: {
-    position: 'absolute',
+    position: 'absolute' as const,
     right: 58,
-    backgroundColor: '#333',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
-    overflow: 'hidden',
+    backgroundColor: theme.colors.textPrimary,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.sm,
+    color: theme.colors.textInverse,
+    ...theme.textStyles.bodySmMedium,
+    overflow: 'hidden' as const,
   },
 });

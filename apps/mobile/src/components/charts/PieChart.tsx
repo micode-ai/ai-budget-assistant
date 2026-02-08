@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface PieChartData {
   label: string;
@@ -13,6 +14,9 @@ interface PieChartProps {
 }
 
 export function PieChart({ data, size = 150, showLegend = true }: PieChartProps) {
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+
   if (data.length === 0) {
     return (
       <View style={styles.container}>
@@ -34,7 +38,6 @@ export function PieChart({ data, size = 150, showLegend = true }: PieChartProps)
         <View style={[styles.pieContainer, { width: size, height: size }]}>
           <View style={styles.pieRings}>
             {sortedData.map((item, index) => {
-              const percentage = (item.value / total) * 100;
               const ringSize = size - index * 20;
 
               return (
@@ -47,7 +50,7 @@ export function PieChart({ data, size = 150, showLegend = true }: PieChartProps)
                       height: ringSize,
                       borderRadius: ringSize / 2,
                       backgroundColor: item.color,
-                      position: 'absolute',
+                      position: 'absolute' as const,
                     },
                   ]}
                 />
@@ -114,129 +117,134 @@ export function PieChart({ data, size = 150, showLegend = true }: PieChartProps)
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
-    width: '100%',
+    width: '100%' as const,
   },
   chartRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    marginBottom: theme.spacing[4],
   },
   pieContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   pieRings: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%' as const,
+    height: '100%' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   ring: {
     opacity: 0.8,
   },
   centerCircle: {
-    position: 'absolute',
+    position: 'absolute' as const,
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: theme.colors.surface,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   totalLabel: {
+    ...theme.textStyles.caption,
     fontSize: 10,
-    color: '#999',
+    color: theme.colors.textTertiary,
   },
   totalValue: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
+    ...theme.textStyles.bodySm,
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
   },
   legend: {
-    marginLeft: 16,
+    marginLeft: theme.spacing[4],
     flex: 1,
   },
   legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[2],
   },
   legendDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    marginRight: 8,
+    marginRight: theme.spacing[2],
   },
   legendTextContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
   },
   legendLabel: {
+    ...theme.textStyles.caption,
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.textSecondary,
     flex: 1,
   },
   legendValue: {
+    ...theme.textStyles.caption,
     fontSize: 12,
-    fontWeight: '600',
-    color: '#333',
-    marginLeft: 8,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    marginLeft: theme.spacing[2],
   },
   moreText: {
-    fontSize: 11,
-    color: '#999',
-    marginTop: 4,
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   horizontalBars: {
-    marginTop: 8,
+    marginTop: theme.spacing[2],
   },
   barRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[2],
   },
   barLabelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
     width: 100,
   },
   barDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    marginRight: 6,
+    marginRight: theme.spacing[1.5],
   },
   barLabel: {
+    ...theme.textStyles.caption,
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.textSecondary,
     flex: 1,
   },
   barTrack: {
     flex: 1,
     height: 8,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 4,
-    marginHorizontal: 8,
-    overflow: 'hidden',
+    backgroundColor: theme.colors.progressTrack,
+    borderRadius: theme.borderRadius.sm,
+    marginHorizontal: theme.spacing[2],
+    overflow: 'hidden' as const,
   },
   barFill: {
-    height: '100%',
-    borderRadius: 4,
+    height: '100%' as const,
+    borderRadius: theme.borderRadius.sm,
   },
   barPercentage: {
+    ...theme.textStyles.bodySmMedium,
     fontSize: 12,
-    fontWeight: '500',
-    color: '#333',
+    color: theme.colors.textPrimary,
     width: 35,
-    textAlign: 'right',
+    textAlign: 'right' as const,
   },
   emptyText: {
-    color: '#999',
-    textAlign: 'center',
-    marginVertical: 20,
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginVertical: theme.spacing[5],
   },
 });

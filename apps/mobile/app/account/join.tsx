@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -13,9 +12,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function JoinAccountScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { acceptInvitation } = useAccountStore();
 
   const [inviteCode, setInviteCode] = useState('');
@@ -44,7 +46,7 @@ export default function JoinAccountScreen() {
     <SafeAreaView style={styles.container} edges={[]}>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <Ionicons name="people-outline" size={48} color="#4ECDC4" />
+          <Ionicons name="people-outline" size={48} color={theme.colors.primary} />
         </View>
         <Text style={styles.title}>{t('accounts.joinAccount')}</Text>
         <Text style={styles.subtitle}>{t('accounts.joinDescription')}</Text>
@@ -54,6 +56,7 @@ export default function JoinAccountScreen() {
           value={inviteCode}
           onChangeText={setInviteCode}
           placeholder={t('accounts.enterCode')}
+          placeholderTextColor={theme.colors.textTertiary}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -64,7 +67,7 @@ export default function JoinAccountScreen() {
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={theme.colors.textInverse} />
           ) : (
             <Text style={styles.submitButtonText}>{t('accounts.join')}</Text>
           )}
@@ -74,57 +77,55 @@ export default function JoinAccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    padding: theme.spacing[5],
+    justifyContent: 'center' as const,
   },
   iconContainer: {
-    alignItems: 'center',
-    marginBottom: 16,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[4],
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#333',
-    textAlign: 'center',
+    ...theme.textStyles.h2,
+    color: theme.colors.textPrimary,
+    textAlign: 'center' as const,
   },
   subtitle: {
-    fontSize: 14,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 32,
+    ...theme.textStyles.body,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[2],
+    marginBottom: theme.spacing[8],
   },
   input: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     fontSize: 20,
-    color: '#333',
+    color: theme.colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    textAlign: 'center',
+    borderColor: theme.colors.border,
+    textAlign: 'center' as const,
     letterSpacing: 4,
   },
   submitButton: {
-    backgroundColor: '#4ECDC4',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 24,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[6],
   },
   submitButtonDisabled: {
     opacity: 0.7,
   },
   submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
 });

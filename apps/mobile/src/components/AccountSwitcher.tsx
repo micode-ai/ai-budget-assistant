@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
-  StyleSheet,
   Pressable,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,6 +12,7 @@ import { router } from 'expo-router';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useTranslation } from 'react-i18next';
+import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType } from '@budget/shared-types';
 
 const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = {
@@ -26,6 +26,8 @@ export function AccountSwitcher() {
   const { t } = useTranslation();
   const { accounts, currentAccountId, switchAccount } = useAccountStore();
   const { loadExpenses } = useExpenseStore();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
 
   const currentAccount = accounts.find((a) => a.id === currentAccountId);
 
@@ -52,13 +54,13 @@ export function AccountSwitcher() {
         <Ionicons
           name={ACCOUNT_TYPE_ICONS[currentAccount?.type || 'personal']}
           size={18}
-          color="#fff"
+          color={theme.colors.textInverse}
         />
         <Text style={styles.triggerText} numberOfLines={1}>
           {currentAccount?.name || t('accounts.personal')}
         </Text>
         {accounts.length > 1 && (
-          <Ionicons name="chevron-down" size={16} color="#fff" />
+          <Ionicons name="chevron-down" size={16} color={theme.colors.textInverse} />
         )}
       </TouchableOpacity>
 
@@ -87,7 +89,7 @@ export function AccountSwitcher() {
                     <Ionicons
                       name={ACCOUNT_TYPE_ICONS[item.type]}
                       size={20}
-                      color={item.id === currentAccountId ? '#4ECDC4' : '#666'}
+                      color={item.id === currentAccountId ? theme.colors.primary : theme.colors.textSecondary}
                     />
                   </View>
                   <View style={styles.accountInfo}>
@@ -104,7 +106,7 @@ export function AccountSwitcher() {
                     </Text>
                   </View>
                   {item.id === currentAccountId && (
-                    <Ionicons name="checkmark-circle" size={20} color="#4ECDC4" />
+                    <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
                   )}
                 </TouchableOpacity>
               )}
@@ -117,7 +119,7 @@ export function AccountSwitcher() {
                 router.push('/account/list');
               }}
             >
-              <Ionicons name="settings-outline" size={18} color="#4ECDC4" />
+              <Ionicons name="settings-outline" size={18} color={theme.colors.primary} />
               <Text style={styles.manageButtonText}>{t('accounts.manage')}</Text>
             </TouchableOpacity>
           </View>
@@ -127,97 +129,89 @@ export function AccountSwitcher() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: Theme) => ({
   trigger: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 16,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginLeft: theme.spacing[4],
+    paddingHorizontal: theme.spacing[2.5],
+    paddingVertical: theme.spacing[1.5],
+    backgroundColor: 'rgba(255,255,255,0.2)' as const,
+    borderRadius: theme.borderRadius.xl,
     maxWidth: 180,
-    gap: 4,
+    gap: theme.spacing[1],
   },
   triggerText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textInverse,
     flexShrink: 1,
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-start',
+    backgroundColor: theme.colors.overlay,
+    justifyContent: 'flex-start' as const,
     paddingTop: 100,
   },
   dropdown: {
-    marginHorizontal: 20,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    paddingVertical: 16,
+    marginHorizontal: theme.spacing[5],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    paddingVertical: theme.spacing[4],
     maxHeight: 400,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
+    ...theme.shadows.lg,
   },
   dropdownTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    paddingHorizontal: 20,
-    marginBottom: 12,
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    paddingHorizontal: theme.spacing[5],
+    marginBottom: theme.spacing[3],
   },
   accountItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[5],
   },
   accountItemActive: {
-    backgroundColor: '#f0faf9',
+    backgroundColor: theme.colors.primaryLight,
   },
   accountIcon: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+    backgroundColor: theme.colors.surfaceSecondary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    marginRight: theme.spacing[3],
   },
   accountInfo: {
     flex: 1,
   },
   accountName: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#333',
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
   },
   accountNameActive: {
-    color: '#4ECDC4',
-    fontWeight: '600',
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   accountType: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 2,
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[0.5],
   },
   manageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    marginTop: 8,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    marginTop: theme.spacing[2],
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-    gap: 6,
+    borderTopColor: theme.colors.divider,
+    gap: theme.spacing[1.5],
   },
   manageButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#4ECDC4',
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
 });
