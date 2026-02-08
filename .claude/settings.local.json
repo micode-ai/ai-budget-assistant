@@ -71,7 +71,9 @@
       "Bash(npx expo start)",
       "Bash(ipconfig:*)",
       "Bash(npx prisma migrate dev:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

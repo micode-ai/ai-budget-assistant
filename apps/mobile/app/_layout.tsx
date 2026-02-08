@@ -156,6 +156,13 @@ function RootNavigator() {
             title: t('nav.joinAccount'),
           }}
         />
+        <Stack.Screen
+          name="settings"
+          options={{
+            headerShown: true,
+            title: t('nav.settings'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

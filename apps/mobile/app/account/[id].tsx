@@ -12,13 +12,10 @@ import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
-import { useThemeStore } from '@/stores/themeStore';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole, AccountMember, AccountInvitation } from '@budget/shared-types';
 import { api } from '@/services/api';
-
-type IconName = keyof typeof Ionicons.glyphMap;
 
 export default function AccountDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -36,8 +33,6 @@ export default function AccountDetailScreen() {
     leaveAccount,
     isLoading,
   } = useAccountStore();
-  const { mode, setMode } = useThemeStore();
-
   const ROLE_COLORS: Record<AccountRole, string> = {
     owner: theme.colors.primary,
     editor: theme.colors.secondary,
@@ -330,33 +325,6 @@ export default function AccountDetailScreen() {
           </View>
         )}
 
-        {/* Appearance */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.appearance')}</Text>
-          <View style={styles.themeRow}>
-            {([
-              { key: 'system' as const, icon: 'phone-portrait-outline' as IconName, label: t('settings.system') },
-              { key: 'light' as const, icon: 'sunny-outline' as IconName, label: t('settings.light') },
-              { key: 'dark' as const, icon: 'moon-outline' as IconName, label: t('settings.dark') },
-            ]).map((item) => (
-              <TouchableOpacity
-                key={item.key}
-                style={[styles.themeChip, mode === item.key && styles.themeChipActive]}
-                onPress={() => setMode(item.key)}
-              >
-                <Ionicons
-                  name={item.icon}
-                  size={20}
-                  color={mode === item.key ? theme.colors.primary : theme.colors.textTertiary}
-                />
-                <Text style={[styles.themeChipText, mode === item.key && styles.themeChipTextActive]}>
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
         {/* Danger Zone */}
         <View style={styles.section}>
           {isOwner ? (
@@ -496,34 +464,6 @@ const createStyles = (theme: Theme) => ({
   memberActions: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-  },
-  themeRow: {
-    flexDirection: 'row' as const,
-    gap: theme.spacing[3],
-  },
-  themeChip: {
-    flex: 1,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    gap: theme.spacing[1.5],
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    paddingVertical: theme.spacing[3],
-    borderWidth: 2,
-    borderColor: theme.colors.border,
-  },
-  themeChipActive: {
-    borderColor: theme.colors.primary,
-    backgroundColor: theme.colors.primaryLight,
-  },
-  themeChipText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textTertiary,
-  },
-  themeChipTextActive: {
-    color: theme.colors.primary,
-    fontWeight: '600' as const,
   },
   dangerButton: {
     flexDirection: 'row' as const,
