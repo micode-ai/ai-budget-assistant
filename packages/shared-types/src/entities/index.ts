@@ -10,20 +10,62 @@ export type BudgetPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
 
 export type CategoryType = 'income' | 'expense';
 
+export type AccountType = 'personal' | 'business' | 'shared';
+
+export type AccountRole = 'owner' | 'editor' | 'viewer';
+
+export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
+
 export interface User {
   id: string;
   email: string;
   name: string;
   currencyCode: Currency;
   timezone: string;
+  defaultAccountId?: string;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;
 }
 
+export interface Account {
+  id: string;
+  name: string;
+  type: AccountType;
+  currencyCode: Currency;
+  ownerId: string;
+  icon?: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AccountMember {
+  id: string;
+  accountId: string;
+  userId: string;
+  role: AccountRole;
+  joinedAt: Date;
+  user?: Pick<User, 'id' | 'name' | 'email'>;
+}
+
+export interface AccountInvitation {
+  id: string;
+  accountId: string;
+  invitedBy: string;
+  invitedEmail?: string;
+  inviteCode: string;
+  role: AccountRole;
+  status: InvitationStatus;
+  expiresAt: Date;
+  acceptedBy?: string;
+  createdAt: Date;
+}
+
 export interface Category {
   id: string;
   userId?: string; // null for system categories
+  accountId?: string; // null for system categories
   name: string;
   icon?: string;
   color?: string;
@@ -57,6 +99,7 @@ export interface Expense {
   localId: string;
   serverId?: string;
   userId: string;
+  accountId: string;
   amount: number;
   currencyCode: Currency;
   description?: string;
@@ -87,6 +130,7 @@ export interface Budget {
   localId: string;
   serverId?: string;
   userId: string;
+  accountId: string;
   name: string;
   amount: number;
   currencyCode: Currency;

@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { Expense } from '@budget/shared-types';
 
@@ -13,6 +14,7 @@ export default function ExpensesScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
   const { isLoading, loadExpenses, getFilteredExpenses } = useExpenseStore();
+  const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();
   const fabAnimation = useRef(new Animated.Value(0)).current;
 
@@ -103,8 +105,8 @@ export default function ExpensesScreen() {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
 
-      {/* Floating Action Button with Menu */}
-      {fabOpen && (
+      {/* Floating Action Button with Menu (hidden for viewers) */}
+      {fabOpen && canEdit && (
         <TouchableOpacity
           style={styles.fabOverlay}
           activeOpacity={1}
@@ -112,7 +114,7 @@ export default function ExpensesScreen() {
         />
       )}
 
-      <View style={styles.fabContainer}>
+      {canEdit && <View style={styles.fabContainer}>
         {/* Receipt Button */}
         <Animated.View
           style={[
@@ -244,7 +246,7 @@ export default function ExpensesScreen() {
             <Ionicons name="add" size={28} color="#fff" />
           </Animated.View>
         </TouchableOpacity>
-      </View>
+      </View>}
     </SafeAreaView>
   );
 }

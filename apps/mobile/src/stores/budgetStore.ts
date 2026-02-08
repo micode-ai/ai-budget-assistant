@@ -3,6 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import type { Budget, BudgetProgress, BudgetPeriod, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
+import { useAccountStore } from './accountStore';
 
 interface BudgetState {
   budgets: Budget[];
@@ -14,7 +15,7 @@ interface BudgetState {
 
   // Actions
   setBudgets: (budgets: Budget[]) => void;
-  addBudget: (budget: Omit<Budget, 'id' | 'localId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Budget;
+  addBudget: (budget: Omit<Budget, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Budget;
   updateBudget: (id: string, updates: Partial<Budget>) => void;
   deleteBudget: (id: string) => void;
 
@@ -38,11 +39,13 @@ export const useBudgetStore = create<BudgetState>()(
     addBudget: (budgetData) => {
       const id = generateUUID();
       const now = new Date();
+      const accountId = useAccountStore.getState().currentAccountId || '';
 
       const newBudget: Budget = {
         ...budgetData,
         id,
         localId: id,
+        accountId,
         createdAt: now,
         updatedAt: now,
         syncStatus: 'pending' as SyncStatus,

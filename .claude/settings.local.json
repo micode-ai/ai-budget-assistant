@@ -1,4 +1,8 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "teammateMode": "in-process",
   "permissions": {
     "allow": [
       "Bash(timeout 15 pnpm run start:dev:*)",
@@ -66,7 +70,8 @@
       "Bash(npm ls:*)",
       "Bash(npx expo start)",
       "Bash(ipconfig:*)",
-      "Bash(npx prisma migrate dev:*)"
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(head:*)"
     ]
   }
 }

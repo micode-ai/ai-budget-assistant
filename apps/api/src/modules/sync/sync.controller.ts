@@ -1,16 +1,17 @@
 import { Controller, Get, Post, Body, Query, UseGuards, Req } from '@nestjs/common';
 import { SyncService, SyncResult } from './sync.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('sync')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, AccountContextGuard)
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
 
   @Post('push')
   async pushChanges(@Req() req: AuthenticatedRequest, @Body() body: { changes: any[] }) {
-    const results = await this.syncService.pushChanges(req.user.id, body.changes);
+    const results = await this.syncService.pushChanges(req.accountId, req.user.id, body.changes);
 
     return {
       results,
@@ -26,6 +27,6 @@ export class SyncController {
   @Get('pull')
   async pullChanges(@Req() req: AuthenticatedRequest, @Query('since') since: string) {
     const sinceDate = since ? new Date(since) : new Date(0);
-    return this.syncService.pullChanges(req.user.id, sinceDate);
+    return this.syncService.pullChanges(req.accountId, req.user.id, sinceDate);
   }
 }

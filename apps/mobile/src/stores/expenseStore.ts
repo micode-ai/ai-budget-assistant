@@ -5,6 +5,7 @@ import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-uti
 import {
   loadAllExpenses,
   insertExpense,
+  upsertExpense,
   updateExpenseInDb,
   softDeleteExpenseInDb,
   saveReceiptImageLocally,
@@ -19,6 +20,7 @@ import {
   softDeleteExpenseItemInDb,
 } from '@/db/expenseItemRepository';
 import { api } from '@/services/api';
+import { useAccountStore } from './accountStore';
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -48,7 +50,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: () => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string }) => Expense;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string }) => Expense;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
@@ -102,10 +104,49 @@ export const useExpenseStore = create<ExpenseState>()(
     loadExpenses: async () => {
       set({ isLoading: true, error: null });
       try {
-        const expenses = await loadAllExpenses();
-        set({ expenses, isLoading: false });
-        // Sync pending expenses in background
+        const accountId = useAccountStore.getState().currentAccountId;
+        // 1. Show local data immediately
+        const localExpenses = await loadAllExpenses(accountId || undefined);
+        set({ expenses: localExpenses, isLoading: false });
+
+        // 2. Sync pending local → server
         get().syncPendingExpenses();
+
+        // 3. Pull from server → local (for shared accounts / other devices)
+        try {
+          const serverResult = await api.getExpenses();
+          const serverExpenses: any[] = serverResult.data || serverResult;
+          for (const se of serverExpenses) {
+            const expense: Expense = {
+              id: se.clientId || se.id,
+              localId: se.clientId || se.id,
+              serverId: se.id,
+              userId: se.userId,
+              accountId: se.accountId,
+              amount: Number(se.amount),
+              currencyCode: se.currencyCode,
+              description: se.description ?? undefined,
+              notes: se.notes ?? undefined,
+              categoryId: se.category?.name ?? se.categoryId ?? undefined,
+              date: new Date(se.date),
+              time: se.time ?? undefined,
+              source: se.source || 'manual',
+              isRecurring: se.isRecurring || false,
+              createdAt: new Date(se.createdAt),
+              updatedAt: new Date(se.updatedAt),
+              isDeleted: se.isDeleted || false,
+              syncStatus: 'synced' as SyncStatus,
+              syncVersion: se.syncVersion || 0,
+            };
+            await upsertExpense(expense);
+          }
+          // Reload from SQLite after merge
+          const merged = await loadAllExpenses(accountId || undefined);
+          set({ expenses: merged });
+        } catch (e) {
+          // Server pull failed (offline?) — local data is still shown
+          console.log('Server pull skipped:', e);
+        }
       } catch (e) {
         console.error('Failed to load expenses from SQLite:', e);
         set({ error: 'Failed to load expenses', isLoading: false });
@@ -118,11 +159,13 @@ export const useExpenseStore = create<ExpenseState>()(
       const { items, receiptImageBase64, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
+      const accountId = useAccountStore.getState().currentAccountId || '';
 
       const newExpense: Expense = {
         ...coreData,
         id,
         localId: id,
+        accountId,
         createdAt: now,
         updatedAt: now,
         syncStatus: 'pending' as SyncStatus,
@@ -186,7 +229,7 @@ export const useExpenseStore = create<ExpenseState>()(
         currencyCode: newExpense.currencyCode,
         description: newExpense.description,
         notes: newExpense.notes,
-        categoryId: newExpense.categoryId,
+        categoryId: newExpense.categoryId || undefined,
         date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
         source: newExpense.source,
         items: sanitizedItems,
@@ -229,6 +272,7 @@ export const useExpenseStore = create<ExpenseState>()(
           console.error('Failed to update expense in SQLite:', e),
         );
 
+        console.log('[updateExpense] updates:', JSON.stringify(updates));
         api.updateExpense(id, updates).catch((e) =>
           console.error('Failed to update expense on server:', e),
         );
@@ -388,7 +432,7 @@ export const useExpenseStore = create<ExpenseState>()(
             currencyCode: expense.currencyCode,
             description: expense.description,
             notes: expense.notes,
-            categoryId: expense.categoryId,
+            categoryId: expense.categoryId || undefined,
             date: expense.date instanceof Date ? expense.date.toISOString() : String(expense.date),
             source: expense.source,
           });

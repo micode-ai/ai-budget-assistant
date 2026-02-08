@@ -47,12 +47,12 @@ export class SyncService {
     private readonly expensesService: ExpensesService,
   ) {}
 
-  async pushChanges(userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
+  async pushChanges(accountId: string, userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
     const results: SyncResult[] = [];
 
     for (const change of changes) {
       try {
-        const result = await this.processChange(userId, change);
+        const result = await this.processChange(accountId, userId, change);
         results.push(result);
       } catch (error) {
         results.push({
@@ -72,16 +72,16 @@ export class SyncService {
     return results;
   }
 
-  private async processChange(userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
     switch (change.entityType) {
       case 'expense':
-        return this.processExpenseChange(userId, change);
+        return this.processExpenseChange(accountId, userId, change);
       case 'expense_item':
-        return this.processExpenseItemChange(userId, change);
+        return this.processExpenseItemChange(accountId, change);
       case 'budget':
-        return this.processBudgetChange(userId, change);
+        return this.processBudgetChange(accountId, change);
       case 'category':
-        return this.processCategoryChange(userId, change);
+        return this.processCategoryChange(accountId, change);
       default:
         return {
           entityId: change.entityId,
@@ -91,11 +91,11 @@ export class SyncService {
     }
   }
 
-  private async processExpenseChange(userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processExpenseChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
     const { operation, payload, clientVersion, entityId } = change;
 
     // Check for existing record
-    const existing = await this.expensesService.getByClientId(userId, entityId);
+    const existing = await this.expensesService.getByClientId(accountId, entityId);
 
     if (operation === 'create') {
       if (existing) {
@@ -117,7 +117,7 @@ export class SyncService {
       }
 
       // Create new expense
-      const created = await this.expensesService.create(userId, {
+      const created = await this.expensesService.create(accountId, userId, {
         ...payload,
         localId: entityId,
       });
@@ -153,7 +153,7 @@ export class SyncService {
     }
 
     if (operation === 'update') {
-      const updated = await this.expensesService.update(userId, existing.id, payload);
+      const updated = await this.expensesService.update(accountId, existing.id, payload);
       return {
         entityId,
         status: 'success',
@@ -162,7 +162,7 @@ export class SyncService {
     }
 
     if (operation === 'delete') {
-      await this.expensesService.remove(userId, existing.id);
+      await this.expensesService.remove(accountId, existing.id);
       return {
         entityId,
         status: 'success',
@@ -176,13 +176,13 @@ export class SyncService {
     };
   }
 
-  private async processExpenseItemChange(userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processExpenseItemChange(accountId: string, change: SyncChange): Promise<SyncResult> {
     const { operation, payload, clientVersion, entityId } = change;
 
-    // Verify that the parent expense belongs to this user
+    // Verify that the parent expense belongs to this account
     if (payload?.expenseId) {
       const parentExpense = await this.prisma.expense.findFirst({
-        where: { id: payload.expenseId, userId },
+        where: { id: payload.expenseId, accountId },
       });
       if (!parentExpense) {
         return { entityId, status: 'error', error: 'Parent expense not found' };
@@ -246,7 +246,7 @@ export class SyncService {
     return { entityId, status: 'error', error: 'Invalid operation' };
   }
 
-  private async processBudgetChange(userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processBudgetChange(accountId: string, change: SyncChange): Promise<SyncResult> {
     // Similar implementation for budgets
     return {
       entityId: change.entityId,
@@ -254,7 +254,7 @@ export class SyncService {
     };
   }
 
-  private async processCategoryChange(userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processCategoryChange(accountId: string, change: SyncChange): Promise<SyncResult> {
     // Similar implementation for categories
     return {
       entityId: change.entityId,
@@ -262,30 +262,30 @@ export class SyncService {
     };
   }
 
-  async pullChanges(userId: string, since: Date) {
+  async pullChanges(accountId: string, userId: string, since: Date) {
     // Get all entities updated since the given timestamp
     const [expenses, expenseItems, budgets, categories] = await Promise.all([
       this.prisma.expense.findMany({
         where: {
-          userId,
+          accountId,
           updatedAt: { gt: since },
         },
       }),
       this.prisma.expenseItem.findMany({
         where: {
-          expense: { userId },
+          expense: { accountId },
           updatedAt: { gt: since },
         },
       }),
       this.prisma.budget.findMany({
         where: {
-          userId,
+          accountId,
           updatedAt: { gt: since },
         },
       }),
       this.prisma.category.findMany({
         where: {
-          OR: [{ userId }, { isSystem: true }],
+          OR: [{ accountId }, { isSystem: true }],
           updatedAt: { gt: since },
         },
       }),

@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Budget } from '@budget/shared-types';
 
@@ -12,6 +13,7 @@ export default function BudgetsScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const { budgets, getBudgetProgress } = useBudgetStore();
+  const canEdit = useAccountStore((s) => s.canEdit());
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -104,13 +106,15 @@ export default function BudgetsScreen() {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
 
-      {/* Floating Action Button */}
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push('/budget/new')}
-      >
-        <Ionicons name="add" size={28} color="#fff" />
-      </TouchableOpacity>
+      {/* Floating Action Button (hidden for viewers) */}
+      {canEdit && (
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => router.push('/budget/new')}
+        >
+          <Ionicons name="add" size={28} color="#fff" />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }

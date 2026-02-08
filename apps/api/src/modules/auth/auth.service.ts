@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { AccountsService } from '../accounts/accounts.service';
 import { RegisterDto, LoginDto } from './dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly accountsService: AccountsService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -32,8 +34,17 @@ export class AuthService {
       timezone: dto.timezone,
     });
 
+    // Create default personal account
+    const defaultAccount = await this.accountsService.createDefaultAccount(
+      user.id,
+      dto.currencyCode || 'USD',
+    );
+
     // Generate tokens
     const tokens = await this.generateTokens(user.id, user.email);
+
+    // Load all accounts
+    const accounts = await this.accountsService.findAllForUser(user.id);
 
     return {
       accessToken: tokens.accessToken,
@@ -43,7 +54,9 @@ export class AuthService {
         email: user.email,
         name: user.name,
         currencyCode: user.currencyCode,
+        defaultAccountId: defaultAccount.id,
       },
+      accounts,
     };
   }
 
@@ -68,6 +81,9 @@ export class AuthService {
     // Generate tokens
     const tokens = await this.generateTokens(user.id, user.email);
 
+    // Load all accounts
+    const accounts = await this.accountsService.findAllForUser(user.id);
+
     return {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
@@ -76,7 +92,9 @@ export class AuthService {
         email: user.email,
         name: user.name,
         currencyCode: user.currencyCode,
+        defaultAccountId: user.defaultAccountId,
       },
+      accounts,
     };
   }
 

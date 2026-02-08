@@ -7,18 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---- Enums ----
+
+enum AccountType {
+  personal
+  business
+  shared
+}
+
+enum AccountRole {
+  owner
+  editor
+  viewer
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  declined
+  expired
+}
+
+// ---- Models ----
+
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  passwordHash String    @map("password_hash")
-  name         String
-  currencyCode String    @default("USD") @map("currency_code")
-  timezone     String    @default("UTC")
-  pushToken    String?   @map("push_token")
-  isActive     Boolean   @default(true) @map("is_active")
-  lastSyncAt   DateTime? @map("last_sync_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  id               String    @id @default(uuid())
+  email            String    @unique
+  passwordHash     String    @map("password_hash")
+  name             String
+  currencyCode     String    @default("USD") @map("currency_code")
+  timezone         String    @default("UTC")
+  pushToken        String?   @map("push_token")
+  isActive         Boolean   @default(true) @map("is_active")
+  defaultAccountId String?   @map("default_account_id")
+  lastSyncAt       DateTime? @map("last_sync_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 
   // Relations
   expenses          Expense[]
@@ -27,13 +51,77 @@ model User {
   chatConversations ChatConversation[]
   budgetAlerts      BudgetAlert[]
   syncLogs          SyncLog[]
+  ownedAccounts     Account[]        @relation("OwnedAccounts")
+  accountMembers    AccountMember[]
 
   @@map("users")
+}
+
+model Account {
+  id           String      @id @default(uuid())
+  name         String
+  type         AccountType
+  currencyCode String      @default("USD") @map("currency_code")
+  ownerId      String      @map("owner_id")
+  icon         String?
+  isActive     Boolean     @default(true) @map("is_active")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  owner       User                @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     AccountMember[]
+  invitations AccountInvitation[]
+  expenses    Expense[]
+  budgets     Budget[]
+  categories  Category[]
+  syncLogs    SyncLog[]
+
+  @@map("accounts")
+}
+
+model AccountMember {
+  id        String      @id @default(uuid())
+  accountId String      @map("account_id")
+  userId    String      @map("user_id")
+  role      AccountRole
+  joinedAt  DateTime    @default(now()) @map("joined_at")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, userId])
+  @@map("account_members")
+}
+
+model AccountInvitation {
+  id           String           @id @default(uuid())
+  accountId    String           @map("account_id")
+  invitedBy    String           @map("invited_by")
+  invitedEmail String?          @map("invited_email")
+  inviteCode   String           @unique @map("invite_code")
+  role         AccountRole      @default(editor)
+  status       InvitationStatus @default(pending)
+  expiresAt    DateTime         @map("expires_at")
+  acceptedBy   String?          @map("accepted_by")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([inviteCode])
+  @@index([invitedEmail])
+  @@map("account_invitations")
 }
 
 model Category {
   id          String   @id @default(uuid())
   userId      String?  @map("user_id")
+  accountId   String?  @map("account_id")
   name        String
   icon        String?
   color       String?
@@ -47,18 +135,20 @@ model Category {
 
   // Relations
   user     User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account?   @relation(fields: [accountId], references: [id], onDelete: Cascade)
   parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
   children Category[] @relation("CategoryHierarchy")
   expenses Expense[]
   budgets  Budget[]
 
-  @@unique([userId, name, type])
+  @@unique([accountId, name, type])
   @@map("categories")
 }
 
 model Expense {
   id           String   @id @default(uuid())
   userId       String   @map("user_id")
+  accountId    String   @map("account_id")
   clientId     String   @map("client_id")
   categoryId   String?  @map("category_id")
   amount       Decimal  @db.Decimal(12, 2)
@@ -78,15 +168,16 @@ model Expense {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  receiptImage Bytes?  @map("receipt_image")
+  receiptImage Bytes? @map("receipt_image")
 
   // Relations
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category?     @relation(fields: [categoryId], references: [id])
   items    ExpenseItem[]
 
-  @@unique([userId, clientId])
-  @@index([userId, date(sort: Desc)])
+  @@unique([accountId, clientId])
+  @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
   @@map("expenses")
 }
@@ -114,6 +205,7 @@ model ExpenseItem {
 model Budget {
   id             String    @id @default(uuid())
   userId         String    @map("user_id")
+  accountId      String    @map("account_id")
   clientId       String    @map("client_id")
   name           String
   amount         Decimal   @db.Decimal(12, 2)
@@ -131,11 +223,12 @@ model Budget {
 
   // Relations
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category?     @relation(fields: [categoryId], references: [id])
   alerts   BudgetAlert[]
 
-  @@unique([userId, clientId])
-  @@index([userId, isActive])
+  @@unique([accountId, clientId])
+  @@index([accountId, isActive])
   @@map("budgets")
 }
 
@@ -188,6 +281,7 @@ model ChatMessage {
 model SyncLog {
   id                 String   @id @default(uuid())
   userId             String   @map("user_id")
+  accountId          String?  @map("account_id")
   entityType         String   @map("entity_type")
   entityId           String   @map("entity_id")
   operation          String
@@ -198,7 +292,8 @@ model SyncLog {
   createdAt          DateTime @default(now()) @map("created_at")
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@map("sync_log")
 }

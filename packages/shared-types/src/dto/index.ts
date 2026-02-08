@@ -1,6 +1,6 @@
 // Data Transfer Objects for API communication
 
-import type { Currency, ExpenseSource, BudgetPeriod, CategoryType } from '../entities';
+import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account } from '../entities';
 
 // Auth DTOs
 export interface RegisterDto {
@@ -24,7 +24,9 @@ export interface AuthResponse {
     email: string;
     name: string;
     currencyCode: Currency;
+    defaultAccountId?: string;
   };
+  accounts: Account[];
 }
 
 // Expense DTOs
@@ -100,6 +102,34 @@ export interface UpdateCategoryDto {
   parentId?: string | null;
 }
 
+// Account DTOs
+export interface CreateAccountDto {
+  name: string;
+  type: AccountType;
+  currencyCode?: Currency;
+  icon?: string;
+}
+
+export interface UpdateAccountDto {
+  name?: string;
+  currencyCode?: Currency;
+  icon?: string;
+}
+
+export interface CreateInvitationDto {
+  email?: string;
+  role?: AccountRole;
+  expiresInDays?: number;
+}
+
+export interface AcceptInvitationDto {
+  inviteCode: string;
+}
+
+export interface UpdateMemberRoleDto {
+  role: AccountRole;
+}
+
 // Sync DTOs
 export type SyncOperation = 'create' | 'update' | 'delete';
 
@@ -109,11 +139,13 @@ export interface SyncChange<T = unknown> {
   operation: SyncOperation;
   payload: T;
   clientVersion: number;
+  accountId: string;
 }
 
 export interface SyncPushRequest {
   changes: SyncChange[];
   lastSyncTimestamp?: string;
+  accountId: string;
 }
 
 export interface SyncResult {

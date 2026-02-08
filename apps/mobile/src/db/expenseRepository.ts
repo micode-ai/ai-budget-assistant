@@ -6,6 +6,7 @@ interface ExpenseRow {
   local_id: string;
   server_id: string | null;
   user_id: string;
+  account_id: string;
   amount: number;
   currency_code: string;
   description: string | null;
@@ -33,6 +34,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     localId: row.local_id,
     serverId: row.server_id ?? undefined,
     userId: row.user_id,
+    accountId: row.account_id,
     amount: row.amount,
     currencyCode: row.currency_code as Currency,
     description: row.description ?? undefined,
@@ -66,6 +68,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.localId,
     expense.serverId ?? null,
     expense.userId,
+    expense.accountId,
     expense.amount,
     expense.currencyCode,
     expense.description ?? null,
@@ -88,7 +91,14 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
   ];
 }
 
-export async function loadAllExpenses(): Promise<Expense[]> {
+export async function loadAllExpenses(accountId?: string): Promise<Expense[]> {
+  if (accountId) {
+    const rows = await executeSql<ExpenseRow>(
+      'SELECT * FROM expenses WHERE is_deleted = 0 AND account_id = ? ORDER BY date DESC',
+      [accountId],
+    );
+    return rows.map(rowToExpense);
+  }
   const rows = await executeSql<ExpenseRow>(
     'SELECT * FROM expenses WHERE is_deleted = 0 ORDER BY date DESC',
   );
@@ -98,12 +108,12 @@ export async function loadAllExpenses(): Promise<Expense[]> {
 export async function insertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
-      id, local_id, server_id, user_id, amount, currency_code,
+      id, local_id, server_id, user_id, account_id, amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, source, created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -197,6 +207,19 @@ export async function deleteReceiptImageLocally(
   await executeSql(
     'UPDATE expenses SET receipt_image = NULL, updated_at = ?, sync_status = ? WHERE id = ?',
     [Date.now(), 'pending', expenseId],
+  );
+}
+
+export async function upsertExpense(expense: Expense): Promise<void> {
+  await executeSql(
+    `INSERT OR REPLACE INTO expenses (
+      id, local_id, server_id, user_id, account_id, amount, currency_code,
+      description, notes, category_id, date, time,
+      location_lat, location_lng, location_name, receipt_url,
+      is_recurring, recurring_id, source, created_at, updated_at,
+      is_deleted, sync_status, sync_version
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    expenseToParams(expense),
   );
 }
 

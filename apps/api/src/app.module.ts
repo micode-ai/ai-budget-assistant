@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { AccountsModule } from './modules/accounts/accounts.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { BudgetsModule } from './modules/budgets/budgets.module';
 import { CategoriesModule } from './modules/categories/categories.module';
@@ -10,6 +11,7 @@ import { SyncModule } from './modules/sync/sync.module';
 import { AiModule } from './modules/ai/ai.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { DatabaseModule } from './database/database.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -30,9 +32,13 @@ import { DatabaseModule } from './database/database.module';
     // Database
     DatabaseModule,
 
+    // Infrastructure
+    MailModule,
+
     // Feature modules
     AuthModule,
     UsersModule,
+    AccountsModule,
     ExpensesModule,
     BudgetsModule,
     CategoriesModule,
