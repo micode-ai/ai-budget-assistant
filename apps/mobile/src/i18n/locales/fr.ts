@@ -159,6 +159,7 @@ export default {
     sourceImport: 'Importé',
     deleteTitle: 'Supprimer la dépense',
     deleteConfirm: 'Êtes-vous sûr de vouloir supprimer cette dépense ?',
+    copy: 'Copier',
     receiptItems: 'Articles du reçu',
     noItems: 'Aucun article',
     addItem: 'Ajouter un article',

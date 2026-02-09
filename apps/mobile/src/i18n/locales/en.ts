@@ -159,6 +159,7 @@ export default {
     sourceImport: 'Imported',
     deleteTitle: 'Delete Expense',
     deleteConfirm: 'Are you sure you want to delete this expense?',
+    copy: 'Copy',
     receiptItems: 'Receipt Items',
     noItems: 'No receipt items',
     addItem: 'Add Item',

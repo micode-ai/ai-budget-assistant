@@ -159,6 +159,7 @@ export default {
     sourceImport: 'Импортировано',
     deleteTitle: 'Удалить расход',
     deleteConfirm: 'Вы уверены, что хотите удалить этот расход?',
+    copy: 'Копировать',
     receiptItems: 'Позиции чека',
     noItems: 'Нет позиций',
     addItem: 'Добавить позицию',

@@ -201,6 +201,18 @@ export default function ExpenseDetailScreen() {
     );
   }
 
+  const handleCopy = () => {
+    router.push({
+      pathname: '/expense/new',
+      params: {
+        amount: expense.amount.toString(),
+        description: expense.description || '',
+        categoryId: expense.categoryId || '',
+        currencyCode: expense.currencyCode,
+      },
+    });
+  };
+
   const handleDelete = () => {
     Alert.alert(t('expenseDetail.deleteTitle'), t('expenseDetail.deleteConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
@@ -549,6 +561,10 @@ export default function ExpenseDetailScreen() {
                 <Ionicons name="pencil" size={20} color={theme.colors.primary} />
                 <Text style={styles.editButtonText}>{t('common.edit')}</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
+                <Ionicons name="copy-outline" size={20} color={theme.colors.secondary} />
+                <Text style={styles.copyButtonText}>{t('expenseDetail.copy')}</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                 <Ionicons name="trash" size={20} color={theme.colors.danger} />
                 <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
@@ -718,6 +734,22 @@ const createStyles = (theme: Theme) => ({
     fontSize: 16,
     fontWeight: '600' as const,
     color: theme.colors.primary,
+  },
+  copyButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 2,
+    borderColor: theme.colors.secondary,
+    gap: theme.spacing[2],
+  },
+  copyButtonText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.secondary,
   },
   deleteButton: {
     flex: 1,

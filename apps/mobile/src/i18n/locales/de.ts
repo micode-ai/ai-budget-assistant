@@ -159,6 +159,7 @@ export default {
     sourceImport: 'Importiert',
     deleteTitle: 'Ausgabe löschen',
     deleteConfirm: 'Bist du sicher, dass du diese Ausgabe löschen möchtest?',
+    copy: 'Kopieren',
     receiptItems: 'Belegpositionen',
     noItems: 'Keine Positionen',
     addItem: 'Position hinzufügen',
