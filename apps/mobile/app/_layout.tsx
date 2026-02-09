@@ -157,6 +157,29 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="wallet/index"
+          options={{
+            headerShown: true,
+            title: t('wallet.title'),
+          }}
+        />
+        <Stack.Screen
+          name="wallet/set-balance"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('wallet.setInitialBalance'),
+          }}
+        />
+        <Stack.Screen
+          name="wallet/exchange"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('exchange.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings"
           options={{
             headerShown: true,

@@ -127,11 +127,14 @@ export const useBudgetStore = create<BudgetState>()(
           periodEnd = getEndOfMonth(now);
       }
 
-      // Filter expenses for this budget period
+      // Filter expenses for this budget period and matching currency
       let periodExpenses = expenses.filter((e) => {
         const expenseDate = new Date(e.date);
         return expenseDate >= periodStart && expenseDate <= periodEnd;
       });
+
+      // Filter by currency to match budget currency
+      periodExpenses = periodExpenses.filter((e) => e.currencyCode === budget.currencyCode);
 
       // Filter by category if budget is category-specific
       if (budget.categoryId) {
@@ -166,16 +169,20 @@ export const useBudgetStore = create<BudgetState>()(
 
     getTotalBudget: () => {
       const activeBudgets = get().budgets.filter((b) => b.isActive && !b.isDeleted);
+      const accountCurrency = useAccountStore.getState().currentAccount()?.currencyCode || 'USD';
+
+      // Only sum budgets matching the account's default currency
+      const sameCurrencyBudgets = activeBudgets.filter((b) => b.currencyCode === accountCurrency);
 
       // Find overall budget (no category) or sum category budgets
-      const overallBudget = activeBudgets.find((b) => !b.categoryId && b.period === 'monthly');
+      const overallBudget = sameCurrencyBudgets.find((b) => !b.categoryId && b.period === 'monthly');
 
       if (overallBudget) {
         return overallBudget.amount;
       }
 
-      // Sum all monthly category budgets
-      return activeBudgets
+      // Sum all monthly category budgets in the same currency
+      return sameCurrencyBudgets
         .filter((b) => b.period === 'monthly')
         .reduce((sum, b) => sum + b.amount, 0);
     },

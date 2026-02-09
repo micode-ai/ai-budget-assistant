@@ -4,16 +4,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
+import { useWalletStore } from '@/stores/walletStore';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
 import { BarChart, PieChart } from '@/components/charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import type { Currency } from '@budget/shared-types';
 
 export default function AnalyticsScreen() {
   const { t } = useTranslation();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const { user } = useAuthStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown } = useAnalytics(selectedRange);
+  const { walletSummary } = useWalletStore();
+  const { dailySpending, categorySpending, summary, itemBreakdown } = useAnalytics(selectedRange, selectedCurrency);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -23,7 +27,8 @@ export default function AnalyticsScreen() {
     { key: 'year', label: t('analytics.year') },
   ];
 
-  const currency = user?.currencyCode || 'USD';
+  const availableCurrencies = walletSummary.map((s) => s.currencyCode);
+  const currency = selectedCurrency || user?.currencyCode || 'USD';
 
   // Format currency helper for charts
   const formatChartValue = (value: number) => {
@@ -58,6 +63,31 @@ export default function AnalyticsScreen() {
             </TouchableOpacity>
           ))}
         </View>
+
+        {/* Currency Filter */}
+        {availableCurrencies.length > 1 && (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.currencyFilter}>
+            <TouchableOpacity
+              style={[styles.currencyChip, !selectedCurrency && styles.currencyChipActive]}
+              onPress={() => setSelectedCurrency(undefined)}
+            >
+              <Text style={[styles.currencyChipText, !selectedCurrency && styles.currencyChipTextActive]}>
+                {t('analytics.allCurrencies')}
+              </Text>
+            </TouchableOpacity>
+            {availableCurrencies.map((c) => (
+              <TouchableOpacity
+                key={c}
+                style={[styles.currencyChip, selectedCurrency === c && styles.currencyChipActive]}
+                onPress={() => setSelectedCurrency(c)}
+              >
+                <Text style={[styles.currencyChipText, selectedCurrency === c && styles.currencyChipTextActive]}>
+                  {c}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
 
         {/* Summary Cards */}
         <View style={styles.summaryRow}>
@@ -256,6 +286,30 @@ const createStyles = (theme: Theme) => ({
   },
   rangeButtonTextActive: {
     color: theme.colors.textInverse,
+  },
+  currencyFilter: {
+    flexDirection: 'row' as const,
+    marginBottom: theme.spacing[4],
+  },
+  currencyChip: {
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.surface,
+    marginRight: theme.spacing[2],
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  currencyChipActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  currencyChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+  },
+  currencyChipTextActive: {
+    color: '#FFFFFF',
   },
   summaryRow: {
     flexDirection: 'row' as const,

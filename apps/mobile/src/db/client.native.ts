@@ -164,6 +164,41 @@ export async function initializeDatabase(): Promise<void> {
         tokens_used INTEGER,
         created_at INTEGER NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS wallet_balances (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        server_id TEXT,
+        account_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        currency_code TEXT NOT NULL,
+        initial_amount REAL NOT NULL DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
+
+      CREATE TABLE IF NOT EXISTS currency_exchanges (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        server_id TEXT,
+        account_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        from_currency TEXT NOT NULL,
+        to_currency TEXT NOT NULL,
+        from_amount REAL NOT NULL,
+        to_amount REAL NOT NULL,
+        exchange_rate REAL NOT NULL,
+        date INTEGER NOT NULL,
+        notes TEXT,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
     `);
 
     // Add receipt_image column to expenses (migration for existing DBs)
@@ -207,6 +242,10 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE INDEX IF NOT EXISTS idx_budgets_account ON budgets(account_id)',
       'CREATE INDEX IF NOT EXISTS idx_accounts_owner ON accounts(owner_id)',
       'CREATE INDEX IF NOT EXISTS idx_account_members_account ON account_members(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_wallet_balances_account ON wallet_balances(account_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_wallet_balances_account_currency ON wallet_balances(account_id, currency_code)',
+      'CREATE INDEX IF NOT EXISTS idx_currency_exchanges_account ON currency_exchanges(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_currency_exchanges_date ON currency_exchanges(account_id, date DESC)',
     ];
 
     for (const indexSql of indexes) {

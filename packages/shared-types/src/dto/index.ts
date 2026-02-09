@@ -134,7 +134,7 @@ export interface UpdateMemberRoleDto {
 export type SyncOperation = 'create' | 'update' | 'delete';
 
 export interface SyncChange<T = unknown> {
-  entityType: 'expense' | 'budget' | 'category';
+  entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange';
   entityId: string;
   operation: SyncOperation;
   payload: T;
@@ -169,7 +169,7 @@ export interface SyncPushResponse {
 
 export interface SyncPullResponse {
   changes: Array<{
-    entityType: 'expense' | 'budget' | 'category';
+    entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange';
     entityId: string;
     operation: SyncOperation;
     data: unknown;
@@ -247,4 +247,54 @@ export interface AnalyticsSummary {
     vsLastPeriod: number; // percentage change
     vsAverage: number;
   };
+}
+
+// Wallet DTOs
+export interface CreateWalletBalanceDto {
+  localId: string;
+  currencyCode: Currency;
+  initialAmount: number;
+}
+
+export interface UpdateWalletBalanceDto {
+  initialAmount?: number;
+}
+
+// Currency Exchange DTOs
+export interface CreateCurrencyExchangeDto {
+  localId: string;
+  fromCurrency: Currency;
+  toCurrency: Currency;
+  fromAmount: number;
+  toAmount: number;
+  exchangeRate: number;
+  date: string;
+  notes?: string;
+}
+
+export interface UpdateCurrencyExchangeDto {
+  fromAmount?: number;
+  toAmount?: number;
+  exchangeRate?: number;
+  date?: string;
+  notes?: string;
+}
+
+// Wallet summary response
+export interface WalletSummaryResponse {
+  balances: Array<{
+    currencyCode: Currency;
+    initialAmount: number;
+    totalExpenses: number;
+    totalExchangedIn: number;
+    totalExchangedOut: number;
+    currentBalance: number;
+  }>;
+}
+
+// Exchange rates response
+export interface ExchangeRatesResponse {
+  base: Currency;
+  rates: Partial<Record<Currency, number>>;
+  updatedAt: string;
 }

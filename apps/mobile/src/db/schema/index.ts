@@ -133,7 +133,48 @@ export const chatMessages = sqliteTable('chat_messages', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Wallet balances table
+export const walletBalances = sqliteTable('wallet_balances', {
+  id: text('id').primaryKey(),
+  localId: text('local_id').notNull(),
+  serverId: text('server_id'),
+  accountId: text('account_id').notNull(),
+  userId: text('user_id').notNull(),
+  currencyCode: text('currency_code').notNull(),
+  initialAmount: real('initial_amount').notNull().default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').notNull().default('pending'),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Currency exchanges table
+export const currencyExchanges = sqliteTable('currency_exchanges', {
+  id: text('id').primaryKey(),
+  localId: text('local_id').notNull(),
+  serverId: text('server_id'),
+  accountId: text('account_id').notNull(),
+  userId: text('user_id').notNull(),
+  fromCurrency: text('from_currency').notNull(),
+  toCurrency: text('to_currency').notNull(),
+  fromAmount: real('from_amount').notNull(),
+  toAmount: real('to_amount').notNull(),
+  exchangeRate: real('exchange_rate').notNull(),
+  date: integer('date', { mode: 'timestamp' }).notNull(),
+  notes: text('notes'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').notNull().default('pending'),
+  syncVersion: integer('sync_version').default(0),
+});
+
 // Type exports
+export type WalletBalanceRecord = typeof walletBalances.$inferSelect;
+export type NewWalletBalanceRecord = typeof walletBalances.$inferInsert;
+export type CurrencyExchangeRecord = typeof currencyExchanges.$inferSelect;
+export type NewCurrencyExchangeRecord = typeof currencyExchanges.$inferInsert;
 export type AccountRecord = typeof accounts.$inferSelect;
 export type NewAccountRecord = typeof accounts.$inferInsert;
 export type AccountMemberRecord = typeof accountMembers.$inferSelect;

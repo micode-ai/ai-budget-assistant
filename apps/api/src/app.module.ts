@@ -10,6 +10,8 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { SyncModule } from './modules/sync/sync.module';
 import { AiModule } from './modules/ai/ai.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { WalletModule } from './modules/wallet/wallet.module';
+import { CurrencyExchangeModule } from './modules/currency-exchange/currency-exchange.module';
 import { DatabaseModule } from './database/database.module';
 import { MailModule } from './modules/mail/mail.module';
 
@@ -45,6 +47,8 @@ import { MailModule } from './modules/mail/mail.module';
     SyncModule,
     AiModule,
     AnalyticsModule,
+    WalletModule,
+    CurrencyExchangeModule,
   ],
 })
 export class AppModule {}
