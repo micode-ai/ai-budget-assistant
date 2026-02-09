@@ -33,6 +33,7 @@ export const expenses = sqliteTable('expenses', {
   userId: text('user_id').notNull(),
   accountId: text('account_id').notNull(),
   amount: real('amount').notNull(),
+  discountAmount: real('discount_amount'),
   currencyCode: text('currency_code').notNull().default('USD'),
   description: text('description'),
   notes: text('notes'),

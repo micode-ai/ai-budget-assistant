@@ -132,6 +132,8 @@ export default {
     peakDayInsight: 'Больше всего вы тратите по {{day}}',
     periodUp: 'больше, чем за прошлый {{period}}',
     periodDown: 'меньше, чем за прошлый {{period}}',
+    totalSavings: 'Экономия по чекам',
+    totalSavingsText: 'Вы сэкономили {{amount}} на скидках за {{range}}.',
   },
   chat: {
     title: 'ИИ Бюджетный помощник',
@@ -232,6 +234,7 @@ export default {
     success: 'Расход успешно добавлен!',
     scanAnother: 'Сканировать ещё',
     saveFailed: 'Не удалось сохранить расход',
+    discount: 'Скидка',
     saveImage: 'Сохранить фото чека',
   },
   budgetNew: {

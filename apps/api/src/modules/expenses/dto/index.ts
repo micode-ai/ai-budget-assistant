@@ -88,6 +88,11 @@ export class CreateExpenseDto {
   @Min(0)
   amount: number;
 
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  discountAmount?: number;
+
   @IsString()
   currencyCode: string;
 
@@ -134,6 +139,11 @@ export class UpdateExpenseDto {
   @IsNumber()
   @Min(0)
   amount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  discountAmount?: number;
 
   @IsOptional()
   @IsString()

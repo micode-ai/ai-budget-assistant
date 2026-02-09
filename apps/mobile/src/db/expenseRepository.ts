@@ -8,6 +8,7 @@ interface ExpenseRow {
   user_id: string;
   account_id: string;
   amount: number;
+  discount_amount: number | null;
   currency_code: string;
   description: string | null;
   notes: string | null;
@@ -36,6 +37,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     userId: row.user_id,
     accountId: row.account_id,
     amount: row.amount,
+    discountAmount: row.discount_amount ?? undefined,
     currencyCode: row.currency_code as Currency,
     description: row.description ?? undefined,
     notes: row.notes ?? undefined,
@@ -70,6 +72,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.userId,
     expense.accountId,
     expense.amount,
+    expense.discountAmount ?? null,
     expense.currencyCode,
     expense.description ?? null,
     expense.notes ?? null,
@@ -108,12 +111,12 @@ export async function loadAllExpenses(accountId?: string): Promise<Expense[]> {
 export async function insertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
-      id, local_id, server_id, user_id, account_id, amount, currency_code,
+      id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, source, created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -130,6 +133,10 @@ export async function updateExpenseInDb(
   if (updates.amount !== undefined) {
     setClauses.push('amount = ?');
     params.push(updates.amount);
+  }
+  if (updates.discountAmount !== undefined) {
+    setClauses.push('discount_amount = ?');
+    params.push(updates.discountAmount ?? null);
   }
   if (updates.description !== undefined) {
     setClauses.push('description = ?');
@@ -212,13 +219,38 @@ export async function deleteReceiptImageLocally(
 
 export async function upsertExpense(expense: Expense): Promise<void> {
   await executeSql(
-    `INSERT OR REPLACE INTO expenses (
-      id, local_id, server_id, user_id, account_id, amount, currency_code,
+    `INSERT INTO expenses (
+      id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, source, created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      local_id = excluded.local_id,
+      server_id = excluded.server_id,
+      user_id = excluded.user_id,
+      account_id = excluded.account_id,
+      amount = excluded.amount,
+      discount_amount = COALESCE(excluded.discount_amount, discount_amount),
+      currency_code = excluded.currency_code,
+      description = excluded.description,
+      notes = excluded.notes,
+      category_id = COALESCE(excluded.category_id, category_id),
+      date = excluded.date,
+      time = excluded.time,
+      location_lat = excluded.location_lat,
+      location_lng = excluded.location_lng,
+      location_name = excluded.location_name,
+      receipt_url = excluded.receipt_url,
+      is_recurring = excluded.is_recurring,
+      recurring_id = excluded.recurring_id,
+      source = excluded.source,
+      created_at = excluded.created_at,
+      updated_at = excluded.updated_at,
+      is_deleted = excluded.is_deleted,
+      sync_status = excluded.sync_status,
+      sync_version = excluded.sync_version`,
     expenseToParams(expense),
   );
 }

@@ -131,6 +131,52 @@ export async function softDeleteExpenseItemInDb(
   );
 }
 
+export async function upsertExpenseItem(item: ExpenseItem): Promise<void> {
+  await executeSql(
+    `INSERT INTO expense_items (
+      id, local_id, expense_id, description, quantity, unit_price,
+      total_price, sort_order, is_deleted, sync_status, sync_version,
+      created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      description = excluded.description,
+      quantity = excluded.quantity,
+      unit_price = excluded.unit_price,
+      total_price = excluded.total_price,
+      sort_order = excluded.sort_order,
+      is_deleted = excluded.is_deleted,
+      sync_status = excluded.sync_status,
+      sync_version = excluded.sync_version,
+      updated_at = excluded.updated_at`,
+    expenseItemToParams(item),
+  );
+}
+
+export async function deduplicateItemsByExpenseId(expenseId: string): Promise<void> {
+  const rows = await executeSql<ExpenseItemRow>(
+    'SELECT * FROM expense_items WHERE expense_id = ? AND is_deleted = 0 ORDER BY sort_order ASC, created_at ASC',
+    [expenseId],
+  );
+  const seen = new Set<string>();
+  const duplicateIds: string[] = [];
+  for (const row of rows) {
+    const key = `${row.description}:${row.sort_order}`;
+    if (seen.has(key)) {
+      duplicateIds.push(row.id);
+    } else {
+      seen.add(key);
+    }
+  }
+  if (duplicateIds.length > 0) {
+    for (const id of duplicateIds) {
+      await executeSql(
+        'UPDATE expense_items SET is_deleted = 1 WHERE id = ?',
+        [id],
+      );
+    }
+  }
+}
+
 export async function deleteItemsByExpenseId(expenseId: string): Promise<void> {
   await executeSql(
     'UPDATE expense_items SET is_deleted = 1, sync_status = ? WHERE expense_id = ?',

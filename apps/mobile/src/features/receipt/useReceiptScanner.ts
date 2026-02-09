@@ -13,6 +13,7 @@ export interface ReceiptItem {
 
 export interface ScannedReceipt {
   amount: number;
+  discountAmount: number | null;
   currencyCode: string;
   description: string;
   categoryId: string | null;

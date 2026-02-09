@@ -56,7 +56,7 @@ export default function NewExpenseScreen() {
 
     setIsSubmitting(true);
     try {
-      addExpense({
+      await addExpense({
         userId: user?.id || '',
         amount: numericAmount,
         currencyCode,

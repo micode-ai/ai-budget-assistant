@@ -132,6 +132,8 @@ export default {
     peakDayInsight: 'Vous dépensez le plus le {{day}}',
     periodUp: 'de plus que la {{period}} précédente',
     periodDown: 'de moins que la {{period}} précédente',
+    totalSavings: 'Économies sur les tickets',
+    totalSavingsText: 'Vous avez économisé {{amount}} en remises ce {{range}}.',
   },
   chat: {
     title: 'Assistant Budget IA',
@@ -232,6 +234,7 @@ export default {
     success: 'Dépense ajoutée avec succès !',
     scanAnother: 'Scanner un autre',
     saveFailed: 'Échec de l\'enregistrement de la dépense',
+    discount: 'Remise',
     saveImage: 'Enregistrer l\'image du reçu',
   },
   budgetNew: {

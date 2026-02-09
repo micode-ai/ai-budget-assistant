@@ -36,7 +36,7 @@ export default function ReceiptExpenseScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [saveImage, setSaveImage] = useState(false);
+  const [saveImage, setSaveImage] = useState(true);
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
 
@@ -105,9 +105,10 @@ export default function ReceiptExpenseScreen() {
       await addExpense({
         userId: user?.id || '',
         amount: scannedReceipt.amount,
+        discountAmount: scannedReceipt.discountAmount ?? undefined,
         currencyCode: scannedReceipt.currencyCode as Currency,
         description: scannedReceipt.description,
-        categoryId: scannedReceipt.categoryId || undefined,
+        categoryId: scannedReceipt.categorySuggestion || scannedReceipt.categoryId || undefined,
         date: expenseDate,
         source: 'ocr',
         isRecurring: false,
@@ -218,6 +219,18 @@ export default function ReceiptExpenseScreen() {
                 </Text>
               </View>
 
+              {scannedReceipt?.discountAmount != null && scannedReceipt.discountAmount > 0 && (
+                <View style={styles.expenseRow}>
+                  <Text style={styles.expenseLabel}>{t('receipt.discount')}</Text>
+                  <Text style={[styles.expenseValue, { color: theme.colors.success }]}>
+                    -{formatCurrency(
+                      scannedReceipt.discountAmount,
+                      (scannedReceipt?.currencyCode || 'USD') as Currency
+                    )}
+                  </Text>
+                </View>
+              )}
+
               <View style={styles.expenseRow}>
                 <Text style={styles.expenseLabel}>{t('receipt.description')}</Text>
                 <Text style={styles.expenseValue}>{scannedReceipt?.description}</Text>
@@ -303,13 +316,11 @@ export default function ReceiptExpenseScreen() {
 
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.editButton} onPress={handleEditExpense}>
-                <Ionicons name="pencil" size={20} color={theme.colors.primary} />
-                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
+                <Ionicons name="pencil" size={24} color={theme.colors.primary} />
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmExpense}>
-                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
-                <Text style={styles.confirmButtonText}>{t('receipt.saveExpense')}</Text>
+                <Ionicons name="checkmark" size={24} color={theme.colors.textInverse} />
               </TouchableOpacity>
             </View>
 
@@ -535,12 +546,15 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     gap: theme.spacing[3],
     marginBottom: theme.spacing[4],
+    width: '100%' as const,
   },
   editButton: {
+    flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[6],
+    paddingHorizontal: theme.spacing[3],
     borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
     borderColor: theme.colors.primary,
@@ -551,10 +565,12 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.primary,
   },
   confirmButton: {
+    flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[6],
+    paddingHorizontal: theme.spacing[3],
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.primary,
     gap: theme.spacing[2],

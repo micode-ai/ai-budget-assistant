@@ -96,7 +96,7 @@ export default function VoiceExpenseScreen() {
     }
 
     try {
-      addExpense({
+      await addExpense({
         userId: user?.id || '',
         amount: numericAmount,
         currencyCode: editCurrencyCode as Currency,
