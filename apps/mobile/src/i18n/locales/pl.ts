@@ -159,6 +159,7 @@ export default {
     sourceImport: 'Zaimportowano',
     deleteTitle: 'Usuń wydatek',
     deleteConfirm: 'Czy na pewno chcesz usunąć ten wydatek?',
+    copy: 'Kopiuj',
     receiptItems: 'Pozycje paragonu',
     noItems: 'Brak pozycji',
     addItem: 'Dodaj pozycję',

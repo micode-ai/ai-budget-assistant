@@ -159,6 +159,7 @@ export default {
     sourceImport: 'Імпортовано',
     deleteTitle: 'Видалити витрату',
     deleteConfirm: 'Ви впевнені, що хочете видалити цю витрату?',
+    copy: 'Копіювати',
     receiptItems: 'Позиції чеку',
     noItems: 'Немає позицій',
     addItem: 'Додати позицію',
