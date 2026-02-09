@@ -73,7 +73,8 @@
       "Bash(npx prisma migrate dev:*)",
       "Bash(head:*)",
       "Bash(npm run typecheck:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx prisma migrate:*)"
     ]
   }
 }

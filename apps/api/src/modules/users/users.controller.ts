@@ -37,9 +37,22 @@ export class UsersController {
   }
 
   @Patch('me/push-token')
-  async updatePushToken(@Req() req: AuthenticatedRequest, @Body() body: { pushToken: string }) {
+  async updatePushToken(@Req() req: AuthenticatedRequest, @Body() body: { pushToken: string | null }) {
     await this.usersService.updatePushToken(req.user.id, body.pushToken);
     return { success: true };
+  }
+
+  @Get('me/notification-preferences')
+  async getNotificationPreferences(@Req() req: AuthenticatedRequest) {
+    return this.usersService.getNotificationPreferences(req.user.id);
+  }
+
+  @Patch('me/notification-preferences')
+  async updateNotificationPreferences(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { budgetAlerts?: boolean; sharedAccountActivity?: boolean },
+  ) {
+    return this.usersService.updateNotificationPreferences(req.user.id, body);
   }
 
   @Delete('me')

@@ -346,6 +346,15 @@ export default {
     logoutConfirm: 'Are you sure you want to log out?',
     profileUpdated: 'Profile updated',
   },
+  notifications: {
+    title: 'Notifications',
+    pushNotifications: 'Push Notifications',
+    pushNotificationsDesc: 'Enable or disable all push notifications',
+    budgetAlerts: 'Budget Alerts',
+    budgetAlertsDesc: 'Get notified when you reach budget thresholds',
+    sharedAccountActivity: 'Shared Account Activity',
+    sharedAccountActivityDesc: 'Get notified when others add expenses to shared accounts',
+  },
   wallet: {
     title: 'Wallet',
     balances: 'Balances',

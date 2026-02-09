@@ -466,6 +466,30 @@ class ApiClient {
       `/currency-exchanges/rates?base=${baseCurrency}`,
     );
   }
+
+  // Push Notification endpoints
+  async updatePushToken(token: string | null) {
+    return this.request<{ success: boolean }>('/users/me/push-token', {
+      method: 'PATCH',
+      body: JSON.stringify({ pushToken: token }),
+    });
+  }
+
+  async getNotificationPreferences() {
+    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean }>(
+      '/users/me/notification-preferences',
+    );
+  }
+
+  async updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean }) {
+    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean }>(
+      '/users/me/notification-preferences',
+      {
+        method: 'PATCH',
+        body: JSON.stringify(prefs),
+      },
+    );
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL);

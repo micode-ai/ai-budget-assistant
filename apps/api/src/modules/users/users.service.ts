@@ -51,11 +51,37 @@ export class UsersService {
     });
   }
 
-  async updatePushToken(id: string, pushToken: string) {
+  async updatePushToken(id: string, pushToken: string | null) {
     return this.prisma.user.update({
       where: { id },
       data: { pushToken },
     });
+  }
+
+  async getNotificationPreferences(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        notifyBudgetAlerts: true,
+        notifySharedActivity: true,
+      },
+    });
+    return {
+      budgetAlerts: user?.notifyBudgetAlerts ?? true,
+      sharedAccountActivity: user?.notifySharedActivity ?? true,
+    };
+  }
+
+  async updateNotificationPreferences(
+    userId: string,
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean },
+  ) {
+    const data: Record<string, boolean> = {};
+    if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
+    if (prefs.sharedAccountActivity !== undefined) data.notifySharedActivity = prefs.sharedAccountActivity;
+
+    await this.prisma.user.update({ where: { id: userId }, data });
+    return this.getNotificationPreferences(userId);
   }
 
   async deactivate(id: string) {

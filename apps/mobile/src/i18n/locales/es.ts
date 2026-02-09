@@ -346,6 +346,15 @@ export default {
     logoutConfirm: '¿Estás seguro de que quieres cerrar sesión?',
     profileUpdated: 'Perfil actualizado',
   },
+  notifications: {
+    title: 'Notificaciones',
+    pushNotifications: 'Notificaciones Push',
+    pushNotificationsDesc: 'Activar o desactivar todas las notificaciones push',
+    budgetAlerts: 'Alertas de Presupuesto',
+    budgetAlertsDesc: 'Recibe notificaciones al alcanzar umbrales de presupuesto',
+    sharedAccountActivity: 'Actividad de Cuenta Compartida',
+    sharedAccountActivityDesc: 'Recibe notificaciones cuando otros añadan gastos a cuentas compartidas',
+  },
   wallet: {
     title: 'Billetera',
     balances: 'Saldos',

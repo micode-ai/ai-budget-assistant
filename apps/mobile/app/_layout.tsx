@@ -13,11 +13,17 @@ import {
   Inter_600SemiBold,
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
+import * as Notifications from 'expo-notifications';
 import { useAuthStore } from '@/stores/authStore';
 import { DatabaseProvider } from '@/db/DatabaseProvider';
 import { initializeDatabase } from '@/db/client';
 import { loadSavedLanguage } from '@/i18n';
 import { ThemeProvider, useTheme } from '@/theme';
+import {
+  registerForPushNotifications,
+  setupNotificationListeners,
+  handleNotificationResponse,
+} from '@/services/notifications';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -32,7 +38,7 @@ const queryClient = new QueryClient({
 });
 
 function RootNavigator() {
-  const { isLoading, initialize } = useAuthStore();
+  const { isLoading, isAuthenticated, initialize } = useAuthStore();
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -56,6 +62,27 @@ function RootNavigator() {
 
     prepare();
   }, [initialize]);
+
+  // Register push notifications when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      registerForPushNotifications();
+    }
+  }, [isAuthenticated]);
+
+  // Set up notification listeners
+  useEffect(() => {
+    const cleanup = setupNotificationListeners();
+
+    // Handle notification that launched the app (cold start)
+    Notifications.getLastNotificationResponseAsync().then((response) => {
+      if (response) {
+        handleNotificationResponse(response);
+      }
+    });
+
+    return cleanup;
+  }, []);
 
   useEffect(() => {
     if (!isLoading && fontsLoaded) {

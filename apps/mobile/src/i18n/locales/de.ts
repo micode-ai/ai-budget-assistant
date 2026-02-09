@@ -346,6 +346,15 @@ export default {
     logoutConfirm: 'Bist du sicher, dass du dich abmelden möchtest?',
     profileUpdated: 'Profil aktualisiert',
   },
+  notifications: {
+    title: 'Benachrichtigungen',
+    pushNotifications: 'Push-Benachrichtigungen',
+    pushNotificationsDesc: 'Alle Push-Benachrichtigungen aktivieren oder deaktivieren',
+    budgetAlerts: 'Budget-Warnungen',
+    budgetAlertsDesc: 'Benachrichtigung bei Erreichen von Budget-Schwellenwerten',
+    sharedAccountActivity: 'Gemeinsame Kontoaktivität',
+    sharedAccountActivityDesc: 'Benachrichtigung wenn andere Ausgaben zu gemeinsamen Konten hinzufügen',
+  },
   wallet: {
     title: 'Geldbörse',
     balances: 'Salden',

@@ -346,6 +346,15 @@ export default {
     logoutConfirm: 'Êtes-vous sûr de vouloir vous déconnecter ?',
     profileUpdated: 'Profil mis à jour',
   },
+  notifications: {
+    title: 'Notifications',
+    pushNotifications: 'Notifications Push',
+    pushNotificationsDesc: 'Activer ou désactiver toutes les notifications push',
+    budgetAlerts: 'Alertes Budget',
+    budgetAlertsDesc: 'Soyez notifié lorsque vous atteignez les seuils de budget',
+    sharedAccountActivity: 'Activité Compte Partagé',
+    sharedAccountActivityDesc: "Soyez notifié lorsque d'autres ajoutent des dépenses aux comptes partagés",
+  },
   wallet: {
     title: 'Portefeuille',
     balances: 'Soldes',

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Switch,
   Alert,
   Linking,
 } from 'react-native';
@@ -35,7 +36,60 @@ export default function SettingsScreen() {
   const [editingName, setEditingName] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Notification preferences
+  const [notifBudgetAlerts, setNotifBudgetAlerts] = useState(true);
+  const [notifSharedActivity, setNotifSharedActivity] = useState(true);
+  const [notifLoading, setNotifLoading] = useState(true);
+
   const appVersion = Constants.expoConfig?.version || '1.0.0';
+
+  const loadNotificationPreferences = useCallback(async () => {
+    try {
+      const prefs = await api.getNotificationPreferences();
+      setNotifBudgetAlerts(prefs.budgetAlerts);
+      setNotifSharedActivity(prefs.sharedAccountActivity);
+    } catch (e) {
+      console.error('Failed to load notification preferences:', e);
+    } finally {
+      setNotifLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadNotificationPreferences();
+  }, [loadNotificationPreferences]);
+
+  const handleToggleBudgetAlerts = async (value: boolean) => {
+    setNotifBudgetAlerts(value);
+    try {
+      await api.updateNotificationPreferences({ budgetAlerts: value });
+    } catch (e) {
+      setNotifBudgetAlerts(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleToggleSharedActivity = async (value: boolean) => {
+    setNotifSharedActivity(value);
+    try {
+      await api.updateNotificationPreferences({ sharedAccountActivity: value });
+    } catch (e) {
+      setNotifSharedActivity(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleToggleAllNotifications = async (value: boolean) => {
+    setNotifBudgetAlerts(value);
+    setNotifSharedActivity(value);
+    try {
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value });
+    } catch (e) {
+      setNotifBudgetAlerts(!value);
+      setNotifSharedActivity(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
 
   const handleSaveName = async () => {
     const trimmed = name.trim();
@@ -227,6 +281,55 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Notifications Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('notifications.title')}</Text>
+          <View style={styles.card}>
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.pushNotifications')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
+              </View>
+              <Switch
+                value={notifBudgetAlerts || notifSharedActivity}
+                onValueChange={handleToggleAllNotifications}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.budgetAlerts')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.budgetAlertsDesc')}</Text>
+              </View>
+              <Switch
+                value={notifBudgetAlerts}
+                onValueChange={handleToggleBudgetAlerts}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.sharedAccountActivity')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.sharedAccountActivityDesc')}</Text>
+              </View>
+              <Switch
+                value={notifSharedActivity}
+                onValueChange={handleToggleSharedActivity}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+          </View>
+        </View>
+
         {/* Wallet Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('wallet.title')}</Text>
@@ -363,6 +466,11 @@ const createStyles = (theme: Theme) => ({
   fieldValue: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textPrimary,
+  },
+  fieldDesc: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[0.5],
   },
   fieldValueRow: {
     flexDirection: 'row' as const,

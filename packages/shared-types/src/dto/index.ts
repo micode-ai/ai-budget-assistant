@@ -249,6 +249,21 @@ export interface AnalyticsSummary {
   };
 }
 
+// Notification DTOs
+export interface UpdatePushTokenDto {
+  pushToken: string | null;
+}
+
+export interface UpdateNotificationPreferencesDto {
+  budgetAlerts?: boolean;
+  sharedAccountActivity?: boolean;
+}
+
+export interface NotificationPreferencesResponse {
+  budgetAlerts: boolean;
+  sharedAccountActivity: boolean;
+}
+
 // Wallet DTOs
 export interface CreateWalletBalanceDto {
   localId: string;
