@@ -14,6 +14,7 @@ import { WalletModule } from './modules/wallet/wallet.module';
 import { CurrencyExchangeModule } from './modules/currency-exchange/currency-exchange.module';
 import { DatabaseModule } from './database/database.module';
 import { MailModule } from './modules/mail/mail.module';
+import { TelegramModule } from './modules/telegram/telegram.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MailModule } from './modules/mail/mail.module';
 
     // Infrastructure
     MailModule,
+    TelegramModule,
 
     // Feature modules
     AuthModule,
