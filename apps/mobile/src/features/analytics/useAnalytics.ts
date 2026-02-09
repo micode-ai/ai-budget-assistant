@@ -49,7 +49,7 @@ const CATEGORY_COLORS = [
   '#85C1E9', // Light Blue
 ];
 
-export function useAnalytics(timeRange: TimeRange = 'month') {
+export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: string) {
   const { t } = useTranslation();
   const { expenses } = useExpenseStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -80,10 +80,11 @@ export function useAnalytics(timeRange: TimeRange = 'month') {
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
       if (e.isDeleted) return false;
+      if (currencyCode && e.currencyCode !== currencyCode) return false;
       const expenseDate = new Date(e.date);
       return expenseDate >= dateRange.startDate && expenseDate <= dateRange.endDate;
     });
-  }, [expenses, dateRange]);
+  }, [expenses, dateRange, currencyCode]);
 
   const dailySpending = useMemo((): DailySpending[] => {
     const now = new Date();

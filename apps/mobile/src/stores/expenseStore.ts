@@ -91,9 +91,11 @@ export const useExpenseStore = create<ExpenseState>()(
       const now = new Date();
       const startOfMonth = getStartOfMonth(now);
       const endOfMonth = getEndOfMonth(now);
+      const accountCurrency = useAccountStore.getState().currentAccount?.()?.currencyCode || 'USD';
 
       return get().expenses
         .filter((e) => !e.isDeleted)
+        .filter((e) => e.currencyCode === accountCurrency)
         .filter((e) => {
           const expenseDate = new Date(e.date);
           return expenseDate >= startOfMonth && expenseDate <= endOfMonth;

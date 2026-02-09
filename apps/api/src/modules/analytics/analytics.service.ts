@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 interface ExpenseWithCategory {
   id: string;
   amount: unknown;
+  currencyCode: string;
   description: string | null;
   date: Date;
   categoryId: string | null;
@@ -27,6 +28,23 @@ export class AnalyticsService {
     });
 
     const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
+
+    // Group expenses by currency
+    const currencyTotals = new Map<string, { total: number; count: number }>();
+    for (const expense of expenses) {
+      const currency = expense.currencyCode || 'USD';
+      const current = currencyTotals.get(currency) || { total: 0, count: 0 };
+      currencyTotals.set(currency, {
+        total: current.total + Number(expense.amount),
+        count: current.count + 1,
+      });
+    }
+
+    const expensesByCurrency = Array.from(currencyTotals.entries()).map(([currencyCode, data]) => ({
+      currencyCode,
+      totalExpenses: data.total,
+      transactionCount: data.count,
+    }));
 
     // Group by category
     const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
@@ -85,6 +103,7 @@ export class AnalyticsService {
       totalExpenses,
       netSavings: 0 - totalExpenses,
       expensesByCategory,
+      expensesByCurrency,
       topExpenses,
       trends: {
         vsLastPeriod,

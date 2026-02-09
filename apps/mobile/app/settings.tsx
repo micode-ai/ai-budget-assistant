@@ -227,6 +227,34 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Wallet Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('wallet.title')}</Text>
+          <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => router.push('/wallet/set-balance')}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="wallet-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('wallet.setInitialBalance')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => router.push('/wallet')}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="cash-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('wallet.balances')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* About Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.about')}</Text>

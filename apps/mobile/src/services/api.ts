@@ -420,6 +420,52 @@ class ApiClient {
       body: JSON.stringify({ inviteCode }),
     });
   }
+
+  // Wallet endpoints
+  async getWalletBalances() {
+    return this.request<any[]>('/wallet');
+  }
+
+  async getWalletSummary() {
+    return this.request<any>('/wallet/summary');
+  }
+
+  async setWalletBalance(data: { localId: string; currencyCode: string; initialAmount: number }) {
+    return this.request<any>('/wallet', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteWalletBalance(currencyCode: string) {
+    return this.request<void>(`/wallet/${currencyCode}`, { method: 'DELETE' });
+  }
+
+  // Currency Exchange endpoints
+  async getCurrencyExchanges(filters?: { startDate?: string; endDate?: string }) {
+    const params = new URLSearchParams();
+    if (filters?.startDate) params.append('startDate', filters.startDate);
+    if (filters?.endDate) params.append('endDate', filters.endDate);
+    const query = params.toString();
+    return this.request<any[]>(`/currency-exchanges${query ? `?${query}` : ''}`);
+  }
+
+  async createCurrencyExchange(data: any) {
+    return this.request<any>('/currency-exchanges', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteCurrencyExchange(id: string) {
+    return this.request<void>(`/currency-exchanges/${id}`, { method: 'DELETE' });
+  }
+
+  async getExchangeRates(baseCurrency: string = 'USD') {
+    return this.request<{ base: string; rates: Record<string, number>; updatedAt: string }>(
+      `/currency-exchanges/rates?base=${baseCurrency}`,
+    );
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL);

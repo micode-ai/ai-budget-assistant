@@ -92,6 +92,7 @@ export class BudgetsService {
     const whereExpenses: any = {
       accountId,
       isDeleted: false,
+      currencyCode: budget.currencyCode,
       date: {
         gte: periodStart,
         lte: periodEnd,

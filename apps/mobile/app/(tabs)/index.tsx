@@ -7,6 +7,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useWalletStore } from '@/stores/walletStore';
 import { formatCurrency, formatRelativeDate } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -18,6 +19,7 @@ export default function DashboardScreen() {
   const { expenses, totalThisMonth, loadExpenses } = useExpenseStore();
   const { activeBudgets, getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const { walletSummary, loadWallet } = useWalletStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -28,11 +30,11 @@ export default function DashboardScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await loadExpenses();
+      await Promise.all([loadExpenses(), loadWallet()]);
     } finally {
       setRefreshing(false);
     }
-  }, [loadExpenses]);
+  }, [loadExpenses, loadWallet]);
 
   const recentExpenses = expenses.slice(0, 5);
 
@@ -75,21 +77,72 @@ export default function DashboardScreen() {
           </View>
         </View>
 
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{t('dashboard.walletBalances')}</Text>
+            {walletSummary.length > 0 && (
+              <TouchableOpacity onPress={() => router.push('/wallet')}>
+                <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          {walletSummary.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
+              <Text style={styles.emptyStateText}>{t('wallet.noBalances')}</Text>
+              <Text style={styles.emptyStateSubtext}>{t('wallet.noBalancesHint')}</Text>
+              {canEdit && (
+                <TouchableOpacity style={styles.emptyStateButton} onPress={() => router.push('/wallet/set-balance')}>
+                  <Text style={styles.emptyStateButtonText}>{t('wallet.addBalance')}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : (
+            <View style={styles.walletGrid}>
+              {walletSummary.map((summary) => (
+                <TouchableOpacity key={summary.currencyCode} style={styles.walletCard} onPress={() => router.push('/wallet')}>
+                  <Text style={styles.walletCurrency}>{summary.currencyCode}</Text>
+                  <Text style={[styles.walletBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}>
+                    {formatCurrency(summary.currentBalance, summary.currencyCode)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+
         {canEdit && (
-          <View style={styles.quickActions}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.quickActions}
+            style={styles.quickActionsScroll}
+          >
             <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
-              <Ionicons name="add-circle" size={32} color={theme.colors.primary} />
-              <Text style={styles.quickActionText}>{t('dashboard.addExpense')}</Text>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.primary + '18' }]}>
+                <Ionicons name="add-circle" size={28} color={theme.colors.primary} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
-              <Ionicons name="mic" size={32} color={theme.colors.accent} />
-              <Text style={styles.quickActionText}>{t('dashboard.voiceInput')}</Text>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.accent + '18' }]}>
+                <Ionicons name="mic" size={28} color={theme.colors.accent} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
-              <Ionicons name="camera" size={32} color={theme.colors.secondary} />
-              <Text style={styles.quickActionText}>{t('dashboard.scanReceipt')}</Text>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.secondary + '18' }]}>
+                <Ionicons name="camera" size={28} color={theme.colors.secondary} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
             </TouchableOpacity>
-          </View>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.warning + '18' }]}>
+                <Ionicons name="swap-horizontal" size={28} color={theme.colors.warning} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
+            </TouchableOpacity>
+          </ScrollView>
         )}
 
         <View style={styles.section}>
@@ -218,19 +271,31 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
   },
+  quickActionsScroll: {
+    marginBottom: theme.spacing[6],
+    marginHorizontal: -theme.spacing[4],
+  },
   quickActions: {
     flexDirection: 'row' as const,
-    justifyContent: 'space-around' as const,
-    marginBottom: theme.spacing[6],
+    paddingHorizontal: theme.spacing[4],
+    gap: theme.spacing[3],
   },
   quickActionButton: {
     alignItems: 'center' as const,
     gap: theme.spacing[2],
-    padding: theme.spacing[3],
+    width: 72,
+  },
+  quickActionIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: theme.borderRadius.xl,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   quickActionText: {
     ...theme.textStyles.caption,
     color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
   },
   section: {
     marginBottom: theme.spacing[6],
@@ -264,6 +329,18 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[1],
+  },
+  emptyStateButton: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[2.5],
+    paddingHorizontal: theme.spacing[5],
+    marginTop: theme.spacing[4],
+  },
+  emptyStateButtonText: {
+    ...theme.textStyles.bodyMedium,
+    color: '#FFFFFF',
+    fontWeight: '600' as const,
   },
   expenseItem: {
     backgroundColor: theme.colors.surface,
@@ -315,5 +392,27 @@ const createStyles = (theme: Theme) => ({
   budgetAmountText: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.primary,
+  },
+  walletGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+  },
+  walletCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    minWidth: 100,
+    flex: 1,
+    ...theme.shadows.sm,
+  },
+  walletCurrency: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1],
+  },
+  walletBalance: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
   },
 });

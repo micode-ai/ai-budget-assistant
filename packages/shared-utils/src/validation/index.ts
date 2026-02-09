@@ -116,7 +116,7 @@ export const UpdateCategorySchema = z.object({
 export const SyncOperationSchema = z.enum(['create', 'update', 'delete']);
 
 export const SyncChangeSchema = z.object({
-  entityType: z.enum(['expense', 'budget', 'category']),
+  entityType: z.enum(['expense', 'budget', 'category', 'walletBalance', 'currencyExchange']),
   entityId: z.string().uuid(),
   operation: SyncOperationSchema,
   payload: z.unknown(),
@@ -164,6 +164,47 @@ export const BudgetFiltersSchema = PaginationSchema.extend({
   period: BudgetPeriodSchema.optional(),
 });
 
+// Wallet Balance schemas
+export const CreateWalletBalanceSchema = z.object({
+  localId: z.string().uuid(),
+  currencyCode: CurrencySchema,
+  initialAmount: z.number().min(0, 'Amount cannot be negative').max(999999999),
+});
+
+export const UpdateWalletBalanceSchema = z.object({
+  initialAmount: z.number().min(0).max(999999999).optional(),
+});
+
+// Currency Exchange schemas
+export const CreateCurrencyExchangeSchema = z
+  .object({
+    localId: z.string().uuid(),
+    fromCurrency: CurrencySchema,
+    toCurrency: CurrencySchema,
+    fromAmount: z.number().positive('Amount must be positive').max(999999999),
+    toAmount: z.number().positive('Amount must be positive').max(999999999),
+    exchangeRate: z.number().positive('Rate must be positive'),
+    date: z.string().datetime({ offset: true }),
+    notes: z.string().max(500).optional(),
+  })
+  .refine((data) => data.fromCurrency !== data.toCurrency, {
+    message: 'Source and target currencies must be different',
+  });
+
+export const UpdateCurrencyExchangeSchema = z.object({
+  fromAmount: z.number().positive().max(999999999).optional(),
+  toAmount: z.number().positive().max(999999999).optional(),
+  exchangeRate: z.number().positive().optional(),
+  date: z.string().datetime({ offset: true }).optional(),
+  notes: z.string().max(500).nullable().optional(),
+});
+
+export const ExchangeFiltersSchema = PaginationSchema.extend({
+  startDate: z.string().datetime({ offset: true }).optional(),
+  endDate: z.string().datetime({ offset: true }).optional(),
+  currency: CurrencySchema.optional(),
+});
+
 // Type exports from schemas
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
@@ -178,3 +219,8 @@ export type ParseExpenseRequestInput = z.infer<typeof ParseExpenseRequestSchema>
 export type ChatRequestInput = z.infer<typeof ChatRequestSchema>;
 export type ExpenseFiltersInput = z.infer<typeof ExpenseFiltersSchema>;
 export type BudgetFiltersInput = z.infer<typeof BudgetFiltersSchema>;
+export type CreateWalletBalanceInput = z.infer<typeof CreateWalletBalanceSchema>;
+export type UpdateWalletBalanceInput = z.infer<typeof UpdateWalletBalanceSchema>;
+export type CreateCurrencyExchangeInput = z.infer<typeof CreateCurrencyExchangeSchema>;
+export type UpdateCurrencyExchangeInput = z.infer<typeof UpdateCurrencyExchangeSchema>;
+export type ExchangeFiltersInput = z.infer<typeof ExchangeFiltersSchema>;

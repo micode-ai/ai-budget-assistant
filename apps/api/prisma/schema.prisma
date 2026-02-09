@@ -51,8 +51,10 @@ model User {
   chatConversations ChatConversation[]
   budgetAlerts      BudgetAlert[]
   syncLogs          SyncLog[]
-  ownedAccounts     Account[]        @relation("OwnedAccounts")
+  ownedAccounts     Account[]          @relation("OwnedAccounts")
   accountMembers    AccountMember[]
+  walletBalances    WalletBalance[]
+  currencyExchanges CurrencyExchange[]
 
   @@map("users")
 }
@@ -74,8 +76,10 @@ model Account {
   invitations AccountInvitation[]
   expenses    Expense[]
   budgets     Budget[]
-  categories  Category[]
-  syncLogs    SyncLog[]
+  categories        Category[]
+  syncLogs          SyncLog[]
+  walletBalances    WalletBalance[]
+  currencyExchanges CurrencyExchange[]
 
   @@map("accounts")
 }
@@ -296,4 +300,52 @@ model SyncLog {
   account Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@map("sync_log")
+}
+
+model WalletBalance {
+  id            String   @id @default(uuid())
+  accountId     String   @map("account_id")
+  userId        String   @map("user_id")
+  clientId      String   @map("client_id")
+  currencyCode  String   @map("currency_code")
+  initialAmount Decimal  @map("initial_amount") @db.Decimal(12, 2)
+  isDeleted     Boolean  @default(false) @map("is_deleted")
+  syncVersion   Int      @default(0) @map("sync_version")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, currencyCode])
+  @@unique([accountId, clientId])
+  @@index([accountId])
+  @@map("wallet_balances")
+}
+
+model CurrencyExchange {
+  id           String   @id @default(uuid())
+  accountId    String   @map("account_id")
+  userId       String   @map("user_id")
+  clientId     String   @map("client_id")
+  fromCurrency String   @map("from_currency")
+  toCurrency   String   @map("to_currency")
+  fromAmount   Decimal  @map("from_amount") @db.Decimal(12, 2)
+  toAmount     Decimal  @map("to_amount") @db.Decimal(12, 2)
+  exchangeRate Decimal  @map("exchange_rate") @db.Decimal(12, 6)
+  date         DateTime @db.Date
+  notes        String?
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  syncVersion  Int      @default(0) @map("sync_version")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, clientId])
+  @@index([accountId, date(sort: Desc)])
+  @@map("currency_exchanges")
 }
