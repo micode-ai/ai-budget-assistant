@@ -132,6 +132,8 @@ export default {
     peakDayInsight: 'Gastas más los {{day}}',
     periodUp: 'más que el {{period}} anterior',
     periodDown: 'menos que el {{period}} anterior',
+    totalSavings: 'Ahorros en recibos',
+    totalSavingsText: 'Ahorraste {{amount}} en descuentos este {{range}}.',
   },
   chat: {
     title: 'Asistente de presupuesto IA',
@@ -232,6 +234,7 @@ export default {
     success: '¡Gasto agregado exitosamente!',
     scanAnother: 'Escanear otro',
     saveFailed: 'Error al guardar el gasto',
+    discount: 'Descuento',
     saveImage: 'Guardar imagen del recibo',
   },
   budgetNew: {

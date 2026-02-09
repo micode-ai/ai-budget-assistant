@@ -17,6 +17,7 @@ export interface ParsedReceipt {
   time: string | null;
   items: ReceiptItem[];
   subtotal: number | null;
+  discount: number | null;
   tax: number | null;
   total: number;
   currency: string;
@@ -27,6 +28,7 @@ export interface ParsedReceipt {
 
 export interface ReceiptExpense {
   amount: number;
+  discountAmount: number | null;
   currencyCode: string;
   description: string;
   categoryId: string | null;
@@ -83,21 +85,37 @@ Return a JSON object with the following structure:
   "time": "HH:MM format or null",
   "items": [
     {
-      "description": "item name",
+      "description": "clean, normalized product name (see normalization rules below)",
       "quantity": 1,
       "unitPrice": 10.00,
       "totalPrice": 10.00
     }
   ],
   "subtotal": number or null,
+  "discount": total discount amount or null,
   "tax": number or null,
-  "total": total amount (required),
+  "total": total amount after discount (required),
   "currency": "USD/EUR/PLN/etc",
   "paymentMethod": "cash/card/etc or null",
   "suggestedCategory": "best matching category from the available list",
   "confidence": 0-1 confidence score,
   "rawText": "all readable text from receipt"
 }
+
+Item name normalization rules for the "description" field:
+- IMPORTANT: Preserve the actual product name from the receipt — do NOT replace it with a different brand or product
+- Separate concatenated words with spaces (e.g. "PiwoZywiec0.5" -> "Piwo Zywiec 0.5L")
+- Use proper capitalization for the words as printed on receipt (e.g. "coca cola" -> "Coca-Cola")
+- Remove store-specific product codes, PLU numbers, and internal IDs
+- Include size/weight/volume when present (e.g. "0.5L", "500g", "1kg")
+- Keep the product name in the original receipt language
+- Only fix obvious single-character OCR errors within the same word, do NOT guess or substitute brand names
+
+Discount extraction:
+- Look for lines like "DISCOUNT", "RABAT", "СКИДКА", "ЗНИЖКА", "SAVINGS", "SALE", percentage-off amounts
+- Sum all discount lines into one total discount value
+- If no discount found, set discount to null
+- The total should be the final amount AFTER discount
 
 Important:
 - Extract EVERY line item if possible
@@ -156,6 +174,7 @@ Important:
 
     return {
       amount: parsed.total || 0,
+      discountAmount: parsed.discount || null,
       currencyCode: parsed.currency || 'USD',
       description,
       categoryId: matchedCategory?.id || null,

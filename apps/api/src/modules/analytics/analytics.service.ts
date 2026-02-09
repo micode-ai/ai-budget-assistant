@@ -28,6 +28,7 @@ export class AnalyticsService {
     });
 
     const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
+    const totalDiscountSavings = expenses.reduce((sum: number, e: any) => sum + Number(e.discountAmount || 0), 0);
 
     // Group expenses by currency
     const currencyTotals = new Map<string, { total: number; count: number }>();
@@ -101,6 +102,7 @@ export class AnalyticsService {
       },
       totalIncome: 0, // TODO: Implement income tracking
       totalExpenses,
+      totalDiscountSavings,
       netSavings: 0 - totalExpenses,
       expensesByCategory,
       expensesByCurrency,
@@ -210,6 +212,7 @@ export class AnalyticsService {
     });
 
     const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
+    const totalDiscountSavings = expenses.reduce((sum: number, e: any) => sum + Number(e.discountAmount || 0), 0);
 
     // Group by category
     const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
@@ -266,6 +269,7 @@ export class AnalyticsService {
       },
       totalIncome: 0,
       totalExpenses,
+      totalDiscountSavings,
       netSavings: 0 - totalExpenses,
       expensesByCategory,
       topExpenses,

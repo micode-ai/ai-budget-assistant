@@ -16,8 +16,10 @@ import {
   loadItemsByExpenseId,
   insertExpenseItems,
   insertExpenseItem,
+  upsertExpenseItem,
   updateExpenseItemInDb,
   softDeleteExpenseItemInDb,
+  deduplicateItemsByExpenseId,
 } from '@/db/expenseItemRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
@@ -50,7 +52,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: () => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string }) => Expense;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
@@ -107,8 +109,12 @@ export const useExpenseStore = create<ExpenseState>()(
       set({ isLoading: true, error: null });
       try {
         const accountId = useAccountStore.getState().currentAccountId;
+        if (!accountId) {
+          set({ expenses: [], isLoading: false });
+          return;
+        }
         // 1. Show local data immediately
-        const localExpenses = await loadAllExpenses(accountId || undefined);
+        const localExpenses = await loadAllExpenses(accountId);
         set({ expenses: localExpenses, isLoading: false });
 
         // 2. Sync pending local → server
@@ -119,17 +125,24 @@ export const useExpenseStore = create<ExpenseState>()(
           const serverResult = await api.getExpenses();
           const serverExpenses: any[] = serverResult.data || serverResult;
           for (const se of serverExpenses) {
+            const expenseId = se.clientId || se.id;
+            const serverCategoryId = se.category?.name ?? se.categoryId ?? undefined;
+            const serverDiscount = se.discountAmount != null ? Number(se.discountAmount) : undefined;
+
+            // Preserve local category & discount if server doesn't have them
+            const localExpense = localExpenses.find((e) => e.id === expenseId);
             const expense: Expense = {
-              id: se.clientId || se.id,
-              localId: se.clientId || se.id,
+              id: expenseId,
+              localId: expenseId,
               serverId: se.id,
               userId: se.userId,
               accountId: se.accountId,
               amount: Number(se.amount),
+              discountAmount: serverDiscount ?? localExpense?.discountAmount,
               currencyCode: se.currencyCode,
               description: se.description ?? undefined,
               notes: se.notes ?? undefined,
-              categoryId: se.category?.name ?? se.categoryId ?? undefined,
+              categoryId: serverCategoryId || localExpense?.categoryId,
               date: new Date(se.date),
               time: se.time ?? undefined,
               source: se.source || 'manual',
@@ -141,9 +154,35 @@ export const useExpenseStore = create<ExpenseState>()(
               syncVersion: se.syncVersion || 0,
             };
             await upsertExpense(expense);
+
+            // Sync expense items from server only if no local items exist
+            if (se.items && Array.isArray(se.items) && se.items.length > 0) {
+              const localItems = await loadItemsByExpenseId(expense.id);
+              if (localItems.length === 0) {
+                const now = new Date();
+                for (const si of se.items) {
+                  const item: ExpenseItem = {
+                    id: si.id,
+                    localId: si.id,
+                    expenseId: expense.id,
+                    description: si.description,
+                    quantity: si.quantity ?? 1,
+                    unitPrice: Number(si.unitPrice ?? 0),
+                    totalPrice: Number(si.totalPrice ?? 0),
+                    sortOrder: si.sortOrder ?? 0,
+                    isDeleted: si.isDeleted || false,
+                    syncStatus: 'synced' as SyncStatus,
+                    syncVersion: si.syncVersion ?? 0,
+                    createdAt: si.createdAt ? new Date(si.createdAt) : now,
+                    updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
+                  };
+                  await upsertExpenseItem(item);
+                }
+              }
+            }
           }
           // Reload from SQLite after merge
-          const merged = await loadAllExpenses(accountId || undefined);
+          const merged = await loadAllExpenses(accountId);
           set({ expenses: merged });
         } catch (e) {
           // Server pull failed (offline?) — local data is still shown
@@ -157,7 +196,7 @@ export const useExpenseStore = create<ExpenseState>()(
 
     setExpenses: (expenses) => set({ expenses }),
 
-    addExpense: (expenseData) => {
+    addExpense: async (expenseData) => {
       const { items, receiptImageBase64, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
@@ -179,18 +218,13 @@ export const useExpenseStore = create<ExpenseState>()(
         expenses: [newExpense, ...state.expenses],
       }));
 
-      insertExpense(newExpense).catch((e) =>
-        console.error('Failed to insert expense into SQLite:', e),
-      );
+      // Await local SQLite writes so data is persisted before navigation
+      await insertExpense(newExpense);
 
-      // Save receipt image if provided
       if (receiptImageBase64) {
-        saveReceiptImageLocally(id, receiptImageBase64).catch((e) =>
-          console.error('Failed to save receipt image:', e),
-        );
+        await saveReceiptImageLocally(id, receiptImageBase64);
       }
 
-      // Save expense items if provided
       if (items && items.length > 0) {
         const expenseItems: ExpenseItem[] = items.map((item, index) => ({
           id: generateUUID(),
@@ -212,12 +246,10 @@ export const useExpenseStore = create<ExpenseState>()(
           expenseItems: { ...state.expenseItems, [id]: expenseItems },
         }));
 
-        insertExpenseItems(expenseItems).catch((e) =>
-          console.error('Failed to insert expense items into SQLite:', e),
-        );
+        await insertExpenseItems(expenseItems);
       }
 
-      // Sync to server
+      // Fire-and-forget server sync (non-blocking)
       const sanitizedItems = items?.map((item) => ({
         description: item.description,
         quantity: Math.max(0, item.quantity ?? 1),
@@ -228,6 +260,7 @@ export const useExpenseStore = create<ExpenseState>()(
       api.createExpense({
         localId: id,
         amount: newExpense.amount,
+        discountAmount: newExpense.discountAmount,
         currencyCode: newExpense.currencyCode,
         description: newExpense.description,
         notes: newExpense.notes,
@@ -304,7 +337,43 @@ export const useExpenseStore = create<ExpenseState>()(
 
     loadExpenseItems: async (expenseId: string) => {
       try {
-        const items = await loadItemsByExpenseId(expenseId);
+        // Clean up any existing duplicates first
+        await deduplicateItemsByExpenseId(expenseId);
+
+        // Try local first
+        let items = await loadItemsByExpenseId(expenseId);
+
+        // Fallback: fetch from server if local is empty
+        if (items.length === 0) {
+          try {
+            const serverItems: any[] = await api.getExpenseItems(expenseId);
+            if (serverItems && serverItems.length > 0) {
+              const now = new Date();
+              items = serverItems.map((si: any, index: number) => ({
+                id: si.id,
+                localId: si.id,
+                expenseId,
+                description: si.description,
+                quantity: si.quantity ?? 1,
+                unitPrice: Number(si.unitPrice ?? 0),
+                totalPrice: Number(si.totalPrice ?? 0),
+                sortOrder: si.sortOrder ?? index,
+                isDeleted: si.isDeleted || false,
+                syncStatus: 'synced' as SyncStatus,
+                syncVersion: si.syncVersion ?? 0,
+                createdAt: si.createdAt ? new Date(si.createdAt) : now,
+                updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
+              }));
+              // Save to local SQLite
+              for (const item of items) {
+                await upsertExpenseItem(item);
+              }
+            }
+          } catch {
+            // Server fetch failed (offline)
+          }
+        }
+
         set((state) => ({
           expenseItems: { ...state.expenseItems, [expenseId]: items },
         }));
@@ -394,7 +463,21 @@ export const useExpenseStore = create<ExpenseState>()(
 
     loadReceiptImage: async (expenseId: string) => {
       try {
-        return await getReceiptImageFromDb(expenseId);
+        // Try local first
+        const local = await getReceiptImageFromDb(expenseId);
+        if (local) return local;
+
+        // Fallback: fetch from server
+        try {
+          const result = await api.getReceiptImage(expenseId);
+          if (result?.imageBase64) {
+            await saveReceiptImageLocally(expenseId, result.imageBase64);
+            return result.imageBase64;
+          }
+        } catch {
+          // Server fetch failed (offline or no image on server)
+        }
+        return null;
       } catch (e) {
         console.error('Failed to load receipt image:', e);
         return null;

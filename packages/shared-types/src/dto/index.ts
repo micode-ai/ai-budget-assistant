@@ -33,6 +33,7 @@ export interface AuthResponse {
 export interface CreateExpenseDto {
   localId: string;
   amount: number;
+  discountAmount?: number;
   currencyCode: Currency;
   description?: string;
   notes?: string;
@@ -49,6 +50,7 @@ export interface CreateExpenseDto {
 
 export interface UpdateExpenseDto {
   amount?: number;
+  discountAmount?: number;
   currencyCode?: Currency;
   description?: string;
   notes?: string;
@@ -243,6 +245,7 @@ export interface AnalyticsSummary {
     date: string;
     categoryName: string;
   }>;
+  totalDiscountSavings: number;
   trends: {
     vsLastPeriod: number; // percentage change
     vsAverage: number;

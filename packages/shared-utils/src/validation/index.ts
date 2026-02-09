@@ -37,6 +37,7 @@ export const LocationSchema = z.object({
 export const CreateExpenseSchema = z.object({
   localId: z.string().uuid(),
   amount: z.number().positive('Amount must be positive').max(999999999, 'Amount too large'),
+  discountAmount: z.number().min(0).max(999999999).optional(),
   currencyCode: CurrencySchema,
   description: z.string().max(500).optional(),
   notes: z.string().max(2000).optional(),
@@ -52,6 +53,7 @@ export const CreateExpenseSchema = z.object({
 
 export const UpdateExpenseSchema = z.object({
   amount: z.number().positive().max(999999999).optional(),
+  discountAmount: z.number().min(0).max(999999999).optional(),
   currencyCode: CurrencySchema.optional(),
   description: z.string().max(500).optional(),
   notes: z.string().max(2000).optional(),

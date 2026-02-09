@@ -252,6 +252,7 @@ class ApiClient {
   async scanReceipt(imageBase64: string) {
     return this.request<{
       amount: number;
+      discountAmount: number | null;
       currencyCode: string;
       description: string;
       categoryId: string | null;

@@ -275,6 +275,11 @@ export default function ExpenseDetailScreen() {
               {formatCurrency(expense.amount, expense.currencyCode)}
             </Text>
           )}
+          {expense.discountAmount != null && expense.discountAmount > 0 && (
+            <Text style={styles.discountText}>
+              {t('receipt.discount')}: -{formatCurrency(expense.discountAmount, expense.currencyCode)}
+            </Text>
+          )}
           <View style={styles.sourceBadge}>
             <Ionicons
               name={(sourceIcon[expense.source] || 'help-circle-outline') as any}
@@ -558,16 +563,13 @@ export default function ExpenseDetailScreen() {
                 style={styles.editButton}
                 onPress={() => setIsEditing(true)}
               >
-                <Ionicons name="pencil" size={20} color={theme.colors.primary} />
-                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
+                <Ionicons name="pencil" size={22} color={theme.colors.primary} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
-                <Ionicons name="copy-outline" size={20} color={theme.colors.secondary} />
-                <Text style={styles.copyButtonText}>{t('expenseDetail.copy')}</Text>
+                <Ionicons name="copy-outline" size={22} color={theme.colors.secondary} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                <Ionicons name="trash" size={20} color={theme.colors.danger} />
-                <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
+                <Ionicons name="trash" size={22} color={theme.colors.danger} />
               </TouchableOpacity>
             </View>
           )}
@@ -630,6 +632,12 @@ const createStyles = (theme: Theme) => ({
     borderBottomColor: theme.colors.primary,
     paddingBottom: theme.spacing[1],
     minWidth: 150,
+  },
+  discountText: {
+    fontSize: 16,
+    color: theme.colors.success,
+    fontWeight: '500' as const,
+    marginTop: theme.spacing[2],
   },
   sourceBadge: {
     flexDirection: 'row' as const,
@@ -717,7 +725,7 @@ const createStyles = (theme: Theme) => ({
   },
   editActions: {
     flexDirection: 'row' as const,
-    gap: theme.spacing[3],
+    gap: theme.spacing[2],
   },
   editButton: {
     flex: 1,
@@ -731,7 +739,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   editButtonText: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '600' as const,
     color: theme.colors.primary,
   },
@@ -747,7 +755,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   copyButtonText: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '600' as const,
     color: theme.colors.secondary,
   },
@@ -763,7 +771,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   deleteButtonText: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '600' as const,
     color: theme.colors.danger,
   },

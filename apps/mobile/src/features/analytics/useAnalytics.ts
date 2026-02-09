@@ -24,6 +24,7 @@ export interface CategorySpending {
 
 export interface AnalyticsSummary {
   totalSpent: number;
+  totalDiscountSavings: number;
   averagePerDay: number;
   transactionCount: number;
   trend: number;
@@ -208,6 +209,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
   const summary = useMemo((): AnalyticsSummary => {
     const totalSpent = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalDiscountSavings = filteredExpenses.reduce((sum, e) => sum + (e.discountAmount || 0), 0);
     const transactionCount = filteredExpenses.length;
 
     // Calculate days in range
@@ -242,6 +244,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
     return {
       totalSpent,
+      totalDiscountSavings,
       averagePerDay,
       transactionCount,
       trend,

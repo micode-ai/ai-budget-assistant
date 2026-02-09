@@ -132,6 +132,8 @@ export default {
     peakDayInsight: 'Najwięcej wydajesz w {{day}}',
     periodUp: 'więcej niż poprzedni {{period}}',
     periodDown: 'mniej niż poprzedni {{period}}',
+    totalSavings: 'Oszczędności z paragonów',
+    totalSavingsText: 'Zaoszczędziłeś {{amount}} na rabatach w tym {{range}}.',
   },
   chat: {
     title: 'Asystent budżetowy AI',
@@ -232,6 +234,7 @@ export default {
     success: 'Wydatek dodany pomyślnie!',
     scanAnother: 'Skanuj kolejny',
     saveFailed: 'Nie udało się zapisać wydatku',
+    discount: 'Rabat',
     saveImage: 'Zapisz zdjęcie paragonu',
   },
   budgetNew: {

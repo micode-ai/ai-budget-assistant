@@ -108,6 +108,7 @@ export interface Expense {
   userId: string;
   accountId: string;
   amount: number;
+  discountAmount?: number;
   currencyCode: Currency;
   description?: string;
   notes?: string;

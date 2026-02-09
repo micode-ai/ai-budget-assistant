@@ -132,6 +132,8 @@ export default {
     peakDayInsight: 'Am meisten gibst du {{day}}s aus',
     periodUp: 'mehr als letzte {{period}}',
     periodDown: 'weniger als letzte {{period}}',
+    totalSavings: 'Quittungsersparnisse',
+    totalSavingsText: 'Sie haben {{amount}} durch Rabatte in diesem {{range}} gespart.',
   },
   chat: {
     title: 'KI-Budgetassistent',
@@ -232,6 +234,7 @@ export default {
     success: 'Ausgabe erfolgreich hinzugefügt!',
     scanAnother: 'Weiteren scannen',
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
+    discount: 'Rabatt',
     saveImage: 'Kassenbon-Bild speichern',
   },
   budgetNew: {

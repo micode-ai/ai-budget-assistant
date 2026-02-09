@@ -315,6 +315,21 @@ export default function AnalyticsScreen() {
               </Text>
             </View>
           </View>
+
+          {summary.totalDiscountSavings > 0 && (
+            <View style={styles.insightCard}>
+              <Ionicons name="pricetag-outline" size={24} color={theme.colors.success} />
+              <View style={styles.insightContent}>
+                <Text style={styles.insightTitle}>{t('analytics.totalSavings')}</Text>
+                <Text style={styles.insightText}>
+                  {t('analytics.totalSavingsText', {
+                    amount: formatCurrency(summary.totalDiscountSavings, currency),
+                    range: t(`analytics.${selectedRange}`),
+                  })}
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Top Receipt Items */}

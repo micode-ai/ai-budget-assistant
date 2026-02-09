@@ -36,6 +36,7 @@ export class ExpensesService {
         userId,
         clientId: dto.localId,
         amount: dto.amount,
+        discountAmount: dto.discountAmount,
         currencyCode: dto.currencyCode,
         description: dto.description,
         notes: dto.notes,
@@ -53,6 +54,7 @@ export class ExpensesService {
         create: expenseData,
         update: {
           amount: dto.amount,
+          discountAmount: dto.discountAmount,
           currencyCode: dto.currencyCode,
           description: dto.description,
           notes: dto.notes,
@@ -124,6 +126,7 @@ export class ExpensesService {
           clientId: true,
           categoryId: true,
           amount: true,
+          discountAmount: true,
           currencyCode: true,
           description: true,
           notes: true,
@@ -140,6 +143,10 @@ export class ExpensesService {
           createdAt: true,
           updatedAt: true,
           category: true,
+          items: {
+            where: { isDeleted: false },
+            orderBy: { sortOrder: 'asc' },
+          },
         },
         orderBy: { date: 'desc' },
         skip,
@@ -191,6 +198,7 @@ export class ExpensesService {
       where: { id: expense.id },
       data: {
         amount: dto.amount,
+        discountAmount: dto.discountAmount,
         currencyCode: dto.currencyCode,
         description: dto.description,
         notes: dto.notes,

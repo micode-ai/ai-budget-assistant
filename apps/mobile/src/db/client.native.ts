@@ -229,6 +229,13 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Add discount_amount column to expenses
+    try {
+      expoDb.execSync(`ALTER TABLE expenses ADD COLUMN discount_amount REAL`);
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
     // Create indexes
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date DESC)',

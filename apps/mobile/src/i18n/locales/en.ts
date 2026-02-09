@@ -132,6 +132,8 @@ export default {
     peakDayInsight: 'You spend the most on {{day}}s',
     periodUp: 'more than last {{period}}',
     periodDown: 'less than last {{period}}',
+    totalSavings: 'Receipt Savings',
+    totalSavingsText: 'You saved {{amount}} from discounts this {{range}}.',
   },
   chat: {
     title: 'AI Budget Assistant',
@@ -232,6 +234,7 @@ export default {
     success: 'Expense added successfully!',
     scanAnother: 'Scan Another',
     saveFailed: 'Failed to save expense',
+    discount: 'Discount',
     saveImage: 'Save receipt image',
   },
   budgetNew: {
