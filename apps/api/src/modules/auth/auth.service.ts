@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { AccountsService } from '../accounts/accounts.service';
+import { TelegramService } from '../telegram/telegram.service';
 import { RegisterDto, LoginDto } from './dto';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly accountsService: AccountsService,
+    private readonly telegramService: TelegramService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -33,6 +35,9 @@ export class AuthService {
       currencyCode: dto.currencyCode,
       timezone: dto.timezone,
     });
+
+    // Notify about new registration
+    this.telegramService.notifyNewUser(user.name, user.email);
 
     // Create default personal account
     const defaultAccount = await this.accountsService.createDefaultAccount(
