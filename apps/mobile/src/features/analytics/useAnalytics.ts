@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useBudgetStore } from '@/stores/budgetStore';
 import { loadItemsByExpenseId } from '@/db/expenseItemRepository';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import type { Currency } from '@budget/shared-types';
 
 export type TimeRange = 'week' | 'month' | 'year';
 
@@ -34,6 +36,29 @@ export interface ItemBreakdown {
   totalSpent: number;
   count: number;
   avgPrice: number;
+}
+
+export interface BudgetComparison {
+  budgetId: string;
+  name: string;
+  budgetAmount: number;
+  spent: number;
+  percentageUsed: number;
+  isOverBudget: boolean;
+  currencyCode: Currency;
+}
+
+export interface DayOfWeekSpending {
+  dayIndex: number;
+  dayLabel: string;
+  totalAmount: number;
+  transactionCount: number;
+}
+
+export interface PeriodComparison {
+  currentTotal: number;
+  previousTotal: number;
+  changePercent: number;
 }
 
 const CATEGORY_COLORS = [
@@ -225,6 +250,75 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     };
   }, [filteredExpenses, dateRange, categorySpending]);
 
+  // Budget comparison
+  const budgetComparison = useMemo((): BudgetComparison[] => {
+    const allBudgets = useBudgetStore.getState().budgets.filter((b) => b.isActive && !b.isDeleted);
+    const filtered = currencyCode
+      ? allBudgets.filter((b) => b.currencyCode === currencyCode)
+      : allBudgets;
+
+    return filtered.map((budget) => {
+      const progress = useBudgetStore.getState().getBudgetProgress(budget.id);
+      return {
+        budgetId: budget.id,
+        name: budget.name,
+        budgetAmount: budget.amount,
+        spent: progress?.spent ?? 0,
+        percentageUsed: progress?.percentageUsed ?? 0,
+        isOverBudget: progress?.isOverBudget ?? false,
+        currencyCode: budget.currencyCode,
+      };
+    });
+  }, [filteredExpenses, currencyCode]);
+
+  // Day of week spending
+  const dayOfWeekSpending = useMemo((): DayOfWeekSpending[] => {
+    const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
+    const days: DayOfWeekSpending[] = dayKeys.map((key, index) => ({
+      dayIndex: index,
+      dayLabel: t(`analytics.days.${key}`),
+      totalAmount: 0,
+      transactionCount: 0,
+    }));
+
+    filteredExpenses.forEach((expense) => {
+      const dayIndex = new Date(expense.date).getDay();
+      days[dayIndex].totalAmount += expense.amount;
+      days[dayIndex].transactionCount += 1;
+    });
+
+    // Reorder: Mon-Sun instead of Sun-Sat
+    return [...days.slice(1), days[0]];
+  }, [filteredExpenses, t]);
+
+  // Period comparison
+  const periodComparison = useMemo((): PeriodComparison => {
+    const currentTotal = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+    // Calculate previous period range
+    const msRange = dateRange.endDate.getTime() - dateRange.startDate.getTime();
+    const prevStart = new Date(dateRange.startDate.getTime() - msRange);
+    const prevEnd = new Date(dateRange.startDate.getTime() - 1);
+
+    const previousTotal = expenses
+      .filter((e) => {
+        if (e.isDeleted) return false;
+        if (currencyCode && e.currencyCode !== currencyCode) return false;
+        const d = new Date(e.date);
+        return d >= prevStart && d <= prevEnd;
+      })
+      .reduce((sum, e) => sum + e.amount, 0);
+
+    const changePercent =
+      previousTotal > 0
+        ? ((currentTotal - previousTotal) / previousTotal) * 100
+        : currentTotal > 0
+          ? 100
+          : 0;
+
+    return { currentTotal, previousTotal, changePercent };
+  }, [filteredExpenses, expenses, dateRange, currencyCode]);
+
   // Item breakdown for OCR expenses
   const [itemBreakdown, setItemBreakdown] = useState<ItemBreakdown[]>([]);
 
@@ -277,5 +371,8 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     summary,
     dateRange,
     itemBreakdown,
+    budgetComparison,
+    dayOfWeekSpending,
+    periodComparison,
   };
 }

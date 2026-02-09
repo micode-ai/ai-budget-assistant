@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
-import { BarChart, PieChart } from '@/components/charts';
+import { BarChart, DonutChart, GroupedBarChart, WeekdayChart } from '@/components/charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Currency } from '@budget/shared-types';
 
@@ -17,7 +17,7 @@ export default function AnalyticsScreen() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown } = useAnalytics(selectedRange, selectedCurrency);
+  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison } = useAnalytics(selectedRange, selectedCurrency);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -94,10 +94,30 @@ export default function AnalyticsScreen() {
           <View style={styles.summaryCard}>
             <Text style={styles.summaryLabel}>{t('analytics.totalSpent')}</Text>
             <Text style={styles.summaryValue}>{formatCurrency(summary.totalSpent, currency)}</Text>
-            <View style={styles.statsRow}>
-              <Ionicons name="receipt-outline" size={14} color={theme.colors.textTertiary} />
-              <Text style={styles.statsText}>{summary.transactionCount} {t('analytics.transactions')}</Text>
-            </View>
+            {periodComparison.previousTotal > 0 ? (
+              <View style={styles.statsRow}>
+                <Ionicons
+                  name={periodComparison.changePercent > 0 ? 'arrow-up' : 'arrow-down'}
+                  size={14}
+                  color={periodComparison.changePercent > 0 ? theme.colors.danger : theme.colors.success}
+                />
+                <Text style={[
+                  styles.trendText,
+                  { color: periodComparison.changePercent > 0 ? theme.colors.danger : theme.colors.success },
+                ]}>
+                  {Math.abs(periodComparison.changePercent).toFixed(0)}%{' '}
+                  {periodComparison.changePercent > 0
+                    ? t('analytics.periodUp', { period: t(`analytics.${selectedRange}`) })
+                    : t('analytics.periodDown', { period: t(`analytics.${selectedRange}`) })
+                  }
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.statsRow}>
+                <Ionicons name="receipt-outline" size={14} color={theme.colors.textTertiary} />
+                <Text style={styles.statsText}>{summary.transactionCount} {t('analytics.transactions')}</Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.summaryCard}>
@@ -127,6 +147,54 @@ export default function AnalyticsScreen() {
           />
         </View>
 
+        {/* Budget vs Actual */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('analytics.budgetVsActual')}</Text>
+          {budgetComparison.length === 0 ? (
+            <View style={styles.hintCard}>
+              <Ionicons name="wallet-outline" size={24} color={theme.colors.textTertiary} />
+              <Text style={styles.hintText}>{t('analytics.noBudgetsHint')}</Text>
+            </View>
+          ) : (
+            <View style={styles.chartContainer}>
+              <GroupedBarChart
+                data={budgetComparison.map((b) => ({
+                  label: b.name,
+                  values: [
+                    { value: b.budgetAmount, color: theme.colors.progressTrack },
+                    { value: b.spent, color: b.isOverBudget ? theme.colors.danger : theme.colors.primary },
+                  ],
+                }))}
+                height={150}
+                showLabels={true}
+                showValues={budgetComparison.length <= 6}
+                formatValue={formatChartValue}
+                legendItems={[
+                  { label: t('analytics.budgetLabel'), color: theme.colors.progressTrack },
+                  { label: t('analytics.actualLabel'), color: theme.colors.primary },
+                ]}
+              />
+              {/* Budget status list */}
+              {budgetComparison.map((b) => (
+                <View key={b.budgetId} style={styles.budgetStatusRow}>
+                  <Text style={styles.budgetStatusName} numberOfLines={1}>{b.name}</Text>
+                  <View style={styles.budgetStatusBadge}>
+                    <Text style={[
+                      styles.budgetStatusText,
+                      { color: b.isOverBudget ? theme.colors.danger : theme.colors.success },
+                    ]}>
+                      {b.isOverBudget
+                        ? t('analytics.overBudget')
+                        : t('analytics.onTrack')
+                      }
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+
         {/* Category Breakdown */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('analytics.spendingByCategory')}</Text>
@@ -139,13 +207,16 @@ export default function AnalyticsScreen() {
             </View>
           ) : (
             <View style={styles.chartContainer}>
-              <PieChart
+              <DonutChart
                 data={categorySpending.map((c) => ({
                   label: c.name,
                   value: c.amount,
                   color: c.color,
                 }))}
-                size={120}
+                size={140}
+                strokeWidth={24}
+                centerLabel="Total"
+                centerValue={formatChartValue(summary.totalSpent)}
                 showLegend={false}
               />
             </View>
@@ -170,6 +241,34 @@ export default function AnalyticsScreen() {
                 </View>
               </View>
             ))}
+          </View>
+        )}
+
+        {/* Spending by Day of Week */}
+        {dayOfWeekSpending.some((d) => d.totalAmount > 0) && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('analytics.dayOfWeekTitle')}</Text>
+            <View style={styles.chartContainer}>
+              <WeekdayChart
+                data={dayOfWeekSpending.map((d) => ({
+                  label: d.dayLabel,
+                  value: d.totalAmount,
+                  count: d.transactionCount,
+                }))}
+                formatValue={formatChartValue}
+              />
+              {(() => {
+                const peak = dayOfWeekSpending.reduce((max, d) => (d.totalAmount > max.totalAmount ? d : max), dayOfWeekSpending[0]);
+                return peak && peak.totalAmount > 0 ? (
+                  <View style={styles.weekdayInsight}>
+                    <Ionicons name="information-circle-outline" size={16} color={theme.colors.info} />
+                    <Text style={styles.weekdayInsightText}>
+                      {t('analytics.peakDayInsight', { day: peak.dayLabel })}
+                    </Text>
+                  </View>
+                ) : null;
+              })()}
+            </View>
           </View>
         )}
 
@@ -484,6 +583,60 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.body,
     fontWeight: '600' as const,
     color: theme.colors.textPrimary,
+  },
+  trendText: {
+    ...theme.textStyles.caption,
+    fontWeight: '600' as const,
+  },
+  hintCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[5],
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+  },
+  hintText: {
+    ...theme.textStyles.bodyMedium,
+    fontSize: 14,
+    color: theme.colors.textTertiary,
+    flex: 1,
+  },
+  budgetStatusRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[2],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+    marginTop: theme.spacing[2],
+  },
+  budgetStatusName: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    flex: 1,
+  },
+  budgetStatusBadge: {
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[0.5],
+    borderRadius: theme.borderRadius.sm,
+  },
+  budgetStatusText: {
+    ...theme.textStyles.caption,
+    fontWeight: '600' as const,
+  },
+  weekdayInsight: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[3],
+    paddingTop: theme.spacing[3],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+  },
+  weekdayInsightText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
   },
   exportButton: {
     flexDirection: 'row' as const,
