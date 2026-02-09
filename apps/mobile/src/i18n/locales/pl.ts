@@ -423,4 +423,16 @@ export default {
     chatError: 'Przepraszam, wystąpił błąd. Sprawdź połączenie i spróbuj ponownie.',
     unknown: 'Wystąpił nieoczekiwany błąd',
   },
+  insights: {
+    title: 'Analiza predykcyjna',
+    anomalies: 'Anomalie wydatków',
+    anomalyText: '{{percent}}% więcej niż zwykle na {{category}}',
+    avgLabel: 'śr.',
+    predictions: 'Prognozy budżetowe',
+    exhaustionText: 'Wyczerpie się ok. {{date}}',
+    projectedTotal: 'Prognoza: {{amount}}',
+    noAnomalies: 'Twoje wydatki wyglądają normalnie',
+    noPredictions: 'Brak aktywnych budżetów do prognozy',
+    categoryLearned: 'Na podstawie Twojej historii',
+  },
 } as const;

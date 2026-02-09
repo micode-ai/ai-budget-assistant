@@ -1,7 +1,9 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
+  Query,
   UseGuards,
   Req,
 } from '@nestjs/common';
@@ -66,5 +68,39 @@ export class AiController {
   @Post('extract-text')
   async extractText(@Body() body: { imageBase64: string }) {
     return { text: await this.ocrService.extractTextFromImage(body.imageBase64) };
+  }
+
+  @Get('suggest-category')
+  async suggestCategory(
+    @Req() req: AuthenticatedRequest,
+    @Query('description') description: string,
+  ) {
+    const historySuggestion = await this.categorizationService.suggestFromHistory(
+      req.accountId,
+      description,
+    );
+
+    if (historySuggestion) {
+      return {
+        categoryId: historySuggestion.categoryId,
+        categoryName: historySuggestion.categoryName,
+        confidence: historySuggestion.confidence,
+        source: 'history' as const,
+      };
+    }
+
+    // Fallback to AI
+    const aiResult = await this.categorizationService.categorize(
+      description,
+      req.user.id,
+      req.accountId,
+    );
+
+    return {
+      categoryId: aiResult.categoryId,
+      categoryName: aiResult.categoryName,
+      confidence: aiResult.confidence,
+      source: 'ai' as const,
+    };
   }
 }

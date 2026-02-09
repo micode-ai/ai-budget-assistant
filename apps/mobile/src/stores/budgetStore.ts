@@ -4,6 +4,7 @@ import type { Budget, BudgetProgress, BudgetPeriod, Currency, SyncStatus } from 
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
+import { api } from '@/services/api';
 
 interface BudgetState {
   budgets: Budget[];
@@ -14,6 +15,7 @@ interface BudgetState {
   activeBudgets: Budget[];
 
   // Actions
+  loadBudgets: () => Promise<void>;
   setBudgets: (budgets: Budget[]) => void;
   addBudget: (budget: Omit<Budget, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Budget;
   updateBudget: (id: string, updates: Partial<Budget>) => void;
@@ -22,6 +24,7 @@ interface BudgetState {
   // Selectors
   getBudgetProgress: (budgetId: string) => BudgetProgress | null;
   getTotalBudget: () => number;
+  reset: () => void;
 }
 
 export const useBudgetStore = create<BudgetState>()(
@@ -31,7 +34,50 @@ export const useBudgetStore = create<BudgetState>()(
     error: null,
 
     get activeBudgets() {
-      return get().budgets.filter((b) => b.isActive && !b.isDeleted);
+      const accountId = useAccountStore.getState().currentAccountId;
+      return get().budgets.filter((b) => b.isActive && !b.isDeleted && b.accountId === accountId);
+    },
+
+    loadBudgets: async () => {
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) return;
+
+      set({ isLoading: true, error: null });
+      try {
+        const serverBudgets = await api.getBudgets();
+        // Guard: abort if account switched during async operation
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+        if (Array.isArray(serverBudgets)) {
+          const budgets: Budget[] = serverBudgets.map((sb: any) => ({
+            id: sb.clientId || sb.id,
+            localId: sb.clientId || sb.id,
+            serverId: sb.id,
+            userId: sb.userId,
+            accountId: sb.accountId,
+            name: sb.name,
+            amount: Number(sb.amount),
+            currencyCode: (sb.currencyCode || 'USD') as Currency,
+            period: sb.period as BudgetPeriod,
+            startDate: new Date(sb.startDate),
+            endDate: sb.endDate ? new Date(sb.endDate) : undefined,
+            categoryId: sb.categoryId ?? undefined,
+            alertThreshold: sb.alertThreshold ?? 80,
+            isActive: sb.isActive ?? true,
+            createdAt: new Date(sb.createdAt),
+            updatedAt: new Date(sb.updatedAt),
+            isDeleted: sb.isDeleted || false,
+            syncStatus: 'synced' as SyncStatus,
+            syncVersion: sb.syncVersion || 0,
+          }));
+          set({ budgets, isLoading: false });
+        } else {
+          set({ isLoading: false });
+        }
+      } catch (e) {
+        console.log('Budget server sync skipped:', e);
+        set({ isLoading: false });
+      }
     },
 
     setBudgets: (budgets) => set({ budgets }),
@@ -57,6 +103,21 @@ export const useBudgetStore = create<BudgetState>()(
         budgets: [newBudget, ...state.budgets],
       }));
 
+      // Sync to server
+      api.createBudget({
+        localId: id,
+        name: budgetData.name,
+        amount: budgetData.amount,
+        currencyCode: budgetData.currencyCode,
+        period: budgetData.period,
+        startDate: budgetData.startDate instanceof Date ? budgetData.startDate.toISOString() : budgetData.startDate,
+        endDate: budgetData.endDate instanceof Date ? budgetData.endDate.toISOString() : budgetData.endDate,
+        categoryId: budgetData.categoryId,
+        alertThreshold: budgetData.alertThreshold,
+      }).catch((e) =>
+        console.error('Failed to sync budget to server:', e),
+      );
+
       return newBudget;
     },
 
@@ -73,9 +134,19 @@ export const useBudgetStore = create<BudgetState>()(
             : b
         ),
       }));
+
+      // Sync to server
+      const budget = get().budgets.find((b) => b.id === id);
+      if (budget?.serverId) {
+        api.updateBudget(budget.serverId, updates).catch((e) =>
+          console.error('Failed to sync budget update to server:', e),
+        );
+      }
     },
 
     deleteBudget: (id) => {
+      const budget = get().budgets.find((b) => b.id === id);
+
       set((state) => ({
         budgets: state.budgets.map((b) =>
           b.id === id
@@ -88,6 +159,13 @@ export const useBudgetStore = create<BudgetState>()(
             : b
         ),
       }));
+
+      // Sync to server
+      if (budget?.serverId) {
+        api.deleteBudget(budget.serverId).catch((e) =>
+          console.error('Failed to sync budget deletion to server:', e),
+        );
+      }
     },
 
     getBudgetProgress: (budgetId: string): BudgetProgress | null => {
@@ -156,6 +234,18 @@ export const useBudgetStore = create<BudgetState>()(
       const totalDays = Math.ceil((periodEnd.getTime() - periodStart.getTime()) / msPerDay);
       const projectedTotal = dailyAverage * totalDays;
 
+      const dailyBurnRate = dailyAverage;
+
+      // Estimate exhaustion date
+      let estimatedExhaustionDate: Date | undefined;
+      if (dailyBurnRate > 0 && !isOverBudget) {
+        const daysUntilExhaustion = remaining / dailyBurnRate;
+        const exhaustionDate = new Date(now.getTime() + daysUntilExhaustion * msPerDay);
+        if (exhaustionDate <= periodEnd) {
+          estimatedExhaustionDate = exhaustionDate;
+        }
+      }
+
       return {
         budget,
         spent,
@@ -164,6 +254,8 @@ export const useBudgetStore = create<BudgetState>()(
         isOverBudget,
         daysRemaining,
         projectedTotal,
+        dailyBurnRate,
+        estimatedExhaustionDate,
       };
     },
 
@@ -186,5 +278,7 @@ export const useBudgetStore = create<BudgetState>()(
         .filter((b) => b.period === 'monthly')
         .reduce((sum, b) => sum + b.amount, 0);
     },
+
+    reset: () => set({ budgets: [], isLoading: false, error: null }),
   }))
 );

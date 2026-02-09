@@ -51,10 +51,11 @@ OPENAI_API_KEY=sk-ваш-openai-api-ключ
 PORT=3000
 CORS_ORIGIN=*
 
-# Firebase (опционально, для push-уведомлений)
-FIREBASE_PROJECT_ID=ваш-project-id
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk@your-project.iam.gserviceaccount.com
+# Push-уведомления используют Expo Push API — дополнительная настройка не требуется.
+
+# Telegram (опционально, для системных уведомлений)
+# TELEGRAM_BOT_TOKEN=ваш-токен-telegram-бота
+# TELEGRAM_CHAT_ID=ваш-chat-id
 ```
 
 #### Мобильное приложение (.env)

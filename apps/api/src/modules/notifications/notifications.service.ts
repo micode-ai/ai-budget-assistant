@@ -44,6 +44,7 @@ export class NotificationsService {
     if (!user?.pushToken) return false;
 
     if (notificationType === 'budget_alert' && !user.notifyBudgetAlerts) return false;
+    if (notificationType === 'spending_anomaly' && !user.notifyBudgetAlerts) return false;
     if (notificationType === 'shared_expense' && !user.notifySharedActivity) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
@@ -87,6 +88,7 @@ export class NotificationsService {
     const eligible = users.filter((u) => {
       if (!u.pushToken || !this.isValidExpoPushToken(u.pushToken)) return false;
       if (notificationType === 'budget_alert' && !u.notifyBudgetAlerts) return false;
+      if (notificationType === 'spending_anomaly' && !u.notifyBudgetAlerts) return false;
       if (notificationType === 'shared_expense' && !u.notifySharedActivity) return false;
       return true;
     });

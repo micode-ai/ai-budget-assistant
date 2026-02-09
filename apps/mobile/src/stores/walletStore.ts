@@ -44,6 +44,8 @@ interface WalletState {
   // Computed
   computeWalletSummary: () => Promise<WalletSummary[]>;
   getBalanceForCurrency: (currencyCode: Currency) => number;
+
+  reset: () => void;
 }
 
 export const useWalletStore = create<WalletState>()(
@@ -66,6 +68,8 @@ export const useWalletStore = create<WalletState>()(
         // 1. Load from local DB
         const localBalances = await loadAllWalletBalances(accountId);
         const localExchanges = await loadAllExchanges(accountId);
+        // Guard: abort if account switched during async operation
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
         set({ walletBalances: localBalances, exchanges: localExchanges });
 
         // 2. Compute summary from local data
@@ -75,6 +79,8 @@ export const useWalletStore = create<WalletState>()(
         // 3. Sync from server
         try {
           const serverBalances = await api.getWalletBalances();
+          // Guard: abort if account switched during server call
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
           if (Array.isArray(serverBalances)) {
             for (const sb of serverBalances) {
               const balance: WalletBalance = {
@@ -96,6 +102,8 @@ export const useWalletStore = create<WalletState>()(
           }
 
           const serverExchanges = await api.getCurrencyExchanges();
+          // Guard: abort if account switched
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
           if (Array.isArray(serverExchanges)) {
             for (const se of serverExchanges) {
               const exchange: CurrencyExchange = {
@@ -124,6 +132,8 @@ export const useWalletStore = create<WalletState>()(
           // Reload after server sync
           const merged = await loadAllWalletBalances(accountId);
           const mergedExchanges = await loadAllExchanges(accountId);
+          // Guard: abort if account switched during merge
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
           set({ walletBalances: merged, exchanges: mergedExchanges });
 
           const updatedSummary = await get().computeWalletSummary();
@@ -331,5 +341,7 @@ export const useWalletStore = create<WalletState>()(
       const summary = get().walletSummary.find((s) => s.currencyCode === currencyCode);
       return summary?.currentBalance ?? 0;
     },
+
+    reset: () => set({ walletBalances: [], exchanges: [], walletSummary: [], isLoading: false, error: null }),
   })),
 );

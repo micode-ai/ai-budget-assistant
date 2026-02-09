@@ -423,4 +423,16 @@ export default {
     chatError: 'Entschuldigung, es ist ein Fehler aufgetreten. Bitte überprüfe deine Verbindung und versuche es erneut.',
     unknown: 'Ein unerwarteter Fehler ist aufgetreten',
   },
+  insights: {
+    title: 'Vorausschauende Einblicke',
+    anomalies: 'Ausgabenauffälligkeiten',
+    anomalyText: '{{percent}}% mehr als üblich für {{category}}',
+    avgLabel: 'Durchschn.',
+    predictions: 'Budgetprognosen',
+    exhaustionText: 'Aufgebraucht ca. {{date}}',
+    projectedTotal: 'Prognose: {{amount}}',
+    noAnomalies: 'Ihre Ausgaben sehen normal aus',
+    noPredictions: 'Keine aktiven Budgets zur Prognose',
+    categoryLearned: 'Basierend auf Ihrem Verlauf',
+  },
 } as const;

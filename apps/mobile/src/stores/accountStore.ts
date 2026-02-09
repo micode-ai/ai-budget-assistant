@@ -21,6 +21,9 @@ import {
   deleteMembersByAccountId,
   clearAllAccounts,
 } from '@/db/accountRepository';
+import { clearAllExpenses } from '@/db/expenseRepository';
+import { clearAllWalletBalances } from '@/db/walletRepository';
+import { clearAllExchanges } from '@/db/currencyExchangeRepository';
 
 interface AccountState {
   accounts: (Account & { myRole: AccountRole })[];
@@ -55,6 +58,16 @@ interface AccountState {
   reset: () => void;
 }
 
+async function getCurrentUserId(): Promise<string | null> {
+  const userJson = await secureStorage.getItem('user');
+  if (!userJson) return null;
+  try {
+    return JSON.parse(userJson).id;
+  } catch {
+    return null;
+  }
+}
+
 export const useAccountStore = create<AccountState>()((set, get) => ({
   accounts: [],
   currentAccountId: null,
@@ -64,11 +77,16 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
 
   initialize: async (serverAccounts, defaultAccountId, userId) => {
     try {
+      // Clear all previous user's data from SQLite
+      await clearAllAccounts();
+      await clearAllExpenses();
+      await clearAllWalletBalances();
+      await clearAllExchanges();
       // Save accounts to local DB
       await insertAccounts(serverAccounts as Array<Account & { myRole?: AccountRole }>, userId);
 
-      // Load from local DB to get consistent format with myRole
-      const localAccounts = await loadAllAccounts();
+      // Load from local DB to get consistent format with myRole (filtered by userId)
+      const localAccounts = await loadAllAccounts(userId);
 
       const currentId = defaultAccountId || localAccounts[0]?.id || null;
 
@@ -97,7 +115,15 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
 
   loadAccounts: async () => {
     try {
-      const localAccounts = await loadAllAccounts();
+      const userId = await getCurrentUserId();
+      const localAccounts = await loadAllAccounts(userId ?? undefined);
+
+      // No local accounts for this user (e.g. after migration) — refresh from server
+      if (localAccounts.length === 0 && userId) {
+        await get().loadAccountsFromServer();
+        return;
+      }
+
       const savedAccountId = await secureStorage.getItem('currentAccountId');
 
       set({
@@ -116,16 +142,14 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const serverAccounts = await api.getAccounts();
-      const userId = (await secureStorage.getItem('user'))
-        ? JSON.parse((await secureStorage.getItem('user'))!).id
-        : null;
+      const userId = await getCurrentUserId();
 
       if (userId) {
         await clearAllAccounts();
         await insertAccounts(serverAccounts, userId);
       }
 
-      const localAccounts = await loadAllAccounts();
+      const localAccounts = await loadAllAccounts(userId ?? undefined);
       const { currentAccountId } = get();
 
       set({
@@ -148,9 +172,10 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const newAccount = await api.createAccount(dto);
-      await insertAccount(newAccount, 'owner');
+      const userId = await getCurrentUserId();
+      await insertAccount(newAccount, 'owner', userId ?? undefined);
 
-      const localAccounts = await loadAllAccounts();
+      const localAccounts = await loadAllAccounts(userId ?? undefined);
       set({ accounts: localAccounts, isLoading: false });
 
       return newAccount;
@@ -169,7 +194,8 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       const updated = await api.updateAccount(id, dto);
       await updateAccountInDb(id, updated);
 
-      const localAccounts = await loadAllAccounts();
+      const userId = await getCurrentUserId();
+      const localAccounts = await loadAllAccounts(userId ?? undefined);
       set({ accounts: localAccounts, isLoading: false });
     } catch (error) {
       set({
@@ -186,7 +212,8 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       await api.deleteAccount(id);
       await deleteAccountFromDb(id);
 
-      const localAccounts = await loadAllAccounts();
+      const userId = await getCurrentUserId();
+      const localAccounts = await loadAllAccounts(userId ?? undefined);
       const { currentAccountId } = get();
 
       set({
@@ -277,7 +304,8 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     await api.leaveAccount(accountId);
     await deleteAccountFromDb(accountId);
 
-    const localAccounts = await loadAllAccounts();
+    const userId = await getCurrentUserId();
+    const localAccounts = await loadAllAccounts(userId ?? undefined);
     const { currentAccountId } = get();
 
     set({

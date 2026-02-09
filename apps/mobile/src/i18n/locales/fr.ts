@@ -423,4 +423,16 @@ export default {
     chatError: 'Désolé, une erreur est survenue. Veuillez vérifier votre connexion et réessayer.',
     unknown: 'Une erreur inattendue est survenue',
   },
+  insights: {
+    title: 'Analyses prédictives',
+    anomalies: 'Anomalies de dépenses',
+    anomalyText: '{{percent}}% de plus que d\'habitude pour {{category}}',
+    avgLabel: 'moy.',
+    predictions: 'Prévisions budgétaires',
+    exhaustionText: 'Épuisé vers le ~{{date}}',
+    projectedTotal: 'Projeté : {{amount}}',
+    noAnomalies: 'Vos dépenses semblent normales',
+    noPredictions: 'Aucun budget actif à prévoir',
+    categoryLearned: 'Basé sur votre historique',
+  },
 } as const;

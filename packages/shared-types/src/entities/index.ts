@@ -16,7 +16,9 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly';
+
+export type InsightType = 'spending_anomaly' | 'budget_prediction' | 'saving_tip' | 'achievement';
 
 export interface NotificationPreferences {
   budgetAlerts: boolean;
@@ -163,6 +165,27 @@ export interface BudgetProgress {
   isOverBudget: boolean;
   daysRemaining: number;
   projectedTotal: number;
+  dailyBurnRate: number;
+  estimatedExhaustionDate?: Date;
+}
+
+export interface SpendingAnomaly {
+  categoryId: string;
+  categoryName: string;
+  currentAmount: number;
+  averageAmount: number;
+  percentageChange: number;
+  period: string;
+}
+
+export interface BudgetPrediction {
+  budgetId: string;
+  budgetName: string;
+  estimatedExhaustionDate?: Date;
+  dailyBurnRate: number;
+  daysRemaining: number;
+  projectedTotal: number;
+  currencyCode: string;
 }
 
 export interface ChatConversation {

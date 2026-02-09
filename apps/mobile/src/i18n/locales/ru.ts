@@ -423,4 +423,16 @@ export default {
     chatError: 'Извините, произошла ошибка. Проверьте подключение и попробуйте снова.',
     unknown: 'Произошла непредвиденная ошибка',
   },
+  insights: {
+    title: 'Прогнозная аналитика',
+    anomalies: 'Аномалии расходов',
+    anomalyText: '{{percent}}% больше обычного на {{category}}',
+    avgLabel: 'ср.',
+    predictions: 'Прогнозы бюджета',
+    exhaustionText: 'Закончится ~{{date}}',
+    projectedTotal: 'Прогноз: {{amount}}',
+    noAnomalies: 'Ваши расходы выглядят нормально',
+    noPredictions: 'Нет активных бюджетов для прогноза',
+    categoryLearned: 'На основе вашей истории',
+  },
 } as const;
