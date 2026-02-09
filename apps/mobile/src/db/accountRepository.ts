@@ -54,7 +54,22 @@ function rowToMember(row: AccountMemberRow): AccountMember {
   };
 }
 
-export async function loadAllAccounts(): Promise<(Account & { myRole: AccountRole })[]> {
+export async function loadAllAccounts(sessionUserId?: string): Promise<(Account & { myRole: AccountRole })[]> {
+  if (sessionUserId) {
+    // Try filtered by session user first
+    const filtered = await executeSql<AccountRow>(
+      'SELECT * FROM accounts WHERE is_active = 1 AND session_user_id = ? ORDER BY created_at ASC',
+      [sessionUserId],
+    );
+    if (filtered.length > 0) {
+      return filtered.map(rowToAccount);
+    }
+    // Fallback: claim unclaimed accounts for this user (migration from older version)
+    await executeSql(
+      "UPDATE accounts SET session_user_id = ? WHERE session_user_id = '' OR session_user_id IS NULL",
+      [sessionUserId],
+    );
+  }
   const rows = await executeSql<AccountRow>(
     'SELECT * FROM accounts WHERE is_active = 1 ORDER BY created_at ASC',
   );
@@ -64,11 +79,12 @@ export async function loadAllAccounts(): Promise<(Account & { myRole: AccountRol
 export async function insertAccount(
   account: Account,
   myRole: AccountRole,
+  sessionUserId?: string,
 ): Promise<void> {
   await executeSql(
     `INSERT OR REPLACE INTO accounts (
-      id, name, type, currency_code, owner_id, icon, is_active, my_role, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      id, name, type, currency_code, owner_id, icon, is_active, my_role, created_at, updated_at, session_user_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       account.id,
       account.name,
@@ -80,6 +96,7 @@ export async function insertAccount(
       myRole,
       account.createdAt instanceof Date ? account.createdAt.getTime() : account.createdAt,
       account.updatedAt instanceof Date ? account.updatedAt.getTime() : account.updatedAt,
+      sessionUserId ?? '',
     ],
   );
 }
@@ -130,7 +147,7 @@ export async function insertAccounts(
 ): Promise<void> {
   for (const account of accounts) {
     const myRole = account.myRole ?? (account.ownerId === userId ? 'owner' : 'editor');
-    await insertAccount(account, myRole as AccountRole);
+    await insertAccount(account, myRole as AccountRole, userId);
   }
 }
 

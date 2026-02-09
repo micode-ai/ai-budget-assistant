@@ -7,6 +7,24 @@ All endpoints except authentication require a valid JWT token in the Authorizati
 Authorization: Bearer <access_token>
 ```
 
+## Account Context
+
+Most endpoints (expenses, budgets, categories, wallet, analytics, insights, sync) require an account context. Pass the account ID in a header:
+```
+X-Account-Id: <account-uuid>
+```
+
+The `AccountContextGuard` middleware validates that the authenticated user is a member of the specified account and sets `accountId` and `accountRole` on the request.
+
+**Account roles:**
+| Role | Permissions |
+|------|-------------|
+| `owner` | Full access, manage members and invitations |
+| `editor` | Create, read, update expenses/budgets/categories |
+| `viewer` | Read-only access |
+
+---
+
 ## Authentication
 
 ### Register User
@@ -100,6 +118,9 @@ Authorization: Bearer <token>
   "currencyCode": "USD",
   "timezone": "UTC",
   "pushToken": null,
+  "notifyBudgetAlerts": true,
+  "notifySharedActivity": true,
+  "defaultAccountId": "uuid",
   "lastSyncAt": "2024-01-15T10:30:00Z",
   "createdAt": "2024-01-01T00:00:00Z"
 }
@@ -115,30 +136,224 @@ Content-Type: application/json
 {
   "name": "John Smith",
   "currencyCode": "EUR",
-  "timezone": "Europe/London"
+  "timezone": "Europe/London",
+  "notifyBudgetAlerts": true,
+  "notifySharedActivity": false
 }
 ```
 
 **Response** `200 OK`
+
+---
+
+## Accounts
+
+### Create Account
+
+```http
+POST /accounts
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Family Budget",
+  "type": "shared",
+  "currencyCode": "USD",
+  "icon": "family"
+}
+```
+
+**Type values**: `personal`, `business`, `shared`
+
+**Response** `201 Created`
 ```json
 {
   "id": "uuid",
-  "email": "user@example.com",
-  "name": "John Smith",
-  "currencyCode": "EUR",
-  "timezone": "Europe/London"
+  "name": "Family Budget",
+  "type": "shared",
+  "currencyCode": "USD",
+  "ownerId": "user-uuid",
+  "icon": "family",
+  "isActive": true,
+  "createdAt": "2024-01-15T10:30:00Z"
 }
+```
+
+### List Accounts
+
+```http
+GET /accounts
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "name": "Personal",
+    "type": "personal",
+    "currencyCode": "USD",
+    "ownerId": "user-uuid",
+    "role": "owner",
+    "memberCount": 1
+  }
+]
+```
+
+### Get Account
+
+```http
+GET /accounts/:id
+Authorization: Bearer <token>
+```
+
+### Update Account
+
+```http
+PATCH /accounts/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "icon": "wallet"
+}
+```
+
+### Delete Account
+
+```http
+DELETE /accounts/:id
+Authorization: Bearer <token>
+```
+
+**Response** `204 No Content`
+
+### Create Invitation
+
+```http
+POST /accounts/:id/invitations
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "invitedEmail": "friend@example.com",
+  "role": "editor"
+}
+```
+
+**Response** `201 Created`
+```json
+{
+  "id": "uuid",
+  "inviteCode": "ABC123XYZ",
+  "role": "editor",
+  "status": "pending",
+  "expiresAt": "2024-01-22T10:30:00Z"
+}
+```
+
+### List Invitations
+
+```http
+GET /accounts/:id/invitations
+Authorization: Bearer <token>
+```
+
+### Cancel Invitation
+
+```http
+DELETE /accounts/:id/invitations/:invitationId
+Authorization: Bearer <token>
+```
+
+### Accept Invitation
+
+```http
+POST /accounts/invitations/accept
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "inviteCode": "ABC123XYZ"
+}
+```
+
+### Decline Invitation
+
+```http
+POST /accounts/invitations/decline
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "inviteCode": "ABC123XYZ"
+}
+```
+
+### List Members
+
+```http
+GET /accounts/:id/members
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "member-uuid",
+    "userId": "user-uuid",
+    "role": "owner",
+    "joinedAt": "2024-01-01T00:00:00Z",
+    "user": {
+      "id": "user-uuid",
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  }
+]
+```
+
+### Update Member Role
+
+```http
+PATCH /accounts/:id/members/:memberId
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "role": "viewer"
+}
+```
+
+### Remove Member
+
+```http
+DELETE /accounts/:id/members/:memberId
+Authorization: Bearer <token>
+```
+
+### Leave Account
+
+```http
+POST /accounts/:id/leave
+Authorization: Bearer <token>
 ```
 
 ---
 
 ## Expenses
 
+All expense endpoints require `X-Account-Id` header.
+
 ### List Expenses
 
 ```http
 GET /expenses
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Query Parameters**
@@ -159,12 +374,15 @@ Authorization: Bearer <token>
       "clientId": "client-uuid",
       "categoryId": "uuid",
       "amount": 29.99,
+      "discountAmount": null,
       "currencyCode": "USD",
       "description": "Lunch at restaurant",
-      "date": "2024-01-15T12:30:00Z",
-      "location": "New York, NY",
+      "date": "2024-01-15",
+      "time": "12:30",
+      "locationLat": 40.7128,
+      "locationLng": -74.0060,
       "notes": "Business lunch",
-      "receiptUrl": "https://storage.example.com/receipts/uuid.jpg",
+      "receiptUrl": null,
       "isRecurring": false,
       "source": "manual",
       "syncVersion": 1,
@@ -188,16 +406,20 @@ Authorization: Bearer <token>
 ```http
 POST /expenses
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
   "clientId": "client-generated-uuid",
   "categoryId": "uuid",
   "amount": 29.99,
+  "discountAmount": 5.00,
   "currencyCode": "USD",
   "description": "Lunch at restaurant",
-  "date": "2024-01-15T12:30:00Z",
-  "location": "New York, NY",
+  "date": "2024-01-15",
+  "time": "12:30",
+  "locationLat": 40.7128,
+  "locationLng": -74.0060,
   "notes": "Business lunch",
   "isRecurring": false,
   "source": "manual"
@@ -205,41 +427,13 @@ Content-Type: application/json
 ```
 
 **Response** `201 Created`
-```json
-{
-  "id": "uuid",
-  "clientId": "client-generated-uuid",
-  "categoryId": "uuid",
-  "amount": 29.99,
-  "syncVersion": 1,
-  "createdAt": "2024-01-15T12:35:00Z"
-}
-```
 
 ### Get Single Expense
 
 ```http
 GET /expenses/:id
 Authorization: Bearer <token>
-```
-
-**Response** `200 OK`
-```json
-{
-  "id": "uuid",
-  "clientId": "client-uuid",
-  "categoryId": "uuid",
-  "amount": 29.99,
-  "currencyCode": "USD",
-  "description": "Lunch at restaurant",
-  "date": "2024-01-15T12:30:00Z",
-  "category": {
-    "id": "uuid",
-    "name": "Food & Dining",
-    "icon": "utensils",
-    "color": "#FF6B6B"
-  }
-}
+X-Account-Id: <account-uuid>
 ```
 
 ### Update Expense
@@ -247,6 +441,7 @@ Authorization: Bearer <token>
 ```http
 PATCH /expenses/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -255,35 +450,122 @@ Content-Type: application/json
 }
 ```
 
-**Response** `200 OK`
-```json
-{
-  "id": "uuid",
-  "amount": 35.50,
-  "description": "Lunch at Italian restaurant",
-  "syncVersion": 2,
-  "updatedAt": "2024-01-15T14:00:00Z"
-}
-```
-
 ### Delete Expense
 
 ```http
 DELETE /expenses/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Response** `204 No Content`
 
+### Expense Items
+
+#### List Items
+
+```http
+GET /expenses/:id/items
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "description": "Organic Apples",
+    "quantity": 2.0,
+    "unitPrice": 3.99,
+    "totalPrice": 7.98,
+    "sortOrder": 0
+  }
+]
+```
+
+#### Create Item
+
+```http
+POST /expenses/:id/items
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "description": "Almond Milk",
+  "quantity": 1,
+  "unitPrice": 4.49,
+  "totalPrice": 4.49,
+  "sortOrder": 1
+}
+```
+
+#### Update Item
+
+```http
+PATCH /expenses/:id/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "quantity": 2,
+  "totalPrice": 8.98
+}
+```
+
+#### Delete Item
+
+```http
+DELETE /expenses/:id/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Receipt Image
+
+#### Get Receipt Image
+
+```http
+GET /expenses/:id/receipt-image
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+#### Save Receipt Image
+
+```http
+PUT /expenses/:id/receipt-image
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "imageBase64": "data:image/jpeg;base64,/9j/4AAQ..."
+}
+```
+
+#### Delete Receipt Image
+
+```http
+DELETE /expenses/:id/receipt-image
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
 ---
 
 ## Budgets
+
+All budget endpoints require `X-Account-Id` header.
 
 ### List Budgets
 
 ```http
 GET /budgets
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Response** `200 OK`
@@ -297,7 +579,7 @@ Authorization: Bearer <token>
       "amount": 500.00,
       "currencyCode": "USD",
       "period": "monthly",
-      "startDate": "2024-01-01T00:00:00Z",
+      "startDate": "2024-01-01",
       "endDate": null,
       "categoryId": "uuid",
       "alertThreshold": 80,
@@ -319,6 +601,7 @@ Authorization: Bearer <token>
 ```http
 POST /budgets
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -327,7 +610,7 @@ Content-Type: application/json
   "amount": 500.00,
   "currencyCode": "USD",
   "period": "monthly",
-  "startDate": "2024-01-01T00:00:00Z",
+  "startDate": "2024-01-01",
   "categoryId": "uuid",
   "alertThreshold": 80
 }
@@ -336,21 +619,13 @@ Content-Type: application/json
 **Period Values**: `daily`, `weekly`, `monthly`, `yearly`, `custom`
 
 **Response** `201 Created`
-```json
-{
-  "id": "uuid",
-  "clientId": "client-generated-uuid",
-  "name": "Monthly Food Budget",
-  "amount": 500.00,
-  "syncVersion": 1
-}
-```
 
 ### Get Budget Progress
 
 ```http
 GET /budgets/:id/progress
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Response** `200 OK`
@@ -366,7 +641,10 @@ Authorization: Bearer <token>
   "remaining": 174.50,
   "percentage": 65.1,
   "daysRemaining": 15,
+  "dailyBurnRate": 21.70,
   "dailyAllowance": 11.63,
+  "projectedTotal": 651.50,
+  "estimatedExhaustionDate": "2024-01-23",
   "onTrack": true
 }
 ```
@@ -376,6 +654,7 @@ Authorization: Bearer <token>
 ```http
 PATCH /budgets/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -384,21 +663,12 @@ Content-Type: application/json
 }
 ```
 
-**Response** `200 OK`
-```json
-{
-  "id": "uuid",
-  "amount": 600.00,
-  "alertThreshold": 75,
-  "syncVersion": 2
-}
-```
-
 ### Delete Budget
 
 ```http
 DELETE /budgets/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Response** `204 No Content`
@@ -407,11 +677,14 @@ Authorization: Bearer <token>
 
 ## Categories
 
+All category endpoints require `X-Account-Id` header.
+
 ### List Categories
 
 ```http
 GET /categories
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Response** `200 OK`
@@ -427,16 +700,6 @@ Authorization: Bearer <token>
       "isSystem": true,
       "parentId": null,
       "syncVersion": 1
-    },
-    {
-      "id": "uuid",
-      "name": "Restaurants",
-      "icon": "restaurant",
-      "color": "#FF8888",
-      "type": "expense",
-      "isSystem": false,
-      "parentId": "parent-uuid",
-      "syncVersion": 1
     }
   ]
 }
@@ -447,6 +710,7 @@ Authorization: Bearer <token>
 ```http
 POST /categories
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -460,24 +724,12 @@ Content-Type: application/json
 
 **Type Values**: `expense`, `income`
 
-**Response** `201 Created`
-```json
-{
-  "id": "uuid",
-  "name": "Coffee Shops",
-  "icon": "coffee",
-  "color": "#8B4513",
-  "type": "expense",
-  "isSystem": false,
-  "syncVersion": 1
-}
-```
-
 ### Update Category
 
 ```http
 PATCH /categories/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -486,24 +738,191 @@ Content-Type: application/json
 }
 ```
 
-**Response** `200 OK`
-```json
-{
-  "id": "uuid",
-  "name": "Coffee & Tea",
-  "color": "#654321",
-  "syncVersion": 2
-}
-```
-
 ### Delete Category
 
 ```http
 DELETE /categories/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Response** `204 No Content`
+
+---
+
+## Wallet
+
+All wallet endpoints require `X-Account-Id` header.
+
+### Set Balance
+
+```http
+POST /wallet
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "clientId": "client-generated-uuid",
+  "currencyCode": "USD",
+  "initialAmount": 5000.00
+}
+```
+
+### List Balances
+
+```http
+GET /wallet
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "currencyCode": "USD",
+    "initialAmount": 5000.00,
+    "syncVersion": 1
+  },
+  {
+    "id": "uuid",
+    "currencyCode": "EUR",
+    "initialAmount": 2000.00,
+    "syncVersion": 1
+  }
+]
+```
+
+### Get Wallet Summary
+
+```http
+GET /wallet/summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Remove Balance
+
+```http
+DELETE /wallet/:currencyCode
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+---
+
+## Currency Exchange
+
+All currency exchange endpoints require `X-Account-Id` header.
+
+### Create Exchange
+
+```http
+POST /currency-exchanges
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "clientId": "client-generated-uuid",
+  "fromCurrency": "USD",
+  "toCurrency": "EUR",
+  "fromAmount": 1000.00,
+  "toAmount": 920.00,
+  "exchangeRate": 0.92,
+  "date": "2024-01-15",
+  "notes": "Monthly exchange"
+}
+```
+
+### List Exchanges
+
+```http
+GET /currency-exchanges
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Get Exchange Rates
+
+```http
+GET /currency-exchanges/rates?base=USD
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "base": "USD",
+  "rates": {
+    "EUR": 0.92,
+    "GBP": 0.79,
+    "JPY": 148.50
+  }
+}
+```
+
+### Get Single Exchange
+
+```http
+GET /currency-exchanges/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Delete Exchange
+
+```http
+DELETE /currency-exchanges/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+---
+
+## Insights
+
+Requires `X-Account-Id` header.
+
+### Get Insights
+
+```http
+GET /insights
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "anomalies": [
+    {
+      "categoryId": "uuid",
+      "categoryName": "Entertainment",
+      "currentAmount": 450.00,
+      "averageAmount": 200.00,
+      "percentageChange": 125,
+      "period": "2024-01"
+    }
+  ],
+  "predictions": [
+    {
+      "budgetId": "uuid",
+      "budgetName": "Monthly Food Budget",
+      "estimatedExhaustionDate": "2024-01-25",
+      "dailyBurnRate": 21.70,
+      "daysRemaining": 15,
+      "projectedTotal": 651.50,
+      "currencyCode": "USD"
+    }
+  ]
+}
+```
 
 ---
 
@@ -641,11 +1060,14 @@ Content-Type: application/json
 
 ## Analytics
 
+All analytics endpoints require `X-Account-Id` header.
+
 ### Get Spending Summary
 
 ```http
 GET /analytics/summary
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Query Parameters**
@@ -673,13 +1095,6 @@ Authorization: Bearer <token>
       "amount": 542.30,
       "percentage": 25.2,
       "count": 15
-    },
-    {
-      "categoryId": "uuid",
-      "categoryName": "Transportation",
-      "amount": 385.00,
-      "percentage": 17.9,
-      "count": 8
     }
   ],
   "topExpenses": [
@@ -698,6 +1113,7 @@ Authorization: Bearer <token>
 ```http
 GET /analytics/trends
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Query Parameters**
@@ -715,11 +1131,6 @@ Authorization: Bearer <token>
       "period": "2024-01-01",
       "total": 450.25,
       "count": 12
-    },
-    {
-      "period": "2024-01-08",
-      "total": 525.50,
-      "count": 15
     }
   ],
   "comparison": {
@@ -736,11 +1147,14 @@ Authorization: Bearer <token>
 
 ## Synchronization
 
+All sync endpoints require `X-Account-Id` header.
+
 ### Push Changes
 
 ```http
 POST /sync/push
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -785,11 +1199,6 @@ Content-Type: application/json
       "serverId": "new-server-uuid",
       "serverVersion": 1,
       "status": "created"
-    },
-    {
-      "serverId": "server-uuid",
-      "serverVersion": 3,
-      "status": "updated"
     }
   ],
   "conflicts": [
@@ -797,7 +1206,7 @@ Content-Type: application/json
       "serverId": "server-uuid",
       "clientVersion": 2,
       "serverVersion": 4,
-      "serverData": { ... },
+      "serverData": { },
       "resolution": "server_wins"
     }
   ],
@@ -810,6 +1219,7 @@ Content-Type: application/json
 ```http
 GET /sync/pull
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Query Parameters**
@@ -825,13 +1235,13 @@ Authorization: Bearer <token>
       "id": "uuid",
       "clientId": "client-uuid",
       "operation": "upsert",
-      "data": { ... },
+      "data": { },
       "syncVersion": 2,
       "updatedAt": "2024-01-15T10:30:00Z"
     }
   ],
-  "categories": [ ... ],
-  "budgets": [ ... ],
+  "categories": [],
+  "budgets": [],
   "deletedIds": {
     "expenses": ["uuid1", "uuid2"],
     "categories": [],
@@ -867,7 +1277,7 @@ Authorization: Bearer <token>
 |------|-------------|
 | `400` | Bad Request - Invalid input |
 | `401` | Unauthorized - Invalid or expired token |
-| `403` | Forbidden - Insufficient permissions |
+| `403` | Forbidden - Insufficient permissions or wrong account role |
 | `404` | Not Found - Resource doesn't exist |
 | `409` | Conflict - Sync version mismatch |
 | `422` | Unprocessable Entity - Validation error |

@@ -3,6 +3,9 @@ import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
 import type { User, Currency } from '@budget/shared-types';
 import { useAccountStore } from './accountStore';
+import { useBudgetStore } from './budgetStore';
+import { useExpenseStore } from './expenseStore';
+import { useWalletStore } from './walletStore';
 
 interface AuthState {
   user: User | null;
@@ -56,6 +59,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               });
               // Restore account context from local DB
               await useAccountStore.getState().loadAccounts();
+              // Load data for the user's account
+              await Promise.all([
+                useExpenseStore.getState().loadExpenses(),
+                useWalletStore.getState().loadWallet(),
+                useBudgetStore.getState().loadBudgets(),
+              ]);
             }
           } else {
             set({ isLoading: false });
@@ -105,6 +114,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               user.id,
             );
           }
+
+          // Load data for the new user's account
+          await Promise.all([
+            useExpenseStore.getState().loadExpenses(),
+            useWalletStore.getState().loadWallet(),
+            useBudgetStore.getState().loadBudgets(),
+          ]);
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Login failed',
@@ -153,6 +169,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               user.id,
             );
           }
+
+          // Load data for the new user's account
+          await Promise.all([
+            useExpenseStore.getState().loadExpenses(),
+            useWalletStore.getState().loadWallet(),
+            useBudgetStore.getState().loadBudgets(),
+          ]);
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
@@ -195,6 +218,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             await secureStorage.setItem('user', JSON.stringify(updatedUser));
             // Restore account context from local DB
             await useAccountStore.getState().loadAccounts();
+            // Load data for the user's account
+            await Promise.all([
+              useExpenseStore.getState().loadExpenses(),
+              useWalletStore.getState().loadWallet(),
+              useBudgetStore.getState().loadBudgets(),
+            ]);
           } catch {
             // Tokens are invalid and refresh also failed — need full re-login
             await secureStorage.removeItem('accessToken');
@@ -255,8 +284,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             });
           }
 
-          // Reset account store
+          // Reset stores
           useAccountStore.getState().reset();
+          useBudgetStore.getState().reset();
+          useExpenseStore.getState().reset();
+          useWalletStore.getState().reset();
         } catch (error) {
           console.error('Failed to logout:', error);
         }

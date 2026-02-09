@@ -13,16 +13,20 @@ import type { Budget } from '@budget/shared-types';
 export default function BudgetsScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
-  const { budgets, getBudgetProgress } = useBudgetStore();
+  const { budgets, getBudgetProgress, loadBudgets } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    // Trigger sync
-    setRefreshing(false);
-  }, []);
+    try {
+      await loadBudgets();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [loadBudgets]);
 
   const renderBudgetItem = ({ item }: { item: Budget }) => {
     const progress = getBudgetProgress(item.id);
@@ -75,6 +79,28 @@ export default function BudgetsScreen() {
             {formatCurrency(progress.remaining, item.currencyCode)} {t('budgets.remaining')}
           </Text>
         )}
+
+        {progress?.estimatedExhaustionDate && (
+          <View style={styles.predictionRow}>
+            <Ionicons name="time-outline" size={14} color={theme.colors.warning} />
+            <Text style={styles.predictionText}>
+              {t('insights.exhaustionText', {
+                date: new Date(progress.estimatedExhaustionDate).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                }),
+              })}
+            </Text>
+          </View>
+        )}
+
+        {progress && progress.projectedTotal > item.amount && !isOverBudget && (
+          <Text style={styles.projectedText}>
+            {t('insights.projectedTotal', {
+              amount: formatCurrency(progress.projectedTotal, item.currencyCode),
+            })}
+          </Text>
+        )}
       </TouchableOpacity>
     );
   };
@@ -98,7 +124,7 @@ export default function BudgetsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <FlatList
-        data={budgets.filter(b => !b.isDeleted)}
+        data={budgets.filter(b => !b.isDeleted && b.accountId === currentAccountId)}
         renderItem={renderBudgetItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
@@ -214,6 +240,21 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.primary,
     marginTop: theme.spacing[3],
+  },
+  predictionRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[2],
+  },
+  predictionText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.warning,
+  },
+  projectedText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   separator: {
     height: theme.spacing[3],

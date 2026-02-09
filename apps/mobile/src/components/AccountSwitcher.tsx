@@ -11,6 +11,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useWalletStore } from '@/stores/walletStore';
+import { useBudgetStore } from '@/stores/budgetStore';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType } from '@budget/shared-types';
@@ -26,6 +28,8 @@ export function AccountSwitcher() {
   const { t } = useTranslation();
   const { accounts, currentAccountId, switchAccount } = useAccountStore();
   const { loadExpenses } = useExpenseStore();
+  const { loadWallet } = useWalletStore();
+  const { loadBudgets } = useBudgetStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -35,8 +39,8 @@ export function AccountSwitcher() {
     setVisible(false);
     if (accountId === currentAccountId) return;
     await switchAccount(accountId);
-    // Reload data for the new account
-    await loadExpenses();
+    // Reload all data for the new account
+    await Promise.all([loadExpenses(), loadWallet(), loadBudgets()]);
   };
 
   const handleTriggerPress = () => {

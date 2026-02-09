@@ -86,3 +86,7 @@ export async function softDeleteExchange(id: string, updatedAt: Date): Promise<v
     [updatedAt.getTime(), 'pending', id],
   );
 }
+
+export async function clearAllExchanges(): Promise<void> {
+  await executeSql('DELETE FROM currency_exchanges', []);
+}

@@ -7,6 +7,24 @@
 Authorization: Bearer <access_token>
 ```
 
+## Контекст аккаунта
+
+Большинство эндпоинтов (расходы, бюджеты, категории, кошелёк, аналитика, инсайты, синхронизация) требуют контекст аккаунта. Передайте идентификатор аккаунта в заголовке:
+```
+X-Account-Id: <account-uuid>
+```
+
+Middleware `AccountContextGuard` проверяет, что аутентифицированный пользователь является участником указанного аккаунта, и устанавливает `accountId` и `accountRole` в объекте запроса.
+
+**Роли аккаунта:**
+| Роль | Разрешения |
+|------|------------|
+| `owner` | Полный доступ, управление участниками и приглашениями |
+| `editor` | Создание, чтение, обновление расходов/бюджетов/категорий |
+| `viewer` | Доступ только для чтения |
+
+---
+
 ## Аутентификация
 
 ### Регистрация пользователя
@@ -28,7 +46,7 @@ Content-Type: application/json
   "id": "uuid",
   "email": "user@example.com",
   "name": "Иван Иванов",
-  "currencyCode": "USD",
+  "currencyCode": "RUB",
   "timezone": "UTC",
   "createdAt": "2024-01-15T10:30:00Z"
 }
@@ -97,9 +115,12 @@ Authorization: Bearer <token>
   "id": "uuid",
   "email": "user@example.com",
   "name": "Иван Иванов",
-  "currencyCode": "USD",
+  "currencyCode": "RUB",
   "timezone": "UTC",
   "pushToken": null,
+  "notifyBudgetAlerts": true,
+  "notifySharedActivity": true,
+  "defaultAccountId": "uuid",
   "lastSyncAt": "2024-01-15T10:30:00Z",
   "createdAt": "2024-01-01T00:00:00Z"
 }
@@ -114,31 +135,225 @@ Content-Type: application/json
 
 {
   "name": "Иван Петров",
-  "currencyCode": "RUB",
-  "timezone": "Europe/Moscow"
+  "currencyCode": "EUR",
+  "timezone": "Europe/Moscow",
+  "notifyBudgetAlerts": true,
+  "notifySharedActivity": false
 }
 ```
 
 **Ответ** `200 OK`
+
+---
+
+## Аккаунты
+
+### Создать аккаунт
+
+```http
+POST /accounts
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Семейный бюджет",
+  "type": "shared",
+  "currencyCode": "RUB",
+  "icon": "family"
+}
+```
+
+**Значения type**: `personal`, `business`, `shared`
+
+**Ответ** `201 Created`
 ```json
 {
   "id": "uuid",
-  "email": "user@example.com",
-  "name": "Иван Петров",
+  "name": "Семейный бюджет",
+  "type": "shared",
   "currencyCode": "RUB",
-  "timezone": "Europe/Moscow"
+  "ownerId": "user-uuid",
+  "icon": "family",
+  "isActive": true,
+  "createdAt": "2024-01-15T10:30:00Z"
 }
+```
+
+### Список аккаунтов
+
+```http
+GET /accounts
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "name": "Личный",
+    "type": "personal",
+    "currencyCode": "RUB",
+    "ownerId": "user-uuid",
+    "role": "owner",
+    "memberCount": 1
+  }
+]
+```
+
+### Получить аккаунт
+
+```http
+GET /accounts/:id
+Authorization: Bearer <token>
+```
+
+### Обновить аккаунт
+
+```http
+PATCH /accounts/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "Новое название",
+  "icon": "wallet"
+}
+```
+
+### Удалить аккаунт
+
+```http
+DELETE /accounts/:id
+Authorization: Bearer <token>
+```
+
+**Ответ** `204 No Content`
+
+### Создать приглашение
+
+```http
+POST /accounts/:id/invitations
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "invitedEmail": "friend@example.com",
+  "role": "editor"
+}
+```
+
+**Ответ** `201 Created`
+```json
+{
+  "id": "uuid",
+  "inviteCode": "ABC123XYZ",
+  "role": "editor",
+  "status": "pending",
+  "expiresAt": "2024-01-22T10:30:00Z"
+}
+```
+
+### Список приглашений
+
+```http
+GET /accounts/:id/invitations
+Authorization: Bearer <token>
+```
+
+### Отменить приглашение
+
+```http
+DELETE /accounts/:id/invitations/:invitationId
+Authorization: Bearer <token>
+```
+
+### Принять приглашение
+
+```http
+POST /accounts/invitations/accept
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "inviteCode": "ABC123XYZ"
+}
+```
+
+### Отклонить приглашение
+
+```http
+POST /accounts/invitations/decline
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "inviteCode": "ABC123XYZ"
+}
+```
+
+### Список участников
+
+```http
+GET /accounts/:id/members
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "member-uuid",
+    "userId": "user-uuid",
+    "role": "owner",
+    "joinedAt": "2024-01-01T00:00:00Z",
+    "user": {
+      "id": "user-uuid",
+      "name": "Иван Иванов",
+      "email": "ivan@example.com"
+    }
+  }
+]
+```
+
+### Обновить роль участника
+
+```http
+PATCH /accounts/:id/members/:memberId
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "role": "viewer"
+}
+```
+
+### Удалить участника
+
+```http
+DELETE /accounts/:id/members/:memberId
+Authorization: Bearer <token>
+```
+
+### Покинуть аккаунт
+
+```http
+POST /accounts/:id/leave
+Authorization: Bearer <token>
 ```
 
 ---
 
 ## Расходы
 
+Все эндпоинты расходов требуют заголовок `X-Account-Id`.
+
 ### Список расходов
 
 ```http
 GET /expenses
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Параметры запроса**
@@ -159,12 +374,15 @@ Authorization: Bearer <token>
       "clientId": "client-uuid",
       "categoryId": "uuid",
       "amount": 1500.00,
+      "discountAmount": null,
       "currencyCode": "RUB",
       "description": "Обед в ресторане",
-      "date": "2024-01-15T12:30:00Z",
-      "location": "Москва",
+      "date": "2024-01-15",
+      "time": "12:30",
+      "locationLat": 55.7558,
+      "locationLng": 37.6173,
       "notes": "Деловой обед",
-      "receiptUrl": "https://storage.example.com/receipts/uuid.jpg",
+      "receiptUrl": null,
       "isRecurring": false,
       "source": "manual",
       "syncVersion": 1,
@@ -188,16 +406,20 @@ Authorization: Bearer <token>
 ```http
 POST /expenses
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
   "clientId": "client-generated-uuid",
   "categoryId": "uuid",
   "amount": 1500.00,
+  "discountAmount": 250.00,
   "currencyCode": "RUB",
   "description": "Обед в ресторане",
-  "date": "2024-01-15T12:30:00Z",
-  "location": "Москва",
+  "date": "2024-01-15",
+  "time": "12:30",
+  "locationLat": 55.7558,
+  "locationLng": 37.6173,
   "notes": "Деловой обед",
   "isRecurring": false,
   "source": "manual"
@@ -205,41 +427,13 @@ Content-Type: application/json
 ```
 
 **Ответ** `201 Created`
-```json
-{
-  "id": "uuid",
-  "clientId": "client-generated-uuid",
-  "categoryId": "uuid",
-  "amount": 1500.00,
-  "syncVersion": 1,
-  "createdAt": "2024-01-15T12:35:00Z"
-}
-```
 
 ### Получить расход
 
 ```http
 GET /expenses/:id
 Authorization: Bearer <token>
-```
-
-**Ответ** `200 OK`
-```json
-{
-  "id": "uuid",
-  "clientId": "client-uuid",
-  "categoryId": "uuid",
-  "amount": 1500.00,
-  "currencyCode": "RUB",
-  "description": "Обед в ресторане",
-  "date": "2024-01-15T12:30:00Z",
-  "category": {
-    "id": "uuid",
-    "name": "Еда и рестораны",
-    "icon": "utensils",
-    "color": "#FF6B6B"
-  }
-}
+X-Account-Id: <account-uuid>
 ```
 
 ### Обновить расход
@@ -247,6 +441,7 @@ Authorization: Bearer <token>
 ```http
 PATCH /expenses/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -255,35 +450,122 @@ Content-Type: application/json
 }
 ```
 
-**Ответ** `200 OK`
-```json
-{
-  "id": "uuid",
-  "amount": 1800.00,
-  "description": "Обед в итальянском ресторане",
-  "syncVersion": 2,
-  "updatedAt": "2024-01-15T14:00:00Z"
-}
-```
-
 ### Удалить расход
 
 ```http
 DELETE /expenses/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `204 No Content`
 
+### Позиции расхода
+
+#### Список позиций
+
+```http
+GET /expenses/:id/items
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "description": "Яблоки органические",
+    "quantity": 2.0,
+    "unitPrice": 199.00,
+    "totalPrice": 398.00,
+    "sortOrder": 0
+  }
+]
+```
+
+#### Создать позицию
+
+```http
+POST /expenses/:id/items
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "description": "Миндальное молоко",
+  "quantity": 1,
+  "unitPrice": 249.00,
+  "totalPrice": 249.00,
+  "sortOrder": 1
+}
+```
+
+#### Обновить позицию
+
+```http
+PATCH /expenses/:id/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "quantity": 2,
+  "totalPrice": 498.00
+}
+```
+
+#### Удалить позицию
+
+```http
+DELETE /expenses/:id/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Изображение чека
+
+#### Получить изображение чека
+
+```http
+GET /expenses/:id/receipt-image
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+#### Сохранить изображение чека
+
+```http
+PUT /expenses/:id/receipt-image
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "imageBase64": "data:image/jpeg;base64,/9j/4AAQ..."
+}
+```
+
+#### Удалить изображение чека
+
+```http
+DELETE /expenses/:id/receipt-image
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
 ---
 
 ## Бюджеты
+
+Все эндпоинты бюджетов требуют заголовок `X-Account-Id`.
 
 ### Список бюджетов
 
 ```http
 GET /budgets
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `200 OK`
@@ -297,7 +579,7 @@ Authorization: Bearer <token>
       "amount": 30000.00,
       "currencyCode": "RUB",
       "period": "monthly",
-      "startDate": "2024-01-01T00:00:00Z",
+      "startDate": "2024-01-01",
       "endDate": null,
       "categoryId": "uuid",
       "alertThreshold": 80,
@@ -319,6 +601,7 @@ Authorization: Bearer <token>
 ```http
 POST /budgets
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -327,7 +610,7 @@ Content-Type: application/json
   "amount": 30000.00,
   "currencyCode": "RUB",
   "period": "monthly",
-  "startDate": "2024-01-01T00:00:00Z",
+  "startDate": "2024-01-01",
   "categoryId": "uuid",
   "alertThreshold": 80
 }
@@ -336,21 +619,13 @@ Content-Type: application/json
 **Значения period**: `daily`, `weekly`, `monthly`, `yearly`, `custom`
 
 **Ответ** `201 Created`
-```json
-{
-  "id": "uuid",
-  "clientId": "client-generated-uuid",
-  "name": "Бюджет на еду",
-  "amount": 30000.00,
-  "syncVersion": 1
-}
-```
 
 ### Получить прогресс бюджета
 
 ```http
 GET /budgets/:id/progress
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `200 OK`
@@ -366,7 +641,10 @@ Authorization: Bearer <token>
   "remaining": 10470.00,
   "percentage": 65.1,
   "daysRemaining": 15,
+  "dailyBurnRate": 1302.00,
   "dailyAllowance": 698.00,
+  "projectedTotal": 39060.00,
+  "estimatedExhaustionDate": "2024-01-23",
   "onTrack": true
 }
 ```
@@ -376,6 +654,7 @@ Authorization: Bearer <token>
 ```http
 PATCH /budgets/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -384,21 +663,12 @@ Content-Type: application/json
 }
 ```
 
-**Ответ** `200 OK`
-```json
-{
-  "id": "uuid",
-  "amount": 35000.00,
-  "alertThreshold": 75,
-  "syncVersion": 2
-}
-```
-
 ### Удалить бюджет
 
 ```http
 DELETE /budgets/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `204 No Content`
@@ -407,11 +677,14 @@ Authorization: Bearer <token>
 
 ## Категории
 
+Все эндпоинты категорий требуют заголовок `X-Account-Id`.
+
 ### Список категорий
 
 ```http
 GET /categories
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `200 OK`
@@ -427,16 +700,6 @@ Authorization: Bearer <token>
       "isSystem": true,
       "parentId": null,
       "syncVersion": 1
-    },
-    {
-      "id": "uuid",
-      "name": "Рестораны",
-      "icon": "restaurant",
-      "color": "#FF8888",
-      "type": "expense",
-      "isSystem": false,
-      "parentId": "parent-uuid",
-      "syncVersion": 1
     }
   ]
 }
@@ -447,6 +710,7 @@ Authorization: Bearer <token>
 ```http
 POST /categories
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -460,24 +724,12 @@ Content-Type: application/json
 
 **Значения type**: `expense`, `income`
 
-**Ответ** `201 Created`
-```json
-{
-  "id": "uuid",
-  "name": "Кофейни",
-  "icon": "coffee",
-  "color": "#8B4513",
-  "type": "expense",
-  "isSystem": false,
-  "syncVersion": 1
-}
-```
-
 ### Обновить категорию
 
 ```http
 PATCH /categories/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -486,24 +738,191 @@ Content-Type: application/json
 }
 ```
 
-**Ответ** `200 OK`
-```json
-{
-  "id": "uuid",
-  "name": "Кофе и чай",
-  "color": "#654321",
-  "syncVersion": 2
-}
-```
-
 ### Удалить категорию
 
 ```http
 DELETE /categories/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `204 No Content`
+
+---
+
+## Кошелёк
+
+Все эндпоинты кошелька требуют заголовок `X-Account-Id`.
+
+### Установить баланс
+
+```http
+POST /wallet
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "clientId": "client-generated-uuid",
+  "currencyCode": "RUB",
+  "initialAmount": 300000.00
+}
+```
+
+### Список балансов
+
+```http
+GET /wallet
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "currencyCode": "RUB",
+    "initialAmount": 300000.00,
+    "syncVersion": 1
+  },
+  {
+    "id": "uuid",
+    "currencyCode": "EUR",
+    "initialAmount": 2000.00,
+    "syncVersion": 1
+  }
+]
+```
+
+### Получить сводку по кошельку
+
+```http
+GET /wallet/summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Удалить баланс
+
+```http
+DELETE /wallet/:currencyCode
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+---
+
+## Обмен валют
+
+Все эндпоинты обмена валют требуют заголовок `X-Account-Id`.
+
+### Создать обмен
+
+```http
+POST /currency-exchanges
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "clientId": "client-generated-uuid",
+  "fromCurrency": "RUB",
+  "toCurrency": "EUR",
+  "fromAmount": 100000.00,
+  "toAmount": 920.00,
+  "exchangeRate": 0.0092,
+  "date": "2024-01-15",
+  "notes": "Ежемесячный обмен"
+}
+```
+
+### Список обменов
+
+```http
+GET /currency-exchanges
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Получить курсы валют
+
+```http
+GET /currency-exchanges/rates?base=RUB
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "base": "RUB",
+  "rates": {
+    "EUR": 0.0092,
+    "GBP": 0.0079,
+    "USD": 0.011
+  }
+}
+```
+
+### Получить обмен
+
+```http
+GET /currency-exchanges/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Удалить обмен
+
+```http
+DELETE /currency-exchanges/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+---
+
+## Инсайты
+
+Требуется заголовок `X-Account-Id`.
+
+### Получить инсайты
+
+```http
+GET /insights
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "anomalies": [
+    {
+      "categoryId": "uuid",
+      "categoryName": "Развлечения",
+      "currentAmount": 27000.00,
+      "averageAmount": 12000.00,
+      "percentageChange": 125,
+      "period": "2024-01"
+    }
+  ],
+  "predictions": [
+    {
+      "budgetId": "uuid",
+      "budgetName": "Бюджет на еду",
+      "estimatedExhaustionDate": "2024-01-25",
+      "dailyBurnRate": 1302.00,
+      "daysRemaining": 15,
+      "projectedTotal": 39060.00,
+      "currencyCode": "RUB"
+    }
+  ]
+}
+```
 
 ---
 
@@ -595,12 +1014,12 @@ image: <изображение>
   "date": "2024-01-15",
   "time": "14:30",
   "items": [
-    { "description": "Яблоки", "amount": 299.00 },
-    { "description": "Молоко", "amount": 89.00 }
+    { "description": "Яблоки органические", "amount": 299.00 },
+    { "description": "Миндальное молоко", "amount": 249.00 }
   ],
-  "subtotal": 388.00,
+  "subtotal": 548.00,
   "tax": 0,
-  "total": 388.00,
+  "total": 548.00,
   "currencyCode": "RUB",
   "paymentMethod": "Банковская карта",
   "confidence": 0.88
@@ -631,7 +1050,7 @@ Content-Type: application/json
     "tokensUsed": 156
   },
   "suggestedActions": [
-    { "type": "view_chart", "label": "Посмотреть статистику" },
+    { "type": "view_chart", "label": "Посмотреть статистику расходов" },
     { "type": "set_budget", "label": "Изменить бюджет на еду" }
   ]
 }
@@ -641,11 +1060,14 @@ Content-Type: application/json
 
 ## Аналитика
 
+Все эндпоинты аналитики требуют заголовок `X-Account-Id`.
+
 ### Сводка по расходам
 
 ```http
 GET /analytics/summary
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Параметры запроса**
@@ -673,13 +1095,6 @@ Authorization: Bearer <token>
       "amount": 31538.00,
       "percentage": 25.2,
       "count": 15
-    },
-    {
-      "categoryId": "uuid",
-      "categoryName": "Транспорт",
-      "amount": 22383.15,
-      "percentage": 17.9,
-      "count": 8
     }
   ],
   "topExpenses": [
@@ -698,6 +1113,7 @@ Authorization: Bearer <token>
 ```http
 GET /analytics/trends
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Параметры запроса**
@@ -715,11 +1131,6 @@ Authorization: Bearer <token>
       "period": "2024-01-01",
       "total": 26264.58,
       "count": 12
-    },
-    {
-      "period": "2024-01-08",
-      "total": 30620.41,
-      "count": 15
     }
   ],
   "comparison": {
@@ -736,11 +1147,14 @@ Authorization: Bearer <token>
 
 ## Синхронизация
 
+Все эндпоинты синхронизации требуют заголовок `X-Account-Id`.
+
 ### Отправка изменений
 
 ```http
 POST /sync/push
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -785,11 +1199,6 @@ Content-Type: application/json
       "serverId": "new-server-uuid",
       "serverVersion": 1,
       "status": "created"
-    },
-    {
-      "serverId": "server-uuid",
-      "serverVersion": 3,
-      "status": "updated"
     }
   ],
   "conflicts": [
@@ -797,7 +1206,7 @@ Content-Type: application/json
       "serverId": "server-uuid",
       "clientVersion": 2,
       "serverVersion": 4,
-      "serverData": { ... },
+      "serverData": { },
       "resolution": "server_wins"
     }
   ],
@@ -810,6 +1219,7 @@ Content-Type: application/json
 ```http
 GET /sync/pull
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
 **Параметры запроса**
@@ -825,13 +1235,13 @@ Authorization: Bearer <token>
       "id": "uuid",
       "clientId": "client-uuid",
       "operation": "upsert",
-      "data": { ... },
+      "data": { },
       "syncVersion": 2,
       "updatedAt": "2024-01-15T10:30:00Z"
     }
   ],
-  "categories": [ ... ],
-  "budgets": [ ... ],
+  "categories": [],
+  "budgets": [],
   "deletedIds": {
     "expenses": ["uuid1", "uuid2"],
     "categories": [],
@@ -867,7 +1277,7 @@ Authorization: Bearer <token>
 |-----|----------|
 | `400` | Bad Request — неверные входные данные |
 | `401` | Unauthorized — неверный или истёкший токен |
-| `403` | Forbidden — недостаточно прав |
+| `403` | Forbidden — недостаточно прав или неверная роль аккаунта |
 | `404` | Not Found — ресурс не найден |
 | `409` | Conflict — несоответствие версий синхронизации |
 | `422` | Unprocessable Entity — ошибка валидации |

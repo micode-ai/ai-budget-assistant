@@ -16,6 +16,7 @@ import { DatabaseModule } from './database/database.module';
 import { MailModule } from './modules/mail/mail.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { InsightsModule } from './modules/insights/insights.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AnalyticsModule,
     WalletModule,
     CurrencyExchangeModule,
+    InsightsModule,
   ],
 })
 export class AppModule {}

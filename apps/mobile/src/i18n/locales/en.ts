@@ -423,4 +423,16 @@ export default {
     chatError: 'Sorry, I encountered an error. Please check your connection and try again.',
     unknown: 'An unexpected error occurred',
   },
+  insights: {
+    title: 'Predictive Insights',
+    anomalies: 'Spending Anomalies',
+    anomalyText: '{{percent}}% more than usual on {{category}}',
+    avgLabel: 'avg.',
+    predictions: 'Budget Predictions',
+    exhaustionText: 'Runs out ~{{date}}',
+    projectedTotal: 'Projected: {{amount}}',
+    noAnomalies: 'Your spending looks normal',
+    noPredictions: 'No active budgets to predict',
+    categoryLearned: 'Based on your history',
+  },
 } as const;

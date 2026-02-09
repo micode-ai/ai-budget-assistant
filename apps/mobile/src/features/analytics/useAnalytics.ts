@@ -4,6 +4,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { loadItemsByExpenseId } from '@/db/expenseItemRepository';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
 
 export type TimeRange = 'week' | 'month' | 'year';
@@ -60,6 +61,25 @@ export interface PeriodComparison {
   currentTotal: number;
   previousTotal: number;
   changePercent: number;
+}
+
+export interface SpendingAnomalyItem {
+  categoryId: string;
+  categoryName: string;
+  currentAmount: number;
+  averageAmount: number;
+  percentageChange: number;
+  period: string;
+}
+
+export interface BudgetPredictionItem {
+  budgetId: string;
+  budgetName: string;
+  estimatedExhaustionDate?: string;
+  dailyBurnRate: number;
+  daysRemaining: number;
+  projectedTotal: number;
+  currencyCode: string;
 }
 
 const CATEGORY_COLORS = [
@@ -322,6 +342,72 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     return { currentTotal, previousTotal, changePercent };
   }, [filteredExpenses, expenses, dateRange, currencyCode]);
 
+  // Predictive insights from API
+  const [anomalies, setAnomalies] = useState<SpendingAnomalyItem[]>([]);
+  const [predictions, setPredictions] = useState<BudgetPredictionItem[]>([]);
+
+  useEffect(() => {
+    const fetchInsights = async () => {
+      try {
+        const data = await api.getInsights();
+        setAnomalies(data.anomalies || []);
+        setPredictions(data.predictions || []);
+      } catch {
+        // Fallback: compute anomalies locally from expense data
+        const localAnomalies: SpendingAnomalyItem[] = [];
+        const currentByCategory = new Map<string, { amount: number; name: string }>();
+
+        for (const expense of filteredExpenses) {
+          const catId = expense.categoryId || 'uncategorized';
+          const current = currentByCategory.get(catId) || { amount: 0, name: catId };
+          currentByCategory.set(catId, {
+            amount: current.amount + expense.amount,
+            name: current.name,
+          });
+        }
+
+        // Compare to previous period
+        const msRange = dateRange.endDate.getTime() - dateRange.startDate.getTime();
+        const prevStart = new Date(dateRange.startDate.getTime() - msRange);
+        const prevEnd = new Date(dateRange.startDate.getTime() - 1);
+
+        const prevExpenses = expenses.filter((e) => {
+          if (e.isDeleted) return false;
+          if (currencyCode && e.currencyCode !== currencyCode) return false;
+          const d = new Date(e.date);
+          return d >= prevStart && d <= prevEnd;
+        });
+
+        const prevByCategory = new Map<string, number>();
+        for (const expense of prevExpenses) {
+          const catId = expense.categoryId || 'uncategorized';
+          prevByCategory.set(catId, (prevByCategory.get(catId) || 0) + expense.amount);
+        }
+
+        for (const [catId, currentData] of currentByCategory) {
+          const prevAmount = prevByCategory.get(catId);
+          if (!prevAmount || prevAmount <= 0) continue;
+          const pctChange = ((currentData.amount - prevAmount) / prevAmount) * 100;
+          if (pctChange >= 30) {
+            localAnomalies.push({
+              categoryId: catId,
+              categoryName: currentData.name,
+              currentAmount: currentData.amount,
+              averageAmount: prevAmount,
+              percentageChange: Math.round(pctChange),
+              period: dateRange.startDate.toISOString().slice(0, 7),
+            });
+          }
+        }
+
+        setAnomalies(localAnomalies.sort((a, b) => b.percentageChange - a.percentageChange));
+        setPredictions([]);
+      }
+    };
+
+    fetchInsights();
+  }, [filteredExpenses, dateRange, currencyCode, expenses]);
+
   // Item breakdown for OCR expenses
   const [itemBreakdown, setItemBreakdown] = useState<ItemBreakdown[]>([]);
 
@@ -377,5 +463,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     budgetComparison,
     dayOfWeekSpending,
     periodComparison,
+    anomalies,
+    predictions,
   };
 }

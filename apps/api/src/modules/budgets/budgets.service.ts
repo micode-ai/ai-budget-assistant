@@ -88,6 +88,7 @@ export class BudgetsService {
     // Calculate spent amount for this budget period
     const periodStart = budget.startDate;
     const periodEnd = budget.endDate || new Date();
+    const now = new Date();
 
     const whereExpenses: any = {
       accountId,
@@ -112,13 +113,38 @@ export class BudgetsService {
     const budgetAmount = Number(budget.amount);
     const remaining = Math.max(0, budgetAmount - spentAmount);
     const percentageUsed = budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
+    const isOverBudget = spentAmount > budgetAmount;
+
+    // Calculate prediction fields
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const daysElapsed = Math.max(1, Math.ceil((now.getTime() - periodStart.getTime()) / msPerDay));
+    const totalDaysInPeriod = Math.max(1, Math.ceil((periodEnd.getTime() - periodStart.getTime()) / msPerDay));
+    const daysRemaining = Math.max(0, Math.ceil((periodEnd.getTime() - now.getTime()) / msPerDay));
+
+    const dailyBurnRate = spentAmount / daysElapsed;
+    const projectedTotal = dailyBurnRate * totalDaysInPeriod;
+
+    // Estimate when budget will run out
+    let estimatedExhaustionDate: string | undefined;
+    if (dailyBurnRate > 0 && !isOverBudget) {
+      const daysUntilExhaustion = remaining / dailyBurnRate;
+      const exhaustionDate = new Date(now.getTime() + daysUntilExhaustion * msPerDay);
+      // Only return if exhaustion is within the budget period
+      if (exhaustionDate <= periodEnd) {
+        estimatedExhaustionDate = exhaustionDate.toISOString();
+      }
+    }
 
     return {
       budget,
       spent: spentAmount,
       remaining,
       percentageUsed,
-      isOverBudget: spentAmount > budgetAmount,
+      isOverBudget,
+      daysRemaining,
+      projectedTotal,
+      dailyBurnRate,
+      estimatedExhaustionDate,
     };
   }
 }

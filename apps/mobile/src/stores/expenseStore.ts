@@ -75,6 +75,8 @@ interface ExpenseState {
   getFilteredExpenses: () => Expense[];
   getExpensesByCategory: () => CategoryBreakdown[];
   getTrendVsLastPeriod: () => number;
+
+  reset: () => void;
 }
 
 export const useExpenseStore = create<ExpenseState>()(
@@ -115,6 +117,8 @@ export const useExpenseStore = create<ExpenseState>()(
         }
         // 1. Show local data immediately
         const localExpenses = await loadAllExpenses(accountId);
+        // Guard: abort if account switched during async operation
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
         set({ expenses: localExpenses, isLoading: false });
 
         // 2. Sync pending local → server
@@ -123,6 +127,8 @@ export const useExpenseStore = create<ExpenseState>()(
         // 3. Pull from server → local (for shared accounts / other devices)
         try {
           const serverResult = await api.getExpenses();
+          // Guard: abort if account switched during server call
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
           const serverExpenses: any[] = serverResult.data || serverResult;
           for (const se of serverExpenses) {
             const expenseId = se.clientId || se.id;
@@ -181,8 +187,18 @@ export const useExpenseStore = create<ExpenseState>()(
               }
             }
           }
+          // Mark locally-synced expenses as deleted if server no longer returns them
+          const serverIdSet = new Set(serverExpenses.map((se: any) => se.clientId || se.id));
+          for (const local of localExpenses) {
+            if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
+              await softDeleteExpenseInDb(local.id, new Date());
+            }
+          }
+
           // Reload from SQLite after merge
           const merged = await loadAllExpenses(accountId);
+          // Guard: abort if account switched during merge
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
           set({ expenses: merged });
         } catch (e) {
           // Server pull failed (offline?) — local data is still shown
@@ -533,6 +549,8 @@ export const useExpenseStore = create<ExpenseState>()(
         updateExpenseInDb(expense.id, {}, new Date(), 'synced').catch(() => {});
       }
     },
+
+    reset: () => set({ expenses: [], expenseItems: {}, isLoading: false, error: null }),
 
     // ---- Selectors ----
 

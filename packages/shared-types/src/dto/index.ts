@@ -252,6 +252,34 @@ export interface AnalyticsSummary {
   };
 }
 
+// Insights DTOs
+export interface InsightsResponse {
+  anomalies: Array<{
+    categoryId: string;
+    categoryName: string;
+    currentAmount: number;
+    averageAmount: number;
+    percentageChange: number;
+    period: string;
+  }>;
+  predictions: Array<{
+    budgetId: string;
+    budgetName: string;
+    estimatedExhaustionDate?: string;
+    dailyBurnRate: number;
+    daysRemaining: number;
+    projectedTotal: number;
+    currencyCode: string;
+  }>;
+}
+
+export interface CategorySuggestionResponse {
+  categoryId?: string;
+  categoryName: string;
+  confidence: number;
+  source: 'history' | 'ai';
+}
+
 // Notification DTOs
 export interface UpdatePushTokenDto {
   pushToken: string | null;

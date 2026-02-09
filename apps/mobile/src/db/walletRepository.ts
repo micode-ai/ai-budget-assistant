@@ -71,6 +71,10 @@ export async function softDeleteWalletBalance(id: string, updatedAt: Date): Prom
   );
 }
 
+export async function clearAllWalletBalances(): Promise<void> {
+  await executeSql('DELETE FROM wallet_balances', []);
+}
+
 export async function getExpenseTotalsByCurrency(accountId: string): Promise<Record<string, number>> {
   const rows = await executeSql<{ currency_code: string; total: number }>(
     `SELECT currency_code, SUM(amount) as total

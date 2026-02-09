@@ -9,12 +9,18 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 ### Key Features
 
 - **Expense Tracking** - Manual entry, voice input, and receipt scanning
+- **Expense Items** - Itemized receipts with line items (quantity, unit price)
 - **AI-Powered Categorization** - Automatic expense categorization using GPT-4
 - **Voice Input** - Transcribe expenses using Whisper API
 - **Receipt Scanning** - Extract data from receipts using GPT-4 Vision
-- **Budget Management** - Set and track budgets with alerts
+- **Budget Management** - Set and track budgets with threshold alerts
+- **Multi-Account Support** - Personal, business, and shared accounts with role-based access (owner/editor/viewer)
+- **Wallet & Currency Exchange** - Multi-currency wallet balances and exchange rate tracking
+- **Smart Insights** - Spending anomaly detection and budget exhaustion predictions
+- **Push Notifications** - Budget alerts and spending anomaly notifications (Expo Push)
 - **AI Chat Assistant** - Get personalized financial advice
 - **Analytics** - Visual spending trends and category breakdowns
+- **Shared Accounts** - Invite members via invite codes, track shared activity
 - **Offline-First** - Full functionality without internet connection
 - **Cross-Platform** - iOS, Android, and Web support
 

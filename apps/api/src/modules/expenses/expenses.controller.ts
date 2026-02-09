@@ -40,6 +40,8 @@ export class ExpensesController {
     // Fire-and-forget notifications
     this.budgetAlertService.checkBudgetsForAccount(req.accountId, dto.currencyCode)
       .catch(e => this.logger.error('Budget alert check failed', e));
+    this.budgetAlertService.checkSpendingAnomalies(req.accountId, req.user.id)
+      .catch(e => this.logger.error('Spending anomaly check failed', e));
     this.sharedActivityService.notifyExpenseCreated(
       req.accountId, req.user.id, dto.amount, dto.currencyCode, dto.description,
     ).catch(e => this.logger.error('Shared activity notification failed', e));

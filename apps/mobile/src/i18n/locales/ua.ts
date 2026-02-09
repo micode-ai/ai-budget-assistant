@@ -423,4 +423,16 @@ export default {
     chatError: 'Вибачте, сталася помилка. Перевірте підключення та спробуйте ще раз.',
     unknown: 'Сталася непередбачена помилка',
   },
+  insights: {
+    title: 'Прогнозна аналітика',
+    anomalies: 'Аномалії витрат',
+    anomalyText: '{{percent}}% більше за звичайне на {{category}}',
+    avgLabel: 'сер.',
+    predictions: 'Прогнози бюджету',
+    exhaustionText: 'Вичерпається ~{{date}}',
+    projectedTotal: 'Прогноз: {{amount}}',
+    noAnomalies: 'Ваші витрати виглядають нормально',
+    noPredictions: 'Немає активних бюджетів для прогнозу',
+    categoryLearned: 'На основі вашої історії',
+  },
 } as const;

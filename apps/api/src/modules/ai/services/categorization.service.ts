@@ -21,7 +21,73 @@ export class CategorizationService {
     });
   }
 
+  async suggestFromHistory(
+    accountId: string,
+    description: string,
+  ): Promise<{ categoryId: string; categoryName: string; confidence: number } | null> {
+    if (!description || description.trim().length < 2) return null;
+
+    const searchTerm = description.trim().toLowerCase();
+
+    // Find recent expenses with similar descriptions
+    const recentExpenses = await this.prisma.expense.findMany({
+      where: {
+        accountId,
+        isDeleted: false,
+        categoryId: { not: null },
+        description: { not: null },
+      },
+      select: { categoryId: true, description: true, category: { select: { name: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 200,
+    });
+
+    // Count category frequency for matching descriptions
+    const categoryFrequency = new Map<string, { count: number; name: string }>();
+    let totalMatches = 0;
+
+    for (const expense of recentExpenses) {
+      if (!expense.categoryId || !expense.description) continue;
+      const expenseDesc = expense.description.toLowerCase();
+
+      // Match if descriptions are similar (contains or Levenshtein-like)
+      if (expenseDesc.includes(searchTerm) || searchTerm.includes(expenseDesc)) {
+        const current = categoryFrequency.get(expense.categoryId) || { count: 0, name: expense.category?.name || '' };
+        current.count += 1;
+        categoryFrequency.set(expense.categoryId, current);
+        totalMatches++;
+      }
+    }
+
+    if (totalMatches < 3) return null;
+
+    // Find the most frequent category
+    let bestCategoryId = '';
+    let bestCount = 0;
+    let bestName = '';
+
+    for (const [categoryId, data] of categoryFrequency) {
+      if (data.count > bestCount) {
+        bestCount = data.count;
+        bestCategoryId = categoryId;
+        bestName = data.name;
+      }
+    }
+
+    const frequency = bestCount / totalMatches;
+    if (frequency < 0.7) return null;
+
+    return {
+      categoryId: bestCategoryId,
+      categoryName: bestName,
+      confidence: Math.min(0.95, 0.7 + (frequency - 0.7) * 0.8),
+    };
+  }
+
   async parseExpenseFromText(text: string, userId: string, accountId: string) {
+    // Try history-based suggestion first (fast, free)
+    const historySuggestion = await this.suggestFromHistory(accountId, text);
+
     const categories = await this.prisma.category.findMany({
       where: {
         OR: [{ isSystem: true }, { accountId }],
@@ -72,14 +138,24 @@ Only return valid JSON, no other text.`;
       amount: result.amount || 0,
       currencyCode: result.currency || 'USD',
       description: result.description || text,
-      categoryId: matchedCategory?.id,
-      categorySuggestion: result.category,
-      confidence: result.confidence || 0.5,
+      categoryId: historySuggestion?.categoryId || matchedCategory?.id,
+      categorySuggestion: historySuggestion?.categoryName || result.category,
+      confidence: historySuggestion?.confidence || result.confidence || 0.5,
       merchant: result.merchant,
     };
   }
 
   async categorize(description: string, userId: string, accountId: string) {
+    // Try history-based suggestion first (fast, free)
+    const historySuggestion = await this.suggestFromHistory(accountId, description);
+    if (historySuggestion) {
+      return {
+        categoryId: historySuggestion.categoryId,
+        categoryName: historySuggestion.categoryName,
+        confidence: historySuggestion.confidence,
+      };
+    }
+
     const categories = await this.prisma.category.findMany({
       where: {
         OR: [{ isSystem: true }, { accountId }],

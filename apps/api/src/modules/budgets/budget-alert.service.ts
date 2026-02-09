@@ -32,6 +32,117 @@ export class BudgetAlertService {
     }
   }
 
+  async checkSpendingAnomalies(accountId: string, userId: string): Promise<void> {
+    try {
+      const now = new Date();
+      const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+      // Current month spending per category
+      const currentExpenses = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          date: { gte: currentMonthStart, lte: currentMonthEnd },
+        },
+        include: { category: true },
+      });
+
+      const currentByCategory = new Map<string, { amount: number; name: string }>();
+      for (const expense of currentExpenses) {
+        if (!expense.categoryId) continue;
+        const current = currentByCategory.get(expense.categoryId) || { amount: 0, name: expense.category?.name || 'Uncategorized' };
+        currentByCategory.set(expense.categoryId, {
+          amount: current.amount + Number(expense.amount),
+          name: current.name,
+        });
+      }
+
+      // Previous 3 months average per category
+      const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+      const previousExpenses = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          date: { gte: threeMonthsAgo, lt: currentMonthStart },
+        },
+        select: { categoryId: true, amount: true, date: true },
+      });
+
+      const previousByCategory = new Map<string, { total: number; months: Set<string> }>();
+      for (const expense of previousExpenses) {
+        if (!expense.categoryId) continue;
+        const monthKey = `${expense.date.getFullYear()}-${expense.date.getMonth()}`;
+        const prev = previousByCategory.get(expense.categoryId) || { total: 0, months: new Set<string>() };
+        prev.total += Number(expense.amount);
+        prev.months.add(monthKey);
+        previousByCategory.set(expense.categoryId, prev);
+      }
+
+      const monthKey = `${now.getFullYear()}-${now.getMonth()}`;
+
+      for (const [categoryId, currentData] of currentByCategory) {
+        const prevData = previousByCategory.get(categoryId);
+        if (!prevData || prevData.months.size < 2) continue;
+
+        const avgAmount = prevData.total / prevData.months.size;
+        if (avgAmount <= 0) continue;
+
+        const percentChange = ((currentData.amount - avgAmount) / avgAmount) * 100;
+        if (percentChange < 30) continue;
+
+        // Check if we already sent an anomaly alert for this category this month
+        const alertKey = `anomaly:${categoryId}:${monthKey}`;
+        const existingAlert = await this.prisma.budgetAlert.findFirst({
+          where: {
+            userId,
+            thresholdPercentage: -1, // Use -1 as marker for anomaly alerts
+            triggeredAt: { gte: currentMonthStart },
+            budget: { categoryId },
+          },
+        });
+
+        if (existingAlert) continue;
+
+        // Find a budget for this category to link the alert (optional)
+        const budget = await this.prisma.budget.findFirst({
+          where: { accountId, categoryId, isActive: true, isDeleted: false },
+        });
+
+        if (!budget) continue;
+
+        await this.prisma.budgetAlert.create({
+          data: {
+            budgetId: budget.id,
+            userId,
+            thresholdPercentage: -1, // Marker for spending anomaly
+            currentSpent: currentData.amount,
+            triggeredAt: new Date(),
+            notificationSent: false,
+          },
+        });
+
+        const roundedPercent = Math.round(percentChange);
+        const title = `Unusual spending on ${currentData.name}`;
+        const body = `You've spent ${roundedPercent}% more than usual on ${currentData.name} this month.`;
+
+        const sentOk = await this.notifications.sendToUser(
+          userId,
+          title,
+          body,
+          { categoryId, percentChange: roundedPercent },
+          'spending_anomaly',
+        );
+
+        if (sentOk) {
+          this.logger.log(`Anomaly alert sent: ${currentData.name} +${roundedPercent}%`);
+        }
+      }
+    } catch (error) {
+      this.logger.error(`Spending anomaly check failed: ${error}`);
+    }
+  }
+
   private async checkBudgetThresholds(accountId: string, budget: any): Promise<void> {
     const periodStart = budget.startDate;
     const periodEnd = budget.endDate || new Date();

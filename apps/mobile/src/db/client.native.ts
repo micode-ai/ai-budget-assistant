@@ -236,6 +236,13 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Add session_user_id to accounts (multi-user device isolation)
+    try {
+      expoDb.execSync(`ALTER TABLE accounts ADD COLUMN session_user_id TEXT NOT NULL DEFAULT ''`);
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
     // Create indexes
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date DESC)',

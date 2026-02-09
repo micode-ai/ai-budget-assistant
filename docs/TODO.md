@@ -2,7 +2,7 @@
 
 ## Completed Features
 
-- [x] Monorepo setup (Turborepo + pnpm)
+- [x] Monorepo setup (Turborepo + npm)
 - [x] Mobile app (Expo + TypeScript + Expo Router)
 - [x] Backend API (NestJS + PostgreSQL + Prisma)
 - [x] Shared packages (types + utils)
@@ -17,19 +17,23 @@
 - [x] Receipt OCR scanning (GPT-4 Vision)
 - [x] Analytics dashboard with charts
 - [x] Basic sync mechanism
+- [x] Multi-account system with RBAC (owner/editor/viewer)
+- [x] Wallet balances (multi-currency)
+- [x] Currency exchange tracking
+- [x] Expense items (line items with quantity, unit price)
+- [x] Push notifications (Expo Push API)
+- [x] Budget alert notifications
+- [x] Spending anomaly detection (Insights)
+- [x] Budget predictions (Insights)
+- [x] Telegram notifications (system events)
+- [x] Shared account activity notifications
+- [x] Account invitations (invite codes)
 
 ---
 
 ## Remaining Tasks
 
 ### High Priority
-
-#### Push Notifications
-- [ ] Setup Firebase Cloud Messaging
-- [ ] Create notification service on backend
-- [ ] Register device tokens on mobile
-- [ ] Budget alert notifications
-- [ ] Daily/weekly spending summary notifications
 
 #### Scheduled Jobs
 - [ ] Setup Bull/Agenda for job scheduling
@@ -98,14 +102,14 @@ cd apps/api
 cp .env.example .env
 # Configure DATABASE_URL, OPENAI_API_KEY, JWT_SECRET
 docker-compose up -d  # PostgreSQL + Redis
-pnpm run start:dev
+npm run start:dev
 ```
 
 ### Mobile
 ```bash
 cd apps/mobile
 # Configure EXPO_PUBLIC_API_URL in .env
-pnpm run start
+npm run start
 ```
 
 ---
@@ -114,5 +118,4 @@ pnpm run start
 - `OPENAI_API_KEY` - For Whisper, GPT-4, GPT-4 Vision
 - `JWT_SECRET` - For authentication
 - `DATABASE_URL` - PostgreSQL connection
-- `REDIS_URL` - Redis connection (optional, for sessions)
-- `FIREBASE_*` - For push notifications (when implemented)
+- `REDIS_URL` - Redis connection (optional, for caching)

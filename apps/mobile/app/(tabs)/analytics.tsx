@@ -17,7 +17,7 @@ export default function AnalyticsScreen() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison } = useAnalytics(selectedRange, selectedCurrency);
+  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions } = useAnalytics(selectedRange, selectedCurrency);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -331,6 +331,60 @@ export default function AnalyticsScreen() {
             </View>
           )}
         </View>
+
+        {/* Predictive Insights — Anomalies */}
+        {anomalies.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('insights.anomalies')}</Text>
+            {anomalies.map((anomaly) => (
+              <View key={anomaly.categoryId} style={styles.insightCard}>
+                <Ionicons name="warning-outline" size={24} color={theme.colors.warning} />
+                <View style={styles.insightContent}>
+                  <Text style={styles.insightTitle}>{anomaly.categoryName}</Text>
+                  <Text style={styles.insightText}>
+                    {t('insights.anomalyText', {
+                      percent: anomaly.percentageChange,
+                      category: anomaly.categoryName,
+                    })}
+                  </Text>
+                  <Text style={[styles.insightText, { marginTop: 4 }]}>
+                    {formatCurrency(anomaly.currentAmount, currency)} vs {formatCurrency(anomaly.averageAmount, currency)} {t('insights.avgLabel')}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Predictive Insights — Budget Predictions */}
+        {predictions.filter((p) => p.estimatedExhaustionDate).length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('insights.predictions')}</Text>
+            {predictions
+              .filter((p) => p.estimatedExhaustionDate)
+              .map((prediction) => (
+                <View key={prediction.budgetId} style={styles.insightCard}>
+                  <Ionicons name="time-outline" size={24} color={theme.colors.danger} />
+                  <View style={styles.insightContent}>
+                    <Text style={styles.insightTitle}>{prediction.budgetName}</Text>
+                    <Text style={styles.insightText}>
+                      {t('insights.exhaustionText', {
+                        date: new Date(prediction.estimatedExhaustionDate!).toLocaleDateString(undefined, {
+                          month: 'short',
+                          day: 'numeric',
+                        }),
+                      })}
+                    </Text>
+                    <Text style={[styles.insightText, { marginTop: 4 }]}>
+                      {t('insights.projectedTotal', {
+                        amount: formatCurrency(prediction.projectedTotal, prediction.currencyCode as any),
+                      })}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+          </View>
+        )}
 
         {/* Top Receipt Items */}
         {itemBreakdown.length > 0 && (

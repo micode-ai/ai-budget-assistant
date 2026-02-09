@@ -17,6 +17,7 @@ AI Budget Assistant follows a monorepo architecture with two main applications a
 └─────────────────────────────────────────────────────────────────┘
                               │
                               │ HTTPS / REST API
+                              │ X-Account-Id header
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                         Server Layer                             │
@@ -24,18 +25,27 @@ AI Budget Assistant follows a monorepo architecture with two main applications a
 │  │                     NestJS Backend                         │  │
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐   │  │
 │  │  │ Controllers │  │  Services   │  │     Guards      │   │  │
-│  │  │   (REST)    │  │  (Business) │  │  (JWT Auth)     │   │  │
+│  │  │   (REST)    │  │  (Business) │  │ (JWT + Account) │   │  │
 │  │  └─────────────┘  └─────────────┘  └─────────────────┘   │  │
 │  └───────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
                               │
-              ┌───────────────┼───────────────┐
-              ▼               ▼               ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│   PostgreSQL    │ │      Redis      │ │    OpenAI API   │
-│   (Prisma ORM)  │ │    (Cache)      │ │  (GPT/Whisper)  │
-└─────────────────┘ └─────────────────┘ └─────────────────┘
+        ┌─────────────┬───────┼───────┬──────────────┐
+        ▼             ▼       ▼       ▼              ▼
+┌────────────┐ ┌──────────┐ ┌──────┐ ┌───────────┐ ┌──────────┐
+│ PostgreSQL │ │  Redis   │ │OpenAI│ │ Expo Push │ │ Telegram │
+│  (Prisma)  │ │ (Cache)  │ │ API  │ │    API    │ │   Bot    │
+└────────────┘ └──────────┘ └──────┘ └───────────┘ └──────────┘
 ```
+
+## Multi-Account System
+
+The application supports multi-account access with role-based control:
+
+- **Account types**: `personal`, `business`, `shared`
+- **Roles**: `owner` (full access), `editor` (create/edit), `viewer` (read-only)
+- **Account scoping**: All data requests include `X-Account-Id` header; `AccountContextGuard` resolves membership and role
+- **Invitations**: Users can be invited to accounts via invite codes with expiration
 
 ## Mobile Application
 
@@ -53,21 +63,36 @@ AI Budget Assistant follows a monorepo architecture with two main applications a
 ```
 app/
 ├── (auth)/
+│   ├── _layout.tsx
 │   ├── login.tsx
 │   └── register.tsx
 ├── (tabs)/
-│   ├── index.tsx        # Dashboard
-│   ├── expenses.tsx     # Expense list
-│   ├── budgets.tsx      # Budget management
-│   ├── analytics.tsx    # Charts and reports
-│   └── settings.tsx     # User settings
-├── expense/
-│   ├── [id].tsx         # Expense details
-│   └── new.tsx          # Add expense
+│   ├── _layout.tsx
+│   ├── index.tsx          # Dashboard
+│   ├── expenses.tsx       # Expense list
+│   ├── budgets.tsx        # Budget management
+│   ├── analytics.tsx      # Charts and reports
+│   └── chat.tsx           # AI assistant
+├── account/
+│   ├── [id].tsx           # Account details
+│   ├── create.tsx         # Create account
+│   ├── list.tsx           # List accounts
+│   ├── join.tsx           # Join via invite code
+│   └── invite.tsx         # Invite members
 ├── budget/
-│   └── [id].tsx         # Budget details
-├── chat.tsx             # AI assistant
-└── _layout.tsx          # Root layout
+│   ├── [id].tsx           # Budget details
+│   └── new.tsx            # Create budget
+├── expense/
+│   ├── [id].tsx           # Expense details
+│   ├── new.tsx            # Add expense
+│   ├── receipt.tsx        # Receipt scanner
+│   └── voice.tsx          # Voice input
+├── wallet/
+│   ├── index.tsx          # Wallet balances
+│   ├── exchange.tsx       # Currency exchange
+│   └── set-balance.tsx    # Set wallet balance
+├── settings.tsx           # User settings
+└── _layout.tsx            # Root layout
 ```
 
 ### State Management
@@ -79,9 +104,10 @@ Zustand stores manage application state:
 | `useAuthStore` | Authentication state, tokens, user profile |
 | `useExpenseStore` | Expense CRUD operations, filters |
 | `useBudgetStore` | Budget management, progress tracking |
-| `useCategoryStore` | Category management |
-| `useSyncStore` | Synchronization state, queue |
-| `useSettingsStore` | App settings, preferences |
+| `useAccountStore` | Multi-account management, switching |
+| `useChatStore` | AI chat conversations |
+| `useWalletStore` | Wallet balances, currency exchange |
+| `useThemeStore` | Theme preferences, dark mode |
 
 ### Local Database Schema
 
@@ -91,17 +117,22 @@ Zustand stores manage application state:
   localId: integer (PK, autoincrement),
   serverId: text (nullable),
   clientId: text (unique),
+  accountId: text,
   categoryId: text,
   amount: real,
+  discountAmount: real (nullable),
   currencyCode: text,
   description: text,
   date: text (ISO),
-  location: text (nullable),
+  time: text (nullable),
+  locationLat: real (nullable),
+  locationLng: real (nullable),
   notes: text (nullable),
   receiptUrl: text (nullable),
   isRecurring: integer (boolean),
-  recurringPattern: text (nullable),
+  recurringId: text (nullable),
   source: text (manual|voice|ocr|import),
+  isDeleted: integer (boolean),
   syncStatus: text (pending|synced|conflict),
   syncVersion: integer,
   createdAt: text,
@@ -112,12 +143,14 @@ Zustand stores manage application state:
 {
   localId: integer (PK),
   serverId: text (nullable),
+  accountId: text,
   name: text,
   icon: text,
   color: text,
   type: text (expense|income),
   isSystem: integer (boolean),
   parentId: text (nullable),
+  isDeleted: integer (boolean),
   syncStatus: text,
   syncVersion: integer
 }
@@ -127,6 +160,7 @@ Zustand stores manage application state:
   localId: integer (PK),
   serverId: text (nullable),
   clientId: text (unique),
+  accountId: text,
   name: text,
   amount: real,
   currencyCode: text,
@@ -136,6 +170,7 @@ Zustand stores manage application state:
   categoryId: text (nullable),
   alertThreshold: integer (0-100),
   isActive: integer (boolean),
+  isDeleted: integer (boolean),
   syncStatus: text,
   syncVersion: integer
 }
@@ -163,149 +198,265 @@ Zustand stores manage application state:
 - **Authentication**: Passport JWT
 - **Validation**: class-validator, Zod
 - **AI Integration**: OpenAI SDK 4.24
+- **Push Notifications**: Expo Push API
 
 ### Module Structure
 
 ```
 src/
 ├── modules/
-│   ├── auth/
+│   ├── auth/                    # Authentication (JWT)
 │   │   ├── auth.controller.ts
 │   │   ├── auth.service.ts
 │   │   ├── jwt.strategy.ts
-│   │   └── jwt-auth.guard.ts
-│   ├── users/
+│   │   └── guards/
+│   │       └── jwt-auth.guard.ts
+│   ├── users/                   # User management
 │   │   ├── users.controller.ts
 │   │   └── users.service.ts
-│   ├── expenses/
+│   ├── accounts/                # Multi-account system
+│   │   ├── accounts.controller.ts
+│   │   ├── accounts.service.ts
+│   │   └── dto/
+│   ├── expenses/                # Expense tracking
 │   │   ├── expenses.controller.ts
 │   │   ├── expenses.service.ts
 │   │   └── dto/
-│   ├── budgets/
+│   ├── budgets/                 # Budget management
 │   │   ├── budgets.controller.ts
 │   │   ├── budgets.service.ts
+│   │   ├── budget-alert.service.ts
 │   │   └── dto/
-│   ├── categories/
+│   ├── categories/              # Category management
 │   │   ├── categories.controller.ts
 │   │   └── categories.service.ts
-│   ├── ai/
+│   ├── ai/                      # AI services
 │   │   ├── ai.controller.ts
 │   │   └── services/
 │   │       ├── transcription.service.ts
 │   │       ├── categorization.service.ts
 │   │       ├── chat.service.ts
 │   │       └── receipt-scanner.service.ts
-│   ├── analytics/
+│   ├── analytics/               # Spending analytics
 │   │   ├── analytics.controller.ts
 │   │   └── analytics.service.ts
-│   └── sync/
-│       ├── sync.controller.ts
-│       └── sync.service.ts
+│   ├── insights/                # Anomaly detection & predictions
+│   │   ├── insights.controller.ts
+│   │   └── insights.service.ts
+│   ├── wallet/                  # Multi-currency wallets
+│   │   ├── wallet.controller.ts
+│   │   └── wallet.service.ts
+│   ├── currency-exchange/       # Currency exchange tracking
+│   │   ├── currency-exchange.controller.ts
+│   │   ├── currency-exchange.service.ts
+│   │   └── exchange-rate.service.ts
+│   ├── sync/                    # Data synchronization
+│   │   ├── sync.controller.ts
+│   │   └── sync.service.ts
+│   ├── notifications/           # Push notifications (Expo)
+│   │   ├── notifications.service.ts
+│   │   └── shared-activity.service.ts
+│   ├── mail/                    # Email infrastructure
+│   │   └── mail.service.ts
+│   └── telegram/                # Telegram bot integration
+│       └── telegram.service.ts
 ├── common/
 │   ├── decorators/
 │   ├── filters/
 │   ├── guards/
-│   └── interceptors/
-└── prisma/
+│   ├── middleware/
+│   │   └── account-context.middleware.ts
+│   ├── interceptors/
+│   └── types/
+└── database/
     └── prisma.service.ts
 ```
 
 ### Database Schema (PostgreSQL)
 
 ```prisma
-model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  passwordHash String
-  name         String?
-  currencyCode String    @default("USD")
-  timezone     String    @default("UTC")
-  pushToken    String?
-  lastSyncAt   DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+// Enums
+enum AccountType { personal, business, shared }
+enum AccountRole { owner, editor, viewer }
+enum InvitationStatus { pending, accepted, declined, expired }
 
-  expenses      Expense[]
-  budgets       Budget[]
-  categories    Category[]
-  conversations ChatConversation[]
-  budgetAlerts  BudgetAlert[]
-  syncLogs      SyncLog[]
+model User {
+  id                   String    @id @default(uuid())
+  email                String    @unique
+  passwordHash         String
+  name                 String
+  currencyCode         String    @default("USD")
+  timezone             String    @default("UTC")
+  pushToken            String?
+  notifyBudgetAlerts   Boolean   @default(true)
+  notifySharedActivity Boolean   @default(true)
+  isActive             Boolean   @default(true)
+  defaultAccountId     String?
+  lastSyncAt           DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  expenses          Expense[]
+  budgets           Budget[]
+  categories        Category[]
+  chatConversations ChatConversation[]
+  budgetAlerts      BudgetAlert[]
+  syncLogs          SyncLog[]
+  ownedAccounts     Account[]
+  accountMembers    AccountMember[]
+  walletBalances    WalletBalance[]
+  currencyExchanges CurrencyExchange[]
 }
 
-model Expense {
-  id               String   @id @default(uuid())
-  userId           String
-  clientId         String
-  categoryId       String?
-  amount           Decimal  @db.Decimal(12, 2)
-  currencyCode     String   @default("USD")
-  description      String
-  date             DateTime
-  location         String?
-  notes            String?
-  receiptUrl       String?
-  isRecurring      Boolean  @default(false)
-  recurringPattern String?
-  source           String   @default("manual")
-  syncVersion      Int      @default(1)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  deletedAt        DateTime?
+model Account {
+  id           String      @id @default(uuid())
+  name         String
+  type         AccountType
+  currencyCode String      @default("USD")
+  ownerId      String
+  icon         String?
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category? @relation(fields: [categoryId], references: [id])
+  owner       User                @relation(fields: [ownerId], references: [id])
+  members     AccountMember[]
+  invitations AccountInvitation[]
+  expenses    Expense[]
+  budgets     Budget[]
+  categories  Category[]
+  syncLogs    SyncLog[]
+  walletBalances    WalletBalance[]
+  currencyExchanges CurrencyExchange[]
+}
 
-  @@unique([userId, clientId])
-  @@index([userId, date])
+model AccountMember {
+  id        String      @id @default(uuid())
+  accountId String
+  userId    String
+  role      AccountRole
+  joinedAt  DateTime    @default(now())
+
+  account Account
+  user    User
+
+  @@unique([accountId, userId])
+}
+
+model AccountInvitation {
+  id           String           @id @default(uuid())
+  accountId    String
+  invitedBy    String
+  invitedEmail String?
+  inviteCode   String           @unique
+  role         AccountRole      @default(editor)
+  status       InvitationStatus @default(pending)
+  expiresAt    DateTime
+  acceptedBy   String?
+
+  account Account
 }
 
 model Category {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   userId      String?
+  accountId   String?
   name        String
-  icon        String
-  color       String
-  type        String    @default("expense")
-  isSystem    Boolean   @default(false)
+  icon        String?
+  color       String?
+  type        String   @default("expense")
+  isSystem    Boolean  @default(false)
   parentId    String?
-  syncVersion Int       @default(1)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  user     User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  user     User?
+  account  Account?
+  parent   Category?  @relation("CategoryHierarchy")
   children Category[] @relation("CategoryHierarchy")
   expenses Expense[]
   budgets  Budget[]
 
-  @@unique([userId, name, type])
+  @@unique([accountId, name, type])
+}
+
+model Expense {
+  id             String   @id @default(uuid())
+  userId         String
+  accountId      String
+  clientId       String
+  categoryId     String?
+  amount         Decimal  @db.Decimal(12, 2)
+  discountAmount Decimal? @db.Decimal(12, 2)
+  currencyCode   String   @default("USD")
+  description    String?
+  notes          String?
+  date           DateTime @db.Date
+  time           String?
+  locationLat    Decimal? @db.Decimal(10, 8)
+  locationLng    Decimal? @db.Decimal(11, 8)
+  receiptUrl     String?
+  receiptImage   Bytes?
+  isRecurring    Boolean  @default(false)
+  recurringId    String?
+  source         String   @default("manual")
+  isDeleted      Boolean  @default(false)
+  syncVersion    Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user     User
+  account  Account
+  category Category?
+  items    ExpenseItem[]
+
+  @@unique([accountId, clientId])
+  @@index([accountId, date(sort: Desc)])
+}
+
+model ExpenseItem {
+  id          String   @id @default(uuid())
+  expenseId   String
+  description String
+  quantity    Decimal  @default(1) @db.Decimal(10, 3)
+  unitPrice   Decimal  @default(0) @db.Decimal(12, 2)
+  totalPrice  Decimal  @db.Decimal(12, 2)
+  sortOrder   Int      @default(0)
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expense Expense
 }
 
 model Budget {
   id             String    @id @default(uuid())
   userId         String
+  accountId      String
   clientId       String
   name           String
   amount         Decimal   @db.Decimal(12, 2)
   currencyCode   String    @default("USD")
   period         String    @default("monthly")
-  startDate      DateTime
-  endDate        DateTime?
+  startDate      DateTime  @db.Date
+  endDate        DateTime? @db.Date
   categoryId     String?
   alertThreshold Int       @default(80)
   isActive       Boolean   @default(true)
-  syncVersion    Int       @default(1)
+  isDeleted      Boolean   @default(false)
+  syncVersion    Int       @default(0)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
 
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category?     @relation(fields: [categoryId], references: [id])
+  user     User
+  account  Account
+  category Category?
   alerts   BudgetAlert[]
 
-  @@unique([userId, clientId])
+  @@unique([accountId, clientId])
 }
 
 model BudgetAlert {
@@ -313,11 +464,13 @@ model BudgetAlert {
   budgetId            String
   userId              String
   thresholdPercentage Int
-  triggeredAt         DateTime @default(now())
+  triggeredAt         DateTime
   currentSpent        Decimal  @db.Decimal(12, 2)
+  isRead              Boolean  @default(false)
+  notificationSent    Boolean  @default(false)
 
-  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  budget Budget
+  user   User
 }
 
 model ChatConversation {
@@ -327,35 +480,78 @@ model ChatConversation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User
   messages ChatMessage[]
 }
 
 model ChatMessage {
   id             String   @id @default(uuid())
   conversationId String
-  role           String
+  role           String   // user, assistant, system
   content        String
   tokensUsed     Int?
   createdAt      DateTime @default(now())
 
-  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversation ChatConversation
 }
 
 model SyncLog {
-  id               String    @id @default(uuid())
-  userId           String
-  entityType       String
-  entityId         String
-  operation        String
-  clientVersion    Int
-  serverVersion    Int
-  conflictResolved Boolean   @default(false)
-  createdAt        DateTime  @default(now())
+  id                 String   @id @default(uuid())
+  userId             String
+  accountId          String?
+  entityType         String
+  entityId           String
+  operation          String
+  clientVersion      Int
+  serverVersion      Int
+  conflictResolved   Boolean  @default(false)
+  resolutionStrategy String?
+  createdAt          DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User
+  account Account?
+}
 
-  @@index([userId, createdAt])
+model WalletBalance {
+  id            String   @id @default(uuid())
+  accountId     String
+  userId        String
+  clientId      String
+  currencyCode  String
+  initialAmount Decimal  @db.Decimal(12, 2)
+  isDeleted     Boolean  @default(false)
+  syncVersion   Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  account Account
+  user    User
+
+  @@unique([accountId, currencyCode])
+  @@unique([accountId, clientId])
+}
+
+model CurrencyExchange {
+  id           String   @id @default(uuid())
+  accountId    String
+  userId       String
+  clientId     String
+  fromCurrency String
+  toCurrency   String
+  fromAmount   Decimal  @db.Decimal(12, 2)
+  toAmount     Decimal  @db.Decimal(12, 2)
+  exchangeRate Decimal  @db.Decimal(12, 6)
+  date         DateTime @db.Date
+  notes        String?
+  isDeleted    Boolean  @default(false)
+  syncVersion  Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  account Account
+  user    User
+
+  @@unique([accountId, clientId])
 }
 ```
 
@@ -382,6 +578,7 @@ The application uses optimistic version-based synchronization with last-write-wi
          │  2. Network available                │
          │  ──────────────────────────────────► │
          │  POST /sync/push                     │
+         │  X-Account-Id: <account-uuid>        │
          │  { changes: [...] }                  │
          │                                      │
          │                                      │  3. Process changes
@@ -421,7 +618,8 @@ The application uses optimistic version-based synchronization with last-write-wi
 1. **Version Comparison**: Each entity has a `syncVersion` field
 2. **Last Write Wins**: By default, the latest change wins
 3. **Conflict Detection**: If local and server versions diverge, mark as conflict
-4. **Manual Resolution**: User can choose which version to keep (future feature)
+4. **Resolution Strategy**: Stored in SyncLog for auditability
+5. **Manual Resolution**: User can choose which version to keep (future feature)
 
 ## AI Integration
 
@@ -463,6 +661,38 @@ const context = {
 };
 ```
 
+## Notifications
+
+### Push Notifications (Expo Push API)
+
+The application uses Expo Push API for sending push notifications. No Firebase configuration is required.
+
+**Notification types:**
+- `budget_alert` — triggered when spending exceeds budget threshold
+- `spending_anomaly` — triggered when category spending increases >30% from 3-month average
+- `shared_expense` — triggered when a member creates an expense in a shared account
+
+**User preferences:**
+- `notifyBudgetAlerts` — controls budget_alert and spending_anomaly notifications
+- `notifySharedActivity` — controls shared_expense notifications
+
+**Batch processing:** Notifications are sent in batches of 100 messages.
+
+### Telegram Integration
+
+Telegram bot sends notifications for system events (e.g., new user registration).
+
+### Email (Mail)
+
+Mail module provides email sending infrastructure for transactional emails.
+
+## Insights & Anomaly Detection
+
+The Insights module provides:
+
+1. **Spending Anomalies**: Compares current month's category spending against 3-month average. Categories with >30% increase are flagged.
+2. **Budget Predictions**: Forecasts budget exhaustion dates based on daily burn rate and projects end-of-period totals.
+
 ## Security
 
 ### Authentication Flow
@@ -484,6 +714,7 @@ const context = {
          │                                      │
          │  GET /expenses                       │
          │  Authorization: Bearer <token>       │
+         │  X-Account-Id: <account-uuid>        │
          │  ──────────────────────────────────► │
          │                                      │
          │  Token expired? Refresh              │
@@ -499,6 +730,7 @@ const context = {
 - **Secure Storage**: Tokens stored in device keychain/keystore
 - **Biometric Auth**: Optional fingerprint/face unlock
 - **API Key Proxy**: OpenAI key never exposed to client
+- **Account Scoping**: All data access filtered by accountId + role check
 - **CORS**: Configured origin restrictions
 - **Input Validation**: Zod schemas and class-validator
 
@@ -516,6 +748,6 @@ const context = {
 
 - **Turbo Caching**: Build outputs cached across runs
 - **Redis Cache**: Frequently accessed data cached
-- **Database Indexes**: Optimized queries on userId, date
-- **Batch Operations**: Sync processes multiple changes at once
+- **Database Indexes**: Optimized queries on accountId, date, categoryId
+- **Batch Operations**: Sync processes multiple changes at once; notifications sent in batches of 100
 - **Connection Pooling**: Prisma manages DB connections

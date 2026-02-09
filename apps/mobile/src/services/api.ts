@@ -207,6 +207,17 @@ class ApiClient {
     });
   }
 
+  async updateBudget(id: string, data: any) {
+    return this.request<any>(`/budgets/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteBudget(id: string) {
+    return this.request<void>(`/budgets/${id}`, { method: 'DELETE' });
+  }
+
   async getBudgetProgress(id: string) {
     return this.request<any>(`/budgets/${id}/progress`);
   }
@@ -466,6 +477,38 @@ class ApiClient {
     return this.request<{ base: string; rates: Record<string, number>; updatedAt: string }>(
       `/currency-exchanges/rates?base=${baseCurrency}`,
     );
+  }
+
+  // Insights endpoints
+  async getInsights() {
+    return this.request<{
+      anomalies: Array<{
+        categoryId: string;
+        categoryName: string;
+        currentAmount: number;
+        averageAmount: number;
+        percentageChange: number;
+        period: string;
+      }>;
+      predictions: Array<{
+        budgetId: string;
+        budgetName: string;
+        estimatedExhaustionDate?: string;
+        dailyBurnRate: number;
+        daysRemaining: number;
+        projectedTotal: number;
+        currencyCode: string;
+      }>;
+    }>('/insights');
+  }
+
+  async suggestCategory(description: string) {
+    return this.request<{
+      categoryId?: string;
+      categoryName: string;
+      confidence: number;
+      source: 'history' | 'ai';
+    }>(`/ai/suggest-category?description=${encodeURIComponent(description)}`);
   }
 
   // Push Notification endpoints
