@@ -221,6 +221,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       logout: async () => {
         try {
+          // Clear push token from server before clearing auth state
+          try {
+            const { unregisterPushNotifications } = await import('../services/notifications');
+            await unregisterPushNotifications();
+          } catch (e) {
+            console.error('Failed to clear push token:', e);
+          }
+
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
           if (biometricEnabled === 'true') {

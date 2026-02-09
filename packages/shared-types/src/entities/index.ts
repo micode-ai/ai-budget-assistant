@@ -16,6 +16,13 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
+export type NotificationType = 'budget_alert' | 'shared_expense';
+
+export interface NotificationPreferences {
+  budgetAlerts: boolean;
+  sharedAccountActivity: boolean;
+}
+
 export interface User {
   id: string;
   email: string;

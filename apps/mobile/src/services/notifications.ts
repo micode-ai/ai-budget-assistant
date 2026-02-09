@@ -1,0 +1,117 @@
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
+import { router } from 'expo-router';
+import { api } from './api';
+
+// Configure foreground notification display
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
+export async function registerForPushNotifications(): Promise<string | null> {
+  try {
+    if (!Device.isDevice) {
+      console.log('[Notifications] Not a physical device, skipping registration');
+      return null;
+    }
+
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      console.log('[Notifications] Permission not granted');
+      return null;
+    }
+
+    // Android notification channel
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'Default',
+        importance: Notifications.AndroidImportance.HIGH,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#4ECDC4',
+      });
+    }
+
+    const projectId =
+      Constants.expoConfig?.extra?.eas?.projectId ??
+      Constants.easConfig?.projectId;
+
+    if (!projectId) {
+      console.warn('[Notifications] No EAS projectId found, skipping push token registration. Configure EAS to enable push notifications.');
+      return null;
+    }
+
+    const tokenData = await Notifications.getExpoPushTokenAsync({ projectId });
+    const token = tokenData.data;
+
+    // Send token to server
+    try {
+      await api.updatePushToken(token);
+    } catch (e) {
+      console.error('[Notifications] Failed to send token to server:', e);
+    }
+
+    return token;
+  } catch (e) {
+    // Gracefully handle errors (e.g., Expo Go doesn't support push notifications since SDK 53)
+    console.warn('[Notifications] Registration failed:', e);
+    return null;
+  }
+}
+
+export async function unregisterPushNotifications(): Promise<void> {
+  try {
+    await api.updatePushToken(null);
+  } catch (e) {
+    console.error('[Notifications] Failed to clear token:', e);
+  }
+}
+
+export function handleNotificationResponse(
+  response: Notifications.NotificationResponse,
+): void {
+  const data = response.notification.request.content.data;
+  if (!data?.type) return;
+
+  switch (data.type) {
+    case 'budget_alert':
+      if (data.budgetId) {
+        router.push(`/budget/${data.budgetId}`);
+      }
+      break;
+    case 'shared_expense':
+      router.push('/(tabs)/expenses');
+      break;
+    default:
+      break;
+  }
+}
+
+export function setupNotificationListeners(): () => void {
+  const notificationSub = Notifications.addNotificationReceivedListener((notification) => {
+    console.log('[Notifications] Received in foreground:', notification.request.content.title);
+  });
+
+  const responseSub = Notifications.addNotificationResponseReceivedListener(
+    handleNotificationResponse,
+  );
+
+  return () => {
+    notificationSub.remove();
+    responseSub.remove();
+  };
+}

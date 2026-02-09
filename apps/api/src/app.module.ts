@@ -15,6 +15,7 @@ import { CurrencyExchangeModule } from './modules/currency-exchange/currency-exc
 import { DatabaseModule } from './database/database.module';
 import { MailModule } from './modules/mail/mail.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TelegramModule } from './modules/telegram/telegram.module';
     // Infrastructure
     MailModule,
     TelegramModule,
+    NotificationsModule,
 
     // Feature modules
     AuthModule,

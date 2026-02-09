@@ -346,6 +346,15 @@ export default {
     logoutConfirm: 'Ви впевнені, що хочете вийти?',
     profileUpdated: 'Профіль оновлено',
   },
+  notifications: {
+    title: 'Сповіщення',
+    pushNotifications: 'Push-сповіщення',
+    pushNotificationsDesc: 'Увімкнути або вимкнути всі push-сповіщення',
+    budgetAlerts: 'Сповіщення про бюджет',
+    budgetAlertsDesc: 'Сповіщення при досягненні порогів бюджету',
+    sharedAccountActivity: 'Активність спільного рахунку',
+    sharedAccountActivityDesc: 'Сповіщення коли інші додають витрати до спільних рахунків',
+  },
   wallet: {
     title: 'Гаманець',
     balances: 'Баланси',

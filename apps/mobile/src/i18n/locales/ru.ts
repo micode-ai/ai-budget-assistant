@@ -346,6 +346,15 @@ export default {
     logoutConfirm: 'Вы уверены, что хотите выйти?',
     profileUpdated: 'Профиль обновлён',
   },
+  notifications: {
+    title: 'Уведомления',
+    pushNotifications: 'Push-уведомления',
+    pushNotificationsDesc: 'Включить или отключить все push-уведомления',
+    budgetAlerts: 'Оповещения о бюджете',
+    budgetAlertsDesc: 'Уведомления при достижении порогов бюджета',
+    sharedAccountActivity: 'Активность общего счёта',
+    sharedAccountActivityDesc: 'Уведомления когда другие добавляют расходы в общие счета',
+  },
   wallet: {
     title: 'Кошелёк',
     balances: 'Балансы',

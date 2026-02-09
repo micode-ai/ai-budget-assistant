@@ -13,6 +13,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
+import { BudgetAlertService } from '../budgets/budget-alert.service';
+import { SharedActivityService } from '../notifications/shared-activity.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto } from './dto';
@@ -23,13 +25,26 @@ import { AuthenticatedRequest } from '../../common/types';
 export class ExpensesController {
   private readonly logger = new Logger(ExpensesController.name);
 
-  constructor(private readonly expensesService: ExpensesService) {}
+  constructor(
+    private readonly expensesService: ExpensesService,
+    private readonly budgetAlertService: BudgetAlertService,
+    private readonly sharedActivityService: SharedActivityService,
+  ) {}
 
   @Post()
   async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateExpenseDto) {
     this.logger.debug(`[CREATE] raw body: ${JSON.stringify(req.body)}`);
     this.logger.debug(`[CREATE] dto: ${JSON.stringify(dto)}`);
-    return this.expensesService.create(req.accountId, req.user.id, dto);
+    const expense = await this.expensesService.create(req.accountId, req.user.id, dto);
+
+    // Fire-and-forget notifications
+    this.budgetAlertService.checkBudgetsForAccount(req.accountId, dto.currencyCode)
+      .catch(e => this.logger.error('Budget alert check failed', e));
+    this.sharedActivityService.notifyExpenseCreated(
+      req.accountId, req.user.id, dto.amount, dto.currencyCode, dto.description,
+    ).catch(e => this.logger.error('Shared activity notification failed', e));
+
+    return expense;
   }
 
   @Get()
@@ -46,7 +61,15 @@ export class ExpensesController {
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateExpenseDto) {
     this.logger.debug(`[UPDATE] id=${id} raw body: ${JSON.stringify(req.body)}`);
     this.logger.debug(`[UPDATE] dto: ${JSON.stringify(dto)}`);
-    return this.expensesService.update(req.accountId, id, dto);
+    const expense = await this.expensesService.update(req.accountId, id, dto);
+
+    // Re-check budget alerts if amount or currency changed
+    if (dto.amount !== undefined || dto.currencyCode !== undefined) {
+      this.budgetAlertService.checkBudgetsForAccount(req.accountId, expense.currencyCode)
+        .catch(e => this.logger.error('Budget alert check failed', e));
+    }
+
+    return expense;
   }
 
   @Delete(':id')

@@ -37,8 +37,10 @@ model User {
   name             String
   currencyCode     String    @default("USD") @map("currency_code")
   timezone         String    @default("UTC")
-  pushToken        String?   @map("push_token")
-  isActive         Boolean   @default(true) @map("is_active")
+  pushToken            String?   @map("push_token")
+  notifyBudgetAlerts   Boolean   @default(true) @map("notify_budget_alerts")
+  notifySharedActivity Boolean   @default(true) @map("notify_shared_activity")
+  isActive             Boolean   @default(true) @map("is_active")
   defaultAccountId String?   @map("default_account_id")
   lastSyncAt       DateTime? @map("last_sync_at")
   createdAt        DateTime  @default(now()) @map("created_at")

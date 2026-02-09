@@ -346,6 +346,15 @@ export default {
     logoutConfirm: 'Czy na pewno chcesz się wylogować?',
     profileUpdated: 'Profil zaktualizowany',
   },
+  notifications: {
+    title: 'Powiadomienia',
+    pushNotifications: 'Powiadomienia Push',
+    pushNotificationsDesc: 'Włącz lub wyłącz wszystkie powiadomienia push',
+    budgetAlerts: 'Alerty Budżetowe',
+    budgetAlertsDesc: 'Otrzymuj powiadomienia po osiągnięciu progów budżetowych',
+    sharedAccountActivity: 'Aktywność Wspólnego Konta',
+    sharedAccountActivityDesc: 'Otrzymuj powiadomienia gdy inni dodają wydatki do wspólnych kont',
+  },
   wallet: {
     title: 'Portfel',
     balances: 'Salda',
