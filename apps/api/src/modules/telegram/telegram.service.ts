@@ -54,4 +54,13 @@ export class TelegramService {
     const text = `🆕 <b>New user registered</b>\n\nName: ${name}\nEmail: ${email}`;
     this.sendMessage(text).catch(() => {});
   }
+
+  notifyNewSubscription(
+    userName: string,
+    userEmail: string,
+    tier: string,
+  ): void {
+    const text = `💰 <b>New subscription</b>\n\nUser: ${userName}\nEmail: ${userEmail}\nPlan: ${tier.toUpperCase()}`;
+    this.sendMessage(text).catch(() => {});
+  }
 }

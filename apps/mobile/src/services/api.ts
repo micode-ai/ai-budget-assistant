@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -533,6 +533,32 @@ class ApiClient {
         body: JSON.stringify(prefs),
       },
     );
+  }
+  // Subscription endpoints
+  async getPlans() {
+    return this.request<PlansResponse>('/subscriptions/plans');
+  }
+
+  async getCurrentSubscription() {
+    return this.request<SubscriptionDto>('/subscriptions/current');
+  }
+
+  async getUsageStats() {
+    return this.request<UsageStatsDto>('/subscriptions/usage');
+  }
+
+  async createCheckoutSession(priceId: string, successUrl: string, cancelUrl: string) {
+    return this.request<CheckoutSessionResponse>('/subscriptions/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ priceId, successUrl, cancelUrl }),
+    });
+  }
+
+  async createPortalSession(returnUrl: string) {
+    return this.request<PortalSessionResponse>('/subscriptions/portal', {
+      method: 'POST',
+      body: JSON.stringify({ returnUrl }),
+    });
   }
 }
 

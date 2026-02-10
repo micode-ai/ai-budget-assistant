@@ -330,6 +330,23 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Subscription Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('subscription.title')}</Text>
+          <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => router.push('/subscription' as any)}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="diamond-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('subscription.managePlan')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* Wallet Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('wallet.title')}</Text>
