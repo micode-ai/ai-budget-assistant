@@ -28,13 +28,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#4ECDC4"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.budget.assistant",
       "permissions": [
         "RECORD_AUDIO",
         "USE_BIOMETRIC",
         "USE_FINGERPRINT",
         "DETECT_SCREEN_CAPTURE",
-        "RECEIVE_BOOT_COMPLETED"
+        "RECEIVE_BOOT_COMPLETED",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
       ]
     },
     "web": {
@@ -63,6 +68,13 @@
       ],
       "expo-web-browser"
     ],
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "49256da4-747d-43c9-8a21-fe6ff28a7497"
+      }
+    },
+    "owner": "mi-code"
   }
 }

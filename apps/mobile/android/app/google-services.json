@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749607772465",
+    "project_id": "ai-budget-assistant-c33a2",
+    "storage_bucket": "ai-budget-assistant-c33a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749607772465:android:14fc16fb8ade59bdfc1010",
+        "android_client_info": {
+          "package_name": "com.budget.assistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn00fJiGspv6OqxF2nWgbuII6nBuVa65w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

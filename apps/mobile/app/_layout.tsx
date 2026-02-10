@@ -38,7 +38,7 @@ const queryClient = new QueryClient({
 });
 
 function RootNavigator() {
-  const { isLoading, isAuthenticated, initialize } = useAuthStore();
+  const { isInitializing, isAuthenticated, initialize } = useAuthStore();
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -85,12 +85,12 @@ function RootNavigator() {
   }, []);
 
   useEffect(() => {
-    if (!isLoading && fontsLoaded) {
+    if (!isInitializing && fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [isLoading, fontsLoaded]);
+  }, [isInitializing, fontsLoaded]);
 
-  if (isLoading || !fontsLoaded) {
+  if (isInitializing || !fontsLoaded) {
     return null;
   }
 
