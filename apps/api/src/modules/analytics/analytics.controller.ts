@@ -1,8 +1,9 @@
-import { Controller, Get, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards, Req } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { AuthenticatedRequest } from '../../common/types';
+import type { DrillDownLevel } from '@budget/shared-types';
 
 @Controller('analytics')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -58,6 +59,27 @@ export class AnalyticsController {
       req.user.id,
       new Date(startDate),
       new Date(endDate),
+    );
+  }
+
+  @Post('drill-down')
+  async getDrillDown(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: {
+      level: DrillDownLevel;
+      parentId?: string;
+      startDate: string;
+      endDate: string;
+      currencyCode?: string;
+    },
+  ) {
+    return this.analyticsService.getDrillDown(
+      req.accountId,
+      body.level,
+      new Date(body.startDate),
+      new Date(body.endDate),
+      body.parentId,
+      body.currencyCode,
     );
   }
 }

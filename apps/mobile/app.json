@@ -66,7 +66,50 @@
           "color": "#4ECDC4"
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "BudgetWidgetSmall",
+              "label": "Budget - Today",
+              "minWidth": "110dp",
+              "minHeight": "40dp",
+              "description": "Shows today's spending total",
+              "previewImage": "./assets/widget-small-preview.png",
+              "resizeMode": "none",
+              "widgetFeatures": "reconfigurable",
+              "updatePeriodMillis": 1800000,
+              "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
+            },
+            {
+              "name": "BudgetWidgetMedium",
+              "label": "Budget - Week",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "description": "Shows weekly spending chart and today's total",
+              "previewImage": "./assets/widget-medium-preview.png",
+              "resizeMode": "horizontal",
+              "widgetFeatures": "reconfigurable",
+              "updatePeriodMillis": 1800000,
+              "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
+            },
+            {
+              "name": "BudgetWidgetLarge",
+              "label": "Budget - Overview",
+              "minWidth": "250dp",
+              "minHeight": "180dp",
+              "description": "Shows budget progress and top categories",
+              "previewImage": "./assets/widget-large-preview.png",
+              "resizeMode": "horizontal|vertical",
+              "widgetFeatures": "reconfigurable",
+              "updatePeriodMillis": 1800000,
+              "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
+            }
+          ]
+        }
+      ]
     ],
     "newArchEnabled": true,
     "extra": {

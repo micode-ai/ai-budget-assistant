@@ -1,25 +1,33 @@
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import { useWalletStore } from '@/stores/walletStore';
+import { useInsightsStore } from '@/stores/insightsStore';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
 import { BarChart, DonutChart, GroupedBarChart, WeekdayChart } from '@/components/charts';
+import { InteractiveBarChart, InteractiveDonutChart } from '@/components/interactive-charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import type { Currency } from '@budget/shared-types';
+import type { Currency, ChartDataPoint } from '@budget/shared-types';
 
 export default function AnalyticsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions } = useAnalytics(selectedRange, selectedCurrency);
+  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange } = useAnalytics(selectedRange, selectedCurrency);
+  const { aiInsights, loadAIInsights } = useInsightsStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+
+  useEffect(() => {
+    loadAIInsights(i18n.language);
+  }, [loadAIInsights, i18n.language]);
 
   const TIME_RANGES: { key: TimeRange; label: string }[] = [
     { key: 'week', label: t('analytics.week') },
@@ -129,22 +137,75 @@ export default function AnalyticsScreen() {
           </View>
         </View>
 
-        {/* Spending Trend Chart */}
+        {/* Story Banner */}
+        <TouchableOpacity
+          style={styles.storyBanner}
+          onPress={() => router.push('/story')}
+        >
+          <Ionicons name="book-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.storyBannerContent}>
+            <Text style={styles.storyBannerTitle}>{t('story.viewStory')}</Text>
+            <Text style={styles.storyBannerSubtext}>{t('story.title')}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
+
+        {/* AI Insights Carousel */}
+        {aiInsights.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('insights.aiSuggested')}</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.insightsCarousel}>
+              {aiInsights.slice(0, 5).map((insight) => (
+                <View key={insight.id} style={styles.aiInsightCard}>
+                  <View style={styles.aiInsightHeader}>
+                    <Ionicons
+                      name={insight.severity === 'critical' ? 'alert-circle' : insight.severity === 'warning' ? 'warning' : 'information-circle'}
+                      size={20}
+                      color={insight.severity === 'critical' ? theme.colors.danger : insight.severity === 'warning' ? theme.colors.warning : theme.colors.info}
+                    />
+                    <Text style={styles.aiInsightTitle} numberOfLines={1}>{insight.title}</Text>
+                  </View>
+                  <Text style={styles.aiInsightDescription} numberOfLines={2}>{insight.description}</Text>
+                  {insight.actionSuggestion && (
+                    <View style={styles.aiInsightAction}>
+                      <Ionicons name="bulb-outline" size={14} color={theme.colors.primary} />
+                      <Text style={styles.aiInsightActionText} numberOfLines={1}>{insight.actionSuggestion}</Text>
+                    </View>
+                  )}
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Spending Trend Chart - Interactive */}
         <View style={styles.chartContainer}>
           <Text style={styles.chartTitle}>
             {selectedRange === 'year' ? t('analytics.spendingByMonth') : t('analytics.spendingTrend')}
           </Text>
-          <BarChart
+          <InteractiveBarChart
             data={dailySpending.map((d) => ({
               label: d.dayLabel,
               value: d.amount,
+              id: d.date,
             }))}
-            height={150}
+            height={180}
             barColor={theme.colors.primary}
-            showLabels={true}
             showValues={dailySpending.length <= 12}
             formatValue={formatChartValue}
+            onBarPress={(item) => {
+              router.push({
+                pathname: '/analytics/drill-down',
+                params: {
+                  startDate: dateRange.startDate.toISOString(),
+                  endDate: dateRange.endDate.toISOString(),
+                  currencyCode: currency,
+                  level: selectedRange === 'year' ? 'year' : 'month',
+                },
+              });
+            }}
           />
+          <Text style={styles.drillDownHint}>{t('drillDown.tapToExplore')}</Text>
         </View>
 
         {/* Budget vs Actual */}
@@ -207,17 +268,16 @@ export default function AnalyticsScreen() {
             </View>
           ) : (
             <View style={styles.chartContainer}>
-              <DonutChart
+              <InteractiveDonutChart
                 data={categorySpending.map((c) => ({
                   label: c.name,
                   value: c.amount,
                   color: c.color,
+                  id: c.categoryId || undefined,
                 }))}
-                size={140}
-                strokeWidth={24}
-                centerLabel="Total"
-                centerValue={formatChartValue(summary.totalSpent)}
-                showLegend={false}
+                size={160}
+                formatValue={formatChartValue}
+                showLegend={true}
               />
             </View>
           )}
@@ -721,5 +781,74 @@ const createStyles = (theme: Theme) => ({
   exportButtonText: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.primary,
+  },
+  storyBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.primaryLight,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[5],
+    gap: theme.spacing[3],
+  },
+  storyBannerContent: {
+    flex: 1,
+  },
+  storyBannerTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.primary,
+  },
+  storyBannerSubtext: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[0.5],
+  },
+  insightsCarousel: {
+    marginHorizontal: -theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+  },
+  aiInsightCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginRight: theme.spacing[3],
+    width: 280,
+    ...theme.shadows.sm,
+  },
+  aiInsightHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[2],
+  },
+  aiInsightTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  aiInsightDescription: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    lineHeight: 18,
+  },
+  aiInsightAction: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    marginTop: theme.spacing[3],
+    paddingTop: theme.spacing[2],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+  },
+  aiInsightActionText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.primary,
+    flex: 1,
+  },
+  drillDownHint: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[2],
   },
 });

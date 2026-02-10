@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -586,6 +586,28 @@ class ApiClient {
     return this.request<PortalSessionResponse>('/subscriptions/portal', {
       method: 'POST',
       body: JSON.stringify({ returnUrl }),
+    });
+  }
+
+  // Drill-Down Analytics
+  async drillDown(request: DrillDownRequest) {
+    return this.request<DrillDownResponse>('/analytics/drill-down', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  // AI Insights
+  async getAIInsights(language?: string) {
+    const params = language ? `?language=${language}` : '';
+    return this.request<AIInsightsResponse>(`/insights/ai-charts${params}`);
+  }
+
+  // Story Dashboard
+  async getSpendingStory(period: 'week' | 'month', forceRegenerate?: boolean, language?: string) {
+    return this.request<StoryDashboardResponse>('/insights/story', {
+      method: 'POST',
+      body: JSON.stringify({ period, forceRegenerate, language }),
     });
   }
 

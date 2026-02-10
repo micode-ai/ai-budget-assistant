@@ -1,6 +1,6 @@
 // Data Transfer Objects for API communication
 
-import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus } from '../entities';
+import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory } from '../entities';
 
 // Auth DTOs
 export interface RegisterDto {
@@ -420,6 +420,51 @@ export interface ExchangeRatesResponse {
   base: Currency;
   rates: Partial<Record<Currency, number>>;
   updatedAt: string;
+}
+
+// Drill-Down DTOs
+export interface DrillDownRequest {
+  level: DrillDownLevel;
+  parentId?: string;
+  startDate: string;
+  endDate: string;
+  currencyCode?: string;
+}
+
+export interface DrillDownResponse {
+  chart: ChartConfig;
+  transactions?: Array<{
+    id: string;
+    description: string;
+    amount: number;
+    date: string;
+    categoryName: string;
+    currencyCode: string;
+  }>;
+  breadcrumb: Array<{
+    level: DrillDownLevel;
+    label: string;
+    id?: string;
+  }>;
+}
+
+// AI Insights DTOs
+export interface AIInsightsResponse {
+  insights: AIInsightChart[];
+  generatedAt: string;
+  periodStart: string;
+  periodEnd: string;
+}
+
+// Story Dashboard DTOs
+export interface GenerateStoryRequest {
+  period: 'week' | 'month';
+  forceRegenerate?: boolean;
+}
+
+export interface StoryDashboardResponse {
+  story: SpendingStory;
+  isStale: boolean;
 }
 
 // Admin DTOs

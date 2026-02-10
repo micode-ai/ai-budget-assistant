@@ -27,10 +27,12 @@ const FEATURE_LABELS: Record<string, string> = {
   parse: 'admin.features.parse',
   categorization: 'admin.features.categorization',
   ocr: 'admin.features.ocr',
+  story: 'admin.features.story',
+  insights: 'admin.features.insights',
 };
 
 export default function AdminScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -82,7 +84,11 @@ export default function AdminScreen() {
     );
   }
 
-  const periodLabel = new Date(data.aiUsage.periodStart).toLocaleDateString(undefined, {
+  const LOCALE_MAP: Record<string, string> = {
+    en: 'en-US', ru: 'ru-RU', ua: 'uk-UA', de: 'de-DE', es: 'es-ES', fr: 'fr-FR', pl: 'pl-PL',
+  };
+  const periodLabel = new Date(data.aiUsage.periodStart).toLocaleDateString(
+    LOCALE_MAP[i18n.language] || 'en-US', {
     month: 'long',
     year: 'numeric',
   });

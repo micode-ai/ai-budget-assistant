@@ -236,6 +236,35 @@ function RootNavigator() {
             title: t('nav.settings'),
           }}
         />
+        <Stack.Screen
+          name="analytics/drill-down"
+          options={{
+            headerShown: true,
+            title: t('drillDown.title'),
+          }}
+        />
+        <Stack.Screen
+          name="story"
+          options={{
+            headerShown: true,
+            title: t('story.title'),
+          }}
+        />
+        <Stack.Screen
+          name="income/new"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('nav.newIncome'),
+          }}
+        />
+        <Stack.Screen
+          name="income/[id]"
+          options={{
+            headerShown: true,
+            title: t('nav.incomeDetails'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

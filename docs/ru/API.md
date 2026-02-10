@@ -1030,6 +1030,166 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## AI Инсайты
+
+Требуется заголовок `X-Account-Id`. Требуется подписка Pro или Business.
+
+### Получить AI-сгенерированные инсайты
+
+```http
+GET /insights/ai-charts?language=ru
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `language` | string | Код языка ответа (en, ru, de, es, fr, pl, ua) |
+
+**Ответ** `200 OK`
+```json
+{
+  "insights": [
+    {
+      "id": "uuid",
+      "insightType": "anomaly_spike",
+      "title": "Всплеск расходов на еду",
+      "description": "Расходы на еду выросли на 45% по сравнению со средним за 3 месяца.",
+      "severity": "warning",
+      "chartConfig": {
+        "chartType": "bar",
+        "title": "Сравнение расходов на еду",
+        "data": [
+          { "label": "Среднее", "value": 12000, "color": "#4ECDC4" },
+          { "label": "Этот месяц", "value": 17400, "color": "#E74C3C" }
+        ]
+      },
+      "actionSuggestion": "Рекомендуем установить бюджет для этой категории.",
+      "generatedAt": "2026-02-10T12:00:00Z"
+    }
+  ],
+  "generatedAt": "2026-02-10T12:00:00Z",
+  "periodStart": "2026-02-01T00:00:00Z",
+  "periodEnd": "2026-02-28T00:00:00Z"
+}
+```
+
+**Примечание:** Результаты кешируются на 24 часа.
+
+---
+
+## История расходов
+
+Требуется заголовок `X-Account-Id`. Требуется подписка Pro или Business.
+
+### Сгенерировать историю расходов
+
+```http
+POST /insights/story
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "period": "month",
+  "forceRegenerate": false,
+  "language": "ru"
+}
+```
+
+**Параметры тела**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `period` | string | `week` или `month` |
+| `forceRegenerate` | boolean | Принудительная регенерация (обходит 24ч кеш) |
+| `language` | string | Код языка ответа |
+
+**Ответ** `200 OK`
+```json
+{
+  "story": {
+    "id": "uuid",
+    "accountId": "uuid",
+    "periodLabel": "Февраль 2026",
+    "periodStart": "2026-02-01T00:00:00Z",
+    "periodEnd": "2026-02-28T00:00:00Z",
+    "blocks": [
+      {
+        "type": "hero_metric",
+        "order": 1,
+        "content": {
+          "title": "Итого потрачено",
+          "metrics": [{ "label": "Итого", "value": "75 045 ₽", "change": -12 }],
+          "tone": "positive"
+        }
+      }
+    ],
+    "summary": "Отличный месяц! Вы потратили на 12% меньше, чем в прошлом.",
+    "generatedAt": "2026-02-10T12:00:00Z"
+  },
+  "isStale": false
+}
+```
+
+**Типы блоков:** `hero_metric`, `narrative_text`, `chart`, `comparison`, `callout`, `achievement`
+
+---
+
+## Детализация аналитики
+
+Требуется заголовок `X-Account-Id`.
+
+### Получить данные детализации
+
+```http
+POST /analytics/drill-down
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "level": "month",
+  "parentId": null,
+  "startDate": "2026-01-01",
+  "endDate": "2026-12-31",
+  "currencyCode": "PLN"
+}
+```
+
+**Параметры тела**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `level` | string | `year`, `month`, `week`, `day`, `transactions` |
+| `parentId` | string | ID категории или ключ даты для следующего уровня |
+| `startDate` | ISO 8601 | Начало периода |
+| `endDate` | ISO 8601 | Конец периода |
+| `currencyCode` | string | Фильтр по валюте |
+
+**Ответ** `200 OK`
+```json
+{
+  "chart": {
+    "chartType": "bar",
+    "title": "Расходы по месяцам",
+    "data": [
+      { "label": "Янв", "value": 72000, "id": "2026-01" },
+      { "label": "Фев", "value": 58800, "id": "2026-02" }
+    ],
+    "drillDown": {
+      "enabled": true,
+      "currentLevel": "year",
+      "nextLevel": "month"
+    }
+  },
+  "breadcrumb": [
+    { "level": "year", "label": "2026" }
+  ]
+}
+```
+
+---
+
 ## AI сервисы
 
 ### Транскрипция аудио

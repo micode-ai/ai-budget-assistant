@@ -1030,6 +1030,166 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## AI Insights
+
+Requires `X-Account-Id` header. Requires Pro or Business subscription.
+
+### Get AI-Generated Insights
+
+```http
+GET /insights/ai-charts?language=en
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `language` | string | Response language code (en, ru, de, es, fr, pl, ua) |
+
+**Response** `200 OK`
+```json
+{
+  "insights": [
+    {
+      "id": "uuid",
+      "insightType": "anomaly_spike",
+      "title": "Food spending spike",
+      "description": "Your food spending increased 45% compared to the 3-month average.",
+      "severity": "warning",
+      "chartConfig": {
+        "chartType": "bar",
+        "title": "Food Spending Comparison",
+        "data": [
+          { "label": "Average", "value": 200, "color": "#4ECDC4" },
+          { "label": "This month", "value": 290, "color": "#E74C3C" }
+        ]
+      },
+      "actionSuggestion": "Consider setting a budget for this category.",
+      "generatedAt": "2026-02-10T12:00:00Z"
+    }
+  ],
+  "generatedAt": "2026-02-10T12:00:00Z",
+  "periodStart": "2026-02-01T00:00:00Z",
+  "periodEnd": "2026-02-28T00:00:00Z"
+}
+```
+
+**Note:** Results are cached for 24 hours.
+
+---
+
+## Spending Story
+
+Requires `X-Account-Id` header. Requires Pro or Business subscription.
+
+### Generate Spending Story
+
+```http
+POST /insights/story
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "period": "month",
+  "forceRegenerate": false,
+  "language": "en"
+}
+```
+
+**Body Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `period` | string | `week` or `month` |
+| `forceRegenerate` | boolean | Force regeneration (bypasses 24h cache) |
+| `language` | string | Response language code |
+
+**Response** `200 OK`
+```json
+{
+  "story": {
+    "id": "uuid",
+    "accountId": "uuid",
+    "periodLabel": "February 2026",
+    "periodStart": "2026-02-01T00:00:00Z",
+    "periodEnd": "2026-02-28T00:00:00Z",
+    "blocks": [
+      {
+        "type": "hero_metric",
+        "order": 1,
+        "content": {
+          "title": "Total Spent",
+          "metrics": [{ "label": "Total", "value": "$1,250.00", "change": -12 }],
+          "tone": "positive"
+        }
+      }
+    ],
+    "summary": "Great month! You spent 12% less than last month.",
+    "generatedAt": "2026-02-10T12:00:00Z"
+  },
+  "isStale": false
+}
+```
+
+**Block types:** `hero_metric`, `narrative_text`, `chart`, `comparison`, `callout`, `achievement`
+
+---
+
+## Analytics Drill-Down
+
+Requires `X-Account-Id` header.
+
+### Get Drill-Down Data
+
+```http
+POST /analytics/drill-down
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "level": "month",
+  "parentId": null,
+  "startDate": "2026-01-01",
+  "endDate": "2026-12-31",
+  "currencyCode": "USD"
+}
+```
+
+**Body Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `level` | string | `year`, `month`, `week`, `day`, `transactions` |
+| `parentId` | string | Category or date key for next level |
+| `startDate` | ISO 8601 | Period start |
+| `endDate` | ISO 8601 | Period end |
+| `currencyCode` | string | Currency filter |
+
+**Response** `200 OK`
+```json
+{
+  "chart": {
+    "chartType": "bar",
+    "title": "Monthly Spending",
+    "data": [
+      { "label": "Jan", "value": 1200, "id": "2026-01" },
+      { "label": "Feb", "value": 980, "id": "2026-02" }
+    ],
+    "drillDown": {
+      "enabled": true,
+      "currentLevel": "year",
+      "nextLevel": "month"
+    }
+  },
+  "breadcrumb": [
+    { "level": "year", "label": "2026" }
+  ]
+}
+```
+
+---
+
 ## AI Services
 
 ### Transcribe Audio

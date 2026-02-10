@@ -29,6 +29,13 @@
 - [x] Shared account activity notifications
 - [x] Account invitations (invite codes)
 - [x] Income tracking (multi-currency, per-currency dashboard totals, offline-first sync)
+- [x] Subscription system (Free/Pro/Business tiers, Stripe integration, trial periods)
+- [x] Admin dashboard (system stats, subscription breakdown, AI usage monitoring)
+- [x] Interactive charts with drill-down (year → month → week → day → transactions)
+- [x] AI-generated insights (GPT-4 pattern analysis, anomaly detection, chart cards)
+- [x] Spending story dashboards (AI-generated narrative with hero metrics, charts, achievements)
+- [x] Home screen widgets (Android — small/medium/large, background refresh)
+- [x] i18n (7 locales: EN, RU, UA, DE, ES, FR, PL)
 
 ---
 

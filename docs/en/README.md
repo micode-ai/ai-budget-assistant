@@ -22,6 +22,12 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **AI Chat Assistant** - Get personalized financial advice
 - **Analytics** - Visual spending trends and category breakdowns
 - **Shared Accounts** - Invite members via invite codes, track shared activity
+- **Interactive Charts** - Drill-down from year to individual transactions with animated bar, line, and donut charts
+- **AI Insights** - GPT-4 analyzes spending patterns and generates visual insight cards with actionable recommendations (Pro)
+- **Spending Story** - AI-generated narrative dashboards summarizing your financial period with interactive blocks (Pro)
+- **Home Screen Widgets** - Android widgets in 3 sizes showing spending totals, weekly charts, and budget progress
+- **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits
+- **Admin Dashboard** - System stats, subscription breakdown, and per-user AI usage monitoring
 - **Offline-First** - Full functionality without internet connection
 - **Cross-Platform** - iOS, Android, and Web support
 
@@ -38,6 +44,8 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 | Cache | Redis |
 | Authentication | JWT + Passport |
 | AI/ML | OpenAI (GPT-4, Whisper, Vision) |
+| Charts | react-native-gifted-charts |
+| Widgets | react-native-android-widget |
 | Build System | Turborepo |
 | Package Manager | npm |
 
@@ -54,9 +62,16 @@ ai-budget-assistant/
 │       ├── app/             # Screens (Expo Router)
 │       └── src/
 │           ├── components/  # UI components
+│           │   ├── interactive-charts/ # Drill-down charts
+│           │   ├── insights/    # AI insight cards
+│           │   ├── story/       # Story block components
+│           │   └── widgets/     # Android home screen widgets
 │           ├── db/          # SQLite schema
 │           ├── services/    # API client
-│           └── stores/      # Zustand stores
+│           ├── stores/      # Zustand stores
+│           │   └── insightsStore.ts
+│           └── features/    # Feature hooks
+│               └── analytics/
 ├── packages/
 │   ├── shared-types/        # TypeScript definitions
 │   └── shared-utils/        # Validation & utilities

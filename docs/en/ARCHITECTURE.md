@@ -94,6 +94,10 @@ app/
 │   ├── index.tsx          # Wallet balances
 │   ├── exchange.tsx       # Currency exchange
 │   └── set-balance.tsx    # Set wallet balance
+├── analytics/
+│   └── drill-down.tsx    # Chart drill-down explorer
+├── story.tsx              # AI spending story dashboard
+├── admin.tsx              # Admin dashboard
 ├── settings.tsx           # User settings
 └── _layout.tsx            # Root layout
 ```
@@ -112,6 +116,7 @@ Zustand stores manage application state:
 | `useChatStore` | AI chat conversations |
 | `useWalletStore` | Wallet balances, currency exchange |
 | `useThemeStore` | Theme preferences, dark mode |
+| `useInsightsStore` | AI insights loading, caching, dismissal |
 
 ### Local Database Schema
 
@@ -268,9 +273,22 @@ src/
 │   ├── analytics/               # Spending analytics
 │   │   ├── analytics.controller.ts
 │   │   └── analytics.service.ts
-│   ├── insights/                # Anomaly detection & predictions
+│   ├── insights/                # AI insights, stories, anomalies
 │   │   ├── insights.controller.ts
-│   │   └── insights.service.ts
+│   │   ├── insights.service.ts
+│   │   ├── ai-insights.service.ts    # GPT-4 insight generation
+│   │   └── story.service.ts          # AI story narrative generation
+│   ├── subscriptions/           # Subscription tiers & AI usage
+│   │   ├── subscriptions.service.ts
+│   │   ├── guards/
+│   │   │   ├── subscription-tier.guard.ts
+│   │   │   └── ai-usage.guard.ts
+│   │   └── decorators/
+│   │       ├── require-tier.decorator.ts
+│   │       └── track-ai-usage.decorator.ts
+│   ├── admin/                   # Admin dashboard
+│   │   ├── admin.controller.ts
+│   │   └── admin.service.ts
 │   ├── wallet/                  # Multi-currency wallets
 │   │   ├── wallet.controller.ts
 │   │   └── wallet.service.ts
@@ -608,6 +626,48 @@ model CurrencyExchange {
 
   @@unique([accountId, clientId])
 }
+
+model Subscription {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  tier             SubscriptionTier @default(free)
+  status           String   @default("active")
+  aiRequestsUsed   Int      @default(0)
+  aiCostUnitsUsed  Float    @default(0)
+  periodStart      DateTime
+  periodEnd        DateTime
+  trialEndsAt      DateTime?
+  // ... relations
+}
+
+model GeneratedInsight {
+  id               String   @id @default(uuid())
+  accountId        String
+  insightType      String
+  title            String
+  description      String
+  severity         String
+  chartConfig      Json
+  actionSuggestion String?
+  periodStart      DateTime
+  periodEnd        DateTime
+  isExpired        Boolean  @default(false)
+  expiresAt        DateTime
+  createdAt        DateTime @default(now())
+}
+
+model SpendingStory {
+  id          String   @id @default(uuid())
+  accountId   String
+  periodLabel String
+  periodStart DateTime
+  periodEnd   DateTime
+  blocks      Json
+  summary     String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  @@unique([accountId, periodStart, periodEnd])
+}
 ```
 
 ## Synchronization
@@ -687,6 +747,8 @@ The application uses optimistic version-based synchronization with last-write-wi
 | Categorization | GPT-4 | Suggest expense categories |
 | Receipt Scanner | GPT-4 Vision | Extract data from receipt images |
 | Chat Assistant | GPT-4 | Financial advice and insights |
+| AI Insights | GPT-4 | Analyze patterns, generate insight cards |
+| Story Generation | GPT-4 | Create narrative spending dashboards |
 
 ### Data Flow
 
@@ -740,6 +802,33 @@ Telegram bot sends notifications for system events (e.g., new user registration)
 ### Email (Mail)
 
 Mail module provides email sending infrastructure for transactional emails.
+
+## Subscription System
+
+The application uses a tiered subscription model to manage access to AI-powered features:
+
+- **Three tiers**: free, pro, business
+- **AI usage tracking**: Each AI request is tracked per user with cost units
+- **Trial periods**: New users receive trial access with reduced limits
+  - Trial limits: free = 5, pro = 15, business = 100
+  - Active limits: free = 5, pro = 200, business = unlimited
+- **Guards**:
+  - `SubscriptionTierGuard` checks that the user's subscription tier meets the minimum required tier for the endpoint
+  - `AiUsageGuard` checks that the user has not exceeded their AI usage limit for the current billing period
+- **AI features** (insights, story) require Pro or Business tier
+
+## Home Screen Widgets
+
+Android home screen widgets provide quick access to financial data without opening the app:
+
+- **Technology**: `react-native-android-widget` for native Android widget rendering
+- **3 sizes**:
+  - **Small** (2x1): Today's spending total
+  - **Medium** (4x2): Weekly spending bar chart
+  - **Large** (4x4): Budget progress bars + top spending categories
+- **Data bridge**: `widgetData.ts` service serializes data from API responses and local SQLite storage into a format suitable for widget rendering
+- **Background refresh**: `expo-background-fetch` triggers data updates every 30 minutes
+- **Widget task handler**: Registered in `index.js` to handle widget update requests from the Android system
 
 ## Insights & Anomaly Detection
 

@@ -102,6 +102,8 @@ model Account {
   walletBalances    WalletBalance[]
   currencyExchanges CurrencyExchange[]
   usageLogs         UsageLog[]
+  generatedInsights GeneratedInsight[]
+  spendingStories   SpendingStory[]
 
   @@map("accounts")
 }
@@ -452,4 +454,43 @@ model UsageLog {
   @@index([userId, createdAt])
   @@index([accountId, userId, createdAt])
   @@map("usage_logs")
+}
+
+model GeneratedInsight {
+  id               String   @id @default(uuid())
+  accountId        String   @map("account_id")
+  insightType      String   @map("insight_type")
+  title            String
+  description      String
+  severity         String
+  chartConfig      Json     @map("chart_config") @db.JsonB
+  actionSuggestion String?  @map("action_suggestion")
+  periodStart      DateTime @map("period_start") @db.Date
+  periodEnd        DateTime @map("period_end") @db.Date
+  isExpired        Boolean  @default(false) @map("is_expired")
+  createdAt        DateTime @default(now()) @map("created_at")
+  expiresAt        DateTime @map("expires_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, isExpired, createdAt])
+  @@map("generated_insights")
+}
+
+model SpendingStory {
+  id          String   @id @default(uuid())
+  accountId   String   @map("account_id")
+  periodLabel String   @map("period_label")
+  periodStart DateTime @map("period_start") @db.Date
+  periodEnd   DateTime @map("period_end") @db.Date
+  blocks      Json     @db.JsonB
+  summary     String
+  createdAt   DateTime @default(now()) @map("created_at")
+  expiresAt   DateTime @map("expires_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, periodStart, periodEnd])
+  @@index([accountId, createdAt])
+  @@map("spending_stories")
 }

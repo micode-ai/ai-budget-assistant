@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
 
 interface ExpenseWithCategory {
   id: string;
@@ -300,6 +301,191 @@ export class AnalyticsService {
         vsAverage: 0,
       },
       accountCount: accountIds.length,
+    };
+  }
+
+  async getDrillDown(
+    accountId: string,
+    level: DrillDownLevel,
+    startDate: Date,
+    endDate: Date,
+    parentId?: string,
+    currencyCode?: string,
+  ) {
+    const currencyFilter = currencyCode ? { currencyCode } : {};
+
+    if (level === 'year') {
+      // Monthly totals
+      const expenses = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          date: { gte: startDate, lte: endDate },
+          ...currencyFilter,
+        },
+        orderBy: { date: 'asc' },
+      });
+
+      const monthlyTotals = new Map<string, number>();
+      for (const expense of expenses) {
+        const monthKey = `${expense.date.getFullYear()}-${String(expense.date.getMonth() + 1).padStart(2, '0')}`;
+        monthlyTotals.set(monthKey, (monthlyTotals.get(monthKey) || 0) + Number(expense.amount));
+      }
+
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const data: ChartDataPoint[] = Array.from(monthlyTotals.entries()).map(([key, value]) => {
+        const month = parseInt(key.split('-')[1]) - 1;
+        return { label: monthNames[month], value, id: key };
+      });
+
+      const chart: ChartConfig = {
+        chartType: 'bar',
+        title: 'Monthly Spending',
+        data,
+        drillDown: { enabled: true, currentLevel: 'year', nextLevel: 'month' },
+        formatting: { currencyCode, showValues: true },
+      };
+
+      const breadcrumb = [{ level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` }];
+      return { chart, breadcrumb };
+    }
+
+    if (level === 'month') {
+      // Weekly totals within a month
+      const expenses = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          date: { gte: startDate, lte: endDate },
+          ...currencyFilter,
+        },
+        orderBy: { date: 'asc' },
+      });
+
+      const weeklyTotals = new Map<number, number>();
+      for (const expense of expenses) {
+        const dayOfMonth = expense.date.getDate();
+        const weekNum = Math.ceil(dayOfMonth / 7);
+        weeklyTotals.set(weekNum, (weeklyTotals.get(weekNum) || 0) + Number(expense.amount));
+      }
+
+      const data: ChartDataPoint[] = Array.from(weeklyTotals.entries())
+        .sort(([a], [b]) => a - b)
+        .map(([week, value]) => ({
+          label: `Week ${week}`,
+          value,
+          id: String(week),
+        }));
+
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthLabel = monthNames[startDate.getMonth()];
+
+      const chart: ChartConfig = {
+        chartType: 'bar',
+        title: `${monthLabel} Spending`,
+        data,
+        drillDown: { enabled: true, currentLevel: 'month', nextLevel: 'week', parentId },
+        formatting: { currencyCode, showValues: true },
+      };
+
+      const breadcrumb = [
+        { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
+        { level: 'month' as DrillDownLevel, label: monthLabel, id: parentId },
+      ];
+      return { chart, breadcrumb };
+    }
+
+    if (level === 'week') {
+      // Daily totals within a week
+      const expenses = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          date: { gte: startDate, lte: endDate },
+          ...currencyFilter,
+        },
+        orderBy: { date: 'asc' },
+      });
+
+      const dailyTotals = new Map<string, number>();
+      for (const expense of expenses) {
+        const dateKey = expense.date.toISOString().split('T')[0];
+        dailyTotals.set(dateKey, (dailyTotals.get(dateKey) || 0) + Number(expense.amount));
+      }
+
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const data: ChartDataPoint[] = Array.from(dailyTotals.entries())
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([dateKey, value]) => {
+          const d = new Date(dateKey);
+          return { label: dayNames[d.getUTCDay()], value, id: dateKey };
+        });
+
+      const chart: ChartConfig = {
+        chartType: 'bar',
+        title: 'Daily Spending',
+        data,
+        drillDown: { enabled: true, currentLevel: 'week', nextLevel: 'day', parentId },
+        formatting: { currencyCode, showValues: true },
+      };
+
+      const breadcrumb = [
+        { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
+        { level: 'month' as DrillDownLevel, label: `${startDate.toLocaleString('en', { month: 'long' })}` },
+        { level: 'week' as DrillDownLevel, label: `Week ${parentId || ''}`, id: parentId },
+      ];
+      return { chart, breadcrumb };
+    }
+
+    if (level === 'day' || level === 'transactions') {
+      // Individual transactions for a specific day
+      const expenses = await this.prisma.expense.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          date: { gte: startDate, lte: endDate },
+          ...currencyFilter,
+        },
+        include: { category: true },
+        orderBy: { amount: 'desc' },
+      });
+
+      const transactions = expenses.map((e) => ({
+        id: e.id,
+        description: e.description || 'No description',
+        amount: Number(e.amount),
+        date: e.date.toISOString(),
+        categoryName: e.category?.name || 'Uncategorized',
+        currencyCode: e.currencyCode,
+      }));
+
+      const data: ChartDataPoint[] = transactions.slice(0, 10).map((t) => ({
+        label: t.description.substring(0, 15),
+        value: t.amount,
+        id: t.id,
+      }));
+
+      const chart: ChartConfig = {
+        chartType: 'bar',
+        title: `Transactions`,
+        data,
+        drillDown: { enabled: false, currentLevel: 'day' },
+        formatting: { currencyCode, showValues: true },
+      };
+
+      const dateLabel = startDate.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+      const breadcrumb = [
+        { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
+        { level: 'month' as DrillDownLevel, label: `${startDate.toLocaleString('en', { month: 'long' })}` },
+        { level: 'day' as DrillDownLevel, label: dateLabel, id: parentId },
+      ];
+      return { chart, transactions, breadcrumb };
+    }
+
+    // Fallback
+    return {
+      chart: { chartType: 'bar' as const, title: 'No data', data: [], drillDown: { enabled: false, currentLevel: level } },
+      breadcrumb: [],
     };
   }
 }
