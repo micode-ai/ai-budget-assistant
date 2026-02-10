@@ -14,6 +14,11 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    const adminEmails = (process.env.ADMIN_EMAILS || '')
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
     return {
       id: user.id,
       email: user.email,
@@ -21,6 +26,7 @@ export class UsersController {
       currencyCode: user.currencyCode,
       timezone: user.timezone,
       createdAt: user.createdAt,
+      isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
   }
 

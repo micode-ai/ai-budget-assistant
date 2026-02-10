@@ -115,6 +115,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             );
           }
 
+          // Fetch profile to get isAdmin flag
+          try {
+            const profile = await api.getProfile();
+            if (profile.isAdmin) {
+              const updatedUser = { ...user, isAdmin: profile.isAdmin };
+              set({ user: updatedUser });
+              await secureStorage.setItem('user', JSON.stringify(updatedUser));
+            }
+          } catch { /* non-critical */ }
+
           // Load data for the new user's account
           await Promise.all([
             useExpenseStore.getState().loadExpenses(),
@@ -213,6 +223,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               ...user,
               name: profile.name || user.name,
               currencyCode: (profile.currencyCode || user.currencyCode) as Currency,
+              isAdmin: profile.isAdmin,
             };
             set({ user: updatedUser });
             await secureStorage.setItem('user', JSON.stringify(updatedUser));

@@ -223,6 +223,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="admin"
+          options={{
+            headerShown: true,
+            title: t('nav.adminPanel'),
+          }}
+        />
+        <Stack.Screen
           name="settings"
           options={{
             headerShown: true,

@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -559,6 +559,17 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ returnUrl }),
     });
+  }
+
+  // Admin endpoints
+  async getAdminDashboard(startDate?: string, endDate?: string) {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    const query = params.toString();
+    return this.request<AdminDashboardResponse>(
+      `/admin/dashboard${query ? `?${query}` : ''}`,
+    );
   }
 }
 
