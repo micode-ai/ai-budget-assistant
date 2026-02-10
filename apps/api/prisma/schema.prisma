@@ -99,6 +99,7 @@ model Account {
   syncLogs          SyncLog[]
   walletBalances    WalletBalance[]
   currencyExchanges CurrencyExchange[]
+  usageLogs         UsageLog[]
 
   @@map("accounts")
 }
@@ -408,14 +409,17 @@ model UsageLog {
   id             String   @id @default(uuid())
   userId         String   @map("user_id")
   subscriptionId String   @map("subscription_id")
+  accountId      String?  @map("account_id")
   featureType    String   @map("feature_type")
   costUnits      Float    @map("cost_units")
   metadata       Json?    @db.JsonB
   createdAt      DateTime @default(now()) @map("created_at")
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account? @relation(fields: [accountId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
+  @@index([accountId, userId, createdAt])
   @@map("usage_logs")
 }

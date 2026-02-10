@@ -18,6 +18,7 @@ import { TelegramModule } from './modules/telegram/telegram.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { InsightsModule } from './modules/insights/insights.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
     CurrencyExchangeModule,
     InsightsModule,
     SubscriptionsModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

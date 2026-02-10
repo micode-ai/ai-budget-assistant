@@ -259,12 +259,13 @@ export class SubscriptionsService {
     userId: string,
     featureType: string,
     costUnits: number,
+    accountId?: string,
   ): Promise<void> {
     const sub = await this.getOrCreateSubscription(userId);
 
     // Business tier with active (non-trial) status = unlimited
     if (sub.tier === 'business' && sub.status !== 'trialing') {
-      await this.logUsage(sub.id, userId, featureType, costUnits);
+      await this.logUsage(sub.id, userId, featureType, costUnits, accountId);
       return;
     }
 
@@ -297,6 +298,7 @@ export class SubscriptionsService {
           subscriptionId: current.id,
           featureType,
           costUnits,
+          accountId,
         },
       }),
     ]);
@@ -545,6 +547,7 @@ export class SubscriptionsService {
     userId: string,
     featureType: string,
     costUnits: number,
+    accountId?: string,
   ): Promise<void> {
     await this.prisma.usageLog.create({
       data: {
@@ -552,6 +555,7 @@ export class SubscriptionsService {
         subscriptionId,
         featureType,
         costUnits,
+        accountId,
       },
     });
   }

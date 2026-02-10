@@ -347,6 +347,25 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Admin Section */}
+        {user?.isAdmin && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('admin.title')}</Text>
+            <View style={styles.card}>
+              <TouchableOpacity
+                style={styles.fieldRow}
+                onPress={() => router.push('/admin' as any)}
+              >
+                <View style={styles.fieldValueRow}>
+                  <Ionicons name="shield-checkmark-outline" size={18} color={theme.colors.warning} />
+                  <Text style={styles.fieldLabel}>{t('admin.openPanel')}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
         {/* Wallet Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('wallet.title')}</Text>

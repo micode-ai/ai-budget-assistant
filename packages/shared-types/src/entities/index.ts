@@ -36,6 +36,7 @@ export interface User {
   currencyCode: Currency;
   timezone: string;
   defaultAccountId?: string;
+  isAdmin?: boolean;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;

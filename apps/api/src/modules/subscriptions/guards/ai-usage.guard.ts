@@ -23,7 +23,8 @@ export class AiUsageGuard implements CanActivate {
     const costUnits =
       Reflect.getMetadata(AI_COST_UNITS_KEY, handler) || 1.0;
 
-    await this.subscriptionsService.trackAiUsage(userId, featureType, costUnits);
+    const accountId = request.accountId as string | undefined;
+    await this.subscriptionsService.trackAiUsage(userId, featureType, costUnits, accountId);
 
     return true;
   }
