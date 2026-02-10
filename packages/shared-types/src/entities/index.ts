@@ -307,3 +307,80 @@ export interface WalletSummary {
   totalExchangedOut: number;
   currentBalance: number;
 }
+
+// Chart types
+export type ChartType = 'bar' | 'line' | 'donut' | 'pie' | 'grouped_bar' | 'stacked_bar';
+
+export type DrillDownLevel = 'year' | 'month' | 'week' | 'day' | 'transactions';
+
+export interface ChartDataPoint {
+  label: string;
+  value: number;
+  color?: string;
+  id?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ChartConfig {
+  chartType: ChartType;
+  title: string;
+  subtitle?: string;
+  data: ChartDataPoint[];
+  drillDown?: {
+    enabled: boolean;
+    currentLevel: DrillDownLevel;
+    nextLevel?: DrillDownLevel;
+    parentId?: string;
+  };
+  formatting?: {
+    currencyCode?: string;
+    showLegend?: boolean;
+    showValues?: boolean;
+  };
+  highlights?: Array<{
+    dataIndex: number;
+    type: 'anomaly' | 'peak' | 'low';
+    message: string;
+  }>;
+}
+
+// AI Insight types
+export type InsightChartType = 'anomaly_spike' | 'category_comparison' | 'trend_change' | 'budget_burndown' | 'savings_opportunity';
+
+export interface AIInsightChart {
+  id: string;
+  insightType: InsightChartType;
+  title: string;
+  description: string;
+  severity: 'info' | 'warning' | 'critical';
+  chartConfig: ChartConfig;
+  actionSuggestion?: string;
+  generatedAt: string;
+}
+
+// Story Dashboard types
+export type StoryBlockType = 'hero_metric' | 'narrative_text' | 'chart' | 'comparison' | 'callout' | 'achievement';
+
+export interface StoryBlock {
+  type: StoryBlockType;
+  order: number;
+  content: {
+    title?: string;
+    text?: string;
+    chartConfig?: ChartConfig;
+    metrics?: Array<{ label: string; value: string; change?: number }>;
+    icon?: string;
+    tone?: 'positive' | 'neutral' | 'warning' | 'celebration';
+  };
+}
+
+export interface SpendingStory {
+  id: string;
+  accountId: string;
+  periodLabel: string;
+  periodStart: string;
+  periodEnd: string;
+  blocks: StoryBlock[];
+  summary: string;
+  generatedAt: string;
+}

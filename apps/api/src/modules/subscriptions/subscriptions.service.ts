@@ -19,7 +19,7 @@ const AI_REQUEST_LIMITS: Record<SubscriptionTier, number> = {
 const TRIAL_REQUEST_LIMITS: Record<SubscriptionTier, number> = {
   free: 5,
   pro: 15,
-  business: 30,
+  business: 100,
 };
 
 const MEMBER_LIMITS: Record<SubscriptionTier, number> = {
