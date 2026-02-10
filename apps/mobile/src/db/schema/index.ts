@@ -54,6 +54,26 @@ export const expenses = sqliteTable('expenses', {
   syncVersion: integer('sync_version').default(0),
 });
 
+// Incomes table
+export const incomes = sqliteTable('incomes', {
+  id: text('id').primaryKey(),
+  localId: text('local_id').notNull(),
+  serverId: text('server_id'),
+  userId: text('user_id').notNull(),
+  accountId: text('account_id').notNull(),
+  amount: real('amount').notNull(),
+  currencyCode: text('currency_code').notNull().default('USD'),
+  description: text('description'),
+  notes: text('notes'),
+  categoryId: text('category_id'),
+  date: integer('date', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').notNull().default('pending'),
+  syncVersion: integer('sync_version').default(0),
+});
+
 // Categories table
 export const categories = sqliteTable('categories', {
   id: text('id').primaryKey(),
@@ -186,5 +206,7 @@ export type CategoryRecord = typeof categories.$inferSelect;
 export type NewCategoryRecord = typeof categories.$inferInsert;
 export type BudgetRecord = typeof budgets.$inferSelect;
 export type NewBudgetRecord = typeof budgets.$inferInsert;
+export type IncomeRecord = typeof incomes.$inferSelect;
+export type NewIncomeRecord = typeof incomes.$inferInsert;
 export type SyncQueueRecord = typeof syncQueue.$inferSelect;
 export type NewSyncQueueRecord = typeof syncQueue.$inferInsert;

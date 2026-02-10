@@ -67,6 +67,26 @@ export const UpdateExpenseSchema = z.object({
   location: LocationSchema.nullable().optional(),
 });
 
+// Income schemas
+export const CreateIncomeSchema = z.object({
+  localId: z.string().uuid(),
+  amount: z.number().positive('Amount must be positive').max(999999999, 'Amount too large'),
+  currencyCode: CurrencySchema,
+  description: z.string().max(500).optional(),
+  notes: z.string().max(2000).optional(),
+  categoryId: z.string().uuid().optional(),
+  date: z.string().datetime({ offset: true }),
+});
+
+export const UpdateIncomeSchema = z.object({
+  amount: z.number().positive().max(999999999).optional(),
+  currencyCode: CurrencySchema.optional(),
+  description: z.string().max(500).optional(),
+  notes: z.string().max(2000).optional(),
+  categoryId: z.string().uuid().nullable().optional(),
+  date: z.string().datetime({ offset: true }).optional(),
+});
+
 // Budget schemas
 export const CreateBudgetSchema = z.object({
   localId: z.string().uuid(),
@@ -118,7 +138,7 @@ export const UpdateCategorySchema = z.object({
 export const SyncOperationSchema = z.enum(['create', 'update', 'delete']);
 
 export const SyncChangeSchema = z.object({
-  entityType: z.enum(['expense', 'budget', 'category', 'walletBalance', 'currencyExchange']),
+  entityType: z.enum(['expense', 'budget', 'category', 'walletBalance', 'currencyExchange', 'income']),
   entityId: z.string().uuid(),
   operation: SyncOperationSchema,
   payload: z.unknown(),
@@ -155,6 +175,13 @@ export const ExpenseFiltersSchema = PaginationSchema.extend({
   maxAmount: z.coerce.number().min(0).optional(),
   search: z.string().max(100).optional(),
   source: ExpenseSourceSchema.optional(),
+});
+
+export const IncomeFiltersSchema = PaginationSchema.extend({
+  startDate: z.string().datetime({ offset: true }).optional(),
+  endDate: z.string().datetime({ offset: true }).optional(),
+  categoryId: z.string().uuid().optional(),
+  search: z.string().max(100).optional(),
 });
 
 export const BudgetFiltersSchema = PaginationSchema.extend({
@@ -226,3 +253,6 @@ export type UpdateWalletBalanceInput = z.infer<typeof UpdateWalletBalanceSchema>
 export type CreateCurrencyExchangeInput = z.infer<typeof CreateCurrencyExchangeSchema>;
 export type UpdateCurrencyExchangeInput = z.infer<typeof UpdateCurrencyExchangeSchema>;
 export type ExchangeFiltersInput = z.infer<typeof ExchangeFiltersSchema>;
+export type CreateIncomeInput = z.infer<typeof CreateIncomeSchema>;
+export type UpdateIncomeInput = z.infer<typeof UpdateIncomeSchema>;
+export type IncomeFiltersInput = z.infer<typeof IncomeFiltersSchema>;

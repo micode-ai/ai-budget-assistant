@@ -140,6 +140,25 @@ export interface Expense {
   syncVersion: number;
 }
 
+export interface Income {
+  id: string;
+  localId: string;
+  serverId?: string;
+  userId: string;
+  accountId: string;
+  amount: number;
+  currencyCode: Currency;
+  description?: string;
+  notes?: string;
+  categoryId?: string;
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
 export interface Budget {
   id: string;
   localId: string;

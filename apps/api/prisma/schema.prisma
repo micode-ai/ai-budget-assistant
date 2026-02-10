@@ -63,6 +63,7 @@ model User {
 
   // Relations
   expenses          Expense[]
+  incomes           Income[]
   budgets           Budget[]
   categories        Category[]
   chatConversations ChatConversation[]
@@ -94,6 +95,7 @@ model Account {
   members     AccountMember[]
   invitations AccountInvitation[]
   expenses    Expense[]
+  incomes     Income[]
   budgets     Budget[]
   categories        Category[]
   syncLogs          SyncLog[]
@@ -163,6 +165,7 @@ model Category {
   parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
   children Category[] @relation("CategoryHierarchy")
   expenses Expense[]
+  incomes  Income[]
   budgets  Budget[]
 
   @@unique([accountId, name, type])
@@ -225,6 +228,33 @@ model ExpenseItem {
 
   @@index([expenseId])
   @@map("expense_items")
+}
+
+model Income {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  accountId    String   @map("account_id")
+  clientId     String   @map("client_id")
+  categoryId   String?  @map("category_id")
+  amount       Decimal  @db.Decimal(12, 2)
+  currencyCode String   @default("USD") @map("currency_code")
+  description  String?
+  notes        String?
+  date         DateTime @db.Date
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  syncVersion  Int      @default(0) @map("sync_version")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@unique([accountId, clientId])
+  @@index([accountId, date(sort: Desc)])
+  @@index([categoryId])
+  @@map("incomes")
 }
 
 model Budget {

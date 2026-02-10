@@ -5,18 +5,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
-import type { Expense } from '@budget/shared-types';
+import type { Expense, Income } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+
+type ActiveTab = 'expenses' | 'income';
 
 export default function ExpensesScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<ActiveTab>('expenses');
   const { isLoading, loadExpenses, getFilteredExpenses } = useExpenseStore();
+  const { loadIncomes, getFilteredIncomes } = useIncomeStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();
+  const incomes = getFilteredIncomes();
   const fabAnimation = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -24,11 +30,15 @@ export default function ExpensesScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await loadExpenses();
+      if (activeTab === 'expenses') {
+        await loadExpenses();
+      } else {
+        await loadIncomes();
+      }
     } finally {
       setRefreshing(false);
     }
-  }, [loadExpenses]);
+  }, [loadExpenses, loadIncomes, activeTab]);
 
   const toggleFab = () => {
     const toValue = fabOpen ? 0 : 1;
@@ -78,7 +88,27 @@ export default function ExpensesScreen() {
     </TouchableOpacity>
   );
 
-  const ListEmptyComponent = () => (
+  const renderIncomeItem = ({ item }: { item: Income }) => (
+    <TouchableOpacity
+      style={styles.expenseCard}
+      onPress={() => router.push(`/income/${item.id}`)}
+    >
+      <View style={[styles.expenseIcon, { backgroundColor: theme.colors.success + '18' }]}>
+        <Ionicons name="trending-up-outline" size={24} color={theme.colors.success} />
+      </View>
+      <View style={styles.expenseDetails}>
+        <Text style={styles.expenseDescription} numberOfLines={1}>
+          {item.description || 'Income'}
+        </Text>
+        <Text style={styles.expenseDate}>{formatDate(item.date)}</Text>
+      </View>
+      <Text style={[styles.expenseAmount, { color: theme.colors.success }]}>
+        +{formatCurrency(item.amount, item.currencyCode)}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const ExpenseEmptyComponent = () => (
     <View style={styles.emptyState}>
       <Ionicons name="receipt-outline" size={64} color={theme.colors.textDisabled} />
       <Text style={styles.emptyTitle}>{t('expenses.noExpenses')}</Text>
@@ -94,22 +124,84 @@ export default function ExpensesScreen() {
     </View>
   );
 
+  const IncomeEmptyComponent = () => (
+    <View style={styles.emptyState}>
+      <Ionicons name="trending-up-outline" size={64} color={theme.colors.textDisabled} />
+      <Text style={styles.emptyTitle}>{t('incomes.noIncomes')}</Text>
+      <Text style={styles.emptySubtitle}>
+        {t('incomes.addFirst')}
+      </Text>
+      <TouchableOpacity
+        style={[styles.addButton, { backgroundColor: theme.colors.success }]}
+        onPress={() => router.push('/income/new')}
+      >
+        <Text style={styles.addButtonText}>{t('incomes.addIncome')}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <FlatList
-        data={expenses}
-        renderItem={renderExpenseItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListEmptyComponent={ListEmptyComponent}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      {/* Segmented Control */}
+      <View style={styles.segmentedControl}>
+        <TouchableOpacity
+          style={[styles.segmentButton, activeTab === 'expenses' && styles.segmentButtonActive]}
+          onPress={() => setActiveTab('expenses')}
+        >
+          <Text style={[styles.segmentText, activeTab === 'expenses' && styles.segmentTextActive]}>
+            {t('expenses.tabExpenses')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.segmentButton, activeTab === 'income' && styles.segmentButtonActive]}
+          onPress={() => setActiveTab('income')}
+        >
+          <Text style={[styles.segmentText, activeTab === 'income' && styles.segmentTextActive]}>
+            {t('expenses.tabIncome')}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* Floating Action Button with Menu (hidden for viewers) */}
-      {fabOpen && canEdit && (
+      {activeTab === 'expenses' ? (
+        <FlatList
+          data={expenses}
+          renderItem={renderExpenseItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListEmptyComponent={ExpenseEmptyComponent}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+      ) : (
+        <FlatList
+          data={incomes}
+          renderItem={renderIncomeItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListEmptyComponent={IncomeEmptyComponent}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+      )}
+
+      {/* Floating Action Button (hidden for viewers) */}
+      {activeTab === 'income' && canEdit && (
+        <View style={styles.fabContainer}>
+          <TouchableOpacity
+            style={[styles.fab, { backgroundColor: theme.colors.success }]}
+            onPress={() => router.push('/income/new')}
+            activeOpacity={0.9}
+          >
+            <Ionicons name="add" size={28} color={theme.colors.textInverse} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {fabOpen && canEdit && activeTab === 'expenses' && (
         <TouchableOpacity
           style={styles.fabOverlay}
           activeOpacity={1}
@@ -117,7 +209,7 @@ export default function ExpensesScreen() {
         />
       )}
 
-      {canEdit && <View style={styles.fabContainer}>
+      {canEdit && activeTab === 'expenses' && <View style={styles.fabContainer}>
         {/* Receipt Button */}
         <Animated.View
           style={[
@@ -258,6 +350,33 @@ const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  segmentedControl: {
+    flexDirection: 'row' as const,
+    marginHorizontal: theme.spacing[4],
+    marginTop: theme.spacing[3],
+    marginBottom: theme.spacing[1],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: 3,
+  },
+  segmentButton: {
+    flex: 1,
+    paddingVertical: theme.spacing[2],
+    alignItems: 'center' as const,
+    borderRadius: theme.borderRadius.md,
+  },
+  segmentButtonActive: {
+    backgroundColor: theme.colors.surface,
+    ...theme.shadows.sm,
+  },
+  segmentText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textTertiary,
+  },
+  segmentTextActive: {
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
   },
   listContent: {
     padding: theme.spacing[4],

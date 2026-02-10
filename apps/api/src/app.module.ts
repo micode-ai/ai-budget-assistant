@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
+import { IncomesModule } from './modules/incomes/incomes.module';
 import { BudgetsModule } from './modules/budgets/budgets.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { SyncModule } from './modules/sync/sync.module';
@@ -49,6 +50,7 @@ import { AdminModule } from './modules/admin/admin.module';
     UsersModule,
     AccountsModule,
     ExpensesModule,
+    IncomesModule,
     BudgetsModule,
     CategoriesModule,
     SyncModule,

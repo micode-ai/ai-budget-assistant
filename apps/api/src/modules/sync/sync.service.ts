@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
+import { IncomesService } from '../incomes/incomes.service';
 
 interface SyncChange {
-  entityType: 'expense' | 'expense_item' | 'budget' | 'category';
+  entityType: 'expense' | 'expense_item' | 'budget' | 'category' | 'income';
   entityId: string;
   operation: 'create' | 'update' | 'delete';
   payload: any;
@@ -45,6 +46,7 @@ export class SyncService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly expensesService: ExpensesService,
+    private readonly incomesService: IncomesService,
   ) {}
 
   async pushChanges(accountId: string, userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
@@ -82,6 +84,8 @@ export class SyncService {
         return this.processBudgetChange(accountId, change);
       case 'category':
         return this.processCategoryChange(accountId, change);
+      case 'income':
+        return this.processIncomeChange(accountId, userId, change);
       default:
         return {
           entityId: change.entityId,
@@ -262,9 +266,55 @@ export class SyncService {
     };
   }
 
+  private async processIncomeChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
+    const { operation, payload, clientVersion, entityId } = change;
+
+    const existing = await this.incomesService.getByClientId(accountId, entityId);
+
+    if (operation === 'create') {
+      if (existing) {
+        if (existing.syncVersion !== clientVersion) {
+          return { entityId, status: 'conflict', serverVersion: existing.syncVersion, serverData: existing };
+        }
+        return { entityId, status: 'success', serverId: existing.id, serverVersion: existing.syncVersion };
+      }
+
+      const created = await this.incomesService.create(accountId, userId, {
+        ...payload,
+        localId: entityId,
+      });
+
+      if (!created) {
+        return { entityId, status: 'error', error: 'Failed to create income' };
+      }
+
+      return { entityId, status: 'success', serverId: created.id, serverVersion: created.syncVersion };
+    }
+
+    if (!existing) {
+      return { entityId, status: 'error', error: 'Entity not found' };
+    }
+
+    if (existing.syncVersion !== clientVersion) {
+      return { entityId, status: 'conflict', serverVersion: existing.syncVersion, serverData: existing };
+    }
+
+    if (operation === 'update') {
+      const updated = await this.incomesService.update(accountId, existing.id, payload);
+      return { entityId, status: 'success', serverVersion: updated.syncVersion };
+    }
+
+    if (operation === 'delete') {
+      await this.incomesService.remove(accountId, existing.id);
+      return { entityId, status: 'success' };
+    }
+
+    return { entityId, status: 'error', error: 'Invalid operation' };
+  }
+
   async pullChanges(accountId: string, userId: string, since: Date) {
     // Get all entities updated since the given timestamp
-    const [expenses, expenseItems, budgets, categories] = await Promise.all([
+    const [expenses, expenseItems, budgets, categories, incomes] = await Promise.all([
       this.prisma.expense.findMany({
         where: {
           accountId,
@@ -286,6 +336,12 @@ export class SyncService {
       this.prisma.category.findMany({
         where: {
           OR: [{ accountId }, { isSystem: true }],
+          updatedAt: { gt: since },
+        },
+      }),
+      this.prisma.income.findMany({
+        where: {
+          accountId,
           updatedAt: { gt: since },
         },
       }),
@@ -323,6 +379,14 @@ export class SyncService {
         data: c,
         version: c.syncVersion,
         timestamp: c.updatedAt.toISOString(),
+      })),
+      ...incomes.map((i: { clientId: string; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'income' as const,
+        entityId: i.clientId,
+        operation: i.isDeleted ? 'delete' as const : 'update' as const,
+        data: i,
+        version: i.syncVersion,
+        timestamp: i.updatedAt.toISOString(),
       })),
     ];
 

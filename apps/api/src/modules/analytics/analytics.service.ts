@@ -16,6 +16,17 @@ export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getSummary(accountId: string, startDate: Date, endDate: Date) {
+    // Get incomes in date range
+    const incomeAgg = await this.prisma.income.aggregate({
+      where: {
+        accountId,
+        date: { gte: startDate, lte: endDate },
+        isDeleted: false,
+      },
+      _sum: { amount: true },
+    });
+    const totalIncome = Number(incomeAgg._sum?.amount || 0);
+
     // Get expenses in date range
     const expenses = await this.prisma.expense.findMany({
       where: {
@@ -100,10 +111,10 @@ export class AnalyticsService {
         start: startDate.toISOString(),
         end: endDate.toISOString(),
       },
-      totalIncome: 0, // TODO: Implement income tracking
+      totalIncome,
       totalExpenses,
       totalDiscountSavings,
-      netSavings: 0 - totalExpenses,
+      netSavings: totalIncome - totalExpenses,
       expensesByCategory,
       expensesByCurrency,
       topExpenses,
@@ -200,6 +211,17 @@ export class AnalyticsService {
       };
     }
 
+    // Get incomes across all accounts in date range
+    const incomeAgg = await this.prisma.income.aggregate({
+      where: {
+        accountId: { in: accountIds },
+        date: { gte: startDate, lte: endDate },
+        isDeleted: false,
+      },
+      _sum: { amount: true },
+    });
+    const totalIncome = Number(incomeAgg._sum?.amount || 0);
+
     // Get expenses across all accounts in date range
     const expenses = await this.prisma.expense.findMany({
       where: {
@@ -267,10 +289,10 @@ export class AnalyticsService {
         start: startDate.toISOString(),
         end: endDate.toISOString(),
       },
-      totalIncome: 0,
+      totalIncome,
       totalExpenses,
       totalDiscountSavings,
-      netSavings: 0 - totalExpenses,
+      netSavings: totalIncome - totalExpenses,
       expensesByCategory,
       topExpenses,
       trends: {

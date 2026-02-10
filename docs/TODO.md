@@ -28,6 +28,7 @@
 - [x] Telegram notifications (system events)
 - [x] Shared account activity notifications
 - [x] Account invitations (invite codes)
+- [x] Income tracking (multi-currency, per-currency dashboard totals, offline-first sync)
 
 ---
 

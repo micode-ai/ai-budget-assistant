@@ -556,6 +556,110 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Доходы
+
+Все эндпоинты доходов требуют заголовок `X-Account-Id`.
+
+### Список доходов
+
+```http
+GET /incomes
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `startDate` | ISO 8601 | Фильтр от даты |
+| `endDate` | ISO 8601 | Фильтр до даты |
+| `categoryId` | UUID | Фильтр по категории |
+| `limit` | number | Макс. результатов (по умолч.: 50) |
+| `offset` | number | Смещение для пагинации |
+
+**Ответ** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "clientId": "client-uuid",
+      "categoryId": "uuid",
+      "amount": 200000.00,
+      "currencyCode": "RUB",
+      "description": "Зарплата за январь",
+      "date": "2024-01-15",
+      "notes": "Основной доход",
+      "syncVersion": 1,
+      "createdAt": "2024-01-15T10:00:00Z",
+      "category": {
+        "id": "uuid",
+        "name": "Salary",
+        "color": "#4CAF50"
+      }
+    }
+  ],
+  "total": 10,
+  "limit": 50,
+  "offset": 0
+}
+```
+
+### Создать доход
+
+```http
+POST /incomes
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "amount": 200000.00,
+  "currencyCode": "RUB",
+  "description": "Зарплата за январь",
+  "notes": "Основной доход",
+  "categoryId": "uuid",
+  "date": "2024-01-15T00:00:00Z"
+}
+```
+
+**Ответ** `201 Created`
+
+### Получить доход
+
+```http
+GET /incomes/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Обновить доход
+
+```http
+PATCH /incomes/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "amount": 220000.00,
+  "description": "Зарплата за январь (с бонусом)"
+}
+```
+
+### Удалить доход
+
+```http
+DELETE /incomes/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+---
+
 ## Бюджеты
 
 Все эндпоинты бюджетов требуют заголовок `X-Account-Id`.
