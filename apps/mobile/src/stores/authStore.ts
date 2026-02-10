@@ -12,6 +12,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  isInitializing: boolean;
   isLoading: boolean;
   error: string | null;
   hasSavedSession: boolean;
@@ -32,12 +33,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
-      isLoading: true,
+      isInitializing: true,
+      isLoading: false,
       error: null,
       hasSavedSession: false,
 
       initialize: async () => {
-        set({ isLoading: true });
+        set({ isInitializing: true });
         try {
           const accessToken = await secureStorage.getItem('accessToken');
           const refreshToken = await secureStorage.getItem('refreshToken');
@@ -47,7 +49,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           if (accessToken && userJson) {
             if (biometricEnabled === 'true') {
               // Session exists but biometric required — wait for biometric verification
-              set({ hasSavedSession: true, isLoading: false });
+              set({ hasSavedSession: true, isInitializing: false });
             } else {
               const user = JSON.parse(userJson) as User;
               set({
@@ -55,7 +57,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 accessToken,
                 refreshToken,
                 isAuthenticated: true,
-                isLoading: false,
+                isInitializing: false,
               });
               // Restore account context from local DB
               await useAccountStore.getState().loadAccounts();
@@ -67,11 +69,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               ]);
             }
           } else {
-            set({ isLoading: false });
+            set({ isInitializing: false });
           }
         } catch (error) {
           console.error('Failed to initialize auth:', error);
-          set({ isLoading: false });
+          set({ isInitializing: false });
         }
       },
 
