@@ -1,0 +1,375 @@
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  TextInput,
+  Platform,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useIncomeStore } from '@/stores/incomeStore';
+import { formatCurrency, formatDate, DEFAULT_INCOME_CATEGORIES } from '@budget/shared-utils';
+import { useTheme, useStyles, type Theme } from '@/theme';
+
+export default function IncomeDetailScreen() {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { incomes, updateIncome, deleteIncome } = useIncomeStore();
+  const income = incomes.find((i) => i.id === id);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editDescription, setEditDescription] = useState(income?.description || '');
+  const [editAmount, setEditAmount] = useState(income?.amount?.toString() || '');
+  const [editCategory, setEditCategory] = useState(income?.categoryId || '');
+  const [editNotes, setEditNotes] = useState(income?.notes || '');
+  const [editDate, setEditDate] = useState(income?.date ? new Date(income.date) : new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  if (!income) {
+    return (
+      <SafeAreaView style={styles.container} edges={['bottom']}>
+        <View style={styles.centered}>
+          <Text style={styles.notFoundText}>{t('incomeDetail.notFound')}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const handleSave = () => {
+    const numericAmount = parseFloat(editAmount);
+    if (!numericAmount || numericAmount <= 0) return;
+
+    updateIncome(income.id, {
+      description: editDescription.trim() || undefined,
+      amount: numericAmount,
+      categoryId: editCategory || undefined,
+      notes: editNotes.trim() || undefined,
+      date: editDate,
+    });
+    setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      t('incomeDetail.deleteTitle'),
+      t('incomeDetail.deleteConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => {
+            deleteIncome(income.id);
+            router.back();
+          },
+        },
+      ],
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* Amount Card */}
+        <View style={styles.amountCard}>
+          {isEditing ? (
+            <TextInput
+              style={styles.amountInput}
+              value={editAmount}
+              onChangeText={setEditAmount}
+              keyboardType="decimal-pad"
+            />
+          ) : (
+            <Text style={styles.amountText}>
+              +{formatCurrency(income.amount, income.currencyCode)}
+            </Text>
+          )}
+        </View>
+
+        {/* Details */}
+        <View style={styles.detailsCard}>
+          {/* Description */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>{t('incomeDetail.description')}</Text>
+            {isEditing ? (
+              <TextInput
+                style={styles.detailInput}
+                value={editDescription}
+                onChangeText={setEditDescription}
+              />
+            ) : (
+              <Text style={styles.detailValue}>
+                {income.description || t('incomeDetail.noDescription')}
+              </Text>
+            )}
+          </View>
+
+          {/* Date */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>{t('incomeDetail.date')}</Text>
+            {isEditing ? (
+              <>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <Text style={styles.detailValue}>{formatDate(editDate)}</Text>
+                </TouchableOpacity>
+                {showDatePicker && (
+                  <DateTimePicker
+                    value={editDate}
+                    mode="date"
+                    onChange={(_, date) => {
+                      setShowDatePicker(Platform.OS === 'ios');
+                      if (date) setEditDate(date);
+                    }}
+                  />
+                )}
+              </>
+            ) : (
+              <Text style={styles.detailValue}>{formatDate(income.date)}</Text>
+            )}
+          </View>
+
+          {/* Category */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>{t('incomeDetail.category')}</Text>
+            {isEditing ? (
+              <View style={styles.categoryGrid}>
+                {DEFAULT_INCOME_CATEGORIES.map((cat) => (
+                  <TouchableOpacity
+                    key={cat.name}
+                    style={[
+                      styles.categoryChip,
+                      editCategory === cat.name && {
+                        backgroundColor: cat.color,
+                        borderColor: cat.color,
+                      },
+                    ]}
+                    onPress={() =>
+                      setEditCategory(editCategory === cat.name ? '' : cat.name)
+                    }
+                  >
+                    <Text
+                      style={[
+                        styles.categoryChipText,
+                        editCategory === cat.name && styles.categoryChipTextSelected,
+                      ]}
+                    >
+                      {cat.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.detailValue}>
+                {income.categoryId || '-'}
+              </Text>
+            )}
+          </View>
+
+          {/* Notes */}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>{t('incomeDetail.notes')}</Text>
+            {isEditing ? (
+              <TextInput
+                style={[styles.detailInput, { minHeight: 60, textAlignVertical: 'top' }]}
+                value={editNotes}
+                onChangeText={setEditNotes}
+                multiline
+              />
+            ) : (
+              <Text style={styles.detailValue}>
+                {income.notes || '-'}
+              </Text>
+            )}
+          </View>
+        </View>
+
+        {/* Action Buttons */}
+        <View style={styles.actionsRow}>
+          {isEditing ? (
+            <>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setIsEditing(false)}>
+                <Ionicons name="close" size={20} color={theme.colors.textSecondary} />
+                <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+                <Text style={styles.saveButtonText}>{t('common.save')}</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
+                <Ionicons name="create-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+                <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
+                <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const createStyles = (theme: Theme) => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  notFoundText: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textTertiary,
+  },
+  content: {
+    padding: theme.spacing[4],
+  },
+  amountCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[8],
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.sm,
+  },
+  amountText: {
+    fontSize: 36,
+    fontWeight: 'bold' as const,
+    color: theme.colors.success,
+  },
+  amountInput: {
+    fontSize: 36,
+    fontWeight: 'bold' as const,
+    color: theme.colors.success,
+    textAlign: 'center' as const,
+    minWidth: 150,
+  },
+  detailsCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.sm,
+  },
+  detailRow: {
+    paddingVertical: theme.spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.divider,
+  },
+  detailLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1],
+  },
+  detailValue: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
+  },
+  detailInput: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing[2],
+  },
+  categoryGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[1],
+  },
+  categoryChip: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius['2xl'],
+    borderWidth: 1.5,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+  },
+  categoryChipText: {
+    fontSize: 13,
+    color: theme.colors.textSecondary,
+  },
+  categoryChipTextSelected: {
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
+  },
+  actionsRow: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  editButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1.5,
+    borderColor: theme.colors.primary,
+  },
+  editButtonText: {
+    ...theme.textStyles.button,
+    color: theme.colors.primary,
+  },
+  deleteButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1.5,
+    borderColor: theme.colors.danger,
+  },
+  deleteButtonText: {
+    ...theme.textStyles.button,
+    color: theme.colors.danger,
+  },
+  cancelButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1.5,
+    borderColor: theme.colors.border,
+  },
+  cancelButtonText: {
+    ...theme.textStyles.button,
+    color: theme.colors.textSecondary,
+  },
+  saveButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.success,
+  },
+  saveButtonText: {
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
+  },
+});

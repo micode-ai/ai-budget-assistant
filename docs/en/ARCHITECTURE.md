@@ -87,6 +87,9 @@ app/
 │   ├── new.tsx            # Add expense
 │   ├── receipt.tsx        # Receipt scanner
 │   └── voice.tsx          # Voice input
+├── income/
+│   ├── [id].tsx           # Income details
+│   └── new.tsx            # Add income
 ├── wallet/
 │   ├── index.tsx          # Wallet balances
 │   ├── exchange.tsx       # Currency exchange
@@ -103,6 +106,7 @@ Zustand stores manage application state:
 |-------|---------|
 | `useAuthStore` | Authentication state, tokens, user profile |
 | `useExpenseStore` | Expense CRUD operations, filters |
+| `useIncomeStore` | Income CRUD, per-currency monthly totals |
 | `useBudgetStore` | Budget management, progress tracking |
 | `useAccountStore` | Multi-account management, switching |
 | `useChatStore` | AI chat conversations |
@@ -175,6 +179,26 @@ Zustand stores manage application state:
   syncVersion: integer
 }
 
+// incomes table
+{
+  id: text (PK),
+  localId: text,
+  serverId: text (nullable),
+  userId: text,
+  accountId: text,
+  amount: real,
+  currencyCode: text,
+  description: text (nullable),
+  notes: text (nullable),
+  categoryId: text (nullable),
+  date: integer (timestamp),
+  createdAt: integer,
+  updatedAt: integer,
+  isDeleted: integer (boolean),
+  syncStatus: text (pending|synced|conflict),
+  syncVersion: integer
+}
+
 // sync_queue table
 {
   id: integer (PK),
@@ -221,6 +245,10 @@ src/
 │   ├── expenses/                # Expense tracking
 │   │   ├── expenses.controller.ts
 │   │   ├── expenses.service.ts
+│   │   └── dto/
+│   ├── incomes/                 # Income tracking
+│   │   ├── incomes.controller.ts
+│   │   ├── incomes.service.ts
 │   │   └── dto/
 │   ├── budgets/                 # Budget management
 │   │   ├── budgets.controller.ts
@@ -297,6 +325,7 @@ model User {
   updatedAt            DateTime  @updatedAt
 
   expenses          Expense[]
+  incomes           Income[]
   budgets           Budget[]
   categories        Category[]
   chatConversations ChatConversation[]
@@ -323,6 +352,7 @@ model Account {
   members     AccountMember[]
   invitations AccountInvitation[]
   expenses    Expense[]
+  incomes     Income[]
   budgets     Budget[]
   categories  Category[]
   syncLogs    SyncLog[]
@@ -377,9 +407,34 @@ model Category {
   parent   Category?  @relation("CategoryHierarchy")
   children Category[] @relation("CategoryHierarchy")
   expenses Expense[]
+  incomes  Income[]
   budgets  Budget[]
 
   @@unique([accountId, name, type])
+}
+
+model Income {
+  id           String   @id @default(uuid())
+  userId       String
+  accountId    String
+  clientId     String
+  categoryId   String?
+  amount       Decimal  @db.Decimal(12, 2)
+  currencyCode String   @default("USD")
+  description  String?
+  notes        String?
+  date         DateTime @db.Date
+  isDeleted    Boolean  @default(false)
+  syncVersion  Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user     User
+  account  Account
+  category Category?
+
+  @@unique([accountId, clientId])
+  @@index([accountId, date(sort: Desc)])
 }
 
 model Expense {

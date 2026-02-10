@@ -201,6 +201,28 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Incomes table
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS incomes (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        server_id TEXT,
+        user_id TEXT NOT NULL,
+        account_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        currency_code TEXT NOT NULL DEFAULT 'USD',
+        description TEXT,
+        notes TEXT,
+        category_id TEXT,
+        date INTEGER NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
+    `);
+
     // Add receipt_image column to expenses (migration for existing DBs)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image TEXT`);
@@ -260,6 +282,9 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE UNIQUE INDEX IF NOT EXISTS idx_wallet_balances_account_currency ON wallet_balances(account_id, currency_code)',
       'CREATE INDEX IF NOT EXISTS idx_currency_exchanges_account ON currency_exchanges(account_id)',
       'CREATE INDEX IF NOT EXISTS idx_currency_exchanges_date ON currency_exchanges(account_id, date DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_incomes_account ON incomes(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_incomes_date ON incomes(account_id, date DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_incomes_sync ON incomes(sync_status)',
     ];
 
     for (const indexSql of indexes) {

@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
@@ -17,6 +18,7 @@ export default function DashboardScreen() {
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const { expenses, totalThisMonth, loadExpenses } = useExpenseStore();
+  const { incomeTotalsByCurrency, loadIncomes } = useIncomeStore();
   const { activeBudgets, getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
@@ -30,7 +32,7 @@ export default function DashboardScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await Promise.all([loadExpenses(), loadWallet()]);
+      await Promise.all([loadExpenses(), loadIncomes(), loadWallet()]);
     } finally {
       setRefreshing(false);
     }
@@ -75,6 +77,17 @@ export default function DashboardScreen() {
               <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
             </View>
           </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
+          {Object.keys(incomeTotalsByCurrency).length === 0 ? (
+            <Text style={styles.incomeAmount}>+{formatCurrency(0, currency)}</Text>
+          ) : (
+            Object.entries(incomeTotalsByCurrency).map(([code, amount]) => (
+              <Text key={code} style={styles.incomeAmount}>+{formatCurrency(amount, code as any)}</Text>
+            ))
+          )}
         </View>
 
         <View style={styles.section}>
@@ -236,6 +249,11 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing[3],
+  },
+  incomeAmount: {
+    ...theme.textStyles.h2,
+    fontSize: 28,
+    color: theme.colors.success,
   },
   budgetOverview: {
     gap: theme.spacing[4],

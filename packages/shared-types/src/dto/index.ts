@@ -64,6 +64,26 @@ export interface UpdateExpenseDto {
   } | null;
 }
 
+// Income DTOs
+export interface CreateIncomeDto {
+  localId: string;
+  amount: number;
+  currencyCode: Currency;
+  description?: string;
+  notes?: string;
+  categoryId?: string;
+  date: string; // ISO string
+}
+
+export interface UpdateIncomeDto {
+  amount?: number;
+  currencyCode?: Currency;
+  description?: string;
+  notes?: string;
+  categoryId?: string;
+  date?: string;
+}
+
 // Budget DTOs
 export interface CreateBudgetDto {
   localId: string;
@@ -136,7 +156,7 @@ export interface UpdateMemberRoleDto {
 export type SyncOperation = 'create' | 'update' | 'delete';
 
 export interface SyncChange<T = unknown> {
-  entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange';
+  entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income';
   entityId: string;
   operation: SyncOperation;
   payload: T;
@@ -171,7 +191,7 @@ export interface SyncPushResponse {
 
 export interface SyncPullResponse {
   changes: Array<{
-    entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange';
+    entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income';
     entityId: string;
     operation: SyncOperation;
     data: unknown;

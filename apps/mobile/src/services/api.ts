@@ -195,6 +195,34 @@ class ApiClient {
     return this.request<void>(`/expenses/${id}`, { method: 'DELETE' });
   }
 
+  // Income endpoints
+  async getIncomes(filters?: { startDate?: string; endDate?: string; categoryId?: string }) {
+    const params = new URLSearchParams();
+    if (filters?.startDate) params.append('startDate', filters.startDate);
+    if (filters?.endDate) params.append('endDate', filters.endDate);
+    if (filters?.categoryId) params.append('categoryId', filters.categoryId);
+    const query = params.toString();
+    return this.request<any[]>(`/incomes${query ? `?${query}` : ''}`);
+  }
+
+  async createIncome(data: any) {
+    return this.request<any>('/incomes', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateIncome(id: string, data: any) {
+    return this.request<any>(`/incomes/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteIncome(id: string) {
+    return this.request<void>(`/incomes/${id}`, { method: 'DELETE' });
+  }
+
   // Budget endpoints
   async getBudgets() {
     return this.request<any[]>('/budgets');

@@ -556,6 +556,110 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Incomes
+
+All income endpoints require `X-Account-Id` header.
+
+### List Incomes
+
+```http
+GET /incomes
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `startDate` | ISO 8601 | Filter from date |
+| `endDate` | ISO 8601 | Filter to date |
+| `categoryId` | UUID | Filter by category |
+| `limit` | number | Max results (default: 50) |
+| `offset` | number | Pagination offset |
+
+**Response** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "clientId": "client-uuid",
+      "categoryId": "uuid",
+      "amount": 5000.00,
+      "currencyCode": "USD",
+      "description": "Freelance payment",
+      "date": "2024-01-15",
+      "notes": "January invoice",
+      "syncVersion": 1,
+      "createdAt": "2024-01-15T10:00:00Z",
+      "category": {
+        "id": "uuid",
+        "name": "Freelance",
+        "color": "#4CAF50"
+      }
+    }
+  ],
+  "total": 10,
+  "limit": 50,
+  "offset": 0
+}
+```
+
+### Create Income
+
+```http
+POST /incomes
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "amount": 5000.00,
+  "currencyCode": "USD",
+  "description": "Freelance payment",
+  "notes": "January invoice",
+  "categoryId": "uuid",
+  "date": "2024-01-15T00:00:00Z"
+}
+```
+
+**Response** `201 Created`
+
+### Get Single Income
+
+```http
+GET /incomes/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Update Income
+
+```http
+PATCH /incomes/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "amount": 5500.00,
+  "description": "Freelance payment (updated)"
+}
+```
+
+### Delete Income
+
+```http
+DELETE /incomes/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+---
+
 ## Budgets
 
 All budget endpoints require `X-Account-Id` header.
