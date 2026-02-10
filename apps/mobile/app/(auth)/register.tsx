@@ -76,7 +76,7 @@ export default function RegisterScreen() {
 
     try {
       await register(email, password, name, currencyCode);
-      router.replace('/(tabs)');
+      router.replace('/welcome');
     } catch (e) {
       setError(e instanceof Error ? e.message : t('errors.registrationFailed'));
     }

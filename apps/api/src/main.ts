@@ -4,13 +4,23 @@ import { json } from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
 
   // Increase body size limit for base64 audio/image uploads
-  app.use(json({ limit: '50mb' }));
+  // verify callback preserves rawBody for Stripe webhook signature verification
+  app.use(
+    json({
+      limit: '50mb',
+      verify: (req: any, _res, buf) => {
+        req.rawBody = buf;
+      },
+    }),
+  );
 
-  // Global prefix
-  app.setGlobalPrefix('api/v1');
+  // Global prefix (exclude webhook routes from versioning)
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['webhooks/stripe'],
+  });
 
   // CORS
   app.enableCors({

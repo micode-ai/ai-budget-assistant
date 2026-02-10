@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AccountLimitGuard } from '../subscriptions/guards/account-limit.guard';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import {
   CreateAccountDto,
   UpdateAccountDto,
@@ -23,9 +25,13 @@ import { AuthenticatedRequest } from '../../common/types';
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
 export class AccountsController {
-  constructor(private readonly accountsService: AccountsService) {}
+  constructor(
+    private readonly accountsService: AccountsService,
+    private readonly subscriptionsService: SubscriptionsService,
+  ) {}
 
   @Post()
+  @UseGuards(AccountLimitGuard)
   async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateAccountDto) {
     return this.accountsService.create(req.user.id, dto);
   }
@@ -62,6 +68,7 @@ export class AccountsController {
     @Param('id') id: string,
     @Body() dto: CreateInvitationDto,
   ) {
+    await this.subscriptionsService.checkMemberLimit(req.user.id, id);
     return this.accountsService.createInvitation(id, req.user.id, dto);
   }
 

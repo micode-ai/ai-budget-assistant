@@ -1,6 +1,6 @@
 // Data Transfer Objects for API communication
 
-import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account } from '../entities';
+import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus } from '../entities';
 
 // Auth DTOs
 export interface RegisterDto {
@@ -293,6 +293,63 @@ export interface UpdateNotificationPreferencesDto {
 export interface NotificationPreferencesResponse {
   budgetAlerts: boolean;
   sharedAccountActivity: boolean;
+}
+
+// Subscription DTOs
+export interface SubscriptionDto {
+  id: string;
+  tier: SubscriptionTier;
+  status: SubscriptionStatus;
+  currentPeriodStart?: string;
+  currentPeriodEnd?: string;
+  cancelAtPeriodEnd: boolean;
+  trialStart?: string;
+  trialEnd?: string;
+}
+
+export interface UsageStatsDto {
+  tier: SubscriptionTier;
+  aiRequestsUsed: number;
+  aiRequestsLimit: number;
+  resetAt: string;
+  percentUsed: number;
+  isTrialing?: boolean;
+}
+
+export interface CreateCheckoutSessionDto {
+  priceId: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+export interface CheckoutSessionResponse {
+  sessionId: string;
+  url: string;
+}
+
+export interface PortalSessionResponse {
+  url: string;
+}
+
+export interface PlanPriceDto {
+  amount: number;
+  display: string;
+  priceEnvKey: string;
+}
+
+export interface PlanDto {
+  tier: 'pro' | 'business';
+  name: string;
+  monthly: PlanPriceDto;
+  yearly: PlanPriceDto;
+  monthlyEquivalent: string;
+  features: string[];
+}
+
+export interface PlansResponse {
+  currency: string;
+  symbol: string;
+  plans: PlanDto[];
 }
 
 // Wallet DTOs

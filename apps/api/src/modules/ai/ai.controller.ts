@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { AiUsageGuard } from '../subscriptions/guards/ai-usage.guard';
+import { TrackAiUsage } from '../subscriptions/decorators/track-ai-usage.decorator';
 import { AuthenticatedRequest } from '../../common/types';
 import { WhisperService } from './services/whisper.service';
 import { ChatService } from './services/chat.service';
@@ -26,6 +28,8 @@ export class AiController {
   ) {}
 
   @Post('transcribe')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('voice', 1.0)
   async transcribe(
     @Body() body: { audio: string; language?: string },
   ) {
@@ -34,6 +38,8 @@ export class AiController {
   }
 
   @Post('parse-expense')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('parse', 1.0)
   async parseExpense(
     @Req() req: AuthenticatedRequest,
     @Body() body: { text: string },
@@ -42,6 +48,8 @@ export class AiController {
   }
 
   @Post('categorize')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('categorization', 0.5)
   async categorize(
     @Req() req: AuthenticatedRequest,
     @Body() body: { description: string },
@@ -50,6 +58,8 @@ export class AiController {
   }
 
   @Post('chat')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('chat', 1.0)
   async chat(
     @Req() req: AuthenticatedRequest,
     @Body() body: { message: string; conversationId?: string },
@@ -58,6 +68,8 @@ export class AiController {
   }
 
   @Post('scan-receipt')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('ocr', 2.0)
   async scanReceipt(
     @Req() req: AuthenticatedRequest,
     @Body() body: { imageBase64: string },
@@ -66,6 +78,8 @@ export class AiController {
   }
 
   @Post('extract-text')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('ocr', 2.0)
   async extractText(@Body() body: { imageBase64: string }) {
     return { text: await this.ocrService.extractTextFromImage(body.imageBase64) };
   }

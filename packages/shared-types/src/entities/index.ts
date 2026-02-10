@@ -18,6 +18,10 @@ export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
 export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly';
 
+export type SubscriptionTier = 'free' | 'pro' | 'business';
+
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing' | 'paused';
+
 export type InsightType = 'spending_anomaly' | 'budget_prediction' | 'saving_tip' | 'achievement';
 
 export interface NotificationPreferences {
@@ -249,6 +253,30 @@ export interface CurrencyExchange {
   isDeleted: boolean;
   syncStatus: SyncStatus;
   syncVersion: number;
+}
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  tier: SubscriptionTier;
+  status: SubscriptionStatus;
+  currentPeriodStart?: Date;
+  currentPeriodEnd?: Date;
+  cancelAtPeriodEnd: boolean;
+  trialStart?: Date;
+  trialEnd?: Date;
+  aiRequestsUsed: number;
+  aiRequestsResetAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface UsageStats {
+  tier: SubscriptionTier;
+  aiRequestsUsed: number;
+  aiRequestsLimit: number;
+  resetAt: Date;
+  percentUsed: number;
 }
 
 export interface WalletSummary {

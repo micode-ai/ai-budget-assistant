@@ -50,6 +50,10 @@ bugreport-*.zip
 ios/Pods/
 ios/build/
 
+# Claude Code
+.claude/settings.local.json
+
 # Misc
 *.pem
 plan.md
+stripe.exe

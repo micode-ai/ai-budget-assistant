@@ -207,6 +207,22 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="welcome"
+          options={{
+            headerShown: true,
+            title: t('welcome.title'),
+            headerBackVisible: false,
+            gestureEnabled: false,
+          }}
+        />
+        <Stack.Screen
+          name="subscription"
+          options={{
+            headerShown: true,
+            title: t('subscription.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings"
           options={{
             headerShown: true,

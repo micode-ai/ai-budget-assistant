@@ -28,6 +28,21 @@ enum InvitationStatus {
   expired
 }
 
+enum SubscriptionTier {
+  free
+  pro
+  business
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  past_due
+  incomplete
+  trialing
+  paused
+}
+
 // ---- Models ----
 
 model User {
@@ -57,6 +72,8 @@ model User {
   accountMembers    AccountMember[]
   walletBalances    WalletBalance[]
   currencyExchanges CurrencyExchange[]
+  subscription      Subscription?
+  usageLogs         UsageLog[]
 
   @@map("users")
 }
@@ -351,4 +368,54 @@ model CurrencyExchange {
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
   @@map("currency_exchanges")
+}
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  userId               String             @unique @map("user_id")
+  tier                 SubscriptionTier   @default(free)
+  status               SubscriptionStatus @default(active)
+
+  // Stripe fields
+  stripeCustomerId     String?            @unique @map("stripe_customer_id")
+  stripeSubscriptionId String?            @unique @map("stripe_subscription_id")
+  stripePriceId        String?            @map("stripe_price_id")
+
+  // Billing period
+  currentPeriodStart   DateTime?          @map("current_period_start")
+  currentPeriodEnd     DateTime?          @map("current_period_end")
+  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
+  canceledAt           DateTime?          @map("canceled_at")
+
+  // Trial
+  trialStart           DateTime?          @map("trial_start")
+  trialEnd             DateTime?          @map("trial_end")
+
+  // Usage tracking
+  aiRequestsUsed      Int                @default(0) @map("ai_requests_used")
+  aiRequestsResetAt   DateTime           @default(now()) @map("ai_requests_reset_at")
+
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model UsageLog {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  subscriptionId String   @map("subscription_id")
+  featureType    String   @map("feature_type")
+  costUnits      Float    @map("cost_units")
+  metadata       Json?    @db.JsonB
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("usage_logs")
 }
