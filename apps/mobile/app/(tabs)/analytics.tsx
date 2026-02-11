@@ -922,6 +922,7 @@ const createStyles = (theme: Theme) => ({
   insightsCarousel: {
     marginHorizontal: -theme.spacing[4],
     paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[1],
   },
   aiInsightCard: {
     backgroundColor: theme.colors.surface,

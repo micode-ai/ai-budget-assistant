@@ -101,6 +101,7 @@ const createStyles = (theme: Theme) => ({
   },
   scrollContent: {
     paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[1],
   },
   loadingContainer: {
     flexDirection: 'row' as const,

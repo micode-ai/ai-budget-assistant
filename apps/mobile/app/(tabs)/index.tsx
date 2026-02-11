@@ -353,6 +353,7 @@ const createStyles = (theme: Theme) => ({
   walletGrid: {
     flexDirection: 'row' as const,
     paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[1],
     gap: theme.spacing[2],
   },
   walletCard: {
