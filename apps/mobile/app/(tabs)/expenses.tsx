@@ -1,6 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated } from 'react-native';
-import { useState, useCallback, useRef } from 'react';
-import { router } from 'expo-router';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -16,9 +16,16 @@ type ActiveTab = 'expenses' | 'income';
 
 export default function ExpensesScreen() {
   const { t } = useTranslation();
+  const { tab } = useLocalSearchParams<{ tab?: string }>();
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('expenses');
+
+  useEffect(() => {
+    if (tab === 'income' || tab === 'expenses') {
+      setActiveTab(tab);
+    }
+  }, [tab]);
   const { isLoading, loadExpenses, getFilteredExpenses } = useExpenseStore();
   const { loadIncomes, getFilteredIncomes } = useIncomeStore();
   const canEdit = useAccountStore((s) => s.canEdit());

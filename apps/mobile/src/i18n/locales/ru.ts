@@ -83,9 +83,10 @@ export default {
     activeBudgets: 'Активные бюджеты',
     noBudgets: 'Бюджеты не заданы',
     createBudgetHint: 'Создайте бюджет для отслеживания расходов',
-    walletBalances: 'Балансы кошелька',
+    walletBalances: 'Баланс кошелька',
     exchangeCurrency: 'Обмен',
     totalIncome: 'Доходы за этот месяц',
+    totalExpenses: 'Расходы за этот месяц',
   },
   expenses: {
     noExpenses: 'Расходов пока нет',

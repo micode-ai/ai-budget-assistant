@@ -86,6 +86,7 @@ export default {
     walletBalances: 'Баланси гаманця',
     exchangeCurrency: 'Обмін',
     totalIncome: 'Доходи за цей місяць',
+    totalExpenses: 'Витрати за цей місяць',
   },
   expenses: {
     noExpenses: 'Витрат ще немає',

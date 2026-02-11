@@ -18,9 +18,9 @@ export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const { user } = useAuthStore();
-  const { expenses, totalThisMonth, loadExpenses } = useExpenseStore();
+  const { totalThisMonth, loadExpenses } = useExpenseStore();
   const { incomeTotalsByCurrency, loadIncomes } = useIncomeStore();
-  const { activeBudgets, getTotalBudget } = useBudgetStore();
+  const { getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
   const theme = useTheme();
@@ -47,28 +47,7 @@ export default function DashboardScreen() {
     }
   }, [loadExpenses, loadIncomes, loadWallet]);
 
-  const recentExpenses = expenses.slice(0, 5);
-
-  const formatRelativeDate = useCallback((date: Date | string) => {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    const now = new Date();
-    const diffMs = now.getTime() - d.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return t('dates.today');
-    if (diffDays === 1) return t('dates.yesterday');
-    if (diffDays < 7) return t('dates.daysAgo', { count: diffDays });
-    if (diffDays < 30) {
-      const weeks = Math.floor(diffDays / 7);
-      return t('dates.weeksAgo', { count: weeks });
-    }
-    if (diffDays < 365) {
-      const months = Math.floor(diffDays / 30);
-      return t('dates.monthsAgo', { count: months });
-    }
-    const years = Math.floor(diffDays / 365);
-    return t('dates.yearsAgo', { count: years });
-  }, [t]);
+  const remaining = totalBudget - totalThisMonth;
 
   const progressColor = budgetUsedPercent > 90
     ? theme.colors.danger
@@ -88,11 +67,49 @@ export default function DashboardScreen() {
           <Text style={styles.dateText}>{new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
+        {canEdit && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.quickActions}
+            style={styles.quickActionsScroll}
+          >
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.primary + '18' }]}>
+                <Ionicons name="add-circle" size={28} color={theme.colors.primary} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.accent + '18' }]}>
+                <Ionicons name="mic" size={28} color={theme.colors.accent} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.secondary + '18' }]}>
+                <Ionicons name="camera" size={28} color={theme.colors.secondary} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
+              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.warning + '18' }]}>
+                <Ionicons name="swap-horizontal" size={28} color={theme.colors.warning} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        )}
+
+        <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
+          </View>
           <View style={styles.budgetOverview}>
             <View style={styles.budgetAmount}>
-              <Text style={styles.spentAmount}>{formatCurrency(totalThisMonth, currency)}</Text>
+              <Text style={[styles.remainingAmount, remaining < 0 && { color: theme.colors.danger }]}>
+                {formatCurrency(remaining, currency)}
+              </Text>
               <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
             </View>
             <View style={styles.progressContainer}>
@@ -107,10 +124,12 @@ export default function DashboardScreen() {
               <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
+        <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'income' } })}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
+          </View>
           {Object.keys(incomeTotalsByCurrency).length === 0 ? (
             <Text style={styles.incomeAmount}>+{formatCurrency(0, currency)}</Text>
           ) : (
@@ -118,7 +137,14 @@ export default function DashboardScreen() {
               <Text key={code} style={styles.incomeAmount}>+{formatCurrency(amount, code as any)}</Text>
             ))
           )}
-        </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>{t('dashboard.totalExpenses')}</Text>
+          </View>
+          <Text style={styles.expenseTotalAmount}>-{formatCurrency(totalThisMonth, currency)}</Text>
+        </TouchableOpacity>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -164,91 +190,6 @@ export default function DashboardScreen() {
           )}
         </View>
 
-        {canEdit && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.quickActions}
-            style={styles.quickActionsScroll}
-          >
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.primary + '18' }]}>
-                <Ionicons name="add-circle" size={28} color={theme.colors.primary} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.accent + '18' }]}>
-                <Ionicons name="mic" size={28} color={theme.colors.accent} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.secondary + '18' }]}>
-                <Ionicons name="camera" size={28} color={theme.colors.secondary} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.warning + '18' }]}>
-                <Ionicons name="swap-horizontal" size={28} color={theme.colors.warning} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        )}
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{t('dashboard.recentExpenses')}</Text>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/expenses')}>
-              <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
-            </TouchableOpacity>
-          </View>
-          {recentExpenses.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons name="receipt-outline" size={48} color={theme.colors.textTertiary} />
-              <Text style={styles.emptyStateText}>{t('dashboard.noExpenses')}</Text>
-              <Text style={styles.emptyStateSubtext}>{t('dashboard.addFirstExpense')}</Text>
-            </View>
-          ) : (
-            recentExpenses.map((expense) => (
-              <TouchableOpacity key={expense.id} style={styles.expenseItem} onPress={() => router.push(`/expense/${expense.id}`)}>
-                <View style={styles.expenseInfo}>
-                  <Text style={styles.expenseDescription}>{expense.description || t('dashboard.expense')}</Text>
-                  <Text style={styles.expenseDate}>{formatRelativeDate(expense.date)}</Text>
-                </View>
-                <Text style={styles.expenseAmount}>-{formatCurrency(expense.amount, expense.currencyCode)}</Text>
-              </TouchableOpacity>
-            ))
-          )}
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{t('dashboard.activeBudgets')}</Text>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/budgets')}>
-              <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
-            </TouchableOpacity>
-          </View>
-          {activeBudgets.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
-              <Text style={styles.emptyStateText}>{t('dashboard.noBudgets')}</Text>
-              <Text style={styles.emptyStateSubtext}>{t('dashboard.createBudgetHint')}</Text>
-            </View>
-          ) : (
-            activeBudgets.slice(0, 3).map((budget) => (
-              <TouchableOpacity key={budget.id} style={styles.budgetItem} onPress={() => router.push(`/budget/${budget.id}`)}>
-                <View style={styles.budgetInfo}>
-                  <Text style={styles.budgetName}>{budget.name}</Text>
-                  <Text style={styles.budgetPeriod}>{t(`budgets.periods.${budget.period}`)}</Text>
-                </View>
-                <Text style={styles.budgetAmountText}>{formatCurrency(budget.amount, budget.currencyCode)}</Text>
-              </TouchableOpacity>
-            ))
-          )}
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -285,15 +226,30 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[5],
     ...theme.shadows.md,
   },
-  cardTitle: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.textSecondary,
+  cardHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.borderLight,
+    paddingBottom: theme.spacing[2.5],
     marginBottom: theme.spacing[3],
   },
+  cardTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+  },
   incomeAmount: {
-    ...theme.textStyles.h2,
-    fontSize: 28,
+    ...theme.textStyles.h3,
     color: theme.colors.success,
+    fontWeight: '700' as const,
+  },
+  expenseTotalAmount: {
+    ...theme.textStyles.h3,
+    color: theme.colors.danger,
+    fontWeight: '700' as const,
+  },
+  remainingAmount: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    fontWeight: '700' as const,
   },
   budgetOverview: {
     gap: theme.spacing[4],
@@ -302,11 +258,6 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     alignItems: 'baseline' as const,
     gap: theme.spacing[2],
-  },
-  spentAmount: {
-    ...theme.textStyles.h2,
-    fontSize: 32,
-    color: theme.colors.textPrimary,
   },
   budgetTotal: {
     ...theme.textStyles.bodyLarge,
@@ -399,57 +350,6 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     color: '#FFFFFF',
     fontWeight: '600' as const,
-  },
-  expenseItem: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
-    marginBottom: theme.spacing[2],
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-  },
-  expenseInfo: {
-    flex: 1,
-  },
-  expenseDescription: {
-    ...theme.textStyles.bodyLargeMedium,
-    color: theme.colors.textPrimary,
-  },
-  expenseDate: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[1],
-  },
-  expenseAmount: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.danger,
-  },
-  budgetItem: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
-    marginBottom: theme.spacing[2],
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-  },
-  budgetInfo: {
-    flex: 1,
-  },
-  budgetName: {
-    ...theme.textStyles.bodyLargeMedium,
-    color: theme.colors.textPrimary,
-  },
-  budgetPeriod: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[1],
-    textTransform: 'capitalize' as const,
-  },
-  budgetAmountText: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.primary,
   },
   walletGridScroll: {
     marginHorizontal: -theme.spacing[4],
