@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
-import { DEFAULT_EXPENSE_CATEGORIES } from '@budget/shared-utils';
+import { useCategoryStore } from '@/stores/categoryStore';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -28,6 +28,7 @@ export default function VoiceExpenseScreen() {
   const [showConfirm, setShowConfirm] = useState(false);
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
+  const { getExpenseCategories, getCategoryByName, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
 
   // Editable fields
   const [editAmount, setEditAmount] = useState('');
@@ -49,6 +50,10 @@ export default function VoiceExpenseScreen() {
   } = useVoiceInput();
 
   useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
+  }, []);
+
+  useEffect(() => {
     if (error) {
       Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: resetVoice }]);
     }
@@ -59,7 +64,10 @@ export default function VoiceExpenseScreen() {
       setEditAmount(parsedExpense.amount.toString());
       setEditDescription(parsedExpense.description || '');
       setEditMerchant(parsedExpense.merchant || '');
-      setEditCategory(parsedExpense.categorySuggestion || '');
+      // Map AI-suggested category name to category ID
+      const suggestedName = parsedExpense.categorySuggestion || '';
+      const matchedCategory = suggestedName ? getCategoryByName(suggestedName, 'expense') : undefined;
+      setEditCategory(matchedCategory?.id || '');
       setEditCurrencyCode(parsedExpense.currencyCode || user?.currencyCode || 'USD');
       setShowConfirm(true);
     }
@@ -238,24 +246,24 @@ export default function VoiceExpenseScreen() {
               <View style={styles.fieldGroup}>
                 <Text style={styles.fieldLabel}>{t('voice.category')}</Text>
                 <View style={styles.categoryGrid}>
-                  {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
+                  {getExpenseCategories().map((cat) => (
                     <TouchableOpacity
-                      key={cat.name}
+                      key={cat.id}
                       style={[
                         styles.categoryChip,
-                        editCategory === cat.name && {
+                        editCategory === cat.id && {
                           backgroundColor: cat.color,
                           borderColor: cat.color,
                         },
                       ]}
                       onPress={() =>
-                        setEditCategory(editCategory === cat.name ? '' : cat.name)
+                        setEditCategory(editCategory === cat.id ? '' : cat.id)
                       }
                     >
                       <Text
                         style={[
                           styles.categoryChipText,
-                          editCategory === cat.name && styles.categoryChipTextSelected,
+                          editCategory === cat.id && styles.categoryChipTextSelected,
                         ]}
                       >
                         {cat.name}

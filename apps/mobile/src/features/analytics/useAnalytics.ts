@@ -1,8 +1,14 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useBudgetStore } from '@/stores/budgetStore';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { useTagStore } from '@/stores/tagStore';
+import { useProjectStore } from '@/stores/projectStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { loadItemsByExpenseId } from '@/db/expenseItemRepository';
+import { getAllExpenseTagMappings } from '@/db/tagRepository';
+import { getAllProjectExpenseMappings } from '@/db/projectRepository';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
@@ -82,6 +88,36 @@ export interface BudgetPredictionItem {
   currencyCode: string;
 }
 
+export interface TagSpending {
+  tagId: string;
+  name: string;
+  amount: number;
+  percentage: number;
+  color: string;
+}
+
+export interface ProjectSpending {
+  projectId: string;
+  name: string;
+  amount: number;
+  percentage: number;
+  color: string;
+  budget?: number;
+}
+
+const TAG_COLORS = [
+  '#6366F1', // Indigo
+  '#EC4899', // Pink
+  '#F59E0B', // Amber
+  '#10B981', // Emerald
+  '#3B82F6', // Blue
+  '#8B5CF6', // Violet
+  '#EF4444', // Red
+  '#14B8A6', // Teal
+  '#F97316', // Orange
+  '#6B7280', // Gray
+];
+
 const CATEGORY_COLORS = [
   '#4ECDC4', // Teal
   '#FF6B6B', // Red
@@ -98,7 +134,17 @@ const CATEGORY_COLORS = [
 export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: string) {
   const { t } = useTranslation();
   const { expenses } = useExpenseStore();
+  const { categories, loadCategories } = useCategoryStore();
+  const { tags, loadTags } = useTagStore();
+  const { projects, loadProjects } = useProjectStore();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Ensure reference data is loaded
+  useEffect(() => {
+    if (categories.length === 0) loadCategories();
+    if (tags.length === 0) loadTags();
+    if (projects.length === 0) loadProjects();
+  }, [categories.length, tags.length, projects.length, loadCategories, loadTags, loadProjects]);
 
   const dateRange = useMemo(() => {
     const now = new Date();
@@ -214,18 +260,21 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     let colorIndex = 0;
 
     categoryMap.forEach((amount, categoryId) => {
+      const category = categoryId
+        ? categories.find(c => c.id === categoryId) || categories.find(c => c.name === categoryId)
+        : undefined;
       result.push({
         categoryId,
-        name: categoryId || t('common.uncategorized'),
+        name: category?.name || (categoryId ? categoryId : t('common.uncategorized')),
         amount,
         percentage: (amount / total) * 100,
-        color: CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],
+        color: category?.color || CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],
       });
       colorIndex++;
     });
 
     return result.sort((a, b) => b.amount - a.amount);
-  }, [filteredExpenses, t]);
+  }, [filteredExpenses, categories, t]);
 
   const summary = useMemo((): AnalyticsSummary => {
     const totalSpent = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
@@ -359,7 +408,8 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
         for (const expense of filteredExpenses) {
           const catId = expense.categoryId || 'uncategorized';
-          const current = currentByCategory.get(catId) || { amount: 0, name: catId };
+          const cat = expense.categoryId ? categories.find(c => c.id === expense.categoryId) : undefined;
+          const current = currentByCategory.get(catId) || { amount: 0, name: cat?.name || t('common.uncategorized') };
           currentByCategory.set(catId, {
             amount: current.amount + expense.amount,
             name: current.name,
@@ -406,7 +456,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     };
 
     fetchInsights();
-  }, [filteredExpenses, dateRange, currencyCode, expenses]);
+  }, [filteredExpenses, dateRange, currencyCode, expenses, categories]);
 
   // Item breakdown for OCR expenses
   const [itemBreakdown, setItemBreakdown] = useState<ItemBreakdown[]>([]);
@@ -453,6 +503,123 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     computeItemBreakdown();
   }, [filteredExpenses]);
 
+  // Tag spending breakdown
+  const [tagSpending, setTagSpending] = useState<TagSpending[]>([]);
+
+  useEffect(() => {
+    const computeTagSpending = async () => {
+      if (filteredExpenses.length === 0) {
+        setTagSpending([]);
+        return;
+      }
+
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) {
+        setTagSpending([]);
+        return;
+      }
+
+      try {
+        const mappings = await getAllExpenseTagMappings(accountId);
+        const expenseIds = new Set(filteredExpenses.map(e => e.id));
+        const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, e.amount]));
+
+        // Aggregate: for each tag, sum amounts of linked expenses in the filtered set
+        const tagAmountMap = new Map<string, number>();
+        for (const m of mappings) {
+          if (!expenseIds.has(m.expenseId)) continue;
+          const amount = expenseAmountMap.get(m.expenseId) || 0;
+          tagAmountMap.set(m.tagId, (tagAmountMap.get(m.tagId) || 0) + amount);
+        }
+
+        const totalTagged = Array.from(tagAmountMap.values()).reduce((s, a) => s + a, 0);
+        if (totalTagged === 0) {
+          setTagSpending([]);
+          return;
+        }
+
+        const result: TagSpending[] = [];
+        let colorIndex = 0;
+        for (const [tagId, amount] of tagAmountMap) {
+          const tag = tags.find(t => t.id === tagId) || tags.find(t => t.name === tagId);
+          result.push({
+            tagId,
+            name: tag?.name || tagId,
+            amount,
+            percentage: (amount / totalTagged) * 100,
+            color: tag?.color || TAG_COLORS[colorIndex % TAG_COLORS.length],
+          });
+          colorIndex++;
+        }
+
+        setTagSpending(result.sort((a, b) => b.amount - a.amount));
+      } catch {
+        setTagSpending([]);
+      }
+    };
+
+    computeTagSpending();
+  }, [filteredExpenses, tags]);
+
+  // Project spending breakdown
+  const [projectSpending, setProjectSpending] = useState<ProjectSpending[]>([]);
+
+  useEffect(() => {
+    const computeProjectSpending = async () => {
+      if (filteredExpenses.length === 0) {
+        setProjectSpending([]);
+        return;
+      }
+
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) {
+        setProjectSpending([]);
+        return;
+      }
+
+      try {
+        const mappings = await getAllProjectExpenseMappings(accountId);
+        const expenseIds = new Set(filteredExpenses.map(e => e.id));
+        const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, e.amount]));
+
+        // Aggregate: for each project, sum amounts of linked expenses in the filtered set
+        const projectAmountMap = new Map<string, number>();
+        for (const m of mappings) {
+          if (!expenseIds.has(m.expenseId)) continue;
+          const amount = expenseAmountMap.get(m.expenseId) || 0;
+          projectAmountMap.set(m.projectId, (projectAmountMap.get(m.projectId) || 0) + amount);
+        }
+
+        const totalProjected = Array.from(projectAmountMap.values()).reduce((s, a) => s + a, 0);
+        if (totalProjected === 0) {
+          setProjectSpending([]);
+          return;
+        }
+
+        const result: ProjectSpending[] = [];
+        let colorIndex = 0;
+        for (const [projectId, amount] of projectAmountMap) {
+          const project = projects.find(p => p.id === projectId) || projects.find(p => p.name === projectId);
+          result.push({
+            projectId,
+            name: project?.name || projectId,
+            amount,
+            percentage: (amount / totalProjected) * 100,
+            color: project?.color || TAG_COLORS[colorIndex % TAG_COLORS.length],
+            budget: project?.budget,
+          });
+          colorIndex++;
+        }
+
+        setProjectSpending(result.sort((a, b) => b.amount - a.amount));
+      } catch {
+        setProjectSpending([]);
+      }
+    };
+
+    computeProjectSpending();
+  }, [filteredExpenses, projects]);
+
   return {
     isLoading,
     dailySpending,
@@ -465,5 +632,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     periodComparison,
     anomalies,
     predictions,
+    tagSpending,
+    projectSpending,
   };
 }

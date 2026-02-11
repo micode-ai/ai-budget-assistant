@@ -90,6 +90,12 @@ app/
 ├── income/
 │   ├── [id].tsx           # Детали дохода
 │   └── new.tsx            # Добавить доход
+├── tags/
+│   └── index.tsx          # Управление тегами
+├── projects/
+│   ├── index.tsx          # Список проектов
+│   ├── [id].tsx           # Детали проекта и аналитика
+│   └── new.tsx            # Создать проект
 ├── wallet/
 │   ├── index.tsx          # Балансы кошелька
 │   ├── exchange.tsx       # Обмен валют
@@ -117,6 +123,9 @@ Zustand хранилища управляют состоянием прилож�
 | `useWalletStore` | Балансы кошелька, обмен валют |
 | `useThemeStore` | Настройки темы, тёмный режим |
 | `useInsightsStore` | Загрузка AI инсайтов, кеширование, скрытие |
+| `useTagStore` | CRUD тегов, привязка к расходам/доходам, AI-подсказки |
+| `useProjectStore` | CRUD проектов, привязка расходов/доходов, архивирование |
+| `useCategoryStore` | Управление категориями, загрузка из БД |
 
 ### Схема локальной базы данных
 
@@ -204,10 +213,95 @@ Zustand хранилища управляют состоянием прилож�
   syncVersion: integer
 }
 
+// таблица tags (теги)
+{
+  id: text (PK),
+  serverId: text (nullable),
+  accountId: text,
+  name: text,
+  color: text (nullable),
+  icon: text (nullable),
+  usageCount: integer (по умолч. 0),
+  isDeleted: integer (boolean),
+  syncStatus: text (pending|synced|conflict),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// таблица expense_tags (теги расходов)
+{
+  id: text (PK),
+  expenseId: text,
+  tagId: text,
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// таблица income_tags (теги доходов)
+{
+  id: text (PK),
+  incomeId: text,
+  tagId: text,
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// таблица projects (проекты)
+{
+  id: text (PK),
+  localId: text,
+  serverId: text (nullable),
+  accountId: text,
+  name: text,
+  description: text (nullable),
+  color: text (nullable),
+  icon: text (nullable),
+  startDate: integer (nullable),
+  endDate: integer (nullable),
+  budget: real (nullable),
+  currencyCode: text (nullable),
+  isArchived: integer (boolean),
+  isDeleted: integer (boolean),
+  syncStatus: text (pending|synced|conflict),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// таблица project_expenses (расходы проекта)
+{
+  id: text (PK),
+  projectId: text,
+  expenseId: text,
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// таблица expense_category_splits (разделение расходов по категориям)
+{
+  id: text (PK),
+  expenseId: text,
+  categoryId: text,
+  amount: real,
+  percentage: real,
+  notes: text (nullable),
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
 // таблица sync_queue (очередь синхронизации)
 {
   id: integer (PK),
-  entityType: text (expense|category|budget),
+  entityType: text (expense|category|budget|tag|project|...),
   entityLocalId: integer,
   operation: text (create|update|delete),
   payload: text (JSON),
@@ -263,13 +357,24 @@ src/
 │   ├── categories/              # Управление категориями
 │   │   ├── categories.controller.ts
 │   │   └── categories.service.ts
+│   ├── tags/                     # Управление тегами
+│   │   ├── tags.controller.ts
+│   │   ├── tags.service.ts
+│   │   └── tags.module.ts
+│   ├── projects/                 # Управление проектами
+│   │   ├── projects.controller.ts
+│   │   ├── projects.service.ts
+│   │   └── projects.module.ts
 │   ├── ai/                      # AI сервисы
 │   │   ├── ai.controller.ts
 │   │   └── services/
 │   │       ├── transcription.service.ts
 │   │       ├── categorization.service.ts
 │   │       ├── chat.service.ts
-│   │       └── receipt-scanner.service.ts
+│   │       ├── receipt-scanner.service.ts
+│   │       ├── tag-suggestion.service.ts
+│   │       ├── project-suggestion.service.ts
+│   │       └── split-suggestion.service.ts
 │   ├── analytics/               # Аналитика расходов
 │   │   ├── analytics.controller.ts
 │   │   └── analytics.service.ts
@@ -627,6 +732,126 @@ model CurrencyExchange {
   @@unique([accountId, clientId])
 }
 
+model Tag {
+  id          String   @id @default(uuid())
+  accountId   String
+  name        String
+  color       String?
+  icon        String?
+  usageCount  Int      @default(0)
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  account     Account
+  expenseTags ExpenseTag[]
+  incomeTags  IncomeTag[]
+
+  @@unique([accountId, name])
+}
+
+model ExpenseTag {
+  id          String   @id @default(uuid())
+  expenseId   String
+  tagId       String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expense Expense
+  tag     Tag
+
+  @@unique([expenseId, tagId])
+}
+
+model IncomeTag {
+  id          String   @id @default(uuid())
+  incomeId    String
+  tagId       String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  income Income
+  tag    Tag
+
+  @@unique([incomeId, tagId])
+}
+
+model Project {
+  id           String    @id @default(uuid())
+  accountId    String
+  clientId     String
+  name         String
+  description  String?
+  color        String?
+  icon         String?
+  startDate    DateTime? @db.Date
+  endDate      DateTime? @db.Date
+  budget       Decimal?  @db.Decimal(12, 2)
+  currencyCode String?
+  isArchived   Boolean   @default(false)
+  isDeleted    Boolean   @default(false)
+  syncVersion  Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  account         Account
+  projectExpenses ProjectExpense[]
+  projectIncomes  ProjectIncome[]
+
+  @@unique([accountId, clientId])
+}
+
+model ProjectExpense {
+  id          String   @id @default(uuid())
+  projectId   String
+  expenseId   String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project
+  expense Expense
+
+  @@unique([projectId, expenseId])
+}
+
+model ProjectIncome {
+  id          String   @id @default(uuid())
+  projectId   String
+  incomeId    String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project
+  income  Income
+
+  @@unique([projectId, incomeId])
+}
+
+model ExpenseCategorySplit {
+  id          String   @id @default(uuid())
+  expenseId   String
+  categoryId  String
+  amount      Decimal  @db.Decimal(12, 2)
+  percentage  Decimal  @db.Decimal(5, 2)
+  notes       String?
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expense  Expense
+  category Category
+}
+
 model Subscription {
   id               String   @id @default(uuid())
   userId           String   @unique
@@ -749,6 +974,9 @@ model SpendingStory {
 | Чат ассистент | GPT-4 | Финансовые советы и аналитика |
 | AI Инсайты | GPT-4 | Анализ паттернов, генерация карточек инсайтов |
 | Генерация историй | GPT-4 | Создание нарративных дашбордов о расходах |
+| Подсказки тегов | GPT-4 | Подбор тегов по описанию расхода (сначала из истории, затем AI) |
+| Подсказки проектов | GPT-4 | Привязка расходов к проектам по датам и семантическому анализу |
+| Подсказки разделения | GPT-4 | Предложение разделения расходов по категориям |
 
 ### Поток данных
 

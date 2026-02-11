@@ -422,9 +422,12 @@ Content-Type: application/json
   "locationLng": 37.6173,
   "notes": "Деловой обед",
   "isRecurring": false,
-  "source": "manual"
+  "source": "manual",
+  "tagIds": ["tag-uuid-1", "tag-uuid-2"]
 }
 ```
+
+**Примечание:** `tagIds` — опциональное поле. Теги автоматически привязываются к расходу.
 
 **Ответ** `201 Created`
 
@@ -851,6 +854,384 @@ X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `204 No Content`
+
+---
+
+## Теги
+
+Все эндпоинты тегов требуют заголовок `X-Account-Id`.
+
+### Список тегов
+
+```http
+GET /tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "name": "командировка",
+      "color": "#3498DB",
+      "icon": "briefcase",
+      "usageCount": 12,
+      "syncVersion": 1,
+      "createdAt": "2026-01-15T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Создать тег
+
+```http
+POST /tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "командировка",
+  "color": "#3498DB",
+  "icon": "briefcase"
+}
+```
+
+**Ответ** `201 Created`
+
+### Обновить тег
+
+```http
+PATCH /tags/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "рабочая-поездка",
+  "color": "#2980B9"
+}
+```
+
+### Удалить тег
+
+```http
+DELETE /tags/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Добавить тег к расходу
+
+```http
+POST /tags/:id/expenses/:expenseId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `201 Created`
+
+### Удалить тег с расхода
+
+```http
+DELETE /tags/:id/expenses/:expenseId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Добавить тег к доходу
+
+```http
+POST /tags/:id/incomes/:incomeId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `201 Created`
+
+### Удалить тег с дохода
+
+```http
+DELETE /tags/:id/incomes/:incomeId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+---
+
+## Проекты
+
+Все эндпоинты проектов требуют заголовок `X-Account-Id`.
+
+### Список проектов
+
+```http
+GET /projects?archived=false
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `archived` | boolean | Фильтр по статусу архивации |
+
+**Ответ** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "clientId": "client-uuid",
+      "name": "Ремонт кухни",
+      "description": "Полный ремонт кухни",
+      "color": "#E74C3C",
+      "icon": "home",
+      "startDate": "2026-01-01",
+      "endDate": "2026-03-31",
+      "budget": 300000.00,
+      "currencyCode": "RUB",
+      "isArchived": false,
+      "syncVersion": 1,
+      "createdAt": "2026-01-01T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Получить проект
+
+```http
+GET /projects/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+Возвращает проект с привязанными расходами и доходами.
+
+### Создать проект
+
+```http
+POST /projects
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "name": "Ремонт кухни",
+  "description": "Полный ремонт кухни",
+  "color": "#E74C3C",
+  "icon": "home",
+  "startDate": "2026-01-01",
+  "endDate": "2026-03-31",
+  "budget": 300000.00,
+  "currencyCode": "RUB"
+}
+```
+
+**Ответ** `201 Created`
+
+### Обновить проект
+
+```http
+PATCH /projects/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "Ремонт кухни — фаза 2",
+  "budget": 450000.00,
+  "isArchived": false
+}
+```
+
+### Удалить проект
+
+```http
+DELETE /projects/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Добавить расход в проект
+
+```http
+POST /projects/:id/expenses
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "expenseId": "expense-uuid"
+}
+```
+
+**Ответ** `201 Created`
+
+### Удалить расход из проекта
+
+```http
+DELETE /projects/:id/expenses/:expenseId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Добавить доход в проект
+
+```http
+POST /projects/:id/incomes
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "incomeId": "income-uuid"
+}
+```
+
+**Ответ** `201 Created`
+
+### Удалить доход из проекта
+
+```http
+DELETE /projects/:id/incomes/:incomeId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Получить аналитику проекта
+
+```http
+GET /projects/:id/analytics
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "projectId": "uuid",
+  "projectName": "Ремонт кухни",
+  "totalExpenses": 192000.00,
+  "totalIncome": 0,
+  "netAmount": -192000.00,
+  "expenseCount": 8,
+  "incomeCount": 0,
+  "budgetRemaining": 108000.00,
+  "expensesByCategory": [
+    {
+      "categoryId": "uuid",
+      "categoryName": "Материалы",
+      "amount": 126000.00,
+      "count": 5
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-01-15",
+      "expenses": 27000.00,
+      "income": 0
+    }
+  ]
+}
+```
+
+---
+
+## Разделение расходов по категориям
+
+Разделение позволяет распределить один расход по нескольким категориям.
+
+### Установить разделение для расхода
+
+```http
+POST /expenses/:id/splits
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "splits": [
+    {
+      "categoryId": "food-uuid",
+      "amount": 1800.00,
+      "percentage": 60,
+      "notes": "Продукты"
+    },
+    {
+      "categoryId": "household-uuid",
+      "amount": 1200.00,
+      "percentage": 40,
+      "notes": "Бытовая химия"
+    }
+  ]
+}
+```
+
+**Валидация**: от 2 до 10 разделений на расход.
+
+**Ответ** `200 OK`
+```json
+{
+  "splits": [
+    {
+      "id": "uuid",
+      "expenseId": "expense-uuid",
+      "categoryId": "food-uuid",
+      "amount": 1800.00,
+      "percentage": 60,
+      "notes": "Продукты",
+      "category": {
+        "id": "food-uuid",
+        "name": "Еда и рестораны"
+      }
+    },
+    {
+      "id": "uuid",
+      "expenseId": "expense-uuid",
+      "categoryId": "household-uuid",
+      "amount": 1200.00,
+      "percentage": 40,
+      "notes": "Бытовая химия",
+      "category": {
+        "id": "household-uuid",
+        "name": "Бытовые товары"
+      }
+    }
+  ]
+}
+```
+
+### Удалить разделение расхода
+
+```http
+DELETE /expenses/:id/splits
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+**Примечание:** Если расход разделён, аналитика агрегирует по категориям разделения вместо единственной категории расхода.
 
 ---
 
@@ -1290,6 +1671,117 @@ image: <изображение>
 }
 ```
 
+### Подсказки тегов
+
+```http
+GET /ai/suggest-tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `description` | string | Описание расхода (обязательно) |
+| `merchant` | string | Название продавца (опционально) |
+
+**Ответ** `200 OK`
+```json
+{
+  "tags": [
+    {
+      "name": "деловой-обед",
+      "confidence": 0.92,
+      "source": "history",
+      "existingTagId": "uuid"
+    },
+    {
+      "name": "встреча-с-клиентом",
+      "confidence": 0.78,
+      "source": "ai",
+      "existingTagId": null
+    }
+  ]
+}
+```
+
+**Стоимость AI**: 0.5 единиц (только если из истории < 3 результатов)
+
+**Значения source**: `history` (из похожих прошлых расходов), `ai` (сгенерировано GPT-4)
+
+### Подсказка проекта
+
+```http
+POST /ai/suggest-project
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "description": "Краска для стен кухни",
+  "date": "2026-02-10",
+  "locationName": "Леруа Мерлен"
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "projectId": "uuid",
+  "projectName": "Ремонт кухни",
+  "confidence": 0.88
+}
+```
+
+Возвращает `null`, если подходящий проект не найден (confidence < 0.6).
+
+**Стоимость AI**: 0.5 единиц
+
+### Подсказка разделения
+
+```http
+POST /ai/suggest-splits
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "id": "expense-uuid",
+  "description": "Перекрёсток — продукты и бытовая химия",
+  "amount": 5130.00,
+  "items": [
+    { "description": "Яблоки", "totalPrice": 359.00 },
+    { "description": "Куриная грудка", "totalPrice": 779.00 },
+    { "description": "Средство для мытья полов", "totalPrice": 509.00 },
+    { "description": "Губки", "totalPrice": 239.00 }
+  ]
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "shouldSplit": true,
+  "confidence": 0.91,
+  "suggestedSplits": [
+    {
+      "categoryName": "Еда и рестораны",
+      "amount": 1138.00,
+      "percentage": 22.2,
+      "reasoning": "Продукты питания: яблоки, куриная грудка"
+    },
+    {
+      "categoryName": "Бытовые товары",
+      "amount": 748.00,
+      "percentage": 14.6,
+      "reasoning": "Бытовая химия: средство для мытья полов, губки"
+    }
+  ]
+}
+```
+
+**Стоимость AI**: 1.0 единица
+
 ### Чат с AI ассистентом
 
 ```http
@@ -1404,6 +1896,67 @@ X-Account-Id: <account-uuid>
     "changePercentage": 16.3
   },
   "monthlyAverage": 116391.75
+}
+```
+
+### Разбивка по тегам
+
+```http
+GET /analytics/tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `startDate` | ISO 8601 | Начало периода (обязательно) |
+| `endDate` | ISO 8601 | Конец периода (обязательно) |
+
+**Ответ** `200 OK`
+```json
+{
+  "tags": [
+    {
+      "tagId": "uuid",
+      "tagName": "командировка",
+      "color": "#3498DB",
+      "amount": 75000.00,
+      "count": 8,
+      "percentage": 35.2
+    }
+  ]
+}
+```
+
+### Разбивка по проектам
+
+```http
+GET /analytics/projects
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `startDate` | ISO 8601 | Начало периода (обязательно) |
+| `endDate` | ISO 8601 | Конец периода (обязательно) |
+
+**Ответ** `200 OK`
+```json
+{
+  "projects": [
+    {
+      "projectId": "uuid",
+      "projectName": "Ремонт кухни",
+      "totalExpenses": 192000.00,
+      "totalIncome": 0,
+      "expenseCount": 8,
+      "budget": 300000.00,
+      "isArchived": false
+    }
+  ]
 }
 ```
 

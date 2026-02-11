@@ -223,6 +223,106 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Tags, Projects, Splits tables
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS tags (
+        id TEXT PRIMARY KEY,
+        account_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        color TEXT,
+        icon TEXT,
+        usage_count INTEGER DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
+
+      CREATE TABLE IF NOT EXISTS expense_tags (
+        id TEXT PRIMARY KEY,
+        expense_id TEXT NOT NULL,
+        tag_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS income_tags (
+        id TEXT PRIMARY KEY,
+        income_id TEXT NOT NULL,
+        tag_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (income_id) REFERENCES incomes(id) ON DELETE CASCADE,
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS projects (
+        id TEXT PRIMARY KEY,
+        account_id TEXT NOT NULL,
+        client_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        description TEXT,
+        color TEXT,
+        icon TEXT,
+        start_date INTEGER,
+        end_date INTEGER,
+        budget REAL,
+        currency_code TEXT,
+        is_archived INTEGER DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
+
+      CREATE TABLE IF NOT EXISTS project_expenses (
+        id TEXT PRIMARY KEY,
+        project_id TEXT NOT NULL,
+        expense_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+        FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS project_incomes (
+        id TEXT PRIMARY KEY,
+        project_id TEXT NOT NULL,
+        income_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+        FOREIGN KEY (income_id) REFERENCES incomes(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS expense_category_splits (
+        id TEXT PRIMARY KEY,
+        expense_id TEXT NOT NULL,
+        category_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        percentage REAL NOT NULL,
+        notes TEXT,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
+      );
+    `);
+
     // Add receipt_image column to expenses (migration for existing DBs)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image TEXT`);
@@ -285,6 +385,27 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE INDEX IF NOT EXISTS idx_incomes_account ON incomes(account_id)',
       'CREATE INDEX IF NOT EXISTS idx_incomes_date ON incomes(account_id, date DESC)',
       'CREATE INDEX IF NOT EXISTS idx_incomes_sync ON incomes(sync_status)',
+      // Tags indexes
+      'CREATE INDEX IF NOT EXISTS idx_tags_account ON tags(account_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_tags_account_name ON tags(account_id, name)',
+      'CREATE INDEX IF NOT EXISTS idx_expense_tags_expense ON expense_tags(expense_id)',
+      'CREATE INDEX IF NOT EXISTS idx_expense_tags_tag ON expense_tags(tag_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_expense_tags_unique ON expense_tags(expense_id, tag_id)',
+      'CREATE INDEX IF NOT EXISTS idx_income_tags_income ON income_tags(income_id)',
+      'CREATE INDEX IF NOT EXISTS idx_income_tags_tag ON income_tags(tag_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_income_tags_unique ON income_tags(income_id, tag_id)',
+      // Projects indexes
+      'CREATE INDEX IF NOT EXISTS idx_projects_account ON projects(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_projects_archived ON projects(account_id, is_archived)',
+      'CREATE INDEX IF NOT EXISTS idx_project_expenses_project ON project_expenses(project_id)',
+      'CREATE INDEX IF NOT EXISTS idx_project_expenses_expense ON project_expenses(expense_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_project_expenses_unique ON project_expenses(project_id, expense_id)',
+      'CREATE INDEX IF NOT EXISTS idx_project_incomes_project ON project_incomes(project_id)',
+      'CREATE INDEX IF NOT EXISTS idx_project_incomes_income ON project_incomes(income_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_project_incomes_unique ON project_incomes(project_id, income_id)',
+      // Splits indexes
+      'CREATE INDEX IF NOT EXISTS idx_expense_splits_expense ON expense_category_splits(expense_id)',
+      'CREATE INDEX IF NOT EXISTS idx_expense_splits_category ON expense_category_splits(category_id)',
     ];
 
     for (const indexSql of indexes) {

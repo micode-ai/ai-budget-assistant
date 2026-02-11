@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,6 +25,14 @@ export default function DashboardScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
+
+  useEffect(() => {
+    if (currentAccountId) {
+      loadIncomes();
+    }
+  }, [currentAccountId, loadIncomes]);
+
   const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
   const budgetUsedPercent = totalBudget > 0 ? (totalThisMonth / totalBudget) * 100 : 0;
@@ -36,7 +44,7 @@ export default function DashboardScreen() {
     } finally {
       setRefreshing(false);
     }
-  }, [loadExpenses, loadWallet]);
+  }, [loadExpenses, loadIncomes, loadWallet]);
 
   const recentExpenses = expenses.slice(0, 5);
 
@@ -63,7 +71,7 @@ export default function DashboardScreen() {
           <View style={styles.budgetOverview}>
             <View style={styles.budgetAmount}>
               <Text style={styles.spentAmount}>{formatCurrency(totalThisMonth, currency)}</Text>
-              <Text style={styles.budgetTotal}>of {formatCurrency(totalBudget, currency)}</Text>
+              <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
             </View>
             <View style={styles.progressContainer}>
               <View style={styles.progressBar}>

@@ -21,6 +21,8 @@ import {
   softDeleteExpenseItemInDb,
   deduplicateItemsByExpenseId,
 } from '@/db/expenseItemRepository';
+import { insertExpenseTag } from '@/db/tagRepository';
+import { addExpenseToProject } from '@/db/projectRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
 
@@ -91,21 +93,7 @@ export const useExpenseStore = create<ExpenseState>()(
     },
     expenseItems: {},
 
-    get totalThisMonth() {
-      const now = new Date();
-      const startOfMonth = getStartOfMonth(now);
-      const endOfMonth = getEndOfMonth(now);
-      const accountCurrency = useAccountStore.getState().currentAccount?.()?.currencyCode || 'USD';
-
-      return get().expenses
-        .filter((e) => !e.isDeleted)
-        .filter((e) => e.currencyCode === accountCurrency)
-        .filter((e) => {
-          const expenseDate = new Date(e.date);
-          return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
-        })
-        .reduce((sum, e) => sum + e.amount, 0);
-    },
+    totalThisMonth: 0,
 
     loadExpenses: async () => {
       set({ isLoading: true, error: null });
@@ -129,7 +117,7 @@ export const useExpenseStore = create<ExpenseState>()(
           const serverResult = await api.getExpenses();
           // Guard: abort if account switched during server call
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          const serverExpenses: any[] = serverResult.data || serverResult;
+          const serverExpenses: any[] = (serverResult as any).data || serverResult;
           for (const se of serverExpenses) {
             const expenseId = se.clientId || se.id;
             const serverCategoryId = se.category?.name ?? se.categoryId ?? undefined;
@@ -213,7 +201,7 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: async (expenseData) => {
-      const { items, receiptImageBase64, ...coreData } = expenseData;
+      const { items, receiptImageBase64, tagIds, projectId, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
@@ -223,6 +211,7 @@ export const useExpenseStore = create<ExpenseState>()(
         id,
         localId: id,
         accountId,
+        projectId,
         createdAt: now,
         updatedAt: now,
         syncStatus: 'pending' as SyncStatus,
@@ -236,6 +225,34 @@ export const useExpenseStore = create<ExpenseState>()(
 
       // Await local SQLite writes so data is persisted before navigation
       await insertExpense(newExpense);
+
+      // Save tag associations to expense_tags join table
+      if (tagIds && tagIds.length > 0) {
+        for (const tagId of tagIds) {
+          await insertExpenseTag({
+            id: generateUUID(),
+            expenseId: id,
+            tagId,
+            createdAt: now,
+            updatedAt: now,
+            isDeleted: false,
+            syncVersion: 0,
+          });
+        }
+      }
+
+      // Save project association to project_expenses join table
+      if (projectId) {
+        await addExpenseToProject({
+          id: generateUUID(),
+          projectId,
+          expenseId: id,
+          createdAt: now,
+          updatedAt: now,
+          isDeleted: false,
+          syncVersion: 0,
+        });
+      }
 
       if (receiptImageBase64) {
         await saveReceiptImageLocally(id, receiptImageBase64);
@@ -677,4 +694,26 @@ export const useExpenseStore = create<ExpenseState>()(
       return ((currentTotal - previousTotal) / previousTotal) * 100;
     },
   }))
+);
+
+// Auto-recompute totalThisMonth whenever expenses change
+useExpenseStore.subscribe(
+  (s) => s.expenses,
+  (expenses) => {
+    const now = new Date();
+    const startOfMonth = getStartOfMonth(now);
+    const endOfMonth = getEndOfMonth(now);
+    const accountCurrency = useAccountStore.getState().currentAccount?.()?.currencyCode || 'USD';
+
+    const totalThisMonth = expenses
+      .filter((e) => !e.isDeleted)
+      .filter((e) => e.currencyCode === accountCurrency)
+      .filter((e) => {
+        const expenseDate = new Date(e.date);
+        return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
+      })
+      .reduce((sum, e) => sum + e.amount, 0);
+
+    useExpenseStore.setState({ totalThisMonth });
+  },
 );

@@ -104,6 +104,8 @@ model Account {
   usageLogs         UsageLog[]
   generatedInsights GeneratedInsight[]
   spendingStories   SpendingStory[]
+  tags              Tag[]
+  projects          Project[]
 
   @@map("accounts")
 }
@@ -169,6 +171,7 @@ model Category {
   expenses Expense[]
   incomes  Income[]
   budgets  Budget[]
+  expenseCategorySplits ExpenseCategorySplit[]
 
   @@unique([accountId, name, type])
   @@map("categories")
@@ -205,6 +208,9 @@ model Expense {
   account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category?     @relation(fields: [categoryId], references: [id])
   items    ExpenseItem[]
+  expenseTags      ExpenseTag[]
+  categorySplits   ExpenseCategorySplit[]
+  projectExpenses  ProjectExpense[]
 
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
@@ -252,6 +258,8 @@ model Income {
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category? @relation(fields: [categoryId], references: [id])
+  incomeTags      IncomeTag[]
+  projectIncomes  ProjectIncome[]
 
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
@@ -493,4 +501,158 @@ model SpendingStory {
   @@unique([accountId, periodStart, periodEnd])
   @@index([accountId, createdAt])
   @@map("spending_stories")
+}
+
+// ---- Tags ----
+
+model Tag {
+  id          String   @id @default(uuid())
+  accountId   String   @map("account_id")
+  name        String
+  color       String?
+  icon        String?
+  usageCount  Int      @default(0) @map("usage_count")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  account     Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  expenseTags ExpenseTag[]
+  incomeTags  IncomeTag[]
+
+  @@unique([accountId, name])
+  @@index([accountId])
+  @@map("tags")
+}
+
+model ExpenseTag {
+  id          String   @id @default(uuid())
+  expenseId   String   @map("expense_id")
+  tagId       String   @map("tag_id")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, tagId])
+  @@index([expenseId])
+  @@index([tagId])
+  @@map("expense_tags")
+}
+
+model IncomeTag {
+  id          String   @id @default(uuid())
+  incomeId    String   @map("income_id")
+  tagId       String   @map("tag_id")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  income Income @relation(fields: [incomeId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([incomeId, tagId])
+  @@index([incomeId])
+  @@index([tagId])
+  @@map("income_tags")
+}
+
+// ---- Projects ----
+
+model Project {
+  id           String    @id @default(uuid())
+  accountId    String    @map("account_id")
+  clientId     String    @map("client_id")
+  name         String
+  description  String?
+  color        String?
+  icon         String?
+  startDate    DateTime? @map("start_date") @db.Date
+  endDate      DateTime? @map("end_date") @db.Date
+  budget       Decimal?  @db.Decimal(12, 2)
+  currencyCode String?   @map("currency_code")
+  isArchived   Boolean   @default(false) @map("is_archived")
+  isDeleted    Boolean   @default(false) @map("is_deleted")
+  syncVersion  Int       @default(0) @map("sync_version")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  account         Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  projectExpenses ProjectExpense[]
+  projectIncomes  ProjectIncome[]
+
+  @@unique([accountId, clientId])
+  @@unique([accountId, name])
+  @@index([accountId, isArchived])
+  @@map("projects")
+}
+
+model ProjectExpense {
+  id          String   @id @default(uuid())
+  projectId   String   @map("project_id")
+  expenseId   String   @map("expense_id")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, expenseId])
+  @@index([projectId])
+  @@index([expenseId])
+  @@map("project_expenses")
+}
+
+model ProjectIncome {
+  id          String   @id @default(uuid())
+  projectId   String   @map("project_id")
+  incomeId    String   @map("income_id")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  income  Income  @relation(fields: [incomeId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, incomeId])
+  @@index([projectId])
+  @@index([incomeId])
+  @@map("project_incomes")
+}
+
+// ---- Expense Category Splits ----
+
+model ExpenseCategorySplit {
+  id          String   @id @default(uuid())
+  expenseId   String   @map("expense_id")
+  categoryId  String   @map("category_id")
+  amount      Decimal  @db.Decimal(12, 2)
+  percentage  Decimal  @db.Decimal(5, 2)
+  notes       String?
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  expense  Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@index([expenseId])
+  @@index([categoryId])
+  @@map("expense_category_splits")
 }

@@ -82,4 +82,22 @@ export class AnalyticsController {
       body.currencyCode,
     );
   }
+
+  @Get('by-tag')
+  async getByTag(
+    @Req() req: AuthenticatedRequest,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ) {
+    return this.analyticsService.getTagBreakdown(
+      req.accountId,
+      new Date(startDate),
+      new Date(endDate),
+    );
+  }
+
+  @Get('by-project')
+  async getByProject(@Req() req: AuthenticatedRequest) {
+    return this.analyticsService.getProjectBreakdown(req.accountId);
+  }
 }

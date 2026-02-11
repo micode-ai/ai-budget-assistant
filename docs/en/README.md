@@ -19,8 +19,11 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **Wallet & Currency Exchange** - Multi-currency wallet balances and exchange rate tracking
 - **Smart Insights** - Spending anomaly detection and budget exhaustion predictions
 - **Push Notifications** - Budget alerts and spending anomaly notifications (Expo Push)
+- **Tags** - Flexible tagging system for expenses and incomes with color-coded labels, AI-powered tag suggestions
+- **Projects** - Group expenses and incomes into projects with budgets, date ranges, and per-project analytics
+- **Expense Splits** - Split a single expense across multiple categories with amounts and percentages, AI-powered split suggestions
 - **AI Chat Assistant** - Get personalized financial advice
-- **Analytics** - Visual spending trends and category breakdowns
+- **Analytics** - Visual spending trends, category breakdowns, tag breakdowns, and project breakdowns
 - **Shared Accounts** - Invite members via invite codes, track shared activity
 - **Interactive Charts** - Drill-down from year to individual transactions with animated bar, line, and donut charts
 - **AI Insights** - GPT-4 analyzes spending patterns and generates visual insight cards with actionable recommendations (Pro)
@@ -65,11 +68,18 @@ ai-budget-assistant/
 │           │   ├── interactive-charts/ # Drill-down charts
 │           │   ├── insights/    # AI insight cards
 │           │   ├── story/       # Story block components
-│           │   └── widgets/     # Android home screen widgets
+│           │   ├── widgets/     # Android home screen widgets
+│           │   ├── TagPicker.tsx   # Tag selection component
+│           │   ├── TagChip.tsx     # Tag display chip
+│           │   ├── ProjectPicker.tsx # Project assignment
+│           │   └── SplitEditor.tsx  # Expense split editor
 │           ├── db/          # SQLite schema
 │           ├── services/    # API client
 │           ├── stores/      # Zustand stores
-│           │   └── insightsStore.ts
+│           │   ├── insightsStore.ts
+│           │   ├── tagStore.ts
+│           │   ├── projectStore.ts
+│           │   └── categoryStore.ts
 │           └── features/    # Feature hooks
 │               └── analytics/
 ├── packages/

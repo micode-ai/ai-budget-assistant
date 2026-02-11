@@ -35,7 +35,10 @@ export class AnalyticsService {
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
       },
-      include: { category: true },
+      include: {
+        category: true,
+        categorySplits: { where: { isDeleted: false }, include: { category: true } },
+      },
       orderBy: { amount: 'desc' },
     });
 
@@ -61,15 +64,29 @@ export class AnalyticsService {
 
     // Group by category
     const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
-    for (const expense of expenses) {
-      const categoryId = expense.categoryId || 'uncategorized';
-      const categoryName = expense.category?.name || 'Uncategorized';
-      const current = categoryMap.get(categoryId) || { amount: 0, count: 0, name: categoryName };
-      categoryMap.set(categoryId, {
-        amount: current.amount + Number(expense.amount),
-        count: current.count + 1,
-        name: categoryName,
-      });
+    for (const expense of expenses as any[]) {
+      // If expense has splits, use those instead of single category
+      if (expense.categorySplits && expense.categorySplits.length > 0) {
+        for (const split of expense.categorySplits) {
+          const catId = split.categoryId;
+          const catName = split.category?.name || 'Uncategorized';
+          const current = categoryMap.get(catId) || { amount: 0, count: 0, name: catName };
+          categoryMap.set(catId, {
+            amount: current.amount + Number(split.amount),
+            count: current.count + 1,
+            name: catName,
+          });
+        }
+      } else {
+        const categoryId = expense.categoryId || 'uncategorized';
+        const categoryName = expense.category?.name || 'Uncategorized';
+        const current = categoryMap.get(categoryId) || { amount: 0, count: 0, name: categoryName };
+        categoryMap.set(categoryId, {
+          amount: current.amount + Number(expense.amount),
+          count: current.count + 1,
+          name: categoryName,
+        });
+      }
     }
 
     const expensesByCategory = Array.from(categoryMap.entries())
@@ -230,7 +247,10 @@ export class AnalyticsService {
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
       },
-      include: { category: true },
+      include: {
+        category: true,
+        categorySplits: { where: { isDeleted: false }, include: { category: true } },
+      },
       orderBy: { amount: 'desc' },
     });
 
@@ -239,15 +259,29 @@ export class AnalyticsService {
 
     // Group by category
     const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
-    for (const expense of expenses) {
-      const categoryId = expense.categoryId || 'uncategorized';
-      const categoryName = expense.category?.name || 'Uncategorized';
-      const current = categoryMap.get(categoryId) || { amount: 0, count: 0, name: categoryName };
-      categoryMap.set(categoryId, {
-        amount: current.amount + Number(expense.amount),
-        count: current.count + 1,
-        name: categoryName,
-      });
+    for (const expense of expenses as any[]) {
+      // If expense has splits, use those instead of single category
+      if (expense.categorySplits && expense.categorySplits.length > 0) {
+        for (const split of expense.categorySplits) {
+          const catId = split.categoryId;
+          const catName = split.category?.name || 'Uncategorized';
+          const current = categoryMap.get(catId) || { amount: 0, count: 0, name: catName };
+          categoryMap.set(catId, {
+            amount: current.amount + Number(split.amount),
+            count: current.count + 1,
+            name: catName,
+          });
+        }
+      } else {
+        const categoryId = expense.categoryId || 'uncategorized';
+        const categoryName = expense.category?.name || 'Uncategorized';
+        const current = categoryMap.get(categoryId) || { amount: 0, count: 0, name: categoryName };
+        categoryMap.set(categoryId, {
+          amount: current.amount + Number(expense.amount),
+          count: current.count + 1,
+          name: categoryName,
+        });
+      }
     }
 
     const expensesByCategory = Array.from(categoryMap.entries())
@@ -487,5 +521,69 @@ export class AnalyticsService {
       chart: { chartType: 'bar' as const, title: 'No data', data: [], drillDown: { enabled: false, currentLevel: level } },
       breadcrumb: [],
     };
+  }
+
+  async getTagBreakdown(accountId: string, startDate: Date, endDate: Date) {
+    const expenseTags = await this.prisma.expenseTag.findMany({
+      where: {
+        isDeleted: false,
+        expense: {
+          accountId,
+          date: { gte: startDate, lte: endDate },
+          isDeleted: false,
+        },
+      },
+      include: {
+        tag: true,
+        expense: { select: { amount: true, currencyCode: true } },
+      },
+    });
+
+    const tagMap = new Map<string, { tagId: string; tagName: string; color: string | null; amount: number; count: number }>();
+    for (const et of expenseTags) {
+      if (!et.tag) continue;
+      const current = tagMap.get(et.tag.id) || {
+        tagId: et.tag.id,
+        tagName: et.tag.name,
+        color: et.tag.color,
+        amount: 0,
+        count: 0,
+      };
+      current.amount += Number(et.expense.amount);
+      current.count++;
+      tagMap.set(et.tag.id, current);
+    }
+
+    const total = Array.from(tagMap.values()).reduce((sum, t) => sum + t.amount, 0);
+    return Array.from(tagMap.values())
+      .map(t => ({ ...t, percentage: total > 0 ? (t.amount / total) * 100 : 0 }))
+      .sort((a, b) => b.amount - a.amount);
+  }
+
+  async getProjectBreakdown(accountId: string) {
+    const projects = await this.prisma.project.findMany({
+      where: { accountId, isDeleted: false },
+      include: {
+        projectExpenses: {
+          where: { isDeleted: false },
+          include: { expense: { select: { amount: true, currencyCode: true } } },
+        },
+        projectIncomes: {
+          where: { isDeleted: false },
+          include: { income: { select: { amount: true } } },
+        },
+      },
+    });
+
+    return projects.map(p => ({
+      projectId: p.id,
+      projectName: p.name,
+      color: p.color,
+      totalExpenses: p.projectExpenses.reduce((sum, pe) => sum + Number(pe.expense.amount), 0),
+      totalIncome: p.projectIncomes.reduce((sum, pi) => sum + Number(pi.income.amount), 0),
+      expenseCount: p.projectExpenses.length,
+      budget: p.budget ? Number(p.budget) : null,
+      isArchived: p.isArchived,
+    }));
   }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useAuthStore } from '@/stores/authStore';
-import { DEFAULT_INCOME_CATEGORIES, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { useTagStore } from '@/stores/tagStore';
+import { TagPicker } from '@/components/TagPicker';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -26,16 +29,24 @@ export default function NewIncomeScreen() {
 
   const { addIncome } = useIncomeStore();
   const { user } = useAuthStore();
+  const { getIncomeCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
+  const { loadTags } = useTagStore();
 
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [currencyCode, setCurrencyCode] = useState<Currency>(
     user?.currencyCode || 'USD',
   );
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
+    loadTags();
+  }, []);
 
   const handleSubmit = async () => {
     const numericAmount = parseFloat(amount);
@@ -58,6 +69,7 @@ export default function NewIncomeScreen() {
         description: description.trim(),
         notes: notes.trim() || undefined,
         categoryId: selectedCategory || undefined,
+        tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
         date: new Date(),
       });
 
@@ -138,24 +150,24 @@ export default function NewIncomeScreen() {
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{t('incomeNew.category')}</Text>
             <View style={styles.categoryGrid}>
-              {DEFAULT_INCOME_CATEGORIES.map((cat) => (
+              {getIncomeCategories().map((cat) => (
                 <TouchableOpacity
-                  key={cat.name}
+                  key={cat.id}
                   style={[
                     styles.categoryChip,
-                    selectedCategory === cat.name && {
+                    selectedCategory === cat.id && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
                     },
                   ]}
                   onPress={() =>
-                    setSelectedCategory(selectedCategory === cat.name ? '' : cat.name)
+                    setSelectedCategory(selectedCategory === cat.id ? '' : cat.id)
                   }
                 >
                   <Text
                     style={[
                       styles.categoryChipText,
-                      selectedCategory === cat.name && styles.categoryChipTextSelected,
+                      selectedCategory === cat.id && styles.categoryChipTextSelected,
                     ]}
                   >
                     {cat.name}
@@ -164,6 +176,13 @@ export default function NewIncomeScreen() {
               ))}
             </View>
           </View>
+
+          {/* Tags */}
+          <TagPicker
+            selectedTagIds={selectedTagIds}
+            onTagsChange={setSelectedTagIds}
+            description={description}
+          />
 
           {/* Notes */}
           <View style={styles.fieldContainer}>

@@ -9,6 +9,7 @@ import {
   updateIncomeInDb,
   softDeleteIncomeInDb,
 } from '@/db/incomeRepository';
+import { insertIncomeTag } from '@/db/tagRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
 
@@ -35,6 +36,8 @@ interface IncomeState {
     description?: string;
     notes?: string;
     categoryId?: string;
+    tagIds?: string[];
+    projectId?: string;
     date: Date;
   }) => Promise<Income>;
   updateIncome: (id: string, updates: Partial<Income>) => void;
@@ -156,12 +159,13 @@ export const useIncomeStore = create<IncomeState>()(
     },
 
     addIncome: async (incomeData) => {
+      const { tagIds, projectId, ...coreData } = incomeData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
 
       const newIncome: Income = {
-        ...incomeData,
+        ...coreData,
         id,
         localId: id,
         accountId,
@@ -177,6 +181,21 @@ export const useIncomeStore = create<IncomeState>()(
       }));
 
       await insertIncome(newIncome);
+
+      // Save tag associations to income_tags join table
+      if (tagIds && tagIds.length > 0) {
+        for (const tagId of tagIds) {
+          await insertIncomeTag({
+            id: generateUUID(),
+            incomeId: id,
+            tagId,
+            createdAt: now,
+            updatedAt: now,
+            isDeleted: false,
+            syncVersion: 0,
+          });
+        }
+      }
 
       // Fire-and-forget server sync
       api.createIncome({

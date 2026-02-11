@@ -203,16 +203,19 @@ const createStyles = (theme: Theme) => ({
   amountRow: {
     flexDirection: 'row' as const,
     alignItems: 'baseline' as const,
+    flexWrap: 'wrap' as const,
     gap: theme.spacing[2],
     marginBottom: theme.spacing[3],
   },
   spentText: {
     ...theme.textStyles.h2,
     color: theme.colors.textPrimary,
+    flexShrink: 1,
   },
   budgetText: {
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textTertiary,
+    flexShrink: 0,
   },
   progressContainer: {
     flexDirection: 'row' as const,

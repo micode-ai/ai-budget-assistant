@@ -21,8 +21,15 @@ import { File, Paths } from 'expo-file-system/next';
 import * as Sharing from 'expo-sharing';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useExpenseStore } from '@/stores/expenseStore';
-import { formatCurrency, formatDate, DEFAULT_EXPENSE_CATEGORIES } from '@budget/shared-utils';
-import type { Currency, ExpenseItem } from '@budget/shared-types';
+import { useTagStore } from '@/stores/tagStore';
+import { useProjectStore } from '@/stores/projectStore';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { getTagsForExpense } from '@/db/tagRepository';
+import { getSplitsForExpense, insertSplit, deleteAllSplitsForExpense } from '@/db/splitRepository';
+import { TagChip } from '@/components/TagChip';
+import { SplitEditor } from '@/components/SplitEditor';
+import { formatCurrency, formatDate, generateUUID } from '@budget/shared-utils';
+import type { Currency, ExpenseItem, ExpenseCategorySplit, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ExpenseDetailScreen() {
@@ -43,7 +50,16 @@ export default function ExpenseDetailScreen() {
     saveReceiptImage,
     deleteReceiptImage,
   } = useExpenseStore();
+  const { tags } = useTagStore();
+  const { projects } = useProjectStore();
+  const { getExpenseCategories, getCategoryById, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const expense = expenses.find((e) => e.id === id);
+
+  // Tags loaded from DB join table
+  const [expenseTags, setExpenseTags] = useState<Tag[]>([]);
+  // Splits loaded from DB
+  const [splits, setSplits] = useState<ExpenseCategorySplit[]>([]);
+  const [showSplitEditor, setShowSplitEditor] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editDescription, setEditDescription] = useState(expense?.description || '');
@@ -68,8 +84,14 @@ export default function ExpenseDetailScreen() {
   const items = id ? expenseItems[id] || [] : [];
 
   useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
     if (id && expense?.source === 'ocr') {
       loadExpenseItems(id);
+    }
+    // Load tags from expense_tags join table
+    if (id) {
+      getTagsForExpense(id).then(setExpenseTags).catch(() => {});
+      getSplitsForExpense(id).then(setSplits).catch(() => {});
     }
   }, [id]);
 
@@ -243,6 +265,48 @@ export default function ExpenseDetailScreen() {
     setIsEditing(false);
   };
 
+  const handleSaveSplits = async (editorSplits: Array<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }>) => {
+    if (!id) return;
+    // Remove old splits
+    await deleteAllSplitsForExpense(id);
+    // Insert new splits
+    const now = new Date();
+    const newSplits: ExpenseCategorySplit[] = [];
+    for (const s of editorSplits) {
+      const split: ExpenseCategorySplit = {
+        id: generateUUID(),
+        expenseId: id,
+        categoryId: s.categoryId,
+        amount: s.amount,
+        percentage: s.percentage,
+        notes: s.notes,
+        createdAt: now,
+        updatedAt: now,
+        isDeleted: false,
+        syncVersion: 0,
+      };
+      await insertSplit(split);
+      newSplits.push(split);
+    }
+    setSplits(newSplits);
+    setShowSplitEditor(false);
+  };
+
+  const handleRemoveSplits = async () => {
+    if (!id) return;
+    Alert.alert(t('splits.removeSplit'), '', [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.delete'),
+        style: 'destructive',
+        onPress: async () => {
+          await deleteAllSplitsForExpense(id);
+          setSplits([]);
+        },
+      },
+    ]);
+  };
+
   const sourceLabel: Record<string, string> = {
     manual: t('expenseDetail.sourceManual'),
     voice: t('expenseDetail.sourceVoice'),
@@ -337,24 +401,24 @@ export default function ExpenseDetailScreen() {
             <Text style={styles.detailLabel}>{t('expenseDetail.category')}</Text>
             {isEditing ? (
               <View style={styles.categoryGrid}>
-                {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
+                {getExpenseCategories().map((cat) => (
                   <TouchableOpacity
-                    key={cat.name}
+                    key={cat.id}
                     style={[
                       styles.categoryChip,
-                      editCategory === cat.name && {
+                      editCategory === cat.id && {
                         backgroundColor: cat.color,
                         borderColor: cat.color,
                       },
                     ]}
                     onPress={() =>
-                      setEditCategory(editCategory === cat.name ? '' : cat.name)
+                      setEditCategory(editCategory === cat.id ? '' : cat.id)
                     }
                   >
                     <Text
                       style={[
                         styles.categoryChipText,
-                        editCategory === cat.name && styles.categoryChipTextSelected,
+                        editCategory === cat.id && styles.categoryChipTextSelected,
                       ]}
                     >
                       {cat.name}
@@ -364,7 +428,7 @@ export default function ExpenseDetailScreen() {
               </View>
             ) : (
               <Text style={styles.detailValue}>
-                {expense.categoryId || t('common.uncategorized')}
+                {(expense.categoryId && getCategoryById(expense.categoryId)?.name) || t('common.uncategorized')}
               </Text>
             )}
           </View>
@@ -374,6 +438,90 @@ export default function ExpenseDetailScreen() {
               <Text style={styles.detailLabel}>{t('expenseDetail.notes')}</Text>
               <Text style={styles.detailValue}>{expense.notes}</Text>
             </View>
+          )}
+
+          {/* Tags Section */}
+          {expenseTags.length > 0 && (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>{t('tags.title')}</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {expenseTags.map((tag) => (
+                  <TagChip key={tag.id} name={tag.name} color={tag.color} size="small" />
+                ))}
+              </View>
+            </View>
+          )}
+
+          {/* Project Section */}
+          {expense.projectId && (() => {
+            const project = projects.find(p => p.id === expense.projectId);
+            return project ? (
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>{t('projects.title')}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: project.color || '#6366F1' }} />
+                  <Text style={styles.detailValue}>{project.name}</Text>
+                </View>
+              </View>
+            ) : null;
+          })()}
+
+          {/* Category Splits Section */}
+          {splits.length > 0 && !showSplitEditor && (
+            <View style={styles.detailRow}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={styles.detailLabel}>{t('splits.title')}</Text>
+                <TouchableOpacity onPress={handleRemoveSplits}>
+                  <Ionicons name="trash-outline" size={16} color={theme.colors.danger} />
+                </TouchableOpacity>
+              </View>
+              {splits.map((split) => {
+                const cat = getCategoryById(split.categoryId);
+                return (
+                  <View key={split.id} style={styles.splitRow}>
+                    <View style={[styles.splitDot, { backgroundColor: cat?.color || '#6B7280' }]} />
+                    <Text style={styles.splitName}>{cat?.name || split.categoryId}</Text>
+                    <Text style={styles.splitAmount}>
+                      {formatCurrency(split.amount, expense.currencyCode)}
+                    </Text>
+                    <Text style={styles.splitPercent}>{split.percentage.toFixed(0)}%</Text>
+                  </View>
+                );
+              })}
+            </View>
+          )}
+
+          {/* Split Editor */}
+          {showSplitEditor && expense && (
+            <View style={styles.detailRow}>
+              <SplitEditor
+                totalAmount={expense.amount}
+                currencyCode={expense.currencyCode}
+                initialSplits={splits.map((s) => {
+                  const cat = getCategoryById(s.categoryId);
+                  return {
+                    categoryId: s.categoryId,
+                    categoryName: cat?.name || s.categoryId,
+                    amount: s.amount,
+                    percentage: s.percentage,
+                    notes: s.notes,
+                  };
+                })}
+                onSplitsChange={handleSaveSplits}
+                onCancel={() => setShowSplitEditor(false)}
+              />
+            </View>
+          )}
+
+          {/* Split by categories button */}
+          {!isEditing && !showSplitEditor && splits.length === 0 && (
+            <TouchableOpacity
+              style={styles.splitButton}
+              onPress={() => setShowSplitEditor(true)}
+            >
+              <Ionicons name="git-branch-outline" size={18} color={theme.colors.primary} />
+              <Text style={styles.splitButtonText}>{t('splits.splitExpense')}</Text>
+            </TouchableOpacity>
           )}
 
         </View>
@@ -1009,5 +1157,51 @@ const createStyles = (theme: Theme) => ({
     fontSize: 16,
     fontWeight: '600' as const,
     color: theme.colors.textInverse,
+  },
+  // Splits
+  splitRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[2],
+    gap: theme.spacing[2],
+  },
+  splitDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  splitName: {
+    flex: 1,
+    fontSize: 14,
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
+  },
+  splitAmount: {
+    fontSize: 14,
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
+  },
+  splitPercent: {
+    fontSize: 12,
+    color: theme.colors.textTertiary,
+    width: 36,
+    textAlign: 'right' as const,
+  },
+  splitButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    marginTop: theme.spacing[2],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    borderStyle: 'dashed' as const,
+  },
+  splitButtonText: {
+    fontSize: 14,
+    color: theme.colors.primary,
+    fontWeight: '500' as const,
   },
 });

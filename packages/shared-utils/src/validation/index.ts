@@ -134,11 +134,80 @@ export const UpdateCategorySchema = z.object({
   parentId: z.string().uuid().nullable().optional(),
 });
 
+// Tag schemas
+export const CreateTagSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(30),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color')
+    .optional(),
+  icon: z.string().max(50).optional(),
+});
+
+export const UpdateTagSchema = z.object({
+  name: z.string().min(1).max(30).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .nullable()
+    .optional(),
+  icon: z.string().max(50).nullable().optional(),
+});
+
+// Project schemas
+export const CreateProjectSchema = z.object({
+  localId: z.string().uuid(),
+  name: z.string().min(1, 'Name is required').max(100),
+  description: z.string().max(500).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color')
+    .optional(),
+  icon: z.string().max(50).optional(),
+  startDate: z.string().datetime({ offset: true }).optional(),
+  endDate: z.string().datetime({ offset: true }).optional(),
+  budget: z.number().min(0).max(999999999).optional(),
+  currencyCode: CurrencySchema.optional(),
+});
+
+export const UpdateProjectSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  description: z.string().max(500).nullable().optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .nullable()
+    .optional(),
+  icon: z.string().max(50).nullable().optional(),
+  startDate: z.string().datetime({ offset: true }).nullable().optional(),
+  endDate: z.string().datetime({ offset: true }).nullable().optional(),
+  budget: z.number().min(0).max(999999999).nullable().optional(),
+  currencyCode: CurrencySchema.nullable().optional(),
+  isArchived: z.boolean().optional(),
+});
+
+// Expense category split schemas
+export const CreateExpenseCategorySplitSchema = z.object({
+  categoryId: z.string().uuid(),
+  amount: z.number().positive('Amount must be positive').max(999999999),
+  percentage: z.number().min(0).max(100),
+  notes: z.string().max(200).optional(),
+});
+
+export const SetExpenseSplitsSchema = z.object({
+  splits: z.array(CreateExpenseCategorySplitSchema).min(2, 'At least 2 splits required').max(10, 'Maximum 10 splits'),
+});
+
 // Sync schemas
 export const SyncOperationSchema = z.enum(['create', 'update', 'delete']);
 
+export const SyncEntityTypeSchema = z.enum([
+  'expense', 'budget', 'category', 'walletBalance', 'currencyExchange', 'income',
+  'tag', 'expense_tag', 'income_tag', 'project', 'project_expense', 'project_income', 'expense_category_split',
+]);
+
 export const SyncChangeSchema = z.object({
-  entityType: z.enum(['expense', 'budget', 'category', 'walletBalance', 'currencyExchange', 'income']),
+  entityType: SyncEntityTypeSchema,
   entityId: z.string().uuid(),
   operation: SyncOperationSchema,
   payload: z.unknown(),
@@ -256,3 +325,9 @@ export type ExchangeFiltersInput = z.infer<typeof ExchangeFiltersSchema>;
 export type CreateIncomeInput = z.infer<typeof CreateIncomeSchema>;
 export type UpdateIncomeInput = z.infer<typeof UpdateIncomeSchema>;
 export type IncomeFiltersInput = z.infer<typeof IncomeFiltersSchema>;
+export type CreateTagInput = z.infer<typeof CreateTagSchema>;
+export type UpdateTagInput = z.infer<typeof UpdateTagSchema>;
+export type CreateProjectInput = z.infer<typeof CreateProjectSchema>;
+export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>;
+export type CreateExpenseCategorySplitInput = z.infer<typeof CreateExpenseCategorySplitSchema>;
+export type SetExpenseSplitsInput = z.infer<typeof SetExpenseSplitsSchema>;

@@ -265,6 +265,35 @@ function RootNavigator() {
             title: t('nav.incomeDetails'),
           }}
         />
+        <Stack.Screen
+          name="projects/index"
+          options={{
+            headerShown: true,
+            title: t('projects.title'),
+          }}
+        />
+        <Stack.Screen
+          name="projects/new"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('projects.createProject'),
+          }}
+        />
+        <Stack.Screen
+          name="projects/[id]"
+          options={{
+            headerShown: true,
+            title: t('projects.title'),
+          }}
+        />
+        <Stack.Screen
+          name="tags/manage"
+          options={{
+            headerShown: true,
+            title: t('tags.title'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

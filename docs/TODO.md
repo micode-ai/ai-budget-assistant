@@ -36,6 +36,9 @@
 - [x] Spending story dashboards (AI-generated narrative with hero metrics, charts, achievements)
 - [x] Home screen widgets (Android — small/medium/large, background refresh)
 - [x] i18n (7 locales: EN, RU, UA, DE, ES, FR, PL)
+- [x] Tags (color-coded labels for expenses/incomes, AI suggestions, analytics breakdown)
+- [x] Projects (group expenses/incomes with budgets, date ranges, per-project analytics)
+- [x] Expense category splits (split expense across multiple categories with AI suggestions)
 
 ---
 
