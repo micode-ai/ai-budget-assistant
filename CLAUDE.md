@@ -6,10 +6,10 @@ Turborepo monorepo with 4 packages:
 
 | Package | Tech | Purpose |
 |---|---|---|
-| `apps/api` | NestJS + Prisma + PostgreSQL + Redis | REST API backend |
-| `apps/mobile` | Expo (React Native) + Zustand + SQLite/Drizzle | Mobile app (iOS/Android/Web) |
+| `apps/api` | NestJS 10 + Prisma 5 + PostgreSQL + Redis | REST API backend |
+| `apps/mobile` | Expo 54 + React Native 0.81 + Zustand + SQLite/Drizzle | Mobile app (iOS/Android/Web) |
 | `packages/shared-types` | TypeScript interfaces | Entities and DTOs shared between api and mobile |
-| `packages/shared-utils` | Zod schemas | Validation schemas shared between api and mobile |
+| `packages/shared-utils` | Zod schemas + formatting + constants | Validation and utilities shared between api and mobile |
 
 ## Key Patterns
 
@@ -20,19 +20,30 @@ Turborepo monorepo with 4 packages:
 - **Role-based access**: `AccountRoleGuard` with `@RequireRole('owner')` decorator
 - **Service signature**: `(accountId, userId, dto)` as parameters, all Prisma queries filter by `accountId`
 - **Database**: Prisma ORM. Schema at `apps/api/prisma/schema.prisma`. Uses `@map("snake_case")` for column names
+- **19 modules**: `accounts`, `admin`, `ai`, `analytics`, `auth`, `budgets`, `categories`, `currency-exchange`, `expenses`, `incomes`, `insights`, `mail`, `notifications`, `projects`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`
 
 ### Mobile (React Native/Expo)
-- **Navigation**: Expo Router. Screens in `app/`, tabs in `app/(tabs)/`
-- **State**: Zustand stores in `src/stores/` (authStore, accountStore, expenseStore, budgetStore)
-- **Local DB**: SQLite via Drizzle ORM. Schema in `src/db/schema/index.ts`. Repositories in `src/db/*Repository.ts` use raw `executeSql()`
-- **API client**: `src/services/api.ts` - singleton `ApiClient` class, auto-injects `X-Account-Id` header
+- **Navigation**: Expo Router. Screens in `app/`, tabs in `app/(tabs)/` — home, expenses, budgets, analytics, chat
+- **State**: 14 Zustand stores in `src/stores/` — `authStore`, `accountStore`, `expenseStore`, `incomeStore`, `budgetStore`, `categoryStore`, `tagStore`, `projectStore`, `walletStore`, `chatStore`, `insightsStore`, `exchangeRateStore`, `subscriptionStore`, `themeStore`
+- **Local DB**: SQLite via Drizzle ORM. Schema in `src/db/schema/index.ts`. 12 repositories in `src/db/*Repository.ts` use raw `executeSql()` — `account`, `category`, `currencyExchange`, `expense`, `expenseItem`, `income`, `project`, `split`, `tag`, `wallet`
+- **API client**: `src/services/api.ts` — singleton `ApiClient` class, auto-injects `X-Account-Id` header, auto JWT refresh, 401 → logout
 - **Offline-first**: write to SQLite first, queue sync via `syncQueue` table, sync to server when online
 - **i18n**: 7 locales in `src/i18n/locales/` — `en.ts` (source), `de.ts`, `es.ts`, `fr.ts`, `pl.ts`, `ru.ts`, `ua.ts`. When adding keys, update ALL 7 files.
+- **Services**: `api.ts`, `notifications.ts`, `secureStorage.native.ts` / `secureStorage.web.ts`, `widgetData.ts`
+- **Screens**: `(auth)/` login/register, `(tabs)/` main tabs, `expense/`, `income/`, `budget/`, `account/`, `analytics/`, `projects/`, `tags/`, `wallet/`, `settings.tsx`, `subscription.tsx`, `admin.tsx`, `story.tsx`
+- **Components**: `charts/` (Bar, Donut, Pie, Weekday, GroupedBar), `interactive-charts/` (drill-down charts with ChartRenderer), `insights/` (InsightCard, InsightCarousel), `story/`, `AccountSwitcher`, `CreateCategoryModal`, `Paywall`, `ProjectPicker`, `SplitEditor`, `TagPicker`, `TagChip`, `UsageWarning`
 
 ### Shared Types
-- Entities: `packages/shared-types/src/entities/index.ts` — domain interfaces
+- Entities: `packages/shared-types/src/entities/index.ts` — 30+ domain interfaces
 - DTOs: `packages/shared-types/src/dto/index.ts` — API request/response shapes
+- API types: `packages/shared-types/src/api/index.ts` — API endpoint types
 - Types use `PascalCase` interfaces, enums use string literal unions (e.g., `type AccountRole = 'owner' | 'editor' | 'viewer'`)
+- Key enums: `Currency` (USD/EUR/PLN/GBP/UAH/RUB), `AccountRole` (owner/editor/viewer), `AccountType` (personal/business/shared), `ExpenseSource` (manual/voice/ocr/import), `BudgetPeriod` (daily/weekly/monthly/yearly/custom), `SubscriptionTier` (free/pro/business), `SyncStatus` (pending/synced/conflict/error)
+
+### Shared Utils
+- Validation: `packages/shared-utils/src/validation/index.ts` — Zod schemas for auth, expenses, incomes, budgets, categories, tags, projects, sync
+- Formatting: `packages/shared-utils/src/formatting/index.ts`
+- Constants: `packages/shared-utils/src/constants/index.ts`
 
 ## Dependency Order for Changes
 
@@ -61,6 +72,7 @@ npm run lint                   # Lint all code
 npm run typecheck              # TypeScript check all code
 npm run test                   # Run tests
 npm run format                 # Prettier format
+npm run clean                  # Clean all builds + node_modules
 
 # API specific (run from apps/api/)
 npx prisma generate            # Regenerate Prisma client
@@ -71,3 +83,13 @@ npx prisma studio              # Visual DB editor
 npx expo start                 # Start Expo dev server
 npx expo start --web           # Start web preview
 ```
+
+## Environment Variables
+
+See `.env.example`:
+- `DATABASE_URL` — PostgreSQL connection string
+- `REDIS_URL` — Redis connection string
+- `JWT_SECRET`, `JWT_EXPIRES_IN` — JWT token config
+- `OPENAI_API_KEY` — OpenAI for AI features (Whisper, GPT)
+- `FIREBASE_PROJECT_ID`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL` — push notifications
+- `EXPO_PUBLIC_API_URL` — API URL for mobile app

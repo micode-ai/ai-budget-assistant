@@ -49,7 +49,7 @@ export default function AccountDetailScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (id && account?.type === 'shared') {
+      if (id && (account?.type === 'shared' || account?.type === 'business')) {
         loadMembers(id);
         loadInvitations();
       }
@@ -242,7 +242,7 @@ export default function AccountDetailScreen() {
         </View>
 
         {/* Members Section (for shared accounts) */}
-        {account.type === 'shared' && (
+        {(account.type === 'shared' || account.type === 'business') && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>{t('accounts.members')}</Text>
@@ -293,7 +293,7 @@ export default function AccountDetailScreen() {
         )}
 
         {/* Pending Invitations (for shared accounts, owners only) */}
-        {account.type === 'shared' && isOwner && (
+        {(account.type === 'shared' || account.type === 'business') && isOwner && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('accounts.pendingInvitations')}</Text>
             {loadingInvitations ? (

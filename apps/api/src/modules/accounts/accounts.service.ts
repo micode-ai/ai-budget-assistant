@@ -162,8 +162,8 @@ export class AccountsService {
       where: { id: accountId },
     });
 
-    if (!account || account.type !== 'shared') {
-      throw new BadRequestException('Invitations can only be created for shared accounts');
+    if (!account || account.type === 'personal') {
+      throw new BadRequestException('Invitations can only be created for shared or business accounts');
     }
 
     // If inviting by email, check the user is not already a member
