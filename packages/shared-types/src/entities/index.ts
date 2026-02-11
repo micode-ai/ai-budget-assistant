@@ -133,6 +133,10 @@ export interface Expense {
   source: ExpenseSource;
   items?: ExpenseItem[];
   receiptImageBase64?: string;
+  tags?: ExpenseTag[];
+  tagIds?: string[];
+  categorySplits?: ExpenseCategorySplit[];
+  projectId?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -152,10 +156,113 @@ export interface Income {
   notes?: string;
   categoryId?: string;
   date: Date;
+  tags?: IncomeTag[];
+  tagIds?: string[];
+  projectId?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
   syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
+// Tag entities
+
+export interface Tag {
+  id: string;
+  accountId: string;
+  name: string;
+  color?: string;
+  icon?: string;
+  usageCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
+export interface ExpenseTag {
+  id: string;
+  expenseId: string;
+  tagId: string;
+  tag?: Tag;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncVersion: number;
+}
+
+export interface IncomeTag {
+  id: string;
+  incomeId: string;
+  tagId: string;
+  tag?: Tag;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncVersion: number;
+}
+
+// Project entities
+
+export interface Project {
+  id: string;
+  localId: string;
+  serverId?: string;
+  accountId: string;
+  name: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  startDate?: Date;
+  endDate?: Date;
+  budget?: number;
+  currencyCode?: Currency;
+  isArchived: boolean;
+  totalExpenses?: number;
+  totalIncome?: number;
+  expenseCount?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
+export interface ProjectExpense {
+  id: string;
+  projectId: string;
+  expenseId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncVersion: number;
+}
+
+export interface ProjectIncome {
+  id: string;
+  projectId: string;
+  incomeId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncVersion: number;
+}
+
+// Expense category split
+
+export interface ExpenseCategorySplit {
+  id: string;
+  expenseId: string;
+  categoryId: string;
+  category?: Category;
+  amount: number;
+  percentage: number;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
   syncVersion: number;
 }
 

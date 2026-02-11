@@ -7,6 +7,8 @@ import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useInsightsStore } from '@/stores/insightsStore';
+import { useTagStore } from '@/stores/tagStore';
+import { useProjectStore } from '@/stores/projectStore';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
 import { BarChart, DonutChart, GroupedBarChart, WeekdayChart } from '@/components/charts';
@@ -20,14 +22,18 @@ export default function AnalyticsScreen() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange } = useAnalytics(selectedRange, selectedCurrency);
+  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency);
   const { aiInsights, loadAIInsights } = useInsightsStore();
+  const { loadTags } = useTagStore();
+  const { loadProjects } = useProjectStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
   useEffect(() => {
     loadAIInsights(i18n.language);
-  }, [loadAIInsights, i18n.language]);
+    loadTags();
+    loadProjects();
+  }, [loadAIInsights, loadTags, loadProjects, i18n.language]);
 
   const TIME_RANGES: { key: TimeRange; label: string }[] = [
     { key: 'week', label: t('analytics.week') },
@@ -299,6 +305,81 @@ export default function AnalyticsScreen() {
                   </Text>
                   <Text style={styles.categoryPercent}>{category.percentage.toFixed(0)}%</Text>
                 </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Tag Breakdown */}
+        {tagSpending.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('analytics.byTag')}</Text>
+            <View style={styles.chartContainer}>
+              <InteractiveDonutChart
+                data={tagSpending.map((ts) => ({
+                  label: ts.name,
+                  value: ts.amount,
+                  color: ts.color,
+                  id: ts.tagId,
+                }))}
+                size={140}
+                formatValue={formatChartValue}
+                showLegend={true}
+              />
+            </View>
+            {tagSpending.map((ts, index) => (
+              <View key={ts.tagId} style={styles.categoryItem}>
+                <View style={styles.categoryInfo}>
+                  <View style={[styles.categoryDot, { backgroundColor: ts.color }]} />
+                  <Text style={styles.categoryName}>{ts.name}</Text>
+                </View>
+                <View style={styles.categoryValues}>
+                  <Text style={styles.categoryAmount}>
+                    {formatCurrency(ts.amount, currency)}
+                  </Text>
+                  <Text style={styles.categoryPercent}>{ts.percentage.toFixed(0)}%</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Project Breakdown */}
+        {projectSpending.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('analytics.byProject')}</Text>
+            {projectSpending.map((ps) => (
+              <View key={ps.projectId} style={styles.projectItem}>
+                <View style={styles.projectHeader}>
+                  <View style={styles.categoryInfo}>
+                    <View style={[styles.projectDot, { backgroundColor: ps.color }]} />
+                    <Text style={styles.categoryName}>{ps.name}</Text>
+                  </View>
+                  <Text style={styles.categoryAmount}>
+                    {formatCurrency(ps.amount, currency)}
+                  </Text>
+                </View>
+                {ps.budget != null && ps.budget > 0 && (
+                  <View style={styles.projectBudgetBar}>
+                    <View style={styles.projectBudgetTrack}>
+                      <View
+                        style={[
+                          styles.projectBudgetFill,
+                          {
+                            width: `${Math.min((ps.amount / ps.budget) * 100, 100)}%`,
+                            backgroundColor: ps.amount > ps.budget ? theme.colors.danger : ps.color,
+                          },
+                        ]}
+                      />
+                    </View>
+                    <Text style={styles.projectBudgetText}>
+                      {ps.amount > ps.budget
+                        ? t('analytics.overBudget')
+                        : `${formatCurrency(ps.budget - ps.amount, currency)} ${t('projects.budgetRemaining')}`
+                      }
+                    </Text>
+                  </View>
+                )}
               </View>
             ))}
           </View>
@@ -647,6 +728,40 @@ const createStyles = (theme: Theme) => ({
     fontSize: 14,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[0.5],
+  },
+  projectItem: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[2],
+  },
+  projectHeader: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+  },
+  projectDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  projectBudgetBar: {
+    marginTop: theme.spacing[3],
+  },
+  projectBudgetTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: theme.colors.progressTrack,
+    overflow: 'hidden' as const,
+  },
+  projectBudgetFill: {
+    height: '100%' as const,
+    borderRadius: 3,
+  },
+  projectBudgetText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   insightCard: {
     backgroundColor: theme.colors.surface,

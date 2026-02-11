@@ -46,6 +46,8 @@ export interface CreateExpenseDto {
     name?: string;
   };
   source: ExpenseSource;
+  tagIds?: string[];
+  projectId?: string;
 }
 
 export interface UpdateExpenseDto {
@@ -62,6 +64,8 @@ export interface UpdateExpenseDto {
     lng: number;
     name?: string;
   } | null;
+  tagIds?: string[];
+  projectId?: string | null;
 }
 
 // Income DTOs
@@ -73,6 +77,8 @@ export interface CreateIncomeDto {
   notes?: string;
   categoryId?: string;
   date: string; // ISO string
+  tagIds?: string[];
+  projectId?: string;
 }
 
 export interface UpdateIncomeDto {
@@ -124,6 +130,99 @@ export interface UpdateCategoryDto {
   parentId?: string | null;
 }
 
+// Tag DTOs
+export interface CreateTagDto {
+  name: string;
+  color?: string;
+  icon?: string;
+}
+
+export interface UpdateTagDto {
+  name?: string;
+  color?: string | null;
+  icon?: string | null;
+}
+
+export interface TagSuggestionResponse {
+  tags: Array<{
+    name: string;
+    confidence: number;
+    source: 'history' | 'ai';
+    existingTagId?: string;
+  }>;
+}
+
+// Project DTOs
+export interface CreateProjectDto {
+  localId: string;
+  name: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  startDate?: string;
+  endDate?: string;
+  budget?: number;
+  currencyCode?: Currency;
+}
+
+export interface UpdateProjectDto {
+  name?: string;
+  description?: string | null;
+  color?: string | null;
+  icon?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  budget?: number | null;
+  currencyCode?: Currency | null;
+  isArchived?: boolean;
+}
+
+export interface ProjectAnalyticsResponse {
+  projectId: string;
+  projectName: string;
+  totalExpenses: number;
+  totalIncome: number;
+  netAmount: number;
+  expenseCount: number;
+  incomeCount: number;
+  budgetRemaining?: number;
+  expensesByCategory: Array<{
+    categoryId: string;
+    categoryName: string;
+    amount: number;
+    percentage: number;
+  }>;
+  timeline: Array<{
+    date: string;
+    expenses: number;
+    income: number;
+  }>;
+}
+
+// Expense Category Split DTOs
+export interface CreateExpenseCategorySplitDto {
+  categoryId: string;
+  amount: number;
+  percentage: number;
+  notes?: string;
+}
+
+export interface SetExpenseSplitsDto {
+  splits: CreateExpenseCategorySplitDto[];
+}
+
+export interface SplitSuggestionResponse {
+  shouldSplit: boolean;
+  confidence: number;
+  suggestedSplits?: Array<{
+    categoryId?: string;
+    categoryName: string;
+    amount: number;
+    percentage: number;
+    reasoning: string;
+  }>;
+}
+
 // Account DTOs
 export interface CreateAccountDto {
   name: string;
@@ -155,8 +254,10 @@ export interface UpdateMemberRoleDto {
 // Sync DTOs
 export type SyncOperation = 'create' | 'update' | 'delete';
 
+export type SyncEntityType = 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income' | 'tag' | 'expense_tag' | 'income_tag' | 'project' | 'project_expense' | 'project_income' | 'expense_category_split';
+
 export interface SyncChange<T = unknown> {
-  entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income';
+  entityType: SyncEntityType;
   entityId: string;
   operation: SyncOperation;
   payload: T;
@@ -191,7 +292,7 @@ export interface SyncPushResponse {
 
 export interface SyncPullResponse {
   changes: Array<{
-    entityType: 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income';
+    entityType: SyncEntityType;
     entityId: string;
     operation: SyncOperation;
     data: unknown;

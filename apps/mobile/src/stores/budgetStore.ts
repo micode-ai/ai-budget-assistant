@@ -33,10 +33,7 @@ export const useBudgetStore = create<BudgetState>()(
     isLoading: false,
     error: null,
 
-    get activeBudgets() {
-      const accountId = useAccountStore.getState().currentAccountId;
-      return get().budgets.filter((b) => b.isActive && !b.isDeleted && b.accountId === accountId);
-    },
+    activeBudgets: [],
 
     loadBudgets: async () => {
       const accountId = useAccountStore.getState().currentAccountId;
@@ -279,6 +276,16 @@ export const useBudgetStore = create<BudgetState>()(
         .reduce((sum, b) => sum + b.amount, 0);
     },
 
-    reset: () => set({ budgets: [], isLoading: false, error: null }),
+    reset: () => set({ budgets: [], activeBudgets: [], isLoading: false, error: null }),
   }))
+);
+
+// Auto-recompute activeBudgets whenever budgets change
+useBudgetStore.subscribe(
+  (s) => s.budgets,
+  (budgets) => {
+    const accountId = useAccountStore.getState().currentAccountId;
+    const activeBudgets = budgets.filter((b) => b.isActive && !b.isDeleted && b.accountId === accountId);
+    useBudgetStore.setState({ activeBudgets });
+  },
 );

@@ -66,7 +66,7 @@ export class ExpensesController {
     const expense = await this.expensesService.update(req.accountId, id, dto);
 
     // Re-check budget alerts if amount or currency changed
-    if (dto.amount !== undefined || dto.currencyCode !== undefined) {
+    if (expense && (dto.amount !== undefined || dto.currencyCode !== undefined)) {
       this.budgetAlertService.checkBudgetsForAccount(req.accountId, expense.currencyCode)
         .catch(e => this.logger.error('Budget alert check failed', e));
     }
@@ -133,5 +133,24 @@ export class ExpensesController {
   @Delete(':id/receipt-image')
   async deleteReceiptImage(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.deleteReceiptImage(req.accountId, id);
+  }
+
+  // ---- Category Splits ----
+
+  @Post(':id/splits')
+  async setSplits(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: { splits: Array<{ categoryId: string; amount: number; percentage: number; notes?: string }> },
+  ) {
+    return this.expensesService.setSplits(req.accountId, id, body.splits);
+  }
+
+  @Delete(':id/splits')
+  async removeSplits(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    return this.expensesService.removeSplits(req.accountId, id);
   }
 }

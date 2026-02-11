@@ -16,6 +16,9 @@ import { WhisperService } from './services/whisper.service';
 import { ChatService } from './services/chat.service';
 import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
+import { TagSuggestionService } from './services/tag-suggestion.service';
+import { ProjectSuggestionService } from './services/project-suggestion.service';
+import { SplitSuggestionService } from './services/split-suggestion.service';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -25,6 +28,9 @@ export class AiController {
     private readonly chatService: ChatService,
     private readonly categorizationService: CategorizationService,
     private readonly ocrService: OcrService,
+    private readonly tagSuggestionService: TagSuggestionService,
+    private readonly projectSuggestionService: ProjectSuggestionService,
+    private readonly splitSuggestionService: SplitSuggestionService,
   ) {}
 
   @Post('transcribe')
@@ -116,5 +122,46 @@ export class AiController {
       confidence: aiResult.confidence,
       source: 'ai' as const,
     };
+  }
+
+  @Get('suggest-tags')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('tag_suggestion', 0.5)
+  async suggestTags(
+    @Req() req: AuthenticatedRequest,
+    @Query('description') description: string,
+    @Query('merchant') merchant?: string,
+  ) {
+    return this.tagSuggestionService.suggestTags(
+      req.accountId,
+      description,
+      merchant,
+    );
+  }
+
+  @Post('suggest-project')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('project_suggestion', 0.5)
+  async suggestProject(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { description: string; date: string; locationName?: string },
+  ) {
+    return this.projectSuggestionService.suggestProject(req.accountId, body);
+  }
+
+  @Post('suggest-splits')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('split_suggestion', 1.0)
+  async suggestSplits(
+    @Req() req: AuthenticatedRequest,
+    @Body()
+    body: {
+      id: string;
+      description: string;
+      amount: number;
+      items?: Array<{ description: string; totalPrice: number }>;
+    },
+  ) {
+    return this.splitSuggestionService.suggestSplits(req.accountId, body);
   }
 }

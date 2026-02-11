@@ -255,6 +255,120 @@ class ApiClient {
     return this.request<any[]>('/categories');
   }
 
+  async createCategory(data: { name: string; icon?: string; color?: string; type: string; parentId?: string }) {
+    return this.request<any>('/categories', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Tags
+  async getTags() {
+    return this.request<any[]>('/tags');
+  }
+
+  async createTag(data: { name: string; color?: string; icon?: string }) {
+    return this.request<any>('/tags', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateTag(id: string, data: { name?: string; color?: string; icon?: string }) {
+    return this.request<any>(`/tags/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteTag(id: string) {
+    return this.request<void>(`/tags/${id}`, { method: 'DELETE' });
+  }
+
+  async suggestTags(description: string, merchant?: string) {
+    const params = new URLSearchParams({ description });
+    if (merchant) params.append('merchant', merchant);
+    return this.request<any>(`/ai/suggest-tags?${params.toString()}`);
+  }
+
+  // Projects
+  async getProjects(includeArchived?: boolean) {
+    const params = includeArchived ? '?archived=true' : '';
+    return this.request<any[]>(`/projects${params}`);
+  }
+
+  async getProject(id: string) {
+    return this.request<any>(`/projects/${id}`);
+  }
+
+  async createProject(data: any) {
+    return this.request<any>('/projects', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateProject(id: string, data: any) {
+    return this.request<any>(`/projects/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteProject(id: string) {
+    return this.request<void>(`/projects/${id}`, { method: 'DELETE' });
+  }
+
+  async addExpenseToProject(projectId: string, expenseId: string) {
+    return this.request<any>(`/projects/${projectId}/expenses`, {
+      method: 'POST',
+      body: JSON.stringify({ expenseId }),
+    });
+  }
+
+  async removeExpenseFromProject(projectId: string, expenseId: string) {
+    return this.request<void>(`/projects/${projectId}/expenses/${expenseId}`, { method: 'DELETE' });
+  }
+
+  async getProjectAnalytics(projectId: string) {
+    return this.request<any>(`/projects/${projectId}/analytics`);
+  }
+
+  async suggestProject(data: { description: string; date: string; locationName?: string }) {
+    return this.request<any>('/ai/suggest-project', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Splits
+  async setExpenseSplits(expenseId: string, splits: Array<{ categoryId: string; amount: number; percentage: number; notes?: string }>) {
+    return this.request<any>(`/expenses/${expenseId}/splits`, {
+      method: 'POST',
+      body: JSON.stringify({ splits }),
+    });
+  }
+
+  async removeExpenseSplits(expenseId: string) {
+    return this.request<void>(`/expenses/${expenseId}/splits`, { method: 'DELETE' });
+  }
+
+  async suggestSplits(data: { id: string; description: string; amount: number; items?: Array<{ description: string; totalPrice: number }> }) {
+    return this.request<any>('/ai/suggest-splits', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // Enhanced analytics
+  async getAnalyticsByTag(startDate: string, endDate: string) {
+    return this.request<any>(`/analytics/by-tag?startDate=${startDate}&endDate=${endDate}`);
+  }
+
+  async getAnalyticsByProject() {
+    return this.request<any>('/analytics/by-project');
+  }
+
   // AI endpoints
   async transcribeAudio(audioBase64: string, language?: string) {
     return this.request<{ text: string; language: string; duration: number }>(

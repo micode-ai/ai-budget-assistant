@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
-import { DEFAULT_EXPENSE_CATEGORIES, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
-import type { Currency } from '@budget/shared-types';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { useTagStore } from '@/stores/tagStore';
+import { useProjectStore } from '@/stores/projectStore';
+import { TagPicker } from '@/components/TagPicker';
+import { ProjectPicker } from '@/components/ProjectPicker';
+import { SplitEditor } from '@/components/SplitEditor';
+import { insertSplit } from '@/db/splitRepository';
+import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
+import type { Currency, ExpenseCategorySplit } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function NewExpenseScreen() {
@@ -32,15 +39,28 @@ export default function NewExpenseScreen() {
 
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
+  const { getExpenseCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
+  const { loadTags } = useTagStore();
+  const { loadProjects } = useProjectStore();
 
   const [amount, setAmount] = useState(params.amount || '');
   const [description, setDescription] = useState(params.description || '');
   const [selectedCategory, setSelectedCategory] = useState(params.categoryId || '');
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [currencyCode, setCurrencyCode] = useState<Currency>(
     (params.currencyCode as Currency) || user?.currencyCode || 'USD',
   );
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSplitEditor, setShowSplitEditor] = useState(false);
+  const [pendingSplits, setPendingSplits] = useState<Array<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }>>([]);
+
+  useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
+    loadTags();
+    loadProjects();
+  }, []);
 
   const handleSubmit = async () => {
     const numericAmount = parseFloat(amount);
@@ -56,16 +76,38 @@ export default function NewExpenseScreen() {
 
     setIsSubmitting(true);
     try {
-      await addExpense({
+      const newExpense = await addExpense({
         userId: user?.id || '',
         amount: numericAmount,
         currencyCode,
         description: description.trim(),
         categoryId: selectedCategory || undefined,
+        tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
+        projectId: selectedProjectId || undefined,
         date: new Date(),
         source: 'manual',
         isRecurring: false,
       });
+
+      // Save category splits if defined
+      if (pendingSplits.length >= 2) {
+        const now = new Date();
+        for (const s of pendingSplits) {
+          const split: ExpenseCategorySplit = {
+            id: generateUUID(),
+            expenseId: newExpense.id,
+            categoryId: s.categoryId,
+            amount: s.amount,
+            percentage: s.percentage,
+            notes: s.notes,
+            createdAt: now,
+            updatedAt: now,
+            isDeleted: false,
+            syncVersion: 0,
+          };
+          await insertSplit(split);
+        }
+      }
 
       router.back();
     } catch (err) {
@@ -144,24 +186,24 @@ export default function NewExpenseScreen() {
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{t('expenseNew.category')}</Text>
             <View style={styles.categoryGrid}>
-              {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
+              {getExpenseCategories().map((cat) => (
                 <TouchableOpacity
-                  key={cat.name}
+                  key={cat.id}
                   style={[
                     styles.categoryChip,
-                    selectedCategory === cat.name && {
+                    selectedCategory === cat.id && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
                     },
                   ]}
                   onPress={() =>
-                    setSelectedCategory(selectedCategory === cat.name ? '' : cat.name)
+                    setSelectedCategory(selectedCategory === cat.id ? '' : cat.id)
                   }
                 >
                   <Text
                     style={[
                       styles.categoryChipText,
-                      selectedCategory === cat.name && styles.categoryChipTextSelected,
+                      selectedCategory === cat.id && styles.categoryChipTextSelected,
                     ]}
                   >
                     {cat.name}
@@ -170,6 +212,65 @@ export default function NewExpenseScreen() {
               ))}
             </View>
           </View>
+
+          {/* Tags */}
+          <TagPicker
+            selectedTagIds={selectedTagIds}
+            onTagsChange={setSelectedTagIds}
+            description={description}
+          />
+
+          {/* Project */}
+          <ProjectPicker
+            selectedProjectId={selectedProjectId}
+            onProjectChange={setSelectedProjectId}
+          />
+
+          {/* Category Split */}
+          {showSplitEditor && parseFloat(amount) > 0 ? (
+            <View style={styles.fieldContainer}>
+              <SplitEditor
+                totalAmount={parseFloat(amount) || 0}
+                currencyCode={currencyCode}
+                initialSplits={pendingSplits}
+                onSplitsChange={(splits) => {
+                  setPendingSplits(splits);
+                  setShowSplitEditor(false);
+                }}
+                onCancel={() => setShowSplitEditor(false)}
+              />
+            </View>
+          ) : pendingSplits.length >= 2 ? (
+            <View style={styles.fieldContainer}>
+              <View style={styles.splitHeader}>
+                <Text style={styles.fieldLabel}>{t('splits.title')}</Text>
+                <TouchableOpacity onPress={() => setPendingSplits([])}>
+                  <Ionicons name="trash-outline" size={16} color={theme.colors.danger} />
+                </TouchableOpacity>
+              </View>
+              {pendingSplits.map((s, i) => (
+                <View key={i} style={styles.splitRow}>
+                  <Text style={styles.splitName}>{s.categoryName}</Text>
+                  <Text style={styles.splitAmount}>{currencyCode} {s.amount.toFixed(2)}</Text>
+                  <Text style={styles.splitPercent}>{s.percentage.toFixed(0)}%</Text>
+                </View>
+              ))}
+              <TouchableOpacity
+                style={styles.splitEditBtn}
+                onPress={() => setShowSplitEditor(true)}
+              >
+                <Text style={styles.splitEditText}>{t('common.edit')}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.splitButton}
+              onPress={() => setShowSplitEditor(true)}
+            >
+              <Ionicons name="git-branch-outline" size={18} color={theme.colors.primary} />
+              <Text style={styles.splitButtonText}>{t('splits.splitExpense')}</Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
 
         {/* Submit Button */}
@@ -313,5 +414,61 @@ const createStyles = (theme: Theme) => ({
   submitButtonText: {
     ...theme.textStyles.h3,
     color: theme.colors.textInverse,
+  },
+  // Splits
+  splitButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    marginBottom: theme.spacing[6],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    borderStyle: 'dashed' as const,
+  },
+  splitButtonText: {
+    fontSize: 14,
+    color: theme.colors.primary,
+    fontWeight: '500' as const,
+  },
+  splitHeader: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[2],
+  },
+  splitRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[1.5],
+    gap: theme.spacing[2],
+  },
+  splitName: {
+    flex: 1,
+    fontSize: 14,
+    color: theme.colors.textPrimary,
+  },
+  splitAmount: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  splitPercent: {
+    fontSize: 12,
+    color: theme.colors.textTertiary,
+    width: 36,
+    textAlign: 'right' as const,
+  },
+  splitEditBtn: {
+    alignSelf: 'flex-start' as const,
+    paddingVertical: theme.spacing[1],
+    marginTop: theme.spacing[1],
+  },
+  splitEditText: {
+    fontSize: 13,
+    color: theme.colors.primary,
+    fontWeight: '500' as const,
   },
 });

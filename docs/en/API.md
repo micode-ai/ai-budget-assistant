@@ -422,9 +422,12 @@ Content-Type: application/json
   "locationLng": -74.0060,
   "notes": "Business lunch",
   "isRecurring": false,
-  "source": "manual"
+  "source": "manual",
+  "tagIds": ["tag-uuid-1", "tag-uuid-2"]
 }
 ```
+
+**Note:** `tagIds` is optional. Tags will be associated with the expense automatically.
 
 **Response** `201 Created`
 
@@ -851,6 +854,384 @@ X-Account-Id: <account-uuid>
 ```
 
 **Response** `204 No Content`
+
+---
+
+## Tags
+
+All tag endpoints require `X-Account-Id` header.
+
+### List Tags
+
+```http
+GET /tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "name": "business-trip",
+      "color": "#3498DB",
+      "icon": "briefcase",
+      "usageCount": 12,
+      "syncVersion": 1,
+      "createdAt": "2026-01-15T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Create Tag
+
+```http
+POST /tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "business-trip",
+  "color": "#3498DB",
+  "icon": "briefcase"
+}
+```
+
+**Response** `201 Created`
+
+### Update Tag
+
+```http
+PATCH /tags/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "work-trip",
+  "color": "#2980B9"
+}
+```
+
+### Delete Tag
+
+```http
+DELETE /tags/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Add Tag to Expense
+
+```http
+POST /tags/:id/expenses/:expenseId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `201 Created`
+
+### Remove Tag from Expense
+
+```http
+DELETE /tags/:id/expenses/:expenseId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Add Tag to Income
+
+```http
+POST /tags/:id/incomes/:incomeId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `201 Created`
+
+### Remove Tag from Income
+
+```http
+DELETE /tags/:id/incomes/:incomeId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+---
+
+## Projects
+
+All project endpoints require `X-Account-Id` header.
+
+### List Projects
+
+```http
+GET /projects?archived=false
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `archived` | boolean | Filter by archived status |
+
+**Response** `200 OK`
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "clientId": "client-uuid",
+      "name": "Kitchen Renovation",
+      "description": "Complete kitchen remodel",
+      "color": "#E74C3C",
+      "icon": "home",
+      "startDate": "2026-01-01",
+      "endDate": "2026-03-31",
+      "budget": 5000.00,
+      "currencyCode": "USD",
+      "isArchived": false,
+      "syncVersion": 1,
+      "createdAt": "2026-01-01T10:00:00Z"
+    }
+  ]
+}
+```
+
+### Get Project
+
+```http
+GET /projects/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+Returns project with associated expenses and incomes.
+
+### Create Project
+
+```http
+POST /projects
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "name": "Kitchen Renovation",
+  "description": "Complete kitchen remodel",
+  "color": "#E74C3C",
+  "icon": "home",
+  "startDate": "2026-01-01",
+  "endDate": "2026-03-31",
+  "budget": 5000.00,
+  "currencyCode": "USD"
+}
+```
+
+**Response** `201 Created`
+
+### Update Project
+
+```http
+PATCH /projects/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "Kitchen Renovation Phase 2",
+  "budget": 7500.00,
+  "isArchived": false
+}
+```
+
+### Delete Project
+
+```http
+DELETE /projects/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Add Expense to Project
+
+```http
+POST /projects/:id/expenses
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "expenseId": "expense-uuid"
+}
+```
+
+**Response** `201 Created`
+
+### Remove Expense from Project
+
+```http
+DELETE /projects/:id/expenses/:expenseId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Add Income to Project
+
+```http
+POST /projects/:id/incomes
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "incomeId": "income-uuid"
+}
+```
+
+**Response** `201 Created`
+
+### Remove Income from Project
+
+```http
+DELETE /projects/:id/incomes/:incomeId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Get Project Analytics
+
+```http
+GET /projects/:id/analytics
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "projectId": "uuid",
+  "projectName": "Kitchen Renovation",
+  "totalExpenses": 3200.00,
+  "totalIncome": 0,
+  "netAmount": -3200.00,
+  "expenseCount": 8,
+  "incomeCount": 0,
+  "budgetRemaining": 1800.00,
+  "expensesByCategory": [
+    {
+      "categoryId": "uuid",
+      "categoryName": "Materials",
+      "amount": 2100.00,
+      "count": 5
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-01-15",
+      "expenses": 450.00,
+      "income": 0
+    }
+  ]
+}
+```
+
+---
+
+## Expense Category Splits
+
+Splits allow distributing a single expense across multiple categories.
+
+### Set Splits for Expense
+
+```http
+POST /expenses/:id/splits
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "splits": [
+    {
+      "categoryId": "food-uuid",
+      "amount": 30.00,
+      "percentage": 60,
+      "notes": "Groceries"
+    },
+    {
+      "categoryId": "household-uuid",
+      "amount": 20.00,
+      "percentage": 40,
+      "notes": "Cleaning supplies"
+    }
+  ]
+}
+```
+
+**Validation**: 2-10 splits per expense.
+
+**Response** `200 OK`
+```json
+{
+  "splits": [
+    {
+      "id": "uuid",
+      "expenseId": "expense-uuid",
+      "categoryId": "food-uuid",
+      "amount": 30.00,
+      "percentage": 60,
+      "notes": "Groceries",
+      "category": {
+        "id": "food-uuid",
+        "name": "Food & Dining"
+      }
+    },
+    {
+      "id": "uuid",
+      "expenseId": "expense-uuid",
+      "categoryId": "household-uuid",
+      "amount": 20.00,
+      "percentage": 40,
+      "notes": "Cleaning supplies",
+      "category": {
+        "id": "household-uuid",
+        "name": "Household"
+      }
+    }
+  ]
+}
+```
+
+### Remove Splits from Expense
+
+```http
+DELETE /expenses/:id/splits
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+**Note:** When an expense has splits, analytics aggregate by split categories instead of the single expense category.
 
 ---
 
@@ -1290,6 +1671,117 @@ image: <image file>
 }
 ```
 
+### Suggest Tags
+
+```http
+GET /ai/suggest-tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `description` | string | Expense description (required) |
+| `merchant` | string | Merchant name (optional) |
+
+**Response** `200 OK`
+```json
+{
+  "tags": [
+    {
+      "name": "business-lunch",
+      "confidence": 0.92,
+      "source": "history",
+      "existingTagId": "uuid"
+    },
+    {
+      "name": "client-meeting",
+      "confidence": 0.78,
+      "source": "ai",
+      "existingTagId": null
+    }
+  ]
+}
+```
+
+**AI cost**: 0.5 units (only when history provides < 3 results)
+
+**Source values**: `history` (from similar past expenses), `ai` (GPT-4 generated)
+
+### Suggest Project
+
+```http
+POST /ai/suggest-project
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "description": "Paint for kitchen walls",
+  "date": "2026-02-10",
+  "locationName": "Home Depot"
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "projectId": "uuid",
+  "projectName": "Kitchen Renovation",
+  "confidence": 0.88
+}
+```
+
+Returns `null` if no suitable project found (confidence < 0.6).
+
+**AI cost**: 0.5 units
+
+### Suggest Splits
+
+```http
+POST /ai/suggest-splits
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "id": "expense-uuid",
+  "description": "Walmart groceries and cleaning supplies",
+  "amount": 85.50,
+  "items": [
+    { "description": "Apples", "totalPrice": 5.99 },
+    { "description": "Chicken breast", "totalPrice": 12.99 },
+    { "description": "Floor cleaner", "totalPrice": 8.49 },
+    { "description": "Sponges", "totalPrice": 3.99 }
+  ]
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "shouldSplit": true,
+  "confidence": 0.91,
+  "suggestedSplits": [
+    {
+      "categoryName": "Food & Dining",
+      "amount": 18.98,
+      "percentage": 22.2,
+      "reasoning": "Grocery items: apples, chicken breast"
+    },
+    {
+      "categoryName": "Household",
+      "amount": 12.48,
+      "percentage": 14.6,
+      "reasoning": "Cleaning supplies: floor cleaner, sponges"
+    }
+  ]
+}
+```
+
+**AI cost**: 1.0 unit
+
 ### Chat with AI Assistant
 
 ```http
@@ -1404,6 +1896,67 @@ X-Account-Id: <account-uuid>
     "changePercentage": 16.3
   },
   "monthlyAverage": 2000.38
+}
+```
+
+### Get Tag Breakdown
+
+```http
+GET /analytics/tags
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `startDate` | ISO 8601 | Period start (required) |
+| `endDate` | ISO 8601 | Period end (required) |
+
+**Response** `200 OK`
+```json
+{
+  "tags": [
+    {
+      "tagId": "uuid",
+      "tagName": "business-trip",
+      "color": "#3498DB",
+      "amount": 1250.00,
+      "count": 8,
+      "percentage": 35.2
+    }
+  ]
+}
+```
+
+### Get Project Breakdown
+
+```http
+GET /analytics/projects
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `startDate` | ISO 8601 | Period start (required) |
+| `endDate` | ISO 8601 | Period end (required) |
+
+**Response** `200 OK`
+```json
+{
+  "projects": [
+    {
+      "projectId": "uuid",
+      "projectName": "Kitchen Renovation",
+      "totalExpenses": 3200.00,
+      "totalIncome": 0,
+      "expenseCount": 8,
+      "budget": 5000.00,
+      "isArchived": false
+    }
+  ]
 }
 ```
 

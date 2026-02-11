@@ -81,11 +81,29 @@ export class ExpensesService {
         });
       }
 
+      // Create tag associations if provided
+      if (dto.tagIds && dto.tagIds.length > 0) {
+        await tx.expenseTag.createMany({
+          data: dto.tagIds.map(tagId => ({
+            expenseId: expense.id,
+            tagId,
+          })),
+          skipDuplicates: true,
+        });
+        // Increment usage counts
+        await tx.tag.updateMany({
+          where: { id: { in: dto.tagIds } },
+          data: { usageCount: { increment: 1 } },
+        });
+      }
+
       return tx.expense.findUnique({
         where: { id: expense.id },
         include: {
           category: true,
           items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
+          expenseTags: { where: { isDeleted: false }, include: { tag: true } },
+          categorySplits: { where: { isDeleted: false }, include: { category: true } },
         },
       });
     });
@@ -147,6 +165,14 @@ export class ExpensesService {
             where: { isDeleted: false },
             orderBy: { sortOrder: 'asc' },
           },
+          expenseTags: {
+            where: { isDeleted: false },
+            include: { tag: true },
+          },
+          categorySplits: {
+            where: { isDeleted: false },
+            include: { category: true },
+          },
         },
         orderBy: { date: 'desc' },
         skip,
@@ -178,6 +204,8 @@ export class ExpensesService {
       include: {
         category: true,
         items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
+        expenseTags: { where: { isDeleted: false }, include: { tag: true } },
+        categorySplits: { where: { isDeleted: false }, include: { category: true } },
       },
     });
 
@@ -194,25 +222,58 @@ export class ExpensesService {
       ? await this.resolveCategoryId(dto.categoryId, accountId)
       : undefined;
 
-    return this.prisma.expense.update({
-      where: { id: expense.id },
-      data: {
-        amount: dto.amount,
-        discountAmount: dto.discountAmount,
-        currencyCode: dto.currencyCode,
-        description: dto.description,
-        notes: dto.notes,
-        categoryId: resolvedCategoryId,
-        date: dto.date ? new Date(dto.date) : undefined,
-        time: dto.time,
-        locationLat: dto.location?.lat,
-        locationLng: dto.location?.lng,
-        syncVersion: { increment: 1 },
-      },
-      include: {
-        category: true,
-        items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
-      },
+    return this.prisma.$transaction(async (tx) => {
+      const updated = await tx.expense.update({
+        where: { id: expense.id },
+        data: {
+          amount: dto.amount,
+          discountAmount: dto.discountAmount,
+          currencyCode: dto.currencyCode,
+          description: dto.description,
+          notes: dto.notes,
+          categoryId: resolvedCategoryId,
+          date: dto.date ? new Date(dto.date) : undefined,
+          time: dto.time,
+          locationLat: dto.location?.lat,
+          locationLng: dto.location?.lng,
+          syncVersion: { increment: 1 },
+        },
+      });
+
+      // Update tag associations if provided
+      if (dto.tagIds !== undefined) {
+        // Soft-delete existing expense tags
+        await tx.expenseTag.updateMany({
+          where: { expenseId: expense.id, isDeleted: false },
+          data: { isDeleted: true },
+        });
+
+        // Create new expense tags
+        if (dto.tagIds.length > 0) {
+          await tx.expenseTag.createMany({
+            data: dto.tagIds.map(tagId => ({
+              expenseId: expense.id,
+              tagId,
+            })),
+            skipDuplicates: true,
+          });
+          // Increment usage counts
+          await tx.tag.updateMany({
+            where: { id: { in: dto.tagIds } },
+            data: { usageCount: { increment: 1 } },
+          });
+        }
+      }
+
+      return tx.expense.findUnique({
+        where: { id: expense.id },
+        include: {
+          category: true,
+          items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
+          expenseTags: { where: { isDeleted: false }, include: { tag: true } },
+          categorySplits: { where: { isDeleted: false }, include: { category: true } },
+        },
+      });
     });
   }
 
@@ -327,6 +388,62 @@ export class ExpensesService {
       where: { id: expenseId },
       data: { receiptImage: null, syncVersion: { increment: 1 } },
     });
+    return { success: true };
+  }
+
+  // ---- Category Splits ----
+
+  async setSplits(
+    accountId: string,
+    expenseId: string,
+    splits: Array<{ categoryId: string; amount: number; percentage: number; notes?: string }>,
+  ) {
+    const expense = await this.prisma.expense.findFirst({
+      where: { id: expenseId, accountId, isDeleted: false },
+    });
+    if (!expense) throw new NotFoundException('Expense not found');
+
+    return this.prisma.$transaction(async (tx) => {
+      // Soft-delete existing splits
+      await tx.expenseCategorySplit.updateMany({
+        where: { expenseId, isDeleted: false },
+        data: { isDeleted: true },
+      });
+
+      // Create new splits
+      await tx.expenseCategorySplit.createMany({
+        data: splits.map(split => ({
+          expenseId,
+          categoryId: split.categoryId,
+          amount: split.amount,
+          percentage: split.percentage,
+          notes: split.notes,
+        })),
+      });
+
+      return tx.expense.findUnique({
+        where: { id: expenseId },
+        include: {
+          category: true,
+          items: { where: { isDeleted: false } },
+          expenseTags: { where: { isDeleted: false }, include: { tag: true } },
+          categorySplits: { where: { isDeleted: false }, include: { category: true } },
+        },
+      });
+    });
+  }
+
+  async removeSplits(accountId: string, expenseId: string) {
+    const expense = await this.prisma.expense.findFirst({
+      where: { id: expenseId, accountId, isDeleted: false },
+    });
+    if (!expense) throw new NotFoundException('Expense not found');
+
+    await this.prisma.expenseCategorySplit.updateMany({
+      where: { expenseId, isDeleted: false },
+      data: { isDeleted: true },
+    });
+
     return { success: true };
   }
 }

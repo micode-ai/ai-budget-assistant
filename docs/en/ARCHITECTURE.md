@@ -90,6 +90,12 @@ app/
 ├── income/
 │   ├── [id].tsx           # Income details
 │   └── new.tsx            # Add income
+├── tags/
+│   └── index.tsx          # Tag management
+├── projects/
+│   ├── index.tsx          # Project list
+│   ├── [id].tsx           # Project details & analytics
+│   └── new.tsx            # Create project
 ├── wallet/
 │   ├── index.tsx          # Wallet balances
 │   ├── exchange.tsx       # Currency exchange
@@ -117,6 +123,9 @@ Zustand stores manage application state:
 | `useWalletStore` | Wallet balances, currency exchange |
 | `useThemeStore` | Theme preferences, dark mode |
 | `useInsightsStore` | AI insights loading, caching, dismissal |
+| `useTagStore` | Tag CRUD, expense/income tag associations, AI suggestions |
+| `useProjectStore` | Project CRUD, expense/income assignment, archiving |
+| `useCategoryStore` | Category management, loading from DB |
 
 ### Local Database Schema
 
@@ -204,10 +213,95 @@ Zustand stores manage application state:
   syncVersion: integer
 }
 
+// tags table
+{
+  id: text (PK),
+  serverId: text (nullable),
+  accountId: text,
+  name: text,
+  color: text (nullable),
+  icon: text (nullable),
+  usageCount: integer (default 0),
+  isDeleted: integer (boolean),
+  syncStatus: text (pending|synced|conflict),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// expense_tags table
+{
+  id: text (PK),
+  expenseId: text,
+  tagId: text,
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// income_tags table
+{
+  id: text (PK),
+  incomeId: text,
+  tagId: text,
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// projects table
+{
+  id: text (PK),
+  localId: text,
+  serverId: text (nullable),
+  accountId: text,
+  name: text,
+  description: text (nullable),
+  color: text (nullable),
+  icon: text (nullable),
+  startDate: integer (nullable),
+  endDate: integer (nullable),
+  budget: real (nullable),
+  currencyCode: text (nullable),
+  isArchived: integer (boolean),
+  isDeleted: integer (boolean),
+  syncStatus: text (pending|synced|conflict),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// project_expenses table
+{
+  id: text (PK),
+  projectId: text,
+  expenseId: text,
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
+// expense_category_splits table
+{
+  id: text (PK),
+  expenseId: text,
+  categoryId: text,
+  amount: real,
+  percentage: real,
+  notes: text (nullable),
+  isDeleted: integer (boolean),
+  syncVersion: integer,
+  createdAt: integer,
+  updatedAt: integer
+}
+
 // sync_queue table
 {
   id: integer (PK),
-  entityType: text (expense|category|budget),
+  entityType: text (expense|category|budget|tag|project|...),
   entityLocalId: integer,
   operation: text (create|update|delete),
   payload: text (JSON),
@@ -263,13 +357,24 @@ src/
 │   ├── categories/              # Category management
 │   │   ├── categories.controller.ts
 │   │   └── categories.service.ts
+│   ├── tags/                     # Tag management
+│   │   ├── tags.controller.ts
+│   │   ├── tags.service.ts
+│   │   └── tags.module.ts
+│   ├── projects/                 # Project management
+│   │   ├── projects.controller.ts
+│   │   ├── projects.service.ts
+│   │   └── projects.module.ts
 │   ├── ai/                      # AI services
 │   │   ├── ai.controller.ts
 │   │   └── services/
 │   │       ├── transcription.service.ts
 │   │       ├── categorization.service.ts
 │   │       ├── chat.service.ts
-│   │       └── receipt-scanner.service.ts
+│   │       ├── receipt-scanner.service.ts
+│   │       ├── tag-suggestion.service.ts
+│   │       ├── project-suggestion.service.ts
+│   │       └── split-suggestion.service.ts
 │   ├── analytics/               # Spending analytics
 │   │   ├── analytics.controller.ts
 │   │   └── analytics.service.ts
@@ -627,6 +732,126 @@ model CurrencyExchange {
   @@unique([accountId, clientId])
 }
 
+model Tag {
+  id          String   @id @default(uuid())
+  accountId   String
+  name        String
+  color       String?
+  icon        String?
+  usageCount  Int      @default(0)
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  account     Account
+  expenseTags ExpenseTag[]
+  incomeTags  IncomeTag[]
+
+  @@unique([accountId, name])
+}
+
+model ExpenseTag {
+  id          String   @id @default(uuid())
+  expenseId   String
+  tagId       String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expense Expense
+  tag     Tag
+
+  @@unique([expenseId, tagId])
+}
+
+model IncomeTag {
+  id          String   @id @default(uuid())
+  incomeId    String
+  tagId       String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  income Income
+  tag    Tag
+
+  @@unique([incomeId, tagId])
+}
+
+model Project {
+  id           String    @id @default(uuid())
+  accountId    String
+  clientId     String
+  name         String
+  description  String?
+  color        String?
+  icon         String?
+  startDate    DateTime? @db.Date
+  endDate      DateTime? @db.Date
+  budget       Decimal?  @db.Decimal(12, 2)
+  currencyCode String?
+  isArchived   Boolean   @default(false)
+  isDeleted    Boolean   @default(false)
+  syncVersion  Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  account         Account
+  projectExpenses ProjectExpense[]
+  projectIncomes  ProjectIncome[]
+
+  @@unique([accountId, clientId])
+}
+
+model ProjectExpense {
+  id          String   @id @default(uuid())
+  projectId   String
+  expenseId   String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project
+  expense Expense
+
+  @@unique([projectId, expenseId])
+}
+
+model ProjectIncome {
+  id          String   @id @default(uuid())
+  projectId   String
+  incomeId    String
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project
+  income  Income
+
+  @@unique([projectId, incomeId])
+}
+
+model ExpenseCategorySplit {
+  id          String   @id @default(uuid())
+  expenseId   String
+  categoryId  String
+  amount      Decimal  @db.Decimal(12, 2)
+  percentage  Decimal  @db.Decimal(5, 2)
+  notes       String?
+  isDeleted   Boolean  @default(false)
+  syncVersion Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expense  Expense
+  category Category
+}
+
 model Subscription {
   id               String   @id @default(uuid())
   userId           String   @unique
@@ -749,6 +974,9 @@ The application uses optimistic version-based synchronization with last-write-wi
 | Chat Assistant | GPT-4 | Financial advice and insights |
 | AI Insights | GPT-4 | Analyze patterns, generate insight cards |
 | Story Generation | GPT-4 | Create narrative spending dashboards |
+| Tag Suggestions | GPT-4 | Suggest tags based on expense description (history-first, AI fallback) |
+| Project Suggestions | GPT-4 | Match expenses to active projects by date range and semantic analysis |
+| Split Suggestions | GPT-4 | Suggest category splits for multi-category expenses |
 
 ### Data Flow
 

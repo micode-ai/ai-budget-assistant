@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,10 +15,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useCategoryStore } from '@/stores/categoryStore';
 import {
   BUDGET_PERIODS,
   SUPPORTED_CURRENCIES,
-  DEFAULT_EXPENSE_CATEGORIES,
 } from '@budget/shared-utils';
 import type { Currency, BudgetPeriod } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -29,6 +29,7 @@ export default function NewBudgetScreen() {
   const styles = useStyles(createStyles);
   const { addBudget } = useBudgetStore();
   const { user } = useAuthStore();
+  const { getExpenseCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
 
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
@@ -38,6 +39,10 @@ export default function NewBudgetScreen() {
   const [alertThreshold, setAlertThreshold] = useState(80);
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
+  }, []);
 
   const handleSubmit = async () => {
     if (!name.trim()) {
@@ -174,24 +179,24 @@ export default function NewBudgetScreen() {
             <Text style={styles.fieldLabel}>{t('budgetNew.categoryOptional')}</Text>
             <Text style={styles.fieldHint}>{t('budgetNew.categoryHint')}</Text>
             <View style={styles.categoryGrid}>
-              {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
+              {getExpenseCategories().map((cat) => (
                 <TouchableOpacity
-                  key={cat.name}
+                  key={cat.id}
                   style={[
                     styles.categoryChip,
-                    selectedCategory === cat.name && {
+                    selectedCategory === cat.id && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
                     },
                   ]}
                   onPress={() =>
-                    setSelectedCategory(selectedCategory === cat.name ? '' : cat.name)
+                    setSelectedCategory(selectedCategory === cat.id ? '' : cat.id)
                   }
                 >
                   <Text
                     style={[
                       styles.categoryChipText,
-                      selectedCategory === cat.name && styles.categoryChipTextSelected,
+                      selectedCategory === cat.id && styles.categoryChipTextSelected,
                     ]}
                   >
                     {cat.name}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useIncomeStore } from '@/stores/incomeStore';
-import { formatCurrency, formatDate, DEFAULT_INCOME_CATEGORIES } from '@budget/shared-utils';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { getTagsForIncome } from '@/db/tagRepository';
+import { TagChip } from '@/components/TagChip';
+import { formatCurrency, formatDate } from '@budget/shared-utils';
+import type { Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function IncomeDetailScreen() {
@@ -23,8 +27,10 @@ export default function IncomeDetailScreen() {
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { incomes, updateIncome, deleteIncome } = useIncomeStore();
+  const { getIncomeCategories, getCategoryById, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const income = incomes.find((i) => i.id === id);
 
+  const [incomeTags, setIncomeTags] = useState<Tag[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editDescription, setEditDescription] = useState(income?.description || '');
   const [editAmount, setEditAmount] = useState(income?.amount?.toString() || '');
@@ -32,6 +38,13 @@ export default function IncomeDetailScreen() {
   const [editNotes, setEditNotes] = useState(income?.notes || '');
   const [editDate, setEditDate] = useState(income?.date ? new Date(income.date) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
+    if (id) {
+      getTagsForIncome(id).then(setIncomeTags).catch(() => {});
+    }
+  }, [id]);
 
   if (!income) {
     return (
@@ -141,24 +154,24 @@ export default function IncomeDetailScreen() {
             <Text style={styles.detailLabel}>{t('incomeDetail.category')}</Text>
             {isEditing ? (
               <View style={styles.categoryGrid}>
-                {DEFAULT_INCOME_CATEGORIES.map((cat) => (
+                {getIncomeCategories().map((cat) => (
                   <TouchableOpacity
-                    key={cat.name}
+                    key={cat.id}
                     style={[
                       styles.categoryChip,
-                      editCategory === cat.name && {
+                      editCategory === cat.id && {
                         backgroundColor: cat.color,
                         borderColor: cat.color,
                       },
                     ]}
                     onPress={() =>
-                      setEditCategory(editCategory === cat.name ? '' : cat.name)
+                      setEditCategory(editCategory === cat.id ? '' : cat.id)
                     }
                   >
                     <Text
                       style={[
                         styles.categoryChipText,
-                        editCategory === cat.name && styles.categoryChipTextSelected,
+                        editCategory === cat.id && styles.categoryChipTextSelected,
                       ]}
                     >
                       {cat.name}
@@ -168,7 +181,7 @@ export default function IncomeDetailScreen() {
               </View>
             ) : (
               <Text style={styles.detailValue}>
-                {income.categoryId || '-'}
+                {(income.categoryId && getCategoryById(income.categoryId)?.name) || '-'}
               </Text>
             )}
           </View>
@@ -189,6 +202,18 @@ export default function IncomeDetailScreen() {
               </Text>
             )}
           </View>
+
+          {/* Tags Section */}
+          {incomeTags.length > 0 && (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>{t('tags.title')}</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {incomeTags.map((tag) => (
+                  <TagChip key={tag.id} name={tag.name} color={tag.color} size="small" />
+                ))}
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Action Buttons */}

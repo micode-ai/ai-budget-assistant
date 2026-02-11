@@ -5,6 +5,8 @@ import type { User, Currency } from '@budget/shared-types';
 import { useAccountStore } from './accountStore';
 import { useBudgetStore } from './budgetStore';
 import { useExpenseStore } from './expenseStore';
+import { useIncomeStore } from './incomeStore';
+import { useCategoryStore } from './categoryStore';
 import { useWalletStore } from './walletStore';
 
 interface AuthState {
@@ -64,6 +66,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               // Load data for the user's account
               await Promise.all([
                 useExpenseStore.getState().loadExpenses(),
+                useIncomeStore.getState().loadIncomes(),
+                useCategoryStore.getState().loadCategories(),
                 useWalletStore.getState().loadWallet(),
                 useBudgetStore.getState().loadBudgets(),
               ]);
@@ -130,6 +134,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // Load data for the new user's account
           await Promise.all([
             useExpenseStore.getState().loadExpenses(),
+            useIncomeStore.getState().loadIncomes(),
+            useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
           ]);
@@ -185,6 +191,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // Load data for the new user's account
           await Promise.all([
             useExpenseStore.getState().loadExpenses(),
+            useIncomeStore.getState().loadIncomes(),
+            useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
           ]);
@@ -234,6 +242,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             // Load data for the user's account
             await Promise.all([
               useExpenseStore.getState().loadExpenses(),
+              useIncomeStore.getState().loadIncomes(),
+              useCategoryStore.getState().loadCategories(),
               useWalletStore.getState().loadWallet(),
               useBudgetStore.getState().loadBudgets(),
             ]);
@@ -301,6 +311,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           useAccountStore.getState().reset();
           useBudgetStore.getState().reset();
           useExpenseStore.getState().reset();
+          useIncomeStore.getState().reset();
           useWalletStore.getState().reset();
         } catch (error) {
           console.error('Failed to logout:', error);

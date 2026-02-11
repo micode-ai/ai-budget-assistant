@@ -132,6 +132,11 @@ export class CreateExpenseDto {
   @IsOptional()
   @IsString()
   receiptImageBase64?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  tagIds?: string[];
 }
 
 export class UpdateExpenseDto {
@@ -173,6 +178,11 @@ export class UpdateExpenseDto {
   @ValidateNested()
   @Type(() => LocationDto)
   location?: LocationDto;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  tagIds?: string[];
 }
 
 export class ExpenseFiltersDto {

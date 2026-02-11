@@ -135,6 +135,100 @@ export const syncMetadata = sqliteTable('sync_metadata', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Tags table
+export const tags = sqliteTable('tags', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  name: text('name').notNull(),
+  color: text('color'),
+  icon: text('icon'),
+  usageCount: integer('usage_count').default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').notNull().default('pending'),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Expense tags junction table
+export const expenseTags = sqliteTable('expense_tags', {
+  id: text('id').primaryKey(),
+  expenseId: text('expense_id').notNull(),
+  tagId: text('tag_id').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Income tags junction table
+export const incomeTags = sqliteTable('income_tags', {
+  id: text('id').primaryKey(),
+  incomeId: text('income_id').notNull(),
+  tagId: text('tag_id').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Projects table
+export const projects = sqliteTable('projects', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  clientId: text('client_id').notNull(),
+  name: text('name').notNull(),
+  description: text('description'),
+  color: text('color'),
+  icon: text('icon'),
+  startDate: integer('start_date', { mode: 'timestamp' }),
+  endDate: integer('end_date', { mode: 'timestamp' }),
+  budget: real('budget'),
+  currencyCode: text('currency_code'),
+  isArchived: integer('is_archived', { mode: 'boolean' }).default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').notNull().default('pending'),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Project expenses junction table
+export const projectExpenses = sqliteTable('project_expenses', {
+  id: text('id').primaryKey(),
+  projectId: text('project_id').notNull(),
+  expenseId: text('expense_id').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Project incomes junction table
+export const projectIncomes = sqliteTable('project_incomes', {
+  id: text('id').primaryKey(),
+  projectId: text('project_id').notNull(),
+  incomeId: text('income_id').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
+// Expense category splits table
+export const expenseCategorySplits = sqliteTable('expense_category_splits', {
+  id: text('id').primaryKey(),
+  expenseId: text('expense_id').notNull(),
+  categoryId: text('category_id').notNull(),
+  amount: real('amount').notNull(),
+  percentage: real('percentage').notNull(),
+  notes: text('notes'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
 // Chat conversations table
 export const chatConversations = sqliteTable('chat_conversations', {
   id: text('id').primaryKey(),
@@ -210,3 +304,17 @@ export type IncomeRecord = typeof incomes.$inferSelect;
 export type NewIncomeRecord = typeof incomes.$inferInsert;
 export type SyncQueueRecord = typeof syncQueue.$inferSelect;
 export type NewSyncQueueRecord = typeof syncQueue.$inferInsert;
+export type TagRecord = typeof tags.$inferSelect;
+export type NewTagRecord = typeof tags.$inferInsert;
+export type ExpenseTagRecord = typeof expenseTags.$inferSelect;
+export type NewExpenseTagRecord = typeof expenseTags.$inferInsert;
+export type IncomeTagRecord = typeof incomeTags.$inferSelect;
+export type NewIncomeTagRecord = typeof incomeTags.$inferInsert;
+export type ProjectRecord = typeof projects.$inferSelect;
+export type NewProjectRecord = typeof projects.$inferInsert;
+export type ProjectExpenseRecord = typeof projectExpenses.$inferSelect;
+export type NewProjectExpenseRecord = typeof projectExpenses.$inferInsert;
+export type ProjectIncomeRecord = typeof projectIncomes.$inferSelect;
+export type NewProjectIncomeRecord = typeof projectIncomes.$inferInsert;
+export type ExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferSelect;
+export type NewExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferInsert;
