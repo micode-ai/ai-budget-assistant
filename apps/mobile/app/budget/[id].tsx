@@ -80,7 +80,7 @@ export default function BudgetDetailScreen() {
               {formatCurrency(progress?.spent || 0, budget.currencyCode)}
             </Text>
             <Text style={styles.totalAmount}>
-              of {formatCurrency(budget.amount, budget.currencyCode)}
+              {t('common.of')} {formatCurrency(budget.amount, budget.currencyCode)}
             </Text>
           </View>
 
@@ -101,7 +101,7 @@ export default function BudgetDetailScreen() {
 
           {progress && progress.remaining > 0 && (
             <Text style={styles.remainingText}>
-              {formatCurrency(progress.remaining, budget.currencyCode)} remaining
+              {formatCurrency(progress.remaining, budget.currencyCode)} {t('budgets.remaining')}
             </Text>
           )}
         </View>

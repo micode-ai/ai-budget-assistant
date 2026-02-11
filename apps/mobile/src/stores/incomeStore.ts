@@ -9,10 +9,12 @@ import {
   updateIncomeInDb,
   softDeleteIncomeInDb,
 } from '@/db/incomeRepository';
-import { insertIncomeTag } from '@/db/tagRepository';
+import { insertIncomeTag, getTagsForIncome } from '@/db/tagRepository';
+import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
+import { useCategoryStore } from './categoryStore';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -115,7 +117,7 @@ export const useIncomeStore = create<IncomeState>()(
           for (const si of serverIncomes) {
             const incomeId = si.clientId || si.id;
             const localIncome = localIncomes.find((i) => i.id === incomeId);
-            const serverCategoryId = si.category?.name ?? si.categoryId ?? undefined;
+            const serverCategoryId = si.categoryId ?? si.category?.id ?? undefined;
 
             const income: Income = {
               id: incomeId,
@@ -136,6 +138,53 @@ export const useIncomeStore = create<IncomeState>()(
               syncVersion: si.syncVersion || 0,
             };
             await upsertIncome(income);
+
+            // Sync category from server if present (so other devices have it locally)
+            if (si.category && si.category.id) {
+              const tagNow2 = new Date();
+              try {
+                await upsertCategory({
+                  id: si.category.id,
+                  accountId: si.accountId,
+                  userId: si.category.userId ?? undefined,
+                  name: si.category.name,
+                  icon: si.category.icon ?? undefined,
+                  color: si.category.color ?? undefined,
+                  type: si.category.type || 'income',
+                  isSystem: si.category.isSystem ?? false,
+                  parentId: si.category.parentId ?? undefined,
+                  createdAt: si.category.createdAt ? new Date(si.category.createdAt) : tagNow2,
+                  updatedAt: si.category.updatedAt ? new Date(si.category.updatedAt) : tagNow2,
+                  isDeleted: si.category.isDeleted ?? false,
+                  syncVersion: si.category.syncVersion ?? 0,
+                });
+              } catch { /* skip if already exists */ }
+            }
+
+            // Sync income tags from server
+            if (si.incomeTags && Array.isArray(si.incomeTags) && si.incomeTags.length > 0) {
+              const localTags = await getTagsForIncome(incomeId);
+              if (localTags.length === 0) {
+                const tagNow = new Date();
+                for (const it of si.incomeTags) {
+                  const tagId = it.tagId ?? it.tag?.id;
+                  if (!tagId) continue;
+                  try {
+                    await insertIncomeTag({
+                      id: it.id,
+                      incomeId,
+                      tagId,
+                      createdAt: it.createdAt ? new Date(it.createdAt) : tagNow,
+                      updatedAt: it.updatedAt ? new Date(it.updatedAt) : tagNow,
+                      isDeleted: it.isDeleted || false,
+                      syncVersion: it.syncVersion ?? 0,
+                    });
+                  } catch {
+                    // Duplicate — skip
+                  }
+                }
+              }
+            }
           }
 
           // Mark locally-synced incomes as deleted if server no longer returns them
@@ -145,6 +194,9 @@ export const useIncomeStore = create<IncomeState>()(
               await softDeleteIncomeInDb(local.id, new Date());
             }
           }
+
+          // Refresh category store so UI picks up newly synced data
+          useCategoryStore.getState().loadCategories();
 
           // Reload from SQLite after merge
           const merged = await loadAllIncomes(accountId);
@@ -199,6 +251,13 @@ export const useIncomeStore = create<IncomeState>()(
         }
       }
 
+      // Resolve category ID to name for the server (local IDs don't exist on server)
+      let resolvedCategoryId: string | undefined = newIncome.categoryId;
+      if (newIncome.categoryId) {
+        const cat = await getCategoryFromDb(newIncome.categoryId);
+        resolvedCategoryId = cat?.name || newIncome.categoryId;
+      }
+
       // Fire-and-forget server sync
       api.createIncome({
         localId: id,
@@ -206,8 +265,10 @@ export const useIncomeStore = create<IncomeState>()(
         currencyCode: newIncome.currencyCode,
         description: newIncome.description,
         notes: newIncome.notes,
-        categoryId: newIncome.categoryId || undefined,
+        categoryId: resolvedCategoryId,
         date: newIncome.date instanceof Date ? newIncome.date.toISOString() : newIncome.date,
+        tagIds: tagIds?.length ? tagIds : undefined,
+        projectId: projectId || undefined,
       }).then(() => {
         set((state) => ({
           incomes: state.incomes.map((i) =>
@@ -279,14 +340,22 @@ export const useIncomeStore = create<IncomeState>()(
 
       for (const income of pending) {
         try {
+          const tags = await getTagsForIncome(income.id);
+          const tagIds = tags.map(t => t.id);
+          let resolvedCategoryId: string | undefined = income.categoryId;
+          if (income.categoryId) {
+            const cat = await getCategoryFromDb(income.categoryId);
+            resolvedCategoryId = cat?.name || income.categoryId;
+          }
           await api.createIncome({
             localId: income.localId || income.id,
             amount: income.amount,
             currencyCode: income.currencyCode,
             description: income.description,
             notes: income.notes,
-            categoryId: income.categoryId || undefined,
+            categoryId: resolvedCategoryId,
             date: income.date instanceof Date ? income.date.toISOString() : String(income.date),
+            tagIds: tagIds.length ? tagIds : undefined,
           });
         } catch {
           // upsert handles duplicates

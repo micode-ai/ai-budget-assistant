@@ -314,7 +314,7 @@ export class SyncService {
 
     if (operation === 'update') {
       const updated = await this.incomesService.update(accountId, existing.id, payload);
-      return { entityId, status: 'success', serverVersion: updated.syncVersion };
+      return { entityId, status: 'success', serverVersion: updated?.syncVersion ?? existing.syncVersion + 1 };
     }
 
     if (operation === 'delete') {
