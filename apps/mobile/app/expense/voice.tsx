@@ -19,8 +19,10 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import type { Currency } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 
 export default function VoiceExpenseScreen() {
   const { t } = useTranslation();
@@ -37,6 +39,8 @@ export default function VoiceExpenseScreen() {
   const [editMerchant, setEditMerchant] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [editCurrencyCode, setEditCurrencyCode] = useState('');
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  const [showCreateCategory, setShowCreateCategory] = useState(false);
 
   const {
     isRecording,
@@ -207,16 +211,50 @@ export default function VoiceExpenseScreen() {
             <Text style={styles.confirmTitle}>{t('voice.confirmTitle')}</Text>
 
             <View style={styles.expenseCard}>
-              {/* Amount */}
+              {/* Amount + Currency */}
               <View style={styles.fieldGroup}>
                 <Text style={styles.fieldLabel}>{t('voice.amount')}</Text>
-                <TextInput
-                  style={styles.amountInput}
-                  value={editAmount}
-                  onChangeText={setEditAmount}
-                  keyboardType="decimal-pad"
-                  selectTextOnFocus
-                />
+                <View style={styles.amountRow}>
+                  <TouchableOpacity
+                    style={styles.currencyButton}
+                    onPress={() => setShowCurrencyPicker(!showCurrencyPicker)}
+                  >
+                    <Text style={styles.currencyText}>
+                      {SUPPORTED_CURRENCIES.find((c) => c.code === editCurrencyCode)?.symbol || '$'}
+                    </Text>
+                    <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
+                  </TouchableOpacity>
+                  <TextInput
+                    style={styles.amountInput}
+                    value={editAmount}
+                    onChangeText={setEditAmount}
+                    keyboardType="decimal-pad"
+                    selectTextOnFocus
+                  />
+                </View>
+                {showCurrencyPicker && (
+                  <View style={styles.pickerContainer}>
+                    {SUPPORTED_CURRENCIES.map((currency) => (
+                      <TouchableOpacity
+                        key={currency.code}
+                        style={[
+                          styles.pickerItem,
+                          editCurrencyCode === currency.code && styles.pickerItemSelected,
+                        ]}
+                        onPress={() => {
+                          setEditCurrencyCode(currency.code);
+                          setShowCurrencyPicker(false);
+                        }}
+                      >
+                        <Text style={styles.pickerSymbol}>{currency.symbol}</Text>
+                        <Text style={styles.pickerLabel}>{currency.name}</Text>
+                        {editCurrencyCode === currency.code && (
+                          <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
               </View>
 
               {/* Description */}
@@ -271,8 +309,24 @@ export default function VoiceExpenseScreen() {
                       </Text>
                     </TouchableOpacity>
                   ))}
+                  <TouchableOpacity
+                    style={[styles.categoryChip, styles.addCategoryChip]}
+                    onPress={() => setShowCreateCategory(true)}
+                  >
+                    <Ionicons name="add" size={16} color={theme.colors.primary} />
+                  </TouchableOpacity>
                 </View>
               </View>
+
+              <CreateCategoryModal
+                visible={showCreateCategory}
+                type="expense"
+                onClose={() => setShowCreateCategory(false)}
+                onCreated={(categoryId) => {
+                  setEditCategory(categoryId);
+                  setShowCreateCategory(false);
+                }}
+              />
 
               {/* Confidence */}
               <View style={styles.confidenceRow}>
@@ -428,7 +482,27 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing[1.5],
   },
+  amountRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+  },
+  currencyButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+    marginRight: theme.spacing[2],
+    gap: theme.spacing[1],
+  },
+  currencyText: {
+    fontSize: 24,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
   amountInput: {
+    flex: 1,
     fontSize: 32,
     fontWeight: 'bold' as const,
     color: theme.colors.textPrimary,
@@ -436,6 +510,33 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[3],
     textAlign: 'center' as const,
+  },
+  pickerContainer: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing[2],
+    overflow: 'hidden' as const,
+  },
+  pickerItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  pickerItemSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  pickerSymbol: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    width: 30,
+  },
+  pickerLabel: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    flex: 1,
   },
   textInput: {
     backgroundColor: theme.colors.surface,
@@ -465,6 +566,12 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textInverse,
     fontWeight: '600' as const,
   },
+  addCategoryChip: {
+    borderStyle: 'dashed' as const,
+    borderColor: theme.colors.primary,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
   confidenceRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
@@ -480,13 +587,12 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     gap: theme.spacing[3],
     alignItems: 'center' as const,
-    justifyContent: 'center' as const,
   },
   retryButton: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[5],
+    paddingHorizontal: theme.spacing[4],
     gap: theme.spacing[1.5],
   },
   retryButtonText: {
@@ -494,10 +600,12 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
   },
   confirmButton: {
+    flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[6],
+    paddingHorizontal: theme.spacing[4],
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.primary,
     gap: theme.spacing[2],
@@ -505,5 +613,6 @@ const createStyles = (theme: Theme) => ({
   confirmButtonText: {
     ...theme.textStyles.button,
     color: theme.colors.textInverse,
+    flexShrink: 1,
   },
 });
