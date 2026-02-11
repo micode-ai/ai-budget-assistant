@@ -9,8 +9,9 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useWalletStore } from '@/stores/walletStore';
-import { formatCurrency, formatRelativeDate } from '@budget/shared-utils';
+import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function DashboardScreen() {
@@ -48,6 +49,27 @@ export default function DashboardScreen() {
 
   const recentExpenses = expenses.slice(0, 5);
 
+  const formatRelativeDate = useCallback((date: Date | string) => {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return t('dates.today');
+    if (diffDays === 1) return t('dates.yesterday');
+    if (diffDays < 7) return t('dates.daysAgo', { count: diffDays });
+    if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return t('dates.weeksAgo', { count: weeks });
+    }
+    if (diffDays < 365) {
+      const months = Math.floor(diffDays / 30);
+      return t('dates.monthsAgo', { count: months });
+    }
+    const years = Math.floor(diffDays / 365);
+    return t('dates.yearsAgo', { count: years });
+  }, [t]);
+
   const progressColor = budgetUsedPercent > 90
     ? theme.colors.danger
     : budgetUsedPercent > 70
@@ -63,7 +85,7 @@ export default function DashboardScreen() {
       >
         <View style={styles.welcomeSection}>
           <Text style={styles.welcomeText}>{t('dashboard.hello', { name: user?.name || 'User' })}</Text>
-          <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
+          <Text style={styles.dateText}>{new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
         </View>
 
         <View style={styles.card}>
@@ -119,16 +141,26 @@ export default function DashboardScreen() {
               )}
             </View>
           ) : (
-            <View style={styles.walletGrid}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.walletGrid}
+              style={styles.walletGridScroll}
+            >
               {walletSummary.map((summary) => (
                 <TouchableOpacity key={summary.currencyCode} style={styles.walletCard} onPress={() => router.push('/wallet')}>
                   <Text style={styles.walletCurrency}>{summary.currencyCode}</Text>
-                  <Text style={[styles.walletBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}>
+                  <Text
+                    style={[styles.walletBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}
+                  >
                     {formatCurrency(summary.currentBalance, summary.currencyCode)}
                   </Text>
                 </TouchableOpacity>
               ))}
-            </View>
+            </ScrollView>
           )}
         </View>
 
@@ -210,7 +242,7 @@ export default function DashboardScreen() {
               <TouchableOpacity key={budget.id} style={styles.budgetItem} onPress={() => router.push(`/budget/${budget.id}`)}>
                 <View style={styles.budgetInfo}>
                   <Text style={styles.budgetName}>{budget.name}</Text>
-                  <Text style={styles.budgetPeriod}>{budget.period}</Text>
+                  <Text style={styles.budgetPeriod}>{t(`budgets.periods.${budget.period}`)}</Text>
                 </View>
                 <Text style={styles.budgetAmountText}>{formatCurrency(budget.amount, budget.currencyCode)}</Text>
               </TouchableOpacity>
@@ -419,17 +451,19 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.primary,
   },
+  walletGridScroll: {
+    marginHorizontal: -theme.spacing[4],
+  },
   walletGrid: {
     flexDirection: 'row' as const,
-    flexWrap: 'wrap' as const,
+    paddingHorizontal: theme.spacing[4],
     gap: theme.spacing[2],
   },
   walletCard: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[4],
-    minWidth: 100,
-    flex: 1,
+    width: 140,
     ...theme.shadows.sm,
   },
   walletCurrency: {

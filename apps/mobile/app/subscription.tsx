@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getIntlLocale } from '@/i18n';
 import type { SubscriptionTier } from '@budget/shared-types';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -134,7 +135,7 @@ export default function SubscriptionScreen() {
                 : cancelAtPeriodEnd
                   ? t('subscription.cancelsAt', {
                       date: currentPeriodEnd
-                        ? new Date(currentPeriodEnd).toLocaleDateString()
+                        ? new Date(currentPeriodEnd).toLocaleDateString(getIntlLocale())
                         : '',
                     })
                   : t(`subscription.status.${status}`)}

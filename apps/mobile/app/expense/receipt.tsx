@@ -20,6 +20,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getIntlLocale } from '@/i18n';
 
 async function compressAndEncodeImage(uri: string): Promise<string> {
   const result = await ImageManipulator.manipulateAsync(
@@ -254,7 +255,7 @@ export default function ReceiptExpenseScreen() {
                 <View style={styles.expenseRow}>
                   <Text style={styles.expenseLabel}>{t('receipt.date')}</Text>
                   <Text style={styles.expenseValue}>
-                    {new Date(scannedReceipt.date).toLocaleDateString()}
+                    {new Date(scannedReceipt.date).toLocaleDateString(getIntlLocale())}
                   </Text>
                 </View>
               )}

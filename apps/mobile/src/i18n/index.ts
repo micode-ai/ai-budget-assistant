@@ -21,6 +21,20 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'de', label: 'German', flag: 'DE' },
 ] as const;
 
+const intlLocaleMap: Record<string, string> = {
+  en: 'en-US',
+  ru: 'ru-RU',
+  ua: 'uk-UA',
+  pl: 'pl-PL',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE',
+};
+
+export function getIntlLocale(): string {
+  return intlLocaleMap[i18n.language] || 'en-US';
+}
+
 const resources = {
   en: { translation: en },
   ru: { translation: ru },

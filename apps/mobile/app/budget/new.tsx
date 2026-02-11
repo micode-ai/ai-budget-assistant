@@ -167,7 +167,7 @@ export default function NewBudgetScreen() {
                       period === p.value && styles.periodChipTextSelected,
                     ]}
                   >
-                    {p.label}
+                    {t(`budgets.periods.${p.value}`)}
                   </Text>
                 </TouchableOpacity>
               ))}

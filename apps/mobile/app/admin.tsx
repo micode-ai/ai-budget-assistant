@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
+import { getIntlLocale } from '@/i18n';
 import type { AdminDashboardResponse, AdminUserUsageItem, SubscriptionTier } from '@budget/shared-types';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -32,7 +33,7 @@ const FEATURE_LABELS: Record<string, string> = {
 };
 
 export default function AdminScreen() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -84,11 +85,8 @@ export default function AdminScreen() {
     );
   }
 
-  const LOCALE_MAP: Record<string, string> = {
-    en: 'en-US', ru: 'ru-RU', ua: 'uk-UA', de: 'de-DE', es: 'es-ES', fr: 'fr-FR', pl: 'pl-PL',
-  };
   const periodLabel = new Date(data.aiUsage.periodStart).toLocaleDateString(
-    LOCALE_MAP[i18n.language] || 'en-US', {
+    getIntlLocale(), {
     month: 'long',
     year: 'numeric',
   });

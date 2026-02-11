@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
@@ -15,13 +15,33 @@ export const ProjectPicker: React.FC<ProjectPickerProps> = ({
   onProjectChange,
 }) => {
   const { t } = useTranslation();
-  const { projects } = useProjectStore();
+  const { projects, deleteProject } = useProjectStore();
   const activeProjects = useMemo(
     () => projects.filter(p => !p.isArchived && !p.isDeleted),
     [projects],
   );
 
   const selectedProject = activeProjects.find(p => p.id === selectedProjectId);
+
+  const handleDeleteProject = (projectId: string, projectName: string) => {
+    Alert.alert(
+      t('projects.deleteProject') || 'Delete Project',
+      t('projects.confirmDelete') || 'Are you sure you want to delete this project?',
+      [
+        { text: t('common.cancel') || 'Cancel', style: 'cancel' },
+        {
+          text: t('common.delete') || 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            if (selectedProjectId === projectId) {
+              onProjectChange(null);
+            }
+            deleteProject(projectId);
+          },
+        },
+      ],
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -58,6 +78,7 @@ export const ProjectPicker: React.FC<ProjectPickerProps> = ({
               onPress={() =>
                 onProjectChange(selectedProjectId === project.id ? null : project.id)
               }
+              onLongPress={() => handleDeleteProject(project.id, project.name)}
             >
               {project.icon && (
                 <Ionicons

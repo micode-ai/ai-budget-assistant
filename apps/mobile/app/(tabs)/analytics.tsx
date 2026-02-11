@@ -14,6 +14,7 @@ import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
 import { BarChart, DonutChart, GroupedBarChart, WeekdayChart } from '@/components/charts';
 import { InteractiveBarChart, InteractiveDonutChart } from '@/components/interactive-charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getIntlLocale } from '@/i18n';
 import type { Currency, ChartDataPoint } from '@budget/shared-types';
 
 export default function AnalyticsScreen() {
@@ -139,7 +140,7 @@ export default function AnalyticsScreen() {
             <Text style={styles.summaryValue}>
               {formatCurrency(summary.averagePerDay, currency)}
             </Text>
-            <Text style={styles.summarySubtext}>{t('analytics.thisRange', { range: t(`analytics.${selectedRange}`) })}</Text>
+            <Text style={styles.summarySubtext}>{t(`analytics.this_${selectedRange}`)}</Text>
           </View>
         </View>
 
@@ -436,7 +437,7 @@ export default function AnalyticsScreen() {
                 <Text style={styles.insightTitle}>{t('analytics.peakSpendingDay')}</Text>
                 <Text style={styles.insightText}>
                   {t('analytics.peakSpendingText', {
-                    date: new Date(summary.highestSpendingDay).toLocaleDateString(undefined, {
+                    date: new Date(summary.highestSpendingDay).toLocaleDateString(getIntlLocale(), {
                       weekday: 'long',
                       month: 'short',
                       day: 'numeric',
@@ -510,7 +511,7 @@ export default function AnalyticsScreen() {
                     <Text style={styles.insightTitle}>{prediction.budgetName}</Text>
                     <Text style={styles.insightText}>
                       {t('insights.exhaustionText', {
-                        date: new Date(prediction.estimatedExhaustionDate!).toLocaleDateString(undefined, {
+                        date: new Date(prediction.estimatedExhaustionDate!).toLocaleDateString(getIntlLocale(), {
                           month: 'short',
                           day: 'numeric',
                         }),

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Expense, ExpenseItem, ExpenseCategorySplit, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
+import i18n from '@/i18n';
 import {
   loadAllExpenses,
   insertExpense,
@@ -839,7 +840,7 @@ export const useExpenseStore = create<ExpenseState>()(
       const breakdown: CategoryBreakdown[] = Array.from(categoryMap.entries()).map(
         ([categoryId, data]) => ({
           categoryId,
-          name: categoryId || 'Uncategorized', // TODO: Get category name from categoryStore
+          name: categoryId || i18n.t('common.uncategorized'),
           amount: data.amount,
           percentage: (data.amount / total) * 100,
           count: data.count,

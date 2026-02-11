@@ -30,6 +30,7 @@ import { api } from '@/services/api';
 import { TagChip } from '@/components/TagChip';
 import { SplitEditor } from '@/components/SplitEditor';
 import { formatCurrency, formatDate, generateUUID } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
 import type { Currency, ExpenseItem, ExpenseCategorySplit, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -389,7 +390,7 @@ export default function ExpenseDetailScreen() {
                   onPress={() => setShowDatePicker(true)}
                 >
                   <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
-                  <Text style={styles.datePickerText}>{formatDate(editDate)}</Text>
+                  <Text style={styles.datePickerText}>{formatDate(editDate, undefined, getIntlLocale())}</Text>
                 </TouchableOpacity>
                 {showDatePicker && (
                   <DateTimePicker
@@ -404,7 +405,7 @@ export default function ExpenseDetailScreen() {
                 )}
               </>
             ) : (
-              <Text style={styles.detailValue}>{formatDate(expense.date)}</Text>
+              <Text style={styles.detailValue}>{formatDate(expense.date, undefined, getIntlLocale())}</Text>
             )}
           </View>
 

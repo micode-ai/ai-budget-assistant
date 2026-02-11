@@ -18,6 +18,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { getTagsForIncome } from '@/db/tagRepository';
 import { TagChip } from '@/components/TagChip';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
 import type { Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -131,7 +132,7 @@ export default function IncomeDetailScreen() {
             {isEditing ? (
               <>
                 <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                  <Text style={styles.detailValue}>{formatDate(editDate)}</Text>
+                  <Text style={styles.detailValue}>{formatDate(editDate, undefined, getIntlLocale())}</Text>
                 </TouchableOpacity>
                 {showDatePicker && (
                   <DateTimePicker
@@ -145,7 +146,7 @@ export default function IncomeDetailScreen() {
                 )}
               </>
             ) : (
-              <Text style={styles.detailValue}>{formatDate(income.date)}</Text>
+              <Text style={styles.detailValue}>{formatDate(income.date, undefined, getIntlLocale())}</Text>
             )}
           </View>
 

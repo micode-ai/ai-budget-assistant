@@ -8,6 +8,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getIntlLocale } from '@/i18n';
 import type { Budget } from '@budget/shared-types';
 
 export default function BudgetsScreen() {
@@ -41,7 +42,7 @@ export default function BudgetsScreen() {
         <View style={styles.budgetHeader}>
           <View style={styles.budgetInfo}>
             <Text style={styles.budgetName}>{item.name}</Text>
-            <Text style={styles.budgetPeriod}>{item.period}</Text>
+            <Text style={styles.budgetPeriod}>{t(`budgets.periods.${item.period}`)}</Text>
           </View>
           <View style={[styles.statusBadge, isOverBudget && styles.statusBadgeOver]}>
             <Text style={[styles.statusText, isOverBudget && styles.statusTextOver]}>
@@ -85,7 +86,7 @@ export default function BudgetsScreen() {
             <Ionicons name="time-outline" size={14} color={theme.colors.warning} />
             <Text style={styles.predictionText}>
               {t('insights.exhaustionText', {
-                date: new Date(progress.estimatedExhaustionDate).toLocaleDateString(undefined, {
+                date: new Date(progress.estimatedExhaustionDate).toLocaleDateString(getIntlLocale(), {
                   month: 'short',
                   day: 'numeric',
                 }),

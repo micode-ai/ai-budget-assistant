@@ -111,7 +111,7 @@ export default function BudgetDetailScreen() {
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('budgetDetail.period')}</Text>
             <Text style={styles.detailValue}>
-              {budget.period.charAt(0).toUpperCase() + budget.period.slice(1)}
+              {t(`budgets.periods.${budget.period}`)}
             </Text>
           </View>
 

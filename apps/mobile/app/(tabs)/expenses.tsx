@@ -8,6 +8,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
 import type { Expense, Income } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -80,7 +81,7 @@ export default function ExpensesScreen() {
         <Text style={styles.expenseDescription} numberOfLines={1}>
           {item.description || 'Expense'}
         </Text>
-        <Text style={styles.expenseDate}>{formatDate(item.date)}</Text>
+        <Text style={styles.expenseDate}>{formatDate(item.date, undefined, getIntlLocale())}</Text>
       </View>
       <Text style={styles.expenseAmount}>
         -{formatCurrency(item.amount, item.currencyCode)}
@@ -100,7 +101,7 @@ export default function ExpensesScreen() {
         <Text style={styles.expenseDescription} numberOfLines={1}>
           {item.description || 'Income'}
         </Text>
-        <Text style={styles.expenseDate}>{formatDate(item.date)}</Text>
+        <Text style={styles.expenseDate}>{formatDate(item.date, undefined, getIntlLocale())}</Text>
       </View>
       <Text style={[styles.expenseAmount, { color: theme.colors.success }]}>
         +{formatCurrency(item.amount, item.currencyCode)}

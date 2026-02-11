@@ -8,6 +8,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getIntlLocale } from '@/i18n';
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -117,7 +118,7 @@ export default function WalletScreen() {
                         {exchange.fromCurrency} → {exchange.toCurrency}
                       </Text>
                       <Text style={styles.exchangeDate}>
-                        {new Date(exchange.date).toLocaleDateString()}
+                        {new Date(exchange.date).toLocaleDateString(getIntlLocale())}
                       </Text>
                     </View>
                     <View style={styles.exchangeAmounts}>
