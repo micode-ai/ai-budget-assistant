@@ -86,6 +86,7 @@ export default {
     walletBalances: 'Salda portfela',
     exchangeCurrency: 'Wymiana',
     totalIncome: 'Łączne przychody w tym miesiącu',
+    totalExpenses: 'Łączne wydatki w tym miesiącu',
   },
   expenses: {
     noExpenses: 'Brak wydatków',

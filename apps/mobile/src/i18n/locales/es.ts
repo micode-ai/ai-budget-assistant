@@ -86,6 +86,7 @@ export default {
     walletBalances: 'Saldos de billetera',
     exchangeCurrency: 'Cambio',
     totalIncome: 'Ingresos totales este mes',
+    totalExpenses: 'Gastos totales este mes',
   },
   expenses: {
     noExpenses: 'Aún no hay gastos',

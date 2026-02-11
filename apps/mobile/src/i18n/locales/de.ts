@@ -86,6 +86,7 @@ export default {
     walletBalances: 'Geldbörsen-Salden',
     exchangeCurrency: 'Umtausch',
     totalIncome: 'Gesamteinkommen diesen Monat',
+    totalExpenses: 'Gesamtausgaben diesen Monat',
   },
   expenses: {
     noExpenses: 'Noch keine Ausgaben',

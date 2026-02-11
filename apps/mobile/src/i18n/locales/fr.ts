@@ -86,6 +86,7 @@ export default {
     walletBalances: 'Soldes du portefeuille',
     exchangeCurrency: 'Change',
     totalIncome: 'Revenu total ce mois',
+    totalExpenses: 'Dépenses totales ce mois',
   },
   expenses: {
     noExpenses: 'Aucune dépense pour le moment',
