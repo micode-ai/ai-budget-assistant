@@ -19,7 +19,7 @@ export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
   const { user } = useAuthStore();
-  const { totalThisMonth, loadExpenses } = useExpenseStore();
+  const { loadExpenses } = useExpenseStore();
   const { loadIncomes } = useIncomeStore();
   const { getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
@@ -38,7 +38,7 @@ export default function DashboardScreen() {
 
   const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
-  const budgetUsedPercent = totalBudget > 0 ? (totalThisMonth / totalBudget) * 100 : 0;
+  const budgetUsedPercent = totalBudget > 0 ? (convertedExpenseTotal / totalBudget) * 100 : 0;
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -49,7 +49,7 @@ export default function DashboardScreen() {
     }
   }, [loadExpenses, loadIncomes, loadWallet, loadRates]);
 
-  const remaining = totalBudget - totalThisMonth;
+  const remaining = totalBudget - convertedExpenseTotal;
 
   const progressColor = budgetUsedPercent > 90
     ? theme.colors.danger

@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsUUID,
   IsDateString,
+  IsArray,
   Min,
   Max,
 } from 'class-validator';
@@ -34,6 +35,15 @@ export class CreateIncomeDto {
 
   @IsDateString()
   date: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  tagIds?: string[];
+
+  @IsOptional()
+  @IsUUID()
+  projectId?: string;
 }
 
 export class UpdateIncomeDto {
@@ -61,6 +71,15 @@ export class UpdateIncomeDto {
   @IsOptional()
   @IsDateString()
   date?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true })
+  tagIds?: string[];
+
+  @IsOptional()
+  @IsUUID()
+  projectId?: string | null;
 }
 
 export class IncomeFiltersDto {

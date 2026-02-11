@@ -4,6 +4,7 @@ import type { Budget, BudgetProgress, BudgetPeriod, Currency, SyncStatus } from 
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
+import { useExchangeRateStore } from './exchangeRateStore';
 import { api } from '@/services/api';
 import {
   loadAllBudgets,
@@ -350,22 +351,25 @@ export const useBudgetStore = create<BudgetState>()(
 
     getTotalBudget: () => {
       const activeBudgets = get().budgets.filter((b) => b.isActive && !b.isDeleted);
-      const accountCurrency = useAccountStore.getState().currentAccount()?.currencyCode || 'USD';
+      const { rates, baseCurrency } = useExchangeRateStore.getState();
 
-      // Only sum budgets matching the account's default currency
-      const sameCurrencyBudgets = activeBudgets.filter((b) => b.currencyCode === accountCurrency);
+      const convertToBase = (amount: number, fromCurrency: string) => {
+        if (!baseCurrency || fromCurrency === baseCurrency) return amount;
+        const rate = rates[fromCurrency];
+        if (!rate || rate === 0) return amount;
+        return amount / rate;
+      };
 
       // Find overall budget (no category) or sum category budgets
-      const overallBudget = sameCurrencyBudgets.find((b) => !b.categoryId && b.period === 'monthly');
+      const monthlyBudgets = activeBudgets.filter((b) => b.period === 'monthly');
+      const overallBudget = monthlyBudgets.find((b) => !b.categoryId);
 
       if (overallBudget) {
-        return overallBudget.amount;
+        return convertToBase(overallBudget.amount, overallBudget.currencyCode);
       }
 
-      // Sum all monthly category budgets in the same currency
-      return sameCurrencyBudgets
-        .filter((b) => b.period === 'monthly')
-        .reduce((sum, b) => sum + b.amount, 0);
+      // Sum all monthly category budgets, converting each to user's currency
+      return monthlyBudgets.reduce((sum, b) => sum + convertToBase(b.amount, b.currencyCode), 0);
     },
 
     reset: () => {
