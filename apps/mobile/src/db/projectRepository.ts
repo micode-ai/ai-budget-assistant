@@ -137,6 +137,17 @@ export async function deleteProject(id: string): Promise<void> {
   );
 }
 
+export async function hardDeleteProject(id: string): Promise<void> {
+  await executeSql('DELETE FROM projects WHERE id = ?', [id]);
+}
+
+export async function reassignProjectExpenses(oldProjectId: string, newProjectId: string): Promise<void> {
+  await executeSql(
+    'UPDATE project_expenses SET project_id = ?, updated_at = ? WHERE project_id = ?',
+    [newProjectId, Date.now(), oldProjectId],
+  );
+}
+
 export async function addExpenseToProject(projectExpense: {
   id: string;
   projectId: string;

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
+import { translateUncategorized, localizeStoryBlocks } from '../../common/utils/translate';
 
 @Injectable()
 export class StoryService {
@@ -40,7 +41,7 @@ export class StoryService {
         },
       });
 
-      if (cached && cached.expiresAt > now) {
+      if (cached && cached.expiresAt > now && cached.periodLabel === periodLabel) {
         return {
           story: {
             id: cached.id,
@@ -148,7 +149,7 @@ export class StoryService {
     const byCategory = new Map<string, { name: string; amount: number; count: number; color?: string }>();
     for (const e of currentExpenses) {
       const catId = e.categoryId || 'uncategorized';
-      const catName = e.category?.name || 'Uncategorized';
+      const catName = e.category?.name || translateUncategorized(language);
       const cur = byCategory.get(catId) || { name: catName, amount: 0, count: 0, color: e.category?.color || undefined };
       byCategory.set(catId, {
         name: catName,
@@ -175,7 +176,7 @@ export class StoryService {
     const topExpenses = currentExpenses.slice(0, 5).map((e) => ({
       description: e.description || 'Expense',
       amount: Number(e.amount),
-      category: e.category?.name || 'Uncategorized',
+      category: e.category?.name || translateUncategorized(language),
       date: e.date.toISOString().split('T')[0],
     }));
 
@@ -205,7 +206,7 @@ export class StoryService {
 
     const prompt = `You are a personal finance storyteller. Create a narrative spending story for the period "${periodLabel}".
 
-IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, narrative text, metric labels, chart labels, achievement texts, callout texts, and the summary. Everything the user will see must be in ${languageName}.
+IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, narrative text, metric labels, chart data labels (like category names, axis labels, legend entries), achievement texts, callout texts, and the summary. Everything the user will see must be in ${languageName}. Do NOT use English words like "Total", "Other", "Uncategorized" — translate them to ${languageName}.
 
 Data:
 - Currency: ${currencyCode}
@@ -265,6 +266,9 @@ Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
         this.logger.warn('Failed to parse story response');
         parsed = { blocks: [], summary: '' };
       }
+
+      // Post-process: replace any remaining English labels GPT might have used
+      parsed.blocks = localizeStoryBlocks(parsed.blocks, language);
 
       // Save to database
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h

@@ -155,10 +155,21 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
 
   syncFromServer: async (serverProjects: any[]) => {
     for (const proj of serverProjects) {
+      // The server's clientId is the local project's id.
+      // If they differ, a duplicate local row exists — clean it up.
+      const localId = proj.clientId || proj.localId;
+      if (localId && localId !== proj.id) {
+        const oldLocal = await projectRepo.getProjectById(localId);
+        if (oldLocal) {
+          await projectRepo.reassignProjectExpenses(localId, proj.id);
+          await projectRepo.hardDeleteProject(localId);
+        }
+      }
+
       await projectRepo.upsertProject({
         id: proj.id,
         accountId: proj.accountId,
-        localId: proj.localId || proj.id,
+        localId: localId || proj.id,
         name: proj.name,
         description: proj.description || undefined,
         color: proj.color || undefined,
