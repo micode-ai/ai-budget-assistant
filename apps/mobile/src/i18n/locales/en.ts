@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Failed to save expense',
     discount: 'Discount',
     saveImage: 'Save receipt image',
+    userPromptPlaceholder: 'Additional instructions for AI (optional)',
   },
   budgetNew: {
     name: 'Budget Name',

@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Error al guardar el gasto',
     discount: 'Descuento',
     saveImage: 'Guardar imagen del recibo',
+    userPromptPlaceholder: 'Instrucciones adicionales para la IA (opcional)',
   },
   budgetNew: {
     name: 'Nombre del presupuesto',

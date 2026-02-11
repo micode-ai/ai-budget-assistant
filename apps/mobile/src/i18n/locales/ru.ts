@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Не удалось сохранить расход',
     discount: 'Скидка',
     saveImage: 'Сохранить фото чека',
+    userPromptPlaceholder: 'Дополнительные инструкции для ИИ (необязательно)',
   },
   budgetNew: {
     name: 'Название бюджета',

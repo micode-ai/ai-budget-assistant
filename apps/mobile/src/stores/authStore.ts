@@ -8,6 +8,7 @@ import { useExpenseStore } from './expenseStore';
 import { useIncomeStore } from './incomeStore';
 import { useCategoryStore } from './categoryStore';
 import { useWalletStore } from './walletStore';
+import { useExchangeRateStore } from './exchangeRateStore';
 
 interface AuthState {
   user: User | null;
@@ -70,6 +71,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 useCategoryStore.getState().loadCategories(),
                 useWalletStore.getState().loadWallet(),
                 useBudgetStore.getState().loadBudgets(),
+                useExchangeRateStore.getState().loadRates(),
               ]);
             }
           } else {
@@ -138,6 +140,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
+            useExchangeRateStore.getState().loadRates(),
           ]);
         } catch (error) {
           set({
@@ -195,6 +198,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
+            useExchangeRateStore.getState().loadRates(),
           ]);
         } catch (error) {
           set({
@@ -313,6 +317,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           useExpenseStore.getState().reset();
           useIncomeStore.getState().reset();
           useWalletStore.getState().reset();
+          useExchangeRateStore.getState().reset();
         } catch (error) {
           console.error('Failed to logout:', error);
         }
