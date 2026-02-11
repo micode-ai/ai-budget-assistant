@@ -423,6 +423,8 @@ export default {
     logout: 'Log Out',
     logoutConfirm: 'Are you sure you want to log out?',
     profileUpdated: 'Profile updated',
+    timezoneSearch: 'Search timezone...',
+    timezoneUpdated: 'Timezone updated',
   },
   notifications: {
     title: 'Notifications',

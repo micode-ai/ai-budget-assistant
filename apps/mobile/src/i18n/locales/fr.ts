@@ -423,6 +423,8 @@ export default {
     logout: 'Se déconnecter',
     logoutConfirm: 'Êtes-vous sûr de vouloir vous déconnecter ?',
     profileUpdated: 'Profil mis à jour',
+    timezoneSearch: 'Rechercher un fuseau horaire...',
+    timezoneUpdated: 'Fuseau horaire mis à jour',
   },
   notifications: {
     title: 'Notifications',

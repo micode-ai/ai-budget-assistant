@@ -423,6 +423,8 @@ export default {
     logout: 'Abmelden',
     logoutConfirm: 'Bist du sicher, dass du dich abmelden möchtest?',
     profileUpdated: 'Profil aktualisiert',
+    timezoneSearch: 'Zeitzone suchen...',
+    timezoneUpdated: 'Zeitzone aktualisiert',
   },
   notifications: {
     title: 'Benachrichtigungen',
