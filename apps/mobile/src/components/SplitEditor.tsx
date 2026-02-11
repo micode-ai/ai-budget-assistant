@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '../stores/categoryStore';
+import { getCategoryDisplayName } from '../utils/categoryDisplayName';
 
 interface Split {
   categoryId: string;
@@ -50,7 +51,7 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
 
     const newSplit: Split = {
       categoryId: availableCategory.id,
-      categoryName: availableCategory.name,
+      categoryName: getCategoryDisplayName(availableCategory, t),
       amount: Math.max(0, remainingAmount),
       percentage: totalAmount > 0 ? Math.max(0, (remainingAmount / totalAmount) * 100) : 0,
     };
@@ -79,7 +80,7 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
     newSplits[index] = {
       ...newSplits[index],
       categoryId,
-      categoryName: category.name,
+      categoryName: getCategoryDisplayName(category, t),
     };
     setSplits(newSplits);
   }, [splits, categories]);

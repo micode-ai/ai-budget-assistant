@@ -26,6 +26,8 @@ import { api } from '@/services/api';
 import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
 import type { Currency, ExpenseCategorySplit } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 
 export default function NewExpenseScreen() {
   const { t } = useTranslation();
@@ -56,6 +58,7 @@ export default function NewExpenseScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSplitEditor, setShowSplitEditor] = useState(false);
   const [pendingSplits, setPendingSplits] = useState<Array<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }>>([]);
+  const [showCreateCategory, setShowCreateCategory] = useState(false);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
@@ -217,12 +220,28 @@ export default function NewExpenseScreen() {
                       selectedCategory === cat.id && styles.categoryChipTextSelected,
                     ]}
                   >
-                    {cat.name}
+                    {getCategoryDisplayName(cat, t)}
                   </Text>
                 </TouchableOpacity>
               ))}
+              <TouchableOpacity
+                style={[styles.categoryChip, styles.addCategoryChip]}
+                onPress={() => setShowCreateCategory(true)}
+              >
+                <Ionicons name="add" size={16} color={theme.colors.primary} />
+              </TouchableOpacity>
             </View>
           </View>
+
+          <CreateCategoryModal
+            visible={showCreateCategory}
+            type="expense"
+            onClose={() => setShowCreateCategory(false)}
+            onCreated={(categoryId) => {
+              setSelectedCategory(categoryId);
+              setShowCreateCategory(false);
+            }}
+          />
 
           {/* Tags */}
           <TagPicker
@@ -396,6 +415,12 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1.5,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surface,
+  },
+  addCategoryChip: {
+    borderStyle: 'dashed' as const,
+    borderColor: theme.colors.primary,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   categoryChipText: {
     fontSize: 14,

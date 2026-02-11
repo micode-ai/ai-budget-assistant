@@ -28,6 +28,7 @@ import { getTagsForExpense } from '@/db/tagRepository';
 import { getSplitsForExpense, insertSplit, deleteAllSplitsForExpense } from '@/db/splitRepository';
 import { api } from '@/services/api';
 import { TagChip } from '@/components/TagChip';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { SplitEditor } from '@/components/SplitEditor';
 import { formatCurrency, formatDate, generateUUID } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
@@ -433,14 +434,14 @@ export default function ExpenseDetailScreen() {
                         editCategory === cat.id && styles.categoryChipTextSelected,
                       ]}
                     >
-                      {cat.name}
+                      {getCategoryDisplayName(cat, t)}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
             ) : (
               <Text style={styles.detailValue}>
-                {(expense.categoryId && getCategoryById(expense.categoryId)?.name) || t('common.uncategorized')}
+                {(expense.categoryId && (() => { const c = getCategoryById(expense.categoryId); return c ? getCategoryDisplayName(c, t) : null; })()) || t('common.uncategorized')}
               </Text>
             )}
           </View>
@@ -492,7 +493,7 @@ export default function ExpenseDetailScreen() {
                 return (
                   <View key={split.id} style={styles.splitRow}>
                     <View style={[styles.splitDot, { backgroundColor: cat?.color || '#6B7280' }]} />
-                    <Text style={styles.splitName}>{cat?.name || split.categoryId}</Text>
+                    <Text style={styles.splitName}>{cat ? getCategoryDisplayName(cat, t) : split.categoryId}</Text>
                     <Text style={styles.splitAmount}>
                       {formatCurrency(split.amount, expense.currencyCode)}
                     </Text>
@@ -513,7 +514,7 @@ export default function ExpenseDetailScreen() {
                   const cat = getCategoryById(s.categoryId);
                   return {
                     categoryId: s.categoryId,
-                    categoryName: cat?.name || s.categoryId,
+                    categoryName: cat ? getCategoryDisplayName(cat, t) : s.categoryId,
                     amount: s.amount,
                     percentage: s.percentage,
                     notes: s.notes,

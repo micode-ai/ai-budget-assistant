@@ -12,6 +12,7 @@ import { getAllProjectExpenseMappings } from '@/db/projectRepository';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 
 export type TimeRange = 'week' | 'month' | 'year';
 
@@ -265,7 +266,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         : undefined;
       result.push({
         categoryId,
-        name: category?.name || (categoryId ? categoryId : t('common.uncategorized')),
+        name: category ? getCategoryDisplayName(category, t) : (categoryId ? categoryId : t('common.uncategorized')),
         amount,
         percentage: (amount / total) * 100,
         color: category?.color || CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],
@@ -409,7 +410,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         for (const expense of filteredExpenses) {
           const catId = expense.categoryId || 'uncategorized';
           const cat = expense.categoryId ? categories.find(c => c.id === expense.categoryId) : undefined;
-          const current = currentByCategory.get(catId) || { amount: 0, name: cat?.name || t('common.uncategorized') };
+          const current = currentByCategory.get(catId) || { amount: 0, name: cat ? getCategoryDisplayName(cat, t) : t('common.uncategorized') };
           currentByCategory.set(catId, {
             amount: current.amount + expense.amount,
             name: current.name,
