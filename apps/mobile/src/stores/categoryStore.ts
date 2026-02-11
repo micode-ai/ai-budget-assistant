@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import { getAllCategories, upsertCategory, getCategoryById, getCategoryByName } from '@/db/categoryRepository';
+import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
 import { api } from '@/services/api';
@@ -63,6 +64,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
           if (serverCategories && serverCategories.length > 0) {
             await get().syncFromServer(serverCategories);
             categories = await getAllCategories(accountId);
+            setLastSyncTime(Date.now());
           }
         } catch {
           // Server unavailable — will seed defaults below

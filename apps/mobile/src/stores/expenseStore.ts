@@ -13,6 +13,7 @@ import {
   getReceiptImageFromDb,
   deleteReceiptImageLocally,
 } from '@/db/expenseRepository';
+import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import {
   loadItemsByExpenseId,
   insertExpenseItems,
@@ -377,6 +378,7 @@ export const useExpenseStore = create<ExpenseState>()(
           }
 
           set({ expenses: merged });
+          setLastSyncTime(Date.now());
 
           // Refresh category and project stores so UI picks up newly synced data
           useCategoryStore.getState().loadCategories();

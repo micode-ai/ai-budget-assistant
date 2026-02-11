@@ -65,7 +65,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               // Restore account context from local DB
               await useAccountStore.getState().loadAccounts();
               // Load data for the user's account
-              await Promise.all([
+              await Promise.allSettled([
                 useExpenseStore.getState().loadExpenses(),
                 useIncomeStore.getState().loadIncomes(),
                 useCategoryStore.getState().loadCategories(),
@@ -134,7 +134,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           } catch { /* non-critical */ }
 
           // Load data for the new user's account
-          await Promise.all([
+          await Promise.allSettled([
             useExpenseStore.getState().loadExpenses(),
             useIncomeStore.getState().loadIncomes(),
             useCategoryStore.getState().loadCategories(),
@@ -192,7 +192,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           }
 
           // Load data for the new user's account
-          await Promise.all([
+          await Promise.allSettled([
             useExpenseStore.getState().loadExpenses(),
             useIncomeStore.getState().loadIncomes(),
             useCategoryStore.getState().loadCategories(),
@@ -244,7 +244,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             // Restore account context from local DB
             await useAccountStore.getState().loadAccounts();
             // Load data for the user's account
-            await Promise.all([
+            await Promise.allSettled([
               useExpenseStore.getState().loadExpenses(),
               useIncomeStore.getState().loadIncomes(),
               useCategoryStore.getState().loadCategories(),

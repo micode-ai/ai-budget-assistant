@@ -10,6 +10,7 @@ import {
   softDeleteIncomeInDb,
 } from '@/db/incomeRepository';
 import { insertIncomeTag } from '@/db/tagRepository';
+import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
 
@@ -149,6 +150,7 @@ export const useIncomeStore = create<IncomeState>()(
           const merged = await loadAllIncomes(accountId);
           if (useAccountStore.getState().currentAccountId !== accountId) return;
           set({ incomes: merged });
+          setLastSyncTime(Date.now());
         } catch (e) {
           console.log('Server pull skipped (incomes):', e);
         }
