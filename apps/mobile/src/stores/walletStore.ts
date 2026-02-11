@@ -14,6 +14,7 @@ import {
   insertExchange,
   softDeleteExchange,
 } from '@/db/currencyExchangeRepository';
+import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
@@ -138,6 +139,7 @@ export const useWalletStore = create<WalletState>()(
 
           const updatedSummary = await get().computeWalletSummary();
           set({ walletSummary: updatedSummary });
+          setLastSyncTime(Date.now());
         } catch (e) {
           console.log('Wallet server sync skipped:', e);
         }

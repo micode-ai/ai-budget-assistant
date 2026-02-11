@@ -16,6 +16,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { useWalletStore } from '@/stores/walletStore';
+import { useBudgetStore } from '@/stores/budgetStore';
+import { getLastSyncTime } from '@/db/syncMetadataRepository';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
@@ -78,6 +84,45 @@ export default function SettingsScreen() {
   const [notifLoading, setNotifLoading] = useState(true);
 
   const appVersion = Constants.expoConfig?.version || '1.0.0';
+
+  // Last sync time
+  const [lastSyncTime, setLastSyncTimeState] = useState<number | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  useEffect(() => {
+    getLastSyncTime().then(setLastSyncTimeState);
+  }, []);
+
+  const formatLastSyncTime = useCallback((timestamp: number | null): string => {
+    if (!timestamp) return t('settings.neverSynced');
+    const diff = Date.now() - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return t('settings.justNow');
+    if (minutes < 60) return t('settings.minutesAgo', { count: minutes });
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return t('settings.hoursAgo', { count: hours });
+    return new Date(timestamp).toLocaleString();
+  }, [t]);
+
+  const handleSyncNow = async () => {
+    setIsSyncing(true);
+    try {
+      await Promise.allSettled([
+        useExpenseStore.getState().loadExpenses(),
+        useIncomeStore.getState().loadIncomes(),
+        useCategoryStore.getState().loadCategories(),
+        useWalletStore.getState().loadWallet(),
+        useBudgetStore.getState().loadBudgets(),
+      ]);
+      const time = await getLastSyncTime();
+      setLastSyncTimeState(time);
+      Alert.alert(t('common.success'), t('settings.syncComplete'));
+    } catch {
+      Alert.alert(t('common.error'), t('settings.syncFailed'));
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const loadNotificationPreferences = useCallback(async () => {
     try {
@@ -448,6 +493,36 @@ export default function SettingsScreen() {
               <View style={styles.fieldValueRow}>
                 <Ionicons name="cash-outline" size={18} color={theme.colors.textSecondary} />
                 <Text style={styles.fieldLabel}>{t('wallet.balances')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Data & Sync Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.dataSync')}</Text>
+          <View style={styles.card}>
+            <View style={styles.fieldRow}>
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="sync-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('settings.lastSynced')}</Text>
+              </View>
+              <Text style={styles.fieldValue}>
+                {formatLastSyncTime(lastSyncTime)}
+              </Text>
+            </View>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={handleSyncNow}
+              disabled={isSyncing}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="refresh-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>
+                  {isSyncing ? t('settings.syncing') : t('settings.syncNow')}
+                </Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
             </TouchableOpacity>

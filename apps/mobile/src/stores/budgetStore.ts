@@ -5,6 +5,15 @@ import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfW
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
 import { api } from '@/services/api';
+import {
+  loadAllBudgets,
+  insertBudget,
+  upsertBudget,
+  updateBudgetInDb,
+  softDeleteBudgetInDb,
+  clearAllBudgets,
+} from '@/db/budgetRepository';
+import { setLastSyncTime } from '@/db/syncMetadataRepository';
 
 interface BudgetState {
   budgets: Budget[];
@@ -16,6 +25,7 @@ interface BudgetState {
 
   // Actions
   loadBudgets: () => Promise<void>;
+  syncPendingBudgets: () => Promise<void>;
   setBudgets: (budgets: Budget[]) => void;
   addBudget: (budget: Omit<Budget, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Budget;
   updateBudget: (id: string, updates: Partial<Budget>) => void;
@@ -41,39 +51,97 @@ export const useBudgetStore = create<BudgetState>()(
 
       set({ isLoading: true, error: null });
       try {
-        const serverBudgets = await api.getBudgets();
-        // Guard: abort if account switched during async operation
+        // 1. Show local data immediately
+        const localBudgets = await loadAllBudgets(accountId);
         if (useAccountStore.getState().currentAccountId !== accountId) return;
+        set({ budgets: localBudgets, isLoading: false });
 
-        if (Array.isArray(serverBudgets)) {
-          const budgets: Budget[] = serverBudgets.map((sb: any) => ({
-            id: sb.clientId || sb.id,
-            localId: sb.clientId || sb.id,
-            serverId: sb.id,
-            userId: sb.userId,
-            accountId: sb.accountId,
-            name: sb.name,
-            amount: Number(sb.amount),
-            currencyCode: (sb.currencyCode || 'USD') as Currency,
-            period: sb.period as BudgetPeriod,
-            startDate: new Date(sb.startDate),
-            endDate: sb.endDate ? new Date(sb.endDate) : undefined,
-            categoryId: sb.categoryId ?? undefined,
-            alertThreshold: sb.alertThreshold ?? 80,
-            isActive: sb.isActive ?? true,
-            createdAt: new Date(sb.createdAt),
-            updatedAt: new Date(sb.updatedAt),
-            isDeleted: sb.isDeleted || false,
-            syncStatus: 'synced' as SyncStatus,
-            syncVersion: sb.syncVersion || 0,
-          }));
-          set({ budgets, isLoading: false });
-        } else {
-          set({ isLoading: false });
+        // 2. Sync pending local → server
+        get().syncPendingBudgets();
+
+        // 3. Pull from server → local
+        try {
+          const serverBudgets = await api.getBudgets();
+          if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+          if (Array.isArray(serverBudgets)) {
+            for (const sb of serverBudgets) {
+              const budget: Budget = {
+                id: sb.clientId || sb.id,
+                localId: sb.clientId || sb.id,
+                serverId: sb.id,
+                userId: sb.userId,
+                accountId: sb.accountId,
+                name: sb.name,
+                amount: Number(sb.amount),
+                currencyCode: (sb.currencyCode || 'USD') as Currency,
+                period: sb.period as BudgetPeriod,
+                startDate: new Date(sb.startDate),
+                endDate: sb.endDate ? new Date(sb.endDate) : undefined,
+                categoryId: sb.categoryId ?? undefined,
+                alertThreshold: sb.alertThreshold ?? 80,
+                isActive: sb.isActive ?? true,
+                createdAt: new Date(sb.createdAt),
+                updatedAt: new Date(sb.updatedAt),
+                isDeleted: sb.isDeleted || false,
+                syncStatus: 'synced' as SyncStatus,
+                syncVersion: sb.syncVersion || 0,
+              };
+              await upsertBudget(budget);
+            }
+
+            // Soft-delete locally-synced budgets the server no longer returns
+            const serverIdSet = new Set(serverBudgets.map((sb: any) => sb.clientId || sb.id));
+            for (const local of localBudgets) {
+              if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
+                await softDeleteBudgetInDb(local.id, new Date());
+              }
+            }
+
+            // Reload merged data from SQLite
+            const merged = await loadAllBudgets(accountId);
+            if (useAccountStore.getState().currentAccountId !== accountId) return;
+            set({ budgets: merged });
+
+            setLastSyncTime(Date.now());
+          }
+        } catch (e) {
+          console.log('Budget server sync skipped:', e);
         }
       } catch (e) {
-        console.log('Budget server sync skipped:', e);
-        set({ isLoading: false });
+        console.error('Failed to load budgets from SQLite:', e);
+        set({ error: 'Failed to load budgets', isLoading: false });
+      }
+    },
+
+    syncPendingBudgets: async () => {
+      const pending = get().budgets.filter(
+        (b) => b.syncStatus === 'pending' && !b.isDeleted,
+      );
+      if (pending.length === 0) return;
+
+      for (const budget of pending) {
+        try {
+          await api.createBudget({
+            localId: budget.localId || budget.id,
+            name: budget.name,
+            amount: budget.amount,
+            currencyCode: budget.currencyCode,
+            period: budget.period,
+            startDate: budget.startDate instanceof Date ? budget.startDate.toISOString() : budget.startDate,
+            endDate: budget.endDate instanceof Date ? budget.endDate.toISOString() : budget.endDate,
+            categoryId: budget.categoryId,
+            alertThreshold: budget.alertThreshold,
+          });
+          set((state) => ({
+            budgets: state.budgets.map((b) =>
+              b.id === budget.id ? { ...b, syncStatus: 'synced' as SyncStatus } : b,
+            ),
+          }));
+          updateBudgetInDb(budget.id, {}, new Date(), 'synced').catch(() => {});
+        } catch {
+          // Server unavailable — will retry on next load
+        }
       }
     },
 
@@ -100,6 +168,11 @@ export const useBudgetStore = create<BudgetState>()(
         budgets: [newBudget, ...state.budgets],
       }));
 
+      // Persist to local SQLite
+      insertBudget(newBudget).catch((e) =>
+        console.error('Failed to insert budget in SQLite:', e),
+      );
+
       // Sync to server
       api.createBudget({
         localId: id,
@@ -111,6 +184,13 @@ export const useBudgetStore = create<BudgetState>()(
         endDate: budgetData.endDate instanceof Date ? budgetData.endDate.toISOString() : budgetData.endDate,
         categoryId: budgetData.categoryId,
         alertThreshold: budgetData.alertThreshold,
+      }).then(() => {
+        set((state) => ({
+          budgets: state.budgets.map((b) =>
+            b.id === id ? { ...b, syncStatus: 'synced' as SyncStatus } : b,
+          ),
+        }));
+        updateBudgetInDb(id, {}, new Date(), 'synced').catch(() => {});
       }).catch((e) =>
         console.error('Failed to sync budget to server:', e),
       );
@@ -132,8 +212,15 @@ export const useBudgetStore = create<BudgetState>()(
         ),
       }));
 
-      // Sync to server
+      // Persist to local SQLite
       const budget = get().budgets.find((b) => b.id === id);
+      if (budget) {
+        updateBudgetInDb(id, updates, budget.updatedAt, budget.syncStatus).catch((e) =>
+          console.error('Failed to update budget in SQLite:', e),
+        );
+      }
+
+      // Sync to server
       if (budget?.serverId) {
         api.updateBudget(budget.serverId, updates).catch((e) =>
           console.error('Failed to sync budget update to server:', e),
@@ -156,6 +243,11 @@ export const useBudgetStore = create<BudgetState>()(
             : b
         ),
       }));
+
+      // Persist to local SQLite
+      softDeleteBudgetInDb(id, new Date()).catch((e) =>
+        console.error('Failed to soft-delete budget in SQLite:', e),
+      );
 
       // Sync to server
       if (budget?.serverId) {
@@ -276,7 +368,10 @@ export const useBudgetStore = create<BudgetState>()(
         .reduce((sum, b) => sum + b.amount, 0);
     },
 
-    reset: () => set({ budgets: [], activeBudgets: [], isLoading: false, error: null }),
+    reset: () => {
+      clearAllBudgets().catch(() => {});
+      set({ budgets: [], activeBudgets: [], isLoading: false, error: null });
+    },
   }))
 );
 
