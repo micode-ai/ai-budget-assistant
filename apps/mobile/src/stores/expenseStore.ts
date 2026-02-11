@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Expense, ExpenseItem, Currency, SyncStatus } from '@budget/shared-types';
+import type { Expense, ExpenseItem, ExpenseCategorySplit, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
 import {
   loadAllExpenses,
@@ -21,10 +21,14 @@ import {
   softDeleteExpenseItemInDb,
   deduplicateItemsByExpenseId,
 } from '@/db/expenseItemRepository';
-import { insertExpenseTag } from '@/db/tagRepository';
-import { addExpenseToProject } from '@/db/projectRepository';
+import { insertExpenseTag, getTagsForExpense } from '@/db/tagRepository';
+import { addExpenseToProject, getProjectIdForExpense, getAllProjectExpenseMappings, upsertProject } from '@/db/projectRepository';
+import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
+import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
+import { useCategoryStore } from './categoryStore';
+import { useProjectStore } from './projectStore';
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -54,7 +58,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: () => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }>; receiptImageBase64?: string; splits?: Array<{ categoryId: string; amount: number; percentage: number; notes?: string }> }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
@@ -107,6 +111,18 @@ export const useExpenseStore = create<ExpenseState>()(
         const localExpenses = await loadAllExpenses(accountId);
         // Guard: abort if account switched during async operation
         if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+        // Populate projectId from project_expenses join table
+        const projectMappings = await getAllProjectExpenseMappings(accountId);
+        const expenseProjectMap = new Map<string, string>();
+        for (const m of projectMappings) {
+          expenseProjectMap.set(m.expenseId, m.projectId);
+        }
+        for (const exp of localExpenses) {
+          const pid = expenseProjectMap.get(exp.id);
+          if (pid) exp.projectId = pid;
+        }
+
         set({ expenses: localExpenses, isLoading: false });
 
         // 2. Sync pending local → server
@@ -120,11 +136,16 @@ export const useExpenseStore = create<ExpenseState>()(
           const serverExpenses: any[] = (serverResult as any).data || serverResult;
           for (const se of serverExpenses) {
             const expenseId = se.clientId || se.id;
-            const serverCategoryId = se.category?.name ?? se.categoryId ?? undefined;
+            const serverCategoryId = se.categoryId ?? se.category?.id ?? undefined;
             const serverDiscount = se.discountAmount != null ? Number(se.discountAmount) : undefined;
 
             // Preserve local category & discount if server doesn't have them
             const localExpense = localExpenses.find((e) => e.id === expenseId);
+            // Extract projectId from server project associations
+            const serverProjectId = se.projectExpenses && Array.isArray(se.projectExpenses) && se.projectExpenses.length > 0
+              ? (se.projectExpenses[0].projectId ?? se.projectExpenses[0].project?.id)
+              : undefined;
+
             const expense: Expense = {
               id: expenseId,
               localId: expenseId,
@@ -139,6 +160,7 @@ export const useExpenseStore = create<ExpenseState>()(
               categoryId: serverCategoryId || localExpense?.categoryId,
               date: new Date(se.date),
               time: se.time ?? undefined,
+              projectId: serverProjectId || localExpense?.projectId,
               source: se.source || 'manual',
               isRecurring: se.isRecurring || false,
               createdAt: new Date(se.createdAt),
@@ -148,6 +170,85 @@ export const useExpenseStore = create<ExpenseState>()(
               syncVersion: se.syncVersion || 0,
             };
             await upsertExpense(expense);
+
+            // Sync category from server if present (so other devices have it locally)
+            if (se.category && se.category.id) {
+              const now = new Date();
+              try {
+                await upsertCategory({
+                  id: se.category.id,
+                  accountId: se.accountId,
+                  userId: se.category.userId ?? undefined,
+                  name: se.category.name,
+                  icon: se.category.icon ?? undefined,
+                  color: se.category.color ?? undefined,
+                  type: se.category.type || 'expense',
+                  isSystem: se.category.isSystem ?? false,
+                  parentId: se.category.parentId ?? undefined,
+                  createdAt: se.category.createdAt ? new Date(se.category.createdAt) : now,
+                  updatedAt: se.category.updatedAt ? new Date(se.category.updatedAt) : now,
+                  isDeleted: se.category.isDeleted ?? false,
+                  syncVersion: se.category.syncVersion ?? 0,
+                });
+              } catch { /* skip if already exists */ }
+            }
+
+            // Sync project entities from server if present
+            if (se.projectExpenses && Array.isArray(se.projectExpenses)) {
+              for (const pe of se.projectExpenses) {
+                if (pe.project && pe.project.id) {
+                  const proj = pe.project;
+                  const now = new Date();
+                  try {
+                    await upsertProject({
+                      id: proj.id,
+                      accountId: proj.accountId,
+                      localId: proj.clientId || proj.id,
+                      name: proj.name,
+                      description: proj.description ?? undefined,
+                      color: proj.color ?? undefined,
+                      icon: proj.icon ?? undefined,
+                      startDate: proj.startDate ? new Date(proj.startDate) : undefined,
+                      endDate: proj.endDate ? new Date(proj.endDate) : undefined,
+                      budget: proj.budget ?? undefined,
+                      currencyCode: proj.currencyCode ?? undefined,
+                      isArchived: proj.isArchived ?? false,
+                      createdAt: proj.createdAt ? new Date(proj.createdAt) : now,
+                      updatedAt: proj.updatedAt ? new Date(proj.updatedAt) : now,
+                      isDeleted: proj.isDeleted ?? false,
+                      syncStatus: 'synced' as SyncStatus,
+                      syncVersion: proj.syncVersion ?? 0,
+                    });
+                  } catch { /* skip */ }
+                }
+              }
+            }
+
+            // Sync split categories from server if present
+            if (se.categorySplits && Array.isArray(se.categorySplits)) {
+              for (const ss of se.categorySplits) {
+                if (ss.category && ss.category.id) {
+                  const now = new Date();
+                  try {
+                    await upsertCategory({
+                      id: ss.category.id,
+                      accountId: se.accountId,
+                      userId: ss.category.userId ?? undefined,
+                      name: ss.category.name,
+                      icon: ss.category.icon ?? undefined,
+                      color: ss.category.color ?? undefined,
+                      type: ss.category.type || 'expense',
+                      isSystem: ss.category.isSystem ?? false,
+                      parentId: ss.category.parentId ?? undefined,
+                      createdAt: ss.category.createdAt ? new Date(ss.category.createdAt) : now,
+                      updatedAt: ss.category.updatedAt ? new Date(ss.category.updatedAt) : now,
+                      isDeleted: ss.category.isDeleted ?? false,
+                      syncVersion: ss.category.syncVersion ?? 0,
+                    });
+                  } catch { /* skip */ }
+                }
+              }
+            }
 
             // Sync expense items from server only if no local items exist
             if (se.items && Array.isArray(se.items) && se.items.length > 0) {
@@ -174,6 +275,79 @@ export const useExpenseStore = create<ExpenseState>()(
                 }
               }
             }
+
+            // Sync category splits from server
+            if (se.categorySplits && Array.isArray(se.categorySplits) && se.categorySplits.length > 0) {
+              const localSplits = await getSplitsForExpense(expense.id);
+              if (localSplits.length === 0) {
+                const now = new Date();
+                for (const ss of se.categorySplits) {
+                  const split: ExpenseCategorySplit = {
+                    id: ss.id,
+                    expenseId: expense.id,
+                    categoryId: ss.categoryId ?? ss.category?.id,
+                    amount: Number(ss.amount),
+                    percentage: Number(ss.percentage),
+                    notes: ss.notes ?? undefined,
+                    createdAt: ss.createdAt ? new Date(ss.createdAt) : now,
+                    updatedAt: ss.updatedAt ? new Date(ss.updatedAt) : now,
+                    isDeleted: ss.isDeleted || false,
+                    syncVersion: ss.syncVersion ?? 0,
+                  };
+                  await insertSplit(split);
+                }
+              }
+            }
+
+            // Sync expense tags from server
+            if (se.expenseTags && Array.isArray(se.expenseTags) && se.expenseTags.length > 0) {
+              const localTags = await getTagsForExpense(expense.id);
+              if (localTags.length === 0) {
+                const now = new Date();
+                for (const et of se.expenseTags) {
+                  const tagId = et.tagId ?? et.tag?.id;
+                  if (!tagId) continue;
+                  try {
+                    await insertExpenseTag({
+                      id: et.id,
+                      expenseId: expense.id,
+                      tagId,
+                      createdAt: et.createdAt ? new Date(et.createdAt) : now,
+                      updatedAt: et.updatedAt ? new Date(et.updatedAt) : now,
+                      isDeleted: et.isDeleted || false,
+                      syncVersion: et.syncVersion ?? 0,
+                    });
+                  } catch {
+                    // Duplicate — skip
+                  }
+                }
+              }
+            }
+
+            // Sync project associations from server
+            if (se.projectExpenses && Array.isArray(se.projectExpenses) && se.projectExpenses.length > 0) {
+              const localProjectId = await getProjectIdForExpense(expense.id);
+              if (!localProjectId) {
+                const now = new Date();
+                for (const pe of se.projectExpenses) {
+                  const projectId = pe.projectId ?? pe.project?.id;
+                  if (!projectId) continue;
+                  try {
+                    await addExpenseToProject({
+                      id: pe.id,
+                      projectId,
+                      expenseId: expense.id,
+                      createdAt: pe.createdAt ? new Date(pe.createdAt) : now,
+                      updatedAt: pe.updatedAt ? new Date(pe.updatedAt) : now,
+                      isDeleted: pe.isDeleted || false,
+                      syncVersion: pe.syncVersion ?? 0,
+                    });
+                  } catch {
+                    // Duplicate — skip
+                  }
+                }
+              }
+            }
           }
           // Mark locally-synced expenses as deleted if server no longer returns them
           const serverIdSet = new Set(serverExpenses.map((se: any) => se.clientId || se.id));
@@ -187,7 +361,23 @@ export const useExpenseStore = create<ExpenseState>()(
           const merged = await loadAllExpenses(accountId);
           // Guard: abort if account switched during merge
           if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+          // Populate projectId from project_expenses join table
+          const mergedMappings = await getAllProjectExpenseMappings(accountId);
+          const mergedProjectMap = new Map<string, string>();
+          for (const m of mergedMappings) {
+            mergedProjectMap.set(m.expenseId, m.projectId);
+          }
+          for (const exp of merged) {
+            const pid = mergedProjectMap.get(exp.id);
+            if (pid) exp.projectId = pid;
+          }
+
           set({ expenses: merged });
+
+          // Refresh category and project stores so UI picks up newly synced data
+          useCategoryStore.getState().loadCategories();
+          useProjectStore.getState().loadProjects();
         } catch (e) {
           // Server pull failed (offline?) — local data is still shown
           console.log('Server pull skipped:', e);
@@ -201,7 +391,7 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: async (expenseData) => {
-      const { items, receiptImageBase64, tagIds, projectId, ...coreData } = expenseData;
+      const { items, receiptImageBase64, tagIds, projectId, splits, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
@@ -290,6 +480,13 @@ export const useExpenseStore = create<ExpenseState>()(
         totalPrice: Math.max(0, item.totalPrice ?? 0),
         sortOrder: item.sortOrder,
       }));
+      // Resolve category IDs to names for the server (local default IDs don't exist on server)
+      const catStore = useCategoryStore.getState();
+      const resolveCatId = (catId: string | undefined) => {
+        if (!catId) return undefined;
+        const cat = catStore.getCategoryById(catId);
+        return cat?.name || catId;
+      };
       api.createExpense({
         localId: id,
         amount: newExpense.amount,
@@ -297,11 +494,14 @@ export const useExpenseStore = create<ExpenseState>()(
         currencyCode: newExpense.currencyCode,
         description: newExpense.description,
         notes: newExpense.notes,
-        categoryId: newExpense.categoryId || undefined,
+        categoryId: resolveCatId(newExpense.categoryId),
+        tagIds: tagIds?.length ? tagIds : undefined,
+        projectId: projectId || undefined,
         date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
         source: newExpense.source,
         items: sanitizedItems,
         receiptImageBase64,
+        splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
       }).then(() => {
         set((state) => ({
           expenses: state.expenses.map((e) =>
@@ -544,13 +744,20 @@ export const useExpenseStore = create<ExpenseState>()(
 
       for (const expense of pending) {
         try {
+          // Get tags and project for this expense from local SQLite
+          const localTags = await getTagsForExpense(expense.id);
+          const localProjectId = await getProjectIdForExpense(expense.id);
+
           await api.createExpense({
             localId: expense.localId || expense.id,
             amount: expense.amount,
+            discountAmount: expense.discountAmount,
             currencyCode: expense.currencyCode,
             description: expense.description,
             notes: expense.notes,
             categoryId: expense.categoryId || undefined,
+            tagIds: localTags.length > 0 ? localTags.map(t => t.id) : undefined,
+            projectId: localProjectId || undefined,
             date: expense.date instanceof Date ? expense.date.toISOString() : String(expense.date),
             source: expense.source,
           });

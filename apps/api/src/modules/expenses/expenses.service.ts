@@ -8,19 +8,47 @@ export class ExpensesService {
 
   /**
    * Resolve categoryId: if it's a valid UUID, use as-is.
-   * If it's a category name, look up by name. Otherwise return null.
+   * If it's a category name, find or create by name.
+   * If it's a mobile default ID (e.g. "default-exp-food---drinks"), extract name and fuzzy match.
    */
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
     if (!categoryId) return null;
-    // UUID v4 pattern
+    // UUID v4 pattern — use directly
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId)) {
       return categoryId;
     }
-    // Try to find by name
+    // Try exact name match
     const category = await this.prisma.category.findFirst({
       where: { name: { equals: categoryId, mode: 'insensitive' } },
     });
-    return category?.id ?? null;
+    if (category) return category.id;
+
+    // Handle mobile default IDs (e.g. "default-exp-bills---utilities" → search "bills", "utilities")
+    const defaultMatch = categoryId.match(/^default-(?:exp|inc)-(.+)$/);
+    if (defaultMatch) {
+      const words = defaultMatch[1].split(/-+/).filter(w => w.length > 0);
+      if (words.length > 0) {
+        const matched = await this.prisma.category.findFirst({
+          where: {
+            accountId,
+            isDeleted: false,
+            AND: words.map(word => ({ name: { contains: word, mode: 'insensitive' as const } })),
+          },
+        });
+        if (matched) return matched.id;
+      }
+    }
+
+    // Auto-create category if it looks like a real name (not a default ID)
+    if (!categoryId.startsWith('default-')) {
+      const type = categoryId.toLowerCase().includes('income') ? 'income' : 'expense';
+      const created = await this.prisma.category.create({
+        data: { accountId, name: categoryId, type },
+      });
+      return created.id;
+    }
+
+    return null;
   }
 
   async create(accountId: string, userId: string, dto: CreateExpenseDto) {
@@ -81,20 +109,71 @@ export class ExpensesService {
         });
       }
 
-      // Create tag associations if provided
+      // Create tag associations if provided (skip silently if tags don't exist on server yet)
       if (dto.tagIds && dto.tagIds.length > 0) {
-        await tx.expenseTag.createMany({
-          data: dto.tagIds.map(tagId => ({
-            expenseId: expense.id,
-            tagId,
-          })),
-          skipDuplicates: true,
-        });
-        // Increment usage counts
-        await tx.tag.updateMany({
+        // Filter to only tags that exist on the server
+        const existingTags = await tx.tag.findMany({
           where: { id: { in: dto.tagIds } },
-          data: { usageCount: { increment: 1 } },
+          select: { id: true },
         });
+        const validTagIds = existingTags.map(t => t.id);
+
+        if (validTagIds.length > 0) {
+          await tx.expenseTag.createMany({
+            data: validTagIds.map(tagId => ({
+              expenseId: expense.id,
+              tagId,
+            })),
+            skipDuplicates: true,
+          });
+          await tx.tag.updateMany({
+            where: { id: { in: validTagIds } },
+            data: { usageCount: { increment: 1 } },
+          });
+        }
+      }
+
+      // Create project association if provided (try by id first, then by clientId)
+      if (dto.projectId) {
+        let project = await tx.project.findUnique({
+          where: { id: dto.projectId },
+          select: { id: true },
+        });
+        if (!project) {
+          project = await tx.project.findFirst({
+            where: { accountId, clientId: dto.projectId, isDeleted: false },
+            select: { id: true },
+          });
+        }
+        if (project) {
+          await tx.projectExpense.upsert({
+            where: { projectId_expenseId: { projectId: project.id, expenseId: expense.id } },
+            create: { projectId: project.id, expenseId: expense.id },
+            update: { isDeleted: false },
+          });
+        }
+      }
+
+      // Create category splits if provided (resolve categoryIds like the main expense category)
+      if (dto.splits && dto.splits.length > 0) {
+        const resolvedSplits = await Promise.all(
+          dto.splits.map(async (split) => {
+            const resolvedId = await this.resolveCategoryId(split.categoryId, accountId);
+            return resolvedId ? { ...split, categoryId: resolvedId } : null;
+          }),
+        );
+        const validSplits = resolvedSplits.filter((s): s is NonNullable<typeof s> => s !== null);
+        if (validSplits.length > 0) {
+          await tx.expenseCategorySplit.createMany({
+            data: validSplits.map(split => ({
+              expenseId: expense.id,
+              categoryId: split.categoryId,
+              amount: split.amount,
+              percentage: split.percentage,
+              notes: split.notes,
+            })),
+          });
+        }
       }
 
       return tx.expense.findUnique({
@@ -104,6 +183,7 @@ export class ExpensesService {
           items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
           expenseTags: { where: { isDeleted: false }, include: { tag: true } },
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
+          projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         },
       });
     });
@@ -173,6 +253,10 @@ export class ExpensesService {
             where: { isDeleted: false },
             include: { category: true },
           },
+          projectExpenses: {
+            where: { isDeleted: false },
+            include: { project: true },
+          },
         },
         orderBy: { date: 'desc' },
         skip,
@@ -206,6 +290,7 @@ export class ExpensesService {
         items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
         expenseTags: { where: { isDeleted: false }, include: { tag: true } },
         categorySplits: { where: { isDeleted: false }, include: { category: true } },
+        projectExpenses: { where: { isDeleted: false }, include: { project: true } },
       },
     });
 
@@ -248,20 +333,50 @@ export class ExpensesService {
           data: { isDeleted: true },
         });
 
-        // Create new expense tags
+        // Create new expense tags (skip tags that don't exist on server yet)
         if (dto.tagIds.length > 0) {
-          await tx.expenseTag.createMany({
-            data: dto.tagIds.map(tagId => ({
-              expenseId: expense.id,
-              tagId,
-            })),
-            skipDuplicates: true,
-          });
-          // Increment usage counts
-          await tx.tag.updateMany({
+          const existingTags = await tx.tag.findMany({
             where: { id: { in: dto.tagIds } },
-            data: { usageCount: { increment: 1 } },
+            select: { id: true },
           });
+          const validTagIds = existingTags.map(t => t.id);
+
+          if (validTagIds.length > 0) {
+            await tx.expenseTag.createMany({
+              data: validTagIds.map(tagId => ({
+                expenseId: expense.id,
+                tagId,
+              })),
+              skipDuplicates: true,
+            });
+            await tx.tag.updateMany({
+              where: { id: { in: validTagIds } },
+              data: { usageCount: { increment: 1 } },
+            });
+          }
+        }
+      }
+
+      // Update project association if provided
+      if (dto.projectId !== undefined) {
+        // Soft-delete existing project associations
+        await tx.projectExpense.updateMany({
+          where: { expenseId: expense.id, isDeleted: false },
+          data: { isDeleted: true },
+        });
+        // Create new association if projectId is not null (skip if project doesn't exist on server yet)
+        if (dto.projectId) {
+          const projectExists = await tx.project.findUnique({
+            where: { id: dto.projectId },
+            select: { id: true },
+          });
+          if (projectExists) {
+            await tx.projectExpense.upsert({
+              where: { projectId_expenseId: { projectId: dto.projectId, expenseId: expense.id } },
+              create: { projectId: dto.projectId, expenseId: expense.id },
+              update: { isDeleted: false },
+            });
+          }
         }
       }
 
@@ -272,6 +387,7 @@ export class ExpensesService {
           items: { where: { isDeleted: false }, orderBy: { sortOrder: 'asc' } },
           expenseTags: { where: { isDeleted: false }, include: { tag: true } },
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
+          projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         },
       });
     });
@@ -428,6 +544,7 @@ export class ExpensesService {
           items: { where: { isDeleted: false } },
           expenseTags: { where: { isDeleted: false }, include: { tag: true } },
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
+          projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         },
       });
     });

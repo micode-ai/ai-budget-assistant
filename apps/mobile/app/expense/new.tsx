@@ -22,6 +22,7 @@ import { TagPicker } from '@/components/TagPicker';
 import { ProjectPicker } from '@/components/ProjectPicker';
 import { SplitEditor } from '@/components/SplitEditor';
 import { insertSplit } from '@/db/splitRepository';
+import { api } from '@/services/api';
 import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
 import type { Currency, ExpenseCategorySplit } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -76,6 +77,15 @@ export default function NewExpenseScreen() {
 
     setIsSubmitting(true);
     try {
+      const splitsPayload = pendingSplits.length >= 2
+        ? pendingSplits.map(s => ({
+            categoryId: s.categoryId,
+            amount: s.amount,
+            percentage: s.percentage,
+            notes: s.notes,
+          }))
+        : undefined;
+
       const newExpense = await addExpense({
         userId: user?.id || '',
         amount: numericAmount,
@@ -87,9 +97,10 @@ export default function NewExpenseScreen() {
         date: new Date(),
         source: 'manual',
         isRecurring: false,
+        splits: splitsPayload,
       });
 
-      // Save category splits if defined
+      // Save category splits locally
       if (pendingSplits.length >= 2) {
         const now = new Date();
         for (const s of pendingSplits) {

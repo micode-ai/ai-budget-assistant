@@ -26,6 +26,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { getTagsForExpense } from '@/db/tagRepository';
 import { getSplitsForExpense, insertSplit, deleteAllSplitsForExpense } from '@/db/splitRepository';
+import { api } from '@/services/api';
 import { TagChip } from '@/components/TagChip';
 import { SplitEditor } from '@/components/SplitEditor';
 import { formatCurrency, formatDate, generateUUID } from '@budget/shared-utils';
@@ -290,6 +291,14 @@ export default function ExpenseDetailScreen() {
     }
     setSplits(newSplits);
     setShowSplitEditor(false);
+
+    // Fire-and-forget sync to server
+    api.setExpenseSplits(id, editorSplits.map(s => ({
+      categoryId: s.categoryId,
+      amount: s.amount,
+      percentage: s.percentage,
+      notes: s.notes,
+    }))).catch(e => console.error('Failed to sync splits to server:', e));
   };
 
   const handleRemoveSplits = async () => {
@@ -302,6 +311,8 @@ export default function ExpenseDetailScreen() {
         onPress: async () => {
           await deleteAllSplitsForExpense(id);
           setSplits([]);
+          // Fire-and-forget sync to server
+          api.removeExpenseSplits(id).catch(e => console.error('Failed to remove splits on server:', e));
         },
       },
     ]);

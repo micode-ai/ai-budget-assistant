@@ -50,6 +50,24 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     try {
       const projects = await projectRepo.getAllProjects(accountId);
       set({ projects });
+      // Sync pending local projects to server (they may have never been synced)
+      for (const p of projects) {
+        if (p.syncStatus === 'pending') {
+          api.createProject({
+            localId: p.id,
+            name: p.name,
+            description: p.description,
+            color: p.color,
+            icon: p.icon,
+            startDate: p.startDate?.toISOString(),
+            endDate: p.endDate?.toISOString(),
+            budget: p.budget,
+            currencyCode: p.currencyCode,
+          }).then(() => {
+            projectRepo.upsertProject({ ...p, syncStatus: 'synced' });
+          }).catch(() => {});
+        }
+      }
       // Fire-and-forget: fetch from server
       api.getProjects(true).then(serverProjects => {
         if (serverProjects) get().syncFromServer(serverProjects);
@@ -86,8 +104,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     };
     await projectRepo.insertProject(project);
     set({ projects: [...get().projects, project] });
-    // Fire-and-forget: sync to server
-    api.createProject(data).catch(() => {});
+    // Fire-and-forget: sync to server (include localId so server stores it as clientId)
+    api.createProject({ ...data, localId: id }).catch(() => {});
     return project;
   },
 

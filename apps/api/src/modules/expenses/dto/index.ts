@@ -80,6 +80,24 @@ export class SaveReceiptImageDto {
   imageBase64: string;
 }
 
+class CreateExpenseSplitDto {
+  @IsString()
+  categoryId: string;
+
+  @IsNumber()
+  @Min(0)
+  amount: number;
+
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  percentage: number;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
 export class CreateExpenseDto {
   @IsUUID()
   localId: string;
@@ -137,6 +155,16 @@ export class CreateExpenseDto {
   @IsArray()
   @IsUUID('4', { each: true })
   tagIds?: string[];
+
+  @IsOptional()
+  @IsUUID()
+  projectId?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateExpenseSplitDto)
+  splits?: CreateExpenseSplitDto[];
 }
 
 export class UpdateExpenseDto {
@@ -183,6 +211,10 @@ export class UpdateExpenseDto {
   @IsArray()
   @IsUUID('4', { each: true })
   tagIds?: string[];
+
+  @IsOptional()
+  @IsUUID()
+  projectId?: string | null;
 }
 
 export class ExpenseFiltersDto {

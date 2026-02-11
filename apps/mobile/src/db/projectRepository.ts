@@ -162,6 +162,14 @@ export async function addExpenseToProject(projectExpense: {
   );
 }
 
+export async function getProjectIdForExpense(expenseId: string): Promise<string | null> {
+  const rows = await executeSql<{ project_id: string }>(
+    'SELECT project_id FROM project_expenses WHERE expense_id = ? AND is_deleted = 0 LIMIT 1',
+    [expenseId],
+  );
+  return rows.length > 0 ? rows[0].project_id : null;
+}
+
 export async function removeExpenseFromProject(projectId: string, expenseId: string): Promise<void> {
   await executeSql(
     'UPDATE project_expenses SET is_deleted = 1, updated_at = ? WHERE project_id = ? AND expense_id = ?',
