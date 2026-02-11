@@ -55,6 +55,7 @@ interface ExpenseState {
 
   // Computed values
   totalThisMonth: number;
+  expenseTotalsByCurrency: Record<string, number>;
 
   // Actions
   loadExpenses: () => Promise<void>;
@@ -99,6 +100,7 @@ export const useExpenseStore = create<ExpenseState>()(
     expenseItems: {},
 
     totalThisMonth: 0,
+    expenseTotalsByCurrency: {},
 
     loadExpenses: async () => {
       set({ isLoading: true, error: null });
@@ -904,24 +906,32 @@ export const useExpenseStore = create<ExpenseState>()(
   }))
 );
 
+function computeExpenseTotalsByCurrency(expenses: Expense[]): Record<string, number> {
+  const now = new Date();
+  const startOfMonth = getStartOfMonth(now);
+  const endOfMonth = getEndOfMonth(now);
+
+  const totals: Record<string, number> = {};
+  expenses
+    .filter((e) => !e.isDeleted)
+    .filter((e) => {
+      const expenseDate = new Date(e.date);
+      return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
+    })
+    .forEach((e) => {
+      totals[e.currencyCode] = (totals[e.currencyCode] || 0) + e.amount;
+    });
+  return totals;
+}
+
 // Auto-recompute totalThisMonth whenever expenses change
 useExpenseStore.subscribe(
   (s) => s.expenses,
   (expenses) => {
-    const now = new Date();
-    const startOfMonth = getStartOfMonth(now);
-    const endOfMonth = getEndOfMonth(now);
+    const expenseTotalsByCurrency = computeExpenseTotalsByCurrency(expenses);
     const accountCurrency = useAccountStore.getState().currentAccount?.()?.currencyCode || 'USD';
+    const totalThisMonth = expenseTotalsByCurrency[accountCurrency] || 0;
 
-    const totalThisMonth = expenses
-      .filter((e) => !e.isDeleted)
-      .filter((e) => e.currencyCode === accountCurrency)
-      .filter((e) => {
-        const expenseDate = new Date(e.date);
-        return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
-      })
-      .reduce((sum, e) => sum + e.amount, 0);
-
-    useExpenseStore.setState({ totalThisMonth });
+    useExpenseStore.setState({ totalThisMonth, expenseTotalsByCurrency });
   },
 );

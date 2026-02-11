@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Не вдалося зберегти витрату',
     discount: 'Знижка',
     saveImage: 'Зберегти фото чеку',
+    userPromptPlaceholder: 'Додаткові інструкції для ШІ (необов\'язково)',
   },
   budgetNew: {
     name: 'Назва бюджету',

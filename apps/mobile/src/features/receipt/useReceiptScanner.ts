@@ -39,7 +39,7 @@ export function useReceiptScanner() {
     scannedReceipt: null,
   });
 
-  const pickFromCamera = useCallback(async (): Promise<ScannedReceipt | null> => {
+  const pickFromCamera = useCallback(async (userPrompt?: string): Promise<ScannedReceipt | null> => {
     try {
       // Request camera permissions
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -61,7 +61,7 @@ export function useReceiptScanner() {
       }
 
       const imageUri = result.assets[0].uri;
-      return processImage(imageUri);
+      return processImage(imageUri, userPrompt);
     } catch (error) {
       console.error('Failed to capture image:', error);
       setState((s) => ({
@@ -72,7 +72,7 @@ export function useReceiptScanner() {
     }
   }, []);
 
-  const pickFromGallery = useCallback(async (): Promise<ScannedReceipt | null> => {
+  const pickFromGallery = useCallback(async (userPrompt?: string): Promise<ScannedReceipt | null> => {
     try {
       // Request media library permissions
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -94,7 +94,7 @@ export function useReceiptScanner() {
       }
 
       const imageUri = result.assets[0].uri;
-      return processImage(imageUri);
+      return processImage(imageUri, userPrompt);
     } catch (error) {
       console.error('Failed to pick image:', error);
       setState((s) => ({
@@ -105,7 +105,7 @@ export function useReceiptScanner() {
     }
   }, []);
 
-  const processImage = async (imageUri: string): Promise<ScannedReceipt | null> => {
+  const processImage = async (imageUri: string, userPrompt?: string): Promise<ScannedReceipt | null> => {
     setState((s) => ({
       ...s,
       isProcessing: true,
@@ -123,7 +123,7 @@ export function useReceiptScanner() {
 
       // Send to API for OCR
       console.log('[ReceiptScanner] Calling api.scanReceipt...');
-      const scannedReceipt = await api.scanReceipt(base64);
+      const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined);
       console.log('[ReceiptScanner] Scan result:', JSON.stringify(scannedReceipt).substring(0, 200));
 
       setState((s) => ({
@@ -145,8 +145,8 @@ export function useReceiptScanner() {
   };
 
   const processExistingImage = useCallback(
-    async (imageUri: string): Promise<ScannedReceipt | null> => {
-      return processImage(imageUri);
+    async (imageUri: string, userPrompt?: string): Promise<ScannedReceipt | null> => {
+      return processImage(imageUri, userPrompt);
     },
     [],
   );

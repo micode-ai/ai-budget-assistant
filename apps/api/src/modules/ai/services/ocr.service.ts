@@ -61,6 +61,7 @@ export class OcrService {
     imageBase64: string,
     userId: string,
     accountId: string,
+    userPrompt?: string,
   ): Promise<ReceiptExpense> {
     // Get account's categories for categorization
     const categories = await this.prisma.category.findMany({
@@ -122,7 +123,7 @@ Important:
 - If currency symbol is not clear, guess based on merchant location/language
 - Total is required - estimate from items if not clearly visible
 - Be thorough but fast
-- Only return valid JSON, no other text`;
+- Only return valid JSON, no other text${userPrompt ? `\n\nAdditional user instructions:\n${userPrompt}` : ''}`;
 
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4o',

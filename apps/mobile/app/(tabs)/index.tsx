@@ -9,6 +9,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useWalletStore } from '@/stores/walletStore';
+import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { getIntlLocale } from '@/i18n';
@@ -19,10 +20,11 @@ export default function DashboardScreen() {
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const { totalThisMonth, loadExpenses } = useExpenseStore();
-  const { incomeTotalsByCurrency, loadIncomes } = useIncomeStore();
+  const { loadIncomes } = useIncomeStore();
   const { getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
+  const { convertedIncomeTotal, convertedExpenseTotal, loadRates } = useExchangeRateStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -41,11 +43,11 @@ export default function DashboardScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await Promise.all([loadExpenses(), loadIncomes(), loadWallet()]);
+      await Promise.all([loadExpenses(), loadIncomes(), loadWallet(), loadRates()]);
     } finally {
       setRefreshing(false);
     }
-  }, [loadExpenses, loadIncomes, loadWallet]);
+  }, [loadExpenses, loadIncomes, loadWallet, loadRates]);
 
   const remaining = totalBudget - totalThisMonth;
 
@@ -130,20 +132,14 @@ export default function DashboardScreen() {
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
           </View>
-          {Object.keys(incomeTotalsByCurrency).length === 0 ? (
-            <Text style={styles.incomeAmount}>+{formatCurrency(0, currency)}</Text>
-          ) : (
-            Object.entries(incomeTotalsByCurrency).map(([code, amount]) => (
-              <Text key={code} style={styles.incomeAmount}>+{formatCurrency(amount, code as any)}</Text>
-            ))
-          )}
+          <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>{t('dashboard.totalExpenses')}</Text>
           </View>
-          <Text style={styles.expenseTotalAmount}>-{formatCurrency(totalThisMonth, currency)}</Text>
+          <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
         </TouchableOpacity>
 
         <View style={styles.section}>

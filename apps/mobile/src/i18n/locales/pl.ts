@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Nie udało się zapisać wydatku',
     discount: 'Rabat',
     saveImage: 'Zapisz zdjęcie paragonu',
+    userPromptPlaceholder: 'Dodatkowe instrukcje dla AI (opcjonalnie)',
   },
   budgetNew: {
     name: 'Nazwa budżetu',

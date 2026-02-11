@@ -78,9 +78,9 @@ export class AiController {
   @TrackAiUsage('ocr', 2.0)
   async scanReceipt(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { imageBase64: string },
+    @Body() body: { imageBase64: string; userPrompt?: string },
   ) {
-    return this.ocrService.parseReceipt(body.imageBase64, req.user.id, req.accountId);
+    return this.ocrService.parseReceipt(body.imageBase64, req.user.id, req.accountId, body.userPrompt);
   }
 
   @Post('extract-text')

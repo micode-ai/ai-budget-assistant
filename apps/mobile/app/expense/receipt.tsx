@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
@@ -38,6 +39,7 @@ export default function ReceiptExpenseScreen() {
   const styles = useStyles(createStyles);
   const [showConfirm, setShowConfirm] = useState(false);
   const [saveImage, setSaveImage] = useState(true);
+  const [userPrompt, setUserPrompt] = useState('');
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
 
@@ -64,11 +66,11 @@ export default function ReceiptExpenseScreen() {
   }, [scannedReceipt]);
 
   const handleCameraPress = async () => {
-    await pickFromCamera();
+    await pickFromCamera(userPrompt.trim() || undefined);
   };
 
   const handleGalleryPress = async () => {
-    await pickFromGallery();
+    await pickFromGallery(userPrompt.trim() || undefined);
   };
 
   const handleConfirmExpense = async () => {
@@ -168,6 +170,17 @@ export default function ReceiptExpenseScreen() {
                 {t('receipt.hint')}
               </Text>
             </View>
+
+            <TextInput
+              style={styles.userPromptInput}
+              placeholder={t('receipt.userPromptPlaceholder')}
+              placeholderTextColor={theme.colors.textTertiary}
+              value={userPrompt}
+              onChangeText={setUserPrompt}
+              multiline
+              numberOfLines={2}
+              textAlignVertical="top"
+            />
 
             {isProcessing ? (
               <View style={styles.processingContainer}>
@@ -383,6 +396,19 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[2],
     textAlign: 'center' as const,
+  },
+  userPromptInput: {
+    width: '100%' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    padding: theme.spacing[4],
+    fontSize: 14,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[6],
+    minHeight: 60,
+    maxHeight: 100,
   },
   buttonContainer: {
     width: '100%' as const,

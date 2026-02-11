@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
     discount: 'Rabatt',
     saveImage: 'Kassenbon-Bild speichern',
+    userPromptPlaceholder: 'Zusätzliche Anweisungen für KI (optional)',
   },
   budgetNew: {
     name: 'Budgetname',

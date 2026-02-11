@@ -301,6 +301,7 @@ export default {
     saveFailed: 'Échec de l\'enregistrement de la dépense',
     discount: 'Remise',
     saveImage: 'Enregistrer l\'image du reçu',
+    userPromptPlaceholder: 'Instructions supplémentaires pour l\'IA (facultatif)',
   },
   budgetNew: {
     name: 'Nom du budget',
