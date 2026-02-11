@@ -20,6 +20,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 
 export default function VoiceExpenseScreen() {
   const { t } = useTranslation();
@@ -266,7 +267,7 @@ export default function VoiceExpenseScreen() {
                           editCategory === cat.id && styles.categoryChipTextSelected,
                         ]}
                       >
-                        {cat.name}
+                        {getCategoryDisplayName(cat, t)}
                       </Text>
                     </TouchableOpacity>
                   ))}

@@ -21,6 +21,7 @@ import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 
 export default function IncomeDetailScreen() {
   const { t } = useTranslation();
@@ -175,14 +176,14 @@ export default function IncomeDetailScreen() {
                         editCategory === cat.id && styles.categoryChipTextSelected,
                       ]}
                     >
-                      {cat.name}
+                      {getCategoryDisplayName(cat, t)}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
             ) : (
               <Text style={styles.detailValue}>
-                {(income.categoryId && getCategoryById(income.categoryId)?.name) || '-'}
+                {(income.categoryId && (() => { const c = getCategoryById(income.categoryId); return c ? getCategoryDisplayName(c, t) : null; })()) || '-'}
               </Text>
             )}
           </View>

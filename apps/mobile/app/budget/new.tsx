@@ -22,6 +22,8 @@ import {
 } from '@budget/shared-utils';
 import type { Currency, BudgetPeriod } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 
 export default function NewBudgetScreen() {
   const { t } = useTranslation();
@@ -39,6 +41,7 @@ export default function NewBudgetScreen() {
   const [alertThreshold, setAlertThreshold] = useState(80);
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCreateCategory, setShowCreateCategory] = useState(false);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
@@ -199,12 +202,28 @@ export default function NewBudgetScreen() {
                       selectedCategory === cat.id && styles.categoryChipTextSelected,
                     ]}
                   >
-                    {cat.name}
+                    {getCategoryDisplayName(cat, t)}
                   </Text>
                 </TouchableOpacity>
               ))}
+              <TouchableOpacity
+                style={[styles.categoryChip, styles.addCategoryChip]}
+                onPress={() => setShowCreateCategory(true)}
+              >
+                <Ionicons name="add" size={16} color={theme.colors.primary} />
+              </TouchableOpacity>
             </View>
           </View>
+
+          <CreateCategoryModal
+            visible={showCreateCategory}
+            type="expense"
+            onClose={() => setShowCreateCategory(false)}
+            onCreated={(categoryId) => {
+              setSelectedCategory(categoryId);
+              setShowCreateCategory(false);
+            }}
+          />
 
           {/* Alert Threshold */}
           <View style={styles.fieldContainer}>
@@ -375,6 +394,12 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1.5,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surface,
+  },
+  addCategoryChip: {
+    borderStyle: 'dashed' as const,
+    borderColor: theme.colors.primary,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   categoryChipText: {
     fontSize: 14,

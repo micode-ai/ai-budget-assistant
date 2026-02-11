@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import type { Category } from '@budget/shared-types';
+import { generateUUID } from '@budget/shared-utils';
 import { getAllCategories, upsertCategory, getCategoryById, getCategoryByName } from '@/db/categoryRepository';
 import { useAccountStore } from './accountStore';
+import { useAuthStore } from './authStore';
 import { api } from '@/services/api';
 
 const DEFAULT_EXPENSE_CATEGORIES = [
@@ -38,6 +40,7 @@ interface CategoryState {
   getCategoryByName: (name: string, type: 'expense' | 'income') => Category | undefined;
   getExpenseCategories: () => Category[];
   getIncomeCategories: () => Category[];
+  createCategory: (name: string, type: 'expense' | 'income', icon?: string, color?: string) => Promise<Category>;
   syncFromServer: (serverCategories: any[]) => Promise<void>;
 }
 
@@ -134,6 +137,39 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
 
   getIncomeCategories: () => {
     return get().categories.filter(c => c.type === 'income' && !c.isDeleted);
+  },
+
+  createCategory: async (name: string, type: 'expense' | 'income', icon?: string, color?: string) => {
+    const accountId = useAccountStore.getState().currentAccountId;
+    const userId = useAuthStore.getState().user?.id;
+    if (!accountId || !userId) throw new Error('No account or user');
+
+    const now = new Date();
+    const id = generateUUID();
+
+    const category: Category = {
+      id,
+      userId,
+      accountId,
+      name,
+      icon,
+      color: color || '#6B7280',
+      type,
+      isSystem: false,
+      createdAt: now,
+      updatedAt: now,
+      isDeleted: false,
+      syncVersion: 0,
+    };
+
+    await upsertCategory(category);
+
+    const categories = await getAllCategories(accountId);
+    set({ categories });
+
+    api.createCategory({ name, icon, color, type }).catch(() => {});
+
+    return category;
   },
 
   syncFromServer: async (serverCategories: any[]) => {
