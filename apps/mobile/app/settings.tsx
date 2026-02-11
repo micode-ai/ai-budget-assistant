@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Switch,
   Alert,
   Linking,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -24,6 +26,36 @@ import Constants from 'expo-constants';
 type IconName = keyof typeof Ionicons.glyphMap;
 
 const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB'];
+const TIMEZONES: string[] = [
+  'Africa/Abidjan', 'Africa/Accra', 'Africa/Algiers', 'Africa/Cairo', 'Africa/Casablanca',
+  'Africa/Johannesburg', 'Africa/Lagos', 'Africa/Nairobi', 'Africa/Tunis',
+  'America/Anchorage', 'America/Argentina/Buenos_Aires', 'America/Bogota', 'America/Chicago',
+  'America/Denver', 'America/Edmonton', 'America/Halifax', 'America/Havana',
+  'America/Lima', 'America/Los_Angeles', 'America/Manaus', 'America/Mexico_City',
+  'America/New_York', 'America/Phoenix', 'America/Santiago', 'America/Sao_Paulo',
+  'America/St_Johns', 'America/Toronto', 'America/Vancouver', 'America/Winnipeg',
+  'Asia/Almaty', 'Asia/Baghdad', 'Asia/Baku', 'Asia/Bangkok', 'Asia/Beirut',
+  'Asia/Colombo', 'Asia/Dhaka', 'Asia/Dubai', 'Asia/Hong_Kong', 'Asia/Irkutsk',
+  'Asia/Istanbul', 'Asia/Jakarta', 'Asia/Jerusalem', 'Asia/Kabul', 'Asia/Kamchatka',
+  'Asia/Karachi', 'Asia/Kathmandu', 'Asia/Kolkata', 'Asia/Krasnoyarsk', 'Asia/Kuala_Lumpur',
+  'Asia/Kuwait', 'Asia/Magadan', 'Asia/Manila', 'Asia/Novosibirsk', 'Asia/Omsk',
+  'Asia/Riyadh', 'Asia/Seoul', 'Asia/Shanghai', 'Asia/Singapore', 'Asia/Taipei',
+  'Asia/Tashkent', 'Asia/Tbilisi', 'Asia/Tehran', 'Asia/Tokyo', 'Asia/Vladivostok',
+  'Asia/Yakutsk', 'Asia/Yekaterinburg', 'Asia/Yerevan',
+  'Atlantic/Azores', 'Atlantic/Cape_Verde', 'Atlantic/Reykjavik',
+  'Australia/Adelaide', 'Australia/Brisbane', 'Australia/Darwin', 'Australia/Hobart',
+  'Australia/Melbourne', 'Australia/Perth', 'Australia/Sydney',
+  'Europe/Amsterdam', 'Europe/Athens', 'Europe/Belgrade', 'Europe/Berlin', 'Europe/Brussels',
+  'Europe/Bucharest', 'Europe/Budapest', 'Europe/Copenhagen', 'Europe/Dublin', 'Europe/Helsinki',
+  'Europe/Kyiv', 'Europe/Lisbon', 'Europe/London', 'Europe/Madrid', 'Europe/Milan',
+  'Europe/Minsk', 'Europe/Moscow', 'Europe/Oslo', 'Europe/Paris', 'Europe/Prague',
+  'Europe/Riga', 'Europe/Rome', 'Europe/Samara', 'Europe/Sofia', 'Europe/Stockholm',
+  'Europe/Tallinn', 'Europe/Vienna', 'Europe/Vilnius', 'Europe/Warsaw', 'Europe/Zurich',
+  'Indian/Maldives', 'Indian/Mauritius',
+  'Pacific/Auckland', 'Pacific/Chatham', 'Pacific/Fiji', 'Pacific/Guadalcanal',
+  'Pacific/Guam', 'Pacific/Honolulu', 'Pacific/Tongatapu',
+  'UTC',
+];
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
@@ -35,6 +67,10 @@ export default function SettingsScreen() {
   const [name, setName] = useState(user?.name || '');
   const [editingName, setEditingName] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  // Timezone picker
+  const [timezonePicker, setTimezonePicker] = useState(false);
+  const [timezoneSearch, setTimezoneSearch] = useState('');
 
   // Notification preferences
   const [notifBudgetAlerts, setNotifBudgetAlerts] = useState(true);
@@ -115,6 +151,27 @@ export default function SettingsScreen() {
     try {
       await api.updateProfile({ currencyCode: currency });
       updateUser({ currencyCode: currency });
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const filteredTimezones = useMemo(() => {
+    if (!timezoneSearch.trim()) return TIMEZONES;
+    const q = timezoneSearch.toLowerCase();
+    return TIMEZONES.filter((tz) => tz.toLowerCase().includes(q));
+  }, [timezoneSearch]);
+
+  const handleTimezoneChange = async (timezone: string) => {
+    if (timezone === user?.timezone) {
+      setTimezonePicker(false);
+      return;
+    }
+    try {
+      await api.updateProfile({ timezone });
+      updateUser({ timezone });
+      setTimezonePicker(false);
+      Alert.alert(t('common.success'), t('settings.timezoneUpdated'));
     } catch (e) {
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
@@ -211,7 +268,10 @@ export default function SettingsScreen() {
             {/* Timezone */}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>{t('settings.timezone')}</Text>
-              <Text style={styles.fieldValue}>{user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone}</Text>
+              <TouchableOpacity style={styles.fieldValueRow} onPress={() => { setTimezoneSearch(''); setTimezonePicker(true); }}>
+                <Text style={styles.fieldValue}>{user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone}</Text>
+                <Ionicons name="pencil-outline" size={16} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -421,6 +481,50 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Timezone Picker Modal */}
+      <Modal visible={timezonePicker} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{t('settings.timezone')}</Text>
+              <TouchableOpacity onPress={() => setTimezonePicker(false)}>
+                <Ionicons name="close" size={24} color={theme.colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.modalSearch}
+              placeholder={t('settings.timezoneSearch')}
+              placeholderTextColor={theme.colors.textTertiary}
+              value={timezoneSearch}
+              onChangeText={setTimezoneSearch}
+              autoFocus
+            />
+            <FlatList
+              data={filteredTimezones}
+              keyExtractor={(item) => item}
+              keyboardShouldPersistTaps="handled"
+              style={styles.modalList}
+              renderItem={({ item }) => {
+                const isSelected = item === (user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone);
+                return (
+                  <TouchableOpacity
+                    style={[styles.modalItem, isSelected && styles.modalItemActive]}
+                    onPress={() => handleTimezoneChange(item)}
+                  >
+                    <Text style={[styles.modalItemText, isSelected && styles.modalItemTextActive]}>
+                      {item.replace(/_/g, ' ')}
+                    </Text>
+                    {isSelected && (
+                      <Ionicons name="checkmark" size={18} color={theme.colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -608,6 +712,63 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
   },
   themeChipTextActive: {
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
+  },
+
+  // Timezone modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)' as const,
+    justifyContent: 'flex-end' as const,
+  },
+  modalContent: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.lg,
+    borderTopRightRadius: theme.borderRadius.lg,
+    maxHeight: '70%' as const,
+    paddingBottom: theme.spacing[6],
+  },
+  modalHeader: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[4],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.divider,
+  },
+  modalTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+  },
+  modalSearch: {
+    margin: theme.spacing[4],
+    marginBottom: 0,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing[3],
+    fontSize: 15,
+    color: theme.colors.textPrimary,
+  },
+  modalList: {
+    marginTop: theme.spacing[2],
+  },
+  modalItem: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+  },
+  modalItemActive: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  modalItemText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  modalItemTextActive: {
     color: theme.colors.primary,
     fontWeight: '600' as const,
   },

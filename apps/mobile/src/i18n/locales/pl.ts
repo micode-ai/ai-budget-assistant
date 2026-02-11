@@ -423,6 +423,8 @@ export default {
     logout: 'Wyloguj się',
     logoutConfirm: 'Czy na pewno chcesz się wylogować?',
     profileUpdated: 'Profil zaktualizowany',
+    timezoneSearch: 'Szukaj strefy czasowej...',
+    timezoneUpdated: 'Strefa czasowa zaktualizowana',
   },
   notifications: {
     title: 'Powiadomienia',

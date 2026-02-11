@@ -53,7 +53,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     try {
       let categories = await getAllCategories(accountId);
 
-      // If local DB is empty, try to fetch from server
+      // If local DB is empty, try to fetch from server first
       if (categories.length === 0) {
         try {
           const serverCategories = await api.getCategories();
@@ -62,14 +62,17 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
             categories = await getAllCategories(accountId);
           }
         } catch {
-          // Server unavailable — seed default categories locally
+          // Server unavailable — will seed defaults below
         }
       }
 
-      // If still empty (offline + first time), seed defaults
-      if (categories.length === 0) {
-        const now = new Date();
-        for (const cat of DEFAULT_EXPENSE_CATEGORIES) {
+      // Ensure all default categories exist (check by name to avoid duplicates with server categories)
+      const existingNames = new Set(categories.map(c => `${c.type}:${c.name}`));
+      let seeded = false;
+      const now = new Date();
+
+      for (const cat of DEFAULT_EXPENSE_CATEGORIES) {
+        if (!existingNames.has(`expense:${cat.name}`)) {
           const id = `default-exp-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
           await upsertCategory({
             id,
@@ -84,8 +87,11 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
             isDeleted: false,
             syncVersion: 0,
           });
+          seeded = true;
         }
-        for (const cat of DEFAULT_INCOME_CATEGORIES) {
+      }
+      for (const cat of DEFAULT_INCOME_CATEGORIES) {
+        if (!existingNames.has(`income:${cat.name}`)) {
           const id = `default-inc-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
           await upsertCategory({
             id,
@@ -100,7 +106,11 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
             isDeleted: false,
             syncVersion: 0,
           });
+          seeded = true;
         }
+      }
+
+      if (seeded) {
         categories = await getAllCategories(accountId);
       }
 

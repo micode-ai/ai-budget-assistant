@@ -423,6 +423,8 @@ export default {
     logout: 'Cerrar sesión',
     logoutConfirm: '¿Estás seguro de que quieres cerrar sesión?',
     profileUpdated: 'Perfil actualizado',
+    timezoneSearch: 'Buscar zona horaria...',
+    timezoneUpdated: 'Zona horaria actualizada',
   },
   notifications: {
     title: 'Notificaciones',

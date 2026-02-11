@@ -13,12 +13,12 @@ import de from './locales/de';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', flag: 'EN' },
-  { code: 'ru', label: 'Russian', flag: 'RU' },
-  { code: 'ua', label: 'Ukrainian', flag: 'UA' },
-  { code: 'pl', label: 'Polish', flag: 'PL' },
-  { code: 'es', label: 'Spanish', flag: 'ES' },
-  { code: 'fr', label: 'French', flag: 'FR' },
-  { code: 'de', label: 'German', flag: 'DE' },
+  { code: 'ru', label: 'Русский', flag: 'RU' },
+  { code: 'ua', label: 'Українська', flag: 'UA' },
+  { code: 'pl', label: 'Polski', flag: 'PL' },
+  { code: 'es', label: 'Español', flag: 'ES' },
+  { code: 'fr', label: 'Français', flag: 'FR' },
+  { code: 'de', label: 'Deutsch', flag: 'DE' },
 ] as const;
 
 const intlLocaleMap: Record<string, string> = {

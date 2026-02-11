@@ -423,6 +423,8 @@ export default {
     logout: 'Выйти',
     logoutConfirm: 'Вы уверены, что хотите выйти?',
     profileUpdated: 'Профиль обновлён',
+    timezoneSearch: 'Поиск часового пояса...',
+    timezoneUpdated: 'Часовой пояс обновлён',
   },
   notifications: {
     title: 'Уведомления',
