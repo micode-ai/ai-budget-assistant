@@ -1,6 +1,6 @@
 # Saisie vocale et scan de recus
 
-> Laissez l'IA faire le travail. Decrivez votre depense naturellement a l'oral ou photographiez un recu -- l'application extrait automatiquement le montant, la description, le commercant et la categorie.
+> Laissez l'IA faire le travail. Decrivez votre depense naturellement a l'oral ou photographiez un recu — l'application extrait automatiquement le montant, la description, le commercant et la categorie.
 
 ## Depense vocale
 
@@ -19,11 +19,11 @@
 
 Apres le traitement, vous verrez une confirmation avec les donnees analysees :
 
-- **Montant** -- extrait de votre parole (modifiable)
-- **Description** -- l'objet de la depense (modifiable)
-- **Commercant** -- ou vous avez depense (modifiable)
-- **Categorie** -- attribuee automatiquement (modifiable)
-- Indicateur de **confiance** -- **Confiance elevee** ou **Confiance moyenne**
+- **Montant** — extrait de votre parole (modifiable)
+- **Description** — l'objet de la depense (modifiable)
+- **Commercant** — ou vous avez depense (modifiable)
+- **Categorie** — attribuee automatiquement (modifiable)
+- Indicateur de **confiance** — **Confiance elevee** ou **Confiance moyenne**
 
 Verifiez les details, apportez les corrections necessaires, puis :
 - Appuyez sur **Enregistrer la depense** pour confirmer et sauvegarder
@@ -36,7 +36,7 @@ Apres la sauvegarde, vous pouvez appuyer sur **Ajouter une autre** pour enregist
 - Parlez clairement et incluez a la fois la description et le montant
 - Mentionnez le nom du commercant si pertinent (par ex. "Dejeuner chez McDonald's, douze euros")
 - Specifiez la devise si elle est differente de votre devise par defaut
-- Restez simple -- une depense par enregistrement
+- Restez simple — une depense par enregistrement
 
 ## Scanner un recu
 
@@ -46,8 +46,8 @@ Apres la sauvegarde, vous pouvez appuyer sur **Ajouter une autre** pour enregist
 
 1. Appuyez sur **Scanner un recu** dans les actions rapides du Tableau de bord, ou appuyez sur **+** dans l'ecran Transactions et selectionnez **Scanner un recu**
 2. Vous verrez deux options :
-   - **Prendre une photo** -- ouvre votre appareil photo pour photographier le recu
-   - **Choisir depuis la galerie** -- selectionnez une photo existante
+   - **Prendre une photo** — ouvre votre appareil photo pour photographier le recu
+   - **Choisir depuis la galerie** — selectionnez une photo existante
 3. Optionnellement, entrez des **Instructions supplementaires pour l'IA** (par ex. "Diviser en parts egales entre deux personnes", "Ignorer le pourboire")
 4. L'application analyse l'image du recu et en extrait les donnees
 
@@ -55,15 +55,15 @@ Apres la sauvegarde, vous pouvez appuyer sur **Ajouter une autre** pour enregist
 
 Apres l'analyse par l'IA, vous verrez :
 
-- **Montant total** -- extrait du recu (modifiable)
-- **Description** -- resume genere (modifiable)
-- **Commercant** -- nom du magasin/restaurant (modifiable)
-- **Categorie** -- attribuee automatiquement (modifiable)
-- **Date** -- du recu (modifiable)
-- **Articles** -- lignes individuelles avec quantites et prix (si detectes)
-- **Remise** -- montant de la remise (si presente sur le recu)
-- Indicateur de **confiance** -- **Confiance elevee** ou **Confiance moyenne**
-- Option **Conserver l'image du recu** -- garder la photo attachee a la depense
+- **Montant total** — extrait du recu (modifiable)
+- **Description** — resume genere (modifiable)
+- **Commercant** — nom du magasin/restaurant (modifiable)
+- **Categorie** — attribuee automatiquement (modifiable)
+- **Date** — du recu (modifiable)
+- **Articles** — lignes individuelles avec quantites et prix (si detectes)
+- **Remise** — montant de la remise (si presente sur le recu)
+- Indicateur de **confiance** — **Confiance elevee** ou **Confiance moyenne**
+- Option **Conserver l'image du recu** — garder la photo attachee a la depense
 
 Verifiez et corrigez les details, puis :
 - Appuyez sur **Enregistrer la depense** pour confirmer
@@ -71,7 +71,7 @@ Verifiez et corrigez les details, puis :
 
 ### Conseils pour de meilleurs resultats
 
-- Photographiez dans un bon eclairage -- evitez les ombres et les reflets
+- Photographiez dans un bon eclairage — evitez les ombres et les reflets
 - Assurez-vous que l'ensemble du recu est visible et a plat
 - Tenez l'appareil photo stable pour eviter le flou
 - Utilisez les **Instructions supplementaires pour l'IA** pour un traitement special (par ex. "C'est en EUR", "Ignorer le premier article")

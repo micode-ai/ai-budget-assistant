@@ -10,8 +10,8 @@ System grywalizacji nagradza Cie za konsekwentne sledzenie finansow. Kazdy wydat
 
 Na ekranie glownym zobaczysz kompaktowa karte grywalizacji pokazujaca:
 
-- **Poziom** -- Twoj aktualny poziom z paskiem postepu XP
-- **Seria** -- Twoja aktualna codzienna seria sledzenia (emoji ognia gdy aktywna, platka sniegu gdy nieaktywna)
+- **Poziom** — Twoj aktualny poziom z paskiem postepu XP
+- **Seria** — Twoja aktualna codzienna seria sledzenia (emoji ognia gdy aktywna, platka sniegu gdy nieaktywna)
 
 Dotknij widgetu, aby otworzyc pelny ekran **Osiagniec**.
 
@@ -19,11 +19,11 @@ Dotknij widgetu, aby otworzyc pelny ekran **Osiagniec**.
 
 Osiagniecia to kamienie milowe, ktore nagradzaja Cie za konkretne zachowania finansowe. Kazde osiagniecie posiada:
 
-- **Ikona** -- wizualne emoji reprezentujace osiagniecie
-- **Tytul i opis** -- co musisz zrobic, aby je zdobyc
-- **Rzadkosc** -- Zwykle, Rzadkie, Epickie lub Legendarne
-- **Nagroda XP** -- punkty doswiadczenia zdobywane po ukonczeniu
-- **Postep** -- procent ukonczenia (dla niezdobytych osiagniec)
+- **Ikona** — wizualne emoji reprezentujace osiagniecie
+- **Tytul i opis** — co musisz zrobic, aby je zdobyc
+- **Rzadkosc** — Zwykle, Rzadkie, Epickie lub Legendarne
+- **Nagroda XP** — punkty doswiadczenia zdobywane po ukonczeniu
+- **Postep** — procent ukonczenia (dla niezdobytych osiagniec)
 
 ### Kategorie osiagniec
 
@@ -46,9 +46,9 @@ Zdobyte osiagniecia wyswietlaja sie w pelnym kolorze z obramowaniem odpowiadajac
 
 Twoja seria liczy kolejne dni, w ktorych zarejestrujesz przynajmniej jeden wydatek lub przychod. Seria resetuje sie, jesli pominiesz dzien.
 
-- **Aktywna seria** -- wyswietlana z emoji ognia i liczba dni
-- **Przerwana seria** -- wyswietlana z emoji platka sniegu i zacheta do rozpoczecia od nowa
-- **Najdluzsza seria** -- Twoj rekord osobisty jest sledzony i wyswietlany na ekranie Osiagniec
+- **Aktywna seria** — wyswietlana z emoji ognia i liczba dni
+- **Przerwana seria** — wyswietlana z emoji platka sniegu i zacheta do rozpoczecia od nowa
+- **Najdluzsza seria** — Twoj rekord osobisty jest sledzony i wyswietlany na ekranie Osiagniec
 
 > **Wskazowka:** Dodaj przynajmniej jedna transakcje kazdego dnia, aby utrzymac swoja serie!
 

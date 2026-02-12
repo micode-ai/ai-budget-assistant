@@ -14,32 +14,32 @@ AI Budget Assistant propose trois niveaux d'abonnement. Chaque nouvel utilisateu
 | **Comptes** | 1 | Jusqu'a 3 | Illimite |
 | **Membres par compte** | 1 | Jusqu'a 5 | Illimite |
 | **Suivi des depenses** | Complet | Complet | Complet |
-| **Analyses predictives** | -- | Oui | Oui |
-| **Detection d'anomalies de depenses** | -- | Oui | Oui |
-| **Devises illimitees** | -- | Oui | Oui |
-| **Histoire des depenses** | -- | Oui | Oui |
-| **Aperçus IA** | -- | Oui | Oui |
-| **Rapports avances** | -- | -- | Oui |
+| **Analyses predictives** | — | Oui | Oui |
+| **Detection d'anomalies de depenses** | — | Oui | Oui |
+| **Devises illimitees** | — | Oui | Oui |
+| **Histoire des depenses** | — | Oui | Oui |
+| **Aperçus IA** | — | Oui | Oui |
+| **Rapports avances** | — | — | Oui |
 
 ## Plan Gratuit
 
 Votre plan de depart inclut :
-- **5 requetes IA par mois** -- utilisez le Chat IA, la Saisie vocale et le Scan de recus
+- **5 requetes IA par mois** — utilisez le Chat IA, la Saisie vocale et le Scan de recus
 - **1 compte personnel**
 - **1 membre** (vous)
-- **Suivi complet des depenses** -- saisie manuelle, categories, etiquettes, projets, budgets, analyses
+- **Suivi complet des depenses** — saisie manuelle, categories, etiquettes, projets, budgets, analyses
 
 ## Plan Pro
 
 Tout ce qui est inclus dans le plan Gratuit, plus :
 - **200 requetes IA par mois**
-- **Jusqu'a 3 comptes** -- gerez vos finances personnelles, partagees et professionnelles
-- **Jusqu'a 5 membres par compte** -- collaborez avec votre famille ou votre equipe
-- **Analyses predictives** -- previsions budgetaires et projections de depenses
-- **Detection d'anomalies de depenses** -- alertes IA pour les depenses inhabituelles
-- **Devises illimitees** -- utilisez les 6 devises sans restrictions
-- **Histoire des depenses** -- rapports financiers narratifs generes par l'IA
-- **Aperçus IA** -- recommandations personnalisees dans les Analyses
+- **Jusqu'a 3 comptes** — gerez vos finances personnelles, partagees et professionnelles
+- **Jusqu'a 5 membres par compte** — collaborez avec votre famille ou votre equipe
+- **Analyses predictives** — previsions budgetaires et projections de depenses
+- **Detection d'anomalies de depenses** — alertes IA pour les depenses inhabituelles
+- **Devises illimitees** — utilisez les 6 devises sans restrictions
+- **Histoire des depenses** — rapports financiers narratifs generes par l'IA
+- **Aperçus IA** — recommandations personnalisees dans les Analyses
 
 ### Essai gratuit de 7 jours
 Essayez le plan Pro gratuitement pendant 7 jours. Annulez a tout moment avant la fin de l'essai pour eviter les frais.
@@ -50,14 +50,14 @@ Tout ce qui est inclus dans le plan Pro, plus :
 - **Requetes IA illimitees**
 - **Comptes illimites**
 - **Membres illimites**
-- **Rapports avances** -- rapports detailles et exports
+- **Rapports avances** — rapports detailles et exports
 
 ## Utilisation de l'IA
 
 Suivez votre utilisation de l'IA depuis Parametres > Abonnement :
 
-- **Utilisation ce mois-ci** -- affiche le nombre de requetes IA utilisees (par ex. "3 sur 5")
-- **Barre de progression** -- indicateur visuel d'utilisation
+- **Utilisation ce mois-ci** — affiche le nombre de requetes IA utilisees (par ex. "3 sur 5")
+- **Barre de progression** — indicateur visuel d'utilisation
 - Se reinitialise au debut de chaque mois
 
 ### Ce qui compte comme une requete IA :
@@ -81,7 +81,7 @@ Suivez votre utilisation de l'IA depuis Parametres > Abonnement :
 | **Actif** | L'abonnement est actif et la facturation fonctionne normalement |
 | **Essai** | Vous etes dans la periode d'essai gratuit de 7 jours |
 | **Annule** | L'abonnement prendra fin a la date d'annulation |
-| **Impaye** | Le paiement a echoue -- mettez a jour votre moyen de paiement |
+| **Impaye** | Le paiement a echoue — mettez a jour votre moyen de paiement |
 | **Incomplet** | Le paiement initial n'a pas ete finalise |
 | **En pause** | L'abonnement est temporairement suspendu |
 

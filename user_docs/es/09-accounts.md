@@ -70,18 +70,18 @@ Toca cualquier cuenta para abrir sus ajustes:
 1. Abre los Ajustes de la cuenta
 2. Toca el **icono de invitacion** (icono de persona+ en la esquina superior derecha de la seccion de Miembros)
 3. Elige el metodo de invitacion:
-   - **Por correo electronico** -- introduce la direccion de correo electronico de la persona, selecciona su rol (Editor u Observador), toca **Enviar invitacion**
-   - **Por enlace** -- se genera un codigo que puedes compartir. Toca para copiar o compartir a traves de aplicaciones de mensajeria
+   - **Por correo electronico** — introduce la direccion de correo electronico de la persona, selecciona su rol (Editor u Observador), toca **Enviar invitacion**
+   - **Por enlace** — se genera un codigo que puedes compartir. Toca para copiar o compartir a traves de aplicaciones de mensajeria
 
 ### Gestionar miembros (solo Propietario)
 
-- **Cambiar rol** -- toca el icono de cambio de rol junto a un miembro para asignar un nuevo rol
-- **Eliminar miembro** -- toca el icono de eliminar para quitar a un miembro (con confirmacion)
+- **Cambiar rol** — toca el icono de cambio de rol junto a un miembro para asignar un nuevo rol
+- **Eliminar miembro** — toca el icono de eliminar para quitar a un miembro (con confirmacion)
 
 ### Invitaciones pendientes
 
 - Consulta las invitaciones que aun no han sido aceptadas
-- **Cancelar invitacion** -- revoca una invitacion pendiente
+- **Cancelar invitacion** — revoca una invitacion pendiente
 
 ## Roles y permisos
 
@@ -96,9 +96,9 @@ Toca cualquier cuenta para abrir sus ajustes:
 | Eliminar cuenta | Si | No | No |
 
 ### Descripcion de roles
-- **Propietario** -- control total sobre la cuenta, puede gestionar miembros y ajustes
-- **Editor** -- puede agregar y editar gastos, ingresos y presupuestos
-- **Observador** -- solo puede ver datos (acceso de solo lectura)
+- **Propietario** — control total sobre la cuenta, puede gestionar miembros y ajustes
+- **Editor** — puede agregar y editar gastos, ingresos y presupuestos
+- **Observador** — solo puede ver datos (acceso de solo lectura)
 
 ## Eliminar una cuenta
 
@@ -113,7 +113,7 @@ Toca cualquier cuenta para abrir sus ajustes:
 Si eres miembro (no el Propietario) de una cuenta compartida:
 1. Abre los Ajustes de la cuenta
 2. Toca **Abandonar cuenta**
-3. Confirma -- seras eliminado de la cuenta
+3. Confirma — seras eliminado de la cuenta
 
 ## Preguntas frecuentes
 

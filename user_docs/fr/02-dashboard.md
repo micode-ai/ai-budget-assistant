@@ -19,7 +19,7 @@ Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent u
 | Bouton | Action |
 |---|---|
 | **Ajouter une depense** | Ouvre le formulaire de saisie manuelle de depense |
-| **Saisie vocale** | Ouvre l'ecran de depense vocale -- decrivez votre depense naturellement |
+| **Saisie vocale** | Ouvre l'ecran de depense vocale — decrivez votre depense naturellement |
 | **Scanner un recu** | Ouvre l'appareil photo pour photographier un recu et en extraire les informations par IA |
 | **Change** | Ouvre le formulaire de change de devises |
 
@@ -27,8 +27,8 @@ Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent u
 
 Sous les actions rapides, une carte compacte de gamification affiche votre progression :
 
-- **Niveau** -- votre niveau actuel accompagne d'une barre de progression XP (par ex. **Niveau 4 -- 65/100 XP**)
-- **Serie** -- le nombre de jours consecutifs de suivi, avec un emoji flamme lorsque la serie est active ou un emoji flocon de neige lorsqu'elle est interrompue
+- **Niveau** — votre niveau actuel accompagne d'une barre de progression XP (par ex. **Niveau 4 — 65/100 XP**)
+- **Serie** — le nombre de jours consecutifs de suivi, avec un emoji flamme lorsque la serie est active ou un emoji flocon de neige lorsqu'elle est interrompue
 
 Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez parcourir vos badges, consulter votre progression et decouvrir de nouveaux succes a debloquer.
 
@@ -45,7 +45,7 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez
 
 ## Revenu total ce mois-ci
 
-![Tableau de bord defilant -- revenus, depenses, portefeuille](../img/home-2.jpg)
+![Tableau de bord defilant — revenus, depenses, portefeuille](../img/home-2.jpg)
 
 - Affiche votre revenu total du mois en cours en vert (par ex. **+2 482,52 $**)
 - Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
@@ -71,7 +71,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
   **R :** Vous n'avez pas encore ajoute de depenses ou de revenus. Utilisez les boutons d'actions rapides pour ajouter votre premiere transaction.
 
 - **Q : Puis-je personnaliser ce qui apparait sur le Tableau de bord ?**
-  **R :** La disposition du Tableau de bord est fixe, mais elle s'adapte a vos donnees -- les soldes du portefeuille n'apparaissent qu'apres leur configuration, et les cartes de budget n'apparaissent qu'avec des budgets actifs.
+  **R :** La disposition du Tableau de bord est fixe, mais elle s'adapte a vos donnees — les soldes du portefeuille n'apparaissent qu'apres leur configuration, et les cartes de budget n'apparaissent qu'avec des budgets actifs.
 
 ---
 

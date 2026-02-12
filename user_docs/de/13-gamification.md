@@ -10,8 +10,8 @@ Das Gamification-System belohnt dich fur die konsequente Verfolgung deiner Finan
 
 Auf deinem Startbildschirm siehst du eine kompakte Gamification-Karte mit:
 
-- **Level** -- dein aktuelles Level mit einem XP-Fortschrittsbalken
-- **Serie** -- deine aktuelle tagliche Erfassungsserie (Flammen-Emoji wenn aktiv, Schneeflocke wenn inaktiv)
+- **Level** — dein aktuelles Level mit einem XP-Fortschrittsbalken
+- **Serie** — deine aktuelle tagliche Erfassungsserie (Flammen-Emoji wenn aktiv, Schneeflocke wenn inaktiv)
 
 Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen.
 
@@ -19,11 +19,11 @@ Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen.
 
 Erfolge sind Meilensteine, die dich fur bestimmte Finanzverhaltensweisen belohnen. Jeder Erfolg hat:
 
-- **Symbol** -- ein visuelles Emoji, das den Erfolg darstellt
-- **Titel & Beschreibung** -- was du tun musst, um ihn zu verdienen
-- **Seltenheit** -- Gewohnlich, Selten, Episch oder Legendar
-- **XP-Belohnung** -- Erfahrungspunkte, die du bei Abschluss erhaltst
-- **Fortschritt** -- Prozentsatz bis zum Abschluss (fur unvollstandige Erfolge)
+- **Symbol** — ein visuelles Emoji, das den Erfolg darstellt
+- **Titel & Beschreibung** — was du tun musst, um ihn zu verdienen
+- **Seltenheit** — Gewohnlich, Selten, Episch oder Legendar
+- **XP-Belohnung** — Erfahrungspunkte, die du bei Abschluss erhaltst
+- **Fortschritt** — Prozentsatz bis zum Abschluss (fur unvollstandige Erfolge)
 
 ### Erfolgskategorien
 
@@ -46,9 +46,9 @@ Abgeschlossene Erfolge erscheinen in voller Farbe mit ihrem Seltenheitsrahmen. G
 
 Deine Serie zahlt aufeinanderfolgende Tage, an denen du mindestens eine Ausgabe oder ein Einkommen erfasst hast. Die Serie wird zuruckgesetzt, wenn du einen Tag auslasst.
 
-- **Aktive Serie** -- wird mit einem Flammen-Emoji und der Anzahl der Tage angezeigt
-- **Unterbrochene Serie** -- wird mit einem Schneeflocken-Emoji und einer Aufforderung zum Neustarten angezeigt
-- **Langste Serie** -- dein personlicher Rekord wird auf dem Erfolge-Bildschirm verfolgt und angezeigt
+- **Aktive Serie** — wird mit einem Flammen-Emoji und der Anzahl der Tage angezeigt
+- **Unterbrochene Serie** — wird mit einem Schneeflocken-Emoji und einer Aufforderung zum Neustarten angezeigt
+- **Langste Serie** — dein personlicher Rekord wird auf dem Erfolge-Bildschirm verfolgt und angezeigt
 
 > **Tipp:** Fuge jeden Tag mindestens eine Transaktion hinzu, um deine Serie aufrechtzuerhalten!
 

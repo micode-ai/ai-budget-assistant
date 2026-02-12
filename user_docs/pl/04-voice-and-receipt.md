@@ -1,6 +1,6 @@
 # Wprowadzanie glosowe i skanowanie paragonow
 
-> Pozwol, aby AI wykonal prace za Ciebie. Powiedz swoj wydatek naturalnie lub sfotografuj paragon -- aplikacja automatycznie wyodrebni kwote, opis, sprzedawce i kategorie.
+> Pozwol, aby AI wykonal prace za Ciebie. Powiedz swoj wydatek naturalnie lub sfotografuj paragon — aplikacja automatycznie wyodrebni kwote, opis, sprzedawce i kategorie.
 
 ## Wydatek glosowy
 
@@ -19,11 +19,11 @@
 
 Po przetworzeniu zobaczysz potwierdzenie z przeanalizowanymi danymi:
 
-- **Kwota** -- wyodrebniona z Twojej mowy (mozna edytowac)
-- **Opis** -- na co byl wydatek (mozna edytowac)
-- **Sprzedawca** -- gdzie wydales pieniadze (mozna edytowac)
-- **Kategoria** -- przypisana automatycznie (mozna edytowac)
-- Wskaznik **pewnosci** -- **Wysoka pewnosc** lub **Srednia pewnosc**
+- **Kwota** — wyodrebniona z Twojej mowy (mozna edytowac)
+- **Opis** — na co byl wydatek (mozna edytowac)
+- **Sprzedawca** — gdzie wydales pieniadze (mozna edytowac)
+- **Kategoria** — przypisana automatycznie (mozna edytowac)
+- Wskaznik **pewnosci** — **Wysoka pewnosc** lub **Srednia pewnosc**
 
 Przejrzyj szczegoly, wprowadz ewentualne poprawki, a nastepnie:
 - Dotknij **Zapisz wydatek**, aby potwierdzic i zapisac
@@ -36,7 +36,7 @@ Po zapisaniu mozesz dotknac **Dodaj kolejny**, aby nagrac nowy wydatek glosowy.
 - Mow wyraznie i uwzglednij zarowno opis przedmiotu, jak i kwote
 - Podaj nazwe sprzedawcy, jezeli jest istotna (np. "Obiad w McDonald's, dwanascie euro")
 - Okresl walute, jezeli rozni sie od domyslnej
-- Utrzymuj prostote -- jeden wydatek na nagranie
+- Utrzymuj prostote — jeden wydatek na nagranie
 
 ## Skanuj paragon
 
@@ -46,8 +46,8 @@ Po zapisaniu mozesz dotknac **Dodaj kolejny**, aby nagrac nowy wydatek glosowy.
 
 1. Dotknij **Skanuj paragon** z szybkich akcji na Pulpicie lub dotknij **+** na ekranie Transakcje i wybierz **Skanuj paragon**
 2. Zobaczysz dwie opcje:
-   - **Zrob zdjecie** -- otwiera aparat, aby sfotografowac paragon
-   - **Wybierz z galerii** -- wybierz istniejace zdjecie
+   - **Zrob zdjecie** — otwiera aparat, aby sfotografowac paragon
+   - **Wybierz z galerii** — wybierz istniejace zdjecie
 3. Opcjonalnie wprowadz **Dodatkowe instrukcje dla AI** (np. "Podziel rowno miedzy dwie osoby", "Pomin napiwek")
 4. Aplikacja przeanalizuje obraz paragonu i wyodrebni dane
 
@@ -55,15 +55,15 @@ Po zapisaniu mozesz dotknac **Dodaj kolejny**, aby nagrac nowy wydatek glosowy.
 
 Po analizie AI zobaczysz:
 
-- **Laczna kwota** -- wyodrebniona z paragonu (mozna edytowac)
-- **Opis** -- wygenerowane podsumowanie (mozna edytowac)
-- **Sprzedawca** -- nazwa sklepu/restauracji (mozna edytowac)
-- **Kategoria** -- przypisana automatycznie (mozna edytowac)
-- **Data** -- z paragonu (mozna edytowac)
-- **Pozycje** -- poszczegolne pozycje z ilosciami i cenami (jezeli wykryto)
-- **Rabat** -- kwota rabatu (jezeli widnieje na paragonie)
-- Wskaznik **pewnosci** -- Wysoka lub Srednia
-- Przelacznik **Zapisz zdjecie paragonu** -- zachowaj zdjecie dolaczone do wydatku
+- **Laczna kwota** — wyodrebniona z paragonu (mozna edytowac)
+- **Opis** — wygenerowane podsumowanie (mozna edytowac)
+- **Sprzedawca** — nazwa sklepu/restauracji (mozna edytowac)
+- **Kategoria** — przypisana automatycznie (mozna edytowac)
+- **Data** — z paragonu (mozna edytowac)
+- **Pozycje** — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto)
+- **Rabat** — kwota rabatu (jezeli widnieje na paragonie)
+- Wskaznik **pewnosci** — Wysoka lub Srednia
+- Przelacznik **Zapisz zdjecie paragonu** — zachowaj zdjecie dolaczone do wydatku
 
 Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Dotknij **Zapisz wydatek**, aby potwierdzic
@@ -71,7 +71,7 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 
 ### Wskazowki dla najlepszych wynikow
 
-- Fotografuj w dobrym oswietleniu -- unikaj cieni i odblaskow
+- Fotografuj w dobrym oswietleniu — unikaj cieni i odblaskow
 - Upewnij sie, ze caly paragon jest widoczny i plasko ulozony
 - Trzymaj aparat stabilnie, aby uniknac rozmazania
 - Uzyj **Dodatkowe instrukcje dla AI** do specjalnej obslugi (np. "To jest w EUR", "Pomin pierwsza pozycje")

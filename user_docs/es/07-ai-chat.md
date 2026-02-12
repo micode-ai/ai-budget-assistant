@@ -1,6 +1,6 @@
 # Chat IA
 
-> Haz preguntas sobre tus finanzas en lenguaje natural. Obtiene analisis de gastos, consejos sobre presupuestos y recomendaciones de ahorro personalizadas -- todo impulsado por IA.
+> Haz preguntas sobre tus finanzas en lenguaje natural. Obtiene analisis de gastos, consejos sobre presupuestos y recomendaciones de ahorro personalizadas — todo impulsado por IA.
 
 ## Vista general
 
@@ -50,9 +50,9 @@ Toca cualquier boton para enviar esa pregunta al instante.
 
 ## Funciones del chat
 
-- **Historial de conversacion** -- los mensajes anteriores se conservan durante tu sesion
-- **Indicador de escritura** -- muestra "Pensando..." mientras la IA procesa tu pregunta
-- **Manejo de errores** -- si algo sale mal, veras un mensaje de error con opcion de reintentar
+- **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion
+- **Indicador de escritura** — muestra "Pensando..." mientras la IA procesa tu pregunta
+- **Manejo de errores** — si algo sale mal, veras un mensaje de error con opcion de reintentar
 
 ## Limites de solicitudes IA
 

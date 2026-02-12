@@ -1370,6 +1370,91 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Account Transfers
+
+Account transfers are **user-scoped** — they do NOT require the `X-Account-Id` header since they span across accounts. The authenticated user must be a member of both the source and destination accounts, and must have at least **Editor** role on the source account.
+
+### Create Transfer
+
+```http
+POST /account-transfers
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "fromAccountId": "source-account-uuid",
+  "fromCurrency": "USD",
+  "fromAmount": 1000.00,
+  "toAccountId": "destination-account-uuid",
+  "toCurrency": "EUR",
+  "toAmount": 920.00,
+  "exchangeRate": 0.92,
+  "date": "2024-01-15T00:00:00Z",
+  "notes": "Monthly transfer to personal"
+}
+```
+
+**Response** `201 Created`
+```json
+{
+  "id": "uuid",
+  "localId": "client-generated-uuid",
+  "fromAccountId": "source-account-uuid",
+  "fromCurrency": "USD",
+  "fromAmount": 1000.00,
+  "toAccountId": "destination-account-uuid",
+  "toCurrency": "EUR",
+  "toAmount": 920.00,
+  "exchangeRate": 0.92,
+  "date": "2024-01-15T00:00:00Z",
+  "notes": "Monthly transfer to personal",
+  "userId": "user-uuid",
+  "createdAt": "2024-01-15T12:00:00Z",
+  "updatedAt": "2024-01-15T12:00:00Z"
+}
+```
+
+### List Transfers
+
+```http
+GET /account-transfers
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "localId": "client-generated-uuid",
+    "fromAccountId": "source-account-uuid",
+    "fromCurrency": "USD",
+    "fromAmount": 1000.00,
+    "toAccountId": "destination-account-uuid",
+    "toCurrency": "EUR",
+    "toAmount": 920.00,
+    "exchangeRate": 0.92,
+    "date": "2024-01-15T00:00:00Z",
+    "notes": "Monthly transfer to personal",
+    "userId": "user-uuid",
+    "createdAt": "2024-01-15T12:00:00Z",
+    "updatedAt": "2024-01-15T12:00:00Z"
+  }
+]
+```
+
+### Delete Transfer
+
+```http
+DELETE /account-transfers/:id
+Authorization: Bearer <token>
+```
+
+**Response** `204 No Content`
+
+---
+
 ## Insights
 
 Requires `X-Account-Id` header.

@@ -1,6 +1,6 @@
 # Chat IA
 
-> Posez des questions sur vos finances en langage naturel. Obtenez des analyses de depenses, des conseils budgetaires et des astuces d'epargne personnalisees -- le tout alimente par l'IA.
+> Posez des questions sur vos finances en langage naturel. Obtenez des analyses de depenses, des conseils budgetaires et des astuces d'epargne personnalisees — le tout alimente par l'IA.
 
 ## Apercu
 
@@ -50,9 +50,9 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 
 ## Fonctionnalites du chat
 
-- **Historique de conversation** -- les messages precedents sont conserves pendant votre session
-- **Indicateur de saisie** -- affiche "Reflexion en cours..." pendant que l'IA traite votre question
-- **Gestion des erreurs** -- en cas de probleme, vous verrez un message d'erreur avec une option de reessai
+- **Historique de conversation** — les messages precedents sont conserves pendant votre session
+- **Indicateur de saisie** — affiche "Reflexion en cours..." pendant que l'IA traite votre question
+- **Gestion des erreurs** — en cas de probleme, vous verrez un message d'erreur avec une option de reessai
 
 ## Limites de requetes IA
 

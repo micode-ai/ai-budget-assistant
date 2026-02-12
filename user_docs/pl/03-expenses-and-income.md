@@ -7,8 +7,8 @@
 ![Lista transakcji z wydatkami](../img/expenses-2.jpg)
 
 Ekran **Transakcje** posiada dwie zakladki u gory:
-- **Wydatki** -- wszystkie Twoje wydatki, posortowane wedlug daty (najnowsze najpierw)
-- **Przychody** -- wszystkie wpisy przychodow
+- **Wydatki** — wszystkie Twoje wydatki, posortowane wedlug daty (najnowsze najpierw)
+- **Przychody** — wszystkie wpisy przychodow
 
 Kazda transakcja wyswietla:
 - Ikone kategorii
@@ -34,9 +34,9 @@ Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 6. Wybierz **Kategorie** z dostepnych elementow:
    - Jedzenie i restauracje, Artykuly spozywcze, Transport, Zakupy, Rozrywka, Zdrowie i fitness, Rachunki i media, Edukacja, Podroze, Kawa i napoje, Subskrypcje, Odziez, Higiena osobista
    - Dotknij przycisk **+**, aby utworzyc wlasna kategorie
-7. Wyszukaj i wybierz **Tagi** (np. #herbata, #piwo, #supermarket) -- opcjonalnie
-8. Wybierz **Dodaj do projektu** (np. "Wakacje") -- opcjonalnie
-9. Dotknij **Podziel wydatek**, aby rozdzielic wydatek miedzy wiele kategorii -- opcjonalnie
+7. Wyszukaj i wybierz **Tagi** (np. #herbata, #piwo, #supermarket) — opcjonalnie
+8. Wybierz **Dodaj do projektu** (np. "Wakacje") — opcjonalnie
+9. Dotknij **Podziel wydatek**, aby rozdzielic wydatek miedzy wiele kategorii — opcjonalnie
 10. Dotknij **Zapisz wydatek**
 
 ### Kategorie
@@ -89,15 +89,15 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Data** wydatku
 - **Kategoria** ze wskaznikiem koloru
 - **Notatki** (jezeli dodano)
-- **Status synchronizacji** -- oczekujacy, zsynchronizowany, konflikt lub blad
-- **Zrodlo** -- Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
-- **Pozycje paragonu** -- poszczegolne pozycje (dla zeskanowanych paragonow)
-- **Zdjecie paragonu** -- wyswietl, pobierz, zmien lub usun zdjecie paragonu
+- **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
+- **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
+- **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
+- **Zdjecie paragonu** — wyswietl, pobierz, zmien lub usun zdjecie paragonu
 
 ### Dostepne akcje w szczegolach wydatku:
-- **Edytuj** -- zmodyfikuj wydatek
-- **Kopiuj** -- utworz duplikat
-- **Usun** -- usun wydatek (z potwierdzeniem)
+- **Edytuj** — zmodyfikuj wydatek
+- **Kopiuj** — utworz duplikat
+- **Usun** — usun wydatek (z potwierdzeniem)
 
 ## Szczegoly przychodu
 

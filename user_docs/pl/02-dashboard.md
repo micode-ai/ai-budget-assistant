@@ -19,7 +19,7 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 | Przycisk | Akcja |
 |---|---|
 | **Dodaj wydatek** | Otwiera formularz recznego dodawania wydatku |
-| **Glosowo** | Otwiera ekran wydatku glosowego -- powiedz swoj wydatek naturalnie |
+| **Glosowo** | Otwiera ekran wydatku glosowego — powiedz swoj wydatek naturalnie |
 | **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
 | **Wymiana** | Otwiera formularz wymiany walut |
 
@@ -27,8 +27,8 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 
 Ponizej szybkich akcji kompaktowa karta pokazuje Twoj postep w grywalizacji:
 
-- **Poziom** -- Twoj aktualny poziom z paskiem postepu XP do nastepnego poziomu
-- **Seria** -- licznik Twojej codziennej serii sledzenia z emoji ognia lub platka sniegu
+- **Poziom** — Twoj aktualny poziom z paskiem postepu XP do nastepnego poziomu
+- **Seria** — licznik Twojej codziennej serii sledzenia z emoji ognia lub platka sniegu
 
 Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami, szczegolami serii i filtrami kategorii.
 
@@ -45,7 +45,7 @@ Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami
 
 ## Laczne przychody w tym miesiacu
 
-![Pulpit przewiniety -- przychody, wydatki, portfel](../img/home-2.jpg)
+![Pulpit przewiniety — przychody, wydatki, portfel](../img/home-2.jpg)
 
 - Wyswietla laczne przychody za biezacy miesiac na zielono (np. **+2 482,52 $**)
 - Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
@@ -71,7 +71,7 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
   **O:** Nie dodales jeszcze zadnych wydatkow ani przychodow. Uzyj przyciskow szybkich akcji, aby dodac swoja pierwsza transakcje.
 
 - **P: Czy moge dostosowal wyglad Pulpitu?**
-  **O:** Uklad Pulpitu jest staly, ale dostosowuje sie do Twoich danych -- salda portfela pojawiaja sie dopiero po ich skonfigurowaniu, a karty budzetowe tylko przy aktywnych budzetach.
+  **O:** Uklad Pulpitu jest staly, ale dostosowuje sie do Twoich danych — salda portfela pojawiaja sie dopiero po ich skonfigurowaniu, a karty budzetowe tylko przy aktywnych budzetach.
 
 ---
 

@@ -27,12 +27,12 @@ Vier Schnellaktions-Schaltflachen unterhalb der Begrussung geben dir schnellen Z
 
 Unterhalb der Schnellaktionen zeigt eine kompakte Gamification-Karte deinen Fortschritt:
 
-- **Level** -- dein aktuelles Level mit einem XP-Fortschrittsbalken (z.B. **Level 4 -- 60/100 XP**)
-- **Serie** -- deine aktuelle tagliche Erfassungsserie mit Flammen-Emoji (z.B. **5 Tage**)
+- **Level** — dein aktuelles Level mit einem XP-Fortschrittsbalken (z.B. **Level 4 — 60/100 XP**)
+- **Serie** — deine aktuelle tagliche Erfassungsserie mit Flammen-Emoji (z.B. **5 Tage**)
 
 Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo du alle Abzeichen, Kategorien und deinen Gesamtfortschritt einsehen kannst.
 
-> **Hinweis:** Das Widget erscheint automatisch fur alle Nutzer -- keine Einrichtung erforderlich.
+> **Hinweis:** Das Widget erscheint automatisch fur alle Nutzer — keine Einrichtung erforderlich.
 
 ## Monatsbudget-Karte
 

@@ -17,19 +17,19 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
 
 ## Tarjetas de resumen
 
-- **Total gastado** -- tus gastos totales para el periodo seleccionado
-- **Comparacion de tendencia** -- "mas que la semana/mes/ano pasado" o "menos que la semana/mes/ano pasado" con porcentaje
-- **Promedio por dia** -- gasto diario promedio
+- **Total gastado** — tus gastos totales para el periodo seleccionado
+- **Comparacion de tendencia** — "mas que la semana/mes/ano pasado" o "menos que la semana/mes/ano pasado" con porcentaje
+- **Promedio por dia** — gasto diario promedio
 
 ## Carrusel de informacion IA
 
 Un carrusel horizontal desplazable con informacion generada por IA (requiere plan Pro):
 
-- **Anomalias de gasto** -- gasto inusual detectado (por ejemplo, "78% mas de lo habitual en Transporte")
-- **Predicciones de presupuesto** -- cuando se proyecta que se agotara tu presupuesto
-- **Oportunidades de ahorro** -- sugerencias para reducir gastos
-- **Comparaciones de categorias** -- como se compara tu gasto entre categorias
-- **Cambios de tendencia** -- cambios significativos en patrones de gasto
+- **Anomalias de gasto** — gasto inusual detectado (por ejemplo, "78% mas de lo habitual en Transporte")
+- **Predicciones de presupuesto** — cuando se proyecta que se agotara tu presupuesto
+- **Oportunidades de ahorro** — sugerencias para reducir gastos
+- **Comparaciones de categorias** — como se compara tu gasto entre categorias
+- **Cambios de tendencia** — cambios significativos en patrones de gasto
 
 Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), advertencia (amarillo) o informativo (azul).
 
@@ -61,18 +61,18 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 
 ### Por etiquetas / Por proyectos
 
-- **Desglose por etiquetas** -- gasto agrupado por tus etiquetas personalizadas
-- **Comparacion por proyectos** -- gasto agrupado por proyectos
+- **Desglose por etiquetas** — gasto agrupado por tus etiquetas personalizadas
+- **Comparacion por proyectos** — gasto agrupado por proyectos
 - Ayuda a rastrear gasto tematico (por ejemplo, todos los gastos de #cafe o costos del proyecto "Vacaciones")
 
 ## Exploracion detallada
 
 Toca cualquier elemento del grafico para profundizar:
 
-1. Vista de **Ano** -- toca una barra de mes para acercarte a ese mes
-2. Vista de **Mes** -- toca una semana para acercarte a esa semana
-3. Vista de **Semana** -- toca un dia para ver las transacciones diarias
-4. Vista de **Dia** -- consulta las transacciones individuales
+1. Vista de **Ano** — toca una barra de mes para acercarte a ese mes
+2. Vista de **Mes** — toca una semana para acercarte a esa semana
+3. Vista de **Semana** — toca un dia para ver las transacciones diarias
+4. Vista de **Dia** — consulta las transacciones individuales
 
 Usa el boton **Atras** para navegar hacia arriba a traves de los niveles.
 
@@ -80,10 +80,10 @@ Usa el boton **Atras** para navegar hacia arriba a traves de los niveles.
 
 Debajo de los graficos, encontraras informacion rapida en formato de texto:
 
-- **Categoria principal** -- tu categoria con mayor gasto en este periodo
-- **Dia de mayor gasto** -- el dia con mas gastos
-- **Consejo de presupuesto diario** -- gasto diario recomendado para mantenerte en el objetivo
-- **Ahorros en recibos** -- importe total ahorrado en descuentos
+- **Categoria principal** — tu categoria con mayor gasto en este periodo
+- **Dia de mayor gasto** — el dia con mas gastos
+- **Consejo de presupuesto diario** — gasto diario recomendado para mantenerte en el objetivo
+- **Ahorros en recibos** — importe total ahorrado en descuentos
 
 ## Articulos principales de recibos
 

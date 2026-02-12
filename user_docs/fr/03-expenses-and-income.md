@@ -7,8 +7,8 @@
 ![Liste des transactions avec depenses](../img/expenses-2.jpg)
 
 L'ecran **Transactions** comporte deux onglets en haut :
-- **Depenses** -- toutes vos depenses, triees par date (les plus recentes en premier)
-- **Revenus** -- toutes vos entrees de revenus
+- **Depenses** — toutes vos depenses, triees par date (les plus recentes en premier)
+- **Revenus** — toutes vos entrees de revenus
 
 Chaque transaction affiche :
 - Icone de categorie
@@ -34,9 +34,9 @@ Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle tr
 6. Selectionnez une **Categorie** parmi les pastilles :
    - Alimentation, Courses, Transport, Shopping, Divertissement, Sante & Fitness, Factures & Services, Education, Voyage, Cafe & Boissons, Abonnements, Vetements, Soins personnels
    - Appuyez sur le bouton **+** pour creer une categorie personnalisee
-7. Recherchez et selectionnez des **Etiquettes** (par ex. #the, #biere, #supermarche) -- optionnel
-8. Selectionnez **Ajouter a un projet** (par ex. "Vacances") -- optionnel
-9. Appuyez sur **Diviser la depense** pour repartir la depense entre plusieurs categories -- optionnel
+7. Recherchez et selectionnez des **Etiquettes** (par ex. #the, #biere, #supermarche) — optionnel
+8. Selectionnez **Ajouter a un projet** (par ex. "Vacances") — optionnel
+9. Appuyez sur **Diviser la depense** pour repartir la depense entre plusieurs categories — optionnel
 10. Appuyez sur **Enregistrer la depense**
 
 ### Categories
@@ -89,15 +89,15 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Date** de la depense
 - **Categorie** avec indicateur de couleur
 - **Notes** (si ajoutees)
-- **Statut de synchronisation** -- en attente, synchronise, conflit ou erreur
-- **Source** -- Saisie manuelle, Saisie vocale, Scan de recu ou Importe
-- **Articles du recu** -- articles individuels (pour les recus scannes)
-- **Image du recu** -- afficher, telecharger, remplacer ou supprimer la photo du recu
+- **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
+- **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
+- **Articles du recu** — articles individuels (pour les recus scannes)
+- **Image du recu** — afficher, telecharger, remplacer ou supprimer la photo du recu
 
 ### Actions sur les details de la depense :
-- **Modifier** -- modifier la depense
-- **Copier** -- creer un doublon
-- **Supprimer** -- supprimer la depense (avec confirmation)
+- **Modifier** — modifier la depense
+- **Copier** — creer un doublon
+- **Supprimer** — supprimer la depense (avec confirmation)
 
 ## Details d'un revenu
 

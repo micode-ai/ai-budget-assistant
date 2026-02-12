@@ -17,19 +17,19 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 
 ## Karty podsumowania
 
-- **Lacznie wydano** -- calkowite wydatki za wybrany okres
-- **Porownanie trendu** -- "wiecej niz poprzedni tydzien/miesiac/rok" lub "mniej niz poprzedni tydzien/miesiac/rok" z procentem
-- **Srednio dziennie** -- srednie dzienne wydatki
+- **Lacznie wydano** — calkowite wydatki za wybrany okres
+- **Porownanie trendu** — "wiecej niz poprzedni tydzien/miesiac/rok" lub "mniej niz poprzedni tydzien/miesiac/rok" z procentem
+- **Srednio dziennie** — srednie dzienne wydatki
 
 ## Karuzela wnioskow AI
 
 Poziomo przewijana karuzela wnioskow generowanych przez AI (wymaga planu Pro):
 
-- **Anomalie wydatkow** -- wykryto nietypowe wydatki (np. "78% wiecej niz zwykle na Transport")
-- **Prognozy budzetowe** -- kiedy prognozowane jest wyczerpanie budzetu
-- **Mozliwosci oszczednosci** -- sugestie redukcji wydatkow
-- **Porownania kategorii** -- jak Twoje wydatki rokladaja sie miedzy kategoriami
-- **Zmiany trendow** -- znaczace zmiany we wzorcach wydatkow
+- **Anomalie wydatkow** — wykryto nietypowe wydatki (np. "78% wiecej niz zwykle na Transport")
+- **Prognozy budzetowe** — kiedy prognozowane jest wyczerpanie budzetu
+- **Mozliwosci oszczednosci** — sugestie redukcji wydatkow
+- **Porownania kategorii** — jak Twoje wydatki rokladaja sie miedzy kategoriami
+- **Zmiany trendow** — znaczace zmiany we wzorcach wydatkow
 
 Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolty) lub informacyjny (niebieski).
 
@@ -61,18 +61,18 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 ### Wedlug tagow / Wedlug projektow
 
-- **Podzial tagow** -- wydatki pogrupowane wedlug Twoich niestandardowych tagow
-- **Porownanie projektow** -- wydatki pogrupowane wedlug projektow
+- **Podzial tagow** — wydatki pogrupowane wedlug Twoich niestandardowych tagow
+- **Porownanie projektow** — wydatki pogrupowane wedlug projektow
 - Pomaga sledzic wydatki tematyczne (np. wszystkie wydatki #kawa lub koszty projektu "Wakacje")
 
 ## Drilldown (zaglebienie)
 
 Dotknij dowolny element wykresu, aby zbadac glebiej:
 
-1. Widok **Rok** -- dotknij slupek miesiaca, aby przyblizye ten miesiac
-2. Widok **Miesiac** -- dotknij tydzien, aby przyblizye ten tydzien
-3. Widok **Tydzien** -- dotknij dzien, aby zobaczyc transakcje dzienne
-4. Widok **Dzien** -- zobacz poszczegolne transakcje
+1. Widok **Rok** — dotknij slupek miesiaca, aby przyblizye ten miesiac
+2. Widok **Miesiac** — dotknij tydzien, aby przyblizye ten tydzien
+3. Widok **Tydzien** — dotknij dzien, aby zobaczyc transakcje dzienne
+4. Widok **Dzien** — zobacz poszczegolne transakcje
 
 Uzyj przycisku **Wroc**, aby nawigowac w gore przez poziomy.
 
@@ -80,10 +80,10 @@ Uzyj przycisku **Wroc**, aby nawigowac w gore przez poziomy.
 
 Ponizej wykresow znajdziesz tekstowe szybkie wnioski:
 
-- **Glowna kategoria** -- Twoja najwyzsza kategoria wydatkow w tym okresie
-- **Dzien najwiekszych wydatkow** -- dzien z najwyzszymi wydatkami
-- **Dzienna wskazowka budzetowa** -- zalecane dzienne wydatki, aby utrzymac sie w budzecie
-- **Oszczednosci z paragonow** -- laczna kwota zaoszczedzona na rabatach
+- **Glowna kategoria** — Twoja najwyzsza kategoria wydatkow w tym okresie
+- **Dzien najwiekszych wydatkow** — dzien z najwyzszymi wydatkami
+- **Dzienna wskazowka budzetowa** — zalecane dzienne wydatki, aby utrzymac sie w budzecie
+- **Oszczednosci z paragonow** — laczna kwota zaoszczedzona na rabatach
 
 ## Najczesciej kupowane
 

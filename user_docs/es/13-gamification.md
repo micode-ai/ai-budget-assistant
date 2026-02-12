@@ -10,8 +10,8 @@ El sistema de Gamificacion te recompensa por hacer un seguimiento constante de t
 
 En tu pantalla de inicio, veras una tarjeta compacta de gamificacion que muestra:
 
-- **Nivel** -- tu nivel actual con una barra de progreso de XP
-- **Racha** -- tu racha actual de seguimiento diario (icono de fuego cuando esta activa, copo de nieve cuando esta inactiva)
+- **Nivel** — tu nivel actual con una barra de progreso de XP
+- **Racha** — tu racha actual de seguimiento diario (icono de fuego cuando esta activa, copo de nieve cuando esta inactiva)
 
 Toca el widget para abrir la pantalla completa de **Logros**.
 
@@ -19,11 +19,11 @@ Toca el widget para abrir la pantalla completa de **Logros**.
 
 Los logros son hitos que te recompensan por comportamientos financieros especificos. Cada logro tiene:
 
-- **Icono** -- un emoji visual que representa el logro
-- **Titulo y Descripcion** -- lo que necesitas hacer para ganarlo
-- **Rareza** -- Comun, Raro, Epico o Legendario
-- **Recompensa de XP** -- puntos de experiencia obtenidos al completarlo
-- **Progreso** -- porcentaje de avance hacia la finalizacion (para logros incompletos)
+- **Icono** — un emoji visual que representa el logro
+- **Titulo y Descripcion** — lo que necesitas hacer para ganarlo
+- **Rareza** — Comun, Raro, Epico o Legendario
+- **Recompensa de XP** — puntos de experiencia obtenidos al completarlo
+- **Progreso** — porcentaje de avance hacia la finalizacion (para logros incompletos)
 
 ### Categorias de logros
 
@@ -46,9 +46,9 @@ Los logros completados aparecen a todo color con su borde de rareza. Los logros 
 
 Tu racha cuenta los dias consecutivos en los que registras al menos un gasto o ingreso. La racha se reinicia si faltas un dia.
 
-- **Racha activa** -- se muestra con un icono de fuego y el numero de dias
-- **Racha interrumpida** -- se muestra con un icono de copo de nieve y una indicacion para comenzar de nuevo
-- **Racha mas larga** -- tu mejor marca personal se registra y se muestra en la pantalla de Logros
+- **Racha activa** — se muestra con un icono de fuego y el numero de dias
+- **Racha interrumpida** — se muestra con un icono de copo de nieve y una indicacion para comenzar de nuevo
+- **Racha mas larga** — tu mejor marca personal se registra y se muestra en la pantalla de Logros
 
 > **Consejo:** Agrega al menos una transaccion cada dia para mantener tu racha activa.
 

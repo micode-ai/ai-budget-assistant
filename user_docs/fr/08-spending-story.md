@@ -17,8 +17,8 @@ La fonctionnalite **Histoire des depenses** cree un rapport personnalise, sous f
 
 En haut de l'ecran Histoire des depenses :
 
-- **Semaine** -- histoire sur les finances de la semaine en cours
-- **Mois** -- histoire sur les finances du mois en cours
+- **Semaine** — histoire sur les finances de la semaine en cours
+- **Mois** — histoire sur les finances du mois en cours
 
 Appuyez pour basculer entre les vues. Le contenu de l'histoire se met a jour en consequence.
 
@@ -49,14 +49,14 @@ L'IA genere differents types de blocs d'aperçus :
 
 ## Actions
 
-- **Regenerer** -- appuyez pour generer une nouvelle histoire avec les donnees mises a jour
-- **Partager** -- partagez votre histoire des depenses avec d'autres personnes
-- Horodatage **Derniere mise a jour** -- indique quand l'histoire a ete generee pour la derniere fois
+- **Regenerer** — appuyez pour generer une nouvelle histoire avec les donnees mises a jour
+- **Partager** — partagez votre histoire des depenses avec d'autres personnes
+- Horodatage **Derniere mise a jour** — indique quand l'histoire a ete generee pour la derniere fois
 
 ## Conditions requises
 
-- **Abonnement Pro ou Business requis** -- les utilisateurs du plan Gratuit voient une invitation a la mise a niveau
-- **Donnees de transactions suffisantes** -- l'application a besoin d'assez de depenses pour generer des aperçus significatifs. Si vous n'avez pas assez de donnees, vous verrez : "Pas assez de donnees pour generer une histoire pour le moment."
+- **Abonnement Pro ou Business requis** — les utilisateurs du plan Gratuit voient une invitation a la mise a niveau
+- **Donnees de transactions suffisantes** — l'application a besoin d'assez de depenses pour generer des aperçus significatifs. Si vous n'avez pas assez de donnees, vous verrez : "Pas assez de donnees pour generer une histoire pour le moment."
 - Chaque generation d'histoire utilise des requetes IA de votre allocation mensuelle
 
 ## FAQ

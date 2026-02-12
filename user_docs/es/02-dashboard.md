@@ -19,7 +19,7 @@ Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las 
 | Boton | Accion |
 |---|---|
 | **Agregar gasto** | Abre el formulario de gasto manual |
-| **Entrada de voz** | Abre la pantalla de gasto por voz -- describe tu gasto de forma natural |
+| **Entrada de voz** | Abre la pantalla de gasto por voz — describe tu gasto de forma natural |
 | **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
 | **Cambio** | Abre el formulario de cambio de divisa |
 
@@ -27,8 +27,8 @@ Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las 
 
 Debajo de las acciones rapidas, una tarjeta compacta muestra tu progreso de gamificacion:
 
-- **Nivel** -- tu nivel actual con una barra de progreso de XP hacia el siguiente nivel
-- **Racha** -- tu conteo de racha de seguimiento diario con un icono de fuego o copo de nieve
+- **Nivel** — tu nivel actual con una barra de progreso de XP hacia el siguiente nivel
+- **Racha** — tu conteo de racha de seguimiento diario con un icono de fuego o copo de nieve
 
 Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las insignias, detalles de racha y filtros por categoria.
 
@@ -45,7 +45,7 @@ Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las in
 
 ## Ingresos totales de este mes
 
-![Panel desplazado -- ingresos, gastos, billetera](../img/home-2.jpg)
+![Panel desplazado — ingresos, gastos, billetera](../img/home-2.jpg)
 
 - Muestra tus ingresos totales del mes actual en verde (por ejemplo, **+$2,482.52**)
 - Toca para ir a la pestana **Transacciones** (vista de Ingresos)
