@@ -540,6 +540,17 @@ export default function SettingsScreen() {
             <View style={styles.divider} />
             <TouchableOpacity
               style={styles.fieldRow}
+              onPress={() => router.push('/help' as any)}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="help-circle-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('help.title')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.fieldRow}
               onPress={() => Linking.openURL('mailto:support@aibudget.app')}
             >
               <Text style={styles.fieldLabel}>{t('settings.support')}</Text>

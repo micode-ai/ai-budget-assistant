@@ -1,0 +1,67 @@
+# Panel
+
+> Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque.
+
+## Vista general
+
+El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra un saludo personalizado, el contexto de tu cuenta actual y las metricas financieras clave del mes en curso.
+
+![Panel con acciones rapidas y resumen de presupuesto](../img/home-1.jpg)
+
+## Cambiar cuenta
+
+En la esquina superior izquierda, toca el nombre de la cuenta (por ejemplo, **Familia**) para abrir el menu desplegable **Cambiar cuenta**. Puedes alternar entre tus cuentas Personal, Compartida y Empresa. Todos los datos del Panel se actualizan para reflejar la cuenta seleccionada.
+
+## Acciones rapidas
+
+Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las tareas mas comunes:
+
+| Boton | Accion |
+|---|---|
+| **Agregar gasto** | Abre el formulario de gasto manual |
+| **Entrada de voz** | Abre la pantalla de gasto por voz -- describe tu gasto de forma natural |
+| **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
+| **Cambio** | Abre el formulario de cambio de divisa |
+
+## Tarjeta de presupuesto mensual
+
+- Muestra tu gasto actual comparado con tu presupuesto mensual (por ejemplo, **2 846,83 zl de 20 000,00 zl**)
+- Barra de progreso con codigo de colores: verde (bajo control), amarillo (acercandose al limite), rojo/naranja (cerca o por encima del presupuesto)
+- Muestra el **porcentaje utilizado** (por ejemplo, 86% utilizado)
+- Toca la tarjeta para ir a la pestana **Presupuestos** y ver los detalles
+
+> **Nota:** Si no tienes un presupuesto mensual configurado, veras una sugerencia para crear uno.
+
+## Ingresos totales de este mes
+
+![Panel desplazado -- ingresos, gastos, billetera](../img/home-2.jpg)
+
+- Muestra tus ingresos totales del mes actual en verde (por ejemplo, **+$2,482.52**)
+- Toca para ir a la pestana **Transacciones** (vista de Ingresos)
+
+## Gastos totales de este mes
+
+- Muestra tus gastos totales del mes actual en rojo (por ejemplo, **-$4,838.99**)
+- Toca para ir a la pestana **Transacciones** (vista de Gastos)
+
+## Saldos de la billetera
+
+- Tarjetas con desplazamiento horizontal mostrando tu saldo en cada moneda (por ejemplo, **EUR 16,723.00**, **PLN 2 192,89**, **USD $56...**)
+- Toca **Ver todo** para ir a la vista completa de la Billetera con desgloses detallados
+- Si no hay saldos configurados, veras una indicacion para agregar tu saldo inicial
+
+## Deslizar para actualizar
+
+Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos y sincronizar con el servidor.
+
+## Preguntas frecuentes
+
+- **P: Por que el Panel muestra $0 en todo?**
+  **R:** Aun no has agregado ningun gasto o ingreso. Usa los botones de accion rapida para agregar tu primera transaccion.
+
+- **P: Puedo personalizar lo que aparece en el Panel?**
+  **R:** El diseno del Panel es fijo, pero se adapta a tus datos: los saldos de la billetera solo aparecen despues de configurarlos, y las tarjetas de presupuesto solo aparecen con presupuestos activos.
+
+---
+
+*Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md)*

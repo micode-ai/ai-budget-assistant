@@ -237,6 +237,20 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="help/index"
+          options={{
+            headerShown: true,
+            title: t('help.title'),
+          }}
+        />
+        <Stack.Screen
+          name="help/[id]"
+          options={{
+            headerShown: true,
+            title: t('help.articleTitle'),
+          }}
+        />
+        <Stack.Screen
           name="analytics/drill-down"
           options={{
             headerShown: true,
