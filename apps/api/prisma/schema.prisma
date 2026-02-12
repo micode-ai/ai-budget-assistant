@@ -73,6 +73,7 @@ model User {
   accountMembers    AccountMember[]
   walletBalances    WalletBalance[]
   currencyExchanges CurrencyExchange[]
+  accountTransfers  AccountTransfer[]
   subscription      Subscription?
   usageLogs         UsageLog[]
   achievements      UserAchievement[]
@@ -103,6 +104,8 @@ model Account {
   syncLogs          SyncLog[]
   walletBalances    WalletBalance[]
   currencyExchanges CurrencyExchange[]
+  transfersOut      AccountTransfer[] @relation("TransfersOut")
+  transfersIn       AccountTransfer[] @relation("TransfersIn")
   usageLogs         UsageLog[]
   generatedInsights GeneratedInsight[]
   spendingStories   SpendingStory[]
@@ -413,6 +416,36 @@ model CurrencyExchange {
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
   @@map("currency_exchanges")
+}
+
+model AccountTransfer {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  clientId      String   @map("client_id")
+  fromAccountId String   @map("from_account_id")
+  fromCurrency  String   @map("from_currency")
+  fromAmount    Decimal  @map("from_amount") @db.Decimal(12, 2)
+  toAccountId   String   @map("to_account_id")
+  toCurrency    String   @map("to_currency")
+  toAmount      Decimal  @map("to_amount") @db.Decimal(12, 2)
+  exchangeRate  Decimal  @map("exchange_rate") @db.Decimal(12, 6)
+  date          DateTime @db.Date
+  notes         String?
+  isDeleted     Boolean  @default(false) @map("is_deleted")
+  syncVersion   Int      @default(0) @map("sync_version")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fromAccount Account @relation("TransfersOut", fields: [fromAccountId], references: [id], onDelete: Cascade)
+  toAccount   Account @relation("TransfersIn", fields: [toAccountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId, date(sort: Desc)])
+  @@index([fromAccountId])
+  @@index([toAccountId])
+  @@map("account_transfers")
 }
 
 model Subscription {

@@ -1,19 +1,26 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { WalletBalance, CurrencyExchange, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
+import type { WalletBalance, CurrencyExchange, AccountTransfer, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import {
   loadAllWalletBalances,
   upsertWalletBalance,
   softDeleteWalletBalance,
   getExpenseTotalsByCurrency,
+  getIncomeTotalsByCurrency,
   getExchangeTotals,
+  getTransferTotals,
 } from '@/db/walletRepository';
 import {
   loadAllExchanges,
   insertExchange,
   softDeleteExchange,
 } from '@/db/currencyExchangeRepository';
+import {
+  loadTransfersByAccount,
+  insertTransfer,
+  softDeleteTransfer,
+} from '@/db/accountTransferRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
@@ -22,6 +29,7 @@ import { useAuthStore } from './authStore';
 interface WalletState {
   walletBalances: WalletBalance[];
   exchanges: CurrencyExchange[];
+  transfers: AccountTransfer[];
   walletSummary: WalletSummary[];
   isLoading: boolean;
   error: string | null;
@@ -41,6 +49,18 @@ interface WalletState {
     notes?: string;
   }) => CurrencyExchange;
   deleteExchange: (id: string) => void;
+  addTransfer: (data: {
+    fromAccountId: string;
+    fromCurrency: Currency;
+    fromAmount: number;
+    toAccountId: string;
+    toCurrency: Currency;
+    toAmount: number;
+    exchangeRate: number;
+    date: Date;
+    notes?: string;
+  }) => AccountTransfer;
+  deleteTransfer: (id: string) => void;
 
   // Computed
   computeWalletSummary: () => Promise<WalletSummary[]>;
@@ -53,6 +73,7 @@ export const useWalletStore = create<WalletState>()(
   subscribeWithSelector((set, get) => ({
     walletBalances: [],
     exchanges: [],
+    transfers: [],
     walletSummary: [],
     isLoading: false,
     error: null,
@@ -69,9 +90,10 @@ export const useWalletStore = create<WalletState>()(
         // 1. Load from local DB
         const localBalances = await loadAllWalletBalances(accountId);
         const localExchanges = await loadAllExchanges(accountId);
+        const localTransfers = await loadTransfersByAccount(accountId);
         // Guard: abort if account switched during async operation
         if (useAccountStore.getState().currentAccountId !== accountId) return;
-        set({ walletBalances: localBalances, exchanges: localExchanges });
+        set({ walletBalances: localBalances, exchanges: localExchanges, transfers: localTransfers });
 
         // 2. Compute summary from local data
         const summary = await get().computeWalletSummary();
@@ -130,12 +152,49 @@ export const useWalletStore = create<WalletState>()(
             }
           }
 
+          // Sync transfers from server
+          try {
+            const serverTransfers = await api.getAccountTransfers();
+            if (useAccountStore.getState().currentAccountId !== accountId) return;
+            if (Array.isArray(serverTransfers)) {
+              for (const st of serverTransfers) {
+                // Only store transfers relevant to current account
+                if (st.fromAccountId === accountId || st.toAccountId === accountId) {
+                  const transfer: AccountTransfer = {
+                    id: st.clientId || st.id,
+                    localId: st.clientId || st.id,
+                    serverId: st.id,
+                    userId: st.userId,
+                    fromAccountId: st.fromAccountId,
+                    fromCurrency: st.fromCurrency as Currency,
+                    fromAmount: Number(st.fromAmount),
+                    toAccountId: st.toAccountId,
+                    toCurrency: st.toCurrency as Currency,
+                    toAmount: Number(st.toAmount),
+                    exchangeRate: Number(st.exchangeRate),
+                    date: new Date(st.date),
+                    notes: st.notes ?? undefined,
+                    createdAt: new Date(st.createdAt),
+                    updatedAt: new Date(st.updatedAt),
+                    isDeleted: st.isDeleted || false,
+                    syncStatus: 'synced' as SyncStatus,
+                    syncVersion: st.syncVersion || 0,
+                  };
+                  await insertTransfer(transfer);
+                }
+              }
+            }
+          } catch (e) {
+            console.log('Transfer server sync skipped:', e);
+          }
+
           // Reload after server sync
           const merged = await loadAllWalletBalances(accountId);
           const mergedExchanges = await loadAllExchanges(accountId);
+          const mergedTransfers = await loadTransfersByAccount(accountId);
           // Guard: abort if account switched during merge
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          set({ walletBalances: merged, exchanges: mergedExchanges });
+          set({ walletBalances: merged, exchanges: mergedExchanges, transfers: mergedTransfers });
 
           const updatedSummary = await get().computeWalletSummary();
           set({ walletSummary: updatedSummary });
@@ -312,26 +371,97 @@ export const useWalletStore = create<WalletState>()(
       get().computeWalletSummary().then((summary) => set({ walletSummary: summary }));
     },
 
+    addTransfer: (data) => {
+      const id = generateUUID();
+      const now = new Date();
+      const userId = useAuthStore.getState().user?.id || '';
+
+      const newTransfer: AccountTransfer = {
+        id,
+        localId: id,
+        userId,
+        ...data,
+        createdAt: now,
+        updatedAt: now,
+        isDeleted: false,
+        syncStatus: 'pending' as SyncStatus,
+        syncVersion: 0,
+      };
+
+      set((state) => ({
+        transfers: [newTransfer, ...state.transfers],
+      }));
+
+      insertTransfer(newTransfer).catch((e) =>
+        console.error('Failed to insert transfer into SQLite:', e),
+      );
+
+      api.createAccountTransfer({
+        localId: id,
+        fromAccountId: data.fromAccountId,
+        fromCurrency: data.fromCurrency,
+        fromAmount: data.fromAmount,
+        toAccountId: data.toAccountId,
+        toCurrency: data.toCurrency,
+        toAmount: data.toAmount,
+        exchangeRate: data.exchangeRate,
+        date: data.date instanceof Date ? data.date.toISOString() : data.date,
+        notes: data.notes,
+      }).catch((e) =>
+        console.error('Failed to sync transfer to server:', e),
+      );
+
+      get().computeWalletSummary().then((summary) => set({ walletSummary: summary }));
+
+      return newTransfer;
+    },
+
+    deleteTransfer: (id) => {
+      set((state) => ({
+        transfers: state.transfers.filter((t) => t.id !== id),
+      }));
+
+      softDeleteTransfer(id, new Date()).catch((e) =>
+        console.error('Failed to delete transfer from SQLite:', e),
+      );
+
+      api.deleteAccountTransfer(id).catch((e) =>
+        console.error('Failed to delete transfer from server:', e),
+      );
+
+      get().computeWalletSummary().then((summary) => set({ walletSummary: summary }));
+    },
+
     computeWalletSummary: async () => {
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) return [];
 
       const balances = get().walletBalances.filter((b) => !b.isDeleted);
       const expenseTotals = await getExpenseTotalsByCurrency(accountId);
+      const incomeTotals = await getIncomeTotalsByCurrency(accountId);
       const { exchangedIn, exchangedOut } = await getExchangeTotals(accountId);
+      const { transferredIn, transferredOut } = await getTransferTotals(accountId);
 
       const summary: WalletSummary[] = balances.map((wb) => {
+        const totalIncomes = incomeTotals[wb.currencyCode] || 0;
         const totalExpenses = expenseTotals[wb.currencyCode] || 0;
         const totalExchangedIn = exchangedIn[wb.currencyCode] || 0;
         const totalExchangedOut = exchangedOut[wb.currencyCode] || 0;
-        const currentBalance = wb.initialAmount - totalExpenses + totalExchangedIn - totalExchangedOut;
+        const totalTransferredIn = transferredIn[wb.currencyCode] || 0;
+        const totalTransferredOut = transferredOut[wb.currencyCode] || 0;
+        const currentBalance = wb.initialAmount + totalIncomes - totalExpenses
+          + totalExchangedIn - totalExchangedOut
+          + totalTransferredIn - totalTransferredOut;
 
         return {
           currencyCode: wb.currencyCode as Currency,
           initialAmount: wb.initialAmount,
+          totalIncomes,
           totalExpenses,
           totalExchangedIn,
           totalExchangedOut,
+          totalTransferredIn,
+          totalTransferredOut,
           currentBalance,
         };
       });
@@ -344,6 +474,6 @@ export const useWalletStore = create<WalletState>()(
       return summary?.currentBalance ?? 0;
     },
 
-    reset: () => set({ walletBalances: [], exchanges: [], walletSummary: [], isLoading: false, error: null }),
+    reset: () => set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], isLoading: false, error: null }),
   })),
 );

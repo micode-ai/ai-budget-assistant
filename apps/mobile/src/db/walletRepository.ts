@@ -90,6 +90,21 @@ export async function getExpenseTotalsByCurrency(accountId: string): Promise<Rec
   return result;
 }
 
+export async function getIncomeTotalsByCurrency(accountId: string): Promise<Record<string, number>> {
+  const rows = await executeSql<{ currency_code: string; total: number }>(
+    `SELECT currency_code, SUM(amount) as total
+     FROM incomes
+     WHERE account_id = ? AND is_deleted = 0
+     GROUP BY currency_code`,
+    [accountId],
+  );
+  const result: Record<string, number> = {};
+  for (const row of rows) {
+    result[row.currency_code] = row.total;
+  }
+  return result;
+}
+
 export async function getExchangeTotals(accountId: string): Promise<{
   exchangedIn: Record<string, number>;
   exchangedOut: Record<string, number>;
@@ -114,4 +129,30 @@ export async function getExchangeTotals(accountId: string): Promise<{
   for (const row of inRows) exchangedIn[row.to_currency] = row.total;
   for (const row of outRows) exchangedOut[row.from_currency] = row.total;
   return { exchangedIn, exchangedOut };
+}
+
+export async function getTransferTotals(accountId: string): Promise<{
+  transferredIn: Record<string, number>;
+  transferredOut: Record<string, number>;
+}> {
+  const inRows = await executeSql<{ to_currency: string; total: number }>(
+    `SELECT to_currency, SUM(to_amount) as total
+     FROM account_transfers
+     WHERE to_account_id = ? AND is_deleted = 0
+     GROUP BY to_currency`,
+    [accountId],
+  );
+  const outRows = await executeSql<{ from_currency: string; total: number }>(
+    `SELECT from_currency, SUM(from_amount) as total
+     FROM account_transfers
+     WHERE from_account_id = ? AND is_deleted = 0
+     GROUP BY from_currency`,
+    [accountId],
+  );
+
+  const transferredIn: Record<string, number> = {};
+  const transferredOut: Record<string, number> = {};
+  for (const row of inRows) transferredIn[row.to_currency] = row.total;
+  for (const row of outRows) transferredOut[row.from_currency] = row.total;
+  return { transferredIn, transferredOut };
 }

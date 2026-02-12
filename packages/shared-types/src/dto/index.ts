@@ -504,14 +504,48 @@ export interface UpdateCurrencyExchangeDto {
   notes?: string;
 }
 
+// Account Transfer DTOs
+export interface CreateAccountTransferDto {
+  localId: string;
+  fromAccountId: string;
+  fromCurrency: Currency;
+  fromAmount: number;
+  toAccountId: string;
+  toCurrency: Currency;
+  toAmount: number;
+  exchangeRate: number;
+  date: string;
+  notes?: string;
+}
+
+export interface AccountTransferResponse {
+  id: string;
+  clientId: string;
+  userId: string;
+  fromAccountId: string;
+  fromCurrency: string;
+  fromAmount: number;
+  toAccountId: string;
+  toCurrency: string;
+  toAmount: number;
+  exchangeRate: number;
+  date: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Wallet summary response
 export interface WalletSummaryResponse {
   balances: Array<{
     currencyCode: Currency;
     initialAmount: number;
+    totalIncomes: number;
     totalExpenses: number;
     totalExchangedIn: number;
     totalExchangedOut: number;
+    totalTransferredIn: number;
+    totalTransferredOut: number;
     currentBalance: number;
   }>;
 }

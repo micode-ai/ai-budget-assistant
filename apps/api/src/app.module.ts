@@ -23,6 +23,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
+import { AccountTransferModule } from './modules/account-transfers/account-transfer.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { GamificationModule } from './modules/gamification/gamification.module';
     TagsModule,
     ProjectsModule,
     GamificationModule,
+    AccountTransferModule,
   ],
 })
 export class AppModule {}
