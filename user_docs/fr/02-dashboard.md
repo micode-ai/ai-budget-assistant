@@ -23,6 +23,17 @@ Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent u
 | **Scanner un recu** | Ouvre l'appareil photo pour photographier un recu et en extraire les informations par IA |
 | **Change** | Ouvre le formulaire de change de devises |
 
+## Widget Gamification
+
+Sous les actions rapides, une carte compacte de gamification affiche votre progression :
+
+- **Niveau** -- votre niveau actuel accompagne d'une barre de progression XP (par ex. **Niveau 4 -- 65/100 XP**)
+- **Serie** -- le nombre de jours consecutifs de suivi, avec un emoji flamme lorsque la serie est active ou un emoji flocon de neige lorsqu'elle est interrompue
+
+Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez parcourir vos badges, consulter votre progression et decouvrir de nouveaux succes a debloquer.
+
+> **Astuce :** Maintenez votre serie en ajoutant au moins une transaction chaque jour !
+
 ## Carte de budget mensuel
 
 - Affiche vos depenses actuelles par rapport a votre budget mensuel (par ex. **2 846,83 zl sur 20 000,00 zl**)

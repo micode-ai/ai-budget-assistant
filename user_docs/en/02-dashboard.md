@@ -23,6 +23,17 @@ Four quick action buttons below the greeting give you fast access to the most co
 | **Scan Receipt** | Opens the camera to photograph a receipt for AI extraction |
 | **Exchange** | Opens the currency exchange form |
 
+## Gamification Widget
+
+Below the quick actions, a compact card shows your gamification progress:
+
+- **Level** — your current level with an XP progress bar toward the next level
+- **Streak** — your daily tracking streak count with a fire or snowflake emoji
+
+Tap this card to open the full **Achievements** screen with all badges, streak details, and category filters.
+
+> See [Achievements & Gamification](./13-gamification.md) for details on how XP, levels, and achievements work.
+
 ## Monthly Budget Card
 
 - Shows your current spending against your monthly budget (e.g., **2 846,83 zl of 20 000,00 zl**)

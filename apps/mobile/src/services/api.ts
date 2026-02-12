@@ -725,6 +725,19 @@ class ApiClient {
     });
   }
 
+  // Gamification endpoints
+  async getGamificationProfile() {
+    return this.request<any>('/gamification/profile');
+  }
+
+  async checkAchievements() {
+    return this.request<any>('/gamification/check', { method: 'POST' });
+  }
+
+  async getAchievementDefinitions() {
+    return this.request<any[]>('/gamification/definitions');
+  }
+
   // Admin endpoints
   async getAdminDashboard(startDate?: string, endDate?: string) {
     const params = new URLSearchParams();

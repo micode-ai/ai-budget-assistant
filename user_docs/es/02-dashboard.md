@@ -23,6 +23,17 @@ Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las 
 | **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
 | **Cambio** | Abre el formulario de cambio de divisa |
 
+## Widget de Gamificacion
+
+Debajo de las acciones rapidas, una tarjeta compacta muestra tu progreso de gamificacion:
+
+- **Nivel** -- tu nivel actual con una barra de progreso de XP hacia el siguiente nivel
+- **Racha** -- tu conteo de racha de seguimiento diario con un icono de fuego o copo de nieve
+
+Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las insignias, detalles de racha y filtros por categoria.
+
+> Consulta [Logros y Gamificacion](./13-gamification.md) para mas detalles sobre como funcionan los XP, niveles y logros.
+
 ## Tarjeta de presupuesto mensual
 
 - Muestra tu gasto actual comparado con tu presupuesto mensual (por ejemplo, **2 846,83 zl de 20 000,00 zl**)

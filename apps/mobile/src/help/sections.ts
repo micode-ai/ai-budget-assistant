@@ -22,4 +22,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '10-wallet-and-exchange', icon: 'wallet-outline', color: '#F39C12' },
   { id: '11-settings', icon: 'settings-outline', color: '#7F8C8D' },
   { id: '12-subscription', icon: 'diamond-outline', color: '#E67E22' },
+  { id: '13-gamification', icon: 'trophy-outline', color: '#F5A623' },
 ];

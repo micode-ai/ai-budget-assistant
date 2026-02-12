@@ -2070,6 +2070,106 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Геймификация
+
+Все эндпоинты геймификации требуют заголовок `X-Account-Id`.
+
+### Получить профиль геймификации
+
+```http
+GET /gamification/profile
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "totalXp": 85,
+  "level": 1,
+  "levelProgress": 85,
+  "currentStreak": 3,
+  "longestStreak": 5,
+  "achievements": [
+    {
+      "id": "uuid",
+      "achievementId": "first_expense",
+      "progress": 100,
+      "isCompleted": true,
+      "unlockedAt": "2026-02-10T12:00:00Z"
+    }
+  ],
+  "recentBadges": [
+    {
+      "id": "uuid",
+      "achievementId": "first_expense",
+      "progress": 100,
+      "isCompleted": true,
+      "unlockedAt": "2026-02-10T12:00:00Z"
+    }
+  ]
+}
+```
+
+### Проверить достижения
+
+Проверяет все правила достижений, обновляет серию и возвращает новые разблокированные значки.
+
+```http
+POST /gamification/check
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "newAchievements": ["first_expense", "streak_3"],
+  "updatedProgress": [
+    { "achievementId": "expenses_10", "progress": 30 }
+  ],
+  "streak": {
+    "currentStreak": 3,
+    "longestStreak": 5
+  },
+  "totalXp": 85,
+  "level": 1
+}
+```
+
+**Примечание:** Проверка достижений также запускается автоматически (fire-and-forget) при создании расходов, доходов или бюджетов.
+
+### Получить определения достижений
+
+Возвращает все доступные определения достижений. Аутентификация не требуется.
+
+```http
+GET /gamification/definitions
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "first_expense",
+    "i18nKey": "firstExpense",
+    "category": "milestone",
+    "icon": "🌟",
+    "rarity": "common",
+    "threshold": 1,
+    "xpReward": 10
+  }
+]
+```
+
+**Категории достижений:** `budget`, `tracking`, `streak`, `milestone`, `savings`
+
+**Уровни редкости:** `common` (обычный), `rare` (редкий), `epic` (эпический), `legendary` (легендарный)
+
+**Система XP:** 100 XP за уровень. XP за достижения — от 10 (обычное) до 500 (легендарное).
+
+---
+
 ## Ответы с ошибками
 
 ### Формат ошибки

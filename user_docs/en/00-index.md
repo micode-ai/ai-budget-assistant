@@ -8,6 +8,7 @@
 - **Multi-Currency Wallet** — track balances in USD, EUR, PLN, GBP, UAH, and RUB with live exchange rates
 - **AI Chat** — ask questions about your finances and get personalized advice
 - **Spending Stories** — AI-generated narrative reports with achievements and insights
+- **Gamification** — achievements, daily streaks, XP/levels, and badge collection to keep you motivated
 - **Budgets** — set spending limits with real-time progress tracking and alerts
 - **Interactive Analytics** — charts with drill-down, category breakdowns, and trend analysis
 - **Multiple Accounts** — Personal, Shared, and Business accounts with role-based access (Owner, Editor, Viewer)
@@ -28,6 +29,7 @@
 10. [Wallet & Currency Exchange](./10-wallet-and-exchange.md) — multi-currency management
 11. [Settings](./11-settings.md) — profile, appearance, and preferences
 12. [Subscription Plans](./12-subscription.md) — Free, Pro, and Business plans
+13. [Achievements & Gamification](./13-gamification.md) — streaks, XP, levels, and badges
 
 ## Supported Currencies
 

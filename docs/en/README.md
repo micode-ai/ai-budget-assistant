@@ -29,6 +29,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **AI Insights** - GPT-4 analyzes spending patterns and generates visual insight cards with actionable recommendations (Pro)
 - **Spending Story** - AI-generated narrative dashboards summarizing your financial period with interactive blocks (Pro)
 - **Home Screen Widgets** - Android widgets in 3 sizes showing spending totals, weekly charts, and budget progress
+- **Gamification** - Achievements, daily streaks, XP/levels, and virtual badges to encourage consistent tracking habits
 - **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits
 - **Admin Dashboard** - System stats, subscription breakdown, and per-user AI usage monitoring
 - **Offline-First** - Full functionality without internet connection
@@ -68,6 +69,7 @@ ai-budget-assistant/
 │           │   ├── interactive-charts/ # Drill-down charts
 │           │   ├── insights/    # AI insight cards
 │           │   ├── story/       # Story block components
+│           │   ├── gamification/ # Achievement badges, streaks, levels
 │           │   ├── widgets/     # Android home screen widgets
 │           │   ├── TagPicker.tsx   # Tag selection component
 │           │   ├── TagChip.tsx     # Tag display chip
@@ -77,6 +79,7 @@ ai-budget-assistant/
 │           ├── services/    # API client
 │           ├── stores/      # Zustand stores
 │           │   ├── insightsStore.ts
+│           │   ├── gamificationStore.ts
 │           │   ├── tagStore.ts
 │           │   ├── projectStore.ts
 │           │   └── categoryStore.ts

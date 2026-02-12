@@ -102,6 +102,7 @@ app/
 │   └── set-balance.tsx    # Set wallet balance
 ├── analytics/
 │   └── drill-down.tsx    # Chart drill-down explorer
+├── achievements.tsx       # Achievements & gamification
 ├── story.tsx              # AI spending story dashboard
 ├── admin.tsx              # Admin dashboard
 ├── settings.tsx           # User settings
@@ -126,6 +127,7 @@ Zustand stores manage application state:
 | `useTagStore` | Tag CRUD, expense/income tag associations, AI suggestions |
 | `useProjectStore` | Project CRUD, expense/income assignment, archiving |
 | `useCategoryStore` | Category management, loading from DB |
+| `useGamificationStore` | Achievements, streaks, XP/levels, new badge modal |
 
 ### Local Database Schema
 
@@ -404,6 +406,12 @@ src/
 │   ├── sync/                    # Data synchronization
 │   │   ├── sync.controller.ts
 │   │   └── sync.service.ts
+│   ├── gamification/              # Achievements & streaks
+│   │   ├── gamification.module.ts
+│   │   ├── gamification.controller.ts
+│   │   ├── gamification.service.ts
+│   │   ├── streak.service.ts
+│   │   └── achievement-definitions.ts
 │   ├── notifications/           # Push notifications (Expo)
 │   │   ├── notifications.service.ts
 │   │   └── shared-activity.service.ts
@@ -1064,6 +1072,37 @@ The Insights module provides:
 
 1. **Spending Anomalies**: Compares current month's category spending against 3-month average. Categories with >30% increase are flagged.
 2. **Budget Predictions**: Forecasts budget exhaustion dates based on daily burn rate and projects end-of-period totals.
+
+## Gamification
+
+The gamification system encourages consistent financial tracking through achievements, streaks, and XP progression.
+
+### Components
+
+- **Achievement Definitions**: 14 static achievements defined in code (not DB), categorized as milestone, budget, streak, and savings
+- **XP System**: 100 XP per level, achievement XP ranges from 10 (common) to 500 (legendary)
+- **Daily Streak**: Tracks consecutive days of expense/income activity using user's timezone
+- **Rarity Tiers**: common, rare, epic, legendary — with distinct visual styling
+
+### Architecture
+
+- **Server-side computation**: Achievements are evaluated on the API using Prisma queries, then synced to mobile SQLite cache
+- **Fire-and-forget triggers**: `GamificationService.checkAchievements()` is called after expense/income/budget creation, wrapped in try/catch to never block core operations
+- **Module integration**: `GamificationModule` is imported by `ExpensesModule`, `IncomesModule`, and `BudgetsModule`
+
+### Mobile Components
+
+| Component | Purpose |
+|-----------|---------|
+| `AchievementBadge` | Single badge display with rarity colors and progress bar |
+| `StreakWidget` | Streak count with fire emoji and longest streak |
+| `LevelProgress` | XP progress bar with level indicator |
+| `NewBadgeModal` | Celebration overlay when achievement is unlocked |
+
+### Database Tables
+
+- `UserAchievement` — tracks per-user achievement progress and completion (unique on `[userId, accountId, achievementId]`)
+- `UserStreak` — tracks daily tracking streak per user/account (unique on `[userId, accountId, streakType]`)
 
 ## Security
 

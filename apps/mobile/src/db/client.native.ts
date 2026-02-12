@@ -323,6 +323,29 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Gamification tables
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS user_achievements (
+        id TEXT PRIMARY KEY,
+        achievement_id TEXT NOT NULL,
+        progress INTEGER DEFAULT 0,
+        is_completed INTEGER DEFAULT 0,
+        unlocked_at INTEGER,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS user_streaks (
+        id TEXT PRIMARY KEY,
+        streak_type TEXT NOT NULL DEFAULT 'daily_tracking',
+        current_streak INTEGER DEFAULT 0,
+        longest_streak INTEGER DEFAULT 0,
+        last_activity_date INTEGER,
+        streak_start_date INTEGER,
+        updated_at INTEGER NOT NULL
+      );
+    `);
+
     // Add receipt_image column to expenses (migration for existing DBs)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image TEXT`);
@@ -406,6 +429,8 @@ export async function initializeDatabase(): Promise<void> {
       // Splits indexes
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_expense ON expense_category_splits(expense_id)',
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_category ON expense_category_splits(category_id)',
+      // Gamification indexes
+      'CREATE INDEX IF NOT EXISTS idx_user_achievements_achievement ON user_achievements(achievement_id)',
     ];
 
     for (const indexSql of indexes) {

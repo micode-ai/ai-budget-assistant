@@ -23,6 +23,17 @@ Vier Schnellaktions-Schaltflachen unterhalb der Begrussung geben dir schnellen Z
 | **Beleg scannen** | Offnet die Kamera zum Fotografieren eines Belegs fur KI-Extraktion |
 | **Umtausch** | Offnet das Wahrungsumtausch-Formular |
 
+## Gamification-Widget
+
+Unterhalb der Schnellaktionen zeigt eine kompakte Gamification-Karte deinen Fortschritt:
+
+- **Level** -- dein aktuelles Level mit einem XP-Fortschrittsbalken (z.B. **Level 4 -- 60/100 XP**)
+- **Serie** -- deine aktuelle tagliche Erfassungsserie mit Flammen-Emoji (z.B. **5 Tage**)
+
+Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo du alle Abzeichen, Kategorien und deinen Gesamtfortschritt einsehen kannst.
+
+> **Hinweis:** Das Widget erscheint automatisch fur alle Nutzer -- keine Einrichtung erforderlich.
+
 ## Monatsbudget-Karte
 
 - Zeigt deine aktuellen Ausgaben im Verhaltnis zu deinem Monatsbudget (z.B. **2 846,83 zl von 20 000,00 zl**)

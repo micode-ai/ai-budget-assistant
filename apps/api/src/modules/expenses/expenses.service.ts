@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
+import { GamificationService } from '../gamification/gamification.service';
 
 @Injectable()
 export class ExpensesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gamificationService: GamificationService,
+  ) {}
 
   /**
    * Resolve categoryId: if it's a valid UUID, use as-is.
@@ -52,7 +56,7 @@ export class ExpensesService {
   }
 
   async create(accountId: string, userId: string, dto: CreateExpenseDto) {
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
@@ -187,6 +191,11 @@ export class ExpensesService {
         },
       });
     });
+
+    // Fire-and-forget gamification check
+    this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+
+    return result;
   }
 
   async findAll(accountId: string, filters: ExpenseFiltersDto) {

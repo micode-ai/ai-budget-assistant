@@ -75,6 +75,8 @@ model User {
   currencyExchanges CurrencyExchange[]
   subscription      Subscription?
   usageLogs         UsageLog[]
+  achievements      UserAchievement[]
+  streaks           UserStreak[]
 
   @@map("users")
 }
@@ -106,6 +108,8 @@ model Account {
   spendingStories   SpendingStory[]
   tags              Tag[]
   projects          Project[]
+  achievements      UserAchievement[]
+  streaks           UserStreak[]
 
   @@map("accounts")
 }
@@ -655,4 +659,45 @@ model ExpenseCategorySplit {
   @@index([expenseId])
   @@index([categoryId])
   @@map("expense_category_splits")
+}
+
+// ---- Gamification ----
+
+model UserAchievement {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  accountId     String    @map("account_id")
+  achievementId String    @map("achievement_id")
+  progress      Int       @default(0)
+  isCompleted   Boolean   @default(false) @map("is_completed")
+  unlockedAt    DateTime? @map("unlocked_at")
+  notified      Boolean   @default(false)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId, achievementId])
+  @@index([accountId, userId])
+  @@map("user_achievements")
+}
+
+model UserStreak {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  accountId        String   @map("account_id")
+  streakType       String   @default("daily_tracking") @map("streak_type")
+  currentStreak    Int      @default(0) @map("current_streak")
+  longestStreak    Int      @default(0) @map("longest_streak")
+  lastActivityDate DateTime @map("last_activity_date") @db.Date
+  streakStartDate  DateTime @map("streak_start_date") @db.Date
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId, streakType])
+  @@map("user_streaks")
 }

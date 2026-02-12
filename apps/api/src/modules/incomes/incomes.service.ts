@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
+import { GamificationService } from '../gamification/gamification.service';
 
 @Injectable()
 export class IncomesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gamificationService: GamificationService,
+  ) {}
 
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
     if (!categoryId) return null;
@@ -47,7 +51,7 @@ export class IncomesService {
   }
 
   async create(accountId: string, userId: string, dto: CreateIncomeDto) {
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
 
       const incomeData = {
@@ -130,6 +134,11 @@ export class IncomesService {
         },
       });
     });
+
+    // Fire-and-forget gamification check
+    this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+
+    return result;
   }
 
   async findAll(accountId: string, filters: IncomeFiltersDto) {

@@ -8,6 +8,7 @@
 - **Billetera multidivisa** -- rastrea saldos en USD, EUR, PLN, GBP, UAH y RUB con tasas de cambio en tiempo real
 - **Chat IA** -- haz preguntas sobre tus finanzas y recibe consejos personalizados
 - **Historia de gastos** -- informes narrativos generados por IA con logros e informacion relevante
+- **Gamificacion** -- logros, rachas diarias, XP/niveles y coleccion de insignias para mantenerte motivado
 - **Presupuestos** -- establece limites de gasto con seguimiento en tiempo real y alertas
 - **Analisis interactivo** -- graficos con desglose detallado, por categoria y analisis de tendencias
 - **Multiples cuentas** -- cuentas Personal, Compartida y Empresa con control de acceso basado en roles (Propietario, Editor, Observador)
@@ -28,6 +29,7 @@
 10. [Billetera y Cambio de divisa](./10-wallet-and-exchange.md) -- gestion multidivisa
 11. [Ajustes](./11-settings.md) -- perfil, apariencia y preferencias
 12. [Planes de suscripcion](./12-subscription.md) -- planes Gratuito, Pro y Business
+13. [Logros y Gamificacion](./13-gamification.md) -- rachas, XP, niveles e insignias
 
 ## Monedas compatibles
 

@@ -15,6 +15,7 @@ import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
+import { useGamificationStore } from './gamificationStore';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -278,6 +279,9 @@ export const useIncomeStore = create<IncomeState>()(
       }).catch((e) =>
         console.error('Failed to sync income to server:', e),
       );
+
+      // Fire-and-forget gamification check
+      try { useGamificationStore.getState().checkAchievements(); } catch {}
 
       return newIncome;
     },
