@@ -1,6 +1,6 @@
 # Entrada de voz y Escaneo de recibos
 
-> Deja que la IA haga el trabajo. Describe tu gasto de forma natural o fotografa un recibo -- la aplicacion extrae el importe, la descripcion, el comercio y la categoria automaticamente.
+> Deja que la IA haga el trabajo. Describe tu gasto de forma natural o fotografa un recibo — la aplicacion extrae el importe, la descripcion, el comercio y la categoria automaticamente.
 
 ## Gasto por voz
 
@@ -19,11 +19,11 @@
 
 Despues del procesamiento, veras una confirmacion con los datos extraidos:
 
-- **Importe** -- extraido de tu voz (editable)
-- **Descripcion** -- para que fue el gasto (editable)
-- **Comercio** -- donde gastaste (editable)
-- **Categoria** -- asignada automaticamente (editable)
-- Indicador de **Confianza** -- **Alta confianza** o **Confianza media**
+- **Importe** — extraido de tu voz (editable)
+- **Descripcion** — para que fue el gasto (editable)
+- **Comercio** — donde gastaste (editable)
+- **Categoria** — asignada automaticamente (editable)
+- Indicador de **Confianza** — **Alta confianza** o **Confianza media**
 
 Revisa los detalles, realiza las correcciones necesarias y luego:
 - Toca **Guardar gasto** para confirmar y guardar
@@ -36,7 +36,7 @@ Despues de guardar, puedes tocar **Agregar otro** para grabar un nuevo gasto por
 - Habla con claridad e incluye tanto el articulo/descripcion como el importe
 - Incluye el nombre del comercio si es relevante (por ejemplo, "Almuerzo en McDonald's, doce euros")
 - Especifica la moneda si es diferente a la predeterminada
-- Mantenlo simple -- un gasto por grabacion
+- Mantenlo simple — un gasto por grabacion
 
 ## Escanear recibo
 
@@ -46,8 +46,8 @@ Despues de guardar, puedes tocar **Agregar otro** para grabar un nuevo gasto por
 
 1. Toca **Escanear recibo** desde las acciones rapidas del Panel, o toca **+** en la pantalla de Transacciones y selecciona **Escanear recibo**
 2. Veras dos opciones:
-   - **Tomar foto** -- abre tu camara para fotografiar el recibo
-   - **Elegir de la galeria** -- selecciona una foto existente
+   - **Tomar foto** — abre tu camara para fotografiar el recibo
+   - **Elegir de la galeria** — selecciona una foto existente
 3. Opcionalmente, introduce **Instrucciones adicionales para la IA** (por ejemplo, "Dividir a partes iguales entre dos personas", "Ignorar la propina")
 4. La aplicacion analiza la imagen del recibo y extrae los datos
 
@@ -55,15 +55,15 @@ Despues de guardar, puedes tocar **Agregar otro** para grabar un nuevo gasto por
 
 Despues del analisis de la IA, veras:
 
-- **Importe total** -- extraido del recibo (editable)
-- **Descripcion** -- resumen generado (editable)
-- **Comercio** -- nombre de la tienda/restaurante (editable)
-- **Categoria** -- asignada automaticamente (editable)
-- **Fecha** -- del recibo (editable)
-- **Articulos** -- articulos individuales con cantidades y precios (si se detectan)
-- **Descuento** -- importe del descuento (si esta presente en el recibo)
-- Indicador de **Confianza** -- **Alta confianza** o **Confianza media**
-- Interruptor **Guardar imagen del recibo** -- mantener la foto adjunta al gasto
+- **Importe total** — extraido del recibo (editable)
+- **Descripcion** — resumen generado (editable)
+- **Comercio** — nombre de la tienda/restaurante (editable)
+- **Categoria** — asignada automaticamente (editable)
+- **Fecha** — del recibo (editable)
+- **Articulos** — articulos individuales con cantidades y precios (si se detectan)
+- **Descuento** — importe del descuento (si esta presente en el recibo)
+- Indicador de **Confianza** — **Alta confianza** o **Confianza media**
+- Interruptor **Guardar imagen del recibo** — mantener la foto adjunta al gasto
 
 Revisa y corrige cualquier detalle, luego:
 - Toca **Guardar gasto** para confirmar
@@ -71,7 +71,7 @@ Revisa y corrige cualquier detalle, luego:
 
 ### Consejos para mejores resultados
 
-- Fotografa con buena iluminacion -- evita sombras y reflejos
+- Fotografa con buena iluminacion — evita sombras y reflejos
 - Asegurate de que el recibo completo sea visible y este plano
 - Mantene la camara estable para evitar desenfoque
 - Usa **Instrucciones adicionales para la IA** para un tratamiento especial (por ejemplo, "Esto esta en EUR", "Ignorar el primer articulo")

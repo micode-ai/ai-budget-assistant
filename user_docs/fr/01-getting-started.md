@@ -58,8 +58,8 @@ L'application comporte 5 onglets principaux en bas de l'ecran :
 | **Chat IA** | Poser des questions sur vos finances |
 
 Navigation supplementaire :
-- **Changer de compte** -- appuyez sur le nom du compte (en haut a gauche) pour basculer entre les comptes
-- **Parametres** -- appuyez sur l'icone d'engrenage (en haut a droite) pour acceder aux parametres
+- **Changer de compte** — appuyez sur le nom du compte (en haut a gauche) pour basculer entre les comptes
+- **Parametres** — appuyez sur l'icone d'engrenage (en haut a droite) pour acceder aux parametres
 
 ---
 

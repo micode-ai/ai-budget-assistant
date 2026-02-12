@@ -70,18 +70,18 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 1. Ouvrez les Parametres du compte concerne
 2. Appuyez sur l'**icone d'invitation** (icone personne+ en haut a droite de la section Membres)
 3. Choisissez la methode d'invitation :
-   - **Par e-mail** -- entrez l'adresse e-mail de la personne, selectionnez son role (Editeur ou Observateur), appuyez sur **Envoyer l'invitation**
-   - **Par lien** -- un code est genere que vous pouvez partager. Appuyez pour copier ou partager via des applications de messagerie
+   - **Par e-mail** — entrez l'adresse e-mail de la personne, selectionnez son role (Editeur ou Observateur), appuyez sur **Envoyer l'invitation**
+   - **Par lien** — un code est genere que vous pouvez partager. Appuyez pour copier ou partager via des applications de messagerie
 
 ### Gerer les membres (Proprietaire uniquement)
 
-- **Changer le role** -- appuyez sur l'icone de changement de role a cote d'un membre pour attribuer un nouveau role
-- **Supprimer un membre** -- appuyez sur l'icone de suppression pour retirer un membre (avec confirmation)
+- **Changer le role** — appuyez sur l'icone de changement de role a cote d'un membre pour attribuer un nouveau role
+- **Supprimer un membre** — appuyez sur l'icone de suppression pour retirer un membre (avec confirmation)
 
 ### Invitations en attente
 
 - Consultez les invitations qui n'ont pas encore ete acceptees
-- **Annuler l'invitation** -- revoquer une invitation en attente
+- **Annuler l'invitation** — revoquer une invitation en attente
 
 ## Roles et permissions
 
@@ -96,9 +96,9 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 | Supprimer le compte | Oui | Non | Non |
 
 ### Description des roles
-- **Proprietaire** -- controle total sur le compte, peut gerer les membres et les parametres
-- **Editeur** -- peut ajouter et modifier les depenses, revenus et budgets
-- **Observateur** -- peut uniquement consulter les donnees (acces en lecture seule)
+- **Proprietaire** — controle total sur le compte, peut gerer les membres et les parametres
+- **Editeur** — peut ajouter et modifier les depenses, revenus et budgets
+- **Observateur** — peut uniquement consulter les donnees (acces en lecture seule)
 
 ## Supprimer un compte
 
@@ -113,7 +113,7 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 Si vous etes membre (pas le Proprietaire) d'un compte partage :
 1. Ouvrez les Parametres du compte
 2. Appuyez sur **Quitter le compte**
-3. Confirmez -- vous serez retire du compte
+3. Confirmez — vous serez retire du compte
 
 ## FAQ
 

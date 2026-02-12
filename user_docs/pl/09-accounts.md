@@ -70,18 +70,18 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 1. Otworz Ustawienia konta dla danego konta
 2. Dotknij **ikone zaproszenia** (ikona osoba+ w prawym gornym rogu sekcji Czlonkowie)
 3. Wybierz metode zaproszenia:
-   - **Przez email** -- wprowadz adres e-mail osoby, wybierz jej role (Edytor lub Obserwator), dotknij **Wyslij zaproszenie**
-   - **Przez link** -- generowany jest kod, ktory mozesz udostepnic. Dotknij, aby skopiowac lub udostepnic przez komunikatory
+   - **Przez email** — wprowadz adres e-mail osoby, wybierz jej role (Edytor lub Obserwator), dotknij **Wyslij zaproszenie**
+   - **Przez link** — generowany jest kod, ktory mozesz udostepnic. Dotknij, aby skopiowac lub udostepnic przez komunikatory
 
 ### Zarzadzanie czlonkami (tylko Wlasciciel)
 
-- **Zmien role** -- dotknij ikone zmiany roli obok czlonka, aby przypisac nowa role
-- **Usun czlonka** -- dotknij ikone usuwania, aby usunac czlonka (z potwierdzeniem)
+- **Zmien role** — dotknij ikone zmiany roli obok czlonka, aby przypisac nowa role
+- **Usun czlonka** — dotknij ikone usuwania, aby usunac czlonka (z potwierdzeniem)
 
 ### Oczekujace zaproszenia
 
 - Przegladaj zaproszenia, ktore nie zostaly jeszcze zaakceptowane
-- **Anuluj zaproszenie** -- cofnij oczekujace zaproszenie
+- **Anuluj zaproszenie** — cofnij oczekujace zaproszenie
 
 ## Role i uprawnienia
 
@@ -96,9 +96,9 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 | Usuwanie konta | Tak | Nie | Nie |
 
 ### Opisy rol
-- **Wlasciciel** -- pelna kontrola nad kontem, moze zarzadzac czlonkami i ustawieniami
-- **Edytor** -- moze dodawac i edytowac wydatki, przychody i budzety
-- **Obserwator** -- moze tylko przegladac dane (dostep tylko do odczytu)
+- **Wlasciciel** — pelna kontrola nad kontem, moze zarzadzac czlonkami i ustawieniami
+- **Edytor** — moze dodawac i edytowac wydatki, przychody i budzety
+- **Obserwator** — moze tylko przegladac dane (dostep tylko do odczytu)
 
 ## Usuwanie konta
 
@@ -113,7 +113,7 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 Jezeli jestes czlonkiem (nie Wlascicielem) wspolnego konta:
 1. Otworz Ustawienia konta
 2. Dotknij **Opusc konto**
-3. Potwierdz -- zostaniesz usuniety z konta
+3. Potwierdz — zostaniesz usuniety z konta
 
 ## FAQ
 

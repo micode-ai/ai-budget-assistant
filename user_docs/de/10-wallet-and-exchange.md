@@ -21,8 +21,17 @@ Fur jede Wahrung siehst du:
 | **Gesamtausgaben** | Summe aller Ausgaben in dieser Wahrung |
 | **Eingetauscht** | Betrag, der durch Wahrungsumtausch erhalten wurde |
 | **Umgetauscht** | Betrag, der fur Wahrungsumtausch ausgegeben wurde |
+| **Ubertragen erhalten** | Betrag, der durch Uberweisungen von anderen Konten erhalten wurde |
+| **Ubertragen gesendet** | Betrag, der per Uberweisung an andere Konten gesendet wurde |
+| **Gesamteinkommen** | Summe aller Einkommen in dieser Wahrung |
 
-Die Formel: **Aktueller Saldo = Anfangssaldo - Gesamtausgaben + Gesamteinkommen + Eingetauscht - Umgetauscht**
+Die Formel: **Aktueller Saldo = Anfangssaldo + Gesamteinkommen - Gesamtausgaben + Eingetauscht - Umgetauscht + Ubertragen erhalten - Ubertragen gesendet**
+
+## Gesamtsaldo
+
+Wenn du Salden in mehreren Wahrungen hast, zeigt die App einen **Gesamtsaldo** an, der alle Wahrungssalden in deine in den Einstellungen festgelegte Hauptwahrung umrechnet. So erhaltst du einen schnellen Uberblick uber dein gesamtes Vermogen, ohne manuell zwischen Wahrungen rechnen zu mussen.
+
+Der Gesamtsaldo wird auf der Ubersicht und in der Geldborse-Ansicht angezeigt und aktualisiert sich automatisch mit den aktuellen Wechselkursen.
 
 ## Anfangssaldo festlegen
 
@@ -72,6 +81,29 @@ Unterhalb des Umtauschformulars findest du eine Liste deiner letzten Wahrungsumt
 - Datum
 - Notizen (falls hinzugefugt)
 
+## Uberweisungen zwischen Konten
+
+Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberweisungen verschieben Geld zwischen Konten, nicht zwischen Wahrungen.
+
+### Schritt fur Schritt
+
+1. Wahle das **Von-Konto** — das Konto, von dem das Geld abgebucht wird
+2. Wahle das **An-Konto** — das Konto, auf das das Geld gutgeschrieben wird
+3. Wahle die **Wahrung** der Uberweisung
+4. Gib den **Betrag** ein
+5. Falls die Konten unterschiedliche Wahrungen verwenden, wird ein **Wechselkurs** angezeigt, den du anpassen kannst
+6. Fuge optionale **Notizen** hinzu (z.B. "Monatsbudget" oder "Ruckzahlung")
+7. Tippe auf **Ubertragen**, um abzuschliessen
+
+### Letzte Uberweisungen
+
+Unterhalb des Uberweisungsformulars findest du eine Liste deiner letzten Uberweisungen mit:
+- Von-Konto und An-Konto
+- Betrag und Wahrung
+- Wechselkurs (falls Wahrungen unterschiedlich)
+- Datum
+- Notizen (falls hinzugefugt)
+
 ## Unterstutzte Wahrungen
 
 | Code | Wahrung |
@@ -93,6 +125,12 @@ Unterhalb des Umtauschformulars findest du eine Liste deiner letzten Wahrungsumt
 
 - **F: Zahlt ein Wahrungsumtausch als Ausgabe?**
   **A:** Nein. Wahrungsumtausche sind getrennt von Ausgaben — sie verschieben Geld zwischen Wahrungsgelborsen, ohne deine Ausgabensummen zu beeinflussen.
+
+- **F: Was ist der Unterschied zwischen einer Uberweisung und einem Umtausch?**
+  **A:** Ein **Umtausch** verschiebt Geld zwischen verschiedenen Wahrungen innerhalb desselben Kontos (z.B. USD in EUR). Eine **Uberweisung** verschiebt Geld zwischen verschiedenen Konten (z.B. Geschaftskonto auf Privatkonto), unabhangig von der Wahrung.
+
+- **F: Beeinflusst eine Uberweisung meinen Geldborsensaldo?**
+  **A:** Ja. Beim sendenden Konto wird der Saldo um den uberwiesenen Betrag reduziert ("Ubertragen gesendet"), beim empfangenden Konto wird er entsprechend erhoht ("Ubertragen erhalten"). Der Gesamtsaldo uber alle Konten bleibt gleich.
 
 ---
 

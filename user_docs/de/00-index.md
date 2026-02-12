@@ -8,7 +8,7 @@
 - **Multi-Wahrung Geldborse** — Salden in USD, EUR, PLN, GBP, UAH und RUB mit aktuellen Wechselkursen verfolgen
 - **KI-Chat** — Fragen zu deinen Finanzen stellen und personalisierte Beratung erhalten
 - **Ausgabengeschichte** — KI-generierte narrative Berichte mit Erfolgen und Einblicken
-- **Gamification** -- Erfolge, tagliche Serien, XP/Level und Abzeichen-Sammlung zur Motivation
+- **Gamification** — Erfolge, tagliche Serien, XP/Level und Abzeichen-Sammlung zur Motivation
 - **Budgets** — Ausgabenlimits mit Echtzeit-Fortschrittsverfolgung und Warnungen festlegen
 - **Interaktive Analysen** — Diagramme mit Drill-Down, Kategorieaufschlusselungen und Trendanalyse
 - **Mehrere Konten** — Personlich, Gemeinsam und Geschaftlich mit rollenbasierter Zugriffskontrolle (Eigentumer, Bearbeiter, Betrachter)
@@ -29,7 +29,7 @@
 10. [Geldborse & Umtausch](./10-wallet-and-exchange.md) — Multi-Wahrungsverwaltung
 11. [Einstellungen](./11-settings.md) — Profil, Erscheinungsbild und Praferenzen
 12. [Abonnement-Plane](./12-subscription.md) — Free, Pro und Business Plane
-13. [Erfolge & Gamification](./13-gamification.md) -- Serien, XP, Level und Abzeichen
+13. [Erfolge & Gamification](./13-gamification.md) — Serien, XP, Level und Abzeichen
 
 ## Unterstutzte Wahrungen
 

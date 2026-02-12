@@ -17,8 +17,8 @@ La funcion **Historia de gastos** crea un informe personalizado en estilo narrat
 
 En la parte superior de la pantalla de Historia de gastos:
 
-- **Semana** -- historia sobre las finanzas de la semana actual
-- **Mes** -- historia sobre las finanzas del mes actual
+- **Semana** — historia sobre las finanzas de la semana actual
+- **Mes** — historia sobre las finanzas del mes actual
 
 Toca para alternar entre vistas. El contenido de la historia se actualiza en consecuencia.
 
@@ -49,14 +49,14 @@ La IA genera varios tipos de bloques de informacion:
 
 ## Acciones
 
-- **Regenerar** -- toca para solicitar una historia recien generada con datos actualizados
-- **Compartir** -- comparte tu historia de gastos con otros
-- Marca de tiempo de **Ultima actualizacion** -- muestra cuando se genero la historia por ultima vez
+- **Regenerar** — toca para solicitar una historia recien generada con datos actualizados
+- **Compartir** — comparte tu historia de gastos con otros
+- Marca de tiempo de **Ultima actualizacion** — muestra cuando se genero la historia por ultima vez
 
 ## Requisitos
 
-- Se requiere **suscripcion Pro o Business** -- los usuarios del plan Gratuito ven un mensaje para mejorar
-- **Datos de transacciones suficientes** -- la aplicacion necesita suficientes gastos para generar informacion significativa. Si no tienes suficientes datos, veras: "No hay suficientes datos para generar una historia todavia."
+- Se requiere **suscripcion Pro o Business** — los usuarios del plan Gratuito ven un mensaje para mejorar
+- **Datos de transacciones suficientes** — la aplicacion necesita suficientes gastos para generar informacion significativa. Si no tienes suficientes datos, veras: "No hay suficientes datos para generar una historia todavia."
 - Cada generacion de historia utiliza solicitudes IA de tu cuota mensual
 
 ## Preguntas frecuentes

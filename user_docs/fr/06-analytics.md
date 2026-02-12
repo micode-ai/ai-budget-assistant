@@ -17,19 +17,19 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 
 ## Cartes de synthese
 
-- **Total depense** -- vos depenses totales pour la periode selectionnee
-- **Comparaison de tendance** -- "plus que la semaine/le mois/l'annee derniere" ou "moins que la semaine/le mois/l'annee derniere" avec pourcentage
-- **Moy. par jour** -- moyenne des depenses quotidiennes
+- **Total depense** — vos depenses totales pour la periode selectionnee
+- **Comparaison de tendance** — "plus que la semaine/le mois/l'annee derniere" ou "moins que la semaine/le mois/l'annee derniere" avec pourcentage
+- **Moy. par jour** — moyenne des depenses quotidiennes
 
 ## Carousel d'aperçus IA
 
 Un carousel horizontal defilable d'aperçus generes par l'IA (plan Pro requis) :
 
-- **Anomalies de depenses** -- depenses inhabituelles detectees (par ex. "78 % de plus que d'habitude en Transport")
-- **Previsions budgetaires** -- quand votre budget devrait etre epuise
-- **Opportunites d'economies** -- suggestions pour reduire les depenses
-- **Comparaisons de categories** -- comment vos depenses se comparent entre les categories
-- **Changements de tendance** -- evolutions significatives dans les habitudes de depenses
+- **Anomalies de depenses** — depenses inhabituelles detectees (par ex. "78 % de plus que d'habitude en Transport")
+- **Previsions budgetaires** — quand votre budget devrait etre epuise
+- **Opportunites d'economies** — suggestions pour reduire les depenses
+- **Comparaisons de categories** — comment vos depenses se comparent entre les categories
+- **Changements de tendance** — evolutions significatives dans les habitudes de depenses
 
 Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (jaune) ou information (bleu).
 
@@ -61,18 +61,18 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 ### Par etiquettes / Par projets
 
-- **Repartition par etiquettes** -- depenses groupees par vos etiquettes personnalisees
-- **Comparaison par projets** -- depenses groupees par projets
+- **Repartition par etiquettes** — depenses groupees par vos etiquettes personnalisees
+- **Comparaison par projets** — depenses groupees par projets
 - Aide a suivre les depenses thematiques (par ex. toutes les depenses #cafe ou les couts du projet "Vacances")
 
 ## Exploration detaillee
 
 Appuyez sur n'importe quel element de graphique pour explorer plus en profondeur :
 
-1. Vue **Annee** -- appuyez sur une barre de mois pour zoomer sur ce mois
-2. Vue **Mois** -- appuyez sur une semaine pour zoomer sur cette semaine
-3. Vue **Semaine** -- appuyez sur un jour pour voir les transactions quotidiennes
-4. Vue **Jour** -- voir les transactions individuelles
+1. Vue **Annee** — appuyez sur une barre de mois pour zoomer sur ce mois
+2. Vue **Mois** — appuyez sur une semaine pour zoomer sur cette semaine
+3. Vue **Semaine** — appuyez sur un jour pour voir les transactions quotidiennes
+4. Vue **Jour** — voir les transactions individuelles
 
 Utilisez le bouton **Retour** pour remonter dans les niveaux.
 
@@ -80,10 +80,10 @@ Utilisez le bouton **Retour** pour remonter dans les niveaux.
 
 Sous les graphiques, vous trouverez des aperçus rapides sous forme de texte :
 
-- **Categorie principale** -- votre categorie de depenses la plus elevee sur cette periode
-- **Jour de depense maximal** -- le jour avec le plus de depenses
-- **Conseil de budget quotidien** -- depense quotidienne recommandee pour rester dans les limites
-- **Economies sur les recus** -- montant total economise grace aux remises
+- **Categorie principale** — votre categorie de depenses la plus elevee sur cette periode
+- **Jour de depense maximal** — le jour avec le plus de depenses
+- **Conseil de budget quotidien** — depense quotidienne recommandee pour rester dans les limites
+- **Economies sur les recus** — montant total economise grace aux remises
 
 ## Articles de recus les plus frequents
 

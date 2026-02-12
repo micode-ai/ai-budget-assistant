@@ -1,6 +1,6 @@
 # Czat AI
 
-> Zadawaj pytania o swoje finanse w jezyku naturalnym. Otrzymuj analize wydatkow, porady budzetowe i spersonalizowane wskazowki oszczednosciowe -- wszystko z pomoca AI.
+> Zadawaj pytania o swoje finanse w jezyku naturalnym. Otrzymuj analize wydatkow, porady budzetowe i spersonalizowane wskazowki oszczednosciowe — wszystko z pomoca AI.
 
 ## Przeglad
 
@@ -50,9 +50,9 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 
 ## Funkcje czatu
 
-- **Historia rozmow** -- poprzednie wiadomosci sa zachowywane podczas sesji
-- **Wskaznik pisania** -- wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
-- **Obsluga bledow** -- jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
+- **Historia rozmow** — poprzednie wiadomosci sa zachowywane podczas sesji
+- **Wskaznik pisania** — wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
+- **Obsluga bledow** — jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
 
 ## Limity zapytan AI
 

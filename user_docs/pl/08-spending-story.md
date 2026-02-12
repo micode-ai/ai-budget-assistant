@@ -17,8 +17,8 @@ Funkcja **Historia wydatkow** tworzy spersonalizowany, narracyjny raport z Twoje
 
 U gory ekranu Historii wydatkow:
 
-- **Tydzien** -- historia o finansach biezacego tygodnia
-- **Miesiac** -- historia o finansach biezacego miesiaca
+- **Tydzien** — historia o finansach biezacego tygodnia
+- **Miesiac** — historia o finansach biezacego miesiaca
 
 Dotknij, aby przelaczac miedzy widokami. Tresc historii aktualizuje sie odpowiednio.
 
@@ -31,7 +31,7 @@ AI generuje rozne typy blokow z wnioskami:
 - Pojawia sie, gdy wydatki przekraczaja przychody
 - Przyklad: *"Twoje wydatki przekroczyly przychody o 8 346,74 PLN. To przypomnienie, aby przejrzec i dostosowac plany na nadchodzace miesiace."*
 
-### Zwyciestwo -- ponizej budzetu (Osiagniecie)
+### Zwyciestwo — ponizej budzetu (Osiagniecie)
 - Zlota karta z ikona trofeum
 - Pojawia sie, gdy zmiescilas/zmiesciels sie w limicie budzetu
 - Przyklad: *"Gratulacje! Utrzymales sie ponizej limitu budzetu calkowitego o 1 325,52 PLN. To imponujacy wynik biorac pod uwage niespodziewane wydatki w tym miesiacu."*
@@ -49,14 +49,14 @@ AI generuje rozne typy blokow z wnioskami:
 
 ## Akcje
 
-- **Odswierz** -- dotknij, aby wygenerowac nowa historie z aktualnymi danymi
-- **Udostepnij** -- udostepnij swoja historie wydatkow innym
-- Znacznik czasu **Zaktualizowano** -- pokazuje, kiedy historia byla ostatnio wygenerowana
+- **Odswierz** — dotknij, aby wygenerowac nowa historie z aktualnymi danymi
+- **Udostepnij** — udostepnij swoja historie wydatkow innym
+- Znacznik czasu **Zaktualizowano** — pokazuje, kiedy historia byla ostatnio wygenerowana
 
 ## Wymagania
 
-- Wymaga **subskrypcji Pro lub Business** -- uzytkownicy darmowego planu widza zachete do ulepszenia
-- **Wystarczajaca ilosc danych transakcyjnych** -- aplikacja potrzebuje wystarczajacej liczby wydatkow, aby wygenerowac wartosciowe wnioski. Jezeli nie masz wystarczajaco danych, zobaczysz: "Za malo danych, aby wygenerowac historie."
+- Wymaga **subskrypcji Pro lub Business** — uzytkownicy darmowego planu widza zachete do ulepszenia
+- **Wystarczajaca ilosc danych transakcyjnych** — aplikacja potrzebuje wystarczajacej liczby wydatkow, aby wygenerowac wartosciowe wnioski. Jezeli nie masz wystarczajaco danych, zobaczysz: "Za malo danych, aby wygenerowac historie."
 - Kazde generowanie historii zuzywa zapytania AI z Twojego miesiecznego limitu
 
 ## FAQ

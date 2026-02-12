@@ -10,8 +10,8 @@ Le systeme de Gamification vous recompense pour le suivi regulier de vos finance
 
 Sur votre ecran d'accueil, vous verrez une carte de gamification compacte affichant :
 
-- **Niveau** -- votre niveau actuel avec une barre de progression XP
-- **Serie** -- votre serie de suivi quotidien en cours (emoji flamme lorsque active, flocon de neige lorsque inactive)
+- **Niveau** — votre niveau actuel avec une barre de progression XP
+- **Serie** — votre serie de suivi quotidien en cours (emoji flamme lorsque active, flocon de neige lorsque inactive)
 
 Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**.
 
@@ -19,11 +19,11 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**.
 
 Les succes sont des jalons qui vous recompensent pour des comportements financiers specifiques. Chaque succes comporte :
 
-- **Icone** -- un emoji visuel representant le succes
-- **Titre et Description** -- ce que vous devez faire pour le debloquer
-- **Rarete** -- Commun, Rare, Epique ou Legendaire
-- **Recompense XP** -- points d'experience gagnes a l'accomplissement
-- **Progression** -- pourcentage d'avancement (pour les succes non encore debloques)
+- **Icone** — un emoji visuel representant le succes
+- **Titre et Description** — ce que vous devez faire pour le debloquer
+- **Rarete** — Commun, Rare, Epique ou Legendaire
+- **Recompense XP** — points d'experience gagnes a l'accomplissement
+- **Progression** — pourcentage d'avancement (pour les succes non encore debloques)
 
 ### Categories de succes
 
@@ -46,9 +46,9 @@ Les succes debloques apparaissent en couleurs vives avec une bordure corresponda
 
 Votre serie compte les jours consecutifs pendant lesquels vous avez enregistre au moins une depense ou un revenu. La serie se reinitialise si vous manquez un jour.
 
-- **Serie active** -- affichee avec un emoji flamme et le nombre de jours
-- **Serie interrompue** -- affichee avec un emoji flocon de neige et une invitation a recommencer
-- **Plus longue serie** -- votre record personnel est suivi et affiche sur l'ecran des Succes
+- **Serie active** — affichee avec un emoji flamme et le nombre de jours
+- **Serie interrompue** — affichee avec un emoji flocon de neige et une invitation a recommencer
+- **Plus longue serie** — votre record personnel est suivi et affiche sur l'ecran des Succes
 
 > **Astuce :** Ajoutez au moins une transaction chaque jour pour maintenir votre serie !
 

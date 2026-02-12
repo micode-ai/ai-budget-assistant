@@ -58,8 +58,8 @@ La aplicacion tiene 5 pestanas principales en la parte inferior de la pantalla:
 | **Chat IA** | Haz preguntas sobre tus finanzas |
 
 Navegacion adicional:
-- **Cambiar cuenta** -- toca el nombre de la cuenta (esquina superior izquierda) para cambiar entre cuentas
-- **Ajustes** -- toca el icono de engranaje (esquina superior derecha) para acceder a los ajustes
+- **Cambiar cuenta** — toca el nombre de la cuenta (esquina superior izquierda) para cambiar entre cuentas
+- **Ajustes** — toca el icono de engranaje (esquina superior derecha) para acceder a los ajustes
 
 ---
 

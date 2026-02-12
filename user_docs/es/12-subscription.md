@@ -14,32 +14,32 @@ AI Budget Assistant ofrece tres niveles de suscripcion. Cada nuevo usuario comie
 | **Cuentas** | 1 | Hasta 3 | Ilimitadas |
 | **Miembros por cuenta** | 1 | Hasta 5 | Ilimitados |
 | **Seguimiento de gastos** | Completo | Completo | Completo |
-| **Analisis predictivo** | -- | Si | Si |
-| **Deteccion de anomalias de gasto** | -- | Si | Si |
-| **Monedas ilimitadas** | -- | Si | Si |
-| **Historia de gastos** | -- | Si | Si |
-| **Informacion de IA** | -- | Si | Si |
-| **Informes avanzados** | -- | -- | Si |
+| **Analisis predictivo** | — | Si | Si |
+| **Deteccion de anomalias de gasto** | — | Si | Si |
+| **Monedas ilimitadas** | — | Si | Si |
+| **Historia de gastos** | — | Si | Si |
+| **Informacion de IA** | — | Si | Si |
+| **Informes avanzados** | — | — | Si |
 
 ## Plan Gratuito
 
 Tu plan inicial incluye:
-- **5 solicitudes IA por mes** -- usa Chat IA, Entrada de voz, Escaneo de recibos
+- **5 solicitudes IA por mes** — usa Chat IA, Entrada de voz, Escaneo de recibos
 - **1 cuenta personal**
 - **1 miembro** (tu)
-- **Seguimiento completo de gastos** -- entrada manual, categorias, etiquetas, proyectos, presupuestos, analisis
+- **Seguimiento completo de gastos** — entrada manual, categorias, etiquetas, proyectos, presupuestos, analisis
 
 ## Plan Pro
 
 Todo lo del plan Gratuito, mas:
 - **200 solicitudes IA por mes**
-- **Hasta 3 cuentas** -- gestiona finanzas personales, compartidas y de empresa
-- **Hasta 5 miembros por cuenta** -- colabora con familia o equipo
-- **Analisis predictivo** -- previsiones de presupuesto y proyecciones de gasto
-- **Deteccion de anomalias de gasto** -- alertas de IA para gastos inusuales
-- **Monedas ilimitadas** -- usa las 6 monedas sin restricciones
-- **Historia de gastos** -- informes narrativos financieros generados por IA
-- **Informacion de IA** -- recomendaciones personalizadas en Analisis
+- **Hasta 3 cuentas** — gestiona finanzas personales, compartidas y de empresa
+- **Hasta 5 miembros por cuenta** — colabora con familia o equipo
+- **Analisis predictivo** — previsiones de presupuesto y proyecciones de gasto
+- **Deteccion de anomalias de gasto** — alertas de IA para gastos inusuales
+- **Monedas ilimitadas** — usa las 6 monedas sin restricciones
+- **Historia de gastos** — informes narrativos financieros generados por IA
+- **Informacion de IA** — recomendaciones personalizadas en Analisis
 
 ### Prueba gratuita de 7 dias
 Prueba Pro gratis durante 7 dias. Cancela en cualquier momento antes de que termine la prueba para evitar cargos.
@@ -50,14 +50,14 @@ Todo lo del plan Pro, mas:
 - **Solicitudes IA ilimitadas**
 - **Cuentas ilimitadas**
 - **Miembros ilimitados**
-- **Informes avanzados** -- informes detallados y exportaciones
+- **Informes avanzados** — informes detallados y exportaciones
 
 ## Uso de IA
 
 Controla tu uso de IA desde Ajustes > Suscripcion:
 
-- **Uso este mes** -- muestra cuantas solicitudes IA has usado (por ejemplo, "3 de 5")
-- **Barra de progreso** -- indicador visual del uso
+- **Uso este mes** — muestra cuantas solicitudes IA has usado (por ejemplo, "3 de 5")
+- **Barra de progreso** — indicador visual del uso
 - Se reinicia al comienzo de cada mes
 
 ### Que cuenta como una solicitud IA:
@@ -81,7 +81,7 @@ Controla tu uso de IA desde Ajustes > Suscripcion:
 | **Activo** | La suscripcion esta activa y se factura normalmente |
 | **Prueba** | Estas en el periodo de prueba gratuita de 7 dias |
 | **Cancelado** | La suscripcion terminara en la fecha de cancelacion |
-| **Pago vencido** | El pago fallo -- actualiza tu metodo de pago |
+| **Pago vencido** | El pago fallo — actualiza tu metodo de pago |
 | **Incompleto** | El pago inicial no se completo |
 | **Pausado** | La suscripcion esta pausada temporalmente |
 

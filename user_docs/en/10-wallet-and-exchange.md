@@ -18,11 +18,18 @@ For each currency, you'll see:
 |---|---|
 | **Current Balance** | Your real-time balance in this currency |
 | **Initial Balance** | The starting balance you set |
+| **Total Income** | Sum of all income in this currency |
 | **Total Spent** | Sum of all expenses in this currency |
 | **Exchanged In** | Amount received from currency exchanges |
 | **Exchanged Out** | Amount spent on currency exchanges |
+| **Transferred In** | Amount received from other accounts |
+| **Transferred Out** | Amount sent to other accounts |
 
-The formula: **Current Balance = Initial Balance - Total Spent + Total Income + Exchanged In - Exchanged Out**
+The formula: **Current Balance = Initial Balance + Total Income - Total Spent + Exchanged In - Exchanged Out + Transferred In - Transferred Out**
+
+## Total Balance
+
+If you hold balances in multiple currencies, the wallet displays a **Total Balance** card at the top. This card converts all your currency balances into your chosen settings currency (configured in **Settings** > **Currency**) using the latest exchange rates, giving you a single combined view of your finances.
 
 ## Setting Initial Balance
 
@@ -72,6 +79,30 @@ Below the exchange form, you'll find a list of your recent currency exchanges wi
 - Date
 - Notes (if added)
 
+## Account Transfers
+
+Account transfers let you move money between different accounts — for example, from your Business account to your Personal account. This is different from a currency exchange, which converts between currencies within the same account.
+
+### Step-by-step
+
+1. Go to **Settings** > **Wallet** > **Transfer**
+2. Select the **From Account** (the source account)
+3. Select the **To Account** (the destination account)
+4. Choose the **Currency**
+5. Enter the **Amount** to transfer
+6. If the accounts use different currencies, an **Exchange Rate** field appears — adjust it if your actual rate differs
+7. Add optional **Notes** (e.g., "Monthly savings" or "Reimbursement")
+8. Tap **Transfer** to complete
+
+### Recent Transfers
+
+Below the transfer form, you'll find a list of your recent account transfers with:
+- Source and destination accounts (From → To)
+- Amount and currency
+- Exchange rate (if currencies differ)
+- Date
+- Notes (if added)
+
 ## Supported Currencies
 
 | Code | Currency |
@@ -93,6 +124,12 @@ Below the exchange form, you'll find a list of your recent currency exchanges wi
 
 - **Q: Does a currency exchange count as an expense?**
   **A:** No. Currency exchanges are separate from expenses — they move money between currency wallets without affecting your expense totals.
+
+- **Q: What's the difference between a transfer and an exchange?**
+  **A:** An exchange converts between currencies within the same account. A transfer moves money between different accounts (e.g., Business to Personal).
+
+- **Q: Does a transfer affect my wallet balance?**
+  **A:** Yes. The source account's wallet decreases and the destination account's wallet increases by the transferred amounts.
 
 ---
 

@@ -8,12 +8,12 @@ Accede a los Ajustes tocando el **icono de engranaje** en la esquina superior de
 
 ## Perfil
 
-![Ajustes -- Seccion de Perfil](../img/settings-0.jpg)
+![Ajustes — Seccion de Perfil](../img/settings-0.jpg)
 
-- **Avatar** -- muestra tus iniciales con un fondo de color
-- **Nombre** -- tu nombre para mostrar. Toca el icono de lapiz para editar
-- **Correo electronico** -- tu correo electronico de la cuenta (solo visualizacion)
-- **Zona horaria** -- toca el icono de lapiz para cambiar. Aparece un selector con busqueda con mas de 90 zonas horarias (por ejemplo, "Europe/Madrid")
+- **Avatar** — muestra tus iniciales con un fondo de color
+- **Nombre** — tu nombre para mostrar. Toca el icono de lapiz para editar
+- **Correo electronico** — tu correo electronico de la cuenta (solo visualizacion)
+- **Zona horaria** — toca el icono de lapiz para cambiar. Aparece un selector con busqueda con mas de 90 zonas horarias (por ejemplo, "Europe/Madrid")
 
 ## Moneda
 
@@ -45,47 +45,47 @@ Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 
 Elige tu tema:
 
-- **Sistema** -- sigue la configuracion de modo claro/oscuro de tu dispositivo
-- **Claro** -- siempre usa el tema claro
-- **Oscuro** -- siempre usa el tema oscuro
+- **Sistema** — sigue la configuracion de modo claro/oscuro de tu dispositivo
+- **Claro** — siempre usa el tema claro
+- **Oscuro** — siempre usa el tema oscuro
 
 ## Notificaciones
 
-![Ajustes -- Seccion de Notificaciones](../img/settings.jpg)
+![Ajustes — Seccion de Notificaciones](../img/settings.jpg)
 
 Interruptores para las preferencias de notificaciones:
 
 | Ajuste | Descripcion |
 |---|---|
-| **Notificaciones Push** | Interruptor principal -- activa o desactiva todas las notificaciones push |
+| **Notificaciones Push** | Interruptor principal — activa o desactiva todas las notificaciones push |
 | **Alertas de Presupuesto** | Recibe notificaciones cuando alcances los umbrales de presupuesto |
 | **Actividad de Cuenta Compartida** | Recibe notificaciones cuando otros agregan gastos a cuentas compartidas |
 
 ## Suscripcion
 
-- **Gestionar plan** -- toca para ver tu suscripcion actual y explorar opciones de mejora
+- **Gestionar plan** — toca para ver tu suscripcion actual y explorar opciones de mejora
 
 ## Panel de administracion
 
-- **Panel de administracion** -- visible solo para usuarios administradores. Proporciona estadisticas a nivel de sistema y monitoreo del uso de IA.
+- **Panel de administracion** — visible solo para usuarios administradores. Proporciona estadisticas a nivel de sistema y monitoreo del uso de IA.
 
 ## Billetera
 
 Acceso rapido a las funciones de billetera:
 
-- **Establecer saldo** -- establece saldos iniciales para tus monedas
-- **Saldos** -- consulta el desglose detallado de la billetera por moneda
+- **Establecer saldo** — establece saldos iniciales para tus monedas
+- **Saldos** — consulta el desglose detallado de la billetera por moneda
 
 ## Datos y sincronizacion
 
-- **Ultima sincronizacion** -- muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
-- **Sincronizar ahora** -- toca para activar manualmente una sincronizacion de datos
+- **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
+- **Sincronizar ahora** — toca para activar manualmente una sincronizacion de datos
 
 > **Nota:** La aplicacion funciona sin conexion. Tus datos se guardan en tu dispositivo y se sincronizan automaticamente cuando vuelves a estar en linea. Usa **Sincronizar ahora** para forzar una sincronizacion inmediata.
 
 ## Cerrar sesion
 
-Desplazate hasta el final de Ajustes y toca **Cerrar sesion**. Aparecera un dialogo de confirmacion -- confirma para cerrar sesion en tu cuenta.
+Desplazate hasta el final de Ajustes y toca **Cerrar sesion**. Aparecera un dialogo de confirmacion — confirma para cerrar sesion en tu cuenta.
 
 ## Preguntas frecuentes
 

@@ -7,8 +7,8 @@
 ![Lista de transacciones con gastos](../img/expenses-2.jpg)
 
 La pantalla de **Transacciones** tiene dos pestanas en la parte superior:
-- **Gastos** -- todos tus gastos, ordenados por fecha (los mas recientes primero)
-- **Ingresos** -- todas tus entradas de ingresos
+- **Gastos** — todos tus gastos, ordenados por fecha (los mas recientes primero)
+- **Ingresos** — todas tus entradas de ingresos
 
 Cada transaccion muestra:
 - Icono de categoria
@@ -34,9 +34,9 @@ Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva tr
 6. Selecciona una **Categoria** de las fichas:
    - Comida y Restaurantes, Supermercado, Transporte, Compras, Entretenimiento, Salud y Fitness, Facturas y Servicios, Educacion, Viajes, Cafe y Bebidas, Suscripciones, Ropa, Cuidado personal
    - Toca el boton **+** para crear una categoria personalizada
-7. Busca y selecciona **Etiquetas** (por ejemplo, #te, #cerveza, #supermercado) -- opcional
-8. Selecciona **Agregar a proyecto** (por ejemplo, "Vacaciones") -- opcional
-9. Toca **Dividir gasto** para dividir el gasto entre multiples categorias -- opcional
+7. Busca y selecciona **Etiquetas** (por ejemplo, #te, #cerveza, #supermercado) — opcional
+8. Selecciona **Agregar a proyecto** (por ejemplo, "Vacaciones") — opcional
+9. Toca **Dividir gasto** para dividir el gasto entre multiples categorias — opcional
 10. Toca **Guardar gasto**
 
 ### Categorias
@@ -89,15 +89,15 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Fecha** del gasto
 - **Categoria** con indicador de color
 - **Notas** (si se agregaron)
-- **Estado de sincronizacion** -- pendiente, sincronizado, conflicto o error
-- **Fuente** -- Entrada manual, Entrada de voz, Escaneo de recibo o Importado
-- **Articulos del recibo** -- articulos individuales (para recibos escaneados)
-- **Imagen del recibo** -- ver, descargar, reemplazar o eliminar la foto del recibo
+- **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
+- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
+- **Articulos del recibo** — articulos individuales (para recibos escaneados)
+- **Imagen del recibo** — ver, descargar, reemplazar o eliminar la foto del recibo
 
 ### Acciones en los detalles del gasto:
-- **Editar** -- modificar el gasto
-- **Copiar** -- crear un duplicado
-- **Eliminar** -- eliminar el gasto (con confirmacion)
+- **Editar** — modificar el gasto
+- **Copiar** — crear un duplicado
+- **Eliminar** — eliminar el gasto (con confirmacion)
 
 ## Detalles del ingreso
 

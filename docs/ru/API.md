@@ -1370,6 +1370,55 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Переводы между счетами
+
+Переводы между счетами работают на уровне пользователя (заголовок `X-Account-Id` не требуется). Пользователь должен быть участником обоих счетов и иметь роль Редактор или выше на счёте-источнике.
+
+### Создать перевод
+
+```http
+POST /account-transfers
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "fromAccountId": "source-account-uuid",
+  "fromCurrency": "USD",
+  "fromAmount": 1000.00,
+  "toAccountId": "destination-account-uuid",
+  "toCurrency": "EUR",
+  "toAmount": 920.00,
+  "exchangeRate": 0.92,
+  "date": "2024-01-15T00:00:00Z",
+  "notes": "Ежемесячный перевод на личный"
+}
+```
+
+**Ответ** `201 Created`
+
+### Список переводов
+
+```http
+GET /account-transfers
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK` — массив переводов для текущего пользователя.
+
+### Удалить перевод
+
+```http
+DELETE /account-transfers/:id
+Authorization: Bearer <token>
+```
+
+**Ответ** `204 No Content`
+
+**Примечание:** Переводы между счетами работают на уровне пользователя (заголовок `X-Account-Id` не требуется). Пользователь должен быть участником обоих счетов и иметь роль Редактор или выше на счёте-источнике.
+
+---
+
 ## Инсайты
 
 Требуется заголовок `X-Account-Id`.
