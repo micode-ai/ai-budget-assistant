@@ -712,4 +712,8 @@ export default {
     creating: 'Création...',
     create: 'Créer',
   },
+  help: {
+    title: 'Aide',
+    articleTitle: 'Aide',
+  },
 } as const;
