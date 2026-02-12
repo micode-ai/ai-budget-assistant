@@ -621,6 +621,22 @@ class ApiClient {
     );
   }
 
+  // Account Transfer endpoints (user-scoped, no X-Account-Id needed)
+  async getAccountTransfers() {
+    return this.request<any[]>('/account-transfers');
+  }
+
+  async createAccountTransfer(data: any) {
+    return this.request<any>('/account-transfers', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteAccountTransfer(id: string) {
+    return this.request<void>(`/account-transfers/${id}`, { method: 'DELETE' });
+  }
+
   // Insights endpoints
   async getInsights() {
     return this.request<{

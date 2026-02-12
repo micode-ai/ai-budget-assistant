@@ -201,6 +201,30 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Account transfers table
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS account_transfers (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        server_id TEXT,
+        user_id TEXT NOT NULL,
+        from_account_id TEXT NOT NULL,
+        from_currency TEXT NOT NULL,
+        from_amount REAL NOT NULL,
+        to_account_id TEXT NOT NULL,
+        to_currency TEXT NOT NULL,
+        to_amount REAL NOT NULL,
+        exchange_rate REAL NOT NULL,
+        date INTEGER NOT NULL,
+        notes TEXT,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0
+      );
+    `);
+
     // Incomes table
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS incomes (

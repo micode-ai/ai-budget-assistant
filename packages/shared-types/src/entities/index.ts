@@ -382,6 +382,27 @@ export interface CurrencyExchange {
   syncVersion: number;
 }
 
+export interface AccountTransfer {
+  id: string;
+  localId: string;
+  serverId?: string;
+  userId: string;
+  fromAccountId: string;
+  fromCurrency: Currency;
+  fromAmount: number;
+  toAccountId: string;
+  toCurrency: Currency;
+  toAmount: number;
+  exchangeRate: number;
+  date: Date;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncStatus: SyncStatus;
+  syncVersion: number;
+}
+
 export interface Subscription {
   id: string;
   userId: string;
@@ -409,9 +430,12 @@ export interface UsageStats {
 export interface WalletSummary {
   currencyCode: Currency;
   initialAmount: number;
+  totalIncomes: number;
   totalExpenses: number;
   totalExchangedIn: number;
   totalExchangedOut: number;
+  totalTransferredIn: number;
+  totalTransferredOut: number;
   currentBalance: number;
 }
 

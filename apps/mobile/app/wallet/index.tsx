@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useExchangeRateStore } from '@/stores/exchangeRateStore';
+import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -13,13 +15,28 @@ import { getIntlLocale } from '@/i18n';
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
-  const { walletSummary, exchanges, loadWallet } = useWalletStore();
+  const { walletSummary, exchanges, transfers, loadWallet } = useWalletStore();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const accounts = useAccountStore((s) => s.accounts);
+  const { rates, baseCurrency } = useExchangeRateStore();
+  const userCurrency = useAuthStore((s) => s.user?.currencyCode || 'USD');
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const hasMultipleCurrencies = walletSummary.length > 1;
+  const hasRates = Object.keys(rates).length > 0;
+  const totalBalanceInUserCurrency = hasMultipleCurrencies && hasRates
+    ? walletSummary.reduce((sum, s) => {
+        if (s.currencyCode === userCurrency) return sum + s.currentBalance;
+        const rate = rates[s.currencyCode];
+        if (!rate || rate === 0) return sum + s.currentBalance;
+        return sum + s.currentBalance / rate;
+      }, 0)
+    : 0;
+
   useEffect(() => {
     loadWallet();
+    useExchangeRateStore.getState().loadRates();
   }, []);
 
   const onRefresh = useCallback(async () => {
@@ -55,6 +72,16 @@ export default function WalletScreen() {
           <>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t('wallet.balances')}</Text>
+              {hasMultipleCurrencies && hasRates && (
+                <View style={styles.totalBalanceCard}>
+                  <Text style={styles.totalBalanceLabel}>
+                    {t('wallet.totalBalance', { currency: userCurrency })}
+                  </Text>
+                  <Text style={[styles.totalBalanceAmount, totalBalanceInUserCurrency < 0 && { color: '#FF6B6B' }]}>
+                    {formatCurrency(totalBalanceInUserCurrency, userCurrency)}
+                  </Text>
+                </View>
+              )}
               {walletSummary.map((summary) => (
                 <View key={summary.currencyCode} style={styles.balanceCard}>
                   <View style={styles.balanceHeader}>
@@ -68,6 +95,14 @@ export default function WalletScreen() {
                       <Text style={styles.detailLabel}>{t('wallet.initialBalance')}</Text>
                       <Text style={styles.detailValue}>{formatCurrency(summary.initialAmount, summary.currencyCode)}</Text>
                     </View>
+                    {summary.totalIncomes > 0 && (
+                      <View style={styles.detailRow}>
+                        <Text style={styles.detailLabel}>{t('wallet.totalIncome')}</Text>
+                        <Text style={[styles.detailValue, { color: theme.colors.success }]}>
+                          +{formatCurrency(summary.totalIncomes, summary.currencyCode)}
+                        </Text>
+                      </View>
+                    )}
                     <View style={styles.detailRow}>
                       <Text style={styles.detailLabel}>{t('wallet.totalSpent')}</Text>
                       <Text style={[styles.detailValue, { color: theme.colors.danger }]}>
@@ -90,6 +125,22 @@ export default function WalletScreen() {
                         </Text>
                       </View>
                     )}
+                    {summary.totalTransferredIn > 0 && (
+                      <View style={styles.detailRow}>
+                        <Text style={styles.detailLabel}>{t('wallet.transferredIn')}</Text>
+                        <Text style={[styles.detailValue, { color: theme.colors.success }]}>
+                          +{formatCurrency(summary.totalTransferredIn, summary.currencyCode)}
+                        </Text>
+                      </View>
+                    )}
+                    {summary.totalTransferredOut > 0 && (
+                      <View style={styles.detailRow}>
+                        <Text style={styles.detailLabel}>{t('wallet.transferredOut')}</Text>
+                        <Text style={[styles.detailValue, { color: theme.colors.warning }]}>
+                          -{formatCurrency(summary.totalTransferredOut, summary.currencyCode)}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 </View>
               ))}
@@ -105,6 +156,12 @@ export default function WalletScreen() {
                   <Ionicons name="swap-horizontal" size={20} color={theme.colors.primary} />
                   <Text style={styles.actionButtonText}>{t('exchange.title')}</Text>
                 </TouchableOpacity>
+                {accounts.length > 1 && (
+                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/transfer')}>
+                    <Ionicons name="arrow-forward-circle-outline" size={20} color={theme.colors.primary} />
+                    <Text style={styles.actionButtonText}>{t('transfer.title')}</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
 
@@ -131,6 +188,36 @@ export default function WalletScreen() {
                     </View>
                   </View>
                 ))}
+              </View>
+            )}
+
+            {transfers.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>{t('transfer.recentTransfers')}</Text>
+                {transfers.slice(0, 10).map((transfer) => {
+                  const fromAccount = accounts.find((a) => a.id === transfer.fromAccountId);
+                  const toAccount = accounts.find((a) => a.id === transfer.toAccountId);
+                  return (
+                    <View key={transfer.id} style={styles.exchangeItem}>
+                      <View style={styles.exchangeInfo}>
+                        <Text style={styles.exchangeDirection}>
+                          {fromAccount?.name || '...'} → {toAccount?.name || '...'}
+                        </Text>
+                        <Text style={styles.exchangeDate}>
+                          {new Date(transfer.date).toLocaleDateString(getIntlLocale())}
+                        </Text>
+                      </View>
+                      <View style={styles.exchangeAmounts}>
+                        <Text style={styles.exchangeFromAmount}>
+                          -{formatCurrency(transfer.fromAmount, transfer.fromCurrency)}
+                        </Text>
+                        <Text style={styles.exchangeToAmount}>
+                          +{formatCurrency(transfer.toAmount, transfer.toCurrency)}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
               </View>
             )}
           </>
@@ -164,6 +251,22 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.h3,
     color: theme.colors.textPrimary,
     marginBottom: theme.spacing[3],
+  },
+  totalBalanceCard: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    alignItems: 'center' as const,
+  },
+  totalBalanceLabel: {
+    ...theme.textStyles.bodySmMedium,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: theme.spacing[1],
+  },
+  totalBalanceAmount: {
+    ...theme.textStyles.h1,
+    color: '#FFFFFF',
   },
   emptyState: {
     alignItems: 'center' as const,
