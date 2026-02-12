@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { GamificationService } from '../gamification/gamification.service';
 
 @Injectable()
 export class BudgetsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly gamificationService: GamificationService,
+  ) {}
 
   async create(accountId: string, userId: string, dto: any) {
-    return this.prisma.budget.create({
+    const result = await this.prisma.budget.create({
       data: {
         accountId,
         userId,
@@ -22,6 +26,11 @@ export class BudgetsService {
       },
       include: { category: true },
     });
+
+    // Fire-and-forget gamification check
+    this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+
+    return result;
   }
 
   async findAll(accountId: string, filters: any = {}) {

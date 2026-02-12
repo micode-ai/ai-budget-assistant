@@ -2070,6 +2070,106 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Gamification
+
+All gamification endpoints require `X-Account-Id` header.
+
+### Get Gamification Profile
+
+```http
+GET /gamification/profile
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "totalXp": 85,
+  "level": 1,
+  "levelProgress": 85,
+  "currentStreak": 3,
+  "longestStreak": 5,
+  "achievements": [
+    {
+      "id": "uuid",
+      "achievementId": "first_expense",
+      "progress": 100,
+      "isCompleted": true,
+      "unlockedAt": "2026-02-10T12:00:00Z"
+    }
+  ],
+  "recentBadges": [
+    {
+      "id": "uuid",
+      "achievementId": "first_expense",
+      "progress": 100,
+      "isCompleted": true,
+      "unlockedAt": "2026-02-10T12:00:00Z"
+    }
+  ]
+}
+```
+
+### Check Achievements
+
+Evaluates all achievement rules, updates streak, and returns newly unlocked badges.
+
+```http
+POST /gamification/check
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "newAchievements": ["first_expense", "streak_3"],
+  "updatedProgress": [
+    { "achievementId": "expenses_10", "progress": 30 }
+  ],
+  "streak": {
+    "currentStreak": 3,
+    "longestStreak": 5
+  },
+  "totalXp": 85,
+  "level": 1
+}
+```
+
+**Note:** Achievement checks are also triggered automatically (fire-and-forget) when creating expenses, incomes, or budgets.
+
+### Get Achievement Definitions
+
+Returns all available achievement definitions. No authentication required.
+
+```http
+GET /gamification/definitions
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "first_expense",
+    "i18nKey": "firstExpense",
+    "category": "milestone",
+    "icon": "🌟",
+    "rarity": "common",
+    "threshold": 1,
+    "xpReward": 10
+  }
+]
+```
+
+**Achievement categories:** `budget`, `tracking`, `streak`, `milestone`, `savings`
+
+**Rarity levels:** `common`, `rare`, `epic`, `legendary`
+
+**XP system:** 100 XP per level. Achievement XP ranges from 10 (common) to 500 (legendary).
+
+---
+
 ## Error Responses
 
 ### Error Format

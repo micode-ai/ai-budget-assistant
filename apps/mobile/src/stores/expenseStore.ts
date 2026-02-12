@@ -31,6 +31,7 @@ import { api } from '@/services/api';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
+import { useGamificationStore } from './gamificationStore';
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all';
@@ -516,6 +517,9 @@ export const useExpenseStore = create<ExpenseState>()(
       }).catch((e) =>
         console.error('Failed to sync expense to server:', e),
       );
+
+      // Fire-and-forget gamification check
+      try { useGamificationStore.getState().checkAchievements(); } catch {}
 
       return newExpense;
     },

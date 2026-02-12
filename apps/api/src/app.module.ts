@@ -22,6 +22,7 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
 import { AdminModule } from './modules/admin/admin.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { ProjectsModule } from './modules/projects/projects.module';
+import { GamificationModule } from './modules/gamification/gamification.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
     AdminModule,
     TagsModule,
     ProjectsModule,
+    GamificationModule,
   ],
 })
 export class AppModule {}

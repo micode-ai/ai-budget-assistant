@@ -8,6 +8,7 @@
 - **Portefeuille multi-devises** -- suivez vos soldes en USD, EUR, PLN, GBP, UAH et RUB avec des taux de change en temps reel
 - **Chat IA** -- posez des questions sur vos finances et recevez des conseils personnalises
 - **Histoire des depenses** -- rapports narratifs generes par l'IA avec realisations et analyses
+- **Gamification** -- succes, series quotidiennes, XP/niveaux et collection de badges pour rester motive
 - **Budgets** -- definissez des limites de depenses avec suivi en temps reel et alertes
 - **Analyses interactives** -- graphiques avec exploration detaillee, repartition par categorie et analyse des tendances
 - **Comptes multiples** -- comptes Personnel, Partage et Professionnel avec controle d'acces base sur les roles (Proprietaire, Editeur, Observateur)
@@ -28,6 +29,7 @@
 10. [Portefeuille et change](./10-wallet-and-exchange.md) -- gestion multi-devises
 11. [Parametres](./11-settings.md) -- profil, apparence et preferences
 12. [Abonnement](./12-subscription.md) -- plans Gratuit, Pro et Business
+13. [Succes et Gamification](./13-gamification.md) -- series, XP, niveaux et badges
 
 ## Devises prises en charge
 

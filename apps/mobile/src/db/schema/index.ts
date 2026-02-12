@@ -285,7 +285,31 @@ export const currencyExchanges = sqliteTable('currency_exchanges', {
   syncVersion: integer('sync_version').default(0),
 });
 
+// Gamification: achievements cache
+export const userAchievements = sqliteTable('user_achievements', {
+  id: text('id').primaryKey(),
+  achievementId: text('achievement_id').notNull(),
+  progress: integer('progress').default(0),
+  isCompleted: integer('is_completed', { mode: 'boolean' }).default(false),
+  unlockedAt: integer('unlocked_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+// Gamification: streak cache
+export const userStreaks = sqliteTable('user_streaks', {
+  id: text('id').primaryKey(),
+  streakType: text('streak_type').notNull().default('daily_tracking'),
+  currentStreak: integer('current_streak').default(0),
+  longestStreak: integer('longest_streak').default(0),
+  lastActivityDate: integer('last_activity_date', { mode: 'timestamp' }),
+  streakStartDate: integer('streak_start_date', { mode: 'timestamp' }),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Type exports
+export type UserAchievementRecord = typeof userAchievements.$inferSelect;
+export type UserStreakRecord = typeof userStreaks.$inferSelect;
 export type WalletBalanceRecord = typeof walletBalances.$inferSelect;
 export type NewWalletBalanceRecord = typeof walletBalances.$inferInsert;
 export type CurrencyExchangeRecord = typeof currencyExchanges.$inferSelect;

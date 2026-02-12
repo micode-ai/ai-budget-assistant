@@ -23,6 +23,17 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 | **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
 | **Wymiana** | Otwiera formularz wymiany walut |
 
+## Widget grywalizacji
+
+Ponizej szybkich akcji kompaktowa karta pokazuje Twoj postep w grywalizacji:
+
+- **Poziom** -- Twoj aktualny poziom z paskiem postepu XP do nastepnego poziomu
+- **Seria** -- licznik Twojej codziennej serii sledzenia z emoji ognia lub platka sniegu
+
+Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami, szczegolami serii i filtrami kategorii.
+
+> Zobacz [Osiagniecia i Grywalizacja](./13-gamification.md), aby dowiedziec sie wiecej o XP, poziomach i osiagnieciach.
+
 ## Karta budzetu miesiecznego
 
 - Pokazuje biezace wydatki w stosunku do budzetu miesiecznego (np. **2 846,83 zl z 20 000,00 zl**)
