@@ -79,7 +79,7 @@ Review and correct any details, then:
 ## FAQ
 
 - **Q: Which languages does voice input support?**
-  **A:** Voice input works best in the language your app is set to. It supports all 7 app languages.
+  **A:** Voice input works best in the language your app is set to. It supports all 8 app languages.
 
 - **Q: Can I scan receipts in any language?**
   **A:** Yes, the AI can process receipts in most languages and will extract amounts and items regardless of the receipt language.

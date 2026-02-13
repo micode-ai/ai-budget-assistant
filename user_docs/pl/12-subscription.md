@@ -37,7 +37,7 @@ Wszystko z Free, plus:
 - **Do 5 czlonkow na konto** — wspolpracuj z rodzina lub zespolem
 - **Analityka predykcyjna** — prognozy budzetowe i projekcje wydatkow
 - **Wykrywanie anomalii wydatkow** — alerty AI o nietypowych wydatkach
-- **Nieograniczone waluty** — uzyj wszystkich 6 walut bez ograniczen
+- **Nieograniczone waluty** — uzyj wszystkich 7 walut bez ograniczen
 - **Historia wydatkow** — narracyjne raporty finansowe generowane przez AI
 - **Wnioski AI** — spersonalizowane rekomendacje w Analityce
 

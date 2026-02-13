@@ -9,7 +9,7 @@ import type { Currency } from '@budget/shared-types';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB'];
+const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
 
 export default function ExchangeScreen() {
   const { t } = useTranslation();

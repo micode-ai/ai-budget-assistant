@@ -19,7 +19,7 @@ Przejdz do Ustawien, dotykajac **ikone zebatki** w prawym gornym rogu dowolnego 
 
 Wybierz domyslna walute, dotykajac jednego z elementow waluty:
 
-**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB**
+**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow, przychodow i wyswietlania na Pulpicie.
 
@@ -27,7 +27,7 @@ Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow
 
 ### Jezyk
 
-Wybierz z 7 obslugiwanych jezykow:
+Wybierz z 8 obslugiwanych jezykow:
 
 | Kod | Jezyk |
 |---|---|
@@ -38,6 +38,7 @@ Wybierz z 7 obslugiwanych jezykow:
 | ES | Espanol |
 | FR | Francais |
 | DE | Deutsch |
+| BY | Беларуская |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
 

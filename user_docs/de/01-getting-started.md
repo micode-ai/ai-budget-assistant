@@ -9,8 +9,8 @@
 3. Gib deine **E-Mail**-Adresse ein
 4. Erstelle ein **Passwort** (mindestens 8 Zeichen, muss einen Grossbuchstaben A-Z, einen Kleinbuchstaben a-z und eine Zahl 0-9 enthalten)
 5. Bestatige dein Passwort
-6. Wahle deine bevorzugte **Wahrung** (USD, EUR, PLN, GBP, UAH oder RUB)
-7. Wahle deine bevorzugte **Sprache** (English, Deutsch, Espanol, Francais, Polski, Русский oder Українська)
+6. Wahle deine bevorzugte **Wahrung** (USD, EUR, PLN, GBP, UAH, RUB oder BYN)
+7. Wahle deine bevorzugte **Sprache** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська oder Беларуская)
 8. Tippe auf **Konto erstellen**
 
 ## Anmelden

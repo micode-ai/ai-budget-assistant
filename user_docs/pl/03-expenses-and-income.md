@@ -28,7 +28,7 @@ Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
 1. Dotknij przycisku **+** na ekranie Transakcje lub **Dodaj wydatek** z Pulpitu
 2. Jezeli uzywasz przycisku **+**, wybierz **Reczne wprowadzanie** z menu
-3. Dotknij symbolu waluty, aby zmienic walute (USD, EUR, PLN, GBP, UAH, RUB)
+3. Dotknij symbolu waluty, aby zmienic walute (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Wprowadz **kwote**
 5. Wprowadz **Opis** (np. "Na co byl ten wydatek?")
 6. Wybierz **Kategorie** z dostepnych elementow:
@@ -108,7 +108,7 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 ## FAQ
 
 - **P: Czy moge dodawac wydatki w roznych walutach?**
-  **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH i RUB.
+  **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN.
 
 - **P: Jak edytowac istniejacy wydatek?**
   **O:** Dotknij wydatek na liscie, aby otworzyc szczegoly, a nastepnie dotknij **Edytuj**.

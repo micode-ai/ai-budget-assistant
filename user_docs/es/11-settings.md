@@ -19,7 +19,7 @@ Accede a los Ajustes tocando el **icono de engranaje** en la esquina superior de
 
 Selecciona tu moneda predeterminada tocando una de las fichas de moneda:
 
-**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB**
+**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 La moneda seleccionada se resalta. Esto establece la moneda predeterminada para nuevos gastos, ingresos y visualizacion del Panel.
 
@@ -27,7 +27,7 @@ La moneda seleccionada se resalta. Esto establece la moneda predeterminada para 
 
 ### Idioma
 
-Elige entre 7 idiomas disponibles:
+Elige entre 8 idiomas disponibles:
 
 | Codigo | Idioma |
 |---|---|
@@ -38,6 +38,7 @@ Elige entre 7 idiomas disponibles:
 | ES | Espanol |
 | FR | Francais |
 | DE | Deutsch |
+| BY | Беларуская |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 

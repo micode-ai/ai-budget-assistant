@@ -37,7 +37,7 @@ Everything in Free, plus:
 - **Up to 5 members per account** — collaborate with family or team
 - **Predictive analytics** — budget forecasts and spending projections
 - **Spending anomaly detection** — AI alerts for unusual spending
-- **Unlimited currencies** — use all 6 currencies without restrictions
+- **Unlimited currencies** — use all 7 currencies without restrictions
 - **Spending Stories** — AI-generated narrative financial reports
 - **AI Insights** — personalized recommendations in Analytics
 

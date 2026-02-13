@@ -28,7 +28,7 @@ Use the floating **+** button (bottom-right) to add a new transaction.
 
 1. Tap the **+** button on the Transactions screen, or **Add Expense** from the Dashboard
 2. If using the **+** button, select **Manual Entry** from the menu
-3. Tap the currency symbol to change currency (USD, EUR, PLN, GBP, UAH, RUB)
+3. Tap the currency symbol to change currency (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Enter the **amount**
 5. Enter a **Description** (e.g., "What was this expense for?")
 6. Select a **Category** from the chips:
@@ -108,7 +108,7 @@ Tap any income entry to view details:
 ## FAQ
 
 - **Q: Can I add expenses in different currencies?**
-  **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, and RUB.
+  **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN.
 
 - **Q: How do I edit an existing expense?**
   **A:** Tap the expense in the list to open details, then tap **Edit**.

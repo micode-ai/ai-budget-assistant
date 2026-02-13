@@ -36,7 +36,7 @@ If you hold balances in multiple currencies, the wallet displays a **Total Balan
 Set your starting balance for each currency:
 
 1. Go to **Settings** > **Wallet** > **Set Balance**
-2. Select the **Currency** (USD, EUR, PLN, GBP, UAH, or RUB)
+2. Select the **Currency** (USD, EUR, PLN, GBP, UAH, RUB, or BYN)
 3. Enter the **Amount** — your current real-world balance in that currency
 4. Tap **Save**
 
@@ -113,6 +113,7 @@ Below the transfer form, you'll find a list of your recent account transfers wit
 | GBP | British Pound |
 | UAH | Ukrainian Hryvnia |
 | RUB | Russian Ruble |
+| BYN | Belarusian Ruble |
 
 ## FAQ
 

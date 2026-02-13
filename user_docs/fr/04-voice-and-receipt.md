@@ -79,7 +79,7 @@ Verifiez et corrigez les details, puis :
 ## FAQ
 
 - **Q : Quelles langues la saisie vocale prend-elle en charge ?**
-  **R :** La saisie vocale fonctionne au mieux dans la langue definie pour votre application. Elle prend en charge les 7 langues de l'application.
+  **R :** La saisie vocale fonctionne au mieux dans la langue definie pour votre application. Elle prend en charge les 8 langues de l'application.
 
 - **Q : Puis-je scanner des recus dans n'importe quelle langue ?**
   **R :** Oui, l'IA peut traiter des recus dans la plupart des langues et extrait les montants et les articles quelle que soit la langue du recu.

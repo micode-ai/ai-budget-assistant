@@ -37,7 +37,7 @@ Todo lo del plan Gratuito, mas:
 - **Hasta 5 miembros por cuenta** — colabora con familia o equipo
 - **Analisis predictivo** — previsiones de presupuesto y proyecciones de gasto
 - **Deteccion de anomalias de gasto** — alertas de IA para gastos inusuales
-- **Monedas ilimitadas** — usa las 6 monedas sin restricciones
+- **Monedas ilimitadas** — usa las 7 monedas sin restricciones
 - **Historia de gastos** — informes narrativos financieros generados por IA
 - **Informacion de IA** — recomendaciones personalizadas en Analisis
 

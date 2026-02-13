@@ -32,7 +32,7 @@ La formula: **Saldo actual = Saldo inicial + Total ingresos - Total gastado + Ca
 Establece tu saldo inicial para cada moneda:
 
 1. Ve a **Ajustes** > **Billetera** > **Establecer saldo**
-2. Selecciona la **Moneda** (USD, EUR, PLN, GBP, UAH o RUB)
+2. Selecciona la **Moneda** (USD, EUR, PLN, GBP, UAH, RUB o BYN)
 3. Introduce el **Importe** — tu saldo real actual en esa moneda
 4. Toca **Guardar**
 
@@ -115,6 +115,7 @@ Debajo del formulario de cambio, encontraras una lista de tus cambios de divisa 
 | GBP | Libra esterlina |
 | UAH | Grivna ucraniana |
 | RUB | Rublo ruso |
+| BYN | Rublo bielorruso |
 
 ## Preguntas frecuentes
 

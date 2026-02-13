@@ -5,7 +5,7 @@
 ## Fonctionnalites principales
 
 - **Suivi intelligent des depenses** — ajoutez des depenses manuellement, par saisie vocale ou en scannant des recus grace a l'OCR par IA
-- **Portefeuille multi-devises** — suivez vos soldes en USD, EUR, PLN, GBP, UAH et RUB avec des taux de change en temps reel
+- **Portefeuille multi-devises** — suivez vos soldes en USD, EUR, PLN, GBP, UAH, RUB et BYN avec des taux de change en temps reel
 - **Chat IA** — posez des questions sur vos finances et recevez des conseils personnalises
 - **Histoire des depenses** — rapports narratifs generes par l'IA avec realisations et analyses
 - **Gamification** — succes, series quotidiennes, XP/niveaux et collection de badges pour rester motive
@@ -13,7 +13,7 @@
 - **Analyses interactives** — graphiques avec exploration detaillee, repartition par categorie et analyse des tendances
 - **Comptes multiples** — comptes Personnel, Partage et Professionnel avec controle d'acces base sur les roles (Proprietaire, Editeur, Observateur)
 - **Mode hors-ligne** — les donnees sont enregistrees localement et synchronisees automatiquement une fois en ligne
-- **7 langues** — English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa
+- **8 langues** — English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa, Беларуская
 
 ## Table des matieres
 
@@ -33,7 +33,7 @@
 
 ## Devises prises en charge
 
-USD, EUR, PLN, GBP, UAH, RUB
+USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Plateformes prises en charge
 

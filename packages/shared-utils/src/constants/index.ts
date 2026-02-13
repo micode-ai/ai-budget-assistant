@@ -33,6 +33,7 @@ export const SUPPORTED_CURRENCIES: { code: Currency; name: string; symbol: strin
   { code: 'GBP', name: 'British Pound', symbol: '£' },
   { code: 'UAH', name: 'Ukrainian Hryvnia', symbol: '₴' },
   { code: 'RUB', name: 'Russian Ruble', symbol: '₽' },
+  { code: 'BYN', name: 'Belarusian Ruble', symbol: 'Br' },
 ];
 
 // Budget periods

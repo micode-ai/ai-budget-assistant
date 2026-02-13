@@ -9,8 +9,8 @@
 3. Enter your **Email** address
 4. Create a **Password** (minimum 8 characters, must include an uppercase letter A-Z, a lowercase letter a-z, and a number 0-9)
 5. Confirm your password
-6. Select your preferred **Currency** (USD, EUR, PLN, GBP, UAH, or RUB)
-7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, or Українська)
+6. Select your preferred **Currency** (USD, EUR, PLN, GBP, UAH, RUB, or BYN)
+7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, or Беларуская)
 8. Tap **Create Account**
 
 ## Signing In

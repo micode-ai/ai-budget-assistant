@@ -79,7 +79,7 @@ Uberprufe und korrigiere Details, dann:
 ## FAQ
 
 - **F: Welche Sprachen unterstutzt die Spracheingabe?**
-  **A:** Die Spracheingabe funktioniert am besten in der Sprache, auf die deine App eingestellt ist. Sie unterstutzt alle 7 App-Sprachen.
+  **A:** Die Spracheingabe funktioniert am besten in der Sprache, auf die deine App eingestellt ist. Sie unterstutzt alle 8 App-Sprachen.
 
 - **F: Kann ich Belege in jeder Sprache scannen?**
   **A:** Ja, die KI kann Belege in den meisten Sprachen verarbeiten und extrahiert Betrage und Artikel unabhangig von der Belegsprache.

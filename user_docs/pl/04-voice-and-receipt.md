@@ -79,7 +79,7 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 ## FAQ
 
 - **P: Jakie jezyki obsluguje wprowadzanie glosowe?**
-  **O:** Wprowadzanie glosowe dziala najlepiej w jezyku, na ktory ustawiona jest aplikacja. Obsluguje wszystkie 7 jezykow aplikacji.
+  **O:** Wprowadzanie glosowe dziala najlepiej w jezyku, na ktory ustawiona jest aplikacja. Obsluguje wszystkie 8 jezykow aplikacji.
 
 - **P: Czy moge skanowac paragony w dowolnym jezyku?**
   **O:** Tak, AI moze przetwarzac paragony w wiekszosci jezykow i wyodrebni kwoty oraz pozycje niezaleznie od jezyka paragonu.

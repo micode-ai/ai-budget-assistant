@@ -5,7 +5,7 @@
 ## Funciones principales
 
 - **Seguimiento inteligente de gastos** — agrega gastos manualmente, por voz o escaneando recibos con OCR basado en IA
-- **Billetera multidivisa** — rastrea saldos en USD, EUR, PLN, GBP, UAH y RUB con tasas de cambio en tiempo real
+- **Billetera multidivisa** — rastrea saldos en USD, EUR, PLN, GBP, UAH, RUB y BYN con tasas de cambio en tiempo real
 - **Chat IA** — haz preguntas sobre tus finanzas y recibe consejos personalizados
 - **Historia de gastos** — informes narrativos generados por IA con logros e informacion relevante
 - **Gamificacion** — logros, rachas diarias, XP/niveles y coleccion de insignias para mantenerte motivado
@@ -13,7 +13,7 @@
 - **Analisis interactivo** — graficos con desglose detallado, por categoria y analisis de tendencias
 - **Multiples cuentas** — cuentas Personal, Compartida y Empresa con control de acceso basado en roles (Propietario, Editor, Observador)
 - **Sin conexion primero** — los datos se guardan localmente y se sincronizan automaticamente cuando hay conexion
-- **7 idiomas** — English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska
+- **8 idiomas** — English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska, Беларуская
 
 ## Tabla de contenidos
 
@@ -33,7 +33,7 @@
 
 ## Monedas compatibles
 
-USD, EUR, PLN, GBP, UAH, RUB
+USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Plataformas compatibles
 

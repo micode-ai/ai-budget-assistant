@@ -24,6 +24,7 @@ AI-powered personal finance management application with voice input, receipt sca
 | Deutsch | [Benutzerhandbuch](user_docs/de/00-index.md) |
 | Español | [Guía del usuario](user_docs/es/00-index.md) |
 | Français | [Guide utilisateur](user_docs/fr/00-index.md) |
+| Беларуская | [Кіраўніцтва карыстальніка](user_docs/be/00-index.md) |
 
 #### User Docs Sections
 

@@ -5,7 +5,7 @@
 ## Key Features
 
 - **Smart Expense Tracking** — add expenses manually, by voice, or by scanning receipts with AI-powered OCR
-- **Multi-Currency Wallet** — track balances in USD, EUR, PLN, GBP, UAH, and RUB with live exchange rates
+- **Multi-Currency Wallet** — track balances in USD, EUR, PLN, GBP, UAH, RUB, and BYN with live exchange rates
 - **AI Chat** — ask questions about your finances and get personalized advice
 - **Spending Stories** — AI-generated narrative reports with achievements and insights
 - **Gamification** — achievements, daily streaks, XP/levels, and badge collection to keep you motivated
@@ -13,7 +13,7 @@
 - **Interactive Analytics** — charts with drill-down, category breakdowns, and trend analysis
 - **Multiple Accounts** — Personal, Shared, and Business accounts with role-based access (Owner, Editor, Viewer)
 - **Offline-First** — data saves locally and syncs automatically when online
-- **7 Languages** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська
+- **8 Languages** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
 
 ## Table of Contents
 
@@ -33,7 +33,7 @@
 
 ## Supported Currencies
 
-USD, EUR, PLN, GBP, UAH, RUB
+USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Supported Platforms
 

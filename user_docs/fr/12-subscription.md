@@ -37,7 +37,7 @@ Tout ce qui est inclus dans le plan Gratuit, plus :
 - **Jusqu'a 5 membres par compte** — collaborez avec votre famille ou votre equipe
 - **Analyses predictives** — previsions budgetaires et projections de depenses
 - **Detection d'anomalies de depenses** — alertes IA pour les depenses inhabituelles
-- **Devises illimitees** — utilisez les 6 devises sans restrictions
+- **Devises illimitees** — utilisez les 7 devises sans restrictions
 - **Histoire des depenses** — rapports financiers narratifs generes par l'IA
 - **Aperçus IA** — recommandations personnalisees dans les Analyses
 

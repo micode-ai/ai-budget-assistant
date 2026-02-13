@@ -28,7 +28,7 @@ Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transakt
 
 1. Tippe auf die **+**-Schaltflache auf dem Transaktionen-Bildschirm oder auf **Ausgabe hinzufugen** von der Ubersicht
 2. Wenn du die **+**-Schaltflache verwendest, wahle **Manuelle Eingabe** aus dem Menu
-3. Tippe auf das Wahrungssymbol, um die Wahrung zu andern (USD, EUR, PLN, GBP, UAH, RUB)
+3. Tippe auf das Wahrungssymbol, um die Wahrung zu andern (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Gib den **Betrag** ein
 5. Gib eine **Beschreibung** ein (z.B. "Wofur war diese Ausgabe?")
 6. Wahle eine **Kategorie** aus den Chips:
@@ -108,7 +108,7 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 ## FAQ
 
 - **F: Kann ich Ausgaben in verschiedenen Wahrungen hinzufugen?**
-  **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH und RUB zu wechseln.
+  **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln.
 
 - **F: Wie bearbeite ich eine vorhandene Ausgabe?**
   **A:** Tippe auf die Ausgabe in der Liste, um die Details zu offnen, und tippe dann auf **Bearbeiten**.

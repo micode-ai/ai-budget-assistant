@@ -10,6 +10,7 @@ import pl from './locales/pl';
 import es from './locales/es';
 import fr from './locales/fr';
 import de from './locales/de';
+import be from './locales/be';
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', flag: 'EN' },
@@ -19,6 +20,7 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'es', label: 'Español', flag: 'ES' },
   { code: 'fr', label: 'Français', flag: 'FR' },
   { code: 'de', label: 'Deutsch', flag: 'DE' },
+  { code: 'be', label: 'Беларуская', flag: 'BY' },
 ] as const;
 
 const intlLocaleMap: Record<string, string> = {
@@ -29,6 +31,7 @@ const intlLocaleMap: Record<string, string> = {
   es: 'es-ES',
   fr: 'fr-FR',
   de: 'de-DE',
+  be: 'be-BY',
 };
 
 export function getIntlLocale(): string {
@@ -43,6 +46,7 @@ const resources = {
   es: { translation: es },
   fr: { translation: fr },
   de: { translation: de },
+  be: { translation: be },
 };
 
 function getDeviceLanguage(): string {

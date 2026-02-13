@@ -32,7 +32,7 @@ La formule : **Solde actuel = Solde initial + Total des revenus - Total depense 
 Definissez votre solde de depart pour chaque devise :
 
 1. Allez dans **Parametres** > **Portefeuille** > **Definir le solde**
-2. Selectionnez la **Devise** (USD, EUR, PLN, GBP, UAH ou RUB)
+2. Selectionnez la **Devise** (USD, EUR, PLN, GBP, UAH, RUB ou BYN)
 3. Entrez le **Montant** — votre solde reel actuel dans cette devise
 4. Appuyez sur **Enregistrer**
 
@@ -113,6 +113,7 @@ Sous le formulaire de transfert, vous trouverez la liste de vos transferts recen
 | GBP | Livre sterling |
 | UAH | Hryvnia ukrainienne |
 | RUB | Rouble russe |
+| BYN | Rouble bielorusse |
 
 ## FAQ
 

@@ -79,7 +79,7 @@ Revisa y corrige cualquier detalle, luego:
 ## Preguntas frecuentes
 
 - **P: Que idiomas admite la entrada de voz?**
-  **R:** La entrada de voz funciona mejor en el idioma configurado en la aplicacion. Admite los 7 idiomas de la aplicacion.
+  **R:** La entrada de voz funciona mejor en el idioma configurado en la aplicacion. Admite los 8 idiomas de la aplicacion.
 
 - **P: Puedo escanear recibos en cualquier idioma?**
   **R:** Si, la IA puede procesar recibos en la mayoria de los idiomas y extraera importes y articulos independientemente del idioma del recibo.
