@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Enums as Zod schemas
-export const CurrencySchema = z.enum(['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB']);
+export const CurrencySchema = z.enum(['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN']);
 export const SyncStatusSchema = z.enum(['pending', 'synced', 'conflict', 'error']);
 export const ExpenseSourceSchema = z.enum(['manual', 'voice', 'ocr', 'import']);
 export const BudgetPeriodSchema = z.enum(['daily', 'weekly', 'monthly', 'yearly', 'custom']);

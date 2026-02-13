@@ -32,7 +32,7 @@ Formula: **Bieżące saldo = Saldo początkowe + Łączne przychody - Łącznie 
 Ustaw saldo startowe dla kazdej waluty:
 
 1. Przejdz do **Ustawienia** > **Portfel** > **Ustaw saldo**
-2. Wybierz **Walute** (USD, EUR, PLN, GBP, UAH lub RUB)
+2. Wybierz **Walute** (USD, EUR, PLN, GBP, UAH, RUB lub BYN)
 3. Wprowadz **Kwote** — Twoje obecne rzeczywiste saldo w tej walucie
 4. Dotknij **Zapisz**
 
@@ -117,6 +117,7 @@ Poniżej formularza przelewu znajdziesz listę ostatnich przelewów między kont
 | GBP | Funt brytyjski |
 | UAH | Hrywna ukrainska |
 | RUB | Rubel rosyjski |
+| BYN | Rubel bialoruski |
 
 ## FAQ
 

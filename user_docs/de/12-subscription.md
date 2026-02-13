@@ -37,7 +37,7 @@ Alles aus dem Free-Plan, plus:
 - **Bis zu 5 Mitglieder pro Konto** — mit Familie oder Team zusammenarbeiten
 - **Pradiktive Analysen** — Budgetprognosen und Ausgabenprojektionen
 - **Erkennung von Ausgabenauffalligkeit** — KI-Warnungen bei ungewohnlichen Ausgaben
-- **Unbegrenzte Wahrungen** — alle 6 Wahrungen ohne Einschrankungen verwenden
+- **Unbegrenzte Wahrungen** — alle 7 Wahrungen ohne Einschrankungen verwenden
 - **Ausgabengeschichte** — KI-generierte narrative Finanzberichte
 - **KI-Einblicke** — personalisierte Empfehlungen in den Analysen
 

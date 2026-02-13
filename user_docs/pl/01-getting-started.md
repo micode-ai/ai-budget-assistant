@@ -9,8 +9,8 @@
 3. Wprowadz adres **E-mail**
 4. Utworz **Haslo** (minimum 8 znakow, musi zawierac wielka litere A-Z, mala litere a-z i cyfre 0-9)
 5. Potwierdz haslo w polu **Potwierdz haslo**
-6. Wybierz preferowana **Walute** (USD, EUR, PLN, GBP, UAH lub RUB)
-7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij lub Ukrainska)
+6. Wybierz preferowana **Walute** (USD, EUR, PLN, GBP, UAH, RUB lub BYN)
+7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska lub Беларуская)
 8. Dotknij **Utwórz konto**
 
 ## Logowanie

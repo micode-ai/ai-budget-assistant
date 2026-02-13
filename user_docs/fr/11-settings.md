@@ -19,7 +19,7 @@ Accedez aux Parametres en appuyant sur l'**icone d'engrenage** dans le coin supe
 
 Selectionnez votre devise par defaut en appuyant sur l'une des pastilles de devise :
 
-**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB**
+**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 La devise selectionnee est mise en surbrillance. Cela definit la devise par defaut pour les nouvelles depenses, revenus et l'affichage du Tableau de bord.
 
@@ -27,7 +27,7 @@ La devise selectionnee est mise en surbrillance. Cela definit la devise par defa
 
 ### Langue
 
-Choisissez parmi 7 langues prises en charge :
+Choisissez parmi 8 langues prises en charge :
 
 | Code | Langue |
 |---|---|
@@ -38,6 +38,7 @@ Choisissez parmi 7 langues prises en charge :
 | ES | Espanol |
 | FR | Francais |
 | DE | Deutsch |
+| BY | Беларуская |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
 

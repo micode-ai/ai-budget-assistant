@@ -38,7 +38,7 @@ Der Gesamtsaldo wird auf der Ubersicht und in der Geldborse-Ansicht angezeigt un
 Lege deinen Startsaldo fur jede Wahrung fest:
 
 1. Gehe zu **Einstellungen** > **Geldborse** > **Saldo festlegen**
-2. Wahle die **Wahrung** (USD, EUR, PLN, GBP, UAH oder RUB)
+2. Wahle die **Wahrung** (USD, EUR, PLN, GBP, UAH, RUB oder BYN)
 3. Gib den **Betrag** ein — deinen aktuellen realen Saldo in dieser Wahrung
 4. Tippe auf **Speichern**
 
@@ -114,6 +114,7 @@ Unterhalb des Uberweisungsformulars findest du eine Liste deiner letzten Uberwei
 | GBP | Britisches Pfund |
 | UAH | Ukrainische Griwna |
 | RUB | Russischer Rubel |
+| BYN | Belarussischer Rubel |
 
 ## FAQ
 

@@ -19,7 +19,7 @@ Offne die Einstellungen, indem du auf das **Zahnradsymbol** in der oberen rechte
 
 Wahle deine Standardwahrung, indem du auf einen der Wahrungschips tippst:
 
-**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB**
+**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neue Ausgaben, Einkommen und die Ubersichtsanzeige fest.
 
@@ -27,7 +27,7 @@ Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neu
 
 ### Sprache
 
-Wahle aus 7 unterstutzten Sprachen:
+Wahle aus 8 unterstutzten Sprachen:
 
 | Code | Sprache |
 |---|---|
@@ -38,6 +38,7 @@ Wahle aus 7 unterstutzten Sprachen:
 | ES | Espanol |
 | FR | Francais |
 | DE | Deutsch |
+| BY | Беларуская |
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
 

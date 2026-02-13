@@ -34,7 +34,7 @@ export class ExchangeRateService {
       const data = await response.json();
 
       // Filter to only supported currencies
-      const supportedCurrencies = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB'];
+      const supportedCurrencies = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
       const rates: Record<string, number> = {};
       for (const currency of supportedCurrencies) {
         if (data.rates[currency] !== undefined) {

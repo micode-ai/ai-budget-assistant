@@ -5,7 +5,7 @@
 ## Najwazniejsze funkcje
 
 - **Inteligentne sledzenie wydatkow** — dodawaj wydatki recznie, glosowo lub skanujac paragony dzieki OCR opartemu na AI
-- **Portfel wielowalutowy** — sledz salda w USD, EUR, PLN, GBP, UAH i RUB z aktualnymi kursami wymiany
+- **Portfel wielowalutowy** — sledz salda w USD, EUR, PLN, GBP, UAH, RUB i BYN z aktualnymi kursami wymiany
 - **Czat AI** — zadawaj pytania o swoje finanse i otrzymuj spersonalizowane porady
 - **Historia wydatkow** — generowane przez AI raporty narracyjne z osiagnieciami i wnioskami
 - **Grywalizacja** — osiagniecia, codzienne serie, XP/poziomy i kolekcja odznak dla motywacji
@@ -13,7 +13,7 @@
 - **Interaktywna analityka** — wykresy z drilldownem, podzialem na kategorie i analiza trendow
 - **Wiele kont** — konta Osobiste, Wspolne i Firmowe z dostepem opartym na rolach (Wlasciciel, Edytor, Obserwator)
 - **Offline-first** — dane zapisuja sie lokalnie i synchronizuja automatycznie po polaczeniu z siecia
-- **7 jezykow** — English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska
+- **8 jezykow** — English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska, Беларуская
 
 ## Spis tresci
 
@@ -33,7 +33,7 @@
 
 ## Obslugiwane waluty
 
-USD, EUR, PLN, GBP, UAH, RUB
+USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Obslugiwane platformy
 

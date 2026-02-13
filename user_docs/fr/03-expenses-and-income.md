@@ -28,7 +28,7 @@ Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle tr
 
 1. Appuyez sur le bouton **+** de l'ecran Transactions, ou sur **Ajouter une depense** depuis le Tableau de bord
 2. Si vous utilisez le bouton **+**, selectionnez **Saisie manuelle** dans le menu
-3. Appuyez sur le symbole de devise pour changer de devise (USD, EUR, PLN, GBP, UAH, RUB)
+3. Appuyez sur le symbole de devise pour changer de devise (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Entrez le **montant**
 5. Entrez une **Description** (par ex. "A quoi correspondait cette depense ?")
 6. Selectionnez une **Categorie** parmi les pastilles :
@@ -108,7 +108,7 @@ Appuyez sur une entree de revenu pour afficher les details :
 ## FAQ
 
 - **Q : Puis-je ajouter des depenses dans differentes devises ?**
-  **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH et RUB.
+  **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN.
 
 - **Q : Comment modifier une depense existante ?**
   **R :** Appuyez sur la depense dans la liste pour ouvrir les details, puis appuyez sur **Modifier**.

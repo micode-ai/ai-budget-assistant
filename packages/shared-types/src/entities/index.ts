@@ -1,6 +1,6 @@
 // Core domain entities
 
-export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB';
+export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB' | 'BYN';
 
 export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
 

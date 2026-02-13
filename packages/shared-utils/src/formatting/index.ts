@@ -8,6 +8,7 @@ const currencyConfig: Record<Currency, { symbol: string; locale: string; positio
   GBP: { symbol: '£', locale: 'en-GB', position: 'before' },
   UAH: { symbol: '₴', locale: 'uk-UA', position: 'after' },
   RUB: { symbol: '₽', locale: 'ru-RU', position: 'after' },
+  BYN: { symbol: 'Br', locale: 'be-BY', position: 'after' },
 };
 
 export function formatCurrency(amount: number, currency: Currency): string {

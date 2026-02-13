@@ -9,8 +9,8 @@
 3. Introduce tu **Correo electronico**
 4. Crea una **Contrasena** (minimo 8 caracteres, debe incluir una letra mayuscula A-Z, una letra minuscula a-z y un numero 0-9)
 5. Confirma tu contrasena
-6. Selecciona tu **Moneda** preferida (USD, EUR, PLN, GBP, UAH o RUB)
-7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki o Ukrainska)
+6. Selecciona tu **Moneda** preferida (USD, EUR, PLN, GBP, UAH, RUB o BYN)
+7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska o Беларуская)
 8. Toca **Crear cuenta**
 
 ## Iniciar sesion

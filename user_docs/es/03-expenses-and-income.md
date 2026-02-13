@@ -28,7 +28,7 @@ Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva tr
 
 1. Toca el boton **+** en la pantalla de Transacciones, o **Agregar gasto** desde el Panel
 2. Si usas el boton **+**, selecciona **Entrada manual** del menu
-3. Toca el simbolo de moneda para cambiar la moneda (USD, EUR, PLN, GBP, UAH, RUB)
+3. Toca el simbolo de moneda para cambiar la moneda (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Introduce el **importe**
 5. Introduce una **Descripcion** (por ejemplo, "Para que fue este gasto?")
 6. Selecciona una **Categoria** de las fichas:
@@ -108,7 +108,7 @@ Toca cualquier entrada de ingreso para ver los detalles:
 ## Preguntas frecuentes
 
 - **P: Puedo agregar gastos en diferentes monedas?**
-  **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH y RUB.
+  **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN.
 
 - **P: Como edito un gasto existente?**
   **R:** Toca el gasto en la lista para abrir los detalles, luego toca **Editar**.

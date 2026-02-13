@@ -5,7 +5,7 @@
 ## Hauptfunktionen
 
 - **Intelligente Ausgabenverfolgung** — Ausgaben manuell, per Spracheingabe oder durch Scannen von Belegen mit KI-gestutzter OCR hinzufugen
-- **Multi-Wahrung Geldborse** — Salden in USD, EUR, PLN, GBP, UAH und RUB mit aktuellen Wechselkursen verfolgen
+- **Multi-Wahrung Geldborse** — Salden in USD, EUR, PLN, GBP, UAH, RUB und BYN mit aktuellen Wechselkursen verfolgen
 - **KI-Chat** — Fragen zu deinen Finanzen stellen und personalisierte Beratung erhalten
 - **Ausgabengeschichte** — KI-generierte narrative Berichte mit Erfolgen und Einblicken
 - **Gamification** — Erfolge, tagliche Serien, XP/Level und Abzeichen-Sammlung zur Motivation
@@ -13,7 +13,7 @@
 - **Interaktive Analysen** — Diagramme mit Drill-Down, Kategorieaufschlusselungen und Trendanalyse
 - **Mehrere Konten** — Personlich, Gemeinsam und Geschaftlich mit rollenbasierter Zugriffskontrolle (Eigentumer, Bearbeiter, Betrachter)
 - **Offline-First** — Daten werden lokal gespeichert und automatisch synchronisiert, wenn du online bist
-- **7 Sprachen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська
+- **8 Sprachen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
 
 ## Inhaltsverzeichnis
 
@@ -33,7 +33,7 @@
 
 ## Unterstutzte Wahrungen
 
-USD, EUR, PLN, GBP, UAH, RUB
+USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Unterstutzte Plattformen
 

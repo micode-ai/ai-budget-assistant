@@ -24,7 +24,7 @@ const ACCOUNT_TYPES: { type: AccountType; icon: IconName }[] = [
   { type: 'shared', icon: 'people-outline' },
 ];
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB'];
+const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
 
 export default function CreateAccountScreen() {
   const { t } = useTranslation();

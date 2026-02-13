@@ -19,7 +19,7 @@ Access Settings by tapping the **gear icon** in the top-right corner of any scre
 
 Select your default currency by tapping one of the currency chips:
 
-**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB**
+**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 The selected currency is highlighted. This sets the default currency for new expenses, income, and Dashboard displays.
 
@@ -27,7 +27,7 @@ The selected currency is highlighted. This sets the default currency for new exp
 
 ### Language
 
-Choose from 7 supported languages:
+Choose from 8 supported languages:
 
 | Code | Language |
 |---|---|
@@ -38,6 +38,7 @@ Choose from 7 supported languages:
 | ES | Espanol |
 | FR | Francais |
 | DE | Deutsch |
+| BY | Беларуская |
 
 Tap a language chip to switch. The interface updates immediately.
 

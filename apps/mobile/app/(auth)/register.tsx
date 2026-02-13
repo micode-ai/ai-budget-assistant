@@ -23,6 +23,7 @@ const CURRENCIES = [
   { code: 'UAH', label: '\u20B4 UAH' },
   { code: 'PLN', label: 'z\u0142 PLN' },
   { code: 'RUB', label: '\u20BD RUB' },
+  { code: 'BYN', label: 'Br BYN' },
 ];
 
 export default function RegisterScreen() {
