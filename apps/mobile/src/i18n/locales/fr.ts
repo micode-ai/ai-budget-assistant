@@ -893,4 +893,12 @@ export default {
     title: 'Aide',
     articleTitle: 'Aide',
   },
+  legal: {
+    privacyPolicy: 'Politique de confidentialité',
+    termsOfService: 'Conditions d\'utilisation',
+    agreeToTerms: 'J\'accepte les',
+    and: 'et',
+    bySubscribing: 'En vous abonnant, vous acceptez nos',
+    mustAcceptTerms: 'Vous devez accepter les Conditions et la Politique de confidentialité',
+  },
 } as const;

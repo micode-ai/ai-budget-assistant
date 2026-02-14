@@ -893,4 +893,12 @@ export default {
     title: 'Помощь',
     articleTitle: 'Помощь',
   },
+  legal: {
+    privacyPolicy: 'Политика конфиденциальности',
+    termsOfService: 'Условия использования',
+    agreeToTerms: 'Я принимаю',
+    and: 'и',
+    bySubscribing: 'Подписываясь, вы принимаете наши',
+    mustAcceptTerms: 'Вы должны принять Условия и Политику конфиденциальности',
+  },
 } as const;

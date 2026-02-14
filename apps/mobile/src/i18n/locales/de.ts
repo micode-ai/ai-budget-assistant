@@ -893,4 +893,12 @@ export default {
     title: 'Hilfe',
     articleTitle: 'Hilfe',
   },
+  legal: {
+    privacyPolicy: 'Datenschutzrichtlinie',
+    termsOfService: 'Nutzungsbedingungen',
+    agreeToTerms: 'Ich stimme den',
+    and: 'und',
+    bySubscribing: 'Mit dem Abonnement stimmen Sie unseren',
+    mustAcceptTerms: 'Sie müssen die Nutzungsbedingungen und Datenschutzrichtlinie akzeptieren',
+  },
 } as const;
