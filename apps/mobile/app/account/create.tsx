@@ -22,6 +22,7 @@ const ACCOUNT_TYPES: { type: AccountType; icon: IconName }[] = [
   { type: 'personal', icon: 'person-outline' },
   { type: 'business', icon: 'briefcase-outline' },
   { type: 'shared', icon: 'people-outline' },
+  { type: 'investment', icon: 'trending-up-outline' },
 ];
 
 const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
@@ -162,18 +163,20 @@ const createStyles = (theme: Theme) => ({
   },
   typeRow: {
     flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
     gap: theme.spacing[3],
   },
   typeCard: {
-    flex: 1,
+    width: '47%' as unknown as number,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[3],
     borderWidth: 2,
     borderColor: theme.colors.border,
-    gap: theme.spacing[2],
+    gap: theme.spacing[1.5],
   },
   typeCardActive: {
     borderColor: theme.colors.primary,

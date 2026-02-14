@@ -123,4 +123,48 @@ export interface ApiEndpoints {
     query: { startDate: string; endDate: string };
     response: import('../dto').AnalyticsSummary;
   };
+
+  // Investments
+  'GET /investments/assets/search': {
+    query: { q: string; type?: string };
+    response: import('../dto').AssetSearchResponse;
+  };
+  'GET /investments/holdings': {
+    response: import('../entities').PortfolioHolding[];
+  };
+  'POST /investments/holdings': {
+    body: import('../dto').CreatePortfolioHoldingDto;
+    response: import('../entities').PortfolioHolding;
+  };
+  'DELETE /investments/holdings/:id': {
+    params: { id: string };
+    response: { success: boolean };
+  };
+  'GET /investments/transactions': {
+    query: { holdingId?: string };
+    response: import('../entities').InvestmentTransaction[];
+  };
+  'POST /investments/transactions': {
+    body: import('../dto').CreateInvestmentTransactionDto;
+    response: import('../entities').InvestmentTransaction;
+  };
+  'PATCH /investments/transactions/:id': {
+    params: { id: string };
+    body: import('../dto').UpdateInvestmentTransactionDto;
+    response: import('../entities').InvestmentTransaction;
+  };
+  'DELETE /investments/transactions/:id': {
+    params: { id: string };
+    response: { success: boolean };
+  };
+  'GET /investments/summary': {
+    response: import('../dto').PortfolioSummaryResponse;
+  };
+  'POST /investments/analytics': {
+    body: import('../dto').PortfolioAnalyticsRequest;
+    response: import('../dto').PortfolioAnalyticsResponse;
+  };
+  'POST /investments/refresh-prices': {
+    response: { success: boolean };
+  };
 }

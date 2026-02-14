@@ -23,6 +23,7 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = 
   personal: 'person-outline',
   business: 'briefcase-outline',
   shared: 'people-outline',
+  investment: 'trending-up-outline',
 };
 
 export function AccountSwitcher() {

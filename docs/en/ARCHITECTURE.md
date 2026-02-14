@@ -42,7 +42,7 @@ AI Budget Assistant follows a monorepo architecture with two main applications a
 
 The application supports multi-account access with role-based control:
 
-- **Account types**: `personal`, `business`, `shared`
+- **Account types**: `personal`, `business`, `shared`, `investment`
 - **Roles**: `owner` (full access), `editor` (create/edit), `viewer` (read-only)
 - **Account scoping**: All data requests include `X-Account-Id` header; `AccountContextGuard` resolves membership and role
 - **Invitations**: Users can be invited to accounts via invite codes with expiration

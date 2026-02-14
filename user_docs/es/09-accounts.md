@@ -15,6 +15,7 @@ La aplicacion admite multiples cuentas para separar diferentes contextos financi
 | **Personal** | Icono de persona | Seguimiento de gastos individual |
 | **Compartida** | Icono de personas | Presupuestos familiares o de grupo (por ejemplo, "Familia") |
 | **Empresa** | Icono de maletin | Gastos de la empresa o equipo (por ejemplo, "MiCodigo") |
+| **Inversion** | Icono de tendencia al alza | Seguimiento de carteras de inversion y activos |
 
 Cada cuenta muestra su tipo y tu rol (Propietario, Editor u Observador).
 
@@ -35,7 +36,7 @@ Toca **Gestionar cuentas** en la parte inferior del menu desplegable para ir a l
 1. Ve a la lista de Cuentas (a traves de **Gestionar cuentas** o desde Ajustes)
 2. Toca **Crear cuenta**
 3. Introduce un **Nombre de cuenta** (por ejemplo, "Mi presupuesto")
-4. Selecciona el **Tipo de cuenta**: Personal, Compartida o Empresa
+4. Selecciona el **Tipo de cuenta**: Personal, Compartida, Empresa o Inversion
 5. Selecciona la **Moneda** para esta cuenta
 6. Toca **Crear**
 

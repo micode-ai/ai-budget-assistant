@@ -370,6 +370,65 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Investment tables
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS assets (
+        id TEXT PRIMARY KEY,
+        symbol TEXT NOT NULL,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        exchange TEXT,
+        current_price REAL,
+        price_currency TEXT NOT NULL DEFAULT 'USD',
+        logo_url TEXT,
+        last_price_update INTEGER,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS portfolio_holdings (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        server_id TEXT,
+        account_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        asset_id TEXT NOT NULL,
+        quantity REAL NOT NULL DEFAULT 0,
+        average_cost_basis REAL NOT NULL DEFAULT 0,
+        total_invested REAL NOT NULL DEFAULT 0,
+        notes TEXT,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (asset_id) REFERENCES assets(id),
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS investment_transactions (
+        id TEXT PRIMARY KEY,
+        local_id TEXT NOT NULL,
+        server_id TEXT,
+        holding_id TEXT NOT NULL,
+        account_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        type TEXT NOT NULL,
+        quantity REAL NOT NULL,
+        price_per_unit REAL NOT NULL,
+        total_amount REAL NOT NULL,
+        fee REAL NOT NULL DEFAULT 0,
+        date INTEGER NOT NULL,
+        notes TEXT,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_status TEXT NOT NULL DEFAULT 'pending',
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (holding_id) REFERENCES portfolio_holdings(id) ON DELETE CASCADE
+      );
+    `);
+
     // Add receipt_image column to expenses (migration for existing DBs)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image TEXT`);
@@ -455,6 +514,15 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_category ON expense_category_splits(category_id)',
       // Gamification indexes
       'CREATE INDEX IF NOT EXISTS idx_user_achievements_achievement ON user_achievements(achievement_id)',
+      // Investment indexes
+      'CREATE INDEX IF NOT EXISTS idx_assets_symbol ON assets(symbol)',
+      'CREATE INDEX IF NOT EXISTS idx_portfolio_holdings_account ON portfolio_holdings(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_portfolio_holdings_asset ON portfolio_holdings(asset_id)',
+      'CREATE INDEX IF NOT EXISTS idx_investment_transactions_holding ON investment_transactions(holding_id)',
+      'CREATE INDEX IF NOT EXISTS idx_investment_transactions_account ON investment_transactions(account_id)',
+      'CREATE INDEX IF NOT EXISTS idx_investment_transactions_date ON investment_transactions(account_id, date DESC)',
+      'CREATE INDEX IF NOT EXISTS idx_investment_transactions_sync ON investment_transactions(sync_status)',
+      'CREATE INDEX IF NOT EXISTS idx_portfolio_holdings_sync ON portfolio_holdings(sync_status)',
     ];
 
     for (const indexSql of indexes) {

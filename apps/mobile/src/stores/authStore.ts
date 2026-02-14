@@ -9,6 +9,8 @@ import { useIncomeStore } from './incomeStore';
 import { useCategoryStore } from './categoryStore';
 import { useWalletStore } from './walletStore';
 import { useExchangeRateStore } from './exchangeRateStore';
+import { useInvestmentStore } from './investmentStore';
+import * as investmentRepo from '../db/investmentRepository';
 
 interface AuthState {
   user: User | null;
@@ -318,6 +320,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           useIncomeStore.getState().reset();
           useWalletStore.getState().reset();
           useExchangeRateStore.getState().reset();
+          useInvestmentStore.getState().reset();
+
+          // Clear investment data from SQLite
+          await investmentRepo.clearAllInvestments();
         } catch (error) {
           console.error('Failed to logout:', error);
         }

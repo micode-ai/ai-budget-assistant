@@ -12,8 +12,8 @@ export class CreateAccountDto {
   @IsString()
   name: string;
 
-  @IsEnum(['personal', 'business', 'shared'])
-  type: 'personal' | 'business' | 'shared';
+  @IsEnum(['personal', 'business', 'shared', 'investment'])
+  type: 'personal' | 'business' | 'shared' | 'investment';
 
   @IsOptional()
   @IsString()

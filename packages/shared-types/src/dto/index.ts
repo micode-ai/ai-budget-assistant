@@ -1,6 +1,6 @@
 // Data Transfer Objects for API communication
 
-import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory } from '../entities';
+import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory, AssetType, InvestmentTransactionType, PortfolioSummary, PortfolioPerformance } from '../entities';
 
 // Auth DTOs
 export interface RegisterDto {
@@ -254,7 +254,7 @@ export interface UpdateMemberRoleDto {
 // Sync DTOs
 export type SyncOperation = 'create' | 'update' | 'delete';
 
-export type SyncEntityType = 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income' | 'tag' | 'expense_tag' | 'income_tag' | 'project' | 'project_expense' | 'project_income' | 'expense_category_split';
+export type SyncEntityType = 'expense' | 'budget' | 'category' | 'walletBalance' | 'currencyExchange' | 'income' | 'tag' | 'expense_tag' | 'income_tag' | 'project' | 'project_expense' | 'project_income' | 'expense_category_split' | 'portfolio_holding' | 'investment_transaction';
 
 export interface SyncChange<T = unknown> {
   entityType: SyncEntityType;
@@ -634,6 +634,69 @@ export interface CheckAchievementsResponse {
   }>;
   streakUpdated: boolean;
   currentStreak: number;
+}
+
+// Investment DTOs
+
+export interface AssetSearchResult {
+  symbol: string;
+  name: string;
+  type: AssetType;
+  exchange: string;
+  currency: string;
+}
+
+export interface AssetSearchResponse {
+  results: AssetSearchResult[];
+}
+
+export interface CreatePortfolioHoldingDto {
+  localId: string;
+  assetSymbol: string;
+  assetName: string;
+  assetType: AssetType;
+  assetExchange?: string;
+  notes?: string;
+}
+
+export interface CreateInvestmentTransactionDto {
+  localId: string;
+  holdingId: string;
+  type: InvestmentTransactionType;
+  quantity: number;
+  pricePerUnit: number;
+  fee?: number;
+  date: string; // ISO string
+  notes?: string;
+}
+
+export interface UpdateInvestmentTransactionDto {
+  quantity?: number;
+  pricePerUnit?: number;
+  fee?: number;
+  date?: string;
+  notes?: string;
+}
+
+export interface PortfolioSummaryResponse {
+  summary: PortfolioSummary;
+  lastPriceUpdate: string;
+}
+
+export interface PortfolioAnalyticsRequest {
+  period: 'week' | 'month' | 'quarter' | 'year' | 'all';
+  benchmark?: string;
+}
+
+export interface PortfolioAnalyticsResponse {
+  performance: PortfolioPerformance;
+  allocation: Array<{
+    assetType: AssetType;
+    value: number;
+    percentage: number;
+  }>;
+  topGainers: Array<{ symbol: string; pnlPercent: number }>;
+  topLosers: Array<{ symbol: string; pnlPercent: number }>;
 }
 
 // Admin DTOs

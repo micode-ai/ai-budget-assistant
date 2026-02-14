@@ -204,6 +204,7 @@ export const SyncOperationSchema = z.enum(['create', 'update', 'delete']);
 export const SyncEntityTypeSchema = z.enum([
   'expense', 'budget', 'category', 'walletBalance', 'currencyExchange', 'income',
   'tag', 'expense_tag', 'income_tag', 'project', 'project_expense', 'project_income', 'expense_category_split',
+  'portfolio_holding', 'investment_transaction',
 ]);
 
 export const SyncChangeSchema = z.object({
@@ -303,6 +304,43 @@ export const ExchangeFiltersSchema = PaginationSchema.extend({
   currency: CurrencySchema.optional(),
 });
 
+// Investment schemas
+export const AssetTypeSchema = z.enum(['stock', 'crypto', 'etf', 'bond', 'commodity']);
+export const InvestmentTransactionTypeSchema = z.enum(['buy', 'sell']);
+
+export const CreatePortfolioHoldingSchema = z.object({
+  localId: z.string().uuid(),
+  assetSymbol: z.string().min(1).max(20).transform(s => s.toUpperCase()),
+  assetName: z.string().min(1).max(200),
+  assetType: AssetTypeSchema,
+  assetExchange: z.string().max(50).optional(),
+  notes: z.string().max(500).optional(),
+});
+
+export const CreateInvestmentTransactionSchema = z.object({
+  localId: z.string().uuid(),
+  holdingId: z.string().uuid(),
+  type: InvestmentTransactionTypeSchema,
+  quantity: z.number().positive('Quantity must be positive').max(999999999),
+  pricePerUnit: z.number().positive('Price must be positive').max(999999999),
+  fee: z.number().min(0).max(999999999).optional().default(0),
+  date: z.string().datetime({ offset: true }),
+  notes: z.string().max(500).optional(),
+});
+
+export const UpdateInvestmentTransactionSchema = z.object({
+  quantity: z.number().positive().max(999999999).optional(),
+  pricePerUnit: z.number().positive().max(999999999).optional(),
+  fee: z.number().min(0).max(999999999).optional(),
+  date: z.string().datetime({ offset: true }).optional(),
+  notes: z.string().max(500).optional(),
+});
+
+export const PortfolioAnalyticsRequestSchema = z.object({
+  period: z.enum(['week', 'month', 'quarter', 'year', 'all']),
+  benchmark: z.string().max(20).optional(),
+});
+
 // Type exports from schemas
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
@@ -331,3 +369,7 @@ export type CreateProjectInput = z.infer<typeof CreateProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>;
 export type CreateExpenseCategorySplitInput = z.infer<typeof CreateExpenseCategorySplitSchema>;
 export type SetExpenseSplitsInput = z.infer<typeof SetExpenseSplitsSchema>;
+export type CreatePortfolioHoldingInput = z.infer<typeof CreatePortfolioHoldingSchema>;
+export type CreateInvestmentTransactionInput = z.infer<typeof CreateInvestmentTransactionSchema>;
+export type UpdateInvestmentTransactionInput = z.infer<typeof UpdateInvestmentTransactionSchema>;
+export type PortfolioAnalyticsRequestInput = z.infer<typeof PortfolioAnalyticsRequestSchema>;

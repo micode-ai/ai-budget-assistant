@@ -22,7 +22,7 @@ export class AccountsService {
 
   async create(userId: string, dto: CreateAccountDto) {
     // Validate account type limits
-    if (dto.type === 'personal' || dto.type === 'business') {
+    if (dto.type === 'personal' || dto.type === 'business' || dto.type === 'investment') {
       const existing = await this.prisma.account.findFirst({
         where: { ownerId: userId, type: dto.type, isActive: true },
       });
@@ -163,7 +163,7 @@ export class AccountsService {
     });
 
     if (!account || account.type === 'personal') {
-      throw new BadRequestException('Invitations can only be created for shared or business accounts');
+      throw new BadRequestException('Invitations can only be created for shared, business, or investment accounts');
     }
 
     // If inviting by email, check the user is not already a member

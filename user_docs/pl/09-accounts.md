@@ -15,6 +15,7 @@ Aplikacja obsluguje wiele kont w celu oddzielenia roznych kontekstow finansowych
 | **Osobiste** | Ikona osoby | Indywidualne sledzenie wydatkow |
 | **Wspolne** | Ikona osob | Budzety rodzinne lub grupowe (np. "Rodzina") |
 | **Firmowe** | Ikona aktowki | Wydatki firmowe lub zespolowe (np. "MiCode") |
+| **Inwestycyjne** | Ikona trendu wzrostowego | Sledzenie portfeli inwestycyjnych i aktywow |
 
 Kazde konto wyswietla swoj typ i Twoja role (Wlasciciel, Edytor lub Obserwator).
 
@@ -35,7 +36,7 @@ Dotknij **Zarzadzaj kontami** na dole menu, aby przejsc do pelnej listy kont.
 1. Przejdz do listy kont (przez **Zarzadzaj kontami** lub z Ustawien)
 2. Dotknij **Utworz konto**
 3. Wprowadz **Nazwe konta** (np. "Moj budzet")
-4. Wybierz **Typ konta**: Osobiste, Wspolne lub Firmowe
+4. Wybierz **Typ konta**: Osobiste, Wspolne, Firmowe lub Inwestycyjne
 5. Wybierz **Walute** dla tego konta
 6. Dotknij **Utworz**
 
