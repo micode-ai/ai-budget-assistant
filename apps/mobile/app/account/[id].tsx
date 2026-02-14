@@ -191,7 +191,7 @@ export default function AccountDetailScreen() {
         }
       },
     }));
-    buttons.push({ text: t('common.cancel'), onPress: () => {} });
+    buttons.push({ text: t('common.cancel'), onPress: async () => {} });
     Alert.alert(t('accounts.changeRole'), t('accounts.selectRole'), buttons as any);
   };
 
