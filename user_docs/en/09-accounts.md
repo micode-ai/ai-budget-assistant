@@ -15,6 +15,7 @@ The app supports multiple accounts to separate different financial contexts. Eac
 | **Personal** | Person icon | Individual expense tracking |
 | **Shared** | People icon | Family or group budgets (e.g., "Family") |
 | **Business** | Briefcase icon | Company or team expenses (e.g., "MiCode") |
+| **Investment** | Trending-up icon | Track investment portfolios and assets |
 
 Each account shows its type and your role (Owner, Editor, or Viewer).
 
@@ -35,7 +36,7 @@ Tap **Manage Accounts** at the bottom of the dropdown to go to the full account 
 1. Go to the Accounts list (via **Manage Accounts** or from Settings)
 2. Tap **Create Account**
 3. Enter an **Account Name** (e.g., "My Budget")
-4. Select the **Account Type**: Personal, Shared, or Business
+4. Select the **Account Type**: Personal, Shared, Business, or Investment
 5. Select the **Currency** for this account
 6. Tap **Create**
 

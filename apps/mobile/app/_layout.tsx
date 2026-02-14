@@ -308,6 +308,43 @@ function RootNavigator() {
             title: t('tags.title'),
           }}
         />
+        <Stack.Screen
+          name="investment/index"
+          options={{
+            headerShown: true,
+            title: t('nav.investmentDashboard'),
+          }}
+        />
+        <Stack.Screen
+          name="investment/search"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('nav.assetSearch'),
+          }}
+        />
+        <Stack.Screen
+          name="investment/[holdingId]"
+          options={{
+            headerShown: true,
+            title: t('nav.assetDetails'),
+          }}
+        />
+        <Stack.Screen
+          name="investment/transaction"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('nav.investmentTransaction'),
+          }}
+        />
+        <Stack.Screen
+          name="investment/analytics"
+          options={{
+            headerShown: true,
+            title: t('nav.investmentAnalytics'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

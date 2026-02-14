@@ -4,7 +4,7 @@ import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
 
 interface SyncChange {
-  entityType: 'expense' | 'expense_item' | 'budget' | 'category' | 'income' | 'tag' | 'project' | 'expense_tag' | 'income_tag' | 'project_expense' | 'project_income' | 'expense_category_split';
+  entityType: 'expense' | 'expense_item' | 'budget' | 'category' | 'income' | 'tag' | 'project' | 'expense_tag' | 'income_tag' | 'project_expense' | 'project_income' | 'expense_category_split' | 'portfolio_holding' | 'investment_transaction';
   entityId: string;
   operation: 'create' | 'update' | 'delete';
   payload: any;
@@ -96,6 +96,10 @@ export class SyncService {
       case 'project_income':
       case 'expense_category_split':
         return this.processRelationChange(accountId, change);
+      case 'portfolio_holding':
+        return this.processPortfolioHoldingChange(accountId, userId, change);
+      case 'investment_transaction':
+        return this.processInvestmentTransactionChange(accountId, userId, change);
       default:
         return {
           entityId: change.entityId,
@@ -393,6 +397,89 @@ export class SyncService {
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
   }
 
+  private async processPortfolioHoldingChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
+    const payload = change.payload as any;
+    if (change.operation === 'create') {
+      // Find or create asset
+      let asset = await this.prisma.asset.findFirst({
+        where: { symbol: payload.assetSymbol?.toUpperCase(), exchange: payload.assetExchange || null },
+      });
+      if (!asset) {
+        asset = await this.prisma.asset.create({
+          data: {
+            symbol: payload.assetSymbol?.toUpperCase(),
+            name: payload.assetName,
+            type: payload.assetType,
+            exchange: payload.assetExchange,
+            priceCurrency: 'USD',
+          },
+        });
+      }
+      const holding = await this.prisma.portfolioHolding.upsert({
+        where: { accountId_clientId: { accountId, clientId: payload.localId || change.entityId } },
+        create: {
+          accountId,
+          userId,
+          clientId: payload.localId || change.entityId,
+          assetId: asset.id,
+          notes: payload.notes,
+        },
+        update: { isDeleted: false },
+      });
+      return { entityId: change.entityId, status: 'success', serverId: holding.id, serverVersion: holding.syncVersion };
+    }
+    if (change.operation === 'delete') {
+      await this.prisma.portfolioHolding.updateMany({
+        where: { clientId: change.entityId, accountId },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+      return { entityId: change.entityId, status: 'success' };
+    }
+    return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
+  }
+
+  private async processInvestmentTransactionChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
+    const payload = change.payload as any;
+    if (change.operation === 'create') {
+      const holding = await this.prisma.portfolioHolding.findFirst({
+        where: { OR: [{ id: payload.holdingId }, { clientId: payload.holdingId }], accountId },
+      });
+      if (!holding) return { entityId: change.entityId, status: 'error', error: 'Holding not found' };
+
+      const quantity = Number(payload.quantity);
+      const pricePerUnit = Number(payload.pricePerUnit);
+      const fee = Number(payload.fee) || 0;
+      const totalAmount = quantity * pricePerUnit + (payload.type === 'buy' ? fee : -fee);
+
+      const tx = await this.prisma.investmentTransaction.upsert({
+        where: { accountId_clientId: { accountId, clientId: payload.localId || change.entityId } },
+        create: {
+          accountId,
+          userId,
+          clientId: payload.localId || change.entityId,
+          holdingId: holding.id,
+          type: payload.type,
+          quantity,
+          pricePerUnit,
+          totalAmount,
+          fee,
+          date: new Date(payload.date),
+          notes: payload.notes,
+        },
+        update: { isDeleted: false },
+      });
+      return { entityId: change.entityId, status: 'success', serverId: tx.id, serverVersion: tx.syncVersion };
+    }
+    if (change.operation === 'delete') {
+      await this.prisma.investmentTransaction.updateMany({
+        where: { clientId: change.entityId, accountId },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+      return { entityId: change.entityId, status: 'success' };
+    }
+    return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
+  }
+
   private async processRelationChange(accountId: string, change: SyncChange): Promise<SyncResult> {
     // For relation entities (expense_tag, income_tag, project_expense, project_income, expense_category_split)
     // These are simple create/delete operations
@@ -461,7 +548,7 @@ export class SyncService {
 
   async pullChanges(accountId: string, userId: string, since: Date) {
     // Get all entities updated since the given timestamp
-    const [expenses, expenseItems, budgets, categories, incomes, tags, projects, expenseTags, projectExpenses, categorySplits] = await Promise.all([
+    const [expenses, expenseItems, budgets, categories, incomes, tags, projects, expenseTags, projectExpenses, categorySplits, portfolioHoldings, investmentTransactions] = await Promise.all([
       this.prisma.expense.findMany({
         where: {
           accountId,
@@ -497,6 +584,8 @@ export class SyncService {
       this.prisma.expenseTag.findMany({ where: { updatedAt: { gt: since }, expense: { accountId } } }),
       this.prisma.projectExpense.findMany({ where: { updatedAt: { gt: since }, project: { accountId } } }),
       this.prisma.expenseCategorySplit.findMany({ where: { updatedAt: { gt: since }, expense: { accountId } } }),
+      this.prisma.portfolioHolding.findMany({ where: { accountId, updatedAt: { gt: since } }, include: { asset: true } }),
+      this.prisma.investmentTransaction.findMany({ where: { accountId, updatedAt: { gt: since } } }),
     ]);
 
     const changes = [
@@ -579,6 +668,22 @@ export class SyncService {
         data: cs,
         version: 1,
         timestamp: cs.updatedAt.toISOString(),
+      })),
+      ...portfolioHoldings.map((h: { clientId: string; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'portfolio_holding' as const,
+        entityId: h.clientId,
+        operation: h.isDeleted ? 'delete' as const : 'update' as const,
+        data: h,
+        version: h.syncVersion,
+        timestamp: h.updatedAt.toISOString(),
+      })),
+      ...investmentTransactions.map((t: { clientId: string; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'investment_transaction' as const,
+        entityId: t.clientId,
+        operation: t.isDeleted ? 'delete' as const : 'update' as const,
+        data: t,
+        version: t.syncVersion,
+        timestamp: t.updatedAt.toISOString(),
       })),
     ];
 

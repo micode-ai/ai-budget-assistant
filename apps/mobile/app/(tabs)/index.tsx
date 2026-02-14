@@ -11,6 +11,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { useGamificationStore } from '@/stores/gamificationStore';
+import { useInvestmentStore } from '@/stores/investmentStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { getIntlLocale } from '@/i18n';
@@ -28,6 +29,8 @@ export default function DashboardScreen() {
   const { walletSummary, loadWallet } = useWalletStore();
   const { convertedIncomeTotal, convertedExpenseTotal, loadRates } = useExchangeRateStore();
   const { level, levelProgress, currentStreak, longestStreak, loadProfile } = useGamificationStore();
+  const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
+  const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -37,8 +40,11 @@ export default function DashboardScreen() {
     if (currentAccountId) {
       loadIncomes();
       loadProfile();
+      if (currentAccountType === 'investment') {
+        loadInvestmentSummary();
+      }
     }
-  }, [currentAccountId, loadIncomes, loadProfile]);
+  }, [currentAccountId, loadIncomes, loadProfile, currentAccountType, loadInvestmentSummary]);
 
   const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
@@ -47,7 +53,11 @@ export default function DashboardScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await Promise.all([loadExpenses(), loadIncomes(), loadWallet(), loadRates(), loadProfile()]);
+      const promises = [loadExpenses(), loadIncomes(), loadWallet(), loadRates(), loadProfile()];
+      if (currentAccountType === 'investment') {
+        promises.push(loadInvestmentSummary());
+      }
+      await Promise.all(promises);
     } finally {
       setRefreshing(false);
     }
@@ -72,6 +82,35 @@ export default function DashboardScreen() {
           <Text style={styles.welcomeText}>{t('dashboard.hello', { name: user?.name || 'User' })}</Text>
           <Text style={styles.dateText}>{new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
         </View>
+
+        {currentAccountType === 'investment' && investmentSummary && (
+          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/investment')}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>{t('investments.portfolio')}</Text>
+            </View>
+            <View style={styles.investmentRow}>
+              <View style={styles.investmentCol}>
+                <Text style={styles.investmentLabel}>{t('investments.totalValue')}</Text>
+                <Text style={styles.investmentValue}>
+                  {formatCurrency(investmentSummary.totalValue, currency)}
+                </Text>
+              </View>
+              <View style={styles.investmentCol}>
+                <Text style={styles.investmentLabel}>{t('investments.dayChange')}</Text>
+                <Text style={[
+                  styles.investmentValue,
+                  { color: investmentSummary.totalPnL >= 0 ? theme.colors.success : theme.colors.danger },
+                ]}>
+                  {investmentSummary.totalPnL >= 0 ? '+' : ''}
+                  {formatCurrency(investmentSummary.totalPnL, currency)}
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.investmentHoldingsCount}>
+              {t('investments.holdingsCount', { count: investmentSummary.holdings.length })}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {canEdit && (
           <ScrollView
@@ -479,6 +518,28 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textLink,
     textAlign: 'center' as const,
+    marginTop: theme.spacing[3],
+  },
+  investmentRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    gap: theme.spacing[4],
+  },
+  investmentCol: {
+    flex: 1,
+  },
+  investmentLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1],
+  },
+  investmentValue: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+  },
+  investmentHoldingsCount: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
     marginTop: theme.spacing[3],
   },
 });

@@ -15,6 +15,7 @@ Die App unterstutzt mehrere Konten, um verschiedene finanzielle Kontexte zu tren
 | **Personlich** | Personensymbol | Individuelle Ausgabenverfolgung |
 | **Gemeinsam** | Gruppensymbol | Familien- oder Gruppenbudgets (z.B. "Familie") |
 | **Geschaftlich** | Aktenkoffersymbol | Firmen- oder Teamausgaben (z.B. "MiCode") |
+| **Investition** | Aufwartstrend-Symbol | Investmentportfolios und Vermogenswerte verfolgen |
 
 Jedes Konto zeigt seinen Typ und deine Rolle (Eigentumer, Bearbeiter oder Betrachter).
 
@@ -35,7 +36,7 @@ Tippe auf **Konten verwalten** am unteren Rand des Dropdowns, um zur vollstandig
 1. Gehe zur Kontoliste (uber **Konten verwalten** oder aus den Einstellungen)
 2. Tippe auf **Konto erstellen**
 3. Gib einen **Kontonamen** ein (z.B. "Mein Budget")
-4. Wahle den **Kontotyp**: Personlich, Gemeinsam oder Geschaftlich
+4. Wahle den **Kontotyp**: Personlich, Gemeinsam, Geschaftlich oder Investition
 5. Wahle die **Wahrung** fur dieses Konto
 6. Tippe auf **Erstellen**
 

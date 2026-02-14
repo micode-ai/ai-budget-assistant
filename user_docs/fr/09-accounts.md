@@ -15,6 +15,7 @@ L'application prend en charge plusieurs comptes pour separer les differents cont
 | **Personnel** | Icone de personne | Suivi des depenses individuelles |
 | **Partage** | Icone de personnes | Budgets familiaux ou de groupe (par ex. "Famille") |
 | **Professionnel** | Icone de mallette | Depenses d'entreprise ou d'equipe (par ex. "MiCode") |
+| **Investissement** | Icone de tendance haussiere | Suivre les portefeuilles d'investissement et les actifs |
 
 Chaque compte affiche son type et votre role (Proprietaire, Editeur ou Observateur).
 
@@ -35,7 +36,7 @@ Appuyez sur **Gerer les comptes** en bas du menu deroulant pour acceder a la lis
 1. Accedez a la liste des comptes (via **Gerer les comptes** ou depuis les Parametres)
 2. Appuyez sur **Creer un compte**
 3. Entrez un **Nom de compte** (par ex. "Mon Budget")
-4. Selectionnez le **Type de compte** : Personnel, Partage ou Professionnel
+4. Selectionnez le **Type de compte** : Personnel, Partage, Professionnel ou Investissement
 5. Selectionnez la **Devise** pour ce compte
 6. Appuyez sur **Creer**
 

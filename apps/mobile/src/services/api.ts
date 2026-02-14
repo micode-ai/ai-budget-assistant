@@ -754,6 +754,76 @@ class ApiClient {
     return this.request<any[]>('/gamification/definitions');
   }
 
+  // Investment endpoints
+  async searchAssets(query: string) {
+    return this.request<Array<{ symbol: string; name: string; type: string; exchange: string; currency: string }>>(
+      `/investments/assets/search?q=${encodeURIComponent(query)}`,
+    );
+  }
+
+  async getPortfolioHoldings() {
+    return this.request<any[]>('/investments/holdings');
+  }
+
+  async createPortfolioHolding(data: any) {
+    return this.request<any>('/investments/holdings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  }
+
+  async removePortfolioHolding(id: string) {
+    return this.request<{ success: boolean }>(`/investments/holdings/${id}`, { method: 'DELETE' });
+  }
+
+  async getInvestmentTransactions(holdingId?: string) {
+    const params = holdingId ? `?holdingId=${holdingId}` : '';
+    return this.request<any[]>(`/investments/transactions${params}`);
+  }
+
+  async createInvestmentTransaction(data: any) {
+    return this.request<any>('/investments/transactions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateInvestmentTransaction(id: string, data: any) {
+    return this.request<any>(`/investments/transactions/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteInvestmentTransaction(id: string) {
+    return this.request<{ success: boolean }>(`/investments/transactions/${id}`, { method: 'DELETE' });
+  }
+
+  async getPortfolioSummary() {
+    return this.request<any>('/investments/summary');
+  }
+
+  async getPortfolioAnalytics(period: string, benchmark?: string) {
+    return this.request<any>('/investments/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ period, benchmark }),
+    });
+  }
+
+  async getAssetPriceHistory(holdingId: string, days: number = 30) {
+    return this.request<{ dates: string[]; prices: number[] }>(
+      `/investments/holdings/${holdingId}/price-history?days=${days}`,
+    );
+  }
+
+  async refreshInvestmentPrices() {
+    return this.request<{ success: boolean }>('/investments/refresh-prices', { method: 'POST' });
+  }
+
   // Admin endpoints
   async getAdminDashboard(startDate?: string, endDate?: string) {
     const params = new URLSearchParams();

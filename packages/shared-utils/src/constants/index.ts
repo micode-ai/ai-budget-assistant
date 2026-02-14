@@ -99,6 +99,28 @@ export const CHART_COLORS = [
   '#AEB6BF',
 ] as const;
 
+// Investment constants
+export const ASSET_TYPES = [
+  { value: 'stock', label: 'Stock', icon: 'trending-up' },
+  { value: 'crypto', label: 'Crypto', icon: 'logo-bitcoin' },
+  { value: 'etf', label: 'ETF', icon: 'layers' },
+  { value: 'bond', label: 'Bond', icon: 'document-text' },
+  { value: 'commodity', label: 'Commodity', icon: 'diamond' },
+] as const;
+
+export const TWELVE_DATA_CONFIG = {
+  baseUrl: 'https://api.twelvedata.com',
+  maxRequestsPerDay: 800,
+  priceCacheTtlSeconds: 300, // 5 minutes
+  historicalCacheTtlSeconds: 86400, // 1 day
+  batchPriceLimit: 8, // Max symbols per batch request
+};
+
+export const PORTFOLIO_CHART_COLORS = [
+  '#2196F3', '#4CAF50', '#FF9800', '#9C27B0', '#F44336',
+  '#00BCD4', '#FF5722', '#795548', '#607D8B', '#E91E63',
+] as const;
+
 // UUID generation (simple version, use uuid package in production)
 export function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {

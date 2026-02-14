@@ -775,17 +775,18 @@ const createStyles = (theme: Theme) => ({
   // Theme
   themeRow: {
     flexDirection: 'row' as const,
-    gap: theme.spacing[3],
+    gap: theme.spacing[2],
   },
   themeChip: {
     flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
-    gap: theme.spacing[1.5],
+    gap: theme.spacing[1],
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
-    paddingVertical: theme.spacing[3],
+    paddingVertical: theme.spacing[2.5],
+    paddingHorizontal: theme.spacing[2],
     borderWidth: 2,
     borderColor: theme.colors.border,
   },

@@ -11,8 +11,16 @@ const currencyConfig: Record<Currency, { symbol: string; locale: string; positio
   BYN: { symbol: 'Br', locale: 'be-BY', position: 'after' },
 };
 
-export function formatCurrency(amount: number, currency: Currency): string {
-  const config = currencyConfig[currency];
+export function formatCurrency(amount: number, currency: Currency | string): string {
+  const config = currencyConfig[currency as Currency];
+  if (!config) {
+    // Fallback for currencies not in currencyConfig (e.g., CHF, CAD, JPY)
+    const formatted = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+    return `${formatted} ${currency}`;
+  }
   const formatted = new Intl.NumberFormat(config.locale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -21,28 +29,26 @@ export function formatCurrency(amount: number, currency: Currency): string {
   return config.position === 'before' ? `${config.symbol}${formatted}` : `${formatted} ${config.symbol}`;
 }
 
-export function formatCompactCurrency(amount: number, currency: Currency): string {
-  const config = currencyConfig[currency];
+export function formatCompactCurrency(amount: number, currency: Currency | string): string {
+  const config = currencyConfig[currency as Currency];
+  const symbol = config?.symbol ?? currency;
+  const before = config ? config.position === 'before' : false;
 
   if (amount >= 1000000) {
     const formatted = (amount / 1000000).toFixed(1);
-    return config.position === 'before'
-      ? `${config.symbol}${formatted}M`
-      : `${formatted}M ${config.symbol}`;
+    return before ? `${symbol}${formatted}M` : `${formatted}M ${symbol}`;
   }
 
   if (amount >= 1000) {
     const formatted = (amount / 1000).toFixed(1);
-    return config.position === 'before'
-      ? `${config.symbol}${formatted}K`
-      : `${formatted}K ${config.symbol}`;
+    return before ? `${symbol}${formatted}K` : `${formatted}K ${symbol}`;
   }
 
   return formatCurrency(amount, currency);
 }
 
-export function getCurrencySymbol(currency: Currency): string {
-  return currencyConfig[currency].symbol;
+export function getCurrencySymbol(currency: Currency | string): string {
+  return currencyConfig[currency as Currency]?.symbol ?? currency;
 }
 
 // Date formatting

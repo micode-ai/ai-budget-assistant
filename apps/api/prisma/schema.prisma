@@ -13,6 +13,7 @@ enum AccountType {
   personal
   business
   shared
+  investment
 }
 
 enum AccountRole {
@@ -78,6 +79,8 @@ model User {
   usageLogs         UsageLog[]
   achievements      UserAchievement[]
   streaks           UserStreak[]
+  portfolioHoldings       PortfolioHolding[]
+  investmentTransactions  InvestmentTransaction[]
 
   @@map("users")
 }
@@ -113,6 +116,8 @@ model Account {
   projects          Project[]
   achievements      UserAchievement[]
   streaks           UserStreak[]
+  portfolioHoldings       PortfolioHolding[]
+  investmentTransactions  InvestmentTransaction[]
 
   @@map("accounts")
 }
@@ -733,4 +738,103 @@ model UserStreak {
 
   @@unique([userId, accountId, streakType])
   @@map("user_streaks")
+}
+
+// ---- Investments ----
+
+model Asset {
+  id               String    @id @default(uuid())
+  symbol           String
+  name             String
+  type             String    // stock, crypto, etf, bond, commodity
+  exchange         String?
+  currentPrice     Decimal?  @map("current_price") @db.Decimal(16, 6)
+  priceCurrency    String    @default("USD") @map("price_currency")
+  logoUrl          String?   @map("logo_url")
+  lastPriceUpdate  DateTime? @map("last_price_update")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  holdings     PortfolioHolding[]
+  priceHistory AssetPriceHistory[]
+
+  @@unique([symbol, exchange])
+  @@index([symbol])
+  @@map("assets")
+}
+
+model PortfolioHolding {
+  id              String   @id @default(uuid())
+  accountId       String   @map("account_id")
+  userId          String   @map("user_id")
+  clientId        String   @map("client_id")
+  assetId         String   @map("asset_id")
+  quantity        Decimal  @default(0) @db.Decimal(16, 8)
+  averageCostBasis Decimal @default(0) @map("average_cost_basis") @db.Decimal(16, 6)
+  totalInvested   Decimal  @default(0) @map("total_invested") @db.Decimal(16, 2)
+  notes           String?
+  isDeleted       Boolean  @default(false) @map("is_deleted")
+  syncVersion     Int      @default(0) @map("sync_version")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  account      Account                @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset        Asset                  @relation(fields: [assetId], references: [id])
+  transactions InvestmentTransaction[]
+
+  @@unique([accountId, clientId])
+  @@unique([accountId, assetId])
+  @@index([accountId])
+  @@map("portfolio_holdings")
+}
+
+model InvestmentTransaction {
+  id           String   @id @default(uuid())
+  holdingId    String   @map("holding_id")
+  accountId    String   @map("account_id")
+  userId       String   @map("user_id")
+  clientId     String   @map("client_id")
+  type         String   // buy, sell
+  quantity     Decimal  @db.Decimal(16, 8)
+  pricePerUnit Decimal  @map("price_per_unit") @db.Decimal(16, 6)
+  totalAmount  Decimal  @map("total_amount") @db.Decimal(16, 2)
+  fee          Decimal  @default(0) @db.Decimal(12, 2)
+  date         DateTime @db.Date
+  notes        String?
+  isDeleted    Boolean  @default(false) @map("is_deleted")
+  syncVersion  Int      @default(0) @map("sync_version")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  holding PortfolioHolding @relation(fields: [holdingId], references: [id], onDelete: Cascade)
+  account Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, clientId])
+  @@index([holdingId, date(sort: Desc)])
+  @@index([accountId, date(sort: Desc)])
+  @@map("investment_transactions")
+}
+
+model AssetPriceHistory {
+  id         String   @id @default(uuid())
+  assetId    String   @map("asset_id")
+  date       DateTime @db.Date
+  openPrice  Decimal  @map("open_price") @db.Decimal(16, 6)
+  closePrice Decimal  @map("close_price") @db.Decimal(16, 6)
+  highPrice  Decimal  @map("high_price") @db.Decimal(16, 6)
+  lowPrice   Decimal  @map("low_price") @db.Decimal(16, 6)
+  volume     BigInt?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, date])
+  @@index([assetId, date(sort: Desc)])
+  @@map("asset_price_history")
 }
