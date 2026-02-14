@@ -49,6 +49,7 @@ export default function NewIncomeScreen() {
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
     loadTags();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async () => {
@@ -77,7 +78,7 @@ export default function NewIncomeScreen() {
       });
 
       router.back();
-    } catch (err) {
+    } catch {
       Alert.alert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSubmitting(false);

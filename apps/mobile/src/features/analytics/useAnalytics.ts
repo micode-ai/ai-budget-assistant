@@ -138,7 +138,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
   const { categories, loadCategories } = useCategoryStore();
   const { tags, loadTags } = useTagStore();
   const { projects, loadProjects } = useProjectStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
 
   // Ensure reference data is loaded
   useEffect(() => {
@@ -342,6 +342,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         currencyCode: budget.currencyCode,
       };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredExpenses, currencyCode]);
 
   // Day of week spending
@@ -457,6 +458,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     };
 
     fetchInsights();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredExpenses, dateRange, currencyCode, expenses, categories]);
 
   // Item breakdown for OCR expenses

@@ -47,7 +47,7 @@ export default function ChatScreen() {
     if (voiceError) {
       Alert.alert(t('common.error'), voiceError);
     }
-  }, [voiceError]);
+  }, [voiceError, t]);
 
   useEffect(() => {
     // Send transcription as message when available

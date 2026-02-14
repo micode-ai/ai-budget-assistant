@@ -21,26 +21,26 @@ export interface WidgetSmallData {
 
 export interface WidgetMediumData extends WidgetSmallData {
   weekTotal: string;
-  weekBars: Array<{
+  weekBars: {
     day: string; // Mon, Tue, ...
     value: number;
     maxValue: number;
-  }>;
+  }[];
 }
 
 export interface WidgetLargeData extends WidgetMediumData {
-  budgets: Array<{
+  budgets: {
     name: string;
     spent: string;
     limit: string;
     percent: number;
     isOverBudget: boolean;
-  }>;
-  topCategories: Array<{
+  }[];
+  topCategories: {
     name: string;
     amount: string;
     icon: string;
-  }>;
+  }[];
 }
 
 const WIDGET_DATA_KEY = 'widget_data';
@@ -53,18 +53,18 @@ export class WidgetDataService {
   static async updateWidgetData(params: {
     todayExpenses: number;
     yesterdayExpenses: number;
-    weeklyExpenses: Array<{ day: string; amount: number }>;
+    weeklyExpenses: { day: string; amount: number }[];
     weekTotal: number;
-    budgets: Array<{
+    budgets: {
       name: string;
       spent: number;
       limit: number;
-    }>;
-    topCategories: Array<{
+    }[];
+    topCategories: {
       name: string;
       amount: number;
       icon: string;
-    }>;
+    }[];
     currencyCode: Currency;
   }): Promise<void> {
     const {

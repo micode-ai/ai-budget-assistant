@@ -96,6 +96,32 @@ Visualisiert die Verteilung des Portfolios nach Anlagetypen (Aktien, ETFs, Krypt
 
 Liste der besten und schlechtesten Positionen nach prozentualer Rendite.
 
+### AI-Portfolio-Insights (Pro+)
+
+Erhalte KI-gestutzte Analyse deines Portfolios mit umsetzbaren Empfehlungen:
+
+1. Offne den Tab **Analysen**
+2. Scrolle zum **Insights**-Karussell oben
+3. Wische links/rechts, um verschiedene Insights anzuzeigen
+4. Tippe auf die Schliessen-Schaltflache, um einen Insight auszublenden
+
+**Insight-Typen:**
+
+| Typ | Beschreibung |
+|-----|--------------|
+| Konzentrationsrisiko | Warnt, wenn ein Vermogenswert das Portfolio dominiert |
+| Sektorungleichgewicht | Signalisiert Ubergewichtung eines Anlagetyps |
+| Underperformer | Identifiziert Vermogenswerte, die hinter dem Markt liegen |
+| Outperformer | Hebt Rebalancing-Moglichkeiten hervor |
+| Benchmark-Abweichung | Zeigt Abweichung des Portfolios vom Benchmark |
+| Diversifikationslucke | Schlagt fehlende Anlagetypen vor |
+| Kosten-Basis-Alarm | Steuerrelevante unrealisierte Gewinne/Verluste |
+| Gebuhrenwirkung | Warnt, wenn Gebuhren die Rendite auffressen |
+
+Jeder Insight enthalt eine Visualisierung (Diagramm) und einen Handlungsvorschlag.
+
+**Hinweis:** AI-Insights werden 24 Stunden zwischengespeichert und kosten 2,5 AI-Credits pro Aktualisierung.
+
 ### Benchmark-Vergleich (Pro+)
 
 Vergleiche deine Portfoliorendite mit Marktindizes:

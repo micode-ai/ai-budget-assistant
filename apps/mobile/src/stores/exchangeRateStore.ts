@@ -6,8 +6,9 @@ import { useExpenseStore } from './expenseStore';
 
 // Lazy getter to avoid circular dependency with authStore
 // (authStore imports exchangeRateStore, exchangeRateStore needs authStore)
-function getAuthStore() {
-  return require('./authStore').useAuthStore;
+async function getAuthStore() {
+  const { useAuthStore } = await import('./authStore');
+  return useAuthStore;
 }
 
 interface ExchangeRateState {
@@ -69,7 +70,7 @@ export const useExchangeRateStore = create<ExchangeRateState>()(
     loadRates: async () => {
       set({ isLoading: true });
       try {
-        const useAuthStore = getAuthStore();
+        const useAuthStore = await getAuthStore();
         const userCurrency = useAuthStore.getState().user?.currencyCode || 'USD';
         const data = await api.getExchangeRates(userCurrency);
         set({
@@ -112,8 +113,8 @@ useExpenseStore.subscribe(
 );
 
 // Deferred subscription for auth currency changes (avoids circular dep at module init)
-setTimeout(() => {
-  const useAuthStore = getAuthStore();
+setTimeout(async () => {
+  const useAuthStore = await getAuthStore();
   let prevCurrencyCode = useAuthStore.getState().user?.currencyCode;
   useAuthStore.subscribe((s: any) => {
     const curr = s.user?.currencyCode;

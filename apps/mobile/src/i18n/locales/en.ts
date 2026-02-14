@@ -882,6 +882,12 @@ export default {
       benchmarkDesc: 'Benchmark comparison shows how your portfolio performed relative to a market index (like S&P 500). Positive difference means you outperformed the market.',
       benchmarkExample: 'Portfolio: {{portfolio}}% vs Benchmark: {{benchmark}}% = {{diff}}% difference',
     },
+    insights: {
+      title: 'AI Portfolio Insights',
+      loading: 'Analyzing your portfolio...',
+      error: 'Failed to load insights',
+      empty: 'No insights available',
+    },
   },
   help: {
     title: 'Help & Docs',

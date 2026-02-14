@@ -2595,6 +2595,66 @@ X-Account-Id: <account-uuid>
 
 **Note:** Prices are automatically updated every 15 minutes for active portfolios. Use this endpoint to force an immediate refresh.
 
+### AI Portfolio Insights
+
+Get AI-generated insights for investment portfolio analysis. Requires Pro+ subscription.
+
+```http
+GET /investments/insights?language=en
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| language | string | Language code (en, ru, ua, de, es, fr, pl, be) |
+
+**Response** `200 OK`
+```json
+{
+  "insights": [
+    {
+      "id": "uuid",
+      "insightType": "concentration_risk",
+      "title": "High Concentration in AAPL",
+      "description": "Apple Inc represents 45% of your portfolio, which exceeds the recommended 25% threshold for single-asset concentration.",
+      "severity": "warning",
+      "chartConfig": {
+        "chartType": "donut",
+        "title": "Portfolio Allocation",
+        "data": [
+          { "label": "AAPL", "value": 45, "color": "#FF6B6B" },
+          { "label": "GOOGL", "value": 30 },
+          { "label": "Others", "value": 25 }
+        ]
+      },
+      "actionSuggestion": "Consider diversifying by reducing AAPL position to below 25% of portfolio value.",
+      "generatedAt": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "generatedAt": "2024-01-15T10:30:00Z",
+  "portfolioSnapshotAt": "2024-01-15T10:30:00Z"
+}
+```
+
+**Insight Types:**
+| Type | Description | Severity Triggers |
+|------|-------------|-------------------|
+| `concentration_risk` | Single asset dominates portfolio | Critical: >40%, Warning: >25% |
+| `sector_imbalance` | Portfolio heavily weighted to one asset type | Critical: >70%, Warning: >50% |
+| `underperformer` | Asset significantly lagging benchmark | Critical: <-30%, Warning: <-15% |
+| `overperformer` | Asset significantly beating benchmark | Info: >+20% |
+| `benchmark_deviation` | Portfolio straying from benchmark | Critical: >25%, Warning: >15% |
+| `diversification_gap` | Missing asset types | Critical: <2 types, Warning: <3 types |
+| `cost_basis_alert` | High unrealized gains/losses | Critical: >50% or <-30% |
+| `fee_impact` | Transaction fees eating returns | Critical: >5%, Warning: >2% |
+
+**Notes:**
+- Insights are cached for 24 hours
+- Costs 2.5 AI credits per request
+- Requires Pro+ subscription tier
+
 ---
 
 ## Error Responses

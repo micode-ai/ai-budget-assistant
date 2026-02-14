@@ -4,7 +4,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface StoryComparisonProps {
   title?: string;
-  metrics: Array<{ label: string; value: string; change?: number }>;
+  metrics: { label: string; value: string; change?: number }[];
 }
 
 export function StoryComparison({ title, metrics }: StoryComparisonProps) {

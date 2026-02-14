@@ -15,16 +15,6 @@ interface TagRow {
   sync_version: number;
 }
 
-interface ExpenseTagRow {
-  id: string;
-  expense_id: string;
-  tag_id: string;
-  created_at: number;
-  updated_at: number;
-  is_deleted: number;
-  sync_version: number;
-}
-
 function rowToTag(row: TagRow): Tag {
   return {
     id: row.id,

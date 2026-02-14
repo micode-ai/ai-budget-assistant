@@ -7,8 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { useTheme } from '@/theme';
 
-type IconName = keyof typeof Ionicons.glyphMap;
-
 export default function TabLayout() {
   const { isAuthenticated } = useAuthStore();
   const { t } = useTranslation();

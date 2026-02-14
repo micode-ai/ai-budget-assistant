@@ -16,7 +16,6 @@ export default function StoryScreen() {
   const [period, setPeriod] = useState<'week' | 'month'>('month');
   const [story, setStory] = useState<SpendingStory | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isStale, setIsStale] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadStory = useCallback(
@@ -26,14 +25,13 @@ export default function StoryScreen() {
       try {
         const response = await api.getSpendingStory(period, forceRegenerate, i18n.language);
         setStory(response.story);
-        setIsStale(response.isStale);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load story');
       } finally {
         setIsLoading(false);
       }
     },
-    [period],
+    [period, i18n.language],
   );
 
   useEffect(() => {

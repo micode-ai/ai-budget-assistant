@@ -21,16 +21,6 @@ interface ProjectRow {
   sync_version: number;
 }
 
-interface ProjectExpenseRow {
-  id: string;
-  project_id: string;
-  expense_id: string;
-  created_at: number;
-  updated_at: number;
-  is_deleted: number;
-  sync_version: number;
-}
-
 function rowToProject(row: ProjectRow): Project {
   return {
     id: row.id,

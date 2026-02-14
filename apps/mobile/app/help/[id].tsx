@@ -38,7 +38,7 @@ function HelpImage({ src, alt }: { src: string; alt?: string }) {
 
 export default function HelpArticleScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 

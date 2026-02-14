@@ -75,6 +75,7 @@ export default function LoginScreen() {
     if (showBiometric) {
       handleBiometricLogin();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showBiometric]);
 
   return (

@@ -22,7 +22,6 @@ import { TagPicker } from '@/components/TagPicker';
 import { ProjectPicker } from '@/components/ProjectPicker';
 import { SplitEditor } from '@/components/SplitEditor';
 import { insertSplit } from '@/db/splitRepository';
-import { api } from '@/services/api';
 import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
 import type { Currency, ExpenseCategorySplit } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -57,13 +56,14 @@ export default function NewExpenseScreen() {
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSplitEditor, setShowSplitEditor] = useState(false);
-  const [pendingSplits, setPendingSplits] = useState<Array<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }>>([]);
+  const [pendingSplits, setPendingSplits] = useState<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]>([]);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
     loadTags();
     loadProjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async () => {
@@ -124,7 +124,7 @@ export default function NewExpenseScreen() {
       }
 
       router.back();
-    } catch (err) {
+    } catch {
       Alert.alert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSubmitting(false);

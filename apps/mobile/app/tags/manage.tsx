@@ -9,7 +9,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTagStore } from '../../src/stores/tagStore';
@@ -24,6 +24,7 @@ export default function ManageTagsScreen() {
 
   useEffect(() => {
     loadTags();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCreate = async () => {

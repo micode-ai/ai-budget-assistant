@@ -96,6 +96,32 @@ Visualizes how your portfolio is distributed across asset types (stocks, ETFs, c
 
 Lists your best and worst performing holdings by percentage return.
 
+### AI Portfolio Insights (Pro+)
+
+Get AI-powered analysis of your portfolio with actionable recommendations:
+
+1. Open **Analytics** tab
+2. Scroll to the **Insights** carousel at the top
+3. Swipe left/right to view different insights
+4. Tap the dismiss button to hide an insight
+
+**Insight Types:**
+
+| Type | Description |
+|------|-------------|
+| Concentration Risk | Warns when one asset dominates your portfolio |
+| Sector Imbalance | Alerts when heavily weighted to one asset type |
+| Underperformer | Identifies assets lagging the market |
+| Overperformer | Highlights rebalancing opportunities |
+| Benchmark Deviation | Shows when portfolio strays from benchmark |
+| Diversification Gap | Suggests missing asset types |
+| Cost Basis Alert | Tax-relevant unrealized gains/losses |
+| Fee Impact | Warns when fees eat into returns |
+
+Each insight includes a visualization (chart) and actionable suggestion.
+
+**Note:** AI insights are cached for 24 hours and cost 2.5 AI credits per refresh.
+
 ### Benchmark Comparison (Pro+)
 
 Compare your portfolio returns against market indices:

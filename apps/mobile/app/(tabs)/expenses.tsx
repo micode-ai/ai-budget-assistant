@@ -26,7 +26,7 @@ export default function ExpensesScreen() {
       setActiveTab(tab);
     }
   }, [tab]);
-  const { isLoading, loadExpenses, getFilteredExpenses } = useExpenseStore();
+  const { loadExpenses, getFilteredExpenses } = useExpenseStore();
   const { loadIncomes, getFilteredIncomes } = useIncomeStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();

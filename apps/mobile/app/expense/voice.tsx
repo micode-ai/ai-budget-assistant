@@ -56,13 +56,14 @@ export default function VoiceExpenseScreen() {
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (error) {
       Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: resetVoice }]);
     }
-  }, [error, resetVoice]);
+  }, [error, resetVoice, t]);
 
   useEffect(() => {
     if (parsedExpense) {
@@ -76,6 +77,7 @@ export default function VoiceExpenseScreen() {
       setEditCurrencyCode(parsedExpense.currencyCode || user?.currencyCode || 'USD');
       setShowConfirm(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parsedExpense]);
 
   const handleReset = () => {
@@ -125,7 +127,7 @@ export default function VoiceExpenseScreen() {
         { text: t('voice.addAnother'), onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
-    } catch (err) {
+    } catch {
       Alert.alert(t('common.error'), t('voice.saveFailed'));
     }
   };

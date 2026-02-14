@@ -44,6 +44,7 @@ export function DatabaseProvider({ children }: DatabaseProviderProps) {
     }
 
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

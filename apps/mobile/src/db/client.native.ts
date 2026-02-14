@@ -432,42 +432,42 @@ export async function initializeDatabase(): Promise<void> {
     // Add receipt_image column to expenses (migration for existing DBs)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image TEXT`);
-    } catch (e) {
+    } catch {
       // Column already exists, ignore
     }
 
     // Add account_id column to expenses (multi-account migration)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN account_id TEXT NOT NULL DEFAULT ''`);
-    } catch (e) {
+    } catch {
       // Column already exists, ignore
     }
 
     // Add account_id column to budgets
     try {
       expoDb.execSync(`ALTER TABLE budgets ADD COLUMN account_id TEXT NOT NULL DEFAULT ''`);
-    } catch (e) {
+    } catch {
       // Column already exists, ignore
     }
 
     // Add account_id column to categories
     try {
       expoDb.execSync(`ALTER TABLE categories ADD COLUMN account_id TEXT`);
-    } catch (e) {
+    } catch {
       // Column already exists, ignore
     }
 
     // Add discount_amount column to expenses
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN discount_amount REAL`);
-    } catch (e) {
+    } catch {
       // Column already exists, ignore
     }
 
     // Add session_user_id to accounts (multi-user device isolation)
     try {
       expoDb.execSync(`ALTER TABLE accounts ADD COLUMN session_user_id TEXT NOT NULL DEFAULT ''`);
-    } catch (e) {
+    } catch {
       // Column already exists, ignore
     }
 

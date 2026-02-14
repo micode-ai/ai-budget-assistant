@@ -36,6 +36,7 @@ export default function WelcomeScreen() {
 
   useEffect(() => {
     loadPlans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleUpgrade = async (priceEnvKey: string) => {

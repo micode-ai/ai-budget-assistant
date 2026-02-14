@@ -4,7 +4,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface StoryHeroMetricProps {
   title?: string;
-  metrics: Array<{ label: string; value: string; change?: number }>;
+  metrics: { label: string; value: string; change?: number }[];
   tone?: 'positive' | 'neutral' | 'warning' | 'celebration';
 }
 

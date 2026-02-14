@@ -96,6 +96,32 @@ Visualise la repartition du portefeuille par types d'actifs (actions, ETFs, cryp
 
 Liste des meilleures et pires positions par rendement en pourcentage.
 
+### Insights IA du portefeuille (Pro+)
+
+Obtenez une analyse de votre portefeuille alimentée par l'IA avec des recommandations actionnables :
+
+1. Ouvrez l'onglet **Analyses**
+2. Faites défiler jusqu'au carrousel **Insights** en haut
+3. Balayez gauche/droite pour voir différents insights
+4. Appuyez sur le bouton fermer pour masquer un insight
+
+**Types d'insights :**
+
+| Type | Description |
+|------|-------------|
+| Risque de concentration | Avertit lorsqu'un actif domine le portefeuille |
+| Déséquilibre sectoriel | Alerte sur la surexposition à un type d'actif |
+| Sous-performant | Identifie les actifs en retard sur le marché |
+| Surperformant | Met en évidence les opportunités de rééquilibrage |
+| Écart du benchmark | Montre quand le portefeuille s'écarte du benchmark |
+| Lacune de diversification | Suggère les types d'actifs manquants |
+| Alerte de base de coût | Plus-values/moins-values non réalisées fiscalement pertinentes |
+| Impact des frais | Avertit quand les frais réduisent les rendements |
+
+Chaque insight comprend une visualisation (graphique) et une suggestion actionnable.
+
+**Note :** Les insights IA sont mis en cache pendant 24 heures et coûtent 2,5 crédits IA par actualisation.
+
 ### Comparaison avec benchmark (Pro+)
 
 Comparez le rendement de votre portefeuille avec les indices de marche :

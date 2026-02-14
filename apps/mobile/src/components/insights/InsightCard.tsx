@@ -1,9 +1,13 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { ChartRenderer } from '@/components/interactive-charts';
-import type { AIInsightChart } from '@budget/shared-types';
+import type { AIInsightChart, ChartConfig } from '@budget/shared-types';
+
+const MAX_CHART_DATA_POINTS = 5;
+const MAX_LABEL_LENGTH = 6;
+const CHART_HEIGHT = 140;
 
 interface InsightCardProps {
   insight: AIInsightChart;
@@ -20,6 +24,41 @@ const SEVERITY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
 export function InsightCard({ insight, width, onDismiss }: InsightCardProps) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const [showFullAction, setShowFullAction] = useState(false);
+
+  // Limit chart data points and truncate labels to prevent layout issues
+  const limitedChartConfig = useMemo((): ChartConfig | undefined => {
+    if (!insight.chartConfig) return undefined;
+
+    const { data, ...rest } = insight.chartConfig;
+    if (!data || data.length === 0) return insight.chartConfig;
+
+    // Limit data points for bar/line charts
+    let processedData = data;
+    if (data.length > MAX_CHART_DATA_POINTS) {
+      const sortedData = [...data].sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
+      processedData = sortedData.slice(0, MAX_CHART_DATA_POINTS);
+    }
+
+    // Normalize negative values to absolute for bar charts
+    // (the insight title/description already conveys the direction)
+    const isBarChart = rest.chartType === 'bar' || rest.chartType === 'grouped_bar' || rest.chartType === 'stacked_bar';
+    const hasNegatives = processedData.some((d) => d.value < 0);
+
+    // Truncate long labels and normalize values
+    const truncatedData = processedData.map((point) => ({
+      ...point,
+      value: isBarChart && hasNegatives ? Math.abs(point.value) : point.value,
+      label: point.label && point.label.length > MAX_LABEL_LENGTH
+        ? point.label.slice(0, MAX_LABEL_LENGTH - 1) + '…'
+        : point.label,
+    }));
+
+    return {
+      ...rest,
+      data: truncatedData,
+    };
+  }, [insight.chartConfig]);
 
   const severityIcon = SEVERITY_ICONS[insight.severity] || 'information-circle';
 
@@ -67,20 +106,48 @@ export function InsightCard({ insight, width, onDismiss }: InsightCardProps) {
       </Text>
 
       {/* Chart */}
-      {insight.chartConfig && (
+      {limitedChartConfig && (
         <View style={styles.chartContainer}>
-          <ChartRenderer config={insight.chartConfig} height={160} />
+          <ChartRenderer config={limitedChartConfig} height={CHART_HEIGHT} />
         </View>
       )}
 
       {/* Action Suggestion */}
       {insight.actionSuggestion && (
-        <View style={styles.actionContainer}>
+        <TouchableOpacity
+          style={styles.actionContainer}
+          activeOpacity={0.7}
+          onPress={() => setShowFullAction(true)}
+        >
           <Ionicons name="bulb-outline" size={14} color={theme.colors.primary} />
           <Text style={styles.actionText} numberOfLines={2}>
             {insight.actionSuggestion}
           </Text>
-        </View>
+          <Ionicons name="chevron-forward" size={14} color={theme.colors.primary} />
+        </TouchableOpacity>
+      )}
+
+      {/* Full Action Modal */}
+      {showFullAction && insight.actionSuggestion && (
+        <Modal
+          visible
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowFullAction(false)}
+        >
+          <Pressable style={styles.modalOverlay} onPress={() => setShowFullAction(false)}>
+            <Pressable style={styles.modalContent} onPress={(e) => e.stopPropagation()}>
+              <View style={styles.modalHeader}>
+                <Ionicons name="bulb-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.modalTitle}>{insight.title}</Text>
+                <TouchableOpacity onPress={() => setShowFullAction(false)}>
+                  <Ionicons name="close" size={22} color={theme.colors.textSecondary} />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.modalActionText}>{insight.actionSuggestion}</Text>
+            </Pressable>
+          </Pressable>
+        </Modal>
       )}
     </View>
   );
@@ -94,6 +161,7 @@ const createStyles = (theme: Theme) => ({
     marginHorizontal: theme.spacing[2],
     borderWidth: 1,
     borderColor: theme.colors.borderLight,
+    overflow: 'hidden' as const,
     ...theme.shadows.md,
   },
   header: {
@@ -144,5 +212,36 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textPrimary,
     flex: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[4],
+  },
+  modalContent: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    width: '100%' as const,
+    maxWidth: 400,
+    ...theme.shadows.lg,
+  },
+  modalHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[4],
+  },
+  modalTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  modalActionText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
+    lineHeight: 22,
   },
 });

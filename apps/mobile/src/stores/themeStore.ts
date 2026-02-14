@@ -7,26 +7,34 @@ interface ThemeState {
   setMode: (mode: ThemeMode) => void;
 }
 
-// Simple storage abstraction — MMKV when available, in-memory fallback
-const createStorage = () => {
-  try {
-    const { MMKV } = require('react-native-mmkv');
-    const mmkv = new MMKV({ id: 'theme-storage' });
-    return {
-      get: (key: string) => mmkv.getString(key),
-      set: (key: string, value: string) => mmkv.set(key, value),
-    };
-  } catch {
-    // Fallback for Expo Go / environments without TurboModules
-    const mem: Record<string, string> = {};
-    return {
-      get: (key: string) => mem[key],
-      set: (key: string, value: string) => { mem[key] = value; },
-    };
-  }
+interface SimpleStorage {
+  get: (key: string) => string | undefined;
+  set: (key: string, value: string) => void;
+}
+
+// In-memory fallback for Expo Go / environments without TurboModules
+const memFallback: Record<string, string> = {};
+const storage: SimpleStorage = {
+  get: (key: string) => memFallback[key],
+  set: (key: string, value: string) => { memFallback[key] = value; },
 };
 
-const storage = createStorage();
+// Attempt to upgrade storage to MMKV asynchronously
+import('react-native-mmkv')
+  .then(({ MMKV }) => {
+    const mmkv = new MMKV({ id: 'theme-storage' });
+    storage.get = (key: string) => mmkv.getString(key);
+    storage.set = (key: string, value: string) => mmkv.set(key, value);
+
+    // Re-read persisted theme once MMKV is available
+    const persisted = mmkv.getString('themeMode') as ThemeMode | undefined;
+    if (persisted) {
+      useThemeStore.setState({ mode: persisted });
+    }
+  })
+  .catch(() => {
+    // MMKV not available — keep in-memory fallback
+  });
 
 export const useThemeStore = create<ThemeState>((set) => ({
   mode: (storage.get('themeMode') as ThemeMode) || 'system',

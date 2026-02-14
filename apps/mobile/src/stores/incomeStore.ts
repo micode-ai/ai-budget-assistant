@@ -73,11 +73,6 @@ function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string, number
   return totals;
 }
 
-function computeTotalThisMonth(incomes: Income[]): number {
-  const totals = computeIncomeTotalsByCurrency(incomes);
-  return Object.values(totals).reduce((sum, v) => sum + v, 0);
-}
-
 export const useIncomeStore = create<IncomeState>()(
   subscribeWithSelector((set, get) => ({
     incomes: [],

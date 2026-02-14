@@ -46,6 +46,7 @@ export default function IncomeDetailScreen() {
     if (id) {
       getTagsForIncome(id).then(setIncomeTags).catch(() => {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (!income) {

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useEffect } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -33,9 +33,7 @@ export default function DrillDownScreen() {
     breadcrumb,
     isLoading,
     error,
-    canGoBack,
     drillInto,
-    goBack,
     goToLevel,
     initialize,
   } = useDrillDown({ startDate, endDate, currencyCode });

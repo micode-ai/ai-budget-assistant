@@ -882,6 +882,12 @@ export default {
       benchmarkDesc: 'Porównanie pokazuje, jak Twój portfel wypadł względem indeksu rynkowego (np. S&P 500). Dodatnia różnica oznacza, że pobiłeś rynek.',
       benchmarkExample: 'Portfel: {{portfolio}}% vs Benchmark: {{benchmark}}% = {{diff}}% różnica',
     },
+    insights: {
+      title: 'Analizy AI portfela',
+      loading: 'Analizowanie Twojego portfela...',
+      error: 'Nie udało się załadować analiz',
+      empty: 'Brak dostępnych analiz',
+    },
   },
   help: {
     title: 'Pomoc',

@@ -32,7 +32,6 @@ export default function InvestmentDashboardScreen() {
     loadHoldings, loadSummary, loadPerformance, refreshPrices,
   } = useInvestmentStore();
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
-  const accounts = useAccountStore((s) => s.accounts);
   const userCurrency = useAuthStore((s) => s.user?.currencyCode || 'USD') as Currency;
   const { rates, loadRates } = useExchangeRateStore();
   const [refreshing, setRefreshing] = useState(false);
@@ -56,6 +55,7 @@ export default function InvestmentDashboardScreen() {
     if (holdings && holdings.length > 0) {
       loadPerformance(PERIOD_MAP[selectedPeriod]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPeriod, holdings?.length, loadPerformance]);
 
   const onRefresh = useCallback(async () => {

@@ -47,7 +47,8 @@ export function InteractiveLineChart({
     );
   }
 
-  const chartWidth = screenWidth - 64;
+  // Account for container padding (32px) + y-axis labels (~50px)
+  const chartWidth = screenWidth - 90;
 
   const lineData = data.map((point, index) => ({
     value: point.value,
@@ -111,9 +112,11 @@ export function InteractiveLineChart({
         textFontSize={10}
         textColor={theme.colors.textSecondary}
         hideDataPoints={false}
+        initialSpacing={8}
+        endSpacing={8}
         spacing={
           data.length > 1
-            ? Math.max(40, chartWidth / (data.length - 1))
+            ? Math.max(30, (chartWidth - 16) / (data.length - 1))
             : chartWidth
         }
       />
@@ -124,7 +127,6 @@ export function InteractiveLineChart({
 const createStyles = (theme: Theme) => ({
   container: {
     width: '100%' as const,
-    alignItems: 'center' as const,
   },
   emptyText: {
     ...theme.textStyles.bodySm,

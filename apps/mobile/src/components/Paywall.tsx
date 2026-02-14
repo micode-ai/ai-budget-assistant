@@ -21,6 +21,7 @@ export function Paywall({ feature, requiredTier, onDismiss }: PaywallProps) {
 
   useEffect(() => {
     if (plans.length === 0) loadPlans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const plan = plans.find((p) => p.tier === requiredTier);

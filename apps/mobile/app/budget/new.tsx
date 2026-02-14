@@ -45,6 +45,7 @@ export default function NewBudgetScreen() {
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async () => {
@@ -74,7 +75,7 @@ export default function NewBudgetScreen() {
       });
 
       router.back();
-    } catch (err) {
+    } catch {
       Alert.alert(t('common.error'), t('budgetNew.errorFailed'));
     } finally {
       setIsSubmitting(false);

@@ -982,6 +982,7 @@ model SpendingStory {
 | Чат ассистент | GPT-4 | Финансовые советы и аналитика |
 | AI Инсайты | GPT-4 | Анализ паттернов, генерация карточек инсайтов |
 | Генерация историй | GPT-4 | Создание нарративных дашбордов о расходах |
+| Инвестиционные инсайты | GPT-4 | Анализ портфеля, риски концентрации, оповещения о производительности |
 | Подсказки тегов | GPT-4 | Подбор тегов по описанию расхода (сначала из истории, затем AI) |
 | Подсказки проектов | GPT-4 | Привязка расходов к проектам по датам и семантическому анализу |
 | Подсказки разделения | GPT-4 | Предложение разделения расходов по категориям |
@@ -1146,9 +1147,10 @@ src/modules/investments/
 ├── investments.module.ts
 ├── investments.controller.ts
 ├── investments.service.ts
-├── twelve-data.service.ts     # Интеграция с внешним API
+├── investment-insights.service.ts  # Генерация AI-инсайтов портфеля через GPT-4
+├── twelve-data.service.ts          # Интеграция с внешним API
 └── dto/
-    └── index.ts               # CreateHolding, CreateTransaction, Analytics DTO
+    └── index.ts                    # CreateHolding, CreateTransaction, Analytics DTO
 ```
 
 ### Модель данных
@@ -1276,6 +1278,8 @@ app/investment/
   holdings: PortfolioHolding[],
   summary: PortfolioSummary | null,
   analytics: PortfolioPerformance | null,
+  aiInsights: AIInsightChart[],
+  insightsLoading: boolean,
 
   loadHoldings: () => Promise<void>,
   loadSummary: () => Promise<void>,
@@ -1283,8 +1287,33 @@ app/investment/
   createHolding: (dto) => Promise<void>,
   createTransaction: (dto) => Promise<void>,
   refreshPrices: () => Promise<void>,
+  loadInvestmentInsights: (language?) => Promise<void>,
+  dismissInsight: (id: string) => void,
 }
 ```
+
+### AI-инсайты портфеля
+
+Модуль инвестиций включает AI-инсайты на базе GPT-4, которые анализируют портфель и предоставляют рекомендации.
+
+**Типы инсайтов:**
+
+| Тип | Описание | Пороги серьёзности |
+|-----|----------|-------------------|
+| `concentration_risk` | Один актив доминирует в портфеле | Критический: >40%, Предупреждение: >25% |
+| `sector_imbalance` | Перевес в одном типе активов | Критический: >70%, Предупреждение: >50% |
+| `underperformer` | Актив значительно отстаёт от бенчмарка | Критический: <-30%, Предупреждение: <-15% |
+| `overperformer` | Актив значительно обгоняет бенчмарк | Инфо: >+20% (возможность ребалансировки) |
+| `benchmark_deviation` | Портфель отклоняется от бенчмарка | Критический: >25%, Предупреждение: >15% |
+| `diversification_gap` | Отсутствуют типы активов | Критический: <2 типов, Предупреждение: <3 типов |
+| `cost_basis_alert` | Налогово-значимые нереализованные прибыли/убытки | Критический: >50% или <-30% |
+| `fee_impact` | Комиссии съедают доходность | Критический: >5%, Предупреждение: >2% |
+
+**Архитектура:**
+- **Кэширование**: Инсайты кэшируются на 24 часа для каждого аккаунта
+- **Подписка**: Требуется уровень Pro+ (2.5 AI-кредитов за запрос)
+- **Локализация**: Поддерживает все 8 языков приложения
+- **Графики**: Каждый инсайт включает соответствующую визуализацию (donut, bar, line)
 
 ## Безопасность
 

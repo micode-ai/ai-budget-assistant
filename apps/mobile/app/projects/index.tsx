@@ -14,10 +14,11 @@ import { useProjectStore } from '../../src/stores/projectStore';
 
 export default function ProjectsScreen() {
   const { t } = useTranslation();
-  const { projects, loadProjects, getActiveProjects, getArchivedProjects } = useProjectStore();
+  const { loadProjects, getActiveProjects, getArchivedProjects } = useProjectStore();
 
   useEffect(() => {
     loadProjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const active = getActiveProjects();

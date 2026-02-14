@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
@@ -28,7 +27,7 @@ export const TagPicker: React.FC<TagPickerProps> = ({
   const { t } = useTranslation();
   const { tags, createTag, searchTags, getMostUsedTags } = useTagStore();
   const [searchQuery, setSearchQuery] = useState('');
-  const [suggestedTags, setSuggestedTags] = useState<Array<{ name: string; confidence: number; existingTagId?: string }>>([]);
+  const [suggestedTags, setSuggestedTags] = useState<{ name: string; confidence: number; existingTagId?: string }[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
   // Fetch AI suggestions when description changes

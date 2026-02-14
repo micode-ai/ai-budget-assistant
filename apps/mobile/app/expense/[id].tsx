@@ -32,7 +32,7 @@ import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { SplitEditor } from '@/components/SplitEditor';
 import { formatCurrency, formatDate, generateUUID } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
-import type { Currency, ExpenseItem, ExpenseCategorySplit, Tag } from '@budget/shared-types';
+import type { ExpenseItem, ExpenseCategorySplit, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ExpenseDetailScreen() {
@@ -53,7 +53,7 @@ export default function ExpenseDetailScreen() {
     saveReceiptImage,
     deleteReceiptImage,
   } = useExpenseStore();
-  const { tags } = useTagStore();
+  useTagStore();
   const { projects } = useProjectStore();
   const { getExpenseCategories, getCategoryById, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const expense = expenses.find((e) => e.id === id);
@@ -96,6 +96,7 @@ export default function ExpenseDetailScreen() {
       getTagsForExpense(id).then(setExpenseTags).catch(() => {});
       getSplitsForExpense(id).then(setSplits).catch(() => {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleLoadReceiptImage = useCallback(async () => {
@@ -110,7 +111,7 @@ export default function ExpenseDetailScreen() {
     if (id) {
       handleLoadReceiptImage();
     }
-  }, [id]);
+  }, [id, handleLoadReceiptImage]);
 
   // Item modal helpers
   const openAddItem = () => {
@@ -268,7 +269,7 @@ export default function ExpenseDetailScreen() {
     setIsEditing(false);
   };
 
-  const handleSaveSplits = async (editorSplits: Array<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }>) => {
+  const handleSaveSplits = async (editorSplits: { categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]) => {
     if (!id) return;
     // Remove old splits
     await deleteAllSplitsForExpense(id);

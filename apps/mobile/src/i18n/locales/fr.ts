@@ -882,6 +882,12 @@ export default {
       benchmarkDesc: "La comparaison montre comment votre portefeuille s'est comporté par rapport à un indice de marché (comme S&P 500). Une différence positive signifie que vous avez surperformé le marché.",
       benchmarkExample: 'Portefeuille: {{portfolio}}% vs Benchmark: {{benchmark}}% = {{diff}}% différence',
     },
+    insights: {
+      title: 'Analyses IA du portefeuille',
+      loading: 'Analyse de votre portefeuille...',
+      error: 'Impossible de charger les analyses',
+      empty: 'Aucune analyse disponible',
+    },
   },
   help: {
     title: 'Aide',

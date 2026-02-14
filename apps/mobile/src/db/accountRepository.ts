@@ -142,7 +142,7 @@ export async function deleteAccountFromDb(id: string): Promise<void> {
 }
 
 export async function insertAccounts(
-  accounts: Array<Account & { myRole?: AccountRole }>,
+  accounts: (Account & { myRole?: AccountRole })[],
   userId: string,
 ): Promise<void> {
   for (const account of accounts) {

@@ -18,7 +18,7 @@ export default function WalletScreen() {
   const { walletSummary, exchanges, transfers, loadWallet } = useWalletStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const accounts = useAccountStore((s) => s.accounts);
-  const { rates, baseCurrency } = useExchangeRateStore();
+  const { rates } = useExchangeRateStore();
   const userCurrency = useAuthStore((s) => s.user?.currencyCode || 'USD');
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -37,6 +37,7 @@ export default function WalletScreen() {
   useEffect(() => {
     loadWallet();
     useExchangeRateStore.getState().loadRates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onRefresh = useCallback(async () => {

@@ -57,7 +57,7 @@ export default function ReceiptExpenseScreen() {
     if (error) {
       Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
     }
-  }, [error, reset]);
+  }, [error, reset, t]);
 
   useEffect(() => {
     if (scannedReceipt) {
@@ -123,7 +123,7 @@ export default function ReceiptExpenseScreen() {
         { text: t('receipt.scanAnother'), onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
-    } catch (err) {
+    } catch {
       Alert.alert(t('common.error'), t('receipt.saveFailed'));
     }
   };

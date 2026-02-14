@@ -96,6 +96,32 @@ Visualiza la distribucion de la cartera por tipos de activos (acciones, ETFs, cr
 
 Lista de las mejores y peores posiciones por rendimiento porcentual.
 
+### Insights AI de cartera (Pro+)
+
+Obtén análisis de tu cartera impulsado por IA con recomendaciones accionables:
+
+1. Abre la pestaña **Analíticas**
+2. Desplázate al carrusel de **Insights** en la parte superior
+3. Desliza izquierda/derecha para ver diferentes insights
+4. Toca el botón de cerrar para ocultar un insight
+
+**Tipos de insights:**
+
+| Tipo | Descripción |
+|------|-------------|
+| Riesgo de concentración | Advierte cuando un activo domina la cartera |
+| Desequilibrio sectorial | Alerta sobre sobreexposición a un tipo de activo |
+| Bajo rendimiento | Identifica activos que van por detrás del mercado |
+| Alto rendimiento | Destaca oportunidades de reequilibrio |
+| Desviación del benchmark | Muestra cuando la cartera se aleja del benchmark |
+| Brecha de diversificación | Sugiere tipos de activos faltantes |
+| Alerta de base de costo | Ganancias/pérdidas no realizadas relevantes fiscalmente |
+| Impacto de comisiones | Advierte cuando las comisiones reducen los retornos |
+
+Cada insight incluye una visualización (gráfico) y una sugerencia accionable.
+
+**Nota:** Los insights AI se almacenan en caché durante 24 horas y cuestan 2.5 créditos AI por actualización.
+
 ### Comparacion con benchmark (Pro+)
 
 Compara el rendimiento de tu cartera con indices de mercado:

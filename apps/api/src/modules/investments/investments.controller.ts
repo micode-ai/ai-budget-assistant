@@ -11,8 +11,13 @@ import {
   Req,
 } from '@nestjs/common';
 import { InvestmentsService } from './investments.service';
+import { InvestmentInsightsService } from './investment-insights.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
+import { RequireTier } from '../subscriptions/decorators/require-tier.decorator';
+import { AiUsageGuard } from '../subscriptions/guards/ai-usage.guard';
+import { TrackAiUsage } from '../subscriptions/decorators/track-ai-usage.decorator';
 import { AuthenticatedRequest } from '../../common/types';
 import {
   CreatePortfolioHoldingDto,
@@ -24,7 +29,10 @@ import {
 @Controller('investments')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
 export class InvestmentsController {
-  constructor(private readonly investmentsService: InvestmentsService) {}
+  constructor(
+    private readonly investmentsService: InvestmentsService,
+    private readonly investmentInsightsService: InvestmentInsightsService,
+  ) {}
 
   // ---- Asset Search ----
 
@@ -122,5 +130,21 @@ export class InvestmentsController {
   @Post('refresh-prices')
   async refreshPrices(@Req() req: AuthenticatedRequest) {
     return this.investmentsService.refreshPrices(req.accountId);
+  }
+
+  // ---- AI Insights ----
+
+  @Get('insights')
+  @UseGuards(SubscriptionTierGuard, AiUsageGuard)
+  @RequireTier('pro')
+  @TrackAiUsage('investment_insights', 2.5)
+  async getInvestmentInsights(
+    @Req() req: AuthenticatedRequest,
+    @Query('language') language?: string,
+  ) {
+    return this.investmentInsightsService.getInvestmentInsights(
+      req.accountId,
+      language,
+    );
   }
 }

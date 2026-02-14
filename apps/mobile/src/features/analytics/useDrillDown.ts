@@ -137,7 +137,6 @@ export function useDrillDown(params: DrillDownParams) {
       // Navigate back to a specific breadcrumb level
       if (index >= state.breadcrumb.length - 1) return; // Already at this level
 
-      const targetLevel = state.breadcrumb[index];
       // Pop history back to that level
       const stepsBack = state.breadcrumb.length - 1 - index;
       if (stepsBack > 0 && history.length >= stepsBack) {
