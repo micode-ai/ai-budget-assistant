@@ -62,7 +62,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: () => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[] }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
   setFilters: (filters: Partial<ExpenseFilters>) => void;

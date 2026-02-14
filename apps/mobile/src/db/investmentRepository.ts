@@ -354,7 +354,7 @@ export async function deduplicateTransactions(): Promise<number> {
 
     if (txs.length > 1) {
       // Keep the first one (has server_id if any), delete the rest
-      const idsToDelete = txs.slice(1).map((t) => t.id);
+      const idsToDelete = txs.slice(1).map((t: TransactionRow) => t.id);
       for (const id of idsToDelete) {
         await executeSql('DELETE FROM investment_transactions WHERE id = ?', [id]);
         removedCount++;
