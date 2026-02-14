@@ -29,6 +29,9 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **AI Insights** - GPT-4 analyzes spending patterns and generates visual insight cards with actionable recommendations (Pro)
 - **Spending Story** - AI-generated narrative dashboards summarizing your financial period with interactive blocks (Pro)
 - **Home Screen Widgets** - Android widgets in 3 sizes showing spending totals, weekly charts, and budget progress
+- **Investment Portfolio** - Track stocks, ETFs, crypto, bonds, and commodities with real-time prices from Twelve Data API
+- **Portfolio Analytics** - Performance charts with benchmark comparison (SPY, QQQ, DIA, IWM), allocation breakdown, top gainers/losers
+- **Investment Transactions** - Record buy/sell transactions with price per unit, fees, and notes
 - **Gamification** - Achievements, daily streaks, XP/levels, and virtual badges to encourage consistent tracking habits
 - **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits
 - **Admin Dashboard** - System stats, subscription breakdown, and per-user AI usage monitoring
@@ -48,6 +51,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 | Cache | Redis |
 | Authentication | JWT + Passport |
 | AI/ML | OpenAI (GPT-4, Whisper, Vision) |
+| Market Data | Twelve Data API |
 | Charts | react-native-gifted-charts |
 | Widgets | react-native-android-widget |
 | Build System | Turborepo |
@@ -80,6 +84,7 @@ ai-budget-assistant/
 │           ├── stores/      # Zustand stores
 │           │   ├── insightsStore.ts
 │           │   ├── gamificationStore.ts
+│           │   ├── investmentStore.ts
 │           │   ├── tagStore.ts
 │           │   ├── projectStore.ts
 │           │   └── categoryStore.ts

@@ -9,7 +9,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useWalletStore } from '@/stores/walletStore';
-import { useExchangeRateStore } from '@/stores/exchangeRateStore';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useGamificationStore } from '@/stores/gamificationStore';
 import { useInvestmentStore } from '@/stores/investmentStore';
 import { formatCurrency } from '@budget/shared-utils';
@@ -27,7 +27,7 @@ export default function DashboardScreen() {
   const { getTotalBudget } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
-  const { convertedIncomeTotal, convertedExpenseTotal, loadRates } = useExchangeRateStore();
+  const { convertedIncomeTotal, convertedExpenseTotal, loadRates, rates } = useExchangeRateStore();
   const { level, levelProgress, currentStreak, longestStreak, loadProfile } = useGamificationStore();
   const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
@@ -92,7 +92,7 @@ export default function DashboardScreen() {
               <View style={styles.investmentCol}>
                 <Text style={styles.investmentLabel}>{t('investments.totalValue')}</Text>
                 <Text style={styles.investmentValue}>
-                  {formatCurrency(investmentSummary.totalValue, currency)}
+                  {formatCurrency(convertAmount(investmentSummary.totalValue, 'USD', currency, rates), currency)}
                 </Text>
               </View>
               <View style={styles.investmentCol}>
@@ -102,7 +102,7 @@ export default function DashboardScreen() {
                   { color: investmentSummary.totalPnL >= 0 ? theme.colors.success : theme.colors.danger },
                 ]}>
                   {investmentSummary.totalPnL >= 0 ? '+' : ''}
-                  {formatCurrency(investmentSummary.totalPnL, currency)}
+                  {formatCurrency(convertAmount(investmentSummary.totalPnL, 'USD', currency, rates), currency)}
                 </Text>
               </View>
             </View>

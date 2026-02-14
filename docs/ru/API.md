@@ -2219,6 +2219,348 @@ GET /gamification/definitions
 
 ---
 
+## Инвестиции
+
+Отслеживание инвестиционного портфеля с актуальными ценами через Twelve Data API. Требуется заголовок `X-Account-Id`. Требуется аккаунт типа **investment** (`type: 'investment'`).
+
+### Поиск активов
+
+```http
+GET /investments/assets/search?q=AAPL
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `q` | string | Поисковый запрос (символ или название компании) |
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "type": "stock",
+    "exchange": "NASDAQ",
+    "currency": "USD"
+  },
+  {
+    "symbol": "AAPL.MX",
+    "name": "Apple Inc",
+    "type": "stock",
+    "exchange": "BMV",
+    "currency": "MXN"
+  }
+]
+```
+
+### Список позиций
+
+```http
+GET /investments/holdings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "localId": "client-uuid",
+    "accountId": "account-uuid",
+    "assetId": "asset-uuid",
+    "asset": {
+      "id": "asset-uuid",
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "type": "stock",
+      "exchange": "NASDAQ",
+      "currentPrice": 178.50,
+      "priceCurrency": "USD",
+      "lastPriceUpdate": "2026-02-14T16:00:00Z"
+    },
+    "quantity": 10,
+    "averageCostBasis": 165.25,
+    "totalInvested": 1652.50,
+    "notes": "Долгосрочная позиция",
+    "syncVersion": 1,
+    "createdAt": "2026-01-15T10:00:00Z"
+  }
+]
+```
+
+### Создать позицию
+
+```http
+POST /investments/holdings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "assetSymbol": "AAPL",
+  "assetName": "Apple Inc",
+  "assetType": "stock",
+  "assetExchange": "NASDAQ",
+  "assetCurrency": "USD",
+  "notes": "Долгосрочная позиция"
+}
+```
+
+**Значения assetType**: `stock` (акции), `crypto` (криптовалюта), `etf` (фонд), `bond` (облигации), `commodity` (товар)
+
+**Ответ** `201 Created`
+```json
+{
+  "id": "uuid",
+  "localId": "client-uuid",
+  "assetId": "asset-uuid",
+  "asset": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "type": "stock",
+    "currentPrice": 178.50
+  },
+  "quantity": 0,
+  "averageCostBasis": 0,
+  "totalInvested": 0,
+  "syncVersion": 1
+}
+```
+
+### Удалить позицию
+
+```http
+DELETE /investments/holdings/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+**Примечание:** При удалении позиции также удаляются все связанные транзакции.
+
+### Список транзакций
+
+```http
+GET /investments/transactions?holdingId=uuid
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `holdingId` | UUID | Фильтр по позиции (опционально) |
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "localId": "client-uuid",
+    "holdingId": "holding-uuid",
+    "type": "buy",
+    "quantity": 10,
+    "pricePerUnit": 165.25,
+    "totalAmount": 1652.50,
+    "fee": 0,
+    "date": "2026-01-15",
+    "notes": "Первая покупка",
+    "syncVersion": 1,
+    "createdAt": "2026-01-15T10:00:00Z"
+  }
+]
+```
+
+### Создать транзакцию
+
+```http
+POST /investments/transactions
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "holdingId": "holding-uuid",
+  "type": "buy",
+  "quantity": 10,
+  "pricePerUnit": 165.25,
+  "fee": 0,
+  "date": "2026-01-15",
+  "notes": "Первая покупка"
+}
+```
+
+**Значения type**: `buy` (покупка), `sell` (продажа)
+
+**Ответ** `201 Created`
+
+**Примечание:** При создании транзакции автоматически обновляются поля `quantity`, `averageCostBasis` и `totalInvested` позиции.
+
+### Обновить транзакцию
+
+```http
+PATCH /investments/transactions/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "quantity": 15,
+  "pricePerUnit": 164.00,
+  "notes": "Скорректированная покупка"
+}
+```
+
+**Ответ** `200 OK`
+
+### Удалить транзакцию
+
+```http
+DELETE /investments/transactions/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Получить сводку по портфелю
+
+Возвращает агрегированные метрики портфеля с текущими рыночными ценами.
+
+```http
+GET /investments/summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "totalValue": 5325.00,
+  "totalInvested": 4980.00,
+  "totalPnL": 345.00,
+  "totalPnLPercent": 6.93,
+  "dayChange": 52.50,
+  "dayChangePercent": 0.99,
+  "holdings": [
+    {
+      "holdingId": "uuid",
+      "assetId": "asset-uuid",
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "assetType": "stock",
+      "quantity": 10,
+      "averageCostBasis": 165.25,
+      "currentPrice": 178.50,
+      "marketValue": 1785.00,
+      "totalInvested": 1652.50,
+      "pnl": 132.50,
+      "pnlPercent": 8.02,
+      "dayChange": 15.00,
+      "dayChangePercent": 0.85,
+      "allocationPercent": 33.52
+    }
+  ]
+}
+```
+
+### Получить аналитику портфеля
+
+Возвращает исторические данные о производительности с опциональным сравнением с бенчмарком.
+
+```http
+POST /investments/analytics
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "period": "month",
+  "benchmark": "SPY"
+}
+```
+
+**Параметры тела**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `period` | string | `week`, `month`, `quarter`, `year`, `all` |
+| `benchmark` | string | Символ бенчмарка (опционально): `SPY`, `QQQ`, `DIA`, `IWM` |
+
+**Ответ** `200 OK`
+```json
+{
+  "dates": ["2026-01-15", "2026-01-16", "2026-01-17"],
+  "values": [4980.00, 5050.00, 5325.00],
+  "investedValues": [4980.00, 4980.00, 4980.00],
+  "benchmarkValues": [0, 0.45, 1.23],
+  "benchmarkName": "SPY"
+}
+```
+
+**Расчёт доходности:**
+```
+Доходность % = ((Конечная стоимость - Начальная стоимость) / Начальная стоимость) × 100
+```
+
+**Значения бенчмарка:** Нормализованные проценты относительно первого дня (benchmarkValues[0] = 0, последующие значения = накопленное изменение в %).
+
+### Получить историю цен актива
+
+```http
+GET /investments/holdings/:id/price-history?days=30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `days` | number | Количество дней (по умолчанию: 30) |
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "date": "2026-01-15",
+    "openPrice": 175.50,
+    "closePrice": 178.50,
+    "highPrice": 179.20,
+    "lowPrice": 174.80,
+    "volume": 45230000
+  }
+]
+```
+
+### Обновить цены
+
+Принудительно обновить цены для всех позиций в портфеле.
+
+```http
+POST /investments/refresh-prices
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "refreshed": 5,
+  "failed": 0,
+  "message": "Цены успешно обновлены"
+}
+```
+
+**Примечание:** Цены автоматически обновляются каждые 15 минут для активных портфелей. Используйте этот эндпоинт для принудительного немедленного обновления.
+
+---
+
 ## Ответы с ошибками
 
 ### Формат ошибки

@@ -11,7 +11,8 @@
 - **Gamification** — achievements, daily streaks, XP/levels, and badge collection to keep you motivated
 - **Budgets** — set spending limits with real-time progress tracking and alerts
 - **Interactive Analytics** — charts with drill-down, category breakdowns, and trend analysis
-- **Multiple Accounts** — Personal, Shared, and Business accounts with role-based access (Owner, Editor, Viewer)
+- **Investment Portfolio** — track stocks, ETFs, crypto, bonds with real-time prices and benchmark comparison
+- **Multiple Accounts** — Personal, Shared, Business, and Investment accounts with role-based access (Owner, Editor, Viewer)
 - **Offline-First** — data saves locally and syncs automatically when online
 - **8 Languages** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
 
@@ -30,6 +31,7 @@
 11. [Settings](./11-settings.md) — profile, appearance, and preferences
 12. [Subscription Plans](./12-subscription.md) — Free, Pro, and Business plans
 13. [Achievements & Gamification](./13-gamification.md) — streaks, XP, levels, and badges
+14. [Investment Portfolio](./14-investments.md) — stocks, ETFs, crypto tracking and analytics
 
 ## Supported Currencies
 

@@ -18,6 +18,7 @@ const SECTIONS = [
   '11-settings',
   '12-subscription',
   '13-gamification',
+  '14-investments',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

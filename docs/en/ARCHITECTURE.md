@@ -1104,6 +1104,178 @@ The gamification system encourages consistent financial tracking through achieve
 - `UserAchievement` — tracks per-user achievement progress and completion (unique on `[userId, accountId, achievementId]`)
 - `UserStreak` — tracks daily tracking streak per user/account (unique on `[userId, accountId, streakType]`)
 
+## Investment Portfolio
+
+Investment portfolio tracking enables users to monitor stocks, ETFs, crypto, bonds, and commodities with real-time market data.
+
+### Technology
+
+- **Price Data**: Twelve Data API for real-time and historical prices
+- **Account Type**: Requires `investment` type account
+- **Asset Support**: Stocks, ETFs, crypto, bonds, commodities
+
+### Architecture
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Mobile Client  │────►│  NestJS Backend │────►│  Twelve Data    │
+│  (Analytics)    │     │  (investments/) │     │  API            │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                               │
+                               ▼
+                        ┌─────────────────┐
+                        │   PostgreSQL    │
+                        │  (Price Cache)  │
+                        └─────────────────┘
+```
+
+### Module Structure
+
+```
+src/modules/investments/
+├── investments.module.ts
+├── investments.controller.ts
+├── investments.service.ts
+├── twelve-data.service.ts     # External API integration
+└── dto/
+    └── index.ts               # CreateHolding, CreateTransaction, Analytics DTOs
+```
+
+### Data Model
+
+```prisma
+model Asset {
+  id             String    @id @default(uuid())
+  symbol         String    @unique
+  name           String
+  type           AssetType // stock, crypto, etf, bond, commodity
+  exchange       String?
+  currentPrice   Decimal?  @db.Decimal(18, 8)
+  priceCurrency  String    @default("USD")
+  logoUrl        String?
+  lastPriceUpdate DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  holdings      PortfolioHolding[]
+  priceHistory  AssetPriceHistory[]
+}
+
+model PortfolioHolding {
+  id              String    @id @default(uuid())
+  localId         String
+  accountId       String
+  userId          String
+  assetId         String
+  quantity        Decimal   @db.Decimal(18, 8)
+  averageCostBasis Decimal  @db.Decimal(18, 8)
+  totalInvested   Decimal   @db.Decimal(18, 2)
+  notes           String?
+  isDeleted       Boolean   @default(false)
+  syncStatus      String    @default("pending")
+  syncVersion     Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  account      Account
+  user         User
+  asset        Asset
+  transactions InvestmentTransaction[]
+
+  @@unique([accountId, localId])
+}
+
+model InvestmentTransaction {
+  id           String   @id @default(uuid())
+  localId      String
+  holdingId    String
+  accountId    String
+  userId       String
+  type         String   // buy, sell
+  quantity     Decimal  @db.Decimal(18, 8)
+  pricePerUnit Decimal  @db.Decimal(18, 8)
+  totalAmount  Decimal  @db.Decimal(18, 2)
+  fee          Decimal  @default(0) @db.Decimal(18, 2)
+  date         DateTime @db.Date
+  notes        String?
+  isDeleted    Boolean  @default(false)
+  syncStatus   String   @default("pending")
+  syncVersion  Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  holding PortfolioHolding
+  account Account
+  user    User
+
+  @@unique([accountId, localId])
+}
+
+model AssetPriceHistory {
+  id         String   @id @default(uuid())
+  assetId    String
+  date       DateTime @db.Date
+  openPrice  Decimal  @db.Decimal(18, 8)
+  closePrice Decimal  @db.Decimal(18, 8)
+  highPrice  Decimal  @db.Decimal(18, 8)
+  lowPrice   Decimal  @db.Decimal(18, 8)
+  volume     BigInt?
+  createdAt  DateTime @default(now())
+
+  asset Asset
+
+  @@unique([assetId, date])
+}
+```
+
+### Analytics Calculations
+
+| Metric | Formula |
+|--------|---------|
+| Portfolio Return % | `((End Value - Start Value) / Start Value) × 100` |
+| P&L | `Current Value - Total Invested` |
+| P&L % | `(P&L / Total Invested) × 100` |
+| Allocation % | `(Holding Value / Total Portfolio Value) × 100` |
+| Benchmark Return | API returns normalized values (first = 0, subsequent = cumulative %) |
+
+### Price Update Strategy
+
+1. **Automatic**: Prices refresh every 15 minutes for active portfolios
+2. **Manual**: Users can trigger immediate refresh via `POST /investments/refresh-prices`
+3. **Caching**: Historical prices stored in `AssetPriceHistory` table to minimize API calls
+4. **Fallback**: Last known price used when current price unavailable
+
+### Mobile Screens
+
+```
+app/investment/
+├── index.tsx           # Portfolio overview (holdings list, summary)
+├── analytics.tsx       # Performance charts, benchmark comparison
+├── holding/
+│   ├── [id].tsx        # Holding details with transactions
+│   └── new.tsx         # Add new holding (asset search)
+└── transaction/
+    └── new.tsx         # Add buy/sell transaction
+```
+
+### Mobile Store
+
+```typescript
+// useInvestmentStore
+{
+  holdings: PortfolioHolding[],
+  summary: PortfolioSummary | null,
+  analytics: PortfolioPerformance | null,
+
+  loadHoldings: () => Promise<void>,
+  loadSummary: () => Promise<void>,
+  loadAnalytics: (period, benchmark?) => Promise<void>,
+  createHolding: (dto) => Promise<void>,
+  createTransaction: (dto) => Promise<void>,
+  refreshPrices: () => Promise<void>,
+}
+```
+
 ## Security
 
 ### Authentication Flow

@@ -23,7 +23,7 @@ export default function AddTransactionScreen() {
 
   const holding = holdings?.find((h: any) => h.id === holdingId);
   const currentAccount = accounts.find((a) => a.id === currentAccountId);
-  const defaultCurrency = (holding?.asset?.priceCurrency || currentAccount?.currency || 'USD') as Currency;
+  const defaultCurrency = (holding?.asset?.priceCurrency || currentAccount?.currencyCode || 'USD') as Currency;
 
   const [type, setType] = useState<TransactionType>('buy');
   const [quantity, setQuantity] = useState('');

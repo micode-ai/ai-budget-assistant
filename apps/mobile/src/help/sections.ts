@@ -23,4 +23,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '11-settings', icon: 'settings-outline', color: '#7F8C8D' },
   { id: '12-subscription', icon: 'diamond-outline', color: '#E67E22' },
   { id: '13-gamification', icon: 'trophy-outline', color: '#F5A623' },
+  { id: '14-investments', icon: 'trending-up-outline', color: '#27AE60' },
 ];

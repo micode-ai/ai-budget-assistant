@@ -22,16 +22,19 @@ interface ExchangeRateState {
   reset: () => void;
 }
 
-function convertAmount(
+export function convertAmount(
   amount: number,
   fromCurrency: string,
-  baseCurrency: string,
+  toCurrency: string,
   rates: Record<string, number>,
 ): number {
-  if (fromCurrency === baseCurrency) return amount;
-  const rate = rates[fromCurrency];
-  if (!rate || rate === 0) return amount;
-  return amount / rate;
+  if (fromCurrency === toCurrency) return amount;
+  const fromRate = rates[fromCurrency];
+  const toRate = rates[toCurrency];
+  if (!fromRate || fromRate === 0 || !toRate || toRate === 0) return amount;
+  // Convert: amount in fromCurrency -> base -> toCurrency
+  // rates are relative to baseCurrency, so: amount / fromRate * toRate
+  return (amount / fromRate) * toRate;
 }
 
 function recomputeConvertedTotals() {

@@ -9,6 +9,7 @@
 - **Chat IA** — posez des questions sur vos finances et recevez des conseils personnalises
 - **Histoire des depenses** — rapports narratifs generes par l'IA avec realisations et analyses
 - **Gamification** — succes, series quotidiennes, XP/niveaux et collection de badges pour rester motive
+- **Portefeuille d'investissement** — suivez actions, ETFs, cryptomonnaies, obligations et matieres premieres avec prix en temps reel et analyses
 - **Budgets** — definissez des limites de depenses avec suivi en temps reel et alertes
 - **Analyses interactives** — graphiques avec exploration detaillee, repartition par categorie et analyse des tendances
 - **Comptes multiples** — comptes Personnel, Partage et Professionnel avec controle d'acces base sur les roles (Proprietaire, Editeur, Observateur)
@@ -30,6 +31,7 @@
 11. [Parametres](./11-settings.md) — profil, apparence et preferences
 12. [Abonnement](./12-subscription.md) — plans Gratuit, Pro et Business
 13. [Succes et Gamification](./13-gamification.md) — series, XP, niveaux et badges
+14. [Portefeuille d'investissement](./14-investments.md) — suivi actions, ETFs, crypto et analyses
 
 ## Devises prises en charge
 
