@@ -9,13 +9,13 @@ import { useWalletStore } from '@/stores/walletStore';
 import { useInsightsStore } from '@/stores/insightsStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
-import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
+import { formatCurrency } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
-import { BarChart, DonutChart, GroupedBarChart, WeekdayChart } from '@/components/charts';
+import { GroupedBarChart, WeekdayChart } from '@/components/charts';
 import { InteractiveBarChart, InteractiveDonutChart } from '@/components/interactive-charts';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
-import type { Currency, ChartDataPoint } from '@budget/shared-types';
+import type { Currency } from '@budget/shared-types';
 
 export default function AnalyticsScreen() {
   const { t, i18n } = useTranslation();

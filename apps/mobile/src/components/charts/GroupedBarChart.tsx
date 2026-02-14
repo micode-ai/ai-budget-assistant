@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { useTheme, useStyles, type Theme } from '@/theme';
+import { useStyles, type Theme } from '@/theme';
 
 interface GroupedBarValue {
   value: number;
@@ -33,7 +33,6 @@ export function GroupedBarChart({
   formatValue = (v) => v.toFixed(0),
   legendItems,
 }: GroupedBarChartProps) {
-  const theme = useTheme();
   const styles = useStyles(createStyles);
 
   if (data.length === 0) {

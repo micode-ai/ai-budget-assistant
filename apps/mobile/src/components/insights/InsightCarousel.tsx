@@ -24,7 +24,8 @@ export function InsightCarousel({ insights, isLoading, onDismiss }: InsightCarou
   const { width: windowWidth } = useWindowDimensions();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const cardWidth = windowWidth - 48; // account for horizontal margins
+  // scrollContent paddingHorizontal (8) + card marginHorizontal (8) = 16px each side
+  const cardWidth = windowWidth - 32;
 
   const handleScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -98,10 +99,12 @@ export function InsightCarousel({ insights, isLoading, onDismiss }: InsightCarou
 const createStyles = (theme: Theme) => ({
   container: {
     marginVertical: theme.spacing[3],
+    marginHorizontal: -theme.spacing[4],
   },
   scrollContent: {
-    paddingHorizontal: theme.spacing[4],
+    paddingHorizontal: theme.spacing[2],
     paddingVertical: theme.spacing[1],
+    alignItems: 'flex-start' as const,
   },
   loadingContainer: {
     flexDirection: 'row' as const,

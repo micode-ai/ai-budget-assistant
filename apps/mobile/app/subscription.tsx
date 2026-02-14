@@ -48,7 +48,6 @@ export default function SubscriptionScreen() {
     status,
     cancelAtPeriodEnd,
     currentPeriodEnd,
-    trialEnd,
     aiRequestsUsed,
     aiRequestsLimit,
     percentUsed,
@@ -65,6 +64,7 @@ export default function SubscriptionScreen() {
     loadSubscription();
     loadUsage();
     loadPlans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleUpgrade = async (priceEnvKey: string) => {

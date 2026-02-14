@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { useTheme, useStyles, type Theme } from '@/theme';
+import { useStyles, type Theme } from '@/theme';
 
 interface PieChartData {
   label: string;
@@ -14,7 +14,6 @@ interface PieChartProps {
 }
 
 export function PieChart({ data, size = 150, showLegend = true }: PieChartProps) {
-  const theme = useTheme();
   const styles = useStyles(createStyles);
 
   if (data.length === 0) {

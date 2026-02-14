@@ -483,6 +483,17 @@ export interface ChartConfig {
 // AI Insight types
 export type InsightChartType = 'anomaly_spike' | 'category_comparison' | 'trend_change' | 'budget_burndown' | 'savings_opportunity';
 
+// Investment AI Insight types
+export type InvestmentInsightType =
+  | 'concentration_risk'
+  | 'sector_imbalance'
+  | 'underperformer'
+  | 'overperformer'
+  | 'benchmark_deviation'
+  | 'diversification_gap'
+  | 'cost_basis_alert'
+  | 'fee_impact';
+
 export interface AIInsightChart {
   id: string;
   insightType: InsightChartType;

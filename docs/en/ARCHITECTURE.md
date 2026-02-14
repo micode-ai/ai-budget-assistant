@@ -982,6 +982,7 @@ The application uses optimistic version-based synchronization with last-write-wi
 | Chat Assistant | GPT-4 | Financial advice and insights |
 | AI Insights | GPT-4 | Analyze patterns, generate insight cards |
 | Story Generation | GPT-4 | Create narrative spending dashboards |
+| Investment Insights | GPT-4 | Portfolio analysis, concentration risks, performance alerts |
 | Tag Suggestions | GPT-4 | Suggest tags based on expense description (history-first, AI fallback) |
 | Project Suggestions | GPT-4 | Match expenses to active projects by date range and semantic analysis |
 | Split Suggestions | GPT-4 | Suggest category splits for multi-category expenses |
@@ -1136,9 +1137,10 @@ src/modules/investments/
 ├── investments.module.ts
 ├── investments.controller.ts
 ├── investments.service.ts
-├── twelve-data.service.ts     # External API integration
+├── investment-insights.service.ts  # GPT-4 portfolio insights generation
+├── twelve-data.service.ts          # External API integration
 └── dto/
-    └── index.ts               # CreateHolding, CreateTransaction, Analytics DTOs
+    └── index.ts                    # CreateHolding, CreateTransaction, Analytics DTOs
 ```
 
 ### Data Model
@@ -1266,6 +1268,8 @@ app/investment/
   holdings: PortfolioHolding[],
   summary: PortfolioSummary | null,
   analytics: PortfolioPerformance | null,
+  aiInsights: AIInsightChart[],
+  insightsLoading: boolean,
 
   loadHoldings: () => Promise<void>,
   loadSummary: () => Promise<void>,
@@ -1273,8 +1277,33 @@ app/investment/
   createHolding: (dto) => Promise<void>,
   createTransaction: (dto) => Promise<void>,
   refreshPrices: () => Promise<void>,
+  loadInvestmentInsights: (language?) => Promise<void>,
+  dismissInsight: (id: string) => void,
 }
 ```
+
+### AI Portfolio Insights
+
+The investment module includes GPT-4-powered portfolio insights that analyze holdings and provide actionable recommendations.
+
+**Insight Types:**
+
+| Type | Description | Severity Triggers |
+|------|-------------|-------------------|
+| `concentration_risk` | Single asset dominates portfolio | Critical: >40%, Warning: >25% |
+| `sector_imbalance` | Portfolio heavily weighted to one asset type | Critical: >70%, Warning: >50% |
+| `underperformer` | Asset significantly lagging benchmark | Critical: <-30%, Warning: <-15% |
+| `overperformer` | Asset significantly beating benchmark | Info: >+20% (rebalance opportunity) |
+| `benchmark_deviation` | Portfolio straying from benchmark | Critical: >25%, Warning: >15% |
+| `diversification_gap` | Missing asset types | Critical: <2 types, Warning: <3 types |
+| `cost_basis_alert` | Tax-relevant unrealized gains/losses | Critical: >50% or <-30% |
+| `fee_impact` | Transaction fees eating returns | Critical: >5%, Warning: >2% |
+
+**Architecture:**
+- **Caching**: Insights are cached for 24 hours per account
+- **Subscription**: Requires Pro+ tier (2.5 AI credits per request)
+- **Localization**: Supports all 8 app languages
+- **Charts**: Each insight includes appropriate visualization (donut, bar, line)
 
 ## Security
 

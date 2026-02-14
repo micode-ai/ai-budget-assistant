@@ -34,11 +34,13 @@ export default function TransferScreen() {
   useEffect(() => {
     const fromAccount = accounts.find((a) => a.id === fromAccountId);
     if (fromAccount) setFromCurrency(fromAccount.currencyCode as Currency);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromAccountId]);
 
   useEffect(() => {
     const toAccount = accounts.find((a) => a.id === toAccountId);
     if (toAccount) setToCurrency(toAccount.currencyCode as Currency);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toAccountId]);
 
   // Fetch exchange rate when currencies differ
@@ -49,6 +51,7 @@ export default function TransferScreen() {
       return;
     }
     fetchRate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
   const fetchRate = async () => {

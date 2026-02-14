@@ -53,6 +53,7 @@ export default function AccountDetailScreen() {
         loadMembers(id);
         loadInvitations();
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, account?.type]),
   );
 

@@ -882,6 +882,12 @@ export default {
       benchmarkDesc: 'Der Vergleich zeigt, wie Ihr Portfolio im Verhältnis zu einem Marktindex (wie S&P 500) abgeschnitten hat. Eine positive Differenz bedeutet, dass Sie den Markt übertroffen haben.',
       benchmarkExample: 'Portfolio: {{portfolio}}% vs Benchmark: {{benchmark}}% = {{diff}}% Differenz',
     },
+    insights: {
+      title: 'KI-Portfolio-Einblicke',
+      loading: 'Ihr Portfolio wird analysiert...',
+      error: 'Einblicke konnten nicht geladen werden',
+      empty: 'Keine Einblicke verfügbar',
+    },
   },
   help: {
     title: 'Hilfe',

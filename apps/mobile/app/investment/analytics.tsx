@@ -5,7 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/services/api';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useInvestmentStore } from '@/stores/investmentStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { InsightCarousel } from '@/components/insights/InsightCarousel';
 import type { PortfolioAnalyticsResponse } from '@budget/shared-types';
 
 type Period = '1W' | '1M' | '3M' | '1Y' | 'All';
@@ -29,11 +31,14 @@ const BENCHMARKS = [
 ];
 
 export default function PortfolioAnalyticsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const isPremium = useSubscriptionStore((s) => s.isPaid());
   const loadSubscription = useSubscriptionStore((s) => s.loadSubscription);
+
+  // AI Insights
+  const { aiInsights, insightsLoading, loadInvestmentInsights, dismissInsight } = useInvestmentStore();
 
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('1M');
   const [selectedBenchmark, setSelectedBenchmark] = useState<string>('SPY');
@@ -46,9 +51,17 @@ export default function PortfolioAnalyticsScreen() {
     loadSubscription();
   }, [loadSubscription]);
 
+  // Load AI insights for Pro users
+  useEffect(() => {
+    if (isPremium) {
+      loadInvestmentInsights(i18n.language);
+    }
+  }, [isPremium, loadInvestmentInsights, i18n.language]);
+
   // Load main analytics (without benchmark) on period change
   useEffect(() => {
     fetchAnalytics(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPeriod]);
 
   // Load benchmark separately when benchmark changes
@@ -56,6 +69,7 @@ export default function PortfolioAnalyticsScreen() {
     if (isPremium && selectedBenchmark) {
       fetchBenchmark();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBenchmark, isPremium]);
 
   const fetchAnalytics = async (includeBenchmark: boolean = false) => {
@@ -230,6 +244,21 @@ export default function PortfolioAnalyticsScreen() {
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         <Text style={styles.title}>{t('investments.analytics')}</Text>
+
+        {/* AI Insights Carousel (Pro+) */}
+        {isPremium && (
+          <View style={styles.insightsSection}>
+            <View style={styles.insightsHeader}>
+              <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
+              <Text style={styles.insightsTitle}>{t('investments.insights.title')}</Text>
+            </View>
+            <InsightCarousel
+              insights={aiInsights}
+              isLoading={insightsLoading}
+              onDismiss={dismissInsight}
+            />
+          </View>
+        )}
 
         {/* Period Selector */}
         <View style={styles.periodSelector}>
@@ -487,6 +516,19 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.h1,
     color: theme.colors.textPrimary,
     marginBottom: theme.spacing[5],
+  },
+  insightsSection: {
+    marginBottom: theme.spacing[5],
+  },
+  insightsHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[3],
+  },
+  insightsTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
   },
   periodSelector: {
     flexDirection: 'row' as const,
@@ -758,7 +800,7 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
-    width: '100%',
+    width: '100%' as const,
     maxWidth: 400,
     ...theme.shadows.lg,
   },

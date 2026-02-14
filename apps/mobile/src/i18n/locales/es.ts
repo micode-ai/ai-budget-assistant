@@ -882,6 +882,12 @@ export default {
       benchmarkDesc: 'La comparación muestra cómo tu portafolio se desempeñó en relación con un índice de mercado (como S&P 500). Una diferencia positiva significa que superaste al mercado.',
       benchmarkExample: 'Portafolio: {{portfolio}}% vs Benchmark: {{benchmark}}% = {{diff}}% diferencia',
     },
+    insights: {
+      title: 'Perspectivas IA del portafolio',
+      loading: 'Analizando tu portafolio...',
+      error: 'Error al cargar las perspectivas',
+      empty: 'No hay perspectivas disponibles',
+    },
   },
   help: {
     title: 'Ayuda',

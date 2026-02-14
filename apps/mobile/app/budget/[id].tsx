@@ -11,7 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { formatCurrency } from '@budget/shared-utils';
-import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function BudgetDetailScreen() {

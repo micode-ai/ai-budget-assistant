@@ -866,6 +866,12 @@ export default {
     noBenchmarkData: 'Няма даных для параўнання з бенчмаркам',
     yourPortfolio: 'Ваш партфель',
     difference: 'Розніца',
+    insights: {
+      title: 'ІІ-інсайты партфеля',
+      loading: 'Аналізуем ваш партфель...',
+      error: 'Не ўдалося загрузіць інсайты',
+      empty: 'Інсайты недаступныя',
+    },
   },
   help: {
     title: 'Дапамога',

@@ -10,6 +10,7 @@ import type {
   PortfolioSummary,
   AssetType,
   InvestmentTransactionType,
+  AIInsightChart,
 } from '@budget/shared-types';
 
 interface InvestmentState {
@@ -23,6 +24,10 @@ interface InvestmentState {
   isLoading: boolean;
   error: string | null;
   lastPriceUpdate: string | null;
+  // AI Insights
+  aiInsights: AIInsightChart[];
+  insightsLoading: boolean;
+  insightsError: string | null;
 
   // Actions
   loadHoldings: () => Promise<void>;
@@ -51,6 +56,8 @@ interface InvestmentState {
   loadPerformance: (period?: string) => Promise<void>;
   loadAssetPriceHistory: (holdingId: string, days?: number) => Promise<void>;
   refreshPrices: () => Promise<void>;
+  loadInvestmentInsights: (language?: string) => Promise<void>;
+  dismissInsight: (id: string) => void;
   clearError: () => void;
   reset: () => void;
 }
@@ -74,6 +81,9 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   isLoading: false,
   error: null,
   lastPriceUpdate: null,
+  aiInsights: [],
+  insightsLoading: false,
+  insightsError: null,
 
   loadHoldings: async () => {
     const accountId = getAccountId();
@@ -341,7 +351,7 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
               date: new Date(ptx.date).toISOString(),
               notes: ptx.notes,
             });
-          } catch (pushErr) {
+          } catch {
             // Transaction might already exist on server, continue
           }
         }
@@ -376,7 +386,7 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
             transactions: { ...state.transactions, [holdingId]: updated },
           }));
         }
-      } catch (err) {
+      } catch {
         // Silently fail server sync
       }
     } catch (error) {
@@ -586,6 +596,28 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
     }
   },
 
+  loadInvestmentInsights: async (language?: string) => {
+    set({ insightsLoading: true, insightsError: null });
+    try {
+      const response = await api.getInvestmentInsights(language);
+      set({
+        aiInsights: response.insights || [],
+        insightsLoading: false,
+      });
+    } catch (error) {
+      set({
+        insightsError: (error as Error).message,
+        insightsLoading: false,
+      });
+    }
+  },
+
+  dismissInsight: (id: string) => {
+    set((state) => ({
+      aiInsights: state.aiInsights.filter((insight) => insight.id !== id),
+    }));
+  },
+
   clearError: () => set({ error: null }),
 
   reset: () => set({
@@ -599,5 +631,8 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
     isLoading: false,
     error: null,
     lastPriceUpdate: null,
+    aiInsights: [],
+    insightsLoading: false,
+    insightsError: null,
   }),
 }));

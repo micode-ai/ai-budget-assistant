@@ -28,7 +28,7 @@ class ApiClient {
   private async getAuthToken(): Promise<string | null> {
     try {
       return await secureStorage.getItem('accessToken');
-    } catch (e) {
+    } catch {
       console.error('[API] getAuthToken error');
       return null;
     }
@@ -53,7 +53,7 @@ class ApiClient {
         await secureStorage.setItem('refreshToken', data.refreshToken);
       }
       return true;
-    } catch (e) {
+    } catch {
       console.error('[API] Token refresh failed');
       return false;
     }
@@ -342,7 +342,7 @@ class ApiClient {
   }
 
   // Splits
-  async setExpenseSplits(expenseId: string, splits: Array<{ categoryId: string; amount: number; percentage: number; notes?: string }>) {
+  async setExpenseSplits(expenseId: string, splits: { categoryId: string; amount: number; percentage: number; notes?: string }[]) {
     return this.request<any>(`/expenses/${expenseId}/splits`, {
       method: 'POST',
       body: JSON.stringify({ splits }),
@@ -353,7 +353,7 @@ class ApiClient {
     return this.request<void>(`/expenses/${expenseId}/splits`, { method: 'DELETE' });
   }
 
-  async suggestSplits(data: { id: string; description: string; amount: number; items?: Array<{ description: string; totalPrice: number }> }) {
+  async suggestSplits(data: { id: string; description: string; amount: number; items?: { description: string; totalPrice: number }[] }) {
     return this.request<any>('/ai/suggest-splits', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -413,12 +413,12 @@ class ApiClient {
       merchant: string | null;
       date: string | null;
       confidence: number;
-      receiptItems: Array<{
+      receiptItems: {
         description: string;
         quantity?: number;
         unitPrice?: number;
         totalPrice: number;
-      }>;
+      }[];
     }>('/ai/scan-receipt', {
       method: 'POST',
       body: JSON.stringify({ imageBase64, ...(userPrompt ? { userPrompt } : {}) }),
@@ -640,15 +640,15 @@ class ApiClient {
   // Insights endpoints
   async getInsights() {
     return this.request<{
-      anomalies: Array<{
+      anomalies: {
         categoryId: string;
         categoryName: string;
         currentAmount: number;
         averageAmount: number;
         percentageChange: number;
         period: string;
-      }>;
-      predictions: Array<{
+      }[];
+      predictions: {
         budgetId: string;
         budgetName: string;
         estimatedExhaustionDate?: string;
@@ -656,7 +656,7 @@ class ApiClient {
         daysRemaining: number;
         projectedTotal: number;
         currencyCode: string;
-      }>;
+      }[];
     }>('/insights');
   }
 
@@ -756,7 +756,7 @@ class ApiClient {
 
   // Investment endpoints
   async searchAssets(query: string) {
-    return this.request<Array<{ symbol: string; name: string; type: string; exchange: string; currency: string }>>(
+    return this.request<{ symbol: string; name: string; type: string; exchange: string; currency: string }[]>(
       `/investments/assets/search?q=${encodeURIComponent(query)}`,
     );
   }
@@ -822,6 +822,11 @@ class ApiClient {
 
   async refreshInvestmentPrices() {
     return this.request<{ success: boolean }>('/investments/refresh-prices', { method: 'POST' });
+  }
+
+  async getInvestmentInsights(language?: string) {
+    const params = language ? `?language=${encodeURIComponent(language)}` : '';
+    return this.request<AIInsightsResponse>(`/investments/insights${params}`);
   }
 
   // Admin endpoints

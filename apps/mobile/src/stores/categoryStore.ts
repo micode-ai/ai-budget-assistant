@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
-import { getAllCategories, upsertCategory, getCategoryById, getCategoryByName } from '@/db/categoryRepository';
+import { getAllCategories, upsertCategory } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';

@@ -96,6 +96,32 @@ Wizualizuje rozklad portfela wedlug typow aktywow (akcje, ETF, krypto itp.).
 
 Lista najlepszych i najgorszych pozycji wedlug procentowej stopy zwrotu.
 
+### AI-insighty portfela (Pro+)
+
+Otrzymuj analize portfela oparta na AI z praktycznymi rekomendacjami:
+
+1. Otworz zakladke **Analityka**
+2. Przewin do karuzeli **Insighty** na gorze
+3. Przesun w lewo/prawo, aby zobaczyc rozne insighty
+4. Kliknij przycisk zamkniecia, aby ukryc insight
+
+**Typy insightow:**
+
+| Typ | Opis |
+|-----|------|
+| Ryzyko koncentracji | Ostrzega, gdy jeden aktyw dominuje w portfelu |
+| Nierownoaga sektorowa | Sygnalizuje nadmierna ekspozycje na jeden typ aktywa |
+| Slabszy wynik | Identyfikuje aktywa pozostajace w tyle za rynkiem |
+| Lepszy wynik | Wskazuje mozliwosci rebalansowania |
+| Odchylenie od benchmarku | Pokazuje, gdy portfel odbiega od benchmarku |
+| Luka dywersyfikacji | Sugeruje brakujace typy aktywow |
+| Alert podstawy kosztu | Podatkowo istotne niezrealizowane zyski/straty |
+| Wplyw prowizji | Ostrzega, gdy prowizje zmniejszaja zyski |
+
+Kazdy insight zawiera wizualizacje (wykres) i praktyczna sugestie.
+
+**Uwaga:** AI-insighty sa przechowywane w pamieci podrecznej przez 24 godziny i kosztuja 2,5 kredytu AI za odswiezenie.
+
 ### Porownanie z benchmarkiem (Pro+)
 
 Porownaj stope zwrotu portfela z indeksami rynkowymi:

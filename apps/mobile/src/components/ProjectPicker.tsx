@@ -21,8 +21,6 @@ export const ProjectPicker: React.FC<ProjectPickerProps> = ({
     [projects],
   );
 
-  const selectedProject = activeProjects.find(p => p.id === selectedProjectId);
-
   const handleDeleteProject = (projectId: string, projectName: string) => {
     Alert.alert(
       t('projects.deleteProject') || 'Delete Project',

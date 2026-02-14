@@ -5,9 +5,7 @@ import type {
   Account,
   AccountMember,
   AccountInvitation,
-  AccountType,
   AccountRole,
-  Currency,
 } from '@budget/shared-types';
 import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto } from '@budget/shared-types';
 import {
@@ -83,7 +81,7 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       await clearAllWalletBalances();
       await clearAllExchanges();
       // Save accounts to local DB
-      await insertAccounts(serverAccounts as Array<Account & { myRole?: AccountRole }>, userId);
+      await insertAccounts(serverAccounts as (Account & { myRole?: AccountRole })[], userId);
 
       // Load from local DB to get consistent format with myRole (filtered by userId)
       const localAccounts = await loadAllAccounts(userId);
@@ -251,7 +249,7 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       }));
 
       return serverMembers;
-    } catch (error) {
+    } catch {
       // Fall back to local cache
       const localMembers = await loadMembersByAccountId(accountId);
       set((state) => ({

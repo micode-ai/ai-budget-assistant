@@ -28,7 +28,7 @@ export default function DashboardScreen() {
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
   const { convertedIncomeTotal, convertedExpenseTotal, loadRates, rates } = useExchangeRateStore();
-  const { level, levelProgress, currentStreak, longestStreak, loadProfile } = useGamificationStore();
+  const { level, levelProgress, currentStreak, loadProfile } = useGamificationStore();
   const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
   const theme = useTheme();
@@ -61,7 +61,7 @@ export default function DashboardScreen() {
     } finally {
       setRefreshing(false);
     }
-  }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile]);
+  }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile, currentAccountType, loadInvestmentSummary]);
 
   const remaining = totalBudget - convertedExpenseTotal;
 

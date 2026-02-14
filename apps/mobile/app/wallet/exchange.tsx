@@ -13,7 +13,7 @@ const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN']
 
 export default function ExchangeScreen() {
   const { t } = useTranslation();
-  const { addExchange, walletSummary } = useWalletStore();
+  const { addExchange } = useWalletStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -29,6 +29,7 @@ export default function ExchangeScreen() {
     if (fromCurrency !== toCurrency) {
       fetchRate();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
   const fetchRate = async () => {

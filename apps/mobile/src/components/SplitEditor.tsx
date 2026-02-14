@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -56,7 +56,7 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
       percentage: totalAmount > 0 ? Math.max(0, (remainingAmount / totalAmount) * 100) : 0,
     };
     setSplits([...splits, newSplit]);
-  }, [splits, categories, remainingAmount, totalAmount]);
+  }, [splits, categories, remainingAmount, totalAmount, t]);
 
   const removeSplit = useCallback((index: number) => {
     setSplits(splits.filter((_, i) => i !== index));
@@ -72,18 +72,6 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
     };
     setSplits(newSplits);
   }, [splits, totalAmount]);
-
-  const updateSplitCategory = useCallback((index: number, categoryId: string) => {
-    const category = categories.find(c => c.id === categoryId);
-    if (!category) return;
-    const newSplits = [...splits];
-    newSplits[index] = {
-      ...newSplits[index],
-      categoryId,
-      categoryName: getCategoryDisplayName(category, t),
-    };
-    setSplits(newSplits);
-  }, [splits, categories]);
 
   const handleConfirm = useCallback(() => {
     const total = splits.reduce((sum, s) => sum + s.amount, 0);
