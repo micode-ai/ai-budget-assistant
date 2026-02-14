@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="250dp"
+    android:minHeight="110dp"
+
+
+
+
+
+    android:resizeMode="horizontal"
+
+    android:description="@string/widget_budgetwidgetmedium_description"
+
+    android:initialLayout="@layout/rn_widget"
+    android:previewImage="@drawable/budgetwidgetmedium_preview"
+
+    android:configure="com.budget.assistant.WidgetConfigurationActivity"
+    android:widgetFeatures="reconfigurable"
+
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen">
+</appwidget-provider>

@@ -2,4 +2,7 @@
   <string name="app_name">AI Budget Assistant</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+  <string name="widget_budgetwidgetsmall_description" translatable="false">Shows today\'s spending total</string>
+  <string name="widget_budgetwidgetmedium_description" translatable="false">Shows weekly spending chart and today\'s total</string>
+  <string name="widget_budgetwidgetlarge_description" translatable="false">Shows budget progress and top categories</string>
 </resources>
