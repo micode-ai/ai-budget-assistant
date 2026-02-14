@@ -2255,6 +2255,348 @@ GET /gamification/definitions
 
 ---
 
+## Investments
+
+Investment portfolio tracking with real-time prices from Twelve Data API. Requires `X-Account-Id` header. Requires an **investment** type account (`type: 'investment'`).
+
+### Search Assets
+
+```http
+GET /investments/assets/search?q=AAPL
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `q` | string | Search query (symbol or company name) |
+
+**Response** `200 OK`
+```json
+[
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "type": "stock",
+    "exchange": "NASDAQ",
+    "currency": "USD"
+  },
+  {
+    "symbol": "AAPL.MX",
+    "name": "Apple Inc",
+    "type": "stock",
+    "exchange": "BMV",
+    "currency": "MXN"
+  }
+]
+```
+
+### List Holdings
+
+```http
+GET /investments/holdings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "localId": "client-uuid",
+    "accountId": "account-uuid",
+    "assetId": "asset-uuid",
+    "asset": {
+      "id": "asset-uuid",
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "type": "stock",
+      "exchange": "NASDAQ",
+      "currentPrice": 178.50,
+      "priceCurrency": "USD",
+      "lastPriceUpdate": "2026-02-14T16:00:00Z"
+    },
+    "quantity": 10,
+    "averageCostBasis": 165.25,
+    "totalInvested": 1652.50,
+    "notes": "Long-term hold",
+    "syncVersion": 1,
+    "createdAt": "2026-01-15T10:00:00Z"
+  }
+]
+```
+
+### Create Holding
+
+```http
+POST /investments/holdings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "assetSymbol": "AAPL",
+  "assetName": "Apple Inc",
+  "assetType": "stock",
+  "assetExchange": "NASDAQ",
+  "assetCurrency": "USD",
+  "notes": "Long-term hold"
+}
+```
+
+**Asset Type Values**: `stock`, `crypto`, `etf`, `bond`, `commodity`
+
+**Response** `201 Created`
+```json
+{
+  "id": "uuid",
+  "localId": "client-uuid",
+  "assetId": "asset-uuid",
+  "asset": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "type": "stock",
+    "currentPrice": 178.50
+  },
+  "quantity": 0,
+  "averageCostBasis": 0,
+  "totalInvested": 0,
+  "syncVersion": 1
+}
+```
+
+### Delete Holding
+
+```http
+DELETE /investments/holdings/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+**Note:** Deleting a holding also deletes all associated transactions.
+
+### List Transactions
+
+```http
+GET /investments/transactions?holdingId=uuid
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `holdingId` | UUID | Filter by holding (optional) |
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "localId": "client-uuid",
+    "holdingId": "holding-uuid",
+    "type": "buy",
+    "quantity": 10,
+    "pricePerUnit": 165.25,
+    "totalAmount": 1652.50,
+    "fee": 0,
+    "date": "2026-01-15",
+    "notes": "Initial purchase",
+    "syncVersion": 1,
+    "createdAt": "2026-01-15T10:00:00Z"
+  }
+]
+```
+
+### Create Transaction
+
+```http
+POST /investments/transactions
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "localId": "client-generated-uuid",
+  "holdingId": "holding-uuid",
+  "type": "buy",
+  "quantity": 10,
+  "pricePerUnit": 165.25,
+  "fee": 0,
+  "date": "2026-01-15",
+  "notes": "Initial purchase"
+}
+```
+
+**Transaction Type Values**: `buy`, `sell`
+
+**Response** `201 Created`
+
+**Note:** Creating a transaction automatically updates the holding's `quantity`, `averageCostBasis`, and `totalInvested` fields.
+
+### Update Transaction
+
+```http
+PATCH /investments/transactions/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "quantity": 15,
+  "pricePerUnit": 164.00,
+  "notes": "Adjusted purchase"
+}
+```
+
+**Response** `200 OK`
+
+### Delete Transaction
+
+```http
+DELETE /investments/transactions/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Get Portfolio Summary
+
+Returns aggregated portfolio metrics with current market values.
+
+```http
+GET /investments/summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "totalValue": 5325.00,
+  "totalInvested": 4980.00,
+  "totalPnL": 345.00,
+  "totalPnLPercent": 6.93,
+  "dayChange": 52.50,
+  "dayChangePercent": 0.99,
+  "holdings": [
+    {
+      "holdingId": "uuid",
+      "assetId": "asset-uuid",
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "assetType": "stock",
+      "quantity": 10,
+      "averageCostBasis": 165.25,
+      "currentPrice": 178.50,
+      "marketValue": 1785.00,
+      "totalInvested": 1652.50,
+      "pnl": 132.50,
+      "pnlPercent": 8.02,
+      "dayChange": 15.00,
+      "dayChangePercent": 0.85,
+      "allocationPercent": 33.52
+    }
+  ]
+}
+```
+
+### Get Portfolio Analytics
+
+Returns historical performance data with optional benchmark comparison.
+
+```http
+POST /investments/analytics
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "period": "month",
+  "benchmark": "SPY"
+}
+```
+
+**Body Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `period` | string | `week`, `month`, `quarter`, `year`, `all` |
+| `benchmark` | string | Benchmark symbol (optional): `SPY`, `QQQ`, `DIA`, `IWM` |
+
+**Response** `200 OK`
+```json
+{
+  "dates": ["2026-01-15", "2026-01-16", "2026-01-17"],
+  "values": [4980.00, 5050.00, 5325.00],
+  "investedValues": [4980.00, 4980.00, 4980.00],
+  "benchmarkValues": [0, 0.45, 1.23],
+  "benchmarkName": "SPY"
+}
+```
+
+**Performance Calculation:**
+```
+Return % = ((End Value - Start Value) / Start Value) × 100
+```
+
+**Benchmark Values:** Normalized percentages relative to the first day (benchmarkValues[0] = 0, subsequent values = cumulative % change).
+
+### Get Asset Price History
+
+```http
+GET /investments/holdings/:id/price-history?days=30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `days` | number | Number of days (default: 30) |
+
+**Response** `200 OK`
+```json
+[
+  {
+    "date": "2026-01-15",
+    "openPrice": 175.50,
+    "closePrice": 178.50,
+    "highPrice": 179.20,
+    "lowPrice": 174.80,
+    "volume": 45230000
+  }
+]
+```
+
+### Refresh Prices
+
+Manually trigger price refresh for all holdings in the portfolio.
+
+```http
+POST /investments/refresh-prices
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "refreshed": 5,
+  "failed": 0,
+  "message": "Prices updated successfully"
+}
+```
+
+**Note:** Prices are automatically updated every 15 minutes for active portfolios. Use this endpoint to force an immediate refresh.
+
+---
+
 ## Error Responses
 
 ### Error Format

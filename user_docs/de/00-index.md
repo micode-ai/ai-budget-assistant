@@ -9,6 +9,7 @@
 - **KI-Chat** — Fragen zu deinen Finanzen stellen und personalisierte Beratung erhalten
 - **Ausgabengeschichte** — KI-generierte narrative Berichte mit Erfolgen und Einblicken
 - **Gamification** — Erfolge, tagliche Serien, XP/Level und Abzeichen-Sammlung zur Motivation
+- **Anlageportfolio** — verfolge Aktien, ETFs, Krypto, Anleihen und Rohstoffe mit aktuellen Preisen und Analysen
 - **Budgets** — Ausgabenlimits mit Echtzeit-Fortschrittsverfolgung und Warnungen festlegen
 - **Interaktive Analysen** — Diagramme mit Drill-Down, Kategorieaufschlusselungen und Trendanalyse
 - **Mehrere Konten** — Personlich, Gemeinsam und Geschaftlich mit rollenbasierter Zugriffskontrolle (Eigentumer, Bearbeiter, Betrachter)
@@ -30,6 +31,7 @@
 11. [Einstellungen](./11-settings.md) — Profil, Erscheinungsbild und Praferenzen
 12. [Abonnement-Plane](./12-subscription.md) — Free, Pro und Business Plane
 13. [Erfolge & Gamification](./13-gamification.md) — Serien, XP, Level und Abzeichen
+14. [Anlageportfolio](./14-investments.md) — Aktien, ETFs, Krypto Tracking und Analysen
 
 ## Unterstutzte Wahrungen
 

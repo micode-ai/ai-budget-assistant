@@ -863,6 +863,9 @@ export default {
     noAllocationData: 'Няма даных пра размеркаванне',
     benchmarkComparison: 'Параўнанне з бенчмаркам',
     benchmarkProOnly: 'Перайдзіце на Pro+ для параўнання з бенчмаркам',
+    noBenchmarkData: 'Няма даных для параўнання з бенчмаркам',
+    yourPortfolio: 'Ваш партфель',
+    difference: 'Розніца',
   },
   help: {
     title: 'Дапамога',

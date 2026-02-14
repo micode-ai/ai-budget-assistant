@@ -453,23 +453,47 @@ export class InvestmentsService {
       }
       const dates = Array.from(allDates).sort();
 
+      // Track last known price for each holding to fill gaps
+      const lastKnownPrice = new Map<string, number>();
+
+      // Initialize with current prices as fallback
+      for (const h of holdings) {
+        if (h.asset.currentPrice) {
+          lastKnownPrice.set(h.asset.symbol, Number(h.asset.currentPrice));
+        }
+      }
+
       // Compute portfolio value for each date
       for (const date of dates) {
         let dailyValue = 0;
         let dailyInvested = 0;
+        let hasAllPrices = true;
 
         for (const h of holdings) {
           const symbolPrices = priceMap.get(h.asset.symbol);
           const price = symbolPrices?.get(date);
+
           if (price) {
+            lastKnownPrice.set(h.asset.symbol, price);
             dailyValue += Number(h.quantity) * price;
+          } else {
+            // Use last known price if available
+            const fallbackPrice = lastKnownPrice.get(h.asset.symbol);
+            if (fallbackPrice) {
+              dailyValue += Number(h.quantity) * fallbackPrice;
+            } else {
+              hasAllPrices = false;
+            }
           }
           dailyInvested += Number(h.totalInvested);
         }
 
-        performanceDates.push(date);
-        performanceValues.push(Math.round(dailyValue * 100) / 100);
-        investedValues.push(Math.round(dailyInvested * 100) / 100);
+        // Only include dates where we have prices for all holdings
+        if (hasAllPrices) {
+          performanceDates.push(date);
+          performanceValues.push(Math.round(dailyValue * 100) / 100);
+          investedValues.push(Math.round(dailyInvested * 100) / 100);
+        }
       }
 
       // If still no data, generate minimal chart from current prices

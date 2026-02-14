@@ -37,7 +37,7 @@ export default function AssetDetailScreen() {
   const [chartPeriod, setChartPeriod] = useState(30);
 
   const currentAccount = accounts.find((a) => a.id === currentAccountId);
-  const currency = (currentAccount?.currency || 'USD') as Currency;
+  const currency = (currentAccount?.currencyCode || 'USD') as Currency;
 
   const holding = holdings?.find((h: any) => h.id === holdingId);
   const holdingTransactions = transactions?.[holdingId || ''] || [];

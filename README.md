@@ -42,3 +42,5 @@ AI-powered personal finance management application with voice input, receipt sca
 | 10 | [Wallet & Exchange](user_docs/en/10-wallet-and-exchange.md) |
 | 11 | [Settings](user_docs/en/11-settings.md) |
 | 12 | [Subscription Plans](user_docs/en/12-subscription.md) |
+| 13 | [Achievements & Gamification](user_docs/en/13-gamification.md) |
+| 14 | [Investment Portfolio](user_docs/en/14-investments.md) |

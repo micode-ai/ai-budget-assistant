@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useInvestmentStore } from '@/stores/investmentStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { InteractiveLineChart } from '@/components/interactive-charts';
 import { formatCurrency, formatPercentageChange } from '@budget/shared-utils';
 import { useTheme, useStyles, fontSizes, type Theme } from '@/theme';
@@ -31,16 +33,24 @@ export default function InvestmentDashboardScreen() {
   } = useInvestmentStore();
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const accounts = useAccountStore((s) => s.accounts);
+  const userCurrency = useAuthStore((s) => s.user?.currencyCode || 'USD') as Currency;
+  const { rates, loadRates } = useExchangeRateStore();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState<string>('1M');
 
-  const currentAccount = accounts.find((a) => a.id === currentAccountId);
-  const currency = (currentAccount?.currency || 'USD') as Currency;
+  // Portfolio values are in USD, convert to user's display currency
+  const displayCurrency = userCurrency;
+  const convert = useCallback(
+    (amount: number, fromCurrency: string = 'USD') =>
+      convertAmount(amount, fromCurrency, displayCurrency, rates),
+    [rates, displayCurrency],
+  );
 
   useEffect(() => {
     loadHoldings();
     loadSummary();
-  }, [loadHoldings, loadSummary, currentAccountId]);
+    loadRates();
+  }, [loadHoldings, loadSummary, loadRates, currentAccountId]);
 
   useEffect(() => {
     if (holdings && holdings.length > 0) {
@@ -112,13 +122,13 @@ export default function InvestmentDashboardScreen() {
           <Text style={styles.holdingName} numberOfLines={1}>{item.asset?.name ?? ''}</Text>
           <Text style={styles.holdingMeta}>
             {parseFloat(qty.toPrecision(10))} {item.asset?.symbol}
-            {hasPrice ? ` · ${hasLivePrice ? '' : '~'}${formatCurrency(curPrice, priceCurrency)}` : ''}
+            {hasPrice ? ` · ${hasLivePrice ? '' : '~'}${formatCurrency(convert(curPrice, priceCurrency), displayCurrency)}` : ''}
           </Text>
         </View>
 
         <View style={styles.holdingRight}>
           <Text style={styles.holdingValue}>
-            {hasPrice ? `${hasLivePrice ? '' : '~'}${formatCurrency(marketVal, priceCurrency)}` : '—'}
+            {hasPrice ? `${hasLivePrice ? '' : '~'}${formatCurrency(convert(marketVal, priceCurrency), displayCurrency)}` : '—'}
           </Text>
           {hasPrice && avgCost > 0 && hasLivePrice ? (
             <Text style={[styles.holdingPnlPercent, {
@@ -160,7 +170,7 @@ export default function InvestmentDashboardScreen() {
       <View style={styles.heroSection}>
         <Text style={styles.heroLabel}>{t('investments.portfolio')}</Text>
         <Text style={styles.heroValue}>
-          {formatCurrency(totalValue, currency)}
+          {formatCurrency(convert(totalValue), displayCurrency)}
         </Text>
         <View style={styles.heroPnlRow}>
           <Ionicons
@@ -174,7 +184,7 @@ export default function InvestmentDashboardScreen() {
             {formatPercentageChange(totalPnlPercent)}
           </Text>
           <Text style={styles.heroPnlAbsolute}>
-            ({isPositive ? '+' : ''}{formatCurrency(Math.abs(totalPnl), currency)})
+            ({isPositive ? '+' : ''}{formatCurrency(convert(Math.abs(totalPnl)), displayCurrency)})
           </Text>
         </View>
       </View>
@@ -205,7 +215,7 @@ export default function InvestmentDashboardScreen() {
             <InteractiveLineChart
               data={chartData}
               height={180}
-              formatValue={(v) => formatCurrency(v, currency)}
+              formatValue={(v) => formatCurrency(convert(v), displayCurrency)}
               lineColor={isPositive ? theme.colors.success : theme.colors.danger}
               areaChart
             />

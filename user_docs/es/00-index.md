@@ -9,6 +9,7 @@
 - **Chat IA** — haz preguntas sobre tus finanzas y recibe consejos personalizados
 - **Historia de gastos** — informes narrativos generados por IA con logros e informacion relevante
 - **Gamificacion** — logros, rachas diarias, XP/niveles y coleccion de insignias para mantenerte motivado
+- **Cartera de inversiones** — sigue acciones, ETFs, criptomonedas, bonos y materias primas con precios en tiempo real y analiticas
 - **Presupuestos** — establece limites de gasto con seguimiento en tiempo real y alertas
 - **Analisis interactivo** — graficos con desglose detallado, por categoria y analisis de tendencias
 - **Multiples cuentas** — cuentas Personal, Compartida y Empresa con control de acceso basado en roles (Propietario, Editor, Observador)
@@ -30,6 +31,7 @@
 11. [Ajustes](./11-settings.md) — perfil, apariencia y preferencias
 12. [Planes de suscripcion](./12-subscription.md) — planes Gratuito, Pro y Business
 13. [Logros y Gamificacion](./13-gamification.md) — rachas, XP, niveles e insignias
+14. [Cartera de inversiones](./14-investments.md) — seguimiento de acciones, ETFs, cripto y analiticas
 
 ## Monedas compatibles
 

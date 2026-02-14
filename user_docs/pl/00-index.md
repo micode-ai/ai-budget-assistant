@@ -9,6 +9,7 @@
 - **Czat AI** — zadawaj pytania o swoje finanse i otrzymuj spersonalizowane porady
 - **Historia wydatkow** — generowane przez AI raporty narracyjne z osiagnieciami i wnioskami
 - **Grywalizacja** — osiagniecia, codzienne serie, XP/poziomy i kolekcja odznak dla motywacji
+- **Portfel inwestycyjny** — sledz akcje, ETF, kryptowaluty, obligacje i towary z aktualnymi cenami i analityka
 - **Budzety** — ustalaj limity wydatkow ze sledzeniem postepu w czasie rzeczywistym i alertami
 - **Interaktywna analityka** — wykresy z drilldownem, podzialem na kategorie i analiza trendow
 - **Wiele kont** — konta Osobiste, Wspolne i Firmowe z dostepem opartym na rolach (Wlasciciel, Edytor, Obserwator)
@@ -30,6 +31,7 @@
 11. [Ustawienia](./11-settings.md) — profil, wyglad i preferencje
 12. [Plany subskrypcji](./12-subscription.md) — plany Free, Pro i Business
 13. [Osiagniecia i Grywalizacja](./13-gamification.md) — serie, XP, poziomy i odznaki
+14. [Portfel inwestycyjny](./14-investments.md) — sledzenie akcji, ETF, krypto i analityka
 
 ## Obslugiwane waluty
 
