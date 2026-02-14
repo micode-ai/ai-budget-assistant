@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useStyles, type Theme } from '@/theme';
+import { LEGAL_URLS } from '@/constants/legal';
 
 interface PaywallProps {
   feature: string;
@@ -76,6 +77,23 @@ export function Paywall({ feature, requiredTier, onDismiss }: PaywallProps) {
       )}
 
       <Text style={styles.trial}>{t('subscription.trial')}</Text>
+
+      <Text style={styles.legalText}>
+        {t('legal.bySubscribing')}{' '}
+        <Text
+          style={styles.legalLink}
+          onPress={() => Linking.openURL(LEGAL_URLS.termsOfService)}
+        >
+          {t('legal.termsOfService')}
+        </Text>
+        {' '}{t('legal.and')}{' '}
+        <Text
+          style={styles.legalLink}
+          onPress={() => Linking.openURL(LEGAL_URLS.privacyPolicy)}
+        >
+          {t('legal.privacyPolicy')}
+        </Text>
+      </Text>
 
       {onDismiss && (
         <TouchableOpacity onPress={onDismiss} style={styles.dismissButton}>
@@ -170,5 +188,16 @@ const createStyles = (theme: Theme) => ({
   dismissText: {
     fontSize: 14,
     color: theme.colors.textSecondary,
+  },
+  legalText: {
+    fontSize: 11,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginBottom: 12,
+    lineHeight: 16,
+    paddingHorizontal: 16,
+  },
+  legalLink: {
+    color: theme.colors.primary,
   },
 });

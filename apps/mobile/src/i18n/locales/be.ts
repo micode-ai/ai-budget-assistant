@@ -877,4 +877,12 @@ export default {
     title: 'Дапамога',
     articleTitle: 'Дапамога',
   },
+  legal: {
+    privacyPolicy: 'Палітыка канфідэнцыяльнасці',
+    termsOfService: 'Умовы выкарыстання',
+    agreeToTerms: 'Я прымаю',
+    and: 'і',
+    bySubscribing: 'Падпісваючыся, вы прымаеце нашы',
+    mustAcceptTerms: 'Вы павінны прыняць Умовы і Палітыку канфідэнцыяльнасці',
+  },
 } as const;

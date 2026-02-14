@@ -893,4 +893,12 @@ export default {
     title: 'Pomoc',
     articleTitle: 'Pomoc',
   },
+  legal: {
+    privacyPolicy: 'Polityka Prywatności',
+    termsOfService: 'Regulamin',
+    agreeToTerms: 'Akceptuję',
+    and: 'oraz',
+    bySubscribing: 'Subskrybując, akceptujesz nasz',
+    mustAcceptTerms: 'Musisz zaakceptować Regulamin i Politykę Prywatności',
+  },
 } as const;

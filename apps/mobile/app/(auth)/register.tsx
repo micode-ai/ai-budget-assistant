@@ -8,13 +8,16 @@ import {
   Platform,
   ActivityIndicator,
   ScrollView,
+  Linking,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import i18n, { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { LEGAL_URLS } from '@/constants/legal';
 
 const CURRENCIES = [
   { code: 'USD', label: '$ USD' },
@@ -37,6 +40,7 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [currencyCode, setCurrencyCode] = useState('USD');
   const [language, setLanguage] = useState(i18n.language);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { register, isLoading } = useAuthStore();
@@ -70,6 +74,11 @@ export default function RegisterScreen() {
 
     if (password !== confirmPassword) {
       setError(t('validation.passwordsNoMatch'));
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setError(t('legal.mustAcceptTerms'));
       return;
     }
 
@@ -195,6 +204,34 @@ export default function RegisterScreen() {
                 ))}
               </View>
             </View>
+
+            <TouchableOpacity
+              style={styles.termsRow}
+              onPress={() => setAcceptedTerms(!acceptedTerms)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.checkbox, acceptedTerms && styles.checkboxChecked]}>
+                {acceptedTerms && (
+                  <Ionicons name="checkmark" size={16} color={theme.colors.textInverse} />
+                )}
+              </View>
+              <Text style={styles.termsText}>
+                {t('legal.agreeToTerms')}{' '}
+                <Text
+                  style={styles.termsLink}
+                  onPress={() => Linking.openURL(LEGAL_URLS.termsOfService)}
+                >
+                  {t('legal.termsOfService')}
+                </Text>
+                {' '}{t('legal.and')}{' '}
+                <Text
+                  style={styles.termsLink}
+                  onPress={() => Linking.openURL(LEGAL_URLS.privacyPolicy)}
+                >
+                  {t('legal.privacyPolicy')}
+                </Text>
+              </Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -332,5 +369,35 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     fontWeight: '600' as const,
     color: theme.colors.primary,
+  },
+  termsRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[2],
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: theme.borderRadius.sm,
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    marginTop: 2,
+  },
+  checkboxChecked: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  termsText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    flex: 1,
+    lineHeight: 20,
+  },
+  termsLink: {
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
 });

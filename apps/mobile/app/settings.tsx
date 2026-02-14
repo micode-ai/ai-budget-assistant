@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
+import { LEGAL_URLS } from '@/constants/legal';
 import type { Currency } from '@budget/shared-types';
 import Constants from 'expo-constants';
 
@@ -555,6 +556,28 @@ export default function SettingsScreen() {
             >
               <Text style={styles.fieldLabel}>{t('settings.support')}</Text>
               <Ionicons name="mail-outline" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => Linking.openURL(LEGAL_URLS.privacyPolicy)}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="shield-checkmark-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('legal.privacyPolicy')}</Text>
+              </View>
+              <Ionicons name="open-outline" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => Linking.openURL(LEGAL_URLS.termsOfService)}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="document-text-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('legal.termsOfService')}</Text>
+              </View>
+              <Ionicons name="open-outline" size={18} color={theme.colors.textTertiary} />
             </TouchableOpacity>
           </View>
         </View>
