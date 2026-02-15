@@ -6,6 +6,7 @@ import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
 import { useExchangeRateStore } from './exchangeRateStore';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import {
   loadAllBudgets,
   insertBudget,
@@ -67,14 +68,17 @@ export const useBudgetStore = create<BudgetState>()(
 
           if (Array.isArray(serverBudgets)) {
             for (const sb of serverBudgets) {
+              // Decrypt encrypted fields if present
+              const decrypted = await maybeDecrypt('budget', sb, sb.accountId);
+
               const budget: Budget = {
                 id: sb.clientId || sb.id,
                 localId: sb.clientId || sb.id,
                 serverId: sb.id,
                 userId: sb.userId,
                 accountId: sb.accountId,
-                name: sb.name,
-                amount: Number(sb.amount),
+                name: decrypted.name,
+                amount: Number(decrypted.amount),
                 currencyCode: (sb.currencyCode || 'USD') as Currency,
                 period: sb.period as BudgetPeriod,
                 startDate: new Date(sb.startDate),
@@ -123,17 +127,25 @@ export const useBudgetStore = create<BudgetState>()(
 
       for (const budget of pending) {
         try {
-          await api.createBudget({
-            localId: budget.localId || budget.id,
+          // Encrypt before sending
+          const { payload: encPayload, encryptedPayload, encryptionKeyVersion } = await maybeEncrypt('budget', {
             name: budget.name,
             amount: budget.amount,
+          }, budget.accountId);
+
+          await api.createBudget({
+            localId: budget.localId || budget.id,
+            name: encPayload.name ?? budget.name,
+            amount: encPayload.amount ?? budget.amount,
             currencyCode: budget.currencyCode,
             period: budget.period,
             startDate: budget.startDate instanceof Date ? budget.startDate.toISOString() : budget.startDate,
             endDate: budget.endDate instanceof Date ? budget.endDate.toISOString() : budget.endDate,
             categoryId: budget.categoryId,
             alertThreshold: budget.alertThreshold,
-          });
+            encryptedPayload,
+            encryptionKeyVersion,
+          } as any);
           set((state) => ({
             budgets: state.budgets.map((b) =>
               b.id === budget.id ? { ...b, syncStatus: 'synced' as SyncStatus } : b,
@@ -174,17 +186,24 @@ export const useBudgetStore = create<BudgetState>()(
         console.error('Failed to insert budget in SQLite:', e),
       );
 
-      // Sync to server
-      api.createBudget({
-        localId: id,
+      // Encrypt sensitive fields before sending to server
+      maybeEncrypt('budget', {
         name: budgetData.name,
         amount: budgetData.amount,
-        currencyCode: budgetData.currencyCode,
-        period: budgetData.period,
-        startDate: budgetData.startDate instanceof Date ? budgetData.startDate.toISOString() : budgetData.startDate,
-        endDate: budgetData.endDate instanceof Date ? budgetData.endDate.toISOString() : budgetData.endDate,
-        categoryId: budgetData.categoryId,
-        alertThreshold: budgetData.alertThreshold,
+      }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+        return api.createBudget({
+          localId: id,
+          name: encPayload.name ?? budgetData.name,
+          amount: encPayload.amount ?? budgetData.amount,
+          currencyCode: budgetData.currencyCode,
+          period: budgetData.period,
+          startDate: budgetData.startDate instanceof Date ? budgetData.startDate.toISOString() : budgetData.startDate,
+          endDate: budgetData.endDate instanceof Date ? budgetData.endDate.toISOString() : budgetData.endDate,
+          categoryId: budgetData.categoryId,
+          alertThreshold: budgetData.alertThreshold,
+          encryptedPayload,
+          encryptionKeyVersion,
+        } as any);
       }).then(() => {
         set((state) => ({
           budgets: state.budgets.map((b) =>

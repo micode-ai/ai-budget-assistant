@@ -13,6 +13,7 @@ import { insertIncomeTag, getTagsForIncome } from '@/db/tagRepository';
 import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
@@ -115,23 +116,26 @@ export const useIncomeStore = create<IncomeState>()(
             const localIncome = localIncomes.find((i) => i.id === incomeId);
             const serverCategoryId = si.categoryId ?? si.category?.id ?? undefined;
 
+            // Decrypt encrypted fields if present
+            const decrypted = await maybeDecrypt('income', si, si.accountId);
+
             const income: Income = {
               id: incomeId,
               localId: incomeId,
               serverId: si.id,
-              userId: si.userId,
-              accountId: si.accountId,
-              amount: Number(si.amount),
-              currencyCode: si.currencyCode,
-              description: si.description ?? undefined,
-              notes: si.notes ?? undefined,
+              userId: decrypted.userId,
+              accountId: decrypted.accountId,
+              amount: Number(decrypted.amount),
+              currencyCode: decrypted.currencyCode,
+              description: decrypted.description ?? undefined,
+              notes: decrypted.notes ?? undefined,
               categoryId: serverCategoryId || localIncome?.categoryId,
-              date: new Date(si.date),
-              createdAt: new Date(si.createdAt),
-              updatedAt: new Date(si.updatedAt),
-              isDeleted: si.isDeleted || false,
+              date: new Date(decrypted.date),
+              createdAt: new Date(decrypted.createdAt),
+              updatedAt: new Date(decrypted.updatedAt),
+              isDeleted: decrypted.isDeleted || false,
               syncStatus: 'synced' as SyncStatus,
-              syncVersion: si.syncVersion || 0,
+              syncVersion: decrypted.syncVersion || 0,
             };
             await upsertIncome(income);
 
@@ -254,17 +258,25 @@ export const useIncomeStore = create<IncomeState>()(
         resolvedCategoryId = cat?.name || newIncome.categoryId;
       }
 
-      // Fire-and-forget server sync
-      api.createIncome({
-        localId: id,
-        amount: newIncome.amount,
-        currencyCode: newIncome.currencyCode,
+      // Fire-and-forget server sync with encryption
+      maybeEncrypt('income', {
         description: newIncome.description,
         notes: newIncome.notes,
-        categoryId: resolvedCategoryId,
-        date: newIncome.date instanceof Date ? newIncome.date.toISOString() : newIncome.date,
-        tagIds: tagIds?.length ? tagIds : undefined,
-        projectId: projectId || undefined,
+        amount: newIncome.amount,
+      }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+        return api.createIncome({
+          localId: id,
+          amount: encPayload.amount ?? newIncome.amount,
+          currencyCode: newIncome.currencyCode,
+          description: encPayload.description ?? newIncome.description,
+          notes: encPayload.notes ?? newIncome.notes,
+          categoryId: resolvedCategoryId,
+          date: newIncome.date instanceof Date ? newIncome.date.toISOString() : newIncome.date,
+          tagIds: tagIds?.length ? tagIds : undefined,
+          projectId: projectId || undefined,
+          encryptedPayload,
+          encryptionKeyVersion,
+        } as any);
       }).then(() => {
         set((state) => ({
           incomes: state.incomes.map((i) =>
@@ -346,16 +358,24 @@ export const useIncomeStore = create<IncomeState>()(
             const cat = await getCategoryFromDb(income.categoryId);
             resolvedCategoryId = cat?.name || income.categoryId;
           }
-          await api.createIncome({
-            localId: income.localId || income.id,
-            amount: income.amount,
-            currencyCode: income.currencyCode,
+          const { payload: encPayload, encryptedPayload, encryptionKeyVersion } = await maybeEncrypt('income', {
             description: income.description,
             notes: income.notes,
+            amount: income.amount,
+          }, income.accountId);
+
+          await api.createIncome({
+            localId: income.localId || income.id,
+            amount: encPayload.amount ?? income.amount,
+            currencyCode: income.currencyCode,
+            description: encPayload.description ?? income.description,
+            notes: encPayload.notes ?? income.notes,
             categoryId: resolvedCategoryId,
             date: income.date instanceof Date ? income.date.toISOString() : String(income.date),
             tagIds: tagIds.length ? tagIds : undefined,
-          });
+            encryptedPayload,
+            encryptionKeyVersion,
+          } as any);
         } catch {
           // upsert handles duplicates
         }

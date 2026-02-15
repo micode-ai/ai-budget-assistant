@@ -11,7 +11,26 @@ export class InsightsService {
     private readonly budgetsService: BudgetsService,
   ) {}
 
+  /**
+   * Check if the account has Tier 2 (full) encryption.
+   */
+  private async isFullEncryption(accountId: string): Promise<boolean> {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionTier: true },
+    });
+    return (account?.encryptionTier ?? 0) >= 2;
+  }
+
   async getInsights(accountId: string) {
+    if (await this.isFullEncryption(accountId)) {
+      return {
+        encryptionRestricted: true,
+        anomalies: [],
+        predictions: [],
+      };
+    }
+
     const [anomalies, predictions] = await Promise.all([
       this.detectSpendingAnomalies(accountId),
       this.getBudgetPredictions(accountId),

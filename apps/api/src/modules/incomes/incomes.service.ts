@@ -65,12 +65,12 @@ export class IncomesService {
         notes: dto.notes,
         categoryId: resolvedCategoryId,
         date: new Date(dto.date),
+        // E2EE: pass through encrypted payload if provided
+        ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
+        ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
       };
 
-      const income = await tx.income.upsert({
-        where: { accountId_clientId: { accountId, clientId: dto.localId } },
-        create: incomeData,
-        update: {
+      const incomeUpdateData = {
           amount: dto.amount,
           currencyCode: dto.currencyCode,
           description: dto.description,
@@ -78,7 +78,14 @@ export class IncomesService {
           categoryId: resolvedCategoryId,
           date: new Date(dto.date),
           isDeleted: false,
-        },
+          ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
+          ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
+        };
+
+      const income = await tx.income.upsert({
+        where: { accountId_clientId: { accountId, clientId: dto.localId } },
+        create: incomeData,
+        update: incomeUpdateData,
         include: { category: true },
       });
 
@@ -223,9 +230,7 @@ export class IncomesService {
       : undefined;
 
     return this.prisma.$transaction(async (tx: PrismaClient) => {
-      await tx.income.update({
-        where: { id: income.id },
-        data: {
+      const incomeUpdData = {
           amount: dto.amount,
           currencyCode: dto.currencyCode,
           description: dto.description,
@@ -233,7 +238,13 @@ export class IncomesService {
           categoryId: resolvedCategoryId,
           date: dto.date ? new Date(dto.date) : undefined,
           syncVersion: { increment: 1 },
-        },
+          ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
+          ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
+        };
+
+      await tx.income.update({
+        where: { id: income.id },
+        data: incomeUpdData,
       });
 
       // Update tag associations if provided

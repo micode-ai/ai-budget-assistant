@@ -8,6 +8,8 @@ interface SyncChange {
   entityId: string;
   operation: 'create' | 'update' | 'delete';
   payload: any;
+  encryptedPayload?: string;
+  encryptionKeyVersion?: number;
   clientVersion: number;
 }
 
@@ -110,7 +112,7 @@ export class SyncService {
   }
 
   private async processExpenseChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
-    const { operation, payload, clientVersion, entityId } = change;
+    const { operation, payload, encryptedPayload, encryptionKeyVersion, clientVersion, entityId } = change;
 
     // Check for existing record
     const existing = await this.expensesService.getByClientId(accountId, entityId);
@@ -138,6 +140,8 @@ export class SyncService {
       const created = await this.expensesService.create(accountId, userId, {
         ...payload,
         localId: entityId,
+        encryptedPayload,
+        encryptionKeyVersion,
       });
 
       if (!created) {
@@ -171,7 +175,11 @@ export class SyncService {
     }
 
     if (operation === 'update') {
-      const updated = await this.expensesService.update(accountId, existing.id, payload);
+      const updated = await this.expensesService.update(accountId, existing.id, {
+        ...payload,
+        encryptedPayload,
+        encryptionKeyVersion,
+      });
       if (!updated) {
         return { entityId, status: 'error', error: 'Failed to update expense' };
       }
@@ -231,6 +239,8 @@ export class SyncService {
           unitPrice: payload.unitPrice ?? 0,
           totalPrice: payload.totalPrice,
           sortOrder: payload.sortOrder ?? 0,
+          encryptedPayload: change.encryptedPayload,
+          encryptionKeyVersion: change.encryptionKeyVersion,
         },
       });
 
@@ -250,6 +260,8 @@ export class SyncService {
         where: { id: entityId },
         data: {
           ...payload,
+          encryptedPayload: change.encryptedPayload,
+          encryptionKeyVersion: change.encryptionKeyVersion,
           syncVersion: { increment: 1 },
         },
       });
@@ -284,7 +296,7 @@ export class SyncService {
   }
 
   private async processIncomeChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
-    const { operation, payload, clientVersion, entityId } = change;
+    const { operation, payload, encryptedPayload, encryptionKeyVersion, clientVersion, entityId } = change;
 
     const existing = await this.incomesService.getByClientId(accountId, entityId);
 
@@ -299,6 +311,8 @@ export class SyncService {
       const created = await this.incomesService.create(accountId, userId, {
         ...payload,
         localId: entityId,
+        encryptedPayload,
+        encryptionKeyVersion,
       });
 
       if (!created) {
@@ -317,7 +331,11 @@ export class SyncService {
     }
 
     if (operation === 'update') {
-      const updated = await this.incomesService.update(accountId, existing.id, payload);
+      const updated = await this.incomesService.update(accountId, existing.id, {
+        ...payload,
+        encryptedPayload,
+        encryptionKeyVersion,
+      });
       return { entityId, status: 'success', serverVersion: updated?.syncVersion ?? existing.syncVersion + 1 };
     }
 
@@ -330,11 +348,12 @@ export class SyncService {
   }
 
   private async processTagChange(accountId: string, change: SyncChange): Promise<SyncResult> {
+    const encData = { encryptedPayload: change.encryptedPayload, encryptionKeyVersion: change.encryptionKeyVersion };
     if (change.operation === 'create') {
       const tag = await this.prisma.tag.upsert({
         where: { accountId_name: { accountId, name: (change.payload as any).name } },
-        create: { accountId, ...(change.payload as any) },
-        update: { ...(change.payload as any), isDeleted: false },
+        create: { accountId, ...(change.payload as any), ...encData },
+        update: { ...(change.payload as any), ...encData, isDeleted: false },
       });
       return { entityId: change.entityId, status: 'success', serverId: tag.id, serverVersion: tag.syncVersion };
     }
@@ -343,7 +362,7 @@ export class SyncService {
       if (!tag) return { entityId: change.entityId, status: 'error', error: 'Tag not found' };
       const updated = await this.prisma.tag.update({
         where: { id: change.entityId },
-        data: { ...(change.payload as any), syncVersion: { increment: 1 } },
+        data: { ...(change.payload as any), ...encData, syncVersion: { increment: 1 } },
       });
       return { entityId: change.entityId, status: 'success', serverVersion: updated.syncVersion };
     }
@@ -359,6 +378,7 @@ export class SyncService {
 
   private async processProjectChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
     const payload = change.payload as any;
+    const encData = { encryptedPayload: change.encryptedPayload, encryptionKeyVersion: change.encryptionKeyVersion };
     if (change.operation === 'create') {
       const project = await this.prisma.project.upsert({
         where: { accountId_clientId: { accountId, clientId: payload.localId || change.entityId } },
@@ -373,8 +393,9 @@ export class SyncService {
           endDate: payload.endDate ? new Date(payload.endDate) : undefined,
           budget: payload.budget,
           currencyCode: payload.currencyCode,
+          ...encData,
         },
-        update: { ...payload, isDeleted: false },
+        update: { ...payload, ...encData, isDeleted: false },
       });
       return { entityId: change.entityId, status: 'success', serverId: project.id, serverVersion: project.syncVersion };
     }
@@ -383,7 +404,7 @@ export class SyncService {
       if (!project) return { entityId: change.entityId, status: 'error', error: 'Project not found' };
       const updated = await this.prisma.project.update({
         where: { id: change.entityId },
-        data: { ...payload, syncVersion: { increment: 1 } },
+        data: { ...payload, ...encData, syncVersion: { increment: 1 } },
       });
       return { entityId: change.entityId, status: 'success', serverVersion: updated.syncVersion };
     }
@@ -536,6 +557,8 @@ export class SyncService {
               amount: payload.amount,
               percentage: payload.percentage,
               notes: payload.notes,
+              encryptedPayload: change.encryptedPayload,
+              encryptionKeyVersion: change.encryptionKeyVersion,
             },
           });
         }

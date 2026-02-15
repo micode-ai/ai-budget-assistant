@@ -20,12 +20,42 @@ export class StoryService {
     });
   }
 
+  /**
+   * Get the encryption tier for an account (0=off, 1=text, 2=full).
+   */
+  private async getEncryptionTier(accountId: string): Promise<number> {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionTier: true },
+    });
+    return account?.encryptionTier ?? 0;
+  }
+
   async getSpendingStory(
     accountId: string,
     period: 'week' | 'month',
     forceRegenerate = false,
     language?: string,
   ) {
+    // Tier 2 (full encryption): amounts are encrypted, stories cannot be generated
+    const encryptionTier = await this.getEncryptionTier(accountId);
+    if (encryptionTier >= 2) {
+      return {
+        encryptionRestricted: true,
+        story: {
+          id: '',
+          accountId,
+          periodLabel: '',
+          periodStart: new Date().toISOString(),
+          periodEnd: new Date().toISOString(),
+          blocks: [],
+          summary: 'Spending story is unavailable because this account uses full end-to-end encryption.',
+          generatedAt: new Date().toISOString(),
+        },
+        isStale: false,
+      };
+    }
+
     const now = new Date();
     const { periodStart, periodEnd, periodLabel } = this.computePeriod(now, period, language);
 
@@ -58,7 +88,7 @@ export class StoryService {
       }
     }
 
-    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language);
+    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier);
   }
 
   private static readonly LOCALE_MAP: Record<string, string> = {
@@ -112,6 +142,7 @@ export class StoryService {
     periodEnd: Date,
     periodLabel: string,
     language?: string,
+    encryptionTier = 0,
   ) {
     // Gather comprehensive data
     const previousPeriodStart = new Date(periodStart);
@@ -176,7 +207,7 @@ export class StoryService {
     }
 
     const topExpenses = currentExpenses.slice(0, 5).map((e: ExpenseWithCategory) => ({
-      description: e.description || 'Expense',
+      description: encryptionTier >= 1 ? 'Expense' : (e.description || 'Expense'),
       amount: Number(e.amount),
       category: e.category?.name || translateUncategorized(language),
       date: e.date.toISOString().split('T')[0],
@@ -206,8 +237,12 @@ export class StoryService {
     // Build GPT prompt
     const languageName = StoryService.LANGUAGE_NAMES[language || 'en'] || 'English';
 
-    const prompt = `You are a personal finance storyteller. Create a narrative spending story for the period "${periodLabel}".
+    const encryptionNotice = encryptionTier >= 1
+      ? '\nNOTE: This account has text-level encryption. Expense descriptions and notes are encrypted and unavailable. Focus the story on amounts, categories, and numerical trends only. Do not reference specific expense descriptions.\n'
+      : '';
 
+    const prompt = `You are a personal finance storyteller. Create a narrative spending story for the period "${periodLabel}".
+${encryptionNotice}
 IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, narrative text, metric labels, chart data labels (like category names, axis labels, legend entries), achievement texts, callout texts, and the summary. Everything the user will see must be in ${languageName}. Do NOT use English words like "Total", "Other", "Uncategorized" — translate them to ${languageName}.
 
 Data:

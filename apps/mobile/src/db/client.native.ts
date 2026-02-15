@@ -347,6 +347,16 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Encryption keys table (local cache for E2EE account keys)
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS encryption_keys (
+        account_id TEXT PRIMARY KEY,
+        account_key TEXT NOT NULL,
+        key_version INTEGER NOT NULL DEFAULT 1,
+        updated_at INTEGER NOT NULL
+      );
+    `);
+
     // Gamification tables
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS user_achievements (

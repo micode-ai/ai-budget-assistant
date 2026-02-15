@@ -375,6 +375,21 @@ export class AccountsService {
       where: { id: memberId },
     });
 
+    // If E2EE is enabled, delete the member's encryption key and flag for key rotation
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionEnabled: true },
+    });
+    if (account?.encryptionEnabled) {
+      await this.prisma.accountEncryptionKey.deleteMany({
+        where: { accountId, userId: member.userId },
+      });
+      await this.prisma.account.update({
+        where: { id: accountId },
+        data: { keyRotationNeeded: true },
+      });
+    }
+
     return { success: true };
   }
 

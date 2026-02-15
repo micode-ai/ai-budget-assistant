@@ -17,6 +17,17 @@ export class AiInsightsService {
     });
   }
 
+  /**
+   * Get the encryption tier for an account (0=off, 1=text, 2=full).
+   */
+  private async getEncryptionTier(accountId: string): Promise<number> {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionTier: true },
+    });
+    return account?.encryptionTier ?? 0;
+  }
+
   private static readonly LANGUAGE_NAMES: Record<string, string> = {
     en: 'English',
     ru: 'Russian',
@@ -28,6 +39,19 @@ export class AiInsightsService {
   };
 
   async getAIInsights(accountId: string, language?: string) {
+    const encryptionTier = await this.getEncryptionTier(accountId);
+
+    // Tier 2 (full encryption): amounts are encrypted, AI insights cannot be generated
+    if (encryptionTier >= 2) {
+      return {
+        encryptionRestricted: true,
+        insights: [],
+        generatedAt: new Date().toISOString(),
+        periodStart: new Date().toISOString(),
+        periodEnd: new Date().toISOString(),
+      };
+    }
+
     // Check cache first
     const now = new Date();
     const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -54,10 +78,10 @@ export class AiInsightsService {
     }
 
     // Generate new insights
-    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language);
+    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier);
   }
 
-  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string) {
+  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0) {
     // Gather financial data
     const threeMonthsAgo = new Date(periodStart.getFullYear(), periodStart.getMonth() - 3, 1);
 
@@ -133,8 +157,12 @@ export class AiInsightsService {
     // Call GPT-4
     const languageName = AiInsightsService.LANGUAGE_NAMES[language || 'en'] || 'English';
 
-    const prompt = `You are a financial analyst. Analyze this spending data and identify 3-5 interesting patterns or insights.
+    const encryptionNotice = encryptionTier >= 1
+      ? '\nNOTE: This account has text-level encryption enabled. Expense descriptions and notes are encrypted and not available. Focus your analysis solely on numerical amounts and category totals.\n'
+      : '';
 
+    const prompt = `You are a financial analyst. Analyze this spending data and identify 3-5 interesting patterns or insights.
+${encryptionNotice}
 IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, action suggestions, and chart labels. Everything the user will see must be in ${languageName}.
 
 Current month spending data:

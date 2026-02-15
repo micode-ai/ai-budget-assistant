@@ -18,8 +18,11 @@ export class ProjectSuggestionService {
 
   async suggestProject(
     accountId: string,
-    expense: { description: string; date: string; locationName?: string },
+    expense: { description: string | null; date: string; locationName?: string },
   ): Promise<{ projectId?: string; projectName?: string; confidence: number } | null> {
+    // Cannot suggest projects without a description (e.g. encrypted under E2EE)
+    if (!expense.description) return null;
+
     // Get active (non-archived) projects
     const activeProjects = await this.prisma.project.findMany({
       where: {

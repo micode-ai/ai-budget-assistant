@@ -32,6 +32,7 @@
 12. [Plany subskrypcji](./12-subscription.md) — plany Free, Pro i Business
 13. [Osiagniecia i Grywalizacja](./13-gamification.md) — serie, XP, poziomy i odznaki
 14. [Portfel inwestycyjny](./14-investments.md) — sledzenie akcji, ETF, krypto i analityka
+15. [Szyfrowanie end-to-end](./15-encryption.md) — ochrona danych za pomoca E2EE
 
 ## Obslugiwane waluty
 

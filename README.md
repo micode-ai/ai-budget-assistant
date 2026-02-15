@@ -8,8 +8,8 @@ AI-powered personal finance management application with voice input, receipt sca
 
 | Language | Files |
 |---|---|
-| English | [README](docs/en/README.md) \| [Architecture](docs/en/ARCHITECTURE.md) \| [API](docs/en/API.md) \| [Setup](docs/en/SETUP.md) |
-| Russian | [README](docs/ru/README.md) \| [Architecture](docs/ru/ARCHITECTURE.md) \| [API](docs/ru/API.md) \| [Setup](docs/ru/SETUP.md) |
+| English | [README](docs/en/README.md) \| [Architecture](docs/en/ARCHITECTURE.md) \| [API](docs/en/API.md) \| [Setup](docs/en/SETUP.md) \| [Encryption](docs/en/ENCRYPTION.md) |
+| Russian | [README](docs/ru/README.md) \| [Architecture](docs/ru/ARCHITECTURE.md) \| [API](docs/ru/API.md) \| [Setup](docs/ru/SETUP.md) \| [Encryption](docs/ru/ENCRYPTION.md) |
 
 [TODO](docs/TODO.md)
 
@@ -44,3 +44,4 @@ AI-powered personal finance management application with voice input, receipt sca
 | 12 | [Subscription Plans](user_docs/en/12-subscription.md) |
 | 13 | [Achievements & Gamification](user_docs/en/13-gamification.md) |
 | 14 | [Investment Portfolio](user_docs/en/14-investments.md) |
+| 15 | [End-to-End Encryption](user_docs/en/15-encryption.md) |

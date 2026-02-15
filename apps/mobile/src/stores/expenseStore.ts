@@ -28,6 +28,7 @@ import { addExpenseToProject, getProjectIdForExpense, getAllProjectExpenseMappin
 import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
@@ -151,28 +152,31 @@ export const useExpenseStore = create<ExpenseState>()(
               ? (se.projectExpenses[0].projectId ?? se.projectExpenses[0].project?.id)
               : undefined;
 
+            // Decrypt encrypted fields if present
+            const decrypted = await maybeDecrypt('expense', se, se.accountId);
+
             const expense: Expense = {
               id: expenseId,
               localId: expenseId,
               serverId: se.id,
-              userId: se.userId,
-              accountId: se.accountId,
-              amount: Number(se.amount),
+              userId: decrypted.userId,
+              accountId: decrypted.accountId,
+              amount: Number(decrypted.amount),
               discountAmount: serverDiscount ?? localExpense?.discountAmount,
-              currencyCode: se.currencyCode,
-              description: se.description ?? undefined,
-              notes: se.notes ?? undefined,
+              currencyCode: decrypted.currencyCode,
+              description: decrypted.description ?? undefined,
+              notes: decrypted.notes ?? undefined,
               categoryId: serverCategoryId || localExpense?.categoryId,
-              date: new Date(se.date),
-              time: se.time ?? undefined,
+              date: new Date(decrypted.date),
+              time: decrypted.time ?? undefined,
               projectId: serverProjectId || localExpense?.projectId,
-              source: se.source || 'manual',
-              isRecurring: se.isRecurring || false,
-              createdAt: new Date(se.createdAt),
-              updatedAt: new Date(se.updatedAt),
-              isDeleted: se.isDeleted || false,
+              source: decrypted.source || 'manual',
+              isRecurring: decrypted.isRecurring || false,
+              createdAt: new Date(decrypted.createdAt),
+              updatedAt: new Date(decrypted.updatedAt),
+              isDeleted: decrypted.isDeleted || false,
               syncStatus: 'synced' as SyncStatus,
-              syncVersion: se.syncVersion || 0,
+              syncVersion: decrypted.syncVersion || 0,
             };
             await upsertExpense(expense);
 
@@ -493,21 +497,31 @@ export const useExpenseStore = create<ExpenseState>()(
         const cat = catStore.getCategoryById(catId);
         return cat?.name || catId;
       };
-      api.createExpense({
-        localId: id,
-        amount: newExpense.amount,
-        discountAmount: newExpense.discountAmount,
-        currencyCode: newExpense.currencyCode,
+      // Encrypt sensitive fields before sending to server
+      maybeEncrypt('expense', {
         description: newExpense.description,
         notes: newExpense.notes,
-        categoryId: resolveCatId(newExpense.categoryId),
-        tagIds: tagIds?.length ? tagIds : undefined,
-        projectId: projectId || undefined,
-        date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
-        source: newExpense.source,
-        items: sanitizedItems,
-        receiptImageBase64,
-        splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
+        amount: newExpense.amount,
+        discountAmount: newExpense.discountAmount,
+      }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+        return api.createExpense({
+          localId: id,
+          amount: encPayload.amount ?? newExpense.amount,
+          discountAmount: encPayload.discountAmount ?? newExpense.discountAmount,
+          currencyCode: newExpense.currencyCode,
+          description: encPayload.description ?? newExpense.description,
+          notes: encPayload.notes ?? newExpense.notes,
+          categoryId: resolveCatId(newExpense.categoryId),
+          tagIds: tagIds?.length ? tagIds : undefined,
+          projectId: projectId || undefined,
+          date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
+          source: newExpense.source,
+          items: sanitizedItems,
+          receiptImageBase64,
+          splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
+          encryptedPayload,
+          encryptionKeyVersion,
+        } as any);
       }).then(() => {
         set((state) => ({
           expenses: state.expenses.map((e) =>
@@ -757,19 +771,29 @@ export const useExpenseStore = create<ExpenseState>()(
           const localTags = await getTagsForExpense(expense.id);
           const localProjectId = await getProjectIdForExpense(expense.id);
 
-          await api.createExpense({
-            localId: expense.localId || expense.id,
-            amount: expense.amount,
-            discountAmount: expense.discountAmount,
-            currencyCode: expense.currencyCode,
+          // Encrypt before sending
+          const { payload: encPayload, encryptedPayload, encryptionKeyVersion } = await maybeEncrypt('expense', {
             description: expense.description,
             notes: expense.notes,
+            amount: expense.amount,
+            discountAmount: expense.discountAmount,
+          }, expense.accountId);
+
+          await api.createExpense({
+            localId: expense.localId || expense.id,
+            amount: encPayload.amount ?? expense.amount,
+            discountAmount: encPayload.discountAmount ?? expense.discountAmount,
+            currencyCode: expense.currencyCode,
+            description: encPayload.description ?? expense.description,
+            notes: encPayload.notes ?? expense.notes,
             categoryId: expense.categoryId || undefined,
             tagIds: localTags.length > 0 ? localTags.map(t => t.id) : undefined,
             projectId: localProjectId || undefined,
             date: expense.date instanceof Date ? expense.date.toISOString() : String(expense.date),
             source: expense.source,
-          });
+            encryptedPayload,
+            encryptionKeyVersion,
+          } as any);
         } catch {
           // upsert handles duplicates, other errors skip silently
         }

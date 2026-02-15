@@ -32,6 +32,7 @@
 12. [Abonnement-Plane](./12-subscription.md) — Free, Pro und Business Plane
 13. [Erfolge & Gamification](./13-gamification.md) — Serien, XP, Level und Abzeichen
 14. [Anlageportfolio](./14-investments.md) — Aktien, ETFs, Krypto Tracking und Analysen
+15. [Ende-zu-Ende-Verschlusselung](./15-encryption.md) — Datenschutz mit E2EE
 
 ## Unterstutzte Wahrungen
 

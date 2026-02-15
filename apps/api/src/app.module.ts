@@ -25,6 +25,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
 import { AccountTransferModule } from './modules/account-transfers/account-transfer.module';
 import { InvestmentsModule } from './modules/investments/investments.module';
+import { EncryptionModule } from './modules/encryption/encryption.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { InvestmentsModule } from './modules/investments/investments.module';
     GamificationModule,
     AccountTransferModule,
     InvestmentsModule,
+    EncryptionModule,
   ],
 })
 export class AppModule {}
