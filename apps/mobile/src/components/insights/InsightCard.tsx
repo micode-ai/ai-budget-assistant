@@ -1,9 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Pressable, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { ChartRenderer } from '@/components/interactive-charts';
 import type { AIInsightChart, ChartConfig } from '@budget/shared-types';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const MAX_CHART_DATA_POINTS = 5;
 const MAX_LABEL_LENGTH = 6;
@@ -24,7 +28,13 @@ const SEVERITY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
 export function InsightCard({ insight, width, onDismiss }: InsightCardProps) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const [expanded, setExpanded] = useState(false);
   const [showFullAction, setShowFullAction] = useState(false);
+
+  const toggleExpanded = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded((prev) => !prev);
+  };
 
   // Limit chart data points and truncate labels to prevent layout issues
   const limitedChartConfig = useMemo((): ChartConfig | undefined => {
@@ -97,13 +107,25 @@ export function InsightCard({ insight, width, onDismiss }: InsightCardProps) {
         )}
       </View>
 
-      {/* Title & Description */}
-      <Text style={styles.title} numberOfLines={2}>
-        {insight.title}
-      </Text>
-      <Text style={styles.description} numberOfLines={3}>
-        {insight.description}
-      </Text>
+      {/* Tappable body */}
+      <TouchableOpacity activeOpacity={0.7} onPress={toggleExpanded}>
+        {/* Title & Description */}
+        <Text style={styles.title} numberOfLines={expanded ? undefined : 2}>
+          {insight.title}
+        </Text>
+        <Text style={styles.description} numberOfLines={expanded ? undefined : 3}>
+          {insight.description}
+        </Text>
+
+        {/* Expand hint */}
+        <View style={styles.expandHint}>
+          <Ionicons
+            name={expanded ? 'chevron-up' : 'chevron-down'}
+            size={16}
+            color={theme.colors.textTertiary}
+          />
+        </View>
+      </TouchableOpacity>
 
       {/* Chart */}
       {limitedChartConfig && (
@@ -120,7 +142,7 @@ export function InsightCard({ insight, width, onDismiss }: InsightCardProps) {
           onPress={() => setShowFullAction(true)}
         >
           <Ionicons name="bulb-outline" size={14} color={theme.colors.primary} />
-          <Text style={styles.actionText} numberOfLines={2}>
+          <Text style={styles.actionText} numberOfLines={expanded ? undefined : 2}>
             {insight.actionSuggestion}
           </Text>
           <Ionicons name="chevron-forward" size={14} color={theme.colors.primary} />
@@ -194,7 +216,12 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
     lineHeight: 18,
-    marginBottom: theme.spacing[3],
+    marginBottom: theme.spacing[1],
+  },
+  expandHint: {
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[1],
+    marginBottom: theme.spacing[2],
   },
   chartContainer: {
     marginBottom: theme.spacing[3],

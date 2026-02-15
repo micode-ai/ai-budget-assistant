@@ -7,9 +7,10 @@ interface UserContext {
   totalSpentThisMonth: number;
   monthlyBudget: number;
   topCategories: { name: string; amount: number }[];
-  recentExpenses: { description: string; amount: number }[];
+  recentExpenses: { description: string; amount: number; category?: string; items?: { description: string; totalPrice: number }[] }[];
   tags: { name: string }[];
   projects: { name: string; spent: number }[];
+  topItems: { description: string; totalSpent: number; count: number }[];
 }
 
 interface ChatMessageRecord {
@@ -21,6 +22,10 @@ interface ExpenseWithCategory {
   amount: unknown;
   description: string | null;
   category?: { name: string } | null;
+  categorySplits?: Array<{ amount: unknown; category?: { name: string } | null }>;
+  items?: Array<{ description: string; totalPrice: unknown; quantity: unknown }>;
+  source?: string;
+  accountId?: string;
 }
 
 interface BudgetRecord {
@@ -94,7 +99,7 @@ export class ChatService {
     });
 
     // Build context
-    const context = await this.buildUserContext(userId);
+    const context = await this.buildUserContext(userId, accountId);
     const systemPrompt = this.buildSystemPrompt(context, encryptionTier);
 
     // Get conversation history
@@ -133,37 +138,49 @@ export class ChatService {
     };
   }
 
-  private async buildUserContext(userId: string): Promise<UserContext> {
+  private async buildUserContext(userId: string, accountId?: string): Promise<UserContext> {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    // Get expenses this month
+    const expenseWhere = accountId
+      ? { accountId, date: { gte: startOfMonth }, isDeleted: false }
+      : { userId, date: { gte: startOfMonth }, isDeleted: false };
+
+    // Get expenses this month with categories, splits and items
     const expenses = await this.prisma.expense.findMany({
-      where: {
-        userId,
-        date: { gte: startOfMonth },
-        isDeleted: false,
+      where: expenseWhere,
+      include: {
+        category: true,
+        categorySplits: { where: { isDeleted: false }, include: { category: true } },
+        items: { where: { isDeleted: false } },
       },
-      include: { category: true },
       orderBy: { date: 'desc' },
       take: 50,
     });
 
     // Get active budgets
-    const budgets = await this.prisma.budget.findMany({
-      where: { userId, isActive: true, isDeleted: false },
-    });
+    const budgetWhere = accountId
+      ? { accountId, isActive: true, isDeleted: false }
+      : { userId, isActive: true, isDeleted: false };
+    const budgets = await this.prisma.budget.findMany({ where: budgetWhere });
 
     const totalSpent = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
     const monthlyBudget = budgets
       .filter((b: BudgetRecord) => b.period === 'monthly' && !b.categoryId)
       .reduce((sum: number, b: BudgetRecord) => sum + Number(b.amount), 0);
 
-    // Group by category
+    // Group by category — handle categorySplits like analytics does
     const categoryTotals = new Map<string, number>();
-    for (const expense of expenses) {
-      const categoryName = expense.category?.name || 'Uncategorized';
-      categoryTotals.set(categoryName, (categoryTotals.get(categoryName) || 0) + Number(expense.amount));
+    for (const expense of expenses as any[]) {
+      if (expense.categorySplits && expense.categorySplits.length > 0) {
+        for (const split of expense.categorySplits) {
+          const catName = split.category?.name || 'Uncategorized';
+          categoryTotals.set(catName, (categoryTotals.get(catName) || 0) + Number(split.amount));
+        }
+      } else {
+        const categoryName = expense.category?.name || 'Uncategorized';
+        categoryTotals.set(categoryName, (categoryTotals.get(categoryName) || 0) + Number(expense.amount));
+      }
     }
 
     const topCategories = Array.from(categoryTotals.entries())
@@ -171,20 +188,49 @@ export class ChatService {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 5);
 
-    const recentExpenses = expenses.slice(0, 5).map((e: ExpenseWithCategory) => ({
-      description: e.description || 'Expense',
-      amount: Number(e.amount),
-    }));
+    const recentExpenses = expenses.slice(0, 5).map((e: any) => {
+      const category = e.categorySplits?.length > 0
+        ? e.categorySplits.map((s: any) => s.category?.name).filter(Boolean).join(', ')
+        : e.category?.name;
+      const items = e.items?.map((i: any) => ({
+        description: i.description,
+        totalPrice: Number(i.totalPrice),
+      }));
+      return {
+        description: e.description || 'Expense',
+        amount: Number(e.amount),
+        category,
+        items: items?.length > 0 ? items : undefined,
+      };
+    });
 
-    // Get accountId from first expense (all expenses should have same accountId for this user)
-    const accountId = expenses[0]?.accountId;
+    // Aggregate expense items for top purchased items
+    const itemMap = new Map<string, { totalSpent: number; count: number }>();
+    for (const expense of expenses as any[]) {
+      if (!expense.items) continue;
+      for (const item of expense.items) {
+        if (!item.description) continue;
+        const key = item.description.toLowerCase().trim();
+        const existing = itemMap.get(key) || { totalSpent: 0, count: 0 };
+        itemMap.set(key, {
+          totalSpent: existing.totalSpent + Number(item.totalPrice),
+          count: existing.count + Number(item.quantity || 1),
+        });
+      }
+    }
+    const topItems = Array.from(itemMap.entries())
+      .map(([description, data]) => ({ description, ...data }))
+      .sort((a, b) => b.totalSpent - a.totalSpent)
+      .slice(0, 10);
+
+    const resolvedAccountId = accountId || expenses[0]?.accountId;
     let tags: { name: string }[] = [];
     let projects: { name: string; spent: number }[] = [];
 
-    if (accountId) {
+    if (resolvedAccountId) {
       // Fetch tags for the account
       const accountTags = await this.prisma.tag.findMany({
-        where: { accountId, isDeleted: false },
+        where: { accountId: resolvedAccountId, isDeleted: false },
         orderBy: { usageCount: 'desc' },
         take: 20,
       });
@@ -192,7 +238,7 @@ export class ChatService {
 
       // Fetch active projects
       const accountProjects = await this.prisma.project.findMany({
-        where: { accountId, isDeleted: false, isArchived: false },
+        where: { accountId: resolvedAccountId, isDeleted: false, isArchived: false },
         include: {
           projectExpenses: {
             where: { isDeleted: false },
@@ -213,6 +259,7 @@ export class ChatService {
       recentExpenses,
       tags,
       projects,
+      topItems,
     };
   }
 
@@ -223,26 +270,43 @@ export class ChatService {
 
     // For Tier 1, descriptions are encrypted — show amounts only for recent expenses
     const recentExpensesText = encryptionTier >= 1
-      ? context.recentExpenses.map((e) => `Amount: ${e.amount.toFixed(2)}`).join(', ') || 'No data'
-      : context.recentExpenses.map((e) => `${e.description}: ${e.amount.toFixed(2)}`).join(', ') || 'No data';
+      ? context.recentExpenses.map((e) => `Amount: ${e.amount.toFixed(2)}`).join('\n') || 'No data'
+      : context.recentExpenses.map((e) => {
+          let line = `${e.description}: ${e.amount.toFixed(2)}`;
+          if (e.category) line += ` [${e.category}]`;
+          if (e.items && e.items.length > 0) {
+            line += ` (items: ${e.items.map(i => `${i.description} ${i.totalPrice.toFixed(2)}`).join(', ')})`;
+          }
+          return line;
+        }).join('\n') || 'No data';
 
     const tagsText = encryptionTier >= 1 ? '(encrypted)' : (context.tags.map(t => t.name).join(', ') || 'none');
     const projectsText = encryptionTier >= 1
       ? context.projects.map(p => `Project (${p.spent.toFixed(2)} spent)`).join(', ') || 'none'
       : context.projects.map(p => `${p.name} (${p.spent.toFixed(2)} spent)`).join(', ') || 'none';
 
-    return `You are a helpful financial assistant helping a user manage their budget and expenses.${encryptionNotice}
+    const topItemsText = encryptionTier >= 1
+      ? '(encrypted)'
+      : context.topItems.length > 0
+        ? context.topItems.map(i => `${i.description}: ${i.totalSpent.toFixed(2)} (×${i.count})`).join(', ')
+        : 'No item-level data';
+
+    return `You are a helpful financial assistant helping a user manage their budget and expenses.
+Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.${encryptionNotice}
 
 Current user's financial context:
 - Total spent this month: ${context.totalSpentThisMonth.toFixed(2)}
 - Monthly budget: ${context.monthlyBudget > 0 ? context.monthlyBudget.toFixed(2) : 'Not set'}
 - Top spending categories: ${context.topCategories.map((c) => `${c.name}: ${c.amount.toFixed(2)}`).join(', ') || 'No data'}
-- Recent expenses: ${recentExpensesText}
+- Recent expenses:
+${recentExpensesText}
+- Top purchased items (from receipts): ${topItemsText}
 - User's tags: ${tagsText}
 - Active projects: ${projectsText}
 
-You can help analyze spending by tags (e.g., "How much on #subscriptions?") and by projects (e.g., "Show vacation spending").
+You can help analyze spending by tags (e.g., "How much on #subscriptions?"), by projects (e.g., "Show vacation spending"), and by individual purchased items from receipts (e.g., "How much did I spend on milk?").
 When users reference tags with #, look them up. When they mention project names, match to active projects.
+When asked about specific items or products, use the "Top purchased items" data which comes from scanned receipts.
 
 Provide helpful, actionable advice about budgeting and spending. Be concise but thorough.
 If asked about specific data you don't have, acknowledge the limitation and provide general guidance.
