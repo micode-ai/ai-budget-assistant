@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
-import { LEGAL_URLS } from '@/constants/legal';
+import { getLegalUrls } from '@/constants/legal';
 import type { Currency } from '@budget/shared-types';
 import Constants from 'expo-constants';
 
@@ -66,6 +66,7 @@ const TIMEZONES: string[] = [
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
+  const legalUrls = getLegalUrls(i18n.language);
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user, updateUser, logout } = useAuthStore();
@@ -560,7 +561,7 @@ export default function SettingsScreen() {
             <View style={styles.divider} />
             <TouchableOpacity
               style={styles.fieldRow}
-              onPress={() => Linking.openURL(LEGAL_URLS.privacyPolicy)}
+              onPress={() => Linking.openURL(legalUrls.privacyPolicy)}
             >
               <View style={styles.fieldValueRow}>
                 <Ionicons name="shield-checkmark-outline" size={18} color={theme.colors.textSecondary} />
@@ -571,7 +572,7 @@ export default function SettingsScreen() {
             <View style={styles.divider} />
             <TouchableOpacity
               style={styles.fieldRow}
-              onPress={() => Linking.openURL(LEGAL_URLS.termsOfService)}
+              onPress={() => Linking.openURL(legalUrls.termsOfService)}
             >
               <View style={styles.fieldValueRow}>
                 <Ionicons name="document-text-outline" size={18} color={theme.colors.textSecondary} />
