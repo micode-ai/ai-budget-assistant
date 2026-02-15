@@ -17,7 +17,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import i18n, { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { LEGAL_URLS } from '@/constants/legal';
+import { getLegalUrls } from '@/constants/legal';
 
 const CURRENCIES = [
   { code: 'USD', label: '$ USD' },
@@ -30,7 +30,8 @@ const CURRENCIES = [
 ];
 
 export default function RegisterScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const legalUrls = getLegalUrls(i18n.language);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -219,14 +220,14 @@ export default function RegisterScreen() {
                 {t('legal.agreeToTerms')}{' '}
                 <Text
                   style={styles.termsLink}
-                  onPress={() => Linking.openURL(LEGAL_URLS.termsOfService)}
+                  onPress={() => Linking.openURL(legalUrls.termsOfService)}
                 >
                   {t('legal.termsOfService')}
                 </Text>
                 {' '}{t('legal.and')}{' '}
                 <Text
                   style={styles.termsLink}
-                  onPress={() => Linking.openURL(LEGAL_URLS.privacyPolicy)}
+                  onPress={() => Linking.openURL(legalUrls.privacyPolicy)}
                 >
                   {t('legal.privacyPolicy')}
                 </Text>
