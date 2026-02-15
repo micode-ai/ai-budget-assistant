@@ -353,13 +353,16 @@ export class ProjectsService {
     }
 
     // Calculate totals
+    type ProjectExpenseItem = typeof project.projectExpenses[number];
+    type ProjectIncomeItem = typeof project.projectIncomes[number];
+
     const totalExpenses = project.projectExpenses.reduce(
-      (sum, pe) => sum + Number(pe.expense.amount),
+      (sum: number, pe: ProjectExpenseItem) => sum + Number(pe.expense.amount),
       0,
     );
 
     const totalIncome = project.projectIncomes.reduce(
-      (sum, pi) => sum + Number(pi.income.amount),
+      (sum: number, pi: ProjectIncomeItem) => sum + Number(pi.income.amount),
       0,
     );
 
@@ -379,7 +382,7 @@ export class ProjectsService {
       { categoryName: string; amount: number; count: number }
     > = {};
 
-    project.projectExpenses.forEach((pe) => {
+    project.projectExpenses.forEach((pe: ProjectExpenseItem) => {
       const categoryId = pe.expense.categoryId || 'uncategorized';
       const categoryName = pe.expense.category?.name || 'Uncategorized';
 
@@ -401,7 +404,7 @@ export class ProjectsService {
       { date: string; expenses: number; income: number }
     > = {};
 
-    project.projectExpenses.forEach((pe) => {
+    project.projectExpenses.forEach((pe: ProjectExpenseItem) => {
       const dateKey = pe.expense.date.toISOString().split('T')[0];
       if (!timelineMap[dateKey]) {
         timelineMap[dateKey] = { date: dateKey, expenses: 0, income: 0 };
@@ -409,7 +412,7 @@ export class ProjectsService {
       timelineMap[dateKey].expenses += Number(pe.expense.amount);
     });
 
-    project.projectIncomes.forEach((pi) => {
+    project.projectIncomes.forEach((pi: ProjectIncomeItem) => {
       const dateKey = pi.income.date.toISOString().split('T')[0];
       if (!timelineMap[dateKey]) {
         timelineMap[dateKey] = { date: dateKey, expenses: 0, income: 0 };

@@ -166,7 +166,7 @@ export class ChatService {
         orderBy: { usageCount: 'desc' },
         take: 20,
       });
-      tags = accountTags.map(t => ({ name: t.name }));
+      tags = accountTags.map((t: { name: string }) => ({ name: t.name }));
 
       // Fetch active projects
       const accountProjects = await this.prisma.project.findMany({
@@ -178,9 +178,9 @@ export class ChatService {
           },
         },
       });
-      projects = accountProjects.map(p => ({
+      projects = accountProjects.map((p: { name: string; projectExpenses: Array<{ expense: { amount: unknown } }> }) => ({
         name: p.name,
-        spent: p.projectExpenses.reduce((sum, pe) => sum + Number(pe.expense.amount), 0),
+        spent: p.projectExpenses.reduce((sum: number, pe: { expense: { amount: unknown } }) => sum + Number(pe.expense.amount), 0),
       }));
     }
 

@@ -6,9 +6,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { SubscriptionTier } from '@prisma/client';
 import { SubscriptionsService } from '../subscriptions.service';
 import { REQUIRED_TIER_KEY } from '../decorators/require-tier.decorator';
+
+type SubscriptionTier = 'free' | 'pro' | 'business';
 
 const TIER_HIERARCHY: Record<SubscriptionTier, number> = {
   free: 0,
@@ -37,8 +38,8 @@ export class SubscriptionTierGuard implements CanActivate {
     if (!userId) throw new UnauthorizedException();
 
     const subscription = await this.subscriptionsService.getOrCreateSubscription(userId);
-    const userTierLevel = TIER_HIERARCHY[subscription.tier];
-    const requiredTierLevel = TIER_HIERARCHY[requiredTier];
+    const userTierLevel = TIER_HIERARCHY[subscription.tier as SubscriptionTier];
+    const requiredTierLevel = TIER_HIERARCHY[requiredTier as SubscriptionTier];
 
     if (userTierLevel < requiredTierLevel) {
       throw new ForbiddenException(

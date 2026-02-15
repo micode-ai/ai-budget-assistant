@@ -9,6 +9,7 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, UpdateMemberRoleDto } from './dto';
+import { PrismaClient } from '@prisma/client';
 import { randomBytes } from 'crypto';
 
 @Injectable()
@@ -33,7 +34,7 @@ export class AccountsService {
       }
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: PrismaClient) => {
       const account = await tx.account.create({
         data: {
           name: dto.name,
@@ -64,7 +65,7 @@ export class AccountsService {
       },
     });
 
-    return memberships.map((m) => ({
+    return memberships.map((m: typeof memberships[number]) => ({
       ...m.account,
       myRole: m.role,
     }));
@@ -145,7 +146,7 @@ export class AccountsService {
 
     if (requiredRole) {
       const roleHierarchy = { owner: 3, editor: 2, viewer: 1 };
-      if (roleHierarchy[membership.role] < roleHierarchy[requiredRole]) {
+      if (roleHierarchy[membership.role as keyof typeof roleHierarchy] < roleHierarchy[requiredRole]) {
         throw new ForbiddenException('Insufficient permissions');
       }
     }
@@ -276,7 +277,7 @@ export class AccountsService {
       throw new ConflictException('You are already a member of this account');
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: PrismaClient) => {
       const member = await tx.accountMember.create({
         data: {
           accountId: invitation.accountId,
@@ -394,7 +395,7 @@ export class AccountsService {
   // ---- Helper for auto-creating default account ----
 
   async createDefaultAccount(userId: string, currencyCode: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: PrismaClient) => {
       const account = await tx.account.create({
         data: {
           name: 'Personal',

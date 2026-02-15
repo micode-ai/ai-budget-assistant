@@ -46,7 +46,7 @@ export class SharedActivityService {
       const body = `${creator?.name || 'Someone'} added ${currencyCode} ${amount.toFixed(2)} for ${expenseDesc}`;
 
       await this.notifications.sendToUsers(
-        members.map((m) => m.userId),
+        members.map((m: { userId: string }) => m.userId),
         title,
         body,
         { type: 'shared_expense', accountId, creatorUserId },

@@ -7,8 +7,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { PrismaService } from '../../database/prisma.service';
-import type { SubscriptionTier, Subscription } from '@prisma/client';
 import { TelegramService } from '../telegram/telegram.service';
+
+type SubscriptionTier = 'free' | 'pro' | 'business';
+type SubscriptionRecord = NonNullable<Awaited<ReturnType<PrismaService['subscription']['findUnique']>>>;
 
 const AI_REQUEST_LIMITS: Record<SubscriptionTier, number> = {
   free: 5,
@@ -63,7 +65,7 @@ export class SubscriptionsService {
 
   // ---- Subscription CRUD ----
 
-  async getOrCreateSubscription(userId: string): Promise<Subscription> {
+  async getOrCreateSubscription(userId: string): Promise<SubscriptionRecord> {
     let subscription = await this.prisma.subscription.findUnique({
       where: { userId },
     });
@@ -100,8 +102,8 @@ export class SubscriptionsService {
     await this.resetUsageIfNeeded(sub);
 
     const limit = sub.status === 'trialing'
-      ? TRIAL_REQUEST_LIMITS[sub.tier]
-      : AI_REQUEST_LIMITS[sub.tier];
+      ? TRIAL_REQUEST_LIMITS[sub.tier as SubscriptionTier]
+      : AI_REQUEST_LIMITS[sub.tier as SubscriptionTier];
     const refreshedSub = await this.prisma.subscription.findUnique({
       where: { userId },
     });
@@ -278,8 +280,8 @@ export class SubscriptionsService {
     });
 
     const limit = current.status === 'trialing'
-      ? TRIAL_REQUEST_LIMITS[current.tier]
-      : AI_REQUEST_LIMITS[current.tier];
+      ? TRIAL_REQUEST_LIMITS[current.tier as SubscriptionTier]
+      : AI_REQUEST_LIMITS[current.tier as SubscriptionTier];
     if (current.aiRequestsUsed + costUnits > limit) {
       throw new ForbiddenException(
         `AI request limit reached (${limit} per month). Upgrade your subscription for more AI features.`,
@@ -310,7 +312,7 @@ export class SubscriptionsService {
       where: { accountId },
     });
 
-    const limit = MEMBER_LIMITS[sub.tier];
+    const limit = MEMBER_LIMITS[sub.tier as SubscriptionTier];
     if (memberCount >= limit) {
       throw new ForbiddenException(
         `Member limit reached (${limit}). Upgrade your subscription to invite more members.`,
@@ -478,7 +480,7 @@ export class SubscriptionsService {
 
   private async resolveTierFromPrice(
     priceId: string,
-  ): Promise<SubscriptionTier> {
+  ): Promise<'free' | 'pro' | 'business'> {
     const proMonthly = this.configService.get<string>(
       'STRIPE_PRO_MONTHLY_PRICE_ID',
     );
@@ -524,7 +526,7 @@ export class SubscriptionsService {
     return statusMap[stripeStatus] || 'active';
   }
 
-  private async resetUsageIfNeeded(sub: Subscription): Promise<void> {
+  private async resetUsageIfNeeded(sub: SubscriptionRecord): Promise<void> {
     const now = new Date();
     if (now > sub.aiRequestsResetAt) {
       const nextReset = new Date(

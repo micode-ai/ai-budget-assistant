@@ -24,7 +24,7 @@ async function migrate() {
   }
 
   const result = await prisma.subscription.createMany({
-    data: usersWithoutSub.map((user) => ({
+    data: usersWithoutSub.map((user: { id: string; email: string }) => ({
       userId: user.id,
       tier: 'free' as const,
       status: 'active' as const,

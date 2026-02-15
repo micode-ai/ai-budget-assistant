@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
@@ -51,7 +52,7 @@ export class IncomesService {
   }
 
   async create(accountId: string, userId: string, dto: CreateIncomeDto) {
-    const result = await this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
 
       const incomeData = {
@@ -87,11 +88,11 @@ export class IncomesService {
           where: { id: { in: dto.tagIds } },
           select: { id: true },
         });
-        const validTagIds = existingTags.map(t => t.id);
+        const validTagIds = existingTags.map((t: { id: string }) => t.id);
 
         if (validTagIds.length > 0) {
           await tx.incomeTag.createMany({
-            data: validTagIds.map(tagId => ({
+            data: validTagIds.map((tagId: string) => ({
               incomeId: income.id,
               tagId,
             })),
@@ -221,7 +222,7 @@ export class IncomesService {
       ? await this.resolveCategoryId(dto.categoryId, accountId)
       : undefined;
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: PrismaClient) => {
       await tx.income.update({
         where: { id: income.id },
         data: {
@@ -247,11 +248,11 @@ export class IncomesService {
             where: { id: { in: dto.tagIds } },
             select: { id: true },
           });
-          const validTagIds = existingTags.map(t => t.id);
+          const validTagIds = existingTags.map((t: { id: string }) => t.id);
 
           if (validTagIds.length > 0) {
             await tx.incomeTag.createMany({
-              data: validTagIds.map(tagId => ({
+              data: validTagIds.map((tagId: string) => ({
                 incomeId: income.id,
                 tagId,
               })),

@@ -74,7 +74,7 @@ export class AdminService {
       _count: { id: true },
     });
 
-    const userIds = [...new Set(usageGroups.map((g) => g.userId))];
+    const userIds = [...new Set(usageGroups.map((g: typeof usageGroups[number]) => g.userId))];
 
     const usersMap = new Map<string, { name: string; email: string }>();
     const subsMap = new Map<string, string>(); // userId -> tier

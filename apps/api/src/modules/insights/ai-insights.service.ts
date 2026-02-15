@@ -103,7 +103,7 @@ export class AiInsightsService {
       prevByCategory.set(catId, current);
     }
 
-    const totalCurrentSpending = currentExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
+    const totalCurrentSpending = currentExpenses.reduce((sum: number, e: typeof currentExpenses[number]) => sum + Number(e.amount), 0);
     const categoryBreakdown = Array.from(currentByCategory.entries())
       .map(([id, data]) => {
         const prev = prevByCategory.get(id);
@@ -123,7 +123,7 @@ export class AiInsightsService {
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, amount]) => ({ date, amount: Math.round(amount * 100) / 100 }));
 
-    const budgetData = budgets.map((b) => ({
+    const budgetData = budgets.map((b: typeof budgets[number]) => ({
       name: b.name,
       amount: Number(b.amount),
       period: b.period,

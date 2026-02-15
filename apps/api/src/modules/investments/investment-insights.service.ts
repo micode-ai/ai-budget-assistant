@@ -92,7 +92,7 @@ export class InvestmentInsightsService {
 
     // Calculate additional metrics for the prompt
     const maxAllocation = Math.max(
-      ...summary.holdings.map((h) => h.allocationPercent),
+      ...summary.holdings.map((h: typeof summary.holdings[number]) => h.allocationPercent),
     );
     const maxTypeAllocation = Math.max(
       ...allocation.map((a) => a.percentage),
@@ -101,7 +101,7 @@ export class InvestmentInsightsService {
 
     // Calculate total fees from transactions
     const totalFees = transactions.reduce(
-      (sum, tx) => sum + Number(tx.fee || 0),
+      (sum: number, tx: typeof transactions[number]) => sum + Number(tx.fee || 0),
       0,
     );
     const feePercentage =
@@ -127,7 +127,7 @@ export class InvestmentInsightsService {
     const languageName =
       InvestmentInsightsService.LANGUAGE_NAMES[language || 'en'] || 'English';
 
-    const holdingsData = summary.holdings.map((h) => ({
+    const holdingsData = summary.holdings.map((h: typeof summary.holdings[number]) => ({
       symbol: h.symbol,
       name: h.name,
       type: h.assetType,
