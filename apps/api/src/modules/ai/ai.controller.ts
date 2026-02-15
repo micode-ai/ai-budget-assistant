@@ -70,7 +70,7 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { message: string; conversationId?: string },
   ) {
-    return this.chatService.chat(req.user.id, body.message, body.conversationId);
+    return this.chatService.chat(req.user.id, body.message, body.conversationId, req.accountId);
   }
 
   @Post('scan-receipt')

@@ -32,6 +32,7 @@
 12. [Subscription Plans](./12-subscription.md) — Free, Pro, and Business plans
 13. [Achievements & Gamification](./13-gamification.md) — streaks, XP, levels, and badges
 14. [Investment Portfolio](./14-investments.md) — stocks, ETFs, crypto tracking and analytics
+15. [End-to-End Encryption](./15-encryption.md) — protect your data with E2EE
 
 ## Supported Currencies
 

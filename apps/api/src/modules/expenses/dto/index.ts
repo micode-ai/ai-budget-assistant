@@ -165,6 +165,14 @@ export class CreateExpenseDto {
   @ValidateNested({ each: true })
   @Type(() => CreateExpenseSplitDto)
   splits?: CreateExpenseSplitDto[];
+
+  @IsOptional()
+  @IsString()
+  encryptedPayload?: string;
+
+  @IsOptional()
+  @IsNumber()
+  encryptionKeyVersion?: number;
 }
 
 export class UpdateExpenseDto {
@@ -215,6 +223,14 @@ export class UpdateExpenseDto {
   @IsOptional()
   @IsUUID()
   projectId?: string | null;
+
+  @IsOptional()
+  @IsString()
+  encryptedPayload?: string;
+
+  @IsOptional()
+  @IsNumber()
+  encryptionKeyVersion?: number;
 }
 
 export class ExpenseFiltersDto {

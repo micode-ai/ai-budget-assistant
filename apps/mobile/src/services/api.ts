@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -827,6 +827,75 @@ class ApiClient {
   async getInvestmentInsights(language?: string) {
     const params = language ? `?language=${encodeURIComponent(language)}` : '';
     return this.request<AIInsightsResponse>(`/investments/insights${params}`);
+  }
+
+  // E2EE Encryption endpoints
+  async setupEncryption(dto: SetupEncryptionDto) {
+    return this.request<{ success: boolean }>('/encryption/setup', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async getEncryptionProfile() {
+    return this.request<EncryptionProfileResponse>('/encryption/profile');
+  }
+
+  async resetEncryptionProfile() {
+    return this.request<{ deleted: boolean }>('/encryption/profile', {
+      method: 'DELETE',
+    });
+  }
+
+  async enableAccountEncryption(accountId: string, dto: EnableAccountEncryptionDto) {
+    return this.request<{ success: boolean }>(`/encryption/account/${accountId}/enable`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async getAccountEncryptionKey(accountId: string) {
+    return this.request<AccountEncryptionKeyResponse>(`/encryption/account/${accountId}/key`);
+  }
+
+  async getAccountEncryptionStatus(accountId: string) {
+    return this.request<AccountEncryptionStatusResponse>(`/encryption/account/${accountId}/status`);
+  }
+
+  async grantEncryptionKey(accountId: string, dto: GrantKeyDto) {
+    return this.request<{ success: boolean }>(`/encryption/account/${accountId}/grant-key`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async getPendingKeyGrants(accountId: string) {
+    return this.request<PendingKeyGrantsResponse>(`/encryption/account/${accountId}/pending-grants`);
+  }
+
+  async rotateAccountKey(accountId: string, dto: RotateAccountKeyDto) {
+    return this.request<{ success: boolean }>(`/encryption/account/${accountId}/rotate-key`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async getMemberPublicKeys(accountId: string) {
+    return this.request<MemberPublicKeyResponse>(`/encryption/members/${accountId}/public-keys`);
+  }
+
+  async setupRecovery(dto: SetupRecoveryDto) {
+    return this.request<{ success: boolean }>('/encryption/recovery/setup', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async recoverEncryption(recoveryKey: string) {
+    return this.request<RecoverEncryptionResponse>('/encryption/recovery/recover', {
+      method: 'POST',
+      body: JSON.stringify({ recoveryKey }),
+    });
   }
 
   // Admin endpoints

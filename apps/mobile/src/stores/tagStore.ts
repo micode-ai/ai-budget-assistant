@@ -4,6 +4,7 @@ import type { Tag } from '@budget/shared-types';
 import * as tagRepo from '@/db/tagRepository';
 import { useAccountStore } from './accountStore';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 
 interface TagState {
   tags: Tag[];
@@ -61,8 +62,10 @@ export const useTagStore = create<TagState>((set, get) => ({
     };
     await tagRepo.insertTag(tag);
     set({ tags: [...get().tags, tag] });
-    // Fire-and-forget: sync to server
-    api.createTag({ name, color, icon }).catch(() => {});
+    // Fire-and-forget: sync to server with encryption
+    maybeEncrypt('tag', { name }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+      api.createTag({ name: encPayload.name ?? name, color, icon, encryptedPayload, encryptionKeyVersion } as any);
+    }).catch(() => {});
     return tag;
   },
 
@@ -114,10 +117,13 @@ export const useTagStore = create<TagState>((set, get) => ({
 
   syncFromServer: async (serverTags: any[]) => {
     for (const tag of serverTags) {
+      // Decrypt encrypted fields if present
+      const decrypted = await maybeDecrypt('tag', tag, tag.accountId);
+
       await tagRepo.upsertTag({
         id: tag.id,
         accountId: tag.accountId,
-        name: tag.name,
+        name: decrypted.name,
         color: tag.color || undefined,
         icon: tag.icon || undefined,
         usageCount: tag.usageCount || 0,

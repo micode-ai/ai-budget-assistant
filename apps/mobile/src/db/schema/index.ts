@@ -307,7 +307,17 @@ export const userStreaks = sqliteTable('user_streaks', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
 
+// Encryption keys table (local cache for E2EE account keys)
+export const encryptionKeys = sqliteTable('encryption_keys', {
+  accountId: text('account_id').primaryKey(),
+  accountKey: text('account_key').notNull(), // encrypted by secureStorage
+  keyVersion: integer('key_version').notNull().default(1),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 // Type exports
+export type EncryptionKeyRecord = typeof encryptionKeys.$inferSelect;
+export type NewEncryptionKeyRecord = typeof encryptionKeys.$inferInsert;
 export type UserAchievementRecord = typeof userAchievements.$inferSelect;
 export type UserStreakRecord = typeof userStreaks.$inferSelect;
 export type WalletBalanceRecord = typeof walletBalances.$inferSelect;

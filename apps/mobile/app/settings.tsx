@@ -10,12 +10,16 @@ import {
   Linking,
   Modal,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { useAccountStore } from '@/stores/accountStore';
+import { useEncryptionStore } from '@/stores/encryptionStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -86,6 +90,31 @@ export default function SettingsScreen() {
   const [notifLoading, setNotifLoading] = useState(true);
 
   const appVersion = Constants.expoConfig?.version || '1.0.0';
+
+  // E2EE state
+  const {
+    isSetUp: e2eeSetUp,
+    isUnlocked: e2eeUnlocked,
+    isLoading: e2eeLoading,
+    error: e2eeError,
+    setupE2EE,
+    unlock: unlockE2EE,
+    lock: lockE2EE,
+    enableAccountEncryption,
+    resetE2EE,
+    clearError: clearE2EEError,
+    initialize: initializeE2EE,
+  } = useEncryptionStore();
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
+
+  useEffect(() => {
+    initializeE2EE();
+  }, [initializeE2EE]);
+  const [e2eePassphrase, setE2eePassphrase] = useState('');
+  const [e2eePassphraseConfirm, setE2eePassphraseConfirm] = useState('');
+  const [showRecoveryKey, setShowRecoveryKey] = useState<string | null>(null);
+  const [showE2EESetup, setShowE2EESetup] = useState(false);
+  const [showE2EEUnlock, setShowE2EEUnlock] = useState(false);
 
   // Last sync time
   const [lastSyncTime, setLastSyncTimeState] = useState<number | null>(null);
@@ -227,6 +256,87 @@ export default function SettingsScreen() {
   const handleLanguageChange = async (langCode: string) => {
     if (langCode === i18n.language) return;
     await changeLanguage(langCode);
+  };
+
+  const handleSetupE2EE = async () => {
+    if (e2eePassphrase.length < 8) {
+      Alert.alert(t('common.error'), t('encryption.passphraseMin'));
+      return;
+    }
+    if (e2eePassphrase !== e2eePassphraseConfirm) {
+      Alert.alert(t('common.error'), t('encryption.passphraseMismatch'));
+      return;
+    }
+    try {
+      const { recoveryKey } = await setupE2EE(e2eePassphrase);
+      // Auto-enable encryption for current account (tier 1 = text fields)
+      if (currentAccountId) {
+        try {
+          await enableAccountEncryption(currentAccountId, 1);
+        } catch {
+          // Non-critical — user can enable later per account
+        }
+      }
+      setE2eePassphrase('');
+      setE2eePassphraseConfirm('');
+      setShowE2EESetup(false);
+      setShowRecoveryKey(recoveryKey);
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleUnlockE2EE = async () => {
+    if (!e2eePassphrase) return;
+    try {
+      await unlockE2EE(e2eePassphrase);
+      // Fetch account key for current account if encryption is enabled
+      if (currentAccountId) {
+        try {
+          await useEncryptionStore.getState().fetchAccountKey(currentAccountId);
+        } catch {
+          // Key may not exist yet
+        }
+      }
+      setE2eePassphrase('');
+      setShowE2EEUnlock(false);
+      Alert.alert(t('common.success'), t('encryption.unlocked'));
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
+      Alert.alert(
+        t('common.error'),
+        t('encryption.unlockFailed') + (msg ? `\n\n${msg}` : ''),
+      );
+    }
+  };
+
+  const handleResetE2EE = () => {
+    Alert.alert(
+      t('encryption.resetTitle'),
+      t('encryption.resetConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('encryption.resetButton'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await resetE2EE();
+              Alert.alert(t('common.success'), t('encryption.resetSuccess'));
+            } catch (e) {
+              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleCopyRecoveryKey = async () => {
+    if (showRecoveryKey) {
+      await Clipboard.setStringAsync(showRecoveryKey);
+      Alert.alert(t('common.success'), t('encryption.recoveryKeyCopied'));
+    }
   };
 
   const handleLogout = () => {
@@ -500,6 +610,205 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Security / E2EE Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('encryption.title')}</Text>
+          <View style={styles.card}>
+            {!e2eeSetUp ? (
+              // Not set up yet
+              <>
+                <View style={styles.fieldRow}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.fieldLabel}>{t('encryption.e2ee')}</Text>
+                    <Text style={styles.fieldDesc}>{t('encryption.e2eeDesc')}</Text>
+                  </View>
+                </View>
+                <View style={styles.divider} />
+                {showE2EESetup ? (
+                  <View style={{ gap: theme.spacing[3] }}>
+                    <Text style={styles.fieldDesc}>{t('encryption.passphraseHint')}</Text>
+                    <TextInput
+                      style={styles.editInput}
+                      value={e2eePassphrase}
+                      onChangeText={setE2eePassphrase}
+                      placeholder={t('encryption.passphrasePlaceholder')}
+                      placeholderTextColor={theme.colors.textTertiary}
+                      secureTextEntry
+                    />
+                    <TextInput
+                      style={styles.editInput}
+                      value={e2eePassphraseConfirm}
+                      onChangeText={setE2eePassphraseConfirm}
+                      placeholder={t('encryption.passphraseConfirmPlaceholder')}
+                      placeholderTextColor={theme.colors.textTertiary}
+                      secureTextEntry
+                    />
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        width: '100%' as any,
+                        borderRadius: theme.borderRadius.md,
+                        paddingVertical: theme.spacing[3],
+                        alignItems: 'center' as const,
+                        flexDirection: 'row' as const,
+                        justifyContent: 'center' as const,
+                        gap: 8,
+                        opacity: e2eeLoading ? 0.7 : 1,
+                      }}
+                      onPress={handleSetupE2EE}
+                      disabled={e2eeLoading}
+                    >
+                      {e2eeLoading && <ActivityIndicator size="small" color="#FFFFFF" />}
+                      <Text style={{ color: '#FFFFFF', fontWeight: '600' as const, fontSize: 16 }}>
+                        {e2eeLoading ? t('encryption.settingUp') : t('encryption.setup')}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <TouchableOpacity style={styles.fieldRow} onPress={() => setShowE2EESetup(true)}>
+                    <View style={styles.fieldValueRow}>
+                      <Ionicons name="lock-closed-outline" size={18} color={theme.colors.primary} />
+                      <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>{t('encryption.setupE2EE')}</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                  </TouchableOpacity>
+                )}
+              </>
+            ) : e2eeUnlocked ? (
+              // Set up and unlocked
+              <>
+                <View style={styles.fieldRow}>
+                  <View style={styles.fieldValueRow}>
+                    <Ionicons name="shield-checkmark" size={18} color={theme.colors.success} />
+                    <Text style={styles.fieldLabel}>{t('encryption.e2ee')}</Text>
+                  </View>
+                  <Text style={[styles.fieldValue, { color: theme.colors.success }]}>{t('encryption.unlocked')}</Text>
+                </View>
+                <View style={styles.divider} />
+                <TouchableOpacity style={styles.fieldRow} onPress={lockE2EE}>
+                  <View style={styles.fieldValueRow}>
+                    <Ionicons name="lock-open-outline" size={18} color={theme.colors.textSecondary} />
+                    <Text style={styles.fieldLabel}>{t('encryption.lock')}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              </>
+            ) : (
+              // Set up but locked
+              <>
+                <View style={styles.fieldRow}>
+                  <View style={styles.fieldValueRow}>
+                    <Ionicons name="lock-closed" size={18} color={theme.colors.warning} />
+                    <Text style={styles.fieldLabel}>{t('encryption.e2ee')}</Text>
+                  </View>
+                  <Text style={[styles.fieldValue, { color: theme.colors.warning }]}>{t('encryption.locked')}</Text>
+                </View>
+                <View style={styles.divider} />
+                {showE2EEUnlock ? (
+                  <View style={{ gap: theme.spacing[3] }}>
+                    <Text style={styles.fieldDesc}>{t('encryption.unlockDesc')}</Text>
+                    <TextInput
+                      style={styles.editInput}
+                      value={e2eePassphrase}
+                      onChangeText={setE2eePassphrase}
+                      placeholder={t('encryption.passphrasePlaceholder')}
+                      placeholderTextColor={theme.colors.textTertiary}
+                      secureTextEntry
+                      autoFocus
+                    />
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: theme.colors.primary,
+                        width: '100%' as any,
+                        borderRadius: theme.borderRadius.md,
+                        paddingVertical: theme.spacing[3],
+                        alignItems: 'center' as const,
+                        flexDirection: 'row' as const,
+                        justifyContent: 'center' as const,
+                        gap: 8,
+                        opacity: e2eeLoading ? 0.7 : 1,
+                      }}
+                      onPress={handleUnlockE2EE}
+                      disabled={e2eeLoading}
+                    >
+                      {e2eeLoading && <ActivityIndicator size="small" color="#FFFFFF" />}
+                      <Text style={{ color: '#FFFFFF', fontWeight: '600' as const, fontSize: 16 }}>
+                        {e2eeLoading ? t('encryption.unlocking') : t('encryption.unlockButton')}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <TouchableOpacity style={styles.fieldRow} onPress={() => setShowE2EEUnlock(true)}>
+                    <View style={styles.fieldValueRow}>
+                      <Ionicons name="key-outline" size={18} color={theme.colors.primary} />
+                      <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>{t('encryption.unlock')}</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                  </TouchableOpacity>
+                )}
+                <View style={styles.divider} />
+                <TouchableOpacity style={styles.fieldRow} onPress={handleResetE2EE}>
+                  <View style={styles.fieldValueRow}>
+                    <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
+                    <Text style={[styles.fieldLabel, { color: theme.colors.danger }]}>{t('encryption.resetButton')}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+
+        {/* Recovery Key Modal */}
+        <Modal visible={showRecoveryKey !== null} transparent animationType="slide">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>{t('encryption.recoveryKey')}</Text>
+              </View>
+              <View style={{ padding: theme.spacing[4], gap: theme.spacing[4] }}>
+                <Text style={styles.fieldDesc}>{t('encryption.recoveryKeyDesc')}</Text>
+                <View style={{
+                  backgroundColor: theme.colors.surfaceSecondary,
+                  borderRadius: theme.borderRadius.md,
+                  padding: theme.spacing[4],
+                }}>
+                  <Text style={{
+                    fontFamily: 'monospace',
+                    fontSize: 16,
+                    color: theme.colors.textPrimary,
+                    textAlign: 'center' as const,
+                    letterSpacing: 1,
+                  }}>
+                    {showRecoveryKey}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={[styles.chip, styles.chipActive, { alignSelf: 'center' as const }]}
+                  onPress={handleCopyRecoveryKey}
+                >
+                  <Ionicons name="copy-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.chipText, styles.chipTextActive]}>{t('common.copy')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    width: '100%' as any,
+                    borderRadius: theme.borderRadius.md,
+                    paddingVertical: theme.spacing[3],
+                    alignItems: 'center' as const,
+                  }}
+                  onPress={() => setShowRecoveryKey(null)}
+                >
+                  <Text style={{ color: '#FFFFFF', textAlign: 'center' as const, fontWeight: '600' as const, fontSize: 16 }}>
+                    {t('encryption.recoveryKeySaved')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
         {/* Data & Sync Section */}
         <View style={styles.section}>

@@ -23,6 +23,7 @@ import {
 } from '@/db/accountTransferRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
 
@@ -106,6 +107,9 @@ export const useWalletStore = create<WalletState>()(
           if (useAccountStore.getState().currentAccountId !== accountId) return;
           if (Array.isArray(serverBalances)) {
             for (const sb of serverBalances) {
+              // Decrypt encrypted fields if present
+              const decryptedBal = await maybeDecrypt('walletBalance', sb, sb.accountId);
+
               const balance: WalletBalance = {
                 id: sb.clientId || sb.id,
                 localId: sb.clientId || sb.id,
@@ -113,7 +117,7 @@ export const useWalletStore = create<WalletState>()(
                 accountId: sb.accountId,
                 userId: sb.userId,
                 currencyCode: sb.currencyCode as Currency,
-                initialAmount: Number(sb.initialAmount),
+                initialAmount: Number(decryptedBal.initialAmount),
                 createdAt: new Date(sb.createdAt),
                 updatedAt: new Date(sb.updatedAt),
                 isDeleted: sb.isDeleted || false,
@@ -129,6 +133,9 @@ export const useWalletStore = create<WalletState>()(
           if (useAccountStore.getState().currentAccountId !== accountId) return;
           if (Array.isArray(serverExchanges)) {
             for (const se of serverExchanges) {
+              // Decrypt encrypted fields if present
+              const decryptedExch = await maybeDecrypt('currencyExchange', se, se.accountId);
+
               const exchange: CurrencyExchange = {
                 id: se.clientId || se.id,
                 localId: se.clientId || se.id,
@@ -137,11 +144,11 @@ export const useWalletStore = create<WalletState>()(
                 userId: se.userId,
                 fromCurrency: se.fromCurrency as Currency,
                 toCurrency: se.toCurrency as Currency,
-                fromAmount: Number(se.fromAmount),
-                toAmount: Number(se.toAmount),
-                exchangeRate: Number(se.exchangeRate),
+                fromAmount: Number(decryptedExch.fromAmount),
+                toAmount: Number(decryptedExch.toAmount),
+                exchangeRate: Number(decryptedExch.exchangeRate),
                 date: new Date(se.date),
-                notes: se.notes ?? undefined,
+                notes: decryptedExch.notes ?? undefined,
                 createdAt: new Date(se.createdAt),
                 updatedAt: new Date(se.updatedAt),
                 isDeleted: se.isDeleted || false,
@@ -249,11 +256,17 @@ export const useWalletStore = create<WalletState>()(
         console.error('Failed to save wallet balance to SQLite:', e),
       );
 
-      // Sync to server
-      api.setWalletBalance({
-        localId: balanceToSave.localId,
-        currencyCode,
+      // Encrypt sensitive fields and sync to server
+      maybeEncrypt('walletBalance', {
         initialAmount: amount,
+      }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+        return api.setWalletBalance({
+          localId: balanceToSave.localId,
+          currencyCode,
+          initialAmount: encPayload.initialAmount ?? amount,
+          encryptedPayload,
+          encryptionKeyVersion,
+        } as any);
       }).catch((e) =>
         console.error('Failed to sync wallet balance to server:', e),
       );
@@ -337,15 +350,25 @@ export const useWalletStore = create<WalletState>()(
         console.error('Failed to insert exchange into SQLite:', e),
       );
 
-      api.createCurrencyExchange({
-        localId: id,
-        fromCurrency: data.fromCurrency,
-        toCurrency: data.toCurrency,
+      // Encrypt sensitive fields before sending to server
+      maybeEncrypt('currencyExchange', {
+        notes: data.notes,
         fromAmount: data.fromAmount,
         toAmount: data.toAmount,
         exchangeRate: data.exchangeRate,
-        date: data.date instanceof Date ? data.date.toISOString() : data.date,
-        notes: data.notes,
+      }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+        return api.createCurrencyExchange({
+          localId: id,
+          fromCurrency: data.fromCurrency,
+          toCurrency: data.toCurrency,
+          fromAmount: encPayload.fromAmount ?? data.fromAmount,
+          toAmount: encPayload.toAmount ?? data.toAmount,
+          exchangeRate: encPayload.exchangeRate ?? data.exchangeRate,
+          date: data.date instanceof Date ? data.date.toISOString() : data.date,
+          notes: encPayload.notes ?? data.notes,
+          encryptedPayload,
+          encryptionKeyVersion,
+        } as any);
       }).catch((e) =>
         console.error('Failed to sync exchange to server:', e),
       );

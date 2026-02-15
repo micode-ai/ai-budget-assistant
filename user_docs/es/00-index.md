@@ -32,6 +32,7 @@
 12. [Planes de suscripcion](./12-subscription.md) — planes Gratuito, Pro y Business
 13. [Logros y Gamificacion](./13-gamification.md) — rachas, XP, niveles e insignias
 14. [Cartera de inversiones](./14-investments.md) — seguimiento de acciones, ETFs, cripto y analiticas
+15. [Cifrado de extremo a extremo](./15-encryption.md) — protege tus datos con E2EE
 
 ## Monedas compatibles
 

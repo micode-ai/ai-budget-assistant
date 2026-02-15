@@ -42,7 +42,29 @@ export class ChatService {
     });
   }
 
-  async chat(userId: string, message: string, conversationId?: string) {
+  /**
+   * Get the encryption tier for an account (0=off, 1=text, 2=full).
+   */
+  private async getEncryptionTier(accountId?: string): Promise<number> {
+    if (!accountId) return 0;
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionTier: true },
+    });
+    return account?.encryptionTier ?? 0;
+  }
+
+  async chat(userId: string, message: string, conversationId?: string, accountId?: string) {
+    // Tier 2 (full encryption): AI features are unavailable — amounts and text are encrypted
+    const encryptionTier = await this.getEncryptionTier(accountId);
+    if (encryptionTier >= 2) {
+      return {
+        message: 'AI chat is unavailable for this account because end-to-end encryption (full mode) is enabled. Financial data is encrypted and cannot be analyzed server-side.',
+        conversationId: conversationId || null,
+        encryptionRestricted: true,
+      };
+    }
+
     // Get or create conversation
     let conversation;
     if (conversationId) {
@@ -73,7 +95,7 @@ export class ChatService {
 
     // Build context
     const context = await this.buildUserContext(userId);
-    const systemPrompt = this.buildSystemPrompt(context);
+    const systemPrompt = this.buildSystemPrompt(context, encryptionTier);
 
     // Get conversation history
     const history = conversation.messages.map((m: ChatMessageRecord) => ({
@@ -194,16 +216,30 @@ export class ChatService {
     };
   }
 
-  private buildSystemPrompt(context: UserContext): string {
-    return `You are a helpful financial assistant helping a user manage their budget and expenses.
+  private buildSystemPrompt(context: UserContext, encryptionTier = 0): string {
+    const encryptionNotice = encryptionTier >= 1
+      ? `\n\nIMPORTANT: This account has end-to-end encryption enabled (text fields). Expense descriptions, notes, tag names, and project names shown below may be encrypted/unavailable. Focus your analysis on numerical data (amounts, category totals) and general spending patterns. Do not attempt to interpret encrypted text values.`
+      : '';
+
+    // For Tier 1, descriptions are encrypted — show amounts only for recent expenses
+    const recentExpensesText = encryptionTier >= 1
+      ? context.recentExpenses.map((e) => `Amount: ${e.amount.toFixed(2)}`).join(', ') || 'No data'
+      : context.recentExpenses.map((e) => `${e.description}: ${e.amount.toFixed(2)}`).join(', ') || 'No data';
+
+    const tagsText = encryptionTier >= 1 ? '(encrypted)' : (context.tags.map(t => t.name).join(', ') || 'none');
+    const projectsText = encryptionTier >= 1
+      ? context.projects.map(p => `Project (${p.spent.toFixed(2)} spent)`).join(', ') || 'none'
+      : context.projects.map(p => `${p.name} (${p.spent.toFixed(2)} spent)`).join(', ') || 'none';
+
+    return `You are a helpful financial assistant helping a user manage their budget and expenses.${encryptionNotice}
 
 Current user's financial context:
 - Total spent this month: ${context.totalSpentThisMonth.toFixed(2)}
 - Monthly budget: ${context.monthlyBudget > 0 ? context.monthlyBudget.toFixed(2) : 'Not set'}
 - Top spending categories: ${context.topCategories.map((c) => `${c.name}: ${c.amount.toFixed(2)}`).join(', ') || 'No data'}
-- Recent expenses: ${context.recentExpenses.map((e) => `${e.description}: ${e.amount.toFixed(2)}`).join(', ') || 'No data'}
-- User's tags: ${context.tags.map(t => t.name).join(', ') || 'none'}
-- Active projects: ${context.projects.map(p => `${p.name} (${p.spent.toFixed(2)} spent)`).join(', ') || 'none'}
+- Recent expenses: ${recentExpensesText}
+- User's tags: ${tagsText}
+- Active projects: ${projectsText}
 
 You can help analyze spending by tags (e.g., "How much on #subscriptions?") and by projects (e.g., "Show vacation spending").
 When users reference tags with #, look them up. When they mention project names, match to active projects.

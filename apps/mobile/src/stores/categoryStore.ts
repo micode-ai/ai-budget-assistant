@@ -6,6 +6,7 @@ import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 
 const DEFAULT_EXPENSE_CATEGORIES = [
   { name: 'Food & Dining', icon: 'restaurant', color: '#FF6B6B' },
@@ -169,18 +170,24 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const categories = await getAllCategories(accountId);
     set({ categories });
 
-    api.createCategory({ name, icon, color, type }).catch(() => {});
+    // Encrypt sensitive fields before sending to server
+    maybeEncrypt('category', { name }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+      api.createCategory({ name: encPayload.name ?? name, icon, color, type, encryptedPayload, encryptionKeyVersion } as any);
+    }).catch(() => {});
 
     return category;
   },
 
   syncFromServer: async (serverCategories: any[]) => {
     for (const cat of serverCategories) {
+      // Decrypt encrypted fields if present
+      const decrypted = await maybeDecrypt('category', cat, cat.accountId);
+
       await upsertCategory({
         id: cat.id,
         userId: cat.userId || undefined,
         accountId: cat.accountId || undefined,
-        name: cat.name,
+        name: decrypted.name,
         icon: cat.icon || undefined,
         color: cat.color || undefined,
         type: cat.type || 'expense',

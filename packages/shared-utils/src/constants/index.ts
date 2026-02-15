@@ -121,6 +121,61 @@ export const PORTFOLIO_CHART_COLORS = [
   '#00BCD4', '#FF5722', '#795548', '#607D8B', '#E91E63',
 ] as const;
 
+// E2EE field encryption configuration
+// Defines which fields are encrypted per entity type and tier
+export const ENCRYPTION_FIELDS: Record<string, { tier1: string[]; tier2: string[] }> = {
+  expense: {
+    tier1: ['description', 'notes', 'locationName', 'receiptUrl', 'receiptImageBase64'],
+    tier2: ['amount', 'discountAmount'],
+  },
+  expense_item: {
+    tier1: ['description'],
+    tier2: ['unitPrice', 'totalPrice'],
+  },
+  income: {
+    tier1: ['description', 'notes'],
+    tier2: ['amount'],
+  },
+  budget: {
+    tier1: ['name'],
+    tier2: ['amount'],
+  },
+  category: {
+    tier1: ['name'],
+    tier2: [],
+  },
+  tag: {
+    tier1: ['name'],
+    tier2: [],
+  },
+  project: {
+    tier1: ['name', 'description'],
+    tier2: ['budget'],
+  },
+  currencyExchange: {
+    tier1: ['notes'],
+    tier2: ['fromAmount', 'toAmount', 'exchangeRate'],
+  },
+  expense_category_split: {
+    tier1: ['notes'],
+    tier2: ['amount'],
+  },
+  walletBalance: {
+    tier1: [],
+    tier2: ['initialAmount'],
+  },
+} as const;
+
+export const ENCRYPTION_CONFIG = {
+  pbkdf2Iterations: 100000,
+  aesKeyLengthBits: 256,
+  ivLengthBytes: 12,
+  saltLengthBytes: 32,
+  encryptionFormatVersion: 1,
+  recoveryKeyLengthBytes: 32,
+  migrationBatchSize: 50,
+} as const;
+
 // UUID generation (simple version, use uuid package in production)
 export function generateUUID(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {

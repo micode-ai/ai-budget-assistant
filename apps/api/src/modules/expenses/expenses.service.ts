@@ -80,12 +80,12 @@ export class ExpensesService {
         locationLng: dto.location?.lng,
         source: dto.source,
         receiptImage,
+        // E2EE: pass through encrypted payload if provided
+        ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
+        ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
       };
 
-      const expense = await tx.expense.upsert({
-        where: { accountId_clientId: { accountId, clientId: dto.localId } },
-        create: expenseData,
-        update: {
+      const updateData = {
           amount: dto.amount,
           discountAmount: dto.discountAmount,
           currencyCode: dto.currencyCode,
@@ -96,7 +96,14 @@ export class ExpensesService {
           source: dto.source,
           receiptImage,
           isDeleted: false,
-        },
+          ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
+          ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
+        };
+
+      const expense = await tx.expense.upsert({
+        where: { accountId_clientId: { accountId, clientId: dto.localId } },
+        create: expenseData,
+        update: updateData,
         include: { category: true },
       });
 
@@ -248,6 +255,8 @@ export class ExpensesService {
           source: true,
           isDeleted: true,
           syncVersion: true,
+          encryptedPayload: true,
+          encryptionKeyVersion: true,
           createdAt: true,
           updatedAt: true,
           category: true,
@@ -318,9 +327,7 @@ export class ExpensesService {
       : undefined;
 
     return this.prisma.$transaction(async (tx: PrismaClient) => {
-      const updated = await tx.expense.update({
-        where: { id: expense.id },
-        data: {
+      const expenseUpdateData = {
           amount: dto.amount,
           discountAmount: dto.discountAmount,
           currencyCode: dto.currencyCode,
@@ -332,7 +339,13 @@ export class ExpensesService {
           locationLat: dto.location?.lat,
           locationLng: dto.location?.lng,
           syncVersion: { increment: 1 },
-        },
+          ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
+          ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
+        };
+
+      const updated = await tx.expense.update({
+        where: { id: expense.id },
+        data: expenseUpdateData,
       });
 
       // Update tag associations if provided

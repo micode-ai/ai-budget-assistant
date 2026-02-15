@@ -44,6 +44,14 @@ export class CreateIncomeDto {
   @IsOptional()
   @IsUUID()
   projectId?: string;
+
+  @IsOptional()
+  @IsString()
+  encryptedPayload?: string;
+
+  @IsOptional()
+  @IsNumber()
+  encryptionKeyVersion?: number;
 }
 
 export class UpdateIncomeDto {
@@ -80,6 +88,14 @@ export class UpdateIncomeDto {
   @IsOptional()
   @IsUUID()
   projectId?: string | null;
+
+  @IsOptional()
+  @IsString()
+  encryptedPayload?: string;
+
+  @IsOptional()
+  @IsNumber()
+  encryptionKeyVersion?: number;
 }
 
 export class IncomeFiltersDto {

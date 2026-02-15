@@ -167,4 +167,52 @@ export interface ApiEndpoints {
   'POST /investments/refresh-prices': {
     response: { success: boolean };
   };
+
+  // E2EE
+  'POST /encryption/setup': {
+    body: import('../dto').SetupEncryptionDto;
+    response: { success: boolean };
+  };
+  'GET /encryption/profile': {
+    response: import('../dto').EncryptionProfileResponse;
+  };
+  'POST /encryption/account/:id/enable': {
+    params: { id: string };
+    body: import('../dto').EnableAccountEncryptionDto;
+    response: { success: boolean };
+  };
+  'GET /encryption/account/:id/key': {
+    params: { id: string };
+    response: import('../dto').AccountEncryptionKeyResponse;
+  };
+  'POST /encryption/account/:id/grant-key': {
+    params: { id: string };
+    body: import('../dto').GrantKeyDto;
+    response: { success: boolean };
+  };
+  'GET /encryption/account/:id/pending-grants': {
+    params: { id: string };
+    response: import('../dto').PendingKeyGrantsResponse;
+  };
+  'POST /encryption/account/:id/rotate-key': {
+    params: { id: string };
+    body: import('../dto').RotateAccountKeyDto;
+    response: { success: boolean };
+  };
+  'POST /encryption/recovery/setup': {
+    body: import('../dto').SetupRecoveryDto;
+    response: { success: boolean };
+  };
+  'POST /encryption/recovery/recover': {
+    body: import('../dto').RecoverEncryptionDto;
+    response: import('../dto').RecoverEncryptionResponse;
+  };
+  'GET /encryption/account/:id/status': {
+    params: { id: string };
+    response: import('../dto').AccountEncryptionStatusResponse;
+  };
+  'GET /encryption/members/:id/public-keys': {
+    params: { id: string };
+    response: import('../dto').MemberPublicKeyResponse;
+  };
 }

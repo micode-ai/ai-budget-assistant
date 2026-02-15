@@ -687,3 +687,54 @@ export interface PortfolioPerformance {
   benchmarkValues?: number[];
   benchmarkName?: string;
 }
+
+// E2EE (End-to-End Encryption) types
+
+export type EncryptionTier = 0 | 1 | 2;
+
+export type KeyWrappingMethod = 'ecdh' | 'master_key';
+
+export interface EncryptedFieldValue {
+  iv: string;  // base64, 12 bytes
+  ct: string;  // base64, ciphertext
+  tag: string; // base64, 16-byte auth tag
+}
+
+export interface EncryptedPayload {
+  v: number;   // encryption format version
+  kv: number;  // account key version
+  fields: Record<string, EncryptedFieldValue>;
+}
+
+export interface UserEncryptionProfile {
+  id: string;
+  userId: string;
+  pbkdf2Salt: string;
+  publicKeyX25519: string;
+  publicKeyEd25519: string;
+  wrappedPrivateKeyX25519: string;
+  wrappedPrivateKeyEd25519: string;
+  recoveryKeyHash?: string;
+  wrappedMasterKeyByRecovery?: string;
+  keyVersion: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AccountEncryptionKey {
+  id: string;
+  accountId: string;
+  userId: string;
+  wrappedAccountKey: string;
+  wrappedBy: string;
+  wrappingMethod: KeyWrappingMethod;
+  keyVersion: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PendingKeyGrant {
+  userId: string;
+  userName: string;
+  publicKeyX25519: string;
+}

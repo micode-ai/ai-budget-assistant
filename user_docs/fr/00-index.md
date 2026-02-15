@@ -32,6 +32,7 @@
 12. [Abonnement](./12-subscription.md) — plans Gratuit, Pro et Business
 13. [Succes et Gamification](./13-gamification.md) — series, XP, niveaux et badges
 14. [Portefeuille d'investissement](./14-investments.md) — suivi actions, ETFs, crypto et analyses
+15. [Chiffrement de bout en bout](./15-encryption.md) — protegez vos donnees avec E2EE
 
 ## Devises prises en charge
 

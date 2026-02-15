@@ -212,6 +212,8 @@ export const SyncChangeSchema = z.object({
   entityId: z.string().uuid(),
   operation: SyncOperationSchema,
   payload: z.unknown(),
+  encryptedPayload: z.string().optional(),
+  encryptionKeyVersion: z.number().int().positive().optional(),
   clientVersion: z.number().int().min(0),
 });
 
@@ -341,6 +343,61 @@ export const PortfolioAnalyticsRequestSchema = z.object({
   benchmark: z.string().max(20).optional(),
 });
 
+// E2EE schemas
+
+export const EncryptionTierSchema = z.union([z.literal(0), z.literal(1), z.literal(2)]);
+
+export const KeyWrappingMethodSchema = z.enum(['ecdh', 'master_key']);
+
+const base64String = z.string().min(1).max(10000);
+
+export const SetupEncryptionSchema = z.object({
+  pbkdf2Salt: base64String,
+  publicKeyX25519: base64String,
+  publicKeyEd25519: base64String,
+  wrappedPrivateKeyX25519: base64String,
+  wrappedPrivateKeyEd25519: base64String,
+});
+
+export const EnableAccountEncryptionSchema = z.object({
+  tier: z.union([z.literal(1), z.literal(2)]),
+  wrappedAccountKey: base64String,
+});
+
+export const GrantKeySchema = z.object({
+  targetUserId: z.string().uuid(),
+  wrappedAccountKey: base64String,
+  wrappingMethod: KeyWrappingMethodSchema,
+});
+
+export const RotateAccountKeySchema = z.object({
+  newWrappedKeys: z.array(z.object({
+    userId: z.string().uuid(),
+    wrappedAccountKey: base64String,
+  })).min(1),
+});
+
+export const SetupRecoverySchema = z.object({
+  recoveryKeyHash: z.string().min(1),
+  wrappedMasterKeyByRecovery: base64String,
+});
+
+export const RecoverEncryptionSchema = z.object({
+  recoveryKey: z.string().min(1).max(200),
+});
+
+export const EncryptedFieldValueSchema = z.object({
+  iv: base64String,
+  ct: base64String,
+  tag: base64String,
+});
+
+export const EncryptedPayloadSchema = z.object({
+  v: z.number().int().positive(),
+  kv: z.number().int().positive(),
+  fields: z.record(z.string(), EncryptedFieldValueSchema),
+});
+
 // Type exports from schemas
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
@@ -373,3 +430,10 @@ export type CreatePortfolioHoldingInput = z.infer<typeof CreatePortfolioHoldingS
 export type CreateInvestmentTransactionInput = z.infer<typeof CreateInvestmentTransactionSchema>;
 export type UpdateInvestmentTransactionInput = z.infer<typeof UpdateInvestmentTransactionSchema>;
 export type PortfolioAnalyticsRequestInput = z.infer<typeof PortfolioAnalyticsRequestSchema>;
+export type SetupEncryptionInput = z.infer<typeof SetupEncryptionSchema>;
+export type EnableAccountEncryptionInput = z.infer<typeof EnableAccountEncryptionSchema>;
+export type GrantKeyInput = z.infer<typeof GrantKeySchema>;
+export type RotateAccountKeyInput = z.infer<typeof RotateAccountKeySchema>;
+export type SetupRecoveryInput = z.infer<typeof SetupRecoverySchema>;
+export type RecoverEncryptionInput = z.infer<typeof RecoverEncryptionSchema>;
+export type EncryptedPayloadInput = z.infer<typeof EncryptedPayloadSchema>;

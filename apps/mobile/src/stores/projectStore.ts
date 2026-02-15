@@ -4,6 +4,7 @@ import type { Project, Currency } from '@budget/shared-types';
 import * as projectRepo from '@/db/projectRepository';
 import { useAccountStore } from './accountStore';
 import { api } from '@/services/api';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 
 interface ProjectState {
   projects: Project[];
@@ -53,16 +54,24 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       // Sync pending local projects to server (they may have never been synced)
       for (const p of projects) {
         if (p.syncStatus === 'pending') {
-          api.createProject({
-            localId: p.id,
+          maybeEncrypt('project', {
             name: p.name,
             description: p.description,
-            color: p.color,
-            icon: p.icon,
-            startDate: p.startDate?.toISOString(),
-            endDate: p.endDate?.toISOString(),
             budget: p.budget,
-            currencyCode: p.currencyCode,
+          }, p.accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+            return api.createProject({
+              localId: p.id,
+              name: encPayload.name ?? p.name,
+              description: encPayload.description ?? p.description,
+              color: p.color,
+              icon: p.icon,
+              startDate: p.startDate?.toISOString(),
+              endDate: p.endDate?.toISOString(),
+              budget: encPayload.budget ?? p.budget,
+              currencyCode: p.currencyCode,
+              encryptedPayload,
+              encryptionKeyVersion,
+            } as any);
           }).then(() => {
             projectRepo.upsertProject({ ...p, syncStatus: 'synced' });
           }).catch(() => {});
@@ -104,8 +113,22 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     };
     await projectRepo.insertProject(project);
     set({ projects: [...get().projects, project] });
-    // Fire-and-forget: sync to server (include localId so server stores it as clientId)
-    api.createProject({ ...data, localId: id }).catch(() => {});
+    // Fire-and-forget: sync to server with encryption (include localId so server stores it as clientId)
+    maybeEncrypt('project', {
+      name: data.name,
+      description: data.description,
+      budget: data.budget,
+    }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+      api.createProject({
+        ...data,
+        localId: id,
+        name: encPayload.name ?? data.name,
+        description: encPayload.description ?? data.description,
+        budget: encPayload.budget ?? data.budget,
+        encryptedPayload,
+        encryptionKeyVersion,
+      } as any);
+    }).catch(() => {});
     return project;
   },
 
@@ -166,17 +189,20 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         }
       }
 
+      // Decrypt encrypted fields if present
+      const decrypted = await maybeDecrypt('project', proj, proj.accountId);
+
       await projectRepo.upsertProject({
         id: proj.id,
         accountId: proj.accountId,
         localId: localId || proj.id,
-        name: proj.name,
-        description: proj.description || undefined,
+        name: decrypted.name,
+        description: decrypted.description || undefined,
         color: proj.color || undefined,
         icon: proj.icon || undefined,
         startDate: proj.startDate ? new Date(proj.startDate) : undefined,
         endDate: proj.endDate ? new Date(proj.endDate) : undefined,
-        budget: proj.budget || undefined,
+        budget: decrypted.budget || undefined,
         currencyCode: proj.currencyCode || undefined,
         isArchived: proj.isArchived ?? false,
         createdAt: new Date(proj.createdAt),

@@ -16,7 +16,41 @@ interface ExpenseWithCategory {
 export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Check if the account has Tier 2 (full) encryption, meaning amounts are
+   * encrypted and server-side analytics cannot compute totals.
+   */
+  private async isFullEncryption(accountId: string): Promise<boolean> {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionTier: true },
+    });
+    return (account?.encryptionTier ?? 0) >= 2;
+  }
+
+  private encryptionRestrictedSummary(startDate: Date, endDate: Date) {
+    return {
+      encryptionRestricted: true,
+      period: {
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+      },
+      totalIncome: 0,
+      totalExpenses: 0,
+      totalDiscountSavings: 0,
+      netSavings: 0,
+      expensesByCategory: [],
+      expensesByCurrency: [],
+      topExpenses: [],
+      trends: { vsLastPeriod: 0, vsAverage: 0 },
+    };
+  }
+
   async getSummary(accountId: string, startDate: Date, endDate: Date) {
+    if (await this.isFullEncryption(accountId)) {
+      return this.encryptionRestrictedSummary(startDate, endDate);
+    }
+
     // Get incomes in date range
     const incomeAgg = await this.prisma.income.aggregate({
       where: {
@@ -144,6 +178,10 @@ export class AnalyticsService {
   }
 
   async getItemBreakdown(accountId: string, startDate: Date, endDate: Date) {
+    if (await this.isFullEncryption(accountId)) {
+      return { encryptionRestricted: true, data: [] };
+    }
+
     const expenses = await this.prisma.expense.findMany({
       where: {
         accountId,
@@ -160,6 +198,7 @@ export class AnalyticsService {
 
     for (const expense of expenses) {
       for (const item of expense.items) {
+        if (!item.description) continue;
         const key = item.description.toLowerCase().trim();
         const existing = itemMap.get(key) || { totalSpent: 0, count: 0 };
         itemMap.set(key, {
@@ -181,6 +220,10 @@ export class AnalyticsService {
   }
 
   async getTrends(accountId: string, startDate: Date, endDate: Date) {
+    if (await this.isFullEncryption(accountId)) {
+      return { encryptionRestricted: true, data: [] };
+    }
+
     // Get daily totals
     const expenses = await this.prisma.expense.findMany({
       where: {
@@ -211,7 +254,16 @@ export class AnalyticsService {
       select: { accountId: true },
     });
 
-    const accountIds = memberships.map((m: { accountId: string }) => m.accountId);
+    const allAccountIds = memberships.map((m: { accountId: string }) => m.accountId);
+
+    // Exclude accounts with Tier 2 (full) encryption — amounts are not readable server-side
+    const accounts = await this.prisma.account.findMany({
+      where: { id: { in: allAccountIds } },
+      select: { id: true, encryptionTier: true },
+    });
+    const accountIds = accounts
+      .filter((a: { encryptionTier: number }) => (a.encryptionTier ?? 0) < 2)
+      .map((a: { id: string }) => a.id);
 
     if (accountIds.length === 0) {
       return {
@@ -346,6 +398,14 @@ export class AnalyticsService {
     parentId?: string,
     currencyCode?: string,
   ) {
+    if (await this.isFullEncryption(accountId)) {
+      return {
+        encryptionRestricted: true,
+        chart: { chartType: 'bar' as const, title: 'Encryption restricted', data: [], drillDown: { enabled: false, currentLevel: level } },
+        breadcrumb: [],
+      };
+    }
+
     const currencyFilter = currencyCode ? { currencyCode } : {};
 
     if (level === 'year') {
@@ -524,6 +584,10 @@ export class AnalyticsService {
   }
 
   async getTagBreakdown(accountId: string, startDate: Date, endDate: Date) {
+    if (await this.isFullEncryption(accountId)) {
+      return { encryptionRestricted: true, data: [] };
+    }
+
     const expenseTags = await this.prisma.expenseTag.findMany({
       where: {
         isDeleted: false,
@@ -561,6 +625,10 @@ export class AnalyticsService {
   }
 
   async getProjectBreakdown(accountId: string) {
+    if (await this.isFullEncryption(accountId)) {
+      return { encryptionRestricted: true, data: [] };
+    }
+
     const projects = await this.prisma.project.findMany({
       where: { accountId, isDeleted: false },
       include: {
