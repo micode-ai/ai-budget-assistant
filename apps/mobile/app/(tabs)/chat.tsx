@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import Markdown from 'react-native-markdown-display';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -25,6 +26,82 @@ export default function ChatScreen() {
   const styles = useStyles(createStyles);
 
   const { messages, isLoading, sendMessage } = useChatStore();
+
+  const markdownStyles = useMemo(
+    () => ({
+      body: {
+        color: theme.colors.messageBubbleAIText,
+        fontSize: 15,
+        lineHeight: 22,
+      },
+      heading2: {
+        color: theme.colors.messageBubbleAIText,
+        fontWeight: '600' as const,
+        fontSize: 17,
+        marginTop: 8,
+        marginBottom: 4,
+      },
+      heading3: {
+        color: theme.colors.messageBubbleAIText,
+        fontWeight: '600' as const,
+        fontSize: 15,
+        marginTop: 6,
+        marginBottom: 3,
+      },
+      paragraph: {
+        marginVertical: 2,
+      },
+      strong: {
+        fontWeight: '600' as const,
+      },
+      em: {
+        fontStyle: 'italic' as const,
+      },
+      bullet_list: {
+        marginVertical: 4,
+      },
+      ordered_list: {
+        marginVertical: 4,
+      },
+      list_item: {
+        marginVertical: 2,
+      },
+      table: {
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        borderRadius: 6,
+        marginVertical: 6,
+      },
+      thead: {
+        backgroundColor: theme.colors.surfaceSecondary,
+      },
+      th: {
+        padding: 6,
+        fontWeight: '600' as const,
+        borderWidth: 0.5,
+        borderColor: theme.colors.border,
+      },
+      td: {
+        padding: 6,
+        borderWidth: 0.5,
+        borderColor: theme.colors.border,
+      },
+      code_inline: {
+        backgroundColor: theme.colors.surfaceSecondary,
+        color: theme.colors.primary,
+        fontSize: 13,
+        paddingHorizontal: 4,
+        paddingVertical: 1,
+        borderRadius: 4,
+      },
+      hr: {
+        backgroundColor: theme.colors.divider,
+        height: 1,
+        marginVertical: 8,
+      },
+    }),
+    [theme],
+  );
   const {
     isRecording,
     isProcessing,
@@ -89,9 +166,15 @@ export default function ChatScreen() {
           </View>
         )}
         <View style={[styles.messageBubble, isUser && styles.userMessageBubble]}>
-          <Text style={[styles.messageText, isUser && styles.userMessageText]}>
-            {item.content}
-          </Text>
+          {isUser ? (
+            <Text style={[styles.messageText, styles.userMessageText]}>
+              {item.content}
+            </Text>
+          ) : (
+            <Markdown style={markdownStyles}>
+              {item.content}
+            </Markdown>
+          )}
         </View>
       </View>
     );

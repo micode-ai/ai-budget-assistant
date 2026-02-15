@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -17,10 +17,15 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { Currency } from '@budget/shared-types';
 
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 export default function AnalyticsScreen() {
   const { t, i18n } = useTranslation();
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
+  const [expandedInsightId, setExpandedInsightId] = useState<string | null>(null);
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
   const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency);
@@ -41,6 +46,11 @@ export default function AnalyticsScreen() {
     { key: 'month', label: t('analytics.month') },
     { key: 'year', label: t('analytics.year') },
   ];
+
+  const toggleInsight = useCallback((id: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpandedInsightId((prev) => (prev === id ? null : id));
+  }, []);
 
   const availableCurrencies = walletSummary.map((s) => s.currencyCode);
   const currency = selectedCurrency || user?.currencyCode || 'USD';
@@ -157,31 +167,46 @@ export default function AnalyticsScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 
-        {/* AI Insights Carousel */}
+        {/* AI Insights */}
         {aiInsights.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('insights.aiSuggested')}</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.insightsCarousel}>
-              {aiInsights.slice(0, 5).map((insight) => (
-                <View key={insight.id} style={styles.aiInsightCard}>
+            {aiInsights.slice(0, 5).map((insight) => {
+              const isExpanded = expandedInsightId === insight.id;
+              const severityColor = insight.severity === 'critical' ? theme.colors.danger : insight.severity === 'warning' ? theme.colors.warning : theme.colors.info;
+              const severityBg = insight.severity === 'critical' ? theme.colors.dangerLight : insight.severity === 'warning' ? theme.colors.warningLight : theme.colors.primaryLight;
+              return (
+                <TouchableOpacity
+                  key={insight.id}
+                  style={styles.aiInsightCard}
+                  activeOpacity={0.7}
+                  onPress={() => toggleInsight(insight.id)}
+                >
                   <View style={styles.aiInsightHeader}>
+                    <View style={[styles.aiSeverityBadge, { backgroundColor: severityBg }]}>
+                      <Ionicons
+                        name={insight.severity === 'critical' ? 'alert-circle' : insight.severity === 'warning' ? 'warning' : 'information-circle'}
+                        size={16}
+                        color={severityColor}
+                      />
+                    </View>
+                    <Text style={styles.aiInsightTitle} numberOfLines={isExpanded ? undefined : 1}>{insight.title}</Text>
                     <Ionicons
-                      name={insight.severity === 'critical' ? 'alert-circle' : insight.severity === 'warning' ? 'warning' : 'information-circle'}
-                      size={20}
-                      color={insight.severity === 'critical' ? theme.colors.danger : insight.severity === 'warning' ? theme.colors.warning : theme.colors.info}
+                      name={isExpanded ? 'chevron-up' : 'chevron-down'}
+                      size={16}
+                      color={theme.colors.textTertiary}
                     />
-                    <Text style={styles.aiInsightTitle} numberOfLines={1}>{insight.title}</Text>
                   </View>
-                  <Text style={styles.aiInsightDescription} numberOfLines={2}>{insight.description}</Text>
+                  <Text style={styles.aiInsightDescription} numberOfLines={isExpanded ? undefined : 2}>{insight.description}</Text>
                   {insight.actionSuggestion && (
                     <View style={styles.aiInsightAction}>
                       <Ionicons name="bulb-outline" size={14} color={theme.colors.primary} />
-                      <Text style={styles.aiInsightActionText} numberOfLines={1}>{insight.actionSuggestion}</Text>
+                      <Text style={styles.aiInsightActionText} numberOfLines={isExpanded ? undefined : 1}>{insight.actionSuggestion}</Text>
                     </View>
                   )}
-                </View>
-              ))}
-            </ScrollView>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         )}
 
@@ -919,17 +944,11 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
     marginTop: theme.spacing[0.5],
   },
-  insightsCarousel: {
-    marginHorizontal: -theme.spacing[4],
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[1],
-  },
   aiInsightCard: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[4],
-    marginRight: theme.spacing[3],
-    width: 280,
+    marginBottom: theme.spacing[2],
     ...theme.shadows.sm,
   },
   aiInsightHeader: {
@@ -937,6 +956,13 @@ const createStyles = (theme: Theme) => ({
     alignItems: 'center' as const,
     gap: theme.spacing[2],
     marginBottom: theme.spacing[2],
+  },
+  aiSeverityBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   aiInsightTitle: {
     ...theme.textStyles.bodyMedium,
