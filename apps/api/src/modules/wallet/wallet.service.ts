@@ -140,7 +140,7 @@ export class WalletService {
     }
 
     // Compute balances
-    const balances = walletBalances.map((wb) => {
+    const balances = walletBalances.map((wb: typeof walletBalances[number]) => {
       const initialAmount = Number(wb.initialAmount);
       const totalIncomes = incomeMap.get(wb.currencyCode) || 0;
       const totalExpenses = expenseMap.get(wb.currencyCode) || 0;

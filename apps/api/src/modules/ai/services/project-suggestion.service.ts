@@ -48,7 +48,7 @@ export class ProjectSuggestionService {
           const isRelated = await this.isExpenseRelatedToProject(
             expense.description,
             project.name,
-            project.projectExpenses.map(pe => pe.expense.description || ''),
+            project.projectExpenses.map((pe: { expense: { description: string | null } }) => pe.expense.description || ''),
           );
           if (isRelated) {
             return { projectId: project.id, projectName: project.name, confidence: 0.8 };
@@ -58,18 +58,18 @@ export class ProjectSuggestionService {
     }
 
     // 2. Use AI to match
-    const projectDescriptions = activeProjects.map(p => ({
+    const projectDescriptions = activeProjects.map((p: typeof activeProjects[number]) => ({
       id: p.id,
       name: p.name,
       description: p.description,
-      recentExpenses: p.projectExpenses.map(pe => pe.expense.description).filter(Boolean).slice(0, 5),
+      recentExpenses: p.projectExpenses.map((pe: { expense: { description: string | null } }) => pe.expense.description).filter(Boolean).slice(0, 5),
     }));
 
     try {
       const prompt = `Given this expense: "${expense.description}"${expense.locationName ? ` at "${expense.locationName}"` : ''}
 
 Active projects:
-${projectDescriptions.map(p => `- "${p.name}"${p.description ? `: ${p.description}` : ''} (recent: ${p.recentExpenses.join(', ') || 'none'})`).join('\n')}
+${projectDescriptions.map((p: { name: string; description: string | null; recentExpenses: (string | null)[] }) => `- "${p.name}"${p.description ? `: ${p.description}` : ''} (recent: ${p.recentExpenses.join(', ') || 'none'})`).join('\n')}
 
 Does this expense belong to any of these projects? Return JSON: { "projectId": "id or null", "projectName": "name or null", "confidence": 0.0-1.0 }
 Only suggest if confidence >= 0.6.`;

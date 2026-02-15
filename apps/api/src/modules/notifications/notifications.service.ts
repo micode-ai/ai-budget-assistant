@@ -85,7 +85,8 @@ export class NotificationsService {
       },
     });
 
-    const eligible = users.filter((u) => {
+    type UserWithToken = typeof users[number];
+    const eligible = users.filter((u: UserWithToken) => {
       if (!u.pushToken || !this.isValidExpoPushToken(u.pushToken)) return false;
       if (notificationType === 'budget_alert' && !u.notifyBudgetAlerts) return false;
       if (notificationType === 'spending_anomaly' && !u.notifyBudgetAlerts) return false;
@@ -95,7 +96,7 @@ export class NotificationsService {
 
     if (eligible.length === 0) return;
 
-    const messages: ExpoPushMessage[] = eligible.map((u) => ({
+    const messages: ExpoPushMessage[] = eligible.map((u: UserWithToken) => ({
       to: u.pushToken!,
       title,
       body,
@@ -106,7 +107,7 @@ export class NotificationsService {
     for (let i = 0; i < messages.length; i += this.BATCH_SIZE) {
       const batch = messages.slice(i, i + this.BATCH_SIZE);
       const tokenMap = eligible.slice(i, i + this.BATCH_SIZE)
-        .map((u) => ({ userId: u.id, token: u.pushToken! }));
+        .map((u: UserWithToken) => ({ userId: u.id, token: u.pushToken! }));
 
       const tickets = await this.sendPushNotifications(batch);
       await this.handleTicketErrors(tickets, tokenMap);

@@ -141,9 +141,11 @@ export class StoryService {
     ]);
 
     // Compute aggregates
-    const totalExpenses = currentExpenses.reduce((s, e) => s + Number(e.amount), 0);
-    const totalPrevExpenses = previousExpenses.reduce((s, e) => s + Number(e.amount), 0);
-    const totalIncome = incomes.reduce((s, i) => s + Number(i.amount), 0);
+    type ExpenseWithCategory = typeof currentExpenses[number];
+    type IncomeRecord = typeof incomes[number];
+    const totalExpenses = currentExpenses.reduce((s: number, e: ExpenseWithCategory) => s + Number(e.amount), 0);
+    const totalPrevExpenses = previousExpenses.reduce((s: number, e: ExpenseWithCategory) => s + Number(e.amount), 0);
+    const totalIncome = incomes.reduce((s: number, i: IncomeRecord) => s + Number(i.amount), 0);
     const netSavings = totalIncome - totalExpenses;
 
     const byCategory = new Map<string, { name: string; amount: number; count: number; color?: string }>();
@@ -173,7 +175,7 @@ export class StoryService {
       dailyTotals.push({ date, amount: Math.round(amount * 100) / 100 });
     }
 
-    const topExpenses = currentExpenses.slice(0, 5).map((e) => ({
+    const topExpenses = currentExpenses.slice(0, 5).map((e: ExpenseWithCategory) => ({
       description: e.description || 'Expense',
       amount: Number(e.amount),
       category: e.category?.name || translateUncategorized(language),

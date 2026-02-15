@@ -22,9 +22,10 @@ export class GamificationService {
       this.streakService.getStreak(accountId, userId),
     ]);
 
+    type Achievement = typeof achievements[number];
     const totalXp = achievements
-      .filter((a) => a.isCompleted)
-      .reduce((sum, a) => {
+      .filter((a: Achievement) => a.isCompleted)
+      .reduce((sum: number, a: Achievement) => {
         const def = ACHIEVEMENT_DEFINITIONS.find((d) => d.id === a.achievementId);
         return sum + (def?.xpReward || 0);
       }, 0);
@@ -32,8 +33,8 @@ export class GamificationService {
     const { level, progress } = getLevel(totalXp);
 
     const recentBadges = achievements
-      .filter((a) => a.isCompleted && a.unlockedAt)
-      .sort((a, b) => (b.unlockedAt!.getTime() - a.unlockedAt!.getTime()))
+      .filter((a: Achievement) => a.isCompleted && a.unlockedAt)
+      .sort((a: Achievement, b: Achievement) => (b.unlockedAt!.getTime() - a.unlockedAt!.getTime()))
       .slice(0, 5);
 
     return {
@@ -43,13 +44,13 @@ export class GamificationService {
       currentStreak: streak?.currentStreak || 0,
       longestStreak: streak?.longestStreak || 0,
       lastActivityDate: streak?.lastActivityDate?.toISOString(),
-      achievements: achievements.map((a) => ({
+      achievements: achievements.map((a: Achievement) => ({
         achievementId: a.achievementId,
         isCompleted: a.isCompleted,
         progress: a.progress,
         unlockedAt: a.unlockedAt?.toISOString(),
       })),
-      recentBadges: recentBadges.map((a) => ({
+      recentBadges: recentBadges.map((a: Achievement) => ({
         achievementId: a.achievementId,
         unlockedAt: a.unlockedAt!.toISOString(),
       })),
@@ -104,7 +105,7 @@ export class GamificationService {
 
     if (activeBudgets.length > 0) {
       const budgetChecks = await Promise.all(
-        activeBudgets.map(async (budget) => {
+        activeBudgets.map(async (budget: typeof activeBudgets[number]) => {
           const spent = await this.prisma.expense.aggregate({
             where: {
               accountId,

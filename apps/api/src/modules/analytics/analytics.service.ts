@@ -211,7 +211,7 @@ export class AnalyticsService {
       select: { accountId: true },
     });
 
-    const accountIds = memberships.map((m) => m.accountId);
+    const accountIds = memberships.map((m: { accountId: string }) => m.accountId);
 
     if (accountIds.length === 0) {
       return {
@@ -484,7 +484,7 @@ export class AnalyticsService {
         orderBy: { amount: 'desc' },
       });
 
-      const transactions = expenses.map((e) => ({
+      const transactions = expenses.map((e: { id: string; amount: unknown; description: string | null; date: Date; category?: { name: string } | null; currencyCode: string }) => ({
         id: e.id,
         description: e.description || 'No description',
         amount: Number(e.amount),
@@ -493,7 +493,7 @@ export class AnalyticsService {
         currencyCode: e.currencyCode,
       }));
 
-      const data: ChartDataPoint[] = transactions.slice(0, 10).map((t) => ({
+      const data: ChartDataPoint[] = transactions.slice(0, 10).map((t: { id: string; description: string; amount: number }) => ({
         label: t.description.substring(0, 15),
         value: t.amount,
         id: t.id,
@@ -575,12 +575,12 @@ export class AnalyticsService {
       },
     });
 
-    return projects.map(p => ({
+    return projects.map((p: typeof projects[number]) => ({
       projectId: p.id,
       projectName: p.name,
       color: p.color,
-      totalExpenses: p.projectExpenses.reduce((sum, pe) => sum + Number(pe.expense.amount), 0),
-      totalIncome: p.projectIncomes.reduce((sum, pi) => sum + Number(pi.income.amount), 0),
+      totalExpenses: p.projectExpenses.reduce((sum: number, pe: { expense: { amount: unknown } }) => sum + Number(pe.expense.amount), 0),
+      totalIncome: p.projectIncomes.reduce((sum: number, pi: { income: { amount: unknown } }) => sum + Number(pi.income.amount), 0),
       expenseCount: p.projectExpenses.length,
       budget: p.budget ? Number(p.budget) : null,
       isArchived: p.isArchived,

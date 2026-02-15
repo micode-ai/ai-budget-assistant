@@ -109,7 +109,7 @@ export class TagSuggestionService {
       take: 50,
     });
 
-    const tagList = existingTags.map(t => t.name).join(', ');
+    const tagList = existingTags.map((t: typeof existingTags[number]) => t.name).join(', ');
 
     const prompt = `Given the expense description: "${description}"${merchant ? ` from merchant: "${merchant}"` : ''}
 
@@ -132,7 +132,7 @@ Tags should be short (1-3 words), lowercase, descriptive labels like: subscripti
 
       for (const tag of result.tags || []) {
         const existingTag = existingTags.find(
-          t => t.name.toLowerCase() === (tag.name || '').toLowerCase(),
+          (t: typeof existingTags[number]) => t.name.toLowerCase() === (tag.name || '').toLowerCase(),
         );
         suggestedTags.push({
           name: tag.name,

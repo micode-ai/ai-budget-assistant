@@ -268,7 +268,7 @@ export class InvestmentsService {
     }
 
     // Batch fetch current prices
-    const symbols = holdings.map((h) =>
+    const symbols = holdings.map((h: typeof holdings[number]) =>
       h.asset.exchange ? `${h.asset.symbol}:${h.asset.exchange}` : h.asset.symbol,
     );
     const prices = await this.twelveData.getBatchPrices(symbols);
@@ -290,7 +290,7 @@ export class InvestmentsService {
     let totalValue = 0;
     let totalInvested = 0;
 
-    const holdingSummaries = holdings.map((h) => {
+    const holdingSummaries = holdings.map((h: typeof holdings[number]) => {
       const symbolKey = h.asset.exchange
         ? `${h.asset.symbol}:${h.asset.exchange}`
         : h.asset.symbol;
@@ -428,7 +428,7 @@ export class InvestmentsService {
           });
 
           if (cachedPrices.length > 0) {
-            seriesData = cachedPrices.map((p) => ({
+            seriesData = cachedPrices.map((p: typeof cachedPrices[number]) => ({
               date: p.date.toISOString().split('T')[0],
               open: Number(p.openPrice),
               high: Number(p.highPrice),
@@ -554,14 +554,15 @@ export class InvestmentsService {
     }));
 
     // Top gainers/losers
-    const holdingPnl = holdings.map((h) => {
+    const holdingPnl = holdings.map((h: typeof holdings[number]) => {
       const currentPrice = Number(h.asset.currentPrice ?? 0);
       const avgCost = Number(h.averageCostBasis);
       const pnlPercent = avgCost > 0 ? ((currentPrice - avgCost) / avgCost) * 100 : 0;
       return { symbol: h.asset.symbol, pnlPercent };
     });
 
-    holdingPnl.sort((a, b) => b.pnlPercent - a.pnlPercent);
+    type HoldingPnlItem = { symbol: string; pnlPercent: number };
+    holdingPnl.sort((a: HoldingPnlItem, b: HoldingPnlItem) => b.pnlPercent - a.pnlPercent);
 
     return {
       performance: {
@@ -572,8 +573,8 @@ export class InvestmentsService {
         benchmarkName,
       },
       allocation,
-      topGainers: holdingPnl.filter((h) => h.pnlPercent > 0).slice(0, 5),
-      topLosers: holdingPnl.filter((h) => h.pnlPercent < 0).slice(-5).reverse(),
+      topGainers: holdingPnl.filter((h: HoldingPnlItem) => h.pnlPercent > 0).slice(0, 5),
+      topLosers: holdingPnl.filter((h: HoldingPnlItem) => h.pnlPercent < 0).slice(-5).reverse(),
     };
   }
 
@@ -613,7 +614,7 @@ export class InvestmentsService {
       }
     }
 
-    const symbols = holdings.map((h) =>
+    const symbols = holdings.map((h: typeof holdings[number]) =>
       h.asset.exchange ? `${h.asset.symbol}:${h.asset.exchange}` : h.asset.symbol,
     );
 
@@ -693,8 +694,8 @@ export class InvestmentsService {
       });
 
       return {
-        dates: cached.map((p) => p.date.toISOString().split('T')[0]),
-        prices: cached.map((p) => Number(p.closePrice)),
+        dates: cached.map((p: typeof cached[number]) => p.date.toISOString().split('T')[0]),
+        prices: cached.map((p: typeof cached[number]) => Number(p.closePrice)),
       };
     }
 

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
@@ -56,7 +57,7 @@ export class ExpensesService {
   }
 
   async create(accountId: string, userId: string, dto: CreateExpenseDto) {
-    const result = await this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
@@ -120,11 +121,11 @@ export class ExpensesService {
           where: { id: { in: dto.tagIds } },
           select: { id: true },
         });
-        const validTagIds = existingTags.map(t => t.id);
+        const validTagIds = existingTags.map((t: { id: string }) => t.id);
 
         if (validTagIds.length > 0) {
           await tx.expenseTag.createMany({
-            data: validTagIds.map(tagId => ({
+            data: validTagIds.map((tagId: string) => ({
               expenseId: expense.id,
               tagId,
             })),
@@ -316,7 +317,7 @@ export class ExpensesService {
       ? await this.resolveCategoryId(dto.categoryId, accountId)
       : undefined;
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: PrismaClient) => {
       const updated = await tx.expense.update({
         where: { id: expense.id },
         data: {
@@ -348,11 +349,11 @@ export class ExpensesService {
             where: { id: { in: dto.tagIds } },
             select: { id: true },
           });
-          const validTagIds = existingTags.map(t => t.id);
+          const validTagIds = existingTags.map((t: { id: string }) => t.id);
 
           if (validTagIds.length > 0) {
             await tx.expenseTag.createMany({
-              data: validTagIds.map(tagId => ({
+              data: validTagIds.map((tagId: string) => ({
                 expenseId: expense.id,
                 tagId,
               })),
@@ -528,7 +529,7 @@ export class ExpensesService {
     });
     if (!expense) throw new NotFoundException('Expense not found');
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: PrismaClient) => {
       // Soft-delete existing splits
       await tx.expenseCategorySplit.updateMany({
         where: { expenseId, isDeleted: false },

@@ -289,7 +289,7 @@ export class TagsService {
       },
     });
 
-    return expenseTags.map((et) => et.tag);
+    return expenseTags.map((et: typeof expenseTags[number]) => et.tag);
   }
 
   async getTagsForIncome(incomeId: string) {
@@ -303,6 +303,6 @@ export class TagsService {
       },
     });
 
-    return incomeTags.map((it) => it.tag);
+    return incomeTags.map((it: typeof incomeTags[number]) => it.tag);
   }
 }
