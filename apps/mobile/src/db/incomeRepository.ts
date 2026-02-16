@@ -13,6 +13,11 @@ interface IncomeRow {
   notes: string | null;
   category_id: string | null;
   date: number;
+  is_debt: number;
+  is_debt_repayment: number;
+  debt_contact_name: string | null;
+  debt_due_date: number | null;
+  related_debt_expense_id: string | null;
   created_at: number;
   updated_at: number;
   is_deleted: number;
@@ -33,6 +38,11 @@ function rowToIncome(row: IncomeRow): Income {
     notes: row.notes ?? undefined,
     categoryId: row.category_id ?? undefined,
     date: new Date(row.date),
+    isDebt: row.is_debt === 1,
+    isDebtRepayment: row.is_debt_repayment === 1,
+    debtContactName: row.debt_contact_name ?? undefined,
+    debtDueDate: row.debt_due_date ? new Date(row.debt_due_date) : undefined,
+    relatedDebtExpenseId: row.related_debt_expense_id ?? undefined,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     isDeleted: row.is_deleted === 1,
@@ -54,6 +64,11 @@ function incomeToParams(income: Income): (string | number | null)[] {
     income.notes ?? null,
     income.categoryId ?? null,
     income.date.getTime(),
+    income.isDebt ? 1 : 0,
+    income.isDebtRepayment ? 1 : 0,
+    income.debtContactName ?? null,
+    income.debtDueDate ? income.debtDueDate.getTime() : null,
+    income.relatedDebtExpenseId ?? null,
     income.createdAt.getTime(),
     income.updatedAt.getTime(),
     income.isDeleted ? 1 : 0,
@@ -80,9 +95,11 @@ export async function insertIncome(income: Income): Promise<void> {
   await executeSql(
     `INSERT INTO incomes (
       id, local_id, server_id, user_id, account_id, amount, currency_code,
-      description, notes, category_id, date, created_at, updated_at,
+      description, notes, category_id, date,
+      is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_expense_id,
+      created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     incomeToParams(income),
   );
 }
@@ -91,9 +108,11 @@ export async function upsertIncome(income: Income): Promise<void> {
   await executeSql(
     `INSERT INTO incomes (
       id, local_id, server_id, user_id, account_id, amount, currency_code,
-      description, notes, category_id, date, created_at, updated_at,
+      description, notes, category_id, date,
+      is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_expense_id,
+      created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -105,6 +124,11 @@ export async function upsertIncome(income: Income): Promise<void> {
       notes = excluded.notes,
       category_id = COALESCE(excluded.category_id, category_id),
       date = excluded.date,
+      is_debt = excluded.is_debt,
+      is_debt_repayment = excluded.is_debt_repayment,
+      debt_contact_name = excluded.debt_contact_name,
+      debt_due_date = excluded.debt_due_date,
+      related_debt_expense_id = excluded.related_debt_expense_id,
       created_at = excluded.created_at,
       updated_at = excluded.updated_at,
       is_deleted = excluded.is_deleted,
@@ -147,6 +171,26 @@ export async function updateIncomeInDb(
     setClauses.push('date = ?');
     params.push(updates.date instanceof Date ? updates.date.getTime() : updates.date);
   }
+  if (updates.isDebt !== undefined) {
+    setClauses.push('is_debt = ?');
+    params.push(updates.isDebt ? 1 : 0);
+  }
+  if (updates.isDebtRepayment !== undefined) {
+    setClauses.push('is_debt_repayment = ?');
+    params.push(updates.isDebtRepayment ? 1 : 0);
+  }
+  if (updates.debtContactName !== undefined) {
+    setClauses.push('debt_contact_name = ?');
+    params.push(updates.debtContactName ?? null);
+  }
+  if (updates.debtDueDate !== undefined) {
+    setClauses.push('debt_due_date = ?');
+    params.push(updates.debtDueDate instanceof Date ? updates.debtDueDate.getTime() : (updates.debtDueDate ?? null));
+  }
+  if (updates.relatedDebtExpenseId !== undefined) {
+    setClauses.push('related_debt_expense_id = ?');
+    params.push(updates.relatedDebtExpenseId ?? null);
+  }
 
   setClauses.push('updated_at = ?');
   params.push(updatedAt.getTime());
@@ -173,4 +217,20 @@ export async function softDeleteIncomeInDb(
 
 export async function clearAllIncomes(): Promise<void> {
   await executeSql('DELETE FROM incomes', []);
+}
+
+export async function loadDebtIncomes(accountId: string): Promise<Income[]> {
+  const rows = await executeSql<IncomeRow>(
+    'SELECT * FROM incomes WHERE is_deleted = 0 AND account_id = ? AND is_debt = 1 ORDER BY date DESC',
+    [accountId],
+  );
+  return rows.map(rowToIncome);
+}
+
+export async function loadRepaymentIncomesForExpense(expenseId: string): Promise<Income[]> {
+  const rows = await executeSql<IncomeRow>(
+    'SELECT * FROM incomes WHERE is_deleted = 0 AND is_debt_repayment = 1 AND related_debt_expense_id = ? ORDER BY date ASC',
+    [expenseId],
+  );
+  return rows.map(rowToIncome);
 }

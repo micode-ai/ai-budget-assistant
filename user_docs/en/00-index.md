@@ -35,6 +35,7 @@
 14. [Investment Portfolio](./14-investments.md) — stocks, ETFs, crypto tracking and analytics
 15. [End-to-End Encryption](./15-encryption.md) — protect your data with E2EE
 16. [Export & Reports](./16-export-reports.md) — PDF/Excel/CSV reports, backups, email digests
+17. [Debts & Loans](./17-debts-and-loans.md) — track money lent and borrowed, repayments, due dates
 
 ## Supported Currencies
 

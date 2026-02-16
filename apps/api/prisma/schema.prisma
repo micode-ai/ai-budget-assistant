@@ -228,6 +228,11 @@ model Expense {
   isRecurring  Boolean  @default(false) @map("is_recurring")
   recurringId  String?  @map("recurring_id")
   source       String   @default("manual")
+  isDebt           Boolean   @default(false) @map("is_debt")
+  isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
+  debtContactName  String?   @map("debt_contact_name")
+  debtDueDate      DateTime? @map("debt_due_date") @db.Date
+  relatedDebtIncomeId String? @map("related_debt_income_id")
   isDeleted    Boolean  @default(false) @map("is_deleted")
   syncVersion  Int      @default(0) @map("sync_version")
   createdAt    DateTime @default(now()) @map("created_at")
@@ -250,6 +255,7 @@ model Expense {
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
+  @@index([accountId, isDebt])
   @@map("expenses")
 }
 
@@ -286,6 +292,11 @@ model Income {
   description  String?
   notes        String?
   date         DateTime @db.Date
+  isDebt           Boolean   @default(false) @map("is_debt")
+  isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
+  debtContactName  String?   @map("debt_contact_name")
+  debtDueDate      DateTime? @map("debt_due_date") @db.Date
+  relatedDebtExpenseId String? @map("related_debt_expense_id")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -303,6 +314,7 @@ model Income {
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
+  @@index([accountId, isDebt])
   @@map("incomes")
 }
 

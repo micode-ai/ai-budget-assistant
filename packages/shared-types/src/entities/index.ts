@@ -29,6 +29,8 @@ export type AssetType = 'stock' | 'crypto' | 'etf' | 'bond' | 'commodity';
 
 export type InvestmentTransactionType = 'buy' | 'sell';
 
+export type DebtStatus = 'active' | 'paid' | 'overdue';
+
 export interface NotificationPreferences {
   budgetAlerts: boolean;
   sharedAccountActivity: boolean;
@@ -142,6 +144,11 @@ export interface Expense {
   tagIds?: string[];
   categorySplits?: ExpenseCategorySplit[];
   projectId?: string;
+  isDebt: boolean;
+  isDebtRepayment: boolean;
+  debtContactName?: string;
+  debtDueDate?: Date;
+  relatedDebtIncomeId?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -164,6 +171,11 @@ export interface Income {
   tags?: IncomeTag[];
   tagIds?: string[];
   projectId?: string;
+  isDebt: boolean;
+  isDebtRepayment: boolean;
+  debtContactName?: string;
+  debtDueDate?: Date;
+  relatedDebtExpenseId?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -801,4 +813,21 @@ export interface ReportPreferences {
   weeklyEmailEnabled: boolean;
   weeklyEmailDay: number;
   monthlyDigestEnabled: boolean;
+}
+
+// Debt/Loan types
+
+export interface DebtSummary {
+  id: string;
+  type: 'lent' | 'borrowed';
+  contactName: string;
+  originalAmount: number;
+  currencyCode: Currency;
+  totalRepaid: number;
+  remainingAmount: number;
+  status: DebtStatus;
+  dueDate?: Date;
+  date: Date;
+  description?: string;
+  repayments: Array<{ id: string; amount: number; date: Date; description?: string }>;
 }

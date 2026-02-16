@@ -8,9 +8,10 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useIncomeStore } from '@/stores/incomeStore';
@@ -28,13 +29,21 @@ export default function NewIncomeScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const params = useLocalSearchParams<{
+    isDebtRepayment?: string;
+    relatedDebtExpenseId?: string;
+    debtContactName?: string;
+    currencyCode?: string;
+    amount?: string;
+  }>();
 
   const { addIncome } = useIncomeStore();
   const { user } = useAuthStore();
   const { getIncomeCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const { loadTags } = useTagStore();
 
-  const [amount, setAmount] = useState('');
+  const isDebtRepayment = params.isDebtRepayment === 'true';
+  const [amount, setAmount] = useState(params.amount || '');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -45,6 +54,11 @@ export default function NewIncomeScreen() {
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
+
+  // Debt state
+  const [isDebt, setIsDebt] = useState(false);
+  const [debtContactName, setDebtContactName] = useState(params.debtContactName || '');
+  const [debtDueDate, setDebtDueDate] = useState<Date | null>(null);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
@@ -75,6 +89,11 @@ export default function NewIncomeScreen() {
         categoryId: selectedCategory || undefined,
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
         date: new Date(),
+        isDebt: isDebt && !isDebtRepayment,
+        isDebtRepayment,
+        debtContactName: (isDebt || isDebtRepayment) ? debtContactName.trim() || undefined : undefined,
+        debtDueDate: isDebt && debtDueDate ? debtDueDate : undefined,
+        relatedDebtExpenseId: isDebtRepayment ? params.relatedDebtExpenseId : undefined,
       });
 
       router.back();
@@ -203,6 +222,54 @@ export default function NewIncomeScreen() {
             onTagsChange={setSelectedTagIds}
             description={description}
           />
+
+          {/* Debt Toggle */}
+          {isDebtRepayment ? (
+            <View style={styles.debtBanner}>
+              <Ionicons name="return-down-back" size={18} color={theme.colors.warning} />
+              <Text style={styles.debtBannerText}>{t('debt.isDebtRepayment')}</Text>
+              {params.debtContactName ? (
+                <Text style={styles.debtBannerContact}>{params.debtContactName}</Text>
+              ) : null}
+            </View>
+          ) : (
+            <View style={styles.fieldContainer}>
+              <View style={styles.debtToggleRow}>
+                <View style={styles.debtToggleInfo}>
+                  <Ionicons name="people-outline" size={20} color={theme.colors.textSecondary} />
+                  <Text style={styles.debtToggleLabel}>{t('debt.borrowMoney')}</Text>
+                </View>
+                <Switch value={isDebt} onValueChange={setIsDebt} />
+              </View>
+              {isDebt && (
+                <View style={styles.debtFields}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder={t('debt.contactNamePlaceholder')}
+                    placeholderTextColor={theme.colors.textTertiary}
+                    value={debtContactName}
+                    onChangeText={setDebtContactName}
+                  />
+                  <TouchableOpacity
+                    style={styles.debtDateButton}
+                    onPress={() => {
+                      setDebtDueDate(debtDueDate ? null : new Date(Date.now() + 30 * 86400000));
+                    }}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+                    <Text style={styles.debtDateText}>
+                      {debtDueDate
+                        ? `${t('debt.dueDate')}: ${debtDueDate.toLocaleDateString()}`
+                        : t('debt.setDueDate')}
+                    </Text>
+                    {debtDueDate && (
+                      <Ionicons name="close-circle" size={16} color={theme.colors.textTertiary} />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          )}
 
           {/* Notes */}
           <View style={styles.fieldContainer}>
@@ -364,5 +431,57 @@ const createStyles = (theme: Theme) => ({
   submitButtonText: {
     ...theme.textStyles.h3,
     color: theme.colors.textInverse,
+  },
+  // Debt styles
+  debtBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.warningLight || theme.colors.surfaceSecondary,
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[6],
+  },
+  debtBannerText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.warning,
+  },
+  debtBannerContact: {
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+    marginLeft: 'auto' as const,
+  },
+  debtToggleRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+  },
+  debtToggleInfo: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  debtToggleLabel: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+  },
+  debtFields: {
+    marginTop: theme.spacing[3],
+    gap: theme.spacing[3],
+  },
+  debtDateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+  },
+  debtDateText: {
+    flex: 1,
+    fontSize: 14,
+    color: theme.colors.textPrimary,
   },
 });

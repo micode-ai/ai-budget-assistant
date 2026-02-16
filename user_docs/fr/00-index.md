@@ -35,6 +35,7 @@
 14. [Portefeuille d'investissement](./14-investments.md) — suivi actions, ETFs, crypto et analyses
 15. [Chiffrement de bout en bout](./15-encryption.md) — protegez vos donnees avec E2EE
 16. [Export et rapports](./16-export-reports.md) — rapports PDF/Excel/CSV, sauvegardes, resumes par email
+17. [Dettes et Prets](./17-debts-and-loans.md) — suivi de l'argent prete et emprunte, remboursements, echeances
 
 ## Devises prises en charge
 

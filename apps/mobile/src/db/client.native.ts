@@ -481,6 +481,24 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Debt tracking fields for expenses
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN is_debt INTEGER DEFAULT 0`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN is_debt_repayment INTEGER DEFAULT 0`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN debt_contact_name TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN debt_due_date INTEGER`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN related_debt_income_id TEXT`); } catch {}
+
+    // Debt tracking fields for incomes
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN is_debt INTEGER DEFAULT 0`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN is_debt_repayment INTEGER DEFAULT 0`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN debt_contact_name TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN debt_due_date INTEGER`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN related_debt_expense_id TEXT`); } catch {}
+
+    // Debt indexes
+    expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_expenses_debt ON expenses(account_id, is_debt)`);
+    expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_incomes_debt ON incomes(account_id, is_debt)`);
+
     // Create indexes
     const indexes = [
       'CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date DESC)',

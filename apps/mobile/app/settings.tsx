@@ -839,6 +839,14 @@ export default function SettingsScreen() {
               </View>
               <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
             </TouchableOpacity>
+            <View style={styles.divider} />
+            <TouchableOpacity style={styles.fieldRow} onPress={() => router.push('/debts')}>
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="people-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('debt.debtsAndLoans')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
           </View>
         </View>
 

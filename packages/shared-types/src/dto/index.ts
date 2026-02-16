@@ -1,6 +1,6 @@
 // Data Transfer Objects for API communication
 
-import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory, AssetType, InvestmentTransactionType, PortfolioSummary, PortfolioPerformance, EncryptionTier, KeyWrappingMethod, PendingKeyGrant } from '../entities';
+import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory, AssetType, InvestmentTransactionType, PortfolioSummary, PortfolioPerformance, EncryptionTier, KeyWrappingMethod, PendingKeyGrant, DebtSummary } from '../entities';
 
 // Auth DTOs
 export interface RegisterDto {
@@ -48,6 +48,11 @@ export interface CreateExpenseDto {
   source: ExpenseSource;
   tagIds?: string[];
   projectId?: string;
+  isDebt?: boolean;
+  isDebtRepayment?: boolean;
+  debtContactName?: string;
+  debtDueDate?: string;
+  relatedDebtIncomeId?: string;
 }
 
 export interface UpdateExpenseDto {
@@ -66,6 +71,11 @@ export interface UpdateExpenseDto {
   } | null;
   tagIds?: string[];
   projectId?: string | null;
+  isDebt?: boolean;
+  isDebtRepayment?: boolean;
+  debtContactName?: string | null;
+  debtDueDate?: string | null;
+  relatedDebtIncomeId?: string | null;
 }
 
 // Income DTOs
@@ -79,6 +89,11 @@ export interface CreateIncomeDto {
   date: string; // ISO string
   tagIds?: string[];
   projectId?: string;
+  isDebt?: boolean;
+  isDebtRepayment?: boolean;
+  debtContactName?: string;
+  debtDueDate?: string;
+  relatedDebtExpenseId?: string;
 }
 
 export interface UpdateIncomeDto {
@@ -88,6 +103,11 @@ export interface UpdateIncomeDto {
   notes?: string;
   categoryId?: string;
   date?: string;
+  isDebt?: boolean;
+  isDebtRepayment?: boolean;
+  debtContactName?: string | null;
+  debtDueDate?: string | null;
+  relatedDebtExpenseId?: string | null;
 }
 
 // Budget DTOs
@@ -869,6 +889,19 @@ export interface ReportPreferencesResponse {
   weeklyEmailEnabled: boolean;
   weeklyEmailDay: number;
   monthlyDigestEnabled: boolean;
+}
+
+// Debt DTOs
+export interface DebtSummaryResponse {
+  lent: DebtSummary[];
+  borrowed: DebtSummary[];
+  totals: {
+    totalLent: number;
+    totalBorrowed: number;
+    totalLentRemaining: number;
+    totalBorrowedRemaining: number;
+    currencyCode: string;
+  };
 }
 
 // Admin DTOs

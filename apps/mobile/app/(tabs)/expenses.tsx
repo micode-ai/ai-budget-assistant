@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,6 +13,9 @@ import type { Expense, Income } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 type ActiveTab = 'expenses' | 'income';
+type DateRange = 'week' | 'month' | 'year' | 'all' | 'custom';
+
+const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
 
 export default function ExpensesScreen() {
   const { t } = useTranslation();
@@ -26,8 +29,8 @@ export default function ExpensesScreen() {
       setActiveTab(tab);
     }
   }, [tab]);
-  const { loadExpenses, getFilteredExpenses } = useExpenseStore();
-  const { loadIncomes, getFilteredIncomes } = useIncomeStore();
+  const { loadExpenses, getFilteredExpenses, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
+  const { loadIncomes, getFilteredIncomes, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();
   const incomes = getFilteredIncomes();
@@ -169,6 +172,69 @@ export default function ExpensesScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Period Filter */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.periodFilterScroll} contentContainerStyle={styles.periodFilterRow}>
+        {(['week', 'month', 'year', 'all', 'custom'] as DateRange[]).map((range) => {
+          const currentFilters = activeTab === 'expenses' ? expenseFilters : incomeFilters;
+          const isActive = currentFilters.dateRange === range;
+          return (
+            <TouchableOpacity
+              key={range}
+              style={[styles.periodChip, isActive && styles.periodChipActive]}
+              onPress={() => {
+                const now = new Date();
+                const update = range === 'custom'
+                  ? { dateRange: range as DateRange, customMonth: now.getMonth(), customYear: now.getFullYear() }
+                  : { dateRange: range as DateRange };
+                if (activeTab === 'expenses') {
+                  setExpenseFilters(update);
+                } else {
+                  setIncomeFilters(update);
+                }
+              }}
+            >
+              <Text style={[styles.periodChipText, isActive && styles.periodChipTextActive]}>
+                {t(`expenses.period${range.charAt(0).toUpperCase()}${range.slice(1)}` as any)}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+
+      {/* Month/Year Navigator (visible when custom is selected) */}
+      {(() => {
+        const currentFilters = activeTab === 'expenses' ? expenseFilters : incomeFilters;
+        const setCurrentFilters = activeTab === 'expenses' ? setExpenseFilters : setIncomeFilters;
+        if (currentFilters.dateRange !== 'custom') return null;
+
+        const m = currentFilters.customMonth ?? new Date().getMonth();
+        const y = currentFilters.customYear ?? new Date().getFullYear();
+        const monthLabel = t(`analytics.months.${MONTH_KEYS[m]}` as any);
+
+        const goPrev = () => {
+          const prevMonth = m === 0 ? 11 : m - 1;
+          const prevYear = m === 0 ? y - 1 : y;
+          setCurrentFilters({ customMonth: prevMonth, customYear: prevYear });
+        };
+        const goNext = () => {
+          const nextMonth = m === 11 ? 0 : m + 1;
+          const nextYear = m === 11 ? y + 1 : y;
+          setCurrentFilters({ customMonth: nextMonth, customYear: nextYear });
+        };
+
+        return (
+          <View style={styles.monthNavigator}>
+            <TouchableOpacity onPress={goPrev} style={styles.monthNavButton}>
+              <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
+            </TouchableOpacity>
+            <Text style={styles.monthNavLabel}>{monthLabel} {y}</Text>
+            <TouchableOpacity onPress={goNext} style={styles.monthNavButton}>
+              <Ionicons name="chevron-forward" size={22} color={theme.colors.primary} />
+            </TouchableOpacity>
+          </View>
+        );
+      })()}
 
       {activeTab === 'expenses' ? (
         <FlatList
@@ -385,6 +451,54 @@ const createStyles = (theme: Theme) => ({
   segmentTextActive: {
     color: theme.colors.textPrimary,
     fontWeight: '600' as const,
+  },
+  periodFilterScroll: {
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+  periodFilterRow: {
+    flexDirection: 'row' as const,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+    gap: theme.spacing[2],
+  },
+  periodChip: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius['3xl'],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderWidth: 1,
+    borderColor: theme.colors.borderLight,
+  },
+  periodChipActive: {
+    backgroundColor: theme.colors.primaryLight,
+    borderColor: theme.colors.primary,
+  },
+  periodChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textTertiary,
+  },
+  periodChipTextActive: {
+    color: theme.colors.primary,
+  },
+  monthNavigator: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingHorizontal: theme.spacing[4],
+    paddingBottom: theme.spacing[2],
+    gap: theme.spacing[3],
+  },
+  monthNavButton: {
+    padding: theme.spacing[2],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  monthNavLabel: {
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
+    minWidth: 120,
+    textAlign: 'center' as const,
   },
   listContent: {
     padding: theme.spacing[4],

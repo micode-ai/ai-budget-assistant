@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsUUID,
   IsDateString,
+  IsBoolean,
   IsArray,
   Min,
   Max,
@@ -44,6 +45,26 @@ export class CreateIncomeDto {
   @IsOptional()
   @IsUUID()
   projectId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isDebt?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isDebtRepayment?: boolean;
+
+  @IsOptional()
+  @IsString()
+  debtContactName?: string;
+
+  @IsOptional()
+  @IsDateString()
+  debtDueDate?: string;
+
+  @IsOptional()
+  @IsUUID()
+  relatedDebtExpenseId?: string;
 
   @IsOptional()
   @IsString()
@@ -90,6 +111,26 @@ export class UpdateIncomeDto {
   projectId?: string | null;
 
   @IsOptional()
+  @IsBoolean()
+  isDebt?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isDebtRepayment?: boolean;
+
+  @IsOptional()
+  @IsString()
+  debtContactName?: string;
+
+  @IsOptional()
+  @IsDateString()
+  debtDueDate?: string;
+
+  @IsOptional()
+  @IsUUID()
+  relatedDebtExpenseId?: string;
+
+  @IsOptional()
   @IsString()
   encryptedPayload?: string;
 
@@ -109,7 +150,7 @@ export class IncomeFiltersDto {
   @Transform(({ value }) => parseInt(value, 10))
   @IsNumber()
   @Min(1)
-  @Max(100)
+  @Max(10000)
   limit?: number;
 
   @IsOptional()
@@ -127,4 +168,12 @@ export class IncomeFiltersDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  isDebt?: boolean;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  isDebtRepayment?: boolean;
 }

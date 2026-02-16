@@ -110,6 +110,14 @@ export default function IncomeDetailScreen() {
           )}
         </View>
 
+        {/* Debt Repayment Banner */}
+        {income.isDebtRepayment && (
+          <View style={styles.debtRepaymentBanner}>
+            <Ionicons name="return-down-back" size={16} color={theme.colors.warning} />
+            <Text style={styles.debtRepaymentText}>{t('debt.isDebtRepayment')}</Text>
+          </View>
+        )}
+
         {/* Details */}
         <View style={styles.detailsCard}>
           {/* Description */}
@@ -215,6 +223,43 @@ export default function IncomeDetailScreen() {
                   <TagChip key={tag.id} name={tag.name} color={tag.color} size="small" />
                 ))}
               </View>
+            </View>
+          )}
+
+          {/* Debt Info Section */}
+          {income.isDebt && (
+            <View style={styles.debtSection}>
+              <View style={styles.debtHeader}>
+                <Ionicons name="people-outline" size={18} color={theme.colors.primary} />
+                <Text style={styles.debtHeaderText}>{t('debt.borrowed')}</Text>
+              </View>
+              {income.debtContactName && (
+                <View style={styles.debtRow}>
+                  <Text style={styles.debtRowLabel}>{t('debt.contact')}</Text>
+                  <Text style={styles.debtRowValue}>{income.debtContactName}</Text>
+                </View>
+              )}
+              {income.debtDueDate && (
+                <View style={styles.debtRow}>
+                  <Text style={styles.debtRowLabel}>{t('debt.dueDate')}</Text>
+                  <Text style={styles.debtRowValue}>{new Date(income.debtDueDate).toLocaleDateString()}</Text>
+                </View>
+              )}
+              <TouchableOpacity
+                style={styles.recordRepaymentButton}
+                onPress={() => router.push({
+                  pathname: '/expense/new',
+                  params: {
+                    isDebtRepayment: 'true',
+                    relatedDebtIncomeId: income.id,
+                    debtContactName: income.debtContactName || '',
+                    currencyCode: income.currencyCode,
+                  },
+                })}
+              >
+                <Ionicons name="return-down-back" size={18} color={theme.colors.success} />
+                <Text style={styles.recordRepaymentText}>{t('debt.recordRepayment')}</Text>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -399,5 +444,66 @@ const createStyles = (theme: Theme) => ({
   saveButtonText: {
     ...theme.textStyles.button,
     color: theme.colors.textInverse,
+  },
+  // Debt section
+  debtSection: {
+    marginTop: theme.spacing[4],
+    padding: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing[3],
+  },
+  debtHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  debtHeaderText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
+  },
+  debtRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+  },
+  debtRowLabel: {
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+  },
+  debtRowValue: {
+    fontSize: 14,
+    fontWeight: '500' as const,
+    color: theme.colors.textPrimary,
+  },
+  recordRepaymentButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.success,
+  },
+  recordRepaymentText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.success,
+  },
+  debtRepaymentBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.warningLight || theme.colors.surfaceSecondary,
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing[3],
+  },
+  debtRepaymentText: {
+    fontSize: 14,
+    fontWeight: '500' as const,
+    color: theme.colors.warning,
   },
 });

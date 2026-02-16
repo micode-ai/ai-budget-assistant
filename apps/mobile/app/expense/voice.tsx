@@ -121,6 +121,8 @@ export default function VoiceExpenseScreen() {
         date: new Date(),
         source: 'voice',
         isRecurring: false,
+        isDebt: false,
+        isDebtRepayment: false,
       });
 
       Alert.alert(t('common.success'), t('voice.success'), [

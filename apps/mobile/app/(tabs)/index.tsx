@@ -12,6 +12,7 @@ import { useWalletStore } from '@/stores/walletStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useGamificationStore } from '@/stores/gamificationStore';
 import { useInvestmentStore } from '@/stores/investmentStore';
+import { useDebtStore } from '@/stores/debtStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { getIntlLocale } from '@/i18n';
@@ -30,21 +31,30 @@ export default function DashboardScreen() {
   const { convertedIncomeTotal, convertedExpenseTotal, loadRates, rates } = useExchangeRateStore();
   const { level, levelProgress, currentStreak, loadProfile } = useGamificationStore();
   const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
+  const { lentDebts, borrowedDebts, loadDebts } = useDebtStore();
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
+  const convertedLentTotal = lentDebts.reduce(
+    (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
+  );
+  const convertedBorrowedTotal = borrowedDebts.reduce(
+    (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
+  );
+
   useEffect(() => {
     if (currentAccountId) {
-      loadIncomes();
+      // Load debts after expenses/incomes so SQLite has fresh data
+      Promise.all([loadExpenses(), loadIncomes()]).then(() => loadDebts());
       loadProfile();
       if (currentAccountType === 'investment') {
         loadInvestmentSummary();
       }
     }
-  }, [currentAccountId, loadIncomes, loadProfile, currentAccountType, loadInvestmentSummary]);
+  }, [currentAccountId, loadExpenses, loadIncomes, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
   const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
@@ -53,15 +63,17 @@ export default function DashboardScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const promises = [loadExpenses(), loadIncomes(), loadWallet(), loadRates(), loadProfile()];
+      const promises: Promise<any>[] = [loadWallet(), loadRates(), loadProfile()];
       if (currentAccountType === 'investment') {
         promises.push(loadInvestmentSummary());
       }
-      await Promise.all(promises);
+      // Load debts after expenses/incomes so SQLite has fresh server data
+      await Promise.all([loadExpenses(), loadIncomes(), ...promises]);
+      await loadDebts();
     } finally {
       setRefreshing(false);
     }
-  }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile, currentAccountType, loadInvestmentSummary]);
+  }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
   const remaining = totalBudget - convertedExpenseTotal;
 
@@ -215,6 +227,31 @@ export default function DashboardScreen() {
           </View>
           <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
         </TouchableOpacity>
+
+        {(lentDebts.length > 0 || borrowedDebts.length > 0) && (
+          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
+            </View>
+            <View style={styles.debtRow}>
+              <View style={styles.debtCol}>
+                <Ionicons name="arrow-up-circle-outline" size={20} color={theme.colors.success} />
+                <Text style={styles.debtLabel}>{t('debt.peopleOweYou')}</Text>
+                <Text style={[styles.debtAmount, { color: theme.colors.success }]}>
+                  {formatCurrency(convertedLentTotal, currency)}
+                </Text>
+              </View>
+              <View style={styles.debtDivider} />
+              <View style={styles.debtCol}>
+                <Ionicons name="arrow-down-circle-outline" size={20} color={theme.colors.danger} />
+                <Text style={styles.debtLabel}>{t('debt.youOwe')}</Text>
+                <Text style={[styles.debtAmount, { color: theme.colors.danger }]}>
+                  {formatCurrency(convertedBorrowedTotal, currency)}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -541,5 +578,27 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[3],
+  },
+  debtRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+  },
+  debtCol: {
+    flex: 1,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+  },
+  debtDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: theme.colors.borderLight,
+    marginHorizontal: theme.spacing[2],
+  },
+  debtLabel: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+  },
+  debtAmount: {
+    ...theme.textStyles.bodyLargeSemiBold,
   },
 });
