@@ -77,6 +77,18 @@ Schnellzugriff auf Geldborse-Funktionen:
 - **Saldo festlegen** — Anfangssalden fur deine Wahrungen festlegen
 - **Salden** — detaillierte Geldborsenaufschlusselung nach Wahrung anzeigen
 
+## Berichte & E-Mail
+
+Verwalte Berichts- und E-Mail-Einstellungen:
+
+- **Wöchentliche E-Mail-Zusammenfassung** — erhalte wöchentliche Ausgabenberichte per E-Mail (Business-Plan)
+- **Monatliche E-Mail-Zusammenfassung** — erhalte monatliche Finanzberichte per E-Mail (Pro & Business)
+- **Bericht generieren** — erstelle PDF-, Excel- oder CSV-Berichte deiner Finanzdaten
+- **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten (Ausgaben, Einkommen, Budgets, Kategorien usw.)
+- **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
+
+> **Hinweis:** Berichte werden 7 Tage lang gespeichert und dann automatisch gelöscht. Lade sie zeitnah herunter.
+
 ## Daten & Synchronisierung
 
 - **Zuletzt synchronisiert** — zeigt, wann deine Daten zuletzt mit dem Server synchronisiert wurden (z.B. "Vor 5 Min." oder "Nie")
@@ -101,4 +113,4 @@ Scrolle zum Ende der Einstellungen und tippe auf **Abmelden**. Ein Bestatigungsd
 
 ---
 
-*Siehe auch: [Konten](./09-accounts.md) | [Abonnement-Plane](./12-subscription.md)*
+*Siehe auch: [Konten](./09-accounts.md) | [Abonnement-Plane](./12-subscription.md) | [Export & Berichte](./16-export-reports.md)*

@@ -94,7 +94,7 @@ Una tabla que muestra los articulos de recibos que compras con mas frecuencia:
 
 ## Exportar
 
-Toca **Exportar informe** para generar y compartir un resumen de tus analisis.
+Toca **Exportar informe** para acceder a la pantalla de Exportacion e informes, donde puedes generar informes PDF, Excel o CSV, ver resumenes mensuales y gestionar copias de seguridad de datos. Ver [Exportacion e informes](./16-export-reports.md) para mas detalles.
 
 ## Preguntas frecuentes
 
@@ -106,4 +106,4 @@ Toca **Exportar informe** para generar y compartir un resumen de tus analisis.
 
 ---
 
-*Ver tambien: [Presupuestos](./05-budgets.md) | [Historia de gastos](./08-spending-story.md)*
+*Ver tambien: [Presupuestos](./05-budgets.md) | [Historia de gastos](./08-spending-story.md) | [Exportacion e informes](./16-export-reports.md)*

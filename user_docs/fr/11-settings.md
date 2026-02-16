@@ -77,6 +77,16 @@ Acces rapide aux fonctionnalites du portefeuille :
 - **Definir le solde** — definir les soldes initiaux pour vos devises
 - **Soldes** — voir la ventilation detaillee du portefeuille par devise
 
+## Rapports et email
+
+Gerez vos preferences de rapports et d'emails :
+
+- **Resume hebdomadaire par email** (Business) — activer/desactiver, choisir le jour de la semaine
+- **Resume mensuel par email** (Pro+) — activer/desactiver
+- **Generer un rapport** — ouvre l'ecran [Export et rapports](./16-export-reports.md)
+- **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte
+- **Restaurer la sauvegarde** — importer un fichier de sauvegarde precedemment exporte
+
 ## Donnees et synchronisation
 
 - **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
@@ -101,4 +111,4 @@ Faites defiler jusqu'en bas des Parametres et appuyez sur **Se deconnecter**. Un
 
 ---
 
-*Voir aussi : [Comptes](./09-accounts.md) | [Abonnement](./12-subscription.md)*
+*Voir aussi : [Comptes](./09-accounts.md) | [Abonnement](./12-subscription.md) | [Export et rapports](./16-export-reports.md)*

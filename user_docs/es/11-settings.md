@@ -77,6 +77,18 @@ Acceso rapido a las funciones de billetera:
 - **Establecer saldo** — establece saldos iniciales para tus monedas
 - **Saldos** — consulta el desglose detallado de la billetera por moneda
 
+## Informes y email
+
+Configura la generacion de informes automaticos y exportacion de datos:
+
+- **Resumen semanal por email** — recibe un resumen semanal de gastos con principales categorias (requiere plan Business)
+- **Resumen mensual por email** — recibe un resumen mensual con comparacion mes a mes (requiere plan Pro o Business)
+- **Generar informe** — crea informes PDF, Excel o CSV bajo demanda
+- **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
+- **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
+
+Ver [Exportacion e informes](./16-export-reports.md) para mas detalles sobre formatos de informe y opciones de copia de seguridad.
+
 ## Datos y sincronizacion
 
 - **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
@@ -101,4 +113,4 @@ Desplazate hasta el final de Ajustes y toca **Cerrar sesion**. Aparecera un dial
 
 ---
 
-*Ver tambien: [Cuentas](./09-accounts.md) | [Planes de suscripcion](./12-subscription.md)*
+*Ver tambien: [Cuentas](./09-accounts.md) | [Planes de suscripcion](./12-subscription.md) | [Exportacion e informes](./16-export-reports.md)*

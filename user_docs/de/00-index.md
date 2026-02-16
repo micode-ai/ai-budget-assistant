@@ -12,6 +12,7 @@
 - **Anlageportfolio** — verfolge Aktien, ETFs, Krypto, Anleihen und Rohstoffe mit aktuellen Preisen und Analysen
 - **Budgets** — Ausgabenlimits mit Echtzeit-Fortschrittsverfolgung und Warnungen festlegen
 - **Interaktive Analysen** — Diagramme mit Drill-Down, Kategorieaufschlusselungen und Trendanalyse
+- **Export & Berichte** — PDF/Excel/CSV-Berichte, monatliche Zusammenfassungen, verschlüsselte Backups, E-Mail-Berichte
 - **Mehrere Konten** — Personlich, Gemeinsam und Geschaftlich mit rollenbasierter Zugriffskontrolle (Eigentumer, Bearbeiter, Betrachter)
 - **Offline-First** — Daten werden lokal gespeichert und automatisch synchronisiert, wenn du online bist
 - **8 Sprachen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
@@ -33,6 +34,7 @@
 13. [Erfolge & Gamification](./13-gamification.md) — Serien, XP, Level und Abzeichen
 14. [Anlageportfolio](./14-investments.md) — Aktien, ETFs, Krypto Tracking und Analysen
 15. [Ende-zu-Ende-Verschlusselung](./15-encryption.md) — Datenschutz mit E2EE
+16. [Export & Berichte](./16-export-reports.md) — PDF/Excel/CSV-Berichte, Backups, E-Mail-Zusammenfassungen
 
 ## Unterstutzte Wahrungen
 

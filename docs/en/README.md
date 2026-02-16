@@ -32,6 +32,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **Investment Portfolio** - Track stocks, ETFs, crypto, bonds, and commodities with real-time prices from Twelve Data API
 - **Portfolio Analytics** - Performance charts with benchmark comparison (SPY, QQQ, DIA, IWM), allocation breakdown, top gainers/losers
 - **Investment Transactions** - Record buy/sell transactions with price per unit, fees, and notes
+- **Export & Reports** - PDF/Excel/CSV report generation, monthly digests, encrypted backups, email reports (weekly/monthly)
 - **Gamification** - Achievements, daily streaks, XP/levels, and virtual badges to encourage consistent tracking habits
 - **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits
 - **Admin Dashboard** - System stats, subscription breakdown, and per-user AI usage monitoring
@@ -85,6 +86,7 @@ ai-budget-assistant/
 │           │   ├── insightsStore.ts
 │           │   ├── gamificationStore.ts
 │           │   ├── investmentStore.ts
+│           │   ├── reportStore.ts
 │           │   ├── tagStore.ts
 │           │   ├── projectStore.ts
 │           │   └── categoryStore.ts

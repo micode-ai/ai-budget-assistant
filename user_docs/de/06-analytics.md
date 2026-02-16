@@ -94,7 +94,7 @@ Eine Tabelle mit deinen am haufigsten gekauften Belegartikeln:
 
 ## Export
 
-Tippe auf **Bericht exportieren**, um eine Zusammenfassung deiner Analysen zu generieren und zu teilen.
+Tippe auf **Bericht exportieren**, um zum Export & Berichte-Bildschirm zu gelangen. Dort kannst du PDF-, Excel- oder CSV-Berichte generieren, monatliche Zusammenfassungen ansehen und Daten-Backups verwalten. Siehe [Export & Berichte](./16-export-reports.md) für Details.
 
 ## FAQ
 
@@ -106,4 +106,4 @@ Tippe auf **Bericht exportieren**, um eine Zusammenfassung deiner Analysen zu ge
 
 ---
 
-*Siehe auch: [Budgets](./05-budgets.md) | [Ausgabengeschichte](./08-spending-story.md)*
+*Siehe auch: [Budgets](./05-budgets.md) | [Ausgabengeschichte](./08-spending-story.md) | [Export & Berichte](./16-export-reports.md)*

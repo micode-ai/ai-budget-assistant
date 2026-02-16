@@ -1,0 +1,227 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import { PrismaService } from '../../database/prisma.service';
+import { MailService } from '../mail/mail.service';
+
+@Injectable()
+export class ReportSchedulerService {
+  private readonly logger = new Logger(ReportSchedulerService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
+  ) {}
+
+  // Runs every day at 08:00 UTC — process weekly emails
+  @Cron('0 8 * * *')
+  async processWeeklyEmails() {
+    const today = new Date().getDay(); // 0=Sun, 1=Mon, ...
+
+    const users = await this.prisma.user.findMany({
+      where: {
+        weeklyEmailEnabled: true,
+        weeklyEmailDay: today,
+        isActive: true,
+      },
+      include: {
+        subscription: true,
+        accountMembers: {
+          include: {
+            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true } },
+          },
+        },
+      },
+    });
+
+    this.logger.log(`Processing weekly emails for ${users.length} users`);
+
+    for (const user of users) {
+      // Business tier only
+      if (user.subscription?.tier !== 'business') continue;
+
+      for (const membership of user.accountMembers) {
+        const account = membership.account;
+        // Skip fully encrypted accounts
+        if (account.encryptionTier >= 2) continue;
+
+        try {
+          const now = new Date();
+          const weekStart = new Date(now);
+          weekStart.setDate(now.getDate() - 7);
+
+          const [expenseAgg, incomeAgg] = await Promise.all([
+            this.prisma.expense.aggregate({
+              where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+              _sum: { amount: true },
+            }),
+            this.prisma.income.aggregate({
+              where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+              _sum: { amount: true },
+            }),
+          ]);
+
+          const totalExpenses = Number(expenseAgg._sum.amount || 0);
+          const totalIncome = Number(incomeAgg._sum.amount || 0);
+          const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+
+          // Top categories
+          const categoryBreakdown = await this.prisma.expense.groupBy({
+            by: ['categoryId'],
+            where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+            _sum: { amount: true },
+            orderBy: { _sum: { amount: 'desc' } },
+            take: 5,
+          });
+
+          const categoryIds = categoryBreakdown.map(c => c.categoryId).filter(Boolean) as string[];
+          const categoryNames = await this.prisma.category.findMany({
+            where: { id: { in: categoryIds } },
+            select: { id: true, name: true },
+          });
+          const nameMap = new Map(categoryNames.map(c => [c.id, c.name]));
+
+          const topCategories = categoryBreakdown.map(c => ({
+            name: nameMap.get(c.categoryId || '') || 'Uncategorized',
+            amount: Number(c._sum.amount || 0),
+            percentage: totalExpenses > 0 ? (Number(c._sum.amount || 0) / totalExpenses) * 100 : 0,
+          }));
+
+          const periodLabel = `${weekStart.toISOString().split('T')[0]} — ${now.toISOString().split('T')[0]}`;
+
+          await this.mailService.sendWeeklyReport({
+            to: user.email,
+            userName: user.name,
+            accountName: account.name,
+            periodLabel,
+            totalIncome,
+            totalExpenses,
+            savingsRate: Math.round(savingsRate * 10) / 10,
+            topCategories,
+            currencyCode: account.currencyCode,
+          });
+        } catch (error) {
+          this.logger.error(`Weekly email failed for user ${user.id}, account ${account.id}: ${error}`);
+        }
+      }
+    }
+  }
+
+  // Runs on the 1st of every month at 09:00 UTC
+  @Cron('0 9 1 * *')
+  async processMonthlyDigests() {
+    const users = await this.prisma.user.findMany({
+      where: {
+        monthlyDigestEnabled: true,
+        isActive: true,
+      },
+      include: {
+        subscription: true,
+        accountMembers: {
+          include: {
+            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true } },
+          },
+        },
+      },
+    });
+
+    this.logger.log(`Processing monthly digests for ${users.length} users`);
+
+    const TIER_HIERARCHY: Record<string, number> = { free: 0, pro: 1, business: 2 };
+
+    for (const user of users) {
+      const tier = user.subscription?.tier || 'free';
+      if (TIER_HIERARCHY[tier] < TIER_HIERARCHY['pro']) continue;
+
+      for (const membership of user.accountMembers) {
+        const account = membership.account;
+        if (account.encryptionTier >= 2) continue;
+
+        try {
+          const now = new Date();
+          const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          const prevMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+          const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+          const twoMonthsAgoEnd = new Date(now.getFullYear(), now.getMonth() - 1, 0);
+
+          const [expAgg, incAgg, prevExpAgg, prevIncAgg] = await Promise.all([
+            this.prisma.expense.aggregate({
+              where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
+              _sum: { amount: true },
+            }),
+            this.prisma.income.aggregate({
+              where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
+              _sum: { amount: true },
+            }),
+            this.prisma.expense.aggregate({
+              where: { accountId: account.id, isDeleted: false, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
+              _sum: { amount: true },
+            }),
+            this.prisma.income.aggregate({
+              where: { accountId: account.id, isDeleted: false, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
+              _sum: { amount: true },
+            }),
+          ]);
+
+          const totalExpenses = Number(expAgg._sum.amount || 0);
+          const totalIncome = Number(incAgg._sum.amount || 0);
+          const prevTotalExpenses = Number(prevExpAgg._sum.amount || 0);
+          const prevTotalIncome = Number(prevIncAgg._sum.amount || 0);
+
+          const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+          const incomeChange = prevTotalIncome > 0 ? ((totalIncome - prevTotalIncome) / prevTotalIncome) * 100 : 0;
+          const expenseChange = prevTotalExpenses > 0 ? ((totalExpenses - prevTotalExpenses) / prevTotalExpenses) * 100 : 0;
+
+          const categoryBreakdown = await this.prisma.expense.groupBy({
+            by: ['categoryId'],
+            where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
+            _sum: { amount: true },
+            orderBy: { _sum: { amount: 'desc' } },
+            take: 5,
+          });
+
+          const categoryIds = categoryBreakdown.map(c => c.categoryId).filter(Boolean) as string[];
+          const categoryNames = await this.prisma.category.findMany({
+            where: { id: { in: categoryIds } },
+            select: { id: true, name: true },
+          });
+          const nameMap = new Map(categoryNames.map(c => [c.id, c.name]));
+
+          const topCategories = categoryBreakdown.map(c => ({
+            name: nameMap.get(c.categoryId || '') || 'Uncategorized',
+            amount: Number(c._sum.amount || 0),
+            percentage: totalExpenses > 0 ? (Number(c._sum.amount || 0) / totalExpenses) * 100 : 0,
+          }));
+
+          const monthLabel = prevMonth.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+
+          await this.mailService.sendMonthlyDigest({
+            to: user.email,
+            userName: user.name,
+            accountName: account.name,
+            periodLabel: monthLabel,
+            totalIncome,
+            totalExpenses,
+            savingsRate: Math.round(savingsRate * 10) / 10,
+            topCategories,
+            incomeChange: Math.round(incomeChange * 10) / 10,
+            expenseChange: Math.round(expenseChange * 10) / 10,
+            currencyCode: account.currencyCode,
+          });
+        } catch (error) {
+          this.logger.error(`Monthly digest failed for user ${user.id}, account ${account.id}: ${error}`);
+        }
+      }
+    }
+  }
+
+  // Cleanup expired reports — runs daily at 03:00 UTC
+  @Cron('0 3 * * *')
+  async cleanupExpiredReports() {
+    const result = await this.prisma.generatedReport.deleteMany({
+      where: { expiresAt: { lt: new Date() } },
+    });
+    if (result.count > 0) {
+      this.logger.log(`Cleaned up ${result.count} expired reports`);
+    }
+  }
+}

@@ -19,6 +19,12 @@ AI Budget Assistant propose trois niveaux d'abonnement. Chaque nouvel utilisateu
 | **Devises illimitees** | — | Oui | Oui |
 | **Histoire des depenses** | — | Oui | Oui |
 | **Aperçus IA** | — | Oui | Oui |
+| **Export CSV** | Oui | Oui | Oui |
+| **Rapports PDF/Excel** | — | Oui | Oui |
+| **Resume mensuel** | — | Oui | Oui |
+| **Rapport hebdomadaire par email** | — | — | Oui |
+| **Resume mensuel par email** | — | Oui | Oui |
+| **Sauvegarde chiffree** | Oui | Oui | Oui |
 | **Rapports avances** | — | — | Oui |
 
 ## Plan Gratuit
@@ -98,4 +104,4 @@ Suivez votre utilisation de l'IA depuis Parametres > Abonnement :
 
 ---
 
-*Voir aussi : [Chat IA](./07-ai-chat.md) | [Parametres](./11-settings.md)*
+*Voir aussi : [Chat IA](./07-ai-chat.md) | [Parametres](./11-settings.md) | [Export et rapports](./16-export-reports.md)*

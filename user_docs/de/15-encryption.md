@@ -100,6 +100,11 @@ Wenn die Verschlusselung fur ein gemeinsames Konto aktiviert ist:
 |---|---|---|
 | Analysen und Diagramme | Funktioniert vollstandig | Lokale Berechnung |
 | Budget-Warnungen | Funktioniert vollstandig | Nicht verfugbar |
+| PDF/Excel-Berichte | Teilweise (leere Namen) | Nicht verfugbar |
+| Monatliche Zusammenfassung | Funktioniert vollstandig | Nicht verfugbar |
+| E-Mail-Berichte | Teilweise (leere Namen) | Nicht verfugbar |
+| CSV-Export | Funktioniert vollstandig | Funktioniert vollstandig |
+| Backup Export/Restore | Funktioniert vollstandig | Funktioniert vollstandig |
 | KI-Chat | Teilweise (keine Beschreibungen) | Nicht verfugbar |
 | KI-Insights | Teilweise | Nicht verfugbar |
 | Ausgaben-Story | Teilweise | Nicht verfugbar |
@@ -125,4 +130,4 @@ Wenn die Verschlusselung fur ein gemeinsames Konto aktiviert ist:
 
 ---
 
-*Siehe auch: [Einstellungen](./11-settings.md) | [Konten](./09-accounts.md)*
+*Siehe auch: [Einstellungen](./11-settings.md) | [Konten](./09-accounts.md) | [Export & Berichte](./16-export-reports.md)*

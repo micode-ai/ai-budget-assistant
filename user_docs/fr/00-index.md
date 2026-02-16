@@ -12,6 +12,7 @@
 - **Portefeuille d'investissement** — suivez actions, ETFs, cryptomonnaies, obligations et matieres premieres avec prix en temps reel et analyses
 - **Budgets** — definissez des limites de depenses avec suivi en temps reel et alertes
 - **Analyses interactives** — graphiques avec exploration detaillee, repartition par categorie et analyse des tendances
+- **Export et rapports** — rapports PDF/Excel/CSV, resumes mensuels, sauvegardes chiffrees, rapports par email
 - **Comptes multiples** — comptes Personnel, Partage et Professionnel avec controle d'acces base sur les roles (Proprietaire, Editeur, Observateur)
 - **Mode hors-ligne** — les donnees sont enregistrees localement et synchronisees automatiquement une fois en ligne
 - **8 langues** — English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa, Беларуская
@@ -33,6 +34,7 @@
 13. [Succes et Gamification](./13-gamification.md) — series, XP, niveaux et badges
 14. [Portefeuille d'investissement](./14-investments.md) — suivi actions, ETFs, crypto et analyses
 15. [Chiffrement de bout en bout](./15-encryption.md) — protegez vos donnees avec E2EE
+16. [Export et rapports](./16-export-reports.md) — rapports PDF/Excel/CSV, sauvegardes, resumes par email
 
 ## Devises prises en charge
 

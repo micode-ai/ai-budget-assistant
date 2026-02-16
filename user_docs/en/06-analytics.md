@@ -94,7 +94,7 @@ A table showing your most frequently purchased receipt items:
 
 ## Export
 
-Tap **Export Report** to generate and share a summary of your analytics.
+Tap **Export Report** to open the [Export & Reports](./16-export-reports.md) screen where you can generate PDF, Excel, and CSV reports, view monthly digests, and manage data backups.
 
 ## FAQ
 
@@ -106,4 +106,4 @@ Tap **Export Report** to generate and share a summary of your analytics.
 
 ---
 
-*See also: [Budgets](./05-budgets.md) | [Spending Story](./08-spending-story.md)*
+*See also: [Budgets](./05-budgets.md) | [Spending Story](./08-spending-story.md) | [Export & Reports](./16-export-reports.md)*

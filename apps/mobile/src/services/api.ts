@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse, GenerateReportDto, GenerateReportResponse, ReportListResponse, MonthlyDigestResponse, CreateBackupResponse, RestoreBackupResponse, BackupHistoryItem, UpdateReportPreferencesDto, ReportPreferencesResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -896,6 +896,84 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ recoveryKey }),
     });
+  }
+
+  // Reports endpoints
+  async generateReport(dto: GenerateReportDto) {
+    return this.request<GenerateReportResponse>('/reports/generate', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async listReports() {
+    return this.request<ReportListResponse>('/reports');
+  }
+
+  async downloadReport(reportId: string): Promise<Blob> {
+    const token = await this.getAuthToken();
+    const accountId = this.accountIdGetter?.();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (accountId) headers['X-Account-Id'] = accountId;
+
+    const response = await fetch(`${this.baseUrl}/reports/${reportId}/download`, { headers });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'Download failed' }));
+      throw new Error(error.message || `HTTP ${response.status}`);
+    }
+    return response.blob();
+  }
+
+  async getMonthlyDigest(month: string) {
+    return this.request<MonthlyDigestResponse>(`/reports/monthly-digest?month=${month}`);
+  }
+
+  async getReportPreferences() {
+    return this.request<ReportPreferencesResponse>('/reports/preferences');
+  }
+
+  async updateReportPreferences(dto: UpdateReportPreferencesDto) {
+    return this.request<ReportPreferencesResponse>('/reports/preferences', {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  // Backup endpoints
+  async exportBackup() {
+    return this.request<CreateBackupResponse>('/backups/export', {
+      method: 'POST',
+    });
+  }
+
+  async downloadBackupData(): Promise<Blob> {
+    const token = await this.getAuthToken();
+    const accountId = this.accountIdGetter?.();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (accountId) headers['X-Account-Id'] = accountId;
+
+    const response = await fetch(`${this.baseUrl}/backups/export`, {
+      method: 'POST',
+      headers,
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'Export failed' }));
+      throw new Error(error.message || `HTTP ${response.status}`);
+    }
+    return response.blob();
+  }
+
+  async restoreBackup(data: string, overwrite: boolean) {
+    return this.request<RestoreBackupResponse>('/backups/restore', {
+      method: 'POST',
+      body: JSON.stringify({ data, overwrite }),
+    });
+  }
+
+  async getBackupHistory() {
+    return this.request<BackupHistoryItem[]>('/backups/history');
   }
 
   // Admin endpoints

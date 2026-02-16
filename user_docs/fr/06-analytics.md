@@ -94,7 +94,7 @@ Un tableau affichant vos articles de recus les plus frequemment achetes :
 
 ## Exporter
 
-Appuyez sur **Exporter le rapport** pour generer et partager un resume de vos analyses.
+Appuyez sur **Exporter le rapport** pour acceder a l'ecran Export et rapports. Vous pouvez y generer des rapports PDF, Excel ou CSV, consulter votre resume mensuel et gerer les sauvegardes de donnees. Consultez le guide [Export et rapports](./16-export-reports.md) pour plus de details.
 
 ## FAQ
 
@@ -106,4 +106,4 @@ Appuyez sur **Exporter le rapport** pour generer et partager un resume de vos an
 
 ---
 
-*Voir aussi : [Budgets](./05-budgets.md) | [Histoire des depenses](./08-spending-story.md)*
+*Voir aussi : [Budgets](./05-budgets.md) | [Histoire des depenses](./08-spending-story.md) | [Export et rapports](./16-export-reports.md)*

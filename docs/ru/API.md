@@ -2621,6 +2621,306 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Отчёты
+
+Все эндпоинты отчётов требуют JWT аутентификацию и заголовок `X-Account-Id`.
+
+### Сгенерировать отчёт
+
+```http
+POST /reports/generate
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "format": "pdf",
+  "startDate": "2025-01-01",
+  "endDate": "2025-01-31",
+  "categoryIds": ["category-uuid-1", "category-uuid-2"],
+  "tagIds": ["tag-uuid-1"],
+  "projectIds": ["project-uuid-1"],
+  "currencyCode": "USD",
+  "includeExpenses": true,
+  "includeIncomes": true
+}
+```
+
+**Значения format**: `csv`, `pdf`, `excel`
+
+**Ответ** `201 Created`
+```json
+{
+  "reportId": "uuid",
+  "status": "completed",
+  "downloadUrl": "/reports/uuid/download",
+  "fileName": "report-2025-01-01-2025-01-31.pdf",
+  "fileSize": 102400
+}
+```
+
+**Примечания:**
+- Формат `csv` доступен на всех тарифах
+- Форматы `pdf` и `excel` требуют подписку Pro+
+- Аккаунты с `encryptionTier >= 2` получат ответ `403 Forbidden`
+- `categoryIds`, `tagIds`, `projectIds`, `currencyCode`, `includeExpenses` и `includeIncomes` — опциональные фильтры
+
+### Список отчётов
+
+```http
+GET /reports
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "reports": [
+    {
+      "id": "uuid",
+      "format": "pdf",
+      "status": "completed",
+      "fileName": "report-2025-01-01-2025-01-31.pdf",
+      "fileSize": 102400,
+      "createdAt": "2025-02-01T08:00:00Z",
+      "expiresAt": "2025-02-08T08:00:00Z"
+    }
+  ]
+}
+```
+
+**Примечания:**
+- Возвращает последние 20 отчётов
+- Отчёты истекают через 7 дней
+
+### Скачать отчёт
+
+```http
+GET /reports/:id/download
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — Бинарный файл
+
+`Content-Type` зависит от формата:
+| Формат | Content-Type |
+|--------|-------------|
+| `csv` | `text/csv` |
+| `pdf` | `application/pdf` |
+| `excel` | `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` |
+
+Ответ включает заголовок `Content-Disposition: attachment; filename="<fileName>"`.
+
+### Ежемесячный дайджест
+
+```http
+GET /reports/monthly-digest?month=2025-01
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "digest": {
+    "periodLabel": "Январь 2025",
+    "totalIncome": 200000.00,
+    "totalExpenses": 128000.00,
+    "savingsRate": 36.0,
+    "topCategories": [
+      {
+        "categoryId": "uuid",
+        "name": "Продукты",
+        "amount": 34000.00,
+        "percentage": 26.56
+      },
+      {
+        "categoryId": "uuid",
+        "name": "Аренда",
+        "amount": 48000.00,
+        "percentage": 37.50
+      }
+    ],
+    "incomeChange": 5.2,
+    "expenseChange": -3.1
+  },
+  "generatedAt": "2025-02-01T08:00:00Z"
+}
+```
+
+**Примечания:**
+- Требуется подписка Pro+
+- Результаты кэшируются на 7 дней
+
+### Получить настройки отчётов
+
+```http
+GET /reports/preferences
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "weeklyEmailEnabled": false,
+  "weeklyEmailDay": 1,
+  "monthlyDigestEnabled": true
+}
+```
+
+### Обновить настройки отчётов
+
+```http
+PATCH /reports/preferences
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "weeklyEmailEnabled": true,
+  "weeklyEmailDay": 1,
+  "monthlyDigestEnabled": true
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "weeklyEmailEnabled": true,
+  "weeklyEmailDay": 1,
+  "monthlyDigestEnabled": true
+}
+```
+
+**Примечания:**
+- `weeklyEmailDay` принимает значения `0` (воскресенье) — `6` (суббота)
+- `weeklyEmailEnabled` требует подписку Business
+- `monthlyDigestEnabled` требует подписку Pro+
+
+---
+
+## Резервное копирование
+
+Все эндпоинты резервного копирования требуют JWT аутентификацию и заголовок `X-Account-Id`.
+
+### Экспорт резервной копии
+
+```http
+POST /backups/export
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — JSON-файл резервной копии со всеми данными аккаунта.
+```json
+{
+  "version": "1.0",
+  "exportedAt": "2025-02-15T12:00:00Z",
+  "accountId": "account-uuid",
+  "encrypted": false,
+  "entityCounts": {
+    "expenses": 245,
+    "incomes": 24,
+    "budgets": 5,
+    "categories": 18,
+    "tags": 12,
+    "projects": 3,
+    "wallets": 2,
+    "transfers": 8,
+    "currencyExchanges": 4
+  },
+  "data": {
+    "expenses": [],
+    "incomes": [],
+    "budgets": [],
+    "categories": [],
+    "tags": [],
+    "projects": [],
+    "wallets": [],
+    "transfers": [],
+    "currencyExchanges": []
+  }
+}
+```
+
+**Примечания:**
+- Доступно на всех тарифах
+- Массивы `data` содержат полные записи каждого типа сущностей
+
+### Восстановление из резервной копии
+
+```http
+POST /backups/restore
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "data": "{\"version\":\"1.0\",\"exportedAt\":\"2025-02-15T12:00:00Z\",...}",
+  "overwrite": false
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "restoredCounts": {
+    "expenses": 245,
+    "incomes": 24,
+    "budgets": 5,
+    "categories": 18,
+    "tags": 12,
+    "projects": 3,
+    "wallets": 2,
+    "transfers": 8,
+    "currencyExchanges": 4
+  },
+  "errors": []
+}
+```
+
+**Примечания:**
+- `data` — JSON-строка ранее экспортированной резервной копии
+- При `overwrite: true` существующие данные аккаунта полностью заменяются; при `false` данные из копии объединяются с существующими записями
+- Массив `errors` содержит ошибки на уровне отдельных сущностей, возникшие при восстановлении
+
+### История резервных копий
+
+```http
+GET /backups/history
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "version": "1.0",
+    "entityCounts": {
+      "expenses": 245,
+      "incomes": 24,
+      "budgets": 5,
+      "categories": 18,
+      "tags": 12,
+      "projects": 3,
+      "wallets": 2,
+      "transfers": 8,
+      "currencyExchanges": 4
+    },
+    "encrypted": false,
+    "fileSize": 524288,
+    "createdAt": "2025-02-15T12:00:00Z"
+  }
+]
+```
+
+---
+
 ## Ответы с ошибками
 
 ### Формат ошибки

@@ -26,6 +26,9 @@ import { GamificationModule } from './modules/gamification/gamification.module';
 import { AccountTransferModule } from './modules/account-transfers/account-transfer.module';
 import { InvestmentsModule } from './modules/investments/investments.module';
 import { EncryptionModule } from './modules/encryption/encryption.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ReportsModule } from './modules/reports/reports.module';
+import { BackupsModule } from './modules/backups/backups.module';
 
 @Module({
   imports: [
@@ -42,6 +45,9 @@ import { EncryptionModule } from './modules/encryption/encryption.module';
         limit: 100, // 100 requests per minute
       },
     ]),
+
+    // Scheduling
+    ScheduleModule.forRoot(),
 
     // Database
     DatabaseModule,
@@ -73,6 +79,8 @@ import { EncryptionModule } from './modules/encryption/encryption.module';
     AccountTransferModule,
     InvestmentsModule,
     EncryptionModule,
+    ReportsModule,
+    BackupsModule,
   ],
 })
 export class AppModule {}

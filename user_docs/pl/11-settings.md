@@ -77,6 +77,16 @@ Szybki dostep do funkcji portfela:
 - **Ustaw saldo** — ustaw salda poczatkowe dla swoich walut
 - **Salda** — przegladaj szczegolowy podzial portfela wedlug waluty
 
+## Raporty i e-mail
+
+Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
+
+- **Tygodniowy raport e-mail** — otrzymuj tygodniowy przeglad wydatkow z glownymi kategoriami (plan Business)
+- **Miesieczny raport e-mail** — otrzymuj miesieczne podsumowanie z porownaniem miesiac do miesiaca (plan Pro i Business)
+- **Generuj raport** — otworz ekran Eksport i raporty, aby wygenerowac raporty PDF, Excel lub CSV
+- **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
+- **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
+
 ## Dane i synchronizacja
 
 - **Ostatnia synchronizacja** — pokazuje, kiedy dane zostaly ostatnio zsynchronizowane z serwerem (np. "5 min temu" lub "Nigdy")
@@ -101,4 +111,4 @@ Przewin na dol Ustawien i dotknij **Wyloguj sie**. Pojawi sie okno potwierdzenia
 
 ---
 
-*Zobacz takze: [Konta](./09-accounts.md) | [Plany subskrypcji](./12-subscription.md)*
+*Zobacz takze: [Konta](./09-accounts.md) | [Plany subskrypcji](./12-subscription.md) | [Eksport i raporty](./16-export-reports.md)*

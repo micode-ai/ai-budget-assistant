@@ -77,6 +77,16 @@ Quick access to wallet features:
 - **Set Balance** — set initial balances for your currencies
 - **Balances** — view detailed wallet breakdown by currency
 
+## Reports & Email
+
+Manage your report and email preferences:
+
+- **Weekly Email Summary** (Business) — toggle on/off, choose the day of week
+- **Monthly Digest Email** (Pro+) — toggle on/off
+- **Generate Report** — opens the [Export & Reports](./16-export-reports.md) screen
+- **Export Backup** — creates a full JSON backup of your account data
+- **Restore Backup** — import a previously exported backup file
+
 ## Data & Sync
 
 - **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
@@ -101,4 +111,4 @@ Scroll to the bottom of Settings and tap **Log Out**. A confirmation dialog will
 
 ---
 
-*See also: [Accounts](./09-accounts.md) | [Subscription Plans](./12-subscription.md)*
+*See also: [Accounts](./09-accounts.md) | [Subscription Plans](./12-subscription.md) | [Export & Reports](./16-export-reports.md)*

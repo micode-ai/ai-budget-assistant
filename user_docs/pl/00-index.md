@@ -12,6 +12,7 @@
 - **Portfel inwestycyjny** — sledz akcje, ETF, kryptowaluty, obligacje i towary z aktualnymi cenami i analityka
 - **Budzety** — ustalaj limity wydatkow ze sledzeniem postepu w czasie rzeczywistym i alertami
 - **Interaktywna analityka** — wykresy z drilldownem, podzialem na kategorie i analiza trendow
+- **Eksport i raporty** — raporty PDF/Excel/CSV, podsumowania miesięczne, zaszyfrowane kopie zapasowe, raporty e-mail
 - **Wiele kont** — konta Osobiste, Wspolne i Firmowe z dostepem opartym na rolach (Wlasciciel, Edytor, Obserwator)
 - **Offline-first** — dane zapisuja sie lokalnie i synchronizuja automatycznie po polaczeniu z siecia
 - **8 jezykow** — English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska, Беларуская
@@ -33,6 +34,7 @@
 13. [Osiagniecia i Grywalizacja](./13-gamification.md) — serie, XP, poziomy i odznaki
 14. [Portfel inwestycyjny](./14-investments.md) — sledzenie akcji, ETF, krypto i analityka
 15. [Szyfrowanie end-to-end](./15-encryption.md) — ochrona danych za pomoca E2EE
+16. [Eksport i raporty](./16-export-reports.md) — raporty PDF/Excel/CSV, kopie zapasowe, podsumowania e-mail
 
 ## Obslugiwane waluty
 

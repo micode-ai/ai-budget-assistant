@@ -105,6 +105,10 @@ Cuando el cifrado esta activado para una cuenta compartida:
 | Historia de gastos | Parcial | No disponible |
 | Entrada de voz | Funciona completamente | Funciona completamente |
 | Escaneo de recibos | Funciona completamente | Funciona completamente |
+| Informes PDF/Excel | Parcial (sin nombres) | No disponible |
+| Exportacion CSV | Funciona completamente | Parcial (importes cifrados) |
+| Resumen mensual | Funciona completamente | No disponible |
+| Copias de seguridad | Funciona completamente | Funciona completamente |
 
 ## Preguntas frecuentes
 
@@ -125,4 +129,4 @@ Cuando el cifrado esta activado para una cuenta compartida:
 
 ---
 
-*Ver tambien: [Ajustes](./11-settings.md) | [Cuentas](./09-accounts.md)*
+*Ver tambien: [Ajustes](./11-settings.md) | [Cuentas](./09-accounts.md) | [Exportacion e informes](./16-export-reports.md)*

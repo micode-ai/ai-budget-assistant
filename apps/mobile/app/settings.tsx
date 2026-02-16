@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
+import { StorageAccessFramework, readAsStringAsync } from 'expo-file-system/legacy';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { useAccountStore } from '@/stores/accountStore';
@@ -25,6 +26,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useBudgetStore } from '@/stores/budgetStore';
+import { useReportStore } from '@/stores/reportStore';
 import { getLastSyncTime } from '@/db/syncMetadataRepository';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -88,6 +90,9 @@ export default function SettingsScreen() {
   const [notifBudgetAlerts, setNotifBudgetAlerts] = useState(true);
   const [notifSharedActivity, setNotifSharedActivity] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
+
+  // Report preferences
+  const { preferences: reportPrefs, loadPreferences: loadReportPrefs, updatePreferences: updateReportPrefs, exportBackup, isExporting, restoreBackup, isRestoring } = useReportStore();
 
   const appVersion = Constants.expoConfig?.version || '1.0.0';
 
@@ -169,7 +174,8 @@ export default function SettingsScreen() {
 
   useEffect(() => {
     loadNotificationPreferences();
-  }, [loadNotificationPreferences]);
+    loadReportPrefs();
+  }, [loadNotificationPreferences, loadReportPrefs]);
 
   const handleToggleBudgetAlerts = async (value: boolean) => {
     setNotifBudgetAlerts(value);
@@ -199,6 +205,124 @@ export default function SettingsScreen() {
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const WEEK_DAYS = [
+    { value: 0, label: t('reports.sunday') },
+    { value: 1, label: t('reports.monday') },
+    { value: 2, label: t('reports.tuesday') },
+    { value: 3, label: t('reports.wednesday') },
+    { value: 4, label: t('reports.thursday') },
+    { value: 5, label: t('reports.friday') },
+    { value: 6, label: t('reports.saturday') },
+  ];
+
+  const handleToggleWeeklyEmail = async (value: boolean) => {
+    try {
+      await updateReportPrefs({ weeklyEmailEnabled: value });
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleToggleMonthlyDigest = async (value: boolean) => {
+    try {
+      await updateReportPrefs({ monthlyDigestEnabled: value });
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleWeeklyEmailDay = async (day: number) => {
+    try {
+      await updateReportPrefs({ weeklyEmailDay: day });
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleExportBackup = async () => {
+    try {
+      await exportBackup();
+      Alert.alert(t('common.success'), t('reports.backupExported'));
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleImportBackup = async () => {
+    try {
+      const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (!permissions.granted) return;
+
+      const files = await StorageAccessFramework.readDirectoryAsync(permissions.directoryUri);
+      const jsonFiles = files.filter(uri => uri.toLowerCase().endsWith('.json'));
+
+      if (jsonFiles.length === 0) {
+        Alert.alert(t('common.error'), t('errors.unknown'));
+        return;
+      }
+
+      const data = await readAsStringAsync(jsonFiles[0]);
+
+      // Validate it's a backup file
+      try {
+        const parsed = JSON.parse(data);
+        if (!parsed.version || !parsed.data) {
+          Alert.alert(t('common.error'), t('errors.unknown'));
+          return;
+        }
+      } catch {
+        Alert.alert(t('common.error'), t('errors.unknown'));
+        return;
+      }
+
+      Alert.alert(
+        t('reports.restoreConfirmTitle'),
+        t('reports.restoreConfirmMerge'),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          {
+            text: t('reports.overwrite'),
+            style: 'destructive',
+            onPress: async () => {
+              Alert.alert(
+                t('reports.restoreConfirmTitle'),
+                t('reports.restoreConfirmOverwrite'),
+                [
+                  { text: t('common.cancel'), style: 'cancel' },
+                  {
+                    text: t('reports.overwrite'),
+                    style: 'destructive',
+                    onPress: async () => {
+                      const res = await restoreBackup(data, true);
+                      if (res.errors.length === 0) {
+                        Alert.alert(t('common.success'), t('reports.backupRestored'));
+                      } else {
+                        Alert.alert(t('common.error'), res.errors.join('\n'));
+                      }
+                    },
+                  },
+                ],
+              );
+            },
+          },
+          {
+            text: t('reports.merge'),
+            onPress: async () => {
+              const res = await restoreBackup(data, false);
+              if (res.errors.length === 0) {
+                Alert.alert(t('common.success'), t('reports.backupRestored'));
+              } else {
+                Alert.alert(t('common.error'), res.errors.join('\n'));
+              }
+            },
+          },
+        ],
+      );
+    } catch (e) {
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -544,6 +668,113 @@ export default function SettingsScreen() {
                 disabled={notifLoading}
               />
             </View>
+          </View>
+        </View>
+
+        {/* Reports & Email Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('reports.settingsTitle')}</Text>
+          <View style={styles.card}>
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('reports.weeklyEmail')}</Text>
+                <Text style={styles.fieldDesc}>{t('reports.weeklyEmailDesc')}</Text>
+              </View>
+              <Switch
+                value={reportPrefs?.weeklyEmailEnabled ?? false}
+                onValueChange={handleToggleWeeklyEmail}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              />
+            </View>
+
+            {reportPrefs?.weeklyEmailEnabled && (
+              <>
+                <View style={styles.divider} />
+                <Text style={[styles.fieldLabel, { marginBottom: theme.spacing[2] }]}>{t('reports.sendOn')}</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View style={styles.chipRow}>
+                    {WEEK_DAYS.map((day) => (
+                      <TouchableOpacity
+                        key={day.value}
+                        style={[styles.chip, reportPrefs?.weeklyEmailDay === day.value && styles.chipActive]}
+                        onPress={() => handleWeeklyEmailDay(day.value)}
+                      >
+                        <Text style={[styles.chipText, reportPrefs?.weeklyEmailDay === day.value && styles.chipTextActive]}>
+                          {day.label}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ScrollView>
+              </>
+            )}
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('reports.monthlyDigest')}</Text>
+                <Text style={styles.fieldDesc}>{t('reports.monthlyDigestDesc')}</Text>
+              </View>
+              <Switch
+                value={reportPrefs?.monthlyDigestEnabled ?? false}
+                onValueChange={handleToggleMonthlyDigest}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={() => router.push('/reports')}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="document-text-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>{t('reports.generateReport')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+
+            <View style={styles.divider} />
+
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={handleExportBackup}
+              disabled={isExporting}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="cloud-download-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>
+                  {isExporting ? t('reports.exporting') : t('reports.exportBackup')}
+                </Text>
+              </View>
+              {isExporting ? (
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+              ) : (
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.divider} />
+
+            <TouchableOpacity
+              style={styles.fieldRow}
+              onPress={handleImportBackup}
+              disabled={isRestoring}
+            >
+              <View style={styles.fieldValueRow}>
+                <Ionicons name="cloud-upload-outline" size={18} color={theme.colors.textSecondary} />
+                <Text style={styles.fieldLabel}>
+                  {isRestoring ? t('reports.restoring') : t('reports.restoreBackup')}
+                </Text>
+              </View>
+              {isRestoring ? (
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+              ) : (
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
 

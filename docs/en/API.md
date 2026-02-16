@@ -2657,6 +2657,306 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Reports
+
+All report endpoints require JWT authentication and the `X-Account-Id` header.
+
+### Generate Report
+
+```http
+POST /reports/generate
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "format": "pdf",
+  "startDate": "2025-01-01",
+  "endDate": "2025-01-31",
+  "categoryIds": ["category-uuid-1", "category-uuid-2"],
+  "tagIds": ["tag-uuid-1"],
+  "projectIds": ["project-uuid-1"],
+  "currencyCode": "USD",
+  "includeExpenses": true,
+  "includeIncomes": true
+}
+```
+
+**Format values**: `csv`, `pdf`, `excel`
+
+**Response** `201 Created`
+```json
+{
+  "reportId": "uuid",
+  "status": "completed",
+  "downloadUrl": "/reports/uuid/download",
+  "fileName": "report-2025-01-01-2025-01-31.pdf",
+  "fileSize": 102400
+}
+```
+
+**Notes:**
+- `csv` format is available on all subscription tiers
+- `pdf` and `excel` formats require Pro+ subscription tier
+- Accounts with `encryptionTier >= 2` will receive a `403 Forbidden` response
+- `categoryIds`, `tagIds`, `projectIds`, `currencyCode`, `includeExpenses`, and `includeIncomes` are all optional filters
+
+### List Reports
+
+```http
+GET /reports
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "reports": [
+    {
+      "id": "uuid",
+      "format": "pdf",
+      "status": "completed",
+      "fileName": "report-2025-01-01-2025-01-31.pdf",
+      "fileSize": 102400,
+      "createdAt": "2025-02-01T08:00:00Z",
+      "expiresAt": "2025-02-08T08:00:00Z"
+    }
+  ]
+}
+```
+
+**Notes:**
+- Returns the last 20 reports
+- Reports expire after 7 days
+
+### Download Report
+
+```http
+GET /reports/:id/download
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — Binary file
+
+The response `Content-Type` depends on the report format:
+| Format | Content-Type |
+|--------|-------------|
+| `csv` | `text/csv` |
+| `pdf` | `application/pdf` |
+| `excel` | `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` |
+
+The response includes a `Content-Disposition: attachment; filename="<fileName>"` header.
+
+### Monthly Digest
+
+```http
+GET /reports/monthly-digest?month=2025-01
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "digest": {
+    "periodLabel": "January 2025",
+    "totalIncome": 5000.00,
+    "totalExpenses": 3200.00,
+    "savingsRate": 36.0,
+    "topCategories": [
+      {
+        "categoryId": "uuid",
+        "name": "Groceries",
+        "amount": 850.00,
+        "percentage": 26.56
+      },
+      {
+        "categoryId": "uuid",
+        "name": "Rent",
+        "amount": 1200.00,
+        "percentage": 37.50
+      }
+    ],
+    "incomeChange": 5.2,
+    "expenseChange": -3.1
+  },
+  "generatedAt": "2025-02-01T08:00:00Z"
+}
+```
+
+**Notes:**
+- Requires Pro+ subscription tier
+- Results are cached for 7 days
+
+### Get Report Preferences
+
+```http
+GET /reports/preferences
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "weeklyEmailEnabled": false,
+  "weeklyEmailDay": 1,
+  "monthlyDigestEnabled": true
+}
+```
+
+### Update Report Preferences
+
+```http
+PATCH /reports/preferences
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "weeklyEmailEnabled": true,
+  "weeklyEmailDay": 1,
+  "monthlyDigestEnabled": true
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "weeklyEmailEnabled": true,
+  "weeklyEmailDay": 1,
+  "monthlyDigestEnabled": true
+}
+```
+
+**Notes:**
+- `weeklyEmailDay` accepts values `0` (Sunday) through `6` (Saturday)
+- `weeklyEmailEnabled` requires Business subscription tier
+- `monthlyDigestEnabled` requires Pro+ subscription tier
+
+---
+
+## Backups
+
+All backup endpoints require JWT authentication and the `X-Account-Id` header.
+
+### Export Backup
+
+```http
+POST /backups/export
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — JSON backup file containing all account data.
+```json
+{
+  "version": "1.0",
+  "exportedAt": "2025-02-15T12:00:00Z",
+  "accountId": "account-uuid",
+  "encrypted": false,
+  "entityCounts": {
+    "expenses": 245,
+    "incomes": 24,
+    "budgets": 5,
+    "categories": 18,
+    "tags": 12,
+    "projects": 3,
+    "wallets": 2,
+    "transfers": 8,
+    "currencyExchanges": 4
+  },
+  "data": {
+    "expenses": [],
+    "incomes": [],
+    "budgets": [],
+    "categories": [],
+    "tags": [],
+    "projects": [],
+    "wallets": [],
+    "transfers": [],
+    "currencyExchanges": []
+  }
+}
+```
+
+**Notes:**
+- Available on all subscription tiers
+- The `data` arrays contain the full records for each entity type
+
+### Restore Backup
+
+```http
+POST /backups/restore
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "data": "{\"version\":\"1.0\",\"exportedAt\":\"2025-02-15T12:00:00Z\",...}",
+  "overwrite": false
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "restoredCounts": {
+    "expenses": 245,
+    "incomes": 24,
+    "budgets": 5,
+    "categories": 18,
+    "tags": 12,
+    "projects": 3,
+    "wallets": 2,
+    "transfers": 8,
+    "currencyExchanges": 4
+  },
+  "errors": []
+}
+```
+
+**Notes:**
+- `data` is the JSON string of a previously exported backup
+- When `overwrite` is `true`, existing account data is replaced entirely; when `false`, backup data is merged with existing records
+- The `errors` array contains any entity-level errors encountered during restoration
+
+### Backup History
+
+```http
+GET /backups/history
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "version": "1.0",
+    "entityCounts": {
+      "expenses": 245,
+      "incomes": 24,
+      "budgets": 5,
+      "categories": 18,
+      "tags": 12,
+      "projects": 3,
+      "wallets": 2,
+      "transfers": 8,
+      "currencyExchanges": 4
+    },
+    "encrypted": false,
+    "fileSize": 524288,
+    "createdAt": "2025-02-15T12:00:00Z"
+  }
+]
+```
+
+---
+
 ## Error Responses
 
 ### Error Format

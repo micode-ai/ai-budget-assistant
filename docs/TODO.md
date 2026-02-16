@@ -39,24 +39,14 @@
 - [x] Tags (color-coded labels for expenses/incomes, AI suggestions, analytics breakdown)
 - [x] Projects (group expenses/incomes with budgets, date ranges, per-project analytics)
 - [x] Expense category splits (split expense across multiple categories with AI suggestions)
+- [x] End-to-End Encryption (field-level E2EE, key versioning, PBKDF2+XSalsa20-Poly1305)
+- [x] Export & Reporting (PDF/Excel/CSV reports, monthly digests, encrypted backups, email reports)
+- [x] Scheduled Jobs (@nestjs/schedule — weekly emails, monthly digests, expired report cleanup)
+- [x] i18n — 8th locale: BY (Belarusian)
 
 ---
 
 ## Remaining Tasks
-
-### High Priority
-
-#### Scheduled Jobs
-- [ ] Setup Bull/Agenda for job scheduling
-- [ ] Daily budget check job
-- [ ] Weekly spending report generation
-- [ ] Cleanup old sync logs
-
-#### Export Functionality
-- [ ] PDF report generation (backend)
-- [ ] CSV export for expenses
-- [ ] Export UI in analytics screen
-- [ ] Share functionality
 
 ### Medium Priority
 
