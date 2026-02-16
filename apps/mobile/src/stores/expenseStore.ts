@@ -35,9 +35,11 @@ import { useProjectStore } from './projectStore';
 import { useGamificationStore } from './gamificationStore';
 
 interface ExpenseFilters {
-  dateRange: 'week' | 'month' | 'year' | 'all';
+  dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
   categoryId: string | null;
   searchQuery: string;
+  customMonth?: number; // 0-11
+  customYear?: number;
 }
 
 interface CategoryBreakdown {
@@ -172,6 +174,11 @@ export const useExpenseStore = create<ExpenseState>()(
               projectId: serverProjectId || localExpense?.projectId,
               source: decrypted.source || 'manual',
               isRecurring: decrypted.isRecurring || false,
+              isDebt: decrypted.isDebt || false,
+              isDebtRepayment: decrypted.isDebtRepayment || false,
+              debtContactName: decrypted.debtContactName ?? undefined,
+              debtDueDate: decrypted.debtDueDate ? new Date(decrypted.debtDueDate) : undefined,
+              relatedDebtIncomeId: decrypted.relatedDebtIncomeId ?? undefined,
               createdAt: new Date(decrypted.createdAt),
               updatedAt: new Date(decrypted.updatedAt),
               isDeleted: decrypted.isDeleted || false,
@@ -503,6 +510,7 @@ export const useExpenseStore = create<ExpenseState>()(
         notes: newExpense.notes,
         amount: newExpense.amount,
         discountAmount: newExpense.discountAmount,
+        debtContactName: newExpense.debtContactName,
       }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
         return api.createExpense({
           localId: id,
@@ -519,6 +527,11 @@ export const useExpenseStore = create<ExpenseState>()(
           items: sanitizedItems,
           receiptImageBase64,
           splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
+          isDebt: newExpense.isDebt || undefined,
+          isDebtRepayment: newExpense.isDebtRepayment || undefined,
+          debtContactName: encPayload.debtContactName ?? newExpense.debtContactName,
+          debtDueDate: newExpense.debtDueDate instanceof Date ? newExpense.debtDueDate.toISOString() : newExpense.debtDueDate,
+          relatedDebtIncomeId: newExpense.relatedDebtIncomeId,
           encryptedPayload,
           encryptionKeyVersion,
         } as any);
@@ -791,6 +804,11 @@ export const useExpenseStore = create<ExpenseState>()(
             projectId: localProjectId || undefined,
             date: expense.date instanceof Date ? expense.date.toISOString() : String(expense.date),
             source: expense.source,
+            isDebt: expense.isDebt || undefined,
+            isDebtRepayment: expense.isDebtRepayment || undefined,
+            debtContactName: expense.debtContactName || undefined,
+            debtDueDate: expense.debtDueDate ? (expense.debtDueDate instanceof Date ? expense.debtDueDate.toISOString() : String(expense.debtDueDate)) : undefined,
+            relatedDebtIncomeId: expense.relatedDebtIncomeId || undefined,
             encryptedPayload,
             encryptionKeyVersion,
           } as any);
@@ -817,7 +835,14 @@ export const useExpenseStore = create<ExpenseState>()(
 
       // Apply date range filter
       const now = new Date();
-      if (filters.dateRange !== 'all') {
+      if (filters.dateRange === 'custom' && filters.customMonth != null && filters.customYear != null) {
+        const startDate = new Date(filters.customYear, filters.customMonth, 1);
+        const endDate = new Date(filters.customYear, filters.customMonth + 1, 0, 23, 59, 59, 999);
+        filtered = filtered.filter((e) => {
+          const d = new Date(e.date);
+          return d >= startDate && d <= endDate;
+        });
+      } else if (filters.dateRange !== 'all') {
         const startDate = new Date();
         switch (filters.dateRange) {
           case 'week':

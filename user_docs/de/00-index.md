@@ -35,6 +35,7 @@
 14. [Anlageportfolio](./14-investments.md) — Aktien, ETFs, Krypto Tracking und Analysen
 15. [Ende-zu-Ende-Verschlusselung](./15-encryption.md) — Datenschutz mit E2EE
 16. [Export & Berichte](./16-export-reports.md) — PDF/Excel/CSV-Berichte, Backups, E-Mail-Zusammenfassungen
+17. [Schulden & Darlehen](./17-debts-and-loans.md) — Verliehenes und geliehenes Geld, Ruckzahlungen, Falligkeiten
 
 ## Unterstutzte Wahrungen
 

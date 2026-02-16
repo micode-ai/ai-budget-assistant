@@ -65,6 +65,11 @@ export class IncomesService {
         notes: dto.notes,
         categoryId: resolvedCategoryId,
         date: new Date(dto.date),
+        isDebt: dto.isDebt ?? false,
+        isDebtRepayment: dto.isDebtRepayment ?? false,
+        debtContactName: dto.debtContactName,
+        debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
+        relatedDebtExpenseId: dto.relatedDebtExpenseId,
         // E2EE: pass through encrypted payload if provided
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
         ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
@@ -78,6 +83,11 @@ export class IncomesService {
           categoryId: resolvedCategoryId,
           date: new Date(dto.date),
           isDeleted: false,
+          isDebt: dto.isDebt ?? false,
+          isDebtRepayment: dto.isDebtRepayment ?? false,
+          debtContactName: dto.debtContactName,
+          debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
+          relatedDebtExpenseId: dto.relatedDebtExpenseId,
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
         };
@@ -173,6 +183,12 @@ export class IncomesService {
         { notes: { contains: search, mode: 'insensitive' } },
       ];
     }
+    if (filters.isDebt !== undefined) {
+      where.isDebt = filters.isDebt;
+    }
+    if (filters.isDebtRepayment !== undefined) {
+      where.isDebtRepayment = filters.isDebtRepayment;
+    }
 
     const [incomes, total] = await Promise.all([
       this.prisma.income.findMany({
@@ -237,6 +253,11 @@ export class IncomesService {
           notes: dto.notes,
           categoryId: resolvedCategoryId,
           date: dto.date ? new Date(dto.date) : undefined,
+          isDebt: dto.isDebt,
+          isDebtRepayment: dto.isDebtRepayment,
+          debtContactName: dto.debtContactName,
+          debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : dto.debtDueDate === null ? null : undefined,
+          relatedDebtExpenseId: dto.relatedDebtExpenseId,
           syncVersion: { increment: 1 },
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),

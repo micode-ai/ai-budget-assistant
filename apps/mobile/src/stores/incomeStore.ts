@@ -19,9 +19,11 @@ import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
 
 interface IncomeFilters {
-  dateRange: 'week' | 'month' | 'year' | 'all';
+  dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
   categoryId: string | null;
   searchQuery: string;
+  customMonth?: number; // 0-11
+  customYear?: number;
 }
 
 interface IncomeState {
@@ -44,6 +46,11 @@ interface IncomeState {
     tagIds?: string[];
     projectId?: string;
     date: Date;
+    isDebt?: boolean;
+    isDebtRepayment?: boolean;
+    debtContactName?: string;
+    debtDueDate?: Date;
+    relatedDebtExpenseId?: string;
   }) => Promise<Income>;
   updateIncome: (id: string, updates: Partial<Income>) => void;
   deleteIncome: (id: string) => void;
@@ -131,6 +138,11 @@ export const useIncomeStore = create<IncomeState>()(
               notes: decrypted.notes ?? undefined,
               categoryId: serverCategoryId || localIncome?.categoryId,
               date: new Date(decrypted.date),
+              isDebt: decrypted.isDebt || false,
+              isDebtRepayment: decrypted.isDebtRepayment || false,
+              debtContactName: decrypted.debtContactName ?? undefined,
+              debtDueDate: decrypted.debtDueDate ? new Date(decrypted.debtDueDate) : undefined,
+              relatedDebtExpenseId: decrypted.relatedDebtExpenseId ?? undefined,
               createdAt: new Date(decrypted.createdAt),
               updatedAt: new Date(decrypted.updatedAt),
               isDeleted: decrypted.isDeleted || false,
@@ -223,6 +235,8 @@ export const useIncomeStore = create<IncomeState>()(
         id,
         localId: id,
         accountId,
+        isDebt: coreData.isDebt || false,
+        isDebtRepayment: coreData.isDebtRepayment || false,
         createdAt: now,
         updatedAt: now,
         syncStatus: 'pending' as SyncStatus,
@@ -263,6 +277,7 @@ export const useIncomeStore = create<IncomeState>()(
         description: newIncome.description,
         notes: newIncome.notes,
         amount: newIncome.amount,
+        debtContactName: newIncome.debtContactName,
       }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
         return api.createIncome({
           localId: id,
@@ -274,6 +289,11 @@ export const useIncomeStore = create<IncomeState>()(
           date: newIncome.date instanceof Date ? newIncome.date.toISOString() : newIncome.date,
           tagIds: tagIds?.length ? tagIds : undefined,
           projectId: projectId || undefined,
+          isDebt: newIncome.isDebt || undefined,
+          isDebtRepayment: newIncome.isDebtRepayment || undefined,
+          debtContactName: encPayload.debtContactName ?? newIncome.debtContactName,
+          debtDueDate: newIncome.debtDueDate instanceof Date ? newIncome.debtDueDate.toISOString() : newIncome.debtDueDate,
+          relatedDebtExpenseId: newIncome.relatedDebtExpenseId,
           encryptedPayload,
           encryptionKeyVersion,
         } as any);
@@ -373,6 +393,11 @@ export const useIncomeStore = create<IncomeState>()(
             categoryId: resolvedCategoryId,
             date: income.date instanceof Date ? income.date.toISOString() : String(income.date),
             tagIds: tagIds.length ? tagIds : undefined,
+            isDebt: income.isDebt || undefined,
+            isDebtRepayment: income.isDebtRepayment || undefined,
+            debtContactName: income.debtContactName || undefined,
+            debtDueDate: income.debtDueDate ? (income.debtDueDate instanceof Date ? income.debtDueDate.toISOString() : String(income.debtDueDate)) : undefined,
+            relatedDebtExpenseId: income.relatedDebtExpenseId || undefined,
             encryptedPayload,
             encryptionKeyVersion,
           } as any);
@@ -395,7 +420,14 @@ export const useIncomeStore = create<IncomeState>()(
       let filtered = incomes.filter((i) => !i.isDeleted);
 
       const now = new Date();
-      if (filters.dateRange !== 'all') {
+      if (filters.dateRange === 'custom' && filters.customMonth != null && filters.customYear != null) {
+        const startDate = new Date(filters.customYear, filters.customMonth, 1);
+        const endDate = new Date(filters.customYear, filters.customMonth + 1, 0, 23, 59, 59, 999);
+        filtered = filtered.filter((i) => {
+          const d = new Date(i.date);
+          return d >= startDate && d <= endDate;
+        });
+      } else if (filters.dateRange !== 'all') {
         const startDate = new Date();
         switch (filters.dateRange) {
           case 'week':

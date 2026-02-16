@@ -29,6 +29,7 @@ import { EncryptionModule } from './modules/encryption/encryption.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ReportsModule } from './modules/reports/reports.module';
 import { BackupsModule } from './modules/backups/backups.module';
+import { DebtsModule } from './modules/debts/debts.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { BackupsModule } from './modules/backups/backups.module';
     EncryptionModule,
     ReportsModule,
     BackupsModule,
+    DebtsModule,
   ],
 })
 export class AppModule {}

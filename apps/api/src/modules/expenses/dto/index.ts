@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsUUID,
   IsDateString,
+  IsBoolean,
   IsArray,
   Min,
   Max,
@@ -167,6 +168,26 @@ export class CreateExpenseDto {
   splits?: CreateExpenseSplitDto[];
 
   @IsOptional()
+  @IsBoolean()
+  isDebt?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isDebtRepayment?: boolean;
+
+  @IsOptional()
+  @IsString()
+  debtContactName?: string;
+
+  @IsOptional()
+  @IsDateString()
+  debtDueDate?: string;
+
+  @IsOptional()
+  @IsUUID()
+  relatedDebtIncomeId?: string;
+
+  @IsOptional()
   @IsString()
   encryptedPayload?: string;
 
@@ -225,6 +246,26 @@ export class UpdateExpenseDto {
   projectId?: string | null;
 
   @IsOptional()
+  @IsBoolean()
+  isDebt?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isDebtRepayment?: boolean;
+
+  @IsOptional()
+  @IsString()
+  debtContactName?: string;
+
+  @IsOptional()
+  @IsDateString()
+  debtDueDate?: string;
+
+  @IsOptional()
+  @IsUUID()
+  relatedDebtIncomeId?: string;
+
+  @IsOptional()
   @IsString()
   encryptedPayload?: string;
 
@@ -244,7 +285,7 @@ export class ExpenseFiltersDto {
   @Transform(({ value }) => parseInt(value, 10))
   @IsNumber()
   @Min(1)
-  @Max(100)
+  @Max(10000)
   limit?: number;
 
   @IsOptional()
@@ -266,4 +307,12 @@ export class ExpenseFiltersDto {
   @IsOptional()
   @IsString()
   source?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  isDebt?: boolean;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  isDebtRepayment?: boolean;
 }

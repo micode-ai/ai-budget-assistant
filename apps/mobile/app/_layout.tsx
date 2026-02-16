@@ -345,6 +345,13 @@ function RootNavigator() {
             title: t('nav.investmentAnalytics'),
           }}
         />
+        <Stack.Screen
+          name="debts/index"
+          options={{
+            headerShown: true,
+            title: t('debt.debtsAndLoans'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

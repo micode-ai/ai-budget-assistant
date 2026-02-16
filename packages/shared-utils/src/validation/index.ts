@@ -49,7 +49,18 @@ export const CreateExpenseSchema = z.object({
     .optional(),
   location: LocationSchema.optional(),
   source: ExpenseSourceSchema,
-});
+  isDebt: z.boolean().optional().default(false),
+  isDebtRepayment: z.boolean().optional().default(false),
+  debtContactName: z.string().max(200).optional(),
+  debtDueDate: z.string().datetime({ offset: true }).optional(),
+  relatedDebtIncomeId: z.string().uuid().optional(),
+}).refine(
+  (data) => !(data.isDebt && data.isDebtRepayment),
+  { message: 'Cannot be both a debt and a debt repayment' },
+).refine(
+  (data) => !data.isDebtRepayment || data.relatedDebtIncomeId,
+  { message: 'Debt repayment must link to original income' },
+);
 
 export const UpdateExpenseSchema = z.object({
   amount: z.number().positive().max(999999999).optional(),
@@ -65,6 +76,11 @@ export const UpdateExpenseSchema = z.object({
     .nullable()
     .optional(),
   location: LocationSchema.nullable().optional(),
+  isDebt: z.boolean().optional(),
+  isDebtRepayment: z.boolean().optional(),
+  debtContactName: z.string().max(200).nullable().optional(),
+  debtDueDate: z.string().datetime({ offset: true }).nullable().optional(),
+  relatedDebtIncomeId: z.string().uuid().nullable().optional(),
 });
 
 // Income schemas
@@ -76,7 +92,18 @@ export const CreateIncomeSchema = z.object({
   notes: z.string().max(2000).optional(),
   categoryId: z.string().uuid().optional(),
   date: z.string().datetime({ offset: true }),
-});
+  isDebt: z.boolean().optional().default(false),
+  isDebtRepayment: z.boolean().optional().default(false),
+  debtContactName: z.string().max(200).optional(),
+  debtDueDate: z.string().datetime({ offset: true }).optional(),
+  relatedDebtExpenseId: z.string().uuid().optional(),
+}).refine(
+  (data) => !(data.isDebt && data.isDebtRepayment),
+  { message: 'Cannot be both a debt and a debt repayment' },
+).refine(
+  (data) => !data.isDebtRepayment || data.relatedDebtExpenseId,
+  { message: 'Debt repayment must link to original expense' },
+);
 
 export const UpdateIncomeSchema = z.object({
   amount: z.number().positive().max(999999999).optional(),
@@ -85,6 +112,11 @@ export const UpdateIncomeSchema = z.object({
   notes: z.string().max(2000).optional(),
   categoryId: z.string().uuid().nullable().optional(),
   date: z.string().datetime({ offset: true }).optional(),
+  isDebt: z.boolean().optional(),
+  isDebtRepayment: z.boolean().optional(),
+  debtContactName: z.string().max(200).nullable().optional(),
+  debtDueDate: z.string().datetime({ offset: true }).nullable().optional(),
+  relatedDebtExpenseId: z.string().uuid().nullable().optional(),
 });
 
 // Budget schemas
@@ -247,6 +279,8 @@ export const ExpenseFiltersSchema = PaginationSchema.extend({
   maxAmount: z.coerce.number().min(0).optional(),
   search: z.string().max(100).optional(),
   source: ExpenseSourceSchema.optional(),
+  isDebt: z.string().transform((v) => v === 'true').optional(),
+  isDebtRepayment: z.string().transform((v) => v === 'true').optional(),
 });
 
 export const IncomeFiltersSchema = PaginationSchema.extend({
@@ -254,6 +288,8 @@ export const IncomeFiltersSchema = PaginationSchema.extend({
   endDate: z.string().datetime({ offset: true }).optional(),
   categoryId: z.string().uuid().optional(),
   search: z.string().max(100).optional(),
+  isDebt: z.string().transform((v) => v === 'true').optional(),
+  isDebtRepayment: z.string().transform((v) => v === 'true').optional(),
 });
 
 export const BudgetFiltersSchema = PaginationSchema.extend({

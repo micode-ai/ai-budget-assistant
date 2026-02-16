@@ -35,6 +35,7 @@
 14. [Portfel inwestycyjny](./14-investments.md) — sledzenie akcji, ETF, krypto i analityka
 15. [Szyfrowanie end-to-end](./15-encryption.md) — ochrona danych za pomoca E2EE
 16. [Eksport i raporty](./16-export-reports.md) — raporty PDF/Excel/CSV, kopie zapasowe, podsumowania e-mail
+17. [Dlugi i Pozyczki](./17-debts-and-loans.md) — sledzenie pozyczonych i wzietych pieniedzy, splaty, terminy
 
 ## Obslugiwane waluty
 

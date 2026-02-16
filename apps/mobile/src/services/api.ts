@@ -170,11 +170,12 @@ class ApiClient {
   // Expense endpoints
   async getExpenses(filters?: { startDate?: string; endDate?: string; categoryId?: string }) {
     const params = new URLSearchParams();
+    params.append('limit', '10000');
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.categoryId) params.append('categoryId', filters.categoryId);
     const query = params.toString();
-    return this.request<any[]>(`/expenses${query ? `?${query}` : ''}`);
+    return this.request<any[]>(`/expenses?${query}`);
   }
 
   async createExpense(data: any) {
@@ -198,11 +199,12 @@ class ApiClient {
   // Income endpoints
   async getIncomes(filters?: { startDate?: string; endDate?: string; categoryId?: string }) {
     const params = new URLSearchParams();
+    params.append('limit', '10000');
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.categoryId) params.append('categoryId', filters.categoryId);
     const query = params.toString();
-    return this.request<any[]>(`/incomes${query ? `?${query}` : ''}`);
+    return this.request<any[]>(`/incomes?${query}`);
   }
 
   async createIncome(data: any) {
@@ -613,6 +615,11 @@ class ApiClient {
 
   async deleteCurrencyExchange(id: string) {
     return this.request<void>(`/currency-exchanges/${id}`, { method: 'DELETE' });
+  }
+
+  // Debt endpoints
+  async getDebtSummary() {
+    return this.request<any>('/debts/summary');
   }
 
   async getExchangeRates(baseCurrency: string = 'USD') {

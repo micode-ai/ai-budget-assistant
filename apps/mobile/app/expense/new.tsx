@@ -8,6 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -37,6 +38,9 @@ export default function NewExpenseScreen() {
     description?: string;
     categoryId?: string;
     currencyCode?: string;
+    isDebtRepayment?: string;
+    relatedDebtIncomeId?: string;
+    debtContactName?: string;
   }>();
 
   const { addExpense } = useExpenseStore();
@@ -58,6 +62,12 @@ export default function NewExpenseScreen() {
   const [showSplitEditor, setShowSplitEditor] = useState(false);
   const [pendingSplits, setPendingSplits] = useState<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]>([]);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
+
+  // Debt state
+  const isDebtRepayment = params.isDebtRepayment === 'true';
+  const [isDebt, setIsDebt] = useState(false);
+  const [debtContactName, setDebtContactName] = useState(params.debtContactName || '');
+  const [debtDueDate, setDebtDueDate] = useState<Date | null>(null);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
@@ -100,6 +110,11 @@ export default function NewExpenseScreen() {
         date: new Date(),
         source: 'manual',
         isRecurring: false,
+        isDebt: isDebt && !isDebtRepayment,
+        isDebtRepayment,
+        debtContactName: (isDebt || isDebtRepayment) ? debtContactName.trim() || undefined : undefined,
+        debtDueDate: isDebt && debtDueDate ? debtDueDate : undefined,
+        relatedDebtIncomeId: isDebtRepayment ? params.relatedDebtIncomeId : undefined,
         splits: splitsPayload,
       });
 
@@ -255,6 +270,54 @@ export default function NewExpenseScreen() {
             selectedProjectId={selectedProjectId}
             onProjectChange={setSelectedProjectId}
           />
+
+          {/* Debt Toggle */}
+          {isDebtRepayment ? (
+            <View style={styles.debtBanner}>
+              <Ionicons name="return-down-back" size={18} color={theme.colors.warning} />
+              <Text style={styles.debtBannerText}>{t('debt.isDebtRepayment')}</Text>
+              {params.debtContactName ? (
+                <Text style={styles.debtBannerContact}>{params.debtContactName}</Text>
+              ) : null}
+            </View>
+          ) : (
+            <View style={styles.fieldContainer}>
+              <View style={styles.debtToggleRow}>
+                <View style={styles.debtToggleInfo}>
+                  <Ionicons name="people-outline" size={20} color={theme.colors.textSecondary} />
+                  <Text style={styles.debtToggleLabel}>{t('debt.lendMoney')}</Text>
+                </View>
+                <Switch value={isDebt} onValueChange={setIsDebt} />
+              </View>
+              {isDebt && (
+                <View style={styles.debtFields}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder={t('debt.contactNamePlaceholder')}
+                    placeholderTextColor={theme.colors.textTertiary}
+                    value={debtContactName}
+                    onChangeText={setDebtContactName}
+                  />
+                  <TouchableOpacity
+                    style={styles.debtDateButton}
+                    onPress={() => {
+                      setDebtDueDate(debtDueDate ? null : new Date(Date.now() + 30 * 86400000));
+                    }}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+                    <Text style={styles.debtDateText}>
+                      {debtDueDate
+                        ? `${t('debt.dueDate')}: ${debtDueDate.toLocaleDateString()}`
+                        : t('debt.setDueDate')}
+                    </Text>
+                    {debtDueDate && (
+                      <Ionicons name="close-circle" size={16} color={theme.colors.textTertiary} />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          )}
 
           {/* Category Split */}
           {showSplitEditor && parseFloat(amount) > 0 ? (
@@ -506,5 +569,57 @@ const createStyles = (theme: Theme) => ({
     fontSize: 13,
     color: theme.colors.primary,
     fontWeight: '500' as const,
+  },
+  // Debt styles
+  debtBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.warningLight || theme.colors.surfaceSecondary,
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[6],
+  },
+  debtBannerText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.warning,
+  },
+  debtBannerContact: {
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+    marginLeft: 'auto' as const,
+  },
+  debtToggleRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+  },
+  debtToggleInfo: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  debtToggleLabel: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+  },
+  debtFields: {
+    marginTop: theme.spacing[3],
+    gap: theme.spacing[3],
+  },
+  debtDateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+  },
+  debtDateText: {
+    flex: 1,
+    fontSize: 14,
+    color: theme.colors.primary,
   },
 });

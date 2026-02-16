@@ -26,4 +26,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '14-investments', icon: 'trending-up-outline', color: '#27AE60' },
   { id: '15-encryption', icon: 'lock-closed-outline', color: '#8E44AD' },
   { id: '16-export-reports', icon: 'download-outline', color: '#16A085' },
+  { id: '17-debts-and-loans', icon: 'people-outline', color: '#E91E63' },
 ];

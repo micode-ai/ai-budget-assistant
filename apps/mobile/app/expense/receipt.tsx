@@ -115,6 +115,8 @@ export default function ReceiptExpenseScreen() {
         date: expenseDate,
         source: 'ocr',
         isRecurring: false,
+        isDebt: false,
+        isDebtRepayment: false,
         items,
         receiptImageBase64,
       });

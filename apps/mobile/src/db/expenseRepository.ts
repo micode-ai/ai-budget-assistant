@@ -22,6 +22,11 @@ interface ExpenseRow {
   is_recurring: number;
   recurring_id: string | null;
   source: string;
+  is_debt: number;
+  is_debt_repayment: number;
+  debt_contact_name: string | null;
+  debt_due_date: number | null;
+  related_debt_income_id: string | null;
   created_at: number;
   updated_at: number;
   is_deleted: number;
@@ -56,6 +61,11 @@ function rowToExpense(row: ExpenseRow): Expense {
     isRecurring: row.is_recurring === 1,
     recurringId: row.recurring_id ?? undefined,
     source: row.source as ExpenseSource,
+    isDebt: row.is_debt === 1,
+    isDebtRepayment: row.is_debt_repayment === 1,
+    debtContactName: row.debt_contact_name ?? undefined,
+    debtDueDate: row.debt_due_date ? new Date(row.debt_due_date) : undefined,
+    relatedDebtIncomeId: row.related_debt_income_id ?? undefined,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     isDeleted: row.is_deleted === 1,
@@ -86,6 +96,11 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.isRecurring ? 1 : 0,
     expense.recurringId ?? null,
     expense.source,
+    expense.isDebt ? 1 : 0,
+    expense.isDebtRepayment ? 1 : 0,
+    expense.debtContactName ?? null,
+    expense.debtDueDate ? expense.debtDueDate.getTime() : null,
+    expense.relatedDebtIncomeId ?? null,
     expense.createdAt.getTime(),
     expense.updatedAt.getTime(),
     expense.isDeleted ? 1 : 0,
@@ -114,9 +129,11 @@ export async function insertExpense(expense: Expense): Promise<void> {
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
-      is_recurring, recurring_id, source, created_at, updated_at,
+      is_recurring, recurring_id, source,
+      is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
+      created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -174,6 +191,26 @@ export async function updateExpenseInDb(
     setClauses.push('location_name = ?');
     params.push(updates.location?.name ?? null);
   }
+  if (updates.isDebt !== undefined) {
+    setClauses.push('is_debt = ?');
+    params.push(updates.isDebt ? 1 : 0);
+  }
+  if (updates.isDebtRepayment !== undefined) {
+    setClauses.push('is_debt_repayment = ?');
+    params.push(updates.isDebtRepayment ? 1 : 0);
+  }
+  if (updates.debtContactName !== undefined) {
+    setClauses.push('debt_contact_name = ?');
+    params.push(updates.debtContactName ?? null);
+  }
+  if (updates.debtDueDate !== undefined) {
+    setClauses.push('debt_due_date = ?');
+    params.push(updates.debtDueDate instanceof Date ? updates.debtDueDate.getTime() : (updates.debtDueDate ?? null));
+  }
+  if (updates.relatedDebtIncomeId !== undefined) {
+    setClauses.push('related_debt_income_id = ?');
+    params.push(updates.relatedDebtIncomeId ?? null);
+  }
 
   setClauses.push('updated_at = ?');
   params.push(updatedAt.getTime());
@@ -223,9 +260,11 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
-      is_recurring, recurring_id, source, created_at, updated_at,
+      is_recurring, recurring_id, source,
+      is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
+      created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -246,6 +285,11 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       is_recurring = excluded.is_recurring,
       recurring_id = excluded.recurring_id,
       source = excluded.source,
+      is_debt = excluded.is_debt,
+      is_debt_repayment = excluded.is_debt_repayment,
+      debt_contact_name = excluded.debt_contact_name,
+      debt_due_date = excluded.debt_due_date,
+      related_debt_income_id = excluded.related_debt_income_id,
       created_at = excluded.created_at,
       updated_at = excluded.updated_at,
       is_deleted = excluded.is_deleted,
@@ -268,4 +312,20 @@ export async function softDeleteExpenseInDb(
 export async function clearAllExpenses(): Promise<void> {
   await executeSql('DELETE FROM expense_items', []);
   await executeSql('DELETE FROM expenses', []);
+}
+
+export async function loadDebtExpenses(accountId: string): Promise<Expense[]> {
+  const rows = await executeSql<ExpenseRow>(
+    'SELECT * FROM expenses WHERE is_deleted = 0 AND account_id = ? AND is_debt = 1 ORDER BY date DESC',
+    [accountId],
+  );
+  return rows.map(rowToExpense);
+}
+
+export async function loadRepaymentExpensesForIncome(incomeId: string): Promise<Expense[]> {
+  const rows = await executeSql<ExpenseRow>(
+    'SELECT * FROM expenses WHERE is_deleted = 0 AND is_debt_repayment = 1 AND related_debt_income_id = ? ORDER BY date ASC',
+    [incomeId],
+  );
+  return rows.map(rowToExpense);
 }

@@ -35,6 +35,7 @@
 14. [Cartera de inversiones](./14-investments.md) — seguimiento de acciones, ETFs, cripto y analiticas
 15. [Cifrado de extremo a extremo](./15-encryption.md) — protege tus datos con E2EE
 16. [Exportacion e informes](./16-export-reports.md) — informes PDF/Excel/CSV, copias de seguridad, resumenes por email
+17. [Deudas y Prestamos](./17-debts-and-loans.md) — seguimiento de dinero prestado y tomado, reembolsos, vencimientos
 
 ## Monedas compatibles
 

@@ -21,6 +21,7 @@ const SECTIONS = [
   '14-investments',
   '15-encryption',
   '16-export-reports',
+  '17-debts-and-loans',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

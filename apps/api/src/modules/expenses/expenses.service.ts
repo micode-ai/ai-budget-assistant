@@ -80,6 +80,11 @@ export class ExpensesService {
         locationLng: dto.location?.lng,
         source: dto.source,
         receiptImage,
+        isDebt: dto.isDebt ?? false,
+        isDebtRepayment: dto.isDebtRepayment ?? false,
+        debtContactName: dto.debtContactName,
+        debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
+        relatedDebtIncomeId: dto.relatedDebtIncomeId,
         // E2EE: pass through encrypted payload if provided
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
         ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
@@ -96,6 +101,11 @@ export class ExpensesService {
           source: dto.source,
           receiptImage,
           isDeleted: false,
+          isDebt: dto.isDebt ?? false,
+          isDebtRepayment: dto.isDebtRepayment ?? false,
+          debtContactName: dto.debtContactName,
+          debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
+          relatedDebtIncomeId: dto.relatedDebtIncomeId,
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
         };
@@ -230,6 +240,12 @@ export class ExpensesService {
         { notes: { contains: search, mode: 'insensitive' } },
       ];
     }
+    if (filters.isDebt !== undefined) {
+      where.isDebt = filters.isDebt;
+    }
+    if (filters.isDebtRepayment !== undefined) {
+      where.isDebtRepayment = filters.isDebtRepayment;
+    }
 
     const [expenses, total] = await Promise.all([
       this.prisma.expense.findMany({
@@ -253,6 +269,11 @@ export class ExpensesService {
           isRecurring: true,
           recurringId: true,
           source: true,
+          isDebt: true,
+          isDebtRepayment: true,
+          debtContactName: true,
+          debtDueDate: true,
+          relatedDebtIncomeId: true,
           isDeleted: true,
           syncVersion: true,
           encryptedPayload: true,
@@ -338,6 +359,11 @@ export class ExpensesService {
           time: dto.time,
           locationLat: dto.location?.lat,
           locationLng: dto.location?.lng,
+          isDebt: dto.isDebt,
+          isDebtRepayment: dto.isDebtRepayment,
+          debtContactName: dto.debtContactName,
+          debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : dto.debtDueDate === null ? null : undefined,
+          relatedDebtIncomeId: dto.relatedDebtIncomeId,
           syncVersion: { increment: 1 },
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
