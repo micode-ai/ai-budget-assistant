@@ -105,6 +105,10 @@ Lorsque le chiffrement est active pour un compte partage :
 | Histoire des depenses | Partiel | Indisponible |
 | Saisie vocale | Fonctionne pleinement | Fonctionne pleinement |
 | Scan de recus | Fonctionne pleinement | Fonctionne pleinement |
+| Rapports CSV/PDF/Excel | Montants corrects, champs texte vides | Indisponible |
+| Resume mensuel | Fonctionne (noms resolus localement) | Indisponible |
+| Sauvegarde chiffree | Fonctionne pleinement | Fonctionne pleinement |
+| Rapports par email | Montants corrects, champs texte vides | Indisponible |
 
 ## FAQ
 
@@ -125,4 +129,4 @@ Lorsque le chiffrement est active pour un compte partage :
 
 ---
 
-*Voir aussi : [Parametres](./11-settings.md) | [Comptes](./09-accounts.md)*
+*Voir aussi : [Parametres](./11-settings.md) | [Comptes](./09-accounts.md) | [Export et rapports](./16-export-reports.md)*

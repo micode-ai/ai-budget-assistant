@@ -105,6 +105,10 @@ When encryption is enabled for a shared account:
 | Spending Story | Partial | Unavailable |
 | Voice input | Fully works | Fully works |
 | Receipt scanning | Fully works | Fully works |
+| CSV/PDF/Excel reports | Amounts correct, text fields empty | Unavailable |
+| Monthly digest | Works (names resolved locally) | Unavailable |
+| Encrypted backup | Fully works | Fully works |
+| Email reports | Amounts correct, text fields empty | Unavailable |
 
 ## FAQ
 
@@ -125,4 +129,4 @@ When encryption is enabled for a shared account:
 
 ---
 
-*See also: [Settings](./11-settings.md) | [Accounts](./09-accounts.md)*
+*See also: [Settings](./11-settings.md) | [Accounts](./09-accounts.md) | [Export & Reports](./16-export-reports.md)*

@@ -19,6 +19,12 @@ AI Budget Assistant offers three subscription tiers. Every new user starts on th
 | **Unlimited currencies** | — | Yes | Yes |
 | **Spending Stories** | — | Yes | Yes |
 | **AI Insights** | — | Yes | Yes |
+| **CSV export** | Yes | Yes | Yes |
+| **PDF/Excel reports** | — | Yes | Yes |
+| **Monthly digest** | — | Yes | Yes |
+| **Weekly email report** | — | — | Yes |
+| **Monthly digest email** | — | Yes | Yes |
+| **Encrypted backup** | Yes | Yes | Yes |
 | **Advanced reporting** | — | — | Yes |
 
 ## Free Plan
@@ -98,4 +104,4 @@ Track your AI usage from Settings > Subscription:
 
 ---
 
-*See also: [AI Chat](./07-ai-chat.md) | [Settings](./11-settings.md)*
+*See also: [AI Chat](./07-ai-chat.md) | [Settings](./11-settings.md) | [Export & Reports](./16-export-reports.md)*

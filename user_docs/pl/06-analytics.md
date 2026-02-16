@@ -94,7 +94,7 @@ Tabela pokazujaca najczesciej kupowane pozycje z paragonow:
 
 ## Eksport
 
-Dotknij **Eksportuj raport**, aby wygenerowac i udostepnic podsumowanie analityki.
+Dotknij **Eksportuj raport**, aby otworzyc ekran Eksport i raporty, gdzie mozesz generowac raporty PDF, Excel lub CSV, przegladac podsumowania miesieczne i zarzadzac kopiami zapasowymi danych. Zobacz [Eksport i raporty](./16-export-reports.md) po wiecej szczególów.
 
 ## FAQ
 
@@ -106,4 +106,4 @@ Dotknij **Eksportuj raport**, aby wygenerowac i udostepnic podsumowanie analityk
 
 ---
 
-*Zobacz takze: [Budzety](./05-budgets.md) | [Historia wydatkow](./08-spending-story.md)*
+*Zobacz takze: [Budzety](./05-budgets.md) | [Historia wydatkow](./08-spending-story.md) | [Eksport i raporty](./16-export-reports.md)*

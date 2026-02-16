@@ -14,6 +14,12 @@ AI Budget Assistant bietet drei Abonnementstufen. Jeder neue Nutzer startet mit 
 | **Konten** | 1 | Bis zu 3 | Unbegrenzt |
 | **Mitglieder pro Konto** | 1 | Bis zu 5 | Unbegrenzt |
 | **Ausgabenverfolgung** | Vollstandig | Vollstandig | Vollstandig |
+| **CSV-Export** | Ja | Ja | Ja |
+| **PDF/Excel-Berichte** | — | Ja | Ja |
+| **Monatliche Zusammenfassung** | — | Ja | Ja |
+| **Wöchentlicher E-Mail-Bericht** | — | — | Ja |
+| **E-Mail-Zusammenfassung** | — | Ja | Ja |
+| **Verschlüsseltes Backup** | Ja | Ja | Ja |
 | **Pradiktive Analysen** | — | Ja | Ja |
 | **Erkennung von Ausgabenauffalligkeit** | — | Ja | Ja |
 | **Unbegrenzte Wahrungen** | — | Ja | Ja |
@@ -98,4 +104,4 @@ Verfolge deine KI-Nutzung uber Einstellungen > Abonnement:
 
 ---
 
-*Siehe auch: [KI-Chat](./07-ai-chat.md) | [Einstellungen](./11-settings.md)*
+*Siehe auch: [KI-Chat](./07-ai-chat.md) | [Einstellungen](./11-settings.md) | [Export & Berichte](./16-export-reports.md)*

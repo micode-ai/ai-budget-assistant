@@ -398,6 +398,33 @@ export const EncryptedPayloadSchema = z.object({
   fields: z.record(z.string(), EncryptedFieldValueSchema),
 });
 
+// Report & Export schemas
+
+export const ReportFormatSchema = z.enum(['csv', 'pdf', 'excel']);
+
+export const GenerateReportSchema = z.object({
+  format: ReportFormatSchema,
+  startDate: z.string().datetime({ offset: true }),
+  endDate: z.string().datetime({ offset: true }),
+  categoryIds: z.array(z.string().uuid()).optional(),
+  tagIds: z.array(z.string().uuid()).optional(),
+  projectIds: z.array(z.string().uuid()).optional(),
+  currencyCode: CurrencySchema.optional(),
+  includeIncomes: z.boolean().optional().default(true),
+  includeExpenses: z.boolean().optional().default(true),
+});
+
+export const UpdateReportPreferencesSchema = z.object({
+  weeklyEmailEnabled: z.boolean().optional(),
+  weeklyEmailDay: z.number().int().min(0).max(6).optional(),
+  monthlyDigestEnabled: z.boolean().optional(),
+});
+
+export const RestoreBackupSchema = z.object({
+  data: z.string().min(1),
+  overwrite: z.boolean(),
+});
+
 // Type exports from schemas
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
@@ -437,3 +464,6 @@ export type RotateAccountKeyInput = z.infer<typeof RotateAccountKeySchema>;
 export type SetupRecoveryInput = z.infer<typeof SetupRecoverySchema>;
 export type RecoverEncryptionInput = z.infer<typeof RecoverEncryptionSchema>;
 export type EncryptedPayloadInput = z.infer<typeof EncryptedPayloadSchema>;
+export type GenerateReportInput = z.infer<typeof GenerateReportSchema>;
+export type UpdateReportPreferencesInput = z.infer<typeof UpdateReportPreferencesSchema>;
+export type RestoreBackupInput = z.infer<typeof RestoreBackupSchema>;

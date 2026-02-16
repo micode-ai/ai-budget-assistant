@@ -577,7 +577,7 @@ export default function AnalyticsScreen() {
         )}
 
         {/* Export Button */}
-        <TouchableOpacity style={styles.exportButton}>
+        <TouchableOpacity style={styles.exportButton} onPress={() => router.push('/reports')}>
           <Ionicons name="download-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.exportButtonText}>{t('analytics.exportReport')}</Text>
         </TouchableOpacity>

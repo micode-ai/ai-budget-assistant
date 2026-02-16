@@ -12,6 +12,7 @@
 - **Cartera de inversiones** — sigue acciones, ETFs, criptomonedas, bonos y materias primas con precios en tiempo real y analiticas
 - **Presupuestos** — establece limites de gasto con seguimiento en tiempo real y alertas
 - **Analisis interactivo** — graficos con desglose detallado, por categoria y analisis de tendencias
+- **Exportacion e informes** — informes PDF/Excel/CSV, resumenes mensuales, copias de seguridad cifradas, informes por email
 - **Multiples cuentas** — cuentas Personal, Compartida y Empresa con control de acceso basado en roles (Propietario, Editor, Observador)
 - **Sin conexion primero** — los datos se guardan localmente y se sincronizan automaticamente cuando hay conexion
 - **8 idiomas** — English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska, Беларуская
@@ -33,6 +34,7 @@
 13. [Logros y Gamificacion](./13-gamification.md) — rachas, XP, niveles e insignias
 14. [Cartera de inversiones](./14-investments.md) — seguimiento de acciones, ETFs, cripto y analiticas
 15. [Cifrado de extremo a extremo](./15-encryption.md) — protege tus datos con E2EE
+16. [Exportacion e informes](./16-export-reports.md) — informes PDF/Excel/CSV, copias de seguridad, resumenes por email
 
 ## Monedas compatibles
 

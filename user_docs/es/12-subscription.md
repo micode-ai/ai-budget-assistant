@@ -19,6 +19,12 @@ AI Budget Assistant ofrece tres niveles de suscripcion. Cada nuevo usuario comie
 | **Monedas ilimitadas** | — | Si | Si |
 | **Historia de gastos** | — | Si | Si |
 | **Informacion de IA** | — | Si | Si |
+| **Exportacion CSV** | Si | Si | Si |
+| **Informes PDF/Excel** | — | Si | Si |
+| **Resumen mensual** | — | Si | Si |
+| **Resumen semanal por email** | — | — | Si |
+| **Resumen mensual por email** | — | Si | Si |
+| **Copia de seguridad cifrada** | Si | Si | Si |
 | **Informes avanzados** | — | — | Si |
 
 ## Plan Gratuito
@@ -98,4 +104,4 @@ Controla tu uso de IA desde Ajustes > Suscripcion:
 
 ---
 
-*Ver tambien: [Chat IA](./07-ai-chat.md) | [Ajustes](./11-settings.md)*
+*Ver tambien: [Chat IA](./07-ai-chat.md) | [Ajustes](./11-settings.md) | [Exportacion e informes](./16-export-reports.md)*

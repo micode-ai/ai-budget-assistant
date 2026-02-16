@@ -11,6 +11,7 @@
 - **Gamification** — achievements, daily streaks, XP/levels, and badge collection to keep you motivated
 - **Budgets** — set spending limits with real-time progress tracking and alerts
 - **Interactive Analytics** — charts with drill-down, category breakdowns, and trend analysis
+- **Export & Reports** — PDF/Excel/CSV reports, monthly digests, encrypted backups, email summaries
 - **Investment Portfolio** — track stocks, ETFs, crypto, bonds with real-time prices and benchmark comparison
 - **Multiple Accounts** — Personal, Shared, Business, and Investment accounts with role-based access (Owner, Editor, Viewer)
 - **Offline-First** — data saves locally and syncs automatically when online
@@ -33,6 +34,7 @@
 13. [Achievements & Gamification](./13-gamification.md) — streaks, XP, levels, and badges
 14. [Investment Portfolio](./14-investments.md) — stocks, ETFs, crypto tracking and analytics
 15. [End-to-End Encryption](./15-encryption.md) — protect your data with E2EE
+16. [Export & Reports](./16-export-reports.md) — PDF/Excel/CSV reports, backups, email digests
 
 ## Supported Currencies
 

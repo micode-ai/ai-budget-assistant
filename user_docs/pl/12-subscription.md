@@ -19,6 +19,12 @@ AI Budget Assistant oferuje trzy poziomy subskrypcji. Kazdy nowy uzytkownik zacz
 | **Nieograniczone waluty** | — | Tak | Tak |
 | **Historia wydatkow** | — | Tak | Tak |
 | **Wnioski AI** | — | Tak | Tak |
+| **Eksport CSV** | Tak | Tak | Tak |
+| **Raporty PDF/Excel** | — | Tak | Tak |
+| **Podsumowanie miesieczne** | — | Tak | Tak |
+| **Tygodniowy raport e-mail** | — | — | Tak |
+| **Miesieczny raport e-mail** | — | Tak | Tak |
+| **Zaszyfrowana kopia zapasowa** | Tak | Tak | Tak |
 | **Zaawansowane raporty** | — | — | Tak |
 
 ## Plan Free
@@ -98,4 +104,4 @@ Sledz uzycie AI z poziomu Ustawienia > Subskrypcja:
 
 ---
 
-*Zobacz takze: [Czat AI](./07-ai-chat.md) | [Ustawienia](./11-settings.md)*
+*Zobacz takze: [Czat AI](./07-ai-chat.md) | [Ustawienia](./11-settings.md) | [Eksport i raporty](./16-export-reports.md)*

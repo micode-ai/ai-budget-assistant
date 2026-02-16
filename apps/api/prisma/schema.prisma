@@ -84,6 +84,15 @@ model User {
   encryptionProfile       UserEncryptionProfile?
   accountEncryptionKeys   AccountEncryptionKey[]
 
+  // Report preferences
+  weeklyEmailEnabled    Boolean   @default(false) @map("weekly_email_enabled")
+  weeklyEmailDay        Int       @default(1)     @map("weekly_email_day")
+  monthlyDigestEnabled  Boolean   @default(false) @map("monthly_digest_enabled")
+
+  // Report & backup relations
+  generatedReports      GeneratedReport[]
+  backupHistory         BackupHistory[]
+
   @@map("users")
 }
 
@@ -124,6 +133,9 @@ model Account {
   portfolioHoldings       PortfolioHolding[]
   investmentTransactions  InvestmentTransaction[]
   encryptionKeys          AccountEncryptionKey[]
+  generatedReports        GeneratedReport[]
+  backupHistory           BackupHistory[]
+  monthlyDigestCache      MonthlyDigestCache[]
 
   @@map("accounts")
 }
@@ -909,4 +921,63 @@ model AccountEncryptionKey {
 
   @@unique([accountId, userId])
   @@map("account_encryption_keys")
+}
+
+// ---- Reports & Backups ----
+
+model GeneratedReport {
+  id           String    @id @default(uuid())
+  accountId    String    @map("account_id")
+  userId       String    @map("user_id")
+  format       String
+  status       String    @default("pending")
+  fileName     String    @map("file_name")
+  fileData     Bytes?    @map("file_data")
+  fileSize     Int?      @map("file_size")
+  filters      Json      @db.JsonB
+  errorMessage String?   @map("error_message")
+  expiresAt    DateTime  @map("expires_at")
+  completedAt  DateTime? @map("completed_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([accountId, userId])
+  @@map("generated_reports")
+}
+
+model BackupHistory {
+  id                   String   @id @default(uuid())
+  userId               String   @map("user_id")
+  accountId            String   @map("account_id")
+  version              Int      @default(1)
+  entityCounts         Json     @map("entity_counts") @db.JsonB
+  encrypted            Boolean  @default(false)
+  encryptionKeyVersion Int?     @map("encryption_key_version")
+  fileSize             Int      @map("file_size")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("backup_history")
+}
+
+model MonthlyDigestCache {
+  id          String   @id @default(uuid())
+  accountId   String   @map("account_id")
+  periodStart DateTime @map("period_start") @db.Date
+  periodEnd   DateTime @map("period_end")   @db.Date
+  data        Json     @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at")
+  expiresAt   DateTime @map("expires_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, periodStart, periodEnd])
+  @@index([accountId])
+  @@map("monthly_digest_cache")
 }

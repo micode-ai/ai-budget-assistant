@@ -105,6 +105,11 @@ Gdy szyfrowanie jest wlaczone dla wspolnego konta:
 | Historia wydatkow | Czesciowo | Niedostepne |
 | Wprowadzanie glosowe | W pelni dziala | W pelni dziala |
 | Skanowanie paragonow | W pelni dziala | W pelni dziala |
+| Raporty PDF/Excel | Czesciowo (puste nazwy) | Niedostepne |
+| Eksport CSV | W pelni dziala | W pelni dziala |
+| Podsumowanie miesieczne | W pelni dziala | Obliczane lokalnie |
+| Raporty e-mail | Czesciowo (puste nazwy) | Niedostepne |
+| Kopia zapasowa danych | W pelni dziala | W pelni dziala |
 
 ## FAQ
 
@@ -125,4 +130,4 @@ Gdy szyfrowanie jest wlaczone dla wspolnego konta:
 
 ---
 
-*Zobacz takze: [Ustawienia](./11-settings.md) | [Konta](./09-accounts.md)*
+*Zobacz takze: [Ustawienia](./11-settings.md) | [Konta](./09-accounts.md) | [Eksport i raporty](./16-export-reports.md)*
