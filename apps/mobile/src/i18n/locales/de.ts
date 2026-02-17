@@ -288,7 +288,7 @@ export default {
   },
   receipt: {
     title: 'Beleg scannen',
-    instructions: 'Foto aufnehmen oder aus Galerie wählen',
+    instructions: 'Foto aufnehmen, aus Galerie wählen oder PDF hochladen',
     hint: 'Richte deine Kamera auf einen Beleg für beste Ergebnisse',
     takePhoto: 'Foto aufnehmen',
     chooseGallery: 'Aus Galerie wählen',
@@ -311,6 +311,8 @@ export default {
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
     discount: 'Rabatt',
     saveImage: 'Kassenbon-Bild speichern',
+    choosePdf: 'PDF hochladen',
+    analyzingPdf: 'PDF-Beleg wird analysiert...',
     userPromptPlaceholder: 'Zusätzliche Anweisungen für KI (optional)',
   },
   budgetNew: {
@@ -522,6 +524,7 @@ export default {
     captureImageFailed: 'Bild konnte nicht aufgenommen werden',
     pickImageFailed: 'Bild konnte nicht ausgewählt werden',
     processReceiptFailed: 'Beleg konnte nicht verarbeitet werden',
+    pdfTooLarge: 'PDF-Datei ist zu groß (max. 10 MB)',
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
     createBudgetFailed: 'Budget konnte nicht erstellt werden',
     sendMessageFailed: 'Nachricht konnte nicht gesendet werden',

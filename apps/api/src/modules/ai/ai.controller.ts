@@ -78,8 +78,17 @@ export class AiController {
   @TrackAiUsage('ocr', 2.0)
   async scanReceipt(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { imageBase64: string; userPrompt?: string },
+    @Body() body: { imageBase64: string; userPrompt?: string; mimeType?: string },
   ) {
+    if (body.mimeType === 'application/pdf') {
+      return this.ocrService.parseReceiptPdf(
+        body.imageBase64,
+        req.user.id,
+        req.accountId,
+        body.userPrompt,
+      );
+    }
+
     return this.ocrService.parseReceipt(body.imageBase64, req.user.id, req.accountId, body.userPrompt);
   }
 

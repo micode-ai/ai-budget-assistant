@@ -288,7 +288,7 @@ export default {
   },
   receipt: {
     title: 'Skanuj paragon',
-    instructions: 'Zrób zdjęcie lub wybierz z galerii',
+    instructions: 'Zrób zdjęcie, wybierz z galerii lub wgraj PDF',
     hint: 'Skieruj aparat na paragon, aby uzyskać najlepsze wyniki',
     takePhoto: 'Zrób zdjęcie',
     chooseGallery: 'Wybierz z galerii',
@@ -311,6 +311,8 @@ export default {
     saveFailed: 'Nie udało się zapisać wydatku',
     discount: 'Rabat',
     saveImage: 'Zapisz zdjęcie paragonu',
+    choosePdf: 'Wgraj PDF',
+    analyzingPdf: 'Analizowanie paragonu PDF...',
     userPromptPlaceholder: 'Dodatkowe instrukcje dla AI (opcjonalnie)',
   },
   budgetNew: {
@@ -522,6 +524,7 @@ export default {
     captureImageFailed: 'Nie udało się zrobić zdjęcia',
     pickImageFailed: 'Nie udało się wybrać zdjęcia',
     processReceiptFailed: 'Nie udało się przetworzyć paragonu',
+    pdfTooLarge: 'Plik PDF jest za duży (maks. 10 MB)',
     saveFailed: 'Nie udało się zapisać wydatku',
     createBudgetFailed: 'Nie udało się utworzyć budżetu',
     sendMessageFailed: 'Nie udało się wysłać wiadomości',

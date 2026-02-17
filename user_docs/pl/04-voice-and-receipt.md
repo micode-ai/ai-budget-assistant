@@ -45,11 +45,12 @@ Po zapisaniu mozesz dotknac **Dodaj kolejny**, aby nagrac nowy wydatek glosowy.
 ### Jak to dziala
 
 1. Dotknij **Skanuj paragon** z szybkich akcji na Pulpicie lub dotknij **+** na ekranie Transakcje i wybierz **Skanuj paragon**
-2. Zobaczysz dwie opcje:
+2. Zobaczysz trzy opcje:
    - **Zrob zdjecie** — otwiera aparat, aby sfotografowac paragon
    - **Wybierz z galerii** — wybierz istniejace zdjecie
+   - **Wgraj PDF** — wybierz plik PDF (faktury elektroniczne, skanowane paragony, do 10 MB)
 3. Opcjonalnie wprowadz **Dodatkowe instrukcje dla AI** (np. "Podziel rowno miedzy dwie osoby", "Pomin napiwek")
-4. Aplikacja przeanalizuje obraz paragonu i wyodrebni dane
+4. Aplikacja przeanalizuje paragon i wyodrebni dane
 
 ### Ekran potwierdzenia
 
@@ -83,6 +84,9 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 
 - **P: Czy moge skanowac paragony w dowolnym jezyku?**
   **O:** Tak, AI moze przetwarzac paragony w wiekszosci jezykow i wyodrebni kwoty oraz pozycje niezaleznie od jezyka paragonu.
+
+- **P: Jakie pliki PDF sa obslugiwane?**
+  **O:** Obslugiwane sa zarowno cyfrowe pliki PDF (np. faktury Amazon lub PayPal), jak i zeskanowane paragony w formacie PDF. Maksymalny rozmiar pliku wynosi 10 MB. Cyfrowe pliki PDF z mozliwoscia zaznaczania tekstu sa przetwarzane szybciej i dokladniej. W przypadku zeskanowanych PDF upewnij sie, ze skan jest wyrazny i o wysokim kontraście.
 
 - **P: Dlaczego kwota byla bledna po zeskanowaniu?**
   **O:** Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki.

@@ -45,11 +45,12 @@ Apres la sauvegarde, vous pouvez appuyer sur **Ajouter une autre** pour enregist
 ### Comment ca marche
 
 1. Appuyez sur **Scanner un recu** dans les actions rapides du Tableau de bord, ou appuyez sur **+** dans l'ecran Transactions et selectionnez **Scanner un recu**
-2. Vous verrez deux options :
+2. Vous verrez trois options :
    - **Prendre une photo** — ouvre votre appareil photo pour photographier le recu
    - **Choisir depuis la galerie** — selectionnez une photo existante
+   - **Importer un PDF** — choisissez un fichier PDF (factures numeriques, recus scannes, jusqu'a 10 Mo)
 3. Optionnellement, entrez des **Instructions supplementaires pour l'IA** (par ex. "Diviser en parts egales entre deux personnes", "Ignorer le pourboire")
-4. L'application analyse l'image du recu et en extrait les donnees
+4. L'application analyse le recu et en extrait les donnees
 
 ### Ecran de confirmation
 
@@ -83,6 +84,9 @@ Verifiez et corrigez les details, puis :
 
 - **Q : Puis-je scanner des recus dans n'importe quelle langue ?**
   **R :** Oui, l'IA peut traiter des recus dans la plupart des langues et extrait les montants et les articles quelle que soit la langue du recu.
+
+- **Q : Quels fichiers PDF sont pris en charge ?**
+  **R :** Les PDFs numeriques (par ex. factures Amazon ou PayPal) et les recus scannes en PDF sont tous deux pris en charge. La taille maximale du fichier est de 10 Mo. Les PDFs numeriques avec du texte selectionnable sont traites plus rapidement et avec plus de precision. Pour les PDFs scannes, assurez-vous que le scan est net et contraste.
 
 - **Q : Pourquoi le montant etait-il incorrect apres le scan ?**
   **R :** L'extraction par IA n'est pas toujours parfaite. Verifiez toujours l'ecran de confirmation et corrigez les erreurs avant de sauvegarder. Les recus flous ou endommages peuvent produire des resultats moins precis.

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
+import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
 
 export interface ReceiptItem {
@@ -46,6 +47,7 @@ interface CategoryWithName {
 
 @Injectable()
 export class OcrService {
+  private readonly logger = new Logger(OcrService.name);
   private readonly openai: OpenAI;
 
   constructor(
@@ -57,27 +59,29 @@ export class OcrService {
     });
   }
 
-  async parseReceipt(
-    imageBase64: string,
-    userId: string,
-    accountId: string,
+  private buildReceiptPrompt(
+    categoryNames: string,
+    source: 'image' | 'text',
     userPrompt?: string,
-  ): Promise<ReceiptExpense> {
-    // Get account's categories for categorization
-    const categories = await this.prisma.category.findMany({
-      where: {
-        OR: [{ isSystem: true }, { accountId }],
-        type: 'expense',
-        isDeleted: false,
-      },
-    });
+    receiptText?: string,
+  ): string {
+    const sourceLabel = source === 'image' ? 'receipt image' : 'receipt text';
 
-    const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-
-    const prompt = `Analyze this receipt image and extract all information.
+    let prompt = `Analyze this ${sourceLabel} and extract all information.
 
 Available expense categories for classification: ${categoryNames}
+`;
 
+    if (source === 'text' && receiptText) {
+      prompt += `
+Receipt text:
+---
+${receiptText}
+---
+`;
+    }
+
+    prompt += `
 Return a JSON object with the following structure:
 {
   "merchantName": "store/restaurant name or null if not found",
@@ -123,43 +127,23 @@ Important:
 - If currency symbol is not clear, guess based on merchant location/language
 - Total is required - estimate from items if not clearly visible
 - Be thorough but fast
-- Only return valid JSON, no other text${userPrompt ? `\n\nAdditional user instructions:\n${userPrompt}` : ''}`;
+- Only return valid JSON, no other text`;
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: prompt },
-            {
-              type: 'image_url',
-              image_url: {
-                url: `data:image/jpeg;base64,${imageBase64}`,
-                detail: 'high',
-              },
-            },
-          ],
-        },
-      ],
-      max_tokens: 2000,
-      response_format: { type: 'json_object' },
-    });
-
-    const content = response.choices[0]?.message?.content;
-    if (!content) {
-      throw new Error('No response from AI');
+    if (userPrompt) {
+      prompt += `\n\nAdditional user instructions:\n${userPrompt}`;
     }
 
-    const parsed: ParsedReceipt & { suggestedCategory?: string } =
-      JSON.parse(content);
+    return prompt;
+  }
 
-    // Find matching category
+  private buildReceiptExpense(
+    parsed: ParsedReceipt & { suggestedCategory?: string },
+    categories: CategoryWithName[],
+  ): ReceiptExpense {
     const matchedCategory = categories.find(
       (c: CategoryWithName) => c.name.toLowerCase() === parsed.suggestedCategory?.toLowerCase(),
     );
 
-    // Generate description from items or merchant
     let description = '';
     if (parsed.items && parsed.items.length > 0) {
       if (parsed.items.length === 1) {
@@ -185,6 +169,152 @@ Important:
       confidence: parsed.confidence || 0.7,
       receiptItems: parsed.items || [],
     };
+  }
+
+  private async getExpenseCategories(accountId: string): Promise<CategoryWithName[]> {
+    return this.prisma.category.findMany({
+      where: {
+        OR: [{ isSystem: true }, { accountId }],
+        type: 'expense',
+        isDeleted: false,
+      },
+    });
+  }
+
+  async parseReceipt(
+    imageBase64: string,
+    userId: string,
+    accountId: string,
+    userPrompt?: string,
+    imageDataUrl?: string,
+  ): Promise<ReceiptExpense> {
+    const categories = await this.getExpenseCategories(accountId);
+    const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
+    const prompt = this.buildReceiptPrompt(categoryNames, 'image', userPrompt);
+
+    const url = imageDataUrl || `data:image/jpeg;base64,${imageBase64}`;
+
+    this.logger.log(`[Vision] Image URL prefix: ${url.substring(0, 80)}...`);
+    this.logger.log(`[Vision] Image URL total length: ${url.length}`);
+
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: prompt },
+            {
+              type: 'image_url',
+              image_url: {
+                url,
+                detail: 'high',
+              },
+            },
+          ],
+        },
+      ],
+      max_tokens: 2000,
+      response_format: { type: 'json_object' },
+    });
+
+    const content = response.choices[0]?.message?.content;
+    this.logger.log(`[Vision] GPT response: ${content}`);
+    if (!content) {
+      throw new Error('No response from AI');
+    }
+
+    const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
+    return this.buildReceiptExpense(parsed, categories);
+  }
+
+  async parseReceiptPdf(
+    pdfBase64: string,
+    userId: string,
+    accountId: string,
+    userPrompt?: string,
+  ): Promise<ReceiptExpense> {
+    const buffer = Buffer.from(pdfBase64, 'base64');
+    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+
+    try {
+      // Try text extraction first
+      const textResult = await parser.getText();
+      const trimmedText = textResult.text.trim();
+
+      this.logger.log(`[PDF] Extracted text length: ${trimmedText.length}`);
+      this.logger.log(`[PDF] Extracted text (first 500 chars): ${trimmedText.substring(0, 500)}`);
+
+      if (trimmedText && trimmedText.length >= 20) {
+        // Text-based PDF — use cheaper text-only GPT call
+        const categories = await this.getExpenseCategories(accountId);
+        const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
+        const prompt = this.buildReceiptPrompt(categoryNames, 'text', userPrompt, trimmedText);
+
+        this.logger.log(`[PDF] Using text-based parsing, sending to GPT-4o (text-only)`);
+
+        const response = await this.openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 2000,
+          response_format: { type: 'json_object' },
+        });
+
+        const content = response.choices[0]?.message?.content;
+        this.logger.log(`[PDF] GPT response: ${content}`);
+        if (!content) throw new Error('No response from AI');
+
+        const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
+        return this.buildReceiptExpense(parsed, categories);
+      }
+
+      // Scanned PDF — send the full PDF as a file to GPT-4o
+      this.logger.log(`[PDF] No text found, sending full PDF as file to GPT-4o`);
+      return this.parseReceiptFile(pdfBase64, userId, accountId, userPrompt);
+    } finally {
+      await parser.destroy();
+    }
+  }
+
+  private async parseReceiptFile(
+    pdfBase64: string,
+    userId: string,
+    accountId: string,
+    userPrompt?: string,
+  ): Promise<ReceiptExpense> {
+    const categories = await this.getExpenseCategories(accountId);
+    const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
+    const prompt = this.buildReceiptPrompt(categoryNames, 'image', userPrompt);
+
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: prompt },
+            {
+              type: 'file',
+              file: {
+                filename: 'receipt.pdf',
+                file_data: `data:application/pdf;base64,${pdfBase64}`,
+              },
+            },
+          ],
+        },
+      ],
+      max_tokens: 2000,
+      response_format: { type: 'json_object' },
+    });
+
+    const content = response.choices[0]?.message?.content;
+    this.logger.log(`[PDF-File] GPT response: ${content}`);
+    if (!content) {
+      throw new Error('No response from AI');
+    }
+
+    const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
+    return this.buildReceiptExpense(parsed, categories);
   }
 
   async extractTextFromImage(imageBase64: string): Promise<string> {

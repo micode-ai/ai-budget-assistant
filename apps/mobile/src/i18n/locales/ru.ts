@@ -288,7 +288,7 @@ export default {
   },
   receipt: {
     title: 'Сканировать чек',
-    instructions: 'Сфотографируйте или выберите из галереи',
+    instructions: 'Сфотографируйте, выберите из галереи или загрузите PDF',
     hint: 'Наведите камеру на чек для лучшего результата',
     takePhoto: 'Сделать фото',
     chooseGallery: 'Выбрать из галереи',
@@ -311,6 +311,8 @@ export default {
     saveFailed: 'Не удалось сохранить расход',
     discount: 'Скидка',
     saveImage: 'Сохранить фото чека',
+    choosePdf: 'Загрузить PDF',
+    analyzingPdf: 'Анализ PDF чека...',
     userPromptPlaceholder: 'Дополнительные инструкции для ИИ (необязательно)',
   },
   budgetNew: {
@@ -522,6 +524,7 @@ export default {
     captureImageFailed: 'Не удалось сделать снимок',
     pickImageFailed: 'Не удалось выбрать изображение',
     processReceiptFailed: 'Не удалось обработать чек',
+    pdfTooLarge: 'PDF-файл слишком большой (макс. 10 МБ)',
     saveFailed: 'Не удалось сохранить расход',
     createBudgetFailed: 'Не удалось создать бюджет',
     sendMessageFailed: 'Не удалось отправить сообщение',

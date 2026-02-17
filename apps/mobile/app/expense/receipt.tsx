@@ -47,9 +47,11 @@ export default function ReceiptExpenseScreen() {
     isProcessing,
     error,
     imageUri,
+    isPdf,
     scannedReceipt,
     pickFromCamera,
     pickFromGallery,
+    pickPdfDocument,
     reset,
   } = useReceiptScanner();
 
@@ -71,6 +73,10 @@ export default function ReceiptExpenseScreen() {
 
   const handleGalleryPress = async () => {
     await pickFromGallery(userPrompt.trim() || undefined);
+  };
+
+  const handlePdfPress = async () => {
+    await pickPdfDocument(userPrompt.trim() || undefined);
   };
 
   const handleConfirmExpense = async () => {
@@ -95,9 +101,9 @@ export default function ReceiptExpenseScreen() {
         sortOrder: index,
       }));
 
-      // Compress and encode receipt image if checkbox is checked
+      // Compress and encode receipt image if checkbox is checked (not for PDFs)
       let receiptImageBase64: string | undefined;
-      if (saveImage && imageUri) {
+      if (saveImage && imageUri && !isPdf) {
         try {
           receiptImageBase64 = await compressAndEncodeImage(imageUri);
         } catch (e) {
@@ -189,9 +195,12 @@ export default function ReceiptExpenseScreen() {
                 {imageUri && (
                   <Image source={{ uri: imageUri }} style={styles.previewImage} />
                 )}
+                {isPdf && !imageUri && (
+                  <Ionicons name="document-text" size={80} color={theme.colors.primary} style={{ marginBottom: theme.spacing[6] }} />
+                )}
                 <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />
                 <Text style={styles.processingText}>
-                  {t('receipt.extracting')}
+                  {isPdf ? t('receipt.analyzingPdf') : t('receipt.extracting')}
                 </Text>
               </View>
             ) : (
@@ -213,6 +222,15 @@ export default function ReceiptExpenseScreen() {
                   <Ionicons name="images" size={28} color={theme.colors.primary} />
                   <Text style={styles.galleryButtonText}>{t('receipt.chooseGallery')}</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.galleryButton}
+                  onPress={handlePdfPress}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="document-text" size={28} color={theme.colors.primary} />
+                  <Text style={styles.galleryButtonText}>{t('receipt.choosePdf')}</Text>
+                </TouchableOpacity>
               </View>
             )}
           </>
@@ -220,7 +238,7 @@ export default function ReceiptExpenseScreen() {
           <View style={styles.confirmContainer}>
             <Text style={styles.confirmTitle}>{t('receipt.scannedTitle')}</Text>
 
-            {imageUri && (
+            {!isPdf && imageUri && (
               <Image source={{ uri: imageUri }} style={styles.receiptImage} />
             )}
 
@@ -317,18 +335,20 @@ export default function ReceiptExpenseScreen() {
               </View>
             </View>
 
-            <TouchableOpacity
-              style={styles.saveImageCheckbox}
-              onPress={() => setSaveImage(!saveImage)}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name={saveImage ? 'checkbox' : 'square-outline'}
-                size={24}
-                color={saveImage ? theme.colors.primary : theme.colors.textTertiary}
-              />
-              <Text style={styles.saveImageText}>{t('receipt.saveImage')}</Text>
-            </TouchableOpacity>
+            {!isPdf && (
+              <TouchableOpacity
+                style={styles.saveImageCheckbox}
+                onPress={() => setSaveImage(!saveImage)}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={saveImage ? 'checkbox' : 'square-outline'}
+                  size={24}
+                  color={saveImage ? theme.colors.primary : theme.colors.textTertiary}
+                />
+                <Text style={styles.saveImageText}>{t('receipt.saveImage')}</Text>
+              </TouchableOpacity>
+            )}
 
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.editButton} onPress={handleEditExpense}>

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { File } from 'expo-file-system/next';
 import { api } from '@/services/api';
@@ -28,16 +28,21 @@ export interface ReceiptScannerState {
   isProcessing: boolean;
   error: string | null;
   imageUri: string | null;
+  isPdf: boolean;
   scannedReceipt: ScannedReceipt | null;
 }
+
+const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB
 
 export function useReceiptScanner() {
   const [state, setState] = useState<ReceiptScannerState>({
     isProcessing: false,
     error: null,
     imageUri: null,
+    isPdf: false,
     scannedReceipt: null,
   });
+  const pickingRef = useRef(false);
 
   const pickFromCamera = useCallback(async (userPrompt?: string): Promise<ScannedReceipt | null> => {
     try {
@@ -105,12 +110,69 @@ export function useReceiptScanner() {
     }
   }, []);
 
+  const pickPdfDocument = useCallback(async (userPrompt?: string): Promise<ScannedReceipt | null> => {
+    if (pickingRef.current) return null;
+    pickingRef.current = true;
+    try {
+      const DocumentPicker = await import('expo-document-picker');
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+        copyToCacheDirectory: true,
+      });
+
+      if (result.canceled || !result.assets?.[0]) {
+        return null;
+      }
+
+      const asset = result.assets[0];
+
+      if (asset.size && asset.size > MAX_PDF_SIZE) {
+        setState((s) => ({ ...s, error: i18n.t('errors.pdfTooLarge') }));
+        return null;
+      }
+
+      setState((s) => ({
+        ...s,
+        isProcessing: true,
+        error: null,
+        imageUri: null,
+        isPdf: true,
+        scannedReceipt: null,
+      }));
+
+      const file = new File(asset.uri);
+      const base64 = await file.base64();
+
+      const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined, 'application/pdf');
+
+      setState((s) => ({
+        ...s,
+        isProcessing: false,
+        scannedReceipt,
+      }));
+
+      return scannedReceipt;
+    } catch (error) {
+      console.error('[ReceiptScanner] Failed to process PDF:', error);
+      setState((s) => ({
+        ...s,
+        isProcessing: false,
+        isPdf: false,
+        error: error instanceof Error ? error.message : i18n.t('errors.processReceiptFailed'),
+      }));
+      return null;
+    } finally {
+      pickingRef.current = false;
+    }
+  }, []);
+
   const processImage = async (imageUri: string, userPrompt?: string): Promise<ScannedReceipt | null> => {
     setState((s) => ({
       ...s,
       isProcessing: true,
       error: null,
       imageUri,
+      isPdf: false,
       scannedReceipt: null,
     }));
 
@@ -156,6 +218,7 @@ export function useReceiptScanner() {
       isProcessing: false,
       error: null,
       imageUri: null,
+      isPdf: false,
       scannedReceipt: null,
     });
   }, []);
@@ -164,6 +227,7 @@ export function useReceiptScanner() {
     ...state,
     pickFromCamera,
     pickFromGallery,
+    pickPdfDocument,
     processExistingImage,
     reset,
   };

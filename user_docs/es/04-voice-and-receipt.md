@@ -45,11 +45,12 @@ Despues de guardar, puedes tocar **Agregar otro** para grabar un nuevo gasto por
 ### Como funciona
 
 1. Toca **Escanear recibo** desde las acciones rapidas del Panel, o toca **+** en la pantalla de Transacciones y selecciona **Escanear recibo**
-2. Veras dos opciones:
+2. Veras tres opciones:
    - **Tomar foto** — abre tu camara para fotografiar el recibo
    - **Elegir de la galeria** — selecciona una foto existente
+   - **Subir PDF** — elige un archivo PDF (facturas digitales, recibos escaneados, hasta 10 MB)
 3. Opcionalmente, introduce **Instrucciones adicionales para la IA** (por ejemplo, "Dividir a partes iguales entre dos personas", "Ignorar la propina")
-4. La aplicacion analiza la imagen del recibo y extrae los datos
+4. La aplicacion analiza el recibo y extrae los datos
 
 ### Pantalla de confirmacion
 
@@ -83,6 +84,9 @@ Revisa y corrige cualquier detalle, luego:
 
 - **P: Puedo escanear recibos en cualquier idioma?**
   **R:** Si, la IA puede procesar recibos en la mayoria de los idiomas y extraera importes y articulos independientemente del idioma del recibo.
+
+- **P: Que archivos PDF son compatibles?**
+  **R:** Se admiten tanto PDFs digitales (por ejemplo, facturas de Amazon o PayPal) como recibos escaneados en PDF. El tamano maximo del archivo es 10 MB. Los PDFs digitales con texto seleccionable se procesan mas rapido y con mayor precision. Para PDFs escaneados, asegurate de que el escaneo sea nitido y de alto contraste.
 
 - **P: Por que el importe fue incorrecto despues del escaneo?**
   **R:** La extraccion por IA no siempre es perfecta. Revisa siempre la pantalla de confirmacion y corrige cualquier error antes de guardar. Los recibos borrosos o danados pueden producir resultados menos precisos.

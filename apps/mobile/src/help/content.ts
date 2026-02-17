@@ -398,11 +398,12 @@ After saving, you can tap **Add Another** to record a new voice expense.
 ### How It Works
 
 1. Tap **Scan Receipt** from the Dashboard quick actions, or tap **+** on the Transactions screen and select **Scan Receipt**
-2. You'll see two options:
+2. You'll see three options:
    - **Take Photo** — opens your camera to photograph the receipt
    - **Choose from Gallery** — select an existing photo
+   - **Upload PDF** — pick a PDF file (digital invoices, scanned receipts up to 10 MB)
 3. Optionally, enter **Additional instructions for AI** (e.g., "Split equally between two people", "Ignore the tip")
-4. The app analyzes the receipt image and extracts data
+4. The app analyzes the receipt and extracts data
 
 ### Confirmation Screen
 
@@ -436,6 +437,9 @@ Review and correct any details, then:
 
 - **Q: Can I scan receipts in any language?**
   **A:** Yes, the AI can process receipts in most languages and will extract amounts and items regardless of the receipt language.
+
+- **Q: What PDF files are supported?**
+  **A:** Both digital PDFs (e.g. Amazon or PayPal invoices) and scanned PDF receipts are supported. Maximum file size is 10 MB. Digital PDFs with selectable text are processed faster and more accurately. For best results with scanned PDFs, make sure the scan is clear and high-contrast.
 
 - **Q: Why was the amount wrong after scanning?**
   **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results.
@@ -2402,11 +2406,12 @@ iOS, Android, Web
 ### Как это работает
 
 1. Нажмите **Сканировать чек** в быстрых действиях на Главной или нажмите **+** на экране Транзакции и выберите **Сканировать чек**
-2. Вы увидите два варианта:
+2. Вы увидите три варианта:
    - **Сделать фото** — открывает камеру для фотографирования чека
    - **Выбрать из галереи** — выбрать существующее фото
+   - **Загрузить PDF** — выбрать PDF-файл (электронные чеки, сканированные квитанции, до 10 МБ)
 3. По желанию введите **Дополнительные инструкции для ИИ** (например, «Разделить поровну между двумя людьми», «Игнорировать чаевые»)
-4. Приложение анализирует изображение чека и извлекает данные
+4. Приложение анализирует чек и извлекает данные
 
 ### Экран подтверждения
 
@@ -2440,6 +2445,9 @@ iOS, Android, Web
 
 - **В: Можно ли сканировать чеки на любом языке?**
   **О:** Да, ИИ может обрабатывать чеки на большинстве языков и извлекает суммы и позиции независимо от языка чека.
+
+- **В: Какие PDF-файлы поддерживаются?**
+  **О:** Поддерживаются как цифровые PDF (например, счета от Amazon или PayPal), так и сканированные чеки в PDF. Максимальный размер файла — 10 МБ. Цифровые PDF с извлекаемым текстом обрабатываются быстрее и точнее. Для сканированных PDF убедитесь, что скан чёткий и контрастный.
 
 - **В: Почему сумма была неправильной после сканирования?**
   **О:** Извлечение данных ИИ не всегда идеально. Всегда проверяйте экран подтверждения и исправляйте ошибки перед сохранением. Размытые или повреждённые чеки могут давать менее точные результаты.
@@ -4419,11 +4427,12 @@ iOS, Android, Web
 ### Як це працює
 
 1. Натисніть **Сканувати чек** серед швидких дій на Головна, або натисніть **+** на екрані Транзакції та оберіть **Сканувати чек**
-2. Ви побачите два варіанти:
+2. Ви побачите три варіанти:
    - **Зробити фото** — відкриває камеру для фотографування чека
    - **Обрати з галереї** — оберіть існуюче фото
+   - **Завантажити PDF** — оберіть PDF-файл (електронні чеки, сканований чек, до 10 МБ)
 3. За бажанням введіть **Додаткові інструкції для ШІ** (наприклад, "Розділити порівну на двох", "Ігнорувати чайові")
-4. Додаток аналізує зображення чека та розпізнає дані
+4. Додаток аналізує чек та розпізнає дані
 
 ### Екран підтвердження
 
@@ -4457,6 +4466,9 @@ iOS, Android, Web
 
 - **П:** Чи можу я сканувати чеки будь-якою мовою?
   **В:** Так, ШІ може обробляти чеки більшістю мов та розпізнає суми та позиції незалежно від мови чека.
+
+- **П:** Які PDF-файли підтримуються?
+  **В:** Підтримуються як цифрові PDF (наприклад, рахунки від Amazon або PayPal), так і сканований чек у PDF. Максимальний розмір файлу — 10 МБ. Цифрові PDF з текстом, що виділяється, обробляються швидше та точніше. Для сканованих PDF переконайтесь, що скан чіткий та контрастний.
 
 - **П:** Чому сума після сканування виявилася неправильною?
   **В:** ШІ-розпізнавання не завжди ідеальне. Завжди перевіряйте екран підтвердження та виправляйте будь-які помилки перед збереженням. Розмиті або пошкоджені чеки можуть давати менш точні результати.
@@ -6433,11 +6445,12 @@ Po zapisaniu mozesz dotknac **Dodaj kolejny**, aby nagrac nowy wydatek glosowy.
 ### Jak to dziala
 
 1. Dotknij **Skanuj paragon** z szybkich akcji na Pulpicie lub dotknij **+** na ekranie Transakcje i wybierz **Skanuj paragon**
-2. Zobaczysz dwie opcje:
+2. Zobaczysz trzy opcje:
    - **Zrob zdjecie** — otwiera aparat, aby sfotografowac paragon
    - **Wybierz z galerii** — wybierz istniejace zdjecie
+   - **Wgraj PDF** — wybierz plik PDF (faktury elektroniczne, skanowane paragony, do 10 MB)
 3. Opcjonalnie wprowadz **Dodatkowe instrukcje dla AI** (np. "Podziel rowno miedzy dwie osoby", "Pomin napiwek")
-4. Aplikacja przeanalizuje obraz paragonu i wyodrebni dane
+4. Aplikacja przeanalizuje paragon i wyodrebni dane
 
 ### Ekran potwierdzenia
 
@@ -6471,6 +6484,9 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 
 - **P: Czy moge skanowac paragony w dowolnym jezyku?**
   **O:** Tak, AI moze przetwarzac paragony w wiekszosci jezykow i wyodrebni kwoty oraz pozycje niezaleznie od jezyka paragonu.
+
+- **P: Jakie pliki PDF sa obslugiwane?**
+  **O:** Obslugiwane sa zarowno cyfrowe pliki PDF (np. faktury Amazon lub PayPal), jak i zeskanowane paragony w formacie PDF. Maksymalny rozmiar pliku wynosi 10 MB. Cyfrowe pliki PDF z mozliwoscia zaznaczania tekstu sa przetwarzane szybciej i dokladniej. W przypadku zeskanowanych PDF upewnij sie, ze skan jest wyrazny i o wysokim kontraście.
 
 - **P: Dlaczego kwota byla bledna po zeskanowaniu?**
   **O:** Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki.
@@ -8442,11 +8458,12 @@ Nach dem Speichern kannst du auf **Weitere hinzufugen** tippen, um eine neue Spr
 ### So funktioniert es
 
 1. Tippe auf **Beleg scannen** bei den Schnellaktionen der Ubersicht, oder tippe auf **+** auf dem Transaktionen-Bildschirm und wahle **Beleg scannen**
-2. Du siehst zwei Optionen:
+2. Du siehst drei Optionen:
    - **Foto aufnehmen** — offnet deine Kamera zum Fotografieren des Belegs
    - **Aus Galerie wahlen** — wahle ein vorhandenes Foto
+   - **PDF hochladen** — wahle eine PDF-Datei (digitale Rechnungen, gescannte Belege, bis 10 MB)
 3. Optional kannst du **Zusatzliche Anweisungen fur KI** eingeben (z.B. "Gleichmassig auf zwei Personen aufteilen", "Trinkgeld ignorieren")
-4. Die App analysiert das Belegbild und extrahiert die Daten
+4. Die App analysiert den Beleg und extrahiert die Daten
 
 ### Bestatigungsbildschirm
 
@@ -8480,6 +8497,9 @@ Uberprufe und korrigiere Details, dann:
 
 - **F: Kann ich Belege in jeder Sprache scannen?**
   **A:** Ja, die KI kann Belege in den meisten Sprachen verarbeiten und extrahiert Betrage und Artikel unabhangig von der Belegsprache.
+
+- **F: Welche PDF-Dateien werden unterstutzt?**
+  **A:** Sowohl digitale PDFs (z.B. Amazon- oder PayPal-Rechnungen) als auch gescannte PDF-Belege werden unterstutzt. Maximale Dateigrose: 10 MB. Digitale PDFs mit selektierbarem Text werden schneller und genauer verarbeitet. Bei gescannten PDFs sollte der Scan klar und kontraststark sein.
 
 - **F: Warum war der Betrag nach dem Scannen falsch?**
   **A:** Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern.
@@ -10450,11 +10470,12 @@ Despues de guardar, puedes tocar **Agregar otro** para grabar un nuevo gasto por
 ### Como funciona
 
 1. Toca **Escanear recibo** desde las acciones rapidas del Panel, o toca **+** en la pantalla de Transacciones y selecciona **Escanear recibo**
-2. Veras dos opciones:
+2. Veras tres opciones:
    - **Tomar foto** — abre tu camara para fotografiar el recibo
    - **Elegir de la galeria** — selecciona una foto existente
+   - **Subir PDF** — elige un archivo PDF (facturas digitales, recibos escaneados, hasta 10 MB)
 3. Opcionalmente, introduce **Instrucciones adicionales para la IA** (por ejemplo, "Dividir a partes iguales entre dos personas", "Ignorar la propina")
-4. La aplicacion analiza la imagen del recibo y extrae los datos
+4. La aplicacion analiza el recibo y extrae los datos
 
 ### Pantalla de confirmacion
 
@@ -10488,6 +10509,9 @@ Revisa y corrige cualquier detalle, luego:
 
 - **P: Puedo escanear recibos en cualquier idioma?**
   **R:** Si, la IA puede procesar recibos en la mayoria de los idiomas y extraera importes y articulos independientemente del idioma del recibo.
+
+- **P: Que archivos PDF son compatibles?**
+  **R:** Se admiten tanto PDFs digitales (por ejemplo, facturas de Amazon o PayPal) como recibos escaneados en PDF. El tamano maximo del archivo es 10 MB. Los PDFs digitales con texto seleccionable se procesan mas rapido y con mayor precision. Para PDFs escaneados, asegurate de que el escaneo sea nitido y de alto contraste.
 
 - **P: Por que el importe fue incorrecto despues del escaneo?**
   **R:** La extraccion por IA no siempre es perfecta. Revisa siempre la pantalla de confirmacion y corrige cualquier error antes de guardar. Los recibos borrosos o danados pueden producir resultados menos precisos.
@@ -12458,11 +12482,12 @@ Apres la sauvegarde, vous pouvez appuyer sur **Ajouter une autre** pour enregist
 ### Comment ca marche
 
 1. Appuyez sur **Scanner un recu** dans les actions rapides du Tableau de bord, ou appuyez sur **+** dans l'ecran Transactions et selectionnez **Scanner un recu**
-2. Vous verrez deux options :
+2. Vous verrez trois options :
    - **Prendre une photo** — ouvre votre appareil photo pour photographier le recu
    - **Choisir depuis la galerie** — selectionnez une photo existante
+   - **Importer un PDF** — choisissez un fichier PDF (factures numeriques, recus scannes, jusqu'a 10 Mo)
 3. Optionnellement, entrez des **Instructions supplementaires pour l'IA** (par ex. "Diviser en parts egales entre deux personnes", "Ignorer le pourboire")
-4. L'application analyse l'image du recu et en extrait les donnees
+4. L'application analyse le recu et en extrait les donnees
 
 ### Ecran de confirmation
 
@@ -12496,6 +12521,9 @@ Verifiez et corrigez les details, puis :
 
 - **Q : Puis-je scanner des recus dans n'importe quelle langue ?**
   **R :** Oui, l'IA peut traiter des recus dans la plupart des langues et extrait les montants et les articles quelle que soit la langue du recu.
+
+- **Q : Quels fichiers PDF sont pris en charge ?**
+  **R :** Les PDFs numeriques (par ex. factures Amazon ou PayPal) et les recus scannes en PDF sont tous deux pris en charge. La taille maximale du fichier est de 10 Mo. Les PDFs numeriques avec du texte selectionnable sont traites plus rapidement et avec plus de precision. Pour les PDFs scannes, assurez-vous que le scan est net et contraste.
 
 - **Q : Pourquoi le montant etait-il incorrect apres le scan ?**
   **R :** L'extraction par IA n'est pas toujours parfaite. Verifiez toujours l'ecran de confirmation et corrigez les erreurs avant de sauvegarder. Les recus flous ou endommages peuvent produire des resultats moins precis.
@@ -14462,11 +14490,12 @@ iOS, Android, Web
 ### Як гэта працуе
 
 1. Націсніце **Сканаваць чэк** у хуткіх дзеяннях на Галоўнай або націсніце **+** на экране Транзакцыі і выберыце **Сканаваць чэк**
-2. Вы ўбачыце два варыянты:
+2. Вы ўбачыце тры варыянты:
    - **Зрабіць фота** — адкрывае камеру для фатаграфавання чэка
    - **Выбраць з галерэі** — выбраць існуючае фота
+   - **Загрузіць PDF** — выбраць PDF-файл (электронныя чэкі, сканаваныя квітанцыі, да 10 МБ)
 3. Па жаданні ўвядзіце **Дадатковыя інструкцыі для ІІ** (напрыклад, «Падзяліць пароўну паміж двума людзьмі», «Ігнараваць чаявыя»)
-4. Праграма аналізуе выяву чэка і здабывае даныя
+4. Праграма аналізуе чэк і здабывае даныя
 
 ### Экран пацвярджэння
 
@@ -14500,6 +14529,9 @@ iOS, Android, Web
 
 - **П: Ці можна сканаваць чэкі на любой мове?**
   **А:** Так, ІІ можа апрацоўваць чэкі на большасці моў і здабывае сумы і пазіцыі незалежна ад мовы чэка.
+
+- **П: Якія PDF-файлы падтрымліваюцца?**
+  **А:** Падтрымліваюцца як лічбавыя PDF (напрыклад, рахункі ад Amazon або PayPal), так і сканаваныя чэкі ў PDF. Максімальны памер файла — 10 МБ. Лічбавыя PDF з вылучальным тэкстам апрацоўваюцца хутчэй і дакладней. Для сканаваных PDF пераканайцеся, што скан выразны і кантрасны.
 
 - **П: Чаму сума была няправільнай пасля сканавання?**
   **А:** Здабыванне даных ІІ не заўсёды ідэальнае. Заўсёды правярайце экран пацвярджэння і выпраўляйце памылкі перад захаваннем. Размытыя або пашкоджаныя чэкі могуць даваць менш дакладныя вынікі.
