@@ -404,7 +404,7 @@ class ApiClient {
     });
   }
 
-  async scanReceipt(imageBase64: string, userPrompt?: string) {
+  async scanReceipt(imageBase64: string, userPrompt?: string, mimeType?: string) {
     return this.request<{
       amount: number;
       discountAmount: number | null;
@@ -423,7 +423,11 @@ class ApiClient {
       }[];
     }>('/ai/scan-receipt', {
       method: 'POST',
-      body: JSON.stringify({ imageBase64, ...(userPrompt ? { userPrompt } : {}) }),
+      body: JSON.stringify({
+        imageBase64,
+        ...(userPrompt ? { userPrompt } : {}),
+        ...(mimeType ? { mimeType } : {}),
+      }),
     });
   }
 

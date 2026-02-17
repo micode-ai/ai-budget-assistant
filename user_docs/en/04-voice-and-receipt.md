@@ -45,11 +45,12 @@ After saving, you can tap **Add Another** to record a new voice expense.
 ### How It Works
 
 1. Tap **Scan Receipt** from the Dashboard quick actions, or tap **+** on the Transactions screen and select **Scan Receipt**
-2. You'll see two options:
+2. You'll see three options:
    - **Take Photo** — opens your camera to photograph the receipt
    - **Choose from Gallery** — select an existing photo
+   - **Upload PDF** — pick a PDF file (digital invoices, scanned receipts up to 10 MB)
 3. Optionally, enter **Additional instructions for AI** (e.g., "Split equally between two people", "Ignore the tip")
-4. The app analyzes the receipt image and extracts data
+4. The app analyzes the receipt and extracts data
 
 ### Confirmation Screen
 
@@ -83,6 +84,9 @@ Review and correct any details, then:
 
 - **Q: Can I scan receipts in any language?**
   **A:** Yes, the AI can process receipts in most languages and will extract amounts and items regardless of the receipt language.
+
+- **Q: What PDF files are supported?**
+  **A:** Both digital PDFs (e.g. Amazon or PayPal invoices) and scanned PDF receipts are supported. Maximum file size is 10 MB. Digital PDFs with selectable text are processed faster and more accurately. For best results with scanned PDFs, make sure the scan is clear and high-contrast.
 
 - **Q: Why was the amount wrong after scanning?**
   **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results.

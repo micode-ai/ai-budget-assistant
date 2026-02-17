@@ -45,11 +45,12 @@ Nach dem Speichern kannst du auf **Weitere hinzufugen** tippen, um eine neue Spr
 ### So funktioniert es
 
 1. Tippe auf **Beleg scannen** bei den Schnellaktionen der Ubersicht, oder tippe auf **+** auf dem Transaktionen-Bildschirm und wahle **Beleg scannen**
-2. Du siehst zwei Optionen:
+2. Du siehst drei Optionen:
    - **Foto aufnehmen** — offnet deine Kamera zum Fotografieren des Belegs
    - **Aus Galerie wahlen** — wahle ein vorhandenes Foto
+   - **PDF hochladen** — wahle eine PDF-Datei (digitale Rechnungen, gescannte Belege, bis 10 MB)
 3. Optional kannst du **Zusatzliche Anweisungen fur KI** eingeben (z.B. "Gleichmassig auf zwei Personen aufteilen", "Trinkgeld ignorieren")
-4. Die App analysiert das Belegbild und extrahiert die Daten
+4. Die App analysiert den Beleg und extrahiert die Daten
 
 ### Bestatigungsbildschirm
 
@@ -83,6 +84,9 @@ Uberprufe und korrigiere Details, dann:
 
 - **F: Kann ich Belege in jeder Sprache scannen?**
   **A:** Ja, die KI kann Belege in den meisten Sprachen verarbeiten und extrahiert Betrage und Artikel unabhangig von der Belegsprache.
+
+- **F: Welche PDF-Dateien werden unterstutzt?**
+  **A:** Sowohl digitale PDFs (z.B. Amazon- oder PayPal-Rechnungen) als auch gescannte PDF-Belege werden unterstutzt. Maximale Dateigrose: 10 MB. Digitale PDFs mit selektierbarem Text werden schneller und genauer verarbeitet. Bei gescannten PDFs sollte der Scan klar und kontraststark sein.
 
 - **F: Warum war der Betrag nach dem Scannen falsch?**
   **A:** Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern.

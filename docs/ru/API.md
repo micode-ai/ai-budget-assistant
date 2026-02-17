@@ -1693,30 +1693,48 @@ Content-Type: application/json
 
 ### Сканирование чека
 
+Принимает изображение чека (камера/галерея) или PDF-файл в кодировке base64.
+
 ```http
 POST /ai/scan-receipt
 Authorization: Bearer <token>
-Content-Type: multipart/form-data
+X-Account-Id: <account-uuid>
+Content-Type: application/json
 
-image: <изображение>
+{
+  "imageBase64": "<файл в base64>",
+  "userPrompt": "Разделить поровну между двумя людьми",
+  "mimeType": "application/pdf"
+}
 ```
+
+**Параметры тела запроса**
+| Параметр | Тип | Обязательный | Описание |
+|----------|-----|--------------|----------|
+| `imageBase64` | string | Да | Изображение (JPEG/PNG) или PDF в кодировке base64 |
+| `userPrompt` | string | Нет | Дополнительные инструкции для ИИ |
+| `mimeType` | string | Нет | Укажите `application/pdf` для PDF; не указывайте для изображений |
+
+**Логика обработки PDF:**
+- Текстовые PDF (например, электронные чеки) — текст извлекается и отправляется ИИ в текстовом виде (дешевле)
+- Сканированные PDF — весь PDF-файл отправляется ИИ для визуального анализа
 
 **Ответ** `200 OK`
 ```json
 {
+  "amount": 548.00,
+  "discountAmount": null,
+  "currencyCode": "RUB",
+  "description": "Перекрёсток (2 позиции)",
+  "categoryId": "uuid",
+  "categorySuggestion": "Продукты",
   "merchant": "Перекрёсток",
   "date": "2024-01-15",
-  "time": "14:30",
-  "items": [
-    { "description": "Яблоки органические", "amount": 299.00 },
-    { "description": "Миндальное молоко", "amount": 249.00 }
-  ],
-  "subtotal": 548.00,
-  "tax": 0,
-  "total": 548.00,
-  "currencyCode": "RUB",
-  "paymentMethod": "Банковская карта",
-  "confidence": 0.88
+  "confidence": 0.88,
+  "receiptItems": [
+    { "description": "Яблоки органические", "quantity": 1, "unitPrice": 299.00, "totalPrice": 299.00 },
+    { "description": "Миндальное молоко", "quantity": 1, "unitPrice": 249.00, "totalPrice": 249.00 }
+  ]
 }
 ```
 

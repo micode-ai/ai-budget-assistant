@@ -288,7 +288,7 @@ export default {
   },
   receipt: {
     title: 'Escanear recibo',
-    instructions: 'Toma una foto o elige de la galería',
+    instructions: 'Toma una foto, elige de la galería o sube un PDF',
     hint: 'Apunta tu cámara a un recibo para mejores resultados',
     takePhoto: 'Tomar foto',
     chooseGallery: 'Elegir de la galería',
@@ -311,6 +311,8 @@ export default {
     saveFailed: 'Error al guardar el gasto',
     discount: 'Descuento',
     saveImage: 'Guardar imagen del recibo',
+    choosePdf: 'Subir PDF',
+    analyzingPdf: 'Analizando recibo PDF...',
     userPromptPlaceholder: 'Instrucciones adicionales para la IA (opcional)',
   },
   budgetNew: {
@@ -522,6 +524,7 @@ export default {
     captureImageFailed: 'Error al capturar la imagen',
     pickImageFailed: 'Error al seleccionar la imagen',
     processReceiptFailed: 'Error al procesar el recibo',
+    pdfTooLarge: 'El archivo PDF es demasiado grande (máx. 10 MB)',
     saveFailed: 'Error al guardar el gasto',
     createBudgetFailed: 'Error al crear el presupuesto',
     sendMessageFailed: 'Error al enviar el mensaje',

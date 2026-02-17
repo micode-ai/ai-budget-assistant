@@ -288,7 +288,7 @@ export default {
   },
   receipt: {
     title: 'Scan Receipt',
-    instructions: 'Take a photo or choose from gallery',
+    instructions: 'Take a photo, choose from gallery, or upload PDF',
     hint: 'Point your camera at a receipt for best results',
     takePhoto: 'Take Photo',
     chooseGallery: 'Choose from Gallery',
@@ -311,6 +311,8 @@ export default {
     saveFailed: 'Failed to save expense',
     discount: 'Discount',
     saveImage: 'Save receipt image',
+    choosePdf: 'Upload PDF',
+    analyzingPdf: 'Analyzing PDF receipt...',
     userPromptPlaceholder: 'Additional instructions for AI (optional)',
   },
   budgetNew: {
@@ -522,6 +524,7 @@ export default {
     captureImageFailed: 'Failed to capture image',
     pickImageFailed: 'Failed to pick image',
     processReceiptFailed: 'Failed to process receipt',
+    pdfTooLarge: 'PDF file is too large (max 10MB)',
     saveFailed: 'Failed to save expense',
     createBudgetFailed: 'Failed to create budget',
     sendMessageFailed: 'Failed to send message',

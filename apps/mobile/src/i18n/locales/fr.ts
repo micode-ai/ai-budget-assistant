@@ -288,7 +288,7 @@ export default {
   },
   receipt: {
     title: 'Scanner un reçu',
-    instructions: 'Prenez une photo ou choisissez depuis la galerie',
+    instructions: 'Prenez une photo, choisissez depuis la galerie ou importez un PDF',
     hint: 'Dirigez votre caméra vers un reçu pour de meilleurs résultats',
     takePhoto: 'Prendre une photo',
     chooseGallery: 'Choisir depuis la galerie',
@@ -311,6 +311,8 @@ export default {
     saveFailed: 'Échec de l\'enregistrement de la dépense',
     discount: 'Remise',
     saveImage: 'Enregistrer l\'image du reçu',
+    choosePdf: 'Importer PDF',
+    analyzingPdf: 'Analyse du reçu PDF...',
     userPromptPlaceholder: 'Instructions supplémentaires pour l\'IA (facultatif)',
   },
   budgetNew: {
@@ -522,6 +524,7 @@ export default {
     captureImageFailed: 'Échec de la capture de l\'image',
     pickImageFailed: 'Échec de la sélection de l\'image',
     processReceiptFailed: 'Échec du traitement du reçu',
+    pdfTooLarge: 'Le fichier PDF est trop volumineux (max. 10 Mo)',
     saveFailed: 'Échec de l\'enregistrement de la dépense',
     createBudgetFailed: 'Échec de la création du budget',
     sendMessageFailed: 'Échec de l\'envoi du message',

@@ -283,7 +283,7 @@ export default {
   },
   receipt: {
     title: 'Сканаваць чэк',
-    instructions: 'Сфатаграфуйце або выберыце з галерэі',
+    instructions: 'Сфатаграфуйце, выберыце з галерэі або загрузіце PDF',
     hint: 'Навядзіце камеру на чэк для лепшага выніку',
     takePhoto: 'Зрабіць фота',
     chooseGallery: 'Выбраць з галерэі',
@@ -306,6 +306,8 @@ export default {
     saveFailed: 'Не ўдалося захаваць расход',
     discount: 'Зніжка',
     saveImage: 'Захаваць фота чэка',
+    choosePdf: 'Загрузіць PDF',
+    analyzingPdf: 'Аналіз PDF чэка...',
     userPromptPlaceholder: 'Дадатковыя інструкцыі для ІІ (неабавязкова)',
   },
   budgetNew: {
@@ -517,6 +519,7 @@ export default {
     captureImageFailed: 'Не ўдалося зрабіць здымак',
     pickImageFailed: 'Не ўдалося выбраць выяву',
     processReceiptFailed: 'Не ўдалося апрацаваць чэк',
+    pdfTooLarge: 'PDF-файл занадта вялікі (макс. 10 МБ)',
     saveFailed: 'Не ўдалося захаваць расход',
     createBudgetFailed: 'Не ўдалося стварыць бюджэт',
     sendMessageFailed: 'Не ўдалося адправіць паведамленне',

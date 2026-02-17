@@ -1729,30 +1729,48 @@ Content-Type: application/json
 
 ### Scan Receipt
 
+Accepts a receipt image (camera/gallery) or a PDF file encoded as base64.
+
 ```http
 POST /ai/scan-receipt
 Authorization: Bearer <token>
-Content-Type: multipart/form-data
+X-Account-Id: <account-uuid>
+Content-Type: application/json
 
-image: <image file>
+{
+  "imageBase64": "<base64-encoded file>",
+  "userPrompt": "Split equally between two people",
+  "mimeType": "application/pdf"
+}
 ```
+
+**Body Parameters**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `imageBase64` | string | Yes | Base64-encoded image (JPEG/PNG) or PDF file |
+| `userPrompt` | string | No | Additional instructions for the AI |
+| `mimeType` | string | No | Set to `application/pdf` for PDF files; omit for images |
+
+**PDF processing logic:**
+- Text-based PDFs (e.g. digital invoices) — text is extracted and sent to AI as plain text (cheaper)
+- Scanned/image PDFs — the full PDF file is sent to AI for visual analysis
 
 **Response** `200 OK`
 ```json
 {
+  "amount": 11.32,
+  "discountAmount": null,
+  "currencyCode": "USD",
+  "description": "Whole Foods Market (2 items)",
+  "categoryId": "uuid",
+  "categorySuggestion": "Groceries",
   "merchant": "Whole Foods Market",
   "date": "2024-01-15",
-  "time": "14:30",
-  "items": [
-    { "description": "Organic Apples", "amount": 5.99 },
-    { "description": "Almond Milk", "amount": 4.49 }
-  ],
-  "subtotal": 10.48,
-  "tax": 0.84,
-  "total": 11.32,
-  "currencyCode": "USD",
-  "paymentMethod": "Credit Card",
-  "confidence": 0.88
+  "confidence": 0.88,
+  "receiptItems": [
+    { "description": "Organic Apples", "quantity": 1, "unitPrice": 5.99, "totalPrice": 5.99 },
+    { "description": "Almond Milk", "quantity": 1, "unitPrice": 4.49, "totalPrice": 4.49 }
+  ]
 }
 ```
 
