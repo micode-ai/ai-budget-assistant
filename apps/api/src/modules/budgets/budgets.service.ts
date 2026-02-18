@@ -10,6 +10,16 @@ export class BudgetsService {
   ) {}
 
   async create(accountId: string, userId: string, dto: any) {
+    // Validate categoryId exists for this account; ignore if it's a local-only ID
+    let resolvedCategoryId: string | null = null;
+    if (dto.categoryId) {
+      const cat = await this.prisma.category.findFirst({
+        where: { id: dto.categoryId, OR: [{ accountId }, { accountId: null }] },
+        select: { id: true },
+      });
+      resolvedCategoryId = cat?.id ?? null;
+    }
+
     const result = await this.prisma.budget.create({
       data: {
         accountId,
@@ -21,7 +31,7 @@ export class BudgetsService {
         period: dto.period,
         startDate: new Date(dto.startDate),
         endDate: dto.endDate ? new Date(dto.endDate) : null,
-        categoryId: dto.categoryId,
+        categoryId: resolvedCategoryId,
         alertThreshold: dto.alertThreshold || 80,
       },
       include: { category: true },

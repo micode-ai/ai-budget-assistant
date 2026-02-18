@@ -317,6 +317,7 @@ const createStyles = (theme: Theme) => ({
   },
   welcomeSection: {
     marginBottom: theme.spacing[6],
+    alignItems: 'center' as const,
   },
   welcomeText: {
     ...theme.textStyles.h1,
@@ -339,6 +340,7 @@ const createStyles = (theme: Theme) => ({
     borderBottomColor: theme.colors.borderLight,
     paddingBottom: theme.spacing[2.5],
     marginBottom: theme.spacing[3],
+    alignItems: 'center' as const,
   },
   cardTitle: {
     ...theme.textStyles.h3,

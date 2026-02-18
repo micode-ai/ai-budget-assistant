@@ -936,6 +936,12 @@ class ApiClient {
     return response.blob();
   }
 
+  async deleteReport(reportId: string) {
+    return this.request<{ success: boolean }>(`/reports/${reportId}`, {
+      method: 'DELETE',
+    });
+  }
+
   async getMonthlyDigest(month: string) {
     return this.request<MonthlyDigestResponse>(`/reports/monthly-digest?month=${month}`);
   }

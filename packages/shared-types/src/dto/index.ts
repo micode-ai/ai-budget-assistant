@@ -120,7 +120,7 @@ export interface CreateBudgetDto {
   startDate: string;
   endDate?: string;
   categoryId?: string;
-  alertThreshold?: number;
+  alertThreshold?: number | null;
 }
 
 export interface UpdateBudgetDto {
@@ -130,7 +130,7 @@ export interface UpdateBudgetDto {
   period?: BudgetPeriod;
   endDate?: string | null;
   categoryId?: string | null;
-  alertThreshold?: number;
+  alertThreshold?: number | null;
   isActive?: boolean;
 }
 
@@ -814,6 +814,7 @@ export interface GenerateReportDto {
   currencyCode?: string;
   includeIncomes?: boolean;
   includeExpenses?: boolean;
+  locale?: string;
 }
 
 export interface GenerateReportResponse {

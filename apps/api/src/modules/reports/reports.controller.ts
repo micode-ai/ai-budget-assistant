@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Query, Body, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, Res, UseGuards } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { DigestService } from './digest.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -51,6 +51,14 @@ export class ReportsController {
     @Query('month') month: string,
   ) {
     return this.digestService.getDigest(req.accountId, month);
+  }
+
+  @Delete(':id')
+  async deleteReport(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    return this.reportsService.deleteReport(req.accountId, req.user.id, id);
   }
 
   @Get(':id/download')

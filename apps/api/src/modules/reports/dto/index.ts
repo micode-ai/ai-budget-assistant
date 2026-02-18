@@ -36,6 +36,10 @@ export class GenerateReportDto {
   @IsOptional()
   @IsBoolean()
   includeExpenses?: boolean;
+
+  @IsOptional()
+  @IsString()
+  locale?: string;
 }
 
 export class UpdateReportPreferencesDto {
