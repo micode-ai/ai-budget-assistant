@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useReportStore } from '@/stores/reportStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
@@ -23,7 +22,7 @@ import type { Currency } from '@budget/shared-types';
 type ReportFormat = 'csv' | 'pdf' | 'excel';
 
 export default function ReportsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
@@ -38,6 +37,7 @@ export default function ReportsScreen() {
     isLoadingDigest,
     generateReport,
     loadReports,
+    deleteReport,
     downloadAndShare,
     loadMonthlyDigest,
   } = useReportStore();
@@ -84,6 +84,7 @@ export default function ReportsScreen() {
       endDate,
       includeExpenses: true,
       includeIncomes: true,
+      locale: i18n.language,
     };
 
     const reportId = await generateReport(dto);
@@ -94,6 +95,21 @@ export default function ReportsScreen() {
 
   const handleDownload = async (report: ReportListItem) => {
     await downloadAndShare(report.id, report.fileName);
+  };
+
+  const handleDelete = (report: ReportListItem) => {
+    Alert.alert(
+      t('reports.deleteTitle'),
+      t('reports.deleteConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => deleteReport(report.id),
+        },
+      ],
+    );
   };
 
   const FORMATS: { key: ReportFormat; label: string; icon: string; tier?: string }[] = [
@@ -114,15 +130,6 @@ export default function ReportsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('reports.title')}</Text>
-          <View style={{ width: 40 }} />
-        </View>
-
         {/* Report Generator */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('reports.generateReport')}</Text>
@@ -248,11 +255,7 @@ export default function ReportsScreen() {
             </View>
           ) : (
             reports.map((report) => (
-              <TouchableOpacity
-                key={report.id}
-                style={styles.reportItem}
-                onPress={() => handleDownload(report)}
-              >
+              <View key={report.id} style={styles.reportItem}>
                 <View style={styles.reportIcon}>
                   <Ionicons
                     name={
@@ -266,15 +269,20 @@ export default function ReportsScreen() {
                     color={theme.colors.primary}
                   />
                 </View>
-                <View style={styles.reportInfo}>
+                <TouchableOpacity style={styles.reportInfo} onPress={() => handleDownload(report)}>
                   <Text style={styles.reportName} numberOfLines={1}>{report.fileName}</Text>
                   <Text style={styles.reportMeta}>
                     {report.format.toUpperCase()} · {new Date(report.createdAt).toLocaleDateString()}
                     {report.fileSize ? ` · ${(report.fileSize / 1024).toFixed(0)} KB` : ''}
                   </Text>
-                </View>
-                <Ionicons name="share-outline" size={20} color={theme.colors.textTertiary} />
-              </TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDownload(report)} style={styles.reportAction}>
+                  <Ionicons name="share-outline" size={20} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(report)} style={styles.reportAction}>
+                  <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
+                </TouchableOpacity>
+              </View>
             ))
           )}
         </View>
@@ -301,24 +309,6 @@ const createStyles = (theme: Theme) => ({
   content: {
     padding: theme.spacing[4],
     paddingBottom: theme.spacing[8],
-  },
-  header: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
-    marginBottom: theme.spacing[5],
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.colors.surface,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-  },
-  headerTitle: {
-    ...theme.textStyles.h2,
-    color: theme.colors.textPrimary,
   },
   section: {
     marginBottom: theme.spacing[6],
@@ -517,6 +507,9 @@ const createStyles = (theme: Theme) => ({
   },
   reportInfo: {
     flex: 1,
+  },
+  reportAction: {
+    padding: theme.spacing[1],
   },
   reportName: {
     ...theme.textStyles.body,

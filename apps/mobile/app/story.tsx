@@ -43,7 +43,7 @@ export default function StoryScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       {/* Period Selector */}
       <View style={styles.periodSelector}>
         <TouchableOpacity

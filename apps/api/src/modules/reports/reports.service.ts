@@ -183,6 +183,7 @@ export class ReportsService {
         totalIncome,
         totalExpenses,
         currencyCode: account.currencyCode,
+        locale: dto.locale,
         categories,
         transactions,
       });
@@ -302,6 +303,15 @@ export class ReportsService {
     res.setHeader('Content-Disposition', `attachment; filename="${report.fileName}"`);
     res.setHeader('Content-Length', report.fileData.length);
     res.send(report.fileData);
+  }
+
+  async deleteReport(accountId: string, userId: string, reportId: string) {
+    const report = await this.prisma.generatedReport.findFirst({
+      where: { id: reportId, accountId, userId },
+    });
+    if (!report) throw new NotFoundException('Report not found');
+    await this.prisma.generatedReport.delete({ where: { id: reportId } });
+    return { success: true };
   }
 
   async getPreferences(userId: string) {

@@ -84,7 +84,7 @@ export const useBudgetStore = create<BudgetState>()(
                 startDate: new Date(sb.startDate),
                 endDate: sb.endDate ? new Date(sb.endDate) : undefined,
                 categoryId: sb.categoryId ?? undefined,
-                alertThreshold: sb.alertThreshold ?? 80,
+                alertThreshold: sb.alertThreshold ?? null,
                 isActive: sb.isActive ?? true,
                 createdAt: new Date(sb.createdAt),
                 updatedAt: new Date(sb.updatedAt),

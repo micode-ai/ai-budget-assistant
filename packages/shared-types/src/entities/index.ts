@@ -296,7 +296,7 @@ export interface Budget {
   startDate: Date;
   endDate?: Date;
   categoryId?: string; // null = overall budget
-  alertThreshold: number; // percentage (0-100)
+  alertThreshold: number | null; // percentage (0-100), null = no alerts
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

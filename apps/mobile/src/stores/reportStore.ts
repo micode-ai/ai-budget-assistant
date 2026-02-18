@@ -34,6 +34,7 @@ interface ReportState {
   // Actions
   generateReport: (dto: GenerateReportDto) => Promise<string | null>;
   loadReports: () => Promise<void>;
+  deleteReport: (reportId: string) => Promise<void>;
   downloadAndShare: (reportId: string, fileName: string) => Promise<void>;
   loadMonthlyDigest: (month: string) => Promise<void>;
   exportBackup: () => Promise<void>;
@@ -83,6 +84,15 @@ export const useReportStore = create<ReportState>()((set, get) => ({
         isLoading: false,
         error: err instanceof Error ? err.message : 'Failed to load reports',
       });
+    }
+  },
+
+  deleteReport: async (reportId: string) => {
+    try {
+      await api.deleteReport(reportId);
+      set(state => ({ reports: state.reports.filter(r => r.id !== reportId) }));
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : 'Failed to delete report' });
     }
   },
 

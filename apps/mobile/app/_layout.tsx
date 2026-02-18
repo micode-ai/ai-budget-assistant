@@ -210,7 +210,7 @@ function RootNavigator() {
           name="welcome"
           options={{
             headerShown: true,
-            title: t('welcome.title'),
+            title: '',
             headerBackVisible: false,
             gestureEnabled: false,
           }}
@@ -248,6 +248,13 @@ function RootNavigator() {
           options={{
             headerShown: true,
             title: t('help.articleTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="reports"
+          options={{
+            headerShown: true,
+            title: t('reports.title'),
           }}
         />
         <Stack.Screen

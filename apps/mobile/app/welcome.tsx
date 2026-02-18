@@ -65,6 +65,11 @@ export default function WelcomeScreen() {
           <Text style={styles.subheading}>{t('welcome.subheading')}</Text>
         </View>
 
+        {/* Continue with Free - top CTA */}
+        <TouchableOpacity style={styles.continueButton} onPress={handleContinueFree}>
+          <Text style={styles.continueButtonText}>{t('welcome.continueWithFree')}</Text>
+        </TouchableOpacity>
+
         {/* Free Plan Description */}
         <View style={styles.freeSection}>
           <Text style={styles.sectionTitle}>{t('welcome.freeIncluded')}</Text>
@@ -138,10 +143,6 @@ export default function WelcomeScreen() {
           <ActivityIndicator style={{ marginVertical: 20 }} color={theme.colors.primary} />
         )}
 
-        {/* Continue with Free */}
-        <TouchableOpacity style={styles.continueButton} onPress={handleContinueFree}>
-          <Text style={styles.continueButtonText}>{t('welcome.continueWithFree')}</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -290,14 +291,13 @@ const createStyles = (theme: Theme) => ({
   continueButton: {
     paddingVertical: 14,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.primary,
     alignItems: 'center' as const,
-    marginTop: 4,
+    marginBottom: 20,
   },
   continueButtonText: {
     fontSize: 16,
-    fontWeight: '600' as const,
-    color: theme.colors.textSecondary,
+    fontWeight: '700' as const,
+    color: theme.colors.textInverse,
   },
 });

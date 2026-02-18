@@ -38,7 +38,7 @@ export default function NewBudgetScreen() {
   const [period, setPeriod] = useState<BudgetPeriod>('monthly');
   const [currencyCode, setCurrencyCode] = useState<Currency>(user?.currencyCode || 'USD');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [alertThreshold, setAlertThreshold] = useState(80);
+  const [alertThreshold, setAlertThreshold] = useState<number | null>(80);
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
@@ -70,7 +70,7 @@ export default function NewBudgetScreen() {
         period,
         startDate: new Date(),
         categoryId: selectedCategory || undefined,
-        alertThreshold,
+        alertThreshold: alertThreshold,
         isActive: true,
       });
 
@@ -82,7 +82,7 @@ export default function NewBudgetScreen() {
     }
   };
 
-  const thresholdOptions = [50, 75, 80, 90, 100];
+  const thresholdOptions: (number | null)[] = [null, 50, 75, 80, 90, 100];
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -232,7 +232,7 @@ export default function NewBudgetScreen() {
             <View style={styles.thresholdRow}>
               {thresholdOptions.map((th) => (
                 <TouchableOpacity
-                  key={th}
+                  key={th ?? 'none'}
                   style={[
                     styles.thresholdChip,
                     alertThreshold === th && styles.thresholdChipSelected,
@@ -245,7 +245,7 @@ export default function NewBudgetScreen() {
                       alertThreshold === th && styles.thresholdChipTextSelected,
                     ]}
                   >
-                    {th}%
+                    {th === null ? t('budgetNew.noAlert') : `${th}%`}
                   </Text>
                 </TouchableOpacity>
               ))}
