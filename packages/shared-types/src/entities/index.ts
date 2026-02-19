@@ -413,6 +413,8 @@ export interface AccountTransfer {
   exchangeRate: number;
   date: Date;
   notes?: string;
+  countAsIncome: boolean;
+  linkedIncomeId?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;

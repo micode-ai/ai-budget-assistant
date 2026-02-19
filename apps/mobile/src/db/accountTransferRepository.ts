@@ -15,6 +15,8 @@ interface AccountTransferRow {
   exchange_rate: number;
   date: number;
   notes: string | null;
+  count_as_income: number;
+  linked_income_id: string | null;
   created_at: number;
   updated_at: number;
   is_deleted: number;
@@ -37,6 +39,8 @@ function rowToTransfer(row: AccountTransferRow): AccountTransfer {
     exchangeRate: row.exchange_rate,
     date: new Date(row.date),
     notes: row.notes ?? undefined,
+    countAsIncome: row.count_as_income === 1,
+    linkedIncomeId: row.linked_income_id ?? undefined,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     isDeleted: row.is_deleted === 1,
@@ -68,8 +72,9 @@ export async function insertTransfer(transfer: AccountTransfer): Promise<void> {
       from_account_id, from_currency, from_amount,
       to_account_id, to_currency, to_amount,
       exchange_rate, date, notes,
+      count_as_income, linked_income_id,
       created_at, updated_at, is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       transfer.id,
       transfer.localId,
@@ -84,12 +89,63 @@ export async function insertTransfer(transfer: AccountTransfer): Promise<void> {
       transfer.exchangeRate,
       transfer.date instanceof Date ? transfer.date.getTime() : transfer.date,
       transfer.notes ?? null,
+      transfer.countAsIncome ? 1 : 0,
+      transfer.linkedIncomeId ?? null,
       transfer.createdAt instanceof Date ? transfer.createdAt.getTime() : transfer.createdAt,
       transfer.updatedAt instanceof Date ? transfer.updatedAt.getTime() : transfer.updatedAt,
       transfer.isDeleted ? 1 : 0,
       transfer.syncStatus,
       transfer.syncVersion,
     ],
+  );
+}
+
+export async function updateTransferInDb(
+  id: string,
+  updates: Partial<AccountTransfer>,
+  updatedAt: Date,
+  syncStatus: string,
+): Promise<void> {
+  const setClauses: string[] = [];
+  const params: (string | number | null)[] = [];
+
+  if (updates.fromAmount !== undefined) {
+    setClauses.push('from_amount = ?');
+    params.push(updates.fromAmount);
+  }
+  if (updates.toAmount !== undefined) {
+    setClauses.push('to_amount = ?');
+    params.push(updates.toAmount);
+  }
+  if (updates.exchangeRate !== undefined) {
+    setClauses.push('exchange_rate = ?');
+    params.push(updates.exchangeRate);
+  }
+  if (updates.date !== undefined) {
+    setClauses.push('date = ?');
+    params.push(updates.date instanceof Date ? updates.date.getTime() : updates.date);
+  }
+  if (updates.notes !== undefined) {
+    setClauses.push('notes = ?');
+    params.push(updates.notes ?? null);
+  }
+  if (updates.countAsIncome !== undefined) {
+    setClauses.push('count_as_income = ?');
+    params.push(updates.countAsIncome ? 1 : 0);
+  }
+
+  if (setClauses.length === 0) return;
+
+  setClauses.push('updated_at = ?');
+  params.push(updatedAt.getTime());
+  setClauses.push('sync_status = ?');
+  params.push(syncStatus);
+
+  params.push(id);
+
+  await executeSql(
+    `UPDATE account_transfers SET ${setClauses.join(', ')} WHERE id = ?`,
+    params,
   );
 }
 

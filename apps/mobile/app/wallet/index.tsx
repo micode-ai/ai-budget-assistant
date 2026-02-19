@@ -199,7 +199,11 @@ export default function WalletScreen() {
                   const fromAccount = accounts.find((a) => a.id === transfer.fromAccountId);
                   const toAccount = accounts.find((a) => a.id === transfer.toAccountId);
                   return (
-                    <View key={transfer.id} style={styles.exchangeItem}>
+                    <TouchableOpacity
+                      key={transfer.id}
+                      style={styles.exchangeItem}
+                      onPress={() => router.push({ pathname: '/wallet/[id]', params: { id: transfer.id } })}
+                    >
                       <View style={styles.exchangeInfo}>
                         <Text style={styles.exchangeDirection}>
                           {fromAccount?.name || '...'} → {toAccount?.name || '...'}
@@ -216,7 +220,7 @@ export default function WalletScreen() {
                           +{formatCurrency(transfer.toAmount, transfer.toCurrency)}
                         </Text>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   );
                 })}
               </View>

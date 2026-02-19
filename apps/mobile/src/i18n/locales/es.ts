@@ -17,6 +17,8 @@ export default {
     share: 'Compartir',
     retry: 'Reintentar',
     clear: 'Limpiar',
+    yes: 'Sí',
+    no: 'No',
   },
   dates: {
     today: 'Hoy',
@@ -508,6 +510,12 @@ export default {
     submit: 'Transferir',
     recentTransfers: 'Transferencias recientes',
     success: 'Transferencia completada',
+    countAsIncome: 'Contar como ingreso',
+    countAsIncomeHint: 'Crea un registro de ingreso en la cuenta receptora',
+    date: 'Fecha',
+    notFound: 'Transferencia no encontrada',
+    deleteTitle: 'Eliminar transferencia',
+    deleteConfirm: '¿Está seguro de que desea eliminar esta transferencia?',
   },
   errors: {
     loginFailed: 'Error al iniciar sesión',

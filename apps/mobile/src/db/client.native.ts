@@ -217,6 +217,8 @@ export async function initializeDatabase(): Promise<void> {
         exchange_rate REAL NOT NULL,
         date INTEGER NOT NULL,
         notes TEXT,
+        count_as_income INTEGER DEFAULT 0,
+        linked_income_id TEXT,
         created_at INTEGER NOT NULL,
         updated_at INTEGER NOT NULL,
         is_deleted INTEGER DEFAULT 0,
@@ -494,6 +496,10 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN debt_contact_name TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN debt_due_date INTEGER`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN related_debt_expense_id TEXT`); } catch {}
+
+    // Count-as-income fields for account transfers
+    try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN count_as_income INTEGER DEFAULT 0`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN linked_income_id TEXT`); } catch {}
 
     // Debt indexes
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_expenses_debt ON expenses(account_id, is_debt)`);

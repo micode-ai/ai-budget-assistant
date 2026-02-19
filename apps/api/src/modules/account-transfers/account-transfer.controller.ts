@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Body,
   Param,
@@ -25,6 +26,11 @@ export class AccountTransferController {
   @Get()
   async findAll(@Req() req: AuthenticatedRequest) {
     return this.service.findAll(req.user.id);
+  }
+
+  @Patch(':id')
+  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
+    return this.service.update(req.user.id, id, dto);
   }
 
   @Delete(':id')
