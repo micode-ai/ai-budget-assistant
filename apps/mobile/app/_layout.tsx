@@ -18,6 +18,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { DatabaseProvider } from '@/db/DatabaseProvider';
 import { initializeDatabase } from '@/db/client';
 import { loadSavedLanguage } from '@/i18n';
+import i18n from '@/i18n';
+import { api } from '@/services/api';
 import { ThemeProvider, useTheme } from '@/theme';
 import {
   registerForPushNotifications,
@@ -63,10 +65,11 @@ function RootNavigator() {
     prepare();
   }, [initialize]);
 
-  // Register push notifications when authenticated
+  // Register push notifications and sync language when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       registerForPushNotifications();
+      api.updateProfile({ language: i18n.language }).catch(() => {});
     }
   }, [isAuthenticated]);
 

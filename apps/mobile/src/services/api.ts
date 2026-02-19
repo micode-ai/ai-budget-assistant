@@ -160,7 +160,7 @@ class ApiClient {
     return this.request<any>('/users/me');
   }
 
-  async updateProfile(data: { name?: string; currencyCode?: string; timezone?: string }) {
+  async updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string }) {
     return this.request<any>('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(data),

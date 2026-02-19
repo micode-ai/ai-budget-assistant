@@ -31,7 +31,7 @@ export class UsersController {
   }
 
   @Patch('me')
-  async updateProfile(@Req() req: AuthenticatedRequest, @Body() body: { name?: string; currencyCode?: string; timezone?: string }) {
+  async updateProfile(@Req() req: AuthenticatedRequest, @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string }) {
     const user = await this.usersService.update(req.user.id, body);
     return {
       id: user.id,

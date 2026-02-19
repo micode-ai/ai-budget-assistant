@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from './notifications.service';
+import * as ni18n from './notification-i18n';
 
 @Injectable()
 export class SharedActivityService {
@@ -24,7 +25,7 @@ export class SharedActivityService {
         select: { name: true, type: true },
       });
 
-      if (!account || account.type !== 'shared') return;
+      if (!account || account.type === 'personal') return;
 
       const members = await this.prisma.accountMember.findMany({
         where: {
@@ -41,14 +42,15 @@ export class SharedActivityService {
         select: { name: true },
       });
 
-      const title = `New expense in "${account.name}"`;
       const expenseDesc = description || 'an expense';
-      const body = `${creator?.name || 'Someone'} added ${currencyCode} ${amount.toFixed(2)} for ${expenseDesc}`;
+      const creatorName = creator?.name || 'Someone';
+      const amountStr = amount.toFixed(2);
+      const params = { accountName: account.name, creatorName, currencyCode, amount: amountStr, description: expenseDesc };
 
       await this.notifications.sendToUsers(
         members.map((m: { userId: string }) => m.userId),
-        title,
-        body,
+        (lang) => ni18n.sharedExpenseTitle(lang, params),
+        (lang) => ni18n.sharedExpenseBody(lang, params),
         { type: 'shared_expense', accountId, creatorUserId },
         'shared_expense',
       );

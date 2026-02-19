@@ -27,8 +27,8 @@ export class NotificationsService {
 
   async sendToUser(
     userId: string,
-    title: string,
-    body: string,
+    title: string | ((lang: string) => string),
+    body: string | ((lang: string) => string),
     data?: Record<string, unknown>,
     notificationType?: NotificationType,
   ): Promise<boolean> {
@@ -36,6 +36,7 @@ export class NotificationsService {
       where: { id: userId },
       select: {
         pushToken: true,
+        language: true,
         notifyBudgetAlerts: true,
         notifySharedActivity: true,
       },
@@ -53,10 +54,14 @@ export class NotificationsService {
       return false;
     }
 
+    const lang = user.language || 'en';
+    const resolvedTitle = typeof title === 'function' ? title(lang) : title;
+    const resolvedBody = typeof body === 'function' ? body(lang) : body;
+
     const tickets = await this.sendPushNotifications([{
       to: user.pushToken,
-      title,
-      body,
+      title: resolvedTitle,
+      body: resolvedBody,
       data: { ...data, type: notificationType },
       sound: 'default',
     }]);
@@ -68,8 +73,8 @@ export class NotificationsService {
 
   async sendToUsers(
     userIds: string[],
-    title: string,
-    body: string,
+    title: string | ((lang: string) => string),
+    body: string | ((lang: string) => string),
     data?: Record<string, unknown>,
     notificationType?: NotificationType,
   ): Promise<void> {
@@ -80,6 +85,7 @@ export class NotificationsService {
       select: {
         id: true,
         pushToken: true,
+        language: true,
         notifyBudgetAlerts: true,
         notifySharedActivity: true,
       },
@@ -96,13 +102,16 @@ export class NotificationsService {
 
     if (eligible.length === 0) return;
 
-    const messages: ExpoPushMessage[] = eligible.map((u: UserWithToken) => ({
-      to: u.pushToken!,
-      title,
-      body,
-      data: { ...data, type: notificationType },
-      sound: 'default',
-    }));
+    const messages: ExpoPushMessage[] = eligible.map((u: UserWithToken) => {
+      const lang = u.language || 'en';
+      return {
+        to: u.pushToken!,
+        title: typeof title === 'function' ? title(lang) : title,
+        body: typeof body === 'function' ? body(lang) : body,
+        data: { ...data, type: notificationType },
+        sound: 'default',
+      };
+    });
 
     for (let i = 0; i < messages.length; i += this.BATCH_SIZE) {
       const batch = messages.slice(i, i + this.BATCH_SIZE);
