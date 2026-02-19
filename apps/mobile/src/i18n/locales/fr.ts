@@ -17,6 +17,8 @@ export default {
     share: 'Partager',
     retry: 'Réessayer',
     clear: 'Effacer',
+    yes: 'Oui',
+    no: 'Non',
   },
   dates: {
     today: "Aujourd'hui",
@@ -508,6 +510,12 @@ export default {
     submit: 'Virer',
     recentTransfers: 'Virements récents',
     success: 'Virement effectué',
+    countAsIncome: 'Compter comme revenu',
+    countAsIncomeHint: 'Crée un enregistrement de revenu sur le compte destinataire',
+    date: 'Date',
+    notFound: 'Virement non trouvé',
+    deleteTitle: 'Supprimer le virement',
+    deleteConfirm: 'Êtes-vous sûr de vouloir supprimer ce virement ?',
   },
   errors: {
     loginFailed: 'Échec de la connexion',

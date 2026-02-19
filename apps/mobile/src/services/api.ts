@@ -644,6 +644,13 @@ class ApiClient {
     });
   }
 
+  async updateAccountTransfer(id: string, data: any) {
+    return this.request<any>(`/account-transfers/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
   async deleteAccountTransfer(id: string) {
     return this.request<void>(`/account-transfers/${id}`, { method: 'DELETE' });
   }

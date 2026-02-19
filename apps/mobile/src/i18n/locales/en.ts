@@ -17,6 +17,8 @@ export default {
     share: 'Share',
     retry: 'Retry',
     clear: 'Clear',
+    yes: 'Yes',
+    no: 'No',
   },
   dates: {
     today: 'Today',
@@ -508,6 +510,12 @@ export default {
     submit: 'Transfer',
     recentTransfers: 'Recent Transfers',
     success: 'Transfer completed',
+    countAsIncome: 'Count as income',
+    countAsIncomeHint: 'Creates an income record on the receiving account',
+    date: 'Date',
+    notFound: 'Transfer not found',
+    deleteTitle: 'Delete Transfer',
+    deleteConfirm: 'Are you sure you want to delete this transfer?',
   },
   errors: {
     loginFailed: 'Login failed',

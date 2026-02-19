@@ -310,6 +310,7 @@ model Income {
   category Category? @relation(fields: [categoryId], references: [id])
   incomeTags      IncomeTag[]
   projectIncomes  ProjectIncome[]
+  linkedTransfer  AccountTransfer? @relation("TransferLinkedIncome")
 
   @@unique([accountId, clientId])
   @@index([accountId, date(sort: Desc)])
@@ -479,17 +480,20 @@ model AccountTransfer {
   toCurrency    String   @map("to_currency")
   toAmount      Decimal  @map("to_amount") @db.Decimal(12, 2)
   exchangeRate  Decimal  @map("exchange_rate") @db.Decimal(12, 6)
-  date          DateTime @db.Date
-  notes         String?
-  isDeleted     Boolean  @default(false) @map("is_deleted")
-  syncVersion   Int      @default(0) @map("sync_version")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  date           DateTime @db.Date
+  notes          String?
+  countAsIncome  Boolean  @default(false) @map("count_as_income")
+  linkedIncomeId String?  @unique @map("linked_income_id")
+  isDeleted      Boolean  @default(false) @map("is_deleted")
+  syncVersion    Int      @default(0) @map("sync_version")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  fromAccount Account @relation("TransfersOut", fields: [fromAccountId], references: [id], onDelete: Cascade)
-  toAccount   Account @relation("TransfersIn", fields: [toAccountId], references: [id], onDelete: Cascade)
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fromAccount  Account @relation("TransfersOut", fields: [fromAccountId], references: [id], onDelete: Cascade)
+  toAccount    Account @relation("TransfersIn", fields: [toAccountId], references: [id], onDelete: Cascade)
+  linkedIncome Income? @relation("TransferLinkedIncome", fields: [linkedIncomeId], references: [id])
 
   @@unique([userId, clientId])
   @@index([userId, date(sort: Desc)])

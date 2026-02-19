@@ -28,6 +28,7 @@ export default function TransferScreen() {
   const [toAmount, setToAmount] = useState('');
   const [exchangeRate, setExchangeRate] = useState('1');
   const [notes, setNotes] = useState('');
+  const [countAsIncome, setCountAsIncome] = useState(false);
   const [loadingRate, setLoadingRate] = useState(false);
 
   // Set default currencies from selected accounts
@@ -126,6 +127,7 @@ export default function TransferScreen() {
       exchangeRate: rate,
       date: new Date(),
       notes: notes || undefined,
+      countAsIncome,
     });
 
     router.back();
@@ -266,6 +268,19 @@ export default function TransferScreen() {
           />
         </View>
 
+        {/* Count as Income */}
+        <View style={styles.card}>
+          <TouchableOpacity style={styles.checkboxRow} onPress={() => setCountAsIncome(!countAsIncome)} activeOpacity={0.7}>
+            <View style={[styles.checkbox, countAsIncome && styles.checkboxActive]}>
+              {countAsIncome && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
+            </View>
+            <View style={styles.checkboxTextContainer}>
+              <Text style={styles.checkboxLabel}>{t('transfer.countAsIncome')}</Text>
+              <Text style={styles.checkboxHint}>{t('transfer.countAsIncomeHint')}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>{t('transfer.submit')}</Text>
         </TouchableOpacity>
@@ -399,6 +414,36 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[3],
     minHeight: 80,
     textAlignVertical: 'top' as const,
+  },
+  checkboxRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  checkboxActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  checkboxTextContainer: {
+    flex: 1,
+  },
+  checkboxLabel: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+  },
+  checkboxHint: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: 2,
   },
   submitButton: {
     backgroundColor: theme.colors.primary,

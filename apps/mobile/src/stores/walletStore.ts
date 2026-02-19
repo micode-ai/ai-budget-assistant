@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { WalletBalance, CurrencyExchange, AccountTransfer, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
+import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import {
   loadAllWalletBalances,
@@ -19,8 +19,10 @@ import {
 import {
   loadTransfersByAccount,
   insertTransfer,
+  updateTransferInDb,
   softDeleteTransfer,
 } from '@/db/accountTransferRepository';
+import { insertIncome, softDeleteIncomeInDb } from '@/db/incomeRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
@@ -60,7 +62,9 @@ interface WalletState {
     exchangeRate: number;
     date: Date;
     notes?: string;
+    countAsIncome?: boolean;
   }) => AccountTransfer;
+  updateTransfer: (id: string, updates: Partial<AccountTransfer>) => void;
   deleteTransfer: (id: string) => void;
 
   // Computed
@@ -181,6 +185,8 @@ export const useWalletStore = create<WalletState>()(
                     exchangeRate: Number(st.exchangeRate),
                     date: new Date(st.date),
                     notes: st.notes ?? undefined,
+                    countAsIncome: st.countAsIncome ?? false,
+                    linkedIncomeId: st.linkedIncomeId ?? undefined,
                     createdAt: new Date(st.createdAt),
                     updatedAt: new Date(st.updatedAt),
                     isDeleted: st.isDeleted || false,
@@ -398,12 +404,14 @@ export const useWalletStore = create<WalletState>()(
       const id = generateUUID();
       const now = new Date();
       const userId = useAuthStore.getState().user?.id || '';
+      const countAsIncome = data.countAsIncome ?? false;
 
       const newTransfer: AccountTransfer = {
         id,
         localId: id,
         userId,
         ...data,
+        countAsIncome,
         createdAt: now,
         updatedAt: now,
         isDeleted: false,
@@ -419,6 +427,31 @@ export const useWalletStore = create<WalletState>()(
         console.error('Failed to insert transfer into SQLite:', e),
       );
 
+      // If countAsIncome, create a local Income record on the receiving account
+      if (countAsIncome) {
+        const incomeId = generateUUID();
+        const income: Income = {
+          id: incomeId,
+          localId: incomeId,
+          userId,
+          accountId: data.toAccountId,
+          amount: data.toAmount,
+          currencyCode: data.toCurrency,
+          description: 'Transfer from account',
+          date: data.date,
+          isDebt: false,
+          isDebtRepayment: false,
+          createdAt: now,
+          updatedAt: now,
+          isDeleted: false,
+          syncStatus: 'pending' as SyncStatus,
+          syncVersion: 0,
+        };
+        insertIncome(income).catch((e) =>
+          console.error('Failed to insert transfer-linked income into SQLite:', e),
+        );
+      }
+
       api.createAccountTransfer({
         localId: id,
         fromAccountId: data.fromAccountId,
@@ -430,6 +463,7 @@ export const useWalletStore = create<WalletState>()(
         exchangeRate: data.exchangeRate,
         date: data.date instanceof Date ? data.date.toISOString() : data.date,
         notes: data.notes,
+        countAsIncome,
       }).catch((e) =>
         console.error('Failed to sync transfer to server:', e),
       );
@@ -439,7 +473,50 @@ export const useWalletStore = create<WalletState>()(
       return newTransfer;
     },
 
+    updateTransfer: (id, updates) => {
+      set((state) => ({
+        transfers: state.transfers.map((t) =>
+          t.id === id
+            ? {
+                ...t,
+                ...updates,
+                updatedAt: new Date(),
+                syncStatus: t.syncStatus === 'synced' ? ('pending' as SyncStatus) : t.syncStatus,
+              }
+            : t
+        ),
+      }));
+
+      const updatedTransfer = get().transfers.find((t) => t.id === id);
+      if (updatedTransfer) {
+        updateTransferInDb(
+          id,
+          updates,
+          updatedTransfer.updatedAt,
+          updatedTransfer.syncStatus,
+        ).catch((e) =>
+          console.error('Failed to update transfer in SQLite:', e),
+        );
+
+        const serverIdForUpdate = updatedTransfer.serverId || id;
+        api.updateAccountTransfer(serverIdForUpdate, {
+          fromAmount: updates.fromAmount,
+          toAmount: updates.toAmount,
+          exchangeRate: updates.exchangeRate,
+          date: updates.date instanceof Date ? updates.date.toISOString() : updates.date,
+          notes: updates.notes,
+          countAsIncome: updates.countAsIncome,
+        }).catch((e) =>
+          console.error('Failed to update transfer on server:', e),
+        );
+      }
+
+      get().computeWalletSummary().then((summary) => set({ walletSummary: summary }));
+    },
+
     deleteTransfer: (id) => {
+      const transfer = get().transfers.find((t) => t.id === id);
+
       set((state) => ({
         transfers: state.transfers.filter((t) => t.id !== id),
       }));
@@ -448,7 +525,15 @@ export const useWalletStore = create<WalletState>()(
         console.error('Failed to delete transfer from SQLite:', e),
       );
 
-      api.deleteAccountTransfer(id).catch((e) =>
+      // Also soft-delete the linked income if this transfer was counted as income
+      if (transfer?.countAsIncome && transfer?.linkedIncomeId) {
+        softDeleteIncomeInDb(transfer.linkedIncomeId, new Date()).catch((e) =>
+          console.error('Failed to delete linked income from SQLite:', e),
+        );
+      }
+
+      const serverIdForDelete = transfer?.serverId || id;
+      api.deleteAccountTransfer(serverIdForDelete).catch((e) =>
         console.error('Failed to delete transfer from server:', e),
       );
 

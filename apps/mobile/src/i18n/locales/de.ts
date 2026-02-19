@@ -17,6 +17,8 @@ export default {
     share: 'Teilen',
     retry: 'Wiederholen',
     clear: 'Leeren',
+    yes: 'Ja',
+    no: 'Nein',
   },
   dates: {
     today: 'Heute',
@@ -508,6 +510,12 @@ export default {
     submit: 'Überweisen',
     recentTransfers: 'Letzte Überweisungen',
     success: 'Überweisung abgeschlossen',
+    countAsIncome: 'Als Einkommen zählen',
+    countAsIncomeHint: 'Erstellt einen Einkommensdatensatz auf dem Empfängerkonto',
+    date: 'Datum',
+    notFound: 'Überweisung nicht gefunden',
+    deleteTitle: 'Überweisung löschen',
+    deleteConfirm: 'Möchten Sie diese Überweisung wirklich löschen?',
   },
   errors: {
     loginFailed: 'Anmeldung fehlgeschlagen',

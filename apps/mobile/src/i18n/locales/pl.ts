@@ -17,6 +17,8 @@ export default {
     share: 'Udostępnij',
     retry: 'Ponów',
     clear: 'Wyczyść',
+    yes: 'Tak',
+    no: 'Nie',
   },
   dates: {
     today: 'Dzisiaj',
@@ -508,6 +510,12 @@ export default {
     submit: 'Przelej',
     recentTransfers: 'Ostatnie przelewy',
     success: 'Przelew zakończony',
+    countAsIncome: 'Licz jako przychód',
+    countAsIncomeHint: 'Tworzy zapis przychodu na koncie docelowym',
+    date: 'Data',
+    notFound: 'Przelew nie znaleziony',
+    deleteTitle: 'Usuń przelew',
+    deleteConfirm: 'Czy na pewno chcesz usunąć ten przelew?',
   },
   errors: {
     loginFailed: 'Logowanie nie powiodło się',

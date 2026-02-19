@@ -17,6 +17,8 @@ export default {
     share: 'Поделиться',
     retry: 'Повторить',
     clear: 'Очистить',
+    yes: 'Да',
+    no: 'Нет',
   },
   dates: {
     today: 'Сегодня',
@@ -508,6 +510,12 @@ export default {
     submit: 'Перевести',
     recentTransfers: 'Последние переводы',
     success: 'Перевод выполнен',
+    countAsIncome: 'Считать как доход',
+    countAsIncomeHint: 'Создаёт запись дохода на счёте получателя',
+    date: 'Дата',
+    notFound: 'Перевод не найден',
+    deleteTitle: 'Удалить перевод',
+    deleteConfirm: 'Вы уверены, что хотите удалить этот перевод?',
   },
   errors: {
     loginFailed: 'Ошибка входа',

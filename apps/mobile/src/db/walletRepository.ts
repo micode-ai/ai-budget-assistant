@@ -138,7 +138,7 @@ export async function getTransferTotals(accountId: string): Promise<{
   const inRows = await executeSql<{ to_currency: string; total: number }>(
     `SELECT to_currency, SUM(to_amount) as total
      FROM account_transfers
-     WHERE to_account_id = ? AND is_deleted = 0
+     WHERE to_account_id = ? AND is_deleted = 0 AND count_as_income = 0
      GROUP BY to_currency`,
     [accountId],
   );

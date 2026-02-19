@@ -98,10 +98,10 @@ export class WalletService {
       _sum: { fromAmount: true },
     });
 
-    // Get transfers into this account
+    // Get transfers into this account (exclude transfers counted as income to avoid double-counting)
     const transfersIn = await this.prisma.accountTransfer.groupBy({
       by: ['toCurrency'],
-      where: { toAccountId: accountId, isDeleted: false },
+      where: { toAccountId: accountId, isDeleted: false, countAsIncome: false },
       _sum: { toAmount: true },
     });
 

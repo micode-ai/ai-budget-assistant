@@ -538,6 +538,16 @@ export interface CreateAccountTransferDto {
   exchangeRate: number;
   date: string;
   notes?: string;
+  countAsIncome?: boolean;
+}
+
+export interface UpdateAccountTransferDto {
+  fromAmount?: number;
+  toAmount?: number;
+  exchangeRate?: number;
+  date?: string;
+  notes?: string;
+  countAsIncome?: boolean;
 }
 
 export interface AccountTransferResponse {
@@ -553,6 +563,8 @@ export interface AccountTransferResponse {
   exchangeRate: number;
   date: string;
   notes?: string;
+  countAsIncome: boolean;
+  linkedIncomeId?: string;
   createdAt: string;
   updatedAt: string;
 }

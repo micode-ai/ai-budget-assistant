@@ -17,6 +17,8 @@ export default {
     share: 'Поділитися',
     retry: 'Повторити',
     clear: 'Очистити',
+    yes: 'Так',
+    no: 'Ні',
   },
   dates: {
     today: 'Сьогодні',
@@ -508,6 +510,12 @@ export default {
     submit: 'Переказати',
     recentTransfers: 'Останні перекази',
     success: 'Переказ виконано',
+    countAsIncome: 'Рахувати як дохід',
+    countAsIncomeHint: 'Створює запис доходу на рахунку отримувача',
+    date: 'Дата',
+    notFound: 'Переказ не знайдено',
+    deleteTitle: 'Видалити переказ',
+    deleteConfirm: 'Ви впевнені, що хочете видалити цей переказ?',
   },
   errors: {
     loginFailed: 'Не вдалося увійти',
