@@ -225,6 +225,7 @@ export default {
     thinking: 'Думаю...',
     processingVoice: 'Обробка голосу...',
     errorMessage: 'Вибачте, сталася помилка. Перевірте підключення та спробуйте ще раз.',
+    copySuccess: 'Скопійовано!',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

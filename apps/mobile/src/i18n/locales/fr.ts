@@ -225,6 +225,7 @@ export default {
     thinking: 'Réflexion en cours...',
     processingVoice: 'Traitement de la voix...',
     errorMessage: 'Désolé, une erreur est survenue. Veuillez vérifier votre connexion et réessayer.',
+    copySuccess: 'Copié !',
   },
   expenseNew: {
     amountPlaceholder: '0,00',

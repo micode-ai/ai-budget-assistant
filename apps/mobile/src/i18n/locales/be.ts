@@ -218,6 +218,7 @@ export default {
     thinking: 'Думаю...',
     processingVoice: 'Апрацоўка голасу...',
     errorMessage: 'Прабачце, адбылася памылка. Праверце падключэнне і паспрабуйце зноў.',
+    copySuccess: 'Скапіравана!',
   },
   expenseNew: {
     amountPlaceholder: '0.00',
