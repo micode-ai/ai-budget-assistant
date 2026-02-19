@@ -855,6 +855,7 @@ export interface ReportListResponse {
 export interface MonthlyDigestResponse {
   digest: {
     periodLabel: string;
+    currencyCode: string;
     totalIncome: number;
     totalExpenses: number;
     savingsRate: number;

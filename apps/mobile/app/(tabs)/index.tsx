@@ -38,6 +38,8 @@ export default function DashboardScreen() {
 
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
+  const currency = user?.currencyCode || 'USD';
+
   const convertedLentTotal = lentDebts.reduce(
     (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
   );
@@ -56,7 +58,6 @@ export default function DashboardScreen() {
     }
   }, [currentAccountId, loadExpenses, loadIncomes, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
-  const currency = user?.currencyCode || 'USD';
   const totalBudget = getTotalBudget();
   const budgetUsedPercent = totalBudget > 0 ? (convertedExpenseTotal / totalBudget) * 100 : 0;
 
