@@ -52,8 +52,10 @@ export default function ExchangeScreen() {
 
   const onFromAmountChange = (value: string) => {
     setFromAmount(value);
-    if (value && exchangeRate) {
-      setToAmount((parseFloat(value) * parseFloat(exchangeRate)).toFixed(2));
+    const from = parseFloat(value);
+    const rate = parseFloat(exchangeRate);
+    if (isFinite(from) && isFinite(rate) && rate > 0) {
+      setToAmount((from * rate).toFixed(2));
     } else {
       setToAmount('');
     }
@@ -61,8 +63,10 @@ export default function ExchangeScreen() {
 
   const onToAmountChange = (value: string) => {
     setToAmount(value);
-    if (value && exchangeRate) {
-      setFromAmount((parseFloat(value) / parseFloat(exchangeRate)).toFixed(2));
+    const to = parseFloat(value);
+    const rate = parseFloat(exchangeRate);
+    if (isFinite(to) && isFinite(rate) && rate > 0) {
+      setFromAmount((to / rate).toFixed(2));
     } else {
       setFromAmount('');
     }
@@ -70,8 +74,10 @@ export default function ExchangeScreen() {
 
   const onRateChange = (value: string) => {
     setExchangeRate(value);
-    if (fromAmount && value) {
-      setToAmount((parseFloat(fromAmount) * parseFloat(value)).toFixed(2));
+    const from = parseFloat(fromAmount);
+    const rate = parseFloat(value);
+    if (isFinite(from) && isFinite(rate) && rate > 0) {
+      setToAmount((from * rate).toFixed(2));
     }
   };
 

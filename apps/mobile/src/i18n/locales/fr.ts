@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Appuyez sur une barre pour explorer',
     noTransactions: 'Aucune transaction pour cette période',
     back: 'Retour',
+    monthlySpending: 'Dépenses mensuelles',
+    weeklySpending: 'Dépenses : {{month}}',
+    dailySpending: 'Dépenses quotidiennes',
+    weekLabel: 'Semaine {{n}}',
+    noData: 'Aucune donnée',
+    noDataAvailable: 'Aucune donnée disponible',
+    total: 'Total',
   },
   story: {
     title: 'Votre histoire de dépenses',

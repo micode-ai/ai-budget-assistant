@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, useWindowDimensions } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
+import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ChartDataPoint } from '@budget/shared-types';
 
@@ -23,6 +24,7 @@ export function InteractiveBarChart({
   barColor,
   showValues = false,
 }: InteractiveBarChartProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width: screenWidth } = useWindowDimensions();
@@ -41,7 +43,7 @@ export function InteractiveBarChart({
   if (data.length === 0) {
     return (
       <View style={[styles.container, { height }]}>
-        <Text style={styles.emptyText}>No data available</Text>
+        <Text style={styles.emptyText}>{t('drillDown.noDataAvailable')}</Text>
       </View>
     );
   }

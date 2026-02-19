@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Tippe auf einen Balken, um tiefer zu gehen',
     noTransactions: 'Keine Transaktionen für diesen Zeitraum',
     back: 'Zurück',
+    monthlySpending: 'Monatliche Ausgaben',
+    weeklySpending: 'Ausgaben: {{month}}',
+    dailySpending: 'Tägliche Ausgaben',
+    weekLabel: 'Woche {{n}}',
+    noData: 'Keine Daten',
+    noDataAvailable: 'Keine Daten verfügbar',
+    total: 'Gesamt',
   },
   story: {
     title: 'Deine Ausgabengeschichte',

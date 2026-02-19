@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Натисніть на стовпець для деталізації',
     noTransactions: 'Немає транзакцій за цей період',
     back: 'Назад',
+    monthlySpending: 'Витрати по місяцях',
+    weeklySpending: 'Витрати: {{month}}',
+    dailySpending: 'Витрати по днях',
+    weekLabel: 'Тиждень {{n}}',
+    noData: 'Немає даних',
+    noDataAvailable: 'Немає даних',
+    total: 'Разом',
   },
   story: {
     title: 'Історія витрат',

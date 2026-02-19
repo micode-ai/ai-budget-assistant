@@ -825,7 +825,8 @@ export const useExpenseStore = create<ExpenseState>()(
       }
     },
 
-    reset: () => set({ expenses: [], expenseItems: {}, isLoading: false, error: null }),
+    reset: () =>
+      set({ expenses: [], expenseItems: {}, isLoading: false, error: null, totalThisMonth: 0, expenseTotalsByCurrency: {} }),
 
     // ---- Selectors ----
 

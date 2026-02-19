@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '@/services/api';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
 import type { DrillDownResponse } from '@budget/shared-types';
@@ -24,6 +25,64 @@ interface DrillDownParams {
 }
 
 export function useDrillDown(params: DrillDownParams) {
+  const { t, i18n } = useTranslation();
+
+  const localizeResponse = useCallback(
+    (response: DrillDownResponse): DrillDownResponse => {
+      const level = response.chart.drillDown?.currentLevel;
+      const locale = i18n.language;
+
+      // Localize chart title
+      let title = response.chart.title;
+      if (level === 'year') {
+        title = t('drillDown.monthlySpending');
+      } else if (level === 'month') {
+        // Extract month name from breadcrumb (server sends English month name as 2nd item)
+        const monthBreadcrumb = response.breadcrumb[1];
+        const monthName = monthBreadcrumb?.id
+          ? (() => {
+              const [year, month] = monthBreadcrumb.id.split('-').map(Number);
+              return new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(year, month - 1));
+            })()
+          : '';
+        title = t('drillDown.weeklySpending', { month: monthName });
+      } else if (level === 'week') {
+        title = t('drillDown.dailySpending');
+      } else if (level === 'day') {
+        title = t('drillDown.transactions');
+      }
+
+      // Localize breadcrumb labels
+      const breadcrumb = response.breadcrumb.map((item) => {
+        if (item.level === 'month' && item.id) {
+          const [year, month] = item.id.split('-').map(Number);
+          return {
+            ...item,
+            label: new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(year, month - 1)),
+          };
+        }
+        if (item.level === 'week' && item.id) {
+          return { ...item, label: t('drillDown.weekLabel', { n: item.id }) };
+        }
+        if (item.level === 'day' && item.id) {
+          const date = new Date(item.id);
+          return {
+            ...item,
+            label: new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(date),
+          };
+        }
+        return item;
+      });
+
+      return {
+        ...response,
+        chart: { ...response.chart, title },
+        breadcrumb,
+      };
+    },
+    [t, i18n.language],
+  );
+
   const [state, setState] = useState<DrillDownState>({
     chartConfig: null,
     transactions: undefined,
@@ -39,13 +98,15 @@ export function useDrillDown(params: DrillDownParams) {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        const response = await api.drillDown({
+        const raw = await api.drillDown({
           level,
           parentId,
           startDate: params.startDate,
           endDate: params.endDate,
           currencyCode: params.currencyCode,
+          locale: i18n.language,
         });
+        const response = localizeResponse(raw);
 
         setState({
           chartConfig: response.chart,
@@ -99,13 +160,15 @@ export function useDrillDown(params: DrillDownParams) {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
       try {
-        const response = await api.drillDown({
+        const raw = await api.drillDown({
           level: nextLevel,
           parentId: item.id,
           startDate: newStartDate,
           endDate: newEndDate,
           currencyCode: params.currencyCode,
+          locale: i18n.language,
         });
+        const response = localizeResponse(raw);
 
         setState({
           chartConfig: response.chart,

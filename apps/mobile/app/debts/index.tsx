@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, FlatList, RefreshControl, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ export default function DebtsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('lent');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
@@ -311,7 +312,13 @@ export default function DebtsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <Stack.Screen options={{ title: t('debt.debtsAndLoans') }} />
+      <Stack.Screen
+        options={{
+          title: t('debt.debtsAndLoans'),
+          headerStyle: { backgroundColor: theme.colors.background },
+          headerTintColor: theme.colors.textPrimary,
+        }}
+      />
       <FlatList
         data={filteredDebts}
         renderItem={renderDebtItem}
@@ -324,6 +331,28 @@ export default function DebtsScreen() {
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+      <View style={[styles.bottomTabBar, { paddingBottom: 8 + insets.bottom }]}>
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.replace('/(tabs)')}>
+          <Ionicons name="home-outline" size={22} color={theme.colors.tabBarInactive} />
+          <Text style={styles.tabLabel}>{t('nav.dashboard')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.replace('/(tabs)/expenses')}>
+          <Ionicons name="receipt-outline" size={22} color={theme.colors.tabBarInactive} />
+          <Text style={styles.tabLabel}>{t('nav.expenses')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.replace('/(tabs)/budgets')}>
+          <Ionicons name="wallet-outline" size={22} color={theme.colors.tabBarInactive} />
+          <Text style={styles.tabLabel}>{t('nav.budgets')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.replace('/(tabs)/analytics')}>
+          <Ionicons name="bar-chart-outline" size={22} color={theme.colors.tabBarInactive} />
+          <Text style={styles.tabLabel}>{t('nav.analytics')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.replace('/(tabs)/chat')}>
+          <Ionicons name="chatbubble-ellipses-outline" size={22} color={theme.colors.tabBarInactive} />
+          <Text style={styles.tabLabel}>{t('nav.aiChat')}</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -335,7 +364,7 @@ const createStyles = (theme: Theme) => ({
   },
   listContent: {
     padding: theme.spacing[4],
-    paddingBottom: 100,
+    paddingBottom: theme.spacing[4],
     flexGrow: 1,
   },
 
@@ -544,5 +573,25 @@ const createStyles = (theme: Theme) => ({
   // Separator
   separator: {
     height: theme.spacing[3],
+  },
+
+  // Bottom tab bar
+  bottomTabBar: {
+    flexDirection: 'row' as const,
+    backgroundColor: theme.colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.borderLight,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: 2,
+  },
+  tabLabel: {
+    ...theme.textStyles.tabLabel,
+    color: theme.colors.tabBarInactive,
   },
 });

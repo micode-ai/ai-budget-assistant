@@ -413,7 +413,8 @@ export const useIncomeStore = create<IncomeState>()(
       }
     },
 
-    reset: () => set({ incomes: [], isLoading: false, error: null }),
+    reset: () =>
+      set({ incomes: [], isLoading: false, error: null, totalThisMonth: 0, incomeTotalsByCurrency: {} }),
 
     getFilteredIncomes: () => {
       const { incomes, filters } = get();

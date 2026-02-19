@@ -71,6 +71,7 @@ export class AnalyticsController {
       startDate: string;
       endDate: string;
       currencyCode?: string;
+      locale?: string;
     },
   ) {
     return this.analyticsService.getDrillDown(
@@ -80,6 +81,7 @@ export class AnalyticsController {
       new Date(body.endDate),
       body.parentId,
       body.currencyCode,
+      body.locale,
     );
   }
 

@@ -586,6 +586,7 @@ export interface DrillDownRequest {
   startDate: string;
   endDate: string;
   currencyCode?: string;
+  locale?: string;
 }
 
 export interface DrillDownResponse {

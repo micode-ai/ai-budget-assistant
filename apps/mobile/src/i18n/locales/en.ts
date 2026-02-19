@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Tap a bar to explore deeper',
     noTransactions: 'No transactions for this period',
     back: 'Back',
+    monthlySpending: 'Monthly Spending',
+    weeklySpending: '{{month}} Spending',
+    dailySpending: 'Daily Spending',
+    weekLabel: 'Week {{n}}',
+    noData: 'No data',
+    noDataAvailable: 'No data available',
+    total: 'Total',
   },
   story: {
     title: 'Your Spending Story',

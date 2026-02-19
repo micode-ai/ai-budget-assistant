@@ -640,6 +640,13 @@ export default {
     tapToExplore: 'Націсніце на слупок для дэталізацыі',
     noTransactions: 'Няма транзакцый за гэты перыяд',
     back: 'Назад',
+    monthlySpending: 'Расходы па месяцах',
+    weeklySpending: 'Расходы: {{month}}',
+    dailySpending: 'Расходы па днях',
+    weekLabel: 'Тыдзень {{n}}',
+    noData: 'Няма дадзеных',
+    noDataAvailable: 'Няма даступных дадзеных',
+    total: 'Разам',
   },
   story: {
     title: 'Гісторыя расходаў',
