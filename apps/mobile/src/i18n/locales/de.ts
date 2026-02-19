@@ -1004,6 +1004,7 @@ export default {
     topCategories: 'Top-Kategorien',
     weeklyEmail: 'Wöchentliche E-Mail',
     weeklyEmailDesc: 'Wöchentliche Finanzzusammenfassung per E-Mail erhalten',
+    weeklyEmailBusiness: 'Erfordert Business-Plan',
     sendOn: 'Senden am',
     sunday: 'So',
     monday: 'Mo',

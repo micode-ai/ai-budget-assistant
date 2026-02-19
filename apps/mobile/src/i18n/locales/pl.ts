@@ -1004,6 +1004,7 @@ export default {
     topCategories: 'Główne kategorie',
     weeklyEmail: 'Tygodniowy e-mail',
     weeklyEmailDesc: 'Otrzymuj tygodniowe podsumowanie finansów na e-mail',
+    weeklyEmailBusiness: 'Wymaga planu Business',
     sendOn: 'Wyślij w',
     sunday: 'Ndz',
     monday: 'Pon',

@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, Res, UseGuards } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { DigestService } from './digest.service';
+import { ReportSchedulerService } from './report-scheduler.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
@@ -15,6 +16,7 @@ export class ReportsController {
   constructor(
     private readonly reportsService: ReportsService,
     private readonly digestService: DigestService,
+    private readonly schedulerService: ReportSchedulerService,
   ) {}
 
   @Post('generate')
@@ -51,6 +53,14 @@ export class ReportsController {
     @Query('month') month: string,
   ) {
     return this.digestService.getDigest(req.accountId, month);
+  }
+
+  @Post('trigger-weekly')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('business')
+  async triggerWeeklyEmail(@Req() req: AuthenticatedRequest) {
+    await this.schedulerService.processWeeklyEmailsForUser(req.user.id);
+    return { success: true };
   }
 
   @Delete(':id')

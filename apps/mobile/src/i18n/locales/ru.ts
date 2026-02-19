@@ -1004,6 +1004,7 @@ export default {
     topCategories: 'Основные категории',
     weeklyEmail: 'Еженедельная сводка',
     weeklyEmailDesc: 'Получайте еженедельную финансовую сводку на почту',
+    weeklyEmailBusiness: 'Требуется тариф Business',
     sendOn: 'Отправлять в',
     sunday: 'Вс',
     monday: 'Пн',
