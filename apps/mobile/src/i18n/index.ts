@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { getLocales } from 'expo-localization';
 import { secureStorage } from '@/services/secureStorage';
+import { api } from '@/services/api';
 
 import en from './locales/en';
 import ru from './locales/ru';
@@ -77,6 +78,7 @@ export async function loadSavedLanguage() {
 export async function changeLanguage(lang: string) {
   await i18n.changeLanguage(lang);
   await secureStorage.setItem('appLanguage', lang);
+  api.updateProfile({ language: lang }).catch(() => {/* non-critical, ignore */});
 }
 
 export default i18n;

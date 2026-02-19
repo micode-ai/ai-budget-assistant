@@ -53,6 +53,7 @@ model User {
   name             String
   currencyCode     String    @default("USD") @map("currency_code")
   timezone         String    @default("UTC")
+  language             String    @default("en")
   pushToken            String?   @map("push_token")
   notifyBudgetAlerts   Boolean   @default(true) @map("notify_budget_alerts")
   notifySharedActivity Boolean   @default(true) @map("notify_shared_activity")

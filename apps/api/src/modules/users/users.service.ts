@@ -7,6 +7,7 @@ interface CreateUserData {
   name: string;
   currencyCode?: string;
   timezone?: string;
+  language?: string;
 }
 
 @Injectable()

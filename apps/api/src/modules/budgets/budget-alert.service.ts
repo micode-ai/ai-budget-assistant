@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import * as ni18n from '../notifications/notification-i18n';
 
 const THRESHOLDS = [50, 80, 100];
 
@@ -123,13 +124,12 @@ export class BudgetAlertService {
         });
 
         const roundedPercent = Math.round(percentChange);
-        const title = `Unusual spending on ${currentData.name}`;
-        const body = `You've spent ${roundedPercent}% more than usual on ${currentData.name} this month.`;
+        const anomalyParams = { categoryName: currentData.name, percent: roundedPercent };
 
         const sentOk = await this.notifications.sendToUser(
           userId,
-          title,
-          body,
+          (lang) => ni18n.anomalyTitle(lang, anomalyParams),
+          (lang) => ni18n.anomalyBody(lang, anomalyParams),
           { categoryId, percentChange: roundedPercent },
           'spending_anomaly',
         );
@@ -143,9 +143,43 @@ export class BudgetAlertService {
     }
   }
 
+  private getCurrentPeriod(budget: any): { periodStart: Date; periodEnd: Date } {
+    const now = new Date();
+    switch (budget.period) {
+      case 'daily':
+        return {
+          periodStart: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+          periodEnd: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59),
+        };
+      case 'weekly': {
+        const dayOfWeek = now.getDay();
+        const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59);
+        return { periodStart: startOfWeek, periodEnd: endOfWeek };
+      }
+      case 'monthly':
+        return {
+          periodStart: new Date(now.getFullYear(), now.getMonth(), 1),
+          periodEnd: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59),
+        };
+      case 'yearly':
+        return {
+          periodStart: new Date(now.getFullYear(), 0, 1),
+          periodEnd: new Date(now.getFullYear(), 11, 31, 23, 59, 59),
+        };
+      case 'custom':
+      default:
+        return {
+          periodStart: budget.startDate,
+          periodEnd: budget.endDate || now,
+        };
+    }
+  }
+
   private async checkBudgetThresholds(accountId: string, budget: any): Promise<void> {
-    const periodStart = budget.startDate;
-    const periodEnd = budget.endDate || new Date();
+    const { periodStart, periodEnd } = this.getCurrentPeriod(budget);
 
     const whereExpenses: any = {
       accountId,
@@ -191,17 +225,22 @@ export class BudgetAlertService {
             },
           });
 
-          const title = threshold >= 100
-            ? `Budget "${budget.name}" exceeded!`
-            : `Budget "${budget.name}" at ${threshold}%`;
-          const body = threshold >= 100
-            ? `You've spent ${budget.currencyCode} ${spent.toFixed(2)} of your ${budget.currencyCode} ${budgetAmount.toFixed(2)} budget.`
-            : `${budget.currencyCode} ${spent.toFixed(2)} of ${budget.currencyCode} ${budgetAmount.toFixed(2)} used.`;
+          const budgetParams = {
+            budgetName: budget.name,
+            threshold,
+            currencyCode: budget.currencyCode,
+            spent: spent.toFixed(2),
+            total: budgetAmount.toFixed(2),
+          };
 
           const sentOk = await this.notifications.sendToUser(
             budget.userId,
-            title,
-            body,
+            threshold >= 100
+              ? (lang) => ni18n.budgetExceededTitle(lang, budgetParams)
+              : (lang) => ni18n.budgetThresholdTitle(lang, budgetParams),
+            threshold >= 100
+              ? (lang) => ni18n.budgetExceededBody(lang, budgetParams)
+              : (lang) => ni18n.budgetThresholdBody(lang, budgetParams),
             {
               budgetId: budget.id,
               alertId: alert.id,
