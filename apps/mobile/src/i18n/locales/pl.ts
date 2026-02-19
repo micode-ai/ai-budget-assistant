@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Dotknij słupka, aby zbadać głębiej',
     noTransactions: 'Brak transakcji w tym okresie',
     back: 'Wróć',
+    monthlySpending: 'Wydatki miesięczne',
+    weeklySpending: 'Wydatki: {{month}}',
+    dailySpending: 'Wydatki dzienne',
+    weekLabel: 'Tydzień {{n}}',
+    noData: 'Brak danych',
+    noDataAvailable: 'Brak dostępnych danych',
+    total: 'Łącznie',
   },
   story: {
     title: 'Twoja historia wydatków',

@@ -239,6 +239,7 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     marginTop: 2,
+    textAlign: 'center' as const,
   },
   filterScroll: {
     marginHorizontal: -theme.spacing[4],

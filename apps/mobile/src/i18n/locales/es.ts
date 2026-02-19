@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Toca una barra para explorar más',
     noTransactions: 'Sin transacciones para este período',
     back: 'Volver',
+    monthlySpending: 'Gastos mensuales',
+    weeklySpending: 'Gastos: {{month}}',
+    dailySpending: 'Gastos diarios',
+    weekLabel: 'Semana {{n}}',
+    noData: 'Sin datos',
+    noDataAvailable: 'Sin datos disponibles',
+    total: 'Total',
   },
   story: {
     title: 'Tu historia de gastos',

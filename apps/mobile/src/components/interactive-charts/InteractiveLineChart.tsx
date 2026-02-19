@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
+import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ChartDataPoint } from '@budget/shared-types';
 
@@ -25,6 +26,7 @@ export function InteractiveLineChart({
   lineColor,
   areaChart = true,
 }: InteractiveLineChartProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -42,7 +44,7 @@ export function InteractiveLineChart({
   if (data.length === 0) {
     return (
       <View style={[styles.container, { height }]}>
-        <Text style={styles.emptyText}>No data available</Text>
+        <Text style={styles.emptyText}>{t('drillDown.noDataAvailable')}</Text>
       </View>
     );
   }

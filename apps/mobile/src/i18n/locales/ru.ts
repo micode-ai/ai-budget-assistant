@@ -645,6 +645,13 @@ export default {
     tapToExplore: 'Нажмите на столбец для детализации',
     noTransactions: 'Нет транзакций за этот период',
     back: 'Назад',
+    monthlySpending: 'Расходы по месяцам',
+    weeklySpending: 'Расходы: {{month}}',
+    dailySpending: 'Расходы по дням',
+    weekLabel: 'Неделя {{n}}',
+    noData: 'Нет данных',
+    noDataAvailable: 'Нет данных',
+    total: 'Итого',
   },
   story: {
     title: 'История расходов',

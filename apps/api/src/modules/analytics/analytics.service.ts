@@ -397,7 +397,9 @@ export class AnalyticsService {
     endDate: Date,
     parentId?: string,
     currencyCode?: string,
+    locale?: string,
   ) {
+    const effectiveLocale = locale || 'en';
     if (await this.isFullEncryption(accountId)) {
       return {
         encryptionRestricted: true,
@@ -426,10 +428,10 @@ export class AnalyticsService {
         monthlyTotals.set(monthKey, (monthlyTotals.get(monthKey) || 0) + Number(expense.amount));
       }
 
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const data: ChartDataPoint[] = Array.from(monthlyTotals.entries()).map(([key, value]) => {
         const month = parseInt(key.split('-')[1]) - 1;
-        return { label: monthNames[month], value, id: key };
+        const label = new Intl.DateTimeFormat(effectiveLocale, { month: 'short' }).format(new Date(2000, month));
+        return { label, value, id: key };
       });
 
       const chart: ChartConfig = {
@@ -471,8 +473,7 @@ export class AnalyticsService {
           id: String(week),
         }));
 
-      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      const monthLabel = monthNames[startDate.getMonth()];
+      const monthLabel = new Intl.DateTimeFormat(effectiveLocale, { month: 'long' }).format(startDate);
 
       const chart: ChartConfig = {
         chartType: 'bar',
@@ -507,12 +508,12 @@ export class AnalyticsService {
         dailyTotals.set(dateKey, (dailyTotals.get(dateKey) || 0) + Number(expense.amount));
       }
 
-      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayFormatter = new Intl.DateTimeFormat(effectiveLocale, { weekday: 'short' });
       const data: ChartDataPoint[] = Array.from(dailyTotals.entries())
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([dateKey, value]) => {
-          const d = new Date(dateKey);
-          return { label: dayNames[d.getUTCDay()], value, id: dateKey };
+          const d = new Date(dateKey + 'T12:00:00Z');
+          return { label: dayFormatter.format(d), value, id: dateKey };
         });
 
       const chart: ChartConfig = {
@@ -525,7 +526,7 @@ export class AnalyticsService {
 
       const breadcrumb = [
         { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
-        { level: 'month' as DrillDownLevel, label: `${startDate.toLocaleString('en', { month: 'long' })}` },
+        { level: 'month' as DrillDownLevel, label: new Intl.DateTimeFormat(effectiveLocale, { month: 'long' }).format(startDate), id: `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}` },
         { level: 'week' as DrillDownLevel, label: `Week ${parentId || ''}`, id: parentId },
       ];
       return { chart, breadcrumb };
@@ -567,10 +568,10 @@ export class AnalyticsService {
         formatting: { currencyCode, showValues: true },
       };
 
-      const dateLabel = startDate.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+      const dateLabel = new Intl.DateTimeFormat(effectiveLocale, { month: 'short', day: 'numeric' }).format(startDate);
       const breadcrumb = [
         { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
-        { level: 'month' as DrillDownLevel, label: `${startDate.toLocaleString('en', { month: 'long' })}` },
+        { level: 'month' as DrillDownLevel, label: new Intl.DateTimeFormat(effectiveLocale, { month: 'long' }).format(startDate), id: `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}` },
         { level: 'day' as DrillDownLevel, label: dateLabel, id: parentId },
       ];
       return { chart, transactions, breadcrumb };

@@ -66,14 +66,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               });
               // Restore account context from local DB
               await useAccountStore.getState().loadAccounts();
-              // Load data for the user's account
+              // Load exchange rates first so baseCurrency is set before
+              // expense/income totals are computed by subscribers
+              await useExchangeRateStore.getState().loadRates();
+              // Load remaining data for the user's account
               await Promise.allSettled([
                 useExpenseStore.getState().loadExpenses(),
                 useIncomeStore.getState().loadIncomes(),
                 useCategoryStore.getState().loadCategories(),
                 useWalletStore.getState().loadWallet(),
                 useBudgetStore.getState().loadBudgets(),
-                useExchangeRateStore.getState().loadRates(),
               ]);
             }
           } else {
@@ -111,7 +113,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             user,
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            isAuthenticated: true,
             isLoading: false,
             hasSavedSession: false,
           });
@@ -135,15 +136,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             }
           } catch { /* non-critical */ }
 
-          // Load data for the new user's account
+          // Load exchange rates first so baseCurrency is set before
+          // expense/income totals are computed by subscribers
+          await useExchangeRateStore.getState().loadRates();
+
+          // Load remaining data for the new user's account
           await Promise.allSettled([
             useExpenseStore.getState().loadExpenses(),
             useIncomeStore.getState().loadIncomes(),
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
-            useExchangeRateStore.getState().loadRates(),
           ]);
+
+          // Mark as authenticated only after all data is ready so the
+          // dashboard mounts with data already in the stores
+          set({ isAuthenticated: true });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Login failed',
@@ -179,7 +187,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             user,
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            isAuthenticated: true,
             isLoading: false,
             hasSavedSession: false,
           });
@@ -193,15 +200,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             );
           }
 
-          // Load data for the new user's account
+          // Load exchange rates first so baseCurrency is set before
+          // expense/income totals are computed by subscribers
+          await useExchangeRateStore.getState().loadRates();
+
+          // Load remaining data for the new user's account
           await Promise.allSettled([
             useExpenseStore.getState().loadExpenses(),
             useIncomeStore.getState().loadIncomes(),
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
-            useExchangeRateStore.getState().loadRates(),
           ]);
+
+          // Mark as authenticated only after all data is ready so the
+          // dashboard mounts with data already in the stores
+          set({ isAuthenticated: true });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
@@ -223,12 +237,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           const user = JSON.parse(userJson) as User;
 
-          // Set tokens in state so api.request() can use them
+          // Set tokens in state so api.request() can use them (not authenticated yet)
           set({
             user,
             accessToken,
             refreshToken,
-            isAuthenticated: true,
             hasSavedSession: false,
           });
 
@@ -245,6 +258,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             await secureStorage.setItem('user', JSON.stringify(updatedUser));
             // Restore account context from local DB
             await useAccountStore.getState().loadAccounts();
+            // Load exchange rates first so baseCurrency is set before
+            // expense/income totals are computed by subscribers
+            await useExchangeRateStore.getState().loadRates();
             // Load data for the user's account
             await Promise.allSettled([
               useExpenseStore.getState().loadExpenses(),
@@ -253,6 +269,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               useWalletStore.getState().loadWallet(),
               useBudgetStore.getState().loadBudgets(),
             ]);
+            // Mark as authenticated only after all data is ready
+            set({ isAuthenticated: true });
           } catch {
             // Tokens are invalid and refresh also failed — need full re-login
             await secureStorage.removeItem('accessToken');

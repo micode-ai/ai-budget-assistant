@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
+import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ChartDataPoint } from '@budget/shared-types';
 
@@ -34,6 +35,7 @@ export function InteractiveDonutChart({
   showLegend = true,
   innerRadius,
 }: InteractiveDonutChartProps) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -51,7 +53,7 @@ export function InteractiveDonutChart({
   if (data.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyText}>No data available</Text>
+        <Text style={styles.emptyText}>{t('drillDown.noDataAvailable')}</Text>
       </View>
     );
   }
@@ -80,7 +82,7 @@ export function InteractiveDonutChart({
           focusOnPress
           centerLabelComponent={() => (
             <View style={styles.centerContent}>
-              <Text style={styles.centerLabel}>Total</Text>
+              <Text style={styles.centerLabel}>{t('drillDown.total')}</Text>
               <Text style={styles.centerValue}>{formatValue(total)}</Text>
             </View>
           )}

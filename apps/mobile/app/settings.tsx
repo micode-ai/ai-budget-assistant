@@ -1054,11 +1054,11 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>{t('settings.dataSync')}</Text>
           <View style={styles.card}>
             <View style={styles.fieldRow}>
-              <View style={styles.fieldValueRow}>
+              <View style={[styles.fieldValueRow, { flex: 1 }]}>
                 <Ionicons name="sync-outline" size={18} color={theme.colors.textSecondary} />
                 <Text style={styles.fieldLabel}>{t('settings.lastSynced')}</Text>
               </View>
-              <Text style={styles.fieldValue}>
+              <Text style={[styles.fieldValue, { flexShrink: 0 }]}>
                 {formatLastSyncTime(lastSyncTime)}
               </Text>
             </View>
