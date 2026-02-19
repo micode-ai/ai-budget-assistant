@@ -125,7 +125,7 @@ export default function ReportsScreen() {
     { key: 'year', label: t('reports.thisYear') },
   ];
 
-  const currency = (user?.currencyCode || 'USD') as Currency;
+  const currency = ((digest?.digest.currencyCode || user?.currencyCode || 'USD')) as Currency;
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>

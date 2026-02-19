@@ -35,13 +35,14 @@ export class DigestService {
     }
 
     // Generate digest
+    const currencyCode = account.currencyCode;
     const [expenses, incomes] = await Promise.all([
       this.prisma.expense.aggregate({
-        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd } },
+        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd }, currencyCode },
         _sum: { amount: true },
       }),
       this.prisma.income.aggregate({
-        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd } },
+        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd }, currencyCode },
         _sum: { amount: true },
       }),
     ]);
@@ -53,7 +54,7 @@ export class DigestService {
     // Top categories
     const categoryBreakdown = await this.prisma.expense.groupBy({
       by: ['categoryId'],
-      where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd } },
+      where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd }, currencyCode },
       _sum: { amount: true },
       orderBy: { _sum: { amount: 'desc' } },
       take: 5,
@@ -78,11 +79,11 @@ export class DigestService {
     const prevEnd = new Date(year, mon - 1, 0);
     const [prevExpenses, prevIncomes] = await Promise.all([
       this.prisma.expense.aggregate({
-        where: { accountId, isDeleted: false, date: { gte: prevStart, lte: prevEnd } },
+        where: { accountId, isDeleted: false, date: { gte: prevStart, lte: prevEnd }, currencyCode },
         _sum: { amount: true },
       }),
       this.prisma.income.aggregate({
-        where: { accountId, isDeleted: false, date: { gte: prevStart, lte: prevEnd } },
+        where: { accountId, isDeleted: false, date: { gte: prevStart, lte: prevEnd }, currencyCode },
         _sum: { amount: true },
       }),
     ]);
@@ -94,6 +95,7 @@ export class DigestService {
 
     const digestData = {
       periodLabel: month,
+      currencyCode,
       totalIncome,
       totalExpenses,
       savingsRate: Math.round(savingsRate * 10) / 10,
