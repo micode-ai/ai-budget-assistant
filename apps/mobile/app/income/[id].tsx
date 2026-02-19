@@ -184,6 +184,8 @@ export default function IncomeDetailScreen() {
                         styles.categoryChipText,
                         editCategory === cat.id && styles.categoryChipTextSelected,
                       ]}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
                     >
                       {getCategoryDisplayName(cat, t)}
                     </Text>
@@ -367,16 +369,20 @@ const createStyles = (theme: Theme) => ({
     marginTop: theme.spacing[1],
   },
   categoryChip: {
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[1.5],
+    width: '31%' as const,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[2],
     borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1.5,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surface,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   categoryChipText: {
     fontSize: 13,
     color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
   },
   categoryChipTextSelected: {
     color: theme.colors.textInverse,

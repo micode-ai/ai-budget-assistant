@@ -188,6 +188,8 @@ export default function NewIncomeScreen() {
                   }
                 >
                   <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
                     style={[
                       styles.categoryChipText,
                       selectedCategory === cat.id && styles.categoryChipTextSelected,
@@ -390,12 +392,15 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   categoryChip: {
-    paddingHorizontal: theme.spacing[3.5],
-    paddingVertical: theme.spacing[2],
+    width: '31%' as const,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[2.5],
     borderRadius: theme.borderRadius['2xl'],
     borderWidth: 1.5,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surface,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   addCategoryChip: {
     borderStyle: 'dashed' as const,
@@ -404,8 +409,9 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const,
   },
   categoryChipText: {
-    fontSize: 14,
+    fontSize: 13,
     color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
   },
   categoryChipTextSelected: {
     color: theme.colors.textInverse,
