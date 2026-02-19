@@ -225,6 +225,7 @@ export default {
     thinking: 'Thinking...',
     processingVoice: 'Processing voice...',
     errorMessage: 'Sorry, I encountered an error. Please check your connection and try again.',
+    copySuccess: 'Copied!',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

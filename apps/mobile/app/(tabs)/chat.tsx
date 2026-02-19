@@ -17,6 +17,7 @@ import Markdown from 'react-native-markdown-display';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import * as Clipboard from 'expo-clipboard';
 
 export default function ChatScreen() {
   const { t } = useTranslation();
@@ -158,6 +159,17 @@ export default function ChatScreen() {
   const renderMessage = ({ item }: { item: ChatMessage }) => {
     const isUser = item.role === 'user';
 
+    const handleLongPress = () => {
+      const preview = item.content.length > 80 ? item.content.slice(0, 80) + '…' : item.content;
+      Alert.alert('', preview, [
+        {
+          text: t('common.copy'),
+          onPress: () => Clipboard.setStringAsync(item.content),
+        },
+        { text: t('common.cancel'), style: 'cancel' },
+      ]);
+    };
+
     return (
       <View style={[styles.messageContainer, isUser && styles.userMessageContainer]}>
         {!isUser && (
@@ -165,17 +177,23 @@ export default function ChatScreen() {
             <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
           </View>
         )}
-        <View style={[styles.messageBubble, isUser && styles.userMessageBubble]}>
-          {isUser ? (
-            <Text style={[styles.messageText, styles.userMessageText]}>
-              {item.content}
-            </Text>
-          ) : (
-            <Markdown style={markdownStyles}>
-              {item.content}
-            </Markdown>
-          )}
-        </View>
+        <TouchableOpacity
+          onLongPress={handleLongPress}
+          activeOpacity={0.85}
+          delayLongPress={400}
+        >
+          <View style={[styles.messageBubble, isUser && styles.userMessageBubble]}>
+            {isUser ? (
+              <Text style={[styles.messageText, styles.userMessageText]}>
+                {item.content}
+              </Text>
+            ) : (
+              <Markdown style={markdownStyles}>
+                {item.content}
+              </Markdown>
+            )}
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };

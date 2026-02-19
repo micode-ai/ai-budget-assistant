@@ -225,6 +225,7 @@ export default {
     thinking: 'Myślę...',
     processingVoice: 'Przetwarzanie głosu...',
     errorMessage: 'Przepraszam, wystąpił błąd. Sprawdź połączenie i spróbuj ponownie.',
+    copySuccess: 'Skopiowano!',
   },
   expenseNew: {
     amountPlaceholder: '0,00',
