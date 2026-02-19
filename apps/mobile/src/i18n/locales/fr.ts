@@ -1004,6 +1004,7 @@ export default {
     topCategories: 'Catégories principales',
     weeklyEmail: 'Résumé hebdomadaire',
     weeklyEmailDesc: 'Recevoir un résumé financier hebdomadaire par e-mail',
+    weeklyEmailBusiness: 'Nécessite le plan Business',
     sendOn: 'Envoyer le',
     sunday: 'Dim',
     monday: 'Lun',

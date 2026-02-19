@@ -38,70 +38,102 @@ export class ReportSchedulerService {
     for (const user of users) {
       // Business tier only
       if (user.subscription?.tier !== 'business') continue;
+      await this.sendWeeklyEmailsForUser(user);
+    }
+  }
 
-      for (const membership of user.accountMembers) {
-        const account = membership.account;
-        // Skip fully encrypted accounts
-        if (account.encryptionTier >= 2) continue;
+  async processWeeklyEmailsForUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        subscription: true,
+        accountMembers: {
+          include: {
+            account: { select: { id: true, name: true, currencyCode: true, encryptionTier: true } },
+          },
+        },
+      },
+    });
 
-        try {
-          const now = new Date();
-          const weekStart = new Date(now);
-          weekStart.setDate(now.getDate() - 7);
+    if (!user || !user.weeklyEmailEnabled) {
+      this.logger.warn(`trigger-weekly: user ${userId} not found or weekly email disabled`);
+      return;
+    }
+    if (user.subscription?.tier !== 'business') {
+      this.logger.warn(`trigger-weekly: user ${userId} is not on business tier`);
+      return;
+    }
+    await this.sendWeeklyEmailsForUser(user);
+  }
 
-          const [expenseAgg, incomeAgg] = await Promise.all([
-            this.prisma.expense.aggregate({
-              where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
-              _sum: { amount: true },
-            }),
-            this.prisma.income.aggregate({
-              where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
-              _sum: { amount: true },
-            }),
-          ]);
+  private async sendWeeklyEmailsForUser(user: {
+    id: string;
+    email: string;
+    name: string;
+    accountMembers: Array<{ account: { id: string; name: string; currencyCode: string; encryptionTier: number } }>;
+  }) {
+    for (const membership of user.accountMembers) {
+      const account = membership.account;
+      // Skip fully encrypted accounts
+      if (account.encryptionTier >= 2) continue;
 
-          const totalExpenses = Number(expenseAgg._sum.amount || 0);
-          const totalIncome = Number(incomeAgg._sum.amount || 0);
-          const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+      try {
+        const now = new Date();
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - 7);
 
-          // Top categories
-          const categoryBreakdown = await this.prisma.expense.groupBy({
-            by: ['categoryId'],
+        const [expenseAgg, incomeAgg] = await Promise.all([
+          this.prisma.expense.aggregate({
             where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
             _sum: { amount: true },
-            orderBy: { _sum: { amount: 'desc' } },
-            take: 5,
-          });
+          }),
+          this.prisma.income.aggregate({
+            where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+            _sum: { amount: true },
+          }),
+        ]);
 
-          const categoryIds = categoryBreakdown.map(c => c.categoryId).filter(Boolean) as string[];
-          const categoryNames = await this.prisma.category.findMany({
-            where: { id: { in: categoryIds } },
-            select: { id: true, name: true },
-          });
-          const nameMap = new Map(categoryNames.map(c => [c.id, c.name]));
+        const totalExpenses = Number(expenseAgg._sum.amount || 0);
+        const totalIncome = Number(incomeAgg._sum.amount || 0);
+        const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
 
-          const topCategories = categoryBreakdown.map(c => ({
-            name: nameMap.get(c.categoryId || '') || 'Uncategorized',
-            amount: Number(c._sum.amount || 0),
-            percentage: totalExpenses > 0 ? (Number(c._sum.amount || 0) / totalExpenses) * 100 : 0,
-          }));
+        // Top categories
+        const categoryBreakdown = await this.prisma.expense.groupBy({
+          by: ['categoryId'],
+          where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+          _sum: { amount: true },
+          orderBy: { _sum: { amount: 'desc' } },
+          take: 5,
+        });
 
-          const periodLabel = `${weekStart.toISOString().split('T')[0]} — ${now.toISOString().split('T')[0]}`;
+        const categoryIds = categoryBreakdown.map(c => c.categoryId).filter(Boolean) as string[];
+        const categoryNames = await this.prisma.category.findMany({
+          where: { id: { in: categoryIds } },
+          select: { id: true, name: true },
+        });
+        const nameMap = new Map(categoryNames.map(c => [c.id, c.name]));
 
-          await this.mailService.sendWeeklyReport({
-            to: user.email,
-            userName: user.name,
-            accountName: account.name,
-            periodLabel,
-            totalIncome,
-            totalExpenses,
-            savingsRate: Math.round(savingsRate * 10) / 10,
-            topCategories,
-            currencyCode: account.currencyCode,
-          });
-        } catch (error) {
-          this.logger.error(`Weekly email failed for user ${user.id}, account ${account.id}: ${error}`);
-        }
+        const topCategories = categoryBreakdown.map(c => ({
+          name: nameMap.get(c.categoryId || '') || 'Uncategorized',
+          amount: Number(c._sum.amount || 0),
+          percentage: totalExpenses > 0 ? (Number(c._sum.amount || 0) / totalExpenses) * 100 : 0,
+        }));
+
+        const periodLabel = `${weekStart.toISOString().split('T')[0]} — ${now.toISOString().split('T')[0]}`;
+
+        await this.mailService.sendWeeklyReport({
+          to: user.email,
+          userName: user.name,
+          accountName: account.name,
+          periodLabel,
+          totalIncome,
+          totalExpenses,
+          savingsRate: Math.round(savingsRate * 10) / 10,
+          topCategories,
+          currencyCode: account.currencyCode,
+        });
+      } catch (error) {
+        this.logger.error(`Weekly email failed for user ${user.id}, account ${account.id}: ${error}`);
       }
     }
   }

@@ -912,6 +912,7 @@ export default {
     topCategories: 'Асноўныя катэгорыі',
     weeklyEmail: 'Штотыднёвая рассылка',
     weeklyEmailDesc: 'Атрымлівайце штотыднёвую фінансавую зводку на пошту',
+    weeklyEmailBusiness: 'Патрабуецца тарыф Business',
     sendOn: 'Адпраўляць у',
     sunday: 'Нд',
     monday: 'Пн',

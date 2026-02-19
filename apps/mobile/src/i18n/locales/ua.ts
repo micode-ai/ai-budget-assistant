@@ -1004,6 +1004,7 @@ export default {
     topCategories: 'Основні категорії',
     weeklyEmail: 'Щотижнева розсилка',
     weeklyEmailDesc: 'Отримуйте щотижневий фінансовий звіт на пошту',
+    weeklyEmailBusiness: 'Потрібен тариф Business',
     sendOn: 'Надсилати у',
     sunday: 'Нд',
     monday: 'Пн',

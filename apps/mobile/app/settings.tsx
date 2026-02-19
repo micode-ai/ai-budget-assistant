@@ -27,6 +27,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useReportStore } from '@/stores/reportStore';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getLastSyncTime } from '@/db/syncMetadataRepository';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -93,6 +94,7 @@ export default function SettingsScreen() {
 
   // Report preferences
   const { preferences: reportPrefs, loadPreferences: loadReportPrefs, updatePreferences: updateReportPrefs, exportBackup, isExporting, restoreBackup, isRestoring } = useReportStore();
+  const isBusinessTier = useSubscriptionStore((s) => s.isBusiness());
 
   const appVersion = Constants.expoConfig?.version || '1.0.0';
 
@@ -679,15 +681,21 @@ export default function SettingsScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={styles.fieldLabel}>{t('reports.weeklyEmail')}</Text>
                 <Text style={styles.fieldDesc}>{t('reports.weeklyEmailDesc')}</Text>
+                {!isBusinessTier && (
+                  <Text style={[styles.fieldDesc, { color: theme.colors.warning, marginTop: 2 }]}>
+                    {t('reports.weeklyEmailBusiness')}
+                  </Text>
+                )}
               </View>
               <Switch
                 value={reportPrefs?.weeklyEmailEnabled ?? false}
                 onValueChange={handleToggleWeeklyEmail}
+                disabled={!isBusinessTier}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
               />
             </View>
 
-            {reportPrefs?.weeklyEmailEnabled && (
+            {isBusinessTier && reportPrefs?.weeklyEmailEnabled && (
               <>
                 <View style={styles.divider} />
                 <Text style={[styles.fieldLabel, { marginBottom: theme.spacing[2] }]}>{t('reports.sendOn')}</Text>

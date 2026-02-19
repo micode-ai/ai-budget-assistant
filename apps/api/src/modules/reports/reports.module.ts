@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ReportsController } from './reports.controller';
 import { ReportsService } from './reports.service';
 import { DigestService } from './digest.service';
+import { ReportSchedulerService } from './report-scheduler.service';
 import { CsvGenerator } from './generators/csv-generator';
 import { PdfGenerator } from './generators/pdf-generator';
 import { ExcelGenerator } from './generators/excel-generator';
@@ -14,6 +15,7 @@ import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
   providers: [
     ReportsService,
     DigestService,
+    ReportSchedulerService,
     CsvGenerator,
     PdfGenerator,
     ExcelGenerator,
