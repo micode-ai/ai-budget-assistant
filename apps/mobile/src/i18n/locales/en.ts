@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Reports are not available for fully encrypted accounts',
     deleteTitle: 'Delete Report',
     deleteConfirm: 'Are you sure you want to delete this report?',
+    share: 'Share',
+    download: 'Download',
   },
   legal: {
     privacyPolicy: 'Privacy Policy',

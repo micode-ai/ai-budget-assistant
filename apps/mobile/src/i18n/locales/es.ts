@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Los informes no están disponibles para cuentas completamente cifradas',
     deleteTitle: 'Eliminar informe',
     deleteConfirm: '¿Está seguro de que desea eliminar este informe?',
+    share: 'Compartir',
+    download: 'Descargar',
   },
   legal: {
     privacyPolicy: 'Política de Privacidad',

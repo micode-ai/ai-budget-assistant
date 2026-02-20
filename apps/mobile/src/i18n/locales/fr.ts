@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Les rapports ne sont pas disponibles pour les comptes entièrement chiffrés',
     deleteTitle: 'Supprimer le rapport',
     deleteConfirm: 'Voulez-vous vraiment supprimer ce rapport ?',
+    share: 'Partager',
+    download: 'Télécharger',
   },
   legal: {
     privacyPolicy: 'Politique de confidentialité',

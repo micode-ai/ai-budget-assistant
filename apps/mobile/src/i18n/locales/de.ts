@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Berichte sind für vollständig verschlüsselte Konten nicht verfügbar',
     deleteTitle: 'Bericht löschen',
     deleteConfirm: 'Möchten Sie diesen Bericht wirklich löschen?',
+    share: 'Teilen',
+    download: 'Herunterladen',
   },
   legal: {
     privacyPolicy: 'Datenschutzrichtlinie',

@@ -38,7 +38,8 @@ export default function ReportsScreen() {
     generateReport,
     loadReports,
     deleteReport,
-    downloadAndShare,
+    shareReport,
+    downloadReport,
     loadMonthlyDigest,
   } = useReportStore();
 
@@ -89,12 +90,21 @@ export default function ReportsScreen() {
 
     const reportId = await generateReport(dto);
     if (reportId) {
-      Alert.alert(t('common.success'), t('reports.reportGenerated'));
+      // Find the newly generated report and open it immediately
+      const updatedReports = useReportStore.getState().reports;
+      const newReport = updatedReports.find(r => r.id === reportId);
+      if (newReport) {
+        await shareReport(newReport.id, newReport.fileName);
+      }
     }
   };
 
+  const handleShare = async (report: ReportListItem) => {
+    await shareReport(report.id, report.fileName);
+  };
+
   const handleDownload = async (report: ReportListItem) => {
-    await downloadAndShare(report.id, report.fileName);
+    await downloadReport(report.id, report.fileName);
   };
 
   const handleDelete = (report: ReportListItem) => {
@@ -269,14 +279,17 @@ export default function ReportsScreen() {
                     color={theme.colors.primary}
                   />
                 </View>
-                <TouchableOpacity style={styles.reportInfo} onPress={() => handleDownload(report)}>
+                <View style={styles.reportInfo}>
                   <Text style={styles.reportName} numberOfLines={1}>{report.fileName}</Text>
                   <Text style={styles.reportMeta}>
                     {report.format.toUpperCase()} · {new Date(report.createdAt).toLocaleDateString()}
                     {report.fileSize ? ` · ${(report.fileSize / 1024).toFixed(0)} KB` : ''}
                   </Text>
-                </TouchableOpacity>
+                </View>
                 <TouchableOpacity onPress={() => handleDownload(report)} style={styles.reportAction}>
+                  <Ionicons name="download-outline" size={20} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleShare(report)} style={styles.reportAction}>
                   <Ionicons name="share-outline" size={20} color={theme.colors.textTertiary} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleDelete(report)} style={styles.reportAction}>

@@ -35,7 +35,8 @@ interface ReportState {
   generateReport: (dto: GenerateReportDto) => Promise<string | null>;
   loadReports: () => Promise<void>;
   deleteReport: (reportId: string) => Promise<void>;
-  downloadAndShare: (reportId: string, fileName: string) => Promise<void>;
+  shareReport: (reportId: string, fileName: string) => Promise<void>;
+  downloadReport: (reportId: string, fileName: string) => Promise<void>;
   loadMonthlyDigest: (month: string) => Promise<void>;
   exportBackup: () => Promise<void>;
   restoreBackup: (data: string, overwrite: boolean) => Promise<{ restoredCounts: Record<string, number>; errors: string[] }>;
@@ -96,7 +97,42 @@ export const useReportStore = create<ReportState>()((set, get) => ({
     }
   },
 
-  downloadAndShare: async (reportId: string, fileName: string) => {
+  shareReport: async (reportId: string, fileName: string) => {
+    try {
+      const blob = await api.downloadReport(reportId);
+      const ext = fileName.split('.').pop()?.toLowerCase();
+      const mimeTypes: Record<string, string> = {
+        pdf: 'application/pdf',
+        csv: 'text/csv',
+        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      };
+      const mimeType = mimeTypes[ext || ''] || 'application/octet-stream';
+
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const dataUrl = reader.result as string;
+          resolve(dataUrl.split(',')[1]);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      const file = new File(Paths.cache, fileName);
+      file.write(base64, { encoding: 'base64' });
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(file.uri, {
+          mimeType,
+          dialogTitle: fileName,
+        });
+      }
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : 'Failed to share report' });
+    }
+  },
+
+  downloadReport: async (reportId: string, fileName: string) => {
     try {
       const blob = await api.downloadReport(reportId);
       const ext = fileName.split('.').pop()?.toLowerCase();
@@ -119,7 +155,6 @@ export const useReportStore = create<ReportState>()((set, get) => ({
               fileName,
               mimeType,
             );
-            // For binary files (PDF, Excel), write as base64
             if (ext === 'csv') {
               const text = await new Promise<string>((resolve, reject) => {
                 const reader = new FileReader();
@@ -147,7 +182,7 @@ export const useReportStore = create<ReportState>()((set, get) => ({
         }
       }
 
-      // Fallback: share via system sheet
+      // iOS / fallback: open share sheet so user can save to Files
       if (!saved) {
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
