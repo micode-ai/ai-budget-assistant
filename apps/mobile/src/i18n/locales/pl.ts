@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Raporty nie są dostępne dla w pełni zaszyfrowanych kont',
     deleteTitle: 'Usuń raport',
     deleteConfirm: 'Czy na pewno chcesz usunąć ten raport?',
+    share: 'Udostępnij',
+    download: 'Pobierz',
   },
   legal: {
     privacyPolicy: 'Polityka Prywatności',

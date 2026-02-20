@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Звіти недоступні для повністю зашифрованих акаунтів',
     deleteTitle: 'Видалити звіт',
     deleteConfirm: 'Ви впевнені, що хочете видалити цей звіт?',
+    share: 'Поділитися',
+    download: 'Завантажити',
   },
   legal: {
     privacyPolicy: 'Політика конфіденційності',

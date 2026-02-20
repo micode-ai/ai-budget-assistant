@@ -1027,6 +1027,8 @@ export default {
     encryptionRestricted: 'Отчёты недоступны для полностью зашифрованных аккаунтов',
     deleteTitle: 'Удалить отчёт',
     deleteConfirm: 'Вы уверены, что хотите удалить этот отчёт?',
+    share: 'Поделиться',
+    download: 'Скачать',
   },
   legal: {
     privacyPolicy: 'Политика конфиденциальности',
