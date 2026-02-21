@@ -39,6 +39,7 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 
 ## Exemples de questions
 
+**Questions d'analyse :**
 - "Quelles ont ete mes principales depenses ce mois-ci ?"
 - "Combien ai-je depense en alimentation la semaine derniere ?"
 - "Suis-je dans les limites de mon budget ?"
@@ -48,11 +49,23 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Donne-moi des conseils pour economiser de l'argent"
 - "Quand mon budget mensuel sera-t-il epuise a ce rythme ?"
 
+**Commandes en langage naturel :**
+- "Ajouter depense 500₴ pour courses"
+- "Creer budget 10000₴ pour divertissement pour mars"
+- "Ajouter revenu 50000₴ de salaire"
+- "Montrer mes depenses de la semaine derniere"
+- "Quel est le statut de mon budget ?"
+- "Montrer la repartition par categories pour ce mois"
+
 ## Fonctionnalites du chat
 
 - **Historique de conversation** — les messages precedents sont conserves pendant votre session
 - **Indicateur de saisie** — affiche "Reflexion en cours..." pendant que l'IA traite votre question
 - **Gestion des erreurs** — en cas de probleme, vous verrez un message d'erreur avec une option de reessai
+- **Commandes en langage naturel** — creez des depenses, revenus, budgets et consultez les donnees en langage courant
+- **Confirmation d'action** — lors de la creation d'enregistrements financiers, l'IA affiche un apercu et demande confirmation avant l'enregistrement
+- **Detection intelligente de la langue** — l'IA repond automatiquement dans votre langue (anglais, russe, ukrainien, bielorusse, allemand, espagnol, francais, polonais)
+- **Reconnaissance des devises** — prend en charge les symboles : ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Limites de requetes IA
 
@@ -66,6 +79,33 @@ Chaque message que vous envoyez utilise une requete IA de votre allocation mensu
 
 Lorsque vous avez epuise vos requetes, vous serez invite a ameliorer votre plan.
 
+## Commandes en langage naturel
+
+Vous pouvez maintenant **executer des actions reelles** directement depuis le chat :
+
+### Creation d'enregistrements
+
+1. Tapez une commande comme : **"Ajouter depense 500₴ pour courses"**
+2. L'IA affiche une **carte de confirmation** avec :
+   - Montant et devise
+   - Categorie (detectee automatiquement ou par defaut)
+   - Date (aujourd'hui par defaut)
+3. Appuyez sur **Confirmer** pour creer la depense, ou **Annuler** pour rejeter
+4. Apres confirmation, la depense est enregistree et vous verrez un message de reussite
+
+**Commandes de creation prises en charge :**
+- **Depenses :** "Ajouter depense 500₴ pour courses", "Depense 1200₴ en transport hier"
+- **Revenus :** "Ajouter revenu 50000₴ de salaire", "Recu 5000₴ de prime"
+- **Budgets :** "Creer budget 10000₴ pour divertissement pour mars", "Definir budget mensuel 3000₴ pour alimentation"
+
+### Consultation des donnees
+
+Ces commandes s'executent **immediatement** et affichent les resultats :
+
+- **"Montrer mes depenses de la semaine derniere"** → affiche la liste des depenses avec le total
+- **"Quel est le statut de mon budget ?"** → affiche tous les budgets avec des barres de progression
+- **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
+
 ## FAQ
 
 - **Q : L'IA a-t-elle acces a toutes mes donnees financieres ?**
@@ -76,6 +116,12 @@ Lorsque vous avez epuise vos requetes, vous serez invite a ameliorer votre plan.
 
 - **Q : L'IA a donne une reponse incorrecte. Que dois-je faire ?**
   **R :** Les reponses de l'IA sont basees sur vos donnees mais peuvent parfois etre inexactes. Vous pouvez reformuler votre question pour de meilleurs resultats, ou verifier les donnees dans l'onglet Analyses.
+
+- **Q : Puis-je annuler une action confirmee ?**
+  **R :** Apres avoir confirme une action (comme la creation d'une depense), elle est enregistree dans votre compte. Vous pouvez la supprimer manuellement depuis l'onglet Depenses.
+
+- **Q : Que se passe-t-il si je rejette une action ?**
+  **R :** Si vous appuyez sur "Annuler" sur une carte de confirmation, l'action est rejetee et rien n'est enregistre. L'IA accusera reception du rejet.
 
 ---
 

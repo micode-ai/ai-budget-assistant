@@ -37,8 +37,9 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 
 > **Hinweis:** Der Sprachverarbeitungsstatus wird als "Verarbeite Sprache..." angezeigt, wahrend transkribiert wird.
 
-## Beispielfragen
+## Beispiele für Fragen
 
+**Analysefragen:**
 - "Wofur habe ich diesen Monat am meisten ausgegeben?"
 - "Wie viel habe ich letzte Woche fur Essen ausgegeben?"
 - "Bin ich mit meinem Budget auf Kurs?"
@@ -48,11 +49,23 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Gib mir Tipps zum Geldsparen"
 - "Wann wird mein monatliches Budget bei diesem Tempo aufgebraucht sein?"
 
+**Natürlichsprachliche Befehle:**
+- "Ausgabe 500₴ für Lebensmittel hinzufügen"
+- "Budget 10000₴ für Unterhaltung für März erstellen"
+- "Einkommen 50000₴ aus Gehalt hinzufügen"
+- "Zeige meine Ausgaben der letzten Woche"
+- "Wie ist mein Budget-Status?"
+- "Zeige Kategorie-Aufschlüsselung für diesen Monat"
+
 ## Chat-Funktionen
 
 - **Konversationsverlauf** — vorherige Nachrichten bleiben wahrend deiner Sitzung erhalten
 - **Schreibindikator** — zeigt "Denke nach..." wahrend die KI deine Frage verarbeitet
 - **Fehlerbehandlung** — wenn etwas schief geht, siehst du eine Fehlermeldung mit einer Wiederholungsoption
+- **Natürlichsprachliche Befehle** — erstelle Ausgaben, Einkommen, Budgets und frage Daten in einfacher Sprache ab
+- **Aktionsbestätigung** — beim Erstellen von Finanzdatensätzen zeigt die KI eine Vorschau und fragt vor dem Speichern nach Bestätigung
+- **Intelligente Spracherkennung** — KI antwortet automatisch in deiner Sprache (Englisch, Russisch, Ukrainisch, Weißrussisch, Deutsch, Spanisch, Französisch, Polnisch)
+- **Währungserkennung** — unterstützt Symbole: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## KI-Anfragen-Limits
 
@@ -66,6 +79,33 @@ Jede Nachricht, die du sendest, verbraucht eine KI-Anfrage aus deinem monatliche
 
 Wenn du keine Anfragen mehr hast, wirst du aufgefordert, deinen Plan zu upgraden.
 
+## Natürlichsprachliche Befehle
+
+Du kannst jetzt **echte Aktionen** direkt aus dem Chat ausführen:
+
+### Datensätze erstellen
+
+1. Gib einen Befehl ein wie: **"Ausgabe 500₴ für Lebensmittel hinzufügen"**
+2. Die KI zeigt eine **Bestätigungskarte** mit:
+   - Betrag und Währung
+   - Kategorie (automatisch erkannt oder Standard)
+   - Datum (heute als Standard)
+3. Tippe auf **Bestätigen**, um die Ausgabe zu erstellen, oder **Abbrechen**, um abzulehnen
+4. Nach der Bestätigung wird die Ausgabe gespeichert und du siehst eine Erfolgsmeldung
+
+**Unterstützte Erstellungsbefehle:**
+- **Ausgaben:** "Ausgabe 500₴ für Lebensmittel hinzufügen", "1200₴ für Transport gestern ausgegeben"
+- **Einkommen:** "Einkommen 50000₴ aus Gehalt hinzufügen", "5000₴ Bonus erhalten"
+- **Budgets:** "Budget 10000₴ für Unterhaltung für März erstellen", "Monatliches Budget 3000₴ für Essen festlegen"
+
+### Daten abfragen
+
+Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
+
+- **"Zeige meine Ausgaben der letzten Woche"** → zeigt Ausgabenliste mit Gesamtsumme
+- **"Wie ist mein Budget-Status?"** → zeigt alle Budgets mit Fortschrittsbalken
+- **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
+
 ## FAQ
 
 - **F: Hat die KI Zugriff auf alle meine Finanzdaten?**
@@ -76,6 +116,12 @@ Wenn du keine Anfragen mehr hast, wirst du aufgefordert, deinen Plan zu upgraden
 
 - **F: Die KI hat eine falsche Antwort gegeben. Was soll ich tun?**
   **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse oder die Daten im Analysen-Tab uberprufen.
+
+- **F: Kann ich eine bestätigte Aktion rückgängig machen?**
+  **A:** Nachdem du eine Aktion bestätigt hast (wie das Erstellen einer Ausgabe), wird sie in deinem Konto gespeichert. Du kannst sie manuell im Ausgaben-Tab löschen.
+
+- **F: Was passiert, wenn ich eine Aktion ablehne?**
+  **A:** Wenn du auf "Abbrechen" auf einer Bestätigungskarte tippst, wird die Aktion abgelehnt und nichts wird gespeichert. Die KI wird die Ablehnung bestätigen.
 
 ---
 

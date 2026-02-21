@@ -22,7 +22,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **Tags** - Flexible tagging system for expenses and incomes with color-coded labels, AI-powered tag suggestions
 - **Projects** - Group expenses and incomes into projects with budgets, date ranges, and per-project analytics
 - **Expense Splits** - Split a single expense across multiple categories with amounts and percentages, AI-powered split suggestions
-- **AI Chat Assistant** - Get personalized financial advice
+- **AI Chat Assistant** - Get personalized financial advice and execute actions via natural language commands (create expenses/budgets, query data)
 - **Analytics** - Visual spending trends, category breakdowns, tag breakdowns, and project breakdowns
 - **Shared Accounts** - Invite members via invite codes, track shared activity
 - **Interactive Charts** - Drill-down from year to individual transactions with animated bar, line, and donut charts

@@ -1,8 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
+import { ExpensesService } from '../../expenses/expenses.service';
+import { IncomesService } from '../../incomes/incomes.service';
+import { BudgetsService } from '../../budgets/budgets.service';
+import { CategoriesService } from '../../categories/categories.service';
+import { AnalyticsService } from '../../analytics/analytics.service';
+import type { ChatActionType, ChatPendingAction, ChatActionResult } from '@budget/shared-types';
 
 interface UserContext {
   totalSpentThisMonth: number;
@@ -13,6 +20,7 @@ interface UserContext {
   projects: { name: string; spent: number }[];
   topItems: { description: string; totalSpent: number; count: number }[];
   savingsGoals: { name: string; targetAmount: number; currentAmount: number; currencyCode: string; deadline: string; status: string }[];
+  categoryNames: string[];
 }
 
 interface ChatMessageRecord {
@@ -43,6 +51,11 @@ export class ChatService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly expensesService: ExpensesService,
+    private readonly incomesService: IncomesService,
+    private readonly budgetsService: BudgetsService,
+    private readonly categoriesService: CategoriesService,
+    private readonly analyticsService: AnalyticsService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -104,15 +117,18 @@ export class ChatService {
     const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
     const responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
     const context = await this.buildUserContext(userId, accountId);
-    const systemPrompt = this.buildSystemPrompt(context, encryptionTier, responseMode);
 
-    // Get conversation history
-    const history = conversation.messages.map((m: ChatMessageRecord) => ({
-      role: m.role as 'user' | 'assistant' | 'system',
-      content: m.content,
-    }));
+    // Get conversation history (filter out internal roles like pending_action)
+    const history = conversation.messages
+      .filter((m: ChatMessageRecord) => ['user', 'assistant', 'system'].includes(m.role))
+      .map((m: ChatMessageRecord) => ({
+        role: m.role as 'user' | 'assistant' | 'system',
+        content: m.content,
+      }));
 
-    // Call OpenAI
+    const systemPrompt = this.buildSystemPrompt(context, encryptionTier, responseMode, message, history);
+
+    // Call OpenAI with tool definitions
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-turbo-preview',
       messages: [
@@ -120,10 +136,37 @@ export class ChatService {
         ...history,
         { role: 'user', content: message },
       ],
+      tools: this.getToolDefinitions(),
+      tool_choice: 'auto',
       max_tokens: 1000,
     });
 
-    const assistantMessage = response.choices[0]?.message?.content || 'I apologize, but I could not generate a response.';
+    const choice = response.choices[0];
+
+    // Handle tool calls
+    if (choice?.message?.tool_calls && choice.message.tool_calls.length > 0) {
+      const toolCall = choice.message.tool_calls[0];
+      const functionName = toolCall.function.name as ChatActionType;
+      let functionArgs: Record<string, unknown>;
+      try {
+        functionArgs = JSON.parse(toolCall.function.arguments);
+      } catch {
+        functionArgs = {};
+      }
+
+      if (this.isWriteAction(functionName)) {
+        return this.handleWriteActionRequest(
+          conversation, functionName, functionArgs, systemPrompt, history, message,
+        );
+      } else {
+        return this.handleReadAction(
+          conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId,
+        );
+      }
+    }
+
+    // No tool call — regular text response
+    const assistantMessage = choice?.message?.content || 'I apologize, but I could not generate a response.';
     const tokensUsed = response.usage?.total_tokens || 0;
 
     // Save assistant message
@@ -140,6 +183,601 @@ export class ChatService {
       message: assistantMessage,
       conversationId: conversation.id,
     };
+  }
+
+  async confirmAction(userId: string, conversationId: string, actionId: string, accountId?: string) {
+    const pendingMessage = await this.prisma.chatMessage.findFirst({
+      where: {
+        conversationId,
+        role: 'pending_action',
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!pendingMessage) {
+      throw new NotFoundException('Pending action not found or expired');
+    }
+
+    const pendingData = JSON.parse(pendingMessage.content) as ChatPendingAction;
+    if (pendingData.id !== actionId) {
+      throw new NotFoundException('Pending action not found');
+    }
+
+    // Execute the write action
+    const result = await this.executeAction(
+      pendingData.actionType,
+      pendingData.data as Record<string, unknown>,
+      accountId || '',
+      userId,
+    );
+
+    // Mark pending action as executed
+    await this.prisma.chatMessage.update({
+      where: { id: pendingMessage.id },
+      data: {
+        role: 'action_executed',
+        content: JSON.stringify({ ...pendingData, status: 'executed', result }),
+      },
+    });
+
+    // Save confirmation assistant message
+    const confirmText = result.success
+      ? `Done! ${pendingData.displaySummary} — successfully created.`
+      : `Failed to execute: ${result.errorMessage}`;
+
+    await this.prisma.chatMessage.create({
+      data: {
+        conversationId,
+        role: 'assistant',
+        content: confirmText,
+      },
+    });
+
+    return {
+      message: confirmText,
+      conversationId,
+      actionResult: result,
+    };
+  }
+
+  async rejectAction(userId: string, conversationId: string, actionId: string, reason?: string) {
+    const pendingMessage = await this.prisma.chatMessage.findFirst({
+      where: {
+        conversationId,
+        role: 'pending_action',
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!pendingMessage) {
+      throw new NotFoundException('Pending action not found');
+    }
+
+    const pendingData = JSON.parse(pendingMessage.content) as ChatPendingAction;
+    if (pendingData.id !== actionId) {
+      throw new NotFoundException('Pending action not found');
+    }
+
+    // Mark as rejected
+    await this.prisma.chatMessage.update({
+      where: { id: pendingMessage.id },
+      data: {
+        role: 'action_rejected',
+        content: JSON.stringify({ ...pendingData, status: 'rejected', reason }),
+      },
+    });
+
+    const rejectText = 'Action cancelled. Let me know if you need anything else.';
+    await this.prisma.chatMessage.create({
+      data: {
+        conversationId,
+        role: 'assistant',
+        content: rejectText,
+      },
+    });
+
+    return {
+      message: rejectText,
+      conversationId,
+    };
+  }
+
+  // ── Tool Definitions ──
+
+  private getToolDefinitions(): OpenAI.Chat.Completions.ChatCompletionTool[] {
+    return [
+      {
+        type: 'function',
+        function: {
+          name: 'create_expense',
+          description: 'Create a new expense/spending entry. Use when the user asks to add, log, or record an expense.',
+          parameters: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number', description: 'The expense amount' },
+              currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'], description: 'Currency code. Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB' },
+              description: { type: 'string', description: 'What the expense was for' },
+              categoryName: { type: 'string', description: 'Category name (e.g., "Food & Drinks", "Entertainment", "Transport")' },
+              date: { type: 'string', description: 'ISO date string (YYYY-MM-DD). Default to today if not specified.' },
+            },
+            required: ['amount', 'currencyCode', 'description'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'create_income',
+          description: 'Create a new income entry. Use when the user asks to add or record income.',
+          parameters: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number', description: 'The income amount' },
+              currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'] },
+              description: { type: 'string', description: 'Income source description' },
+              categoryName: { type: 'string', description: 'Category name' },
+              date: { type: 'string', description: 'ISO date string (YYYY-MM-DD)' },
+            },
+            required: ['amount', 'currencyCode', 'description'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'create_budget',
+          description: 'Create a new budget. Use when the user asks to set up or create a budget for a category or period.',
+          parameters: {
+            type: 'object',
+            properties: {
+              name: { type: 'string', description: 'Budget name' },
+              amount: { type: 'number', description: 'Budget limit amount' },
+              currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'] },
+              period: { type: 'string', enum: ['daily', 'weekly', 'monthly', 'yearly', 'custom'], description: 'Budget period' },
+              categoryName: { type: 'string', description: 'Category to budget for' },
+              startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
+              endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD), for custom period' },
+            },
+            required: ['name', 'amount', 'currencyCode', 'period', 'startDate'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'get_expenses',
+          description: 'Retrieve and display user expenses for a date range. Use when user asks to show, list, or view their spending.',
+          parameters: {
+            type: 'object',
+            properties: {
+              startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
+              endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD)' },
+              categoryName: { type: 'string', description: 'Filter by category name' },
+            },
+            required: ['startDate', 'endDate'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'get_budget_status',
+          description: 'Get the current status and progress of budgets. Use when user asks about budget status, how much is left, or if they are on track.',
+          parameters: {
+            type: 'object',
+            properties: {
+              budgetName: { type: 'string', description: 'Specific budget name to check' },
+              categoryName: { type: 'string', description: 'Category-linked budget to check' },
+            },
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'get_category_breakdown',
+          description: 'Get spending breakdown by category for a period. Use when user asks for category analysis, breakdown, or pie chart data.',
+          parameters: {
+            type: 'object',
+            properties: {
+              startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
+              endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD)' },
+            },
+            required: ['startDate', 'endDate'],
+          },
+        },
+      },
+    ];
+  }
+
+  // ── Action Handling ──
+
+  private isWriteAction(actionType: string): boolean {
+    return ['create_expense', 'create_income', 'create_budget'].includes(actionType);
+  }
+
+  private async handleWriteActionRequest(
+    conversation: { id: string },
+    actionType: ChatActionType,
+    args: Record<string, unknown>,
+    systemPrompt: string,
+    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
+    userMessage: string,
+  ) {
+    const displaySummary = this.buildActionSummary(actionType, args);
+    const pendingAction: ChatPendingAction = {
+      id: randomUUID(),
+      actionType,
+      data: args as any,
+      displaySummary,
+    };
+
+    // Save pending action as a special message
+    await this.prisma.chatMessage.create({
+      data: {
+        conversationId: conversation.id,
+        role: 'pending_action',
+        content: JSON.stringify(pendingAction),
+      },
+    });
+
+    // Generate confirmation message in user's language via OpenAI
+    const confirmationSystemPrompt = `${systemPrompt}\n\nThe user wants to perform this action: ${displaySummary}. Generate a SHORT confirmation message (1-2 sentences max) asking them to confirm or cancel. Format: "I'd like to [action]. Please confirm or cancel." Use the SAME language as the conversation.`;
+
+    const confirmResponse = await this.openai.chat.completions.create({
+      model: 'gpt-4-turbo-preview',
+      messages: [
+        { role: 'system', content: confirmationSystemPrompt },
+        ...history,
+        { role: 'user', content: userMessage },
+      ],
+      max_tokens: 150,
+    });
+
+    const confirmMessage = confirmResponse.choices[0]?.message?.content || `I'd like to ${displaySummary}. Please confirm or cancel this action.`;
+
+    // Save assistant message describing the action
+    await this.prisma.chatMessage.create({
+      data: {
+        conversationId: conversation.id,
+        role: 'assistant',
+        content: confirmMessage,
+      },
+    });
+
+    return {
+      message: confirmMessage,
+      conversationId: conversation.id,
+      pendingAction,
+    };
+  }
+
+  private async handleReadAction(
+    conversation: { id: string },
+    actionType: ChatActionType,
+    args: Record<string, unknown>,
+    toolCall: OpenAI.Chat.Completions.ChatCompletionMessageToolCall,
+    systemPrompt: string,
+    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
+    userMessage: string,
+    accountId?: string,
+  ) {
+    const result = await this.executeAction(actionType, args, accountId || '', '');
+
+    // Feed the result back to OpenAI to generate a natural language summary
+    const followUpResponse = await this.openai.chat.completions.create({
+      model: 'gpt-4-turbo-preview',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...history,
+        { role: 'user', content: userMessage },
+        {
+          role: 'assistant',
+          content: null,
+          tool_calls: [toolCall],
+        } as any,
+        {
+          role: 'tool',
+          tool_call_id: toolCall.id,
+          content: JSON.stringify(result.data || {}),
+        },
+      ],
+      max_tokens: 1000,
+    });
+
+    const summaryText = followUpResponse.choices[0]?.message?.content || 'Here are your results.';
+    const tokensUsed = followUpResponse.usage?.total_tokens || 0;
+
+    // Save assistant message
+    await this.prisma.chatMessage.create({
+      data: {
+        conversationId: conversation.id,
+        role: 'assistant',
+        content: summaryText,
+        tokensUsed,
+      },
+    });
+
+    return {
+      message: summaryText,
+      conversationId: conversation.id,
+      actionResult: result,
+    };
+  }
+
+  // ── Action Execution ──
+
+  private async executeAction(
+    actionType: ChatActionType,
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+  ): Promise<ChatActionResult> {
+    try {
+      switch (actionType) {
+        case 'create_expense':
+          return await this.executeCreateExpense(data, accountId, userId);
+        case 'create_income':
+          return await this.executeCreateIncome(data, accountId, userId);
+        case 'create_budget':
+          return await this.executeCreateBudget(data, accountId, userId);
+        case 'get_expenses':
+          return await this.executeGetExpenses(data, accountId);
+        case 'get_budget_status':
+          return await this.executeGetBudgetStatus(data, accountId);
+        case 'get_category_breakdown':
+          return await this.executeGetCategoryBreakdown(data, accountId);
+        default:
+          return { actionType, success: false, errorMessage: 'Unknown action type' };
+      }
+    } catch (error) {
+      return {
+        actionType,
+        success: false,
+        errorMessage: error instanceof Error ? error.message : 'Action execution failed',
+      };
+    }
+  }
+
+  private async executeCreateExpense(
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+  ): Promise<ChatActionResult> {
+    const dto = {
+      localId: randomUUID(),
+      amount: Number(data.amount),
+      currencyCode: String(data.currencyCode),
+      description: String(data.description || ''),
+      categoryId: data.categoryName ? String(data.categoryName) : undefined,
+      date: String(data.date || new Date().toISOString().split('T')[0]),
+      source: 'manual',
+    };
+
+    const expense = await this.expensesService.create(accountId, userId, dto as any);
+    if (!expense) {
+      return { actionType: 'create_expense', success: false, errorMessage: 'Failed to create expense' };
+    }
+    return {
+      actionType: 'create_expense',
+      success: true,
+      data: {
+        id: expense.id,
+        amount: Number(expense.amount),
+        currencyCode: expense.currencyCode,
+        description: expense.description,
+        category: (expense as any).category?.name,
+        date: expense.date,
+      },
+    };
+  }
+
+  private async executeCreateIncome(
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+  ): Promise<ChatActionResult> {
+    const dto = {
+      localId: randomUUID(),
+      amount: Number(data.amount),
+      currencyCode: String(data.currencyCode),
+      description: String(data.description || ''),
+      categoryId: data.categoryName ? String(data.categoryName) : undefined,
+      date: String(data.date || new Date().toISOString().split('T')[0]),
+    };
+
+    const income = await this.incomesService.create(accountId, userId, dto as any);
+    if (!income) {
+      return { actionType: 'create_income', success: false, errorMessage: 'Failed to create income' };
+    }
+    return {
+      actionType: 'create_income',
+      success: true,
+      data: {
+        id: income.id,
+        amount: Number(income.amount),
+        currencyCode: income.currencyCode,
+        description: income.description,
+        date: income.date,
+      },
+    };
+  }
+
+  private async executeCreateBudget(
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+  ): Promise<ChatActionResult> {
+    // Resolve category name to ID if provided
+    let categoryId: string | undefined;
+    if (data.categoryName) {
+      const categories = await this.categoriesService.findAll(accountId);
+      const match = categories.find(
+        (c: { name: string }) => c.name.toLowerCase() === String(data.categoryName).toLowerCase(),
+      );
+      categoryId = match?.id;
+    }
+
+    const dto = {
+      localId: randomUUID(),
+      name: String(data.name),
+      amount: Number(data.amount),
+      currencyCode: String(data.currencyCode),
+      period: String(data.period),
+      startDate: String(data.startDate),
+      endDate: data.endDate ? String(data.endDate) : undefined,
+      categoryId,
+    };
+
+    const budget = await this.budgetsService.create(accountId, userId, dto);
+    return {
+      actionType: 'create_budget',
+      success: true,
+      data: {
+        id: budget.id,
+        name: budget.name,
+        amount: Number(budget.amount),
+        currencyCode: budget.currencyCode,
+        period: budget.period,
+      },
+    };
+  }
+
+  private async executeGetExpenses(
+    data: Record<string, unknown>,
+    accountId: string,
+  ): Promise<ChatActionResult> {
+    const filters: any = {
+      startDate: String(data.startDate),
+      endDate: String(data.endDate),
+      limit: 20,
+    };
+
+    // If category name provided, resolve to ID
+    if (data.categoryName) {
+      const categories = await this.categoriesService.findAll(accountId);
+      const match = categories.find(
+        (c: { name: string }) => c.name.toLowerCase() === String(data.categoryName).toLowerCase(),
+      );
+      if (match) filters.categoryId = match.id;
+    }
+
+    const result = await this.expensesService.findAll(accountId, filters);
+    const expenses = (result as any).data || result;
+    const expenseList = (Array.isArray(expenses) ? expenses : []).map((e: any) => ({
+      id: e.id,
+      amount: Number(e.amount),
+      currencyCode: e.currencyCode,
+      description: e.description,
+      category: e.category?.name,
+      date: e.date,
+    }));
+
+    const total = expenseList.reduce((sum: number, e: any) => sum + e.amount, 0);
+
+    return {
+      actionType: 'get_expenses',
+      success: true,
+      data: {
+        expenses: expenseList,
+        total,
+        count: expenseList.length,
+        startDate: data.startDate,
+        endDate: data.endDate,
+      },
+    };
+  }
+
+  private async executeGetBudgetStatus(
+    data: Record<string, unknown>,
+    accountId: string,
+  ): Promise<ChatActionResult> {
+    const budgets = await this.budgetsService.findAll(accountId, { isActive: true });
+    let targetBudgets = Array.isArray(budgets) ? budgets : [];
+
+    // Filter by name or category if specified
+    if (data.budgetName) {
+      const name = String(data.budgetName).toLowerCase();
+      targetBudgets = targetBudgets.filter((b: any) => b.name.toLowerCase().includes(name));
+    }
+    if (data.categoryName) {
+      const catName = String(data.categoryName).toLowerCase();
+      targetBudgets = targetBudgets.filter((b: any) =>
+        b.category?.name?.toLowerCase().includes(catName),
+      );
+    }
+
+    const progressList = await Promise.all(
+      targetBudgets.map(async (b: any) => {
+        try {
+          const progress = await this.budgetsService.getProgress(accountId, b.id);
+          return {
+            name: b.name,
+            amount: Number(b.amount),
+            currencyCode: b.currencyCode,
+            period: b.period,
+            category: b.category?.name,
+            spent: progress.spent,
+            remaining: progress.remaining,
+            percentageUsed: progress.percentageUsed,
+            isOverBudget: progress.isOverBudget,
+            daysRemaining: progress.daysRemaining,
+          };
+        } catch {
+          return {
+            name: b.name,
+            amount: Number(b.amount),
+            currencyCode: b.currencyCode,
+            period: b.period,
+            error: 'Could not calculate progress',
+          };
+        }
+      }),
+    );
+
+    return {
+      actionType: 'get_budget_status',
+      success: true,
+      data: {
+        budgets: progressList,
+        count: progressList.length,
+      },
+    };
+  }
+
+  private async executeGetCategoryBreakdown(
+    data: Record<string, unknown>,
+    accountId: string,
+  ): Promise<ChatActionResult> {
+    const startDate = new Date(String(data.startDate));
+    const endDate = new Date(String(data.endDate));
+
+    const summary = await this.analyticsService.getSummary(accountId, startDate, endDate);
+
+    return {
+      actionType: 'get_category_breakdown',
+      success: true,
+      data: {
+        categories: (summary as any).expensesByCategory || [],
+        totalExpenses: (summary as any).totalExpenses || 0,
+        period: { startDate: data.startDate, endDate: data.endDate },
+      },
+    };
+  }
+
+  // ── Helpers ──
+
+  private buildActionSummary(actionType: ChatActionType, args: Record<string, unknown>): string {
+    switch (actionType) {
+      case 'create_expense':
+        return `add expense ${args.amount} ${args.currencyCode}${args.description ? ` for "${args.description}"` : ''}${args.categoryName ? ` [${args.categoryName}]` : ''}`;
+      case 'create_income':
+        return `add income ${args.amount} ${args.currencyCode}${args.description ? ` — "${args.description}"` : ''}`;
+      case 'create_budget':
+        return `create budget "${args.name}" for ${args.amount} ${args.currencyCode} (${args.period})`;
+      default:
+        return `perform ${actionType}`;
+    }
   }
 
   private async buildUserContext(userId: string, accountId?: string): Promise<UserContext> {
@@ -230,6 +868,7 @@ export class ChatService {
     const resolvedAccountId = accountId || expenses[0]?.accountId;
     let tags: { name: string }[] = [];
     let projects: { name: string; spent: number }[] = [];
+    let categoryNames: string[] = [];
 
     if (resolvedAccountId) {
       // Fetch tags for the account
@@ -254,6 +893,10 @@ export class ChatService {
         name: p.name,
         spent: p.projectExpenses.reduce((sum: number, pe: { expense: { amount: unknown } }) => sum + Number(pe.expense.amount), 0),
       }));
+
+      // Fetch all categories for tool call matching
+      const allCategories = await this.categoriesService.findAll(resolvedAccountId);
+      categoryNames = allCategories.map((c: { name: string }) => c.name);
     }
 
     // Fetch active savings goals
@@ -279,10 +922,11 @@ export class ChatService {
       projects,
       topItems,
       savingsGoals,
+      categoryNames,
     };
   }
 
-  private buildSystemPrompt(context: UserContext, encryptionTier = 0, responseMode: AiResponseMode = 'balanced'): string {
+  private buildSystemPrompt(context: UserContext, encryptionTier = 0, responseMode: AiResponseMode = 'balanced', userMessage = '', history: Array<{ role: string; content: string }> = []): string {
     const encryptionNotice = encryptionTier >= 1
       ? `\n\nIMPORTANT: This account has end-to-end encryption enabled (text fields). Expense descriptions, notes, tag names, and project names shown below may be encrypted/unavailable. Focus your analysis on numerical data (amounts, category totals) and general spending patterns. Do not attempt to interpret encrypted text values.`
       : '';
@@ -310,8 +954,62 @@ export class ChatService {
         ? context.topItems.map(i => `${i.description}: ${i.totalSpent.toFixed(2)} (×${i.count})`).join(', ')
         : 'No item-level data';
 
+    const categoriesListText = context.categoryNames.length > 0
+      ? context.categoryNames.join(', ')
+      : 'No categories available';
+
+    const today = new Date().toISOString().split('T')[0];
+
+    // Detect language from text based on characteristic letters (NOT currency)
+    const detectLanguage = (text: string): string => {
+      const cyrillicRatio = (text.match(/[а-яА-ЯёЁіІїЇєЄґҐўЎ]/g) || []).length / Math.max(text.length, 1);
+      if (cyrillicRatio > 0.3) {
+        // Check for Ukrainian-specific letters
+        if (/[іІїЇєЄґҐ]/.test(text)) return 'Ukrainian';
+        // Check for Belarusian-specific letters
+        if (/[ўЎ]/.test(text)) return 'Belarusian';
+        return 'Russian';
+      }
+      // Check for characteristic letters of other languages
+      if (/[äöüßÄÖÜ]/.test(text)) return 'German';
+      if (/[áéíóúñÁÉÍÓÚÑ¿¡]/.test(text)) return 'Spanish';
+      if (/[àâäæçèéêëîïôœùûüÿÀÂÄÆÇÈÉÊËÎÏÔŒÙÛÜŸ]/.test(text)) return 'French';
+      if (/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(text)) return 'Polish';
+      return 'English';
+    };
+
+    // Detect language from conversation history first (preserve consistency)
+    let userLanguage = 'English';
+    const recentAssistantMessages = history.filter(m => m.role === 'assistant').slice(-3);
+    if (recentAssistantMessages.length > 0) {
+      // Analyze last 3 assistant messages to determine conversation language
+      const allAssistantText = recentAssistantMessages.map(m => m.content).join(' ');
+      const detectedFromHistory = detectLanguage(allAssistantText);
+      if (detectedFromHistory !== 'English') {
+        userLanguage = detectedFromHistory;
+      }
+    }
+
+    // Override with current user message language if clearly different
+    const currentMessageLanguage = detectLanguage(userMessage);
+    if (currentMessageLanguage !== 'English' && currentMessageLanguage !== userLanguage) {
+      // User switched language explicitly, follow their lead
+      userLanguage = currentMessageLanguage;
+    } else if (currentMessageLanguage !== 'English') {
+      // Reinforce detected language
+      userLanguage = currentMessageLanguage;
+    }
+
+    const languageInstruction = userLanguage !== 'English'
+      ? `\n\nCRITICAL: The user is writing in ${userLanguage}. You MUST respond in ${userLanguage}, NOT in English. All your responses, including action confirmations and data summaries, must be in ${userLanguage}.`
+      : '';
+
     return `You are a helpful financial assistant helping a user manage their budget and expenses.
-Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.${encryptionNotice}
+Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.${encryptionNotice}${languageInstruction}
+
+Today's date: ${today}
+Available categories: ${categoriesListText}
+Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB
 
 Current user's financial context:
 - Total spent this month: ${context.totalSpentThisMonth.toFixed(2)}
@@ -330,6 +1028,11 @@ When asked about specific items or products, use the "Top purchased items" data 
 - Active savings goals: ${context.savingsGoals.length > 0 ? context.savingsGoals.map(g => `${g.name}: ${g.currentAmount}/${g.targetAmount} ${g.currencyCode} by ${g.deadline}`).join(', ') : 'none'}
 
 ${getResponseModeInstruction(responseMode)}
+
+When the user asks to CREATE something (expense, income, budget), use the appropriate tool function.
+When the user asks to SHOW or LIST data (expenses, budget status, breakdown), use the appropriate query tool.
+If the user doesn't specify a date, use today's date (${today}).
+If the user references a category, match it to the available categories list above.
 
 Provide helpful, actionable advice about budgeting and spending. Be concise but thorough.
 If asked about specific data you don't have, acknowledge the limitation and provide general guidance.

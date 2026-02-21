@@ -717,6 +717,7 @@ Tap any button to instantly send that question.
 
 ## Example Questions
 
+**Analysis Questions:**
 - "What did I spend the most on this month?"
 - "How much did I spend on food last week?"
 - "Am I on track with my budget?"
@@ -726,11 +727,23 @@ Tap any button to instantly send that question.
 - "Give me tips to save money"
 - "When will my monthly budget run out at this rate?"
 
+**Natural Language Commands:**
+- "Add expense 500₴ for groceries"
+- "Create budget 10000₴ for entertainment for March"
+- "Add income 50000₴ from salary"
+- "Show my expenses last week"
+- "What's my budget status?"
+- "Show category breakdown for this month"
+
 ## Chat Features
 
 - **Conversation history** — previous messages are preserved during your session
 - **Typing indicator** — shows "Thinking..." while the AI processes your question
 - **Error handling** — if something goes wrong, you'll see an error message with a retry option
+- **Natural Language Commands** — create expenses, income, budgets, and query data using plain language
+- **Action Confirmation** — when creating financial records, AI shows a preview and asks for confirmation before saving
+- **Smart Language Detection** — AI automatically responds in your language (English, Russian, Ukrainian, Belarusian, German, Spanish, French, Polish)
+- **Currency Recognition** — supports symbols: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## AI Request Limits
 
@@ -744,6 +757,33 @@ Each message you send uses one AI request from your monthly allowance:
 
 When you run out of requests, you'll be prompted to upgrade your plan.
 
+## Natural Language Commands
+
+You can now **execute real actions** directly from the chat:
+
+### Creating Records
+
+1. Type a command like: **"Add expense 500₴ for groceries"**
+2. AI shows a **confirmation card** with:
+   - Amount and currency
+   - Category (auto-detected or default)
+   - Date (today by default)
+3. Tap **Confirm** to create the expense, or **Cancel** to reject
+4. After confirmation, the expense is saved and you'll see a success message
+
+**Supported create commands:**
+- **Expenses:** "Add expense 500₴ for groceries", "Spent 1200₴ on transport yesterday"
+- **Income:** "Add income 50000₴ from salary", "Received 5000₴ bonus"
+- **Budgets:** "Create budget 10000₴ for entertainment for March", "Set monthly budget 3000₴ for food"
+
+### Querying Data
+
+These commands execute **immediately** and show results:
+
+- **"Show my expenses last week"** → displays expense list with total
+- **"What's my budget status?"** → shows all budgets with progress bars
+- **"Show category breakdown for this month"** → displays spending by category with percentages
+
 ## FAQ
 
 - **Q: Does the AI have access to all my financial data?**
@@ -754,6 +794,12 @@ When you run out of requests, you'll be prompted to upgrade your plan.
 
 - **Q: The AI gave an incorrect answer. What should I do?**
   **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
+
+- **Q: Can I undo a confirmed action?**
+  **A:** After you confirm an action (like creating an expense), it's saved to your account. You can delete it manually from the Expenses tab.
+
+- **Q: What happens if I reject an action?**
+  **A:** If you tap "Cancel" on a confirmation card, the action is rejected and nothing is saved. The AI will acknowledge the rejection.
 
 ---
 
@@ -3051,6 +3097,7 @@ iOS, Android, Web
 
 ## Примеры вопросов
 
+**Аналитические вопросы:**
 - «На что я потратил больше всего в этом месяце?»
 - «Сколько я потратил на еду на прошлой неделе?»
 - «Я укладываюсь в бюджет?»
@@ -3060,11 +3107,23 @@ iOS, Android, Web
 - «Дай советы, как сэкономить»
 - «Когда закончится мой месячный бюджет при текущем темпе?»
 
+**Команды на естественном языке:**
+- «Добавь расход 500₴ на продукты»
+- «Создай бюджет 10000₴ на развлечения на март»
+- «Добавь доход 50000₴ от зарплаты»
+- «Покажи мои расходы за прошлую неделю»
+- «Какой статус моих бюджетов?»
+- «Покажи разбивку по категориям за этот месяц»
+
 ## Возможности чата
 
 - **История разговора** — предыдущие сообщения сохраняются в течение сессии
 - **Индикатор набора** — показывает «Думаю...», пока ИИ обрабатывает ваш вопрос
 - **Обработка ошибок** — если что-то пойдёт не так, вы увидите сообщение об ошибке с возможностью повторить
+- **Команды на естественном языке** — создавайте расходы, доходы, бюджеты и запрашивайте данные на обычном языке
+- **Подтверждение действий** — при создании финансовых записей ИИ показывает предпросмотр и запрашивает подтверждение перед сохранением
+- **Умное определение языка** — ИИ автоматически отвечает на вашем языке (английский, русский, украинский, белорусский, немецкий, испанский, французский, польский)
+- **Распознавание валют** — поддерживает символы: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Лимиты запросов AI
 
@@ -3078,6 +3137,33 @@ iOS, Android, Web
 
 Когда запросы закончатся, вам будет предложено улучшить тариф.
 
+## Команды на естественном языке
+
+Теперь вы можете **выполнять реальные действия** прямо из чата:
+
+### Создание записей
+
+1. Введите команду, например: **«Добавь расход 500₴ на продукты»**
+2. ИИ покажет **карточку подтверждения** с:
+   - Суммой и валютой
+   - Категорией (автоопределённой или по умолчанию)
+   - Датой (сегодня по умолчанию)
+3. Нажмите **Подтвердить** для создания расхода или **Отменить** для отказа
+4. После подтверждения расход сохраняется и вы увидите сообщение об успехе
+
+**Поддерживаемые команды создания:**
+- **Расходы:** «Добавь расход 500₴ на продукты», «Потратил 1200₴ на транспорт вчера»
+- **Доходы:** «Добавь доход 50000₴ от зарплаты», «Получил 5000₴ премии»
+- **Бюджеты:** «Создай бюджет 10000₴ на развлечения на март», «Установи месячный бюджет 3000₴ на еду»
+
+### Запрос данных
+
+Эти команды выполняются **немедленно** и показывают результаты:
+
+- **«Покажи мои расходы за прошлую неделю»** → отображает список расходов с итогом
+- **«Какой статус моих бюджетов?»** → показывает все бюджеты с прогресс-барами
+- **«Покажи разбивку по категориям за этот месяц»** → отображает расходы по категориям с процентами
+
 ## Часто задаваемые вопросы
 
 - **В: Имеет ли ИИ доступ ко всем моим финансовым данным?**
@@ -3088,6 +3174,12 @@ iOS, Android, Web
 
 - **В: ИИ дал неточный ответ. Что делать?**
   **О:** Ответы ИИ основаны на ваших данных, но иногда могут быть неточными. Вы можете переформулировать вопрос для лучших результатов или проверить данные во вкладке Аналитика.
+
+- **В: Можно ли отменить подтверждённое действие?**
+  **О:** После того как вы подтвердили действие (например, создание расхода), оно сохраняется в вашем счёте. Вы можете удалить его вручную во вкладке Расходы.
+
+- **В: Что происходит, если я отклоняю действие?**
+  **О:** Если вы нажмёте «Отменить» на карточке подтверждения, действие отклоняется и ничего не сохраняется. ИИ подтвердит отклонение.
 
 ---
 
@@ -5398,6 +5490,7 @@ iOS, Android, Web
 
 ## Приклади запитань
 
+**Аналітичні питання:**
 - "На що я витратив найбільше цього місяця?"
 - "Скільки я витратив на їжу минулого тижня?"
 - "Чи вкладаюся я в бюджет?"
@@ -5407,11 +5500,23 @@ iOS, Android, Web
 - "Дай мені поради, як зекономити гроші"
 - "Коли мій місячний бюджет закінчиться при такому темпі?"
 
+**Команди природною мовою:**
+- "Додай витрату 500₴ на продукти"
+- "Створи бюджет 10000₴ на розваги на березень"
+- "Додай дохід 50000₴ від зарплати"
+- "Покажи мої витрати за минулий тиждень"
+- "Який статус моїх бюджетів?"
+- "Покажи розбивку за категоріями за цей місяць"
+
 ## Можливості чату
 
 - **Історія розмови** — попередні повідомлення зберігаються протягом сесії
 - **Індикатор набору** — показує "Думаю...", поки ШІ обробляє ваше запитання
 - **Обробка помилок** — якщо щось пішло не так, ви побачите повідомлення про помилку з можливістю повторити
+- **Команди природною мовою** — створюйте витрати, доходи, бюджети та запитуйте дані простою мовою
+- **Підтвердження дій** — при створенні фінансових записів ШІ показує попередній перегляд і запитує підтвердження перед збереженням
+- **Розумне визначення мови** — ШІ автоматично відповідає вашою мовою (англійська, російська, українська, білоруська, німецька, іспанська, французька, польська)
+- **Розпізнавання валют** — підтримує символи: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Ліміти запитів ШІ
 
@@ -5425,6 +5530,33 @@ iOS, Android, Web
 
 Коли ваші запити вичерпаються, вам буде запропоновано оновити тариф.
 
+## Команди природною мовою
+
+Тепер ви можете **виконувати реальні дії** безпосередньо з чату:
+
+### Створення записів
+
+1. Введіть команду, наприклад: **"Додай витрату 500₴ на продукти"**
+2. ШІ покаже **картку підтвердження** з:
+   - Сумою та валютою
+   - Категорією (автовизначеною або за замовчуванням)
+   - Датою (сьогодні за замовчуванням)
+3. Натисніть **Підтвердити** для створення витрати або **Скасувати** для відмови
+4. Після підтвердження витрата зберігається, і ви побачите повідомлення про успіх
+
+**Підтримувані команди створення:**
+- **Витрати:** "Додай витрату 500₴ на продукти", "Витратив 1200₴ на транспорт вчора"
+- **Доходи:** "Додай дохід 50000₴ від зарплати", "Отримав 5000₴ премії"
+- **Бюджети:** "Створи бюджет 10000₴ на розваги на березень", "Встанови місячний бюджет 3000₴ на їжу"
+
+### Запит даних
+
+Ці команди виконуються **негайно** та показують результати:
+
+- **"Покажи мої витрати за минулий тиждень"** → відображає список витрат із підсумком
+- **"Який статус моїх бюджетів?"** → показує всі бюджети з прогрес-барами
+- **"Покажи розбивку за категоріями за цей місяць"** → відображає витрати за категоріями з відсотками
+
 ## Часті запитання
 
 - **П:** Чи має ШІ доступ до всіх моїх фінансових даних?
@@ -5435,6 +5567,12 @@ iOS, Android, Web
 
 - **П:** ШІ дав неправильну відповідь. Що робити?
   **В:** Відповіді ШІ базуються на ваших даних, але іноді можуть бути неточними. Ви можете перефразувати запитання для кращих результатів або перевірити дані у вкладці Аналітика.
+
+- **П:** Чи можу я скасувати підтверджену дію?
+  **В:** Після того як ви підтвердили дію (наприклад, створення витрати), вона зберігається у вашому рахунку. Ви можете видалити її вручну у вкладці Витрати.
+
+- **П:** Що відбувається, якщо я відхиляю дію?
+  **В:** Якщо ви натиснете "Скасувати" на картці підтвердження, дію буде відхилено, і нічого не збережеться. ШІ підтвердить відхилення.
 
 ---
 
@@ -7742,6 +7880,7 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 
 ## Przykladowe pytania
 
+**Pytania analityczne:**
 - "Na co wydalem najwiecej w tym miesiacu?"
 - "Ile wydalem na jedzenie w zeszlym tygodniu?"
 - "Czy mam budzet pod kontrola?"
@@ -7751,11 +7890,23 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Daj mi wskazowki, jak oszczedzac pieniadze"
 - "Kiedy moj miesieczny budzet sie wyczerpa w tym tempie?"
 
+**Polecenia w jezyku naturalnym:**
+- "Dodaj wydatek 500₴ na zakupy"
+- "Utworz budzet 10000₴ na rozrywke na marzec"
+- "Dodaj przychod 50000₴ z wynagrodzenia"
+- "Pokaz moje wydatki z ostatniego tygodnia"
+- "Jaki jest status mojego budzetu?"
+- "Pokaz podzial wedlug kategorii za ten miesiac"
+
 ## Funkcje czatu
 
 - **Historia rozmow** — poprzednie wiadomosci sa zachowywane podczas sesji
 - **Wskaznik pisania** — wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
 - **Obsluga bledow** — jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
+- **Polecenia w jezyku naturalnym** — tworzenie wydatkow, przychodow, budzetow i zapytan o dane uzywajac zwyklego jezyka
+- **Potwierdzenie akcji** — podczas tworzenia rekordow finansowych AI pokazuje podglad i prosi o potwierdzenie przed zapisaniem
+- **Inteligentne wykrywanie jezyka** — AI automatycznie odpowiada w Twoim jezyku (angielski, rosyjski, ukrainski, bialoruski, niemiecki, hiszpanski, francuski, polski)
+- **Rozpoznawanie walut** — obsluga symboli: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Limity zapytan AI
 
@@ -7769,6 +7920,33 @@ Kazda wyslana wiadomosc zuzywa jedno zapytanie AI z Twojego miesiecznego limitu:
 
 Gdy wyczerpiesz zapytania, zostaniesz zachecony do ulepszenia planu.
 
+## Polecenia w jezyku naturalnym
+
+Mozesz teraz **wykonywac rzeczywiste akcje** bezposrednio z czatu:
+
+### Tworzenie rekordow
+
+1. Wpisz polecenie, np.: **"Dodaj wydatek 500₴ na zakupy"**
+2. AI pokazuje **karte potwierdzenia** z:
+   - Kwota i waluta
+   - Kategoria (auto-wykryta lub domyslna)
+   - Data (dzis domyslnie)
+3. Dotknij **Potwierdz**, aby utworzyc wydatek, lub **Anuluj**, aby odrzucic
+4. Po potwierdzeniu wydatek jest zapisany i zobaczysz komunikat o powodzeniu
+
+**Obslugiwane polecenia tworzenia:**
+- **Wydatki:** "Dodaj wydatek 500₴ na zakupy", "Wydalem 1200₴ na transport wczoraj"
+- **Przychody:** "Dodaj przychod 50000₴ z wynagrodzenia", "Otrzymalem 5000₴ premii"
+- **Budzety:** "Utworz budzet 10000₴ na rozrywke na marzec", "Ustaw miesieczny budzet 3000₴ na jedzenie"
+
+### Zapytania o dane
+
+Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
+
+- **"Pokaz moje wydatki z ostatniego tygodnia"** → wyswietla liste wydatkow z suma
+- **"Jaki jest status mojego budzetu?"** → pokazuje wszystkie budzety z paskami postepu
+- **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
+
 ## FAQ
 
 - **P: Czy AI ma dostep do wszystkich moich danych finansowych?**
@@ -7779,6 +7957,12 @@ Gdy wyczerpiesz zapytania, zostaniesz zachecony do ulepszenia planu.
 
 - **P: AI podal bledna odpowiedz. Co powinienem zrobic?**
   **O:** Odpowiedzi AI bazuja na Twoich danych, ale moga okazjonalnie byc niedokladne. Mozesz przeformulowac pytanie, aby uzyskac lepsze wyniki, lub zweryfikowac dane w zakladce Analityka.
+
+- **P: Czy moge cofnac potwierdzona akcje?**
+  **O:** Po potwierdzeniu akcji (takiej jak utworzenie wydatku) jest ona zapisywana na Twoim koncie. Mozesz ja usunac recznie z zakladki Wydatki.
+
+- **P: Co sie stanie, jezeli odrzuce akcje?**
+  **O:** Jezeli dotkniesz "Anuluj" na karcie potwierdzenia, akcja zostaje odrzucona i nic nie jest zapisywane. AI potwierdzi odrzucenie.
 
 ---
 
@@ -10079,8 +10263,9 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 
 > **Hinweis:** Der Sprachverarbeitungsstatus wird als "Verarbeite Sprache..." angezeigt, wahrend transkribiert wird.
 
-## Beispielfragen
+## Beispiele für Fragen
 
+**Analysefragen:**
 - "Wofur habe ich diesen Monat am meisten ausgegeben?"
 - "Wie viel habe ich letzte Woche fur Essen ausgegeben?"
 - "Bin ich mit meinem Budget auf Kurs?"
@@ -10090,11 +10275,23 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Gib mir Tipps zum Geldsparen"
 - "Wann wird mein monatliches Budget bei diesem Tempo aufgebraucht sein?"
 
+**Natürlichsprachliche Befehle:**
+- "Ausgabe 500₴ für Lebensmittel hinzufügen"
+- "Budget 10000₴ für Unterhaltung für März erstellen"
+- "Einkommen 50000₴ aus Gehalt hinzufügen"
+- "Zeige meine Ausgaben der letzten Woche"
+- "Wie ist mein Budget-Status?"
+- "Zeige Kategorie-Aufschlüsselung für diesen Monat"
+
 ## Chat-Funktionen
 
 - **Konversationsverlauf** — vorherige Nachrichten bleiben wahrend deiner Sitzung erhalten
 - **Schreibindikator** — zeigt "Denke nach..." wahrend die KI deine Frage verarbeitet
 - **Fehlerbehandlung** — wenn etwas schief geht, siehst du eine Fehlermeldung mit einer Wiederholungsoption
+- **Natürlichsprachliche Befehle** — erstelle Ausgaben, Einkommen, Budgets und frage Daten in einfacher Sprache ab
+- **Aktionsbestätigung** — beim Erstellen von Finanzdatensätzen zeigt die KI eine Vorschau und fragt vor dem Speichern nach Bestätigung
+- **Intelligente Spracherkennung** — KI antwortet automatisch in deiner Sprache (Englisch, Russisch, Ukrainisch, Weißrussisch, Deutsch, Spanisch, Französisch, Polnisch)
+- **Währungserkennung** — unterstützt Symbole: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## KI-Anfragen-Limits
 
@@ -10108,6 +10305,33 @@ Jede Nachricht, die du sendest, verbraucht eine KI-Anfrage aus deinem monatliche
 
 Wenn du keine Anfragen mehr hast, wirst du aufgefordert, deinen Plan zu upgraden.
 
+## Natürlichsprachliche Befehle
+
+Du kannst jetzt **echte Aktionen** direkt aus dem Chat ausführen:
+
+### Datensätze erstellen
+
+1. Gib einen Befehl ein wie: **"Ausgabe 500₴ für Lebensmittel hinzufügen"**
+2. Die KI zeigt eine **Bestätigungskarte** mit:
+   - Betrag und Währung
+   - Kategorie (automatisch erkannt oder Standard)
+   - Datum (heute als Standard)
+3. Tippe auf **Bestätigen**, um die Ausgabe zu erstellen, oder **Abbrechen**, um abzulehnen
+4. Nach der Bestätigung wird die Ausgabe gespeichert und du siehst eine Erfolgsmeldung
+
+**Unterstützte Erstellungsbefehle:**
+- **Ausgaben:** "Ausgabe 500₴ für Lebensmittel hinzufügen", "1200₴ für Transport gestern ausgegeben"
+- **Einkommen:** "Einkommen 50000₴ aus Gehalt hinzufügen", "5000₴ Bonus erhalten"
+- **Budgets:** "Budget 10000₴ für Unterhaltung für März erstellen", "Monatliches Budget 3000₴ für Essen festlegen"
+
+### Daten abfragen
+
+Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
+
+- **"Zeige meine Ausgaben der letzten Woche"** → zeigt Ausgabenliste mit Gesamtsumme
+- **"Wie ist mein Budget-Status?"** → zeigt alle Budgets mit Fortschrittsbalken
+- **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
+
 ## FAQ
 
 - **F: Hat die KI Zugriff auf alle meine Finanzdaten?**
@@ -10118,6 +10342,12 @@ Wenn du keine Anfragen mehr hast, wirst du aufgefordert, deinen Plan zu upgraden
 
 - **F: Die KI hat eine falsche Antwort gegeben. Was soll ich tun?**
   **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse oder die Daten im Analysen-Tab uberprufen.
+
+- **F: Kann ich eine bestätigte Aktion rückgängig machen?**
+  **A:** Nachdem du eine Aktion bestätigt hast (wie das Erstellen einer Ausgabe), wird sie in deinem Konto gespeichert. Du kannst sie manuell im Ausgaben-Tab löschen.
+
+- **F: Was passiert, wenn ich eine Aktion ablehne?**
+  **A:** Wenn du auf "Abbrechen" auf einer Bestätigungskarte tippst, wird die Aktion abgelehnt und nichts wird gespeichert. Die KI wird die Ablehnung bestätigen.
 
 ---
 
@@ -12420,6 +12650,7 @@ Toca cualquier boton para enviar esa pregunta al instante.
 
 ## Ejemplos de preguntas
 
+**Preguntas de analisis:**
 - "En que gaste mas este mes?"
 - "Cuanto gaste en comida la semana pasada?"
 - "Estoy dentro del presupuesto?"
@@ -12429,11 +12660,23 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Dame consejos para ahorrar dinero"
 - "A este ritmo, cuando se agotara mi presupuesto mensual?"
 
+**Comandos en lenguaje natural:**
+- "Anadir gasto 500₴ para comestibles"
+- "Crear presupuesto 10000₴ para entretenimiento para marzo"
+- "Anadir ingreso 50000₴ de salario"
+- "Mostrar mis gastos de la semana pasada"
+- "Cual es el estado de mi presupuesto?"
+- "Mostrar desglose por categorias de este mes"
+
 ## Funciones del chat
 
 - **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion
 - **Indicador de escritura** — muestra "Pensando..." mientras la IA procesa tu pregunta
 - **Manejo de errores** — si algo sale mal, veras un mensaje de error con opcion de reintentar
+- **Comandos en lenguaje natural** — crea gastos, ingresos, presupuestos y consulta datos usando lenguaje natural
+- **Confirmacion de acciones** — al crear registros financieros, la IA muestra una vista previa y solicita confirmacion antes de guardar
+- **Deteccion inteligente de idioma** — la IA responde automaticamente en tu idioma (ingles, ruso, ucraniano, bielorruso, aleman, espanol, frances, polaco)
+- **Reconocimiento de moneda** — soporta simbolos: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Limites de solicitudes IA
 
@@ -12447,6 +12690,33 @@ Cada mensaje que envias utiliza una solicitud IA de tu cuota mensual:
 
 Cuando se agoten tus solicitudes, se te pedira que mejores tu plan.
 
+## Comandos en lenguaje natural
+
+Ahora puedes **ejecutar acciones reales** directamente desde el chat:
+
+### Creacion de registros
+
+1. Escribe un comando como: **"Anadir gasto 500₴ para comestibles"**
+2. La IA muestra una **tarjeta de confirmacion** con:
+   - Cantidad y moneda
+   - Categoria (detectada automaticamente o por defecto)
+   - Fecha (hoy por defecto)
+3. Toca **Confirmar** para crear el gasto, o **Cancelar** para rechazar
+4. Despues de la confirmacion, el gasto se guarda y veras un mensaje de exito
+
+**Comandos de creacion soportados:**
+- **Gastos:** "Anadir gasto 500₴ para comestibles", "Gaste 1200₴ en transporte ayer"
+- **Ingresos:** "Anadir ingreso 50000₴ de salario", "Recibi 5000₴ de bono"
+- **Presupuestos:** "Crear presupuesto 10000₴ para entretenimiento para marzo", "Establecer presupuesto mensual 3000₴ para comida"
+
+### Consulta de datos
+
+Estos comandos se ejecutan **inmediatamente** y muestran resultados:
+
+- **"Mostrar mis gastos de la semana pasada"** → muestra lista de gastos con total
+- **"Cual es el estado de mi presupuesto?"** → muestra todos los presupuestos con barras de progreso
+- **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
+
 ## Preguntas frecuentes
 
 - **P: La IA tiene acceso a todos mis datos financieros?**
@@ -12457,6 +12727,12 @@ Cuando se agoten tus solicitudes, se te pedira que mejores tu plan.
 
 - **P: La IA dio una respuesta incorrecta. Que debo hacer?**
   **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, o verificar los datos en la pestana de Analisis.
+
+- **P: Puedo deshacer una accion confirmada?**
+  **R:** Despues de confirmar una accion (como crear un gasto), se guarda en tu cuenta. Puedes eliminarlo manualmente desde la pestana de Gastos.
+
+- **P: Que sucede si rechazo una accion?**
+  **R:** Si tocas "Cancelar" en una tarjeta de confirmacion, la accion se rechaza y no se guarda nada. La IA reconocera el rechazo.
 
 ---
 
@@ -14759,6 +15035,7 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 
 ## Exemples de questions
 
+**Questions d'analyse :**
 - "Quelles ont ete mes principales depenses ce mois-ci ?"
 - "Combien ai-je depense en alimentation la semaine derniere ?"
 - "Suis-je dans les limites de mon budget ?"
@@ -14768,11 +15045,23 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Donne-moi des conseils pour economiser de l'argent"
 - "Quand mon budget mensuel sera-t-il epuise a ce rythme ?"
 
+**Commandes en langage naturel :**
+- "Ajouter depense 500₴ pour courses"
+- "Creer budget 10000₴ pour divertissement pour mars"
+- "Ajouter revenu 50000₴ de salaire"
+- "Montrer mes depenses de la semaine derniere"
+- "Quel est le statut de mon budget ?"
+- "Montrer la repartition par categories pour ce mois"
+
 ## Fonctionnalites du chat
 
 - **Historique de conversation** — les messages precedents sont conserves pendant votre session
 - **Indicateur de saisie** — affiche "Reflexion en cours..." pendant que l'IA traite votre question
 - **Gestion des erreurs** — en cas de probleme, vous verrez un message d'erreur avec une option de reessai
+- **Commandes en langage naturel** — creez des depenses, revenus, budgets et consultez les donnees en langage courant
+- **Confirmation d'action** — lors de la creation d'enregistrements financiers, l'IA affiche un apercu et demande confirmation avant l'enregistrement
+- **Detection intelligente de la langue** — l'IA repond automatiquement dans votre langue (anglais, russe, ukrainien, bielorusse, allemand, espagnol, francais, polonais)
+- **Reconnaissance des devises** — prend en charge les symboles : ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Limites de requetes IA
 
@@ -14786,6 +15075,33 @@ Chaque message que vous envoyez utilise une requete IA de votre allocation mensu
 
 Lorsque vous avez epuise vos requetes, vous serez invite a ameliorer votre plan.
 
+## Commandes en langage naturel
+
+Vous pouvez maintenant **executer des actions reelles** directement depuis le chat :
+
+### Creation d'enregistrements
+
+1. Tapez une commande comme : **"Ajouter depense 500₴ pour courses"**
+2. L'IA affiche une **carte de confirmation** avec :
+   - Montant et devise
+   - Categorie (detectee automatiquement ou par defaut)
+   - Date (aujourd'hui par defaut)
+3. Appuyez sur **Confirmer** pour creer la depense, ou **Annuler** pour rejeter
+4. Apres confirmation, la depense est enregistree et vous verrez un message de reussite
+
+**Commandes de creation prises en charge :**
+- **Depenses :** "Ajouter depense 500₴ pour courses", "Depense 1200₴ en transport hier"
+- **Revenus :** "Ajouter revenu 50000₴ de salaire", "Recu 5000₴ de prime"
+- **Budgets :** "Creer budget 10000₴ pour divertissement pour mars", "Definir budget mensuel 3000₴ pour alimentation"
+
+### Consultation des donnees
+
+Ces commandes s'executent **immediatement** et affichent les resultats :
+
+- **"Montrer mes depenses de la semaine derniere"** → affiche la liste des depenses avec le total
+- **"Quel est le statut de mon budget ?"** → affiche tous les budgets avec des barres de progression
+- **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
+
 ## FAQ
 
 - **Q : L'IA a-t-elle acces a toutes mes donnees financieres ?**
@@ -14796,6 +15112,12 @@ Lorsque vous avez epuise vos requetes, vous serez invite a ameliorer votre plan.
 
 - **Q : L'IA a donne une reponse incorrecte. Que dois-je faire ?**
   **R :** Les reponses de l'IA sont basees sur vos donnees mais peuvent parfois etre inexactes. Vous pouvez reformuler votre question pour de meilleurs resultats, ou verifier les donnees dans l'onglet Analyses.
+
+- **Q : Puis-je annuler une action confirmee ?**
+  **R :** Apres avoir confirme une action (comme la creation d'une depense), elle est enregistree dans votre compte. Vous pouvez la supprimer manuellement depuis l'onglet Depenses.
+
+- **Q : Que se passe-t-il si je rejette une action ?**
+  **R :** Si vous appuyez sur "Annuler" sur une carte de confirmation, l'action est rejetee et rien n'est enregistre. L'IA accusera reception du rejet.
 
 ---
 
@@ -17094,6 +17416,7 @@ iOS, Android, Web
 
 ## Прыклады пытанняў
 
+**Аналітычныя пытанні:**
 - «На што я выдаткаваў больш за ўсё ў гэтым месяцы?»
 - «Колькі я выдаткаваў на ежу на мінулым тыдні?»
 - «Ці ўкладваюся я ў бюджэт?»
@@ -17103,11 +17426,23 @@ iOS, Android, Web
 - «Дай парады, як зэканоміць»
 - «Калі скончыцца мой месячны бюджэт пры бягучым тэмпе?»
 
+**Каманды натуральнай мовай:**
+- «Дадай выдатак 500₴ на прадукты»
+- «Стварыць бюджэт 10000₴ на забавы на сакавік»
+- «Дадай даход 50000₴ ад зарплаты»
+- «Пакажы мае выдаткі за мінулы тыдзень»
+- «Які статус маіх бюджэтаў?»
+- «Пакажы разбіўку па катэгорыях за гэты месяц»
+
 ## Магчымасці чата
 
 - **Гісторыя размовы** — папярэднія паведамленні захоўваюцца на працягу сесіі
 - **Індыкатар набору** — паказвае «Думаю...», пакуль ІІ апрацоўвае ваша пытанне
 - **Апрацоўка памылак** — калі нешта пойдзе не так, вы ўбачыце паведамленне пра памылку з магчымасцю паўтарыць
+- **Каманды натуральнай мовай** — ствараць выдаткі, даходы, бюджэты і запытваць даныя на звычайнай мове
+- **Пацверджанне дзеянняў** — пры стварэнні фінансавых запісаў ІІ паказвае папярэдні прагляд і пытае пацверджанне перад захаваннем
+- **Разумнае вызначэнне мовы** — ІІ аўтаматычна адказвае на вашай мове (англійская, руская, украінская, беларуская, нямецкая, іспанская, французская, польская)
+- **Распазнаванне валют** — падтрымлівае сімвалы: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Ліміты запытаў AI
 
@@ -17121,6 +17456,33 @@ iOS, Android, Web
 
 Калі запыты скончацца, вам будзе прапанавана палепшыць тарыф.
 
+## Каманды натуральнай мовай
+
+Цяпер вы можаце **выконваць рэальныя дзеянні** непасрэдна з чата:
+
+### Стварэнне запісаў
+
+1. Увядзіце каманду, напрыклад: **«Дадай выдатак 500₴ на прадукты»**
+2. ІІ паказвае **картку пацверджання** з:
+   - Сумай і валютай
+   - Катэгорыяй (аўтаматычна вызначанай або па змаўчанні)
+   - Датай (сёння па змаўчанні)
+3. Націсніце **Пацвердзіць**, каб стварыць выдатак, або **Адмяніць**, каб адхіліць
+4. Пасля пацверджання выдатак захоўваецца, і вы ўбачыце паведамленне пра поспех
+
+**Падтрымліваюцца каманды стварэння:**
+- **Выдаткі:** «Дадай выдатак 500₴ на прадукты», «Выдаткаваў 1200₴ на транспарт учора»
+- **Даходы:** «Дадай даход 50000₴ ад зарплаты», «Атрымаў 5000₴ прэміі»
+- **Бюджэты:** «Стварыць бюджэт 10000₴ на забавы на сакавік», «Усталяваць месячны бюджэт 3000₴ на ежу»
+
+### Запыт даных
+
+Гэтыя каманды выконваюцца **адразу** і паказваюць вынікі:
+
+- **«Пакажы мае выдаткі за мінулы тыдзень»** → адлюстроўвае спіс выдаткаў з агульнай сумай
+- **«Які статус маіх бюджэтаў?»** → паказвае ўсе бюджэты з паласамі прагрэсу
+- **«Пакажы разбіўку па катэгорыях за гэты месяц»** → адлюстроўвае выдаткі па катэгорыях з адсоткамі
+
 ## Частыя пытанні
 
 - **П: Ці мае ІІ доступ да ўсіх маіх фінансавых даных?**
@@ -17131,6 +17493,12 @@ iOS, Android, Web
 
 - **П: ІІ даў недакладны адказ. Што рабіць?**
   **А:** Адказы ІІ заснаваны на вашых данях, але часам могуць быць недакладнымі. Вы можаце перафармуляваць пытанне для лепшых вынікаў або праверыць даныя ва ўкладцы Аналітыка.
+
+- **П: Ці можна адмяніць пацверджанае дзеянне?**
+  **А:** Пасля таго, як вы пацвердзіце дзеянне (напрыклад, стварэнне выдатку), яно захоўваецца ў вашым рахунку. Вы можаце выдаліць яго ўручную з укладкі Выдаткі.
+
+- **П: Што адбудзецца, калі я адхілю дзеянне?**
+  **А:** Калі вы націснеце «Адмяніць» на картцы пацверджання, дзеянне адхіляецца і нічога не захоўваецца. ІІ пацвердзіць адхіленне.
 
 ---
 

@@ -39,6 +39,7 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 
 ## Przykladowe pytania
 
+**Pytania analityczne:**
 - "Na co wydalem najwiecej w tym miesiacu?"
 - "Ile wydalem na jedzenie w zeszlym tygodniu?"
 - "Czy mam budzet pod kontrola?"
@@ -48,11 +49,23 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Daj mi wskazowki, jak oszczedzac pieniadze"
 - "Kiedy moj miesieczny budzet sie wyczerpa w tym tempie?"
 
+**Polecenia w jezyku naturalnym:**
+- "Dodaj wydatek 500₴ na zakupy"
+- "Utworz budzet 10000₴ na rozrywke na marzec"
+- "Dodaj przychod 50000₴ z wynagrodzenia"
+- "Pokaz moje wydatki z ostatniego tygodnia"
+- "Jaki jest status mojego budzetu?"
+- "Pokaz podzial wedlug kategorii za ten miesiac"
+
 ## Funkcje czatu
 
 - **Historia rozmow** — poprzednie wiadomosci sa zachowywane podczas sesji
 - **Wskaznik pisania** — wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
 - **Obsluga bledow** — jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
+- **Polecenia w jezyku naturalnym** — tworzenie wydatkow, przychodow, budzetow i zapytan o dane uzywajac zwyklego jezyka
+- **Potwierdzenie akcji** — podczas tworzenia rekordow finansowych AI pokazuje podglad i prosi o potwierdzenie przed zapisaniem
+- **Inteligentne wykrywanie jezyka** — AI automatycznie odpowiada w Twoim jezyku (angielski, rosyjski, ukrainski, bialoruski, niemiecki, hiszpanski, francuski, polski)
+- **Rozpoznawanie walut** — obsluga symboli: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Limity zapytan AI
 
@@ -66,6 +79,33 @@ Kazda wyslana wiadomosc zuzywa jedno zapytanie AI z Twojego miesiecznego limitu:
 
 Gdy wyczerpiesz zapytania, zostaniesz zachecony do ulepszenia planu.
 
+## Polecenia w jezyku naturalnym
+
+Mozesz teraz **wykonywac rzeczywiste akcje** bezposrednio z czatu:
+
+### Tworzenie rekordow
+
+1. Wpisz polecenie, np.: **"Dodaj wydatek 500₴ na zakupy"**
+2. AI pokazuje **karte potwierdzenia** z:
+   - Kwota i waluta
+   - Kategoria (auto-wykryta lub domyslna)
+   - Data (dzis domyslnie)
+3. Dotknij **Potwierdz**, aby utworzyc wydatek, lub **Anuluj**, aby odrzucic
+4. Po potwierdzeniu wydatek jest zapisany i zobaczysz komunikat o powodzeniu
+
+**Obslugiwane polecenia tworzenia:**
+- **Wydatki:** "Dodaj wydatek 500₴ na zakupy", "Wydalem 1200₴ na transport wczoraj"
+- **Przychody:** "Dodaj przychod 50000₴ z wynagrodzenia", "Otrzymalem 5000₴ premii"
+- **Budzety:** "Utworz budzet 10000₴ na rozrywke na marzec", "Ustaw miesieczny budzet 3000₴ na jedzenie"
+
+### Zapytania o dane
+
+Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
+
+- **"Pokaz moje wydatki z ostatniego tygodnia"** → wyswietla liste wydatkow z suma
+- **"Jaki jest status mojego budzetu?"** → pokazuje wszystkie budzety z paskami postepu
+- **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
+
 ## FAQ
 
 - **P: Czy AI ma dostep do wszystkich moich danych finansowych?**
@@ -76,6 +116,12 @@ Gdy wyczerpiesz zapytania, zostaniesz zachecony do ulepszenia planu.
 
 - **P: AI podal bledna odpowiedz. Co powinienem zrobic?**
   **O:** Odpowiedzi AI bazuja na Twoich danych, ale moga okazjonalnie byc niedokladne. Mozesz przeformulowac pytanie, aby uzyskac lepsze wyniki, lub zweryfikowac dane w zakladce Analityka.
+
+- **P: Czy moge cofnac potwierdzona akcje?**
+  **O:** Po potwierdzeniu akcji (takiej jak utworzenie wydatku) jest ona zapisywana na Twoim koncie. Mozesz ja usunac recznie z zakladki Wydatki.
+
+- **P: Co sie stanie, jezeli odrzuce akcje?**
+  **O:** Jezeli dotkniesz "Anuluj" na karcie potwierdzenia, akcja zostaje odrzucona i nic nie jest zapisywane. AI potwierdzi odrzucenie.
 
 ---
 

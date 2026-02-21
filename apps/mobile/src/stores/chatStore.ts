@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ChatConversation } from '@budget/shared-types';
+import type { ChatConversation, ChatPendingAction, ChatActionResult } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
@@ -12,6 +12,8 @@ export interface ChatMessage {
   content: string;
   tokensUsed?: number;
   createdAt: Date;
+  pendingAction?: ChatPendingAction;
+  actionResult?: ChatActionResult;
 }
 
 interface ChatState {
@@ -19,10 +21,13 @@ interface ChatState {
   currentConversationId: string | null;
   messages: ChatMessage[];
   isLoading: boolean;
+  isConfirming: boolean;
   error: string | null;
 
   // Actions
   sendMessage: (content: string) => Promise<void>;
+  confirmAction: (actionId: string) => Promise<void>;
+  rejectAction: (actionId: string, reason?: string) => Promise<void>;
   addMessage: (message: ChatMessage) => void;
   setConversationId: (id: string) => void;
   startNewConversation: () => void;
@@ -35,6 +40,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   currentConversationId: null,
   messages: [],
   isLoading: false,
+  isConfirming: false,
   error: null,
 
   sendMessage: async (content: string) => {
@@ -71,6 +77,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         role: 'assistant',
         content: response.message,
         createdAt: new Date(),
+        pendingAction: response.pendingAction as ChatPendingAction | undefined,
+        actionResult: response.actionResult as ChatActionResult | undefined,
       };
 
       set((state) => ({
@@ -91,6 +99,82 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         error: error instanceof Error ? error.message : i18n.t('errors.sendMessageFailed'),
         isLoading: false,
       }));
+    }
+  },
+
+  confirmAction: async (actionId: string) => {
+    const { currentConversationId } = get();
+    if (!currentConversationId) return;
+
+    set({ isConfirming: true });
+
+    try {
+      const response = await api.confirmChatAction(currentConversationId, actionId);
+
+      // Mark the pending action message as confirmed
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg.pendingAction?.id === actionId
+            ? { ...msg, pendingAction: undefined }
+            : msg,
+        ),
+      }));
+
+      // Add the result message
+      const resultMessage: ChatMessage = {
+        id: generateUUID(),
+        conversationId: currentConversationId,
+        role: 'assistant',
+        content: response.message,
+        createdAt: new Date(),
+        actionResult: response.actionResult as ChatActionResult | undefined,
+      };
+
+      set((state) => ({
+        messages: [...state.messages, resultMessage],
+        isConfirming: false,
+      }));
+    } catch (error) {
+      set({
+        isConfirming: false,
+        error: error instanceof Error ? error.message : i18n.t('errors.chatError'),
+      });
+    }
+  },
+
+  rejectAction: async (actionId: string, reason?: string) => {
+    const { currentConversationId } = get();
+    if (!currentConversationId) return;
+
+    set({ isConfirming: true });
+
+    try {
+      const response = await api.rejectChatAction(currentConversationId, actionId, reason);
+
+      // Remove the pending action from the message
+      set((state) => ({
+        messages: state.messages.map((msg) =>
+          msg.pendingAction?.id === actionId
+            ? { ...msg, pendingAction: undefined }
+            : msg,
+        ),
+      }));
+
+      // Add the rejection message
+      const rejectMessage: ChatMessage = {
+        id: generateUUID(),
+        conversationId: currentConversationId,
+        role: 'assistant',
+        content: response.message,
+        createdAt: new Date(),
+      };
+
+      set((state) => ({
+        messages: [...state.messages, rejectMessage],
+        isConfirming: false,
+      }));
+    } catch (error) {
+      set({ isConfirming: false });
     }
   },
 

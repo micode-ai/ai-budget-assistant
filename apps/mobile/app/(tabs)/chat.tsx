@@ -17,6 +17,7 @@ import Markdown from 'react-native-markdown-display';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { ActionConfirmationCard, ActionResultCard } from '@/components/chat';
 import * as Clipboard from 'expo-clipboard';
 
 export default function ChatScreen() {
@@ -26,7 +27,7 @@ export default function ChatScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  const { messages, isLoading, sendMessage } = useChatStore();
+  const { messages, isLoading, isConfirming, sendMessage, confirmAction, rejectAction } = useChatStore();
 
   const markdownStyles = useMemo(
     () => ({
@@ -191,6 +192,17 @@ export default function ChatScreen() {
               <Markdown style={markdownStyles}>
                 {item.content}
               </Markdown>
+            )}
+            {!isUser && item.pendingAction && (
+              <ActionConfirmationCard
+                pendingAction={item.pendingAction}
+                onConfirm={confirmAction}
+                onReject={rejectAction}
+                isConfirming={isConfirming}
+              />
+            )}
+            {!isUser && item.actionResult && (
+              <ActionResultCard actionResult={item.actionResult} />
             )}
           </View>
         </TouchableOpacity>

@@ -9,9 +9,14 @@ import { ProjectSuggestionService } from './services/project-suggestion.service'
 import { SplitSuggestionService } from './services/split-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { ExpensesModule } from '../expenses/expenses.module';
+import { IncomesModule } from '../incomes/incomes.module';
+import { BudgetsModule } from '../budgets/budgets.module';
+import { CategoriesModule } from '../categories/categories.module';
+import { AnalyticsModule } from '../analytics/analytics.module';
 
 @Module({
-  imports: [SubscriptionsModule],
+  imports: [SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule],
   controllers: [AiController],
   providers: [WhisperService, ChatService, CategorizationService, OcrService, TagSuggestionService, ProjectSuggestionService, SplitSuggestionService, GoalPlannerService],
   exports: [WhisperService, ChatService, CategorizationService, OcrService, TagSuggestionService, ProjectSuggestionService, SplitSuggestionService, GoalPlannerService],
