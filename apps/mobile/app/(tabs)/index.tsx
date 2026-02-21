@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
+import { FatFinderCard } from '@/components/insights/FatFinderCard';
+import { GoalsCard } from '@/components/goals/GoalsCard';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -253,6 +255,10 @@ export default function DashboardScreen() {
             </View>
           </TouchableOpacity>
         )}
+
+        <FatFinderCard />
+
+        <GoalsCard />
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>

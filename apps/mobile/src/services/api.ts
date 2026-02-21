@@ -438,6 +438,49 @@ class ApiClient {
     });
   }
 
+  // Savings Goals
+  async createGoal(data: { name: string; targetAmount: number; currencyCode: string; deadline: string }) {
+    return this.request<any>('/ai/goals', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getGoals() {
+    return this.request<any[]>('/ai/goals');
+  }
+
+  async getGoal(id: string) {
+    return this.request<any>(`/ai/goals/${id}`);
+  }
+
+  async getGoalProgress(id: string) {
+    return this.request<any>(`/ai/goals/${id}/progress`);
+  }
+
+  async updateGoal(id: string, data: { name?: string; targetAmount?: number; deadline?: string; currentAmount?: number; status?: string }) {
+    return this.request<any>(`/ai/goals/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteGoal(id: string) {
+    return this.request<{ success: boolean }>(`/ai/goals/${id}`, { method: 'DELETE' });
+  }
+
+  async regenerateGoalPlan(id: string) {
+    return this.request<any>(`/ai/goals/${id}/regenerate-plan`, { method: 'POST' });
+  }
+
+  // AI Response Mode
+  async updateAiResponseMode(mode: string) {
+    return this.request<{ success: boolean; mode: string }>('/users/me/ai-response-mode', {
+      method: 'PATCH',
+      body: JSON.stringify({ mode }),
+    });
+  }
+
   // Expense Items endpoints
   async getExpenseItems(expenseId: string) {
     return this.request<any[]>(`/expenses/${expenseId}/items`);
@@ -756,6 +799,14 @@ class ApiClient {
     return this.request<StoryDashboardResponse>('/insights/story', {
       method: 'POST',
       body: JSON.stringify({ period, forceRegenerate, language }),
+    });
+  }
+
+  // Fat Finder
+  async getFatFinderReport(language?: string, forceRegenerate?: boolean) {
+    return this.request<any>('/insights/fat-finder', {
+      method: 'POST',
+      body: JSON.stringify({ language, forceRegenerate }),
     });
   }
 

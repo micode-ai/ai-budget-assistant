@@ -55,6 +55,18 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez
 - Affiche vos depenses totales du mois en cours en rouge (par ex. **-4 838,99 $**)
 - Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
+## Carte Fat Finder
+
+Sous la section des dettes, la carte **Fat Finder** affiche un resume de votre audit mensuel de depenses :
+
+- **Economies potentielles totales** — combien vous pourriez economiser par mois
+- **3 principaux constats** — liste rapide avec des points de gravite et les montants d'economies
+- **Voir le rapport complet** — appuyez pour ouvrir l'ecran detaille du Fat Finder
+
+Cette carte necessite un **abonnement Pro ou Business**. Les utilisateurs du plan gratuit voient une invitation a passer a un plan superieur.
+
+> Voir [Fat Finder](./19-fat-finder.md) pour le guide complet de la fonctionnalite.
+
 ## Soldes du Portefeuille
 
 - Cartes horizontales defilables affichant votre solde dans chaque devise (par ex. **EUR 16 723,00**, **PLN 2 192,89**, **USD 56...**)
@@ -75,4 +87,4 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
 
 ---
 
-*Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md)*
+*Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*

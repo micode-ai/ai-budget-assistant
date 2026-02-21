@@ -36,6 +36,9 @@
 15. [Ende-zu-Ende-Verschlusselung](./15-encryption.md) — Datenschutz mit E2EE
 16. [Export & Berichte](./16-export-reports.md) — PDF/Excel/CSV-Berichte, Backups, E-Mail-Zusammenfassungen
 17. [Schulden & Darlehen](./17-debts-and-loans.md) — Verliehenes und geliehenes Geld, Ruckzahlungen, Falligkeiten
+18. [Sparziele](./18-savings-goals.md) — KI-gestützte Sparpläne mit Beitragsvorgaben und Meilensteinen
+19. [Fat Finder](./19-fat-finder.md) — monatliche Ausgabenprüfung zur Identifizierung von Verschwendung und Sparvorschlägen
+20. [KI-Antwortmodus](./20-ai-response-mode.md) — KI-Kommunikationsstil anpassen (Einfach, Ausgewogen, Experte)
 
 ## Unterstutzte Wahrungen
 

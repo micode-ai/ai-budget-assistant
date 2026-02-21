@@ -55,6 +55,18 @@ Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami
 - Wyswietla laczne wydatki za biezacy miesiac na czerwono (np. **-4 838,99 $**)
 - Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
+## Karta Tropiciela wydatkow
+
+Ponizej sekcji zobowiazan karta **Tropiciel wydatkow** pokazuje podsumowanie Twojego miesiecznego audytu wydatkow:
+
+- **Laczne potencjalne oszczednosci** — ile mozesz zaoszczedzic miesiecznie
+- **3 glowne odkrycia** — szybka lista z kropkami waznosci i kwotami oszczednosci
+- **Zobacz pelny raport** — dotknij, aby otworzyc szczegolowy ekran Tropiciela wydatkow
+
+Ta karta wymaga subskrypcji **Pro lub Business**. Uzytkownicy planu darmowego zobacza zachete do ulepszenia.
+
+> Zobacz [Tropiciel wydatkow](./19-fat-finder.md) — pelny przewodnik po funkcji.
+
 ## Salda portfela
 
 - Poziomo przewijane karty pokazujace saldo w kazdej walucie (np. **EUR 16 723,00**, **PLN 2 192,89**, **USD 56...**)
@@ -75,4 +87,4 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 
 ---
 
-*Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Portfel i wymiana walut](./10-wallet-and-exchange.md)*
+*Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Portfel i wymiana walut](./10-wallet-and-exchange.md) | [Tropiciel wydatkow](./19-fat-finder.md)*

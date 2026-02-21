@@ -83,6 +83,9 @@ export default function SettingsScreen() {
   const [editingName, setEditingName] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  // AI Response Mode
+  const [aiResponseMode, setAiResponseMode] = useState(user?.aiResponseMode || 'balanced');
+
   // Timezone picker
   const [timezonePicker, setTimezonePicker] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState('');
@@ -103,13 +106,11 @@ export default function SettingsScreen() {
     isSetUp: e2eeSetUp,
     isUnlocked: e2eeUnlocked,
     isLoading: e2eeLoading,
-    error: e2eeError,
     setupE2EE,
     unlock: unlockE2EE,
     lock: lockE2EE,
     enableAccountEncryption,
     resetE2EE,
-    clearError: clearE2EEError,
     initialize: initializeE2EE,
   } = useEncryptionStore();
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
@@ -384,6 +385,17 @@ export default function SettingsScreen() {
     await changeLanguage(langCode);
   };
 
+  const handleAiResponseModeChange = async (newMode: string) => {
+    if (newMode === aiResponseMode) return;
+    setAiResponseMode(newMode);
+    try {
+      await api.updateAiResponseMode(newMode);
+      updateUser({ aiResponseMode: newMode as any });
+    } catch {
+      setAiResponseMode(aiResponseMode);
+    }
+  };
+
   const handleSetupE2EE = async () => {
     if (e2eePassphrase.length < 8) {
       Alert.alert(t('common.error'), t('encryption.passphraseMin'));
@@ -617,6 +629,31 @@ export default function SettingsScreen() {
                   color={mode === item.key ? theme.colors.primary : theme.colors.textTertiary}
                 />
                 <Text style={[styles.themeChipText, mode === item.key && styles.themeChipTextActive]}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* AI Response Mode */}
+          <Text style={styles.fieldLabelOutside}>{t('settings.aiResponseMode')}</Text>
+          <View style={styles.themeRow}>
+            {([
+              { key: 'simple', icon: 'chatbubble-ellipses-outline' as IconName, label: t('settings.aiResponseModeSimple') },
+              { key: 'balanced', icon: 'options-outline' as IconName, label: t('settings.aiResponseModeBalanced') },
+              { key: 'expert', icon: 'stats-chart-outline' as IconName, label: t('settings.aiResponseModeExpert') },
+            ]).map((item) => (
+              <TouchableOpacity
+                key={item.key}
+                style={[styles.themeChip, aiResponseMode === item.key && styles.themeChipActive]}
+                onPress={() => handleAiResponseModeChange(item.key)}
+              >
+                <Ionicons
+                  name={item.icon}
+                  size={20}
+                  color={aiResponseMode === item.key ? theme.colors.primary : theme.colors.textTertiary}
+                />
+                <Text style={[styles.themeChipText, aiResponseMode === item.key && styles.themeChipTextActive]}>
                   {item.label}
                 </Text>
               </TouchableOpacity>

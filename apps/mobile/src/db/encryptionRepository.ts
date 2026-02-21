@@ -32,7 +32,7 @@ export async function deleteAccountKey(accountId: string): Promise<void> {
 }
 
 export async function getAllAccountKeys(): Promise<
-  Array<{ accountId: string; accountKey: string; keyVersion: number }>
+  { accountId: string; accountKey: string; keyVersion: number }[]
 > {
   const rows = await executeSql<{
     account_id: string;

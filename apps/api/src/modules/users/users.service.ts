@@ -85,6 +85,13 @@ export class UsersService {
     return this.getNotificationPreferences(userId);
   }
 
+  async updateAiResponseMode(userId: string, mode: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { aiResponseMode: mode },
+    });
+  }
+
   async deactivate(id: string) {
     return this.prisma.user.update({
       where: { id },

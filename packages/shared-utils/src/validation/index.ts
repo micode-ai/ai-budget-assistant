@@ -254,6 +254,31 @@ export const SyncPushRequestSchema = z.object({
   lastSyncTimestamp: z.string().datetime({ offset: true }).optional(),
 });
 
+// Savings Goal schemas
+export const GoalStatusSchema = z.enum(['active', 'paused', 'completed', 'failed']);
+export const AiResponseModeSchema = z.enum(['simple', 'balanced', 'expert']);
+
+export const CreateGoalSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(200),
+  targetAmount: z.number().positive('Amount must be positive').max(100000000),
+  currencyCode: CurrencySchema,
+  deadline: z.string().refine((val) => !isNaN(Date.parse(val)), 'Invalid date'),
+});
+
+export const UpdateGoalSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  targetAmount: z.number().positive().max(100000000).optional(),
+  deadline: z.string().refine((val) => !isNaN(Date.parse(val)), 'Invalid date').optional(),
+  currentAmount: z.number().min(0).max(100000000).optional(),
+  status: GoalStatusSchema.optional(),
+});
+
+// Fat Finder schemas
+export const GenerateFatFinderSchema = z.object({
+  forceRegenerate: z.boolean().optional(),
+  language: z.string().length(2).optional(),
+});
+
 // AI schemas
 export const ParseExpenseRequestSchema = z.object({
   text: z.string().min(1).max(1000),
@@ -503,3 +528,7 @@ export type EncryptedPayloadInput = z.infer<typeof EncryptedPayloadSchema>;
 export type GenerateReportInput = z.infer<typeof GenerateReportSchema>;
 export type UpdateReportPreferencesInput = z.infer<typeof UpdateReportPreferencesSchema>;
 export type RestoreBackupInput = z.infer<typeof RestoreBackupSchema>;
+export type CreateGoalInput = z.infer<typeof CreateGoalSchema>;
+export type UpdateGoalInput = z.infer<typeof UpdateGoalSchema>;
+export type GenerateFatFinderInput = z.infer<typeof GenerateFatFinderSchema>;
+export type AiResponseModeInput = z.infer<typeof AiResponseModeSchema>;

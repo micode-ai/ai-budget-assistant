@@ -127,7 +127,6 @@ export class ReportsService {
 
     // Generate file
     let fileData: Buffer;
-    let contentType: string;
     let extension: string;
 
     if (dto.format === 'csv') {
@@ -154,7 +153,6 @@ export class ReportsService {
         })),
       ].sort((a, b) => b.date.localeCompare(a.date));
       fileData = this.csvGenerator.generate(rows);
-      contentType = 'text/csv';
       extension = 'csv';
     } else if (dto.format === 'pdf') {
       const transactions = [
@@ -187,7 +185,6 @@ export class ReportsService {
         categories,
         transactions,
       });
-      contentType = 'application/pdf';
       extension = 'pdf';
     } else {
       // Excel
@@ -224,7 +221,6 @@ export class ReportsService {
         expenses: expenseRows,
         incomes: incomeRows,
       });
-      contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       extension = 'xlsx';
     }
 

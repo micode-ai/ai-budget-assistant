@@ -21,8 +21,8 @@ Tres formatos de exportacion disponibles:
 1. Selecciona un **formato** (CSV, PDF o Excel)
 2. Elige un **periodo de tiempo** (Ultima semana, Este mes, Ultimo trimestre, Este ano)
 3. Toca **Generar**
-4. Una vez listo, el informe aparece en Informes recientes debajo
-5. Toca un informe para descargarlo y compartirlo
+4. El informe se genera y se abre inmediatamente mediante el dialogo para compartir del sistema — guardalo o envialo desde ahi
+5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
 
@@ -42,7 +42,8 @@ Una lista de tus informes generados recientemente que muestra:
 - Icono de formato (CSV/PDF/Excel)
 - Nombre del archivo y fecha de creacion
 - Tamano del archivo
-- Toca para descargar y compartir a traves de la hoja para compartir del sistema
+- Boton **Descargar** — guarda el archivo directamente en tu dispositivo (Android: elige carpeta via SAF; iOS: guardar en Archivos)
+- Boton **Compartir** — abre la hoja del sistema para enviar el informe por email, mensajeria u otras apps
 
 ## Copia de seguridad de datos
 

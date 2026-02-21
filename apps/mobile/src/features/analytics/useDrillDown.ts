@@ -123,7 +123,7 @@ export function useDrillDown(params: DrillDownParams) {
         }));
       }
     },
-    [params.startDate, params.endDate, params.currencyCode],
+    [params.startDate, params.endDate, params.currencyCode, i18n.language, localizeResponse],
   );
 
   const drillInto = useCallback(
@@ -185,7 +185,7 @@ export function useDrillDown(params: DrillDownParams) {
         }));
       }
     },
-    [state, params.startDate, params.endDate, params.currencyCode],
+    [state, params.startDate, params.endDate, params.currencyCode, i18n.language, localizeResponse],
   );
 
   const goBack = useCallback(() => {

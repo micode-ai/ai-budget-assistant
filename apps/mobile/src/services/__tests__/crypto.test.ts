@@ -35,6 +35,7 @@ jest.mock('@budget/shared-utils', () => ({
   },
 }));
 
+// eslint-disable-next-line import/first
 import {
   deriveKeyFromPassphrase,
   encryptAesGcm,
@@ -48,7 +49,6 @@ import {
   generateRecoveryKey,
   getRandomBytes,
   toBase64,
-  fromBase64,
   sha256,
 } from '../crypto.web';
 

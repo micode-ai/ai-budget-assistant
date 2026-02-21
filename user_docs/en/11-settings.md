@@ -42,6 +42,20 @@ Choose from 8 supported languages:
 
 Tap a language chip to switch. The interface updates immediately.
 
+### AI Response Style
+
+Control how the AI communicates with you across all AI features (Chat, Stories, Insights, Fat Finder, Goals):
+
+| Mode | Description |
+|---|---|
+| **Simple** | Plain language, no jargon — great for beginners |
+| **Balanced** | Mix of simple and technical — the default |
+| **Expert** | Financial terminology, detailed analysis — for professionals |
+
+Tap a chip to switch. The change applies immediately to all new AI-generated content.
+
+> See [AI Response Mode](./20-ai-response-mode.md) for details on what each mode changes.
+
 ### Appearance
 
 Choose your theme:
@@ -111,4 +125,4 @@ Scroll to the bottom of Settings and tap **Log Out**. A confirmation dialog will
 
 ---
 
-*See also: [Accounts](./09-accounts.md) | [Subscription Plans](./12-subscription.md) | [Export & Reports](./16-export-reports.md)*
+*See also: [Accounts](./09-accounts.md) | [Subscription Plans](./12-subscription.md) | [Export & Reports](./16-export-reports.md) | [AI Response Mode](./20-ai-response-mode.md)*

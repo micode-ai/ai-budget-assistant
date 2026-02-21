@@ -55,6 +55,18 @@ Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las in
 - Muestra tus gastos totales del mes actual en rojo (por ejemplo, **-$4,838.99**)
 - Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
+## Tarjeta Fat Finder
+
+Debajo de la seccion de deudas, la tarjeta del **Fat Finder** muestra un resumen de tu auditoria mensual de gastos:
+
+- **Ahorro potencial total** — cuanto podrias ahorrar al mes
+- **3 hallazgos principales** — lista rapida con puntos de severidad y montos de ahorro
+- **Ver informe completo** — toca para abrir la pantalla detallada del Fat Finder
+
+Esta tarjeta requiere una **suscripcion Pro o Business**. Los usuarios del plan gratuito ven una invitacion a mejorar su plan.
+
+> Consulta [Fat Finder](./19-fat-finder.md) para la guia completa de la funcion.
+
 ## Saldos de la billetera
 
 - Tarjetas con desplazamiento horizontal mostrando tu saldo en cada moneda (por ejemplo, **EUR 16,723.00**, **PLN 2 192,89**, **USD $56...**)
@@ -75,4 +87,4 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
 
 ---
 
-*Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md)*
+*Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*

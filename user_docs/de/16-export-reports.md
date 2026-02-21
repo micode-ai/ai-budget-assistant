@@ -21,8 +21,8 @@ Drei Exportformate verfügbar:
 1. Wähle ein **Format** (CSV, PDF oder Excel)
 2. Wähle einen **Zeitraum** (Letzte Woche, Dieser Monat, Letztes Quartal, Dieses Jahr)
 3. Tippe auf **Generieren**
-4. Sobald fertig, erscheint der Bericht in den kürzlich erstellten Berichten unten
-5. Tippe auf einen Bericht, um ihn herunterzuladen und zu teilen
+4. Der Bericht wird erstellt und öffnet sich sofort über das System-Teilen-Blatt — speichere oder sende ihn von dort
+5. Der Bericht erscheint auch unter **Kürzlich erstellte Berichte** für späteren Zugriff
 
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
@@ -42,7 +42,8 @@ Eine Liste deiner kürzlich generierten Berichte mit:
 - Formatsymbol (CSV/PDF/Excel)
 - Dateiname und Erstellungsdatum
 - Dateigröße
-- Tippen zum Herunterladen und Teilen über das System-Teilen-Blatt
+- Schaltfläche **Herunterladen** — speichert die Datei direkt auf dein Gerät (Android: Ordner wählen über SAF; iOS: In Dateien speichern)
+- Schaltfläche **Teilen** — öffnet das System-Teilen-Blatt, um den Bericht per E-Mail, Messenger oder anderen Apps zu senden
 
 ## Daten-Backup
 

@@ -369,7 +369,7 @@ export class ExpensesService {
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
         };
 
-      const updated = await tx.expense.update({
+      await tx.expense.update({
         where: { id: expense.id },
         data: expenseUpdateData,
       });

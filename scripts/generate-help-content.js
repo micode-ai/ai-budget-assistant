@@ -22,6 +22,9 @@ const SECTIONS = [
   '15-encryption',
   '16-export-reports',
   '17-debts-and-loans',
+  '18-savings-goals',
+  '19-fat-finder',
+  '20-ai-response-mode',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

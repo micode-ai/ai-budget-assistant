@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
+import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
 
 interface UserContext {
   totalSpentThisMonth: number;
@@ -11,6 +12,7 @@ interface UserContext {
   tags: { name: string }[];
   projects: { name: string; spent: number }[];
   topItems: { description: string; totalSpent: number; count: number }[];
+  savingsGoals: { name: string; targetAmount: number; currentAmount: number; currencyCode: string; deadline: string; status: string }[];
 }
 
 interface ChatMessageRecord {
@@ -99,8 +101,10 @@ export class ChatService {
     });
 
     // Build context
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+    const responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
     const context = await this.buildUserContext(userId, accountId);
-    const systemPrompt = this.buildSystemPrompt(context, encryptionTier);
+    const systemPrompt = this.buildSystemPrompt(context, encryptionTier, responseMode);
 
     // Get conversation history
     const history = conversation.messages.map((m: ChatMessageRecord) => ({
@@ -252,6 +256,20 @@ export class ChatService {
       }));
     }
 
+    // Fetch active savings goals
+    const goalsWhere = accountId
+      ? { accountId, status: 'active' }
+      : { userId, status: 'active' };
+    const goals = await this.prisma.savingsGoal.findMany({ where: goalsWhere });
+    const savingsGoals = goals.map((g: any) => ({
+      name: g.name,
+      targetAmount: Number(g.targetAmount),
+      currentAmount: Number(g.currentAmount),
+      currencyCode: g.currencyCode,
+      deadline: g.deadline.toISOString().split('T')[0],
+      status: g.status,
+    }));
+
     return {
       totalSpentThisMonth: totalSpent,
       monthlyBudget,
@@ -260,10 +278,11 @@ export class ChatService {
       tags,
       projects,
       topItems,
+      savingsGoals,
     };
   }
 
-  private buildSystemPrompt(context: UserContext, encryptionTier = 0): string {
+  private buildSystemPrompt(context: UserContext, encryptionTier = 0, responseMode: AiResponseMode = 'balanced'): string {
     const encryptionNotice = encryptionTier >= 1
       ? `\n\nIMPORTANT: This account has end-to-end encryption enabled (text fields). Expense descriptions, notes, tag names, and project names shown below may be encrypted/unavailable. Focus your analysis on numerical data (amounts, category totals) and general spending patterns. Do not attempt to interpret encrypted text values.`
       : '';
@@ -307,6 +326,10 @@ ${recentExpensesText}
 You can help analyze spending by tags (e.g., "How much on #subscriptions?"), by projects (e.g., "Show vacation spending"), and by individual purchased items from receipts (e.g., "How much did I spend on milk?").
 When users reference tags with #, look them up. When they mention project names, match to active projects.
 When asked about specific items or products, use the "Top purchased items" data which comes from scanned receipts.
+
+- Active savings goals: ${context.savingsGoals.length > 0 ? context.savingsGoals.map(g => `${g.name}: ${g.currentAmount}/${g.targetAmount} ${g.currencyCode} by ${g.deadline}`).join(', ') : 'none'}
+
+${getResponseModeInstruction(responseMode)}
 
 Provide helpful, actionable advice about budgeting and spending. Be concise but thorough.
 If asked about specific data you don't have, acknowledge the limitation and provide general guidance.

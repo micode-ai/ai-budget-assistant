@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Query, UseGuards, Req } from '@nestjs/comm
 import { InsightsService } from './insights.service';
 import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
+import { FatFinderService } from './fat-finder.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
@@ -17,6 +18,7 @@ export class InsightsController {
     private readonly insightsService: InsightsService,
     private readonly aiInsightsService: AiInsightsService,
     private readonly storyService: StoryService,
+    private readonly fatFinderService: FatFinderService,
   ) {}
 
   @Get()
@@ -34,7 +36,7 @@ export class InsightsController {
     @Req() req: AuthenticatedRequest,
     @Query('language') language?: string,
   ) {
-    return this.aiInsightsService.getAIInsights(req.accountId, language);
+    return this.aiInsightsService.getAIInsights(req.accountId, language, req.user.id);
   }
 
   @Post('story')
@@ -50,6 +52,23 @@ export class InsightsController {
       body.period || 'month',
       body.forceRegenerate,
       body.language,
+      req.user.id,
+    );
+  }
+
+  @Post('fat-finder')
+  @UseGuards(SubscriptionTierGuard, AiUsageGuard)
+  @RequireTier('pro')
+  @TrackAiUsage('fat_finder', 3.0)
+  async getFatFinderReport(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { forceRegenerate?: boolean; language?: string },
+  ) {
+    return this.fatFinderService.generateReport(
+      req.accountId,
+      body.language,
+      body.forceRegenerate,
+      req.user.id,
     );
   }
 }

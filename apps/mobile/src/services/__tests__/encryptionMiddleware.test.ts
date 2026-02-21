@@ -62,7 +62,9 @@ jest.mock('@budget/shared-utils', () => ({
   },
 }));
 
+// eslint-disable-next-line import/first
 import { getRandomBytes } from '../crypto.web';
+// eslint-disable-next-line import/first
 import { encryptForSync, decryptFromSync } from '../encryptionMiddleware';
 
 describe('encryptionMiddleware', () => {

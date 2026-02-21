@@ -10,6 +10,8 @@ import { useCategoryStore } from './categoryStore';
 import { useWalletStore } from './walletStore';
 import { useExchangeRateStore } from './exchangeRateStore';
 import { useInvestmentStore } from './investmentStore';
+import { useInsightsStore } from './insightsStore';
+import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
 
 interface AuthState {
@@ -129,8 +131,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // Fetch profile to get isAdmin flag
           try {
             const profile = await api.getProfile();
-            if (profile.isAdmin) {
-              const updatedUser = { ...user, isAdmin: profile.isAdmin };
+            if (profile.isAdmin || profile.aiResponseMode) {
+              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced' };
               set({ user: updatedUser });
               await secureStorage.setItem('user', JSON.stringify(updatedUser));
             }
@@ -253,6 +255,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               name: profile.name || user.name,
               currencyCode: (profile.currencyCode || user.currencyCode) as Currency,
               isAdmin: profile.isAdmin,
+              aiResponseMode: profile.aiResponseMode || 'balanced',
             };
             set({ user: updatedUser });
             await secureStorage.setItem('user', JSON.stringify(updatedUser));
@@ -339,6 +342,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           useWalletStore.getState().reset();
           useExchangeRateStore.getState().reset();
           useInvestmentStore.getState().reset();
+          useInsightsStore.getState().reset();
+          useGoalStore.getState().reset();
 
           // Clear investment data from SQLite
           await investmentRepo.clearAllInvestments();

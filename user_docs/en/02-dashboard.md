@@ -55,6 +55,18 @@ Tap this card to open the full **Achievements** screen with all badges, streak d
 - Displays your total expenses for the current month in red (e.g., **-$4,838.99**)
 - Tap to go to the **Transactions** tab (Expenses view)
 
+## Fat Finder Card
+
+Below the debts section, the **Fat Finder** card shows a summary of your monthly expense audit:
+
+- **Total potential savings** — how much you could save per month
+- **Top 3 findings** — quick list with severity dots and savings amounts
+- **View Full Report** — tap to open the detailed Fat Finder screen
+
+This card requires a **Pro or Business subscription**. Free plan users see an upgrade prompt.
+
+> See [Fat Finder](./19-fat-finder.md) for the full feature guide.
+
 ## Wallet Balances
 
 - Horizontal scrollable cards showing your balance in each currency (e.g., **EUR 16,723.00**, **PLN 2 192,89**, **USD $56...**)
@@ -75,4 +87,4 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
 
 ---
 
-*See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md)*
+*See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*

@@ -42,6 +42,20 @@ Wybierz z 8 obslugiwanych jezykow:
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
 
+### Styl odpowiedzi AI
+
+Kontroluj, jak AI komunikuje sie z Toba we wszystkich funkcjach AI (Czat, Historie, Analiza, Tropiciel wydatkow, Cele):
+
+| Tryb | Opis |
+|---|---|
+| **Prosty** | Zrozumialy jezyk, bez zargonu — swietny dla poczatkujacych |
+| **Zrownowazony** | Polaczenie prostego i technicznego — domyslny |
+| **Ekspercki** | Terminologia finansowa, szczegolowa analiza — dla profesjonalistow |
+
+Dotknij element, aby przelaczyc. Zmiana stosowana jest natychmiast do wszystkich nowych tresci AI.
+
+> Zobacz [Tryb odpowiedzi AI](./20-ai-response-mode.md) — szczegoly o kazdym trybie.
+
 ### Wyglad
 
 Wybierz motyw:
@@ -111,4 +125,4 @@ Przewin na dol Ustawien i dotknij **Wyloguj sie**. Pojawi sie okno potwierdzenia
 
 ---
 
-*Zobacz takze: [Konta](./09-accounts.md) | [Plany subskrypcji](./12-subscription.md) | [Eksport i raporty](./16-export-reports.md)*
+*Zobacz takze: [Konta](./09-accounts.md) | [Plany subskrypcji](./12-subscription.md) | [Eksport i raporty](./16-export-reports.md) | [Tryb odpowiedzi AI](./20-ai-response-mode.md)*

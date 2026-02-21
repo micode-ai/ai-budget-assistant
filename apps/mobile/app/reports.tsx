@@ -11,7 +11,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useReportStore } from '@/stores/reportStore';
-import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
@@ -34,7 +33,6 @@ export default function ReportsScreen() {
     isLoading,
     error,
     digest,
-    isLoadingDigest,
     generateReport,
     loadReports,
     deleteReport,

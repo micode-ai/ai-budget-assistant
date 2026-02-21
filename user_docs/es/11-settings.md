@@ -42,6 +42,20 @@ Elige entre 8 idiomas disponibles:
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 
+### Estilo de respuesta de la IA
+
+Controla como la IA se comunica contigo en todas las funciones de IA (Chat, Historias, Conclusiones, Fat Finder, Metas):
+
+| Modo | Descripcion |
+|---|---|
+| **Simple** | Lenguaje sencillo, sin jerga — ideal para principiantes |
+| **Equilibrado** | Combinacion de simple y tecnico — el modo predeterminado |
+| **Experto** | Terminologia financiera, analisis detallado — para profesionales |
+
+Toca una ficha para cambiar. El cambio se aplica de inmediato a todo el nuevo contenido generado por la IA.
+
+> Consulta [Modo de respuesta de la IA](./20-ai-response-mode.md) para mas detalles sobre lo que cambia cada modo.
+
 ### Apariencia
 
 Elige tu tema:
@@ -113,4 +127,4 @@ Desplazate hasta el final de Ajustes y toca **Cerrar sesion**. Aparecera un dial
 
 ---
 
-*Ver tambien: [Cuentas](./09-accounts.md) | [Planes de suscripcion](./12-subscription.md) | [Exportacion e informes](./16-export-reports.md)*
+*Ver tambien: [Cuentas](./09-accounts.md) | [Planes de suscripcion](./12-subscription.md) | [Exportacion e informes](./16-export-reports.md) | [Modo de respuesta de la IA](./20-ai-response-mode.md)*

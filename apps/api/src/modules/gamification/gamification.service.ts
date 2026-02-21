@@ -154,7 +154,7 @@ export class GamificationService {
           }
           break;
 
-        case 'budget_3months_no_exceed':
+        case 'budget_3months_no_exceed': {
           // Simplified: check if budget_month_no_exceed was already completed
           const monthAchievement = await this.prisma.userAchievement.findUnique({
             where: {
@@ -167,15 +167,17 @@ export class GamificationService {
             progress = 33; // At least 1 month done
           }
           break;
+        }
 
         case 'streak_3':
         case 'streak_7':
         case 'streak_30':
-        case 'streak_100':
+        case 'streak_100': {
           const currentStreak = streak?.currentStreak || 0;
           progress = Math.min(100, Math.round((currentStreak / (def.threshold || 1)) * 100));
           completed = currentStreak >= (def.threshold || 1);
           break;
+        }
 
         case 'first_income':
           progress = incomeCount >= 1 ? 100 : 0;

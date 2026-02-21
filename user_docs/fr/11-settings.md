@@ -42,6 +42,20 @@ Choisissez parmi 8 langues prises en charge :
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
 
+### Style de reponse de l'IA
+
+Controlez la maniere dont l'IA communique avec vous dans toutes les fonctionnalites IA (Chat, Histoires, Analyses, Fat Finder, Objectifs) :
+
+| Mode | Description |
+|---|---|
+| **Simple** | Langage courant, sans jargon — ideal pour les debutants |
+| **Equilibre** | Melange de simple et de technique — le mode par defaut |
+| **Expert** | Terminologie financiere, analyse detaillee — pour les professionnels |
+
+Appuyez sur une pastille pour changer. La modification s'applique immediatement a tout nouveau contenu genere par l'IA.
+
+> Voir [Mode de reponse de l'IA](./20-ai-response-mode.md) pour en savoir plus sur ce que chaque mode modifie.
+
 ### Apparence
 
 Choisissez votre theme :
@@ -111,4 +125,4 @@ Faites defiler jusqu'en bas des Parametres et appuyez sur **Se deconnecter**. Un
 
 ---
 
-*Voir aussi : [Comptes](./09-accounts.md) | [Abonnement](./12-subscription.md) | [Export et rapports](./16-export-reports.md)*
+*Voir aussi : [Comptes](./09-accounts.md) | [Abonnement](./12-subscription.md) | [Export et rapports](./16-export-reports.md) | [Mode de reponse de l'IA](./20-ai-response-mode.md)*
