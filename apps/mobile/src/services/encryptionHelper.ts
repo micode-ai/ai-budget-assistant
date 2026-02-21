@@ -8,7 +8,7 @@ import { encryptForSync, decryptFromSync } from './encryptionMiddleware';
 
 // Lazy imports to avoid circular dependency with stores
 function getEncryptionStore() {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   return require('../stores/encryptionStore').useEncryptionStore;
 }
 

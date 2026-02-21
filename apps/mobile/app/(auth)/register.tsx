@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
-import i18n, { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
+import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getLegalUrls } from '@/constants/legal';
 

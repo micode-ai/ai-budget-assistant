@@ -36,6 +36,9 @@
 15. [Chiffrement de bout en bout](./15-encryption.md) — protegez vos donnees avec E2EE
 16. [Export et rapports](./16-export-reports.md) — rapports PDF/Excel/CSV, sauvegardes, resumes par email
 17. [Dettes et Prets](./17-debts-and-loans.md) — suivi de l'argent prete et emprunte, remboursements, echeances
+18. [Objectifs d'épargne](./18-savings-goals.md) — plans d'épargne alimentés par l'IA avec objectifs de contribution et jalons
+19. [Fat Finder](./19-fat-finder.md) — audit mensuel des dépenses pour identifier le gaspillage et suggérer des économies
+20. [Mode de réponse de l'IA](./20-ai-response-mode.md) — personnaliser le style de communication de l'IA (Simple, Équilibré, Expert)
 
 ## Devises prises en charge
 

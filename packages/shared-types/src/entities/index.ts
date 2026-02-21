@@ -24,6 +24,77 @@ export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'incomplet
 
 export type InsightType = 'spending_anomaly' | 'budget_prediction' | 'saving_tip' | 'achievement';
 
+// AI Response Mode
+export type AiResponseMode = 'simple' | 'balanced' | 'expert';
+
+// Savings Goal types
+export type GoalStatus = 'active' | 'paused' | 'completed' | 'failed';
+
+export interface GoalCheckpoint {
+  date: string;
+  targetAmount: number;
+  label: string;
+}
+
+export interface GoalCategoryLimit {
+  categoryName: string;
+  currentMonthly: number;
+  suggestedMonthly: number;
+  savingsPerMonth: number;
+}
+
+export interface GoalPlan {
+  monthlyContribution: number;
+  weeklyContribution: number;
+  checkpoints: GoalCheckpoint[];
+  categoryLimits: GoalCategoryLimit[];
+  estimatedCompletionDate: string;
+  feasibility: 'easy' | 'moderate' | 'challenging' | 'unrealistic';
+  summary: string;
+}
+
+export interface SavingsGoal {
+  id: string;
+  accountId: string;
+  userId: string;
+  name: string;
+  targetAmount: number;
+  currentAmount: number;
+  currencyCode: Currency;
+  deadline: Date;
+  status: GoalStatus;
+  aiPlan?: GoalPlan;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Fat Finder types
+export type FatFinderFindingType = 'subscription' | 'recurring_splurge' | 'large_one_off' | 'category_excess' | 'service_overuse';
+
+export interface FatFinderFinding {
+  id: string;
+  type: FatFinderFindingType;
+  title: string;
+  description: string;
+  currentMonthly: number;
+  suggestedMonthly: number;
+  potentialSavings: number;
+  severity: 'low' | 'medium' | 'high';
+  actionSuggestion: string;
+  relatedExpenses?: { description: string; amount: number; date: string }[];
+}
+
+export interface FatFinderReport {
+  id: string;
+  accountId: string;
+  periodStart: string;
+  periodEnd: string;
+  findings: FatFinderFinding[];
+  totalPotentialSavings: number;
+  currencyCode: Currency;
+  generatedAt: string;
+}
+
 // Investment types
 export type AssetType = 'stock' | 'crypto' | 'etf' | 'bond' | 'commodity';
 
@@ -44,6 +115,7 @@ export interface User {
   timezone: string;
   defaultAccountId?: string;
   isAdmin?: boolean;
+  aiResponseMode?: AiResponseMode;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;

@@ -2,7 +2,10 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
+  Delete,
   Body,
+  Param,
   Query,
   UseGuards,
   Req,
@@ -19,6 +22,7 @@ import { OcrService } from './services/ocr.service';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { SplitSuggestionService } from './services/split-suggestion.service';
+import { GoalPlannerService } from './services/goal-planner.service';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -31,6 +35,7 @@ export class AiController {
     private readonly tagSuggestionService: TagSuggestionService,
     private readonly projectSuggestionService: ProjectSuggestionService,
     private readonly splitSuggestionService: SplitSuggestionService,
+    private readonly goalPlannerService: GoalPlannerService,
   ) {}
 
   @Post('transcribe')
@@ -172,5 +177,53 @@ export class AiController {
     },
   ) {
     return this.splitSuggestionService.suggestSplits(req.accountId, body);
+  }
+
+  // ── Savings Goals ──
+
+  @Post('goals')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('goal_plan', 2.0)
+  async createGoal(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { name: string; targetAmount: number; currencyCode: string; deadline: string },
+  ) {
+    return this.goalPlannerService.createGoal(req.accountId, req.user.id, body);
+  }
+
+  @Get('goals')
+  async listGoals(@Req() req: AuthenticatedRequest) {
+    return this.goalPlannerService.listGoals(req.accountId);
+  }
+
+  @Get('goals/:id')
+  async getGoal(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.goalPlannerService.getGoal(req.accountId, id);
+  }
+
+  @Get('goals/:id/progress')
+  async getGoalProgress(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.goalPlannerService.getProgress(req.accountId, id);
+  }
+
+  @Patch('goals/:id')
+  async updateGoal(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: { name?: string; targetAmount?: number; deadline?: string; currentAmount?: number; status?: string },
+  ) {
+    return this.goalPlannerService.updateGoal(req.accountId, id, body);
+  }
+
+  @Delete('goals/:id')
+  async deleteGoal(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.goalPlannerService.deleteGoal(req.accountId, id);
+  }
+
+  @Post('goals/:id/regenerate-plan')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('goal_plan', 2.0)
+  async regenerateGoalPlan(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.goalPlannerService.generatePlan(req.accountId, id, req.user.id);
   }
 }

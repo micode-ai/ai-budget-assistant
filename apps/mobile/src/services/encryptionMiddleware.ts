@@ -56,7 +56,7 @@ export async function encryptForSync(
 
     try {
       encryptedFields[field] = await encryptField(stringValue, accountKey);
-    } catch (error) {
+    } catch {
       throw new Error(`Failed to encrypt field "${field}"`);
     }
 
@@ -101,7 +101,7 @@ export async function decryptFromSync(
   let payload: EncryptedPayload;
   try {
     payload = JSON.parse(encryptedPayloadStr);
-  } catch (error) {
+  } catch {
     throw new Error('Invalid encrypted payload format');
   }
 
@@ -130,7 +130,7 @@ export async function decryptFromSync(
       } else {
         result[field] = decryptedValue;
       }
-    } catch (error) {
+    } catch {
       throw new Error(`Failed to decrypt field "${field}"`);
     }
   }

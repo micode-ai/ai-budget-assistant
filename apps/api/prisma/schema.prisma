@@ -85,6 +85,9 @@ model User {
   encryptionProfile       UserEncryptionProfile?
   accountEncryptionKeys   AccountEncryptionKey[]
 
+  // AI preferences
+  aiResponseMode        String    @default("balanced") @map("ai_response_mode")
+
   // Report preferences
   weeklyEmailEnabled    Boolean   @default(false) @map("weekly_email_enabled")
   weeklyEmailDay        Int       @default(1)     @map("weekly_email_day")
@@ -93,6 +96,7 @@ model User {
   // Report & backup relations
   generatedReports      GeneratedReport[]
   backupHistory         BackupHistory[]
+  savingsGoals          SavingsGoal[]
 
   @@map("users")
 }
@@ -137,6 +141,8 @@ model Account {
   generatedReports        GeneratedReport[]
   backupHistory           BackupHistory[]
   monthlyDigestCache      MonthlyDigestCache[]
+  savingsGoals            SavingsGoal[]
+  fatFinderReports        FatFinderReport[]
 
   @@map("accounts")
 }
@@ -997,4 +1003,44 @@ model MonthlyDigestCache {
   @@unique([accountId, periodStart, periodEnd])
   @@index([accountId])
   @@map("monthly_digest_cache")
+}
+
+model SavingsGoal {
+  id            String   @id @default(uuid())
+  accountId     String   @map("account_id")
+  userId        String   @map("user_id")
+  name          String
+  targetAmount  Decimal  @map("target_amount") @db.Decimal(12, 2)
+  currentAmount Decimal  @default(0) @map("current_amount") @db.Decimal(12, 2)
+  currencyCode  String   @map("currency_code")
+  deadline      DateTime @db.Date
+  status        String   @default("active")
+  aiPlan        Json?    @map("ai_plan") @db.JsonB
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, status])
+  @@index([userId])
+  @@map("savings_goals")
+}
+
+model FatFinderReport {
+  id           String   @id @default(uuid())
+  accountId    String   @map("account_id")
+  periodStart  DateTime @map("period_start") @db.Date
+  periodEnd    DateTime @map("period_end") @db.Date
+  findings     Json     @db.JsonB
+  totalSavings Decimal  @map("total_savings") @db.Decimal(12, 2)
+  currencyCode String   @map("currency_code")
+  createdAt    DateTime @default(now()) @map("created_at")
+  expiresAt    DateTime @map("expires_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, periodStart, periodEnd])
+  @@index([accountId, createdAt])
+  @@map("fat_finder_reports")
 }

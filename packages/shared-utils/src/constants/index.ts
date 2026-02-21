@@ -1,4 +1,4 @@
-import type { Currency, CategoryType } from '@budget/shared-types';
+import type { Currency } from '@budget/shared-types';
 
 // Default categories
 export const DEFAULT_EXPENSE_CATEGORIES = [

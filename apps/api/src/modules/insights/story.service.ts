@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
 import { translateUncategorized, localizeStoryBlocks } from '../../common/utils/translate';
+import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
 
 @Injectable()
 export class StoryService {
@@ -36,6 +37,7 @@ export class StoryService {
     period: 'week' | 'month',
     forceRegenerate = false,
     language?: string,
+    userId?: string,
   ) {
     // Tier 2 (full encryption): amounts are encrypted, stories cannot be generated
     const encryptionTier = await this.getEncryptionTier(accountId);
@@ -88,7 +90,14 @@ export class StoryService {
       }
     }
 
-    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier);
+    // Fetch response mode
+    let responseMode: AiResponseMode = 'balanced';
+    if (userId) {
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+    }
+
+    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode);
   }
 
   private static readonly LOCALE_MAP: Record<string, string> = {
@@ -143,6 +152,7 @@ export class StoryService {
     periodLabel: string,
     language?: string,
     encryptionTier = 0,
+    responseMode: AiResponseMode = 'balanced',
   ) {
     // Gather comprehensive data
     const previousPeriodStart = new Date(periodStart);
@@ -241,8 +251,12 @@ export class StoryService {
       ? '\nNOTE: This account has text-level encryption. Expense descriptions and notes are encrypted and unavailable. Focus the story on amounts, categories, and numerical trends only. Do not reference specific expense descriptions.\n'
       : '';
 
+    const responseModeInstruction = getResponseModeInstruction(responseMode);
+
     const prompt = `You are a personal finance storyteller. Create a narrative spending story for the period "${periodLabel}".
 ${encryptionNotice}
+${responseModeInstruction}
+
 IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, narrative text, metric labels, chart data labels (like category names, axis labels, legend entries), achievement texts, callout texts, and the summary. Everything the user will see must be in ${languageName}. Do NOT use English words like "Total", "Other", "Uncategorized" — translate them to ${languageName}.
 
 Data:

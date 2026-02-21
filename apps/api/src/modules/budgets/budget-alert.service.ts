@@ -80,8 +80,6 @@ export class BudgetAlertService {
         previousByCategory.set(expense.categoryId, prev);
       }
 
-      const monthKey = `${now.getFullYear()}-${now.getMonth()}`;
-
       for (const [categoryId, currentData] of currentByCategory) {
         const prevData = previousByCategory.get(categoryId);
         if (!prevData || prevData.months.size < 2) continue;
@@ -93,7 +91,6 @@ export class BudgetAlertService {
         if (percentChange < 30) continue;
 
         // Check if we already sent an anomaly alert for this category this month
-        const alertKey = `anomaly:${categoryId}:${monthKey}`;
         const existingAlert = await this.prisma.budgetAlert.findFirst({
           where: {
             userId,

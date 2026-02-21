@@ -55,6 +55,18 @@ Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo 
 - Zeigt deine Gesamtausgaben fur den aktuellen Monat in rot an (z.B. **-4.838,99 $**)
 - Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
+## Fat-Finder-Karte
+
+Unterhalb des Schuldenbereichs zeigt die **Fat-Finder**-Karte eine Zusammenfassung deiner monatlichen Ausgabenprufung:
+
+- **Gesamtes Einsparpotenzial** — wie viel du pro Monat sparen konntest
+- **Die 3 wichtigsten Befunde** — Kurzliste mit Schweregrad-Punkten und Einsparungsbetragen
+- **Vollstandigen Bericht anzeigen** — tippe, um den detaillierten Fat-Finder-Bildschirm zu offnen
+
+Diese Karte erfordert ein **Pro- oder Business-Abonnement**. Nutzer des kostenlosen Plans sehen eine Upgrade-Aufforderung.
+
+> Siehe [Fat Finder](./19-fat-finder.md) fur die vollstandige Funktionsbeschreibung.
+
 ## Geldborsensalden
 
 - Horizontal scrollbare Karten, die deinen Saldo in jeder Wahrung anzeigen (z.B. **EUR 16.723,00**, **PLN 2 192,89**, **USD 56...**)
@@ -75,4 +87,4 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
 
 ---
 
-*Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [Geldborse & Umtausch](./10-wallet-and-exchange.md)*
+*Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [Geldborse & Umtausch](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*

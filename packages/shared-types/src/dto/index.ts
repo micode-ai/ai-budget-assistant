@@ -365,6 +365,47 @@ export interface ChatResponse {
   }>;
 }
 
+// Savings Goal DTOs
+export interface CreateGoalDto {
+  name: string;
+  targetAmount: number;
+  currencyCode: Currency;
+  deadline: string; // ISO date
+}
+
+export interface UpdateGoalDto {
+  name?: string;
+  targetAmount?: number;
+  deadline?: string;
+  currentAmount?: number;
+  status?: import('../entities').GoalStatus;
+}
+
+export interface GoalPlanResponse {
+  goal: import('../entities').SavingsGoal;
+  plan: import('../entities').GoalPlan;
+}
+
+export interface GoalProgressResponse {
+  goal: import('../entities').SavingsGoal;
+  percentComplete: number;
+  onTrack: boolean;
+  projectedCompletionDate: string;
+  monthlyNeeded: number;
+  behindByAmount: number;
+}
+
+// Fat Finder DTOs
+export interface FatFinderResponse {
+  report: import('../entities').FatFinderReport;
+  isStale: boolean;
+}
+
+export interface GenerateFatFinderRequest {
+  forceRegenerate?: boolean;
+  language?: string;
+}
+
 // Analytics DTOs
 export interface AnalyticsSummary {
   period: {

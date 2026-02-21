@@ -42,6 +42,20 @@ Wahle aus 8 unterstutzten Sprachen:
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
 
+### KI-Antwortstil
+
+Bestimme, wie die KI in allen KI-Funktionen (Chat, Geschichten, Einblicke, Fat Finder, Ziele) mit dir kommuniziert:
+
+| Modus | Beschreibung |
+|---|---|
+| **Einfach** | Alltagssprache, kein Fachjargon — ideal fur Einsteiger |
+| **Ausgewogen** | Mischung aus einfach und fachspezifisch — die Standardeinstellung |
+| **Experte** | Finanzterminologie, detaillierte Analyse — fur Fachleute |
+
+Tippe auf einen Chip, um zu wechseln. Die Anderung gilt sofort fur alle neuen KI-generierten Inhalte.
+
+> Siehe [KI-Antwortmodus](./20-ai-response-mode.md) fur Details daruber, was jeder Modus verandert.
+
 ### Erscheinungsbild
 
 Wahle dein Design:
@@ -113,4 +127,4 @@ Scrolle zum Ende der Einstellungen und tippe auf **Abmelden**. Ein Bestatigungsd
 
 ---
 
-*Siehe auch: [Konten](./09-accounts.md) | [Abonnement-Plane](./12-subscription.md) | [Export & Berichte](./16-export-reports.md)*
+*Siehe auch: [Konten](./09-accounts.md) | [Abonnement-Plane](./12-subscription.md) | [Export & Berichte](./16-export-reports.md) | [KI-Antwortmodus](./20-ai-response-mode.md)*

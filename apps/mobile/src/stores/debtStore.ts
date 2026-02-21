@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { DebtSummary, DebtStatus, Currency } from '@budget/shared-types';
+import type { DebtSummary, DebtStatus } from '@budget/shared-types';
 import { loadDebtExpenses, loadRepaymentExpensesForIncome } from '@/db/expenseRepository';
 import { loadDebtIncomes, loadRepaymentIncomesForExpense } from '@/db/incomeRepository';
 import { useAccountStore } from './accountStore';

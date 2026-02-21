@@ -43,7 +43,7 @@ export class TagSuggestionService {
   private async suggestFromHistory(
     accountId: string,
     description: string,
-    merchant?: string,
+    _merchant?: string,
   ): Promise<Array<{ name: string; confidence: number; source: 'history'; existingTagId: string }>> {
     // Find expenses with similar descriptions that have tags
     const searchTerms = description.toLowerCase().split(/\s+/).filter(t => t.length > 2);

@@ -362,6 +362,35 @@ function RootNavigator() {
             title: t('debt.debtsAndLoans'),
           }}
         />
+        <Stack.Screen
+          name="goals/index"
+          options={{
+            headerShown: true,
+            title: t('goals.title'),
+          }}
+        />
+        <Stack.Screen
+          name="goals/new"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('goals.create'),
+          }}
+        />
+        <Stack.Screen
+          name="goals/[id]"
+          options={{
+            headerShown: true,
+            title: t('goals.title'),
+          }}
+        />
+        <Stack.Screen
+          name="fat-finder"
+          options={{
+            headerShown: true,
+            title: t('fatFinder.title'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

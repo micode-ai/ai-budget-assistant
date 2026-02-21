@@ -152,7 +152,7 @@ export async function getLocalSpendingByDay(
   accountId: string,
   startDate: string,
   endDate: string,
-): Promise<Array<{ date: string; amount: number }>> {
+): Promise<{ date: string; amount: number }[]> {
   const rows = await executeSql<{ date: string; total: number }>(
     `SELECT date, SUM(amount) as total FROM expenses
      WHERE account_id = ? AND is_deleted = 0
@@ -174,7 +174,7 @@ export async function getLocalSpendingByDay(
 export async function getLocalMonthlyTotals(
   accountId: string,
   months: number = 12,
-): Promise<Array<{ month: string; expenses: number; income: number }>> {
+): Promise<{ month: string; expenses: number; income: number }[]> {
   const now = new Date();
   const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1);
   const startStr = startDate.toISOString().split('T')[0];

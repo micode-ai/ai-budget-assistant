@@ -36,6 +36,9 @@
 15. [Cifrado de extremo a extremo](./15-encryption.md) — protege tus datos con E2EE
 16. [Exportacion e informes](./16-export-reports.md) — informes PDF/Excel/CSV, copias de seguridad, resumenes por email
 17. [Deudas y Prestamos](./17-debts-and-loans.md) — seguimiento de dinero prestado y tomado, reembolsos, vencimientos
+18. [Metas de ahorro](./18-savings-goals.md) — planes de ahorro con IA, objetivos de contribución y puntos de control
+19. [Fat Finder](./19-fat-finder.md) — auditoría mensual de gastos para identificar desperdicios y sugerir ahorros
+20. [Modo de respuesta de la IA](./20-ai-response-mode.md) — personalizar el estilo de comunicación de la IA (Simple, Equilibrado, Experto)
 
 ## Monedas compatibles
 

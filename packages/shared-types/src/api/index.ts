@@ -168,6 +168,47 @@ export interface ApiEndpoints {
     response: { success: boolean };
   };
 
+  // Savings Goals
+  'POST /ai/goals': {
+    body: import('../dto').CreateGoalDto;
+    response: import('../dto').GoalPlanResponse;
+  };
+  'GET /ai/goals': {
+    response: import('../entities').SavingsGoal[];
+  };
+  'GET /ai/goals/:id': {
+    params: { id: string };
+    response: import('../entities').SavingsGoal;
+  };
+  'GET /ai/goals/:id/progress': {
+    params: { id: string };
+    response: import('../dto').GoalProgressResponse;
+  };
+  'PATCH /ai/goals/:id': {
+    params: { id: string };
+    body: import('../dto').UpdateGoalDto;
+    response: import('../entities').SavingsGoal;
+  };
+  'DELETE /ai/goals/:id': {
+    params: { id: string };
+    response: { success: boolean };
+  };
+  'POST /ai/goals/:id/regenerate-plan': {
+    params: { id: string };
+    response: import('../dto').GoalPlanResponse;
+  };
+
+  // Fat Finder
+  'POST /insights/fat-finder': {
+    body: import('../dto').GenerateFatFinderRequest;
+    response: import('../dto').FatFinderResponse;
+  };
+
+  // Insights
+  'GET /insights': {
+    response: import('../dto').InsightsResponse;
+  };
+
   // E2EE
   'POST /encryption/setup': {
     body: import('../dto').SetupEncryptionDto;

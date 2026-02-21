@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
+import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
 
 @Injectable()
 export class AiInsightsService {
@@ -38,7 +39,7 @@ export class AiInsightsService {
     pl: 'Polish',
   };
 
-  async getAIInsights(accountId: string, language?: string) {
+  async getAIInsights(accountId: string, language?: string, userId?: string) {
     const encryptionTier = await this.getEncryptionTier(accountId);
 
     // Tier 2 (full encryption): amounts are encrypted, AI insights cannot be generated
@@ -77,11 +78,18 @@ export class AiInsightsService {
       };
     }
 
+    // Fetch response mode
+    let responseMode: AiResponseMode = 'balanced';
+    if (userId) {
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+    }
+
     // Generate new insights
-    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier);
+    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier, responseMode);
   }
 
-  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0) {
+  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0, responseMode: AiResponseMode = 'balanced') {
     // Gather financial data
     const threeMonthsAgo = new Date(periodStart.getFullYear(), periodStart.getMonth() - 3, 1);
 
@@ -161,8 +169,12 @@ export class AiInsightsService {
       ? '\nNOTE: This account has text-level encryption enabled. Expense descriptions and notes are encrypted and not available. Focus your analysis solely on numerical amounts and category totals.\n'
       : '';
 
+    const responseModeInstruction = getResponseModeInstruction(responseMode);
+
     const prompt = `You are a financial analyst. Analyze this spending data and identify 3-5 interesting patterns or insights.
 ${encryptionNotice}
+${responseModeInstruction}
+
 IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, action suggestions, and chart labels. Everything the user will see must be in ${languageName}.
 
 Current month spending data:

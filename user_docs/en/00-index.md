@@ -36,6 +36,9 @@
 15. [End-to-End Encryption](./15-encryption.md) — protect your data with E2EE
 16. [Export & Reports](./16-export-reports.md) — PDF/Excel/CSV reports, backups, email digests
 17. [Debts & Loans](./17-debts-and-loans.md) — track money lent and borrowed, repayments, due dates
+18. [Savings Goals](./18-savings-goals.md) — AI-powered savings plans with contribution targets and checkpoints
+19. [Fat Finder](./19-fat-finder.md) — monthly expense audit to identify waste and suggest savings
+20. [AI Response Mode](./20-ai-response-mode.md) — customize AI communication style (Simple, Balanced, Expert)
 
 ## Supported Currencies
 

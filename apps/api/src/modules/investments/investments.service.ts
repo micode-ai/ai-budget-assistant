@@ -12,7 +12,6 @@ import {
   UpdateInvestmentTransactionDto,
   PortfolioAnalyticsRequestDto,
 } from './dto';
-import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class InvestmentsService {
@@ -355,7 +354,6 @@ export class InvestmentsService {
     });
 
     // Determine date range
-    const now = new Date();
     let days: number;
     switch (dto.period) {
       case 'week': days = 7; break;
@@ -653,7 +651,7 @@ export class InvestmentsService {
       : holding.asset.symbol;
 
     // Try Twelve Data first
-    let seriesData = await this.twelveData.getTimeSeries(symbol, days);
+    const seriesData = await this.twelveData.getTimeSeries(symbol, days);
 
     // Store in DB for future use
     for (const point of seriesData) {

@@ -21,8 +21,8 @@ Trois formats d'export disponibles :
 1. Selectionnez un **format** (CSV, PDF ou Excel)
 2. Choisissez une **periode** (Semaine derniere, Ce mois, Trimestre dernier, Cette annee)
 3. Appuyez sur **Generer**
-4. Une fois pret, le rapport apparait dans Rapports recents ci-dessous
-5. Appuyez sur un rapport pour le telecharger et le partager
+4. Le rapport se genere et s'ouvre immediatement via la feuille de partage du systeme — enregistrez-le ou envoyez-le depuis la
+5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
@@ -42,7 +42,8 @@ Une liste de vos rapports recemment generes affichant :
 - Icone de format (CSV/PDF/Excel)
 - Nom de fichier et date de creation
 - Taille du fichier
-- Appuyez pour telecharger et partager via la feuille de partage du systeme
+- Bouton **Telecharger** — enregistre le fichier directement sur votre appareil (Android : choisissez le dossier via SAF ; iOS : enregistrer dans Fichiers)
+- Bouton **Partager** — ouvre la feuille de partage du systeme pour envoyer le rapport par email, messagerie ou d'autres applications
 
 ## Sauvegarde des donnees
 

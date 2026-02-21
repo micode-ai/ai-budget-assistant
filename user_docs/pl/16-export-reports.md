@@ -21,8 +21,8 @@ Dostepne sa trzy formaty eksportu:
 1. Wybierz **format** (CSV, PDF lub Excel)
 2. Wybierz **okres czasu** (Ostatni tydzien, Ten miesiac, Ostatni kwartal, Ten rok)
 3. Dotknij **Generuj**
-4. Po przygotowaniu raport pojawi sie w Ostatnich raportach ponizej
-5. Dotknij raport, aby pobrac i udostepnic
+4. Raport generuje sie i otwiera sie natychmiast przez systemowy arkusz udostepniania — zapisz lub wysli go stamtad
+5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
@@ -42,7 +42,8 @@ Lista ostatnio wygenerowanych raportow pokazujaca:
 - Ikona formatu (CSV/PDF/Excel)
 - Nazwa pliku i data utworzenia
 - Rozmiar pliku
-- Dotknij, aby pobrac i udostepnic przez systemowy arkusz udostepniania
+- Przycisk **Pobierz** — zapisuje plik bezposrednio na urzadzeniu (Android: wybierz folder przez SAF; iOS: zapisz w Plikach)
+- Przycisk **Udostepnij** — otwiera systemowy arkusz udostepniania, aby wyslac raport e-mailem, przez komunikator lub inne aplikacje
 
 ## Kopia zapasowa danych
 

@@ -21,8 +21,8 @@ Three export formats available:
 1. Select a **format** (CSV, PDF, or Excel)
 2. Choose a **time period** (Last Week, This Month, Last Quarter, This Year)
 3. Tap **Generate**
-4. Once ready, the report appears in Recent Reports below
-5. Tap a report to download and share
+4. The report generates and opens immediately via the system share dialog — save or send it from there
+5. The report also appears in **Recent Reports** below for future access
 
 Reports are stored for 7 days and then automatically deleted.
 
@@ -42,7 +42,8 @@ A list of your recently generated reports showing:
 - Format icon (CSV/PDF/Excel)
 - File name and creation date
 - File size
-- Tap to download and share via the system share sheet
+- **Download** button — saves the file directly to your device (Android: choose folder via Storage Access Framework; iOS: save to Files)
+- **Share** button — opens the system share sheet to send the report via email, messaging, or other apps
 
 ## Data Backup
 

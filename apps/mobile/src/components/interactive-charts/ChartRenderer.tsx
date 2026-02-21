@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { View, Text } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ChartConfig, ChartDataPoint } from '@budget/shared-types';
 import { InteractiveBarChart } from './InteractiveBarChart';
@@ -26,7 +25,6 @@ export function ChartRenderer({
   height = 200,
   formatValue,
 }: ChartRendererProps) {
-  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 

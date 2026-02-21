@@ -7,12 +7,13 @@ import { OcrService } from './services/ocr.service';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { SplitSuggestionService } from './services/split-suggestion.service';
+import { GoalPlannerService } from './services/goal-planner.service';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 
 @Module({
   imports: [SubscriptionsModule],
   controllers: [AiController],
-  providers: [WhisperService, ChatService, CategorizationService, OcrService, TagSuggestionService, ProjectSuggestionService, SplitSuggestionService],
-  exports: [WhisperService, ChatService, CategorizationService, OcrService, TagSuggestionService, ProjectSuggestionService, SplitSuggestionService],
+  providers: [WhisperService, ChatService, CategorizationService, OcrService, TagSuggestionService, ProjectSuggestionService, SplitSuggestionService, GoalPlannerService],
+  exports: [WhisperService, ChatService, CategorizationService, OcrService, TagSuggestionService, ProjectSuggestionService, SplitSuggestionService, GoalPlannerService],
 })
 export class AiModule {}

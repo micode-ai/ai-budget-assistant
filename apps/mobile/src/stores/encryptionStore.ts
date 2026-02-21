@@ -5,8 +5,6 @@ import type { EncryptionTier } from '@budget/shared-types';
 import * as encryptionRepo from '../db/encryptionRepository';
 import {
   deriveKeyFromPassphrase,
-  encryptAesGcm,
-  decryptAesGcm,
   generateX25519KeyPair,
   generateEd25519KeyPair,
   computeSharedSecret,
@@ -16,7 +14,6 @@ import {
   getRandomBytes,
   toBase64,
   fromBase64,
-  fromUtf8,
 } from '../services/crypto';
 import { ENCRYPTION_CONFIG } from '@budget/shared-utils';
 import { clearTierCache } from '../services/encryptionHelper';

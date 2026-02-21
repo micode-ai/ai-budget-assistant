@@ -128,6 +128,7 @@ Zustand stores manage application state:
 | `useProjectStore` | Project CRUD, expense/income assignment, archiving |
 | `useCategoryStore` | Category management, loading from DB |
 | `useGamificationStore` | Achievements, streaks, XP/levels, new badge modal |
+| `useReportStore` | Report generation, monthly digest, share/download, backups, email preferences |
 
 ### Local Database Schema
 
