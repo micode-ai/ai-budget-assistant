@@ -1851,9 +1851,12 @@ Content-Type: application/json
 
 ### Чат с AI ассистентом
 
+Общайтесь с AI ассистентом для получения финансовых советов и **выполнения действий** — создания расходов, бюджетов или запроса данных.
+
 ```http
 POST /ai/chat
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -1862,20 +1865,123 @@ Content-Type: application/json
 }
 ```
 
+**Ответ (Запрос)** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "В этом месяце вы потратили 20 550 ₽ на категорию \"Еда и рестораны\", что составляет 68% от вашего бюджета в 30 000 ₽. До конца месяца осталось 9 450 ₽ на 15 дней."
+}
+```
+
+**Ответ (Требуется действие — Запись)** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "Я хочу добавить расход 20.00 PLN на продукты. Пожалуйста, подтвердите или отмените это действие.",
+  "pendingAction": {
+    "id": "action-uuid",
+    "actionType": "create_expense",
+    "data": {
+      "amount": 20,
+      "currencyCode": "PLN",
+      "description": "продукты",
+      "categoryName": "Покупки",
+      "date": "2026-02-21"
+    },
+    "displaySummary": "добавить расход 20.00 PLN на \"продукты\" [Покупки]"
+  }
+}
+```
+
+**Ответ (Действие выполнено — Чтение)** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "Вот ваши расходы за прошлую неделю...",
+  "actionResult": {
+    "actionType": "get_expenses",
+    "success": true,
+    "data": {
+      "expenses": [...],
+      "total": 245.50
+    }
+  }
+}
+```
+
+**AI функции:**
+- `create_expense` — Создать расход (требует подтверждения)
+- `create_income` — Создать доход (требует подтверждения)
+- `create_budget` — Создать бюджет (требует подтверждения)
+- `get_expenses` — Запросить расходы (выполняется немедленно)
+- `get_budget_status` — Запросить статус бюджетов (выполняется немедленно)
+- `get_category_breakdown` — Запросить расходы по категориям (выполняется немедленно)
+
+**Определение языка:**
+AI автоматически определяет язык пользователя из истории разговора и содержимого сообщения (русский, украинский, белорусский, немецкий, испанский, французский, польский, английский) и отвечает на том же языке.
+
+---
+
+### Подтвердить действие в чате
+
+Подтверждение ожидающего действия записи (create_expense, create_income, create_budget).
+
+```http
+POST /ai/chat/confirm
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "conversationId": "uuid",
+  "actionId": "action-uuid"
+}
+```
+
 **Ответ** `200 OK`
 ```json
 {
   "conversationId": "uuid",
-  "message": {
-    "id": "uuid",
-    "role": "assistant",
-    "content": "В этом месяце вы потратили 20 550 ₽ на категорию \"Еда и рестораны\", что составляет 68% от вашего бюджета в 30 000 ₽. До конца месяца осталось 9 450 ₽ на 15 дней.",
-    "tokensUsed": 156
-  },
-  "suggestedActions": [
-    { "type": "view_chart", "label": "Посмотреть статистику расходов" },
-    { "type": "set_budget", "label": "Изменить бюджет на еду" }
-  ]
+  "message": "Расход успешно создан: 20.00 PLN на продукты.",
+  "actionResult": {
+    "actionType": "create_expense",
+    "success": true,
+    "data": {
+      "id": "expense-uuid",
+      "amount": 20,
+      "currencyCode": "PLN",
+      "description": "продукты",
+      "category": "Покупки",
+      "date": "2026-02-21"
+    }
+  }
+}
+```
+
+---
+
+### Отклонить действие в чате
+
+Отклонение ожидающего действия записи.
+
+```http
+POST /ai/chat/reject
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "conversationId": "uuid",
+  "actionId": "action-uuid",
+  "reason": "Передумал" (опционально)
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "Действие отменено. Я не буду создавать этот расход."
 }
 ```
 

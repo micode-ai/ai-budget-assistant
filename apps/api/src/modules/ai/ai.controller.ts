@@ -78,6 +78,24 @@ export class AiController {
     return this.chatService.chat(req.user.id, body.message, body.conversationId, req.accountId);
   }
 
+  @Post('chat/confirm')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('chat', 0.5)
+  async confirmAction(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { conversationId: string; actionId: string },
+  ) {
+    return this.chatService.confirmAction(req.user.id, body.conversationId, body.actionId, req.accountId);
+  }
+
+  @Post('chat/reject')
+  async rejectAction(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { conversationId: string; actionId: string; reason?: string },
+  ) {
+    return this.chatService.rejectAction(req.user.id, body.conversationId, body.actionId, body.reason);
+  }
+
   @Post('scan-receipt')
   @UseGuards(AiUsageGuard)
   @TrackAiUsage('ocr', 2.0)

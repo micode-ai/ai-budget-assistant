@@ -359,10 +359,99 @@ export interface ChatRequest {
 export interface ChatResponse {
   message: string;
   conversationId: string;
+  pendingAction?: ChatPendingAction;
+  actionResult?: ChatActionResult;
   suggestedActions?: Array<{
     type: 'set_budget' | 'view_chart' | 'add_expense';
     data: Record<string, unknown>;
   }>;
+}
+
+// ── Chat Action Types ──
+
+export type ChatActionType =
+  | 'create_expense'
+  | 'create_income'
+  | 'create_budget'
+  | 'get_expenses'
+  | 'get_budget_status'
+  | 'get_category_breakdown';
+
+export interface CreateExpenseActionData {
+  amount: number;
+  currencyCode: Currency;
+  description: string;
+  categoryName?: string;
+  date: string;
+  tagNames?: string[];
+  projectName?: string;
+}
+
+export interface CreateIncomeActionData {
+  amount: number;
+  currencyCode: Currency;
+  description: string;
+  categoryName?: string;
+  date: string;
+}
+
+export interface CreateBudgetActionData {
+  name: string;
+  amount: number;
+  currencyCode: Currency;
+  period: BudgetPeriod;
+  categoryName?: string;
+  startDate: string;
+  endDate?: string;
+}
+
+export interface GetExpensesActionData {
+  startDate: string;
+  endDate: string;
+  categoryName?: string;
+}
+
+export interface GetBudgetStatusActionData {
+  budgetName?: string;
+  categoryName?: string;
+}
+
+export interface GetCategoryBreakdownActionData {
+  startDate: string;
+  endDate: string;
+}
+
+export type ChatActionData =
+  | CreateExpenseActionData
+  | CreateIncomeActionData
+  | CreateBudgetActionData
+  | GetExpensesActionData
+  | GetBudgetStatusActionData
+  | GetCategoryBreakdownActionData;
+
+export interface ChatPendingAction {
+  id: string;
+  actionType: ChatActionType;
+  data: ChatActionData;
+  displaySummary: string;
+}
+
+export interface ChatActionResult {
+  actionType: ChatActionType;
+  success: boolean;
+  data?: Record<string, unknown>;
+  errorMessage?: string;
+}
+
+export interface ChatConfirmActionRequest {
+  conversationId: string;
+  actionId: string;
+}
+
+export interface ChatRejectActionRequest {
+  conversationId: string;
+  actionId: string;
+  reason?: string;
 }
 
 // Savings Goal DTOs

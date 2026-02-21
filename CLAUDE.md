@@ -21,6 +21,14 @@ Turborepo monorepo with 4 packages:
 - **Service signature**: `(accountId, userId, dto)` as parameters, all Prisma queries filter by `accountId`
 - **Database**: Prisma ORM. Schema at `apps/api/prisma/schema.prisma`. Uses `@map("snake_case")` for column names
 - **19 modules**: `accounts`, `admin`, `ai`, `analytics`, `auth`, `budgets`, `categories`, `currency-exchange`, `expenses`, `incomes`, `insights`, `mail`, `notifications`, `projects`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`
+- **AI module features**:
+  - **Chat Q&A**: Natural language financial questions powered by GPT-4
+  - **Natural Language Commands**: Execute actions via chat (create expenses/budgets, query data) using OpenAI function calling
+  - **6 AI functions**: `create_expense`, `create_income`, `create_budget`, `get_expenses`, `get_budget_status`, `get_category_breakdown`
+  - **Confirmation flow**: Write actions (create_*) require user confirmation before execution; read actions (get_*) execute immediately
+  - **Language detection**: Automatically detects user language (Russian, Ukrainian, Belarusian, German, Spanish, French, Polish, English) and responds in same language
+  - **Currency mapping**: Supports currency symbol detection (₴→UAH, $→USD, €→EUR, zł→PLN, £→GBP, ₽→RUB)
+  - **Endpoints**: `POST /ai/chat`, `POST /ai/chat/confirm`, `POST /ai/chat/reject`
 
 ### Mobile (React Native/Expo)
 - **Navigation**: Expo Router. Screens in `app/`, tabs in `app/(tabs)/` — home, expenses, budgets, analytics, chat
@@ -28,10 +36,10 @@ Turborepo monorepo with 4 packages:
 - **Local DB**: SQLite via Drizzle ORM. Schema in `src/db/schema/index.ts`. 12 repositories in `src/db/*Repository.ts` use raw `executeSql()` — `account`, `category`, `currencyExchange`, `expense`, `expenseItem`, `income`, `project`, `split`, `tag`, `wallet`
 - **API client**: `src/services/api.ts` — singleton `ApiClient` class, auto-injects `X-Account-Id` header, auto JWT refresh, 401 → logout
 - **Offline-first**: write to SQLite first, queue sync via `syncQueue` table, sync to server when online
-- **i18n**: 7 locales in `src/i18n/locales/` — `en.ts` (source), `de.ts`, `es.ts`, `fr.ts`, `pl.ts`, `ru.ts`, `ua.ts`. When adding keys, update ALL 7 files.
+- **i18n**: 8 locales in `src/i18n/locales/` — `en.ts` (source), `de.ts`, `es.ts`, `fr.ts`, `pl.ts`, `ru.ts`, `ua.ts`, `be.ts`. When adding keys, update ALL 8 files.
 - **Services**: `api.ts`, `notifications.ts`, `secureStorage.native.ts` / `secureStorage.web.ts`, `widgetData.ts`
 - **Screens**: `(auth)/` login/register, `(tabs)/` main tabs, `expense/`, `income/`, `budget/`, `account/`, `analytics/`, `projects/`, `tags/`, `wallet/`, `settings.tsx`, `subscription.tsx`, `admin.tsx`, `story.tsx`
-- **Components**: `charts/` (Bar, Donut, Pie, Weekday, GroupedBar), `interactive-charts/` (drill-down charts with ChartRenderer), `insights/` (InsightCard, InsightCarousel), `story/`, `AccountSwitcher`, `CreateCategoryModal`, `Paywall`, `ProjectPicker`, `SplitEditor`, `TagPicker`, `TagChip`, `UsageWarning`
+- **Components**: `charts/` (Bar, Donut, Pie, Weekday, GroupedBar), `interactive-charts/` (drill-down charts with ChartRenderer), `insights/` (InsightCard, InsightCarousel), `story/`, `chat/` (ActionConfirmationCard, ActionResultCard), `AccountSwitcher`, `CreateCategoryModal`, `Paywall`, `ProjectPicker`, `SplitEditor`, `TagPicker`, `TagChip`, `UsageWarning`
 
 ### Shared Types
 - Entities: `packages/shared-types/src/entities/index.ts` — 30+ domain interfaces
@@ -58,7 +66,7 @@ When modifying features that span multiple packages, follow this order:
 7. `apps/mobile/src/stores/*` — Zustand stores
 8. `apps/mobile/src/services/api.ts` — API client methods
 9. `apps/mobile/app/*` — screens and UI
-10. `apps/mobile/src/i18n/locales/*.ts` — translations (all 7 files)
+10. `apps/mobile/src/i18n/locales/*.ts` — translations (all 8 files)
 
 Mobile SQLite changes (step 5-6) are independent from API Prisma changes (step 3-4) and can run in parallel.
 

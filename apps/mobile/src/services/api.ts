@@ -398,9 +398,50 @@ class ApiClient {
   }
 
   async chat(message: string, conversationId?: string) {
-    return this.request<{ message: string; conversationId: string }>('/ai/chat', {
+    return this.request<{
+      message: string;
+      conversationId: string;
+      pendingAction?: {
+        id: string;
+        actionType: string;
+        data: Record<string, unknown>;
+        displaySummary: string;
+      };
+      actionResult?: {
+        actionType: string;
+        success: boolean;
+        data?: Record<string, unknown>;
+        errorMessage?: string;
+      };
+    }>('/ai/chat', {
       method: 'POST',
       body: JSON.stringify({ message, conversationId }),
+    });
+  }
+
+  async confirmChatAction(conversationId: string, actionId: string) {
+    return this.request<{
+      message: string;
+      conversationId: string;
+      actionResult?: {
+        actionType: string;
+        success: boolean;
+        data?: Record<string, unknown>;
+        errorMessage?: string;
+      };
+    }>('/ai/chat/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ conversationId, actionId }),
+    });
+  }
+
+  async rejectChatAction(conversationId: string, actionId: string, reason?: string) {
+    return this.request<{
+      message: string;
+      conversationId: string;
+    }>('/ai/chat/reject', {
+      method: 'POST',
+      body: JSON.stringify({ conversationId, actionId, reason }),
     });
   }
 

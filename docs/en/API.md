@@ -1887,9 +1887,12 @@ Content-Type: application/json
 
 ### Chat with AI Assistant
 
+Chat with the AI assistant to get financial advice and **execute actions** like creating expenses, budgets, or querying data.
+
 ```http
 POST /ai/chat
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 Content-Type: application/json
 
 {
@@ -1898,20 +1901,123 @@ Content-Type: application/json
 }
 ```
 
+**Response (Query)** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "This month you've spent $342.50 on Food & Dining, which is 68% of your $500 budget. You have $157.50 remaining with 15 days left in the month."
+}
+```
+
+**Response (Action Required - Write)** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "I'd like to add expense 20.00 PLN for groceries. Please confirm or cancel this action.",
+  "pendingAction": {
+    "id": "action-uuid",
+    "actionType": "create_expense",
+    "data": {
+      "amount": 20,
+      "currencyCode": "PLN",
+      "description": "groceries",
+      "categoryName": "Shopping",
+      "date": "2026-02-21"
+    },
+    "displaySummary": "add expense 20.00 PLN for \"groceries\" [Shopping]"
+  }
+}
+```
+
+**Response (Action Executed - Read)** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "Here are your expenses for last week...",
+  "actionResult": {
+    "actionType": "get_expenses",
+    "success": true,
+    "data": {
+      "expenses": [...],
+      "total": 245.50
+    }
+  }
+}
+```
+
+**AI Functions:**
+- `create_expense` — Create expense (requires confirmation)
+- `create_income` — Create income (requires confirmation)
+- `create_budget` — Create budget (requires confirmation)
+- `get_expenses` — Query expenses (executes immediately)
+- `get_budget_status` — Query budget status (executes immediately)
+- `get_category_breakdown` — Query spending by category (executes immediately)
+
+**Language Detection:**
+The AI automatically detects the user's language from the conversation history and message content (Russian, Ukrainian, Belarusian, German, Spanish, French, Polish, English) and responds in the same language.
+
+---
+
+### Confirm Chat Action
+
+Confirm a pending write action (create_expense, create_income, create_budget).
+
+```http
+POST /ai/chat/confirm
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "conversationId": "uuid",
+  "actionId": "action-uuid"
+}
+```
+
 **Response** `200 OK`
 ```json
 {
   "conversationId": "uuid",
-  "message": {
-    "id": "uuid",
-    "role": "assistant",
-    "content": "This month you've spent $342.50 on Food & Dining, which is 68% of your $500 budget. You have $157.50 remaining with 15 days left in the month.",
-    "tokensUsed": 156
-  },
-  "suggestedActions": [
-    { "type": "view_chart", "label": "View spending breakdown" },
-    { "type": "set_budget", "label": "Adjust food budget" }
-  ]
+  "message": "Expense created successfully: 20.00 PLN for groceries.",
+  "actionResult": {
+    "actionType": "create_expense",
+    "success": true,
+    "data": {
+      "id": "expense-uuid",
+      "amount": 20,
+      "currencyCode": "PLN",
+      "description": "groceries",
+      "category": "Shopping",
+      "date": "2026-02-21"
+    }
+  }
+}
+```
+
+---
+
+### Reject Chat Action
+
+Reject a pending write action.
+
+```http
+POST /ai/chat/reject
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "conversationId": "uuid",
+  "actionId": "action-uuid",
+  "reason": "Changed my mind" (optional)
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "conversationId": "uuid",
+  "message": "Action cancelled. I won't create that expense."
 }
 ```
 

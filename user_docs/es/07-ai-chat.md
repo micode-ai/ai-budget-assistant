@@ -39,6 +39,7 @@ Toca cualquier boton para enviar esa pregunta al instante.
 
 ## Ejemplos de preguntas
 
+**Preguntas de analisis:**
 - "En que gaste mas este mes?"
 - "Cuanto gaste en comida la semana pasada?"
 - "Estoy dentro del presupuesto?"
@@ -48,11 +49,23 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Dame consejos para ahorrar dinero"
 - "A este ritmo, cuando se agotara mi presupuesto mensual?"
 
+**Comandos en lenguaje natural:**
+- "Anadir gasto 500₴ para comestibles"
+- "Crear presupuesto 10000₴ para entretenimiento para marzo"
+- "Anadir ingreso 50000₴ de salario"
+- "Mostrar mis gastos de la semana pasada"
+- "Cual es el estado de mi presupuesto?"
+- "Mostrar desglose por categorias de este mes"
+
 ## Funciones del chat
 
 - **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion
 - **Indicador de escritura** — muestra "Pensando..." mientras la IA procesa tu pregunta
 - **Manejo de errores** — si algo sale mal, veras un mensaje de error con opcion de reintentar
+- **Comandos en lenguaje natural** — crea gastos, ingresos, presupuestos y consulta datos usando lenguaje natural
+- **Confirmacion de acciones** — al crear registros financieros, la IA muestra una vista previa y solicita confirmacion antes de guardar
+- **Deteccion inteligente de idioma** — la IA responde automaticamente en tu idioma (ingles, ruso, ucraniano, bielorruso, aleman, espanol, frances, polaco)
+- **Reconocimiento de moneda** — soporta simbolos: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## Limites de solicitudes IA
 
@@ -66,6 +79,33 @@ Cada mensaje que envias utiliza una solicitud IA de tu cuota mensual:
 
 Cuando se agoten tus solicitudes, se te pedira que mejores tu plan.
 
+## Comandos en lenguaje natural
+
+Ahora puedes **ejecutar acciones reales** directamente desde el chat:
+
+### Creacion de registros
+
+1. Escribe un comando como: **"Anadir gasto 500₴ para comestibles"**
+2. La IA muestra una **tarjeta de confirmacion** con:
+   - Cantidad y moneda
+   - Categoria (detectada automaticamente o por defecto)
+   - Fecha (hoy por defecto)
+3. Toca **Confirmar** para crear el gasto, o **Cancelar** para rechazar
+4. Despues de la confirmacion, el gasto se guarda y veras un mensaje de exito
+
+**Comandos de creacion soportados:**
+- **Gastos:** "Anadir gasto 500₴ para comestibles", "Gaste 1200₴ en transporte ayer"
+- **Ingresos:** "Anadir ingreso 50000₴ de salario", "Recibi 5000₴ de bono"
+- **Presupuestos:** "Crear presupuesto 10000₴ para entretenimiento para marzo", "Establecer presupuesto mensual 3000₴ para comida"
+
+### Consulta de datos
+
+Estos comandos se ejecutan **inmediatamente** y muestran resultados:
+
+- **"Mostrar mis gastos de la semana pasada"** → muestra lista de gastos con total
+- **"Cual es el estado de mi presupuesto?"** → muestra todos los presupuestos con barras de progreso
+- **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
+
 ## Preguntas frecuentes
 
 - **P: La IA tiene acceso a todos mis datos financieros?**
@@ -76,6 +116,12 @@ Cuando se agoten tus solicitudes, se te pedira que mejores tu plan.
 
 - **P: La IA dio una respuesta incorrecta. Que debo hacer?**
   **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, o verificar los datos en la pestana de Analisis.
+
+- **P: Puedo deshacer una accion confirmada?**
+  **R:** Despues de confirmar una accion (como crear un gasto), se guarda en tu cuenta. Puedes eliminarlo manualmente desde la pestana de Gastos.
+
+- **P: Que sucede si rechazo una accion?**
+  **R:** Si tocas "Cancelar" en una tarjeta de confirmacion, la accion se rechaza y no se guarda nada. La IA reconocera el rechazo.
 
 ---
 

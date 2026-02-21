@@ -39,6 +39,7 @@ Tap any button to instantly send that question.
 
 ## Example Questions
 
+**Analysis Questions:**
 - "What did I spend the most on this month?"
 - "How much did I spend on food last week?"
 - "Am I on track with my budget?"
@@ -48,11 +49,23 @@ Tap any button to instantly send that question.
 - "Give me tips to save money"
 - "When will my monthly budget run out at this rate?"
 
+**Natural Language Commands:**
+- "Add expense 500₴ for groceries"
+- "Create budget 10000₴ for entertainment for March"
+- "Add income 50000₴ from salary"
+- "Show my expenses last week"
+- "What's my budget status?"
+- "Show category breakdown for this month"
+
 ## Chat Features
 
 - **Conversation history** — previous messages are preserved during your session
 - **Typing indicator** — shows "Thinking..." while the AI processes your question
 - **Error handling** — if something goes wrong, you'll see an error message with a retry option
+- **Natural Language Commands** — create expenses, income, budgets, and query data using plain language
+- **Action Confirmation** — when creating financial records, AI shows a preview and asks for confirmation before saving
+- **Smart Language Detection** — AI automatically responds in your language (English, Russian, Ukrainian, Belarusian, German, Spanish, French, Polish)
+- **Currency Recognition** — supports symbols: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
 
 ## AI Request Limits
 
@@ -66,6 +79,33 @@ Each message you send uses one AI request from your monthly allowance:
 
 When you run out of requests, you'll be prompted to upgrade your plan.
 
+## Natural Language Commands
+
+You can now **execute real actions** directly from the chat:
+
+### Creating Records
+
+1. Type a command like: **"Add expense 500₴ for groceries"**
+2. AI shows a **confirmation card** with:
+   - Amount and currency
+   - Category (auto-detected or default)
+   - Date (today by default)
+3. Tap **Confirm** to create the expense, or **Cancel** to reject
+4. After confirmation, the expense is saved and you'll see a success message
+
+**Supported create commands:**
+- **Expenses:** "Add expense 500₴ for groceries", "Spent 1200₴ on transport yesterday"
+- **Income:** "Add income 50000₴ from salary", "Received 5000₴ bonus"
+- **Budgets:** "Create budget 10000₴ for entertainment for March", "Set monthly budget 3000₴ for food"
+
+### Querying Data
+
+These commands execute **immediately** and show results:
+
+- **"Show my expenses last week"** → displays expense list with total
+- **"What's my budget status?"** → shows all budgets with progress bars
+- **"Show category breakdown for this month"** → displays spending by category with percentages
+
 ## FAQ
 
 - **Q: Does the AI have access to all my financial data?**
@@ -76,6 +116,12 @@ When you run out of requests, you'll be prompted to upgrade your plan.
 
 - **Q: The AI gave an incorrect answer. What should I do?**
   **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
+
+- **Q: Can I undo a confirmed action?**
+  **A:** After you confirm an action (like creating an expense), it's saved to your account. You can delete it manually from the Expenses tab.
+
+- **Q: What happens if I reject an action?**
+  **A:** If you tap "Cancel" on a confirmation card, the action is rejected and nothing is saved. The AI will acknowledge the rejection.
 
 ---
 

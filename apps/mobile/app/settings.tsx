@@ -593,11 +593,11 @@ export default function SettingsScreen() {
 
           {/* Language */}
           <Text style={styles.fieldLabelOutside}>{t('settings.language')}</Text>
-          <View style={styles.chipRow}>
+          <View style={styles.langGrid}>
             {SUPPORTED_LANGUAGES.map((lang) => (
               <TouchableOpacity
                 key={lang.code}
-                style={[styles.chip, i18n.language === lang.code && styles.chipActive]}
+                style={[styles.langChip, i18n.language === lang.code && styles.chipActive]}
                 onPress={() => handleLanguageChange(lang.code)}
               >
                 <Text style={[styles.chipText, i18n.language === lang.code && styles.chipTextActive]}>
@@ -625,10 +625,10 @@ export default function SettingsScreen() {
               >
                 <Ionicons
                   name={item.icon}
-                  size={20}
+                  size={18}
                   color={mode === item.key ? theme.colors.primary : theme.colors.textTertiary}
                 />
-                <Text style={[styles.themeChipText, mode === item.key && styles.themeChipTextActive]}>
+                <Text style={[styles.themeChipText, mode === item.key && styles.themeChipTextActive]} numberOfLines={1}>
                   {item.label}
                 </Text>
               </TouchableOpacity>
@@ -650,10 +650,10 @@ export default function SettingsScreen() {
               >
                 <Ionicons
                   name={item.icon}
-                  size={20}
+                  size={18}
                   color={aiResponseMode === item.key ? theme.colors.primary : theme.colors.textTertiary}
                 />
-                <Text style={[styles.themeChipText, aiResponseMode === item.key && styles.themeChipTextActive]}>
+                <Text style={[styles.themeChipText, aiResponseMode === item.key && styles.themeChipTextActive]} numberOfLines={1}>
                   {item.label}
                 </Text>
               </TouchableOpacity>
@@ -1389,6 +1389,25 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '600' as const,
   },
 
+  // Language grid (2 columns)
+  langGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+  },
+  langChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    width: '48.5%' as unknown as number,
+  },
+
   // Theme
   themeRow: {
     flexDirection: 'row' as const,
@@ -1396,14 +1415,14 @@ const createStyles = (theme: Theme) => ({
   },
   themeChip: {
     flex: 1,
-    flexDirection: 'row' as const,
+    flexDirection: 'column' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     gap: theme.spacing[1],
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
     paddingVertical: theme.spacing[2.5],
-    paddingHorizontal: theme.spacing[2],
+    paddingHorizontal: theme.spacing[1.5],
     borderWidth: 2,
     borderColor: theme.colors.border,
   },
@@ -1414,6 +1433,7 @@ const createStyles = (theme: Theme) => ({
   themeChipText: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
   },
   themeChipTextActive: {
     color: theme.colors.primary,
