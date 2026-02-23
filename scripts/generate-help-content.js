@@ -25,6 +25,7 @@ const SECTIONS = [
   '18-savings-goals',
   '19-fat-finder',
   '20-ai-response-mode',
+  '21-widgets',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

@@ -64,5 +64,12 @@
       </intent-filter>
       <meta-data android:name="android.appwidget.provider" android:resource="@xml/widgetprovider_budgetwidgetlarge"/>
     </receiver>
+    <receiver android:name=".widget.QuickActionWidget" android:exported="false" android:label="Budget - Quick Add">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+        <action android:name="com.budget.assistant.WIDGET_CLICK"/>
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@xml/widgetprovider_quickactionwidget"/>
+    </receiver>
   </application>
 </manifest>

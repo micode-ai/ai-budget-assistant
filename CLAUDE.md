@@ -37,6 +37,7 @@ Turborepo monorepo with 4 packages:
 - **API client**: `src/services/api.ts` — singleton `ApiClient` class, auto-injects `X-Account-Id` header, auto JWT refresh, 401 → logout
 - **Offline-first**: write to SQLite first, queue sync via `syncQueue` table, sync to server when online
 - **i18n**: 8 locales in `src/i18n/locales/` — `en.ts` (source), `de.ts`, `es.ts`, `fr.ts`, `pl.ts`, `ru.ts`, `ua.ts`, `be.ts`. When adding keys, update ALL 8 files.
+- **Help system**: In-app help screen (`app/help/index.tsx`, `app/help/[id].tsx`) is powered by **auto-generated** `src/help/content.ts`. NEVER create or edit `content.ts` manually. Workflow: (1) write/edit markdown in `user_docs/<lang>/NN-slug.md` for all 8 languages, (2) add the section id to `scripts/generate-help-content.js` SECTIONS array and to `src/help/sections.ts`, (3) run `npm run generate:help` from the project root. Do NOT create a manual `app/help.tsx` file — the route is handled by `app/help/index.tsx`.
 - **Services**: `api.ts`, `notifications.ts`, `secureStorage.native.ts` / `secureStorage.web.ts`, `widgetData.ts`
 - **Screens**: `(auth)/` login/register, `(tabs)/` main tabs, `expense/`, `income/`, `budget/`, `account/`, `analytics/`, `projects/`, `tags/`, `wallet/`, `settings.tsx`, `subscription.tsx`, `admin.tsx`, `story.tsx`
 - **Components**: `charts/` (Bar, Donut, Pie, Weekday, GroupedBar), `interactive-charts/` (drill-down charts with ChartRenderer), `insights/` (InsightCard, InsightCarousel), `story/`, `chat/` (ActionConfirmationCard, ActionResultCard), `AccountSwitcher`, `CreateCategoryModal`, `Paywall`, `ProjectPicker`, `SplitEditor`, `TagPicker`, `TagChip`, `UsageWarning`
@@ -90,6 +91,9 @@ npx prisma studio              # Visual DB editor
 # Mobile specific (run from apps/mobile/)
 npx expo start                 # Start Expo dev server
 npx expo start --web           # Start web preview
+
+# Help content (run from project root)
+npm run generate:help          # Regenerate apps/mobile/src/help/content.ts from user_docs/
 ```
 
 ## Environment Variables

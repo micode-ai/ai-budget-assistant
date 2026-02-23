@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="110dp"
-    android:minHeight="40dp"
-
-
-
-
-
+    android:minWidth="250dp"
+    android:minHeight="60dp"
     android:resizeMode="none"
-
-    android:description="@string/widget_budgetwidgetsmall_description"
-
+    android:description="@string/widget_quickactionwidget_description"
     android:initialLayout="@layout/rn_widget"
-    android:previewImage="@drawable/budgetwidgetsmall_preview"
-
-    android:updatePeriodMillis="1800000"
+    android:previewImage="@drawable/quickactionwidget_preview"
+    android:updatePeriodMillis="0"
     android:widgetCategory="home_screen">
 </appwidget-provider>

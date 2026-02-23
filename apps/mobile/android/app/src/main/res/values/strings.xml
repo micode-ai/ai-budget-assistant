@@ -5,4 +5,5 @@
   <string name="widget_budgetwidgetsmall_description" translatable="false">Shows today\'s spending total</string>
   <string name="widget_budgetwidgetmedium_description" translatable="false">Shows weekly spending chart and today\'s total</string>
   <string name="widget_budgetwidgetlarge_description" translatable="false">Shows budget progress and top categories</string>
+  <string name="widget_quickactionwidget_description" translatable="false">Quick buttons to add expenses by voice, scan, or manually</string>
 </resources>

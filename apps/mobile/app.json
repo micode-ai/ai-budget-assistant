@@ -79,8 +79,7 @@
               "description": "Shows today's spending total",
               "previewImage": "./assets/widget-small-preview.png",
               "resizeMode": "none",
-              "widgetFeatures": "reconfigurable",
-              "updatePeriodMillis": 1800000,
+                            "updatePeriodMillis": 1800000,
               "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
             },
             {
@@ -91,8 +90,7 @@
               "description": "Shows weekly spending chart and today's total",
               "previewImage": "./assets/widget-medium-preview.png",
               "resizeMode": "horizontal",
-              "widgetFeatures": "reconfigurable",
-              "updatePeriodMillis": 1800000,
+                            "updatePeriodMillis": 1800000,
               "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
             },
             {
@@ -103,8 +101,18 @@
               "description": "Shows budget progress and top categories",
               "previewImage": "./assets/widget-large-preview.png",
               "resizeMode": "horizontal|vertical",
-              "widgetFeatures": "reconfigurable",
-              "updatePeriodMillis": 1800000,
+                            "updatePeriodMillis": 1800000,
+              "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
+            },
+            {
+              "name": "QuickActionWidget",
+              "label": "Budget - Quick Add",
+              "minWidth": "250dp",
+              "minHeight": "60dp",
+              "description": "Quick buttons to add expenses by voice, scan, or manually",
+              "previewImage": "./assets/widget-quickaction-preview.png",
+              "resizeMode": "none",
+                            "updatePeriodMillis": 0,
               "taskHandlerName": "BUDGET_WIDGET_TASK_HANDLER"
             }
           ]
