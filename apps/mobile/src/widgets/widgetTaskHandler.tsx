@@ -4,11 +4,13 @@ import { WidgetDataService } from '@/services/widgetData';
 import { BudgetWidgetSmall } from './BudgetWidgetSmall';
 import { BudgetWidgetMedium } from './BudgetWidgetMedium';
 import { BudgetWidgetLarge } from './BudgetWidgetLarge';
+import { QuickActionWidget } from './QuickActionWidget';
 
 const WIDGET_NAMES = {
   SMALL: 'BudgetWidgetSmall',
   MEDIUM: 'BudgetWidgetMedium',
   LARGE: 'BudgetWidgetLarge',
+  QUICK_ACTION: 'QuickActionWidget',
 } as const;
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
@@ -19,6 +21,11 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     case 'WIDGET_ADDED':
     case 'WIDGET_UPDATE':
     case 'WIDGET_RESIZED': {
+      if (widgetName === WIDGET_NAMES.QUICK_ACTION) {
+        props.renderWidget(<QuickActionWidget />);
+        break;
+      }
+
       const data = await WidgetDataService.getWidgetData();
 
       switch (widgetName) {

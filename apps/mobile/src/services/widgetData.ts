@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 import type { Currency } from '@budget/shared-types';
 import { formatCurrency } from '@budget/shared-utils';
 
@@ -156,5 +157,138 @@ export class WidgetDataService {
       weekTotal: data.weekTotal,
       weekBars: data.weekBars,
     };
+  }
+}
+
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+/**
+ * Collect data from Zustand stores, persist to SecureStore, and re-render
+ * all Android home-screen widgets so they display up-to-date numbers.
+ */
+export async function refreshWidgetData(): Promise<void> {
+  if (Platform.OS !== 'android') return;
+
+  try {
+    // Late imports to avoid circular dependency at module level
+    const { useExpenseStore } = require('@/stores/expenseStore');
+    const { useBudgetStore } = require('@/stores/budgetStore');
+    const { useCategoryStore } = require('@/stores/categoryStore');
+    const { useAccountStore } = require('@/stores/accountStore');
+
+    const expenses = useExpenseStore.getState().expenses.filter(
+      (e: any) => !e.isDeleted,
+    );
+    const account = useAccountStore.getState().currentAccount?.();
+    const currencyCode: Currency = account?.currencyCode || 'USD';
+
+    // Filter expenses by account currency
+    const currencyExpenses = expenses.filter(
+      (e: any) => e.currencyCode === currencyCode,
+    );
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterdayStart = new Date(todayStart.getTime() - 24 * 60 * 60 * 1000);
+
+    // Today
+    const todayExpenses = currencyExpenses
+      .filter((e: any) => new Date(e.date) >= todayStart)
+      .reduce((s: number, e: any) => s + e.amount, 0);
+
+    // Yesterday
+    const yesterdayExpenses = currencyExpenses
+      .filter((e: any) => {
+        const d = new Date(e.date);
+        return d >= yesterdayStart && d < todayStart;
+      })
+      .reduce((s: number, e: any) => s + e.amount, 0);
+
+    // Weekly (last 7 days, one bar per day)
+    const weeklyExpenses: { day: string; amount: number }[] = [];
+    let weekTotal = 0;
+    for (let i = 6; i >= 0; i--) {
+      const dayStart = new Date(todayStart.getTime() - i * 24 * 60 * 60 * 1000);
+      const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+      const amount = currencyExpenses
+        .filter((e: any) => {
+          const d = new Date(e.date);
+          return d >= dayStart && d < dayEnd;
+        })
+        .reduce((s: number, e: any) => s + e.amount, 0);
+      weeklyExpenses.push({ day: DAY_NAMES[dayStart.getDay()], amount });
+      weekTotal += amount;
+    }
+
+    // Budget progress
+    const budgets = useBudgetStore
+      .getState()
+      .budgets.filter((b: any) => b.isActive && !b.isDeleted)
+      .slice(0, 3)
+      .map((b: any) => {
+        const progress = useBudgetStore.getState().getBudgetProgress(b.id);
+        return {
+          name: b.name,
+          spent: progress?.spent ?? 0,
+          limit: b.amount,
+        };
+      });
+
+    // Top categories (this month)
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const categoryMap = new Map<string, { amount: number; icon: string; name: string }>();
+    const catStore = useCategoryStore.getState();
+    for (const e of currencyExpenses) {
+      if (new Date(e.date) < monthStart) continue;
+      const cat = e.categoryId ? catStore.getCategoryById(e.categoryId) : null;
+      const key = e.categoryId || '__uncategorized';
+      const prev = categoryMap.get(key) || {
+        amount: 0,
+        icon: cat?.icon || '📦',
+        name: cat?.name || 'Other',
+      };
+      categoryMap.set(key, { ...prev, amount: prev.amount + e.amount });
+    }
+    const topCategories = Array.from(categoryMap.values())
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 3);
+
+    await WidgetDataService.updateWidgetData({
+      todayExpenses,
+      yesterdayExpenses,
+      weeklyExpenses,
+      weekTotal,
+      budgets,
+      topCategories,
+      currencyCode,
+    });
+
+    // Re-render all data widgets on the home screen
+    const { requestWidgetUpdate } = require('react-native-android-widget');
+    const { BudgetWidgetSmall } = require('@/widgets/BudgetWidgetSmall');
+    const { BudgetWidgetMedium } = require('@/widgets/BudgetWidgetMedium');
+    const { BudgetWidgetLarge } = require('@/widgets/BudgetWidgetLarge');
+
+    const data = await WidgetDataService.getWidgetData();
+
+    await Promise.all([
+      requestWidgetUpdate({
+        widgetName: 'BudgetWidgetSmall',
+        renderWidget: () =>
+          BudgetWidgetSmall({ data: data ? WidgetDataService.toSmallData(data) : null }),
+      }),
+      requestWidgetUpdate({
+        widgetName: 'BudgetWidgetMedium',
+        renderWidget: () =>
+          BudgetWidgetMedium({ data: data ? WidgetDataService.toMediumData(data) : null }),
+      }),
+      requestWidgetUpdate({
+        widgetName: 'BudgetWidgetLarge',
+        renderWidget: () =>
+          BudgetWidgetLarge({ data }),
+      }),
+    ]);
+  } catch (e) {
+    console.log('Widget data refresh failed:', e);
   }
 }

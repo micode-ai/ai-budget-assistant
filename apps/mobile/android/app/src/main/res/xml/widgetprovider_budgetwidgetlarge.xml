@@ -14,9 +14,6 @@
     android:initialLayout="@layout/rn_widget"
     android:previewImage="@drawable/budgetwidgetlarge_preview"
 
-    android:configure="com.budget.assistant.WidgetConfigurationActivity"
-    android:widgetFeatures="reconfigurable"
-
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen">
 </appwidget-provider>

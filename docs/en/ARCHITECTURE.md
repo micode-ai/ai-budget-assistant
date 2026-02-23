@@ -1060,13 +1060,16 @@ The application uses a tiered subscription model to manage access to AI-powered 
 Android home screen widgets provide quick access to financial data without opening the app:
 
 - **Technology**: `react-native-android-widget` for native Android widget rendering
-- **3 sizes**:
-  - **Small** (2x1): Today's spending total
-  - **Medium** (4x2): Weekly spending bar chart
-  - **Large** (4x4): Budget progress bars + top spending categories
+- **4 widgets**:
+  - **Small** (110×40 dp, `BudgetWidgetSmall`): Today's spending total with delta vs yesterday
+  - **Medium** (250×110 dp, `BudgetWidgetMedium`): Weekly spending bar chart + today's total
+  - **Large** (250×180 dp, `BudgetWidgetLarge`): Budget progress bars + top spending categories
+  - **Quick Add** (250×60 dp, `QuickActionWidget`): Three deep-link buttons — 🎤 Voice, 📷 Scan, ✏️ Add
 - **Data bridge**: `widgetData.ts` service serializes data from API responses and local SQLite storage into a format suitable for widget rendering
-- **Background refresh**: `expo-background-fetch` triggers data updates every 30 minutes
+- **Background refresh**: `expo-background-fetch` triggers data updates every 30 minutes for data widgets; Quick Add is static (`updatePeriodMillis: 0`)
+- **Deep links**: Quick Add uses `clickAction="OPEN_URI"` with the `budget:///` scheme to open specific app screens directly
 - **Widget task handler**: Registered in `index.js` to handle widget update requests from the Android system
+- **Developer docs**: See [`docs/en/WIDGETS.md`](./WIDGETS.md) for full architecture and how to add new widgets
 
 ## Insights & Anomaly Detection
 

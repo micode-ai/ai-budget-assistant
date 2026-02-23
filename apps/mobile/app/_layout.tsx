@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Linking } from 'react-native';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
@@ -93,6 +94,41 @@ function RootNavigator() {
     }
   }, [isInitializing, fontsLoaded]);
 
+  // Handle deep links from widgets and external sources
+  useEffect(() => {
+    if (isInitializing || !isAuthenticated) return;
+
+    function handleDeepLink(event: { url: string }) {
+      const url = event.url;
+      if (!url) return;
+      // Parse path from custom scheme URI: budget:///expense/voice → /expense/voice
+      try {
+        const parsed = new URL(url);
+        const path = parsed.pathname || parsed.host;
+        if (path && path !== '/') {
+          // Normalize: budget://expense/voice has host="expense", path="/voice"
+          const fullPath = parsed.host ? `/${parsed.host}${parsed.pathname}` : parsed.pathname;
+          router.push(fullPath as any);
+        }
+      } catch {
+        // Fallback: strip scheme manually
+        const path = url.replace(/^[^:]+:\/\/\/?/, '/');
+        if (path && path !== '/') {
+          router.push(path as any);
+        }
+      }
+    }
+
+    // Handle URL that launched the app (cold start)
+    Linking.getInitialURL().then((url) => {
+      if (url) handleDeepLink({ url });
+    });
+
+    // Handle URLs when app is already running (warm start)
+    const sub = Linking.addEventListener('url', handleDeepLink);
+    return () => sub.remove();
+  }, [isInitializing, isAuthenticated]);
+
   if (isInitializing || !fontsLoaded) {
     return null;
   }
@@ -124,6 +160,22 @@ function RootNavigator() {
             presentation: 'modal',
             headerShown: true,
             title: t('nav.newExpense'),
+          }}
+        />
+        <Stack.Screen
+          name="expense/voice"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('voice.title'),
+          }}
+        />
+        <Stack.Screen
+          name="expense/receipt"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('receipt.title'),
           }}
         />
         <Stack.Screen

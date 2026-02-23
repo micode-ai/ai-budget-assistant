@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useGoalStore } from '@/stores/goalStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -40,35 +41,19 @@ export default function NewGoalScreen() {
   const [currencyCode, setCurrencyCode] = useState<string>(
     currentAccount?.currencyCode || 'USD',
   );
-  const [deadline, setDeadline] = useState('');
+  const [deadlineDate, setDeadlineDate] = useState<Date | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showDateHelper, setShowDateHelper] = useState(false);
 
-  const quickDateOptions = [
-    {
-      label: t('goals.threeMonths') || '3 months',
-      months: 3,
-    },
-    {
-      label: t('goals.sixMonths') || '6 months',
-      months: 6,
-    },
-    {
-      label: t('goals.oneYear') || '1 year',
-      months: 12,
-    },
-    {
-      label: t('goals.twoYears') || '2 years',
-      months: 24,
-    },
-  ];
+  const deadlineString = deadlineDate ? deadlineDate.toISOString().split('T')[0] : '';
 
-  const setQuickDate = (months: number) => {
-    const date = new Date();
-    date.setMonth(date.getMonth() + months);
-    const formatted = date.toISOString().split('T')[0];
-    setDeadline(formatted);
-    setShowDateHelper(false);
+  const onDateChange = (_event: DateTimePickerEvent, selected?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    if (selected) {
+      setDeadlineDate(selected);
+    }
   };
 
   const handleCreate = async () => {
@@ -89,20 +74,10 @@ export default function NewGoalScreen() {
       return;
     }
 
-    if (!deadline) {
+    if (!deadlineDate) {
       Alert.alert(
         t('common.error'),
         t('goals.errorDeadline') || 'Please set a deadline',
-      );
-      return;
-    }
-
-    // Validate date format
-    const deadlineDate = new Date(deadline);
-    if (isNaN(deadlineDate.getTime())) {
-      Alert.alert(
-        t('common.error'),
-        t('goals.errorInvalidDate') || 'Please enter a valid date (YYYY-MM-DD)',
       );
       return;
     }
@@ -121,7 +96,7 @@ export default function NewGoalScreen() {
         name: name.trim(),
         targetAmount: numericAmount,
         currencyCode,
-        deadline,
+        deadline: deadlineString,
       });
       router.back();
     } catch {
@@ -205,55 +180,49 @@ export default function NewGoalScreen() {
             <Text style={styles.fieldLabel}>
               {t('goals.deadline') || 'Deadline'}
             </Text>
-            <TextInput
-              style={styles.textInput}
-              value={deadline}
-              onChangeText={setDeadline}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={theme.colors.textTertiary}
-              onFocus={() => setShowDateHelper(true)}
-            />
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Ionicons name="calendar-outline" size={20} color={deadlineDate ? theme.colors.textPrimary : theme.colors.textTertiary} />
+              <Text style={[styles.dateButtonText, !deadlineDate && styles.dateButtonPlaceholder]}>
+                {deadlineDate
+                  ? deadlineDate.toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : t('goals.selectDate') || 'Select date'}
+              </Text>
+            </TouchableOpacity>
 
-            {showDateHelper && (
-              <View style={styles.quickDateContainer}>
-                <Text style={styles.quickDateLabel}>
-                  {t('goals.quickSelect') || 'Quick select:'}
-                </Text>
-                <View style={styles.quickDateRow}>
-                  {quickDateOptions.map((option) => (
-                    <TouchableOpacity
-                      key={option.months}
-                      style={styles.quickDateChip}
-                      onPress={() => setQuickDate(option.months)}
-                    >
-                      <Text style={styles.quickDateText}>{option.label}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
+            {showDatePicker && (
+              <DateTimePicker
+                value={deadlineDate || new Date()}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'inline' : 'default'}
+                minimumDate={new Date()}
+                onChange={onDateChange}
+              />
             )}
 
-            {deadline ? (
-              <Text style={styles.datePreview}>
-                <Ionicons name="calendar-outline" size={13} color={theme.colors.textTertiary} />
-                {'  '}
-                {new Date(deadline).toLocaleDateString(undefined, {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </Text>
-            ) : null}
+            {Platform.OS === 'ios' && showDatePicker && (
+              <TouchableOpacity
+                style={styles.dateConfirmButton}
+                onPress={() => setShowDatePicker(false)}
+              >
+                <Text style={styles.dateConfirmText}>{t('common.done') || 'Done'}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
 
         {/* Submit */}
         <View style={styles.footer}>
           <TouchableOpacity
-            style={[styles.submitButton, (isSubmitting || !name.trim() || !targetAmount || !deadline) && styles.submitButtonDisabled]}
+            style={[styles.submitButton, (isSubmitting || !name.trim() || !targetAmount || !deadlineDate) && styles.submitButtonDisabled]}
             onPress={handleCreate}
-            disabled={isSubmitting || !name.trim() || !targetAmount || !deadline}
+            disabled={isSubmitting || !name.trim() || !targetAmount || !deadlineDate}
           >
             {isSubmitting ? (
               <Text style={styles.submitButtonText}>
@@ -337,34 +306,33 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '600' as const,
   },
 
-  // Quick date helpers
-  quickDateContainer: {
-    marginTop: theme.spacing[3],
-  },
-  quickDateLabel: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginBottom: theme.spacing[2],
-  },
-  quickDateRow: {
+  // Date picker
+  dateButton: {
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
     flexDirection: 'row' as const,
-    flexWrap: 'wrap' as const,
-    gap: theme.spacing[2],
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
   },
-  quickDateChip: {
-    paddingHorizontal: theme.spacing[3],
+  dateButtonText: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+  },
+  dateButtonPlaceholder: {
+    color: theme.colors.textTertiary,
+  },
+  dateConfirmButton: {
+    marginTop: theme.spacing[3],
+    alignSelf: 'flex-end' as const,
+    paddingHorizontal: theme.spacing[4],
     paddingVertical: theme.spacing[2],
     borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.primaryLight,
+    backgroundColor: theme.colors.primary,
   },
-  quickDateText: {
+  dateConfirmText: {
     ...theme.textStyles.bodySmMedium,
-    color: theme.colors.primary,
-  },
-  datePreview: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[2],
+    color: theme.colors.textInverse,
   },
 
   // Footer

@@ -16,7 +16,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { SavingsGoal, GoalStatus } from '@budget/shared-types';
 
 export default function GoalsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { goals, isLoading, loadGoals } = useGoalStore();
@@ -98,7 +98,18 @@ export default function GoalsScreen() {
 
   const formatDate = (date: Date | string): string => {
     const d = date instanceof Date ? date : new Date(date);
-    return d.toLocaleDateString(undefined, {
+    const localeMap: Record<string, string> = {
+      en: 'en-US',
+      ru: 'ru-RU',
+      de: 'de-DE',
+      es: 'es-ES',
+      fr: 'fr-FR',
+      pl: 'pl-PL',
+      ua: 'uk-UA',
+      be: 'be-BY',
+    };
+    const locale = localeMap[i18n.language] || 'en-US';
+    return d.toLocaleDateString(locale, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',

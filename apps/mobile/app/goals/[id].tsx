@@ -73,7 +73,7 @@ export default function GoalDetailScreen() {
           onPress: async () => {
             try {
               await deleteGoal(id!);
-              router.replace('/goals');
+              setTimeout(() => router.back(), 0);
             } catch {
               Alert.alert(
                 t('common.error'),

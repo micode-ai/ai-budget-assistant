@@ -1,3 +1,7 @@
+// Prevent Expo from using monorepo root as Metro server root.
+// Without this, Metro resolves entry files from the workspace root instead of apps/mobile.
+process.env.EXPO_NO_METRO_WORKSPACE_ROOT = '1';
+
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
 

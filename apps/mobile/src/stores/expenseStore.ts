@@ -989,5 +989,12 @@ useExpenseStore.subscribe(
     const totalThisMonth = expenseTotalsByCurrency[accountCurrency] || 0;
 
     useExpenseStore.setState({ totalThisMonth, expenseTotalsByCurrency });
+
+    // Update Android widget data (debounced, fire-and-forget)
+    clearTimeout((globalThis as any).__widgetRefreshTimer);
+    (globalThis as any).__widgetRefreshTimer = setTimeout(() => {
+      const { refreshWidgetData } = require('@/services/widgetData');
+      refreshWidgetData();
+    }, 1000);
   },
 );
