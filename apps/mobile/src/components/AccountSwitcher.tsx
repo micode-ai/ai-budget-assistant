@@ -147,7 +147,7 @@ const createStyles = (theme: Theme) => ({
     paddingVertical: theme.spacing[1.5],
     backgroundColor: 'rgba(255,255,255,0.2)' as const,
     borderRadius: theme.borderRadius.xl,
-    maxWidth: 180,
+    maxWidth: 140,
     gap: theme.spacing[1],
   },
   triggerText: {

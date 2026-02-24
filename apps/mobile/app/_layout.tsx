@@ -138,7 +138,8 @@ function RootNavigator() {
   };
   const headerTintColor = theme.colors.textInverse;
   const headerTitleStyle = {
-    fontFamily: theme.fonts.semiBold,
+    fontFamily: theme.fonts.bold,
+    fontSize: 18,
   };
 
   return (
@@ -149,6 +150,7 @@ function RootNavigator() {
           headerStyle,
           headerTintColor,
           headerTitleStyle,
+          headerTitleAlign: 'center',
           contentStyle: { backgroundColor: theme.colors.background },
         }}
       >

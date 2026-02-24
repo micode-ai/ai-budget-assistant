@@ -38,14 +38,16 @@ export default function TabLayout() {
         },
         headerTintColor: theme.colors.textInverse,
         headerTitleStyle: {
-          fontFamily: theme.fonts.semiBold,
+          fontFamily: theme.fonts.bold,
           fontSize: 18,
         },
+        headerTitleAlign: 'center',
+        headerTitleContainerStyle: { transform: [{ translateX: 20 }] },
         headerLeft: () => <AccountSwitcher />,
         headerRight: () => (
           <TouchableOpacity
             onPress={() => router.push('/settings')}
-            style={{ marginRight: 16 }}
+            style={{ marginRight: 16, width: 56, alignItems: 'flex-end' }}
           >
             <Ionicons name="settings-outline" size={24} color={theme.colors.textInverse} />
           </TouchableOpacity>
