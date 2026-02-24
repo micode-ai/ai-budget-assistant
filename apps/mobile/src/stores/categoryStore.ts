@@ -9,19 +9,19 @@ import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 
 const DEFAULT_EXPENSE_CATEGORIES = [
-  { name: 'Food & Dining', icon: 'restaurant', color: '#FF6B6B' },
-  { name: 'Transport', icon: 'car', color: '#4ECDC4' },
-  { name: 'Shopping', icon: 'cart', color: '#45B7D1' },
-  { name: 'Entertainment', icon: 'game-controller', color: '#96CEB4' },
-  { name: 'Health & Fitness', icon: 'fitness', color: '#FFEAA7' },
-  { name: 'Bills & Utilities', icon: 'flash', color: '#DDA0DD' },
-  { name: 'Education', icon: 'school', color: '#98D8C8' },
-  { name: 'Travel', icon: 'airplane', color: '#F7DC6F' },
-  { name: 'Groceries', icon: 'basket', color: '#82E0AA' },
-  { name: 'Coffee & Drinks', icon: 'cafe', color: '#D4A574' },
-  { name: 'Subscriptions', icon: 'repeat', color: '#BB8FCE' },
-  { name: 'Clothing', icon: 'shirt', color: '#F1948A' },
-  { name: 'Personal Care', icon: 'happy', color: '#AED6F1' },
+  { name: 'Food & Dining', icon: 'restaurant', color: '#E53E3E' },
+  { name: 'Transport', icon: 'car', color: '#2C9E96' },
+  { name: 'Shopping', icon: 'cart', color: '#2B8ABD' },
+  { name: 'Entertainment', icon: 'game-controller', color: '#3A8C6E' },
+  { name: 'Health & Fitness', icon: 'fitness', color: '#D4A017' },
+  { name: 'Bills & Utilities', icon: 'flash', color: '#9B59B6' },
+  { name: 'Education', icon: 'school', color: '#1A8C76' },
+  { name: 'Travel', icon: 'airplane', color: '#B8860B' },
+  { name: 'Groceries', icon: 'basket', color: '#27AE60' },
+  { name: 'Coffee & Drinks', icon: 'cafe', color: '#A0522D' },
+  { name: 'Subscriptions', icon: 'repeat', color: '#7D3C98' },
+  { name: 'Clothing', icon: 'shirt', color: '#C0392B' },
+  { name: 'Personal Care', icon: 'happy', color: '#2471A3' },
 ];
 
 const DEFAULT_INCOME_CATEGORIES = [
@@ -117,6 +117,26 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       }
 
       if (seeded) {
+        categories = await getAllCategories(accountId);
+      }
+
+      // Patch categories that are missing a color (e.g. synced from server without color)
+      const colorMap = new Map<string, string>([
+        ...DEFAULT_EXPENSE_CATEGORIES.map(c => [`expense:${c.name}`, c.color] as [string, string]),
+        ...DEFAULT_INCOME_CATEGORIES.map(c => [`income:${c.name}`, c.color] as [string, string]),
+      ]);
+      let patched = false;
+      for (const cat of categories) {
+        if (!cat.color) {
+          const fallback = colorMap.get(`${cat.type}:${cat.name}`);
+          if (fallback) {
+            await upsertCategory({ ...cat, color: fallback });
+            cat.color = fallback;
+            patched = true;
+          }
+        }
+      }
+      if (patched) {
         categories = await getAllCategories(accountId);
       }
 

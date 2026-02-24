@@ -29,6 +29,17 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 
+function getContrastTextColor(hexColor: string | undefined): string {
+  if (!hexColor || typeof hexColor !== 'string') return '#ffffff';
+  const hex = hexColor.replace('#', '');
+  if (hex.length < 6) return '#ffffff';
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? '#1a1a1a' : '#ffffff';
+}
+
 export default function NewExpenseScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -220,7 +231,7 @@ export default function NewExpenseScreen() {
                   key={cat.id}
                   style={[
                     styles.categoryChip,
-                    selectedCategory === cat.id && {
+                    selectedCategory === cat.id && cat.color && {
                       backgroundColor: cat.color,
                       borderColor: cat.color,
                     },
@@ -234,7 +245,10 @@ export default function NewExpenseScreen() {
                     ellipsizeMode="tail"
                     style={[
                       styles.categoryChipText,
-                      selectedCategory === cat.id && styles.categoryChipTextSelected,
+                      selectedCategory === cat.id && {
+                        color: getContrastTextColor(cat.color),
+                        fontWeight: '600',
+                      },
                     ]}
                   >
                     {getCategoryDisplayName(cat, t)}
