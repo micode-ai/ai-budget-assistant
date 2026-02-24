@@ -86,6 +86,9 @@ export default function SettingsScreen() {
   // AI Response Mode
   const [aiResponseMode, setAiResponseMode] = useState(user?.aiResponseMode || 'balanced');
 
+  // AI Model preference
+  const [aiModel, setAiModel] = useState(user?.aiModel || 'balanced');
+
   // Timezone picker
   const [timezonePicker, setTimezonePicker] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState('');
@@ -387,12 +390,24 @@ export default function SettingsScreen() {
 
   const handleAiResponseModeChange = async (newMode: string) => {
     if (newMode === aiResponseMode) return;
-    setAiResponseMode(newMode);
+    setAiResponseMode(newMode as typeof aiResponseMode);
     try {
       await api.updateAiResponseMode(newMode);
       updateUser({ aiResponseMode: newMode as any });
     } catch {
       setAiResponseMode(aiResponseMode);
+    }
+  };
+
+  const handleAiModelChange = async (newModel: string) => {
+    if (newModel === aiModel) return;
+    const oldModel = aiModel;
+    setAiModel(newModel as typeof aiModel);
+    try {
+      await api.updateAiModel(newModel);
+      updateUser({ aiModel: newModel as any });
+    } catch {
+      setAiModel(oldModel);
     }
   };
 
@@ -655,6 +670,34 @@ export default function SettingsScreen() {
                 />
                 <Text style={[styles.themeChipText, aiResponseMode === item.key && styles.themeChipTextActive]} numberOfLines={1}>
                   {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* AI Model */}
+          <Text style={styles.fieldLabelOutside}>{t('settings.aiModel')}</Text>
+          <View style={styles.themeRow}>
+            {([
+              { key: 'fast', icon: 'flash-outline' as IconName, label: t('settings.aiModelFast'), cost: '×0.75' },
+              { key: 'balanced', icon: 'options-outline' as IconName, label: t('settings.aiModelBalanced'), cost: '×1' },
+              { key: 'quality', icon: 'sparkles-outline' as IconName, label: t('settings.aiModelQuality'), cost: '×1.5' },
+            ]).map((item) => (
+              <TouchableOpacity
+                key={item.key}
+                style={[styles.themeChip, aiModel === item.key && styles.themeChipActive]}
+                onPress={() => handleAiModelChange(item.key)}
+              >
+                <Ionicons
+                  name={item.icon}
+                  size={18}
+                  color={aiModel === item.key ? theme.colors.primary : theme.colors.textTertiary}
+                />
+                <Text style={[styles.themeChipText, aiModel === item.key && styles.themeChipTextActive]} numberOfLines={1}>
+                  {item.label}
+                </Text>
+                <Text style={{ fontSize: 10, color: aiModel === item.key ? theme.colors.primary : theme.colors.textTertiary, marginTop: 2 }}>
+                  {item.cost} {t('settings.aiModelCost')}
                 </Text>
               </TouchableOpacity>
             ))}

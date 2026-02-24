@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
+import { resolveAiModel } from './model-resolver';
 
 @Injectable()
 export class SplitSuggestionService {
@@ -24,6 +25,7 @@ export class SplitSuggestionService {
       amount: number;
       items?: Array<{ description: string; totalPrice: number }>;
     },
+    userId?: string,
   ): Promise<{
     shouldSplit: boolean;
     confidence: number;
@@ -35,6 +37,13 @@ export class SplitSuggestionService {
       reasoning: string;
     }>;
   }> {
+    // Resolve user's preferred AI model
+    let aiModel = 'gpt-4o';
+    if (userId) {
+      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+      aiModel = resolveAiModel(userPref?.aiModel).model;
+    }
+
     // Fetch available categories
     const categories = await this.prisma.category.findMany({
       where: {
@@ -46,11 +55,11 @@ export class SplitSuggestionService {
 
     // If expense has items, try to categorize each item
     if (expense.items && expense.items.length > 1) {
-      return this.suggestFromItems({ ...expense, items: expense.items }, categories);
+      return this.suggestFromItems({ ...expense, items: expense.items }, categories, aiModel);
     }
 
     // Otherwise, use AI to detect if description implies multiple categories
-    return this.suggestFromDescription(expense, categories);
+    return this.suggestFromDescription(expense, categories, aiModel);
   }
 
   private async suggestFromItems(
@@ -60,6 +69,7 @@ export class SplitSuggestionService {
       items: Array<{ description: string; totalPrice: number }>;
     },
     categories: Array<{ id: string; name: string }>,
+    aiModel: string,
   ): Promise<{
     shouldSplit: boolean;
     confidence: number;
@@ -89,7 +99,7 @@ Only suggest split if items clearly belong to 2+ different categories.`;
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: aiModel,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         max_tokens: 500,
@@ -130,6 +140,7 @@ Only suggest split if items clearly belong to 2+ different categories.`;
       amount: number;
     },
     categories: Array<{ id: string; name: string }>,
+    aiModel: string,
   ): Promise<{
     shouldSplit: boolean;
     confidence: number;
@@ -160,7 +171,7 @@ Only suggest split if you're reasonably confident (>0.6) the expense spans multi
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: aiModel,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         max_tokens: 300,

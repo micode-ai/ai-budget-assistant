@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
+import { resolveAiModel } from './model-resolver';
 
 export interface ReceiptItem {
   description: string;
@@ -188,17 +189,21 @@ Important:
     userPrompt?: string,
     imageDataUrl?: string,
   ): Promise<ReceiptExpense> {
+    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+    const { model: aiModel, maxTokens } = resolveAiModel(userPref?.aiModel);
+
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
     const prompt = this.buildReceiptPrompt(categoryNames, 'image', userPrompt);
 
     const url = imageDataUrl || `data:image/jpeg;base64,${imageBase64}`;
 
+    this.logger.log(`[Vision] Using model: ${aiModel}, maxTokens: ${maxTokens}`);
     this.logger.log(`[Vision] Image URL prefix: ${url.substring(0, 80)}...`);
     this.logger.log(`[Vision] Image URL total length: ${url.length}`);
 
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: aiModel,
       messages: [
         {
           role: 'user',
@@ -214,7 +219,7 @@ Important:
           ],
         },
       ],
-      max_tokens: 2000,
+      max_tokens: maxTokens,
       response_format: { type: 'json_object' },
     });
 
@@ -234,6 +239,9 @@ Important:
     accountId: string,
     userPrompt?: string,
   ): Promise<ReceiptExpense> {
+    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+    const { model: aiModel, maxTokens } = resolveAiModel(userPref?.aiModel);
+
     const buffer = Buffer.from(pdfBase64, 'base64');
     const parser = new PDFParse({ data: new Uint8Array(buffer) });
 
@@ -251,12 +259,12 @@ Important:
         const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
         const prompt = this.buildReceiptPrompt(categoryNames, 'text', userPrompt, trimmedText);
 
-        this.logger.log(`[PDF] Using text-based parsing, sending to GPT-4o (text-only)`);
+        this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}`);
 
         const response = await this.openai.chat.completions.create({
-          model: 'gpt-4o',
+          model: aiModel,
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: 2000,
+          max_tokens: maxTokens,
           response_format: { type: 'json_object' },
         });
 
@@ -268,9 +276,9 @@ Important:
         return this.buildReceiptExpense(parsed, categories);
       }
 
-      // Scanned PDF — send the full PDF as a file to GPT-4o
-      this.logger.log(`[PDF] No text found, sending full PDF as file to GPT-4o`);
-      return this.parseReceiptFile(pdfBase64, userId, accountId, userPrompt);
+      // Scanned PDF — send the full PDF as a file
+      this.logger.log(`[PDF] No text found, sending full PDF as file with model: ${aiModel}`);
+      return this.parseReceiptFile(pdfBase64, userId, accountId, userPrompt, aiModel, maxTokens);
     } finally {
       await parser.destroy();
     }
@@ -281,13 +289,18 @@ Important:
     userId: string,
     accountId: string,
     userPrompt?: string,
+    aiModel?: string,
+    maxTokens?: number,
   ): Promise<ReceiptExpense> {
+    const resolvedModel = aiModel || 'gpt-4o';
+    const resolvedMaxTokens = maxTokens || 2000;
+
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
     const prompt = this.buildReceiptPrompt(categoryNames, 'image', userPrompt);
 
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: resolvedModel,
       messages: [
         {
           role: 'user',
@@ -303,7 +316,7 @@ Important:
           ],
         },
       ],
-      max_tokens: 2000,
+      max_tokens: resolvedMaxTokens,
       response_format: { type: 'json_object' },
     });
 
@@ -317,9 +330,15 @@ Important:
     return this.buildReceiptExpense(parsed, categories);
   }
 
-  async extractTextFromImage(imageBase64: string): Promise<string> {
+  async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {
+    let aiModel = 'gpt-4o';
+    if (userId) {
+      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+      aiModel = resolveAiModel(userPref?.aiModel).model;
+    }
+
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: aiModel,
       messages: [
         {
           role: 'user',

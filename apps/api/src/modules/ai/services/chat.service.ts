@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
+import { resolveAiModel } from './model-resolver';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { IncomesService } from '../../incomes/incomes.service';
 import { BudgetsService } from '../../budgets/budgets.service';
@@ -62,6 +63,14 @@ export class ChatService {
     });
   }
 
+  private async getUserModel(userId: string): Promise<{ model: string; maxTokens: number }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { aiModel: true },
+    });
+    return resolveAiModel(user?.aiModel);
+  }
+
   /**
    * Get the encryption tier for an account (0=off, 1=text, 2=full).
    */
@@ -114,8 +123,9 @@ export class ChatService {
     });
 
     // Build context
-    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
     const responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+    const { model: aiModel } = resolveAiModel(user?.aiModel);
     const context = await this.buildUserContext(userId, accountId);
 
     // Get conversation history (filter out internal roles like pending_action)
@@ -130,7 +140,7 @@ export class ChatService {
 
     // Call OpenAI with tool definitions
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: aiModel,
       messages: [
         { role: 'system', content: systemPrompt },
         ...history,
@@ -156,11 +166,11 @@ export class ChatService {
 
       if (this.isWriteAction(functionName)) {
         return this.handleWriteActionRequest(
-          conversation, functionName, functionArgs, systemPrompt, history, message,
+          conversation, functionName, functionArgs, systemPrompt, history, message, aiModel,
         );
       } else {
         return this.handleReadAction(
-          conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId,
+          conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, aiModel,
         );
       }
     }
@@ -403,6 +413,7 @@ export class ChatService {
     systemPrompt: string,
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
     userMessage: string,
+    aiModel: string,
   ) {
     const displaySummary = this.buildActionSummary(actionType, args);
     const pendingAction: ChatPendingAction = {
@@ -425,7 +436,7 @@ export class ChatService {
     const confirmationSystemPrompt = `${systemPrompt}\n\nThe user wants to perform this action: ${displaySummary}. Generate a SHORT confirmation message (1-2 sentences max) asking them to confirm or cancel. Format: "I'd like to [action]. Please confirm or cancel." Use the SAME language as the conversation.`;
 
     const confirmResponse = await this.openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: aiModel,
       messages: [
         { role: 'system', content: confirmationSystemPrompt },
         ...history,
@@ -461,12 +472,13 @@ export class ChatService {
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
     userMessage: string,
     accountId?: string,
+    aiModel?: string,
   ) {
     const result = await this.executeAction(actionType, args, accountId || '', '');
 
     // Feed the result back to OpenAI to generate a natural language summary
     const followUpResponse = await this.openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: aiModel || 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
         ...history,

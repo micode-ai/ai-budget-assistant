@@ -481,6 +481,11 @@ export default {
     aiResponseModeSimpleDesc: 'Einfache Sprache, kein Fachjargon',
     aiResponseModeBalancedDesc: 'Mix aus einfach und fachlich',
     aiResponseModeExpertDesc: 'Finanzterminologie, detaillierte Analyse',
+    aiModel: 'KI-Modell',
+    aiModelFast: 'Schnell',
+    aiModelBalanced: 'Ausgewogen',
+    aiModelQuality: 'Qualität',
+    aiModelCost: 'Kosten',
   },
   notifications: {
     title: 'Benachrichtigungen',

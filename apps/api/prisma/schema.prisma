@@ -87,6 +87,7 @@ model User {
 
   // AI preferences
   aiResponseMode        String    @default("balanced") @map("ai_response_mode")
+  aiModel               String    @default("balanced") @map("ai_model")
 
   // Report preferences
   weeklyEmailEnabled    Boolean   @default(false) @map("weekly_email_enabled")

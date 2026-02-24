@@ -117,11 +117,9 @@ Authorization: Bearer <token>
   "name": "John Doe",
   "currencyCode": "USD",
   "timezone": "UTC",
-  "pushToken": null,
-  "notifyBudgetAlerts": true,
-  "notifySharedActivity": true,
-  "defaultAccountId": "uuid",
-  "lastSyncAt": "2024-01-15T10:30:00Z",
+  "aiResponseMode": "balanced",
+  "aiModel": "balanced",
+  "isAdmin": false,
   "createdAt": "2024-01-01T00:00:00Z"
 }
 ```
@@ -143,6 +141,50 @@ Content-Type: application/json
 ```
 
 **Response** `200 OK`
+
+### Update AI Response Mode
+
+```http
+PATCH /users/me/ai-response-mode
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "mode": "balanced"
+}
+```
+
+**Mode values**: `simple`, `balanced`, `expert`
+
+**Response** `200 OK`
+```json
+{ "success": true, "mode": "balanced" }
+```
+
+### Update AI Model
+
+```http
+PATCH /users/me/ai-model
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "model": "fast"
+}
+```
+
+**Model values**: `fast`, `balanced`, `quality`
+
+| Value | OpenAI Model | Max Tokens | Cost Multiplier |
+|-------|-------------|-----------|-----------------|
+| `fast` | `gpt-4o-mini` | 1500 | ×0.75 |
+| `balanced` | `gpt-4o` | 2000 | ×1.0 |
+| `quality` | `gpt-4.1` | 3000 | ×1.5 |
+
+**Response** `200 OK`
+```json
+{ "success": true, "model": "fast" }
+```
 
 ---
 

@@ -131,8 +131,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // Fetch profile to get isAdmin flag
           try {
             const profile = await api.getProfile();
-            if (profile.isAdmin || profile.aiResponseMode) {
-              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced' };
+            if (profile.isAdmin || profile.aiResponseMode || profile.aiModel) {
+              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced', aiModel: profile.aiModel || 'balanced' };
               set({ user: updatedUser });
               await secureStorage.setItem('user', JSON.stringify(updatedUser));
             }
@@ -256,6 +256,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               currencyCode: (profile.currencyCode || user.currencyCode) as Currency,
               isAdmin: profile.isAdmin,
               aiResponseMode: profile.aiResponseMode || 'balanced',
+              aiModel: profile.aiModel || 'balanced',
             };
             set({ user: updatedUser });
             await secureStorage.setItem('user', JSON.stringify(updatedUser));

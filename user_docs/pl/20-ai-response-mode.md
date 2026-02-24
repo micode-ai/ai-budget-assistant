@@ -46,6 +46,17 @@ Zaprojektowany dla osob bieglych finansowo i profesjonalistow.
 - Sugeruje zaawansowane strategie (optymalizacja podatkowa, projekcje procentu skladanego)
 - Profesjonalny, analityczny ton
 
+## Model AI vs. Tryb odpowiedzi AI
+
+To dwa oddzielne ustawienia:
+
+| Ustawienie | Co zmienia |
+|---|---|
+| **Tryb odpowiedzi AI** | *Jak* AI rozmawia z Toba — ton, slownictwo, poziom szczegolowosci |
+| **Model AI** | *Ktory* bazowy model jest uzywany — wplywa na jakosc, szybkosc i zuzycie limitu |
+
+Mozesz je swobodnie laczyc: np. tryb Ekspercki z modelem Fast, lub tryb Prosty z modelem Quality.
+
 ## Na co wplywa
 
 Tryb odpowiedzi zmienia styl komunikacji AI we **wszystkich funkcjach AI**:

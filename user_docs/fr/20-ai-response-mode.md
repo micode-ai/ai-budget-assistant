@@ -46,6 +46,17 @@ Concu pour les utilisateurs avertis en finance et les professionnels.
 - Suggere des strategies avancees (optimisation fiscale, projections d'interets composes)
 - Ton professionnel et analytique
 
+## Modele d'IA vs. Mode de reponse de l'IA
+
+Ce sont deux parametres distincts :
+
+| Parametre | Ce qu'il modifie |
+|---|---|
+| **Mode de reponse de l'IA** | *Comment* l'IA vous parle — ton, vocabulaire, niveau de detail |
+| **Modele d'IA** | *Quel* modele de base est utilise — affecte la qualite, la vitesse et la consommation du quota |
+
+Vous pouvez les combiner librement : par ex. mode Expert avec modele Fast, ou mode Simple avec modele Quality.
+
 ## Ce qui est affecte
 
 Le mode de reponse modifie le style de communication de l'IA dans **toutes les fonctionnalites IA** :

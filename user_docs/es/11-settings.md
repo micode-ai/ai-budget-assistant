@@ -56,6 +56,20 @@ Toca una ficha para cambiar. El cambio se aplica de inmediato a todo el nuevo co
 
 > Consulta [Modo de respuesta de la IA](./20-ai-response-mode.md) para mas detalles sobre lo que cambia cada modo.
 
+### Modelo de IA
+
+Elige el modelo de IA para todas las funciones de IA (Chat, Escaneo de recibos, Categorizacion, Analisis, Historias, Metas). Esto afecta directamente la **calidad de respuesta** y el **consumo de cuota de IA**:
+
+| Modelo | Velocidad | Coste | Mejor para |
+|---|---|---|---|
+| ⚡ **Fast** | Mas rapido | ×0.75 cuota | Categorizacion rapida, consultas sencillas |
+| ⚖️ **Balanced** | Medio | ×1 cuota | Uso general — predeterminado |
+| ✨ **Quality** | Mas lento | ×1.5 cuota | Analisis complejos, analisis detallados |
+
+> **Consejo:** Con el plan Free (5 solicitudes de IA/mes), cambiar a **Fast** da ~6.7 solicitudes efectivas. Cambiar a **Quality** da ~3.3.
+
+Toca una ficha para cambiar. El modelo surte efecto de inmediato para todas las nuevas solicitudes de IA.
+
 ### Apariencia
 
 Elige tu tema:

@@ -26,6 +26,7 @@ export class UsersController {
       currencyCode: user.currencyCode,
       timezone: user.timezone,
       aiResponseMode: user.aiResponseMode,
+      aiModel: user.aiModel,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
@@ -47,6 +48,12 @@ export class UsersController {
   async updateAiResponseMode(@Req() req: AuthenticatedRequest, @Body() body: { mode: string }) {
     await this.usersService.updateAiResponseMode(req.user.id, body.mode);
     return { success: true, mode: body.mode };
+  }
+
+  @Patch('me/ai-model')
+  async updateAiModel(@Req() req: AuthenticatedRequest, @Body() body: { model: string }) {
+    await this.usersService.updateAiModel(req.user.id, body.model);
+    return { success: true, model: body.model };
   }
 
   @Patch('me/push-token')

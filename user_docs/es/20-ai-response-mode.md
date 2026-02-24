@@ -46,6 +46,17 @@ Disenado para usuarios con conocimientos financieros y profesionales.
 - Sugiere estrategias avanzadas (optimizacion fiscal, proyecciones de interes compuesto)
 - Tono profesional y analitico
 
+## Modelo de IA vs. Modo de respuesta de IA
+
+Son dos configuraciones separadas:
+
+| Configuracion | Que cambia |
+|---|---|
+| **Modo de respuesta de IA** | *Como* habla la IA contigo — tono, vocabulario, nivel de detalle |
+| **Modelo de IA** | *Que* modelo base se usa — afecta la calidad, velocidad y consumo de cuota |
+
+Puedes combinarlos libremente: p.ej., modo Experto con modelo Fast, o modo Simple con modelo Quality.
+
 ## Que afecta
 
 El modo de respuesta cambia el estilo de comunicacion de la IA en **todas las funciones de IA**:

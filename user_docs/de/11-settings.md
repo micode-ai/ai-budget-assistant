@@ -56,6 +56,20 @@ Tippe auf einen Chip, um zu wechseln. Die Anderung gilt sofort fur alle neuen KI
 
 > Siehe [KI-Antwortmodus](./20-ai-response-mode.md) fur Details daruber, was jeder Modus verandert.
 
+### KI-Modell
+
+Wahle das KI-Modell fur alle KI-Funktionen (Chat, Belegscannen, Kategorisierung, Einblicke, Geschichten, Ziele). Dies beeinflusst direkt die **Antwortqualitat** und den **KI-Kontingentverbrauch**:
+
+| Modell | Geschwindigkeit | Kosten | Am besten fur |
+|---|---|---|---|
+| ⚡ **Fast** | Am schnellsten | ×0.75 Kontingent | Schnelle Kategorisierung, einfache Anfragen |
+| ⚖️ **Balanced** | Mittel | ×1 Kontingent | Allgemeine Nutzung — Standard |
+| ✨ **Quality** | Langsamer | ×1.5 Kontingent | Komplexe Analyse, detaillierte Einblicke |
+
+> **Tipp:** Mit dem Free-Tarif (5 KI-Anfragen/Monat) gibt **Fast** ca. 6.7 effektive Anfragen. **Quality** gibt ca. 3.3.
+
+Tippe auf einen Chip zum Andern. Das Modell gilt sofort fur alle neuen KI-Anfragen.
+
 ### Erscheinungsbild
 
 Wahle dein Design:

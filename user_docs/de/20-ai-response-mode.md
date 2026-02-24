@@ -46,6 +46,17 @@ Konzipiert fur finanziell versierte Nutzer und Fachleute.
 - Schlagt fortgeschrittene Strategien vor (Steueroptimierung, Zinseszins-Prognosen)
 - Professioneller, analytischer Ton
 
+## KI-Modell vs. KI-Antwortmodus
+
+Dies sind zwei separate Einstellungen:
+
+| Einstellung | Was sie andert |
+|---|---|
+| **KI-Antwortmodus** | *Wie* die KI mit dir spricht — Ton, Wortschatz, Detaillevel |
+| **KI-Modell** | *Welches* Basismodell verwendet wird — beeinflusst Qualitat, Geschwindigkeit und Kontingentverbrauch |
+
+Du kannst sie frei kombinieren: z.B. Experte-Modus mit Fast-Modell, oder Einfach-Modus mit Quality-Modell.
+
 ## Was wird beeinflusst
 
 Der Antwortmodus andert den Kommunikationsstil der KI in **allen KI-Funktionen**:

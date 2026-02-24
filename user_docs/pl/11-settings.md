@@ -56,6 +56,20 @@ Dotknij element, aby przelaczyc. Zmiana stosowana jest natychmiast do wszystkich
 
 > Zobacz [Tryb odpowiedzi AI](./20-ai-response-mode.md) — szczegoly o kazdym trybie.
 
+### Model AI
+
+Wybierz model AI dla wszystkich funkcji AI (Czat, Skanowanie paragonow, Kategoryzacja, Analizy, Historie, Cele). Bezposrednio wplywa to na **jakosc odpowiedzi** i **zuzycie limitu AI**:
+
+| Model | Szybkosc | Koszt | Najlepszy do |
+|---|---|---|---|
+| ⚡ **Fast** | Najszybszy | ×0.75 limitu | Szybka kategoryzacja, proste zapytania |
+| ⚖️ **Balanced** | Sredni | ×1 limitu | Ogolne uzytkowanie — domyslny |
+| ✨ **Quality** | Wolniejszy | ×1.5 limitu | Zlozona analiza, szczegolowe wyniki |
+
+> **Wskazowka:** W planie Free (5 zapytan AI/miesiac) przelaczenie na **Fast** daje ~6.7 efektywnych zapytan. Przelaczenie na **Quality** daje ~3.3.
+
+Dotknij element, aby zmienic. Model dziala natychmiast dla wszystkich nowych zapytan AI.
+
 ### Wyglad
 
 Wybierz motyw:
