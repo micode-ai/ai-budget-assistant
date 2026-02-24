@@ -18,6 +18,7 @@ import { File } from 'expo-file-system/next';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -111,13 +112,20 @@ export default function ReceiptExpenseScreen() {
         }
       }
 
+      // Resolve category suggestion (name string) to a local category ID
+      let resolvedCategoryId = scannedReceipt.categoryId || undefined;
+      if (!resolvedCategoryId && scannedReceipt.categorySuggestion) {
+        const matched = useCategoryStore.getState().getCategoryByName(scannedReceipt.categorySuggestion, 'expense');
+        resolvedCategoryId = matched?.id;
+      }
+
       await addExpense({
         userId: user?.id || '',
         amount: scannedReceipt.amount,
         discountAmount: scannedReceipt.discountAmount ?? undefined,
         currencyCode: scannedReceipt.currencyCode as Currency,
         description: scannedReceipt.description,
-        categoryId: scannedReceipt.categorySuggestion || scannedReceipt.categoryId || undefined,
+        categoryId: resolvedCategoryId,
         date: expenseDate,
         source: 'ocr',
         isRecurring: false,
@@ -139,12 +147,18 @@ export default function ReceiptExpenseScreen() {
   const handleEditExpense = () => {
     if (!scannedReceipt) return;
 
+    let resolvedCategoryId = scannedReceipt.categoryId || '';
+    if (!resolvedCategoryId && scannedReceipt.categorySuggestion) {
+      const matched = useCategoryStore.getState().getCategoryByName(scannedReceipt.categorySuggestion, 'expense');
+      resolvedCategoryId = matched?.id || '';
+    }
+
     router.push({
       pathname: '/expense/new',
       params: {
         amount: scannedReceipt.amount.toString(),
         description: scannedReceipt.description,
-        categoryId: scannedReceipt.categoryId || '',
+        categoryId: resolvedCategoryId,
         currencyCode: scannedReceipt.currencyCode,
       },
     });

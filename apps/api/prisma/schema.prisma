@@ -364,6 +364,7 @@ model BudgetAlert {
   userId              String   @map("user_id")
   thresholdPercentage Int      @map("threshold_percentage")
   triggeredAt         DateTime @map("triggered_at")
+  periodStart         DateTime @map("period_start") @db.Date
   currentSpent        Decimal  @map("current_spent") @db.Decimal(12, 2)
   isRead              Boolean  @default(false) @map("is_read")
   notificationSent    Boolean  @default(false) @map("notification_sent")
@@ -372,6 +373,7 @@ model BudgetAlert {
   budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([budgetId, thresholdPercentage, periodStart])
   @@map("budget_alerts")
 }
 

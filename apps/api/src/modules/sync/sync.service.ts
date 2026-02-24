@@ -2,8 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
-import { SharedActivityService } from '../notifications/shared-activity.service';
-import { BudgetAlertService } from '../budgets/budget-alert.service';
 
 interface SyncChange {
   entityType: 'expense' | 'expense_item' | 'budget' | 'category' | 'income' | 'tag' | 'project' | 'expense_tag' | 'income_tag' | 'project_expense' | 'project_income' | 'expense_category_split' | 'portfolio_holding' | 'investment_transaction';
@@ -53,8 +51,6 @@ export class SyncService {
     private readonly prisma: PrismaService,
     private readonly expensesService: ExpensesService,
     private readonly incomesService: IncomesService,
-    private readonly sharedActivityService: SharedActivityService,
-    private readonly budgetAlertService: BudgetAlertService,
   ) {}
 
   async pushChanges(accountId: string, userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
@@ -153,13 +149,6 @@ export class SyncService {
       if (!created) {
         return { entityId, status: 'error', error: 'Failed to create expense' };
       }
-
-      // Fire-and-forget notifications (same as expenses.controller)
-      this.sharedActivityService.notifyExpenseCreated(
-        accountId, userId, Number(created.amount), created.currencyCode, created.description ?? undefined,
-      ).catch(e => this.logger.error('Sync: shared activity notification failed', e));
-      this.budgetAlertService.checkBudgetsForAccount(accountId, created.currencyCode)
-        .catch(e => this.logger.error('Sync: budget alert check failed', e));
 
       return {
         entityId,
