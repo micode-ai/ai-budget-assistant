@@ -813,6 +813,8 @@ export default {
     noTags: 'Тэгаў пакуль няма',
     suggestedTags: 'Прапанаваныя тэгі',
     aiSuggestions: 'Прапановы ІІ',
+    suggestTags: 'Прапанаваць тэгі',
+    descriptionRequired: 'Спачатку ўвядзіце апісанне (не менш за 3 сімвалы)',
     recentTags: 'Нядаўнія тэгі',
     popularTags: 'Папулярныя тэгі',
     manageTags: 'Кіраванне тэгамі',

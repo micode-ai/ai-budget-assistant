@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -30,14 +31,24 @@ export const TagPicker: React.FC<TagPickerProps> = ({
   const [suggestedTags, setSuggestedTags] = useState<{ name: string; confidence: number; existingTagId?: string }[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
-  // Fetch AI suggestions when description changes
-  useEffect(() => {
-    if (!description || description.length < 3) return;
+  const handleSuggestPress = useCallback(async () => {
+    if (!description || description.length < 3) {
+      Alert.alert(t('tags.suggestTags'), t('tags.descriptionRequired') || 'Enter a description first (at least 3 characters)');
+      return;
+    }
     setIsLoadingSuggestions(true);
-    api.suggestTags(description).then((result: any) => {
-      if (result?.tags) setSuggestedTags(result.tags);
-    }).catch(() => {}).finally(() => setIsLoadingSuggestions(false));
-  }, [description]);
+    try {
+      const result: any = await api.suggestTags(description);
+      if (result?.tags && result.tags.length > 0) {
+        setSuggestedTags(result.tags);
+      }
+    } catch (e: any) {
+      console.error('[TagPicker] suggestTags error:', e?.message || e);
+      Alert.alert(t('tags.suggestTags'), e?.message || 'Failed to load suggestions');
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  }, [description, t]);
 
   const filteredTags = searchQuery
     ? searchTags(searchQuery)
@@ -85,6 +96,24 @@ export const TagPicker: React.FC<TagPickerProps> = ({
             />
           ))}
         </View>
+      )}
+
+      {/* Suggest tags button */}
+      {suggestedTags.length === 0 && (
+        <TouchableOpacity
+          style={[styles.suggestBtn, (!description || description.length < 3) && styles.suggestBtnDisabled]}
+          onPress={handleSuggestPress}
+          disabled={isLoadingSuggestions}
+        >
+          {isLoadingSuggestions ? (
+            <ActivityIndicator size="small" color="#8B5CF6" />
+          ) : (
+            <Ionicons name="sparkles" size={14} color={(!description || description.length < 3) ? '#C4B5FD' : '#8B5CF6'} />
+          )}
+          <Text style={[styles.suggestBtnText, (!description || description.length < 3) && styles.suggestBtnTextDisabled]}>
+            {t('tags.suggestTags') || 'Suggest tags'}
+          </Text>
+        </TouchableOpacity>
       )}
 
       {/* AI suggestions */}
@@ -182,5 +211,29 @@ const styles = StyleSheet.create({
   },
   createBtn: {
     padding: 4,
+  },
+  suggestBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#8B5CF6',
+    marginBottom: 8,
+  },
+  suggestBtnText: {
+    fontSize: 12,
+    color: '#8B5CF6',
+    fontWeight: '500',
+  },
+  suggestBtnDisabled: {
+    borderColor: '#C4B5FD',
+    opacity: 0.6,
+  },
+  suggestBtnTextDisabled: {
+    color: '#C4B5FD',
   },
 });

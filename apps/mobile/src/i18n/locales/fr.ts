@@ -833,6 +833,8 @@ export default {
     noTags: 'Aucun tag pour le moment',
     suggestedTags: 'Tags suggérés',
     aiSuggestions: 'Suggestions IA',
+    suggestTags: 'Suggérer des tags',
+    descriptionRequired: 'Entrez d\'abord une description (au moins 3 caractères)',
     recentTags: 'Tags récents',
     popularTags: 'Tags populaires',
     manageTags: 'Gérer les tags',
