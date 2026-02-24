@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, Inject, forwardRef } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { AccountsService } from '../accounts/accounts.service';
 import { TelegramService } from '../telegram/telegram.service';
+import { AdminGateway } from '../admin/admin.gateway';
 import { RegisterDto, LoginDto } from './dto';
 
 @Injectable()
@@ -15,6 +16,8 @@ export class AuthService {
     private readonly telegramService: TelegramService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    @Inject(forwardRef(() => AdminGateway))
+    private readonly adminGateway: AdminGateway,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -38,6 +41,12 @@ export class AuthService {
 
     // Notify about new registration
     this.telegramService.notifyNewUser(user.name, user.email);
+    this.adminGateway.emitNewUser({
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: new Date().toISOString(),
+    });
 
     // Create default personal account
     const defaultAccount = await this.accountsService.createDefaultAccount(
@@ -83,6 +92,9 @@ export class AuthService {
       throw new UnauthorizedException('Account is deactivated');
     }
 
+    // Update last active timestamp
+    this.usersService.updateLastSync(user.id).catch(() => null);
+
     // Generate tokens
     const tokens = await this.generateTokens(user.id, user.email);
 
@@ -113,6 +125,9 @@ export class AuthService {
       if (!user || !user.isActive) {
         throw new UnauthorizedException('Invalid refresh token');
       }
+
+      // Update last active timestamp on token refresh (biometric login)
+      this.usersService.updateLastSync(user.id).catch(() => null);
 
       const tokens = await this.generateTokens(user.id, user.email);
 

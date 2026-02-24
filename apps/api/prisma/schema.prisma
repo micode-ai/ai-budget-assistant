@@ -99,6 +99,11 @@ model User {
   backupHistory         BackupHistory[]
   savingsGoals          SavingsGoal[]
 
+  // Admin panel relations
+  adminAuditLogs          AdminAuditLog[]
+  adminNotificationLogs   NotificationLog[]
+  adminScheduledNotifications ScheduledNotification[]
+
   @@map("users")
 }
 
@@ -1046,4 +1051,63 @@ model FatFinderReport {
   @@unique([accountId, periodStart, periodEnd])
   @@index([accountId, createdAt])
   @@map("fat_finder_reports")
+}
+
+// ---- Admin Panel Models ----
+
+model AdminAuditLog {
+  id          String   @id @default(uuid())
+  adminId     String   @map("admin_id")
+  action      String   // e.g. "user.deactivate", "subscription.change_tier", "notification.send_push"
+  targetType  String   @map("target_type")  // "user", "subscription", "notification"
+  targetId    String?  @map("target_id")
+  details     Json?    @db.JsonB
+  ipAddress   String?  @map("ip_address")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  admin       User     @relation(fields: [adminId], references: [id])
+
+  @@index([adminId, createdAt])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("admin_audit_logs")
+}
+
+model NotificationLog {
+  id             String   @id @default(uuid())
+  adminId        String   @map("admin_id")
+  type           String   // "push" | "email" | "broadcast"
+  recipientCount Int      @map("recipient_count")
+  successCount   Int      @default(0) @map("success_count")
+  failCount      Int      @default(0) @map("fail_count")
+  subject        String?
+  body           String?
+  filters        Json?    @db.JsonB
+  recipientIds   Json?    @map("recipient_ids") @db.JsonB
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  admin          User     @relation(fields: [adminId], references: [id])
+
+  @@index([adminId, createdAt])
+  @@map("notification_logs")
+}
+
+model ScheduledNotification {
+  id             String    @id @default(uuid())
+  adminId        String    @map("admin_id")
+  type           String    // "push" | "email"
+  title          String?
+  subject        String?
+  body           String
+  filters        Json?     @db.JsonB
+  userIds        Json?     @map("user_ids") @db.JsonB
+  scheduledAt    DateTime  @map("scheduled_at")
+  executedAt     DateTime? @map("executed_at")
+  status         String    @default("pending") // "pending" | "sent" | "failed" | "cancelled"
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  admin          User      @relation(fields: [adminId], references: [id])
+
+  @@index([status, scheduledAt])
+  @@map("scheduled_notifications")
 }
