@@ -453,6 +453,8 @@ model User {
   isActive             Boolean   @default(true)
   defaultAccountId     String?
   lastSyncAt           DateTime?
+  aiResponseMode       String    @default("balanced")  // simple | balanced | expert
+  aiModel              String    @default("balanced")  // fast | balanced | quality
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 
@@ -972,21 +974,35 @@ The application uses optimistic version-based synchronization with last-write-wi
 
 ## AI Integration
 
+### Model Selection
+
+Users can choose their preferred AI model in Settings → **AI Model**. The preference applies globally to all text and vision AI features (Whisper transcription is excluded):
+
+| Preference | Model | Max Tokens | Cost Multiplier |
+|------------|-------|-----------|-----------------|
+| `fast` | `gpt-4o-mini` | 1500 | ×0.75 |
+| `balanced` (default) | `gpt-4o` | 2000 | ×1.0 |
+| `quality` | `gpt-4.1` | 3000 | ×1.5 |
+
+The cost multiplier scales the AI quota consumed per request. For example, with the Free plan (5 AI requests/month), a "quality" request costs 1.5 units and a "fast" request costs 0.75 units.
+
+**Implementation:** `apps/api/src/modules/ai/services/model-resolver.ts` — exports `resolveAiModel(pref?)` and `getAiCostMultiplier(pref?)`. The `AiUsageGuard` applies the multiplier centrally before recording quota usage.
+
 ### Services
 
 | Service | OpenAI Model | Purpose |
 |---------|--------------|---------|
-| Transcription | Whisper | Convert audio to text |
-| Expense Parsing | GPT-4 | Extract expense data from text |
-| Categorization | GPT-4 | Suggest expense categories |
-| Receipt Scanner | GPT-4 Vision | Extract data from receipt images |
-| Chat Assistant | GPT-4 | Financial advice and insights |
-| AI Insights | GPT-4 | Analyze patterns, generate insight cards |
-| Story Generation | GPT-4 | Create narrative spending dashboards |
-| Investment Insights | GPT-4 | Portfolio analysis, concentration risks, performance alerts |
-| Tag Suggestions | GPT-4 | Suggest tags based on expense description (history-first, AI fallback) |
-| Project Suggestions | GPT-4 | Match expenses to active projects by date range and semantic analysis |
-| Split Suggestions | GPT-4 | Suggest category splits for multi-category expenses |
+| Transcription | `whisper-1` (fixed) | Convert audio to text |
+| Expense Parsing | User-selected model | Extract expense data from text |
+| Categorization | User-selected model | Suggest expense categories |
+| Receipt Scanner | User-selected model | Extract data from receipt images |
+| Chat Assistant | User-selected model | Financial advice and insights |
+| AI Insights | User-selected model | Analyze patterns, generate insight cards |
+| Story Generation | User-selected model | Create narrative spending dashboards |
+| Investment Insights | User-selected model | Portfolio analysis, concentration risks, performance alerts |
+| Tag Suggestions | User-selected model | Suggest tags based on expense description (history-first, AI fallback) |
+| Project Suggestions | User-selected model | Match expenses to active projects by date range and semantic analysis |
+| Split Suggestions | User-selected model | Suggest category splits for multi-category expenses |
 
 ### Data Flow
 
@@ -1046,13 +1062,14 @@ Mail module provides email sending infrastructure for transactional emails.
 The application uses a tiered subscription model to manage access to AI-powered features:
 
 - **Three tiers**: free, pro, business
-- **AI usage tracking**: Each AI request is tracked per user with cost units
+- **AI usage tracking**: Each AI request is tracked per user with cost units (fractional)
+- **Model cost multiplier**: Applied by `AiUsageGuard` before recording usage — fast=0.75×, balanced=1.0×, quality=1.5×
 - **Trial periods**: New users receive trial access with reduced limits
   - Trial limits: free = 5, pro = 15, business = 100
   - Active limits: free = 5, pro = 200, business = unlimited
 - **Guards**:
   - `SubscriptionTierGuard` checks that the user's subscription tier meets the minimum required tier for the endpoint
-  - `AiUsageGuard` checks that the user has not exceeded their AI usage limit for the current billing period
+  - `AiUsageGuard` checks that the user has not exceeded their AI usage limit for the current billing period; applies model cost multiplier
 - **AI features** (insights, story) require Pro or Business tier
 
 ## Home Screen Widgets

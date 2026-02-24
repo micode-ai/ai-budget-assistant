@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
+import { resolveAiModel } from './model-resolver';
 
 @Injectable()
 export class ProjectSuggestionService {
@@ -19,6 +20,7 @@ export class ProjectSuggestionService {
   async suggestProject(
     accountId: string,
     expense: { description: string | null; date: string; locationName?: string },
+    userId?: string,
   ): Promise<{ projectId?: string; projectName?: string; confidence: number } | null> {
     // Cannot suggest projects without a description (e.g. encrypted under E2EE)
     if (!expense.description) return null;
@@ -68,6 +70,13 @@ export class ProjectSuggestionService {
       recentExpenses: p.projectExpenses.map((pe: { expense: { description: string | null } }) => pe.expense.description).filter(Boolean).slice(0, 5),
     }));
 
+    // Resolve user's preferred AI model
+    let aiModel = 'gpt-4o';
+    if (userId) {
+      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+      aiModel = resolveAiModel(userPref?.aiModel).model;
+    }
+
     try {
       const prompt = `Given this expense: "${expense.description}"${expense.locationName ? ` at "${expense.locationName}"` : ''}
 
@@ -78,7 +87,7 @@ Does this expense belong to any of these projects? Return JSON: { "projectId": "
 Only suggest if confidence >= 0.6.`;
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: aiModel,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         max_tokens: 100,

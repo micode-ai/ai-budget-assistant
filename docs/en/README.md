@@ -34,7 +34,8 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **Investment Transactions** - Record buy/sell transactions with price per unit, fees, and notes
 - **Export & Reports** - PDF/Excel/CSV report generation, monthly digests, encrypted backups, email reports (weekly/monthly)
 - **Gamification** - Achievements, daily streaks, XP/levels, and virtual badges to encourage consistent tracking habits
-- **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits
+- **AI Model Selection** - Choose between Fast (gpt-4o-mini, ×0.75 cost), Balanced (gpt-4o, ×1 cost), and Quality (gpt-4.1, ×1.5 cost) models globally across all AI features
+- **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits; model choice scales quota consumption
 - **Admin Dashboard** - System stats, subscription breakdown, and per-user AI usage monitoring
 - **Offline-First** - Full functionality without internet connection
 - **Cross-Platform** - iOS, Android, and Web support
@@ -51,7 +52,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 | Database | PostgreSQL + Prisma |
 | Cache | Redis |
 | Authentication | JWT + Passport |
-| AI/ML | OpenAI (GPT-4, Whisper, Vision) |
+| AI/ML | OpenAI (gpt-4o-mini / gpt-4o / gpt-4.1, Whisper) |
 | Market Data | Twelve Data API |
 | Charts | react-native-gifted-charts |
 | Widgets | react-native-android-widget |

@@ -467,6 +467,11 @@ export default {
     justNow: 'Толькі што',
     minutesAgo: '{{count}} хв. таму',
     hoursAgo: '{{count}} гадз. таму',
+    aiModel: 'Мадэль ШІ',
+    aiModelFast: 'Хуткі',
+    aiModelBalanced: 'Збалансаваны',
+    aiModelQuality: 'Якасны',
+    aiModelCost: 'кошт',
   },
   notifications: {
     title: 'Паведамленні',

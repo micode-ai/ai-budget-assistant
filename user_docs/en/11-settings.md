@@ -56,6 +56,20 @@ Tap a chip to switch. The change applies immediately to all new AI-generated con
 
 > See [AI Response Mode](./20-ai-response-mode.md) for details on what each mode changes.
 
+### AI Model
+
+Choose the AI model used for all AI features (Chat, Receipt Scanning, Categorization, Insights, Stories, Goals). This directly affects **response quality** and **AI quota usage**:
+
+| Model | Speed | Cost | Best For |
+|---|---|---|---|
+| ⚡ **Fast** | Fastest | ×0.75 quota | Quick categorization, simple queries |
+| ⚖️ **Balanced** | Medium | ×1 quota | General use — the default |
+| ✨ **Quality** | Slower | ×1.5 quota | Complex analysis, detailed insights |
+
+> **Tip:** With the Free plan (5 AI requests/month), switching to **Fast** gives you ~6.7 effective requests. Switching to **Quality** gives you ~3.3.
+
+Tap a chip to change. The model takes effect immediately for all new AI requests.
+
 ### Appearance
 
 Choose your theme:
@@ -125,4 +139,4 @@ Scroll to the bottom of Settings and tap **Log Out**. A confirmation dialog will
 
 ---
 
-*See also: [Accounts](./09-accounts.md) | [Subscription Plans](./12-subscription.md) | [Export & Reports](./16-export-reports.md) | [AI Response Mode](./20-ai-response-mode.md)*
+*See also: [Accounts](./09-accounts.md) | [Subscription Plans](./12-subscription.md) | [Export & Reports](./16-export-reports.md) | [AI Response Mode](./20-ai-response-mode.md) | [AI Chat](./07-ai-chat.md)*

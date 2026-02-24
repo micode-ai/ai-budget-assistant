@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 
 interface CreateUserData {
@@ -89,6 +89,17 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id: userId },
       data: { aiResponseMode: mode },
+    });
+  }
+
+  async updateAiModel(userId: string, model: string) {
+    const validModels = ['fast', 'balanced', 'quality'];
+    if (!validModels.includes(model)) {
+      throw new BadRequestException(`Invalid AI model: ${model}. Must be one of: ${validModels.join(', ')}`);
+    }
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { aiModel: model },
     });
   }
 

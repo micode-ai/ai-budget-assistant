@@ -522,6 +522,14 @@ class ApiClient {
     });
   }
 
+  // AI Model preference
+  async updateAiModel(model: string) {
+    return this.request<{ success: boolean; model: string }>('/users/me/ai-model', {
+      method: 'PATCH',
+      body: JSON.stringify({ model }),
+    });
+  }
+
   // Expense Items endpoints
   async getExpenseItems(expenseId: string) {
     return this.request<any[]>(`/expenses/${expenseId}/items`);

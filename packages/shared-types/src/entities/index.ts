@@ -27,6 +27,9 @@ export type InsightType = 'spending_anomaly' | 'budget_prediction' | 'saving_tip
 // AI Response Mode
 export type AiResponseMode = 'simple' | 'balanced' | 'expert';
 
+// AI Model preference
+export type AiModel = 'fast' | 'balanced' | 'quality';
+
 // Savings Goal types
 export type GoalStatus = 'active' | 'paused' | 'completed' | 'failed';
 
@@ -116,6 +119,7 @@ export interface User {
   defaultAccountId?: string;
   isAdmin?: boolean;
   aiResponseMode?: AiResponseMode;
+  aiModel?: AiModel;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;

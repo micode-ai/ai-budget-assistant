@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
+import { resolveAiModel } from './model-resolver';
 
 @Injectable()
 export class GoalPlannerService {
@@ -149,9 +150,16 @@ Return ONLY valid JSON:
   "summary": "string"
 }`;
 
+    // Resolve user's preferred AI model
+    let aiModel = 'gpt-4o';
+    if (userId) {
+      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+      aiModel = resolveAiModel(userPref?.aiModel).model;
+    }
+
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: aiModel,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 2000,

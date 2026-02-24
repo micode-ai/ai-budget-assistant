@@ -118,8 +118,8 @@ export class AiController {
   @Post('extract-text')
   @UseGuards(AiUsageGuard)
   @TrackAiUsage('ocr', 2.0)
-  async extractText(@Body() body: { imageBase64: string }) {
-    return { text: await this.ocrService.extractTextFromImage(body.imageBase64) };
+  async extractText(@Req() req: AuthenticatedRequest, @Body() body: { imageBase64: string }) {
+    return { text: await this.ocrService.extractTextFromImage(body.imageBase64, req.user.id) };
   }
 
   @Get('suggest-category')
@@ -168,6 +168,7 @@ export class AiController {
       req.accountId,
       description,
       merchant,
+      req.user.id,
     );
   }
 
@@ -178,7 +179,7 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { description: string; date: string; locationName?: string },
   ) {
-    return this.projectSuggestionService.suggestProject(req.accountId, body);
+    return this.projectSuggestionService.suggestProject(req.accountId, body, req.user.id);
   }
 
   @Post('suggest-splits')
@@ -194,7 +195,7 @@ export class AiController {
       items?: Array<{ description: string; totalPrice: number }>;
     },
   ) {
-    return this.splitSuggestionService.suggestSplits(req.accountId, body);
+    return this.splitSuggestionService.suggestSplits(req.accountId, body, req.user.id);
   }
 
   // ── Savings Goals ──

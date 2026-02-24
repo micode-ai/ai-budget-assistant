@@ -56,6 +56,20 @@ Appuyez sur une pastille pour changer. La modification s'applique immediatement 
 
 > Voir [Mode de reponse de l'IA](./20-ai-response-mode.md) pour en savoir plus sur ce que chaque mode modifie.
 
+### Modele d'IA
+
+Choisissez le modele d'IA pour toutes les fonctionnalites IA (Chat, Scan de recu, Categorisation, Analyses, Histoires, Objectifs). Cela affecte directement la **qualite des reponses** et la **consommation du quota IA** :
+
+| Modele | Vitesse | Cout | Ideal pour |
+|---|---|---|---|
+| ⚡ **Fast** | Le plus rapide | ×0.75 quota | Categorisation rapide, requetes simples |
+| ⚖️ **Balanced** | Moyen | ×1 quota | Usage general — par defaut |
+| ✨ **Quality** | Plus lent | ×1.5 quota | Analyses complexes, aperçus detailles |
+
+> **Conseil :** Avec le plan Free (5 requetes IA/mois), passer en **Fast** donne ~6.7 requetes effectives. Passer en **Quality** donne ~3.3.
+
+Appuyez sur une pastille pour changer. Le modele prend effet immediatement pour toutes les nouvelles requetes IA.
+
 ### Apparence
 
 Choisissez votre theme :

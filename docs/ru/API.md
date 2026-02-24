@@ -117,11 +117,9 @@ Authorization: Bearer <token>
   "name": "Иван Иванов",
   "currencyCode": "RUB",
   "timezone": "UTC",
-  "pushToken": null,
-  "notifyBudgetAlerts": true,
-  "notifySharedActivity": true,
-  "defaultAccountId": "uuid",
-  "lastSyncAt": "2024-01-15T10:30:00Z",
+  "aiResponseMode": "balanced",
+  "aiModel": "balanced",
+  "isAdmin": false,
   "createdAt": "2024-01-01T00:00:00Z"
 }
 ```
@@ -143,6 +141,50 @@ Content-Type: application/json
 ```
 
 **Ответ** `200 OK`
+
+### Обновить стиль ответов ИИ
+
+```http
+PATCH /users/me/ai-response-mode
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "mode": "balanced"
+}
+```
+
+**Значения mode**: `simple`, `balanced`, `expert`
+
+**Ответ** `200 OK`
+```json
+{ "success": true, "mode": "balanced" }
+```
+
+### Обновить модель ИИ
+
+```http
+PATCH /users/me/ai-model
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "model": "fast"
+}
+```
+
+**Значения model**: `fast`, `balanced`, `quality`
+
+| Значение | Модель OpenAI | Max токенов | Множитель стоимости |
+|----------|--------------|------------|---------------------|
+| `fast` | `gpt-4o-mini` | 1500 | ×0.75 |
+| `balanced` | `gpt-4o` | 2000 | ×1.0 |
+| `quality` | `gpt-4.1` | 3000 | ×1.5 |
+
+**Ответ** `200 OK`
+```json
+{ "success": true, "model": "fast" }
+```
 
 ---
 

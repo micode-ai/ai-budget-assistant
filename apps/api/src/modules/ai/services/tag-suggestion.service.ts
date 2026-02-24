@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
+import { resolveAiModel } from './model-resolver';
 
 @Injectable()
 export class TagSuggestionService {
@@ -20,6 +21,7 @@ export class TagSuggestionService {
     accountId: string,
     description: string,
     merchant?: string,
+    userId?: string,
   ): Promise<{ tags: Array<{ name: string; confidence: number; source: 'history' | 'ai'; existingTagId?: string }> }> {
     // 1. Try history-based suggestions first (free)
     const historySuggestions = await this.suggestFromHistory(accountId, description, merchant);
@@ -28,7 +30,7 @@ export class TagSuggestionService {
     }
 
     // 2. Fall back to AI
-    const aiSuggestions = await this.suggestWithAI(accountId, description, merchant);
+    const aiSuggestions = await this.suggestWithAI(accountId, description, merchant, userId);
 
     // Merge: history suggestions first, then AI (deduped)
     const existingNames = new Set(historySuggestions.map(s => s.name.toLowerCase()));
@@ -101,6 +103,7 @@ export class TagSuggestionService {
     accountId: string,
     description: string,
     merchant?: string,
+    userId?: string,
   ): Promise<Array<{ name: string; confidence: number; source: 'ai'; existingTagId?: string }>> {
     // Get existing tags for context
     const existingTags = await this.prisma.tag.findMany({
@@ -119,9 +122,16 @@ Suggest 3-5 relevant tags for this expense. Prefer existing tags when they fit.
 Return JSON: { "tags": [{ "name": "tag name", "confidence": 0.0-1.0, "isExisting": boolean }] }
 Tags should be short (1-3 words), lowercase, descriptive labels like: subscriptions, entertainment, monthly, groceries, dining-out, work-expense, etc.`;
 
+    // Resolve user's preferred AI model
+    let aiModel = 'gpt-4o';
+    if (userId) {
+      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+      aiModel = resolveAiModel(userPref?.aiModel).model;
+    }
+
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: aiModel,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' },
         max_tokens: 200,

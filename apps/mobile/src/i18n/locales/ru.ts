@@ -481,6 +481,11 @@ export default {
     aiResponseModeSimpleDesc: 'Простой язык, без жаргона',
     aiResponseModeBalancedDesc: 'Смесь простого и технического',
     aiResponseModeExpertDesc: 'Финансовая терминология, детальный анализ',
+    aiModel: 'Модель ИИ',
+    aiModelFast: 'Быстрый',
+    aiModelBalanced: 'Сбалансированный',
+    aiModelQuality: 'Качественный',
+    aiModelCost: 'стоимость',
   },
   notifications: {
     title: 'Уведомления',

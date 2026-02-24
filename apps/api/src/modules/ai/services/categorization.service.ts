@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
+import { resolveAiModel } from './model-resolver';
 
 interface CategoryWithName {
   id: string;
@@ -85,6 +86,10 @@ export class CategorizationService {
   }
 
   async parseExpenseFromText(text: string, userId: string, accountId: string) {
+    // Resolve user's preferred AI model
+    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+
     // Try history-based suggestion first (fast, free)
     const historySuggestion = await this.suggestFromHistory(accountId, text);
 
@@ -118,7 +123,7 @@ If the currency is not specified, default to USD.
 Only return valid JSON, no other text.`;
 
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: aiModel,
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' },
     });
@@ -146,6 +151,10 @@ Only return valid JSON, no other text.`;
   }
 
   async categorize(description: string, userId: string, accountId: string) {
+    // Resolve user's preferred AI model
+    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+
     // Try history-based suggestion first (fast, free)
     const historySuggestion = await this.suggestFromHistory(accountId, description);
     if (historySuggestion) {
@@ -174,7 +183,7 @@ Return a JSON object with:
 Only return valid JSON.`;
 
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: aiModel,
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' },
     });

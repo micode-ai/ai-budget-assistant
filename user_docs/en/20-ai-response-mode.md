@@ -46,6 +46,17 @@ Designed for financially literate users and professionals.
 - Suggests advanced strategies (tax optimization, compound interest projections)
 - Professional, analytical tone
 
+## AI Model vs. AI Response Mode
+
+These are two separate settings:
+
+| Setting | What It Changes |
+|---|---|
+| **AI Response Mode** | *How* the AI talks to you — tone, vocabulary, detail level |
+| **AI Model** | *Which* underlying model is used — affects quality, speed, and quota cost |
+
+You can combine them freely: e.g., Expert mode with Fast model, or Simple mode with Quality model.
+
 ## What It Affects
 
 The response mode changes the AI's communication style across **all AI features**:
