@@ -834,6 +834,8 @@ export default {
     noTags: 'Тегів поки немає',
     suggestedTags: 'Запропоновані теги',
     aiSuggestions: 'Пропозиції ШІ',
+    suggestTags: 'Запропонувати теги',
+    descriptionRequired: 'Спочатку введіть опис (мінімум 3 символи)',
     recentTags: 'Останні теги',
     popularTags: 'Популярні теги',
     manageTags: 'Керування тегами',

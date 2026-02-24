@@ -834,6 +834,8 @@ export default {
     noTags: 'Brak tagów',
     suggestedTags: 'Sugerowane tagi',
     aiSuggestions: 'Sugestie AI',
+    suggestTags: 'Zaproponuj tagi',
+    descriptionRequired: 'Najpierw wprowadź opis (co najmniej 3 znaki)',
     recentTags: 'Ostatnie tagi',
     popularTags: 'Popularne tagi',
     manageTags: 'Zarządzaj tagami',

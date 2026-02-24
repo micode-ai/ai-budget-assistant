@@ -834,6 +834,8 @@ export default {
     noTags: 'Тегов пока нет',
     suggestedTags: 'Предложенные теги',
     aiSuggestions: 'Предложения ИИ',
+    suggestTags: 'Предложить теги',
+    descriptionRequired: 'Сначала введите описание (минимум 3 символа)',
     recentTags: 'Недавние теги',
     popularTags: 'Популярные теги',
     manageTags: 'Управление тегами',
