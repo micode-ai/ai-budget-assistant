@@ -1234,4 +1234,15 @@ export default {
     isDebtRepayment: 'Remboursement de dette',
     repaymentFor: 'Remboursement de dette',
   },
+  widgets: {
+    today: "Aujourd'hui",
+    openApp: "Ouvrir l'app",
+    week: 'Semaine',
+    budgets: 'Budgets',
+    topCategories: 'Top catégories',
+    voice: 'Voix',
+    scan: 'Scanner',
+    add: 'Ajouter',
+    dayNames: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+  },
 } as const;

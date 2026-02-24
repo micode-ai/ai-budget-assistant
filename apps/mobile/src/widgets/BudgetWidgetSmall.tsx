@@ -15,25 +15,43 @@ export function BudgetWidgetSmall({ data }: Props) {
           width: 'match_parent',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#0F172A',
           borderRadius: 16,
-          padding: 12,
+          padding: 8,
         }}
       >
         <TextWidget
-          text="No data yet"
-          style={{ fontSize: 14, color: '#999999' }}
+          text="Open app"
+          style={{ fontSize: 12, color: '#94A3B8' }}
         />
       </FlexWidget>
     );
   }
 
+  const labels = data.labels;
+
   const deltaColor =
     data.deltaDirection === 'up'
-      ? '#E74C3C'
+      ? '#FF6B6B'
       : data.deltaDirection === 'down'
-        ? '#2ECC71'
-        : '#999999';
+        ? '#4ECDC4'
+        : '#94A3B8';
+
+  const deltaIcon =
+    data.deltaDirection === 'up'
+      ? '↑'
+      : data.deltaDirection === 'down'
+        ? '↓'
+        : '';
+
+  const badgeBg =
+    data.deltaDirection === 'up'
+      ? '#2D1515'
+      : data.deltaDirection === 'down'
+        ? '#0D2D2A'
+        : '#1E2235';
+
+  const showDelta = data.todayDelta !== '0%' && deltaIcon !== '';
 
   return (
     <FlexWidget
@@ -43,24 +61,43 @@ export function BudgetWidgetSmall({ data }: Props) {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#0F172A',
         borderRadius: 16,
-        padding: 12,
+        padding: 10,
       }}
       clickAction="OPEN_APP"
     >
       <TextWidget
-        text="Today"
-        style={{ fontSize: 12, color: '#999999' }}
+        text={(labels?.today ?? 'Today').toUpperCase()}
+        style={{ fontSize: 10, color: '#94A3B8', letterSpacing: 0.5 }}
       />
       <TextWidget
         text={data.todaySpent}
-        style={{ fontSize: 24, fontWeight: 'bold', color: '#1A1A2E' }}
+        style={{
+          fontSize: 20,
+          fontWeight: 'bold',
+          color: '#FFFFFF',
+          marginTop: 2,
+        }}
       />
-      <TextWidget
-        text={data.todayDelta}
-        style={{ fontSize: 12, color: deltaColor }}
-      />
+      {showDelta && (
+        <FlexWidget
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: badgeBg,
+            borderRadius: 6,
+            paddingHorizontal: 6,
+            paddingVertical: 2,
+            marginTop: 4,
+          }}
+        >
+          <TextWidget
+            text={`${deltaIcon} ${data.todayDelta}`}
+            style={{ fontSize: 10, fontWeight: '600', color: deltaColor }}
+          />
+        </FlexWidget>
+      )}
     </FlexWidget>
   );
 }

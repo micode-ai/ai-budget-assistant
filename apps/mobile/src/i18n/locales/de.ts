@@ -1234,4 +1234,15 @@ export default {
     isDebtRepayment: 'Schuldenrückzahlung',
     repaymentFor: 'Rückzahlung für Schuld',
   },
+  widgets: {
+    today: 'Heute',
+    openApp: 'App öffnen',
+    week: 'Woche',
+    budgets: 'Budgets',
+    topCategories: 'Top Kategorien',
+    voice: 'Sprache',
+    scan: 'Scannen',
+    add: 'Hinzufügen',
+    dayNames: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+  },
 } as const;

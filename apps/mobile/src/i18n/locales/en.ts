@@ -1234,4 +1234,15 @@ export default {
     isDebtRepayment: 'Debt repayment',
     repaymentFor: 'Repayment for debt',
   },
+  widgets: {
+    today: 'Today',
+    openApp: 'Open app to load data',
+    week: 'Week',
+    budgets: 'Budgets',
+    topCategories: 'Top Categories',
+    voice: 'Voice',
+    scan: 'Scan',
+    add: 'Add',
+    dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  },
 } as const;

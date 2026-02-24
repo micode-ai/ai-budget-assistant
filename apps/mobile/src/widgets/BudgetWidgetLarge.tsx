@@ -15,25 +15,44 @@ export function BudgetWidgetLarge({ data }: Props) {
           width: 'match_parent',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#FFFFFF',
-          borderRadius: 16,
+          backgroundColor: '#0F172A',
+          borderRadius: 20,
           padding: 16,
         }}
       >
         <TextWidget
-          text="No data yet"
-          style={{ fontSize: 14, color: '#999999' }}
+          text="Open app to load data"
+          style={{ fontSize: 13, color: '#94A3B8' }}
         />
       </FlexWidget>
     );
   }
 
+  const labels = data.labels;
+
   const deltaColor =
     data.deltaDirection === 'up'
-      ? '#E74C3C'
+      ? '#FF6B6B'
       : data.deltaDirection === 'down'
-        ? '#2ECC71'
-        : '#999999';
+        ? '#4ECDC4'
+        : '#94A3B8';
+
+  const deltaIcon =
+    data.deltaDirection === 'up'
+      ? '↑'
+      : data.deltaDirection === 'down'
+        ? '↓'
+        : '';
+
+  const badgeBg =
+    data.deltaDirection === 'up'
+      ? '#2D1515'
+      : data.deltaDirection === 'down'
+        ? '#0D2D2A'
+        : '#1E2235';
+
+  const todayIndex = data.weekBars.length - 1;
+  const maxBarHeight = 28;
 
   return (
     <FlexWidget
@@ -41,8 +60,8 @@ export function BudgetWidgetLarge({ data }: Props) {
         height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'column',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
+        backgroundColor: '#0F172A',
+        borderRadius: 20,
         padding: 16,
       }}
       clickAction="OPEN_APP"
@@ -52,31 +71,108 @@ export function BudgetWidgetLarge({ data }: Props) {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           width: 'match_parent',
         }}
       >
         <FlexWidget style={{ flexDirection: 'column' }}>
           <TextWidget
-            text="Today"
-            style={{ fontSize: 11, color: '#999999' }}
+            text={(labels?.today ?? 'Today').toUpperCase()}
+            style={{ fontSize: 10, color: '#94A3B8', letterSpacing: 1 }}
           />
           <TextWidget
             text={data.todaySpent}
-            style={{ fontSize: 20, fontWeight: 'bold', color: '#1A1A2E' }}
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#F8FAFC',
+              marginTop: 2,
+            }}
           />
         </FlexWidget>
         <FlexWidget style={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+          {data.todayDelta !== '0%' && (
+            <FlexWidget
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: badgeBg,
+                borderRadius: 8,
+                paddingHorizontal: 6,
+                paddingVertical: 3,
+              }}
+            >
+              <TextWidget
+                text={`${deltaIcon} ${data.todayDelta}`}
+                style={{ fontSize: 11, fontWeight: '600', color: deltaColor }}
+              />
+            </FlexWidget>
+          )}
           <TextWidget
-            text={data.todayDelta}
-            style={{ fontSize: 12, color: deltaColor }}
-          />
-          <TextWidget
-            text={`Week: ${data.weekTotal}`}
-            style={{ fontSize: 11, color: '#666666' }}
+            text={`${labels?.week ?? 'Week'}: ${data.weekTotal}`}
+            style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}
           />
         </FlexWidget>
       </FlexWidget>
+
+      {/* Mini bar chart */}
+      <FlexWidget
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          width: 'match_parent',
+          height: maxBarHeight + 16,
+          marginTop: 12,
+        }}
+      >
+        {data.weekBars.map((bar, i) => {
+          const barHeight = bar.maxValue > 0
+            ? Math.max(3, (bar.value / bar.maxValue) * maxBarHeight)
+            : 3;
+          const isToday = i === todayIndex;
+          return (
+            <FlexWidget
+              key={i}
+              style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                flex: 1,
+                marginHorizontal: 2,
+              }}
+            >
+              <FlexWidget
+                style={{
+                  width: 'match_parent',
+                  height: barHeight,
+                  backgroundColor: isToday ? '#4ECDC4' : '#1E293B',
+                  borderRadius: 3,
+                }}
+              />
+              <TextWidget
+                text={bar.day}
+                style={{
+                  fontSize: 8,
+                  color: isToday ? '#4ECDC4' : '#94A3B8',
+                  marginTop: 3,
+                  fontWeight: isToday ? '600' : 'normal',
+                }}
+              />
+            </FlexWidget>
+          );
+        })}
+      </FlexWidget>
+
+      {/* Divider */}
+      <FlexWidget
+        style={{
+          width: 'match_parent',
+          height: 1,
+          backgroundColor: '#1E293B',
+          marginTop: 10,
+          marginBottom: 8,
+        }}
+      />
 
       {/* Budget progress bars */}
       {data.budgets.length > 0 && (
@@ -84,60 +180,69 @@ export function BudgetWidgetLarge({ data }: Props) {
           style={{
             flexDirection: 'column',
             width: 'match_parent',
-            marginTop: 12,
           }}
         >
           <TextWidget
-            text="Budgets"
-            style={{ fontSize: 11, color: '#999999', marginBottom: 6 }}
+            text={(labels?.budgets ?? 'Budgets').toUpperCase()}
+            style={{
+              fontSize: 9,
+              color: '#94A3B8',
+              letterSpacing: 1,
+              marginBottom: 6,
+            }}
           />
-          {data.budgets.slice(0, 3).map((budget, i) => (
-            <FlexWidget
-              key={i}
-              style={{
-                flexDirection: 'column',
-                width: 'match_parent',
-                marginBottom: 6,
-              }}
-            >
+          {data.budgets.slice(0, 3).map((budget, i) => {
+            const progressColor = budget.isOverBudget ? '#FF6B6B' : '#4ECDC4';
+            const trackColor = budget.isOverBudget ? '#2D1515' : '#0D2D2A';
+
+            return (
               <FlexWidget
+                key={i}
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  flexDirection: 'column',
                   width: 'match_parent',
+                  marginBottom: 6,
                 }}
               >
-                <TextWidget
-                  text={budget.name}
-                  style={{ fontSize: 11, color: '#333333' }}
-                />
-                <TextWidget
-                  text={`${budget.spent} / ${budget.limit}`}
-                  style={{ fontSize: 10, color: '#666666' }}
-                />
-              </FlexWidget>
-              {/* Progress bar background */}
-              <FlexWidget
-                style={{
-                  width: 'match_parent',
-                  height: 6,
-                  backgroundColor: '#EEEEEE',
-                  borderRadius: 3,
-                  marginTop: 2,
-                }}
-              >
-                {/* Progress bar fill */}
                 <FlexWidget
                   style={{
-                    width: `${Math.min(budget.percent, 100)}%` as any,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: 'match_parent',
+                    marginBottom: 3,
+                  }}
+                >
+                  <TextWidget
+                    text={budget.name}
+                    style={{ fontSize: 11, color: '#CBD5E1' }}
+                  />
+                  <TextWidget
+                    text={`${budget.spent} / ${budget.limit}`}
+                    style={{ fontSize: 11, color: '#94A3B8' }}
+                  />
+                </FlexWidget>
+                {/* Progress bar track */}
+                <FlexWidget
+                  style={{
+                    width: 'match_parent',
                     height: 6,
-                    backgroundColor: budget.isOverBudget ? '#E74C3C' : '#4ECDC4',
+                    backgroundColor: trackColor,
                     borderRadius: 3,
                   }}
-                />
+                >
+                  {/* Progress bar fill */}
+                  <FlexWidget
+                    style={{
+                      width: `${Math.min(budget.percent, 100)}%` as any,
+                      height: 6,
+                      backgroundColor: progressColor,
+                      borderRadius: 3,
+                    }}
+                  />
+                </FlexWidget>
               </FlexWidget>
-            </FlexWidget>
-          ))}
+            );
+          })}
         </FlexWidget>
       )}
 
@@ -147,12 +252,17 @@ export function BudgetWidgetLarge({ data }: Props) {
           style={{
             flexDirection: 'column',
             width: 'match_parent',
-            marginTop: 8,
+            marginTop: 6,
           }}
         >
           <TextWidget
-            text="Top Categories"
-            style={{ fontSize: 11, color: '#999999', marginBottom: 4 }}
+            text={(labels?.topCategories ?? 'Top Categories').toUpperCase()}
+            style={{
+              fontSize: 9,
+              color: '#94A3B8',
+              letterSpacing: 1,
+              marginBottom: 5,
+            }}
           />
           {data.topCategories.map((cat, i) => (
             <FlexWidget
@@ -166,18 +276,30 @@ export function BudgetWidgetLarge({ data }: Props) {
               }}
             >
               <FlexWidget style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TextWidget
-                  text={cat.icon}
-                  style={{ fontSize: 14, marginRight: 4 }}
-                />
+                <FlexWidget
+                  style={{
+                    width: 22,
+                    height: 22,
+                    backgroundColor: '#1E293B',
+                    borderRadius: 6,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: 8,
+                  }}
+                >
+                  <TextWidget
+                    text={cat.icon}
+                    style={{ fontSize: 12 }}
+                  />
+                </FlexWidget>
                 <TextWidget
                   text={cat.name}
-                  style={{ fontSize: 11, color: '#333333' }}
+                  style={{ fontSize: 11, color: '#CBD5E1' }}
                 />
               </FlexWidget>
               <TextWidget
                 text={cat.amount}
-                style={{ fontSize: 11, fontWeight: 'bold', color: '#1A1A2E' }}
+                style={{ fontSize: 11, fontWeight: 'bold', color: '#F8FAFC' }}
               />
             </FlexWidget>
           ))}

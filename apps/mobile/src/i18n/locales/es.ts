@@ -1234,4 +1234,15 @@ export default {
     isDebtRepayment: 'Pago de deuda',
     repaymentFor: 'Pago de deuda',
   },
+  widgets: {
+    today: 'Hoy',
+    openApp: 'Abrir app',
+    week: 'Semana',
+    budgets: 'Presupuestos',
+    topCategories: 'Top categorías',
+    voice: 'Voz',
+    scan: 'Escanear',
+    add: 'Agregar',
+    dayNames: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+  },
 } as const;

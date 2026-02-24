@@ -1235,4 +1235,15 @@ export default {
     isDebtRepayment: 'Spłata długu',
     repaymentFor: 'Spłata długu',
   },
+  widgets: {
+    today: 'Dzisiaj',
+    openApp: 'Otwórz aplikację',
+    week: 'Tydzień',
+    budgets: 'Budżety',
+    topCategories: 'Top kategorie',
+    voice: 'Głos',
+    scan: 'Skanuj',
+    add: 'Dodaj',
+    dayNames: ['Nd', 'Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob'],
+  },
 } as const;

@@ -15,27 +15,44 @@ export function BudgetWidgetMedium({ data }: Props) {
           width: 'match_parent',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#FFFFFF',
-          borderRadius: 16,
+          backgroundColor: '#0F172A',
+          borderRadius: 20,
           padding: 16,
         }}
       >
         <TextWidget
-          text="No data yet"
-          style={{ fontSize: 14, color: '#999999' }}
+          text="Open app to load data"
+          style={{ fontSize: 13, color: '#94A3B8' }}
         />
       </FlexWidget>
     );
   }
 
+  const labels = data.labels;
+
   const deltaColor =
     data.deltaDirection === 'up'
-      ? '#E74C3C'
+      ? '#FF6B6B'
       : data.deltaDirection === 'down'
-        ? '#2ECC71'
-        : '#999999';
+        ? '#4ECDC4'
+        : '#94A3B8';
 
-  const maxBarHeight = 40;
+  const deltaIcon =
+    data.deltaDirection === 'up'
+      ? '↑'
+      : data.deltaDirection === 'down'
+        ? '↓'
+        : '';
+
+  const badgeBg =
+    data.deltaDirection === 'up'
+      ? '#2D1515'
+      : data.deltaDirection === 'down'
+        ? '#0D2D2A'
+        : '#1E2235';
+
+  const maxBarHeight = 36;
+  const todayIndex = data.weekBars.length - 1;
 
   return (
     <FlexWidget
@@ -43,8 +60,8 @@ export function BudgetWidgetMedium({ data }: Props) {
         height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'column',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
+        backgroundColor: '#0F172A',
+        borderRadius: 20,
         padding: 16,
       }}
       clickAction="OPEN_APP"
@@ -54,47 +71,68 @@ export function BudgetWidgetMedium({ data }: Props) {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           width: 'match_parent',
         }}
       >
         <FlexWidget style={{ flexDirection: 'column' }}>
           <TextWidget
-            text="Today"
-            style={{ fontSize: 11, color: '#999999' }}
+            text={(labels?.today ?? 'Today').toUpperCase()}
+            style={{ fontSize: 10, color: '#94A3B8', letterSpacing: 1 }}
           />
           <TextWidget
             text={data.todaySpent}
-            style={{ fontSize: 20, fontWeight: 'bold', color: '#1A1A2E' }}
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#F8FAFC',
+              marginTop: 2,
+            }}
           />
         </FlexWidget>
         <FlexWidget style={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+          {data.todayDelta !== '0%' && (
+            <FlexWidget
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: badgeBg,
+                borderRadius: 8,
+                paddingHorizontal: 6,
+                paddingVertical: 3,
+              }}
+            >
+              <TextWidget
+                text={`${deltaIcon} ${data.todayDelta}`}
+                style={{ fontSize: 11, fontWeight: '600', color: deltaColor }}
+              />
+            </FlexWidget>
+          )}
           <TextWidget
-            text={data.todayDelta}
-            style={{ fontSize: 12, color: deltaColor }}
-          />
-          <TextWidget
-            text={`Week: ${data.weekTotal}`}
-            style={{ fontSize: 11, color: '#666666' }}
+            text={`${labels?.week ?? 'Week'}: ${data.weekTotal}`}
+            style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}
           />
         </FlexWidget>
       </FlexWidget>
 
-      {/* Mini bar chart */}
+      {/* Bar chart */}
       <FlexWidget
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
           width: 'match_parent',
-          height: maxBarHeight + 16,
-          marginTop: 8,
+          height: maxBarHeight + 18,
+          marginTop: 12,
         }}
       >
         {data.weekBars.map((bar, i) => {
           const barHeight = bar.maxValue > 0
             ? Math.max(4, (bar.value / bar.maxValue) * maxBarHeight)
             : 4;
+          const isToday = i === todayIndex;
+          const barColor = isToday ? '#4ECDC4' : '#1E293B';
+
           return (
             <FlexWidget
               key={i}
@@ -109,13 +147,18 @@ export function BudgetWidgetMedium({ data }: Props) {
                 style={{
                   width: 'match_parent',
                   height: barHeight,
-                  backgroundColor: '#4ECDC4',
+                  backgroundColor: barColor,
                   borderRadius: 4,
                 }}
               />
               <TextWidget
                 text={bar.day}
-                style={{ fontSize: 9, color: '#999999', marginTop: 2 }}
+                style={{
+                  fontSize: 9,
+                  color: isToday ? '#4ECDC4' : '#94A3B8',
+                  marginTop: 4,
+                  fontWeight: isToday ? '600' : 'normal',
+                }}
               />
             </FlexWidget>
           );

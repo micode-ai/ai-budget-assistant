@@ -21,12 +21,12 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     case 'WIDGET_ADDED':
     case 'WIDGET_UPDATE':
     case 'WIDGET_RESIZED': {
+      const data = await WidgetDataService.getWidgetData();
+
       if (widgetName === WIDGET_NAMES.QUICK_ACTION) {
-        props.renderWidget(<QuickActionWidget />);
+        props.renderWidget(<QuickActionWidget labels={data?.labels} />);
         break;
       }
-
-      const data = await WidgetDataService.getWidgetData();
 
       switch (widgetName) {
         case WIDGET_NAMES.SMALL:
