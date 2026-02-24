@@ -6,6 +6,8 @@ import * as ni18n from './notification-i18n';
 @Injectable()
 export class SharedActivityService {
   private readonly logger = new Logger(SharedActivityService.name);
+  private readonly sentNotifications = new Map<string, number>();
+  private readonly DEDUP_TTL_MS = 10 * 60 * 1000;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -15,11 +17,24 @@ export class SharedActivityService {
   async notifyExpenseCreated(
     accountId: string,
     creatorUserId: string,
+    expenseId: string,
     amount: number,
     currencyCode: string,
     description?: string,
   ): Promise<void> {
     try {
+      const lastSent = this.sentNotifications.get(expenseId);
+      if (lastSent && Date.now() - lastSent < this.DEDUP_TTL_MS) {
+        this.logger.debug(`Skipping duplicate shared notification for expense ${expenseId}`);
+        return;
+      }
+      this.sentNotifications.set(expenseId, Date.now());
+      if (this.sentNotifications.size > 10000) {
+        const cutoff = Date.now() - this.DEDUP_TTL_MS;
+        for (const [id, ts] of this.sentNotifications) {
+          if (ts < cutoff) this.sentNotifications.delete(id);
+        }
+      }
       const account = await this.prisma.account.findUnique({
         where: { id: accountId },
         select: { name: true, type: true },

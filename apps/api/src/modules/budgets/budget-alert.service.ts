@@ -109,12 +109,14 @@ export class BudgetAlertService {
 
         if (!budget) continue;
 
+        const anomalyPeriodStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         await this.prisma.budgetAlert.create({
           data: {
             budgetId: budget.id,
             userId,
             thresholdPercentage: -1, // Marker for spending anomaly
             currentSpent: currentData.amount,
+            periodStart: anomalyPeriodStart,
             triggeredAt: new Date(),
             notificationSent: false,
           },
@@ -202,55 +204,58 @@ export class BudgetAlertService {
 
     for (const threshold of THRESHOLDS) {
       if (percentUsed >= threshold) {
-        const existing = await this.prisma.budgetAlert.findFirst({
-          where: {
+        // Atomic insert: unique constraint (budgetId, thresholdPercentage, periodStart) prevents
+        // duplicate alerts when concurrent requests both reach this point.
+        const result = await this.prisma.budgetAlert.createMany({
+          data: [{
             budgetId: budget.id,
+            userId: budget.userId,
             thresholdPercentage: threshold,
-            triggeredAt: { gte: periodStart },
-          },
+            currentSpent: spent,
+            periodStart,
+            triggeredAt: new Date(),
+            notificationSent: false,
+          }],
+          skipDuplicates: true,
         });
 
-        if (!existing) {
-          const alert = await this.prisma.budgetAlert.create({
-            data: {
-              budgetId: budget.id,
-              userId: budget.userId,
-              thresholdPercentage: threshold,
-              currentSpent: spent,
-              triggeredAt: new Date(),
-              notificationSent: false,
-            },
+        if (result.count > 0) {
+          const alert = await this.prisma.budgetAlert.findFirst({
+            where: { budgetId: budget.id, thresholdPercentage: threshold, periodStart },
+            orderBy: { triggeredAt: 'desc' },
           });
 
-          const budgetParams = {
-            budgetName: budget.name,
-            threshold,
-            currencyCode: budget.currencyCode,
-            spent: spent.toFixed(2),
-            total: budgetAmount.toFixed(2),
-          };
+          if (alert) {
+            const budgetParams = {
+              budgetName: budget.name,
+              threshold,
+              currencyCode: budget.currencyCode,
+              spent: spent.toFixed(2),
+              total: budgetAmount.toFixed(2),
+            };
 
-          const sentOk = await this.notifications.sendToUser(
-            budget.userId,
-            threshold >= 100
-              ? (lang) => ni18n.budgetExceededTitle(lang, budgetParams)
-              : (lang) => ni18n.budgetThresholdTitle(lang, budgetParams),
-            threshold >= 100
-              ? (lang) => ni18n.budgetExceededBody(lang, budgetParams)
-              : (lang) => ni18n.budgetThresholdBody(lang, budgetParams),
-            {
-              budgetId: budget.id,
-              alertId: alert.id,
-              thresholdPercentage: threshold,
-            },
-            'budget_alert',
-          );
+            const sentOk = await this.notifications.sendToUser(
+              budget.userId,
+              threshold >= 100
+                ? (lang) => ni18n.budgetExceededTitle(lang, budgetParams)
+                : (lang) => ni18n.budgetThresholdTitle(lang, budgetParams),
+              threshold >= 100
+                ? (lang) => ni18n.budgetExceededBody(lang, budgetParams)
+                : (lang) => ni18n.budgetThresholdBody(lang, budgetParams),
+              {
+                budgetId: budget.id,
+                alertId: alert.id,
+                thresholdPercentage: threshold,
+              },
+              'budget_alert',
+            );
 
-          if (sentOk) {
-            await this.prisma.budgetAlert.update({
-              where: { id: alert.id },
-              data: { notificationSent: true },
-            });
+            if (sentOk) {
+              await this.prisma.budgetAlert.update({
+                where: { id: alert.id },
+                data: { notificationSent: true },
+              });
+            }
           }
         }
       }

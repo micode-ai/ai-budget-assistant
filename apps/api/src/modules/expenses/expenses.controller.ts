@@ -42,9 +42,11 @@ export class ExpensesController {
       .catch(e => this.logger.error('Budget alert check failed', e));
     this.budgetAlertService.checkSpendingAnomalies(req.accountId, req.user.id)
       .catch(e => this.logger.error('Spending anomaly check failed', e));
-    this.sharedActivityService.notifyExpenseCreated(
-      req.accountId, req.user.id, dto.amount, dto.currencyCode, dto.description,
-    ).catch(e => this.logger.error('Shared activity notification failed', e));
+    if (expense) {
+      this.sharedActivityService.notifyExpenseCreated(
+        req.accountId, req.user.id, expense.id, dto.amount, dto.currencyCode, dto.description,
+      ).catch(e => this.logger.error('Shared activity notification failed', e));
+    }
 
     return expense;
   }
