@@ -1347,6 +1347,7 @@ const createStyles = (theme: Theme) => ({
   fieldLabelOutside: {
     ...theme.textStyles.body,
     color: theme.colors.textSecondary,
+    marginTop: theme.spacing[4],
     marginBottom: theme.spacing[2],
   },
   fieldValue: {
