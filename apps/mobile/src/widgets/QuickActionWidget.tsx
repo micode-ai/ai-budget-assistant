@@ -1,15 +1,26 @@
 import React from 'react';
 import { FlexWidget, TextWidget } from 'react-native-android-widget';
+import type { WidgetLabels } from '@/services/widgetData';
 
-export function QuickActionWidget() {
+interface Props {
+  labels?: WidgetLabels;
+}
+
+const FALLBACK = { voice: 'Voice', scan: 'Scan', add: 'Add' };
+
+export function QuickActionWidget({ labels }: Props) {
+  const voice = labels?.voice ?? FALLBACK.voice;
+  const scan = labels?.scan ?? FALLBACK.scan;
+  const add = labels?.add ?? FALLBACK.add;
+
   return (
     <FlexWidget
       style={{
         height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 16,
+        backgroundColor: '#0A0F1E',
+        borderRadius: 20,
         padding: 8,
         justifyContent: 'space-evenly',
         alignItems: 'center',
@@ -22,9 +33,10 @@ export function QuickActionWidget() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#F0FFFE',
-          borderRadius: 12,
-          padding: 8,
+          backgroundColor: '#111827',
+          borderRadius: 14,
+          paddingHorizontal: 4,
+          paddingVertical: 8,
           marginHorizontal: 4,
           height: 'match_parent',
         }}
@@ -32,8 +44,27 @@ export function QuickActionWidget() {
         clickActionData={{ uri: 'budget://expense/voice' }}
         accessibilityLabel="Add expense by voice"
       >
-        <TextWidget text="🎤" style={{ fontSize: 20 }} />
-        <TextWidget text="Voice" style={{ fontSize: 11, color: '#333333', marginTop: 2 }} />
+        <FlexWidget
+          style={{
+            width: 32,
+            height: 32,
+            backgroundColor: '#4ECDC4',
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <TextWidget text="◉" style={{ fontSize: 16, color: '#0A0F1E', fontWeight: 'bold' }} />
+        </FlexWidget>
+        <TextWidget
+          text={voice}
+          style={{
+            fontSize: 11,
+            color: '#F1F5F9',
+            marginTop: 4,
+            fontWeight: '600',
+          }}
+        />
       </FlexWidget>
 
       {/* Scan button */}
@@ -43,9 +74,10 @@ export function QuickActionWidget() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#FFF8F0',
-          borderRadius: 12,
-          padding: 8,
+          backgroundColor: '#111827',
+          borderRadius: 14,
+          paddingHorizontal: 4,
+          paddingVertical: 8,
           marginHorizontal: 4,
           height: 'match_parent',
         }}
@@ -53,8 +85,27 @@ export function QuickActionWidget() {
         clickActionData={{ uri: 'budget://expense/receipt' }}
         accessibilityLabel="Scan receipt"
       >
-        <TextWidget text="📷" style={{ fontSize: 20 }} />
-        <TextWidget text="Scan" style={{ fontSize: 11, color: '#333333', marginTop: 2 }} />
+        <FlexWidget
+          style={{
+            width: 32,
+            height: 32,
+            backgroundColor: '#4ECDC4',
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <TextWidget text="≡" style={{ fontSize: 18, color: '#0A0F1E', fontWeight: 'bold' }} />
+        </FlexWidget>
+        <TextWidget
+          text={scan}
+          style={{
+            fontSize: 11,
+            color: '#F1F5F9',
+            marginTop: 4,
+            fontWeight: '600',
+          }}
+        />
       </FlexWidget>
 
       {/* Manual button */}
@@ -64,9 +115,10 @@ export function QuickActionWidget() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#F0F0FF',
-          borderRadius: 12,
-          padding: 8,
+          backgroundColor: '#111827',
+          borderRadius: 14,
+          paddingHorizontal: 4,
+          paddingVertical: 8,
           marginHorizontal: 4,
           height: 'match_parent',
         }}
@@ -74,8 +126,27 @@ export function QuickActionWidget() {
         clickActionData={{ uri: 'budget://expense/new' }}
         accessibilityLabel="Add expense manually"
       >
-        <TextWidget text="✏️" style={{ fontSize: 20 }} />
-        <TextWidget text="Add" style={{ fontSize: 11, color: '#333333', marginTop: 2 }} />
+        <FlexWidget
+          style={{
+            width: 32,
+            height: 32,
+            backgroundColor: '#4ECDC4',
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <TextWidget text="+" style={{ fontSize: 22, color: '#0A0F1E', fontWeight: 'bold' }} />
+        </FlexWidget>
+        <TextWidget
+          text={add}
+          style={{
+            fontSize: 11,
+            color: '#F1F5F9',
+            marginTop: 4,
+            fontWeight: '600',
+          }}
+        />
       </FlexWidget>
     </FlexWidget>
   );

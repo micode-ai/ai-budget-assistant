@@ -12,12 +12,37 @@ import { formatCurrency } from '@budget/shared-utils';
  * - Android: SharedPreferences (via react-native-android-widget task handler)
  */
 
+export interface WidgetLabels {
+  today: string;
+  openApp: string;
+  week: string;
+  budgets: string;
+  topCategories: string;
+  voice: string;
+  scan: string;
+  add: string;
+  dayNames: string[]; // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+}
+
+const DEFAULT_LABELS: WidgetLabels = {
+  today: 'Today',
+  openApp: 'Open app to load data',
+  week: 'Week',
+  budgets: 'Budgets',
+  topCategories: 'Top Categories',
+  voice: 'Voice',
+  scan: 'Scan',
+  add: 'Add',
+  dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+};
+
 export interface WidgetSmallData {
   todaySpent: string;
   todayDelta: string; // e.g., "+12%" or "-5%"
   deltaDirection: 'up' | 'down' | 'neutral';
   currencyCode: string;
   updatedAt: string;
+  labels: WidgetLabels;
 }
 
 export interface WidgetMediumData extends WidgetSmallData {
@@ -88,6 +113,7 @@ export class WidgetDataService {
     }
 
     const maxWeekValue = Math.max(...weeklyExpenses.map((w) => w.amount), 1);
+    const labels = getWidgetLabels();
 
     const data: WidgetLargeData = {
       todaySpent: formatCurrency(todayExpenses, currencyCode),
@@ -95,6 +121,7 @@ export class WidgetDataService {
       deltaDirection,
       currencyCode,
       updatedAt: new Date().toISOString(),
+      labels,
       weekTotal: formatCurrency(weekTotal, currencyCode),
       weekBars: weeklyExpenses.map((w) => ({
         day: w.day,
@@ -141,6 +168,7 @@ export class WidgetDataService {
       deltaDirection: data.deltaDirection,
       currencyCode: data.currencyCode,
       updatedAt: data.updatedAt,
+      labels: data.labels ?? DEFAULT_LABELS,
     };
   }
 
@@ -154,13 +182,33 @@ export class WidgetDataService {
       deltaDirection: data.deltaDirection,
       currencyCode: data.currencyCode,
       updatedAt: data.updatedAt,
+      labels: data.labels ?? DEFAULT_LABELS,
       weekTotal: data.weekTotal,
       weekBars: data.weekBars,
     };
   }
 }
 
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+function getWidgetLabels(): WidgetLabels {
+  try {
+    const i18n = require('@/i18n').default;
+    const t = (key: string) => i18n.t(key);
+    const dayNames = i18n.t('widgets.dayNames', { returnObjects: true });
+    return {
+      today: t('widgets.today'),
+      openApp: t('widgets.openApp'),
+      week: t('widgets.week'),
+      budgets: t('widgets.budgets'),
+      topCategories: t('widgets.topCategories'),
+      voice: t('widgets.voice'),
+      scan: t('widgets.scan'),
+      add: t('widgets.add'),
+      dayNames: Array.isArray(dayNames) ? dayNames : DEFAULT_LABELS.dayNames,
+    };
+  } catch {
+    return DEFAULT_LABELS;
+  }
+}
 
 /**
  * Collect data from Zustand stores, persist to SecureStore, and re-render
@@ -205,6 +253,7 @@ export async function refreshWidgetData(): Promise<void> {
       .reduce((s: number, e: any) => s + e.amount, 0);
 
     // Weekly (last 7 days, one bar per day)
+    const localDayNames = getWidgetLabels().dayNames;
     const weeklyExpenses: { day: string; amount: number }[] = [];
     let weekTotal = 0;
     for (let i = 6; i >= 0; i--) {
@@ -216,7 +265,7 @@ export async function refreshWidgetData(): Promise<void> {
           return d >= dayStart && d < dayEnd;
         })
         .reduce((s: number, e: any) => s + e.amount, 0);
-      weeklyExpenses.push({ day: DAY_NAMES[dayStart.getDay()], amount });
+      weeklyExpenses.push({ day: localDayNames[dayStart.getDay()] ?? localDayNames[0], amount });
       weekTotal += amount;
     }
 

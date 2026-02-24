@@ -1235,4 +1235,15 @@ export default {
     isDebtRepayment: 'Повернення боргу',
     repaymentFor: 'Повернення боргу',
   },
+  widgets: {
+    today: 'Сьогодні',
+    openApp: 'Відкрийте додаток',
+    week: 'Тиждень',
+    budgets: 'Бюджети',
+    topCategories: 'Топ категорій',
+    voice: 'Голос',
+    scan: 'Скан',
+    add: 'Додати',
+    dayNames: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+  },
 } as const;
