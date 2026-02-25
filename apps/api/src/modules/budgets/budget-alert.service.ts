@@ -204,9 +204,18 @@ export class BudgetAlertService {
 
     for (const threshold of THRESHOLDS) {
       if (percentUsed >= threshold) {
-        // Atomic insert: unique constraint (budgetId, thresholdPercentage, periodStart) prevents
-        // duplicate alerts when concurrent requests both reach this point.
-        const result = await this.prisma.budgetAlert.createMany({
+        // Check if alert already exists for this threshold+period (already sent or not)
+        const existingAlert = await this.prisma.budgetAlert.findFirst({
+          where: { budgetId: budget.id, thresholdPercentage: threshold, periodStart },
+        });
+
+        if (existingAlert) {
+          // Alert already exists — skip to avoid duplicate notifications
+          continue;
+        }
+
+        // Try to insert; skipDuplicates handles the race between concurrent requests
+        const insertResult = await this.prisma.budgetAlert.createMany({
           data: [{
             budgetId: budget.id,
             userId: budget.userId,
@@ -219,13 +228,19 @@ export class BudgetAlertService {
           skipDuplicates: true,
         });
 
-        if (result.count > 0) {
+        if (insertResult.count > 0) {
           const alert = await this.prisma.budgetAlert.findFirst({
             where: { budgetId: budget.id, thresholdPercentage: threshold, periodStart },
             orderBy: { triggeredAt: 'desc' },
           });
 
-          if (alert) {
+          if (alert && !alert.notificationSent) {
+            // Mark as sent BEFORE actually sending to prevent concurrent sends
+            await this.prisma.budgetAlert.update({
+              where: { id: alert.id },
+              data: { notificationSent: true },
+            });
+
             const budgetParams = {
               budgetName: budget.name,
               threshold,
@@ -250,10 +265,11 @@ export class BudgetAlertService {
               'budget_alert',
             );
 
-            if (sentOk) {
+            if (!sentOk) {
+              // Rollback: allow retry on next check
               await this.prisma.budgetAlert.update({
                 where: { id: alert.id },
-                data: { notificationSent: true },
+                data: { notificationSent: false },
               });
             }
           }
