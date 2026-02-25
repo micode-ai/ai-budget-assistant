@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
@@ -442,6 +442,27 @@ export class AdminService {
     });
   }
 
+  async deleteUser(userId: string, adminId: string, ipAddress: string | null = null) {
+    if (userId === adminId) {
+      throw new BadRequestException('Cannot delete your own account');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, email: true },
+    });
+    if (!user) throw new NotFoundException('User not found');
+
+    await this.logAction(adminId, 'user.delete', 'user', userId, {
+      userName: user.name,
+      userEmail: user.email,
+    }, ipAddress);
+
+    await this.prisma.user.delete({ where: { id: userId } });
+
+    return { id: user.id, email: user.email, name: user.name, deleted: true };
+  }
+
   // ─── Communications ──────────────────────────────
 
   async sendPush(adminId: string, userIds: string[], title: string, body: string) {
@@ -574,8 +595,8 @@ export class AdminService {
     return {
       data: data.map((d) => ({
         ...d,
-        adminName: d.admin.name,
-        adminEmail: d.admin.email,
+        adminName: d.admin?.name ?? 'Deleted admin',
+        adminEmail: d.admin?.email ?? '',
         admin: undefined,
       })),
       total,
@@ -809,7 +830,7 @@ export class AdminService {
       conversionRate: Math.round(conversionRate * 10) / 10,
       recentChanges: recentChanges.map((c) => ({
         id: c.id,
-        adminName: c.admin.name,
+        adminName: c.admin?.name ?? 'Deleted admin',
         action: c.action,
         targetId: c.targetId,
         details: c.details,
@@ -852,8 +873,8 @@ export class AdminService {
       data: data.map((d) => ({
         id: d.id,
         adminId: d.adminId,
-        adminName: d.admin.name,
-        adminEmail: d.admin.email,
+        adminName: d.admin?.name ?? 'Deleted admin',
+        adminEmail: d.admin?.email ?? '',
         action: d.action,
         targetType: d.targetType,
         targetId: d.targetId,
@@ -921,11 +942,13 @@ export class AdminService {
           language?: string;
         } | null;
 
+        const adminId = sn.adminId ?? 'system';
+
         if (sn.type === 'push') {
           if (userIds && userIds.length > 0) {
-            await this.sendPush(sn.adminId, userIds, sn.title ?? '', sn.body);
+            await this.sendPush(adminId, userIds, sn.title ?? '', sn.body);
           } else if (filters) {
-            await this.sendBroadcast(sn.adminId, 'push', {
+            await this.sendBroadcast(adminId, 'push', {
               title: sn.title ?? '',
               body: sn.body,
               filters,
@@ -933,9 +956,9 @@ export class AdminService {
           }
         } else if (sn.type === 'email') {
           if (userIds && userIds.length > 0) {
-            await this.sendEmail(sn.adminId, userIds, sn.subject ?? '', sn.body);
+            await this.sendEmail(adminId, userIds, sn.subject ?? '', sn.body);
           } else if (filters) {
-            await this.sendBroadcast(sn.adminId, 'email', {
+            await this.sendBroadcast(adminId, 'email', {
               subject: sn.subject ?? '',
               body: sn.body,
               filters,

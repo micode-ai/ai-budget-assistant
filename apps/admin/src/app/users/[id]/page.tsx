@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState } from "react";
-import { useUserDetail, useChangeSubscriptionTier, useDeactivateUser } from "@/hooks/use-users";
+import { useUserDetail, useChangeSubscriptionTier, useDeactivateUser, useDeleteUser } from "@/hooks/use-users";
 import { useSendPush, useSendEmail, useUserNotificationHistory } from "@/hooks/use-communications";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,16 +44,19 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { ArrowLeft, Shield, UserX, Bell, Mail, Send } from "lucide-react";
+import { ArrowLeft, Shield, UserX, Trash2, Bell, Mail, Send } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { SubscriptionTier } from "@/types";
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const { data: user, isLoading } = useUserDetail(id);
   const changeTier = useChangeSubscriptionTier();
   const deactivate = useDeactivateUser();
+  const deleteUser = useDeleteUser();
   const sendPush = useSendPush();
   const sendEmail = useSendEmail();
   const { data: notifHistory } = useUserNotificationHistory(id);
@@ -65,6 +68,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [emailSubject, setEmailSubject] = useState("");
   const [emailHtml, setEmailHtml] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   if (isLoading) return <PageSkeleton />;
   if (!user) return <p>User not found</p>;
@@ -95,6 +99,17 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
     deactivate.mutate(id, {
       onSuccess: () => toast.success("User deactivated"),
       onError: () => toast.error("Failed to deactivate user"),
+    });
+  };
+
+  const handleDeleteUser = () => {
+    deleteUser.mutate(id, {
+      onSuccess: () => {
+        toast.success(`${user.name} has been permanently deleted`);
+        setDeleteDialogOpen(false);
+        router.push("/users");
+      },
+      onError: (err) => toast.error(err instanceof Error ? err.message : "Failed to delete user"),
     });
   };
 
@@ -317,6 +332,42 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
               <UserX className="h-4 w-4 mr-2" />
               {user.isActive ? "Deactivate User" : "Already Inactive"}
             </Button>
+
+            {/* Delete permanently */}
+            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="destructive" className="w-full">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete User
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Permanently Delete User</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-2">
+                  <p className="text-sm text-muted-foreground">
+                    Are you sure you want to permanently delete <strong>{user.name}</strong> ({user.email})?
+                    This will remove ALL their data including expenses, incomes, budgets, and accounts.
+                  </p>
+                  <p className="text-sm font-medium text-destructive">
+                    This action cannot be undone.
+                  </p>
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={handleDeleteUser}
+                      disabled={deleteUser.isPending}
+                    >
+                      {deleteUser.isPending ? "Deleting..." : "Delete Permanently"}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             <div className="text-sm text-muted-foreground space-y-0.5">
               <p>Push token: {user.pushToken ? "Active" : "None"}</p>
