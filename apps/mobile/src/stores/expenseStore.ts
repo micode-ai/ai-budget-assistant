@@ -504,6 +504,13 @@ export const useExpenseStore = create<ExpenseState>()(
         const cat = catStore.getCategoryById(catId);
         return cat?.name || catId;
       };
+      // Mark as syncing immediately to prevent syncPendingExpenses from picking it up
+      set((state) => ({
+        expenses: state.expenses.map((e) =>
+          e.id === id ? { ...e, syncStatus: 'synced' as SyncStatus } : e
+        ),
+      }));
+
       // Encrypt sensitive fields before sending to server
       maybeEncrypt('expense', {
         description: newExpense.description,
@@ -535,15 +542,15 @@ export const useExpenseStore = create<ExpenseState>()(
           encryptedPayload,
           encryptionKeyVersion,
         } as any);
-      }).then(() => {
+      }).catch((e) => {
+        // Revert to pending so syncPendingExpenses can retry later
         set((state) => ({
-          expenses: state.expenses.map((e) =>
-            e.id === id ? { ...e, syncStatus: 'synced' as SyncStatus } : e
+          expenses: state.expenses.map((exp) =>
+            exp.id === id ? { ...exp, syncStatus: 'pending' as SyncStatus } : exp
           ),
         }));
-      }).catch((e) =>
-        console.error('Failed to sync expense to server:', e),
-      );
+        console.error('Failed to sync expense to server:', e);
+      });
 
       // Fire-and-forget gamification check
       try { useGamificationStore.getState().checkAchievements(); } catch {}
