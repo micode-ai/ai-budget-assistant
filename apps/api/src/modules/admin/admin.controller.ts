@@ -105,10 +105,15 @@ export class AdminController {
   }
 
   @Delete('users/:id')
-  async deactivateUser(
+  async deleteOrDeactivateUser(
     @Param('id') id: string,
+    @Query('permanent') permanent: string,
     @Req() req: AdminRequest,
   ) {
+    if (permanent === 'true') {
+      return this.adminService.deleteUser(id, req.user.id, this.getIp(req));
+    }
+
     const result = await this.adminService.deactivateUser(id);
     await this.adminService.logAction(
       req.user.id,

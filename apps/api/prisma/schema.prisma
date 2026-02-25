@@ -1057,7 +1057,7 @@ model FatFinderReport {
 
 model AdminAuditLog {
   id          String   @id @default(uuid())
-  adminId     String   @map("admin_id")
+  adminId     String?  @map("admin_id")
   action      String   // e.g. "user.deactivate", "subscription.change_tier", "notification.send_push"
   targetType  String   @map("target_type")  // "user", "subscription", "notification"
   targetId    String?  @map("target_id")
@@ -1065,7 +1065,7 @@ model AdminAuditLog {
   ipAddress   String?  @map("ip_address")
   createdAt   DateTime @default(now()) @map("created_at")
 
-  admin       User     @relation(fields: [adminId], references: [id])
+  admin       User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([adminId, createdAt])
   @@index([targetType, targetId])
@@ -1075,7 +1075,7 @@ model AdminAuditLog {
 
 model NotificationLog {
   id             String   @id @default(uuid())
-  adminId        String   @map("admin_id")
+  adminId        String?  @map("admin_id")
   type           String   // "push" | "email" | "broadcast"
   recipientCount Int      @map("recipient_count")
   successCount   Int      @default(0) @map("success_count")
@@ -1086,7 +1086,7 @@ model NotificationLog {
   recipientIds   Json?    @map("recipient_ids") @db.JsonB
   createdAt      DateTime @default(now()) @map("created_at")
 
-  admin          User     @relation(fields: [adminId], references: [id])
+  admin          User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([adminId, createdAt])
   @@map("notification_logs")
@@ -1094,7 +1094,7 @@ model NotificationLog {
 
 model ScheduledNotification {
   id             String    @id @default(uuid())
-  adminId        String    @map("admin_id")
+  adminId        String?   @map("admin_id")
   type           String    // "push" | "email"
   title          String?
   subject        String?
@@ -1106,7 +1106,7 @@ model ScheduledNotification {
   status         String    @default("pending") // "pending" | "sent" | "failed" | "cancelled"
   createdAt      DateTime  @default(now()) @map("created_at")
 
-  admin          User      @relation(fields: [adminId], references: [id])
+  admin          User?     @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([status, scheduledAt])
   @@map("scheduled_notifications")

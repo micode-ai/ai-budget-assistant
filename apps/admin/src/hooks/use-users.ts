@@ -74,3 +74,15 @@ export function useDeactivateUser() {
     },
   });
 }
+
+export function useDeleteUser() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      return api.delete(`admin/users/${userId}?permanent=true`).json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
+}
