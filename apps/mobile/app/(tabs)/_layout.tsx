@@ -57,9 +57,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: false,
           title: t('nav.dashboard'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+            <Ionicons name="home" size={size} color={color} />
           ),
         }}
       />
@@ -68,7 +69,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.expenses'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="receipt-outline" size={size} color={color} />
+            <Ionicons name="swap-vertical" size={size} color={color} />
           ),
         }}
       />
@@ -77,7 +78,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.budgets'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="wallet-outline" size={size} color={color} />
+            <Ionicons name="pie-chart-outline" size={size} color={color} />
           ),
         }}
       />
@@ -86,7 +87,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.analytics'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bar-chart-outline" size={size} color={color} />
+            <Ionicons name="bar-chart" size={size} color={color} />
           ),
         }}
       />
@@ -95,7 +96,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.aiChat'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-ellipses-outline" size={size} color={color} />
+            <Ionicons name="chatbubble-ellipses" size={size} color={color} />
           ),
         }}
       />

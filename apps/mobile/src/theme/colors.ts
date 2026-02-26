@@ -51,14 +51,14 @@ export interface ThemeColors {
 
 export const lightColors: ThemeColors = {
   // Brand
-  primary: '#4ECDC4',
-  primaryLight: '#E8F8F7',
-  primaryDark: '#3BA99F',
-  secondary: '#45B7D1',
-  accent: '#96CEB4',
+  primary: '#E37F2B',
+  primaryLight: '#FDF0E4',
+  primaryDark: '#C46A1A',
+  secondary: '#F5A623',
+  accent: '#FFBA60',
 
   // Semantic
-  success: '#4ECDC4',
+  success: '#4CAF50',
   warning: '#F5A623',
   warningLight: '#FFF3DC',
   danger: '#FF6B6B',
@@ -76,7 +76,7 @@ export const lightColors: ThemeColors = {
   textSecondary: '#5E6272',
   textTertiary: '#9CA3B4',
   textInverse: '#FFFFFF',
-  textLink: '#4ECDC4',
+  textLink: '#E37F2B',
   textDisabled: '#C5C9D6',
 
   // Borders
@@ -90,11 +90,11 @@ export const lightColors: ThemeColors = {
 
   // Status / Progress
   progressTrack: '#E2E5EB',
-  tabBarActive: '#4ECDC4',
+  tabBarActive: '#E37F2B',
   tabBarInactive: '#9CA3B4',
 
   // Chat
-  messageBubbleUser: '#4ECDC4',
+  messageBubbleUser: '#E37F2B',
   messageBubbleAI: '#FFFFFF',
   messageBubbleUserText: '#FFFFFF',
   messageBubbleAIText: '#1A1D26',
@@ -102,14 +102,14 @@ export const lightColors: ThemeColors = {
 
 export const darkColors: ThemeColors = {
   // Brand
-  primary: '#4ECDC4',
-  primaryLight: '#1A3B38',
-  primaryDark: '#6EE0D8',
-  secondary: '#45B7D1',
-  accent: '#96CEB4',
+  primary: '#E37F2B',
+  primaryLight: '#3D2A10',
+  primaryDark: '#FFBA60',
+  secondary: '#F5A623',
+  accent: '#FFBA60',
 
   // Semantic
-  success: '#4ECDC4',
+  success: '#4CAF50',
   warning: '#F5A623',
   warningLight: '#3D2E0A',
   danger: '#FF6B6B',
@@ -117,36 +117,36 @@ export const darkColors: ThemeColors = {
   info: '#45B7D1',
 
   // Surfaces
-  background: '#0F1117',
-  surface: '#1A1D26',
-  surfaceElevated: '#232636',
-  surfaceSecondary: '#252838',
+  background: '#000000',
+  surface: '#1A1A1A',
+  surfaceElevated: '#252525',
+  surfaceSecondary: '#1E1E1E',
 
   // Text
-  textPrimary: '#F0F1F5',
-  textSecondary: '#A0A4B8',
-  textTertiary: '#6B6F82',
-  textInverse: '#0F1117',
-  textLink: '#4ECDC4',
-  textDisabled: '#4A4D5E',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#A0A0A0',
+  textTertiary: '#7F7F7C',
+  textInverse: '#FFFFFF',
+  textLink: '#E37F2B',
+  textDisabled: '#4A4A4A',
 
   // Borders
-  border: '#2E3145',
-  borderLight: '#252838',
-  divider: '#232636',
+  border: '#333333',
+  borderLight: '#2A2A2A',
+  divider: '#222222',
 
   // Overlays
   overlay: 'rgba(0, 0, 0, 0.7)',
   scrim: 'rgba(0, 0, 0, 0.5)',
 
   // Status / Progress
-  progressTrack: '#2E3145',
-  tabBarActive: '#4ECDC4',
-  tabBarInactive: '#6B6F82',
+  progressTrack: '#333333',
+  tabBarActive: '#E37F2B',
+  tabBarInactive: '#7F7F7C',
 
   // Chat
-  messageBubbleUser: '#4ECDC4',
-  messageBubbleAI: '#1A1D26',
-  messageBubbleUserText: '#0F1117',
-  messageBubbleAIText: '#F0F1F5',
+  messageBubbleUser: '#E37F2B',
+  messageBubbleAI: '#1A1A1A',
+  messageBubbleUserText: '#FFFFFF',
+  messageBubbleAIText: '#FFFFFF',
 };

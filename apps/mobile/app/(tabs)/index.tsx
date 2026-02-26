@@ -20,6 +20,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
+import { AccountSwitcher } from '@/components/AccountSwitcher';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -51,7 +52,6 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     if (currentAccountId) {
-      // Load debts after expenses/incomes so SQLite has fresh data
       Promise.all([loadExpenses(), loadIncomes()]).then(() => loadDebts());
       loadProfile();
       if (currentAccountType === 'investment') {
@@ -70,7 +70,6 @@ export default function DashboardScreen() {
       if (currentAccountType === 'investment') {
         promises.push(loadInvestmentSummary());
       }
-      // Load debts after expenses/incomes so SQLite has fresh server data
       await Promise.all([loadExpenses(), loadIncomes(), ...promises]);
       await loadDebts();
     } finally {
@@ -86,18 +85,61 @@ export default function DashboardScreen() {
       ? theme.colors.warning
       : theme.colors.primary;
 
+  const ICON_BOX = 48;
+
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      {/* Orange Hero Header */}
+      <View style={styles.heroHeader}>
+        <View style={styles.heroTopRow}>
+          <AccountSwitcher compact />
+          <Text style={styles.welcomeText} numberOfLines={1}>
+            {t('dashboard.hello', { name: user?.name || 'User' })}
+          </Text>
+          <TouchableOpacity
+            onPress={() => router.push('/settings')}
+            style={styles.settingsButton}
+          >
+            <Ionicons name="settings-outline" size={22} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Quick Actions — fixed between header and scroll content */}
+      {canEdit && (
+        <View style={styles.quickActionsRow}>
+          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
+              <Ionicons name="add" size={24} color={theme.colors.primary} />
+            </View>
+            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
+              <Ionicons name="mic" size={22} color={theme.colors.primary} />
+            </View>
+            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
+              <Ionicons name="camera" size={22} color={theme.colors.primary} />
+            </View>
+            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
+              <Ionicons name="swap-horizontal" size={22} color={theme.colors.primary} />
+            </View>
+            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.primary} />}
       >
-        <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeText}>{t('dashboard.hello', { name: user?.name || 'User' })}</Text>
-          <Text style={styles.dateText}>{new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
-        </View>
-
         {currentAccountType === 'investment' && investmentSummary && (
           <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/investment')}>
             <View style={styles.cardHeader}>
@@ -127,41 +169,10 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        {canEdit && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.quickActions}
-            style={styles.quickActionsScroll}
-          >
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.primary + '18' }]}>
-                <Ionicons name="add-circle" size={28} color={theme.colors.primary} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.accent + '18' }]}>
-                <Ionicons name="mic" size={28} color={theme.colors.accent} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.secondary + '18' }]}>
-                <Ionicons name="camera" size={28} color={theme.colors.secondary} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
-              <View style={[styles.quickActionIcon, { backgroundColor: theme.colors.warning + '18' }]}>
-                <Ionicons name="swap-horizontal" size={28} color={theme.colors.warning} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        )}
-
         <TouchableOpacity style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
+          <Text style={styles.gamificationDate}>
+            {new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
+          </Text>
           <View style={styles.gamificationRow}>
             <View style={styles.gamificationItem}>
               <View style={[styles.levelBadge, { backgroundColor: theme.colors.primary }]}>
@@ -315,58 +326,110 @@ const createStyles = (theme: Theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
+  // Orange Hero Header — paddingBottom creates room for top half of quick action icons
+  heroHeader: {
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing[4],
+    paddingBottom: 24, // = ICON_BOX / 2
+  },
+  heroTopRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingTop: theme.spacing[2],
+    paddingBottom: theme.spacing[3],
+  },
+  settingsButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    flexShrink: 0,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 18,
+  },
+  welcomeText: {
+    fontFamily: theme.fonts.semiBold,
+    fontSize: 18,
+    color: '#FFFFFF',
+    flex: 1,
+    textAlign: 'center' as const,
+  },
+  // Quick actions row — sits between header and ScrollView, overlaps header by 24px
+  quickActionsRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-evenly' as const,
+    marginTop: -24, // pulls top half of icons into orange header
+    paddingHorizontal: theme.spacing[3],
+    paddingBottom: theme.spacing[3],
+    zIndex: 1,
+  },
+  quickActionButton: {
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    flex: 1,
+  },
+  quickActionIcon: {
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: theme.isDark ? 0.5 : 0.15,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  quickActionText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  // Scroll content
   scrollView: {
     flex: 1,
   },
   content: {
-    padding: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
     paddingBottom: theme.spacing[8],
-  },
-  welcomeSection: {
-    marginBottom: theme.spacing[6],
-    alignItems: 'center' as const,
-  },
-  welcomeText: {
-    ...theme.textStyles.h1,
-    color: theme.colors.textPrimary,
-  },
-  dateText: {
-    ...theme.textStyles.bodyLarge,
-    color: theme.colors.textSecondary,
-    marginTop: theme.spacing[1],
   },
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
-    marginBottom: theme.spacing[5],
-    ...theme.shadows.md,
+    marginBottom: theme.spacing[4],
+    borderWidth: 2,
+    borderColor: theme.colors.borderLight,
   },
   cardHeader: {
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.borderLight,
-    paddingBottom: theme.spacing[2.5],
-    marginBottom: theme.spacing[3],
-    alignItems: 'center' as const,
+    alignSelf: 'center' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.xl,
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[5],
+    marginBottom: theme.spacing[4],
   },
   cardTitle: {
-    ...theme.textStyles.h3,
+    ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
   },
   incomeAmount: {
-    ...theme.textStyles.h3,
-    color: theme.colors.success,
-    fontWeight: '700' as const,
+    fontSize: 28,
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.primary,
+    fontWeight: '900' as const,
+    textAlign: 'center' as const,
   },
   expenseTotalAmount: {
-    ...theme.textStyles.h3,
-    color: theme.colors.danger,
-    fontWeight: '700' as const,
+    fontSize: 28,
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.textPrimary,
+    fontWeight: '900' as const,
+    textAlign: 'center' as const,
   },
   remainingAmount: {
-    ...theme.textStyles.h3,
+    fontSize: 28,
+    fontFamily: theme.fonts.bold,
     color: theme.colors.textPrimary,
-    fontWeight: '700' as const,
+    fontWeight: '900' as const,
   },
   budgetOverview: {
     gap: theme.spacing[4],
@@ -375,6 +438,7 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     alignItems: 'baseline' as const,
     gap: theme.spacing[2],
+    justifyContent: 'center' as const,
   },
   budgetTotal: {
     ...theme.textStyles.bodyLarge,
@@ -395,31 +459,6 @@ const createStyles = (theme: Theme) => ({
   },
   progressText: {
     ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-  },
-  quickActionsScroll: {
-    marginBottom: theme.spacing[6],
-    marginHorizontal: -theme.spacing[4],
-  },
-  quickActions: {
-    flexDirection: 'row' as const,
-    paddingHorizontal: theme.spacing[4],
-    gap: theme.spacing[3],
-  },
-  quickActionButton: {
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-    width: 72,
-  },
-  quickActionIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: theme.borderRadius.xl,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-  },
-  quickActionText: {
-    ...theme.textStyles.caption,
     color: theme.colors.textSecondary,
     textAlign: 'center' as const,
   },
@@ -497,10 +536,14 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
-    marginBottom: theme.spacing[5],
-    borderWidth: 1,
-    borderColor: '#F5A623' + '40',
-    ...theme.shadows.sm,
+    marginBottom: theme.spacing[4],
+    borderWidth: 2,
+    borderColor: theme.colors.borderLight,
+  },
+  gamificationDate: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[3],
   },
   gamificationRow: {
     flexDirection: 'row' as const,
@@ -562,9 +605,15 @@ const createStyles = (theme: Theme) => ({
   },
   gamificationLink: {
     ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textLink,
+    color: '#FFFFFF',
     textAlign: 'center' as const,
     marginTop: theme.spacing[3],
+    backgroundColor: theme.colors.primary,
+    alignSelf: 'center' as const,
+    paddingVertical: theme.spacing[1],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.borderRadius.md,
+    overflow: 'hidden' as const,
   },
   investmentRow: {
     flexDirection: 'row' as const,
