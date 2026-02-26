@@ -26,7 +26,7 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = 
   investment: 'trending-up-outline',
 };
 
-export function AccountSwitcher() {
+export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const { accounts, currentAccountId, switchAccount } = useAccountStore();
@@ -59,17 +59,17 @@ export function AccountSwitcher() {
 
   return (
     <>
-      <TouchableOpacity style={styles.trigger} onPress={handleTriggerPress}>
+      <TouchableOpacity style={[styles.trigger, compact && styles.triggerCompact]} onPress={handleTriggerPress}>
         <Ionicons
           name={ACCOUNT_TYPE_ICONS[currentAccount?.type || 'personal']}
-          size={18}
+          size={compact ? 14 : 18}
           color={theme.colors.textInverse}
         />
-        <Text style={styles.triggerText} numberOfLines={1}>
+        <Text style={[styles.triggerText, compact && styles.triggerTextCompact]} numberOfLines={1}>
           {currentAccount?.name || t('accounts.personal')}
         </Text>
         {accounts.length > 1 && (
-          <Ionicons name="chevron-down" size={16} color={theme.colors.textInverse} />
+          <Ionicons name="chevron-down" size={compact ? 12 : 16} color={theme.colors.textInverse} />
         )}
       </TouchableOpacity>
 
@@ -150,10 +150,19 @@ const createStyles = (theme: Theme) => ({
     maxWidth: 140,
     gap: theme.spacing[1],
   },
+  triggerCompact: {
+    marginLeft: 0,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+    maxWidth: 110,
+  },
   triggerText: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textInverse,
     flexShrink: 1,
+  },
+  triggerTextCompact: {
+    fontSize: 12,
   },
   overlay: {
     flex: 1,
