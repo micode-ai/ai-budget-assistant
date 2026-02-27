@@ -264,6 +264,14 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="converter"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('converter.title'),
+          }}
+        />
+        <Stack.Screen
           name="welcome"
           options={{
             headerShown: true,

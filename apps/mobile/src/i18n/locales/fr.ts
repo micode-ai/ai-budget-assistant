@@ -92,6 +92,7 @@ export default {
     createBudgetHint: 'Créez un budget pour suivre vos dépenses',
     walletBalances: 'Soldes du portefeuille',
     exchangeCurrency: 'Change',
+    currencyConverter: 'Convertisseur',
     totalIncome: 'Revenu total ce mois',
     totalExpenses: 'Dépenses totales ce mois',
   },
@@ -542,6 +543,12 @@ export default {
     recentExchanges: 'Échanges récents',
     sameCurrencyError: 'Impossible d\'échanger la même devise',
     exchange: 'Échanger',
+  },
+  converter: {
+    title: 'Convertisseur de devises',
+    result: 'Résultat',
+    enterAmount: 'Entrez le montant',
+    rateInfo: '1 {{from}} = {{rate}} {{to}}',
   },
   transfer: {
     title: 'Virement',

@@ -90,6 +90,7 @@ export default {
     createBudgetHint: 'Стварыце бюджэт для адсочвання расходаў',
     walletBalances: 'Баланс кашалька',
     exchangeCurrency: 'Абмен',
+    currencyConverter: 'Канвертар',
     totalIncome: 'Даходы за гэты месяц',
     totalExpenses: 'Расходы за гэты месяц',
   },
@@ -528,6 +529,12 @@ export default {
     recentExchanges: 'Апошнія абмены',
     sameCurrencyError: 'Нельга абмяняць адну і тую ж валюту',
     exchange: 'Абмяняць',
+  },
+  converter: {
+    title: 'Канвертар валют',
+    result: 'Вынік',
+    enterAmount: 'Увядзіце суму',
+    rateInfo: '1 {{from}} = {{rate}} {{to}}',
   },
   transfer: {
     title: 'Пераказ',
