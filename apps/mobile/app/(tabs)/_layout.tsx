@@ -1,11 +1,19 @@
 import { Tabs, Redirect, router } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { useTheme } from '@/theme';
+
+const tabIcons = {
+  home: require('../../assets/widget-icons/home.png'),
+  transactions: require('../../assets/widget-icons/transactions.png'),
+  budget: require('../../assets/widget-icons/budget.png'),
+  analytics: require('../../assets/widget-icons/analytics.png'),
+  ai_chat: require('../../assets/widget-icons/ai_chat.png'),
+};
 
 export default function TabLayout() {
   const { isAuthenticated } = useAuthStore();
@@ -60,7 +68,7 @@ export default function TabLayout() {
           headerShown: false,
           title: t('nav.dashboard'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Image source={tabIcons.home} style={[tabIconStyles.icon, { width: size, height: size, tintColor: color }]} />
           ),
         }}
       />
@@ -69,7 +77,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.expenses'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="swap-vertical" size={size} color={color} />
+            <Image source={tabIcons.transactions} style={[tabIconStyles.icon, { width: size, height: size, tintColor: color }]} />
           ),
         }}
       />
@@ -78,7 +86,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.budgets'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="pie-chart-outline" size={size} color={color} />
+            <Image source={tabIcons.budget} style={[tabIconStyles.icon, { width: size, height: size, tintColor: color }]} />
           ),
         }}
       />
@@ -87,7 +95,7 @@ export default function TabLayout() {
         options={{
           title: t('nav.analytics'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bar-chart" size={size} color={color} />
+            <Image source={tabIcons.analytics} style={[tabIconStyles.icon, { width: size, height: size, tintColor: color }]} />
           ),
         }}
       />
@@ -96,10 +104,16 @@ export default function TabLayout() {
         options={{
           title: t('nav.aiChat'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-ellipses" size={size} color={color} />
+            <Image source={tabIcons.ai_chat} style={[tabIconStyles.icon, { width: size, height: size, tintColor: color }]} />
           ),
         }}
       />
     </Tabs>
   );
 }
+
+const tabIconStyles = StyleSheet.create({
+  icon: {
+    resizeMode: 'contain',
+  },
+});
