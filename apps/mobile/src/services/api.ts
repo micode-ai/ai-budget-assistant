@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse, GenerateReportDto, GenerateReportResponse, ReportListResponse, MonthlyDigestResponse, CreateBackupResponse, RestoreBackupResponse, BackupHistoryItem, UpdateReportPreferencesDto, ReportPreferencesResponse } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse, GenerateReportDto, GenerateReportResponse, ReportListResponse, MonthlyDigestResponse, CreateBackupResponse, RestoreBackupResponse, BackupHistoryItem, UpdateReportPreferencesDto, ReportPreferencesResponse, TelegramLinkCodeResponse, TelegramLinkStatusResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -1098,6 +1098,21 @@ class ApiClient {
 
   async getBackupHistory() {
     return this.request<BackupHistoryItem[]>('/backups/history');
+  }
+
+  // Telegram
+  async generateTelegramLinkCode() {
+    return this.request<TelegramLinkCodeResponse>('/users/me/telegram-link-code', {
+      method: 'POST',
+    });
+  }
+
+  async getTelegramLinkStatus() {
+    return this.request<TelegramLinkStatusResponse>('/users/me/telegram-link');
+  }
+
+  async unlinkTelegram() {
+    return this.request<void>('/users/me/telegram-link', { method: 'DELETE' });
   }
 
   // Admin endpoints

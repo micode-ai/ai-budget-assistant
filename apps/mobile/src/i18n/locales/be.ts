@@ -472,6 +472,17 @@ export default {
     aiModelBalanced: 'Збалансаваны',
     aiModelQuality: 'Якасны',
     aiModelCost: 'кошт',
+    telegram: {
+      title: 'Telegram-бот',
+      connect: 'Падключыць Telegram',
+      disconnect: 'Адключыць',
+      disconnectConfirm: 'Вы ўпэўнены, што хочаце адключыць Telegram-бота?',
+      linked: 'Telegram падключаны',
+      description: 'Падключыце Telegram-бота для дадання выдаткаў, даходаў, сканавання чэкаў і зносін з ШІ-асістэнтам праз Telegram.',
+      tapToCopy: 'Націсніце, каб скапіраваць код',
+      codeCopied: 'Код скапіраваны ў буфер абмену',
+      linkInstructions: 'Адкрыйце @{{botUsername}} у Telegram і адпраўце:\n/link YOUR_CODE',
+    },
   },
   notifications: {
     title: 'Паведамленні',

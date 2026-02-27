@@ -19,7 +19,7 @@ async function bootstrap() {
 
   // Global prefix (exclude webhook routes from versioning)
   app.setGlobalPrefix('api/v1', {
-    exclude: ['webhooks/stripe'],
+    exclude: ['webhooks/stripe', 'telegram/webhook'],
   });
 
   // CORS

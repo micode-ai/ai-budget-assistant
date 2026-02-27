@@ -419,7 +419,22 @@ src/
 │   ├── mail/                    # Email infrastructure
 │   │   └── mail.service.ts
 │   └── telegram/                # Telegram bot integration
-│       └── telegram.service.ts
+│       ├── telegram.service.ts
+│       ├── telegram-bot.service.ts
+│       ├── telegram-bot.controller.ts
+│       ├── telegram-link.service.ts
+│       ├── types.ts
+│       ├── handlers/
+│       │   ├── chat.handler.ts
+│       │   ├── command.handler.ts
+│       │   ├── expense.handler.ts
+│       │   ├── income.handler.ts
+│       │   ├── voice.handler.ts
+│       │   └── photo.handler.ts
+│       └── helpers/
+│           ├── format-telegram.ts
+│           ├── parse-amount.ts
+│           └── resolve-account.ts
 ├── common/
 │   ├── decorators/
 │   ├── filters/
@@ -1051,7 +1066,17 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 
 ### Telegram Integration
 
-Telegram bot sends notifications for system events (e.g., new user registration).
+The Telegram module provides two services:
+
+1. **TelegramService** — admin notifications for system events (new user registration, new subscriptions)
+2. **TelegramBotService** — full-featured user-facing bot with AI chat, expense/income commands, voice transcription, and receipt OCR
+
+**Bot Architecture:**
+- **Middleware**: Resolves `TelegramLink` → sets `ctx.userState` (userId, accountId, conversationId) before every handler
+- **Handlers**: 6 specialized handlers — `ChatHandler` (AI chat), `CommandHandler` (/start, /link, /account, /unlink, /newchat, /help), `ExpenseHandler`, `IncomeHandler`, `VoiceHandler` (Whisper transcription), `PhotoHandler` (OCR receipt scanning)
+- **Account linking**: 6-char codes with 10-minute TTL, stored in `TelegramLinkCode` table. One-to-one mapping: Telegram user ↔ App user
+- **Account context resolution**: `resolve-account.ts` helper detects account names in user messages and overrides the default accountId for that query (without permanently switching). This allows users to query different accounts by mentioning the account name (e.g., "Show expenses in Family")
+- **Webhook/Polling**: Uses webhook mode when `TELEGRAM_WEBHOOK_URL` is set, otherwise falls back to long polling for development
 
 ### Email (Mail)
 

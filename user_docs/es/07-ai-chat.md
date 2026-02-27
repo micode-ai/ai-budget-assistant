@@ -66,6 +66,8 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - **Confirmacion de acciones** — al crear registros financieros, la IA muestra una vista previa y solicita confirmacion antes de guardar
 - **Deteccion inteligente de idioma** — la IA responde automaticamente en tu idioma (ingles, ruso, ucraniano, bielorruso, aleman, espanol, frances, polaco)
 - **Reconocimiento de moneda** — soporta simbolos: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
+- **Bot de Telegram** — usa el mismo Chat IA desde Telegram. Envia texto, mensajes de voz o fotos de recibos directamente al bot
+- **Deteccion automatica de cuenta** — menciona el nombre de una cuenta en tu mensaje (ej., "Muestra gastos en Family") y la IA consultara esa cuenta automaticamente
 
 ## Limites de solicitudes IA
 
@@ -122,6 +124,12 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 
 - **P: Que sucede si rechazo una accion?**
   **R:** Si tocas "Cancelar" en una tarjeta de confirmacion, la accion se rechaza y no se guarda nada. La IA reconocera el rechazo.
+
+- **P: Puedo usar el Chat IA desde Telegram?**
+  **R:** Si! Vincula tu Telegram desde Ajustes y chatea con el bot de IA directamente. Todas las funciones son las mismas — texto, voz, comandos y escaneo de recibos. Ver [Bot de Telegram](./22-telegram-bot.md) para detalles.
+
+- **P: Como sabe la IA sobre que cuenta pregunto?**
+  **R:** Si mencionas el nombre de una cuenta en tu mensaje (ej., "gastos en Family"), la IA consulta automaticamente esa cuenta. De lo contrario, usa tu cuenta predeterminada actual.
 
 ---
 

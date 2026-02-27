@@ -436,7 +436,22 @@ src/
 │   ├── mail/                    # Email инфраструктура
 │   │   └── mail.service.ts
 │   └── telegram/                # Интеграция с Telegram ботом
-│       └── telegram.service.ts
+│       ├── telegram.service.ts
+│       ├── telegram-bot.service.ts
+│       ├── telegram-bot.controller.ts
+│       ├── telegram-link.service.ts
+│       ├── types.ts
+│       ├── handlers/
+│       │   ├── chat.handler.ts
+│       │   ├── command.handler.ts
+│       │   ├── expense.handler.ts
+│       │   ├── income.handler.ts
+│       │   ├── voice.handler.ts
+│       │   └── photo.handler.ts
+│       └── helpers/
+│           ├── format-telegram.ts
+│           ├── parse-amount.ts
+│           └── resolve-account.ts
 ├── common/
 │   ├── decorators/
 │   ├── filters/
@@ -1077,7 +1092,17 @@ const context = {
 
 ### Интеграция с Telegram
 
-Telegram бот отправляет уведомления о системных событиях (например, регистрация нового пользователя).
+Модуль Telegram предоставляет два сервиса:
+
+1. **TelegramService** — уведомления для администраторов о системных событиях (регистрация пользователей, новые подписки)
+2. **TelegramBotService** — полнофункциональный пользовательский бот с ИИ-чатом, командами расходов/доходов, транскрипцией голоса и OCR чеков
+
+**Архитектура бота:**
+- **Middleware**: Разрешает `TelegramLink` → устанавливает `ctx.userState` (userId, accountId, conversationId) перед каждым обработчиком
+- **Обработчики**: 6 специализированных — `ChatHandler` (ИИ-чат), `CommandHandler` (/start, /link, /account, /unlink, /newchat, /help), `ExpenseHandler`, `IncomeHandler`, `VoiceHandler` (транскрипция через Whisper), `PhotoHandler` (OCR сканирование чеков)
+- **Привязка аккаунтов**: 6-символьные коды с TTL 10 минут, хранятся в таблице `TelegramLinkCode`. Связь один-к-одному: Telegram пользователь ↔ Пользователь приложения
+- **Автоматическое определение счёта**: хелпер `resolve-account.ts` определяет названия счетов в сообщениях пользователя и подменяет `accountId` для данного запроса (без постоянного переключения). Это позволяет пользователям запрашивать данные разных счетов, упоминая название (например, «Покажи расходы в Family»)
+- **Webhook/Polling**: Использует webhook при установленном `TELEGRAM_WEBHOOK_URL`, иначе — long polling для разработки
 
 ### Email (Почта)
 

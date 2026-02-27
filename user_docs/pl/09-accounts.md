@@ -116,6 +116,15 @@ Jezeli jestes czlonkiem (nie Wlascicielem) wspolnego konta:
 2. Dotknij **Opusc konto**
 3. Potwierdz — zostaniesz usuniety z konta
 
+## Przelaczanie kont w Telegramie
+
+Korzystajac z bota Telegram, mozesz przelaczac konta na dwa sposoby:
+
+1. **Recznie** — wyslij `/account` i dotknij wybranego konta
+2. **Automatycznie** — wspomnij nazwe konta w wiadomosci (np. "Pokaz wydatki w Family"), a AI odpyta to konto dla biezacego zapytania
+
+Automatyczne wykrywanie nie zmienia Twojego domyslnego konta — dotyczy tylko biezacej wiadomosci. Uzyj `/account` aby trwale przelaczac.
+
 ## FAQ
 
 - **P: Ile kont moge miec?**
@@ -126,6 +135,9 @@ Jezeli jestes czlonkiem (nie Wlascicielem) wspolnego konta:
 
 - **P: Czy moge zobaczyc, kto dodal wydatek na wspolnym koncie?**
   **O:** Wydatki na wspolnych kontach pokazuja, ktory czlonek je utworzyl.
+
+- **P: Czy moge uzywac roznych kont w bocie Telegram?**
+  **O:** Tak. Wyslij `/account` aby zmienic domyslne konto, lub po prostu wspomnij nazwe konta w wiadomosci dla jednorazowych zapytan. Zobacz [Bot Telegram](./22-telegram-bot.md) po szczegoly.
 
 ---
 

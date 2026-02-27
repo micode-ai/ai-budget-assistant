@@ -66,6 +66,8 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - **Confirmation d'action** — lors de la creation d'enregistrements financiers, l'IA affiche un apercu et demande confirmation avant l'enregistrement
 - **Detection intelligente de la langue** — l'IA repond automatiquement dans votre langue (anglais, russe, ukrainien, bielorusse, allemand, espagnol, francais, polonais)
 - **Reconnaissance des devises** — prend en charge les symboles : ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
+- **Bot Telegram** — utilisez le meme Chat IA depuis Telegram. Envoyez du texte, des messages vocaux ou des photos de recus directement au bot
+- **Detection automatique du compte** — mentionnez un nom de compte dans votre message (ex., "Montre les depenses dans Family") et l'IA interrogera automatiquement ce compte
 
 ## Limites de requetes IA
 
@@ -122,6 +124,12 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
 
 - **Q : Que se passe-t-il si je rejette une action ?**
   **R :** Si vous appuyez sur "Annuler" sur une carte de confirmation, l'action est rejetee et rien n'est enregistre. L'IA accusera reception du rejet.
+
+- **Q : Puis-je utiliser le Chat IA depuis Telegram ?**
+  **R :** Oui ! Liez votre Telegram via Parametres et discutez directement avec le bot IA. Toutes les fonctionnalites sont identiques — texte, voix, commandes et numerisation de recus. Voir [Bot Telegram](./22-telegram-bot.md) pour les details.
+
+- **Q : Comment l'IA sait-elle de quel compte je parle ?**
+  **R :** Si vous mentionnez un nom de compte dans votre message (ex., "depenses dans Family"), l'IA interroge automatiquement ce compte. Sinon, votre compte par defaut est utilise.
 
 ---
 

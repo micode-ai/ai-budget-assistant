@@ -66,6 +66,8 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - **Potwierdzenie akcji** — podczas tworzenia rekordow finansowych AI pokazuje podglad i prosi o potwierdzenie przed zapisaniem
 - **Inteligentne wykrywanie jezyka** — AI automatycznie odpowiada w Twoim jezyku (angielski, rosyjski, ukrainski, bialoruski, niemiecki, hiszpanski, francuski, polski)
 - **Rozpoznawanie walut** — obsluga symboli: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
+- **Bot Telegram** — uzywaj tego samego Czatu AI z Telegrama. Wysylaj tekst, wiadomosci glosowe lub zdjecia paragonow bezposrednio do bota
+- **Automatyczne wykrywanie konta** — wspomnij nazwe konta w wiadomosci (np. "Pokaz wydatki w Family") a AI automatycznie odpyta to konto
 
 ## Limity zapytan AI
 
@@ -122,6 +124,12 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
 
 - **P: Co sie stanie, jezeli odrzuce akcje?**
   **O:** Jezeli dotkniesz "Anuluj" na karcie potwierdzenia, akcja zostaje odrzucona i nic nie jest zapisywane. AI potwierdzi odrzucenie.
+
+- **P: Czy moge uzywac Czatu AI z Telegrama?**
+  **O:** Tak! Polacz Telegram przez Ustawienia i rozmawiaj z botem AI bezposrednio. Wszystkie funkcje dzialaja tak samo — tekst, glos, polecenia i skanowanie paragonow. Zobacz [Bot Telegram](./22-telegram-bot.md) po szczegoly.
+
+- **P: Skad AI wie, o ktore konto pytam?**
+  **O:** Jezeli wspomnisz nazwe konta w wiadomosci (np. "wydatki w Family"), AI automatycznie odpyta to konto. W przeciwnym razie uzyje Twojego domyslnego konta.
 
 ---
 
