@@ -26,6 +26,7 @@ const SECTIONS = [
   '19-fat-finder',
   '20-ai-response-mode',
   '21-widgets',
+  '22-telegram-bot',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

@@ -104,6 +104,10 @@ model User {
   adminNotificationLogs   NotificationLog[]
   adminScheduledNotifications ScheduledNotification[]
 
+  // Telegram
+  telegramLink      TelegramLink?
+  telegramLinkCodes TelegramLinkCode[]
+
   @@map("users")
 }
 
@@ -149,6 +153,7 @@ model Account {
   monthlyDigestCache      MonthlyDigestCache[]
   savingsGoals            SavingsGoal[]
   fatFinderReports        FatFinderReport[]
+  telegramLinks           TelegramLink[]
 
   @@map("accounts")
 }
@@ -1110,4 +1115,39 @@ model ScheduledNotification {
 
   @@index([status, scheduledAt])
   @@map("scheduled_notifications")
+}
+
+// ── Telegram ──
+
+model TelegramLink {
+  id               String   @id @default(uuid())
+  telegramUserId   String   @unique @map("telegram_user_id")
+  telegramUsername  String?  @map("telegram_username")
+  userId           String   @unique @map("user_id")
+  defaultAccountId String   @map("default_account_id")
+  conversationId   String?  @map("conversation_id")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [defaultAccountId], references: [id], onDelete: Cascade)
+
+  @@map("telegram_links")
+}
+
+model TelegramLinkCode {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  accountId String    @map("account_id")
+  code      String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([code])
+  @@index([userId])
+  @@map("telegram_link_codes")
 }

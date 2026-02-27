@@ -31,4 +31,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '19-fat-finder', icon: 'search-outline', color: '#FF9800' },
   { id: '20-ai-response-mode', icon: 'options-outline', color: '#00BCD4' },
   { id: '21-widgets', icon: 'grid-outline', color: '#4ECDC4' },
+  { id: '22-telegram-bot', icon: 'paper-plane-outline', color: '#0088CC' },
 ];

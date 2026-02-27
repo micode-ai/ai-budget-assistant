@@ -1,12 +1,19 @@
-import { Controller, Get, Patch, Delete, Body, UseGuards, Req, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Req, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { AuthenticatedRequest } from '../../common/types';
+import { TelegramLinkService } from '../telegram/telegram-link.service';
+import { TelegramBotService } from '../telegram/telegram-bot.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly telegramLinkService: TelegramLinkService,
+    private readonly telegramBotService: TelegramBotService,
+  ) {}
 
   @Get('me')
   async getProfile(@Req() req: AuthenticatedRequest) {
@@ -80,6 +87,38 @@ export class UsersController {
   @Delete('me')
   async deleteAccount(@Req() req: AuthenticatedRequest) {
     await this.usersService.deactivate(req.user.id);
+    return { success: true };
+  }
+
+  // ── Telegram ──
+
+  @Post('me/telegram-link-code')
+  @UseGuards(AccountContextGuard)
+  async generateTelegramLinkCode(@Req() req: AuthenticatedRequest) {
+    const result = await this.telegramLinkService.generateCode(req.user.id, req.accountId);
+    return {
+      code: result.code,
+      expiresAt: result.expiresAt.toISOString(),
+      botUsername: result.botUsername || this.telegramBotService.getBotUsername(),
+    };
+  }
+
+  @Get('me/telegram-link')
+  async getTelegramLinkStatus(@Req() req: AuthenticatedRequest) {
+    const link = await this.telegramLinkService.getLinkByUserId(req.user.id);
+    if (!link) {
+      return { linked: false };
+    }
+    return {
+      linked: true,
+      telegramUsername: link.telegramUsername,
+      linkedAt: link.createdAt.toISOString(),
+    };
+  }
+
+  @Delete('me/telegram-link')
+  async unlinkTelegram(@Req() req: AuthenticatedRequest) {
+    await this.telegramLinkService.unlinkByUserId(req.user.id);
     return { success: true };
   }
 }

@@ -66,6 +66,8 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - **Aktionsbestätigung** — beim Erstellen von Finanzdatensätzen zeigt die KI eine Vorschau und fragt vor dem Speichern nach Bestätigung
 - **Intelligente Spracherkennung** — KI antwortet automatisch in deiner Sprache (Englisch, Russisch, Ukrainisch, Weißrussisch, Deutsch, Spanisch, Französisch, Polnisch)
 - **Währungserkennung** — unterstützt Symbole: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
+- **Telegram-Bot** — nutze denselben KI-Chat von Telegram aus. Sende Text, Sprachnachrichten oder Belegfotos direkt an den Bot
+- **Automatische Kontoerkennung** — erwahne einen Kontonamen in deiner Nachricht (z.B. "Zeige Ausgaben in Family") und die KI fragt automatisch dieses Konto ab
 
 ## KI-Anfragen-Limits
 
@@ -122,6 +124,12 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 
 - **F: Was passiert, wenn ich eine Aktion ablehne?**
   **A:** Wenn du auf "Abbrechen" auf einer Bestätigungskarte tippst, wird die Aktion abgelehnt und nichts wird gespeichert. Die KI wird die Ablehnung bestätigen.
+
+- **F: Kann ich den KI-Chat von Telegram aus nutzen?**
+  **A:** Ja! Verknupfe dein Telegram uber Einstellungen und chatte direkt mit dem KI-Bot. Alle Funktionen funktionieren gleich — Text, Sprache, Befehle und Belegscannen. Siehe [Telegram-Bot](./22-telegram-bot.md) fur Details.
+
+- **F: Woher weiss die KI, welches Konto ich meine?**
+  **A:** Wenn du einen Kontonamen in deiner Nachricht erwahnst (z.B. "Ausgaben in Family"), fragt die KI automatisch dieses Konto ab. Andernfalls wird dein aktuelles Standardkonto verwendet.
 
 ---
 

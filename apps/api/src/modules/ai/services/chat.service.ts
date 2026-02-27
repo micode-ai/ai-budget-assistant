@@ -83,7 +83,7 @@ export class ChatService {
     return account?.encryptionTier ?? 0;
   }
 
-  async chat(userId: string, message: string, conversationId?: string, accountId?: string) {
+  async chat(userId: string, message: string, conversationId?: string, accountId?: string, accountName?: string | null) {
     // Tier 2 (full encryption): AI features are unavailable — amounts and text are encrypted
     const encryptionTier = await this.getEncryptionTier(accountId);
     if (encryptionTier >= 2) {
@@ -136,7 +136,7 @@ export class ChatService {
         content: m.content,
       }));
 
-    const systemPrompt = this.buildSystemPrompt(context, encryptionTier, responseMode, message, history);
+    const systemPrompt = this.buildSystemPrompt(context, encryptionTier, responseMode, message, history, accountName);
 
     // Call OpenAI with tool definitions
     const response = await this.openai.chat.completions.create({
@@ -166,7 +166,7 @@ export class ChatService {
 
       if (this.isWriteAction(functionName)) {
         return this.handleWriteActionRequest(
-          conversation, functionName, functionArgs, systemPrompt, history, message, aiModel,
+          conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId,
         );
       } else {
         return this.handleReadAction(
@@ -208,16 +208,19 @@ export class ChatService {
       throw new NotFoundException('Pending action not found or expired');
     }
 
-    const pendingData = JSON.parse(pendingMessage.content) as ChatPendingAction;
+    const pendingData = JSON.parse(pendingMessage.content) as ChatPendingAction & { accountId?: string };
     if (pendingData.id !== actionId) {
       throw new NotFoundException('Pending action not found');
     }
+
+    // Use the accountId stored with the pending action (resolved from user message) if available
+    const effectiveAccountId = pendingData.accountId || accountId || '';
 
     // Execute the write action
     const result = await this.executeAction(
       pendingData.actionType,
       pendingData.data as Record<string, unknown>,
-      accountId || '',
+      effectiveAccountId,
       userId,
     );
 
@@ -230,10 +233,18 @@ export class ChatService {
       },
     });
 
+    // Detect language from conversation for localized response
+    const lang = await this.detectConversationLanguage(conversationId);
+    const localizedSummary = this.buildActionSummary(
+      pendingData.actionType,
+      pendingData.data as Record<string, unknown>,
+      lang,
+    );
+
     // Save confirmation assistant message
     const confirmText = result.success
-      ? `Done! ${pendingData.displaySummary} — successfully created.`
-      : `Failed to execute: ${result.errorMessage}`;
+      ? this.getConfirmText(lang, localizedSummary)
+      : this.getFailText(lang, result.errorMessage);
 
     await this.prisma.chatMessage.create({
       data: {
@@ -277,7 +288,8 @@ export class ChatService {
       },
     });
 
-    const rejectText = 'Action cancelled. Let me know if you need anything else.';
+    const lang = await this.detectConversationLanguage(conversationId);
+    const rejectText = this.getRejectText(lang);
     await this.prisma.chatMessage.create({
       data: {
         conversationId,
@@ -414,6 +426,7 @@ export class ChatService {
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
     userMessage: string,
     aiModel: string,
+    accountId?: string,
   ) {
     const displaySummary = this.buildActionSummary(actionType, args);
     const pendingAction: ChatPendingAction = {
@@ -423,12 +436,12 @@ export class ChatService {
       displaySummary,
     };
 
-    // Save pending action as a special message
+    // Save pending action as a special message (include accountId for correct resolution on confirm)
     await this.prisma.chatMessage.create({
       data: {
         conversationId: conversation.id,
         role: 'pending_action',
-        content: JSON.stringify(pendingAction),
+        content: JSON.stringify({ ...pendingAction, accountId }),
       },
     });
 
@@ -779,16 +792,146 @@ export class ChatService {
 
   // ── Helpers ──
 
-  private buildActionSummary(actionType: ChatActionType, args: Record<string, unknown>): string {
-    switch (actionType) {
-      case 'create_expense':
-        return `add expense ${args.amount} ${args.currencyCode}${args.description ? ` for "${args.description}"` : ''}${args.categoryName ? ` [${args.categoryName}]` : ''}`;
-      case 'create_income':
-        return `add income ${args.amount} ${args.currencyCode}${args.description ? ` — "${args.description}"` : ''}`;
-      case 'create_budget':
-        return `create budget "${args.name}" for ${args.amount} ${args.currencyCode} (${args.period})`;
-      default:
-        return `perform ${actionType}`;
+  private detectLanguage(text: string): string {
+    const cyrillicRatio = (text.match(/[а-яА-ЯёЁіІїЇєЄґҐўЎ]/g) || []).length / Math.max(text.length, 1);
+    if (cyrillicRatio > 0.3) {
+      if (/[іІїЇєЄґҐ]/.test(text)) return 'Ukrainian';
+      if (/[ўЎ]/.test(text)) return 'Belarusian';
+      return 'Russian';
+    }
+    if (/[äöüßÄÖÜ]/.test(text)) return 'German';
+    if (/[áéíóúñÁÉÍÓÚÑ¿¡]/.test(text)) return 'Spanish';
+    if (/[àâäæçèéêëîïôœùûüÿÀÂÄÆÇÈÉÊËÎÏÔŒÙÛÜŸ]/.test(text)) return 'French';
+    if (/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(text)) return 'Polish';
+    return 'English';
+  }
+
+  private async detectConversationLanguage(conversationId: string): Promise<string> {
+    const recentMessages = await this.prisma.chatMessage.findMany({
+      where: { conversationId, role: 'user' },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      select: { content: true },
+    });
+    if (recentMessages.length === 0) return 'English';
+    const allText = recentMessages.map(m => m.content).join(' ');
+    return this.detectLanguage(allText);
+  }
+
+  private buildActionSummary(actionType: ChatActionType, args: Record<string, unknown>, lang = 'English'): string {
+    const desc = args.description ? `"${args.description}"` : '';
+    const cat = args.categoryName ? ` [${args.categoryName}]` : '';
+    const amt = `${args.amount} ${args.currencyCode}`;
+
+    switch (lang) {
+      case 'Russian':
+      case 'Ukrainian':
+      case 'Belarusian':
+        switch (actionType) {
+          case 'create_expense':
+            return `расход ${amt}${desc ? ` — ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `доход ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `бюджет "${args.name}" на ${amt} (${args.period})`;
+          default:
+            return `${actionType}`;
+        }
+      case 'German':
+        switch (actionType) {
+          case 'create_expense':
+            return `Ausgabe ${amt}${desc ? ` — ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `Einnahme ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `Budget "${args.name}" für ${amt} (${args.period})`;
+          default:
+            return `${actionType}`;
+        }
+      case 'Spanish':
+        switch (actionType) {
+          case 'create_expense':
+            return `gasto ${amt}${desc ? ` — ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `ingreso ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `presupuesto "${args.name}" por ${amt} (${args.period})`;
+          default:
+            return `${actionType}`;
+        }
+      case 'French':
+        switch (actionType) {
+          case 'create_expense':
+            return `dépense ${amt}${desc ? ` — ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `revenu ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `budget "${args.name}" pour ${amt} (${args.period})`;
+          default:
+            return `${actionType}`;
+        }
+      case 'Polish':
+        switch (actionType) {
+          case 'create_expense':
+            return `wydatek ${amt}${desc ? ` — ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `przychód ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `budżet "${args.name}" na ${amt} (${args.period})`;
+          default:
+            return `${actionType}`;
+        }
+      default: // English
+        switch (actionType) {
+          case 'create_expense':
+            return `expense ${amt}${desc ? ` for ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `income ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `budget "${args.name}" for ${amt} (${args.period})`;
+          default:
+            return `${actionType}`;
+        }
+    }
+  }
+
+  private getConfirmText(lang: string, summary: string): string {
+    switch (lang) {
+      case 'Russian': return `✅ Готово! ${summary} — успешно добавлено.`;
+      case 'Ukrainian': return `✅ Готово! ${summary} — успішно додано.`;
+      case 'Belarusian': return `✅ Гатова! ${summary} — паспяхова дададзена.`;
+      case 'German': return `✅ Erledigt! ${summary} — erfolgreich erstellt.`;
+      case 'Spanish': return `✅ ¡Listo! ${summary} — creado con éxito.`;
+      case 'French': return `✅ Terminé ! ${summary} — créé avec succès.`;
+      case 'Polish': return `✅ Gotowe! ${summary} — utworzono pomyślnie.`;
+      default: return `✅ Done! ${summary} — successfully created.`;
+    }
+  }
+
+  private getFailText(lang: string, errorMessage?: string): string {
+    const err = errorMessage || 'unknown error';
+    switch (lang) {
+      case 'Russian': return `❌ Ошибка: ${err}`;
+      case 'Ukrainian': return `❌ Помилка: ${err}`;
+      case 'Belarusian': return `❌ Памылка: ${err}`;
+      case 'German': return `❌ Fehler: ${err}`;
+      case 'Spanish': return `❌ Error: ${err}`;
+      case 'French': return `❌ Erreur : ${err}`;
+      case 'Polish': return `❌ Błąd: ${err}`;
+      default: return `❌ Failed to execute: ${err}`;
+    }
+  }
+
+  private getRejectText(lang: string): string {
+    switch (lang) {
+      case 'Russian': return 'Действие отменено. Напишите, если что-то ещё нужно.';
+      case 'Ukrainian': return 'Дію скасовано. Напишіть, якщо потрібно щось ще.';
+      case 'Belarusian': return 'Дзеянне адменена. Напішыце, калі трэба нешта яшчэ.';
+      case 'German': return 'Aktion abgebrochen. Lassen Sie mich wissen, wenn Sie etwas anderes brauchen.';
+      case 'Spanish': return 'Acción cancelada. Avísame si necesitas algo más.';
+      case 'French': return 'Action annulée. Dites-moi si vous avez besoin d\'autre chose.';
+      case 'Polish': return 'Anulowano. Daj znać, jeśli potrzebujesz czegoś jeszcze.';
+      default: return 'Action cancelled. Let me know if you need anything else.';
     }
   }
 
@@ -938,7 +1081,7 @@ export class ChatService {
     };
   }
 
-  private buildSystemPrompt(context: UserContext, encryptionTier = 0, responseMode: AiResponseMode = 'balanced', userMessage = '', history: Array<{ role: string; content: string }> = []): string {
+  private buildSystemPrompt(context: UserContext, encryptionTier = 0, responseMode: AiResponseMode = 'balanced', userMessage = '', history: Array<{ role: string; content: string }> = [], accountName?: string | null): string {
     const encryptionNotice = encryptionTier >= 1
       ? `\n\nIMPORTANT: This account has end-to-end encryption enabled (text fields). Expense descriptions, notes, tag names, and project names shown below may be encrypted/unavailable. Focus your analysis on numerical data (amounts, category totals) and general spending patterns. Do not attempt to interpret encrypted text values.`
       : '';
@@ -972,43 +1115,22 @@ export class ChatService {
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Detect language from text based on characteristic letters (NOT currency)
-    const detectLanguage = (text: string): string => {
-      const cyrillicRatio = (text.match(/[а-яА-ЯёЁіІїЇєЄґҐўЎ]/g) || []).length / Math.max(text.length, 1);
-      if (cyrillicRatio > 0.3) {
-        // Check for Ukrainian-specific letters
-        if (/[іІїЇєЄґҐ]/.test(text)) return 'Ukrainian';
-        // Check for Belarusian-specific letters
-        if (/[ўЎ]/.test(text)) return 'Belarusian';
-        return 'Russian';
-      }
-      // Check for characteristic letters of other languages
-      if (/[äöüßÄÖÜ]/.test(text)) return 'German';
-      if (/[áéíóúñÁÉÍÓÚÑ¿¡]/.test(text)) return 'Spanish';
-      if (/[àâäæçèéêëîïôœùûüÿÀÂÄÆÇÈÉÊËÎÏÔŒÙÛÜŸ]/.test(text)) return 'French';
-      if (/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(text)) return 'Polish';
-      return 'English';
-    };
-
     // Detect language from conversation history first (preserve consistency)
     let userLanguage = 'English';
     const recentAssistantMessages = history.filter(m => m.role === 'assistant').slice(-3);
     if (recentAssistantMessages.length > 0) {
-      // Analyze last 3 assistant messages to determine conversation language
       const allAssistantText = recentAssistantMessages.map(m => m.content).join(' ');
-      const detectedFromHistory = detectLanguage(allAssistantText);
+      const detectedFromHistory = this.detectLanguage(allAssistantText);
       if (detectedFromHistory !== 'English') {
         userLanguage = detectedFromHistory;
       }
     }
 
     // Override with current user message language if clearly different
-    const currentMessageLanguage = detectLanguage(userMessage);
+    const currentMessageLanguage = this.detectLanguage(userMessage);
     if (currentMessageLanguage !== 'English' && currentMessageLanguage !== userLanguage) {
-      // User switched language explicitly, follow their lead
       userLanguage = currentMessageLanguage;
     } else if (currentMessageLanguage !== 'English') {
-      // Reinforce detected language
       userLanguage = currentMessageLanguage;
     }
 
@@ -1019,7 +1141,7 @@ export class ChatService {
     return `You are a helpful financial assistant helping a user manage their budget and expenses.
 Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.${encryptionNotice}${languageInstruction}
 
-Today's date: ${today}
+Today's date: ${today}${accountName ? `\nCurrently viewing account: "${accountName}"` : ''}
 Available categories: ${categoriesListText}
 Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB
 

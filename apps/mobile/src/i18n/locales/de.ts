@@ -486,6 +486,17 @@ export default {
     aiModelBalanced: 'Ausgewogen',
     aiModelQuality: 'Qualität',
     aiModelCost: 'Kosten',
+    telegram: {
+      title: 'Telegram-Bot',
+      connect: 'Telegram verbinden',
+      disconnect: 'Trennen',
+      disconnectConfirm: 'Sind Sie sicher, dass Sie den Telegram-Bot trennen möchten?',
+      linked: 'Telegram verbunden',
+      description: 'Verbinden Sie einen Telegram-Bot, um Ausgaben, Einnahmen hinzuzufügen, Belege zu scannen und mit dem KI-Assistenten über Telegram zu chatten.',
+      tapToCopy: 'Tippen, um den Code zu kopieren',
+      codeCopied: 'Code in die Zwischenablage kopiert',
+      linkInstructions: 'Öffnen Sie @{{botUsername}} in Telegram und senden Sie:\n/link YOUR_CODE',
+    },
   },
   notifications: {
     title: 'Benachrichtigungen',

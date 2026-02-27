@@ -66,6 +66,8 @@ Tap any button to instantly send that question.
 - **Action Confirmation** — when creating financial records, AI shows a preview and asks for confirmation before saving
 - **Smart Language Detection** — AI automatically responds in your language (English, Russian, Ukrainian, Belarusian, German, Spanish, French, Polish)
 - **Currency Recognition** — supports symbols: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
+- **Telegram Bot** — use the same AI Chat from Telegram. Send text, voice, or receipt photos directly to the bot
+- **Automatic Account Detection** — mention an account name in your message (e.g., "Show expenses in Family") and AI will query that account automatically
 
 ## AI Request Limits
 
@@ -122,6 +124,12 @@ These commands execute **immediately** and show results:
 
 - **Q: What happens if I reject an action?**
   **A:** If you tap "Cancel" on a confirmation card, the action is rejected and nothing is saved. The AI will acknowledge the rejection.
+
+- **Q: Can I use AI Chat from Telegram?**
+  **A:** Yes! Link your Telegram via Settings and chat with the AI bot directly. All features work the same — text, voice, commands, and receipt scanning. See [Telegram Bot](./22-telegram-bot.md) for details.
+
+- **Q: How does AI know which account I'm asking about?**
+  **A:** If you mention an account name in your message (e.g., "expenses in Family"), the AI automatically queries that account. Otherwise, it uses your current default account.
 
 ---
 

@@ -116,6 +116,15 @@ Si eres miembro (no el Propietario) de una cuenta compartida:
 2. Toca **Abandonar cuenta**
 3. Confirma — seras eliminado de la cuenta
 
+## Cambio de cuentas en Telegram
+
+Al usar el bot de Telegram, puedes cambiar de cuenta de dos maneras:
+
+1. **Manualmente** — envia `/account` y toca la cuenta deseada
+2. **Automaticamente** — menciona el nombre de una cuenta en tu mensaje (ej., "Muestra gastos en Family"), y la IA consultara esa cuenta para la solicitud actual
+
+La deteccion automatica no cambia tu cuenta predeterminada — solo aplica al mensaje actual. Usa `/account` para cambiar permanentemente.
+
 ## Preguntas frecuentes
 
 - **P: Cuantas cuentas puedo tener?**
@@ -126,6 +135,9 @@ Si eres miembro (no el Propietario) de una cuenta compartida:
 
 - **P: Puedo ver quien agrego un gasto en una cuenta compartida?**
   **R:** Los gastos en cuentas compartidas muestran que miembro los creo.
+
+- **P: Puedo usar diferentes cuentas en el bot de Telegram?**
+  **R:** Si. Envia `/account` para cambiar tu cuenta predeterminada, o simplemente menciona el nombre de la cuenta en tu mensaje para consultas puntuales. Ver [Bot de Telegram](./22-telegram-bot.md) para detalles.
 
 ---
 

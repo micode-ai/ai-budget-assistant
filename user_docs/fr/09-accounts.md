@@ -116,6 +116,15 @@ Si vous etes membre (pas le Proprietaire) d'un compte partage :
 2. Appuyez sur **Quitter le compte**
 3. Confirmez — vous serez retire du compte
 
+## Changement de compte dans Telegram
+
+Lors de l'utilisation du bot Telegram, vous pouvez changer de compte de deux manieres :
+
+1. **Manuellement** — envoyez `/account` et appuyez sur le compte souhaite
+2. **Automatiquement** — mentionnez un nom de compte dans votre message (ex., "Montre les depenses dans Family"), et l'IA interrogera ce compte pour la requete en cours
+
+La detection automatique ne change pas votre compte par defaut — elle ne s'applique qu'au message en cours. Utilisez `/account` pour changer definitivement.
+
 ## FAQ
 
 - **Q : Combien de comptes puis-je avoir ?**
@@ -126,6 +135,9 @@ Si vous etes membre (pas le Proprietaire) d'un compte partage :
 
 - **Q : Puis-je voir qui a ajoute une depense dans un compte partage ?**
   **R :** Les depenses dans les comptes partages indiquent quel membre les a creees.
+
+- **Q : Puis-je utiliser differents comptes dans le bot Telegram ?**
+  **R :** Oui. Envoyez `/account` pour changer votre compte par defaut, ou mentionnez simplement le nom du compte dans votre message pour des requetes ponctuelles. Voir [Bot Telegram](./22-telegram-bot.md) pour les details.
 
 ---
 

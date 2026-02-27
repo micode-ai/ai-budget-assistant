@@ -116,6 +116,15 @@ Wenn du Mitglied (nicht der Eigentumer) eines gemeinsamen Kontos bist:
 2. Tippe auf **Konto verlassen**
 3. Bestatige — du wirst aus dem Konto entfernt
 
+## Kontowechsel in Telegram
+
+Bei der Nutzung des Telegram-Bots kannst du auf zwei Arten zwischen Konten wechseln:
+
+1. **Manuell** — sende `/account` und tippe auf das gewunschte Konto
+2. **Automatisch** — erwahne einen Kontonamen in deiner Nachricht (z.B. "Zeige Ausgaben in Family"), und die KI fragt dieses Konto fur die aktuelle Anfrage ab
+
+Die automatische Erkennung andert nicht dein Standardkonto — sie gilt nur fur die aktuelle Nachricht. Verwende `/account` zum dauerhaften Wechsel.
+
 ## FAQ
 
 - **F: Wie viele Konten kann ich haben?**
@@ -126,6 +135,9 @@ Wenn du Mitglied (nicht der Eigentumer) eines gemeinsamen Kontos bist:
 
 - **F: Kann ich sehen, wer eine Ausgabe in einem gemeinsamen Konto hinzugefugt hat?**
   **A:** Ausgaben in gemeinsamen Konten zeigen, welches Mitglied sie erstellt hat.
+
+- **F: Kann ich verschiedene Konten im Telegram-Bot verwenden?**
+  **A:** Ja. Sende `/account` um dein Standardkonto zu wechseln, oder erwahne einfach den Kontonamen in deiner Nachricht fur einmalige Abfragen. Siehe [Telegram-Bot](./22-telegram-bot.md) fur Details.
 
 ---
 

@@ -116,6 +116,15 @@ If you're a member (not the Owner) of a shared account:
 2. Tap **Leave Account**
 3. Confirm — you'll be removed from the account
 
+## Telegram Account Switching
+
+When using the Telegram bot, you can switch accounts in two ways:
+
+1. **Manually** — send `/account` and tap the account button
+2. **Automatically** — mention an account name in your message (e.g., "Show expenses in Family"), and the AI will query that account for the current request
+
+The automatic detection does not change your default account — it only applies to the current message. Use `/account` to permanently switch.
+
 ## FAQ
 
 - **Q: How many accounts can I have?**
@@ -126,6 +135,9 @@ If you're a member (not the Owner) of a shared account:
 
 - **Q: Can I see who added an expense in a shared account?**
   **A:** Expenses in shared accounts show which member created them.
+
+- **Q: Can I use different accounts in the Telegram bot?**
+  **A:** Yes. Send `/account` to switch your default account, or simply mention the account name in your message for one-time queries. See [Telegram Bot](./22-telegram-bot.md) for details.
 
 ---
 

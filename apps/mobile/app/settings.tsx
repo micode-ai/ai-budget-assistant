@@ -127,6 +127,13 @@ export default function SettingsScreen() {
   const [showE2EESetup, setShowE2EESetup] = useState(false);
   const [showE2EEUnlock, setShowE2EEUnlock] = useState(false);
 
+  // Telegram
+  const [telegramLinked, setTelegramLinked] = useState(false);
+  const [telegramUsername, setTelegramUsername] = useState<string | null>(null);
+  const [telegramLinkCode, setTelegramLinkCode] = useState<string | null>(null);
+  const [telegramBotUsername, setTelegramBotUsername] = useState<string>('');
+  const [telegramLoading, setTelegramLoading] = useState(false);
+
   // Last sync time
   const [lastSyncTime, setLastSyncTimeState] = useState<number | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -178,10 +185,21 @@ export default function SettingsScreen() {
     }
   }, []);
 
+  const loadTelegramStatus = useCallback(async () => {
+    try {
+      const status = await api.getTelegramLinkStatus();
+      setTelegramLinked(status.linked);
+      setTelegramUsername(status.telegramUsername || null);
+    } catch {
+      // Ignore — telegram feature may not be available
+    }
+  }, []);
+
   useEffect(() => {
     loadNotificationPreferences();
     loadReportPrefs();
-  }, [loadNotificationPreferences, loadReportPrefs]);
+    loadTelegramStatus();
+  }, [loadNotificationPreferences, loadReportPrefs, loadTelegramStatus]);
 
   const handleToggleBudgetAlerts = async (value: boolean) => {
     setNotifBudgetAlerts(value);
@@ -213,6 +231,50 @@ export default function SettingsScreen() {
       setNotifSharedActivity(!value);
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
+  };
+
+  const handleGenerateTelegramCode = async () => {
+    setTelegramLoading(true);
+    try {
+      const result = await api.generateTelegramLinkCode();
+      setTelegramLinkCode(result.code);
+      setTelegramBotUsername(result.botUsername);
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    } finally {
+      setTelegramLoading(false);
+    }
+  };
+
+  const handleCopyTelegramCode = async () => {
+    if (telegramLinkCode) {
+      await Clipboard.setStringAsync(telegramLinkCode);
+      Alert.alert(t('settings.telegram.codeCopied'));
+    }
+  };
+
+  const handleUnlinkTelegram = async () => {
+    Alert.alert(
+      t('settings.telegram.disconnect'),
+      t('settings.telegram.disconnectConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.telegram.disconnect'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.unlinkTelegram();
+              setTelegramLinked(false);
+              setTelegramUsername(null);
+              setTelegramLinkCode(null);
+            } catch (e) {
+              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+            }
+          },
+        },
+      ],
+    );
   };
 
   const WEEK_DAYS = [
@@ -750,6 +812,75 @@ export default function SettingsScreen() {
                 disabled={notifLoading}
               />
             </View>
+          </View>
+        </View>
+
+        {/* Telegram Bot Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.telegram.title')}</Text>
+          <View style={styles.card}>
+            {telegramLinked ? (
+              <>
+                <View style={styles.fieldRow}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.fieldLabel}>{t('settings.telegram.linked')}</Text>
+                    {telegramUsername && (
+                      <Text style={styles.fieldDesc}>@{telegramUsername}</Text>
+                    )}
+                  </View>
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
+                </View>
+                <View style={styles.divider} />
+                <TouchableOpacity style={styles.fieldRow} onPress={handleUnlinkTelegram}>
+                  <Text style={[styles.fieldLabel, { color: theme.colors.danger }]}>
+                    {t('settings.telegram.disconnect')}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[3] }]}>
+                  {t('settings.telegram.description')}
+                </Text>
+                {telegramLinkCode ? (
+                  <>
+                    <TouchableOpacity
+                      style={[styles.fieldRow, { backgroundColor: theme.colors.surface, borderRadius: theme.borderRadius.md, padding: theme.spacing[3] }]}
+                      onPress={handleCopyTelegramCode}
+                    >
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.fieldLabel, { fontSize: 24, letterSpacing: 4, textAlign: 'center' }]}>
+                          {telegramLinkCode}
+                        </Text>
+                        <Text style={[styles.fieldDesc, { textAlign: 'center', marginTop: theme.spacing[1] }]}>
+                          {t('settings.telegram.tapToCopy')}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <Text style={[styles.fieldDesc, { marginTop: theme.spacing[3] }]}>
+                      {t('settings.telegram.linkInstructions', { botUsername: telegramBotUsername || 'BudgetBot' })}
+                    </Text>
+                  </>
+                ) : (
+                  <TouchableOpacity
+                    style={[styles.fieldRow, { justifyContent: 'center' }]}
+                    onPress={handleGenerateTelegramCode}
+                    disabled={telegramLoading}
+                  >
+                    {telegramLoading ? (
+                      <ActivityIndicator size="small" color={theme.colors.primary} />
+                    ) : (
+                      <>
+                        <Ionicons name="paper-plane-outline" size={20} color={theme.colors.primary} style={{ marginRight: theme.spacing[2] }} />
+                        <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>
+                          {t('settings.telegram.connect')}
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
           </View>
         </View>
 
