@@ -1,8 +1,15 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image } from 'react-native';
 import { useState, useCallback, useEffect } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+
+const quickActionIcons = {
+  add_expense: require('../../assets/widget-icons/add_expense.png'),
+  scan_receipt: require('../../assets/widget-icons/scan_receipt.png'),
+  voice_input: require('../../assets/widget-icons/voice_input.png'),
+  exchange: require('../../assets/widget-icons/exchange.png'),
+};
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useBudgetStore } from '@/stores/budgetStore';
@@ -109,26 +116,26 @@ export default function DashboardScreen() {
       {canEdit && (
         <View style={styles.quickActionsRow}>
           <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
-              <Ionicons name="add" size={24} color={theme.colors.primary} />
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+              <Image source={quickActionIcons.add_expense} style={styles.quickActionImage} />
             </View>
             <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
-              <Ionicons name="mic" size={22} color={theme.colors.primary} />
-            </View>
-            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
-              <Ionicons name="camera" size={22} color={theme.colors.primary} />
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+              <Image source={quickActionIcons.scan_receipt} style={styles.quickActionImage} />
             </View>
             <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+              <Image source={quickActionIcons.voice_input} style={styles.quickActionImage} />
+            </View>
+            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX, borderRadius: ICON_BOX / 2 }]}>
-              <Ionicons name="swap-horizontal" size={22} color={theme.colors.primary} />
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+              <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />
             </View>
             <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
           </TouchableOpacity>
@@ -372,11 +379,17 @@ const createStyles = (theme: Theme) => ({
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     backgroundColor: theme.colors.surface,
+    borderRadius: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: theme.isDark ? 0.5 : 0.15,
     shadowRadius: 6,
     elevation: 6,
+  },
+  quickActionImage: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain' as const,
   },
   quickActionText: {
     ...theme.textStyles.caption,
