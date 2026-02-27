@@ -139,6 +139,12 @@ export default function DashboardScreen() {
             </View>
             <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/converter')}>
+            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+              <Ionicons name="calculator-outline" size={28} color={theme.colors.primary} />
+            </View>
+            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.currencyConverter')}</Text>
+          </TouchableOpacity>
         </View>
       )}
 

@@ -92,6 +92,7 @@ export default {
     createBudgetHint: 'Create a budget to track your spending',
     walletBalances: 'Wallet Balances',
     exchangeCurrency: 'Exchange',
+    currencyConverter: 'Converter',
     totalIncome: 'Total Income This Month',
     totalExpenses: 'Total Expenses This Month',
   },
@@ -542,6 +543,12 @@ export default {
     recentExchanges: 'Recent Exchanges',
     sameCurrencyError: 'Cannot exchange the same currency',
     exchange: 'Exchange',
+  },
+  converter: {
+    title: 'Currency Converter',
+    result: 'Result',
+    enterAmount: 'Enter amount',
+    rateInfo: '1 {{from}} = {{rate}} {{to}}',
   },
   transfer: {
     title: 'Transfer',

@@ -92,6 +92,7 @@ export default {
     createBudgetHint: 'Создайте бюджет для отслеживания расходов',
     walletBalances: 'Баланс кошелька',
     exchangeCurrency: 'Обмен',
+    currencyConverter: 'Конвертер',
     totalIncome: 'Доходы за этот месяц',
     totalExpenses: 'Расходы за этот месяц',
   },
@@ -542,6 +543,12 @@ export default {
     recentExchanges: 'Последние обмены',
     sameCurrencyError: 'Нельзя обменять одну и ту же валюту',
     exchange: 'Обменять',
+  },
+  converter: {
+    title: 'Конвертер валют',
+    result: 'Результат',
+    enterAmount: 'Введите сумму',
+    rateInfo: '1 {{from}} = {{rate}} {{to}}',
   },
   transfer: {
     title: 'Перевод',

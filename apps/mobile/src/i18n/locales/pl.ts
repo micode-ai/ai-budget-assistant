@@ -92,6 +92,7 @@ export default {
     createBudgetHint: 'Utwórz budżet, aby śledzić swoje wydatki',
     walletBalances: 'Salda portfela',
     exchangeCurrency: 'Wymiana',
+    currencyConverter: 'Konwerter',
     totalIncome: 'Łączne przychody w tym miesiącu',
     totalExpenses: 'Łączne wydatki w tym miesiącu',
   },
@@ -542,6 +543,12 @@ export default {
     recentExchanges: 'Ostatnie wymiany',
     sameCurrencyError: 'Nie można wymienić tej samej waluty',
     exchange: 'Wymień',
+  },
+  converter: {
+    title: 'Przelicznik walut',
+    result: 'Wynik',
+    enterAmount: 'Wpisz kwotę',
+    rateInfo: '1 {{from}} = {{rate}} {{to}}',
   },
   transfer: {
     title: 'Przelew',
