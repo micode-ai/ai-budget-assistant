@@ -852,10 +852,10 @@ class ApiClient {
   }
 
   // Fat Finder
-  async getFatFinderReport(language?: string, forceRegenerate?: boolean) {
+  async getFatFinderReport(language?: string, forceRegenerate?: boolean, month?: number, year?: number) {
     return this.request<any>('/insights/fat-finder', {
       method: 'POST',
-      body: JSON.stringify({ language, forceRegenerate }),
+      body: JSON.stringify({ language, forceRegenerate, month, year }),
     });
   }
 

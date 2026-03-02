@@ -11,12 +11,17 @@ interface InsightsState {
   fatFinderReport: FatFinderReport | null;
   fatFinderLoading: boolean;
   fatFinderError: string | null;
+  fatFinderMonth: number; // 1-based (1=January)
+  fatFinderYear: number;
 
   loadAIInsights: (language?: string) => Promise<void>;
   dismissInsight: (id: string) => void;
-  loadFatFinder: (language?: string, forceRegenerate?: boolean) => Promise<void>;
+  loadFatFinder: (language?: string, forceRegenerate?: boolean, month?: number, year?: number) => Promise<void>;
+  setFatFinderPeriod: (month: number, year: number) => void;
   reset: () => void;
 }
+
+const now = new Date();
 
 export const useInsightsStore = create<InsightsState>()((set) => ({
   aiInsights: [],
@@ -27,6 +32,8 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
   fatFinderReport: null,
   fatFinderLoading: false,
   fatFinderError: null,
+  fatFinderMonth: now.getMonth() + 1,
+  fatFinderYear: now.getFullYear(),
 
   loadAIInsights: async (language?: string) => {
     set({ isLoading: true, error: null });
@@ -51,10 +58,13 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
     }));
   },
 
-  loadFatFinder: async (language?: string, forceRegenerate?: boolean) => {
+  loadFatFinder: async (language?: string, forceRegenerate?: boolean, month?: number, year?: number) => {
     set({ fatFinderLoading: true, fatFinderError: null });
+    if (month != null && year != null) {
+      set({ fatFinderMonth: month, fatFinderYear: year });
+    }
     try {
-      const response = await api.getFatFinderReport(language, forceRegenerate);
+      const response = await api.getFatFinderReport(language, forceRegenerate, month, year);
       set({
         fatFinderReport: response.report,
         fatFinderLoading: false,
@@ -67,7 +77,12 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
     }
   },
 
+  setFatFinderPeriod: (month: number, year: number) => {
+    set({ fatFinderMonth: month, fatFinderYear: year, fatFinderReport: null });
+  },
+
   reset: () => {
+    const current = new Date();
     set({
       aiInsights: [],
       isLoading: false,
@@ -76,6 +91,8 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
       fatFinderReport: null,
       fatFinderLoading: false,
       fatFinderError: null,
+      fatFinderMonth: current.getMonth() + 1,
+      fatFinderYear: current.getFullYear(),
     });
   },
 }));

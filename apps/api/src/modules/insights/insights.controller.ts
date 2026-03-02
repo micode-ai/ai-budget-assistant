@@ -62,13 +62,15 @@ export class InsightsController {
   @TrackAiUsage('fat_finder', 3.0)
   async getFatFinderReport(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { forceRegenerate?: boolean; language?: string },
+    @Body() body: { forceRegenerate?: boolean; language?: string; month?: number; year?: number },
   ) {
     return this.fatFinderService.generateReport(
       req.accountId,
       body.language,
       body.forceRegenerate,
       req.user.id,
+      body.month,
+      body.year,
     );
   }
 }

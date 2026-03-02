@@ -36,7 +36,7 @@ export class FatFinderService {
     return account?.encryptionTier ?? 0;
   }
 
-  async generateReport(accountId: string, language?: string, forceRegenerate = false, userId?: string) {
+  async generateReport(accountId: string, language?: string, forceRegenerate = false, userId?: string, month?: number, year?: number) {
     const encryptionTier = await this.getEncryptionTier(accountId);
     if (encryptionTier >= 2) {
       return {
@@ -56,8 +56,10 @@ export class FatFinderService {
     }
 
     const now = new Date();
-    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const targetYear = year ?? now.getFullYear();
+    const targetMonth = month != null ? month - 1 : now.getMonth(); // month param is 1-based
+    const currentMonthStart = new Date(targetYear, targetMonth, 1);
+    const currentMonthEnd = new Date(targetYear, targetMonth + 1, 0);
 
     // Check cache (30-day expiry)
     if (!forceRegenerate) {
@@ -87,7 +89,7 @@ export class FatFinderService {
     }
 
     // Gather 3 months of expenses
-    const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+    const threeMonthsAgo = new Date(targetYear, targetMonth - 3, 1);
 
     const expenses = await this.prisma.expense.findMany({
       where: { accountId, isDeleted: false, date: { gte: threeMonthsAgo, lte: currentMonthEnd } },
