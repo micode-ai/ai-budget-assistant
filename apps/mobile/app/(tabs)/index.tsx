@@ -562,6 +562,7 @@ const createStyles = (theme: Theme) => ({
   gamificationDate: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
     marginBottom: theme.spacing[3],
   },
   gamificationRow: {

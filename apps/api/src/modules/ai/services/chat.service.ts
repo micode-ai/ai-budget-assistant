@@ -579,7 +579,7 @@ export class ChatService {
       source: 'manual',
     };
 
-    const expense = await this.expensesService.create(accountId, userId, dto as any);
+    const { expense } = await this.expensesService.create(accountId, userId, dto as any);
     if (!expense) {
       return { actionType: 'create_expense', success: false, errorMessage: 'Failed to create expense' };
     }
@@ -675,7 +675,7 @@ export class ChatService {
     const filters: any = {
       startDate: String(data.startDate),
       endDate: String(data.endDate),
-      limit: 20,
+      limit: 500,
     };
 
     // If category name provided, resolve to ID
@@ -689,6 +689,7 @@ export class ChatService {
 
     const result = await this.expensesService.findAll(accountId, filters);
     const expenses = (result as any).data || result;
+    const pagination = (result as any).pagination;
     const expenseList = (Array.isArray(expenses) ? expenses : []).map((e: any) => ({
       id: e.id,
       amount: Number(e.amount),
@@ -699,6 +700,7 @@ export class ChatService {
     }));
 
     const total = expenseList.reduce((sum: number, e: any) => sum + e.amount, 0);
+    const actualCount = pagination?.total ?? expenseList.length;
 
     return {
       actionType: 'get_expenses',
@@ -706,7 +708,7 @@ export class ChatService {
       data: {
         expenses: expenseList,
         total,
-        count: expenseList.length,
+        count: actualCount,
         startDate: data.startDate,
         endDate: data.endDate,
       },

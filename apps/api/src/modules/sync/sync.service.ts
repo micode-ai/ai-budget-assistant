@@ -139,7 +139,7 @@ export class SyncService {
       }
 
       // Create new expense
-      const created = await this.expensesService.create(accountId, userId, {
+      const { expense: created } = await this.expensesService.create(accountId, userId, {
         ...payload,
         localId: entityId,
         encryptedPayload,

@@ -41,7 +41,7 @@ export class ExpenseHandler {
       const currencyCode = parsed.currencyCode || ctx.userState.currencyCode;
       const now = new Date();
 
-      const expense = await this.expensesService.create(
+      const { expense } = await this.expensesService.create(
         ctx.userState.accountId,
         ctx.userState.userId,
         {
