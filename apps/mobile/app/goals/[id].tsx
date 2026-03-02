@@ -7,6 +7,10 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
+  Modal,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
@@ -30,13 +34,16 @@ export default function GoalDetailScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { goals, deleteGoal, getProgress, regeneratePlan } =
+  const { goals, deleteGoal, getProgress, regeneratePlan, updateGoal } =
     useGoalStore();
 
   const goal = goals.find((g) => g.id === id);
   const [progressData, setProgressData] = useState<ProgressData | null>(null);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showAddFunds, setShowAddFunds] = useState(false);
+  const [fundAmount, setFundAmount] = useState('');
+  const [isAddingFunds, setIsAddingFunds] = useState(false);
 
   const loadProgressData = useCallback(async () => {
     if (!id) return;
@@ -100,6 +107,32 @@ export default function GoalDetailScreen() {
     } finally {
       setIsRegenerating(false);
     }
+  };
+
+  const handleAddFunds = async () => {
+    const amount = parseFloat(fundAmount);
+    if (!id || !goal || isNaN(amount) || amount <= 0) return;
+
+    setIsAddingFunds(true);
+    try {
+      const newAmount = goal.currentAmount + amount;
+      await updateGoal(id, { currentAmount: newAmount });
+      await loadProgressData();
+      setFundAmount('');
+      setShowAddFunds(false);
+    } catch {
+      Alert.alert(
+        t('common.error'),
+        t('goals.errorAddFunds') || 'Failed to add funds',
+      );
+    } finally {
+      setIsAddingFunds(false);
+    }
+  };
+
+  const handleCloseAddFunds = () => {
+    setFundAmount('');
+    setShowAddFunds(false);
   };
 
   const getStatusColor = (status: GoalStatus): string => {
@@ -320,6 +353,18 @@ export default function GoalDetailScreen() {
               {goal.currencyCode} {t('goals.remaining') || 'remaining'}
             </Text>
           </View>
+
+          {goal.status === 'active' && (
+            <TouchableOpacity
+              style={styles.addFundsButton}
+              onPress={() => setShowAddFunds(true)}
+            >
+              <Ionicons name="add-circle" size={20} color={theme.colors.textInverse} />
+              <Text style={styles.addFundsButtonText}>
+                {t('goals.addFunds') || 'Add Funds'}
+              </Text>
+            </TouchableOpacity>
+          )}
 
           {/* Progress tracking info */}
           {progressData && (
@@ -620,6 +665,62 @@ export default function GoalDetailScreen() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Add Funds Modal */}
+      <Modal visible={showAddFunds} transparent animationType="slide" onRequestClose={handleCloseAddFunds}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.modalOverlay}
+        >
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={handleCloseAddFunds} />
+          <View style={styles.modalSheet}>
+            <View style={styles.modalHandle} />
+            <Text style={styles.modalTitle}>
+              {t('goals.addFunds') || 'Add Funds'}
+            </Text>
+            <Text style={styles.modalSubtitle}>
+              {t('goals.addFundsDescription') || 'How much have you saved?'}
+            </Text>
+
+            <TextInput
+              style={styles.modalAmountInput}
+              value={fundAmount}
+              onChangeText={setFundAmount}
+              placeholder="0.00"
+              placeholderTextColor={theme.colors.textTertiary}
+              keyboardType="decimal-pad"
+              autoFocus
+            />
+
+            <Text style={styles.modalCurrentInfo}>
+              {t('goals.currentSaved') || 'Currently saved'}:{' '}
+              {formatAmount(goal?.currentAmount ?? 0)} {goal?.currencyCode}
+            </Text>
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={styles.modalCancelButton} onPress={handleCloseAddFunds}>
+                <Text style={styles.modalCancelText}>{t('common.cancel') || 'Cancel'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.modalConfirmButton,
+                  (!fundAmount || parseFloat(fundAmount) <= 0 || isAddingFunds) && styles.modalConfirmButtonDisabled,
+                ]}
+                onPress={handleAddFunds}
+                disabled={!fundAmount || parseFloat(fundAmount) <= 0 || isAddingFunds}
+              >
+                {isAddingFunds ? (
+                  <ActivityIndicator size="small" color={theme.colors.textInverse} />
+                ) : (
+                  <Text style={styles.modalConfirmText}>
+                    {t('goals.addFundsConfirm') || 'Add'}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -986,5 +1087,113 @@ const createStyles = (theme: Theme) => ({
     fontSize: 16,
     fontWeight: '600' as const,
     color: theme.colors.danger,
+  },
+
+  // Add Funds button
+  addFundsButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.success,
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[4],
+  },
+  addFundsButtonText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textInverse,
+  },
+
+  // Add Funds modal
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end' as const,
+  },
+  modalBackdrop: {
+    ...({
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    } as const),
+  },
+  modalSheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    paddingBottom: theme.spacing[8],
+  },
+  modalHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: theme.colors.textDisabled,
+    borderRadius: 2,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[5],
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[1],
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[5],
+  },
+  modalAmountInput: {
+    fontSize: 32,
+    fontWeight: '700' as const,
+    color: theme.colors.textPrimary,
+    textAlign: 'center' as const,
+    paddingVertical: theme.spacing[4],
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[3],
+  },
+  modalCurrentInfo: {
+    fontSize: 13,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginBottom: theme.spacing[5],
+  },
+  modalActions: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  modalCancelButton: {
+    flex: 1,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    alignItems: 'center' as const,
+  },
+  modalCancelText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textSecondary,
+  },
+  modalConfirmButton: {
+    flex: 1,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.success,
+    alignItems: 'center' as const,
+  },
+  modalConfirmButtonDisabled: {
+    opacity: 0.5,
+  },
+  modalConfirmText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textInverse,
   },
 });

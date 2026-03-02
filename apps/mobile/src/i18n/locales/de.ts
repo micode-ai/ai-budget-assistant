@@ -814,6 +814,11 @@ export default {
     regenerating: 'Neugenerierung...',
     regeneratePlan: 'KI-Plan neu generieren',
     deleteGoal: 'Ziel löschen',
+    addFunds: 'Betrag hinzufügen',
+    addFundsDescription: 'Wie viel haben Sie gespart?',
+    addFundsConfirm: 'Hinzufügen',
+    currentSaved: 'Bereits gespart',
+    errorAddFunds: 'Betrag konnte nicht hinzugefügt werden',
   },
   fatFinder: {
     title: 'Ausgabenprüfung',

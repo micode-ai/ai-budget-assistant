@@ -815,6 +815,11 @@ export default {
     regenerating: 'Ponowne generowanie...',
     regeneratePlan: 'Wygeneruj plan AI ponownie',
     deleteGoal: 'Usuń cel',
+    addFunds: 'Dodaj kwotę',
+    addFundsDescription: 'Ile udało ci się zaoszczędzić?',
+    addFundsConfirm: 'Dodaj',
+    currentSaved: 'Już zaoszczędzono',
+    errorAddFunds: 'Nie udało się dodać kwoty',
   },
   fatFinder: {
     title: 'Audyt wydatków',

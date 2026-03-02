@@ -273,6 +273,14 @@ Return ONLY valid JSON:
     if (dto.currentAmount !== undefined) data.currentAmount = dto.currentAmount;
     if (dto.status !== undefined) data.status = dto.status;
 
+    // Auto-complete: mark as completed when currentAmount reaches targetAmount
+    if (data.currentAmount !== undefined && goal.status === 'active') {
+      const target = data.targetAmount !== undefined ? data.targetAmount : Number(goal.targetAmount);
+      if (Number(data.currentAmount) >= target) {
+        data.status = 'completed';
+      }
+    }
+
     const updated = await this.prisma.savingsGoal.update({
       where: { id: goalId },
       data,
