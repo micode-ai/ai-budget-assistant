@@ -283,11 +283,11 @@ export default function IncomeDetailScreen() {
             <>
               <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
                 <Ionicons name="create-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.editButtonText}>{t('common.edit')}</Text>
+                <Text style={styles.editButtonText} numberOfLines={1}>{t('common.edit')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                 <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
-                <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
+                <Text style={styles.deleteButtonText} numberOfLines={1}>{t('common.delete')}</Text>
               </TouchableOpacity>
             </>
           )}
@@ -399,6 +399,7 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const,
     gap: theme.spacing[2],
     paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[3],
     borderRadius: theme.borderRadius.lg,
     borderWidth: 1.5,
     borderColor: theme.colors.primary,
@@ -406,6 +407,7 @@ const createStyles = (theme: Theme) => ({
   editButtonText: {
     ...theme.textStyles.button,
     color: theme.colors.primary,
+    flexShrink: 1,
   },
   deleteButton: {
     flex: 1,
@@ -414,6 +416,7 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const,
     gap: theme.spacing[2],
     paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[3],
     borderRadius: theme.borderRadius.lg,
     borderWidth: 1.5,
     borderColor: theme.colors.danger,
@@ -421,6 +424,7 @@ const createStyles = (theme: Theme) => ({
   deleteButtonText: {
     ...theme.textStyles.button,
     color: theme.colors.danger,
+    flexShrink: 1,
   },
   cancelButton: {
     flex: 1,

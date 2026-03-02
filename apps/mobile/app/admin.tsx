@@ -30,6 +30,12 @@ const FEATURE_LABELS: Record<string, string> = {
   ocr: 'admin.features.ocr',
   story: 'admin.features.story',
   insights: 'admin.features.insights',
+  tag_suggestion: 'admin.features.tag_suggestion',
+  project_suggestion: 'admin.features.project_suggestion',
+  split_suggestion: 'admin.features.split_suggestion',
+  goal_plan: 'admin.features.goal_plan',
+  investment_insights: 'admin.features.investment_insights',
+  fat_finder: 'admin.features.fat_finder',
 };
 
 export default function AdminScreen() {

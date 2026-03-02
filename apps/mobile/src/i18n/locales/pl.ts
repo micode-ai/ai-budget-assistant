@@ -693,6 +693,12 @@ export default {
       ocr: 'OCR / Skan paragonu',
       story: 'Historia',
       insights: 'AI Analiza',
+      tag_suggestion: 'Sugestia tagów',
+      project_suggestion: 'Sugestia projektu',
+      split_suggestion: 'Sugestia podziału',
+      goal_plan: 'Plan celów',
+      investment_insights: 'Analiza inwestycji',
+      fat_finder: 'Szukacz wydatków',
     },
   },
   drillDown: {

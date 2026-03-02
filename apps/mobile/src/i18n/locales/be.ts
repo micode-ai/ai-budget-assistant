@@ -673,6 +673,12 @@ export default {
       ocr: 'OCR / Сканаванне',
       story: 'Гісторыя',
       insights: 'Аналітыка ІІ',
+      tag_suggestion: 'Падбор тэгаў',
+      project_suggestion: 'Падбор праекта',
+      split_suggestion: 'Падзяленне',
+      goal_plan: 'План мэтаў',
+      investment_insights: 'Аналітыка інвестыцый',
+      fat_finder: 'Пошук лішніх выдаткаў',
     },
   },
   drillDown: {
