@@ -693,6 +693,12 @@ export default {
       ocr: 'OCR / Сканирование',
       story: 'История',
       insights: 'Аналитика ИИ',
+      tag_suggestion: 'Подбор тегов',
+      project_suggestion: 'Подбор проекта',
+      split_suggestion: 'Разделение',
+      goal_plan: 'План целей',
+      investment_insights: 'Аналитика инвестиций',
+      fat_finder: 'Поиск лишних трат',
     },
   },
   drillDown: {

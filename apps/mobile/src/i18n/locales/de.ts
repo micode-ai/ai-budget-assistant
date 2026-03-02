@@ -693,6 +693,12 @@ export default {
       ocr: 'OCR / Belegscan',
       story: 'Geschichte',
       insights: 'KI-Einblicke',
+      tag_suggestion: 'Tag-Vorschlag',
+      project_suggestion: 'Projektvorschlag',
+      split_suggestion: 'Aufteilungsvorschlag',
+      goal_plan: 'Zielplan',
+      investment_insights: 'Investitionsanalyse',
+      fat_finder: 'Sparfinder',
     },
   },
   drillDown: {

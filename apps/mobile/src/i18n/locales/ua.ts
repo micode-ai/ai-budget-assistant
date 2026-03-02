@@ -693,6 +693,12 @@ export default {
       ocr: 'OCR / Сканування',
       story: 'Історія',
       insights: 'Аналітика ШІ',
+      tag_suggestion: 'Підбір тегів',
+      project_suggestion: 'Підбір проєкту',
+      split_suggestion: 'Розділення',
+      goal_plan: 'План цілей',
+      investment_insights: 'Аналітика інвестицій',
+      fat_finder: 'Пошук зайвих витрат',
     },
   },
   drillDown: {
