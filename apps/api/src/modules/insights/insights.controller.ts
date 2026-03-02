@@ -45,7 +45,7 @@ export class InsightsController {
   @TrackAiUsage('story', 3.0)
   async getSpendingStory(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { period: 'week' | 'month'; forceRegenerate?: boolean; language?: string },
+    @Body() body: { period: 'week' | 'month'; forceRegenerate?: boolean; language?: string; month?: number; year?: number },
   ) {
     return this.storyService.getSpendingStory(
       req.accountId,
@@ -53,6 +53,8 @@ export class InsightsController {
       body.forceRegenerate,
       body.language,
       req.user.id,
+      body.month,
+      body.year,
     );
   }
 

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -26,14 +26,20 @@ export default function AnalyticsScreen() {
   const [selectedRange, setSelectedRange] = useState<TimeRange>('month');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | undefined>(undefined);
   const [expandedInsightId, setExpandedInsightId] = useState<string | null>(null);
+
+  const now = useMemo(() => new Date(), []);
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1); // 1-based
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear());
+
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency);
+  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency, selectedRange !== 'week' ? selectedMonth : undefined, selectedYear);
   const { aiInsights, loadAIInsights } = useInsightsStore();
   const { loadTags } = useTagStore();
   const { loadProjects } = useProjectStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const intlLocale = getIntlLocale();
 
   useEffect(() => {
     loadAIInsights(i18n.language);
@@ -46,6 +52,47 @@ export default function AnalyticsScreen() {
     { key: 'month', label: t('analytics.month') },
     { key: 'year', label: t('analytics.year') },
   ];
+
+  // Month/Year navigation
+  const isCurrentPeriod = selectedRange === 'month'
+    ? selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear()
+    : selectedYear === now.getFullYear();
+
+  const getPeriodLabel = (): string => {
+    if (selectedRange === 'year') {
+      return `${selectedYear}`;
+    }
+    const date = new Date(selectedYear, selectedMonth - 1, 1);
+    const monthName = date.toLocaleDateString(intlLocale, { month: 'long' });
+    return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${selectedYear}`;
+  };
+
+  const goToPrevPeriod = useCallback(() => {
+    if (selectedRange === 'year') {
+      setSelectedYear((y) => y - 1);
+    } else {
+      if (selectedMonth === 1) {
+        setSelectedMonth(12);
+        setSelectedYear((y) => y - 1);
+      } else {
+        setSelectedMonth((m) => m - 1);
+      }
+    }
+  }, [selectedRange, selectedMonth]);
+
+  const goToNextPeriod = useCallback(() => {
+    if (isCurrentPeriod) return;
+    if (selectedRange === 'year') {
+      setSelectedYear((y) => y + 1);
+    } else {
+      if (selectedMonth === 12) {
+        setSelectedMonth(1);
+        setSelectedYear((y) => y + 1);
+      } else {
+        setSelectedMonth((m) => m + 1);
+      }
+    }
+  }, [selectedRange, selectedMonth, isCurrentPeriod]);
 
   const toggleInsight = useCallback((id: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -75,7 +122,13 @@ export default function AnalyticsScreen() {
                 styles.rangeButton,
                 selectedRange === range.key && styles.rangeButtonActive,
               ]}
-              onPress={() => setSelectedRange(range.key)}
+              onPress={() => {
+                setSelectedRange(range.key);
+                if (range.key === 'week') {
+                  setSelectedMonth(now.getMonth() + 1);
+                  setSelectedYear(now.getFullYear());
+                }
+              }}
             >
               <Text
                 style={[
@@ -88,6 +141,23 @@ export default function AnalyticsScreen() {
             </TouchableOpacity>
           ))}
         </View>
+
+        {/* Month/Year Picker (hidden for 'week' range) */}
+        {selectedRange !== 'week' && (
+          <View style={styles.monthPickerRow}>
+            <TouchableOpacity onPress={goToPrevPeriod} hitSlop={8}>
+              <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
+            </TouchableOpacity>
+            <Text style={styles.monthPickerLabel}>{getPeriodLabel()}</Text>
+            <TouchableOpacity onPress={goToNextPeriod} hitSlop={8} disabled={isCurrentPeriod}>
+              <Ionicons
+                name="chevron-forward"
+                size={22}
+                color={isCurrentPeriod ? theme.colors.textDisabled : theme.colors.primary}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Currency Filter */}
         {availableCurrencies.length > 1 && (
@@ -157,7 +227,13 @@ export default function AnalyticsScreen() {
         {/* Story Banner */}
         <TouchableOpacity
           style={styles.storyBanner}
-          onPress={() => router.push('/story')}
+          onPress={() => router.push({
+            pathname: '/story',
+            params: {
+              month: String(selectedMonth),
+              year: String(selectedYear),
+            },
+          })}
         >
           <Ionicons name="book-outline" size={24} color={theme.colors.primary} />
           <View style={styles.storyBannerContent}>
@@ -603,7 +679,20 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[1],
-    marginBottom: theme.spacing[5],
+    marginBottom: theme.spacing[3],
+  },
+  monthPickerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[4],
+  },
+  monthPickerLabel: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    minWidth: 140,
+    textAlign: 'center' as const,
   },
   rangeButton: {
     flex: 1,
