@@ -510,6 +510,8 @@ export const useExpenseStore = create<ExpenseState>()(
           e.id === id ? { ...e, syncStatus: 'synced' as SyncStatus } : e
         ),
       }));
+      // Also update SQLite so loadExpenses() won't revert to 'pending'
+      updateExpenseInDb(id, {}, new Date(), 'synced').catch(() => {});
 
       // Encrypt sensitive fields before sending to server
       maybeEncrypt('expense', {
@@ -549,6 +551,7 @@ export const useExpenseStore = create<ExpenseState>()(
             exp.id === id ? { ...exp, syncStatus: 'pending' as SyncStatus } : exp
           ),
         }));
+        updateExpenseInDb(id, {}, new Date(), 'pending').catch(() => {});
         console.error('Failed to sync expense to server:', e);
       });
 

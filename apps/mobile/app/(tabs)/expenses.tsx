@@ -308,7 +308,7 @@ export default function ExpensesScreen() {
           ]}
         >
           <TouchableOpacity style={styles.fabOptionButton} onPress={handleScanReceipt}>
-            <Ionicons name="camera" size={22} color={theme.colors.textInverse} />
+            <Ionicons name="qr-code" size={22} color={theme.colors.textInverse} />
           </TouchableOpacity>
           <Animated.Text
             style={[
@@ -346,7 +346,7 @@ export default function ExpensesScreen() {
           ]}
         >
           <TouchableOpacity style={[styles.fabOptionButton, { backgroundColor: theme.colors.accent }]} onPress={handleVoiceInput}>
-            <Ionicons name="mic" size={22} color={theme.colors.textInverse} />
+            <Ionicons name="radio" size={22} color={theme.colors.textInverse} />
           </TouchableOpacity>
           <Animated.Text
             style={[
@@ -611,12 +611,13 @@ const createStyles = (theme: Theme) => ({
   fabOptionLabel: {
     position: 'absolute' as const,
     right: 58,
-    backgroundColor: theme.colors.textPrimary,
+    backgroundColor: theme.colors.surfaceElevated,
     paddingHorizontal: theme.spacing[3],
     paddingVertical: theme.spacing[1.5],
     borderRadius: theme.borderRadius.sm,
-    color: theme.colors.textInverse,
+    color: theme.colors.textPrimary,
     ...theme.textStyles.bodySmMedium,
     overflow: 'hidden' as const,
+    ...theme.shadows.md,
   },
 });

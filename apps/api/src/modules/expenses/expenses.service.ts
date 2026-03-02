@@ -56,11 +56,18 @@ export class ExpensesService {
     return null;
   }
 
-  async create(accountId: string, userId: string, dto: CreateExpenseDto) {
+  async create(accountId: string, userId: string, dto: CreateExpenseDto): Promise<{ expense: any; isNew: boolean }> {
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
+
+      // Check if this is a new expense or an update (for notification dedup)
+      const existing = await tx.expense.findUnique({
+        where: { accountId_clientId: { accountId, clientId: dto.localId } },
+        select: { id: true },
+      });
+      const isNew = !existing;
 
       const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
 
@@ -198,7 +205,7 @@ export class ExpensesService {
         }
       }
 
-      return tx.expense.findUnique({
+      const full = await tx.expense.findUnique({
         where: { id: expense.id },
         include: {
           category: true,
@@ -208,6 +215,7 @@ export class ExpensesService {
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         },
       });
+      return { expense: full, isNew };
     });
 
     // Fire-and-forget gamification check

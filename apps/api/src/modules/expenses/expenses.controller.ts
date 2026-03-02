@@ -35,17 +35,19 @@ export class ExpensesController {
   async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateExpenseDto) {
     this.logger.debug(`[CREATE] raw body: ${JSON.stringify(req.body)}`);
     this.logger.debug(`[CREATE] dto: ${JSON.stringify(dto)}`);
-    const expense = await this.expensesService.create(req.accountId, req.user.id, dto);
+    const { expense, isNew } = await this.expensesService.create(req.accountId, req.user.id, dto);
 
-    // Fire-and-forget notifications
-    this.budgetAlertService.checkBudgetsForAccount(req.accountId, dto.currencyCode)
-      .catch(e => this.logger.error('Budget alert check failed', e));
-    this.budgetAlertService.checkSpendingAnomalies(req.accountId, req.user.id)
-      .catch(e => this.logger.error('Spending anomaly check failed', e));
-    if (expense) {
-      this.sharedActivityService.notifyExpenseCreated(
-        req.accountId, req.user.id, expense.id, dto.amount, dto.currencyCode, dto.description,
-      ).catch(e => this.logger.error('Shared activity notification failed', e));
+    // Fire-and-forget notifications (only for genuinely new expenses, not upsert updates)
+    if (isNew) {
+      this.budgetAlertService.checkBudgetsForAccount(req.accountId, dto.currencyCode)
+        .catch(e => this.logger.error('Budget alert check failed', e));
+      this.budgetAlertService.checkSpendingAnomalies(req.accountId, req.user.id)
+        .catch(e => this.logger.error('Spending anomaly check failed', e));
+      if (expense) {
+        this.sharedActivityService.notifyExpenseCreated(
+          req.accountId, req.user.id, expense.id, dto.amount, dto.currencyCode, dto.description,
+        ).catch(e => this.logger.error('Shared activity notification failed', e));
+      }
     }
 
     return expense;
