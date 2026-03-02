@@ -38,6 +38,8 @@ export class StoryService {
     forceRegenerate = false,
     language?: string,
     userId?: string,
+    month?: number,
+    year?: number,
   ) {
     // Tier 2 (full encryption): amounts are encrypted, stories cannot be generated
     const encryptionTier = await this.getEncryptionTier(accountId);
@@ -59,7 +61,10 @@ export class StoryService {
     }
 
     const now = new Date();
-    const { periodStart, periodEnd, periodLabel } = this.computePeriod(now, period, language);
+    const targetDate = (month != null && year != null)
+      ? new Date(year, month - 1, 15) // mid-month to avoid timezone edge cases
+      : now;
+    const { periodStart, periodEnd, periodLabel } = this.computePeriod(targetDate, period, language);
 
     // Check cache unless force regenerate
     if (!forceRegenerate) {

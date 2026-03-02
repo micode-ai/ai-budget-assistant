@@ -132,7 +132,7 @@ const CATEGORY_COLORS = [
   '#85C1E9', // Light Blue
 ];
 
-export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: string) {
+export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: string, selectedMonth?: number, selectedYear?: number) {
   const { t } = useTranslation();
   const { expenses } = useExpenseStore();
   const { categories, loadCategories } = useCategoryStore();
@@ -157,18 +157,24 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         startDate = getStartOfWeek(now);
         endDate = getEndOfWeek(now);
         break;
-      case 'month':
-        startDate = getStartOfMonth(now);
-        endDate = getEndOfMonth(now);
+      case 'month': {
+        const m = selectedMonth != null ? selectedMonth - 1 : now.getMonth();
+        const y = selectedYear ?? now.getFullYear();
+        const target = new Date(y, m, 1);
+        startDate = getStartOfMonth(target);
+        endDate = getEndOfMonth(target);
         break;
-      case 'year':
-        startDate = new Date(now.getFullYear(), 0, 1);
-        endDate = new Date(now.getFullYear(), 11, 31);
+      }
+      case 'year': {
+        const y = selectedYear ?? now.getFullYear();
+        startDate = new Date(y, 0, 1);
+        endDate = new Date(y, 11, 31);
         break;
+      }
     }
 
     return { startDate, endDate };
-  }, [timeRange]);
+  }, [timeRange, selectedMonth, selectedYear]);
 
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
@@ -180,9 +186,12 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
   }, [expenses, dateRange, currencyCode]);
 
   const dailySpending = useMemo((): DailySpending[] => {
-    const now = new Date();
     const dailyMap = new Map<string, number>();
     const result: DailySpending[] = [];
+
+    // Derive the target month/year from the dateRange
+    const rangeYear = dateRange.startDate.getFullYear();
+    const rangeMonth = dateRange.startDate.getMonth();
 
     // Initialize days based on time range
     if (timeRange === 'week') {
@@ -193,16 +202,16 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         dailyMap.set(dateKey, 0);
       }
     } else if (timeRange === 'month') {
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const daysInMonth = new Date(rangeYear, rangeMonth + 1, 0).getDate();
       for (let i = 1; i <= daysInMonth; i++) {
-        const date = new Date(now.getFullYear(), now.getMonth(), i);
+        const date = new Date(rangeYear, rangeMonth, i);
         const dateKey = date.toISOString().split('T')[0];
         dailyMap.set(dateKey, 0);
       }
     } else {
       // Year - show monthly totals
       for (let i = 0; i < 12; i++) {
-        const monthKey = `${now.getFullYear()}-${String(i + 1).padStart(2, '0')}`;
+        const monthKey = `${rangeYear}-${String(i + 1).padStart(2, '0')}`;
         dailyMap.set(monthKey, 0);
       }
     }

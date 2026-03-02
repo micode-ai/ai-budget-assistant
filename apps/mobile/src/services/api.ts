@@ -844,10 +844,10 @@ class ApiClient {
   }
 
   // Story Dashboard
-  async getSpendingStory(period: 'week' | 'month', forceRegenerate?: boolean, language?: string) {
+  async getSpendingStory(period: 'week' | 'month', forceRegenerate?: boolean, language?: string, month?: number, year?: number) {
     return this.request<StoryDashboardResponse>('/insights/story', {
       method: 'POST',
-      body: JSON.stringify({ period, forceRegenerate, language }),
+      body: JSON.stringify({ period, forceRegenerate, language, month, year }),
     });
   }
 

@@ -1,10 +1,12 @@
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useLocalSearchParams } from 'expo-router';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
+import { getIntlLocale } from '@/i18n';
 import { StoryBlockRenderer } from '@/components/story';
 import type { SpendingStory, StoryBlock } from '@budget/shared-types';
 
@@ -12,18 +14,58 @@ export default function StoryScreen() {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const intlLocale = getIntlLocale();
+
+  const params = useLocalSearchParams<{ month?: string; year?: string }>();
+
+  const now = useMemo(() => new Date(), []);
+  const [selectedMonth, setSelectedMonth] = useState(
+    params.month ? Number(params.month) : now.getMonth() + 1,
+  );
+  const [selectedYear, setSelectedYear] = useState(
+    params.year ? Number(params.year) : now.getFullYear(),
+  );
 
   const [period, setPeriod] = useState<'week' | 'month'>('month');
   const [story, setStory] = useState<SpendingStory | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isCurrentMonth = selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear();
+
+  const getMonthLabel = (month: number, year: number): string => {
+    const date = new Date(year, month - 1, 1);
+    const monthName = date.toLocaleDateString(intlLocale, { month: 'long' });
+    return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${year}`;
+  };
+
+  const goToPrevMonth = useCallback(() => {
+    if (selectedMonth === 1) {
+      setSelectedMonth(12);
+      setSelectedYear((y) => y - 1);
+    } else {
+      setSelectedMonth((m) => m - 1);
+    }
+  }, [selectedMonth]);
+
+  const goToNextMonth = useCallback(() => {
+    if (isCurrentMonth) return;
+    if (selectedMonth === 12) {
+      setSelectedMonth(1);
+      setSelectedYear((y) => y + 1);
+    } else {
+      setSelectedMonth((m) => m + 1);
+    }
+  }, [selectedMonth, isCurrentMonth]);
+
   const loadStory = useCallback(
     async (forceRegenerate = false) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await api.getSpendingStory(period, forceRegenerate, i18n.language);
+        const month = period === 'month' ? selectedMonth : undefined;
+        const year = period === 'month' ? selectedYear : undefined;
+        const response = await api.getSpendingStory(period, forceRegenerate, i18n.language, month, year);
         setStory(response.story);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load story');
@@ -31,7 +73,7 @@ export default function StoryScreen() {
         setIsLoading(false);
       }
     },
-    [period, i18n.language],
+    [period, i18n.language, selectedMonth, selectedYear],
   );
 
   useEffect(() => {
@@ -63,6 +105,25 @@ export default function StoryScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Month/Year Picker (only for month period) */}
+      {period === 'month' && (
+        <View style={styles.monthPickerRow}>
+          <TouchableOpacity onPress={goToPrevMonth} hitSlop={8} disabled={isLoading}>
+            <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
+          </TouchableOpacity>
+          <Text style={styles.monthPickerLabel}>
+            {getMonthLabel(selectedMonth, selectedYear)}
+          </Text>
+          <TouchableOpacity onPress={goToNextMonth} hitSlop={8} disabled={isCurrentMonth || isLoading}>
+            <Ionicons
+              name="chevron-forward"
+              size={22}
+              color={isCurrentMonth ? theme.colors.textDisabled : theme.colors.primary}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Loading */}
       {isLoading && (
@@ -169,6 +230,20 @@ const createStyles = (theme: Theme) => ({
   },
   periodTabTextActive: {
     color: theme.colors.textInverse,
+  },
+  monthPickerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[3],
+    marginHorizontal: theme.spacing[4],
+  },
+  monthPickerLabel: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    minWidth: 160,
+    textAlign: 'center' as const,
   },
   loadingContainer: {
     flex: 1,
