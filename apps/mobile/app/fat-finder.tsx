@@ -16,6 +16,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInsightsStore } from '@/stores/insightsStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
 import type { FatFinderFinding, FatFinderFindingType, Currency } from '@budget/shared-types';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -46,16 +47,49 @@ export default function FatFinderScreen() {
   const fatFinderLoading = useInsightsStore((s) => s.fatFinderLoading);
   const fatFinderError = useInsightsStore((s) => s.fatFinderError);
   const loadFatFinder = useInsightsStore((s) => s.loadFatFinder);
+  const fatFinderMonth = useInsightsStore((s) => s.fatFinderMonth);
+  const fatFinderYear = useInsightsStore((s) => s.fatFinderYear);
 
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const [expandedExpenses, setExpandedExpenses] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (!fatFinderReport && !fatFinderLoading) {
-      loadFatFinder(i18n.language);
+      loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const now = new Date();
+  const isCurrentMonth = fatFinderMonth === now.getMonth() + 1 && fatFinderYear === now.getFullYear();
+  const intlLocale = getIntlLocale();
+
+  const getMonthLabel = (month: number, year: number): string => {
+    const date = new Date(year, month - 1, 1);
+    const monthName = date.toLocaleDateString(intlLocale, { month: 'long' });
+    return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${year}`;
+  };
+
+  const goToPrevMonth = useCallback(() => {
+    let newMonth = fatFinderMonth - 1;
+    let newYear = fatFinderYear;
+    if (newMonth < 1) {
+      newMonth = 12;
+      newYear -= 1;
+    }
+    loadFatFinder(i18n.language, false, newMonth, newYear);
+  }, [fatFinderMonth, fatFinderYear, i18n.language, loadFatFinder]);
+
+  const goToNextMonth = useCallback(() => {
+    if (isCurrentMonth) return;
+    let newMonth = fatFinderMonth + 1;
+    let newYear = fatFinderYear;
+    if (newMonth > 12) {
+      newMonth = 1;
+      newYear += 1;
+    }
+    loadFatFinder(i18n.language, false, newMonth, newYear);
+  }, [fatFinderMonth, fatFinderYear, isCurrentMonth, i18n.language, loadFatFinder]);
 
   const currency = (fatFinderReport?.currencyCode || user?.currencyCode || 'USD') as Currency;
 
@@ -70,7 +104,7 @@ export default function FatFinderScreen() {
   }, []);
 
   const handleRegenerate = () => {
-    loadFatFinder(i18n.language, true);
+    loadFatFinder(i18n.language, true, fatFinderMonth, fatFinderYear);
   };
 
   const getSeverityColor = (severity: string) => {
@@ -226,11 +260,32 @@ export default function FatFinderScreen() {
     );
   };
 
+  const renderMonthPicker = () => (
+    <View style={styles.monthPickerRow}>
+      <TouchableOpacity onPress={goToPrevMonth} hitSlop={8} disabled={fatFinderLoading}>
+        <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
+      </TouchableOpacity>
+      <Text style={styles.monthPickerLabel}>
+        {getMonthLabel(fatFinderMonth, fatFinderYear)}
+      </Text>
+      <TouchableOpacity onPress={goToNextMonth} hitSlop={8} disabled={isCurrentMonth || fatFinderLoading}>
+        <Ionicons
+          name="chevron-forward"
+          size={22}
+          color={isCurrentMonth ? theme.colors.textDisabled : theme.colors.primary}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
   const renderHeader = () => {
     if (!fatFinderReport) return null;
 
     return (
       <View style={styles.headerSection}>
+        {/* Month picker */}
+        {renderMonthPicker()}
+
         {/* Summary card */}
         <View style={styles.summaryCard}>
           <Text style={styles.summaryTitle}>{t('fatFinder.totalSavings')}</Text>
@@ -285,6 +340,9 @@ export default function FatFinderScreen() {
   if (fatFinderLoading && !fatFinderReport) {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
+        <View style={styles.listContent}>
+          {renderMonthPicker()}
+        </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
           <Text style={styles.loadingText}>{t('fatFinder.loading')}</Text>
@@ -297,10 +355,13 @@ export default function FatFinderScreen() {
   if (fatFinderError && !fatFinderReport) {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
+        <View style={styles.listContent}>
+          {renderMonthPicker()}
+        </View>
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle-outline" size={48} color={theme.colors.danger} />
           <Text style={styles.errorText}>{fatFinderError}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={() => loadFatFinder(i18n.language)}>
+          <TouchableOpacity style={styles.retryButton} onPress={() => loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear)}>
             <Text style={styles.retryText}>{t('common.retry')}</Text>
           </TouchableOpacity>
         </View>
@@ -312,6 +373,9 @@ export default function FatFinderScreen() {
   if (!fatFinderReport || fatFinderReport.findings.length === 0) {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
+        <View style={styles.listContent}>
+          {renderMonthPicker()}
+        </View>
         <View style={styles.emptyContainer}>
           <Ionicons name="checkmark-circle-outline" size={48} color={theme.colors.success} />
           <Text style={styles.emptyTitle}>{t('fatFinder.emptyTitle')}</Text>
@@ -348,6 +412,21 @@ const createStyles = (theme: Theme) => ({
   listContent: {
     padding: theme.spacing[4],
     paddingBottom: theme.spacing[10],
+  },
+
+  // Month picker
+  monthPickerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[4],
+  },
+  monthPickerLabel: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    minWidth: 160,
+    textAlign: 'center' as const,
   },
 
   // Header section

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -8,6 +8,7 @@ import { useInsightsStore } from '@/stores/insightsStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
 import type { Currency } from '@budget/shared-types';
 
 const SEVERITY_COLORS = (theme: Theme) => ({
@@ -15,6 +16,12 @@ const SEVERITY_COLORS = (theme: Theme) => ({
   medium: theme.colors.warning,
   high: theme.colors.danger,
 });
+
+function getMonthLabel(month: number, year: number, locale: string): string {
+  const date = new Date(year, month - 1, 1);
+  const monthName = date.toLocaleDateString(locale, { month: 'long' });
+  return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${year}`;
+}
 
 export function FatFinderCard() {
   const { t, i18n } = useTranslation();
@@ -26,6 +33,8 @@ export function FatFinderCard() {
   const fatFinderLoading = useInsightsStore((s) => s.fatFinderLoading);
   const fatFinderError = useInsightsStore((s) => s.fatFinderError);
   const loadFatFinder = useInsightsStore((s) => s.loadFatFinder);
+  const fatFinderMonth = useInsightsStore((s) => s.fatFinderMonth);
+  const fatFinderYear = useInsightsStore((s) => s.fatFinderYear);
   const isPro = useSubscriptionStore((s) => s.isPro);
   const loadSubscription = useSubscriptionStore((s) => s.loadSubscription);
   const tier = useSubscriptionStore((s) => s.tier);
@@ -37,13 +46,56 @@ export function FatFinderCard() {
 
   useEffect(() => {
     if (isPro() && !fatFinderReport && !fatFinderLoading) {
-      loadFatFinder(i18n.language);
+      loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tier]);
 
+  const now = new Date();
+  const isCurrentMonth = fatFinderMonth === now.getMonth() + 1 && fatFinderYear === now.getFullYear();
+
+  const goToPrevMonth = useCallback(() => {
+    let newMonth = fatFinderMonth - 1;
+    let newYear = fatFinderYear;
+    if (newMonth < 1) {
+      newMonth = 12;
+      newYear -= 1;
+    }
+    loadFatFinder(i18n.language, false, newMonth, newYear);
+  }, [fatFinderMonth, fatFinderYear, i18n.language, loadFatFinder]);
+
+  const goToNextMonth = useCallback(() => {
+    if (isCurrentMonth) return;
+    let newMonth = fatFinderMonth + 1;
+    let newYear = fatFinderYear;
+    if (newMonth > 12) {
+      newMonth = 1;
+      newYear += 1;
+    }
+    loadFatFinder(i18n.language, false, newMonth, newYear);
+  }, [fatFinderMonth, fatFinderYear, isCurrentMonth, i18n.language, loadFatFinder]);
+
   const severityColors = SEVERITY_COLORS(theme);
   const currency = (fatFinderReport?.currencyCode || user?.currencyCode || 'USD') as Currency;
+  const intlLocale = getIntlLocale();
+
+  const monthPicker = (
+    <View style={styles.monthPickerRow}>
+      <TouchableOpacity onPress={goToPrevMonth} hitSlop={8} disabled={fatFinderLoading}>
+        <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
+      </TouchableOpacity>
+      <Text style={styles.monthPickerLabel}>
+        {getMonthLabel(fatFinderMonth, fatFinderYear, intlLocale)}
+      </Text>
+      <TouchableOpacity onPress={goToNextMonth} hitSlop={8} disabled={isCurrentMonth || fatFinderLoading}>
+        <Ionicons
+          name="chevron-forward"
+          size={22}
+          color={isCurrentMonth ? theme.colors.textDisabled : theme.colors.primary}
+        />
+      </TouchableOpacity>
+    </View>
+  );
 
   // Pro gate
   if (!isPro()) {
@@ -75,6 +127,7 @@ export function FatFinderCard() {
           <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
         </View>
+        {monthPicker}
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="small" color={theme.colors.primary} />
           <Text style={styles.loadingText}>{t('fatFinder.loading')}</Text>
@@ -91,6 +144,7 @@ export function FatFinderCard() {
           <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
         </View>
+        {monthPicker}
         <View style={styles.errorContainer}>
           <Ionicons name="alert-circle-outline" size={20} color={theme.colors.danger} />
           <Text style={styles.errorText}>{fatFinderError}</Text>
@@ -107,6 +161,7 @@ export function FatFinderCard() {
           <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
         </View>
+        {monthPicker}
         <View style={styles.emptyContainer}>
           <Ionicons name="checkmark-circle-outline" size={32} color={theme.colors.success} />
           <Text style={styles.emptyText}>{t('fatFinder.noFindings')}</Text>
@@ -124,6 +179,9 @@ export function FatFinderCard() {
         <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
         <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
       </View>
+
+      {/* Month picker */}
+      {monthPicker}
 
       {/* Total savings */}
       <View style={styles.savingsRow}>
@@ -194,6 +252,21 @@ const createStyles = (theme: Theme) => ({
   cardTitle: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
+  },
+
+  // Month picker
+  monthPickerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[3],
+  },
+  monthPickerLabel: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    minWidth: 140,
+    textAlign: 'center' as const,
   },
 
   // Savings
