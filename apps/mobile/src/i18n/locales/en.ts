@@ -814,6 +814,11 @@ export default {
     regenerating: 'Regenerating...',
     regeneratePlan: 'Regenerate AI Plan',
     deleteGoal: 'Delete Goal',
+    addFunds: 'Add Funds',
+    addFundsDescription: 'How much have you saved?',
+    addFundsConfirm: 'Add',
+    currentSaved: 'Currently saved',
+    errorAddFunds: 'Failed to add funds',
   },
   fatFinder: {
     title: 'Expense Audit',

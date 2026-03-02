@@ -814,6 +814,11 @@ export default {
     regenerating: 'Regenerando...',
     regeneratePlan: 'Regenerar plan IA',
     deleteGoal: 'Eliminar meta',
+    addFunds: 'Agregar fondos',
+    addFundsDescription: '¿Cuánto has ahorrado?',
+    addFundsConfirm: 'Agregar',
+    currentSaved: 'Ahorrado actualmente',
+    errorAddFunds: 'Error al agregar fondos',
   },
   fatFinder: {
     title: 'Auditoría de gastos',

@@ -814,6 +814,11 @@ export default {
     regenerating: 'Régénération...',
     regeneratePlan: 'Régénérer le plan IA',
     deleteGoal: 'Supprimer l\'objectif',
+    addFunds: 'Ajouter des fonds',
+    addFundsDescription: 'Combien avez-vous économisé ?',
+    addFundsConfirm: 'Ajouter',
+    currentSaved: 'Déjà économisé',
+    errorAddFunds: 'Échec de l\'ajout des fonds',
   },
   fatFinder: {
     title: 'Audit des dépenses',

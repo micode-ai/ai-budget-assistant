@@ -490,6 +490,7 @@ export class ChatService {
     const result = await this.executeAction(actionType, args, accountId || '', '');
 
     // Feed the result back to OpenAI to generate a natural language summary
+    const toolResultJson = JSON.stringify(result.data || {});
     const followUpResponse = await this.openai.chat.completions.create({
       model: aiModel || 'gpt-4o',
       messages: [
@@ -504,9 +505,10 @@ export class ChatService {
         {
           role: 'tool',
           tool_call_id: toolCall.id,
-          content: JSON.stringify(result.data || {}),
+          content: `IMPORTANT: Present ONLY these exact numbers to the user. Do NOT modify, round, or estimate any values.\n\n${toolResultJson}`,
         },
       ],
+      temperature: 0,
       max_tokens: 1000,
     });
 
@@ -699,15 +701,40 @@ export class ChatService {
       date: e.date,
     }));
 
-    const total = expenseList.reduce((sum: number, e: any) => sum + e.amount, 0);
+    // Pre-aggregate totals by currency
+    const totalsByCurrency: Record<string, number> = {};
+    for (const e of expenseList) {
+      const cur = e.currencyCode || 'USD';
+      totalsByCurrency[cur] = (totalsByCurrency[cur] || 0) + e.amount;
+    }
+
+    // Pre-aggregate totals by category (grouped by currency)
+    const categoryBreakdown: Record<string, { amount: number; count: number; currency: string }> = {};
+    for (const e of expenseList) {
+      const key = `${e.category || 'Uncategorized'}|${e.currencyCode || 'USD'}`;
+      if (!categoryBreakdown[key]) {
+        categoryBreakdown[key] = { amount: 0, count: 0, currency: e.currencyCode || 'USD' };
+      }
+      categoryBreakdown[key].amount += e.amount;
+      categoryBreakdown[key].count += 1;
+    }
+    const categoryTotals = Object.entries(categoryBreakdown).map(([key, val]) => ({
+      category: key.split('|')[0],
+      amount: Math.round(val.amount * 100) / 100,
+      count: val.count,
+      currencyCode: val.currency,
+    })).sort((a, b) => b.amount - a.amount);
+
     const actualCount = pagination?.total ?? expenseList.length;
 
     return {
       actionType: 'get_expenses',
       success: true,
       data: {
-        expenses: expenseList,
-        total,
+        // Send only the last 20 individual expenses to keep payload small
+        recentExpenses: expenseList.slice(0, 20),
+        categoryTotals,
+        totalsByCurrency,
         count: actualCount,
         startDate: data.startDate,
         endDate: data.endDate,
@@ -787,6 +814,7 @@ export class ChatService {
       data: {
         categories: (summary as any).expensesByCategory || [],
         totalExpenses: (summary as any).totalExpenses || 0,
+        expensesByCurrency: (summary as any).expensesByCurrency || [],
         period: { startDate: data.startDate, endDate: data.endDate },
       },
     };
@@ -1150,8 +1178,8 @@ Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB
 Current user's financial context:
 - Total spent this month: ${context.totalSpentThisMonth.toFixed(2)}
 - Monthly budget: ${context.monthlyBudget > 0 ? context.monthlyBudget.toFixed(2) : 'Not set'}
-- Top spending categories: ${context.topCategories.map((c) => `${c.name}: ${c.amount.toFixed(2)}`).join(', ') || 'No data'}
-- Recent expenses:
+- Top spending categories this month (names only — use tools for exact amounts): ${context.topCategories.map((c) => c.name).join(', ') || 'No data'}
+- Recent expenses (last few for context only — use tools for full data):
 ${recentExpensesText}
 - Top purchased items (from receipts): ${topItemsText}
 - User's tags: ${tagsText}
@@ -1166,9 +1194,10 @@ When asked about specific items or products, use the "Top purchased items" data 
 ${getResponseModeInstruction(responseMode)}
 
 When the user asks to CREATE something (expense, income, budget), use the appropriate tool function.
-When the user asks to SHOW or LIST data (expenses, budget status, breakdown), use the appropriate query tool.
+When the user asks to SHOW or LIST data (expenses, budget status, breakdown), you MUST use the appropriate query tool (get_expenses, get_category_breakdown, get_budget_status). NEVER generate expense amounts, totals, or category breakdowns from the context above — the context is only a brief summary of the current month for general awareness. Always call the tool to get accurate data.
 If the user doesn't specify a date, use today's date (${today}).
 If the user references a category, match it to the available categories list above.
+When presenting tool results, use ONLY the exact numbers returned by the tool. Do NOT round, estimate, or substitute any values.
 
 Provide helpful, actionable advice about budgeting and spending. Be concise but thorough.
 If asked about specific data you don't have, acknowledge the limitation and provide general guidance.

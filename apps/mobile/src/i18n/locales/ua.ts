@@ -815,6 +815,11 @@ export default {
     regenerating: 'Регенерація...',
     regeneratePlan: 'Регенерувати ШІ-план',
     deleteGoal: 'Видалити ціль',
+    addFunds: 'Внести суму',
+    addFundsDescription: 'Скільки ви заощадили?',
+    addFundsConfirm: 'Внести',
+    currentSaved: 'Вже заощаджено',
+    errorAddFunds: 'Не вдалося внести суму',
   },
   fatFinder: {
     title: 'Аудит витрат',

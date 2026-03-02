@@ -815,6 +815,11 @@ export default {
     regenerating: 'Перегенерация...',
     regeneratePlan: 'Перегенерировать ИИ-план',
     deleteGoal: 'Удалить цель',
+    addFunds: 'Внести сумму',
+    addFundsDescription: 'Сколько вы накопили?',
+    addFundsConfirm: 'Внести',
+    currentSaved: 'Уже накоплено',
+    errorAddFunds: 'Не удалось внести сумму',
   },
   fatFinder: {
     title: 'Аудит расходов',
