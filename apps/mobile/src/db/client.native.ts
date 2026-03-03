@@ -347,6 +347,19 @@ export async function initializeDatabase(): Promise<void> {
         FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES categories(id)
       );
+
+      CREATE TABLE IF NOT EXISTS budget_categories (
+        id TEXT PRIMARY KEY,
+        budget_id TEXT NOT NULL,
+        category_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (budget_id) REFERENCES budgets(id) ON DELETE CASCADE,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
+      );
     `);
 
     // Encryption keys table (local cache for E2EE account keys)
@@ -546,6 +559,10 @@ export async function initializeDatabase(): Promise<void> {
       // Splits indexes
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_expense ON expense_category_splits(expense_id)',
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_category ON expense_category_splits(category_id)',
+      // Budget categories indexes
+      'CREATE INDEX IF NOT EXISTS idx_budget_categories_budget ON budget_categories(budget_id)',
+      'CREATE INDEX IF NOT EXISTS idx_budget_categories_category ON budget_categories(category_id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_budget_categories_unique ON budget_categories(budget_id, category_id)',
       // Gamification indexes
       'CREATE INDEX IF NOT EXISTS idx_user_achievements_achievement ON user_achievements(achievement_id)',
       // Investment indexes

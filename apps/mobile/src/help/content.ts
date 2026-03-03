@@ -470,10 +470,10 @@ Review and correct any details, then:
     {
       id: '05-budgets',
       title: `Budgets`,
-      description: `Set spending limits and track your progress in real time. Create budgets for specific categories or overall spending, with customizable periods and automatic alert thresholds.`,
+      description: `Set spending limits and track your progress in real time. Create budgets for specific categories or distribute your budget across multiple categories, with customizable periods and automatic alert thresholds.`,
       body: `# Budgets
 
-> Set spending limits and track your progress in real time. Create budgets for specific categories or overall spending, with customizable periods and automatic alert thresholds.
+> Set spending limits and track your progress in real time. Create budgets for specific categories or distribute your budget across multiple categories, with customizable periods and automatic alert thresholds.
 
 ## Overview
 
@@ -499,17 +499,27 @@ The **Budgets** tab shows all your active budgets:
 
 1. Tap **Create Budget** on the Budgets tab (or the **+** button)
 2. Enter a **Budget Name** (e.g., "Monthly Groceries")
-3. Enter the **Amount** — your spending limit
-4. Select the **Currency**
-5. Choose a **Period**:
+3. Select the **Currency**
+4. Choose a **Budget Mode**:
+   - **Overall** — set a single total amount, optionally linked to one category
+   - **By Category** — distribute the budget across multiple categories, each with its own limit
+5. Enter the **Amount** (Overall mode) or add categories with amounts (By Category mode)
+6. Choose a **Period**:
    - **Daily** — resets every day
    - **Weekly** — resets every week
    - **Monthly** — resets every month
    - **Yearly** — resets every year
-   - **Custom** — set your own date range
-6. Optionally select a **Category** — to track spending in a specific category only (e.g., "Food & Dining"). Leave empty for an overall budget that tracks all expenses
 7. Set **Alert At** threshold (default: 80%) — you'll get notified when spending reaches this percentage
 8. Tap **Create Budget**
+
+### By Category mode
+
+In **By Category** mode, you can assign a spending limit to each expense category:
+
+- Tap **Add Category** to pick a category from the list
+- Enter the amount for each category
+- The total budget equals the sum of all category amounts
+- You can add as many categories as needed
 
 ## Budget Details
 
@@ -517,16 +527,28 @@ Tap any budget to see its full details:
 
 - **Progress visualization** — bar showing spent vs. limit
 - **Status** — On Track or Over Budget
+- **Category Breakdown** — for multi-category budgets, see each category's progress:
+  - Color dot + category name
+  - Spent / allocated amounts
+  - Per-category progress bar (green/yellow/red based on usage)
 - **Period** — the budget's time range
-- **Category** — the tracked category (or "All" for overall budgets)
 - **Alert Threshold** — the notification trigger point (e.g., 80%)
 - **Days Remaining** — how many days left in the current period
 - **Projected Total** — estimated total spending by period end based on current pace
-- **Active/Inactive** — toggle the budget on or off
+- **Active/Inactive** — the current status of the budget
 
 ### Actions:
-- **Edit** — modify budget name, amount, or settings
+- **Edit** (pencil icon) — modify name, amount, categories, period, or alert threshold
 - **Delete** — remove the budget (with confirmation)
+
+## Editing a Budget
+
+Tap the **pencil icon** on the budget detail screen to switch to edit mode:
+
+- Change the budget name, currency, period, or alert threshold
+- Switch between **Overall** and **By Category** modes
+- In By Category mode: add, remove, or change amounts for categories
+- Tap **Save** to apply changes, or **Cancel** to discard
 
 ## Budget Alerts
 
@@ -535,9 +557,9 @@ The app automatically monitors your budgets and sends notifications:
 - **Threshold alert** — when spending reaches your set alert percentage (e.g., 80%)
 - **Over budget alert** — when spending exceeds 100%
 - Progress bar color changes dynamically:
-  - Green — under 70% used
-  - Yellow/Orange — 70-90% used
-  - Red — over 90% used
+  - Green — under 80% used
+  - Yellow/Orange — 80–100% used
+  - Red — over 100% used
 
 > **Tip:** The Monthly Budget card on the Dashboard shows your primary budget status at a glance.
 
@@ -545,6 +567,9 @@ The app automatically monitors your budgets and sends notifications:
 
 - **Q: Can I have multiple budgets at the same time?**
   **A:** Yes! You can create as many budgets as you need — for different categories, periods, or overall spending.
+
+- **Q: What's the difference between Overall and By Category modes?**
+  **A:** Overall sets one total limit (optionally for a single category). By Category lets you set individual limits for each category — useful when you want to track groceries, transport, and entertainment separately within one budget.
 
 - **Q: What happens when a budget period ends?**
   **A:** The budget automatically resets for the new period. Your previous spending data is kept in Analytics.
@@ -3149,10 +3174,10 @@ iOS, Android, Web
     {
       id: '05-budgets',
       title: `Бюджеты`,
-      description: `Устанавливайте лимиты расходов и отслеживайте прогресс в реальном времени. Создавайте бюджеты для конкретных категорий или общих расходов с настраиваемыми периодами и автоматическими порогами оповещений.`,
+      description: `Устанавливайте лимиты расходов и отслеживайте прогресс в реальном времени. Создавайте бюджеты для конкретных категорий или распределяйте бюджет по нескольким категориям с настраиваемыми периодами и автоматическими порогами оповещений.`,
       body: `# Бюджеты
 
-> Устанавливайте лимиты расходов и отслеживайте прогресс в реальном времени. Создавайте бюджеты для конкретных категорий или общих расходов с настраиваемыми периодами и автоматическими порогами оповещений.
+> Устанавливайте лимиты расходов и отслеживайте прогресс в реальном времени. Создавайте бюджеты для конкретных категорий или распределяйте бюджет по нескольким категориям с настраиваемыми периодами и автоматическими порогами оповещений.
 
 ## Обзор
 
@@ -3174,21 +3199,31 @@ iOS, Android, Web
 
 ## Создание бюджета
 
-### Пошагово: Создание бюджета
+### Пошагово
 
 1. Нажмите **Создать бюджет** на вкладке Бюджеты (или кнопку **+**)
 2. Введите **Название бюджета** (например, «Продукты на месяц»)
-3. Введите **Сумму** — ваш лимит расходов
-4. Выберите **Валюту**
-5. Выберите **Период**:
+3. Выберите **Валюту**
+4. Выберите **Режим бюджета**:
+   - **Общий** — одна общая сумма, по желанию привязанная к одной категории
+   - **По категориям** — распределите бюджет по нескольким категориям, каждая со своим лимитом
+5. Введите **Сумму** (Общий режим) или добавьте категории с суммами (режим По категориям)
+6. Выберите **Период**:
    - **Ежедневный** — обнуляется каждый день
    - **Еженедельный** — обнуляется каждую неделю
    - **Ежемесячный** — обнуляется каждый месяц
    - **Ежегодный** — обнуляется каждый год
-   - **Свой** — установите свой диапазон дат
-6. По желанию выберите **Категория** — для отслеживания расходов только в определённой категории (например, «Еда и рестораны»). Оставьте пустым для общего бюджета, отслеживающего все расходы
 7. Установите порог **Уведомить при** (по умолчанию: 80%) — вы получите уведомление, когда расходы достигнут этого процента
 8. Нажмите **Создать бюджет**
+
+### Режим «По категориям»
+
+В режиме **По категориям** можно задать лимит расходов для каждой категории:
+
+- Нажмите **Добавить категорию**, чтобы выбрать категорию из списка
+- Введите сумму для каждой категории
+- Общая сумма бюджета равна сумме всех категорий
+- Можно добавить любое количество категорий
 
 ## Детали бюджета
 
@@ -3196,16 +3231,28 @@ iOS, Android, Web
 
 - **Визуализация прогресса** — шкала, показывающая потраченное относительно лимита
 - **Статус** — В рамках бюджета или Бюджет превышен
+- **Расходы по категориям** — для бюджетов с несколькими категориями отображается прогресс по каждой:
+  - Цветная точка + название категории
+  - Потрачено / выделено
+  - Индикатор прогресса (зелёный/жёлтый/красный)
 - **Период** — временной диапазон бюджета
-- **Категория** — отслеживаемая категория (или «Все» для общих бюджетов)
 - **Порог уведомления** — точка срабатывания уведомления (например, 80%)
 - **Дней осталось** — сколько дней осталось в текущем периоде
 - **Прогноз итого** — предполагаемая общая сумма расходов к концу периода на основе текущего темпа
-- **Активный/Неактивный** — включение или выключение бюджета
+- **Активный/Неактивный** — текущий статус бюджета
 
 ### Действия:
-- **Редактировать** — изменить название, сумму или настройки бюджета
+- **Редактировать** (значок карандаша) — изменить название, сумму, категории, период или порог уведомления
 - **Удалить** — удалить бюджет (с подтверждением)
+
+## Редактирование бюджета
+
+Нажмите **значок карандаша** на экране деталей бюджета для перехода в режим редактирования:
+
+- Изменить название бюджета, валюту, период или порог уведомления
+- Переключиться между режимами **Общий** и **По категориям**
+- В режиме По категориям: добавлять, удалять или изменять суммы категорий
+- Нажмите **Сохранить** для применения изменений или **Отмена** для отказа
 
 ## Оповещения о бюджете
 
@@ -3214,9 +3261,9 @@ iOS, Android, Web
 - **Оповещение о пороге** — когда расходы достигают установленного процента (например, 80%)
 - **Оповещение о превышении** — когда расходы превышают 100%
 - Цвет шкалы прогресса меняется динамически:
-  - Зелёный — менее 70% использовано
-  - Жёлтый/Оранжевый — 70-90% использовано
-  - Красный — более 90% использовано
+  - Зелёный — менее 80% использовано
+  - Жёлтый/Оранжевый — 80–100% использовано
+  - Красный — более 100% использовано
 
 > **Совет:** Карточка месячного бюджета на Главной показывает статус вашего основного бюджета с первого взгляда.
 
@@ -3224,6 +3271,9 @@ iOS, Android, Web
 
 - **В: Можно ли иметь несколько бюджетов одновременно?**
   **О:** Да! Вы можете создать столько бюджетов, сколько нужно — для разных категорий, периодов или общих расходов.
+
+- **В: В чём разница между режимами «Общий» и «По категориям»?**
+  **О:** Общий устанавливает один общий лимит (по желанию для одной категории). По категориям позволяет задать отдельный лимит для каждой категории — удобно, когда нужно отслеживать продукты, транспорт и развлечения по отдельности в рамках одного бюджета.
 
 - **В: Что происходит, когда период бюджета заканчивается?**
   **О:** Бюджет автоматически обнуляется на новый период. Данные о предыдущих расходах сохраняются в Аналитике.
@@ -5841,46 +5891,56 @@ iOS, Android, Web
     {
       id: '05-budgets',
       title: `Бюджети`,
-      description: `Встановлюйте ліміти витрат та відстежуйте прогрес у реальному часі. Створюйте бюджети для конкретних категорій або загальних витрат з налаштовуваними періодами та автоматичними порогами сповіщень.`,
+      description: `Встановлюйте ліміти витрат та відстежуйте прогрес у реальному часі. Створюйте бюджети для конкретних категорій або розподіляйте бюджет між кількома категоріями з налаштовуваними періодами та автоматичними порогами сповіщень.`,
       body: `# Бюджети
 
-> Встановлюйте ліміти витрат та відстежуйте прогрес у реальному часі. Створюйте бюджети для конкретних категорій або загальних витрат з налаштовуваними періодами та автоматичними порогами сповіщень.
+> Встановлюйте ліміти витрат та відстежуйте прогрес у реальному часі. Створюйте бюджети для конкретних категорій або розподіляйте бюджет між кількома категоріями з налаштовуваними періодами та автоматичними порогами сповіщень.
 
 ## Огляд
 
-Бюджети допомагають контролювати витрати, встановлюючи ліміти на певні періоди часу. Додаток відстежує ваші витрати відносно цих лімітів та сповіщає, коли ви наближаєтесь до ліміту або перевищуєте його.
+Бюджети допомагають контролювати витрати, встановлюючи ліміти на певні проміжки часу. Додаток відстежує ваші витрати відносно цих лімітів та сповіщає, коли ви наближаєтесь до ліміту або перевищуєте його.
 
 ## Список бюджетів
 
 Вкладка **Бюджети** показує всі ваші активні бюджети:
 
-- **Назва бюджету** та період (Щоденний, Щотижневий, Щомісячний, Щорічний, Свій)
+- **Назва бюджету** та період (Щоденний, Щотижневий, Щомісячний, Щорічний, Власний)
 - **Індикатор прогресу** — візуальне відображення витрат відносно ліміту
-- **Витрачена сума** з загального бюджету (наприклад, "2 846 zl з 20 000 zl")
+- **Витрачена сума** із загального бюджету (наприклад, «2 846 zl із 20 000 zl»)
 - **Статус**:
   - **В межах норми** (зелений) — витрати в рамках ліміту
   - **Перевищено бюджет** (червоний) — витрати перевищили ліміт
 - Сума **залишилось** або перевищення
 
-> **Примітка:** Якщо у вас ще немає бюджетів, ви побачите підказку: "Створіть бюджет, щоб почати відстежувати ліміти витрат."
+> **Примітка:** Якщо у вас ще немає бюджетів, ви побачите підказку: «Створіть бюджет, щоб почати відстежувати ліміти витрат».
 
 ## Створення бюджету
 
-### Покроково: Створити бюджет
+### Покроково
 
 1. Натисніть **Створити бюджет** на вкладці Бюджети (або кнопку **+**)
-2. Введіть **Назва бюджету** (наприклад, "Щомісячні продукти")
-3. Введіть **Сума** — ваш ліміт витрат
-4. Оберіть **Валюта**
-5. Оберіть **Період**:
+2. Введіть **Назву бюджету** (наприклад, «Щомісячні продукти»)
+3. Оберіть **Валюту**
+4. Оберіть **Режим бюджету**:
+   - **Загальний** — одна загальна сума, за бажанням прив'язана до однієї категорії
+   - **По категоріях** — розподіліть бюджет між кількома категоріями, кожна з власним лімітом
+5. Введіть **Суму** (Загальний режим) або додайте категорії з сумами (режим По категоріях)
+6. Оберіть **Період**:
    - **Щоденний** — скидається щодня
    - **Щотижневий** — скидається щотижня
    - **Щомісячний** — скидається щомісяця
    - **Щорічний** — скидається щороку
-   - **Свій** — встановіть власний діапазон дат
-6. За бажанням оберіть **Категорія** — для відстеження витрат лише у конкретній категорії (наприклад, "Їжа та ресторани"). Залиште порожнім для загального бюджету, який відстежує всі витрати
 7. Встановіть поріг **Сповіщення при** (за замовчуванням: 80%) — ви отримаєте сповіщення, коли витрати досягнуть цього відсотка
 8. Натисніть **Створити бюджет**
+
+### Режим «По категоріях»
+
+У режимі **По категоріях** можна задати ліміт витрат для кожної категорії:
+
+- Натисніть **Додати категорію**, щоб обрати категорію зі списку
+- Введіть суму для кожної категорії
+- Загальна сума бюджету дорівнює сумі всіх категорій
+- Можна додавати будь-яку кількість категорій
 
 ## Деталі бюджету
 
@@ -5888,37 +5948,52 @@ iOS, Android, Web
 
 - **Візуалізація прогресу** — індикатор витрачено відносно ліміту
 - **Статус** — В межах норми або Перевищено бюджет
+- **Витрати за категоріями** — для бюджетів із кількома категоріями відображається прогрес по кожній:
+  - Кольорова точка + назва категорії
+  - Витрачено / виділено
+  - Індикатор прогресу (зелений/жовтий/червоний)
 - **Період** — часовий діапазон бюджету
-- **Категорія** — відстежувана категорія (або "Усі" для загальних бюджетів)
 - **Поріг сповіщення** — точка спрацювання сповіщення (наприклад, 80%)
 - **Днів залишилось** — скільки днів залишилось у поточному періоді
 - **Прогнозована сума** — очікувані загальні витрати до кінця періоду на основі поточного темпу
-- **Активний/Неактивний** — увімкнути або вимкнути бюджет
+- **Активний/Неактивний** — поточний статус бюджету
 
 ### Дії:
-- **Редагувати** — змінити назву, суму або налаштування бюджету
+- **Редагувати** (іконка олівця) — змінити назву, суму, категорії, період або поріг сповіщення
 - **Видалити** — видалити бюджет (з підтвердженням)
+
+## Редагування бюджету
+
+Натисніть **іконку олівця** на екрані деталей бюджету для переходу в режим редагування:
+
+- Змінити назву бюджету, валюту, період або поріг сповіщення
+- Переключитися між режимами **Загальний** та **По категоріях**
+- У режимі По категоріях: додавати, видаляти або змінювати суми категорій
+- Натисніть **Зберегти** для застосування змін або **Скасувати** для відмови
 
 ## Сповіщення про бюджет
 
 Додаток автоматично відстежує ваші бюджети та надсилає сповіщення:
 
-- **Сповіщення про поріг** — коли витрати досягають встановленого відсотка сповіщення (наприклад, 80%)
+- **Сповіщення про поріг** — коли витрати досягають встановленого відсотка (наприклад, 80%)
 - **Сповіщення про перевищення** — коли витрати перевищують 100%
 - Колір індикатора прогресу змінюється динамічно:
-  - Зелений — використано менше 70%
-  - Жовтий/Оранжевий — використано 70-90%
-  - Червоний — використано більше 90%
+  - Зелений — менше 80% використано
+  - Жовтий/Оранжевий — 80-100% використано
+  - Червоний — більше 100% використано
 
-> **Порада:** Картка Місячного бюджету на Головна показує стан вашого основного бюджету одним поглядом.
+> **Порада:** Картка місячного бюджету на Головній показує стан вашого основного бюджету одним поглядом.
 
 ## Часті запитання
 
 - **П:** Чи можу я мати кілька бюджетів одночасно?
   **В:** Так! Ви можете створити стільки бюджетів, скільки потрібно — для різних категорій, періодів або загальних витрат.
 
+- **П:** У чому різниця між режимами «Загальний» та «По категоріях»?
+  **В:** Загальний встановлює один загальний ліміт (за бажанням для однієї категорії). По категоріях дозволяє задати окремий ліміт для кожної категорії — зручно, коли потрібно відстежувати продукти, транспорт та розваги окремо в рамках одного бюджету.
+
 - **П:** Що відбувається, коли період бюджету закінчується?
-  **В:** Бюджет автоматично скидається для нового періоду. Ваші попередні дані витрат зберігаються в Аналітика.
+  **В:** Бюджет автоматично скидається для нового періоду. Ваші попередні дані витрат зберігаються в Аналітиці.
 
 - **П:** Чи відстежує бюджет витрати у всіх валютах?
   **В:** Кожен бюджет прив'язаний до однієї валюти. Лише витрати в цій валюті враховуються у бюджеті.
@@ -8508,92 +8583,117 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
     },
     {
       id: '05-budgets',
-      title: `Budzety`,
-      description: `Ustalaj limity wydatkow i sledz postepy w czasie rzeczywistym. Twórz budzety dla konkretnych kategorii lub ogolnych wydatkow, z konfigurowalnymi okresami i automatycznymi progami alertow.`,
-      body: `# Budzety
+      title: `Budżety`,
+      description: `Ustalaj limity wydatków i śledź postępy w czasie rzeczywistym. Twórz budżety dla konkretnych kategorii lub rozdzielaj budżet między wiele kategorii, z konfigurowalnymi okresami i automatycznymi progami alertów.`,
+      body: `# Budżety
 
-> Ustalaj limity wydatkow i sledz postepy w czasie rzeczywistym. Twórz budzety dla konkretnych kategorii lub ogolnych wydatkow, z konfigurowalnymi okresami i automatycznymi progami alertow.
+> Ustalaj limity wydatków i śledź postępy w czasie rzeczywistym. Twórz budżety dla konkretnych kategorii lub rozdzielaj budżet między wiele kategorii, z konfigurowalnymi okresami i automatycznymi progami alertów.
 
-## Przeglad
+## Przegląd
 
-Budzety pomagaja kontrolowac wydatki poprzez ustalanie limitow na okreslone okresy. Aplikacja sledzi Twoje wydatki w stosunku do tych limitow i powiadamia Cie, gdy zblizasz sie do limitu lub go przekraczasz.
+Budżety pomagają kontrolować wydatki poprzez ustalanie limitów na określone okresy. Aplikacja śledzi Twoje wydatki w stosunku do tych limitów i powiadamia Cię, gdy zbliżasz się do limitu lub go przekraczasz.
 
-## Lista budzetow
+## Lista budżetów
 
-Zakladka **Budzety** wyswietla wszystkie aktywne budzety:
+Zakładka **Budżety** wyświetla wszystkie aktywne budżety:
 
-- **Nazwa budzetu** i okres (Dzienny, Tygodniowy, Miesieczny, Roczny, Wlasny)
-- **Pasek postepu** — wizualny wskaznik wydatkow w stosunku do limitu
-- **Kwota wydana** z calkowitego budzetu (np. "2 846 zl z 20 000 zl")
+- **Nazwa budżetu** i okres (Dzienny, Tygodniowy, Miesięczny, Roczny, Własny)
+- **Pasek postępu** — wizualny wskaźnik wydatków w stosunku do limitu
+- **Kwota wydana** z całkowitego budżetu (np. "2 846 zł z 20 000 zł")
 - **Znacznik statusu**:
-  - **W normie** (zielony) — wydatki mieszcza sie w limicie
-  - **Przekroczono budzet** (czerwony) — wydatki przekroczyly limit
-- Kwota **pozostalo** lub kwota przekroczenia
+  - **W normie** (zielony) — wydatki mieszczą się w limicie
+  - **Przekroczono budżet** (czerwony) — wydatki przekroczyły limit
+- Kwota **pozostało** lub kwota przekroczenia
 
-> **Uwaga:** Jezeli nie masz jeszcze zadnych budzetow, zobaczysz komunikat: "Utworz budzet, aby zaczac sledzic swoje limity wydatkow."
+> **Uwaga:** Jeżeli nie masz jeszcze żadnych budżetów, zobaczysz komunikat: "Utwórz budżet, aby zacząć śledzić swoje limity wydatków."
 
-## Tworzenie budzetu
+## Tworzenie budżetu
 
 ### Krok po kroku
 
-1. Dotknij **Utworz budzet** w zakladce Budzety (lub przycisk **+**)
-2. Wprowadz **Nazwe budzetu** (np. "Miesieczne zakupy spozywcze")
-3. Wprowadz **Kwote** — Twoj limit wydatkow
-4. Wybierz **Walute**
-5. Wybierz **Okres**:
-   - **Dzienny** — resetuje sie codziennie
-   - **Tygodniowy** — resetuje sie co tydzien
-   - **Miesieczny** — resetuje sie co miesiac
-   - **Roczny** — resetuje sie co rok
-   - **Wlasny** — ustaw wlasny zakres dat
-6. Opcjonalnie wybierz **Kategorie** — aby sledzic wydatki tylko w konkretnej kategorii (np. "Jedzenie i restauracje"). Pozostaw puste dla budzetu ogolnego sledzacego wszystkie wydatki
-7. Ustaw prog **Powiadom przy** (domyslnie: 80%) — otrzymasz powiadomienie, gdy wydatki osiagna ten procent
-8. Dotknij **Utworz budzet**
+1. Dotknij **Utwórz budżet** w zakładce Budżety (lub przycisk **+**)
+2. Wprowadź **Nazwę budżetu** (np. "Miesięczne zakupy spożywcze")
+3. Wybierz **Walutę**
+4. Wybierz **Tryb budżetu**:
+   - **Ogólny** — jedna łączna kwota, opcjonalnie powiązana z jedną kategorią
+   - **Według kategorii** — podziel budżet między wiele kategorii, każda z własnym limitem
+5. Wprowadź **Kwotę** (tryb Ogólny) lub dodaj kategorie z kwotami (tryb Według kategorii)
+6. Wybierz **Okres**:
+   - **Dzienny** — resetuje się codziennie
+   - **Tygodniowy** — resetuje się co tydzień
+   - **Miesięczny** — resetuje się co miesiąc
+   - **Roczny** — resetuje się co rok
+7. Ustaw próg **Powiadom przy** (domyślnie: 80%) — otrzymasz powiadomienie, gdy wydatki osiągną ten procent
+8. Dotknij **Utwórz budżet**
 
-## Szczegoly budzetu
+### Tryb „Według kategorii"
 
-Dotknij dowolny budzet, aby zobaczyc pelne szczegoly:
+W trybie **Według kategorii** możesz ustawić limit wydatków dla każdej kategorii:
 
-- **Wizualizacja postepu** — pasek pokazujacy wydatki w stosunku do limitu
-- **Status** — W normie lub Przekroczono budzet
-- **Okres** — zakres czasowy budzetu
-- **Kategoria** — sledzona kategoria (lub "Wszystkie" dla budzetow ogolnych)
-- **Prog powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
-- **Pozostalo dni** — ile dni pozostalo w biezacym okresie
-- **Prognozowana suma** — szacowane calkowite wydatki do konca okresu na podstawie obecnego tempa
-- **Aktywny/Nieaktywny** — wlacz lub wylacz budzet
+- Dotknij **Dodaj kategorię**, aby wybrać kategorię z listy
+- Wprowadź kwotę dla każdej kategorii
+- Całkowity budżet równa się sumie wszystkich kategorii
+- Możesz dodać dowolną liczbę kategorii
+
+## Szczegóły budżetu
+
+Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
+
+- **Wizualizacja postępu** — pasek pokazujący wydatki w stosunku do limitu
+- **Status** — W normie lub Przekroczono budżet
+- **Podział na kategorie** — dla budżetów z wieloma kategoriami widoczny jest postęp każdej:
+  - Kolorowa kropka + nazwa kategorii
+  - Wydano / przydzielono
+  - Pasek postępu kategorii (zielony/żółty/czerwony)
+- **Okres** — zakres czasowy budżetu
+- **Próg powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
+- **Pozostało dni** — ile dni pozostało w bieżącym okresie
+- **Prognozowana suma** — szacowane całkowite wydatki do końca okresu
+- **Aktywny/Nieaktywny** — aktualny status budżetu
 
 ### Akcje:
-- **Edytuj** — zmodyfikuj nazwe, kwote lub ustawienia budzetu
-- **Usun** — usun budzet (z potwierdzeniem)
+- **Edytuj** (ikona ołówka) — zmodyfikuj nazwę, kwotę, kategorie, okres lub próg powiadomienia
+- **Usuń** — usuń budżet (z potwierdzeniem)
 
-## Alerty budzetowe
+## Edytowanie budżetu
 
-Aplikacja automatycznie monitoruje Twoje budzety i wysyla powiadomienia:
+Dotknij **ikony ołówka** na ekranie szczegółów budżetu, aby przejść do trybu edycji:
 
-- **Alert progowy** — gdy wydatki osiagna ustawiony procent alertu (np. 80%)
-- **Alert przekroczenia budzetu** — gdy wydatki przekrocza 100%
-- Kolor paska postepu zmienia sie dynamicznie:
-  - Zielony — ponizej 70% wykorzystania
-  - Zolty/Pomaranczowy — 70-90% wykorzystania
-  - Czerwony — powyzej 90% wykorzystania
+- Zmień nazwę budżetu, walutę, okres lub próg powiadomienia
+- Przełącz między trybami **Ogólny** i **Według kategorii**
+- W trybie Według kategorii: dodawaj, usuwaj lub zmieniaj kwoty kategorii
+- Dotknij **Zapisz**, aby zastosować zmiany, lub **Anuluj**, aby je odrzucić
 
-> **Wskazowka:** Karta Budzetu miesiecznego na Pulpicie pokazuje status Twojego glownego budzetu na pierwszy rzut oka.
+## Alerty budżetowe
+
+Aplikacja automatycznie monitoruje Twoje budżety i wysyła powiadomienia:
+
+- **Alert progowy** — gdy wydatki osiągną ustawiony procent alertu (np. 80%)
+- **Alert przekroczenia budżetu** — gdy wydatki przekroczą 100%
+- Kolor paska postępu zmienia się dynamicznie:
+  - Zielony — poniżej 80% wykorzystania
+  - Żółty/Pomarańczowy — 80–100% wykorzystania
+  - Czerwony — powyżej 100% wykorzystania
+
+> **Wskazówka:** Karta Budżetu miesięcznego na Pulpicie pokazuje status Twojego głównego budżetu na pierwszy rzut oka.
 
 ## FAQ
 
-- **P: Czy moge miec wiele budzetow jednoczesnie?**
-  **O:** Tak! Mozesz tworzyc tyle budzetow, ile potrzebujesz — dla roznych kategorii, okresow lub ogolnych wydatkow.
+- **P: Czy mogę mieć wiele budżetów jednocześnie?**
+  **O:** Tak! Możesz tworzyć tyle budżetów, ile potrzebujesz — dla różnych kategorii, okresów lub ogólnych wydatków.
 
-- **P: Co dzieje sie, gdy okres budzetu sie konczy?**
-  **O:** Budzet automatycznie resetuje sie na nowy okres. Dane o poprzednich wydatkach sa przechowywane w Analityce.
+- **P: Jaka jest różnica między trybem Ogólnym a Według kategorii?**
+  **O:** Ogólny ustawia jeden łączny limit (opcjonalnie dla jednej kategorii). Według kategorii pozwala ustawić osobny limit dla każdej kategorii — przydatne, gdy chcesz śledzić artykuły spożywcze, transport i rozrywkę osobno w ramach jednego budżetu.
 
-- **P: Czy budzet sledzi wydatki we wszystkich walutach?**
-  **O:** Kazdy budzet jest powiazany z jedna waluta. Tylko wydatki w tej walucie sa wliczane do budzetu.
+- **P: Co dzieje się, gdy okres budżetu się kończy?**
+  **O:** Budżet automatycznie resetuje się na nowy okres. Dane o poprzednich wydatkach są przechowywane w Analityce.
+
+- **P: Czy budżet śledzi wydatki we wszystkich walutach?**
+  **O:** Każdy budżet jest powiązany z jedną walutą. Tylko wydatki w tej walucie są wliczane do budżetu.
 
 ---
 
-*Zobacz takze: Pulpit | Analityka*
+*Zobacz także: Pulpit | Analityka*
 `,
     },
     {
@@ -11172,91 +11272,116 @@ Uberprufe und korrigiere Details, dann:
     {
       id: '05-budgets',
       title: `Budgets`,
-      description: `Lege Ausgabenlimits fest und verfolge deinen Fortschritt in Echtzeit. Erstelle Budgets fur bestimmte Kategorien oder Gesamtausgaben, mit anpassbaren Zeitraumen und automatischen Warnschwellen.`,
+      description: `Lege Ausgabenlimits fest und verfolge deinen Fortschritt in Echtzeit. Erstelle Budgets für bestimmte Kategorien oder verteile dein Budget auf mehrere Kategorien, mit anpassbaren Zeiträumen und automatischen Warnschwellen.`,
       body: `# Budgets
 
-> Lege Ausgabenlimits fest und verfolge deinen Fortschritt in Echtzeit. Erstelle Budgets fur bestimmte Kategorien oder Gesamtausgaben, mit anpassbaren Zeitraumen und automatischen Warnschwellen.
+> Lege Ausgabenlimits fest und verfolge deinen Fortschritt in Echtzeit. Erstelle Budgets für bestimmte Kategorien oder verteile dein Budget auf mehrere Kategorien, mit anpassbaren Zeiträumen und automatischen Warnschwellen.
 
-## Uberblick
+## Überblick
 
-Budgets helfen dir, deine Ausgaben zu kontrollieren, indem du Limits fur bestimmte Zeitraume festlegst. Die App verfolgt deine Ausgaben im Verhaltnis zu diesen Limits und benachrichtigt dich, wenn du dein Budget naherst oder uberschreitest.
+Budgets helfen dir, deine Ausgaben zu kontrollieren, indem du Limits für bestimmte Zeiträume festlegst. Die App verfolgt deine Ausgaben im Verhältnis zu diesen Limits und benachrichtigt dich, wenn du dein Budget annäherst oder überschreitest.
 
 ## Budgetliste
 
 Der **Budgets**-Tab zeigt alle deine aktiven Budgets:
 
-- **Budgetname** und Zeitraum (Taglich, Wochentlich, Monatlich, Jahrlich, Benutzerdefiniert)
-- **Fortschrittsbalken** — visuelle Anzeige der Ausgaben im Verhaltnis zum Limit
+- **Budgetname** und Zeitraum (Täglich, Wöchentlich, Monatlich, Jährlich, Benutzerdefiniert)
+- **Fortschrittsbalken** — visuelle Anzeige der Ausgaben im Verhältnis zum Limit
 - **Ausgegebener Betrag** vom Gesamtbudget (z.B. "2 846 zl von 20 000 zl")
 - **Statusabzeichen**:
-  - **Im Plan** (grun) — Ausgaben sind innerhalb des Limits
-  - **Budget uberschritten** (rot) — Ausgaben haben das Limit uberschritten
-- **Verbleibender** Betrag oder Uberschreitung
+  - **Im Plan** (grün) — Ausgaben sind innerhalb des Limits
+  - **Budget überschritten** (rot) — Ausgaben haben das Limit überschritten
+- **Verbleibender** Betrag oder Überschreitung
 
 > **Hinweis:** Wenn du noch keine Budgets hast, siehst du den Hinweis: "Erstelle ein Budget, um deine Ausgabenlimits zu verfolgen."
 
 ## Budget erstellen
 
-### Schritt fur Schritt
+### Schritt für Schritt
 
-1. Tippe auf **Budget erstellen** im Budgets-Tab (oder die **+**-Schaltflache)
+1. Tippe auf **Budget erstellen** im Budgets-Tab (oder die **+**-Schaltfläche)
 2. Gib einen **Budgetnamen** ein (z.B. "Monatliche Lebensmittel")
-3. Gib den **Betrag** ein — dein Ausgabenlimit
-4. Wahle die **Wahrung**
-5. Wahle einen **Zeitraum**:
-   - **Taglich** — wird taglich zuruckgesetzt
-   - **Wochentlich** — wird wochentlich zuruckgesetzt
-   - **Monatlich** — wird monatlich zuruckgesetzt
-   - **Jahrlich** — wird jahrlich zuruckgesetzt
-   - **Benutzerdefiniert** — lege deinen eigenen Datumsbereich fest
-6. Wahle optional eine **Kategorie** — um Ausgaben nur in einer bestimmten Kategorie zu verfolgen (z.B. "Essen & Restaurants"). Lass das Feld leer fur ein Gesamtbudget, das alle Ausgaben verfolgt
+3. Wähle die **Währung**
+4. Wähle einen **Budget-Modus**:
+   - **Gesamt** — ein Gesamtbetrag, optional mit einer Kategorie verknüpft
+   - **Nach Kategorien** — verteile das Budget auf mehrere Kategorien, jede mit eigenem Limit
+5. Gib den **Betrag** ein (Gesamt-Modus) oder füge Kategorien mit Beträgen hinzu (Nach Kategorien)
+6. Wähle einen **Zeitraum**:
+   - **Täglich** — wird täglich zurückgesetzt
+   - **Wöchentlich** — wird wöchentlich zurückgesetzt
+   - **Monatlich** — wird monatlich zurückgesetzt
+   - **Jährlich** — wird jährlich zurückgesetzt
 7. Lege die **Warnung bei**-Schwelle fest (Standard: 80%) — du wirst benachrichtigt, wenn die Ausgaben diesen Prozentsatz erreichen
 8. Tippe auf **Budget erstellen**
 
+### Modus „Nach Kategorien"
+
+Im Modus **Nach Kategorien** kannst du für jede Ausgabenkategorie ein Limit festlegen:
+
+- Tippe auf **Kategorie hinzufügen**, um eine Kategorie aus der Liste auszuwählen
+- Gib den Betrag für jede Kategorie ein
+- Das Gesamtbudget entspricht der Summe aller Kategoriebeträge
+- Du kannst beliebig viele Kategorien hinzufügen
+
 ## Budgetdetails
 
-Tippe auf ein beliebiges Budget, um die vollstandigen Details zu sehen:
+Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:
 
 - **Fortschrittsvisualisierung** — Balken, der Ausgaben vs. Limit zeigt
-- **Status** — Im Plan oder Budget uberschritten
+- **Status** — Im Plan oder Budget überschritten
+- **Kategorienaufschlüsselung** — für Budgets mit mehreren Kategorien siehst du den Fortschritt jeder Kategorie:
+  - Farbpunkt + Kategoriename
+  - Ausgegeben / zugeteilt
+  - Kategoriefortschrittsbalken (grün/gelb/rot)
 - **Zeitraum** — der Zeitbereich des Budgets
-- **Kategorie** — die verfolgte Kategorie (oder "Alle" fur Gesamtbudgets)
-- **Warnschwelle** — der Benachrichtigungsauslosepunkt (z.B. 80%)
+- **Warnschwelle** — der Benachrichtigungsauslösepunkt (z.B. 80%)
 - **Verbleibende Tage** — wie viele Tage im aktuellen Zeitraum verbleiben
-- **Voraussichtliche Gesamtsumme** — geschatzte Gesamtausgaben bis zum Ende des Zeitraums basierend auf dem aktuellen Tempo
-- **Aktiv/Inaktiv** — schalte das Budget ein oder aus
+- **Voraussichtliche Gesamtsumme** — geschätzte Gesamtausgaben bis zum Ende des Zeitraums
+- **Aktiv/Inaktiv** — aktueller Status des Budgets
 
 ### Aktionen:
-- **Bearbeiten** — Budgetname, Betrag oder Einstellungen andern
-- **Loschen** — das Budget entfernen (mit Bestatigung)
+- **Bearbeiten** (Bleistift-Symbol) — Budgetname, Betrag, Kategorien, Zeitraum oder Warnschwelle ändern
+- **Löschen** — das Budget entfernen (mit Bestätigung)
+
+## Budget bearbeiten
+
+Tippe auf das **Bleistift-Symbol** auf dem Budgetdetailbildschirm, um in den Bearbeitungsmodus zu wechseln:
+
+- Budgetname, Währung, Zeitraum oder Warnschwelle ändern
+- Zwischen **Gesamt** und **Nach Kategorien** wechseln
+- Im Kategorien-Modus: Kategorien hinzufügen, entfernen oder Beträge ändern
+- Tippe auf **Speichern**, um Änderungen zu übernehmen, oder **Abbrechen**, um sie zu verwerfen
 
 ## Budget-Warnungen
 
-Die App uberwacht automatisch deine Budgets und sendet Benachrichtigungen:
+Die App überwacht automatisch deine Budgets und sendet Benachrichtigungen:
 
 - **Schwellenwarnung** — wenn die Ausgaben deinen festgelegten Warnprozentsatz erreichen (z.B. 80%)
-- **Budget uberschritten-Warnung** — wenn die Ausgaben 100% uberschreiten
-- Die Farbe des Fortschrittsbalkens andert sich dynamisch:
-  - Grun — unter 70% verbraucht
-  - Gelb/Orange — 70-90% verbraucht
-  - Rot — uber 90% verbraucht
+- **Budget überschritten-Warnung** — wenn die Ausgaben 100% überschreiten
+- Die Farbe des Fortschrittsbalkens ändert sich dynamisch:
+  - Grün — unter 80% verbraucht
+  - Gelb/Orange — 80–100% verbraucht
+  - Rot — über 100% verbraucht
 
-> **Tipp:** Die Monatsbudget-Karte auf der Ubersicht zeigt deinen primaren Budgetstatus auf einen Blick.
+> **Tipp:** Die Monatsbudget-Karte auf der Übersicht zeigt deinen primären Budgetstatus auf einen Blick.
 
 ## FAQ
 
 - **F: Kann ich mehrere Budgets gleichzeitig haben?**
-  **A:** Ja! Du kannst so viele Budgets erstellen, wie du brauchst — fur verschiedene Kategorien, Zeitraume oder Gesamtausgaben.
+  **A:** Ja! Du kannst so viele Budgets erstellen, wie du brauchst — für verschiedene Kategorien, Zeiträume oder Gesamtausgaben.
+
+- **F: Was ist der Unterschied zwischen Gesamt- und Nach-Kategorien-Modus?**
+  **A:** Gesamt setzt ein Gesamtlimit (optional für eine Kategorie). Nach Kategorien ermöglicht individuelle Limits für jede Kategorie — nützlich, wenn du Lebensmittel, Transport und Unterhaltung separat innerhalb eines Budgets verfolgen möchtest.
 
 - **F: Was passiert, wenn ein Budgetzeitraum endet?**
-  **A:** Das Budget wird automatisch fur den neuen Zeitraum zuruckgesetzt. Deine bisherigen Ausgabendaten werden in den Analysen aufbewahrt.
+  **A:** Das Budget wird automatisch für den neuen Zeitraum zurückgesetzt. Deine bisherigen Ausgabendaten werden in den Analysen aufbewahrt.
 
-- **F: Verfolgt das Budget Ausgaben in allen Wahrungen?**
-  **A:** Jedes Budget ist an eine Wahrung gebunden. Nur Ausgaben in dieser Wahrung werden auf das Budget angerechnet.
+- **F: Verfolgt das Budget Ausgaben in allen Währungen?**
+  **A:** Jedes Budget ist an eine Währung gebunden. Nur Ausgaben in dieser Währung werden auf das Budget angerechnet.
 
 ---
 
-*Siehe auch: Ubersicht | Analysen*
+*Siehe auch: Übersicht | Analysen*
 `,
     },
     {
@@ -13835,91 +13960,116 @@ Revisa y corrige cualquier detalle, luego:
     {
       id: '05-budgets',
       title: `Presupuestos`,
-      description: `Establece limites de gasto y realiza un seguimiento de tu progreso en tiempo real. Crea presupuestos para categorias especificas o para el gasto general, con periodos personalizables y umbrales de alerta automaticos.`,
+      description: `Establece límites de gasto y realiza un seguimiento de tu progreso en tiempo real. Crea presupuestos para categorías específicas o distribuye tu presupuesto entre varias categorías, con períodos personalizables y umbrales de alerta automáticos.`,
       body: `# Presupuestos
 
-> Establece limites de gasto y realiza un seguimiento de tu progreso en tiempo real. Crea presupuestos para categorias especificas o para el gasto general, con periodos personalizables y umbrales de alerta automaticos.
+> Establece límites de gasto y realiza un seguimiento de tu progreso en tiempo real. Crea presupuestos para categorías específicas o distribuye tu presupuesto entre varias categorías, con períodos personalizables y umbrales de alerta automáticos.
 
 ## Vista general
 
-Los presupuestos te ayudan a controlar tus gastos estableciendo limites para periodos de tiempo especificos. La aplicacion rastrea tus gastos en comparacion con estos limites y te notifica cuando te acercas o excedes tu presupuesto.
+Los presupuestos te ayudan a controlar tus gastos estableciendo límites para períodos de tiempo específicos. La aplicación rastrea tus gastos en comparación con estos límites y te notifica cuando te acercas o excedes tu presupuesto.
 
 ## Lista de presupuestos
 
-La pestana **Presupuestos** muestra todos tus presupuestos activos:
+La pestaña **Presupuestos** muestra todos tus presupuestos activos:
 
-- **Nombre del presupuesto** y periodo (Diario, Semanal, Mensual, Anual, Personalizado)
-- **Barra de progreso** — indicador visual de gasto vs. limite
+- **Nombre del presupuesto** y período (Diario, Semanal, Mensual, Anual, Personalizado)
+- **Barra de progreso** — indicador visual de gasto vs. límite
 - **Importe gastado** del presupuesto total (por ejemplo, "2 846 zl de 20 000 zl")
 - **Insignia de estado**:
-  - **En camino** (verde) — el gasto esta dentro del limite
-  - **Presupuesto excedido** (rojo) — el gasto ha superado el limite
+  - **En camino** (verde) — el gasto está dentro del límite
+  - **Presupuesto excedido** (rojo) — el gasto ha superado el límite
 - Importe **restante** o excedente
 
-> **Nota:** Si aun no tienes presupuestos, veras un mensaje: "Crea un presupuesto para comenzar a rastrear tus limites de gasto."
+> **Nota:** Si aún no tienes presupuestos, verás un mensaje: "Crea un presupuesto para comenzar a rastrear tus límites de gasto."
 
 ## Crear un presupuesto
 
 ### Paso a paso
 
-1. Toca **Crear presupuesto** en la pestana Presupuestos (o el boton **+**)
+1. Toca **Crear presupuesto** en la pestaña Presupuestos (o el botón **+**)
 2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual")
-3. Introduce el **Importe** — tu limite de gasto
-4. Selecciona la **Moneda**
-5. Elige un **Periodo**:
-   - **Diario** — se reinicia cada dia
+3. Selecciona la **Moneda**
+4. Elige un **Modo de presupuesto**:
+   - **General** — un importe total único, opcionalmente vinculado a una categoría
+   - **Por categorías** — distribuye el presupuesto entre varias categorías, cada una con su propio límite
+5. Introduce el **Importe** (modo General) o añade categorías con importes (modo Por categorías)
+6. Elige un **Período**:
+   - **Diario** — se reinicia cada día
    - **Semanal** — se reinicia cada semana
    - **Mensual** — se reinicia cada mes
-   - **Anual** — se reinicia cada ano
-   - **Personalizado** — establece tu propio rango de fechas
-6. Opcionalmente selecciona una **Categoria** — para rastrear el gasto en una categoria especifica (por ejemplo, "Comida y Restaurantes"). Dejala vacia para un presupuesto general que rastree todos los gastos
-7. Establece el umbral de **Alerta en** (por defecto: 80%) — recibiras una notificacion cuando el gasto alcance este porcentaje
+   - **Anual** — se reinicia cada año
+7. Establece el umbral de **Alerta en** (por defecto: 80%) — recibirás una notificación cuando el gasto alcance este porcentaje
 8. Toca **Crear presupuesto**
+
+### Modo «Por categorías»
+
+En el modo **Por categorías** puedes asignar un límite de gasto a cada categoría:
+
+- Toca **Añadir categoría** para seleccionar una categoría de la lista
+- Introduce el importe para cada categoría
+- El presupuesto total es igual a la suma de todos los importes por categoría
+- Puedes añadir tantas categorías como necesites
 
 ## Detalles del presupuesto
 
 Toca cualquier presupuesto para ver sus detalles completos:
 
-- **Visualizacion de progreso** — barra que muestra lo gastado vs. el limite
+- **Visualización de progreso** — barra que muestra lo gastado vs. el límite
 - **Estado** — En camino o Presupuesto excedido
-- **Periodo** — el rango de tiempo del presupuesto
-- **Categoria** — la categoria rastreada (o "Todas" para presupuestos generales)
-- **Umbral de alerta** — el punto de activacion de la notificacion (por ejemplo, 80%)
-- **Dias restantes** — cuantos dias quedan en el periodo actual
-- **Total proyectado** — gasto total estimado para el final del periodo basado en el ritmo actual
-- **Activo/Inactivo** — activa o desactiva el presupuesto
+- **Desglose por categorías** — para presupuestos con varias categorías, verás el progreso de cada una:
+  - Punto de color + nombre de categoría
+  - Gastado / asignado
+  - Barra de progreso por categoría (verde/amarillo/rojo)
+- **Período** — el rango de tiempo del presupuesto
+- **Umbral de alerta** — el punto de activación de la notificación (por ejemplo, 80%)
+- **Días restantes** — cuántos días quedan en el período actual
+- **Total proyectado** — gasto total estimado para el final del período
+- **Activo/Inactivo** — estado actual del presupuesto
 
 ### Acciones:
-- **Editar** — modificar el nombre, importe o configuracion del presupuesto
-- **Eliminar** — eliminar el presupuesto (con confirmacion)
+- **Editar** (icono de lápiz) — modificar el nombre, importe, categorías, período o umbral de alerta
+- **Eliminar** — eliminar el presupuesto (con confirmación)
+
+## Editar un presupuesto
+
+Toca el **icono de lápiz** en la pantalla de detalles del presupuesto para cambiar al modo de edición:
+
+- Cambiar el nombre del presupuesto, moneda, período o umbral de alerta
+- Cambiar entre los modos **General** y **Por categorías**
+- En modo Por categorías: añadir, eliminar o cambiar importes de categorías
+- Toca **Guardar** para aplicar los cambios, o **Cancelar** para descartarlos
 
 ## Alertas de presupuesto
 
-La aplicacion monitoriza automaticamente tus presupuestos y envia notificaciones:
+La aplicación monitoriza automáticamente tus presupuestos y envía notificaciones:
 
 - **Alerta de umbral** — cuando el gasto alcanza el porcentaje de alerta establecido (por ejemplo, 80%)
 - **Alerta de presupuesto excedido** — cuando el gasto supera el 100%
-- El color de la barra de progreso cambia dinamicamente:
-  - Verde — menos del 70% utilizado
-  - Amarillo/Naranja — 70-90% utilizado
-  - Rojo — mas del 90% utilizado
+- El color de la barra de progreso cambia dinámicamente:
+  - Verde — menos del 80% utilizado
+  - Amarillo/Naranja — 80–100% utilizado
+  - Rojo — más del 100% utilizado
 
 > **Consejo:** La tarjeta de Presupuesto mensual en el Panel muestra el estado de tu presupuesto principal de un vistazo.
 
 ## Preguntas frecuentes
 
-- **P: Puedo tener multiples presupuestos al mismo tiempo?**
-  **R:** Si. Puedes crear tantos presupuestos como necesites — para diferentes categorias, periodos o gasto general.
+- **P: ¿Puedo tener múltiples presupuestos al mismo tiempo?**
+  **R:** Sí. Puedes crear tantos presupuestos como necesites — para diferentes categorías, períodos o gasto general.
 
-- **P: Que sucede cuando termina el periodo de un presupuesto?**
-  **R:** El presupuesto se reinicia automaticamente para el nuevo periodo. Los datos de gasto anteriores se conservan en Analisis.
+- **P: ¿Cuál es la diferencia entre los modos General y Por categorías?**
+  **R:** General establece un límite total único (opcionalmente para una categoría). Por categorías permite establecer límites individuales para cada categoría — útil cuando quieres rastrear alimentación, transporte y ocio por separado dentro de un mismo presupuesto.
 
-- **P: El presupuesto rastrea gastos en todas las monedas?**
-  **R:** Cada presupuesto esta vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
+- **P: ¿Qué sucede cuando termina el período de un presupuesto?**
+  **R:** El presupuesto se reinicia automáticamente para el nuevo período. Los datos de gasto anteriores se conservan en Análisis.
+
+- **P: ¿El presupuesto rastrea gastos en todas las monedas?**
+  **R:** Cada presupuesto está vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
 
 ---
 
-*Ver tambien: Panel | Analisis*
+*Ver también: Panel | Análisis*
 `,
     },
     {
@@ -16498,87 +16648,112 @@ Verifiez et corrigez les details, puis :
     {
       id: '05-budgets',
       title: `Budgets`,
-      description: `Definissez des limites de depenses et suivez votre progression en temps reel. Creez des budgets par categorie ou pour l'ensemble de vos depenses, avec des periodes personnalisables et des seuils d'alerte automatiques.`,
+      description: `Définissez des limites de dépenses et suivez votre progression en temps réel. Créez des budgets par catégorie ou répartissez votre budget sur plusieurs catégories, avec des périodes personnalisables et des seuils d'alerte automatiques.`,
       body: `# Budgets
 
-> Definissez des limites de depenses et suivez votre progression en temps reel. Creez des budgets par categorie ou pour l'ensemble de vos depenses, avec des periodes personnalisables et des seuils d'alerte automatiques.
+> Définissez des limites de dépenses et suivez votre progression en temps réel. Créez des budgets par catégorie ou répartissez votre budget sur plusieurs catégories, avec des périodes personnalisables et des seuils d'alerte automatiques.
 
-## Apercu
+## Aperçu
 
-Les budgets vous aident a controler vos depenses en definissant des limites pour des periodes specifiques. L'application suit vos depenses par rapport a ces limites et vous avertit lorsque vous approchez ou depassez votre budget.
+Les budgets vous aident à contrôler vos dépenses en définissant des limites pour des périodes spécifiques. L'application suit vos dépenses par rapport à ces limites et vous avertit lorsque vous approchez ou dépassez votre budget.
 
 ## Liste des budgets
 
 L'onglet **Budgets** affiche tous vos budgets actifs :
 
-- **Nom du budget** et periode (Quotidien, Hebdomadaire, Mensuel, Annuel, Personnalise)
-- **Barre de progression** — indicateur visuel des depenses par rapport a la limite
-- **Montant depense** sur le budget total (par ex. "2 846 zl sur 20 000 zl")
+- **Nom du budget** et période (Quotidien, Hebdomadaire, Mensuel, Annuel, Personnalisé)
+- **Barre de progression** — indicateur visuel des dépenses par rapport à la limite
+- **Montant dépensé** sur le budget total (par ex. "2 846 zl sur 20 000 zl")
 - **Badge de statut** :
-  - **En bonne voie** (vert) — les depenses restent dans la limite
-  - **Budget depasse** (rouge) — les depenses ont excede la limite
-- Montant **restant** ou depassement
+  - **En bonne voie** (vert) — les dépenses restent dans la limite
+  - **Budget dépassé** (rouge) — les dépenses ont excédé la limite
+- Montant **restant** ou dépassement
 
-> **Note :** Si vous n'avez pas encore de budgets, vous verrez un message : "Creez un budget pour commencer a suivre vos limites de depenses."
+> **Note :** Si vous n'avez pas encore de budgets, vous verrez un message : "Créez un budget pour commencer à suivre vos limites de dépenses."
 
-## Creer un budget
+## Créer un budget
 
-### Etape par etape
+### Étape par étape
 
-1. Appuyez sur **Creer un budget** dans l'onglet Budgets (ou le bouton **+**)
+1. Appuyez sur **Créer un budget** dans l'onglet Budgets (ou le bouton **+**)
 2. Entrez un **Nom de budget** (par ex. "Courses mensuelles")
-3. Entrez le **Montant** — votre limite de depenses
-4. Selectionnez la **Devise**
-5. Choisissez une **Periode** :
-   - **Quotidien** — se reinitialise chaque jour
-   - **Hebdomadaire** — se reinitialise chaque semaine
-   - **Mensuel** — se reinitialise chaque mois
-   - **Annuel** — se reinitialise chaque annee
-   - **Personnalise** — definissez votre propre plage de dates
-6. Selectionnez eventuellement une **Categorie** — pour suivre les depenses dans une categorie specifique uniquement (par ex. "Alimentation"). Laissez vide pour un budget global qui suit toutes les depenses
-7. Definissez le seuil **Alerte a** (par defaut : 80 %) — vous serez averti lorsque les depenses atteindront ce pourcentage
-8. Appuyez sur **Creer un budget**
+3. Sélectionnez la **Devise**
+4. Choisissez un **Mode de budget** :
+   - **Global** — un montant total unique, optionnellement lié à une catégorie
+   - **Par catégories** — répartissez le budget sur plusieurs catégories, chacune avec sa propre limite
+5. Entrez le **Montant** (mode Global) ou ajoutez des catégories avec des montants (mode Par catégories)
+6. Choisissez une **Période** :
+   - **Quotidien** — se réinitialise chaque jour
+   - **Hebdomadaire** — se réinitialise chaque semaine
+   - **Mensuel** — se réinitialise chaque mois
+   - **Annuel** — se réinitialise chaque année
+7. Définissez le seuil **Alerte à** (par défaut : 80 %) — vous serez averti lorsque les dépenses atteindront ce pourcentage
+8. Appuyez sur **Créer un budget**
 
-## Details du budget
+### Mode « Par catégories »
 
-Appuyez sur un budget pour voir ses details complets :
+En mode **Par catégories**, vous pouvez attribuer une limite de dépenses à chaque catégorie :
 
-- **Visualisation de la progression** — barre montrant les depenses par rapport a la limite
-- **Statut** — En bonne voie ou Budget depasse
-- **Periode** — la plage temporelle du budget
-- **Categorie** — la categorie suivie (ou "Toutes" pour les budgets globaux)
-- **Seuil d'alerte** — le point de declenchement de la notification (par ex. 80 %)
-- **Jours restants** — combien de jours restent dans la periode en cours
-- **Total projete** — estimation des depenses totales a la fin de la periode, basee sur le rythme actuel
-- **Actif/Inactif** — activer ou desactiver le budget
+- Appuyez sur **Ajouter une catégorie** pour choisir une catégorie dans la liste
+- Entrez le montant pour chaque catégorie
+- Le budget total est égal à la somme de tous les montants par catégorie
+- Vous pouvez ajouter autant de catégories que nécessaire
+
+## Détails du budget
+
+Appuyez sur un budget pour voir ses détails complets :
+
+- **Visualisation de la progression** — barre montrant les dépenses par rapport à la limite
+- **Statut** — En bonne voie ou Budget dépassé
+- **Répartition par catégories** — pour les budgets multi-catégories, la progression de chaque catégorie :
+  - Point de couleur + nom de catégorie
+  - Dépensé / alloué
+  - Barre de progression par catégorie (vert/jaune/rouge)
+- **Période** — la plage temporelle du budget
+- **Seuil d'alerte** — le point de déclenchement de la notification (par ex. 80 %)
+- **Jours restants** — combien de jours restent dans la période en cours
+- **Total projeté** — estimation des dépenses totales à la fin de la période
+- **Actif/Inactif** — statut actuel du budget
 
 ### Actions :
-- **Modifier** — modifier le nom, le montant ou les parametres du budget
+- **Modifier** (icône crayon) — modifier le nom, le montant, les catégories, la période ou le seuil d'alerte
 - **Supprimer** — supprimer le budget (avec confirmation)
+
+## Modifier un budget
+
+Appuyez sur l'**icône crayon** sur l'écran de détails du budget pour passer en mode édition :
+
+- Modifier le nom du budget, la devise, la période ou le seuil d'alerte
+- Basculer entre les modes **Global** et **Par catégories**
+- En mode Par catégories : ajouter, supprimer ou modifier les montants des catégories
+- Appuyez sur **Enregistrer** pour appliquer les modifications, ou **Annuler** pour les ignorer
 
 ## Alertes de budget
 
 L'application surveille automatiquement vos budgets et envoie des notifications :
 
-- **Alerte de seuil** — lorsque les depenses atteignent votre pourcentage d'alerte defini (par ex. 80 %)
-- **Alerte de depassement** — lorsque les depenses depassent 100 %
+- **Alerte de seuil** — lorsque les dépenses atteignent votre pourcentage d'alerte défini (par ex. 80 %)
+- **Alerte de dépassement** — lorsque les dépenses dépassent 100 %
 - La couleur de la barre de progression change dynamiquement :
-  - Vert — moins de 70 % utilise
-  - Jaune/Orange — 70-90 % utilise
-  - Rouge — plus de 90 % utilise
+  - Vert — moins de 80 % utilisé
+  - Jaune/Orange — 80–100 % utilisé
+  - Rouge — plus de 100 % utilisé
 
-> **Astuce :** La carte Budget mensuel sur le Tableau de bord affiche l'etat de votre budget principal en un coup d'oeil.
+> **Astuce :** La carte Budget mensuel sur le Tableau de bord affiche l'état de votre budget principal en un coup d'œil.
 
 ## FAQ
 
-- **Q : Puis-je avoir plusieurs budgets en meme temps ?**
-  **R :** Oui ! Vous pouvez creer autant de budgets que necessaire — pour differentes categories, periodes ou l'ensemble de vos depenses.
+- **Q : Puis-je avoir plusieurs budgets en même temps ?**
+  **R :** Oui ! Vous pouvez créer autant de budgets que nécessaire — pour différentes catégories, périodes ou l'ensemble de vos dépenses.
 
-- **Q : Que se passe-t-il lorsqu'une periode de budget se termine ?**
-  **R :** Le budget se reinitialise automatiquement pour la nouvelle periode. Vos donnees de depenses precedentes sont conservees dans les Analyses.
+- **Q : Quelle est la différence entre les modes Global et Par catégories ?**
+  **R :** Global définit une limite totale unique (optionnellement pour une catégorie). Par catégories permet de fixer des limites individuelles pour chaque catégorie — utile quand vous voulez suivre séparément l'alimentation, le transport et les loisirs au sein d'un même budget.
 
-- **Q : Le budget suit-il les depenses dans toutes les devises ?**
-  **R :** Chaque budget est lie a une devise. Seules les depenses dans cette devise sont comptabilisees dans le budget.
+- **Q : Que se passe-t-il lorsqu'une période de budget se termine ?**
+  **R :** Le budget se réinitialise automatiquement pour la nouvelle période. Vos données de dépenses précédentes sont conservées dans les Analyses.
+
+- **Q : Le budget suit-il les dépenses dans toutes les devises ?**
+  **R :** Chaque budget est lié à une devise. Seules les dépenses dans cette devise sont comptabilisées dans le budget.
 
 ---
 
@@ -19157,10 +19332,10 @@ iOS, Android, Web
     {
       id: '05-budgets',
       title: `Бюджэты`,
-      description: `Усталёўвайце ліміты выдаткаў і адсочвайце прагрэс у рэальным часе. Стварайце бюджэты для канкрэтных катэгорый або агульных выдаткаў з настройваемымі перыядамі і аўтаматычнымі парогамі апавяшчэнняў.`,
+      description: `Усталёўвайце ліміты выдаткаў і адсочвайце прагрэс у рэальным часе. Стварайце бюджэты для канкрэтных катэгорый або размяркоўвайце бюджэт па некалькіх катэгорыях з настройваемымі перыядамі і аўтаматычнымі парогамі апавяшчэнняў.`,
       body: `# Бюджэты
 
-> Усталёўвайце ліміты выдаткаў і адсочвайце прагрэс у рэальным часе. Стварайце бюджэты для канкрэтных катэгорый або агульных выдаткаў з настройваемымі перыядамі і аўтаматычнымі парогамі апавяшчэнняў.
+> Усталёўвайце ліміты выдаткаў і адсочвайце прагрэс у рэальным часе. Стварайце бюджэты для канкрэтных катэгорый або размяркоўвайце бюджэт па некалькіх катэгорыях з настройваемымі перыядамі і аўтаматычнымі парогамі апавяшчэнняў.
 
 ## Агляд
 
@@ -19170,7 +19345,7 @@ iOS, Android, Web
 
 Укладка **Бюджэты** адлюстроўвае ўсе вашы актыўныя бюджэты:
 
-- **Назва бюджэту** і перыяд (Штодзённы, Штотыднёвы, Штомесячны, Штогадовы, Свой)
+- **Назва бюджэту** і перыяд (Штодзённы, Штотыднёвы, Штомесачны, Штогадовы, Свой)
 - **Шкала прагрэсу** — візуальны індыкатар выдаткаў адносна ліміту
 - **Выдаткаваная сума** ад агульнага бюджэту (напрыклад, «2 846 zl з 20 000 zl»)
 - **Статусны значок**:
@@ -19182,21 +19357,31 @@ iOS, Android, Web
 
 ## Стварэнне бюджэту
 
-### Пакрокава: Стварэнне бюджэту
+### Пакрокава
 
 1. Націсніце **Стварыць бюджэт** на ўкладцы Бюджэты (або кнопку **+**)
 2. Увядзіце **Назву бюджэту** (напрыклад, «Прадукты на месяц»)
-3. Увядзіце **Суму** — ваш ліміт выдаткаў
-4. Выберыце **Валюту**
-5. Выберыце **Перыяд**:
+3. Выберыце **Валюту**
+4. Выберыце **Рэжым бюджэту**:
+   - **Агульны** — адна агульная сума, па жаданні прывязаная да адной катэгорыі
+   - **Па катэгорыях** — размяркуйце бюджэт па некалькіх катэгорыях, кожная з уласным лімітам
+5. Увядзіце **Суму** (Агульны рэжым) або дадайце катэгорыі з сумамі (рэжым Па катэгорыях)
+6. Выберыце **Перыяд**:
    - **Штодзённы** — абнуляецца кожны дзень
    - **Штотыднёвы** — абнуляецца кожны тыдзень
-   - **Штомесячны** — абнуляецца кожны месяц
+   - **Штомесачны** — абнуляецца кожны месяц
    - **Штогадовы** — абнуляецца кожны год
-   - **Свой** — усталюйце свой дыяпазон дат
-6. Па жаданні выберыце **Катэгорыю** — для адсочвання выдаткаў толькі ў пэўнай катэгорыі (напрыклад, «Ежа і рэстараны»). Пакіньце пустым для агульнага бюджэту, які адсочвае ўсе выдаткі
 7. Усталюйце парог **Апавясціць пры** (па змаўчанні: 80%) — вы атрымаеце апавяшчэнне, калі выдаткі дасягнуць гэтага адсотку
 8. Націсніце **Стварыць бюджэт**
+
+### Рэжым «Па катэгорыях»
+
+У рэжыме **Па катэгорыях** можна задаць ліміт выдаткаў для кожнай катэгорыі:
+
+- Націсніце **Дадаць катэгорыю**, каб выбраць катэгорыю са спісу
+- Увядзіце суму для кожнай катэгорыі
+- Агульная сума бюджэту роўная суме ўсіх катэгорый
+- Можна дадаць любую колькасць катэгорый
 
 ## Дэталі бюджэту
 
@@ -19204,16 +19389,28 @@ iOS, Android, Web
 
 - **Візуалізацыя прагрэсу** — шкала, якая паказвае выдаткаванае адносна ліміту
 - **Статус** — У межах бюджэту або Бюджэт перавышаны
+- **Выдаткі па катэгорыях** — для бюджэтаў з некалькімі катэгорыямі адлюстроўваецца прагрэс па кожнай:
+  - Каляровая кропка + назва катэгорыі
+  - Выдаткавана / выдзелена
+  - Індыкатар прагрэсу (зялёны/жоўты/чырвоны)
 - **Перыяд** — часавы дыяпазон бюджэту
-- **Катэгорыя** — адсочваемая катэгорыя (або «Усе» для агульных бюджэтаў)
 - **Парог апавяшчэння** — кропка спрацоўвання апавяшчэння (напрыклад, 80%)
 - **Дзён засталося** — колькі дзён засталося ў бягучым перыядзе
-- **Прагноз выніку** — меркаваная агульная сума выдаткаў да канца перыяду на аснове бягучага тэмпу
-- **Актыўны/Неактыўны** — уключэнне або выключэнне бюджэту
+- **Прагноз выніку** — меркаваная агульная сума выдаткаў да канца перыяду
+- **Актыўны/Неактыўны** — бягучы статус бюджэту
 
 ### Дзеянні:
-- **Рэдагаваць** — змяніць назву, суму або налады бюджэту
+- **Рэдагаваць** (значок аловак) — змяніць назву, суму, катэгорыі, перыяд або парог апавяшчэння
 - **Выдаліць** — выдаліць бюджэт (з пацвярджэннем)
+
+## Рэдагаванне бюджэту
+
+Націсніце **значок аловак** на экране дэталей бюджэту для пераходу ў рэжым рэдагавання:
+
+- Змяніць назву бюджэту, валюту, перыяд або парог апавяшчэння
+- Пераключыцца паміж рэжымамі **Агульны** і **Па катэгорыях**
+- У рэжыме Па катэгорыях: дадаваць, выдаляць або змяняць сумы катэгорый
+- Націсніце **Захаваць** для прымянення зменаў або **Адмена** для адмовы
 
 ## Апавяшчэнні пра бюджэт
 
@@ -19222,16 +19419,19 @@ iOS, Android, Web
 - **Апавяшчэнне пра парог** — калі выдаткі дасягаюць усталяванага адсотку (напрыклад, 80%)
 - **Апавяшчэнне пра перавышэнне** — калі выдаткі перавышаюць 100%
 - Колер шкалы прагрэсу змяняецца дынамічна:
-  - Зялёны — менш за 70% выкарыстана
-  - Жоўты/Аранжавы — 70-90% выкарыстана
-  - Чырвоны — больш за 90% выкарыстана
+  - Зялёны — менш за 80% выкарыстана
+  - Жоўты/Аранжавы — 80–100% выкарыстана
+  - Чырвоны — больш за 100% выкарыстана
 
-> **Парада:** Картка месячнага бюджэту на Галоўнай паказвае статус вашага асноўнага бюджэту з першага погляду.
+> **Парада:** Картка месачнага бюджэту на Галоўнай паказвае статус вашага асноўнага бюджэту з першага погляду.
 
 ## Частыя пытанні
 
 - **П: Ці можна мець некалькі бюджэтаў адначасова?**
   **А:** Так! Вы можаце стварыць столькі бюджэтаў, колькі патрэбна — для розных катэгорый, перыядаў або агульных выдаткаў.
+
+- **П: У чым розніца паміж рэжымамі «Агульны» і «Па катэгорыях»?**
+  **А:** Агульны ўсталёўвае адзін агульны ліміт (па жаданні для адной катэгорыі). Па катэгорыях дазваляе задаць асобны ліміт для кожнай катэгорыі — зручна, калі трэба адсочваць прадукты, транспарт і забавы асобна ў межах аднаго бюджэту.
 
 - **П: Што адбываецца, калі перыяд бюджэту заканчваецца?**
   **А:** Бюджэт аўтаматычна абнуляецца на новы перыяд. Даныя пра папярэднія выдаткі захоўваюцца ў Аналітыцы.

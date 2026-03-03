@@ -657,6 +657,9 @@ export class ChatService {
     };
 
     const budget = await this.budgetsService.create(accountId, userId, dto);
+    if (!budget) {
+      return { actionType: 'create_budget', success: false, errorMessage: 'Failed to create budget' };
+    }
     return {
       actionType: 'create_budget',
       success: true,

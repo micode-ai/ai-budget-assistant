@@ -359,6 +359,28 @@ export interface ExpenseCategorySplit {
   syncVersion: number;
 }
 
+export interface BudgetCategoryAllocation {
+  id: string;
+  budgetId: string;
+  categoryId: string;
+  amount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  syncVersion: number;
+}
+
+export interface BudgetCategoryProgress {
+  categoryId: string;
+  categoryName: string;
+  categoryColor?: string;
+  allocated: number;
+  spent: number;
+  remaining: number;
+  percentageUsed: number;
+  isOverBudget: boolean;
+}
+
 export interface Budget {
   id: string;
   localId: string;
@@ -371,7 +393,8 @@ export interface Budget {
   period: BudgetPeriod;
   startDate: Date;
   endDate?: Date;
-  categoryId?: string; // null = overall budget
+  categoryId?: string; // null = overall budget (legacy single-category)
+  categoryAllocations?: BudgetCategoryAllocation[]; // multi-category allocations
   alertThreshold: number | null; // percentage (0-100), null = no alerts
   isActive: boolean;
   createdAt: Date;
@@ -391,6 +414,7 @@ export interface BudgetProgress {
   projectedTotal: number;
   dailyBurnRate: number;
   estimatedExhaustionDate?: Date;
+  categoryBreakdown?: BudgetCategoryProgress[];
 }
 
 export interface SpendingAnomaly {

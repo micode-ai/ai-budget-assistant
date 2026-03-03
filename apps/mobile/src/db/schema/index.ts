@@ -124,6 +124,18 @@ export const budgets = sqliteTable('budgets', {
   syncVersion: integer('sync_version').default(0),
 });
 
+// Budget category allocations table
+export const budgetCategories = sqliteTable('budget_categories', {
+  id: text('id').primaryKey(),
+  budgetId: text('budget_id').notNull(),
+  categoryId: text('category_id').notNull(),
+  amount: real('amount').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
 // Sync queue table
 export const syncQueue = sqliteTable('sync_queue', {
   id: text('id').primaryKey(),

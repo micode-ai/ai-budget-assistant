@@ -24,6 +24,9 @@ import type { Currency, BudgetPeriod } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
+import { BudgetCategoryEditor, type BudgetAllocationRow } from '@/components/BudgetCategoryEditor';
+
+type BudgetMode = 'overall' | 'byCategory';
 
 export default function NewBudgetScreen() {
   const { t } = useTranslation();
@@ -42,11 +45,15 @@ export default function NewBudgetScreen() {
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
+  const [budgetMode, setBudgetMode] = useState<BudgetMode>('overall');
+  const [categoryAllocations, setCategoryAllocations] = useState<BudgetAllocationRow[]>([]);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const totalFromAllocations = categoryAllocations.reduce((sum, a) => sum + a.amount, 0);
 
   const handleSubmit = async () => {
     if (!name.trim()) {
@@ -54,9 +61,17 @@ export default function NewBudgetScreen() {
       return;
     }
 
-    const numericAmount = parseFloat(amount);
+    const numericAmount = budgetMode === 'byCategory'
+      ? totalFromAllocations
+      : parseFloat(amount);
+
     if (!numericAmount || numericAmount <= 0) {
       Alert.alert(t('common.error'), t('budgetNew.errorAmount'));
+      return;
+    }
+
+    if (budgetMode === 'byCategory' && categoryAllocations.length === 0) {
+      Alert.alert(t('common.error'), t('budgetNew.errorNoCategories'));
       return;
     }
 
@@ -69,7 +84,19 @@ export default function NewBudgetScreen() {
         currencyCode,
         period,
         startDate: new Date(),
-        categoryId: selectedCategory || undefined,
+        categoryId: budgetMode === 'overall' ? (selectedCategory || undefined) : undefined,
+        categoryAllocations: budgetMode === 'byCategory'
+          ? categoryAllocations.map((a) => ({
+              id: '',
+              budgetId: '',
+              categoryId: a.categoryId,
+              amount: a.amount,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              isDeleted: false,
+              syncVersion: 0,
+            }))
+          : undefined,
         alertThreshold: alertThreshold,
         isActive: true,
       });
@@ -104,28 +131,19 @@ export default function NewBudgetScreen() {
             />
           </View>
 
-          {/* Amount */}
+          {/* Currency */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{t('budgetNew.amount')}</Text>
-            <View style={styles.amountRow}>
-              <TouchableOpacity
-                style={styles.currencyButton}
-                onPress={() => setShowCurrencyPicker(!showCurrencyPicker)}
-              >
-                <Text style={styles.currencyText}>
-                  {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.symbol || '$'}
-                </Text>
-                <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
-              </TouchableOpacity>
-              <TextInput
-                style={styles.amountInput}
-                value={amount}
-                onChangeText={setAmount}
-                placeholder={t('budgetNew.amountPlaceholder')}
-                placeholderTextColor={theme.colors.textTertiary}
-                keyboardType="decimal-pad"
-              />
-            </View>
+            <TouchableOpacity
+              style={styles.currencyButton}
+              onPress={() => setShowCurrencyPicker(!showCurrencyPicker)}
+            >
+              <Text style={styles.currencyText}>
+                {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.symbol || '$'}{' '}
+                {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.code || 'USD'}
+              </Text>
+              <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
+            </TouchableOpacity>
           </View>
 
           {showCurrencyPicker && (
@@ -149,6 +167,108 @@ export default function NewBudgetScreen() {
                   )}
                 </TouchableOpacity>
               ))}
+            </View>
+          )}
+
+          {/* Budget Mode Toggle */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>{t('budgetNew.budgetMode')}</Text>
+            <View style={styles.modeToggle}>
+              <TouchableOpacity
+                style={[styles.modeButton, budgetMode === 'overall' && styles.modeButtonActive]}
+                onPress={() => setBudgetMode('overall')}
+              >
+                <Text style={[styles.modeButtonText, budgetMode === 'overall' && styles.modeButtonTextActive]}>
+                  {t('budgetNew.modeOverall')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modeButton, budgetMode === 'byCategory' && styles.modeButtonActive]}
+                onPress={() => setBudgetMode('byCategory')}
+              >
+                <Text style={[styles.modeButtonText, budgetMode === 'byCategory' && styles.modeButtonTextActive]}>
+                  {t('budgetNew.modeByCategory')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Overall mode: Amount + optional single category */}
+          {budgetMode === 'overall' && (
+            <>
+              <View style={styles.fieldContainer}>
+                <View style={styles.amountRow}>
+                  <TextInput
+                    style={styles.amountInput}
+                    value={amount}
+                    onChangeText={setAmount}
+                    placeholder={t('budgetNew.amountPlaceholder')}
+                    placeholderTextColor={theme.colors.textTertiary}
+                    keyboardType="decimal-pad"
+                  />
+                </View>
+              </View>
+
+              {/* Category (optional) */}
+              <View style={styles.fieldContainer}>
+                <Text style={styles.fieldLabel}>{t('budgetNew.categoryOptional')}</Text>
+                <Text style={styles.fieldHint}>{t('budgetNew.categoryHint')}</Text>
+                <View style={styles.categoryGrid}>
+                  {getExpenseCategories().map((cat) => (
+                    <TouchableOpacity
+                      key={cat.id}
+                      style={[
+                        styles.categoryChip,
+                        selectedCategory === cat.id && {
+                          backgroundColor: cat.color,
+                          borderColor: cat.color,
+                        },
+                      ]}
+                      onPress={() =>
+                        setSelectedCategory(selectedCategory === cat.id ? '' : cat.id)
+                      }
+                    >
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={[
+                          styles.categoryChipText,
+                          selectedCategory === cat.id && styles.categoryChipTextSelected,
+                        ]}
+                      >
+                        {getCategoryDisplayName(cat, t)}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                  <TouchableOpacity
+                    style={[styles.categoryChip, styles.addCategoryChip]}
+                    onPress={() => setShowCreateCategory(true)}
+                  >
+                    <Ionicons name="add" size={16} color={theme.colors.primary} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <CreateCategoryModal
+                visible={showCreateCategory}
+                type="expense"
+                onClose={() => setShowCreateCategory(false)}
+                onCreated={(categoryId) => {
+                  setSelectedCategory(categoryId);
+                  setShowCreateCategory(false);
+                }}
+              />
+            </>
+          )}
+
+          {/* By Category mode: category allocations editor */}
+          {budgetMode === 'byCategory' && (
+            <View style={styles.fieldContainer}>
+              <BudgetCategoryEditor
+                currencyCode={currencyCode}
+                allocations={categoryAllocations}
+                onAllocationsChange={setCategoryAllocations}
+              />
             </View>
           )}
 
@@ -177,56 +297,6 @@ export default function NewBudgetScreen() {
               ))}
             </View>
           </View>
-
-          {/* Category (optional) */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>{t('budgetNew.categoryOptional')}</Text>
-            <Text style={styles.fieldHint}>{t('budgetNew.categoryHint')}</Text>
-            <View style={styles.categoryGrid}>
-              {getExpenseCategories().map((cat) => (
-                <TouchableOpacity
-                  key={cat.id}
-                  style={[
-                    styles.categoryChip,
-                    selectedCategory === cat.id && {
-                      backgroundColor: cat.color,
-                      borderColor: cat.color,
-                    },
-                  ]}
-                  onPress={() =>
-                    setSelectedCategory(selectedCategory === cat.id ? '' : cat.id)
-                  }
-                >
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={[
-                      styles.categoryChipText,
-                      selectedCategory === cat.id && styles.categoryChipTextSelected,
-                    ]}
-                  >
-                    {getCategoryDisplayName(cat, t)}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-              <TouchableOpacity
-                style={[styles.categoryChip, styles.addCategoryChip]}
-                onPress={() => setShowCreateCategory(true)}
-              >
-                <Ionicons name="add" size={16} color={theme.colors.primary} />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <CreateCategoryModal
-            visible={showCreateCategory}
-            type="expense"
-            onClose={() => setShowCreateCategory(false)}
-            onCreated={(categoryId) => {
-              setSelectedCategory(categoryId);
-              setShowCreateCategory(false);
-            }}
-          />
 
           {/* Alert Threshold */}
           <View style={styles.fieldContainer}>
@@ -317,9 +387,10 @@ const createStyles = (theme: Theme) => ({
     paddingVertical: theme.spacing[3.5],
     borderRadius: theme.borderRadius.lg,
     gap: theme.spacing[1],
+    alignSelf: 'flex-start' as const,
   },
   currencyText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '600' as const,
     color: theme.colors.textPrimary,
   },
@@ -358,6 +429,30 @@ const createStyles = (theme: Theme) => ({
     fontSize: 16,
     color: theme.colors.textPrimary,
     flex: 1,
+  },
+  modeToggle: {
+    flexDirection: 'row' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[1],
+  },
+  modeButton: {
+    flex: 1,
+    paddingVertical: theme.spacing[2.5],
+    alignItems: 'center' as const,
+    borderRadius: theme.borderRadius.md,
+  },
+  modeButtonActive: {
+    backgroundColor: theme.colors.primary,
+  },
+  modeButtonText: {
+    fontSize: 14,
+    fontWeight: '500' as const,
+    color: theme.colors.textSecondary,
+  },
+  modeButtonTextActive: {
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
   },
   periodRow: {
     flexDirection: 'row' as const,
