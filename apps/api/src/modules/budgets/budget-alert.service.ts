@@ -23,6 +23,9 @@ export class BudgetAlertService {
           isDeleted: false,
           currencyCode: expenseCurrencyCode,
         },
+        include: {
+          categoryAllocations: { where: { isDeleted: false } },
+        },
       });
 
       for (const budget of budgets) {
@@ -187,7 +190,11 @@ export class BudgetAlertService {
       date: { gte: periodStart, lte: periodEnd },
     };
 
-    if (budget.categoryId) {
+    // Multi-category support: filter by all allocated category IDs
+    const allocations = budget.categoryAllocations || [];
+    if (allocations.length > 0) {
+      whereExpenses.categoryId = { in: allocations.map((a: any) => a.categoryId) };
+    } else if (budget.categoryId) {
       whereExpenses.categoryId = budget.categoryId;
     }
 

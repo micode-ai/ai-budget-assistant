@@ -1,84 +1,109 @@
 # Presupuestos
 
-> Establece limites de gasto y realiza un seguimiento de tu progreso en tiempo real. Crea presupuestos para categorias especificas o para el gasto general, con periodos personalizables y umbrales de alerta automaticos.
+> Establece límites de gasto y realiza un seguimiento de tu progreso en tiempo real. Crea presupuestos para categorías específicas o distribuye tu presupuesto entre varias categorías, con períodos personalizables y umbrales de alerta automáticos.
 
 ## Vista general
 
-Los presupuestos te ayudan a controlar tus gastos estableciendo limites para periodos de tiempo especificos. La aplicacion rastrea tus gastos en comparacion con estos limites y te notifica cuando te acercas o excedes tu presupuesto.
+Los presupuestos te ayudan a controlar tus gastos estableciendo límites para períodos de tiempo específicos. La aplicación rastrea tus gastos en comparación con estos límites y te notifica cuando te acercas o excedes tu presupuesto.
 
 ## Lista de presupuestos
 
-La pestana **Presupuestos** muestra todos tus presupuestos activos:
+La pestaña **Presupuestos** muestra todos tus presupuestos activos:
 
-- **Nombre del presupuesto** y periodo (Diario, Semanal, Mensual, Anual, Personalizado)
-- **Barra de progreso** — indicador visual de gasto vs. limite
+- **Nombre del presupuesto** y período (Diario, Semanal, Mensual, Anual, Personalizado)
+- **Barra de progreso** — indicador visual de gasto vs. límite
 - **Importe gastado** del presupuesto total (por ejemplo, "2 846 zl de 20 000 zl")
 - **Insignia de estado**:
-  - **En camino** (verde) — el gasto esta dentro del limite
-  - **Presupuesto excedido** (rojo) — el gasto ha superado el limite
+  - **En camino** (verde) — el gasto está dentro del límite
+  - **Presupuesto excedido** (rojo) — el gasto ha superado el límite
 - Importe **restante** o excedente
 
-> **Nota:** Si aun no tienes presupuestos, veras un mensaje: "Crea un presupuesto para comenzar a rastrear tus limites de gasto."
+> **Nota:** Si aún no tienes presupuestos, verás un mensaje: "Crea un presupuesto para comenzar a rastrear tus límites de gasto."
 
 ## Crear un presupuesto
 
 ### Paso a paso
 
-1. Toca **Crear presupuesto** en la pestana Presupuestos (o el boton **+**)
+1. Toca **Crear presupuesto** en la pestaña Presupuestos (o el botón **+**)
 2. Introduce un **Nombre del presupuesto** (por ejemplo, "Supermercado mensual")
-3. Introduce el **Importe** — tu limite de gasto
-4. Selecciona la **Moneda**
-5. Elige un **Periodo**:
-   - **Diario** — se reinicia cada dia
+3. Selecciona la **Moneda**
+4. Elige un **Modo de presupuesto**:
+   - **General** — un importe total único, opcionalmente vinculado a una categoría
+   - **Por categorías** — distribuye el presupuesto entre varias categorías, cada una con su propio límite
+5. Introduce el **Importe** (modo General) o añade categorías con importes (modo Por categorías)
+6. Elige un **Período**:
+   - **Diario** — se reinicia cada día
    - **Semanal** — se reinicia cada semana
    - **Mensual** — se reinicia cada mes
-   - **Anual** — se reinicia cada ano
-   - **Personalizado** — establece tu propio rango de fechas
-6. Opcionalmente selecciona una **Categoria** — para rastrear el gasto en una categoria especifica (por ejemplo, "Comida y Restaurantes"). Dejala vacia para un presupuesto general que rastree todos los gastos
-7. Establece el umbral de **Alerta en** (por defecto: 80%) — recibiras una notificacion cuando el gasto alcance este porcentaje
+   - **Anual** — se reinicia cada año
+7. Establece el umbral de **Alerta en** (por defecto: 80%) — recibirás una notificación cuando el gasto alcance este porcentaje
 8. Toca **Crear presupuesto**
+
+### Modo «Por categorías»
+
+En el modo **Por categorías** puedes asignar un límite de gasto a cada categoría:
+
+- Toca **Añadir categoría** para seleccionar una categoría de la lista
+- Introduce el importe para cada categoría
+- El presupuesto total es igual a la suma de todos los importes por categoría
+- Puedes añadir tantas categorías como necesites
 
 ## Detalles del presupuesto
 
 Toca cualquier presupuesto para ver sus detalles completos:
 
-- **Visualizacion de progreso** — barra que muestra lo gastado vs. el limite
+- **Visualización de progreso** — barra que muestra lo gastado vs. el límite
 - **Estado** — En camino o Presupuesto excedido
-- **Periodo** — el rango de tiempo del presupuesto
-- **Categoria** — la categoria rastreada (o "Todas" para presupuestos generales)
-- **Umbral de alerta** — el punto de activacion de la notificacion (por ejemplo, 80%)
-- **Dias restantes** — cuantos dias quedan en el periodo actual
-- **Total proyectado** — gasto total estimado para el final del periodo basado en el ritmo actual
-- **Activo/Inactivo** — activa o desactiva el presupuesto
+- **Desglose por categorías** — para presupuestos con varias categorías, verás el progreso de cada una:
+  - Punto de color + nombre de categoría
+  - Gastado / asignado
+  - Barra de progreso por categoría (verde/amarillo/rojo)
+- **Período** — el rango de tiempo del presupuesto
+- **Umbral de alerta** — el punto de activación de la notificación (por ejemplo, 80%)
+- **Días restantes** — cuántos días quedan en el período actual
+- **Total proyectado** — gasto total estimado para el final del período
+- **Activo/Inactivo** — estado actual del presupuesto
 
 ### Acciones:
-- **Editar** — modificar el nombre, importe o configuracion del presupuesto
-- **Eliminar** — eliminar el presupuesto (con confirmacion)
+- **Editar** (icono de lápiz) — modificar el nombre, importe, categorías, período o umbral de alerta
+- **Eliminar** — eliminar el presupuesto (con confirmación)
+
+## Editar un presupuesto
+
+Toca el **icono de lápiz** en la pantalla de detalles del presupuesto para cambiar al modo de edición:
+
+- Cambiar el nombre del presupuesto, moneda, período o umbral de alerta
+- Cambiar entre los modos **General** y **Por categorías**
+- En modo Por categorías: añadir, eliminar o cambiar importes de categorías
+- Toca **Guardar** para aplicar los cambios, o **Cancelar** para descartarlos
 
 ## Alertas de presupuesto
 
-La aplicacion monitoriza automaticamente tus presupuestos y envia notificaciones:
+La aplicación monitoriza automáticamente tus presupuestos y envía notificaciones:
 
 - **Alerta de umbral** — cuando el gasto alcanza el porcentaje de alerta establecido (por ejemplo, 80%)
 - **Alerta de presupuesto excedido** — cuando el gasto supera el 100%
-- El color de la barra de progreso cambia dinamicamente:
-  - Verde — menos del 70% utilizado
-  - Amarillo/Naranja — 70-90% utilizado
-  - Rojo — mas del 90% utilizado
+- El color de la barra de progreso cambia dinámicamente:
+  - Verde — menos del 80% utilizado
+  - Amarillo/Naranja — 80–100% utilizado
+  - Rojo — más del 100% utilizado
 
 > **Consejo:** La tarjeta de Presupuesto mensual en el Panel muestra el estado de tu presupuesto principal de un vistazo.
 
 ## Preguntas frecuentes
 
-- **P: Puedo tener multiples presupuestos al mismo tiempo?**
-  **R:** Si. Puedes crear tantos presupuestos como necesites — para diferentes categorias, periodos o gasto general.
+- **P: ¿Puedo tener múltiples presupuestos al mismo tiempo?**
+  **R:** Sí. Puedes crear tantos presupuestos como necesites — para diferentes categorías, períodos o gasto general.
 
-- **P: Que sucede cuando termina el periodo de un presupuesto?**
-  **R:** El presupuesto se reinicia automaticamente para el nuevo periodo. Los datos de gasto anteriores se conservan en Analisis.
+- **P: ¿Cuál es la diferencia entre los modos General y Por categorías?**
+  **R:** General establece un límite total único (opcionalmente para una categoría). Por categorías permite establecer límites individuales para cada categoría — útil cuando quieres rastrear alimentación, transporte y ocio por separado dentro de un mismo presupuesto.
 
-- **P: El presupuesto rastrea gastos en todas las monedas?**
-  **R:** Cada presupuesto esta vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
+- **P: ¿Qué sucede cuando termina el período de un presupuesto?**
+  **R:** El presupuesto se reinicia automáticamente para el nuevo período. Los datos de gasto anteriores se conservan en Análisis.
+
+- **P: ¿El presupuesto rastrea gastos en todas las monedas?**
+  **R:** Cada presupuesto está vinculado a una moneda. Solo los gastos en esa moneda cuentan para el presupuesto.
 
 ---
 
-*Ver tambien: [Panel](./02-dashboard.md) | [Analisis](./06-analytics.md)*
+*Ver también: [Panel](./02-dashboard.md) | [Análisis](./06-analytics.md)*

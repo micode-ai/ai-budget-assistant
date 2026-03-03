@@ -111,6 +111,11 @@ export interface UpdateIncomeDto {
 }
 
 // Budget DTOs
+export interface BudgetCategoryAllocationDto {
+  categoryId: string;
+  amount: number;
+}
+
 export interface CreateBudgetDto {
   localId: string;
   name: string;
@@ -120,6 +125,7 @@ export interface CreateBudgetDto {
   startDate: string;
   endDate?: string;
   categoryId?: string;
+  categories?: BudgetCategoryAllocationDto[];
   alertThreshold?: number | null;
 }
 
@@ -130,6 +136,7 @@ export interface UpdateBudgetDto {
   period?: BudgetPeriod;
   endDate?: string | null;
   categoryId?: string | null;
+  categories?: BudgetCategoryAllocationDto[];
   alertThreshold?: number | null;
   isActive?: boolean;
 }

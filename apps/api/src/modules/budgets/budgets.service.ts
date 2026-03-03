@@ -2,6 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
 
+const CATEGORY_ALLOCATIONS_INCLUDE = {
+  categoryAllocations: {
+    where: { isDeleted: false },
+    include: { category: true },
+  },
+};
+
 @Injectable()
 export class BudgetsService {
   constructor(
@@ -9,38 +16,91 @@ export class BudgetsService {
     private readonly gamificationService: GamificationService,
   ) {}
 
-  async create(accountId: string, userId: string, dto: any) {
-    // Validate categoryId exists for this account; ignore if it's a local-only ID
-    let resolvedCategoryId: string | null = null;
-    if (dto.categoryId) {
+  private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
+    if (!categoryId) return null;
+    // UUID v4 pattern — use directly
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId)) {
+      // Verify it exists
       const cat = await this.prisma.category.findFirst({
-        where: { id: dto.categoryId, OR: [{ accountId }, { accountId: null }] },
+        where: { id: categoryId, OR: [{ accountId }, { accountId: null }] },
         select: { id: true },
       });
-      resolvedCategoryId = cat?.id ?? null;
+      return cat?.id ?? null;
     }
-
-    const result = await this.prisma.budget.create({
-      data: {
-        accountId,
-        userId,
-        clientId: dto.localId,
-        name: dto.name,
-        amount: dto.amount,
-        currencyCode: dto.currencyCode,
-        period: dto.period,
-        startDate: new Date(dto.startDate),
-        endDate: dto.endDate ? new Date(dto.endDate) : null,
-        categoryId: resolvedCategoryId,
-        alertThreshold: dto.alertThreshold || 80,
+    // Try exact name match
+    const category = await this.prisma.category.findFirst({
+      where: {
+        name: { equals: categoryId, mode: 'insensitive' },
+        OR: [{ accountId }, { accountId: null }],
       },
-      include: { category: true },
+      select: { id: true },
     });
+    return category?.id ?? null;
+  }
 
-    // Fire-and-forget gamification check
-    this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+  private async resolveCategoryAllocations(
+    categories: { categoryId: string; amount: number }[],
+    accountId: string,
+  ): Promise<{ categoryId: string; amount: number }[]> {
+    const resolved: { categoryId: string; amount: number }[] = [];
+    for (const cat of categories) {
+      const resolvedId = await this.resolveCategoryId(cat.categoryId, accountId);
+      if (resolvedId) {
+        resolved.push({ categoryId: resolvedId, amount: cat.amount });
+      }
+    }
+    return resolved;
+  }
 
-    return result;
+  async create(accountId: string, userId: string, dto: any) {
+    return this.prisma.$transaction(async (tx) => {
+      // Validate categoryId for legacy single-category mode
+      const resolvedCategoryId = dto.categoryId && (!dto.categories || dto.categories.length === 0)
+        ? await this.resolveCategoryId(dto.categoryId, accountId)
+        : null;
+
+      // Resolve category allocations before creating
+      const resolvedAllocations = dto.categories && dto.categories.length > 0
+        ? await this.resolveCategoryAllocations(dto.categories, accountId)
+        : [];
+
+      const budget = await tx.budget.create({
+        data: {
+          accountId,
+          userId,
+          clientId: dto.localId,
+          name: dto.name,
+          amount: dto.amount,
+          currencyCode: dto.currencyCode,
+          period: dto.period,
+          startDate: new Date(dto.startDate),
+          endDate: dto.endDate ? new Date(dto.endDate) : null,
+          categoryId: resolvedCategoryId,
+          alertThreshold: dto.alertThreshold || 80,
+        },
+      });
+
+      // Create category allocations if provided
+      if (resolvedAllocations.length > 0) {
+        await tx.budgetCategory.createMany({
+          data: resolvedAllocations.map((cat) => ({
+            budgetId: budget.id,
+            categoryId: cat.categoryId,
+            amount: cat.amount,
+          })),
+        });
+      }
+
+      const result = await tx.budget.findUnique({
+        where: { id: budget.id },
+        include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
+      });
+
+      // Fire-and-forget gamification check
+      this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+
+      return result;
+    });
   }
 
   async findAll(accountId: string, filters: any = {}) {
@@ -55,7 +115,7 @@ export class BudgetsService {
 
     return this.prisma.budget.findMany({
       where,
-      include: { category: true },
+      include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -63,7 +123,7 @@ export class BudgetsService {
   async findOne(accountId: string, id: string) {
     const budget = await this.prisma.budget.findFirst({
       where: { id, accountId, isDeleted: false },
-      include: { category: true },
+      include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
     });
 
     if (!budget) {
@@ -76,14 +136,49 @@ export class BudgetsService {
   async update(accountId: string, id: string, dto: any) {
     const budget = await this.findOne(accountId, id);
 
-    return this.prisma.budget.update({
-      where: { id: budget.id },
-      data: {
-        ...dto,
-        endDate: dto.endDate ? new Date(dto.endDate) : undefined,
-        syncVersion: { increment: 1 },
-      },
-      include: { category: true },
+    return this.prisma.$transaction(async (tx) => {
+      const { categories, ...budgetFields } = dto;
+
+      await tx.budget.update({
+        where: { id: budget.id },
+        data: {
+          ...budgetFields,
+          endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+          syncVersion: { increment: 1 },
+        },
+      });
+
+      // Replace category allocations if provided
+      if (categories !== undefined) {
+        // Hard-delete existing allocations (unique constraint requires actual removal)
+        await tx.budgetCategory.deleteMany({
+          where: { budgetId: budget.id },
+        });
+
+        if (categories.length > 0) {
+          const resolvedAllocations = await this.resolveCategoryAllocations(categories, accountId);
+          if (resolvedAllocations.length > 0) {
+            await tx.budgetCategory.createMany({
+              data: resolvedAllocations.map((cat) => ({
+                budgetId: budget.id,
+                categoryId: cat.categoryId,
+                amount: cat.amount,
+              })),
+            });
+          }
+
+          // Clear legacy categoryId when using multi-category
+          await tx.budget.update({
+            where: { id: budget.id },
+            data: { categoryId: null },
+          });
+        }
+      }
+
+      return tx.budget.findUnique({
+        where: { id: budget.id },
+        include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
+      });
     });
   }
 
@@ -109,6 +204,13 @@ export class BudgetsService {
     const periodEnd = budget.endDate || new Date();
     const now = new Date();
 
+    // Determine which categories this budget covers
+    const allocations = budget.categoryAllocations || [];
+    const hasMultiCategory = allocations.length > 0;
+    const categoryIds = hasMultiCategory
+      ? allocations.map((a: any) => a.categoryId)
+      : budget.categoryId ? [budget.categoryId] : null;
+
     const whereExpenses: any = {
       accountId,
       isDeleted: false,
@@ -119,8 +221,8 @@ export class BudgetsService {
       },
     };
 
-    if (budget.categoryId) {
-      whereExpenses.categoryId = budget.categoryId;
+    if (categoryIds) {
+      whereExpenses.categoryId = { in: categoryIds };
     }
 
     const spent = await this.prisma.expense.aggregate({
@@ -148,10 +250,38 @@ export class BudgetsService {
     if (dailyBurnRate > 0 && !isOverBudget) {
       const daysUntilExhaustion = remaining / dailyBurnRate;
       const exhaustionDate = new Date(now.getTime() + daysUntilExhaustion * msPerDay);
-      // Only return if exhaustion is within the budget period
       if (exhaustionDate <= periodEnd) {
         estimatedExhaustionDate = exhaustionDate.toISOString();
       }
+    }
+
+    // Per-category breakdown for multi-category budgets
+    let categoryBreakdown: any[] | undefined;
+    if (hasMultiCategory) {
+      const categorySpending = await this.prisma.expense.groupBy({
+        by: ['categoryId'],
+        where: whereExpenses,
+        _sum: { amount: true },
+      });
+
+      const spendingMap = new Map(
+        categorySpending.map((cs) => [cs.categoryId, Number(cs._sum?.amount || 0)]),
+      );
+
+      categoryBreakdown = allocations.map((alloc: any) => {
+        const catSpent = spendingMap.get(alloc.categoryId) || 0;
+        const catAllocated = Number(alloc.amount);
+        return {
+          categoryId: alloc.categoryId,
+          categoryName: alloc.category?.name || 'Unknown',
+          categoryColor: alloc.category?.color,
+          allocated: catAllocated,
+          spent: catSpent,
+          remaining: Math.max(0, catAllocated - catSpent),
+          percentageUsed: catAllocated > 0 ? (catSpent / catAllocated) * 100 : 0,
+          isOverBudget: catSpent > catAllocated,
+        };
+      });
     }
 
     return {
@@ -164,6 +294,7 @@ export class BudgetsService {
       projectedTotal,
       dailyBurnRate,
       estimatedExhaustionDate,
+      categoryBreakdown,
     };
   }
 }

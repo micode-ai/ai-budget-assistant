@@ -120,6 +120,11 @@ export const UpdateIncomeSchema = z.object({
 });
 
 // Budget schemas
+export const BudgetCategoryAllocationSchema = z.object({
+  categoryId: z.string().uuid(),
+  amount: z.number().positive('Amount must be positive').max(999999999),
+});
+
 export const CreateBudgetSchema = z.object({
   localId: z.string().uuid(),
   name: z.string().min(1, 'Name is required').max(100),
@@ -129,6 +134,7 @@ export const CreateBudgetSchema = z.object({
   startDate: z.string().datetime({ offset: true }),
   endDate: z.string().datetime({ offset: true }).optional(),
   categoryId: z.string().uuid().optional(),
+  categories: z.array(BudgetCategoryAllocationSchema).max(20).optional(),
   alertThreshold: z.number().min(0).max(100).optional().default(80),
 });
 
@@ -139,6 +145,7 @@ export const UpdateBudgetSchema = z.object({
   period: BudgetPeriodSchema.optional(),
   endDate: z.string().datetime({ offset: true }).nullable().optional(),
   categoryId: z.string().uuid().nullable().optional(),
+  categories: z.array(BudgetCategoryAllocationSchema).max(20).optional(),
   alertThreshold: z.number().min(0).max(100).optional(),
   isActive: z.boolean().optional(),
 });

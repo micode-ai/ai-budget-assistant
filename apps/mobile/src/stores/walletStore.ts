@@ -427,9 +427,11 @@ export const useWalletStore = create<WalletState>()(
         console.error('Failed to insert transfer into SQLite:', e),
       );
 
-      // If countAsIncome, create a local Income record on the receiving account
+      // If countAsIncome, create a local Income record on the receiving account.
+      // Use the same clientId pattern as the server (`transfer-income-{localId}`)
+      // so that server sync upserts into the same row instead of creating a duplicate.
       if (countAsIncome) {
-        const incomeId = generateUUID();
+        const incomeId = `transfer-income-${id}`;
         const income: Income = {
           id: incomeId,
           localId: incomeId,

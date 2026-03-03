@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Budget, BudgetProgress, BudgetPeriod, Currency, SyncStatus } from '@budget/shared-types';
+import type { Budget, BudgetProgress, BudgetCategoryProgress, BudgetCategoryAllocation, BudgetPeriod, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
+import { useCategoryStore } from './categoryStore';
 import { useExchangeRateStore } from './exchangeRateStore';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
@@ -15,6 +16,13 @@ import {
   softDeleteBudgetInDb,
   clearAllBudgets,
 } from '@/db/budgetRepository';
+import {
+  getAllocationsForBudget,
+  insertBudgetCategory,
+  upsertBudgetCategory,
+  deleteAllocationsForBudget,
+  clearAllBudgetCategories,
+} from '@/db/budgetCategoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 
 interface BudgetState {
@@ -56,6 +64,15 @@ export const useBudgetStore = create<BudgetState>()(
         // 1. Show local data immediately
         const localBudgets = await loadAllBudgets(accountId);
         if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+        // Load allocations for each budget
+        for (const budget of localBudgets) {
+          const allocs = await getAllocationsForBudget(budget.id);
+          if (allocs.length > 0) {
+            budget.categoryAllocations = allocs;
+          }
+        }
+
         set({ budgets: localBudgets, isLoading: false });
 
         // 2. Sync pending local → server
@@ -93,6 +110,30 @@ export const useBudgetStore = create<BudgetState>()(
                 syncVersion: sb.syncVersion || 0,
               };
               await upsertBudget(budget);
+
+              // Sync category allocations from server
+              if (sb.categoryAllocations && Array.isArray(sb.categoryAllocations)) {
+                // Remove old allocations for this budget
+                await deleteAllocationsForBudget(budget.id);
+
+                const allocations: BudgetCategoryAllocation[] = [];
+                for (const sa of sb.categoryAllocations) {
+                  if (sa.isDeleted) continue;
+                  const alloc: BudgetCategoryAllocation = {
+                    id: sa.id,
+                    budgetId: budget.id,
+                    categoryId: sa.categoryId,
+                    amount: Number(sa.amount),
+                    createdAt: new Date(sa.createdAt),
+                    updatedAt: new Date(sa.updatedAt),
+                    isDeleted: false,
+                    syncVersion: sa.syncVersion || 0,
+                  };
+                  await upsertBudgetCategory(alloc);
+                  allocations.push(alloc);
+                }
+                budget.categoryAllocations = allocations.length > 0 ? allocations : undefined;
+              }
             }
 
             // Soft-delete locally-synced budgets the server no longer returns
@@ -106,6 +147,15 @@ export const useBudgetStore = create<BudgetState>()(
             // Reload merged data from SQLite
             const merged = await loadAllBudgets(accountId);
             if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+            // Reload allocations for merged budgets
+            for (const budget of merged) {
+              const allocs = await getAllocationsForBudget(budget.id);
+              if (allocs.length > 0) {
+                budget.categoryAllocations = allocs;
+              }
+            }
+
             set({ budgets: merged });
 
             setLastSyncTime(Date.now());
@@ -125,6 +175,13 @@ export const useBudgetStore = create<BudgetState>()(
       );
       if (pending.length === 0) return;
 
+      const catStore = useCategoryStore.getState();
+      const resolveCatId = (catId: string | undefined) => {
+        if (!catId) return undefined;
+        const cat = catStore.getCategoryById(catId);
+        return cat?.name || catId;
+      };
+
       for (const budget of pending) {
         try {
           // Encrypt before sending
@@ -141,7 +198,11 @@ export const useBudgetStore = create<BudgetState>()(
             period: budget.period,
             startDate: budget.startDate instanceof Date ? budget.startDate.toISOString() : budget.startDate,
             endDate: budget.endDate instanceof Date ? budget.endDate.toISOString() : budget.endDate,
-            categoryId: budget.categoryId,
+            categoryId: resolveCatId(budget.categoryId),
+            categories: budget.categoryAllocations?.map((a) => ({
+              categoryId: resolveCatId(a.categoryId) || a.categoryId,
+              amount: a.amount,
+            })),
             alertThreshold: budget.alertThreshold,
             encryptedPayload,
             encryptionKeyVersion,
@@ -165,11 +226,23 @@ export const useBudgetStore = create<BudgetState>()(
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
 
+      // Assign budgetId to allocations
+      const categoryAllocations = budgetData.categoryAllocations?.map((a) => ({
+        ...a,
+        id: a.id || generateUUID(),
+        budgetId: id,
+        createdAt: now,
+        updatedAt: now,
+        isDeleted: false,
+        syncVersion: 0,
+      }));
+
       const newBudget: Budget = {
         ...budgetData,
         id,
         localId: id,
         accountId,
+        categoryAllocations,
         createdAt: now,
         updatedAt: now,
         syncStatus: 'pending' as SyncStatus,
@@ -186,6 +259,23 @@ export const useBudgetStore = create<BudgetState>()(
         console.error('Failed to insert budget in SQLite:', e),
       );
 
+      // Persist category allocations to SQLite
+      if (categoryAllocations && categoryAllocations.length > 0) {
+        for (const alloc of categoryAllocations) {
+          insertBudgetCategory(alloc).catch((e) =>
+            console.error('Failed to insert budget category in SQLite:', e),
+          );
+        }
+      }
+
+      // Resolve local category IDs to names for server sync
+      const catStore = useCategoryStore.getState();
+      const resolveCatId = (catId: string | undefined) => {
+        if (!catId) return undefined;
+        const cat = catStore.getCategoryById(catId);
+        return cat?.name || catId;
+      };
+
       // Encrypt sensitive fields before sending to server
       maybeEncrypt('budget', {
         name: budgetData.name,
@@ -199,7 +289,11 @@ export const useBudgetStore = create<BudgetState>()(
           period: budgetData.period,
           startDate: budgetData.startDate instanceof Date ? budgetData.startDate.toISOString() : budgetData.startDate,
           endDate: budgetData.endDate instanceof Date ? budgetData.endDate.toISOString() : budgetData.endDate,
-          categoryId: budgetData.categoryId,
+          categoryId: resolveCatId(budgetData.categoryId),
+          categories: categoryAllocations?.map((a) => ({
+            categoryId: resolveCatId(a.categoryId) || a.categoryId,
+            amount: a.amount,
+          })),
           alertThreshold: budgetData.alertThreshold,
           encryptedPayload,
           encryptionKeyVersion,
@@ -238,11 +332,52 @@ export const useBudgetStore = create<BudgetState>()(
         updateBudgetInDb(id, updates, budget.updatedAt, budget.syncStatus).catch((e) =>
           console.error('Failed to update budget in SQLite:', e),
         );
+
+        // Replace category allocations if provided
+        if (updates.categoryAllocations !== undefined) {
+          deleteAllocationsForBudget(id).then(() => {
+            if (updates.categoryAllocations && updates.categoryAllocations.length > 0) {
+              for (const alloc of updates.categoryAllocations) {
+                insertBudgetCategory({
+                  ...alloc,
+                  id: alloc.id || generateUUID(),
+                  budgetId: id,
+                  createdAt: alloc.createdAt || new Date(),
+                  updatedAt: new Date(),
+                  isDeleted: false,
+                  syncVersion: 0,
+                }).catch((e) =>
+                  console.error('Failed to insert budget category in SQLite:', e),
+                );
+              }
+            }
+          }).catch((e) =>
+            console.error('Failed to delete budget categories in SQLite:', e),
+          );
+        }
       }
 
       // Sync to server
       if (budget?.serverId) {
-        api.updateBudget(budget.serverId, updates).catch((e) =>
+        const catStore = useCategoryStore.getState();
+        const resolveCatId = (catId: string | undefined) => {
+          if (!catId) return undefined;
+          const cat = catStore.getCategoryById(catId);
+          return cat?.name || catId;
+        };
+
+        const apiUpdates: any = { ...updates };
+        if (updates.categoryAllocations) {
+          apiUpdates.categories = updates.categoryAllocations.map((a) => ({
+            categoryId: resolveCatId(a.categoryId) || a.categoryId,
+            amount: a.amount,
+          }));
+          delete apiUpdates.categoryAllocations;
+        }
+        if (apiUpdates.categoryId) {
+          apiUpdates.categoryId = resolveCatId(apiUpdates.categoryId) || apiUpdates.categoryId;
+        }
+        api.updateBudget(budget.serverId, apiUpdates).catch((e) =>
           console.error('Failed to sync budget update to server:', e),
         );
       }
@@ -267,6 +402,11 @@ export const useBudgetStore = create<BudgetState>()(
       // Persist to local SQLite
       softDeleteBudgetInDb(id, new Date()).catch((e) =>
         console.error('Failed to soft-delete budget in SQLite:', e),
+      );
+
+      // Soft-delete category allocations
+      deleteAllocationsForBudget(id).catch((e) =>
+        console.error('Failed to delete budget categories in SQLite:', e),
       );
 
       // Sync to server
@@ -323,8 +463,14 @@ export const useBudgetStore = create<BudgetState>()(
       // Filter by currency to match budget currency
       periodExpenses = periodExpenses.filter((e) => e.currencyCode === budget.currencyCode);
 
-      // Filter by category if budget is category-specific
-      if (budget.categoryId) {
+      // Multi-category support
+      const allocations = budget.categoryAllocations || [];
+      const hasMultiCategory = allocations.length > 0;
+
+      if (hasMultiCategory) {
+        const categoryIds = new Set(allocations.map((a) => a.categoryId));
+        periodExpenses = periodExpenses.filter((e) => categoryIds.has(e.categoryId || ''));
+      } else if (budget.categoryId) {
         periodExpenses = periodExpenses.filter((e) => e.categoryId === budget.categoryId);
       }
 
@@ -355,6 +501,27 @@ export const useBudgetStore = create<BudgetState>()(
         }
       }
 
+      // Per-category breakdown for multi-category budgets
+      let categoryBreakdown: BudgetCategoryProgress[] | undefined;
+      if (hasMultiCategory) {
+        const categoriesState = useCategoryStore.getState();
+        categoryBreakdown = allocations.map((alloc) => {
+          const catExpenses = periodExpenses.filter((e) => e.categoryId === alloc.categoryId);
+          const catSpent = catExpenses.reduce((sum, e) => sum + e.amount, 0);
+          const cat = categoriesState.categories.find((c) => c.id === alloc.categoryId);
+          return {
+            categoryId: alloc.categoryId,
+            categoryName: cat?.name || 'Unknown',
+            categoryColor: cat?.color,
+            allocated: alloc.amount,
+            spent: catSpent,
+            remaining: Math.max(0, alloc.amount - catSpent),
+            percentageUsed: alloc.amount > 0 ? (catSpent / alloc.amount) * 100 : 0,
+            isOverBudget: catSpent > alloc.amount,
+          };
+        });
+      }
+
       return {
         budget,
         spent,
@@ -365,6 +532,7 @@ export const useBudgetStore = create<BudgetState>()(
         projectedTotal,
         dailyBurnRate,
         estimatedExhaustionDate,
+        categoryBreakdown,
       };
     },
 
@@ -381,7 +549,7 @@ export const useBudgetStore = create<BudgetState>()(
 
       // Find overall budget (no category) or sum category budgets
       const monthlyBudgets = activeBudgets.filter((b) => b.period === 'monthly');
-      const overallBudget = monthlyBudgets.find((b) => !b.categoryId);
+      const overallBudget = monthlyBudgets.find((b) => !b.categoryId && (!b.categoryAllocations || b.categoryAllocations.length === 0));
 
       if (overallBudget) {
         return convertToBase(overallBudget.amount, overallBudget.currencyCode);
@@ -393,6 +561,7 @@ export const useBudgetStore = create<BudgetState>()(
 
     reset: () => {
       clearAllBudgets().catch(() => {});
+      clearAllBudgetCategories().catch(() => {});
       set({ budgets: [], activeBudgets: [], isLoading: false, error: null });
     },
   }))

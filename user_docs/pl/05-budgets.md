@@ -1,84 +1,109 @@
-# Budzety
+# Budżety
 
-> Ustalaj limity wydatkow i sledz postepy w czasie rzeczywistym. Twórz budzety dla konkretnych kategorii lub ogolnych wydatkow, z konfigurowalnymi okresami i automatycznymi progami alertow.
+> Ustalaj limity wydatków i śledź postępy w czasie rzeczywistym. Twórz budżety dla konkretnych kategorii lub rozdzielaj budżet między wiele kategorii, z konfigurowalnymi okresami i automatycznymi progami alertów.
 
-## Przeglad
+## Przegląd
 
-Budzety pomagaja kontrolowac wydatki poprzez ustalanie limitow na okreslone okresy. Aplikacja sledzi Twoje wydatki w stosunku do tych limitow i powiadamia Cie, gdy zblizasz sie do limitu lub go przekraczasz.
+Budżety pomagają kontrolować wydatki poprzez ustalanie limitów na określone okresy. Aplikacja śledzi Twoje wydatki w stosunku do tych limitów i powiadamia Cię, gdy zbliżasz się do limitu lub go przekraczasz.
 
-## Lista budzetow
+## Lista budżetów
 
-Zakladka **Budzety** wyswietla wszystkie aktywne budzety:
+Zakładka **Budżety** wyświetla wszystkie aktywne budżety:
 
-- **Nazwa budzetu** i okres (Dzienny, Tygodniowy, Miesieczny, Roczny, Wlasny)
-- **Pasek postepu** — wizualny wskaznik wydatkow w stosunku do limitu
-- **Kwota wydana** z calkowitego budzetu (np. "2 846 zl z 20 000 zl")
+- **Nazwa budżetu** i okres (Dzienny, Tygodniowy, Miesięczny, Roczny, Własny)
+- **Pasek postępu** — wizualny wskaźnik wydatków w stosunku do limitu
+- **Kwota wydana** z całkowitego budżetu (np. "2 846 zł z 20 000 zł")
 - **Znacznik statusu**:
-  - **W normie** (zielony) — wydatki mieszcza sie w limicie
-  - **Przekroczono budzet** (czerwony) — wydatki przekroczyly limit
-- Kwota **pozostalo** lub kwota przekroczenia
+  - **W normie** (zielony) — wydatki mieszczą się w limicie
+  - **Przekroczono budżet** (czerwony) — wydatki przekroczyły limit
+- Kwota **pozostało** lub kwota przekroczenia
 
-> **Uwaga:** Jezeli nie masz jeszcze zadnych budzetow, zobaczysz komunikat: "Utworz budzet, aby zaczac sledzic swoje limity wydatkow."
+> **Uwaga:** Jeżeli nie masz jeszcze żadnych budżetów, zobaczysz komunikat: "Utwórz budżet, aby zacząć śledzić swoje limity wydatków."
 
-## Tworzenie budzetu
+## Tworzenie budżetu
 
 ### Krok po kroku
 
-1. Dotknij **Utworz budzet** w zakladce Budzety (lub przycisk **+**)
-2. Wprowadz **Nazwe budzetu** (np. "Miesieczne zakupy spozywcze")
-3. Wprowadz **Kwote** — Twoj limit wydatkow
-4. Wybierz **Walute**
-5. Wybierz **Okres**:
-   - **Dzienny** — resetuje sie codziennie
-   - **Tygodniowy** — resetuje sie co tydzien
-   - **Miesieczny** — resetuje sie co miesiac
-   - **Roczny** — resetuje sie co rok
-   - **Wlasny** — ustaw wlasny zakres dat
-6. Opcjonalnie wybierz **Kategorie** — aby sledzic wydatki tylko w konkretnej kategorii (np. "Jedzenie i restauracje"). Pozostaw puste dla budzetu ogolnego sledzacego wszystkie wydatki
-7. Ustaw prog **Powiadom przy** (domyslnie: 80%) — otrzymasz powiadomienie, gdy wydatki osiagna ten procent
-8. Dotknij **Utworz budzet**
+1. Dotknij **Utwórz budżet** w zakładce Budżety (lub przycisk **+**)
+2. Wprowadź **Nazwę budżetu** (np. "Miesięczne zakupy spożywcze")
+3. Wybierz **Walutę**
+4. Wybierz **Tryb budżetu**:
+   - **Ogólny** — jedna łączna kwota, opcjonalnie powiązana z jedną kategorią
+   - **Według kategorii** — podziel budżet między wiele kategorii, każda z własnym limitem
+5. Wprowadź **Kwotę** (tryb Ogólny) lub dodaj kategorie z kwotami (tryb Według kategorii)
+6. Wybierz **Okres**:
+   - **Dzienny** — resetuje się codziennie
+   - **Tygodniowy** — resetuje się co tydzień
+   - **Miesięczny** — resetuje się co miesiąc
+   - **Roczny** — resetuje się co rok
+7. Ustaw próg **Powiadom przy** (domyślnie: 80%) — otrzymasz powiadomienie, gdy wydatki osiągną ten procent
+8. Dotknij **Utwórz budżet**
 
-## Szczegoly budzetu
+### Tryb „Według kategorii"
 
-Dotknij dowolny budzet, aby zobaczyc pelne szczegoly:
+W trybie **Według kategorii** możesz ustawić limit wydatków dla każdej kategorii:
 
-- **Wizualizacja postepu** — pasek pokazujacy wydatki w stosunku do limitu
-- **Status** — W normie lub Przekroczono budzet
-- **Okres** — zakres czasowy budzetu
-- **Kategoria** — sledzona kategoria (lub "Wszystkie" dla budzetow ogolnych)
-- **Prog powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
-- **Pozostalo dni** — ile dni pozostalo w biezacym okresie
-- **Prognozowana suma** — szacowane calkowite wydatki do konca okresu na podstawie obecnego tempa
-- **Aktywny/Nieaktywny** — wlacz lub wylacz budzet
+- Dotknij **Dodaj kategorię**, aby wybrać kategorię z listy
+- Wprowadź kwotę dla każdej kategorii
+- Całkowity budżet równa się sumie wszystkich kategorii
+- Możesz dodać dowolną liczbę kategorii
+
+## Szczegóły budżetu
+
+Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
+
+- **Wizualizacja postępu** — pasek pokazujący wydatki w stosunku do limitu
+- **Status** — W normie lub Przekroczono budżet
+- **Podział na kategorie** — dla budżetów z wieloma kategoriami widoczny jest postęp każdej:
+  - Kolorowa kropka + nazwa kategorii
+  - Wydano / przydzielono
+  - Pasek postępu kategorii (zielony/żółty/czerwony)
+- **Okres** — zakres czasowy budżetu
+- **Próg powiadomienia** — punkt wyzwalania powiadomienia (np. 80%)
+- **Pozostało dni** — ile dni pozostało w bieżącym okresie
+- **Prognozowana suma** — szacowane całkowite wydatki do końca okresu
+- **Aktywny/Nieaktywny** — aktualny status budżetu
 
 ### Akcje:
-- **Edytuj** — zmodyfikuj nazwe, kwote lub ustawienia budzetu
-- **Usun** — usun budzet (z potwierdzeniem)
+- **Edytuj** (ikona ołówka) — zmodyfikuj nazwę, kwotę, kategorie, okres lub próg powiadomienia
+- **Usuń** — usuń budżet (z potwierdzeniem)
 
-## Alerty budzetowe
+## Edytowanie budżetu
 
-Aplikacja automatycznie monitoruje Twoje budzety i wysyla powiadomienia:
+Dotknij **ikony ołówka** na ekranie szczegółów budżetu, aby przejść do trybu edycji:
 
-- **Alert progowy** — gdy wydatki osiagna ustawiony procent alertu (np. 80%)
-- **Alert przekroczenia budzetu** — gdy wydatki przekrocza 100%
-- Kolor paska postepu zmienia sie dynamicznie:
-  - Zielony — ponizej 70% wykorzystania
-  - Zolty/Pomaranczowy — 70-90% wykorzystania
-  - Czerwony — powyzej 90% wykorzystania
+- Zmień nazwę budżetu, walutę, okres lub próg powiadomienia
+- Przełącz między trybami **Ogólny** i **Według kategorii**
+- W trybie Według kategorii: dodawaj, usuwaj lub zmieniaj kwoty kategorii
+- Dotknij **Zapisz**, aby zastosować zmiany, lub **Anuluj**, aby je odrzucić
 
-> **Wskazowka:** Karta Budzetu miesiecznego na Pulpicie pokazuje status Twojego glownego budzetu na pierwszy rzut oka.
+## Alerty budżetowe
+
+Aplikacja automatycznie monitoruje Twoje budżety i wysyła powiadomienia:
+
+- **Alert progowy** — gdy wydatki osiągną ustawiony procent alertu (np. 80%)
+- **Alert przekroczenia budżetu** — gdy wydatki przekroczą 100%
+- Kolor paska postępu zmienia się dynamicznie:
+  - Zielony — poniżej 80% wykorzystania
+  - Żółty/Pomarańczowy — 80–100% wykorzystania
+  - Czerwony — powyżej 100% wykorzystania
+
+> **Wskazówka:** Karta Budżetu miesięcznego na Pulpicie pokazuje status Twojego głównego budżetu na pierwszy rzut oka.
 
 ## FAQ
 
-- **P: Czy moge miec wiele budzetow jednoczesnie?**
-  **O:** Tak! Mozesz tworzyc tyle budzetow, ile potrzebujesz — dla roznych kategorii, okresow lub ogolnych wydatkow.
+- **P: Czy mogę mieć wiele budżetów jednocześnie?**
+  **O:** Tak! Możesz tworzyć tyle budżetów, ile potrzebujesz — dla różnych kategorii, okresów lub ogólnych wydatków.
 
-- **P: Co dzieje sie, gdy okres budzetu sie konczy?**
-  **O:** Budzet automatycznie resetuje sie na nowy okres. Dane o poprzednich wydatkach sa przechowywane w Analityce.
+- **P: Jaka jest różnica między trybem Ogólnym a Według kategorii?**
+  **O:** Ogólny ustawia jeden łączny limit (opcjonalnie dla jednej kategorii). Według kategorii pozwala ustawić osobny limit dla każdej kategorii — przydatne, gdy chcesz śledzić artykuły spożywcze, transport i rozrywkę osobno w ramach jednego budżetu.
 
-- **P: Czy budzet sledzi wydatki we wszystkich walutach?**
-  **O:** Kazdy budzet jest powiazany z jedna waluta. Tylko wydatki w tej walucie sa wliczane do budzetu.
+- **P: Co dzieje się, gdy okres budżetu się kończy?**
+  **O:** Budżet automatycznie resetuje się na nowy okres. Dane o poprzednich wydatkach są przechowywane w Analityce.
+
+- **P: Czy budżet śledzi wydatki we wszystkich walutach?**
+  **O:** Każdy budżet jest powiązany z jedną walutą. Tylko wydatki w tej walucie są wliczane do budżetu.
 
 ---
 
-*Zobacz takze: [Pulpit](./02-dashboard.md) | [Analityka](./06-analytics.md)*
+*Zobacz także: [Pulpit](./02-dashboard.md) | [Analityka](./06-analytics.md)*
