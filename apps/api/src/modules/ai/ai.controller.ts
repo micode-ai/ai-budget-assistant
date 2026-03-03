@@ -23,6 +23,7 @@ import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { SplitSuggestionService } from './services/split-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
+import { ScanReceiptRequestSchema } from '@budget/shared-utils';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -101,18 +102,19 @@ export class AiController {
   @TrackAiUsage('ocr', 2.0)
   async scanReceipt(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { imageBase64: string; userPrompt?: string; mimeType?: string },
+    @Body() body: unknown,
   ) {
-    if (body.mimeType === 'application/pdf') {
+    const { imageBase64, userPrompt, mimeType } = ScanReceiptRequestSchema.parse(body);
+    if (mimeType === 'application/pdf') {
       return this.ocrService.parseReceiptPdf(
-        body.imageBase64,
+        imageBase64,
         req.user.id,
         req.accountId,
-        body.userPrompt,
+        userPrompt,
       );
     }
 
-    return this.ocrService.parseReceipt(body.imageBase64, req.user.id, req.accountId, body.userPrompt);
+    return this.ocrService.parseReceipt(imageBase64, req.user.id, req.accountId, userPrompt);
   }
 
   @Post('extract-text')

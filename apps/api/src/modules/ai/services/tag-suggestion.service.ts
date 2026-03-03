@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
+import { sanitizeForPrompt } from '@budget/shared-utils';
 
 @Injectable()
 export class TagSuggestionService {
@@ -112,9 +113,11 @@ export class TagSuggestionService {
       take: 50,
     });
 
-    const tagList = existingTags.map((t: typeof existingTags[number]) => t.name).join(', ');
+    const safeDescription = sanitizeForPrompt(description, 200);
+    const safeMerchant = merchant ? sanitizeForPrompt(merchant, 100) : undefined;
+    const tagList = existingTags.map((t: typeof existingTags[number]) => sanitizeForPrompt(t.name, 30)).join(', ');
 
-    const prompt = `Given the expense description: "${description}"${merchant ? ` from merchant: "${merchant}"` : ''}
+    const prompt = `Given the expense description: "${safeDescription}"${safeMerchant ? ` from merchant: "${safeMerchant}"` : ''}
 
 Existing tags in this account: ${tagList || 'none yet'}
 

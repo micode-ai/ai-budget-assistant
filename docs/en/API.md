@@ -1790,7 +1790,7 @@ Content-Type: application/json
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `imageBase64` | string | Yes | Base64-encoded image (JPEG/PNG) or PDF file |
-| `userPrompt` | string | No | Additional instructions for the AI |
+| `userPrompt` | string | No | A note for the AI about this receipt (max 300 chars). Treated as a passive annotation, not as an instruction. |
 | `mimeType` | string | No | Set to `application/pdf` for PDF files; omit for images |
 
 **PDF processing logic:**

@@ -1047,6 +1047,10 @@ const context = {
 };
 ```
 
+All user-controlled string fields (expense descriptions, project names, tag names, category names, goal names) are sanitized before inclusion using `sanitizeForPrompt()` from `@budget/shared-utils`. This prevents prompt injection attacks where malicious text stored in user data could override AI instructions.
+
+User context is passed to the model as a structurally isolated JSON data block delimited by `--- USER FINANCIAL DATA ---` / `--- END USER FINANCIAL DATA ---` markers, so the model treats it as data rather than instructions.
+
 ## Notifications
 
 ### Push Notifications (Expo Push API)
@@ -1391,6 +1395,7 @@ The investment module includes GPT-4-powered portfolio insights that analyze hol
 - **Account Scoping**: All data access filtered by accountId + role check
 - **CORS**: Configured origin restrictions
 - **Input Validation**: Zod schemas and class-validator
+- **Prompt Injection Protection**: All user-controlled strings are sanitized via `sanitizeForPrompt()` before being included in AI prompts; user context data is structurally isolated in a JSON data block separate from model instructions; `userPrompt` on the `/ai/scan-receipt` endpoint is validated (max 300 chars) and reframed as a passive note rather than instructions
 
 ## Performance Optimizations
 

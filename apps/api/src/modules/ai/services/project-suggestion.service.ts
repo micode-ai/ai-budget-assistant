@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
+import { sanitizeForPrompt } from '@budget/shared-utils';
 
 @Injectable()
 export class ProjectSuggestionService {
@@ -78,10 +79,22 @@ export class ProjectSuggestionService {
     }
 
     try {
-      const prompt = `Given this expense: "${expense.description}"${expense.locationName ? ` at "${expense.locationName}"` : ''}
+      const safeExpenseDesc = sanitizeForPrompt(expense.description, 200);
+      const safeLoc = expense.locationName ? sanitizeForPrompt(expense.locationName, 100) : null;
+      const safeProjectData = projectDescriptions.map((p: { id: string; name: string; description: string | null; recentExpenses: (string | null)[] }) => ({
+        id: p.id,
+        name: sanitizeForPrompt(p.name, 100),
+        description: p.description ? sanitizeForPrompt(p.description, 200) : null,
+        recentExpenses: p.recentExpenses
+          .map((d: string | null) => d ? sanitizeForPrompt(d, 80) : '')
+          .filter(Boolean)
+          .slice(0, 5),
+      }));
+
+      const prompt = `Given this expense: "${safeExpenseDesc}"${safeLoc ? ` at "${safeLoc}"` : ''}
 
 Active projects:
-${projectDescriptions.map((p: { name: string; description: string | null; recentExpenses: (string | null)[] }) => `- "${p.name}"${p.description ? `: ${p.description}` : ''} (recent: ${p.recentExpenses.join(', ') || 'none'})`).join('\n')}
+${JSON.stringify(safeProjectData)}
 
 Does this expense belong to any of these projects? Return JSON: { "projectId": "id or null", "projectName": "name or null", "confidence": 0.0-1.0 }
 Only suggest if confidence >= 0.6.`;

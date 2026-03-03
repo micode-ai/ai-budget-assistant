@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
+import { sanitizeForPrompt } from '@budget/shared-utils';
 
 export interface ReceiptItem {
   description: string;
@@ -131,7 +132,10 @@ Important:
 - Only return valid JSON, no other text`;
 
     if (userPrompt) {
-      prompt += `\n\nAdditional user instructions:\n${userPrompt}`;
+      const safeNote = sanitizeForPrompt(userPrompt, 200);
+      if (safeNote) {
+        prompt += `\n\nUser note about this receipt: "${safeNote}"`;
+      }
     }
 
     return prompt;
