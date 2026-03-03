@@ -121,7 +121,8 @@ Zustand stores manage application state:
 | `useBudgetStore` | Budget management, progress tracking |
 | `useAccountStore` | Multi-account management, switching |
 | `useChatStore` | AI chat conversations |
-| `useWalletStore` | Wallet balances, currency exchange |
+| `useWalletStore` | Wallet balances, currency exchange, net worth computation |
+| `useExchangeRateStore` | Live exchange rates, base currency, `convertedIncomeTotal`, `convertedExpenseTotal` |
 | `useThemeStore` | Theme preferences, dark mode |
 | `useInsightsStore` | AI insights loading, caching, dismissal |
 | `useTagStore` | Tag CRUD, expense/income tag associations, AI suggestions |
@@ -1100,6 +1101,23 @@ The application uses a tiered subscription model to manage access to AI-powered 
   - `SubscriptionTierGuard` checks that the user's subscription tier meets the minimum required tier for the endpoint
   - `AiUsageGuard` checks that the user has not exceeded their AI usage limit for the current billing period; applies model cost multiplier
 - **AI features** (insights, story) require Pro or Business tier
+
+## Dashboard Widgets (in-app)
+
+The home screen (`app/(tabs)/index.tsx`) renders two financial overview widgets from `src/components/widgets/`:
+
+### Net Profit Widget (`NetProfitWidget`)
+- **Data**: Calls `GET /analytics/summary` for each of the last 6 months in parallel via `Promise.all`
+- **Stores**: `useAccountStore` (account scope), `useAuthStore` (base currency)
+- **Chart**: `InteractiveLineChart` with `lineColor` green (positive) or red (negative)
+- **Refresh**: Accepts `refreshKey: number` prop; increments on pull-to-refresh to re-trigger `useEffect`
+- **Formula**: `netSavings = totalIncome - totalExpenses` computed server-side in `analytics.service.ts`
+
+### Net Capital Widget (`NetCapitalWidget`)
+- **Data**: Reads `walletStore.walletSummary` (already loaded) — no additional API calls
+- **Computation**: `totalNetCapital = Σ convertAmount(s.currentBalance, s.currencyCode, baseCurrency, rates)` using `convertAmount()` from `exchangeRateStore`
+- **Display**: Total in base currency + per-currency breakdown list
+- **Empty state**: Shown when `walletSummary.length === 0` (no initial balances set)
 
 ## Home Screen Widgets
 

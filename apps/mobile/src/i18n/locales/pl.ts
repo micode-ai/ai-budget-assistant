@@ -95,6 +95,10 @@ export default {
     currencyConverter: 'Konwerter',
     totalIncome: 'Łączne przychody w tym miesiącu',
     totalExpenses: 'Łączne wydatki w tym miesiącu',
+    netProfit: 'Zysk netto',
+    netProfitSubtitle: 'Ostatnie 6 miesięcy',
+    netCapital: 'Kapitał netto',
+    netCapitalSubtitle: 'Łączny majątek',
   },
   expenses: {
     noExpenses: 'Brak wydatków',

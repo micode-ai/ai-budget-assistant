@@ -93,6 +93,10 @@ export default {
     currencyConverter: 'Канвертар',
     totalIncome: 'Даходы за гэты месяц',
     totalExpenses: 'Расходы за гэты месяц',
+    netProfit: 'Чысты прыбытак',
+    netProfitSubtitle: 'Апошнія 6 месяцаў',
+    netCapital: 'Чысты капітал',
+    netCapitalSubtitle: 'Агульны стан',
   },
   expenses: {
     noExpenses: 'Расходаў пакуль няма',

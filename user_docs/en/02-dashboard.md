@@ -55,6 +55,25 @@ Tap this card to open the full **Achievements** screen with all badges, streak d
 - Displays your total expenses for the current month in red (e.g., **-$4,838.99**)
 - Tap to go to the **Transactions** tab (Expenses view)
 
+## Net Profit
+
+Below the income and expenses cards, the **Net Profit** widget shows how much money you actually saved or lost this month, and tracks the trend over the last 6 months as a line chart:
+
+- **Current month net profit** — displayed above the chart in green (positive) or red (negative)
+- **6-month trend** — a line chart showing monthly net profit (income − expenses) for the past 6 months
+- Tap a data point on the chart to see the exact value for that month
+
+> **Formula:** Net Profit = Total Income − Total Expenses (both converted to your base currency)
+
+## Net Capital
+
+The **Net Capital** widget shows your total net worth across all wallet currencies, converted to your base currency:
+
+- **Total net capital** — sum of all wallet balances converted to your settings currency, shown in green (positive) or red (negative)
+- **Per-currency breakdown** — each currency's current balance listed below the total
+
+> **Note:** Net Capital only appears after you set your initial wallet balances. See [Wallet & Exchange](./10-wallet-and-exchange.md) to configure them.
+
 ## Fat Finder Card
 
 Below the debts section, the **Fat Finder** card shows a summary of your monthly expense audit:
@@ -87,4 +106,4 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
 
 ---
 
-*See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*
+*See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analytics](./06-analytics.md)*

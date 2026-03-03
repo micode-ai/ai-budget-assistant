@@ -55,6 +55,25 @@ Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami
 - Wyswietla laczne wydatki za biezacy miesiac na czerwono (np. **-4 838,99 $**)
 - Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
+## Zysk netto
+
+Ponizej kart przychodow i wydatkow widget **Zysk netto** pokazuje, ile pieniedzy naprawde zaoszczedziles lub straciles w tym miesiacu, i sledzi trend z ostatnich 6 miesiecy jako wykres liniowy:
+
+- **Zysk netto biezacego miesiaca** — wyswietlany nad wykresem na zielono (dodatni) lub czerwono (ujemny)
+- **Trend 6-miesiczny** — wykres liniowy miesicznego zysku netto (przychody − wydatki) z ostatnich 6 miesiecy
+- Dotknij punktu danych, aby zobaczyc dokladna wartosc za dany miesiac
+
+> **Wzor:** Zysk netto = Laczne przychody − Laczne wydatki (oba przeliczone na walute bazowa)
+
+## Kapital netto
+
+Widget **Kapital netto** pokazuje Twoj laczny majatek netto we wszystkich portfelach walutowych, przeliczony na walute bazowa:
+
+- **Laczny kapital netto** — suma wszystkich sald portfela przeliczona na walute ustawien, na zielono (dodatni) lub czerwono (ujemny)
+- **Podzial wedlug walut** — biezace saldo kazdej waluty jest wymienione ponizej sumy
+
+> **Uwaga:** Widget Kapital netto pojawia sie dopiero po ustawieniu sald poczatkowych portfela. Zobacz [Portfel i wymiana walut](./10-wallet-and-exchange.md), aby je skonfigurowac.
+
 ## Karta Tropiciela wydatkow
 
 Ponizej sekcji zobowiazan karta **Tropiciel wydatkow** pokazuje podsumowanie Twojego miesiecznego audytu wydatkow:
@@ -87,4 +106,4 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 
 ---
 
-*Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Portfel i wymiana walut](./10-wallet-and-exchange.md) | [Tropiciel wydatkow](./19-fat-finder.md)*
+*Zobacz takze: [Wydatki i przychody](./03-expenses-and-income.md) | [Portfel i wymiana walut](./10-wallet-and-exchange.md) | [Tropiciel wydatkow](./19-fat-finder.md) | [Analizy](./06-analytics.md)*

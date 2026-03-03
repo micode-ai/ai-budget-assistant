@@ -49,8 +49,8 @@ export function InteractiveLineChart({
     );
   }
 
-  // Account for container padding (32px) + y-axis labels (~50px)
-  const chartWidth = screenWidth - 90;
+  // Account for card padding (16*2=32) + y-axis labels (~50px) + right padding for last label (~30px)
+  const chartWidth = screenWidth - 120;
 
   const lineData = data.map((point, index) => ({
     value: point.value,
@@ -72,7 +72,7 @@ export function InteractiveLineChart({
     ),
   }));
 
-  const maxValue = Math.max(...data.map((d) => d.value), 1);
+  const maxValue = Math.max(...data.map((d) => Math.abs(d.value)), 1);
 
   return (
     <View style={styles.container}>
@@ -115,10 +115,10 @@ export function InteractiveLineChart({
         textColor={theme.colors.textSecondary}
         hideDataPoints={false}
         initialSpacing={8}
-        endSpacing={8}
+        endSpacing={30}
         spacing={
           data.length > 1
-            ? Math.max(30, (chartWidth - 16) / (data.length - 1))
+            ? Math.max(30, (chartWidth - 38) / (data.length - 1))
             : chartWidth
         }
       />
