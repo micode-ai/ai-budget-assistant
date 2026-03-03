@@ -107,6 +107,12 @@ export default {
     scanReceipt: 'Сканаваць чэк',
     tabExpenses: 'Расходы',
     tabIncome: 'Даходы',
+    periodWeek: 'Тыдзень',
+    periodMonth: 'Месяц',
+    periodYear: 'Год',
+    periodAll: 'Усё',
+    periodCustom: 'Абраць',
+    categoryAll: 'Усе',
   },
   incomes: {
     noIncomes: 'Даходаў пакуль няма',

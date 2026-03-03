@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { Expense, Income } from '@budget/shared-types';
@@ -23,6 +24,7 @@ export default function ExpensesScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('expenses');
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   useEffect(() => {
     if (tab === 'income' || tab === 'expenses') {
@@ -34,6 +36,10 @@ export default function ExpensesScreen() {
   const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();
   const incomes = getFilteredIncomes();
+  const allCategories = useCategoryStore((s) => s.categories);
+  const categories = allCategories.filter(
+    (c) => c.type === (activeTab === 'expenses' ? 'expense' : 'income') && !c.isDeleted
+  );
   const fabAnimation = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -157,7 +163,7 @@ export default function ExpensesScreen() {
       <View style={styles.segmentedControl}>
         <TouchableOpacity
           style={[styles.segmentButton, activeTab === 'expenses' && styles.segmentButtonActive]}
-          onPress={() => setActiveTab('expenses')}
+          onPress={() => { setActiveTab('expenses'); setIncomeFilters({ categoryId: null }); setShowCategoryPicker(false); }}
         >
           <Text style={[styles.segmentText, activeTab === 'expenses' && styles.segmentTextActive]}>
             {t('expenses.tabExpenses')}
@@ -165,7 +171,7 @@ export default function ExpensesScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.segmentButton, activeTab === 'income' && styles.segmentButtonActive]}
-          onPress={() => setActiveTab('income')}
+          onPress={() => { setActiveTab('income'); setExpenseFilters({ categoryId: null }); setShowCategoryPicker(false); }}
         >
           <Text style={[styles.segmentText, activeTab === 'income' && styles.segmentTextActive]}>
             {t('expenses.tabIncome')}
@@ -201,6 +207,79 @@ export default function ExpensesScreen() {
           );
         })}
       </ScrollView>
+
+      {/* Category Filter */}
+      {(() => {
+        const currentFilters = activeTab === 'expenses' ? expenseFilters : incomeFilters;
+        const isExpense = activeTab === 'expenses';
+        const selectedCategory = categories.find((c) => c.id === currentFilters.categoryId);
+        const hasFilter = currentFilters.categoryId !== null;
+        return (
+          <View style={styles.categoryFilterWrapper}>
+            <TouchableOpacity
+              style={[styles.categoryFilterButton, hasFilter && (isExpense ? styles.categoryFilterButtonActive : styles.categoryFilterButtonActiveIncome)]}
+              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+            >
+              {selectedCategory?.icon ? (
+                <Ionicons
+                  name={selectedCategory.icon as any}
+                  size={14}
+                  color={hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textTertiary}
+                />
+              ) : (
+                <Ionicons name="pricetag-outline" size={14} color={hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textTertiary} />
+              )}
+              <Text style={[styles.categoryFilterButtonText, hasFilter && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                {selectedCategory ? selectedCategory.name : t('expenses.categoryAll')}
+              </Text>
+              <Ionicons name={showCategoryPicker ? 'chevron-up' : 'chevron-down'} size={14} color={hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textTertiary} />
+            </TouchableOpacity>
+
+            {showCategoryPicker && (
+              <View style={styles.categoryPickerContainer}>
+                <TouchableOpacity
+                  style={[styles.categoryPickerItem, !hasFilter && styles.categoryPickerItemSelected]}
+                  onPress={() => {
+                    if (isExpense) setExpenseFilters({ categoryId: null });
+                    else setIncomeFilters({ categoryId: null });
+                    setShowCategoryPicker(false);
+                  }}
+                >
+                  <Ionicons name="list-outline" size={18} color={!hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
+                  <Text style={[styles.categoryPickerItemText, !hasFilter && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                    {t('expenses.categoryAll')}
+                  </Text>
+                  {!hasFilter && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
+                </TouchableOpacity>
+                {categories.map((cat) => {
+                  const isSelected = currentFilters.categoryId === cat.id;
+                  return (
+                    <TouchableOpacity
+                      key={cat.id}
+                      style={[styles.categoryPickerItem, isSelected && styles.categoryPickerItemSelected]}
+                      onPress={() => {
+                        if (isExpense) setExpenseFilters({ categoryId: cat.id });
+                        else setIncomeFilters({ categoryId: cat.id });
+                        setShowCategoryPicker(false);
+                      }}
+                    >
+                      {cat.icon ? (
+                        <Ionicons name={cat.icon as any} size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
+                      ) : (
+                        <Ionicons name="pricetag-outline" size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
+                      )}
+                      <Text style={[styles.categoryPickerItemText, isSelected && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                        {cat.name}
+                      </Text>
+                      {isSelected && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        );
+      })()}
 
       {/* Month/Year Navigator (visible when custom is selected) */}
       {(() => {
@@ -481,6 +560,68 @@ const createStyles = (theme: Theme) => ({
   periodChipTextActive: {
     color: theme.colors.primary,
   },
+  categoryChipTextActive: {
+    color: theme.colors.primary,
+  },
+  categoryChipTextActiveIncome: {
+    color: theme.colors.success,
+  },
+  categoryFilterWrapper: {
+    paddingHorizontal: theme.spacing[4],
+    paddingBottom: theme.spacing[2],
+    zIndex: 10,
+  },
+  categoryFilterButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    alignSelf: 'flex-start' as const,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius['3xl'],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderWidth: 1,
+    borderColor: theme.colors.borderLight,
+  },
+  categoryFilterButtonActive: {
+    backgroundColor: theme.colors.primaryLight,
+    borderColor: theme.colors.primary,
+  },
+  categoryFilterButtonActiveIncome: {
+    backgroundColor: theme.colors.success + '18',
+    borderColor: theme.colors.success,
+  },
+  categoryFilterButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textTertiary,
+  },
+  categoryPickerContainer: {
+    marginTop: theme.spacing[1],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    overflow: 'hidden' as const,
+    ...theme.shadows.md,
+  },
+  categoryPickerItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.borderLight,
+  },
+  categoryPickerItemSelected: {
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  categoryPickerItemText: {
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  categoryPickerCheck: {},
   monthNavigator: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

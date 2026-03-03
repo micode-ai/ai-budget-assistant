@@ -114,6 +114,7 @@ export default {
     periodYear: 'Рік',
     periodAll: 'Усі',
     periodCustom: 'Обрати',
+    categoryAll: 'Всі',
   },
   incomes: {
     noIncomes: 'Доходів ще немає',

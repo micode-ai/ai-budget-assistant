@@ -114,6 +114,7 @@ export default {
     periodYear: 'Jahr',
     periodAll: 'Alle',
     periodCustom: 'Benutzerdefiniert',
+    categoryAll: 'Alle',
   },
   incomes: {
     noIncomes: 'Noch kein Einkommen',
