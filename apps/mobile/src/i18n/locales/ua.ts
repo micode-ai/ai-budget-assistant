@@ -95,6 +95,10 @@ export default {
     currencyConverter: 'Конвертер',
     totalIncome: 'Доходи за цей місяць',
     totalExpenses: 'Витрати за цей місяць',
+    netProfit: 'Чистий прибуток',
+    netProfitSubtitle: 'Останні 6 місяців',
+    netCapital: 'Чистий капітал',
+    netCapitalSubtitle: 'Загальний стан',
   },
   expenses: {
     noExpenses: 'Витрат ще немає',

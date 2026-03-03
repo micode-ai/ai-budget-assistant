@@ -28,9 +28,11 @@ import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
+import { NetProfitWidget, NetCapitalWidget } from '@/components/widgets';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const [widgetRefreshKey, setWidgetRefreshKey] = useState(0);
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const { loadExpenses } = useExpenseStore();
@@ -81,6 +83,7 @@ export default function DashboardScreen() {
       await loadDebts();
     } finally {
       setRefreshing(false);
+      setWidgetRefreshKey((k) => k + 1);
     }
   }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
@@ -279,6 +282,9 @@ export default function DashboardScreen() {
             </View>
           </TouchableOpacity>
         )}
+
+        <NetProfitWidget refreshKey={widgetRefreshKey} />
+        <NetCapitalWidget />
 
         <FatFinderCard />
 

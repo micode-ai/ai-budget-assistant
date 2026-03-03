@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
 import { resolveAiModel } from './model-resolver';
-import { sanitizeForPrompt } from '@budget/shared-utils';
+import { sanitizeForPrompt } from '../utils/sanitize';
 
 @Injectable()
 export class GoalPlannerService {

@@ -23,7 +23,7 @@ import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { SplitSuggestionService } from './services/split-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
-import { ScanReceiptRequestSchema } from '@budget/shared-utils';
+import { ScanReceiptRequestSchema } from './utils/sanitize';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, AccountContextGuard)

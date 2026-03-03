@@ -55,6 +55,25 @@ Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las in
 - Muestra tus gastos totales del mes actual en rojo (por ejemplo, **-$4,838.99**)
 - Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
+## Beneficio neto
+
+Debajo de las tarjetas de ingresos y gastos, el widget de **Beneficio neto** muestra cuanto dinero has ahorrado o perdido realmente este mes y rastrea la tendencia de los ultimos 6 meses como un grafico de lineas:
+
+- **Beneficio neto del mes actual** — se muestra encima del grafico en verde (positivo) o rojo (negativo)
+- **Tendencia de 6 meses** — grafico de lineas con el beneficio neto mensual (ingresos − gastos) de los ultimos 6 meses
+- Toca un punto de datos para ver el valor exacto de ese mes
+
+> **Formula:** Beneficio neto = Ingresos totales − Gastos totales (ambos convertidos a tu moneda base)
+
+## Capital neto
+
+El widget de **Capital neto** muestra tu patrimonio total en todas las billeteras de divisas, convertido a tu moneda base:
+
+- **Capital neto total** — suma de todos los saldos de la billetera convertidos a la moneda de configuracion, en verde (positivo) o rojo (negativo)
+- **Desglose por moneda** — el saldo actual de cada moneda aparece listado debajo del total
+
+> **Nota:** El widget de Capital neto solo aparece despues de establecer tus saldos iniciales de billetera. Consulta [Billetera y Cambio](./10-wallet-and-exchange.md) para configurarlos.
+
 ## Tarjeta Fat Finder
 
 Debajo de la seccion de deudas, la tarjeta del **Fat Finder** muestra un resumen de tu auditoria mensual de gastos:
@@ -87,4 +106,4 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
 
 ---
 
-*Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*
+*Ver tambien: [Gastos e Ingresos](./03-expenses-and-income.md) | [Billetera y Cambio](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analiticas](./06-analytics.md)*

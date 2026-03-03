@@ -55,6 +55,25 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez
 - Affiche vos depenses totales du mois en cours en rouge (par ex. **-4 838,99 $**)
 - Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
+## Benefice net
+
+Sous les cartes de revenus et de depenses, le widget **Benefice net** indique combien d'argent vous avez reellement economise ou perdu ce mois-ci, et suit la tendance des 6 derniers mois sous forme de graphique en courbes :
+
+- **Benefice net du mois en cours** — affiche au-dessus du graphique en vert (positif) ou en rouge (negatif)
+- **Tendance sur 6 mois** — graphique en courbes du benefice net mensuel (revenus − depenses) des 6 derniers mois
+- Appuyez sur un point de donnees pour voir la valeur exacte de ce mois
+
+> **Formule :** Benefice net = Revenus totaux − Depenses totales (tous deux convertis dans votre devise de base)
+
+## Capital net
+
+Le widget **Capital net** affiche votre patrimoine total sur tous vos portefeuilles de devises, converti dans votre devise de base :
+
+- **Capital net total** — somme de tous les soldes du portefeuille convertis dans la devise des parametres, en vert (positif) ou en rouge (negatif)
+- **Ventilation par devise** — le solde actuel de chaque devise est liste en dessous du total
+
+> **Note :** Le widget Capital net n'apparait qu'apres avoir defini vos soldes initiaux de portefeuille. Consultez [Portefeuille et change](./10-wallet-and-exchange.md) pour les configurer.
+
 ## Carte Fat Finder
 
 Sous la section des dettes, la carte **Fat Finder** affiche un resume de votre audit mensuel de depenses :
@@ -87,4 +106,4 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
 
 ---
 
-*Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*
+*Voir aussi : [Depenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analyses](./06-analytics.md)*

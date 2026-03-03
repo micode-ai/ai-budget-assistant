@@ -11,7 +11,7 @@ import { BudgetsService } from '../../budgets/budgets.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { AnalyticsService } from '../../analytics/analytics.service';
 import type { ChatActionType, ChatPendingAction, ChatActionResult } from '@budget/shared-types';
-import { sanitizeForPrompt } from '@budget/shared-utils';
+import { sanitizeForPrompt } from '../utils/sanitize';
 
 interface UserContext {
   totalSpentThisMonth: number;

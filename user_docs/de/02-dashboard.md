@@ -55,6 +55,25 @@ Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo 
 - Zeigt deine Gesamtausgaben fur den aktuellen Monat in rot an (z.B. **-4.838,99 $**)
 - Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
+## Nettogewinn
+
+Unterhalb der Einkommen- und Ausgabenkarten zeigt das **Nettogewinn**-Widget, wie viel Geld du in diesem Monat tatsachlich gespart oder verloren hast, und verfolgt den Trend der letzten 6 Monate als Liniendiagramm:
+
+- **Nettogewinn des aktuellen Monats** — wird oberhalb des Diagramms grun (positiv) oder rot (negativ) angezeigt
+- **6-Monats-Trend** — Liniendiagramm mit dem monatlichen Nettogewinn (Einkommen − Ausgaben) der letzten 6 Monate
+- Tippe auf einen Datenpunkt, um den genauen Wert fur diesen Monat zu sehen
+
+> **Formel:** Nettogewinn = Gesamteinkommen − Gesamtausgaben (beide in Basiswahrung umgerechnet)
+
+## Nettokapital
+
+Das **Nettokapital**-Widget zeigt dein gesamtes Nettovermogen uber alle Wahrungsgeldborsen, umgerechnet in deine Basiswahrung:
+
+- **Gesamtes Nettokapital** — Summe aller Geldborsensalden in der eingestellten Wahrung, grun (positiv) oder rot (negativ)
+- **Aufschlusselung nach Wahrung** — der aktuelle Saldo jeder Wahrung wird darunter aufgefuhrt
+
+> **Hinweis:** Das Nettokapital-Widget erscheint erst, nachdem du deine anfanglichen Geldborsensalden gesetzt hast. Siehe [Geldborse & Umtausch](./10-wallet-and-exchange.md) zur Einrichtung.
+
 ## Fat-Finder-Karte
 
 Unterhalb des Schuldenbereichs zeigt die **Fat-Finder**-Karte eine Zusammenfassung deiner monatlichen Ausgabenprufung:
@@ -87,4 +106,4 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
 
 ---
 
-*Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [Geldborse & Umtausch](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md)*
+*Siehe auch: [Ausgaben & Einkommen](./03-expenses-and-income.md) | [Geldborse & Umtausch](./10-wallet-and-exchange.md) | [Fat Finder](./19-fat-finder.md) | [Analysen](./06-analytics.md)*

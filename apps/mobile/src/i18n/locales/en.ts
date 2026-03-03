@@ -95,6 +95,10 @@ export default {
     currencyConverter: 'Converter',
     totalIncome: 'Total Income This Month',
     totalExpenses: 'Total Expenses This Month',
+    netProfit: 'Net Profit',
+    netProfitSubtitle: 'Last 6 months',
+    netCapital: 'Net Capital',
+    netCapitalSubtitle: 'Total net worth',
   },
   expenses: {
     noExpenses: 'No expenses yet',

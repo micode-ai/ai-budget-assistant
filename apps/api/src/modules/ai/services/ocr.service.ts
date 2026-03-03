@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
-import { sanitizeForPrompt } from '@budget/shared-utils';
+import { sanitizeForPrompt } from '../utils/sanitize';
 
 export interface ReceiptItem {
   description: string;

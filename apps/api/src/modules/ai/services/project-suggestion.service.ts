@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
-import { sanitizeForPrompt } from '@budget/shared-utils';
+import { sanitizeForPrompt } from '../utils/sanitize';
 
 @Injectable()
 export class ProjectSuggestionService {

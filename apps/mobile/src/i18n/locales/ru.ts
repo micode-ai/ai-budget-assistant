@@ -95,6 +95,10 @@ export default {
     currencyConverter: 'Конвертер',
     totalIncome: 'Доходы за этот месяц',
     totalExpenses: 'Расходы за этот месяц',
+    netProfit: 'Чистая прибыль',
+    netProfitSubtitle: 'Последние 6 месяцев',
+    netCapital: 'Чистый капитал',
+    netCapitalSubtitle: 'Общее состояние',
   },
   expenses: {
     noExpenses: 'Расходов пока нет',

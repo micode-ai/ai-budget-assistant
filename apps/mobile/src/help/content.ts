@@ -200,6 +200,25 @@ Tap this card to open the full **Achievements** screen with all badges, streak d
 - Displays your total expenses for the current month in red (e.g., **-\$4,838.99**)
 - Tap to go to the **Transactions** tab (Expenses view)
 
+## Net Profit
+
+Below the income and expenses cards, the **Net Profit** widget shows how much money you actually saved or lost this month, and tracks the trend over the last 6 months as a line chart:
+
+- **Current month net profit** — displayed above the chart in green (positive) or red (negative)
+- **6-month trend** — a line chart showing monthly net profit (income − expenses) for the past 6 months
+- Tap a data point on the chart to see the exact value for that month
+
+> **Formula:** Net Profit = Total Income − Total Expenses (both converted to your base currency)
+
+## Net Capital
+
+The **Net Capital** widget shows your total net worth across all wallet currencies, converted to your base currency:
+
+- **Total net capital** — sum of all wallet balances converted to your settings currency, shown in green (positive) or red (negative)
+- **Per-currency breakdown** — each currency's current balance listed below the total
+
+> **Note:** Net Capital only appears after you set your initial wallet balances. See Wallet & Exchange to configure them.
+
 ## Fat Finder Card
 
 Below the debts section, the **Fat Finder** card shows a summary of your monthly expense audit:
@@ -232,7 +251,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
 
 ---
 
-*See also: Expenses & Income | Wallet & Exchange | Fat Finder*
+*See also: Expenses & Income | Wallet & Exchange | Fat Finder | Analytics*
 `,
     },
     {
@@ -2904,6 +2923,25 @@ iOS, Android, Web
 - Показывает общие расходы за текущий месяц красным цветом (например, **-\$4 838,99**)
 - Нажмите для перехода на вкладку **Транзакции** (вид расходов)
 
+## Чистая прибыль
+
+Под карточками доходов и расходов виджет **Чистая прибыль** показывает, сколько денег вы реально сэкономили или потратили в этом месяце, и отслеживает тренд за последние 6 месяцев в виде линейного графика:
+
+- **Чистая прибыль за текущий месяц** — отображается над графиком зелёным (положительная) или красным (отрицательная) цветом
+- **Тренд за 6 месяцев** — линейный график ежемесячной чистой прибыли (доходы − расходы) за последние 6 месяцев
+- Нажмите на точку графика, чтобы увидеть точное значение за этот месяц
+
+> **Формула:** Чистая прибыль = Общий доход − Общие расходы (оба показателя конвертируются в базовую валюту)
+
+## Чистый капитал
+
+Виджет **Чистый капитал** показывает ваше общее состояние по всем валютным кошелькам, конвертированное в базовую валюту:
+
+- **Общий чистый капитал** — сумма всех балансов кошелька, конвертированная в валюту настроек, отображается зелёным (положительный) или красным (отрицательный) цветом
+- **Разбивка по валютам** — текущий баланс каждой валюты перечислен ниже общей суммы
+
+> **Примечание:** Виджет «Чистый капитал» появляется только после установки начальных балансов кошелька. Смотрите Кошелёк и обмен валют для настройки.
+
 ## Карточка «Поиск лишних трат»
 
 Под секцией долгов карточка **Поиск лишних трат** показывает сводку вашего ежемесячного аудита расходов:
@@ -2936,7 +2974,7 @@ iOS, Android, Web
 
 ---
 
-*См. также: Расходы и доходы | Кошелёк и обмен валют | Поиск лишних трат*
+*См. также: Расходы и доходы | Кошелёк и обмен валют | Поиск лишних трат | Аналитика*
 `,
     },
     {
@@ -5621,6 +5659,25 @@ iOS, Android, Web
 - Відображає загальні витрати за поточний місяць червоним кольором (наприклад, **-\$4,838.99**)
 - Натисніть, щоб перейти на вкладку **Транзакції** (перегляд витрат)
 
+## Чистий прибуток
+
+Під картками доходів та витрат віджет **Чистий прибуток** показує, скільки грошей ви реально заощадили або витратили цього місяця, і відстежує тренд за останні 6 місяців у вигляді лінійного графіка:
+
+- **Чистий прибуток за поточний місяць** — відображається над графіком зеленим (позитивний) або червоним (від'ємний) кольором
+- **Тренд за 6 місяців** — лінійний графік щомісячного чистого прибутку (доходи − витрати) за останні 6 місяців
+- Натисніть на точку графіка, щоб побачити точне значення за цей місяць
+
+> **Формула:** Чистий прибуток = Загальний дохід − Загальні витрати (обидва показники конвертуються в базову валюту)
+
+## Чистий капітал
+
+Віджет **Чистий капітал** показує ваш загальний стан за всіма валютними гаманцями, конвертований у базову валюту:
+
+- **Загальний чистий капітал** — сума всіх балансів гаманця, конвертована у валюту налаштувань, відображається зеленим (позитивний) або червоним (від'ємний) кольором
+- **Розбивка за валютами** — поточний баланс кожної валюти перераховано нижче загальної суми
+
+> **Примітка:** Віджет «Чистий капітал» з'являється лише після встановлення початкових балансів гаманця. Дивіться Гаманець та обмін валют для налаштування.
+
 ## Картка «Пошук зайвих витрат»
 
 Під секцією боргів картка **Пошук зайвих витрат** показує зведення вашого щомісячного аудиту витрат:
@@ -5653,7 +5710,7 @@ iOS, Android, Web
 
 ---
 
-*Див. також: Витрати та доходи | Гаманець та обмін валют | Пошук зайвих витрат*
+*Див. також: Витрати та доходи | Гаманець та обмін валют | Пошук зайвих витрат | Аналітика*
 `,
     },
     {
@@ -8314,6 +8371,25 @@ Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami
 - Wyswietla laczne wydatki za biezacy miesiac na czerwono (np. **-4 838,99 \$**)
 - Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
+## Zysk netto
+
+Ponizej kart przychodow i wydatkow widget **Zysk netto** pokazuje, ile pieniedzy naprawde zaoszczedziles lub straciles w tym miesiacu, i sledzi trend z ostatnich 6 miesiecy jako wykres liniowy:
+
+- **Zysk netto biezacego miesiaca** — wyswietlany nad wykresem na zielono (dodatni) lub czerwono (ujemny)
+- **Trend 6-miesiczny** — wykres liniowy miesicznego zysku netto (przychody − wydatki) z ostatnich 6 miesiecy
+- Dotknij punktu danych, aby zobaczyc dokladna wartosc za dany miesiac
+
+> **Wzor:** Zysk netto = Laczne przychody − Laczne wydatki (oba przeliczone na walute bazowa)
+
+## Kapital netto
+
+Widget **Kapital netto** pokazuje Twoj laczny majatek netto we wszystkich portfelach walutowych, przeliczony na walute bazowa:
+
+- **Laczny kapital netto** — suma wszystkich sald portfela przeliczona na walute ustawien, na zielono (dodatni) lub czerwono (ujemny)
+- **Podzial wedlug walut** — biezace saldo kazdej waluty jest wymienione ponizej sumy
+
+> **Uwaga:** Widget Kapital netto pojawia sie dopiero po ustawieniu sald poczatkowych portfela. Zobacz Portfel i wymiana walut, aby je skonfigurowac.
+
 ## Karta Tropiciela wydatkow
 
 Ponizej sekcji zobowiazan karta **Tropiciel wydatkow** pokazuje podsumowanie Twojego miesiecznego audytu wydatkow:
@@ -8346,7 +8422,7 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 
 ---
 
-*Zobacz takze: Wydatki i przychody | Portfel i wymiana walut | Tropiciel wydatkow*
+*Zobacz takze: Wydatki i przychody | Portfel i wymiana walut | Tropiciel wydatkow | Analizy*
 `,
     },
     {
@@ -11002,6 +11078,25 @@ Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo 
 - Zeigt deine Gesamtausgaben fur den aktuellen Monat in rot an (z.B. **-4.838,99 \$**)
 - Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
+## Nettogewinn
+
+Unterhalb der Einkommen- und Ausgabenkarten zeigt das **Nettogewinn**-Widget, wie viel Geld du in diesem Monat tatsachlich gespart oder verloren hast, und verfolgt den Trend der letzten 6 Monate als Liniendiagramm:
+
+- **Nettogewinn des aktuellen Monats** — wird oberhalb des Diagramms grun (positiv) oder rot (negativ) angezeigt
+- **6-Monats-Trend** — Liniendiagramm mit dem monatlichen Nettogewinn (Einkommen − Ausgaben) der letzten 6 Monate
+- Tippe auf einen Datenpunkt, um den genauen Wert fur diesen Monat zu sehen
+
+> **Formel:** Nettogewinn = Gesamteinkommen − Gesamtausgaben (beide in Basiswahrung umgerechnet)
+
+## Nettokapital
+
+Das **Nettokapital**-Widget zeigt dein gesamtes Nettovermogen uber alle Wahrungsgeldborsen, umgerechnet in deine Basiswahrung:
+
+- **Gesamtes Nettokapital** — Summe aller Geldborsensalden in der eingestellten Wahrung, grun (positiv) oder rot (negativ)
+- **Aufschlusselung nach Wahrung** — der aktuelle Saldo jeder Wahrung wird darunter aufgefuhrt
+
+> **Hinweis:** Das Nettokapital-Widget erscheint erst, nachdem du deine anfanglichen Geldborsensalden gesetzt hast. Siehe Geldborse & Umtausch zur Einrichtung.
+
 ## Fat-Finder-Karte
 
 Unterhalb des Schuldenbereichs zeigt die **Fat-Finder**-Karte eine Zusammenfassung deiner monatlichen Ausgabenprufung:
@@ -11034,7 +11129,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
 
 ---
 
-*Siehe auch: Ausgaben & Einkommen | Geldborse & Umtausch | Fat Finder*
+*Siehe auch: Ausgaben & Einkommen | Geldborse & Umtausch | Fat Finder | Analysen*
 `,
     },
     {
@@ -13690,6 +13785,25 @@ Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las in
 - Muestra tus gastos totales del mes actual en rojo (por ejemplo, **-\$4,838.99**)
 - Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
+## Beneficio neto
+
+Debajo de las tarjetas de ingresos y gastos, el widget de **Beneficio neto** muestra cuanto dinero has ahorrado o perdido realmente este mes y rastrea la tendencia de los ultimos 6 meses como un grafico de lineas:
+
+- **Beneficio neto del mes actual** — se muestra encima del grafico en verde (positivo) o rojo (negativo)
+- **Tendencia de 6 meses** — grafico de lineas con el beneficio neto mensual (ingresos − gastos) de los ultimos 6 meses
+- Toca un punto de datos para ver el valor exacto de ese mes
+
+> **Formula:** Beneficio neto = Ingresos totales − Gastos totales (ambos convertidos a tu moneda base)
+
+## Capital neto
+
+El widget de **Capital neto** muestra tu patrimonio total en todas las billeteras de divisas, convertido a tu moneda base:
+
+- **Capital neto total** — suma de todos los saldos de la billetera convertidos a la moneda de configuracion, en verde (positivo) o rojo (negativo)
+- **Desglose por moneda** — el saldo actual de cada moneda aparece listado debajo del total
+
+> **Nota:** El widget de Capital neto solo aparece despues de establecer tus saldos iniciales de billetera. Consulta Billetera y Cambio para configurarlos.
+
 ## Tarjeta Fat Finder
 
 Debajo de la seccion de deudas, la tarjeta del **Fat Finder** muestra un resumen de tu auditoria mensual de gastos:
@@ -13722,7 +13836,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
 
 ---
 
-*Ver tambien: Gastos e Ingresos | Billetera y Cambio | Fat Finder*
+*Ver tambien: Gastos e Ingresos | Billetera y Cambio | Fat Finder | Analiticas*
 `,
     },
     {
@@ -16378,6 +16492,25 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez
 - Affiche vos depenses totales du mois en cours en rouge (par ex. **-4 838,99 \$**)
 - Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
+## Benefice net
+
+Sous les cartes de revenus et de depenses, le widget **Benefice net** indique combien d'argent vous avez reellement economise ou perdu ce mois-ci, et suit la tendance des 6 derniers mois sous forme de graphique en courbes :
+
+- **Benefice net du mois en cours** — affiche au-dessus du graphique en vert (positif) ou en rouge (negatif)
+- **Tendance sur 6 mois** — graphique en courbes du benefice net mensuel (revenus − depenses) des 6 derniers mois
+- Appuyez sur un point de donnees pour voir la valeur exacte de ce mois
+
+> **Formule :** Benefice net = Revenus totaux − Depenses totales (tous deux convertis dans votre devise de base)
+
+## Capital net
+
+Le widget **Capital net** affiche votre patrimoine total sur tous vos portefeuilles de devises, converti dans votre devise de base :
+
+- **Capital net total** — somme de tous les soldes du portefeuille convertis dans la devise des parametres, en vert (positif) ou en rouge (negatif)
+- **Ventilation par devise** — le solde actuel de chaque devise est liste en dessous du total
+
+> **Note :** Le widget Capital net n'apparait qu'apres avoir defini vos soldes initiaux de portefeuille. Consultez Portefeuille et change pour les configurer.
+
 ## Carte Fat Finder
 
 Sous la section des dettes, la carte **Fat Finder** affiche un resume de votre audit mensuel de depenses :
@@ -16410,7 +16543,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
 
 ---
 
-*Voir aussi : Depenses et revenus | Portefeuille et change | Fat Finder*
+*Voir aussi : Depenses et revenus | Portefeuille et change | Fat Finder | Analyses*
 `,
     },
     {
@@ -19062,9 +19195,28 @@ iOS, Android, Web
 - Паказвае агульныя выдаткі за бягучы месяц чырвоным колерам (напрыклад, **-\$4 838,99**)
 - Націсніце для пераходу на ўкладку **Транзакцыі** (від выдаткаў)
 
+## Чысты прыбытак
+
+Пад карткамі даходаў і выдаткаў віджэт **Чысты прыбытак** паказвае, колькі грошай вы рэальна зэканомілі або страцілі ў гэтым месяцы, і адсочвае тэндэнцыю за апошнія 6 месяцаў у выглядзе лінейнага графіка:
+
+- **Чысты прыбытак за бягучы месяц** — адлюстроўваецца над графікам зялёным (станоўчы) або чырвоным (адмоўны) колерам
+- **Тэндэнцыя за 6 месяцаў** — лінейны графік штомесачнага чыстага прыбытку (даходы − выдаткі) за апошнія 6 месяцаў
+- Націсніце на кропку графіка, каб убачыць дакладнае значэнне за гэты месяц
+
+> **Формула:** Чысты прыбытак = Агульны даход − Агульныя выдаткі (абодва паказчыкі канвертуюцца ў базавую валюту)
+
+## Чысты капітал
+
+Віджэт **Чысты капітал** паказвае ваш агульны чысты стан па ўсіх валютных кашальках, сканвертаваны ў базавую валюту:
+
+- **Агульны чысты капітал** — сума ўсіх балансаў кашалька, сканвертаваная ў валюту налад, зялёным (станоўчы) або чырвоным (адмоўны) колерам
+- **Разбіўка па валютах** — бягучы баланс кожнай валюты пералічаны ніжэй агульнай сумы
+
+> **Заўвага:** Віджэт «Чысты капітал» з'яўляецца толькі пасля ўстаноўкі пачатковых балансаў кашалька. Глядзіце Кашалёк і абмен валют для наладкі.
+
 ## Картка «Пошук лішніх выдаткаў»
 
-Пад секцыяй даўгоў картка **Пошук лішніх выдаткаў** паказвае зводку вашага штомесячнага аўдыту выдаткаў:
+Пад секцыяй даўгоў картка **Пошук лішніх выдаткаў** паказвае зводку вашага штомесачнага аўдыту выдаткаў:
 
 - **Агульная патэнцыйная эканомія** — колькі вы можаце зэканоміць за месяц
 - **Топ-3 знаходкі** — кароткі спіс з індыкатарамі сур'ёзнасці і сумамі эканоміі
@@ -19094,7 +19246,7 @@ iOS, Android, Web
 
 ---
 
-*Гл. таксама: Выдаткі і даходы | Кашалёк і абмен валют | Пошук лішніх выдаткаў*
+*Гл. таксама: Выдаткі і даходы | Кашалёк і абмен валют | Пошук лішніх выдаткаў | Аналітыка*
 `,
     },
     {
