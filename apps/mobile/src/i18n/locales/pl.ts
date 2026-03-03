@@ -114,6 +114,7 @@ export default {
     periodYear: 'Rok',
     periodAll: 'Wszystko',
     periodCustom: 'Własny',
+    categoryAll: 'Wszystkie',
   },
   incomes: {
     noIncomes: 'Brak przychodów',
