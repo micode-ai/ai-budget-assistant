@@ -297,6 +297,12 @@ export const ChatRequestSchema = z.object({
   conversationId: z.string().uuid().optional(),
 });
 
+export const ScanReceiptRequestSchema = z.object({
+  imageBase64: z.string().min(1),
+  userPrompt: z.string().max(300).optional(),
+  mimeType: z.string().optional(),
+});
+
 // Query parameter schemas
 export const PaginationSchema = z.object({
   page: z.coerce.number().int().min(1).optional().default(1),
@@ -505,6 +511,7 @@ export type UpdateCategoryInput = z.infer<typeof UpdateCategorySchema>;
 export type SyncPushRequestInput = z.infer<typeof SyncPushRequestSchema>;
 export type ParseExpenseRequestInput = z.infer<typeof ParseExpenseRequestSchema>;
 export type ChatRequestInput = z.infer<typeof ChatRequestSchema>;
+export type ScanReceiptRequestInput = z.infer<typeof ScanReceiptRequestSchema>;
 export type ExpenseFiltersInput = z.infer<typeof ExpenseFiltersSchema>;
 export type BudgetFiltersInput = z.infer<typeof BudgetFiltersSchema>;
 export type CreateWalletBalanceInput = z.infer<typeof CreateWalletBalanceSchema>;

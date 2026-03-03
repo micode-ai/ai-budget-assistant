@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
 import { resolveAiModel } from './model-resolver';
+import { sanitizeForPrompt } from '@budget/shared-utils';
 
 @Injectable()
 export class GoalPlannerService {
@@ -87,7 +88,7 @@ export class GoalPlannerService {
       categoryTotals.set(catName, (categoryTotals.get(catName) || 0) + Number(expense.amount));
     }
     const categories = Array.from(categoryTotals.entries())
-      .map(([name, total]) => ({ name, monthlyAvg: Math.round((total / monthsOfData) * 100) / 100 }))
+      .map(([name, total]) => ({ name: sanitizeForPrompt(name, 50), monthlyAvg: Math.round((total / monthsOfData) * 100) / 100 }))
       .sort((a, b) => b.monthlyAvg - a.monthlyAvg)
       .slice(0, 10);
 

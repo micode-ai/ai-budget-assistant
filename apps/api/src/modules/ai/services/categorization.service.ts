@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
+import { sanitizeForPrompt } from '@budget/shared-utils';
 
 interface CategoryWithName {
   id: string;
@@ -101,13 +102,15 @@ export class CategorizationService {
       },
     });
 
-    const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
+    const safeText = sanitizeForPrompt(text, 500);
+    const categoryNames = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50)).join(', ');
 
     const prompt = `Parse the following expense description and extract structured data.
 
-Description: "${text}"
-
+--- INPUT DATA ---
+Description: "${safeText}"
 Available categories: ${categoryNames}
+--- END INPUT DATA ---
 
 Return a JSON object with:
 - amount: number (the expense amount)
@@ -173,8 +176,9 @@ Only return valid JSON, no other text.`;
       },
     });
 
-    const prompt = `Given the expense description: "${description}"
-And these available categories: ${categories.map((c: CategoryWithName) => c.name).join(', ')}
+    const safeDescription = sanitizeForPrompt(description, 500);
+    const prompt = `Given the expense description: "${safeDescription}"
+And these available categories: ${categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50)).join(', ')}
 
 Return a JSON object with:
 - category: the most appropriate category name
