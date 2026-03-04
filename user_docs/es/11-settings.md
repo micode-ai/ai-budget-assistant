@@ -78,6 +78,26 @@ Elige tu tema:
 - **Claro** — siempre usa el tema claro
 - **Oscuro** — siempre usa el tema oscuro
 
+## Widgets del panel
+
+Controla qué secciones aparecen en tu [Panel](./02-dashboard.md). Toca el interruptor junto a cada widget para mostrarlo u ocultarlo:
+
+| Widget | Descripcion |
+|---|---|
+| **Gamificacion** | Nivel, barra de progreso de XP y racha diaria |
+| **Presupuesto mensual** | Presupuesto restante con barra de progreso codificada por colores |
+| **Ingresos totales** | Tus ingresos totales del mes actual |
+| **Gastos totales** | Tus gastos totales del mes actual |
+| **Deudas y prestamos** | Resumen de lo que te deben y lo que debes |
+| **Grafico de beneficio neto** | Grafico de lineas de 6 meses del beneficio neto |
+| **Capital neto** | Patrimonio neto total en todas las billeteras |
+| **Fat Finder (IA)** | Auditoria mensual de gastos con oportunidades de ahorro |
+| **Calendario** | Cuadricula mensual con puntos de ingresos/gastos |
+| **Objetivos** | Objetivo de ahorro activo principal con barra de progreso |
+| **Saldos de billetera** | Desplazamiento horizontal de saldos por moneda |
+
+> **Consejo:** Tus preferencias se guardan automaticamente y persisten entre reinicios.
+
 ## Notificaciones
 
 ![Ajustes — Seccion de Notificaciones](../img/settings.jpg)

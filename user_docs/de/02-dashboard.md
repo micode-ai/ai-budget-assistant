@@ -1,6 +1,6 @@
 # Ubersicht
 
-> Deine Finanzzentrale. Sieh deinen Budgetstatus, Einkommen, Ausgaben und Geldborsensalden auf einen Blick, mit Schnellaktionen zum Hinzufugen von Ausgaben in einem Tipp.
+> Deine Finanzzentrale. Sieh deinen Budgetstatus, Einkommen, Ausgaben und Geldborsensalden auf einen Blick, mit Schnellaktionen zum Hinzufugen von Ausgaben in einem Tipp. Du kannst einzelne Bereiche unter [Einstellungen](./11-settings.md) → Dashboard-Widgets ein- oder ausblenden.
 
 ## Uberblick
 
@@ -127,7 +127,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
   **A:** Du hast noch keine Ausgaben oder Einkommen hinzugefugt. Verwende die Schnellaktions-Schaltflachen, um deine erste Transaktion hinzuzufugen.
 
 - **F: Kann ich anpassen, was auf der Ubersicht angezeigt wird?**
-  **A:** Das Layout der Ubersicht ist fest, passt sich aber an deine Daten an — Geldborsensalden erscheinen erst, nachdem du sie eingerichtet hast, und Budgetkarten erscheinen nur bei aktiven Budgets.
+  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten.
 
 ---
 

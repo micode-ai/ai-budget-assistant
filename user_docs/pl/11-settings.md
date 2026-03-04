@@ -78,6 +78,26 @@ Wybierz motyw:
 - **Jasny** — zawsze uzywa jasnego motywu
 - **Ciemny** — zawsze uzywa ciemnego motywu
 
+## Widgety pulpitu
+
+Kontroluj, ktore sekcje pojawiaja sie na Twoim [Pulpicie](./02-dashboard.md). Dotknij przelacznika obok kazdego widgetu, aby go pokazac lub ukryc:
+
+| Widget | Opis |
+|---|---|
+| **Grywalizacja** | Poziom, pasek postepu XP i codzienna seria |
+| **Miesieczny budzet** | Pozostaly budzet z kolorowym paskiem postepu |
+| **Laczne przychody** | Twoje laczne przychody za biezacy miesiac |
+| **Laczne wydatki** | Twoje laczne wydatki za biezacy miesiac |
+| **Dlugi i pozyczki** | Podsumowanie tego, co ci sie nalezy i co jestes winien |
+| **Wykres zysku netto** | 6-miesiczny wykres liniowy zysku netto |
+| **Kapital netto** | Laczna wartosc netto wszystkich portfeli |
+| **Fat Finder (AI)** | Miesieczny audyt wydatkow z mozliwosciami oszczednosci |
+| **Kalendarz** | Miesieczna siatka z kropkami przychodow/wydatkow |
+| **Cele** | Glowny aktywny cel oszczednosciowy z paskiem postepu |
+| **Salda portfela** | Poziome przewijanie sald wedlug waluty |
+
+> **Wskazowka:** Twoje preferencje sa zapisywane automatycznie i pozostaja po ponownym uruchomieniu.
+
 ## Powiadomienia
 
 ![Ustawienia — sekcja Powiadomienia](../img/settings.jpg)

@@ -1,6 +1,6 @@
 # Panel
 
-> Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque.
+> Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque. Puedes mostrar u ocultar secciones individuales desde [Ajustes](./11-settings.md) → Widgets del panel.
 
 ## Vista general
 
@@ -127,7 +127,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
   **R:** Aun no has agregado ningun gasto o ingreso. Usa los botones de accion rapida para agregar tu primera transaccion.
 
 - **P: Puedo personalizar lo que aparece en el Panel?**
-  **R:** El diseno del Panel es fijo, pero se adapta a tus datos: los saldos de la billetera solo aparecen despues de configurarlos, y las tarjetas de presupuesto solo aparecen con presupuestos activos.
+  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios.
 
 ---
 

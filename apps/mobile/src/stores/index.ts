@@ -6,3 +6,5 @@ export { useChatStore } from './chatStore';
 export { useThemeStore } from './themeStore';
 export { useExchangeRateStore } from './exchangeRateStore';
 export { useGamificationStore } from './gamificationStore';
+export { useWidgetVisibilityStore } from './widgetVisibilityStore';
+export type { WidgetKey } from './widgetVisibilityStore';
