@@ -78,6 +78,26 @@ Choisissez votre theme :
 - **Clair** — toujours utiliser le theme clair
 - **Sombre** — toujours utiliser le theme sombre
 
+## Widgets du tableau de bord
+
+Controlez quelles sections apparaissent sur votre [Tableau de bord](./02-dashboard.md). Appuyez sur le bouton bascule a cote de chaque widget pour l'afficher ou le masquer :
+
+| Widget | Description |
+|---|---|
+| **Gamification** | Niveau, barre de progression XP et serie quotidienne |
+| **Budget mensuel** | Budget restant avec barre de progression codee par couleur |
+| **Revenus totaux** | Vos revenus totaux du mois en cours |
+| **Depenses totales** | Vos depenses totales du mois en cours |
+| **Dettes et prets** | Recapitulatif de ce qu'on vous doit et de vos dettes |
+| **Graphique benefice net** | Graphique lineaire sur 6 mois du benefice net |
+| **Capital net** | Valeur nette totale sur tous les portefeuilles |
+| **Fat Finder (IA)** | Audit mensuel des depenses avec opportunites d'economies |
+| **Calendrier** | Grille mensuelle avec points revenus/depenses |
+| **Objectifs** | Objectif d'epargne principal avec barre de progression |
+| **Soldes du portefeuille** | Defilement horizontal des soldes par devise |
+
+> **Conseil :** Vos preferences sont sauvegardees automatiquement et persistent entre les redemarrages.
+
 ## Notifications
 
 ![Parametres — Section Notifications](../img/settings.jpg)

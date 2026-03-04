@@ -1,6 +1,6 @@
 # Settings
 
-> Customize your profile, appearance, notifications, and data sync. Change your language, currency, theme, and manage your account preferences.
+> Customize your profile, appearance, dashboard widgets, notifications, and data sync. Change your language, currency, theme, and manage your account preferences.
 
 ## Overview
 
@@ -77,6 +77,26 @@ Choose your theme:
 - **System** — follows your device's light/dark mode setting
 - **Light** — always use light theme
 - **Dark** — always use dark theme
+
+## Dashboard Widgets
+
+Control which sections appear on your [Dashboard](./02-dashboard.md). Tap the toggle next to each widget to show or hide it:
+
+| Widget | Description |
+|---|---|
+| **Gamification** | Level, XP progress bar, and daily streak |
+| **Monthly Budget** | Budget remaining with a color-coded progress bar |
+| **Total Income** | Your total income for the current month |
+| **Total Expenses** | Your total expenses for the current month |
+| **Debts & Loans** | Summary of what you are owed and what you owe |
+| **Net Profit Chart** | 6-month line chart of net profit (income − expenses) |
+| **Net Capital** | Total net worth across all wallets |
+| **Fat Finder (AI Insights)** | Monthly spending audit with savings opportunities |
+| **Calendar** | Monthly calendar grid with income/expense dots |
+| **Goals** | Top active savings goal with progress bar |
+| **Wallet Balances** | Horizontal scroll of wallet balances by currency |
+
+> **Tip:** Your choices are saved automatically and persist across app restarts.
 
 ## Notifications
 

@@ -126,6 +126,7 @@ Zustand stores manage application state:
 | `useWalletStore` | Wallet balances, currency exchange, net worth computation |
 | `useExchangeRateStore` | Live exchange rates, base currency, `convertedIncomeTotal`, `convertedExpenseTotal` |
 | `useThemeStore` | Theme preferences, dark mode |
+| `useWidgetVisibilityStore` | Dashboard widget visibility toggles, persisted via MMKV |
 | `useInsightsStore` | AI insights loading, caching, dismissal |
 | `useTagStore` | Tag CRUD, expense/income tag associations, AI suggestions |
 | `useProjectStore` | Project CRUD, expense/income assignment, archiving |

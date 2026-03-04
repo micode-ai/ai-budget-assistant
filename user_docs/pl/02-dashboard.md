@@ -1,6 +1,6 @@
 # Pulpit
 
-> Twoje centrum dowodzenia finansami. Zobacz status budzetu, przychody, wydatki i salda portfela na pierwszy rzut oka, z szybkimi akcjami pozwalajacymi dodac wydatek jednym dotknieciem.
+> Twoje centrum dowodzenia finansami. Zobacz status budzetu, przychody, wydatki i salda portfela na pierwszy rzut oka, z szybkimi akcjami pozwalajacymi dodac wydatek jednym dotknieciem. Mozesz pokazywac lub ukrywac poszczegolne sekcje w [Ustawieniach](./11-settings.md) → Widgety pulpitu.
 
 ## Przeglad
 
@@ -126,8 +126,8 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 - **P: Dlaczego Pulpit pokazuje 0 dla wszystkiego?**
   **O:** Nie dodales jeszcze zadnych wydatkow ani przychodow. Uzyj przyciskow szybkich akcji, aby dodac swoja pierwsza transakcje.
 
-- **P: Czy moge dostosowal wyglad Pulpitu?**
-  **O:** Uklad Pulpitu jest staly, ale dostosowuje sie do Twoich danych — salda portfela pojawiaja sie dopiero po ich skonfigurowaniu, a karty budzetowe tylko przy aktywnych budzetach.
+- **P: Czy moge dostosowac wyglad Pulpitu?**
+  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu.
 
 ---
 

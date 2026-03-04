@@ -30,6 +30,7 @@ import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { NetProfitWidget, NetCapitalWidget, CalendarWidget } from '@/components/widgets';
+import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -46,6 +47,7 @@ export default function DashboardScreen() {
   const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
   const { lentDebts, borrowedDebts, loadDebts } = useDebtStore();
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
+  const { visibility: widgetVisibility } = useWidgetVisibilityStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -186,7 +188,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
+        {widgetVisibility.gamification && <TouchableOpacity style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
           <Text style={styles.gamificationDate}>
             {new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
           </Text>
@@ -218,9 +220,9 @@ export default function DashboardScreen() {
             </View>
           </View>
           <Text style={styles.gamificationLink}>{t('gamification.dashboardWidget.viewAll')}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
 
-        <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
+        {widgetVisibility.monthlyBudget && <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
           </View>
@@ -243,23 +245,27 @@ export default function DashboardScreen() {
               <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
             </View>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity>}
 
-        <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'income' } })}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
-          </View>
-          <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
-        </TouchableOpacity>
+        {widgetVisibility.totalIncome && (
+          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'income' } })}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
+            </View>
+            <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
+          </TouchableOpacity>
+        )}
 
-        <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>{t('dashboard.totalExpenses')}</Text>
-          </View>
-          <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
-        </TouchableOpacity>
+        {widgetVisibility.totalExpenses && (
+          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>{t('dashboard.totalExpenses')}</Text>
+            </View>
+            <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
+          </TouchableOpacity>
+        )}
 
-        {(lentDebts.length > 0 || borrowedDebts.length > 0) && (
+        {widgetVisibility.debts && (lentDebts.length > 0 || borrowedDebts.length > 0) && (
           <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
@@ -284,16 +290,16 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        <NetProfitWidget refreshKey={widgetRefreshKey} />
-        <NetCapitalWidget />
+        {widgetVisibility.netProfit && <NetProfitWidget refreshKey={widgetRefreshKey} />}
+        {widgetVisibility.netCapital && <NetCapitalWidget />}
 
-        <FatFinderCard />
+        {widgetVisibility.fatFinder && <FatFinderCard />}
 
-        <CalendarWidget refreshKey={widgetRefreshKey} />
+        {widgetVisibility.calendar && <CalendarWidget refreshKey={widgetRefreshKey} />}
 
-        <GoalsCard />
+        {widgetVisibility.goals && <GoalsCard />}
 
-        <View style={styles.section}>
+        {widgetVisibility.wallets && <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('dashboard.walletBalances')}</Text>
             {walletSummary.length > 0 && (
@@ -335,7 +341,7 @@ export default function DashboardScreen() {
               ))}
             </ScrollView>
           )}
-        </View>
+        </View>}
 
       </ScrollView>
       <NewBadgeModal />

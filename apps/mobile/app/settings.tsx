@@ -19,6 +19,7 @@ import * as Clipboard from 'expo-clipboard';
 import { StorageAccessFramework, readAsStringAsync } from 'expo-file-system/legacy';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useEncryptionStore } from '@/stores/encryptionStore';
 import { useExpenseStore } from '@/stores/expenseStore';
@@ -78,6 +79,7 @@ export default function SettingsScreen() {
   const styles = useStyles(createStyles);
   const { user, updateUser, logout } = useAuthStore();
   const { mode, setMode } = useThemeStore();
+  const { visibility: widgetVisibility, setVisible: setWidgetVisible } = useWidgetVisibilityStore();
 
   const [name, setName] = useState(user?.name || '');
   const [editingName, setEditingName] = useState(false);
@@ -762,6 +764,38 @@ export default function SettingsScreen() {
                   {item.cost} {t('settings.aiModelCost')}
                 </Text>
               </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Dashboard Widgets Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.dashboardWidgets')}</Text>
+          <View style={styles.card}>
+            {([
+              { key: 'gamification', label: t('settings.widget.gamification') },
+              { key: 'monthlyBudget', label: t('settings.widget.monthlyBudget') },
+              { key: 'totalIncome', label: t('settings.widget.totalIncome') },
+              { key: 'totalExpenses', label: t('settings.widget.totalExpenses') },
+              { key: 'debts', label: t('settings.widget.debts') },
+              { key: 'netProfit', label: t('settings.widget.netProfit') },
+              { key: 'netCapital', label: t('settings.widget.netCapital') },
+              { key: 'fatFinder', label: t('settings.widget.fatFinder') },
+              { key: 'calendar', label: t('settings.widget.calendar') },
+              { key: 'goals', label: t('settings.widget.goals') },
+              { key: 'wallets', label: t('settings.widget.wallets') },
+            ] as const).map(({ key, label }, index, arr) => (
+              <View key={key}>
+                <View style={styles.fieldRow}>
+                  <Text style={styles.fieldLabel}>{label}</Text>
+                  <Switch
+                    value={widgetVisibility[key]}
+                    onValueChange={(v) => setWidgetVisible(key, v)}
+                    trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                  />
+                </View>
+                {index < arr.length - 1 && <View style={styles.divider} />}
+              </View>
             ))}
           </View>
         </View>

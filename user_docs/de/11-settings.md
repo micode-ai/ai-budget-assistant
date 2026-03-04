@@ -1,6 +1,6 @@
 # Einstellungen
 
-> Passe dein Profil, Erscheinungsbild, Benachrichtigungen und Datensynchronisierung an. Andere deine Sprache, Wahrung, dein Design und verwalte deine Kontopraferenzen.
+> Passe dein Profil, Erscheinungsbild, Dashboard-Widgets, Benachrichtigungen und Datensynchronisierung an. Andere deine Sprache, Wahrung, dein Design und verwalte deine Kontopraferenzen.
 
 ## Uberblick
 
@@ -77,6 +77,26 @@ Wahle dein Design:
 - **System** — folgt der Hell-/Dunkel-Einstellung deines Gerats
 - **Hell** — immer helles Design verwenden
 - **Dunkel** — immer dunkles Design verwenden
+
+## Dashboard-Widgets
+
+Steuere, welche Bereiche auf deinem [Dashboard](./02-dashboard.md) erscheinen. Tippe auf den Schalter neben jedem Widget, um es ein- oder auszublenden:
+
+| Widget | Beschreibung |
+|---|---|
+| **Gamification** | Level, XP-Fortschrittsbalken und tagliche Serie |
+| **Monatsbudget** | Verbleibendes Budget mit farbcodiertem Fortschrittsbalken |
+| **Gesamteinnahmen** | Deine Gesamteinnahmen fur den aktuellen Monat |
+| **Gesamtausgaben** | Deine Gesamtausgaben fur den aktuellen Monat |
+| **Schulden & Darlehen** | Ubersicht dessen, was dir geschuldet wird und was du schuldest |
+| **Nettogewinn-Diagramm** | 6-Monats-Liniendiagramm des Nettogewinns |
+| **Nettokapital** | Gesamtes Nettovermogen uber alle Wallets |
+| **Fat Finder (KI-Einblicke)** | Monatliches Ausgaben-Audit mit Sparmoglichkeiten |
+| **Kalender** | Monatliches Raster mit Einnahmen-/Ausgabenpunkten |
+| **Ziele** | Wichtigstes aktives Sparziel mit Fortschrittsbalken |
+| **Wallet-Salden** | Horizontales Scrollen der Salden nach Wahrung |
+
+> **Tipp:** Deine Einstellungen werden automatisch gespeichert und bleiben nach Neustarts erhalten.
 
 ## Benachrichtigungen
 

@@ -142,10 +142,10 @@ Additional navigation:
     {
       id: '02-dashboard',
       title: `Dashboard`,
-      description: `Your financial command center. See your budget status, income, expenses, and wallet balances at a glance, with quick actions to add expenses in one tap.`,
+      description: `Your financial command center. See your budget status, income, expenses, and wallet balances at a glance, with quick actions to add expenses in one tap. You can show or hide individual sections from [Settings](./11-settings.md) → Dashboard Widgets.`,
       body: `# Dashboard
 
-> Your financial command center. See your budget status, income, expenses, and wallet balances at a glance, with quick actions to add expenses in one tap.
+> Your financial command center. See your budget status, income, expenses, and wallet balances at a glance, with quick actions to add expenses in one tap. You can show or hide individual sections from Settings → Dashboard Widgets.
 
 ## Overview
 
@@ -272,7 +272,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
   **A:** You haven't added any expenses or income yet. Use the quick action buttons to add your first transaction.
 
 - **Q: Can I customize what appears on the Dashboard?**
-  **A:** The Dashboard layout is fixed, but it adapts to your data — wallet balances only appear after you set them up, and budget cards only appear with active budgets.
+  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts.
 
 ---
 
@@ -1257,10 +1257,10 @@ Below the transfer form, you'll find a list of your recent account transfers wit
     {
       id: '11-settings',
       title: `Settings`,
-      description: `Customize your profile, appearance, notifications, and data sync. Change your language, currency, theme, and manage your account preferences.`,
+      description: `Customize your profile, appearance, dashboard widgets, notifications, and data sync. Change your language, currency, theme, and manage your account preferences.`,
       body: `# Settings
 
-> Customize your profile, appearance, notifications, and data sync. Change your language, currency, theme, and manage your account preferences.
+> Customize your profile, appearance, dashboard widgets, notifications, and data sync. Change your language, currency, theme, and manage your account preferences.
 
 ## Overview
 
@@ -1337,6 +1337,26 @@ Choose your theme:
 - **System** — follows your device's light/dark mode setting
 - **Light** — always use light theme
 - **Dark** — always use dark theme
+
+## Dashboard Widgets
+
+Control which sections appear on your Dashboard. Tap the toggle next to each widget to show or hide it:
+
+| Widget | Description |
+|---|---|
+| **Gamification** | Level, XP progress bar, and daily streak |
+| **Monthly Budget** | Budget remaining with a color-coded progress bar |
+| **Total Income** | Your total income for the current month |
+| **Total Expenses** | Your total expenses for the current month |
+| **Debts & Loans** | Summary of what you are owed and what you owe |
+| **Net Profit Chart** | 6-month line chart of net profit (income − expenses) |
+| **Net Capital** | Total net worth across all wallets |
+| **Fat Finder (AI Insights)** | Monthly spending audit with savings opportunities |
+| **Calendar** | Monthly calendar grid with income/expense dots |
+| **Goals** | Top active savings goal with progress bar |
+| **Wallet Balances** | Horizontal scroll of wallet balances by currency |
+
+> **Tip:** Your choices are saved automatically and persist across app restarts.
 
 ## Notifications
 
@@ -2890,10 +2910,10 @@ iOS, Android, Web
     {
       id: '02-dashboard',
       title: `Главная`,
-      description: `Ваш финансовый центр управления. Видите статус бюджета, доходы, расходы и балансы кошелька на одном экране, а также быстрые действия для добавления расходов в одно касание.`,
+      description: `Ваш финансовый центр управления. Видите статус бюджета, доходы, расходы и балансы кошелька на одном экране, а также быстрые действия для добавления расходов в одно касание. Вы можете показывать или скрывать отдельные секции через [Настройки](./11-settings.md) → Виджеты главного экрана.`,
       body: `# Главная
 
-> Ваш финансовый центр управления. Видите статус бюджета, доходы, расходы и балансы кошелька на одном экране, а также быстрые действия для добавления расходов в одно касание.
+> Ваш финансовый центр управления. Видите статус бюджета, доходы, расходы и балансы кошелька на одном экране, а также быстрые действия для добавления расходов в одно касание. Вы можете показывать или скрывать отдельные секции через Настройки → Виджеты главного экрана.
 
 ## Обзор
 
@@ -3020,7 +3040,7 @@ iOS, Android, Web
   **О:** Вы ещё не добавили расходы или доходы. Используйте кнопки быстрых действий, чтобы добавить первую транзакцию.
 
 - **В: Можно ли настроить, что отображается на Главной?**
-  **О:** Макет Главной фиксирован, но адаптируется к вашим данным — балансы кошелька появляются только после их настройки, а карточки бюджета — только при наличии активных бюджетов.
+  **О:** Да. Перейдите в **Настройки → Виджеты главного экрана** и включите или выключите нужные секции. Настройки сохраняются и не сбрасываются при перезапуске.
 
 ---
 
@@ -4007,10 +4027,10 @@ iOS, Android, Web
     {
       id: '11-settings',
       title: `Настройки`,
-      description: `Настройте свой профиль, внешний вид, уведомления и синхронизацию данных. Измените язык, валюту, тему и управляйте предпочтениями аккаунта.`,
+      description: `Настройте свой профиль, внешний вид, виджеты главного экрана, уведомления и синхронизацию данных. Измените язык, валюту, тему и управляйте предпочтениями аккаунта.`,
       body: `# Настройки
 
-> Настройте свой профиль, внешний вид, уведомления и синхронизацию данных. Измените язык, валюту, тему и управляйте предпочтениями аккаунта.
+> Настройте свой профиль, внешний вид, виджеты главного экрана, уведомления и синхронизацию данных. Измените язык, валюту, тему и управляйте предпочтениями аккаунта.
 
 ## Обзор
 
@@ -4087,6 +4107,26 @@ iOS, Android, Web
 - **Системная** — следует настройке светлой/тёмной темы вашего устройства
 - **Светлая** — всегда использовать светлую тему
 - **Тёмная** — всегда использовать тёмную тему
+
+## Виджеты главного экрана
+
+Управляйте тем, какие секции отображаются на Главной. Нажмите на переключатель рядом с виджетом, чтобы показать или скрыть его:
+
+| Виджет | Описание |
+|---|---|
+| **Геймификация** | Уровень, полоска прогресса опыта и дневная серия |
+| **Месячный бюджет** | Остаток бюджета с цветовой шкалой прогресса |
+| **Общий доход** | Ваш суммарный доход за текущий месяц |
+| **Общие расходы** | Ваши суммарные расходы за текущий месяц |
+| **Долги и займы** | Сводка того, кто вам должен и что должны вы |
+| **График чистой прибыли** | Линейный график чистой прибыли за 6 месяцев (доходы − расходы) |
+| **Чистый капитал** | Суммарное состояние по всем кошелькам |
+| **Fat Finder (ИИ-аналитика)** | Ежемесячный аудит расходов с возможностями экономии |
+| **Календарь** | Месячная сетка с точками доходов и расходов |
+| **Цели** | Топ активная цель накоплений с прогресс-баром |
+| **Балансы кошельков** | Горизонтальная прокрутка балансов по валютам |
+
+> **Совет:** Ваши настройки сохраняются автоматически и сохраняются при перезапуске приложения.
 
 ## Уведомления
 
@@ -5651,10 +5691,10 @@ iOS, Android, Web
     {
       id: '02-dashboard',
       title: `Головна`,
-      description: `Ваш фінансовий командний центр. Переглядайте стан бюджету, доходи, витрати та баланси гаманця одним поглядом, з швидкими діями для додавання витрат в одне натискання.`,
+      description: `Ваш фінансовий командний центр. Переглядайте стан бюджету, доходи, витрати та баланси гаманця одним поглядом, з швидкими діями для додавання витрат в одне натискання. Ви можете показувати або приховувати окремі секції через [Налаштування](./11-settings.md) → Віджети головного екрану.`,
       body: `# Головна
 
-> Ваш фінансовий командний центр. Переглядайте стан бюджету, доходи, витрати та баланси гаманця одним поглядом, з швидкими діями для додавання витрат в одне натискання.
+> Ваш фінансовий командний центр. Переглядайте стан бюджету, доходи, витрати та баланси гаманця одним поглядом, з швидкими діями для додавання витрат в одне натискання. Ви можете показувати або приховувати окремі секції через Налаштування → Віджети головного екрану.
 
 ## Огляд
 
@@ -5780,8 +5820,8 @@ iOS, Android, Web
 - **П:** Чому на Головна все показує \$0?
   **В:** Ви ще не додали жодних витрат чи доходів. Скористайтеся кнопками швидких дій, щоб додати першу транзакцію.
 
-- **П:** Чи можу я налаштувати, що відображається на Головна?
-  **В:** Макет Головна фіксований, але він адаптується до ваших даних — баланси гаманця з'являються лише після їх налаштування, а картки бюджету — лише при наявності активних бюджетів.
+- **П:** Чи можу я налаштувати, що відображається на Головній?
+  **В:** Так. Перейдіть до **Налаштування → Віджети головного екрану** та вмикайте або вимикайте потрібні секції. Налаштування зберігаються і не скидаються при перезапуску.
 
 ---
 
@@ -6856,6 +6896,26 @@ iOS, Android, Web
 - **Системна** — слідує налаштуванню світлого/темного режиму вашого пристрою
 - **Світла** — завжди використовувати світлу тему
 - **Темна** — завжди використовувати темну тему
+
+## Віджети головного екрану
+
+Керуйте тим, які секції відображаються на Головному екрані. Натисніть на перемикач поряд з віджетом, щоб показати або приховати його:
+
+| Віджет | Опис |
+|---|---|
+| **Гейміфікація** | Рівень, смуга прогресу досвіду та щоденна серія |
+| **Місячний бюджет** | Залишок бюджету з кольоровою смугою прогресу |
+| **Загальний дохід** | Ваш сумарний дохід за поточний місяць |
+| **Загальні витрати** | Ваші сумарні витрати за поточний місяць |
+| **Борги та позики** | Зведення того, хто вам повинен і що повинні ви |
+| **Графік чистого прибутку** | Лінійний графік чистого прибутку за 6 місяців |
+| **Чистий капітал** | Загальний стан по всіх гаманцях |
+| **Fat Finder (ШІ-аналітика)** | Щомісячний аудит витрат з можливостями заощадження |
+| **Календар** | Місячна сітка з точками доходів та витрат |
+| **Цілі** | Головна активна ціль заощаджень з прогрес-баром |
+| **Баланси гаманців** | Горизонтальне прокручування балансів за валютами |
+
+> **Порада:** Ваші налаштування зберігаються автоматично і не скидаються при перезапуску.
 
 ## Сповіщення
 
@@ -8388,10 +8448,10 @@ Dodatkowa nawigacja:
     {
       id: '02-dashboard',
       title: `Pulpit`,
-      description: `Twoje centrum dowodzenia finansami. Zobacz status budzetu, przychody, wydatki i salda portfela na pierwszy rzut oka, z szybkimi akcjami pozwalajacymi dodac wydatek jednym dotknieciem.`,
+      description: `Twoje centrum dowodzenia finansami. Zobacz status budzetu, przychody, wydatki i salda portfela na pierwszy rzut oka, z szybkimi akcjami pozwalajacymi dodac wydatek jednym dotknieciem. Mozesz pokazywac lub ukrywac poszczegolne sekcje w [Ustawieniach](./11-settings.md) → Widgety pulpitu.`,
       body: `# Pulpit
 
-> Twoje centrum dowodzenia finansami. Zobacz status budzetu, przychody, wydatki i salda portfela na pierwszy rzut oka, z szybkimi akcjami pozwalajacymi dodac wydatek jednym dotknieciem.
+> Twoje centrum dowodzenia finansami. Zobacz status budzetu, przychody, wydatki i salda portfela na pierwszy rzut oka, z szybkimi akcjami pozwalajacymi dodac wydatek jednym dotknieciem. Mozesz pokazywac lub ukrywac poszczegolne sekcje w Ustawieniach → Widgety pulpitu.
 
 ## Przeglad
 
@@ -8517,8 +8577,8 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
 - **P: Dlaczego Pulpit pokazuje 0 dla wszystkiego?**
   **O:** Nie dodales jeszcze zadnych wydatkow ani przychodow. Uzyj przyciskow szybkich akcji, aby dodac swoja pierwsza transakcje.
 
-- **P: Czy moge dostosowal wyglad Pulpitu?**
-  **O:** Uklad Pulpitu jest staly, ale dostosowuje sie do Twoich danych — salda portfela pojawiaja sie dopiero po ich skonfigurowaniu, a karty budzetowe tylko przy aktywnych budzetach.
+- **P: Czy moge dostosowac wyglad Pulpitu?**
+  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu.
 
 ---
 
@@ -9587,6 +9647,26 @@ Wybierz motyw:
 - **Systemowy** — podaza za ustawieniem jasnego/ciemnego motywu urzadzenia
 - **Jasny** — zawsze uzywa jasnego motywu
 - **Ciemny** — zawsze uzywa ciemnego motywu
+
+## Widgety pulpitu
+
+Kontroluj, ktore sekcje pojawiaja sie na Twoim Pulpicie. Dotknij przelacznika obok kazdego widgetu, aby go pokazac lub ukryc:
+
+| Widget | Opis |
+|---|---|
+| **Grywalizacja** | Poziom, pasek postepu XP i codzienna seria |
+| **Miesieczny budzet** | Pozostaly budzet z kolorowym paskiem postepu |
+| **Laczne przychody** | Twoje laczne przychody za biezacy miesiac |
+| **Laczne wydatki** | Twoje laczne wydatki za biezacy miesiac |
+| **Dlugi i pozyczki** | Podsumowanie tego, co ci sie nalezy i co jestes winien |
+| **Wykres zysku netto** | 6-miesiczny wykres liniowy zysku netto |
+| **Kapital netto** | Laczna wartosc netto wszystkich portfeli |
+| **Fat Finder (AI)** | Miesieczny audyt wydatkow z mozliwosciami oszczednosci |
+| **Kalendarz** | Miesieczna siatka z kropkami przychodow/wydatkow |
+| **Cele** | Glowny aktywny cel oszczednosciowy z paskiem postepu |
+| **Salda portfela** | Poziome przewijanie sald wedlug waluty |
+
+> **Wskazowka:** Twoje preferencje sa zapisywane automatycznie i pozostaja po ponownym uruchomieniu.
 
 ## Powiadomienia
 
@@ -11120,10 +11200,10 @@ Zusatzliche Navigation:
     {
       id: '02-dashboard',
       title: `Ubersicht`,
-      description: `Deine Finanzzentrale. Sieh deinen Budgetstatus, Einkommen, Ausgaben und Geldborsensalden auf einen Blick, mit Schnellaktionen zum Hinzufugen von Ausgaben in einem Tipp.`,
+      description: `Deine Finanzzentrale. Sieh deinen Budgetstatus, Einkommen, Ausgaben und Geldborsensalden auf einen Blick, mit Schnellaktionen zum Hinzufugen von Ausgaben in einem Tipp. Du kannst einzelne Bereiche unter [Einstellungen](./11-settings.md) → Dashboard-Widgets ein- oder ausblenden.`,
       body: `# Ubersicht
 
-> Deine Finanzzentrale. Sieh deinen Budgetstatus, Einkommen, Ausgaben und Geldborsensalden auf einen Blick, mit Schnellaktionen zum Hinzufugen von Ausgaben in einem Tipp.
+> Deine Finanzzentrale. Sieh deinen Budgetstatus, Einkommen, Ausgaben und Geldborsensalden auf einen Blick, mit Schnellaktionen zum Hinzufugen von Ausgaben in einem Tipp. Du kannst einzelne Bereiche unter Einstellungen → Dashboard-Widgets ein- oder ausblenden.
 
 ## Uberblick
 
@@ -11250,7 +11330,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
   **A:** Du hast noch keine Ausgaben oder Einkommen hinzugefugt. Verwende die Schnellaktions-Schaltflachen, um deine erste Transaktion hinzuzufugen.
 
 - **F: Kann ich anpassen, was auf der Ubersicht angezeigt wird?**
-  **A:** Das Layout der Ubersicht ist fest, passt sich aber an deine Daten an — Geldborsensalden erscheinen erst, nachdem du sie eingerichtet hast, und Budgetkarten erscheinen nur bei aktiven Budgets.
+  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten.
 
 ---
 
@@ -12236,10 +12316,10 @@ Unterhalb des Uberweisungsformulars findest du eine Liste deiner letzten Uberwei
     {
       id: '11-settings',
       title: `Einstellungen`,
-      description: `Passe dein Profil, Erscheinungsbild, Benachrichtigungen und Datensynchronisierung an. Andere deine Sprache, Wahrung, dein Design und verwalte deine Kontopraferenzen.`,
+      description: `Passe dein Profil, Erscheinungsbild, Dashboard-Widgets, Benachrichtigungen und Datensynchronisierung an. Andere deine Sprache, Wahrung, dein Design und verwalte deine Kontopraferenzen.`,
       body: `# Einstellungen
 
-> Passe dein Profil, Erscheinungsbild, Benachrichtigungen und Datensynchronisierung an. Andere deine Sprache, Wahrung, dein Design und verwalte deine Kontopraferenzen.
+> Passe dein Profil, Erscheinungsbild, Dashboard-Widgets, Benachrichtigungen und Datensynchronisierung an. Andere deine Sprache, Wahrung, dein Design und verwalte deine Kontopraferenzen.
 
 ## Uberblick
 
@@ -12316,6 +12396,26 @@ Wahle dein Design:
 - **System** — folgt der Hell-/Dunkel-Einstellung deines Gerats
 - **Hell** — immer helles Design verwenden
 - **Dunkel** — immer dunkles Design verwenden
+
+## Dashboard-Widgets
+
+Steuere, welche Bereiche auf deinem Dashboard erscheinen. Tippe auf den Schalter neben jedem Widget, um es ein- oder auszublenden:
+
+| Widget | Beschreibung |
+|---|---|
+| **Gamification** | Level, XP-Fortschrittsbalken und tagliche Serie |
+| **Monatsbudget** | Verbleibendes Budget mit farbcodiertem Fortschrittsbalken |
+| **Gesamteinnahmen** | Deine Gesamteinnahmen fur den aktuellen Monat |
+| **Gesamtausgaben** | Deine Gesamtausgaben fur den aktuellen Monat |
+| **Schulden & Darlehen** | Ubersicht dessen, was dir geschuldet wird und was du schuldest |
+| **Nettogewinn-Diagramm** | 6-Monats-Liniendiagramm des Nettogewinns |
+| **Nettokapital** | Gesamtes Nettovermogen uber alle Wallets |
+| **Fat Finder (KI-Einblicke)** | Monatliches Ausgaben-Audit mit Sparmoglichkeiten |
+| **Kalender** | Monatliches Raster mit Einnahmen-/Ausgabenpunkten |
+| **Ziele** | Wichtigstes aktives Sparziel mit Fortschrittsbalken |
+| **Wallet-Salden** | Horizontales Scrollen der Salden nach Wahrung |
+
+> **Tipp:** Deine Einstellungen werden automatisch gespeichert und bleiben nach Neustarts erhalten.
 
 ## Benachrichtigungen
 
@@ -13852,10 +13952,10 @@ Navegacion adicional:
     {
       id: '02-dashboard',
       title: `Panel`,
-      description: `Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque.`,
+      description: `Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque. Puedes mostrar u ocultar secciones individuales desde [Ajustes](./11-settings.md) → Widgets del panel.`,
       body: `# Panel
 
-> Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque.
+> Tu centro de control financiero. Consulta el estado de tu presupuesto, ingresos, gastos y saldos de billetera de un vistazo, con acciones rapidas para agregar gastos en un solo toque. Puedes mostrar u ocultar secciones individuales desde Ajustes → Widgets del panel.
 
 ## Vista general
 
@@ -13982,7 +14082,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
   **R:** Aun no has agregado ningun gasto o ingreso. Usa los botones de accion rapida para agregar tu primera transaccion.
 
 - **P: Puedo personalizar lo que aparece en el Panel?**
-  **R:** El diseno del Panel es fijo, pero se adapta a tus datos: los saldos de la billetera solo aparecen despues de configurarlos, y las tarjetas de presupuesto solo aparecen con presupuestos activos.
+  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios.
 
 ---
 
@@ -15049,6 +15149,26 @@ Elige tu tema:
 - **Sistema** — sigue la configuracion de modo claro/oscuro de tu dispositivo
 - **Claro** — siempre usa el tema claro
 - **Oscuro** — siempre usa el tema oscuro
+
+## Widgets del panel
+
+Controla qué secciones aparecen en tu Panel. Toca el interruptor junto a cada widget para mostrarlo u ocultarlo:
+
+| Widget | Descripcion |
+|---|---|
+| **Gamificacion** | Nivel, barra de progreso de XP y racha diaria |
+| **Presupuesto mensual** | Presupuesto restante con barra de progreso codificada por colores |
+| **Ingresos totales** | Tus ingresos totales del mes actual |
+| **Gastos totales** | Tus gastos totales del mes actual |
+| **Deudas y prestamos** | Resumen de lo que te deben y lo que debes |
+| **Grafico de beneficio neto** | Grafico de lineas de 6 meses del beneficio neto |
+| **Capital neto** | Patrimonio neto total en todas las billeteras |
+| **Fat Finder (IA)** | Auditoria mensual de gastos con oportunidades de ahorro |
+| **Calendario** | Cuadricula mensual con puntos de ingresos/gastos |
+| **Objetivos** | Objetivo de ahorro activo principal con barra de progreso |
+| **Saldos de billetera** | Desplazamiento horizontal de saldos por moneda |
+
+> **Consejo:** Tus preferencias se guardan automaticamente y persisten entre reinicios.
 
 ## Notificaciones
 
@@ -16584,10 +16704,10 @@ Navigation supplementaire :
     {
       id: '02-dashboard',
       title: `Tableau de bord`,
-      description: `Votre centre de commande financier. Consultez l'etat de votre budget, vos revenus, vos depenses et vos soldes de portefeuille en un coup d'oeil, avec des actions rapides pour ajouter des depenses en un seul appui.`,
+      description: `Votre centre de commande financier. Consultez l'etat de votre budget, vos revenus, vos depenses et vos soldes de portefeuille en un coup d'oeil, avec des actions rapides pour ajouter des depenses en un seul appui. Vous pouvez afficher ou masquer des sections individuelles depuis [Parametres](./11-settings.md) → Widgets du tableau de bord.`,
       body: `# Tableau de bord
 
-> Votre centre de commande financier. Consultez l'etat de votre budget, vos revenus, vos depenses et vos soldes de portefeuille en un coup d'oeil, avec des actions rapides pour ajouter des depenses en un seul appui.
+> Votre centre de commande financier. Consultez l'etat de votre budget, vos revenus, vos depenses et vos soldes de portefeuille en un coup d'oeil, avec des actions rapides pour ajouter des depenses en un seul appui. Vous pouvez afficher ou masquer des sections individuelles depuis Parametres → Widgets du tableau de bord.
 
 ## Apercu
 
@@ -16714,7 +16834,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
   **R :** Vous n'avez pas encore ajoute de depenses ou de revenus. Utilisez les boutons d'actions rapides pour ajouter votre premiere transaction.
 
 - **Q : Puis-je personnaliser ce qui apparait sur le Tableau de bord ?**
-  **R :** La disposition du Tableau de bord est fixe, mais elle s'adapte a vos donnees — les soldes du portefeuille n'apparaissent qu'apres leur configuration, et les cartes de budget n'apparaissent qu'avec des budgets actifs.
+  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages.
 
 ---
 
@@ -17779,6 +17899,26 @@ Choisissez votre theme :
 - **Systeme** — suit le mode clair/sombre de votre appareil
 - **Clair** — toujours utiliser le theme clair
 - **Sombre** — toujours utiliser le theme sombre
+
+## Widgets du tableau de bord
+
+Controlez quelles sections apparaissent sur votre Tableau de bord. Appuyez sur le bouton bascule a cote de chaque widget pour l'afficher ou le masquer :
+
+| Widget | Description |
+|---|---|
+| **Gamification** | Niveau, barre de progression XP et serie quotidienne |
+| **Budget mensuel** | Budget restant avec barre de progression codee par couleur |
+| **Revenus totaux** | Vos revenus totaux du mois en cours |
+| **Depenses totales** | Vos depenses totales du mois en cours |
+| **Dettes et prets** | Recapitulatif de ce qu'on vous doit et de vos dettes |
+| **Graphique benefice net** | Graphique lineaire sur 6 mois du benefice net |
+| **Capital net** | Valeur nette totale sur tous les portefeuilles |
+| **Fat Finder (IA)** | Audit mensuel des depenses avec opportunites d'economies |
+| **Calendrier** | Grille mensuelle avec points revenus/depenses |
+| **Objectifs** | Objectif d'epargne principal avec barre de progression |
+| **Soldes du portefeuille** | Defilement horizontal des soldes par devise |
+
+> **Conseil :** Vos preferences sont sauvegardees automatiquement et persistent entre les redemarrages.
 
 ## Notifications
 
@@ -19312,10 +19452,10 @@ iOS, Android, Web
     {
       id: '02-dashboard',
       title: `Галоўная`,
-      description: `Ваш фінансавы цэнтр кіравання. Бачце статус бюджэту, даходы, выдаткі і балансы кашалька на адным экране, а таксама хуткія дзеянні для дадання выдаткаў у адно дакрананне.`,
+      description: `Ваш фінансавы цэнтр кіравання. Бачце статус бюджэту, даходы, выдаткі і балансы кашалька на адным экране, а таксама хуткія дзеянні для дадання выдаткаў у адно дакрананне. Вы можаце паказваць або хаваць асобныя секцыі праз [Налады](./11-settings.md) → Віджэты галоўнага экрана.`,
       body: `# Галоўная
 
-> Ваш фінансавы цэнтр кіравання. Бачце статус бюджэту, даходы, выдаткі і балансы кашалька на адным экране, а таксама хуткія дзеянні для дадання выдаткаў у адно дакрананне.
+> Ваш фінансавы цэнтр кіравання. Бачце статус бюджэту, даходы, выдаткі і балансы кашалька на адным экране, а таксама хуткія дзеянні для дадання выдаткаў у адно дакрананне. Вы можаце паказваць або хаваць асобныя секцыі праз Налады → Віджэты галоўнага экрана.
 
 ## Агляд
 
@@ -19442,7 +19582,7 @@ iOS, Android, Web
   **А:** Вы яшчэ не дадалі выдаткі або даходы. Выкарыстоўвайце кнопкі хуткіх дзеянняў, каб дадаць першую транзакцыю.
 
 - **П: Ці можна наладзіць, што адлюстроўваецца на Галоўнай?**
-  **А:** Макет Галоўнай фіксаваны, але адаптуецца да вашых даных — балансы кашалька з'яўляюцца толькі пасля іх наладкі, а карткі бюджэту — толькі пры наяўнасці актыўных бюджэтаў.
+  **А:** Так. Перайдзіце ў **Налады → Віджэты галоўнага экрана** і ўключайце або выключайце патрэбныя секцыі. Налады захоўваюцца і не скідаюцца пры перазапуску.
 
 ---
 
@@ -20509,6 +20649,26 @@ iOS, Android, Web
 - **Сістэмная** — прытрымліваецца налады светлай/цёмнай тэмы вашай прылады
 - **Светлая** — заўсёды выкарыстоўваць светлую тэму
 - **Цёмная** — заўсёды выкарыстоўваць цёмную тэму
+
+## Віджэты галоўнага экрана
+
+Кіруйце тым, якія секцыі адлюстроўваюцца на Галоўным экране. Націсніце на пераключальнік побач з віджэтам, каб паказаць або схаваць яго:
+
+| Віджэт | Апісанне |
+|---|---|
+| **Гейміфікацыя** | Узровень, паласа прагрэсу вопыту і штодзённая серыя |
+| **Месачны бюджэт** | Астатак бюджэту з каляровай паласой прагрэсу |
+| **Агульны даход** | Ваш сумарны даход за бягучы месяц |
+| **Агульныя расходы** | Вашы сумарныя расходы за бягучы месяц |
+| **Даўгі і пазыкі** | Зводка таго, хто вам павінен і што павінны вы |
+| **Графік чыстага прыбытку** | Лінейны графік чыстага прыбытку за 6 месяцаў |
+| **Чысты капітал** | Агульны стан па ўсіх кашальках |
+| **Fat Finder (ШI-аналітыка)** | Штомесачны аўдыт расходаў з магчымасцямі эканоміі |
+| **Каляндар** | Месачная сетка з кропкамі даходаў і расходаў |
+| **Мэты** | Галоўная актыўная мэта зберажэнняў з прагрэс-барам |
+| **Балансы кашалькоў** | Гарызантальная пракрутка балансаў па валютах |
+
+> **Парада:** Вашы налады захоўваюцца аўтаматычна і не скідаюцца пры перазапуску.
 
 ## Апавяшчэнні
 

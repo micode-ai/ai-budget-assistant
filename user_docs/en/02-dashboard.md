@@ -1,6 +1,6 @@
 # Dashboard
 
-> Your financial command center. See your budget status, income, expenses, and wallet balances at a glance, with quick actions to add expenses in one tap.
+> Your financial command center. See your budget status, income, expenses, and wallet balances at a glance, with quick actions to add expenses in one tap. You can show or hide individual sections from [Settings](./11-settings.md) → Dashboard Widgets.
 
 ## Overview
 
@@ -127,7 +127,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
   **A:** You haven't added any expenses or income yet. Use the quick action buttons to add your first transaction.
 
 - **Q: Can I customize what appears on the Dashboard?**
-  **A:** The Dashboard layout is fixed, but it adapts to your data — wallet balances only appear after you set them up, and budget cards only appear with active budgets.
+  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts.
 
 ---
 

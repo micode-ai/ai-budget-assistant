@@ -1,6 +1,6 @@
 # Tableau de bord
 
-> Votre centre de commande financier. Consultez l'etat de votre budget, vos revenus, vos depenses et vos soldes de portefeuille en un coup d'oeil, avec des actions rapides pour ajouter des depenses en un seul appui.
+> Votre centre de commande financier. Consultez l'etat de votre budget, vos revenus, vos depenses et vos soldes de portefeuille en un coup d'oeil, avec des actions rapides pour ajouter des depenses en un seul appui. Vous pouvez afficher ou masquer des sections individuelles depuis [Parametres](./11-settings.md) → Widgets du tableau de bord.
 
 ## Apercu
 
@@ -127,7 +127,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
   **R :** Vous n'avez pas encore ajoute de depenses ou de revenus. Utilisez les boutons d'actions rapides pour ajouter votre premiere transaction.
 
 - **Q : Puis-je personnaliser ce qui apparait sur le Tableau de bord ?**
-  **R :** La disposition du Tableau de bord est fixe, mais elle s'adapte a vos donnees — les soldes du portefeuille n'apparaissent qu'apres leur configuration, et les cartes de budget n'apparaissent qu'avec des budgets actifs.
+  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages.
 
 ---
 
