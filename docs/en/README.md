@@ -19,6 +19,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **Wallet & Currency Exchange** - Multi-currency wallet balances and exchange rate tracking
 - **Net Profit Widget** - Home screen line chart showing monthly net profit (income − expenses) for the last 6 months with color-coded trend
 - **Net Capital Widget** - Home screen card showing total net worth across all wallet currencies, converted to base currency, with per-currency breakdown
+- **Calendar Widget** - Monthly calendar grid with income/expense dots per day, summary totals, and drill-down to full calendar screen with categories, wallets, and transactions tabs
 - **Smart Insights** - Spending anomaly detection and budget exhaustion predictions
 - **Push Notifications** - Budget alerts and spending anomaly notifications (Expo Push)
 - **Tags** - Flexible tagging system for expenses and incomes with color-coded labels, AI-powered tag suggestions
@@ -78,7 +79,7 @@ ai-budget-assistant/
 │           │   ├── insights/    # AI insight cards
 │           │   ├── story/       # Story block components
 │           │   ├── gamification/ # Achievement badges, streaks, levels
-│           │   ├── widgets/     # Dashboard widgets (NetProfitWidget, NetCapitalWidget)
+│           │   ├── widgets/     # Dashboard widgets (NetProfitWidget, NetCapitalWidget, CalendarWidget)
 │           │   ├── goals/       # Savings goal cards
 │           │   ├── charts/      # Android home screen widgets
 │           │   ├── TagPicker.tsx   # Tag selection component

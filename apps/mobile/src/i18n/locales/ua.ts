@@ -56,6 +56,7 @@ export default {
     assetDetails: 'Деталі активу',
     investmentTransaction: 'Транзакція',
     investmentAnalytics: 'Аналітика',
+    calendar: 'Календар',
   },
   auth: {
     appName: 'AI Budget',
@@ -1286,6 +1287,18 @@ export default {
     filterPaid: 'Сплачені',
     isDebtRepayment: 'Повернення боргу',
     repaymentFor: 'Повернення боргу',
+  },
+  calendar: {
+    title: 'Календар',
+    income: 'Доходи',
+    expenses: 'Витрати',
+    netProfit: 'Чистий прибуток',
+    categories: 'Категорії',
+    wallets: 'Рахунки',
+    transactions: 'Транзакції',
+    noTransactions: 'Немає транзакцій за цей період',
+    tapToViewDetails: 'Натисніть для деталей',
+    allMonth: 'Весь місяць',
   },
   widgets: {
     today: 'Сьогодні',

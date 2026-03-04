@@ -54,6 +54,7 @@ export default {
     assetDetails: 'Дэталі актыву',
     investmentTransaction: 'Транзакцыя',
     investmentAnalytics: 'Аналітыка',
+    calendar: 'Каляндар',
   },
   auth: {
     appName: 'AI Budget',
@@ -1157,6 +1158,18 @@ export default {
     and: 'і',
     bySubscribing: 'Падпісваючыся, вы прымаеце нашы',
     mustAcceptTerms: 'Вы павінны прыняць Умовы і Палітыку канфідэнцыяльнасці',
+  },
+  calendar: {
+    title: 'Каляндар',
+    income: 'Даходы',
+    expenses: 'Выдаткі',
+    netProfit: 'Чысты прыбытак',
+    categories: 'Катэгорыі',
+    wallets: 'Рахункі',
+    transactions: 'Транзакцыі',
+    noTransactions: 'Няма транзакцый за гэты перыяд',
+    tapToViewDetails: 'Націсніце для дэталяў',
+    allMonth: 'Увесь месяц',
   },
   widgets: {
     today: 'Сёння',

@@ -86,6 +86,31 @@ Cette carte necessite un **abonnement Pro ou Business**. Les utilisateurs du pla
 
 > Voir [Fat Finder](./19-fat-finder.md) pour le guide complet de la fonctionnalite.
 
+## Calendrier
+
+Le widget **Calendrier** affiche une grille mensuelle avec des points colorés indiquant les jours avec des transactions :
+
+- **Point vert** — un revenu a été enregistré ce jour-là
+- **Point rouge** — une dépense a été enregistrée ce jour-là
+- **Aujourd'hui** est mis en évidence par un cercle orange
+- **Navigation par mois** — flèches gauche/droite pour changer de mois
+
+Sous la grille du calendrier, un résumé s'affiche :
+
+- **Revenus** — revenus totaux du mois sélectionné (convertis dans la devise de base)
+- **Dépenses** — dépenses totales du mois sélectionné
+- **Bénéfice net** — revenus moins dépenses, vert si positif, rouge si négatif
+
+Appuyez sur **Appuyez pour voir les détails** pour ouvrir l'écran complet du Calendrier avec trois onglets :
+
+| Onglet | Contenu |
+|---|---|
+| **Catégories** | Répartition des revenus et dépenses par catégories — chaque ligne affiche l'icône de la catégorie, le nom, le pourcentage et le montant. Bénéfice net en bas |
+| **Comptes** | Solde actuel de chaque portefeuille de devise avec pourcentage du total |
+| **Transactions** | Liste chronologique de toutes les transactions du mois. Appuyez sur un jour du calendrier pour filtrer par ce jour ; appuyez à nouveau pour annuler le filtre |
+
+> **Conseil :** Tous les montants dans le Calendrier sont automatiquement convertis dans votre devise de base, pour des totaux précis même avec plusieurs devises.
+
 ## Soldes du Portefeuille
 
 - Cartes horizontales defilables affichant votre solde dans chaque devise (par ex. **EUR 16 723,00**, **PLN 2 192,89**, **USD 56...**)

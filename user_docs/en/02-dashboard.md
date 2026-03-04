@@ -86,6 +86,31 @@ This card requires a **Pro or Business subscription**. Free plan users see an up
 
 > See [Fat Finder](./19-fat-finder.md) for the full feature guide.
 
+## Calendar
+
+The **Calendar** widget shows a monthly calendar grid with colored dots indicating days with transactions:
+
+- **Green dot** — income recorded on that day
+- **Red dot** — expense recorded on that day
+- **Today** is highlighted with an orange circle
+- **Month navigation** — use left/right arrows to switch between months
+
+Below the calendar grid, a summary row shows:
+
+- **Income** — total income for the selected month (converted to your base currency)
+- **Expenses** — total expenses for the selected month
+- **Net Profit** — income minus expenses, green if positive, red if negative
+
+Tap **Tap to view details** to open the full Calendar screen with three tabs:
+
+| Tab | Content |
+|---|---|
+| **Categories** | Income and expense breakdowns by category — each row shows category icon, name, percentage, and amount. Net profit displayed at the bottom |
+| **Wallets** | Current balance for each currency wallet with percentage of total |
+| **Transactions** | Chronological list of all transactions for the month. Tap a day on the calendar to filter to that specific day; tap again to deselect |
+
+> **Tip:** All amounts in the Calendar are automatically converted to your base currency, so you can see accurate totals even across multiple currencies.
+
 ## Wallet Balances
 
 - Horizontal scrollable cards showing your balance in each currency (e.g., **EUR 16,723.00**, **PLN 2 192,89**, **USD $56...**)

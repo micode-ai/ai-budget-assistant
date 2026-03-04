@@ -86,6 +86,31 @@ Diese Karte erfordert ein **Pro- oder Business-Abonnement**. Nutzer des kostenlo
 
 > Siehe [Fat Finder](./19-fat-finder.md) fur die vollstandige Funktionsbeschreibung.
 
+## Kalender
+
+Das **Kalender**-Widget zeigt ein monatliches Kalenderraster mit farbigen Punkten an, die Tage mit Transaktionen markieren:
+
+- **Grüner Punkt** — an diesem Tag wurde eine Einnahme erfasst
+- **Roter Punkt** — an diesem Tag wurde eine Ausgabe erfasst
+- **Heute** wird mit einem orangefarbenen Kreis hervorgehoben
+- **Monatsnavigation** — Pfeile nach links/rechts zum Wechseln zwischen Monaten
+
+Unter dem Kalenderraster wird eine Zusammenfassung angezeigt:
+
+- **Einnahmen** — Gesamteinnahmen für den ausgewählten Monat (in Basiswährung umgerechnet)
+- **Ausgaben** — Gesamtausgaben für den ausgewählten Monat
+- **Nettogewinn** — Einnahmen minus Ausgaben, grün bei positivem, rot bei negativem Ergebnis
+
+Tippen Sie auf **Tippen für Details**, um den vollständigen Kalenderbildschirm mit drei Registerkarten zu öffnen:
+
+| Registerkarte | Inhalt |
+|---|---|
+| **Kategorien** | Aufschlüsselung von Einnahmen und Ausgaben nach Kategorien — jede Zeile zeigt Kategorie-Symbol, Name, Prozentsatz und Betrag. Nettogewinn am Ende |
+| **Konten** | Aktueller Saldo jeder Währungsbrieftasche mit Prozentanteil am Gesamtbetrag |
+| **Transaktionen** | Chronologische Liste aller Transaktionen des Monats. Tippen Sie auf einen Tag im Kalender, um nach diesem Tag zu filtern; erneut tippen zum Aufheben des Filters |
+
+> **Tipp:** Alle Beträge im Kalender werden automatisch in Ihre Basiswährung umgerechnet, sodass Sie auch bei mehreren Währungen genaue Gesamtbeträge sehen.
+
 ## Geldborsensalden
 
 - Horizontal scrollbare Karten, die deinen Saldo in jeder Wahrung anzeigen (z.B. **EUR 16.723,00**, **PLN 2 192,89**, **USD 56...**)
