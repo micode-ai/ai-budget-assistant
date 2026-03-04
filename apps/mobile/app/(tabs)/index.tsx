@@ -9,6 +9,7 @@ const quickActionIcons = {
   scan_receipt: require('../../assets/widget-icons/scan_receipt.png'),
   voice_input: require('../../assets/widget-icons/voice_input.png'),
   exchange: require('../../assets/widget-icons/exchange.png'),
+  converter: require('../../assets/widget-icons/converter.png'),
 };
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
@@ -144,7 +145,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
           <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/converter')}>
             <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-              <Ionicons name="calculator-outline" size={28} color={theme.colors.primary} />
+              <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />
             </View>
             <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.currencyConverter')}</Text>
           </TouchableOpacity>

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import { useWalletStore } from '@/stores/walletStore';
+import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { useInsightsStore } from '@/stores/insightsStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -35,6 +36,7 @@ export default function AnalyticsScreen() {
   const { walletSummary } = useWalletStore();
   const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency, selectedRange !== 'week' ? selectedMonth : undefined, selectedYear);
   const { aiInsights, loadAIInsights } = useInsightsStore();
+  const { loadRates } = useExchangeRateStore();
   const { loadTags } = useTagStore();
   const { loadProjects } = useProjectStore();
   const theme = useTheme();
@@ -43,9 +45,10 @@ export default function AnalyticsScreen() {
 
   useEffect(() => {
     loadAIInsights(i18n.language);
+    loadRates();
     loadTags();
     loadProjects();
-  }, [loadAIInsights, loadTags, loadProjects, i18n.language]);
+  }, [loadAIInsights, loadRates, loadTags, loadProjects, i18n.language]);
 
   const TIME_RANGES: { key: TimeRange; label: string }[] = [
     { key: 'week', label: t('analytics.week') },

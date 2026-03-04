@@ -6,6 +6,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { loadItemsByExpenseId } from '@/db/expenseItemRepository';
 import { getAllExpenseTagMappings } from '@/db/tagRepository';
 import { getAllProjectExpenseMappings } from '@/db/projectRepository';
@@ -138,7 +139,17 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
   const { categories, loadCategories } = useCategoryStore();
   const { tags, loadTags } = useTagStore();
   const { projects, loadProjects } = useProjectStore();
+  const { rates } = useExchangeRateStore();
   const [isLoading] = useState(false);
+
+  // Display currency: selected currency or user's base currency
+  const displayCurrency = currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';
+
+  // Convert expense amount to the display currency
+  const toDisplayCurrency = useMemo(() => {
+    return (amount: number, fromCurrency: string) =>
+      convertAmount(amount, fromCurrency, displayCurrency, rates);
+  }, [rates, displayCurrency]);
 
   // Ensure reference data is loaded
   useEffect(() => {
@@ -185,6 +196,12 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     });
   }, [expenses, dateRange, currencyCode]);
 
+  // Get expense amount converted to display currency
+  const getAmount = useMemo(() => {
+    return (expense: { amount: number; currencyCode: string }) =>
+      toDisplayCurrency(expense.amount, expense.currencyCode);
+  }, [toDisplayCurrency]);
+
   const dailySpending = useMemo((): DailySpending[] => {
     const dailyMap = new Map<string, number>();
     const result: DailySpending[] = [];
@@ -228,7 +245,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       }
 
       const current = dailyMap.get(key) || 0;
-      dailyMap.set(key, current + expense.amount);
+      dailyMap.set(key, current + getAmount(expense));
     });
 
     // Convert to array
@@ -252,10 +269,10 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     });
 
     return result.sort((a, b) => a.date.localeCompare(b.date));
-  }, [filteredExpenses, timeRange, dateRange, t]);
+  }, [filteredExpenses, timeRange, dateRange, t, getAmount]);
 
   const categorySpending = useMemo((): CategorySpending[] => {
-    const total = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const total = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
     if (total === 0) return [];
 
     const categoryMap = new Map<string | null, number>();
@@ -263,7 +280,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     filteredExpenses.forEach((expense) => {
       const key = expense.categoryId || null;
       const current = categoryMap.get(key) || 0;
-      categoryMap.set(key, current + expense.amount);
+      categoryMap.set(key, current + getAmount(expense));
     });
 
     const result: CategorySpending[] = [];
@@ -284,11 +301,11 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     });
 
     return result.sort((a, b) => b.amount - a.amount);
-  }, [filteredExpenses, categories, t]);
+  }, [filteredExpenses, categories, t, getAmount]);
 
   const summary = useMemo((): AnalyticsSummary => {
-    const totalSpent = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const totalDiscountSavings = filteredExpenses.reduce((sum, e) => sum + (e.discountAmount || 0), 0);
+    const totalSpent = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
+    const totalDiscountSavings = filteredExpenses.reduce((sum, e) => sum + toDisplayCurrency(e.discountAmount || 0, e.currencyCode), 0);
     const transactionCount = filteredExpenses.length;
 
     // Calculate days in range
@@ -302,7 +319,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     const dailyTotals = new Map<string, number>();
     filteredExpenses.forEach((e) => {
       const dateKey = new Date(e.date).toISOString().split('T')[0];
-      dailyTotals.set(dateKey, (dailyTotals.get(dateKey) || 0) + e.amount);
+      dailyTotals.set(dateKey, (dailyTotals.get(dateKey) || 0) + getAmount(e));
     });
 
     let highestSpendingDay: string | null = null;
@@ -330,7 +347,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       highestSpendingDay,
       mostExpensiveCategory,
     };
-  }, [filteredExpenses, dateRange, categorySpending]);
+  }, [filteredExpenses, dateRange, categorySpending, getAmount, toDisplayCurrency]);
 
   // Budget comparison
   const budgetComparison = useMemo((): BudgetComparison[] => {
@@ -366,17 +383,17 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
     filteredExpenses.forEach((expense) => {
       const dayIndex = new Date(expense.date).getDay();
-      days[dayIndex].totalAmount += expense.amount;
+      days[dayIndex].totalAmount += getAmount(expense);
       days[dayIndex].transactionCount += 1;
     });
 
     // Reorder: Mon-Sun instead of Sun-Sat
     return [...days.slice(1), days[0]];
-  }, [filteredExpenses, t]);
+  }, [filteredExpenses, t, getAmount]);
 
   // Period comparison
   const periodComparison = useMemo((): PeriodComparison => {
-    const currentTotal = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const currentTotal = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
 
     // Calculate previous period range
     const msRange = dateRange.endDate.getTime() - dateRange.startDate.getTime();
@@ -390,7 +407,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         const d = new Date(e.date);
         return d >= prevStart && d <= prevEnd;
       })
-      .reduce((sum, e) => sum + e.amount, 0);
+      .reduce((sum, e) => sum + toDisplayCurrency(e.amount, e.currencyCode), 0);
 
     const changePercent =
       previousTotal > 0
@@ -400,7 +417,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
           : 0;
 
     return { currentTotal, previousTotal, changePercent };
-  }, [filteredExpenses, expenses, dateRange, currencyCode]);
+  }, [filteredExpenses, expenses, dateRange, currencyCode, getAmount, toDisplayCurrency]);
 
   // Predictive insights from API
   const [anomalies, setAnomalies] = useState<SpendingAnomalyItem[]>([]);
@@ -422,7 +439,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
           const cat = expense.categoryId ? categories.find(c => c.id === expense.categoryId) : undefined;
           const current = currentByCategory.get(catId) || { amount: 0, name: cat ? getCategoryDisplayName(cat, t) : t('common.uncategorized') };
           currentByCategory.set(catId, {
-            amount: current.amount + expense.amount,
+            amount: current.amount + getAmount(expense),
             name: current.name,
           });
         }
@@ -442,7 +459,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         const prevByCategory = new Map<string, number>();
         for (const expense of prevExpenses) {
           const catId = expense.categoryId || 'uncategorized';
-          prevByCategory.set(catId, (prevByCategory.get(catId) || 0) + expense.amount);
+          prevByCategory.set(catId, (prevByCategory.get(catId) || 0) + toDisplayCurrency(expense.amount, expense.currencyCode));
         }
 
         for (const [catId, currentData] of currentByCategory) {
@@ -489,8 +506,9 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
           for (const item of items) {
             const key = item.description.toLowerCase().trim();
             const existing = itemMap.get(key) || { totalSpent: 0, count: 0 };
+            const convertedPrice = toDisplayCurrency(item.totalPrice, expense.currencyCode);
             itemMap.set(key, {
-              totalSpent: existing.totalSpent + item.totalPrice,
+              totalSpent: existing.totalSpent + convertedPrice,
               count: existing.count + (item.quantity || 1),
             });
           }
@@ -513,7 +531,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     };
 
     computeItemBreakdown();
-  }, [filteredExpenses]);
+  }, [filteredExpenses, toDisplayCurrency]);
 
   // Tag spending breakdown
   const [tagSpending, setTagSpending] = useState<TagSpending[]>([]);
@@ -534,7 +552,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       try {
         const mappings = await getAllExpenseTagMappings(accountId);
         const expenseIds = new Set(filteredExpenses.map(e => e.id));
-        const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, e.amount]));
+        const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, getAmount(e)]));
 
         // Aggregate: for each tag, sum amounts of linked expenses in the filtered set
         const tagAmountMap = new Map<string, number>();
@@ -571,7 +589,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     };
 
     computeTagSpending();
-  }, [filteredExpenses, tags]);
+  }, [filteredExpenses, tags, getAmount]);
 
   // Project spending breakdown
   const [projectSpending, setProjectSpending] = useState<ProjectSpending[]>([]);
@@ -592,7 +610,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       try {
         const mappings = await getAllProjectExpenseMappings(accountId);
         const expenseIds = new Set(filteredExpenses.map(e => e.id));
-        const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, e.amount]));
+        const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, getAmount(e)]));
 
         // Aggregate: for each project, sum amounts of linked expenses in the filtered set
         const projectAmountMap = new Map<string, number>();
@@ -630,7 +648,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     };
 
     computeProjectSpending();
-  }, [filteredExpenses, projects]);
+  }, [filteredExpenses, projects, getAmount]);
 
   return {
     isLoading,
