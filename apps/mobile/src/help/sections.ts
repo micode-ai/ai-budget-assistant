@@ -32,4 +32,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '20-ai-response-mode', icon: 'options-outline', color: '#00BCD4' },
   { id: '21-widgets', icon: 'grid-outline', color: '#4ECDC4' },
   { id: '22-telegram-bot', icon: 'paper-plane-outline', color: '#0088CC' },
+  { id: '23-scenario-simulator', icon: 'flask-outline', color: '#FF9800' },
 ];

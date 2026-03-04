@@ -27,6 +27,7 @@ const SECTIONS = [
   '20-ai-response-mode',
   '21-widgets',
   '22-telegram-bot',
+  '23-scenario-simulator',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

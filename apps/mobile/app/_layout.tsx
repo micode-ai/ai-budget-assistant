@@ -460,6 +460,13 @@ function RootNavigator() {
             title: t('fatFinder.title'),
           }}
         />
+        <Stack.Screen
+          name="scenario-simulator"
+          options={{
+            headerShown: true,
+            title: t('scenarioSimulator.title'),
+          }}
+        />
       </Stack>
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>
