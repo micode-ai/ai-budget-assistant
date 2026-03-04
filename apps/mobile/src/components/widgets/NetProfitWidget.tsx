@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { useAccountStore } from '@/stores/accountStore';
 import { useAuthStore } from '@/stores/authStore';
-import { api } from '@/services/api';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { InteractiveLineChart } from '@/components/interactive-charts/InteractiveLineChart';
@@ -15,69 +16,52 @@ interface NetProfitWidgetProps {
   refreshKey?: number;
 }
 
-export function NetProfitWidget({ refreshKey = 0 }: NetProfitWidgetProps) {
+export function NetProfitWidget({ refreshKey: _refreshKey = 0 }: NetProfitWidgetProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
-  const currentAccountId = useAccountStore((s) => s.currentAccountId);
-  const currency = user?.currencyCode || 'USD';
+  const { expenses } = useExpenseStore();
+  const { incomes } = useIncomeStore();
+  const { rates } = useExchangeRateStore();
+  const displayCurrency = user?.currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';
 
-  const [data, setData] = useState<ChartDataPoint[]>([]);
-  const [currentNetProfit, setCurrentNetProfit] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const monthRanges = useMemo(() => {
+  const { data, currentNetProfit } = useMemo(() => {
     const now = new Date();
     const intlLocale = getIntlLocale();
-    return Array.from({ length: 6 }, (_, i) => {
-      const offset = 5 - i; // 5,4,3,2,1,0 — oldest to newest
+
+    const points: ChartDataPoint[] = Array.from({ length: 6 }, (_, i) => {
+      const offset = 5 - i;
       const d = new Date(now.getFullYear(), now.getMonth() - offset, 1);
       const start = new Date(d.getFullYear(), d.getMonth(), 1);
       const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      end.setHours(23, 59, 59, 999);
       const label = start.toLocaleDateString(intlLocale, { month: 'short' });
-      return { start, end, label };
+
+      const monthIncome = incomes
+        .filter((inc) => {
+          if (inc.isDeleted) return false;
+          const dt = new Date(inc.date);
+          return dt >= start && dt <= end;
+        })
+        .reduce((sum, inc) => sum + convertAmount(inc.amount, inc.currencyCode, displayCurrency, rates), 0);
+
+      const monthExpense = expenses
+        .filter((exp) => {
+          if (exp.isDeleted) return false;
+          const dt = new Date(exp.date);
+          return dt >= start && dt <= end;
+        })
+        .reduce((sum, exp) => sum + convertAmount(exp.amount, exp.currencyCode, displayCurrency, rates), 0);
+
+      return { label, value: monthIncome - monthExpense };
     });
-  }, []);
 
-  useEffect(() => {
-    if (!currentAccountId) return;
-    let cancelled = false;
-
-    async function fetchData() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const results = await Promise.all(
-          monthRanges.map(({ start, end }) =>
-            api.getAnalyticsSummary(
-              start.toISOString().split('T')[0],
-              end.toISOString().split('T')[0],
-            ),
-          ),
-        );
-        if (cancelled) return;
-
-        const points: ChartDataPoint[] = results.map((r, i) => ({
-          label: monthRanges[i].label,
-          value: (r as any).netSavings ?? 0,
-        }));
-
-        setData(points);
-        setCurrentNetProfit(points[points.length - 1]?.value ?? null);
-      } catch {
-        if (!cancelled) setError(t('common.error'));
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    }
-
-    fetchData();
-    return () => {
-      cancelled = true;
+    return {
+      data: points,
+      currentNetProfit: points[points.length - 1]?.value ?? null,
     };
-  }, [currentAccountId, refreshKey, monthRanges, t]);
+  }, [expenses, incomes, rates, displayCurrency]);
 
   const isPositive = (currentNetProfit ?? 0) >= 0;
   const lineColor = isPositive ? theme.colors.success : theme.colors.danger;
@@ -89,37 +73,13 @@ export function NetProfitWidget({ refreshKey = 0 }: NetProfitWidgetProps) {
     </View>
   );
 
-  if (isLoading) {
-    return (
-      <View style={styles.card}>
-        {header}
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color={theme.colors.primary} />
-          <Text style={styles.loadingText}>{t('common.loading')}</Text>
-        </View>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.card}>
-        {header}
-        <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={20} color={theme.colors.danger} />
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.card}>
       {header}
       <Text style={styles.subtitle}>{t('dashboard.netProfitSubtitle')}</Text>
       {currentNetProfit !== null && (
         <Text style={[styles.mainAmount, { color: lineColor }]}>
-          {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, currency)}
+          {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
         </Text>
       )}
       <InteractiveLineChart
@@ -127,7 +87,7 @@ export function NetProfitWidget({ refreshKey = 0 }: NetProfitWidgetProps) {
         height={160}
         lineColor={lineColor}
         areaChart
-        formatValue={(v) => formatCurrency(v, currency)}
+        formatValue={(v) => formatCurrency(v, displayCurrency)}
       />
     </View>
   );
@@ -169,27 +129,5 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '700' as const,
     textAlign: 'center' as const,
     marginBottom: theme.spacing[3],
-  },
-  loadingContainer: {
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[5],
-    gap: theme.spacing[2],
-  },
-  loadingText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-  },
-  errorContainer: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-    backgroundColor: theme.colors.dangerLight,
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing[3],
-  },
-  errorText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.danger,
-    flex: 1,
   },
 });
