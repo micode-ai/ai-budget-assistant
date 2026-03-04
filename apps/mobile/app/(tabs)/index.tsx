@@ -29,7 +29,7 @@ import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
-import { NetProfitWidget, NetCapitalWidget } from '@/components/widgets';
+import { NetProfitWidget, NetCapitalWidget, CalendarWidget } from '@/components/widgets';
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -288,6 +288,8 @@ export default function DashboardScreen() {
         <NetCapitalWidget />
 
         <FatFinderCard />
+
+        <CalendarWidget refreshKey={widgetRefreshKey} />
 
         <GoalsCard />
 

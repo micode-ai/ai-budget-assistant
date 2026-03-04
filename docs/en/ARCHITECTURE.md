@@ -102,6 +102,8 @@ app/
 │   └── set-balance.tsx    # Set wallet balance
 ├── analytics/
 │   └── drill-down.tsx    # Chart drill-down explorer
+├── calendar/
+│   └── index.tsx          # Full-screen calendar with categories/wallets/transactions tabs
 ├── achievements.tsx       # Achievements & gamification
 ├── story.tsx              # AI spending story dashboard
 ├── admin.tsx              # Admin dashboard
@@ -1104,7 +1106,7 @@ The application uses a tiered subscription model to manage access to AI-powered 
 
 ## Dashboard Widgets (in-app)
 
-The home screen (`app/(tabs)/index.tsx`) renders two financial overview widgets from `src/components/widgets/`:
+The home screen (`app/(tabs)/index.tsx`) renders financial overview widgets from `src/components/widgets/`:
 
 ### Net Profit Widget (`NetProfitWidget`)
 - **Data**: Calls `GET /analytics/summary` for each of the last 6 months in parallel via `Promise.all`
@@ -1118,6 +1120,17 @@ The home screen (`app/(tabs)/index.tsx`) renders two financial overview widgets 
 - **Computation**: `totalNetCapital = Σ convertAmount(s.currentBalance, s.currencyCode, baseCurrency, rates)` using `convertAmount()` from `exchangeRateStore`
 - **Display**: Total in base currency + per-currency breakdown list
 - **Empty state**: Shown when `walletSummary.length === 0` (no initial balances set)
+
+### Calendar Widget (`CalendarWidget`)
+- **Hook**: Uses shared `useCalendarData()` hook from `src/hooks/useCalendarData.ts`
+- **Data**: Reads `expenseStore`, `incomeStore`, `categoryStore`, `exchangeRateStore` — no API calls, all local
+- **Display**: Monthly calendar grid with colored dots (green = income, red = expense), month navigation, income/expense/net profit summary
+- **Navigation**: Tapping the widget opens full-screen `app/calendar/index.tsx` with three tabs:
+  - **Categories** — income/expense breakdown by category with icons, percentages, amounts
+  - **Wallets** — wallet balances from `walletStore.walletSummary` with percentage of total
+  - **Transactions** — merged expense/income list, filterable by tapping a specific day
+- **Multi-currency**: All amounts converted via `convertAmount()` from `exchangeRateStore`
+- **Week start**: Monday (matches `getStartOfWeek()` convention in shared-utils)
 
 ## Home Screen Widgets
 

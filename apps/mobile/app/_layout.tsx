@@ -264,6 +264,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="calendar/index"
+          options={{
+            headerShown: true,
+            title: t('calendar.title'),
+          }}
+        />
+        <Stack.Screen
           name="converter"
           options={{
             presentation: 'modal',

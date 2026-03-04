@@ -56,6 +56,7 @@ export default {
     assetDetails: 'Vermögensdetails',
     investmentTransaction: 'Transaktion',
     investmentAnalytics: 'Analytik',
+    calendar: 'Kalender',
   },
   auth: {
     appName: 'AI Budget',
@@ -1285,6 +1286,18 @@ export default {
     filterPaid: 'Bezahlt',
     isDebtRepayment: 'Schuldenrückzahlung',
     repaymentFor: 'Rückzahlung für Schuld',
+  },
+  calendar: {
+    title: 'Kalender',
+    income: 'Einnahmen',
+    expenses: 'Ausgaben',
+    netProfit: 'Nettogewinn',
+    categories: 'Kategorien',
+    wallets: 'Konten',
+    transactions: 'Transaktionen',
+    noTransactions: 'Keine Transaktionen für diesen Zeitraum',
+    tapToViewDetails: 'Tippen für Details',
+    allMonth: 'Ganzer Monat',
   },
   widgets: {
     today: 'Heute',

@@ -86,6 +86,31 @@ Ta karta wymaga subskrypcji **Pro lub Business**. Uzytkownicy planu darmowego zo
 
 > Zobacz [Tropiciel wydatkow](./19-fat-finder.md) — pelny przewodnik po funkcji.
 
+## Kalendarz
+
+Widget **Kalendarz** wyświetla siatkę miesięczną z kolorowymi kropkami oznaczającymi dni z transakcjami:
+
+- **Zielona kropka** — tego dnia zarejestrowano przychód
+- **Czerwona kropka** — tego dnia zarejestrowano wydatek
+- **Dziś** wyróżniony jest pomarańczowym kółkiem
+- **Nawigacja po miesiącach** — strzałki w lewo/prawo do przełączania między miesiącami
+
+Pod siatką kalendarza wyświetlane jest podsumowanie:
+
+- **Przychody** — łączne przychody za wybrany miesiąc (przeliczone na walutę bazową)
+- **Wydatki** — łączne wydatki za wybrany miesiąc
+- **Zysk netto** — przychody minus wydatki, na zielono jeśli dodatni, na czerwono jeśli ujemny
+
+Dotknij **Dotknij, aby zobaczyć szczegóły**, aby otworzyć pełny ekran Kalendarza z trzema zakładkami:
+
+| Zakładka | Zawartość |
+|---|---|
+| **Kategorie** | Podział przychodów i wydatków wg kategorii — każdy wiersz pokazuje ikonę kategorii, nazwę, procent i kwotę. Zysk netto na dole |
+| **Konta** | Bieżące saldo każdego portfela walutowego z procentem od sumy |
+| **Transakcje** | Chronologiczna lista wszystkich transakcji za miesiąc. Dotknij dnia w kalendarzu, aby przefiltrować po konkretnym dniu; dotknij ponownie, aby anulować filtr |
+
+> **Wskazówka:** Wszystkie kwoty w Kalendarzu są automatycznie przeliczane na walutę bazową, więc widzisz dokładne sumy nawet przy wielu walutach.
+
 ## Salda portfela
 
 - Poziomo przewijane karty pokazujace saldo w kazdej walucie (np. **EUR 16 723,00**, **PLN 2 192,89**, **USD 56...**)

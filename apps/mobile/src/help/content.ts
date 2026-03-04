@@ -231,6 +231,31 @@ This card requires a **Pro or Business subscription**. Free plan users see an up
 
 > See Fat Finder for the full feature guide.
 
+## Calendar
+
+The **Calendar** widget shows a monthly calendar grid with colored dots indicating days with transactions:
+
+- **Green dot** — income recorded on that day
+- **Red dot** — expense recorded on that day
+- **Today** is highlighted with an orange circle
+- **Month navigation** — use left/right arrows to switch between months
+
+Below the calendar grid, a summary row shows:
+
+- **Income** — total income for the selected month (converted to your base currency)
+- **Expenses** — total expenses for the selected month
+- **Net Profit** — income minus expenses, green if positive, red if negative
+
+Tap **Tap to view details** to open the full Calendar screen with three tabs:
+
+| Tab | Content |
+|---|---|
+| **Categories** | Income and expense breakdowns by category — each row shows category icon, name, percentage, and amount. Net profit displayed at the bottom |
+| **Wallets** | Current balance for each currency wallet with percentage of total |
+| **Transactions** | Chronological list of all transactions for the month. Tap a day on the calendar to filter to that specific day; tap again to deselect |
+
+> **Tip:** All amounts in the Calendar are automatically converted to your base currency, so you can see accurate totals even across multiple currencies.
+
 ## Wallet Balances
 
 - Horizontal scrollable cards showing your balance in each currency (e.g., **EUR 16,723.00**, **PLN 2 192,89**, **USD \$56...**)
@@ -2953,6 +2978,31 @@ iOS, Android, Web
 Для использования карточки требуется подписка **Pro или Business**. Пользователи бесплатного плана увидят предложение перейти на платный тариф.
 
 > См. Поиск лишних трат — полное руководство по функции.
+
+## Календарь
+
+Виджет **Календарь** отображает месячную сетку с цветными точками, обозначающими дни с транзакциями:
+
+- **Зелёная точка** — в этот день зафиксирован доход
+- **Красная точка** — в этот день зафиксирован расход
+- **Сегодня** выделяется оранжевым кружком
+- **Навигация по месяцам** — стрелки влево/вправо для переключения между месяцами
+
+Под сеткой календаря отображается сводка:
+
+- **Доходы** — общий доход за выбранный месяц (конвертирован в базовую валюту)
+- **Расходы** — общие расходы за выбранный месяц
+- **Чистая прибыль** — доходы минус расходы, зелёным если положительна, красным если отрицательна
+
+Нажмите **Нажмите для подробностей**, чтобы открыть полный экран Календаря с тремя вкладками:
+
+| Вкладка | Содержание |
+|---|---|
+| **Категории** | Разбивка доходов и расходов по категориям — каждая строка показывает иконку категории, название, процент и сумму. Чистая прибыль внизу |
+| **Счета** | Текущий баланс каждого валютного кошелька с процентом от общей суммы |
+| **Транзакции** | Хронологический список всех транзакций за месяц. Нажмите на день в календаре, чтобы отфильтровать по конкретному дню; нажмите ещё раз для отмены фильтра |
+
+> **Совет:** Все суммы в Календаре автоматически конвертируются в базовую валюту, так что вы видите точные итоги даже при использовании нескольких валют.
 
 ## Баланс кошелька
 
@@ -5690,6 +5740,31 @@ iOS, Android, Web
 
 > Див. Пошук зайвих витрат — повний посібник з функції.
 
+## Календар
+
+Віджет **Календар** відображає місячну сітку з кольоровими точками, що позначають дні з транзакціями:
+
+- **Зелена точка** — у цей день зафіксовано дохід
+- **Червона точка** — у цей день зафіксовано витрату
+- **Сьогодні** виділяється помаранчевим колом
+- **Навігація по місяцях** — стрілки вліво/вправо для перемикання між місяцями
+
+Під сіткою календаря відображається підсумок:
+
+- **Доходи** — загальний дохід за обраний місяць (конвертований у базову валюту)
+- **Витрати** — загальні витрати за обраний місяць
+- **Чистий прибуток** — доходи мінус витрати, зеленим якщо позитивний, червоним якщо негативний
+
+Натисніть **Натисніть для деталей**, щоб відкрити повний екран Календаря з трьома вкладками:
+
+| Вкладка | Зміст |
+|---|---|
+| **Категорії** | Розподіл доходів і витрат за категоріями — кожен рядок показує іконку категорії, назву, відсоток і суму. Чистий прибуток внизу |
+| **Рахунки** | Поточний баланс кожного валютного гаманця з відсотком від загальної суми |
+| **Транзакції** | Хронологічний список усіх транзакцій за місяць. Натисніть на день у календарі, щоб відфільтрувати за конкретним днем; натисніть ще раз для скасування фільтра |
+
+> **Порада:** Усі суми в Календарі автоматично конвертуються у базову валюту, тож ви бачите точні підсумки навіть при використанні кількох валют.
+
 ## Баланси гаманця
 
 - Горизонтальні прокручувані картки з балансом у кожній валюті (наприклад, **EUR 16 723,00**, **PLN 2 192,89**, **USD \$56...**)
@@ -8402,6 +8477,31 @@ Ta karta wymaga subskrypcji **Pro lub Business**. Uzytkownicy planu darmowego zo
 
 > Zobacz Tropiciel wydatkow — pelny przewodnik po funkcji.
 
+## Kalendarz
+
+Widget **Kalendarz** wyświetla siatkę miesięczną z kolorowymi kropkami oznaczającymi dni z transakcjami:
+
+- **Zielona kropka** — tego dnia zarejestrowano przychód
+- **Czerwona kropka** — tego dnia zarejestrowano wydatek
+- **Dziś** wyróżniony jest pomarańczowym kółkiem
+- **Nawigacja po miesiącach** — strzałki w lewo/prawo do przełączania między miesiącami
+
+Pod siatką kalendarza wyświetlane jest podsumowanie:
+
+- **Przychody** — łączne przychody za wybrany miesiąc (przeliczone na walutę bazową)
+- **Wydatki** — łączne wydatki za wybrany miesiąc
+- **Zysk netto** — przychody minus wydatki, na zielono jeśli dodatni, na czerwono jeśli ujemny
+
+Dotknij **Dotknij, aby zobaczyć szczegóły**, aby otworzyć pełny ekran Kalendarza z trzema zakładkami:
+
+| Zakładka | Zawartość |
+|---|---|
+| **Kategorie** | Podział przychodów i wydatków wg kategorii — każdy wiersz pokazuje ikonę kategorii, nazwę, procent i kwotę. Zysk netto na dole |
+| **Konta** | Bieżące saldo każdego portfela walutowego z procentem od sumy |
+| **Transakcje** | Chronologiczna lista wszystkich transakcji za miesiąc. Dotknij dnia w kalendarzu, aby przefiltrować po konkretnym dniu; dotknij ponownie, aby anulować filtr |
+
+> **Wskazówka:** Wszystkie kwoty w Kalendarzu są automatycznie przeliczane na walutę bazową, więc widzisz dokładne sumy nawet przy wielu walutach.
+
 ## Salda portfela
 
 - Poziomo przewijane karty pokazujace saldo w kazdej walucie (np. **EUR 16 723,00**, **PLN 2 192,89**, **USD 56...**)
@@ -11108,6 +11208,31 @@ Unterhalb des Schuldenbereichs zeigt die **Fat-Finder**-Karte eine Zusammenfassu
 Diese Karte erfordert ein **Pro- oder Business-Abonnement**. Nutzer des kostenlosen Plans sehen eine Upgrade-Aufforderung.
 
 > Siehe Fat Finder fur die vollstandige Funktionsbeschreibung.
+
+## Kalender
+
+Das **Kalender**-Widget zeigt ein monatliches Kalenderraster mit farbigen Punkten an, die Tage mit Transaktionen markieren:
+
+- **Grüner Punkt** — an diesem Tag wurde eine Einnahme erfasst
+- **Roter Punkt** — an diesem Tag wurde eine Ausgabe erfasst
+- **Heute** wird mit einem orangefarbenen Kreis hervorgehoben
+- **Monatsnavigation** — Pfeile nach links/rechts zum Wechseln zwischen Monaten
+
+Unter dem Kalenderraster wird eine Zusammenfassung angezeigt:
+
+- **Einnahmen** — Gesamteinnahmen für den ausgewählten Monat (in Basiswährung umgerechnet)
+- **Ausgaben** — Gesamtausgaben für den ausgewählten Monat
+- **Nettogewinn** — Einnahmen minus Ausgaben, grün bei positivem, rot bei negativem Ergebnis
+
+Tippen Sie auf **Tippen für Details**, um den vollständigen Kalenderbildschirm mit drei Registerkarten zu öffnen:
+
+| Registerkarte | Inhalt |
+|---|---|
+| **Kategorien** | Aufschlüsselung von Einnahmen und Ausgaben nach Kategorien — jede Zeile zeigt Kategorie-Symbol, Name, Prozentsatz und Betrag. Nettogewinn am Ende |
+| **Konten** | Aktueller Saldo jeder Währungsbrieftasche mit Prozentanteil am Gesamtbetrag |
+| **Transaktionen** | Chronologische Liste aller Transaktionen des Monats. Tippen Sie auf einen Tag im Kalender, um nach diesem Tag zu filtern; erneut tippen zum Aufheben des Filters |
+
+> **Tipp:** Alle Beträge im Kalender werden automatisch in Ihre Basiswährung umgerechnet, sodass Sie auch bei mehreren Währungen genaue Gesamtbeträge sehen.
 
 ## Geldborsensalden
 
@@ -13816,6 +13941,31 @@ Esta tarjeta requiere una **suscripcion Pro o Business**. Los usuarios del plan 
 
 > Consulta Fat Finder para la guia completa de la funcion.
 
+## Calendario
+
+El widget **Calendario** muestra una cuadrícula mensual con puntos de colores que indican los días con transacciones:
+
+- **Punto verde** — se registró un ingreso ese día
+- **Punto rojo** — se registró un gasto ese día
+- **Hoy** se destaca con un círculo naranja
+- **Navegación por meses** — flechas izquierda/derecha para cambiar entre meses
+
+Debajo de la cuadrícula del calendario se muestra un resumen:
+
+- **Ingresos** — ingresos totales del mes seleccionado (convertidos a la moneda base)
+- **Gastos** — gastos totales del mes seleccionado
+- **Beneficio neto** — ingresos menos gastos, verde si es positivo, rojo si es negativo
+
+Toca **Toca para ver detalles** para abrir la pantalla completa del Calendario con tres pestañas:
+
+| Pestaña | Contenido |
+|---|---|
+| **Categorías** | Desglose de ingresos y gastos por categorías — cada fila muestra el icono de la categoría, nombre, porcentaje y monto. Beneficio neto al final |
+| **Cuentas** | Saldo actual de cada billetera de moneda con porcentaje del total |
+| **Transacciones** | Lista cronológica de todas las transacciones del mes. Toca un día en el calendario para filtrar por ese día específico; toca de nuevo para quitar el filtro |
+
+> **Consejo:** Todos los montos en el Calendario se convierten automáticamente a tu moneda base, para que veas totales precisos incluso con múltiples monedas.
+
 ## Saldos de la billetera
 
 - Tarjetas con desplazamiento horizontal mostrando tu saldo en cada moneda (por ejemplo, **EUR 16,723.00**, **PLN 2 192,89**, **USD \$56...**)
@@ -16523,6 +16673,31 @@ Cette carte necessite un **abonnement Pro ou Business**. Les utilisateurs du pla
 
 > Voir Fat Finder pour le guide complet de la fonctionnalite.
 
+## Calendrier
+
+Le widget **Calendrier** affiche une grille mensuelle avec des points colorés indiquant les jours avec des transactions :
+
+- **Point vert** — un revenu a été enregistré ce jour-là
+- **Point rouge** — une dépense a été enregistrée ce jour-là
+- **Aujourd'hui** est mis en évidence par un cercle orange
+- **Navigation par mois** — flèches gauche/droite pour changer de mois
+
+Sous la grille du calendrier, un résumé s'affiche :
+
+- **Revenus** — revenus totaux du mois sélectionné (convertis dans la devise de base)
+- **Dépenses** — dépenses totales du mois sélectionné
+- **Bénéfice net** — revenus moins dépenses, vert si positif, rouge si négatif
+
+Appuyez sur **Appuyez pour voir les détails** pour ouvrir l'écran complet du Calendrier avec trois onglets :
+
+| Onglet | Contenu |
+|---|---|
+| **Catégories** | Répartition des revenus et dépenses par catégories — chaque ligne affiche l'icône de la catégorie, le nom, le pourcentage et le montant. Bénéfice net en bas |
+| **Comptes** | Solde actuel de chaque portefeuille de devise avec pourcentage du total |
+| **Transactions** | Liste chronologique de toutes les transactions du mois. Appuyez sur un jour du calendrier pour filtrer par ce jour ; appuyez à nouveau pour annuler le filtre |
+
+> **Conseil :** Tous les montants dans le Calendrier sont automatiquement convertis dans votre devise de base, pour des totaux précis même avec plusieurs devises.
+
 ## Soldes du Portefeuille
 
 - Cartes horizontales defilables affichant votre solde dans chaque devise (par ex. **EUR 16 723,00**, **PLN 2 192,89**, **USD 56...**)
@@ -19225,6 +19400,31 @@ iOS, Android, Web
 Для выкарыстання карткі патрэбна падпіска **Pro або Business**. Карыстальнікі бясплатнага плана ўбачаць прапанову пераключыцца на платны тарыф.
 
 > Гл. Пошук лішніх выдаткаў — поўнае кіраўніцтва па функцыі.
+
+## Каляндар
+
+Віджэт **Каляндар** адлюстроўвае месячную сетку з каляровымі кропкамі, якія пазначаюць дні з транзакцыямі:
+
+- **Зялёная кропка** — у гэты дзень зафіксаваны даход
+- **Чырвоная кропка** — у гэты дзень зафіксаваны выдатак
+- **Сёння** вылучаецца аранжавым кружком
+- **Навігацыя па месяцах** — стрэлкі ўлева/ўправа для пераключэння паміж месяцамі
+
+Пад сеткай календара адлюстроўваецца зводка:
+
+- **Даходы** — агульны даход за абраны месяц (канвертаваны ў базавую валюту)
+- **Выдаткі** — агульныя выдаткі за абраны месяц
+- **Чысты прыбытак** — даходы мінус выдаткі, зялёным калі дадатны, чырвоным калі адмоўны
+
+Націсніце **Націсніце для дэталяў**, каб адкрыць поўны экран Календара з трыма ўкладкамі:
+
+| Укладка | Змест |
+|---|---|
+| **Катэгорыі** | Разбіўка даходаў і выдаткаў па катэгорыях — кожны радок паказвае іконку катэгорыі, назву, працэнт і суму. Чысты прыбытак унізе |
+| **Рахункі** | Бягучы баланс кожнага валютнага кашалька з працэнтам ад агульнай сумы |
+| **Транзакцыі** | Храналагічны спіс усіх транзакцый за месяц. Націсніце на дзень у календары, каб адфільтраваць за канкрэтным днём; націсніце яшчэ раз для адмены фільтра |
+
+> **Парада:** Усе сумы ў Календары аўтаматычна канвертуюцца ў базавую валюту, так што вы бачыце дакладныя вынікі нават пры выкарыстанні некалькіх валют.
 
 ## Баланс кашалька
 

@@ -86,6 +86,31 @@ Esta tarjeta requiere una **suscripcion Pro o Business**. Los usuarios del plan 
 
 > Consulta [Fat Finder](./19-fat-finder.md) para la guia completa de la funcion.
 
+## Calendario
+
+El widget **Calendario** muestra una cuadrícula mensual con puntos de colores que indican los días con transacciones:
+
+- **Punto verde** — se registró un ingreso ese día
+- **Punto rojo** — se registró un gasto ese día
+- **Hoy** se destaca con un círculo naranja
+- **Navegación por meses** — flechas izquierda/derecha para cambiar entre meses
+
+Debajo de la cuadrícula del calendario se muestra un resumen:
+
+- **Ingresos** — ingresos totales del mes seleccionado (convertidos a la moneda base)
+- **Gastos** — gastos totales del mes seleccionado
+- **Beneficio neto** — ingresos menos gastos, verde si es positivo, rojo si es negativo
+
+Toca **Toca para ver detalles** para abrir la pantalla completa del Calendario con tres pestañas:
+
+| Pestaña | Contenido |
+|---|---|
+| **Categorías** | Desglose de ingresos y gastos por categorías — cada fila muestra el icono de la categoría, nombre, porcentaje y monto. Beneficio neto al final |
+| **Cuentas** | Saldo actual de cada billetera de moneda con porcentaje del total |
+| **Transacciones** | Lista cronológica de todas las transacciones del mes. Toca un día en el calendario para filtrar por ese día específico; toca de nuevo para quitar el filtro |
+
+> **Consejo:** Todos los montos en el Calendario se convierten automáticamente a tu moneda base, para que veas totales precisos incluso con múltiples monedas.
+
 ## Saldos de la billetera
 
 - Tarjetas con desplazamiento horizontal mostrando tu saldo en cada moneda (por ejemplo, **EUR 16,723.00**, **PLN 2 192,89**, **USD $56...**)
