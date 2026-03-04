@@ -106,6 +106,8 @@ app/
 │   └── index.tsx          # Full-screen calendar with categories/wallets/transactions tabs
 ├── achievements.tsx       # Achievements & gamification
 ├── story.tsx              # AI spending story dashboard
+├── fat-finder.tsx         # AI Expense Audit — finds savings opportunities
+├── scenario-simulator.tsx # What-if simulator: adjust sliders to project savings over 3/6/12 months
 ├── admin.tsx              # Admin dashboard
 ├── settings.tsx           # User settings
 └── _layout.tsx            # Root layout

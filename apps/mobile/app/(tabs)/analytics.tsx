@@ -246,6 +246,19 @@ export default function AnalyticsScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 
+        {/* Scenario Simulator Banner */}
+        <TouchableOpacity
+          style={styles.storyBanner}
+          onPress={() => router.push('/scenario-simulator')}
+        >
+          <Ionicons name="flask-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.storyBannerContent}>
+            <Text style={styles.storyBannerTitle}>{t('scenarioSimulator.title')}</Text>
+            <Text style={styles.storyBannerSubtext}>{t('scenarioSimulator.subtitle')}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
+
         {/* AI Insights */}
         {aiInsights.length > 0 && (
           <View style={styles.section}>
