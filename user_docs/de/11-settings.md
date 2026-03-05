@@ -86,8 +86,7 @@ Steuere, welche Bereiche auf deinem [Dashboard](./02-dashboard.md) erscheinen. T
 |---|---|
 | **Gamification** | Level, XP-Fortschrittsbalken und tagliche Serie |
 | **Monatsbudget** | Verbleibendes Budget mit farbcodiertem Fortschrittsbalken |
-| **Gesamteinnahmen** | Deine Gesamteinnahmen fur den aktuellen Monat |
-| **Gesamtausgaben** | Deine Gesamtausgaben fur den aktuellen Monat |
+| **Einnahmen & Ausgaben** | Kombinierte Karte mit monatlichen Einnahmen und Ausgaben |
 | **Schulden & Darlehen** | Ubersicht dessen, was dir geschuldet wird und was du schuldest |
 | **Nettogewinn-Diagramm** | 6-Monats-Liniendiagramm des Nettogewinns |
 | **Nettokapital** | Gesamtes Nettovermogen uber alle Wallets |

@@ -188,17 +188,14 @@ Tap this card to open the full **Achievements** screen with all badges, streak d
 
 > **Note:** If no monthly budget is set, you'll see a hint to create one.
 
-## Total Income This Month
+## Income & Expenses
 
 ![Dashboard scrolled — income, expenses, wallet]({{IMG:home-2.jpg}})
 
-- Displays your total income for the current month in green (e.g., **+\$2,482.52**)
-- Tap to go to the **Transactions** tab (Income view)
+A combined card showing your monthly totals side by side:
 
-## Total Expenses This Month
-
-- Displays your total expenses for the current month in red (e.g., **-\$4,838.99**)
-- Tap to go to the **Transactions** tab (Expenses view)
+- **Income** (left, green) — your total income for the current month (e.g., **+\$2,482.52**). Tap to go to the **Transactions** tab (Income view)
+- **Expenses** (right) — your total expenses for the current month (e.g., **-\$4,838.99**). Tap to go to the **Transactions** tab (Expenses view)
 
 ## Net Profit
 
@@ -1346,8 +1343,7 @@ Control which sections appear on your Dashboard. Tap the toggle next to each wid
 |---|---|
 | **Gamification** | Level, XP progress bar, and daily streak |
 | **Monthly Budget** | Budget remaining with a color-coded progress bar |
-| **Total Income** | Your total income for the current month |
-| **Total Expenses** | Your total expenses for the current month |
+| **Income & Expenses** | Combined card showing monthly income and expenses side by side |
 | **Debts & Loans** | Summary of what you are owed and what you owe |
 | **Net Profit Chart** | 6-month line chart of net profit (income − expenses) |
 | **Net Capital** | Total net worth across all wallets |
@@ -3049,17 +3045,14 @@ iOS, Android, Web
 
 > **Примечание:** Если месячный бюджет не установлен, вы увидите подсказку для его создания.
 
-## Доходы за этот месяц
+## Доходы и расходы
 
 ![Главная — доходы, расходы, кошелёк (прокрутка)]({{IMG:home-2.jpg}})
 
-- Показывает общий доход за текущий месяц зелёным цветом (например, **+\$2 482,52**)
-- Нажмите для перехода на вкладку **Транзакции** (вид доходов)
+Объединённая карточка с итогами за месяц:
 
-## Расходы за этот месяц
-
-- Показывает общие расходы за текущий месяц красным цветом (например, **-\$4 838,99**)
-- Нажмите для перехода на вкладку **Транзакции** (вид расходов)
+- **Доходы** (слева, зелёным) — общий доход за текущий месяц (например, **+\$2 482,52**). Нажмите для перехода на вкладку **Транзакции** (вид доходов)
+- **Расходы** (справа) — общие расходы за текущий месяц (например, **-\$4 838,99**). Нажмите для перехода на вкладку **Транзакции** (вид расходов)
 
 ## Чистая прибыль
 
@@ -4209,8 +4202,7 @@ iOS, Android, Web
 |---|---|
 | **Геймификация** | Уровень, полоска прогресса опыта и дневная серия |
 | **Месячный бюджет** | Остаток бюджета с цветовой шкалой прогресса |
-| **Общий доход** | Ваш суммарный доход за текущий месяц |
-| **Общие расходы** | Ваши суммарные расходы за текущий месяц |
+| **Доходы и расходы** | Объединённая карточка с доходами и расходами за месяц |
 | **Долги и займы** | Сводка того, кто вам должен и что должны вы |
 | **График чистой прибыли** | Линейный график чистой прибыли за 6 месяцев (доходы − расходы) |
 | **Чистый капитал** | Суммарное состояние по всем кошелькам |
@@ -5923,17 +5915,14 @@ iOS, Android, Web
 
 > **Примітка:** Якщо місячний бюджет не створено, ви побачите підказку створити його.
 
-## Доходи за цей місяць
+## Доходи та витрати
 
 ![Головна прокручена — доходи, витрати, гаманець]({{IMG:home-2.jpg}})
 
-- Відображає загальний дохід за поточний місяць зеленим кольором (наприклад, **+\$2,482.52**)
-- Натисніть, щоб перейти на вкладку **Транзакції** (перегляд доходів)
+Об'єднана картка з місячними підсумками поруч:
 
-## Витрати за цей місяць
-
-- Відображає загальні витрати за поточний місяць червоним кольором (наприклад, **-\$4,838.99**)
-- Натисніть, щоб перейти на вкладку **Транзакції** (перегляд витрат)
+- **Доходи** (ліворуч, зеленим) — загальний дохід за поточний місяць (наприклад, **+\$2,482.52**). Натисніть, щоб перейти на вкладку **Транзакції** (перегляд доходів)
+- **Витрати** (праворуч) — загальні витрати за поточний місяць (наприклад, **-\$4,838.99**). Натисніть, щоб перейти на вкладку **Транзакції** (перегляд витрат)
 
 ## Чистий прибуток
 
@@ -7091,8 +7080,7 @@ iOS, Android, Web
 |---|---|
 | **Гейміфікація** | Рівень, смуга прогресу досвіду та щоденна серія |
 | **Місячний бюджет** | Залишок бюджету з кольоровою смугою прогресу |
-| **Загальний дохід** | Ваш сумарний дохід за поточний місяць |
-| **Загальні витрати** | Ваші сумарні витрати за поточний місяць |
+| **Доходи та витрати** | Об'єднана картка з доходами та витратами за місяць |
 | **Борги та позики** | Зведення того, хто вам повинен і що повинні ви |
 | **Графік чистого прибутку** | Лінійний графік чистого прибутку за 6 місяців |
 | **Чистий капітал** | Загальний стан по всіх гаманцях |
@@ -8770,17 +8758,14 @@ Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami
 
 > **Uwaga:** Jezeli nie masz ustawionego budzetu miesiecznego, zobaczysz podpowiedz, aby go utworzyc.
 
-## Laczne przychody w tym miesiacu
+## Przychody i wydatki
 
 ![Pulpit przewiniety — przychody, wydatki, portfel]({{IMG:home-2.jpg}})
 
-- Wyswietla laczne przychody za biezacy miesiac na zielono (np. **+2 482,52 \$**)
-- Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
+Polaczona karta z miesiecznymi sumami obok siebie:
 
-## Laczne wydatki w tym miesiacu
-
-- Wyswietla laczne wydatki za biezacy miesiac na czerwono (np. **-4 838,99 \$**)
-- Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
+- **Przychody** (po lewej, na zielono) — laczne przychody za biezacy miesiac (np. **+2 482,52 \$**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
+- **Wydatki** (po prawej) — laczne wydatki za biezacy miesiac (np. **-4 838,99 \$**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
 ## Zysk netto
 
@@ -9932,8 +9917,7 @@ Kontroluj, ktore sekcje pojawiaja sie na Twoim Pulpicie. Dotknij przelacznika ob
 |---|---|
 | **Grywalizacja** | Poziom, pasek postepu XP i codzienna seria |
 | **Miesieczny budzet** | Pozostaly budzet z kolorowym paskiem postepu |
-| **Laczne przychody** | Twoje laczne przychody za biezacy miesiac |
-| **Laczne wydatki** | Twoje laczne wydatki za biezacy miesiac |
+| **Przychody i wydatki** | Polaczona karta z miesiecznymi przychodami i wydatkami |
 | **Dlugi i pozyczki** | Podsumowanie tego, co ci sie nalezy i co jestes winien |
 | **Wykres zysku netto** | 6-miesiczny wykres liniowy zysku netto |
 | **Kapital netto** | Laczna wartosc netto wszystkich portfeli |
@@ -11612,17 +11596,14 @@ Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo 
 
 > **Hinweis:** Wenn kein Monatsbudget festgelegt ist, siehst du einen Hinweis, eines zu erstellen.
 
-## Gesamteinkommen diesen Monat
+## Einnahmen & Ausgaben
 
 ![Ubersicht gescrollt — Einkommen, Ausgaben, Geldborse]({{IMG:home-2.jpg}})
 
-- Zeigt dein Gesamteinkommen fur den aktuellen Monat in grun an (z.B. **+2.482,52 \$**)
-- Tippe, um zum **Transaktionen**-Tab (Einkommen-Ansicht) zu gelangen
+Eine kombinierte Karte mit deinen monatlichen Summen nebeneinander:
 
-## Gesamtausgaben diesen Monat
-
-- Zeigt deine Gesamtausgaben fur den aktuellen Monat in rot an (z.B. **-4.838,99 \$**)
-- Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
+- **Einnahmen** (links, grun) — dein Gesamteinkommen fur den aktuellen Monat (z.B. **+2.482,52 \$**). Tippe, um zum **Transaktionen**-Tab (Einkommen-Ansicht) zu gelangen
+- **Ausgaben** (rechts) — deine Gesamtausgaben fur den aktuellen Monat (z.B. **-4.838,99 \$**). Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
 ## Nettogewinn
 
@@ -12771,8 +12752,7 @@ Steuere, welche Bereiche auf deinem Dashboard erscheinen. Tippe auf den Schalter
 |---|---|
 | **Gamification** | Level, XP-Fortschrittsbalken und tagliche Serie |
 | **Monatsbudget** | Verbleibendes Budget mit farbcodiertem Fortschrittsbalken |
-| **Gesamteinnahmen** | Deine Gesamteinnahmen fur den aktuellen Monat |
-| **Gesamtausgaben** | Deine Gesamtausgaben fur den aktuellen Monat |
+| **Einnahmen & Ausgaben** | Kombinierte Karte mit monatlichen Einnahmen und Ausgaben |
 | **Schulden & Darlehen** | Ubersicht dessen, was dir geschuldet wird und was du schuldest |
 | **Nettogewinn-Diagramm** | 6-Monats-Liniendiagramm des Nettogewinns |
 | **Nettokapital** | Gesamtes Nettovermogen uber alle Wallets |
@@ -14454,17 +14434,14 @@ Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las in
 
 > **Nota:** Si no tienes un presupuesto mensual configurado, veras una sugerencia para crear uno.
 
-## Ingresos totales de este mes
+## Ingresos y gastos
 
 ![Panel desplazado — ingresos, gastos, billetera]({{IMG:home-2.jpg}})
 
-- Muestra tus ingresos totales del mes actual en verde (por ejemplo, **+\$2,482.52**)
-- Toca para ir a la pestana **Transacciones** (vista de Ingresos)
+Una tarjeta combinada con tus totales mensuales lado a lado:
 
-## Gastos totales de este mes
-
-- Muestra tus gastos totales del mes actual en rojo (por ejemplo, **-\$4,838.99**)
-- Toca para ir a la pestana **Transacciones** (vista de Gastos)
+- **Ingresos** (izquierda, verde) — tus ingresos totales del mes actual (por ejemplo, **+\$2,482.52**). Toca para ir a la pestana **Transacciones** (vista de Ingresos)
+- **Gastos** (derecha) — tus gastos totales del mes actual (por ejemplo, **-\$4,838.99**). Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
 ## Beneficio neto
 
@@ -15614,8 +15591,7 @@ Controla qué secciones aparecen en tu Panel. Toca el interruptor junto a cada w
 |---|---|
 | **Gamificacion** | Nivel, barra de progreso de XP y racha diaria |
 | **Presupuesto mensual** | Presupuesto restante con barra de progreso codificada por colores |
-| **Ingresos totales** | Tus ingresos totales del mes actual |
-| **Gastos totales** | Tus gastos totales del mes actual |
+| **Ingresos y gastos** | Tarjeta combinada con ingresos y gastos mensuales |
 | **Deudas y prestamos** | Resumen de lo que te deben y lo que debes |
 | **Grafico de beneficio neto** | Grafico de lineas de 6 meses del beneficio neto |
 | **Capital neto** | Patrimonio neto total en todas las billeteras |
@@ -17291,17 +17267,14 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez
 
 > **Note :** Si aucun budget mensuel n'est defini, vous verrez une indication pour en creer un.
 
-## Revenu total ce mois-ci
+## Revenus et depenses
 
 ![Tableau de bord defilant — revenus, depenses, portefeuille]({{IMG:home-2.jpg}})
 
-- Affiche votre revenu total du mois en cours en vert (par ex. **+2 482,52 \$**)
-- Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
+Une carte combinee affichant vos totaux mensuels cote a cote :
 
-## Depenses totales ce mois-ci
-
-- Affiche vos depenses totales du mois en cours en rouge (par ex. **-4 838,99 \$**)
-- Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
+- **Revenus** (gauche, vert) — votre revenu total du mois en cours (par ex. **+2 482,52 \$**). Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
+- **Depenses** (droite) — vos depenses totales du mois en cours (par ex. **-4 838,99 \$**). Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
 ## Benefice net
 
@@ -18449,8 +18422,7 @@ Controlez quelles sections apparaissent sur votre Tableau de bord. Appuyez sur l
 |---|---|
 | **Gamification** | Niveau, barre de progression XP et serie quotidienne |
 | **Budget mensuel** | Budget restant avec barre de progression codee par couleur |
-| **Revenus totaux** | Vos revenus totaux du mois en cours |
-| **Depenses totales** | Vos depenses totales du mois en cours |
+| **Revenus et depenses** | Carte combinee avec revenus et depenses mensuels |
 | **Dettes et prets** | Recapitulatif de ce qu'on vous doit et de vos dettes |
 | **Graphique benefice net** | Graphique lineaire sur 6 mois du benefice net |
 | **Capital net** | Valeur nette totale sur tous les portefeuilles |
@@ -20124,17 +20096,14 @@ iOS, Android, Web
 
 > **Заўвага:** Калі месячны бюджэт не ўсталяваны, вы ўбачыце падказку для яго стварэння.
 
-## Даходы за гэты месяц
+## Даходы і выдаткі
 
 ![Галоўная — даходы, выдаткі, кашалёк (пракрутка)]({{IMG:home-2.jpg}})
 
-- Паказвае агульны даход за бягучы месяц зялёным колерам (напрыклад, **+\$2 482,52**)
-- Націсніце для пераходу на ўкладку **Транзакцыі** (від даходаў)
+Аб'яднаная картка з месячнымі вынікамі побач:
 
-## Выдаткі за гэты месяц
-
-- Паказвае агульныя выдаткі за бягучы месяц чырвоным колерам (напрыклад, **-\$4 838,99**)
-- Націсніце для пераходу на ўкладку **Транзакцыі** (від выдаткаў)
+- **Даходы** (злева, зялёным) — агульны даход за бягучы месяц (напрыклад, **+\$2 482,52**). Націсніце для пераходу на ўкладку **Транзакцыі** (від даходаў)
+- **Выдаткі** (справа) — агульныя выдаткі за бягучы месяц (напрыклад, **-\$4 838,99**). Націсніце для пераходу на ўкладку **Транзакцыі** (від выдаткаў)
 
 ## Чысты прыбытак
 
@@ -21284,8 +21253,7 @@ iOS, Android, Web
 |---|---|
 | **Гейміфікацыя** | Узровень, паласа прагрэсу вопыту і штодзённая серыя |
 | **Месачны бюджэт** | Астатак бюджэту з каляровай паласой прагрэсу |
-| **Агульны даход** | Ваш сумарны даход за бягучы месяц |
-| **Агульныя расходы** | Вашы сумарныя расходы за бягучы месяц |
+| **Даходы і выдаткі** | Аб'яднаная картка з даходамі і выдаткамі за месяц |
 | **Даўгі і пазыкі** | Зводка таго, хто вам павінен і што павінны вы |
 | **Графік чыстага прыбытку** | Лінейны графік чыстага прыбытку за 6 месяцаў |
 | **Чысты капітал** | Агульны стан па ўсіх кашальках |

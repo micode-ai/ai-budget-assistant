@@ -43,17 +43,14 @@ Dotknij te karte, aby otworzyc pelny ekran **Osiagniec** ze wszystkimi odznakami
 
 > **Uwaga:** Jezeli nie masz ustawionego budzetu miesiecznego, zobaczysz podpowiedz, aby go utworzyc.
 
-## Laczne przychody w tym miesiacu
+## Przychody i wydatki
 
 ![Pulpit przewiniety — przychody, wydatki, portfel](../img/home-2.jpg)
 
-- Wyswietla laczne przychody za biezacy miesiac na zielono (np. **+2 482,52 $**)
-- Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
+Polaczona karta z miesiecznymi sumami obok siebie:
 
-## Laczne wydatki w tym miesiacu
-
-- Wyswietla laczne wydatki za biezacy miesiac na czerwono (np. **-4 838,99 $**)
-- Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
+- **Przychody** (po lewej, na zielono) — laczne przychody za biezacy miesiac (np. **+2 482,52 $**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Przychody)
+- **Wydatki** (po prawej) — laczne wydatki za biezacy miesiac (np. **-4 838,99 $**). Dotknij, aby przejsc do zakladki **Transakcje** (widok Wydatki)
 
 ## Zysk netto
 

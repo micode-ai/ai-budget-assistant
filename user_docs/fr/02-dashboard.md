@@ -43,17 +43,14 @@ Appuyez sur le widget pour ouvrir l'ecran complet des **Succes**, ou vous pouvez
 
 > **Note :** Si aucun budget mensuel n'est defini, vous verrez une indication pour en creer un.
 
-## Revenu total ce mois-ci
+## Revenus et depenses
 
 ![Tableau de bord defilant — revenus, depenses, portefeuille](../img/home-2.jpg)
 
-- Affiche votre revenu total du mois en cours en vert (par ex. **+2 482,52 $**)
-- Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
+Une carte combinee affichant vos totaux mensuels cote a cote :
 
-## Depenses totales ce mois-ci
-
-- Affiche vos depenses totales du mois en cours en rouge (par ex. **-4 838,99 $**)
-- Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
+- **Revenus** (gauche, vert) — votre revenu total du mois en cours (par ex. **+2 482,52 $**). Appuyez pour acceder a l'onglet **Transactions** (vue Revenus)
+- **Depenses** (droite) — vos depenses totales du mois en cours (par ex. **-4 838,99 $**). Appuyez pour acceder a l'onglet **Transactions** (vue Depenses)
 
 ## Benefice net
 

@@ -123,9 +123,8 @@ export default function ExchangeScreen() {
   const availableFrom = CURRENCIES.filter((c) => c !== toCurrency);
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('exchange.title')}</Text>
 
         <View style={styles.card}>
           <Text style={styles.label}>{t('exchange.from')}</Text>
@@ -227,12 +226,7 @@ const createStyles = (theme: Theme) => ({
   },
   content: {
     padding: theme.spacing[4],
-    paddingBottom: theme.spacing[8],
-  },
-  title: {
-    ...theme.textStyles.h1,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[6],
+    paddingBottom: theme.spacing[10],
   },
   card: {
     backgroundColor: theme.colors.surface,

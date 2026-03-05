@@ -86,8 +86,7 @@ Kontroluj, ktore sekcje pojawiaja sie na Twoim [Pulpicie](./02-dashboard.md). Do
 |---|---|
 | **Grywalizacja** | Poziom, pasek postepu XP i codzienna seria |
 | **Miesieczny budzet** | Pozostaly budzet z kolorowym paskiem postepu |
-| **Laczne przychody** | Twoje laczne przychody za biezacy miesiac |
-| **Laczne wydatki** | Twoje laczne wydatki za biezacy miesiac |
+| **Przychody i wydatki** | Polaczona karta z miesiecznymi przychodami i wydatkami |
 | **Dlugi i pozyczki** | Podsumowanie tego, co ci sie nalezy i co jestes winien |
 | **Wykres zysku netto** | 6-miesiczny wykres liniowy zysku netto |
 | **Kapital netto** | Laczna wartosc netto wszystkich portfeli |

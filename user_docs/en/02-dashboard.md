@@ -43,17 +43,14 @@ Tap this card to open the full **Achievements** screen with all badges, streak d
 
 > **Note:** If no monthly budget is set, you'll see a hint to create one.
 
-## Total Income This Month
+## Income & Expenses
 
 ![Dashboard scrolled — income, expenses, wallet](../img/home-2.jpg)
 
-- Displays your total income for the current month in green (e.g., **+$2,482.52**)
-- Tap to go to the **Transactions** tab (Income view)
+A combined card showing your monthly totals side by side:
 
-## Total Expenses This Month
-
-- Displays your total expenses for the current month in red (e.g., **-$4,838.99**)
-- Tap to go to the **Transactions** tab (Expenses view)
+- **Income** (left, green) — your total income for the current month (e.g., **+$2,482.52**). Tap to go to the **Transactions** tab (Income view)
+- **Expenses** (right) — your total expenses for the current month (e.g., **-$4,838.99**). Tap to go to the **Transactions** tab (Expenses view)
 
 ## Net Profit
 

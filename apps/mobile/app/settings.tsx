@@ -775,8 +775,7 @@ export default function SettingsScreen() {
             {([
               { key: 'gamification', label: t('settings.widget.gamification') },
               { key: 'monthlyBudget', label: t('settings.widget.monthlyBudget') },
-              { key: 'totalIncome', label: t('settings.widget.totalIncome') },
-              { key: 'totalExpenses', label: t('settings.widget.totalExpenses') },
+              { key: 'incomeExpenses', label: t('settings.widget.incomeExpenses') },
               { key: 'debts', label: t('settings.widget.debts') },
               { key: 'netProfit', label: t('settings.widget.netProfit') },
               { key: 'netCapital', label: t('settings.widget.netCapital') },

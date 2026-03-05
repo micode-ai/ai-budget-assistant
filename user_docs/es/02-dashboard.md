@@ -43,17 +43,14 @@ Toca esta tarjeta para abrir la pantalla completa de **Logros** con todas las in
 
 > **Nota:** Si no tienes un presupuesto mensual configurado, veras una sugerencia para crear uno.
 
-## Ingresos totales de este mes
+## Ingresos y gastos
 
 ![Panel desplazado — ingresos, gastos, billetera](../img/home-2.jpg)
 
-- Muestra tus ingresos totales del mes actual en verde (por ejemplo, **+$2,482.52**)
-- Toca para ir a la pestana **Transacciones** (vista de Ingresos)
+Una tarjeta combinada con tus totales mensuales lado a lado:
 
-## Gastos totales de este mes
-
-- Muestra tus gastos totales del mes actual en rojo (por ejemplo, **-$4,838.99**)
-- Toca para ir a la pestana **Transacciones** (vista de Gastos)
+- **Ingresos** (izquierda, verde) — tus ingresos totales del mes actual (por ejemplo, **+$2,482.52**). Toca para ir a la pestana **Transacciones** (vista de Ingresos)
+- **Gastos** (derecha) — tus gastos totales del mes actual (por ejemplo, **-$4,838.99**). Toca para ir a la pestana **Transacciones** (vista de Gastos)
 
 ## Beneficio neto
 

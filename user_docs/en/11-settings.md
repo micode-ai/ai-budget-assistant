@@ -86,8 +86,7 @@ Control which sections appear on your [Dashboard](./02-dashboard.md). Tap the to
 |---|---|
 | **Gamification** | Level, XP progress bar, and daily streak |
 | **Monthly Budget** | Budget remaining with a color-coded progress bar |
-| **Total Income** | Your total income for the current month |
-| **Total Expenses** | Your total expenses for the current month |
+| **Income & Expenses** | Combined card showing monthly income and expenses side by side |
 | **Debts & Loans** | Summary of what you are owed and what you owe |
 | **Net Profit Chart** | 6-month line chart of net profit (income − expenses) |
 | **Net Capital** | Total net worth across all wallets |

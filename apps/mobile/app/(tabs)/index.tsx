@@ -247,22 +247,20 @@ export default function DashboardScreen() {
           </View>
         </TouchableOpacity>}
 
-        {widgetVisibility.totalIncome && (
-          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'income' } })}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{t('dashboard.totalIncome')}</Text>
+        {widgetVisibility.incomeExpenses && (
+          <View style={styles.card}>
+            <View style={styles.incomeExpenseRow}>
+              <TouchableOpacity style={styles.incomeExpenseCol} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'income' } })}>
+                <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
+                <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
+              </TouchableOpacity>
+              <View style={styles.incomeExpenseDivider} />
+              <TouchableOpacity style={styles.incomeExpenseCol} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
+                <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalExpenses')}</Text>
+                <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
-          </TouchableOpacity>
-        )}
-
-        {widgetVisibility.totalExpenses && (
-          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{t('dashboard.totalExpenses')}</Text>
-            </View>
-            <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
-          </TouchableOpacity>
+          </View>
         )}
 
         {widgetVisibility.debts && (lentDebts.length > 0 || borrowedDebts.length > 0) && (
@@ -445,15 +443,40 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
   },
+  incomeExpenseRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+  },
+  incomeExpenseCol: {
+    flex: 1,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  incomeExpenseDivider: {
+    width: 1,
+    height: 48,
+    backgroundColor: theme.colors.borderLight,
+  },
+  incomeExpenseLabel: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    fontWeight: '700' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.xl,
+    paddingVertical: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[4],
+    overflow: 'hidden' as const,
+    textAlign: 'center' as const,
+  },
   incomeAmount: {
-    fontSize: 28,
+    fontSize: 20,
     fontFamily: theme.fonts.bold,
     color: theme.colors.primary,
     fontWeight: '900' as const,
     textAlign: 'center' as const,
   },
   expenseTotalAmount: {
-    fontSize: 28,
+    fontSize: 20,
     fontFamily: theme.fonts.bold,
     color: theme.colors.textPrimary,
     fontWeight: '900' as const,
