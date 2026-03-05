@@ -4,8 +4,7 @@ import { MMKV } from 'react-native-mmkv';
 const WIDGET_KEYS = [
   'gamification',
   'monthlyBudget',
-  'totalIncome',
-  'totalExpenses',
+  'incomeExpenses',
   'debts',
   'netProfit',
   'netCapital',

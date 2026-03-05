@@ -86,8 +86,7 @@ Controla qué secciones aparecen en tu [Panel](./02-dashboard.md). Toca el inter
 |---|---|
 | **Gamificacion** | Nivel, barra de progreso de XP y racha diaria |
 | **Presupuesto mensual** | Presupuesto restante con barra de progreso codificada por colores |
-| **Ingresos totales** | Tus ingresos totales del mes actual |
-| **Gastos totales** | Tus gastos totales del mes actual |
+| **Ingresos y gastos** | Tarjeta combinada con ingresos y gastos mensuales |
 | **Deudas y prestamos** | Resumen de lo que te deben y lo que debes |
 | **Grafico de beneficio neto** | Grafico de lineas de 6 meses del beneficio neto |
 | **Capital neto** | Patrimonio neto total en todas las billeteras |

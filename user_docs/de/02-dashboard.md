@@ -43,17 +43,14 @@ Tippe auf das Widget, um den vollstandigen **Erfolge**-Bildschirm zu offnen, wo 
 
 > **Hinweis:** Wenn kein Monatsbudget festgelegt ist, siehst du einen Hinweis, eines zu erstellen.
 
-## Gesamteinkommen diesen Monat
+## Einnahmen & Ausgaben
 
 ![Ubersicht gescrollt — Einkommen, Ausgaben, Geldborse](../img/home-2.jpg)
 
-- Zeigt dein Gesamteinkommen fur den aktuellen Monat in grun an (z.B. **+2.482,52 $**)
-- Tippe, um zum **Transaktionen**-Tab (Einkommen-Ansicht) zu gelangen
+Eine kombinierte Karte mit deinen monatlichen Summen nebeneinander:
 
-## Gesamtausgaben diesen Monat
-
-- Zeigt deine Gesamtausgaben fur den aktuellen Monat in rot an (z.B. **-4.838,99 $**)
-- Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
+- **Einnahmen** (links, grun) — dein Gesamteinkommen fur den aktuellen Monat (z.B. **+2.482,52 $**). Tippe, um zum **Transaktionen**-Tab (Einkommen-Ansicht) zu gelangen
+- **Ausgaben** (rechts) — deine Gesamtausgaben fur den aktuellen Monat (z.B. **-4.838,99 $**). Tippe, um zum **Transaktionen**-Tab (Ausgaben-Ansicht) zu gelangen
 
 ## Nettogewinn
 

@@ -86,8 +86,7 @@ Controlez quelles sections apparaissent sur votre [Tableau de bord](./02-dashboa
 |---|---|
 | **Gamification** | Niveau, barre de progression XP et serie quotidienne |
 | **Budget mensuel** | Budget restant avec barre de progression codee par couleur |
-| **Revenus totaux** | Vos revenus totaux du mois en cours |
-| **Depenses totales** | Vos depenses totales du mois en cours |
+| **Revenus et depenses** | Carte combinee avec revenus et depenses mensuels |
 | **Dettes et prets** | Recapitulatif de ce qu'on vous doit et de vos dettes |
 | **Graphique benefice net** | Graphique lineaire sur 6 mois du benefice net |
 | **Capital net** | Valeur nette totale sur tous les portefeuilles |
