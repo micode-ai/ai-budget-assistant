@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { useBiometric } from '@/features/auth/useBiometric';
@@ -19,6 +20,7 @@ export default function LoginScreen() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -107,14 +109,29 @@ export default function LoginScreen() {
             autoCorrect={false}
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder={t('auth.password')}
-            placeholderTextColor={theme.colors.textTertiary}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder={t('auth.password')}
+              placeholderTextColor={theme.colors.textTertiary}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <TouchableOpacity
+              style={styles.eyeButton}
+              onPress={() => setShowPassword(!showPassword)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={20}
+                color={theme.colors.textTertiary}
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
@@ -210,6 +227,25 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     borderWidth: 1,
     borderColor: theme.colors.border,
+  },
+  passwordContainer: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3.5],
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
+  },
+  eyeButton: {
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3.5],
   },
   button: {
     backgroundColor: theme.colors.primary,
