@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -91,7 +91,15 @@ export default function ExpensesScreen() {
       onPress={() => router.push(`/expense/${item.id}`)}
     >
       <View style={styles.expenseIcon}>
-        <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
+        {item.source === 'ocr' ? (
+          <Image
+            source={require('../../assets/icons/scan-receipt.png')}
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          />
+        ) : (
+          <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
+        )}
       </View>
       <View style={styles.expenseDetails}>
         <Text style={styles.expenseDescription} numberOfLines={1}>
