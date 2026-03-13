@@ -62,7 +62,7 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion
 - **Indicador de escritura** — muestra "Pensando..." mientras la IA procesa tu pregunta
 - **Manejo de errores** — si algo sale mal, veras un mensaje de error con opcion de reintentar
-- **Comandos en lenguaje natural** — crea gastos, ingresos, presupuestos y consulta datos usando lenguaje natural
+- **Comandos en lenguaje natural** — crea gastos, ingresos, presupuestos, categorias y consulta datos usando lenguaje natural
 - **Confirmacion de acciones** — al crear registros financieros, la IA muestra una vista previa y solicita confirmacion antes de guardar
 - **Deteccion inteligente de idioma** — la IA responde automaticamente en tu idioma (ingles, ruso, ucraniano, bielorruso, aleman, espanol, frances, polaco)
 - **Reconocimiento de moneda** — soporta simbolos: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
@@ -99,6 +99,7 @@ Ahora puedes **ejecutar acciones reales** directamente desde el chat:
 - **Gastos:** "Anadir gasto 500₴ para comestibles", "Gaste 1200₴ en transporte ayer"
 - **Ingresos:** "Anadir ingreso 50000₴ de salario", "Recibi 5000₴ de bono"
 - **Presupuestos:** "Crear presupuesto 10000₴ para entretenimiento para marzo", "Establecer presupuesto mensual 3000₴ para comida"
+- **Categorias:** "Crear categoria de gastos Comida", "Crear categoria de ingresos Freelance"
 
 ### Consulta de datos
 

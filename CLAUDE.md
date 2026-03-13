@@ -24,7 +24,7 @@ Turborepo monorepo with 4 packages:
 - **AI module features**:
   - **Chat Q&A**: Natural language financial questions powered by GPT-4
   - **Natural Language Commands**: Execute actions via chat (create expenses/budgets, query data) using OpenAI function calling
-  - **6 AI functions**: `create_expense`, `create_income`, `create_budget`, `get_expenses`, `get_budget_status`, `get_category_breakdown`
+  - **7 AI functions**: `create_expense`, `create_income`, `create_budget`, `create_category`, `get_expenses`, `get_budget_status`, `get_category_breakdown`
   - **Confirmation flow**: Write actions (create_*) require user confirmation before execution; read actions (get_*) execute immediately
   - **Language detection**: Automatically detects user language (Russian, Ukrainian, Belarusian, German, Spanish, French, Polish, English) and responds in same language
   - **Currency mapping**: Supports currency symbol detection (₴→UAH, $→USD, €→EUR, zł→PLN, £→GBP, ₽→RUB)

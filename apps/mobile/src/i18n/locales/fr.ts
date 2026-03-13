@@ -241,6 +241,7 @@ export default {
     actionCreateExpense: 'Ajouter une dépense',
     actionCreateIncome: 'Ajouter un revenu',
     actionCreateBudget: 'Créer un budget',
+    actionCreateCategory: 'Créer une catégorie',
     actionGetExpenses: 'Dépenses',
     actionGetBudgetStatus: 'État du budget',
     actionGetCategoryBreakdown: 'Répartition par catégorie',

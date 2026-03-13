@@ -7,6 +7,7 @@ import { WhisperService } from '../ai/services/whisper.service';
 import { OcrService } from '../ai/services/ocr.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
+import { CategoriesService } from '../categories/categories.service';
 import { TelegramLinkService } from './telegram-link.service';
 import { CommandHandler } from './handlers/command.handler';
 import { ExpenseHandler } from './handlers/expense.handler';
@@ -14,6 +15,7 @@ import { IncomeHandler } from './handlers/income.handler';
 import { ChatHandler } from './handlers/chat.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
+import { CategoryHandler } from './handlers/category.handler';
 import { BotContext } from './types';
 
 @Injectable()
@@ -29,6 +31,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
   private chatHandler!: ChatHandler;
   private voiceHandler!: VoiceHandler;
   private photoHandler!: PhotoHandler;
+  private categoryHandler!: CategoryHandler;
 
   constructor(
     private readonly config: ConfigService,
@@ -39,6 +42,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     private readonly ocrService: OcrService,
     private readonly expensesService: ExpensesService,
     private readonly incomesService: IncomesService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -58,6 +62,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       this.chatHandler = new ChatHandler(this.chatService, this.linkService, this.prisma);
       this.voiceHandler = new VoiceHandler(this.whisperService, this.chatHandler);
       this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService);
+      this.categoryHandler = new CategoryHandler(this.categoriesService);
 
       // Get bot info
       const botInfo = await this.bot.telegram.getMe();
@@ -143,6 +148,8 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.command('income', (ctx) => this.incomeHandler.handle(ctx));
     this.bot.command('account', (ctx) => this.commandHandler.handleAccount(ctx));
     this.bot.command('newchat', (ctx) => this.commandHandler.handleNewChat(ctx));
+    this.bot.command('category', (ctx) => this.categoryHandler.handle(ctx));
+    this.bot.command('categories', (ctx) => this.categoryHandler.handleList(ctx));
 
     // Callback queries (inline keyboard buttons)
     this.bot.on('callback_query', async (ctx) => {
@@ -167,6 +174,26 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       if (data.startsWith('ra:')) {
         const shortId = data.slice('ra:'.length);
         await this.chatHandler.handleRejectCallback(ctx, shortId);
+        return;
+      }
+
+      // Category type picker callbacks
+      if (data.startsWith('cat_e:')) {
+        const name = data.slice('cat_e:'.length);
+        await this.categoryHandler.handleTypeCallback(ctx, 'expense', name);
+        return;
+      }
+
+      if (data.startsWith('cat_i:')) {
+        const name = data.slice('cat_i:'.length);
+        await this.categoryHandler.handleTypeCallback(ctx, 'income', name);
+        return;
+      }
+
+      // Category delete callbacks
+      if (data.startsWith('cat_d:')) {
+        const categoryId = data.slice('cat_d:'.length);
+        await this.categoryHandler.handleDeleteCallback(ctx, categoryId);
         return;
       }
 

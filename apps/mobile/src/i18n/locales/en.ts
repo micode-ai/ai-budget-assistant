@@ -241,6 +241,7 @@ export default {
     actionCreateExpense: 'Add Expense',
     actionCreateIncome: 'Add Income',
     actionCreateBudget: 'Create Budget',
+    actionCreateCategory: 'Create Category',
     actionGetExpenses: 'Expenses',
     actionGetBudgetStatus: 'Budget Status',
     actionGetCategoryBreakdown: 'Category Breakdown',

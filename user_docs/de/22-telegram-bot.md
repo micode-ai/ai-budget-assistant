@@ -25,6 +25,8 @@ Der **Telegram-Bot** ermoglicht die Interaktion mit deinem KI-Budgetassistenten 
 | `/link CODE` | Telegram mit der App verknupfen |
 | `/expense BETRAG BESCHR` | Schnell eine Ausgabe hinzufugen (z. B. `/expense 50 Mittagessen`) |
 | `/income BETRAG BESCHR` | Schnell ein Einkommen hinzufugen (z. B. `/income 3000 Gehalt`) |
+| `/category [TYP] NAME` | Kategorie erstellen (z. B. `/category expense Essen`) |
+| `/categories` | Kategorien auflisten und loschen |
 | `/account` | Zwischen Konten wechseln |
 | `/newchat` | Ein neues KI-Gesprach starten |
 | `/unlink` | Telegram vom Konto trennen |

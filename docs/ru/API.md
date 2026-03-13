@@ -1955,6 +1955,7 @@ Content-Type: application/json
 - `create_expense` — Создать расход (требует подтверждения)
 - `create_income` — Создать доход (требует подтверждения)
 - `create_budget` — Создать бюджет (требует подтверждения)
+- `create_category` — Создать категорию расходов/доходов (требует подтверждения)
 - `get_expenses` — Запросить расходы (выполняется немедленно)
 - `get_budget_status` — Запросить статус бюджетов (выполняется немедленно)
 - `get_category_breakdown` — Запросить расходы по категориям (выполняется немедленно)
@@ -1966,7 +1967,7 @@ AI автоматически определяет язык пользовате
 
 ### Подтвердить действие в чате
 
-Подтверждение ожидающего действия записи (create_expense, create_income, create_budget).
+Подтверждение ожидающего действия записи (create_expense, create_income, create_budget, create_category).
 
 ```http
 POST /ai/chat/confirm

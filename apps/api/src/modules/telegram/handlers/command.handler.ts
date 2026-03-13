@@ -174,6 +174,10 @@ export class CommandHandler {
         '  <i>Example: /expense 100 UAH taxi</i>\n\n' +
         '/income &lt;amount&gt; [description] — Add income\n' +
         '  <i>Example: /income 3000 salary</i>\n\n' +
+        '/category [type] &lt;name&gt; — Create a category\n' +
+        '  <i>Example: /category expense Food</i>\n' +
+        '  <i>Example: /category income Salary</i>\n' +
+        '/categories — List &amp; delete categories\n\n' +
         '/account — Switch between accounts\n' +
         '/newchat — Start a new AI conversation\n' +
         '/unlink — Disconnect Telegram from the app\n' +

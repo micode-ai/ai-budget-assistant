@@ -241,6 +241,7 @@ export default {
     actionCreateExpense: 'Dodaj wydatek',
     actionCreateIncome: 'Dodaj przychód',
     actionCreateBudget: 'Utwórz budżet',
+    actionCreateCategory: 'Utwórz kategorię',
     actionGetExpenses: 'Wydatki',
     actionGetBudgetStatus: 'Status budżetu',
     actionGetCategoryBreakdown: 'Podział na kategorie',

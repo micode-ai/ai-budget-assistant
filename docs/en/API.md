@@ -1991,6 +1991,7 @@ Content-Type: application/json
 - `create_expense` — Create expense (requires confirmation)
 - `create_income` — Create income (requires confirmation)
 - `create_budget` — Create budget (requires confirmation)
+- `create_category` — Create expense/income category (requires confirmation)
 - `get_expenses` — Query expenses (executes immediately)
 - `get_budget_status` — Query budget status (executes immediately)
 - `get_category_breakdown` — Query spending by category (executes immediately)
@@ -2002,7 +2003,7 @@ The AI automatically detects the user's language from the conversation history a
 
 ### Confirm Chat Action
 
-Confirm a pending write action (create_expense, create_income, create_budget).
+Confirm a pending write action (create_expense, create_income, create_budget, create_category).
 
 ```http
 POST /ai/chat/confirm

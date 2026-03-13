@@ -62,7 +62,7 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - **Historique de conversation** — les messages precedents sont conserves pendant votre session
 - **Indicateur de saisie** — affiche "Reflexion en cours..." pendant que l'IA traite votre question
 - **Gestion des erreurs** — en cas de probleme, vous verrez un message d'erreur avec une option de reessai
-- **Commandes en langage naturel** — creez des depenses, revenus, budgets et consultez les donnees en langage courant
+- **Commandes en langage naturel** — creez des depenses, revenus, budgets, categories et consultez les donnees en langage courant
 - **Confirmation d'action** — lors de la creation d'enregistrements financiers, l'IA affiche un apercu et demande confirmation avant l'enregistrement
 - **Detection intelligente de la langue** — l'IA repond automatiquement dans votre langue (anglais, russe, ukrainien, bielorusse, allemand, espagnol, francais, polonais)
 - **Reconnaissance des devises** — prend en charge les symboles : ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
@@ -99,6 +99,7 @@ Vous pouvez maintenant **executer des actions reelles** directement depuis le ch
 - **Depenses :** "Ajouter depense 500₴ pour courses", "Depense 1200₴ en transport hier"
 - **Revenus :** "Ajouter revenu 50000₴ de salaire", "Recu 5000₴ de prime"
 - **Budgets :** "Creer budget 10000₴ pour divertissement pour mars", "Definir budget mensuel 3000₴ pour alimentation"
+- **Categories :** "Creer categorie de depenses Alimentation", "Creer categorie de revenus Freelance"
 
 ### Consultation des donnees
 

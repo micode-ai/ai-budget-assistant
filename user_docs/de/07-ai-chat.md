@@ -62,7 +62,7 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - **Konversationsverlauf** — vorherige Nachrichten bleiben wahrend deiner Sitzung erhalten
 - **Schreibindikator** — zeigt "Denke nach..." wahrend die KI deine Frage verarbeitet
 - **Fehlerbehandlung** — wenn etwas schief geht, siehst du eine Fehlermeldung mit einer Wiederholungsoption
-- **Natürlichsprachliche Befehle** — erstelle Ausgaben, Einkommen, Budgets und frage Daten in einfacher Sprache ab
+- **Natürlichsprachliche Befehle** — erstelle Ausgaben, Einkommen, Budgets, Kategorien und frage Daten in einfacher Sprache ab
 - **Aktionsbestätigung** — beim Erstellen von Finanzdatensätzen zeigt die KI eine Vorschau und fragt vor dem Speichern nach Bestätigung
 - **Intelligente Spracherkennung** — KI antwortet automatisch in deiner Sprache (Englisch, Russisch, Ukrainisch, Weißrussisch, Deutsch, Spanisch, Französisch, Polnisch)
 - **Währungserkennung** — unterstützt Symbole: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
@@ -99,6 +99,7 @@ Du kannst jetzt **echte Aktionen** direkt aus dem Chat ausführen:
 - **Ausgaben:** "Ausgabe 500₴ für Lebensmittel hinzufügen", "1200₴ für Transport gestern ausgegeben"
 - **Einkommen:** "Einkommen 50000₴ aus Gehalt hinzufügen", "5000₴ Bonus erhalten"
 - **Budgets:** "Budget 10000₴ für Unterhaltung für März erstellen", "Monatliches Budget 3000₴ für Essen festlegen"
+- **Kategorien:** "Erstelle Ausgabenkategorie Essen", "Erstelle Einkommenskategorie Freelance"
 
 ### Daten abfragen
 
