@@ -194,7 +194,7 @@ Important:
     imageDataUrl?: string,
   ): Promise<ReceiptExpense> {
     const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-    const { model: aiModel, maxTokens } = resolveAiModel(userPref?.aiModel);
+    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
@@ -202,9 +202,11 @@ Important:
 
     const url = imageDataUrl || `data:image/jpeg;base64,${imageBase64}`;
 
-    this.logger.log(`[Vision] Using model: ${aiModel}, maxTokens: ${maxTokens}`);
-    this.logger.log(`[Vision] Image URL prefix: ${url.substring(0, 80)}...`);
-    this.logger.log(`[Vision] Image URL total length: ${url.length}`);
+    // OCR needs more tokens than chat — receipts with many items produce large JSON
+    const ocrMaxTokens = 4096;
+
+    this.logger.log(`[Vision] Using model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
+    this.logger.log(`[Vision] Image base64 size: ${(imageBase64.length / 1024).toFixed(1)}KB`);
 
     const response = await this.openai.chat.completions.create({
       model: aiModel,
@@ -223,14 +225,21 @@ Important:
           ],
         },
       ],
-      max_tokens: maxTokens,
+      max_tokens: ocrMaxTokens,
       response_format: { type: 'json_object' },
     });
 
-    const content = response.choices[0]?.message?.content;
+    const choice = response.choices[0];
+    const content = choice?.message?.content;
+    this.logger.log(`[Vision] GPT finish_reason: ${choice?.finish_reason}`);
     this.logger.log(`[Vision] GPT response: ${content}`);
+
     if (!content) {
       throw new Error('No response from AI');
+    }
+
+    if (choice?.finish_reason === 'length') {
+      this.logger.warn('[Vision] Response was truncated (finish_reason=length), attempting to parse anyway');
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
@@ -244,7 +253,9 @@ Important:
     userPrompt?: string,
   ): Promise<ReceiptExpense> {
     const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-    const { model: aiModel, maxTokens } = resolveAiModel(userPref?.aiModel);
+    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+
+    const ocrMaxTokens = 4096;
 
     const buffer = Buffer.from(pdfBase64, 'base64');
     const parser = new PDFParse({ data: new Uint8Array(buffer) });
@@ -257,22 +268,27 @@ Important:
       this.logger.log(`[PDF] Extracted text length: ${trimmedText.length}`);
       this.logger.log(`[PDF] Extracted text (first 500 chars): ${trimmedText.substring(0, 500)}`);
 
-      if (trimmedText && trimmedText.length >= 20) {
+      // Strip pdf-parse page separators and whitespace to check for real content
+      const meaningfulText = trimmedText.replace(/--\s*\d+\s+of\s+\d+\s*--/gi, '').trim();
+
+      if (meaningfulText && meaningfulText.length >= 50) {
         // Text-based PDF — use cheaper text-only GPT call
         const categories = await this.getExpenseCategories(accountId);
         const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
         const prompt = this.buildReceiptPrompt(categoryNames, 'text', userPrompt, trimmedText);
 
-        this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}`);
+        this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
 
         const response = await this.openai.chat.completions.create({
           model: aiModel,
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: maxTokens,
+          max_tokens: ocrMaxTokens,
           response_format: { type: 'json_object' },
         });
 
-        const content = response.choices[0]?.message?.content;
+        const choice = response.choices[0];
+        const content = choice?.message?.content;
+        this.logger.log(`[PDF] GPT finish_reason: ${choice?.finish_reason}`);
         this.logger.log(`[PDF] GPT response: ${content}`);
         if (!content) throw new Error('No response from AI');
 
@@ -281,8 +297,8 @@ Important:
       }
 
       // Scanned PDF — send the full PDF as a file
-      this.logger.log(`[PDF] No text found, sending full PDF as file with model: ${aiModel}`);
-      return this.parseReceiptFile(pdfBase64, userId, accountId, userPrompt, aiModel, maxTokens);
+      this.logger.log(`[PDF] Insufficient meaningful text (${meaningfulText.length} chars), sending full PDF as file with model: ${aiModel}`);
+      return this.parseReceiptFile(pdfBase64, userId, accountId, userPrompt, aiModel, ocrMaxTokens);
     } finally {
       await parser.destroy();
     }

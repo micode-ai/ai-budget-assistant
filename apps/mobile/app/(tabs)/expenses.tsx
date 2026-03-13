@@ -245,44 +245,46 @@ export default function ExpensesScreen() {
 
             {showCategoryPicker && (
               <View style={styles.categoryPickerContainer}>
-                <TouchableOpacity
-                  style={[styles.categoryPickerItem, !hasFilter && styles.categoryPickerItemSelected]}
-                  onPress={() => {
-                    if (isExpense) setExpenseFilters({ categoryId: null });
-                    else setIncomeFilters({ categoryId: null });
-                    setShowCategoryPicker(false);
-                  }}
-                >
-                  <Ionicons name="list-outline" size={18} color={!hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
-                  <Text style={[styles.categoryPickerItemText, !hasFilter && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
-                    {t('expenses.categoryAll')}
-                  </Text>
-                  {!hasFilter && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
-                </TouchableOpacity>
-                {categories.map((cat) => {
-                  const isSelected = currentFilters.categoryId === cat.id;
-                  return (
-                    <TouchableOpacity
-                      key={cat.id}
-                      style={[styles.categoryPickerItem, isSelected && styles.categoryPickerItemSelected]}
-                      onPress={() => {
-                        if (isExpense) setExpenseFilters({ categoryId: cat.id });
-                        else setIncomeFilters({ categoryId: cat.id });
-                        setShowCategoryPicker(false);
-                      }}
-                    >
-                      {cat.icon ? (
-                        <Ionicons name={cat.icon as any} size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
-                      ) : (
-                        <Ionicons name="pricetag-outline" size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
-                      )}
-                      <Text style={[styles.categoryPickerItemText, isSelected && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
-                        {cat.name}
-                      </Text>
-                      {isSelected && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
-                    </TouchableOpacity>
-                  );
-                })}
+                <ScrollView style={styles.categoryPickerScroll} nestedScrollEnabled>
+                  <TouchableOpacity
+                    style={[styles.categoryPickerItem, !hasFilter && styles.categoryPickerItemSelected]}
+                    onPress={() => {
+                      if (isExpense) setExpenseFilters({ categoryId: null });
+                      else setIncomeFilters({ categoryId: null });
+                      setShowCategoryPicker(false);
+                    }}
+                  >
+                    <Ionicons name="list-outline" size={18} color={!hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
+                    <Text style={[styles.categoryPickerItemText, !hasFilter && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                      {t('expenses.categoryAll')}
+                    </Text>
+                    {!hasFilter && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
+                  </TouchableOpacity>
+                  {categories.map((cat) => {
+                    const isSelected = currentFilters.categoryId === cat.id;
+                    return (
+                      <TouchableOpacity
+                        key={cat.id}
+                        style={[styles.categoryPickerItem, isSelected && styles.categoryPickerItemSelected]}
+                        onPress={() => {
+                          if (isExpense) setExpenseFilters({ categoryId: cat.id });
+                          else setIncomeFilters({ categoryId: cat.id });
+                          setShowCategoryPicker(false);
+                        }}
+                      >
+                        {cat.icon ? (
+                          <Ionicons name={cat.icon as any} size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
+                        ) : (
+                          <Ionicons name="pricetag-outline" size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
+                        )}
+                        <Text style={[styles.categoryPickerItemText, isSelected && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                          {cat.name}
+                        </Text>
+                        {isSelected && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
               </View>
             )}
           </View>
@@ -611,6 +613,9 @@ const createStyles = (theme: Theme) => ({
     borderColor: theme.colors.border,
     overflow: 'hidden' as const,
     ...theme.shadows.md,
+  },
+  categoryPickerScroll: {
+    maxHeight: 300,
   },
   categoryPickerItem: {
     flexDirection: 'row' as const,
