@@ -6,10 +6,11 @@ import { TelegramLinkService } from './telegram-link.service';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Global()
 @Module({
-  imports: [AiModule, ExpensesModule, IncomesModule],
+  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule],
   controllers: [TelegramBotController],
   providers: [TelegramService, TelegramBotService, TelegramLinkService],
   exports: [TelegramService, TelegramLinkService, TelegramBotService],

@@ -241,6 +241,7 @@ export default {
     actionCreateExpense: 'Добавить расход',
     actionCreateIncome: 'Добавить доход',
     actionCreateBudget: 'Создать бюджет',
+    actionCreateCategory: 'Создать категорию',
     actionGetExpenses: 'Расходы',
     actionGetBudgetStatus: 'Статус бюджета',
     actionGetCategoryBreakdown: 'Разбивка по категориям',

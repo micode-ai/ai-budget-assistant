@@ -43,6 +43,7 @@ export function ActionResultCard({ actionResult }: ActionResultCardProps) {
     case 'create_expense':
     case 'create_income':
     case 'create_budget':
+    case 'create_category':
       return <CreateSuccessResult actionType={actionResult.actionType} data={data} />;
     default:
       return null;
@@ -165,6 +166,7 @@ function CreateSuccessResult({ actionType, data }: { actionType: string; data: R
     create_expense: t('chat.actionCreateExpense'),
     create_income: t('chat.actionCreateIncome'),
     create_budget: t('chat.actionCreateBudget'),
+    create_category: t('chat.actionCreateCategory'),
   };
 
   return (
@@ -178,6 +180,7 @@ function CreateSuccessResult({ actionType, data }: { actionType: string; data: R
       <Text style={styles.successDetail}>
         {labels[actionType] || actionType}
         {data.amount ? `: ${Number(data.amount).toFixed(2)} ${data.currencyCode || ''}` : ''}
+        {actionType === 'create_category' && data.name ? `: ${data.name} (${data.type})` : ''}
       </Text>
     </View>
   );

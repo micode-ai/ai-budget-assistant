@@ -62,7 +62,7 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - **Historia rozmow** — poprzednie wiadomosci sa zachowywane podczas sesji
 - **Wskaznik pisania** — wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
 - **Obsluga bledow** — jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
-- **Polecenia w jezyku naturalnym** — tworzenie wydatkow, przychodow, budzetow i zapytan o dane uzywajac zwyklego jezyka
+- **Polecenia w jezyku naturalnym** — tworzenie wydatkow, przychodow, budzetow, kategorii i zapytan o dane uzywajac zwyklego jezyka
 - **Potwierdzenie akcji** — podczas tworzenia rekordow finansowych AI pokazuje podglad i prosi o potwierdzenie przed zapisaniem
 - **Inteligentne wykrywanie jezyka** — AI automatycznie odpowiada w Twoim jezyku (angielski, rosyjski, ukrainski, bialoruski, niemiecki, hiszpanski, francuski, polski)
 - **Rozpoznawanie walut** — obsluga symboli: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
@@ -99,6 +99,7 @@ Mozesz teraz **wykonywac rzeczywiste akcje** bezposrednio z czatu:
 - **Wydatki:** "Dodaj wydatek 500₴ na zakupy", "Wydalem 1200₴ na transport wczoraj"
 - **Przychody:** "Dodaj przychod 50000₴ z wynagrodzenia", "Otrzymalem 5000₴ premii"
 - **Budzety:** "Utworz budzet 10000₴ na rozrywke na marzec", "Ustaw miesieczny budzet 3000₴ na jedzenie"
+- **Kategorie:** "Utworz kategorie wydatkow Jedzenie", "Utworz kategorie przychodow Freelance"
 
 ### Zapytania o dane
 

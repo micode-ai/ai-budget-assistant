@@ -241,6 +241,7 @@ export default {
     actionCreateExpense: 'Ausgabe hinzufügen',
     actionCreateIncome: 'Einnahme hinzufügen',
     actionCreateBudget: 'Budget erstellen',
+    actionCreateCategory: 'Kategorie erstellen',
     actionGetExpenses: 'Ausgaben',
     actionGetBudgetStatus: 'Budgetstatus',
     actionGetCategoryBreakdown: 'Kategorieaufschlüsselung',

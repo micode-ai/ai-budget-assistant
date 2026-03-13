@@ -368,6 +368,21 @@ export class ChatService {
       {
         type: 'function',
         function: {
+          name: 'create_category',
+          description: 'Create a new expense or income category. Use when the user asks to add, create, or make a new category.',
+          parameters: {
+            type: 'object',
+            properties: {
+              name: { type: 'string', description: 'Category name (e.g., "Food", "Freelance", "Transport")' },
+              type: { type: 'string', enum: ['expense', 'income'], description: 'Whether this is an expense or income category' },
+            },
+            required: ['name', 'type'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
           name: 'get_expenses',
           description: 'Retrieve and display user expenses for a date range. Use when user asks to show, list, or view their spending.',
           parameters: {
@@ -416,7 +431,7 @@ export class ChatService {
   // ── Action Handling ──
 
   private isWriteAction(actionType: string): boolean {
-    return ['create_expense', 'create_income', 'create_budget'].includes(actionType);
+    return ['create_expense', 'create_income', 'create_budget', 'create_category'].includes(actionType);
   }
 
   private async handleWriteActionRequest(
@@ -549,6 +564,8 @@ export class ChatService {
           return await this.executeCreateIncome(data, accountId, userId);
         case 'create_budget':
           return await this.executeCreateBudget(data, accountId, userId);
+        case 'create_category':
+          return await this.executeCreateCategory(data, accountId, userId);
         case 'get_expenses':
           return await this.executeGetExpenses(data, accountId);
         case 'get_budget_status':
@@ -672,6 +689,37 @@ export class ChatService {
         period: budget.period,
       },
     };
+  }
+
+  private async executeCreateCategory(
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+  ): Promise<ChatActionResult> {
+    const name = String(data.name).trim();
+    const type = String(data.type);
+
+    if (name.length === 0 || name.length > 50) {
+      return { actionType: 'create_category', success: false, errorMessage: 'Category name must be 1-50 characters' };
+    }
+
+    try {
+      const category = await this.categoriesService.create(accountId, userId, { name, type });
+      return {
+        actionType: 'create_category',
+        success: true,
+        data: {
+          id: category.id,
+          name: category.name,
+          type: category.type,
+        },
+      };
+    } catch (error: any) {
+      if (error?.code === 'P2002') {
+        return { actionType: 'create_category', success: false, errorMessage: `Category "${name}" already exists` };
+      }
+      throw error;
+    }
   }
 
   private async executeGetExpenses(

@@ -25,6 +25,8 @@
 | `/link KOD` | Polacz Telegram z aplikacja |
 | `/expense KWOTA OPIS` | Szybko dodaj wydatek (np. `/expense 50 obiad`) |
 | `/income KWOTA OPIS` | Szybko dodaj przychod (np. `/income 3000 wynagrodzenie`) |
+| `/category [TYP] NAZWA` | Utworz kategorie (np. `/category expense Jedzenie`) |
+| `/categories` | Lista i usuwanie kategorii |
 | `/account` | Przelacz miedzy kontami |
 | `/newchat` | Rozpocznij nowa rozmowe z AI |
 | `/unlink` | Odlacz Telegram od konta |

@@ -62,7 +62,7 @@ Tap any button to instantly send that question.
 - **Conversation history** — previous messages are preserved during your session
 - **Typing indicator** — shows "Thinking..." while the AI processes your question
 - **Error handling** — if something goes wrong, you'll see an error message with a retry option
-- **Natural Language Commands** — create expenses, income, budgets, and query data using plain language
+- **Natural Language Commands** — create expenses, income, budgets, categories, and query data using plain language
 - **Action Confirmation** — when creating financial records, AI shows a preview and asks for confirmation before saving
 - **Smart Language Detection** — AI automatically responds in your language (English, Russian, Ukrainian, Belarusian, German, Spanish, French, Polish)
 - **Currency Recognition** — supports symbols: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
@@ -99,6 +99,7 @@ You can now **execute real actions** directly from the chat:
 - **Expenses:** "Add expense 500₴ for groceries", "Spent 1200₴ on transport yesterday"
 - **Income:** "Add income 50000₴ from salary", "Received 5000₴ bonus"
 - **Budgets:** "Create budget 10000₴ for entertainment for March", "Set monthly budget 3000₴ for food"
+- **Categories:** "Create expense category Food", "Add income category Freelance"
 
 ### Querying Data
 

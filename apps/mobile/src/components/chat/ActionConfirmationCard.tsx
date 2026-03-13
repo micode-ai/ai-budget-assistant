@@ -9,6 +9,7 @@ const ACTION_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
   create_expense: 'receipt-outline',
   create_income: 'cash-outline',
   create_budget: 'pie-chart-outline',
+  create_category: 'folder-outline',
 };
 
 interface ActionConfirmationCardProps {

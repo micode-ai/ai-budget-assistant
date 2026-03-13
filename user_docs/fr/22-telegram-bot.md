@@ -25,6 +25,8 @@ Le **Bot Telegram** vous permet d'interagir avec votre Assistant Budget IA direc
 | `/link CODE` | Associer votre Telegram a l'application |
 | `/expense MONTANT DESC` | Ajouter rapidement une depense (par ex., `/expense 50 dejeuner`) |
 | `/income MONTANT DESC` | Ajouter rapidement un revenu (par ex., `/income 3000 salaire`) |
+| `/category [TYPE] NOM` | Creer une categorie (par ex., `/category expense Alimentation`) |
+| `/categories` | Lister et supprimer les categories |
 | `/account` | Basculer entre vos comptes |
 | `/newchat` | Demarrer une nouvelle conversation avec l'IA |
 | `/unlink` | Dissocier Telegram de votre compte |

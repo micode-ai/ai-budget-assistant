@@ -380,6 +380,7 @@ export type ChatActionType =
   | 'create_expense'
   | 'create_income'
   | 'create_budget'
+  | 'create_category'
   | 'get_expenses'
   | 'get_budget_status'
   | 'get_category_breakdown';
@@ -428,10 +429,16 @@ export interface GetCategoryBreakdownActionData {
   endDate: string;
 }
 
+export interface CreateCategoryActionData {
+  name: string;
+  type: 'expense' | 'income';
+}
+
 export type ChatActionData =
   | CreateExpenseActionData
   | CreateIncomeActionData
   | CreateBudgetActionData
+  | CreateCategoryActionData
   | GetExpensesActionData
   | GetBudgetStatusActionData
   | GetCategoryBreakdownActionData;

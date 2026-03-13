@@ -239,6 +239,7 @@ export default {
     actionCreateExpense: 'Дадаць расход',
     actionCreateIncome: 'Дадаць даход',
     actionCreateBudget: 'Стварыць бюджэт',
+    actionCreateCategory: 'Стварыць катэгорыю',
     actionGetExpenses: 'Расходы',
     actionGetBudgetStatus: 'Статус бюджэту',
     actionGetCategoryBreakdown: 'Разбіўка па катэгорыях',
