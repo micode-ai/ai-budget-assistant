@@ -59,8 +59,14 @@ export class PhotoHandler {
 
       // Get the highest resolution photo
       const photo = ctx.message.photo[ctx.message.photo.length - 1];
+      this.logger.log(`[Photo] file_id: ${photo.file_id}, file_size: ${photo.file_size || 'unknown'}, ${photo.width}x${photo.height}`);
+
       const fileLink = await ctx.telegram.getFileLink(photo.file_id);
+      this.logger.log(`[Photo] Download URL: ${fileLink.href.substring(0, 80)}...`);
+
       const buffer = await downloadFile(fileLink.href);
+      this.logger.log(`[Photo] Downloaded ${(buffer.length / 1024).toFixed(1)}KB`);
+
       const base64 = buffer.toString('base64');
 
       // Get caption as optional user prompt
@@ -126,7 +132,7 @@ export class PhotoHandler {
         ]),
       });
     } catch (error) {
-      this.logger.error(`Error processing photo: ${error}`);
+      this.logger.error(`Error processing photo: ${error}`, error instanceof Error ? error.stack : undefined);
       await ctx.reply('❌ Could not scan the receipt. Please try again or add the expense manually.');
     }
   }
@@ -152,7 +158,11 @@ export class PhotoHandler {
       await ctx.sendChatAction('typing');
 
       const fileLink = await ctx.telegram.getFileLink(file_id);
+      this.logger.log(`[Document] mime: ${mime_type}, Download URL: ${fileLink.href.substring(0, 80)}...`);
+
       const buffer = await downloadFile(fileLink.href);
+      this.logger.log(`[Document] Downloaded ${(buffer.length / 1024).toFixed(1)}KB`);
+
       const base64 = buffer.toString('base64');
 
       const caption = ('caption' in ctx.message) ? ctx.message.caption : undefined;
@@ -216,7 +226,7 @@ export class PhotoHandler {
         ]),
       });
     } catch (error) {
-      this.logger.error(`Error processing document: ${error}`);
+      this.logger.error(`Error processing document: ${error}`, error instanceof Error ? error.stack : undefined);
       await ctx.reply('❌ Could not scan the document. Please try again.');
     }
   }
