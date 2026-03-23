@@ -19,6 +19,15 @@ import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getLegalUrls } from '@/constants/legal';
 
+const API_ERROR_MAP: Record<string, string> = {
+  'User with this email already exists': 'errors.emailAlreadyExists',
+};
+
+function mapApiError(message: string, t: (key: string) => string, fallbackKey: string): string {
+  const i18nKey = API_ERROR_MAP[message];
+  return i18nKey ? t(i18nKey) : t(fallbackKey);
+}
+
 const CURRENCIES = [
   { code: 'USD', label: '$ USD' },
   { code: 'EUR', label: '\u20AC EUR' },
@@ -91,7 +100,8 @@ export default function RegisterScreen() {
       await register(email, password, name, currencyCode);
       router.replace('/welcome');
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('errors.registrationFailed'));
+      const msg = e instanceof Error ? e.message : '';
+      setError(mapApiError(msg, t, 'errors.registrationFailed'));
     }
   };
 

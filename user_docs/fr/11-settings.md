@@ -6,7 +6,21 @@
 
 Accedez aux Parametres en appuyant sur l'**icone d'engrenage** dans le coin superieur droit de n'importe quel ecran.
 
-## Profil
+Les parametres sont organises en categories. Appuyez sur une categorie pour ouvrir son ecran dedie :
+
+| Categorie | Contenu |
+|---|---|
+| **Profil et compte** | Nom, e-mail, fuseau horaire, devise, abonnement |
+| **Apparence et langue** | Theme, langue |
+| **Preferences IA** | Style de reponse, selection du modele |
+| **Widgets du tableau de bord** | Afficher ou masquer les widgets de l'ecran d'accueil |
+| **Notifications et integrations** | Notifications push, bot Telegram |
+| **Securite et chiffrement** | Configuration du chiffrement de bout en bout |
+| **Portefeuille** | Soldes, dettes, solde initial |
+| **Donnees et rapports** | Synchronisation, rapports par e-mail, sauvegarde et restauration |
+| **A propos** | Version, aide, support, mentions legales |
+
+## Profil et compte
 
 ![Parametres — Section Profil](../img/settings-0.jpg)
 
@@ -15,7 +29,7 @@ Accedez aux Parametres en appuyant sur l'**icone d'engrenage** dans le coin supe
 - **E-mail** — l'e-mail de votre compte (affichage uniquement)
 - **Fuseau horaire** — appuyez sur l'icone de crayon pour changer. Un selecteur avec recherche apparait avec plus de 90 fuseaux horaires (par ex. "Europe/Paris")
 
-## Devise
+### Devise
 
 Selectionnez votre devise par defaut en appuyant sur l'une des pastilles de devise :
 
@@ -23,7 +37,11 @@ Selectionnez votre devise par defaut en appuyant sur l'une des pastilles de devi
 
 La devise selectionnee est mise en surbrillance. Cela definit la devise par defaut pour les nouvelles depenses, revenus et l'affichage du Tableau de bord.
 
-## Parametres de l'application
+### Abonnement
+
+- **Gerer le plan** — appuyez pour voir votre abonnement actuel et explorer les options de mise a niveau
+
+## Apparence et langue
 
 ### Langue
 
@@ -41,6 +59,16 @@ Choisissez parmi 8 langues prises en charge :
 | BY | Беларуская |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
+
+### Apparence
+
+Choisissez votre theme :
+
+- **Systeme** — suit le mode clair/sombre de votre appareil
+- **Clair** — toujours utiliser le theme clair
+- **Sombre** — toujours utiliser le theme sombre
+
+## Preferences IA
 
 ### Style de reponse de l'IA
 
@@ -70,14 +98,6 @@ Choisissez le modele d'IA pour toutes les fonctionnalites IA (Chat, Scan de recu
 
 Appuyez sur une pastille pour changer. Le modele prend effet immediatement pour toutes les nouvelles requetes IA.
 
-### Apparence
-
-Choisissez votre theme :
-
-- **Systeme** — suit le mode clair/sombre de votre appareil
-- **Clair** — toujours utiliser le theme clair
-- **Sombre** — toujours utiliser le theme sombre
-
 ## Widgets du tableau de bord
 
 Controlez quelles sections apparaissent sur votre [Tableau de bord](./02-dashboard.md). Appuyez sur le bouton bascule a cote de chaque widget pour l'afficher ou le masquer :
@@ -97,9 +117,11 @@ Controlez quelles sections apparaissent sur votre [Tableau de bord](./02-dashboa
 
 > **Conseil :** Vos preferences sont sauvegardees automatiquement et persistent entre les redemarrages.
 
-## Notifications
+## Notifications et integrations
 
 ![Parametres — Section Notifications](../img/settings.jpg)
+
+### Notifications
 
 Interrupteurs a bascule pour les preferences de notifications :
 
@@ -109,22 +131,24 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Alertes Budget** | Etre averti lorsque vous atteignez les seuils de budget |
 | **Activite Compte Partage** | Etre averti lorsque d'autres personnes ajoutent des depenses aux comptes partages |
 
-## Abonnement
+### Bot Telegram
 
-- **Gerer le plan** — appuyez pour voir votre abonnement actuel et explorer les options de mise a niveau
+Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses via le bot Telegram. Voir [Bot Telegram](./22-telegram-bot.md) pour plus de details.
 
-## Panneau d'administration
+## Securite et chiffrement
 
-- **Tableau de bord administrateur** — visible uniquement par les utilisateurs administrateurs. Fournit des statistiques au niveau du systeme et la surveillance de l'utilisation de l'IA.
+Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees financieres. Voir [Chiffrement](./15-encryption.md) pour plus de details.
 
-## Portefeuille
+## Donnees et rapports
 
-Acces rapide aux fonctionnalites du portefeuille :
+### Donnees et synchronisation
 
-- **Definir le solde** — definir les soldes initiaux pour vos devises
-- **Soldes** — voir la ventilation detaillee du portefeuille par devise
+- **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
+- **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
 
-## Rapports et email
+> **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
+
+### Rapports et email
 
 Gerez vos preferences de rapports et d'emails :
 
@@ -134,16 +158,17 @@ Gerez vos preferences de rapports et d'emails :
 - **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte
 - **Restaurer la sauvegarde** — importer un fichier de sauvegarde precedemment exporte
 
-## Donnees et synchronisation
+## A propos
 
-- **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
-- **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
-
-> **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
+- **Version** — numero de version actuel de l'application
+- **Aide** — ouvre le centre d'aide integre
+- **Support** — envoyer un e-mail a l'equipe de support
+- **Politique de confidentialite** — consulter la politique de confidentialite
+- **Conditions d'utilisation** — consulter les conditions d'utilisation
 
 ## Se deconnecter
 
-Faites defiler jusqu'en bas des Parametres et appuyez sur **Se deconnecter**. Une boite de dialogue de confirmation apparaitra — confirmez pour vous deconnecter de votre compte.
+Sur l'ecran principal des Parametres, appuyez sur **Se deconnecter** en bas. Une boite de dialogue de confirmation apparaitra — confirmez pour vous deconnecter de votre compte.
 
 ## FAQ
 
@@ -158,4 +183,4 @@ Faites defiler jusqu'en bas des Parametres et appuyez sur **Se deconnecter**. Un
 
 ---
 
-*Voir aussi : [Comptes](./09-accounts.md) | [Abonnement](./12-subscription.md) | [Export et rapports](./16-export-reports.md) | [Mode de reponse de l'IA](./20-ai-response-mode.md)*
+*Voir aussi : [Comptes](./09-accounts.md) | [Abonnement](./12-subscription.md) | [Export et rapports](./16-export-reports.md) | [Mode de reponse de l'IA](./20-ai-response-mode.md) | [Chat IA](./07-ai-chat.md)*

@@ -88,7 +88,7 @@ Return a JSON object with the following structure:
 {
   "merchantName": "store/restaurant name or null if not found",
   "merchantAddress": "address or null",
-  "date": "YYYY-MM-DD format or null",
+  "date": "YYYY-MM-DD format or null (IMPORTANT: European receipts use DD.MM.YYYY or DD/MM/YYYY, American receipts use MM/DD/YYYY — determine format from merchant country/language, NOT by assuming MM/DD)",
   "time": "HH:MM format or null",
   "items": [
     {

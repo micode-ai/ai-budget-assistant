@@ -1,12 +1,26 @@
 # Ajustes
 
-> Personaliza tu perfil, apariencia, notificaciones y sincronizacion de datos. Cambia tu idioma, moneda, tema y gestiona las preferencias de tu cuenta.
+> Personaliza tu perfil, apariencia, widgets del panel, notificaciones y sincronizacion de datos. Cambia tu idioma, moneda, tema y gestiona las preferencias de tu cuenta.
 
 ## Vista general
 
 Accede a los Ajustes tocando el **icono de engranaje** en la esquina superior derecha de cualquier pantalla.
 
-## Perfil
+Los ajustes estan organizados en categorias. Toca cualquier categoria para abrir su pantalla dedicada:
+
+| Categoria | Contenido |
+|---|---|
+| **Perfil y cuenta** | Nombre, correo, zona horaria, moneda, suscripcion |
+| **Apariencia e idioma** | Tema, idioma |
+| **Preferencias de IA** | Estilo de respuesta, seleccion de modelo |
+| **Widgets del panel** | Mostrar u ocultar widgets |
+| **Notificaciones e integraciones** | Alertas push, bot de Telegram |
+| **Seguridad y cifrado** | Configuracion de cifrado de extremo a extremo |
+| **Billetera** | Saldos, deudas, saldo inicial |
+| **Datos e informes** | Sincronizacion, informes por email, copia de seguridad |
+| **Acerca de** | Version, ayuda, soporte, informacion legal |
+
+## Perfil y cuenta
 
 ![Ajustes — Seccion de Perfil](../img/settings-0.jpg)
 
@@ -15,7 +29,7 @@ Accede a los Ajustes tocando el **icono de engranaje** en la esquina superior de
 - **Correo electronico** — tu correo electronico de la cuenta (solo visualizacion)
 - **Zona horaria** — toca el icono de lapiz para cambiar. Aparece un selector con busqueda con mas de 90 zonas horarias (por ejemplo, "Europe/Madrid")
 
-## Moneda
+### Moneda
 
 Selecciona tu moneda predeterminada tocando una de las fichas de moneda:
 
@@ -23,7 +37,11 @@ Selecciona tu moneda predeterminada tocando una de las fichas de moneda:
 
 La moneda seleccionada se resalta. Esto establece la moneda predeterminada para nuevos gastos, ingresos y visualizacion del Panel.
 
-## Ajustes de la aplicacion
+### Suscripcion
+
+- **Gestionar plan** — toca para ver tu suscripcion actual y explorar opciones de mejora
+
+## Apariencia e idioma
 
 ### Idioma
 
@@ -41,6 +59,16 @@ Elige entre 8 idiomas disponibles:
 | BY | Беларуская |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
+
+### Apariencia
+
+Elige tu tema:
+
+- **Sistema** — sigue la configuracion de modo claro/oscuro de tu dispositivo
+- **Claro** — siempre usa el tema claro
+- **Oscuro** — siempre usa el tema oscuro
+
+## Preferencias de IA
 
 ### Estilo de respuesta de la IA
 
@@ -70,14 +98,6 @@ Elige el modelo de IA para todas las funciones de IA (Chat, Escaneo de recibos, 
 
 Toca una ficha para cambiar. El modelo surte efecto de inmediato para todas las nuevas solicitudes de IA.
 
-### Apariencia
-
-Elige tu tema:
-
-- **Sistema** — sigue la configuracion de modo claro/oscuro de tu dispositivo
-- **Claro** — siempre usa el tema claro
-- **Oscuro** — siempre usa el tema oscuro
-
 ## Widgets del panel
 
 Controla qué secciones aparecen en tu [Panel](./02-dashboard.md). Toca el interruptor junto a cada widget para mostrarlo u ocultarlo:
@@ -97,9 +117,11 @@ Controla qué secciones aparecen en tu [Panel](./02-dashboard.md). Toca el inter
 
 > **Consejo:** Tus preferencias se guardan automaticamente y persisten entre reinicios.
 
-## Notificaciones
+## Notificaciones e integraciones
 
 ![Ajustes — Seccion de Notificaciones](../img/settings.jpg)
+
+### Notificaciones
 
 Interruptores para las preferencias de notificaciones:
 
@@ -109,43 +131,44 @@ Interruptores para las preferencias de notificaciones:
 | **Alertas de Presupuesto** | Recibe notificaciones cuando alcances los umbrales de presupuesto |
 | **Actividad de Cuenta Compartida** | Recibe notificaciones cuando otros agregan gastos a cuentas compartidas |
 
-## Suscripcion
+### Bot de Telegram
 
-- **Gestionar plan** — toca para ver tu suscripcion actual y explorar opciones de mejora
+Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a traves del bot de Telegram. Consulta [Bot de Telegram](./22-telegram-bot.md) para mas detalles.
 
-## Panel de administracion
+## Seguridad y cifrado
 
-- **Panel de administracion** — visible solo para usuarios administradores. Proporciona estadisticas a nivel de sistema y monitoreo del uso de IA.
+Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financieros. Consulta [Cifrado](./15-encryption.md) para mas detalles.
 
-## Billetera
+## Datos e informes
 
-Acceso rapido a las funciones de billetera:
-
-- **Establecer saldo** — establece saldos iniciales para tus monedas
-- **Saldos** — consulta el desglose detallado de la billetera por moneda
-
-## Informes y email
-
-Configura la generacion de informes automaticos y exportacion de datos:
-
-- **Resumen semanal por email** — recibe un resumen semanal de gastos con principales categorias (requiere plan Business)
-- **Resumen mensual por email** — recibe un resumen mensual con comparacion mes a mes (requiere plan Pro o Business)
-- **Generar informe** — crea informes PDF, Excel o CSV bajo demanda
-- **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
-- **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
-
-Ver [Exportacion e informes](./16-export-reports.md) para mas detalles sobre formatos de informe y opciones de copia de seguridad.
-
-## Datos y sincronizacion
+### Datos y sincronizacion
 
 - **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
 - **Sincronizar ahora** — toca para activar manualmente una sincronizacion de datos
 
 > **Nota:** La aplicacion funciona sin conexion. Tus datos se guardan en tu dispositivo y se sincronizan automaticamente cuando vuelves a estar en linea. Usa **Sincronizar ahora** para forzar una sincronizacion inmediata.
 
+### Informes y email
+
+Configura la generacion de informes automaticos y exportacion de datos:
+
+- **Resumen semanal por email** (Business) — recibe un resumen semanal de gastos con principales categorias
+- **Resumen mensual por email** (Pro+) — recibe un resumen mensual con comparacion mes a mes
+- **Generar informe** — crea informes PDF, Excel o CSV bajo demanda
+- **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
+- **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
+
+## Acerca de
+
+- **Version** — numero de version actual de la aplicacion
+- **Ayuda** — abre el centro de ayuda integrado
+- **Soporte** — envia un correo al equipo de soporte
+- **Politica de privacidad** — ver la politica de privacidad
+- **Terminos de servicio** — ver los terminos de servicio
+
 ## Cerrar sesion
 
-Desplazate hasta el final de Ajustes y toca **Cerrar sesion**. Aparecera un dialogo de confirmacion — confirma para cerrar sesion en tu cuenta.
+En la pantalla principal de Ajustes, toca **Cerrar sesion** en la parte inferior. Aparecera un dialogo de confirmacion — confirma para cerrar sesion en tu cuenta.
 
 ## Preguntas frecuentes
 

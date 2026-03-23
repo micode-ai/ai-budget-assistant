@@ -251,7 +251,7 @@ export class PhotoHandler {
           currencyCode: data.currencyCode,
           description: data.description,
           categoryId: data.categoryId || undefined,
-          date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
+          date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
           source: 'ocr',
           receiptImageBase64: data.receiptImageBase64,
           items: data.items.map((item, index) => ({

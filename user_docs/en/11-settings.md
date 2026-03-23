@@ -6,7 +6,21 @@
 
 Access Settings by tapping the **gear icon** in the top-right corner of any screen.
 
-## Profile
+Settings are organized into categories. Tap any category to open its dedicated screen:
+
+| Category | What's inside |
+|---|---|
+| **Profile & Account** | Name, email, timezone, currency, subscription |
+| **Appearance & Language** | Theme, language |
+| **AI Preferences** | Response style, model selection |
+| **Dashboard Widgets** | Show or hide home screen widgets |
+| **Notifications & Integrations** | Push alerts, Telegram bot |
+| **Security & Encryption** | End-to-end encryption setup |
+| **Wallet** | Balances, debts, initial balance |
+| **Data & Reports** | Sync, email reports, backup & restore |
+| **About** | Version, help, support, legal |
+
+## Profile & Account
 
 ![Settings — Profile section](../img/settings-0.jpg)
 
@@ -15,7 +29,7 @@ Access Settings by tapping the **gear icon** in the top-right corner of any scre
 - **Email** — your account email (display only)
 - **Timezone** — tap the pencil icon to change. A searchable picker appears with 90+ timezones (e.g., "Europe/Warsaw")
 
-## Currency
+### Currency
 
 Select your default currency by tapping one of the currency chips:
 
@@ -23,7 +37,11 @@ Select your default currency by tapping one of the currency chips:
 
 The selected currency is highlighted. This sets the default currency for new expenses, income, and Dashboard displays.
 
-## App Settings
+### Subscription
+
+- **Manage Plan** — tap to view your current subscription and explore upgrade options
+
+## Appearance & Language
 
 ### Language
 
@@ -41,6 +59,16 @@ Choose from 8 supported languages:
 | BY | Беларуская |
 
 Tap a language chip to switch. The interface updates immediately.
+
+### Appearance
+
+Choose your theme:
+
+- **System** — follows your device's light/dark mode setting
+- **Light** — always use light theme
+- **Dark** — always use dark theme
+
+## AI Preferences
 
 ### AI Response Style
 
@@ -70,14 +98,6 @@ Choose the AI model used for all AI features (Chat, Receipt Scanning, Categoriza
 
 Tap a chip to change. The model takes effect immediately for all new AI requests.
 
-### Appearance
-
-Choose your theme:
-
-- **System** — follows your device's light/dark mode setting
-- **Light** — always use light theme
-- **Dark** — always use dark theme
-
 ## Dashboard Widgets
 
 Control which sections appear on your [Dashboard](./02-dashboard.md). Tap the toggle next to each widget to show or hide it:
@@ -97,9 +117,11 @@ Control which sections appear on your [Dashboard](./02-dashboard.md). Tap the to
 
 > **Tip:** Your choices are saved automatically and persist across app restarts.
 
-## Notifications
+## Notifications & Integrations
 
 ![Settings — Notifications section](../img/settings.jpg)
+
+### Notifications
 
 Toggle switches for notification preferences:
 
@@ -109,22 +131,24 @@ Toggle switches for notification preferences:
 | **Budget Alerts** | Get notified when you reach budget thresholds |
 | **Shared Account Activity** | Get notified when others add expenses to shared accounts |
 
-## Subscription
+### Telegram Bot
 
-- **Manage Plan** — tap to view your current subscription and explore upgrade options
+Link your Telegram account to receive notifications and manage expenses via the Telegram bot. See [Telegram Bot](./22-telegram-bot.md) for details.
 
-## Admin Panel
+## Security & Encryption
 
-- **Admin Dashboard** — visible only to admin users. Provides system-level statistics and AI usage monitoring.
+Set up end-to-end encryption (E2EE) to protect your financial data. See [Encryption](./15-encryption.md) for details.
 
-## Wallet
+## Data & Reports
 
-Quick access to wallet features:
+### Data & Sync
 
-- **Set Balance** — set initial balances for your currencies
-- **Balances** — view detailed wallet breakdown by currency
+- **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
+- **Sync Now** — tap to manually trigger a data sync
 
-## Reports & Email
+> **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
+
+### Reports & Email
 
 Manage your report and email preferences:
 
@@ -134,16 +158,17 @@ Manage your report and email preferences:
 - **Export Backup** — creates a full JSON backup of your account data
 - **Restore Backup** — import a previously exported backup file
 
-## Data & Sync
+## About
 
-- **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
-- **Sync Now** — tap to manually trigger a data sync
-
-> **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
+- **Version** — current app version number
+- **Help** — opens the in-app help center
+- **Support** — send an email to the support team
+- **Privacy Policy** — view the privacy policy
+- **Terms of Service** — view the terms of service
 
 ## Log Out
 
-Scroll to the bottom of Settings and tap **Log Out**. A confirmation dialog will appear — confirm to sign out of your account.
+On the main Settings screen, tap **Log Out** at the bottom. A confirmation dialog will appear — confirm to sign out of your account.
 
 ## FAQ
 

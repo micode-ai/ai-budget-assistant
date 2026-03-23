@@ -6,7 +6,21 @@
 
 Offne die Einstellungen, indem du auf das **Zahnradsymbol** in der oberen rechten Ecke eines beliebigen Bildschirms tippst.
 
-## Profil
+Die Einstellungen sind in Kategorien organisiert. Tippe auf eine Kategorie, um den entsprechenden Bildschirm zu offnen:
+
+| Kategorie | Inhalt |
+|---|---|
+| **Profil & Konto** | Name, E-Mail, Zeitzone, Wahrung, Abonnement |
+| **Erscheinungsbild & Sprache** | Design, Sprache |
+| **KI-Einstellungen** | Antwortstil, Modellauswahl |
+| **Dashboard-Widgets** | Widgets ein- oder ausblenden |
+| **Benachrichtigungen & Integrationen** | Push-Benachrichtigungen, Telegram-Bot |
+| **Sicherheit & Verschlusselung** | Ende-zu-Ende-Verschlusselung einrichten |
+| **Geldborse** | Salden, Schulden, Anfangssaldo |
+| **Daten & Berichte** | Synchronisierung, E-Mail-Berichte, Backup & Wiederherstellung |
+| **Uber** | Version, Hilfe, Support, Rechtliches |
+
+## Profil & Konto
 
 ![Einstellungen — Profilbereich](../img/settings-0.jpg)
 
@@ -15,7 +29,7 @@ Offne die Einstellungen, indem du auf das **Zahnradsymbol** in der oberen rechte
 - **E-Mail** — deine Konto-E-Mail (nur Anzeige)
 - **Zeitzone** — tippe auf das Stiftsymbol zum Andern. Ein durchsuchbarer Wahler erscheint mit uber 90 Zeitzonen (z.B. "Europe/Warsaw")
 
-## Wahrung
+### Wahrung
 
 Wahle deine Standardwahrung, indem du auf einen der Wahrungschips tippst:
 
@@ -23,7 +37,11 @@ Wahle deine Standardwahrung, indem du auf einen der Wahrungschips tippst:
 
 Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neue Ausgaben, Einkommen und die Ubersichtsanzeige fest.
 
-## App-Einstellungen
+### Abonnement
+
+- **Plan verwalten** — tippe, um dein aktuelles Abonnement anzuzeigen und Upgrade-Optionen zu erkunden
+
+## Erscheinungsbild & Sprache
 
 ### Sprache
 
@@ -41,6 +59,16 @@ Wahle aus 8 unterstutzten Sprachen:
 | BY | Беларуская |
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
+
+### Erscheinungsbild
+
+Wahle dein Design:
+
+- **System** — folgt der Hell-/Dunkel-Einstellung deines Gerats
+- **Hell** — immer helles Design verwenden
+- **Dunkel** — immer dunkles Design verwenden
+
+## KI-Einstellungen
 
 ### KI-Antwortstil
 
@@ -70,14 +98,6 @@ Wahle das KI-Modell fur alle KI-Funktionen (Chat, Belegscannen, Kategorisierung,
 
 Tippe auf einen Chip zum Andern. Das Modell gilt sofort fur alle neuen KI-Anfragen.
 
-### Erscheinungsbild
-
-Wahle dein Design:
-
-- **System** — folgt der Hell-/Dunkel-Einstellung deines Gerats
-- **Hell** — immer helles Design verwenden
-- **Dunkel** — immer dunkles Design verwenden
-
 ## Dashboard-Widgets
 
 Steuere, welche Bereiche auf deinem [Dashboard](./02-dashboard.md) erscheinen. Tippe auf den Schalter neben jedem Widget, um es ein- oder auszublenden:
@@ -97,9 +117,11 @@ Steuere, welche Bereiche auf deinem [Dashboard](./02-dashboard.md) erscheinen. T
 
 > **Tipp:** Deine Einstellungen werden automatisch gespeichert und bleiben nach Neustarts erhalten.
 
-## Benachrichtigungen
+## Benachrichtigungen & Integrationen
 
 ![Einstellungen — Benachrichtigungsbereich](../img/settings.jpg)
+
+### Benachrichtigungen
 
 Umschaltflachen fur Benachrichtigungspraferenzen:
 
@@ -109,43 +131,44 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Budget-Warnungen** | Benachrichtigung bei Erreichen von Budget-Schwellenwerten |
 | **Gemeinsame Kontoaktivitat** | Benachrichtigung, wenn andere Ausgaben zu gemeinsamen Konten hinzufugen |
 
-## Abonnement
+### Telegram-Bot
 
-- **Plan verwalten** — tippe, um dein aktuelles Abonnement anzuzeigen und Upgrade-Optionen zu erkunden
+Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben uber den Telegram-Bot zu verwalten. Siehe [Telegram-Bot](./22-telegram-bot.md) fur Details.
 
-## Admin-Panel
+## Sicherheit & Verschlusselung
 
-- **Admin-Dashboard** — nur fur Administratoren sichtbar. Bietet Systemstatistiken und KI-Nutzungsuberwachung.
+Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen. Siehe [Verschlusselung](./15-encryption.md) fur Details.
 
-## Geldborse
+## Daten & Berichte
 
-Schnellzugriff auf Geldborse-Funktionen:
-
-- **Saldo festlegen** — Anfangssalden fur deine Wahrungen festlegen
-- **Salden** — detaillierte Geldborsenaufschlusselung nach Wahrung anzeigen
-
-## Berichte & E-Mail
-
-Verwalte Berichts- und E-Mail-Einstellungen:
-
-- **Wöchentliche E-Mail-Zusammenfassung** — erhalte wöchentliche Ausgabenberichte per E-Mail (Business-Plan)
-- **Monatliche E-Mail-Zusammenfassung** — erhalte monatliche Finanzberichte per E-Mail (Pro & Business)
-- **Bericht generieren** — erstelle PDF-, Excel- oder CSV-Berichte deiner Finanzdaten
-- **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten (Ausgaben, Einkommen, Budgets, Kategorien usw.)
-- **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
-
-> **Hinweis:** Berichte werden 7 Tage lang gespeichert und dann automatisch gelöscht. Lade sie zeitnah herunter.
-
-## Daten & Synchronisierung
+### Daten & Synchronisierung
 
 - **Zuletzt synchronisiert** — zeigt, wann deine Daten zuletzt mit dem Server synchronisiert wurden (z.B. "Vor 5 Min." oder "Nie")
 - **Jetzt synchronisieren** — tippe, um eine Datensynchronisierung manuell auszulosen
 
 > **Hinweis:** Die App funktioniert offline. Deine Daten werden auf deinem Gerat gespeichert und automatisch synchronisiert, wenn du wieder online bist. Verwende **Jetzt synchronisieren**, um eine sofortige Synchronisierung zu erzwingen.
 
+### Berichte & E-Mail
+
+Verwalte Berichts- und E-Mail-Einstellungen:
+
+- **Wöchentliche E-Mail-Zusammenfassung** (Business) — erhalte wöchentliche Ausgabenberichte per E-Mail
+- **Monatliche E-Mail-Zusammenfassung** (Pro+) — erhalte monatliche Finanzberichte per E-Mail
+- **Bericht generieren** — erstelle PDF-, Excel- oder CSV-Berichte deiner Finanzdaten
+- **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten
+- **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
+
+## Uber
+
+- **Version** — aktuelle App-Versionsnummer
+- **Hilfe** — offnet das integrierte Hilfezentrum
+- **Support** — sende eine E-Mail an das Support-Team
+- **Datenschutzrichtlinie** — Datenschutzrichtlinie anzeigen
+- **Nutzungsbedingungen** — Nutzungsbedingungen anzeigen
+
 ## Abmelden
 
-Scrolle zum Ende der Einstellungen und tippe auf **Abmelden**. Ein Bestatigungsdialog erscheint — bestatige, um dich von deinem Konto abzumelden.
+Auf dem Hauptbildschirm der Einstellungen tippe unten auf **Abmelden**. Ein Bestatigungsdialog erscheint — bestatige, um dich von deinem Konto abzumelden.
 
 ## FAQ
 
