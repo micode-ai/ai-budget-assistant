@@ -27,6 +27,19 @@ Despues de tu primer inicio de sesion, puedes usar la autenticacion biometrica (
 2. Autenticate con el sensor biometrico de tu dispositivo
 3. Listo, ya estas dentro
 
+### ¿Olvidaste tu contraseña?
+
+Si olvidaste tu contraseña:
+
+1. En la pantalla de inicio de sesión, toca **¿Olvidaste tu contraseña?**
+2. Ingresa tu **Correo electrónico** y toca **Enviar código**
+3. Revisa tu correo — recibirás un **código de 6 dígitos** (válido por 30 minutos)
+4. Ingresa el código, tu **Nueva contraseña** y confírmala
+5. Toca **Restablecer contraseña**
+6. Serás redirigido a la pantalla de inicio de sesión — inicia sesión con tu nueva contraseña
+
+> Si no recibes el código, revisa tu carpeta de spam o toca **Reenviar código**.
+
 ## Pantalla de bienvenida
 
 Despues de tu primer inicio de sesion, veras la pantalla de **Bienvenida**:

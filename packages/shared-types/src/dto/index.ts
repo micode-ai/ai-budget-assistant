@@ -29,6 +29,20 @@ export interface AuthResponse {
   accounts: Account[];
 }
 
+export interface ForgotPasswordDto {
+  email: string;
+}
+
+export interface ResetPasswordDto {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface MessageResponse {
+  message: string;
+}
+
 // Expense DTOs
 export interface CreateExpenseDto {
   localId: string;

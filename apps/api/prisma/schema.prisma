@@ -60,6 +60,8 @@ model User {
   isActive             Boolean   @default(true) @map("is_active")
   defaultAccountId String?   @map("default_account_id")
   lastSyncAt       DateTime? @map("last_sync_at")
+  passwordResetCode      String?   @map("password_reset_code")
+  passwordResetExpiresAt DateTime? @map("password_reset_expires_at")
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 

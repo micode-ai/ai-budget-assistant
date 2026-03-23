@@ -27,6 +27,19 @@ Nach deiner ersten Anmeldung kannst du die biometrische Authentifizierung (Face 
 2. Authentifiziere dich mit dem biometrischen Sensor deines Gerats
 3. Du bist eingeloggt!
 
+### Passwort vergessen
+
+Wenn Sie Ihr Passwort vergessen haben:
+
+1. Tippen Sie auf dem Anmeldebildschirm auf **Passwort vergessen?**
+2. Geben Sie Ihre **E-Mail-Adresse** ein und tippen Sie auf **Code senden**
+3. Prüfen Sie Ihre E-Mail — Sie erhalten einen **6-stelligen Code** (gültig für 30 Minuten)
+4. Geben Sie den Code, Ihr **Neues Passwort** ein und bestätigen Sie es
+5. Tippen Sie auf **Passwort zurücksetzen**
+6. Sie werden zum Anmeldebildschirm weitergeleitet — melden Sie sich mit Ihrem neuen Passwort an
+
+> Wenn der Code nicht ankommt, überprüfen Sie Ihren Spam-Ordner oder tippen Sie auf **Code erneut senden**.
+
 ## Willkommensbildschirm
 
 Nach deiner ersten Anmeldung siehst du den **Willkommen**-Bildschirm:

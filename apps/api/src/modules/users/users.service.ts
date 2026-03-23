@@ -45,6 +45,17 @@ export class UsersService {
     });
   }
 
+  async updatePasswordReset(id: string, data: {
+    passwordResetCode: string | null;
+    passwordResetExpiresAt: Date | null;
+    passwordHash?: string;
+  }) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
   async updateLastSync(id: string) {
     return this.prisma.user.update({
       where: { id },

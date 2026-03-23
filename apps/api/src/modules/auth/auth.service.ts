@@ -1,7 +1,9 @@
-import { Injectable, UnauthorizedException, ConflictException, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException, HttpException, HttpStatus, Inject, forwardRef } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { randomInt } from 'crypto';
+import { MailService } from '../mail/mail.service';
 import { UsersService } from '../users/users.service';
 import { AccountsService } from '../accounts/accounts.service';
 import { TelegramService } from '../telegram/telegram.service';
@@ -14,11 +16,26 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly accountsService: AccountsService,
     private readonly telegramService: TelegramService,
+    private readonly mailService: MailService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     @Inject(forwardRef(() => AdminGateway))
     private readonly adminGateway: AdminGateway,
   ) {}
+
+  private resetRequestAttempts = new Map<string, number[]>();
+  private resetVerifyAttempts = new Map<string, number[]>();
+
+  private checkRateLimit(map: Map<string, number[]>, key: string, maxAttempts: number): void {
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000; // 15 minutes
+    const attempts = (map.get(key) || []).filter((t) => now - t < windowMs);
+    if (attempts.length >= maxAttempts) {
+      throw new HttpException('Too many attempts. Please try again later.', HttpStatus.TOO_MANY_REQUESTS);
+    }
+    attempts.push(now);
+    map.set(key, attempts);
+  }
 
   async register(dto: RegisterDto) {
     // Check if user exists
@@ -137,6 +154,79 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
+  }
+
+  async forgotPassword(email: string) {
+    // Rate limit before user lookup to prevent enumeration via timing
+    this.checkRateLimit(this.resetRequestAttempts, email, 3);
+
+    const user = await this.usersService.findByEmail(email);
+
+    // Always return success to prevent email enumeration
+    if (!user || !user.isActive) {
+      return { message: 'If this email is registered, a reset code has been sent' };
+    }
+
+    // Generate 6-digit code
+    const code = randomInt(100000, 999999).toString();
+    const codeHash = await bcrypt.hash(code, 12);
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+
+    // Save to user record
+    await this.usersService.updatePasswordReset(user.id, {
+      passwordResetCode: codeHash,
+      passwordResetExpiresAt: expiresAt,
+    });
+
+    // Send email
+    await this.mailService.sendMail(
+      email,
+      'Your password reset code — AI Budget',
+      `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+          <h2 style="color: #1a1a1a; margin-bottom: 24px;">AI Budget</h2>
+          <p style="color: #333; font-size: 16px; margin-bottom: 8px;">Your password reset code:</p>
+          <div style="background: #f5f5f5; border-radius: 12px; padding: 24px; text-align: center; margin: 16px 0;">
+              <span style="font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${code}</span>
+          </div>
+          <p style="color: #666; font-size: 14px;">This code expires in 30 minutes.</p>
+          <p style="color: #999; font-size: 12px; margin-top: 32px;">If you didn't request this, you can safely ignore this email.</p>
+      </div>
+      `,
+    );
+
+    return { message: 'If this email is registered, a reset code has been sent' };
+  }
+
+  async resetPassword(email: string, code: string, newPassword: string) {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user || !user.isActive || !user.passwordResetCode || !user.passwordResetExpiresAt) {
+      throw new BadRequestException('Invalid or expired code');
+    }
+
+    // Check expiry
+    if (new Date() > user.passwordResetExpiresAt) {
+      throw new BadRequestException('Invalid or expired code');
+    }
+
+    this.checkRateLimit(this.resetVerifyAttempts, email, 5);
+
+    // Verify code
+    const isCodeValid = await bcrypt.compare(code, user.passwordResetCode);
+    if (!isCodeValid) {
+      throw new BadRequestException('Invalid or expired code');
+    }
+
+    // Hash new password and update
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+    await this.usersService.updatePasswordReset(user.id, {
+      passwordHash,
+      passwordResetCode: null,
+      passwordResetExpiresAt: null,
+    });
+
+    return { message: 'Password reset successfully' };
   }
 
   private async generateTokens(userId: string, email: string) {

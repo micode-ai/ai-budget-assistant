@@ -27,6 +27,19 @@ Po pierwszym zalogowaniu mozesz uzyc uwierzytelniania biometrycznego (Face ID lu
 2. Uwierzytelnij sie czujnikiem biometrycznym urzadzenia
 3. Gotowe!
 
+### Zapomniałeś hasła?
+
+Jeśli zapomniałeś hasła:
+
+1. Na ekranie logowania naciśnij **Zapomniałeś hasła?**
+2. Wprowadź swój **Adres e-mail** i naciśnij **Wyślij kod**
+3. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod** (ważny przez 30 minut)
+4. Wprowadź kod, **Nowe hasło** i potwierdź je
+5. Naciśnij **Zresetuj hasło**
+6. Zostaniesz przekierowany na ekran logowania — zaloguj się nowym hasłem
+
+> Jeśli kod nie dotarł, sprawdź folder spam lub naciśnij **Wyślij kod ponownie**.
+
 ## Ekran powitalny
 
 Po pierwszym zalogowaniu zobaczysz ekran **Witamy**:

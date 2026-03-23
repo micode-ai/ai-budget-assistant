@@ -98,6 +98,56 @@ Content-Type: application/json
 }
 ```
 
+### Forgot Password
+
+Request a password reset code. Always returns 200 regardless of whether the email exists (prevents email enumeration).
+
+```http
+POST /auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "message": "If this email is registered, a reset code has been sent"
+}
+```
+
+**Rate limit:** 3 requests per email per 15 minutes. Returns `429 Too Many Requests` if exceeded.
+
+### Reset Password
+
+Verify the 6-digit code and set a new password.
+
+```http
+POST /auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "code": "123456",
+  "newPassword": "NewSecurePass1"
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "message": "Password reset successfully"
+}
+```
+
+**Errors:**
+- `400 Bad Request` — Invalid or expired code
+- `429 Too Many Requests` — Max 5 verification attempts per email per 15 minutes
+
+**Password requirements:** Minimum 8 characters, at least one uppercase letter, one lowercase letter, and one number.
+
 ---
 
 ## Users

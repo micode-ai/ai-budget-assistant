@@ -33,6 +33,8 @@ interface AuthState {
   updateUser: (updates: Partial<User>) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearError: () => void;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (email: string, code: string, newPassword: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -350,6 +352,34 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await investmentRepo.clearAllInvestments();
         } catch (error) {
           console.error('Failed to logout:', error);
+        }
+      },
+
+      forgotPassword: async (email: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.forgotPassword(email);
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Failed to send reset code',
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+
+      resetPassword: async (email: string, code: string, newPassword: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.resetPassword(email, code, newPassword);
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Password reset failed',
+            isLoading: false,
+          });
+          throw error;
         }
       },
 
