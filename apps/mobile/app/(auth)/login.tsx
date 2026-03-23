@@ -16,6 +16,17 @@ import { useAuthStore } from '@/stores/authStore';
 import { useBiometric } from '@/features/auth/useBiometric';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
+const API_ERROR_MAP: Record<string, string> = {
+  'Invalid credentials': 'errors.invalidCredentials',
+  'Account is deactivated': 'errors.accountDeactivated',
+  'Session expired': 'errors.sessionExpired',
+};
+
+function mapApiError(message: string, t: (key: string) => string, fallbackKey: string): string {
+  const i18nKey = API_ERROR_MAP[message];
+  return i18nKey ? t(i18nKey) : t(fallbackKey);
+}
+
 export default function LoginScreen() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
@@ -43,7 +54,8 @@ export default function LoginScreen() {
       await login(email, password);
       router.replace('/(tabs)');
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('errors.loginFailed'));
+      const msg = e instanceof Error ? e.message : '';
+      setError(mapApiError(msg, t, 'errors.loginFailed'));
     }
   };
 
@@ -55,10 +67,9 @@ export default function LoginScreen() {
         await biometricLogin();
         router.replace('/(tabs)');
       } catch (e) {
-        setError(e instanceof Error ? e.message : t('errors.biometricLoginFailed'));
+        const msg = e instanceof Error ? e.message : '';
+        setError(mapApiError(msg, t, 'errors.biometricLoginFailed'));
       }
-    } else {
-      setError(t('errors.biometricFailed'));
     }
   };
 
@@ -68,7 +79,8 @@ export default function LoginScreen() {
       await biometricLogin();
       router.replace('/(tabs)');
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('errors.quickLoginFailed'));
+      const msg = e instanceof Error ? e.message : '';
+      setError(mapApiError(msg, t, 'errors.quickLoginFailed'));
     }
   };
 

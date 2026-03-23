@@ -85,9 +85,10 @@ export default function ReceiptExpenseScreen() {
 
     try {
       // Parse date if available
+      // Use "T12:00:00" to parse as local time and avoid timezone date shift
       let expenseDate = new Date();
       if (scannedReceipt.date) {
-        const parsedDate = new Date(scannedReceipt.date);
+        const parsedDate = new Date(scannedReceipt.date + 'T12:00:00');
         if (!isNaN(parsedDate.getTime())) {
           expenseDate = parsedDate;
         }
@@ -302,7 +303,7 @@ export default function ReceiptExpenseScreen() {
                 <View style={styles.expenseRow}>
                   <Text style={styles.expenseLabel}>{t('receipt.date')}</Text>
                   <Text style={styles.expenseValue}>
-                    {new Date(scannedReceipt.date).toLocaleDateString(getIntlLocale())}
+                    {new Date(scannedReceipt.date + 'T12:00:00').toLocaleDateString(getIntlLocale())}
                   </Text>
                 </View>
               )}

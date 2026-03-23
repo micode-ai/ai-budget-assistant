@@ -302,10 +302,66 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
-          name="settings"
+          name="settings/index"
           options={{
             headerShown: true,
             title: t('nav.settings'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/profile"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.profile'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/appearance"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.appearance'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/ai"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.ai'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/widgets"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.widgets'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/notifications"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.notifications'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/security"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.security'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/data"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.data'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/about"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.about'),
           }}
         />
         <Stack.Screen

@@ -1264,7 +1264,21 @@ Below the transfer form, you'll find a list of your recent account transfers wit
 
 Access Settings by tapping the **gear icon** in the top-right corner of any screen.
 
-## Profile
+Settings are organized into categories. Tap any category to open its dedicated screen:
+
+| Category | What's inside |
+|---|---|
+| **Profile & Account** | Name, email, timezone, currency, subscription |
+| **Appearance & Language** | Theme, language |
+| **AI Preferences** | Response style, model selection |
+| **Dashboard Widgets** | Show or hide home screen widgets |
+| **Notifications & Integrations** | Push alerts, Telegram bot |
+| **Security & Encryption** | End-to-end encryption setup |
+| **Wallet** | Balances, debts, initial balance |
+| **Data & Reports** | Sync, email reports, backup & restore |
+| **About** | Version, help, support, legal |
+
+## Profile & Account
 
 ![Settings — Profile section]({{IMG:settings-0.jpg}})
 
@@ -1273,7 +1287,7 @@ Access Settings by tapping the **gear icon** in the top-right corner of any scre
 - **Email** — your account email (display only)
 - **Timezone** — tap the pencil icon to change. A searchable picker appears with 90+ timezones (e.g., "Europe/Warsaw")
 
-## Currency
+### Currency
 
 Select your default currency by tapping one of the currency chips:
 
@@ -1281,7 +1295,11 @@ Select your default currency by tapping one of the currency chips:
 
 The selected currency is highlighted. This sets the default currency for new expenses, income, and Dashboard displays.
 
-## App Settings
+### Subscription
+
+- **Manage Plan** — tap to view your current subscription and explore upgrade options
+
+## Appearance & Language
 
 ### Language
 
@@ -1299,6 +1317,16 @@ Choose from 8 supported languages:
 | BY | Беларуская |
 
 Tap a language chip to switch. The interface updates immediately.
+
+### Appearance
+
+Choose your theme:
+
+- **System** — follows your device's light/dark mode setting
+- **Light** — always use light theme
+- **Dark** — always use dark theme
+
+## AI Preferences
 
 ### AI Response Style
 
@@ -1328,14 +1356,6 @@ Choose the AI model used for all AI features (Chat, Receipt Scanning, Categoriza
 
 Tap a chip to change. The model takes effect immediately for all new AI requests.
 
-### Appearance
-
-Choose your theme:
-
-- **System** — follows your device's light/dark mode setting
-- **Light** — always use light theme
-- **Dark** — always use dark theme
-
 ## Dashboard Widgets
 
 Control which sections appear on your Dashboard. Tap the toggle next to each widget to show or hide it:
@@ -1355,9 +1375,11 @@ Control which sections appear on your Dashboard. Tap the toggle next to each wid
 
 > **Tip:** Your choices are saved automatically and persist across app restarts.
 
-## Notifications
+## Notifications & Integrations
 
 ![Settings — Notifications section]({{IMG:settings.jpg}})
+
+### Notifications
 
 Toggle switches for notification preferences:
 
@@ -1367,22 +1389,24 @@ Toggle switches for notification preferences:
 | **Budget Alerts** | Get notified when you reach budget thresholds |
 | **Shared Account Activity** | Get notified when others add expenses to shared accounts |
 
-## Subscription
+### Telegram Bot
 
-- **Manage Plan** — tap to view your current subscription and explore upgrade options
+Link your Telegram account to receive notifications and manage expenses via the Telegram bot. See Telegram Bot for details.
 
-## Admin Panel
+## Security & Encryption
 
-- **Admin Dashboard** — visible only to admin users. Provides system-level statistics and AI usage monitoring.
+Set up end-to-end encryption (E2EE) to protect your financial data. See Encryption for details.
 
-## Wallet
+## Data & Reports
 
-Quick access to wallet features:
+### Data & Sync
 
-- **Set Balance** — set initial balances for your currencies
-- **Balances** — view detailed wallet breakdown by currency
+- **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
+- **Sync Now** — tap to manually trigger a data sync
 
-## Reports & Email
+> **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
+
+### Reports & Email
 
 Manage your report and email preferences:
 
@@ -1392,16 +1416,17 @@ Manage your report and email preferences:
 - **Export Backup** — creates a full JSON backup of your account data
 - **Restore Backup** — import a previously exported backup file
 
-## Data & Sync
+## About
 
-- **Last Synced** — shows when your data was last synced with the server (e.g., "5 min ago" or "Never")
-- **Sync Now** — tap to manually trigger a data sync
-
-> **Note:** The app works offline. Your data saves to your device and automatically syncs when you're back online. Use **Sync Now** to force an immediate sync.
+- **Version** — current app version number
+- **Help** — opens the in-app help center
+- **Support** — send an email to the support team
+- **Privacy Policy** — view the privacy policy
+- **Terms of Service** — view the terms of service
 
 ## Log Out
 
-Scroll to the bottom of Settings and tap **Log Out**. A confirmation dialog will appear — confirm to sign out of your account.
+On the main Settings screen, tap **Log Out** at the bottom. A confirmation dialog will appear — confirm to sign out of your account.
 
 ## FAQ
 
@@ -4126,7 +4151,21 @@ iOS, Android, Web
 
 Откройте Настройки, нажав на **значок шестерёнки** в верхнем правом углу любого экрана.
 
-## Профиль
+Настройки организованы по категориям. Нажмите на категорию, чтобы открыть её экран:
+
+| Категория | Что внутри |
+|---|---|
+| **Профиль и аккаунт** | Имя, email, часовой пояс, валюта, подписка |
+| **Оформление и язык** | Тема, язык |
+| **Настройки ИИ** | Стиль ответов, выбор модели |
+| **Виджеты главного экрана** | Показать или скрыть виджеты |
+| **Уведомления и интеграции** | Push-уведомления, Telegram-бот |
+| **Безопасность и шифрование** | Сквозное шифрование (E2EE) |
+| **Кошелёк** | Балансы, долги, начальный баланс |
+| **Данные и отчёты** | Синхронизация, email-отчёты, резервные копии |
+| **О приложении** | Версия, помощь, поддержка, правовая информация |
+
+## Профиль и аккаунт
 
 ![Настройки — секция Профиль]({{IMG:settings-0.jpg}})
 
@@ -4135,7 +4174,7 @@ iOS, Android, Web
 - **Эл. почта** — email вашего аккаунта (только для просмотра)
 - **Часовой пояс** — нажмите значок карандаша для изменения. Откроется выбор с поиском среди 90+ часовых поясов (например, «Europe/Moscow»)
 
-## Валюта
+### Валюта
 
 Выберите валюту по умолчанию, нажав на один из чипов валют:
 
@@ -4143,7 +4182,11 @@ iOS, Android, Web
 
 Выбранная валюта подсвечена. Она устанавливается как валюта по умолчанию для новых расходов, доходов и отображения на Главной.
 
-## Настройки приложения
+### Подписка
+
+- **Управление тарифом** — нажмите, чтобы просмотреть текущую подписку и варианты улучшения тарифа
+
+## Оформление и язык
 
 ### Язык
 
@@ -4161,6 +4204,16 @@ iOS, Android, Web
 | BY | Беларуская |
 
 Нажмите на чип языка для переключения. Интерфейс обновляется мгновенно.
+
+### Внешний вид
+
+Выберите тему:
+
+- **Системная** — следует настройке светлой/тёмной темы вашего устройства
+- **Светлая** — всегда использовать светлую тему
+- **Тёмная** — всегда использовать тёмную тему
+
+## Настройки ИИ
 
 ### Стиль ответов ИИ
 
@@ -4190,14 +4243,6 @@ iOS, Android, Web
 
 Нажмите на чип для изменения. Модель применяется мгновенно ко всем новым AI-запросам.
 
-### Внешний вид
-
-Выберите тему:
-
-- **Системная** — следует настройке светлой/тёмной темы вашего устройства
-- **Светлая** — всегда использовать светлую тему
-- **Тёмная** — всегда использовать тёмную тему
-
 ## Виджеты главного экрана
 
 Управляйте тем, какие секции отображаются на Главной. Нажмите на переключатель рядом с виджетом, чтобы показать или скрыть его:
@@ -4217,9 +4262,11 @@ iOS, Android, Web
 
 > **Совет:** Ваши настройки сохраняются автоматически и сохраняются при перезапуске приложения.
 
-## Уведомления
+## Уведомления и интеграции
 
 ![Настройки — секция Уведомления]({{IMG:settings.jpg}})
+
+### Уведомления
 
 Переключатели для предпочтений уведомлений:
 
@@ -4229,22 +4276,24 @@ iOS, Android, Web
 | **Оповещения о бюджете** | Уведомления при достижении порогов бюджета |
 | **Активность общего счёта** | Уведомления, когда другие добавляют расходы в общие счета |
 
-## Подписка
+### Telegram-бот
 
-- **Управление тарифом** — нажмите, чтобы просмотреть текущую подписку и варианты улучшения тарифа
+Привяжите Telegram-аккаунт для получения уведомлений и управления расходами через Telegram-бот. См. Telegram-бот для подробностей.
 
-## Панель администратора
+## Безопасность и шифрование
 
-- **Панель администратора** — видна только администраторам. Предоставляет системную статистику и мониторинг использования ИИ.
+Настройте сквозное шифрование (E2EE) для защиты ваших финансовых данных. См. Шифрование для подробностей.
 
-## Кошелёк
+## Данные и отчёты
 
-Быстрый доступ к функциям кошелька:
+### Данные и синхронизация
 
-- **Установить баланс** — установите начальные балансы для ваших валют
-- **Балансы** — просмотр детальной разбивки кошелька по валютам
+- **Последняя синхронизация** — показывает, когда данные были в последний раз синхронизированы с сервером (например, «5 мин. назад» или «Никогда»)
+- **Синхронизировать** — нажмите для ручного запуска синхронизации данных
 
-## Отчёты и email
+> **Примечание:** Приложение работает офлайн. Ваши данные сохраняются на устройстве и автоматически синхронизируются при подключении к сети. Используйте **Синхронизировать**, чтобы принудительно запустить немедленную синхронизацию.
+
+### Отчёты и email
 
 - **Еженедельная email-сводка** (Business) — включение/выключение, выбор дня недели
 - **Ежемесячный дайджест** (Pro+) — включение/выключение
@@ -4252,16 +4301,17 @@ iOS, Android, Web
 - **Создать резервную копию** — создаёт полную JSON-копию данных аккаунта
 - **Импортировать резервную копию** — загрузка и восстановление данных из ранее созданной копии
 
-## Данные и синхронизация
+## О приложении
 
-- **Последняя синхронизация** — показывает, когда данные были в последний раз синхронизированы с сервером (например, «5 мин. назад» или «Никогда»)
-- **Синхронизировать** — нажмите для ручного запуска синхронизации данных
-
-> **Примечание:** Приложение работает офлайн. Ваши данные сохраняются на устройстве и автоматически синхронизируются при подключении к сети. Используйте **Синхронизировать**, чтобы принудительно запустить немедленную синхронизацию.
+- **Версия** — номер текущей версии приложения
+- **Помощь** — открывает встроенный центр помощи
+- **Поддержка** — отправить email в службу поддержки
+- **Политика конфиденциальности** — просмотр политики конфиденциальности
+- **Условия использования** — просмотр условий использования
 
 ## Выход
 
-Прокрутите Настройки до конца и нажмите **Выйти**. Появится диалог подтверждения — подтвердите, чтобы выйти из аккаунта.
+На главном экране Настроек нажмите **Выйти** внизу. Появится диалог подтверждения — подтвердите, чтобы выйти из аккаунта.
 
 ## Часто задаваемые вопросы
 
@@ -6998,16 +7048,30 @@ iOS, Android, Web
     {
       id: '11-settings',
       title: `Налаштування`,
-      description: `Налаштуйте профіль, зовнішній вигляд, сповіщення та синхронізацію даних. Змінюйте мову, валюту, тему та керуйте параметрами акаунту.`,
+      description: `Налаштуйте профіль, зовнішній вигляд, віджети головного екрану, сповіщення та синхронізацію даних. Змінюйте мову, валюту, тему та керуйте параметрами акаунту.`,
       body: `# Налаштування
 
-> Налаштуйте профіль, зовнішній вигляд, сповіщення та синхронізацію даних. Змінюйте мову, валюту, тему та керуйте параметрами акаунту.
+> Налаштуйте профіль, зовнішній вигляд, віджети головного екрану, сповіщення та синхронізацію даних. Змінюйте мову, валюту, тему та керуйте параметрами акаунту.
 
 ## Огляд
 
 Доступ до **Налаштування** через натискання **іконки шестерінки** у верхньому правому куті будь-якого екрана.
 
-## Профіль
+Налаштування організовані за категоріями. Натисніть на будь-яку категорію, щоб відкрити відповідний екран:
+
+| Категорія | Що всередині |
+|---|---|
+| **Профіль і акаунт** | Ім'я, email, часовий пояс, валюта, підписка |
+| **Зовнішній вигляд і мова** | Тема, мова |
+| **Налаштування ШІ** | Стиль відповідей, вибір моделі |
+| **Віджети головного екрану** | Показ або приховування віджетів |
+| **Сповіщення та інтеграції** | Push-сповіщення, Telegram-бот |
+| **Безпека та шифрування** | Налаштування наскрізного шифрування |
+| **Гаманець** | Баланси, борги, початковий баланс |
+| **Дані та звіти** | Синхронізація, email-звіти, резервне копіювання |
+| **Про додаток** | Версія, довідка, підтримка, юридична інформація |
+
+## Профіль і акаунт
 
 ![Налаштування — розділ Профіль]({{IMG:settings-0.jpg}})
 
@@ -7016,7 +7080,7 @@ iOS, Android, Web
 - **Ел. пошта** — email вашого акаунту (лише перегляд)
 - **Часовий пояс** — натисніть іконку олівця, щоб змінити. З'являється список з можливістю пошуку серед 90+ часових поясів (наприклад, "Europe/Warsaw")
 
-## Валюта
+### Валюта
 
 Оберіть вашу стандартну валюту, натиснувши один з валютних чіпів:
 
@@ -7024,7 +7088,11 @@ iOS, Android, Web
 
 Обрана валюта виділена. Це встановлює стандартну валюту для нових витрат, доходів та відображення на Головна.
 
-## Налаштування додатку
+### Підписка
+
+- **Керування тарифом** — натисніть, щоб переглянути поточну підписку та дослідити варіанти оновлення
+
+## Зовнішній вигляд і мова
 
 ### Мова
 
@@ -7042,6 +7110,16 @@ iOS, Android, Web
 | BY | Беларуская |
 
 Натисніть мовний чіп, щоб переключитися. Інтерфейс оновлюється миттєво.
+
+### Зовнішній вигляд
+
+Оберіть тему:
+
+- **Системна** — слідує налаштуванню світлого/темного режиму вашого пристрою
+- **Світла** — завжди використовувати світлу тему
+- **Темна** — завжди використовувати темну тему
+
+## Налаштування ШІ
 
 ### Стиль відповідей ШІ
 
@@ -7071,14 +7149,6 @@ iOS, Android, Web
 
 Натисніть чіп для зміни. Модель застосовується миттєво до всіх нових AI-запитів.
 
-### Зовнішній вигляд
-
-Оберіть тему:
-
-- **Системна** — слідує налаштуванню світлого/темного режиму вашого пристрою
-- **Світла** — завжди використовувати світлу тему
-- **Темна** — завжди використовувати темну тему
-
 ## Віджети головного екрану
 
 Керуйте тим, які секції відображаються на Головному екрані. Натисніть на перемикач поряд з віджетом, щоб показати або приховати його:
@@ -7098,9 +7168,11 @@ iOS, Android, Web
 
 > **Порада:** Ваші налаштування зберігаються автоматично і не скидаються при перезапуску.
 
-## Сповіщення
+## Сповіщення та інтеграції
 
 ![Налаштування — розділ Сповіщення]({{IMG:settings.jpg}})
+
+### Сповіщення
 
 Перемикачі для налаштування сповіщень:
 
@@ -7110,22 +7182,24 @@ iOS, Android, Web
 | **Сповіщення про бюджет** | Отримувати сповіщення при досягненні порогів бюджету |
 | **Активність спільного рахунку** | Отримувати сповіщення, коли інші додають витрати до спільних рахунків |
 
-## Підписка
+### Telegram-бот
 
-- **Керування тарифом** — натисніть, щоб переглянути поточну підписку та дослідити варіанти оновлення
+Прив'яжіть свій Telegram-акаунт для отримання сповіщень та керування витратами через Telegram-бот. Див. Telegram-бот для деталей.
 
-## Панель адміністратора
+## Безпека та шифрування
 
-- **Панель адміністратора** — видима лише для адміністраторів. Надає статистику рівня системи та моніторинг використання ШІ.
+Налаштуйте наскрізне шифрування (E2EE) для захисту ваших фінансових даних. Див. Шифрування для деталей.
 
-## Гаманець
+## Дані та звіти
 
-Швидкий доступ до функцій гаманця:
+### Дані та синхронізація
 
-- **Встановити баланс** — встановити початкові баланси для ваших валют
-- **Баланси** — переглянути детальну розбивку гаманця за валютами
+- **Остання синхронізація** — показує, коли ваші дані були останній раз синхронізовані з сервером (наприклад, "5 хв. тому" або "Ніколи")
+- **Синхронізувати** — натисніть, щоб вручну запустити синхронізацію даних
 
-## Звіти та email
+> **Примітка:** Додаток працює офлайн. Ваші дані зберігаються на пристрої та автоматично синхронізуються при підключенні до мережі. Використовуйте **Синхронізувати**, щоб примусово запустити негайну синхронізацію.
+
+### Звіти та email
 
 - **Щотижнева email-зведення** (Business) — увімкнення/вимкнення, вибір дня тижня
 - **Щомісячний дайджест** (Pro+) — увімкнення/вимкнення
@@ -7133,16 +7207,17 @@ iOS, Android, Web
 - **Створити резервну копію** — створює повну JSON-копію даних акаунту
 - **Імпортувати резервну копію** — завантаження та відновлення даних із раніше створеної копії
 
-## Дані та синхронізація
+## Про додаток
 
-- **Остання синхронізація** — показує, коли ваші дані були останній раз синхронізовані з сервером (наприклад, "5 хв. тому" або "Ніколи")
-- **Синхронізувати** — натисніть, щоб вручну запустити синхронізацію даних
-
-> **Примітка:** Додаток працює офлайн. Ваші дані зберігаються на пристрої та автоматично синхронізуються при підключенні до мережі. Використовуйте **Синхронізувати**, щоб примусово запустити негайну синхронізацію.
+- **Версія** — поточний номер версії додатку
+- **Довідка** — відкриває вбудований центр допомоги
+- **Підтримка** — надіслати email команді підтримки
+- **Політика конфіденційності** — переглянути політику конфіденційності
+- **Умови використання** — переглянути умови використання
 
 ## Вихід
 
-Прокрутіть донизу в Налаштування та натисніть **Вийти**. З'явиться діалог підтвердження — підтвердіть, щоб вийти з акаунту.
+На головному екрані Налаштувань натисніть **Вийти** внизу. З'явиться діалог підтвердження — підтвердіть, щоб вийти з акаунту.
 
 ## Часті запитання
 
@@ -9847,7 +9922,21 @@ Poniżej formularza przelewu znajdziesz listę ostatnich przelewów między kont
 
 Przejdz do Ustawien, dotykajac **ikone zebatki** w prawym gornym rogu dowolnego ekranu.
 
-## Profil
+Ustawienia sa podzielone na kategorie. Dotknij kategorie, aby otworzyc jej dedykowany ekran:
+
+| Kategoria | Zawartosc |
+|---|---|
+| **Profil i konto** | Imie, e-mail, strefa czasowa, waluta, subskrypcja |
+| **Wyglad i jezyk** | Motyw, jezyk |
+| **Preferencje AI** | Styl odpowiedzi, wybor modelu |
+| **Widgety pulpitu** | Pokazuj lub ukrywaj widgety ekranu glownego |
+| **Powiadomienia i integracje** | Powiadomienia push, bot Telegram |
+| **Bezpieczenstwo i szyfrowanie** | Konfiguracja szyfrowania end-to-end |
+| **Portfel** | Salda, dlugi, saldo poczatkowe |
+| **Dane i raporty** | Synchronizacja, raporty e-mail, kopia zapasowa i przywracanie |
+| **Informacje** | Wersja, pomoc, wsparcie, regulamin |
+
+## Profil i konto
 
 ![Ustawienia — sekcja Profil]({{IMG:settings-0.jpg}})
 
@@ -9856,7 +9945,7 @@ Przejdz do Ustawien, dotykajac **ikone zebatki** w prawym gornym rogu dowolnego 
 - **E-mail** — adres e-mail konta (tylko do odczytu)
 - **Strefa czasowa** — dotknij ikone olowka, aby zmienic. Pojawi sie lista z wyszukiwaniem z ponad 90 strefami czasowymi (np. "Europe/Warsaw")
 
-## Waluta
+### Waluta
 
 Wybierz domyslna walute, dotykajac jednego z elementow waluty:
 
@@ -9864,7 +9953,11 @@ Wybierz domyslna walute, dotykajac jednego z elementow waluty:
 
 Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow, przychodow i wyswietlania na Pulpicie.
 
-## Ustawienia aplikacji
+### Subskrypcja
+
+- **Zarzadzaj planem** — dotknij, aby zobaczyc biezaca subskrypcje i sprawdzic opcje ulepszenia
+
+## Wyglad i jezyk
 
 ### Jezyk
 
@@ -9882,6 +9975,16 @@ Wybierz z 8 obslugiwanych jezykow:
 | BY | Беларуская |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
+
+### Wyglad
+
+Wybierz motyw:
+
+- **Systemowy** — podaza za ustawieniem jasnego/ciemnego motywu urzadzenia
+- **Jasny** — zawsze uzywa jasnego motywu
+- **Ciemny** — zawsze uzywa ciemnego motywu
+
+## Preferencje AI
 
 ### Styl odpowiedzi AI
 
@@ -9911,14 +10014,6 @@ Wybierz model AI dla wszystkich funkcji AI (Czat, Skanowanie paragonow, Kategory
 
 Dotknij element, aby zmienic. Model dziala natychmiast dla wszystkich nowych zapytan AI.
 
-### Wyglad
-
-Wybierz motyw:
-
-- **Systemowy** — podaza za ustawieniem jasnego/ciemnego motywu urzadzenia
-- **Jasny** — zawsze uzywa jasnego motywu
-- **Ciemny** — zawsze uzywa ciemnego motywu
-
 ## Widgety pulpitu
 
 Kontroluj, ktore sekcje pojawiaja sie na Twoim Pulpicie. Dotknij przelacznika obok kazdego widgetu, aby go pokazac lub ukryc:
@@ -9938,9 +10033,11 @@ Kontroluj, ktore sekcje pojawiaja sie na Twoim Pulpicie. Dotknij przelacznika ob
 
 > **Wskazowka:** Twoje preferencje sa zapisywane automatycznie i pozostaja po ponownym uruchomieniu.
 
-## Powiadomienia
+## Powiadomienia i integracje
 
 ![Ustawienia — sekcja Powiadomienia]({{IMG:settings.jpg}})
+
+### Powiadomienia
 
 Przelaczniki dla preferencji powiadomien:
 
@@ -9950,22 +10047,24 @@ Przelaczniki dla preferencji powiadomien:
 | **Alerty Budzetowe** | Otrzymuj powiadomienia po osiagnieciu progow budzetowych |
 | **Aktywnosc Wspolnego Konta** | Otrzymuj powiadomienia, gdy inni dodaja wydatki do wspolnych kont |
 
-## Subskrypcja
+### Bot Telegram
 
-- **Zarzadzaj planem** — dotknij, aby zobaczyc biezaca subskrypcje i sprawdzic opcje ulepszenia
+Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami za pomoca bota Telegram. Zobacz Bot Telegram, aby uzyskac szczegoly.
 
-## Panel administratora
+## Bezpieczenstwo i szyfrowanie
 
-- **Panel administratora** — widoczny tylko dla uzytkownikow z uprawnieniami administratora. Udostepnia statystyki systemowe i monitorowanie uzycia AI.
+Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zobacz Szyfrowanie, aby uzyskac szczegoly.
 
-## Portfel
+## Dane i raporty
 
-Szybki dostep do funkcji portfela:
+### Dane i synchronizacja
 
-- **Ustaw saldo** — ustaw salda poczatkowe dla swoich walut
-- **Salda** — przegladaj szczegolowy podzial portfela wedlug waluty
+- **Ostatnia synchronizacja** — pokazuje, kiedy dane zostaly ostatnio zsynchronizowane z serwerem (np. "5 min temu" lub "Nigdy")
+- **Synchronizuj teraz** — dotknij, aby recznie wywolac synchronizacje danych
 
-## Raporty i e-mail
+> **Uwaga:** Aplikacja dziala offline. Dane zapisuja sie na urzadzeniu i synchronizuja automatycznie po przywroceniu polaczenia. Uzyj **Synchronizuj teraz**, aby wymusic natychmiastowa synchronizacje.
+
+### Raporty i e-mail
 
 Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 
@@ -9975,16 +10074,17 @@ Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 - **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
 - **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
 
-## Dane i synchronizacja
+## Informacje
 
-- **Ostatnia synchronizacja** — pokazuje, kiedy dane zostaly ostatnio zsynchronizowane z serwerem (np. "5 min temu" lub "Nigdy")
-- **Synchronizuj teraz** — dotknij, aby recznie wywolac synchronizacje danych
-
-> **Uwaga:** Aplikacja dziala offline. Dane zapisuja sie na urzadzeniu i synchronizuja automatycznie po przywroceniu polaczenia. Uzyj **Synchronizuj teraz**, aby wymusic natychmiastowa synchronizacje.
+- **Wersja** — aktualny numer wersji aplikacji
+- **Pomoc** — otwiera wbudowane centrum pomocy
+- **Wsparcie** — wyslij e-mail do zespolu wsparcia
+- **Polityka prywatnosci** — przegladaj polityke prywatnosci
+- **Regulamin** — przegladaj regulamin uslug
 
 ## Wylogowanie
 
-Przewin na dol Ustawien i dotknij **Wyloguj sie**. Pojawi sie okno potwierdzenia — potwierdz, aby wylogowac sie z konta.
+Na glownym ekranie Ustawien dotknij **Wyloguj sie** na dole. Pojawi sie okno potwierdzenia — potwierdz, aby wylogowac sie z konta.
 
 ## FAQ
 
@@ -9999,7 +10099,7 @@ Przewin na dol Ustawien i dotknij **Wyloguj sie**. Pojawi sie okno potwierdzenia
 
 ---
 
-*Zobacz takze: Konta | Plany subskrypcji | Eksport i raporty | Tryb odpowiedzi AI*
+*Zobacz takze: Konta | Plany subskrypcji | Eksport i raporty | Tryb odpowiedzi AI | Czat AI*
 `,
     },
     {
@@ -12685,7 +12785,21 @@ Unterhalb des Uberweisungsformulars findest du eine Liste deiner letzten Uberwei
 
 Offne die Einstellungen, indem du auf das **Zahnradsymbol** in der oberen rechten Ecke eines beliebigen Bildschirms tippst.
 
-## Profil
+Die Einstellungen sind in Kategorien organisiert. Tippe auf eine Kategorie, um den entsprechenden Bildschirm zu offnen:
+
+| Kategorie | Inhalt |
+|---|---|
+| **Profil & Konto** | Name, E-Mail, Zeitzone, Wahrung, Abonnement |
+| **Erscheinungsbild & Sprache** | Design, Sprache |
+| **KI-Einstellungen** | Antwortstil, Modellauswahl |
+| **Dashboard-Widgets** | Widgets ein- oder ausblenden |
+| **Benachrichtigungen & Integrationen** | Push-Benachrichtigungen, Telegram-Bot |
+| **Sicherheit & Verschlusselung** | Ende-zu-Ende-Verschlusselung einrichten |
+| **Geldborse** | Salden, Schulden, Anfangssaldo |
+| **Daten & Berichte** | Synchronisierung, E-Mail-Berichte, Backup & Wiederherstellung |
+| **Uber** | Version, Hilfe, Support, Rechtliches |
+
+## Profil & Konto
 
 ![Einstellungen — Profilbereich]({{IMG:settings-0.jpg}})
 
@@ -12694,7 +12808,7 @@ Offne die Einstellungen, indem du auf das **Zahnradsymbol** in der oberen rechte
 - **E-Mail** — deine Konto-E-Mail (nur Anzeige)
 - **Zeitzone** — tippe auf das Stiftsymbol zum Andern. Ein durchsuchbarer Wahler erscheint mit uber 90 Zeitzonen (z.B. "Europe/Warsaw")
 
-## Wahrung
+### Wahrung
 
 Wahle deine Standardwahrung, indem du auf einen der Wahrungschips tippst:
 
@@ -12702,7 +12816,11 @@ Wahle deine Standardwahrung, indem du auf einen der Wahrungschips tippst:
 
 Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neue Ausgaben, Einkommen und die Ubersichtsanzeige fest.
 
-## App-Einstellungen
+### Abonnement
+
+- **Plan verwalten** — tippe, um dein aktuelles Abonnement anzuzeigen und Upgrade-Optionen zu erkunden
+
+## Erscheinungsbild & Sprache
 
 ### Sprache
 
@@ -12720,6 +12838,16 @@ Wahle aus 8 unterstutzten Sprachen:
 | BY | Беларуская |
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
+
+### Erscheinungsbild
+
+Wahle dein Design:
+
+- **System** — folgt der Hell-/Dunkel-Einstellung deines Gerats
+- **Hell** — immer helles Design verwenden
+- **Dunkel** — immer dunkles Design verwenden
+
+## KI-Einstellungen
 
 ### KI-Antwortstil
 
@@ -12749,14 +12877,6 @@ Wahle das KI-Modell fur alle KI-Funktionen (Chat, Belegscannen, Kategorisierung,
 
 Tippe auf einen Chip zum Andern. Das Modell gilt sofort fur alle neuen KI-Anfragen.
 
-### Erscheinungsbild
-
-Wahle dein Design:
-
-- **System** — folgt der Hell-/Dunkel-Einstellung deines Gerats
-- **Hell** — immer helles Design verwenden
-- **Dunkel** — immer dunkles Design verwenden
-
 ## Dashboard-Widgets
 
 Steuere, welche Bereiche auf deinem Dashboard erscheinen. Tippe auf den Schalter neben jedem Widget, um es ein- oder auszublenden:
@@ -12776,9 +12896,11 @@ Steuere, welche Bereiche auf deinem Dashboard erscheinen. Tippe auf den Schalter
 
 > **Tipp:** Deine Einstellungen werden automatisch gespeichert und bleiben nach Neustarts erhalten.
 
-## Benachrichtigungen
+## Benachrichtigungen & Integrationen
 
 ![Einstellungen — Benachrichtigungsbereich]({{IMG:settings.jpg}})
+
+### Benachrichtigungen
 
 Umschaltflachen fur Benachrichtigungspraferenzen:
 
@@ -12788,43 +12910,44 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Budget-Warnungen** | Benachrichtigung bei Erreichen von Budget-Schwellenwerten |
 | **Gemeinsame Kontoaktivitat** | Benachrichtigung, wenn andere Ausgaben zu gemeinsamen Konten hinzufugen |
 
-## Abonnement
+### Telegram-Bot
 
-- **Plan verwalten** — tippe, um dein aktuelles Abonnement anzuzeigen und Upgrade-Optionen zu erkunden
+Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben uber den Telegram-Bot zu verwalten. Siehe Telegram-Bot fur Details.
 
-## Admin-Panel
+## Sicherheit & Verschlusselung
 
-- **Admin-Dashboard** — nur fur Administratoren sichtbar. Bietet Systemstatistiken und KI-Nutzungsuberwachung.
+Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen. Siehe Verschlusselung fur Details.
 
-## Geldborse
+## Daten & Berichte
 
-Schnellzugriff auf Geldborse-Funktionen:
-
-- **Saldo festlegen** — Anfangssalden fur deine Wahrungen festlegen
-- **Salden** — detaillierte Geldborsenaufschlusselung nach Wahrung anzeigen
-
-## Berichte & E-Mail
-
-Verwalte Berichts- und E-Mail-Einstellungen:
-
-- **Wöchentliche E-Mail-Zusammenfassung** — erhalte wöchentliche Ausgabenberichte per E-Mail (Business-Plan)
-- **Monatliche E-Mail-Zusammenfassung** — erhalte monatliche Finanzberichte per E-Mail (Pro & Business)
-- **Bericht generieren** — erstelle PDF-, Excel- oder CSV-Berichte deiner Finanzdaten
-- **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten (Ausgaben, Einkommen, Budgets, Kategorien usw.)
-- **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
-
-> **Hinweis:** Berichte werden 7 Tage lang gespeichert und dann automatisch gelöscht. Lade sie zeitnah herunter.
-
-## Daten & Synchronisierung
+### Daten & Synchronisierung
 
 - **Zuletzt synchronisiert** — zeigt, wann deine Daten zuletzt mit dem Server synchronisiert wurden (z.B. "Vor 5 Min." oder "Nie")
 - **Jetzt synchronisieren** — tippe, um eine Datensynchronisierung manuell auszulosen
 
 > **Hinweis:** Die App funktioniert offline. Deine Daten werden auf deinem Gerat gespeichert und automatisch synchronisiert, wenn du wieder online bist. Verwende **Jetzt synchronisieren**, um eine sofortige Synchronisierung zu erzwingen.
 
+### Berichte & E-Mail
+
+Verwalte Berichts- und E-Mail-Einstellungen:
+
+- **Wöchentliche E-Mail-Zusammenfassung** (Business) — erhalte wöchentliche Ausgabenberichte per E-Mail
+- **Monatliche E-Mail-Zusammenfassung** (Pro+) — erhalte monatliche Finanzberichte per E-Mail
+- **Bericht generieren** — erstelle PDF-, Excel- oder CSV-Berichte deiner Finanzdaten
+- **Backup exportieren** — vollständige JSON-Sicherung aller Kontodaten
+- **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
+
+## Uber
+
+- **Version** — aktuelle App-Versionsnummer
+- **Hilfe** — offnet das integrierte Hilfezentrum
+- **Support** — sende eine E-Mail an das Support-Team
+- **Datenschutzrichtlinie** — Datenschutzrichtlinie anzeigen
+- **Nutzungsbedingungen** — Nutzungsbedingungen anzeigen
+
 ## Abmelden
 
-Scrolle zum Ende der Einstellungen und tippe auf **Abmelden**. Ein Bestatigungsdialog erscheint — bestatige, um dich von deinem Konto abzumelden.
+Auf dem Hauptbildschirm der Einstellungen tippe unten auf **Abmelden**. Ein Bestatigungsdialog erscheint — bestatige, um dich von deinem Konto abzumelden.
 
 ## FAQ
 
@@ -15518,16 +15641,30 @@ Debajo del formulario de cambio, encontraras una lista de tus cambios de divisa 
     {
       id: '11-settings',
       title: `Ajustes`,
-      description: `Personaliza tu perfil, apariencia, notificaciones y sincronizacion de datos. Cambia tu idioma, moneda, tema y gestiona las preferencias de tu cuenta.`,
+      description: `Personaliza tu perfil, apariencia, widgets del panel, notificaciones y sincronizacion de datos. Cambia tu idioma, moneda, tema y gestiona las preferencias de tu cuenta.`,
       body: `# Ajustes
 
-> Personaliza tu perfil, apariencia, notificaciones y sincronizacion de datos. Cambia tu idioma, moneda, tema y gestiona las preferencias de tu cuenta.
+> Personaliza tu perfil, apariencia, widgets del panel, notificaciones y sincronizacion de datos. Cambia tu idioma, moneda, tema y gestiona las preferencias de tu cuenta.
 
 ## Vista general
 
 Accede a los Ajustes tocando el **icono de engranaje** en la esquina superior derecha de cualquier pantalla.
 
-## Perfil
+Los ajustes estan organizados en categorias. Toca cualquier categoria para abrir su pantalla dedicada:
+
+| Categoria | Contenido |
+|---|---|
+| **Perfil y cuenta** | Nombre, correo, zona horaria, moneda, suscripcion |
+| **Apariencia e idioma** | Tema, idioma |
+| **Preferencias de IA** | Estilo de respuesta, seleccion de modelo |
+| **Widgets del panel** | Mostrar u ocultar widgets |
+| **Notificaciones e integraciones** | Alertas push, bot de Telegram |
+| **Seguridad y cifrado** | Configuracion de cifrado de extremo a extremo |
+| **Billetera** | Saldos, deudas, saldo inicial |
+| **Datos e informes** | Sincronizacion, informes por email, copia de seguridad |
+| **Acerca de** | Version, ayuda, soporte, informacion legal |
+
+## Perfil y cuenta
 
 ![Ajustes — Seccion de Perfil]({{IMG:settings-0.jpg}})
 
@@ -15536,7 +15673,7 @@ Accede a los Ajustes tocando el **icono de engranaje** en la esquina superior de
 - **Correo electronico** — tu correo electronico de la cuenta (solo visualizacion)
 - **Zona horaria** — toca el icono de lapiz para cambiar. Aparece un selector con busqueda con mas de 90 zonas horarias (por ejemplo, "Europe/Madrid")
 
-## Moneda
+### Moneda
 
 Selecciona tu moneda predeterminada tocando una de las fichas de moneda:
 
@@ -15544,7 +15681,11 @@ Selecciona tu moneda predeterminada tocando una de las fichas de moneda:
 
 La moneda seleccionada se resalta. Esto establece la moneda predeterminada para nuevos gastos, ingresos y visualizacion del Panel.
 
-## Ajustes de la aplicacion
+### Suscripcion
+
+- **Gestionar plan** — toca para ver tu suscripcion actual y explorar opciones de mejora
+
+## Apariencia e idioma
 
 ### Idioma
 
@@ -15562,6 +15703,16 @@ Elige entre 8 idiomas disponibles:
 | BY | Беларуская |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
+
+### Apariencia
+
+Elige tu tema:
+
+- **Sistema** — sigue la configuracion de modo claro/oscuro de tu dispositivo
+- **Claro** — siempre usa el tema claro
+- **Oscuro** — siempre usa el tema oscuro
+
+## Preferencias de IA
 
 ### Estilo de respuesta de la IA
 
@@ -15591,14 +15742,6 @@ Elige el modelo de IA para todas las funciones de IA (Chat, Escaneo de recibos, 
 
 Toca una ficha para cambiar. El modelo surte efecto de inmediato para todas las nuevas solicitudes de IA.
 
-### Apariencia
-
-Elige tu tema:
-
-- **Sistema** — sigue la configuracion de modo claro/oscuro de tu dispositivo
-- **Claro** — siempre usa el tema claro
-- **Oscuro** — siempre usa el tema oscuro
-
 ## Widgets del panel
 
 Controla qué secciones aparecen en tu Panel. Toca el interruptor junto a cada widget para mostrarlo u ocultarlo:
@@ -15618,9 +15761,11 @@ Controla qué secciones aparecen en tu Panel. Toca el interruptor junto a cada w
 
 > **Consejo:** Tus preferencias se guardan automaticamente y persisten entre reinicios.
 
-## Notificaciones
+## Notificaciones e integraciones
 
 ![Ajustes — Seccion de Notificaciones]({{IMG:settings.jpg}})
+
+### Notificaciones
 
 Interruptores para las preferencias de notificaciones:
 
@@ -15630,43 +15775,44 @@ Interruptores para las preferencias de notificaciones:
 | **Alertas de Presupuesto** | Recibe notificaciones cuando alcances los umbrales de presupuesto |
 | **Actividad de Cuenta Compartida** | Recibe notificaciones cuando otros agregan gastos a cuentas compartidas |
 
-## Suscripcion
+### Bot de Telegram
 
-- **Gestionar plan** — toca para ver tu suscripcion actual y explorar opciones de mejora
+Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a traves del bot de Telegram. Consulta Bot de Telegram para mas detalles.
 
-## Panel de administracion
+## Seguridad y cifrado
 
-- **Panel de administracion** — visible solo para usuarios administradores. Proporciona estadisticas a nivel de sistema y monitoreo del uso de IA.
+Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financieros. Consulta Cifrado para mas detalles.
 
-## Billetera
+## Datos e informes
 
-Acceso rapido a las funciones de billetera:
-
-- **Establecer saldo** — establece saldos iniciales para tus monedas
-- **Saldos** — consulta el desglose detallado de la billetera por moneda
-
-## Informes y email
-
-Configura la generacion de informes automaticos y exportacion de datos:
-
-- **Resumen semanal por email** — recibe un resumen semanal de gastos con principales categorias (requiere plan Business)
-- **Resumen mensual por email** — recibe un resumen mensual con comparacion mes a mes (requiere plan Pro o Business)
-- **Generar informe** — crea informes PDF, Excel o CSV bajo demanda
-- **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
-- **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
-
-Ver Exportacion e informes para mas detalles sobre formatos de informe y opciones de copia de seguridad.
-
-## Datos y sincronizacion
+### Datos y sincronizacion
 
 - **Ultima sincronizacion** — muestra cuando se sincronizaron tus datos por ultima vez con el servidor (por ejemplo, "Hace 5 min" o "Nunca")
 - **Sincronizar ahora** — toca para activar manualmente una sincronizacion de datos
 
 > **Nota:** La aplicacion funciona sin conexion. Tus datos se guardan en tu dispositivo y se sincronizan automaticamente cuando vuelves a estar en linea. Usa **Sincronizar ahora** para forzar una sincronizacion inmediata.
 
+### Informes y email
+
+Configura la generacion de informes automaticos y exportacion de datos:
+
+- **Resumen semanal por email** (Business) — recibe un resumen semanal de gastos con principales categorias
+- **Resumen mensual por email** (Pro+) — recibe un resumen mensual con comparacion mes a mes
+- **Generar informe** — crea informes PDF, Excel o CSV bajo demanda
+- **Exportar copia de seguridad** — exporta una copia de seguridad JSON completa de los datos de tu cuenta
+- **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
+
+## Acerca de
+
+- **Version** — numero de version actual de la aplicacion
+- **Ayuda** — abre el centro de ayuda integrado
+- **Soporte** — envia un correo al equipo de soporte
+- **Politica de privacidad** — ver la politica de privacidad
+- **Terminos de servicio** — ver los terminos de servicio
+
 ## Cerrar sesion
 
-Desplazate hasta el final de Ajustes y toca **Cerrar sesion**. Aparecera un dialogo de confirmacion — confirma para cerrar sesion en tu cuenta.
+En la pantalla principal de Ajustes, toca **Cerrar sesion** en la parte inferior. Aparecera un dialogo de confirmacion — confirma para cerrar sesion en tu cuenta.
 
 ## Preguntas frecuentes
 
@@ -18361,7 +18507,21 @@ Sous le formulaire de transfert, vous trouverez la liste de vos transferts recen
 
 Accedez aux Parametres en appuyant sur l'**icone d'engrenage** dans le coin superieur droit de n'importe quel ecran.
 
-## Profil
+Les parametres sont organises en categories. Appuyez sur une categorie pour ouvrir son ecran dedie :
+
+| Categorie | Contenu |
+|---|---|
+| **Profil et compte** | Nom, e-mail, fuseau horaire, devise, abonnement |
+| **Apparence et langue** | Theme, langue |
+| **Preferences IA** | Style de reponse, selection du modele |
+| **Widgets du tableau de bord** | Afficher ou masquer les widgets de l'ecran d'accueil |
+| **Notifications et integrations** | Notifications push, bot Telegram |
+| **Securite et chiffrement** | Configuration du chiffrement de bout en bout |
+| **Portefeuille** | Soldes, dettes, solde initial |
+| **Donnees et rapports** | Synchronisation, rapports par e-mail, sauvegarde et restauration |
+| **A propos** | Version, aide, support, mentions legales |
+
+## Profil et compte
 
 ![Parametres — Section Profil]({{IMG:settings-0.jpg}})
 
@@ -18370,7 +18530,7 @@ Accedez aux Parametres en appuyant sur l'**icone d'engrenage** dans le coin supe
 - **E-mail** — l'e-mail de votre compte (affichage uniquement)
 - **Fuseau horaire** — appuyez sur l'icone de crayon pour changer. Un selecteur avec recherche apparait avec plus de 90 fuseaux horaires (par ex. "Europe/Paris")
 
-## Devise
+### Devise
 
 Selectionnez votre devise par defaut en appuyant sur l'une des pastilles de devise :
 
@@ -18378,7 +18538,11 @@ Selectionnez votre devise par defaut en appuyant sur l'une des pastilles de devi
 
 La devise selectionnee est mise en surbrillance. Cela definit la devise par defaut pour les nouvelles depenses, revenus et l'affichage du Tableau de bord.
 
-## Parametres de l'application
+### Abonnement
+
+- **Gerer le plan** — appuyez pour voir votre abonnement actuel et explorer les options de mise a niveau
+
+## Apparence et langue
 
 ### Langue
 
@@ -18396,6 +18560,16 @@ Choisissez parmi 8 langues prises en charge :
 | BY | Беларуская |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
+
+### Apparence
+
+Choisissez votre theme :
+
+- **Systeme** — suit le mode clair/sombre de votre appareil
+- **Clair** — toujours utiliser le theme clair
+- **Sombre** — toujours utiliser le theme sombre
+
+## Preferences IA
 
 ### Style de reponse de l'IA
 
@@ -18425,14 +18599,6 @@ Choisissez le modele d'IA pour toutes les fonctionnalites IA (Chat, Scan de recu
 
 Appuyez sur une pastille pour changer. Le modele prend effet immediatement pour toutes les nouvelles requetes IA.
 
-### Apparence
-
-Choisissez votre theme :
-
-- **Systeme** — suit le mode clair/sombre de votre appareil
-- **Clair** — toujours utiliser le theme clair
-- **Sombre** — toujours utiliser le theme sombre
-
 ## Widgets du tableau de bord
 
 Controlez quelles sections apparaissent sur votre Tableau de bord. Appuyez sur le bouton bascule a cote de chaque widget pour l'afficher ou le masquer :
@@ -18452,9 +18618,11 @@ Controlez quelles sections apparaissent sur votre Tableau de bord. Appuyez sur l
 
 > **Conseil :** Vos preferences sont sauvegardees automatiquement et persistent entre les redemarrages.
 
-## Notifications
+## Notifications et integrations
 
 ![Parametres — Section Notifications]({{IMG:settings.jpg}})
+
+### Notifications
 
 Interrupteurs a bascule pour les preferences de notifications :
 
@@ -18464,22 +18632,24 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Alertes Budget** | Etre averti lorsque vous atteignez les seuils de budget |
 | **Activite Compte Partage** | Etre averti lorsque d'autres personnes ajoutent des depenses aux comptes partages |
 
-## Abonnement
+### Bot Telegram
 
-- **Gerer le plan** — appuyez pour voir votre abonnement actuel et explorer les options de mise a niveau
+Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses via le bot Telegram. Voir Bot Telegram pour plus de details.
 
-## Panneau d'administration
+## Securite et chiffrement
 
-- **Tableau de bord administrateur** — visible uniquement par les utilisateurs administrateurs. Fournit des statistiques au niveau du systeme et la surveillance de l'utilisation de l'IA.
+Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees financieres. Voir Chiffrement pour plus de details.
 
-## Portefeuille
+## Donnees et rapports
 
-Acces rapide aux fonctionnalites du portefeuille :
+### Donnees et synchronisation
 
-- **Definir le solde** — definir les soldes initiaux pour vos devises
-- **Soldes** — voir la ventilation detaillee du portefeuille par devise
+- **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
+- **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
 
-## Rapports et email
+> **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
+
+### Rapports et email
 
 Gerez vos preferences de rapports et d'emails :
 
@@ -18489,16 +18659,17 @@ Gerez vos preferences de rapports et d'emails :
 - **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte
 - **Restaurer la sauvegarde** — importer un fichier de sauvegarde precedemment exporte
 
-## Donnees et synchronisation
+## A propos
 
-- **Derniere synchronisation** — indique quand vos donnees ont ete synchronisees pour la derniere fois avec le serveur (par ex. "il y a 5 min" ou "Jamais")
-- **Synchroniser maintenant** — appuyez pour declencher manuellement une synchronisation des donnees
-
-> **Note :** L'application fonctionne hors ligne. Vos donnees sont enregistrees sur votre appareil et se synchronisent automatiquement lorsque vous etes de nouveau en ligne. Utilisez **Synchroniser maintenant** pour forcer une synchronisation immediate.
+- **Version** — numero de version actuel de l'application
+- **Aide** — ouvre le centre d'aide integre
+- **Support** — envoyer un e-mail a l'equipe de support
+- **Politique de confidentialite** — consulter la politique de confidentialite
+- **Conditions d'utilisation** — consulter les conditions d'utilisation
 
 ## Se deconnecter
 
-Faites defiler jusqu'en bas des Parametres et appuyez sur **Se deconnecter**. Une boite de dialogue de confirmation apparaitra — confirmez pour vous deconnecter de votre compte.
+Sur l'ecran principal des Parametres, appuyez sur **Se deconnecter** en bas. Une boite de dialogue de confirmation apparaitra — confirmez pour vous deconnecter de votre compte.
 
 ## FAQ
 
@@ -18513,7 +18684,7 @@ Faites defiler jusqu'en bas des Parametres et appuyez sur **Se deconnecter**. Un
 
 ---
 
-*Voir aussi : Comptes | Abonnement | Export et rapports | Mode de reponse de l'IA*
+*Voir aussi : Comptes | Abonnement | Export et rapports | Mode de reponse de l'IA | Chat IA*
 `,
     },
     {
@@ -21195,7 +21366,21 @@ iOS, Android, Web
 
 Адкрыйце Налады, націснуўшы на **значок шасцярэнкі** ў верхнім правым куце любога экрана.
 
-## Профіль
+Налады арганізаваны ў катэгорыі. Націсніце на катэгорыю, каб адкрыць яе спецыяльны экран:
+
+| Катэгорыя | Змесціва |
+|---|---|
+| **Профіль і акаўнт** | Імя, email, часавы пояс, валюта, падпіска |
+| **Знешні выгляд і мова** | Тэма, мова |
+| **Пераважнасці ШІ** | Стыль адказаў, выбар мадэлі |
+| **Віджэты галоўнага экрана** | Паказваць або хаваць віджэты галоўнага экрана |
+| **Апавяшчэнні і інтэграцыі** | Push-апавяшчэнні, Telegram-бот |
+| **Бяспека і шыфраванне** | Наладка скразнога шыфравання |
+| **Кашалёк** | Балансы, даўгі, пачатковы баланс |
+| **Даныя і справаздачы** | Сінхранізацыя, email-справаздачы, рэзервовае капіраванне і аднаўленне |
+| **Пра праграму** | Версія, дапамога, падтрымка, прававая інфармацыя |
+
+## Профіль і акаўнт
 
 ![Налады — секцыя Профіль]({{IMG:settings-0.jpg}})
 
@@ -21204,7 +21389,7 @@ iOS, Android, Web
 - **Эл. пошта** — email вашага акаўнта (толькі для прагляду)
 - **Часавы пояс** — націсніце значок алоўка для змены. Адкрыецца выбар з пошукам сярод 90+ часавых паясоў (напрыклад, «Europe/Minsk»)
 
-## Валюта
+### Валюта
 
 Выберыце валюту па змаўчанні, націснуўшы на адзін з чыпаў валют:
 
@@ -21212,7 +21397,11 @@ iOS, Android, Web
 
 Абраная валюта падсвечана. Яна ўсталёўваецца як валюта па змаўчанні для новых выдаткаў, даходаў і адлюстравання на Галоўнай.
 
-## Налады праграмы
+### Падпіска
+
+- **Кіраванне тарыфам** — націсніце, каб праглядзець бягучую падпіску і варыянты паляпшэння тарыфу
+
+## Знешні выгляд і мова
 
 ### Мова
 
@@ -21230,6 +21419,16 @@ iOS, Android, Web
 | DE | Deutsch |
 
 Націсніце на чып мовы для пераключэння. Інтэрфейс абнаўляецца імгненна.
+
+### Знешні выгляд
+
+Выберыце тэму:
+
+- **Сістэмная** — прытрымліваецца налады светлай/цёмнай тэмы вашай прылады
+- **Светлая** — заўсёды выкарыстоўваць светлую тэму
+- **Цёмная** — заўсёды выкарыстоўваць цёмную тэму
+
+## Пераважнасці ШІ
 
 ### Стыль адказаў ШІ
 
@@ -21259,14 +21458,6 @@ iOS, Android, Web
 
 Націсніце на чып для змены. Мадэль прымяняецца імгненна да ўсіх новых AI-запытаў.
 
-### Знешні выгляд
-
-Выберыце тэму:
-
-- **Сістэмная** — прытрымліваецца налады светлай/цёмнай тэмы вашай прылады
-- **Светлая** — заўсёды выкарыстоўваць светлую тэму
-- **Цёмная** — заўсёды выкарыстоўваць цёмную тэму
-
 ## Віджэты галоўнага экрана
 
 Кіруйце тым, якія секцыі адлюстроўваюцца на Галоўным экране. Націсніце на пераключальнік побач з віджэтам, каб паказаць або схаваць яго:
@@ -21286,9 +21477,11 @@ iOS, Android, Web
 
 > **Парада:** Вашы налады захоўваюцца аўтаматычна і не скідаюцца пры перазапуску.
 
-## Апавяшчэнні
+## Апавяшчэнні і інтэграцыі
 
 ![Налады — секцыя Апавяшчэнні]({{IMG:settings.jpg}})
+
+### Апавяшчэнні
 
 Пераключальнікі для пераважнасцей апавяшчэнняў:
 
@@ -21298,44 +21491,44 @@ iOS, Android, Web
 | **Абвесткі пра бюджэт** | Апавяшчэнні пры дасягненні парогаў бюджэту |
 | **Актыўнасць агульнага рахунку** | Апавяшчэнні, калі іншыя дадаюць выдаткі ў агульныя рахункі |
 
-## Падпіска
+### Telegram-бот
 
-- **Кіраванне тарыфам** — націсніце, каб праглядзець бягучую падпіску і варыянты паляпшэння тарыфу
+Звяжыце свой акаўнт Telegram, каб атрымліваць апавяшчэнні і кіраваць выдаткамі праз Telegram-бота. Гл. Telegram-бот для падрабязнасцей.
 
-## Панэль адміністратара
+## Бяспека і шыфраванне
 
-- **Панэль адміністратара** — бачная толькі адміністратарам. Забяспечвае сістэмную статыстыку і маніторынг выкарыстання ШІ.
+Наладзьце скразное шыфраванне (E2EE) для абароны вашых фінансавых даных. Гл. Шыфраванне для падрабязнасцей.
 
-## Кашалёк
+## Даныя і справаздачы
 
-Хуткі доступ да функцый кашалька:
-
-- **Усталяваць баланс** — усталюйце пачатковыя балансы для вашых валют
-- **Балансы** — прагляд дэталёвай разбіўкі кашалька па валютах
-
-## Справаздачы і email
-
-Кіраванне экспартам справаздач і email-падпіскамі:
-
-- **Штотыднёвая email-зводка** — атрымлівайце тыднёвы агляд выдаткаў з топ катэгорыямі (патрабуецца Business план)
-- **Дзень тыдня** — выберыце дзень для атрымання штотыднёвай зводкі (панядзелак па змаўчанні)
-- **Штомесячны email-дайджэст** — атрымлівайце месячную зводку з параўнаннем месяц да месяца (патрабуецца Pro або Business)
-- **Генераваць справаздачу** — адкрыйце экран Экспарт і справаздачы для стварэння справаздачы ў фарматах PDF, Excel або CSV
-- **Стварыць рэзервовую копію** — стварыце поўную JSON рэзервовую копію даных вашага рахунку
-- **Імпартаваць рэзервовую копію** — загрузка і аднаўленне даных з раней створанай копіі
-
-Больш дэталёва пра справаздачы і рэзервовыя копіі глядзіце ў раздзеле Экспарт і справаздачы.
-
-## Даныя і сінхранізацыя
+### Даныя і сінхранізацыя
 
 - **Апошняя сінхранізацыя** — паказвае, калі даныя былі апошні раз сінхранізаваны з серверам (напрыклад, «5 хв. таму» або «Ніколі»)
 - **Сінхранізаваць** — націсніце для ручнога запуску сінхранізацыі даных
 
 > **Заўвага:** Праграма працуе афлайн. Вашы даныя захоўваюцца на прыладзе і аўтаматычна сінхранізуюцца пры падключэнні да сеткі. Выкарыстоўвайце **Сінхранізаваць**, каб прымусова запусціць неадкладную сінхранізацыю.
 
+### Справаздачы і email
+
+Кіраванне экспартам справаздач і email-падпіскамі:
+
+- **Штотыднёвая email-зводка** — атрымлівайце тыднёвы агляд выдаткаў з топ катэгорыямі (патрабуецца Business план)
+- **Штомесячны email-дайджэст** — атрымлівайце месячную зводку з параўнаннем месяц да месяца (патрабуецца Pro або Business)
+- **Генераваць справаздачу** — адкрыйце экран Экспарт і справаздачы для стварэння справаздачы ў фарматах PDF, Excel або CSV
+- **Стварыць рэзервовую копію** — стварыце поўную JSON рэзервовую копію даных вашага рахунку
+- **Імпартаваць рэзервовую копію** — загрузка і аднаўленне даных з раней створанай копіі
+
+## Пра праграму
+
+- **Версія** — нумар бягучай версіі праграмы
+- **Дапамога** — адкрывае ўбудаваны цэнтр дапамогі
+- **Падтрымка** — адправіць email камандзе падтрымкі
+- **Палітыка канфідэнцыяльнасці** — праглядзець палітыку канфідэнцыяльнасці
+- **Умовы выкарыстання** — праглядзець умовы выкарыстання
+
 ## Выхад
 
-Пракруціце Налады да канца і націсніце **Выйсці**. З'явіцца дыялог пацвярджэння — пацвердзіце, каб выйсці з акаўнта.
+На галоўным экране Налад націсніце **Выйсці** унізе. З'явіцца дыялог пацвярджэння — пацвердзіце, каб выйсці з акаўнта.
 
 ## Пытанні і адказы
 
@@ -21350,7 +21543,7 @@ iOS, Android, Web
 
 ---
 
-*Гл. таксама: Рахункі | Тарыфныя планы | Экспарт і справаздачы | Рэжым адказаў ШІ*
+*Гл. таксама: Рахункі | Тарыфныя планы | Экспарт і справаздачы | Рэжым адказаў ШІ | ШІ-чат*
 `,
     },
     {

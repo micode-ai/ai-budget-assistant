@@ -6,7 +6,21 @@
 
 Przejdz do Ustawien, dotykajac **ikone zebatki** w prawym gornym rogu dowolnego ekranu.
 
-## Profil
+Ustawienia sa podzielone na kategorie. Dotknij kategorie, aby otworzyc jej dedykowany ekran:
+
+| Kategoria | Zawartosc |
+|---|---|
+| **Profil i konto** | Imie, e-mail, strefa czasowa, waluta, subskrypcja |
+| **Wyglad i jezyk** | Motyw, jezyk |
+| **Preferencje AI** | Styl odpowiedzi, wybor modelu |
+| **Widgety pulpitu** | Pokazuj lub ukrywaj widgety ekranu glownego |
+| **Powiadomienia i integracje** | Powiadomienia push, bot Telegram |
+| **Bezpieczenstwo i szyfrowanie** | Konfiguracja szyfrowania end-to-end |
+| **Portfel** | Salda, dlugi, saldo poczatkowe |
+| **Dane i raporty** | Synchronizacja, raporty e-mail, kopia zapasowa i przywracanie |
+| **Informacje** | Wersja, pomoc, wsparcie, regulamin |
+
+## Profil i konto
 
 ![Ustawienia — sekcja Profil](../img/settings-0.jpg)
 
@@ -15,7 +29,7 @@ Przejdz do Ustawien, dotykajac **ikone zebatki** w prawym gornym rogu dowolnego 
 - **E-mail** — adres e-mail konta (tylko do odczytu)
 - **Strefa czasowa** — dotknij ikone olowka, aby zmienic. Pojawi sie lista z wyszukiwaniem z ponad 90 strefami czasowymi (np. "Europe/Warsaw")
 
-## Waluta
+### Waluta
 
 Wybierz domyslna walute, dotykajac jednego z elementow waluty:
 
@@ -23,7 +37,11 @@ Wybierz domyslna walute, dotykajac jednego z elementow waluty:
 
 Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow, przychodow i wyswietlania na Pulpicie.
 
-## Ustawienia aplikacji
+### Subskrypcja
+
+- **Zarzadzaj planem** — dotknij, aby zobaczyc biezaca subskrypcje i sprawdzic opcje ulepszenia
+
+## Wyglad i jezyk
 
 ### Jezyk
 
@@ -41,6 +59,16 @@ Wybierz z 8 obslugiwanych jezykow:
 | BY | Беларуская |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
+
+### Wyglad
+
+Wybierz motyw:
+
+- **Systemowy** — podaza za ustawieniem jasnego/ciemnego motywu urzadzenia
+- **Jasny** — zawsze uzywa jasnego motywu
+- **Ciemny** — zawsze uzywa ciemnego motywu
+
+## Preferencje AI
 
 ### Styl odpowiedzi AI
 
@@ -70,14 +98,6 @@ Wybierz model AI dla wszystkich funkcji AI (Czat, Skanowanie paragonow, Kategory
 
 Dotknij element, aby zmienic. Model dziala natychmiast dla wszystkich nowych zapytan AI.
 
-### Wyglad
-
-Wybierz motyw:
-
-- **Systemowy** — podaza za ustawieniem jasnego/ciemnego motywu urzadzenia
-- **Jasny** — zawsze uzywa jasnego motywu
-- **Ciemny** — zawsze uzywa ciemnego motywu
-
 ## Widgety pulpitu
 
 Kontroluj, ktore sekcje pojawiaja sie na Twoim [Pulpicie](./02-dashboard.md). Dotknij przelacznika obok kazdego widgetu, aby go pokazac lub ukryc:
@@ -97,9 +117,11 @@ Kontroluj, ktore sekcje pojawiaja sie na Twoim [Pulpicie](./02-dashboard.md). Do
 
 > **Wskazowka:** Twoje preferencje sa zapisywane automatycznie i pozostaja po ponownym uruchomieniu.
 
-## Powiadomienia
+## Powiadomienia i integracje
 
 ![Ustawienia — sekcja Powiadomienia](../img/settings.jpg)
+
+### Powiadomienia
 
 Przelaczniki dla preferencji powiadomien:
 
@@ -109,41 +131,44 @@ Przelaczniki dla preferencji powiadomien:
 | **Alerty Budzetowe** | Otrzymuj powiadomienia po osiagnieciu progow budzetowych |
 | **Aktywnosc Wspolnego Konta** | Otrzymuj powiadomienia, gdy inni dodaja wydatki do wspolnych kont |
 
-## Subskrypcja
+### Bot Telegram
 
-- **Zarzadzaj planem** — dotknij, aby zobaczyc biezaca subskrypcje i sprawdzic opcje ulepszenia
+Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami za pomoca bota Telegram. Zobacz [Bot Telegram](./22-telegram-bot.md), aby uzyskac szczegoly.
 
-## Panel administratora
+## Bezpieczenstwo i szyfrowanie
 
-- **Panel administratora** — widoczny tylko dla uzytkownikow z uprawnieniami administratora. Udostepnia statystyki systemowe i monitorowanie uzycia AI.
+Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zobacz [Szyfrowanie](./15-encryption.md), aby uzyskac szczegoly.
 
-## Portfel
+## Dane i raporty
 
-Szybki dostep do funkcji portfela:
-
-- **Ustaw saldo** — ustaw salda poczatkowe dla swoich walut
-- **Salda** — przegladaj szczegolowy podzial portfela wedlug waluty
-
-## Raporty i e-mail
-
-Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
-
-- **Tygodniowy raport e-mail** — otrzymuj tygodniowy przeglad wydatkow z glownymi kategoriami (plan Business)
-- **Miesieczny raport e-mail** — otrzymuj miesieczne podsumowanie z porownaniem miesiac do miesiaca (plan Pro i Business)
-- **Generuj raport** — otworz ekran Eksport i raporty, aby wygenerowac raporty PDF, Excel lub CSV
-- **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
-- **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
-
-## Dane i synchronizacja
+### Dane i synchronizacja
 
 - **Ostatnia synchronizacja** — pokazuje, kiedy dane zostaly ostatnio zsynchronizowane z serwerem (np. "5 min temu" lub "Nigdy")
 - **Synchronizuj teraz** — dotknij, aby recznie wywolac synchronizacje danych
 
 > **Uwaga:** Aplikacja dziala offline. Dane zapisuja sie na urzadzeniu i synchronizuja automatycznie po przywroceniu polaczenia. Uzyj **Synchronizuj teraz**, aby wymusic natychmiastowa synchronizacje.
 
+### Raporty i e-mail
+
+Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
+
+- **Tygodniowy raport e-mail** — otrzymuj tygodniowy przeglad wydatkow z glownymi kategoriami (plan Business)
+- **Miesieczny raport e-mail** — otrzymuj miesieczne podsumowanie z porownaniem miesiac do miesiaca (plan Pro i Business)
+- **Generuj raport** — otworz ekran [Eksport i raporty](./16-export-reports.md), aby wygenerowac raporty PDF, Excel lub CSV
+- **Eksportuj kopie zapasowa** — utworz pelna kopie zapasowa JSON wszystkich danych Twojego konta
+- **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
+
+## Informacje
+
+- **Wersja** — aktualny numer wersji aplikacji
+- **Pomoc** — otwiera wbudowane centrum pomocy
+- **Wsparcie** — wyslij e-mail do zespolu wsparcia
+- **Polityka prywatnosci** — przegladaj polityke prywatnosci
+- **Regulamin** — przegladaj regulamin uslug
+
 ## Wylogowanie
 
-Przewin na dol Ustawien i dotknij **Wyloguj sie**. Pojawi sie okno potwierdzenia — potwierdz, aby wylogowac sie z konta.
+Na glownym ekranie Ustawien dotknij **Wyloguj sie** na dole. Pojawi sie okno potwierdzenia — potwierdz, aby wylogowac sie z konta.
 
 ## FAQ
 
@@ -158,4 +183,4 @@ Przewin na dol Ustawien i dotknij **Wyloguj sie**. Pojawi sie okno potwierdzenia
 
 ---
 
-*Zobacz takze: [Konta](./09-accounts.md) | [Plany subskrypcji](./12-subscription.md) | [Eksport i raporty](./16-export-reports.md) | [Tryb odpowiedzi AI](./20-ai-response-mode.md)*
+*Zobacz takze: [Konta](./09-accounts.md) | [Plany subskrypcji](./12-subscription.md) | [Eksport i raporty](./16-export-reports.md) | [Tryb odpowiedzi AI](./20-ai-response-mode.md) | [Czat AI](./07-ai-chat.md)*
