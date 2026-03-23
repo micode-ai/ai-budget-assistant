@@ -100,6 +100,19 @@ After your first login, you can use biometric authentication (Face ID or fingerp
 2. Authenticate with your device's biometric sensor
 3. You're in!
 
+### Forgot Password
+
+If you forgot your password:
+
+1. On the login screen, tap **Forgot password?**
+2. Enter your **Email** address and tap **Send Code**
+3. Check your email for a **6-digit code** (valid for 30 minutes)
+4. Enter the code, your **New Password**, and confirm it
+5. Tap **Reset Password**
+6. You'll be redirected to the login screen — sign in with your new password
+
+> If you don't receive the code, check your spam folder or tap **Resend code**.
+
 ## Welcome Screen
 
 After your first login, you'll see the **Welcome** screen:
@@ -2984,6 +2997,19 @@ iOS, Android, Web
 1. На экране входа нажмите **Использовать Face ID** / **Использовать отпечаток пальца**
 2. Пройдите аутентификацию с помощью биометрического датчика устройства
 3. Готово!
+
+### Забыли пароль
+
+Если вы забыли свой пароль:
+
+1. На экране входа нажмите **Забыли пароль?**
+2. Введите адрес **Электронная почта** и нажмите **Отправить код**
+3. Проверьте почту — вам придёт **6-значный код** (действителен 30 минут)
+4. Введите код, **Новый пароль** и подтвердите его
+5. Нажмите **Сбросить пароль**
+6. Вы будете перенаправлены на экран входа — войдите с новым паролем
+
+> Если код не пришёл, проверьте папку «Спам» или нажмите **Отправить код повторно**.
 
 ## Экран приветствия
 
@@ -5872,6 +5898,19 @@ iOS, Android, Web
 2. Пройдіть автентифікацію за допомогою біометричного сенсора пристрою
 3. Готово!
 
+### Забули пароль
+
+Якщо ви забули свій пароль:
+
+1. На екрані входу натисніть **Забули пароль?**
+2. Введіть адресу **Електронна пошта** та натисніть **Надіслати код**
+3. Перевірте пошту — вам надійде **6-значний код** (дійсний 30 хвилин)
+4. Введіть код, **Новий пароль** та підтвердіть його
+5. Натисніть **Скинути пароль**
+6. Вас буде перенаправлено на екран входу — увійдіть з новим паролем
+
+> Якщо код не надійшов, перевірте папку «Спам» або натисніть **Надіслати код повторно**.
+
 ## Екран привітання
 
 Після першого входу ви побачите екран **Ласкаво просимо до AI Budget!**:
@@ -8754,6 +8793,19 @@ Po pierwszym zalogowaniu mozesz uzyc uwierzytelniania biometrycznego (Face ID lu
 2. Uwierzytelnij sie czujnikiem biometrycznym urzadzenia
 3. Gotowe!
 
+### Zapomniałeś hasła?
+
+Jeśli zapomniałeś hasła:
+
+1. Na ekranie logowania naciśnij **Zapomniałeś hasła?**
+2. Wprowadź swój **Adres e-mail** i naciśnij **Wyślij kod**
+3. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod** (ważny przez 30 minut)
+4. Wprowadź kod, **Nowe hasło** i potwierdź je
+5. Naciśnij **Zresetuj hasło**
+6. Zostaniesz przekierowany na ekran logowania — zaloguj się nowym hasłem
+
+> Jeśli kod nie dotarł, sprawdź folder spam lub naciśnij **Wyślij kod ponownie**.
+
 ## Ekran powitalny
 
 Po pierwszym zalogowaniu zobaczysz ekran **Witamy**:
@@ -11620,6 +11672,19 @@ Nach deiner ersten Anmeldung kannst du die biometrische Authentifizierung (Face 
 2. Authentifiziere dich mit dem biometrischen Sensor deines Gerats
 3. Du bist eingeloggt!
 
+### Passwort vergessen
+
+Wenn Sie Ihr Passwort vergessen haben:
+
+1. Tippen Sie auf dem Anmeldebildschirm auf **Passwort vergessen?**
+2. Geben Sie Ihre **E-Mail-Adresse** ein und tippen Sie auf **Code senden**
+3. Prüfen Sie Ihre E-Mail — Sie erhalten einen **6-stelligen Code** (gültig für 30 Minuten)
+4. Geben Sie den Code, Ihr **Neues Passwort** ein und bestätigen Sie es
+5. Tippen Sie auf **Passwort zurücksetzen**
+6. Sie werden zum Anmeldebildschirm weitergeleitet — melden Sie sich mit Ihrem neuen Passwort an
+
+> Wenn der Code nicht ankommt, überprüfen Sie Ihren Spam-Ordner oder tippen Sie auf **Code erneut senden**.
+
 ## Willkommensbildschirm
 
 Nach deiner ersten Anmeldung siehst du den **Willkommen**-Bildschirm:
@@ -14484,6 +14549,19 @@ Despues de tu primer inicio de sesion, puedes usar la autenticacion biometrica (
 2. Autenticate con el sensor biometrico de tu dispositivo
 3. Listo, ya estas dentro
 
+### ¿Olvidaste tu contraseña?
+
+Si olvidaste tu contraseña:
+
+1. En la pantalla de inicio de sesión, toca **¿Olvidaste tu contraseña?**
+2. Ingresa tu **Correo electrónico** y toca **Enviar código**
+3. Revisa tu correo — recibirás un **código de 6 dígitos** (válido por 30 minutos)
+4. Ingresa el código, tu **Nueva contraseña** y confírmala
+5. Toca **Restablecer contraseña**
+6. Serás redirigido a la pantalla de inicio de sesión — inicia sesión con tu nueva contraseña
+
+> Si no recibes el código, revisa tu carpeta de spam o toca **Reenviar código**.
+
 ## Pantalla de bienvenida
 
 Despues de tu primer inicio de sesion, veras la pantalla de **Bienvenida**:
@@ -17343,6 +17421,19 @@ Apres votre premiere connexion, vous pouvez utiliser l'authentification biometri
 2. Authentifiez-vous avec le capteur biometrique de votre appareil
 3. Vous etes connecte !
 
+### Mot de passe oublié
+
+Si vous avez oublié votre mot de passe :
+
+1. Sur l'écran de connexion, appuyez sur **Mot de passe oublié ?**
+2. Entrez votre **Adresse e-mail** et appuyez sur **Envoyer le code**
+3. Vérifiez votre e-mail — vous recevrez un **code à 6 chiffres** (valide pendant 30 minutes)
+4. Entrez le code, votre **Nouveau mot de passe** et confirmez-le
+5. Appuyez sur **Réinitialiser le mot de passe**
+6. Vous serez redirigé vers l'écran de connexion — connectez-vous avec votre nouveau mot de passe
+
+> Si vous ne recevez pas le code, vérifiez votre dossier spam ou appuyez sur **Renvoyer le code**.
+
 ## Ecran de bienvenue
 
 Apres votre premiere connexion, vous verrez l'ecran **Bienvenue** :
@@ -20199,6 +20290,19 @@ iOS, Android, Web
 1. На экране ўваходу націсніце **Выкарыстаць Face ID** / **Выкарыстаць адбітак пальца**
 2. Прайдзіце аўтэнтыфікацыю з дапамогай біяметрычнага датчыка прылады
 3. Гатова!
+
+### Забылі пароль
+
+Калі вы забылі свой пароль:
+
+1. На экране ўваходу націсніце **Забылі пароль?**
+2. Увядзіце адрас **Электронная пошта** і націсніце **Адправіць код**
+3. Праверце пошту — вам прыйдзе **6-значны код** (дзейнічае 30 хвілін)
+4. Увядзіце код, **Новы пароль** і пацвердзіце яго
+5. Націсніце **Скінуць пароль**
+6. Вас перанакіруюць на экран уваходу — увайдзіце з новым паролем
+
+> Калі код не прыйшоў, праверце папку «Спам» або націсніце **Адправіць код паўторна**.
 
 ## Экран прывітання
 

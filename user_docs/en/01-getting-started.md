@@ -27,6 +27,19 @@ After your first login, you can use biometric authentication (Face ID or fingerp
 2. Authenticate with your device's biometric sensor
 3. You're in!
 
+### Forgot Password
+
+If you forgot your password:
+
+1. On the login screen, tap **Forgot password?**
+2. Enter your **Email** address and tap **Send Code**
+3. Check your email for a **6-digit code** (valid for 30 minutes)
+4. Enter the code, your **New Password**, and confirm it
+5. Tap **Reset Password**
+6. You'll be redirected to the login screen — sign in with your new password
+
+> If you don't receive the code, check your spam folder or tap **Resend code**.
+
 ## Welcome Screen
 
 After your first login, you'll see the **Welcome** screen:

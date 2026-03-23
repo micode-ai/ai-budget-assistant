@@ -98,6 +98,56 @@ Content-Type: application/json
 }
 ```
 
+### Восстановление пароля
+
+Запрос кода для сброса пароля. Всегда возвращает 200, независимо от того, существует ли email (предотвращение перебора email-адресов).
+
+```http
+POST /auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "message": "If this email is registered, a reset code has been sent"
+}
+```
+
+**Ограничение частоты:** 3 запроса на email за 15 минут. Возвращает `429 Too Many Requests` при превышении.
+
+### Сброс пароля
+
+Проверка 6-значного кода и установка нового пароля.
+
+```http
+POST /auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "code": "123456",
+  "newPassword": "NewSecurePass1"
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "message": "Password reset successfully"
+}
+```
+
+**Ошибки:**
+- `400 Bad Request` — Неверный или просроченный код
+- `429 Too Many Requests` — Максимум 5 попыток проверки на email за 15 минут
+
+**Требования к паролю:** Минимум 8 символов, хотя бы одна заглавная буква, одна строчная буква и одна цифра.
+
 ---
 
 ## Пользователи

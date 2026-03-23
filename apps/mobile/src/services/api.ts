@@ -155,6 +155,22 @@ class ApiClient {
     );
   }
 
+  async forgotPassword(email: string) {
+    return this.request<{ message: string }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+      skipAuth: true,
+    });
+  }
+
+  async resetPassword(email: string, code: string, newPassword: string) {
+    return this.request<{ message: string }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ email, code, newPassword }),
+      skipAuth: true,
+    });
+  }
+
   // User endpoints
   async getProfile() {
     return this.request<any>('/users/me');

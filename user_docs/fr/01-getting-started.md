@@ -27,6 +27,19 @@ Apres votre premiere connexion, vous pouvez utiliser l'authentification biometri
 2. Authentifiez-vous avec le capteur biometrique de votre appareil
 3. Vous etes connecte !
 
+### Mot de passe oublié
+
+Si vous avez oublié votre mot de passe :
+
+1. Sur l'écran de connexion, appuyez sur **Mot de passe oublié ?**
+2. Entrez votre **Adresse e-mail** et appuyez sur **Envoyer le code**
+3. Vérifiez votre e-mail — vous recevrez un **code à 6 chiffres** (valide pendant 30 minutes)
+4. Entrez le code, votre **Nouveau mot de passe** et confirmez-le
+5. Appuyez sur **Réinitialiser le mot de passe**
+6. Vous serez redirigé vers l'écran de connexion — connectez-vous avec votre nouveau mot de passe
+
+> Si vous ne recevez pas le code, vérifiez votre dossier spam ou appuyez sur **Renvoyer le code**.
+
 ## Ecran de bienvenue
 
 Apres votre premiere connexion, vous verrez l'ecran **Bienvenue** :
