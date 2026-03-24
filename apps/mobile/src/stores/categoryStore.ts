@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
-import { getAllCategories, upsertCategory } from '@/db/categoryRepository';
+import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
@@ -44,6 +44,8 @@ interface CategoryState {
   getIncomeCategories: () => Category[];
   createCategory: (name: string, type: 'expense' | 'income', icon?: string, color?: string) => Promise<Category>;
   syncFromServer: (serverCategories: any[]) => Promise<void>;
+  deleteCategory: (id: string) => Promise<void>;
+  updateCategory: (id: string, data: { name?: string; color?: string }) => Promise<void>;
 }
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
@@ -72,14 +74,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         }
       }
 
-      // Ensure all default categories exist (check by name to avoid duplicates with server categories)
-      const existingNames = new Set(categories.map(c => `${c.type}:${c.name}`));
+      // Ensure all default categories exist (check by deterministic ID to avoid re-creating deleted system categories)
       let seeded = false;
       const now = new Date();
 
       for (const cat of DEFAULT_EXPENSE_CATEGORIES) {
-        if (!existingNames.has(`expense:${cat.name}`)) {
-          const id = `default-exp-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+        const id = `default-exp-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+        const exists = await categoryExistsById(id);
+        if (!exists) {
           await upsertCategory({
             id,
             accountId,
@@ -97,8 +99,9 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         }
       }
       for (const cat of DEFAULT_INCOME_CATEGORIES) {
-        if (!existingNames.has(`income:${cat.name}`)) {
-          const id = `default-inc-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+        const id = `default-inc-${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+        const exists = await categoryExistsById(id);
+        if (!exists) {
           await upsertCategory({
             id,
             accountId,
@@ -224,6 +227,34 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     if (accountId) {
       const categories = await getAllCategories(accountId);
       set({ categories, isInitialized: true });
+    }
+  },
+
+  deleteCategory: async (id: string) => {
+    // Await API — may throw 409 with details (error.status and error.details preserved by api.ts)
+    // 404 means category exists only locally (e.g. seeded default with local ID) — delete locally only
+    try {
+      await api.deleteCategory(id);
+    } catch (error: any) {
+      if (error?.status !== 404) throw error;
+    }
+    await deleteCategoryFromDb(id);
+    set((state) => ({
+      categories: state.categories.filter((c) => c.id !== id),
+    }));
+  },
+
+  updateCategory: async (id: string, data: { name?: string; color?: string }) => {
+    await api.updateCategory(id, data);
+    await upsertCategory({
+      ...get().categories.find((c) => c.id === id)!,
+      ...data,
+      updatedAt: new Date(),
+    });
+    const accountId = useAccountStore.getState().currentAccountId;
+    if (accountId) {
+      const categories = await getAllCategories(accountId);
+      set({ categories });
     }
   },
 }));

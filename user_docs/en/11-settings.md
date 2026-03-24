@@ -139,6 +139,19 @@ Link your Telegram account to receive notifications and manage expenses via the 
 
 Set up end-to-end encryption (E2EE) to protect your financial data. See [Encryption](./15-encryption.md) for details.
 
+## Categories
+
+Access via **Settings → Categories**.
+
+View and manage all your expense and income categories in one place.
+
+- **All categories listed** — both expense and income categories are shown together
+- **Delete a category** — swipe left on a category or tap the delete icon to remove it
+- **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
+- **System categories** can also be deleted if they have no related records
+
+> **Note:** Deleting a category is permanent and cannot be undone.
+
 ## Data & Reports
 
 ### Data & Sync

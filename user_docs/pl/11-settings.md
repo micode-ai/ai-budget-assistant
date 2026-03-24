@@ -139,6 +139,19 @@ Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami 
 
 Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zobacz [Szyfrowanie](./15-encryption.md), aby uzyskac szczegoly.
 
+## Kategorie
+
+Dostep przez **Ustawienia → Kategorie**.
+
+Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w jednym miejscu.
+
+- **Wszystkie kategorie na liscie** — kategorie wydatkow i przychodow sa wyswietlane razem
+- **Usun kategorie** — przesuń palcem w lewo po kategorii lub dotknij ikony usuwania
+- **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
+- **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
+
+> **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
+
 ## Dane i raporty
 
 ### Dane i synchronizacja

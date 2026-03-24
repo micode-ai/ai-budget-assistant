@@ -139,6 +139,19 @@ Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses
 
 Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees financieres. Voir [Chiffrement](./15-encryption.md) pour plus de details.
 
+## Categories
+
+Acces via **Parametres → Categories**.
+
+Visualisez et gerez toutes vos categories de depenses et de revenus en un seul endroit.
+
+- **Toutes les categories listees** — les categories de depenses et de revenus sont affichees ensemble
+- **Supprimer une categorie** — faites glisser vers la gauche sur une categorie ou appuyez sur l'icone de suppression
+- **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
+- **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
+
+> **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
+
 ## Donnees et rapports
 
 ### Donnees et synchronisation

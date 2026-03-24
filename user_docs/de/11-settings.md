@@ -139,6 +139,19 @@ Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben ub
 
 Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen. Siehe [Verschlusselung](./15-encryption.md) fur Details.
 
+## Kategorien
+
+Zugriff uber **Einstellungen → Kategorien**.
+
+Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
+
+- **Alle Kategorien aufgelistet** — Ausgaben- und Einnahmenkategorien werden gemeinsam angezeigt
+- **Kategorie loschen** — wische eine Kategorie nach links oder tippe auf das Loschsymbol
+- **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
+- **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
+
+> **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
+
 ## Daten & Berichte
 
 ### Daten & Synchronisierung
