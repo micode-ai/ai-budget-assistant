@@ -18,6 +18,15 @@ Kazda transakcja wyswietla:
 
 Dotknij dowolna transakcje, aby zobaczyc jej pelne szczegoly.
 
+### Szybkie akcje (dluge nacisniecie)
+
+Przytrzymaj dowolna transakcje na liscie, aby otworzyc menu szybkich akcji:
+- **Edytuj** — otworz transakcje w trybie edycji
+- **Duplikuj** — utworz nowa transakcje z tymi samymi danymi
+- **Usun** — usun transakcje (z potwierdzeniem)
+
+> **Uwaga:** Duplikowanie i usuwanie sa dostepne tylko dla wlascicieli i edytorow konta.
+
 Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
 ## Dodawanie nowego wydatku (recznie)

@@ -18,6 +18,15 @@ Jede Transaktion zeigt:
 
 Tippe auf eine beliebige Transaktion, um die vollstandigen Details anzuzeigen.
 
+### Schnellaktionen (langes Drucken)
+
+Halte eine beliebige Transaktion in der Liste gedruckt, um das Schnellaktionsmenu zu offnen:
+- **Bearbeiten** — die Transaktion im Bearbeitungsmodus offnen
+- **Duplizieren** — eine neue Transaktion mit denselben Daten erstellen
+- **Loschen** — die Transaktion entfernen (mit Bestatigung)
+
+> **Hinweis:** Duplizieren und Loschen sind nur fur Kontoinhaber und Bearbeiter verfugbar.
+
 Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transaktion hinzuzufugen.
 
 ## Neue Ausgabe hinzufugen (Manuell)
