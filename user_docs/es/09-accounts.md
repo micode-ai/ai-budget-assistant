@@ -40,7 +40,7 @@ Toca **Gestionar cuentas** en la parte inferior del menu desplegable para ir a l
 5. Selecciona la **Moneda** para esta cuenta
 6. Toca **Crear**
 
-> **Nota:** El plan Gratuito permite 1 cuenta, Pro permite hasta 3, Business permite cuentas ilimitadas.
+> **Nota:** El plan Gratuito permite 3 cuentas, Pro permite hasta 5, Business permite cuentas ilimitadas.
 
 ## Unirse a una cuenta
 
@@ -128,7 +128,7 @@ La deteccion automatica no cambia tu cuenta predeterminada — solo aplica al me
 ## Preguntas frecuentes
 
 - **P: Cuantas cuentas puedo tener?**
-  **R:** Gratuito: 1 cuenta, Pro: hasta 3, Business: ilimitadas.
+  **R:** Gratuito: 3 cuentas, Pro: hasta 5, Business: ilimitadas.
 
 - **P: Puedo transferir la propiedad de una cuenta?**
   **R:** Actualmente, el creador de la cuenta siempre es el Propietario. Contacta con soporte para transferencias de propiedad.

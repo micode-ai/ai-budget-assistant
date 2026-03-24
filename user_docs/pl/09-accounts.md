@@ -40,7 +40,7 @@ Dotknij **Zarzadzaj kontami** na dole menu, aby przejsc do pelnej listy kont.
 5. Wybierz **Walute** dla tego konta
 6. Dotknij **Utworz**
 
-> **Uwaga:** Darmowy plan pozwala na 1 konto, Pro pozwala na maksymalnie 3, Business pozwala na nieograniczona liczbe kont.
+> **Uwaga:** Darmowy plan pozwala na 3 konta, Pro pozwala na maksymalnie 5, Business pozwala na nieograniczona liczbe kont.
 
 ## Dolaczanie do konta
 
@@ -128,7 +128,7 @@ Automatyczne wykrywanie nie zmienia Twojego domyslnego konta — dotyczy tylko b
 ## FAQ
 
 - **P: Ile kont moge miec?**
-  **O:** Free: 1 konto, Pro: do 3, Business: bez limitu.
+  **O:** Free: 3 konta, Pro: do 5, Business: bez limitu.
 
 - **P: Czy moge przeniesc wlasnosc konta?**
   **O:** Obecnie tworca konta jest zawsze Wlascicielem. Skontaktuj sie z obsluga w sprawie przeniesienia wlasnosci.

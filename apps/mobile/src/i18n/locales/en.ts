@@ -630,6 +630,7 @@ export default {
     noTransfersHint: 'Transfers between your accounts will appear here',
   },
   errors: {
+    error: 'Error',
     loginFailed: 'Login failed',
     invalidCredentials: 'Invalid email or password',
     accountDeactivated: 'Account is deactivated',
@@ -713,7 +714,7 @@ export default {
     },
     features: {
       aiRequests200: '200 AI requests per month',
-      accounts3: 'Up to 3 accounts',
+      accounts5: 'Up to 5 accounts',
       members5: 'Up to 5 members per account',
       predictiveAnalytics: 'Predictive analytics',
       anomalyDetection: 'Spending anomaly detection',
@@ -731,7 +732,7 @@ export default {
     subheading: 'Your smart financial companion',
     freeIncluded: 'Your free plan includes:',
     freeAiRequests: '5 AI requests per month',
-    freeAccount: '1 personal account',
+    freeAccount: '3 personal accounts',
     freeMember: '1 member',
     freeTracking: 'Full expense tracking',
     wantMore: 'Want more? Upgrade anytime',

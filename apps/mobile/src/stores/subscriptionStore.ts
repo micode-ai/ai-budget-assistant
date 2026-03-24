@@ -43,8 +43,8 @@ interface SubscriptionState {
 }
 
 const ACCOUNT_LIMITS: Record<SubscriptionTier, number> = {
-  free: 1,
-  pro: 3,
+  free: 3,
+  pro: 5,
   business: Infinity,
 };
 

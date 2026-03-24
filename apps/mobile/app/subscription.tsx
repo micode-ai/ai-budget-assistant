@@ -93,7 +93,7 @@ export default function SubscriptionScreen() {
 
   const proFeatures: PlanFeature[] = [
     { icon: 'sparkles-outline', text: t('subscription.features.aiRequests200') },
-    { icon: 'people-outline', text: t('subscription.features.accounts3') },
+    { icon: 'people-outline', text: t('subscription.features.accounts5') },
     { icon: 'person-add-outline', text: t('subscription.features.members5') },
     { icon: 'analytics-outline', text: t('subscription.features.predictiveAnalytics') },
     { icon: 'alert-circle-outline', text: t('subscription.features.anomalyDetection') },

@@ -46,7 +46,7 @@ Despues de tu primer inicio de sesion, veras la pantalla de **Bienvenida**:
 
 - **Tu plan gratuito incluye:**
   - 5 solicitudes IA por mes
-  - 1 cuenta personal
+  - 3 cuentas personales
   - 1 miembro
   - Seguimiento completo de gastos
 - Toca **Continuar con el plan Gratuito** para comenzar, o explora las opciones de mejora

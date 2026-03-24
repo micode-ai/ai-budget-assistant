@@ -46,7 +46,7 @@ Apres votre premiere connexion, vous verrez l'ecran **Bienvenue** :
 
 - **Votre plan gratuit inclut :**
   - 5 requetes IA par mois
-  - 1 compte personnel
+  - 3 comptes personnels
   - 1 membre
   - Suivi complet des depenses
 - Appuyez sur **Continuer avec le plan Gratuit** pour commencer, ou explorez les options de mise a niveau

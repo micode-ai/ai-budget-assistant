@@ -40,7 +40,7 @@ Tap **Manage Accounts** at the bottom of the dropdown to go to the full account 
 5. Select the **Currency** for this account
 6. Tap **Create**
 
-> **Note:** Free plan allows 1 account, Pro allows up to 3, Business allows unlimited accounts.
+> **Note:** Free plan allows 3 accounts, Pro allows up to 5, Business allows unlimited accounts.
 
 ## Joining an Account
 
@@ -128,7 +128,7 @@ The automatic detection does not change your default account — it only applies
 ## FAQ
 
 - **Q: How many accounts can I have?**
-  **A:** Free: 1 account, Pro: up to 3, Business: unlimited.
+  **A:** Free: 3 accounts, Pro: up to 5, Business: unlimited.
 
 - **Q: Can I transfer ownership of an account?**
   **A:** Currently, the account creator is always the Owner. Contact support for ownership transfers.
