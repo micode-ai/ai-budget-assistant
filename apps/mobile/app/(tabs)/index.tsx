@@ -181,6 +181,9 @@ export default function DashboardScreen() {
       >
         {currentAccountType === 'investment' && investmentSummary && (
           <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/investment')}>
+            <View style={styles.chevronHint}>
+              <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+            </View>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{t('investments.portfolio')}</Text>
             </View>
@@ -209,6 +212,9 @@ export default function DashboardScreen() {
         )}
 
         {widgetVisibility.gamification && <TouchableOpacity style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
+          <View style={styles.chevronHint}>
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+          </View>
           <Text style={styles.gamificationDate}>
             {new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
           </Text>
@@ -243,6 +249,9 @@ export default function DashboardScreen() {
         </TouchableOpacity>}
 
         {widgetVisibility.monthlyBudget && <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
+          <View style={styles.chevronHint}>
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+          </View>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
           </View>
@@ -268,23 +277,29 @@ export default function DashboardScreen() {
         </TouchableOpacity>}
 
         {widgetVisibility.incomeExpenses && (
-          <View style={styles.card}>
+          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses' })}>
+            <View style={styles.chevronHint}>
+              <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+            </View>
             <View style={styles.incomeExpenseRow}>
-              <TouchableOpacity style={styles.incomeExpenseCol} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'income' } })}>
+              <View style={styles.incomeExpenseCol}>
                 <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
                 <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
-              </TouchableOpacity>
+              </View>
               <View style={styles.incomeExpenseDivider} />
-              <TouchableOpacity style={styles.incomeExpenseCol} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses', params: { tab: 'expenses' } })}>
+              <View style={styles.incomeExpenseCol}>
                 <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalExpenses')}</Text>
                 <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
-              </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
 
         {widgetVisibility.debts && (
           <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
+            <View style={styles.chevronHint}>
+              <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+            </View>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
               {(lentDebts.length > 0 || borrowedDebts.length > 0) && (
@@ -466,6 +481,12 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[4],
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
+  },
+  chevronHint: {
+    position: 'absolute' as const,
+    top: theme.spacing[3],
+    right: theme.spacing[3],
+    zIndex: 1,
   },
   cardHeader: {
     alignSelf: 'center' as const,

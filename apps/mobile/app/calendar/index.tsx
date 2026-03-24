@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useState, useCallback } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,13 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { formatCurrency } from '@budget/shared-utils';
-import { useWalletStore } from '@/stores/walletStore';
-import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
-import { useAuthStore } from '@/stores/authStore';
 import { useCalendarData, type TransactionItem } from '@/hooks/useCalendarData';
 import { getIntlLocale } from '@/i18n';
-
-type CalendarTab = 'categories' | 'wallets' | 'transactions';
 
 export default function CalendarScreen() {
   const { t } = useTranslation();
@@ -28,7 +23,6 @@ export default function CalendarScreen() {
     params.year ? Number(params.year) : now.getFullYear(),
   );
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<CalendarTab>('categories');
 
   const isCurrentPeriod =
     selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear();
@@ -58,22 +52,9 @@ export default function CalendarScreen() {
     calendarGrid,
     monthLabel,
     weekDayLabels,
-    totalIncome,
-    totalExpenses,
-    netProfit,
-    incomeByCategory,
-    expenseByCategory,
     transactions,
     displayCurrency,
   } = useCalendarData(selectedMonth, selectedYear, selectedDay);
-
-  const { walletSummary } = useWalletStore();
-  const { rates } = useExchangeRateStore();
-  const userCurrency = useAuthStore((s) => s.user?.currencyCode || 'USD');
-
-  const totalWalletBalance = walletSummary.reduce((sum, ws) => {
-    return sum + convertAmount(ws.currentBalance, ws.currencyCode, userCurrency, rates);
-  }, 0);
 
   const handleDayPress = useCallback(
     (day: number) => {
@@ -81,12 +62,6 @@ export default function CalendarScreen() {
     },
     [],
   );
-
-  const TABS: { key: CalendarTab; label: string }[] = [
-    { key: 'categories', label: t('calendar.categories') },
-    { key: 'wallets', label: t('calendar.wallets') },
-    { key: 'transactions', label: t('calendar.transactions') },
-  ];
 
   const renderTransaction = useCallback(
     ({ item }: { item: TransactionItem }) => {
@@ -207,179 +182,19 @@ export default function CalendarScreen() {
           </TouchableOpacity>
         )}
 
-        {/* Tab bar */}
-        <View style={styles.tabBar}>
-          {TABS.map((tab) => (
-            <TouchableOpacity
-              key={tab.key}
-              style={[styles.tabButton, activeTab === tab.key && styles.tabButtonActive]}
-              onPress={() => setActiveTab(tab.key)}
-            >
-              <Text
-                style={[
-                  styles.tabButtonText,
-                  activeTab === tab.key && styles.tabButtonTextActive,
-                ]}
-              >
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Tab content */}
-        {activeTab === 'categories' && (
-          <View style={styles.tabContent}>
-            {/* Income section */}
-            {incomeByCategory.length > 0 && (
-              <>
-                <View style={styles.sectionHeaderRow}>
-                  <Text style={[styles.sectionHeader, { color: theme.colors.success }]}>
-                    {t('calendar.income').toUpperCase()}
-                  </Text>
-                  <Text style={[styles.sectionTotal, { color: theme.colors.success }]}>
-                    {formatCurrency(totalIncome, displayCurrency)}
-                  </Text>
-                </View>
-                {incomeByCategory.map((cat) => (
-                  <View key={cat.categoryId} style={styles.categoryRow}>
-                    <View style={[styles.categoryIcon, { backgroundColor: cat.color + '20' }]}>
-                      <Ionicons
-                        name={(cat.icon as keyof typeof Ionicons.glyphMap) || 'ellipsis-horizontal'}
-                        size={18}
-                        color={cat.color}
-                      />
-                    </View>
-                    <Text style={styles.categoryName} numberOfLines={1}>
-                      {cat.name}
-                    </Text>
-                    <View style={styles.categoryBadge}>
-                      <Text style={styles.categoryPercent}>{cat.percentage}%</Text>
-                    </View>
-                    <Text style={[styles.categoryAmount, { color: theme.colors.success }]}>
-                      {formatCurrency(cat.amount, displayCurrency)}
-                    </Text>
-                  </View>
-                ))}
-              </>
-            )}
-
-            {/* Expense section */}
-            {expenseByCategory.length > 0 && (
-              <>
-                <View style={[styles.sectionHeaderRow, incomeByCategory.length > 0 && styles.sectionGap]}>
-                  <Text style={[styles.sectionHeader, { color: theme.colors.danger }]}>
-                    {t('calendar.expenses').toUpperCase()}
-                  </Text>
-                  <Text style={[styles.sectionTotal, { color: theme.colors.danger }]}>
-                    -{formatCurrency(totalExpenses, displayCurrency)}
-                  </Text>
-                </View>
-                {expenseByCategory.map((cat) => (
-                  <View key={cat.categoryId} style={styles.categoryRow}>
-                    <View style={[styles.categoryIcon, { backgroundColor: cat.color + '20' }]}>
-                      <Ionicons
-                        name={(cat.icon as keyof typeof Ionicons.glyphMap) || 'ellipsis-horizontal'}
-                        size={18}
-                        color={cat.color}
-                      />
-                    </View>
-                    <Text style={styles.categoryName} numberOfLines={1}>
-                      {cat.name}
-                    </Text>
-                    <View style={styles.categoryBadge}>
-                      <Text style={styles.categoryPercent}>{cat.percentage}%</Text>
-                    </View>
-                    <Text style={styles.categoryAmount}>
-                      -{formatCurrency(cat.amount, displayCurrency)}
-                    </Text>
-                  </View>
-                ))}
-              </>
-            )}
-
-            {/* Net profit */}
-            <View style={styles.netProfitRow}>
-              <Text style={styles.netProfitLabel}>
-                {t('calendar.netProfit').toUpperCase()}
-              </Text>
-              <Text
-                style={[
-                  styles.netProfitAmount,
-                  { color: netProfit >= 0 ? theme.colors.success : theme.colors.danger },
-                ]}
-              >
-                {netProfit >= 0 ? '+' : ''}
-                {formatCurrency(netProfit, displayCurrency)}
-              </Text>
+        {/* Transactions */}
+        <View style={styles.tabContent}>
+          {transactions.length > 0 ? (
+            transactions.map((item) => (
+              <View key={item.id}>{renderTransaction({ item })}</View>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Ionicons name="receipt-outline" size={48} color={theme.colors.textTertiary} />
+              <Text style={styles.emptyText}>{t('calendar.noTransactions')}</Text>
             </View>
-
-            {incomeByCategory.length === 0 && expenseByCategory.length === 0 && (
-              <View style={styles.emptyState}>
-                <Ionicons name="folder-open-outline" size={48} color={theme.colors.textTertiary} />
-                <Text style={styles.emptyText}>{t('calendar.noTransactions')}</Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {activeTab === 'wallets' && (
-          <View style={styles.tabContent}>
-            {walletSummary.length > 0 ? (
-              <>
-                {walletSummary.length > 1 && (
-                  <View style={styles.walletTotalRow}>
-                    <Text style={styles.walletTotalLabel}>{t('wallet.totalBalance', { currency: userCurrency })}</Text>
-                    <Text style={styles.walletTotalAmount}>
-                      {formatCurrency(totalWalletBalance, userCurrency)}
-                    </Text>
-                  </View>
-                )}
-                {walletSummary.map((ws) => {
-                  const percentage =
-                    totalWalletBalance > 0
-                      ? Math.round(
-                          (convertAmount(ws.currentBalance, ws.currencyCode, userCurrency, rates) /
-                            totalWalletBalance) *
-                            100,
-                        )
-                      : 0;
-                  return (
-                    <View key={ws.currencyCode} style={styles.walletRow}>
-                      <Text style={styles.walletCurrency}>{ws.currencyCode}</Text>
-                      <View style={styles.categoryBadge}>
-                        <Text style={styles.categoryPercent}>{percentage}%</Text>
-                      </View>
-                      <Text style={styles.walletBalance}>
-                        {formatCurrency(ws.currentBalance, ws.currencyCode)}
-                      </Text>
-                    </View>
-                  );
-                })}
-              </>
-            ) : (
-              <View style={styles.emptyState}>
-                <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
-                <Text style={styles.emptyText}>{t('wallet.noBalances')}</Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {activeTab === 'transactions' && (
-          <View style={styles.tabContent}>
-            {transactions.length > 0 ? (
-              transactions.map((item) => (
-                <View key={item.id}>{renderTransaction({ item })}</View>
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <Ionicons name="receipt-outline" size={48} color={theme.colors.textTertiary} />
-                <Text style={styles.emptyText}>{t('calendar.noTransactions')}</Text>
-              </View>
-            )}
-          </View>
-        )}
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -483,139 +298,10 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.primary,
   },
-  tabBar: {
-    flexDirection: 'row' as const,
-    marginTop: theme.spacing[4],
-    marginBottom: theme.spacing[1],
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.lg,
-    padding: 3,
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: theme.spacing[2],
-    alignItems: 'center' as const,
-    borderRadius: theme.borderRadius.md,
-  },
-  tabButtonActive: {
-    backgroundColor: theme.colors.surface,
-    ...theme.shadows.sm,
-  },
-  tabButtonText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textTertiary,
-  },
-  tabButtonTextActive: {
-    color: theme.colors.textPrimary,
-  },
   tabContent: {
-    marginTop: theme.spacing[3],
-  },
-  // Categories tab
-  sectionHeaderRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    marginBottom: theme.spacing[2],
-  },
-  sectionGap: {
     marginTop: theme.spacing[4],
   },
-  sectionHeader: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    fontWeight: '700' as const,
-  },
-  sectionTotal: {
-    ...theme.textStyles.bodyLargeSemiBold,
-  },
-  categoryRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[2],
-    gap: theme.spacing[2],
-  },
-  categoryIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-  },
-  categoryName: {
-    ...theme.textStyles.body,
-    color: theme.colors.textPrimary,
-    flex: 1,
-  },
-  categoryBadge: {
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.md,
-    paddingHorizontal: theme.spacing[2],
-    paddingVertical: 2,
-  },
-  categoryPercent: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textSecondary,
-    fontWeight: '600' as const,
-  },
-  categoryAmount: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
-    minWidth: 80,
-    textAlign: 'right' as const,
-  },
-  netProfitRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    marginTop: theme.spacing[4],
-    paddingTop: theme.spacing[3],
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.borderLight,
-  },
-  netProfitLabel: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.primary,
-    fontWeight: '700' as const,
-  },
-  netProfitAmount: {
-    ...theme.textStyles.bodyLargeSemiBold,
-  },
-  // Wallets tab
-  walletTotalRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[3],
-    marginBottom: theme.spacing[2],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.borderLight,
-  },
-  walletTotalLabel: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textTertiary,
-  },
-  walletTotalAmount: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-  },
-  walletRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[2.5],
-    gap: theme.spacing[2],
-  },
-  walletCurrency: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.textPrimary,
-    flex: 1,
-  },
-  walletBalance: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
-    minWidth: 100,
-    textAlign: 'right' as const,
-  },
-  // Transactions tab
+  // Transactions
   transactionRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

@@ -173,7 +173,10 @@ export function FatFinderCard() {
   const topFindings = fatFinderReport.findings.slice(0, 3);
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/fat-finder')}>
+      <View style={styles.chevronHint}>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+      </View>
       {/* Header */}
       <View style={styles.headerRow}>
         <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
@@ -214,17 +217,7 @@ export function FatFinderCard() {
           </Text>
         </View>
       ))}
-
-      {/* View Full Report */}
-      <TouchableOpacity
-        style={styles.viewReportButton}
-        activeOpacity={0.7}
-        onPress={() => router.push('/fat-finder')}
-      >
-        <Text style={styles.viewReportText}>{t('fatFinder.viewFullReport')}</Text>
-        <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -236,6 +229,12 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[5],
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
+  },
+  chevronHint: {
+    position: 'absolute' as const,
+    top: theme.spacing[3],
+    right: theme.spacing[3],
+    zIndex: 1,
   },
   headerRow: {
     flexDirection: 'row' as const,
@@ -316,20 +315,6 @@ const createStyles = (theme: Theme) => ({
   findingSavings: {
     ...theme.textStyles.bodySmMedium,
     fontWeight: '600' as const,
-  },
-
-  // View report button
-  viewReportButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    gap: theme.spacing[1],
-    marginTop: theme.spacing[3],
-    paddingVertical: theme.spacing[2],
-  },
-  viewReportText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.primary,
   },
 
   // Loading

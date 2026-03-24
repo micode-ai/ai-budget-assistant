@@ -33,6 +33,9 @@ export function GoalsCard() {
   if (activeGoals.length === 0) {
     return (
       <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/goals/new')}>
+        <View style={styles.chevronHint}>
+          <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+        </View>
         <View style={styles.emptyContent}>
           <Ionicons name="flag-outline" size={32} color={theme.colors.textTertiary} />
           <Text style={styles.emptyTitle}>{t('goals.noActiveGoals')}</Text>
@@ -50,6 +53,9 @@ export function GoalsCard() {
 
   return (
     <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/goals')}>
+      <View style={styles.chevronHint}>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+      </View>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTitle}>{t('goals.savingsGoals')}</Text>
       </View>
@@ -104,6 +110,12 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
     ...theme.shadows.md,
+  },
+  chevronHint: {
+    position: 'absolute' as const,
+    top: theme.spacing[3],
+    right: theme.spacing[3],
+    zIndex: 1,
   },
   cardHeader: {
     alignSelf: 'center' as const,
