@@ -99,7 +99,13 @@ app/
 ├── wallet/
 │   ├── index.tsx          # Wallet balances
 │   ├── exchange.tsx       # Currency exchange
-│   └── set-balance.tsx    # Set wallet balance
+│   ├── set-balance.tsx    # Set wallet balance
+│   ├── transfer.tsx       # Transfer between accounts
+│   ├── transfers.tsx      # Transfer history with filters
+│   ├── exchanges.tsx      # Exchange history with filters
+│   └── [id].tsx           # Transfer details
+├── debts/
+│   └── index.tsx          # Debts & loans screen with FAB
 ├── analytics/
 │   └── drill-down.tsx    # Chart drill-down explorer
 ├── calendar/
@@ -135,6 +141,11 @@ Zustand stores manage application state:
 | `useCategoryStore` | Category management, loading from DB |
 | `useGamificationStore` | Achievements, streaks, XP/levels, new badge modal |
 | `useReportStore` | Report generation, monthly digest, share/download, backups, email preferences |
+| `useDebtStore` | Debt tracking — lent/borrowed debts, repayments, status computation |
+| `useGoalStore` | Savings goals tracking |
+| `useInvestmentStore` | Investment portfolio summary |
+| `useEncryptionStore` | Client-side encryption state |
+| `useSubscriptionStore` | Subscription tier, limits, paywall |
 
 ### Local Database Schema
 

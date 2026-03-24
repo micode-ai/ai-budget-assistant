@@ -20,7 +20,7 @@ Turborepo monorepo with 4 packages:
 - **Role-based access**: `AccountRoleGuard` with `@RequireRole('owner')` decorator
 - **Service signature**: `(accountId, userId, dto)` as parameters, all Prisma queries filter by `accountId`
 - **Database**: Prisma ORM. Schema at `apps/api/prisma/schema.prisma`. Uses `@map("snake_case")` for column names
-- **19 modules**: `accounts`, `admin`, `ai`, `analytics`, `auth`, `budgets`, `categories`, `currency-exchange`, `expenses`, `incomes`, `insights`, `mail`, `notifications`, `projects`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`
+- **27 modules**: `accounts`, `account-transfers`, `admin`, `ai`, `analytics`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`
 - **AI module features**:
   - **Chat Q&A**: Natural language financial questions powered by GPT-4
   - **Natural Language Commands**: Execute actions via chat (create expenses/budgets, query data) using OpenAI function calling
@@ -32,14 +32,14 @@ Turborepo monorepo with 4 packages:
 
 ### Mobile (React Native/Expo)
 - **Navigation**: Expo Router. Screens in `app/`, tabs in `app/(tabs)/` — home, expenses, budgets, analytics, chat
-- **State**: 15 Zustand stores in `src/stores/` — `authStore`, `accountStore`, `expenseStore`, `incomeStore`, `budgetStore`, `categoryStore`, `tagStore`, `projectStore`, `walletStore`, `chatStore`, `insightsStore`, `exchangeRateStore`, `subscriptionStore`, `themeStore`, `widgetVisibilityStore`
+- **State**: 21 Zustand stores in `src/stores/` — `authStore`, `accountStore`, `expenseStore`, `incomeStore`, `budgetStore`, `categoryStore`, `tagStore`, `projectStore`, `walletStore`, `chatStore`, `insightsStore`, `exchangeRateStore`, `subscriptionStore`, `themeStore`, `widgetVisibilityStore`, `debtStore`, `encryptionStore`, `gamificationStore`, `goalStore`, `investmentStore`, `reportStore`
 - **Local DB**: SQLite via Drizzle ORM. Schema in `src/db/schema/index.ts`. 12 repositories in `src/db/*Repository.ts` use raw `executeSql()` — `account`, `category`, `currencyExchange`, `expense`, `expenseItem`, `income`, `project`, `split`, `tag`, `wallet`
 - **API client**: `src/services/api.ts` — singleton `ApiClient` class, auto-injects `X-Account-Id` header, auto JWT refresh, 401 → logout
 - **Offline-first**: write to SQLite first, queue sync via `syncQueue` table, sync to server when online
 - **i18n**: 8 locales in `src/i18n/locales/` — `en.ts` (source), `de.ts`, `es.ts`, `fr.ts`, `pl.ts`, `ru.ts`, `ua.ts`, `be.ts`. When adding keys, update ALL 8 files.
 - **Help system**: In-app help screen (`app/help/index.tsx`, `app/help/[id].tsx`) is powered by **auto-generated** `src/help/content.ts`. NEVER create or edit `content.ts` manually. Workflow: (1) write/edit markdown in `user_docs/<lang>/NN-slug.md` for all 8 languages, (2) add the section id to `scripts/generate-help-content.js` SECTIONS array and to `src/help/sections.ts`, (3) run `npm run generate:help` from the project root. Do NOT create a manual `app/help.tsx` file — the route is handled by `app/help/index.tsx`.
 - **Services**: `api.ts`, `notifications.ts`, `secureStorage.native.ts` / `secureStorage.web.ts`, `widgetData.ts`
-- **Screens**: `(auth)/` login/register/forgot-password/reset-password, `(tabs)/` main tabs, `expense/`, `income/`, `budget/`, `account/`, `analytics/`, `calendar/`, `projects/`, `tags/`, `wallet/`, `settings/` (index hub, profile, appearance, ai, widgets, notifications, security, data, about), `subscription.tsx`, `admin.tsx`, `story.tsx`, `fat-finder.tsx`, `scenario-simulator.tsx`
+- **Screens**: `(auth)/` login/register/forgot-password/reset-password, `(tabs)/` main tabs, `expense/`, `income/`, `budget/`, `account/`, `analytics/`, `calendar/`, `projects/`, `tags/`, `wallet/` (index, set-balance, exchange, transfer, transfers, exchanges, [id]), `debts/`, `goals/`, `settings/` (index hub, profile, appearance, ai, widgets, notifications, security, data, about), `subscription.tsx`, `admin.tsx`, `story.tsx`, `fat-finder.tsx`, `scenario-simulator.tsx`
 - **Components**: `charts/` (Bar, Donut, Pie, Weekday, GroupedBar), `interactive-charts/` (drill-down charts with ChartRenderer), `insights/` (InsightCard, InsightCarousel), `widgets/` (NetProfitWidget, NetCapitalWidget, CalendarWidget), `story/`, `chat/` (ActionConfirmationCard, ActionResultCard), `AccountSwitcher`, `CreateCategoryModal`, `Paywall`, `ProjectPicker`, `SplitEditor`, `TagPicker`, `TagChip`, `UsageWarning`
 - **Hooks**: `src/hooks/useCalendarData.ts` — shared hook for calendar grid computation, date filtering, category breakdowns with multi-currency conversion. Used by `CalendarWidget` (home screen) and `app/calendar/index.tsx` (full-screen page)
 - **Features**: `src/features/analytics/useAnalytics.ts` — analytics computations hook; `src/features/scenario/useScenarioProjection.ts` — scenario simulator projection hook (pure client-side, reads expense/income stores, projects savings over 3/6/12 months)

@@ -169,8 +169,8 @@ export default function WalletScreen() {
             {exchanges.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>{t('exchange.recentExchanges')}</Text>
-                {exchanges.slice(0, 10).map((exchange) => (
-                  <View key={exchange.id} style={styles.exchangeItem}>
+                {exchanges.slice(0, 5).map((exchange) => (
+                  <TouchableOpacity key={exchange.id} style={styles.exchangeItem} activeOpacity={0.7} onPress={() => router.push('/wallet/exchanges')}>
                     <View style={styles.exchangeInfo}>
                       <Text style={styles.exchangeDirection}>
                         {exchange.fromCurrency} → {exchange.toCurrency}
@@ -187,15 +187,21 @@ export default function WalletScreen() {
                         +{formatCurrency(exchange.toAmount, exchange.toCurrency)}
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ))}
+                {exchanges.length > 5 && (
+                  <TouchableOpacity style={styles.showAllButton} onPress={() => router.push('/wallet/exchanges')}>
+                    <Text style={styles.showAllText}>{t('common.showAll')}</Text>
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+                  </TouchableOpacity>
+                )}
               </View>
             )}
 
             {transfers.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>{t('transfer.recentTransfers')}</Text>
-                {transfers.slice(0, 10).map((transfer) => {
+                {transfers.slice(0, 5).map((transfer) => {
                   const fromAccount = accounts.find((a) => a.id === transfer.fromAccountId);
                   const toAccount = accounts.find((a) => a.id === transfer.toAccountId);
                   return (
@@ -223,6 +229,12 @@ export default function WalletScreen() {
                     </TouchableOpacity>
                   );
                 })}
+                {transfers.length > 5 && (
+                  <TouchableOpacity style={styles.showAllButton} onPress={() => router.push('/wallet/transfers')}>
+                    <Text style={styles.showAllText}>{t('common.showAll')}</Text>
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+                  </TouchableOpacity>
+                )}
               </View>
             )}
           </>
@@ -395,5 +407,16 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.success,
     marginTop: theme.spacing[1],
+  },
+  showAllButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[1],
+  },
+  showAllText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
 });

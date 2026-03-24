@@ -10,6 +10,7 @@ The Wallet feature lets you track your actual balances in each supported currenc
 
 Access the Wallet from:
 - **Dashboard** — tap **See All** next to the Wallet Balances section
+- **Dashboard** — tap the **Transfers** quick action button for quick access to transfers
 - **Settings** — go to Wallet > **Balances**
 
 For each currency, you'll see:
@@ -72,12 +73,22 @@ Exchange money between your currency wallets:
 
 ### Recent Exchanges
 
-Below the exchange form, you'll find a list of your recent currency exchanges with:
+Below the exchange form, you'll find the 5 most recent currency exchanges with:
 - Currencies exchanged (From → To)
 - Amounts
 - Exchange rate used
 - Date
 - Notes (if added)
+
+Tap **Show all** to open the full Exchange History screen.
+
+### Exchange History
+
+The **Exchange History** screen displays a complete list of all your currency exchanges. Access it by tapping **Show all** in the Recent Exchanges section.
+
+Available filters:
+- **Currency** — filter by a specific currency pair
+- **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
 
 ## Account Transfers
 
@@ -96,12 +107,22 @@ Account transfers let you move money between different accounts — for example,
 
 ### Recent Transfers
 
-Below the transfer form, you'll find a list of your recent account transfers with:
+Below the transfer form, you'll find the 5 most recent account transfers with:
 - Source and destination accounts (From → To)
 - Amount and currency
 - Exchange rate (if currencies differ)
 - Date
 - Notes (if added)
+
+Tap **Show all** to open the full Transfer History screen.
+
+### Transfer History
+
+The **Transfer History** screen displays a complete list of all your account transfers. Access it by tapping **Show all** in the Recent Transfers section.
+
+Available filters:
+- **Account** — filter by a specific source or destination account
+- **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
 
 ## Supported Currencies
 

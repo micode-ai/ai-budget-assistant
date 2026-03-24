@@ -10,6 +10,7 @@ La funcion de Billetera te permite rastrear tus saldos reales en cada moneda com
 
 Accede a la Billetera desde:
 - **Panel** — toca **Ver todo** junto a la seccion de Saldos de la billetera
+- **Panel** — toca el boton de accion rapida **Transferencias** para acceso rapido a transferencias
 - **Ajustes** — ve a Billetera > **Saldos**
 
 Para cada moneda, veras:
@@ -63,12 +64,22 @@ Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Person
 
 ### Transferencias recientes
 
-Debajo del formulario de transferencia, encontraras una lista de tus transferencias recientes con:
+Debajo del formulario de transferencia, encontraras las 5 transferencias mas recientes con:
 - Cuenta origen y cuenta destino
 - Moneda e importe transferido
 - Tasa de cambio utilizada (si las monedas difieren)
 - Fecha
 - Notas (si se agregaron)
+
+Toca **Mostrar todo** para abrir el historial completo de transferencias.
+
+### Historial de transferencias
+
+La pantalla **Historial de transferencias** muestra una lista completa de todas tus transferencias entre cuentas. Accede tocando **Mostrar todo** en la seccion Transferencias recientes.
+
+Filtros disponibles:
+- **Cuenta** — filtrar por una cuenta de origen o destino especifica
+- **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
 
 ## Cambio de divisa
 
@@ -98,12 +109,22 @@ Cambia dinero entre tus billeteras de diferentes monedas:
 
 ### Cambios recientes
 
-Debajo del formulario de cambio, encontraras una lista de tus cambios de divisa recientes con:
+Debajo del formulario de cambio, encontraras los 5 cambios de divisa mas recientes con:
 - Monedas intercambiadas (Origen a Destino)
 - Importes
 - Tasa de cambio utilizada
 - Fecha
 - Notas (si se agregaron)
+
+Toca **Mostrar todo** para abrir el historial completo de cambios.
+
+### Historial de cambios
+
+La pantalla **Historial de cambios** muestra una lista completa de todos tus cambios de divisa. Accede tocando **Mostrar todo** en la seccion Cambios recientes.
+
+Filtros disponibles:
+- **Moneda** — filtrar por un par de monedas especifico
+- **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
 
 ## Monedas compatibles
 

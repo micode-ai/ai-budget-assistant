@@ -10,6 +10,7 @@ La fonctionnalite Portefeuille vous permet de suivre vos soldes reels dans chaqu
 
 Accedez au Portefeuille depuis :
 - **Tableau de bord** — appuyez sur **Tout voir** a cote de la section Soldes du Portefeuille
+- **Tableau de bord** — appuyez sur le bouton d'action rapide **Transferts** pour un acces rapide aux transferts
 - **Parametres** — allez dans Portefeuille > **Soldes**
 
 Pour chaque devise, vous verrez :
@@ -72,12 +73,22 @@ Echangez de l'argent entre vos portefeuilles de devises :
 
 ### Changes recents
 
-Sous le formulaire de change, vous trouverez la liste de vos changes recents avec :
+Sous le formulaire de change, vous trouverez les 5 changes les plus recents avec :
 - Devises echangees (De vers Vers)
 - Montants
 - Taux de change utilise
 - Date
 - Notes (si ajoutees)
+
+Appuyez sur **Tout afficher** pour ouvrir l'historique complet des echanges.
+
+### Historique des echanges
+
+L'ecran **Historique des echanges** affiche la liste complete de tous vos changes de devises. Accedez-y en appuyant sur **Tout afficher** dans la section Changes recents.
+
+Filtres disponibles :
+- **Devise** — filtrer par une paire de devises specifique
+- **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
 
 ## Transferts entre comptes
 
@@ -96,12 +107,22 @@ Transferez de l'argent entre vos differents comptes (par ex. de Entreprise a Per
 
 ### Transferts recents
 
-Sous le formulaire de transfert, vous trouverez la liste de vos transferts recents avec :
+Sous le formulaire de transfert, vous trouverez les 5 transferts les plus recents avec :
 - Compte source et compte destination
 - Devise et montant
 - Taux de change utilise (si devises differentes)
 - Date
 - Notes (si ajoutees)
+
+Appuyez sur **Tout afficher** pour ouvrir l'historique complet des transferts.
+
+### Historique des transferts
+
+L'ecran **Historique des transferts** affiche la liste complete de tous vos transferts entre comptes. Accedez-y en appuyant sur **Tout afficher** dans la section Transferts recents.
+
+Filtres disponibles :
+- **Compte** — filtrer par un compte source ou destination specifique
+- **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
 
 ## Devises prises en charge
 

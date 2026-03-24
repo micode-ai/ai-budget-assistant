@@ -10,6 +10,7 @@ Die Geldborse-Funktion ermoglicht es dir, deine tatsachlichen Salden in jeder un
 
 Zugriff auf die Geldborse uber:
 - **Ubersicht** — tippe auf **Alle anzeigen** neben dem Geldborsensalden-Bereich
+- **Ubersicht** — tippe auf die Schnellaktion **Uberweisungen** fur schnellen Zugriff auf Uberweisungen
 - **Einstellungen** — gehe zu Geldborse > **Salden**
 
 Fur jede Wahrung siehst du:
@@ -74,12 +75,22 @@ Tausche Geld zwischen deinen Wahrungsgelborsen:
 
 ### Letzte Umtausche
 
-Unterhalb des Umtauschformulars findest du eine Liste deiner letzten Wahrungsumtausche mit:
+Unterhalb des Umtauschformulars findest du die 5 letzten Wahrungsumtausche mit:
 - Umgetauschte Wahrungen (Von -> Nach)
 - Betrage
 - Verwendeter Wechselkurs
 - Datum
 - Notizen (falls hinzugefugt)
+
+Tippe auf **Alle anzeigen**, um den vollstandigen Wechselverlauf zu offnen.
+
+### Wechselverlauf
+
+Der **Wechselverlauf**-Bildschirm zeigt eine vollstandige Liste aller deiner Wahrungsumtausche. Offne ihn, indem du auf **Alle anzeigen** im Bereich Letzte Umtausche tippst.
+
+Verfugbare Filter:
+- **Wahrung** — nach einem bestimmten Wahrungspaar filtern
+- **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
 
 ## Uberweisungen zwischen Konten
 
@@ -97,12 +108,22 @@ Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberwei
 
 ### Letzte Uberweisungen
 
-Unterhalb des Uberweisungsformulars findest du eine Liste deiner letzten Uberweisungen mit:
+Unterhalb des Uberweisungsformulars findest du die 5 letzten Uberweisungen mit:
 - Von-Konto und An-Konto
 - Betrag und Wahrung
 - Wechselkurs (falls Wahrungen unterschiedlich)
 - Datum
 - Notizen (falls hinzugefugt)
+
+Tippe auf **Alle anzeigen**, um den vollstandigen Uberweisungsverlauf zu offnen.
+
+### Uberweisungsverlauf
+
+Der **Uberweisungsverlauf**-Bildschirm zeigt eine vollstandige Liste aller deiner Uberweisungen zwischen Konten. Offne ihn, indem du auf **Alle anzeigen** im Bereich Letzte Uberweisungen tippst.
+
+Verfugbare Filter:
+- **Konto** — nach einem bestimmten Quell- oder Zielkonto filtern
+- **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
 
 ## Unterstutzte Wahrungen
 

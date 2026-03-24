@@ -128,37 +128,49 @@ export default function DashboardScreen() {
 
       {/* Quick Actions — fixed between header and scroll content */}
       {canEdit && (
-        <View style={styles.quickActionsRow}>
-          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-              <Image source={quickActionIcons.add_expense} style={styles.quickActionImage} />
-            </View>
-            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-              <Image source={quickActionIcons.scan_receipt} style={styles.quickActionImage} />
-            </View>
-            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-              <Image source={quickActionIcons.voice_input} style={styles.quickActionImage} />
-            </View>
-            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-              <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />
-            </View>
-            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/converter')}>
-            <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-              <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />
-            </View>
-            <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.currencyConverter')}</Text>
-          </TouchableOpacity>
+        <View style={styles.quickActionsWrapper}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.quickActionsRow}
+          >
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.add_expense} style={styles.quickActionImage} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.scan_receipt} style={styles.quickActionImage} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.voice_input} style={styles.quickActionImage} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/converter')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.currencyConverter')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/transfers')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Ionicons name="swap-horizontal-outline" size={28} color={theme.colors.primary} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.transfers')}</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       )}
 
@@ -403,18 +415,20 @@ const createStyles = (theme: Theme) => ({
     textAlign: 'center' as const,
   },
   // Quick actions row — sits between header and ScrollView, overlaps header by 24px
+  quickActionsWrapper: {
+    marginTop: -24, // pulls top half of icons into orange header
+    zIndex: 1,
+    paddingBottom: theme.spacing[3],
+  },
   quickActionsRow: {
     flexDirection: 'row' as const,
-    justifyContent: 'space-evenly' as const,
-    marginTop: -24, // pulls top half of icons into orange header
     paddingHorizontal: theme.spacing[3],
-    paddingBottom: theme.spacing[3],
-    zIndex: 1,
+    gap: theme.spacing[3],
   },
   quickActionButton: {
     alignItems: 'center' as const,
     gap: theme.spacing[1.5],
-    flex: 1,
+    width: 62,
   },
   quickActionIcon: {
     alignItems: 'center' as const,

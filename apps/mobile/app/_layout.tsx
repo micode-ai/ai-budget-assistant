@@ -264,6 +264,20 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="wallet/transfers"
+          options={{
+            headerShown: true,
+            title: t('transfer.allTransfers'),
+          }}
+        />
+        <Stack.Screen
+          name="wallet/exchanges"
+          options={{
+            headerShown: true,
+            title: t('exchange.allExchanges'),
+          }}
+        />
+        <Stack.Screen
           name="calendar/index"
           options={{
             headerShown: true,

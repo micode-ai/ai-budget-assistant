@@ -10,6 +10,7 @@ Funkcja Portfel pozwala sledzic rzeczywiste salda w kazdej obslugiwanej walucie.
 
 Dostep do Portfela:
 - **Pulpit** — dotknij **Zobacz wszystko** obok sekcji Salda portfela
+- **Pulpit** — dotknij przycisk szybkiej akcji **Przelewy** dla szybkiego dostepu do przelewow
 - **Ustawienia** — przejdz do Portfel > **Salda**
 
 Dla kazdej waluty zobaczysz:
@@ -76,12 +77,22 @@ Wymieniaj pieniadze miedzy swoimi portfelami walutowymi:
 
 ### Ostatnie wymiany
 
-Ponizej formularza wymiany znajdziesz liste ostatnich wymian walutowych z:
+Ponizej formularza wymiany znajdziesz 5 ostatnich wymian walutowych z:
 - Wymienionymi walutami (Z -> Na)
 - Kwotami
 - Uzytym kursem wymiany
 - Data
 - Notatkami (jezeli dodano)
+
+Dotknij **Pokaz wszystko**, aby otworzyc pelna historie wymian.
+
+### Historia wymian
+
+Ekran **Historia wymian** wyswietla kompletna liste wszystkich Twoich wymian walutowych. Otworz go, dotykajac **Pokaz wszystko** w sekcji Ostatnie wymiany.
+
+Dostepne filtry:
+- **Waluta** — filtruj wedlug konkretnej pary walutowej
+- **Okres** — wybierz z: **Caly czas**, **Ten miesiac**, **Ostatnie 3 miesiace** lub **Ten rok**
 
 ## Przelewy między kontami
 
@@ -100,12 +111,22 @@ Przelewaj pieniądze między swoimi kontami (np. z Biznesowego na Osobiste). Prz
 
 ### Ostatnie przelewy
 
-Poniżej formularza przelewu znajdziesz listę ostatnich przelewów między kontami z:
+Poniżej formularza przelewu znajdziesz 5 ostatnich przelewów między kontami z:
 - Kontem źródłowym i docelowym
 - Kwotą i walutą
 - Kursem wymiany (jeśli waluty się różnią)
 - Datą
 - Notatkami (jeżeli dodano)
+
+Dotknij **Pokaż wszystko**, aby otworzyć pełną historię przelewów.
+
+### Historia przelewów
+
+Ekran **Historia przelewów** wyświetla kompletną listę wszystkich Twoich przelewów między kontami. Otwórz go, dotykając **Pokaż wszystko** w sekcji Ostatnie przelewy.
+
+Dostępne filtry:
+- **Konto** — filtruj według konkretnego konta źródłowego lub docelowego
+- **Okres** — wybierz z: **Cały czas**, **Ten miesiąc**, **Ostatnie 3 miesiące** lub **Ten rok**
 
 ## Obslugiwane waluty
 
