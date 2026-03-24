@@ -18,6 +18,15 @@ Chaque transaction affiche :
 
 Appuyez sur une transaction pour afficher ses details complets.
 
+### Actions rapides (appui long)
+
+Maintenez appuye sur une transaction dans la liste pour ouvrir le menu d'actions rapides :
+- **Modifier** — ouvrir la transaction en mode edition
+- **Dupliquer** — creer une nouvelle transaction avec les memes donnees
+- **Supprimer** — supprimer la transaction (avec confirmation)
+
+> **Remarque :** Dupliquer et Supprimer ne sont disponibles que pour les proprietaires et editeurs du compte.
+
 Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle transaction.
 
 ## Ajouter une nouvelle depense (Saisie manuelle)

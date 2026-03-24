@@ -18,6 +18,15 @@ Each transaction shows:
 
 Tap any transaction to view its full details.
 
+### Quick Actions (Long Press)
+
+Long-press any transaction in the list to open a quick action menu:
+- **Edit** — open the transaction in edit mode
+- **Duplicate** — create a new transaction pre-filled with the same data
+- **Delete** — remove the transaction (with confirmation)
+
+> **Note:** Duplicate and Delete are only available for account owners and editors.
+
 Use the floating **+** button (bottom-right) to add a new transaction.
 
 ## Adding a New Expense (Manual)

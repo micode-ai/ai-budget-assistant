@@ -313,6 +313,15 @@ Each transaction shows:
 
 Tap any transaction to view its full details.
 
+### Quick Actions (Long Press)
+
+Long-press any transaction in the list to open a quick action menu:
+- **Edit** — open the transaction in edit mode
+- **Duplicate** — create a new transaction pre-filled with the same data
+- **Delete** — remove the transaction (with confirmation)
+
+> **Note:** Duplicate and Delete are only available for account owners and editors.
+
 Use the floating **+** button (bottom-right) to add a new transaction.
 
 ## Adding a New Expense (Manual)
@@ -3257,6 +3266,15 @@ iOS, Android, Web
 - Сумму с валютой, цветовая маркировка: красный для расходов (например, **-3 750,00 zl**), зелёный для доходов
 
 Нажмите на любую транзакцию, чтобы просмотреть её полные детали.
+
+### Быстрые действия (долгое нажатие)
+
+Удерживайте любую транзакцию в списке, чтобы открыть меню быстрых действий:
+- **Редактировать** — открыть транзакцию в режиме редактирования
+- **Дублировать** — создать новую транзакцию с такими же данными
+- **Удалить** — удалить транзакцию (с подтверждением)
+
+> **Примечание:** Дублирование и удаление доступны только владельцам и редакторам аккаунта.
 
 Используйте плавающую кнопку **+** (внизу справа), чтобы добавить новую транзакцию.
 
@@ -6216,6 +6234,15 @@ iOS, Android, Web
 
 Натисніть будь-яку транзакцію, щоб переглянути повні деталі.
 
+### Швидкі дії (довге натискання)
+
+Утримуйте будь-яку транзакцію у списку, щоб відкрити меню швидких дій:
+- **Редагувати** — відкрити транзакцію в режимі редагування
+- **Дублювати** — створити нову транзакцію з такими ж даними
+- **Видалити** — видалити транзакцію (з підтвердженням)
+
+> **Примітка:** Дублювання та видалення доступні лише власникам і редакторам облікового запису.
+
 Використовуйте плаваючу кнопку **+** (внизу справа), щоб додати нову транзакцію.
 
 ## Додавання нової витрати (ручне введення)
@@ -9147,6 +9174,15 @@ Kazda transakcja wyswietla:
 
 Dotknij dowolna transakcje, aby zobaczyc jej pelne szczegoly.
 
+### Szybkie akcje (dluge nacisniecie)
+
+Przytrzymaj dowolna transakcje na liscie, aby otworzyc menu szybkich akcji:
+- **Edytuj** — otworz transakcje w trybie edycji
+- **Duplikuj** — utworz nowa transakcje z tymi samymi danymi
+- **Usun** — usun transakcje (z potwierdzeniem)
+
+> **Uwaga:** Duplikowanie i usuwanie sa dostepne tylko dla wlascicieli i edytorow konta.
+
 Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
 ## Dodawanie nowego wydatku (recznie)
@@ -12073,6 +12109,15 @@ Jede Transaktion zeigt:
 
 Tippe auf eine beliebige Transaktion, um die vollstandigen Details anzuzeigen.
 
+### Schnellaktionen (langes Drucken)
+
+Halte eine beliebige Transaktion in der Liste gedruckt, um das Schnellaktionsmenu zu offnen:
+- **Bearbeiten** — die Transaktion im Bearbeitungsmodus offnen
+- **Duplizieren** — eine neue Transaktion mit denselben Daten erstellen
+- **Loschen** — die Transaktion entfernen (mit Bestatigung)
+
+> **Hinweis:** Duplizieren und Loschen sind nur fur Kontoinhaber und Bearbeiter verfugbar.
+
 Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transaktion hinzuzufugen.
 
 ## Neue Ausgabe hinzufugen (Manuell)
@@ -14997,6 +15042,15 @@ Cada transaccion muestra:
 
 Toca cualquier transaccion para ver sus detalles completos.
 
+### Acciones rapidas (pulsacion larga)
+
+Mantén presionada cualquier transaccion en la lista para abrir el menu de acciones rapidas:
+- **Editar** — abrir la transaccion en modo de edicion
+- **Duplicar** — crear una nueva transaccion con los mismos datos
+- **Eliminar** — eliminar la transaccion (con confirmacion)
+
+> **Nota:** Duplicar y Eliminar solo estan disponibles para propietarios y editores de la cuenta.
+
 Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva transaccion.
 
 ## Agregar un nuevo gasto (Manual)
@@ -17916,6 +17970,15 @@ Chaque transaction affiche :
 
 Appuyez sur une transaction pour afficher ses details complets.
 
+### Actions rapides (appui long)
+
+Maintenez appuye sur une transaction dans la liste pour ouvrir le menu d'actions rapides :
+- **Modifier** — ouvrir la transaction en mode edition
+- **Dupliquer** — creer une nouvelle transaction avec les memes donnees
+- **Supprimer** — supprimer la transaction (avec confirmation)
+
+> **Remarque :** Dupliquer et Supprimer ne sont disponibles que pour les proprietaires et editeurs du compte.
+
 Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle transaction.
 
 ## Ajouter une nouvelle depense (Saisie manuelle)
@@ -20832,6 +20895,15 @@ iOS, Android, Web
 - Суму з валютай, каляровая маркіроўка: чырвоны для выдаткаў (напрыклад, **-3 750,00 zl**), зялёны для даходаў
 
 Націсніце на любую транзакцыю, каб прагледзець яе поўныя дэталі.
+
+### Хуткія дзеянні (доўгае націсканне)
+
+Утрымлівайце любую транзакцыю ў спісе, каб адкрыць меню хуткіх дзеянняў:
+- **Рэдагаваць** — адкрыць транзакцыю ў рэжыме рэдагавання
+- **Дубліраваць** — стварыць новую транзакцыю з такімі ж данымі
+- **Выдаліць** — выдаліць транзакцыю (з пацвярджэннем)
+
+> **Заўвага:** Дубліраванне і выдаленне даступныя толькі ўладальнікам і рэдактарам уліковага запісу.
 
 Выкарыстоўвайце плаваючую кнопку **+** (унізе справа), каб дадаць новую транзакцыю.
 

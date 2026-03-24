@@ -18,6 +18,15 @@ Cada transaccion muestra:
 
 Toca cualquier transaccion para ver sus detalles completos.
 
+### Acciones rapidas (pulsacion larga)
+
+Mantén presionada cualquier transaccion en la lista para abrir el menu de acciones rapidas:
+- **Editar** — abrir la transaccion en modo de edicion
+- **Duplicar** — crear una nueva transaccion con los mismos datos
+- **Eliminar** — eliminar la transaccion (con confirmacion)
+
+> **Nota:** Duplicar y Eliminar solo estan disponibles para propietarios y editores de la cuenta.
+
 Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva transaccion.
 
 ## Agregar un nuevo gasto (Manual)
