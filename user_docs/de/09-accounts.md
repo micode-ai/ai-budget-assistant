@@ -40,7 +40,7 @@ Tippe auf **Konten verwalten** am unteren Rand des Dropdowns, um zur vollstandig
 5. Wahle die **Wahrung** fur dieses Konto
 6. Tippe auf **Erstellen**
 
-> **Hinweis:** Der kostenlose Plan erlaubt 1 Konto, Pro erlaubt bis zu 3, Business erlaubt unbegrenzte Konten.
+> **Hinweis:** Der kostenlose Plan erlaubt 3 Konten, Pro erlaubt bis zu 5, Business erlaubt unbegrenzte Konten.
 
 ## Konto beitreten
 
@@ -128,7 +128,7 @@ Die automatische Erkennung andert nicht dein Standardkonto — sie gilt nur fur 
 ## FAQ
 
 - **F: Wie viele Konten kann ich haben?**
-  **A:** Free: 1 Konto, Pro: bis zu 3, Business: unbegrenzt.
+  **A:** Free: 3 Konten, Pro: bis zu 5, Business: unbegrenzt.
 
 - **F: Kann ich die Eigentumerschaft eines Kontos ubertragen?**
   **A:** Derzeit ist der Kontoersteller immer der Eigentumer. Kontaktiere den Support fur Eigentumsubertragungen.

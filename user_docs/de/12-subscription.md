@@ -11,7 +11,7 @@ AI Budget Assistant bietet drei Abonnementstufen. Jeder neue Nutzer startet mit 
 | Funktion | Free | Pro | Business |
 |---|---|---|---|
 | **KI-Anfragen pro Monat** | 5 | 200 | Unbegrenzt |
-| **Konten** | 1 | Bis zu 3 | Unbegrenzt |
+| **Konten** | 3 | Bis zu 5 | Unbegrenzt |
 | **Mitglieder pro Konto** | 1 | Bis zu 5 | Unbegrenzt |
 | **Ausgabenverfolgung** | Vollstandig | Vollstandig | Vollstandig |
 | **CSV-Export** | Ja | Ja | Ja |
@@ -31,7 +31,7 @@ AI Budget Assistant bietet drei Abonnementstufen. Jeder neue Nutzer startet mit 
 
 Dein Einstiegsplan beinhaltet:
 - **5 KI-Anfragen pro Monat** — nutze KI-Chat, Spracheingabe, Beleg scannen
-- **1 personliches Konto**
+- **3 personliche Konten**
 - **1 Mitglied** (du)
 - **Vollstandige Ausgabenverfolgung** — Manuelle Eingabe, Kategorien, Tags, Projekte, Budgets, Analysen
 
@@ -39,7 +39,7 @@ Dein Einstiegsplan beinhaltet:
 
 Alles aus dem Free-Plan, plus:
 - **200 KI-Anfragen pro Monat**
-- **Bis zu 3 Konten** — personliche, gemeinsame und geschaftliche Finanzen verwalten
+- **Bis zu 5 Konten** — personliche, gemeinsame und geschaftliche Finanzen verwalten
 - **Bis zu 5 Mitglieder pro Konto** — mit Familie oder Team zusammenarbeiten
 - **Pradiktive Analysen** — Budgetprognosen und Ausgabenprojektionen
 - **Erkennung von Ausgabenauffalligkeit** — KI-Warnungen bei ungewohnlichen Ausgaben

@@ -11,7 +11,7 @@ AI Budget Assistant oferuje trzy poziomy subskrypcji. Kazdy nowy uzytkownik zacz
 | Funkcja | Free | Pro | Business |
 |---|---|---|---|
 | **Zapytania AI miesiecznie** | 5 | 200 | Bez limitu |
-| **Konta** | 1 | Do 3 | Bez limitu |
+| **Konta** | 3 | Do 5 | Bez limitu |
 | **Czlonkowie na konto** | 1 | Do 5 | Bez limitu |
 | **Sledzenie wydatkow** | Pelne | Pelne | Pelne |
 | **Analityka predykcyjna** | — | Tak | Tak |
@@ -31,7 +31,7 @@ AI Budget Assistant oferuje trzy poziomy subskrypcji. Kazdy nowy uzytkownik zacz
 
 Twoj startowy plan obejmuje:
 - **5 zapytan AI miesiecznie** — uzyj Czatu AI, Wprowadzania glosowego, Skanowania paragonow
-- **1 konto osobiste**
+- **3 konta osobiste**
 - **1 czlonek** (Ty)
 - **Pelne sledzenie wydatkow** — reczne wprowadzanie, kategorie, tagi, projekty, budzety, analityka
 
@@ -39,7 +39,7 @@ Twoj startowy plan obejmuje:
 
 Wszystko z Free, plus:
 - **200 zapytan AI miesiecznie**
-- **Do 3 kont** — zarzadzaj finansami osobistymi, wspolnymi i firmowymi
+- **Do 5 kont** — zarzadzaj finansami osobistymi, wspolnymi i firmowymi
 - **Do 5 czlonkow na konto** — wspolpracuj z rodzina lub zespolem
 - **Analityka predykcyjna** — prognozy budzetowe i projekcje wydatkow
 - **Wykrywanie anomalii wydatkow** — alerty AI o nietypowych wydatkach

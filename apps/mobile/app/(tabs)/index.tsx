@@ -115,7 +115,7 @@ export default function DashboardScreen() {
         <View style={styles.heroTopRow}>
           <AccountSwitcher compact />
           <Text style={styles.welcomeText} numberOfLines={1}>
-            {t('dashboard.hello', { name: user?.name || 'User' })}
+            {t('dashboard.hello', { name: (user?.name || 'User').trim() })}
           </Text>
           <TouchableOpacity
             onPress={() => router.push('/settings')}

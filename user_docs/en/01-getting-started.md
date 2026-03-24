@@ -46,7 +46,7 @@ After your first login, you'll see the **Welcome** screen:
 
 - **Your free plan includes:**
   - 5 AI requests per month
-  - 1 personal account
+  - 3 personal accounts
   - 1 member
   - Full expense tracking
 - Tap **Continue with Free** to start, or explore upgrade options

@@ -630,6 +630,7 @@ export default {
     noTransfersHint: 'Las transferencias entre sus cuentas aparecerán aquí',
   },
   errors: {
+    error: 'Error',
     loginFailed: 'Error al iniciar sesión',
     invalidCredentials: 'Correo electrónico o contraseña inválidos',
     accountDeactivated: 'La cuenta está desactivada',
@@ -713,7 +714,7 @@ export default {
     },
     features: {
       aiRequests200: '200 solicitudes de IA al mes',
-      accounts3: 'Hasta 3 cuentas',
+      accounts5: 'Hasta 5 cuentas',
       members5: 'Hasta 5 miembros por cuenta',
       predictiveAnalytics: 'Análisis predictivos',
       anomalyDetection: 'Detección de anomalías de gasto',
@@ -731,7 +732,7 @@ export default {
     subheading: 'Tu asistente financiero inteligente',
     freeIncluded: 'Tu plan gratuito incluye:',
     freeAiRequests: '5 solicitudes de IA al mes',
-    freeAccount: '1 cuenta personal',
+    freeAccount: '3 cuentas personales',
     freeMember: '1 miembro',
     freeTracking: 'Seguimiento completo de gastos',
     wantMore: '¿Quieres más? Actualiza en cualquier momento',

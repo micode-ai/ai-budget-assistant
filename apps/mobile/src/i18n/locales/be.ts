@@ -615,6 +615,7 @@ export default {
     noTransfersHint: 'Пераказы паміж вашымі рахункамі будуць тут',
   },
   errors: {
+    error: 'Памылка',
     loginFailed: 'Памылка ўваходу',
     invalidCredentials: 'Няправільны email або пароль',
     accountDeactivated: 'Акаўнт дэактываваны',
@@ -698,7 +699,7 @@ export default {
     },
     features: {
       aiRequests200: '200 запытаў AI у месяц',
-      accounts3: 'Да 3 рахункаў',
+      accounts5: 'Да 5 рахункаў',
       members5: 'Да 5 удзельнікаў на рахунак',
       predictiveAnalytics: 'Прагнозная аналітыка',
       anomalyDetection: 'Выяўленне анамалій расходаў',
@@ -716,7 +717,7 @@ export default {
     subheading: 'Ваш разумны фінансавы памочнік',
     freeIncluded: 'Ваш бясплатны план уключае:',
     freeAiRequests: '5 ІІ-запытаў у месяц',
-    freeAccount: '1 асабісты рахунак',
+    freeAccount: '3 асабістых рахункі',
     freeMember: '1 удзельнік',
     freeTracking: 'Поўны ўлік расходаў',
     wantMore: 'Хочаце больш? Абнавіце ў любы час',

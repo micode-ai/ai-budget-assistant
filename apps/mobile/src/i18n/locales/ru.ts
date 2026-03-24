@@ -630,6 +630,7 @@ export default {
     noTransfersHint: 'Переводы между вашими счетами будут здесь',
   },
   errors: {
+    error: 'Ошибка',
     loginFailed: 'Ошибка входа',
     invalidCredentials: 'Неверный email или пароль',
     accountDeactivated: 'Аккаунт деактивирован',
@@ -713,7 +714,7 @@ export default {
     },
     features: {
       aiRequests200: '200 запросов AI в месяц',
-      accounts3: 'До 3 счетов',
+      accounts5: 'До 5 счетов',
       members5: 'До 5 участников на счёт',
       predictiveAnalytics: 'Прогнозная аналитика',
       anomalyDetection: 'Обнаружение аномалий расходов',
@@ -731,7 +732,7 @@ export default {
     subheading: 'Ваш умный финансовый помощник',
     freeIncluded: 'Ваш бесплатный план включает:',
     freeAiRequests: '5 ИИ-запросов в месяц',
-    freeAccount: '1 личный счёт',
+    freeAccount: '3 личных счёта',
     freeMember: '1 участник',
     freeTracking: 'Полный учёт расходов',
     wantMore: 'Хотите больше? Обновите в любое время',

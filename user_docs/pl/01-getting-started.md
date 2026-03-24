@@ -46,7 +46,7 @@ Po pierwszym zalogowaniu zobaczysz ekran **Witamy**:
 
 - **Twoj darmowy plan zawiera:**
   - 5 zapytan AI miesiecznie
-  - 1 konto osobiste
+  - 3 konta osobiste
   - 1 czlonek
   - Pelne sledzenie wydatkow
 - Dotknij **Kontynuuj za darmo**, aby rozpoczac, lub sprawdz opcje ulepszenia planu

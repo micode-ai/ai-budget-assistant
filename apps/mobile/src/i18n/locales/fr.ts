@@ -89,7 +89,7 @@ export default {
     enterEmail: 'Entrez votre email pour recevoir un code de réinitialisation',
   },
   dashboard: {
-    hello: 'Bonjour, {{name}} !',
+    hello: 'Bonjour, {{name}}!',
     monthlyBudget: 'Budget mensuel',
     used: '{{percent}}% utilisé',
     addExpense: 'Ajouter une dépense',
@@ -630,6 +630,7 @@ export default {
     noTransfersHint: 'Les virements entre vos comptes apparaîtront ici',
   },
   errors: {
+    error: 'Erreur',
     loginFailed: 'Échec de la connexion',
     invalidCredentials: 'E-mail ou mot de passe invalide',
     accountDeactivated: 'Le compte est désactivé',
@@ -713,7 +714,7 @@ export default {
     },
     features: {
       aiRequests200: '200 requêtes IA par mois',
-      accounts3: 'Jusqu\'à 3 comptes',
+      accounts5: 'Jusqu\'à 5 comptes',
       members5: 'Jusqu\'à 5 membres par compte',
       predictiveAnalytics: 'Analyses prédictives',
       anomalyDetection: 'Détection d\'anomalies de dépenses',
@@ -731,7 +732,7 @@ export default {
     subheading: 'Votre assistant financier intelligent',
     freeIncluded: 'Votre plan gratuit comprend :',
     freeAiRequests: '5 requêtes IA par mois',
-    freeAccount: '1 compte personnel',
+    freeAccount: '3 comptes personnels',
     freeMember: '1 membre',
     freeTracking: 'Suivi complet des dépenses',
     wantMore: 'Envie de plus ? Passez à un forfait supérieur',

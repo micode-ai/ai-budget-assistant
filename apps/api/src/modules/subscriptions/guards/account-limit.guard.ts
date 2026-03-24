@@ -9,8 +9,8 @@ import { PrismaService } from '../../../database/prisma.service';
 import { SubscriptionsService } from '../subscriptions.service';
 
 const ACCOUNT_LIMITS: Record<string, number> = {
-  free: 1,
-  pro: 3,
+  free: 3,
+  pro: 5,
   business: Infinity,
 };
 

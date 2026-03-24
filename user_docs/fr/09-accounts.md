@@ -40,7 +40,7 @@ Appuyez sur **Gerer les comptes** en bas du menu deroulant pour acceder a la lis
 5. Selectionnez la **Devise** pour ce compte
 6. Appuyez sur **Creer**
 
-> **Note :** Le plan Gratuit autorise 1 compte, le plan Pro jusqu'a 3, et le plan Business un nombre illimite.
+> **Note :** Le plan Gratuit autorise 3 comptes, le plan Pro jusqu'a 5, et le plan Business un nombre illimite.
 
 ## Rejoindre un compte
 
@@ -128,7 +128,7 @@ La detection automatique ne change pas votre compte par defaut — elle ne s'app
 ## FAQ
 
 - **Q : Combien de comptes puis-je avoir ?**
-  **R :** Gratuit : 1 compte, Pro : jusqu'a 3, Business : illimite.
+  **R :** Gratuit : 3 comptes, Pro : jusqu'a 5, Business : illimite.
 
 - **Q : Puis-je transferer la propriete d'un compte ?**
   **R :** Actuellement, le createur du compte est toujours le Proprietaire. Contactez le support pour les transferts de propriete.

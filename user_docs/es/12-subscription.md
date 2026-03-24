@@ -11,7 +11,7 @@ AI Budget Assistant ofrece tres niveles de suscripcion. Cada nuevo usuario comie
 | Funcion | Gratuito | Pro | Business |
 |---|---|---|---|
 | **Solicitudes IA por mes** | 5 | 200 | Ilimitadas |
-| **Cuentas** | 1 | Hasta 3 | Ilimitadas |
+| **Cuentas** | 3 | Hasta 5 | Ilimitadas |
 | **Miembros por cuenta** | 1 | Hasta 5 | Ilimitados |
 | **Seguimiento de gastos** | Completo | Completo | Completo |
 | **Analisis predictivo** | — | Si | Si |
@@ -31,7 +31,7 @@ AI Budget Assistant ofrece tres niveles de suscripcion. Cada nuevo usuario comie
 
 Tu plan inicial incluye:
 - **5 solicitudes IA por mes** — usa Chat IA, Entrada de voz, Escaneo de recibos
-- **1 cuenta personal**
+- **3 cuentas personales**
 - **1 miembro** (tu)
 - **Seguimiento completo de gastos** — entrada manual, categorias, etiquetas, proyectos, presupuestos, analisis
 
@@ -39,7 +39,7 @@ Tu plan inicial incluye:
 
 Todo lo del plan Gratuito, mas:
 - **200 solicitudes IA por mes**
-- **Hasta 3 cuentas** — gestiona finanzas personales, compartidas y de empresa
+- **Hasta 5 cuentas** — gestiona finanzas personales, compartidas y de empresa
 - **Hasta 5 miembros por cuenta** — colabora con familia o equipo
 - **Analisis predictivo** — previsiones de presupuesto y proyecciones de gasto
 - **Deteccion de anomalias de gasto** — alertas de IA para gastos inusuales

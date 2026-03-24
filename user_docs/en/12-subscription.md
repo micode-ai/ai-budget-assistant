@@ -11,7 +11,7 @@ AI Budget Assistant offers three subscription tiers. Every new user starts on th
 | Feature | Free | Pro | Business |
 |---|---|---|---|
 | **AI requests per month** | 5 | 200 | Unlimited |
-| **Accounts** | 1 | Up to 3 | Unlimited |
+| **Accounts** | 3 | Up to 5 | Unlimited |
 | **Members per account** | 1 | Up to 5 | Unlimited |
 | **Expense tracking** | Full | Full | Full |
 | **Predictive analytics** | — | Yes | Yes |
@@ -31,7 +31,7 @@ AI Budget Assistant offers three subscription tiers. Every new user starts on th
 
 Your starting plan includes:
 - **5 AI requests per month** — use AI Chat, Voice Input, Receipt Scanning
-- **1 personal account**
+- **3 personal accounts**
 - **1 member** (you)
 - **Full expense tracking** — manual entry, categories, tags, projects, budgets, analytics
 
@@ -39,7 +39,7 @@ Your starting plan includes:
 
 Everything in Free, plus:
 - **200 AI requests per month**
-- **Up to 3 accounts** — manage personal, shared, and business finances
+- **Up to 5 accounts** — manage personal, shared, and business finances
 - **Up to 5 members per account** — collaborate with family or team
 - **Predictive analytics** — budget forecasts and spending projections
 - **Spending anomaly detection** — AI alerts for unusual spending
