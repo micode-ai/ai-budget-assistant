@@ -18,6 +18,9 @@ export default {
     retry: 'Паўтарыць',
     clear: 'Ачысціць',
     showAll: 'Паказаць усё',
+    duplicate: 'Дубліраваць',
+    deleteConfirmTitle: 'Выдаліць транзакцыю',
+    deleteConfirmMessage: 'Вы ўпэўнены? Гэта дзеянне нельга адмяніць.',
   },
   dates: {
     today: 'Сёння',

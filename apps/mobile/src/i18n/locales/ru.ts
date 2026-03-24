@@ -20,6 +20,9 @@ export default {
     yes: 'Да',
     no: 'Нет',
     showAll: 'Показать все',
+    duplicate: 'Дублировать',
+    deleteConfirmTitle: 'Удалить транзакцию',
+    deleteConfirmMessage: 'Вы уверены? Это действие нельзя отменить.',
   },
   dates: {
     today: 'Сегодня',

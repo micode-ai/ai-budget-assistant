@@ -20,6 +20,9 @@ export default {
     yes: 'Sí',
     no: 'No',
     showAll: 'Mostrar todo',
+    duplicate: 'Duplicar',
+    deleteConfirmTitle: 'Eliminar transacción',
+    deleteConfirmMessage: '¿Estás seguro? Esta acción no se puede deshacer.',
   },
   dates: {
     today: 'Hoy',

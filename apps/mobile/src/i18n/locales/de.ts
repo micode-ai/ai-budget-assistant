@@ -20,6 +20,9 @@ export default {
     yes: 'Ja',
     no: 'Nein',
     showAll: 'Alle anzeigen',
+    duplicate: 'Duplizieren',
+    deleteConfirmTitle: 'Transaktion löschen',
+    deleteConfirmMessage: 'Sind Sie sicher? Diese Aktion kann nicht rückgängig gemacht werden.',
   },
   dates: {
     today: 'Heute',

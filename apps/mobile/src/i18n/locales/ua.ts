@@ -20,6 +20,9 @@ export default {
     yes: 'Так',
     no: 'Ні',
     showAll: 'Показати все',
+    duplicate: 'Дублювати',
+    deleteConfirmTitle: 'Видалити транзакцію',
+    deleteConfirmMessage: 'Ви впевнені? Цю дію не можна скасувати.',
   },
   dates: {
     today: 'Сьогодні',
