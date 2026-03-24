@@ -60,7 +60,10 @@ export function CalendarWidget({ refreshKey: _refreshKey = 0 }: CalendarWidgetPr
   }, [selectedMonth, selectedYear]);
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={navigateToCalendar}>
+      <View style={styles.chevronHint}>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+      </View>
       {/* Header pill */}
       <View style={styles.headerRow}>
         <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
@@ -147,12 +150,7 @@ export function CalendarWidget({ refreshKey: _refreshKey = 0 }: CalendarWidgetPr
         {formatCurrency(netProfit, displayCurrency)}
       </Text>
 
-      {/* Tap to details */}
-      <TouchableOpacity style={styles.detailsLink} onPress={navigateToCalendar}>
-        <Text style={styles.detailsText}>{t('calendar.tapToViewDetails')}</Text>
-        <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -164,6 +162,12 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[4],
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
+  },
+  chevronHint: {
+    position: 'absolute' as const,
+    top: theme.spacing[3],
+    right: theme.spacing[3],
+    zIndex: 1,
   },
   headerRow: {
     flexDirection: 'row' as const,
@@ -268,16 +272,5 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     textAlign: 'center' as const,
     marginTop: theme.spacing[2],
-  },
-  detailsLink: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    marginTop: theme.spacing[3],
-    gap: 4,
-  },
-  detailsText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.primary,
   },
 });
