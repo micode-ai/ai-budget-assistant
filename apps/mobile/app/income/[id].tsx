@@ -27,13 +27,16 @@ export default function IncomeDetailScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
   const { incomes, updateIncome, deleteIncome } = useIncomeStore();
   const { getIncomeCategories, getCategoryById, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const income = incomes.find((i) => i.id === id);
 
   const [incomeTags, setIncomeTags] = useState<Tag[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {
+    if (edit === 'true') setIsEditing(true);
+  }, [edit]);
   const [editDescription, setEditDescription] = useState(income?.description || '');
   const [editAmount, setEditAmount] = useState(income?.amount?.toString() || '');
   const [editCategory, setEditCategory] = useState(income?.categoryId || '');

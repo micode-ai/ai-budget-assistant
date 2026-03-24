@@ -20,6 +20,9 @@ export default {
     yes: 'Oui',
     no: 'Non',
     showAll: 'Tout afficher',
+    duplicate: 'Dupliquer',
+    deleteConfirmTitle: 'Supprimer la transaction',
+    deleteConfirmMessage: 'Êtes-vous sûr ? Cette action est irréversible.',
   },
   dates: {
     today: "Aujourd'hui",

@@ -39,7 +39,7 @@ export default function ExpenseDetailScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
   const {
     expenses,
     updateExpense,
@@ -65,6 +65,9 @@ export default function ExpenseDetailScreen() {
   const [showSplitEditor, setShowSplitEditor] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {
+    if (edit === 'true') setIsEditing(true);
+  }, [edit]);
   const [editDescription, setEditDescription] = useState(expense?.description || '');
   const [editAmount, setEditAmount] = useState(expense?.amount?.toString() || '');
   const [editCategory, setEditCategory] = useState(expense?.categoryId || '');

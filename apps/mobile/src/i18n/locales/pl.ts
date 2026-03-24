@@ -20,6 +20,9 @@ export default {
     yes: 'Tak',
     no: 'Nie',
     showAll: 'Pokaż wszystko',
+    duplicate: 'Duplikuj',
+    deleteConfirmTitle: 'Usuń transakcję',
+    deleteConfirmMessage: 'Czy na pewno? Tej akcji nie można cofnąć.',
   },
   dates: {
     today: 'Dzisiaj',

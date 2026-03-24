@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { Expense, Income } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { TransactionActionSheet } from '@/components/TransactionActionSheet';
 
 type ActiveTab = 'expenses' | 'income';
 type DateRange = 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -31,8 +32,8 @@ export default function ExpensesScreen() {
       setActiveTab(tab);
     }
   }, [tab]);
-  const { loadExpenses, getFilteredExpenses, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
-  const { loadIncomes, getFilteredIncomes, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
+  const { loadExpenses, getFilteredExpenses, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
+  const { loadIncomes, getFilteredIncomes, deleteIncome, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const expenses = getFilteredExpenses();
   const incomes = getFilteredIncomes();
@@ -43,6 +44,16 @@ export default function ExpensesScreen() {
   const fabAnimation = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
   const styles = useStyles(createStyles);
+
+  const [selectedTransaction, setSelectedTransaction] = useState<{
+    id: string;
+    type: 'expense' | 'income';
+    amount?: number;
+    description?: string;
+    categoryId?: string;
+    currencyCode?: string;
+  } | null>(null);
+  const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -85,10 +96,70 @@ export default function ExpensesScreen() {
     router.push('/expense/receipt');
   };
 
+  const handleLongPress = (item: Expense | Income, type: 'expense' | 'income') => {
+    setSelectedTransaction({
+      id: item.id,
+      type,
+      amount: item.amount,
+      description: item.description || undefined,
+      categoryId: item.categoryId || undefined,
+      currencyCode: item.currencyCode,
+    });
+    setActionSheetVisible(true);
+  };
+
+  const handleEdit = () => {
+    if (!selectedTransaction) return;
+    const path = selectedTransaction.type === 'expense' ? '/expense' : '/income';
+    if (canEdit) {
+      router.push({ pathname: `${path}/${selectedTransaction.id}`, params: { edit: 'true' } });
+    } else {
+      router.push(`${path}/${selectedTransaction.id}`);
+    }
+  };
+
+  const handleDuplicate = () => {
+    if (!selectedTransaction) return;
+    const path = selectedTransaction.type === 'expense' ? '/expense/new' : '/income/new';
+    router.push({
+      pathname: path,
+      params: {
+        amount: selectedTransaction.amount?.toString() || '',
+        description: selectedTransaction.description || '',
+        categoryId: selectedTransaction.categoryId || '',
+        currencyCode: selectedTransaction.currencyCode || '',
+      },
+    });
+  };
+
+  const handleDeleteFromList = () => {
+    if (!selectedTransaction) return;
+    Alert.alert(
+      t('common.deleteConfirmTitle'),
+      t('common.deleteConfirmMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => {
+            if (selectedTransaction.type === 'expense') {
+              deleteExpense(selectedTransaction.id);
+            } else {
+              deleteIncome(selectedTransaction.id);
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const renderExpenseItem = ({ item }: { item: Expense }) => (
     <TouchableOpacity
       style={styles.expenseCard}
       onPress={() => router.push(`/expense/${item.id}`)}
+      onLongPress={() => handleLongPress(item, 'expense')}
+      delayLongPress={400}
     >
       <View style={styles.expenseIcon}>
         {item.source === 'ocr' ? (
@@ -117,6 +188,8 @@ export default function ExpensesScreen() {
     <TouchableOpacity
       style={styles.expenseCard}
       onPress={() => router.push(`/income/${item.id}`)}
+      onLongPress={() => handleLongPress(item, 'income')}
+      delayLongPress={400}
     >
       <View style={[styles.expenseIcon, { backgroundColor: theme.colors.success + '18' }]}>
         <Ionicons name="trending-up-outline" size={24} color={theme.colors.success} />
@@ -505,6 +578,14 @@ export default function ExpensesScreen() {
           </Animated.View>
         </TouchableOpacity>
       </View>}
+      <TransactionActionSheet
+        visible={actionSheetVisible}
+        onClose={() => setActionSheetVisible(false)}
+        onEdit={handleEdit}
+        onDuplicate={handleDuplicate}
+        onDelete={handleDeleteFromList}
+        canEdit={canEdit}
+      />
     </SafeAreaView>
   );
 }

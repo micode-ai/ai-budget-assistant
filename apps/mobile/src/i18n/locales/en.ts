@@ -20,6 +20,9 @@ export default {
     yes: 'Yes',
     no: 'No',
     showAll: 'Show all',
+    duplicate: 'Duplicate',
+    deleteConfirmTitle: 'Delete Transaction',
+    deleteConfirmMessage: 'Are you sure? This action cannot be undone.',
   },
   dates: {
     today: 'Today',

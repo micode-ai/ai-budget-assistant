@@ -37,6 +37,8 @@ export default function NewIncomeScreen() {
     debtContactName?: string;
     currencyCode?: string;
     amount?: string;
+    description?: string;
+    categoryId?: string;
   }>();
 
   const { addIncome } = useIncomeStore();
@@ -46,12 +48,12 @@ export default function NewIncomeScreen() {
 
   const isDebtRepayment = params.isDebtRepayment === 'true';
   const [amount, setAmount] = useState(params.amount || '');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(params.description || '');
   const [notes, setNotes] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(params.categoryId || '');
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [currencyCode, setCurrencyCode] = useState<Currency>(
-    user?.currencyCode || 'USD',
+    (params.currencyCode as Currency) || user?.currencyCode || 'USD',
   );
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
