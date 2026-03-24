@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image } from 'react-native';
 import { useState, useCallback, useEffect } from 'react';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -71,6 +71,14 @@ export default function DashboardScreen() {
       }
     }
   }, [currentAccountId, loadExpenses, loadIncomes, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (currentAccountId) {
+        Promise.all([loadExpenses(), loadIncomes()]).then(() => loadDebts());
+      }
+    }, [currentAccountId, loadExpenses, loadIncomes, loadDebts]),
+  );
 
   const totalBudget = getTotalBudget();
   const budgetUsedPercent = totalBudget > 0 ? (convertedExpenseTotal / totalBudget) * 100 : 0;
@@ -263,28 +271,42 @@ export default function DashboardScreen() {
           </View>
         )}
 
-        {widgetVisibility.debts && (lentDebts.length > 0 || borrowedDebts.length > 0) && (
+        {widgetVisibility.debts && (
           <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
+              {(lentDebts.length > 0 || borrowedDebts.length > 0) && (
+                <Ionicons name="add-circle-outline" size={22} color={theme.colors.primary} />
+              )}
             </View>
-            <View style={styles.debtRow}>
-              <View style={styles.debtCol}>
-                <Ionicons name="arrow-up-circle-outline" size={20} color={theme.colors.success} />
-                <Text style={styles.debtLabel}>{t('debt.peopleOweYou')}</Text>
-                <Text style={[styles.debtAmount, { color: theme.colors.success }]}>
-                  {formatCurrency(convertedLentTotal, currency)}
-                </Text>
+            {lentDebts.length > 0 || borrowedDebts.length > 0 ? (
+              <View style={styles.debtRow}>
+                <View style={styles.debtCol}>
+                  <Ionicons name="arrow-up-circle-outline" size={20} color={theme.colors.success} />
+                  <Text style={styles.debtLabel}>{t('debt.peopleOweYou')}</Text>
+                  <Text style={[styles.debtAmount, { color: theme.colors.success }]}>
+                    {formatCurrency(convertedLentTotal, currency)}
+                  </Text>
+                </View>
+                <View style={styles.debtDivider} />
+                <View style={styles.debtCol}>
+                  <Ionicons name="arrow-down-circle-outline" size={20} color={theme.colors.danger} />
+                  <Text style={styles.debtLabel}>{t('debt.youOwe')}</Text>
+                  <Text style={[styles.debtAmount, { color: theme.colors.danger }]}>
+                    {formatCurrency(convertedBorrowedTotal, currency)}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.debtDivider} />
-              <View style={styles.debtCol}>
-                <Ionicons name="arrow-down-circle-outline" size={20} color={theme.colors.danger} />
-                <Text style={styles.debtLabel}>{t('debt.youOwe')}</Text>
-                <Text style={[styles.debtAmount, { color: theme.colors.danger }]}>
-                  {formatCurrency(convertedBorrowedTotal, currency)}
-                </Text>
+            ) : (
+              <View style={styles.debtEmptyState}>
+                <Ionicons name="people-outline" size={32} color={theme.colors.textDisabled} />
+                <Text style={styles.debtEmptyText}>{t('debt.noDebts')}</Text>
+                <View style={styles.debtAddButton}>
+                  <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={styles.debtAddButtonText}>{t('debt.addDebt')}</Text>
+                </View>
               </View>
-            </View>
+            )}
           </TouchableOpacity>
         )}
 
@@ -716,5 +738,24 @@ const createStyles = (theme: Theme) => ({
   },
   debtAmount: {
     ...theme.textStyles.bodyLargeSemiBold,
+  },
+  debtEmptyState: {
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[4],
+    gap: theme.spacing[2],
+  },
+  debtEmptyText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+  },
+  debtAddButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    marginTop: theme.spacing[1],
+  },
+  debtAddButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
 });

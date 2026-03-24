@@ -18,6 +18,18 @@ El estado de la deuda se calcula automaticamente:
 - **Pagada** — la deuda se ha reembolsado completamente
 - **Vencida** — la fecha de vencimiento ha pasado y el saldo sigue pendiente
 
+## Crear una deuda
+
+La forma mas rapida de agregar una deuda es desde la pantalla **Deudas y Prestamos**:
+
+1. Abre la pantalla **Deudas y Prestamos** (desde el widget del Panel o Ajustes)
+2. Toca el boton **+** en la esquina inferior derecha
+3. Elige **Prestar dinero** o **Pedir prestado**
+4. Completa el monto, descripcion, nombre del contacto y fecha de vencimiento opcional
+5. Toca **Guardar**
+
+Tambien puedes crear deudas manualmente desde los formularios de gastos o ingresos (ver abajo).
+
 ## Prestar dinero
 
 ### Paso a paso
@@ -112,9 +124,10 @@ Toca una tarjeta de deuda para ver los detalles completos del gasto o ingreso y 
 
 ## Widget en el panel
 
-Cuando tienes deudas activas, aparece un widget en el Panel:
-- **Te deben** — monto total restante de lo prestado
-- **Debes** — monto total restante de lo tomado en prestamo
+El widget de Deudas y Prestamos siempre es visible en el Panel (cuando esta habilitado en los ajustes de widgets):
+
+- **Cuando tienes deudas:** muestra los totales «Te deben» y «Debes», ademas de un boton **+** para navegar rapidamente a la pantalla de Deudas y Prestamos
+- **Cuando no tienes deudas:** muestra un estado vacio con un boton **Agregar deuda** para comenzar
 
 Toca el widget para ir directamente a la pantalla de Deudas y Prestamos.
 

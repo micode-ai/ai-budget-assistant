@@ -18,6 +18,18 @@ Status dlugu jest obliczany automatycznie:
 - **Splacony** — dlug zostal w pelni splacony
 - **Przeterminowany** — termin minal, a saldo nadal jest nieoplacone
 
+## Tworzenie dlugu
+
+Najszybszy sposob na dodanie dlugu to ekran **Dlugi i Pozyczki**:
+
+1. Otworz ekran **Dlugi i Pozyczki** (z widgetu na Pulpicie lub z Ustawien)
+2. Dotknij przycisku **+** w prawym dolnym rogu
+3. Wybierz **Pozyczyc pieniadze** lub **Pozyczyc od kogos**
+4. Wypelnij kwote, opis, nazwe kontaktu i opcjonalny termin splaty
+5. Dotknij **Zapisz**
+
+Mozesz rowniez tworzyc dlugi recznie z formularzy wydatkow lub przychodow (zobacz ponizej).
+
 ## Pozyczanie pieniedzy
 
 ### Krok po kroku
@@ -112,9 +124,10 @@ Dotknij karty dlugu, aby zobaczyc pelne szczegoly wydatku lub przychodu i zareje
 
 ## Widget na pulpicie
 
-Gdy masz aktywne dlugi, na Pulpicie pojawia sie widget:
-- **Sa ci winni** — calkowita pozostala kwota pozyczonego
-- **Jestes winien** — calkowita pozostala kwota wzietego w dlug
+Widget Dlugi i Pozyczki jest zawsze widoczny na Pulpicie (gdy jest wlaczony w ustawieniach widgetow):
+
+- **Gdy masz dlugi:** pokazuje sumy «Sa ci winni» i «Jestes winien» oraz przycisk **+** do szybkiego przejscia na ekran Dlugi i Pozyczki
+- **Gdy nie masz dlugow:** pokazuje pusty stan z przyciskiem **Dodaj dlug**, aby zaczac
 
 Dotknij widgetu, aby przejsc bezposrednio do ekranu Dlugi i Pozyczki.
 

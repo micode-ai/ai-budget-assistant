@@ -18,6 +18,18 @@ Debt status is computed automatically:
 - **Paid** — the debt has been fully repaid
 - **Overdue** — the due date has passed and the balance is still outstanding
 
+## Creating a Debt
+
+The quickest way to add a debt is from the **Debts & Loans** screen:
+
+1. Open the **Debts & Loans** screen (from the Dashboard widget or Settings)
+2. Tap the **+** button in the bottom-right corner
+3. Choose **Lend money** or **Borrow money**
+4. Fill in the amount, description, contact name, and optional due date
+5. Tap **Save**
+
+You can also create debts manually from the expense or income forms (see below).
+
 ## Lending Money
 
 ### Step-by-step
@@ -112,9 +124,10 @@ Tap a debt card to view the full expense or income details, where you can record
 
 ## Dashboard Widget
 
-When you have active debts, a widget appears on the Dashboard showing:
-- **People owe you** — total lent amount remaining
-- **You owe** — total borrowed amount remaining
+The Debts & Loans widget is always visible on the Dashboard (when enabled in widget settings):
+
+- **When you have debts:** shows "People owe you" and "You owe" totals, plus a **+** button to quickly navigate to the Debts & Loans screen
+- **When you have no debts:** shows an empty state with an **Add debt** button to get started
 
 Tap the widget to go directly to the Debts & Loans screen.
 
