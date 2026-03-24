@@ -3,6 +3,7 @@ import { CategoriesService } from './categories.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { AuthenticatedRequest } from '../../common/types';
+import { AccountRoleGuard, RequireRole } from '../accounts/guards/account-role.guard';
 
 @Controller('categories')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -25,6 +26,8 @@ export class CategoriesController {
   }
 
   @Delete(':id')
+  @UseGuards(AccountRoleGuard)
+  @RequireRole('editor')
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.categoriesService.remove(req.accountId, id);
   }

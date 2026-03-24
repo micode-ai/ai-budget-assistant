@@ -61,6 +61,12 @@ export default function SettingsIndexScreen() {
       route: '/settings/security',
     },
     {
+      icon: 'pricetags-outline',
+      label: t('settingsNav.categories'),
+      description: t('settingsNav.categoriesDesc'),
+      route: '/settings/categories',
+    },
+    {
       icon: 'wallet-outline',
       label: t('settingsNav.wallet'),
       description: t('settingsNav.walletDesc'),

@@ -120,3 +120,11 @@ export async function deleteCategory(id: string): Promise<void> {
     [Date.now(), id],
   );
 }
+
+export async function categoryExistsById(id: string): Promise<boolean> {
+  const rows = await executeSql<{ cnt: number }>(
+    'SELECT COUNT(*) as cnt FROM categories WHERE id = ?',
+    [id],
+  );
+  return rows.length > 0 && rows[0].cnt > 0;
+}

@@ -1431,6 +1431,19 @@ Link your Telegram account to receive notifications and manage expenses via the 
 
 Set up end-to-end encryption (E2EE) to protect your financial data. See Encryption for details.
 
+## Categories
+
+Access via **Settings → Categories**.
+
+View and manage all your expense and income categories in one place.
+
+- **All categories listed** — both expense and income categories are shown together
+- **Delete a category** — swipe left on a category or tap the delete icon to remove it
+- **Deletion is blocked** if the category has any related expenses, incomes, or budgets — you must reassign or delete those records first
+- **System categories** can also be deleted if they have no related records
+
+> **Note:** Deleting a category is permanent and cannot be undone.
+
 ## Data & Reports
 
 ### Data & Sync
@@ -4364,6 +4377,19 @@ iOS, Android, Web
 ## Безопасность и шифрование
 
 Настройте сквозное шифрование (E2EE) для защиты ваших финансовых данных. См. Шифрование для подробностей.
+
+## Категории
+
+Доступ: **Настройки → Категории**.
+
+Просматривайте все категории расходов и доходов и управляйте ими в одном месте.
+
+- **Все категории отображаются** — категории расходов и доходов показаны вместе
+- **Удаление категории** — смахните влево по категории или нажмите значок удаления
+- **Удаление заблокировано**, если с категорией связаны расходы, доходы или бюджеты — сначала необходимо переназначить или удалить эти записи
+- **Системные категории** также можно удалить, если с ними не связаны никакие записи
+
+> **Примечание:** Удаление категории необратимо.
 
 ## Данные и отчёты
 
@@ -7318,6 +7344,19 @@ iOS, Android, Web
 
 Налаштуйте наскрізне шифрування (E2EE) для захисту ваших фінансових даних. Див. Шифрування для деталей.
 
+## Категорії
+
+Доступ: **Налаштування → Категорії**.
+
+Переглядайте всі категорії витрат та доходів і керуйте ними в одному місці.
+
+- **Усі категорії відображаються** — категорії витрат і доходів показані разом
+- **Видалення категорії** — свайп вліво по категорії або натисніть іконку видалення
+- **Видалення заблоковано**, якщо з категорією пов'язані витрати, доходи або бюджети — спочатку потрібно переназначити або видалити ці записи
+- **Системні категорії** також можна видалити, якщо з ними не пов'язані жодні записи
+
+> **Примітка:** Видалення категорії є незворотним.
+
 ## Дані та звіти
 
 ### Дані та синхронізація
@@ -10230,6 +10269,19 @@ Polacz swoje konto Telegram, aby otrzymywac powiadomienia i zarzadzac wydatkami 
 
 Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zobacz Szyfrowanie, aby uzyskac szczegoly.
 
+## Kategorie
+
+Dostep przez **Ustawienia → Kategorie**.
+
+Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w jednym miejscu.
+
+- **Wszystkie kategorie na liscie** — kategorie wydatkow i przychodow sa wyswietlane razem
+- **Usun kategorie** — przesuń palcem w lewo po kategorii lub dotknij ikony usuwania
+- **Usuwanie jest zablokowane**, jezeli kategoria ma powiazane wydatki, przychody lub budzety — najpierw musisz je przepisac lub usunac
+- **Kategorie systemowe** rowniez mozna usunac, jezeli nie maja powiazanych rekordow
+
+> **Uwaga:** Usuniecie kategorii jest trwale i nie mozna go cofnac.
+
 ## Dane i raporty
 
 ### Dane i synchronizacja
@@ -13139,6 +13191,19 @@ Verknupfe dein Telegram-Konto, um Benachrichtigungen zu erhalten und Ausgaben ub
 ## Sicherheit & Verschlusselung
 
 Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen. Siehe Verschlusselung fur Details.
+
+## Kategorien
+
+Zugriff uber **Einstellungen → Kategorien**.
+
+Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
+
+- **Alle Kategorien aufgelistet** — Ausgaben- und Einnahmenkategorien werden gemeinsam angezeigt
+- **Kategorie loschen** — wische eine Kategorie nach links oder tippe auf das Loschsymbol
+- **Loschen gesperrt**, wenn die Kategorie zugehorige Ausgaben, Einnahmen oder Budgets hat — diese Datensatze mussen zuerst neu zugewiesen oder geloscht werden
+- **Systemkategorien** konnen ebenfalls geloscht werden, sofern keine zugehorigen Datensatze vorhanden sind
+
+> **Hinweis:** Das Loschen einer Kategorie ist dauerhaft und kann nicht ruckgangig gemacht werden.
 
 ## Daten & Berichte
 
@@ -16052,6 +16117,19 @@ Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a t
 
 Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financieros. Consulta Cifrado para mas detalles.
 
+## Categorias
+
+Accede desde **Ajustes → Categorias**.
+
+Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
+
+- **Todas las categorias listadas** — las categorias de gastos e ingresos se muestran juntas
+- **Eliminar una categoria** — desliza hacia la izquierda sobre una categoria o toca el icono de eliminar
+- **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
+- **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
+
+> **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
+
 ## Datos e informes
 
 ### Datos y sincronizacion
@@ -18955,6 +19033,19 @@ Liez votre compte Telegram pour recevoir des notifications et gerer vos depenses
 ## Securite et chiffrement
 
 Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees financieres. Voir Chiffrement pour plus de details.
+
+## Categories
+
+Acces via **Parametres → Categories**.
+
+Visualisez et gerez toutes vos categories de depenses et de revenus en un seul endroit.
+
+- **Toutes les categories listees** — les categories de depenses et de revenus sont affichees ensemble
+- **Supprimer une categorie** — faites glisser vers la gauche sur une categorie ou appuyez sur l'icone de suppression
+- **La suppression est bloquee** si la categorie a des depenses, des revenus ou des budgets associes — vous devez d'abord reassigner ou supprimer ces enregistrements
+- **Les categories systeme** peuvent egalement etre supprimees si elles n'ont aucun enregistrement associe
+
+> **Note :** La suppression d'une categorie est definitive et ne peut pas etre annulee.
 
 ## Donnees et rapports
 
@@ -21861,6 +21952,19 @@ iOS, Android, Web
 ## Бяспека і шыфраванне
 
 Наладзьце скразное шыфраванне (E2EE) для абароны вашых фінансавых даных. Гл. Шыфраванне для падрабязнасцей.
+
+## Катэгорыі
+
+Доступ: **Налады → Катэгорыі**.
+
+Прагляд усіх катэгорый расходаў і даходаў і кіраванне імі ў адным месцы.
+
+- **Усе катэгорыі адлюстроўваюцца** — катэгорыі расходаў і даходаў паказаны разам
+- **Выдаленне катэгорыі** — правядзіце ўлева па катэгорыі або націсніце значок выдалення
+- **Выдаленне заблакавана**, калі з катэгорыяй звязаны расходы, даходы або бюджэты — спачатку трэба перапрызначыць або выдаліць гэтыя запісы
+- **Сістэмныя катэгорыі** таксама можна выдаліць, калі з імі не звязаны ніякія запісы
+
+> **Заўвага:** Выдаленне катэгорыі з'яўляецца незваротным.
 
 ## Даныя і справаздачы
 

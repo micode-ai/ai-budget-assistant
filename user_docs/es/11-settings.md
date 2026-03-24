@@ -139,6 +139,19 @@ Vincula tu cuenta de Telegram para recibir notificaciones y gestionar gastos a t
 
 Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financieros. Consulta [Cifrado](./15-encryption.md) para mas detalles.
 
+## Categorias
+
+Accede desde **Ajustes → Categorias**.
+
+Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
+
+- **Todas las categorias listadas** — las categorias de gastos e ingresos se muestran juntas
+- **Eliminar una categoria** — desliza hacia la izquierda sobre una categoria o toca el icono de eliminar
+- **La eliminacion esta bloqueada** si la categoria tiene gastos, ingresos o presupuestos relacionados — primero debes reasignar o eliminar esos registros
+- **Las categorias del sistema** tambien pueden eliminarse si no tienen registros relacionados
+
+> **Nota:** Eliminar una categoria es permanente y no se puede deshacer.
+
 ## Datos e informes
 
 ### Datos y sincronizacion

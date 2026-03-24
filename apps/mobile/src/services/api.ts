@@ -126,7 +126,10 @@ class ApiClient {
         ? error.message.join('\n')
         : error.message || `HTTP ${response.status}`;
       console.log(`[API] Error response:`, message);
-      throw new Error(message);
+      const apiError: any = new Error(message);
+      apiError.status = response.status;
+      apiError.details = error.details;
+      throw apiError;
     }
 
     return response.json();
@@ -276,6 +279,17 @@ class ApiClient {
   async createCategory(data: { name: string; icon?: string; color?: string; type: string; parentId?: string }) {
     return this.request<any>('/categories', {
       method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteCategory(id: string) {
+    return this.request<void>(`/categories/${id}`, { method: 'DELETE' });
+  }
+
+  async updateCategory(id: string, data: { name?: string; icon?: string; color?: string }) {
+    return this.request<any>(`/categories/${id}`, {
+      method: 'PATCH',
       body: JSON.stringify(data),
     });
   }

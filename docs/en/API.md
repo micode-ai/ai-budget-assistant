@@ -939,13 +939,41 @@ Content-Type: application/json
 
 ### Delete Category
 
+`DELETE /categories/:id`
+
+Soft-deletes a category. Requires `editor` role or higher.
+
 ```http
 DELETE /categories/:id
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
-**Response** `204 No Content`
+**Response:** 200 OK with the updated category object.
+
+**Error Responses:**
+- `404 Not Found` — Category not found
+- `409 Conflict` — Category has related records:
+
+```json
+{
+  "statusCode": 409,
+  "message": "Category has related records",
+  "details": {
+    "expenses": 5,
+    "incomes": 0,
+    "budgets": 1,
+    "budgetCategories": 0,
+    "splits": 0,
+    "children": 0
+  }
+}
+```
+
+**Notes:**
+- Both system and custom categories can be deleted
+- System categories have `accountId: null` on the server — deletion hides them for all accounts
+- Deletion is blocked if any related active (non-deleted) records exist
 
 ---
 
