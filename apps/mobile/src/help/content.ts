@@ -1138,6 +1138,7 @@ The Wallet feature lets you track your actual balances in each supported currenc
 
 Access the Wallet from:
 - **Dashboard** — tap **See All** next to the Wallet Balances section
+- **Dashboard** — tap the **Transfers** quick action button for quick access to transfers
 - **Settings** — go to Wallet > **Balances**
 
 For each currency, you'll see:
@@ -1200,12 +1201,22 @@ Exchange money between your currency wallets:
 
 ### Recent Exchanges
 
-Below the exchange form, you'll find a list of your recent currency exchanges with:
+Below the exchange form, you'll find the 5 most recent currency exchanges with:
 - Currencies exchanged (From → To)
 - Amounts
 - Exchange rate used
 - Date
 - Notes (if added)
+
+Tap **Show all** to open the full Exchange History screen.
+
+### Exchange History
+
+The **Exchange History** screen displays a complete list of all your currency exchanges. Access it by tapping **Show all** in the Recent Exchanges section.
+
+Available filters:
+- **Currency** — filter by a specific currency pair
+- **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
 
 ## Account Transfers
 
@@ -1224,12 +1235,22 @@ Account transfers let you move money between different accounts — for example,
 
 ### Recent Transfers
 
-Below the transfer form, you'll find a list of your recent account transfers with:
+Below the transfer form, you'll find the 5 most recent account transfers with:
 - Source and destination accounts (From → To)
 - Amount and currency
 - Exchange rate (if currencies differ)
 - Date
 - Notes (if added)
+
+Tap **Show all** to open the full Transfer History screen.
+
+### Transfer History
+
+The **Transfer History** screen displays a complete list of all your account transfers. Access it by tapping **Show all** in the Recent Transfers section.
+
+Available filters:
+- **Account** — filter by a specific source or destination account
+- **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
 
 ## Supported Currencies
 
@@ -4049,6 +4070,7 @@ iOS, Android, Web
 
 Доступ к Кошельку:
 - **Главная** — нажмите **Показать все** рядом с секцией Баланс кошелька
+- **Главная** — нажмите кнопку быстрого действия **Переводы** для быстрого доступа к переводам
 - **Настройки** — перейдите в Кошелёк > **Балансы**
 
 Для каждой валюты отображается:
@@ -4113,12 +4135,22 @@ iOS, Android, Web
 
 ### Последние обмены
 
-Под формой обмена расположен список ваших последних обменов валют с:
+Под формой обмена расположен список 5 последних обменов валют с:
 - Обменянными валютами (Из -> В)
 - Суммами
 - Использованным курсом обмена
 - Датой
 - Заметками (если добавлены)
+
+Нажмите **Показать все**, чтобы открыть полную историю обменов.
+
+### История обменов
+
+Экран **История обменов** отображает полный список всех ваших обменов валют. Откройте его, нажав **Показать все** в разделе Последние обмены.
+
+Доступные фильтры:
+- **Валюта** — фильтр по конкретной валютной паре
+- **Период** — выберите из: **За всё время**, **Этот месяц**, **Последние 3 месяца** или **Этот год**
 
 ## Переводы между счетами
 
@@ -4137,12 +4169,22 @@ iOS, Android, Web
 
 ### Последние переводы
 
-Под формой перевода расположен список ваших последних переводов между счетами с:
+Под формой перевода расположен список 5 последних переводов между счетами с:
 - Счётом-отправителем и счётом-получателем
 - Суммой и валютой
 - Курсом обмена (если валюты различаются)
 - Датой
 - Заметками (если добавлены)
+
+Нажмите **Показать все**, чтобы открыть полную историю переводов.
+
+### История переводов
+
+Экран **История переводов** отображает полный список всех ваших переводов между счетами. Откройте его, нажав **Показать все** в разделе Последние переводы.
+
+Доступные фильтры:
+- **Счёт** — фильтр по конкретному счёту-отправителю или получателю
+- **Период** — выберите из: **За всё время**, **Этот месяц**, **Последние 3 месяца** или **Этот год**
 
 ## Поддерживаемые валюты
 
@@ -6975,6 +7017,7 @@ iOS, Android, Web
 
 Доступ до Гаманця:
 - **Головна** — натисніть **Переглянути всі** поруч з розділом Баланси гаманця
+- **Головна** — натисніть кнопку швидкої дії **Перекази** для швидкого доступу до переказів
 - **Налаштування** — перейдіть до Гаманець > **Баланси**
 
 Для кожної валюти ви побачите:
@@ -7045,12 +7088,22 @@ iOS, Android, Web
 
 ### Останні обміни
 
-Під формою обміну ви знайдете список ваших останніх обмінів валют з:
+Під формою обміну ви знайдете список 5 останніх обмінів валют з:
 - Обміняні валюти (З -> В)
 - Суми
 - Використаний курс обміну
 - Дата
 - Нотатки (якщо додані)
+
+Натисніть **Показати все**, щоб відкрити повну історію обмінів.
+
+### Історія обмінів
+
+Екран **Історія обмінів** відображає повний список усіх ваших обмінів валют. Відкрийте його, натиснувши **Показати все** у розділі Останні обміни.
+
+Доступні фільтри:
+- **Валюта** — фільтр за конкретною валютною парою
+- **Період** — оберіть з: **За весь час**, **Цей місяць**, **Останні 3 місяці** або **Цей рік**
 
 ## Перекази між рахунками
 
@@ -7069,12 +7122,22 @@ iOS, Android, Web
 
 ### Останні перекази
 
-Під формою переказу відображається список ваших останніх переказів між рахунками з:
+Під формою переказу відображається список 5 останніх переказів між рахунками з:
 - Рахунок-відправник та Рахунок-отримувач
 - Валюта та сума
 - Курс обміну (якщо валюти різні)
 - Дата
 - Нотатки (якщо додані)
+
+Натисніть **Показати все**, щоб відкрити повну історію переказів.
+
+### Історія переказів
+
+Екран **Історія переказів** відображає повний список усіх ваших переказів між рахунками. Відкрийте його, натиснувши **Показати все** у розділі Останні перекази.
+
+Доступні фільтри:
+- **Рахунок** — фільтр за конкретним рахунком-відправником або отримувачем
+- **Період** — оберіть з: **За весь час**, **Цей місяць**, **Останні 3 місяці** або **Цей рік**
 
 ## Підтримувані валюти
 
@@ -9870,6 +9933,7 @@ Funkcja Portfel pozwala sledzic rzeczywiste salda w kazdej obslugiwanej walucie.
 
 Dostep do Portfela:
 - **Pulpit** — dotknij **Zobacz wszystko** obok sekcji Salda portfela
+- **Pulpit** — dotknij przycisk szybkiej akcji **Przelewy** dla szybkiego dostepu do przelewow
 - **Ustawienia** — przejdz do Portfel > **Salda**
 
 Dla kazdej waluty zobaczysz:
@@ -9936,12 +10000,22 @@ Wymieniaj pieniadze miedzy swoimi portfelami walutowymi:
 
 ### Ostatnie wymiany
 
-Ponizej formularza wymiany znajdziesz liste ostatnich wymian walutowych z:
+Ponizej formularza wymiany znajdziesz 5 ostatnich wymian walutowych z:
 - Wymienionymi walutami (Z -> Na)
 - Kwotami
 - Uzytym kursem wymiany
 - Data
 - Notatkami (jezeli dodano)
+
+Dotknij **Pokaz wszystko**, aby otworzyc pelna historie wymian.
+
+### Historia wymian
+
+Ekran **Historia wymian** wyswietla kompletna liste wszystkich Twoich wymian walutowych. Otworz go, dotykajac **Pokaz wszystko** w sekcji Ostatnie wymiany.
+
+Dostepne filtry:
+- **Waluta** — filtruj wedlug konkretnej pary walutowej
+- **Okres** — wybierz z: **Caly czas**, **Ten miesiac**, **Ostatnie 3 miesiace** lub **Ten rok**
 
 ## Przelewy między kontami
 
@@ -9960,12 +10034,22 @@ Przelewaj pieniądze między swoimi kontami (np. z Biznesowego na Osobiste). Prz
 
 ### Ostatnie przelewy
 
-Poniżej formularza przelewu znajdziesz listę ostatnich przelewów między kontami z:
+Poniżej formularza przelewu znajdziesz 5 ostatnich przelewów między kontami z:
 - Kontem źródłowym i docelowym
 - Kwotą i walutą
 - Kursem wymiany (jeśli waluty się różnią)
 - Datą
 - Notatkami (jeżeli dodano)
+
+Dotknij **Pokaż wszystko**, aby otworzyć pełną historię przelewów.
+
+### Historia przelewów
+
+Ekran **Historia przelewów** wyświetla kompletną listę wszystkich Twoich przelewów między kontami. Otwórz go, dotykając **Pokaż wszystko** w sekcji Ostatnie przelewy.
+
+Dostępne filtry:
+- **Konto** — filtruj według konkretnego konta źródłowego lub docelowego
+- **Okres** — wybierz z: **Cały czas**, **Ten miesiąc**, **Ostatnie 3 miesiące** lub **Ten rok**
 
 ## Obslugiwane waluty
 
@@ -12762,6 +12846,7 @@ Die Geldborse-Funktion ermoglicht es dir, deine tatsachlichen Salden in jeder un
 
 Zugriff auf die Geldborse uber:
 - **Ubersicht** — tippe auf **Alle anzeigen** neben dem Geldborsensalden-Bereich
+- **Ubersicht** — tippe auf die Schnellaktion **Uberweisungen** fur schnellen Zugriff auf Uberweisungen
 - **Einstellungen** — gehe zu Geldborse > **Salden**
 
 Fur jede Wahrung siehst du:
@@ -12826,12 +12911,22 @@ Tausche Geld zwischen deinen Wahrungsgelborsen:
 
 ### Letzte Umtausche
 
-Unterhalb des Umtauschformulars findest du eine Liste deiner letzten Wahrungsumtausche mit:
+Unterhalb des Umtauschformulars findest du die 5 letzten Wahrungsumtausche mit:
 - Umgetauschte Wahrungen (Von -> Nach)
 - Betrage
 - Verwendeter Wechselkurs
 - Datum
 - Notizen (falls hinzugefugt)
+
+Tippe auf **Alle anzeigen**, um den vollstandigen Wechselverlauf zu offnen.
+
+### Wechselverlauf
+
+Der **Wechselverlauf**-Bildschirm zeigt eine vollstandige Liste aller deiner Wahrungsumtausche. Offne ihn, indem du auf **Alle anzeigen** im Bereich Letzte Umtausche tippst.
+
+Verfugbare Filter:
+- **Wahrung** — nach einem bestimmten Wahrungspaar filtern
+- **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
 
 ## Uberweisungen zwischen Konten
 
@@ -12849,12 +12944,22 @@ Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberwei
 
 ### Letzte Uberweisungen
 
-Unterhalb des Uberweisungsformulars findest du eine Liste deiner letzten Uberweisungen mit:
+Unterhalb des Uberweisungsformulars findest du die 5 letzten Uberweisungen mit:
 - Von-Konto und An-Konto
 - Betrag und Wahrung
 - Wechselkurs (falls Wahrungen unterschiedlich)
 - Datum
 - Notizen (falls hinzugefugt)
+
+Tippe auf **Alle anzeigen**, um den vollstandigen Uberweisungsverlauf zu offnen.
+
+### Uberweisungsverlauf
+
+Der **Uberweisungsverlauf**-Bildschirm zeigt eine vollstandige Liste aller deiner Uberweisungen zwischen Konten. Offne ihn, indem du auf **Alle anzeigen** im Bereich Letzte Uberweisungen tippst.
+
+Verfugbare Filter:
+- **Konto** — nach einem bestimmten Quell- oder Zielkonto filtern
+- **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
 
 ## Unterstutzte Wahrungen
 
@@ -15652,6 +15757,7 @@ La funcion de Billetera te permite rastrear tus saldos reales en cada moneda com
 
 Accede a la Billetera desde:
 - **Panel** — toca **Ver todo** junto a la seccion de Saldos de la billetera
+- **Panel** — toca el boton de accion rapida **Transferencias** para acceso rapido a transferencias
 - **Ajustes** — ve a Billetera > **Saldos**
 
 Para cada moneda, veras:
@@ -15705,12 +15811,22 @@ Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Person
 
 ### Transferencias recientes
 
-Debajo del formulario de transferencia, encontraras una lista de tus transferencias recientes con:
+Debajo del formulario de transferencia, encontraras las 5 transferencias mas recientes con:
 - Cuenta origen y cuenta destino
 - Moneda e importe transferido
 - Tasa de cambio utilizada (si las monedas difieren)
 - Fecha
 - Notas (si se agregaron)
+
+Toca **Mostrar todo** para abrir el historial completo de transferencias.
+
+### Historial de transferencias
+
+La pantalla **Historial de transferencias** muestra una lista completa de todas tus transferencias entre cuentas. Accede tocando **Mostrar todo** en la seccion Transferencias recientes.
+
+Filtros disponibles:
+- **Cuenta** — filtrar por una cuenta de origen o destino especifica
+- **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
 
 ## Cambio de divisa
 
@@ -15740,12 +15856,22 @@ Cambia dinero entre tus billeteras de diferentes monedas:
 
 ### Cambios recientes
 
-Debajo del formulario de cambio, encontraras una lista de tus cambios de divisa recientes con:
+Debajo del formulario de cambio, encontraras los 5 cambios de divisa mas recientes con:
 - Monedas intercambiadas (Origen a Destino)
 - Importes
 - Tasa de cambio utilizada
 - Fecha
 - Notas (si se agregaron)
+
+Toca **Mostrar todo** para abrir el historial completo de cambios.
+
+### Historial de cambios
+
+La pantalla **Historial de cambios** muestra una lista completa de todos tus cambios de divisa. Accede tocando **Mostrar todo** en la seccion Cambios recientes.
+
+Filtros disponibles:
+- **Moneda** — filtrar por un par de monedas especifico
+- **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
 
 ## Monedas compatibles
 
@@ -18537,6 +18663,7 @@ La fonctionnalite Portefeuille vous permet de suivre vos soldes reels dans chaqu
 
 Accedez au Portefeuille depuis :
 - **Tableau de bord** — appuyez sur **Tout voir** a cote de la section Soldes du Portefeuille
+- **Tableau de bord** — appuyez sur le bouton d'action rapide **Transferts** pour un acces rapide aux transferts
 - **Parametres** — allez dans Portefeuille > **Soldes**
 
 Pour chaque devise, vous verrez :
@@ -18599,12 +18726,22 @@ Echangez de l'argent entre vos portefeuilles de devises :
 
 ### Changes recents
 
-Sous le formulaire de change, vous trouverez la liste de vos changes recents avec :
+Sous le formulaire de change, vous trouverez les 5 changes les plus recents avec :
 - Devises echangees (De vers Vers)
 - Montants
 - Taux de change utilise
 - Date
 - Notes (si ajoutees)
+
+Appuyez sur **Tout afficher** pour ouvrir l'historique complet des echanges.
+
+### Historique des echanges
+
+L'ecran **Historique des echanges** affiche la liste complete de tous vos changes de devises. Accedez-y en appuyant sur **Tout afficher** dans la section Changes recents.
+
+Filtres disponibles :
+- **Devise** — filtrer par une paire de devises specifique
+- **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
 
 ## Transferts entre comptes
 
@@ -18623,12 +18760,22 @@ Transferez de l'argent entre vos differents comptes (par ex. de Entreprise a Per
 
 ### Transferts recents
 
-Sous le formulaire de transfert, vous trouverez la liste de vos transferts recents avec :
+Sous le formulaire de transfert, vous trouverez les 5 transferts les plus recents avec :
 - Compte source et compte destination
 - Devise et montant
 - Taux de change utilise (si devises differentes)
 - Date
 - Notes (si ajoutees)
+
+Appuyez sur **Tout afficher** pour ouvrir l'historique complet des transferts.
+
+### Historique des transferts
+
+L'ecran **Historique des transferts** affiche la liste complete de tous vos transferts entre comptes. Accedez-y en appuyant sur **Tout afficher** dans la section Transferts recents.
+
+Filtres disponibles :
+- **Compte** — filtrer par un compte source ou destination specifique
+- **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
 
 ## Devises prises en charge
 
@@ -21420,6 +21567,7 @@ iOS, Android, Web
 
 Доступ да Кашалька:
 - **Галоўная** — націсніце **Паказаць усе** побач з секцыяй Баланс кашалька
+- **Галоўная** — націсніце кнопку хуткага дзеяння **Пераводы** для хуткага доступу да пераводаў
 - **Налады** — перайдзіце ў Кашалёк > **Балансы**
 
 Для кожнай валюты адлюстроўваецца:
@@ -21484,12 +21632,22 @@ iOS, Android, Web
 
 ### Апошнія абмены
 
-Пад формай абмену размешчаны спіс вашых апошніх абменаў валют з:
+Пад формай абмену размешчаны спіс 5 апошніх абменаў валют з:
 - Абменянымі валютамі (З -> У)
 - Сумамі
 - Выкарыстаным курсам абмену
 - Датай
 - Нататкамі (калі дададзены)
+
+Націсніце **Паказаць усё**, каб адкрыць поўную гісторыю абменаў.
+
+### Гісторыя абменаў
+
+Экран **Гісторыя абменаў** адлюстроўвае поўны спіс усіх вашых абменаў валют. Адкрыйце яго, націснуўшы **Паказаць усё** у раздзеле Апошнія абмены.
+
+Даступныя фільтры:
+- **Валюта** — фільтр па канкрэтнай валютнай пары
+- **Перыяд** — выберыце з: **За ўвесь час**, **Гэты месяц**, **Апошнія 3 месяцы** або **Гэты год**
 
 ## Пераводы паміж рахункамі
 
@@ -21508,12 +21666,22 @@ iOS, Android, Web
 
 ### Апошнія пераводы
 
-Пад формай пераводу размешчаны спіс вашых апошніх пераводаў паміж рахункамі з:
+Пад формай пераводу размешчаны спіс 5 апошніх пераводаў паміж рахункамі з:
 - Рахункам-адпраўніком і рахункам-атрымальнікам
 - Сумай і валютай
 - Курсам абмену (калі валюты адрозніваюцца)
 - Датай
 - Нататкамі (калі дададзены)
+
+Націсніце **Паказаць усё**, каб адкрыць поўную гісторыю пераводаў.
+
+### Гісторыя пераводаў
+
+Экран **Гісторыя пераводаў** адлюстроўвае поўны спіс усіх вашых пераводаў паміж рахункамі. Адкрыйце яго, націснуўшы **Паказаць усё** у раздзеле Апошнія пераводы.
+
+Даступныя фільтры:
+- **Рахунак** — фільтр па канкрэтным рахунку-адпраўніку або атрымальніку
+- **Перыяд** — выберыце з: **За ўвесь час**, **Гэты месяц**, **Апошнія 3 месяцы** або **Гэты год**
 
 ## Падтрыманыя валюты
 
