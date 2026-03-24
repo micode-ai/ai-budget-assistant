@@ -18,6 +18,18 @@ Le statut de la dette est calcule automatiquement :
 - **Payee** — la dette a ete entierement remboursee
 - **En retard** — la date d'echeance est passee et le solde est toujours impaye
 
+## Creer une dette
+
+Le moyen le plus rapide d'ajouter une dette est depuis l'ecran **Dettes et Prets** :
+
+1. Ouvrez l'ecran **Dettes et Prets** (depuis le widget du Tableau de bord ou les Parametres)
+2. Appuyez sur le bouton **+** dans le coin inferieur droit
+3. Choisissez **Preter de l'argent** ou **Emprunter de l'argent**
+4. Remplissez le montant, la description, le nom du contact et la date d'echeance optionnelle
+5. Appuyez sur **Enregistrer**
+
+Vous pouvez egalement creer des dettes manuellement depuis les formulaires de depenses ou de revenus (voir ci-dessous).
+
 ## Preter de l'argent
 
 ### Etape par etape
@@ -112,9 +124,10 @@ Appuyez sur une carte de dette pour voir les details complets de la depense ou d
 
 ## Widget sur le tableau de bord
 
-Quand vous avez des dettes actives, un widget apparait sur le Tableau de bord :
-- **On vous doit** — montant total restant du prete
-- **Vous devez** — montant total restant de l'emprunte
+Le widget Dettes et Prets est toujours visible sur le Tableau de bord (lorsqu'il est active dans les parametres de widgets) :
+
+- **Quand vous avez des dettes :** affiche les totaux «On vous doit» et «Vous devez», ainsi qu'un bouton **+** pour naviguer rapidement vers l'ecran Dettes et Prets
+- **Quand vous n'avez pas de dettes :** affiche un etat vide avec un bouton **Ajouter une dette** pour commencer
 
 Appuyez sur le widget pour aller directement a l'ecran Dettes et Prets.
 

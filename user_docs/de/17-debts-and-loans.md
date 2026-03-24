@@ -18,6 +18,18 @@ Der Schulden-Status wird automatisch berechnet:
 - **Bezahlt** — die Schuld ist vollstandig beglichen
 - **Uberfällig** — das Falligkeitsdatum ist uberschritten und der Betrag ist noch ausstehend
 
+## Schuld erstellen
+
+Der schnellste Weg, eine Schuld hinzuzufugen, ist uber den **Schulden & Darlehen** Bildschirm:
+
+1. Offne den **Schulden & Darlehen** Bildschirm (uber das Dashboard-Widget oder Einstellungen)
+2. Tippe auf die **+** Schaltflache in der unteren rechten Ecke
+3. Wahle **Geld verleihen** oder **Geld leihen**
+4. Fulle Betrag, Beschreibung, Kontaktname und optionales Falligkeitsdatum aus
+5. Tippe auf **Speichern**
+
+Du kannst Schulden auch manuell uber die Ausgaben- oder Einnahmeformulare erstellen (siehe unten).
+
 ## Geld verleihen
 
 ### Schritt fur Schritt
@@ -112,9 +124,10 @@ Tippe auf eine Schulden-Karte, um die vollstandigen Ausgaben- oder Einnahmedetai
 
 ## Dashboard-Widget
 
-Wenn du aktive Schulden hast, erscheint ein Widget auf dem Dashboard:
-- **Dir wird geschuldet** — Gesamtrestbetrag des Verliehenen
-- **Du schuldest** — Gesamtrestbetrag des Geliehenen
+Das Schulden & Darlehen Widget ist immer auf dem Dashboard sichtbar (wenn in den Widget-Einstellungen aktiviert):
+
+- **Wenn du Schulden hast:** zeigt die Summen «Dir wird geschuldet» und «Du schuldest» sowie eine **+** Schaltflache, um schnell zum Schulden & Darlehen Bildschirm zu navigieren
+- **Wenn du keine Schulden hast:** zeigt einen leeren Zustand mit einer **Schuld hinzufugen** Schaltflache, um loszulegen
 
 Tippe auf das Widget, um direkt zum Schulden & Darlehen Bildschirm zu gelangen.
 

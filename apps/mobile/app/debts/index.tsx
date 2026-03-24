@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, FlatList, RefreshControl, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, RefreshControl, ScrollView, Modal, Pressable } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router, Stack } from 'expo-router';
+import { router, Stack, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useDebtStore } from '@/stores/debtStore';
@@ -24,6 +24,7 @@ export default function DebtsScreen() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('lent');
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [refreshing, setRefreshing] = useState(false);
+  const [showAddSheet, setShowAddSheet] = useState(false);
 
   const {
     lentDebts,
@@ -41,6 +42,12 @@ export default function DebtsScreen() {
   useEffect(() => {
     loadDebts();
   }, [currentAccountId, loadDebts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadDebts();
+    }, [loadDebts]),
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -331,6 +338,58 @@ export default function DebtsScreen() {
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+      <TouchableOpacity
+        style={[styles.fab, { bottom: 90 + insets.bottom }]}
+        activeOpacity={0.85}
+        onPress={() => setShowAddSheet(true)}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
+
+      <Modal
+        visible={showAddSheet}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAddSheet(false)}
+      >
+        <Pressable style={styles.sheetOverlay} onPress={() => setShowAddSheet(false)}>
+          <View style={[styles.sheetContainer, { paddingBottom: 32 + insets.bottom }]}>
+            <View style={styles.sheetHandle} />
+            <Text style={styles.sheetTitle}>{t('debt.addDebt')}</Text>
+            <TouchableOpacity
+              style={styles.sheetOption}
+              onPress={() => {
+                setShowAddSheet(false);
+                router.push('/expense/new?isDebt=true');
+              }}
+            >
+              <View style={[styles.sheetIconCircle, { backgroundColor: theme.colors.primaryLight }]}>
+                <Ionicons name="arrow-up-circle-outline" size={24} color={theme.colors.success} />
+              </View>
+              <View style={styles.sheetOptionText}>
+                <Text style={styles.sheetOptionTitle}>{t('debt.lendMoney')}</Text>
+                <Text style={styles.sheetOptionSubtitle}>{t('debt.lendMoneyHint')}</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sheetOption}
+              onPress={() => {
+                setShowAddSheet(false);
+                router.push('/income/new?isDebt=true');
+              }}
+            >
+              <View style={[styles.sheetIconCircle, { backgroundColor: theme.colors.dangerLight }]}>
+                <Ionicons name="arrow-down-circle-outline" size={24} color={theme.colors.danger} />
+              </View>
+              <View style={styles.sheetOptionText}>
+                <Text style={styles.sheetOptionTitle}>{t('debt.borrowMoney')}</Text>
+                <Text style={styles.sheetOptionSubtitle}>{t('debt.borrowMoneyHint')}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </Modal>
+
       <View style={[styles.bottomTabBar, { paddingBottom: 8 + insets.bottom }]}>
         <TouchableOpacity style={styles.tabItem} onPress={() => router.replace('/(tabs)')}>
           <Ionicons name="home-outline" size={22} color={theme.colors.tabBarInactive} />
@@ -573,6 +632,72 @@ const createStyles = (theme: Theme) => ({
   // Separator
   separator: {
     height: theme.spacing[3],
+  },
+
+  // FAB
+  fab: {
+    position: 'absolute' as const,
+    right: theme.spacing[4],
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    ...theme.shadows.md,
+    zIndex: 10,
+  },
+
+  // Bottom sheet
+  sheetOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end' as const,
+  },
+  sheetContainer: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius['2xl'],
+    borderTopRightRadius: theme.borderRadius['2xl'],
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[8],
+  },
+  sheetHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.borderLight,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  sheetTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[4],
+  },
+  sheetOption: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[3],
+  },
+  sheetIconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  sheetOptionText: {
+    flex: 1,
+  },
+  sheetOptionTitle: {
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
+  },
+  sheetOptionSubtitle: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: 2,
   },
 
   // Bottom tab bar

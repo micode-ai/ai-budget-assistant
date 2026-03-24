@@ -24,12 +24,14 @@ import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function NewIncomeScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const params = useLocalSearchParams<{
+    isDebt?: string;
     isDebtRepayment?: string;
     relatedDebtExpenseId?: string;
     debtContactName?: string;
@@ -56,9 +58,10 @@ export default function NewIncomeScreen() {
   const [showCreateCategory, setShowCreateCategory] = useState(false);
 
   // Debt state
-  const [isDebt, setIsDebt] = useState(false);
+  const [isDebt, setIsDebt] = useState(params.isDebt === 'true');
   const [debtContactName, setDebtContactName] = useState(params.debtContactName || '');
   const [debtDueDate, setDebtDueDate] = useState<Date | null>(null);
+  const [showDebtDatePicker, setShowDebtDatePicker] = useState(false);
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
@@ -255,7 +258,12 @@ export default function NewIncomeScreen() {
                   <TouchableOpacity
                     style={styles.debtDateButton}
                     onPress={() => {
-                      setDebtDueDate(debtDueDate ? null : new Date(Date.now() + 30 * 86400000));
+                      if (debtDueDate) {
+                        setDebtDueDate(null);
+                        setShowDebtDatePicker(false);
+                      } else {
+                        setShowDebtDatePicker(true);
+                      }
                     }}
                   >
                     <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
@@ -268,6 +276,18 @@ export default function NewIncomeScreen() {
                       <Ionicons name="close-circle" size={16} color={theme.colors.textTertiary} />
                     )}
                   </TouchableOpacity>
+                  {showDebtDatePicker && (
+                    <DateTimePicker
+                      value={debtDueDate || new Date(Date.now() + 30 * 86400000)}
+                      mode="date"
+                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                      minimumDate={new Date()}
+                      onChange={(_event, selectedDate) => {
+                        if (Platform.OS === 'android') setShowDebtDatePicker(false);
+                        if (selectedDate) setDebtDueDate(selectedDate);
+                      }}
+                    />
+                  )}
                 </View>
               )}
             </View>
