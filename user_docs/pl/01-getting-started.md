@@ -45,7 +45,7 @@ Jeśli zapomniałeś hasła:
 Po pierwszym zalogowaniu zobaczysz ekran **Witamy**:
 
 - **Twoj darmowy plan zawiera:**
-  - 5 zapytan AI miesiecznie
+  - 50 zapytan AI miesiecznie
   - 3 konta osobiste
   - 1 czlonek
   - Pelne sledzenie wydatkow

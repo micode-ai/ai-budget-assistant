@@ -8,70 +8,63 @@ AI Budget Assistant propose trois niveaux d'abonnement. Chaque nouvel utilisateu
 
 ## Comparaison des plans
 
+Toutes les fonctionnalités sont disponibles sur chaque forfait. Les forfaits diffèrent uniquement par les limites d'utilisation :
+
 | Fonctionnalite | Gratuit | Pro | Business |
 |---|---|---|---|
-| **Requetes IA par mois** | 5 | 200 | Illimite |
+| **Requetes IA par mois** | 50 | 300 | Illimite |
 | **Comptes** | 3 | Jusqu'a 5 | Illimite |
 | **Membres par compte** | 1 | Jusqu'a 5 | Illimite |
-| **Suivi des depenses** | Complet | Complet | Complet |
-| **Analyses predictives** | — | Oui | Oui |
-| **Detection d'anomalies de depenses** | — | Oui | Oui |
-| **Devises illimitees** | — | Oui | Oui |
-| **Histoire des depenses** | — | Oui | Oui |
-| **Aperçus IA** | — | Oui | Oui |
-| **Export CSV** | Oui | Oui | Oui |
-| **Rapports PDF/Excel** | — | Oui | Oui |
-| **Resume mensuel** | — | Oui | Oui |
-| **Rapport hebdomadaire par email** | — | — | Oui |
-| **Resume mensuel par email** | — | Oui | Oui |
-| **Sauvegarde chiffree** | Oui | Oui | Oui |
-| **Rapports avances** | — | — | Oui |
+| **Toutes les fonctionnalités** | Oui | Oui | Oui |
+
+> Tous les utilisateurs ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, Histoire des depenses, Fat Finder, Apercus IA, analyses predictives, detection d'anomalies, rapports PDF/Excel, rapport hebdomadaire par email, resume mensuel, sauvegardes chiffrees et toutes les devises.
 
 ## Plan Gratuit
 
 Votre plan de depart inclut :
-- **5 requetes IA par mois** — utilisez le Chat IA, la Saisie vocale et le Scan de recus
-- **3 comptes personnels**
+- **50 requetes IA par mois** — utilisez le Chat IA, la Saisie vocale et le Scan de recus
+- **3 comptes**
 - **1 membre** (vous)
-- **Suivi complet des depenses** — saisie manuelle, categories, etiquettes, projets, budgets, analyses
+- **Toutes les fonctionnalités** — aucune restriction de fonctionnalité
 
 ## Plan Pro
 
-Tout ce qui est inclus dans le plan Gratuit, plus :
-- **200 requetes IA par mois**
+Avec des limites plus élevées :
+- **300 requetes IA par mois**
 - **Jusqu'a 5 comptes** — gerez vos finances personnelles, partagees et professionnelles
 - **Jusqu'a 5 membres par compte** — collaborez avec votre famille ou votre equipe
-- **Analyses predictives** — previsions budgetaires et projections de depenses
-- **Detection d'anomalies de depenses** — alertes IA pour les depenses inhabituelles
-- **Devises illimitees** — utilisez les 7 devises sans restrictions
-- **Histoire des depenses** — rapports financiers narratifs generes par l'IA
-- **Aperçus IA** — recommandations personnalisees dans les Analyses
 
 ### Essai gratuit de 7 jours
 Essayez le plan Pro gratuitement pendant 7 jours. Annulez a tout moment avant la fin de l'essai pour eviter les frais.
 
 ## Plan Business
 
-Tout ce qui est inclus dans le plan Pro, plus :
+Sans limites :
 - **Requetes IA illimitees**
 - **Comptes illimites**
 - **Membres illimites**
-- **Rapports avances** — rapports detailles et exports
 
 ## Utilisation de l'IA
 
-Suivez votre utilisation de l'IA depuis Parametres > Abonnement :
+Suivez votre utilisation AI depuis Paramètres > Abonnement :
 
-- **Utilisation ce mois-ci** — affiche le nombre de requetes IA utilisees (par ex. "3 sur 5")
+- **Utilisation ce mois** — indique le nombre de requêtes AI utilisées (ex. : « 3 sur 50 »)
 - **Barre de progression** — indicateur visuel d'utilisation
-- Se reinitialise au debut de chaque mois
+- Réinitialisé au début de chaque mois
+- **Compteur AI** — un compteur compact (ex. : « 12/50 AI ») est affiché sur tous les écrans avec fonctions AI : Chat AI, Histoire des dépenses, Fat Finder, Analytique (AI Insights) et Insights investissements. Appuyez dessus pour voir votre abonnement.
 
-### Ce qui compte comme une requete IA :
-- Envoyer un message dans le **Chat IA**
-- Utiliser la **Saisie vocale** pour ajouter une depense
-- **Scanner un recu**
-- Generer une **Histoire des depenses**
-- Obtenir des **Aperçus IA** dans les Analyses
+### Confirmation à la première utilisation
+
+Lorsque vous utilisez une fonction AI coûteuse (Histoire des dépenses, Fat Finder, AI Insights, Insights investissements) pour la première fois, l'application affiche une boîte de dialogue de confirmation avec le coût et votre solde restant. Vous pouvez choisir « Ne plus demander » pour ignorer les confirmations futures pour cette fonction.
+
+### Ce qui compte comme requête AI :
+- Envoyer un message dans le **Chat AI** (1 requête)
+- Utiliser la **Saisie vocale** pour ajouter une dépense (1 requête)
+- **Scanner un reçu** (2 requêtes)
+- Générer une **Histoire des dépenses** (3 requêtes)
+- Exécuter **Fat Finder** (3 requêtes)
+- Obtenir des **AI Insights** dans Analytique (2 requêtes)
+- **Insights investissements** (2,5 requêtes)
 
 ## Gerer votre abonnement
 

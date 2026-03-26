@@ -94,7 +94,7 @@ Wybierz model AI dla wszystkich funkcji AI (Czat, Skanowanie paragonow, Kategory
 | ⚖️ **Balanced** | Sredni | ×1 limitu | Ogolne uzytkowanie — domyslny |
 | ✨ **Quality** | Wolniejszy | ×1.5 limitu | Zlozona analiza, szczegolowe wyniki |
 
-> **Wskazowka:** W planie Free (5 zapytan AI/miesiac) przelaczenie na **Fast** daje ~6.7 efektywnych zapytan. Przelaczenie na **Quality** daje ~3.3.
+> **Wskazowka:** W planie Free (50 zapytan AI/miesiac) przelaczenie na **Fast** daje ~66.7 efektywnych zapytan. Przelaczenie na **Quality** daje ~33.3.
 
 Dotknij element, aby zmienic. Model dziala natychmiast dla wszystkich nowych zapytan AI.
 

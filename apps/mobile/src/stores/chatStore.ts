@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { ChatConversation, ChatPendingAction, ChatActionResult } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import { api } from '@/services/api';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import i18n from '@/i18n';
 
 // Re-export ChatMessage type for use in components
@@ -85,6 +86,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         messages: [...state.messages, assistantMessage],
         isLoading: false,
       }));
+
+      // Refresh AI usage counter
+      useSubscriptionStore.getState().loadUsage();
     } catch (error) {
       // Add error message to chat
       const errorMessage: ChatMessage = {

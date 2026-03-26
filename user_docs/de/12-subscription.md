@@ -8,70 +8,63 @@ AI Budget Assistant bietet drei Abonnementstufen. Jeder neue Nutzer startet mit 
 
 ## Planuberblick
 
+Alle Funktionen sind in jedem Tarif verfügbar. Tarife unterscheiden sich nur in den Nutzungslimits:
+
 | Funktion | Free | Pro | Business |
 |---|---|---|---|
-| **KI-Anfragen pro Monat** | 5 | 200 | Unbegrenzt |
+| **KI-Anfragen pro Monat** | 50 | 300 | Unbegrenzt |
 | **Konten** | 3 | Bis zu 5 | Unbegrenzt |
 | **Mitglieder pro Konto** | 1 | Bis zu 5 | Unbegrenzt |
-| **Ausgabenverfolgung** | Vollstandig | Vollstandig | Vollstandig |
-| **CSV-Export** | Ja | Ja | Ja |
-| **PDF/Excel-Berichte** | — | Ja | Ja |
-| **Monatliche Zusammenfassung** | — | Ja | Ja |
-| **Wöchentlicher E-Mail-Bericht** | — | — | Ja |
-| **E-Mail-Zusammenfassung** | — | Ja | Ja |
-| **Verschlüsseltes Backup** | Ja | Ja | Ja |
-| **Pradiktive Analysen** | — | Ja | Ja |
-| **Erkennung von Ausgabenauffalligkeit** | — | Ja | Ja |
-| **Unbegrenzte Wahrungen** | — | Ja | Ja |
-| **Ausgabengeschichte** | — | Ja | Ja |
-| **KI-Einblicke** | — | Ja | Ja |
-| **Erweiterte Berichte** | — | — | Ja |
+| **Alle Funktionen** | Ja | Ja | Ja |
+
+> Alle Nutzer haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Ausgabengeschichte, Fat Finder, KI-Einblicke, pradiktive Analysen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, wochentlicher E-Mail-Bericht, monatliche Zusammenfassung, verschlusselte Backups und alle Wahrungen.
 
 ## Free-Plan
 
 Dein Einstiegsplan beinhaltet:
-- **5 KI-Anfragen pro Monat** — nutze KI-Chat, Spracheingabe, Beleg scannen
-- **3 personliche Konten**
+- **50 KI-Anfragen pro Monat** — nutze KI-Chat, Spracheingabe, Beleg scannen
+- **3 Konten**
 - **1 Mitglied** (du)
-- **Vollstandige Ausgabenverfolgung** — Manuelle Eingabe, Kategorien, Tags, Projekte, Budgets, Analysen
+- **Alle Funktionen** — keine Funktionseinschränkungen
 
 ## Pro-Plan
 
-Alles aus dem Free-Plan, plus:
-- **200 KI-Anfragen pro Monat**
+Mit höheren Limits:
+- **300 KI-Anfragen pro Monat**
 - **Bis zu 5 Konten** — personliche, gemeinsame und geschaftliche Finanzen verwalten
 - **Bis zu 5 Mitglieder pro Konto** — mit Familie oder Team zusammenarbeiten
-- **Pradiktive Analysen** — Budgetprognosen und Ausgabenprojektionen
-- **Erkennung von Ausgabenauffalligkeit** — KI-Warnungen bei ungewohnlichen Ausgaben
-- **Unbegrenzte Wahrungen** — alle 7 Wahrungen ohne Einschrankungen verwenden
-- **Ausgabengeschichte** — KI-generierte narrative Finanzberichte
-- **KI-Einblicke** — personalisierte Empfehlungen in den Analysen
 
 ### 7-tagige kostenlose Testversion
 Probiere Pro 7 Tage kostenlos aus. Kundige jederzeit vor Ende der Testversion, um Kosten zu vermeiden.
 
 ## Business-Plan
 
-Alles aus dem Pro-Plan, plus:
+Ohne Limits:
 - **Unbegrenzte KI-Anfragen**
 - **Unbegrenzte Konten**
 - **Unbegrenzte Mitglieder**
-- **Erweiterte Berichte** — detaillierte Berichte und Exporte
 
 ## KI-Nutzung
 
-Verfolge deine KI-Nutzung uber Einstellungen > Abonnement:
+Verfolgen Sie Ihre AI-Nutzung unter Einstellungen > Abonnement:
 
-- **Nutzung diesen Monat** — zeigt, wie viele KI-Anfragen du verwendet hast (z.B. "3 von 5")
+- **Nutzung diesen Monat** — zeigt die Anzahl der verwendeten AI-Anfragen (z.B. „3 von 50")
 - **Fortschrittsbalken** — visuelle Anzeige der Nutzung
-- Wird zu Beginn jedes Monats zuruckgesetzt
+- Wird am Anfang jedes Monats zurückgesetzt
+- **AI-Zähler** — ein kompakter Zähler (z.B. „12/50 AI") wird auf allen AI-Bildschirmen angezeigt: AI-Chat, Ausgabengeschichte, Fat Finder, Analytik (AI-Einblicke) und Investitionseinblicke. Tippen Sie darauf, um Ihr Abonnement anzuzeigen.
 
-### Was als KI-Anfrage zahlt:
-- Senden einer Nachricht im **KI-Chat**
-- Verwendung von **Spracheingabe** zum Hinzufugen einer Ausgabe
-- **Beleg scannen**
-- Generierung einer **Ausgabengeschichte**
-- Abrufen von **KI-Einblicken** in den Analysen
+### Bestätigung bei Erstnutzung
+
+Wenn Sie eine teure AI-Funktion (Ausgabengeschichte, Fat Finder, AI-Einblicke, Investitionseinblicke) zum ersten Mal verwenden, zeigt die App einen Bestätigungsdialog mit den Kosten und Ihrem verbleibenden Guthaben. Sie können „Nicht erneut fragen" wählen, um zukünftige Bestätigungen für diese Funktion zu überspringen.
+
+### Was zählt als AI-Anfrage:
+- Senden einer Nachricht im **AI-Chat** (1 Anfrage)
+- Verwendung der **Spracheingabe** zum Hinzufügen einer Ausgabe (1 Anfrage)
+- **Belegscan** (2 Anfragen)
+- Generierung einer **Ausgabengeschichte** (3 Anfragen)
+- Ausführung von **Fat Finder** (3 Anfragen)
+- Abrufen von **AI-Einblicken** in der Analytik (2 Anfragen)
+- **Investitionseinblicke** (2,5 Anfragen)
 
 ## Abonnement verwalten
 

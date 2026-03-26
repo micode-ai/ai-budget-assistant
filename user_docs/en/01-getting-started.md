@@ -45,7 +45,7 @@ If you forgot your password:
 After your first login, you'll see the **Welcome** screen:
 
 - **Your free plan includes:**
-  - 5 AI requests per month
+  - 50 AI requests per month
   - 3 personal accounts
   - 1 member
   - Full expense tracking

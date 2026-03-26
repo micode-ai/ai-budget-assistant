@@ -845,6 +845,21 @@ class ApiClient {
     return this.request<UsageStatsDto>('/subscriptions/usage');
   }
 
+  async getUsageDetails(month?: number, year?: number) {
+    const params = new URLSearchParams();
+    if (month) params.set('month', String(month));
+    if (year) params.set('year', String(year));
+    const query = params.toString();
+    return this.request<{
+      month: number;
+      year: number;
+      totalCost: number;
+      totalRequests: number;
+      summary: Array<{ feature: string; count: number; totalCost: number }>;
+      logs: Array<{ id: string; feature: string; cost: number; date: string }>;
+    }>(`/subscriptions/usage/details${query ? `?${query}` : ''}`);
+  }
+
   async createCheckoutSession(priceId: string, successUrl: string, cancelUrl: string) {
     return this.request<CheckoutSessionResponse>('/subscriptions/checkout', {
       method: 'POST',

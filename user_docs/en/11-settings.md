@@ -94,7 +94,7 @@ Choose the AI model used for all AI features (Chat, Receipt Scanning, Categoriza
 | ⚖️ **Balanced** | Medium | ×1 quota | General use — the default |
 | ✨ **Quality** | Slower | ×1.5 quota | Complex analysis, detailed insights |
 
-> **Tip:** With the Free plan (5 AI requests/month), switching to **Fast** gives you ~6.7 effective requests. Switching to **Quality** gives you ~3.3.
+> **Tip:** With the Free plan (50 AI requests/month), switching to **Fast** gives you ~66.7 effective requests. Switching to **Quality** gives you ~33.3.
 
 Tap a chip to change. The model takes effect immediately for all new AI requests.
 

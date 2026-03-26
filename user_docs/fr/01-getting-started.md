@@ -45,7 +45,7 @@ Si vous avez oublié votre mot de passe :
 Apres votre premiere connexion, vous verrez l'ecran **Bienvenue** :
 
 - **Votre plan gratuit inclut :**
-  - 5 requetes IA par mois
+  - 50 requetes IA par mois
   - 3 comptes personnels
   - 1 membre
   - Suivi complet des depenses

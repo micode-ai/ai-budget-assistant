@@ -46,8 +46,6 @@ export class ReportsController {
   }
 
   @Get('monthly-digest')
-  @UseGuards(SubscriptionTierGuard)
-  @RequireTier('pro')
   async getMonthlyDigest(
     @Req() req: AuthenticatedRequest,
     @Query('month') month: string,
@@ -56,8 +54,6 @@ export class ReportsController {
   }
 
   @Post('trigger-weekly')
-  @UseGuards(SubscriptionTierGuard)
-  @RequireTier('business')
   async triggerWeeklyEmail(@Req() req: AuthenticatedRequest) {
     await this.schedulerService.processWeeklyEmailsForUser(req.user.id);
     return { success: true };

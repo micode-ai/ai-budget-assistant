@@ -13,8 +13,8 @@ type SubscriptionTier = 'free' | 'pro' | 'business';
 type SubscriptionRecord = NonNullable<Awaited<ReturnType<PrismaService['subscription']['findUnique']>>>;
 
 const AI_REQUEST_LIMITS: Record<SubscriptionTier, number> = {
-  free: 5,
-  pro: 200,
+  free: 50,
+  pro: 300,
   business: Infinity,
 };
 
@@ -253,6 +253,55 @@ export class SubscriptionsService {
     });
 
     return { url: session.url };
+  }
+
+  async getUsageDetails(userId: string, month: number, year: number) {
+    const periodStart = new Date(year, month - 1, 1);
+    const periodEnd = new Date(year, month, 0, 23, 59, 59, 999);
+
+    const logs = await this.prisma.usageLog.findMany({
+      where: {
+        userId,
+        createdAt: { gte: periodStart, lte: periodEnd },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        featureType: true,
+        costUnits: true,
+        createdAt: true,
+      },
+    });
+
+    // Aggregate by feature type
+    const byFeature: Record<string, { count: number; totalCost: number }> = {};
+    for (const log of logs) {
+      if (!byFeature[log.featureType]) {
+        byFeature[log.featureType] = { count: 0, totalCost: 0 };
+      }
+      byFeature[log.featureType].count++;
+      byFeature[log.featureType].totalCost += log.costUnits;
+    }
+
+    const summary = Object.entries(byFeature).map(([feature, data]) => ({
+      feature,
+      count: data.count,
+      totalCost: data.totalCost,
+    })).sort((a, b) => b.totalCost - a.totalCost);
+
+    return {
+      month,
+      year,
+      totalCost: logs.reduce((sum, l) => sum + l.costUnits, 0),
+      totalRequests: logs.length,
+      summary,
+      logs: logs.map((l) => ({
+        id: l.id,
+        feature: l.featureType,
+        cost: l.costUnits,
+        date: l.createdAt.toISOString(),
+      })),
+    };
   }
 
   // ---- Usage Tracking ----

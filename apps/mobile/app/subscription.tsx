@@ -92,7 +92,7 @@ export default function SubscriptionScreen() {
   };
 
   const proFeatures: PlanFeature[] = [
-    { icon: 'sparkles-outline', text: t('subscription.features.aiRequests200') },
+    { icon: 'sparkles-outline', text: t('subscription.features.aiRequests300') },
     { icon: 'people-outline', text: t('subscription.features.accounts5') },
     { icon: 'person-add-outline', text: t('subscription.features.members5') },
     { icon: 'analytics-outline', text: t('subscription.features.predictiveAnalytics') },
@@ -187,6 +187,13 @@ export default function SubscriptionScreen() {
                   {t('subscription.trialLimitNote')}
                 </Text>
               )}
+              <TouchableOpacity
+                style={styles.usageDetailsButton}
+                onPress={() => router.push('/settings/ai-usage-details' as any)}
+              >
+                <Text style={styles.usageDetailsText}>{t('subscription.viewDetails')}</Text>
+                <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -352,6 +359,21 @@ const createStyles = (theme: Theme) => ({
     fontSize: 12,
     color: theme.colors.warning,
     marginTop: 8,
+  },
+  usageDetailsButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+    gap: 4,
+  },
+  usageDetailsText: {
+    fontSize: 14,
+    fontWeight: '500' as const,
+    color: theme.colors.primary,
   },
 
   // Plan cards

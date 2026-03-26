@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import type { AIInsightChart, FatFinderReport } from '@budget/shared-types';
 
 interface InsightsState {
@@ -69,6 +70,7 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
         fatFinderReport: response.report,
         fatFinderLoading: false,
       });
+      useSubscriptionStore.getState().loadUsage();
     } catch (err) {
       set({
         fatFinderLoading: false,

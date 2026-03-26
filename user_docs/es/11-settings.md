@@ -94,7 +94,7 @@ Elige el modelo de IA para todas las funciones de IA (Chat, Escaneo de recibos, 
 | ⚖️ **Balanced** | Medio | ×1 cuota | Uso general — predeterminado |
 | ✨ **Quality** | Mas lento | ×1.5 cuota | Analisis complejos, analisis detallados |
 
-> **Consejo:** Con el plan Free (5 solicitudes de IA/mes), cambiar a **Fast** da ~6.7 solicitudes efectivas. Cambiar a **Quality** da ~3.3.
+> **Consejo:** Con el plan Free (50 solicitudes de IA/mes), cambiar a **Fast** da ~66.7 solicitudes efectivas. Cambiar a **Quality** da ~33.3.
 
 Toca una ficha para cambiar. El modelo surte efecto de inmediato para todas las nuevas solicitudes de IA.
 

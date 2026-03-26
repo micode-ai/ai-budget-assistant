@@ -94,7 +94,7 @@ Choisissez le modele d'IA pour toutes les fonctionnalites IA (Chat, Scan de recu
 | ⚖️ **Balanced** | Moyen | ×1 quota | Usage general — par defaut |
 | ✨ **Quality** | Plus lent | ×1.5 quota | Analyses complexes, aperçus detailles |
 
-> **Conseil :** Avec le plan Free (5 requetes IA/mois), passer en **Fast** donne ~6.7 requetes effectives. Passer en **Quality** donne ~3.3.
+> **Conseil :** Avec le plan Free (50 requetes IA/mois), passer en **Fast** donne ~66.7 requetes effectives. Passer en **Quality** donne ~33.3.
 
 Appuyez sur une pastille pour changer. Le modele prend effet immediatement pour toutes les nouvelles requetes IA.
 

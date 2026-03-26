@@ -62,7 +62,7 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
   trialEnd: undefined,
 
   aiRequestsUsed: 0,
-  aiRequestsLimit: 5,
+  aiRequestsLimit: 50,
   usageResetAt: undefined,
   percentUsed: 0,
   isTrialing: false,
@@ -189,7 +189,7 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
       cancelAtPeriodEnd: false,
       trialEnd: undefined,
       aiRequestsUsed: 0,
-      aiRequestsLimit: 5,
+      aiRequestsLimit: 50,
       usageResetAt: undefined,
       percentUsed: 0,
       isTrialing: false,

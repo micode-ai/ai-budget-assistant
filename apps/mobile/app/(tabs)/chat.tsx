@@ -18,6 +18,7 @@ import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { ActionConfirmationCard, ActionResultCard } from '@/components/chat';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
 import * as Clipboard from 'expo-clipboard';
 
 export default function ChatScreen() {
@@ -280,6 +281,10 @@ export default function ChatScreen() {
           </View>
         )}
 
+        <View style={styles.usageBadgeRow}>
+          <AiUsageBadge />
+        </View>
+
         <View style={styles.inputContainer}>
           <TouchableOpacity
             style={[styles.voiceButton, isRecording && styles.voiceButtonActive]}
@@ -430,6 +435,10 @@ const createStyles = (theme: Theme) => ({
   loadingText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
+  },
+  usageBadgeRow: {
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[1],
   },
   inputContainer: {
     flexDirection: 'row' as const,

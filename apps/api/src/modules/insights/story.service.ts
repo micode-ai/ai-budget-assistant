@@ -3,8 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { BudgetsService } from '../budgets/budgets.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { translateUncategorized, localizeStoryBlocks } from '../../common/utils/translate';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
+import { getAiCostMultiplier } from '../ai/services/model-resolver';
 
 @Injectable()
 export class StoryService {
@@ -15,6 +17,7 @@ export class StoryService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly budgetsService: BudgetsService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -95,11 +98,15 @@ export class StoryService {
       }
     }
 
-    // Fetch response mode
+    // Fetch response mode and track AI usage (only on actual generation, not cache hit)
     let responseMode: AiResponseMode = 'balanced';
+    let aiModel: string | null = null;
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+      aiModel = user?.aiModel || null;
+      const adjustedCost = 3.0 * getAiCostMultiplier(aiModel ?? undefined);
+      await this.subscriptionsService.trackAiUsage(userId, 'story', adjustedCost, accountId);
     }
 
     return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode);

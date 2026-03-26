@@ -45,7 +45,7 @@ Wenn Sie Ihr Passwort vergessen haben:
 Nach deiner ersten Anmeldung siehst du den **Willkommen**-Bildschirm:
 
 - **Dein kostenloser Plan beinhaltet:**
-  - 5 KI-Anfragen pro Monat
+  - 50 KI-Anfragen pro Monat
   - 1 personliches Konto
   - 1 Mitglied
   - Vollstandige Ausgabenverfolgung
