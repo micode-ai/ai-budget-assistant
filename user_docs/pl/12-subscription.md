@@ -8,70 +8,63 @@ AI Budget Assistant oferuje trzy poziomy subskrypcji. Kazdy nowy uzytkownik zacz
 
 ## Porownanie planow
 
+Wszystkie funkcje są dostępne w każdym planie. Plany różnią się tylko limitami użycia:
+
 | Funkcja | Free | Pro | Business |
 |---|---|---|---|
-| **Zapytania AI miesiecznie** | 5 | 200 | Bez limitu |
+| **Zapytania AI miesiecznie** | 50 | 300 | Bez limitu |
 | **Konta** | 3 | Do 5 | Bez limitu |
 | **Czlonkowie na konto** | 1 | Do 5 | Bez limitu |
-| **Sledzenie wydatkow** | Pelne | Pelne | Pelne |
-| **Analityka predykcyjna** | — | Tak | Tak |
-| **Wykrywanie anomalii wydatkow** | — | Tak | Tak |
-| **Nieograniczone waluty** | — | Tak | Tak |
-| **Historia wydatkow** | — | Tak | Tak |
-| **Wnioski AI** | — | Tak | Tak |
-| **Eksport CSV** | Tak | Tak | Tak |
-| **Raporty PDF/Excel** | — | Tak | Tak |
-| **Podsumowanie miesieczne** | — | Tak | Tak |
-| **Tygodniowy raport e-mail** | — | — | Tak |
-| **Miesieczny raport e-mail** | — | Tak | Tak |
-| **Zaszyfrowana kopia zapasowa** | Tak | Tak | Tak |
-| **Zaawansowane raporty** | — | — | Tak |
+| **Wszystkie funkcje** | Tak | Tak | Tak |
+
+> Wszyscy uzytkownicy maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, Historii wydatkow, Fat Finder, Wnioskow AI, analityki predykcyjnej, wykrywania anomalii, raportow PDF/Excel, tygodniowych raportow e-mail, miesiecznego podsumowania, zaszyfrowanych kopii zapasowych i wszystkich walut.
 
 ## Plan Free
 
 Twoj startowy plan obejmuje:
-- **5 zapytan AI miesiecznie** — uzyj Czatu AI, Wprowadzania glosowego, Skanowania paragonow
-- **3 konta osobiste**
+- **50 zapytan AI miesiecznie** — uzyj Czatu AI, Wprowadzania glosowego, Skanowania paragonow
+- **3 konta**
 - **1 czlonek** (Ty)
-- **Pelne sledzenie wydatkow** — reczne wprowadzanie, kategorie, tagi, projekty, budzety, analityka
+- **Wszystkie funkcje** — bez ograniczeń funkcjonalności
 
 ## Plan Pro
 
-Wszystko z Free, plus:
-- **200 zapytan AI miesiecznie**
+Ze zwiększonymi limitami:
+- **300 zapytan AI miesiecznie**
 - **Do 5 kont** — zarzadzaj finansami osobistymi, wspolnymi i firmowymi
 - **Do 5 czlonkow na konto** — wspolpracuj z rodzina lub zespolem
-- **Analityka predykcyjna** — prognozy budzetowe i projekcje wydatkow
-- **Wykrywanie anomalii wydatkow** — alerty AI o nietypowych wydatkach
-- **Nieograniczone waluty** — uzyj wszystkich 7 walut bez ograniczen
-- **Historia wydatkow** — narracyjne raporty finansowe generowane przez AI
-- **Wnioski AI** — spersonalizowane rekomendacje w Analityce
 
 ### 7-dniowy bezplatny okres probny
 Wyprobuj Pro za darmo przez 7 dni. Anuluj w dowolnym momencie przed koncem okresu probnego, aby uniknac oplat.
 
 ## Plan Business
 
-Wszystko z Pro, plus:
+Bez limitów:
 - **Nieograniczone zapytania AI**
 - **Nieograniczone konta**
 - **Nieograniczeni czlonkowie**
-- **Zaawansowane raporty** — szczegolowe raporty i eksporty
 
 ## Uzycie AI
 
-Sledz uzycie AI z poziomu Ustawienia > Subskrypcja:
+Śledź swoje użycie AI w Ustawienia > Subskrypcja:
 
-- **Wykorzystanie w tym miesiacu** — pokazuje, ile zapytan AI zuzyles (np. "3 z 5")
-- **Pasek postepu** — wizualny wskaznik uzycia
-- Resetuje sie na poczatku kazdego miesiaca
+- **Użycie w tym miesiącu** — pokazuje liczbę wykorzystanych zapytań AI (np. „3 z 50")
+- **Pasek postępu** — wizualny wskaźnik użycia
+- Resetuje się na początku każdego miesiąca
+- **Licznik AI** — kompaktowy licznik (np. „12/50 AI") wyświetlany na wszystkich ekranach z funkcjami AI: Chat AI, Historia wydatków, Fat Finder, Analityka (AI Insights) i Insights inwestycyjne. Dotknij go, aby zobaczyć swoją subskrypcję.
 
-### Co liczy sie jako zapytanie AI:
-- Wyslanie wiadomosci w **Czacie AI**
-- Uzycie **Wprowadzania glosowego** do dodania wydatku
-- **Skanowanie paragonu**
-- Generowanie **Historii wydatkow**
-- Uzyskiwanie **Wnioskow AI** w Analityce
+### Potwierdzenie przy pierwszym użyciu
+
+Gdy po raz pierwszy używasz kosztownej funkcji AI (Historia wydatków, Fat Finder, AI Insights, Insights inwestycyjne), aplikacja wyświetla dialog potwierdzenia z kosztem i pozostałym saldem. Możesz wybrać „Nie pytaj ponownie", aby pominąć przyszłe potwierdzenia dla tej funkcji.
+
+### Co liczy się jako zapytanie AI:
+- Wysłanie wiadomości w **Czacie AI** (1 zapytanie)
+- Użycie **Wprowadzania głosowego** do dodania wydatku (1 zapytanie)
+- **Skanowanie paragonu** (2 zapytania)
+- Generowanie **Historii wydatków** (3 zapytania)
+- Uruchomienie **Fat Finder** (3 zapytania)
+- Uzyskanie **AI Insights** w Analityce (2 zapytania)
+- **Insights inwestycyjne** (2,5 zapytania)
 
 ## Zarzadzanie subskrypcja
 

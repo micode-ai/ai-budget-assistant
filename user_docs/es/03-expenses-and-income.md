@@ -101,7 +101,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
 - **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
 - **Articulos del recibo** — articulos individuales (para recibos escaneados)
-- **Imagen del recibo** — ver, descargar, reemplazar o eliminar la foto del recibo
+- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo
 
 ### Acciones en los detalles del gasto:
 - **Editar** — modificar el gasto

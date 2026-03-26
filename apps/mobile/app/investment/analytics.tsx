@@ -8,6 +8,7 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useInvestmentStore } from '@/stores/investmentStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { InsightCarousel } from '@/components/insights/InsightCarousel';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
 import type { PortfolioAnalyticsResponse } from '@budget/shared-types';
 
 type Period = '1W' | '1M' | '3M' | '1Y' | 'All';
@@ -34,7 +35,6 @@ export default function PortfolioAnalyticsScreen() {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const isPremium = useSubscriptionStore((s) => s.isPaid());
   const loadSubscription = useSubscriptionStore((s) => s.loadSubscription);
 
   // AI Insights
@@ -51,12 +51,9 @@ export default function PortfolioAnalyticsScreen() {
     loadSubscription();
   }, [loadSubscription]);
 
-  // Load AI insights for Pro users
   useEffect(() => {
-    if (isPremium) {
-      loadInvestmentInsights(i18n.language);
-    }
-  }, [isPremium, loadInvestmentInsights, i18n.language]);
+    loadInvestmentInsights(i18n.language);
+  }, [loadInvestmentInsights, i18n.language]);
 
   // Load main analytics (without benchmark) on period change
   useEffect(() => {
@@ -66,16 +63,16 @@ export default function PortfolioAnalyticsScreen() {
 
   // Load benchmark separately when benchmark changes
   useEffect(() => {
-    if (isPremium && selectedBenchmark) {
+    if (selectedBenchmark) {
       fetchBenchmark();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBenchmark, isPremium]);
+  }, [selectedBenchmark]);
 
   const fetchAnalytics = async (includeBenchmark: boolean = false) => {
     setLoading(true);
     try {
-      const benchmark = includeBenchmark && isPremium ? selectedBenchmark : undefined;
+      const benchmark = includeBenchmark ? selectedBenchmark : undefined;
       const data = await api.getPortfolioAnalytics(PERIOD_MAP[selectedPeriod], benchmark);
       setAnalytics(data);
     } catch (e) {
@@ -246,19 +243,19 @@ export default function PortfolioAnalyticsScreen() {
         <Text style={styles.title}>{t('investments.analytics')}</Text>
 
         {/* AI Insights Carousel (Pro+) */}
-        {isPremium && (
-          <View style={styles.insightsSection}>
-            <View style={styles.insightsHeader}>
-              <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
-              <Text style={styles.insightsTitle}>{t('investments.insights.title')}</Text>
-            </View>
-            <InsightCarousel
-              insights={aiInsights}
-              isLoading={insightsLoading}
-              onDismiss={dismissInsight}
-            />
+        <View style={styles.insightsSection}>
+          <View style={styles.insightsHeader}>
+            <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
+            <Text style={styles.insightsTitle}>{t('investments.insights.title')}</Text>
+            <View style={{ flex: 1 }} />
+            <AiUsageBadge />
           </View>
-        )}
+          <InsightCarousel
+            insights={aiInsights}
+            isLoading={insightsLoading}
+            onDismiss={dismissInsight}
+          />
+        </View>
 
         {/* Period Selector */}
         <View style={styles.periodSelector}>
@@ -410,25 +407,12 @@ export default function PortfolioAnalyticsScreen() {
               </TouchableOpacity>
             )}
 
-            {/* Benchmark Comparison (Pro+) */}
-            <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => isPremium && setFormulaModal('benchmark')}>
+            {/* Benchmark Comparison */}
+            <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => setFormulaModal('benchmark')}>
               <View style={styles.cardTitleRow}>
                 <Text style={styles.cardTitle}>{t('investments.benchmarkComparison')}</Text>
-                {isPremium && <Ionicons name="information-circle-outline" size={20} color={theme.colors.textTertiary} />}
-                {!isPremium && (
-                  <View style={styles.proBadge}>
-                    <Ionicons name="star" size={12} color={theme.colors.warning} />
-                    <Text style={styles.proBadgeText}>Pro+</Text>
-                  </View>
-                )}
+                <Ionicons name="information-circle-outline" size={20} color={theme.colors.textTertiary} />
               </View>
-              {!isPremium ? (
-                <View style={styles.placeholderChart}>
-                  <Ionicons name="lock-closed-outline" size={40} color={theme.colors.textTertiary} />
-                  <Text style={styles.placeholderText}>{t('investments.benchmarkProOnly')}</Text>
-                </View>
-              ) : (
-                <>
                   {/* Benchmark selector */}
                   <View style={styles.benchmarkSelector}>
                     {BENCHMARKS.map((b) => (
@@ -488,8 +472,6 @@ export default function PortfolioAnalyticsScreen() {
                       <Text style={styles.placeholderText}>{t('investments.noBenchmarkData')}</Text>
                     </View>
                   )}
-                </>
-              )}
             </TouchableOpacity>
           </>
         )}

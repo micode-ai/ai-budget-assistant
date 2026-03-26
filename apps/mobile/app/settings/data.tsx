@@ -228,21 +228,15 @@ export default function DataSettingsScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={styles.fieldLabel}>{t('reports.weeklyEmail')}</Text>
                 <Text style={styles.fieldDesc}>{t('reports.weeklyEmailDesc')}</Text>
-                {!isBusinessTier && (
-                  <Text style={[styles.fieldDesc, { color: theme.colors.warning, marginTop: 2 }]}>
-                    {t('reports.weeklyEmailBusiness')}
-                  </Text>
-                )}
               </View>
               <Switch
                 value={reportPrefs?.weeklyEmailEnabled ?? false}
                 onValueChange={handleToggleWeeklyEmail}
-                disabled={!isBusinessTier}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
               />
             </View>
 
-            {isBusinessTier && reportPrefs?.weeklyEmailEnabled && (
+            {reportPrefs?.weeklyEmailEnabled && (
               <>
                 <View style={styles.divider} />
                 <Text style={[styles.fieldLabel, { marginBottom: theme.spacing[2] }]}>{t('reports.sendOn')}</Text>

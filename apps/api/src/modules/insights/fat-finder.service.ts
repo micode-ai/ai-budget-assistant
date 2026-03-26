@@ -2,7 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
+import { getAiCostMultiplier } from '../ai/services/model-resolver';
 
 @Injectable()
 export class FatFinderService {
@@ -22,6 +24,7 @@ export class FatFinderService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -81,11 +84,13 @@ export class FatFinderService {
       }
     }
 
-    // Fetch response mode
+    // Fetch response mode and track AI usage (only on actual generation, not cache hit)
     let responseMode: AiResponseMode = 'balanced';
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+      const adjustedCost = 3.0 * getAiCostMultiplier(user?.aiModel);
+      await this.subscriptionsService.trackAiUsage(userId, 'fat_finder', adjustedCost, accountId);
     }
 
     // Gather 3 months of expenses

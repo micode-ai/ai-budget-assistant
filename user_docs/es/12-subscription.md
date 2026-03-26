@@ -8,70 +8,63 @@ AI Budget Assistant ofrece tres niveles de suscripcion. Cada nuevo usuario comie
 
 ## Comparacion de planes
 
+Todas las funciones están disponibles en todos los planes. Los planes difieren solo en los límites de uso:
+
 | Funcion | Gratuito | Pro | Business |
 |---|---|---|---|
-| **Solicitudes IA por mes** | 5 | 200 | Ilimitadas |
+| **Solicitudes IA por mes** | 50 | 300 | Ilimitadas |
 | **Cuentas** | 3 | Hasta 5 | Ilimitadas |
 | **Miembros por cuenta** | 1 | Hasta 5 | Ilimitados |
-| **Seguimiento de gastos** | Completo | Completo | Completo |
-| **Analisis predictivo** | — | Si | Si |
-| **Deteccion de anomalias de gasto** | — | Si | Si |
-| **Monedas ilimitadas** | — | Si | Si |
-| **Historia de gastos** | — | Si | Si |
-| **Informacion de IA** | — | Si | Si |
-| **Exportacion CSV** | Si | Si | Si |
-| **Informes PDF/Excel** | — | Si | Si |
-| **Resumen mensual** | — | Si | Si |
-| **Resumen semanal por email** | — | — | Si |
-| **Resumen mensual por email** | — | Si | Si |
-| **Copia de seguridad cifrada** | Si | Si | Si |
-| **Informes avanzados** | — | — | Si |
+| **Todas las funciones** | Si | Si | Si |
+
+> Todos los usuarios tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, Historia de gastos, Fat Finder, Informacion de IA, analisis predictivo, deteccion de anomalias, informes PDF/Excel, resumen semanal por email, resumen mensual, copias de seguridad cifradas y todas las monedas.
 
 ## Plan Gratuito
 
 Tu plan inicial incluye:
-- **5 solicitudes IA por mes** — usa Chat IA, Entrada de voz, Escaneo de recibos
-- **3 cuentas personales**
+- **50 solicitudes IA por mes** — usa Chat IA, Entrada de voz, Escaneo de recibos
+- **3 cuentas**
 - **1 miembro** (tu)
-- **Seguimiento completo de gastos** — entrada manual, categorias, etiquetas, proyectos, presupuestos, analisis
+- **Todas las funciones** — sin restricciones de funcionalidad
 
 ## Plan Pro
 
-Todo lo del plan Gratuito, mas:
-- **200 solicitudes IA por mes**
+Con límites más altos:
+- **300 solicitudes IA por mes**
 - **Hasta 5 cuentas** — gestiona finanzas personales, compartidas y de empresa
 - **Hasta 5 miembros por cuenta** — colabora con familia o equipo
-- **Analisis predictivo** — previsiones de presupuesto y proyecciones de gasto
-- **Deteccion de anomalias de gasto** — alertas de IA para gastos inusuales
-- **Monedas ilimitadas** — usa las 7 monedas sin restricciones
-- **Historia de gastos** — informes narrativos financieros generados por IA
-- **Informacion de IA** — recomendaciones personalizadas en Analisis
 
 ### Prueba gratuita de 7 dias
 Prueba Pro gratis durante 7 dias. Cancela en cualquier momento antes de que termine la prueba para evitar cargos.
 
 ## Plan Business
 
-Todo lo del plan Pro, mas:
+Sin límites:
 - **Solicitudes IA ilimitadas**
 - **Cuentas ilimitadas**
 - **Miembros ilimitados**
-- **Informes avanzados** — informes detallados y exportaciones
 
 ## Uso de IA
 
-Controla tu uso de IA desde Ajustes > Suscripcion:
+Rastrea tu uso de AI desde Configuración > Suscripción:
 
-- **Uso este mes** — muestra cuantas solicitudes IA has usado (por ejemplo, "3 de 5")
+- **Uso este mes** — muestra cuántas solicitudes de AI has usado (p. ej., "3 de 50")
 - **Barra de progreso** — indicador visual del uso
 - Se reinicia al comienzo de cada mes
+- **Contador de AI** — un contador compacto (p. ej., "12/50 AI") se muestra en todas las pantallas con funciones de AI: Chat AI, Historia de gastos, Fat Finder, Analíticas (AI Insights) e Insights de inversiones. Tócalo para ver tu suscripción.
 
-### Que cuenta como una solicitud IA:
-- Enviar un mensaje en **Chat IA**
-- Usar **Entrada de voz** para agregar un gasto
-- **Escanear un recibo**
-- Generar una **Historia de gastos**
-- Obtener **Informacion de IA** en Analisis
+### Confirmación en el primer uso
+
+Cuando usas una función de AI costosa (Historia de gastos, Fat Finder, AI Insights, Insights de inversiones) por primera vez, la app muestra un diálogo de confirmación con el costo y tu saldo restante. Puedes elegir "No preguntar de nuevo" para omitir confirmaciones futuras para esa función.
+
+### Qué cuenta como solicitud de AI:
+- Enviar un mensaje en el **Chat AI** (1 solicitud)
+- Usar **Entrada de voz** para agregar un gasto (1 solicitud)
+- **Escanear un recibo** (2 solicitudes)
+- Generar una **Historia de gastos** (3 solicitudes)
+- Ejecutar **Fat Finder** (3 solicitudes)
+- Obtener **AI Insights** en Analíticas (2 solicitudes)
+- **Insights de inversiones** (2,5 solicitudes)
 
 ## Gestionar tu suscripcion
 

@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Body,
+  Query,
   UseGuards,
   Req,
 } from '@nestjs/common';
@@ -29,6 +30,18 @@ export class SubscriptionsController {
   @Get('usage')
   async getUsage(@Req() req: AuthenticatedRequest) {
     return this.subscriptionsService.getUsageStats(req.user.id);
+  }
+
+  @Get('usage/details')
+  async getUsageDetails(
+    @Req() req: AuthenticatedRequest,
+    @Query('month') month?: string,
+    @Query('year') year?: string,
+  ) {
+    const now = new Date();
+    const m = month ? parseInt(month) : now.getMonth() + 1;
+    const y = year ? parseInt(year) : now.getFullYear();
+    return this.subscriptionsService.getUsageDetails(req.user.id, m, y);
   }
 
   @Post('checkout')

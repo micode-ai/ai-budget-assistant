@@ -6,8 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams } from 'expo-router';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getIntlLocale } from '@/i18n';
 import { StoryBlockRenderer } from '@/components/story';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
+import { useAiCostConfirmation } from '@/hooks/useAiCostConfirmation';
 import type { SpendingStory, StoryBlock } from '@budget/shared-types';
 
 export default function StoryScreen() {
@@ -30,6 +33,7 @@ export default function StoryScreen() {
   const [story, setStory] = useState<SpendingStory | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { confirmAiUsage } = useAiCostConfirmation();
 
   const isCurrentMonth = selectedMonth === now.getMonth() + 1 && selectedYear === now.getFullYear();
 
@@ -60,6 +64,8 @@ export default function StoryScreen() {
 
   const loadStory = useCallback(
     async (forceRegenerate = false) => {
+      const confirmed = await confirmAiUsage('story', 3);
+      if (!confirmed) return;
       setIsLoading(true);
       setError(null);
       try {
@@ -67,12 +73,15 @@ export default function StoryScreen() {
         const year = period === 'month' ? selectedYear : undefined;
         const response = await api.getSpendingStory(period, forceRegenerate, i18n.language, month, year);
         setStory(response.story);
+        useSubscriptionStore.getState().loadUsage();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load story');
       } finally {
         setIsLoading(false);
       }
     },
+    // confirmAiUsage is stable (no deps), safe to omit
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [period, i18n.language, selectedMonth, selectedYear],
   );
 
@@ -87,23 +96,26 @@ export default function StoryScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       {/* Period Selector */}
-      <View style={styles.periodSelector}>
-        <TouchableOpacity
-          style={[styles.periodTab, period === 'week' && styles.periodTabActive]}
-          onPress={() => setPeriod('week')}
-        >
-          <Text style={[styles.periodTabText, period === 'week' && styles.periodTabTextActive]}>
-            {t('story.week')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.periodTab, period === 'month' && styles.periodTabActive]}
-          onPress={() => setPeriod('month')}
-        >
-          <Text style={[styles.periodTabText, period === 'month' && styles.periodTabTextActive]}>
-            {t('story.month')}
-          </Text>
-        </TouchableOpacity>
+      <View style={styles.periodRow}>
+        <View style={styles.periodSelector}>
+          <TouchableOpacity
+            style={[styles.periodTab, period === 'week' && styles.periodTabActive]}
+            onPress={() => setPeriod('week')}
+          >
+            <Text style={[styles.periodTabText, period === 'week' && styles.periodTabTextActive]}>
+              {t('story.week')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.periodTab, period === 'month' && styles.periodTabActive]}
+            onPress={() => setPeriod('month')}
+          >
+            <Text style={[styles.periodTabText, period === 'month' && styles.periodTabTextActive]}>
+              {t('story.month')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <AiUsageBadge />
       </View>
 
       {/* Month/Year Picker (only for month period) */}
@@ -207,10 +219,16 @@ const createStyles = (theme: Theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  periodSelector: {
+  periodRow: {
     flexDirection: 'row' as const,
+    alignItems: 'center' as const,
     marginHorizontal: theme.spacing[4],
     marginTop: theme.spacing[3],
+    gap: theme.spacing[2],
+  },
+  periodSelector: {
+    flex: 1,
+    flexDirection: 'row' as const,
     backgroundColor: theme.colors.surfaceElevated,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[1],

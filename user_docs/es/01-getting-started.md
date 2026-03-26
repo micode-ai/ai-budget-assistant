@@ -45,7 +45,7 @@ Si olvidaste tu contraseña:
 Despues de tu primer inicio de sesion, veras la pantalla de **Bienvenida**:
 
 - **Tu plan gratuito incluye:**
-  - 5 solicitudes IA por mes
+  - 50 solicitudes IA por mes
   - 3 cuentas personales
   - 1 miembro
   - Seguimiento completo de gastos

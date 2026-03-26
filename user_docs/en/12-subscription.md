@@ -8,70 +8,63 @@ AI Budget Assistant offers three subscription tiers. Every new user starts on th
 
 ## Plans Comparison
 
+All features are available on every plan. Plans differ only in usage limits:
+
 | Feature | Free | Pro | Business |
 |---|---|---|---|
-| **AI requests per month** | 5 | 200 | Unlimited |
+| **AI requests per month** | 50 | 300 | Unlimited |
 | **Accounts** | 3 | Up to 5 | Unlimited |
 | **Members per account** | 1 | Up to 5 | Unlimited |
-| **Expense tracking** | Full | Full | Full |
-| **Predictive analytics** | — | Yes | Yes |
-| **Spending anomaly detection** | — | Yes | Yes |
-| **Unlimited currencies** | — | Yes | Yes |
-| **Spending Stories** | — | Yes | Yes |
-| **AI Insights** | — | Yes | Yes |
-| **CSV export** | Yes | Yes | Yes |
-| **PDF/Excel reports** | — | Yes | Yes |
-| **Monthly digest** | — | Yes | Yes |
-| **Weekly email report** | — | — | Yes |
-| **Monthly digest email** | — | Yes | Yes |
-| **Encrypted backup** | Yes | Yes | Yes |
-| **Advanced reporting** | — | — | Yes |
+| **All features** | Yes | Yes | Yes |
+
+All users have access to: expense tracking, AI Chat, Voice Input, Receipt Scanning, Spending Stories, Fat Finder, AI Insights, predictive analytics, anomaly detection, PDF/Excel reports, weekly email reports, monthly digest, encrypted backups, and all currencies.
 
 ## Free Plan
 
 Your starting plan includes:
-- **5 AI requests per month** — use AI Chat, Voice Input, Receipt Scanning
+- **50 AI requests per month**
 - **3 personal accounts**
 - **1 member** (you)
-- **Full expense tracking** — manual entry, categories, tags, projects, budgets, analytics
+- **All features** — no functionality restrictions
 
 ## Pro Plan
 
-Everything in Free, plus:
-- **200 AI requests per month**
+Everything in Free, with higher limits:
+- **300 AI requests per month**
 - **Up to 5 accounts** — manage personal, shared, and business finances
 - **Up to 5 members per account** — collaborate with family or team
-- **Predictive analytics** — budget forecasts and spending projections
-- **Spending anomaly detection** — AI alerts for unusual spending
-- **Unlimited currencies** — use all 7 currencies without restrictions
-- **Spending Stories** — AI-generated narrative financial reports
-- **AI Insights** — personalized recommendations in Analytics
 
 ### 7-Day Free Trial
 Try Pro free for 7 days. Cancel anytime before the trial ends to avoid charges.
 
 ## Business Plan
 
-Everything in Pro, plus:
+Everything in Pro, with no limits:
 - **Unlimited AI requests**
 - **Unlimited accounts**
 - **Unlimited members**
-- **Advanced reporting** — detailed reports and exports
 
 ## AI Usage
 
 Track your AI usage from Settings > Subscription:
 
-- **Usage This Month** — shows how many AI requests you've used (e.g., "3 of 5")
+- **Usage This Month** — shows how many AI requests you've used (e.g., "3 of 50")
 - **Progress bar** — visual indicator of usage
 - Resets at the beginning of each month
+- **AI usage badge** — a compact counter (e.g., "12/50 AI") is shown on all AI-powered screens: AI Chat, Spending Story, Fat Finder, Analytics (AI Insights), and Investment Insights. Tap it to view your subscription.
+
+### First-use confirmation
+
+When you use an expensive AI feature (Spending Story, Fat Finder, AI Insights, Investment Insights) for the first time, the app shows a confirmation dialog with the cost and your remaining balance. You can choose "Don't ask again" to skip future confirmations for that feature.
 
 ### What counts as an AI request:
-- Sending a message in **AI Chat**
-- Using **Voice Input** to add an expense
-- **Scanning a Receipt**
-- Generating a **Spending Story**
-- Getting **AI Insights** in Analytics
+- Sending a message in **AI Chat** (1 request)
+- Using **Voice Input** to add an expense (1 request)
+- **Scanning a Receipt** (2 requests)
+- Generating a **Spending Story** (3 requests)
+- Running **Fat Finder** (3 requests)
+- Getting **AI Insights** in Analytics (2 requests)
+- **Investment Insights** (2.5 requests)
 
 ## Managing Your Subscription
 

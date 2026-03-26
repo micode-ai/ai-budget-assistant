@@ -22,15 +22,12 @@ export class InsightsController {
   ) {}
 
   @Get()
-  @UseGuards(SubscriptionTierGuard)
-  @RequireTier('pro')
   async getInsights(@Req() req: AuthenticatedRequest) {
     return this.insightsService.getInsights(req.accountId);
   }
 
   @Get('ai-charts')
-  @UseGuards(SubscriptionTierGuard, AiUsageGuard)
-  @RequireTier('pro')
+  @UseGuards(AiUsageGuard)
   @TrackAiUsage('insights', 2.0)
   async getAICharts(
     @Req() req: AuthenticatedRequest,
@@ -40,9 +37,6 @@ export class InsightsController {
   }
 
   @Post('story')
-  @UseGuards(SubscriptionTierGuard, AiUsageGuard)
-  @RequireTier('pro')
-  @TrackAiUsage('story', 3.0)
   async getSpendingStory(
     @Req() req: AuthenticatedRequest,
     @Body() body: { period: 'week' | 'month'; forceRegenerate?: boolean; language?: string; month?: number; year?: number },
@@ -59,9 +53,6 @@ export class InsightsController {
   }
 
   @Post('fat-finder')
-  @UseGuards(SubscriptionTierGuard, AiUsageGuard)
-  @RequireTier('pro')
-  @TrackAiUsage('fat_finder', 3.0)
   async getFatFinderReport(
     @Req() req: AuthenticatedRequest,
     @Body() body: { forceRegenerate?: boolean; language?: string; month?: number; year?: number },

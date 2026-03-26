@@ -19,6 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { File, Paths } from 'expo-file-system/next';
 import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useTagStore } from '@/stores/tagStore';
@@ -175,11 +176,24 @@ export default function ExpenseDetailScreen() {
   };
 
   // Receipt image helpers
-  const handleDownloadImage = async () => {
+  const handleShareImage = async () => {
     if (!receiptImageBase64) return;
     const file = new File(Paths.cache, `receipt-${id}.jpg`);
     file.write(receiptImageBase64, { encoding: 'base64' });
     await Sharing.shareAsync(file.uri, { mimeType: 'image/jpeg' });
+  };
+
+  const handleSaveImage = async () => {
+    if (!receiptImageBase64) return;
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(t('common.error'), t('expenseDetail.galleryPermissionDenied'));
+      return;
+    }
+    const file = new File(Paths.cache, `receipt-${id}.jpg`);
+    file.write(receiptImageBase64, { encoding: 'base64' });
+    await MediaLibrary.saveToLibraryAsync(file.uri);
+    Alert.alert('', t('expenseDetail.imageSaved'));
   };
 
   const handleReplaceImage = async () => {
@@ -651,9 +665,13 @@ export default function ExpenseDetailScreen() {
                     <Ionicons name="eye-outline" size={18} color={theme.colors.primary} />
                     <Text style={styles.imageActionText}>{t('expenseDetail.viewImage')}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.imageActionBtn} onPress={handleDownloadImage}>
+                  <TouchableOpacity style={styles.imageActionBtn} onPress={handleShareImage}>
+                    <Ionicons name="share-outline" size={18} color={theme.colors.primary} />
+                    <Text style={styles.imageActionText}>{t('expenseDetail.shareImage')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.imageActionBtn} onPress={handleSaveImage}>
                     <Ionicons name="download-outline" size={18} color={theme.colors.primary} />
-                    <Text style={styles.imageActionText}>{t('expenseDetail.downloadImage')}</Text>
+                    <Text style={styles.imageActionText}>{t('expenseDetail.saveImage')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.imageActionBtn} onPress={handleReplaceImage}>
                     <Ionicons name="swap-horizontal-outline" size={18} color={theme.colors.secondary} />

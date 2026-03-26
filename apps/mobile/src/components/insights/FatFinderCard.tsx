@@ -5,7 +5,6 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInsightsStore } from '@/stores/insightsStore';
-import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
@@ -35,21 +34,12 @@ export function FatFinderCard() {
   const loadFatFinder = useInsightsStore((s) => s.loadFatFinder);
   const fatFinderMonth = useInsightsStore((s) => s.fatFinderMonth);
   const fatFinderYear = useInsightsStore((s) => s.fatFinderYear);
-  const isPro = useSubscriptionStore((s) => s.isPro);
-  const loadSubscription = useSubscriptionStore((s) => s.loadSubscription);
-  const tier = useSubscriptionStore((s) => s.tier);
-
   useEffect(() => {
-    loadSubscription();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (isPro() && !fatFinderReport && !fatFinderLoading) {
+    if (!fatFinderReport && !fatFinderLoading) {
       loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tier]);
+  }, []);
 
   const now = new Date();
   const isCurrentMonth = fatFinderMonth === now.getMonth() + 1 && fatFinderYear === now.getFullYear();
@@ -96,28 +86,6 @@ export function FatFinderCard() {
       </TouchableOpacity>
     </View>
   );
-
-  // Pro gate
-  if (!isPro()) {
-    return (
-      <View style={styles.card}>
-        <View style={styles.headerRow}>
-          <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
-        </View>
-        <View style={styles.upgradeContainer}>
-          <Ionicons name="lock-closed" size={28} color={theme.colors.warning} />
-          <Text style={styles.upgradeText}>{t('fatFinder.upgradeMessage')}</Text>
-          <TouchableOpacity
-            style={styles.upgradeButton}
-            onPress={() => router.push('/subscription')}
-          >
-            <Text style={styles.upgradeButtonText}>{t('subscription.upgrade')}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
 
   // Loading
   if (fatFinderLoading) {

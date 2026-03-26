@@ -101,7 +101,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
 - **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
 - **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
-- **Kassenbon-Bild** — Anzeigen, Herunterladen, Ersetzen oder Loschen des Belegfotos
+- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos
 
 ### Aktionen bei Ausgabendetails:
 - **Bearbeiten** — die Ausgabe andern

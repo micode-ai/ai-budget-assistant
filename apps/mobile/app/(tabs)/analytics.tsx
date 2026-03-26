@@ -12,8 +12,9 @@ import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useAnalytics, TimeRange } from '@/features/analytics/useAnalytics';
-import { GroupedBarChart, WeekdayChart } from '@/components/charts';
+import { WeekdayChart } from '@/components/charts';
 import { InteractiveBarChart, InteractiveDonutChart } from '@/components/interactive-charts';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { Currency } from '@budget/shared-types';
@@ -34,7 +35,7 @@ export default function AnalyticsScreen() {
 
   const { user } = useAuthStore();
   const { walletSummary } = useWalletStore();
-  const { dailySpending, categorySpending, summary, itemBreakdown, budgetComparison, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency, selectedRange !== 'week' ? selectedMonth : undefined, selectedYear);
+  const { dailySpending, categorySpending, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = useAnalytics(selectedRange, selectedCurrency, selectedRange !== 'week' ? selectedMonth : undefined, selectedYear);
   const { aiInsights, loadAIInsights } = useInsightsStore();
   const { loadRates } = useExchangeRateStore();
   const { loadTags } = useTagStore();
@@ -262,7 +263,10 @@ export default function AnalyticsScreen() {
         {/* AI Insights */}
         {aiInsights.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('insights.aiSuggested')}</Text>
+            <View style={styles.sectionTitleRow}>
+              <Text style={styles.sectionTitle}>{t('insights.aiSuggested')}</Text>
+              <AiUsageBadge />
+            </View>
             {aiInsights.slice(0, 5).map((insight) => {
               const isExpanded = expandedInsightId === insight.id;
               const severityColor = insight.severity === 'critical' ? theme.colors.danger : insight.severity === 'warning' ? theme.colors.warning : theme.colors.info;
@@ -330,54 +334,6 @@ export default function AnalyticsScreen() {
             }}
           />
           <Text style={styles.drillDownHint}>{t('drillDown.tapToExplore')}</Text>
-        </View>
-
-        {/* Budget vs Actual */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('analytics.budgetVsActual')}</Text>
-          {budgetComparison.length === 0 ? (
-            <View style={styles.hintCard}>
-              <Ionicons name="wallet-outline" size={24} color={theme.colors.textTertiary} />
-              <Text style={styles.hintText}>{t('analytics.noBudgetsHint')}</Text>
-            </View>
-          ) : (
-            <View style={styles.chartContainer}>
-              <GroupedBarChart
-                data={budgetComparison.map((b) => ({
-                  label: b.name,
-                  values: [
-                    { value: b.budgetAmount, color: theme.colors.progressTrack },
-                    { value: b.spent, color: b.isOverBudget ? theme.colors.danger : theme.colors.primary },
-                  ],
-                }))}
-                height={150}
-                showLabels={true}
-                showValues={budgetComparison.length <= 6}
-                formatValue={formatChartValue}
-                legendItems={[
-                  { label: t('analytics.budgetLabel'), color: theme.colors.progressTrack },
-                  { label: t('analytics.actualLabel'), color: theme.colors.primary },
-                ]}
-              />
-              {/* Budget status list */}
-              {budgetComparison.map((b) => (
-                <View key={b.budgetId} style={styles.budgetStatusRow}>
-                  <Text style={styles.budgetStatusName} numberOfLines={1}>{b.name}</Text>
-                  <View style={styles.budgetStatusBadge}>
-                    <Text style={[
-                      styles.budgetStatusText,
-                      { color: b.isOverBudget ? theme.colors.danger : theme.colors.success },
-                    ]}>
-                      {b.isOverBudget
-                        ? t('analytics.overBudget')
-                        : t('analytics.onTrack')
-                      }
-                    </Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-          )}
         </View>
 
         {/* Category Breakdown */}
@@ -802,6 +758,12 @@ const createStyles = (theme: Theme) => ({
   section: {
     marginBottom: theme.spacing[5],
   },
+  sectionTitleRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    marginBottom: theme.spacing[3],
+  },
   sectionTitle: {
     ...theme.textStyles.h3,
     color: theme.colors.textPrimary,
@@ -960,43 +922,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
   },
   trendText: {
-    ...theme.textStyles.caption,
-    fontWeight: '600' as const,
-  },
-  hintCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[5],
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[3],
-  },
-  hintText: {
-    ...theme.textStyles.bodyMedium,
-    fontSize: 14,
-    color: theme.colors.textTertiary,
-    flex: 1,
-  },
-  budgetStatusRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[2],
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.divider,
-    marginTop: theme.spacing[2],
-  },
-  budgetStatusName: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-    flex: 1,
-  },
-  budgetStatusBadge: {
-    paddingHorizontal: theme.spacing[2],
-    paddingVertical: theme.spacing[0.5],
-    borderRadius: theme.borderRadius.sm,
-  },
-  budgetStatusText: {
     ...theme.textStyles.caption,
     fontWeight: '600' as const,
   },

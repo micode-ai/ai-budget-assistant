@@ -30,14 +30,6 @@ export class ReportsService {
       throw new ForbiddenException('Reports are unavailable for accounts with full encryption (amounts are encrypted server-side)');
     }
 
-    // Check tier for PDF/Excel
-    if (dto.format !== 'csv') {
-      const sub = await this.prisma.subscription.findUnique({ where: { userId } });
-      const tier = sub?.tier || 'free';
-      if (TIER_HIERARCHY[tier] < TIER_HIERARCHY['pro']) {
-        throw new ForbiddenException('PDF/Excel reports require Pro subscription or higher');
-      }
-    }
 
     const startDate = new Date(dto.startDate);
     const endDate = new Date(dto.endDate);

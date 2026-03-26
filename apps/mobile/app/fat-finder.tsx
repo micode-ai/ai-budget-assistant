@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useInsightsStore } from '@/stores/insightsStore';
 import { useAuthStore } from '@/stores/authStore';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
+import { useAiCostConfirmation } from '@/hooks/useAiCostConfirmation';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { FatFinderFinding, FatFinderFindingType, Currency } from '@budget/shared-types';
@@ -52,11 +54,18 @@ export default function FatFinderScreen() {
 
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const [expandedExpenses, setExpandedExpenses] = useState<Record<string, boolean>>({});
+  const { confirmAiUsage } = useAiCostConfirmation();
 
   useEffect(() => {
-    if (!fatFinderReport && !fatFinderLoading) {
-      loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
-    }
+    const init = async () => {
+      if (!fatFinderReport && !fatFinderLoading) {
+        const confirmed = await confirmAiUsage('fat_finder', 3);
+        if (confirmed) {
+          loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
+        }
+      }
+    };
+    init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,7 +112,9 @@ export default function FatFinderScreen() {
     setExpandedExpenses((prev) => ({ ...prev, [id]: !prev[id] }));
   }, []);
 
-  const handleRegenerate = () => {
+  const handleRegenerate = async () => {
+    const confirmed = await confirmAiUsage('fat_finder', 3);
+    if (!confirmed) return;
     loadFatFinder(i18n.language, true, fatFinderMonth, fatFinderYear);
   };
 
@@ -275,6 +286,7 @@ export default function FatFinderScreen() {
           color={isCurrentMonth ? theme.colors.textDisabled : theme.colors.primary}
         />
       </TouchableOpacity>
+      <AiUsageBadge />
     </View>
   );
 

@@ -21,8 +21,10 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import type { Currency } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
 
 export default function VoiceExpenseScreen() {
   const { t } = useTranslation();
@@ -76,6 +78,7 @@ export default function VoiceExpenseScreen() {
       setEditCategory(matchedCategory?.id || '');
       setEditCurrencyCode(parsedExpense.currencyCode || user?.currencyCode || 'USD');
       setShowConfirm(true);
+      useSubscriptionStore.getState().loadUsage();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parsedExpense]);
@@ -149,7 +152,7 @@ export default function VoiceExpenseScreen() {
           <Ionicons name="close" size={28} color={theme.colors.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.title}>{t('voice.title')}</Text>
-        <View style={styles.placeholder} />
+        <AiUsageBadge />
       </View>
 
       {!showConfirm ? (
@@ -348,17 +351,17 @@ export default function VoiceExpenseScreen() {
             </View>
 
             <View style={styles.confirmActions}>
-              <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
-                <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
-                <Text style={styles.retryButtonText}>{t('voice.tryAgain')}</Text>
-              </TouchableOpacity>
-
               <TouchableOpacity
                 style={styles.confirmButton}
                 onPress={handleConfirmExpense}
               >
                 <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
                 <Text style={styles.confirmButtonText}>{t('voice.saveExpense')}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
+                <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
+                <Text style={styles.retryButtonText}>{t('voice.tryAgain')}</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -594,28 +597,14 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
   },
   confirmActions: {
-    flexDirection: 'row' as const,
     gap: theme.spacing[3],
-    alignItems: 'center' as const,
-  },
-  retryButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[4],
-    gap: theme.spacing[1.5],
-  },
-  retryButtonText: {
-    fontSize: 16,
-    color: theme.colors.textSecondary,
   },
   confirmButton: {
-    flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[4],
+    paddingHorizontal: theme.spacing[5],
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.primary,
     gap: theme.spacing[2],
@@ -623,6 +612,16 @@ const createStyles = (theme: Theme) => ({
   confirmButtonText: {
     ...theme.textStyles.button,
     color: theme.colors.textInverse,
-    flexShrink: 1,
+  },
+  retryButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[1.5],
+  },
+  retryButtonText: {
+    fontSize: 16,
+    color: theme.colors.textSecondary,
   },
 });

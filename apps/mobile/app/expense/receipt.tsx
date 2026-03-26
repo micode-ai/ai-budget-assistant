@@ -22,6 +22,8 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { getIntlLocale } from '@/i18n';
 
 async function compressAndEncodeImage(uri: string): Promise<string> {
@@ -65,6 +67,7 @@ export default function ReceiptExpenseScreen() {
   useEffect(() => {
     if (scannedReceipt) {
       setShowConfirm(true);
+      useSubscriptionStore.getState().loadUsage();
     }
   }, [scannedReceipt]);
 
@@ -178,7 +181,7 @@ export default function ReceiptExpenseScreen() {
           <Ionicons name="close" size={28} color={theme.colors.textPrimary} />
         </TouchableOpacity>
         <Text style={styles.title}>{t('receipt.title')}</Text>
-        <View style={styles.placeholder} />
+        <AiUsageBadge />
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>

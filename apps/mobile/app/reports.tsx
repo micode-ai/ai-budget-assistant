@@ -120,10 +120,10 @@ export default function ReportsScreen() {
     );
   };
 
-  const FORMATS: { key: ReportFormat; label: string; icon: string; tier?: string }[] = [
+  const FORMATS: { key: ReportFormat; label: string; icon: string }[] = [
     { key: 'csv', label: 'CSV', icon: 'document-text-outline' },
-    { key: 'pdf', label: 'PDF', icon: 'document-outline', tier: 'pro' },
-    { key: 'excel', label: 'Excel', icon: 'grid-outline', tier: 'pro' },
+    { key: 'pdf', label: 'PDF', icon: 'document-outline' },
+    { key: 'excel', label: 'Excel', icon: 'grid-outline' },
   ];
 
   const DATE_RANGES: { key: typeof dateRange; label: string }[] = [
@@ -159,11 +159,6 @@ export default function ReportsScreen() {
                 <Text style={[styles.formatLabel, selectedFormat === fmt.key && styles.formatLabelActive]}>
                   {fmt.label}
                 </Text>
-                {fmt.tier && (
-                  <View style={styles.tierBadge}>
-                    <Text style={styles.tierBadgeText}>PRO</Text>
-                  </View>
-                )}
               </TouchableOpacity>
             ))}
           </View>

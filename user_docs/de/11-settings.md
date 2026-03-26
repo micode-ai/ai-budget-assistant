@@ -94,7 +94,7 @@ Wahle das KI-Modell fur alle KI-Funktionen (Chat, Belegscannen, Kategorisierung,
 | ⚖️ **Balanced** | Mittel | ×1 Kontingent | Allgemeine Nutzung — Standard |
 | ✨ **Quality** | Langsamer | ×1.5 Kontingent | Komplexe Analyse, detaillierte Einblicke |
 
-> **Tipp:** Mit dem Free-Tarif (5 KI-Anfragen/Monat) gibt **Fast** ca. 6.7 effektive Anfragen. **Quality** gibt ca. 3.3.
+> **Tipp:** Mit dem Free-Tarif (50 KI-Anfragen/Monat) gibt **Fast** ca. 66.7 effektive Anfragen. **Quality** gibt ca. 33.3.
 
 Tippe auf einen Chip zum Andern. Das Modell gilt sofort fur alle neuen KI-Anfragen.
 
