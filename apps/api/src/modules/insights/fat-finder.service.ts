@@ -84,13 +84,11 @@ export class FatFinderService {
       }
     }
 
-    // Fetch response mode and track AI usage (only on actual generation, not cache hit)
+    // Fetch response mode
     let responseMode: AiResponseMode = 'balanced';
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
-      const adjustedCost = 3.0 * getAiCostMultiplier(user?.aiModel);
-      await this.subscriptionsService.trackAiUsage(userId, 'fat_finder', adjustedCost, accountId);
     }
 
     // Gather 3 months of expenses
@@ -241,6 +239,13 @@ Return ONLY valid JSON: { "findings": [...], "totalPotentialSavings": number }`;
         max_tokens: 3000,
         response_format: { type: 'json_object' },
       });
+
+      // Track AI usage only after successful OpenAI call
+      if (userId) {
+        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+        const adjustedCost = 3.0 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        await this.subscriptionsService.trackAiUsage(userId, 'fat_finder', adjustedCost, accountId);
+      }
 
       const responseText = completion.choices[0]?.message?.content || '{"findings":[],"totalPotentialSavings":0}';
       let parsed: any;

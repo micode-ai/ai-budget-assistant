@@ -57,6 +57,15 @@ Suivez votre utilisation AI depuis Paramètres > Abonnement :
 
 Lorsque vous utilisez une fonction AI coûteuse (Histoire des dépenses, Fat Finder, AI Insights, Insights investissements) pour la première fois, l'application affiche une boîte de dialogue de confirmation avec le coût et votre solde restant. Vous pouvez choisir « Ne plus demander » pour ignorer les confirmations futures pour cette fonction.
 
+### Détails d'utilisation
+
+Appuyez sur **Voir les détails** sur l'écran d'abonnement pour voir une ventilation détaillée de votre utilisation AI :
+
+- **Total utilisé** — nombre total de requêtes AI consommées ce mois-ci
+- **Par fonction** — combien de requêtes chaque fonction a utilisées (Chat AI, Saisie vocale, Scan de reçu, Histoire des dépenses, Fat Finder, etc.)
+- **Historique** — liste chronologique de chaque requête AI avec date, heure et coût
+- **Navigation par mois** — consultez l'utilisation des mois précédents
+
 ### Ce qui compte comme requête AI :
 - Envoyer un message dans le **Chat AI** (1 requête)
 - Utiliser la **Saisie vocale** pour ajouter une dépense (1 requête)

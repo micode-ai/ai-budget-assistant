@@ -27,6 +27,7 @@ Der **Telegram-Bot** ermoglicht die Interaktion mit deinem KI-Budgetassistenten 
 | `/income BETRAG BESCHR` | Schnell ein Einkommen hinzufugen (z. B. `/income 3000 Gehalt`) |
 | `/category [TYP] NAME` | Kategorie erstellen (z. B. `/category expense Essen`) |
 | `/categories` | Kategorien auflisten und loschen |
+| `/usage` | AI-Nutzung, Limits und Aufschlüsselung anzeigen |
 | `/account` | Zwischen Konten wechseln |
 | `/newchat` | Ein neues KI-Gesprach starten |
 | `/unlink` | Telegram vom Konto trennen |
@@ -113,7 +114,10 @@ Der Bot erkennt Wahrungssymbole und -codes in Befehlen:
   **A:** Nein, jeder App-Benutzer kann ein verknupftes Telegram-Konto haben, und jedes Telegram-Konto kann mit einem App-Benutzer verknupft werden.
 
 - **F: Zahlen Bot-Nachrichten zum KI-Anfragen-Limit?**
-  **A:** Ja, jede KI-verarbeitete Nachricht (Text, Sprache) verbraucht eine Anfrage aus deinem monatlichen Kontingent.
+  **A:** Ja. AI-Chat kostet 1 Anfrage pro Nachricht, Sprachnachrichten 2 Anfragen (Transkription + AI-Verarbeitung), Belegfotos 2 Anfragen. Verwenden Sie `/usage` zur Überprüfung. Bei Erreichen des Limits benachrichtigt Sie der Bot.
+
+- **F: In welcher Sprache antwortet der Bot?**
+  **A:** Der Bot antwortet in der in der App eingestellten Sprache (Einstellungen > Darstellung). Alle Systemnachrichten sind lokalisiert.
 
 ---
 

@@ -8,12 +8,11 @@
 
 ## Jak uzyskac dostep
 
-- **Karta na Pulpicie** — karta Tropiciela wydatkow pojawia sie na ekranie glownym, pokazujac laczne potencjalne oszczednosci i 3 glowne odkrycia. Dotknij **Zobacz pelny raport**, aby zobaczyc szczegoly.
+- **Karta na pulpicie** — pokazuje zapisane wyniki Fat Finder. Dotknij, aby otworzyć pełny raport i uruchomić nową analizę.
 - **Bezposrednia nawigacja** — przejdz do ekranu Tropiciela wydatkow z karty na Pulpicie
 
 ## Wymagania
 
-- Wymagana subskrypcja **Pro lub Business** — uzytkownicy planu darmowego zobacza zachete do ulepszenia
 - Kazde generowanie raportu zuzywa **3 zapytania AI** z Twojego miesiecznego limitu
 - Raporty sa **przechowywane w pamieci podrecznej przez 30 dni** dla kazdego okresu analizy
 

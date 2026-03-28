@@ -31,6 +31,8 @@ Turborepo monorepo with 5 packages:
   - **Currency mapping**: Supports currency symbol detection (₴→UAH, $→USD, €→EUR, zł→PLN, £→GBP, ₽→RUB)
   - **Endpoints**: `POST /ai/chat`, `POST /ai/chat/confirm`, `POST /ai/chat/reject`
 
+- **Telegram bot**: `modules/telegram/` — Telegraf-based bot with 7 handlers: `ChatHandler` (AI chat with usage tracking, 1.0/msg), `VoiceHandler` (Whisper transcription + chat, 2.0), `PhotoHandler` (OCR receipt scan, 2.0), `CommandHandler` (/start, /link, /help, /usage, /account, /newchat, /unlink), `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`. All system messages localized via `helpers/i18n.ts` (8 languages, resolved from `user.language`). AI usage tracked and limits enforced — users get localized warning when limit reached.
+
 ### Mobile (React Native/Expo)
 - **Navigation**: Expo Router. Screens in `app/`, tabs in `app/(tabs)/` — home, expenses, budgets, analytics, chat
 - **State**: 21 Zustand stores in `src/stores/` — `authStore`, `accountStore`, `expenseStore`, `incomeStore`, `budgetStore`, `categoryStore`, `tagStore`, `projectStore`, `walletStore`, `chatStore`, `insightsStore`, `exchangeRateStore`, `subscriptionStore`, `themeStore`, `widgetVisibilityStore`, `debtStore`, `encryptionStore`, `gamificationStore`, `goalStore`, `investmentStore`, `reportStore`

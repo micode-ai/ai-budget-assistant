@@ -881,6 +881,7 @@ export default {
   },
   fatFinder: {
     title: 'Аўдыт расходаў',
+    tapToAnalyze: 'Націсніце для аналізу выдаткаў',
     subtitle: 'Знайдзіце магчымасці для эканоміі',
     totalSavings: 'Патэнцыяльная штомесячная эканомія',
     finding: 'Знаходка',

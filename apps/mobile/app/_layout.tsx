@@ -379,6 +379,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/ai-usage-details"
+          options={{
+            headerShown: true,
+            title: t('aiUsage.totalUsed'),
+          }}
+        />
+        <Stack.Screen
           name="help/index"
           options={{
             headerShown: true,

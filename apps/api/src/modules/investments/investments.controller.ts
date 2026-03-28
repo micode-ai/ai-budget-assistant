@@ -135,8 +135,6 @@ export class InvestmentsController {
   // ---- AI Insights ----
 
   @Get('insights')
-  @UseGuards(AiUsageGuard)
-  @TrackAiUsage('investment_insights', 2.5)
   async getInvestmentInsights(
     @Req() req: AuthenticatedRequest,
     @Query('language') language?: string,
@@ -144,6 +142,7 @@ export class InvestmentsController {
     return this.investmentInsightsService.getInvestmentInsights(
       req.accountId,
       language,
+      req.user.id,
     );
   }
 }

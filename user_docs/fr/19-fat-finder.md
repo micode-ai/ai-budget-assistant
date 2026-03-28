@@ -8,12 +8,11 @@ Le **Fat Finder** passe en revue 3 mois de votre historique de transactions, det
 
 ## Comment y acceder
 
-- **Carte du tableau de bord** — la carte de synthese du Fat Finder apparait sur l'ecran d'accueil, affichant le potentiel total d'economies et les 3 principaux constats. Appuyez sur **Voir le rapport complet** pour consulter les details.
+- **Carte du tableau de bord** — affiche les résultats Fat Finder mis en cache. Appuyez pour ouvrir le rapport complet et lancer une nouvelle analyse.
 - **Navigation directe** — accedez a l'ecran du Fat Finder depuis la carte du tableau de bord
 
 ## Conditions requises
 
-- **Abonnement Pro ou Business** requis — les utilisateurs du plan gratuit voient une invitation a passer a un plan superieur
 - Chaque generation de rapport consomme **3 requetes IA** de votre quota mensuel
 - Les rapports sont **mis en cache pendant 30 jours** par periode d'analyse
 

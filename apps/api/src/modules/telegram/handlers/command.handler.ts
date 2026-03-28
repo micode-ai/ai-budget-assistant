@@ -1,8 +1,10 @@
 import { Logger } from '@nestjs/common';
 import { TelegramLinkService } from '../telegram-link.service';
 import { PrismaService } from '../../../database/prisma.service';
+import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { BotContext } from '../types';
 import { Markup } from 'telegraf';
+import { t } from '../helpers/i18n';
 
 export class CommandHandler {
   private readonly logger = new Logger(CommandHandler.name);
@@ -10,40 +12,33 @@ export class CommandHandler {
   constructor(
     private readonly linkService: TelegramLinkService,
     private readonly prisma: PrismaService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
   async handleStart(ctx: BotContext): Promise<void> {
     try {
+      const lang = ctx.userState?.language;
       if (ctx.userState) {
-        await ctx.reply(
-          `Welcome back! You are linked to account <b>${(await this.getAccountName(ctx.userState.accountId))}</b>.\n\nSend /help to see available commands.`,
-          { parse_mode: 'HTML' },
-        );
+        const accountName = await this.getAccountName(ctx.userState.accountId);
+        await ctx.reply(t('welcomeBack', lang, { account: accountName }), { parse_mode: 'HTML' });
       } else {
-        await ctx.reply(
-          '👋 Welcome to Budget Assistant Bot!\n\n' +
-          'To get started, link your account:\n' +
-          '1. Open the app → Settings → Telegram Bot\n' +
-          '2. Tap "Connect Telegram"\n' +
-          '3. Send the code here: /link YOUR_CODE\n\n' +
-          'Example: <code>/link A3K9F2</code>',
-          { parse_mode: 'HTML' },
-        );
+        await ctx.reply(t('welcomeNew', lang), { parse_mode: 'HTML' });
       }
     } catch (error) {
       this.logger.error(`Error in /start: ${error}`);
-      await ctx.reply('Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 
   async handleLink(ctx: BotContext): Promise<void> {
     try {
+      const lang = ctx.userState?.language;
       const text = (ctx.message && 'text' in ctx.message) ? ctx.message.text : '';
       const parts = text.split(/\s+/);
       const code = parts[1];
 
       if (!code) {
-        await ctx.reply('Please provide a link code.\n\nUsage: <code>/link YOUR_CODE</code>', { parse_mode: 'HTML' });
+        await ctx.reply(t('linkProvideCode', lang), { parse_mode: 'HTML' });
         return;
       }
 
@@ -53,42 +48,39 @@ export class CommandHandler {
       const result = await this.linkService.redeemCode(code, telegramUserId, telegramUsername);
 
       if (result.success) {
-        await ctx.reply(
-          '✅ Account linked successfully!\n\n' +
-          'You can now:\n' +
-          '• Add expenses: <code>/expense 50 lunch</code>\n' +
-          '• Add incomes: <code>/income 3000 salary</code>\n' +
-          '• Send voice messages to add expenses/chat\n' +
-          '• Send receipt photos to scan them\n' +
-          '• Chat with AI — just type any question\n\n' +
-          'Send /help for all commands.',
-          { parse_mode: 'HTML' },
-        );
+        // After linking, reload user state to get language
+        const link = await this.prisma.telegramLink.findUnique({
+          where: { telegramUserId, isActive: true },
+          include: { user: { select: { language: true } } },
+        });
+        const userLang = link?.user?.language || lang;
+        await ctx.reply(t('linkSuccess', userLang), { parse_mode: 'HTML' });
       } else {
         await ctx.reply(`❌ ${result.error}`);
       }
     } catch (error) {
       this.logger.error(`Error in /link: ${error}`);
-      await ctx.reply('Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 
   async handleUnlink(ctx: BotContext): Promise<void> {
     try {
+      const lang = ctx.userState?.language;
       if (!ctx.userState) {
-        await ctx.reply('Your Telegram is not linked to any account.');
+        await ctx.reply(t('notLinked', lang));
         return;
       }
 
       const success = await this.linkService.unlinkByTelegramId(ctx.userState.telegramUserId);
       if (success) {
-        await ctx.reply('✅ Your Telegram has been unlinked. Send /link <code> to connect again.');
+        await ctx.reply(t('unlinkSuccess', lang), { parse_mode: 'HTML' });
       } else {
-        await ctx.reply('No active link found.');
+        await ctx.reply(t('notLinked', lang));
       }
     } catch (error) {
       this.logger.error(`Error in /unlink: ${error}`);
-      await ctx.reply('Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 
@@ -104,13 +96,14 @@ export class CommandHandler {
         include: { account: { select: { id: true, name: true, currencyCode: true } } },
       });
 
+      const lang = ctx.userState?.language;
       if (memberships.length === 0) {
-        await ctx.reply('No accounts found.');
+        await ctx.reply(t('notLinked', lang));
         return;
       }
 
       if (memberships.length === 1) {
-        await ctx.reply(`You have one account: <b>${memberships[0].account.name}</b> (already active).`, { parse_mode: 'HTML' });
+        await ctx.reply(t('oneAccount', lang, { name: memberships[0].account.name }), { parse_mode: 'HTML' });
         return;
       }
 
@@ -119,10 +112,10 @@ export class CommandHandler {
         return [Markup.button.callback(`${m.account.name} (${m.account.currencyCode})${active}`, `account:${m.account.id}`)];
       });
 
-      await ctx.reply('Choose an account:', Markup.inlineKeyboard(buttons));
+      await ctx.reply(t('chooseAccount', lang), Markup.inlineKeyboard(buttons));
     } catch (error) {
       this.logger.error(`Error in /account: ${error}`);
-      await ctx.reply('Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 
@@ -130,67 +123,86 @@ export class CommandHandler {
     try {
       if (!ctx.userState) return;
 
-      // Verify user has access to this account
       const membership = await this.prisma.accountMember.findFirst({
         where: { userId: ctx.userState.userId, accountId },
         include: { account: { select: { name: true } } },
       });
 
       if (!membership) {
-        await ctx.answerCbQuery('Account not found.');
+        await ctx.answerCbQuery(t('somethingWrong', ctx.userState.language));
         return;
       }
 
       await this.linkService.updateDefaultAccount(ctx.userState.telegramUserId, accountId);
-      await ctx.answerCbQuery(`Switched to ${membership.account.name}`);
-      await ctx.editMessageText(`✅ Active account: <b>${membership.account.name}</b>`, { parse_mode: 'HTML' });
+      await ctx.answerCbQuery(membership.account.name);
+      await ctx.editMessageText(t('activeAccount', ctx.userState.language, { name: membership.account.name }), { parse_mode: 'HTML' });
     } catch (error) {
       this.logger.error(`Error in account callback: ${error}`);
-      await ctx.answerCbQuery('Something went wrong.');
+      await ctx.answerCbQuery(t('somethingWrong', ctx.userState?.language));
     }
   }
 
   async handleNewChat(ctx: BotContext): Promise<void> {
     try {
+      const lang = ctx.userState?.language;
       if (!ctx.userState) {
-        await ctx.reply('Please link your account first. Use /link <code>.');
+        await ctx.reply(t('linkFirst', lang), { parse_mode: 'HTML' });
         return;
       }
 
       await this.linkService.resetConversation(ctx.userState.telegramUserId);
-      await ctx.reply('🔄 New conversation started. Ask me anything!');
+      await ctx.reply(t('newChatStarted', lang));
     } catch (error) {
       this.logger.error(`Error in /newchat: ${error}`);
-      await ctx.reply('Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
+    }
+  }
+
+  async handleUsage(ctx: BotContext): Promise<void> {
+    try {
+      if (!ctx.userState) {
+        await ctx.reply(t('linkFirst', ctx.from?.language_code), { parse_mode: 'HTML' });
+        return;
+      }
+
+      const stats = await this.subscriptionsService.getUsageStats(ctx.userState.userId);
+      const now = new Date();
+      const details = await this.subscriptionsService.getUsageDetails(ctx.userState.userId, now.getMonth() + 1, now.getFullYear());
+
+      const lang = ctx.userState.language;
+      const limitStr = stats.aiRequestsLimit === -1 ? '∞' : String(stats.aiRequestsLimit);
+      let message = `${t('usageTitle', lang)}\n\n`;
+      message += `<b>${t('used', lang)}:</b> ${stats.aiRequestsUsed} / ${limitStr}\n`;
+      message += `<b>${t('tier', lang)}:</b> ${stats.tier}\n`;
+
+      if (details.summary.length > 0) {
+        message += `\n<b>${t('breakdown', lang)}:</b>\n`;
+        for (const item of details.summary) {
+          message += `  • ${item.feature}: ${item.count}× (${item.totalCost} credits)\n`;
+        }
+      }
+
+      if (stats.resetAt) {
+        const resetDate = new Date(stats.resetAt);
+        message += `\n<i>${t('resets', lang)}: ${resetDate.toLocaleDateString()}</i>`;
+      }
+
+      await ctx.reply(message, { parse_mode: 'HTML' });
+    } catch (error) {
+      this.logger.error(`Error in /usage: ${error}`);
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 
   async handleHelp(ctx: BotContext): Promise<void> {
     try {
       await ctx.reply(
-        '<b>Available commands:</b>\n\n' +
-        '/expense &lt;amount&gt; [description] — Add an expense\n' +
-        '  <i>Example: /expense 50 lunch</i>\n' +
-        '  <i>Example: /expense 100 UAH taxi</i>\n\n' +
-        '/income &lt;amount&gt; [description] — Add income\n' +
-        '  <i>Example: /income 3000 salary</i>\n\n' +
-        '/category [type] &lt;name&gt; — Create a category\n' +
-        '  <i>Example: /category expense Food</i>\n' +
-        '  <i>Example: /category income Salary</i>\n' +
-        '/categories — List &amp; delete categories\n\n' +
-        '/account — Switch between accounts\n' +
-        '/newchat — Start a new AI conversation\n' +
-        '/unlink — Disconnect Telegram from the app\n' +
-        '/help — Show this message\n\n' +
-        '<b>Other features:</b>\n' +
-        '🎤 Send a <b>voice message</b> to add expenses or chat with AI\n' +
-        '📷 Send a <b>receipt photo</b> to scan and create an expense\n' +
-        '💬 Just type any message to <b>chat with the AI assistant</b>',
+        t('helpText', ctx.userState?.language),
         { parse_mode: 'HTML' },
       );
     } catch (error) {
       this.logger.error(`Error in /help: ${error}`);
-      await ctx.reply('Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 

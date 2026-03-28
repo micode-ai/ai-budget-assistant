@@ -57,6 +57,15 @@ Rastrea tu uso de AI desde Configuración > Suscripción:
 
 Cuando usas una función de AI costosa (Historia de gastos, Fat Finder, AI Insights, Insights de inversiones) por primera vez, la app muestra un diálogo de confirmación con el costo y tu saldo restante. Puedes elegir "No preguntar de nuevo" para omitir confirmaciones futuras para esa función.
 
+### Detalles de uso
+
+Toca **Ver detalles** en la pantalla de suscripción para ver un desglose detallado de tu uso de AI:
+
+- **Total usado** — total de solicitudes de AI consumidas este mes
+- **Por función** — cuántas solicitudes usó cada función (Chat AI, Entrada de voz, Escaneo de recibos, Historia de gastos, Fat Finder, etc.)
+- **Historial** — registro cronológico de cada solicitud de AI con fecha, hora y costo
+- **Navegación por meses** — consulta el uso de meses anteriores
+
 ### Qué cuenta como solicitud de AI:
 - Enviar un mensaje en el **Chat AI** (1 solicitud)
 - Usar **Entrada de voz** para agregar un gasto (1 solicitud)

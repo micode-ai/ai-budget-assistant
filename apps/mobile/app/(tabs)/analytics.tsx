@@ -244,6 +244,7 @@ export default function AnalyticsScreen() {
             <Text style={styles.storyBannerTitle}>{t('story.viewStory')}</Text>
             <Text style={styles.storyBannerSubtext}>{t('story.title')}</Text>
           </View>
+          <Ionicons name="sparkles" size={16} color={theme.colors.warning} />
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 
@@ -264,7 +265,9 @@ export default function AnalyticsScreen() {
         {aiInsights.length > 0 && (
           <View style={styles.section}>
             <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>{t('insights.aiSuggested')}</Text>
+              <Ionicons name="sparkles" size={16} color={theme.colors.warning} />
+              <Text style={[styles.sectionTitle, { marginBottom: 0 }]}>{t('insights.aiSuggested')}</Text>
+              <View style={{ flex: 1 }} />
               <AiUsageBadge />
             </View>
             {aiInsights.slice(0, 5).map((insight) => {

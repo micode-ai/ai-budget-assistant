@@ -1111,12 +1111,12 @@ The application uses a tiered subscription model to manage access to AI-powered 
 - **AI usage tracking**: Each AI request is tracked per user with cost units (fractional)
 - **Model cost multiplier**: Applied by `AiUsageGuard` before recording usage — fast=0.75×, balanced=1.0×, quality=1.5×
 - **Trial periods**: New users receive trial access with reduced limits
-  - Trial limits: free = 5, pro = 15, business = 100
-  - Active limits: free = 5, pro = 200, business = unlimited
+  - Trial limits: free = 50, pro = 15, business = 100
+  - Active limits: free = 50, pro = 300, business = unlimited
 - **Guards**:
   - `SubscriptionTierGuard` checks that the user's subscription tier meets the minimum required tier for the endpoint
   - `AiUsageGuard` checks that the user has not exceeded their AI usage limit for the current billing period; applies model cost multiplier
-- **AI features** (insights, story) require Pro or Business tier
+- **AI features** (insights, story, fat finder) are available on all tiers — only AI request limits differ by plan
 
 ## Dashboard Widgets (in-app)
 

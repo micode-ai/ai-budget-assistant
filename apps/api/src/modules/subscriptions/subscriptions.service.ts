@@ -101,13 +101,14 @@ export class SubscriptionsService {
     const sub = await this.getOrCreateSubscription(userId);
     await this.resetUsageIfNeeded(sub);
 
-    const limit = sub.status === 'trialing'
+    const tierLimit = sub.status === 'trialing'
       ? TRIAL_REQUEST_LIMITS[sub.tier as SubscriptionTier]
       : AI_REQUEST_LIMITS[sub.tier as SubscriptionTier];
     const refreshedSub = await this.prisma.subscription.findUnique({
       where: { userId },
     });
 
+    const limit = refreshedSub?.customAiLimit ?? tierLimit;
     const used = refreshedSub?.aiRequestsUsed ?? 0;
 
     return {
@@ -328,9 +329,10 @@ export class SubscriptionsService {
       where: { userId },
     });
 
-    const limit = current.status === 'trialing'
+    const tierLimit = current.status === 'trialing'
       ? TRIAL_REQUEST_LIMITS[current.tier as SubscriptionTier]
       : AI_REQUEST_LIMITS[current.tier as SubscriptionTier];
+    const limit = current.customAiLimit ?? tierLimit;
     if (current.aiRequestsUsed + costUnits > limit) {
       throw new ForbiddenException(
         `AI request limit reached (${limit} per month). Upgrade your subscription for more AI features.`,

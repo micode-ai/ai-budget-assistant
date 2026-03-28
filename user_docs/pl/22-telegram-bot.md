@@ -27,6 +27,7 @@
 | `/income KWOTA OPIS` | Szybko dodaj przychod (np. `/income 3000 wynagrodzenie`) |
 | `/category [TYP] NAZWA` | Utworz kategorie (np. `/category expense Jedzenie`) |
 | `/categories` | Lista i usuwanie kategorii |
+| `/usage` | Pokaż użycie AI, limity i podział |
 | `/account` | Przelacz miedzy kontami |
 | `/newchat` | Rozpocznij nowa rozmowe z AI |
 | `/unlink` | Odlacz Telegram od konta |
@@ -113,7 +114,10 @@ Bot rozpoznaje symbole i kody walut w poleceniach:
   **O:** Nie, kazdy uzytkownik aplikacji moze miec jedno polaczone konto Telegram, a kazde konto Telegram moze byc polaczone z jednym uzytkownikiem.
 
 - **P: Czy wiadomosci bota licza sie do limitu zapytan AI?**
-  **O:** Tak, kazda wiadomosc przetworzona przez AI (tekst, glos) zuzywa jedno zapytanie z Twojego miesiecznego limitu.
+  **O:** Tak. Czat AI kosztuje 1 zapytanie na wiadomość, wiadomości głosowe 2 zapytania (transkrypcja + przetwarzanie AI), zdjęcia paragonów 2 zapytania. Użyj `/usage` do sprawdzenia. Po osiągnięciu limitu bot Cię powiadomi.
+
+- **P: W jakim języku odpowiada bot?**
+  **O:** Bot odpowiada w języku ustawionym w aplikacji (Ustawienia > Wygląd). Wszystkie komunikaty systemowe są zlokalizowane.
 
 ---
 
