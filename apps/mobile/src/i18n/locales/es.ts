@@ -312,6 +312,7 @@ export default {
     saveImage: 'Guardar',
     imageSaved: 'Imagen guardada en la galería',
     galleryPermissionDenied: 'Se requiere acceso a la galería para guardar imágenes',
+    tapToOpen: 'Toca para abrir',
     deleteImage: 'Eliminar imagen',
     replaceImage: 'Reemplazar imagen',
     confirmDeleteImage: '¿Eliminar la imagen del recibo?',

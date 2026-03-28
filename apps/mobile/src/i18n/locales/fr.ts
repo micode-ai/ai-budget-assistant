@@ -312,6 +312,7 @@ export default {
     saveImage: 'Enregistrer',
     imageSaved: 'Image enregistrée dans la galerie',
     galleryPermissionDenied: "L'accès à la galerie est requis pour enregistrer des images",
+    tapToOpen: 'Appuyez pour ouvrir',
     deleteImage: 'Supprimer l\'image',
     replaceImage: 'Remplacer l\'image',
     confirmDeleteImage: 'Supprimer l\'image du reçu?',

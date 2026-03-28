@@ -153,6 +153,10 @@ export class CreateExpenseDto {
   receiptImageBase64?: string;
 
   @IsOptional()
+  @IsString()
+  receiptMimeType?: string;
+
+  @IsOptional()
   @IsArray()
   @IsUUID('4', { each: true })
   tagIds?: string[];

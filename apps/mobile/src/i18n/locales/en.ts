@@ -312,6 +312,7 @@ export default {
     saveImage: 'Save',
     imageSaved: 'Image saved to gallery',
     galleryPermissionDenied: 'Gallery access is required to save images',
+    tapToOpen: 'Tap to open',
     deleteImage: 'Delete Image',
     replaceImage: 'Replace Image',
     confirmDeleteImage: 'Are you sure you want to delete the receipt image?',

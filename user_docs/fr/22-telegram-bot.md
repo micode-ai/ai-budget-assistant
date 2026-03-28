@@ -69,9 +69,10 @@ Les messages vocaux prennent en charge les memes commandes et questions que les 
 1. Prenez une photo d'un recu
 2. Envoyez la photo au bot
 3. Le bot le scanne par OCR et affiche un resume
-4. Appuyez sur **Confirmer** pour ajouter la depense, ou **Annuler** pour rejeter
+4. Si la date est incorrecte, appuyez sur **Changer la date** et envoyez la bonne date (JJ.MM.AAAA)
+5. Appuyez sur **Confirmer** pour ajouter la depense, ou **Annuler** pour rejeter
 
-Vous pouvez aussi envoyer des images de recus en tant que documents (PDF ou images).
+Vous pouvez aussi envoyer des images de reçus comme documents (PDF ou images). Les reçus PDF sont sauvegardés et consultables dans l'app.
 
 ## Changer de compte
 

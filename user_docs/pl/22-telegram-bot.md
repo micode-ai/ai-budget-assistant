@@ -69,9 +69,10 @@ Wiadomosci glosowe obsluguja te same polecenia i pytania co wiadomosci tekstowe.
 1. Zrob zdjecie paragonu
 2. Wyslij zdjecie do bota
 3. Bot skanuje je za pomoca OCR i wyswietla podsumowanie
-4. Dotknij **Potwierdz**, aby dodac wydatek, lub **Anuluj**, aby odrzucic
+4. Jeśli data jest błędna, dotknij **Zmień datę** i wyślij poprawną datę (DD.MM.RRRR)
+5. Dotknij **Potwierdz**, aby dodac wydatek, lub **Anuluj**, aby odrzucic
 
-Mozesz tez wysylac zdjecia paragonow jako dokumenty (PDF lub obrazy).
+Możesz też wysyłać zdjęcia paragonów jako dokumenty (PDF lub obrazy). Paragony PDF są zapisywane i dostępne do przeglądania w aplikacji.
 
 ## Przelaczanie kont
 

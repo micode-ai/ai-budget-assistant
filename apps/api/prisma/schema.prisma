@@ -262,7 +262,8 @@ model Expense {
   encryptedPayload     String?  @map("encrypted_payload")
   encryptionKeyVersion Int?     @map("encryption_key_version")
 
-  receiptImage Bytes? @map("receipt_image")
+  receiptImage     Bytes?  @map("receipt_image")
+  receiptMimeType  String? @map("receipt_mime_type")
 
   // Relations
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)

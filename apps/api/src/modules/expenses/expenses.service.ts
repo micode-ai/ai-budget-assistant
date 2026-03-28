@@ -61,6 +61,10 @@ export class ExpensesService {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
+      const receiptMimeType = dto.receiptMimeType || (receiptImage ? 'image/jpeg' : undefined);
+      if (receiptImage) {
+        console.log(`[ExpensesService.create] receiptMimeType from dto: "${dto.receiptMimeType}", resolved: "${receiptMimeType}", imageSize: ${receiptImage.length}`);
+      }
 
       // Check if this is a new expense or an update (for notification dedup)
       const existing = await tx.expense.findUnique({
@@ -87,6 +91,7 @@ export class ExpensesService {
         locationLng: dto.location?.lng,
         source: dto.source,
         receiptImage,
+        receiptMimeType,
         isDebt: dto.isDebt ?? false,
         isDebtRepayment: dto.isDebtRepayment ?? false,
         debtContactName: dto.debtContactName,
@@ -107,6 +112,7 @@ export class ExpensesService {
           date: new Date(dto.date),
           source: dto.source,
           receiptImage,
+          receiptMimeType,
           isDeleted: false,
           isDebt: dto.isDebt ?? false,
           isDebtRepayment: dto.isDebtRepayment ?? false,
@@ -537,11 +543,14 @@ export class ExpensesService {
         isDeleted: false,
         OR: [{ id: expenseId }, { clientId: expenseId }],
       },
-      select: { receiptImage: true },
+      select: { receiptImage: true, receiptMimeType: true },
     });
     if (!expense) throw new NotFoundException('Expense not found');
     if (!expense.receiptImage) throw new NotFoundException('No receipt image found');
-    return { imageBase64: expense.receiptImage.toString('base64') };
+    return {
+      imageBase64: expense.receiptImage.toString('base64'),
+      mimeType: expense.receiptMimeType || 'image/jpeg',
+    };
   }
 
   async saveReceiptImage(accountId: string, expenseId: string, imageBase64: string) {

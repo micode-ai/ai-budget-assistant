@@ -85,6 +85,7 @@ export default function ExpenseDetailScreen() {
 
   // Receipt image state
   const [receiptImageBase64, setReceiptImageBase64] = useState<string | null>(null);
+  const [receiptMimeType, setReceiptMimeType] = useState<string>('image/jpeg');
   const [imageLoading, setImageLoading] = useState(false);
   const [imageViewVisible, setImageViewVisible] = useState(false);
 
@@ -106,8 +107,14 @@ export default function ExpenseDetailScreen() {
   const handleLoadReceiptImage = useCallback(async () => {
     if (!id) return;
     setImageLoading(true);
-    const base64 = await loadReceiptImage(id);
-    setReceiptImageBase64(base64);
+    const result = await loadReceiptImage(id);
+    console.log('=== RECEIPT ===', { hasResult: !!result, mimeType: result?.mimeType, base64Len: result?.base64?.length });
+    if (result) {
+      setReceiptImageBase64(result.base64);
+      setReceiptMimeType(result.mimeType);
+    } else {
+      setReceiptImageBase64(null);
+    }
     setImageLoading(false);
   }, [id, loadReceiptImage]);
 
@@ -176,15 +183,22 @@ export default function ExpenseDetailScreen() {
   };
 
   // Receipt image helpers
+  const isPdf = receiptMimeType === 'application/pdf';
+  const fileExt = isPdf ? 'pdf' : 'jpg';
+
   const handleShareImage = async () => {
     if (!receiptImageBase64) return;
-    const file = new File(Paths.cache, `receipt-${id}.jpg`);
+    const file = new File(Paths.cache, `receipt-${id}.${fileExt}`);
     file.write(receiptImageBase64, { encoding: 'base64' });
-    await Sharing.shareAsync(file.uri, { mimeType: 'image/jpeg' });
+    await Sharing.shareAsync(file.uri, { mimeType: receiptMimeType });
   };
 
   const handleSaveImage = async () => {
     if (!receiptImageBase64) return;
+    if (isPdf) {
+      // PDF can't be saved to gallery — share instead
+      return handleShareImage();
+    }
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert(t('common.error'), t('expenseDetail.galleryPermissionDenied'));
@@ -653,18 +667,28 @@ export default function ExpenseDetailScreen() {
               <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginVertical: 16 }} />
             ) : receiptImageBase64 ? (
               <>
-                <TouchableOpacity onPress={() => setImageViewVisible(true)}>
-                  <Image
-                    source={{ uri: `data:image/jpeg;base64,${receiptImageBase64}` }}
-                    style={styles.receiptThumbnail}
-                    resizeMode="cover"
-                  />
-                </TouchableOpacity>
-                <View style={styles.imageActions}>
-                  <TouchableOpacity style={styles.imageActionBtn} onPress={() => setImageViewVisible(true)}>
-                    <Ionicons name="eye-outline" size={18} color={theme.colors.primary} />
-                    <Text style={styles.imageActionText}>{t('expenseDetail.viewImage')}</Text>
+                {isPdf ? (
+                  <TouchableOpacity style={styles.pdfPreview} onPress={handleShareImage}>
+                    <Ionicons name="document-text-outline" size={48} color={theme.colors.primary} />
+                    <Text style={styles.pdfPreviewText}>PDF</Text>
+                    <Text style={styles.pdfPreviewHint}>{t('expenseDetail.tapToOpen')}</Text>
                   </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={() => setImageViewVisible(true)}>
+                    <Image
+                      source={{ uri: `data:image/jpeg;base64,${receiptImageBase64}` }}
+                      style={styles.receiptThumbnail}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                )}
+                <View style={styles.imageActions}>
+                  {!isPdf && (
+                    <TouchableOpacity style={styles.imageActionBtn} onPress={() => setImageViewVisible(true)}>
+                      <Ionicons name="eye-outline" size={18} color={theme.colors.primary} />
+                      <Text style={styles.imageActionText}>{t('expenseDetail.viewImage')}</Text>
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity style={styles.imageActionBtn} onPress={handleShareImage}>
                     <Ionicons name="share-outline" size={18} color={theme.colors.primary} />
                     <Text style={styles.imageActionText}>{t('expenseDetail.shareImage')}</Text>
@@ -1123,6 +1147,25 @@ const createStyles = (theme: Theme) => ({
     height: 200,
     borderRadius: theme.borderRadius.lg,
     marginBottom: theme.spacing[3],
+  },
+  pdfPreview: {
+    width: '100%' as const,
+    height: 150,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primaryLight,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    marginBottom: theme.spacing[3],
+  },
+  pdfPreviewText: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.primary,
+    marginTop: theme.spacing[1],
+  },
+  pdfPreviewHint: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   imageActions: {
     flexDirection: 'row' as const,

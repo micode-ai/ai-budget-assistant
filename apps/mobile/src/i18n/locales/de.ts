@@ -312,6 +312,7 @@ export default {
     saveImage: 'Speichern',
     imageSaved: 'Bild in der Galerie gespeichert',
     galleryPermissionDenied: 'Galeriezugriff ist zum Speichern von Bildern erforderlich',
+    tapToOpen: 'Zum Öffnen tippen',
     deleteImage: 'Bild löschen',
     replaceImage: 'Bild ersetzen',
     confirmDeleteImage: 'Kassenbon-Bild löschen?',

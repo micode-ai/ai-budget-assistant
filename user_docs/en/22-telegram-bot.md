@@ -69,9 +69,10 @@ Voice messages support all the same commands and questions as text messages.
 1. Take a photo of a receipt
 2. Send the photo to the bot
 3. The bot scans it using OCR and shows a summary
-4. Tap **Confirm** to add the expense, or **Cancel** to reject
+4. If the date is wrong, tap **Change date** and send the correct date (DD.MM.YYYY)
+5. Tap **Add expense** to confirm, or **Cancel** to reject
 
-You can also send receipt images as documents (PDF or images).
+You can also send receipt images as documents (PDF or images). PDF receipts are saved and viewable in the app — tap the PDF preview to open it.
 
 ## Switching Accounts
 

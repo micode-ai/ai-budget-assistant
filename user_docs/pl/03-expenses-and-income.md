@@ -101,7 +101,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
 - **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
 - **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
-- **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu
+- **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF (z Telegrama) pokazują podgląd dokumentu do otwarcia
 
 ### Dostepne akcje w szczegolach wydatku:
 - **Edytuj** — zmodyfikuj wydatek

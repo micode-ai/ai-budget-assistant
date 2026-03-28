@@ -69,9 +69,10 @@ Sprachnachrichten unterstutzen dieselben Befehle und Fragen wie Textnachrichten.
 1. Fotografiere einen Beleg
 2. Sende das Foto an den Bot
 3. Der Bot scannt es per OCR und zeigt eine Zusammenfassung
-4. Tippe auf **Bestatigen**, um die Ausgabe hinzuzufugen, oder **Abbrechen**, um abzulehnen
+4. Wenn das Datum falsch ist, tippen Sie auf **Datum ändern** und senden Sie das richtige Datum (TT.MM.JJJJ)
+5. Tippe auf **Bestatigen**, um die Ausgabe hinzuzufugen, oder **Abbrechen**, um abzulehnen
 
-Du kannst Belegbilder auch als Dokumente senden (PDF oder Bilder).
+Sie können Belegbilder auch als Dokumente senden (PDF oder Bilder). PDF-Belege werden gespeichert und sind in der App einsehbar.
 
 ## Konten wechseln
 
