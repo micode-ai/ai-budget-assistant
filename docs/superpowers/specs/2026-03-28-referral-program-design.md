@@ -11,7 +11,7 @@ Each user gets a unique 6-char referral code. When a new user registers with thi
 - At 5 qualified referrals: referrer gets 1 month Pro free (Stripe coupon)
 - At 10 qualified referrals: referrer gets "Ambassador" badge (via gamification system)
 
-A "qualified referral" = referred user stays active for 7+ days after registration.
+A "qualified referral" = referred user has been registered for 7+ days AND has `lastSyncAt` within 7 days of the qualification check (proves actual app usage, not just registration).
 
 ---
 
@@ -33,6 +33,8 @@ model Referral {
   referrer User @relation("ReferralsMade", fields: [referrerUserId], references: [id])
   referred User @relation("ReferredBy", fields: [referredUserId], references: [id])
 
+  @@index([referrerUserId])
+  @@index([status, createdAt])
   @@map("referrals")
 }
 
@@ -95,7 +97,7 @@ getList(userId) — paginated referrals list
 
 ### Code Generation
 
-6-char uppercase alphanumeric (`crypto.randomBytes(4).toString('base64url').substring(0, 6).toUpperCase()`). Retry on collision (unique constraint).
+6-char code from unambiguous alphabet `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (excludes 0/O, 1/I/L to avoid confusion when shared verbally). Generate via `crypto.randomBytes()` mapped to the alphabet. Retry on collision (unique constraint on `User.referralCode`).
 
 ---
 
@@ -106,7 +108,7 @@ getList(userId) — paginated referrals list
 ```typescript
 @IsOptional()
 @IsString()
-@MaxLength(10)
+@Matches(/^[A-Z0-9]{4,10}$/, { message: 'Invalid referral code format' })
 referralCode?: string;
 ```
 
@@ -115,6 +117,13 @@ referralCode?: string;
 After user creation, if `dto.referralCode` is provided:
 - Call `referralsService.applyReferralCode(user.id, dto.referralCode)`
 - If code is invalid or self-referral — log warning, do NOT block registration
+
+### `applyReferralCode()` validation checks
+
+1. Code exists (find user by `referralCode`)
+2. Code does not belong to the registering user (self-referral prevention)
+3. Referred user does not already have a referral record (catch Prisma unique constraint error on `referredUserId` gracefully)
+4. All failures return silently (log warning) — never block registration
 
 ### auth.module.ts
 
@@ -126,12 +135,17 @@ Import `ReferralsModule` (use `forwardRef` if needed for circular dependency).
 
 ### AI request limit check
 
-In `subscriptions.service.ts`, method `trackAiUsage()` at line 336:
+In `subscriptions.service.ts`:
 
-**Current:** `const limit = current.customAiLimit ?? tierLimit;`
-**Updated:** `const limit = (current.customAiLimit ?? tierLimit) + (current.bonusAiRequests ?? 0);`
+**`trackAiUsage()`** (line 335):
+- Current: `const limit = current.customAiLimit ?? tierLimit;`
+- Updated: `const limit = (current.customAiLimit ?? tierLimit) + (current.bonusAiRequests ?? 0);`
 
-Same change in `getUsageStats()` at line 111.
+**`getUsageStats()`** (line 111):
+- Current: `const limit = refreshedSub?.customAiLimit ?? tierLimit;`
+- Updated: `const limit = (refreshedSub?.customAiLimit ?? tierLimit) + (refreshedSub?.bonusAiRequests ?? 0);`
+
+Note: uses `refreshedSub` (not `current`) to match the existing code shape.
 
 Bonus requests do NOT reset monthly — they stack permanently.
 
@@ -154,9 +168,10 @@ In `checkMilestones()`, when user reaches 5 qualified referrals:
 3. Send push notification
 
 Implementation:
-- Create coupon once at app start or on-demand: `stripe.coupons.create({ percent_off: 100, duration: 'once', name: 'Referral: 1 Month Pro Free' })`
+- Create coupon manually in Stripe Dashboard (100% off, duration: once, name: "Referral: 1 Month Pro Free")
 - Store coupon ID in env: `STRIPE_REFERRAL_COUPON_ID`
-- Generate unique promotion code per user: `stripe.promotionCodes.create({ coupon: couponId, max_redemptions: 1 })`
+- At runtime, generate unique promotion code per user: `stripe.promotionCodes.create({ coupon: couponId, max_redemptions: 1 })`
+- If `STRIPE_REFERRAL_COUPON_ID` is not set, skip Stripe coupon creation (log warning) — the milestone is still recorded
 
 ---
 
@@ -183,9 +198,13 @@ Add two new achievements:
 
 ### gamification.service.ts
 
-Add referral count check in `checkAchievements()`:
+Referral achievements are user-global (not account-scoped like other achievements). To handle the architectural mismatch with the account-scoped `UserAchievement` model:
+
+- Store referral achievements against the user's `defaultAccountId`
+- In `checkAchievements(accountId, userId)`, add referral count check regardless of which account triggered it
 - Query `Referral` count where `referrerUserId = userId` and `status = 'qualified'`
 - Evaluate `referrals_5` and `referrals_10_ambassador` achievements
+- When upserting referral achievements, use `user.defaultAccountId` as the `accountId`
 
 The Ambassador badge is cosmetic — shown in the user's gamification profile alongside other achievements. No special badge field needed, it's just a legendary achievement.
 
@@ -202,10 +221,15 @@ async qualifyPendingReferrals()
 
 Logic:
 1. Find referrals with `status = pending` AND `createdAt <= 7 days ago`
-2. For each, check if referred user `isActive = true`
-3. If active: update to `qualified`, set `qualifiedAt = now`, call `grantReferralBonus()`, call `checkMilestones()`
-4. If not active: update to `expired`
+2. For each, check if referred user is genuinely active: `isActive = true` AND `lastSyncAt` is within the last 7 days (proves actual app usage)
+3. If active: process inside a Prisma `$transaction` to prevent race conditions:
+   - Update referral status to `qualified`, set `qualifiedAt = now`
+   - Call `grantReferralBonus()` (uses `bonusGranted` flag for idempotency)
+   - Call `checkMilestones()`
+4. If not active AND `createdAt <= 30 days ago`: update to `expired` (give 30-day window before expiring)
 5. Send notifications for each qualification
+
+Note: `ScheduleModule.forRoot()` is already imported in `app.module.ts` — do NOT import it again in `ReferralsModule`. The cron service just needs to be registered as a provider in `ReferralsModule`.
 
 ---
 
@@ -284,6 +308,10 @@ getReferralList(): Promise<ReferralListItemDto[]>
 
 Zustand store with: code, stats, referrals list, isLoading, error.
 Methods: loadCode, loadStats, loadReferrals, shareCode (native share sheet).
+
+### Share format
+
+Share text includes a plain text message with the referral code (no deep link for v1 — users enter the code manually during registration). Deep linking can be added later as an enhancement.
 
 ### RegisterDto update (`packages/shared-types`)
 
