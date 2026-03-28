@@ -84,6 +84,12 @@ export default function SettingsIndexScreen() {
       description: t('settingsNav.aboutDesc'),
       route: '/settings/about',
     },
+    {
+      icon: 'people-outline',
+      label: t('referral.settingsTitle'),
+      description: t('referral.settingsSubtitle'),
+      route: '/referral',
+    },
   ];
 
   const handleLogout = () => {

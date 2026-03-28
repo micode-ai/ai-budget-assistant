@@ -29,6 +29,32 @@ enum InvitationStatus {
   expired
 }
 
+enum ReferralStatus {
+  pending
+  qualified
+  expired
+
+  @@map("referral_status")
+}
+
+model Referral {
+  id             String         @id @default(uuid())
+  referrerUserId String         @map("referrer_user_id")
+  referredUserId String         @unique @map("referred_user_id")
+  code           String         @map("code")
+  status         ReferralStatus @default(pending)
+  bonusGranted   Boolean        @default(false) @map("bonus_granted")
+  qualifiedAt    DateTime?      @map("qualified_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+
+  referrer User @relation("ReferralsMade", fields: [referrerUserId], references: [id])
+  referred User @relation("ReferredBy", fields: [referredUserId], references: [id])
+
+  @@index([referrerUserId])
+  @@index([status, createdAt])
+  @@map("referrals")
+}
+
 enum SubscriptionTier {
   free
   pro
@@ -64,6 +90,9 @@ model User {
   passwordResetExpiresAt DateTime? @map("password_reset_expires_at")
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
+  referralCode   String?    @unique @map("referral_code")
+  referralsMade  Referral[] @relation("ReferralsMade")
+  referredBy     Referral?  @relation("ReferredBy")
 
   // Relations
   expenses          Expense[]
@@ -572,6 +601,7 @@ model Subscription {
   aiRequestsUsed      Int                @default(0) @map("ai_requests_used")
   aiRequestsResetAt   DateTime           @default(now()) @map("ai_requests_reset_at")
   customAiLimit       Int?               @map("custom_ai_limit")
+  bonusAiRequests Int @default(0) @map("bonus_ai_requests")
 
   createdAt            DateTime           @default(now()) @map("created_at")
   updatedAt            DateTime           @updatedAt @map("updated_at")

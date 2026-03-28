@@ -14,6 +14,7 @@ interface SubscriptionState {
   aiRequestsLimit: number;
   usageResetAt?: string;
   percentUsed: number;
+  bonusAiRequests: number;
   isTrialing: boolean;
 
   // Plans (localized pricing)
@@ -65,6 +66,7 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
   aiRequestsLimit: 50,
   usageResetAt: undefined,
   percentUsed: 0,
+  bonusAiRequests: 0,
   isTrialing: false,
 
   plans: [],
@@ -101,6 +103,7 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
         aiRequestsLimit: usage.aiRequestsLimit === -1 ? Infinity : usage.aiRequestsLimit,
         usageResetAt: usage.resetAt,
         percentUsed: usage.percentUsed,
+        bonusAiRequests: usage.bonusAiRequests ?? 0,
         isTrialing: usage.isTrialing ?? false,
       });
     } catch (error) {
