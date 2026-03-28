@@ -50,6 +50,7 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [currencyCode, setCurrencyCode] = useState('USD');
   const [language, setLanguage] = useState(i18n.language);
+  const [referralCode, setReferralCode] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -97,7 +98,7 @@ export default function RegisterScreen() {
     setError(null);
 
     try {
-      await register(email, password, name, currencyCode);
+      await register(email, password, name, currencyCode, referralCode || undefined);
       router.replace('/welcome');
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
@@ -247,6 +248,16 @@ export default function RegisterScreen() {
                 ))}
               </View>
             </View>
+
+            <TextInput
+              style={styles.input}
+              placeholder={t('referral.codeOptional')}
+              placeholderTextColor={theme.colors.textTertiary}
+              value={referralCode}
+              onChangeText={(text) => setReferralCode(text.toUpperCase())}
+              autoCapitalize="characters"
+              maxLength={10}
+            />
 
             <TouchableOpacity
               style={styles.termsRow}

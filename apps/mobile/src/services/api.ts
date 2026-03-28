@@ -147,12 +147,12 @@ class ApiClient {
     );
   }
 
-  async register(email: string, password: string, name: string, currencyCode?: string) {
+  async register(email: string, password: string, name: string, currencyCode?: string, referralCode?: string) {
     return this.request<{ accessToken: string; refreshToken: string; user: any; accounts: Account[] }>(
       '/auth/register',
       {
         method: 'POST',
-        body: JSON.stringify({ email, password, name, currencyCode }),
+        body: JSON.stringify({ email, password, name, currencyCode, referralCode }),
         skipAuth: true,
       },
     );
@@ -172,6 +172,19 @@ class ApiClient {
       body: JSON.stringify({ email, code, newPassword }),
       skipAuth: true,
     });
+  }
+
+  // Referral endpoints
+  async getReferralCode() {
+    return this.request<{ code: string }>('/referrals/my-code');
+  }
+
+  async getReferralStats() {
+    return this.request<any>('/referrals/stats');
+  }
+
+  async getReferralList() {
+    return this.request<any[]>('/referrals/list');
   }
 
   // User endpoints
