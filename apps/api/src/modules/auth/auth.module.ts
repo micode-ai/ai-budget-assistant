@@ -9,12 +9,14 @@ import { UsersModule } from '../users/users.module';
 import { AccountsModule } from '../accounts/accounts.module';
 import { MailModule } from '../mail/mail.module';
 import { AdminModule } from '../admin/admin.module';
+import { ReferralsModule } from '../referrals/referrals.module';
 
 @Module({
   imports: [
     UsersModule,
     AccountsModule,
     MailModule,
+    ReferralsModule,
     forwardRef(() => AdminModule),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({

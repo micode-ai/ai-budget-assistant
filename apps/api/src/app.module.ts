@@ -30,6 +30,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ReportsModule } from './modules/reports/reports.module';
 import { BackupsModule } from './modules/backups/backups.module';
 import { DebtsModule } from './modules/debts/debts.module';
+import { ReferralsModule } from './modules/referrals/referrals.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { DebtsModule } from './modules/debts/debts.module';
     ReportsModule,
     BackupsModule,
     DebtsModule,
+    ReferralsModule,
   ],
 })
 export class AppModule {}

@@ -60,7 +60,7 @@ export function BudgetWidgetMedium({ data }: Props) {
         height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'column',
-        backgroundColor: '#0F172A',
+        backgroundColor: '#F8FAFB',
         borderRadius: 20,
         padding: 16,
       }}
@@ -78,14 +78,14 @@ export function BudgetWidgetMedium({ data }: Props) {
         <FlexWidget style={{ flexDirection: 'column' }}>
           <TextWidget
             text={(labels?.today ?? 'Today').toUpperCase()}
-            style={{ fontSize: 10, color: '#94A3B8', letterSpacing: 1 }}
+            style={{ fontSize: 10, color: '#5E6272', letterSpacing: 1 }}
           />
           <TextWidget
             text={data.todaySpent}
             style={{
               fontSize: 20,
               fontWeight: 'bold',
-              color: '#F8FAFC',
+              color: '#1A1D26',
               marginTop: 2,
             }}
           />
@@ -96,7 +96,7 @@ export function BudgetWidgetMedium({ data }: Props) {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: badgeBg,
+                backgroundColor: data.deltaDirection === 'up' ? '#FFE5E5' : data.deltaDirection === 'down' ? '#E8F8F5' : '#EEF0F4',
                 borderRadius: 8,
                 paddingHorizontal: 6,
                 paddingVertical: 3,
@@ -110,7 +110,7 @@ export function BudgetWidgetMedium({ data }: Props) {
           )}
           <TextWidget
             text={`${labels?.week ?? 'Week'}: ${data.weekTotal}`}
-            style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}
+            style={{ fontSize: 11, color: '#5E6272', marginTop: 4 }}
           />
         </FlexWidget>
       </FlexWidget>
@@ -131,7 +131,7 @@ export function BudgetWidgetMedium({ data }: Props) {
             ? Math.max(4, (bar.value / bar.maxValue) * maxBarHeight)
             : 4;
           const isToday = i === todayIndex;
-          const barColor = isToday ? '#4ECDC4' : '#1E293B';
+          const barColor = isToday ? '#E37F2B' : '#EEF0F4';
 
           return (
             <FlexWidget
@@ -155,7 +155,7 @@ export function BudgetWidgetMedium({ data }: Props) {
                 text={bar.day}
                 style={{
                   fontSize: 9,
-                  color: isToday ? '#4ECDC4' : '#94A3B8',
+                  color: isToday ? '#E37F2B' : '#5E6272',
                   marginTop: 4,
                   fontWeight: isToday ? '600' : 'normal',
                 }}

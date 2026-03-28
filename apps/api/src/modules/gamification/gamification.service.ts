@@ -78,6 +78,17 @@ export class GamificationService {
       this.streakService.getStreak(accountId, userId),
     ]);
 
+    // Referral achievements (user-global, stored on defaultAccountId)
+    const referralCount = await this.prisma.referral.count({
+      where: { referrerUserId: userId, status: 'qualified' },
+    });
+
+    const referralUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { defaultAccountId: true },
+    });
+    const referralAccountId = referralUser?.defaultAccountId || accountId;
+
     // Check net positive month
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -191,12 +202,20 @@ export class GamificationService {
             completed = monthlyIncome > monthlyExpenses && monthlyIncome > 0;
           }
           break;
+
+        case 'referrals_5':
+        case 'referrals_10_ambassador': {
+          progress = Math.min(100, Math.round((referralCount / (def.threshold || 1)) * 100));
+          completed = referralCount >= (def.threshold || 1);
+          break;
+        }
       }
 
       // Upsert achievement record
+      const achievementAccountId = def.category === 'social' ? referralAccountId : accountId;
       const existing = await this.prisma.userAchievement.findUnique({
         where: {
-          userId_accountId_achievementId: { userId, accountId, achievementId: def.id },
+          userId_accountId_achievementId: { userId, accountId: achievementAccountId, achievementId: def.id },
         },
       });
 
@@ -218,7 +237,7 @@ export class GamificationService {
         await this.prisma.userAchievement.create({
           data: {
             userId,
-            accountId,
+            accountId: achievementAccountId,
             achievementId: def.id,
             progress: completed ? 100 : progress,
             isCompleted: completed,

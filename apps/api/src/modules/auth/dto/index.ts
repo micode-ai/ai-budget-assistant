@@ -23,6 +23,11 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   timezone?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^[A-Z0-9]{4,10}$/, { message: 'Invalid referral code format' })
+  referralCode?: string;
 }
 
 export class LoginDto {

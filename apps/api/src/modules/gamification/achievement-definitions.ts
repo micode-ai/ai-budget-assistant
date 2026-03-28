@@ -1,6 +1,6 @@
 export interface AchievementDef {
   id: string;
-  category: 'budget' | 'tracking' | 'streak' | 'milestone' | 'savings';
+  category: 'budget' | 'tracking' | 'streak' | 'milestone' | 'savings' | 'social';
   icon: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
   threshold?: number;
@@ -31,6 +31,10 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDef[] = [
   // Savings achievements
   { id: 'first_income', category: 'savings', icon: '💰', rarity: 'common', threshold: 1, xpReward: 10, titleKey: 'gamification.achievements.firstIncome.title', descriptionKey: 'gamification.achievements.firstIncome.description' },
   { id: 'net_positive_month', category: 'savings', icon: '💵', rarity: 'rare', xpReward: 50, titleKey: 'gamification.achievements.netPositiveMonth.title', descriptionKey: 'gamification.achievements.netPositiveMonth.description' },
+
+  // Social achievements (referrals)
+  { id: 'referrals_5', category: 'social', icon: '🤝', rarity: 'epic', threshold: 5, xpReward: 150, titleKey: 'gamification.achievements.referrals5.title', descriptionKey: 'gamification.achievements.referrals5.description' },
+  { id: 'referrals_10_ambassador', category: 'social', icon: '🏅', rarity: 'legendary', threshold: 10, xpReward: 500, titleKey: 'gamification.achievements.ambassador.title', descriptionKey: 'gamification.achievements.ambassador.description' },
 ];
 
 export const XP_PER_LEVEL = 100;

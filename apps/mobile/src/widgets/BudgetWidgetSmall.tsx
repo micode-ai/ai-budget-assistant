@@ -61,7 +61,7 @@ export function BudgetWidgetSmall({ data }: Props) {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#0F172A',
+        backgroundColor: '#F8FAFB',
         borderRadius: 16,
         padding: 10,
       }}
@@ -69,14 +69,14 @@ export function BudgetWidgetSmall({ data }: Props) {
     >
       <TextWidget
         text={(labels?.today ?? 'Today').toUpperCase()}
-        style={{ fontSize: 10, color: '#94A3B8', letterSpacing: 0.5 }}
+        style={{ fontSize: 10, color: '#5E6272', letterSpacing: 0.5 }}
       />
       <TextWidget
         text={data.todaySpent}
         style={{
           fontSize: 20,
           fontWeight: 'bold',
-          color: '#FFFFFF',
+          color: '#1A1D26',
           marginTop: 2,
         }}
       />
@@ -85,7 +85,7 @@ export function BudgetWidgetSmall({ data }: Props) {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: badgeBg,
+            backgroundColor: data.deltaDirection === 'up' ? '#FFE5E5' : data.deltaDirection === 'down' ? '#E8F8F5' : '#EEF0F4',
             borderRadius: 6,
             paddingHorizontal: 6,
             paddingVertical: 2,

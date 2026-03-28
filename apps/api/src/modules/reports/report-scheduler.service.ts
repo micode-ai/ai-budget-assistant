@@ -95,7 +95,7 @@ export class ReportSchedulerService {
 
         const totalExpenses = Number(expenseAgg._sum.amount || 0);
         const totalIncome = Number(incomeAgg._sum.amount || 0);
-        const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+        const savingsRate = totalIncome > 0 ? Math.max(-100, ((totalIncome - totalExpenses) / totalIncome) * 100) : (totalExpenses > 0 ? -100 : 0);
 
         // Top categories
         const categoryBreakdown = await this.prisma.expense.groupBy({
@@ -199,7 +199,7 @@ export class ReportSchedulerService {
           const prevTotalExpenses = Number(prevExpAgg._sum.amount || 0);
           const prevTotalIncome = Number(prevIncAgg._sum.amount || 0);
 
-          const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+          const savingsRate = totalIncome > 0 ? Math.max(-100, ((totalIncome - totalExpenses) / totalIncome) * 100) : (totalIncome === 0 && totalExpenses > 0 ? -100 : 0);
           const incomeChange = prevTotalIncome > 0 ? ((totalIncome - prevTotalIncome) / prevTotalIncome) * 100 : 0;
           const expenseChange = prevTotalExpenses > 0 ? ((totalExpenses - prevTotalExpenses) / prevTotalExpenses) * 100 : 0;
 
