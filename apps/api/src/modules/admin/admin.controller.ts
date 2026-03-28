@@ -104,6 +104,24 @@ export class AdminController {
     return result;
   }
 
+  @Patch('users/:id/ai-limit')
+  async setCustomAiLimit(
+    @Param('id') id: string,
+    @Body() body: { customAiLimit: number | null },
+    @Req() req: AdminRequest,
+  ) {
+    const result = await this.adminService.setCustomAiLimit(id, body.customAiLimit);
+    await this.adminService.logAction(
+      req.user.id,
+      'subscription.set_ai_limit',
+      'user',
+      id,
+      { customAiLimit: body.customAiLimit },
+      this.getIp(req),
+    );
+    return result;
+  }
+
   @Delete('users/:id')
   async deleteOrDeactivateUser(
     @Param('id') id: string,

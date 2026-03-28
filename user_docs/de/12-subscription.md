@@ -57,6 +57,15 @@ Verfolgen Sie Ihre AI-Nutzung unter Einstellungen > Abonnement:
 
 Wenn Sie eine teure AI-Funktion (Ausgabengeschichte, Fat Finder, AI-Einblicke, Investitionseinblicke) zum ersten Mal verwenden, zeigt die App einen Bestätigungsdialog mit den Kosten und Ihrem verbleibenden Guthaben. Sie können „Nicht erneut fragen" wählen, um zukünftige Bestätigungen für diese Funktion zu überspringen.
 
+### Nutzungsdetails
+
+Tippen Sie auf **Details anzeigen** auf dem Abonnement-Bildschirm, um eine detaillierte Aufschlüsselung Ihrer AI-Nutzung zu sehen:
+
+- **Gesamt verbraucht** — Gesamtzahl der AI-Anfragen in diesem Monat
+- **Nach Funktion** — wie viele Anfragen jede Funktion verwendet hat (AI-Chat, Spracheingabe, Belegscan, Ausgabengeschichte, Fat Finder usw.)
+- **Verlauf** — chronologische Liste jeder AI-Anfrage mit Datum, Uhrzeit und Kosten
+- **Monatsnavigation** — Nutzung vergangener Monate durchblättern
+
 ### Was zählt als AI-Anfrage:
 - Senden einer Nachricht im **AI-Chat** (1 Anfrage)
 - Verwendung der **Spracheingabe** zum Hinzufügen einer Ausgabe (1 Anfrage)

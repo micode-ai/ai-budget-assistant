@@ -1,12 +1,14 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ForbiddenException } from '@nestjs/common';
 import { Markup } from 'telegraf';
 import { randomUUID } from 'crypto';
 import { ChatService } from '../../ai/services/chat.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { TelegramLinkService } from '../telegram-link.service';
+import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { BotContext } from '../types';
 import { markdownToTelegramHtml } from '../helpers/format-telegram';
 import { resolveAccountFromMessage, AccountInfo } from '../helpers/resolve-account';
+import { t } from '../helpers/i18n';
 
 // In-memory store for pending action data (keyed by short ID)
 // Keeps callback_data under Telegram's 64-byte limit
@@ -30,12 +32,13 @@ export class ChatHandler {
     private readonly chatService: ChatService,
     private readonly linkService: TelegramLinkService,
     private readonly prisma: PrismaService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
   async handleText(ctx: BotContext): Promise<void> {
     try {
       if (!ctx.userState) {
-        await ctx.reply('Please link your account first. Use /link <code>.');
+        await ctx.reply(t('linkFirst', ctx.from?.language_code), { parse_mode: 'HTML' });
         return;
       }
 
@@ -47,7 +50,7 @@ export class ChatHandler {
       await this.processMessage(ctx, text);
     } catch (error) {
       this.logger.error(`Error in chat handler: ${error}`);
-      await ctx.reply('❌ Something went wrong. Please try again later.');
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }
 
@@ -72,6 +75,17 @@ export class ChatHandler {
       const resolved = resolveAccountFromMessage(messageText, accounts, accountId);
       effectiveAccountId = resolved.resolvedAccountId;
       effectiveAccountName = resolved.resolvedAccountName;
+    }
+
+    // Track AI usage (1.0 for chat)
+    try {
+      await this.subscriptionsService.trackAiUsage(userId, 'chat', 1.0, effectiveAccountId);
+    } catch (e) {
+      if (e instanceof ForbiddenException) {
+        await ctx.reply(t('aiLimitReached', ctx.userState?.language));
+        return;
+      }
+      throw e;
     }
 
     const response = await this.chatService.chat(
@@ -105,8 +119,8 @@ export class ChatHandler {
         {
           parse_mode: 'HTML',
           ...Markup.inlineKeyboard([
-            Markup.button.callback('✅ Confirm', callbackConfirm),
-            Markup.button.callback('❌ Cancel', callbackReject),
+            Markup.button.callback(t('confirm', ctx.userState?.language), callbackConfirm),
+            Markup.button.callback(t('cancel', ctx.userState?.language), callbackReject),
           ]),
         },
       );
@@ -132,6 +146,16 @@ export class ChatHandler {
       }
 
       await ctx.answerCbQuery('Processing...');
+
+      try {
+        await this.subscriptionsService.trackAiUsage(ctx.userState.userId, 'chat', 0.5, ctx.userState.accountId);
+      } catch (e) {
+        if (e instanceof ForbiddenException) {
+          await ctx.answerCbQuery('AI request limit reached.');
+          return;
+        }
+        throw e;
+      }
 
       const result = await this.chatService.confirmAction(
         ctx.userState.userId,

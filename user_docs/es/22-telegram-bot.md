@@ -27,6 +27,7 @@ El **Bot de Telegram** te permite interactuar con tu Asistente de presupuesto IA
 | `/income CANTIDAD DESC` | Anadir un ingreso rapidamente (por ejemplo, `/income 3000 salario`) |
 | `/category [TIPO] NOMBRE` | Crear una categoria (por ejemplo, `/category expense Comida`) |
 | `/categories` | Listar y eliminar categorias |
+| `/usage` | Ver uso de AI, límites y desglose |
 | `/account` | Cambiar entre tus cuentas |
 | `/newchat` | Iniciar una nueva conversacion con la IA |
 | `/unlink` | Desvincular Telegram de tu cuenta |
@@ -113,7 +114,10 @@ El bot reconoce simbolos y codigos de moneda en los comandos:
   **R:** No, cada usuario de la aplicacion puede tener una cuenta de Telegram vinculada, y cada cuenta de Telegram puede vincularse a un usuario.
 
 - **P: Los mensajes del bot cuentan contra mi limite de solicitudes IA?**
-  **R:** Si, cada mensaje procesado por la IA (texto, voz) usa una solicitud de tu cuota mensual.
+  **R:** Sí. Chat AI cuesta 1 solicitud por mensaje, mensajes de voz 2 solicitudes (transcripción + procesamiento AI), fotos de recibos 2 solicitudes. Usa `/usage` para verificar. Al alcanzar el límite, el bot te notificará.
+
+- **P: ¿En qué idioma responde el bot?**
+  **R:** El bot responde en el mismo idioma configurado en la app (Configuración > Apariencia). Todos los mensajes del sistema están localizados.
 
 ---
 

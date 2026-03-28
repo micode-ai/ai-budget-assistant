@@ -57,6 +57,15 @@ Track your AI usage from Settings > Subscription:
 
 When you use an expensive AI feature (Spending Story, Fat Finder, AI Insights, Investment Insights) for the first time, the app shows a confirmation dialog with the cost and your remaining balance. You can choose "Don't ask again" to skip future confirmations for that feature.
 
+### Usage Details
+
+Tap **View Details** on the subscription screen to see a detailed breakdown of your AI usage:
+
+- **Total used** — total AI requests consumed this month
+- **By feature** — breakdown showing how many requests each feature used (AI Chat, Voice Input, Receipt Scan, Spending Story, Fat Finder, etc.)
+- **History** — chronological log of every AI request with date, time, and cost
+- **Month navigation** — browse usage for previous months
+
 ### What counts as an AI request:
 - Sending a message in **AI Chat** (1 request)
 - Using **Voice Input** to add an expense (1 request)

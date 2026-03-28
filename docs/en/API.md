@@ -1618,7 +1618,7 @@ X-Account-Id: <account-uuid>
 
 ## AI Insights
 
-Requires `X-Account-Id` header. Requires Pro or Business subscription.
+Requires `X-Account-Id` header. Available on all subscription tiers. Uses AI requests from monthly allowance.
 
 ### Get AI-Generated Insights
 
@@ -1667,7 +1667,7 @@ X-Account-Id: <account-uuid>
 
 ## Spending Story
 
-Requires `X-Account-Id` header. Requires Pro or Business subscription.
+Requires `X-Account-Id` header. Available on all subscription tiers. Uses AI requests from monthly allowance.
 
 ### Generate Spending Story
 
@@ -2842,7 +2842,7 @@ X-Account-Id: <account-uuid>
 
 ### AI Portfolio Insights
 
-Get AI-generated insights for investment portfolio analysis. Requires Pro+ subscription.
+Get AI-generated insights for investment portfolio analysis. Available on all subscription tiers. Uses AI requests from monthly allowance.
 
 ```http
 GET /investments/insights?language=en
@@ -2898,7 +2898,7 @@ X-Account-Id: <account-uuid>
 **Notes:**
 - Insights are cached for 24 hours
 - Costs 2.5 AI credits per request
-- Requires Pro+ subscription tier
+- Available on all subscription tiers
 
 ---
 
@@ -2941,8 +2941,7 @@ Content-Type: application/json
 ```
 
 **Notes:**
-- `csv` format is available on all subscription tiers
-- `pdf` and `excel` formats require Pro+ subscription tier
+- All formats (CSV, PDF, Excel) are available on all subscription tiers
 - Accounts with `encryptionTier >= 2` will receive a `403 Forbidden` response
 - `categoryIds`, `tagIds`, `projectIds`, `currencyCode`, `includeExpenses`, and `includeIncomes` are all optional filters
 
@@ -3032,7 +3031,7 @@ X-Account-Id: <account-uuid>
 ```
 
 **Notes:**
-- Requires Pro+ subscription tier
+- Available on all subscription tiers
 - Results are cached for 7 days
 
 ### Get Report Preferences
@@ -3078,8 +3077,8 @@ Content-Type: application/json
 
 **Notes:**
 - `weeklyEmailDay` accepts values `0` (Sunday) through `6` (Saturday)
-- `weeklyEmailEnabled` requires Business subscription tier
-- `monthlyDigestEnabled` requires Pro+ subscription tier
+- `weeklyEmailEnabled` is available on all subscription tiers
+- `monthlyDigestEnabled` is available on all subscription tiers
 
 ---
 
@@ -3198,6 +3197,42 @@ X-Account-Id: <account-uuid>
     "createdAt": "2025-02-15T12:00:00Z"
   }
 ]
+```
+
+---
+
+## Usage Details
+
+#### Get Usage Details
+
+```
+GET /subscriptions/usage/details?month=3&year=2026
+```
+
+Returns detailed AI usage breakdown for a specific month.
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `month` | number | No | Month (1-12), defaults to current |
+| `year` | number | No | Year, defaults to current |
+
+**Response:**
+```json
+{
+  "month": 3,
+  "year": 2026,
+  "totalCost": 24.5,
+  "totalRequests": 15,
+  "summary": [
+    { "feature": "chat", "count": 8, "totalCost": 8.0 },
+    { "feature": "story", "count": 2, "totalCost": 6.0 }
+  ],
+  "logs": [
+    { "id": "uuid", "feature": "chat", "cost": 1.0, "date": "2026-03-15T10:30:00Z" }
+  ]
+}
 ```
 
 ---

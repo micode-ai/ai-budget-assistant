@@ -8,12 +8,11 @@ The **Fat Finder** scans 3 months of your transaction history, detects spending 
 
 ## How to Access
 
-- **Dashboard card** — the Fat Finder summary card appears on the home screen showing total potential savings and top 3 findings. Tap **View Full Report** to see details.
+- **Dashboard card** — shows cached Fat Finder results on the home screen. Tap to open the full report and generate fresh analysis.
 - **Direct navigation** — navigate to the Fat Finder screen from the dashboard card
 
 ## Requirements
 
-- **Pro or Business subscription** required — Free plan users see an upgrade prompt
 - Each report generation uses **3 AI requests** from your monthly allowance
 - Reports are **cached for 30 days** per analysis period
 

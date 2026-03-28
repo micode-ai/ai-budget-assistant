@@ -897,6 +897,7 @@ export default {
   },
   fatFinder: {
     title: 'Audyt wydatków',
+    tapToAnalyze: 'Dotknij, aby przeanalizować wydatki',
     subtitle: 'Znajdź możliwości oszczędzania',
     totalSavings: 'Potencjalne miesięczne oszczędności',
     finding: 'Wynik',

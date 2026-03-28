@@ -57,6 +57,15 @@ Bez limitów:
 
 Gdy po raz pierwszy używasz kosztownej funkcji AI (Historia wydatków, Fat Finder, AI Insights, Insights inwestycyjne), aplikacja wyświetla dialog potwierdzenia z kosztem i pozostałym saldem. Możesz wybrać „Nie pytaj ponownie", aby pominąć przyszłe potwierdzenia dla tej funkcji.
 
+### Szczegóły użycia
+
+Dotknij **Zobacz szczegóły** na ekranie subskrypcji, aby zobaczyć szczegółowy podział użycia AI:
+
+- **Łącznie wykorzystano** — łączna liczba zapytań AI w tym miesiącu
+- **Według funkcji** — ile zapytań wykorzystała każda funkcja (Chat AI, Wprowadzanie głosowe, Skan paragonu, Historia wydatków, Fat Finder itp.)
+- **Historia** — chronologiczny wykaz każdego zapytania AI z datą, godziną i kosztem
+- **Nawigacja po miesiącach** — przeglądaj użycie z poprzednich miesięcy
+
 ### Co liczy się jako zapytanie AI:
 - Wysłanie wiadomości w **Czacie AI** (1 zapytanie)
 - Użycie **Wprowadzania głosowego** do dodania wydatku (1 zapytanie)

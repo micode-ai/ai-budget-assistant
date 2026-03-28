@@ -2,7 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
+import { getAiCostMultiplier } from '../ai/services/model-resolver';
 
 @Injectable()
 export class AiInsightsService {
@@ -12,6 +14,7 @@ export class AiInsightsService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -85,11 +88,11 @@ export class AiInsightsService {
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
     }
 
-    // Generate new insights
-    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier, responseMode);
+    // Generate new insights — tracking happens inside after successful OpenAI call
+    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier, responseMode, userId);
   }
 
-  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0, responseMode: AiResponseMode = 'balanced') {
+  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0, responseMode: AiResponseMode = 'balanced', userId?: string) {
     // Gather financial data
     const threeMonthsAgo = new Date(periodStart.getFullYear(), periodStart.getMonth() - 3, 1);
 
@@ -201,6 +204,13 @@ Return ONLY a valid JSON array. No markdown, no code blocks.`;
         max_tokens: 2000,
         response_format: { type: 'json_object' },
       });
+
+      // Track AI usage only after successful OpenAI call
+      if (userId) {
+        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+        const adjustedCost = 2.0 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        await this.subscriptionsService.trackAiUsage(userId, 'insights', adjustedCost, accountId);
+      }
 
       const responseText = completion.choices[0]?.message?.content || '{"insights":[]}';
       let parsedInsights: any[];

@@ -8,12 +8,11 @@ El **Fat Finder** analiza 3 meses de tu historial de transacciones, detecta patr
 
 ## Como acceder
 
-- **Tarjeta del panel** — la tarjeta resumen del Fat Finder aparece en la pantalla de inicio mostrando el ahorro potencial total y los 3 hallazgos principales. Toca **Ver informe completo** para ver los detalles.
+- **Tarjeta del panel** — muestra los resultados guardados de Fat Finder. Toca para abrir el informe completo y generar un análisis nuevo.
 - **Navegacion directa** — accede a la pantalla del Fat Finder desde la tarjeta del panel
 
 ## Requisitos
 
-- Se requiere **suscripcion Pro o Business** — los usuarios del plan gratuito ven una invitacion a mejorar su plan
 - Cada generacion de informe consume **3 solicitudes de IA** de tu cuota mensual
 - Los informes se **almacenan en cache durante 30 dias** por periodo de analisis
 

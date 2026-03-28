@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { InvestmentsService } from './investments.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { getAiCostMultiplier } from '../ai/services/model-resolver';
 
 @Injectable()
 export class InvestmentInsightsService {
@@ -35,13 +37,14 @@ export class InvestmentInsightsService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly investmentsService: InvestmentsService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
   }
 
-  async getInvestmentInsights(accountId: string, language?: string) {
+  async getInvestmentInsights(accountId: string, language?: string, userId?: string) {
     const now = new Date();
 
     // Check cache first (24h expiry)
@@ -63,11 +66,11 @@ export class InvestmentInsightsService {
       };
     }
 
-    // Generate new insights
-    return this.generateInsights(accountId, language);
+    // Generate new insights — tracking happens inside after successful OpenAI call
+    return this.generateInsights(accountId, language, userId);
   }
 
-  private async generateInsights(accountId: string, language?: string) {
+  private async generateInsights(accountId: string, language?: string, userId?: string) {
     // Gather portfolio data
     const [summaryResult, analyticsResult, transactions] = await Promise.all([
       this.investmentsService.getPortfolioSummary(accountId),
@@ -200,6 +203,13 @@ Return ONLY a valid JSON object with an "insights" array. No markdown, no code b
         max_tokens: 2500,
         response_format: { type: 'json_object' },
       });
+
+      // Track AI usage only after successful OpenAI call
+      if (userId) {
+        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+        const adjustedCost = 2.5 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        await this.subscriptionsService.trackAiUsage(userId, 'investment_insights', adjustedCost, accountId);
+      }
 
       const responseText =
         completion.choices[0]?.message?.content || '{"insights":[]}';

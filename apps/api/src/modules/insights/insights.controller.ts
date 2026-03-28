@@ -27,8 +27,6 @@ export class InsightsController {
   }
 
   @Get('ai-charts')
-  @UseGuards(AiUsageGuard)
-  @TrackAiUsage('insights', 2.0)
   async getAICharts(
     @Req() req: AuthenticatedRequest,
     @Query('language') language?: string,

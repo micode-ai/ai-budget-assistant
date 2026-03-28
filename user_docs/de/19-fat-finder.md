@@ -8,12 +8,11 @@ Der **Fat Finder** durchsucht 3 Monate deiner Transaktionshistorie, erkennt Ausg
 
 ## Zugriff
 
-- **Dashboard-Karte** — die Fat-Finder-Ubersichtskarte erscheint auf dem Startbildschirm und zeigt das gesamte Einsparpotenzial sowie die 3 wichtigsten Befunde. Tippe auf **Vollstandigen Bericht anzeigen**, um Details zu sehen.
+- **Dashboard-Karte** — zeigt zwischengespeicherte Fat Finder-Ergebnisse. Tippen Sie, um den vollständigen Bericht zu öffnen und eine neue Analyse zu starten.
 - **Direkter Zugriff** — navigiere zum Fat-Finder-Bildschirm uber die Dashboard-Karte
 
 ## Voraussetzungen
 
-- **Pro- oder Business-Abonnement** erforderlich — Nutzer des kostenlosen Plans sehen eine Upgrade-Aufforderung
 - Jede Berichterstellung verbraucht **3 KI-Anfragen** aus deinem monatlichen Kontingent
 - Berichte werden **30 Tage lang zwischengespeichert** pro Analysezeitraum
 

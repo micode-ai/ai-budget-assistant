@@ -27,6 +27,7 @@ The **Telegram Bot** lets you interact with your AI Budget Assistant from Telegr
 | `/income AMOUNT DESC` | Quick-add an income (e.g., `/income 3000 salary`) |
 | `/category [TYPE] NAME` | Create a category (e.g., `/category expense Food`) |
 | `/categories` | List and delete categories |
+| `/usage` | View your AI usage, limits, and breakdown |
 | `/account` | Switch between your accounts |
 | `/newchat` | Start a fresh AI conversation |
 | `/unlink` | Disconnect Telegram from your account |
@@ -113,7 +114,10 @@ The bot recognizes currency symbols and codes in commands:
   **A:** No, each app user can have one linked Telegram account, and each Telegram account can be linked to one app user.
 
 - **Q: Do bot messages count against my AI request limit?**
-  **A:** Yes, each AI-processed message (text, voice) uses one request from your monthly allowance.
+  **A:** Yes. AI chat costs 1 request per message, voice messages cost 2 requests (transcription + AI processing), and receipt photos cost 2 requests. Use `/usage` to check your remaining balance. When the limit is reached, the bot will notify you instead of processing the request.
+
+- **Q: What language does the bot respond in?**
+  **A:** The bot responds in the same language set in your app (Settings > Appearance). All system messages, commands, and buttons are localized.
 
 ---
 

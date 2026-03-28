@@ -63,6 +63,18 @@ export function useChangeSubscriptionTier() {
   });
 }
 
+export function useSetCustomAiLimit() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId, customAiLimit }: { userId: string; customAiLimit: number | null }) => {
+      return api.patch(`admin/users/${userId}/ai-limit`, { json: { customAiLimit } }).json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
+}
+
 export function useDeactivateUser() {
   const qc = useQueryClient();
   return useMutation({

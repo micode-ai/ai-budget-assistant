@@ -1,11 +1,13 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ForbiddenException } from '@nestjs/common';
 import { Markup } from 'telegraf';
 import { randomUUID } from 'crypto';
 import { OcrService } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
+import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
+import { t } from '../helpers/i18n';
 
 // In-memory store for pending receipt data (keyed by callback ID)
 // In production, consider Redis or DB storage for multi-instance deployments
@@ -41,12 +43,13 @@ export class PhotoHandler {
   constructor(
     private readonly ocrService: OcrService,
     private readonly expensesService: ExpensesService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
   async handlePhoto(ctx: BotContext): Promise<void> {
     try {
       if (!ctx.userState) {
-        await ctx.reply('Please link your account first. Use /link <code>.');
+        await ctx.reply(t('linkFirst', ctx.from?.language_code), { parse_mode: 'HTML' });
         return;
       }
 
@@ -69,6 +72,17 @@ export class PhotoHandler {
 
       const base64 = buffer.toString('base64');
 
+      // Track AI usage for OCR (2.0)
+      try {
+        await this.subscriptionsService.trackAiUsage(ctx.userState.userId, 'ocr', 2.0, ctx.userState.accountId);
+      } catch (e) {
+        if (e instanceof ForbiddenException) {
+          await ctx.reply(t('aiLimitReached', ctx.userState?.language));
+          return;
+        }
+        throw e;
+      }
+
       // Get caption as optional user prompt
       const caption = ('caption' in ctx.message) ? ctx.message.caption : undefined;
 
@@ -82,7 +96,8 @@ export class PhotoHandler {
 
       // Build summary message
       const receiptId = randomUUID().slice(0, 8);
-      let summary = `📄 <b>Receipt scanned</b>\n\n`;
+      const lang = ctx.userState?.language;
+      let summary = `${t('receiptScanned', lang)}\n\n`;
       summary += `<b>Amount:</b> ${formatCurrency(receipt.amount, receipt.currencyCode)}\n`;
       if (receipt.discountAmount) {
         summary += `<b>Discount:</b> ${formatCurrency(receipt.discountAmount, receipt.currencyCode)}\n`;
@@ -127,20 +142,20 @@ export class PhotoHandler {
       await ctx.reply(summary, {
         parse_mode: 'HTML',
         ...Markup.inlineKeyboard([
-          Markup.button.callback('✅ Add expense', `receipt_add:${receiptId}`),
-          Markup.button.callback('❌ Cancel', `receipt_cancel:${receiptId}`),
+          Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`),
+          Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
         ]),
       });
     } catch (error) {
       this.logger.error(`Error processing photo: ${error}`, error instanceof Error ? error.stack : undefined);
-      await ctx.reply('❌ Could not scan the receipt. Please try again or add the expense manually.');
+      await ctx.reply(t('receiptScanFailed', ctx.userState?.language));
     }
   }
 
   async handleDocument(ctx: BotContext): Promise<void> {
     try {
       if (!ctx.userState) {
-        await ctx.reply('Please link your account first. Use /link <code>.');
+        await ctx.reply(t('linkFirst', ctx.from?.language_code), { parse_mode: 'HTML' });
         return;
       }
 
@@ -165,6 +180,17 @@ export class PhotoHandler {
 
       const base64 = buffer.toString('base64');
 
+      // Track AI usage for OCR (2.0)
+      try {
+        await this.subscriptionsService.trackAiUsage(ctx.userState!.userId, 'ocr', 2.0, ctx.userState!.accountId);
+      } catch (e) {
+        if (e instanceof ForbiddenException) {
+          await ctx.reply(t('aiLimitReached', ctx.userState?.language));
+          return;
+        }
+        throw e;
+      }
+
       const caption = ('caption' in ctx.message) ? ctx.message.caption : undefined;
 
       let receipt;
@@ -186,7 +212,8 @@ export class PhotoHandler {
 
       // Build summary
       const receiptId = randomUUID().slice(0, 8);
-      let summary = `📄 <b>Receipt scanned</b>\n\n`;
+      const lang = ctx.userState?.language;
+      let summary = `${t('receiptScanned', lang)}\n\n`;
       summary += `<b>Amount:</b> ${formatCurrency(receipt.amount, receipt.currencyCode)}\n`;
       if (receipt.discountAmount) {
         summary += `<b>Discount:</b> ${formatCurrency(receipt.discountAmount, receipt.currencyCode)}\n`;
@@ -221,8 +248,8 @@ export class PhotoHandler {
       await ctx.reply(summary, {
         parse_mode: 'HTML',
         ...Markup.inlineKeyboard([
-          Markup.button.callback('✅ Add expense', `receipt_add:${receiptId}`),
-          Markup.button.callback('❌ Cancel', `receipt_cancel:${receiptId}`),
+          Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`),
+          Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
         ]),
       });
     } catch (error) {
@@ -279,6 +306,6 @@ export class PhotoHandler {
   async handleReceiptCancelCallback(ctx: BotContext, receiptId: string): Promise<void> {
     pendingReceipts.delete(receiptId);
     await ctx.answerCbQuery('Cancelled.');
-    await ctx.editMessageText('❌ Receipt scan cancelled.');
+    await ctx.editMessageText(t('receiptCancelled', ctx.userState?.language));
   }
 }

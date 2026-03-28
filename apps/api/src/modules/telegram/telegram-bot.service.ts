@@ -9,6 +9,7 @@ import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TelegramLinkService } from './telegram-link.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { CommandHandler } from './handlers/command.handler';
 import { ExpenseHandler } from './handlers/expense.handler';
 import { IncomeHandler } from './handlers/income.handler';
@@ -43,6 +44,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     private readonly expensesService: ExpensesService,
     private readonly incomesService: IncomesService,
     private readonly categoriesService: CategoriesService,
+    private readonly subscriptionsService: SubscriptionsService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -56,12 +58,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       this.bot = new Telegraf<BotContext>(botToken);
 
       // Initialize handlers
-      this.commandHandler = new CommandHandler(this.linkService, this.prisma);
+      this.commandHandler = new CommandHandler(this.linkService, this.prisma, this.subscriptionsService);
       this.expenseHandler = new ExpenseHandler(this.expensesService);
       this.incomeHandler = new IncomeHandler(this.incomesService);
-      this.chatHandler = new ChatHandler(this.chatService, this.linkService, this.prisma);
-      this.voiceHandler = new VoiceHandler(this.whisperService, this.chatHandler);
-      this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService);
+      this.chatHandler = new ChatHandler(this.chatService, this.linkService, this.prisma, this.subscriptionsService);
+      this.voiceHandler = new VoiceHandler(this.whisperService, this.chatHandler, this.subscriptionsService);
+      this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService, this.subscriptionsService);
       this.categoryHandler = new CategoryHandler(this.categoriesService);
 
       // Get bot info
@@ -150,6 +152,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.command('newchat', (ctx) => this.commandHandler.handleNewChat(ctx));
     this.bot.command('category', (ctx) => this.categoryHandler.handle(ctx));
     this.bot.command('categories', (ctx) => this.categoryHandler.handleList(ctx));
+    this.bot.command('usage', (ctx) => this.commandHandler.handleUsage(ctx));
 
     // Callback queries (inline keyboard buttons)
     this.bot.on('callback_query', async (ctx) => {

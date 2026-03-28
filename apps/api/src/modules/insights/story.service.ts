@@ -98,18 +98,14 @@ export class StoryService {
       }
     }
 
-    // Fetch response mode and track AI usage (only on actual generation, not cache hit)
+    // Fetch response mode
     let responseMode: AiResponseMode = 'balanced';
-    let aiModel: string | null = null;
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
-      aiModel = user?.aiModel || null;
-      const adjustedCost = 3.0 * getAiCostMultiplier(aiModel ?? undefined);
-      await this.subscriptionsService.trackAiUsage(userId, 'story', adjustedCost, accountId);
     }
 
-    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode);
+    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId);
   }
 
   private static readonly LOCALE_MAP: Record<string, string> = {
@@ -165,6 +161,7 @@ export class StoryService {
     language?: string,
     encryptionTier = 0,
     responseMode: AiResponseMode = 'balanced',
+    userId?: string,
   ) {
     // Gather comprehensive data
     const previousPeriodStart = new Date(periodStart);
@@ -318,6 +315,13 @@ Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
         max_tokens: 3000,
         response_format: { type: 'json_object' },
       });
+
+      // Track AI usage only after successful OpenAI call
+      if (userId) {
+        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+        const adjustedCost = 3.0 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        await this.subscriptionsService.trackAiUsage(userId, 'story', adjustedCost, accountId);
+      }
 
       const responseText = completion.choices[0]?.message?.content || '{"blocks":[],"summary":""}';
       let parsed: { blocks: any[]; summary: string };

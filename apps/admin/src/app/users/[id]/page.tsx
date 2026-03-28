@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState } from "react";
-import { useUserDetail, useChangeSubscriptionTier, useDeactivateUser, useDeleteUser } from "@/hooks/use-users";
+import { useUserDetail, useChangeSubscriptionTier, useSetCustomAiLimit, useDeactivateUser, useDeleteUser } from "@/hooks/use-users";
 import { useSendPush, useSendEmail, useUserNotificationHistory } from "@/hooks/use-communications";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const { data: user, isLoading } = useUserDetail(id);
   const changeTier = useChangeSubscriptionTier();
+  const setAiLimit = useSetCustomAiLimit();
   const deactivate = useDeactivateUser();
   const deleteUser = useDeleteUser();
   const sendPush = useSendPush();
@@ -69,6 +70,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   const [emailSubject, setEmailSubject] = useState("");
   const [emailHtml, setEmailHtml] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [aiLimitInput, setAiLimitInput] = useState("");
 
   if (isLoading) return <PageSkeleton />;
   if (!user) return <p>User not found</p>;
@@ -249,6 +251,53 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                     ? formatDate(user.subscription.currentPeriodEnd)
                     : "N/A"}
                 </p>
+              </div>
+            </div>
+            <div className="border rounded-lg p-3 space-y-2">
+              <span className="text-sm text-muted-foreground">AI Request Limit</span>
+              <p className="text-sm font-medium">
+                {user.subscription?.customAiLimit != null
+                  ? `Custom: ${user.subscription.customAiLimit}`
+                  : "Tier default"}
+              </p>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  placeholder="Custom limit"
+                  value={aiLimitInput}
+                  onChange={(e) => setAiLimitInput(e.target.value)}
+                  className="w-32 h-8 text-sm"
+                />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={!aiLimitInput || setAiLimit.isPending}
+                  onClick={() => {
+                    const val = parseInt(aiLimitInput);
+                    if (isNaN(val) || val < 0) return;
+                    setAiLimit.mutate(
+                      { userId: id, customAiLimit: val },
+                      { onSuccess: () => { toast.success(`AI limit set to ${val}`); setAiLimitInput(""); } },
+                    );
+                  }}
+                >
+                  Set
+                </Button>
+                {user.subscription?.customAiLimit != null && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={setAiLimit.isPending}
+                    onClick={() => {
+                      setAiLimit.mutate(
+                        { userId: id, customAiLimit: null },
+                        { onSuccess: () => { toast.success("Reset to tier default"); setAiLimitInput(""); } },
+                      );
+                    }}
+                  >
+                    Reset
+                  </Button>
+                )}
               </div>
             </div>
             {user.subscription?.stripeCustomerId && (

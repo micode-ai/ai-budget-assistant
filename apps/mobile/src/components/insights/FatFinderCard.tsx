@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -34,107 +34,30 @@ export function FatFinderCard() {
   const loadFatFinder = useInsightsStore((s) => s.loadFatFinder);
   const fatFinderMonth = useInsightsStore((s) => s.fatFinderMonth);
   const fatFinderYear = useInsightsStore((s) => s.fatFinderYear);
-  useEffect(() => {
-    if (!fatFinderReport && !fatFinderLoading) {
-      loadFatFinder(i18n.language, false, fatFinderMonth, fatFinderYear);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Don't auto-load on Dashboard — only show cached data.
+  // Full loading happens when user navigates to the Fat Finder screen.
 
   const now = new Date();
   const isCurrentMonth = fatFinderMonth === now.getMonth() + 1 && fatFinderYear === now.getFullYear();
-
-  const goToPrevMonth = useCallback(() => {
-    let newMonth = fatFinderMonth - 1;
-    let newYear = fatFinderYear;
-    if (newMonth < 1) {
-      newMonth = 12;
-      newYear -= 1;
-    }
-    loadFatFinder(i18n.language, false, newMonth, newYear);
-  }, [fatFinderMonth, fatFinderYear, i18n.language, loadFatFinder]);
-
-  const goToNextMonth = useCallback(() => {
-    if (isCurrentMonth) return;
-    let newMonth = fatFinderMonth + 1;
-    let newYear = fatFinderYear;
-    if (newMonth > 12) {
-      newMonth = 1;
-      newYear += 1;
-    }
-    loadFatFinder(i18n.language, false, newMonth, newYear);
-  }, [fatFinderMonth, fatFinderYear, isCurrentMonth, i18n.language, loadFatFinder]);
 
   const severityColors = SEVERITY_COLORS(theme);
   const currency = (fatFinderReport?.currencyCode || user?.currencyCode || 'USD') as Currency;
   const intlLocale = getIntlLocale();
 
-  const monthPicker = (
-    <View style={styles.monthPickerRow}>
-      <TouchableOpacity onPress={goToPrevMonth} hitSlop={8} disabled={fatFinderLoading}>
-        <Ionicons name="chevron-back" size={22} color={theme.colors.primary} />
-      </TouchableOpacity>
-      <Text style={styles.monthPickerLabel}>
-        {getMonthLabel(fatFinderMonth, fatFinderYear, intlLocale)}
-      </Text>
-      <TouchableOpacity onPress={goToNextMonth} hitSlop={8} disabled={isCurrentMonth || fatFinderLoading}>
-        <Ionicons
-          name="chevron-forward"
-          size={22}
-          color={isCurrentMonth ? theme.colors.textDisabled : theme.colors.primary}
-        />
-      </TouchableOpacity>
-    </View>
-  );
-
-  // Loading
-  if (fatFinderLoading) {
-    return (
-      <View style={styles.card}>
-        <View style={styles.headerRow}>
-          <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
-        </View>
-        {monthPicker}
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color={theme.colors.primary} />
-          <Text style={styles.loadingText}>{t('fatFinder.loading')}</Text>
-        </View>
-      </View>
-    );
-  }
-
-  // Error
-  if (fatFinderError) {
-    return (
-      <View style={styles.card}>
-        <View style={styles.headerRow}>
-          <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
-        </View>
-        {monthPicker}
-        <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={20} color={theme.colors.danger} />
-          <Text style={styles.errorText}>{fatFinderError}</Text>
-        </View>
-      </View>
-    );
-  }
-
-  // Empty state
+  // No data yet — show invite to open Fat Finder
   if (!fatFinderReport || fatFinderReport.findings.length === 0) {
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/fat-finder')}>
         <View style={styles.headerRow}>
           <Ionicons name="search-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
+          <Ionicons name="sparkles" size={14} color={theme.colors.warning} />
         </View>
-        {monthPicker}
         <View style={styles.emptyContainer}>
-          <Ionicons name="checkmark-circle-outline" size={32} color={theme.colors.success} />
-          <Text style={styles.emptyText}>{t('fatFinder.noFindings')}</Text>
+          <Ionicons name="sparkles-outline" size={32} color={theme.colors.textDisabled} />
+          <Text style={styles.emptyText}>{t('fatFinder.tapToAnalyze')}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -151,8 +74,8 @@ export function FatFinderCard() {
         <Text style={styles.cardTitle}>{t('fatFinder.title')}</Text>
       </View>
 
-      {/* Month picker */}
-      {monthPicker}
+      {/* Period label */}
+      <Text style={styles.monthPickerLabel}>{getMonthLabel(fatFinderMonth, fatFinderYear, intlLocale)}</Text>
 
       {/* Total savings */}
       <View style={styles.savingsRow}>

@@ -570,6 +570,7 @@ model Subscription {
   // Usage tracking
   aiRequestsUsed      Int                @default(0) @map("ai_requests_used")
   aiRequestsResetAt   DateTime           @default(now()) @map("ai_requests_reset_at")
+  customAiLimit       Int?               @map("custom_ai_limit")
 
   createdAt            DateTime           @default(now()) @map("created_at")
   updatedAt            DateTime           @updatedAt @map("updated_at")

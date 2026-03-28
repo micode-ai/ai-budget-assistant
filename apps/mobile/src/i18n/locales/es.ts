@@ -896,6 +896,7 @@ export default {
   },
   fatFinder: {
     title: 'Auditoría de gastos',
+    tapToAnalyze: 'Toca para analizar tus gastos',
     subtitle: 'Encuentra oportunidades para ahorrar',
     totalSavings: 'Ahorro mensual potencial',
     finding: 'Hallazgo',
