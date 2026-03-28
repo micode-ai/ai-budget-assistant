@@ -39,7 +39,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **Gamification** - Achievements, daily streaks, XP/levels, and virtual badges to encourage consistent tracking habits
 - **AI Model Selection** - Choose between Fast (gpt-4o-mini, ×0.75 cost), Balanced (gpt-4o, ×1 cost), and Quality (gpt-4.1, ×1.5 cost) models globally across all AI features
 - **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits; model choice scales quota consumption
-- **Admin Dashboard** - System stats, subscription breakdown, and per-user AI usage monitoring
+- **Admin Dashboard** - System stats, subscription breakdown, per-user AI usage monitoring, and communications center with notification history (delivery stats, recipient details, type filters)
 - **Offline-First** - Full functionality without internet connection
 - **Cross-Platform** - iOS, Android, and Web support
 
