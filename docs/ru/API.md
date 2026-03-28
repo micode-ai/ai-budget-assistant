@@ -628,6 +628,16 @@ Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
+**Ответ:**
+```json
+{
+  "imageBase64": "/9j/4AAQ...",
+  "mimeType": "image/jpeg"
+}
+```
+
+`mimeType` — `image/jpeg` для фото или `application/pdf` для PDF-чеков (например, из Telegram).
+
 #### Сохранить изображение чека
 
 ```http

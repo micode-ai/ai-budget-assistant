@@ -101,7 +101,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
 - **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
 - **Articles du recu** — articles individuels (pour les recus scannes)
-- **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu
+- **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF (de Telegram) affichent un aperçu du document à ouvrir
 
 ### Actions sur les details de la depense :
 - **Modifier** — modifier la depense

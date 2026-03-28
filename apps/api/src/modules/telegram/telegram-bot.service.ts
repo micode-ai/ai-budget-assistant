@@ -207,6 +207,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      if (data.startsWith('receipt_date:')) {
+        const receiptId = data.slice('receipt_date:'.length);
+        await this.photoHandler.handleDateCallback(ctx, receiptId);
+        return;
+      }
+
       if (data.startsWith('receipt_cancel:')) {
         const receiptId = data.slice('receipt_cancel:'.length);
         await this.photoHandler.handleReceiptCancelCallback(ctx, receiptId);
@@ -225,6 +231,11 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.on('document', (ctx) => this.photoHandler.handleDocument(ctx));
 
     // Free-form text messages (catch-all — must be registered last)
-    this.bot.on('text', (ctx) => this.chatHandler.handleText(ctx));
+    this.bot.on('text', async (ctx) => {
+      // Check if user is editing a receipt date
+      const handled = await this.photoHandler.handleDateInput(ctx);
+      if (handled) return;
+      return this.chatHandler.handleText(ctx);
+    });
   }
 }

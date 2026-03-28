@@ -310,6 +310,7 @@ export default {
     saveImage: 'Захаваць',
     imageSaved: 'Выява захавана ў галерэю',
     galleryPermissionDenied: 'Для захавання выяў патрабуецца доступ да галерэі',
+    tapToOpen: 'Націсніце для адкрыцця',
     deleteImage: 'Выдаліць фота',
     replaceImage: 'Замяніць фота',
     confirmDeleteImage: 'Выдаліць фота чэка?',

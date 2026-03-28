@@ -587,7 +587,7 @@ class ApiClient {
 
   // Receipt Image endpoints
   async getReceiptImage(expenseId: string) {
-    return this.request<{ imageBase64: string }>(`/expenses/${expenseId}/receipt-image`);
+    return this.request<{ imageBase64: string; mimeType?: string }>(`/expenses/${expenseId}/receipt-image`);
   }
 
   async saveReceiptImage(expenseId: string, imageBase64: string) {

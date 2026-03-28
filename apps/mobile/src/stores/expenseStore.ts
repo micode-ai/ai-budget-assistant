@@ -77,7 +77,7 @@ interface ExpenseState {
   deleteExpenseItem: (expenseId: string, itemId: string) => void;
 
   // Receipt Image actions
-  loadReceiptImage: (expenseId: string) => Promise<string | null>;
+  loadReceiptImage: (expenseId: string) => Promise<{ base64: string; mimeType: string } | null>;
   saveReceiptImage: (expenseId: string, imageBase64: string) => Promise<void>;
   deleteReceiptImage: (expenseId: string) => Promise<void>;
 
@@ -740,22 +740,23 @@ export const useExpenseStore = create<ExpenseState>()(
 
     // ---- Receipt Image ----
 
-    loadReceiptImage: async (expenseId: string) => {
+    loadReceiptImage: async (expenseId: string): Promise<{ base64: string; mimeType: string } | null> => {
       try {
-        // Try local first
-        const local = await getReceiptImageFromDb(expenseId);
-        if (local) return local;
-
-        // Fallback: fetch from server
+        // Always try server first to get correct mimeType
         try {
           const result = await api.getReceiptImage(expenseId);
           if (result?.imageBase64) {
             await saveReceiptImageLocally(expenseId, result.imageBase64);
-            return result.imageBase64;
+            return { base64: result.imageBase64, mimeType: result.mimeType || 'image/jpeg' };
           }
         } catch {
-          // Server fetch failed (offline or no image on server)
+          // Server fetch failed (offline) — try local
         }
+
+        // Fallback: local SQLite
+        const local = await getReceiptImageFromDb(expenseId);
+        if (local) return { base64: local, mimeType: 'image/jpeg' };
+
         return null;
       } catch (e) {
         console.error('Failed to load receipt image:', e);

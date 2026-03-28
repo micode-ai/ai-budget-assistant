@@ -312,6 +312,7 @@ export default {
     saveImage: 'Зберегти',
     imageSaved: 'Зображення збережено в галерею',
     galleryPermissionDenied: 'Для збереження зображень потрібен доступ до галереї',
+    tapToOpen: 'Натисніть для відкриття',
     deleteImage: 'Видалити фото',
     replaceImage: 'Замінити фото',
     confirmDeleteImage: 'Видалити фото чеку?',

@@ -69,9 +69,10 @@ Los mensajes de voz soportan los mismos comandos y preguntas que los mensajes de
 1. Toma una foto de un recibo
 2. Envia la foto al bot
 3. El bot lo escanea usando OCR y muestra un resumen
-4. Toca **Confirmar** para anadir el gasto, o **Cancelar** para rechazar
+4. Si la fecha es incorrecta, toca **Cambiar fecha** y envía la fecha correcta (DD.MM.AAAA)
+5. Toca **Confirmar** para anadir el gasto, o **Cancelar** para rechazar
 
-Tambien puedes enviar imagenes de recibos como documentos (PDF o imagenes).
+También puedes enviar imágenes de recibos como documentos (PDF o imágenes). Los recibos PDF se guardan y se pueden ver en la app.
 
 ## Cambiar de cuenta
 

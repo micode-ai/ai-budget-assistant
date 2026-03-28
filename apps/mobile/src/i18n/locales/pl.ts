@@ -312,6 +312,7 @@ export default {
     saveImage: 'Zapisz',
     imageSaved: 'Obraz zapisany w galerii',
     galleryPermissionDenied: 'Dostęp do galerii jest wymagany do zapisywania obrazów',
+    tapToOpen: 'Dotknij, aby otworzyć',
     deleteImage: 'Usuń zdjęcie',
     replaceImage: 'Zmień zdjęcie',
     confirmDeleteImage: 'Czy na pewno usunąć zdjęcie paragonu?',

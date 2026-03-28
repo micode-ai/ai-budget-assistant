@@ -628,6 +628,16 @@ Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
+**Response:**
+```json
+{
+  "imageBase64": "/9j/4AAQ...",
+  "mimeType": "image/jpeg"
+}
+```
+
+`mimeType` is `image/jpeg` for photos or `application/pdf` for PDF receipts (e.g. from Telegram).
+
 #### Save Receipt Image
 
 ```http

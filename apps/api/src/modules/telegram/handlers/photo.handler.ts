@@ -24,8 +24,13 @@ interface PendingReceiptData {
   discountAmount: number | null;
   items: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number }>;
   receiptImageBase64: string;
+  receiptMimeType: string;
   createdAt: number;
+  language?: string;
 }
+
+// Map telegramUserId → receiptId for date editing flow
+const awaitingDateEdit = new Map<string, string>();
 
 // Clean up old pending receipts (older than 30 minutes)
 setInterval(() => {
@@ -134,16 +139,21 @@ export class PhotoHandler {
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
+        receiptMimeType: 'image/jpeg',
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         createdAt: Date.now(),
+        language: lang,
       });
 
       await ctx.reply(summary, {
         parse_mode: 'HTML',
         ...Markup.inlineKeyboard([
-          Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`),
-          Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
+          [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
+          [
+            Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
+            Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
+          ],
         ]),
       });
     } catch (error) {
@@ -232,24 +242,29 @@ export class PhotoHandler {
       }
 
       pendingReceipts.set(receiptId, {
-        userId: ctx.userState.userId,
-        accountId: ctx.userState.accountId,
+        userId: ctx.userState!.userId,
+        accountId: ctx.userState!.accountId,
         amount: receipt.amount,
         currencyCode: receipt.currencyCode,
         description: receipt.description,
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
+        receiptMimeType: mime_type || 'application/pdf',
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         createdAt: Date.now(),
+        language: lang,
       });
 
       await ctx.reply(summary, {
         parse_mode: 'HTML',
         ...Markup.inlineKeyboard([
-          Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`),
-          Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
+          [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
+          [
+            Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
+            Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
+          ],
         ]),
       });
     } catch (error) {
@@ -280,6 +295,7 @@ export class PhotoHandler {
           categoryId: data.categoryId || undefined,
           date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
           source: 'ocr',
+          receiptMimeType: data.receiptMimeType,
           receiptImageBase64: data.receiptImageBase64,
           items: data.items.map((item, index) => ({
             description: item.description,
@@ -301,6 +317,58 @@ export class PhotoHandler {
       this.logger.error(`Error creating receipt expense: ${error}`);
       await ctx.answerCbQuery('Failed to create expense.');
     }
+  }
+
+  async handleDateCallback(ctx: BotContext, receiptId: string): Promise<void> {
+    try {
+      const data = pendingReceipts.get(receiptId);
+      if (!data) {
+        await ctx.answerCbQuery('Expired');
+        return;
+      }
+
+      const telegramUserId = String(ctx.from!.id);
+      awaitingDateEdit.set(telegramUserId, receiptId);
+      await ctx.answerCbQuery('');
+      await ctx.reply(t('sendDate', data.language), { parse_mode: 'HTML' });
+    } catch (error) {
+      this.logger.error(`Error in date callback: ${error}`);
+    }
+  }
+
+  async handleDateInput(ctx: BotContext): Promise<boolean> {
+    const telegramUserId = String(ctx.from!.id);
+    const receiptId = awaitingDateEdit.get(telegramUserId);
+    if (!receiptId) return false;
+
+    const data = pendingReceipts.get(receiptId);
+    if (!data) {
+      awaitingDateEdit.delete(telegramUserId);
+      return false;
+    }
+
+    const text = (ctx.message && 'text' in ctx.message) ? ctx.message.text?.trim() : '';
+    if (!text) return false;
+
+    // Parse DD.MM.YYYY
+    const match = text.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{4})$/);
+    if (!match) {
+      await ctx.reply(t('invalidDate', data.language));
+      return true;
+    }
+
+    const [, day, month, year] = match;
+    const dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    const parsed = new Date(dateStr);
+    if (isNaN(parsed.getTime())) {
+      await ctx.reply(t('invalidDate', data.language));
+      return true;
+    }
+
+    data.date = dateStr;
+    awaitingDateEdit.delete(telegramUserId);
+    await ctx.reply(t('dateUpdated', data.language, { date: `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}` }));
+    return true;
   }
 
   async handleReceiptCancelCallback(ctx: BotContext, receiptId: string): Promise<void> {
