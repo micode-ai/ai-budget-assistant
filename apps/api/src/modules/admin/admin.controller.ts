@@ -14,6 +14,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
 import { AdminService } from './admin.service';
+import { ReferralsService } from '../referrals/referrals.service';
 
 interface AdminRequest extends Request {
   user: { id: string; email: string; name: string };
@@ -22,7 +23,10 @@ interface AdminRequest extends Request {
 @Controller('admin')
 @UseGuards(JwtAuthGuard, AdminGuard)
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly referralsService: ReferralsService,
+  ) {}
 
   private getIp(req: Request): string | null {
     return (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim()
@@ -318,5 +322,25 @@ export class AdminController {
   @Get('system/health')
   async getSystemHealth() {
     return this.adminService.getSystemHealth();
+  }
+
+  // ─── Referrals ───────────────────────────────────
+
+  @Get('referrals/stats')
+  async getReferralStats() {
+    return this.referralsService.getAdminStats();
+  }
+
+  @Get('referrals')
+  async getReferralList(
+    @Query('status') status?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.referralsService.getAdminList({
+      status,
+      page: page ? parseInt(page) : 1,
+      limit: limit ? parseInt(limit) : 20,
+    });
   }
 }

@@ -60,7 +60,7 @@ export function BudgetWidgetLarge({ data }: Props) {
         height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'column',
-        backgroundColor: '#0F172A',
+        backgroundColor: '#F8FAFB',
         borderRadius: 20,
         padding: 16,
       }}
@@ -78,14 +78,14 @@ export function BudgetWidgetLarge({ data }: Props) {
         <FlexWidget style={{ flexDirection: 'column' }}>
           <TextWidget
             text={(labels?.today ?? 'Today').toUpperCase()}
-            style={{ fontSize: 10, color: '#94A3B8', letterSpacing: 1 }}
+            style={{ fontSize: 10, color: '#5E6272', letterSpacing: 1 }}
           />
           <TextWidget
             text={data.todaySpent}
             style={{
               fontSize: 20,
               fontWeight: 'bold',
-              color: '#F8FAFC',
+              color: '#1A1D26',
               marginTop: 2,
             }}
           />
@@ -96,7 +96,7 @@ export function BudgetWidgetLarge({ data }: Props) {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: badgeBg,
+                backgroundColor: data.deltaDirection === 'up' ? '#FFE5E5' : data.deltaDirection === 'down' ? '#E8F8F5' : '#EEF0F4',
                 borderRadius: 8,
                 paddingHorizontal: 6,
                 paddingVertical: 3,
@@ -110,7 +110,7 @@ export function BudgetWidgetLarge({ data }: Props) {
           )}
           <TextWidget
             text={`${labels?.week ?? 'Week'}: ${data.weekTotal}`}
-            style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}
+            style={{ fontSize: 11, color: '#5E6272', marginTop: 4 }}
           />
         </FlexWidget>
       </FlexWidget>
@@ -145,7 +145,7 @@ export function BudgetWidgetLarge({ data }: Props) {
                 style={{
                   width: 'match_parent',
                   height: barHeight,
-                  backgroundColor: isToday ? '#4ECDC4' : '#1E293B',
+                  backgroundColor: isToday ? '#E37F2B' : '#EEF0F4',
                   borderRadius: 3,
                 }}
               />
@@ -153,7 +153,7 @@ export function BudgetWidgetLarge({ data }: Props) {
                 text={bar.day}
                 style={{
                   fontSize: 8,
-                  color: isToday ? '#4ECDC4' : '#94A3B8',
+                  color: isToday ? '#E37F2B' : '#5E6272',
                   marginTop: 3,
                   fontWeight: isToday ? '600' : 'normal',
                 }}
@@ -168,7 +168,7 @@ export function BudgetWidgetLarge({ data }: Props) {
         style={{
           width: 'match_parent',
           height: 1,
-          backgroundColor: '#1E293B',
+          backgroundColor: '#EEF0F4',
           marginTop: 10,
           marginBottom: 8,
         }}
@@ -192,8 +192,8 @@ export function BudgetWidgetLarge({ data }: Props) {
             }}
           />
           {data.budgets.slice(0, 3).map((budget, i) => {
-            const progressColor = budget.isOverBudget ? '#FF6B6B' : '#4ECDC4';
-            const trackColor = budget.isOverBudget ? '#2D1515' : '#0D2D2A';
+            const progressColor = budget.isOverBudget ? '#FF6B6B' : '#E37F2B';
+            const trackColor = budget.isOverBudget ? '#FFE5E5' : '#F2F4F7';
 
             return (
               <FlexWidget
@@ -214,11 +214,11 @@ export function BudgetWidgetLarge({ data }: Props) {
                 >
                   <TextWidget
                     text={budget.name}
-                    style={{ fontSize: 11, color: '#CBD5E1' }}
+                    style={{ fontSize: 11, color: '#1A1D26' }}
                   />
                   <TextWidget
                     text={`${budget.spent} / ${budget.limit}`}
-                    style={{ fontSize: 11, color: '#94A3B8' }}
+                    style={{ fontSize: 11, color: '#5E6272' }}
                   />
                 </FlexWidget>
                 {/* Progress bar track */}
@@ -280,7 +280,7 @@ export function BudgetWidgetLarge({ data }: Props) {
                   style={{
                     width: 22,
                     height: 22,
-                    backgroundColor: '#1E293B',
+                    backgroundColor: '#F2F4F7',
                     borderRadius: 6,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -294,12 +294,12 @@ export function BudgetWidgetLarge({ data }: Props) {
                 </FlexWidget>
                 <TextWidget
                   text={cat.name}
-                  style={{ fontSize: 11, color: '#CBD5E1' }}
+                  style={{ fontSize: 11, color: '#1A1D26' }}
                 />
               </FlexWidget>
               <TextWidget
                 text={cat.amount}
-                style={{ fontSize: 11, fontWeight: 'bold', color: '#F8FAFC' }}
+                style={{ fontSize: 11, fontWeight: 'bold', color: '#1A1D26' }}
               />
             </FlexWidget>
           ))}

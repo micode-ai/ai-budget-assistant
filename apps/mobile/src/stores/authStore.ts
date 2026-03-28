@@ -27,7 +27,7 @@ interface AuthState {
   // Actions
   initialize: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, currencyCode?: string) => Promise<void>;
+  register: (email: string, password: string, name: string, currencyCode?: string, referralCode?: string) => Promise<void>;
   biometricLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
@@ -165,10 +165,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         }
       },
 
-      register: async (email: string, password: string, name: string, currencyCode?: string) => {
+      register: async (email: string, password: string, name: string, currencyCode?: string, referralCode?: string) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await api.register(email, password, name, currencyCode);
+          const response = await api.register(email, password, name, currencyCode, referralCode);
 
           const user: User = {
             id: response.user.id,

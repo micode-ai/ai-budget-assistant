@@ -51,6 +51,7 @@ export default function SubscriptionScreen() {
     currentPeriodEnd,
     aiRequestsUsed,
     aiRequestsLimit,
+    bonusAiRequests,
     percentUsed,
     plans,
     isLoading,
@@ -165,6 +166,7 @@ export default function SubscriptionScreen() {
                 <Text style={styles.usageLabel}>{t('subscription.aiRequests')}</Text>
                 <Text style={styles.usageValue}>
                   {aiRequestsUsed} / {aiRequestsLimit === Infinity ? '∞' : aiRequestsLimit}
+                  {bonusAiRequests > 0 ? ` (+${bonusAiRequests})` : ''}
                 </Text>
               </View>
               <View style={styles.progressTrack}>

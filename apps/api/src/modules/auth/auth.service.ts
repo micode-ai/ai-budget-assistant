@@ -8,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { AccountsService } from '../accounts/accounts.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AdminGateway } from '../admin/admin.gateway';
+import { ReferralsService } from '../referrals/referrals.service';
 import { RegisterDto, LoginDto } from './dto';
 
 @Injectable()
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     @Inject(forwardRef(() => AdminGateway))
     private readonly adminGateway: AdminGateway,
+    private readonly referralsService: ReferralsService,
   ) {}
 
   private resetRequestAttempts = new Map<string, number[]>();
@@ -64,6 +66,11 @@ export class AuthService {
       email: user.email,
       createdAt: new Date().toISOString(),
     });
+
+    // Apply referral code if provided
+    if (dto.referralCode) {
+      await this.referralsService.applyReferralCode(user.id, dto.referralCode);
+    }
 
     // Create default personal account
     const defaultAccount = await this.accountsService.createDefaultAccount(

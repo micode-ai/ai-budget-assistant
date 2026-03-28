@@ -19,7 +19,7 @@ export function QuickActionWidget({ labels }: Props) {
         height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'row',
-        backgroundColor: '#0A0F1E',
+        backgroundColor: '#F8FAFB',
         borderRadius: 20,
         padding: 8,
         justifyContent: 'space-evenly',
@@ -33,12 +33,14 @@ export function QuickActionWidget({ labels }: Props) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#111827',
+          backgroundColor: '#FFFFFF',
           borderRadius: 14,
           paddingHorizontal: 4,
           paddingVertical: 8,
           marginHorizontal: 4,
           height: 'match_parent',
+          borderWidth: 1,
+          borderColor: '#EEF0F4',
         }}
         clickAction="OPEN_URI"
         clickActionData={{ uri: 'budget://expense/voice' }}
@@ -48,19 +50,19 @@ export function QuickActionWidget({ labels }: Props) {
           style={{
             width: 32,
             height: 32,
-            backgroundColor: '#4ECDC4',
+            backgroundColor: '#E37F2B',
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <TextWidget text="◉" style={{ fontSize: 16, color: '#0A0F1E', fontWeight: 'bold' }} />
+          <TextWidget text="◉" style={{ fontSize: 16, color: '#FFFFFF', fontWeight: 'bold' }} />
         </FlexWidget>
         <TextWidget
           text={voice}
           style={{
             fontSize: 11,
-            color: '#F1F5F9',
+            color: '#1A1D26',
             marginTop: 4,
             fontWeight: '600',
           }}
@@ -74,12 +76,14 @@ export function QuickActionWidget({ labels }: Props) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#111827',
+          backgroundColor: '#FFFFFF',
           borderRadius: 14,
           paddingHorizontal: 4,
           paddingVertical: 8,
           marginHorizontal: 4,
           height: 'match_parent',
+          borderWidth: 1,
+          borderColor: '#EEF0F4',
         }}
         clickAction="OPEN_URI"
         clickActionData={{ uri: 'budget://expense/receipt' }}
@@ -89,19 +93,19 @@ export function QuickActionWidget({ labels }: Props) {
           style={{
             width: 32,
             height: 32,
-            backgroundColor: '#4ECDC4',
+            backgroundColor: '#E37F2B',
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <TextWidget text="≡" style={{ fontSize: 18, color: '#0A0F1E', fontWeight: 'bold' }} />
+          <TextWidget text="≡" style={{ fontSize: 18, color: '#FFFFFF', fontWeight: 'bold' }} />
         </FlexWidget>
         <TextWidget
           text={scan}
           style={{
             fontSize: 11,
-            color: '#F1F5F9',
+            color: '#1A1D26',
             marginTop: 4,
             fontWeight: '600',
           }}
@@ -115,12 +119,14 @@ export function QuickActionWidget({ labels }: Props) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#111827',
+          backgroundColor: '#FFFFFF',
           borderRadius: 14,
           paddingHorizontal: 4,
           paddingVertical: 8,
           marginHorizontal: 4,
           height: 'match_parent',
+          borderWidth: 1,
+          borderColor: '#EEF0F4',
         }}
         clickAction="OPEN_URI"
         clickActionData={{ uri: 'budget://expense/new' }}
@@ -130,19 +136,19 @@ export function QuickActionWidget({ labels }: Props) {
           style={{
             width: 32,
             height: 32,
-            backgroundColor: '#4ECDC4',
+            backgroundColor: '#E37F2B',
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <TextWidget text="+" style={{ fontSize: 22, color: '#0A0F1E', fontWeight: 'bold' }} />
+          <TextWidget text="+" style={{ fontSize: 22, color: '#FFFFFF', fontWeight: 'bold' }} />
         </FlexWidget>
         <TextWidget
           text={add}
           style={{
             fontSize: 11,
-            color: '#F1F5F9',
+            color: '#1A1D26',
             marginTop: 4,
             fontWeight: '600',
           }}
