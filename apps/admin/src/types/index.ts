@@ -164,6 +164,12 @@ export interface SubscriptionStats {
 }
 
 // Communications
+export interface NotificationRecipient {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface NotificationLogItem {
   id: string;
   adminId: string;
@@ -175,6 +181,7 @@ export interface NotificationLogItem {
   subject: string | null;
   body: string | null;
   filters: Record<string, unknown> | null;
+  recipients: NotificationRecipient[];
   createdAt: string;
 }
 

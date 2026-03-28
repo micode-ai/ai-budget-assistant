@@ -431,6 +431,20 @@ export class AdminService {
     });
   }
 
+  async setCustomAiLimit(userId: string, customAiLimit: number | null) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { subscription: true },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.subscription) throw new NotFoundException('User has no subscription');
+
+    return this.prisma.subscription.update({
+      where: { id: user.subscription.id },
+      data: { customAiLimit },
+    });
+  }
+
   async deactivateUser(userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
@@ -592,13 +606,35 @@ export class AdminService {
       this.prisma.notificationLog.count({ where }),
     ]);
 
+    // Resolve recipient IDs to names/emails
+    const allRecipientIds = [
+      ...new Set(data.flatMap((d) => (d.recipientIds as string[] | null) ?? [])),
+    ];
+    const recipientMap = new Map<string, { name: string; email: string }>();
+    if (allRecipientIds.length > 0) {
+      const users = await this.prisma.user.findMany({
+        where: { id: { in: allRecipientIds } },
+        select: { id: true, name: true, email: true },
+      });
+      for (const u of users) {
+        recipientMap.set(u.id, { name: u.name, email: u.email });
+      }
+    }
+
     return {
-      data: data.map((d) => ({
-        ...d,
-        adminName: d.admin?.name ?? 'Deleted admin',
-        adminEmail: d.admin?.email ?? '',
-        admin: undefined,
-      })),
+      data: data.map((d) => {
+        const ids = (d.recipientIds as string[] | null) ?? [];
+        return {
+          ...d,
+          adminName: d.admin?.name ?? 'Deleted admin',
+          adminEmail: d.admin?.email ?? '',
+          admin: undefined,
+          recipients: ids.map((id) => {
+            const u = recipientMap.get(id);
+            return u ? { id, name: u.name, email: u.email } : { id, name: 'Deleted user', email: '' };
+          }),
+        };
+      }),
       total,
       page,
       limit,
