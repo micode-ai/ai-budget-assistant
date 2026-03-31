@@ -8,6 +8,8 @@ interface CreateUserData {
   currencyCode?: string;
   timezone?: string;
   language?: string;
+  emailVerificationCode?: string;
+  emailVerificationExpiresAt?: Date;
 }
 
 @Injectable()
@@ -22,6 +24,8 @@ export class UsersService {
         name: data.name,
         currencyCode: data.currencyCode || 'USD',
         timezone: data.timezone || 'UTC',
+        emailVerificationCode: data.emailVerificationCode,
+        emailVerificationExpiresAt: data.emailVerificationExpiresAt,
       },
     });
   }
@@ -49,6 +53,17 @@ export class UsersService {
     passwordResetCode: string | null;
     passwordResetExpiresAt: Date | null;
     passwordHash?: string;
+  }) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async updateEmailVerification(id: string, data: {
+    isVerified?: boolean;
+    emailVerificationCode: string | null;
+    emailVerificationExpiresAt: Date | null;
   }) {
     return this.prisma.user.update({
       where: { id },

@@ -12,6 +12,8 @@
 6. Selectionnez votre **Devise** preferee (USD, EUR, PLN, GBP, UAH, RUB ou BYN)
 7. Selectionnez votre **Langue** preferee (English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa ou Беларуская)
 8. Appuyez sur **Creer un compte**
+9. Vérifiez votre e-mail pour un **code de vérification à 6 chiffres**
+10. Entrez le code dans l'application et appuyez sur **Vérifier**
 
 ## Se connecter
 
