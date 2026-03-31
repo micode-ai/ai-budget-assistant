@@ -52,7 +52,16 @@ export default function LoginScreen() {
 
     try {
       await login(email, password);
-      router.replace('/(tabs)');
+      // Check if verified using store state since login() updates it
+      const user = useAuthStore.getState().user;
+      if (user && !user.isVerified) {
+        router.replace({
+          pathname: '/(auth)/verify-email',
+          params: { email },
+        });
+      } else {
+        router.replace('/(tabs)');
+      }
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
       setError(mapApiError(msg, t, 'errors.loginFailed'));

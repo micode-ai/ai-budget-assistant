@@ -44,6 +44,7 @@
 - [x] Scheduled Jobs (@nestjs/schedule — weekly emails, monthly digests, expired report cleanup)
 - [x] i18n — 8th locale: BY (Belarusian)
 - [x] AI Model selection (Fast/Balanced/Quality) with per-model cost multiplier (×0.75 / ×1.0 / ×1.5) applied globally to all AI features
+- [x] Email verification for new registrations (6-digit code, expiration, rate-limiting)
 
 ---
 
