@@ -131,6 +131,68 @@ export class MailService {
     );
   }
 
+  async sendVerificationEmail(to: string, code: string): Promise<boolean> {
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#F8FAFB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <!-- Header -->
+          <tr>
+            <td style="background:#E37F2B;padding:32px 40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:700;">
+                Verify Your Email
+              </h1>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+              <p style="margin:0 0 24px;color:#1A1D26;font-size:16px;line-height:1.6;text-align:center;">
+                Thank you for joining <strong>AI Budget</strong>! <br/>
+                Please use the code below to verify your email address.
+              </p>
+
+              <div style="background:#FDF0E4;border: 2px dashed #E37F2B;border-radius:12px;padding:24px;text-align:center;margin:0 0 32px;">
+                <span style="font-size:42px;font-weight:800;color:#E37F2B;letter-spacing:10px;font-family: 'Courier New', Courier, monospace;">
+                  ${code}
+                </span>
+              </div>
+
+              <p style="margin:0 0 8px;color:#5E6272;font-size:14px;line-height:1.5;text-align:center;">
+                This code will expire in <strong>24 hours</strong>.
+              </p>
+              <p style="margin:0;color:#9CA3B4;font-size:13px;line-height:1.5;text-align:center;">
+                If you didn't create an account, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="padding:24px 40px;background:#F8FAFB;border-top:1px solid #EEF0F4;text-align:center;">
+              <p style="margin:0;color:#9CA3B4;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1px;">
+                AI Budget Assistant
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+    return this.sendMail(
+      to,
+      `Verify your email — AI Budget`,
+      html,
+    );
+  }
+
   async sendWeeklyReport(params: {
     to: string;
     userName: string;

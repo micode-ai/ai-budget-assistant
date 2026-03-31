@@ -174,6 +174,22 @@ class ApiClient {
     });
   }
 
+  async verifyEmail(email: string, code: string) {
+    return this.request<{ message: string }>('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ email, code }),
+      skipAuth: true,
+    });
+  }
+
+  async resendVerificationEmail(email: string) {
+    return this.request<{ message: string }>('/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+      skipAuth: true,
+    });
+  }
+
   // Referral endpoints
   async getReferralCode() {
     return this.request<{ code: string }>('/referrals/my-code');

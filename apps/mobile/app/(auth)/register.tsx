@@ -99,7 +99,10 @@ export default function RegisterScreen() {
 
     try {
       await register(email, password, name, currencyCode, referralCode || undefined);
-      router.replace('/welcome');
+      router.replace({
+        pathname: '/(auth)/verify-email',
+        params: { email },
+      });
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
       setError(mapApiError(msg, t, 'errors.registrationFailed'));
