@@ -65,7 +65,10 @@ app/
 ├── (auth)/
 │   ├── _layout.tsx
 │   ├── login.tsx
-│   └── register.tsx
+│   ├── register.tsx
+│   ├── verify-email.tsx
+│   ├── forgot-password.tsx
+│   └── reset-password.tsx
 ├── (tabs)/
 │   ├── _layout.tsx
 │   ├── index.tsx          # Главная панель
@@ -501,7 +504,9 @@ model User {
   notifySharedActivity Boolean   @default(true)
   isActive             Boolean   @default(true)
   defaultAccountId     String?
-  lastSyncAt           DateTime?
+  isVerified           Boolean   @default(false)
+  emailVerificationCode String?
+  emailVerificationExpiresAt DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 

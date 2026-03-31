@@ -12,6 +12,8 @@
 6. Select your preferred **Currency** (USD, EUR, PLN, GBP, UAH, RUB, or BYN)
 7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, or Беларуская)
 8. Tap **Create Account**
+9. Check your email for a **6-digit verification code**
+10. Enter the code in the app and tap **Verify**
 
 ## Signing In
 

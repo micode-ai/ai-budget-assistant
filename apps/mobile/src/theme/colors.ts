@@ -8,6 +8,7 @@ export interface ThemeColors {
 
   // Semantic
   success: string;
+  successLight: string;
   warning: string;
   warningLight: string;
   danger: string;
@@ -59,6 +60,7 @@ export const lightColors: ThemeColors = {
 
   // Semantic
   success: '#4CAF50',
+  successLight: '#E8F5E9',
   warning: '#F5A623',
   warningLight: '#FFF3DC',
   danger: '#FF6B6B',
@@ -110,6 +112,7 @@ export const darkColors: ThemeColors = {
 
   // Semantic
   success: '#4CAF50',
+  successLight: '#103B20',
   warning: '#F5A623',
   warningLight: '#3D2E0A',
   danger: '#FF6B6B',

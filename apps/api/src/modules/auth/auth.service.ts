@@ -46,8 +46,25 @@ export class AuthService {
       throw new ConflictException('User with this email already exists');
     }
 
+    // Verify email domain exists (MX record check)
+    const domain = dto.email.split('@')[1];
+    try {
+      const dns = require('dns').promises;
+      const mx = await dns.resolveMx(domain);
+      if (!mx || mx.length === 0) {
+        throw new BadRequestException('Email domain does not exist or cannot receive emails');
+      }
+    } catch (error) {
+      throw new BadRequestException('Invalid email domain or mail server not found');
+    }
+
     // Hash password
     const passwordHash = await bcrypt.hash(dto.password, 12);
+
+    // Create verification code
+    const verificationCode = randomInt(100000, 999999).toString();
+    const verificationCodeHash = await bcrypt.hash(verificationCode, 12);
+    const verificationExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     // Create user
     const user = await this.usersService.create({
@@ -56,7 +73,12 @@ export class AuthService {
       name: dto.name,
       currencyCode: dto.currencyCode,
       timezone: dto.timezone,
+      emailVerificationCode: verificationCodeHash,
+      emailVerificationExpiresAt: verificationExpiresAt,
     });
+
+    // Send verification email
+    await this.mailService.sendVerificationEmail(user.email, verificationCode);
 
     // Notify about new registration
     this.telegramService.notifyNewUser(user.name, user.email);
@@ -85,16 +107,17 @@ export class AuthService {
     const accounts = await this.accountsService.findAllForUser(user.id);
 
     return {
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
+      accessToken: user.isVerified ? tokens.accessToken : '',
+      refreshToken: user.isVerified ? tokens.refreshToken : '',
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
         currencyCode: user.currencyCode,
         defaultAccountId: defaultAccount.id,
+        isVerified: user.isVerified,
       },
-      accounts,
+      accounts: user.isVerified ? accounts : [],
     };
   }
 
@@ -112,6 +135,25 @@ export class AuthService {
     }
 
     // Check if user is active
+    if (!user.isVerified) {
+      // Still return user info so the app can redirect to verification
+      const accounts = await this.accountsService.findAllForUser(user.id);
+      const defaultAccount = accounts.find(a => a.type === 'personal') || accounts[0];
+      
+      return {
+        accessToken: '', // No access until verified
+        refreshToken: '',
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          currencyCode: user.currencyCode,
+          defaultAccountId: defaultAccount?.id,
+          isVerified: false,
+        },
+        accounts: [],
+      };
+    }
     if (!user.isActive) {
       throw new UnauthorizedException('Account is deactivated');
     }
@@ -234,6 +276,75 @@ export class AuthService {
     });
 
     return { message: 'Password reset successfully' };
+  }
+
+  async verifyEmail(email: string, code: string) {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user || user.isVerified || !user.emailVerificationCode || !user.emailVerificationExpiresAt) {
+      throw new BadRequestException('Invalid or expired verification code');
+    }
+
+    // Check expiry
+    if (new Date() > user.emailVerificationExpiresAt) {
+      throw new BadRequestException('Verification code has expired');
+    }
+
+    // Verify code
+    const isCodeValid = await bcrypt.compare(code, user.emailVerificationCode);
+    if (!isCodeValid) {
+      throw new BadRequestException('Invalid verification code');
+    }
+
+    // Mark as verified
+    await this.usersService.updateEmailVerification(user.id, {
+      isVerified: true,
+      emailVerificationCode: null,
+      emailVerificationExpiresAt: null,
+    });
+
+    return { message: 'Email verified successfully' };
+  }
+
+  async resendVerificationEmail(email: string) {
+    const user = await this.usersService.findByEmail(email);
+
+    // If already verified or user not found, don't reveal info
+    if (!user || user.isVerified) {
+      return { message: 'If this email is unverified, a new code has been sent' };
+    }
+
+    // Rate limit
+    this.checkRateLimit(this.resetRequestAttempts, `verify_${email}`, 3);
+
+    // Generate new code
+    const code = randomInt(100000, 999999).toString();
+    const codeHash = await bcrypt.hash(code, 12);
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    // Update user
+    await this.usersService.updateEmailVerification(user.id, {
+      emailVerificationCode: codeHash,
+      emailVerificationExpiresAt: expiresAt,
+    });
+
+    // Send email
+    await this.mailService.sendMail(
+      email,
+      'Your email verification code — AI Budget',
+      `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+          <h2 style="color: #1a1a1a; margin-bottom: 24px;">AI Budget Verification</h2>
+          <p style="color: #333; font-size: 16px; margin-bottom: 8px;">Your verification code:</p>
+          <div style="background: #f5f5f5; border-radius: 12px; padding: 24px; text-align: center; margin: 16px 0;">
+              <span style="font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${code}</span>
+          </div>
+          <p style="color: #666; font-size: 14px;">This code expires in 24 hours.</p>
+      </div>
+      `,
+    );
+
+    return { message: 'If this email is unverified, a new code has been sent' };
   }
 
   private async generateTokens(userId: string, email: string) {

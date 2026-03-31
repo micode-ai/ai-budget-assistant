@@ -14,6 +14,8 @@ import { useInsightsStore } from './insightsStore';
 import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
 
+let isLoggingOut = false;
+
 interface AuthState {
   user: User | null;
   accessToken: string | null;
@@ -35,6 +37,8 @@ interface AuthState {
   clearError: () => void;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (email: string, code: string, newPassword: string) => Promise<void>;
+  verifyEmail: (email: string, code: string) => Promise<void>;
+  resendVerification: (email: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -103,6 +107,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             currencyCode: (response.user.currencyCode || 'USD') as Currency,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             defaultAccountId: response.user.defaultAccountId,
+            isVerified: !!response.user.isVerified,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -155,7 +160,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           // Mark as authenticated only after all data is ready so the
           // dashboard mounts with data already in the stores
-          set({ isAuthenticated: true });
+          set({ isAuthenticated: user.isVerified });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Login failed',
@@ -177,6 +182,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             currencyCode: (response.user.currencyCode || 'USD') as Currency,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             defaultAccountId: response.user.defaultAccountId,
+            isVerified: false,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -219,7 +225,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           // Mark as authenticated only after all data is ready so the
           // dashboard mounts with data already in the stores
-          set({ isAuthenticated: true });
+          set({ isAuthenticated: user.isVerified });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
@@ -302,6 +308,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       },
 
       logout: async () => {
+        if (isLoggingOut) return;
+        isLoggingOut = true;
         try {
           // Clear push token from server before clearing auth state
           try {
@@ -352,6 +360,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await investmentRepo.clearAllInvestments();
         } catch (error) {
           console.error('Failed to logout:', error);
+        } finally {
+          isLoggingOut = false;
         }
       },
 
@@ -363,6 +373,40 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Failed to send reset code',
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+
+      verifyEmail: async (email: string, code: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.verifyEmail(email, code);
+          const { user } = get();
+          if (user) {
+            const updatedUser = { ...user, isVerified: true };
+            set({ user: updatedUser, isAuthenticated: true });
+            await secureStorage.setItem('user', JSON.stringify(updatedUser));
+          }
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Verification failed',
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+
+      resendVerification: async (email: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          await api.resendVerificationEmail(email);
+          set({ isLoading: false });
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Failed to resend code',
             isLoading: false,
           });
           throw error;

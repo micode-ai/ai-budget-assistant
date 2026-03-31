@@ -65,7 +65,10 @@ app/
 ├── (auth)/
 │   ├── _layout.tsx
 │   ├── login.tsx
-│   └── register.tsx
+│   ├── register.tsx
+│   ├── verify-email.tsx
+│   ├── forgot-password.tsx
+│   └── reset-password.tsx
 ├── (tabs)/
 │   ├── _layout.tsx
 │   ├── index.tsx          # Dashboard
@@ -487,6 +490,9 @@ model User {
   lastSyncAt           DateTime?
   aiResponseMode       String    @default("balanced")  // simple | balanced | expert
   aiModel              String    @default("balanced")  // fast | balanced | quality
+  isVerified           Boolean   @default(false)
+  emailVerificationCode String?
+  emailVerificationExpiresAt DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 

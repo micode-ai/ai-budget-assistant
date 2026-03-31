@@ -118,6 +118,7 @@ export interface User {
   timezone: string;
   defaultAccountId?: string;
   isAdmin?: boolean;
+  isVerified: boolean;
   aiResponseMode?: AiResponseMode;
   aiModel?: AiModel;
   createdAt: Date;
