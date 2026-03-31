@@ -60,11 +60,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
           if (accessToken && userJson) {
+            const user = JSON.parse(userJson) as User;
+
+            // If user is not verified, don't restore session — wait for verification
+            if (!user.isVerified) {
+              set({ user, isInitializing: false });
+              return;
+            }
+
             if (biometricEnabled === 'true') {
               // Session exists but biometric required — wait for biometric verification
               set({ hasSavedSession: true, isInitializing: false });
             } else {
-              const user = JSON.parse(userJson) as User;
               set({
                 user,
                 accessToken,
@@ -126,6 +133,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             hasSavedSession: false,
           });
 
+          // Skip data loading if user is not verified — no valid tokens yet
+          if (!user.isVerified) {
+            return;
+          }
+
           // Initialize account store with accounts from auth response
           if (response.accounts) {
             await useAccountStore.getState().initialize(
@@ -160,7 +172,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           // Mark as authenticated only after all data is ready so the
           // dashboard mounts with data already in the stores
-          set({ isAuthenticated: user.isVerified });
+          set({ isAuthenticated: true });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Login failed',
@@ -201,6 +213,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             hasSavedSession: false,
           });
 
+          // Skip data loading if user is not verified — no valid tokens yet
+          if (!user.isVerified) {
+            return;
+          }
+
           // Initialize account store with accounts from auth response
           if (response.accounts) {
             await useAccountStore.getState().initialize(
@@ -225,7 +242,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           // Mark as authenticated only after all data is ready so the
           // dashboard mounts with data already in the stores
-          set({ isAuthenticated: user.isVerified });
+          set({ isAuthenticated: true });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
@@ -311,12 +328,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         if (isLoggingOut) return;
         isLoggingOut = true;
         try {
-          // Clear push token from server before clearing auth state
-          try {
-            const { unregisterPushNotifications } = await import('../services/notifications');
-            await unregisterPushNotifications();
-          } catch (e) {
-            console.error('Failed to clear push token:', e);
+          // Clear push token from server before clearing auth state (only if we have a valid token)
+          const { accessToken: currentToken } = get();
+          if (currentToken) {
+            try {
+              const { unregisterPushNotifications } = await import('../services/notifications');
+              await unregisterPushNotifications();
+            } catch (e) {
+              console.error('Failed to clear push token:', e);
+            }
           }
 
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
@@ -382,14 +402,54 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       verifyEmail: async (email: string, code: string) => {
         set({ isLoading: true, error: null });
         try {
-          await api.verifyEmail(email, code);
-          const { user } = get();
-          if (user) {
-            const updatedUser = { ...user, isVerified: true };
-            set({ user: updatedUser, isAuthenticated: true });
-            await secureStorage.setItem('user', JSON.stringify(updatedUser));
+          const response = await api.verifyEmail(email, code);
+
+          const { user: currentUser } = get();
+          const user: User = {
+            ...(currentUser || {} as User),
+            id: response.user?.id || currentUser?.id || '',
+            email: response.user?.email || currentUser?.email || email,
+            name: response.user?.name || currentUser?.name || '',
+            currencyCode: (response.user?.currencyCode || currentUser?.currencyCode || 'USD') as Currency,
+            isVerified: true,
+            createdAt: currentUser?.createdAt || new Date(),
+            updatedAt: new Date(),
+          };
+
+          // Save tokens from verification response
+          if (response.accessToken) {
+            await secureStorage.setItem('accessToken', response.accessToken);
+            await secureStorage.setItem('refreshToken', response.refreshToken);
           }
-          set({ isLoading: false });
+          await secureStorage.setItem('user', JSON.stringify(user));
+
+          set({
+            user,
+            accessToken: response.accessToken || null,
+            refreshToken: response.refreshToken || null,
+            isLoading: false,
+          });
+
+          // Now that we have valid tokens, load data
+          if (response.accounts) {
+            await useAccountStore.getState().initialize(
+              response.accounts,
+              response.user?.defaultAccountId || user.defaultAccountId || '',
+              user.id,
+            );
+          }
+
+          await useExchangeRateStore.getState().loadRates();
+
+          await Promise.allSettled([
+            useExpenseStore.getState().loadExpenses(),
+            useIncomeStore.getState().loadIncomes(),
+            useCategoryStore.getState().loadCategories(),
+            useWalletStore.getState().loadWallet(),
+            useBudgetStore.getState().loadBudgets(),
+          ]);
+
+          set({ isAuthenticated: true });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Verification failed',

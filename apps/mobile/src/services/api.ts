@@ -175,7 +175,7 @@ class ApiClient {
   }
 
   async verifyEmail(email: string, code: string) {
-    return this.request<{ message: string }>('/auth/verify-email', {
+    return this.request<{ message: string; accessToken: string; refreshToken: string; user: any; accounts: any[] }>('/auth/verify-email', {
       method: 'POST',
       body: JSON.stringify({ email, code }),
       skipAuth: true,

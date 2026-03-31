@@ -120,7 +120,9 @@ setTimeout(async () => {
     const curr = s.user?.currencyCode;
     if (curr && curr !== prevCurrencyCode) {
       prevCurrencyCode = curr;
-      useExchangeRateStore.getState().loadRates();
+      if (s.isAuthenticated) {
+        useExchangeRateStore.getState().loadRates();
+      }
     }
   });
 }, 0);
