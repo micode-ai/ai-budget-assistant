@@ -111,7 +111,7 @@ export default {
     noBudgets: 'Brak budżetu',
     createBudgetHint: 'Utwórz budżet, aby śledzić swoje wydatki',
     walletBalances: 'Salda portfela',
-    exchangeCurrency: 'Wymiana',
+    exchangeCurrency: 'Kantor',
     currencyConverter: 'Konwerter',
     transfers: 'Przelewy',
     totalIncome: 'Przychody',
@@ -588,7 +588,7 @@ export default {
     transferredOut: 'Przelano',
   },
   exchange: {
-    title: 'Wymiana',
+    title: 'Kantor',
     from: 'Z',
     to: 'Na',
     rate: 'Kurs wymiany',
