@@ -19,7 +19,8 @@ export const api = ky.create({
           localStorage.removeItem('admin_token');
           localStorage.removeItem('admin_user');
           if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-            window.location.href = '/login';
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            window.location.href = `${basePath}/login`;
           }
         }
         return response;

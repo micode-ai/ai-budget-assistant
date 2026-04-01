@@ -1,14 +1,6 @@
 name: Mobile EAS Build
 
 on:
-  push:
-    branches: [main, development]
-    paths:
-      - 'apps/mobile/**'
-      - 'packages/shared-types/**'
-      - 'packages/shared-utils/**'
-      - 'package.json'
-      - 'package-lock.json'
   workflow_dispatch:
     inputs:
       profile:

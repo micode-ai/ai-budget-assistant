@@ -1,0 +1,46 @@
+FROM node:20-alpine AS base
+WORKDIR /app
+
+# --- deps ---
+FROM base AS deps
+COPY package.json package-lock.json turbo.json ./
+COPY packages/shared-types/package.json ./packages/shared-types/
+COPY packages/shared-utils/package.json ./packages/shared-utils/
+COPY apps/api/package.json ./apps/api/
+RUN npm ci
+
+# --- builder ---
+FROM base AS builder
+COPY --from=deps /app ./
+COPY packages/shared-types ./packages/shared-types
+COPY packages/shared-utils ./packages/shared-utils
+COPY apps/api ./apps/api
+RUN npx prisma generate --schema=apps/api/prisma/schema.prisma
+RUN npx turbo build --filter=@budget/api
+
+# --- migrator ---
+FROM builder AS migrator
+CMD ["npx", "prisma", "migrate", "deploy", "--schema=apps/api/prisma/schema.prisma"]
+
+# --- runner ---
+FROM base AS runner
+RUN apk add --no-cache openssl
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
+COPY --from=builder /app/apps/api/package.json ./apps/api/
+COPY --from=builder /app/packages ./packages
+
+# Re-generate Prisma client for alpine
+RUN npx prisma generate --schema=apps/api/prisma/schema.prisma
+
+ENV NODE_ENV=production
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api/v1', (r) => {process.exit(r.statusCode < 500 ? 0 : 1)})" || exit 1
+
+WORKDIR /app/apps/api
+CMD ["node", "dist/main"]
