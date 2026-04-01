@@ -58,9 +58,9 @@ export class SubscriptionsService {
     private readonly telegramService: TelegramService,
   ) {
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    this.stripe = stripeKey
-      ? new Stripe(stripeKey, { apiVersion: '2026-02-25.clover' })
-      : null;
+    if (stripeKey) {
+      this.stripe = new Stripe(stripeKey, { apiVersion: '2026-02-25.clover' });
+    }
   }
 
   // ---- Subscription CRUD ----
