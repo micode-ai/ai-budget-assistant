@@ -4,9 +4,12 @@ WORKDIR /app
 # --- deps ---
 FROM base AS deps
 COPY package.json package-lock.json turbo.json ./
+# Create all workspace dirs so npm resolves workspaces correctly
 COPY packages/shared-types/package.json ./packages/shared-types/
 COPY packages/shared-utils/package.json ./packages/shared-utils/
 COPY apps/admin/package.json ./apps/admin/
+# Dummy package.json for api workspace so npm doesn't error on missing workspace
+RUN mkdir -p apps/api && echo '{"name":"@budget/api","version":"0.1.0","private":true}' > apps/api/package.json
 RUN npm install --legacy-peer-deps
 
 # --- builder ---
@@ -21,7 +24,8 @@ ARG NEXT_PUBLIC_BASE_PATH=
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH
 
-RUN npx turbo build --filter=admin
+WORKDIR /app/apps/admin
+RUN npm run build
 
 # --- runner ---
 FROM base AS runner
