@@ -25,7 +25,7 @@ export class ReferralsService {
   ) {
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     this.stripe = new Stripe(stripeKey || '', {
-      apiVersion: '2026-01-28.clover',
+      apiVersion: '2026-02-25.clover',
     });
   }
 
