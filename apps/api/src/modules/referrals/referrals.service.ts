@@ -14,7 +14,7 @@ const BONUS_AI_REQUESTS = 30;
 @Injectable()
 export class ReferralsService {
   private readonly logger = new Logger(ReferralsService.name);
-  private readonly stripe: Stripe;
+  private readonly stripe: Stripe | null;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -24,9 +24,9 @@ export class ReferralsService {
     private readonly telegramService: TelegramService,
   ) {
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    this.stripe = new Stripe(stripeKey || '', {
-      apiVersion: '2026-02-25.clover',
-    });
+    this.stripe = stripeKey
+      ? new Stripe(stripeKey, { apiVersion: '2026-02-25.clover' })
+      : null;
   }
 
   // ---- Code Generation ----

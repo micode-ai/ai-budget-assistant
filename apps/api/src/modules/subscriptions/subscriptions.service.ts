@@ -49,7 +49,7 @@ const PRICING: Record<
 
 @Injectable()
 export class SubscriptionsService {
-  private readonly stripe: Stripe;
+  private readonly stripe: Stripe | null;
   private readonly logger = new Logger(SubscriptionsService.name);
 
   constructor(
@@ -58,9 +58,9 @@ export class SubscriptionsService {
     private readonly telegramService: TelegramService,
   ) {
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    this.stripe = new Stripe(stripeKey || '', {
-      apiVersion: '2026-02-25.clover',
-    });
+    this.stripe = stripeKey
+      ? new Stripe(stripeKey, { apiVersion: '2026-02-25.clover' })
+      : null;
   }
 
   // ---- Subscription CRUD ----
