@@ -49,7 +49,7 @@ const PRICING: Record<
 
 @Injectable()
 export class SubscriptionsService {
-  private readonly stripe: Stripe | null;
+  private readonly stripe!: Stripe;
   private readonly logger = new Logger(SubscriptionsService.name);
 
   constructor(

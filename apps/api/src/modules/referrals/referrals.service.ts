@@ -14,7 +14,7 @@ const BONUS_AI_REQUESTS = 30;
 @Injectable()
 export class ReferralsService {
   private readonly logger = new Logger(ReferralsService.name);
-  private readonly stripe: Stripe | null;
+  private readonly stripe!: Stripe;
 
   constructor(
     private readonly prisma: PrismaService,
