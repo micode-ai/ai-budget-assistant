@@ -21,7 +21,7 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 | **Dodaj wydatek** | Otwiera formularz recznego dodawania wydatku |
 | **Glosowo** | Otwiera ekran wydatku glosowego — powiedz swoj wydatek naturalnie |
 | **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
-| **Wymiana** | Otwiera formularz wymiany walut |
+| **Kantor** | Otwiera formularz wymiany walut |
 
 ## Widget grywalizacji
 

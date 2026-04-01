@@ -85,6 +85,8 @@ iOS, Android, Web
 6. Select your preferred **Currency** (USD, EUR, PLN, GBP, UAH, RUB, or BYN)
 7. Select your preferred **Language** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська, or Беларуская)
 8. Tap **Create Account**
+9. Check your email for a **6-digit verification code**
+10. Enter the code in the app and tap **Verify**
 
 ## Signing In
 
@@ -3045,6 +3047,8 @@ iOS, Android, Web
 6. Выберите предпочтительную **Валюту** (USD, EUR, PLN, GBP, UAH, RUB или BYN)
 7. Выберите предпочтительный **Язык** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська или Беларуская)
 8. Нажмите **Создать аккаунт**
+9. Проверьте почту — вам придёт **6-значный код подтверждения**
+10. Введите код в приложении и нажмите **Подтвердить**
 
 ## Вход в систему
 
@@ -6007,6 +6011,8 @@ iOS, Android, Web
 6. Оберіть **Валюта** (USD, EUR, PLN, GBP, UAH, RUB або BYN)
 7. Оберіть **Мова** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська або Беларуская)
 8. Натисніть **Створити акаунт**
+9. Перевірте пошту — вам надійде **6-значний код підтвердження**
+10. Введіть код у додатку та натисніть **Підтвердити**
 
 ## Вхід в систему
 
@@ -6078,7 +6084,7 @@ iOS, Android, Web
   **В:** Так, ви можете змінити мову та валюту будь-коли в **Налаштування**.
 
 - **П:** Що робити, якщо я забув пароль?
-  **В:** Зверніться до служби підтримки для відновлення доступу до акаунту.
+  **В:** Натисніть **Забули пароль?** на екрані входу та дотримуйтесь інструкцій для відновлення доступу за допомогою електронної пошти.
 
 ---
 
@@ -8964,6 +8970,8 @@ iOS, Android, Web
 6. Wybierz preferowana **Walute** (USD, EUR, PLN, GBP, UAH, RUB lub BYN)
 7. Wybierz preferowany **Jezyk** (English, Deutsch, Espanol, Francais, Polski, Russkij, Ukrainska lub Беларуская)
 8. Dotknij **Utwórz konto**
+9. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod weryfikacyjny**
+10. Wprowadź kod w aplikacji i naciśnij **Zweryfikuj**
 
 ## Logowanie
 
@@ -9058,7 +9066,7 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 | **Dodaj wydatek** | Otwiera formularz recznego dodawania wydatku |
 | **Glosowo** | Otwiera ekran wydatku glosowego — powiedz swoj wydatek naturalnie |
 | **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
-| **Wymiana** | Otwiera formularz wymiany walut |
+| **Kantor** | Otwiera formularz wymiany walut |
 
 ## Widget grywalizacji
 
@@ -10073,7 +10081,7 @@ Wymieniaj pieniadze miedzy swoimi portfelami walutowymi:
 
 ### Krok po kroku
 
-1. Dotknij **Wymiana** z szybkich akcji na Pulpicie lub przejdz do **Ustawienia** > **Portfel**
+1. Dotknij **Kantor** z szybkich akcji na Pulpicie lub przejdz do **Ustawienia** > **Portfel**
 2. Wybierz walute **Z** (np. USD) — dotknij element waluty, aby wybrac
 3. Wybierz walute **Na** (np. EUR) — dotknij element waluty, aby wybrac
 4. Wprowadz kwote w polu "Z" lub "Na" — drugie pole oblicza sie automatycznie
@@ -11905,6 +11913,8 @@ iOS, Android, Web
 6. Wahle deine bevorzugte **Wahrung** (USD, EUR, PLN, GBP, UAH, RUB oder BYN)
 7. Wahle deine bevorzugte **Sprache** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська oder Беларуская)
 8. Tippe auf **Konto erstellen**
+9. Überprüfen Sie Ihre E-Mail auf einen **6-stelligen Verifizierungscode**
+10. Geben Sie den Code in der App ein und tippen Sie auf **Verifizieren**
 
 ## Anmelden
 
@@ -14844,6 +14854,8 @@ iOS, Android, Web
 6. Selecciona tu **Moneda** preferida (USD, EUR, PLN, GBP, UAH, RUB o BYN)
 7. Selecciona tu **Idioma** preferido (English, Deutsch, Espanol, Francais, Polski, Russki, Ukrainska o Беларуская)
 8. Toca **Crear cuenta**
+9. Revisa tu correo para obtener un **código de verificación de 6 dígitos**
+10. Ingresa el código en la aplicación y toca **Verificar**
 
 ## Iniciar sesion
 
@@ -17778,6 +17790,8 @@ iOS, Android, Web
 6. Selectionnez votre **Devise** preferee (USD, EUR, PLN, GBP, UAH, RUB ou BYN)
 7. Selectionnez votre **Langue** preferee (English, Deutsch, Espanol, Francais, Polski, Pyccкий, Yкpaїнcькa ou Беларуская)
 8. Appuyez sur **Creer un compte**
+9. Vérifiez votre e-mail pour un **code de vérification à 6 chiffres**
+10. Entrez le code dans l'application et appuyez sur **Vérifier**
 
 ## Se connecter
 
@@ -20710,6 +20724,8 @@ iOS, Android, Web
 6. Выберыце пераважную **Валюту** (USD, EUR, PLN, GBP, UAH, RUB або BYN)
 7. Выберыце пераважную **Мову** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська або Беларуская)
 8. Націсніце **Стварыць акаўнт**
+9. Праверце пошту — вам прыйдзе **6-значны код пацверджання**
+10. Увядзіце код у праграме і націсніце **Пацвердзіць**
 
 ## Уваход у сістэму
 

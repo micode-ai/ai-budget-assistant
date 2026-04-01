@@ -57,7 +57,7 @@ Wymieniaj pieniadze miedzy swoimi portfelami walutowymi:
 
 ### Krok po kroku
 
-1. Dotknij **Wymiana** z szybkich akcji na Pulpicie lub przejdz do **Ustawienia** > **Portfel**
+1. Dotknij **Kantor** z szybkich akcji na Pulpicie lub przejdz do **Ustawienia** > **Portfel**
 2. Wybierz walute **Z** (np. USD) — dotknij element waluty, aby wybrac
 3. Wybierz walute **Na** (np. EUR) — dotknij element waluty, aby wybrac
 4. Wprowadz kwote w polu "Z" lub "Na" — drugie pole oblicza sie automatycznie
