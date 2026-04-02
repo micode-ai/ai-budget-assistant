@@ -4,34 +4,57 @@ import {
   Post,
   Body,
   Query,
+  Res,
   UseGuards,
   Req,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import { SubscriptionsService } from './subscriptions.service';
 import { CreateCheckoutSessionDto, CreatePortalSessionDto } from './dto';
 
 @Controller('subscriptions')
-@UseGuards(JwtAuthGuard)
 export class SubscriptionsController {
   constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
+  /**
+   * Public redirect endpoint for Stripe success/cancel URLs.
+   * Stripe requires https:// URLs, so we redirect to the app deep link.
+   */
+  @Get('redirect')
+  handleRedirect(
+    @Query('target') target: string,
+    @Res() res: Response,
+  ) {
+    const allowed = [
+      'aibudget://subscription/success',
+      'aibudget://subscription/cancel',
+      'aibudget://subscription',
+    ];
+    const url = allowed.includes(target) ? target : 'aibudget://subscription';
+    return res.redirect(url);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('plans')
   async getPlans(@Req() req: AuthenticatedRequest) {
     return this.subscriptionsService.getPlans(req.user.currencyCode);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('current')
   async getCurrent(@Req() req: AuthenticatedRequest) {
     return this.subscriptionsService.getCurrent(req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('usage')
   async getUsage(@Req() req: AuthenticatedRequest) {
     return this.subscriptionsService.getUsageStats(req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('usage/details')
   async getUsageDetails(
     @Req() req: AuthenticatedRequest,
@@ -44,6 +67,7 @@ export class SubscriptionsController {
     return this.subscriptionsService.getUsageDetails(req.user.id, m, y);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('checkout')
   async createCheckout(
     @Req() req: AuthenticatedRequest,
@@ -57,6 +81,7 @@ export class SubscriptionsController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('portal')
   async createPortal(
     @Req() req: AuthenticatedRequest,

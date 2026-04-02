@@ -1202,3 +1202,7 @@ class ApiClient {
 }
 
 export const api = new ApiClient(API_BASE_URL);
+
+export function getApiBaseUrl(): string {
+  return API_BASE_URL;
+}
