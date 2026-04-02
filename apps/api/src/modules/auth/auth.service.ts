@@ -176,6 +176,7 @@ export class AuthService {
         name: user.name,
         currencyCode: user.currencyCode,
         defaultAccountId: user.defaultAccountId,
+        isVerified: true,
       },
       accounts,
     };
