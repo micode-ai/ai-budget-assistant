@@ -391,7 +391,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               isAuthenticated: true,
             });
             await secureStorage.setItem('accessToken', response.accessToken);
-            await secureStorage.setItem('refreshToken', response.refreshToken);
+            if (response.refreshToken) {
+              await secureStorage.setItem('refreshToken', response.refreshToken);
+            }
             await secureStorage.setItem('user', JSON.stringify(response.user));
           } else {
             const { user } = get();
