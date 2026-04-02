@@ -433,6 +433,10 @@ src/
 │   │   ├── gamification.service.ts
 │   │   ├── streak.service.ts
 │   │   └── achievement-definitions.ts
+│   ├── referrals/               # Referral program
+│   │   ├── referrals.controller.ts
+│   │   ├── referrals.service.ts
+│   │   └── referral-qualification.cron.ts
 │   ├── notifications/           # Push notifications (Expo)
 │   │   ├── notifications.service.ts
 │   │   └── shared-activity.service.ts

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlexWidget, TextWidget } from 'react-native-android-widget';
+import { FlexWidget, ImageWidget, TextWidget } from 'react-native-android-widget';
 import type { WidgetLabels } from '@/services/widgetData';
 
 interface Props {
@@ -7,6 +7,12 @@ interface Props {
 }
 
 const FALLBACK = { voice: 'Voice', scan: 'Scan', add: 'Add' };
+
+const ICONS = {
+  voice: require('@/../assets/widget-icons/voice_input.png'),
+  scan: require('@/../assets/widget-icons/scan_receipt.png'),
+  add: require('@/../assets/widget-icons/add_expense.png'),
+};
 
 export function QuickActionWidget({ labels }: Props) {
   const voice = labels?.voice ?? FALLBACK.voice;
@@ -16,12 +22,12 @@ export function QuickActionWidget({ labels }: Props) {
   return (
     <FlexWidget
       style={{
-        height: 'match_parent',
         width: 'match_parent',
         flexDirection: 'row',
         backgroundColor: '#F8FAFB',
         borderRadius: 20,
-        padding: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 6,
         justifyContent: 'space-evenly',
         alignItems: 'center',
       }}
@@ -30,15 +36,14 @@ export function QuickActionWidget({ labels }: Props) {
       <FlexWidget
         style={{
           flex: 1,
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#FFFFFF',
           borderRadius: 14,
-          paddingHorizontal: 4,
-          paddingVertical: 8,
+          paddingHorizontal: 8,
+          paddingVertical: 10,
           marginHorizontal: 4,
-          height: 'match_parent',
           borderWidth: 1,
           borderColor: '#EEF0F4',
         }}
@@ -46,24 +51,17 @@ export function QuickActionWidget({ labels }: Props) {
         clickActionData={{ uri: 'budget://expense/voice' }}
         accessibilityLabel="Add expense by voice"
       >
-        <FlexWidget
-          style={{
-            width: 32,
-            height: 32,
-            backgroundColor: '#E37F2B',
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <TextWidget text="◉" style={{ fontSize: 16, color: '#FFFFFF', fontWeight: 'bold' }} />
-        </FlexWidget>
+        <ImageWidget
+          image={ICONS.voice}
+          imageWidth={24}
+          imageHeight={24}
+        />
         <TextWidget
           text={voice}
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: '#1A1D26',
-            marginTop: 4,
+            marginLeft: 6,
             fontWeight: '600',
           }}
         />
@@ -73,15 +71,14 @@ export function QuickActionWidget({ labels }: Props) {
       <FlexWidget
         style={{
           flex: 1,
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#FFFFFF',
           borderRadius: 14,
-          paddingHorizontal: 4,
-          paddingVertical: 8,
+          paddingHorizontal: 8,
+          paddingVertical: 10,
           marginHorizontal: 4,
-          height: 'match_parent',
           borderWidth: 1,
           borderColor: '#EEF0F4',
         }}
@@ -89,24 +86,17 @@ export function QuickActionWidget({ labels }: Props) {
         clickActionData={{ uri: 'budget://expense/receipt' }}
         accessibilityLabel="Scan receipt"
       >
-        <FlexWidget
-          style={{
-            width: 32,
-            height: 32,
-            backgroundColor: '#E37F2B',
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <TextWidget text="≡" style={{ fontSize: 18, color: '#FFFFFF', fontWeight: 'bold' }} />
-        </FlexWidget>
+        <ImageWidget
+          image={ICONS.scan}
+          imageWidth={24}
+          imageHeight={24}
+        />
         <TextWidget
           text={scan}
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: '#1A1D26',
-            marginTop: 4,
+            marginLeft: 6,
             fontWeight: '600',
           }}
         />
@@ -116,15 +106,14 @@ export function QuickActionWidget({ labels }: Props) {
       <FlexWidget
         style={{
           flex: 1,
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#FFFFFF',
           borderRadius: 14,
-          paddingHorizontal: 4,
-          paddingVertical: 8,
+          paddingHorizontal: 8,
+          paddingVertical: 10,
           marginHorizontal: 4,
-          height: 'match_parent',
           borderWidth: 1,
           borderColor: '#EEF0F4',
         }}
@@ -132,24 +121,17 @@ export function QuickActionWidget({ labels }: Props) {
         clickActionData={{ uri: 'budget://expense/new' }}
         accessibilityLabel="Add expense manually"
       >
-        <FlexWidget
-          style={{
-            width: 32,
-            height: 32,
-            backgroundColor: '#E37F2B',
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <TextWidget text="+" style={{ fontSize: 22, color: '#FFFFFF', fontWeight: 'bold' }} />
-        </FlexWidget>
+        <ImageWidget
+          image={ICONS.add}
+          imageWidth={24}
+          imageHeight={24}
+        />
         <TextWidget
           text={add}
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: '#1A1D26',
-            marginTop: 4,
+            marginLeft: 6,
             fontWeight: '600',
           }}
         />

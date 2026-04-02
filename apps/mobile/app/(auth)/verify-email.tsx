@@ -49,7 +49,7 @@ export default function VerifyEmailScreen() {
     try {
       await verifyEmail(email!, code);
       Alert.alert('', t('auth.verificationSuccess'));
-      router.replace('/(tabs)');
+      router.replace('/welcome');
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
       setError(mapApiError(msg, t));

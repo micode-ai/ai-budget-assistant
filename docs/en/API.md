@@ -3247,6 +3247,104 @@ Returns detailed AI usage breakdown for a specific month.
 
 ---
 
+## Referrals
+
+All referral endpoints require JWT authentication. No `X-Account-Id` header needed.
+
+### Get My Referral Code
+
+```http
+GET /referrals/my-code
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+```json
+{
+  "code": "AB3XK7"
+}
+```
+
+Generates a unique 6-character code on first call, returns existing code on subsequent calls.
+
+### Get Referral Stats
+
+```http
+GET /referrals/stats
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+```json
+{
+  "referralCode": "AB3XK7",
+  "totalReferrals": 3,
+  "qualifiedReferrals": 1,
+  "pendingReferrals": 2,
+  "bonusAiRequests": 30,
+  "nextMilestone": {
+    "count": 5,
+    "reward": "free_pro_month"
+  }
+}
+```
+
+`nextMilestone` is `null` when all milestones are reached.
+
+Milestones:
+- 5 qualified referrals → `free_pro_month` (Stripe promo code sent via email)
+- 10 qualified referrals → `ambassador_badge`
+
+### Get Referral List
+
+```http
+GET /referrals/list
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "uuid",
+    "referredName": "Jane Doe",
+    "status": "qualified",
+    "createdAt": "2026-03-28T10:00:00.000Z",
+    "qualifiedAt": "2026-04-04T03:00:00.000Z"
+  }
+]
+```
+
+**Referral statuses:**
+| Status | Description |
+|---|---|
+| `pending` | Registered, waiting 7 days + activity confirmation |
+| `qualified` | Active user confirmed, +30 AI requests granted to referrer |
+| `expired` | 30 days passed without qualification |
+
+### Referral Code at Registration
+
+Referral codes are applied during user registration via the optional `referralCode` field:
+
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securePassword123",
+  "name": "Jane Doe",
+  "referralCode": "AB3XK7"
+}
+```
+
+When a valid code is provided:
+- A referral record is created with status `pending`
+- The referred user's trial is extended by 7 days (14 days total)
+- The referrer receives a push notification
+
+---
+
 ## Error Responses
 
 ### Error Format

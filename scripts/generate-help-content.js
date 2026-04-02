@@ -28,6 +28,7 @@ const SECTIONS = [
   '21-widgets',
   '22-telegram-bot',
   '23-scenario-simulator',
+  '24-referral',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');
