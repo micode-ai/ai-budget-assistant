@@ -47,8 +47,8 @@ model Referral {
   qualifiedAt    DateTime?      @map("qualified_at")
   createdAt      DateTime       @default(now()) @map("created_at")
 
-  referrer User @relation("ReferralsMade", fields: [referrerUserId], references: [id])
-  referred User @relation("ReferredBy", fields: [referredUserId], references: [id])
+  referrer User @relation("ReferralsMade", fields: [referrerUserId], references: [id], onDelete: Cascade)
+  referred User @relation("ReferredBy", fields: [referredUserId], references: [id], onDelete: Cascade)
 
   @@index([referrerUserId])
   @@index([status, createdAt])
