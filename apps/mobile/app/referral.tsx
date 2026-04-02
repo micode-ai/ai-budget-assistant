@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useFocusEffect } from '@react-navigation/native';
 import { useReferralStore } from '@/stores/referralStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ReferralListItemDto } from '@budget/shared-types';
@@ -20,13 +22,23 @@ export default function ReferralScreen() {
   const styles = useStyles(createStyles);
 
   const [copied, setCopied] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { code, stats, referrals, isLoading, loadStats, loadReferrals, copyCode, shareCode } =
     useReferralStore();
 
-  useEffect(() => {
-    loadStats();
-    loadReferrals();
+  useFocusEffect(
+    useCallback(() => {
+      loadStats();
+      loadReferrals();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await Promise.all([loadStats(), loadReferrals()]);
+    setRefreshing(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,7 +162,7 @@ export default function ReferralScreen() {
         <View style={styles.milestoneCard}>
           <View style={styles.milestoneHeader}>
             <Text style={styles.milestoneTitle}>{t('referral.nextMilestone')}</Text>
-            <Text style={styles.milestoneReward}>{stats.nextMilestone.reward}</Text>
+            <Text style={styles.milestoneReward}>{t(`referral.reward.${stats.nextMilestone.reward}`)}</Text>
           </View>
           <View style={styles.milestoneProgress}>
             <Text style={styles.milestoneCount}>
@@ -170,6 +182,26 @@ export default function ReferralScreen() {
           </View>
         </View>
       )}
+
+      {/* How It Works */}
+      <View style={styles.howItWorksCard}>
+        <View style={styles.howItWorksHeader}>
+          <Ionicons name="information-circle-outline" size={20} color={theme.colors.primary} />
+          <Text style={styles.howItWorksTitle}>{t('referral.howItWorks.title')}</Text>
+        </View>
+        <View style={styles.howItWorksStep}>
+          <Text style={styles.howItWorksNumber}>1</Text>
+          <Text style={styles.howItWorksText}>{t('referral.howItWorks.step1')}</Text>
+        </View>
+        <View style={styles.howItWorksStep}>
+          <Text style={styles.howItWorksNumber}>2</Text>
+          <Text style={styles.howItWorksText}>{t('referral.howItWorks.step2')}</Text>
+        </View>
+        <View style={styles.howItWorksStep}>
+          <Text style={styles.howItWorksNumber}>3</Text>
+          <Text style={styles.howItWorksText}>{t('referral.howItWorks.step3')}</Text>
+        </View>
+      </View>
 
       {/* Referrals List Header */}
       <Text style={styles.sectionTitle}>{t('referral.referredUsers')}</Text>
@@ -194,7 +226,7 @@ export default function ReferralScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <Stack.Screen options={{ title: t('referral.title') }} />
+      <Stack.Screen options={{ title: t('referral.title'), headerShown: true }} />
       <FlatList
         data={referrals}
         keyExtractor={(item) => item.id}
@@ -202,6 +234,14 @@ export default function ReferralScreen() {
         ListHeaderComponent={ListHeader}
         ListEmptyComponent={ListEmpty}
         contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={theme.colors.primary}
+            colors={[theme.colors.primary]}
+          />
+        }
       />
     </SafeAreaView>
   );
@@ -371,6 +411,48 @@ const createStyles = (theme: Theme) => ({
   progressFill: {
     height: '100%' as const,
     borderRadius: 3,
+  },
+
+  // How it works
+  howItWorksCard: {
+    padding: 16,
+    backgroundColor: theme.colors.surface,
+    borderRadius: 12,
+    marginBottom: 24,
+  },
+  howItWorksHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 8,
+    marginBottom: 12,
+  },
+  howItWorksTitle: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  howItWorksStep: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    gap: 10,
+    marginBottom: 8,
+  },
+  howItWorksNumber: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: theme.colors.primary + '20',
+    color: theme.colors.primary,
+    fontSize: 12,
+    fontWeight: '700' as const,
+    textAlign: 'center' as const,
+    lineHeight: 22,
+  },
+  howItWorksText: {
+    flex: 1,
+    fontSize: 13,
+    color: theme.colors.textSecondary,
+    lineHeight: 18,
   },
 
   // Section title

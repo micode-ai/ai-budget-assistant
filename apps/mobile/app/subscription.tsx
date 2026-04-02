@@ -49,6 +49,7 @@ export default function SubscriptionScreen() {
     status,
     cancelAtPeriodEnd,
     currentPeriodEnd,
+    trialEnd,
     aiRequestsUsed,
     aiRequestsLimit,
     bonusAiRequests,
@@ -142,6 +143,13 @@ export default function SubscriptionScreen() {
                     })
                   : t(`subscription.status.${status}`)}
             </Text>
+            {status === 'trialing' && trialEnd && (
+              <Text style={styles.trialEndDate}>
+                {t('subscription.trialEndsAt', {
+                  date: new Date(trialEnd).toLocaleDateString(getIntlLocale()),
+                })}
+              </Text>
+            )}
 
             {tier !== 'free' && (
               <TouchableOpacity
@@ -313,6 +321,12 @@ const createStyles = (theme: Theme) => ({
   statusText: {
     fontSize: 14,
     color: theme.colors.textSecondary,
+    marginBottom: 4,
+  },
+  trialEndDate: {
+    fontSize: 13,
+    color: theme.colors.primary,
+    fontWeight: '500' as const,
     marginBottom: 16,
   },
   manageButton: {
