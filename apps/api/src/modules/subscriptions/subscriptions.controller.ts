@@ -28,11 +28,11 @@ export class SubscriptionsController {
     @Res() res: Response,
   ) {
     const allowed = [
-      'aibudget://subscription/success',
-      'aibudget://subscription/cancel',
-      'aibudget://subscription',
+      'budget://subscription/success',
+      'budget://subscription/cancel',
+      'budget://subscription',
     ];
-    const url = allowed.includes(target) ? target : 'aibudget://subscription';
+    const url = allowed.includes(target) ? target : 'budget://subscription';
     return res.redirect(url);
   }
 

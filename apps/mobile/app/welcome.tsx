@@ -42,7 +42,7 @@ export default function WelcomeScreen() {
   const handleUpgrade = async (priceEnvKey: string) => {
     try {
       const url = await createCheckout(priceEnvKey);
-      await WebBrowser.openAuthSessionAsync(url, 'aibudget://subscription/success');
+      await WebBrowser.openAuthSessionAsync(url, 'budget://subscription/success');
       router.replace('/(tabs)');
     } catch (error) {
       console.error('Failed to open checkout:', error);

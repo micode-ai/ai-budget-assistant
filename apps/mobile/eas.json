@@ -15,7 +15,15 @@
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://46.225.23.232/ai-budget/api/v1"
+        "EXPO_PUBLIC_API_URL": "https://46.225.23.232/ai-budget/api/v1"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "internal"
       }
     }
   }
