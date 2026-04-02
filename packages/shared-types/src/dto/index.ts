@@ -616,6 +616,7 @@ export interface UsageStatsDto {
   resetAt: string;
   percentUsed: number;
   isTrialing?: boolean;
+  bonusAiRequests?: number;
 }
 
 export interface CreateCheckoutSessionDto {
