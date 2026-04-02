@@ -8,8 +8,15 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://46.225.23.232/ai-budget/api/v1"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://46.225.23.232/ai-budget/api/v1"
+      }
+    }
   }
 }
