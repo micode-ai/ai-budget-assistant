@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -57,41 +57,47 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register, isLoading } = useAuthStore();
+  const scrollRef = useRef<ScrollView>(null);
+
+  const showError = (msg: string) => {
+    setError(msg);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      setError(t('validation.fillAllFields'));
+      showError(t('validation.fillAllFields'));
       return;
     }
 
     if (name.trim().length < 2) {
-      setError(t('validation.nameMin2'));
+      showError(t('validation.nameMin2'));
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError(t('validation.invalidEmail'));
+      showError(t('validation.invalidEmail'));
       return;
     }
 
     if (password.length < 8) {
-      setError(t('validation.passwordMin8'));
+      showError(t('validation.passwordMin8'));
       return;
     }
 
     if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      setError(t('validation.passwordLatin'));
+      showError(t('validation.passwordLatin'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError(t('validation.passwordsNoMatch'));
+      showError(t('validation.passwordsNoMatch'));
       return;
     }
 
     if (!acceptedTerms) {
-      setError(t('legal.mustAcceptTerms'));
+      showError(t('legal.mustAcceptTerms'));
       return;
     }
 
@@ -105,7 +111,7 @@ export default function RegisterScreen() {
       });
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
-      setError(mapApiError(msg, t, 'errors.registrationFailed'));
+      showError(mapApiError(msg, t, 'errors.registrationFailed'));
     }
   };
 
@@ -116,6 +122,7 @@ export default function RegisterScreen() {
         style={styles.content}
       >
         <ScrollView
+          ref={scrollRef}
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >

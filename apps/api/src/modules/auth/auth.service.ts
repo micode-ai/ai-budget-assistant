@@ -304,7 +304,24 @@ export class AuthService {
       emailVerificationExpiresAt: null,
     });
 
-    return { message: 'Email verified successfully' };
+    // Generate tokens so the user can proceed without re-login
+    const tokens = await this.generateTokens(user.id, user.email);
+    const accounts = await this.accountsService.findAllForUser(user.id);
+
+    return {
+      message: 'Email verified successfully',
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        currencyCode: user.currencyCode,
+        defaultAccountId: user.defaultAccountId,
+        isVerified: true,
+      },
+      accounts,
+    };
   }
 
   async resendVerificationEmail(email: string) {

@@ -382,12 +382,24 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       verifyEmail: async (email: string, code: string) => {
         set({ isLoading: true, error: null });
         try {
-          await api.verifyEmail(email, code);
-          const { user } = get();
-          if (user) {
-            const updatedUser = { ...user, isVerified: true };
-            set({ user: updatedUser, isAuthenticated: true });
-            await secureStorage.setItem('user', JSON.stringify(updatedUser));
+          const response = await api.verifyEmail(email, code);
+          if (response.accessToken && response.user) {
+            set({
+              user: response.user,
+              accessToken: response.accessToken,
+              refreshToken: response.refreshToken,
+              isAuthenticated: true,
+            });
+            await secureStorage.setItem('accessToken', response.accessToken);
+            await secureStorage.setItem('refreshToken', response.refreshToken);
+            await secureStorage.setItem('user', JSON.stringify(response.user));
+          } else {
+            const { user } = get();
+            if (user) {
+              const updatedUser = { ...user, isVerified: true };
+              set({ user: updatedUser, isAuthenticated: true });
+              await secureStorage.setItem('user', JSON.stringify(updatedUser));
+            }
           }
           set({ isLoading: false });
         } catch (error) {
