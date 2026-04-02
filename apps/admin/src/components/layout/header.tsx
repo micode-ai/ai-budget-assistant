@@ -10,13 +10,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 
 interface HeaderProps {
   connected?: boolean;
+  onMenuClick?: () => void;
 }
 
-export function Header({ connected }: HeaderProps) {
+export function Header({ connected, onMenuClick }: HeaderProps) {
   const { user, logout } = useAuth();
 
   const initials = user?.name
@@ -29,8 +30,18 @@ export function Header({ connected }: HeaderProps) {
     : "AD";
 
   return (
-    <header className="flex h-14 items-center justify-between border-b bg-background px-6">
+    <header className="flex h-14 items-center justify-between border-b bg-background px-4 md:px-6">
       <div className="flex items-center gap-3">
+        {onMenuClick && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden h-8 w-8"
+            onClick={onMenuClick}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        )}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span
             className={`h-2 w-2 rounded-full ${

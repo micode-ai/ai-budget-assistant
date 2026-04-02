@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useState } from "react";
 
-const navItems = [
+export const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/users", label: "Users", icon: Users },
   { href: "/ai-usage", label: "AI Usage", icon: BrainCircuit },
@@ -33,6 +33,39 @@ const navItems = [
   { href: "/audit-log", label: "Audit Log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
+
+export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <nav className="flex-1 space-y-1 p-2">
+      {navItems.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={cn(
+              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              active
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+            )}
+          >
+            <item.icon className="h-5 w-5 shrink-0" />
+            <span>{item.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -46,7 +79,7 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "relative flex flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-200",
+        "relative hidden md:flex flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-200",
         collapsed ? "w-16" : "w-64"
       )}
     >
