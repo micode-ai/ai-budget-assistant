@@ -8,6 +8,9 @@ import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { PrismaService } from '../../database/prisma.service';
 import { TelegramService } from '../telegram/telegram.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { MailService } from '../mail/mail.service';
+import * as ni18n from '../notifications/notification-i18n';
 
 type SubscriptionTier = 'free' | 'pro' | 'business';
 type SubscriptionRecord = NonNullable<Awaited<ReturnType<PrismaService['subscription']['findUnique']>>>;
@@ -56,6 +59,8 @@ export class SubscriptionsService {
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
     private readonly telegramService: TelegramService,
+    private readonly notificationsService: NotificationsService,
+    private readonly mailService: MailService,
   ) {
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (stripeKey) {
@@ -391,6 +396,12 @@ export class SubscriptionsService {
         );
         break;
 
+      case 'invoice.paid':
+        await this.handleInvoicePaid(
+          event.data.object as Stripe.Invoice,
+        );
+        break;
+
       case 'invoice.payment_failed':
         await this.handlePaymentFailed(
           event.data.object as Stripe.Invoice,
@@ -441,12 +452,13 @@ export class SubscriptionsService {
         ? stripeSub.customer
         : stripeSub.customer.id;
 
-    // Capture current tier before update (for notification logic)
+    // Capture current state before update (for notification logic)
     const existingSub = await this.prisma.subscription.findUnique({
       where: { userId },
-      select: { tier: true },
+      select: { tier: true, status: true },
     });
     const previousTier = existingSub?.tier;
+    const previousStatus = existingSub?.status;
 
     const data = {
       tier,
@@ -471,6 +483,8 @@ export class SubscriptionsService {
       update: data,
     });
 
+    const newStatus = this.mapStripeStatus(stripeSub.status);
+
     // Notify on new paid subscription or tier upgrade
     if (tier !== 'free' && previousTier !== tier) {
       try {
@@ -488,6 +502,17 @@ export class SubscriptionsService {
       } catch (error) {
         this.logger.warn(`Failed to send subscription notification: ${error}`);
       }
+    }
+
+    // Notify user when trial ends and subscription becomes active
+    if (previousStatus === 'trialing' && newStatus === 'active') {
+      const tierUpper = tier.toUpperCase();
+      this.notificationsService.sendToUser(
+        userId,
+        (lang: string) => ni18n.subscriptionActivatedTitle(lang),
+        (lang: string) => ni18n.subscriptionActivatedBody(lang, { tier: tierUpper }),
+        { type: 'subscription_activated' },
+      ).catch(() => {});
     }
   }
 
@@ -510,6 +535,36 @@ export class SubscriptionsService {
     });
   }
 
+  private async handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
+    // Skip trial invoices ($0)
+    if (invoice.amount_paid === 0) return;
+
+    const customerId =
+      typeof invoice.customer === 'string'
+        ? invoice.customer
+        : invoice.customer?.id;
+
+    if (!customerId) return;
+
+    const sub = await this.prisma.subscription.findUnique({
+      where: { stripeCustomerId: customerId },
+      select: { userId: true, tier: true },
+    });
+
+    if (!sub) return;
+
+    const amountDisplay = (invoice.amount_paid / 100).toFixed(2);
+    const currency = (invoice.currency || 'usd').toUpperCase();
+
+    const tierUpper = sub.tier.toUpperCase();
+    this.notificationsService.sendToUser(
+      sub.userId,
+      (lang: string) => ni18n.paymentSuccessTitle(lang),
+      (lang: string) => ni18n.paymentSuccessBody(lang, { amount: amountDisplay, currency, tier: tierUpper }),
+      { type: 'payment_success' },
+    ).catch(() => {});
+  }
+
   private async handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
     const customerId =
       typeof invoice.customer === 'string'
@@ -527,28 +582,30 @@ export class SubscriptionsService {
         where: { id: sub.id },
         data: { status: 'past_due' },
       });
+
+      this.notificationsService.sendToUser(
+        sub.userId,
+        (lang: string) => ni18n.paymentFailedTitle(lang),
+        (lang: string) => ni18n.paymentFailedBody(lang),
+        { type: 'payment_failed' },
+      ).catch(() => {});
     }
   }
 
   private async resolveTierFromPrice(
     priceId: string,
   ): Promise<'free' | 'pro' | 'business'> {
-    const proMonthly = this.configService.get<string>(
-      'STRIPE_PRO_MONTHLY_PRICE_ID',
-    );
-    const proYearly = this.configService.get<string>(
-      'STRIPE_PRO_YEARLY_PRICE_ID',
-    );
-    const businessMonthly = this.configService.get<string>(
-      'STRIPE_BUSINESS_MONTHLY_PRICE_ID',
-    );
-    const businessYearly = this.configService.get<string>(
-      'STRIPE_BUSINESS_YEARLY_PRICE_ID',
-    );
+    const currencies = ['', '_USD', '_EUR', '_PLN', '_GBP', '_UAH', '_RUB'];
 
-    if (priceId === proMonthly || priceId === proYearly) return 'pro';
-    if (priceId === businessMonthly || priceId === businessYearly)
-      return 'business';
+    for (const suffix of currencies) {
+      const proMonthly = this.configService.get<string>(`STRIPE_PRO_MONTHLY_PRICE_ID${suffix}`);
+      const proYearly = this.configService.get<string>(`STRIPE_PRO_YEARLY_PRICE_ID${suffix}`);
+      if (priceId === proMonthly || priceId === proYearly) return 'pro';
+
+      const bizMonthly = this.configService.get<string>(`STRIPE_BUSINESS_MONTHLY_PRICE_ID${suffix}`);
+      const bizYearly = this.configService.get<string>(`STRIPE_BUSINESS_YEARLY_PRICE_ID${suffix}`);
+      if (priceId === bizMonthly || priceId === bizYearly) return 'business';
+    }
 
     // Fallback: try to read from Stripe price metadata
     try {

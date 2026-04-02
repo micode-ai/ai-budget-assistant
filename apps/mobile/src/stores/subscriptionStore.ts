@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { api } from '../services/api';
+import { api, getApiBaseUrl } from '../services/api';
 import type { SubscriptionTier, SubscriptionStatus, PlanDto } from '@budget/shared-types';
 
 interface SubscriptionState {
@@ -126,10 +126,13 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
   createCheckout: async (priceEnvKey: string) => {
     set({ isLoading: true, error: null });
     try {
+      const base = getApiBaseUrl();
+      const successUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('aibudget://subscription/success')}`;
+      const cancelUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('aibudget://subscription/cancel')}`;
       const result = await api.createCheckoutSession(
         priceEnvKey,
-        'aibudget://subscription/success',
-        'aibudget://subscription/cancel',
+        successUrl,
+        cancelUrl,
       );
       set({ isLoading: false });
       return result.url;
@@ -145,7 +148,9 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
   openPortal: async () => {
     set({ isLoading: true, error: null });
     try {
-      const result = await api.createPortalSession('aibudget://subscription');
+      const base = getApiBaseUrl();
+      const returnUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('aibudget://subscription')}`;
+      const result = await api.createPortalSession(returnUrl);
       set({ isLoading: false });
       return result.url;
     } catch (error) {

@@ -6,6 +6,7 @@ import { MailService } from '../mail/mail.service';
 import { TelegramService } from '../telegram/telegram.service';
 import Stripe from 'stripe';
 import * as crypto from 'crypto';
+import * as ni18n from '../notifications/notification-i18n';
 
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I/L
 const CODE_LENGTH = 6;
@@ -111,10 +112,8 @@ export class ReferralsService {
 
       this.notificationsService.sendToUser(
         referrer.id,
-        (lang: string) => lang === 'ru' ? 'Новый реферал!' : 'New Referral!',
-        (lang: string) => lang === 'ru'
-          ? `Ваш друг ${referred?.name || ''} присоединился по вашему коду!`
-          : `Your friend ${referred?.name || ''} joined using your referral code!`,
+        (lang: string) => ni18n.newReferralTitle(lang),
+        (lang: string) => ni18n.newReferralBody(lang, { name: referred?.name || '' }),
       ).catch(() => {});
 
       this.telegramService.sendMessage(
@@ -168,10 +167,8 @@ export class ReferralsService {
 
         this.notificationsService.sendToUser(
           referral.referrer.id,
-          (lang: string) => lang === 'ru' ? 'Реферал подтверждён!' : 'Referral Qualified!',
-          (lang: string) => lang === 'ru'
-            ? `Ваш реферал ${referral.referred.name} активен! Вы получили +${BONUS_AI_REQUESTS} AI запросов.`
-            : `Your referral ${referral.referred.name} is now active! You earned +${BONUS_AI_REQUESTS} AI requests.`,
+          (lang: string) => ni18n.referralQualifiedTitle(lang),
+          (lang: string) => ni18n.referralQualifiedBody(lang, { name: referral.referred.name, bonus: BONUS_AI_REQUESTS }),
         ).catch(() => {});
 
         this.telegramService.sendMessage(
@@ -253,10 +250,8 @@ export class ReferralsService {
 
       this.notificationsService.sendToUser(
         userId,
-        (lang: string) => lang === 'ru' ? '5 рефералов!' : '5 Referrals!',
-        (lang: string) => lang === 'ru'
-          ? 'Вы заработали бесплатный месяц Pro! Проверьте email.'
-          : 'You earned a free month of Pro! Check your email.',
+        (lang: string) => ni18n.referralMilestone5Title(lang),
+        (lang: string) => ni18n.referralMilestone5Body(lang),
       ).catch(() => {});
     } catch (error) {
       this.logger.error(`Failed to create Stripe coupon for user ${userId}: ${error}`);
@@ -359,10 +354,14 @@ export class ReferralsService {
     return {
       data: referrals.map((r) => ({
         id: r.id,
-        referrerName: r.referrer.name,
-        referrerEmail: r.referrer.email,
-        referredName: r.referred.name,
-        referredEmail: r.referred.email,
+        referrer: {
+          name: r.referrer.name,
+          email: r.referrer.email,
+        },
+        referred: {
+          name: r.referred.name,
+          email: r.referred.email,
+        },
         code: r.code,
         status: r.status,
         bonusGranted: r.bonusGranted,
