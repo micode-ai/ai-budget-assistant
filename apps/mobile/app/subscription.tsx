@@ -73,7 +73,7 @@ export default function SubscriptionScreen() {
   const handleUpgrade = async (priceEnvKey: string) => {
     try {
       const url = await createCheckout(priceEnvKey);
-      await WebBrowser.openAuthSessionAsync(url, 'aibudget://subscription/success');
+      await WebBrowser.openAuthSessionAsync(url, 'budget://subscription/success');
       // Browser closed — reload subscription data
       loadSubscription();
       loadUsage();
@@ -85,7 +85,7 @@ export default function SubscriptionScreen() {
   const handleManage = async () => {
     try {
       const url = await openPortal();
-      await WebBrowser.openAuthSessionAsync(url, 'aibudget://subscription');
+      await WebBrowser.openAuthSessionAsync(url, 'budget://subscription');
       // Browser closed — reload subscription data
       loadSubscription();
       loadUsage();

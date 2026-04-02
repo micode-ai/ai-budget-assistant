@@ -127,8 +127,8 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const base = getApiBaseUrl();
-      const successUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('aibudget://subscription/success')}`;
-      const cancelUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('aibudget://subscription/cancel')}`;
+      const successUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('budget://subscription/success')}`;
+      const cancelUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('budget://subscription/cancel')}`;
       const result = await api.createCheckoutSession(
         priceEnvKey,
         successUrl,
@@ -149,7 +149,7 @@ export const useSubscriptionStore = create<SubscriptionState>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const base = getApiBaseUrl();
-      const returnUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('aibudget://subscription')}`;
+      const returnUrl = `${base}/subscriptions/redirect?target=${encodeURIComponent('budget://subscription')}`;
       const result = await api.createPortalSession(returnUrl);
       set({ isLoading: false });
       return result.url;
