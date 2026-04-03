@@ -714,6 +714,8 @@ export default {
     usageThisMonth: 'Uso este mes',
     availablePlans: 'Planes disponibles',
     manage: 'Gestionar suscripción',
+    upgraded: 'Plan actualizado',
+    upgradeSuccess: 'Tu suscripción ha sido actualizada correctamente.',
     includesProFeatures: 'Incluye todas las funciones Pro, más:',
     cancelsAt: 'Se cancela el {{date}}',
     status: {
