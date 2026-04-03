@@ -27,6 +27,7 @@ import {
   setupNotificationListeners,
   handleNotificationResponse,
 } from '@/services/notifications';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -565,16 +566,18 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <SafeAreaProvider>
-          <QueryClientProvider client={queryClient}>
-            <DatabaseProvider>
-              <RootNavigator />
-            </DatabaseProvider>
-          </QueryClientProvider>
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider>
+          <SafeAreaProvider>
+            <QueryClientProvider client={queryClient}>
+              <DatabaseProvider>
+                <RootNavigator />
+              </DatabaseProvider>
+            </QueryClientProvider>
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
