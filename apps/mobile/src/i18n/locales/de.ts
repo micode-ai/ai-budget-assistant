@@ -714,6 +714,8 @@ export default {
     usageThisMonth: 'Nutzung diesen Monat',
     availablePlans: 'Verfügbare Pläne',
     manage: 'Abonnement verwalten',
+    upgraded: 'Plan aktualisiert',
+    upgradeSuccess: 'Ihr Abonnement wurde erfolgreich aktualisiert.',
     includesProFeatures: 'Enthält alle Pro-Funktionen, plus:',
     cancelsAt: 'Wird gekündigt am {{date}}',
     status: {

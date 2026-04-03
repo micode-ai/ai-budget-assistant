@@ -699,6 +699,8 @@ export default {
     usageThisMonth: 'Выкарыстанне ў гэтым месяцы',
     availablePlans: 'Даступныя тарыфы',
     manage: 'Кіраванне падпіскай',
+    upgraded: 'Тарыф абноўлены',
+    upgradeSuccess: 'Ваша падпіска паспяхова абноўлена.',
     includesProFeatures: 'Уключае ўсе функцыі Pro, плюс:',
     cancelsAt: 'Скасоўваецца {{date}}',
     status: {

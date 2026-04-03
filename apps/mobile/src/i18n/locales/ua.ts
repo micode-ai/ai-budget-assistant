@@ -714,6 +714,8 @@ export default {
     usageThisMonth: 'Використання цього місяця',
     availablePlans: 'Доступні тарифи',
     manage: 'Керування підпискою',
+    upgraded: 'Тариф оновлено',
+    upgradeSuccess: 'Вашу підписку успішно оновлено.',
     includesProFeatures: 'Включає всі функції Pro, плюс:',
     cancelsAt: 'Скасовується {{date}}',
     status: {

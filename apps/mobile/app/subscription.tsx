@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -73,10 +73,16 @@ export default function SubscriptionScreen() {
   const handleUpgrade = async (priceEnvKey: string) => {
     try {
       const url = await createCheckout(priceEnvKey);
-      await WebBrowser.openAuthSessionAsync(url, 'budget://subscription/success');
+      const result = await WebBrowser.openAuthSessionAsync(url, 'budget://subscription');
       // Browser closed — reload subscription data
-      loadSubscription();
-      loadUsage();
+      await loadSubscription();
+      await loadUsage();
+      if (result.type === 'success') {
+        Alert.alert(
+          t('subscription.upgraded'),
+          t('subscription.upgradeSuccess'),
+        );
+      }
     } catch (error) {
       console.error('Failed to open checkout:', error);
     }
