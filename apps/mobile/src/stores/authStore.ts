@@ -384,8 +384,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         try {
           const response = await api.verifyEmail(email, code);
           if (response.accessToken && response.user) {
+            const user = {
+              id: response.user.id,
+              email: response.user.email,
+              name: response.user.name,
+              currencyCode: response.user.currencyCode || 'USD',
+              defaultAccountId: response.user.defaultAccountId,
+              isVerified: true,
+            };
             set({
-              user: response.user,
+              user,
               accessToken: response.accessToken,
               refreshToken: response.refreshToken,
               isAuthenticated: true,
@@ -394,7 +402,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             if (response.refreshToken) {
               await secureStorage.setItem('refreshToken', response.refreshToken);
             }
-            await secureStorage.setItem('user', JSON.stringify(response.user));
+            await secureStorage.setItem('user', JSON.stringify(user));
+            await secureStorage.setItem('biometricEnabled', 'true');
+
+            // Initialize account store so dashboard loads correctly
+            if (response.accounts) {
+              const { useAccountStore } = require('@/stores/accountStore');
+              await useAccountStore.getState().initialize(
+                response.accounts,
+                response.user.defaultAccountId || '',
+                response.user.id,
+              );
+            }
           } else {
             const { user } = get();
             if (user) {
