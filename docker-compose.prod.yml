@@ -86,8 +86,8 @@ services:
       context: .
       dockerfile: docker/Dockerfile.admin
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/ai-budget/api/v1}
-        NEXT_PUBLIC_BASE_PATH: /ai-budget/admin
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.ai-budget.pl/api/v1}
+        NEXT_PUBLIC_BASE_PATH: ""
     container_name: budget-admin-prod
     restart: unless-stopped
     environment:
