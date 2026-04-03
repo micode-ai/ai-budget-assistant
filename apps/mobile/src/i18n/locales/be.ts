@@ -1308,6 +1308,7 @@ export default {
     walletDesc: 'Балансы, даўгі, пачатковы баланс',
     categories: 'Катэгорыі',
     categoriesDesc: 'Кіраванне і выдаленне катэгорый',
+    subscriptionDesc: 'Тарыф, выкарыстанне, паляпшэнне',
   },
   categories: {
     title: 'Катэгорыі',

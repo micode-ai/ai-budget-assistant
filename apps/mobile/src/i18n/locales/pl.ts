@@ -1403,6 +1403,7 @@ export default {
     walletDesc: 'Salda, długi, saldo początkowe',
     categories: 'Kategorie',
     categoriesDesc: 'Zarządzanie i usuwanie kategorii',
+    subscriptionDesc: 'Plan, zużycie, ulepszenie',
   },
   categories: {
     title: 'Kategorie',

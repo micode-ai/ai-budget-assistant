@@ -10,7 +10,8 @@ Ustawienia sa podzielone na kategorie. Dotknij kategorie, aby otworzyc jej dedyk
 
 | Kategoria | Zawartosc |
 |---|---|
-| **Profil i konto** | Imie, e-mail, strefa czasowa, waluta, subskrypcja |
+| **Profil i konto** | Imie, e-mail, strefa czasowa, waluta |
+| **Zarzadzaj planem** | Biezacy plan, uzycie, opcje ulepszenia |
 | **Wyglad i jezyk** | Motyw, jezyk |
 | **Preferencje AI** | Styl odpowiedzi, wybor modelu |
 | **Widgety pulpitu** | Pokazuj lub ukrywaj widgety ekranu glownego |
@@ -36,10 +37,6 @@ Wybierz domyslna walute, dotykajac jednego z elementow waluty:
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow, przychodow i wyswietlania na Pulpicie.
-
-### Subskrypcja
-
-- **Zarzadzaj planem** — dotknij, aby zobaczyc biezaca subskrypcje i sprawdzic opcje ulepszenia
 
 ## Wyglad i jezyk
 

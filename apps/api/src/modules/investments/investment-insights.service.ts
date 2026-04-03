@@ -197,7 +197,7 @@ Return ONLY a valid JSON object with an "insights" array. No markdown, no code b
 
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 2500,

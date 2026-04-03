@@ -46,7 +46,7 @@ Sans limites :
 
 ## Utilisation de l'IA
 
-Suivez votre utilisation AI depuis Paramètres > Abonnement :
+Suivez votre utilisation AI depuis Paramètres > Gerer le plan :
 
 - **Utilisation ce mois** — indique le nombre de requêtes AI utilisées (ex. : « 3 sur 50 »)
 - **Barre de progression** — indicateur visuel d'utilisation
@@ -77,7 +77,7 @@ Appuyez sur **Voir les détails** sur l'écran d'abonnement pour voir une ventil
 
 ## Gerer votre abonnement
 
-1. Allez dans **Parametres** > **Abonnement** > **Gerer le plan**
+1. Allez dans **Parametres** > **Gerer le plan**
 2. Consultez votre plan actuel et son statut
 3. Appuyez sur **Ameliorer** pour passer au plan Pro ou Business
 4. Consultez les plans disponibles et les tarifs

@@ -309,7 +309,7 @@ Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
 
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.8,
         max_tokens: 3000,

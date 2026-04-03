@@ -10,7 +10,8 @@ Les parametres sont organises en categories. Appuyez sur une categorie pour ouvr
 
 | Categorie | Contenu |
 |---|---|
-| **Profil et compte** | Nom, e-mail, fuseau horaire, devise, abonnement |
+| **Profil et compte** | Nom, e-mail, fuseau horaire, devise |
+| **Gerer le plan** | Plan actuel, utilisation, options de mise a niveau |
 | **Apparence et langue** | Theme, langue |
 | **Preferences IA** | Style de reponse, selection du modele |
 | **Widgets du tableau de bord** | Afficher ou masquer les widgets de l'ecran d'accueil |
@@ -36,10 +37,6 @@ Selectionnez votre devise par defaut en appuyant sur l'une des pastilles de devi
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 La devise selectionnee est mise en surbrillance. Cela definit la devise par defaut pour les nouvelles depenses, revenus et l'affichage du Tableau de bord.
-
-### Abonnement
-
-- **Gerer le plan** — appuyez pour voir votre abonnement actuel et explorer les options de mise a niveau
 
 ## Apparence et langue
 

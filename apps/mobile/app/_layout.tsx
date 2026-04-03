@@ -98,9 +98,12 @@ function RootNavigator() {
   useEffect(() => {
     if (isInitializing || !isAuthenticated) return;
 
-    function handleDeepLink(event: { url: string }) {
-      const url = event.url;
-      if (!url) return;
+    let initialUrlHandled = false;
+
+    function navigateToDeepLink(url: string) {
+      // Subscription deep links are handled by WebBrowser.openAuthSessionAsync — ignore here
+      if (url.includes('subscription/success') || url.includes('subscription/cancel')) return;
+
       // Parse path from custom scheme URI: budget:///expense/voice → /expense/voice
       try {
         const parsed = new URL(url);
@@ -121,11 +124,21 @@ function RootNavigator() {
 
     // Handle URL that launched the app (cold start)
     Linking.getInitialURL().then((url) => {
-      if (url) handleDeepLink({ url });
+      if (url) {
+        initialUrlHandled = true;
+        navigateToDeepLink(url);
+      }
     });
 
     // Handle URLs when app is already running (warm start)
-    const sub = Linking.addEventListener('url', handleDeepLink);
+    // Skip if the same URL was already handled from getInitialURL
+    const sub = Linking.addEventListener('url', (event) => {
+      if (initialUrlHandled) {
+        initialUrlHandled = false;
+        return;
+      }
+      if (event.url) navigateToDeepLink(event.url);
+    });
     return () => sub.remove();
   }, [isInitializing, isAuthenticated]);
 

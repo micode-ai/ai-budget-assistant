@@ -1403,6 +1403,7 @@ export default {
     walletDesc: 'Баланси, борги, початковий баланс',
     categories: 'Категорії',
     categoriesDesc: 'Керування та видалення категорій',
+    subscriptionDesc: 'Тариф, використання, покращення',
   },
   categories: {
     title: 'Категорії',
