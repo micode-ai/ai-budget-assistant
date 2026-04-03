@@ -10,7 +10,8 @@ Los ajustes estan organizados en categorias. Toca cualquier categoria para abrir
 
 | Categoria | Contenido |
 |---|---|
-| **Perfil y cuenta** | Nombre, correo, zona horaria, moneda, suscripcion |
+| **Perfil y cuenta** | Nombre, correo, zona horaria, moneda |
+| **Gestionar plan** | Plan actual, uso, opciones de mejora |
 | **Apariencia e idioma** | Tema, idioma |
 | **Preferencias de IA** | Estilo de respuesta, seleccion de modelo |
 | **Widgets del panel** | Mostrar u ocultar widgets |
@@ -36,10 +37,6 @@ Selecciona tu moneda predeterminada tocando una de las fichas de moneda:
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 La moneda seleccionada se resalta. Esto establece la moneda predeterminada para nuevos gastos, ingresos y visualizacion del Panel.
-
-### Suscripcion
-
-- **Gestionar plan** — toca para ver tu suscripcion actual y explorar opciones de mejora
 
 ## Apariencia e idioma
 

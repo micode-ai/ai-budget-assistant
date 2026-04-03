@@ -10,7 +10,8 @@ Settings are organized into categories. Tap any category to open its dedicated s
 
 | Category | What's inside |
 |---|---|
-| **Profile & Account** | Name, email, timezone, currency, subscription |
+| **Profile & Account** | Name, email, timezone, currency |
+| **Manage Plan** | Current plan, usage, upgrade options |
 | **Appearance & Language** | Theme, language |
 | **AI Preferences** | Response style, model selection |
 | **Dashboard Widgets** | Show or hide home screen widgets |
@@ -36,10 +37,6 @@ Select your default currency by tapping one of the currency chips:
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 The selected currency is highlighted. This sets the default currency for new expenses, income, and Dashboard displays.
-
-### Subscription
-
-- **Manage Plan** — tap to view your current subscription and explore upgrade options
 
 ## Appearance & Language
 

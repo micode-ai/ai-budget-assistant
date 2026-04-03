@@ -10,7 +10,8 @@ Die Einstellungen sind in Kategorien organisiert. Tippe auf eine Kategorie, um d
 
 | Kategorie | Inhalt |
 |---|---|
-| **Profil & Konto** | Name, E-Mail, Zeitzone, Wahrung, Abonnement |
+| **Profil & Konto** | Name, E-Mail, Zeitzone, Wahrung |
+| **Plan verwalten** | Aktueller Plan, Nutzung, Upgrade-Optionen |
 | **Erscheinungsbild & Sprache** | Design, Sprache |
 | **KI-Einstellungen** | Antwortstil, Modellauswahl |
 | **Dashboard-Widgets** | Widgets ein- oder ausblenden |
@@ -36,10 +37,6 @@ Wahle deine Standardwahrung, indem du auf einen der Wahrungschips tippst:
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neue Ausgaben, Einkommen und die Ubersichtsanzeige fest.
-
-### Abonnement
-
-- **Plan verwalten** — tippe, um dein aktuelles Abonnement anzuzeigen und Upgrade-Optionen zu erkunden
 
 ## Erscheinungsbild & Sprache
 

@@ -46,7 +46,7 @@ Ohne Limits:
 
 ## KI-Nutzung
 
-Verfolgen Sie Ihre AI-Nutzung unter Einstellungen > Abonnement:
+Verfolgen Sie Ihre AI-Nutzung unter Einstellungen > Plan verwalten:
 
 - **Nutzung diesen Monat** — zeigt die Anzahl der verwendeten AI-Anfragen (z.B. „3 von 50")
 - **Fortschrittsbalken** — visuelle Anzeige der Nutzung
@@ -77,7 +77,7 @@ Tippen Sie auf **Details anzeigen** auf dem Abonnement-Bildschirm, um eine detai
 
 ## Abonnement verwalten
 
-1. Gehe zu **Einstellungen** > **Abonnement** > **Plan verwalten**
+1. Gehe zu **Einstellungen** > **Plan verwalten**
 2. Sieh deinen aktuellen Plan und Status
 3. Tippe auf **Upgrade**, um auf Pro oder Business zu wechseln
 4. Sieh verfugbare Plane und Preise

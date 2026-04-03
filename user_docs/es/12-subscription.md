@@ -46,7 +46,7 @@ Sin límites:
 
 ## Uso de IA
 
-Rastrea tu uso de AI desde Configuración > Suscripción:
+Rastrea tu uso de AI desde Ajustes > Gestionar plan:
 
 - **Uso este mes** — muestra cuántas solicitudes de AI has usado (p. ej., "3 de 50")
 - **Barra de progreso** — indicador visual del uso
@@ -77,7 +77,7 @@ Toca **Ver detalles** en la pantalla de suscripción para ver un desglose detall
 
 ## Gestionar tu suscripcion
 
-1. Ve a **Ajustes** > **Suscripcion** > **Gestionar plan**
+1. Ve a **Ajustes** > **Gestionar plan**
 2. Consulta tu plan actual y estado
 3. Toca **Mejorar** para cambiar a Pro o Business
 4. Consulta los planes disponibles y precios

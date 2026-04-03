@@ -31,6 +31,13 @@ export default function SettingsIndexScreen() {
       route: '/settings/profile',
     },
     {
+      icon: 'diamond-outline',
+      label: t('subscription.managePlan'),
+      description: t('settingsNav.subscriptionDesc'),
+      route: '/subscription',
+      iconColor: '#4ECDC4',
+    },
+    {
       icon: 'color-palette-outline',
       label: t('settingsNav.appearance'),
       description: t('settingsNav.appearanceDesc'),

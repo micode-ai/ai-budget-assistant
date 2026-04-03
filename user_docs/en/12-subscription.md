@@ -46,7 +46,7 @@ Everything in Pro, with no limits:
 
 ## AI Usage
 
-Track your AI usage from Settings > Subscription:
+Track your AI usage from **Settings** > **Manage Plan**:
 
 - **Usage This Month** — shows how many AI requests you've used (e.g., "3 of 50")
 - **Progress bar** — visual indicator of usage
@@ -77,7 +77,7 @@ Tap **View Details** on the subscription screen to see a detailed breakdown of y
 
 ## Managing Your Subscription
 
-1. Go to **Settings** > **Subscription** > **Manage Plan**
+1. Go to **Settings** > **Manage Plan**
 2. View your current plan and status
 3. Tap **Upgrade** to switch to Pro or Business
 4. View available plans and pricing

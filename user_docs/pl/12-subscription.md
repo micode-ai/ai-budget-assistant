@@ -46,7 +46,7 @@ Bez limitów:
 
 ## Uzycie AI
 
-Śledź swoje użycie AI w Ustawienia > Subskrypcja:
+Śledź swoje użycie AI w Ustawienia > Zarzadzaj planem:
 
 - **Użycie w tym miesiącu** — pokazuje liczbę wykorzystanych zapytań AI (np. „3 z 50")
 - **Pasek postępu** — wizualny wskaźnik użycia
@@ -77,7 +77,7 @@ Dotknij **Zobacz szczegóły** na ekranie subskrypcji, aby zobaczyć szczegóło
 
 ## Zarzadzanie subskrypcja
 
-1. Przejdz do **Ustawienia** > **Subskrypcja** > **Zarzadzaj planem**
+1. Przejdz do **Ustawienia** > **Zarzadzaj planem**
 2. Przegladaj swoj biezacy plan i status
 3. Dotknij **Ulepsz**, aby przejsc na Pro lub Business
 4. Przegladaj dostepne plany i ceny
