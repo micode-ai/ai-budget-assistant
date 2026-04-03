@@ -234,8 +234,16 @@ export class GamificationService {
           updatedProgress.push({ achievementId: def.id, progress });
         }
       } else {
-        await this.prisma.userAchievement.create({
-          data: {
+        await this.prisma.userAchievement.upsert({
+          where: {
+            userId_accountId_achievementId: { userId, accountId: achievementAccountId, achievementId: def.id },
+          },
+          update: {
+            progress: completed ? 100 : progress,
+            isCompleted: completed,
+            unlockedAt: completed ? now : null,
+          },
+          create: {
             userId,
             accountId: achievementAccountId,
             achievementId: def.id,

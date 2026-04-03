@@ -104,7 +104,7 @@ export default function RegisterScreen() {
     setError(null);
 
     try {
-      await register(email, password, name, currencyCode, referralCode || undefined);
+      await register(email, password, name, currencyCode, referralCode || undefined, language);
       router.replace({
         pathname: '/(auth)/verify-email',
         params: { email },

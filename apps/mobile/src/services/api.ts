@@ -136,12 +136,12 @@ class ApiClient {
     );
   }
 
-  async register(email: string, password: string, name: string, currencyCode?: string, referralCode?: string) {
+  async register(email: string, password: string, name: string, currencyCode?: string, referralCode?: string, language?: string) {
     return this.request<{ accessToken: string; refreshToken: string; user: any; accounts: Account[] }>(
       '/auth/register',
       {
         method: 'POST',
-        body: JSON.stringify({ email, password, name, currencyCode, referralCode }),
+        body: JSON.stringify({ email, password, name, currencyCode, referralCode, language }),
         skipAuth: true,
       },
     );
