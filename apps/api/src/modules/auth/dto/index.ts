@@ -26,6 +26,10 @@ export class RegisterDto {
 
   @IsOptional()
   @IsString()
+  language?: string;
+
+  @IsOptional()
+  @IsString()
   @Matches(/^[A-Z0-9]{4,10}$/, { message: 'Invalid referral code format' })
   referralCode?: string;
 }

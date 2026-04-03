@@ -98,6 +98,7 @@ export class AuthService {
     const defaultAccount = await this.accountsService.createDefaultAccount(
       user.id,
       dto.currencyCode || 'USD',
+      dto.language || 'en',
     );
 
     // Generate tokens

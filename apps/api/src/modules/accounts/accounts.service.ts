@@ -7,6 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { getDefaultCategories } from './default-categories';
 import { MailService } from '../mail/mail.service';
 import { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, UpdateMemberRoleDto } from './dto';
 import { PrismaClient } from '@prisma/client';
@@ -409,7 +410,7 @@ export class AccountsService {
 
   // ---- Helper for auto-creating default account ----
 
-  async createDefaultAccount(userId: string, currencyCode: string) {
+  async createDefaultAccount(userId: string, currencyCode: string, language = 'en') {
     return this.prisma.$transaction(async (tx: PrismaClient) => {
       const account = await tx.account.create({
         data: {
@@ -431,6 +432,17 @@ export class AccountsService {
       await tx.user.update({
         where: { id: userId },
         data: { defaultAccountId: account.id },
+      });
+
+      // Seed default categories for the new account (localized)
+      const defaultCategories = getDefaultCategories(language);
+      await tx.category.createMany({
+        data: defaultCategories.map((cat) => ({
+          accountId: account.id,
+          name: cat.name,
+          icon: cat.icon,
+          color: cat.color,
+        })),
       });
 
       return account;
