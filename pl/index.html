@@ -3,123 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Budget Assistant - Dokumenty Prawne</title>
+    <title>AI Budget Assistant — Inteligentne Zarządzanie Wydatkami</title>
+    <meta name="description" content="Aplikacja finansowa oparta na AI. Śledź wydatki głosem, skanuj paragony, otrzymuj inteligentne analizy i zarządzaj budżetami bez wysiłku.">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
-            color: #1a1a1a;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #F8FAFC;
+            background: #0F172A;
+        }
+        .hero {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 500px;
-            width: 100%;
-            background: #fff;
-            padding: 48px 40px;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            padding: 40px 20px;
             text-align: center;
+            background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
         }
         .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            margin: 0 auto 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
+            width: 120px;
+            height: 120px;
+            border-radius: 28px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(243, 146, 55, 0.3);
         }
         h1 {
-            color: #1a1a1a;
+            font-size: 42px;
+            font-weight: 800;
             margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        h1 span { color: #F39237; }
+        .tagline {
+            font-size: 20px;
+            color: #94A3B8;
+            margin-bottom: 48px;
+            max-width: 500px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 48px;
+        }
+        .feature {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: left;
+        }
+        .feature-icon {
             font-size: 28px;
+            margin-bottom: 12px;
         }
-        .subtitle {
-            color: #666;
-            margin-bottom: 32px;
+        .feature h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #F8FAFC;
         }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .feature p {
+            font-size: 14px;
+            color: #94A3B8;
         }
-        a {
-            display: block;
-            padding: 16px 24px;
-            background: #f5f5f5;
-            border-radius: 12px;
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #F39237;
+            color: #0F172A;
+            padding: 16px 32px;
+            border-radius: 14px;
             text-decoration: none;
-            color: #1a1a1a;
-            font-weight: 500;
-            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 17px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(243, 146, 55, 0.3);
         }
-        a:hover {
-            background: #667eea;
-            color: #fff;
+        .cta:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(243, 146, 55, 0.4);
+        }
+        .footer {
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+        .footer a {
+            color: #94A3B8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .footer a:hover { color: #F39237; }
+        .footer .copy {
+            color: #475569;
+            font-size: 13px;
         }
         .lang-switch {
-            margin-top: 24px;
+            margin-top: 16px;
         }
         .lang-switch a {
-            display: inline-block;
-            padding: 8px 16px;
-            background: none;
-            color: #667eea;
+            color: #64748B;
+            text-decoration: none;
             font-size: 14px;
+            margin: 0 8px;
         }
-        .lang-switch a:hover {
-            background: none;
-            color: #764ba2;
-            transform: none;
-        }
-        .contact {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid #eee;
-            color: #666;
-            font-size: 14px;
-        }
-        .contact a {
-            display: inline;
-            background: none;
-            padding: 0;
-            color: #667eea;
-        }
-        .contact a:hover {
-            background: none;
-            color: #764ba2;
-            transform: none;
+        .lang-switch a:hover { color: #F39237; }
+        @media (max-width: 600px) {
+            h1 { font-size: 30px; }
+            .tagline { font-size: 16px; }
+            .features { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">💰</div>
-        <h1>AI Budget Assistant</h1>
-        <p class="subtitle">Dokumenty Prawne</p>
+    <section class="hero">
+        <img src="https://raw.githubusercontent.com/micode-ai/ai-budget-assistant/gh-pages/icon.png" alt="AI Budget Assistant" class="logo" onerror="this.style.display='none'">
+        <h1>AI Budget <span>Assistant</span></h1>
+        <p class="tagline">Inteligentne śledzenie wydatków z AI. Wprowadzanie głosowe, skanowanie paragonów, budżety, analityka — wszystko w jednej aplikacji.</p>
 
-        <div class="links">
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎙</div>
+                <h3>Wprowadzanie Głosowe</h3>
+                <p>Powiedz "Kawa 4,50 zł" — wydatek zostanie zapisany z automatyczną kategoryzacją AI.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📸</div>
+                <h3>Skanowanie Paragonów</h3>
+                <p>Zrób zdjęcie paragonu — AI automatycznie rozpozna pozycje, kwoty i kategorie.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💬</div>
+                <h3>Czat z AI</h3>
+                <p>Zadawaj pytania typu "Ile wydałem na jedzenie w tym miesiącu?" w dowolnym języku.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Inteligentna Analityka</h3>
+                <p>Interaktywne wykresy, historie wydatków, analiza trendów i wykrywanie anomalii.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <h3>Wiele Walut</h3>
+                <p>6 walut z kursami wymiany w czasie rzeczywistym. Idealne dla użytkowników międzynarodowych.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">👥</div>
+                <h3>Wspólne Konta</h3>
+                <p>Śledź wydatki z rodziną lub zespołem. Kontrola dostępu z szyfrowaniem end-to-end.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>Bot Telegram</h3>
+                <p>Zapisuj wydatki, skanuj paragony i rozmawiaj z AI bezpośrednio w Telegramie.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Widżety</h3>
+                <p>4 widżety Android do szybkiego dodawania wydatków i podglądu dziennych wydatków.</p>
+            </div>
+        </div>
+
+        <a href="https://play.google.com/store/apps/details?id=com.budget.assistant" class="cta">
+            ▶ Pobierz z Google Play
+        </a>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
             <a href="privacy.html">Polityka Prywatności</a>
             <a href="terms.html">Regulamin</a>
+            <a href="../en/delete-account.html">Usuń Konto</a>
+            <a href="mailto:perevertkinma@gmail.com">Kontakt</a>
         </div>
-
         <div class="lang-switch">
-            <a href="../en/">🇬🇧 English version</a>
+            <a href="/">🇬🇧 English</a>
+            <a href="/pl/">🇵🇱 Polski</a>
         </div>
-
-        <div class="contact">
-            Pytania? Skontaktuj się z nami<br>
-            <a href="mailto:perevertkinma@gmail.com">perevertkinma@gmail.com</a>
-        </div>
-    </div>
+        <p class="copy">&copy; 2026 MiCode. Wszelkie prawa zastrzeżone.</p>
+    </footer>
 </body>
 </html>
