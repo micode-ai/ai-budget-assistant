@@ -383,6 +383,17 @@ export class SubscriptionsService {
     this.logger.log(`Processing Stripe webhook: ${event.type}`);
 
     switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session;
+        if (session.subscription && session.mode === 'subscription') {
+          const subscription = await this.stripe.subscriptions.retrieve(
+            session.subscription as string,
+          );
+          await this.handleSubscriptionUpdated(subscription);
+        }
+        break;
+      }
+
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
         await this.handleSubscriptionUpdated(
@@ -402,6 +413,7 @@ export class SubscriptionsService {
         );
         break;
 
+      case 'invoice.payment_succeeded':
       case 'invoice.payment_failed':
         await this.handlePaymentFailed(
           event.data.object as Stripe.Invoice,
