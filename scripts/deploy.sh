@@ -26,11 +26,14 @@ echo "=== Pulling latest code ==="
 git fetch origin
 git reset --hard origin/development
 
+echo "=== Cleaning up stale containers ==="
+docker container prune -f 2>/dev/null || true
+
 echo "=== Building containers ==="
 $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile migrate build api admin migrator
 
 echo "=== Starting infrastructure ==="
-$DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --force-recreate postgres redis
+$DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d postgres redis
 
 echo "Waiting for postgres to be healthy..."
 for i in $(seq 1 30); do
@@ -52,7 +55,7 @@ echo "=== Running database migrations ==="
 $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile migrate run --rm migrator
 
 echo "=== Starting application services ==="
-$DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d api admin
+$DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --force-recreate api admin
 
 echo "=== Waiting for services to start ==="
 sleep 10
