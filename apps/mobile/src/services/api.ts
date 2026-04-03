@@ -29,7 +29,6 @@ class ApiClient {
     try {
       return await secureStorage.getItem('accessToken');
     } catch {
-      console.error('[API] getAuthToken error');
       return null;
     }
   }
@@ -54,7 +53,6 @@ class ApiClient {
       }
       return true;
     } catch {
-      console.error('[API] Token refresh failed');
       return false;
     }
   }
@@ -81,7 +79,6 @@ class ApiClient {
     }
 
     const url = `${this.baseUrl}${endpoint}`;
-    console.log(`[API] ${options.method || 'GET'} ${url} (skipAuth: ${skipAuth})`);
 
     let response: Response;
     try {
@@ -90,15 +87,11 @@ class ApiClient {
         headers,
       });
     } catch (e) {
-      console.log('[API] Network error:', e);
       throw e;
     }
 
-    console.log(`[API] Response: ${response.status} ${response.statusText}`);
-
     // Handle token expiration
     if (response.status === 401 && !skipAuth) {
-      console.log('[API] Got 401, attempting token refresh...');
       const refreshed = await this.refreshToken();
       if (refreshed) {
         const newToken = await this.getAuthToken();
@@ -109,10 +102,7 @@ class ApiClient {
           ...fetchOptions,
           headers,
         });
-        console.log(`[API] Retry response: ${response.status}`);
       } else {
-        // Refresh failed — clear dead tokens so biometric login won't reuse them
-        console.log('[API] Token refresh failed, clearing tokens and logging out');
         await secureStorage.removeItem('accessToken');
         await secureStorage.removeItem('refreshToken');
         this.logoutHandler?.();
@@ -125,7 +115,6 @@ class ApiClient {
       const message = Array.isArray(error.message)
         ? error.message.join('\n')
         : error.message || `HTTP ${response.status}`;
-      console.log(`[API] Error response:`, message);
       const apiError: any = new Error(message);
       apiError.status = response.status;
       apiError.details = error.details;
