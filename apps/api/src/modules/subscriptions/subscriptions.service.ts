@@ -414,6 +414,11 @@ export class SubscriptionsService {
         break;
 
       case 'invoice.payment_succeeded':
+        await this.handleInvoicePaid(
+          event.data.object as Stripe.Invoice,
+        );
+        break;
+
       case 'invoice.payment_failed':
         await this.handlePaymentFailed(
           event.data.object as Stripe.Invoice,
