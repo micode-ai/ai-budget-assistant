@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -96,48 +96,48 @@ function RootNavigator() {
   }, [isInitializing, fontsLoaded]);
 
   // Handle deep links from widgets and external sources
+  const lastHandledUrl = useRef<string | null>(null);
+
   useEffect(() => {
     if (isInitializing || !isAuthenticated) return;
-
-    let initialUrlHandled = false;
 
     function navigateToDeepLink(url: string) {
       // Subscription deep links are handled by WebBrowser.openAuthSessionAsync — ignore here
       if (url.includes('subscription/success') || url.includes('subscription/cancel')) return;
 
+      // Prevent duplicate navigation for the same URL
+      if (lastHandledUrl.current === url) return;
+      lastHandledUrl.current = url;
+      // Reset after a short delay to allow re-tapping the same widget later
+      setTimeout(() => { lastHandledUrl.current = null; }, 1000);
+
       // Parse path from custom scheme URI: budget:///expense/voice → /expense/voice
+      let fullPath: string | null = null;
       try {
         const parsed = new URL(url);
         const path = parsed.pathname || parsed.host;
         if (path && path !== '/') {
           // Normalize: budget://expense/voice has host="expense", path="/voice"
-          const fullPath = parsed.host ? `/${parsed.host}${parsed.pathname}` : parsed.pathname;
-          router.push(fullPath as any);
+          fullPath = parsed.host ? `/${parsed.host}${parsed.pathname}` : parsed.pathname;
         }
       } catch {
         // Fallback: strip scheme manually
-        const path = url.replace(/^[^:]+:\/\/\/?/, '/');
-        if (path && path !== '/') {
-          router.push(path as any);
-        }
+        fullPath = url.replace(/^[^:]+:\/\/\/?/, '/');
+        if (fullPath === '/') fullPath = null;
+      }
+
+      if (fullPath) {
+        router.push(fullPath as any);
       }
     }
 
     // Handle URL that launched the app (cold start)
     Linking.getInitialURL().then((url) => {
-      if (url) {
-        initialUrlHandled = true;
-        navigateToDeepLink(url);
-      }
+      if (url) navigateToDeepLink(url);
     });
 
     // Handle URLs when app is already running (warm start)
-    // Skip if the same URL was already handled from getInitialURL
     const sub = Linking.addEventListener('url', (event) => {
-      if (initialUrlHandled) {
-        initialUrlHandled = false;
-        return;
-      }
       if (event.url) navigateToDeepLink(event.url);
     });
     return () => sub.remove();

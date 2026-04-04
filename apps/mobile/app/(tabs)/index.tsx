@@ -302,9 +302,6 @@ export default function DashboardScreen() {
             </View>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
-              {(lentDebts.length > 0 || borrowedDebts.length > 0) && (
-                <Ionicons name="add-circle-outline" size={22} color={theme.colors.primary} />
-              )}
             </View>
             {lentDebts.length > 0 || borrowedDebts.length > 0 ? (
               <View style={styles.debtRow}>

@@ -162,6 +162,42 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // dashboard mounts with data already in the stores
           set({ isAuthenticated: user.isVerified });
         } catch (error) {
+          // Network error — try offline login with cached session
+          const isNetworkError = error instanceof TypeError
+            || (error instanceof Error && (
+              error.message === 'Network request failed'
+              || error.message.includes('fetch')
+            ));
+
+          if (isNetworkError) {
+            const cachedUserJson = await secureStorage.getItem('user');
+            const cachedToken = await secureStorage.getItem('accessToken');
+            if (cachedUserJson && cachedToken) {
+              const cachedUser = JSON.parse(cachedUserJson) as User;
+              // Only allow offline login if email matches
+              if (cachedUser.email === email) {
+                set({
+                  user: cachedUser,
+                  accessToken: cachedToken,
+                  refreshToken: await secureStorage.getItem('refreshToken'),
+                  isLoading: false,
+                  isAuthenticated: true,
+                  hasSavedSession: false,
+                });
+                await useAccountStore.getState().loadAccounts();
+                await useExchangeRateStore.getState().loadRates();
+                await Promise.allSettled([
+                  useExpenseStore.getState().loadExpenses(),
+                  useIncomeStore.getState().loadIncomes(),
+                  useCategoryStore.getState().loadCategories(),
+                  useWalletStore.getState().loadWallet(),
+                  useBudgetStore.getState().loadBudgets(),
+                ]);
+                return;
+              }
+            }
+          }
+
           set({
             error: error instanceof Error ? error.message : 'Login failed',
             isLoading: false,
@@ -268,36 +304,44 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             };
             set({ user: updatedUser });
             await secureStorage.setItem('user', JSON.stringify(updatedUser));
-            // Restore account context from local DB
-            await useAccountStore.getState().loadAccounts();
-            // Load exchange rates first so baseCurrency is set before
-            // expense/income totals are computed by subscribers
-            await useExchangeRateStore.getState().loadRates();
-            // Load data for the user's account
-            await Promise.allSettled([
-              useExpenseStore.getState().loadExpenses(),
-              useIncomeStore.getState().loadIncomes(),
-              useCategoryStore.getState().loadCategories(),
-              useWalletStore.getState().loadWallet(),
-              useBudgetStore.getState().loadBudgets(),
-            ]);
-            // Mark as authenticated only after all data is ready
-            set({ isAuthenticated: true });
-          } catch {
-            // Tokens are invalid and refresh also failed — need full re-login
-            await secureStorage.removeItem('accessToken');
-            await secureStorage.removeItem('refreshToken');
-            await secureStorage.removeItem('user');
-            await secureStorage.removeItem('biometricEnabled');
-            set({
-              user: null,
-              accessToken: null,
-              refreshToken: null,
-              isAuthenticated: false,
-              hasSavedSession: false,
-            });
-            throw new Error('Session expired, please login again');
+          } catch (profileError: any) {
+            // Network error — allow offline login with cached data
+            const isNetworkError = profileError?.message === 'Network request failed'
+              || profileError?.message?.includes('fetch')
+              || profileError?.name === 'TypeError';
+            if (!isNetworkError) {
+              // Tokens are invalid (401) — need full re-login
+              await secureStorage.removeItem('accessToken');
+              await secureStorage.removeItem('refreshToken');
+              await secureStorage.removeItem('user');
+              await secureStorage.removeItem('biometricEnabled');
+              set({
+                user: null,
+                accessToken: null,
+                refreshToken: null,
+                isAuthenticated: false,
+                hasSavedSession: false,
+              });
+              throw new Error('Session expired, please login again');
+            }
+            // Network error — proceed with cached user data
           }
+
+          // Restore account context from local DB
+          await useAccountStore.getState().loadAccounts();
+          // Load exchange rates first so baseCurrency is set before
+          // expense/income totals are computed by subscribers
+          await useExchangeRateStore.getState().loadRates();
+          // Load data for the user's account
+          await Promise.allSettled([
+            useExpenseStore.getState().loadExpenses(),
+            useIncomeStore.getState().loadIncomes(),
+            useCategoryStore.getState().loadCategories(),
+            useWalletStore.getState().loadWallet(),
+            useBudgetStore.getState().loadBudgets(),
+          ]);
+          // Mark as authenticated only after all data is ready
+          set({ isAuthenticated: true });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Biometric login failed',
@@ -384,13 +428,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         try {
           const response = await api.verifyEmail(email, code);
           if (response.accessToken && response.user) {
-            const user = {
+            const user: User = {
               id: response.user.id,
               email: response.user.email,
               name: response.user.name,
-              currencyCode: response.user.currencyCode || 'USD',
+              currencyCode: (response.user.currencyCode || 'USD') as Currency,
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
               defaultAccountId: response.user.defaultAccountId,
               isVerified: true,
+              createdAt: new Date(),
+              updatedAt: new Date(),
             };
             set({
               user,
