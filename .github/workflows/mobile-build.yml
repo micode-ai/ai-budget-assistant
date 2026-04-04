@@ -1,0 +1,53 @@
+name: Mobile Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Build profile'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - preview
+          - production
+
+jobs:
+  build:
+    name: Build Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - run: npm ci
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build AAB locally
+        working-directory: apps/mobile
+        run: eas build --platform android --profile ${{ inputs.profile }} --local --non-interactive --output ./app-release.aab
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-${{ inputs.profile }}
+          path: apps/mobile/app-release.aab
+          retention-days: 30
