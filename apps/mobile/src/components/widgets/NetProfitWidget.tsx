@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ interface NetProfitWidgetProps {
 }
 
 export function NetProfitWidget({ refreshKey: _refreshKey = 0 }: NetProfitWidgetProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
@@ -25,10 +25,11 @@ export function NetProfitWidget({ refreshKey: _refreshKey = 0 }: NetProfitWidget
   const { incomes } = useIncomeStore();
   const { rates } = useExchangeRateStore();
   const displayCurrency = user?.currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const intlLocale = useMemo(() => getIntlLocale(), [i18n.language]);
 
   const { data, currentNetProfit } = useMemo(() => {
     const now = new Date();
-    const intlLocale = getIntlLocale();
 
     const points: ChartDataPoint[] = Array.from({ length: 6 }, (_, i) => {
       const offset = 5 - i;
@@ -61,7 +62,7 @@ export function NetProfitWidget({ refreshKey: _refreshKey = 0 }: NetProfitWidget
       data: points,
       currentNetProfit: points[points.length - 1]?.value ?? null,
     };
-  }, [expenses, incomes, rates, displayCurrency]);
+  }, [expenses, incomes, rates, displayCurrency, intlLocale]);
 
   const isPositive = (currentNetProfit ?? 0) >= 0;
   const lineColor = isPositive ? theme.colors.success : theme.colors.danger;

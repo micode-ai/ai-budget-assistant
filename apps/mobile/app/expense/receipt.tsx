@@ -157,15 +157,17 @@ export default function ReceiptExpenseScreen() {
       resolvedCategoryId = matched?.id || '';
     }
 
-    router.push({
-      pathname: '/expense/new',
-      params: {
-        amount: scannedReceipt.amount.toString(),
-        description: scannedReceipt.description,
-        categoryId: resolvedCategoryId,
-        currencyCode: scannedReceipt.currencyCode,
-      },
-    });
+    const params = {
+      amount: scannedReceipt.amount.toString(),
+      description: scannedReceipt.description,
+      categoryId: resolvedCategoryId,
+      currencyCode: scannedReceipt.currencyCode,
+    };
+
+    // Reset scan state so returning to this screen won't allow duplicate creation
+    handleReset();
+
+    router.push({ pathname: '/expense/new', params });
   };
 
   const handleReset = () => {

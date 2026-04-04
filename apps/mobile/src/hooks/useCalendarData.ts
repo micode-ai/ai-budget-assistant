@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Expense, Income, Category } from '@budget/shared-types';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
@@ -60,10 +61,13 @@ export function useCalendarData(
   const { categories } = useCategoryStore();
   const { rates } = useExchangeRateStore();
   const { user } = useAuthStore();
+  const { i18n } = useTranslation();
   const displayCurrency = user?.currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';
+  // Re-derive locale when language changes (i18n.language triggers re-render via useTranslation)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const locale = useMemo(() => getIntlLocale(), [i18n.language]);
 
   const weekDayLabels = useMemo(() => {
-    const locale = getIntlLocale();
     const labels: string[] = [];
     // Jan 5, 2026 is a Monday
     for (let i = 0; i < 7; i++) {
@@ -71,14 +75,13 @@ export function useCalendarData(
       labels.push(d.toLocaleDateString(locale, { weekday: 'narrow' }));
     }
     return labels;
-  }, []);
+  }, [locale]);
 
   const monthLabel = useMemo(() => {
-    const locale = getIntlLocale();
     const date = new Date(selectedYear, selectedMonth - 1, 1);
     const monthName = date.toLocaleDateString(locale, { month: 'long' });
     return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${selectedYear}`;
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, locale]);
 
   // Filter expenses and incomes for the selected month
   const monthStart = useMemo(
