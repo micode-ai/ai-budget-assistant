@@ -197,6 +197,20 @@ export default function TransferHistoryScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/wallet/transfer')}
+              accessibilityLabel={t('transfer.title')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={{ paddingHorizontal: 12 }}
+            >
+              <Ionicons name="add" size={28} color={theme.colors.primary} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <FlatList
         data={filteredTransfers}
         renderItem={renderTransferItem}

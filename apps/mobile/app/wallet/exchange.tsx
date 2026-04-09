@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
@@ -124,6 +124,20 @@ export default function ExchangeScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/wallet/exchanges')}
+              accessibilityLabel={t('exchange.allExchanges')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={{ paddingHorizontal: 12 }}
+            >
+              <Ionicons name="time-outline" size={24} color={theme.colors.primary} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
 
         <View style={styles.card}>

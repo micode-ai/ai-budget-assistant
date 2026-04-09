@@ -164,7 +164,7 @@ export default function DashboardScreen() {
               </View>
               <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.currencyConverter')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/transfers')}>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/transfer')}>
               <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
                 <Ionicons name="swap-horizontal-outline" size={28} color={theme.colors.primary} />
               </View>
