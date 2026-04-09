@@ -190,7 +190,7 @@ function RootNavigator() {
           name="expense/receipt"
           options={{
             presentation: 'modal',
-            headerShown: true,
+            headerShown: false,
             title: t('receipt.title'),
           }}
         />
@@ -275,6 +275,14 @@ function RootNavigator() {
             presentation: 'modal',
             headerShown: true,
             title: t('exchange.title'),
+          }}
+        />
+        <Stack.Screen
+          name="wallet/transfer"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('transfer.title'),
           }}
         />
         <Stack.Screen

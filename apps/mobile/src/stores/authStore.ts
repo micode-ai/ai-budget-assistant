@@ -60,11 +60,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
           if (accessToken && userJson) {
-            if (biometricEnabled === 'true') {
+            // Parse stored user so we can gate biometric on verification status
+            let storedUser: User | null = null;
+            try {
+              storedUser = JSON.parse(userJson) as User;
+            } catch {
+              storedUser = null;
+            }
+
+            // Only gate behind biometric if the user has verified their email.
+            // Unverified sessions should go straight through so the user can
+            // reach the verify-email screen without a fingerprint prompt.
+            if (biometricEnabled === 'true' && storedUser?.isVerified) {
               // Session exists but biometric required — wait for biometric verification
               set({ hasSavedSession: true, isInitializing: false });
-            } else {
-              const user = JSON.parse(userJson) as User;
+            } else if (storedUser) {
+              const user = storedUser;
               set({
                 user,
                 accessToken,
@@ -85,6 +96,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 useWalletStore.getState().loadWallet(),
                 useBudgetStore.getState().loadBudgets(),
               ]);
+            } else {
+              // Stored user data was corrupted — treat as logged out
+              set({ isInitializing: false });
             }
           } else {
             set({ isInitializing: false });
@@ -226,8 +240,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await secureStorage.setItem('accessToken', response.accessToken);
           await secureStorage.setItem('refreshToken', response.refreshToken);
           await secureStorage.setItem('user', JSON.stringify(user));
-          // Auto-enable biometric for next login
-          await secureStorage.setItem('biometricEnabled', 'true');
+          // Note: biometricEnabled is intentionally NOT set here. It is only
+          // enabled after successful email verification (see verifyEmail()).
+          // Setting it before verification would cause the login screen to
+          // auto-prompt biometric during the verify-email flow.
 
           set({
             user,

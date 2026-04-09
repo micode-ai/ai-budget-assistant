@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, FlatList, RefreshControl, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useWalletStore } from '@/stores/walletStore';
@@ -220,6 +220,20 @@ export default function ExchangeHistoryScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/wallet/exchange')}
+              accessibilityLabel={t('exchange.title')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={{ paddingHorizontal: 12 }}
+            >
+              <Ionicons name="add" size={28} color={theme.colors.primary} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <FlatList
         data={filteredExchanges}
         renderItem={renderExchangeItem}

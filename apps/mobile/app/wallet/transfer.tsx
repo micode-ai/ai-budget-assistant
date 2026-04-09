@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
-import { router } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
@@ -137,9 +137,21 @@ export default function TransferScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/wallet/transfers')}
+              accessibilityLabel={t('transfer.allTransfers')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={{ paddingHorizontal: 12 }}
+            >
+              <Ionicons name="time-outline" size={24} color={theme.colors.primary} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('transfer.title')}</Text>
-
         {/* From Account */}
         <View style={styles.card}>
           <Text style={styles.label}>{t('transfer.fromAccount')}</Text>
