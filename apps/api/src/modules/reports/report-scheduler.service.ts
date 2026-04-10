@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 
 @Injectable()
 export class ReportSchedulerService {
@@ -10,7 +11,45 @@ export class ReportSchedulerService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mailService: MailService,
+    private readonly exchangeRateService: ExchangeRateService,
   ) {}
+
+  /**
+   * Convert an amount from one currency to a target currency using rates.
+   * If currencies match, returns original amount. If no rate found, returns original (best effort).
+   */
+  private convertAmount(
+    amount: number,
+    fromCurrency: string,
+    targetCurrency: string,
+    rates: Record<string, number>,
+  ): number {
+    if (fromCurrency === targetCurrency || amount === 0) return amount;
+    // rates are based on targetCurrency as base, so rate = how many units of fromCurrency per 1 targetCurrency
+    // To convert fromCurrency → targetCurrency: amount / rates[fromCurrency]
+    const rate = rates[fromCurrency];
+    if (!rate || rate === 0) {
+      this.logger.warn(`No exchange rate for ${fromCurrency} → ${targetCurrency}, using raw amount`);
+      return amount;
+    }
+    return amount / rate;
+  }
+
+  /**
+   * Sum grouped amounts (by currency) converting each to the target currency.
+   */
+  private async sumWithConversion(
+    groups: Array<{ currencyCode: string; _sum: { amount: any } }>,
+    targetCurrency: string,
+    rates: Record<string, number>,
+  ): Promise<number> {
+    let total = 0;
+    for (const group of groups) {
+      const raw = Number(group._sum.amount || 0);
+      total += this.convertAmount(raw, group.currencyCode, targetCurrency, rates);
+    }
+    return total;
+  }
 
   // Runs every day at 08:00 UTC — process weekly emails
   @Cron('0 8 * * *')
@@ -82,41 +121,65 @@ export class ReportSchedulerService {
         const weekStart = new Date(now);
         weekStart.setDate(now.getDate() - 7);
 
-        const [expenseAgg, incomeAgg] = await Promise.all([
-          this.prisma.expense.aggregate({
+        // Fetch exchange rates for account base currency to convert multi-currency amounts
+        let rates: Record<string, number> = {};
+        try {
+          const rateData = await this.exchangeRateService.getRates(account.currencyCode);
+          rates = rateData.rates;
+        } catch (e) {
+          this.logger.warn(`Could not fetch exchange rates for ${account.currencyCode}, sums may be inaccurate`);
+        }
+
+        // Group expenses and incomes by currency, then convert to account currency
+        const [expenseGroups, incomeGroups] = await Promise.all([
+          this.prisma.expense.groupBy({
+            by: ['currencyCode'],
             where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
             _sum: { amount: true },
           }),
-          this.prisma.income.aggregate({
+          this.prisma.income.groupBy({
+            by: ['currencyCode'],
             where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
             _sum: { amount: true },
           }),
         ]);
 
-        const totalExpenses = Number(expenseAgg._sum.amount || 0);
-        const totalIncome = Number(incomeAgg._sum.amount || 0);
+        const totalExpenses = await this.sumWithConversion(expenseGroups, account.currencyCode, rates);
+        const totalIncome = await this.sumWithConversion(incomeGroups, account.currencyCode, rates);
         const savingsRate = totalIncome > 0 ? Math.max(-100, ((totalIncome - totalExpenses) / totalIncome) * 100) : (totalExpenses > 0 ? -100 : 0);
 
-        // Top categories
-        const categoryBreakdown = await this.prisma.expense.groupBy({
-          by: ['categoryId'],
+        // Top categories — group by category AND currency, then convert and re-aggregate
+        const categoryBreakdownRaw = await this.prisma.expense.groupBy({
+          by: ['categoryId', 'currencyCode'],
           where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
           _sum: { amount: true },
-          orderBy: { _sum: { amount: 'desc' } },
-          take: 5,
         });
 
-        const categoryIds = categoryBreakdown.map(c => c.categoryId).filter(Boolean) as string[];
+        // Aggregate per category with currency conversion
+        const categoryTotals = new Map<string, number>();
+        for (const row of categoryBreakdownRaw) {
+          const catId = row.categoryId || '';
+          const raw = Number(row._sum.amount || 0);
+          const converted = this.convertAmount(raw, row.currencyCode, account.currencyCode, rates);
+          categoryTotals.set(catId, (categoryTotals.get(catId) || 0) + converted);
+        }
+
+        // Sort and take top 5
+        const sortedCategories = [...categoryTotals.entries()]
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+
+        const categoryIds = sortedCategories.map(([id]) => id).filter(Boolean);
         const categoryNames = await this.prisma.category.findMany({
           where: { id: { in: categoryIds } },
           select: { id: true, name: true },
         });
         const nameMap = new Map(categoryNames.map(c => [c.id, c.name]));
 
-        const topCategories = categoryBreakdown.map(c => ({
-          name: nameMap.get(c.categoryId || '') || 'Uncategorized',
-          amount: Number(c._sum.amount || 0),
-          percentage: totalExpenses > 0 ? (Number(c._sum.amount || 0) / totalExpenses) * 100 : 0,
+        const topCategories = sortedCategories.map(([catId, amount]) => ({
+          name: nameMap.get(catId) || 'Uncategorized',
+          amount,
+          percentage: totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0,
         }));
 
         const periodLabel = `${weekStart.toISOString().split('T')[0]} — ${now.toISOString().split('T')[0]}`;
@@ -175,53 +238,78 @@ export class ReportSchedulerService {
           const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
           const twoMonthsAgoEnd = new Date(now.getFullYear(), now.getMonth() - 1, 0);
 
-          const [expAgg, incAgg, prevExpAgg, prevIncAgg] = await Promise.all([
-            this.prisma.expense.aggregate({
+          // Fetch exchange rates for currency conversion
+          let rates: Record<string, number> = {};
+          try {
+            const rateData = await this.exchangeRateService.getRates(account.currencyCode);
+            rates = rateData.rates;
+          } catch (e) {
+            this.logger.warn(`Could not fetch exchange rates for ${account.currencyCode}, sums may be inaccurate`);
+          }
+
+          // Group by currency and convert to account base currency
+          const [expGroups, incGroups, prevExpGroups, prevIncGroups] = await Promise.all([
+            this.prisma.expense.groupBy({
+              by: ['currencyCode'],
               where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
               _sum: { amount: true },
             }),
-            this.prisma.income.aggregate({
+            this.prisma.income.groupBy({
+              by: ['currencyCode'],
               where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
               _sum: { amount: true },
             }),
-            this.prisma.expense.aggregate({
+            this.prisma.expense.groupBy({
+              by: ['currencyCode'],
               where: { accountId: account.id, isDeleted: false, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
               _sum: { amount: true },
             }),
-            this.prisma.income.aggregate({
+            this.prisma.income.groupBy({
+              by: ['currencyCode'],
               where: { accountId: account.id, isDeleted: false, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
               _sum: { amount: true },
             }),
           ]);
 
-          const totalExpenses = Number(expAgg._sum.amount || 0);
-          const totalIncome = Number(incAgg._sum.amount || 0);
-          const prevTotalExpenses = Number(prevExpAgg._sum.amount || 0);
-          const prevTotalIncome = Number(prevIncAgg._sum.amount || 0);
+          const totalExpenses = await this.sumWithConversion(expGroups, account.currencyCode, rates);
+          const totalIncome = await this.sumWithConversion(incGroups, account.currencyCode, rates);
+          const prevTotalExpenses = await this.sumWithConversion(prevExpGroups, account.currencyCode, rates);
+          const prevTotalIncome = await this.sumWithConversion(prevIncGroups, account.currencyCode, rates);
 
           const savingsRate = totalIncome > 0 ? Math.max(-100, ((totalIncome - totalExpenses) / totalIncome) * 100) : (totalIncome === 0 && totalExpenses > 0 ? -100 : 0);
           const incomeChange = prevTotalIncome > 0 ? ((totalIncome - prevTotalIncome) / prevTotalIncome) * 100 : 0;
           const expenseChange = prevTotalExpenses > 0 ? ((totalExpenses - prevTotalExpenses) / prevTotalExpenses) * 100 : 0;
 
-          const categoryBreakdown = await this.prisma.expense.groupBy({
-            by: ['categoryId'],
+          // Top categories — group by category AND currency, then convert and re-aggregate
+          const categoryBreakdownRaw = await this.prisma.expense.groupBy({
+            by: ['categoryId', 'currencyCode'],
             where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
             _sum: { amount: true },
-            orderBy: { _sum: { amount: 'desc' } },
-            take: 5,
           });
 
-          const categoryIds = categoryBreakdown.map(c => c.categoryId).filter(Boolean) as string[];
+          const categoryTotals = new Map<string, number>();
+          for (const row of categoryBreakdownRaw) {
+            const catId = row.categoryId || '';
+            const raw = Number(row._sum.amount || 0);
+            const converted = this.convertAmount(raw, row.currencyCode, account.currencyCode, rates);
+            categoryTotals.set(catId, (categoryTotals.get(catId) || 0) + converted);
+          }
+
+          const sortedCategories = [...categoryTotals.entries()]
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+          const categoryIds = sortedCategories.map(([id]) => id).filter(Boolean);
           const categoryNames = await this.prisma.category.findMany({
             where: { id: { in: categoryIds } },
             select: { id: true, name: true },
           });
           const nameMap = new Map(categoryNames.map(c => [c.id, c.name]));
 
-          const topCategories = categoryBreakdown.map(c => ({
-            name: nameMap.get(c.categoryId || '') || 'Uncategorized',
-            amount: Number(c._sum.amount || 0),
-            percentage: totalExpenses > 0 ? (Number(c._sum.amount || 0) / totalExpenses) * 100 : 0,
+          const topCategories = sortedCategories.map(([catId, amount]) => ({
+            name: nameMap.get(catId) || 'Uncategorized',
+            amount,
+            percentage: totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0,
           }));
 
           const monthLabel = prevMonth.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
