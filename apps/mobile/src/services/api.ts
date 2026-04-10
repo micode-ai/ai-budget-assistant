@@ -12,6 +12,7 @@ class ApiClient {
   private baseUrl: string;
   private accountIdGetter: (() => string | null) | null = null;
   private logoutHandler: (() => void) | null = null;
+  private isLoggingOut = false;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -92,6 +93,11 @@ class ApiClient {
 
     // Handle token expiration
     if (response.status === 401 && !skipAuth) {
+      // If already logging out, skip refresh/logout cascade
+      if (this.isLoggingOut) {
+        throw new Error('Session expired');
+      }
+
       const refreshed = await this.refreshToken();
       if (refreshed) {
         const newToken = await this.getAuthToken();
@@ -103,9 +109,14 @@ class ApiClient {
           headers,
         });
       } else {
-        await secureStorage.removeItem('accessToken');
-        await secureStorage.removeItem('refreshToken');
-        this.logoutHandler?.();
+        // Prevent cascading logout calls
+        if (!this.isLoggingOut) {
+          this.isLoggingOut = true;
+          await secureStorage.removeItem('accessToken');
+          await secureStorage.removeItem('refreshToken');
+          this.logoutHandler?.();
+          this.isLoggingOut = false;
+        }
         throw new Error('Session expired');
       }
     }
