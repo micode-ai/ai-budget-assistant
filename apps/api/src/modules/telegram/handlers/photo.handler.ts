@@ -367,7 +367,27 @@ export class PhotoHandler {
 
     data.date = dateStr;
     awaitingDateEdit.delete(telegramUserId);
-    await ctx.reply(t('dateUpdated', data.language, { date: `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}` }));
+
+    // Re-show the receipt summary with updated date and action buttons
+    const lang = data.language;
+    const formattedDate = `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
+    let summary = `${t('dateUpdated', lang, { date: formattedDate })}\n\n`;
+    summary += `<b>Amount:</b> ${formatCurrency(data.amount, data.currencyCode)}\n`;
+    if (data.discountAmount) {
+      summary += `<b>Discount:</b> ${formatCurrency(data.discountAmount, data.currencyCode)}\n`;
+    }
+    if (data.description) {
+      summary += `<b>Description:</b> ${escapeHtml(data.description)}\n`;
+    }
+    summary += `<b>Date:</b> ${formattedDate}\n`;
+
+    await ctx.reply(summary, {
+      parse_mode: 'HTML',
+      ...Markup.inlineKeyboard([
+        [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
+        [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
+      ]),
+    });
     return true;
   }
 
