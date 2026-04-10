@@ -1,4 +1,4 @@
-name: Mobile Build
+name: Mobile Build & Publish
 
 on:
   workflow_dispatch:
@@ -11,6 +11,11 @@ on:
         options:
           - preview
           - production
+      submit:
+        description: 'Submit to Google Play after build'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   build:
@@ -51,3 +56,18 @@ jobs:
           name: app-release-${{ inputs.profile }}
           path: apps/mobile/app-release.aab
           retention-days: 30
+
+      - name: Write Google Play service account key
+        if: inputs.submit && inputs.profile == 'production'
+        working-directory: apps/mobile
+        run: echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}' > google-play-service-account.json
+
+      - name: Submit to Google Play
+        if: inputs.submit && inputs.profile == 'production'
+        working-directory: apps/mobile
+        run: eas submit --platform android --profile production --path ./app-release.aab --non-interactive
+
+      - name: Clean up service account key
+        if: always() && inputs.submit && inputs.profile == 'production'
+        working-directory: apps/mobile
+        run: rm -f google-play-service-account.json
