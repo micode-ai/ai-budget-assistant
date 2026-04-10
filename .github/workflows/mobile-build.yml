@@ -65,7 +65,7 @@ jobs:
       - name: Submit to Google Play
         if: inputs.submit && inputs.profile == 'production'
         working-directory: apps/mobile
-        run: eas submit --platform android --profile production --path ./app-release.aab --non-interactive
+        run: eas submit --platform android --profile production --path ./app-release.aab --non-interactive --no-wait
 
       - name: Clean up service account key
         if: always() && inputs.submit && inputs.profile == 'production'
