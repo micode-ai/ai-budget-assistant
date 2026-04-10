@@ -8,9 +8,10 @@ import { PdfGenerator } from './generators/pdf-generator';
 import { ExcelGenerator } from './generators/excel-generator';
 import { DatabaseModule } from '../../database/database.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.module';
 
 @Module({
-  imports: [DatabaseModule, SubscriptionsModule],
+  imports: [DatabaseModule, SubscriptionsModule, CurrencyExchangeModule],
   controllers: [ReportsController],
   providers: [
     ReportsService,
