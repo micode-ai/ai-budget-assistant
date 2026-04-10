@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 user,
                 accessToken,
                 refreshToken,
-                isAuthenticated: true,
+                isAuthenticated: !!user.isVerified,
                 isInitializing: false,
               });
               // Restore account context from local DB
@@ -129,8 +129,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await secureStorage.setItem('accessToken', response.accessToken);
           await secureStorage.setItem('refreshToken', response.refreshToken);
           await secureStorage.setItem('user', JSON.stringify(user));
-          // Auto-enable biometric for next login
-          await secureStorage.setItem('biometricEnabled', 'true');
+          // Only enable biometric for verified users — unverified users
+          // must reach the verify-email screen without a fingerprint prompt.
+          if (user.isVerified) {
+            await secureStorage.setItem('biometricEnabled', 'true');
+          }
 
           set({
             user,
@@ -240,10 +243,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await secureStorage.setItem('accessToken', response.accessToken);
           await secureStorage.setItem('refreshToken', response.refreshToken);
           await secureStorage.setItem('user', JSON.stringify(user));
-          // Note: biometricEnabled is intentionally NOT set here. It is only
-          // enabled after successful email verification (see verifyEmail()).
-          // Setting it before verification would cause the login screen to
-          // auto-prompt biometric during the verify-email flow.
+          // Clear biometricEnabled from any previous session so the login
+          // screen does not auto-prompt fingerprint during verify-email flow.
+          // It will be re-enabled after successful email verification.
+          await secureStorage.removeItem('biometricEnabled');
 
           set({
             user,
@@ -371,12 +374,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         if (isLoggingOut) return;
         isLoggingOut = true;
         try {
-          // Clear push token from server before clearing auth state
-          try {
-            const { unregisterPushNotifications } = await import('../services/notifications');
-            await unregisterPushNotifications();
-          } catch (e) {
-            console.error('Failed to clear push token:', e);
+          // Clear push token from server before clearing auth state,
+          // but only if we still have a valid token (skip when called
+          // from a 401 cascade where tokens are already removed).
+          const currentToken = await secureStorage.getItem('accessToken');
+          if (currentToken) {
+            try {
+              const { unregisterPushNotifications } = await import('../services/notifications');
+              await unregisterPushNotifications();
+            } catch {
+              // Non-critical — server token will expire naturally
+            }
           }
 
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
