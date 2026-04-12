@@ -67,12 +67,17 @@ function RootNavigator() {
     prepare();
   }, [initialize]);
 
-  // Register push notifications and sync language when authenticated
+  // Register push notifications and sync language when authenticated.
+  // Delay slightly so the navigation stack settles before the OS
+  // permission dialog appears — avoids a crash on Android when the
+  // dialog dismisses into a partially-mounted screen.
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) return;
+    const timer = setTimeout(() => {
       registerForPushNotifications();
       api.updateProfile({ language: i18n.language }).catch(() => {});
-    }
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [isAuthenticated]);
 
   // Set up notification listeners

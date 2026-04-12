@@ -8,7 +8,6 @@ import {
   Platform,
   ActivityIndicator,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,7 +47,6 @@ export default function VerifyEmailScreen() {
 
     try {
       await verifyEmail(email!, code);
-      Alert.alert('', t('auth.verificationSuccess'));
       router.replace('/welcome');
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
