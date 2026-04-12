@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Income, Currency, SyncStatus } from '@budget/shared-types';
-import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
+import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import {
   loadAllIncomes,
   insertIncome,
@@ -429,19 +429,29 @@ export const useIncomeStore = create<IncomeState>()(
           return d >= startDate && d <= endDate;
         });
       } else if (filters.dateRange !== 'all') {
-        const startDate = new Date();
+        let startDate: Date;
+        let endDate: Date;
         switch (filters.dateRange) {
           case 'week':
-            startDate.setDate(now.getDate() - 7);
+            startDate = getStartOfWeek(now);
+            endDate = getEndOfWeek(now);
             break;
           case 'month':
-            startDate.setMonth(now.getMonth() - 1);
+            startDate = getStartOfMonth(now);
+            endDate = getEndOfMonth(now);
             break;
           case 'year':
-            startDate.setFullYear(now.getFullYear() - 1);
+            startDate = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+            endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
             break;
+          default:
+            startDate = new Date(0);
+            endDate = now;
         }
-        filtered = filtered.filter((i) => new Date(i.date) >= startDate);
+        filtered = filtered.filter((i) => {
+          const d = new Date(i.date);
+          return d >= startDate && d <= endDate;
+        });
       }
 
       if (filters.categoryId) {
