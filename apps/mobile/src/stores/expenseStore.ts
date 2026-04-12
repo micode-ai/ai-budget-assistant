@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus } from '@budget/shared-types';
-import { generateUUID, getStartOfMonth, getEndOfMonth } from '@budget/shared-utils';
+import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import i18n from '@/i18n';
 import {
   loadAllExpenses,
@@ -855,19 +855,29 @@ export const useExpenseStore = create<ExpenseState>()(
           return d >= startDate && d <= endDate;
         });
       } else if (filters.dateRange !== 'all') {
-        const startDate = new Date();
+        let startDate: Date;
+        let endDate: Date;
         switch (filters.dateRange) {
           case 'week':
-            startDate.setDate(now.getDate() - 7);
+            startDate = getStartOfWeek(now);
+            endDate = getEndOfWeek(now);
             break;
           case 'month':
-            startDate.setMonth(now.getMonth() - 1);
+            startDate = getStartOfMonth(now);
+            endDate = getEndOfMonth(now);
             break;
           case 'year':
-            startDate.setFullYear(now.getFullYear() - 1);
+            startDate = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+            endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
             break;
+          default:
+            startDate = new Date(0);
+            endDate = now;
         }
-        filtered = filtered.filter((e) => new Date(e.date) >= startDate);
+        filtered = filtered.filter((e) => {
+          const d = new Date(e.date);
+          return d >= startDate && d <= endDate;
+        });
       }
 
       // Apply category filter
