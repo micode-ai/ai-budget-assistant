@@ -98,14 +98,23 @@ Same validation as create mode: `parseFloat(amount)` must be a finite number
 2. `apps/mobile/app/wallet/set-balance.tsx`
    - Read `editId` from `useLocalSearchParams`.
    - Derive `editingBalance = walletBalances.find(b => b.id === editId && !b.isDeleted)`.
-   - On mount / when `editId` changes, seed `amount` and `selectedCurrency`
-     from `editingBalance` via `useEffect`.
+   - On mount / when `editId` changes, seed both `amount` (from
+     `editingBalance.initialAmount.toString()`) and `selectedCurrency`
+     (from `editingBalance.currencyCode`) via `useEffect`.
+   - If `editId` is present but `editingBalance` is not found (e.g. store
+     not yet loaded, or stale id), fall back to create-mode UI without
+     error. No loading spinner.
    - Branch title, button label, save handler, and currency-chip rendering on
      `editingBalance`.
    - Add pencil icon button in each list row, alongside the existing trash
      button; pressing it calls `router.setParams({ editId: balance.id })`.
    - Add a `Cancel` button in edit mode that calls `router.back()` (or clears
      `editId` if no back-stack entry exists — `router.canGoBack()` check).
+   - After successful `updateInitialBalance`, clear the edit state so the
+     user sees the refreshed list: prefer `router.setParams({ editId: '' })`
+     (empty string, more reliable than `undefined` in Expo Router) and
+     reset local form state. Implementer should verify on device that
+     `useLocalSearchParams().editId` becomes falsy afterwards.
 3. `apps/mobile/src/i18n/locales/{en,de,es,fr,pl,ru,ua,be}.ts`
    - Add `wallet.editInitialBalance`, `wallet.balanceUpdated`, `common.update`.
    - Reuse existing `common.cancel`.
