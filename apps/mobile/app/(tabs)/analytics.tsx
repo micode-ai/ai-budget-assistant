@@ -207,7 +207,7 @@ export default function AnalyticsScreen() {
             onPress={openDrillDown}
             activeOpacity={0.7}
             accessibilityRole="button"
-            accessibilityLabel={t('analytics.viewExpenses')}
+            accessibilityLabel={`${t('analytics.totalSpent')}, ${t('analytics.viewExpenses')}`}
           >
             <View style={styles.summaryCardHeader}>
               <Text style={styles.summaryLabel}>{t('analytics.totalSpent')}</Text>
@@ -251,7 +251,7 @@ export default function AnalyticsScreen() {
             onPress={openDrillDown}
             activeOpacity={0.7}
             accessibilityRole="button"
-            accessibilityLabel={t('analytics.viewExpenses')}
+            accessibilityLabel={`${t('analytics.avgPerDay')}, ${t('analytics.viewExpenses')}`}
           >
             <View style={styles.summaryCardHeader}>
               <Text style={styles.summaryLabel}>{t('analytics.avgPerDay')}</Text>
@@ -366,7 +366,7 @@ export default function AnalyticsScreen() {
             barColor={theme.colors.primary}
             showValues={dailySpending.length <= 12}
             formatValue={formatChartValue}
-            onBarPress={() => openDrillDown()}
+            onBarPress={openDrillDown}
           />
           <Text style={styles.drillDownHint}>{t('drillDown.tapToExplore')}</Text>
         </View>
