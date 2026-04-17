@@ -39,7 +39,7 @@ export default function DashboardScreen() {
   const { user } = useAuthStore();
   const { loadExpenses } = useExpenseStore();
   const { loadIncomes } = useIncomeStore();
-  const { getTotalBudget } = useBudgetStore();
+  const { getMonthlyBudgetSummary } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
   const { convertedIncomeTotal, convertedExpenseTotal, loadRates, rates } = useExchangeRateStore();
@@ -80,8 +80,10 @@ export default function DashboardScreen() {
     }, [currentAccountId, loadExpenses, loadIncomes, loadDebts]),
   );
 
-  const totalBudget = getTotalBudget();
-  const budgetUsedPercent = totalBudget > 0 ? (convertedExpenseTotal / totalBudget) * 100 : 0;
+  const monthlyBudgetSummary = getMonthlyBudgetSummary();
+  const totalBudget = monthlyBudgetSummary.totalAmount;
+  const budgetSpent = monthlyBudgetSummary.totalSpent;
+  const budgetUsedPercent = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -98,7 +100,7 @@ export default function DashboardScreen() {
     }
   }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
-  const remaining = totalBudget - convertedExpenseTotal;
+  const remaining = totalBudget - budgetSpent;
 
   const progressColor = budgetUsedPercent > 90
     ? theme.colors.danger
@@ -248,7 +250,7 @@ export default function DashboardScreen() {
           <Text style={styles.gamificationLink}>{t('gamification.dashboardWidget.viewAll')}</Text>
         </TouchableOpacity>}
 
-        {widgetVisibility.monthlyBudget && <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
+        {widgetVisibility.monthlyBudget && monthlyBudgetSummary.budgetCount > 0 && <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
           <View style={styles.chevronHint}>
             <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
           </View>
