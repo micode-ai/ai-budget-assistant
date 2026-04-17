@@ -46,6 +46,9 @@ interface BudgetState {
   getMonthlyBudgetSummary: () => {
     totalAmount: number;
     totalSpent: number;
+    // Count of active monthly budgets. When isOverall=true the card shows
+    // only the overall; this count still reflects all active monthlies and
+    // is used to decide whether the card is rendered at all.
     budgetCount: number;
     isOverall: boolean;
   };
@@ -562,6 +565,9 @@ export const useBudgetStore = create<BudgetState>()(
         (b) => !b.categoryId && (!b.categoryAllocations || b.categoryAllocations.length === 0),
       );
 
+      // progress.spent is always in the budget's own currency —
+      // getBudgetProgress filters expenses by budget.currencyCode and does not
+      // convert. Both amount and spent are converted to base here in parallel.
       if (overall) {
         const progress = get().getBudgetProgress(overall.id);
         const spent = progress ? progress.spent : 0;
