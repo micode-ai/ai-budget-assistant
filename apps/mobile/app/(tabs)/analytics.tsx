@@ -51,6 +51,9 @@ export default function AnalyticsScreen() {
     loadProjects();
   }, [loadAIInsights, loadRates, loadTags, loadProjects, i18n.language]);
 
+  const availableCurrencies = walletSummary.map((s) => s.currencyCode);
+  const currency = selectedCurrency || user?.currencyCode || 'USD';
+
   const TIME_RANGES: { key: TimeRange; label: string }[] = [
     { key: 'week', label: t('analytics.week') },
     { key: 'month', label: t('analytics.month') },
@@ -98,13 +101,22 @@ export default function AnalyticsScreen() {
     }
   }, [selectedRange, selectedMonth, isCurrentPeriod]);
 
+  const openDrillDown = useCallback(() => {
+    router.push({
+      pathname: '/analytics/drill-down',
+      params: {
+        startDate: dateRange.startDate.toISOString(),
+        endDate: dateRange.endDate.toISOString(),
+        currencyCode: currency,
+        level: selectedRange === 'year' ? 'year' : 'month',
+      },
+    });
+  }, [dateRange.startDate, dateRange.endDate, currency, selectedRange]);
+
   const toggleInsight = useCallback((id: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedInsightId((prev) => (prev === id ? null : id));
   }, []);
-
-  const availableCurrencies = walletSummary.map((s) => s.currencyCode);
-  const currency = selectedCurrency || user?.currencyCode || 'USD';
 
   // Format currency helper for charts
   const formatChartValue = (value: number) => {
@@ -190,8 +202,23 @@ export default function AnalyticsScreen() {
 
         {/* Summary Cards */}
         <View style={styles.summaryRow}>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>{t('analytics.totalSpent')}</Text>
+          <TouchableOpacity
+            style={styles.summaryCard}
+            onPress={openDrillDown}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={t('analytics.viewExpenses')}
+          >
+            <View style={styles.summaryCardHeader}>
+              <Text style={styles.summaryLabel}>{t('analytics.totalSpent')}</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={14}
+                color={theme.colors.textTertiary}
+                style={styles.summaryCardChevron}
+                accessible={false}
+              />
+            </View>
             <Text style={styles.summaryValue}>{formatCurrency(summary.totalSpent, currency)}</Text>
             {periodComparison.previousTotal > 0 ? (
               <View style={styles.statsRow}>
@@ -217,15 +244,30 @@ export default function AnalyticsScreen() {
                 <Text style={styles.statsText}>{summary.transactionCount} {t('analytics.transactions')}</Text>
               </View>
             )}
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>{t('analytics.avgPerDay')}</Text>
+          <TouchableOpacity
+            style={styles.summaryCard}
+            onPress={openDrillDown}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={t('analytics.viewExpenses')}
+          >
+            <View style={styles.summaryCardHeader}>
+              <Text style={styles.summaryLabel}>{t('analytics.avgPerDay')}</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={14}
+                color={theme.colors.textTertiary}
+                style={styles.summaryCardChevron}
+                accessible={false}
+              />
+            </View>
             <Text style={styles.summaryValue}>
               {formatCurrency(summary.averagePerDay, currency)}
             </Text>
             <Text style={styles.summarySubtext}>{t(`analytics.this_${selectedRange}`)}</Text>
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* Story Banner */}
@@ -324,17 +366,7 @@ export default function AnalyticsScreen() {
             barColor={theme.colors.primary}
             showValues={dailySpending.length <= 12}
             formatValue={formatChartValue}
-            onBarPress={(item) => {
-              router.push({
-                pathname: '/analytics/drill-down',
-                params: {
-                  startDate: dateRange.startDate.toISOString(),
-                  endDate: dateRange.endDate.toISOString(),
-                  currencyCode: currency,
-                  level: selectedRange === 'year' ? 'year' : 'month',
-                },
-              });
-            }}
+            onBarPress={() => openDrillDown()}
           />
           <Text style={styles.drillDownHint}>{t('drillDown.tapToExplore')}</Text>
         </View>
@@ -726,7 +758,15 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     fontSize: 14,
     color: theme.colors.textTertiary,
+  },
+  summaryCardHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
     marginBottom: theme.spacing[2],
+  },
+  summaryCardChevron: {
+    opacity: 0.6,
   },
   summaryValue: {
     ...theme.textStyles.h2,
