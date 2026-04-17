@@ -149,6 +149,7 @@ export default function SetBalanceScreen() {
                     <TouchableOpacity
                       style={styles.iconButton}
                       onPress={() => router.setParams({ editId: balance.id })}
+                      accessibilityLabel={t('wallet.editInitialBalance')}
                     >
                       <Ionicons name="pencil-outline" size={20} color={theme.colors.primary} />
                     </TouchableOpacity>
