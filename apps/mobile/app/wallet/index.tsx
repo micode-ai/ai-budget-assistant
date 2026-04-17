@@ -23,6 +23,14 @@ export default function WalletScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const walletBalances = useWalletStore((s) => s.walletBalances);
+
+  const handleEditBalance = (currencyCode: string) => {
+    const balance = walletBalances.find((b) => b.currencyCode === currencyCode && !b.isDeleted);
+    if (!balance) return;
+    router.push({ pathname: '/wallet/set-balance', params: { editId: balance.id } });
+  };
+
   const hasMultipleCurrencies = walletSummary.length > 1;
   const hasRates = Object.keys(rates).length > 0;
   const totalBalanceInUserCurrency = hasMultipleCurrencies && hasRates
@@ -84,9 +92,25 @@ export default function WalletScreen() {
                 </View>
               )}
               {walletSummary.map((summary) => (
-                <View key={summary.currencyCode} style={styles.balanceCard}>
+                <TouchableOpacity
+                  key={summary.currencyCode}
+                  style={styles.balanceCard}
+                  onPress={() => handleEditBalance(summary.currencyCode)}
+                  disabled={!canEdit}
+                  activeOpacity={canEdit ? 0.7 : 1}
+                >
                   <View style={styles.balanceHeader}>
-                    <Text style={styles.currencyCode}>{summary.currencyCode}</Text>
+                    <View style={styles.balanceHeaderLeft}>
+                      <Text style={styles.currencyCode}>{summary.currencyCode}</Text>
+                      {canEdit && (
+                        <Ionicons
+                          name="pencil-outline"
+                          size={14}
+                          color={theme.colors.textTertiary}
+                          style={styles.editHint}
+                        />
+                      )}
+                    </View>
                     <Text style={[styles.currentBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}>
                       {formatCurrency(summary.currentBalance, summary.currencyCode)}
                     </Text>
@@ -143,7 +167,7 @@ export default function WalletScreen() {
                       </View>
                     )}
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
 
@@ -327,6 +351,14 @@ const createStyles = (theme: Theme) => ({
   currencyCode: {
     ...theme.textStyles.h3,
     color: theme.colors.textSecondary,
+  },
+  balanceHeaderLeft: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+  },
+  editHint: {
+    opacity: 0.6,
   },
   currentBalance: {
     ...theme.textStyles.h2,
