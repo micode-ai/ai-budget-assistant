@@ -284,46 +284,6 @@ export default function ExpenseDetailScreen() {
     ]);
   };
 
-  const handleSaveEdit = async () => {
-    const numericAmount = parseFloat(editAmount);
-    if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
-      return;
-    }
-
-    const oldAmount = expense.amount;
-
-    updateExpense(expense.id, {
-      amount: numericAmount,
-      description: editDescription.trim(),
-      categoryId: editCategory || undefined,
-      date: editDate,
-    });
-
-    if (splits.length > 0 && numericAmount !== oldAmount && oldAmount > 0) {
-      const ratio = numericAmount / oldAmount;
-      let runningSum = 0;
-      const rescaled = splits.map((s, i) => {
-        let amount: number;
-        if (i === splits.length - 1) {
-          amount = Math.round((numericAmount - runningSum) * 100) / 100;
-        } else {
-          amount = Math.round(s.amount * ratio * 100) / 100;
-          runningSum += amount;
-        }
-        return {
-          categoryId: s.categoryId,
-          amount,
-          percentage: numericAmount > 0 ? (amount / numericAmount) * 100 : 0,
-          notes: s.notes,
-        };
-      });
-      await persistSplits(rescaled);
-    }
-
-    setIsEditing(false);
-  };
-
   const persistSplits = useCallback(async (
     nextSplits: { categoryId: string; amount: number; percentage: number; notes?: string }[]
   ): Promise<void> => {
@@ -355,6 +315,50 @@ export default function ExpenseDetailScreen() {
       notes: s.notes,
     }))).catch(e => console.error('Failed to sync splits to server:', e));
   }, [id]);
+
+  const handleSaveEdit = async () => {
+    const numericAmount = parseFloat(editAmount);
+    if (!numericAmount || numericAmount <= 0) {
+      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      return;
+    }
+
+    const oldAmount = expense.amount;
+
+    updateExpense(expense.id, {
+      amount: numericAmount,
+      description: editDescription.trim(),
+      categoryId: editCategory || undefined,
+      date: editDate,
+    });
+
+    try {
+      if (splits.length > 0 && numericAmount !== oldAmount && oldAmount > 0) {
+        const ratio = numericAmount / oldAmount;
+        let runningSum = 0;
+        const rescaled = splits.map((s, i) => {
+          let amount: number;
+          if (i === splits.length - 1) {
+            amount = Math.round((numericAmount - runningSum) * 100) / 100;
+          } else {
+            amount = Math.round(s.amount * ratio * 100) / 100;
+            runningSum += amount;
+          }
+          return {
+            categoryId: s.categoryId,
+            amount,
+            percentage: numericAmount > 0 ? (amount / numericAmount) * 100 : 0,
+            notes: s.notes,
+          };
+        });
+        await persistSplits(rescaled);
+      }
+    } catch (e) {
+      console.error('Failed to rescale splits:', e);
+    } finally {
+      setIsEditing(false);
+    }
+  };
 
   const handleSaveSplits = async (editorSplits: { categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]) => {
     await persistSplits(editorSplits.map(s => ({
