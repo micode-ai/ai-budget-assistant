@@ -183,6 +183,7 @@ export default {
     week: 'Неделя',
     month: 'Месяц',
     year: 'Год',
+    viewExpenses: 'Посмотреть траты',
     totalSpent: 'Всего потрачено',
     avgPerDay: 'Среднее в день',
     transactions: 'транзакций',

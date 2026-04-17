@@ -181,6 +181,7 @@ export default {
     week: 'Тыдзень',
     month: 'Месяц',
     year: 'Год',
+    viewExpenses: 'Паказаць выдаткі',
     totalSpent: 'Усяго выдаткавана',
     avgPerDay: 'У сярэднім за дзень',
     transactions: 'транзакцый',
