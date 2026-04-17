@@ -104,11 +104,14 @@ Stepping rules (always applied to the period-start date of the current view):
 
 Compute `const isCurrentPeriod = <ref is within today's period>`. When
 `!isCurrentPeriod`:
-- Hide `daysRemaining` row.
-- Hide `estimatedExhaustionDate` row (already conditionally rendered when
-  the value is set; we add `&& isCurrentPeriod`).
-- Hide `projectedTotal` row if the screen shows it (check code; if not
-  rendered today, nothing to hide).
+- Hide the `daysRemaining` row (currently rendered at
+  `app/budget/[id].tsx:526-527`).
+- Hide the `projectedTotal` row (currently rendered at
+  `app/budget/[id].tsx:531-538`). A projection for a completed period
+  is meaningless.
+- `estimatedExhaustionDate` is **not rendered on the detail screen
+  today** — it's computed in the store but has no JSX row. Nothing to
+  hide. No new render for it in this change.
 
 When `isCurrentPeriod === true`, the screen renders exactly as today.
 
@@ -165,15 +168,17 @@ Forward cap: the step button is disabled when `isCurrentPeriod === true`.
 2. `apps/mobile/app/budget/[id].tsx`
    - Add `const [referenceDate, setReferenceDate] = useState(new Date());`.
    - Pass `referenceDate` to `getBudgetProgress(budget.id, referenceDate)`.
-   - Compute `isCurrentPeriod` via a local helper (see above).
+   - Import `getStartOfWeek` from `@budget/shared-utils` for use in the
+     `periodsMatch` helper (currently not imported in this file).
+   - Compute `isCurrentPeriod` via the local `periodsMatch` helper.
    - Add a period-picker row above the progress card when `budget.period !== 'custom'`.
    - Handlers `goToPrevPeriod` / `goToNextPeriod` mutate `referenceDate`
      according to `budget.period`.
    - Label formatter returns a string per period type using `toLocaleDateString(getIntlLocale(), ...)`.
    - Disable backward chevron when the previous period would start before `budget.startDate`.
    - Disable forward chevron when `isCurrentPeriod`.
-   - Wrap the `daysRemaining` row and the `estimatedExhaustionDate` row
-     with `isCurrentPeriod &&` (or equivalent).
+   - Wrap the `daysRemaining` row (lines 525-528) and the `projectedTotal`
+     row (lines 531-538) with `isCurrentPeriod &&`. No `estimatedExhaustionDate` row exists on this screen today; do not add one.
 
 3. `apps/mobile/src/i18n/locales/{en,de,es,fr,pl,ru,ua,be}.ts` — 8 files.
    - Potentially add one key for weekly period label interpolation, e.g.
