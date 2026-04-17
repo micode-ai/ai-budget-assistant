@@ -1,7 +1,8 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useWalletStore } from '@/stores/walletStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
@@ -12,12 +13,26 @@ const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN']
 
 export default function SetBalanceScreen() {
   const { t } = useTranslation();
-  const { walletBalances, walletSummary, setInitialBalance, removeBalance } = useWalletStore();
+  const { walletBalances, walletSummary, setInitialBalance, updateInitialBalance, removeBalance } = useWalletStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const { editId } = useLocalSearchParams<{ editId?: string }>();
+  const editingBalance = useMemo(
+    () => (editId ? walletBalances.find((b) => b.id === editId && !b.isDeleted) : undefined),
+    [editId, walletBalances],
+  );
+  const isEditMode = !!editingBalance;
+
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>('USD');
   const [amount, setAmount] = useState('');
+
+  useEffect(() => {
+    if (editingBalance) {
+      setSelectedCurrency(editingBalance.currencyCode as Currency);
+      setAmount(editingBalance.initialAmount.toString());
+    }
+  }, [editingBalance]);
 
   const handleSave = () => {
     const parsedAmount = parseFloat(amount);
@@ -26,9 +41,26 @@ export default function SetBalanceScreen() {
       return;
     }
 
-    setInitialBalance(selectedCurrency, parsedAmount);
-    setAmount('');
-    Alert.alert(t('common.success'), t('wallet.balanceSaved'));
+    if (isEditMode && editingBalance) {
+      updateInitialBalance(editingBalance.id, parsedAmount);
+      setAmount('');
+      setSelectedCurrency('USD');
+      router.setParams({ editId: '' });
+      Alert.alert(t('common.success'), t('wallet.balanceUpdated'));
+    } else {
+      setInitialBalance(selectedCurrency, parsedAmount);
+      setAmount('');
+      Alert.alert(t('common.success'), t('wallet.balanceSaved'));
+    }
+  };
+
+  const handleCancel = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.setParams({ editId: '' });
+      setAmount('');
+    }
   };
 
   const handleDelete = (id: string, currencyCode: string) => {
@@ -49,16 +81,21 @@ export default function SetBalanceScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('wallet.setInitialBalance')}</Text>
+        <Text style={styles.title}>
+          {isEditMode ? t('wallet.editInitialBalance') : t('wallet.setInitialBalance')}
+        </Text>
 
         <View style={styles.card}>
           <Text style={styles.label}>{t('wallet.currency')}</Text>
           <View style={styles.currencyGrid}>
-            {CURRENCIES.map((c) => (
+            {(isEditMode ? [selectedCurrency] : CURRENCIES).map((c) => (
               <TouchableOpacity
                 key={c}
                 style={[styles.currencyChip, selectedCurrency === c && styles.currencyChipActive]}
-                onPress={() => setSelectedCurrency(c)}
+                onPress={() => {
+                  if (!isEditMode) setSelectedCurrency(c);
+                }}
+                disabled={isEditMode}
               >
                 <Text style={[styles.currencyChipText, selectedCurrency === c && styles.currencyChipTextActive]}>
                   {c}
@@ -78,8 +115,16 @@ export default function SetBalanceScreen() {
           />
 
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>{t('common.save')}</Text>
+            <Text style={styles.saveButtonText}>
+              {isEditMode ? t('common.update') : t('common.save')}
+            </Text>
           </TouchableOpacity>
+
+          {isEditMode && (
+            <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+              <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {walletBalances.length > 0 && (
@@ -100,12 +145,20 @@ export default function SetBalanceScreen() {
                       </Text>
                     )}
                   </View>
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() => handleDelete(balance.id, balance.currencyCode)}
-                  >
-                    <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
-                  </TouchableOpacity>
+                  <View style={styles.rowActions}>
+                    <TouchableOpacity
+                      style={styles.iconButton}
+                      onPress={() => router.setParams({ editId: balance.id })}
+                    >
+                      <Ionicons name="pencil-outline" size={20} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.iconButton}
+                      onPress={() => handleDelete(balance.id, balance.currencyCode)}
+                    >
+                      <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               );
             })}
@@ -222,7 +275,21 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[1],
   },
-  deleteButton: {
+  rowActions: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[1],
+  },
+  iconButton: {
     padding: theme.spacing[2],
+  },
+  cancelButton: {
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[2],
+  },
+  cancelButtonText: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textSecondary,
   },
 });
