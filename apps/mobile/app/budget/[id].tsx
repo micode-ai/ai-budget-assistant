@@ -56,6 +56,13 @@ export default function BudgetDetailScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Reset to current period when the budget's period changes (e.g., user
+  // edited monthly → weekly), otherwise referenceDate could sit in a period
+  // that no longer makes sense for the new period type.
+  useEffect(() => {
+    setReferenceDate(new Date());
+  }, [budget?.period]);
+
   if (!budget) {
     return (
       <SafeAreaView style={styles.container}>
@@ -113,13 +120,16 @@ export default function BudgetDetailScreen() {
 
   const canGoBack = (() => {
     if (!budget || budget.period === 'custom') return false;
-    const candidate = new Date(referenceDate);
+    let candidate = new Date(referenceDate);
     switch (budget.period) {
       case 'daily':
         candidate.setDate(candidate.getDate() - 1);
         break;
       case 'weekly':
         candidate.setDate(candidate.getDate() - 7);
+        // Mirror stepPeriod's week-start alignment so the candidate
+        // comparison is symmetric regardless of the initial referenceDate.
+        candidate = getStartOfWeek(candidate);
         break;
       case 'monthly':
         candidate.setMonth(candidate.getMonth() - 1);
