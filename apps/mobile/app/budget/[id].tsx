@@ -15,7 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { formatCurrency, BUDGET_PERIODS, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { formatCurrency, BUDGET_PERIODS, SUPPORTED_CURRENCIES, getStartOfWeek } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
 import type { BudgetPeriod, Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
@@ -32,7 +33,9 @@ export default function BudgetDetailScreen() {
   const { budgets, updateBudget, deleteBudget, getBudgetProgress } = useBudgetStore();
   const { getExpenseCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const budget = budgets.find((b) => b.id === id);
-  const progress = budget ? getBudgetProgress(budget.id) : null;
+
+  const [referenceDate, setReferenceDate] = useState<Date>(new Date());
+  const progress = budget ? getBudgetProgress(budget.id, referenceDate) : null;
 
   // Edit state
   const [isEditing, setIsEditing] = useState(false);
@@ -66,6 +69,93 @@ export default function BudgetDetailScreen() {
       </SafeAreaView>
     );
   }
+
+  const periodsMatch = (period: string, a: Date, b: Date): boolean => {
+    switch (period) {
+      case 'daily':
+        return a.toDateString() === b.toDateString();
+      case 'weekly':
+        return getStartOfWeek(a).getTime() === getStartOfWeek(b).getTime();
+      case 'monthly':
+        return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+      case 'yearly':
+        return a.getFullYear() === b.getFullYear();
+      default:
+        return true;
+    }
+  };
+
+  const isCurrentPeriod = budget ? periodsMatch(budget.period, referenceDate, new Date()) : true;
+
+  const stepPeriod = (delta: 1 | -1) => {
+    if (!budget) return;
+    const d = new Date(referenceDate);
+    switch (budget.period) {
+      case 'daily':
+        d.setDate(d.getDate() + delta);
+        break;
+      case 'weekly':
+        d.setDate(d.getDate() + 7 * delta);
+        // Re-align to week-start to avoid DST drift.
+        setReferenceDate(getStartOfWeek(d));
+        return;
+      case 'monthly':
+        d.setMonth(d.getMonth() + delta);
+        break;
+      case 'yearly':
+        d.setFullYear(d.getFullYear() + delta);
+        break;
+      default:
+        return; // 'custom' — no navigation
+    }
+    setReferenceDate(d);
+  };
+
+  const canGoBack = (() => {
+    if (!budget || budget.period === 'custom') return false;
+    const candidate = new Date(referenceDate);
+    switch (budget.period) {
+      case 'daily':
+        candidate.setDate(candidate.getDate() - 1);
+        break;
+      case 'weekly':
+        candidate.setDate(candidate.getDate() - 7);
+        break;
+      case 'monthly':
+        candidate.setMonth(candidate.getMonth() - 1);
+        break;
+      case 'yearly':
+        candidate.setFullYear(candidate.getFullYear() - 1);
+        break;
+    }
+    const budgetStart = new Date(budget.startDate);
+    return candidate >= budgetStart || periodsMatch(budget.period, candidate, budgetStart);
+  })();
+
+  const formatPeriodLabel = (): string => {
+    if (!budget) return '';
+    const locale = getIntlLocale();
+    switch (budget.period) {
+      case 'daily':
+        return referenceDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+      case 'weekly': {
+        const start = getStartOfWeek(referenceDate);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 6);
+        const from = start.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
+        const to = end.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
+        return `${from} – ${to}`;
+      }
+      case 'monthly': {
+        const name = referenceDate.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+        return name.charAt(0).toUpperCase() + name.slice(1);
+      }
+      case 'yearly':
+        return String(referenceDate.getFullYear());
+      default:
+        return '';
+    }
+  };
 
   const startEditing = () => {
     const categories = useCategoryStore.getState().categories;
@@ -428,6 +518,34 @@ export default function BudgetDetailScreen() {
           </View>
         </View>
 
+        {budget.period !== 'custom' && (
+          <View style={styles.periodNavRow}>
+            <TouchableOpacity
+              onPress={() => stepPeriod(-1)}
+              disabled={!canGoBack}
+              hitSlop={8}
+            >
+              <Ionicons
+                name="chevron-back"
+                size={22}
+                color={canGoBack ? theme.colors.primary : theme.colors.textDisabled}
+              />
+            </TouchableOpacity>
+            <Text style={styles.periodNavLabel}>{formatPeriodLabel()}</Text>
+            <TouchableOpacity
+              onPress={() => stepPeriod(1)}
+              disabled={isCurrentPeriod}
+              hitSlop={8}
+            >
+              <Ionicons
+                name="chevron-forward"
+                size={22}
+                color={isCurrentPeriod ? theme.colors.textDisabled : theme.colors.primary}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Progress Card */}
         <View style={styles.progressCard}>
           <View style={styles.progressAmountRow}>
@@ -522,22 +640,26 @@ export default function BudgetDetailScreen() {
 
           {progress && (
             <>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>{t('budgetDetail.daysRemaining')}</Text>
-                <Text style={styles.detailValue}>{progress.daysRemaining}</Text>
-              </View>
+              {isCurrentPeriod && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('budgetDetail.daysRemaining')}</Text>
+                  <Text style={styles.detailValue}>{progress.daysRemaining}</Text>
+                </View>
+              )}
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>{t('budgetDetail.projectedTotal')}</Text>
-                <Text
-                  style={[
-                    styles.detailValue,
-                    progress.projectedTotal > budget.amount && { color: theme.colors.danger },
-                  ]}
-                >
-                  {formatCurrency(progress.projectedTotal, budget.currencyCode)}
-                </Text>
-              </View>
+              {isCurrentPeriod && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('budgetDetail.projectedTotal')}</Text>
+                  <Text
+                    style={[
+                      styles.detailValue,
+                      progress.projectedTotal > budget.amount && { color: theme.colors.danger },
+                    ]}
+                  >
+                    {formatCurrency(progress.projectedTotal, budget.currencyCode)}
+                  </Text>
+                </View>
+              )}
             </>
           )}
 
@@ -1010,5 +1132,18 @@ const createStyles = (theme: Theme) => ({
   },
   submitButtonDisabled: {
     opacity: 0.6,
+  },
+  periodNavRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[3],
+  },
+  periodNavLabel: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.textPrimary,
+    minWidth: 160,
+    textAlign: 'center' as const,
   },
 });
