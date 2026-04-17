@@ -42,7 +42,7 @@ interface BudgetState {
   deleteBudget: (id: string) => void;
 
   // Selectors
-  getBudgetProgress: (budgetId: string) => BudgetProgress | null;
+  getBudgetProgress: (budgetId: string, referenceDate?: Date) => BudgetProgress | null;
   getMonthlyBudgetSummary: () => {
     totalAmount: number;
     totalSpent: number;
@@ -425,7 +425,7 @@ export const useBudgetStore = create<BudgetState>()(
       }
     },
 
-    getBudgetProgress: (budgetId: string): BudgetProgress | null => {
+    getBudgetProgress: (budgetId: string, referenceDate?: Date): BudgetProgress | null => {
       const budget = get().budgets.find((b) => b.id === budgetId);
       if (!budget || budget.isDeleted) return null;
 
@@ -434,7 +434,7 @@ export const useBudgetStore = create<BudgetState>()(
       // Get period dates
       let periodStart: Date;
       let periodEnd: Date;
-      const now = new Date();
+      const now = referenceDate ?? new Date();
 
       switch (budget.period) {
         case 'daily':
