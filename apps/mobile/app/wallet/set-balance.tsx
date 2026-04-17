@@ -31,6 +31,9 @@ export default function SetBalanceScreen() {
     if (editingBalance) {
       setSelectedCurrency(editingBalance.currencyCode as Currency);
       setAmount(editingBalance.initialAmount.toString());
+    } else {
+      setSelectedCurrency('USD');
+      setAmount('');
     }
   }, [editingBalance]);
 
@@ -43,8 +46,6 @@ export default function SetBalanceScreen() {
 
     if (isEditMode && editingBalance) {
       updateInitialBalance(editingBalance.id, parsedAmount);
-      setAmount('');
-      setSelectedCurrency('USD');
       router.setParams({ editId: '' });
       Alert.alert(t('common.success'), t('wallet.balanceUpdated'));
     } else {
@@ -59,7 +60,6 @@ export default function SetBalanceScreen() {
       router.back();
     } else {
       router.setParams({ editId: '' });
-      setAmount('');
     }
   };
 
