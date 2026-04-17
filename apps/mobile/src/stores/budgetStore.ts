@@ -43,7 +43,12 @@ interface BudgetState {
 
   // Selectors
   getBudgetProgress: (budgetId: string) => BudgetProgress | null;
-  getTotalBudget: () => number;
+  getMonthlyBudgetSummary: () => {
+    totalAmount: number;
+    totalSpent: number;
+    budgetCount: number;
+    isOverall: boolean;
+  };
   reset: () => void;
 }
 
@@ -536,10 +541,12 @@ export const useBudgetStore = create<BudgetState>()(
       };
     },
 
-    getTotalBudget: () => {
-      const activeBudgets = get().budgets.filter((b) => b.isActive && !b.isDeleted);
-      const { rates, baseCurrency } = useExchangeRateStore.getState();
+    getMonthlyBudgetSummary: () => {
+      const activeMonthly = get().budgets.filter(
+        (b) => b.isActive && !b.isDeleted && b.period === 'monthly',
+      );
 
+      const { rates, baseCurrency } = useExchangeRateStore.getState();
       const convertToBase = (amount: number, fromCurrency: string) => {
         if (!baseCurrency || fromCurrency === baseCurrency) return amount;
         const rate = rates[fromCurrency];
@@ -547,16 +554,41 @@ export const useBudgetStore = create<BudgetState>()(
         return amount / rate;
       };
 
-      // Find overall budget (no category) or sum category budgets
-      const monthlyBudgets = activeBudgets.filter((b) => b.period === 'monthly');
-      const overallBudget = monthlyBudgets.find((b) => !b.categoryId && (!b.categoryAllocations || b.categoryAllocations.length === 0));
-
-      if (overallBudget) {
-        return convertToBase(overallBudget.amount, overallBudget.currencyCode);
+      if (activeMonthly.length === 0) {
+        return { totalAmount: 0, totalSpent: 0, budgetCount: 0, isOverall: false };
       }
 
-      // Sum all monthly category budgets, converting each to user's currency
-      return monthlyBudgets.reduce((sum, b) => sum + convertToBase(b.amount, b.currencyCode), 0);
+      const overall = activeMonthly.find(
+        (b) => !b.categoryId && (!b.categoryAllocations || b.categoryAllocations.length === 0),
+      );
+
+      if (overall) {
+        const progress = get().getBudgetProgress(overall.id);
+        const spent = progress ? progress.spent : 0;
+        return {
+          totalAmount: convertToBase(overall.amount, overall.currencyCode),
+          totalSpent: convertToBase(spent, overall.currencyCode),
+          budgetCount: activeMonthly.length,
+          isOverall: true,
+        };
+      }
+
+      let totalAmount = 0;
+      let totalSpent = 0;
+      for (const b of activeMonthly) {
+        totalAmount += convertToBase(b.amount, b.currencyCode);
+        const progress = get().getBudgetProgress(b.id);
+        if (progress) {
+          totalSpent += convertToBase(progress.spent, b.currencyCode);
+        }
+      }
+
+      return {
+        totalAmount,
+        totalSpent,
+        budgetCount: activeMonthly.length,
+        isOverall: false,
+      };
     },
 
     reset: () => {
