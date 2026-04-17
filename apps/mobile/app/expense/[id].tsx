@@ -244,6 +244,38 @@ export default function ExpenseDetailScreen() {
     ]);
   };
 
+  const persistSplits = useCallback(async (
+    nextSplits: { categoryId: string; amount: number; percentage: number; notes?: string }[]
+  ): Promise<void> => {
+    if (!id) return;
+    await deleteAllSplitsForExpense(id);
+    const now = new Date();
+    const newSplits: ExpenseCategorySplit[] = [];
+    for (const s of nextSplits) {
+      const split: ExpenseCategorySplit = {
+        id: generateUUID(),
+        expenseId: id,
+        categoryId: s.categoryId,
+        amount: s.amount,
+        percentage: s.percentage,
+        notes: s.notes,
+        createdAt: now,
+        updatedAt: now,
+        isDeleted: false,
+        syncVersion: 0,
+      };
+      await insertSplit(split);
+      newSplits.push(split);
+    }
+    setSplits(newSplits);
+    api.setExpenseSplits(id, nextSplits.map(s => ({
+      categoryId: s.categoryId,
+      amount: s.amount,
+      percentage: s.percentage,
+      notes: s.notes,
+    }))).catch(e => console.error('Failed to sync splits to server:', e));
+  }, [id]);
+
   if (!expense) {
     return (
       <SafeAreaView style={styles.container}>
@@ -283,38 +315,6 @@ export default function ExpenseDetailScreen() {
       },
     ]);
   };
-
-  const persistSplits = useCallback(async (
-    nextSplits: { categoryId: string; amount: number; percentage: number; notes?: string }[]
-  ): Promise<void> => {
-    if (!id) return;
-    await deleteAllSplitsForExpense(id);
-    const now = new Date();
-    const newSplits: ExpenseCategorySplit[] = [];
-    for (const s of nextSplits) {
-      const split: ExpenseCategorySplit = {
-        id: generateUUID(),
-        expenseId: id,
-        categoryId: s.categoryId,
-        amount: s.amount,
-        percentage: s.percentage,
-        notes: s.notes,
-        createdAt: now,
-        updatedAt: now,
-        isDeleted: false,
-        syncVersion: 0,
-      };
-      await insertSplit(split);
-      newSplits.push(split);
-    }
-    setSplits(newSplits);
-    api.setExpenseSplits(id, nextSplits.map(s => ({
-      categoryId: s.categoryId,
-      amount: s.amount,
-      percentage: s.percentage,
-      notes: s.notes,
-    }))).catch(e => console.error('Failed to sync splits to server:', e));
-  }, [id]);
 
   const handleSaveEdit = async () => {
     const numericAmount = parseFloat(editAmount);
