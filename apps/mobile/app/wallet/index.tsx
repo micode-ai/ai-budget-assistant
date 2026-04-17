@@ -15,15 +15,13 @@ import { getIntlLocale } from '@/i18n';
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const { t } = useTranslation();
-  const { walletSummary, exchanges, transfers, loadWallet } = useWalletStore();
+  const { walletSummary, walletBalances, exchanges, transfers, loadWallet } = useWalletStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const accounts = useAccountStore((s) => s.accounts);
   const { rates } = useExchangeRateStore();
   const userCurrency = useAuthStore((s) => s.user?.currencyCode || 'USD');
   const theme = useTheme();
   const styles = useStyles(createStyles);
-
-  const walletBalances = useWalletStore((s) => s.walletBalances);
 
   const handleEditBalance = (currencyCode: string) => {
     const balance = walletBalances.find((b) => b.currencyCode === currencyCode && !b.isDeleted);
@@ -108,6 +106,7 @@ export default function WalletScreen() {
                           size={14}
                           color={theme.colors.textTertiary}
                           style={styles.editHint}
+                          accessible={false}
                         />
                       )}
                     </View>
