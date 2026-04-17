@@ -183,6 +183,7 @@ export default {
     week: 'Semana',
     month: 'Mes',
     year: 'Año',
+    viewExpenses: 'Ver gastos',
     totalSpent: 'Total gastado',
     avgPerDay: 'Promedio por día',
     transactions: 'transacciones',

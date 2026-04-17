@@ -183,6 +183,7 @@ export default {
     week: 'Тиждень',
     month: 'Місяць',
     year: 'Рік',
+    viewExpenses: 'Переглянути витрати',
     totalSpent: 'Загальні витрати',
     avgPerDay: 'Середнє за день',
     transactions: 'транзакцій',
