@@ -300,14 +300,14 @@ export default function ExpenseDetailScreen() {
     setIsEditing(false);
   };
 
-  const handleSaveSplits = async (editorSplits: { categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]) => {
+  const persistSplits = useCallback(async (
+    nextSplits: { categoryId: string; amount: number; percentage: number; notes?: string }[]
+  ): Promise<void> => {
     if (!id) return;
-    // Remove old splits
     await deleteAllSplitsForExpense(id);
-    // Insert new splits
     const now = new Date();
     const newSplits: ExpenseCategorySplit[] = [];
-    for (const s of editorSplits) {
+    for (const s of nextSplits) {
       const split: ExpenseCategorySplit = {
         id: generateUUID(),
         expenseId: id,
@@ -324,15 +324,22 @@ export default function ExpenseDetailScreen() {
       newSplits.push(split);
     }
     setSplits(newSplits);
-    setShowSplitEditor(false);
-
-    // Fire-and-forget sync to server
-    api.setExpenseSplits(id, editorSplits.map(s => ({
+    api.setExpenseSplits(id, nextSplits.map(s => ({
       categoryId: s.categoryId,
       amount: s.amount,
       percentage: s.percentage,
       notes: s.notes,
     }))).catch(e => console.error('Failed to sync splits to server:', e));
+  }, [id]);
+
+  const handleSaveSplits = async (editorSplits: { categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]) => {
+    await persistSplits(editorSplits.map(s => ({
+      categoryId: s.categoryId,
+      amount: s.amount,
+      percentage: s.percentage,
+      notes: s.notes,
+    })));
+    setShowSplitEditor(false);
   };
 
   const handleRemoveSplits = async () => {
