@@ -45,19 +45,20 @@ jobs:
           script_stop: true
           script: |
             set -e
-            echo "Waiting for API to become healthy (up to 90s)..."
-            for i in $(seq 1 30); do
-              code=$(curl -sf -o /dev/null -w "%{http_code}" http://localhost:3000/api/v1/health || echo "000")
+            HEALTH_URL="${HEALTH_URL:-https://api.ai-budget.pl/api/v1/health}"
+            echo "Waiting for API to become healthy at $HEALTH_URL (up to 120s)..."
+            for i in $(seq 1 40); do
+              code=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 5 "$HEALTH_URL" || echo "000")
               if [ "$code" = "200" ]; then
                 echo "API healthy on attempt $i"
-                curl -s http://localhost:3000/api/v1/health
+                curl -s --max-time 5 "$HEALTH_URL"
                 docker ps --filter name=budget
                 exit 0
               fi
-              echo "  ($i/30) /api/v1/health -> $code, retrying in 3s..."
+              echo "  ($i/40) $HEALTH_URL -> $code, retrying in 3s..."
               sleep 3
             done
-            echo "ERROR: API did not become healthy in 90s" >&2
+            echo "ERROR: API did not become healthy in 120s" >&2
             docker ps -a --filter name=budget
             docker logs --tail 100 budget-api-prod || true
             exit 1
