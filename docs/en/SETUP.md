@@ -53,9 +53,17 @@ CORS_ORIGIN=*
 
 # Push notifications use Expo Push API — no additional config required.
 
-# Telegram (optional, for system notifications)
-# TELEGRAM_BOT_TOKEN=your-telegram-bot-token
-# TELEGRAM_CHAT_ID=your-chat-id
+# Telegram (bot for in-app commands; same token used by the
+# uptime-check GitHub Actions workflow for downtime alerts)
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+TELEGRAM_CHAT_ID=your-chat-id
+
+# Stripe (subscriptions). apiVersion in code is pinned to
+# '2026-01-28.clover' to match the SDK locked in package-lock.json.
+STRIPE_SECRET_KEY=sk_live_or_test_...
+
+# Sentry (optional, for production error capture)
+SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
 ```
 
 #### Mobile (.env)
@@ -65,6 +73,27 @@ Create `apps/mobile/.env`:
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
 ```
+
+#### Firebase (`google-services.json`)
+
+`apps/mobile/google-services.json` is **not committed** to the repo — the Firebase
+Android API key is scanned as a secret by GitHub. Each developer must provide
+their own copy.
+
+1. Copy the template:
+   ```bash
+   cp apps/mobile/google-services.example.json apps/mobile/google-services.json
+   ```
+2. Download the real `google-services.json` from the
+   [Firebase Console](https://console.firebase.google.com/) → *Project settings*
+   → *Your apps* → Android app `com.budget.assistant`, and replace the template.
+3. Ensure the Android API key is restricted by **package name** + **SHA-1**
+   fingerprint in
+   [Google Cloud Console → APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials).
+
+For CI, add the file contents as the `GOOGLE_SERVICES_JSON` GitHub Actions
+secret — the `mobile-build` and `mobile-eas-build` workflows write it into
+`apps/mobile/google-services.json` before the build step.
 
 ### 4. Database Setup
 
@@ -332,6 +361,119 @@ docker-compose logs -f api
 docker-compose down
 ```
 
+## Production Deployment
+
+The committed `docker-compose.prod.yml` is the source of truth for production
+on the Hetzner VPS. Key differences from the dev compose above:
+
+- **API has no host port mapping** — `budget-api-prod` is reachable only via
+  the docker network; `shared-nginx` (a separate stack) terminates TLS for
+  `api.ai-budget.pl` and proxies upstream. Do not `curl localhost:3000` from
+  the VPS — it will not resolve. Always go through the public URL.
+- **Volumes** `ai-budget_postgres_data` and `ai-budget_redis_data` MUST be
+  preserved across deploys. Never run `docker volume prune` without filters.
+- **`env_file`** is read only when the container is created (not on
+  `docker restart`). To pick up new env vars:
+  ```bash
+  cd /opt/ai-budget
+  docker compose -f docker-compose.prod.yml --env-file .env.production \
+    up -d --force-recreate api
+  ```
+
+### CI/CD
+
+`.github/workflows/deploy.yml` triggers on every push to `development` that
+touches `apps/api/**`, `apps/admin/**`, `packages/**`, `docker/**`,
+`docker-compose.prod.yml`, or `scripts/deploy.sh`. The workflow:
+
+1. SSHs into the VPS and runs `scripts/deploy.sh` (git reset, `npm install`
+   with `package-lock.json` copied, `prisma migrate deploy`,
+   `up -d --force-recreate api admin`).
+2. Verify-step polls `https://api.ai-budget.pl/api/v1/health` for up to 120s
+   and fails the run with log dump if the service does not become healthy.
+
+### Snap Docker is held
+
+After the 2026-04-27 outage caused by `snap` auto-refreshing the Docker
+package and hijacking `/var/run/docker.sock` from the apt-installed daemon,
+snap docker is now `held` and `disabled`:
+
+```bash
+snap refresh --hold docker
+snap disable docker
+```
+
+Only the apt-installed `dockerd` should manage production containers.
+Do not re-enable the snap version. The system data root is
+`/var/lib/docker`; preserve it.
+
+### Disk hygiene
+
+```bash
+journalctl --vacuum-size=500M    # cap journal logs (~2-3 GB savings)
+apt-get clean                    # apt cache (~400 MB)
+docker builder prune -f          # build cache only (safe; no volumes)
+docker image prune -f            # dangling untagged images
+# NEVER: docker system prune --volumes  (would wipe postgres data)
+```
+
+## Monitoring & Observability
+
+### Health endpoint
+
+`GET /api/v1/health` (public, no auth):
+
+```json
+{
+  "status": "ok",
+  "db": "ok",
+  "uptimeSeconds": 384,
+  "timestamp": "2026-04-27T18:22:48.653Z"
+}
+```
+
+Returns HTTP `503` with `db: "fail"` if Postgres is unreachable.
+Used by:
+
+- Docker `HEALTHCHECK` in `docker/Dockerfile.api` (requires HTTP 200).
+- CI verify-step (waits up to 120s after `force-recreate`).
+- External uptime monitor (below).
+
+### Uptime monitor
+
+`.github/workflows/uptime-check.yml` runs every 5 minutes:
+
+1. Curls the public `/api/v1/health` with retries.
+2. On non-200 or transport failure, sends a Telegram message to
+   `TELEGRAM_CHAT_ID` via `TELEGRAM_BOT_TOKEN` (both stored as GitHub
+   Actions secrets, NOT in repo env files).
+3. Run is marked `failure` so it shows up red in Actions UI.
+
+To override the URL (e.g. for a staging probe), set repo variable
+`HEALTH_URL`.
+
+### Sentry
+
+`apps/api/src/instrument.ts` is imported as the very first line of
+`main.ts` so it can install hooks before any other module loads. If
+`SENTRY_DSN` is set, `@sentry/node` v8 initializes with:
+
+- `tracesSampleRate: 0.1` in production, `0` otherwise
+- `release: process.env.GIT_SHA` if exposed by deploy
+- Express error handler hooked after Nest boot via
+  `Sentry.setupExpressErrorHandler(...)`
+
+Without `SENTRY_DSN`, the SDK no-ops and nothing is sent.
+
+To verify reachability without redeploying, send a test event from inside
+the running container:
+
+```bash
+docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
+  'const S=require("@sentry/node"); S.init({dsn:process.env.SENTRY_DSN}); \
+   S.captureException(new Error("boot test")); S.close(5000)'
+```
+
 ## Configuration Options
 
 ### Backend Configuration
@@ -346,6 +488,10 @@ docker-compose down
 | `OPENAI_API_KEY` | OpenAI API key | required |
 | `PORT` | Server port | `3000` |
 | `CORS_ORIGIN` | Allowed origins | `*` |
+| `STRIPE_SECRET_KEY` | Stripe key (apiVersion pinned to `2026-01-28.clover`) | required for billing |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token (in-app + ops alerts) | optional |
+| `TELEGRAM_CHAT_ID` | Chat ID for system/uptime notifications | optional |
+| `SENTRY_DSN` | Sentry DSN; absence makes the SDK a no-op | optional |
 
 ### Mobile Configuration
 

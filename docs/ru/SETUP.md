@@ -54,8 +54,17 @@ CORS_ORIGIN=*
 # Push-уведомления используют Expo Push API — дополнительная настройка не требуется.
 
 # Telegram (опционально, для системных уведомлений)
-# TELEGRAM_BOT_TOKEN=ваш-токен-telegram-бота
-# TELEGRAM_CHAT_ID=ваш-chat-id
+# Telegram (бот для in-app команд; этот же токен использует
+# uptime-check GitHub Actions workflow для алертов о падениях)
+TELEGRAM_BOT_TOKEN=ваш-токен-telegram-бота
+TELEGRAM_CHAT_ID=ваш-chat-id
+
+# Stripe (подписки). apiVersion в коде зафиксирован на
+# '2026-01-28.clover' — должен совпадать с SDK из package-lock.json.
+STRIPE_SECRET_KEY=sk_live_or_test_...
+
+# Sentry (опционально, для ловли необработанных ошибок в проде)
+SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
 ```
 
 #### Мобильное приложение (.env)
@@ -65,6 +74,27 @@ CORS_ORIGIN=*
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
 ```
+
+#### Firebase (`google-services.json`)
+
+Файл `apps/mobile/google-services.json` **не хранится в репозитории** — Android
+API‑ключ Firebase распознаётся GitHub как секрет. Каждый разработчик подставляет
+свою копию локально.
+
+1. Скопируйте шаблон:
+   ```bash
+   cp apps/mobile/google-services.example.json apps/mobile/google-services.json
+   ```
+2. Скачайте настоящий `google-services.json` из
+   [Firebase Console](https://console.firebase.google.com/) → *Project settings*
+   → *Your apps* → Android‑приложение `com.budget.assistant` и замените шаблон.
+3. Убедитесь, что Android API‑ключ ограничен по **package name** + **SHA‑1**
+   в
+   [Google Cloud Console → APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials).
+
+Для CI добавьте содержимое файла в секрет GitHub Actions `GOOGLE_SERVICES_JSON`
+— воркфлоу `mobile-build` и `mobile-eas-build` записывают его в
+`apps/mobile/google-services.json` перед сборкой.
 
 ### 4. Настройка базы данных
 
@@ -332,6 +362,119 @@ docker-compose logs -f api
 docker-compose down
 ```
 
+## Production-деплой
+
+Источник истины для прода — закоммиченный `docker-compose.prod.yml` на
+Hetzner VPS. Ключевые отличия от dev compose выше:
+
+- **API не пробрасывает порт на хост** — `budget-api-prod` доступен только
+  через docker network; `shared-nginx` (отдельный стек) терминирует TLS
+  для `api.ai-budget.pl` и проксирует upstream. Не делай `curl
+  localhost:3000` с VPS — работать не будет. Только публичный URL.
+- **Volumes** `ai-budget_postgres_data` и `ai-budget_redis_data` ОБЯЗАНЫ
+  пережить деплои. Никогда не запускай `docker volume prune` без
+  фильтров.
+- **`env_file`** читается только при создании контейнера (не на
+  `docker restart`). Чтобы подхватить новые переменные:
+  ```bash
+  cd /opt/ai-budget
+  docker compose -f docker-compose.prod.yml --env-file .env.production \
+    up -d --force-recreate api
+  ```
+
+### CI/CD
+
+`.github/workflows/deploy.yml` триггерится на push в `development` при
+изменениях в `apps/api/**`, `apps/admin/**`, `packages/**`, `docker/**`,
+`docker-compose.prod.yml`, `scripts/deploy.sh`. Workflow:
+
+1. SSH на VPS, запускает `scripts/deploy.sh` (git reset, `npm install` с
+   копией `package-lock.json`, `prisma migrate deploy`,
+   `up -d --force-recreate api admin`).
+2. Verify-step опрашивает `https://api.ai-budget.pl/api/v1/health` до 120с
+   и валит run с дампом логов, если сервис не стал healthy.
+
+### Snap-докер заморожен
+
+После аварии 2026-04-27, когда `snap` авто-обновил Docker и угнал
+`/var/run/docker.sock` у apt-демона, snap-версия Docker заморожена
+и отключена:
+
+```bash
+snap refresh --hold docker
+snap disable docker
+```
+
+Прод-контейнерами должен управлять только apt-`dockerd`. Не включай
+snap обратно. Системный data-root — `/var/lib/docker`, его сохраняем.
+
+### Гигиена диска
+
+```bash
+journalctl --vacuum-size=500M    # обрезать journal-логи (~2-3 GB)
+apt-get clean                    # apt-кеш (~400 МБ)
+docker builder prune -f          # только build-cache (без volumes)
+docker image prune -f            # dangling untagged образы
+# НИКОГДА: docker system prune --volumes  (затрёт данные postgres)
+```
+
+## Мониторинг и observability
+
+### Health-эндпоинт
+
+`GET /api/v1/health` (публичный, без auth):
+
+```json
+{
+  "status": "ok",
+  "db": "ok",
+  "uptimeSeconds": 384,
+  "timestamp": "2026-04-27T18:22:48.653Z"
+}
+```
+
+Возвращает HTTP `503` с `db: "fail"`, если Postgres недоступен.
+Используется:
+
+- Docker `HEALTHCHECK` в `docker/Dockerfile.api` (требует HTTP 200).
+- CI verify-step (ждёт до 120с после `force-recreate`).
+- Внешний uptime-монитор (ниже).
+
+### Uptime-монитор
+
+`.github/workflows/uptime-check.yml` запускается каждые 5 минут:
+
+1. Curl-ит публичный `/api/v1/health` с retries.
+2. При не-200 или транспортной ошибке шлёт сообщение в Telegram через
+   `TELEGRAM_BOT_TOKEN` в `TELEGRAM_CHAT_ID` (оба хранятся как GitHub
+   Actions secrets, НЕ в repo env).
+3. Run помечается `failure` — красный в Actions UI.
+
+Чтобы переопределить URL (например, для staging-пинга), задай repo-переменную
+`HEALTH_URL`.
+
+### Sentry
+
+`apps/api/src/instrument.ts` импортируется самой первой строкой в
+`main.ts`, чтобы хуки встали до загрузки остальных модулей. Если
+`SENTRY_DSN` задан, `@sentry/node` v8 инициализируется с:
+
+- `tracesSampleRate: 0.1` в production, иначе `0`
+- `release: process.env.GIT_SHA`, если выставлен на деплое
+- Express-error-handler подключается после старта Nest через
+  `Sentry.setupExpressErrorHandler(...)`
+
+Без `SENTRY_DSN` SDK работает no-op и ничего не отправляет.
+
+Чтобы проверить связь без редеплоя, отправь тестовое событие изнутри
+работающего контейнера:
+
+```bash
+docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
+  'const S=require("@sentry/node"); S.init({dsn:process.env.SENTRY_DSN}); \
+   S.captureException(new Error("boot test")); S.close(5000)'
+```
+
 ## Параметры конфигурации
 
 ### Конфигурация бэкенда
@@ -346,6 +489,10 @@ docker-compose down
 | `OPENAI_API_KEY` | API ключ OpenAI | обязательно |
 | `PORT` | Порт сервера | `3000` |
 | `CORS_ORIGIN` | Разрешённые источники | `*` |
+| `STRIPE_SECRET_KEY` | Ключ Stripe (apiVersion закреплён `2026-01-28.clover`) | для биллинга |
+| `TELEGRAM_BOT_TOKEN` | Токен Telegram бота (in-app + ops-алерты) | опционально |
+| `TELEGRAM_CHAT_ID` | Chat ID для системных и uptime-уведомлений | опционально |
+| `SENTRY_DSN` | DSN Sentry; без него SDK работает no-op | опционально |
 
 ### Конфигурация мобильного приложения
 
