@@ -4,13 +4,14 @@ WORKDIR /app
 
 # --- deps ---
 FROM base AS deps
-COPY package.json turbo.json ./
+COPY package.json package-lock.json turbo.json ./
 COPY packages/shared-types/package.json ./packages/shared-types/
 COPY packages/shared-utils/package.json ./packages/shared-utils/
 COPY apps/api/package.json ./apps/api/
-# Dummy workspace so npm resolves workspaces correctly
+# Dummy workspaces so npm resolves the lock file correctly
 RUN mkdir -p apps/admin && echo '{"name":"admin","version":"0.1.0","private":true}' > apps/admin/package.json
-RUN npm install --legacy-peer-deps
+RUN mkdir -p apps/mobile && echo '{"name":"mobile","version":"0.1.0","private":true}' > apps/mobile/package.json
+RUN npm ci --legacy-peer-deps
 
 # --- builder ---
 FROM base AS builder

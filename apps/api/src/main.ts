@@ -1,6 +1,8 @@
+import './instrument';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { json } from 'express';
+import * as Sentry from '@sentry/node';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -40,6 +42,10 @@ async function bootstrap() {
       },
     }),
   );
+
+  if (process.env.SENTRY_DSN) {
+    Sentry.setupExpressErrorHandler(app.getHttpAdapter().getInstance());
+  }
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
