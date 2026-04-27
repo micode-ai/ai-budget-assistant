@@ -42,7 +42,22 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
           script: |
-            sleep 5
-            curl -sf http://localhost:3000/api/v1/health || echo "API health check pending"
-            docker ps --filter name=budget
+            set -e
+            echo "Waiting for API to become healthy (up to 90s)..."
+            for i in $(seq 1 30); do
+              code=$(curl -sf -o /dev/null -w "%{http_code}" http://localhost:3000/api/v1/health || echo "000")
+              if [ "$code" = "200" ]; then
+                echo "API healthy on attempt $i"
+                curl -s http://localhost:3000/api/v1/health
+                docker ps --filter name=budget
+                exit 0
+              fi
+              echo "  ($i/30) /api/v1/health -> $code, retrying in 3s..."
+              sleep 3
+            done
+            echo "ERROR: API did not become healthy in 90s" >&2
+            docker ps -a --filter name=budget
+            docker logs --tail 100 budget-api-prod || true
+            exit 1
