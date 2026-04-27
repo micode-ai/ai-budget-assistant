@@ -122,3 +122,22 @@ See `.env.example`:
 - `OPENAI_API_KEY` — OpenAI for AI features (Whisper, GPT)
 - `FIREBASE_PROJECT_ID`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL` — push notifications
 - `EXPO_PUBLIC_API_URL` — API URL for mobile app
+- `STRIPE_SECRET_KEY` — Stripe API key (apiVersion pinned to `2026-01-28.clover`, must match SDK in `package-lock.json`)
+- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — Telegram bot for in-app commands and ops alerts; also set as GitHub Actions secrets so `uptime-check.yml` can deliver downtime alerts
+- `SENTRY_DSN` — optional. When set, `apps/api/src/instrument.ts` initializes `@sentry/node` (must be imported FIRST in `main.ts`, before any other module). When unset, Sentry is a no-op.
+
+## Production
+
+Hetzner VPS (Hetzner cloud), Docker Compose. Stack defined in `docker-compose.prod.yml`:
+- `budget-db-prod` (postgres:16-alpine, 512M), `budget-redis-prod` (redis:7-alpine, 96M), `budget-api-prod` (512M), `budget-admin-prod` (256M), plus shared `accounting-nginx` (separate stack) reverse-proxying `api.ai-budget.pl` and `admin.ai-budget.pl`. API container has **no host port mapping** — reach it only through nginx or the docker network.
+- Volumes: `ai-budget_postgres_data`, `ai-budget_redis_data` (preserve across deploys; never `docker volume prune` without filters).
+- Deploy: push to `development` triggers `.github/workflows/deploy.yml` → SSH → `scripts/deploy.sh` (`git reset --hard`, `npm install` with lock, build, `prisma migrate deploy`, `up -d --force-recreate api admin`). Verify-step polls `https://api.ai-budget.pl/api/v1/health` for up to 120 s.
+- **Snap-installed Docker is held and disabled** (`snap refresh --hold docker`, `snap disable docker`) after the 2026-04-27 incident where snap auto-refresh hijacked `/var/run/docker.sock` from the apt-installed daemon. Do not re-enable snap docker; only the apt-installed `dockerd` (system data root `/var/lib/docker`) owns prod state.
+- Adding env vars: `docker restart` does NOT reload `env_file`. Must `docker compose -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate <service>`.
+
+## Observability
+
+- **Health**: `GET /api/v1/health` (public, no auth) — runs `SELECT 1` on Postgres, returns `{status, db, uptimeSeconds, timestamp}`. 503 if DB fails. Used by Docker `HEALTHCHECK` (requires HTTP 200) and CI verify-step.
+- **Uptime**: `.github/workflows/uptime-check.yml` runs every 5 min via cron, hits the public `/api/v1/health`. On non-200, sends a Telegram alert via `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` GitHub Secrets with HTTP code, response body, and a link to the failed run.
+- **Errors**: `@sentry/node` v8 captures unhandled exceptions and Express 5xx errors. Init must remain at the top of `main.ts` via `import './instrument'` — moving it after other imports breaks instrumentation.
+- **No Prometheus / Datadog / external APM** at this time.
