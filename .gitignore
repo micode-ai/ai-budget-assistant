@@ -16,6 +16,10 @@ build/
 .env.production
 google-play-service-account.json
 
+# Firebase config (contains public-but-scanned API key — inject via GOOGLE_SERVICES_JSON secret in CI)
+apps/mobile/google-services.json
+apps/mobile/android/app/google-services.json
+
 # IDE
 .idea/
 .vscode/
