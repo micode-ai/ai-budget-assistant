@@ -47,6 +47,79 @@ interface CategoryWithName {
   name: string;
 }
 
+interface OcrContext {
+  language: string;
+  todayIso: string;
+}
+
+// Date format actually printed on receipts in each locale (verified against
+// real Polish/Czech/Hungarian/etc. receipts — many ISO-first countries do NOT
+// use DD.MM.YYYY on cash receipts, even though their conversational format
+// looks European).
+type ReceiptDateFormat = 'YYYY-MM-DD' | 'DD.MM.YYYY' | 'DD/MM/YYYY' | 'DD-MM-YYYY' | 'MM/DD/YYYY';
+
+const DATE_FORMAT_BY_LANG: Record<string, ReceiptDateFormat> = {
+  // ISO-first on receipts (Poland, Czechia, Slovakia, Slovenia, Finland, Sweden, Hungary)
+  pl: 'YYYY-MM-DD',
+  cs: 'YYYY-MM-DD',
+  sk: 'YYYY-MM-DD',
+  sl: 'YYYY-MM-DD',
+  fi: 'YYYY-MM-DD',
+  sv: 'YYYY-MM-DD',
+  hu: 'YYYY-MM-DD',
+  // DD.MM.YYYY (Germany / Austria / Switzerland / Norway / Russia / Ukraine / Belarus)
+  de: 'DD.MM.YYYY',
+  no: 'DD.MM.YYYY',
+  ru: 'DD.MM.YYYY',
+  ua: 'DD.MM.YYYY',
+  be: 'DD.MM.YYYY',
+  // DD/MM/YYYY (France / Italy / Spain / UK / Belgium)
+  fr: 'DD/MM/YYYY',
+  it: 'DD/MM/YYYY',
+  es: 'DD/MM/YYYY',
+  // DD-MM-YYYY (Portugal / Netherlands / Denmark)
+  pt: 'DD-MM-YYYY',
+  nl: 'DD-MM-YYYY',
+  da: 'DD-MM-YYYY',
+  // English defaults to US convention; UK trade receipts vary
+  en: 'MM/DD/YYYY',
+};
+
+function getDateFormatForLang(lang: string): ReceiptDateFormat {
+  return DATE_FORMAT_BY_LANG[lang.toLowerCase()] || 'YYYY-MM-DD';
+}
+
+// "Ambiguous" 03/04/2026 with no part >12: which side is the day?
+// Everyone except US English defaults to day-first when reading slash-dates.
+function isDayFirstLanguage(lang: string): boolean {
+  return lang.toLowerCase() !== 'en';
+}
+
+function dateExampleForFormat(fmt: ReceiptDateFormat): string {
+  // 3 April 2026 in the locale's typical receipt format
+  switch (fmt) {
+    case 'YYYY-MM-DD': return '2026-04-03';
+    case 'DD.MM.YYYY': return '03.04.2026';
+    case 'DD/MM/YYYY': return '03/04/2026';
+    case 'DD-MM-YYYY': return '03-04-2026';
+    case 'MM/DD/YYYY': return '04/03/2026';
+  }
+}
+
+function todayInTimezone(timezone: string | null | undefined): string {
+  const tz = timezone || 'UTC';
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
@@ -64,19 +137,32 @@ export class OcrService {
   private buildReceiptPrompt(
     categoryNames: string,
     source: 'image' | 'text',
+    context: OcrContext,
     userPrompt?: string,
     receiptText?: string,
   ): string {
     const sourceLabel = source === 'image' ? 'receipt image' : 'receipt text';
+    const localFmt = getDateFormatForLang(context.language);
+    const localExample = dateExampleForFormat(localFmt);
+    const dayFirstNote = isDayFirstLanguage(context.language)
+      ? `If the date appears as "DD/MM/YYYY", "DD.MM.YYYY", or "DD-MM-YYYY", the FIRST number is the DAY (not the month). Example: "12/04/2026" = 12 April 2026, NOT 4 December.`
+      : `The user's locale is US English: ambiguous slash-dates are MM/DD/YYYY by default. Trust the merchant's country if it's outside the US.`;
 
     let prompt = `Analyze this ${sourceLabel} and extract all information.
+
+USER CONTEXT (use as a tiebreaker for ambiguous formats):
+- Today's date: ${context.todayIso} — any extracted date MUST NOT be more than 7 days after this.
+- User app language: "${context.language}". On receipts in this locale, dates are typically printed as ${localFmt} (example: 3 April 2026 → "${localExample}").
+- ${dayFirstNote}
+- If the receipt itself indicates a different country (merchant address, language, currency), trust the RECEIPT's locale over the user's app language.
+- ALWAYS output the date strictly as YYYY-MM-DD regardless of how it appears on the receipt.
 
 Available expense categories for classification: ${categoryNames}
 `;
 
     if (source === 'text' && receiptText) {
       prompt += `
-Receipt text:
+Receipt text (extracted via pdf-parse — spacing may be lost, columns may be misaligned, but the content is correct):
 ---
 ${receiptText}
 ---
@@ -88,7 +174,7 @@ Return a JSON object with the following structure:
 {
   "merchantName": "store/restaurant name or null if not found",
   "merchantAddress": "address or null",
-  "date": "YYYY-MM-DD format or null (IMPORTANT: European receipts use DD.MM.YYYY or DD/MM/YYYY, American receipts use MM/DD/YYYY — determine format from merchant country/language, NOT by assuming MM/DD)",
+  "date": "STRICT YYYY-MM-DD format only, or null. Use USER CONTEXT to pick the right format. Never invent the year — if year is unreadable, return null.",
   "time": "HH:MM format or null",
   "items": [
     {
@@ -98,10 +184,10 @@ Return a JSON object with the following structure:
       "totalPrice": 10.00
     }
   ],
-  "subtotal": number or null,
-  "discount": total discount amount or null,
+  "subtotal": number or null (sum BEFORE any discount and BEFORE tax, when shown),
+  "discount": total discount amount as a POSITIVE number, or null,
   "tax": number or null,
-  "total": total amount after discount (required),
+  "total": total amount the customer actually pays (after discount, including tax) — REQUIRED,
   "currency": "USD/EUR/PLN/etc",
   "paymentMethod": "cash/card/etc or null",
   "suggestedCategory": "best matching category from the available list",
@@ -118,11 +204,18 @@ Item name normalization rules for the "description" field:
 - Keep the product name in the original receipt language
 - Only fix obvious single-character OCR errors within the same word, do NOT guess or substitute brand names
 
-Discount extraction:
-- Look for lines like "DISCOUNT", "RABAT", "СКИДКА", "ЗНИЖКА", "SAVINGS", "SALE", percentage-off amounts
-- Sum all discount lines into one total discount value
-- If no discount found, set discount to null
-- The total should be the final amount AFTER discount
+Discount extraction (BE STRICT — false positives are worse than missing the discount):
+- Recognize ANY line that subtracts from the running total as a discount. Strong signals:
+  (a) line label contains: DISCOUNT, RABAT, RABATT, REMISE, DESCUENTO, SCONTO, ZNIŻKA, ZNIZKA, UPUST, PROMOCJA, AKCJA, OFERTA, СКИДКА, ЗНИЖКА, SAVINGS, GUTSCHEIN, BON, KUPON, COUPON, VOUCHER, "<store name> Plus voucher" / "<store name> Plus kupon" (e.g. "Lidl Plus voucher", "Lidl Plus kupon", "Biedronka rabat", "Carrefour bon", "Tesco Clubcard")
+  (b) the line's amount is NEGATIVE (printed with a minus sign or in parentheses) — this alone is enough; treat the absolute value as a discount
+- Sum ALL such lines into a single positive "discount" number (drop the minus sign in output)
+- Do NOT compute a discount from per-item "regular price vs sale price" markings unless the receipt also has a separate discount/savings line
+- Math invariant: subtotal − discount + tax ≈ total. If your extracted numbers do not satisfy this within rounding, set discount to null rather than guessing
+- "total" is the FINAL amount paid (after all discounts, including tax)
+
+Date extraction:
+- Output STRICTLY in YYYY-MM-DD form. If the receipt shows DD.MM.YYYY, convert it. Do not include time in this field.
+- If the date is partially unreadable or the year is missing, return null. Do NOT guess year from "today's date".
 
 Important:
 - Extract EVERY line item if possible
@@ -186,6 +279,133 @@ Important:
     });
   }
 
+  private async getUserOcrPrefs(userId: string): Promise<{ aiModel: string | null; context: OcrContext }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { aiModel: true, language: true, timezone: true },
+    });
+    return {
+      aiModel: user?.aiModel ?? null,
+      context: {
+        language: user?.language || 'en',
+        todayIso: todayInTimezone(user?.timezone),
+      },
+    };
+  }
+
+  private validateAndNormalizeReceipt(
+    parsed: ParsedReceipt & { suggestedCategory?: string },
+    context: OcrContext,
+  ): ParsedReceipt & { suggestedCategory?: string } {
+    parsed.date = this.normalizeDate(parsed.date, context);
+
+    const subtotal = typeof parsed.subtotal === 'number' && Number.isFinite(parsed.subtotal) ? parsed.subtotal : null;
+    const total = typeof parsed.total === 'number' && Number.isFinite(parsed.total) ? parsed.total : null;
+    const tax = typeof parsed.tax === 'number' && Number.isFinite(parsed.tax) ? parsed.tax : 0;
+    const rawDiscount = typeof parsed.discount === 'number' && Number.isFinite(parsed.discount) ? Math.abs(parsed.discount) : null;
+
+    let discount = rawDiscount;
+
+    if (discount !== null && total !== null && discount >= total) {
+      this.logger.warn(`[OCR] Discount ${discount} >= total ${total} — discarding implausible discount`);
+      discount = null;
+    }
+
+    if (subtotal !== null && total !== null) {
+      const expected = subtotal - (discount ?? 0) + tax;
+      const tolerance = Math.max(0.5, Math.abs(total) * 0.02);
+
+      if (Math.abs(expected - total) > tolerance) {
+        const derived = Math.round((subtotal + tax - total) * 100) / 100;
+        if (derived > 0.01 && derived < subtotal) {
+          this.logger.log(`[OCR] Discount reconciled: model=${rawDiscount} -> derived=${derived} (subtotal=${subtotal}, tax=${tax}, total=${total})`);
+          discount = derived;
+        } else {
+          if (discount !== null) {
+            this.logger.warn(`[OCR] Cannot reconcile discount=${rawDiscount} against subtotal=${subtotal} tax=${tax} total=${total}; clearing discount`);
+          }
+          discount = null;
+        }
+      }
+    }
+
+    parsed.discount = discount;
+    return parsed;
+  }
+
+  private normalizeDate(raw: string | null, context: OcrContext): string | null {
+    if (!raw || typeof raw !== 'string') return null;
+    const trimmed = raw.trim();
+    if (!trimmed) return null;
+
+    let normalized: string | null = null;
+
+    // ISO-style YYYY-MM-DD (also accept ISO with "." or "/" separators —
+    // some Polish/Czech receipts emit "2026.04.03" or "2026/04/03")
+    const isoMatch = trimmed.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+    if (isoMatch) {
+      const yyyy = isoMatch[1];
+      const mm = parseInt(isoMatch[2], 10);
+      const dd = parseInt(isoMatch[3], 10);
+      if (mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31) {
+        normalized = `${yyyy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+      }
+    } else {
+      const dmy = trimmed.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{2,4})/);
+      if (dmy) {
+        const a = parseInt(dmy[1], 10);
+        const b = parseInt(dmy[2], 10);
+        let yyyy = dmy[3];
+        if (yyyy.length === 2) yyyy = `20${yyyy}`;
+        let day: number;
+        let month: number;
+        if (a > 12 && b <= 12) {
+          day = a;
+          month = b;
+        } else if (b > 12 && a <= 12) {
+          month = a;
+          day = b;
+        } else if (isDayFirstLanguage(context.language)) {
+          day = a;
+          month = b;
+        } else {
+          month = a;
+          day = b;
+        }
+        if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+          normalized = `${yyyy}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+      }
+    }
+
+    if (!normalized) {
+      this.logger.warn(`[OCR] Date "${raw}" did not match any known format; setting null`);
+      return null;
+    }
+
+    const parsedDate = new Date(`${normalized}T12:00:00Z`);
+    if (isNaN(parsedDate.getTime())) {
+      this.logger.warn(`[OCR] Date "${raw}" -> "${normalized}" is not a valid Date; setting null`);
+      return null;
+    }
+
+    const today = new Date(`${context.todayIso}T12:00:00Z`);
+    const diffDays = (parsedDate.getTime() - today.getTime()) / 86400000;
+    if (diffDays > 7) {
+      this.logger.warn(`[OCR] Date "${normalized}" is ${diffDays.toFixed(0)} days in the future; setting null`);
+      return null;
+    }
+    if (diffDays < -3650) {
+      this.logger.warn(`[OCR] Date "${normalized}" is more than 10 years in the past; setting null`);
+      return null;
+    }
+
+    if (raw !== normalized) {
+      this.logger.log(`[OCR] Date normalized: "${raw}" -> "${normalized}"`);
+    }
+    return normalized;
+  }
+
   async parseReceipt(
     imageBase64: string,
     userId: string,
@@ -193,12 +413,12 @@ Important:
     userPrompt?: string,
     imageDataUrl?: string,
   ): Promise<ReceiptExpense> {
-    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+    const { aiModel: userModel, context } = await this.getUserOcrPrefs(userId);
+    const { model: aiModel } = resolveAiModel(userModel ?? undefined);
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-    const prompt = this.buildReceiptPrompt(categoryNames, 'image', userPrompt);
+    const prompt = this.buildReceiptPrompt(categoryNames, 'image', context, userPrompt);
 
     const url = imageDataUrl || `data:image/jpeg;base64,${imageBase64}`;
 
@@ -243,7 +463,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return this.buildReceiptExpense(parsed, categories);
+    return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
   }
 
   async parseReceiptPdf(
@@ -252,8 +472,8 @@ Important:
     accountId: string,
     userPrompt?: string,
   ): Promise<ReceiptExpense> {
-    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+    const { aiModel: userModel, context } = await this.getUserOcrPrefs(userId);
+    const { model: aiModel } = resolveAiModel(userModel ?? undefined);
 
     const ocrMaxTokens = 4096;
 
@@ -275,7 +495,7 @@ Important:
         // Text-based PDF — use cheaper text-only GPT call
         const categories = await this.getExpenseCategories(accountId);
         const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-        const prompt = this.buildReceiptPrompt(categoryNames, 'text', userPrompt, trimmedText);
+        const prompt = this.buildReceiptPrompt(categoryNames, 'text', context, userPrompt, trimmedText);
 
         this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
 
@@ -293,12 +513,12 @@ Important:
         if (!content) throw new Error('No response from AI');
 
         const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-        return this.buildReceiptExpense(parsed, categories);
+        return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
       }
 
       // Scanned PDF — send the full PDF as a file
       this.logger.log(`[PDF] Insufficient meaningful text (${meaningfulText.length} chars), sending full PDF as file with model: ${aiModel}`);
-      return this.parseReceiptFile(pdfBase64, userId, accountId, userPrompt, aiModel, ocrMaxTokens);
+      return this.parseReceiptFile(pdfBase64, accountId, context, userPrompt, aiModel, ocrMaxTokens);
     } finally {
       await parser.destroy();
     }
@@ -306,8 +526,8 @@ Important:
 
   private async parseReceiptFile(
     pdfBase64: string,
-    userId: string,
     accountId: string,
+    context: OcrContext,
     userPrompt?: string,
     aiModel?: string,
     maxTokens?: number,
@@ -317,7 +537,7 @@ Important:
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-    const prompt = this.buildReceiptPrompt(categoryNames, 'image', userPrompt);
+    const prompt = this.buildReceiptPrompt(categoryNames, 'image', context, userPrompt);
 
     const response = await this.openai.chat.completions.create({
       model: resolvedModel,
@@ -347,7 +567,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return this.buildReceiptExpense(parsed, categories);
+    return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {
