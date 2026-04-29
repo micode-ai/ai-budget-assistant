@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { spawn } from 'node:child_process';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import OpenAI from 'openai';
 import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
@@ -120,6 +124,11 @@ function todayInTimezone(timezone: string | null | undefined): string {
   }
 }
 
+// Force GPT-4.1 for receipt OCR regardless of the user's general aiModel pref.
+// On scanned-PDF receipts (Biedronka/Lidl/etc) gpt-4o hallucinates items and
+// totals; gpt-4.1 reads the same PDF correctly AND is cheaper per token.
+const OCR_RECEIPT_MODEL = 'gpt-4.1';
+
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
@@ -204,14 +213,21 @@ Item name normalization rules for the "description" field:
 - Keep the product name in the original receipt language
 - Only fix obvious single-character OCR errors within the same word, do NOT guess or substitute brand names
 
-Discount extraction (BE STRICT — false positives are worse than missing the discount):
+Discount extraction (read carefully — Polish/Lidl/Biedronka receipts often have many small discount lines that must be summed):
 - Recognize ANY line that subtracts from the running total as a discount. Strong signals:
-  (a) line label contains: DISCOUNT, RABAT, RABATT, REMISE, DESCUENTO, SCONTO, ZNIŻKA, ZNIZKA, UPUST, PROMOCJA, AKCJA, OFERTA, СКИДКА, ЗНИЖКА, SAVINGS, GUTSCHEIN, BON, KUPON, COUPON, VOUCHER, "<store name> Plus voucher" / "<store name> Plus kupon" (e.g. "Lidl Plus voucher", "Lidl Plus kupon", "Biedronka rabat", "Carrefour bon", "Tesco Clubcard")
+  (a) line label contains: DISCOUNT, RABAT, RABATT, REMISE, DESCUENTO, SCONTO, ZNIŻKA, ZNIZKA, UPUST, OPUST, OPUSTY, OPUSTY ŁĄCZNIE, PROMOCJA, AKCJA, OFERTA, СКИДКА, ЗНИЖКА, SAVINGS, GUTSCHEIN, BON, KUPON, COUPON, VOUCHER, "<store name> Plus voucher" / "<store name> Plus kupon" (e.g. "Lidl Plus voucher", "Lidl Plus kupon", "Biedronka rabat")
   (b) the line's amount is NEGATIVE (printed with a minus sign or in parentheses) — this alone is enough; treat the absolute value as a discount
-- Sum ALL such lines into a single positive "discount" number (drop the minus sign in output)
-- Do NOT compute a discount from per-item "regular price vs sale price" markings unless the receipt also has a separate discount/savings line
-- Math invariant: subtotal − discount + tax ≈ total. If your extracted numbers do not satisfy this within rounding, set discount to null rather than guessing
-- "total" is the FINAL amount paid (after all discounts, including tax)
+- IMPORTANT for Polish (Biedronka/Lidl) receipts:
+  - "Opust" lines under each item are PER-ITEM discounts (e.g. "Opust -4,56")
+  - "OPUSTY ŁĄCZNIE" / "RABAT ŁĄCZNIE" prints the SUM of all per-item discounts
+  - If both per-item Opust lines AND a "OPUSTY ŁĄCZNIE: -X,XX" total are present, use the ŁĄCZNIE total — do NOT add it to the per-item lines (would double-count)
+- Output discount as a single POSITIVE number (drop the minus sign)
+- Do NOT compute a discount from "regular price vs sale price" markings unless there is also an explicit discount line
+- Receipt math layout:
+  - Polish/EU style (VAT included in prices): items_sum − discount = post-discount total ("Suma PLN"), then optional packaging deposit ("kaucja") → final "DO ZAPŁATY"
+  - US style (tax added on top): items_sum − discount + tax = total
+  - Set "subtotal" to items_sum BEFORE discount (NOT the printed "Suma PLN" which is post-discount)
+- "total" is the FINAL amount paid as printed on the receipt (DO ZAPŁATY / TOTAL / SUMMA / Итого)
 
 Date extraction:
 - Output STRICTLY in YYYY-MM-DD form. If the receipt shows DD.MM.YYYY, convert it. Do not include time in this field.
@@ -312,12 +328,25 @@ Important:
     }
 
     if (subtotal !== null && total !== null) {
-      const expected = subtotal - (discount ?? 0) + tax;
-      const tolerance = Math.max(0.5, Math.abs(total) * 0.02);
+      // Math invariant has two valid forms:
+      //   (a) tax-exclusive (US-style): subtotal − discount + tax = total
+      //   (b) tax-inclusive (EU-style, e.g. Polish VAT embedded in prices):
+      //       subtotal − discount = total (tax is informational; total may
+      //       additionally include small fees like packaging deposits)
+      const tolerance = Math.max(0.5, Math.abs(total) * 0.03);
+      const exclExpected = subtotal - (discount ?? 0) + tax;
+      const inclExpected = subtotal - (discount ?? 0);
+      const exclOk = Math.abs(exclExpected - total) <= tolerance;
+      const inclOk = Math.abs(inclExpected - total) <= tolerance;
 
-      if (Math.abs(expected - total) > tolerance) {
-        const derived = Math.round((subtotal + tax - total) * 100) / 100;
-        if (derived > 0.01 && derived < subtotal) {
+      if (!exclOk && !inclOk) {
+        let derived: number | null = null;
+        if (subtotal > total + 0.01) {
+          derived = Math.round((subtotal - total) * 100) / 100;
+        } else if (subtotal + tax > total + 0.01) {
+          derived = Math.round((subtotal + tax - total) * 100) / 100;
+        }
+        if (derived !== null && derived > 0.01 && derived < subtotal) {
           this.logger.log(`[OCR] Discount reconciled: model=${rawDiscount} -> derived=${derived} (subtotal=${subtotal}, tax=${tax}, total=${total})`);
           discount = derived;
         } else {
@@ -413,8 +442,8 @@ Important:
     userPrompt?: string,
     imageDataUrl?: string,
   ): Promise<ReceiptExpense> {
-    const { aiModel: userModel, context } = await this.getUserOcrPrefs(userId);
-    const { model: aiModel } = resolveAiModel(userModel ?? undefined);
+    const { context } = await this.getUserOcrPrefs(userId);
+    const aiModel = OCR_RECEIPT_MODEL;
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
@@ -425,7 +454,7 @@ Important:
     // OCR needs more tokens than chat — receipts with many items produce large JSON
     const ocrMaxTokens = 4096;
 
-    this.logger.log(`[Vision] Using model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
+    this.logger.log(`[Vision] Using model: ${aiModel} (forced for OCR), maxTokens: ${ocrMaxTokens}`);
     this.logger.log(`[Vision] Image base64 size: ${(imageBase64.length / 1024).toFixed(1)}KB`);
 
     const response = await this.openai.chat.completions.create({
@@ -472,8 +501,8 @@ Important:
     accountId: string,
     userPrompt?: string,
   ): Promise<ReceiptExpense> {
-    const { aiModel: userModel, context } = await this.getUserOcrPrefs(userId);
-    const { model: aiModel } = resolveAiModel(userModel ?? undefined);
+    const { context } = await this.getUserOcrPrefs(userId);
+    const aiModel = OCR_RECEIPT_MODEL;
 
     const ocrMaxTokens = 4096;
 
@@ -524,6 +553,33 @@ Important:
     }
   }
 
+  private async renderPdfToPngs(pdfBuffer: Buffer, dpi = 300, maxPages = 4): Promise<Buffer[]> {
+    const dir = await mkdtemp(join(tmpdir(), 'ocr-pdf-'));
+    const inPath = join(dir, 'in.pdf');
+    const outPrefix = join(dir, 'page');
+    await writeFile(inPath, pdfBuffer);
+    try {
+      const args = ['-png', '-r', String(dpi), '-f', '1', '-l', String(maxPages), inPath, outPrefix];
+      await new Promise<void>((resolve, reject) => {
+        const p = spawn('pdftoppm', args);
+        let stderr = '';
+        p.stderr.on('data', (d) => { stderr += d.toString(); });
+        p.on('error', reject);
+        p.on('close', (code) => code === 0
+          ? resolve()
+          : reject(new Error(`pdftoppm exited ${code}: ${stderr.trim()}`)));
+      });
+      const files = (await readdir(dir))
+        .filter((f) => f.startsWith('page') && f.endsWith('.png'))
+        .sort();
+      const pngs: Buffer[] = [];
+      for (const f of files) pngs.push(await readFile(join(dir, f)));
+      return pngs;
+    } finally {
+      await rm(dir, { recursive: true, force: true }).catch(() => undefined);
+    }
+  }
+
   private async parseReceiptFile(
     pdfBase64: string,
     accountId: string,
@@ -532,28 +588,54 @@ Important:
     aiModel?: string,
     maxTokens?: number,
   ): Promise<ReceiptExpense> {
-    const resolvedModel = aiModel || 'gpt-4o';
-    const resolvedMaxTokens = maxTokens || 2000;
+    const resolvedModel = aiModel || OCR_RECEIPT_MODEL;
+    const resolvedMaxTokens = maxTokens || 4096;
+    this.logger.log(`[PDF-File] Using model: ${resolvedModel}, maxTokens: ${resolvedMaxTokens}`);
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
     const prompt = this.buildReceiptPrompt(categoryNames, 'image', context, userPrompt);
+
+    const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+
+    let imageContents: Array<{ type: 'image_url'; image_url: { url: string; detail: 'high' } }>;
+    try {
+      const pngs = await this.renderPdfToPngs(pdfBuffer);
+      this.logger.log(`[PDF-File] Rendered ${pngs.length} page(s) to PNG; total size: ${(pngs.reduce((s, b) => s + b.length, 0) / 1024).toFixed(1)}KB`);
+      imageContents = pngs.map((png) => ({
+        type: 'image_url' as const,
+        image_url: {
+          url: `data:image/png;base64,${png.toString('base64')}`,
+          detail: 'high' as const,
+        },
+      }));
+    } catch (err) {
+      this.logger.error(`[PDF-File] pdftoppm rendering failed, falling back to raw PDF file upload: ${err instanceof Error ? err.message : err}`);
+      const response = await this.openai.chat.completions.create({
+        model: resolvedModel,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'text', text: prompt },
+            { type: 'file', file: { filename: 'receipt.pdf', file_data: `data:application/pdf;base64,${pdfBase64}` } },
+          ],
+        }],
+        max_tokens: resolvedMaxTokens,
+        response_format: { type: 'json_object' },
+      });
+      const content = response.choices[0]?.message?.content;
+      this.logger.log(`[PDF-File] GPT response (fallback): ${content}`);
+      if (!content) throw new Error('No response from AI');
+      const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
+      return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+    }
 
     const response = await this.openai.chat.completions.create({
       model: resolvedModel,
       messages: [
         {
           role: 'user',
-          content: [
-            { type: 'text', text: prompt },
-            {
-              type: 'file',
-              file: {
-                filename: 'receipt.pdf',
-                file_data: `data:application/pdf;base64,${pdfBase64}`,
-              },
-            },
-          ],
+          content: [{ type: 'text', text: prompt }, ...imageContents],
         },
       ],
       max_tokens: resolvedMaxTokens,

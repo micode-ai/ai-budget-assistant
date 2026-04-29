@@ -1,5 +1,8 @@
 FROM node:20-alpine AS base
-RUN apk add --no-cache openssl
+# poppler-utils provides pdftoppm — used to rasterize receipt PDFs to PNG
+# before sending to OpenAI vision (raw PDF binaries cause hallucinations on
+# scanned receipts; rendered images are read accurately).
+RUN apk add --no-cache openssl poppler-utils
 WORKDIR /app
 
 # --- deps ---
