@@ -12,7 +12,8 @@
     "build:ios": "eas build --platform ios",
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "eas-build-pre-install": "node scripts/write-google-services.js"
   },
   "jest": {
     "preset": "jest-expo",

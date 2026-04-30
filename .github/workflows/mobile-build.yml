@@ -46,18 +46,15 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Write google-services.json
-        # Gradle's google-services plugin reads android/app/google-services.json
-        # (or the src/<variant>/ variants). The native android/ dir is committed,
-        # so Expo prebuild does NOT run and `app.json` `googleServicesFile` is
-        # ignored — we have to put the file where Gradle looks directly.
-        working-directory: apps/mobile
-        run: |
-          mkdir -p android/app
-          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
-
       - name: Build AAB locally
+        # GOOGLE_SERVICES_JSON is consumed by `eas-build-pre-install` (see
+        # apps/mobile/scripts/write-google-services.js). The hook runs inside
+        # EAS's build workdir AFTER archive extraction and BEFORE Gradle, so
+        # the file lands at android/app/google-services.json without ever
+        # touching the repo or the runner's tracked workspace.
         working-directory: apps/mobile
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: eas build --platform android --profile ${{ inputs.profile }} --local --non-interactive --output ./app-release.aab
 
       - name: Upload AAB
