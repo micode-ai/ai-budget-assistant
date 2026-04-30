@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveAiModel } from './model-resolver';
+import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 
 @Injectable()
@@ -125,12 +125,9 @@ Suggest 3-5 relevant tags for this expense. Prefer existing tags when they fit.
 Return JSON: { "tags": [{ "name": "tag name", "confidence": 0.0-1.0, "isExisting": boolean }] }
 Tags should be short (1-3 words), lowercase, descriptive labels like: subscriptions, entertainment, monthly, groceries, dining-out, work-expense, etc.`;
 
-    // Resolve user's preferred AI model
-    let aiModel = 'gpt-4o';
-    if (userId) {
-      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-      aiModel = resolveAiModel(userPref?.aiModel).model;
-    }
+    // Cheap model: tag suggestion is short structured classification.
+    void userId;
+    const aiModel = resolveCheapModel();
 
     try {
       const response = await this.openai.chat.completions.create({

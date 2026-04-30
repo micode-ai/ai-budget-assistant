@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveAiModel } from './model-resolver';
+import { resolveCheapModel } from './model-resolver';
 
 @Injectable()
 export class SplitSuggestionService {
@@ -37,12 +37,9 @@ export class SplitSuggestionService {
       reasoning: string;
     }>;
   }> {
-    // Resolve user's preferred AI model
-    let aiModel = 'gpt-4o';
-    if (userId) {
-      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-      aiModel = resolveAiModel(userPref?.aiModel).model;
-    }
+    // Cheap model: split assignment is structured per-item categorization.
+    void userId;
+    const aiModel = resolveCheapModel();
 
     // Fetch available categories
     const categories = await this.prisma.category.findMany({
