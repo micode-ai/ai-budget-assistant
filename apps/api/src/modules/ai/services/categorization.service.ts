@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveCheapModel } from './model-resolver';
+import { resolveAiModel, resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { EmbeddingService } from './embedding.service';
 
@@ -89,9 +89,15 @@ export class CategorizationService {
   }
 
   async parseExpenseFromText(text: string, userId: string, accountId: string) {
-    // Cheap model: this is a one-shot JSON extraction, no reasoning required.
-    void userId;
-    const aiModel = resolveCheapModel();
+    // Free-form natural-language extraction (amount + currency + description
+    // + category + merchant from short voice/text input). Empirically the
+    // cheap model loses fidelity on short multilingual transcripts — keep
+    // honoring the user's aiModel preference (gpt-4o by default).
+    const userPref = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { aiModel: true },
+    });
+    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
 
     // Try history-based suggestion first (fast, free)
     const historySuggestion = await this.suggestFromHistory(accountId, text);
