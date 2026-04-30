@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { EmbeddingService } from './embedding.service';
 
 @Injectable()
 export class TagSuggestionService {
@@ -12,6 +13,7 @@ export class TagSuggestionService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly embeddingService: EmbeddingService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -23,24 +25,53 @@ export class TagSuggestionService {
     description: string,
     merchant?: string,
     userId?: string,
-  ): Promise<{ tags: Array<{ name: string; confidence: number; source: 'history' | 'ai'; existingTagId?: string }> }> {
+  ): Promise<{ tags: Array<{ name: string; confidence: number; source: 'history' | 'embedding' | 'ai'; existingTagId?: string }> }> {
     // 1. Try history-based suggestions first (free)
     const historySuggestions = await this.suggestFromHistory(accountId, description, merchant);
     if (historySuggestions.length >= 3) {
       return { tags: historySuggestions };
     }
 
-    // 2. Fall back to AI
+    // 2. Embedding match — picks one high-confidence existing tag without
+    //    a chat-completions roundtrip.
+    const embeddingSuggestions = await this.suggestFromEmbedding(accountId, description);
+
+    // 3. Fall back to AI for additional creative suggestions
     const aiSuggestions = await this.suggestWithAI(accountId, description, merchant, userId);
 
-    // Merge: history suggestions first, then AI (deduped)
-    const existingNames = new Set(historySuggestions.map(s => s.name.toLowerCase()));
+    const seenIds = new Set(
+      [...historySuggestions, ...embeddingSuggestions]
+        .map(s => s.existingTagId)
+        .filter((id): id is string => Boolean(id)),
+    );
+    const seenNames = new Set(
+      [...historySuggestions, ...embeddingSuggestions].map(s => s.name.toLowerCase()),
+    );
     const merged = [
       ...historySuggestions,
-      ...aiSuggestions.filter(s => !existingNames.has(s.name.toLowerCase())),
+      ...embeddingSuggestions.filter(s => !seenIds.has(s.existingTagId || '')),
+      ...aiSuggestions.filter(s => !seenNames.has(s.name.toLowerCase()) && !seenIds.has(s.existingTagId || '')),
     ].slice(0, 5);
 
     return { tags: merged };
+  }
+
+  private async suggestFromEmbedding(
+    accountId: string,
+    description: string,
+  ): Promise<Array<{ name: string; confidence: number; source: 'embedding'; existingTagId: string }>> {
+    try {
+      const match = await this.embeddingService.matchTag(accountId, description);
+      if (!match) return [];
+      return [{
+        name: match.tagName,
+        confidence: match.similarity,
+        source: 'embedding',
+        existingTagId: match.tagId,
+      }];
+    } catch {
+      return [];
+    }
   }
 
   private async suggestFromHistory(
