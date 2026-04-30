@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { EmbeddingService } from './embedding.service';
 
 interface CategoryWithName {
   id: string;
@@ -17,6 +18,7 @@ export class CategorizationService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly embeddingService: EmbeddingService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -94,6 +96,12 @@ export class CategorizationService {
     // Try history-based suggestion first (fast, free)
     const historySuggestion = await this.suggestFromHistory(accountId, text);
 
+    // Embedding hint: if no history match, try semantic similarity. Used only
+    // as a categoryId hint — the LLM still parses amount/currency/etc.
+    const embeddingHint = historySuggestion
+      ? null
+      : await this.embeddingService.matchCategory(accountId, text).catch(() => null);
+
     const categories = await this.prisma.category.findMany({
       where: {
         OR: [{ isSystem: true }, { accountId }],
@@ -146,9 +154,9 @@ Only return valid JSON, no other text.`;
       amount: result.amount || 0,
       currencyCode: result.currency || 'USD',
       description: result.description || text,
-      categoryId: historySuggestion?.categoryId || matchedCategory?.id,
-      categorySuggestion: historySuggestion?.categoryName || result.category,
-      confidence: historySuggestion?.confidence || result.confidence || 0.5,
+      categoryId: historySuggestion?.categoryId || embeddingHint?.categoryId || matchedCategory?.id,
+      categorySuggestion: historySuggestion?.categoryName || embeddingHint?.categoryName || result.category,
+      confidence: historySuggestion?.confidence || embeddingHint?.similarity || result.confidence || 0.5,
       merchant: result.merchant,
     };
   }
@@ -166,6 +174,21 @@ Only return valid JSON, no other text.`;
         categoryName: historySuggestion.categoryName,
         confidence: historySuggestion.confidence,
       };
+    }
+
+    // Try embedding similarity next — much cheaper than the LLM call below.
+    // Skips when no category has an embedding yet (pre-backfill state).
+    try {
+      const embeddingMatch = await this.embeddingService.matchCategory(accountId, description);
+      if (embeddingMatch) {
+        return {
+          categoryId: embeddingMatch.categoryId,
+          categoryName: embeddingMatch.categoryName,
+          confidence: embeddingMatch.similarity,
+        };
+      }
+    } catch {
+      // Embedding lookup failed — fall through to LLM.
     }
 
     const categories = await this.prisma.category.findMany({
