@@ -24,7 +24,6 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
-import { AiUsageBadge } from '@/components/AiUsageBadge';
 
 export default function VoiceExpenseScreen() {
   const { t } = useTranslation();
@@ -146,23 +145,10 @@ export default function VoiceExpenseScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
-          <Ionicons name="close" size={28} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={styles.title}>{t('voice.title')}</Text>
-        <AiUsageBadge />
-      </View>
-
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       {!showConfirm ? (
         <View style={styles.content}>
           <View style={styles.instructionContainer}>
-            <Ionicons
-              name={isRecording ? 'radio-button-on' : 'mic-outline'}
-              size={80}
-              color={isRecording ? theme.colors.danger : theme.colors.primary}
-            />
             <Text style={styles.instructionText}>
               {isProcessing
                 ? t('voice.processing')
@@ -379,24 +365,6 @@ const createStyles = (theme: Theme) => ({
   flex: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
-    padding: theme.spacing[4],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-  },
-  closeButton: {
-    padding: theme.spacing[1],
-  },
-  title: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-  },
-  placeholder: {
-    width: 36,
-  },
   content: {
     flex: 1,
     padding: theme.spacing[6],
@@ -410,7 +378,6 @@ const createStyles = (theme: Theme) => ({
   instructionText: {
     fontSize: 18,
     color: theme.colors.textPrimary,
-    marginTop: theme.spacing[6],
     fontWeight: '500' as const,
   },
   exampleText: {

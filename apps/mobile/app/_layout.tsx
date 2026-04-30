@@ -28,6 +28,7 @@ import {
   handleNotificationResponse,
 } from '@/services/notifications';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AiUsageBadge } from '@/components/AiUsageBadge';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -189,6 +190,7 @@ function RootNavigator() {
             presentation: 'modal',
             headerShown: true,
             title: t('voice.title'),
+            headerRight: () => <AiUsageBadge />,
           }}
         />
         <Stack.Screen

@@ -1,4 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  getStartOfMonth,
+  getEndOfMonth,
+  getStartOfWeek,
+  getEndOfWeek,
+} from '@budget/shared-utils';
 import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
@@ -9,6 +15,40 @@ const CATEGORY_ALLOCATIONS_INCLUDE = {
     include: { category: true },
   },
 };
+
+// Compute the rolling [periodStart, periodEnd] window for a budget. For
+// daily/weekly/monthly/yearly budgets the window tracks the current calendar
+// period rather than `budget.startDate` (otherwise a long-lived monthly budget
+// would sum every month's expenses since it was created). `custom` budgets
+// keep their fixed [startDate, endDate] window. Mirrors the mobile store
+// logic in apps/mobile/src/stores/budgetStore.ts so API and client agree.
+export function computeBudgetPeriod(
+  budget: { period: string; startDate: Date; endDate: Date | null },
+  now: Date = new Date(),
+): { periodStart: Date; periodEnd: Date } {
+  switch (budget.period) {
+    case 'daily': {
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      return { periodStart: start, periodEnd: end };
+    }
+    case 'weekly':
+      return { periodStart: getStartOfWeek(now), periodEnd: getEndOfWeek(now) };
+    case 'yearly': {
+      const start = new Date(now.getFullYear(), 0, 1);
+      const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+      return { periodStart: start, periodEnd: end };
+    }
+    case 'custom':
+      return {
+        periodStart: budget.startDate,
+        periodEnd: budget.endDate ?? now,
+      };
+    case 'monthly':
+    default:
+      return { periodStart: getStartOfMonth(now), periodEnd: getEndOfMonth(now) };
+  }
+}
 
 @Injectable()
 export class BudgetsService {
@@ -214,9 +254,8 @@ export class BudgetsService {
     const budget = await this.findOne(accountId, id);
 
     // Calculate spent amount for this budget period
-    const periodStart = budget.startDate;
-    const periodEnd = budget.endDate || new Date();
     const now = new Date();
+    const { periodStart, periodEnd } = computeBudgetPeriod(budget, now);
 
     // Determine which categories this budget covers
     const allocations = budget.categoryAllocations || [];
