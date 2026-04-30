@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveAiModel } from './model-resolver';
+import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 
 interface CategoryWithName {
@@ -87,9 +87,9 @@ export class CategorizationService {
   }
 
   async parseExpenseFromText(text: string, userId: string, accountId: string) {
-    // Resolve user's preferred AI model
-    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+    // Cheap model: this is a one-shot JSON extraction, no reasoning required.
+    void userId;
+    const aiModel = resolveCheapModel();
 
     // Try history-based suggestion first (fast, free)
     const historySuggestion = await this.suggestFromHistory(accountId, text);
@@ -154,9 +154,9 @@ Only return valid JSON, no other text.`;
   }
 
   async categorize(description: string, userId: string, accountId: string) {
-    // Resolve user's preferred AI model
-    const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+    // Cheap model: classification only.
+    void userId;
+    const aiModel = resolveCheapModel();
 
     // Try history-based suggestion first (fast, free)
     const historySuggestion = await this.suggestFromHistory(accountId, description);

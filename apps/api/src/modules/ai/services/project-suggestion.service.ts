@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveAiModel } from './model-resolver';
+import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 
 @Injectable()
@@ -71,12 +71,9 @@ export class ProjectSuggestionService {
       recentExpenses: p.projectExpenses.map((pe: { expense: { description: string | null } }) => pe.expense.description).filter(Boolean).slice(0, 5),
     }));
 
-    // Resolve user's preferred AI model
-    let aiModel = 'gpt-4o';
-    if (userId) {
-      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-      aiModel = resolveAiModel(userPref?.aiModel).model;
-    }
+    // Cheap model: project matching is short structured classification.
+    void userId;
+    const aiModel = resolveCheapModel();
 
     try {
       const safeExpenseDesc = sanitizeForPrompt(expense.description, 200);
