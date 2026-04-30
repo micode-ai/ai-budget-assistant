@@ -80,6 +80,5 @@ describeIfFfmpeg('audio-trim (requires ffmpeg)', () => {
 
 if (!ffmpegAvailable) {
   // Surface a single test so jest doesn't report "no tests" — skipped above.
-  // eslint-disable-next-line jest/no-disabled-tests
   it.skip('audio-trim suite skipped: ffmpeg not on PATH (runs in Docker / CI)', () => undefined);
 }
