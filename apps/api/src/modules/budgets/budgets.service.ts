@@ -306,6 +306,9 @@ export class BudgetsService {
     const spentAmount = Number(spent._sum?.amount || 0);
     const budgetAmount = Number(budget.amount);
     const remaining = Math.max(0, budgetAmount - spentAmount);
+    // Precomputed so AI consumers don't have to do (spent − amount) themselves
+    // — LLMs hallucinate arithmetic on similar-looking PLN/UAH amounts.
+    const overBy = Math.max(0, spentAmount - budgetAmount);
     const percentageUsed = budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
     const isOverBudget = spentAmount > budgetAmount;
 
@@ -361,6 +364,7 @@ export class BudgetsService {
       budget,
       spent: spentAmount,
       remaining,
+      overBy,
       percentageUsed,
       isOverBudget,
       daysRemaining,
