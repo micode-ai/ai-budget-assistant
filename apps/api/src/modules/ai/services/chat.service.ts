@@ -877,6 +877,10 @@ export class ChatService {
             category: b.category?.name,
             spent: progress.spent,
             remaining: progress.remaining,
+            // overBy is precomputed server-side. The LLM MUST report this
+            // verbatim when explaining how much the user is over — never
+            // recompute spent − amount, LLMs hallucinate arithmetic.
+            overBy: progress.overBy,
             percentageUsed: progress.percentageUsed,
             isOverBudget: progress.isOverBudget,
             daysRemaining: progress.daysRemaining,
@@ -1257,7 +1261,9 @@ a brief summary of the current month for general awareness. Always call the tool
 If the user doesn't specify a date, use today's date provided in the dynamic context section.
 If the user references a category, match it to the available categories list provided below.
 When presenting tool results, use ONLY the exact numbers returned by the tool. Do NOT round, estimate,
-or substitute any values.
+or substitute any values. Do NOT do arithmetic between fields — every quantity you might want is already
+precomputed: budget status returns \`spent\`, \`remaining\`, \`overBy\`, \`percentageUsed\` (do not subtract
+\`spent − amount\` yourself; use \`overBy\` verbatim when the budget is over).
 
 Provide helpful, actionable advice about budgeting and spending. Be concise but thorough.
 If asked about specific data you don't have, acknowledge the limitation and provide general guidance.
