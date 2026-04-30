@@ -1,10 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  getStartOfMonth,
-  getEndOfMonth,
-  getStartOfWeek,
-  getEndOfWeek,
-} from '@budget/shared-utils';
 import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
@@ -15,6 +9,27 @@ const CATEGORY_ALLOCATIONS_INCLUDE = {
     include: { category: true },
   },
 };
+
+// Mirrors getStartOfWeek/getEndOfWeek from @budget/shared-utils. Inlined
+// because @budget/shared-utils is bundler-only (its index.ts uses extensionless
+// directory re-exports that Node ESM rejects with ERR_UNSUPPORTED_DIR_IMPORT
+// in the API runtime). The mobile/admin builds bundle the package, so they're
+// fine; only the API hits the raw Node loader.
+function startOfWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Monday as first day
+  d.setDate(diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function endOfWeek(date: Date): Date {
+  const d = startOfWeek(date);
+  d.setDate(d.getDate() + 6);
+  d.setHours(23, 59, 59, 999);
+  return d;
+}
 
 // Compute the rolling [periodStart, periodEnd] window for a budget. For
 // daily/weekly/monthly/yearly budgets the window tracks the current calendar
@@ -33,7 +48,7 @@ export function computeBudgetPeriod(
       return { periodStart: start, periodEnd: end };
     }
     case 'weekly':
-      return { periodStart: getStartOfWeek(now), periodEnd: getEndOfWeek(now) };
+      return { periodStart: startOfWeek(now), periodEnd: endOfWeek(now) };
     case 'yearly': {
       const start = new Date(now.getFullYear(), 0, 1);
       const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
@@ -45,8 +60,13 @@ export function computeBudgetPeriod(
         periodEnd: budget.endDate ?? now,
       };
     case 'monthly':
-    default:
-      return { periodStart: getStartOfMonth(now), periodEnd: getEndOfMonth(now) };
+    default: {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      end.setHours(23, 59, 59, 999);
+      return { periodStart: start, periodEnd: end };
+    }
   }
 }
 
