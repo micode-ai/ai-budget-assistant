@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
-import { resolveAiModel } from './model-resolver';
+import { resolveAiModel, resolveCheapModel } from './model-resolver';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { IncomesService } from '../../incomes/incomes.service';
 import { BudgetsService } from '../../budgets/budgets.service';
@@ -187,7 +187,7 @@ export class ChatService {
         );
       } else {
         return this.handleReadAction(
-          conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, aiModel,
+          conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId,
         );
       }
     }
@@ -481,7 +481,9 @@ export class ChatService {
     const confirmationSystemPrompt = `${systemPrompt}\n\nThe user wants to perform this action: ${displaySummary}. Generate a SHORT confirmation message (1-2 sentences max) asking them to confirm or cancel. Format: "I'd like to [action]. Please confirm or cancel." Use the SAME language as the conversation.`;
 
     const confirmResponse = await this.openai.chat.completions.create({
-      model: aiModel,
+      // Confirmation rendering is single-language formatting — no reasoning
+      // needed, so we always use the cheap model regardless of user preference.
+      model: resolveCheapModel(),
       messages: [
         { role: 'system', content: confirmationSystemPrompt },
         ...history,
@@ -519,14 +521,15 @@ export class ChatService {
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
     userMessage: string,
     accountId?: string,
-    aiModel?: string,
   ) {
     const result = await this.executeAction(actionType, args, accountId || '', '');
 
     // Feed the result back to OpenAI to generate a natural language summary
     const toolResultJson = JSON.stringify(result.data || {});
     const followUpResponse = await this.openai.chat.completions.create({
-      model: aiModel || 'gpt-4o',
+      // Read-action follow-up just narrates structured data into prose. No
+      // reasoning needed — use the cheap model.
+      model: resolveCheapModel(),
       messages: [
         { role: 'system', content: systemPrompt },
         ...history,
