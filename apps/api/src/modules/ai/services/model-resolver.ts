@@ -27,3 +27,15 @@ export function resolveAiModel(pref?: string): { model: string; maxTokens: numbe
 export function getAiCostMultiplier(pref?: string): number {
   return AI_COST_MULTIPLIER[pref || 'balanced'] ?? 1.0;
 }
+
+/**
+ * Model used for low-reasoning tasks where output is short, structured, and
+ * largely classification: confirmation rendering, single-field categorization,
+ * tag/project picking, split assignment. Independent of user's aiModel
+ * preference — that preference is reserved for the main chat reasoning turn.
+ */
+export const CHEAP_MODEL = 'gpt-4o-mini';
+
+export function resolveCheapModel(): string {
+  return CHEAP_MODEL;
+}
