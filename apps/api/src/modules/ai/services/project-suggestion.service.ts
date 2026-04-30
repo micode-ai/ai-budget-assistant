@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveAiModel } from './model-resolver';
+import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { EmbeddingService } from './embedding.service';
 
 @Injectable()
 export class ProjectSuggestionService {
@@ -12,6 +13,7 @@ export class ProjectSuggestionService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly embeddingService: EmbeddingService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -63,7 +65,21 @@ export class ProjectSuggestionService {
       }
     }
 
-    // 2. Use AI to match
+    // 2. Try semantic similarity via embeddings (cheap, no LLM)
+    try {
+      const embeddingMatch = await this.embeddingService.matchProject(accountId, expense.description);
+      if (embeddingMatch) {
+        return {
+          projectId: embeddingMatch.projectId,
+          projectName: embeddingMatch.projectName,
+          confidence: embeddingMatch.similarity,
+        };
+      }
+    } catch {
+      // Embedding lookup failed — fall through to LLM.
+    }
+
+    // 3. Use AI to match
     const projectDescriptions = activeProjects.map((p: typeof activeProjects[number]) => ({
       id: p.id,
       name: p.name,
@@ -71,12 +87,9 @@ export class ProjectSuggestionService {
       recentExpenses: p.projectExpenses.map((pe: { expense: { description: string | null } }) => pe.expense.description).filter(Boolean).slice(0, 5),
     }));
 
-    // Resolve user's preferred AI model
-    let aiModel = 'gpt-4o';
-    if (userId) {
-      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-      aiModel = resolveAiModel(userPref?.aiModel).model;
-    }
+    // Cheap model: project matching is short structured classification.
+    void userId;
+    const aiModel = resolveCheapModel();
 
     try {
       const safeExpenseDesc = sanitizeForPrompt(expense.description, 200);

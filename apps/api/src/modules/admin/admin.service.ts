@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { CacheService } from '../../common/cache/cache.service';
 import type { AdminDashboardResponse, AdminUserUsageItem } from '@budget/shared-types';
 
 type SubscriptionTier = 'free' | 'pro' | 'business';
@@ -37,6 +38,7 @@ export class AdminService {
     private readonly prisma: PrismaService,
     private readonly mailService: MailService,
     private readonly notificationsService: NotificationsService,
+    private readonly cacheService: CacheService,
   ) {}
 
   // ─── Audit Log ───────────────────────────────────
@@ -935,10 +937,17 @@ export class AdminService {
       dbStatus = 'error';
     }
 
+    let redisStatus: 'ok' | 'error' = 'ok';
+    try {
+      await this.cacheService.ping();
+    } catch {
+      redisStatus = 'error';
+    }
+
     return {
       api: 'ok' as const,
       database: dbStatus,
-      redis: 'ok' as const,
+      redis: redisStatus,
       uptime: process.uptime(),
       memoryUsage: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
     };

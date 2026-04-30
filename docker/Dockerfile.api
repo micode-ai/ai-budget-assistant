@@ -2,7 +2,10 @@ FROM node:20-alpine AS base
 # poppler-utils provides pdftoppm — used to rasterize receipt PDFs to PNG
 # before sending to OpenAI vision (raw PDF binaries cause hallucinations on
 # scanned receipts; rendered images are read accurately).
-RUN apk add --no-cache openssl poppler-utils
+# ffmpeg (with bundled ffprobe) — used to trim leading/trailing silence from
+# voice memos before passing them to gpt-4o-mini-transcribe, and to probe
+# audio duration for usage tracking.
+RUN apk add --no-cache openssl poppler-utils ffmpeg
 WORKDIR /app
 
 # --- deps ---

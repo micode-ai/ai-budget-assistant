@@ -3,13 +3,29 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
+import { CacheService } from '../../common/cache/cache.service';
 
 @Injectable()
 export class ExpensesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gamificationService: GamificationService,
+    private readonly cacheService: CacheService,
   ) {}
+
+  /**
+   * Invalidate every chat tool result cached for this account. Touched on
+   * any expense mutation since `get_expenses`, `get_budget_status`, and
+   * `get_category_breakdown` all read from the expense table.
+   */
+  private async invalidateChatCache(accountId: string): Promise<void> {
+    if (!accountId) return;
+    await Promise.all([
+      this.cacheService.delByPrefix(`chat:get_expenses:${accountId}:`),
+      this.cacheService.delByPrefix(`chat:get_budget_status:${accountId}:`),
+      this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`),
+    ]);
+  }
 
   /**
    * Resolve categoryId: if it's a valid UUID, use as-is.
@@ -226,6 +242,9 @@ export class ExpensesService {
 
     // Fire-and-forget gamification check
     this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+
+    // Fire-and-forget cache invalidation; never block the create response.
+    this.invalidateChatCache(accountId).catch(() => undefined);
 
     return result;
   }
@@ -453,6 +472,9 @@ export class ExpensesService {
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
         },
       });
+    }).then((updated) => {
+      this.invalidateChatCache(accountId).catch(() => undefined);
+      return updated;
     });
   }
 
@@ -466,6 +488,8 @@ export class ExpensesService {
         syncVersion: { increment: 1 },
       },
     });
+
+    this.invalidateChatCache(accountId).catch(() => undefined);
 
     return { success: true };
   }
