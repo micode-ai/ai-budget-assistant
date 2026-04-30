@@ -4,10 +4,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
+import { EmbeddingService } from '../ai/services/embedding.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly embeddingService: EmbeddingService,
+  ) {}
 
   async findAll(accountId: string, includeArchived?: boolean) {
     const whereClause: any = {
@@ -70,6 +74,7 @@ export class ProjectsService {
   }
 
   async create(accountId: string, userId: string, dto: CreateProjectDto) {
+    void userId;
     const data: any = {
       accountId,
       name: dto.name,
@@ -82,7 +87,7 @@ export class ProjectsService {
       currencyCode: dto.currencyCode,
     };
 
-    return this.prisma.project.upsert({
+    const project = await this.prisma.project.upsert({
       where: {
         accountId_clientId: {
           accountId,
@@ -95,6 +100,8 @@ export class ProjectsService {
       },
       update: data,
     });
+    void this.embeddingService.embedAndStore('project', project.id, project.name);
+    return project;
   }
 
   async update(accountId: string, id: string, dto: UpdateProjectDto) {
@@ -123,10 +130,14 @@ export class ProjectsService {
     if (dto.currencyCode !== undefined) data.currencyCode = dto.currencyCode;
     if (dto.isArchived !== undefined) data.isArchived = dto.isArchived;
 
-    return this.prisma.project.update({
+    const updated = await this.prisma.project.update({
       where: { id },
       data,
     });
+    if (dto.name && dto.name !== project.name) {
+      void this.embeddingService.embedAndStore('project', updated.id, updated.name);
+    }
+    return updated;
   }
 
   async remove(accountId: string, id: string) {

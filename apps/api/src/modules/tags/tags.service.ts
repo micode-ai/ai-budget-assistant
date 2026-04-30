@@ -4,10 +4,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateTagDto, UpdateTagDto } from './dto';
+import { EmbeddingService } from '../ai/services/embedding.service';
 
 @Injectable()
 export class TagsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private embeddingService: EmbeddingService,
+  ) {}
 
   async findAll(accountId: string) {
     return this.prisma.tag.findMany({
@@ -38,7 +42,8 @@ export class TagsService {
   }
 
   async create(accountId: string, userId: string, dto: CreateTagDto) {
-    return this.prisma.tag.create({
+    void userId;
+    const created = await this.prisma.tag.create({
       data: {
         accountId,
         name: dto.name,
@@ -47,13 +52,14 @@ export class TagsService {
         usageCount: 0,
       },
     });
+    void this.embeddingService.embedAndStore('tag', created.id, created.name);
+    return created;
   }
 
   async update(accountId: string, id: string, dto: UpdateTagDto) {
-    // Verify ownership
-    await this.findOne(accountId, id);
+    const existing = await this.findOne(accountId, id);
 
-    return this.prisma.tag.update({
+    const updated = await this.prisma.tag.update({
       where: { id },
       data: {
         name: dto.name,
@@ -61,6 +67,10 @@ export class TagsService {
         icon: dto.icon,
       },
     });
+    if (dto.name && dto.name !== existing.name) {
+      void this.embeddingService.embedAndStore('tag', updated.id, updated.name);
+    }
+    return updated;
   }
 
   async remove(accountId: string, id: string) {

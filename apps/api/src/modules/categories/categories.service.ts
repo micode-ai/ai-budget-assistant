@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { EmbeddingService } from '../ai/services/embedding.service';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly embeddingService: EmbeddingService,
+  ) {}
 
   async findAll(accountId: string) {
     // Get system categories and account's custom categories
@@ -25,7 +29,7 @@ export class CategoriesService {
       where: { accountId, name: dto.name, type: dto.type, isDeleted: true },
     });
     if (existing) {
-      return this.prisma.category.update({
+      const revived = await this.prisma.category.update({
         where: { id: existing.id },
         data: {
           isDeleted: false,
@@ -35,9 +39,12 @@ export class CategoriesService {
           userId,
         },
       });
+      // Fire-and-forget: refresh embedding so semantic match picks it up.
+      void this.embeddingService.embedAndStore('category', revived.id, revived.name);
+      return revived;
     }
 
-    return this.prisma.category.create({
+    const created = await this.prisma.category.create({
       data: {
         accountId,
         userId,
@@ -48,6 +55,8 @@ export class CategoriesService {
         parentId: dto.parentId,
       },
     });
+    void this.embeddingService.embedAndStore('category', created.id, created.name);
+    return created;
   }
 
   async update(accountId: string, id: string, dto: any) {
@@ -58,10 +67,15 @@ export class CategoriesService {
       },
     });
     if (!category) throw new NotFoundException('Category not found');
-    return this.prisma.category.update({
+    const updated = await this.prisma.category.update({
       where: { id },
       data: dto,
     });
+    if (dto.name && dto.name !== category.name) {
+      // Name changed — refresh embedding.
+      void this.embeddingService.embedAndStore('category', updated.id, updated.name);
+    }
+    return updated;
   }
 
   async remove(accountId: string, id: string) {
