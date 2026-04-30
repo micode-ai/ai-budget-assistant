@@ -1,0 +1,68 @@
+# EAS Build reads this INSTEAD of .gitignore when building the project archive.
+# The root .gitignore excludes android/app/google-services.json (Firebase API
+# key — public-but-scanned, kept out of the repo to avoid scanner alerts).
+# But EAS needs the file at build time: Gradle's processReleaseGoogleServices
+# reads it from android/app/. CI writes the file from the GOOGLE_SERVICES_JSON
+# secret before `eas build`, and this file is intentionally OMITTED here so
+# EAS will include it in the upload.
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+.expo/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.production
+google-play-service-account.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# Turbo
+.turbo/
+
+# Mobile signing/cert artifacts (NOT google-services.json — that one we need)
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+bugreport-*.zip
+
+# Android build artifacts
+android/build/
+android/.gradle/
+android/app/build/
+android/app/debug
+android/app/release
+
+# iOS artifacts
+ios/Pods/
+ios/build/
+
+# Misc
+*.pem
