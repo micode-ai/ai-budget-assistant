@@ -1,13 +1,21 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { EmbeddingService } from '../ai/services/embedding.service';
+import { CacheService } from '../../common/cache/cache.service';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly embeddingService: EmbeddingService,
+    private readonly cacheService: CacheService,
   ) {}
+
+  private invalidateChatCache(accountId: string): void {
+    if (!accountId) return;
+    void this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`);
+    void this.cacheService.delByPrefix(`chat:get_expenses:${accountId}:`);
+  }
 
   async findAll(accountId: string) {
     // Get system categories and account's custom categories
@@ -41,6 +49,7 @@ export class CategoriesService {
       });
       // Fire-and-forget: refresh embedding so semantic match picks it up.
       void this.embeddingService.embedAndStore('category', revived.id, revived.name);
+      this.invalidateChatCache(accountId);
       return revived;
     }
 
@@ -56,6 +65,7 @@ export class CategoriesService {
       },
     });
     void this.embeddingService.embedAndStore('category', created.id, created.name);
+    this.invalidateChatCache(accountId);
     return created;
   }
 
@@ -75,6 +85,7 @@ export class CategoriesService {
       // Name changed — refresh embedding.
       void this.embeddingService.embedAndStore('category', updated.id, updated.name);
     }
+    this.invalidateChatCache(accountId);
     return updated;
   }
 
@@ -123,9 +134,11 @@ export class CategoriesService {
       });
     }
 
-    return this.prisma.category.update({
+    const removed = await this.prisma.category.update({
       where: { id },
       data: { isDeleted: true },
     });
+    this.invalidateChatCache(accountId);
+    return removed;
   }
 }
