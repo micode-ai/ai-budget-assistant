@@ -38,15 +38,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Write google-services.json
-        # Same path as the local build workflow — see comment there. The
-        # committed android/ dir means we have to write into android/app/
-        # rather than relying on Expo prebuild + app.json `googleServicesFile`.
-        working-directory: apps/mobile
-        run: |
-          mkdir -p android/app
-          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
-
       - name: Determine build profile
         id: profile
         run: |
@@ -59,5 +50,9 @@ jobs:
           fi
 
       - name: Run EAS Build
+        # GOOGLE_SERVICES_JSON consumed by eas-build-pre-install hook
+        # (apps/mobile/scripts/write-google-services.js).
         working-directory: apps/mobile
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: eas build --platform android --profile ${{ steps.profile.outputs.name }} --non-interactive --no-wait
