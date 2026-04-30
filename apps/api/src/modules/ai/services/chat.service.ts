@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
@@ -49,6 +49,7 @@ interface BudgetRecord {
 @Injectable()
 export class ChatService {
   private readonly openai: OpenAI;
+  private readonly logger = new Logger(ChatService.name);
 
   constructor(
     private readonly configService: ConfigService,
@@ -62,6 +63,19 @@ export class ChatService {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
+  }
+
+  /**
+   * Log OpenAI prompt cache hit ratio so we can verify the static-prefix
+   * restructure is actually getting cached. cached_tokens=0 means either the
+   * prefix is below 1024 tokens or it varies between calls.
+   */
+  private logCacheUsage(label: string, usage: OpenAI.Completions.CompletionUsage | undefined): void {
+    if (!usage) return;
+    const cached = usage.prompt_tokens_details?.cached_tokens ?? 0;
+    const total = usage.prompt_tokens ?? 0;
+    const ratio = total > 0 ? (cached / total).toFixed(2) : '0.00';
+    this.logger.log(`[ai/${label}] prompt_tokens=${total} cached_tokens=${cached} hit_ratio=${ratio}`);
   }
 
   private async getUserModel(userId: string): Promise<{ model: string; maxTokens: number }> {
@@ -151,6 +165,8 @@ export class ChatService {
       tool_choice: 'auto',
       max_tokens: 1000,
     });
+
+    this.logCacheUsage('chat', response.usage);
 
     const choice = response.choices[0];
 
@@ -474,6 +490,8 @@ export class ChatService {
       max_tokens: 150,
     });
 
+    this.logCacheUsage('chat-confirm', confirmResponse.usage);
+
     const confirmMessage = confirmResponse.choices[0]?.message?.content || `I'd like to ${displaySummary}. Please confirm or cancel this action.`;
 
     // Save assistant message describing the action
@@ -527,6 +545,8 @@ export class ChatService {
       temperature: 0,
       max_tokens: 1000,
     });
+
+    this.logCacheUsage('chat-readaction', followUpResponse.usage);
 
     const summaryText = followUpResponse.choices[0]?.message?.content || 'Here are your results.';
     const tokensUsed = followUpResponse.usage?.total_tokens || 0;
