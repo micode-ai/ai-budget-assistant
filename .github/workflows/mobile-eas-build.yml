@@ -39,8 +39,13 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Write google-services.json
+        # Same path as the local build workflow — see comment there. The
+        # committed android/ dir means we have to write into android/app/
+        # rather than relying on Expo prebuild + app.json `googleServicesFile`.
         working-directory: apps/mobile
-        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > google-services.json
+        run: |
+          mkdir -p android/app
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
 
       - name: Determine build profile
         id: profile
