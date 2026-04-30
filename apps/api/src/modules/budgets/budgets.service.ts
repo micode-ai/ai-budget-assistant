@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
+import { CacheService } from '../../common/cache/cache.service';
 
 const CATEGORY_ALLOCATIONS_INCLUDE = {
   categoryAllocations: {
@@ -14,7 +15,13 @@ export class BudgetsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gamificationService: GamificationService,
+    private readonly cacheService: CacheService,
   ) {}
+
+  private invalidateChatCache(accountId: string): void {
+    if (!accountId) return;
+    void this.cacheService.delByPrefix(`chat:get_budget_status:${accountId}:`);
+  }
 
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
     if (!categoryId) return null;
@@ -99,6 +106,8 @@ export class BudgetsService {
       // Fire-and-forget gamification check
       this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
 
+      this.invalidateChatCache(accountId);
+
       return result;
     });
   }
@@ -179,6 +188,9 @@ export class BudgetsService {
         where: { id: budget.id },
         include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
       });
+    }).then((updated) => {
+      this.invalidateChatCache(accountId);
+      return updated;
     });
   }
 
@@ -192,6 +204,8 @@ export class BudgetsService {
         syncVersion: { increment: 1 },
       },
     });
+
+    this.invalidateChatCache(accountId);
 
     return { success: true };
   }

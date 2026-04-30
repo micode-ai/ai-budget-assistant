@@ -10,6 +10,7 @@ import { IncomesService } from '../../incomes/incomes.service';
 import { BudgetsService } from '../../budgets/budgets.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { AnalyticsService } from '../../analytics/analytics.service';
+import { CacheService } from '../../../common/cache/cache.service';
 import type { ChatActionType, ChatPendingAction, ChatActionResult } from '@budget/shared-types';
 import { sanitizeForPrompt } from '../utils/sanitize';
 
@@ -59,6 +60,7 @@ export class ChatService {
     private readonly budgetsService: BudgetsService,
     private readonly categoriesService: CategoriesService,
     private readonly analyticsService: AnalyticsService,
+    private readonly cacheService: CacheService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -512,6 +514,18 @@ export class ChatService {
     };
   }
 
+  private buildToolCacheKey(
+    actionType: ChatActionType,
+    accountId: string,
+    args: Record<string, unknown>,
+  ): string {
+    // Sorted-key JSON so semantically equal arg objects produce the same key.
+    const sortedArgs = Object.keys(args)
+      .sort()
+      .reduce((acc, k) => { acc[k] = args[k]; return acc; }, {} as Record<string, unknown>);
+    return `chat:${actionType}:${accountId}:${JSON.stringify(sortedArgs)}`;
+  }
+
   private async handleReadAction(
     conversation: { id: string },
     actionType: ChatActionType,
@@ -522,7 +536,22 @@ export class ChatService {
     userMessage: string,
     accountId?: string,
   ) {
-    const result = await this.executeAction(actionType, args, accountId || '', '');
+    const cacheKey = accountId ? this.buildToolCacheKey(actionType, accountId, args) : null;
+    let result: ChatActionResult;
+    if (cacheKey) {
+      const cached = await this.cacheService.get<ChatActionResult>(cacheKey);
+      if (cached) {
+        this.logger.log(`[chat] cache hit ${cacheKey}`);
+        result = cached;
+      } else {
+        result = await this.executeAction(actionType, args, accountId || '', '');
+        // 10-min TTL keeps "this month" answers fresh enough; on writes we
+        // also invalidate via expensesService/budgetsService/categoriesService.
+        await this.cacheService.set(cacheKey, result, 600);
+      }
+    } else {
+      result = await this.executeAction(actionType, args, accountId || '', '');
+    }
 
     // Feed the result back to OpenAI to generate a natural language summary
     const toolResultJson = JSON.stringify(result.data || {});
