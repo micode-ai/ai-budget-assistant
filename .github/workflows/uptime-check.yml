@@ -11,14 +11,22 @@ concurrency:
 
 jobs:
   ping:
-    name: Ping production health
+    name: Ping ${{ matrix.label }}
     runs-on: ubuntu-latest
     timeout-minutes: 3
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: db
+            url: https://api.ai-budget.pl/api/v1/health
+          - label: ai
+            url: https://api.ai-budget.pl/api/v1/health/ai
     steps:
-      - name: Hit /api/v1/health
+      - name: Hit ${{ matrix.url }}
         id: probe
         env:
-          URL: ${{ vars.HEALTH_URL || 'https://api.ai-budget.pl/api/v1/health' }}
+          URL: ${{ matrix.url }}
         run: |
           set +e
           RESP_FILE=$(mktemp)
@@ -58,6 +66,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LABEL: ${{ matrix.label }}
           URL: ${{ steps.probe.outputs.url }}
           CODE: ${{ steps.probe.outputs.http_code }}
           TIME: ${{ steps.probe.outputs.time_total }}
@@ -69,8 +78,8 @@ jobs:
             echo "TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID secret missing — cannot alert" >&2
             exit 1
           fi
-          MESSAGE=$(printf '\xF0\x9F\x9A\xA8 *PROD DOWN* \xF0\x9F\x9A\xA8\n\n*URL*: `%s`\n*HTTP*: `%s`  *time*: `%ss`  *curl exit*: `%s`\n\n*Body* (first 500B):\n```\n%s\n```\n\n[GitHub run](%s)' \
-            "$URL" "$CODE" "$TIME" "$CURL_EXIT" "${BODY:-(empty)}" "$RUN_URL")
+          MESSAGE=$(printf '\xF0\x9F\x9A\xA8 *PROD %s DOWN* \xF0\x9F\x9A\xA8\n\n*URL*: `%s`\n*HTTP*: `%s`  *time*: `%ss`  *curl exit*: `%s`\n\n*Body* (first 500B):\n```\n%s\n```\n\n[GitHub run](%s)' \
+            "$(echo "$LABEL" | tr '[:lower:]' '[:upper:]')" "$URL" "$CODE" "$TIME" "$CURL_EXIT" "${BODY:-(empty)}" "$RUN_URL")
           curl -sS -X POST \
             "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d "chat_id=${TELEGRAM_CHAT_ID}" \

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { SentryExceptionFilter } from './common/filters/sentry-exception.filter';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
@@ -91,6 +93,12 @@ import { CacheModule } from './common/cache/cache.module';
     DebtsModule,
     ReferralsModule,
     HealthModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryExceptionFilter,
+    },
   ],
 })
 export class AppModule {}
