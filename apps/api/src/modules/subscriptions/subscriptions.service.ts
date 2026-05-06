@@ -71,21 +71,15 @@ export class SubscriptionsService {
   // ---- Subscription CRUD ----
 
   async getOrCreateSubscription(userId: string): Promise<SubscriptionRecord> {
-    let subscription = await this.prisma.subscription.findUnique({
+    return this.prisma.subscription.upsert({
       where: { userId },
+      create: {
+        userId,
+        tier: 'free',
+        status: 'active',
+      },
+      update: {},
     });
-
-    if (!subscription) {
-      subscription = await this.prisma.subscription.create({
-        data: {
-          userId,
-          tier: 'free',
-          status: 'active',
-        },
-      });
-    }
-
-    return subscription;
   }
 
   async getCurrent(userId: string) {
