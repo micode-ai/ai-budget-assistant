@@ -101,7 +101,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
 - **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
 - **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
-- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege (aus Telegram) zeigen eine Dokumentvorschau zum Öffnen
+- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefugte
 
 ### Aktionen bei Ausgabendetails:
 - **Bearbeiten** — die Ausgabe andern

@@ -101,7 +101,7 @@ Tap any expense to view its full details:
 - **Sync Status** — pending, synced, conflict, or error
 - **Source** — Manual Entry, Voice Input, Receipt Scan, or Imported
 - **Receipt Items** — individual items (for scanned receipts)
-- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts (from Telegram) show a document preview with tap-to-open
+- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually
 
 ### Actions on expense details:
 - **Edit** — modify the expense

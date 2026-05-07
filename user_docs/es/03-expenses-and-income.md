@@ -101,7 +101,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
 - **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
 - **Articulos del recibo** — articulos individuales (para recibos escaneados)
-- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF (de Telegram) muestran una vista previa del documento para abrir
+- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente
 
 ### Acciones en los detalles del gasto:
 - **Editar** — modificar el gasto
