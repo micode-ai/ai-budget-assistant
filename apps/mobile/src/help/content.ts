@@ -398,7 +398,7 @@ Tap any expense to view its full details:
 - **Sync Status** — pending, synced, conflict, or error
 - **Source** — Manual Entry, Voice Input, Receipt Scan, or Imported
 - **Receipt Items** — individual items (for scanned receipts)
-- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts (from Telegram) show a document preview with tap-to-open
+- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually
 
 ### Actions on expense details:
 - **Edit** — modify the expense
@@ -3456,7 +3456,7 @@ iOS, Android, Web
 - **Статус синхронизации** — ожидает, синхронизировано, конфликт или ошибка
 - **Источник** — Ручной ввод, Голосовой ввод, Сканирование чека или Импортировано
 - **Позиции чека** — отдельные позиции (для отсканированных чеков)
-- **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки (из Telegram) показываются как документ с возможностью открытия
+- **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите **Прикрепить чек** — выберите **Сфотографировать**, **Из галереи** или **Выбрать PDF**. Работает для любого расхода, в том числе добавленного вручную
 
 ### Действия с деталями расхода:
 - **Редактировать** — изменить расход
@@ -6527,7 +6527,7 @@ iOS, Android, Web
 - **Статус синхронізації** — очікує, синхронізовано, конфлікт або помилка
 - **Джерело** — Ручне введення, Голосовий ввід, Сканування чеку або Імпортовано
 - **Позиції чеку** — окремі позиції (для сканованих чеків)
-- **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки (з Telegram) показуються як документ з можливістю відкриття
+- **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки показуються як документ з можливістю відкриття. Якщо чек ще не додано, натисніть **Додати чек** — оберіть **Сфотографувати**, **З галереї** або **Обрати PDF**. Працює для будь-якої витрати, у тому числі доданої вручну
 
 ### Дії з деталями витрати:
 - **Редагувати** — змінити витрату
@@ -9571,7 +9571,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
 - **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
 - **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
-- **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF (z Telegrama) pokazują podgląd dokumentu do otwarcia
+- **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF pokazują podgląd dokumentu do otwarcia. Jeśli paragon nie jest jeszcze dołączony, dotknij **Dołącz paragon** — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, także dodanego ręcznie
 
 ### Dostepne akcje w szczegolach wydatku:
 - **Edytuj** — zmodyfikuj wydatek
@@ -12610,7 +12610,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
 - **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
 - **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
-- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege (aus Telegram) zeigen eine Dokumentvorschau zum Öffnen
+- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefugte
 
 ### Aktionen bei Ausgabendetails:
 - **Bearbeiten** — die Ausgabe andern
@@ -15647,7 +15647,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
 - **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
 - **Articulos del recibo** — articulos individuales (para recibos escaneados)
-- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF (de Telegram) muestran una vista previa del documento para abrir
+- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente
 
 ### Acciones en los detalles del gasto:
 - **Editar** — modificar el gasto
@@ -18679,7 +18679,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
 - **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
 - **Articles du recu** — articles individuels (pour les recus scannes)
-- **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF (de Telegram) affichent un aperçu du document à ouvrir
+- **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF affichent un aperçu du document à ouvrir. Si aucun reçu n'est encore joint, appuyez sur **Joindre un reçu** — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles ajoutées manuellement
 
 ### Actions sur les details de la depense :
 - **Modifier** — modifier la depense
@@ -21709,7 +21709,7 @@ iOS, Android, Web
 - **Статус сінхранізацыі** — чакае, сінхранізавана, канфлікт або памылка
 - **Крыніца** — Ручны ўвод, Галасавы ўвод, Сканаванне чэка або Імпартавана
 - **Пазіцыі чэка** — асобныя пазіцыі (для адсканаваных чэкаў)
-- **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі (з Telegram) паказваюцца як дакумент з магчымасцю адкрыцця
+- **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі паказваюцца як дакумент з магчымасцю адкрыцця. Калі чэк яшчэ не дададзены, націсніце **Дадаць чэк** — выберыце **Сфатаграфаваць**, **З галерэі** або **Выбраць PDF**. Працуе для любога выдатку, у тым ліку дададзенага ўручную
 
 ### Дзеянні з дэталямі выдатку:
 - **Рэдагаваць** — змяніць выдатак
