@@ -322,6 +322,11 @@ export default {
     deleteImage: 'Delete Image',
     replaceImage: 'Replace Image',
     confirmDeleteImage: 'Are you sure you want to delete the receipt image?',
+    attachReceipt: 'Attach Receipt',
+    attachFromCamera: 'Take Photo',
+    attachFromGallery: 'Choose from Gallery',
+    attachAsPdf: 'Choose PDF',
+    cameraPermissionDenied: 'Camera permission is required',
   },
   voice: {
     title: 'Voice Expense',

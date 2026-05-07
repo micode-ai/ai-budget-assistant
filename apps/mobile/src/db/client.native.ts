@@ -461,6 +461,13 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Add receipt_image_mime column to expenses (migration for existing DBs)
+    try {
+      expoDb.execSync(`ALTER TABLE expenses ADD COLUMN receipt_image_mime TEXT`);
+    } catch {
+      // Column already exists, ignore
+    }
+
     // Add account_id column to expenses (multi-account migration)
     try {
       expoDb.execSync(`ALTER TABLE expenses ADD COLUMN account_id TEXT NOT NULL DEFAULT ''`);

@@ -79,6 +79,10 @@ export class UpdateExpenseItemDto {
 export class SaveReceiptImageDto {
   @IsString()
   imageBase64: string;
+
+  @IsOptional()
+  @IsString()
+  mimeType?: string;
 }
 
 class CreateExpenseSplitDto {

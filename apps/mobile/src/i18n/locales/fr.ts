@@ -322,6 +322,11 @@ export default {
     deleteImage: 'Supprimer l\'image',
     replaceImage: 'Remplacer l\'image',
     confirmDeleteImage: 'Supprimer l\'image du reçu?',
+    attachReceipt: 'Joindre un reçu',
+    attachFromCamera: 'Prendre une photo',
+    attachFromGallery: 'Depuis la galerie',
+    attachAsPdf: 'Choisir un PDF',
+    cameraPermissionDenied: 'Accès à la caméra requis',
   },
   voice: {
     title: 'Dépense vocale',

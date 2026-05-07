@@ -320,6 +320,11 @@ export default {
     deleteImage: 'Выдаліць фота',
     replaceImage: 'Замяніць фота',
     confirmDeleteImage: 'Выдаліць фота чэка?',
+    attachReceipt: 'Дадаць чэк',
+    attachFromCamera: 'Сфатаграфаваць',
+    attachFromGallery: 'З галерэі',
+    attachAsPdf: 'Выбраць PDF',
+    cameraPermissionDenied: 'Патрабуецца доступ да камеры',
   },
   voice: {
     title: 'Галасавы расход',

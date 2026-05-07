@@ -228,28 +228,34 @@ export async function updateExpenseInDb(
 export async function saveReceiptImageLocally(
   expenseId: string,
   imageBase64: string,
+  mimeType?: string,
 ): Promise<void> {
   await executeSql(
-    'UPDATE expenses SET receipt_image = ?, updated_at = ?, sync_status = ? WHERE id = ?',
-    [imageBase64, Date.now(), 'pending', expenseId],
+    'UPDATE expenses SET receipt_image = ?, receipt_image_mime = ?, updated_at = ?, sync_status = ? WHERE id = ?',
+    [imageBase64, mimeType ?? 'image/jpeg', Date.now(), 'pending', expenseId],
   );
 }
 
 export async function getReceiptImageFromDb(
   expenseId: string,
-): Promise<string | null> {
-  const rows = await executeSql<{ receipt_image: string | null }>(
-    'SELECT receipt_image FROM expenses WHERE id = ?',
+): Promise<{ base64: string; mimeType: string } | null> {
+  const rows = await executeSql<{ receipt_image: string | null; receipt_image_mime: string | null }>(
+    'SELECT receipt_image, receipt_image_mime FROM expenses WHERE id = ?',
     [expenseId],
   );
-  return rows[0]?.receipt_image ?? null;
+  const row = rows[0];
+  if (!row?.receipt_image) return null;
+  return {
+    base64: row.receipt_image,
+    mimeType: row.receipt_image_mime ?? 'image/jpeg',
+  };
 }
 
 export async function deleteReceiptImageLocally(
   expenseId: string,
 ): Promise<void> {
   await executeSql(
-    'UPDATE expenses SET receipt_image = NULL, updated_at = ?, sync_status = ? WHERE id = ?',
+    'UPDATE expenses SET receipt_image = NULL, receipt_image_mime = NULL, updated_at = ?, sync_status = ? WHERE id = ?',
     [Date.now(), 'pending', expenseId],
   );
 }

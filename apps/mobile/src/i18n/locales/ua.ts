@@ -322,6 +322,11 @@ export default {
     deleteImage: 'Видалити фото',
     replaceImage: 'Замінити фото',
     confirmDeleteImage: 'Видалити фото чеку?',
+    attachReceipt: 'Додати чек',
+    attachFromCamera: 'Сфотографувати',
+    attachFromGallery: 'З галереї',
+    attachAsPdf: 'Обрати PDF',
+    cameraPermissionDenied: 'Потрібен доступ до камери',
   },
   voice: {
     title: 'Голосова витрата',
