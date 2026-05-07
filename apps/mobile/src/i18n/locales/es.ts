@@ -610,6 +610,10 @@ export default {
     thisYear: 'Este año',
     noExchanges: 'Sin cambios',
     noExchangesHint: 'Los cambios de moneda que coincidan con los filtros seleccionados aparecerán aquí.',
+    notFound: 'Cambio no encontrado',
+    deleteTitle: 'Eliminar cambio',
+    deleteConfirm: '¿Está seguro de que desea eliminar este cambio?',
+    editTitle: 'Detalles del cambio',
   },
   converter: {
     title: 'Convertidor de divisas',

@@ -610,6 +610,10 @@ export default {
     thisYear: 'Dieses Jahr',
     noExchanges: 'Keine Umtausche',
     noExchangesHint: 'Währungsumtausche, die den ausgewählten Filtern entsprechen, werden hier angezeigt.',
+    notFound: 'Umtausch nicht gefunden',
+    deleteTitle: 'Umtausch löschen',
+    deleteConfirm: 'Möchten Sie diesen Umtausch wirklich löschen?',
+    editTitle: 'Umtausch-Details',
   },
   converter: {
     title: 'Währungsrechner',

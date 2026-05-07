@@ -80,6 +80,56 @@ export async function insertExchange(exchange: CurrencyExchange): Promise<void> 
   );
 }
 
+export async function updateExchangeInDb(
+  id: string,
+  updates: Partial<CurrencyExchange>,
+  updatedAt: Date,
+  syncStatus: SyncStatus,
+): Promise<void> {
+  const fields: string[] = [];
+  const values: any[] = [];
+
+  if (updates.fromCurrency !== undefined) {
+    fields.push('from_currency = ?');
+    values.push(updates.fromCurrency);
+  }
+  if (updates.toCurrency !== undefined) {
+    fields.push('to_currency = ?');
+    values.push(updates.toCurrency);
+  }
+  if (updates.fromAmount !== undefined) {
+    fields.push('from_amount = ?');
+    values.push(updates.fromAmount);
+  }
+  if (updates.toAmount !== undefined) {
+    fields.push('to_amount = ?');
+    values.push(updates.toAmount);
+  }
+  if (updates.exchangeRate !== undefined) {
+    fields.push('exchange_rate = ?');
+    values.push(updates.exchangeRate);
+  }
+  if (updates.date !== undefined) {
+    fields.push('date = ?');
+    values.push(updates.date instanceof Date ? updates.date.getTime() : updates.date);
+  }
+  if (updates.notes !== undefined) {
+    fields.push('notes = ?');
+    values.push(updates.notes ?? null);
+  }
+
+  fields.push('updated_at = ?');
+  values.push(updatedAt.getTime());
+  fields.push('sync_status = ?');
+  values.push(syncStatus);
+  values.push(id);
+
+  await executeSql(
+    `UPDATE currency_exchanges SET ${fields.join(', ')} WHERE id = ?`,
+    values,
+  );
+}
+
 export async function softDeleteExchange(id: string, updatedAt: Date): Promise<void> {
   await executeSql(
     'UPDATE currency_exchanges SET is_deleted = 1, updated_at = ?, sync_status = ? WHERE id = ?',

@@ -50,7 +50,11 @@ export class CurrencyExchangeService {
 
   async findOne(accountId: string, id: string) {
     const exchange = await this.prisma.currencyExchange.findFirst({
-      where: { id, accountId, isDeleted: false },
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id }, { clientId: id }],
+      },
     });
 
     if (!exchange) {
@@ -58,6 +62,32 @@ export class CurrencyExchangeService {
     }
 
     return exchange;
+  }
+
+  async update(accountId: string, id: string, dto: any) {
+    const exchange = await this.findOne(accountId, id);
+
+    const data: any = {};
+    if (dto.fromCurrency !== undefined) data.fromCurrency = dto.fromCurrency;
+    if (dto.toCurrency !== undefined) data.toCurrency = dto.toCurrency;
+    if (dto.fromAmount !== undefined) data.fromAmount = dto.fromAmount;
+    if (dto.toAmount !== undefined) data.toAmount = dto.toAmount;
+    if (dto.exchangeRate !== undefined) data.exchangeRate = dto.exchangeRate;
+    if (dto.date !== undefined) data.date = new Date(dto.date);
+    if (dto.notes !== undefined) data.notes = dto.notes;
+    if (dto.encryptedPayload !== undefined) data.encryptedPayload = dto.encryptedPayload;
+    if (dto.encryptionKeyVersion !== undefined) data.encryptionKeyVersion = dto.encryptionKeyVersion;
+
+    const fromCurrency = data.fromCurrency ?? exchange.fromCurrency;
+    const toCurrency = data.toCurrency ?? exchange.toCurrency;
+    if (fromCurrency === toCurrency) {
+      throw new BadRequestException('Source and target currencies must be different');
+    }
+
+    return this.prisma.currencyExchange.update({
+      where: { id: exchange.id },
+      data: { ...data, syncVersion: { increment: 1 } },
+    });
   }
 
   async remove(accountId: string, id: string) {

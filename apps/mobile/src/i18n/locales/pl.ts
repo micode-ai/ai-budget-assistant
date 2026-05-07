@@ -610,6 +610,10 @@ export default {
     thisYear: 'Ten rok',
     noExchanges: 'Brak wymian',
     noExchangesHint: 'Wymiany walut pasujące do wybranych filtrów pojawią się tutaj.',
+    notFound: 'Wymiana nie znaleziona',
+    deleteTitle: 'Usuń wymianę',
+    deleteConfirm: 'Czy na pewno chcesz usunąć tę wymianę?',
+    editTitle: 'Szczegóły wymiany',
   },
   converter: {
     title: 'Przelicznik walut',

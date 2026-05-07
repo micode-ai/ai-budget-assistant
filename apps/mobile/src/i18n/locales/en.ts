@@ -610,6 +610,10 @@ export default {
     thisYear: 'This year',
     noExchanges: 'No exchanges',
     noExchangesHint: 'Currency exchanges matching the selected filters will appear here.',
+    notFound: 'Exchange not found',
+    deleteTitle: 'Delete Exchange',
+    deleteConfirm: 'Are you sure you want to delete this exchange?',
+    editTitle: 'Exchange Details',
   },
   converter: {
     title: 'Currency Converter',
