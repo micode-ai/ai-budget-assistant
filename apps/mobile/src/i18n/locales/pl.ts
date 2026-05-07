@@ -322,6 +322,11 @@ export default {
     deleteImage: 'Usuń zdjęcie',
     replaceImage: 'Zmień zdjęcie',
     confirmDeleteImage: 'Czy na pewno usunąć zdjęcie paragonu?',
+    attachReceipt: 'Dołącz paragon',
+    attachFromCamera: 'Zrób zdjęcie',
+    attachFromGallery: 'Z galerii',
+    attachAsPdf: 'Wybierz PDF',
+    cameraPermissionDenied: 'Wymagany dostęp do kamery',
   },
   voice: {
     title: 'Wydatek głosowy',

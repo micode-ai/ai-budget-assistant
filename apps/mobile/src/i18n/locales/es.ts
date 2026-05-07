@@ -322,6 +322,11 @@ export default {
     deleteImage: 'Eliminar imagen',
     replaceImage: 'Reemplazar imagen',
     confirmDeleteImage: '¿Eliminar la imagen del recibo?',
+    attachReceipt: 'Adjuntar recibo',
+    attachFromCamera: 'Tomar foto',
+    attachFromGallery: 'Desde la galería',
+    attachAsPdf: 'Elegir PDF',
+    cameraPermissionDenied: 'Se requiere acceso a la cámara',
   },
   voice: {
     title: 'Gasto por voz',

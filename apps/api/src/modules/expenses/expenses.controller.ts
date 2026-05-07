@@ -131,7 +131,7 @@ export class ExpensesController {
     @Param('id') id: string,
     @Body() dto: SaveReceiptImageDto,
   ) {
-    return this.expensesService.saveReceiptImage(req.accountId, id, dto.imageBase64);
+    return this.expensesService.saveReceiptImage(req.accountId, id, dto.imageBase64, dto.mimeType);
   }
 
   @Delete(':id/receipt-image')

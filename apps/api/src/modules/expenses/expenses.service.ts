@@ -577,22 +577,35 @@ export class ExpensesService {
     };
   }
 
-  async saveReceiptImage(accountId: string, expenseId: string, imageBase64: string) {
-    await this.findOne(accountId, expenseId);
+  async saveReceiptImage(
+    accountId: string,
+    expenseId: string,
+    imageBase64: string,
+    mimeType?: string,
+  ) {
+    const expense = await this.findOne(accountId, expenseId);
     const imageBuffer = Buffer.from(imageBase64, 'base64');
 
     await this.prisma.expense.update({
-      where: { id: expenseId },
-      data: { receiptImage: imageBuffer, syncVersion: { increment: 1 } },
+      where: { id: expense.id },
+      data: {
+        receiptImage: imageBuffer,
+        receiptMimeType: mimeType ?? 'image/jpeg',
+        syncVersion: { increment: 1 },
+      },
     });
     return { success: true };
   }
 
   async deleteReceiptImage(accountId: string, expenseId: string) {
-    await this.findOne(accountId, expenseId);
+    const expense = await this.findOne(accountId, expenseId);
     await this.prisma.expense.update({
-      where: { id: expenseId },
-      data: { receiptImage: null, syncVersion: { increment: 1 } },
+      where: { id: expense.id },
+      data: {
+        receiptImage: null,
+        receiptMimeType: null,
+        syncVersion: { increment: 1 },
+      },
     });
     return { success: true };
   }

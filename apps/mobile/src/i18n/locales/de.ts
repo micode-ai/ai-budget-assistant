@@ -322,6 +322,11 @@ export default {
     deleteImage: 'Bild löschen',
     replaceImage: 'Bild ersetzen',
     confirmDeleteImage: 'Kassenbon-Bild löschen?',
+    attachReceipt: 'Beleg anhängen',
+    attachFromCamera: 'Foto aufnehmen',
+    attachFromGallery: 'Aus Galerie',
+    attachAsPdf: 'PDF auswählen',
+    cameraPermissionDenied: 'Kamerazugriff erforderlich',
   },
   voice: {
     title: 'Sprachausgabe',

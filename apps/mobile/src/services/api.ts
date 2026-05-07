@@ -619,10 +619,10 @@ class ApiClient {
     return this.request<{ imageBase64: string; mimeType?: string }>(`/expenses/${expenseId}/receipt-image`);
   }
 
-  async saveReceiptImage(expenseId: string, imageBase64: string) {
+  async saveReceiptImage(expenseId: string, imageBase64: string, mimeType?: string) {
     return this.request<{ success: boolean }>(`/expenses/${expenseId}/receipt-image`, {
       method: 'PUT',
-      body: JSON.stringify({ imageBase64 }),
+      body: JSON.stringify({ imageBase64, mimeType }),
     });
   }
 

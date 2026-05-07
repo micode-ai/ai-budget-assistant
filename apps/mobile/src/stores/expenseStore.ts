@@ -78,7 +78,7 @@ interface ExpenseState {
 
   // Receipt Image actions
   loadReceiptImage: (expenseId: string) => Promise<{ base64: string; mimeType: string } | null>;
-  saveReceiptImage: (expenseId: string, imageBase64: string) => Promise<void>;
+  saveReceiptImage: (expenseId: string, imageBase64: string, mimeType?: string) => Promise<void>;
   deleteReceiptImage: (expenseId: string) => Promise<void>;
 
   // Sync
@@ -746,8 +746,9 @@ export const useExpenseStore = create<ExpenseState>()(
         try {
           const result = await api.getReceiptImage(expenseId);
           if (result?.imageBase64) {
-            await saveReceiptImageLocally(expenseId, result.imageBase64);
-            return { base64: result.imageBase64, mimeType: result.mimeType || 'image/jpeg' };
+            const mimeType = result.mimeType || 'image/jpeg';
+            await saveReceiptImageLocally(expenseId, result.imageBase64, mimeType);
+            return { base64: result.imageBase64, mimeType };
           }
         } catch {
           // Server fetch failed (offline) — try local
@@ -755,7 +756,7 @@ export const useExpenseStore = create<ExpenseState>()(
 
         // Fallback: local SQLite
         const local = await getReceiptImageFromDb(expenseId);
-        if (local) return { base64: local, mimeType: 'image/jpeg' };
+        if (local) return local;
 
         return null;
       } catch (e) {
@@ -764,9 +765,12 @@ export const useExpenseStore = create<ExpenseState>()(
       }
     },
 
-    saveReceiptImage: async (expenseId: string, imageBase64: string) => {
+    saveReceiptImage: async (expenseId: string, imageBase64: string, mimeType?: string) => {
       try {
-        await saveReceiptImageLocally(expenseId, imageBase64);
+        await saveReceiptImageLocally(expenseId, imageBase64, mimeType);
+        api.saveReceiptImage(expenseId, imageBase64, mimeType).catch((e) =>
+          console.error('Failed to sync receipt image to server:', e),
+        );
       } catch (e) {
         console.error('Failed to save receipt image:', e);
       }
