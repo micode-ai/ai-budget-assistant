@@ -90,6 +90,14 @@ Available filters:
 - **Currency** — filter by a specific currency pair
 - **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
 
+### Editing or Deleting an Exchange
+
+Tap any exchange in the history to open its detail screen. From there you can:
+- Tap the **pencil** icon to edit the amounts, exchange rate, or notes — then **Save**
+- Tap the **trash** icon to delete the exchange (a confirmation prompt appears)
+
+Wallet balances recalculate automatically after edits or deletions.
+
 ## Account Transfers
 
 Account transfers let you move money between different accounts — for example, from your Business account to your Personal account. This is different from a currency exchange, which converts between currencies within the same account.

@@ -126,6 +126,14 @@ Filtros disponibles:
 - **Moneda** — filtrar por un par de monedas especifico
 - **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
 
+### Editar o eliminar un cambio
+
+Toca cualquier cambio en el historial para abrir su pantalla de detalles. Desde alli puedes:
+- Tocar el icono de **lapiz** para editar los importes, la tasa o las notas — luego **Guardar**
+- Tocar el icono de **papelera** para eliminar el cambio (aparece una confirmacion)
+
+Los saldos de la billetera se recalculan automaticamente tras editar o eliminar.
+
 ## Monedas compatibles
 
 | Codigo | Moneda |

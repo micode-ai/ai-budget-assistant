@@ -90,6 +90,14 @@ Filtres disponibles :
 - **Devise** — filtrer par une paire de devises specifique
 - **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
 
+### Modifier ou supprimer un echange
+
+Appuyez sur un echange dans l'historique pour ouvrir son ecran de details. De la, vous pouvez :
+- Appuyer sur l'icone **crayon** pour modifier les montants, le taux ou les notes — puis **Enregistrer**
+- Appuyer sur l'icone **corbeille** pour supprimer l'echange (une confirmation apparait)
+
+Les soldes du portefeuille sont automatiquement recalcules apres une modification ou une suppression.
+
 ## Transferts entre comptes
 
 Transferez de l'argent entre vos differents comptes (par ex. de Entreprise a Personnel) :

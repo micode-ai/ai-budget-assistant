@@ -92,6 +92,14 @@ Verfugbare Filter:
 - **Wahrung** — nach einem bestimmten Wahrungspaar filtern
 - **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
 
+### Umtausch bearbeiten oder loschen
+
+Tippe auf einen Umtausch im Verlauf, um die Detailansicht zu offnen. Dort kannst du:
+- Auf das **Stift**-Symbol tippen, um Betrage, Wechselkurs oder Notizen zu andern — dann **Speichern**
+- Auf das **Papierkorb**-Symbol tippen, um den Umtausch zu loschen (eine Bestatigung erscheint)
+
+Die Wallet-Salden werden nach Anderungen oder Loschungen automatisch neu berechnet.
+
 ## Uberweisungen zwischen Konten
 
 Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberweisungen verschieben Geld zwischen Konten, nicht zwischen Wahrungen.

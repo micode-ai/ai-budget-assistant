@@ -1229,6 +1229,14 @@ Available filters:
 - **Currency** — filter by a specific currency pair
 - **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
 
+### Editing or Deleting an Exchange
+
+Tap any exchange in the history to open its detail screen. From there you can:
+- Tap the **pencil** icon to edit the amounts, exchange rate, or notes — then **Save**
+- Tap the **trash** icon to delete the exchange (a confirmation prompt appears)
+
+Wallet balances recalculate automatically after edits or deletions.
+
 ## Account Transfers
 
 Account transfers let you move money between different accounts — for example, from your Business account to your Personal account. This is different from a currency exchange, which converts between currencies within the same account.
@@ -4280,6 +4288,14 @@ iOS, Android, Web
 Доступные фильтры:
 - **Валюта** — фильтр по конкретной валютной паре
 - **Период** — выберите из: **За всё время**, **Этот месяц**, **Последние 3 месяца** или **Этот год**
+
+### Редактирование или удаление обмена
+
+Нажмите на любой обмен в истории, чтобы открыть экран его деталей. Оттуда можно:
+- Нажать иконку **карандаша**, чтобы изменить суммы, курс или заметки — затем **Сохранить**
+- Нажать иконку **корзины**, чтобы удалить обмен (появится запрос подтверждения)
+
+Балансы кошелька автоматически пересчитываются после изменений или удаления.
 
 ## Переводы между счетами
 
@@ -7352,6 +7368,14 @@ iOS, Android, Web
 - **Валюта** — фільтр за конкретною валютною парою
 - **Період** — оберіть з: **За весь час**, **Цей місяць**, **Останні 3 місяці** або **Цей рік**
 
+### Редагування або видалення обміну
+
+Натисніть на будь-який обмін в історії, щоб відкрити екран його деталей. Там можна:
+- Натиснути іконку **олівця**, щоб змінити суми, курс або нотатки — потім **Зберегти**
+- Натиснути іконку **кошика**, щоб видалити обмін (з'явиться запит підтвердження)
+
+Баланси гаманця перераховуються автоматично після змін або видалення.
+
 ## Перекази між рахунками
 
 Переказуйте кошти між вашими рахунками — наприклад, з Бізнес на Особистий. Перекази дозволяють переміщувати гроші між рахунками без створення витрат чи доходів.
@@ -10382,6 +10406,14 @@ Dostepne filtry:
 - **Waluta** — filtruj wedlug konkretnej pary walutowej
 - **Okres** — wybierz z: **Caly czas**, **Ten miesiac**, **Ostatnie 3 miesiace** lub **Ten rok**
 
+### Edycja lub usuwanie wymiany
+
+Dotknij dowolnej wymiany w historii, aby otworzyc ekran szczegolow. Stamtad mozesz:
+- Dotknac ikony **olowka**, aby edytowac kwoty, kurs lub notatki — nastepnie **Zapisz**
+- Dotknac ikony **kosza**, aby usunac wymiane (pojawi sie prosba o potwierdzenie)
+
+Salda portfela sa automatycznie przeliczane po edycji lub usunieciu.
+
 ## Przelewy między kontami
 
 Przelewaj pieniądze między swoimi kontami (np. z Biznesowego na Osobiste). Przelewy pozwalają przenosić środki bez tworzenia wydatków ani przychodów.
@@ -13410,6 +13442,14 @@ Der **Wechselverlauf**-Bildschirm zeigt eine vollstandige Liste aller deiner Wah
 Verfugbare Filter:
 - **Wahrung** — nach einem bestimmten Wahrungspaar filtern
 - **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
+
+### Umtausch bearbeiten oder loschen
+
+Tippe auf einen Umtausch im Verlauf, um die Detailansicht zu offnen. Dort kannst du:
+- Auf das **Stift**-Symbol tippen, um Betrage, Wechselkurs oder Notizen zu andern — dann **Speichern**
+- Auf das **Papierkorb**-Symbol tippen, um den Umtausch zu loschen (eine Bestatigung erscheint)
+
+Die Wallet-Salden werden nach Anderungen oder Loschungen automatisch neu berechnet.
 
 ## Uberweisungen zwischen Konten
 
@@ -16474,6 +16514,14 @@ Filtros disponibles:
 - **Moneda** — filtrar por un par de monedas especifico
 - **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
 
+### Editar o eliminar un cambio
+
+Toca cualquier cambio en el historial para abrir su pantalla de detalles. Desde alli puedes:
+- Tocar el icono de **lapiz** para editar los importes, la tasa o las notas — luego **Guardar**
+- Tocar el icono de **papelera** para eliminar el cambio (aparece una confirmacion)
+
+Los saldos de la billetera se recalculan automaticamente tras editar o eliminar.
+
 ## Monedas compatibles
 
 | Codigo | Moneda |
@@ -19461,6 +19509,14 @@ L'ecran **Historique des echanges** affiche la liste complete de tous vos change
 Filtres disponibles :
 - **Devise** — filtrer par une paire de devises specifique
 - **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
+
+### Modifier ou supprimer un echange
+
+Appuyez sur un echange dans l'historique pour ouvrir son ecran de details. De la, vous pouvez :
+- Appuyer sur l'icone **crayon** pour modifier les montants, le taux ou les notes — puis **Enregistrer**
+- Appuyer sur l'icone **corbeille** pour supprimer l'echange (une confirmation apparait)
+
+Les soldes du portefeuille sont automatiquement recalcules apres une modification ou une suppression.
 
 ## Transferts entre comptes
 
@@ -22485,6 +22541,14 @@ iOS, Android, Web
 Даступныя фільтры:
 - **Валюта** — фільтр па канкрэтнай валютнай пары
 - **Перыяд** — выберыце з: **За ўвесь час**, **Гэты месяц**, **Апошнія 3 месяцы** або **Гэты год**
+
+### Рэдагаванне або выдаленне абмену
+
+Націсніце на любы абмен у гісторыі, каб адкрыць экран яго дэталяў. Там можна:
+- Націснуць іконку **алоўка**, каб змяніць сумы, курс або нататкі — затым **Захаваць**
+- Націснуць іконку **кошыка**, каб выдаліць абмен (з'явіцца запыт пацверджання)
+
+Балансы кашалька аўтаматычна пералічваюцца пасля змен або выдалення.
 
 ## Пераводы паміж рахункамі
 
