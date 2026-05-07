@@ -601,6 +601,10 @@ export default {
     thisYear: 'Гэты год',
     noExchanges: 'Няма абменаў',
     noExchangesHint: 'Абмены валют, якія адпавядаюць абраным фільтрам, з\'явяцца тут.',
+    notFound: 'Абмен не знойдзены',
+    deleteTitle: 'Выдаліць абмен',
+    deleteConfirm: 'Вы ўпэўненыя, што хочаце выдаліць гэты абмен?',
+    editTitle: 'Дэталі абмену',
   },
   converter: {
     title: 'Канвертар валют',

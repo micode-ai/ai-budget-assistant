@@ -277,11 +277,18 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
-          name="wallet/exchange"
+          name="wallet/exchange/index"
           options={{
             presentation: 'modal',
             headerShown: true,
             title: t('exchange.title'),
+          }}
+        />
+        <Stack.Screen
+          name="wallet/exchange/[id]"
+          options={{
+            headerShown: true,
+            title: t('exchange.editTitle'),
           }}
         />
         <Stack.Screen

@@ -610,6 +610,10 @@ export default {
     thisYear: 'Этот год',
     noExchanges: 'Нет обменов',
     noExchangesHint: 'Обмены валют, соответствующие выбранным фильтрам, появятся здесь.',
+    notFound: 'Обмен не найден',
+    deleteTitle: 'Удалить обмен',
+    deleteConfirm: 'Вы уверены, что хотите удалить этот обмен?',
+    editTitle: 'Детали обмена',
   },
   converter: {
     title: 'Конвертер валют',

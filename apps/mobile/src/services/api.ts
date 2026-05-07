@@ -768,6 +768,13 @@ class ApiClient {
     });
   }
 
+  async updateCurrencyExchange(id: string, data: any) {
+    return this.request<any>(`/currency-exchanges/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
   async deleteCurrencyExchange(id: string) {
     return this.request<void>(`/currency-exchanges/${id}`, { method: 'DELETE' });
   }

@@ -14,6 +14,7 @@ import {
 import {
   loadAllExchanges,
   insertExchange,
+  updateExchangeInDb,
   softDeleteExchange,
 } from '@/db/currencyExchangeRepository';
 import {
@@ -51,6 +52,7 @@ interface WalletState {
     date: Date;
     notes?: string;
   }) => CurrencyExchange;
+  updateExchange: (id: string, updates: Partial<CurrencyExchange>) => void;
   deleteExchange: (id: string) => void;
   addTransfer: (data: {
     fromAccountId: string;
@@ -384,7 +386,58 @@ export const useWalletStore = create<WalletState>()(
       return newExchange;
     },
 
+    updateExchange: (id, updates) => {
+      const accountId = useAccountStore.getState().currentAccountId || '';
+      const now = new Date();
+
+      set((state) => ({
+        exchanges: state.exchanges.map((e) =>
+          e.id === id
+            ? {
+                ...e,
+                ...updates,
+                updatedAt: now,
+                syncStatus: e.syncStatus === 'synced' ? ('pending' as SyncStatus) : e.syncStatus,
+              }
+            : e,
+        ),
+      }));
+
+      const updated = get().exchanges.find((e) => e.id === id);
+      if (!updated) return;
+
+      updateExchangeInDb(id, updates, now, updated.syncStatus).catch((err) =>
+        console.error('Failed to update exchange in SQLite:', err),
+      );
+
+      const serverIdForUpdate = updated.serverId || id;
+      maybeEncrypt('currencyExchange', {
+        notes: updated.notes,
+        fromAmount: updated.fromAmount,
+        toAmount: updated.toAmount,
+        exchangeRate: updated.exchangeRate,
+      }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
+        return api.updateCurrencyExchange(serverIdForUpdate, {
+          fromCurrency: updated.fromCurrency,
+          toCurrency: updated.toCurrency,
+          fromAmount: encPayload.fromAmount ?? updated.fromAmount,
+          toAmount: encPayload.toAmount ?? updated.toAmount,
+          exchangeRate: encPayload.exchangeRate ?? updated.exchangeRate,
+          date: updated.date instanceof Date ? updated.date.toISOString() : updated.date,
+          notes: encPayload.notes ?? updated.notes,
+          encryptedPayload,
+          encryptionKeyVersion,
+        });
+      }).catch((err) =>
+        console.error('Failed to sync exchange update to server:', err),
+      );
+
+      get().computeWalletSummary().then((summary) => set({ walletSummary: summary }));
+    },
+
     deleteExchange: (id) => {
+      const exchange = get().exchanges.find((e) => e.id === id);
+
       set((state) => ({
         exchanges: state.exchanges.filter((e) => e.id !== id),
       }));
@@ -393,7 +446,8 @@ export const useWalletStore = create<WalletState>()(
         console.error('Failed to delete exchange from SQLite:', e),
       );
 
-      api.deleteCurrencyExchange(id).catch((e) =>
+      const serverIdForDelete = exchange?.serverId || id;
+      api.deleteCurrencyExchange(serverIdForDelete).catch((e) =>
         console.error('Failed to delete exchange from server:', e),
       );
 

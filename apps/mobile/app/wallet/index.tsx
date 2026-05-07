@@ -193,7 +193,7 @@ export default function WalletScreen() {
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>{t('exchange.recentExchanges')}</Text>
                 {exchanges.slice(0, 5).map((exchange) => (
-                  <TouchableOpacity key={exchange.id} style={styles.exchangeItem} activeOpacity={0.7} onPress={() => router.push('/wallet/exchanges')}>
+                  <TouchableOpacity key={exchange.id} style={styles.exchangeItem} activeOpacity={0.7} onPress={() => router.push({ pathname: '/wallet/exchange/[id]', params: { id: exchange.id } })}>
                     <View style={styles.exchangeInfo}>
                       <Text style={styles.exchangeDirection}>
                         {exchange.fromCurrency} → {exchange.toCurrency}

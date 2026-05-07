@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Body,
   Param,
@@ -41,6 +42,11 @@ export class CurrencyExchangeController {
   @Get(':id')
   async findOne(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.exchangeService.findOne(req.accountId, id);
+  }
+
+  @Patch(':id')
+  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
+    return this.exchangeService.update(req.accountId, id, dto);
   }
 
   @Delete(':id')

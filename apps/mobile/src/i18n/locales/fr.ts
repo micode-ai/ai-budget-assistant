@@ -610,6 +610,10 @@ export default {
     thisYear: 'Cette année',
     noExchanges: 'Aucun échange',
     noExchangesHint: 'Les échanges de devises correspondant aux filtres sélectionnés apparaîtront ici.',
+    notFound: 'Échange introuvable',
+    deleteTitle: 'Supprimer l\'échange',
+    deleteConfirm: 'Êtes-vous sûr de vouloir supprimer cet échange ?',
+    editTitle: 'Détails de l\'échange',
   },
   converter: {
     title: 'Convertisseur de devises',

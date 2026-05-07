@@ -168,7 +168,11 @@ export default function ExchangeHistoryScreen() {
   );
 
   const renderExchangeItem = ({ item }: { item: CurrencyExchange }) => (
-    <View style={styles.exchangeCard}>
+    <TouchableOpacity
+      style={styles.exchangeCard}
+      activeOpacity={0.7}
+      onPress={() => router.push({ pathname: '/wallet/exchange/[id]', params: { id: item.id } })}
+    >
       <View style={styles.exchangeHeader}>
         <View style={styles.currencyPair}>
           <Text style={styles.currencyPairText}>
@@ -200,7 +204,7 @@ export default function ExchangeHistoryScreen() {
           {item.notes}
         </Text>
       ) : null}
-    </View>
+    </TouchableOpacity>
   );
 
   const ListHeaderComponent = () => (
