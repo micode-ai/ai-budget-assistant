@@ -94,6 +94,14 @@ Dostepne filtry:
 - **Waluta** — filtruj wedlug konkretnej pary walutowej
 - **Okres** — wybierz z: **Caly czas**, **Ten miesiac**, **Ostatnie 3 miesiace** lub **Ten rok**
 
+### Edycja lub usuwanie wymiany
+
+Dotknij dowolnej wymiany w historii, aby otworzyc ekran szczegolow. Stamtad mozesz:
+- Dotknac ikony **olowka**, aby edytowac kwoty, kurs lub notatki — nastepnie **Zapisz**
+- Dotknac ikony **kosza**, aby usunac wymiane (pojawi sie prosba o potwierdzenie)
+
+Salda portfela sa automatycznie przeliczane po edycji lub usunieciu.
+
 ## Przelewy między kontami
 
 Przelewaj pieniądze między swoimi kontami (np. z Biznesowego na Osobiste). Przelewy pozwalają przenosić środki bez tworzenia wydatków ani przychodów.
