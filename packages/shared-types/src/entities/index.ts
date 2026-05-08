@@ -934,3 +934,17 @@ export interface DebtSummary {
   description?: string;
   repayments: Array<{ id: string; amount: number; date: Date; description?: string }>;
 }
+
+// App version (Google Play / App Store update tracking)
+export type AppPlatform = 'ios' | 'android';
+
+export interface AppVersion {
+  id: string;
+  platform: AppPlatform;
+  latestVersion: string;
+  minSupportedVersion: string;
+  releaseNotes: Record<string, string> | null;
+  storeUrl: string;
+  publishedAt: string;
+  updatedAt: string;
+}

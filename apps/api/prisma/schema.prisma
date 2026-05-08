@@ -70,6 +70,13 @@ enum SubscriptionStatus {
   paused
 }
 
+enum AppPlatform {
+  ios
+  android
+
+  @@map("app_platform")
+}
+
 // ---- Models ----
 
 model User {
@@ -1212,4 +1219,18 @@ model TelegramLinkCode {
   @@index([code])
   @@index([userId])
   @@map("telegram_link_codes")
+}
+
+model AppVersion {
+  id                  String      @id @default(cuid())
+  platform            AppPlatform
+  latestVersion       String      @map("latest_version")
+  minSupportedVersion String      @map("min_supported_version")
+  releaseNotes        Json?       @map("release_notes")
+  storeUrl            String      @map("store_url")
+  publishedAt         DateTime    @default(now()) @map("published_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@index([platform, publishedAt(sort: Desc)])
+  @@map("app_versions")
 }
