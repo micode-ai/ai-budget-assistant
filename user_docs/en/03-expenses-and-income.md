@@ -125,6 +125,9 @@ Tap any income entry to view details:
 - **Q: What's the difference between categories and tags?**
   **A:** Each expense has one category (e.g., "Food & Dining") but can have multiple tags (e.g., #lunch, #work). Categories are used for budgets and charts; tags provide additional filtering flexibility.
 
+- **Q: Why does the Transactions tab open instantly, even with no internet?**
+  **A:** The app stores your transactions locally on your device. When you open the tab, the list is shown immediately from this local copy, and any new changes from the server are loaded in the background. If the list is empty on first launch, you'll see a brief loading spinner while the device fetches your data.
+
 ---
 
 *See also: [Voice Input & Receipt Scanning](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

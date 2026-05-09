@@ -125,6 +125,9 @@ Appuyez sur une entree de revenu pour afficher les details :
 - **Q : Quelle est la difference entre les categories et les etiquettes ?**
   **R :** Chaque depense a une categorie (par ex. "Alimentation") mais peut avoir plusieurs etiquettes (par ex. #dejeuner, #travail). Les categories sont utilisees pour les budgets et les graphiques ; les etiquettes offrent une flexibilite supplementaire de filtrage.
 
+- **Q : Pourquoi l'onglet Transactions s'ouvre-t-il instantanement, meme sans internet ?**
+  **R :** L'application stocke vos transactions localement sur votre appareil. Quand vous ouvrez l'onglet, la liste s'affiche immediatement depuis cette copie locale, et les nouveaux changements du serveur sont charges en arriere-plan. Si la liste est vide au premier lancement, un bref indicateur de chargement apparait pendant que l'appareil recupere vos donnees.
+
 ---
 
 *Voir aussi : [Saisie vocale et scan de recus](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*

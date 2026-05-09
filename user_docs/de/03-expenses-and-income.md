@@ -125,6 +125,9 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - **F: Was ist der Unterschied zwischen Kategorien und Tags?**
   **A:** Jede Ausgabe hat eine Kategorie (z.B. "Essen & Restaurants"), kann aber mehrere Tags haben (z.B. #mittagessen, #arbeit). Kategorien werden fur Budgets und Diagramme verwendet; Tags bieten zusatzliche Filtermoglichkeiten.
 
+- **F: Warum offnet sich der Tab "Transaktionen" sofort, sogar ohne Internet?**
+  **A:** Die App speichert deine Transaktionen lokal auf deinem Gerat. Wenn du den Tab offnest, wird die Liste sofort aus dieser lokalen Kopie angezeigt, und neue Anderungen vom Server werden im Hintergrund geladen. Ist die Liste beim ersten Start leer, siehst du kurz einen Ladeindikator, wahrend das Gerat deine Daten abruft.
+
 ---
 
 *Siehe auch: [Spracheingabe & Beleg scannen](./04-voice-and-receipt.md) | [Budgets](./05-budgets.md)*
