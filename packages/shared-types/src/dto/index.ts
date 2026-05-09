@@ -1,6 +1,6 @@
 // Data Transfer Objects for API communication
 
-import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory, AssetType, InvestmentTransactionType, PortfolioSummary, PortfolioPerformance, EncryptionTier, KeyWrappingMethod, PendingKeyGrant, DebtSummary } from '../entities';
+import type { Currency, ExpenseSource, BudgetPeriod, CategoryType, AccountType, AccountRole, Account, SubscriptionTier, SubscriptionStatus, DrillDownLevel, ChartConfig, AIInsightChart, SpendingStory, AssetType, InvestmentTransactionType, PortfolioSummary, PortfolioPerformance, EncryptionTier, KeyWrappingMethod, PendingKeyGrant, DebtSummary, AppPlatform } from '../entities';
 
 // Auth DTOs
 export interface RegisterDto {
@@ -1147,3 +1147,24 @@ export interface ReferralListItemDto {
   createdAt: string;
   qualifiedAt: string | null;
 }
+
+// App version DTOs
+export interface AppVersionCheckResponse {
+  latestVersion: string;
+  minSupportedVersion: string;
+  isUpdateAvailable: boolean;
+  isUpdateRequired: boolean;
+  releaseNotes: Record<string, string> | null;
+  storeUrl: string;
+}
+
+export interface CreateAppVersionDto {
+  platform: AppPlatform;
+  latestVersion: string;
+  minSupportedVersion: string;
+  releaseNotes?: Record<string, string>;
+  storeUrl: string;
+  publishedAt?: string;
+}
+
+export type UpdateAppVersionDto = Partial<CreateAppVersionDto>;

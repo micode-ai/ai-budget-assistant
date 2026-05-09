@@ -1524,4 +1524,13 @@ export default {
     friendJoined: '{{name}} приєднався за вашим кодом!',
     friendQualified: '{{name}} тепер активний! +30 AI запитів отримано.',
   },
+  update: {
+    titleAvailable: 'Доступне оновлення',
+    titleRequired: 'Потрібне оновлення',
+    bodyAvailable: 'Доступна нова версія AI Budget Assistant.',
+    bodyRequired: 'Ця версія більше не підтримується. Оновіть застосунок, щоб продовжити.',
+    actionUpdate: 'Оновити',
+    actionLater: 'Пізніше',
+    releaseNotesLabel: 'Що нового',
+  },
 } as const;

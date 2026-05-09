@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   UserPlus,
+  Smartphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +30,7 @@ export const navItems = [
   { href: "/ai-usage", label: "AI Usage", icon: BrainCircuit },
   { href: "/subscriptions", label: "Subscriptions", icon: CreditCard },
   { href: "/communications", label: "Communications", icon: MessageSquare },
+  { href: "/app-versions", label: "App Versions", icon: Smartphone },
   { href: "/referrals", label: "Referrals", icon: UserPlus },
   { href: "/audit-log", label: "Audit Log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },

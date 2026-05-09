@@ -29,6 +29,7 @@ import {
 } from '@/services/notifications';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
+import { UpdatePrompt } from '@/components/UpdatePrompt';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -581,6 +582,7 @@ function RootNavigator() {
           }}
         />
       </Stack>
+      <UpdatePrompt />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>
   );

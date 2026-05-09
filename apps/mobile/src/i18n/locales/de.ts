@@ -1523,4 +1523,13 @@ export default {
     friendJoined: '{{name}} ist mit deinem Code beigetreten!',
     friendQualified: '{{name}} ist jetzt aktiv! +30 AI-Anfragen verdient.',
   },
+  update: {
+    titleAvailable: 'Update verfügbar',
+    titleRequired: 'Update erforderlich',
+    bodyAvailable: 'Eine neue Version von AI Budget Assistant ist verfügbar.',
+    bodyRequired: 'Diese Version wird nicht mehr unterstützt. Bitte aktualisiere, um fortzufahren.',
+    actionUpdate: 'Aktualisieren',
+    actionLater: 'Später',
+    releaseNotesLabel: 'Was ist neu',
+  },
 } as const;
