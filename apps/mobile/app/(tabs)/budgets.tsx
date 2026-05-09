@@ -1,6 +1,6 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
-import { useState, useCallback } from 'react';
-import { router } from 'expo-router';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
+import { useState, useCallback, useEffect } from 'react';
+import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +15,22 @@ export default function BudgetsScreen() {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const { budgets, getBudgetProgress, loadBudgets } = useBudgetStore();
+  const budgetsLoading = useBudgetStore((s) => s.isLoading);
   const canEdit = useAccountStore((s) => s.canEdit());
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const theme = useTheme();
   const styles = useStyles(createStyles);
+
+  // Local-first hydration: store reads SQLite immediately and refreshes from API in background.
+  useEffect(() => {
+    if (currentAccountId) loadBudgets();
+  }, [currentAccountId, loadBudgets]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (currentAccountId) loadBudgets();
+    }, [currentAccountId, loadBudgets]),
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -106,26 +118,37 @@ export default function BudgetsScreen() {
     );
   };
 
-  const ListEmptyComponent = () => (
-    <View style={styles.emptyState}>
-      <Ionicons name="wallet-outline" size={64} color={theme.colors.textDisabled} />
-      <Text style={styles.emptyTitle}>{t('budgets.noBudgets')}</Text>
-      <Text style={styles.emptySubtitle}>
-        {t('budgets.createHint')}
-      </Text>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => router.push('/budget/new')}
-      >
-        <Text style={styles.addButtonText}>{t('budgets.createBudget')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const visibleBudgets = budgets.filter((b) => !b.isDeleted && b.accountId === currentAccountId);
+
+  const ListEmptyComponent = () => {
+    if (budgetsLoading && visibleBudgets.length === 0) {
+      return (
+        <View style={styles.emptyState}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      );
+    }
+    return (
+      <View style={styles.emptyState}>
+        <Ionicons name="wallet-outline" size={64} color={theme.colors.textDisabled} />
+        <Text style={styles.emptyTitle}>{t('budgets.noBudgets')}</Text>
+        <Text style={styles.emptySubtitle}>
+          {t('budgets.createHint')}
+        </Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => router.push('/budget/new')}
+        >
+          <Text style={styles.addButtonText}>{t('budgets.createBudget')}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <FlatList
-        data={budgets.filter(b => !b.isDeleted && b.accountId === currentAccountId)}
+        data={visibleBudgets}
         renderItem={renderBudgetItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}

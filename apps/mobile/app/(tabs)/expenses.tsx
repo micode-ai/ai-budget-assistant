@@ -1,6 +1,6 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,10 @@ export default function ExpensesScreen() {
   }, [tab]);
   const { loadExpenses, getFilteredExpenses, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
   const { loadIncomes, getFilteredIncomes, deleteIncome, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
+  const expensesLoading = useExpenseStore((s) => s.isLoading);
+  const incomesLoading = useIncomeStore((s) => s.isLoading);
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const expenses = getFilteredExpenses();
   const incomes = getFilteredIncomes();
   const allCategories = useCategoryStore((s) => s.categories);
@@ -54,6 +57,25 @@ export default function ExpensesScreen() {
     currencyCode?: string;
   } | null>(null);
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
+
+  // Hydrate from SQLite on mount/account-switch; stores set isLoading=false after
+  // local read and continue API sync in the background (see expenseStore.loadExpenses).
+  useEffect(() => {
+    if (currentAccountId) {
+      loadExpenses();
+      loadIncomes();
+    }
+  }, [currentAccountId, loadExpenses, loadIncomes]);
+
+  // Refresh when tab regains focus (cheap: SQLite read first, API in background).
+  useFocusEffect(
+    useCallback(() => {
+      if (currentAccountId) {
+        loadExpenses();
+        loadIncomes();
+      }
+    }, [currentAccountId, loadExpenses, loadIncomes]),
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -206,37 +228,49 @@ export default function ExpensesScreen() {
     </TouchableOpacity>
   );
 
-  const ExpenseEmptyComponent = () => (
+  const LoadingState = () => (
     <View style={styles.emptyState}>
-      <Ionicons name="receipt-outline" size={64} color={theme.colors.textDisabled} />
-      <Text style={styles.emptyTitle}>{t('expenses.noExpenses')}</Text>
-      <Text style={styles.emptySubtitle}>
-        {t('expenses.addFirst')}
-      </Text>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => router.push('/expense/new')}
-      >
-        <Text style={styles.addButtonText}>{t('expenses.addExpense')}</Text>
-      </TouchableOpacity>
+      <ActivityIndicator size="large" color={theme.colors.primary} />
     </View>
   );
 
-  const IncomeEmptyComponent = () => (
-    <View style={styles.emptyState}>
-      <Ionicons name="trending-up-outline" size={64} color={theme.colors.textDisabled} />
-      <Text style={styles.emptyTitle}>{t('incomes.noIncomes')}</Text>
-      <Text style={styles.emptySubtitle}>
-        {t('incomes.addFirst')}
-      </Text>
-      <TouchableOpacity
-        style={[styles.addButton, { backgroundColor: theme.colors.success }]}
-        onPress={() => router.push('/income/new')}
-      >
-        <Text style={styles.addButtonText}>{t('incomes.addIncome')}</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const ExpenseEmptyComponent = () => {
+    if (expensesLoading && expenses.length === 0) return <LoadingState />;
+    return (
+      <View style={styles.emptyState}>
+        <Ionicons name="receipt-outline" size={64} color={theme.colors.textDisabled} />
+        <Text style={styles.emptyTitle}>{t('expenses.noExpenses')}</Text>
+        <Text style={styles.emptySubtitle}>
+          {t('expenses.addFirst')}
+        </Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => router.push('/expense/new')}
+        >
+          <Text style={styles.addButtonText}>{t('expenses.addExpense')}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const IncomeEmptyComponent = () => {
+    if (incomesLoading && incomes.length === 0) return <LoadingState />;
+    return (
+      <View style={styles.emptyState}>
+        <Ionicons name="trending-up-outline" size={64} color={theme.colors.textDisabled} />
+        <Text style={styles.emptyTitle}>{t('incomes.noIncomes')}</Text>
+        <Text style={styles.emptySubtitle}>
+          {t('incomes.addFirst')}
+        </Text>
+        <TouchableOpacity
+          style={[styles.addButton, { backgroundColor: theme.colors.success }]}
+          onPress={() => router.push('/income/new')}
+        >
+          <Text style={styles.addButtonText}>{t('incomes.addIncome')}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>

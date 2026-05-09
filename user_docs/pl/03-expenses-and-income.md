@@ -125,6 +125,9 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - **P: Jaka jest roznica miedzy kategoriami a tagami?**
   **O:** Kazdy wydatek ma jedna kategorie (np. "Jedzenie i restauracje"), ale moze miec wiele tagow (np. #obiad, #praca). Kategorie sa uzywane do budzetow i wykresow; tagi zapewniaja dodatkowa elastycznosc filtrowania.
 
+- **P: Dlaczego zakladka Transakcje otwiera sie natychmiast, nawet bez internetu?**
+  **O:** Aplikacja przechowuje Twoje transakcje lokalnie na urzadzeniu. Po otwarciu zakladki lista jest natychmiast wyswietlana z tej lokalnej kopii, a nowe zmiany z serwera sa wczytywane w tle. Jesli lista jest pusta przy pierwszym uruchomieniu, zobaczysz krotki wskaznik ladowania, podczas gdy urzadzenie pobiera Twoje dane.
+
 ---
 
 *Zobacz takze: [Wprowadzanie glosowe i skanowanie paragonow](./04-voice-and-receipt.md) | [Budzety](./05-budgets.md)*
