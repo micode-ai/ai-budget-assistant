@@ -125,6 +125,9 @@ Toca cualquier entrada de ingreso para ver los detalles:
 - **P: Cual es la diferencia entre categorias y etiquetas?**
   **R:** Cada gasto tiene una categoria (por ejemplo, "Comida y Restaurantes") pero puede tener multiples etiquetas (por ejemplo, #almuerzo, #trabajo). Las categorias se usan para presupuestos y graficos; las etiquetas proporcionan flexibilidad adicional para filtrar.
 
+- **P: Por que la pestana de Transacciones se abre al instante, incluso sin internet?**
+  **R:** La aplicacion guarda tus transacciones localmente en tu dispositivo. Al abrir la pestana, la lista se muestra de inmediato desde esa copia local, y los cambios nuevos del servidor se cargan en segundo plano. Si la lista esta vacia en el primer inicio, veras brevemente un indicador de carga mientras el dispositivo obtiene tus datos.
+
 ---
 
 *Ver tambien: [Entrada de voz y Escaneo de recibos](./04-voice-and-receipt.md) | [Presupuestos](./05-budgets.md)*
