@@ -1429,4 +1429,13 @@ export default {
     friendJoined: '{{name}} далучыўся па вашаму коду!',
     friendQualified: '{{name}} цяпер актыўны! +30 AI запытаў атрымана.',
   },
+  update: {
+    titleAvailable: 'Даступнае абнаўленне',
+    titleRequired: 'Патрабуецца абнаўленне',
+    bodyAvailable: 'Даступная новая версія AI Budget Assistant.',
+    bodyRequired: 'Гэтая версія больш не падтрымліваецца. Абнавіце прыкладанне, каб працягнуць.',
+    actionUpdate: 'Абнавіць',
+    actionLater: 'Пазней',
+    releaseNotesLabel: 'Што новага',
+  },
 } as const;

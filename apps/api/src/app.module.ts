@@ -13,6 +13,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { SyncModule } from './modules/sync/sync.module';
 import { AiModule } from './modules/ai/ai.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { AppVersionsModule } from './modules/app-versions/app-versions.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { CurrencyExchangeModule } from './modules/currency-exchange/currency-exchange.module';
 import { DatabaseModule } from './database/database.module';
@@ -77,6 +78,7 @@ import { CacheModule } from './common/cache/cache.module';
     SyncModule,
     AiModule,
     AnalyticsModule,
+    AppVersionsModule,
     WalletModule,
     CurrencyExchangeModule,
     InsightsModule,
