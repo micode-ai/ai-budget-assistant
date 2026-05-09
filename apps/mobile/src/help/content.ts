@@ -422,6 +422,9 @@ Tap any income entry to view details:
 - **Q: What's the difference between categories and tags?**
   **A:** Each expense has one category (e.g., "Food & Dining") but can have multiple tags (e.g., #lunch, #work). Categories are used for budgets and charts; tags provide additional filtering flexibility.
 
+- **Q: Why does the Transactions tab open instantly, even with no internet?**
+  **A:** The app stores your transactions locally on your device. When you open the tab, the list is shown immediately from this local copy, and any new changes from the server are loaded in the background. If the list is empty on first launch, you'll see a brief loading spinner while the device fetches your data.
+
 ---
 
 *See also: Voice Input & Receipt Scanning | Budgets*
@@ -3479,6 +3482,9 @@ iOS, Android, Web
 
 - **В: В чём разница между категориями и тегами?**
   **О:** Каждый расход имеет одну категорию (например, «Еда и рестораны»), но может иметь несколько тегов (например, #обед, #работа). Категории используются для бюджетов и графиков; теги обеспечивают дополнительную гибкость фильтрации.
+
+- **В: Почему вкладка «Транзакции» открывается мгновенно, даже без интернета?**
+  **О:** Приложение хранит ваши транзакции локально на устройстве. При открытии вкладки список сразу показывается из локальной копии, а новые изменения с сервера подгружаются в фоне. Если список пуст при первом запуске, вы увидите короткий индикатор загрузки, пока устройство получает данные.
 
 ---
 
@@ -6551,6 +6557,9 @@ iOS, Android, Web
 - **П:** Яка різниця між категоріями та тегами?
   **В:** Кожна витрата має одну категорію (наприклад, "Їжа та ресторани"), але може мати кілька тегів (наприклад, #обід, #робота). Категорії використовуються для бюджетів та графіків; теги надають додаткову гнучкість фільтрації.
 
+- **П:** Чому вкладка «Транзакції» відкривається миттєво навіть без інтернету?
+  **В:** Програма зберігає ваші транзакції локально на пристрої. Коли ви відкриваєте вкладку, список одразу показується з локальної копії, а нові зміни з сервера підвантажуються у фоні. Якщо список порожній при першому запуску, ви побачите короткий індикатор завантаження, поки пристрій отримує дані.
+
 ---
 
 *Див. також: Голосовий ввід та сканування чеків | Бюджети*
@@ -9595,6 +9604,9 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - **P: Jaka jest roznica miedzy kategoriami a tagami?**
   **O:** Kazdy wydatek ma jedna kategorie (np. "Jedzenie i restauracje"), ale moze miec wiele tagow (np. #obiad, #praca). Kategorie sa uzywane do budzetow i wykresow; tagi zapewniaja dodatkowa elastycznosc filtrowania.
 
+- **P: Dlaczego zakladka Transakcje otwiera sie natychmiast, nawet bez internetu?**
+  **O:** Aplikacja przechowuje Twoje transakcje lokalnie na urzadzeniu. Po otwarciu zakladki lista jest natychmiast wyswietlana z tej lokalnej kopii, a nowe zmiany z serwera sa wczytywane w tle. Jesli lista jest pusta przy pierwszym uruchomieniu, zobaczysz krotki wskaznik ladowania, podczas gdy urzadzenie pobiera Twoje dane.
+
 ---
 
 *Zobacz takze: Wprowadzanie glosowe i skanowanie paragonow | Budzety*
@@ -12634,6 +12646,9 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - **F: Was ist der Unterschied zwischen Kategorien und Tags?**
   **A:** Jede Ausgabe hat eine Kategorie (z.B. "Essen & Restaurants"), kann aber mehrere Tags haben (z.B. #mittagessen, #arbeit). Kategorien werden fur Budgets und Diagramme verwendet; Tags bieten zusatzliche Filtermoglichkeiten.
 
+- **F: Warum offnet sich der Tab "Transaktionen" sofort, sogar ohne Internet?**
+  **A:** Die App speichert deine Transaktionen lokal auf deinem Gerat. Wenn du den Tab offnest, wird die Liste sofort aus dieser lokalen Kopie angezeigt, und neue Anderungen vom Server werden im Hintergrund geladen. Ist die Liste beim ersten Start leer, siehst du kurz einen Ladeindikator, wahrend das Gerat deine Daten abruft.
+
 ---
 
 *Siehe auch: Spracheingabe & Beleg scannen | Budgets*
@@ -15671,6 +15686,9 @@ Toca cualquier entrada de ingreso para ver los detalles:
 - **P: Cual es la diferencia entre categorias y etiquetas?**
   **R:** Cada gasto tiene una categoria (por ejemplo, "Comida y Restaurantes") pero puede tener multiples etiquetas (por ejemplo, #almuerzo, #trabajo). Las categorias se usan para presupuestos y graficos; las etiquetas proporcionan flexibilidad adicional para filtrar.
 
+- **P: Por que la pestana de Transacciones se abre al instante, incluso sin internet?**
+  **R:** La aplicacion guarda tus transacciones localmente en tu dispositivo. Al abrir la pestana, la lista se muestra de inmediato desde esa copia local, y los cambios nuevos del servidor se cargan en segundo plano. Si la lista esta vacia en el primer inicio, veras brevemente un indicador de carga mientras el dispositivo obtiene tus datos.
+
 ---
 
 *Ver tambien: Entrada de voz y Escaneo de recibos | Presupuestos*
@@ -18703,6 +18721,9 @@ Appuyez sur une entree de revenu pour afficher les details :
 - **Q : Quelle est la difference entre les categories et les etiquettes ?**
   **R :** Chaque depense a une categorie (par ex. "Alimentation") mais peut avoir plusieurs etiquettes (par ex. #dejeuner, #travail). Les categories sont utilisees pour les budgets et les graphiques ; les etiquettes offrent une flexibilite supplementaire de filtrage.
 
+- **Q : Pourquoi l'onglet Transactions s'ouvre-t-il instantanement, meme sans internet ?**
+  **R :** L'application stocke vos transactions localement sur votre appareil. Quand vous ouvrez l'onglet, la liste s'affiche immediatement depuis cette copie locale, et les nouveaux changements du serveur sont charges en arriere-plan. Si la liste est vide au premier lancement, un bref indicateur de chargement apparait pendant que l'appareil recupere vos donnees.
+
 ---
 
 *Voir aussi : Saisie vocale et scan de recus | Budgets*
@@ -21732,6 +21753,9 @@ iOS, Android, Web
 
 - **П: У чым розніца паміж катэгорыямі і тэгамі?**
   **А:** Кожны выдатак мае адну катэгорыю (напрыклад, «Ежа і рэстараны»), але можа мець некалькі тэгаў (напрыклад, #абед, #праца). Катэгорыі выкарыстоўваюцца для бюджэтаў і графікаў; тэгі забяспечваюць дадатковую гнуткасць фільтрацыі.
+
+- **П: Чаму ўкладка «Транзакцыі» адкрываецца імгненна, нават без інтэрнэту?**
+  **А:** Праграма захоўвае вашы транзакцыі лакальна на прыладзе. Калі вы адкрываеце ўкладку, спіс адразу паказваецца з лакальнай копіі, а новыя змены з сервера падгружаюцца ў фоне. Калі спіс пусты пры першым запуску, вы ўбачыце кароткі індыкатар загрузкі, пакуль прылада атрымлівае даныя.
 
 ---
 
