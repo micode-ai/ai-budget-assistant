@@ -30,6 +30,7 @@ import {
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
+import { useOrientationLock } from '@/hooks/useOrientationLock';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -47,6 +48,8 @@ function RootNavigator() {
   const { isInitializing, isAuthenticated, initialize } = useAuthStore();
   const { t } = useTranslation();
   const theme = useTheme();
+
+  useOrientationLock();
 
   const [fontsLoaded] = useFonts({
     Montserrat_400Regular,

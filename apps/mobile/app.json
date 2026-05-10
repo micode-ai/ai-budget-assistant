@@ -3,7 +3,7 @@
     "name": "AI Budget Assistant",
     "slug": "ai-budget-assistant",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "scheme": "budget",
     "userInterfaceStyle": "automatic",
@@ -13,7 +13,7 @@
       "backgroundColor": "#000000"
     },
     "androidStatusBar": {
-      "backgroundColor": "#000000",
+      "translucent": true,
       "barStyle": "light-content"
     },
     "assetBundlePatterns": [
