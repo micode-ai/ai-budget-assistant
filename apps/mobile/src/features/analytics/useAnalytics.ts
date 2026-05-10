@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { InteractionManager } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useBudgetStore } from '@/stores/budgetStore';
@@ -491,16 +492,18 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
   const [itemBreakdown, setItemBreakdown] = useState<ItemBreakdown[]>([]);
 
   useEffect(() => {
+    let cancelled = false;
     const computeItemBreakdown = async () => {
       const ocrExpenses = filteredExpenses.filter((e) => e.source === 'ocr');
       if (ocrExpenses.length === 0) {
-        setItemBreakdown([]);
+        if (!cancelled) setItemBreakdown([]);
         return;
       }
 
       const itemMap = new Map<string, { totalSpent: number; count: number }>();
 
       for (const expense of ocrExpenses) {
+        if (cancelled) return;
         try {
           const items = await loadItemsByExpenseId(expense.id);
           for (const item of items) {
@@ -517,6 +520,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         }
       }
 
+      if (cancelled) return;
       const result: ItemBreakdown[] = Array.from(itemMap.entries())
         .map(([description, data]) => ({
           description,
@@ -530,27 +534,37 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       setItemBreakdown(result);
     };
 
-    computeItemBreakdown();
+    // Defer until after the tab transition / first paint so the JS thread is
+    // free for the navigation animation. Cancellable on unmount or dep change.
+    const handle = InteractionManager.runAfterInteractions(() => {
+      if (!cancelled) computeItemBreakdown();
+    });
+    return () => {
+      cancelled = true;
+      handle.cancel();
+    };
   }, [filteredExpenses, toDisplayCurrency]);
 
   // Tag spending breakdown
   const [tagSpending, setTagSpending] = useState<TagSpending[]>([]);
 
   useEffect(() => {
+    let cancelled = false;
     const computeTagSpending = async () => {
       if (filteredExpenses.length === 0) {
-        setTagSpending([]);
+        if (!cancelled) setTagSpending([]);
         return;
       }
 
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) {
-        setTagSpending([]);
+        if (!cancelled) setTagSpending([]);
         return;
       }
 
       try {
         const mappings = await getAllExpenseTagMappings(accountId);
+        if (cancelled) return;
         const expenseIds = new Set(filteredExpenses.map(e => e.id));
         const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, getAmount(e)]));
 
@@ -564,7 +578,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
         const totalTagged = Array.from(tagAmountMap.values()).reduce((s, a) => s + a, 0);
         if (totalTagged === 0) {
-          setTagSpending([]);
+          if (!cancelled) setTagSpending([]);
           return;
         }
 
@@ -582,33 +596,41 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
           colorIndex++;
         }
 
-        setTagSpending(result.sort((a, b) => b.amount - a.amount));
+        if (!cancelled) setTagSpending(result.sort((a, b) => b.amount - a.amount));
       } catch {
-        setTagSpending([]);
+        if (!cancelled) setTagSpending([]);
       }
     };
 
-    computeTagSpending();
+    const handle = InteractionManager.runAfterInteractions(() => {
+      if (!cancelled) computeTagSpending();
+    });
+    return () => {
+      cancelled = true;
+      handle.cancel();
+    };
   }, [filteredExpenses, tags, getAmount]);
 
   // Project spending breakdown
   const [projectSpending, setProjectSpending] = useState<ProjectSpending[]>([]);
 
   useEffect(() => {
+    let cancelled = false;
     const computeProjectSpending = async () => {
       if (filteredExpenses.length === 0) {
-        setProjectSpending([]);
+        if (!cancelled) setProjectSpending([]);
         return;
       }
 
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) {
-        setProjectSpending([]);
+        if (!cancelled) setProjectSpending([]);
         return;
       }
 
       try {
         const mappings = await getAllProjectExpenseMappings(accountId);
+        if (cancelled) return;
         const expenseIds = new Set(filteredExpenses.map(e => e.id));
         const expenseAmountMap = new Map(filteredExpenses.map(e => [e.id, getAmount(e)]));
 
@@ -622,7 +644,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
         const totalProjected = Array.from(projectAmountMap.values()).reduce((s, a) => s + a, 0);
         if (totalProjected === 0) {
-          setProjectSpending([]);
+          if (!cancelled) setProjectSpending([]);
           return;
         }
 
@@ -641,13 +663,19 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
           colorIndex++;
         }
 
-        setProjectSpending(result.sort((a, b) => b.amount - a.amount));
+        if (!cancelled) setProjectSpending(result.sort((a, b) => b.amount - a.amount));
       } catch {
-        setProjectSpending([]);
+        if (!cancelled) setProjectSpending([]);
       }
     };
 
-    computeProjectSpending();
+    const handle = InteractionManager.runAfterInteractions(() => {
+      if (!cancelled) computeProjectSpending();
+    });
+    return () => {
+      cancelled = true;
+      handle.cancel();
+    };
   }, [filteredExpenses, projects, getAmount]);
 
   return {

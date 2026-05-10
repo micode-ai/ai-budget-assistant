@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, InteractionManager } from 'react-native';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -59,12 +59,16 @@ export default function AnalyticsScreen() {
 
   // Make sure expenses/incomes are hydrated even if the user lands on Analytics
   // first. Stores are local-first (SQLite immediately, API in background).
+  // Deferred via InteractionManager so the on-focus reload runs after the
+  // tab-switch animation completes.
   useFocusEffect(
     useCallback(() => {
-      if (currentAccountId) {
+      if (!currentAccountId) return;
+      const handle = InteractionManager.runAfterInteractions(() => {
         loadExpenses();
         loadIncomes();
-      }
+      });
+      return () => handle.cancel();
     }, [currentAccountId, loadExpenses, loadIncomes]),
   );
 
