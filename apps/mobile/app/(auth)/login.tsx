@@ -203,6 +203,15 @@ export default function LoginScreen() {
           </View>
         </View>
       </KeyboardAvoidingView>
+      {isLoading && (
+        <View style={styles.loadingOverlay} pointerEvents="auto">
+          <View style={styles.loadingCard}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+            <Text style={styles.loadingText}>{t('auth.signingIn')}</Text>
+            <Text style={styles.loadingSubtext}>{t('auth.loadingData')}</Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -318,5 +327,42 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     fontWeight: '600' as const,
     color: theme.colors.primary,
+  },
+  loadingOverlay: {
+    ...(Platform.OS === 'web'
+      ? { position: 'fixed' as any }
+      : { position: 'absolute' as const }),
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: theme.colors.background + 'E6',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    zIndex: 10,
+  },
+  loadingCard: {
+    backgroundColor: theme.colors.surface,
+    paddingVertical: theme.spacing[6],
+    paddingHorizontal: theme.spacing[8],
+    borderRadius: theme.borderRadius.xl,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    minWidth: 220,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  loadingText: {
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
+    textAlign: 'center' as const,
+  },
+  loadingSubtext: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
   },
 });

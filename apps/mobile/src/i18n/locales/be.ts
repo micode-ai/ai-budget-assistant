@@ -93,6 +93,8 @@ export default {
     verify: 'Пацвердзіць',
     verificationSuccess: 'Пошта паспяхова пацверджана!',
     enterVerificationCode: 'Увядзіце 6-значны код, адпраўлены на {{email}}',
+    signingIn: 'Уваход...',
+    loadingData: 'Загрузка вашых даных...',
   },
   dashboard: {
     hello: 'Прывітанне, {{name}}!',
