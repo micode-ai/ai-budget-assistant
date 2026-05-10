@@ -139,7 +139,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             user,
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            isLoading: false,
             hasSavedSession: false,
           });
 
@@ -176,8 +175,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           ]);
 
           // Mark as authenticated only after all data is ready so the
-          // dashboard mounts with data already in the stores
-          set({ isAuthenticated: user.isVerified });
+          // dashboard mounts with data already in the stores. Keep isLoading
+          // true through the entire flow so the login UI keeps showing the
+          // loader until navigation actually happens.
+          set({ isAuthenticated: user.isVerified, isLoading: false });
         } catch (error) {
           // Network error — try offline login with cached session
           const isNetworkError = error instanceof TypeError
@@ -197,8 +198,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                   user: cachedUser,
                   accessToken: cachedToken,
                   refreshToken: await secureStorage.getItem('refreshToken'),
-                  isLoading: false,
-                  isAuthenticated: true,
                   hasSavedSession: false,
                 });
                 await useAccountStore.getState().loadAccounts();
@@ -210,6 +209,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                   useWalletStore.getState().loadWallet(),
                   useBudgetStore.getState().loadBudgets(),
                 ]);
+                set({ isAuthenticated: true, isLoading: false });
                 return;
               }
             }
@@ -252,7 +252,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             user,
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            isLoading: false,
             hasSavedSession: false,
           });
 
@@ -279,8 +278,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           ]);
 
           // Mark as authenticated only after all data is ready so the
-          // dashboard mounts with data already in the stores
-          set({ isAuthenticated: user.isVerified });
+          // dashboard mounts with data already in the stores. Keep isLoading
+          // true through the entire flow so the registration UI keeps
+          // showing the loader until navigation actually happens.
+          set({ isAuthenticated: user.isVerified, isLoading: false });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
@@ -291,6 +292,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       },
 
       biometricLogin: async () => {
+        set({ isLoading: true, error: null });
         try {
           const accessToken = await secureStorage.getItem('accessToken');
           const refreshToken = await secureStorage.getItem('refreshToken');
@@ -360,11 +362,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             useBudgetStore.getState().loadBudgets(),
           ]);
           // Mark as authenticated only after all data is ready
-          set({ isAuthenticated: true });
+          set({ isAuthenticated: true, isLoading: false });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Biometric login failed',
             hasSavedSession: false,
+            isLoading: false,
           });
           throw error;
         }

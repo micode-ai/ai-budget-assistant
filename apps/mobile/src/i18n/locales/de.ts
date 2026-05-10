@@ -95,6 +95,8 @@ export default {
     verify: 'Verifizieren',
     verificationSuccess: 'E-Mail erfolgreich verifiziert!',
     enterVerificationCode: 'Geben Sie den 6-stelligen Code ein, der an {{email}} gesendet wurde',
+    signingIn: 'Anmeldung...',
+    loadingData: 'Ihre Daten werden geladen...',
   },
   dashboard: {
     hello: 'Hallo, {{name}}!',
