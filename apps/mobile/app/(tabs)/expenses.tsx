@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator, InteractionManager } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -68,12 +68,16 @@ export default function ExpensesScreen() {
   }, [currentAccountId, loadExpenses, loadIncomes]);
 
   // Refresh when tab regains focus (cheap: SQLite read first, API in background).
+  // Deferred via InteractionManager so the heavy reload work runs after the
+  // tab-switch animation completes.
   useFocusEffect(
     useCallback(() => {
-      if (currentAccountId) {
+      if (!currentAccountId) return;
+      const handle = InteractionManager.runAfterInteractions(() => {
         loadExpenses();
         loadIncomes();
-      }
+      });
+      return () => handle.cancel();
     }, [currentAccountId, loadExpenses, loadIncomes]),
   );
 
