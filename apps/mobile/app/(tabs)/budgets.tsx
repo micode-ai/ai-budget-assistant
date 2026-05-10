@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator, InteractionManager } from 'react-native';
 import { useState, useCallback, useEffect } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,9 +26,15 @@ export default function BudgetsScreen() {
     if (currentAccountId) loadBudgets();
   }, [currentAccountId, loadBudgets]);
 
+  // Defer the on-focus refresh until after the tab transition so it doesn't
+  // block the animation frame.
   useFocusEffect(
     useCallback(() => {
-      if (currentAccountId) loadBudgets();
+      if (!currentAccountId) return;
+      const handle = InteractionManager.runAfterInteractions(() => {
+        loadBudgets();
+      });
+      return () => handle.cancel();
     }, [currentAccountId, loadBudgets]),
   );
 

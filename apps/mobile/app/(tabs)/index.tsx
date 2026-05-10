@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image } from 'react-native';
-import { useState, useCallback, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, InteractionManager } from 'react-native';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -55,11 +55,17 @@ export default function DashboardScreen() {
 
   const currency = user?.currencyCode || 'USD';
 
-  const convertedLentTotal = lentDebts.reduce(
-    (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
+  const convertedLentTotal = useMemo(
+    () => lentDebts.reduce(
+      (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
+    ),
+    [lentDebts, currency, rates],
   );
-  const convertedBorrowedTotal = borrowedDebts.reduce(
-    (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
+  const convertedBorrowedTotal = useMemo(
+    () => borrowedDebts.reduce(
+      (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
+    ),
+    [borrowedDebts, currency, rates],
   );
 
   useEffect(() => {
@@ -72,11 +78,15 @@ export default function DashboardScreen() {
     }
   }, [currentAccountId, loadExpenses, loadIncomes, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
+  // Defer the on-focus refresh until after the tab transition finishes so it
+  // doesn't block the animation frame.
   useFocusEffect(
     useCallback(() => {
-      if (currentAccountId) {
+      if (!currentAccountId) return;
+      const handle = InteractionManager.runAfterInteractions(() => {
         Promise.all([loadExpenses(), loadIncomes()]).then(() => loadDebts());
-      }
+      });
+      return () => handle.cancel();
     }, [currentAccountId, loadExpenses, loadIncomes, loadDebts]),
   );
 
