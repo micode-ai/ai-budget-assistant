@@ -95,6 +95,8 @@ export default {
     verify: 'Подтвердить',
     verificationSuccess: 'Почта успешно подтверждена!',
     enterVerificationCode: 'Введите 6-значный код, отправленный на {{email}}',
+    signingIn: 'Вход...',
+    loadingData: 'Загрузка ваших данных...',
   },
   dashboard: {
     hello: 'Привет, {{name}}!',

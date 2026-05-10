@@ -95,6 +95,8 @@ export default {
     verify: 'Verificar',
     verificationSuccess: '¡Correo verificado con éxito!',
     enterVerificationCode: 'Ingresa el código de 6 dígitos enviado a {{email}}',
+    signingIn: 'Iniciando sesión...',
+    loadingData: 'Cargando tus datos...',
   },
   dashboard: {
     hello: '¡Hola, {{name}}!',
