@@ -136,7 +136,7 @@ export default function TransferScreen() {
   const otherAccounts = accounts.filter((a) => a.id !== fromAccountId);
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen
         options={{
           headerRight: () => (
