@@ -24,8 +24,8 @@ export function useAppVersionCheck(): State {
   useEffect(() => {
     if (Platform.OS === 'web') return;
 
-    async function run() {
-      if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
+    async function run(opts?: { force?: boolean }) {
+      if (!opts?.force && cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
         setState(cached.state);
         return;
       }
@@ -54,7 +54,7 @@ export function useAppVersionCheck(): State {
 
     run();
     const sub = AppState.addEventListener('change', (s: AppStateStatus) => {
-      if (s === 'active') run();
+      if (s === 'active') run({ force: true });
     });
     return () => {
       sub.remove();
