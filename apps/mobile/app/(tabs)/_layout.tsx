@@ -29,10 +29,6 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // Freeze inactive tabs so unrelated store updates don't re-render
-        // background screens — keeps the tab-switch animation on the UI thread.
-        freezeOnBlur: true,
-        lazy: true,
         tabBarActiveTintColor: theme.colors.tabBarActive,
         tabBarInactiveTintColor: theme.colors.tabBarInactive,
         tabBarStyle: {

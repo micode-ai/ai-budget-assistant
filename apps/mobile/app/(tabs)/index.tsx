@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, InteractionManager } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image } from 'react-native';
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -77,18 +77,6 @@ export default function DashboardScreen() {
       }
     }
   }, [currentAccountId, loadExpenses, loadIncomes, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
-
-  // Defer the on-focus refresh until after the tab transition finishes so it
-  // doesn't block the animation frame.
-  useFocusEffect(
-    useCallback(() => {
-      if (!currentAccountId) return;
-      const handle = InteractionManager.runAfterInteractions(() => {
-        Promise.all([loadExpenses(), loadIncomes()]).then(() => loadDebts());
-      });
-      return () => handle.cancel();
-    }, [currentAccountId, loadExpenses, loadIncomes, loadDebts]),
-  );
 
   const monthlyBudgetSummary = getMonthlyBudgetSummary();
   const totalBudget = monthlyBudgetSummary.totalAmount;
