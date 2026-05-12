@@ -395,6 +395,7 @@ Tap any expense to view its full details:
 - **Date** of the expense
 - **Category** with color indicator
 - **Notes** (if added)
+- **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
 - **Source** — Manual Entry, Voice Input, Receipt Scan, or Imported
 - **Receipt Items** — individual items (for scanned receipts)
@@ -409,6 +410,7 @@ Tap any expense to view its full details:
 
 Tap any income entry to view details:
 - Description, date, category, notes
+- **Added by** — in shared accounts, shows who created this income entry
 - Edit or delete options
 
 ## FAQ
@@ -1341,7 +1343,7 @@ Settings are organized into categories. Tap any category to open its dedicated s
 
 - **Avatar** — displays your initials with a colored background
 - **Name** — your display name. Tap the pencil icon to edit
-- **Email** — your account email (display only)
+- **Email** — your account email. Tap the pencil icon to start an email change (see [Change email address](#change-email-address) below)
 - **Timezone** — tap the pencil icon to change. A searchable picker appears with 90+ timezones (e.g., "Europe/Warsaw")
 
 ### Currency
@@ -1351,6 +1353,19 @@ Select your default currency by tapping one of the currency chips:
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 The selected currency is highlighted. This sets the default currency for new expenses, income, and Dashboard displays.
+
+### Change email address
+
+To change your account email:
+
+1. Go to **Settings → Profile** and tap the pencil icon next to your current email address.
+2. On the **Change Email** screen, enter your **new email address** and your **current password**.
+3. Tap **Send verification code** — a 6-digit code is sent to the *new* address.
+4. Enter the code in the next step and tap **Confirm email change**.
+
+Your email is updated immediately and new login tokens are issued. If you close the app before entering the code, the next time you open the Change Email screen it will resume at Step 2 for up to 30 minutes.
+
+> **Note:** The verification code expires in 30 minutes. Tap **Resend code** to go back to Step 1 and request a new code.
 
 ## Appearance & Language
 
@@ -1500,7 +1515,7 @@ On the main Settings screen, tap **Log Out** at the bottom. A confirmation dialo
   **A:** The language change is instant for all interface elements. If you notice untranslated text, try restarting the app.
 
 - **Q: How do I change my email?**
-  **A:** Email changes are not supported in the app currently. Contact support for assistance.
+  **A:** Go to **Settings → Profile**, tap the pencil icon next to your email, and follow the two-step verification flow. A 6-digit code is sent to your new address to confirm the change.
 
 - **Q: What happens to my data when I log out?**
   **A:** Your data remains stored on the server. When you log back in, everything will be restored. Local data on the device may be cleared.
@@ -3456,6 +3471,7 @@ iOS, Android, Web
 - **Дата** расхода
 - **Категория** с цветовым индикатором
 - **Заметки** (если добавлены)
+- **Добавил(а)** — отображается в общих счетах; имя участника счёта, создавшего эту запись
 - **Статус синхронизации** — ожидает, синхронизировано, конфликт или ошибка
 - **Источник** — Ручной ввод, Голосовой ввод, Сканирование чека или Импортировано
 - **Позиции чека** — отдельные позиции (для отсканированных чеков)
@@ -3470,6 +3486,7 @@ iOS, Android, Web
 
 Нажмите на любую запись о доходе для просмотра деталей:
 - Описание, дата, категория, заметки
+- **Добавил(а)** — в общих счетах показывает, кто добавил этот доход
 - Возможности редактирования и удаления
 
 ## Часто задаваемые вопросы
@@ -6530,6 +6547,7 @@ iOS, Android, Web
 - **Дата** витрати
 - **Категорія** з кольоровим індикатором
 - **Нотатки** (якщо додані)
+- **Додав(ла)** — відображається у спільних рахунках; ім'я учасника рахунку, який створив цей запис
 - **Статус синхронізації** — очікує, синхронізовано, конфлікт або помилка
 - **Джерело** — Ручне введення, Голосовий ввід, Сканування чеку або Імпортовано
 - **Позиції чеку** — окремі позиції (для сканованих чеків)
@@ -6544,6 +6562,7 @@ iOS, Android, Web
 
 Натисніть будь-який запис доходу для перегляду деталей:
 - Опис, дата, категорія, нотатки
+- **Додав(ла)** — у спільних рахунках показує, хто додав цей дохід
 - Можливість редагувати або видалити
 
 ## Часті запитання
@@ -9577,6 +9596,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Data** wydatku
 - **Kategoria** ze wskaznikiem koloru
 - **Notatki** (jezeli dodano)
+- **Dodane przez** — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
 - **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
 - **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
@@ -9591,6 +9611,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 
 Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - Opis, data, kategoria, notatki
+- **Dodane przez** — w udostępnionych kontach pokazuje, kto utworzył ten wpis przychodu
 - Opcje edycji i usuwania
 
 ## FAQ
@@ -12619,6 +12640,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Datum** der Ausgabe
 - **Kategorie** mit Farbindikator
 - **Notizen** (falls hinzugefugt)
+- **Hinzugefügt von** — in geteilten Konten; zeigt den Namen des Kontomitglieds, das diesen Eintrag erstellt hat
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
 - **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
 - **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
@@ -12633,6 +12655,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 
 Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - Beschreibung, Datum, Kategorie, Notizen
+- **Hinzugefügt von** — in geteilten Konten zeigt, wer diesen Einkommensbetrag erstellt hat
 - Bearbeiten- oder Loschen-Optionen
 
 ## FAQ
@@ -15659,6 +15682,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Fecha** del gasto
 - **Categoria** con indicador de color
 - **Notas** (si se agregaron)
+- **Agregado por** — en cuentas compartidas; muestra el nombre del miembro de la cuenta que creó esta entrada
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
 - **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
 - **Articulos del recibo** — articulos individuales (para recibos escaneados)
@@ -15673,6 +15697,7 @@ Toca cualquier gasto para ver sus detalles completos:
 
 Toca cualquier entrada de ingreso para ver los detalles:
 - Descripcion, fecha, categoria, notas
+- **Agregado por** — en cuentas compartidas, muestra quién creó esta entrada de ingreso
 - Opciones de editar o eliminar
 
 ## Preguntas frecuentes
@@ -18694,6 +18719,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Date** de la depense
 - **Categorie** avec indicateur de couleur
 - **Notes** (si ajoutees)
+- **Ajouté par** — dans les comptes partagés; affiche le nom du membre du compte qui a créé cette entrée
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
 - **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
 - **Articles du recu** — articles individuels (pour les recus scannes)
@@ -18708,6 +18734,7 @@ Appuyez sur une depense pour afficher ses details complets :
 
 Appuyez sur une entree de revenu pour afficher les details :
 - Description, date, categorie, notes
+- **Ajouté par** — dans les comptes partagés, affiche qui a créé cette entrée de revenu
 - Options de modification ou de suppression
 
 ## FAQ
@@ -21727,6 +21754,7 @@ iOS, Android, Web
 - **Дата** выдатку
 - **Катэгорыя** з каляровым індыкатарам
 - **Нататкі** (калі дададзены)
+- **Дадаў(ла)** — адлюстроўваецца ў агульных рахунках; імя ўдзельніка рахунку, які стварыў гэты запіс
 - **Статус сінхранізацыі** — чакае, сінхранізавана, канфлікт або памылка
 - **Крыніца** — Ручны ўвод, Галасавы ўвод, Сканаванне чэка або Імпартавана
 - **Пазіцыі чэка** — асобныя пазіцыі (для адсканаваных чэкаў)
@@ -21741,6 +21769,7 @@ iOS, Android, Web
 
 Націсніце на любы запіс пра даход для прагляду дэталяў:
 - Апісанне, дата, катэгорыя, нататкі
+- **Дадаў(ла)** — у агульных рахунках паказвае, хто дадаў гэты даход
 - Магчымасці рэдагавання і выдалення
 
 ## Частыя пытанні

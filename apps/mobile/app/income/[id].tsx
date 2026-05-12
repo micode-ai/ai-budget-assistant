@@ -231,6 +231,13 @@ export default function IncomeDetailScreen() {
             </View>
           )}
 
+          {/* Attribution */}
+          {income.createdByUserName && (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>{t('common.addedBy', { name: income.createdByUserName })}</Text>
+            </View>
+          )}
+
           {/* Debt Info Section */}
           {income.isDebt && (
             <View style={styles.debtSection}>

@@ -666,6 +666,13 @@ export default function ExpenseDetailScreen() {
             </TouchableOpacity>
           )}
 
+          {/* Attribution */}
+          {expense.createdByUserName && (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>{t('common.addedBy', { name: expense.createdByUserName })}</Text>
+            </View>
+          )}
+
           {/* Debt Info Section */}
           {expense.isDebt && (
             <View style={styles.debtSection}>

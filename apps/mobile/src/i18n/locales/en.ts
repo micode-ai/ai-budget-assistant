@@ -22,6 +22,7 @@ export default {
     no: 'No',
     showAll: 'Show all',
     duplicate: 'Duplicate',
+    addedBy: 'Added by {{name}}',
     deleteConfirmTitle: 'Delete Transaction',
     deleteConfirmMessage: 'Are you sure? This action cannot be undone.',
   },

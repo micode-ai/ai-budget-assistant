@@ -22,6 +22,7 @@ export default {
     no: 'Non',
     showAll: 'Tout afficher',
     duplicate: 'Dupliquer',
+    addedBy: 'Ajouté par {{name}}',
     deleteConfirmTitle: 'Supprimer la transaction',
     deleteConfirmMessage: 'Êtes-vous sûr ? Cette action est irréversible.',
   },

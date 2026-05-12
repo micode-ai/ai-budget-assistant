@@ -98,6 +98,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Data** wydatku
 - **Kategoria** ze wskaznikiem koloru
 - **Notatki** (jezeli dodano)
+- **Dodane przez** — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
 - **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
 - **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
@@ -112,6 +113,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 
 Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - Opis, data, kategoria, notatki
+- **Dodane przez** — w udostępnionych kontach pokazuje, kto utworzył ten wpis przychodu
 - Opcje edycji i usuwania
 
 ## FAQ
