@@ -22,6 +22,7 @@ export default {
     no: 'No',
     showAll: 'Mostrar todo',
     duplicate: 'Duplicar',
+    addedBy: 'Agregado por {{name}}',
     deleteConfirmTitle: 'Eliminar transacción',
     deleteConfirmMessage: '¿Estás seguro? Esta acción no se puede deshacer.',
   },

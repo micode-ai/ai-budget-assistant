@@ -22,6 +22,7 @@ export default {
     no: 'Nie',
     showAll: 'Pokaż wszystko',
     duplicate: 'Duplikuj',
+    addedBy: 'Dodane przez {{name}}',
     deleteConfirmTitle: 'Usuń transakcję',
     deleteConfirmMessage: 'Czy na pewno? Tej akcji nie można cofnąć.',
   },

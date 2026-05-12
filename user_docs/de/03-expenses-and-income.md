@@ -98,6 +98,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Datum** der Ausgabe
 - **Kategorie** mit Farbindikator
 - **Notizen** (falls hinzugefugt)
+- **Hinzugefügt von** — in geteilten Konten; zeigt den Namen des Kontomitglieds, das diesen Eintrag erstellt hat
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
 - **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
 - **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
@@ -112,6 +113,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 
 Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - Beschreibung, Datum, Kategorie, Notizen
+- **Hinzugefügt von** — in geteilten Konten zeigt, wer diesen Einkommensbetrag erstellt hat
 - Bearbeiten- oder Loschen-Optionen
 
 ## FAQ

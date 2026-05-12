@@ -22,6 +22,7 @@ export default {
     no: 'Ні',
     showAll: 'Показати все',
     duplicate: 'Дублювати',
+    addedBy: 'Додав(ла) {{name}}',
     deleteConfirmTitle: 'Видалити транзакцію',
     deleteConfirmMessage: 'Ви впевнені? Цю дію не можна скасувати.',
   },

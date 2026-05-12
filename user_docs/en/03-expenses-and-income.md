@@ -98,6 +98,7 @@ Tap any expense to view its full details:
 - **Date** of the expense
 - **Category** with color indicator
 - **Notes** (if added)
+- **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
 - **Source** — Manual Entry, Voice Input, Receipt Scan, or Imported
 - **Receipt Items** — individual items (for scanned receipts)
@@ -112,6 +113,7 @@ Tap any expense to view its full details:
 
 Tap any income entry to view details:
 - Description, date, category, notes
+- **Added by** — in shared accounts, shows who created this income entry
 - Edit or delete options
 
 ## FAQ

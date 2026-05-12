@@ -226,6 +226,7 @@ export interface Expense {
   debtContactName?: string;
   debtDueDate?: Date;
   relatedDebtIncomeId?: string;
+  createdByUserName?: string | null;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -253,6 +254,7 @@ export interface Income {
   debtContactName?: string;
   debtDueDate?: Date;
   relatedDebtExpenseId?: string;
+  createdByUserName?: string | null;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;

@@ -22,6 +22,7 @@ export default {
     no: 'Nein',
     showAll: 'Alle anzeigen',
     duplicate: 'Duplizieren',
+    addedBy: 'Hinzugefügt von {{name}}',
     deleteConfirmTitle: 'Transaktion löschen',
     deleteConfirmMessage: 'Sind Sie sicher? Diese Aktion kann nicht rückgängig gemacht werden.',
   },

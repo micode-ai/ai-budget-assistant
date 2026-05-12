@@ -20,6 +20,7 @@ export default {
     clear: 'Ачысціць',
     showAll: 'Паказаць усё',
     duplicate: 'Дубліраваць',
+    addedBy: 'Дадаў(ла) {{name}}',
     deleteConfirmTitle: 'Выдаліць транзакцыю',
     deleteConfirmMessage: 'Вы ўпэўнены? Гэта дзеянне нельга адмяніць.',
   },

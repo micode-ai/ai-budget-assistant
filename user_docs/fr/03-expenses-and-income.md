@@ -98,6 +98,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Date** de la depense
 - **Categorie** avec indicateur de couleur
 - **Notes** (si ajoutees)
+- **Ajouté par** — dans les comptes partagés; affiche le nom du membre du compte qui a créé cette entrée
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
 - **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
 - **Articles du recu** — articles individuels (pour les recus scannes)
@@ -112,6 +113,7 @@ Appuyez sur une depense pour afficher ses details complets :
 
 Appuyez sur une entree de revenu pour afficher les details :
 - Description, date, categorie, notes
+- **Ajouté par** — dans les comptes partagés, affiche qui a créé cette entrée de revenu
 - Options de modification ou de suppression
 
 ## FAQ

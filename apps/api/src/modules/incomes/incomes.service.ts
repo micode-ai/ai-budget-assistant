@@ -11,6 +11,11 @@ export class IncomesService {
     private readonly gamificationService: GamificationService,
   ) {}
 
+  private toIncomeResponse(income: any) {
+    const { user, ...rest } = income;
+    return { ...rest, createdByUserName: user?.name ?? null };
+  }
+
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
     if (!categoryId) return null;
     // UUID v4 pattern — verify it exists, return null if not
@@ -143,14 +148,16 @@ export class IncomesService {
         }
       }
 
-      return tx.income.findUnique({
+      const full = await tx.income.findUnique({
         where: { id: income.id },
         include: {
           category: true,
           incomeTags: { where: { isDeleted: false }, include: { tag: true } },
           projectIncomes: { where: { isDeleted: false }, include: { project: true } },
+          user: { select: { name: true } },
         },
       });
+      return full ? this.toIncomeResponse(full) : full;
     });
 
     // Fire-and-forget gamification check
@@ -197,6 +204,7 @@ export class IncomesService {
           category: true,
           incomeTags: { where: { isDeleted: false }, include: { tag: true } },
           projectIncomes: { where: { isDeleted: false }, include: { project: true } },
+          user: { select: { name: true } },
         },
         orderBy: { date: 'desc' },
         skip,
@@ -206,7 +214,7 @@ export class IncomesService {
     ]);
 
     return {
-      data: incomes,
+      data: incomes.map(i => this.toIncomeResponse(i)),
       pagination: {
         page,
         limit,
@@ -229,6 +237,7 @@ export class IncomesService {
         category: true,
         incomeTags: { where: { isDeleted: false }, include: { tag: true } },
         projectIncomes: { where: { isDeleted: false }, include: { project: true } },
+        user: { select: { name: true } },
       },
     });
 
@@ -236,7 +245,7 @@ export class IncomesService {
       throw new NotFoundException('Income not found');
     }
 
-    return income;
+    return this.toIncomeResponse(income);
   }
 
   async update(accountId: string, id: string, dto: UpdateIncomeDto) {
@@ -319,14 +328,16 @@ export class IncomesService {
         }
       }
 
-      return tx.income.findUnique({
+      const updated = await tx.income.findUnique({
         where: { id: income.id },
         include: {
           category: true,
           incomeTags: { where: { isDeleted: false }, include: { tag: true } },
           projectIncomes: { where: { isDeleted: false }, include: { project: true } },
+          user: { select: { name: true } },
         },
       });
+      return updated ? this.toIncomeResponse(updated) : updated;
     });
   }
 

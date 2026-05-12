@@ -13,6 +13,11 @@ export class ExpensesService {
     private readonly cacheService: CacheService,
   ) {}
 
+  private toExpenseResponse(expense: any) {
+    const { user, ...rest } = expense;
+    return { ...rest, createdByUserName: user?.name ?? null };
+  }
+
   /**
    * Invalidate every chat tool result cached for this account. Touched on
    * any expense mutation since `get_expenses`, `get_budget_status`, and
@@ -235,9 +240,10 @@ export class ExpensesService {
           expenseTags: { where: { isDeleted: false }, include: { tag: true } },
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
+          user: { select: { name: true } },
         },
       });
-      return { expense: full, isNew };
+      return { expense: this.toExpenseResponse(full), isNew };
     });
 
     // Fire-and-forget gamification check
@@ -330,6 +336,7 @@ export class ExpensesService {
             where: { isDeleted: false },
             include: { project: true },
           },
+          user: { select: { name: true } },
         },
         orderBy: { date: 'desc' },
         skip,
@@ -339,7 +346,7 @@ export class ExpensesService {
     ]);
 
     return {
-      data: expenses,
+      data: expenses.map(e => this.toExpenseResponse(e)),
       pagination: {
         page,
         limit,
@@ -364,6 +371,7 @@ export class ExpensesService {
         expenseTags: { where: { isDeleted: false }, include: { tag: true } },
         categorySplits: { where: { isDeleted: false }, include: { category: true } },
         projectExpenses: { where: { isDeleted: false }, include: { project: true } },
+        user: { select: { name: true } },
       },
     });
 
@@ -371,7 +379,7 @@ export class ExpensesService {
       throw new NotFoundException('Expense not found');
     }
 
-    return expense;
+    return this.toExpenseResponse(expense);
   }
 
   async update(accountId: string, id: string, dto: UpdateExpenseDto) {
@@ -470,11 +478,12 @@ export class ExpensesService {
           expenseTags: { where: { isDeleted: false }, include: { tag: true } },
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
+          user: { select: { name: true } },
         },
       });
     }).then((updated) => {
       this.invalidateChatCache(accountId).catch(() => undefined);
-      return updated;
+      return updated ? this.toExpenseResponse(updated) : updated;
     });
   }
 
@@ -640,7 +649,7 @@ export class ExpensesService {
         })),
       });
 
-      return tx.expense.findUnique({
+      const result = await tx.expense.findUnique({
         where: { id: expenseId },
         include: {
           category: true,
@@ -648,8 +657,10 @@ export class ExpensesService {
           expenseTags: { where: { isDeleted: false }, include: { tag: true } },
           categorySplits: { where: { isDeleted: false }, include: { category: true } },
           projectExpenses: { where: { isDeleted: false }, include: { project: true } },
+          user: { select: { name: true } },
         },
       });
+      return result ? this.toExpenseResponse(result) : result;
     });
   }
 

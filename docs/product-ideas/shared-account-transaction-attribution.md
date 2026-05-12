@@ -1,10 +1,12 @@
 ---
 id: shared-account-transaction-attribution
 title: '"Who added this?" — transaction attribution in shared accounts'
-status: idea
+status: building
 priority: P2
 created_at: 2026-05-11
 jira_ticket:
+github_issue: https://github.com/micode-ai/ai-budget-assistant/issues/97
+orchestration_run: e79eafcc-a2ea-494c-8849-9e302349fdd1
 ---
 
 # "Who added this?" — transaction attribution in shared accounts

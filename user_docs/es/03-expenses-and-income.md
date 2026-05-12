@@ -98,6 +98,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Fecha** del gasto
 - **Categoria** con indicador de color
 - **Notas** (si se agregaron)
+- **Agregado por** — en cuentas compartidas; muestra el nombre del miembro de la cuenta que creó esta entrada
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
 - **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
 - **Articulos del recibo** — articulos individuales (para recibos escaneados)
@@ -112,6 +113,7 @@ Toca cualquier gasto para ver sus detalles completos:
 
 Toca cualquier entrada de ingreso para ver los detalles:
 - Descripcion, fecha, categoria, notas
+- **Agregado por** — en cuentas compartidas, muestra quién creó esta entrada de ingreso
 - Opciones de editar o eliminar
 
 ## Preguntas frecuentes
