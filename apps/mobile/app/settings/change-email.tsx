@@ -12,10 +12,10 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from '@/stores/authStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
+import { secureStorage } from '@/services/secureStorage';
 
 const PENDING_KEY = 'pendingEmailChange';
 
@@ -39,7 +39,7 @@ export default function ChangeEmailScreen() {
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem(PENDING_KEY).then((raw) => {
+    secureStorage.getItem(PENDING_KEY).then((raw: string | null) => {
       if (raw) {
         try {
           const parsed: PendingState = JSON.parse(raw);
@@ -47,10 +47,10 @@ export default function ChangeEmailScreen() {
             setPendingEmail(parsed.newEmail);
             setStep(2);
           } else {
-            AsyncStorage.removeItem(PENDING_KEY);
+            secureStorage.removeItem(PENDING_KEY);
           }
         } catch {
-          AsyncStorage.removeItem(PENDING_KEY);
+          secureStorage.removeItem(PENDING_KEY);
         }
       }
       setInitializing(false);
@@ -66,7 +66,7 @@ export default function ChangeEmailScreen() {
     try {
       await api.changeEmailRequest({ newEmail: newEmail.trim(), currentPassword });
       const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
-      await AsyncStorage.setItem(PENDING_KEY, JSON.stringify({ newEmail: newEmail.trim(), expiresAt }));
+      await secureStorage.setItem(PENDING_KEY, JSON.stringify({ newEmail: newEmail.trim(), expiresAt }));
       setPendingEmail(newEmail.trim());
       setStep(2);
     } catch (e) {
@@ -86,7 +86,7 @@ export default function ChangeEmailScreen() {
       const result = await api.changeEmailConfirm({ code: code.trim() });
       updateUser({ email: pendingEmail });
       setTokens(result.accessToken, result.refreshToken);
-      await AsyncStorage.removeItem(PENDING_KEY);
+      await secureStorage.removeItem(PENDING_KEY);
       Alert.alert(
         t('settings.changeEmail.success'),
         t('settings.changeEmail.successMessage'),
@@ -100,7 +100,7 @@ export default function ChangeEmailScreen() {
   };
 
   const handleResend = async () => {
-    await AsyncStorage.removeItem(PENDING_KEY);
+    await secureStorage.removeItem(PENDING_KEY);
     setPendingEmail('');
     setCode('');
     setStep(1);
