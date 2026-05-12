@@ -1,3 +1,7 @@
+---
+status: deprecated
+---
+
 # Contract: Auth — Change Email
 
 **Module:** `apps/api/src/modules/auth/`  
