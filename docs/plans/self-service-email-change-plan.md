@@ -1,3 +1,7 @@
+---
+status: done
+---
+
 # Plan: Self-service email address change
 
 **Feature:** `self-service-email-change`  

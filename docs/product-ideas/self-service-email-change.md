@@ -6,6 +6,7 @@ priority: P2
 created_at: 2026-05-11
 jira_ticket:
 orchestration_run: 8b9d51ba-3a2c-476e-92d0-63d8bad85a56
+github_issue: https://github.com/micode-ai/ai-budget-assistant/issues/95
 ---
 
 # Self-service email address change in Settings

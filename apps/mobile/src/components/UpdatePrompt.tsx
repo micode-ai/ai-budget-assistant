@@ -41,10 +41,23 @@ export function UpdatePrompt() {
   const notes = pickReleaseNotes(check.releaseNotes, i18n.language);
 
   async function onUpdate() {
+    // For soft prompts, dismiss as soon as the user taps Update — they've
+    // expressed intent, and the modal must not linger when they return from
+    // the store (whether or not the install actually happened). The forced
+    // version check on AppState 'active' will re-prompt if a newer version
+    // ships later. Required prompts stay until the version check confirms.
+    if (!isRequired) {
+      try {
+        await secureStorage.setItem(SKIPPED_KEY, check!.latestVersion);
+      } catch {
+        // best-effort
+      }
+      setSkippedVersion(check!.latestVersion);
+    }
     try {
       await Linking.openURL(check!.storeUrl);
     } catch {
-      // best-effort; modal stays open
+      // best-effort
     }
   }
 
