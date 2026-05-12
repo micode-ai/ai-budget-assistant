@@ -1,6 +1,6 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator, InteractionManager } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { useState, useCallback, useEffect } from 'react';
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -21,22 +21,9 @@ export default function BudgetsScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  // Local-first hydration: store reads SQLite immediately and refreshes from API in background.
   useEffect(() => {
     if (currentAccountId) loadBudgets();
   }, [currentAccountId, loadBudgets]);
-
-  // Defer the on-focus refresh until after the tab transition so it doesn't
-  // block the animation frame.
-  useFocusEffect(
-    useCallback(() => {
-      if (!currentAccountId) return;
-      const handle = InteractionManager.runAfterInteractions(() => {
-        loadBudgets();
-      });
-      return () => handle.cancel();
-    }, [currentAccountId, loadBudgets]),
-  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

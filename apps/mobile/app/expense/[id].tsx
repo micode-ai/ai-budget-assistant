@@ -10,6 +10,7 @@ import {
   Modal,
   ActivityIndicator,
   Platform,
+  InteractionManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -119,10 +120,15 @@ export default function ExpenseDetailScreen() {
     setImageLoading(false);
   }, [id, loadReceiptImage]);
 
+  // Defer receipt-image lookup until after the navigation animation so the
+  // detail screen paints immediately. Most expenses have no receipt — the
+  // store now reads SQLite first and only hits the network when local is empty.
   useEffect(() => {
-    if (id) {
+    if (!id) return;
+    const handle = InteractionManager.runAfterInteractions(() => {
       handleLoadReceiptImage();
-    }
+    });
+    return () => handle.cancel();
   }, [id, handleLoadReceiptImage]);
 
   // Item modal helpers

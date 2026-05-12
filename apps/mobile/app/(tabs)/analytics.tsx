@@ -1,9 +1,9 @@
-import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, InteractionManager } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExpenseStore } from '@/stores/expenseStore';
@@ -57,20 +57,13 @@ export default function AnalyticsScreen() {
     loadProjects();
   }, [loadAIInsights, loadRates, loadTags, loadProjects, i18n.language]);
 
-  // Make sure expenses/incomes are hydrated even if the user lands on Analytics
-  // first. Stores are local-first (SQLite immediately, API in background).
-  // Deferred via InteractionManager so the on-focus reload runs after the
-  // tab-switch animation completes.
-  useFocusEffect(
-    useCallback(() => {
-      if (!currentAccountId) return;
-      const handle = InteractionManager.runAfterInteractions(() => {
-        loadExpenses();
-        loadIncomes();
-      });
-      return () => handle.cancel();
-    }, [currentAccountId, loadExpenses, loadIncomes]),
-  );
+  // Hydrate once on mount/account-switch. Stores are local-first (SQLite immediately,
+  // API in background). Pull-to-refresh and post-mutation updates handle staleness.
+  useEffect(() => {
+    if (!currentAccountId) return;
+    loadExpenses();
+    loadIncomes();
+  }, [currentAccountId, loadExpenses, loadIncomes]);
 
   const availableCurrencies = walletSummary.map((s) => s.currencyCode);
   const currency = selectedCurrency || user?.currencyCode || 'USD';

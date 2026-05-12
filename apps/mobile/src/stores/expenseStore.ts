@@ -742,7 +742,11 @@ export const useExpenseStore = create<ExpenseState>()(
 
     loadReceiptImage: async (expenseId: string): Promise<{ base64: string; mimeType: string } | null> => {
       try {
-        // Always try server first to get correct mimeType
+        // Local first — opens the receipt instantly when cached, no network.
+        const local = await getReceiptImageFromDb(expenseId);
+        if (local) return local;
+
+        // Fallback: server (e.g. on a fresh device that hasn't synced this receipt yet).
         try {
           const result = await api.getReceiptImage(expenseId);
           if (result?.imageBase64) {
@@ -751,12 +755,8 @@ export const useExpenseStore = create<ExpenseState>()(
             return { base64: result.imageBase64, mimeType };
           }
         } catch {
-          // Server fetch failed (offline) — try local
+          // Offline or no receipt on server — fall through to null.
         }
-
-        // Fallback: local SQLite
-        const local = await getReceiptImageFromDb(expenseId);
-        if (local) return local;
 
         return null;
       } catch (e) {

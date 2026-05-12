@@ -1,6 +1,6 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator, InteractionManager } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -58,28 +58,12 @@ export default function ExpensesScreen() {
   } | null>(null);
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
-  // Hydrate from SQLite on mount/account-switch; stores set isLoading=false after
-  // local read and continue API sync in the background (see expenseStore.loadExpenses).
   useEffect(() => {
     if (currentAccountId) {
       loadExpenses();
       loadIncomes();
     }
   }, [currentAccountId, loadExpenses, loadIncomes]);
-
-  // Refresh when tab regains focus (cheap: SQLite read first, API in background).
-  // Deferred via InteractionManager so the heavy reload work runs after the
-  // tab-switch animation completes.
-  useFocusEffect(
-    useCallback(() => {
-      if (!currentAccountId) return;
-      const handle = InteractionManager.runAfterInteractions(() => {
-        loadExpenses();
-        loadIncomes();
-      });
-      return () => handle.cancel();
-    }, [currentAccountId, loadExpenses, loadIncomes]),
-  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
