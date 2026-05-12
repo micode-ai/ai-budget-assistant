@@ -129,6 +129,18 @@ export class UsersService {
     });
   }
 
+  async updateEmailChange(id: string, data: {
+    emailChangePending: string | null;
+    emailChangeCode: string | null;
+    emailChangeExpiresAt: Date | null;
+    email?: string;
+  }) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
   async deactivate(id: string) {
     return this.prisma.user.update({
       where: { id },

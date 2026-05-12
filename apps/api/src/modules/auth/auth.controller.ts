@@ -1,6 +1,7 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, RefreshTokenDto, ForgotPasswordDto, ResetPasswordDto, VerifyEmailDto } from './dto';
+import { RegisterDto, LoginDto, RefreshTokenDto, ForgotPasswordDto, ResetPasswordDto, VerifyEmailDto, ChangeEmailRequestDto, ChangeEmailConfirmDto } from './dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -45,5 +46,19 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resendVerification(@Body() dto: ForgotPasswordDto) {
     return this.authService.resendVerificationEmail(dto.email);
+  }
+
+  @Post('change-email/request')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async changeEmailRequest(@Req() req: any, @Body() dto: ChangeEmailRequestDto) {
+    return this.authService.changeEmailRequest(req.user.sub, dto);
+  }
+
+  @Post('change-email/confirm')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async changeEmailConfirm(@Req() req: any, @Body() dto: ChangeEmailConfirmDto) {
+    return this.authService.changeEmailConfirm(req.user.sub, dto);
   }
 }
