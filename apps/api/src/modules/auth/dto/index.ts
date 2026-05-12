@@ -77,3 +77,18 @@ export class VerifyEmailDto {
   @Matches(/^\d{6}$/, { message: 'Code must be 6 digits' })
   code: string;
 }
+
+export class ChangeEmailRequestDto {
+  @IsEmail()
+  newEmail: string;
+
+  @IsString()
+  @MinLength(1)
+  currentPassword: string;
+}
+
+export class ChangeEmailConfirmDto {
+  @IsString()
+  @Matches(/^\d{6}$/, { message: 'Code must be 6 digits' })
+  code: string;
+}

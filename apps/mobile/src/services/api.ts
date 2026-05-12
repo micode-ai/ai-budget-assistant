@@ -190,6 +190,20 @@ class ApiClient {
     });
   }
 
+  async changeEmailRequest(dto: { newEmail: string; currentPassword: string }) {
+    return this.request<{ message: string }>('/auth/change-email/request', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  async changeEmailConfirm(dto: { code: string }) {
+    return this.request<{ message: string; accessToken: string; refreshToken: string }>('/auth/change-email/confirm', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
   // Referral endpoints
   async getReferralCode() {
     return this.request<{ code: string }>('/referrals/my-code');

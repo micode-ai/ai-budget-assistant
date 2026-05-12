@@ -9,7 +9,7 @@ import { AccountsService } from '../accounts/accounts.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AdminGateway } from '../admin/admin.gateway';
 import { ReferralsService } from '../referrals/referrals.service';
-import { RegisterDto, LoginDto } from './dto';
+import { RegisterDto, LoginDto, ChangeEmailRequestDto, ChangeEmailConfirmDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +27,8 @@ export class AuthService {
 
   private resetRequestAttempts = new Map<string, number[]>();
   private resetVerifyAttempts = new Map<string, number[]>();
+  private emailChangeRequestAttempts = new Map<string, number[]>();
+  private emailChangeVerifyAttempts = new Map<string, number[]>();
 
   private checkRateLimit(map: Map<string, number[]>, key: string, maxAttempts: number): void {
     const now = Date.now();
@@ -364,6 +366,91 @@ export class AuthService {
     );
 
     return { message: 'If this email is unverified, a new code has been sent' };
+  }
+
+  async changeEmailRequest(userId: string, dto: ChangeEmailRequestDto) {
+    this.checkRateLimit(this.emailChangeRequestAttempts, userId, 3);
+
+    const user = await this.usersService.findById(userId);
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(dto.currentPassword, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    const normalizedEmail = dto.newEmail.toLowerCase();
+    if (normalizedEmail === user.email.toLowerCase()) {
+      throw new BadRequestException('New email must be different from current email');
+    }
+
+    const existing = await this.usersService.findByEmail(normalizedEmail);
+    if (existing) {
+      throw new ConflictException('This email is already registered');
+    }
+
+    const code = randomInt(100000, 999999).toString();
+    const codeHash = await bcrypt.hash(code, 12);
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
+    await this.usersService.updateEmailChange(user.id, {
+      emailChangePending: normalizedEmail,
+      emailChangeCode: codeHash,
+      emailChangeExpiresAt: expiresAt,
+    });
+
+    await this.mailService.sendMail(
+      normalizedEmail,
+      'Confirm your new email address — AI Budget',
+      `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+          <h2 style="color: #1a1a1a; margin-bottom: 24px;">AI Budget</h2>
+          <p style="color: #333; font-size: 16px; margin-bottom: 8px;">Your email change verification code:</p>
+          <div style="background: #f5f5f5; border-radius: 12px; padding: 24px; text-align: center; margin: 16px 0;">
+              <span style="font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #1a1a1a;">${code}</span>
+          </div>
+          <p style="color: #666; font-size: 14px;">This code expires in 30 minutes.</p>
+          <p style="color: #999; font-size: 12px; margin-top: 32px;">If you didn't request this, you can safely ignore this email.</p>
+      </div>
+      `,
+    );
+
+    return { message: 'Verification code sent to new email address' };
+  }
+
+  async changeEmailConfirm(userId: string, dto: ChangeEmailConfirmDto) {
+    this.checkRateLimit(this.emailChangeVerifyAttempts, userId, 5);
+
+    const user = await this.usersService.findById(userId);
+    if (!user || !user.isActive || !user.emailChangePending || !user.emailChangeCode || !user.emailChangeExpiresAt) {
+      throw new BadRequestException('No pending email change or code expired');
+    }
+
+    if (new Date() > user.emailChangeExpiresAt) {
+      throw new BadRequestException('Verification code has expired');
+    }
+
+    const isCodeValid = await bcrypt.compare(dto.code, user.emailChangeCode);
+    if (!isCodeValid) {
+      throw new BadRequestException('Invalid verification code');
+    }
+
+    const newEmail = user.emailChangePending;
+    await this.usersService.updateEmailChange(user.id, {
+      email: newEmail,
+      emailChangePending: null,
+      emailChangeCode: null,
+      emailChangeExpiresAt: null,
+    });
+
+    const tokens = await this.generateTokens(user.id, newEmail);
+    return {
+      message: 'Email changed successfully',
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
   }
 
   private async generateTokens(userId: string, email: string) {

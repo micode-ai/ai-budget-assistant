@@ -167,7 +167,13 @@ export default function ProfileSettingsScreen() {
 
           <View style={styles.fieldRow}>
             <Text style={styles.fieldLabel}>{t('settings.email')}</Text>
-            <Text style={styles.fieldValue}>{user?.email}</Text>
+            <TouchableOpacity
+              style={styles.fieldValueRow}
+              onPress={() => router.push('/settings/change-email' as any)}
+            >
+              <Text style={styles.fieldValue}>{user?.email}</Text>
+              <Ionicons name="pencil-outline" size={16} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.divider} />

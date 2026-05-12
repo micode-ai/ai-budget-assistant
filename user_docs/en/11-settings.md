@@ -27,7 +27,7 @@ Settings are organized into categories. Tap any category to open its dedicated s
 
 - **Avatar** — displays your initials with a colored background
 - **Name** — your display name. Tap the pencil icon to edit
-- **Email** — your account email (display only)
+- **Email** — your account email. Tap the pencil icon to start an email change (see [Change email address](#change-email-address) below)
 - **Timezone** — tap the pencil icon to change. A searchable picker appears with 90+ timezones (e.g., "Europe/Warsaw")
 
 ### Currency
@@ -37,6 +37,19 @@ Select your default currency by tapping one of the currency chips:
 **USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
 
 The selected currency is highlighted. This sets the default currency for new expenses, income, and Dashboard displays.
+
+### Change email address
+
+To change your account email:
+
+1. Go to **Settings → Profile** and tap the pencil icon next to your current email address.
+2. On the **Change Email** screen, enter your **new email address** and your **current password**.
+3. Tap **Send verification code** — a 6-digit code is sent to the *new* address.
+4. Enter the code in the next step and tap **Confirm email change**.
+
+Your email is updated immediately and new login tokens are issued. If you close the app before entering the code, the next time you open the Change Email screen it will resume at Step 2 for up to 30 minutes.
+
+> **Note:** The verification code expires in 30 minutes. Tap **Resend code** to go back to Step 1 and request a new code.
 
 ## Appearance & Language
 
@@ -186,7 +199,7 @@ On the main Settings screen, tap **Log Out** at the bottom. A confirmation dialo
   **A:** The language change is instant for all interface elements. If you notice untranslated text, try restarting the app.
 
 - **Q: How do I change my email?**
-  **A:** Email changes are not supported in the app currently. Contact support for assistance.
+  **A:** Go to **Settings → Profile**, tap the pencil icon next to your email, and follow the two-step verification flow. A 6-digit code is sent to your new address to confirm the change.
 
 - **Q: What happens to my data when I log out?**
   **A:** Your data remains stored on the server. When you log back in, everything will be restored. Local data on the device may be cleared.
