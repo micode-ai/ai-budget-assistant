@@ -280,6 +280,12 @@ export default {
     spent: 'ausgegeben',
     remaining: 'übrig',
     budget: 'Budget',
+    history: 'Verlauf',
+    historyTitle: 'Gespräche',
+    historyEmpty: 'Noch keine Gespräche',
+    newConversation: 'Neues Gespräch',
+    loadingHistory: 'Wird geladen...',
+    conversationUntitled: 'Gespräch',
   },
   expenseNew: {
     amountPlaceholder: '0,00',

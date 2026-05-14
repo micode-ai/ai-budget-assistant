@@ -179,6 +179,7 @@ export function sanitizeForPrompt(text: string, maxLength = 200): string {
   return text
     .slice(0, maxLength)
     .replace(/[\r\n\t]+/g, ' ')
+    // eslint-disable-next-line no-control-regex -- intentional: strip control chars to defang prompt injection
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
     .replace(
       /\b(ignore|disregard|forget|override|system|assistant|instruction|jailbreak)\b/gi,

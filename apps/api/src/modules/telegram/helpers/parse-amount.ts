@@ -7,8 +7,6 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   '₽': 'RUB',
 };
 
-const CURRENCY_CODES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
-
 export interface ParsedAmount {
   amount: number;
   currencyCode?: string;

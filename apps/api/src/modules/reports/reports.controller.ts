@@ -4,8 +4,6 @@ import { DigestService } from './digest.service';
 import { ReportSchedulerService } from './report-scheduler.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
-import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
-import { RequireTier } from '../subscriptions/decorators/require-tier.decorator';
 import { AuthenticatedRequest } from '../../common/types';
 import { GenerateReportDto, UpdateReportPreferencesDto } from './dto';
 import type { Response } from 'express';

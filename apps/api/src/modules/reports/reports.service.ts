@@ -6,8 +6,6 @@ import { ExcelGenerator } from './generators/excel-generator';
 import { GenerateReportDto } from './dto';
 import type { Response } from 'express';
 
-const TIER_HIERARCHY: Record<string, number> = { free: 0, pro: 1, business: 2 };
-
 @Injectable()
 export class ReportsService {
   private readonly logger = new Logger(ReportsService.name);

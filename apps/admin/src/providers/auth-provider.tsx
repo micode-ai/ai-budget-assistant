@@ -33,10 +33,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isAuthenticated()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only, can't read during SSR render
       setUser(getUser());
     } else if (pathname !== "/login") {
       router.replace("/login");
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- same reason
     setLoading(false);
   }, [pathname, router]);
 

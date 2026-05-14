@@ -57,9 +57,21 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Quel est le statut de mon budget ?"
 - "Montrer la repartition par categories pour ce mois"
 
+## Historique des conversations
+
+Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :
+
+1. Appuyez sur le bouton **Historique** (icône horloge) en haut de l'onglet chat
+2. Une liste des conversations passées s'affiche avec le titre et la date
+3. Appuyez sur une conversation pour charger ses messages
+4. Vous pouvez continuer la conversation en tapant un nouveau message
+5. Pour recommencer, appuyez sur **Nouvelle conversation** (en haut à gauche)
+
+> L'historique chargé est enregistré localement pour un accès hors ligne après le premier chargement.
+
 ## Fonctionnalites du chat
 
-- **Historique de conversation** — les messages precedents sont conserves pendant votre session
+- **Historique de conversation** — les messages precedents sont conserves pendant votre session et peuvent être rouverts via le bouton Historique
 - **Indicateur de saisie** — affiche "Reflexion en cours..." pendant que l'IA traite votre question
 - **Gestion des erreurs** — en cas de probleme, vous verrez un message d'erreur avec une option de reessai
 - **Commandes en langage naturel** — creez des depenses, revenus, budgets, categories et consultez les donnees en langage courant

@@ -830,9 +830,21 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+## Conversation History
+
+You can browse and reopen previous AI conversations at any time:
+
+1. Tap the **History** (clock icon) button at the top of the chat tab
+2. A list of past conversations appears, showing the title and date
+3. Tap any conversation to load its messages
+4. You can continue the conversation by typing a new message
+5. To start fresh, tap the **New Conversation** button (top-left, visible when a past conversation is loaded)
+
+> Loaded conversation history is also saved locally for offline access after the first load.
+
 ## Chat Features
 
-- **Conversation history** — previous messages are preserved during your session
+- **Conversation history** — previous messages are preserved during your session and can be reopened via the History button
 - **Typing indicator** — shows "Thinking..." while the AI processes your question
 - **Error handling** — if something goes wrong, you'll see an error message with a retry option
 - **Natural Language Commands** — create expenses, income, budgets, categories, and query data using plain language
@@ -3906,9 +3918,21 @@ iOS, Android, Web
 - «Какой статус моих бюджетов?»
 - «Покажи разбивку по категориям за этот месяц»
 
+## История разговоров
+
+Вы можете просматривать и возвращаться к предыдущим разговорам с ИИ в любое время:
+
+1. Нажмите кнопку **История** (иконка часов) вверху вкладки чата
+2. Появится список прошлых разговоров с заголовком и датой
+3. Нажмите на любой разговор, чтобы загрузить его сообщения
+4. Можно продолжить разговор, введя новое сообщение
+5. Для начала нового разговора нажмите **Новый разговор** (вверху слева)
+
+> Загруженная история сохраняется локально и доступна без интернета после первой загрузки.
+
 ## Возможности чата
 
-- **История разговора** — предыдущие сообщения сохраняются в течение сессии
+- **История разговора** — предыдущие сообщения сохраняются в течение сессии и могут быть открыты повторно через кнопку «История»
 - **Индикатор набора** — показывает «Думаю...», пока ИИ обрабатывает ваш вопрос
 - **Обработка ошибок** — если что-то пойдёт не так, вы увидите сообщение об ошибке с возможностью повторить
 - **Команды на естественном языке** — создавайте расходы, доходы, бюджеты, категории и запрашивайте данные на обычном языке
@@ -6982,9 +7006,21 @@ iOS, Android, Web
 - "Який статус моїх бюджетів?"
 - "Покажи розбивку за категоріями за цей місяць"
 
+## Історія розмов
+
+Ви можете переглядати та повертатися до попередніх розмов з ШІ у будь-який час:
+
+1. Натисніть кнопку **Історія** (іконка годинника) вгорі вкладки чату
+2. З'явиться список минулих розмов із заголовком і датою
+3. Натисніть на будь-яку розмову, щоб завантажити її повідомлення
+4. Можна продовжити розмову, ввівши нове повідомлення
+5. Щоб почати нову розмову, натисніть **Нова розмова** (вгорі зліва)
+
+> Завантажена історія зберігається локально і доступна без інтернету після першого завантаження.
+
 ## Можливості чату
 
-- **Історія розмови** — попередні повідомлення зберігаються протягом сесії
+- **Історія розмови** — попередні повідомлення зберігаються протягом сесії та можуть бути знову відкриті через кнопку «Історія»
 - **Індикатор набору** — показує "Думаю...", поки ШІ обробляє ваше запитання
 - **Обробка помилок** — якщо щось пішло не так, ви побачите повідомлення про помилку з можливістю повторити
 - **Команди природною мовою** — створюйте витрати, доходи, бюджети, категорії та запитуйте дані простою мовою
@@ -10031,9 +10067,21 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Jaki jest status mojego budzetu?"
 - "Pokaz podzial wedlug kategorii za ten miesiac"
 
+## Historia rozmów
+
+Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
+
+1. Dotknij przycisku **Historia** (ikona zegara) u góry zakładki czatu
+2. Wyświetli się lista poprzednich rozmów z tytułem i datą
+3. Dotknij dowolnej rozmowy, aby załadować jej wiadomości
+4. Możesz kontynuować rozmowę, wpisując nową wiadomość
+5. Aby rozpocząć od nowa, dotknij **Nowa rozmowa** (górny lewy róg)
+
+> Załadowana historia jest zapisywana lokalnie i dostępna offline po pierwszym załadowaniu.
+
 ## Funkcje czatu
 
-- **Historia rozmow** — poprzednie wiadomosci sa zachowywane podczas sesji
+- **Historia rozmow** — poprzednie wiadomości są zachowywane podczas sesji i można je ponownie otworzyć za pomocą przycisku Historia
 - **Wskaznik pisania** — wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
 - **Obsluga bledow** — jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
 - **Polecenia w jezyku naturalnym** — tworzenie wydatkow, przychodow, budzetow, kategorii i zapytan o dane uzywajac zwyklego jezyka
@@ -13075,9 +13123,21 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Wie ist mein Budget-Status?"
 - "Zeige Kategorie-Aufschlüsselung für diesen Monat"
 
+## Gesprächsverlauf
+
+Du kannst frühere KI-Gespräche jederzeit aufrufen:
+
+1. Tippe auf die **Verlauf**-Schaltfläche (Uhrsymbol) oben im Chat
+2. Eine Liste vergangener Gespräche erscheint mit Titel und Datum
+3. Tippe auf ein Gespräch, um dessen Nachrichten zu laden
+4. Du kannst das Gespräch fortsetzen, indem du eine neue Nachricht eingibst
+5. Tippe auf **Neues Gespräch** (oben links), um neu zu beginnen
+
+> Der geladene Verlauf wird lokal gespeichert und steht nach dem ersten Laden auch offline zur Verfügung.
+
 ## Chat-Funktionen
 
-- **Konversationsverlauf** — vorherige Nachrichten bleiben wahrend deiner Sitzung erhalten
+- **Konversationsverlauf** — vorherige Nachrichten bleiben während deiner Sitzung erhalten und können über den Verlauf-Button wieder geöffnet werden
 - **Schreibindikator** — zeigt "Denke nach..." wahrend die KI deine Frage verarbeitet
 - **Fehlerbehandlung** — wenn etwas schief geht, siehst du eine Fehlermeldung mit einer Wiederholungsoption
 - **Natürlichsprachliche Befehle** — erstelle Ausgaben, Einkommen, Budgets, Kategorien und frage Daten in einfacher Sprache ab
@@ -16117,9 +16177,21 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Cual es el estado de mi presupuesto?"
 - "Mostrar desglose por categorias de este mes"
 
+## Historial de conversaciones
+
+Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
+
+1. Toca el botón **Historial** (icono de reloj) en la parte superior del chat
+2. Aparece una lista de conversaciones pasadas con título y fecha
+3. Toca cualquier conversación para cargar sus mensajes
+4. Puedes continuar la conversación escribiendo un nuevo mensaje
+5. Para empezar de nuevo, toca **Nueva conversación** (arriba a la izquierda)
+
+> El historial cargado se guarda localmente para acceso sin conexión después de la primera carga.
+
 ## Funciones del chat
 
-- **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion
+- **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion y pueden reabrirse con el botón de Historial
 - **Indicador de escritura** — muestra "Pensando..." mientras la IA procesa tu pregunta
 - **Manejo de errores** — si algo sale mal, veras un mensaje de error con opcion de reintentar
 - **Comandos en lenguaje natural** — crea gastos, ingresos, presupuestos, categorias y consulta datos usando lenguaje natural
@@ -19154,9 +19226,21 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Quel est le statut de mon budget ?"
 - "Montrer la repartition par categories pour ce mois"
 
+## Historique des conversations
+
+Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :
+
+1. Appuyez sur le bouton **Historique** (icône horloge) en haut de l'onglet chat
+2. Une liste des conversations passées s'affiche avec le titre et la date
+3. Appuyez sur une conversation pour charger ses messages
+4. Vous pouvez continuer la conversation en tapant un nouveau message
+5. Pour recommencer, appuyez sur **Nouvelle conversation** (en haut à gauche)
+
+> L'historique chargé est enregistré localement pour un accès hors ligne après le premier chargement.
+
 ## Fonctionnalites du chat
 
-- **Historique de conversation** — les messages precedents sont conserves pendant votre session
+- **Historique de conversation** — les messages precedents sont conserves pendant votre session et peuvent être rouverts via le bouton Historique
 - **Indicateur de saisie** — affiche "Reflexion en cours..." pendant que l'IA traite votre question
 - **Gestion des erreurs** — en cas de probleme, vous verrez un message d'erreur avec une option de reessai
 - **Commandes en langage naturel** — creez des depenses, revenus, budgets, categories et consultez les donnees en langage courant
@@ -22189,9 +22273,21 @@ iOS, Android, Web
 - «Які статус маіх бюджэтаў?»
 - «Пакажы разбіўку па катэгорыях за гэты месяц»
 
+## Гісторыя размоў
+
+Вы можаце праглядаць і вяртацца да папярэдніх размоў з ШІ у любы момант:
+
+1. Націсніце кнопку **Гісторыя** (іконка гадзінніка) у верхняй частцы ўкладкі чата
+2. З'явіцца спіс мінулых размоў з загалоўкам і датай
+3. Націсніце на любую размову, каб загрузіць яе паведамленні
+4. Можна працягнуць размову, увёўшы новае паведамленне
+5. Каб пачаць нанова, націсніце **Новая размова** (уверсе злева)
+
+> Загружаная гісторыя захоўваецца лакальна і даступна без інтэрнэту пасля першай загрузкі.
+
 ## Магчымасці чата
 
-- **Гісторыя размовы** — папярэднія паведамленні захоўваюцца на працягу сесіі
+- **Гісторыя размовы** — папярэднія паведамленні захоўваюцца на працягу сесіі і могуць быць зноў адкрыты праз кнопку «Гісторыя»
 - **Індыкатар набору** — паказвае «Думаю...», пакуль ІІ апрацоўвае ваша пытанне
 - **Апрацоўка памылак** — калі нешта пойдзе не так, вы ўбачыце паведамленне пра памылку з магчымасцю паўтарыць
 - **Каманды натуральнай мовай** — ствараць выдаткі, даходы, бюджэты, катэгорыі і запытваць даныя на звычайнай мове

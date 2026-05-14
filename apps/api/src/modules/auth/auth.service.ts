@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'crypto';
+import { promises as dnsPromises } from 'dns';
 import { MailService } from '../mail/mail.service';
 import { UsersService } from '../users/users.service';
 import { AccountsService } from '../accounts/accounts.service';
@@ -51,12 +52,11 @@ export class AuthService {
     // Verify email domain exists (MX record check)
     const domain = dto.email.split('@')[1];
     try {
-      const dns = require('dns').promises;
-      const mx = await dns.resolveMx(domain);
+      const mx = await dnsPromises.resolveMx(domain);
       if (!mx || mx.length === 0) {
         throw new BadRequestException('Email domain does not exist or cannot receive emails');
       }
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Invalid email domain or mail server not found');
     }
 

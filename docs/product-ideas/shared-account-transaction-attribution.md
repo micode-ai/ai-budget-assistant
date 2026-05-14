@@ -1,7 +1,7 @@
 ---
 id: shared-account-transaction-attribution
 title: '"Who added this?" — transaction attribution in shared accounts'
-status: building
+status: shipped
 priority: P2
 created_at: 2026-05-11
 jira_ticket:

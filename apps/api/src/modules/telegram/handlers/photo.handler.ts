@@ -283,7 +283,7 @@ export class PhotoHandler {
 
       await ctx.answerCbQuery('Creating expense...');
 
-      const { expense } = await this.expensesService.create(
+      await this.expensesService.create(
         data.accountId,
         data.userId,
         {

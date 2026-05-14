@@ -4,6 +4,7 @@ import { generateUUID } from '@budget/shared-utils';
 import { api } from '@/services/api';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import i18n from '@/i18n';
+import * as chatRepository from '@/db/chatRepository';
 
 // Re-export ChatMessage type for use in components
 export interface ChatMessage {
@@ -32,6 +33,7 @@ interface ChatState {
   addMessage: (message: ChatMessage) => void;
   setConversationId: (id: string) => void;
   startNewConversation: () => void;
+  loadConversations: () => Promise<void>;
   loadConversation: (conversationId: string) => Promise<void>;
   clearMessages: () => void;
 }
@@ -200,15 +202,77 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     });
   },
 
+  loadConversations: async () => {
+    try {
+      // Show cached conversations immediately
+      const authStore = await import('@/stores/authStore');
+      const userId = authStore.useAuthStore.getState().user?.id;
+      if (!userId) return;
+
+      const cached = await chatRepository.getConversations(userId);
+      if (cached.length > 0) {
+        set({ conversations: cached });
+      }
+
+      // Refresh from API
+      const remote = await api.getChatConversations();
+      const conversations: import('@budget/shared-types').ChatConversation[] = remote.map((c) => ({
+        id: c.id,
+        userId,
+        title: c.title ?? undefined,
+        createdAt: new Date(c.createdAt),
+        updatedAt: new Date(c.updatedAt),
+      }));
+
+      set({ conversations });
+
+      // Upsert into SQLite
+      for (const conv of conversations) {
+        await chatRepository.upsertConversation(conv);
+      }
+    } catch {
+      // Non-fatal: leave whatever is in state
+    }
+  },
+
   loadConversation: async (conversationId: string) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, currentConversationId: conversationId });
 
     try {
-      // TODO: Load conversation history from API
-      set({
-        currentConversationId: conversationId,
-        isLoading: false,
-      });
+      // Paint from SQLite cache immediately
+      const cached = await chatRepository.getMessages(conversationId);
+      if (cached.length > 0) {
+        set({
+          messages: cached.map((m) => ({
+            id: m.id,
+            conversationId: m.conversationId,
+            role: m.role as 'user' | 'assistant' | 'system',
+            content: m.content,
+            tokensUsed: m.tokensUsed,
+            createdAt: m.createdAt,
+          })),
+        });
+      }
+
+      // Fetch from API (up to 50 messages, pending_action filtered server-side)
+      const remote = await api.getChatConversationMessages(conversationId);
+      const messages: ChatMessage[] = remote.map((m) => ({
+        id: m.id,
+        conversationId: m.conversationId,
+        role: m.role as 'user' | 'assistant' | 'system',
+        content: m.content,
+        tokensUsed: m.tokensUsed ?? undefined,
+        createdAt: new Date(m.createdAt),
+      }));
+
+      set({ messages, isLoading: false });
+
+      // Persist to SQLite (all API messages always have conversationId)
+      for (const msg of messages) {
+        if (msg.conversationId) {
+          await chatRepository.upsertMessage(msg as import('@budget/shared-types').ChatMessage);
+        }
+      }
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : i18n.t('errors.loadConversationFailed'),

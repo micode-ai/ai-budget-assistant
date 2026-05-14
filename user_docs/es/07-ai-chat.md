@@ -57,9 +57,21 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Cual es el estado de mi presupuesto?"
 - "Mostrar desglose por categorias de este mes"
 
+## Historial de conversaciones
+
+Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
+
+1. Toca el botón **Historial** (icono de reloj) en la parte superior del chat
+2. Aparece una lista de conversaciones pasadas con título y fecha
+3. Toca cualquier conversación para cargar sus mensajes
+4. Puedes continuar la conversación escribiendo un nuevo mensaje
+5. Para empezar de nuevo, toca **Nueva conversación** (arriba a la izquierda)
+
+> El historial cargado se guarda localmente para acceso sin conexión después de la primera carga.
+
 ## Funciones del chat
 
-- **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion
+- **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion y pueden reabrirse con el botón de Historial
 - **Indicador de escritura** — muestra "Pensando..." mientras la IA procesa tu pregunta
 - **Manejo de errores** — si algo sale mal, veras un mensaje de error con opcion de reintentar
 - **Comandos en lenguaje natural** — crea gastos, ingresos, presupuestos, categorias y consulta datos usando lenguaje natural

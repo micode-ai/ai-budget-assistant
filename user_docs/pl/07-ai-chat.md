@@ -57,9 +57,21 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Jaki jest status mojego budzetu?"
 - "Pokaz podzial wedlug kategorii za ten miesiac"
 
+## Historia rozmów
+
+Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
+
+1. Dotknij przycisku **Historia** (ikona zegara) u góry zakładki czatu
+2. Wyświetli się lista poprzednich rozmów z tytułem i datą
+3. Dotknij dowolnej rozmowy, aby załadować jej wiadomości
+4. Możesz kontynuować rozmowę, wpisując nową wiadomość
+5. Aby rozpocząć od nowa, dotknij **Nowa rozmowa** (górny lewy róg)
+
+> Załadowana historia jest zapisywana lokalnie i dostępna offline po pierwszym załadowaniu.
+
 ## Funkcje czatu
 
-- **Historia rozmow** — poprzednie wiadomosci sa zachowywane podczas sesji
+- **Historia rozmow** — poprzednie wiadomości są zachowywane podczas sesji i można je ponownie otworzyć za pomocą przycisku Historia
 - **Wskaznik pisania** — wyswietla "Mysle..." gdy AI przetwarza Twoje pytanie
 - **Obsluga bledow** — jezeli cos pojdzie nie tak, zobaczysz komunikat o bledzie z opcja ponowienia
 - **Polecenia w jezyku naturalnym** — tworzenie wydatkow, przychodow, budzetow, kategorii i zapytan o dane uzywajac zwyklego jezyka

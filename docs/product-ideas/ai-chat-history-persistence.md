@@ -1,10 +1,12 @@
 ---
 id: ai-chat-history-persistence
 title: Load and browse past AI chat conversations
-status: idea
+status: building
 priority: P2
 created_at: 2026-05-11
 jira_ticket:
+github_issue: https://github.com/micode-ai/ai-budget-assistant/issues/100
+orchestration_run: a32f20e5-5a09-4054-931d-e7abffb4426c
 ---
 
 # Load and browse past AI chat conversations
