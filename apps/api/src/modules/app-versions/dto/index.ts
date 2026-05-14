@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional, IsObject, Matches, IsDateString, IsUrl, ValidateIf } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsObject, Matches, IsDateString, IsUrl } from 'class-validator';
 
 export const APP_PLATFORMS = ['ios', 'android'] as const;
 export type AppPlatformValue = typeof APP_PLATFORMS[number];

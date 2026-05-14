@@ -57,9 +57,21 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+## Conversation History
+
+You can browse and reopen previous AI conversations at any time:
+
+1. Tap the **History** (clock icon) button at the top of the chat tab
+2. A list of past conversations appears, showing the title and date
+3. Tap any conversation to load its messages
+4. You can continue the conversation by typing a new message
+5. To start fresh, tap the **New Conversation** button (top-left, visible when a past conversation is loaded)
+
+> Loaded conversation history is also saved locally for offline access after the first load.
+
 ## Chat Features
 
-- **Conversation history** — previous messages are preserved during your session
+- **Conversation history** — previous messages are preserved during your session and can be reopened via the History button
 - **Typing indicator** — shows "Thinking..." while the AI processes your question
 - **Error handling** — if something goes wrong, you'll see an error message with a retry option
 - **Natural Language Commands** — create expenses, income, budgets, categories, and query data using plain language

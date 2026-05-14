@@ -323,6 +323,35 @@ export class ChatService {
     };
   }
 
+  async getConversations(userId: string) {
+    const conversations = await this.prisma.chatConversation.findMany({
+      where: { userId },
+      orderBy: { updatedAt: 'desc' },
+      take: 20,
+      select: { id: true, title: true, createdAt: true, updatedAt: true },
+    });
+    return conversations;
+  }
+
+  async getConversationMessages(userId: string, conversationId: string) {
+    const conversation = await this.prisma.chatConversation.findUnique({
+      where: { id: conversationId, userId },
+    });
+    if (!conversation) {
+      throw new NotFoundException('Conversation not found');
+    }
+    const messages = await this.prisma.chatMessage.findMany({
+      where: {
+        conversationId,
+        role: { in: ['user', 'assistant'] },
+      },
+      orderBy: { createdAt: 'asc' },
+      take: 50,
+      select: { id: true, conversationId: true, role: true, content: true, tokensUsed: true, createdAt: true },
+    });
+    return messages;
+  }
+
   // ── Tool Definitions ──
 
   private getToolDefinitions(): OpenAI.Chat.Completions.ChatCompletionTool[] {

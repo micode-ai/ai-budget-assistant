@@ -280,6 +280,12 @@ export default {
     spent: 'витрачено',
     remaining: 'залишилось',
     budget: 'Бюджет',
+    history: 'Історія',
+    historyTitle: 'Розмови',
+    historyEmpty: 'Немає розмов',
+    newConversation: 'Нова розмова',
+    loadingHistory: 'Завантаження...',
+    conversationUntitled: 'Розмова',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

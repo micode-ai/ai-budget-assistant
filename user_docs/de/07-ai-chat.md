@@ -57,9 +57,21 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Wie ist mein Budget-Status?"
 - "Zeige Kategorie-Aufschlüsselung für diesen Monat"
 
+## Gesprächsverlauf
+
+Du kannst frühere KI-Gespräche jederzeit aufrufen:
+
+1. Tippe auf die **Verlauf**-Schaltfläche (Uhrsymbol) oben im Chat
+2. Eine Liste vergangener Gespräche erscheint mit Titel und Datum
+3. Tippe auf ein Gespräch, um dessen Nachrichten zu laden
+4. Du kannst das Gespräch fortsetzen, indem du eine neue Nachricht eingibst
+5. Tippe auf **Neues Gespräch** (oben links), um neu zu beginnen
+
+> Der geladene Verlauf wird lokal gespeichert und steht nach dem ersten Laden auch offline zur Verfügung.
+
 ## Chat-Funktionen
 
-- **Konversationsverlauf** — vorherige Nachrichten bleiben wahrend deiner Sitzung erhalten
+- **Konversationsverlauf** — vorherige Nachrichten bleiben während deiner Sitzung erhalten und können über den Verlauf-Button wieder geöffnet werden
 - **Schreibindikator** — zeigt "Denke nach..." wahrend die KI deine Frage verarbeitet
 - **Fehlerbehandlung** — wenn etwas schief geht, siehst du eine Fehlermeldung mit einer Wiederholungsoption
 - **Natürlichsprachliche Befehle** — erstelle Ausgaben, Einkommen, Budgets, Kategorien und frage Daten in einfacher Sprache ab

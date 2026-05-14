@@ -209,7 +209,7 @@ export class ReferralsService {
 
   // ---- Milestones ----
 
-  async checkMilestones(referrerUserId: string, defaultAccountId?: string | null): Promise<void> {
+  async checkMilestones(referrerUserId: string, _defaultAccountId?: string | null): Promise<void> {
     const qualifiedCount = await this.prisma.referral.count({
       where: { referrerUserId, status: 'qualified' },
     });

@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev": "turbo dev",
+    "dev:web": "cd apps/mobile && npx expo start --web",
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",

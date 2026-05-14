@@ -97,6 +97,19 @@ export class AiController {
     return this.chatService.rejectAction(req.user.id, body.conversationId, body.actionId, body.reason);
   }
 
+  @Get('chat/conversations')
+  async getConversations(@Req() req: AuthenticatedRequest) {
+    return this.chatService.getConversations(req.user.id);
+  }
+
+  @Get('chat/conversations/:id/messages')
+  async getConversationMessages(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    return this.chatService.getConversationMessages(req.user.id, id);
+  }
+
   @Post('scan-receipt')
   @UseGuards(AiUsageGuard)
   @TrackAiUsage('ocr', 2.0)

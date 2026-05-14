@@ -126,7 +126,7 @@ export class ReportSchedulerService {
         try {
           const rateData = await this.exchangeRateService.getRates(account.currencyCode);
           rates = rateData.rates;
-        } catch (e) {
+        } catch {
           this.logger.warn(`Could not fetch exchange rates for ${account.currencyCode}, sums may be inaccurate`);
         }
 
@@ -243,7 +243,7 @@ export class ReportSchedulerService {
           try {
             const rateData = await this.exchangeRateService.getRates(account.currencyCode);
             rates = rateData.rates;
-          } catch (e) {
+          } catch {
             this.logger.warn(`Could not fetch exchange rates for ${account.currencyCode}, sums may be inaccurate`);
           }
 

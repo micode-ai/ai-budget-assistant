@@ -1,7 +1,7 @@
 ---
 id: self-service-email-change
 title: Self-service email address change in Settings
-status: building
+status: shipped
 priority: P2
 created_at: 2026-05-11
 jira_ticket:

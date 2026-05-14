@@ -5,18 +5,25 @@ import { Platform } from 'react-native';
 import { router } from 'expo-router';
 import { api } from './api';
 
-// Configure foreground notification display
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+// Configure foreground notification display (native only — expo-notifications
+// throws "not available on web" for the handler API).
+if (Platform.OS !== 'web') {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+}
 
 export async function registerForPushNotifications(): Promise<string | null> {
+  // Push notifications are not supported on web.
+  if (Platform.OS === 'web') {
+    return null;
+  }
   try {
     if (!Device.isDevice) {
       console.log('[Notifications] Not a physical device, skipping registration');
@@ -102,6 +109,11 @@ export function handleNotificationResponse(
 }
 
 export function setupNotificationListeners(): () => void {
+  // Web no-op — listener APIs throw on web.
+  if (Platform.OS === 'web') {
+    return () => {};
+  }
+
   const notificationSub = Notifications.addNotificationReceivedListener((notification) => {
     console.log('[Notifications] Received in foreground:', notification.request.content.title);
   });

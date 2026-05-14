@@ -26,7 +26,6 @@ export class TelegramLinkService {
       data: { userId, accountId, code, expiresAt },
     });
 
-    const botToken = this.config.get<string>('TELEGRAM_BOT_TOKEN') || '';
     // Bot username is extracted from bot info at runtime; fallback to token-based hint
     const botUsername = this.config.get<string>('TELEGRAM_BOT_USERNAME') || '';
 

@@ -14,10 +14,6 @@ import { InvestmentsService } from './investments.service';
 import { InvestmentInsightsService } from './investment-insights.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
-import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
-import { RequireTier } from '../subscriptions/decorators/require-tier.decorator';
-import { AiUsageGuard } from '../subscriptions/guards/ai-usage.guard';
-import { TrackAiUsage } from '../subscriptions/decorators/track-ai-usage.decorator';
 import { AuthenticatedRequest } from '../../common/types';
 import {
   CreatePortfolioHoldingDto,

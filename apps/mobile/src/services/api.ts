@@ -518,6 +518,26 @@ class ApiClient {
     });
   }
 
+  async getChatConversations() {
+    return this.request<Array<{
+      id: string;
+      title: string | null;
+      createdAt: string;
+      updatedAt: string;
+    }>>('/ai/chat/conversations');
+  }
+
+  async getChatConversationMessages(conversationId: string) {
+    return this.request<Array<{
+      id: string;
+      conversationId: string;
+      role: string;
+      content: string;
+      tokensUsed: number | null;
+      createdAt: string;
+    }>>(`/ai/chat/conversations/${conversationId}/messages`);
+  }
+
   async scanReceipt(imageBase64: string, userPrompt?: string, mimeType?: string) {
     return this.request<{
       amount: number;

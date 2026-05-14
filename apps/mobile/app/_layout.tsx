@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -89,12 +89,15 @@ function RootNavigator() {
   useEffect(() => {
     const cleanup = setupNotificationListeners();
 
-    // Handle notification that launched the app (cold start)
-    Notifications.getLastNotificationResponseAsync().then((response) => {
-      if (response) {
-        handleNotificationResponse(response);
-      }
-    });
+    // Handle notification that launched the app (cold start) — native only;
+    // expo-notifications throws "not available on web" otherwise.
+    if (Platform.OS !== 'web') {
+      Notifications.getLastNotificationResponseAsync().then((response) => {
+        if (response) {
+          handleNotificationResponse(response);
+        }
+      }).catch(() => {});
+    }
 
     return cleanup;
   }, []);
