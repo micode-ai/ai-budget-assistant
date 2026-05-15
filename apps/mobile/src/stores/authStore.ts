@@ -6,6 +6,7 @@ import { useAccountStore } from './accountStore';
 import { useBudgetStore } from './budgetStore';
 import { useExpenseStore } from './expenseStore';
 import { useIncomeStore } from './incomeStore';
+import { hydrateTransactions } from './hydrateTransactions';
 import { useCategoryStore } from './categoryStore';
 import { useWalletStore } from './walletStore';
 import { useExchangeRateStore } from './exchangeRateStore';
@@ -88,10 +89,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               // Load exchange rates first so baseCurrency is set before
               // expense/income totals are computed by subscribers
               await useExchangeRateStore.getState().loadRates();
-              // Load remaining data for the user's account
+              // Load remaining data. hydrateTransactions serializes expense→income
+              // to avoid SQLite contention; other stores run in parallel to it.
               await Promise.allSettled([
-                useExpenseStore.getState().loadExpenses(),
-                useIncomeStore.getState().loadIncomes(),
+                hydrateTransactions(),
                 useCategoryStore.getState().loadCategories(),
                 useWalletStore.getState().loadWallet(),
                 useBudgetStore.getState().loadBudgets(),
@@ -165,10 +166,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // expense/income totals are computed by subscribers
           await useExchangeRateStore.getState().loadRates();
 
-          // Load remaining data for the new user's account
+          // Load remaining data for the new user's account.
           await Promise.allSettled([
-            useExpenseStore.getState().loadExpenses(),
-            useIncomeStore.getState().loadIncomes(),
+            hydrateTransactions(),
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
@@ -203,8 +203,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
                 await useAccountStore.getState().loadAccounts();
                 await useExchangeRateStore.getState().loadRates();
                 await Promise.allSettled([
-                  useExpenseStore.getState().loadExpenses(),
-                  useIncomeStore.getState().loadIncomes(),
+                  hydrateTransactions(),
                   useCategoryStore.getState().loadCategories(),
                   useWalletStore.getState().loadWallet(),
                   useBudgetStore.getState().loadBudgets(),
@@ -268,10 +267,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // expense/income totals are computed by subscribers
           await useExchangeRateStore.getState().loadRates();
 
-          // Load remaining data for the new user's account
+          // Load remaining data for the new user's account.
           await Promise.allSettled([
-            useExpenseStore.getState().loadExpenses(),
-            useIncomeStore.getState().loadIncomes(),
+            hydrateTransactions(),
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),
@@ -353,10 +351,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // Load exchange rates first so baseCurrency is set before
           // expense/income totals are computed by subscribers
           await useExchangeRateStore.getState().loadRates();
-          // Load data for the user's account
+          // Load data for the user's account.
           await Promise.allSettled([
-            useExpenseStore.getState().loadExpenses(),
-            useIncomeStore.getState().loadIncomes(),
+            hydrateTransactions(),
             useCategoryStore.getState().loadCategories(),
             useWalletStore.getState().loadWallet(),
             useBudgetStore.getState().loadBudgets(),

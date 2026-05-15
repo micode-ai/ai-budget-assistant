@@ -54,8 +54,8 @@ export default function DataSettingsScreen() {
     setIsSyncing(true);
     try {
       await Promise.allSettled([
-        useExpenseStore.getState().loadExpenses(),
-        useIncomeStore.getState().loadIncomes(),
+        useExpenseStore.getState().loadExpenses({ force: true }),
+        useIncomeStore.getState().loadIncomes({ force: true }),
         useCategoryStore.getState().loadCategories(),
         useWalletStore.getState().loadWallet(),
         useBudgetStore.getState().loadBudgets(),

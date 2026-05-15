@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
+import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
@@ -60,18 +61,17 @@ export default function ExpensesScreen() {
 
   useEffect(() => {
     if (currentAccountId) {
-      loadExpenses();
-      loadIncomes();
+      hydrateTransactions();
     }
-  }, [currentAccountId, loadExpenses, loadIncomes]);
+  }, [currentAccountId]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
       if (activeTab === 'expenses') {
-        await loadExpenses();
+        await loadExpenses({ force: true });
       } else {
-        await loadIncomes();
+        await loadIncomes({ force: true });
       }
     } finally {
       setRefreshing(false);

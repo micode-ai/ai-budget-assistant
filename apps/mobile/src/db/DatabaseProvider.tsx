@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { initializeDatabase, db } from './client';
-import { useExpenseStore } from '@/stores/expenseStore';
-import { useIncomeStore } from '@/stores/incomeStore';
+import { hydrateTransactions } from '@/stores/hydrateTransactions';
 
 interface DatabaseContextValue {
   isReady: boolean;
@@ -28,15 +27,13 @@ interface DatabaseProviderProps {
 export function DatabaseProvider({ children }: DatabaseProviderProps) {
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const loadExpenses = useExpenseStore.getState().loadExpenses;
-  const loadIncomes = useIncomeStore.getState().loadIncomes;
 
   useEffect(() => {
     async function init() {
       try {
         await initializeDatabase();
         setIsReady(true);
-        await Promise.all([loadExpenses(), loadIncomes()]);
+        await hydrateTransactions();
       } catch (e) {
         console.error('Failed to initialize database:', e);
         setError(e instanceof Error ? e : new Error('Database initialization failed'));

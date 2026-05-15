@@ -14,6 +14,7 @@ import {
   deleteReceiptImageLocally,
 } from '@/db/expenseRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
+import { withTransaction } from '@/db/client';
 import {
   loadItemsByExpenseId,
   insertExpenseItems,
@@ -63,7 +64,7 @@ interface ExpenseState {
   expenseTotalsByCurrency: Record<string, number>;
 
   // Actions
-  loadExpenses: () => Promise<void>;
+  loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
   addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
@@ -92,6 +93,13 @@ interface ExpenseState {
   reset: () => void;
 }
 
+// Module-level state for coalescing concurrent loadExpenses calls and
+// skipping redundant server pulls within a short window.
+let _loadExpensesInflight: Promise<void> | null = null;
+let _lastExpensesSyncAt = 0;
+let _lastExpensesSyncedAccountId: string | null = null;
+const EXPENSES_SYNC_SKIP_WINDOW_MS = 30_000;
+
 export const useExpenseStore = create<ExpenseState>()(
   subscribeWithSelector((set, get) => ({
     expenses: [],
@@ -107,7 +115,12 @@ export const useExpenseStore = create<ExpenseState>()(
     totalThisMonth: 0,
     expenseTotalsByCurrency: {},
 
-    loadExpenses: async () => {
+    loadExpenses: (opts?: { force?: boolean }) => {
+      // Re-entry guard: coalesce concurrent callers (DatabaseProvider, authStore,
+      // tab useEffects all call this in parallel on cold start).
+      if (_loadExpensesInflight) return _loadExpensesInflight;
+
+      _loadExpensesInflight = (async () => {
       set({ isLoading: true, error: null });
       try {
         const accountId = useAccountStore.getState().currentAccountId;
@@ -133,6 +146,12 @@ export const useExpenseStore = create<ExpenseState>()(
 
         set({ expenses: localExpenses, isLoading: false });
 
+        // Skip server-pull if we synced recently for this account (unless forced).
+        // Pull-to-refresh passes force:true to bypass.
+        const msSinceLastSync = Date.now() - _lastExpensesSyncAt;
+        const recent = _lastExpensesSyncedAccountId === accountId && msSinceLastSync < EXPENSES_SYNC_SKIP_WINDOW_MS;
+        if (recent && !opts?.force) return;
+
         // 2. Sync pending local → server
         get().syncPendingExpenses();
 
@@ -142,22 +161,99 @@ export const useExpenseStore = create<ExpenseState>()(
           // Guard: abort if account switched during server call
           if (useAccountStore.getState().currentAccountId !== accountId) return;
           const serverExpenses: any[] = (serverResult as any).data || serverResult;
+
+          // -------- PHASE A: build local lookup + dedup category/project maps --------
+          const localById = new Map<string, Expense>();
+          for (const e of localExpenses) localById.set(e.id, e);
+
+          const categoryUpserts = new Map<string, Parameters<typeof upsertCategory>[0]>();
+          const projectUpserts = new Map<string, Parameters<typeof upsertProject>[0]>();
           for (const se of serverExpenses) {
+            if (se.category && se.category.id && !categoryUpserts.has(se.category.id)) {
+              const c = se.category;
+              const cn = new Date();
+              categoryUpserts.set(c.id, {
+                id: c.id,
+                accountId: se.accountId,
+                userId: c.userId ?? undefined,
+                name: c.name,
+                icon: c.icon ?? undefined,
+                color: c.color ?? undefined,
+                type: c.type || 'expense',
+                isSystem: c.isSystem ?? false,
+                parentId: c.parentId ?? undefined,
+                createdAt: c.createdAt ? new Date(c.createdAt) : cn,
+                updatedAt: c.updatedAt ? new Date(c.updatedAt) : cn,
+                isDeleted: c.isDeleted ?? false,
+                syncVersion: c.syncVersion ?? 0,
+              });
+            }
+            if (Array.isArray(se.categorySplits)) {
+              for (const ss of se.categorySplits) {
+                if (ss.category && ss.category.id && !categoryUpserts.has(ss.category.id)) {
+                  const c = ss.category;
+                  const cn = new Date();
+                  categoryUpserts.set(c.id, {
+                    id: c.id,
+                    accountId: se.accountId,
+                    userId: c.userId ?? undefined,
+                    name: c.name,
+                    icon: c.icon ?? undefined,
+                    color: c.color ?? undefined,
+                    type: c.type || 'expense',
+                    isSystem: c.isSystem ?? false,
+                    parentId: c.parentId ?? undefined,
+                    createdAt: c.createdAt ? new Date(c.createdAt) : cn,
+                    updatedAt: c.updatedAt ? new Date(c.updatedAt) : cn,
+                    isDeleted: c.isDeleted ?? false,
+                    syncVersion: c.syncVersion ?? 0,
+                  });
+                }
+              }
+            }
+            if (Array.isArray(se.projectExpenses)) {
+              for (const pe of se.projectExpenses) {
+                if (pe.project && pe.project.id && !projectUpserts.has(pe.project.id)) {
+                  const proj = pe.project;
+                  const pn = new Date();
+                  projectUpserts.set(proj.id, {
+                    id: proj.id,
+                    accountId: proj.accountId,
+                    localId: proj.clientId || proj.id,
+                    name: proj.name,
+                    description: proj.description ?? undefined,
+                    color: proj.color ?? undefined,
+                    icon: proj.icon ?? undefined,
+                    startDate: proj.startDate ? new Date(proj.startDate) : undefined,
+                    endDate: proj.endDate ? new Date(proj.endDate) : undefined,
+                    budget: proj.budget ?? undefined,
+                    currencyCode: proj.currencyCode ?? undefined,
+                    isArchived: proj.isArchived ?? false,
+                    createdAt: proj.createdAt ? new Date(proj.createdAt) : pn,
+                    updatedAt: proj.updatedAt ? new Date(proj.updatedAt) : pn,
+                    isDeleted: proj.isDeleted ?? false,
+                    syncStatus: 'synced' as SyncStatus,
+                    syncVersion: proj.syncVersion ?? 0,
+                  });
+                }
+              }
+            }
+          }
+
+          // -------- PHASE B: decrypt every server record in parallel --------
+          const decryptedAll = await Promise.all(serverExpenses.map((se) => maybeDecrypt('expense', se, se.accountId)));
+
+          // -------- PHASE C: build Expense objects (pure JS, no DB) --------
+          const builtExpenses: Expense[] = serverExpenses.map((se, i) => {
             const expenseId = se.clientId || se.id;
             const serverCategoryId = se.categoryId ?? se.category?.id ?? undefined;
             const serverDiscount = se.discountAmount != null ? Number(se.discountAmount) : undefined;
-
-            // Preserve local category & discount if server doesn't have them
-            const localExpense = localExpenses.find((e) => e.id === expenseId);
-            // Extract projectId from server project associations
+            const localExpense = localById.get(expenseId);
             const serverProjectId = se.projectExpenses && Array.isArray(se.projectExpenses) && se.projectExpenses.length > 0
               ? (se.projectExpenses[0].projectId ?? se.projectExpenses[0].project?.id)
               : undefined;
-
-            // Decrypt encrypted fields if present
-            const decrypted = await maybeDecrypt('expense', se, se.accountId);
-
-            const expense: Expense = {
+            const decrypted = decryptedAll[i];
+            return {
               id: expenseId,
               localId: expenseId,
               serverId: se.id,
@@ -185,193 +281,125 @@ export const useExpenseStore = create<ExpenseState>()(
               syncStatus: 'synced' as SyncStatus,
               syncVersion: decrypted.syncVersion || 0,
             };
-            await upsertExpense(expense);
+          });
 
-            // Sync category from server if present (so other devices have it locally)
-            if (se.category && se.category.id) {
-              const now = new Date();
-              try {
-                await upsertCategory({
-                  id: se.category.id,
-                  accountId: se.accountId,
-                  userId: se.category.userId ?? undefined,
-                  name: se.category.name,
-                  icon: se.category.icon ?? undefined,
-                  color: se.category.color ?? undefined,
-                  type: se.category.type || 'expense',
-                  isSystem: se.category.isSystem ?? false,
-                  parentId: se.category.parentId ?? undefined,
-                  createdAt: se.category.createdAt ? new Date(se.category.createdAt) : now,
-                  updatedAt: se.category.updatedAt ? new Date(se.category.updatedAt) : now,
-                  isDeleted: se.category.isDeleted ?? false,
-                  syncVersion: se.category.syncVersion ?? 0,
-                });
-              } catch { /* skip if already exists */ }
-            }
-
-            // Sync project entities from server if present
-            if (se.projectExpenses && Array.isArray(se.projectExpenses)) {
-              for (const pe of se.projectExpenses) {
-                if (pe.project && pe.project.id) {
-                  const proj = pe.project;
-                  const now = new Date();
-                  try {
-                    await upsertProject({
-                      id: proj.id,
-                      accountId: proj.accountId,
-                      localId: proj.clientId || proj.id,
-                      name: proj.name,
-                      description: proj.description ?? undefined,
-                      color: proj.color ?? undefined,
-                      icon: proj.icon ?? undefined,
-                      startDate: proj.startDate ? new Date(proj.startDate) : undefined,
-                      endDate: proj.endDate ? new Date(proj.endDate) : undefined,
-                      budget: proj.budget ?? undefined,
-                      currencyCode: proj.currencyCode ?? undefined,
-                      isArchived: proj.isArchived ?? false,
-                      createdAt: proj.createdAt ? new Date(proj.createdAt) : now,
-                      updatedAt: proj.updatedAt ? new Date(proj.updatedAt) : now,
-                      isDeleted: proj.isDeleted ?? false,
-                      syncStatus: 'synced' as SyncStatus,
-                      syncVersion: proj.syncVersion ?? 0,
-                    });
-                  } catch { /* skip */ }
-                }
+          // -------- PHASE D: single SQLite transaction for ALL writes --------
+          const serverIdSet = new Set<string>(serverExpenses.map((se: any) => se.clientId || se.id));
+          await withTransaction(async () => {
+              // 1) Dedup'd categories/projects — each upserted ONCE
+              for (const c of categoryUpserts.values()) {
+                try { await upsertCategory(c); } catch { /* skip */ }
               }
-            }
-
-            // Sync split categories from server if present
-            if (se.categorySplits && Array.isArray(se.categorySplits)) {
-              for (const ss of se.categorySplits) {
-                if (ss.category && ss.category.id) {
-                  const now = new Date();
-                  try {
-                    await upsertCategory({
-                      id: ss.category.id,
-                      accountId: se.accountId,
-                      userId: ss.category.userId ?? undefined,
-                      name: ss.category.name,
-                      icon: ss.category.icon ?? undefined,
-                      color: ss.category.color ?? undefined,
-                      type: ss.category.type || 'expense',
-                      isSystem: ss.category.isSystem ?? false,
-                      parentId: ss.category.parentId ?? undefined,
-                      createdAt: ss.category.createdAt ? new Date(ss.category.createdAt) : now,
-                      updatedAt: ss.category.updatedAt ? new Date(ss.category.updatedAt) : now,
-                      isDeleted: ss.category.isDeleted ?? false,
-                      syncVersion: ss.category.syncVersion ?? 0,
-                    });
-                  } catch { /* skip */ }
-                }
+              for (const p of projectUpserts.values()) {
+                try { await upsertProject(p); } catch { /* skip */ }
               }
-            }
-
-            // Sync expense items from server only if no local items exist
-            if (se.items && Array.isArray(se.items) && se.items.length > 0) {
-              const localItems = await loadItemsByExpenseId(expense.id);
-              if (localItems.length === 0) {
-                const now = new Date();
-                for (const si of se.items) {
-                  const item: ExpenseItem = {
-                    id: si.id,
-                    localId: si.id,
-                    expenseId: expense.id,
-                    description: si.description,
-                    quantity: si.quantity ?? 1,
-                    unitPrice: Number(si.unitPrice ?? 0),
-                    totalPrice: Number(si.totalPrice ?? 0),
-                    sortOrder: si.sortOrder ?? 0,
-                    isDeleted: si.isDeleted || false,
-                    syncStatus: 'synced' as SyncStatus,
-                    syncVersion: si.syncVersion ?? 0,
-                    createdAt: si.createdAt ? new Date(si.createdAt) : now,
-                    updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
-                  };
-                  await upsertExpenseItem(item);
-                }
+              // 2) Expenses
+              for (const e of builtExpenses) {
+                await upsertExpense(e);
               }
-            }
+              // 3) Per-expense extras (items / splits / tags / project links)
+              for (let i = 0; i < serverExpenses.length; i++) {
+                const se = serverExpenses[i];
+                const expense = builtExpenses[i];
 
-            // Sync category splits from server
-            if (se.categorySplits && Array.isArray(se.categorySplits) && se.categorySplits.length > 0) {
-              const localSplits = await getSplitsForExpense(expense.id);
-              if (localSplits.length === 0) {
-                const now = new Date();
-                for (const ss of se.categorySplits) {
-                  const split: ExpenseCategorySplit = {
-                    id: ss.id,
-                    expenseId: expense.id,
-                    categoryId: ss.categoryId ?? ss.category?.id,
-                    amount: Number(ss.amount),
-                    percentage: Number(ss.percentage),
-                    notes: ss.notes ?? undefined,
-                    createdAt: ss.createdAt ? new Date(ss.createdAt) : now,
-                    updatedAt: ss.updatedAt ? new Date(ss.updatedAt) : now,
-                    isDeleted: ss.isDeleted || false,
-                    syncVersion: ss.syncVersion ?? 0,
-                  };
-                  await insertSplit(split);
+                if (se.items && Array.isArray(se.items) && se.items.length > 0) {
+                  const localItems = await loadItemsByExpenseId(expense.id);
+                  if (localItems.length === 0) {
+                    const now = new Date();
+                    for (const si of se.items) {
+                      const item: ExpenseItem = {
+                        id: si.id,
+                        localId: si.id,
+                        expenseId: expense.id,
+                        description: si.description,
+                        quantity: si.quantity ?? 1,
+                        unitPrice: Number(si.unitPrice ?? 0),
+                        totalPrice: Number(si.totalPrice ?? 0),
+                        sortOrder: si.sortOrder ?? 0,
+                        isDeleted: si.isDeleted || false,
+                        syncStatus: 'synced' as SyncStatus,
+                        syncVersion: si.syncVersion ?? 0,
+                        createdAt: si.createdAt ? new Date(si.createdAt) : now,
+                        updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
+                      };
+                      await upsertExpenseItem(item);
+                    }
+                  }
                 }
-              }
-            }
 
-            // Sync expense tags from server
-            if (se.expenseTags && Array.isArray(se.expenseTags) && se.expenseTags.length > 0) {
-              const localTags = await getTagsForExpense(expense.id);
-              if (localTags.length === 0) {
-                const now = new Date();
-                for (const et of se.expenseTags) {
-                  const tagId = et.tagId ?? et.tag?.id;
-                  if (!tagId) continue;
-                  try {
-                    await insertExpenseTag({
-                      id: et.id,
-                      expenseId: expense.id,
-                      tagId,
-                      createdAt: et.createdAt ? new Date(et.createdAt) : now,
-                      updatedAt: et.updatedAt ? new Date(et.updatedAt) : now,
-                      isDeleted: et.isDeleted || false,
-                      syncVersion: et.syncVersion ?? 0,
-                    });
-                  } catch {
-                    // Duplicate — skip
+                if (se.categorySplits && Array.isArray(se.categorySplits) && se.categorySplits.length > 0) {
+                  const localSplits = await getSplitsForExpense(expense.id);
+                  if (localSplits.length === 0) {
+                    const now = new Date();
+                    for (const ss of se.categorySplits) {
+                      const split: ExpenseCategorySplit = {
+                        id: ss.id,
+                        expenseId: expense.id,
+                        categoryId: ss.categoryId ?? ss.category?.id,
+                        amount: Number(ss.amount),
+                        percentage: Number(ss.percentage),
+                        notes: ss.notes ?? undefined,
+                        createdAt: ss.createdAt ? new Date(ss.createdAt) : now,
+                        updatedAt: ss.updatedAt ? new Date(ss.updatedAt) : now,
+                        isDeleted: ss.isDeleted || false,
+                        syncVersion: ss.syncVersion ?? 0,
+                      };
+                      await insertSplit(split);
+                    }
+                  }
+                }
+
+                if (se.expenseTags && Array.isArray(se.expenseTags) && se.expenseTags.length > 0) {
+                  const localTags = await getTagsForExpense(expense.id);
+                  if (localTags.length === 0) {
+                    const now = new Date();
+                    for (const et of se.expenseTags) {
+                      const tagId = et.tagId ?? et.tag?.id;
+                      if (!tagId) continue;
+                      try {
+                        await insertExpenseTag({
+                          id: et.id,
+                          expenseId: expense.id,
+                          tagId,
+                          createdAt: et.createdAt ? new Date(et.createdAt) : now,
+                          updatedAt: et.updatedAt ? new Date(et.updatedAt) : now,
+                          isDeleted: et.isDeleted || false,
+                          syncVersion: et.syncVersion ?? 0,
+                        });
+                      } catch { /* duplicate */ }
+                    }
+                  }
+                }
+
+                if (se.projectExpenses && Array.isArray(se.projectExpenses) && se.projectExpenses.length > 0) {
+                  const localProjectId = await getProjectIdForExpense(expense.id);
+                  if (!localProjectId) {
+                    const now = new Date();
+                    for (const pe of se.projectExpenses) {
+                      const projectId = pe.projectId ?? pe.project?.id;
+                      if (!projectId) continue;
+                      try {
+                        await addExpenseToProject({
+                          id: pe.id,
+                          projectId,
+                          expenseId: expense.id,
+                          createdAt: pe.createdAt ? new Date(pe.createdAt) : now,
+                          updatedAt: pe.updatedAt ? new Date(pe.updatedAt) : now,
+                          isDeleted: pe.isDeleted || false,
+                          syncVersion: pe.syncVersion ?? 0,
+                        });
+                      } catch { /* duplicate */ }
+                    }
                   }
                 }
               }
-            }
-
-            // Sync project associations from server
-            if (se.projectExpenses && Array.isArray(se.projectExpenses) && se.projectExpenses.length > 0) {
-              const localProjectId = await getProjectIdForExpense(expense.id);
-              if (!localProjectId) {
-                const now = new Date();
-                for (const pe of se.projectExpenses) {
-                  const projectId = pe.projectId ?? pe.project?.id;
-                  if (!projectId) continue;
-                  try {
-                    await addExpenseToProject({
-                      id: pe.id,
-                      projectId,
-                      expenseId: expense.id,
-                      createdAt: pe.createdAt ? new Date(pe.createdAt) : now,
-                      updatedAt: pe.updatedAt ? new Date(pe.updatedAt) : now,
-                      isDeleted: pe.isDeleted || false,
-                      syncVersion: pe.syncVersion ?? 0,
-                    });
-                  } catch {
-                    // Duplicate — skip
-                  }
+              // 4) Soft-delete locals that the server no longer returns
+              for (const local of localExpenses) {
+                if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
+                  await softDeleteExpenseInDb(local.id, new Date());
                 }
               }
-            }
-          }
-          // Mark locally-synced expenses as deleted if server no longer returns them
-          const serverIdSet = new Set(serverExpenses.map((se: any) => se.clientId || se.id));
-          for (const local of localExpenses) {
-            if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
-              await softDeleteExpenseInDb(local.id, new Date());
-            }
-          }
+            });
 
           // Reload from SQLite after merge
           const merged = await loadAllExpenses(accountId);
@@ -391,10 +419,16 @@ export const useExpenseStore = create<ExpenseState>()(
 
           set({ expenses: merged });
           setLastSyncTime(Date.now());
+          _lastExpensesSyncAt = Date.now();
+          _lastExpensesSyncedAccountId = accountId;
 
-          // Refresh category and project stores so UI picks up newly synced data
-          useCategoryStore.getState().loadCategories();
-          useProjectStore.getState().loadProjects();
+          // Refresh category and project stores so UI picks up newly synced data.
+          // AWAITED — fire-and-forget caused background SQLite contention with the
+          // very next hydrateTransactions cycle (followups paid 200-400ms extra).
+          await Promise.all([
+            useCategoryStore.getState().loadCategories(),
+            useProjectStore.getState().loadProjects(),
+          ]);
         } catch (e) {
           // Server pull failed (offline?) — local data is still shown
           console.log('Server pull skipped:', e);
@@ -403,6 +437,9 @@ export const useExpenseStore = create<ExpenseState>()(
         console.error('Failed to load expenses from SQLite:', e);
         set({ error: 'Failed to load expenses', isLoading: false });
       }
+      })();
+      _loadExpensesInflight.finally(() => { _loadExpensesInflight = null; });
+      return _loadExpensesInflight;
     },
 
     setExpenses: (expenses) => set({ expenses }),

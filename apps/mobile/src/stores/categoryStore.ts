@@ -8,6 +8,11 @@ import { useAuthStore } from './authStore';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 
+// Accounts whose default categories have been seeded and color-patched in this
+// session. Avoids re-running 18 sequential `categoryExistsById` SELECTs + a
+// color-patch loop on every `loadCategories` call (used to cost 60-600ms each).
+const _seededAccounts = new Set<string>();
+
 const DEFAULT_EXPENSE_CATEGORIES = [
   { name: 'Food & Dining', icon: 'restaurant', color: '#E53E3E' },
   { name: 'Transport', icon: 'car', color: '#2C9E96' },
@@ -58,6 +63,16 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     if (!accountId) return;
     set({ isLoading: true });
     try {
+      // Fast path: this account was already seeded + color-patched in this
+      // session. Skip the 18 categoryExistsById SELECTs + color-patch loop and
+      // just re-read from SQLite (which the caller wants because the cascade
+      // upstream may have upserted new server categories).
+      if (_seededAccounts.has(accountId)) {
+        const categories = await getAllCategories(accountId);
+        set({ categories, isInitialized: true });
+        return;
+      }
+
       let categories = await getAllCategories(accountId);
 
       // If local DB is empty, try to fetch from server first
@@ -143,6 +158,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         categories = await getAllCategories(accountId);
       }
 
+      _seededAccounts.add(accountId);
       set({ categories, isInitialized: true });
     } finally {
       set({ isLoading: false });

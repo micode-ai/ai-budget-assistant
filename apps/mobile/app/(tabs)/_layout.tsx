@@ -1,11 +1,13 @@
 import { Tabs, Redirect, router } from 'expo-router';
-import { TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { useTheme } from '@/theme';
+import { HydrationProgressBar } from '@/components/HydrationProgressBar';
 
 const tabIcons = {
   home: require('../../assets/widget-icons/home.png'),
@@ -27,7 +29,16 @@ export default function TabLayout() {
   }
 
   return (
-    <Tabs
+    <View style={{ flex: 1 }}>
+      <HydrationProgressBar />
+      <Tabs
+      screenListeners={{
+        tabPress: () => {
+          if (Platform.OS !== 'web') {
+            Haptics.selectionAsync().catch(() => {});
+          }
+        },
+      }}
       screenOptions={{
         tabBarActiveTintColor: theme.colors.tabBarActive,
         tabBarInactiveTintColor: theme.colors.tabBarInactive,
@@ -108,7 +119,8 @@ export default function TabLayout() {
           ),
         }}
       />
-    </Tabs>
+      </Tabs>
+    </View>
   );
 }
 
