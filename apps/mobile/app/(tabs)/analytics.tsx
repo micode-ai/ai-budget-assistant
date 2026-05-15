@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { useExpenseStore } from '@/stores/expenseStore';
-import { useIncomeStore } from '@/stores/incomeStore';
+import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useWalletStore } from '@/stores/walletStore';
 import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { useInsightsStore } from '@/stores/insightsStore';
@@ -43,8 +42,6 @@ export default function AnalyticsScreen() {
   const { loadRates } = useExchangeRateStore();
   const { loadTags } = useTagStore();
   const { loadProjects } = useProjectStore();
-  const loadExpenses = useExpenseStore((s) => s.loadExpenses);
-  const loadIncomes = useIncomeStore((s) => s.loadIncomes);
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -58,12 +55,12 @@ export default function AnalyticsScreen() {
   }, [loadAIInsights, loadRates, loadTags, loadProjects, i18n.language]);
 
   // Hydrate once on mount/account-switch. Stores are local-first (SQLite immediately,
-  // API in background). Pull-to-refresh and post-mutation updates handle staleness.
+  // API in background). hydrateTransactions serializes expense→income to avoid
+  // SQLite contention. Pull-to-refresh and post-mutation updates handle staleness.
   useEffect(() => {
     if (!currentAccountId) return;
-    loadExpenses();
-    loadIncomes();
-  }, [currentAccountId, loadExpenses, loadIncomes]);
+    hydrateTransactions();
+  }, [currentAccountId]);
 
   const availableCurrencies = walletSummary.map((s) => s.currencyCode);
   const currency = selectedCurrency || user?.currencyCode || 'USD';

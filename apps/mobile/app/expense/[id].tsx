@@ -110,7 +110,6 @@ export default function ExpenseDetailScreen() {
     if (!id) return;
     setImageLoading(true);
     const result = await loadReceiptImage(id);
-    console.log('=== RECEIPT ===', { hasResult: !!result, mimeType: result?.mimeType, base64Len: result?.base64?.length });
     if (result) {
       setReceiptImageBase64(result.base64);
       setReceiptMimeType(result.mimeType);

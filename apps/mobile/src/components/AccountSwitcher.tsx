@@ -10,8 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAccountStore } from '@/stores/accountStore';
-import { useExpenseStore } from '@/stores/expenseStore';
-import { useIncomeStore } from '@/stores/incomeStore';
+import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useBudgetStore } from '@/stores/budgetStore';
@@ -30,8 +29,6 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const { accounts, currentAccountId, switchAccount } = useAccountStore();
-  const { loadExpenses } = useExpenseStore();
-  const { loadIncomes } = useIncomeStore();
   const { loadCategories } = useCategoryStore();
   const { loadWallet } = useWalletStore();
   const { loadBudgets } = useBudgetStore();
@@ -44,8 +41,9 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
     setVisible(false);
     if (accountId === currentAccountId) return;
     await switchAccount(accountId);
-    // Reload all data for the new account
-    await Promise.all([loadExpenses(), loadIncomes(), loadCategories(), loadWallet(), loadBudgets()]);
+    // Reload all data for the new account. hydrateTransactions serializes
+    // expenses→incomes to avoid SQLite contention; other stores run in parallel.
+    await Promise.all([hydrateTransactions(), loadCategories(), loadWallet(), loadBudgets()]);
   };
 
   const handleTriggerPress = () => {

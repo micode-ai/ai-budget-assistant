@@ -51,3 +51,8 @@ export async function initializeDatabase(): Promise<void> {
   console.log('[WebDB] Database initialized (web mock - data not persisted)');
   console.log('[WebDB] For full functionality, please use the mobile app on iOS/Android');
 }
+
+// No-op transaction wrapper on web (mock DB has no real persistence anyway).
+export function withTransaction(task: () => Promise<void>): Promise<void> {
+  return task();
+}

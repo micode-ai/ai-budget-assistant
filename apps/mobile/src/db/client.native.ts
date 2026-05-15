@@ -21,6 +21,14 @@ export function executeSql<T = Record<string, unknown>>(
   return Promise.resolve(expoDb.getAllSync<T>(sql, ...params));
 }
 
+// Run `task` inside a single SQLite transaction. Any awaited executeSql calls
+// inside resolve synchronously (expo-sqlite uses getAllSync underneath), so
+// dozens of upserts collapse into one BEGIN/COMMIT — orders of magnitude
+// faster than one transaction per statement.
+export function withTransaction(task: () => Promise<void>): Promise<void> {
+  return expoDb.withTransactionAsync(task);
+}
+
 // Database initialization
 export async function initializeDatabase(): Promise<void> {
   try {

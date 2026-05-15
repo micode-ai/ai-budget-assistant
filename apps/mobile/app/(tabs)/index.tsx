@@ -11,8 +11,7 @@ const quickActionIcons = {
   exchange: require('../../assets/widget-icons/exchange.png'),
   converter: require('../../assets/widget-icons/converter.png'),
 };
-import { useExpenseStore } from '@/stores/expenseStore';
-import { useIncomeStore } from '@/stores/incomeStore';
+import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
@@ -37,8 +36,6 @@ export default function DashboardScreen() {
   const [widgetRefreshKey, setWidgetRefreshKey] = useState(0);
   const { t } = useTranslation();
   const { user } = useAuthStore();
-  const { loadExpenses } = useExpenseStore();
-  const { loadIncomes } = useIncomeStore();
   const { getMonthlyBudgetSummary } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { walletSummary, loadWallet } = useWalletStore();
@@ -70,13 +67,13 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     if (currentAccountId) {
-      Promise.all([loadExpenses(), loadIncomes()]).then(() => loadDebts());
+      hydrateTransactions().then(() => loadDebts());
       loadProfile();
       if (currentAccountType === 'investment') {
         loadInvestmentSummary();
       }
     }
-  }, [currentAccountId, loadExpenses, loadIncomes, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
   const monthlyBudgetSummary = getMonthlyBudgetSummary();
   const totalBudget = monthlyBudgetSummary.totalAmount;
@@ -90,13 +87,13 @@ export default function DashboardScreen() {
       if (currentAccountType === 'investment') {
         promises.push(loadInvestmentSummary());
       }
-      await Promise.all([loadExpenses(), loadIncomes(), ...promises]);
+      await Promise.all([hydrateTransactions({ force: true }), ...promises]);
       await loadDebts();
     } finally {
       setRefreshing(false);
       setWidgetRefreshKey((k) => k + 1);
     }
-  }, [loadExpenses, loadIncomes, loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+  }, [loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
 
   const remaining = totalBudget - budgetSpent;
 

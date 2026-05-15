@@ -11,3 +11,7 @@ export function executeSql<T = Record<string, unknown>>(
 ): Promise<QueryResult<T>> {
   return Promise.resolve([]);
 }
+
+export function withTransaction(task: () => Promise<void>): Promise<void> {
+  return task();
+}

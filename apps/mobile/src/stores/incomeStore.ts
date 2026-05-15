@@ -12,6 +12,7 @@ import {
 import { insertIncomeTag, getTagsForIncome } from '@/db/tagRepository';
 import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
+import { withTransaction } from '@/db/client';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
@@ -35,7 +36,7 @@ interface IncomeState {
   totalThisMonth: number;
   incomeTotalsByCurrency: Record<string, number>;
 
-  loadIncomes: () => Promise<void>;
+  loadIncomes: (opts?: { force?: boolean }) => Promise<void>;
   addIncome: (income: {
     userId: string;
     amount: number;
@@ -81,6 +82,13 @@ function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string, number
   return totals;
 }
 
+// Module-level state for coalescing concurrent loadIncomes calls and
+// skipping redundant server pulls within a short window.
+let _loadIncomesInflight: Promise<void> | null = null;
+let _lastIncomesSyncAt = 0;
+let _lastIncomesSyncedAccountId: string | null = null;
+const INCOMES_SYNC_SKIP_WINDOW_MS = 30_000;
+
 export const useIncomeStore = create<IncomeState>()(
   subscribeWithSelector((set, get) => ({
     incomes: [],
@@ -95,7 +103,10 @@ export const useIncomeStore = create<IncomeState>()(
     totalThisMonth: 0,
     incomeTotalsByCurrency: {},
 
-    loadIncomes: async () => {
+    loadIncomes: (opts?: { force?: boolean }) => {
+      if (_loadIncomesInflight) return _loadIncomesInflight;
+
+      _loadIncomesInflight = (async () => {
       set({ isLoading: true, error: null });
       try {
         const accountId = useAccountStore.getState().currentAccountId;
@@ -109,6 +120,11 @@ export const useIncomeStore = create<IncomeState>()(
         if (useAccountStore.getState().currentAccountId !== accountId) return;
         set({ incomes: localIncomes, isLoading: false });
 
+        // Skip server-pull if we synced recently for this account (unless forced).
+        const msSinceLastSync = Date.now() - _lastIncomesSyncAt;
+        const recent = _lastIncomesSyncedAccountId === accountId && msSinceLastSync < INCOMES_SYNC_SKIP_WINDOW_MS;
+        if (recent && !opts?.force) return;
+
         // 2. Sync pending local → server
         get().syncPendingIncomes();
 
@@ -118,15 +134,43 @@ export const useIncomeStore = create<IncomeState>()(
           if (useAccountStore.getState().currentAccountId !== accountId) return;
           const serverIncomes: any[] = (serverResult as any).data || serverResult;
 
+          // -------- PHASE A: build local lookup + dedup category map --------
+          const localById = new Map<string, Income>();
+          for (const i of localIncomes) localById.set(i.id, i);
+
+          const categoryUpserts = new Map<string, Parameters<typeof upsertCategory>[0]>();
           for (const si of serverIncomes) {
+            if (si.category && si.category.id && !categoryUpserts.has(si.category.id)) {
+              const c = si.category;
+              const cn = new Date();
+              categoryUpserts.set(c.id, {
+                id: c.id,
+                accountId: si.accountId,
+                userId: c.userId ?? undefined,
+                name: c.name,
+                icon: c.icon ?? undefined,
+                color: c.color ?? undefined,
+                type: c.type || 'income',
+                isSystem: c.isSystem ?? false,
+                parentId: c.parentId ?? undefined,
+                createdAt: c.createdAt ? new Date(c.createdAt) : cn,
+                updatedAt: c.updatedAt ? new Date(c.updatedAt) : cn,
+                isDeleted: c.isDeleted ?? false,
+                syncVersion: c.syncVersion ?? 0,
+              });
+            }
+          }
+
+          // -------- PHASE B: decrypt every server record in parallel --------
+          const decryptedAll = await Promise.all(serverIncomes.map((si) => maybeDecrypt('income', si, si.accountId)));
+
+          // -------- PHASE C: build Income objects --------
+          const builtIncomes: Income[] = serverIncomes.map((si, i) => {
             const incomeId = si.clientId || si.id;
-            const localIncome = localIncomes.find((i) => i.id === incomeId);
+            const localIncome = localById.get(incomeId);
             const serverCategoryId = si.categoryId ?? si.category?.id ?? undefined;
-
-            // Decrypt encrypted fields if present
-            const decrypted = await maybeDecrypt('income', si, si.accountId);
-
-            const income: Income = {
+            const decrypted = decryptedAll[i];
+            return {
               id: incomeId,
               localId: incomeId,
               serverId: si.id,
@@ -149,72 +193,61 @@ export const useIncomeStore = create<IncomeState>()(
               syncStatus: 'synced' as SyncStatus,
               syncVersion: decrypted.syncVersion || 0,
             };
-            await upsertIncome(income);
+          });
 
-            // Sync category from server if present (so other devices have it locally)
-            if (si.category && si.category.id) {
-              const tagNow2 = new Date();
-              try {
-                await upsertCategory({
-                  id: si.category.id,
-                  accountId: si.accountId,
-                  userId: si.category.userId ?? undefined,
-                  name: si.category.name,
-                  icon: si.category.icon ?? undefined,
-                  color: si.category.color ?? undefined,
-                  type: si.category.type || 'income',
-                  isSystem: si.category.isSystem ?? false,
-                  parentId: si.category.parentId ?? undefined,
-                  createdAt: si.category.createdAt ? new Date(si.category.createdAt) : tagNow2,
-                  updatedAt: si.category.updatedAt ? new Date(si.category.updatedAt) : tagNow2,
-                  isDeleted: si.category.isDeleted ?? false,
-                  syncVersion: si.category.syncVersion ?? 0,
-                });
-              } catch { /* skip if already exists */ }
-            }
-
-            // Sync income tags from server
-            if (si.incomeTags && Array.isArray(si.incomeTags) && si.incomeTags.length > 0) {
-              const localTags = await getTagsForIncome(incomeId);
-              if (localTags.length === 0) {
-                const tagNow = new Date();
-                for (const it of si.incomeTags) {
-                  const tagId = it.tagId ?? it.tag?.id;
-                  if (!tagId) continue;
-                  try {
-                    await insertIncomeTag({
-                      id: it.id,
-                      incomeId,
-                      tagId,
-                      createdAt: it.createdAt ? new Date(it.createdAt) : tagNow,
-                      updatedAt: it.updatedAt ? new Date(it.updatedAt) : tagNow,
-                      isDeleted: it.isDeleted || false,
-                      syncVersion: it.syncVersion ?? 0,
-                    });
-                  } catch {
-                    // Duplicate — skip
+          // -------- PHASE D: single SQLite transaction for ALL writes --------
+          const serverIdSet = new Set<string>(serverIncomes.map((si: any) => si.clientId || si.id));
+          await withTransaction(async () => {
+              for (const c of categoryUpserts.values()) {
+                try { await upsertCategory(c); } catch { /* skip */ }
+              }
+              for (const inc of builtIncomes) {
+                await upsertIncome(inc);
+              }
+              for (let i = 0; i < serverIncomes.length; i++) {
+                const si = serverIncomes[i];
+                const incomeId = builtIncomes[i].id;
+                if (si.incomeTags && Array.isArray(si.incomeTags) && si.incomeTags.length > 0) {
+                  const localTags = await getTagsForIncome(incomeId);
+                  if (localTags.length === 0) {
+                    const tagNow = new Date();
+                    for (const it of si.incomeTags) {
+                      const tagId = it.tagId ?? it.tag?.id;
+                      if (!tagId) continue;
+                      try {
+                        await insertIncomeTag({
+                          id: it.id,
+                          incomeId,
+                          tagId,
+                          createdAt: it.createdAt ? new Date(it.createdAt) : tagNow,
+                          updatedAt: it.updatedAt ? new Date(it.updatedAt) : tagNow,
+                          isDeleted: it.isDeleted || false,
+                          syncVersion: it.syncVersion ?? 0,
+                        });
+                      } catch { /* duplicate */ }
+                    }
                   }
                 }
               }
-            }
-          }
+              for (const local of localIncomes) {
+                if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
+                  await softDeleteIncomeInDb(local.id, new Date());
+                }
+              }
+            });
 
-          // Mark locally-synced incomes as deleted if server no longer returns them
-          const serverIdSet = new Set(serverIncomes.map((si: any) => si.clientId || si.id));
-          for (const local of localIncomes) {
-            if (local.syncStatus === 'synced' && !serverIdSet.has(local.id)) {
-              await softDeleteIncomeInDb(local.id, new Date());
-            }
-          }
-
-          // Refresh category store so UI picks up newly synced data
-          useCategoryStore.getState().loadCategories();
+          // Refresh category store so UI picks up newly synced data.
+          // AWAITED so the next hydrate cycle doesn't contend with a background
+          // SQLite read for categories.
+          await useCategoryStore.getState().loadCategories();
 
           // Reload from SQLite after merge
           const merged = await loadAllIncomes(accountId);
           if (useAccountStore.getState().currentAccountId !== accountId) return;
           set({ incomes: merged });
           setLastSyncTime(Date.now());
+          _lastIncomesSyncAt = Date.now();
+          _lastIncomesSyncedAccountId = accountId;
         } catch (e) {
           console.log('Server pull skipped (incomes):', e);
         }
@@ -222,6 +255,9 @@ export const useIncomeStore = create<IncomeState>()(
         console.error('Failed to load incomes from SQLite:', e);
         set({ error: 'Failed to load incomes', isLoading: false });
       }
+      })();
+      _loadIncomesInflight.finally(() => { _loadIncomesInflight = null; });
+      return _loadIncomesInflight;
     },
 
     addIncome: async (incomeData) => {
