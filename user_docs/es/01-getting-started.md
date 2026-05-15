@@ -75,6 +75,8 @@ La aplicacion tiene 5 pestanas principales en la parte inferior de la pantalla:
 Navegacion adicional:
 - **Cambiar cuenta** — toca el nombre de la cuenta (esquina superior izquierda) para cambiar entre cuentas
 - **Ajustes** — toca el icono de engranaje (esquina superior derecha) para acceder a los ajustes
+- **Vibracion tactil** — al tocar una pestana, los dispositivos compatibles producen una breve vibracion para confirmar que el toque fue registrado
+- **Indicador de carga** — una barra de progreso fina aparece en la parte superior de la pantalla mientras la app obtiene o sincroniza datos
 
 ---
 

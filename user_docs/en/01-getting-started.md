@@ -75,6 +75,8 @@ The app has 5 main tabs at the bottom of the screen:
 Additional navigation:
 - **Account switcher** — tap the account name (top-left) to switch between accounts
 - **Settings** — tap the gear icon (top-right) to access settings
+- **Tactile feedback** — tapping a tab produces a light vibration on supported devices, so you know your tap was registered
+- **Loading indicator** — a thin progress bar at the very top of the screen appears while the app is fetching or syncing data
 
 ---
 

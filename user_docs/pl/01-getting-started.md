@@ -75,6 +75,8 @@ Aplikacja posiada 5 glownych zakladek na dole ekranu:
 Dodatkowa nawigacja:
 - **Przelacznik kont** — dotknij nazwy konta (lewy gorny rog), aby przelaczac miedzy kontami
 - **Ustawienia** — dotknij ikony zebatki (prawy gorny rog), aby przejsc do ustawien
+- **Wibracja przy dotyku** — dotkniecie zakladki powoduje krotka wibracje na obslugiwanych urzadzeniach, dzieki czemu wiesz, ze dotkniecie zostalo zarejestrowane
+- **Wskaznik ladowania** — cienki pasek postepu pojawia sie u gory ekranu, gdy aplikacja pobiera lub synchronizuje dane
 
 ---
 

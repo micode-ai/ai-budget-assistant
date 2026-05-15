@@ -148,6 +148,8 @@ The app has 5 main tabs at the bottom of the screen:
 Additional navigation:
 - **Account switcher** — tap the account name (top-left) to switch between accounts
 - **Settings** — tap the gear icon (top-right) to access settings
+- **Tactile feedback** — tapping a tab produces a light vibration on supported devices, so you know your tap was registered
+- **Loading indicator** — a thin progress bar at the very top of the screen appears while the app is fetching or syncing data
 
 ---
 
@@ -3236,6 +3238,8 @@ iOS, Android, Web
 Дополнительная навигация:
 - **Переключить счёт** — нажмите на название счёта (вверху слева), чтобы переключиться между счетами
 - **Настройки** — нажмите на значок шестерёнки (вверху справа), чтобы открыть настройки
+- **Тактильный отклик** — при нажатии на вкладку на поддерживаемых устройствах появляется лёгкая вибрация — так вы видите, что нажатие зарегистрировано
+- **Индикатор загрузки** — тонкая полоса в самом верху экрана появляется, пока приложение загружает или синхронизирует данные
 
 ---
 
@@ -6313,6 +6317,8 @@ iOS, Android, Web
 Додаткова навігація:
 - **Переключити рахунок** — натисніть назву рахунку (вгорі зліва), щоб переключитися між рахунками
 - **Налаштування** — натисніть іконку шестерінки (вгорі справа) для доступу до налаштувань
+- **Тактильний відгук** — натискання на вкладку викликає легку вібрацію на сумісних пристроях, щоб ви бачили, що натискання зареєстровано
+- **Індикатор завантаження** — тонка смуга прогресу з'являється у верхній частині екрана, поки додаток отримує або синхронізує дані
 
 ## Часті запитання
 
@@ -9385,6 +9391,8 @@ Aplikacja posiada 5 glownych zakladek na dole ekranu:
 Dodatkowa nawigacja:
 - **Przelacznik kont** — dotknij nazwy konta (lewy gorny rog), aby przelaczac miedzy kontami
 - **Ustawienia** — dotknij ikony zebatki (prawy gorny rog), aby przejsc do ustawien
+- **Wibracja przy dotyku** — dotkniecie zakladki powoduje krotka wibracje na obslugiwanych urzadzeniach, dzieki czemu wiesz, ze dotkniecie zostalo zarejestrowane
+- **Wskaznik ladowania** — cienki pasek postepu pojawia sie u gory ekranu, gdy aplikacja pobiera lub synchronizuje dane
 
 ---
 
@@ -12441,6 +12449,8 @@ Die App hat 5 Haupttabs am unteren Bildschirmrand:
 Zusatzliche Navigation:
 - **Konto wechseln** — tippe auf den Kontonamen (oben links), um zwischen Konten zu wechseln
 - **Einstellungen** — tippe auf das Zahnradsymbol (oben rechts), um die Einstellungen zu offnen
+- **Haptisches Feedback** — beim Antippen eines Tabs gibt es auf unterstutzten Geraten eine kurze Vibration, damit du weisst, dass deine Eingabe registriert wurde
+- **Ladeanzeige** — ein dunner Fortschrittsbalken erscheint oben am Bildschirmrand, wahrend die App Daten ladt oder synchronisiert
 
 ---
 
@@ -15495,6 +15505,8 @@ La aplicacion tiene 5 pestanas principales en la parte inferior de la pantalla:
 Navegacion adicional:
 - **Cambiar cuenta** — toca el nombre de la cuenta (esquina superior izquierda) para cambiar entre cuentas
 - **Ajustes** — toca el icono de engranaje (esquina superior derecha) para acceder a los ajustes
+- **Vibracion tactil** — al tocar una pestana, los dispositivos compatibles producen una breve vibracion para confirmar que el toque fue registrado
+- **Indicador de carga** — una barra de progreso fina aparece en la parte superior de la pantalla mientras la app obtiene o sincroniza datos
 
 ---
 
@@ -18544,6 +18556,8 @@ L'application comporte 5 onglets principaux en bas de l'ecran :
 Navigation supplementaire :
 - **Changer de compte** — appuyez sur le nom du compte (en haut a gauche) pour basculer entre les comptes
 - **Parametres** — appuyez sur l'icone d'engrenage (en haut a droite) pour acceder aux parametres
+- **Retour haptique** — toucher un onglet declenche une legere vibration sur les appareils compatibles pour confirmer que l'appui a ete enregistre
+- **Indicateur de chargement** — une fine barre de progression apparait en haut de l'ecran pendant que l'application recupere ou synchronise les donnees
 
 ---
 
@@ -21591,6 +21605,8 @@ iOS, Android, Web
 Дадатковая навігацыя:
 - **Пераключыць рахунак** — націсніце на назву рахунку (уверсе злева), каб пераключыцца паміж рахункамі
 - **Налады** — націсніце на значок шасцярні (уверсе справа), каб адкрыць налады
+- **Тактыльны водгук** — пры націсканні на ўкладку на падтрымлівальных прыладах з'яўляецца лёгкая вібрацыя, каб вы бачылі, што націсканне зарэгістравана
+- **Індыкатар загрузкі** — тонкая паласа прагрэсу з'яўляецца ў верхняй частцы экрана, пакуль праграма атрымлівае ці сінхранізуе даныя
 
 ---
 
