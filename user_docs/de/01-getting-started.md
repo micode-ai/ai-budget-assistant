@@ -75,6 +75,8 @@ Die App hat 5 Haupttabs am unteren Bildschirmrand:
 Zusatzliche Navigation:
 - **Konto wechseln** — tippe auf den Kontonamen (oben links), um zwischen Konten zu wechseln
 - **Einstellungen** — tippe auf das Zahnradsymbol (oben rechts), um die Einstellungen zu offnen
+- **Haptisches Feedback** — beim Antippen eines Tabs gibt es auf unterstutzten Geraten eine kurze Vibration, damit du weisst, dass deine Eingabe registriert wurde
+- **Ladeanzeige** — ein dunner Fortschrittsbalken erscheint oben am Bildschirmrand, wahrend die App Daten ladt oder synchronisiert
 
 ---
 
