@@ -231,6 +231,8 @@ export default {
     peakDayInsight: 'Vous dépensez le plus le {{day}}',
     periodUp: 'de plus que la {{period}} précédente',
     periodDown: 'de moins que la {{period}} précédente',
+    vsAvgUp: '{{pct}}% au-dessus de la moy. 3 mois',
+    vsAvgDown: '{{pct}}% en-dessous de la moy. 3 mois',
     totalSavings: 'Économies sur les tickets',
     totalSavingsText: 'Vous avez économisé {{amount}} en remises ce {{range}}.',
     byTag: 'Par tags',

@@ -678,7 +678,8 @@ The selected range affects all charts and insights below.
 ## Summary Cards
 
 - **Total Spent** — your total expenses for the selected period
-- **Trend comparison** — "more than last week/month/year" or "less than last week/month/year" with percentage
+  - **vs. last period** — "more than last week/month/year" or "less than last week/month/year" with percentage
+  - **vs. 3-month average** — shown below the period comparison once you have at least 1 prior full month of data, e.g. "18% above 3-month avg" (green = below average, red = above average)
 - **Avg per Day** — average daily spending
 
 ## AI Insights Carousel
@@ -3768,7 +3769,8 @@ iOS, Android, Web
 ## Сводные карточки
 
 - **Всего потрачено** — общая сумма расходов за выбранный период
-- **Сравнение тренда** — «больше, чем за прошлый месяц/неделю/год» или «меньше, чем за прошлый месяц/неделю/год» с процентами
+  - **vs. прошлый период** — «больше/меньше, чем за прошлый месяц/неделю/год» с процентами
+  - **vs. среднее за 3 месяца** — например, «18% выше среднего за 3 месяца» (зелёный = ниже среднего, красный = выше), появляется при наличии хотя бы 1 полного предыдущего месяца
 - **Среднее в день** — среднедневные расходы
 
 ## Карусель ИИ-инсайтов
@@ -6858,7 +6860,8 @@ iOS, Android, Web
 ## Картки підсумків
 
 - **Загальні витрати** — ваші загальні витрати за обраний період
-- **Порівняння тенденції** — "більше, ніж за минулий тиждень/місяць/рік" або "менше, ніж за минулий тиждень/місяць/рік" з відсотком
+  - **vs. попередній період** — "більше/менше, ніж за минулий тиждень/місяць/рік" з відсотком
+  - **vs. середнє за 3 місяці** — напр. "18% вище середнього за 3 місяці" (зелений = нижче, червоний = вище), з'являється за наявності хоча б 1 повного попереднього місяця
 - **Середнє за день** — середні щоденні витрати
 
 ## Карусель ШІ-інсайтів
@@ -9921,7 +9924,8 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 ## Karty podsumowania
 
 - **Lacznie wydano** — calkowite wydatki za wybrany okres
-- **Porownanie trendu** — "wiecej niz poprzedni tydzien/miesiac/rok" lub "mniej niz poprzedni tydzien/miesiac/rok" z procentem
+  - **vs. poprzedni okres** — "wiecej/mniej niz poprzedni tydzien/miesiac/rok" z procentem
+  - **vs. srednia 3 miesiecy** — np. "18% powyzej sredniej 3 miesiecy" (zielony = ponizej, czerwony = powyzej), pojawia sie po co najmniej 1 pelnym poprzednim miesiacu
 - **Srednio dziennie** — srednie dzienne wydatki
 
 ## Karuzela wnioskow AI
@@ -12979,7 +12983,8 @@ Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
 ## Ubersichtskarten
 
 - **Gesamtausgaben** — deine Gesamtausgaben fur den ausgewahlten Zeitraum
-- **Trendvergleich** — "mehr als letzte Woche/Monat/Jahr" oder "weniger als letzte Woche/Monat/Jahr" mit Prozentsatz
+  - **vs. letzter Zeitraum** — "mehr/weniger als letzte Woche/Monat/Jahr" mit Prozentsatz
+  - **vs. 3-Monats-Schnitt** — z.B. "18% uber 3-Monats-Schnitt" (grun = darunter, rot = daruber), erscheint ab mindestens 1 abgeschlossenem Vormonat
 - **Durchschnitt pro Tag** — durchschnittliche tagliche Ausgaben
 
 ## KI-Einblicke-Karussell
@@ -16035,7 +16040,8 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
 ## Tarjetas de resumen
 
 - **Total gastado** — tus gastos totales para el periodo seleccionado
-- **Comparacion de tendencia** — "mas que la semana/mes/ano pasado" o "menos que la semana/mes/ano pasado" con porcentaje
+  - **vs. periodo anterior** — "mas/menos que la semana/mes/ano pasado" con porcentaje
+  - **vs. promedio de 3 meses** — p.ej. "18% sobre el promedio de 3 meses" (verde = por debajo, rojo = por encima), aparece tras al menos 1 mes completo anterior
 - **Promedio por dia** — gasto diario promedio
 
 ## Carrusel de informacion IA
@@ -19086,7 +19092,8 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 ## Cartes de synthese
 
 - **Total depense** — vos depenses totales pour la periode selectionnee
-- **Comparaison de tendance** — "plus que la semaine/le mois/l'annee derniere" ou "moins que la semaine/le mois/l'annee derniere" avec pourcentage
+  - **vs. periode precedente** — "plus/moins que la semaine/le mois/l'annee derniere" avec pourcentage
+  - **vs. moy. 3 mois** — p.ex. "18% au-dessus de la moy. 3 mois" (vert = en dessous, rouge = au-dessus), affiche des qu'il y a au moins 1 mois complet d'historique
 - **Moy. par jour** — moyenne des depenses quotidiennes
 
 ## Carousel d'aperçus IA
@@ -22135,7 +22142,8 @@ iOS, Android, Web
 ## Зводныя карткі
 
 - **Усяго выдаткавана** — агульная сума выдаткаў за абраны перыяд
-- **Параўнанне трэнду** — «больш, чым за мінулы месяц/тыдзень/год» або «менш, чым за мінулы месяц/тыдзень/год» з адсоткамі
+  - **vs. мінулы перыяд** — «больш/менш, чым за мінулы месяц/тыдзень/год» з адсоткамі
+  - **vs. сярэдняе за 3 месяцы** — напр. «18% вышэй сярэдняга за 3 месяцы» (зялёны = ніжэй, чырвоны = вышэй), з'яўляецца пры наяўнасці хаця б 1 поўнага папярэдняга месяца
 - **Сярэдняе за дзень** — сярэднядзённыя выдаткі
 
 ## Карусель ІІ-інсайтаў

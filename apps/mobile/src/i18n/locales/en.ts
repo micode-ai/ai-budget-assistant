@@ -231,6 +231,8 @@ export default {
     peakDayInsight: 'You spend the most on {{day}}s',
     periodUp: 'more than last {{period}}',
     periodDown: 'less than last {{period}}',
+    vsAvgUp: '{{pct}}% above 3-month avg',
+    vsAvgDown: '{{pct}}% below 3-month avg',
     totalSavings: 'Receipt Savings',
     totalSavingsText: 'You saved {{amount}} from discounts this {{range}}.',
     byTag: 'By Tags',

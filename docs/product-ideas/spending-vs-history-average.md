@@ -1,10 +1,12 @@
 ---
 id: spending-vs-history-average
 title: '"Spending vs. your average" — contextual comparison in analytics'
-status: idea
+status: building
 priority: P2
 created_at: 2026-05-11
 jira_ticket:
+github_issue: https://github.com/micode-ai/ai-budget-assistant/issues/104
+orchestration_run: 11cbd2c7-1029-442c-bde7-261a9782b798
 ---
 
 # "Spending vs. your average" — contextual comparison in analytics

@@ -255,6 +255,21 @@ export default function AnalyticsScreen() {
                 <Text style={styles.statsText}>{summary.transactionCount} {t('analytics.transactions')}</Text>
               </View>
             )}
+            {summary.vsAverage !== 0 && (
+              <View style={styles.statsRow}>
+                <Ionicons
+                  name={summary.vsAverage > 0 ? 'trending-up' : 'trending-down'}
+                  size={14}
+                  color={summary.vsAverage > 0 ? theme.colors.danger : theme.colors.success}
+                />
+                <Text style={[styles.trendText, { color: summary.vsAverage > 0 ? theme.colors.danger : theme.colors.success }]}>
+                  {summary.vsAverage > 0
+                    ? t('analytics.vsAvgUp', { pct: Math.abs(summary.vsAverage).toFixed(0) })
+                    : t('analytics.vsAvgDown', { pct: Math.abs(summary.vsAverage).toFixed(0) })
+                  }
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

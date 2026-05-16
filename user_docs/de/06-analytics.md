@@ -18,7 +18,8 @@ Der ausgewahlte Bereich beeinflusst alle Diagramme und Einblicke darunter.
 ## Ubersichtskarten
 
 - **Gesamtausgaben** — deine Gesamtausgaben fur den ausgewahlten Zeitraum
-- **Trendvergleich** — "mehr als letzte Woche/Monat/Jahr" oder "weniger als letzte Woche/Monat/Jahr" mit Prozentsatz
+  - **vs. letzter Zeitraum** — "mehr/weniger als letzte Woche/Monat/Jahr" mit Prozentsatz
+  - **vs. 3-Monats-Schnitt** — z.B. "18% uber 3-Monats-Schnitt" (grun = darunter, rot = daruber), erscheint ab mindestens 1 abgeschlossenem Vormonat
 - **Durchschnitt pro Tag** — durchschnittliche tagliche Ausgaben
 
 ## KI-Einblicke-Karussell

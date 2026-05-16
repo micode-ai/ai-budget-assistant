@@ -18,7 +18,8 @@ Wybrany zakres wplywa na wszystkie wykresy i wnioski ponizej.
 ## Karty podsumowania
 
 - **Lacznie wydano** — calkowite wydatki za wybrany okres
-- **Porownanie trendu** — "wiecej niz poprzedni tydzien/miesiac/rok" lub "mniej niz poprzedni tydzien/miesiac/rok" z procentem
+  - **vs. poprzedni okres** — "wiecej/mniej niz poprzedni tydzien/miesiac/rok" z procentem
+  - **vs. srednia 3 miesiecy** — np. "18% powyzej sredniej 3 miesiecy" (zielony = ponizej, czerwony = powyzej), pojawia sie po co najmniej 1 pelnym poprzednim miesiacu
 - **Srednio dziennie** — srednie dzienne wydatki
 
 ## Karuzela wnioskow AI

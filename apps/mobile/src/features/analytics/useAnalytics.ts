@@ -38,6 +38,7 @@ export interface AnalyticsSummary {
   averagePerDay: number;
   transactionCount: number;
   trend: number;
+  vsAverage: number;
   highestSpendingDay: string | null;
   mostExpensiveCategory: string | null;
 }
@@ -339,16 +340,44 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     // Calculate trend (simplified - comparing to previous period)
     const trend = 0; // Would need previous period data
 
+    // Compute vsAverage: compare currentTotal to the trailing 3 full calendar months
+    const trailingMonths = 3;
+    const monthlyTotals: number[] = [];
+    for (let i = 1; i <= trailingMonths; i++) {
+      const d = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth() - i, 1);
+      const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+      const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+      const monthTotal = expenses
+        .filter((e) => {
+          if (e.isDeleted) return false;
+          const ed = new Date(e.date);
+          return ed >= monthStart && ed < monthEnd;
+        })
+        .reduce((s, e) => s + toDisplayCurrency(e.amount, e.currencyCode), 0);
+      monthlyTotals.push(monthTotal);
+    }
+
+    let vsAverage = 0;
+    if (monthlyTotals.some((t) => t > 0)) {
+      const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
+      if (rollingAverage === 0) {
+        vsAverage = totalSpent > 0 ? 100 : 0;
+      } else {
+        vsAverage = Math.round(((totalSpent - rollingAverage) / rollingAverage) * 10000) / 100;
+      }
+    }
+
     return {
       totalSpent,
       totalDiscountSavings,
       averagePerDay,
       transactionCount,
       trend,
+      vsAverage,
       highestSpendingDay,
       mostExpensiveCategory,
     };
-  }, [filteredExpenses, dateRange, categorySpending, getAmount, toDisplayCurrency]);
+  }, [filteredExpenses, expenses, dateRange, categorySpending, getAmount, toDisplayCurrency]);
 
   // Budget comparison
   const budgetComparison = useMemo((): BudgetComparison[] => {

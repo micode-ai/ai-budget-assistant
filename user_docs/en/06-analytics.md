@@ -18,7 +18,8 @@ The selected range affects all charts and insights below.
 ## Summary Cards
 
 - **Total Spent** — your total expenses for the selected period
-- **Trend comparison** — "more than last week/month/year" or "less than last week/month/year" with percentage
+  - **vs. last period** — "more than last week/month/year" or "less than last week/month/year" with percentage
+  - **vs. 3-month average** — shown below the period comparison once you have at least 1 prior full month of data, e.g. "18% above 3-month avg" (green = below average, red = above average)
 - **Avg per Day** — average daily spending
 
 ## AI Insights Carousel
