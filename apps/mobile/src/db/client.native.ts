@@ -529,6 +529,11 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN count_as_income INTEGER DEFAULT 0`); } catch {}
     try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN linked_income_id TEXT`); } catch {}
 
+    // Transaction attribution: cache the creator's display name on each row so
+    // shared-account screens can show "Added by …" without an extra user lookup.
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_user_name TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN created_by_user_name TEXT`); } catch {}
+
     // Debt indexes
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_expenses_debt ON expenses(account_id, is_debt)`);
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_incomes_debt ON incomes(account_id, is_debt)`);

@@ -275,6 +275,7 @@ export const useExpenseStore = create<ExpenseState>()(
               debtContactName: decrypted.debtContactName ?? undefined,
               debtDueDate: decrypted.debtDueDate ? new Date(decrypted.debtDueDate) : undefined,
               relatedDebtIncomeId: decrypted.relatedDebtIncomeId ?? undefined,
+              createdByUserName: se.createdByUserName ?? null,
               createdAt: new Date(decrypted.createdAt),
               updatedAt: new Date(decrypted.updatedAt),
               isDeleted: decrypted.isDeleted || false,
