@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
 
 interface ExpenseWithCategory {
@@ -14,7 +15,105 @@ interface ExpenseWithCategory {
 
 @Injectable()
 export class AnalyticsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cache: CacheService,
+  ) {}
+
+  /**
+   * Fetch total expenses for a single calendar month, using Redis cache.
+   * Cache key: analytics:trailing-avg:{accountId}:{YYYY-MM}
+   */
+  private async getMonthlyTotal(accountId: string, year: number, month: number): Promise<number> {
+    const monthKey = `${year}-${String(month).padStart(2, '0')}`;
+    const cacheKey = `analytics:trailing-avg:${accountId}:${monthKey}`;
+
+    const cached = await this.cache.get<number>(cacheKey);
+    if (cached !== null) return cached;
+
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 1); // exclusive upper bound
+    const agg = await this.prisma.expense.aggregate({
+      where: { accountId, date: { gte: start, lt: end }, isDeleted: false },
+      _sum: { amount: true },
+    });
+    const total = Number(agg._sum?.amount || 0);
+    await this.cache.set(cacheKey, total, 3600);
+    return total;
+  }
+
+  /**
+   * Compute the signed percentage difference between currentTotal and the
+   * rolling average of the trailing N full calendar months before startDate.
+   *
+   * Returns 0 when there is no historical data (new account).
+   */
+  private async computeVsAverage(
+    accountId: string,
+    startDate: Date,
+    currentTotal: number,
+    months = 3,
+  ): Promise<number> {
+    const monthlyTotals: number[] = [];
+
+    for (let i = 1; i <= months; i++) {
+      // Walk backwards: month i before startDate
+      const d = new Date(startDate.getFullYear(), startDate.getMonth() - i, 1);
+      const total = await this.getMonthlyTotal(accountId, d.getFullYear(), d.getMonth() + 1);
+      monthlyTotals.push(total);
+    }
+
+    const hasData = monthlyTotals.some((t) => t > 0);
+    if (!hasData) return 0;
+
+    const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
+
+    if (rollingAverage === 0) return currentTotal > 0 ? 100 : 0;
+
+    return Math.round(((currentTotal - rollingAverage) / rollingAverage) * 10000) / 100;
+  }
+
+  /**
+   * Like computeVsAverage but for multiple accounts (aggregated summary).
+   */
+  private async computeVsAverageMulti(
+    accountIds: string[],
+    startDate: Date,
+    currentTotal: number,
+    months = 3,
+  ): Promise<number> {
+    const monthlyTotals: number[] = [];
+
+    for (let i = 1; i <= months; i++) {
+      const d = new Date(startDate.getFullYear(), startDate.getMonth() - i, 1);
+      const start = new Date(d.getFullYear(), d.getMonth(), 1);
+      const end = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+
+      const cacheKey = `analytics:trailing-avg-multi:${accountIds.slice().sort().join(',')}:${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const cached = await this.cache.get<number>(cacheKey);
+      if (cached !== null) {
+        monthlyTotals.push(cached);
+        continue;
+      }
+
+      const agg = await this.prisma.expense.aggregate({
+        where: { accountId: { in: accountIds }, date: { gte: start, lt: end }, isDeleted: false },
+        _sum: { amount: true },
+      });
+      const total = Number(agg._sum?.amount || 0);
+      await this.cache.set(cacheKey, total, 3600);
+      monthlyTotals.push(total);
+    }
+
+    const hasData = monthlyTotals.some((t) => t > 0);
+    if (!hasData) return 0;
+
+    const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
+
+    if (rollingAverage === 0) return currentTotal > 0 ? 100 : 0;
+
+    return Math.round(((currentTotal - rollingAverage) / rollingAverage) * 10000) / 100;
+  }
 
   /**
    * Check if the account has Tier 2 (full) encryption, meaning amounts are
@@ -158,6 +257,8 @@ export class AnalyticsService {
     const previousTotal = Number(previousExpenses._sum?.amount || 0);
     const vsLastPeriod = previousTotal > 0 ? ((totalExpenses - previousTotal) / previousTotal) * 100 : 0;
 
+    const vsAverage = await this.computeVsAverage(accountId, startDate, totalExpenses);
+
     return {
       period: {
         start: startDate.toISOString(),
@@ -172,7 +273,7 @@ export class AnalyticsService {
       topExpenses,
       trends: {
         vsLastPeriod,
-        vsAverage: 0, // TODO: Calculate average
+        vsAverage,
       },
     };
   }
@@ -371,6 +472,8 @@ export class AnalyticsService {
     const previousTotal = Number(previousExpenses._sum?.amount || 0);
     const vsLastPeriod = previousTotal > 0 ? ((totalExpenses - previousTotal) / previousTotal) * 100 : 0;
 
+    const vsAverage = await this.computeVsAverageMulti(accountIds, startDate, totalExpenses);
+
     return {
       period: {
         start: startDate.toISOString(),
@@ -384,7 +487,7 @@ export class AnalyticsService {
       topExpenses,
       trends: {
         vsLastPeriod,
-        vsAverage: 0,
+        vsAverage,
       },
       accountCount: accountIds.length,
     };
