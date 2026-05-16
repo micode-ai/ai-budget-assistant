@@ -229,6 +229,8 @@ export default {
     peakDayInsight: 'Больш за ўсё вы траціце ў {{day}}',
     periodUp: 'больш, чым за мінулы {{period}}',
     periodDown: 'менш, чым за мінулы {{period}}',
+    vsAvgUp: '{{pct}}% вышэй сярэдняга за 3 месяцы',
+    vsAvgDown: '{{pct}}% ніжэй сярэдняга за 3 месяцы',
     totalSavings: 'Эканомія па чэках',
     totalSavingsText: 'Вы зэканомілі {{amount}} на зніжках за {{range}}.',
     byTag: 'Па тэгах',

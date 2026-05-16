@@ -9,6 +9,15 @@ import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
 import { t } from '../helpers/i18n';
 
+// `ctx.answerCbQuery` throws if Telegram considers the callback query expired
+// (15s window). When called from a `catch` block, an unhandled rethrow would
+// bubble out of the polling loop and silently kill the bot.
+async function safeAnswerCb(ctx: BotContext, text?: string): Promise<void> {
+  try {
+    await ctx.answerCbQuery(text);
+  } catch {}
+}
+
 // In-memory store for pending receipt data (keyed by callback ID)
 // In production, consider Redis or DB storage for multi-instance deployments
 const pendingReceipts = new Map<string, PendingReceiptData>();
@@ -274,15 +283,17 @@ export class PhotoHandler {
   }
 
   async handleReceiptAddCallback(ctx: BotContext, receiptId: string): Promise<void> {
+    const data = pendingReceipts.get(receiptId);
+    if (!data) {
+      await safeAnswerCb(ctx, 'Receipt data expired. Please resend the photo.');
+      return;
+    }
+
+    // Acknowledge the callback immediately; if Telegram says the query is too
+    // old, we still want to create the expense the user explicitly confirmed.
+    await safeAnswerCb(ctx, 'Creating expense...');
+
     try {
-      const data = pendingReceipts.get(receiptId);
-      if (!data) {
-        await ctx.answerCbQuery('Receipt data expired. Please resend the photo.');
-        return;
-      }
-
-      await ctx.answerCbQuery('Creating expense...');
-
       await this.expensesService.create(
         data.accountId,
         data.userId,
@@ -309,13 +320,25 @@ export class PhotoHandler {
 
       pendingReceipts.delete(receiptId);
 
-      await ctx.editMessageText(
-        `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}`,
-        { parse_mode: 'HTML' },
-      );
+      try {
+        await ctx.editMessageText(
+          `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}`,
+          { parse_mode: 'HTML' },
+        );
+      } catch (e) {
+        // editMessageText can fail (message too old, deleted, etc.) — expense
+        // is already created, fall back to a plain reply.
+        this.logger.warn(`editMessageText failed after expense create: ${e}`);
+        try {
+          await ctx.reply(
+            `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}`,
+            { parse_mode: 'HTML' },
+          );
+        } catch {}
+      }
     } catch (error) {
       this.logger.error(`Error creating receipt expense: ${error}`);
-      await ctx.answerCbQuery('Failed to create expense.');
+      await safeAnswerCb(ctx, 'Failed to create expense.');
     }
   }
 

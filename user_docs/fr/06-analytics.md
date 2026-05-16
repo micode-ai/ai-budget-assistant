@@ -18,7 +18,8 @@ La periode selectionnee affecte tous les graphiques et aperçus ci-dessous.
 ## Cartes de synthese
 
 - **Total depense** — vos depenses totales pour la periode selectionnee
-- **Comparaison de tendance** — "plus que la semaine/le mois/l'annee derniere" ou "moins que la semaine/le mois/l'annee derniere" avec pourcentage
+  - **vs. periode precedente** — "plus/moins que la semaine/le mois/l'annee derniere" avec pourcentage
+  - **vs. moy. 3 mois** — p.ex. "18% au-dessus de la moy. 3 mois" (vert = en dessous, rouge = au-dessus), affiche des qu'il y a au moins 1 mois complet d'historique
 - **Moy. par jour** — moyenne des depenses quotidiennes
 
 ## Carousel d'aperçus IA

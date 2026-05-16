@@ -75,6 +75,15 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       this.registerMiddleware();
       this.registerHandlers();
 
+      // Global error handler — without this, any unhandled error in a handler
+      // bubbles out of the polling loop and rejects bot.launch(), silently
+      // killing the bot until the process restarts.
+      this.bot.catch((err, ctx) => {
+        this.logger.error(
+          `Unhandled bot error (update ${ctx.update.update_id}): ${err instanceof Error ? err.stack || err.message : err}`,
+        );
+      });
+
       // Start bot
       const webhookUrl = this.config.get<string>('TELEGRAM_WEBHOOK_URL');
       if (webhookUrl) {

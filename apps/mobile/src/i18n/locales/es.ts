@@ -231,6 +231,8 @@ export default {
     peakDayInsight: 'Gastas más los {{day}}',
     periodUp: 'más que el {{period}} anterior',
     periodDown: 'menos que el {{period}} anterior',
+    vsAvgUp: '{{pct}}% sobre el promedio de 3 meses',
+    vsAvgDown: '{{pct}}% bajo el promedio de 3 meses',
     totalSavings: 'Ahorros en recibos',
     totalSavingsText: 'Ahorraste {{amount}} en descuentos este {{range}}.',
     byTag: 'Por etiquetas',

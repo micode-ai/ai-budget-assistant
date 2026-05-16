@@ -18,7 +18,8 @@ El rango seleccionado afecta a todos los graficos e informacion que aparecen deb
 ## Tarjetas de resumen
 
 - **Total gastado** — tus gastos totales para el periodo seleccionado
-- **Comparacion de tendencia** — "mas que la semana/mes/ano pasado" o "menos que la semana/mes/ano pasado" con porcentaje
+  - **vs. periodo anterior** — "mas/menos que la semana/mes/ano pasado" con porcentaje
+  - **vs. promedio de 3 meses** — p.ej. "18% sobre el promedio de 3 meses" (verde = por debajo, rojo = por encima), aparece tras al menos 1 mes completo anterior
 - **Promedio por dia** — gasto diario promedio
 
 ## Carrusel de informacion IA
