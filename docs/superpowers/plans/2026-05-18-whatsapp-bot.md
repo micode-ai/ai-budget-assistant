@@ -10,6 +10,10 @@
 
 **Spec:** [docs/superpowers/specs/2026-05-18-whatsapp-bot-design.md](../specs/2026-05-18-whatsapp-bot-design.md)
 
+**Out of scope (v2):** persistent commands menu (Business Profile API), per-user proactive notifications (templates), Telegram bot pending-actions Redis migration (tracked separately — see Task 30), PDF/non-image documents, Prometheus metrics.
+
+**Commit message convention:** Prefix every commit with the GitHub issue id once it's created (e.g., `ABA-150: feat(whatsapp): add parseCommand helper`). Until the issue exists, use `feat(whatsapp): ...` and rebase-rewrite later if needed. Per user's memory, every task ships with an issue.
+
 ---
 
 ## File map
@@ -443,17 +447,23 @@ cd apps/api && npx jest format-whatsapp.spec.ts
 ```ts
 /**
  * Convert Markdown produced by ChatService into WhatsApp-flavored text.
- * Order matters: process **bold** before *italic* to avoid the inner
- * substitution stealing the bold marker.
+ *
+ * WhatsApp uses *single-asterisk* for bold AND we need to convert Markdown
+ * _italic_ at the same time. Doing the replaces in the wrong order makes the
+ * italic regex eat the inner characters of **bold**. To avoid that, stash
+ * bold behind a unique placeholder, do the italic pass, then restore bold.
  */
+const BOLD_OPEN = '\u0001BO\u0001';
+const BOLD_CLOSE = '\u0001BC\u0001';
+
 export function markdownToWhatsApp(markdown: string): string {
   let out = markdown;
-  // **bold** → *bold*  (placeholder swap to avoid collision with *italic*)
-  out = out.replace(/\*\*(.+?)\*\*/g, '$1');
-  // *italic* → _italic_
+  // 1) Stash **bold**
+  out = out.replace(/\*\*(.+?)\*\*/g, `${BOLD_OPEN}$1${BOLD_CLOSE}`);
+  // 2) *italic* -> _italic_
   out = out.replace(/\*([^*\n]+?)\*/g, '_$1_');
-  // Restore bold
-  out = out.replace(/(.+?)/g, '*$1*');
+  // 3) Restore stashed bold as WhatsApp *bold*
+  out = out.split(BOLD_OPEN).join('*').split(BOLD_CLOSE).join('*');
   return out;
 }
 ```
@@ -478,11 +488,15 @@ git commit -m "feat(whatsapp): add markdown→whatsapp-text formatter"
 **Files:**
 - Create: `apps/api/src/modules/whatsapp/helpers/i18n.ts`
 
-- [ ] **Step 1: Copy from telegram and adapt HTML → WA markdown**
+- [ ] **Step 1: Copy from telegram**
 
-Copy `apps/api/src/modules/telegram/helpers/i18n.ts` into `apps/api/src/modules/whatsapp/helpers/i18n.ts`. Then apply a global substitution across every language entry:
+Read `apps/api/src/modules/telegram/helpers/i18n.ts` in full. Write the same content to `apps/api/src/modules/whatsapp/helpers/i18n.ts` using the Write tool.
 
-| From | To |
+- [ ] **Step 2: Apply 5 substitutions via Edit tool with `replace_all: true`**
+
+Run the following 5 Edit calls against the new file (each with `replace_all: true`):
+
+| old_string | new_string |
 |---|---|
 | `<b>` | `*` |
 | `</b>` | `*` |
@@ -490,9 +504,17 @@ Copy `apps/api/src/modules/telegram/helpers/i18n.ts` into `apps/api/src/modules/
 | `</code>` | `` ` `` |
 | `<br>` | `\n` |
 
-Use Find & Replace All in your editor — do not run sed/awk. Double-check that all 8 languages in every key still have content (no truncation). Required keys (from telegram source): `linkFirst`, `aiLimitReached`, `somethingWrong`, `speechNotRecognized`, `receiptScanFailed`, `voiceFailed`, `receiptScanned`, `confirm`, `cancel`, `addExpense`, `expenseCreated`, `cancelled`, `receiptCancelled`, `usageTitle`, `used`, `tier`, `breakdown`, `resets`, `changeDate`, `sendDate`, `dateUpdated`, `invalidDate`, `welcomeBack`, `welcomeNew`, `linkProvideCode`, `linkSuccess`, `unlinkSuccess`, `notLinked`, `newChatStarted`, `chooseAccount`, `oneAccount`, `activeAccount`, `helpText`.
+These tags appear inside multiple language strings; `replace_all` handles the bulk.
 
-For `welcomeNew`, update the wording: instead of telling the user to open the app, give the WA-specific instruction (since the bot's first response is to a `link CODE` message OR to an arbitrary first contact). The 8 translations need updating — see spec §4 mobile-side description.
+- [ ] **Step 3: Re-author `welcomeNew` for WhatsApp UX**
+
+The Telegram `welcomeNew` string instructs the user to open the app → Settings → Telegram Bot → tap "Connect Telegram" → send `/link CODE`. For WhatsApp, the user arrives by tapping the wa.me link from the app, so the welcome message should be shorter: explain that the bot is for budget tracking and ask them to send `link YOUR_CODE` if they haven't already. Edit all 8 language entries for `welcomeNew`.
+
+- [ ] **Step 4: Confirm all 33 keys present in all 8 languages**
+
+Required keys (from telegram source): `linkFirst`, `aiLimitReached`, `somethingWrong`, `speechNotRecognized`, `receiptScanFailed`, `voiceFailed`, `receiptScanned`, `confirm`, `cancel`, `addExpense`, `expenseCreated`, `cancelled`, `receiptCancelled`, `usageTitle`, `used`, `tier`, `breakdown`, `resets`, `changeDate`, `sendDate`, `dateUpdated`, `invalidDate`, `welcomeBack`, `welcomeNew`, `linkProvideCode`, `linkSuccess`, `unlinkSuccess`, `notLinked`, `newChatStarted`, `chooseAccount`, `oneAccount`, `activeAccount`, `helpText`.
+
+Grep the file with `pattern: "^\\s+(en|de|es|fr|pl|ru|ua|be):"` and assert each key has 8 hits.
 
 - [ ] **Step 2: Verify the export signature matches telegram (so handlers can be copy-adapted)**
 
@@ -519,14 +541,16 @@ git commit -m "feat(whatsapp): add 8-language i18n helper"
 - Create: `apps/api/src/modules/whatsapp/helpers/parse-amount.ts`
 - Create: `apps/api/src/modules/whatsapp/helpers/resolve-account.ts`
 
-- [ ] **Step 1: Copy files verbatim from telegram module**
+- [ ] **Step 1: Copy files byte-for-byte from telegram module**
 
-```
+Use Bash `cp`:
+
+```bash
 cp apps/api/src/modules/telegram/helpers/parse-amount.ts apps/api/src/modules/whatsapp/helpers/parse-amount.ts
 cp apps/api/src/modules/telegram/helpers/resolve-account.ts apps/api/src/modules/whatsapp/helpers/resolve-account.ts
 ```
 
-(Use the Read+Write tool sequence — these helpers contain no telegram-specific code, just business logic.)
+These helpers are framework-agnostic (no Telegraf imports). No edits required.
 
 - [ ] **Step 2: Typecheck**
 
@@ -1027,7 +1051,45 @@ git commit -m "feat(whatsapp): add webhook controller with HMAC verify + ACK"
 
 ---
 
-### Task 13: WhatsAppBotService — dispatcher + idempotency
+### Task 13: Handler stubs (all 7, empty methods)
+
+> ⚠️ This task **must come before the dispatcher (Task 14)** so that the dispatcher's imports resolve and each commit compiles.
+
+**Files:**
+- Create: `apps/api/src/modules/whatsapp/handlers/{command,chat,expense,income,category,voice,photo}.handler.ts`
+
+- [ ] **Step 1: Create minimal stubs**
+
+For each handler file, create an `@Injectable()` class with the method signatures referenced in the dispatcher (Task 14, below). Each method body: `this.logger.warn('not implemented');`. Use the method names from Task 14's `switch` and `routeCallback` blocks as the spec for the signatures.
+
+- [ ] **Step 2: Register handlers in module**
+
+In `whatsapp.module.ts`, add all 7 to `providers` (not exports — only services that other modules consume go in `exports`).
+
+- [ ] **Step 3: Typecheck**
+
+```
+cd apps/api && npx tsc --noEmit
+```
+
+- [ ] **Step 4: Boot Nest**
+
+```
+cd apps/api && npm run start -- --watch=false
+```
+
+Expected: Nest starts cleanly. Ctrl+C.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add apps/api/src/modules/whatsapp/
+git commit -m "feat(whatsapp): scaffold 7 handler stubs"
+```
+
+---
+
+### Task 14: WhatsAppBotService — dispatcher + idempotency
 
 **Files:**
 - Modify: `apps/api/src/modules/whatsapp/whatsapp-bot.service.ts`
@@ -1077,11 +1139,19 @@ export class WhatsAppBotService {
     const value = body.entry?.[0]?.changes?.[0]?.value;
     if (!value) return;
 
-    // Ignore statuses[] (delivery receipts)
+    // Ignore statuses[] (delivery/read receipts) — same subscription, not user messages.
     const messages = value.messages ?? [];
     if (messages.length === 0) return;
 
     for (const msg of messages) {
+      // Defensive filtering (spec §4):
+      //   - Drop messages whose `from` doesn't look like a phone (length < 7, non-digits).
+      //   - Drop messages with `context.referred_product` (catalog interactions — out of v1 scope).
+      //   - Group messages don't arrive on Cloud API for individual numbers, but defensively
+      //     reject any payload with a non-string `from`.
+      if (typeof msg.from !== 'string' || !/^\d{7,15}$/.test(msg.from)) continue;
+      if ((msg as any).context?.referred_product) continue;
+
       await this.processMessage(msg);
     }
   }
@@ -1210,28 +1280,9 @@ export class WhatsAppBotService {
 }
 ```
 
-- [ ] **Step 2: Typecheck (will fail — handlers not yet implemented)**
+- [ ] **Step 2: Wire dispatcher into module**
 
-It is expected to fail here. The handler classes are referenced but not yet created. Stub them in next task before re-running typecheck.
-
-- [ ] **Step 3: Don't commit yet** — commit at end of Task 14 when handlers compile.
-
----
-
-### Task 14: Handler stubs (all 7, empty methods)
-
-**Files:**
-- Create: `apps/api/src/modules/whatsapp/handlers/{command,chat,expense,income,category,voice,photo}.handler.ts`
-
-- [ ] **Step 1: Create minimal stubs**
-
-For each handler file, create an `@Injectable()` class with the method signatures referenced in `whatsapp-bot.service.ts`. Each method body: `this.logger.warn('not implemented'); /* TODO */`.
-
-This makes the module typecheck and compile. Real implementations follow in Tasks 15–21.
-
-- [ ] **Step 2: Register handlers in module**
-
-In `whatsapp.module.ts`, add all 7 to `providers` (not exports).
+In `whatsapp.module.ts`, add `WhatsAppBotService` to providers + exports (replace the stub from Task 12).
 
 - [ ] **Step 3: Typecheck**
 
@@ -1239,19 +1290,21 @@ In `whatsapp.module.ts`, add all 7 to `providers` (not exports).
 cd apps/api && npx tsc --noEmit
 ```
 
+Expected: 0 errors. Stubs from Task 13 satisfy all references.
+
 - [ ] **Step 4: Boot Nest**
 
 ```
-npm run start -- --watch=false
+cd apps/api && npm run start -- --watch=false
 ```
 
-Expected: no errors. Ctrl+C.
+Expected: clean start, no `WhatsAppBotService` resolution errors. Ctrl+C.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add apps/api/src/modules/whatsapp/
-git commit -m "feat(whatsapp): wire dispatcher with handler stubs"
+git add apps/api/src/modules/whatsapp/whatsapp-bot.service.ts apps/api/src/modules/whatsapp/whatsapp.module.ts
+git commit -m "feat(whatsapp): implement dispatcher with idempotency"
 ```
 
 ---
@@ -1469,7 +1522,7 @@ git commit -m "feat(whatsapp): implement PhotoHandler (OCR + date flow)"
 
 - [ ] **Step 1: Inject `WhatsAppLinkService`**
 
-Add to constructor signature alongside existing telegram service.
+Add to constructor signature alongside existing telegram service. **No new import needed** in `users.module.ts` — `WhatsAppModule` is `@Global()` (Task 11 set this up), so `WhatsAppLinkService` is available app-wide.
 
 - [ ] **Step 2: Add 3 endpoints (mirror telegram ones at lines 93-123)**
 
@@ -1605,7 +1658,25 @@ cd apps/mobile && npm install react-native-qrcode-svg
 
 - [ ] **Step 2: Verify it doesn't require native rebuild**
 
-`react-native-qrcode-svg` uses `react-native-svg` (already installed) — pure JS. Confirm no native linking step needed by checking the package README or by running `cd apps/mobile && npm run typecheck` and a quick `npx expo start --web` boot test.
+`react-native-qrcode-svg` is pure JS and renders via `react-native-svg` (already installed). **However:** if `apps/mobile/ios/` or `apps/mobile/android/` directories exist (bare workflow, post-`expo prebuild`), the new dep's autolinking config may require a fresh prebuild. Check:
+
+```bash
+ls apps/mobile/ios apps/mobile/android 2>/dev/null
+```
+
+If those directories exist, run:
+
+```bash
+cd apps/mobile && npx expo prebuild --clean
+```
+
+If the directories don't exist (managed workflow), no native rebuild is needed.
+
+Then confirm:
+
+```bash
+cd apps/mobile && npx tsc --noEmit && npx expo start --web
+```
 
 - [ ] **Step 3: Commit**
 
