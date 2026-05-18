@@ -62,6 +62,13 @@ export default function SettingsIndexScreen() {
       route: '/settings/notifications',
     },
     {
+      icon: 'logo-whatsapp',
+      label: t('whatsappBot.title'),
+      description: t('whatsappBot.subtitle'),
+      route: '/settings/whatsapp',
+      iconColor: '#25D366',
+    },
+    {
       icon: 'shield-outline',
       label: t('settingsNav.security'),
       description: t('settingsNav.securityDesc'),
