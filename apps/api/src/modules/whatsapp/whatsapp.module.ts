@@ -4,6 +4,7 @@ import Redis from 'ioredis';
 import { WhatsAppLinkService } from './whatsapp-link.service';
 import { WhatsAppClientService } from './whatsapp-client.service';
 import { WhatsAppBotService } from './whatsapp-bot.service';
+import { WhatsAppBotController } from './whatsapp-bot.controller';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
@@ -14,6 +15,7 @@ import { WA_REDIS } from './types';
 @Global()
 @Module({
   imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule],
+  controllers: [WhatsAppBotController],
   providers: [
     WhatsAppLinkService,
     WhatsAppClientService,
