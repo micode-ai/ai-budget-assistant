@@ -1,7 +1,7 @@
 # WhatsApp Bot — Design
 
 **Date:** 2026-05-18
-**Status:** Draft
+**Status:** Draft (rev 1 — incorporates spec review feedback)
 **Goal:** Build a WhatsApp bot that mirrors the existing Telegram bot's feature set (chat, voice, OCR, expense/income/category commands, account linking, 8-language i18n) using the official WhatsApp Business Cloud API.
 
 ---
@@ -81,7 +81,18 @@ apps/api/src/modules/whatsapp/
 
 ## 3. Data model (Prisma)
 
-Two new models in `apps/api/prisma/schema.prisma`, mirroring `TelegramLink` / `TelegramLinkCode`:
+Two new models in `apps/api/prisma/schema.prisma`, mirroring `TelegramLink` / `TelegramLinkCode`. **Inverse relations must also be added to existing `User` and `Account` models** (Prisma requires both ends):
+
+```prisma
+// In `model User { ... }` — alongside the existing telegramLink/telegramLinkCodes refs:
+whatsappLink       WhatsAppLink?
+whatsappLinkCodes  WhatsAppLinkCode[]
+
+// In `model Account { ... }` — alongside `telegramLinks`:
+whatsappLinks      WhatsAppLink[]
+```
+
+New models:
 
 ```prisma
 model WhatsAppLink {
@@ -119,6 +130,8 @@ model WhatsAppLinkCode {
 }
 ```
 
+**Re-linking semantics:** `waPhoneNumber` is `@unique`. When a phone number is re-issued to a different person (common with prepaid SIMs in LATAM/India), `WhatsAppLinkService.redeemCode()` upserts on `waPhoneNumber` — the previous link row is overwritten in-place. The previous owner's expense/income history stays under their own `userId` (no cross-contamination). Documented behaviour, not a bug.
+
 **Why separate tables (not unified `BotLink` with `channel` discriminator):**
 - `TelegramLink` already migrated in prod — no churn
 - WhatsApp-only fields (`waProfileName`, `lastInboundAt`); Telegram-only fields (`telegramUsername`)
@@ -132,7 +145,7 @@ The Telegram bot stores `pendingActions: Map<shortId, {conversationId, actionId}
 - `wa:receipt:{shortId}` → `{userId, accountId, scannedData}`, TTL 1800s
 - `wa:awaiting_date:{waPhoneNumber}` → `receiptShortId`, TTL 600s (date-input mode after "Change date" tap)
 
-Redis is already in the stack (`budget-redis-prod`). Migrating Telegram bot to Redis is **out of scope** — separate follow-up task to unify state.
+Redis is already in the stack (`budget-redis-prod`). Migrating the existing Telegram bot's in-memory `pendingActions` to Redis is **out of scope** for this work but should be tracked. **Action:** when this WhatsApp work ships, the `finish-aba-task` step creates ABA-{N} for it; the same step should create a **second tracked issue** for "Migrate Telegram pendingActions to Redis (unify with WhatsApp)".
 
 ### Migration
 
@@ -160,17 +173,52 @@ WhatsApp has no `@username` → user must know the bot's phone number. Flow:
 
 ### Backend endpoints
 
-| Method | Path | Auth | Purpose |
-|---|---|---|---|
-| `POST` | `/whatsapp/generate-link-code` | JwtAuthGuard + AccountContextGuard | Mirror of Telegram's link-code endpoint |
-| `DELETE` | `/whatsapp/link` | JwtAuthGuard | Unlink current user's WhatsApp |
-| `GET` | `/whatsapp/link` | JwtAuthGuard | Returns `{linked: boolean, waPhoneNumber?, waProfileName?}` for the settings screen |
-| `GET` | `/whatsapp/webhook` | none | Meta verify-token handshake |
-| `POST` | `/whatsapp/webhook` | none (Meta signature header verified) | Inbound events |
+Follow the **existing Telegram link pattern** (`apps/api/src/modules/users/users.controller.ts:93-123`): the three mobile-facing endpoints live on `UsersController`, not on a new dedicated WhatsApp controller. The webhook lives on a separate `WhatsAppBotController` (mirror of `TelegramBotController`).
+
+| Method | Path | Controller | Auth | Purpose |
+|---|---|---|---|---|
+| `POST` | `/api/v1/users/me/whatsapp-link-code` | `UsersController` | `JwtAuthGuard` (class) + `AccountContextGuard` (method) | Generate 6-char code |
+| `GET`  | `/api/v1/users/me/whatsapp-link` | `UsersController` | `JwtAuthGuard` | Returns `{linked, waPhoneNumber?, waProfileName?, linkedAt?}` |
+| `DELETE` | `/api/v1/users/me/whatsapp-link` | `UsersController` | `JwtAuthGuard` | Unlink current user |
+| `GET`  | `/whatsapp/webhook` | `WhatsAppBotController` | none | Meta verify-token handshake |
+| `POST` | `/whatsapp/webhook` | `WhatsAppBotController` | none (HMAC verified in handler) | Inbound events |
+
+**Webhook URL excluded from `/api/v1` global prefix** — same as Telegram. Update `apps/api/src/main.ts:24`:
+```ts
+app.setGlobalPrefix('api/v1', {
+  exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook'],
+});
+```
+
+Final webhook URL registered in Meta: `https://api.ai-budget.pl/whatsapp/webhook`.
+
+**`@Global()` module decoration:** `WhatsAppModule` must be `@Global()` (mirror `TelegramModule`) so `UsersController` can inject `WhatsAppLinkService` without `UsersModule` listing it in `imports`.
 
 ### Webhook security
 
-WhatsApp Cloud API signs every POST with `X-Hub-Signature-256: sha256=<HMAC-SHA256 of raw body using App Secret>`. We **must** verify this on inbound to prevent spoofing. Implementation: use a raw-body parser for the `/whatsapp/webhook` route and compare HMAC against `WHATSAPP_APP_SECRET` env var. Reject with 401 on mismatch.
+WhatsApp Cloud API signs every POST with `X-Hub-Signature-256: sha256=<HMAC-SHA256 of raw body using App Secret>`. We must verify this on inbound.
+
+**`req.rawBody` is already available globally** — `apps/api/src/main.ts:13-20` registers `express.json({ verify: (req, _res, buf) => { req.rawBody = buf } })` for the entire app (used today by Stripe webhook). The WhatsApp webhook handler accesses `(req as any).rawBody` directly, computes `crypto.createHmac('sha256', WHATSAPP_APP_SECRET).update(rawBody).digest('hex')`, and uses `crypto.timingSafeEqual` to compare against the header. Reject with 401 on mismatch. **Do not add a separate body-parser middleware** — that would break JSON parsing for the rest of the API.
+
+### Inbound idempotency
+
+Meta retries on non-200, and may also redeliver duplicate `messages[].id` on rare occasions. Before processing each inbound message, set a Redis dedup key:
+```
+SET wa:msg:{message.id} 1 EX 86400 NX
+```
+If `NX` returns 0 (key existed), drop the message silently. This protects against double-processing of expenses/incomes from duplicate webhook deliveries.
+
+### Event filtering
+
+The `messages` subscription delivers both `messages[]` (inbound user messages) and `statuses[]` (delivery receipts, read receipts) in the same payload. The dispatcher must:
+- Iterate `messages[]` only; ignore `statuses[]`
+- Skip messages where `from` doesn't match expected user format (E.164 phone)
+- Drop messages with `context.referred_product` (catalog interactions — not supported in v1)
+- Group-chat messages: WhatsApp Cloud API for individual numbers does not deliver group messages, but defensively filter on `message.from` being a single phone (no `groupId` in payload) — drop if anything unexpected
+
+### Webhook rate limiting
+
+The webhook is unauthenticated (HMAC verification protects against spoofed payloads but not flood of garbage requests consuming CPU for HMAC computation). v1 relies on the existing nginx-level connection limits on `accounting-nginx`. If observed traffic justifies it, add a NestJS `@Throttle` decorator later (out of v1 scope).
 
 ---
 
@@ -210,7 +258,23 @@ Result handed to `whatsapp-bot.service` dispatcher; if `null`, message falls thr
 | Category type picker (Expense/Income) | Button (2 options) | Trivial |
 | Receipt actions (Add/Change date/Cancel) | Button (3 options) | Fits exactly |
 
-**Callback IDs:** WhatsApp interactive button `reply.id` accepts only `[A-Za-z0-9_-]{1,256}`. Telegram's `:` separators become `_`: `ca:abc` → `ca_abc`. Dispatcher parses on the underscore.
+**Callback IDs:** WhatsApp interactive button `reply.id` accepts only `[A-Za-z0-9_-]{1,256}`. Telegram uses `:` as the prefix/payload separator (e.g., `cat_e:foo`, `account:UUID`), but `:` is not allowed. We use `--` (double-hyphen) as the separator, since UUIDs and prefix tokens never contain `--`:
+
+| Telegram callback | WhatsApp callback |
+|---|---|
+| `ca:abc123`         | `ca--abc123` |
+| `ra:abc123`         | `ra--abc123` |
+| `account:UUID`      | `account--UUID` |
+| `cat_e:Name`        | `cat_e--Name` |
+| `cat_i:Name`        | `cat_i--Name` |
+| `cat_d:UUID`        | `cat_d--UUID` |
+| `receipt_add:ID`    | `receipt_add--ID` |
+| `receipt_date:ID`   | `receipt_date--ID` |
+| `receipt_cancel:ID` | `receipt_cancel--ID` |
+
+Dispatcher splits on **first occurrence of `--`**. Single `-` inside UUIDs is preserved untouched. Category names are URL-encoded before insertion (already done in Telegram for `:` safety; for WhatsApp, also strip any `--` substring from user-supplied names — extremely unlikely in practice but cheap to guard).
+
+**Length:** `cat_d--{uuid}` = 7 + 36 = 43 chars, well under WhatsApp's 256-char limit.
 
 ### Text formatting
 
@@ -292,11 +356,13 @@ WHATSAPP_BUSINESS_PHONE_NUMBER= # E.164 displayed in mobile app (wa.me deep link
 WHATSAPP_API_VERSION=v21.0      # Graph API version pinned explicitly
 ```
 
+**Token scope:** Issue the System User token with only `whatsapp_business_messaging` for v1. `whatsapp_business_management` is **not** needed (no template management, no display-name updates from API). Minimise blast radius if the token leaks.
+
 ### Operational pre-deploy checklist
 
 1. Create Meta Business Manager + Facebook Business Account
 2. Add a WhatsApp Business Account (WABA)
-3. Register a phone number (real number, not currently used in consumer WhatsApp App). For dev/staging, use Meta's **5 free test numbers** per WABA — no verification, 1000 conversations/month
+3. Register a phone number (real number, not currently used in consumer WhatsApp App). For dev/staging, Meta provides test numbers — typically 2 per WABA by default with more on request, plus a free monthly tier of service conversations per WABA. **Verify exact current limits in [Meta's docs](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started) before relying on a specific count** — Meta has revised these policies over time
 4. Business verification in Meta (5–10 business days; only needed for production volume)
 5. Create a System User → issue long-lived token with `whatsapp_business_messaging` + `whatsapp_business_management` scopes
 6. Configure webhook: `https://api.ai-budget.pl/api/v1/whatsapp/webhook` + verify token. Subscribe to field `messages`
@@ -305,8 +371,12 @@ WHATSAPP_API_VERSION=v21.0      # Graph API version pinned explicitly
 ### Deployment
 
 - No new services in `docker-compose.prod.yml` — module runs inside existing `budget-api-prod`
-- Add env vars to `.env.production`, then `docker compose -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate api` (per CLAUDE.md: `docker restart` does not reload `env_file`)
-- Nginx already proxies `/api/v1/*` → endpoint live automatically
+- Add env vars to `.env.production`, then **only the `api` service is recreated** (admin doesn't use these vars):
+  ```
+  docker compose -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate api
+  ```
+  Per CLAUDE.md: `docker restart` does NOT reload `env_file` — must use `--force-recreate`.
+- Nginx already proxies all routes → both `/api/v1/users/me/whatsapp-link*` and `/whatsapp/webhook` live automatically
 
 ### Observability
 
@@ -325,17 +395,46 @@ WHATSAPP_API_VERSION=v21.0      # Graph API version pinned explicitly
 | `apps/mobile/src/services/api.ts` | Add `generateWhatsAppLinkCode()`, `getWhatsAppLinkStatus()`, `unlinkWhatsApp()` |
 | `apps/mobile/src/i18n/locales/*.ts` (× 8) | New keys: `whatsappBot.title`, `whatsappBot.connectButton`, `whatsappBot.disconnectButton`, `whatsappBot.codeInstructions`, `whatsappBot.openButton`, `whatsappBot.copyCode`, `whatsappBot.linkedAs` |
 
-QR code dependency: `react-native-qrcode-svg` — install if missing.
+QR code dependency: `react-native-qrcode-svg` is **not currently installed** (verified against `apps/mobile/package.json`). Add it during implementation:
+```
+cd apps/mobile && npm install react-native-qrcode-svg
+```
+It has zero native code — pure JS rendering via `react-native-svg` (already in the project).
 
 ---
 
 ## 9. Localization
 
-8 locales (parity with rest of app): en, de, es, fr, pl, ru, ua, be.
+8 locales (parity with rest of app): en, de, es, fr, pl, ru, ua, be. CLAUDE.md is explicit: any i18n change must update **all 8 files**.
 
-`helpers/i18n.ts` in WhatsApp module — copy of Telegram's, with HTML tags substituted for WhatsApp markdown. Same `t(key, lang, params)` signature. Language resolved from linked user's `User.language` (same as Telegram).
+**Two distinct i18n surfaces in this feature:**
+
+1. **Backend bot strings** — `apps/api/src/modules/whatsapp/helpers/i18n.ts`. Copy of `apps/api/src/modules/telegram/helpers/i18n.ts` (already supports all 8 languages). For each key, substitute HTML tags for WhatsApp markdown (`<b>...</b>` → `*...*`, `<code>...</code>` → `` `...` ``, `<br>` → `\n`). **Every existing key must have all 8 language entries** — no fallback to `en` only.
+
+2. **Mobile app strings** — new keys in `apps/mobile/src/i18n/locales/{en,de,es,fr,pl,ru,ua,be}.ts`:
+   - `whatsappBot.title`
+   - `whatsappBot.connectButton`
+   - `whatsappBot.disconnectButton`
+   - `whatsappBot.codeInstructions`
+   - `whatsappBot.openButton`
+   - `whatsappBot.copyCode`
+   - `whatsappBot.linkedAs`
+   - `whatsappBot.confirmDisconnect`
+
+   Source language is English (`en.ts`); translations for the other 7 use the same translation source/process as the rest of the app (run i18n-add-strings skill).
+
+Language for the bot's outbound replies resolves from `User.language` on the linked account (same flow as Telegram — `BotContext.userState.language`).
 
 ---
+
+### Error handling in handlers
+
+Every handler wraps its downstream service call in `try/catch` (same pattern as Telegram's `chat.handler.ts:51-54`). On any unhandled exception:
+- Log via `this.logger.error(...)` (auto-captured by Sentry)
+- Reply with `t('somethingWrong', userState.language)` so the user knows the message was received but failed
+- Never let the exception escape the handler — `bot.catch` is Telegraf-specific; for WhatsApp dispatcher, the top-level `handleUpdate(body)` wraps each handler call
+
+Domain-specific errors (e.g., `ForbiddenException` from `subscriptionsService.trackAiUsage`) get specific replies (`aiLimitReached`), matching Telegram's pattern.
 
 ## 10. v1 scope
 
@@ -382,16 +481,20 @@ Out (v2):
 
 ## 13. Dependency order
 
-Follows CLAUDE.md guidance:
+Follows CLAUDE.md guidance (shared-types → API → mobile). No new entities/DTOs cross the package boundary in v1 — the link-status response shape stays in the API (matching the Telegram precedent, which also keeps it controller-local). If a future consumer (admin dashboard) needs the type, lift it to `packages/shared-types` then.
 
-1. `apps/api/prisma/schema.prisma` — add 2 models, migrate, `prisma generate`
-2. `apps/api/src/modules/whatsapp/` — new module (controller, service, client, link service, handlers, helpers)
-3. `apps/api/src/app.module.ts` — register `WhatsAppModule`
-4. `.env.example` + `.env.production` — new vars
-5. `apps/mobile/src/services/api.ts` — 3 new methods
-6. `apps/mobile/app/settings/whatsapp.tsx` — new screen
-7. `apps/mobile/app/settings/index.tsx` — add row
-8. `apps/mobile/src/i18n/locales/*.ts` (× 8) — new keys
+1. `apps/api/prisma/schema.prisma` — add `WhatsAppLink`, `WhatsAppLinkCode`; add inverse refs to `User` and `Account`. Then `npx prisma migrate dev --name add_whatsapp_link && npx prisma generate`
+2. `apps/api/src/main.ts` — add `whatsapp/webhook` to global prefix exclude list
+3. `apps/api/src/modules/whatsapp/` — new `@Global()` module (controller, bot service, client, link service, 7 handlers, helpers)
+4. `apps/api/src/modules/users/users.controller.ts` — inject `WhatsAppLinkService` + `WhatsAppBotService`; add 3 endpoints mirroring telegram methods
+5. `apps/api/src/modules/users/users.module.ts` — verify nothing breaks (WhatsAppModule is `@Global()`, no import needed)
+6. `apps/api/src/app.module.ts` — register `WhatsAppModule`
+7. `.env.example` + `.env.production` — new vars
+8. `apps/mobile/package.json` — `react-native-qrcode-svg`
+9. `apps/mobile/src/services/api.ts` — `generateWhatsAppLinkCode()`, `getWhatsAppLinkStatus()`, `unlinkWhatsApp()`
+10. `apps/mobile/app/settings/whatsapp.tsx` — new screen
+11. `apps/mobile/app/settings/index.tsx` — add "WhatsApp Bot" row
+12. `apps/mobile/src/i18n/locales/{en,de,es,fr,pl,ru,ua,be}.ts` — 8 new keys × 8 files (use `i18n-add-strings` skill)
 
 ---
 
