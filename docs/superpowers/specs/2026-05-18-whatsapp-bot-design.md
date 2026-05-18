@@ -364,8 +364,8 @@ WHATSAPP_API_VERSION=v21.0      # Graph API version pinned explicitly
 2. Add a WhatsApp Business Account (WABA)
 3. Register a phone number (real number, not currently used in consumer WhatsApp App). For dev/staging, Meta provides test numbers — typically 2 per WABA by default with more on request, plus a free monthly tier of service conversations per WABA. **Verify exact current limits in [Meta's docs](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started) before relying on a specific count** — Meta has revised these policies over time
 4. Business verification in Meta (5–10 business days; only needed for production volume)
-5. Create a System User → issue long-lived token with `whatsapp_business_messaging` + `whatsapp_business_management` scopes
-6. Configure webhook: `https://api.ai-budget.pl/api/v1/whatsapp/webhook` + verify token. Subscribe to field `messages`
+5. Create a System User → issue long-lived token with `whatsapp_business_messaging` scope only (see "Token scope" above)
+6. Configure webhook: `https://api.ai-budget.pl/whatsapp/webhook` (no `/api/v1` prefix — excluded in main.ts) + verify token. Subscribe to field `messages`
 7. Submit display name for approval (visible to users in chat header)
 
 ### Deployment
