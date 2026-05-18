@@ -5,7 +5,7 @@ import { WhatsAppUserState } from '../types';
 export class CommandHandler {
   private readonly logger = new Logger(CommandHandler.name);
 
-  async handleLink(_waPhoneNumber: string, _code: string): Promise<void> {
+  async handleLink(_waPhoneNumber: string, _code: string, _profileName?: string): Promise<void> {
     this.logger.warn('CommandHandler.handleLink: not implemented');
   }
   async handleHelp(_userState: WhatsAppUserState): Promise<void> {
