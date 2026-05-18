@@ -5,6 +5,7 @@ import { AccountContextGuard } from '../../common/middleware/account-context.mid
 import { AuthenticatedRequest } from '../../common/types';
 import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
+import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -13,6 +14,7 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly telegramLinkService: TelegramLinkService,
     private readonly telegramBotService: TelegramBotService,
+    private readonly whatsAppLinkService: WhatsAppLinkService,
   ) {}
 
   @Get('me')
@@ -119,6 +121,39 @@ export class UsersController {
   @Delete('me/telegram-link')
   async unlinkTelegram(@Req() req: AuthenticatedRequest) {
     await this.telegramLinkService.unlinkByUserId(req.user.id);
+    return { success: true };
+  }
+
+  // ── WhatsApp ──
+
+  @Post('me/whatsapp-link-code')
+  @UseGuards(AccountContextGuard)
+  async generateWhatsAppLinkCode(@Req() req: AuthenticatedRequest) {
+    const result = await this.whatsAppLinkService.generateCode(req.user.id, req.accountId);
+    return {
+      code: result.code,
+      expiresAt: result.expiresAt.toISOString(),
+      waPhoneNumber: result.waPhoneNumber,
+    };
+  }
+
+  @Get('me/whatsapp-link')
+  async getWhatsAppLinkStatus(@Req() req: AuthenticatedRequest) {
+    const link = await this.whatsAppLinkService.getLinkByUserId(req.user.id);
+    if (!link) {
+      return { linked: false };
+    }
+    return {
+      linked: true,
+      waPhoneNumber: link.waPhoneNumber,
+      waProfileName: link.waProfileName,
+      linkedAt: link.createdAt.toISOString(),
+    };
+  }
+
+  @Delete('me/whatsapp-link')
+  async unlinkWhatsApp(@Req() req: AuthenticatedRequest) {
+    await this.whatsAppLinkService.unlinkByUserId(req.user.id);
     return { success: true };
   }
 }
