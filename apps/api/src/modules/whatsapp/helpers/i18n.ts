@@ -109,6 +109,16 @@ const messages: Record<string, Record<string, string>> = {
     pl: '✅ Wydatek utworzony',
     be: '✅ Выдатак створаны',
   },
+  incomeCreated: {
+    en: '✅ Income added',
+    ru: '✅ Доход добавлен',
+    ua: '✅ Дохід додано',
+    de: '✅ Einnahme hinzugefügt',
+    es: '✅ Ingreso agregado',
+    fr: '✅ Revenu ajouté',
+    pl: '✅ Dochód dodany',
+    be: '✅ Даход дададзены',
+  },
   cancelled: {
     en: '❌ Cancelled',
     ru: '❌ Отменено',
