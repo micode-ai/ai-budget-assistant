@@ -1230,6 +1230,32 @@ class ApiClient {
     return this.request<void>('/users/me/telegram-link', { method: 'DELETE' });
   }
 
+  // WhatsApp
+  async generateWhatsAppLinkCode(): Promise<{ code: string; expiresAt: string; waPhoneNumber: string }> {
+    return this.request<{ code: string; expiresAt: string; waPhoneNumber: string }>(
+      '/users/me/whatsapp-link-code',
+      { method: 'POST' },
+    );
+  }
+
+  async getWhatsAppLinkStatus(): Promise<{
+    linked: boolean;
+    waPhoneNumber?: string;
+    waProfileName?: string | null;
+    linkedAt?: string;
+  }> {
+    return this.request<{
+      linked: boolean;
+      waPhoneNumber?: string;
+      waProfileName?: string | null;
+      linkedAt?: string;
+    }>('/users/me/whatsapp-link');
+  }
+
+  async unlinkWhatsApp(): Promise<{ success: boolean }> {
+    return this.request<{ success: boolean }>('/users/me/whatsapp-link', { method: 'DELETE' });
+  }
+
   // Admin endpoints
   async getAdminDashboard(startDate?: string, endDate?: string) {
     const params = new URLSearchParams();
