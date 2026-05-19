@@ -152,6 +152,10 @@ model User {
   telegramLink      TelegramLink?
   telegramLinkCodes TelegramLinkCode[]
 
+  // WhatsApp
+  whatsappLink      WhatsAppLink?
+  whatsappLinkCodes WhatsAppLinkCode[]
+
   @@map("users")
 }
 
@@ -198,6 +202,7 @@ model Account {
   savingsGoals            SavingsGoal[]
   fatFinderReports        FatFinderReport[]
   telegramLinks           TelegramLink[]
+  whatsappLinks           WhatsAppLink[]
 
   @@map("accounts")
 }
@@ -1222,6 +1227,42 @@ model TelegramLinkCode {
   @@index([code])
   @@index([userId])
   @@map("telegram_link_codes")
+}
+
+// ── WhatsApp ──
+
+model WhatsAppLink {
+  id               String    @id @default(uuid())
+  waPhoneNumber    String    @unique @map("wa_phone_number")
+  waProfileName    String?   @map("wa_profile_name")
+  userId           String    @unique @map("user_id")
+  defaultAccountId String    @map("default_account_id")
+  conversationId   String?   @map("conversation_id")
+  isActive         Boolean   @default(true) @map("is_active")
+  lastInboundAt    DateTime? @map("last_inbound_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [defaultAccountId], references: [id], onDelete: Cascade)
+
+  @@map("whatsapp_links")
+}
+
+model WhatsAppLinkCode {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  accountId String    @map("account_id")
+  code      String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([code])
+  @@index([userId])
+  @@map("whatsapp_link_codes")
 }
 
 model AppVersion {

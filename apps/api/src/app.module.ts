@@ -19,6 +19,7 @@ import { CurrencyExchangeModule } from './modules/currency-exchange/currency-exc
 import { DatabaseModule } from './database/database.module';
 import { MailModule } from './modules/mail/mail.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
+import { WhatsAppModule } from './modules/whatsapp/whatsapp.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { InsightsModule } from './modules/insights/insights.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
@@ -65,6 +66,7 @@ import { CacheModule } from './common/cache/cache.module';
     // Infrastructure
     MailModule,
     TelegramModule,
+    WhatsAppModule,
     NotificationsModule,
 
     // Feature modules
