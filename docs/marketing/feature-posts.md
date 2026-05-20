@@ -573,3 +573,85 @@ Po tygodniu łapiesz się na tym, że myślisz o budżecie zanim wydasz, a nie p
 
 #AIBudgetAssistant #widżety #budżet #Android #finanse #ekranGłówny #fintech #finanseOsobiste
 ```
+
+---
+
+## Пост 9 — Facebook · WhatsApp-бот
+
+### 🇷🇺 Русский
+
+```
+💚 WhatsApp у тебя открыт и так — 247 раз в день. Так зачем заводить ещё одно приложение для учёта расходов?
+
+AI Budget Assistant теперь живёт прямо в WhatsApp. Один QR-код или 6-значный код из приложения — и финансовый ассистент с ИИ оказывается рядом с чатами друзей и семьи.
+
+Что он умеет:
+🗣 Голосовые — наговори «такси 65 гривен» по пути домой, бот расшифрует через Whisper и добавит расход
+📸 Фото чека — щёлкни в супермаркете, OCR разберёт по позициям, сам подберёт категорию
+💬 ИИ-чат — «сколько ушло на еду в марте?», «создай бюджет на кофе 500 в месяц», «покажи траты в Семейном аккаунте»
+✅ Подтверждение действий — перед созданием расхода или бюджета бот покажет кнопки «Создать / Отмена», случайных списаний не будет
+
+Бонусом:
+🌍 Отвечает на твоём языке — определяется автоматически из 8 поддерживаемых
+💱 Понимает символы валют — ₴, $, €, zł, £, ₽ — пишешь «100zł», записывается в злотых
+👨‍👩‍👧 Понимает контекст аккаунтов — упомянул «Семейный» → запрос пошёл в семейный аккаунт
+📲 Всё синхронизируется с мобильным приложением и Telegram-ботом — три точки входа, одна база
+
+Можно использовать параллельно с Telegram-ботом, без конфликтов. Где удобнее: дома Telegram, в командировке WhatsApp, в приложении когда хочешь графики.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #WhatsApp #бюджет #финансы #ИИ #голосовойввод #OCR #финтех #личныефинансы
+```
+
+### 🇬🇧 English
+
+```
+💚 You've got WhatsApp open anyway — 247 times a day. So why install yet another budgeting app?
+
+AI Budget Assistant now lives right inside WhatsApp. One QR code or 6-character code from the app — and an AI finance assistant sits next to your chats with friends and family.
+
+What it does:
+🗣 Voice messages — say "taxi 8 pounds" on your way home, the bot transcribes via Whisper and logs the expense
+📸 Receipt photos — snap one at the supermarket, OCR parses line items and picks the category
+💬 AI chat — "how much did I spend on food in March?", "create a coffee budget of 50 a month", "show me expenses in my Family account"
+✅ Action confirmation — before creating an expense or budget, the bot shows "Create / Cancel" buttons. No accidental entries.
+
+Bonus:
+🌍 Replies in your language — auto-detected from 8 supported
+💱 Reads currency symbols — ₴, $, €, zł, £, ₽ — type "100€" and it's logged in euros
+👨‍👩‍👧 Knows your accounts — mention "Family" and the query routes to the Family account
+📲 Everything syncs with the mobile app and the Telegram bot — three entry points, one database
+
+You can use it alongside the Telegram bot, no conflicts. Whatever's handier: Telegram at home, WhatsApp on a trip, the app when you want charts.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #WhatsApp #budget #finance #AI #voiceinput #OCR #fintech #personalfinance
+```
+
+### 🇵🇱 Polski
+
+```
+💚 WhatsApp masz otwarty i tak — 247 razy dziennie. Po co więc instalować kolejną aplikację do budżetu?
+
+AI Budget Assistant od teraz mieszka prosto w WhatsAppie. Jeden kod QR albo 6-znakowy kod z aplikacji — i asystent finansowy z AI siedzi obok czatów ze znajomymi i rodziną.
+
+Co potrafi:
+🗣 Wiadomości głosowe — powiedz „taksówka 30 zł" w drodze do domu, bot przepisze przez Whisper i doda wydatek
+📸 Zdjęcia paragonów — pstryknij w sklepie, OCR rozbije na pozycje i sam dobierze kategorię
+💬 Czat z AI — „ile wydałem na jedzenie w marcu?", „stwórz budżet na kawę 200 zł miesięcznie", „pokaż wydatki na koncie Rodzinnym"
+✅ Potwierdzenie akcji — przed stworzeniem wydatku czy budżetu bot pokazuje przyciski „Utwórz / Anuluj". Żadnych przypadkowych wpisów.
+
+W pakiecie:
+🌍 Odpowiada w twoim języku — wykrywany automatycznie z 8 wspieranych
+💱 Rozpoznaje symbole walut — zł, $, €, £, ₴, ₽ — wpisujesz „50€" i zapisuje się w euro
+👨‍👩‍👧 Rozumie konteksty kont — wspomnisz „Rodzinne" → zapytanie idzie do rodzinnego konta
+📲 Wszystko synchronizuje się z aplikacją mobilną i botem na Telegramie — trzy punkty wejścia, jedna baza
+
+Możesz używać równolegle z botem na Telegramie, bez konfliktów. Co wygodniej: Telegram w domu, WhatsApp w podróży, aplikacja gdy chcesz wykresy.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #WhatsApp #budżet #finanse #AI #wpisGłosowy #OCR #fintech #finanseOsobiste
+```
