@@ -429,6 +429,27 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/whatsapp"
+          options={{
+            headerShown: true,
+            title: t('whatsappBot.title'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/categories"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.categories'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/change-email"
+          options={{
+            headerShown: true,
+            title: t('changeEmail.title'),
+          }}
+        />
+        <Stack.Screen
           name="help/index"
           options={{
             headerShown: true,
