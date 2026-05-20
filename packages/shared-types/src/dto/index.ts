@@ -590,11 +590,13 @@ export interface UpdatePushTokenDto {
 export interface UpdateNotificationPreferencesDto {
   budgetAlerts?: boolean;
   sharedAccountActivity?: boolean;
+  debtReminders?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
   budgetAlerts: boolean;
   sharedAccountActivity: boolean;
+  debtReminders: boolean;
 }
 
 // Subscription DTOs

@@ -597,6 +597,8 @@ export default {
     budgetAlertsDesc: 'Recibe notificaciones al alcanzar umbrales de presupuesto',
     sharedAccountActivity: 'Actividad de Cuenta Compartida',
     sharedAccountActivityDesc: 'Recibe notificaciones cuando otros añadan gastos a cuentas compartidas',
+    debtReminders: 'Recordatorios de deudas',
+    debtRemindersDesc: 'Notificación 3 días antes del vencimiento y cuando se vence',
   },
   whatsappBot: {
     title: 'Bot de WhatsApp',

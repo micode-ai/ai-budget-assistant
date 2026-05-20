@@ -597,6 +597,8 @@ export default {
     budgetAlertsDesc: 'Soyez notifié lorsque vous atteignez les seuils de budget',
     sharedAccountActivity: 'Activité Compte Partagé',
     sharedAccountActivityDesc: "Soyez notifié lorsque d'autres ajoutent des dépenses aux comptes partagés",
+    debtReminders: 'Rappels de dettes',
+    debtRemindersDesc: 'Notification 3 jours avant l\'échéance et en cas de retard',
   },
   whatsappBot: {
     title: 'Bot WhatsApp',

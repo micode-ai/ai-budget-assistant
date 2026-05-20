@@ -122,6 +122,17 @@ Each debt shows:
 
 Tap a debt card to view the full expense or income details, where you can record repayments.
 
+## Push Reminders
+
+When a debt has a due date, the app sends automatic push notifications to keep you on track:
+
+- **3 days before the due date** — an upcoming reminder: "Debt due in 3 days: John"
+- **The day after the due date** — an overdue alert: "Debt overdue: John"
+
+Notifications are sent to the person who recorded the debt (the debt owner), not the counterparty.
+
+To enable or disable these reminders, go to **Settings → Notifications & Integrations → Debt Reminders**.
+
 ## Dashboard Widget
 
 The Debts & Loans widget is always visible on the Dashboard (when enabled in widget settings):

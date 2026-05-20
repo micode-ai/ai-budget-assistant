@@ -90,6 +90,7 @@ model User {
   pushToken            String?   @map("push_token")
   notifyBudgetAlerts   Boolean   @default(true) @map("notify_budget_alerts")
   notifySharedActivity Boolean   @default(true) @map("notify_shared_activity")
+  notifyDebtReminders  Boolean   @default(true) @map("notify_debt_reminders")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")

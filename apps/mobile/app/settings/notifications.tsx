@@ -23,6 +23,7 @@ export default function NotificationsSettingsScreen() {
   // Notification preferences
   const [notifBudgetAlerts, setNotifBudgetAlerts] = useState(true);
   const [notifSharedActivity, setNotifSharedActivity] = useState(true);
+  const [notifDebtReminders, setNotifDebtReminders] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   // Telegram
@@ -37,6 +38,7 @@ export default function NotificationsSettingsScreen() {
       const prefs = await api.getNotificationPreferences();
       setNotifBudgetAlerts(prefs.budgetAlerts);
       setNotifSharedActivity(prefs.sharedAccountActivity);
+      setNotifDebtReminders(prefs.debtReminders);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -79,14 +81,26 @@ export default function NotificationsSettingsScreen() {
     }
   };
 
+  const handleToggleDebtReminders = async (value: boolean) => {
+    setNotifDebtReminders(value);
+    try {
+      await api.updateNotificationPreferences({ debtReminders: value });
+    } catch (e) {
+      setNotifDebtReminders(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
+    setNotifDebtReminders(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
+      setNotifDebtReminders(!value);
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -148,7 +162,7 @@ export default function NotificationsSettingsScreen() {
                 <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
               </View>
               <Switch
-                value={notifBudgetAlerts || notifSharedActivity}
+                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders}
                 onValueChange={handleToggleAllNotifications}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
@@ -180,6 +194,21 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 value={notifSharedActivity}
                 onValueChange={handleToggleSharedActivity}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.debtReminders')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.debtRemindersDesc')}</Text>
+              </View>
+              <Switch
+                value={notifDebtReminders}
+                onValueChange={handleToggleDebtReminders}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
               />

@@ -1,7 +1,7 @@
 ---
 id: spending-vs-history-average
 title: '"Spending vs. your average" — contextual comparison in analytics'
-status: building
+status: shipped
 priority: P2
 created_at: 2026-05-11
 jira_ticket:

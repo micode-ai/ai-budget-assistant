@@ -597,6 +597,8 @@ export default {
     budgetAlertsDesc: 'Benachrichtigung bei Erreichen von Budget-Schwellenwerten',
     sharedAccountActivity: 'Gemeinsame Kontoaktivität',
     sharedAccountActivityDesc: 'Benachrichtigung wenn andere Ausgaben zu gemeinsamen Konten hinzufügen',
+    debtReminders: 'Schulden-Erinnerungen',
+    debtRemindersDesc: 'Erinnerung 3 Tage vor Fälligkeit und bei Überschreitung',
   },
   whatsappBot: {
     title: 'WhatsApp-Bot',

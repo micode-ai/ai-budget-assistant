@@ -127,6 +127,7 @@ Interruptores para las preferencias de notificaciones:
 | **Notificaciones Push** | Interruptor principal — activa o desactiva todas las notificaciones push |
 | **Alertas de Presupuesto** | Recibe notificaciones cuando alcances los umbrales de presupuesto |
 | **Actividad de Cuenta Compartida** | Recibe notificaciones cuando otros agregan gastos a cuentas compartidas |
+| **Recordatorios de deudas** | Notificación 3 días antes del vencimiento y cuando se vence |
 
 ### Bot de Telegram
 

@@ -140,6 +140,7 @@ Toggle switches for notification preferences:
 | **Push Notifications** | Master toggle — enable or disable all push notifications |
 | **Budget Alerts** | Get notified when you reach budget thresholds |
 | **Shared Account Activity** | Get notified when others add expenses to shared accounts |
+| **Debt Reminders** | Get notified 3 days before a debt is due and when it becomes overdue |
 
 ### Telegram Bot
 
