@@ -122,6 +122,17 @@ Kazdy dlug pokazuje:
 
 Dotknij karty dlugu, aby zobaczyc pelne szczegoly wydatku lub przychodu i zarejestrowac splaty.
 
+## Powiadomienia push
+
+Jeśli dług ma ustawioną datę spłaty, aplikacja wysyła automatyczne powiadomienia push:
+
+- **3 dni przed terminem** — przypomnienie: „Dług za 3 dni: Jan"
+- **Dzień po terminie** — powiadomienie o przeterminowaniu: „Dług przeterminowany: Jan"
+
+Powiadomienia są wysyłane do właściciela długu (osoby, która go zapisała), a nie do drugiej strony.
+
+Aby włączyć lub wyłączyć przypomnienia, przejdź do **Ustawienia → Powiadomienia → Przypomnienia o długach**.
+
 ## Widget na pulpicie
 
 Widget Dlugi i Pozyczki jest zawsze widoczny na Pulpicie (gdy jest wlaczony w ustawieniach widgetow):

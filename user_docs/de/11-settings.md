@@ -127,6 +127,7 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Push-Benachrichtigungen** | Hauptschalter — alle Push-Benachrichtigungen ein- oder ausschalten |
 | **Budget-Warnungen** | Benachrichtigung bei Erreichen von Budget-Schwellenwerten |
 | **Gemeinsame Kontoaktivitat** | Benachrichtigung, wenn andere Ausgaben zu gemeinsamen Konten hinzufugen |
+| **Schulden-Erinnerungen** | Erinnerung 3 Tage vor Fälligkeit und bei Überschreitung |
 
 ### Telegram-Bot
 

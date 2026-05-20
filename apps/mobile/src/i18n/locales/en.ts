@@ -597,6 +597,8 @@ export default {
     budgetAlertsDesc: 'Get notified when you reach budget thresholds',
     sharedAccountActivity: 'Shared Account Activity',
     sharedAccountActivityDesc: 'Get notified when others add expenses to shared accounts',
+    debtReminders: 'Debt Reminders',
+    debtRemindersDesc: 'Get notified 3 days before a debt is due and when it becomes overdue',
   },
   whatsappBot: {
     title: 'WhatsApp Bot',

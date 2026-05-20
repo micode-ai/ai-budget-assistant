@@ -122,6 +122,17 @@ Cada deuda muestra:
 
 Toca una tarjeta de deuda para ver los detalles completos del gasto o ingreso y registrar reembolsos.
 
+## Notificaciones push
+
+Si una deuda tiene una fecha de vencimiento, la app envía notificaciones push automáticas:
+
+- **3 días antes del vencimiento** — recordatorio: "Deuda en 3 días: Juan"
+- **Al día siguiente del vencimiento** — alerta de vencimiento: "Deuda vencida: Juan"
+
+Las notificaciones se envían al propietario de la deuda (quien la registró), no a la contraparte.
+
+Para habilitar o deshabilitar los recordatorios, ve a **Configuración → Notificaciones → Recordatorios de deudas**.
+
 ## Widget en el panel
 
 El widget de Deudas y Prestamos siempre es visible en el Panel (cuando esta habilitado en los ajustes de widgets):

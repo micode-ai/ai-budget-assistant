@@ -16,7 +16,7 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder';
 
 export type SubscriptionTier = 'free' | 'pro' | 'business';
 
@@ -108,6 +108,7 @@ export type DebtStatus = 'active' | 'paid' | 'overdue';
 export interface NotificationPreferences {
   budgetAlerts: boolean;
   sharedAccountActivity: boolean;
+  debtReminders: boolean;
 }
 
 export interface User {

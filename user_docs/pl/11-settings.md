@@ -127,6 +127,7 @@ Przelaczniki dla preferencji powiadomien:
 | **Powiadomienia Push** | Glowny przelacznik — wlacz lub wylacz wszystkie powiadomienia push |
 | **Alerty Budzetowe** | Otrzymuj powiadomienia po osiagnieciu progow budzetowych |
 | **Aktywnosc Wspolnego Konta** | Otrzymuj powiadomienia, gdy inni dodaja wydatki do wspolnych kont |
+| **Przypomnienia o długach** | Powiadomienie 3 dni przed terminem spłaty i po jego przekroczeniu |
 
 ### Bot Telegram
 

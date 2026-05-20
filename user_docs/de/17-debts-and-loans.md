@@ -122,6 +122,17 @@ Jede Schuld zeigt:
 
 Tippe auf eine Schulden-Karte, um die vollstandigen Ausgaben- oder Einnahmedetails zu sehen und Ruckzahlungen zu erfassen.
 
+## Push-Benachrichtigungen
+
+Wenn eine Schuld ein Fälligkeitsdatum hat, sendet die App automatische Push-Benachrichtigungen:
+
+- **3 Tage vor Fälligkeit** — Erinnerung: „Schulden in 3 Tagen: Johannes"
+- **Am Tag nach Fälligkeit** — Überfälligkeitshinweis: „Schulden überfällig: Johannes"
+
+Benachrichtigungen gehen an den Schulden-Eigentümer (wer die Schuld erfasst hat), nicht an die Gegenpartei.
+
+Um Erinnerungen zu aktivieren oder deaktivieren, gehe zu **Einstellungen → Benachrichtigungen → Schulden-Erinnerungen**.
+
 ## Dashboard-Widget
 
 Das Schulden & Darlehen Widget ist immer auf dem Dashboard sichtbar (wenn in den Widget-Einstellungen aktiviert):

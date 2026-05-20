@@ -91,21 +91,24 @@ export class UsersService {
       select: {
         notifyBudgetAlerts: true,
         notifySharedActivity: true,
+        notifyDebtReminders: true,
       },
     });
     return {
       budgetAlerts: user?.notifyBudgetAlerts ?? true,
       sharedAccountActivity: user?.notifySharedActivity ?? true,
+      debtReminders: user?.notifyDebtReminders ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
     if (prefs.sharedAccountActivity !== undefined) data.notifySharedActivity = prefs.sharedAccountActivity;
+    if (prefs.debtReminders !== undefined) data.notifyDebtReminders = prefs.debtReminders;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);

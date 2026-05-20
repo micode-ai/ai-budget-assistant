@@ -127,6 +127,7 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Notifications Push** | Interrupteur principal — activer ou desactiver toutes les notifications push |
 | **Alertes Budget** | Etre averti lorsque vous atteignez les seuils de budget |
 | **Activite Compte Partage** | Etre averti lorsque d'autres personnes ajoutent des depenses aux comptes partages |
+| **Rappels de dettes** | Notification 3 jours avant l'échéance et en cas de retard |
 
 ### Bot Telegram
 

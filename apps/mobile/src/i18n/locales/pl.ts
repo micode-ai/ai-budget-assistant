@@ -597,6 +597,8 @@ export default {
     budgetAlertsDesc: 'Otrzymuj powiadomienia po osiągnięciu progów budżetowych',
     sharedAccountActivity: 'Aktywność Wspólnego Konta',
     sharedAccountActivityDesc: 'Otrzymuj powiadomienia gdy inni dodają wydatki do wspólnych kont',
+    debtReminders: 'Przypomnienia o długach',
+    debtRemindersDesc: 'Powiadomienie 3 dni przed terminem spłaty i po jego przekroczeniu',
   },
   whatsappBot: {
     title: 'Bot WhatsApp',

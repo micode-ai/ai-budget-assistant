@@ -597,6 +597,8 @@ export default {
     budgetAlertsDesc: 'Уведомления при достижении порогов бюджета',
     sharedAccountActivity: 'Активность общего счёта',
     sharedAccountActivityDesc: 'Уведомления когда другие добавляют расходы в общие счета',
+    debtReminders: 'Напоминания о долгах',
+    debtRemindersDesc: 'Уведомление за 3 дня до срока долга и при просрочке',
   },
   whatsappBot: {
     title: 'WhatsApp-бот',

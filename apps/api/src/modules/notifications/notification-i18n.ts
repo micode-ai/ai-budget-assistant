@@ -44,6 +44,21 @@ interface ReferralQualifiedParams {
   bonus: number;
 }
 
+interface DebtUpcomingParams {
+  contactName: string;
+  days: number;
+  amount: string;
+  currencyCode: string;
+  type: 'lent' | 'borrowed';
+}
+
+interface DebtOverdueParams {
+  contactName: string;
+  amount: string;
+  currencyCode: string;
+  type: 'lent' | 'borrowed';
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -69,6 +84,10 @@ const translations: Record<string, {
   referralQualifiedBody: (p: ReferralQualifiedParams) => string;
   referralMilestone5Title: () => string;
   referralMilestone5Body: () => string;
+  debtUpcomingTitle: (p: DebtUpcomingParams) => string;
+  debtUpcomingBody: (p: DebtUpcomingParams) => string;
+  debtOverdueTitle: (p: DebtOverdueParams) => string;
+  debtOverdueBody: (p: DebtOverdueParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -100,6 +119,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Your referral ${name} is now active! You earned +${bonus} AI requests.`,
     referralMilestone5Title: () => '5 Referrals!',
     referralMilestone5Body: () => 'You earned a free month of Pro! Check your email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Debt due in ${days} day${days === 1 ? '' : 's'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `You lent ${currencyCode} ${amount} — repayment due soon`
+        : `You borrowed ${currencyCode} ${amount} — repayment due soon`,
+    debtOverdueTitle: ({ contactName }) => `Debt overdue: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${currencyCode} ${amount} you lent is now overdue`
+        : `${currencyCode} ${amount} you borrowed is now overdue`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -131,6 +160,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Ваш реферал ${name} активен! Вы получили +${bonus} AI запросов.`,
     referralMilestone5Title: () => '5 рефералов!',
     referralMilestone5Body: () => 'Вы заработали бесплатный месяц Pro! Проверьте email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Долг через ${days} ${days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Вы одолжили ${amount} ${currencyCode} — срок погашения скоро`
+        : `Вы заняли ${amount} ${currencyCode} — срок погашения скоро`,
+    debtOverdueTitle: ({ contactName }) => `Долг просрочен: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${amount} ${currencyCode}, которые вы одолжили, просрочены`
+        : `${amount} ${currencyCode}, которые вы заняли, просрочены`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -162,6 +201,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Ваш реферал ${name} активний! Ви отримали +${bonus} AI запитів.`,
     referralMilestone5Title: () => '5 рефералів!',
     referralMilestone5Body: () => 'Ви заробили безкоштовний місяць Pro! Перевірте email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Борг через ${days} ${days === 1 ? 'день' : days < 5 ? 'дні' : 'днів'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Ви позичили ${amount} ${currencyCode} — термін погашення скоро`
+        : `Ви взяли ${amount} ${currencyCode} — термін погашення скоро`,
+    debtOverdueTitle: ({ contactName }) => `Борг прострочений: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${amount} ${currencyCode}, які ви позичили, прострочені`
+        : `${amount} ${currencyCode}, які ви взяли, прострочені`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -193,6 +242,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Twoje polecenie ${name} jest aktywne! Otrzymałeś +${bonus} zapytań AI.`,
     referralMilestone5Title: () => '5 poleceń!',
     referralMilestone5Body: () => 'Zdobyłeś darmowy miesiąc Pro! Sprawdź email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Dług za ${days} ${days === 1 ? 'dzień' : 'dni'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Pożyczyłeś ${amount} ${currencyCode} — termin spłaty wkrótce`
+        : `Pożyczyłeś ${amount} ${currencyCode} — termin spłaty wkrótce`,
+    debtOverdueTitle: ({ contactName }) => `Dług przeterminowany: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${amount} ${currencyCode}, które pożyczyłeś, jest przeterminowane`
+        : `${amount} ${currencyCode}, które pożyczyłeś, jest przeterminowane`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -224,6 +283,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `¡Tu referido ${name} está activo! Ganaste +${bonus} solicitudes AI.`,
     referralMilestone5Title: () => '¡5 referidos!',
     referralMilestone5Body: () => '¡Ganaste un mes gratis de Pro! Revisa tu email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Deuda en ${days} día${days === 1 ? '' : 's'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Prestaste ${currencyCode} ${amount} — vencimiento pronto`
+        : `Tomaste prestado ${currencyCode} ${amount} — vencimiento pronto`,
+    debtOverdueTitle: ({ contactName }) => `Deuda vencida: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${currencyCode} ${amount} que prestaste está vencido`
+        : `${currencyCode} ${amount} que tomaste prestado está vencido`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -255,6 +324,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Votre filleul ${name} est actif ! Vous avez gagné +${bonus} requêtes AI.`,
     referralMilestone5Title: () => '5 parrainages !',
     referralMilestone5Body: () => 'Vous avez gagné un mois Pro gratuit ! Vérifiez votre email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Dette dans ${days} jour${days === 1 ? '' : 's'} : ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Vous avez prêté ${amount} ${currencyCode} — échéance prochaine`
+        : `Vous avez emprunté ${amount} ${currencyCode} — échéance prochaine`,
+    debtOverdueTitle: ({ contactName }) => `Dette en retard : ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${amount} ${currencyCode} que vous avez prêté est en retard`
+        : `${amount} ${currencyCode} que vous avez emprunté est en retard`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -286,6 +365,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Deine Empfehlung ${name} ist aktiv! Du hast +${bonus} AI-Anfragen verdient.`,
     referralMilestone5Title: () => '5 Empfehlungen!',
     referralMilestone5Body: () => 'Du hast einen kostenlosen Monat Pro verdient! Prüfe deine E-Mail.',
+    debtUpcomingTitle: ({ contactName, days }) => `Schulden in ${days} Tag${days === 1 ? '' : 'en'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Du hast ${amount} ${currencyCode} geliehen — Fälligkeit bald`
+        : `Du hast ${amount} ${currencyCode} geliehen bekommen — Fälligkeit bald`,
+    debtOverdueTitle: ({ contactName }) => `Schulden überfällig: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${amount} ${currencyCode}, die du geliehen hast, sind überfällig`
+        : `${amount} ${currencyCode}, die du geliehen bekommen hast, sind überfällig`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -317,6 +406,16 @@ const translations: Record<string, {
     referralQualifiedBody: ({ name, bonus }) => `Ваш рэферал ${name} актыўны! Вы атрымалі +${bonus} AI запытаў.`,
     referralMilestone5Title: () => '5 рэфералаў!',
     referralMilestone5Body: () => 'Вы заработалі бясплатны месяц Pro! Праверце email.',
+    debtUpcomingTitle: ({ contactName, days }) => `Доўг праз ${days} ${days === 1 ? 'дзень' : days < 5 ? 'дні' : 'дзён'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Вы пазычылі ${amount} ${currencyCode} — тэрмін пагашэння хутка`
+        : `Вы ўзялі ${amount} ${currencyCode} — тэрмін пагашэння хутка`,
+    debtOverdueTitle: ({ contactName }) => `Доўг прасрочаны: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${amount} ${currencyCode}, якія вы пазычылі, прасрочаны`
+        : `${amount} ${currencyCode}, якія вы ўзялі, прасрочаны`,
   },
 };
 
@@ -404,4 +503,16 @@ export function referralMilestone5Title(lang: Lang): string {
 }
 export function referralMilestone5Body(lang: Lang): string {
   return t(lang).referralMilestone5Body();
+}
+export function debtUpcomingTitle(lang: Lang, params: DebtUpcomingParams): string {
+  return t(lang).debtUpcomingTitle(params);
+}
+export function debtUpcomingBody(lang: Lang, params: DebtUpcomingParams): string {
+  return t(lang).debtUpcomingBody(params);
+}
+export function debtOverdueTitle(lang: Lang, params: DebtOverdueParams): string {
+  return t(lang).debtOverdueTitle(params);
+}
+export function debtOverdueBody(lang: Lang, params: DebtOverdueParams): string {
+  return t(lang).debtOverdueBody(params);
 }

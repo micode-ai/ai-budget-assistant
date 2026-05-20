@@ -888,13 +888,13 @@ class ApiClient {
   }
 
   async getNotificationPreferences() {
-    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean }>(
+    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean }>(
       '/users/me/notification-preferences',
     );
   }
 
-  async updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean }) {
-    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean }>(
+  async updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean }) {
+    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean }>(
       '/users/me/notification-preferences',
       {
         method: 'PATCH',

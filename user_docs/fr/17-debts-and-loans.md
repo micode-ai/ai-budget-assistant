@@ -122,6 +122,17 @@ Chaque dette affiche :
 
 Appuyez sur une carte de dette pour voir les details complets de la depense ou du revenu et enregistrer des remboursements.
 
+## Notifications push
+
+Si une dette a une date d'échéance, l'application envoie des notifications push automatiques :
+
+- **3 jours avant l'échéance** — rappel : « Dette dans 3 jours : Jean »
+- **Le lendemain de l'échéance** — alerte de retard : « Dette en retard : Jean »
+
+Les notifications sont envoyées au propriétaire de la dette (celui qui l'a enregistrée), pas à la contrepartie.
+
+Pour activer ou désactiver les rappels, rendez-vous dans **Paramètres → Notifications → Rappels de dettes**.
+
 ## Widget sur le tableau de bord
 
 Le widget Dettes et Prets est toujours visible sur le Tableau de bord (lorsqu'il est active dans les parametres de widgets) :
