@@ -26,4 +26,5 @@ Domain-by-domain reference for the AI Budget Assistant monorepo. One page per co
 | [offline-sync](offline-sync.md) | SQLite write-first, `syncQueue` pattern, background API sync |
 | [subscriptions](subscriptions.md) | Stripe-backed Free/Pro/Business tiers, paywall, webhook lifecycle |
 | [telegram-bot](telegram-bot.md) | Telegraf bot — text/voice/photo commands, account linking, 8-locale i18n |
+| [whatsapp-bot](whatsapp-bot.md) | WhatsApp Cloud API bot — webhook + HMAC, Redis state, mirrors Telegram features, Meta setup runbook |
 | [analytics-insights](analytics-insights.md) | Server aggregations, client-side hooks, charts, calendar, scenario simulator |
