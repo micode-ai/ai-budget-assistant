@@ -578,6 +578,7 @@ export interface AnalyticsSummary {
     amount: number;
     percentage: number;
     count: number;
+    vsAverage?: number | null;
   }>;
   topExpenses: Array<{
     id: string;

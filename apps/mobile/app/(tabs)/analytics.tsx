@@ -428,20 +428,38 @@ export default function AnalyticsScreen() {
         {categorySpending.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('analytics.categoryDetails')}</Text>
-            {categorySpending.map((category, index) => (
-              <View key={category.categoryId || index} style={styles.categoryItem}>
-                <View style={styles.categoryInfo}>
-                  <View style={[styles.categoryDot, { backgroundColor: category.color }]} />
-                  <Text style={styles.categoryName}>{category.name}</Text>
+            {categorySpending.map((category, index) => {
+              const delta = category.vsAverage;
+              const showChip = delta != null && Math.abs(delta) >= 5;
+              const isAbove = delta != null && delta > 0;
+              return (
+                <View key={category.categoryId || index} style={styles.categoryItem}>
+                  <View style={styles.categoryInfo}>
+                    <View style={[styles.categoryDot, { backgroundColor: category.color }]} />
+                    <Text style={styles.categoryName}>{category.name}</Text>
+                  </View>
+                  <View style={styles.categoryValues}>
+                    <Text style={styles.categoryAmount}>
+                      {formatCurrency(category.amount, currency)}
+                    </Text>
+                    <Text style={styles.categoryPercent}>{category.percentage.toFixed(0)}%</Text>
+                    {showChip && (
+                      <View style={[
+                        styles.vsAvgChip,
+                        { backgroundColor: isAbove ? theme.colors.dangerLight : theme.colors.successLight },
+                      ]}>
+                        <Text style={[
+                          styles.vsAvgChipText,
+                          { color: isAbove ? theme.colors.danger : theme.colors.success },
+                        ]}>
+                          {isAbove ? '+' : ''}{Math.round(delta!)}%
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-                <View style={styles.categoryValues}>
-                  <Text style={styles.categoryAmount}>
-                    {formatCurrency(category.amount, currency)}
-                  </Text>
-                  <Text style={styles.categoryPercent}>{category.percentage.toFixed(0)}%</Text>
-                </View>
-              </View>
-            ))}
+              );
+            })}
           </View>
         )}
 
@@ -890,6 +908,18 @@ const createStyles = (theme: Theme) => ({
     fontSize: 14,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[0.5],
+  },
+  vsAvgChip: {
+    borderRadius: theme.borderRadius.full,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: 2,
+    marginTop: theme.spacing[1],
+    alignSelf: 'flex-end' as const,
+  },
+  vsAvgChipText: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+    lineHeight: 14,
   },
   projectItem: {
     backgroundColor: theme.colors.surface,

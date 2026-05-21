@@ -30,6 +30,7 @@ export interface CategorySpending {
   amount: number;
   percentage: number;
   color: string;
+  vsAverage: number | null;
 }
 
 export interface AnalyticsSummary {
@@ -285,6 +286,32 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       categoryMap.set(key, current + getAmount(expense));
     });
 
+    // Per-category 3-month trailing average (month view only)
+    const trailingMonths = 3;
+    const getCategoryVsAverage = (categoryId: string | null, currentAmount: number): number | null => {
+      if (timeRange !== 'month') return null;
+      const monthlyTotals: number[] = [];
+      for (let i = 1; i <= trailingMonths; i++) {
+        const d = new Date(dateRange.startDate.getFullYear(), dateRange.startDate.getMonth() - i, 1);
+        const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+        const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+        const monthTotal = expenses
+          .filter((e) => {
+            if (e.isDeleted) return false;
+            if (currencyCode && e.currencyCode !== currencyCode) return false;
+            if ((e.categoryId || null) !== categoryId) return false;
+            const ed = new Date(e.date);
+            return ed >= monthStart && ed < monthEnd;
+          })
+          .reduce((s, e) => s + toDisplayCurrency(e.amount, e.currencyCode), 0);
+        monthlyTotals.push(monthTotal);
+      }
+      if (!monthlyTotals.some((t) => t > 0)) return null;
+      const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / trailingMonths;
+      if (rollingAverage === 0) return currentAmount > 0 ? 100 : 0;
+      return Math.round(((currentAmount - rollingAverage) / rollingAverage) * 10000) / 100;
+    };
+
     const result: CategorySpending[] = [];
     let colorIndex = 0;
 
@@ -298,12 +325,13 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
         amount,
         percentage: (amount / total) * 100,
         color: category?.color || CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],
+        vsAverage: getCategoryVsAverage(categoryId, amount),
       });
       colorIndex++;
     });
 
     return result.sort((a, b) => b.amount - a.amount);
-  }, [filteredExpenses, categories, t, getAmount]);
+  }, [filteredExpenses, expenses, categories, t, getAmount, toDisplayCurrency, timeRange, dateRange, currencyCode]);
 
   const summary = useMemo((): AnalyticsSummary => {
     const totalSpent = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
