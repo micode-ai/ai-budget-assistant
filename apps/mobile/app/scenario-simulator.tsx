@@ -884,7 +884,7 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
-    width: '100%',
+    width: '100%' as const,
     gap: theme.spacing[4],
   },
   modalTitle: {
@@ -935,7 +935,7 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
-    width: '100%',
+    width: '100%' as const,
     maxHeight: '80%' as any,
     alignSelf: 'flex-end' as const,
     position: 'absolute' as const,
