@@ -24,6 +24,7 @@ export default function NotificationsSettingsScreen() {
   const [notifBudgetAlerts, setNotifBudgetAlerts] = useState(true);
   const [notifSharedActivity, setNotifSharedActivity] = useState(true);
   const [notifDebtReminders, setNotifDebtReminders] = useState(true);
+  const [notifRecurringExpenses, setNotifRecurringExpenses] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   // Telegram
@@ -39,6 +40,7 @@ export default function NotificationsSettingsScreen() {
       setNotifBudgetAlerts(prefs.budgetAlerts);
       setNotifSharedActivity(prefs.sharedAccountActivity);
       setNotifDebtReminders(prefs.debtReminders);
+      setNotifRecurringExpenses(prefs.recurringExpenses ?? true);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -91,16 +93,28 @@ export default function NotificationsSettingsScreen() {
     }
   };
 
+  const handleToggleRecurringExpenses = async (value: boolean) => {
+    setNotifRecurringExpenses(value);
+    try {
+      await api.updateNotificationPreferences({ recurringExpenses: value });
+    } catch (e) {
+      setNotifRecurringExpenses(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
     setNotifDebtReminders(value);
+    setNotifRecurringExpenses(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
       setNotifDebtReminders(!value);
+      setNotifRecurringExpenses(!value);
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -162,7 +176,7 @@ export default function NotificationsSettingsScreen() {
                 <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
               </View>
               <Switch
-                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders}
+                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses}
                 onValueChange={handleToggleAllNotifications}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
@@ -209,6 +223,21 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 value={notifDebtReminders}
                 onValueChange={handleToggleDebtReminders}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.recurringExpenses')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.recurringExpensesDesc')}</Text>
+              </View>
+              <Switch
+                value={notifRecurringExpenses}
+                onValueChange={handleToggleRecurringExpenses}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
               />

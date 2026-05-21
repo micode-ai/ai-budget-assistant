@@ -24,7 +24,7 @@ import { ProjectPicker } from '@/components/ProjectPicker';
 import { SplitEditor } from '@/components/SplitEditor';
 import { insertSplit } from '@/db/splitRepository';
 import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
-import type { Currency, ExpenseCategorySplit } from '@budget/shared-types';
+import type { Currency, ExpenseCategorySplit, RecurringPeriod } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
@@ -76,6 +76,10 @@ export default function NewExpenseScreen() {
   const [pendingSplits, setPendingSplits] = useState<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]>([]);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
 
+  // Recurring state
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurringPeriod, setRecurringPeriod] = useState<RecurringPeriod>('monthly');
+
   // Debt state
   const isDebtRepayment = params.isDebtRepayment === 'true';
   const [isDebt, setIsDebt] = useState(params.isDebt === 'true');
@@ -123,7 +127,9 @@ export default function NewExpenseScreen() {
         projectId: selectedProjectId || undefined,
         date: new Date(),
         source: 'manual',
-        isRecurring: false,
+        isRecurring,
+        recurringId: isRecurring ? generateUUID() : undefined,
+        recurringPeriod: isRecurring ? recurringPeriod : undefined,
         isDebt: isDebt && !isDebtRepayment,
         isDebtRepayment,
         debtContactName: (isDebt || isDebtRepayment) ? debtContactName.trim() || undefined : undefined,
@@ -289,6 +295,38 @@ export default function NewExpenseScreen() {
             selectedProjectId={selectedProjectId}
             onProjectChange={setSelectedProjectId}
           />
+
+          {/* Recurring Toggle */}
+          {!isDebtRepayment && !isDebt && (
+            <View style={styles.fieldContainer}>
+              <View style={styles.debtToggleRow}>
+                <View style={styles.debtToggleInfo}>
+                  <Ionicons name="repeat-outline" size={20} color={theme.colors.textSecondary} />
+                  <Text style={styles.debtToggleLabel}>{t('recurring.repeat')}</Text>
+                </View>
+                <Switch value={isRecurring} onValueChange={setIsRecurring} />
+              </View>
+              {isRecurring && (
+                <View style={[styles.debtFields, { flexDirection: 'row', gap: theme.spacing[2] }]}>
+                  {(['weekly', 'monthly', 'yearly'] as RecurringPeriod[]).map((p) => (
+                    <TouchableOpacity
+                      key={p}
+                      style={[
+                        styles.categoryChip,
+                        { flex: 1 },
+                        recurringPeriod === p && { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary },
+                      ]}
+                      onPress={() => setRecurringPeriod(p)}
+                    >
+                      <Text style={[styles.categoryChipText, recurringPeriod === p && { color: '#fff', fontWeight: '600' }]}>
+                        {t(`recurring.${p}`)}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+          )}
 
           {/* Debt Toggle */}
           {isDebtRepayment ? (

@@ -113,6 +113,9 @@ export class ExpensesService {
         source: dto.source,
         receiptImage,
         receiptMimeType,
+        isRecurring: dto.isRecurring ?? false,
+        recurringId: dto.recurringId,
+        recurringPeriod: dto.recurringPeriod,
         isDebt: dto.isDebt ?? false,
         isDebtRepayment: dto.isDebtRepayment ?? false,
         debtContactName: dto.debtContactName,
@@ -135,6 +138,9 @@ export class ExpensesService {
           receiptImage,
           receiptMimeType,
           isDeleted: false,
+          isRecurring: dto.isRecurring ?? false,
+          recurringId: dto.recurringId,
+          recurringPeriod: dto.recurringPeriod,
           isDebt: dto.isDebt ?? false,
           isDebtRepayment: dto.isDebtRepayment ?? false,
           debtContactName: dto.debtContactName,
@@ -307,6 +313,7 @@ export class ExpensesService {
           receiptUrl: true,
           isRecurring: true,
           recurringId: true,
+          recurringPeriod: true,
           source: true,
           isDebt: true,
           isDebtRepayment: true,
@@ -400,6 +407,9 @@ export class ExpensesService {
           time: dto.time,
           locationLat: dto.location?.lat,
           locationLng: dto.location?.lng,
+          isRecurring: dto.isRecurring,
+          recurringId: dto.recurringId,
+          recurringPeriod: dto.recurringPeriod,
           isDebt: dto.isDebt,
           isDebtRepayment: dto.isDebtRepayment,
           debtContactName: dto.debtContactName,
@@ -501,6 +511,16 @@ export class ExpensesService {
     this.invalidateChatCache(accountId).catch(() => undefined);
 
     return { success: true };
+  }
+
+  async stopRecurring(accountId: string, id: string) {
+    const expense = await this.findOne(accountId, id);
+    await this.prisma.expense.update({
+      where: { id: expense.id },
+      data: { isRecurring: false, syncVersion: { increment: 1 } },
+    });
+    this.invalidateChatCache(accountId).catch(() => undefined);
+    return { id: expense.id, isRecurring: false };
   }
 
   async getByClientId(accountId: string, clientId: string) {

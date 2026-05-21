@@ -258,6 +258,10 @@ class ApiClient {
     return this.request<void>(`/expenses/${id}`, { method: 'DELETE' });
   }
 
+  async stopRecurringExpense(id: string) {
+    return this.request<{ id: string; isRecurring: boolean }>(`/expenses/${id}/stop-recurring`, { method: 'PATCH' });
+  }
+
   // Income endpoints
   async getIncomes(filters?: { startDate?: string; endDate?: string; categoryId?: string }) {
     const params = new URLSearchParams();
@@ -892,13 +896,13 @@ class ApiClient {
   }
 
   async getNotificationPreferences() {
-    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean }>(
+    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean }>(
       '/users/me/notification-preferences',
     );
   }
 
-  async updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean }) {
-    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean }>(
+  async updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean }) {
+    return this.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean }>(
       '/users/me/notification-preferences',
       {
         method: 'PATCH',

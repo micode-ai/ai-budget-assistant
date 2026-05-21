@@ -46,6 +46,7 @@ export const expenses = sqliteTable('expenses', {
   receiptUrl: text('receipt_url'),
   isRecurring: integer('is_recurring', { mode: 'boolean' }).default(false),
   recurringId: text('recurring_id'),
+  recurringPeriod: text('recurring_period'),
   source: text('source').notNull().default('manual'),
   isDebt: integer('is_debt', { mode: 'boolean' }).default(false),
   isDebtRepayment: integer('is_debt_repayment', { mode: 'boolean' }).default(false),

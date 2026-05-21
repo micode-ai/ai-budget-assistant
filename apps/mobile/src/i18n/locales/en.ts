@@ -339,6 +339,19 @@ export default {
     attachAsPdf: 'Choose PDF',
     cameraPermissionDenied: 'Camera permission is required',
   },
+  recurring: {
+    repeat: 'Repeat',
+    repeatDesc: 'Auto-log this expense each period',
+    period: 'Period',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    yearly: 'Yearly',
+    seriesBanner: 'Part of a recurring series',
+    seriesPeriod: 'Repeats {{period}}',
+    stopRecurring: 'Stop Recurring',
+    stopRecurringConfirm: 'Stop auto-logging this expense? Existing records will not be deleted.',
+    stopped: 'Recurring stopped',
+  },
   voice: {
     title: 'Voice Expense',
     listening: 'Listening... Tap to stop',
@@ -607,6 +620,8 @@ export default {
     sharedAccountActivityDesc: 'Get notified when others add expenses to shared accounts',
     debtReminders: 'Debt Reminders',
     debtRemindersDesc: 'Get notified 3 days before a debt is due and when it becomes overdue',
+    recurringExpenses: 'Recurring Expenses',
+    recurringExpensesDesc: 'Get notified when a recurring expense is auto-logged',
   },
   whatsappBot: {
     title: 'WhatsApp Bot',

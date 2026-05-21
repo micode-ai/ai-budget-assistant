@@ -40,6 +40,7 @@ export class NotificationsService {
         notifyBudgetAlerts: true,
         notifySharedActivity: true,
         notifyDebtReminders: true,
+        notifyRecurringExpenses: true,
       },
     });
 
@@ -49,6 +50,7 @@ export class NotificationsService {
     if (notificationType === 'spending_anomaly' && !user.notifyBudgetAlerts) return false;
     if (notificationType === 'shared_expense' && !user.notifySharedActivity) return false;
     if (notificationType === 'debt_reminder' && !user.notifyDebtReminders) return false;
+    if (notificationType === 'recurring_expense' && !user.notifyRecurringExpenses) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);
@@ -91,6 +93,7 @@ export class NotificationsService {
         notifyBudgetAlerts: true,
         notifySharedActivity: true,
         notifyDebtReminders: true,
+        notifyRecurringExpenses: true,
       },
     });
 
@@ -101,6 +104,7 @@ export class NotificationsService {
       if (notificationType === 'spending_anomaly' && !u.notifyBudgetAlerts) return false;
       if (notificationType === 'shared_expense' && !u.notifySharedActivity) return false;
       if (notificationType === 'debt_reminder' && !u.notifyDebtReminders) return false;
+      if (notificationType === 'recurring_expense' && !u.notifyRecurringExpenses) return false;
       return true;
     });
 

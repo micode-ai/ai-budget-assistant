@@ -177,6 +177,18 @@ export class CreateExpenseDto {
 
   @IsOptional()
   @IsBoolean()
+  isRecurring?: boolean;
+
+  @IsOptional()
+  @IsUUID()
+  recurringId?: string;
+
+  @IsOptional()
+  @IsString()
+  recurringPeriod?: string;
+
+  @IsOptional()
+  @IsBoolean()
   isDebt?: boolean;
 
   @IsOptional()
@@ -252,6 +264,18 @@ export class UpdateExpenseDto {
   @IsOptional()
   @IsUUID()
   projectId?: string | null;
+
+  @IsOptional()
+  @IsBoolean()
+  isRecurring?: boolean;
+
+  @IsOptional()
+  @IsUUID()
+  recurringId?: string;
+
+  @IsOptional()
+  @IsString()
+  recurringPeriod?: string;
 
   @IsOptional()
   @IsBoolean()

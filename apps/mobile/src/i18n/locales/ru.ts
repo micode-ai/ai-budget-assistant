@@ -339,6 +339,19 @@ export default {
     attachAsPdf: 'Выбрать PDF',
     cameraPermissionDenied: 'Требуется доступ к камере',
   },
+  recurring: {
+    repeat: 'Повторять',
+    repeatDesc: 'Автоматически добавлять этот расход каждый период',
+    period: 'Период',
+    weekly: 'Еженедельно',
+    monthly: 'Ежемесячно',
+    yearly: 'Ежегодно',
+    seriesBanner: 'Часть повторяющейся серии',
+    seriesPeriod: 'Повторяется {{period}}',
+    stopRecurring: 'Остановить повтор',
+    stopRecurringConfirm: 'Прекратить автоматическое добавление? Существующие записи не будут удалены.',
+    stopped: 'Повтор остановлен',
+  },
   voice: {
     title: 'Голосовой расход',
     listening: 'Слушаю... Нажмите, чтобы остановить',
@@ -607,6 +620,8 @@ export default {
     sharedAccountActivityDesc: 'Уведомления когда другие добавляют расходы в общие счета',
     debtReminders: 'Напоминания о долгах',
     debtRemindersDesc: 'Уведомление за 3 дня до срока долга и при просрочке',
+    recurringExpenses: 'Регулярные расходы',
+    recurringExpensesDesc: 'Уведомление при автоматическом добавлении регулярного расхода',
   },
   whatsappBot: {
     title: 'WhatsApp-бот',

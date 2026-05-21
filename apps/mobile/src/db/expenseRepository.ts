@@ -1,5 +1,5 @@
 import { executeSql } from './client';
-import type { Expense, Currency, SyncStatus, ExpenseSource } from '@budget/shared-types';
+import type { Expense, Currency, SyncStatus, ExpenseSource, RecurringPeriod } from '@budget/shared-types';
 
 interface ExpenseRow {
   id: string;
@@ -21,6 +21,7 @@ interface ExpenseRow {
   receipt_url: string | null;
   is_recurring: number;
   recurring_id: string | null;
+  recurring_period: string | null;
   source: string;
   is_debt: number;
   is_debt_repayment: number;
@@ -61,6 +62,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     receiptUrl: row.receipt_url ?? undefined,
     isRecurring: row.is_recurring === 1,
     recurringId: row.recurring_id ?? undefined,
+    recurringPeriod: (row.recurring_period as RecurringPeriod) ?? undefined,
     source: row.source as ExpenseSource,
     isDebt: row.is_debt === 1,
     isDebtRepayment: row.is_debt_repayment === 1,
@@ -97,6 +99,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.receiptUrl ?? null,
     expense.isRecurring ? 1 : 0,
     expense.recurringId ?? null,
+    expense.recurringPeriod ?? null,
     expense.source,
     expense.isDebt ? 1 : 0,
     expense.isDebtRepayment ? 1 : 0,
@@ -132,12 +135,12 @@ export async function insertExpense(expense: Expense): Promise<void> {
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
-      is_recurring, recurring_id, source,
+      is_recurring, recurring_id, recurring_period, source,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -182,6 +185,10 @@ export async function updateExpenseInDb(
   if (updates.isRecurring !== undefined) {
     setClauses.push('is_recurring = ?');
     params.push(updates.isRecurring ? 1 : 0);
+  }
+  if (updates.recurringPeriod !== undefined) {
+    setClauses.push('recurring_period = ?');
+    params.push(updates.recurringPeriod ?? null);
   }
   if (updates.receiptUrl !== undefined) {
     setClauses.push('receipt_url = ?');
@@ -270,12 +277,12 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
-      is_recurring, recurring_id, source,
+      is_recurring, recurring_id, recurring_period, source,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -295,6 +302,7 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       receipt_url = excluded.receipt_url,
       is_recurring = excluded.is_recurring,
       recurring_id = excluded.recurring_id,
+      recurring_period = excluded.recurring_period,
       source = excluded.source,
       is_debt = excluded.is_debt,
       is_debt_repayment = excluded.is_debt_repayment,

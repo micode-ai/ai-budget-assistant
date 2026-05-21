@@ -47,6 +47,7 @@ export default function ExpenseDetailScreen() {
     expenses,
     updateExpense,
     deleteExpense,
+    stopRecurringExpense,
     expenseItems,
     loadExpenseItems,
     addExpenseItem,
@@ -347,6 +348,29 @@ export default function ExpenseDetailScreen() {
     );
   }
 
+  const handleStopRecurring = () => {
+    if (!expense) return;
+    Alert.alert(
+      t('recurring.stopRecurring'),
+      t('recurring.stopRecurringConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('recurring.stopRecurring'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await stopRecurringExpense(expense.id);
+              Alert.alert('', t('recurring.stopped'));
+            } catch {
+              Alert.alert(t('common.error'), t('errors.saveFailed'));
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const handleCopy = () => {
     router.push({
       pathname: '/expense/new',
@@ -496,6 +520,24 @@ export default function ExpenseDetailScreen() {
           <View style={styles.debtRepaymentBanner}>
             <Ionicons name="return-down-back" size={16} color={theme.colors.warning} />
             <Text style={styles.debtRepaymentText}>{t('debt.isDebtRepayment')}</Text>
+          </View>
+        )}
+
+        {/* Recurring Series Banner */}
+        {expense.isRecurring && expense.recurringId && (
+          <View style={styles.recurringBanner}>
+            <Ionicons name="repeat-outline" size={16} color={theme.colors.primary} />
+            <View style={styles.recurringBannerInfo}>
+              <Text style={styles.recurringBannerText}>{t('recurring.seriesBanner')}</Text>
+              {expense.recurringPeriod && (
+                <Text style={styles.recurringBannerPeriod}>
+                  {t('recurring.seriesPeriod', { period: t(`recurring.${expense.recurringPeriod}`) })}
+                </Text>
+              )}
+            </View>
+            <TouchableOpacity onPress={handleStopRecurring}>
+              <Text style={styles.recurringStopText}>{t('recurring.stopRecurring')}</Text>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -1490,5 +1532,32 @@ const createStyles = (theme: Theme) => ({
     fontSize: 14,
     fontWeight: '500' as const,
     color: theme.colors.warning,
+  },
+  recurringBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.primaryLight || theme.colors.surfaceSecondary,
+    padding: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing[3],
+  },
+  recurringBannerInfo: {
+    flex: 1,
+  },
+  recurringBannerText: {
+    fontSize: 14,
+    fontWeight: '500' as const,
+    color: theme.colors.primary,
+  },
+  recurringBannerPeriod: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    marginTop: 2,
+  },
+  recurringStopText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: theme.colors.danger,
   },
 });

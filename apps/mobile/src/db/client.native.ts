@@ -529,6 +529,9 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN count_as_income INTEGER DEFAULT 0`); } catch {}
     try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN linked_income_id TEXT`); } catch {}
 
+    // Recurring period for expense series
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN recurring_period TEXT`); } catch {}
+
     // Transaction attribution: cache the creator's display name on each row so
     // shared-account screens can show "Added by …" without an extra user lookup.
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_user_name TEXT`); } catch {}

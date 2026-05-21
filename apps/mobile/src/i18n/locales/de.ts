@@ -339,6 +339,19 @@ export default {
     attachAsPdf: 'PDF auswählen',
     cameraPermissionDenied: 'Kamerazugriff erforderlich',
   },
+  recurring: {
+    repeat: 'Wiederholen',
+    repeatDesc: 'Diese Ausgabe automatisch jeden Zeitraum hinzufügen',
+    period: 'Zeitraum',
+    weekly: 'Wöchentlich',
+    monthly: 'Monatlich',
+    yearly: 'Jährlich',
+    seriesBanner: 'Teil einer wiederkehrenden Serie',
+    seriesPeriod: 'Wiederholt sich {{period}}',
+    stopRecurring: 'Wiederholung stoppen',
+    stopRecurringConfirm: 'Automatisches Hinzufügen stoppen? Vorhandene Einträge werden nicht gelöscht.',
+    stopped: 'Wiederholung gestoppt',
+  },
   voice: {
     title: 'Sprachausgabe',
     listening: 'Zuhören... Tippen zum Stoppen',
@@ -607,6 +620,8 @@ export default {
     sharedAccountActivityDesc: 'Benachrichtigung wenn andere Ausgaben zu gemeinsamen Konten hinzufügen',
     debtReminders: 'Schulden-Erinnerungen',
     debtRemindersDesc: 'Erinnerung 3 Tage vor Fälligkeit und bei Überschreitung',
+    recurringExpenses: 'Wiederkehrende Ausgaben',
+    recurringExpensesDesc: 'Benachrichtigung wenn eine wiederkehrende Ausgabe automatisch gebucht wird',
   },
   whatsappBot: {
     title: 'WhatsApp-Bot',
