@@ -430,6 +430,14 @@ export default {
     editBudget: 'Редактировать бюджет',
     save: 'Сохранить',
     saving: 'Сохранение...',
+    history: {
+      title: 'История',
+      spent: 'Расход',
+      limit: 'Лимит',
+      overCount: 'Превышен {{count}} из {{total}} периодов',
+      avgOverage: 'Ср. превышение: +{{amount}}',
+      avgSavings: 'Ср. экономия: {{amount}}',
+    },
   },
   validation: {
     fillAllFields: 'Пожалуйста, заполните все поля',

@@ -428,6 +428,14 @@ export default {
     editBudget: 'Рэдагаваць бюджэт',
     save: 'Захаваць',
     saving: 'Захаванне...',
+    history: {
+      title: 'Гісторыя',
+      spent: 'Выдаткі',
+      limit: 'Ліміт',
+      overCount: 'Перавышаны {{count}} з {{total}} перыядаў',
+      avgOverage: 'Сярэд. перавышэнне: +{{amount}}',
+      avgSavings: 'Сярэд. эканомія: {{amount}}',
+    },
   },
   validation: {
     fillAllFields: 'Калі ласка, запоўніце ўсе палі',

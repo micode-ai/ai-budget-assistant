@@ -68,6 +68,18 @@ Toca cualquier presupuesto para ver sus detalles completos:
 - **Editar** (icono de lápiz) — modificar el nombre, importe, categorías, período o umbral de alerta
 - **Eliminar** — eliminar el presupuesto (con confirmación)
 
+## Historial de gastos
+
+La tarjeta **Historial** muestra cómo has cumplido tu presupuesto durante los últimos 6 períodos. Disponible para todos los tipos de período excepto Personalizado.
+
+- **Gráfico de barras** — cada grupo muestra dos barras: tus gastos reales (de color) y el límite del presupuesto (gris) para ese período.
+  - Barra verde — gastos dentro del límite
+  - Barra roja — límite superado
+- **Resumen de cumplimiento** — p. ej., «Excedido 3 de 6 períodos» o «Ahorro prom.: 42 $»
+- **Exceso promedio** — si superaste el límite en algunos períodos, muestra el importe promedio excedido
+
+> **Consejo:** Usa la tarjeta de historial para detectar patrones de gasto excesivo recurrentes. Si ves 3–4 barras rojas seguidas, considera aumentar el límite o ajustar tus hábitos en esa categoría.
+
 ## Editar un presupuesto
 
 Toca el **icono de lápiz** en la pantalla de detalles del presupuesto para cambiar al modo de edición:

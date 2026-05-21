@@ -156,6 +156,14 @@ export interface UpdateBudgetDto {
   isActive?: boolean;
 }
 
+export interface BudgetHistoryEntry {
+  periodStart: string;
+  periodEnd: string;
+  limit: number;
+  actual: number;
+  isOverBudget: boolean;
+}
+
 // Category DTOs
 export interface CreateCategoryDto {
   name: string;

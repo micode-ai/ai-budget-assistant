@@ -613,6 +613,18 @@ Tap any budget to see its full details:
 - **Edit** (pencil icon) — modify name, amount, categories, period, or alert threshold
 - **Delete** — remove the budget (with confirmation)
 
+## Spending History
+
+The **History** card shows how you've performed against this budget over the last 6 periods. It's available for all period types except Custom.
+
+- **Bar chart** — each group shows two bars: your actual spend (colored) and the budget limit (gray) for that period.
+  - Green bar — spent within the limit
+  - Red bar — exceeded the limit
+- **Compliance summary** — e.g., "Over budget 3 of 6 periods" or "Avg savings: \$42"
+- **Average overage** — if you went over in some periods, shows the average amount by which you exceeded the limit
+
+> **Tip:** Use the history card to spot recurring overspend patterns. If you see 3–4 red bars in a row, consider raising the limit or adjusting your habits for that category.
+
 ## Editing a Budget
 
 Tap the **pencil icon** on the budget detail screen to switch to edit mode:
@@ -3876,6 +3888,18 @@ iOS, Android, Web
 ### Действия:
 - **Редактировать** (значок карандаша) — изменить название, сумму, категории, период или порог уведомления
 - **Удалить** — удалить бюджет (с подтверждением)
+
+## История расходов
+
+Карточка **История** показывает, как вы соблюдали бюджет за последние 6 периодов. Доступна для всех типов периодов, кроме Произвольного.
+
+- **Столбчатый график** — каждая группа показывает два столбца: фактические расходы (цветной) и лимит бюджета (серый) за период.
+  - Зелёный столбец — расходы в рамках лимита
+  - Красный столбец — лимит превышен
+- **Сводка соответствия** — например, «Превышен 3 из 6 периодов» или «Ср. экономия: 42 \$»
+- **Среднее превышение** — если лимит превышался, показывает среднюю сумму превышения
+
+> **Совет:** Используйте карточку истории для выявления повторяющихся перерасходов. Если вы видите 3–4 красных столбца подряд, подумайте о повышении лимита или корректировке привычек для этой категории.
 
 ## Редактирование бюджета
 
@@ -7141,6 +7165,18 @@ iOS, Android, Web
 - **Редагувати** (іконка олівця) — змінити назву, суму, категорії, період або поріг сповіщення
 - **Видалити** — видалити бюджет (з підтвердженням)
 
+## Історія витрат
+
+Картка **Історія** показує, як ви дотримувались бюджету за останні 6 періодів. Доступна для всіх типів періодів, окрім Довільного.
+
+- **Стовпчастий графік** — кожна група показує два стовпці: фактичні витрати (кольоровий) і ліміт бюджету (сірий) за період.
+  - Зелений стовпець — витрати в межах ліміту
+  - Червоний стовпець — ліміт перевищено
+- **Зведення відповідності** — наприклад, «Перевищено 3 з 6 періодів» або «Сер. економія: 42 \$»
+- **Середнє перевищення** — якщо ліміт перевищувався, показує середню суму перевищення
+
+> **Порада:** Використовуйте картку історії для виявлення повторюваних перевитрат. Якщо ви бачите 3–4 червоних стовпці поспіль, подумайте про підвищення ліміту або коригування звичок для цієї категорії.
+
 ## Редагування бюджету
 
 Натисніть **іконку олівця** на екрані деталей бюджету для переходу в режим редагування:
@@ -10341,6 +10377,18 @@ Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
 - **Edytuj** (ikona ołówka) — zmodyfikuj nazwę, kwotę, kategorie, okres lub próg powiadomienia
 - **Usuń** — usuń budżet (z potwierdzeniem)
 
+## Historia wydatków
+
+Karta **Historia** pokazuje, jak przestrzegałeś budżetu przez ostatnie 6 okresów. Dostępna dla wszystkich typów okresów z wyjątkiem Niestandardowego.
+
+- **Wykres słupkowy** — każda grupa pokazuje dwa słupki: rzeczywiste wydatki (kolorowy) i limit budżetu (szary) za dany okres.
+  - Zielony słupek — wydatki w granicach limitu
+  - Czerwony słupek — limit przekroczony
+- **Podsumowanie zgodności** — np. „Przekroczono 3 z 6 okresów" lub „Śr. oszczędności: 42 zł"
+- **Średnia nadwyżka** — jeśli limit był przekraczany, pokazuje średnią kwotę przekroczenia
+
+> **Wskazówka:** Używaj karty historii, aby wykryć powtarzające się wzorce nadmiernych wydatków. Jeśli widzisz 3–4 czerwone słupki z rzędu, rozważ podwyższenie limitu lub zmianę nawyków w tej kategorii.
+
 ## Edytowanie budżetu
 
 Dotknij **ikony ołówka** na ekranie szczegółów budżetu, aby przejść do trybu edycji:
@@ -13525,6 +13573,18 @@ Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:
 - **Bearbeiten** (Bleistift-Symbol) — Budgetname, Betrag, Kategorien, Zeitraum oder Warnschwelle ändern
 - **Löschen** — das Budget entfernen (mit Bestätigung)
 
+## Ausgabenverlauf
+
+Die **Verlauf**-Karte zeigt, wie du dein Budget in den letzten 6 Zeiträumen eingehalten hast. Verfügbar für alle Zeitraumtypen außer Benutzerdefiniert.
+
+- **Balkendiagramm** — jede Gruppe zeigt zwei Balken: deine tatsächlichen Ausgaben (farbig) und das Budgetlimit (grau) für den jeweiligen Zeitraum.
+  - Grüner Balken — Ausgaben innerhalb des Limits
+  - Roter Balken — Limit überschritten
+- **Compliance-Zusammenfassung** — z.B. „2 von 6 Zeiträumen überschritten" oder „Ø Ersparnis: 42 €"
+- **Durchschnittliche Überschreitung** — wenn das Limit mehrfach überschritten wurde, wird der durchschnittliche Betrag angezeigt
+
+> **Tipp:** Nutze die Verlaufskarte, um wiederkehrende Ausgabenmuster zu erkennen. Wenn du 3–4 rote Balken in Folge siehst, solltest du das Limit erhöhen oder deine Gewohnheiten in dieser Kategorie anpassen.
+
 ## Budget bearbeiten
 
 Tippe auf das **Bleistift-Symbol** auf dem Budgetdetailbildschirm, um in den Bearbeitungsmodus zu wechseln:
@@ -16707,6 +16767,18 @@ Toca cualquier presupuesto para ver sus detalles completos:
 - **Editar** (icono de lápiz) — modificar el nombre, importe, categorías, período o umbral de alerta
 - **Eliminar** — eliminar el presupuesto (con confirmación)
 
+## Historial de gastos
+
+La tarjeta **Historial** muestra cómo has cumplido tu presupuesto durante los últimos 6 períodos. Disponible para todos los tipos de período excepto Personalizado.
+
+- **Gráfico de barras** — cada grupo muestra dos barras: tus gastos reales (de color) y el límite del presupuesto (gris) para ese período.
+  - Barra verde — gastos dentro del límite
+  - Barra roja — límite superado
+- **Resumen de cumplimiento** — p. ej., «Excedido 3 de 6 períodos» o «Ahorro prom.: 42 \$»
+- **Exceso promedio** — si superaste el límite en algunos períodos, muestra el importe promedio excedido
+
+> **Consejo:** Usa la tarjeta de historial para detectar patrones de gasto excesivo recurrentes. Si ves 3–4 barras rojas seguidas, considera aumentar el límite o ajustar tus hábitos en esa categoría.
+
 ## Editar un presupuesto
 
 Toca el **icono de lápiz** en la pantalla de detalles del presupuesto para cambiar al modo de edición:
@@ -19884,6 +19956,18 @@ Appuyez sur un budget pour voir ses détails complets :
 - **Modifier** (icône crayon) — modifier le nom, le montant, les catégories, la période ou le seuil d'alerte
 - **Supprimer** — supprimer le budget (avec confirmation)
 
+## Historique des dépenses
+
+La carte **Historique** affiche votre respect du budget sur les 6 dernières périodes. Disponible pour tous les types de période sauf Personnalisé.
+
+- **Graphique en barres** — chaque groupe montre deux barres : vos dépenses réelles (colorées) et la limite du budget (grise) pour cette période.
+  - Barre verte — dépenses dans la limite
+  - Barre rouge — limite dépassée
+- **Résumé de conformité** — par ex. « Dépassé 3 sur 6 périodes » ou « Économie moy. : 42 € »
+- **Dépassement moyen** — si la limite a été dépassée sur certaines périodes, affiche le montant moyen de dépassement
+
+> **Conseil :** Utilisez la carte historique pour repérer les dépassements récurrents. Si vous voyez 3 à 4 barres rouges consécutives, envisagez d'augmenter la limite ou d'ajuster vos habitudes dans cette catégorie.
+
 ## Modifier un budget
 
 Appuyez sur l'**icône crayon** sur l'écran de détails du budget pour passer en mode édition :
@@ -23058,6 +23142,18 @@ iOS, Android, Web
 ### Дзеянні:
 - **Рэдагаваць** (значок аловак) — змяніць назву, суму, катэгорыі, перыяд або парог апавяшчэння
 - **Выдаліць** — выдаліць бюджэт (з пацвярджэннем)
+
+## Гісторыя выдаткаў
+
+Картка **Гісторыя** паказвае, як вы выконвалі бюджэт на працягу апошніх 6 перыядаў. Даступная для ўсіх тыпаў перыядаў, акрамя Адвольнага.
+
+- **Слупковая дыяграма** — кожная група паказвае два слупкі: фактычныя выдаткі (каляровы) і ліміт бюджэту (шэры) за дадзены перыяд.
+  - Зялёны слупок — выдаткі ў межах ліміту
+  - Чырвоны слупок — ліміт перавышаны
+- **Зводка адпаведнасці** — напрыклад, «Перавышаны 3 з 6 перыядаў» або «Сярэд. эканомія: 42 \$»
+- **Сярэдняе перавышэнне** — калі ліміт перавышаўся, паказвае сярэднюю суму перавышэння
+
+> **Парада:** Выкарыстоўвайце картку гісторыі для выяўлення паўтаральных перавыдаткаў. Калі вы бачыце 3–4 чырвоных слупкі запар, падумайце аб павышэнні ліміту або карэкціроўцы звычак для гэтай катэгорыі.
 
 ## Рэдагаванне бюджэту
 

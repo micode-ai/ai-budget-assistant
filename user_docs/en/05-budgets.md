@@ -68,6 +68,18 @@ Tap any budget to see its full details:
 - **Edit** (pencil icon) — modify name, amount, categories, period, or alert threshold
 - **Delete** — remove the budget (with confirmation)
 
+## Spending History
+
+The **History** card shows how you've performed against this budget over the last 6 periods. It's available for all period types except Custom.
+
+- **Bar chart** — each group shows two bars: your actual spend (colored) and the budget limit (gray) for that period.
+  - Green bar — spent within the limit
+  - Red bar — exceeded the limit
+- **Compliance summary** — e.g., "Over budget 3 of 6 periods" or "Avg savings: $42"
+- **Average overage** — if you went over in some periods, shows the average amount by which you exceeded the limit
+
+> **Tip:** Use the history card to spot recurring overspend patterns. If you see 3–4 red bars in a row, consider raising the limit or adjusting your habits for that category.
+
 ## Editing a Budget
 
 Tap the **pencil icon** on the budget detail screen to switch to edit mode:

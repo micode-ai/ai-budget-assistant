@@ -68,6 +68,18 @@ Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:
 - **Bearbeiten** (Bleistift-Symbol) — Budgetname, Betrag, Kategorien, Zeitraum oder Warnschwelle ändern
 - **Löschen** — das Budget entfernen (mit Bestätigung)
 
+## Ausgabenverlauf
+
+Die **Verlauf**-Karte zeigt, wie du dein Budget in den letzten 6 Zeiträumen eingehalten hast. Verfügbar für alle Zeitraumtypen außer Benutzerdefiniert.
+
+- **Balkendiagramm** — jede Gruppe zeigt zwei Balken: deine tatsächlichen Ausgaben (farbig) und das Budgetlimit (grau) für den jeweiligen Zeitraum.
+  - Grüner Balken — Ausgaben innerhalb des Limits
+  - Roter Balken — Limit überschritten
+- **Compliance-Zusammenfassung** — z.B. „2 von 6 Zeiträumen überschritten" oder „Ø Ersparnis: 42 €"
+- **Durchschnittliche Überschreitung** — wenn das Limit mehrfach überschritten wurde, wird der durchschnittliche Betrag angezeigt
+
+> **Tipp:** Nutze die Verlaufskarte, um wiederkehrende Ausgabenmuster zu erkennen. Wenn du 3–4 rote Balken in Folge siehst, solltest du das Limit erhöhen oder deine Gewohnheiten in dieser Kategorie anpassen.
+
 ## Budget bearbeiten
 
 Tippe auf das **Bleistift-Symbol** auf dem Budgetdetailbildschirm, um in den Bearbeitungsmodus zu wechseln:
