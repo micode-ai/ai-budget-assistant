@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,10 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Modal,
+  Alert,
+  FlatList,
+  Share,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +20,8 @@ import { LineChart } from 'react-native-gifted-charts';
 import { Dimensions } from 'react-native';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useScenarioStore, type SavedScenario } from '@/stores/scenarioStore';
 import { formatCurrency } from '@budget/shared-utils';
 import {
   useScenarioProjection,
@@ -32,6 +38,8 @@ export default function ScenarioSimulatorScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
+  const isPro = useSubscriptionStore(s => s.isPro());
+  const { scenarios, saveScenario, deleteScenario, canSave } = useScenarioStore();
 
   // Adjustments state: categoryId -> percent change (-100..100)
   const [expenseAdj, setExpenseAdj] = useState<Record<string, number>>({});
@@ -40,6 +48,13 @@ export default function ScenarioSimulatorScreen() {
   const [horizon, setHorizon] = useState<Horizon>(6);
   // Disable ScrollView while a slider is being dragged
   const [scrollEnabled, setScrollEnabled] = useState(true);
+
+  // Save modal state
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [scenarioName, setScenarioName] = useState('');
+
+  // Load modal state
+  const [loadModalVisible, setLoadModalVisible] = useState(false);
 
   const projection = useScenarioProjection(expenseAdj, incomeAdj, extraIncomes, horizon);
 
@@ -80,6 +95,77 @@ export default function ScenarioSimulatorScreen() {
     setExtraIncomes([]);
   }, []);
 
+  // --- Save ---
+  const handleSavePress = useCallback(() => {
+    if (!canSave(isPro)) {
+      Alert.alert(
+        t('scenarioSimulator.savedScenarios'),
+        t('scenarioSimulator.scenarioLimitFree'),
+      );
+      return;
+    }
+    setScenarioName('');
+    setSaveModalVisible(true);
+  }, [canSave, isPro, t]);
+
+  const handleConfirmSave = useCallback(() => {
+    const result = saveScenario(scenarioName, { expenseAdj, incomeAdj, extraIncomes, horizon }, isPro);
+    setSaveModalVisible(false);
+    if (result === 'ok') {
+      Alert.alert('', t('scenarioSimulator.scenarioSaved'));
+    } else {
+      Alert.alert(
+        t('scenarioSimulator.savedScenarios'),
+        t('scenarioSimulator.scenarioLimitFree'),
+      );
+    }
+  }, [saveScenario, scenarioName, expenseAdj, incomeAdj, extraIncomes, horizon, isPro, t]);
+
+  // --- Load ---
+  const handleLoadScenario = useCallback((scenario: SavedScenario) => {
+    setExpenseAdj(scenario.expenseAdj);
+    setIncomeAdj(scenario.incomeAdj);
+    setExtraIncomes(scenario.extraIncomes);
+    setHorizon(scenario.horizon);
+    setLoadModalVisible(false);
+  }, []);
+
+  const handleDeleteScenario = useCallback((id: string) => {
+    Alert.alert(
+      t('scenarioSimulator.deleteScenario'),
+      t('common.deleteConfirmMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('common.delete'), style: 'destructive', onPress: () => deleteScenario(id) },
+      ],
+    );
+  }, [deleteScenario, t]);
+
+  // --- Share ---
+  const fmt = (amount: number) => formatCurrency(Math.abs(amount), currency as never);
+  const fmtSigned = (amount: number) =>
+    `${amount >= 0 ? '+' : '−'}${fmt(amount)}`;
+
+  const handleShare = useCallback(async () => {
+    const savingsDiff = projection.monthlySavingsDiff;
+    const horizonTotal = projection.horizonTotals[horizon];
+    const message = [
+      `📊 ${t('scenarioSimulator.projectionTitle')}`,
+      '',
+      `${t('scenarioSimulator.currentSavings')}: ${fmtSigned(projection.currentMonthlySavings)}${t('scenarioSimulator.perMonth')}`,
+      `${t('scenarioSimulator.scenarioSavings')}: ${fmtSigned(projection.scenarioMonthlySavings)}${t('scenarioSimulator.perMonth')}`,
+      `Δ ${savingsDiff >= 0 ? '+' : '−'}${fmt(savingsDiff)}${t('scenarioSimulator.perMonth')}`,
+      '',
+      `${horizon} ${t('scenarioSimulator.months')}: ${fmtSigned(horizonTotal.scenario)} (${savingsDiff >= 0 ? '+' : '−'}${fmt(horizonTotal.diff)})`,
+    ].join('\n');
+
+    try {
+      await Share.share({ message });
+    } catch {
+      // user cancelled or error — silently ignore
+    }
+  }, [projection, horizon, t, fmt, fmtSigned]);
+
   // --- Chart data ---
   const chartData = useMemo(() => {
     return projection.projectionPoints.map(p => ({
@@ -98,10 +184,6 @@ export default function ScenarioSimulatorScreen() {
   const chartWidth = screenWidth - 64;
   const savingsDiff = projection.monthlySavingsDiff;
   const diffIsPositive = savingsDiff >= 0;
-
-  const fmt = (amount: number) => formatCurrency(Math.abs(amount), currency as never);
-  const fmtSigned = (amount: number) =>
-    `${amount >= 0 ? '+' : '−'}${fmt(amount)}`;
 
   const HORIZONS: Horizon[] = [3, 6, 12];
 
@@ -123,6 +205,23 @@ export default function ScenarioSimulatorScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
+        {/* ── Action bar ── */}
+        <View style={styles.actionBar}>
+          <TouchableOpacity style={styles.actionBarBtn} onPress={() => setLoadModalVisible(true)}>
+            <Ionicons name="folder-outline" size={20} color={theme.colors.primary} />
+            <Text style={styles.actionBarBtnText}>{t('scenarioSimulator.savedScenarios')}</Text>
+            {scenarios.length > 0 && (
+              <View style={styles.scenarioBadge}>
+                <Text style={styles.scenarioBadgeText}>{scenarios.length}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBarBtn} onPress={handleSavePress}>
+            <Ionicons name="bookmark-outline" size={20} color={theme.colors.primary} />
+            <Text style={styles.actionBarBtnText}>{t('scenarioSimulator.saveScenario')}</Text>
+          </TouchableOpacity>
+        </View>
+
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.content}
@@ -317,7 +416,7 @@ export default function ScenarioSimulatorScreen() {
             })}
 
             {/* Extra income rows */}
-            {extraIncomes.map((extra, idx) => (
+            {extraIncomes.map((extra) => (
               <View key={extra.id} style={[styles.categoryRow, styles.categoryRowBorder]}>
                 <View style={styles.extraIncomeRow}>
                   <TextInput
@@ -349,15 +448,108 @@ export default function ScenarioSimulatorScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* ── Reset ── */}
-          <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-            <Ionicons name="refresh-outline" size={16} color={theme.colors.textSecondary} />
-            <Text style={styles.resetBtnText}>{t('scenarioSimulator.resetAll')}</Text>
-          </TouchableOpacity>
+          {/* ── Bottom Actions ── */}
+          <View style={styles.bottomActionsRow}>
+            <TouchableOpacity style={[styles.bottomBtn, { flex: 1 }]} onPress={handleReset}>
+              <Ionicons name="refresh-outline" size={16} color={theme.colors.textSecondary} />
+              <Text style={styles.bottomBtnText}>{t('scenarioSimulator.resetAll')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.bottomBtn, styles.shareBtn]} onPress={handleShare}>
+              <Ionicons name="share-outline" size={16} color={theme.colors.primary} />
+              <Text style={[styles.bottomBtnText, { color: theme.colors.primary }]}>{t('scenarioSimulator.shareScenario')}</Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={{ height: 40 }} />
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* ── Save Modal ── */}
+      <Modal
+        visible={saveModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSaveModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>{t('scenarioSimulator.saveScenario')}</Text>
+              <TextInput
+                style={styles.modalInput}
+                placeholder={t('scenarioSimulator.saveNamePlaceholder')}
+                placeholderTextColor={theme.colors.textTertiary}
+                value={scenarioName}
+                onChangeText={setScenarioName}
+                autoFocus
+                returnKeyType="done"
+                onSubmitEditing={handleConfirmSave}
+              />
+              <View style={styles.modalActions}>
+                <TouchableOpacity style={styles.modalCancel} onPress={() => setSaveModalVisible(false)}>
+                  <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalSave} onPress={handleConfirmSave}>
+                  <Text style={styles.modalSaveText}>{t('common.save')}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </Modal>
+
+      {/* ── Load Modal ── */}
+      <Modal
+        visible={loadModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setLoadModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.loadSheet}>
+            <View style={styles.loadSheetHandle} />
+            <Text style={styles.loadSheetTitle}>{t('scenarioSimulator.savedScenarios')}</Text>
+            {scenarios.length === 0 ? (
+              <View style={styles.loadEmptyState}>
+                <Ionicons name="folder-open-outline" size={40} color={theme.colors.textDisabled} />
+                <Text style={styles.loadEmptyText}>{t('scenarioSimulator.noSavedScenarios')}</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={scenarios}
+                keyExtractor={s => s.id}
+                style={styles.loadList}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.loadRow}
+                    onPress={() => handleLoadScenario(item)}
+                  >
+                    <View style={styles.loadRowContent}>
+                      <Ionicons name="bookmark" size={16} color={theme.colors.primary} />
+                      <View style={styles.loadRowText}>
+                        <Text style={styles.loadRowName} numberOfLines={1}>{item.name}</Text>
+                        <Text style={styles.loadRowDate}>
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </Text>
+                      </View>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteScenario(item.id)}
+                      style={styles.loadRowDelete}
+                    >
+                      <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
+                ItemSeparatorComponent={() => <View style={styles.loadSeparator} />}
+              />
+            )}
+            <TouchableOpacity style={styles.loadCloseBtn} onPress={() => setLoadModalVisible(false)}>
+              <Text style={styles.loadCloseBtnText}>{t('common.done')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -372,6 +564,44 @@ const createStyles = (theme: Theme) => ({
   },
   content: {
     padding: theme.spacing[4],
+  },
+
+  // Action bar
+  actionBar: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.borderLight,
+    backgroundColor: theme.colors.background,
+  },
+  actionBarBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingVertical: theme.spacing[1],
+    paddingHorizontal: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  actionBarBtnText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
+  },
+  scenarioBadge: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingHorizontal: 4,
+  },
+  scenarioBadgeText: {
+    ...theme.textStyles.caption,
+    color: '#fff',
+    fontSize: 11,
   },
 
   // Empty state
@@ -616,8 +846,13 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.primary,
   },
 
-  // Reset button
-  resetBtn: {
+  // Bottom actions row
+  bottomActionsRow: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[2],
+  },
+  bottomBtn: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -627,10 +862,155 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surface,
-    marginBottom: theme.spacing[2],
   },
-  resetBtnText: {
+  shareBtn: {
+    borderColor: theme.colors.primaryLight,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  bottomBtnText: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textSecondary,
+  },
+
+  // Save modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
+  },
+  modalCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    width: '100%',
+    gap: theme.spacing[4],
+  },
+  modalTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    textAlign: 'center' as const,
+  },
+  modalInput: {
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  modalActions: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  modalCancel: {
+    flex: 1,
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    alignItems: 'center' as const,
+  },
+  modalCancelText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+  },
+  modalSave: {
+    flex: 1,
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center' as const,
+  },
+  modalSaveText: {
+    ...theme.textStyles.bodyMedium,
+    color: '#fff',
+  },
+
+  // Load sheet
+  loadSheet: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    width: '100%',
+    maxHeight: '80%' as any,
+    alignSelf: 'flex-end' as const,
+    position: 'absolute' as const,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingBottom: theme.spacing[8],
+  },
+  loadSheetHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.border,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  loadSheetTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[4],
+  },
+  loadList: {
+    maxHeight: 320,
+  },
+  loadEmptyState: {
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[8],
+    gap: theme.spacing[3],
+  },
+  loadEmptyText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  loadRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    justifyContent: 'space-between' as const,
+  },
+  loadRowContent: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    flex: 1,
+  },
+  loadRowText: {
+    flex: 1,
+  },
+  loadRowName: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+  },
+  loadRowDate: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+    marginTop: 2,
+  },
+  loadRowDelete: {
+    padding: theme.spacing[2],
+    marginLeft: theme.spacing[2],
+  },
+  loadSeparator: {
+    height: 1,
+    backgroundColor: theme.colors.borderLight,
+  },
+  loadCloseBtn: {
+    marginTop: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surfaceSecondary,
+    alignItems: 'center' as const,
+  },
+  loadCloseBtnText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
   },
 });

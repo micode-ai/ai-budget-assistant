@@ -59,9 +59,24 @@ Trois cartes sous le graphique affichent les totaux du scénario pour 3, 6 et 12
 
 La carte tout en haut se met à jour en temps réel.
 
+## Enregistrer un scénario
+
+Appuyez sur **Enregistrer le scénario** dans la barre d'actions pour sauvegarder l'état actuel des curseurs et l'horizon sous un nom de votre choix (ex. : « Resto −30 % »). Les scénarios enregistrés sont conservés sur l'appareil.
+
+- **Plan gratuit** : jusqu'à 5 scénarios enregistrés
+- **Pro / Business** : illimité
+
+## Charger un scénario enregistré
+
+Appuyez sur **Scénarios enregistrés** (icône dossier) dans la barre d'actions pour afficher la liste. Appuyez sur une ligne pour restaurer immédiatement tous les curseurs et l'horizon. Pour supprimer, appuyez sur l'icône corbeille de la ligne concernée.
+
+## Partager une projection
+
+Appuyez sur **Partager** (à côté de « Tout réinitialiser ») pour ouvrir la feuille de partage native avec un résumé texte de la projection actuelle. Le résumé comprend les économies actuelles et du scénario, la différence mensuelle et les totaux cumulés pour l'horizon sélectionné.
+
 ## Réinitialisation
 
-Appuyez sur **Tout réinitialiser** en bas pour remettre tous les curseurs et revenus supplémentaires à zéro.
+Appuyez sur **Tout réinitialiser** en bas pour remettre tous les curseurs et revenus supplémentaires à zéro. Les scénarios enregistrés ne sont pas affectés.
 
 ## FAQ
 
