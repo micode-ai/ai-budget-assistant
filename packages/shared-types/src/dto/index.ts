@@ -398,7 +398,11 @@ export type ChatActionType =
   | 'create_category'
   | 'get_expenses'
   | 'get_budget_status'
-  | 'get_category_breakdown';
+  | 'get_category_breakdown'
+  | 'record_debt_repayment'
+  | 'create_debt'
+  | 'get_debt_summary'
+  | 'update_goal_balance';
 
 export interface CreateExpenseActionData {
   amount: number;
@@ -449,6 +453,29 @@ export interface CreateCategoryActionData {
   type: 'expense' | 'income';
 }
 
+export interface RecordDebtRepaymentActionData {
+  debtId: string;
+  amount: number;
+  date?: string;
+}
+
+export interface CreateDebtActionData {
+  contactName: string;
+  amount: number;
+  currencyCode: Currency;
+  direction: 'lent' | 'borrowed';
+  dueDate?: string;
+}
+
+export interface GetDebtSummaryActionData {
+  // No parameters needed
+}
+
+export interface UpdateGoalBalanceActionData {
+  goalId: string;
+  newAmount: number;
+}
+
 export type ChatActionData =
   | CreateExpenseActionData
   | CreateIncomeActionData
@@ -456,7 +483,11 @@ export type ChatActionData =
   | CreateCategoryActionData
   | GetExpensesActionData
   | GetBudgetStatusActionData
-  | GetCategoryBreakdownActionData;
+  | GetCategoryBreakdownActionData
+  | RecordDebtRepaymentActionData
+  | CreateDebtActionData
+  | GetDebtSummaryActionData
+  | UpdateGoalBalanceActionData;
 
 export interface ChatPendingAction {
   id: string;

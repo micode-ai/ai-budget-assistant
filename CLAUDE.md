@@ -28,8 +28,10 @@ Turborepo monorepo with 5 packages:
 - **AI module features**:
   - **Chat Q&A**: Natural language financial questions powered by GPT-4
   - **Natural Language Commands**: Execute actions via chat (create expenses/budgets, query data) using OpenAI function calling
-  - **7 AI functions**: `create_expense`, `create_income`, `create_budget`, `create_category`, `get_expenses`, `get_budget_status`, `get_category_breakdown`
-  - **Confirmation flow**: Write actions (create_*) require user confirmation before execution; read actions (get_*) execute immediately
+  - **11 AI functions**: `create_expense`, `create_income`, `create_budget`, `create_category`, `get_expenses`, `get_budget_status`, `get_category_breakdown`, `record_debt_repayment`, `create_debt`, `get_debt_summary`, `update_goal_balance`
+  - **Debt commands**: `record_debt_repayment(debtId, amount, date?)` creates a linked repayment income/expense; `create_debt(contactName, amount, currencyCode, direction, dueDate?)` creates lent (Expense) or borrowed (Income) record with `isDebt=true`; `get_debt_summary()` returns active debts (read, cached). AI resolves contact names via `activeDebts` context (ids included) — ambiguous names trigger clarifying question.
+  - **Goal command**: `update_goal_balance(goalId, newAmount)` calls `GoalPlannerService.updateGoal({ currentAmount })`. Resolves goal names via `savingsGoals` context (ids now included). Auto-completes goal if `currentAmount >= targetAmount`.
+  - **Confirmation flow**: Write actions (`create_*`, `record_debt_repayment`, `update_goal_balance`) require user confirmation before execution; read actions (`get_*`) execute immediately (10-min cache)
   - **Language detection**: Automatically detects user language (Russian, Ukrainian, Belarusian, German, Spanish, French, Polish, English) and responds in same language
   - **Currency mapping**: Supports currency symbol detection (₴→UAH, $→USD, €→EUR, zł→PLN, £→GBP, ₽→RUB)
   - **Endpoints**: `POST /ai/chat`, `POST /ai/chat/confirm`, `POST /ai/chat/reject`; `GET /ai/chat/conversations` (last 20, per-user, no AccountContextGuard), `GET /ai/chat/conversations/:id/messages` (last 50, user+assistant roles only, 404 if wrong user)

@@ -113,6 +113,27 @@ You can now **execute real actions** directly from the chat:
 - **Budgets:** "Create budget 10000₴ for entertainment for March", "Set monthly budget 3000₴ for food"
 - **Categories:** "Create expense category Food", "Add income category Freelance"
 
+### Debt & Loan Commands
+
+Manage your debts directly from chat — no need to open the Debts screen:
+
+- **"Sarah repaid me $80"** → records a partial repayment for Sarah's debt (shows confirmation first)
+- **"I lent John $200 until Friday"** → creates a new lent-money entry
+- **"Borrowed 5000₴ from mom"** → creates a new borrowed-money entry
+- **"Show my debts"** → instantly lists all active debts with remaining balances
+
+> If you have multiple debts with the same contact name, the AI will ask which one you mean.
+
+### Savings Goal Commands
+
+Update your savings goal progress without leaving the chat:
+
+- **"I saved $200 for my vacation fund"** → updates the current balance of your Vacation goal
+- **"Add 500₴ to my car goal"** → increments the Car goal balance
+- **"Set my emergency fund to $3000"** → sets the current amount directly
+
+> The AI matches goal names from your active goals list. Confirm the action in the preview card before it's saved.
+
 ### Querying Data
 
 These commands execute **immediately** and show results:
@@ -120,6 +141,7 @@ These commands execute **immediately** and show results:
 - **"Show my expenses last week"** → displays expense list with total
 - **"What's my budget status?"** → shows all budgets with progress bars
 - **"Show category breakdown for this month"** → displays spending by category with percentages
+- **"Show my debts"** → lists all active debts with amounts owed
 
 ## FAQ
 

@@ -113,6 +113,27 @@ Du kannst jetzt **echte Aktionen** direkt aus dem Chat ausführen:
 - **Budgets:** "Budget 10000₴ für Unterhaltung für März erstellen", "Monatliches Budget 3000₴ für Essen festlegen"
 - **Kategorien:** "Erstelle Ausgabenkategorie Essen", "Erstelle Einkommenskategorie Freelance"
 
+### Schulden-Befehle
+
+Verwalte deine Schulden direkt im Chat — ohne den Schulden-Bildschirm öffnen zu müssen:
+
+- **"Sarah hat mir 80€ zurückgezahlt"** → erfasst eine Teilrückzahlung von Sarahs Schuld (mit Bestätigung)
+- **"Habe Johannes 200€ bis Freitag geliehen"** → erstellt einen neuen Eintrag "Geld verliehen"
+- **"200€ von Mama geliehen"** → erstellt einen neuen Eintrag "Geld geliehen"
+- **"Zeige meine Schulden"** → listet sofort alle aktiven Schulden mit Restbeträgen auf
+
+> Wenn du mehrere Schulden mit demselben Kontaktnamen hast, fragt die KI nach, welche gemeint ist.
+
+### Sparziel-Befehle
+
+Aktualisiere deinen Sparfortschritt direkt im Chat:
+
+- **"Ich habe 200€ für meinen Urlaub gespart"** → aktualisiert den aktuellen Stand des Urlaubs-Ziels
+- **"Füge 500€ zu meinem Auto-Ziel hinzu"** → erhöht den Kontostand des Auto-Ziels
+- **"Setze meinen Notfallfonds auf 3000€"** → setzt den aktuellen Betrag direkt
+
+> Die KI findet das Ziel anhand des Namens aus deiner Zielliste. Bestätige die Aktion in der Vorschaukarte, bevor sie gespeichert wird.
+
 ### Daten abfragen
 
 Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
@@ -120,6 +141,7 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 - **"Zeige meine Ausgaben der letzten Woche"** → zeigt Ausgabenliste mit Gesamtsumme
 - **"Wie ist mein Budget-Status?"** → zeigt alle Budgets mit Fortschrittsbalken
 - **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
+- **"Zeige meine Schulden"** → listet aktive Schulden mit Beträgen auf
 
 ## FAQ
 

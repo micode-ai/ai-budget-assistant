@@ -113,6 +113,27 @@ Vous pouvez maintenant **executer des actions reelles** directement depuis le ch
 - **Budgets :** "Creer budget 10000₴ pour divertissement pour mars", "Definir budget mensuel 3000₴ pour alimentation"
 - **Categories :** "Creer categorie de depenses Alimentation", "Creer categorie de revenus Freelance"
 
+### Commandes de dettes
+
+Gerez vos dettes directement depuis le chat — sans ouvrir l'ecran Dettes :
+
+- **"Sara m'a rembourse 80€"** → enregistre un remboursement partiel de la dette de Sara (avec confirmation)
+- **"J'ai prete 200€ a Jean jusqu'a vendredi"** → cree une entree "argent prete"
+- **"Emprunte 5000₴ a maman"** → cree une entree "argent emprunte"
+- **"Montrer mes dettes"** → liste instantanee de toutes les dettes actives avec les soldes restants
+
+> Si vous avez plusieurs dettes avec le meme nom de contact, l'IA vous demandera de preciser laquelle.
+
+### Commandes d'objectifs d'epargne
+
+Mettez a jour votre progression d'epargne directement depuis le chat :
+
+- **"J'ai economise 200€ pour mes vacances"** → met a jour le solde actuel de l'objectif Vacances
+- **"Ajouter 500€ a mon objectif voiture"** → augmente le solde de l'objectif Voiture
+- **"Definir mon fonds d'urgence a 3000€"** → fixe directement le montant actuel
+
+> L'IA identifie l'objectif par son nom dans votre liste d'objectifs actifs. Confirmez l'action dans la carte d'apercu avant l'enregistrement.
+
 ### Consultation des donnees
 
 Ces commandes s'executent **immediatement** et affichent les resultats :
@@ -120,6 +141,7 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
 - **"Montrer mes depenses de la semaine derniere"** → affiche la liste des depenses avec le total
 - **"Quel est le statut de mon budget ?"** → affiche tous les budgets avec des barres de progression
 - **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
+- **"Montrer mes dettes"** → liste les dettes actives avec les montants dus
 
 ## FAQ
 

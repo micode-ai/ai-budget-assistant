@@ -63,3 +63,7 @@ ios/build/
 *.pem
 plan.md
 stripe.exe
+.claude
+docs/contracts
+docs/plans
+docs/product-ideas
