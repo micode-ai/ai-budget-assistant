@@ -6,5 +6,6 @@ import { DebtReminderCron } from './debt-reminder.cron';
 @Module({
   controllers: [DebtsController],
   providers: [DebtsService, DebtReminderCron],
+  exports: [DebtsService],
 })
 export class DebtsModule {}

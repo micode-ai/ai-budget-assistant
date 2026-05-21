@@ -113,6 +113,27 @@ Mozesz teraz **wykonywac rzeczywiste akcje** bezposrednio z czatu:
 - **Budzety:** "Utworz budzet 10000₴ na rozrywke na marzec", "Ustaw miesieczny budzet 3000₴ na jedzenie"
 - **Kategorie:** "Utworz kategorie wydatkow Jedzenie", "Utworz kategorie przychodow Freelance"
 
+### Polecenia dotyczace dlugow
+
+Zarzadzaj dlugami bezposrednio z czatu — bez otwierania ekranu Dlugi:
+
+- **"Sara splacila mi 80zl"** → rejestruje czesciowa splate dlugu Sary (z potwierdzeniem)
+- **"Pozyczyles Janowi 200zl do piatku"** → tworzy nowy wpis "pozyczone pieniadze"
+- **"Pozyczono 5000zl od mamy"** → tworzy nowy wpis "pieniadze pozyczone od innych"
+- **"Pokaz moje dlugi"** → natychmiastowa lista wszystkich aktywnych dlugow z pozostalymi saldami
+
+> Jezeli masz wiele dlugow z tym samym imieniem kontaktu, AI zapyta, ktory masz na mysli.
+
+### Polecenia celow oszczednosciowych
+
+Aktualizuj postep oszczedzania bezposrednio z czatu:
+
+- **"Zaoszczedziem 200zl na urlop"** → aktualizuje biezace saldo celu Urlop
+- **"Dodaj 500zl do mojego celu na samochod"** → zwiekszenie salda celu Samochod
+- **"Ustaw moj fundusz awaryjny na 3000zl"** → ustawia bezposrednio biezaca kwote
+
+> AI identyfikuje cel po nazwie z listy aktywnych celow. Potwierdz akcje na karcie podgladu przed zapisaniem.
+
 ### Zapytania o dane
 
 Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
@@ -120,6 +141,7 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
 - **"Pokaz moje wydatki z ostatniego tygodnia"** → wyswietla liste wydatkow z suma
 - **"Jaki jest status mojego budzetu?"** → pokazuje wszystkie budzety z paskami postepu
 - **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
+- **"Pokaz moje dlugi"** → lista aktywnych dlugow z kwotami
 
 ## FAQ
 

@@ -113,6 +113,27 @@ Ahora puedes **ejecutar acciones reales** directamente desde el chat:
 - **Presupuestos:** "Crear presupuesto 10000₴ para entretenimiento para marzo", "Establecer presupuesto mensual 3000₴ para comida"
 - **Categorias:** "Crear categoria de gastos Comida", "Crear categoria de ingresos Freelance"
 
+### Comandos de deudas
+
+Gestiona tus deudas directamente desde el chat — sin abrir la pantalla de Deudas:
+
+- **"Sara me devolvio 80€"** → registra un pago parcial de la deuda de Sara (con confirmacion)
+- **"Le preste 200€ a Juan hasta el viernes"** → crea una entrada nueva "dinero prestado"
+- **"Tome prestado 5000₴ de mama"** → crea una entrada nueva "dinero pedido prestado"
+- **"Mostrar mis deudas"** → lista instantanea de todas las deudas activas con saldos pendientes
+
+> Si tienes varias deudas con el mismo nombre de contacto, la IA te pedira que aclares cual es.
+
+### Comandos de metas de ahorro
+
+Actualiza tu progreso de ahorro directamente desde el chat:
+
+- **"Ahorre 200€ para mis vacaciones"** → actualiza el saldo actual de la meta Vacaciones
+- **"Anadir 500€ a mi meta del coche"** → incrementa el saldo de la meta Coche
+- **"Establece mi fondo de emergencia en 3000€"** → fija directamente el importe actual
+
+> La IA identifica la meta por nombre desde tu lista de metas activas. Confirma la accion en la tarjeta de vista previa antes de guardar.
+
 ### Consulta de datos
 
 Estos comandos se ejecutan **inmediatamente** y muestran resultados:
@@ -120,6 +141,7 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 - **"Mostrar mis gastos de la semana pasada"** → muestra lista de gastos con total
 - **"Cual es el estado de mi presupuesto?"** → muestra todos los presupuestos con barras de progreso
 - **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
+- **"Mostrar mis deudas"** → lista las deudas activas con importes pendientes
 
 ## Preguntas frecuentes
 

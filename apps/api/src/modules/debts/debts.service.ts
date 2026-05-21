@@ -104,4 +104,110 @@ export class DebtsService {
       },
     };
   }
+
+  async recordRepayment(
+    accountId: string,
+    userId: string,
+    debtId: string,
+    amount: number,
+    date?: string,
+  ) {
+    const repayDate = date ? new Date(date) : new Date();
+
+    // Try lent debt (expense with isDebt=true)
+    const lentDebt = await this.prisma.expense.findFirst({
+      where: { id: debtId, accountId, isDebt: true, isDeleted: false },
+    });
+    if (lentDebt) {
+      const income = await this.prisma.income.create({
+        data: {
+          userId,
+          accountId,
+          clientId: `repay-${debtId}-${Date.now()}`,
+          amount,
+          currencyCode: lentDebt.currencyCode,
+          description: `Repayment from ${lentDebt.debtContactName || 'contact'}`,
+          date: repayDate,
+          isDebtRepayment: true,
+          relatedDebtExpenseId: debtId,
+          debtContactName: lentDebt.debtContactName,
+        },
+      });
+      return { type: 'lent' as const, record: income };
+    }
+
+    // Try borrowed debt (income with isDebt=true)
+    const borrowedDebt = await this.prisma.income.findFirst({
+      where: { id: debtId, accountId, isDebt: true, isDeleted: false },
+    });
+    if (borrowedDebt) {
+      const expense = await this.prisma.expense.create({
+        data: {
+          userId,
+          accountId,
+          clientId: `repay-${debtId}-${Date.now()}`,
+          amount,
+          currencyCode: borrowedDebt.currencyCode,
+          description: `Repayment to ${borrowedDebt.debtContactName || 'contact'}`,
+          date: repayDate,
+          isDebtRepayment: true,
+          relatedDebtIncomeId: debtId,
+          debtContactName: borrowedDebt.debtContactName,
+        },
+      });
+      return { type: 'borrowed' as const, record: expense };
+    }
+
+    throw new Error(`Debt with id "${debtId}" not found`);
+  }
+
+  async createDebt(
+    accountId: string,
+    userId: string,
+    dto: {
+      contactName: string;
+      amount: number;
+      currencyCode: string;
+      direction: 'lent' | 'borrowed';
+      dueDate?: string;
+    },
+  ) {
+    const date = new Date();
+    const debtDueDate = dto.dueDate ? new Date(dto.dueDate) : undefined;
+    const sanitizedContact = dto.contactName.slice(0, 100);
+
+    if (dto.direction === 'lent') {
+      const expense = await this.prisma.expense.create({
+        data: {
+          userId,
+          accountId,
+          clientId: `debt-lent-${Date.now()}`,
+          amount: dto.amount,
+          currencyCode: dto.currencyCode,
+          description: `Lent to ${sanitizedContact}`,
+          date,
+          isDebt: true,
+          debtContactName: sanitizedContact,
+          debtDueDate,
+        },
+      });
+      return { type: 'lent' as const, record: expense };
+    } else {
+      const income = await this.prisma.income.create({
+        data: {
+          userId,
+          accountId,
+          clientId: `debt-borrowed-${Date.now()}`,
+          amount: dto.amount,
+          currencyCode: dto.currencyCode,
+          description: `Borrowed from ${sanitizedContact}`,
+          date,
+          isDebt: true,
+          debtContactName: sanitizedContact,
+          debtDueDate,
+        },
+      });
+      return { type: 'borrowed' as const, record: income };
+    }
+  }
 }

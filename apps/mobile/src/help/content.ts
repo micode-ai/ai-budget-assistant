@@ -889,6 +889,27 @@ You can now **execute real actions** directly from the chat:
 - **Budgets:** "Create budget 10000₴ for entertainment for March", "Set monthly budget 3000₴ for food"
 - **Categories:** "Create expense category Food", "Add income category Freelance"
 
+### Debt & Loan Commands
+
+Manage your debts directly from chat — no need to open the Debts screen:
+
+- **"Sarah repaid me \$80"** → records a partial repayment for Sarah's debt (shows confirmation first)
+- **"I lent John \$200 until Friday"** → creates a new lent-money entry
+- **"Borrowed 5000₴ from mom"** → creates a new borrowed-money entry
+- **"Show my debts"** → instantly lists all active debts with remaining balances
+
+> If you have multiple debts with the same contact name, the AI will ask which one you mean.
+
+### Savings Goal Commands
+
+Update your savings goal progress without leaving the chat:
+
+- **"I saved \$200 for my vacation fund"** → updates the current balance of your Vacation goal
+- **"Add 500₴ to my car goal"** → increments the Car goal balance
+- **"Set my emergency fund to \$3000"** → sets the current amount directly
+
+> The AI matches goal names from your active goals list. Confirm the action in the preview card before it's saved.
+
 ### Querying Data
 
 These commands execute **immediately** and show results:
@@ -896,6 +917,7 @@ These commands execute **immediately** and show results:
 - **"Show my expenses last week"** → displays expense list with total
 - **"What's my budget status?"** → shows all budgets with progress bars
 - **"Show category breakdown for this month"** → displays spending by category with percentages
+- **"Show my debts"** → lists all active debts with amounts owed
 
 ## FAQ
 
@@ -4131,6 +4153,27 @@ iOS, Android, Web
 - **Бюджеты:** «Создай бюджет 10000₴ на развлечения на март», «Установи месячный бюджет 3000₴ на еду»
 - **Категории:** «Создай категорию расходов Еда», «Добавь категорию доходов Фриланс»
 
+### Команды для долгов
+
+Управляйте долгами прямо из чата — без перехода на экран Долгов:
+
+- **«Саша вернул мне 2000₴»** → записывает частичное погашение долга Саши (с подтверждением)
+- **«Одолжил Ивану 5000₴ до пятницы»** → создаёт новую запись «я дал в долг»
+- **«Взял в долг 3000₴ у мамы»** → создаёт новую запись «я взял в долг»
+- **«Покажи мои долги»** → мгновенно выводит список активных долгов с остатками
+
+> Если у вас несколько долгов с одним именем контакта, ИИ уточнит, о каком именно идёт речь.
+
+### Команды для целей накопления
+
+Обновляйте прогресс по целям прямо из чата:
+
+- **«Накопил 5000₴ на отпуск»** → обновляет текущий баланс цели «Отпуск»
+- **«Добавь 1000₴ к цели на машину»** → увеличивает баланс цели «Машина»
+- **«Установи экстренный фонд в 50000₴»** → задаёт накопленную сумму напрямую
+
+> ИИ находит цель по имени из списка активных целей. Перед сохранением появится карточка подтверждения.
+
 ### Запрос данных
 
 Эти команды выполняются **немедленно** и показывают результаты:
@@ -4138,6 +4181,7 @@ iOS, Android, Web
 - **«Покажи мои расходы за прошлую неделю»** → отображает список расходов с итогом
 - **«Какой статус моих бюджетов?»** → показывает все бюджеты с прогресс-барами
 - **«Покажи разбивку по категориям за этот месяц»** → отображает расходы по категориям с процентами
+- **«Покажи мои долги»** → список активных долгов с суммами
 
 ## Часто задаваемые вопросы
 
@@ -7373,6 +7417,27 @@ iOS, Android, Web
 - **Бюджети:** "Створи бюджет 10000₴ на розваги на березень", "Встанови місячний бюджет 3000₴ на їжу"
 - **Категорії:** "Створи категорію витрат Їжа", "Додай категорію доходів Фріланс"
 
+### Команди для боргів
+
+Керуйте боргами прямо з чату — без переходу на екран Боргів:
+
+- **«Саша повернув мені 2000₴»** → записує часткове погашення боргу Саші (з підтвердженням)
+- **«Позичив Іванові 5000₴ до п'ятниці»** → створює новий запис «я дав у борг»
+- **«Взяв у борг 3000₴ у мами»** → створює новий запис «я взяв у борг»
+- **«Покажи мої борги»** → миттєво виводить список активних боргів із залишками
+
+> Якщо у вас кілька боргів з одним ім'ям контакту, ШІ уточнить, про який саме йдеться.
+
+### Команди для цілей накопичення
+
+Оновлюйте прогрес по цілях прямо з чату:
+
+- **«Накопив 5000₴ на відпустку»** → оновлює поточний баланс цілі «Відпустка»
+- **«Додай 1000₴ до цілі на машину»** → збільшує баланс цілі «Машина»
+- **«Встанови аварійний фонд у 50000₴»** → задає накопичену суму напряму
+
+> ШІ знаходить ціль за назвою зі списку активних цілей. Перед збереженням з'явиться картка підтвердження.
+
 ### Запит даних
 
 Ці команди виконуються **негайно** та показують результати:
@@ -7380,6 +7445,7 @@ iOS, Android, Web
 - **"Покажи мої витрати за минулий тиждень"** → відображає список витрат із підсумком
 - **"Який статус моїх бюджетів?"** → показує всі бюджети з прогрес-барами
 - **"Покажи розбивку за категоріями за цей місяць"** → відображає витрати за категоріями з відсотками
+- **"Покажи мої борги"** → список активних боргів із сумами
 
 ## Часті запитання
 
@@ -10551,6 +10617,27 @@ Mozesz teraz **wykonywac rzeczywiste akcje** bezposrednio z czatu:
 - **Budzety:** "Utworz budzet 10000₴ na rozrywke na marzec", "Ustaw miesieczny budzet 3000₴ na jedzenie"
 - **Kategorie:** "Utworz kategorie wydatkow Jedzenie", "Utworz kategorie przychodow Freelance"
 
+### Polecenia dotyczace dlugow
+
+Zarzadzaj dlugami bezposrednio z czatu — bez otwierania ekranu Dlugi:
+
+- **"Sara splacila mi 80zl"** → rejestruje czesciowa splate dlugu Sary (z potwierdzeniem)
+- **"Pozyczyles Janowi 200zl do piatku"** → tworzy nowy wpis "pozyczone pieniadze"
+- **"Pozyczono 5000zl od mamy"** → tworzy nowy wpis "pieniadze pozyczone od innych"
+- **"Pokaz moje dlugi"** → natychmiastowa lista wszystkich aktywnych dlugow z pozostalymi saldami
+
+> Jezeli masz wiele dlugow z tym samym imieniem kontaktu, AI zapyta, ktory masz na mysli.
+
+### Polecenia celow oszczednosciowych
+
+Aktualizuj postep oszczedzania bezposrednio z czatu:
+
+- **"Zaoszczedziem 200zl na urlop"** → aktualizuje biezace saldo celu Urlop
+- **"Dodaj 500zl do mojego celu na samochod"** → zwiekszenie salda celu Samochod
+- **"Ustaw moj fundusz awaryjny na 3000zl"** → ustawia bezposrednio biezaca kwote
+
+> AI identyfikuje cel po nazwie z listy aktywnych celow. Potwierdz akcje na karcie podgladu przed zapisaniem.
+
 ### Zapytania o dane
 
 Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
@@ -10558,6 +10645,7 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
 - **"Pokaz moje wydatki z ostatniego tygodnia"** → wyswietla liste wydatkow z suma
 - **"Jaki jest status mojego budzetu?"** → pokazuje wszystkie budzety z paskami postepu
 - **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
+- **"Pokaz moje dlugi"** → lista aktywnych dlugow z kwotami
 
 ## FAQ
 
@@ -13713,6 +13801,27 @@ Du kannst jetzt **echte Aktionen** direkt aus dem Chat ausführen:
 - **Budgets:** "Budget 10000₴ für Unterhaltung für März erstellen", "Monatliches Budget 3000₴ für Essen festlegen"
 - **Kategorien:** "Erstelle Ausgabenkategorie Essen", "Erstelle Einkommenskategorie Freelance"
 
+### Schulden-Befehle
+
+Verwalte deine Schulden direkt im Chat — ohne den Schulden-Bildschirm öffnen zu müssen:
+
+- **"Sarah hat mir 80€ zurückgezahlt"** → erfasst eine Teilrückzahlung von Sarahs Schuld (mit Bestätigung)
+- **"Habe Johannes 200€ bis Freitag geliehen"** → erstellt einen neuen Eintrag "Geld verliehen"
+- **"200€ von Mama geliehen"** → erstellt einen neuen Eintrag "Geld geliehen"
+- **"Zeige meine Schulden"** → listet sofort alle aktiven Schulden mit Restbeträgen auf
+
+> Wenn du mehrere Schulden mit demselben Kontaktnamen hast, fragt die KI nach, welche gemeint ist.
+
+### Sparziel-Befehle
+
+Aktualisiere deinen Sparfortschritt direkt im Chat:
+
+- **"Ich habe 200€ für meinen Urlaub gespart"** → aktualisiert den aktuellen Stand des Urlaubs-Ziels
+- **"Füge 500€ zu meinem Auto-Ziel hinzu"** → erhöht den Kontostand des Auto-Ziels
+- **"Setze meinen Notfallfonds auf 3000€"** → setzt den aktuellen Betrag direkt
+
+> Die KI findet das Ziel anhand des Namens aus deiner Zielliste. Bestätige die Aktion in der Vorschaukarte, bevor sie gespeichert wird.
+
 ### Daten abfragen
 
 Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
@@ -13720,6 +13829,7 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 - **"Zeige meine Ausgaben der letzten Woche"** → zeigt Ausgabenliste mit Gesamtsumme
 - **"Wie ist mein Budget-Status?"** → zeigt alle Budgets mit Fortschrittsbalken
 - **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
+- **"Zeige meine Schulden"** → listet aktive Schulden mit Beträgen auf
 
 ## FAQ
 
@@ -16873,6 +16983,27 @@ Ahora puedes **ejecutar acciones reales** directamente desde el chat:
 - **Presupuestos:** "Crear presupuesto 10000₴ para entretenimiento para marzo", "Establecer presupuesto mensual 3000₴ para comida"
 - **Categorias:** "Crear categoria de gastos Comida", "Crear categoria de ingresos Freelance"
 
+### Comandos de deudas
+
+Gestiona tus deudas directamente desde el chat — sin abrir la pantalla de Deudas:
+
+- **"Sara me devolvio 80€"** → registra un pago parcial de la deuda de Sara (con confirmacion)
+- **"Le preste 200€ a Juan hasta el viernes"** → crea una entrada nueva "dinero prestado"
+- **"Tome prestado 5000₴ de mama"** → crea una entrada nueva "dinero pedido prestado"
+- **"Mostrar mis deudas"** → lista instantanea de todas las deudas activas con saldos pendientes
+
+> Si tienes varias deudas con el mismo nombre de contacto, la IA te pedira que aclares cual es.
+
+### Comandos de metas de ahorro
+
+Actualiza tu progreso de ahorro directamente desde el chat:
+
+- **"Ahorre 200€ para mis vacaciones"** → actualiza el saldo actual de la meta Vacaciones
+- **"Anadir 500€ a mi meta del coche"** → incrementa el saldo de la meta Coche
+- **"Establece mi fondo de emergencia en 3000€"** → fija directamente el importe actual
+
+> La IA identifica la meta por nombre desde tu lista de metas activas. Confirma la accion en la tarjeta de vista previa antes de guardar.
+
 ### Consulta de datos
 
 Estos comandos se ejecutan **inmediatamente** y muestran resultados:
@@ -16880,6 +17011,7 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 - **"Mostrar mis gastos de la semana pasada"** → muestra lista de gastos con total
 - **"Cual es el estado de mi presupuesto?"** → muestra todos los presupuestos con barras de progreso
 - **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
+- **"Mostrar mis deudas"** → lista las deudas activas con importes pendientes
 
 ## Preguntas frecuentes
 
@@ -20028,6 +20160,27 @@ Vous pouvez maintenant **executer des actions reelles** directement depuis le ch
 - **Budgets :** "Creer budget 10000₴ pour divertissement pour mars", "Definir budget mensuel 3000₴ pour alimentation"
 - **Categories :** "Creer categorie de depenses Alimentation", "Creer categorie de revenus Freelance"
 
+### Commandes de dettes
+
+Gerez vos dettes directement depuis le chat — sans ouvrir l'ecran Dettes :
+
+- **"Sara m'a rembourse 80€"** → enregistre un remboursement partiel de la dette de Sara (avec confirmation)
+- **"J'ai prete 200€ a Jean jusqu'a vendredi"** → cree une entree "argent prete"
+- **"Emprunte 5000₴ a maman"** → cree une entree "argent emprunte"
+- **"Montrer mes dettes"** → liste instantanee de toutes les dettes actives avec les soldes restants
+
+> Si vous avez plusieurs dettes avec le meme nom de contact, l'IA vous demandera de preciser laquelle.
+
+### Commandes d'objectifs d'epargne
+
+Mettez a jour votre progression d'epargne directement depuis le chat :
+
+- **"J'ai economise 200€ pour mes vacances"** → met a jour le solde actuel de l'objectif Vacances
+- **"Ajouter 500€ a mon objectif voiture"** → augmente le solde de l'objectif Voiture
+- **"Definir mon fonds d'urgence a 3000€"** → fixe directement le montant actuel
+
+> L'IA identifie l'objectif par son nom dans votre liste d'objectifs actifs. Confirmez l'action dans la carte d'apercu avant l'enregistrement.
+
 ### Consultation des donnees
 
 Ces commandes s'executent **immediatement** et affichent les resultats :
@@ -20035,6 +20188,7 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
 - **"Montrer mes depenses de la semaine derniere"** → affiche la liste des depenses avec le total
 - **"Quel est le statut de mon budget ?"** → affiche tous les budgets avec des barres de progression
 - **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
+- **"Montrer mes dettes"** → liste les dettes actives avec les montants dus
 
 ## FAQ
 
@@ -23181,6 +23335,27 @@ iOS, Android, Web
 - **Бюджэты:** «Стварыць бюджэт 10000₴ на забавы на сакавік», «Усталяваць месячны бюджэт 3000₴ на ежу»
 - **Катэгорыі:** «Стварыць катэгорыю выдаткаў Ежа», «Стварыць катэгорыю даходаў Фрыланс»
 
+### Каманды для даўгоў
+
+Кіруйце даўгамі прама з чата — без пераходу на экран Даўгоў:
+
+- **«Саша вярнуў мне 2000₴»** → запісвае частковае пагашэнне даўгу Сашы (з пацверджаннем)
+- **«Пазычыў Івану 5000₴ да пятніцы»** → стварае новы запіс «я даў у доўг»
+- **«Узяў у доўг 3000₴ у мамы»» → стварае новы запіс «я ўзяў у доўг»
+- **«Пакажы мае даўгі»** → імгненны спіс усіх актыўных даўгоў з астаткамі
+
+> Калі ў вас некалькі даўгоў з адным іменем кантакту, ІІ ўдакладніць, пра які менавіта ідзе гаворка.
+
+### Каманды для мэтаў зберажэння
+
+Абнаўляйце прагрэс па мэтах прама з чата:
+
+- **«Назапасіў 5000₴ на адпачынак»** → абнаўляе бягучы баланс мэты «Адпачынак»
+- **«Дадай 1000₴ да мэты на машыну»** → павялічвае баланс мэты «Машына»
+- **«Усталюй аварыйны фонд у 50000₴»** → задае накопленую суму наўпрост
+
+> ІІ знаходзіць мэту па назве са спісу актыўных мэт. Перад захаваннем з'явіцца картка пацверджання.
+
 ### Запыт даных
 
 Гэтыя каманды выконваюцца **адразу** і паказваюць вынікі:
@@ -23188,6 +23363,7 @@ iOS, Android, Web
 - **«Пакажы мае выдаткі за мінулы тыдзень»** → адлюстроўвае спіс выдаткаў з агульнай сумай
 - **«Які статус маіх бюджэтаў?»** → паказвае ўсе бюджэты з паласамі прагрэсу
 - **«Пакажы разбіўку па катэгорыях за гэты месяц»** → адлюстроўвае выдаткі па катэгорыях з адсоткамі
+- **«Пакажы мае даўгі»** → спіс актыўных даўгоў з сумамі
 
 ## Частыя пытанні
 
