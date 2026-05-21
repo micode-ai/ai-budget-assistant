@@ -59,9 +59,24 @@ Tres tarjetas bajo el gráfico muestran los totales del escenario para 3, 6 y 12
 
 La tarjeta en la parte superior de la pantalla se actualiza en tiempo real.
 
+## Guardar escenarios
+
+Toca **Guardar escenario** en la barra de acciones para guardar el estado actual de los controles y el horizonte con el nombre que elijas (p. ej., "Restaurantes −30%"). Los escenarios guardados persisten en el dispositivo.
+
+- **Plan gratuito**: hasta 5 escenarios guardados
+- **Pro / Business**: ilimitados
+
+## Cargar un escenario guardado
+
+Toca **Escenarios guardados** (icono de carpeta) en la barra de acciones para ver la lista. Toca cualquier fila para restaurar de inmediato todos los controles y el horizonte. Para eliminar, toca el icono de papelera de la fila.
+
+## Compartir una proyección
+
+Toca **Compartir** (junto al botón Restablecer) para abrir el panel de compartir nativo con un resumen en texto de la proyección actual. El resumen incluye ahorros actuales y del escenario, la diferencia mensual y los totales para el horizonte seleccionado.
+
 ## Restablecer
 
-Toca **Restablecer todo** en la parte inferior para devolver todos los controles e ingresos adicionales a cero.
+Toca **Restablecer todo** en la parte inferior para devolver todos los controles e ingresos adicionales a cero. Los escenarios guardados no se ven afectados.
 
 ## Preguntas frecuentes
 

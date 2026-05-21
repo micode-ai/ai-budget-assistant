@@ -64,9 +64,30 @@ The card at the very top of the screen updates in real time:
 | Current monthly savings | Scenario monthly savings |
 | (unchanged) | ↑ or ↓ difference |
 
+## Saving Scenarios
+
+Tap **Save Scenario** in the action bar at the top to save the current slider state and projection horizon under a name you choose (e.g. "Cut dining 30%"). Saved scenarios persist on your device — you can come back to them at any time.
+
+- **Free plan**: up to 5 saved scenarios
+- **Pro / Business**: unlimited
+
+## Loading a Saved Scenario
+
+Tap **Saved Scenarios** (folder icon) in the action bar to open the list of saved scenarios. Tap any row to instantly restore all sliders and the horizon to that state. To delete a saved scenario, tap the trash icon on its row.
+
+## Sharing a Projection
+
+Tap **Share** (next to the Reset button at the bottom of the screen) to open the native share sheet with a text summary of the current projection. The summary includes:
+
+- Current vs. scenario monthly savings
+- Monthly difference
+- Cumulative totals for the selected horizon
+
+No data is uploaded — the share sheet uses text only, generated locally.
+
 ## Resetting
 
-Tap **Reset All** at the bottom to return every slider and extra income to zero.
+Tap **Reset All** at the bottom to return every slider and extra income to zero. Saved scenarios are not affected by reset.
 
 ## FAQ
 

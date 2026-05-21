@@ -64,9 +64,24 @@ Karta u samej góry ekranu aktualizuje się w czasie rzeczywistym:
 | Bieżące miesięczne oszczędności | Miesięczne oszczędności wg scenariusza |
 | (bez zmian) | ↑ lub ↓ różnica |
 
+## Zapisywanie scenariusza
+
+Dotknij **Zapisz scenariusz** w pasku akcji, aby zapisać bieżący stan suwaków i horyzont pod wybraną nazwą (np. „Restauracje −30%"). Zapisane scenariusze pozostają na urządzeniu.
+
+- **Plan bezpłatny**: do 5 zapisanych scenariuszy
+- **Pro / Business**: nieograniczona liczba
+
+## Wczytywanie zapisanego scenariusza
+
+Dotknij **Zapisane scenariusze** (ikona folderu) w pasku akcji, aby wyświetlić listę. Dotknij wiersza, aby od razu przywrócić wszystkie suwaki i horyzont. Aby usunąć scenariusz, dotknij ikony kosza w jego wierszu.
+
+## Udostępnianie projekcji
+
+Dotknij **Udostępnij** (obok „Resetuj wszystko") aby otworzyć natywny panel udostępniania z tekstowym podsumowaniem bieżącej projekcji. Podsumowanie zawiera oszczędności bieżące i scenariuszowe, miesięczną różnicę oraz sumy skumulowane dla wybranego horyzontu.
+
 ## Resetowanie
 
-Dotknij **Resetuj wszystko** na dole, aby przywrócić wszystkie suwaki i dodatkowe dochody do zera.
+Dotknij **Resetuj wszystko** na dole, aby przywrócić wszystkie suwaki i dodatkowe dochody do zera. Zapisane scenariusze nie są przy tym usuwane.
 
 ## FAQ
 

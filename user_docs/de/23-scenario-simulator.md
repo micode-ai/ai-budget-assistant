@@ -64,9 +64,24 @@ Die Karte ganz oben aktualisiert sich in Echtzeit:
 | Aktuelle monatliche Ersparnisse | Monatliche Ersparnisse laut Szenario |
 | (unverändert) | ↑ oder ↓ Differenz |
 
+## Szenario speichern
+
+Tippe oben in der Aktionsleiste auf **Szenario speichern**, um den aktuellen Zustand aller Schieberegler und den Horizont unter einem Namen zu speichern (z. B. „Gastronomie −30 %"). Gespeicherte Szenarien bleiben auf dem Gerät erhalten.
+
+- **Free-Plan**: bis zu 5 gespeicherte Szenarien
+- **Pro / Business**: unbegrenzt
+
+## Gespeichertes Szenario laden
+
+Tippe auf **Gespeicherte Szenarien** (Ordner-Symbol) in der Aktionsleiste, um die Liste zu öffnen. Auf eine Zeile tippen stellt alle Schieberegler und den Horizont sofort wieder her. Zum Löschen das Papierkorb-Symbol in der jeweiligen Zeile antippen.
+
+## Projektion teilen
+
+Tippe unten auf **Teilen** (neben „Alles zurücksetzen"), um die native Teilen-Funktion mit einer Textzusammenfassung der aktuellen Projektion zu öffnen. Die Zusammenfassung enthält aktuelle und Szenario-Ersparnisse, die monatliche Differenz sowie die kumulativen Gesamtbeträge für den gewählten Horizont.
+
 ## Zurücksetzen
 
-Tippe unten auf **Alles zurücksetzen**, um alle Schieberegler und Zusatzeinkommen auf null zu setzen.
+Tippe unten auf **Alles zurücksetzen**, um alle Schieberegler und Zusatzeinkommen auf null zu setzen. Gespeicherte Szenarien werden davon nicht berührt.
 
 ## FAQ
 
