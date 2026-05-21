@@ -18,6 +18,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency, BUDGET_PERIODS, SUPPORTED_CURRENCIES, getStartOfWeek } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { BudgetPeriod, Currency } from '@budget/shared-types';
+import { GroupedBarChart } from '@/components/charts/GroupedBarChart';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
@@ -30,12 +31,13 @@ export default function BudgetDetailScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { budgets, updateBudget, deleteBudget, getBudgetProgress } = useBudgetStore();
+  const { budgets, updateBudget, deleteBudget, getBudgetProgress, budgetHistory, loadBudgetHistory } = useBudgetStore();
   const { getExpenseCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const budget = budgets.find((b) => b.id === id);
 
   const [referenceDate, setReferenceDate] = useState<Date>(new Date());
   const progress = budget ? getBudgetProgress(budget.id, referenceDate) : null;
+  const historyData = (budget && budgetHistory[budget.id]) || [];
 
   // Edit state
   const [isEditing, setIsEditing] = useState(false);
@@ -55,6 +57,13 @@ export default function BudgetDetailScreen() {
     if (!categoriesInitialized) loadCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (budget && budget.period !== 'custom') {
+      loadBudgetHistory(budget.id, 6);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [budget?.id]);
 
   // Reset to current period when the budget's period changes (e.g., user
   // edited monthly → weekly), otherwise referenceDate could sit in a period
@@ -275,6 +284,36 @@ export default function BudgetDetailScreen() {
       : theme.colors.primary;
 
   const thresholdOptions: (number | null)[] = [null, 50, 75, 80, 90, 100];
+
+  // --- History chart data (computed outside JSX) ---
+  const historyOverCount = historyData.filter((h) => h.isOverBudget).length;
+  const historyTotal = historyData.length;
+  const historyAvgOverage = historyOverCount > 0
+    ? historyData.filter((h) => h.isOverBudget).reduce((s, h) => s + (h.actual - h.limit), 0) / historyOverCount
+    : 0;
+  const historySavings = historyData.filter((h) => !h.isOverBudget);
+  const historyAvgSavings = historySavings.length > 0
+    ? historySavings.reduce((s, h) => s + (h.limit - h.actual), 0) / historySavings.length
+    : 0;
+  const historyLocale = getIntlLocale();
+  const historyShortLabel = (iso: string): string => {
+    if (!budget) return '';
+    const d = new Date(iso);
+    switch (budget.period) {
+      case 'daily': return d.toLocaleDateString(historyLocale, { month: 'numeric', day: 'numeric' });
+      case 'weekly': return d.toLocaleDateString(historyLocale, { month: 'short', day: 'numeric' });
+      case 'monthly': return d.toLocaleDateString(historyLocale, { month: 'short' });
+      case 'yearly': return String(d.getFullYear());
+      default: return '';
+    }
+  };
+  const historyChartData = historyData.map((h) => ({
+    label: historyShortLabel(h.periodStart),
+    values: [
+      { value: h.actual, color: h.isOverBudget ? theme.colors.danger : theme.colors.primary },
+      { value: h.limit, color: theme.colors.textDisabled },
+    ],
+  }));
 
   // --- EDIT MODE ---
   if (isEditing) {
@@ -680,6 +719,32 @@ export default function BudgetDetailScreen() {
             </Text>
           </View>
         </View>
+
+        {/* History Card */}
+        {budget.period !== 'custom' && historyChartData.length > 0 && (
+          <View style={styles.historyCard}>
+            <Text style={styles.historyTitle}>{t('budgetDetail.history.title')}</Text>
+            <Text style={styles.historySummary}>
+              {historyOverCount > 0
+                ? t('budgetDetail.history.overCount', { count: historyOverCount, total: historyTotal })
+                : t('budgetDetail.history.avgSavings', { amount: formatCurrency(historyAvgSavings, budget.currencyCode) })}
+            </Text>
+            {historyOverCount > 0 && (
+              <Text style={styles.historySubSummary}>
+                {t('budgetDetail.history.avgOverage', { amount: formatCurrency(historyAvgOverage, budget.currencyCode) })}
+              </Text>
+            )}
+            <GroupedBarChart
+              data={historyChartData}
+              height={140}
+              showLabels
+              legendItems={[
+                { label: t('budgetDetail.history.spent'), color: theme.colors.primary },
+                { label: t('budgetDetail.history.limit'), color: theme.colors.textDisabled },
+              ]}
+            />
+          </View>
+        )}
 
         {/* Actions */}
         <View style={styles.actionsContainer}>
@@ -1155,5 +1220,28 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     minWidth: 160,
     textAlign: 'center' as const,
+  },
+  historyCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
+  },
+  historyTitle: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[2],
+  },
+  historySummary: {
+    fontSize: 13,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[1],
+  },
+  historySubSummary: {
+    fontSize: 13,
+    color: theme.colors.danger,
+    marginBottom: theme.spacing[4],
   },
 });

@@ -1,10 +1,12 @@
 ---
 id: budget-period-retrospective
 title: Budget retrospective — month-by-month compliance history
-status: idea
+status: building
 priority: P1
 created_at: 2026-05-11
 jira_ticket:
+github_issue: https://github.com/micode-ai/ai-budget-assistant/issues/114
+orchestration_run: 352fdfd0-53f5-459b-b104-118d77c1edf7
 ---
 
 # Budget retrospective — month-by-month compliance history

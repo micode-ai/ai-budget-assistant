@@ -68,6 +68,18 @@ Appuyez sur un budget pour voir ses détails complets :
 - **Modifier** (icône crayon) — modifier le nom, le montant, les catégories, la période ou le seuil d'alerte
 - **Supprimer** — supprimer le budget (avec confirmation)
 
+## Historique des dépenses
+
+La carte **Historique** affiche votre respect du budget sur les 6 dernières périodes. Disponible pour tous les types de période sauf Personnalisé.
+
+- **Graphique en barres** — chaque groupe montre deux barres : vos dépenses réelles (colorées) et la limite du budget (grise) pour cette période.
+  - Barre verte — dépenses dans la limite
+  - Barre rouge — limite dépassée
+- **Résumé de conformité** — par ex. « Dépassé 3 sur 6 périodes » ou « Économie moy. : 42 € »
+- **Dépassement moyen** — si la limite a été dépassée sur certaines périodes, affiche le montant moyen de dépassement
+
+> **Conseil :** Utilisez la carte historique pour repérer les dépassements récurrents. Si vous voyez 3 à 4 barres rouges consécutives, envisagez d'augmenter la limite ou d'ajuster vos habitudes dans cette catégorie.
+
 ## Modifier un budget
 
 Appuyez sur l'**icône crayon** sur l'écran de détails du budget pour passer en mode édition :

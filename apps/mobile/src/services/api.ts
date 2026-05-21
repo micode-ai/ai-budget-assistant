@@ -314,6 +314,10 @@ class ApiClient {
     return this.request<any>(`/budgets/${id}/progress`);
   }
 
+  async getBudgetHistory(id: string, periods = 6) {
+    return this.request<any[]>(`/budgets/${id}/history?periods=${periods}`);
+  }
+
   // Category endpoints
   async getCategories() {
     return this.request<any[]>('/categories');

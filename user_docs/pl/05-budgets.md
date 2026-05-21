@@ -68,6 +68,18 @@ Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:
 - **Edytuj** (ikona ołówka) — zmodyfikuj nazwę, kwotę, kategorie, okres lub próg powiadomienia
 - **Usuń** — usuń budżet (z potwierdzeniem)
 
+## Historia wydatków
+
+Karta **Historia** pokazuje, jak przestrzegałeś budżetu przez ostatnie 6 okresów. Dostępna dla wszystkich typów okresów z wyjątkiem Niestandardowego.
+
+- **Wykres słupkowy** — każda grupa pokazuje dwa słupki: rzeczywiste wydatki (kolorowy) i limit budżetu (szary) za dany okres.
+  - Zielony słupek — wydatki w granicach limitu
+  - Czerwony słupek — limit przekroczony
+- **Podsumowanie zgodności** — np. „Przekroczono 3 z 6 okresów" lub „Śr. oszczędności: 42 zł"
+- **Średnia nadwyżka** — jeśli limit był przekraczany, pokazuje średnią kwotę przekroczenia
+
+> **Wskazówka:** Używaj karty historii, aby wykryć powtarzające się wzorce nadmiernych wydatków. Jeśli widzisz 3–4 czerwone słupki z rzędu, rozważ podwyższenie limitu lub zmianę nawyków w tej kategorii.
+
 ## Edytowanie budżetu
 
 Dotknij **ikony ołówka** na ekranie szczegółów budżetu, aby przejść do trybu edycji:

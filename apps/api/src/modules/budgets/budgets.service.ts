@@ -270,6 +270,78 @@ export class BudgetsService {
     return { success: true };
   }
 
+  async getHistory(accountId: string, id: string, periods: number = 6) {
+    const budget = await this.findOne(accountId, id);
+    if (budget.period === 'custom') return [];
+
+    const periodsCount = Math.min(Math.max(1, periods), 12);
+    const now = new Date();
+
+    const allocations = (budget as any).categoryAllocations || [];
+    const hasMultiCategory = allocations.length > 0;
+    const categoryIds = hasMultiCategory
+      ? allocations.map((a: any) => a.categoryId)
+      : (budget as any).categoryId ? [(budget as any).categoryId] : null;
+
+    const results: {
+      periodStart: string;
+      periodEnd: string;
+      limit: number;
+      actual: number;
+      isOverBudget: boolean;
+    }[] = [];
+
+    for (let i = 0; i < periodsCount; i++) {
+      // Compute reference date i steps back from now
+      const ref = new Date(now);
+      switch (budget.period) {
+        case 'daily':
+          ref.setDate(ref.getDate() - i);
+          break;
+        case 'weekly':
+          ref.setDate(ref.getDate() - i * 7);
+          break;
+        case 'monthly':
+          ref.setMonth(ref.getMonth() - i);
+          break;
+        case 'yearly':
+          ref.setFullYear(ref.getFullYear() - i);
+          break;
+      }
+
+      const { periodStart, periodEnd } = computeBudgetPeriod(budget, ref);
+
+      const whereExpenses: any = {
+        accountId,
+        isDeleted: false,
+        currencyCode: budget.currencyCode,
+        date: { gte: periodStart, lte: periodEnd },
+      };
+      if (categoryIds) {
+        whereExpenses.categoryId = { in: categoryIds };
+      }
+
+      const spent = await this.prisma.expense.aggregate({
+        where: whereExpenses,
+        _sum: { amount: true },
+      });
+
+      const actual = Number(spent._sum?.amount || 0);
+      const limit = Number(budget.amount);
+
+      results.push({
+        periodStart: periodStart.toISOString(),
+        periodEnd: periodEnd.toISOString(),
+        limit,
+        actual,
+        isOverBudget: actual > limit,
+      });
+    }
+
+    // Return in chronological order (oldest first)
+    return results.reverse();
+  }
+
   async getProgress(accountId: string, id: string) {
     const budget = await this.findOne(accountId, id);
 

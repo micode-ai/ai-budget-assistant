@@ -430,6 +430,14 @@ export default {
     editBudget: 'Editar presupuesto',
     save: 'Guardar',
     saving: 'Guardando...',
+    history: {
+      title: 'Historial',
+      spent: 'Gastado',
+      limit: 'Límite',
+      overCount: 'Excedido {{count}} de {{total}} períodos',
+      avgOverage: 'Exceso prom.: +{{amount}}',
+      avgSavings: 'Ahorro prom.: {{amount}}',
+    },
   },
   validation: {
     fillAllFields: 'Por favor completa todos los campos',

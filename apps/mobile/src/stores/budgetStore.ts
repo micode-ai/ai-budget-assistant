@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Budget, BudgetProgress, BudgetCategoryProgress, BudgetCategoryAllocation, BudgetPeriod, Currency, SyncStatus } from '@budget/shared-types';
+import type { Budget, BudgetProgress, BudgetCategoryProgress, BudgetCategoryAllocation, BudgetPeriod, Currency, SyncStatus, BudgetHistoryEntry } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
@@ -29,6 +29,7 @@ interface BudgetState {
   budgets: Budget[];
   isLoading: boolean;
   error: string | null;
+  budgetHistory: Record<string, BudgetHistoryEntry[]>;
 
   // Computed
   activeBudgets: Budget[];
@@ -40,6 +41,7 @@ interface BudgetState {
   addBudget: (budget: Omit<Budget, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted'>) => Budget;
   updateBudget: (id: string, updates: Partial<Budget>) => void;
   deleteBudget: (id: string) => void;
+  loadBudgetHistory: (budgetId: string, periods?: number) => Promise<void>;
 
   // Selectors
   getBudgetProgress: (budgetId: string, referenceDate?: Date) => BudgetProgress | null;
@@ -60,6 +62,7 @@ export const useBudgetStore = create<BudgetState>()(
     budgets: [],
     isLoading: false,
     error: null,
+    budgetHistory: {},
 
     activeBudgets: [],
 
@@ -425,6 +428,19 @@ export const useBudgetStore = create<BudgetState>()(
       }
     },
 
+    loadBudgetHistory: async (budgetId: string, periods = 6) => {
+      try {
+        const history = await api.getBudgetHistory(budgetId, periods);
+        if (Array.isArray(history)) {
+          set((state) => ({
+            budgetHistory: { ...state.budgetHistory, [budgetId]: history as BudgetHistoryEntry[] },
+          }));
+        }
+      } catch {
+        // History is non-critical — silently ignore network errors
+      }
+    },
+
     getBudgetProgress: (budgetId: string, referenceDate?: Date): BudgetProgress | null => {
       const budget = get().budgets.find((b) => b.id === budgetId);
       if (!budget || budget.isDeleted) return null;
@@ -600,7 +616,7 @@ export const useBudgetStore = create<BudgetState>()(
     reset: () => {
       clearAllBudgets().catch(() => {});
       clearAllBudgetCategories().catch(() => {});
-      set({ budgets: [], activeBudgets: [], isLoading: false, error: null });
+      set({ budgets: [], activeBudgets: [], isLoading: false, error: null, budgetHistory: {} });
     },
   }))
 );

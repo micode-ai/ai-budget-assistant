@@ -35,6 +35,15 @@ export class BudgetsController {
     return this.budgetsService.findOne(req.accountId, id);
   }
 
+  @Get(':id/history')
+  async getHistory(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('periods') periods?: string,
+  ) {
+    return this.budgetsService.getHistory(req.accountId, id, periods ? parseInt(periods, 10) : 6);
+  }
+
   @Get(':id/progress')
   async getProgress(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.budgetsService.getProgress(req.accountId, id);

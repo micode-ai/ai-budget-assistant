@@ -430,6 +430,14 @@ export default {
     editBudget: 'Редагувати бюджет',
     save: 'Зберегти',
     saving: 'Збереження...',
+    history: {
+      title: 'Історія',
+      spent: 'Витрати',
+      limit: 'Ліміт',
+      overCount: 'Перевищено {{count}} з {{total}} періодів',
+      avgOverage: 'Сер. перевищення: +{{amount}}',
+      avgSavings: 'Сер. економія: {{amount}}',
+    },
   },
   validation: {
     fillAllFields: 'Будь ласка, заповніть усі поля',

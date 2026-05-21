@@ -430,6 +430,14 @@ export default {
     editBudget: 'Edit Budget',
     save: 'Save',
     saving: 'Saving...',
+    history: {
+      title: 'History',
+      spent: 'Spent',
+      limit: 'Limit',
+      overCount: 'Over budget {{count}} of {{total}} periods',
+      avgOverage: 'Avg overage: +{{amount}}',
+      avgSavings: 'Avg savings: {{amount}}',
+    },
   },
   validation: {
     fillAllFields: 'Please fill in all fields',
