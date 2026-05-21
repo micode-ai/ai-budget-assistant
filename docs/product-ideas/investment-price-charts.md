@@ -1,7 +1,7 @@
 ---
 id: investment-price-charts
 title: Historical price charts for individual investment holdings
-status: idea
+status: dropped
 priority: P1
 created_at: 2026-05-11
 jira_ticket:
