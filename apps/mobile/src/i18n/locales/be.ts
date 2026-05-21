@@ -337,6 +337,19 @@ export default {
     attachAsPdf: 'Выбраць PDF',
     cameraPermissionDenied: 'Патрабуецца доступ да камеры',
   },
+  recurring: {
+    repeat: 'Паўтараць',
+    repeatDesc: 'Аўтаматычна дадаваць гэты расход кожны перыяд',
+    period: 'Перыяд',
+    weekly: 'Штотыдзень',
+    monthly: 'Штомесяц',
+    yearly: 'Штогод',
+    seriesBanner: 'Частка паўтаральнай серыі',
+    seriesPeriod: 'Паўтараецца {{period}}',
+    stopRecurring: 'Спыніць паўтарэнне',
+    stopRecurringConfirm: 'Спыніць аўтаматычнае дадаванне? Існуючыя запісы не будуць выдалены.',
+    stopped: 'Паўтарэнне спынена',
+  },
   voice: {
     title: 'Галасавы расход',
     listening: 'Слухаю... Націсніце, каб спыніць',
@@ -598,6 +611,8 @@ export default {
     sharedAccountActivityDesc: 'Паведамленні калі іншыя дадаюць расходы ў агульныя рахункі',
     debtReminders: 'Напамінанні пра даўгі',
     debtRemindersDesc: 'Паведамленне за 3 дні да тэрміну даўгу і пры прасрочцы',
+    recurringExpenses: 'Рэгулярныя расходы',
+    recurringExpensesDesc: 'Паведамленне калі рэгулярны расход аўтаматычна дадаецца',
   },
   whatsappBot: {
     title: 'WhatsApp-бот',

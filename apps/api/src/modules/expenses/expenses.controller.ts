@@ -83,6 +83,11 @@ export class ExpensesController {
     return this.expensesService.remove(req.accountId, id);
   }
 
+  @Patch(':id/stop-recurring')
+  async stopRecurring(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.expensesService.stopRecurring(req.accountId, id);
+  }
+
   // ---- Expense Items ----
 
   @Get(':id/items')

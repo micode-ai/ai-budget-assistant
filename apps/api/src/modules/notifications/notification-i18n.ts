@@ -59,6 +59,13 @@ interface DebtOverdueParams {
   type: 'lent' | 'borrowed';
 }
 
+interface RecurringExpenseParams {
+  description: string;
+  amount: string;
+  currencyCode: string;
+  period: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -88,6 +95,8 @@ const translations: Record<string, {
   debtUpcomingBody: (p: DebtUpcomingParams) => string;
   debtOverdueTitle: (p: DebtOverdueParams) => string;
   debtOverdueBody: (p: DebtOverdueParams) => string;
+  recurringExpenseTitle: (p: RecurringExpenseParams) => string;
+  recurringExpenseBody: (p: RecurringExpenseParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -129,6 +138,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${currencyCode} ${amount} you lent is now overdue`
         : `${currencyCode} ${amount} you borrowed is now overdue`,
+    recurringExpenseTitle: ({ description }) => `Recurring expense logged: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${currencyCode} ${amount} auto-logged (${period})`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -170,6 +182,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${amount} ${currencyCode}, которые вы одолжили, просрочены`
         : `${amount} ${currencyCode}, которые вы заняли, просрочены`,
+    recurringExpenseTitle: ({ description }) => `Регулярный расход записан: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${amount} ${currencyCode} автоматически добавлено (${period})`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -211,6 +226,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${amount} ${currencyCode}, які ви позичили, прострочені`
         : `${amount} ${currencyCode}, які ви взяли, прострочені`,
+    recurringExpenseTitle: ({ description }) => `Регулярний витрат записано: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${amount} ${currencyCode} автоматично додано (${period})`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -252,6 +270,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${amount} ${currencyCode}, które pożyczyłeś, jest przeterminowane`
         : `${amount} ${currencyCode}, które pożyczyłeś, jest przeterminowane`,
+    recurringExpenseTitle: ({ description }) => `Cykliczny wydatek zarejestrowany: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${amount} ${currencyCode} automatycznie dodane (${period})`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -293,6 +314,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${currencyCode} ${amount} que prestaste está vencido`
         : `${currencyCode} ${amount} que tomaste prestado está vencido`,
+    recurringExpenseTitle: ({ description }) => `Gasto recurrente registrado: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${currencyCode} ${amount} registrado automáticamente (${period})`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -334,6 +358,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${amount} ${currencyCode} que vous avez prêté est en retard`
         : `${amount} ${currencyCode} que vous avez emprunté est en retard`,
+    recurringExpenseTitle: ({ description }) => `Dépense récurrente enregistrée : ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${amount} ${currencyCode} enregistré automatiquement (${period})`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -375,6 +402,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${amount} ${currencyCode}, die du geliehen hast, sind überfällig`
         : `${amount} ${currencyCode}, die du geliehen bekommen hast, sind überfällig`,
+    recurringExpenseTitle: ({ description }) => `Wiederkehrende Ausgabe gebucht: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${amount} ${currencyCode} automatisch hinzugefügt (${period})`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -416,6 +446,9 @@ const translations: Record<string, {
       type === 'lent'
         ? `${amount} ${currencyCode}, якія вы пазычылі, прасрочаны`
         : `${amount} ${currencyCode}, якія вы ўзялі, прасрочаны`,
+    recurringExpenseTitle: ({ description }) => `Рэгулярны расход запісаны: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${amount} ${currencyCode} аўтаматычна дадана (${period})`,
   },
 };
 
@@ -515,4 +548,10 @@ export function debtOverdueTitle(lang: Lang, params: DebtOverdueParams): string 
 }
 export function debtOverdueBody(lang: Lang, params: DebtOverdueParams): string {
   return t(lang).debtOverdueBody(params);
+}
+export function recurringExpenseTitle(lang: Lang, params: RecurringExpenseParams): string {
+  return t(lang).recurringExpenseTitle(params);
+}
+export function recurringExpenseBody(lang: Lang, params: RecurringExpenseParams): string {
+  return t(lang).recurringExpenseBody(params);
 }

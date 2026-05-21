@@ -16,7 +16,9 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense';
+
+export type RecurringPeriod = 'weekly' | 'monthly' | 'yearly';
 
 export type SubscriptionTier = 'free' | 'pro' | 'business';
 
@@ -109,6 +111,7 @@ export interface NotificationPreferences {
   budgetAlerts: boolean;
   sharedAccountActivity: boolean;
   debtReminders: boolean;
+  recurringExpenses: boolean;
 }
 
 export interface User {
@@ -215,6 +218,7 @@ export interface Expense {
   receiptUrl?: string;
   isRecurring: boolean;
   recurringId?: string;
+  recurringPeriod?: RecurringPeriod;
   source: ExpenseSource;
   items?: ExpenseItem[];
   receiptImageBase64?: string;

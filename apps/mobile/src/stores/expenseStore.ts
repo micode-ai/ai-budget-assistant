@@ -69,6 +69,7 @@ interface ExpenseState {
   addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   deleteExpense: (id: string) => void;
+  stopRecurringExpense: (id: string) => Promise<void>;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
 
   // Expense Items actions
@@ -270,6 +271,8 @@ export const useExpenseStore = create<ExpenseState>()(
               projectId: serverProjectId || localExpense?.projectId,
               source: decrypted.source || 'manual',
               isRecurring: decrypted.isRecurring || false,
+              recurringId: decrypted.recurringId ?? undefined,
+              recurringPeriod: decrypted.recurringPeriod ?? undefined,
               isDebt: decrypted.isDebt || false,
               isDebtRepayment: decrypted.isDebtRepayment || false,
               debtContactName: decrypted.debtContactName ?? undefined,
@@ -579,6 +582,9 @@ export const useExpenseStore = create<ExpenseState>()(
           debtContactName: encPayload.debtContactName ?? newExpense.debtContactName,
           debtDueDate: newExpense.debtDueDate instanceof Date ? newExpense.debtDueDate.toISOString() : newExpense.debtDueDate,
           relatedDebtIncomeId: newExpense.relatedDebtIncomeId,
+          isRecurring: newExpense.isRecurring || undefined,
+          recurringId: newExpense.recurringId,
+          recurringPeriod: newExpense.recurringPeriod,
           encryptedPayload,
           encryptionKeyVersion,
         } as any);
@@ -643,6 +649,16 @@ export const useExpenseStore = create<ExpenseState>()(
       api.deleteExpense(id).catch((e) =>
         console.error('Failed to delete expense on server:', e),
       );
+    },
+
+    stopRecurringExpense: async (id) => {
+      set((state) => ({
+        expenses: state.expenses.map((e) =>
+          e.id === id ? { ...e, isRecurring: false, updatedAt: new Date() } : e
+        ),
+      }));
+      await updateExpenseInDb(id, { isRecurring: false }, new Date(), 'synced');
+      await api.stopRecurringExpense(id);
     },
 
     setFilters: (filters) =>

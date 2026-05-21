@@ -92,23 +92,26 @@ export class UsersService {
         notifyBudgetAlerts: true,
         notifySharedActivity: true,
         notifyDebtReminders: true,
+        notifyRecurringExpenses: true,
       },
     });
     return {
       budgetAlerts: user?.notifyBudgetAlerts ?? true,
       sharedAccountActivity: user?.notifySharedActivity ?? true,
       debtReminders: user?.notifyDebtReminders ?? true,
+      recurringExpenses: user?.notifyRecurringExpenses ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
     if (prefs.sharedAccountActivity !== undefined) data.notifySharedActivity = prefs.sharedAccountActivity;
     if (prefs.debtReminders !== undefined) data.notifyDebtReminders = prefs.debtReminders;
+    if (prefs.recurringExpenses !== undefined) data.notifyRecurringExpenses = prefs.recurringExpenses;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);

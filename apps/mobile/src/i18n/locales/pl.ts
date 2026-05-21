@@ -339,6 +339,19 @@ export default {
     attachAsPdf: 'Wybierz PDF',
     cameraPermissionDenied: 'Wymagany dostęp do kamery',
   },
+  recurring: {
+    repeat: 'Powtarzaj',
+    repeatDesc: 'Automatycznie dodawaj ten wydatek każdy okres',
+    period: 'Okres',
+    weekly: 'Co tydzień',
+    monthly: 'Co miesiąc',
+    yearly: 'Co rok',
+    seriesBanner: 'Część serii cyklicznej',
+    seriesPeriod: 'Powtarza się {{period}}',
+    stopRecurring: 'Zatrzymaj powtarzanie',
+    stopRecurringConfirm: 'Zatrzymać automatyczne dodawanie? Istniejące rekordy nie zostaną usunięte.',
+    stopped: 'Powtarzanie zatrzymane',
+  },
   voice: {
     title: 'Wydatek głosowy',
     listening: 'Słucham... Dotknij, aby zatrzymać',
@@ -607,6 +620,8 @@ export default {
     sharedAccountActivityDesc: 'Otrzymuj powiadomienia gdy inni dodają wydatki do wspólnych kont',
     debtReminders: 'Przypomnienia o długach',
     debtRemindersDesc: 'Powiadomienie 3 dni przed terminem spłaty i po jego przekroczeniu',
+    recurringExpenses: 'Wydatki cykliczne',
+    recurringExpensesDesc: 'Powiadomienie gdy cykliczny wydatek jest automatycznie rejestrowany',
   },
   whatsappBot: {
     title: 'Bot WhatsApp',

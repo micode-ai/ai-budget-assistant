@@ -81,7 +81,7 @@ export class UsersController {
   @Patch('me/notification-preferences')
   async updateNotificationPreferences(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean },
+    @Body() body: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean },
   ) {
     return this.usersService.updateNotificationPreferences(req.user.id, body);
   }

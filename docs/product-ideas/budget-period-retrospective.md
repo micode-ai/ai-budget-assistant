@@ -1,7 +1,7 @@
 ---
 id: budget-period-retrospective
 title: Budget retrospective — month-by-month compliance history
-status: building
+status: shipped
 priority: P1
 created_at: 2026-05-11
 jira_ticket:

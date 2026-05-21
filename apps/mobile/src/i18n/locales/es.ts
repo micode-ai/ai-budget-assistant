@@ -339,6 +339,19 @@ export default {
     attachAsPdf: 'Elegir PDF',
     cameraPermissionDenied: 'Se requiere acceso a la cámara',
   },
+  recurring: {
+    repeat: 'Repetir',
+    repeatDesc: 'Agregar automáticamente este gasto cada período',
+    period: 'Período',
+    weekly: 'Semanal',
+    monthly: 'Mensual',
+    yearly: 'Anual',
+    seriesBanner: 'Parte de una serie recurrente',
+    seriesPeriod: 'Se repite {{period}}',
+    stopRecurring: 'Detener repetición',
+    stopRecurringConfirm: '¿Detener el registro automático? Los registros existentes no se eliminarán.',
+    stopped: 'Repetición detenida',
+  },
   voice: {
     title: 'Gasto por voz',
     listening: 'Escuchando... Toca para detener',
@@ -607,6 +620,8 @@ export default {
     sharedAccountActivityDesc: 'Recibe notificaciones cuando otros añadan gastos a cuentas compartidas',
     debtReminders: 'Recordatorios de deudas',
     debtRemindersDesc: 'Notificación 3 días antes del vencimiento y cuando se vence',
+    recurringExpenses: 'Gastos recurrentes',
+    recurringExpensesDesc: 'Notificación cuando se registra automáticamente un gasto recurrente',
   },
   whatsappBot: {
     title: 'Bot de WhatsApp',

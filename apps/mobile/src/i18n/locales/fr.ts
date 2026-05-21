@@ -339,6 +339,19 @@ export default {
     attachAsPdf: 'Choisir un PDF',
     cameraPermissionDenied: 'Accès à la caméra requis',
   },
+  recurring: {
+    repeat: 'Répéter',
+    repeatDesc: 'Ajouter automatiquement cette dépense chaque période',
+    period: 'Période',
+    weekly: 'Hebdomadaire',
+    monthly: 'Mensuel',
+    yearly: 'Annuel',
+    seriesBanner: 'Fait partie d\'une série récurrente',
+    seriesPeriod: 'Se répète {{period}}',
+    stopRecurring: 'Arrêter la répétition',
+    stopRecurringConfirm: 'Arrêter l\'enregistrement automatique ? Les enregistrements existants ne seront pas supprimés.',
+    stopped: 'Répétition arrêtée',
+  },
   voice: {
     title: 'Dépense vocale',
     listening: 'Écoute en cours... Appuyez pour arrêter',
@@ -607,6 +620,8 @@ export default {
     sharedAccountActivityDesc: "Soyez notifié lorsque d'autres ajoutent des dépenses aux comptes partagés",
     debtReminders: 'Rappels de dettes',
     debtRemindersDesc: 'Notification 3 jours avant l\'échéance et en cas de retard',
+    recurringExpenses: 'Dépenses récurrentes',
+    recurringExpensesDesc: 'Notification quand une dépense récurrente est enregistrée automatiquement',
   },
   whatsappBot: {
     title: 'Bot WhatsApp',
