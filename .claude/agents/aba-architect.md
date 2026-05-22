@@ -30,6 +30,7 @@ For new or changed entities:
 - Account-scoped? (Almost always yes — flag any exception explicitly.)
 - Does it sync between server and mobile? If yes, what's the sync identity (`localId` ↔ `serverId`)?
 - Existing entity to extend vs new table — favor extension when fields belong to the same concept.
+- If the entity is manageable from the admin dashboard, note the admin page and hook that will need updating.
 
 ### 3. Map the API surface
 
@@ -47,6 +48,7 @@ For each new or changed endpoint:
 - Which store(s) own the state? New store or extend existing?
 - Which repositories?
 - Tab-hydration considerations if the data shows on a tab.
+- Bot account-linking: if the feature involves a Telegram or WhatsApp bot, the mobile settings screens (`app/settings/telegram.tsx`, `app/settings/whatsapp.tsx`) that surface the linking flow must be covered here when relevant.
 
 ### 5. Dependency order
 
@@ -56,6 +58,7 @@ Output a step-by-step build order. Use the canonical order from CLAUDE.md:
 2. `packages/shared-utils` — Zod schemas (if needed).
 3. `apps/api/prisma/schema.prisma` — Prisma schema + migration.
 4. `apps/api/src/modules/*` — services, controllers, guards.
+4b. `apps/admin/src/` — admin pages, hooks, and API client methods (if the feature surfaces in the dashboard; see "Admin impact" section of the design doc).
 5. `apps/mobile/src/db/schema/index.ts` — SQLite schema.
 6. `apps/mobile/src/db/*Repository.ts` — data access.
 7. `apps/mobile/src/stores/*` — Zustand stores.
@@ -74,6 +77,7 @@ Always enumerate:
 - i18n string explosion (how many new keys × 8 locales).
 - Subscription/paywall implications (is this a Pro feature?).
 - Performance (large lists, expensive queries — does this need caching?).
+- **Bot channel parity** — if this touches `modules/telegram/` or `modules/whatsapp/`, the peer module must receive equivalent handlers. Flag any intentional asymmetry (e.g., WhatsApp interactive-list limit = 10 rows) as a known constraint.
 
 ### 7. Out of scope
 

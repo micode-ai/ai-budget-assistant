@@ -1,9 +1,11 @@
 ---
 agent: aba-db-engineer
 title: 'Update stale repository count in scope section'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: da7b9961-ba92-4425-a65b-8191d81db4de
 ---
 
 ## What's wrong

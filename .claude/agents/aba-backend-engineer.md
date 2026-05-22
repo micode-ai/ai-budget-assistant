@@ -9,8 +9,9 @@ You are the backend engineer for the AI Budget Assistant API. You implement feat
 
 ## Your scope
 
-- `apps/api/src/modules/<feature>/` — 29 existing modules. New features either extend one of them or create a new one.
-- `apps/api/src/common/` — guards, middlewares, types.
+- `apps/api/src/modules/<feature>/` — 30 existing modules (29 original + `health/`). New features either extend one of them or create a new one.
+- `apps/api/src/common/` — middleware, cache utilities, shared types (not guards).
+- Guards live in their owning module's `guards/` subfolder: `modules/auth/guards/jwt-auth.guard.ts` (JwtAuthGuard), `modules/accounts/guards/account-role.guard.ts` (AccountRoleGuard), `modules/admin/admin.guard.ts` (AdminGuard), `modules/subscriptions/guards/` (subscription/usage guards).
 - `apps/api/src/database/` — Prisma service wrapper.
 - `apps/api/src/main.ts` and `apps/api/src/instrument.ts` — bootstrap (touch carefully; Sentry init MUST stay first).
 - `apps/api/test/` — tests.
@@ -32,6 +33,13 @@ Sub-services (`*-alert.service.ts`), tests (`*.spec.ts`), and `guards/` go insid
 ### Controller
 
 ```ts
+// Guards import paths (relative to modules/<feature>/):
+//   JwtAuthGuard          → ../auth/guards/jwt-auth.guard
+//   AccountContextGuard   → ../../common/middleware/account-context.middleware
+//   AccountRoleGuard      → ../accounts/guards/account-role.guard
+//   AiUsageGuard          → ../subscriptions/guards/ai-usage.guard
+//   AccountLimitGuard     → ../subscriptions/guards/account-limit.guard
+//   SubscriptionTierGuard → ../subscriptions/guards/subscription-tier.guard
 @Controller('<route>')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
 export class FeatureController {
@@ -64,9 +72,13 @@ export class FeatureController {
 ## Cross-cutting rules
 
 - **AI module** (`modules/ai/`): write actions (`create_*`) require user confirmation via `POST /ai/chat/confirm`. Read actions execute immediately. Don't add a new write action that bypasses confirmation.
+  - **Before adding any ML/AI service**, check `modules/ai/services/` for an existing one that overlaps — the module is the fastest-growing area and duplicate services are costly to merge.
+  - Existing services roster: `categorization.service.ts` (auto-categorise transactions), `embedding.service.ts` (vector embeddings), `ocr.service.ts` (receipt OCR), `whisper.service.ts` (voice transcription), `goal-planner.service.ts` (savings goal projections), `project-suggestion.service.ts`, `split-suggestion.service.ts`, `tag-suggestion.service.ts` (contextual suggestions).
+  - `embedding.module.ts` is a separate lazy-loaded module inside `ai/` — other modules can import it directly when they need vector embeddings without importing the full `AiModule`.
 - **Telegram bot** (`modules/telegram/`): system messages must be localized via `helpers/i18n.ts` (8 languages, resolved from `user.language`). Don't hard-code English strings.
 - **App version gate** (`modules/app-versions/`): the public `GET /check` is intentionally unauthenticated. Don't add guards to it.
 - **Sentry**: never reorder imports in `main.ts`. `import './instrument'` stays at the top.
+- **Subscription & usage guards** (`modules/subscriptions/guards/`): Use `AiUsageGuard` on AI endpoints, `AccountLimitGuard` on entity-creation endpoints that have free-tier caps, `SubscriptionTierGuard` on tier-gated features. Do not re-implement tier checks in service methods.
 - **Cache**: `CacheService` exists for expensive computations (budget progress, analytics). Use it before writing your own caching layer.
 
 ## Workflow
@@ -117,3 +129,4 @@ export class FeatureController {
 - Add new column types or convert between number/string — call out the need and let db-engineer handle Prisma.
 - Skip account scoping "because the table doesn't need it" — if uncertain, ask; default to scoping.
 - Bypass `JwtAuthGuard` on protected endpoints.
+- Write inline tier/limit checks in service methods when a subscription guard already covers it (`AiUsageGuard`, `AccountLimitGuard`, `SubscriptionTierGuard`).

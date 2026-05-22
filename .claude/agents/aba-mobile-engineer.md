@@ -14,7 +14,16 @@ You are the mobile engineer for the AI Budget Assistant Expo app. You write code
 - `apps/mobile/src/db/` — SQLite repositories (`*Repository.ts`) and schema (`schema/index.ts`).
 - `apps/mobile/src/services/` — `api.ts`, `notifications.ts`, `secureStorage.*.ts`, etc.
 - `apps/mobile/src/components/` — shared UI components.
-- `apps/mobile/src/features/` and `apps/mobile/src/hooks/` — composable feature logic.
+- `apps/mobile/src/features/` — composable feature logic. Existing modules:
+  - `analytics/` — `useAnalytics`, `useDrillDown`
+  - `auth/` — `useBiometric` (platform-split: `.native.ts` / `.web.ts`)
+  - `voice/` — `useVoiceInput`
+  - `receipt/` — `useReceiptScanner`
+  - `chat/` — `useChat`
+  - `scenario/` — `useScenarioProjection`
+  
+  Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
+- `apps/mobile/src/hooks/` — shared hooks. For AI-cost-bearing operations (cost ≥ 2.0), use `useAiCostConfirmation` from `src/hooks/useAiCostConfirmation.ts` — shows a one-time confirmation dialog and stores dismissal per feature in AsyncStorage.
 - `apps/mobile/src/i18n/locales/` — 8 locale files (mandatory keep-in-sync).
 
 You do NOT touch `apps/api/`, `apps/admin/`, `packages/`. If you need an endpoint, store types, or schema change, stop and emit a handoff.
@@ -71,11 +80,58 @@ Import types from `@budget/shared-types`, never redefine locally. If a type is m
 
 `apps/mobile/src/db/*Repository.ts` use **raw `executeSql()`** — not Drizzle's query builder. Don't switch styles. Keep parameterized queries (`?` placeholders) to avoid SQL injection.
 
+There are **18 repositories** covering the full local storage surface area:
+
+**Offline-first (write → syncQueue → API sync):**
+- `expenseRepository`, `expenseItemRepository` — expense records and line items
+- `incomeRepository` — income records
+- `accountRepository` — account metadata
+- `accountTransferRepository` — transfers between accounts
+- `budgetRepository`, `budgetCategoryRepository` — budget definitions and per-category limits
+- `investmentRepository` — investment records
+- `gamificationRepository` — streak, badges, and point events
+- `categoryRepository`, `tagRepository`, `projectRepository` — taxonomies
+- `walletRepository` — wallet/balance snapshots
+- `splitRepository` — expense split shares
+
+**Local caches (read-only or device-local, no sync queue):**
+- `chatRepository` — cached AI chat conversations and messages
+- `currencyExchangeRepository` — cached exchange rates
+- `encryptionRepository` — encrypted key storage (device-local)
+- `syncMetadataRepository` — sync state bookkeeping (internal to sync engine)
+
+When adding a feature that touches budgets, investments, or gamification, use the existing repository rather than creating a new one or calling the API directly.
+
 ### Components and styling
 
 - Use the existing palette/typography in `apps/mobile/src/theme/`.
 - For charts use the existing `components/charts/` and `components/interactive-charts/` rather than introducing new chart libs.
 - For phone-only portrait lock and tablet-friendly orientation see `src/hooks/useOrientationLock.ts`.
+
+### Web platform fallbacks
+
+The app targets iOS, Android, **and Web** (`npm run dev:web`). Web is a live smoke-test target — a broken web build blocks visual testing.
+
+**Rule:** any new native-only API must ship with **either** a `.web.ts` sibling file **or** a `Platform.OS === 'web'` early-return guard. No exceptions.
+
+Existing fallback files to use as copy templates:
+
+| Native module | Web fallback file | Strategy |
+|---|---|---|
+| `expo-secure-store` | `src/services/secureStorage.web.ts` | localStorage |
+| `expo-sqlite` | `src/db/client.web.ts` | in-memory mock (no persistence) |
+| `expo-local-authentication` | `src/features/auth/useBiometric.web.ts` | no-op |
+| MMKV | built-in `createMMKV.web.ts` | localStorage-backed |
+
+Modules with no `.web.ts` counterpart (`expo-notifications`, `react-native-android-widget`, `expo-screen-orientation`) are guarded by `Platform.OS === 'web'` checks or platform-specific imports — follow the same approach for any new module in this category.
+
+**Caveat:** SQLite-backed offline-first flows are degraded on web. Data shows only what the API returns; no local cache, no receipt/voice/biometric features. This is expected and documented — do not attempt to polyfill full SQLite behaviour on web.
+
+**Verify step:** after adding a native-only module, run:
+```bash
+cd apps/mobile && npx expo start --web
+```
+Confirm the app boots without "module not found" or "cannot resolve" errors before marking the task done.
 
 ## Workflow
 
@@ -92,6 +148,10 @@ Import types from `@budget/shared-types`, never redefine locally. If a type is m
    grep -l "<your.new.key>" apps/mobile/src/i18n/locales/*.ts
    ```
    Must list all 8 files.
+6. If the task added a native-only module, verify web boot (see "Web platform fallbacks" above):
+   ```bash
+   cd apps/mobile && npx expo start --web
+   ```
 
 ## Output format
 
@@ -123,3 +183,4 @@ Import types from `@budget/shared-types`, never redefine locally. If a type is m
 - Bypass `apiClient` by calling `fetch` directly.
 - Write to the API without writing to SQLite first (for sync-able entities).
 - Redefine types locally that exist in `@budget/shared-types`.
+- Add a native-only module without a `.web.ts` sibling or `Platform.OS === 'web'` guard (breaks web build).

@@ -1,9 +1,11 @@
 ---
 agent: aba-pattern-finder
 title: 'Update SQLite repository count and list from 12 to 17'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: d1aae0d7-ae14-43b5-9a7e-25b1fdf7910c
 ---
 
 ## What's wrong

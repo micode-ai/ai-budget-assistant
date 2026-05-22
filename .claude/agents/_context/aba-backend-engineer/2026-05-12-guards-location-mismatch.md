@@ -1,9 +1,11 @@
 ---
 agent: aba-backend-engineer
 title: 'Fix guards location — they live in module folders, not common/'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: cc1b4e0e-2d79-472a-ad69-972cf576b233
 ---
 
 ## What's wrong

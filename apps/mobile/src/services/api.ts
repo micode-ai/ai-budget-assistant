@@ -1,6 +1,6 @@
 import { secureStorage } from './secureStorage';
 import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse, GenerateReportDto, GenerateReportResponse, ReportListResponse, MonthlyDigestResponse, CreateBackupResponse, RestoreBackupResponse, BackupHistoryItem, UpdateReportPreferencesDto, ReportPreferencesResponse, TelegramLinkCodeResponse, TelegramLinkStatusResponse } from '@budget/shared-types';
+import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, SubscriptionDto, UsageStatsDto, CheckoutSessionResponse, PortalSessionResponse, PlansResponse, AdminDashboardResponse, DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SetupEncryptionDto, EnableAccountEncryptionDto, GrantKeyDto, RotateAccountKeyDto, SetupRecoveryDto, EncryptionProfileResponse, AccountEncryptionKeyResponse, PendingKeyGrantsResponse, RecoverEncryptionResponse, AccountEncryptionStatusResponse, MemberPublicKeyResponse, GenerateReportDto, GenerateReportResponse, ReportListResponse, MonthlyDigestResponse, CreateBackupResponse, RestoreBackupResponse, BackupHistoryItem, UpdateReportPreferencesDto, ReportPreferencesResponse, TelegramLinkCodeResponse, TelegramLinkStatusResponse, WiseImportPreviewResponse, WiseImportCommitDto, WiseImportCommitResponse } from '@budget/shared-types';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -1262,6 +1262,45 @@ class ApiClient {
 
   async unlinkWhatsApp(): Promise<{ success: boolean }> {
     return this.request<{ success: boolean }>('/users/me/whatsapp-link', { method: 'DELETE' });
+  }
+
+  // Wise CSV Import endpoints
+  async importWisePreview(file: { uri: string; name: string; type: string }): Promise<WiseImportPreviewResponse> {
+    const form = new FormData();
+    form.append('file', { uri: file.uri, name: file.name, type: file.type } as any);
+
+    const token = await this.getAuthToken();
+    const accountId = this.accountIdGetter?.();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (accountId) headers['X-Account-Id'] = accountId;
+
+    const url = `${this.baseUrl}/import/wise/preview`;
+    let response = await fetch(url, { method: 'POST', headers, body: form });
+
+    if (response.status === 401) {
+      const refreshed = await this.refreshToken();
+      if (refreshed) {
+        const newToken = await this.getAuthToken();
+        if (newToken) headers['Authorization'] = `Bearer ${newToken}`;
+        response = await fetch(url, { method: 'POST', headers, body: form });
+      }
+    }
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'Request failed' }));
+      const message = Array.isArray(error.message) ? error.message.join('\n') : error.message || `HTTP ${response.status}`;
+      throw new Error(message);
+    }
+
+    return response.json();
+  }
+
+  async importWiseCommit(payload: WiseImportCommitDto): Promise<WiseImportCommitResponse> {
+    return this.request<WiseImportCommitResponse>('/import/wise/commit', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   }
 
   // Admin endpoints

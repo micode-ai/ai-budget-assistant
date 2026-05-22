@@ -36,6 +36,7 @@ import { BackupsModule } from './modules/backups/backups.module';
 import { DebtsModule } from './modules/debts/debts.module';
 import { ReferralsModule } from './modules/referrals/referrals.module';
 import { HealthModule } from './modules/health/health.module';
+import { ImportWiseModule } from './modules/import-wise/import-wise.module';
 import { CacheModule } from './common/cache/cache.module';
 
 @Module({
@@ -97,6 +98,7 @@ import { CacheModule } from './common/cache/cache.module';
     DebtsModule,
     ReferralsModule,
     HealthModule,
+    ImportWiseModule,
   ],
   providers: [
     {

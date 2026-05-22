@@ -1,9 +1,11 @@
 ---
 agent: aba-pattern-finder
 title: 'Update module count and list to include health module'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: 6254cfa7-8428-47ce-89b4-b6f087af8683
 ---
 
 ## What's wrong

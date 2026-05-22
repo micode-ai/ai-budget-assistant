@@ -636,6 +636,28 @@ export default {
     confirmDisconnect: 'Disconnect WhatsApp?',
     refresh: 'Refresh status',
   },
+  wiseImport: {
+    title: 'Wise import',
+    subtitle: 'Import expenses and incomes from a Wise CSV statement',
+    pickFile: 'Pick CSV file',
+    parsing: 'Parsing CSV…',
+    importButton: 'Import {{count}} rows',
+    importAnother: 'Import another',
+    success: 'Import complete',
+    summary: '{{expenses}} expenses · {{incomes}} incomes · {{exchanges}} exchanges',
+    help: {
+      where: 'In Wise: Transactions → Statements and Reports → CSV. Choose your date range and currency, then download the file and select it here.',
+    },
+    preview: {
+      selected: '{{count}} selected',
+      skipped: '{{count}} already imported',
+      alreadyImported: 'Already imported',
+      fxPair: 'FX conversion',
+    },
+    error: {
+      parseFailed: 'Could not parse the CSV. Make sure you downloaded a Wise statement in CSV format.',
+    },
+  },
   wallet: {
     title: 'Wallet',
     balances: 'Balances',

@@ -537,6 +537,11 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_user_name TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN created_by_user_name TEXT`); } catch {}
 
+    // External reference for CSV/bank imports (e.g. "wise:<TransferWise ID>")
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN external_ref TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN external_ref TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE currency_exchanges ADD COLUMN external_ref TEXT`); } catch {}
+
     // Debt indexes
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_expenses_debt ON expenses(account_id, is_debt)`);
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_incomes_debt ON incomes(account_id, is_debt)`);

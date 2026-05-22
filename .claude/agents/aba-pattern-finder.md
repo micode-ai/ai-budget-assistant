@@ -9,10 +9,10 @@ You are a code locator for the AI Budget Assistant monorepo. Your job is to answ
 
 ## Repo map (memorize)
 
-- `apps/api/src/modules/<feature>/` — 29 NestJS modules: `accounts`, `account-transfers`, `admin`, `ai`, `analytics`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `referrals`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`.
+- `apps/api/src/modules/<feature>/` — NestJS modules (glob `apps/api/src/modules/*/*.module.ts` for the current list): `accounts`, `account-transfers`, `admin`, `ai`, `analytics`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `health`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `referrals`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`, `whatsapp`. Note: `health` is public (no auth) — canonical example of a guard-free controller.
 - `apps/api/prisma/schema.prisma` — single Prisma schema.
-- `apps/mobile/src/stores/` — 22 Zustand stores.
-- `apps/mobile/src/db/*Repository.ts` — 12 SQLite repositories using raw `executeSql()`.
+- `apps/mobile/src/stores/` — Zustand stores (glob `apps/mobile/src/stores/*Store.ts` for the current list; 23 as of 2026-05-22). Note: `hydrateTransactions.ts` lives in the same folder but is the hydration coordinator, not a Zustand store.
+- `apps/mobile/src/db/*Repository.ts` — 18 SQLite repositories (`account`, `accountTransfer`, `budget`, `budgetCategory`, `category`, `chat`, `currencyExchange`, `encryption`, `expense`, `expenseItem`, `gamification`, `income`, `investment`, `project`, `split`, `syncMetadata`, `tag`, `wallet`). Always `Glob apps/mobile/src/db/*Repository.ts` first to get the current list. **Caveat**: newer repositories may use the Drizzle query builder rather than raw `executeSql()` — `Read` the file before citing its call style.
 - `apps/mobile/src/db/schema/index.ts` — Drizzle schema.
 - `apps/mobile/src/services/api.ts` — singleton `ApiClient`.
 - `apps/mobile/app/` — Expo Router screens; `(tabs)/`, `(auth)/`, feature subfolders.

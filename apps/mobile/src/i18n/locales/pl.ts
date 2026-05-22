@@ -636,6 +636,28 @@ export default {
     confirmDisconnect: 'Rozłączyć WhatsApp?',
     refresh: 'Odśwież status',
   },
+  wiseImport: {
+    title: 'Import z Wise',
+    subtitle: 'Importuj wydatki i przychody z wyciągu CSV z Wise',
+    pickFile: 'Wybierz plik CSV',
+    parsing: 'Przetwarzanie CSV…',
+    importButton: 'Importuj {{count}} wierszy',
+    importAnother: 'Importuj kolejny',
+    success: 'Import zakończony',
+    summary: '{{expenses}} wydatków · {{incomes}} przychodów · {{exchanges}} wymian',
+    help: {
+      where: 'W Wise: Transakcje → Wyciągi i raporty → CSV. Wybierz zakres dat i walutę, pobierz plik, a następnie wybierz go tutaj.',
+    },
+    preview: {
+      selected: 'Wybrano: {{count}}',
+      skipped: 'Już zaimportowano: {{count}}',
+      alreadyImported: 'Już zaimportowano',
+      fxPair: 'Wymiana walut',
+    },
+    error: {
+      parseFailed: 'Nie udało się przetworzyć pliku CSV. Upewnij się, że pobrałeś wyciąg z Wise w formacie CSV.',
+    },
+  },
   wallet: {
     title: 'Portfel',
     balances: 'Salda',

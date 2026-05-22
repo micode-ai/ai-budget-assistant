@@ -636,6 +636,28 @@ export default {
     confirmDisconnect: 'Déconnecter WhatsApp ?',
     refresh: 'Actualiser le statut',
   },
+  wiseImport: {
+    title: 'Import Wise',
+    subtitle: 'Importez vos dépenses et revenus depuis un relevé CSV Wise',
+    pickFile: 'Choisir un fichier CSV',
+    parsing: 'Analyse du CSV…',
+    importButton: 'Importer {{count}} lignes',
+    importAnother: 'Importer un autre',
+    success: 'Import terminé',
+    summary: '{{expenses}} dépenses · {{incomes}} revenus · {{exchanges}} conversions',
+    help: {
+      where: 'Dans Wise : Transactions → Relevés et rapports → CSV. Choisissez la période et la devise, téléchargez le fichier, puis sélectionnez-le ici.',
+    },
+    preview: {
+      selected: '{{count}} sélectionnés',
+      skipped: '{{count}} déjà importés',
+      alreadyImported: 'Déjà importé',
+      fxPair: 'Conversion de devise',
+    },
+    error: {
+      parseFailed: 'Impossible d\'analyser le CSV. Assurez-vous d\'avoir téléchargé un relevé Wise au format CSV.',
+    },
+  },
   wallet: {
     title: 'Portefeuille',
     balances: 'Soldes',

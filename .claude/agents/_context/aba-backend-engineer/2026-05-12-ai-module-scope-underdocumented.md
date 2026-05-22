@@ -1,9 +1,11 @@
 ---
 agent: aba-backend-engineer
 title: 'Document expanded AI module scope to prevent duplicate service creation'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: 1ac38180-fba6-4353-a294-648a8a09cb0b
 ---
 
 ## What's wrong

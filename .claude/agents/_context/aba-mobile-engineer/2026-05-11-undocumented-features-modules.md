@@ -1,9 +1,11 @@
 ---
 agent: aba-mobile-engineer
 title: 'Document biometric, voice, receipt, and chat feature modules in scope'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-11
+applied_at: 2026-05-22
+orchestration_run: e5692505-2a0f-4afb-bdea-00bad081fa28
 ---
 
 ## What's wrong
