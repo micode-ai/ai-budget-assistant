@@ -2302,6 +2302,87 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Import
+
+Bulk-create transactions from a Wise CSV statement. Both endpoints require `X-Account-Id`.
+
+### Preview a Wise CSV upload
+
+```http
+POST /import/wise/preview
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: multipart/form-data
+
+file=<wise-statement.csv>
+```
+
+Max file size: 5 MB. Parses with `papaparse`, strips BOM, classifies each row as `expense` / `income` / `fx`, pairs FX conversion rows by shared `Payment Reference + Date + opposite sign`, folds `Total fees` into the absolute amount, and dedups by checking the `externalRef = 'wise:<TransferWise ID>'` against existing `Expense`/`Income`/`CurrencyExchange` rows in the account.
+
+**Response** `200 OK`
+```json
+{
+  "totalRows": 124,
+  "importable": 118,
+  "skipped": 6,
+  "rows": [
+    {
+      "idx": 0,
+      "kind": "expense",
+      "date": "2024-10-19",
+      "amount": 22.19,
+      "currencyCode": "EUR",
+      "description": "Reserved.com Gdansk",
+      "merchant": "Reserved.com Gdansk",
+      "externalRef": "wise:5478821093",
+      "suggestedCategoryName": null,
+      "alreadyImported": false
+    },
+    {
+      "idx": 7,
+      "kind": "fx",
+      "date": "2024-10-15",
+      "amount": 120.00,
+      "currencyCode": "USD",
+      "description": "Currency exchange",
+      "externalRef": "wise:5478811010+5478811011",
+      "alreadyImported": false,
+      "fxFromCurrency": "USD",
+      "fxFromAmount": 120.00,
+      "fxToCurrency": "EUR",
+      "fxToAmount": 109.50,
+      "fxRate": 0.9125
+    }
+  ]
+}
+```
+
+### Commit selected rows
+
+```http
+POST /import/wise/commit
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "rows": [ /* WiseImportRow[] — only rows the user kept */ ]
+}
+```
+
+Wraps every insert in one `prisma.$transaction`. Rows with `alreadyImported: true` are dropped server-side. Each created record gets `source: 'import'` (on `Expense`) and the `externalRef`. Duplicate-key violations (`P2002`) are swallowed per row.
+
+**Response** `200 OK`
+```json
+{
+  "createdExpenses": 96,
+  "createdIncomes": 19,
+  "createdExchanges": 3
+}
+```
+
+---
+
 ## Synchronization
 
 All sync endpoints require `X-Account-Id` header.

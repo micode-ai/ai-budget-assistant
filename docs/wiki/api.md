@@ -5,7 +5,7 @@ The REST API backend, built with NestJS 10 + Prisma 5 on PostgreSQL + Redis. It 
 
 ## Entry points
 - `apps/api/src/main.ts` — bootstrap entry point; imports `./instrument` (Sentry) first before anything else
-- `apps/api/src/app.module.ts` — root module that imports all 29 feature modules
+- `apps/api/src/app.module.ts` — root module that imports all 30 feature modules
 - `apps/api/prisma/schema.prisma` — authoritative database schema
 - `apps/api/src/common/types/index.ts` — `AuthenticatedRequest` type used across controllers
 
@@ -15,7 +15,7 @@ The REST API backend, built with NestJS 10 + Prisma 5 on PostgreSQL + Redis. It 
 - **Account scoping** — `AccountContextGuard` middleware reads `X-Account-Id` header, resolves membership, injects `accountId` + `accountRole` into every request
 - **Role-based access** — `AccountRoleGuard` + `@RequireRole('owner')` decorator restrict write operations to account owners
 - **Service signature** — all service methods follow `(accountId, userId, dto)` parameter order; all Prisma queries filter by `accountId`
-- **29 modules** — `accounts`, `account-transfers`, `admin`, `ai`, `analytics`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `referrals`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`
+- **30 modules** — `accounts`, `account-transfers`, `admin`, `ai`, `analytics`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `import-wise`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `referrals`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`
 - **Health** — `GET /api/v1/health` runs `SELECT 1` on Postgres; used by Docker `HEALTHCHECK` and uptime CI
 
 ## Cross-references

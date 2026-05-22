@@ -442,23 +442,28 @@ src/
 │   │   └── shared-activity.service.ts
 │   ├── mail/                    # Email infrastructure
 │   │   └── mail.service.ts
-│   └── telegram/                # Telegram bot integration
-│       ├── telegram.service.ts
-│       ├── telegram-bot.service.ts
-│       ├── telegram-bot.controller.ts
-│       ├── telegram-link.service.ts
-│       ├── types.ts
-│       ├── handlers/
-│       │   ├── chat.handler.ts
-│       │   ├── command.handler.ts
-│       │   ├── expense.handler.ts
-│       │   ├── income.handler.ts
-│       │   ├── voice.handler.ts
-│       │   └── photo.handler.ts
-│       └── helpers/
-│           ├── format-telegram.ts
-│           ├── parse-amount.ts
-│           └── resolve-account.ts
+│   ├── telegram/                # Telegram bot integration
+│   │   ├── telegram.service.ts
+│   │   ├── telegram-bot.service.ts
+│   │   ├── telegram-bot.controller.ts
+│   │   ├── telegram-link.service.ts
+│   │   ├── types.ts
+│   │   ├── handlers/
+│   │   │   ├── chat.handler.ts
+│   │   │   ├── command.handler.ts
+│   │   │   ├── expense.handler.ts
+│   │   │   ├── income.handler.ts
+│   │   │   ├── voice.handler.ts
+│   │   │   └── photo.handler.ts
+│   │   └── helpers/
+│   │       ├── format-telegram.ts
+│   │       ├── parse-amount.ts
+│   │       └── resolve-account.ts
+│   └── import-wise/             # Wise CSV statement import
+│       ├── import-wise.module.ts
+│       ├── import-wise.controller.ts
+│       ├── import-wise.service.ts
+│       └── dto/index.ts
 ├── common/
 │   ├── decorators/
 │   ├── filters/
