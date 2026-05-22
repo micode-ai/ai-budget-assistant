@@ -655,3 +655,97 @@ Możesz używać równolegle z botem na Telegramie, bez konfliktów. Co wygodnie
 
 #AIBudgetAssistant #WhatsApp #budżet #finanse #AI #wpisGłosowy #OCR #fintech #finanseOsobiste
 ```
+
+---
+
+## Пост 10 — Facebook · Импорт из Wise (CSV-выписка)
+
+### 🇷🇺 Русский
+
+```
+🏦 У тебя 437 транзакций в Wise за последние полгода. Сколько вечеров уйдёт, чтобы вбить их по одной?
+
+Ноль. Теперь — ноль вечеров.
+
+AI Budget Assistant читает CSV-выписку Wise напрямую. Скачиваешь файл из Wise (Transactions → Statements and Reports → CSV), кидаешь в приложение — и видишь предпросмотр всех операций до того, как что-то попадёт в твою историю.
+
+Что внутри:
+📥 Расходы, доходы, конвертации валют — каждая операция распознаётся сама
+💱 Обмены EUR↔USD внутри Wise склеиваются в один обмен валют, а не в два мусорных движения
+🏷 Известные мерчанты (Uber, Bolt, Lidl, Starbucks, Amazon, Netflix, Wizzair…) получают подходящую категорию автоматически
+☑️ Любую строку можно снять галочкой — переводы между своими картами не нужны? одно касание и они пропали
+🛡 Загрузил тот же файл дважды? Дубликаты ловятся по уникальному ID транзакции Wise — повторно ничего не запишется
+🌍 Работает для аккаунтов Wise в любой стране — EU, UK, US, всё одинаково
+🔐 CSV проходит через сервер только в памяти и сразу удаляется — сохраняются только подтверждённые тобой строки
+
+Идеально, если ты:
+— только что переехал на Wise и хочешь подтянуть историю
+— ведёшь учёт раз в полгода, а не каждый день
+— устал от того, что трата в евро записывается в гривнах по непонятному курсу
+
+Открываешь Настройки → Импорт из Wise. Дальше — три тапа.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #Wise #импорт #бюджет #финансы #мультивалютность #CSV #финтех #личныефинансы
+```
+
+### 🇬🇧 English
+
+```
+🏦 You've got 437 transactions in Wise over the last six months. How many evenings to type them in one by one?
+
+Zero. As of now — zero evenings.
+
+AI Budget Assistant reads your Wise CSV statement directly. Download the file from Wise (Transactions → Statements and Reports → CSV), drop it into the app, and you get a preview of every transaction before anything touches your history.
+
+What's inside:
+📥 Expenses, incomes, currency conversions — each row gets classified for you
+💱 In-Wise EUR↔USD conversions are merged into one currency exchange, not two orphan transactions
+🏷 Known merchants (Uber, Bolt, Lidl, Starbucks, Amazon, Netflix, Wizzair…) get the right category automatically
+☑️ Uncheck anything you don't want — transfers between your own cards? one tap and they're gone
+🛡 Upload the same file twice? Duplicates are caught by Wise's unique transaction ID — nothing is created a second time
+🌍 Works for Wise accounts in any region — EU, UK, US, all the same
+🔐 The CSV passes through the server in memory and is deleted right after — only the rows you confirm get stored
+
+This is for you if:
+— you've just moved to Wise and want your history in one place
+— you do bookkeeping once every six months, not daily
+— you're tired of a euro expense showing up in dollars at a mystery rate
+
+Open Settings → Wise import. Three taps and you're done.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #Wise #import #budget #finance #multicurrency #CSV #fintech #personalfinance
+```
+
+### 🇵🇱 Polski
+
+```
+🏦 Masz 437 transakcji w Wise za ostatnie pół roku. Ile wieczorów zajmie wpisanie ich po jednej?
+
+Zero. Od teraz — zero wieczorów.
+
+AI Budget Assistant czyta wyciąg CSV z Wise bezpośrednio. Pobierasz plik z Wise (Transactions → Statements and Reports → CSV), wrzucasz do aplikacji i widzisz podgląd wszystkich operacji, zanim cokolwiek trafi do twojej historii.
+
+Co w środku:
+📥 Wydatki, przychody, przewalutowania — każda operacja rozpoznawana sama
+💱 Wymiany EUR↔USD wewnątrz Wise sklejają się w jedną wymianę walut, a nie w dwa śmieciowe ruchy
+🏷 Znane marki (Uber, Bolt, Lidl, Starbucks, Amazon, Netflix, Wizzair…) dostają właściwą kategorię automatycznie
+☑️ Każdą linię można odznaczyć — przelewy między własnymi kartami? jeden tap i znikają
+🛡 Wgrałeś ten sam plik dwa razy? Duplikaty łapane są po unikalnym ID transakcji Wise — drugi raz nic się nie zapisze
+🌍 Działa dla kont Wise w każdym kraju — EU, UK, US, tak samo
+🔐 CSV przechodzi przez serwer tylko w pamięci i jest natychmiast usuwany — zapisywane są wyłącznie potwierdzone przez ciebie linie
+
+Idealne jeśli:
+— właśnie przesiadłeś się na Wise i chcesz mieć historię w jednym miejscu
+— prowadzisz księgowość raz na pół roku, a nie codziennie
+— masz dość tego, że wydatek w euro zapisuje się w złotówkach po nie wiadomo jakim kursie
+
+Otwierasz Ustawienia → Import z Wise. Trzy tapnięcia i gotowe.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #Wise #import #budżet #finanse #wieleWalut #CSV #fintech #finanseOsobiste
+```

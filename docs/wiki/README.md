@@ -6,7 +6,7 @@ Domain-by-domain reference for the AI Budget Assistant monorepo. One page per co
 
 | Domain | Summary |
 |---|---|
-| [api](api.md) | NestJS 10 REST API — 29 modules, Prisma/PostgreSQL, JWT + account-scoped auth |
+| [api](api.md) | NestJS 10 REST API — 30 modules, Prisma/PostgreSQL, JWT + account-scoped auth |
 | [mobile-app](mobile-app.md) | Expo 54 / React Native offline-first app — Zustand stores, SQLite/Drizzle, 8-locale i18n |
 | [admin-dashboard](admin-dashboard.md) | Next.js 16 operator dashboard — user mgmt, AI usage, comms, app-version releases |
 
