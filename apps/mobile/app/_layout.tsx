@@ -436,6 +436,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/wise-import"
+          options={{
+            headerShown: true,
+            title: t('wiseImport.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings/categories"
           options={{
             headerShown: true,
