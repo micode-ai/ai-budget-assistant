@@ -207,7 +207,7 @@ export default function WiseImportScreen() {
 
   if (screenState === 'idle') {
     return (
-      <SafeAreaView style={styles.container} edges={[]}>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.idleContent}>
           <View style={styles.iconHero}>
             <Ionicons name="swap-horizontal-outline" size={48} color="#00b9ff" />
@@ -232,7 +232,7 @@ export default function WiseImportScreen() {
 
   if (screenState === 'parsing' || screenState === 'committing') {
     return (
-      <SafeAreaView style={styles.container} edges={[]}>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
           <Text style={styles.loadingLabel}>{t('wiseImport.parsing')}</Text>
@@ -243,7 +243,7 @@ export default function WiseImportScreen() {
 
   if (screenState === 'done' && commitResult) {
     return (
-      <SafeAreaView style={styles.container} edges={[]}>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.doneContent}>
           <View style={styles.successIconContainer}>
             <Ionicons name="checkmark-circle" size={72} color={theme.colors.success} />
@@ -272,7 +272,7 @@ export default function WiseImportScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <View style={styles.previewHeader}>
         <Text style={styles.previewHeaderText}>
           {t('wiseImport.preview.selected', { count: selected.size })}
@@ -299,7 +299,9 @@ export default function WiseImportScreen() {
           disabled={selected.size === 0}
           activeOpacity={0.8}
         >
-          <Text style={styles.primaryButtonText}>{t('wiseImport.importButton')}</Text>
+          <Text style={styles.primaryButtonText}>
+            {t('wiseImport.importButton', { count: selected.size })}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

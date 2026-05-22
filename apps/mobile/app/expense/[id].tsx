@@ -526,17 +526,19 @@ export default function ExpenseDetailScreen() {
         {/* Recurring Series Banner */}
         {expense.isRecurring && expense.recurringId && (
           <View style={styles.recurringBanner}>
-            <Ionicons name="repeat-outline" size={16} color={theme.colors.primary} />
-            <View style={styles.recurringBannerInfo}>
-              <Text style={styles.recurringBannerText}>{t('recurring.seriesBanner')}</Text>
-              {expense.recurringPeriod && (
-                <Text style={styles.recurringBannerPeriod}>
-                  {t('recurring.seriesPeriod', { period: t(`recurring.${expense.recurringPeriod}`) })}
-                </Text>
-              )}
+            <View style={styles.recurringBannerHeader}>
+              <Ionicons name="repeat-outline" size={16} color={theme.colors.primary} />
+              <View style={styles.recurringBannerInfo}>
+                <Text style={styles.recurringBannerText}>{t('recurring.seriesBanner')}</Text>
+                {expense.recurringPeriod && (
+                  <Text style={styles.recurringBannerPeriod}>
+                    {t('recurring.seriesPeriod', { period: t(`recurring.${expense.recurringPeriod}`) })}
+                  </Text>
+                )}
+              </View>
             </View>
-            <TouchableOpacity onPress={handleStopRecurring}>
-              <Text style={styles.recurringStopText}>{t('recurring.stopRecurring')}</Text>
+            <TouchableOpacity onPress={handleStopRecurring} style={styles.recurringStopButton} activeOpacity={0.7}>
+              <Text style={styles.recurringStopText} numberOfLines={1}>{t('recurring.stopRecurring')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -1534,13 +1536,16 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.warning,
   },
   recurringBanner: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
     backgroundColor: theme.colors.primaryLight || theme.colors.surfaceSecondary,
     padding: theme.spacing[3],
     borderRadius: theme.borderRadius.lg,
     marginTop: theme.spacing[3],
+    gap: theme.spacing[3],
+  },
+  recurringBannerHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
   },
   recurringBannerInfo: {
     flex: 1,
@@ -1554,6 +1559,14 @@ const createStyles = (theme: Theme) => ({
     fontSize: 12,
     color: theme.colors.textSecondary,
     marginTop: 2,
+  },
+  recurringStopButton: {
+    alignSelf: 'flex-start' as const,
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.danger,
   },
   recurringStopText: {
     fontSize: 13,
