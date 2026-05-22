@@ -44,10 +44,30 @@ interface WiseRawRow {
 
 // UTF-8 BOM that Wise prepends to CSV exports
 const BOM_PATTERN = new RegExp('^\uFEFF');
+
 function parseIsoDate(raw: string): string {
-  const d = new Date(raw);
-  if (isNaN(d.getTime())) return raw;
-  return d.toISOString().slice(0, 10);
+  if (!raw) return '';
+  const trimmed = raw.trim();
+  const dateOnly = trimmed.split(/[\sT]/)[0];
+
+  let m = dateOnly.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) {
+    const [, y, mo, d] = m;
+    return `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`;
+  }
+
+  m = dateOnly.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);
+  if (m) {
+    const [, d, mo, y] = m;
+    return `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`;
+  }
+
+  const parsed = new Date(trimmed);
+  if (!isNaN(parsed.getTime())) {
+    return parsed.toISOString().slice(0, 10);
+  }
+
+  return trimmed;
 }
 
 function suggestCategory(merchant: string | undefined): string | undefined {
