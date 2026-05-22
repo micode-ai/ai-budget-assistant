@@ -1,9 +1,11 @@
 ---
 agent: aba-code-reviewer
 title: 'Document AdminGuard as a valid guard pattern alongside AccountContextGuard'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: 5c51749d-6813-42a2-a339-ff85851929b7
 ---
 
 ## What's wrong

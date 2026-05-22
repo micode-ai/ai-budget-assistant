@@ -636,6 +636,28 @@ export default {
     confirmDisconnect: 'Отключить WhatsApp?',
     refresh: 'Обновить статус',
   },
+  wiseImport: {
+    title: 'Импорт из Wise',
+    subtitle: 'Импортируйте расходы и доходы из CSV-выписки Wise',
+    pickFile: 'Выбрать CSV-файл',
+    parsing: 'Обработка CSV…',
+    importButton: 'Импортировать {{count}} записей',
+    importAnother: 'Импортировать ещё',
+    success: 'Импорт завершён',
+    summary: '{{expenses}} расходов · {{incomes}} доходов · {{exchanges}} конвертаций',
+    help: {
+      where: 'В Wise: Transactions → Statements and Reports → CSV. Выберите период и валюту, скачайте файл и выберите его здесь.',
+    },
+    preview: {
+      selected: 'Выбрано: {{count}}',
+      skipped: 'Уже импортировано: {{count}}',
+      alreadyImported: 'Уже импортировано',
+      fxPair: 'Конвертация валюты',
+    },
+    error: {
+      parseFailed: 'Не удалось обработать CSV. Убедитесь, что вы скачали выписку Wise в формате CSV.',
+    },
+  },
   wallet: {
     title: 'Кошелёк',
     balances: 'Балансы',

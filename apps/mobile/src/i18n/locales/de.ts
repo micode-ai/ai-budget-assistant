@@ -636,6 +636,28 @@ export default {
     confirmDisconnect: 'WhatsApp trennen?',
     refresh: 'Status aktualisieren',
   },
+  wiseImport: {
+    title: 'Wise-Import',
+    subtitle: 'Ausgaben und Einnahmen aus einem Wise-Kontoauszug (CSV) importieren',
+    pickFile: 'CSV-Datei auswählen',
+    parsing: 'CSV wird verarbeitet…',
+    importButton: '{{count}} Zeilen importieren',
+    importAnother: 'Weitere importieren',
+    success: 'Import abgeschlossen',
+    summary: '{{expenses}} Ausgaben · {{incomes}} Einnahmen · {{exchanges}} Umrechnungen',
+    help: {
+      where: 'In Wise: Transaktionen → Kontoauszüge und Berichte → CSV. Wählen Sie Zeitraum und Währung, laden Sie die Datei herunter und wählen Sie sie hier aus.',
+    },
+    preview: {
+      selected: '{{count}} ausgewählt',
+      skipped: '{{count}} bereits importiert',
+      alreadyImported: 'Bereits importiert',
+      fxPair: 'Währungsumrechnung',
+    },
+    error: {
+      parseFailed: 'CSV konnte nicht verarbeitet werden. Stellen Sie sicher, dass Sie einen Wise-Kontoauszug im CSV-Format heruntergeladen haben.',
+    },
+  },
   wallet: {
     title: 'Geldbörse',
     balances: 'Salden',

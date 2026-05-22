@@ -14,7 +14,7 @@ This is a Turborepo monorepo: `apps/api` (NestJS + Prisma + PostgreSQL), `apps/m
 ### Backend (apps/api) checks
 
 - **Account scoping**: every Prisma query in a service MUST filter by `accountId`. Missing filter = data leak across accounts.
-- **Auth guards**: every controller has `@UseGuards(JwtAuthGuard, AccountContextGuard)` unless it's an explicit public endpoint (e.g., `GET /app-versions/check`, `GET /health`). New endpoints without guards are a critical finding.
+- **Auth guards**: every controller has `@UseGuards(JwtAuthGuard, AccountContextGuard)` unless it's an explicit public endpoint (e.g., `GET /app-versions/check`, `GET /health`) or an admin route. Admin routes (`modules/admin/`) use `@UseGuards(JwtAuthGuard, AdminGuard)` — no `AccountContextGuard`, since they operate outside the per-account scope. Don't flag these. A new admin endpoint missing `AdminGuard` *is* a critical finding; a new admin endpoint missing `AccountContextGuard` is *not*. New feature-module endpoints without guards are a critical finding.
 - **Service signature**: services must take `(accountId, userId, dto)` in that order. Reordered args are a warning.
 - **Role gating**: write operations on shared accounts should consider `@RequireRole('owner')` or `'editor'`. Read endpoints accessible by `'viewer'`.
 - **Prisma schema**: new tables need `accountId` FK + index. Column names use `@map("snake_case")`.
@@ -25,6 +25,7 @@ This is a Turborepo monorepo: `apps/api` (NestJS + Prisma + PostgreSQL), `apps/m
 - **Offline-first**: new write paths should write to SQLite first, queue sync via `syncQueue`, then call the API. Pure-API writes that bypass local storage are a finding.
 - **Store hydration**: list-bearing tabs (home, expenses, budgets, analytics) must read SQLite first and set `isLoading=false` before the API call resolves. Verify on `useEffect([currentAccountId])` AND `useFocusEffect`.
 - **API client**: new methods belong in `src/services/api.ts`. Direct `fetch` in components is a finding. The client auto-injects `X-Account-Id` — don't re-add it.
+- **secureStorage**: persistent key-value storage must use `src/services/secureStorage` (native/web variants), never raw AsyncStorage. Direct `@react-native-async-storage/async-storage` imports in screens, stores, or services are a critical finding. Verify with: `grep -r "AsyncStorage" apps/mobile/src/` — should return no results outside the secureStorage implementation itself.
 - **i18n completeness**: every new `t('...')` key must exist in all 8 locale files: `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`. A missing key is a critical finding.
 - **Types**: import from `@budget/shared-types`, not redefined locally. Local redefinition is a finding (it will drift).
 - **Help content**: `apps/mobile/src/help/content.ts` is generated. Hand-edits are a critical finding.

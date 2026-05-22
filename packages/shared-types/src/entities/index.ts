@@ -220,6 +220,7 @@ export interface Expense {
   recurringId?: string;
   recurringPeriod?: RecurringPeriod;
   source: ExpenseSource;
+  externalRef?: string;
   items?: ExpenseItem[];
   receiptImageBase64?: string;
   tags?: ExpenseTag[];
@@ -251,6 +252,7 @@ export interface Income {
   notes?: string;
   categoryId?: string;
   date: Date;
+  externalRef?: string;
   tags?: IncomeTag[];
   tagIds?: string[];
   projectId?: string;
@@ -500,6 +502,7 @@ export interface CurrencyExchange {
   exchangeRate: number;
   date: Date;
   notes?: string;
+  externalRef?: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;

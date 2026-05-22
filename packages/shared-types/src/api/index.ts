@@ -256,4 +256,14 @@ export interface ApiEndpoints {
     params: { id: string };
     response: import('../dto').MemberPublicKeyResponse;
   };
+
+  // Wise Import
+  'POST /import/wise/preview': {
+    body: FormData;
+    response: import('../dto').WiseImportPreviewResponse;
+  };
+  'POST /import/wise/commit': {
+    body: import('../dto').WiseImportCommitDto;
+    response: import('../dto').WiseImportCommitResponse;
+  };
 }

@@ -69,6 +69,13 @@ export default function SettingsIndexScreen() {
       iconColor: '#25D366',
     },
     {
+      icon: 'swap-horizontal-outline',
+      label: t('wiseImport.title'),
+      description: t('wiseImport.subtitle'),
+      route: '/settings/wise-import',
+      iconColor: '#00b9ff',
+    },
+    {
       icon: 'shield-outline',
       label: t('settingsNav.security'),
       description: t('settingsNav.securityDesc'),

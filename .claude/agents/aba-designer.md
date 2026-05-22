@@ -30,6 +30,11 @@ Check:
 - `apps/mobile/src/components/` — existing UI primitives (`AccountSwitcher`, `Paywall`, `TagChip`, charts).
 - `apps/mobile/src/components/charts/` and `interactive-charts/` — chart styles already in use.
 - Existing screen header/footer/safe-area patterns.
+- Check an existing screen for icon imports — they look like `import { Ionicons } from '@expo/vector-icons'`.
+
+For **admin work**, also check:
+- `apps/admin/src/components/` — existing shadcn/ui-based primitives. Check there before proposing a new component.
+- `AlertDialog` is **not** in the admin codebase — use `Dialog` with confirmation buttons instead (per CLAUDE.md).
 
 ### Step 3 — Produce a structured design spec
 
@@ -53,7 +58,7 @@ For each state (empty, loading, populated, error):
 ## Visual language
 - Color tokens used (refer to existing theme)
 - Typography (use existing pairings)
-- Iconography (lucide-react-native names if mobile)
+- Iconography (@expo/vector-icons Ionicons names if mobile — browse https://icons.expo.fyi)
 
 ## Interactions
 - Gestures, taps, swipes
@@ -93,6 +98,12 @@ After writing the spec:
 - New components needed: <list, or "none — uses existing primitives">
 - New i18n keys: <count, namespace, e.g., "12 keys under `<feature>.*`">
 - Theme tokens needed: <list, or "none — all existing">
+
+## Implementation handoff (admin engineer — only if admin work)
+- New page: `apps/admin/src/app/<route>/page.tsx`
+- shadcn/ui components needed: <list — e.g. Dialog, DataTable, Select>
+- New Recharts chart type: <type or "none — uses existing chart">
+- API query hook: `src/hooks/use-<feature>.ts` (React Query)
 ```
 
 ## Constraints specific to this app

@@ -1,9 +1,11 @@
 ---
 agent: aba-backend-engineer
 title: 'Document subscription guards so agents use them instead of reimplementing limits'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: def3acf4-138b-4e5f-83bd-5a390f991303
 ---
 
 ## What's wrong

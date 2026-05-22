@@ -1,9 +1,11 @@
 ---
 agent: aba-code-reviewer
 title: 'Add secureStorage vs AsyncStorage check to mobile review checklist'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: 7f4556ec-ac6a-4d49-8eca-d43a6832315d
 ---
 
 ## What's wrong

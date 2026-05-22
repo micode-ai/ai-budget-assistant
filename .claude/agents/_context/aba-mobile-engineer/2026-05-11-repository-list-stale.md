@@ -1,9 +1,11 @@
 ---
 agent: aba-mobile-engineer
 title: 'Update stale repository count and list (12 → 17)'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-11
+applied_at: 2026-05-22
+orchestration_run: 1468eef2-2bb8-4fd2-96f2-728f468f6a08
 ---
 
 ## What's wrong

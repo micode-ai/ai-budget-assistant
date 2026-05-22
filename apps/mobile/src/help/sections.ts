@@ -35,4 +35,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '23-scenario-simulator', icon: 'flask-outline', color: '#FF9800' },
   { id: '24-referral', icon: 'gift-outline', color: '#E91E63' },
   { id: '25-whatsapp-bot', icon: 'logo-whatsapp', color: '#25D366' },
+  { id: '26-wise-import', icon: 'swap-horizontal-outline', color: '#00B9FF' },
 ];

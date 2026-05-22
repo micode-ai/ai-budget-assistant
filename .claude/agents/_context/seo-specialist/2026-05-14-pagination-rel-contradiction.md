@@ -1,9 +1,10 @@
 ---
 agent: seo-specialist
 title: 'Remove contradictory rel=next/prev pagination checklist item'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-14
+orchestration_run: 0466acc7-04c8-4beb-98fa-9255ee4b2f4f
 ---
 
 ## What's wrong

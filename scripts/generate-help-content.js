@@ -30,6 +30,7 @@ const SECTIONS = [
   '23-scenario-simulator',
   '24-referral',
   '25-whatsapp-bot',
+  '26-wise-import',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

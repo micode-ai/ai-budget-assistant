@@ -1210,3 +1210,42 @@ export interface CreateAppVersionDto {
 }
 
 export type UpdateAppVersionDto = Partial<CreateAppVersionDto>;
+
+// Wise CSV Import DTOs
+
+export type WiseImportRowKind = 'expense' | 'income' | 'fx';
+
+export interface WiseImportRow {
+  idx: number;
+  kind: WiseImportRowKind;
+  date: string;
+  amount: number;
+  currencyCode: string;
+  description: string;
+  merchant?: string;
+  externalRef: string;
+  suggestedCategoryName?: string;
+  alreadyImported: boolean;
+  fxFromCurrency?: string;
+  fxFromAmount?: number;
+  fxToCurrency?: string;
+  fxToAmount?: number;
+  fxRate?: number;
+}
+
+export interface WiseImportPreviewResponse {
+  totalRows: number;
+  importable: number;
+  skipped: number;
+  rows: WiseImportRow[];
+}
+
+export interface WiseImportCommitDto {
+  rows: WiseImportRow[];
+}
+
+export interface WiseImportCommitResponse {
+  createdExpenses: number;
+  createdIncomes: number;
+  createdExchanges: number;
+}

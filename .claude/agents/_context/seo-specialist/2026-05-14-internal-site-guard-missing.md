@@ -1,9 +1,11 @@
 ---
 agent: seo-specialist
 title: 'Add guard-rail for internal/auth-gated web surfaces before auditing'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-14
+applied_at: 2026-05-22
+orchestration_run: d30c8dc7-ed12-4e2c-96f0-50cfcae05d0c
 ---
 
 ## What's wrong

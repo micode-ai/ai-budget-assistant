@@ -300,6 +300,7 @@ model Expense {
   recurringId     String?  @map("recurring_id")
   recurringPeriod String?  @map("recurring_period")
   source       String   @default("manual")
+  externalRef  String?  @map("external_ref")
   isDebt           Boolean   @default(false) @map("is_debt")
   isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
   debtContactName  String?   @map("debt_contact_name")
@@ -326,6 +327,7 @@ model Expense {
   projectExpenses  ProjectExpense[]
 
   @@unique([accountId, clientId])
+  @@unique([accountId, externalRef])
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
   @@index([accountId, isDebt])
@@ -365,6 +367,7 @@ model Income {
   description  String?
   notes        String?
   date         DateTime @db.Date
+  externalRef  String?  @map("external_ref")
   isDebt           Boolean   @default(false) @map("is_debt")
   isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
   debtContactName  String?   @map("debt_contact_name")
@@ -386,6 +389,7 @@ model Income {
   linkedTransfer  AccountTransfer? @relation("TransferLinkedIncome")
 
   @@unique([accountId, clientId])
+  @@unique([accountId, externalRef])
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
   @@index([accountId, isDebt])
@@ -549,6 +553,7 @@ model CurrencyExchange {
   exchangeRate Decimal  @map("exchange_rate") @db.Decimal(12, 6)
   date         DateTime @db.Date
   notes        String?
+  externalRef  String?  @map("external_ref")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -561,6 +566,7 @@ model CurrencyExchange {
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([accountId, clientId])
+  @@unique([accountId, externalRef])
   @@index([accountId, date(sort: Desc)])
   @@map("currency_exchanges")
 }

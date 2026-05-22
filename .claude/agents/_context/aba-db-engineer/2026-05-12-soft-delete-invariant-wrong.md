@@ -1,9 +1,11 @@
 ---
 agent: aba-db-engineer
 title: 'Fix soft-delete invariant — deletedAt does not exist in codebase'
-status: proposed
+status: applied
 conflict: false
 created_at: 2026-05-12
+applied_at: 2026-05-22
+orchestration_run: 1830f887-5fe0-4524-aa2b-717919a8843e
 ---
 
 ## What's wrong
