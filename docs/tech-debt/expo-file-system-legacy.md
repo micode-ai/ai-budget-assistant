@@ -1,10 +1,11 @@
 ---
 id: expo-file-system-legacy
 title: Two files import from deprecated expo-file-system/legacy path
-status: open
+status: closed
 priority: P1
 module: apps/mobile
 created_at: 2026-05-11
+orchestration_run: bb6c7cc3-18c9-469f-b76d-1bae53530b8a
 ---
 
 # Two files import from deprecated expo-file-system/legacy path

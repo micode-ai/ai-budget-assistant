@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { api } from '@/services/api';
-import { File, Paths } from 'expo-file-system';
-import { StorageAccessFramework, writeAsStringAsync } from 'expo-file-system/legacy';
+import { File, Directory, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import type {
   GenerateReportDto,
@@ -148,37 +147,36 @@ export const useReportStore = create<ReportState>()((set, get) => ({
       // Android: save directly to user-chosen directory via SAF
       if (Platform.OS === 'android') {
         try {
-          const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
-          if (permissions.granted) {
-            const fileUri = await StorageAccessFramework.createFileAsync(
-              permissions.directoryUri,
-              fileName,
-              mimeType,
-            );
-            if (ext === 'csv') {
-              const text = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result as string);
-                reader.onerror = reject;
-                reader.readAsText(blob);
-              });
-              await writeAsStringAsync(fileUri, text);
-            } else {
-              const base64 = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  const dataUrl = reader.result as string;
-                  resolve(dataUrl.split(',')[1]);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-              });
-              await writeAsStringAsync(fileUri, base64, { encoding: 'base64' as any });
+          const dir = await Directory.pickDirectoryAsync();
+          const destFile = dir.createFile(fileName, mimeType);
+          if (ext === 'csv') {
+            const text = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.onerror = reject;
+              reader.readAsText(blob);
+            });
+            destFile.write(text);
+          } else {
+            const base64 = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const dataUrl = reader.result as string;
+                resolve(dataUrl.split(',')[1]);
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            });
+            const binaryString = atob(base64);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
             }
-            saved = true;
+            destFile.write(bytes);
           }
+          saved = true;
         } catch {
-          // SAF failed, fall through to sharing
+          // SAF picker cancelled or failed, fall through to sharing
         }
       }
 
@@ -239,18 +237,12 @@ export const useReportStore = create<ReportState>()((set, get) => ({
       // Android: save directly to user-chosen directory via SAF
       if (Platform.OS === 'android') {
         try {
-          const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
-          if (permissions.granted) {
-            const fileUri = await StorageAccessFramework.createFileAsync(
-              permissions.directoryUri,
-              response.fileName,
-              'application/json',
-            );
-            await writeAsStringAsync(fileUri, content);
-            saved = true;
-          }
+          const dir = await Directory.pickDirectoryAsync();
+          const destFile = dir.createFile(response.fileName, 'application/json');
+          destFile.write(content);
+          saved = true;
         } catch {
-          // SAF failed, fall through to sharing
+          // SAF picker cancelled or failed, fall through to sharing
         }
       }
 
