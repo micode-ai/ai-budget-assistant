@@ -8,7 +8,7 @@ The primary user-facing product: an Expo 54 / React Native 0.81 app targeting iO
 - `apps/mobile/app/(tabs)/` — the five main tabs: `index` (home), `expenses`, `budgets`, `analytics`, `chat`
 - `apps/mobile/src/stores/index.ts` — re-exports all 22 Zustand stores
 - `apps/mobile/src/db/schema/index.ts` — SQLite table definitions (Drizzle ORM)
-- `apps/mobile/src/services/api.ts` — singleton `ApiClient`: auto-injects `X-Account-Id`, handles JWT refresh, 401 → logout
+- `apps/mobile/src/services/api.ts` — barrel that composes the `api` singleton from 14 domain modules (`auth.api.ts`, `users.api.ts`, `expenses.api.ts`, …); base `HttpClient` lives in `http-client.ts` and handles `X-Account-Id` injection, JWT refresh, 401 → logout
 
 ## Key concepts
 - **Offline-first** — writes go to SQLite immediately via `*Repository.ts`, are queued in `syncQueue`, then pushed to the API when online
@@ -20,7 +20,7 @@ The primary user-facing product: an Expo 54 / React Native 0.81 app targeting iO
 - **Encryption** — `src/services/encryptionHelper.ts` + `encryptionMiddleware.ts` + `encryptionStore.ts` encrypt sensitive fields before writing to SQLite
 
 ## Cross-references
-- Talks to: `api` via `src/services/api.ts` REST calls
+- Talks to: `api` via `src/services/api.ts` (barrel) → `http-client.ts` for REST calls
 - Uses: `shared-types` for entity interfaces
 - Uses: `shared-utils` for Zod validation and formatting helpers
 

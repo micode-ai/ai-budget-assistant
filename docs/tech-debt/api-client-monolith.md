@@ -1,10 +1,11 @@
 ---
 id: api-client-monolith
 title: Mobile ApiClient is a 1,215-line monolith with all endpoints inlined
-status: open
+status: closed
 priority: P2
 module: apps/mobile
 created_at: 2026-05-11
+orchestration_run: 772a133f-73ba-4880-bdd1-2b18a5f87988
 ---
 
 # Mobile ApiClient is a 1,215-line monolith with all endpoints inlined
