@@ -121,11 +121,6 @@ export class BudgetsService {
 
   async create(accountId: string, userId: string, dto: any) {
     return this.prisma.$transaction(async (tx) => {
-      // Validate categoryId for legacy single-category mode
-      const resolvedCategoryId = dto.categoryId && (!dto.categories || dto.categories.length === 0)
-        ? await this.resolveCategoryId(dto.categoryId, accountId)
-        : null;
-
       // Resolve category allocations before creating
       const resolvedAllocations = dto.categories && dto.categories.length > 0
         ? await this.resolveCategoryAllocations(dto.categories, accountId)
@@ -142,7 +137,6 @@ export class BudgetsService {
           period: dto.period,
           startDate: new Date(dto.startDate),
           endDate: dto.endDate ? new Date(dto.endDate) : null,
-          categoryId: resolvedCategoryId,
           alertThreshold: dto.alertThreshold || 80,
         },
       });
@@ -160,7 +154,7 @@ export class BudgetsService {
 
       const result = await tx.budget.findUnique({
         where: { id: budget.id },
-        include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
+        include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
       });
 
       // Fire-and-forget gamification check
@@ -178,13 +172,10 @@ export class BudgetsService {
     if (filters.isActive !== undefined) {
       where.isActive = filters.isActive;
     }
-    if (filters.categoryId) {
-      where.categoryId = filters.categoryId;
-    }
 
     return this.prisma.budget.findMany({
       where,
-      include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
+      include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -192,7 +183,7 @@ export class BudgetsService {
   async findOne(accountId: string, id: string) {
     const budget = await this.prisma.budget.findFirst({
       where: { id, accountId, isDeleted: false },
-      include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
+      include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
     });
 
     if (!budget) {
@@ -206,7 +197,7 @@ export class BudgetsService {
     const budget = await this.findOne(accountId, id);
 
     return this.prisma.$transaction(async (tx) => {
-      const { categories, ...budgetFields } = dto;
+      const { categories, categoryId: _ignoredLegacy, ...budgetFields } = dto;
 
       await tx.budget.update({
         where: { id: budget.id },
@@ -235,18 +226,12 @@ export class BudgetsService {
               })),
             });
           }
-
-          // Clear legacy categoryId when using multi-category
-          await tx.budget.update({
-            where: { id: budget.id },
-            data: { categoryId: null },
-          });
         }
       }
 
       return tx.budget.findUnique({
         where: { id: budget.id },
-        include: { category: true, ...CATEGORY_ALLOCATIONS_INCLUDE },
+        include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
       });
     }).then((updated) => {
       this.invalidateChatCache(accountId);
@@ -281,7 +266,7 @@ export class BudgetsService {
     const hasMultiCategory = allocations.length > 0;
     const categoryIds = hasMultiCategory
       ? allocations.map((a: any) => a.categoryId)
-      : (budget as any).categoryId ? [(budget as any).categoryId] : null;
+      : null;
 
     const results: {
       periodStart: string;
@@ -354,7 +339,7 @@ export class BudgetsService {
     const hasMultiCategory = allocations.length > 0;
     const categoryIds = hasMultiCategory
       ? allocations.map((a: any) => a.categoryId)
-      : budget.categoryId ? [budget.categoryId] : null;
+      : null;
 
     const whereExpenses: any = {
       accountId,

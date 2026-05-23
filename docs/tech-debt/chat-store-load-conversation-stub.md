@@ -1,11 +1,11 @@
 ---
 id: chat-store-load-conversation-stub
 title: chatStore.loadConversation() is a silent no-op
-status: open
+status: closed
 priority: P2
 module: apps/mobile
 created_at: 2026-05-11
-orchestration_run: a6a0f83b-fb1b-4497-a212-d1ecd5c2d21f
+orchestration_run: 4a2a1aa4-f4c2-43bd-9ad2-425bfa2db0d5
 ---
 
 # chatStore.loadConversation() is a silent no-op

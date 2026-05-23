@@ -272,7 +272,6 @@ model Category {
   children Category[] @relation("CategoryHierarchy")
   expenses Expense[]
   incomes  Income[]
-  budgets  Budget[]
   expenseCategorySplits ExpenseCategorySplit[]
   budgetCategories      BudgetCategory[]
 
@@ -407,7 +406,6 @@ model Budget {
   period         String    @default("monthly")
   startDate      DateTime  @map("start_date") @db.Date
   endDate        DateTime? @map("end_date") @db.Date
-  categoryId     String?   @map("category_id")
   alertThreshold Int       @default(80) @map("alert_threshold")
   isActive       Boolean   @default(true) @map("is_active")
   isDeleted            Boolean   @default(false) @map("is_deleted")
@@ -420,7 +418,6 @@ model Budget {
   // Relations
   user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   account             Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category            Category?          @relation(fields: [categoryId], references: [id])
   alerts              BudgetAlert[]
   categoryAllocations BudgetCategory[]
 

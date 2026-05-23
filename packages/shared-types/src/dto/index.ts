@@ -139,7 +139,6 @@ export interface CreateBudgetDto {
   period: BudgetPeriod;
   startDate: string;
   endDate?: string;
-  categoryId?: string;
   categories?: BudgetCategoryAllocationDto[];
   alertThreshold?: number | null;
 }
@@ -150,7 +149,6 @@ export interface UpdateBudgetDto {
   currencyCode?: Currency;
   period?: BudgetPeriod;
   endDate?: string | null;
-  categoryId?: string | null;
   categories?: BudgetCategoryAllocationDto[];
   alertThreshold?: number | null;
   isActive?: boolean;

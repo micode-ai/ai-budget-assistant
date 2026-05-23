@@ -119,7 +119,6 @@ export const budgets = sqliteTable('budgets', {
   period: text('period').notNull().default('monthly'),
   startDate: integer('start_date', { mode: 'timestamp' }).notNull(),
   endDate: integer('end_date', { mode: 'timestamp' }),
-  categoryId: text('category_id'),
   alertThreshold: integer('alert_threshold').default(80),
   isActive: integer('is_active', { mode: 'boolean' }).default(true),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),

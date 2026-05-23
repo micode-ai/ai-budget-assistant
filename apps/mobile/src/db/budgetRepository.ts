@@ -13,7 +13,6 @@ interface BudgetRow {
   period: string;
   start_date: number;
   end_date: number | null;
-  category_id: string | null;
   alert_threshold: number;
   is_active: number;
   created_at: number;
@@ -36,7 +35,6 @@ function rowToBudget(row: BudgetRow): Budget {
     period: row.period as BudgetPeriod,
     startDate: new Date(row.start_date),
     endDate: row.end_date ? new Date(row.end_date) : undefined,
-    categoryId: row.category_id ?? undefined,
     alertThreshold: row.alert_threshold,
     isActive: row.is_active === 1,
     createdAt: new Date(row.created_at),
@@ -60,7 +58,6 @@ function budgetToParams(budget: Budget): (string | number | null)[] {
     budget.period,
     budget.startDate instanceof Date ? budget.startDate.getTime() : budget.startDate,
     budget.endDate instanceof Date ? budget.endDate.getTime() : (budget.endDate ?? null),
-    budget.categoryId ?? null,
     budget.alertThreshold,
     budget.isActive ? 1 : 0,
     budget.createdAt instanceof Date ? budget.createdAt.getTime() : budget.createdAt,
@@ -83,9 +80,9 @@ export async function insertBudget(budget: Budget): Promise<void> {
   await executeSql(
     `INSERT INTO budgets (
       id, local_id, server_id, user_id, account_id, name, amount, currency_code,
-      period, start_date, end_date, category_id, alert_threshold, is_active,
+      period, start_date, end_date, alert_threshold, is_active,
       created_at, updated_at, is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     budgetToParams(budget),
   );
 }
@@ -94,9 +91,9 @@ export async function upsertBudget(budget: Budget): Promise<void> {
   await executeSql(
     `INSERT INTO budgets (
       id, local_id, server_id, user_id, account_id, name, amount, currency_code,
-      period, start_date, end_date, category_id, alert_threshold, is_active,
+      period, start_date, end_date, alert_threshold, is_active,
       created_at, updated_at, is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -108,7 +105,6 @@ export async function upsertBudget(budget: Budget): Promise<void> {
       period = excluded.period,
       start_date = excluded.start_date,
       end_date = excluded.end_date,
-      category_id = COALESCE(excluded.category_id, category_id),
       alert_threshold = excluded.alert_threshold,
       is_active = excluded.is_active,
       created_at = excluded.created_at,
@@ -152,10 +148,6 @@ export async function updateBudgetInDb(
   if (updates.endDate !== undefined) {
     setClauses.push('end_date = ?');
     params.push(updates.endDate instanceof Date ? updates.endDate.getTime() : (updates.endDate ?? null));
-  }
-  if (updates.categoryId !== undefined) {
-    setClauses.push('category_id = ?');
-    params.push(updates.categoryId ?? null);
   }
   if (updates.alertThreshold !== undefined) {
     setClauses.push('alert_threshold = ?');

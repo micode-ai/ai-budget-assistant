@@ -1,7 +1,7 @@
 ---
 id: deprecated-legal-urls-export
 title: Deprecated LEGAL_URLS constant is dead code in legal.ts
-status: open
+status: dropped
 priority: P3
 module: apps/mobile
 created_at: 2026-05-11

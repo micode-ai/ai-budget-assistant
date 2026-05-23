@@ -112,18 +112,20 @@ export class GamificationService {
     let budgetCompliant = false;
     const activeBudgets = await this.prisma.budget.findMany({
       where: { accountId, userId, isDeleted: false, isActive: true },
+      include: { categoryAllocations: { where: { isDeleted: false }, select: { categoryId: true } } },
     });
 
     if (activeBudgets.length > 0) {
       const budgetChecks = await Promise.all(
         activeBudgets.map(async (budget: typeof activeBudgets[number]) => {
+          const categoryIds = budget.categoryAllocations.map((a) => a.categoryId);
           const spent = await this.prisma.expense.aggregate({
             where: {
               accountId,
               isDeleted: false,
               currencyCode: budget.currencyCode,
               date: { gte: budget.startDate, lte: budget.endDate || now },
-              ...(budget.categoryId ? { categoryId: budget.categoryId } : {}),
+              ...(categoryIds.length > 0 ? { categoryId: { in: categoryIds } } : {}),
             },
             _sum: { amount: true },
           });

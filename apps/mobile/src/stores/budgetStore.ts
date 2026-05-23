@@ -111,7 +111,6 @@ export const useBudgetStore = create<BudgetState>()(
                 period: sb.period as BudgetPeriod,
                 startDate: new Date(sb.startDate),
                 endDate: sb.endDate ? new Date(sb.endDate) : undefined,
-                categoryId: sb.categoryId ?? undefined,
                 alertThreshold: sb.alertThreshold ?? null,
                 isActive: sb.isActive ?? true,
                 createdAt: new Date(sb.createdAt),
@@ -209,7 +208,6 @@ export const useBudgetStore = create<BudgetState>()(
             period: budget.period,
             startDate: budget.startDate instanceof Date ? budget.startDate.toISOString() : budget.startDate,
             endDate: budget.endDate instanceof Date ? budget.endDate.toISOString() : budget.endDate,
-            categoryId: resolveCatId(budget.categoryId),
             categories: budget.categoryAllocations?.map((a) => ({
               categoryId: resolveCatId(a.categoryId) || a.categoryId,
               amount: a.amount,
@@ -300,7 +298,6 @@ export const useBudgetStore = create<BudgetState>()(
           period: budgetData.period,
           startDate: budgetData.startDate instanceof Date ? budgetData.startDate.toISOString() : budgetData.startDate,
           endDate: budgetData.endDate instanceof Date ? budgetData.endDate.toISOString() : budgetData.endDate,
-          categoryId: resolveCatId(budgetData.categoryId),
           categories: categoryAllocations?.map((a) => ({
             categoryId: resolveCatId(a.categoryId) || a.categoryId,
             amount: a.amount,
@@ -384,9 +381,6 @@ export const useBudgetStore = create<BudgetState>()(
             amount: a.amount,
           }));
           delete apiUpdates.categoryAllocations;
-        }
-        if (apiUpdates.categoryId) {
-          apiUpdates.categoryId = resolveCatId(apiUpdates.categoryId) || apiUpdates.categoryId;
         }
         api.updateBudget(budget.serverId, apiUpdates).catch((e) =>
           console.error('Failed to sync budget update to server:', e),
@@ -494,8 +488,6 @@ export const useBudgetStore = create<BudgetState>()(
       if (hasMultiCategory) {
         const categoryIds = new Set(allocations.map((a) => a.categoryId));
         periodExpenses = periodExpenses.filter((e) => categoryIds.has(e.categoryId || ''));
-      } else if (budget.categoryId) {
-        periodExpenses = periodExpenses.filter((e) => e.categoryId === budget.categoryId);
       }
 
       const spent = periodExpenses.reduce((sum, e) => sum + e.amount, 0);
@@ -578,7 +570,7 @@ export const useBudgetStore = create<BudgetState>()(
       }
 
       const overall = activeMonthly.find(
-        (b) => !b.categoryId && (!b.categoryAllocations || b.categoryAllocations.length === 0),
+        (b) => !b.categoryAllocations || b.categoryAllocations.length === 0,
       );
 
       // progress.spent is always in the budget's own currency —
