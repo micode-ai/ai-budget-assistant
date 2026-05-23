@@ -205,6 +205,7 @@ model Account {
   fatFinderReports        FatFinderReport[]
   telegramLinks           TelegramLink[]
   whatsappLinks           WhatsAppLink[]
+  csvImportMappings       CsvImportMapping[]
 
   @@map("accounts")
 }
@@ -1283,4 +1284,27 @@ model AppVersion {
 
   @@index([platform, publishedAt(sort: Desc)])
   @@map("app_versions")
+}
+
+// ---- CSV Import Mappings ----
+
+model CsvImportMapping {
+  id                String   @id @default(uuid())
+  accountId         String   @map("account_id")
+  name              String
+  headerFingerprint String   @map("header_fingerprint")
+  bankId            String?  @map("bank_id")
+  mapping           Json
+  delimiter         String   @default(";")
+  encoding          String   @default("utf-8")
+  amountFormat      String   @default("polish") @map("amount_format")
+  dateFormat        String   @default("auto") @map("date_format")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, headerFingerprint])
+  @@index([accountId])
+  @@map("csv_import_mappings")
 }

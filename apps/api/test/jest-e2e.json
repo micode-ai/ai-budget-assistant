@@ -1,0 +1,23 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "..",
+  "testEnvironment": "node",
+  "testRegex": "test/.+\\.e2e-spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": ["ts-jest", {
+      "tsconfig": {
+        "module": "commonjs",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2021",
+        "strictNullChecks": true,
+        "noImplicitAny": true
+      }
+    }]
+  },
+  "moduleNameMapper": {
+    "@budget/shared-types": "<rootDir>/../../packages/shared-types/src/index.ts",
+    "@budget/shared-utils": "<rootDir>/../../packages/shared-utils/src/index.ts"
+  }
+}
