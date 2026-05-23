@@ -391,14 +391,24 @@ src/
 │   │   └── projects.module.ts
 │   ├── ai/                      # AI сервисы
 │   │   ├── ai.controller.ts
-│   │   └── services/
-│   │       ├── transcription.service.ts
-│   │       ├── categorization.service.ts
-│   │       ├── chat.service.ts
-│   │       ├── receipt-scanner.service.ts
-│   │       ├── tag-suggestion.service.ts
-│   │       ├── project-suggestion.service.ts
-│   │       └── split-suggestion.service.ts
+│   │   ├── ai.module.ts
+│   │   ├── embedding.module.ts
+│   │   ├── services/
+│   │   │   ├── chat.service.ts                 # Оркестратор жизненного цикла вызова OpenAI (~415 строк)
+│   │   │   ├── user-context-builder.service.ts # Сборка UserContext для промпта
+│   │   │   ├── ai-tools.service.ts             # 11 схем функций + диспетчер executeAction
+│   │   │   ├── prompt-builder.service.ts       # Системный промпт, определение языка, i18n действий
+│   │   │   ├── whisper.service.ts              # Транскрипция голоса
+│   │   │   ├── ocr.service.ts                  # OCR чеков
+│   │   │   ├── categorization.service.ts
+│   │   │   ├── tag-suggestion.service.ts
+│   │   │   ├── project-suggestion.service.ts
+│   │   │   ├── split-suggestion.service.ts
+│   │   │   ├── goal-planner.service.ts
+│   │   │   ├── embedding.service.ts
+│   │   │   ├── model-resolver.ts
+│   │   │   └── response-mode.helper.ts
+│   │   └── utils/                              # Маппинг символов валют и др.
 │   ├── analytics/               # Аналитика расходов
 │   │   ├── analytics.controller.ts
 │   │   └── analytics.service.ts
