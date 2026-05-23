@@ -5,8 +5,11 @@ OpenAI-powered functionality exposed through the API (`modules/ai/`) and consume
 
 ## Entry points
 - `apps/api/src/modules/ai/ai.controller.ts` — `POST /ai/chat`, `POST /ai/chat/confirm`, `POST /ai/chat/reject`
-- `apps/api/src/modules/ai/services/` — chat service, function-calling service, language-detection logic
-- `apps/api/src/modules/ai/utils/` — currency symbol mapping, prompt builders
+- `apps/api/src/modules/ai/services/chat.service.ts` — lean orchestrator (~415 lines) for the OpenAI call lifecycle (message assembly → API call → response parsing → pending-action management)
+- `apps/api/src/modules/ai/services/user-context-builder.service.ts` — assembles the `UserContext` from Prisma / domain services
+- `apps/api/src/modules/ai/services/ai-tools.service.ts` — all 11 OpenAI function schemas + `executeAction` dispatcher + read-action cache wrapper
+- `apps/api/src/modules/ai/services/prompt-builder.service.ts` — system prompt construction, language detection, action i18n
+- `apps/api/src/modules/ai/utils/` — currency symbol mapping and other helpers
 - `apps/mobile/app/(tabs)/chat.tsx` — chat tab UI
 - `apps/mobile/src/stores/chatStore.ts` — message history, pending-confirmation state
 - `apps/mobile/src/features/chat/` — `ActionConfirmationCard`, `ActionResultCard` components
@@ -14,7 +17,7 @@ OpenAI-powered functionality exposed through the API (`modules/ai/`) and consume
 - `apps/mobile/src/features/receipt/` — photo capture → OCR → expense extraction
 
 ## Key concepts
-- **7 AI functions** — `create_expense`, `create_income`, `create_budget`, `create_category`, `get_expenses`, `get_budget_status`, `get_category_breakdown`; implemented as OpenAI function calling tools
+- **11 AI functions** — `create_expense`, `create_income`, `create_budget`, `create_category`, `get_expenses`, `get_budget_status`, `get_category_breakdown`, `record_debt_repayment`, `create_debt`, `get_debt_summary`, `update_goal_balance`; schemas + dispatch live in `ai-tools.service.ts`
 - **Confirmation flow** — write actions (`create_*`) return a pending confirmation; mobile shows `ActionConfirmationCard`; user confirms via `POST /ai/chat/confirm` or rejects via `POST /ai/chat/reject`; read actions (`get_*`) execute immediately
 - **Language detection** — API detects user language from message content (8 languages: en, de, es, fr, pl, ru, ua, be) and responds in the same language
 - **Currency symbol mapping** — `₴→UAH`, `$→USD`, `€→EUR`, `zł→PLN`, `£→GBP`, `₽→RUB` resolved in `utils/`
@@ -27,4 +30,4 @@ OpenAI-powered functionality exposed through the API (`modules/ai/`) and consume
 - Monitored by: `admin-dashboard` `/ai-usage` page and dashboard AI cost chart
 
 ## Where to look first
-Function-calling logic → `apps/api/src/modules/ai/services/`. Mobile chat UI → `apps/mobile/app/(tabs)/chat.tsx` and `src/stores/chatStore.ts`.
+Function-calling logic → `ai-tools.service.ts`. Prompt or language-detection issues → `prompt-builder.service.ts`. User-context shape → `user-context-builder.service.ts`. Mobile chat UI → `apps/mobile/app/(tabs)/chat.tsx` and `src/stores/chatStore.ts`.

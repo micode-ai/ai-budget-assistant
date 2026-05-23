@@ -1,10 +1,11 @@
 ---
 id: chat-service-god-class
 title: ChatService is a 1,395-line god class mixing five concerns
-status: open
+status: closed
 priority: P2
 module: apps/api
 created_at: 2026-05-11
+orchestration_run: 12a1af4f-f52d-4301-aff9-322a5d4cc9eb
 ---
 
 # ChatService is a 1,395-line god class mixing five concerns

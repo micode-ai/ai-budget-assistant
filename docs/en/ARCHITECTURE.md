@@ -390,14 +390,24 @@ src/
 │   │   └── projects.module.ts
 │   ├── ai/                      # AI services
 │   │   ├── ai.controller.ts
-│   │   └── services/
-│   │       ├── transcription.service.ts
-│   │       ├── categorization.service.ts
-│   │       ├── chat.service.ts
-│   │       ├── receipt-scanner.service.ts
-│   │       ├── tag-suggestion.service.ts
-│   │       ├── project-suggestion.service.ts
-│   │       └── split-suggestion.service.ts
+│   │   ├── ai.module.ts
+│   │   ├── embedding.module.ts
+│   │   ├── services/
+│   │   │   ├── chat.service.ts                 # OpenAI call lifecycle orchestrator (~415 lines)
+│   │   │   ├── user-context-builder.service.ts # Assembles UserContext for the prompt
+│   │   │   ├── ai-tools.service.ts             # 11 function schemas + executeAction dispatcher
+│   │   │   ├── prompt-builder.service.ts       # System prompt, language detection, action i18n
+│   │   │   ├── whisper.service.ts              # Voice transcription
+│   │   │   ├── ocr.service.ts                  # Receipt OCR
+│   │   │   ├── categorization.service.ts
+│   │   │   ├── tag-suggestion.service.ts
+│   │   │   ├── project-suggestion.service.ts
+│   │   │   ├── split-suggestion.service.ts
+│   │   │   ├── goal-planner.service.ts
+│   │   │   ├── embedding.service.ts
+│   │   │   ├── model-resolver.ts
+│   │   │   └── response-mode.helper.ts
+│   │   └── utils/                              # Currency symbol mapping, etc.
 │   ├── analytics/               # Spending analytics
 │   │   ├── analytics.controller.ts
 │   │   └── analytics.service.ts
