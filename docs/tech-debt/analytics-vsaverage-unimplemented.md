@@ -1,10 +1,11 @@
 ---
 id: analytics-vsaverage-unimplemented
 title: analytics.service trends.vsAverage is hardcoded to 0
-status: resolved
+status: closed
 priority: P1
 module: apps/api
 created_at: 2026-05-11
+orchestration_run: a78d0684-e928-4154-b37d-72148529b33a
 ---
 
 # analytics.service trends.vsAverage is hardcoded to 0

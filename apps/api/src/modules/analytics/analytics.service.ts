@@ -13,6 +13,21 @@ interface ExpenseWithCategory {
   category?: { name: string } | null;
 }
 
+/**
+ * Pure calculation used by computeVsAverage / computeVsAverageMulti.
+ * Exported for unit testing without mocking the DB/cache stack.
+ */
+export function computeVsAverageFromTotals(currentTotal: number, monthlyTotals: number[]): number {
+  const hasData = monthlyTotals.some((t) => t > 0);
+  if (!hasData) return 0;
+
+  const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
+
+  if (rollingAverage === 0) return currentTotal > 0 ? 100 : 0;
+
+  return Math.round(((currentTotal - rollingAverage) / rollingAverage) * 10000) / 100;
+}
+
 @Injectable()
 export class AnalyticsService {
   constructor(
@@ -63,14 +78,7 @@ export class AnalyticsService {
       monthlyTotals.push(total);
     }
 
-    const hasData = monthlyTotals.some((t) => t > 0);
-    if (!hasData) return 0;
-
-    const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
-
-    if (rollingAverage === 0) return currentTotal > 0 ? 100 : 0;
-
-    return Math.round(((currentTotal - rollingAverage) / rollingAverage) * 10000) / 100;
+    return computeVsAverageFromTotals(currentTotal, monthlyTotals);
   }
 
   /**
@@ -105,14 +113,7 @@ export class AnalyticsService {
       monthlyTotals.push(total);
     }
 
-    const hasData = monthlyTotals.some((t) => t > 0);
-    if (!hasData) return 0;
-
-    const rollingAverage = monthlyTotals.reduce((s, t) => s + t, 0) / monthlyTotals.length;
-
-    if (rollingAverage === 0) return currentTotal > 0 ? 100 : 0;
-
-    return Math.round(((currentTotal - rollingAverage) / rollingAverage) * 10000) / 100;
+    return computeVsAverageFromTotals(currentTotal, monthlyTotals);
   }
 
   /**
