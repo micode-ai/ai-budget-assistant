@@ -266,4 +266,23 @@ export interface ApiEndpoints {
     body: import('../dto').WiseImportCommitDto;
     response: import('../dto').WiseImportCommitResponse;
   };
+
+  // Bank Import
+  'POST /import/bank/preview': {
+    response: import('../dto').BankImportPreviewResponse;
+  };
+  'POST /import/bank/commit': {
+    body: import('../dto').BankImportCommitDto;
+    response: import('../dto').BankImportCommitResponse;
+  };
+  'GET /import/bank/mappings': {
+    response: import('../dto').CsvImportMapping[];
+  };
+  'POST /import/bank/mappings': {
+    body: import('../dto').CreateCsvImportMappingDto;
+    response: import('../dto').CsvImportMapping;
+  };
+  'DELETE /import/bank/mappings/:id': {
+    response: void;
+  };
 }

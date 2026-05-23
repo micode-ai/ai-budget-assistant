@@ -69,11 +69,10 @@ export default function SettingsIndexScreen() {
       iconColor: '#25D366',
     },
     {
-      icon: 'swap-horizontal-outline',
-      label: t('wiseImport.title'),
-      description: t('wiseImport.subtitle'),
-      route: '/settings/wise-import',
-      iconColor: '#00b9ff',
+      icon: 'cloud-download-outline',
+      label: t('bankImport.title'),
+      description: t('bankImport.subtitle'),
+      route: '/settings/import',
     },
     {
       icon: 'shield-outline',
