@@ -280,9 +280,9 @@ export class BackupsService {
         const existing = await this.prisma.budget.findFirst({ where: { accountId, clientId: b.clientId } });
         if (existing && !overwrite) { skipped++; continue; }
         if (existing && overwrite) {
-          await this.prisma.budget.update({ where: { id: existing.id }, data: { name: b.name, amount: b.amount, currencyCode: b.currencyCode, period: b.period, startDate: b.startDate, endDate: b.endDate, categoryId: b.categoryId, alertThreshold: b.alertThreshold, isActive: b.isActive, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
+          await this.prisma.budget.update({ where: { id: existing.id }, data: { name: b.name, amount: b.amount, currencyCode: b.currencyCode, period: b.period, startDate: b.startDate, endDate: b.endDate, alertThreshold: b.alertThreshold, isActive: b.isActive, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
         } else {
-          await this.prisma.budget.create({ data: { id: b.id, accountId, userId, clientId: b.clientId, name: b.name, amount: b.amount, currencyCode: b.currencyCode || 'USD', period: b.period || 'monthly', startDate: b.startDate, categoryId: b.categoryId, alertThreshold: b.alertThreshold ?? 80, isActive: b.isActive ?? true, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
+          await this.prisma.budget.create({ data: { id: b.id, accountId, userId, clientId: b.clientId, name: b.name, amount: b.amount, currencyCode: b.currencyCode || 'USD', period: b.period || 'monthly', startDate: b.startDate, alertThreshold: b.alertThreshold ?? 80, isActive: b.isActive ?? true, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
         }
         restored++;
       } catch (e) { errs.push(`budget ${b.name}: ${e instanceof Error ? e.message : String(e)}`); }
