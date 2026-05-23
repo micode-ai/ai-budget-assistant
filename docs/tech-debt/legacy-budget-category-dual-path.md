@@ -1,10 +1,11 @@
 ---
 id: legacy-budget-category-dual-path
 title: Budgets carry dead single-category legacy path alongside multi-category
-status: open
+status: closed
 priority: P2
 module: apps/api
 created_at: 2026-05-11
+orchestration_run: 4a082df5-4a26-46ed-93b6-6ec04432091a
 ---
 
 # Budgets carry dead single-category legacy path alongside multi-category

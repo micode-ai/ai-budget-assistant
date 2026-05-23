@@ -403,8 +403,7 @@ export interface Budget {
   period: BudgetPeriod;
   startDate: Date;
   endDate?: Date;
-  categoryId?: string; // null = overall budget (legacy single-category)
-  categoryAllocations?: BudgetCategoryAllocation[]; // multi-category allocations
+  categoryAllocations?: BudgetCategoryAllocation[];
   alertThreshold: number | null; // percentage (0-100), null = no alerts
   isActive: boolean;
   createdAt: Date;

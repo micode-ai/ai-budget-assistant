@@ -84,7 +84,6 @@ export default function NewBudgetScreen() {
         currencyCode,
         period,
         startDate: new Date(),
-        categoryId: budgetMode === 'overall' ? (selectedCategory || undefined) : undefined,
         categoryAllocations: budgetMode === 'byCategory'
           ? categoryAllocations.map((a) => ({
               id: '',
@@ -96,7 +95,18 @@ export default function NewBudgetScreen() {
               isDeleted: false,
               syncVersion: 0,
             }))
-          : undefined,
+          : selectedCategory
+            ? [{
+                id: '',
+                budgetId: '',
+                categoryId: selectedCategory,
+                amount: numericAmount,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isDeleted: false,
+                syncVersion: 0,
+              }]
+            : undefined,
         alertThreshold: alertThreshold,
         isActive: true,
       });

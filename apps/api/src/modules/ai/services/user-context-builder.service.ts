@@ -27,7 +27,7 @@ interface ExpenseWithCategory {
 
 interface BudgetRecord {
   period: string;
-  categoryId: string | null;
+  categoryAllocations: Array<unknown>;
   amount: unknown;
 }
 
@@ -61,11 +61,14 @@ export class UserContextBuilder {
     const budgetWhere = accountId
       ? { accountId, isActive: true, isDeleted: false }
       : { userId, isActive: true, isDeleted: false };
-    const budgets = await this.prisma.budget.findMany({ where: budgetWhere });
+    const budgets = await this.prisma.budget.findMany({
+      where: budgetWhere,
+      include: { categoryAllocations: { where: { isDeleted: false }, select: { id: true } } },
+    });
 
     const totalSpent = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
     const monthlyBudget = budgets
-      .filter((b: BudgetRecord) => b.period === 'monthly' && !b.categoryId)
+      .filter((b: BudgetRecord) => b.period === 'monthly' && b.categoryAllocations.length === 0)
       .reduce((sum: number, b: BudgetRecord) => sum + Number(b.amount), 0);
 
     const categoryTotals = new Map<string, number>();

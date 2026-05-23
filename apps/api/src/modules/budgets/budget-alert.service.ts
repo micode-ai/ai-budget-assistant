@@ -194,8 +194,6 @@ export class BudgetAlertService {
     const allocations = budget.categoryAllocations || [];
     if (allocations.length > 0) {
       whereExpenses.categoryId = { in: allocations.map((a: any) => a.categoryId) };
-    } else if (budget.categoryId) {
-      whereExpenses.categoryId = budget.categoryId;
     }
 
     const result = await this.prisma.expense.aggregate({

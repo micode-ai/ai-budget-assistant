@@ -184,7 +184,7 @@ export default function BudgetDetailScreen() {
     setEditAmount(budget.amount.toString());
     setEditPeriod(budget.period as BudgetPeriod);
     setEditCurrencyCode(budget.currencyCode as Currency);
-    setEditSelectedCategory(budget.categoryId || '');
+    setEditSelectedCategory('');
     setEditAlertThreshold(budget.alertThreshold ?? 80);
     setEditBudgetMode(hasAllocations ? 'byCategory' : 'overall');
     setEditCategoryAllocations(
@@ -239,7 +239,6 @@ export default function BudgetDetailScreen() {
     };
 
     if (editBudgetMode === 'byCategory') {
-      updates.categoryId = undefined;
       updates.categoryAllocations = editCategoryAllocations.map((a) => ({
         id: '',
         budgetId: budget.id,
@@ -250,8 +249,18 @@ export default function BudgetDetailScreen() {
         isDeleted: false,
         syncVersion: 0,
       }));
+    } else if (editSelectedCategory) {
+      updates.categoryAllocations = [{
+        id: '',
+        budgetId: budget.id,
+        categoryId: editSelectedCategory,
+        amount: numericAmount,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isDeleted: false,
+        syncVersion: 0,
+      }];
     } else {
-      updates.categoryId = editSelectedCategory || undefined;
       updates.categoryAllocations = [];
     }
 
@@ -674,13 +683,6 @@ export default function BudgetDetailScreen() {
               {t(`budgets.periods.${budget.period}`)}
             </Text>
           </View>
-
-          {budget.categoryId && (
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>{t('budgetDetail.category')}</Text>
-              <Text style={styles.detailValue}>{budget.categoryId}</Text>
-            </View>
-          )}
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('budgetDetail.alertThreshold')}</Text>
