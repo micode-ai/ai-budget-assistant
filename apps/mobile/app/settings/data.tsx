@@ -11,7 +11,8 @@ import {
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { StorageAccessFramework, readAsStringAsync } from 'expo-file-system/legacy';
+import * as DocumentPicker from 'expo-document-picker';
+import { File } from 'expo-file-system';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
@@ -115,18 +116,12 @@ export default function DataSettingsScreen() {
 
   const handleImportBackup = async () => {
     try {
-      const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
-      if (!permissions.granted) return;
+      const result = await DocumentPicker.getDocumentAsync({ type: 'application/json' });
+      if (result.canceled) return;
 
-      const files = await StorageAccessFramework.readDirectoryAsync(permissions.directoryUri);
-      const jsonFiles = files.filter(uri => uri.toLowerCase().endsWith('.json'));
-
-      if (jsonFiles.length === 0) {
-        Alert.alert(t('common.error'), t('errors.unknown'));
-        return;
-      }
-
-      const data = await readAsStringAsync(jsonFiles[0]);
+      const asset = result.assets[0];
+      const file = new File(asset.uri);
+      const data = await file.text();
 
       try {
         const parsed = JSON.parse(data);
