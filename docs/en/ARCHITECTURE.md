@@ -208,7 +208,6 @@ Zustand stores manage application state:
   period: text (daily|weekly|monthly|yearly|custom),
   startDate: text,
   endDate: text (nullable),
-  categoryId: text (nullable),
   alertThreshold: integer (0-100),
   isActive: integer (boolean),
   isDeleted: integer (boolean),
@@ -689,7 +688,6 @@ model Budget {
   period         String    @default("monthly")
   startDate      DateTime  @db.Date
   endDate        DateTime? @db.Date
-  categoryId     String?
   alertThreshold Int       @default(80)
   isActive       Boolean   @default(true)
   isDeleted      Boolean   @default(false)
