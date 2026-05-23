@@ -1,10 +1,11 @@
 ---
 id: analytics-screen-oversized
 title: analytics.tsx screen is 1,091 lines mixing data prep and UI
-status: open
+status: closed
 priority: P2
 module: apps/mobile
 created_at: 2026-05-11
+orchestration_run: 85cad6a3-b40b-4245-8109-ac4039b481eb
 ---
 
 # analytics.tsx screen is 1,091 lines mixing data prep and UI
