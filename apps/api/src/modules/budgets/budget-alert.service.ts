@@ -99,7 +99,7 @@ export class BudgetAlertService {
             userId,
             thresholdPercentage: -1, // Use -1 as marker for anomaly alerts
             triggeredAt: { gte: currentMonthStart },
-            budget: { categoryId },
+            budget: { categoryAllocations: { some: { categoryId, isDeleted: false } } },
           },
         });
 
@@ -107,7 +107,12 @@ export class BudgetAlertService {
 
         // Find a budget for this category to link the alert (optional)
         const budget = await this.prisma.budget.findFirst({
-          where: { accountId, categoryId, isActive: true, isDeleted: false },
+          where: {
+            accountId,
+            isActive: true,
+            isDeleted: false,
+            categoryAllocations: { some: { categoryId, isDeleted: false } },
+          },
         });
 
         if (!budget) continue;

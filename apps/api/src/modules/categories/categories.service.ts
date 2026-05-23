@@ -103,15 +103,12 @@ export class CategoriesService {
     if (!category) throw new NotFoundException('Category not found');
 
     // Check for related records
-    const [expenses, incomes, budgets, budgetCategories, splits, children] =
+    const [expenses, incomes, budgetCategories, splits, children] =
       await Promise.all([
         this.prisma.expense.count({
           where: { categoryId: id, isDeleted: false },
         }),
         this.prisma.income.count({
-          where: { categoryId: id, isDeleted: false },
-        }),
-        this.prisma.budget.count({
           where: { categoryId: id, isDeleted: false },
         }),
         this.prisma.budgetCategory.count({
@@ -125,12 +122,12 @@ export class CategoriesService {
         }),
       ]);
 
-    const total = expenses + incomes + budgets + budgetCategories + splits + children;
+    const total = expenses + incomes + budgetCategories + splits + children;
     if (total > 0) {
       throw new ConflictException({
         statusCode: 409,
         message: 'Category has related records',
-        details: { expenses, incomes, budgets, budgetCategories, splits, children },
+        details: { expenses, incomes, budgetCategories, splits, children },
       });
     }
 
