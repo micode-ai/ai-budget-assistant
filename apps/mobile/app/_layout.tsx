@@ -464,6 +464,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/import/request-bank"
+          options={{
+            headerShown: true,
+            title: t('bankImport.requestTitle'),
+          }}
+        />
+        <Stack.Screen
           name="settings/categories"
           options={{
             headerShown: true,

@@ -164,6 +164,19 @@ export default function ImportHubScreen() {
                 </View>
               ))
             )}
+
+            <TouchableOpacity
+              style={styles.requestCard}
+              onPress={() => router.push('/settings/import/request-bank')}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add-circle-outline" size={22} color={theme.colors.primary} />
+              <View style={styles.requestTextWrap}>
+                <Text style={styles.requestTitle}>{t('bankImport.requestCardTitle')}</Text>
+                <Text style={styles.requestSubtitle}>{t('bankImport.requestCardSubtitle')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
           </>
         }
       />
@@ -212,5 +225,24 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
     padding: theme.spacing[4],
+  },
+  requestCard: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    margin: theme.spacing[4],
+    padding: theme.spacing[4],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderStyle: 'dashed' as const,
+  },
+  requestTextWrap: { flex: 1 },
+  requestTitle: { ...theme.textStyles.bodyMedium, color: theme.colors.textPrimary },
+  requestSubtitle: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: 2,
   },
 });

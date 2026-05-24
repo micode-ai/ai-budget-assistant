@@ -50,6 +50,39 @@ export class TelegramService {
     }
   }
 
+  /** Send a document (e.g. a user-submitted sample bank statement) to the ops chat. */
+  async sendDocument(buffer: Buffer, filename: string, caption: string): Promise<boolean> {
+    if (!this.botToken || !this.chatId) {
+      this.logger.warn('Telegram document skipped (not configured)');
+      return false;
+    }
+
+    try {
+      const form = new FormData();
+      form.append('chat_id', this.chatId);
+      if (caption) {
+        form.append('caption', caption.slice(0, 1024));
+        form.append('parse_mode', 'HTML');
+      }
+      form.append('document', new Blob([new Uint8Array(buffer)]), filename || 'document');
+
+      const url = `https://api.telegram.org/bot${this.botToken}/sendDocument`;
+      const res = await fetch(url, { method: 'POST', body: form });
+
+      if (!res.ok) {
+        const body = await res.text();
+        this.logger.error(`Telegram sendDocument error (${res.status}): ${body}`);
+        return false;
+      }
+
+      this.logger.log('Telegram document sent');
+      return true;
+    } catch (error) {
+      this.logger.error(`Failed to send Telegram document: ${error}`);
+      return false;
+    }
+  }
+
   notifyNewUser(name: string, email: string): void {
     const text = `🆕 <b>New user registered</b>\n\nName: ${name}\nEmail: ${email}`;
     this.sendMessage(text).catch(() => {});

@@ -77,4 +77,44 @@ export const importBankApi = {
   deleteCsvImportMapping(id: string): Promise<void> {
     return httpClient.request<void>(`/import/bank/mappings/${id}`, { method: 'DELETE' });
   },
+
+  async requestBank(payload: {
+    bankName: string;
+    notes?: string;
+    file?: { uri: string; name: string; type: string };
+  }): Promise<{ ok: boolean }> {
+    const form = new FormData();
+    form.append('bankName', payload.bankName);
+    if (payload.notes) form.append('notes', payload.notes);
+    if (payload.file) {
+      form.append('file', {
+        uri: payload.file.uri,
+        name: payload.file.name,
+        type: payload.file.type,
+      } as any);
+    }
+
+    const token = await httpClient.getAuthToken();
+    const accountId = httpClient.accountIdGetter?.();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (accountId) headers['X-Account-Id'] = accountId;
+
+    const url = `${httpClient.baseUrl}/import/bank/request-bank`;
+    let response = await fetch(url, { method: 'POST', headers, body: form });
+    if (response.status === 401) {
+      const refreshed = await httpClient.refreshToken();
+      if (refreshed) {
+        const newToken = await httpClient.getAuthToken();
+        if (newToken) headers['Authorization'] = `Bearer ${newToken}`;
+        response = await fetch(url, { method: 'POST', headers, body: form });
+      }
+    }
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ message: 'Request failed' }));
+      const message = Array.isArray(err.message) ? err.message.join('\n') : err.message || `HTTP ${response.status}`;
+      throw new Error(message);
+    }
+    return response.json();
+  },
 };

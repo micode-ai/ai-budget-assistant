@@ -5,7 +5,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImportBankService } from './import-bank.service';
 import { MappingService } from './mapping/mapping.service';
-import { BankImportCommitBodyDto, CreateMappingBodyDto } from './dto';
+import { BankImportCommitBodyDto, CreateMappingBodyDto, RequestBankBodyDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import type { AuthenticatedRequest } from '../../common/types';
@@ -66,5 +66,22 @@ export class ImportBankController {
   @HttpCode(204)
   deleteMapping(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.mapping.delete(req.accountId, id);
+  }
+
+  // Lets users ask us to support a new bank by sending the bank name + an
+  // example statement. The request is delivered to the ops Telegram chat
+  // (the app owner), never to the requesting user.
+  @Post('request-bank')
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 5 * 1024 * 1024 } }))
+  requestBank(
+    @Req() req: AuthenticatedRequest,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body() dto: RequestBankBodyDto,
+  ) {
+    return this.service.requestBank(
+      { name: req.user.name, email: req.user.email },
+      dto,
+      file,
+    );
   }
 }

@@ -133,3 +133,12 @@ export class CreateMappingBodyDto {
   @IsIn(['auto', 'DD.MM.YYYY', 'DD-MM-YYYY', 'YYYY-MM-DD'])
   dateFormat?: 'auto' | 'DD.MM.YYYY' | 'DD-MM-YYYY' | 'YYYY-MM-DD';
 }
+
+export class RequestBankBodyDto {
+  @IsString()
+  bankName: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
