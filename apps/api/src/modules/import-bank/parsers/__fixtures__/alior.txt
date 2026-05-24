@@ -1,0 +1,185 @@
+Nr wyciągu:
+Wyciąg za okres:
+Strona
+Wyciąg z rachunku bankowego
+JAN KOWALSKI
+TESTOWA 1
+00-000 GDAŃSK
+Dane finansowe rachunku	Dane rachunku
+Numer rachunku:
+Rodzaj rachunku:
+Waluta rachunku:
+IBAN:
+BIC/SWIFT:
+Przyznany limit odnawialny w rachunku:
+Saldo końcowe:
+Saldo początkowe:
+Kwota blokad:
+Uznania ogółem:
+Obciążenia ogółem:
+2026.04.01 - 2026.04.30
+1
+1 z
+00 0000 0000 0000 0000 0000 0000
+Rachunek oszczędnościowo -
+rozliczeniowy
+PLN
+PL 00 0000 0000 0000 0000 0000 0000
+0,00
+11,85
+0,00
+100,00
+88,15
+ALBP PL PW
+3
+0,00
+Data wyciągu: 2026.04.30
+Niespłacone odsetki od zadłużenia: 0,00
+0,00	Niespłacone koszty obsługi zadłużenia:
+11,85	Saldo średnie:
+SALDO
+Dane operacji
+OPIS
+OPERACJI	DATA OPERACJI KSIĘGOWE
+DATA KSIĘGOWANIA
+OPERACJI
+KWOTA
+2026.04.17
+2026.04.17
+PRZELEW KRAJOWY 100,00 100,00
+00 0000 0000 0000 0000 0000 0000 JAN KOWALSKI
+UL. TESTOWA 1 00-000 GDAŃSK PRZELEW Data transakcji:
+2026-04-16
+2026.04.24
+2026.04.24
+ZAKUP BILETU PARKINGOWEGO -2,67 97,33
+00 0000 0000 0000 0000 0000 0000 Mobile Traffic DATA Sp. z
+o.o. ul. Drużbickiego 11, 61-693 Poznań Nowa Bankowość
+Mobilna AB240420261359077017014 Gdańsk Nieb ieska (09:00-
+17:00) GDAA 24.04.2026 , 14:40:32 Gdańsk
+Infolinia Alior Banku jest dostępna pod numerami: 12 370 70 00 z Polski (koszt połączenia lokalnego) i telefonów komórkowych (koszt
+połączenia według stawek operatora), (+48) 12 370 70 00 z zagranicy (koszt połączenia według stawek operatora).
+Alior Bank SA, ul. Chmielna 69, 00-801 Warszawa, Sąd Rejonowy dla m.st. Warszawy w Warszawie, XIII Wydział Gospodarczy KRS
+0000305178, REGON: 141387142, NIP: 1070010731; Kapitał zakładowy: 1 305 539 910 PLN (opłacony w całości).
+
+-- 1 of 5 --
+
+Wyciąg za okres:
+Nr wyciągu:
+Wyciąg z rachunku bankowego
+1
+2026.04.01 - 2026.04.30
+Strona
+2026.04.30	Data wyciągu:
+2 z 3
+2026.04.24
+2026.04.22
+TRANSAKCJA KARTĄ DEBETOWĄ -6,20 91,13
+Vinted Vilnius LTU 5575 XXXX XXXX 3660 Data transakcji: 2026-
+04-22 Kwota w walucie rozliczeniowej: Kod MCC: 7311 Kwota i
+waluta oryginalna transakcji: 6.20PLN
+2026.04.25
+2026.04.25
+PRZELEW P2P -40,36 50,77
+00 0000 0000 0000 0000 0000 0000 ANNA BLIK bilety
+2026.04.25
+2026.04.23
+TRANSAKCJA KARTĄ DEBETOWĄ -22,62 28,15
+CUKIERNIA SOWA SP. Z 0 Gdansk POL 5575 XXXX XXXX 3660
+Data transakcji: 2026-04-23 Kwota w walucie rozliczeniowej:
+Kod MCC: 5441 Kwota i waluta oryginalna transakcji: 22.62PLN
+2026.04.25
+2026.04.23
+TRANSAKCJA KARTĄ DEBETOWĄ -7,99 20,16
+SINSAY Gdansk POL 5575 XXXX XXXX 3660 Data transakcji:
+2026-04-23 Kwota w walucie rozliczeniowej: Kod MCC: 5651
+Kwota i waluta oryginalna transakcji: 7.99PLN
+2026.04.28
+2026.04.26
+TRANSAKCJA KARTĄ DEBETOWĄ -8,31 11,85
+CUKIERNIA SOWA SP. Z 0 Gdansk POL 5575 XXXX XXXX 3660
+Data transakcji: 2026-04-26 Kwota w walucie rozliczeniowej:
+Kod MCC: 5441 Kwota i waluta oryginalna transakcji: 8.31PLN
+Dzień dobry,
+od 1 października 2025 roku zmieniamy adres naszej siedziby. Od tej daty prosimy wysyłać wszelką korespondencję na
+nasz nowy adres:
+Alior Bank SA
+ul. Chmielna 69
+00-801 Warszawa
+Kontakt
+Jeśli mają Państwo dodatkowe pytania w tej sprawie, prosimy o kontakt:
+• telefoniczny – (+48) 12 370 70 00
+• osobisty – w naszej dowolnej placówce
+• elektroniczny:
+- na nasz adres do e-doręczeń: AE:PL-18375-10021-DTBRC-21
+- w bankowości internetowej lub aplikacji mobilnej – jeśli masz do nich dostęp
+Z poważaniem
+Zespół Alior Banku
+Komunikaty
+Infolinia Alior Banku jest dostępna pod numerami: 12 370 70 00 z Polski (koszt połączenia lokalnego) i telefonów komórkowych (koszt
+połączenia według stawek operatora), (+48) 12 370 70 00 z zagranicy (koszt połączenia według stawek operatora).
+Alior Bank SA, ul. Chmielna 69, 00-801 Warszawa, Sąd Rejonowy dla m.st. Warszawy w Warszawie, XIII Wydział Gospodarczy KRS
+0000305178, REGON: 141387142, NIP: 1070010731; Kapitał zakładowy: 1 305 539 910 PLN (opłacony w całości).
+
+-- 2 of 5 --
+
+Wyciąg za okres:
+Nr wyciągu:
+Wyciąg z rachunku bankowego
+1
+2026.04.01 - 2026.04.30
+Strona
+2026.04.30	Data wyciągu:
+3 z 3
+Ten dokument jest wydrukiem, który nie wymaga podpisów ani pieczątek bankowych. Podstawa prawna: art. 7 Ustawy Prawo Bankowe
+(Dz.U. Nr 140 z 1997 roku, poz.939 z późniejszymi zmianami).
+Infolinia Alior Banku jest dostępna pod numerami: 12 370 70 00 z Polski (koszt połączenia lokalnego) i telefonów komórkowych (koszt
+połączenia według stawek operatora), (+48) 12 370 70 00 z zagranicy (koszt połączenia według stawek operatora).
+Alior Bank SA, ul. Chmielna 69, 00-801 Warszawa, Sąd Rejonowy dla m.st. Warszawy w Warszawie, XIII Wydział Gospodarczy KRS
+0000305178, REGON: 141387142, NIP: 1070010731; Kapitał zakładowy: 1 305 539 910 PLN (opłacony w całości).
+Środki pieniężne zgromadzone na rachunku bankowym, dla którego został wygenerowany niniejszy wyciąg, chronione są przez
+obowiązkowy system gwarantowania depozytów, na zasadach określonych w ustawie z dnia 10 czerwca 2016 r. o Bankowym Funduszu
+Gwarancyjnym, systemie gwarantowania depozytów oraz przymusowej restrukturyzacji (Dz.U. z 2016 r. poz. 996 z późn.zm.) do kwoty w
+wysokości równowartości w złotych 100 000 euro, poza wyjątkami określonymi w ustawie, przy czym limit ten obowiązuje dla jednego
+Posiadacza bez względu na liczbę posiadanych rachunków w Alior Banku SA. Szczegółowy zakres i zasady ochrony wskazane są w Arkuszu
+Informacyjnym dla Deponentów.
+
+-- 3 of 5 --
+
+Zestawienie opłat
+Zawiera on również informacje o ewentualnych odsetkach, które zapłacili lub uzyskali Państwo w
+tym okresie.
+BIC: ALBPPLPW
+2026.04.30
+adres e-mail: kontakt@alior.pl
+kontakt z infolinią: 19 502 (z sieci Play: 12 19 502) lub 12 370 70 00 (tel. stacjonarne i komórkowe)
++48 12 19 502 lub +48 12 370 70 00 (z zagranicy)
+TESTOWA 1
+00-000 GDAŃSK
+ul. Chmielna 69, 00-801 Warszawa
+Alior Bank SA
+adres internetowy: www.aliorbank.pl
+Data
+Informacje dotyczące poszczególnych transakcji i salda rachunku mogą Państwo znaleźć na
+wyciągu z rachunku.
+Dane rachunku
+Niniejszy dokument przedstawia wszystkie opłaty za usługi powiązane z Państwa rachunkiem
+płatniczym, które naliczono w powyższym okresie.
+Rachunek Rachunek płatniczy w PLN [Alior Konto]
+JAN KOWALSKI
+Okres Od 2026.04.01 do 2026.04.30
+Krajowy numer rachunku: 00 0000 0000 0000 0000 0000 0000
+Krajowy numer rozliczeniowy: 24900005
+IBAN: PL00 0000 0000 0000 0000 0000 0000
+2	Strona 1 z
+
+-- 4 of 5 --
+
+Brak opłat i naliczonych odsetek w okresie rozliczeniowym
+Informacje dodatkowe
+Niniejszy dokument przekazujemy zgodnie z art. 32b Ustawy z dnia 19 sierpnia 2011 r. o
+usługach płatniczych (Dz. U. Nr 199 z 2011 r. poz. 1175 z późniejszymi zmianami).
+2	Strona 2 z
+
+-- 5 of 5 --
+

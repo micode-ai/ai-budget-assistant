@@ -5,6 +5,7 @@ import { IngParser } from './ing.parser';
 import { MillenniumParser } from './millennium.parser';
 import { PekaoParser } from './pekao.parser';
 import { ErsteParser } from './erste.parser';
+import { AliorParser } from './alior.parser';
 import { UniversalParser } from './universal.parser';
 
 export const PARSERS: BankParser[] = [
@@ -14,6 +15,7 @@ export const PARSERS: BankParser[] = [
   new MillenniumParser(),
   new PekaoParser(),
   new ErsteParser(),
+  new AliorParser(),
   new UniversalParser(),
 ];
 
