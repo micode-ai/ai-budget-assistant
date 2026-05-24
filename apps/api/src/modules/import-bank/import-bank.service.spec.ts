@@ -45,4 +45,44 @@ describe('ImportBankService.parsePreview', () => {
     expect(res.headers).toContain('Col1');
     expect(res.supportedBanks?.map((b) => b.id)).toContain('mbank');
   });
+
+  it('flags a row as already-imported when it matches an existing manual transaction', async () => {
+    // Layer 1 (externalRef select) finds nothing; Layer 2 (content select)
+    // returns a manual expense with the same date/amount/currency.
+    prisma.expense.findMany.mockImplementation((args: any) =>
+      Promise.resolve(
+        args?.select?.externalRef
+          ? []
+          : [{ date: new Date('2026-01-16'), amount: 87.45, currencyCode: 'PLN' }],
+      ),
+    );
+
+    const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(MBANK_CSV, 'utf-8'), {});
+    expect(res.rows).toHaveLength(1);
+    expect(res.rows![0].alreadyImported).toBe(true);
+    expect(res.importable).toBe(0);
+    expect(res.skipped).toBe(1);
+  });
+
+  it('greedily matches one-to-one: one existing absorbs only one of two identical-amount rows', async () => {
+    const twoRows = [
+      '#Data operacji;#Data księgowania;#Opis operacji;#Tytuł;#Nadawca/Odbiorca;#Numer konta;#Kwota;#Saldo po operacji',
+      '2026-01-16;2026-01-16;PLATNOSC KARTA;Sklep A;X;PL999;-87,45 PLN;1,00 PLN',
+      '2026-01-16;2026-01-16;PLATNOSC KARTA;Sklep B;Y;PL999;-87,45 PLN;1,00 PLN',
+    ].join('\n');
+
+    prisma.expense.findMany.mockImplementation((args: any) =>
+      Promise.resolve(
+        args?.select?.externalRef
+          ? []
+          : [{ date: new Date('2026-01-16'), amount: 87.45, currencyCode: 'PLN' }],
+      ),
+    );
+
+    const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(twoRows, 'utf-8'), {});
+    expect(res.rows).toHaveLength(2);
+    expect(res.rows!.filter((r) => r.alreadyImported)).toHaveLength(1);
+    expect(res.importable).toBe(1);
+    expect(res.skipped).toBe(1);
+  });
 });
