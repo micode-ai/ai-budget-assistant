@@ -1,4 +1,6 @@
-Data;Opis transakcji;Obciążenia;Uznania;Saldo po transakcji;Numer rachunku
-2026-01-15;Wynagrodzenie styczen - PRZELEW PRZYCHODZACY;;1500,00;3200,50;PL12345
-2026-01-16;ZAKUPY - BIEDRONKA 5234;87,45;;3113,05;PL12345
-2026-01-17;Czynsz mieszkanie;1200,00;;1913,05;PL12345
+"Data operacji","Data waluty","Typ transakcji","Kwota","Waluta","Saldo po transakcji","Opis transakcji","","","","",""
+"2026-05-22","2026-05-22","Płatność kartą","-64.10","PLN","+10244.52","Tytuł:  74838496143365049879610 ","Lokalizacja: Adres: eLeclerc 01 Miasto: Gdansk Kraj: POLSKA","Data wykonania operacji: 2026-05-22","Oryginalna kwota operacji: 64.10","Numer karty: 425125******8000",""
+"2026-05-07","2026-05-07","Płatność kartą","-28.20","PLN","+20629.65","Tytuł: 000498849 74230786127190310660541 ","Lokalizacja: Adres: ZABKA ZF351 K.1 Miasto: GDANSK Kraj: POLSKA","Data wykonania operacji: 2026-05-07","Oryginalna kwota operacji: 28.20","Numer karty: 425125******8000",""
+"2026-05-05","2026-05-05","Płatność web - kod mobilny","-15.00","PLN","+14191.14","Tytuł: 00000093952642101  ","Numer telefonu: 48000000000","Lokalizacja: Adres: doladowania.orange.pl","'Operacja: 00000093952642101","Numer referencyjny: 00000093952642101",""
+"2026-05-18","2026-05-18","Przelew z rachunku","-10000.00","PLN","+10466.31","Rachunek odbiorcy: 00 0000 0000 0000 0000 0000 0000","Nazwa odbiorcy: FIRMA TESTOWA","Tytuł: ZADATEK NA POCZET ZAKUPU","","",""
+"2026-05-06","2026-05-06","Przelew na konto","+6600.00","PLN","+20779.65","Rachunek nadawcy: 00 0000 0000 0000 0000 0000 0000","Nazwa nadawcy: PRACODAWCA SP. Z O.O.","Adres nadawcy: UL. TESTOWA 1 00-000 GDAŃSK","Tytuł: WYPLATA","Referencje wlasne: 000000000000",""

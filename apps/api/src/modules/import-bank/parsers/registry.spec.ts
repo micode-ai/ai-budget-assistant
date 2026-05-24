@@ -15,7 +15,7 @@ describe('parser registry', () => {
 
   it('detectParser returns the first bank parser whose detect() is true', () => {
     expect(detectParser(['#Data operacji', '#Kwota'])?.id).toBe('mbank');
-    expect(detectParser(['Data', 'Obciążenia', 'Uznania'])?.id).toBe('pko');
+    expect(detectParser(['Data operacji', 'Typ transakcji', 'Kwota', 'Waluta'])?.id).toBe('pko');
     expect(detectParser(['Random', 'Headers'])).toBeUndefined();
   });
 
