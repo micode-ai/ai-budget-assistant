@@ -4,9 +4,10 @@ import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
 import { MappingService } from './mapping/mapping.service';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
+import { isPdfBuffer, extractPdfText } from './utils/pdf-text';
 import { headerFingerprint } from './utils/header-fingerprint';
 import { pairFxRows } from './utils/fx-pairing';
-import { PARSERS, getParserById, detectParser } from './parsers/registry';
+import { PARSERS, getParserById, detectParser, detectPdfParser } from './parsers/registry';
 import type { BankParser } from './parsers/parser.interface';
 import type {
   BankImportPreviewResponse,
@@ -38,6 +39,12 @@ export class ImportBankService {
     fileBuffer: Buffer,
     opts: PreviewOptions,
   ): Promise<BankImportPreviewResponse> {
+    // PDF statements (e.g. Erste) go through a separate text-extraction path;
+    // CSV header/mapping/fingerprint logic does not apply to them.
+    if (isPdfBuffer(fileBuffer)) {
+      return this.parsePdfPreview(accountId, fileBuffer, opts);
+    }
+
     let text: string;
     try {
       text = decodeCsvBuffer(fileBuffer, opts.encoding ?? 'auto');
@@ -104,9 +111,71 @@ export class ImportBankService {
     }
 
     const parseErrors = countParseFailures(text, parsed.rows.length);
-    const withRefs: ImportRow[] = parsed.rows.map((r) => ({
+    return this.buildPreviewResponse(accountId, parser, parsed.rows, parseErrors, fingerprint);
+  }
+
+  /** PDF statement path: extract text, pick a PDF parser, then shared dedup. */
+  private async parsePdfPreview(
+    accountId: string,
+    fileBuffer: Buffer,
+    opts: PreviewOptions,
+  ): Promise<BankImportPreviewResponse> {
+    let text: string;
+    try {
+      text = await extractPdfText(fileBuffer);
+    } catch (e: any) {
+      throw new BadRequestException({ code: 'PARSE_FAILED', message: e.message });
+    }
+
+    const lines = text
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    let parser: BankParser | undefined;
+    if (opts.bankId) {
+      parser = getParserById(opts.bankId);
+      if (!parser) throw new BadRequestException('Unknown bankId');
+      if ((parser.format ?? 'csv') !== 'pdf') {
+        throw new BadRequestException({ code: 'PARSE_FAILED', message: 'Selected bank does not accept PDF' });
+      }
+    } else {
+      parser = detectPdfParser(lines);
+    }
+
+    if (!parser) {
+      return {
+        status: 'needs_picker',
+        headers: lines.slice(0, 20),
+        sampleRows: [],
+        supportedBanks: PARSERS.filter((p) => (p.format ?? 'csv') === 'pdf').map((p) => ({
+          id: p.id,
+          displayName: p.displayName,
+        })),
+      };
+    }
+
+    let parsed: ReturnType<BankParser['parse']>;
+    try {
+      parsed = parser.parse(text);
+    } catch (e: any) {
+      throw new BadRequestException({ code: 'PARSE_FAILED', message: e.message });
+    }
+
+    return this.buildPreviewResponse(accountId, parser, parsed.rows, 0);
+  }
+
+  /** Stamp externalRefs, pair FX rows, flag already-imported, shape response. */
+  private async buildPreviewResponse(
+    accountId: string,
+    parser: BankParser,
+    parsedRows: ReturnType<BankParser['parse']>['rows'],
+    parseErrors: number,
+    fingerprint?: string,
+  ): Promise<BankImportPreviewResponse> {
+    const withRefs: ImportRow[] = parsedRows.map((r) => ({
       ...r,
-      externalRef: buildExternalRef(parser!.id, r),
+      externalRef: buildExternalRef(parser.id, r),
       alreadyImported: false,
     }));
 

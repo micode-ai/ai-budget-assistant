@@ -12,12 +12,14 @@ import { useImportStore } from '@/stores/importStore';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
-// registry) until validated against real CSVs. Alior / Revolut / Erste will be
-// added here once their parsers land. See ABA-126.
+// registry) until validated against real CSVs. Alior / Revolut to be added
+// once their parsers land. Erste accepts a PDF statement, the rest take CSV.
+// See ABA-126.
 const BANKS = [
   { id: 'wise', label: 'Wise' },
   { id: 'mbank', label: 'mBank' },
   { id: 'pko', label: 'PKO BP' },
+  { id: 'erste', label: 'Erste Bank (PDF)' },
   { id: 'universal', label: 'Other (custom CSV)' },
 ];
 
@@ -58,7 +60,7 @@ export default function ImportHubScreen() {
     let picked: DocumentPicker.DocumentPickerResult;
     try {
       picked = await DocumentPicker.getDocumentAsync({
-        type: ['text/csv', 'text/comma-separated-values', '*/*'],
+        type: ['text/csv', 'text/comma-separated-values', 'application/pdf', '*/*'],
         copyToCacheDirectory: true,
       });
     } catch (err) {
@@ -72,7 +74,15 @@ export default function ImportHubScreen() {
     if (picked.canceled) return;
 
     const asset = picked.assets[0];
-    const file = { uri: asset.uri, name: asset.name ?? 'bank.csv', type: 'text/csv' };
+    const isPdf =
+      bankId === 'erste' ||
+      asset.mimeType === 'application/pdf' ||
+      (asset.name ?? '').toLowerCase().endsWith('.pdf');
+    const file = {
+      uri: asset.uri,
+      name: asset.name ?? (isPdf ? 'statement.pdf' : 'bank.csv'),
+      type: isPdf ? 'application/pdf' : 'text/csv',
+    };
 
     setFileAsset(file);
     setPickedBankId(bankId ?? null);
