@@ -21,7 +21,7 @@ More banks are added over time. If yours isn't listed yet, use **Other** and map
 4. The app shows a preview with every row marked as an expense, income, or currency exchange
 5. Uncheck any rows you don't want, then tap **Import**
 
-The app remembers which rows you've already imported by their date, amount, and description — uploading the same file twice won't create duplicates.
+The app skips rows that already exist in your account — whether you imported them earlier or added them manually — by matching on date, amount, and currency, so importing won't create duplicates. Matched rows are unchecked by default; re-check one if it's genuinely a separate transaction.
 
 ## Where to find the file in your bank
 

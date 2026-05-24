@@ -21,7 +21,7 @@ Obsługa kolejnych banków jest sukcesywnie dodawana. Jeśli twojego banku nie m
 4. Aplikacja wyświetla podgląd, gdzie każdy wiersz jest oznaczony jako wydatek, przychód lub wymiana walut
 5. Odznacz wiersze, których nie chcesz, a następnie dotknij **Importuj**
 
-Aplikacja zapamiętuje już zaimportowane wiersze na podstawie daty, kwoty i opisu — ponowne przesłanie tego samego pliku nie spowoduje duplikatów.
+Aplikacja pomija wiersze, które już istnieją na Twoim koncie — niezależnie od tego, czy importowałeś je wcześniej, czy dodałeś ręcznie — dopasowując je po dacie, kwocie i walucie, dzięki czemu import nie tworzy duplikatów. Dopasowane wiersze są domyślnie odznaczone; zaznacz jeden ponownie, jeśli to naprawdę odrębna transakcja.
 
 ## Gdzie znaleźć plik w swoim banku
 

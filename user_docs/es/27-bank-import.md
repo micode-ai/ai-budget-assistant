@@ -21,7 +21,7 @@ Se añaden más bancos con el tiempo. Si el suyo no aparece en la lista, use **O
 4. La aplicación muestra una vista previa con cada fila marcada como gasto, ingreso o cambio de divisa
 5. Desmarque las filas que no desee y pulse **Importar**
 
-La aplicación recuerda qué filas ya han sido importadas por fecha, importe y descripción — subir el mismo archivo dos veces no creará duplicados.
+La aplicación omite las filas que ya existen en su cuenta — tanto si las importó antes como si las añadió manualmente — comparando fecha, importe y divisa, de modo que importar el archivo no creará duplicados. Las filas coincidentes aparecen desmarcadas por defecto; márquelas de nuevo si se trata de una transacción realmente distinta.
 
 ## Dónde encontrar el archivo en su banco
 
