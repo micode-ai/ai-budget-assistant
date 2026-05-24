@@ -1,0 +1,34 @@
+mBank S.A. Bankowość Detaliczna;
+		Skrytka Pocztowa 2108;
+		90-959 Łódź 2;
+		www.mBank.pl;
+		mLinia: 801 300 800;
+		+48 (42) 6 300 800;
+
+
+#Klient;
+JAN KOWALSKI;
+
+Elektroniczne zestawienie operacji;
+
+#Za okres:;
+11.01.2026;12.01.2026;
+#Rodzaj rachunku;
+MASTERCARD ME;
+#Waluta;
+PLN;
+#Numer rachunku;
+00 0000 0000 0000 0000 0000 0000 ;
+#Podsumowanie obrotów na rachunku;#Liczba operacji;#Wartość operacji
+Uznania;0;0,00 PLN;
+Obciążenia;2;109,54 PLN;
+Łącznie;2;-109,54 PLN;
+
+
+#Data księgowania;#Data operacji;#Opis operacji;#Tytuł;#Nadawca/Odbiorca;#Numer konta;#Numer karty;#Kwota;
+2026-01-12;2026-01-11;ZAKUP PRZY UŻYCIU KARTY W KRAJU;"ZABKA ZF351 K.1";"  ";'';MASTERCARD ME 5396 **** **** 3567;-56,74;
+2026-01-13;2026-01-12;ODSETKI;"";"  ";''; ;-52,80;
+
+
+
+Niniejszy dokument sporządzono na podstawie art. 7 Ustawy Prawo Bankowe (Dz. U. Nr 140 z 1997 roku, poz.939 z późniejszymi zmianami).
