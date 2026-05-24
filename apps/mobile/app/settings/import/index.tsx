@@ -10,13 +10,14 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { useImportStore } from '@/stores/importStore';
 
+// Only banks whose parser has been validated against a real export are shown.
+// ING / Millennium / Pekao are temporarily hidden (parsers still in the API
+// registry) until validated against real CSVs. Alior / Revolut / Erste will be
+// added here once their parsers land. See ABA-126.
 const BANKS = [
   { id: 'wise', label: 'Wise' },
   { id: 'mbank', label: 'mBank' },
   { id: 'pko', label: 'PKO BP' },
-  { id: 'ing', label: 'ING Bank Śląski' },
-  { id: 'millennium', label: 'Bank Millennium' },
-  { id: 'pekao', label: 'Pekao SA' },
   { id: 'universal', label: 'Other (custom CSV)' },
 ];
 
