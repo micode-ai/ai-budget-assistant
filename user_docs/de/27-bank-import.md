@@ -38,6 +38,10 @@ Jede Zeile wird zu einer Ausgabe, einer Einnahme oder einem Währungsumtausch (w
 
 Wenn Ihre Bank nicht in der Liste steht, wählen Sie **Other (custom CSV)**. Die App zeigt eine Vorschau Ihrer Datei und fordert Sie auf, die Spalten für Datum, Betrag und Beschreibung zu benennen. Sie können diese Zuordnung unter einem Namen speichern; die nächste CSV-Datei mit demselben Spaltenaufbau wird dann automatisch importiert.
 
+## Ihre Bank nicht dabei?
+
+Am unteren Ende von **Einstellungen → Transaktionen importieren** finden Sie eine Karte **„Ihre Bank nicht dabei?"**. Tippen Sie darauf, geben Sie den Namen Ihrer Bank ein und fügen Sie ein Beispiel des von ihr ausgegebenen Kontoauszugs bei (CSV oder PDF). Senden Sie die Anfrage, und wir werden die Unterstützung für diese Bank hinzufügen. Ihre Anfrage geht direkt an unser Team — sie wird nicht öffentlich gepostet.
+
 ## Zeichenkodierung
 
 Bei CSV-Dateien erkennt die App automatisch UTF-8 und Windows-1250 (die am häufigsten verwendete Kodierung polnischer Banken). Wenn in der Vorschau polnische Zeichen unleserlich dargestellt werden, wählen Sie die Kodierung im Zuordner manuell aus. PDF-Kontoauszüge werden direkt gelesen — keine Kodierungsauswahl erforderlich.

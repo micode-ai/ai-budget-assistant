@@ -38,6 +38,10 @@ Każdy wiersz staje się Wydatkiem, Przychodem lub Wymianą walut (gdy aplikacja
 
 Jeśli twojego banku nie ma na liście, wybierz **Other (custom CSV)**. Aplikacja wyświetli podgląd pliku i poprosi o wskazanie, która kolumna zawiera datę, kwotę i opis. Możesz zapisać to mapowanie z nazwą — kolejny CSV z tym samym układem kolumn zostanie zaimportowany automatycznie.
 
+## Nie ma twojego banku?
+
+Na dole ekranu **Ustawienia → Import transakcji** znajdziesz kartę **„Nie ma twojego banku?"**. Dotknij jej, wpisz nazwę banku i dołącz przykład wyciągu, który on udostępnia (CSV lub PDF). Wyślij — wykorzystamy to, żeby dodać obsługę tego banku. Twoje zgłoszenie trafia bezpośrednio do naszego zespołu — nic nie jest publikowane publicznie.
+
 ## Kodowanie
 
 W przypadku plików CSV aplikacja automatycznie wykrywa UTF-8 i Windows-1250 (najpopularniejsze kodowanie polskich banków). Jeśli podgląd pokazuje zniekształcone polskie znaki, ręcznie wybierz kodowanie w maperze. Wyciągi PDF są odczytywane bezpośrednio — wybór kodowania nie jest potrzebny.

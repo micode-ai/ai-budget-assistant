@@ -38,6 +38,10 @@ Each row becomes an Expense, an Income, or a Currency Exchange (when the app det
 
 If your bank isn't in the list, pick **Other (custom CSV)**. The app shows a preview of your file and asks you to point at which column holds the date, amount, and description. You can save this mapping with a name, and the next CSV with the same column layout is imported automatically.
 
+## Don't see your bank?
+
+At the bottom of **Settings → Import transactions** there's a **"Don't see your bank?"** card. Tap it, enter the bank's name, and attach an example of the statement it gives you (CSV or PDF). Send it and we'll use it to add support for that bank. Your request goes straight to our team — nothing is posted publicly.
+
 ## Encoding
 
 For CSV files the app auto-detects UTF-8 and Windows-1250 (the most common Polish bank encoding). If the preview shows garbled Polish characters, pick the encoding manually in the mapper. PDF statements are read directly — no encoding choice needed.
