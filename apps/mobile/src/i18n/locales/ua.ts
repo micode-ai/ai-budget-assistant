@@ -580,6 +580,10 @@ export default {
       codeCopied: 'Код скопійовано в буфер обміну',
       linkInstructions: 'Відкрийте @{{botUsername}} у Telegram та надішліть:\n/link YOUR_CODE',
     },
+    bots: {
+      title: 'Чат-боти',
+      subtitle: 'Підключити Telegram і WhatsApp',
+    },
     dashboardWidgets: 'Віджети головного екрану',
     widget: {
       gamification: 'Гейміфікація',
