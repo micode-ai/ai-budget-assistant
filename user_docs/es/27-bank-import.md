@@ -38,6 +38,10 @@ Cada fila se convierte en un Gasto, un Ingreso o un Cambio de divisa (cuando la 
 
 Si su banco no está en la lista, elija **Other (custom CSV)**. La aplicación muestra una vista previa del archivo y le pide que indique qué columna contiene la fecha, el importe y la descripción. Puede guardar este mapeo con un nombre y el próximo CSV con el mismo diseño de columnas se importará automáticamente.
 
+## ¿No ve su banco?
+
+En la parte inferior de **Ajustes → Importar transacciones** hay una tarjeta **"¿No ve su banco?"**. Púlsela, introduzca el nombre del banco y adjunte un ejemplo del extracto que le proporciona (CSV o PDF). Envíelo y lo usaremos para añadir compatibilidad con ese banco. Su solicitud va directamente a nuestro equipo — no se publica nada públicamente.
+
 ## Codificación
 
 Para archivos CSV, la aplicación detecta automáticamente UTF-8 y Windows-1250 (la codificación más habitual de los bancos polacos). Si la vista previa muestra caracteres polacos ilegibles, seleccione la codificación manualmente en el mapeador. Los extractos en PDF se leen directamente — no es necesario elegir codificación.

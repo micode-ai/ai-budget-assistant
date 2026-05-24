@@ -38,6 +38,10 @@ Chaque ligne devient soit une Dépense, soit un Revenu, soit un Échange de devi
 
 Si votre banque ne figure pas dans la liste, choisissez **Other (custom CSV)**. L'application affiche un aperçu de votre fichier et vous demande d'indiquer quelle colonne contient la date, le montant et la description. Vous pouvez enregistrer ce mappage avec un nom : le prochain CSV avec la même structure de colonnes sera importé automatiquement.
 
+## Votre banque n'est pas dans la liste ?
+
+En bas de **Paramètres → Importer des transactions**, vous trouverez une carte **« Votre banque n'est pas dans la liste ? »**. Appuyez dessus, saisissez le nom de votre banque et joignez un exemple du relevé qu'elle vous fournit (CSV ou PDF). Envoyez-le et nous l'utiliserons pour ajouter la prise en charge de cette banque. Votre demande va directement à notre équipe — rien n'est publié publiquement.
+
 ## Encodage
 
 Pour les fichiers CSV, l'application détecte automatiquement l'UTF-8 et le Windows-1250 (l'encodage le plus courant des banques polonaises). Si l'aperçu affiche des caractères polonais illisibles, sélectionnez manuellement l'encodage dans le mappeur. Les relevés PDF sont lus directement — aucun choix d'encodage n'est nécessaire.
