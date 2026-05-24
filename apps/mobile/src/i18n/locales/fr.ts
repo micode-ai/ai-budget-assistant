@@ -580,6 +580,10 @@ export default {
       codeCopied: 'Code copié dans le presse-papiers',
       linkInstructions: 'Ouvrez @{{botUsername}} dans Telegram et envoyez :\n/link YOUR_CODE',
     },
+    bots: {
+      title: 'Bots de chat',
+      subtitle: 'Connecter Telegram et WhatsApp',
+    },
     dashboardWidgets: 'Widgets du tableau de bord',
     widget: {
       gamification: 'Gamification',

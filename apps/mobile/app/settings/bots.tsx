@@ -17,6 +17,8 @@ import QRCode from 'react-native-qrcode-svg';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 
+// ── WhatsApp types (moved verbatim from whatsapp.tsx) ──────────────────────
+
 interface WhatsAppStatus {
   linked: boolean;
   waPhoneNumber?: string;
@@ -30,50 +32,120 @@ interface LinkCodeState {
   waPhoneNumber: string;
 }
 
-export default function WhatsAppSettingsScreen() {
+// ── Screen ──────────────────────────────────────────────────────────────────
+
+export default function BotsSettingsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  const [status, setStatus] = useState<WhatsAppStatus | null>(null);
-  const [linkCode, setLinkCode] = useState<LinkCodeState | null>(null);
-  const [statusLoading, setStatusLoading] = useState(true);
-  const [codeLoading, setCodeLoading] = useState(false);
-  const [unlinkLoading, setUnlinkLoading] = useState(false);
+  // ── Telegram state (moved verbatim from notifications.tsx) ────────────────
 
-  const loadStatus = useCallback(async () => {
+  const [telegramLinked, setTelegramLinked] = useState(false);
+  const [telegramUsername, setTelegramUsername] = useState<string | null>(null);
+  const [telegramLinkCode, setTelegramLinkCode] = useState<string | null>(null);
+  const [telegramBotUsername, setTelegramBotUsername] = useState<string>('');
+  const [telegramLoading, setTelegramLoading] = useState(false);
+
+  const loadTelegramStatus = useCallback(async () => {
+    try {
+      const status = await api.getTelegramLinkStatus();
+      setTelegramLinked(status.linked);
+      setTelegramUsername(status.telegramUsername || null);
+    } catch {
+      // Ignore — telegram feature may not be available
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTelegramStatus();
+  }, [loadTelegramStatus]);
+
+  const handleGenerateTelegramCode = async () => {
+    setTelegramLoading(true);
+    try {
+      const result = await api.generateTelegramLinkCode();
+      setTelegramLinkCode(result.code);
+      setTelegramBotUsername(result.botUsername);
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    } finally {
+      setTelegramLoading(false);
+    }
+  };
+
+  const handleCopyTelegramCode = async () => {
+    if (telegramLinkCode) {
+      await Clipboard.setStringAsync(telegramLinkCode);
+      Alert.alert(t('settings.telegram.codeCopied'));
+    }
+  };
+
+  const handleUnlinkTelegram = async () => {
+    Alert.alert(
+      t('settings.telegram.disconnect'),
+      t('settings.telegram.disconnectConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.telegram.disconnect'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.unlinkTelegram();
+              setTelegramLinked(false);
+              setTelegramUsername(null);
+              setTelegramLinkCode(null);
+            } catch (e) {
+              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  // ── WhatsApp state (moved verbatim from whatsapp.tsx) ────────────────────
+
+  const [waStatus, setWaStatus] = useState<WhatsAppStatus | null>(null);
+  const [linkCode, setLinkCode] = useState<LinkCodeState | null>(null);
+  const [waStatusLoading, setWaStatusLoading] = useState(true);
+  const [waCodeLoading, setWaCodeLoading] = useState(false);
+  const [waUnlinkLoading, setWaUnlinkLoading] = useState(false);
+
+  const loadWaStatus = useCallback(async () => {
     try {
       const result = await api.getWhatsAppLinkStatus();
-      setStatus(result);
+      setWaStatus(result);
       if (result.linked) {
         setLinkCode(null);
       }
     } catch {
       // Ignore — feature may not be available yet
     } finally {
-      setStatusLoading(false);
+      setWaStatusLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadStatus();
-  }, [loadStatus]);
+    loadWaStatus();
+  }, [loadWaStatus]);
 
   useFocusEffect(
     useCallback(() => {
-      loadStatus();
-    }, [loadStatus]),
+      loadWaStatus();
+    }, [loadWaStatus]),
   );
 
-  const handleGenerateCode = async () => {
-    setCodeLoading(true);
+  const handleGenerateWaCode = async () => {
+    setWaCodeLoading(true);
     try {
       const result = await api.generateWhatsAppLinkCode();
       setLinkCode(result);
     } catch (e) {
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
-      setCodeLoading(false);
+      setWaCodeLoading(false);
     }
   };
 
@@ -90,18 +162,18 @@ export default function WhatsAppSettingsScreen() {
     });
   };
 
-  const handleCopyCode = async () => {
+  const handleCopyWaCode = async () => {
     if (!linkCode) return;
     await Clipboard.setStringAsync(linkCode.code);
     Alert.alert('', t('whatsappBot.copyCode'));
   };
 
-  const handleRefresh = async () => {
-    setStatusLoading(true);
-    await loadStatus();
+  const handleWaRefresh = async () => {
+    setWaStatusLoading(true);
+    await loadWaStatus();
   };
 
-  const handleUnlink = () => {
+  const handleUnlinkWa = () => {
     Alert.alert(
       t('whatsappBot.confirmDisconnect'),
       '',
@@ -111,15 +183,15 @@ export default function WhatsAppSettingsScreen() {
           text: t('whatsappBot.disconnectButton'),
           style: 'destructive',
           onPress: async () => {
-            setUnlinkLoading(true);
+            setWaUnlinkLoading(true);
             try {
               await api.unlinkWhatsApp();
-              setStatus({ linked: false });
+              setWaStatus({ linked: false });
               setLinkCode(null);
             } catch (e) {
               Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
             } finally {
-              setUnlinkLoading(false);
+              setWaUnlinkLoading(false);
             }
           },
         },
@@ -127,28 +199,125 @@ export default function WhatsAppSettingsScreen() {
     );
   };
 
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+
+        {/* ── Telegram section ─────────────────────────────────────────── */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.telegram.title')}</Text>
+          <View style={styles.card}>
+            {telegramLinked ? (
+              <>
+                <View style={styles.fieldRow}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.fieldLabel}>{t('settings.telegram.linked')}</Text>
+                    {telegramUsername && (
+                      <Text style={styles.fieldDesc}>@{telegramUsername}</Text>
+                    )}
+                  </View>
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
+                </View>
+                <View style={styles.divider} />
+                <TouchableOpacity style={styles.fieldRow} onPress={handleUnlinkTelegram}>
+                  <Text style={[styles.fieldLabel, { color: theme.colors.danger }]}>
+                    {t('settings.telegram.disconnect')}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[3] }]}>
+                  {t('settings.telegram.description')}
+                </Text>
+                {telegramLinkCode ? (
+                  <>
+                    <TouchableOpacity
+                      style={[
+                        styles.fieldRow,
+                        {
+                          backgroundColor: theme.colors.surface,
+                          borderRadius: theme.borderRadius.md,
+                          padding: theme.spacing[3],
+                        },
+                      ]}
+                      onPress={handleCopyTelegramCode}
+                    >
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={[
+                            styles.fieldLabel,
+                            { fontSize: 24, letterSpacing: 4, textAlign: 'center' },
+                          ]}
+                        >
+                          {telegramLinkCode}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.fieldDesc,
+                            { textAlign: 'center', marginTop: theme.spacing[1] },
+                          ]}
+                        >
+                          {t('settings.telegram.tapToCopy')}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <Text style={[styles.fieldDesc, { marginTop: theme.spacing[3] }]}>
+                      {t('settings.telegram.linkInstructions', {
+                        botUsername: telegramBotUsername || 'BudgetBot',
+                      })}
+                    </Text>
+                  </>
+                ) : (
+                  <TouchableOpacity
+                    style={[styles.fieldRow, { justifyContent: 'center' }]}
+                    onPress={handleGenerateTelegramCode}
+                    disabled={telegramLoading}
+                  >
+                    {telegramLoading ? (
+                      <ActivityIndicator size="small" color={theme.colors.primary} />
+                    ) : (
+                      <>
+                        <Ionicons
+                          name="paper-plane-outline"
+                          size={20}
+                          color={theme.colors.primary}
+                          style={{ marginRight: theme.spacing[2] }}
+                        />
+                        <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>
+                          {t('settings.telegram.connect')}
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+          </View>
+        </View>
+
+        {/* ── WhatsApp section ──────────────────────────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('whatsappBot.title')}</Text>
 
-          {statusLoading ? (
+          {waStatusLoading ? (
             <View style={[styles.card, styles.centered]}>
               <ActivityIndicator size="small" color={theme.colors.primary} />
             </View>
-          ) : status?.linked ? (
+          ) : waStatus?.linked ? (
             /* ── Linked state ── */
             <View style={styles.card}>
               <View style={styles.fieldRow}>
                 <View style={styles.fieldInfo}>
                   <Text style={styles.fieldLabel}>
                     {t('whatsappBot.linkedAs', {
-                      name: status.waProfileName ?? status.waPhoneNumber ?? '',
+                      name: waStatus.waProfileName ?? waStatus.waPhoneNumber ?? '',
                     })}
                   </Text>
-                  {status.waPhoneNumber && status.waProfileName && (
-                    <Text style={styles.fieldDesc}>{status.waPhoneNumber}</Text>
+                  {waStatus.waPhoneNumber && waStatus.waProfileName && (
+                    <Text style={styles.fieldDesc}>{waStatus.waPhoneNumber}</Text>
                   )}
                 </View>
                 <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
@@ -158,8 +327,8 @@ export default function WhatsAppSettingsScreen() {
 
               <TouchableOpacity
                 style={styles.fieldRow}
-                onPress={handleRefresh}
-                disabled={statusLoading}
+                onPress={handleWaRefresh}
+                disabled={waStatusLoading}
               >
                 <Ionicons
                   name="refresh-outline"
@@ -176,10 +345,10 @@ export default function WhatsAppSettingsScreen() {
 
               <TouchableOpacity
                 style={styles.fieldRow}
-                onPress={handleUnlink}
-                disabled={unlinkLoading}
+                onPress={handleUnlinkWa}
+                disabled={waUnlinkLoading}
               >
-                {unlinkLoading ? (
+                {waUnlinkLoading ? (
                   <ActivityIndicator size="small" color={theme.colors.danger} />
                 ) : (
                   <>
@@ -221,10 +390,7 @@ export default function WhatsAppSettingsScreen() {
                   </View>
 
                   {/* Action buttons */}
-                  <TouchableOpacity
-                    style={styles.primaryButton}
-                    onPress={handleOpenWhatsApp}
-                  >
+                  <TouchableOpacity style={styles.primaryButton} onPress={handleOpenWhatsApp}>
                     <Ionicons
                       name="logo-whatsapp"
                       size={20}
@@ -234,10 +400,7 @@ export default function WhatsAppSettingsScreen() {
                     <Text style={styles.primaryButtonText}>{t('whatsappBot.openButton')}</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={styles.secondaryButton}
-                    onPress={handleCopyCode}
-                  >
+                  <TouchableOpacity style={styles.secondaryButton} onPress={handleCopyWaCode}>
                     <Ionicons
                       name="copy-outline"
                       size={18}
@@ -249,7 +412,7 @@ export default function WhatsAppSettingsScreen() {
 
                   <View style={styles.divider} />
 
-                  <TouchableOpacity style={styles.fieldRow} onPress={handleRefresh}>
+                  <TouchableOpacity style={styles.fieldRow} onPress={handleWaRefresh}>
                     <Ionicons
                       name="refresh-outline"
                       size={18}
@@ -271,10 +434,10 @@ export default function WhatsAppSettingsScreen() {
                   </Text>
                   <TouchableOpacity
                     style={[styles.fieldRow, { justifyContent: 'center' }]}
-                    onPress={handleGenerateCode}
-                    disabled={codeLoading}
+                    onPress={handleGenerateWaCode}
+                    disabled={waCodeLoading}
                   >
-                    {codeLoading ? (
+                    {waCodeLoading ? (
                       <ActivityIndicator size="small" color={theme.colors.primary} />
                     ) : (
                       <>

@@ -429,10 +429,10 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
-          name="settings/whatsapp"
+          name="settings/bots"
           options={{
             headerShown: true,
-            title: t('whatsappBot.title'),
+            title: t('settings.bots.title'),
           }}
         />
         <Stack.Screen
