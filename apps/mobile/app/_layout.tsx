@@ -443,6 +443,27 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/import/index"
+          options={{
+            headerShown: true,
+            title: t('bankImport.title'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/import/preview"
+          options={{
+            headerShown: true,
+            title: t('bankImport.title'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/import/mapper"
+          options={{
+            headerShown: true,
+            title: t('bankImport.mapperTitle'),
+          }}
+        />
+        <Stack.Screen
           name="settings/categories"
           options={{
             headerShown: true,
