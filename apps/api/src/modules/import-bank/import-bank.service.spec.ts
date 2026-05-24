@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBankService } from './import-bank.service';
 import { MappingService } from './mapping/mapping.service';
+import { TelegramService } from '../telegram/telegram.service';
 
 const MBANK_CSV = [
   '#Data operacji;#Data księgowania;#Opis operacji;#Tytuł;#Nadawca/Odbiorca;#Numer konta;#Kwota;#Saldo po operacji',
@@ -17,14 +18,22 @@ describe('ImportBankService.parsePreview', () => {
     csvImportMapping: { findFirst: jest.fn().mockResolvedValue(null) },
   };
   const mapping = { findByFingerprint: jest.fn().mockResolvedValue(null) };
+  const telegram = {
+    sendMessage: jest.fn().mockResolvedValue(true),
+    sendDocument: jest.fn().mockResolvedValue(true),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    prisma.expense.findMany.mockResolvedValue([]);
+    prisma.income.findMany.mockResolvedValue([]);
+    prisma.currencyExchange.findMany.mockResolvedValue([]);
     const mod = await Test.createTestingModule({
       providers: [
         ImportBankService,
         { provide: PrismaService, useValue: prisma },
         { provide: MappingService, useValue: mapping },
+        { provide: TelegramService, useValue: telegram },
       ],
     }).compile();
     service = mod.get(ImportBankService);
@@ -84,5 +93,31 @@ describe('ImportBankService.parsePreview', () => {
     expect(res.rows!.filter((r) => r.alreadyImported)).toHaveLength(1);
     expect(res.importable).toBe(1);
     expect(res.skipped).toBe(1);
+  });
+
+  it('requestBank forwards bank name + sample file to the ops Telegram chat', async () => {
+    const file = { originalname: 'wyciag.pdf', size: 2048, buffer: Buffer.from('%PDF-1.7') } as any;
+    const res = await service.requestBank(
+      { name: 'Jan Kowalski', email: 'jan@test.local' },
+      { bankName: 'Santander', notes: 'CSV export from web' },
+      file,
+    );
+    expect(res.ok).toBe(true);
+    expect(telegram.sendMessage).toHaveBeenCalledTimes(1);
+    const msg = telegram.sendMessage.mock.calls[0][0] as string;
+    expect(msg).toContain('Santander');
+    expect(msg).toContain('jan@test.local');
+    expect(telegram.sendDocument).toHaveBeenCalledWith(file.buffer, 'wyciag.pdf', expect.stringContaining('Santander'));
+  });
+
+  it('requestBank works without a file (message only)', async () => {
+    const res = await service.requestBank(
+      { name: 'A', email: 'a@test.local' },
+      { bankName: 'Nest Bank' },
+      undefined,
+    );
+    expect(res.ok).toBe(true);
+    expect(telegram.sendMessage).toHaveBeenCalledTimes(1);
+    expect(telegram.sendDocument).not.toHaveBeenCalled();
   });
 });

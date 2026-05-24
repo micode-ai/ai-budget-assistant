@@ -3,6 +3,7 @@ import { createHash, randomUUID } from 'crypto';
 import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
 import { MappingService } from './mapping/mapping.service';
+import { TelegramService } from '../telegram/telegram.service';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
 import { isPdfBuffer, extractPdfText } from './utils/pdf-text';
 import { headerFingerprint } from './utils/header-fingerprint';
@@ -14,7 +15,7 @@ import type {
   BankImportCommitResponse,
   ImportRow,
 } from '@budget/shared-types';
-import type { BankImportCommitBodyDto } from './dto';
+import type { BankImportCommitBodyDto, RequestBankBodyDto } from './dto';
 
 export interface PreviewOptions {
   bankId?: BankParser['id'];
@@ -31,7 +32,41 @@ export class ImportBankService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mapping: MappingService,
+    private readonly telegram: TelegramService,
   ) {}
+
+  /**
+   * Forward a "please support my bank" request to the ops Telegram chat (the
+   * app owner) — bank name, optional notes, optional sample statement file.
+   * Never sent to the requesting user. Returns { ok } reflecting delivery.
+   */
+  async requestBank(
+    user: { name: string; email: string },
+    dto: RequestBankBodyDto,
+    file?: Express.Multer.File,
+  ): Promise<{ ok: boolean }> {
+    const esc = (s: string) =>
+      (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const lines = [
+      '🏦 <b>New bank import request</b>',
+      '',
+      `Bank: <b>${esc(dto.bankName)}</b>`,
+      `From: ${esc(user.name)} (${esc(user.email)})`,
+    ];
+    if (dto.notes?.trim()) lines.push('', `Notes: ${esc(dto.notes.trim())}`);
+    if (file) lines.push('', `Attached: ${esc(file.originalname)} (${Math.round(file.size / 1024)} KB)`);
+
+    const sent = await this.telegram.sendMessage(lines.join('\n'));
+    if (file?.buffer?.length) {
+      await this.telegram.sendDocument(
+        file.buffer,
+        file.originalname || 'statement',
+        `Sample statement for: ${esc(dto.bankName)}`,
+      );
+    }
+    return { ok: sent };
+  }
 
   async parsePreview(
     accountId: string,
