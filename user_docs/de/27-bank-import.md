@@ -1,40 +1,46 @@
 # Transaktionen aus Ihrer Bank importieren
 
-> Importieren Sie Transaktionen direkt aus CSV-Exporten polnischer Großbanken oder einer beliebigen Bank mithilfe des universellen Spalten-Mappers.
+> Importieren Sie Transaktionen aus einem CSV- oder PDF-Kontoauszug Ihrer Bank oder aus einer beliebigen Bank über den universellen Spaltenzuordner.
 
 ## Unterstützte Banken
 
-Sie können Transaktionen direkt aus CSV-Exporten der wichtigsten polnischen Banken importieren: **mBank, PKO BP, ING Bank Śląski, Bank Millennium, Pekao SA**. Für jede andere Bank ermöglicht der universelle Spalten-Mapper, das Format manuell zu beschreiben.
+- **mBank** — CSV-Export
+- **PKO BP** — CSV-Export
+- **Erste Bank** — PDF-Kontoauszug
+- **Alior Bank** — PDF-Kontoauszug
+- **Wise** — CSV-Export (siehe [Wise-Import](./26-wise-import.md))
+- **Other** — beliebige Bank, über den universellen Spaltenzuordner (CSV)
+
+Weitere Banken werden laufend hinzugefügt. Wenn Ihre Bank noch nicht aufgeführt ist, verwenden Sie **Other** und ordnen Sie die Spalten manuell zu.
 
 ## So importieren Sie
 
 1. Gehen Sie zu **Einstellungen → Transaktionen importieren**
-2. Wählen Sie Ihre Bank aus der Liste (oder „Andere (benutzerdefiniertes CSV)" für nicht unterstützte Banken)
-3. Wählen Sie die CSV-Datei aus, die Sie aus Ihrem Online-Banking exportiert haben
-4. Die App zeigt eine Vorschau, in der jede Zeile als Ausgabe, Einnahme oder Währungstausch markiert ist
-5. Deaktivieren Sie nicht gewünschte Zeilen und tippen Sie auf **Importieren**
+2. Wählen Sie Ihre Bank aus der Liste (oder **Other (custom CSV)**, wenn sie nicht aufgeführt ist)
+3. Wählen Sie die aus Ihrer Bank exportierte Datei — eine **CSV**-Datei für mBank/PKO, einen **PDF**-Kontoauszug für Erste/Alior
+4. Die App zeigt eine Vorschau, in der jede Zeile als Ausgabe, Einnahme oder Währungsumtausch markiert ist
+5. Deaktivieren Sie alle Zeilen, die Sie nicht möchten, und tippen Sie dann auf **Importieren**
 
-Die App merkt sich, welche Zeilen bereits importiert wurden (anhand von Datum, Betrag und Beschreibung) — das zweimalige Hochladen derselben CSV-Datei erzeugt keine Duplikate.
+Die App merkt sich, welche Zeilen bereits importiert wurden — anhand von Datum, Betrag und Beschreibung. Das erneute Hochladen derselben Datei erzeugt keine Duplikate.
 
-## Wo Sie die CSV-Datei in Ihrer Bank finden
+## Wo Sie die Datei in Ihrer Bank finden
 
-- **mBank**: Online-Banking → Historia operacji → Eksport → CSV
-- **PKO BP**: iPKO → Lista operacji → Pobierz → CSV
-- **ING Bank Śląski**: Moje ING → Historia → Eksportuj → CSV
-- **Bank Millennium**: Web → Historia rachunku → Eksport → CSV
-- **Pekao SA**: Pekao24 → Historia → Eksport → CSV
+- **mBank**: Web-Banking → Historia operacji → Eksport → CSV
+- **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
+- **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
+- **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
 
 ## Was importiert wird
 
-Jede Zeile wird entweder zu einer Ausgabe, einer Einnahme oder einem Währungstausch (wenn die App eine gepaarte FX-Transaktion am gleichen Datum in verschiedenen Währungen erkennt). Kategorien werden für bekannte Händler (Biedronka, Żabka, Orlen, Lidl usw.) automatisch vorgeschlagen — Sie können diese später ändern.
+Jede Zeile wird zu einer Ausgabe, einer Einnahme oder einem Währungsumtausch (wenn die App eine gekoppelte Devisentransaktion am gleichen Datum in verschiedenen Währungen erkennt). Kategorien werden automatisch für bekannte Händler vorgeschlagen (Biedronka, Żabka, Orlen, Lidl, Rossmann usw.) — Sie können diese später ändern.
 
-## „Andere" — universeller CSV-Mapper
+## „Other" — universeller CSV-Zuordner
 
-Falls Ihre Bank nicht in der Liste ist, wählen Sie „Andere (benutzerdefiniertes CSV)". Die App zeigt eine Vorschau Ihrer Datei und fragt, welche Spalte Datum, Betrag und Beschreibung enthält. Sie können dieses Mapping mit einem Namen speichern — die nächste CSV-Datei mit demselben Spaltenformat wird automatisch importiert.
+Wenn Ihre Bank nicht in der Liste steht, wählen Sie **Other (custom CSV)**. Die App zeigt eine Vorschau Ihrer Datei und fordert Sie auf, die Spalten für Datum, Betrag und Beschreibung zu benennen. Sie können diese Zuordnung unter einem Namen speichern; die nächste CSV-Datei mit demselben Spaltenaufbau wird dann automatisch importiert.
 
 ## Zeichenkodierung
 
-Die App erkennt automatisch UTF-8 und Windows-1250 (die häufigste Kodierung polnischer Banken). Falls die Vorschau fehlerhafte polnische Zeichen anzeigt, wählen Sie die Kodierung im Mapper manuell aus.
+Bei CSV-Dateien erkennt die App automatisch UTF-8 und Windows-1250 (die am häufigsten verwendete Kodierung polnischer Banken). Wenn in der Vorschau polnische Zeichen unleserlich dargestellt werden, wählen Sie die Kodierung im Zuordner manuell aus. PDF-Kontoauszüge werden direkt gelesen — keine Kodierungsauswahl erforderlich.
 
 ---
 
