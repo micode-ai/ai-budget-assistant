@@ -21,7 +21,7 @@ De nouvelles banques sont ajoutées régulièrement. Si la vôtre n'est pas enco
 4. L'application affiche un aperçu avec chaque ligne identifiée comme dépense, revenu ou échange de devises
 5. Décochez les lignes indésirables, puis appuyez sur **Importer**
 
-L'application mémorise les lignes déjà importées par date, montant et description — envoyer le même fichier deux fois ne créera pas de doublons.
+L'application ignore les lignes qui existent déjà dans votre compte — qu'elles aient été importées précédemment ou saisies manuellement — en les comparant par date, montant et devise, ce qui évite toute duplication lors de l'import. Les lignes correspondantes sont décochées par défaut ; recochez-en une s'il s'agit réellement d'une transaction distincte.
 
 ## Où trouver le fichier dans votre banque
 

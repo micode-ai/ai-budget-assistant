@@ -21,7 +21,7 @@ Weitere Banken werden laufend hinzugefügt. Wenn Ihre Bank noch nicht aufgeführ
 4. Die App zeigt eine Vorschau, in der jede Zeile als Ausgabe, Einnahme oder Währungsumtausch markiert ist
 5. Deaktivieren Sie alle Zeilen, die Sie nicht möchten, und tippen Sie dann auf **Importieren**
 
-Die App merkt sich, welche Zeilen bereits importiert wurden — anhand von Datum, Betrag und Beschreibung. Das erneute Hochladen derselben Datei erzeugt keine Duplikate.
+Die App überspringt Zeilen, die in Ihrem Konto bereits vorhanden sind — egal ob Sie diese früher importiert oder manuell eingegeben haben — indem sie Datum, Betrag und Währung abgleicht. Dadurch entstehen beim Import keine Duplikate. Abgeglichene Zeilen sind standardmäßig nicht ausgewählt; aktivieren Sie eine solche Zeile, wenn es sich tatsächlich um eine separate Transaktion handelt.
 
 ## Wo Sie die Datei in Ihrer Bank finden
 
