@@ -206,6 +206,12 @@ export class ImportBankService {
       if (seen.has(r.externalRef)) r.alreadyImported = true;
     }
 
+    // Content-based dedup: flag rows that match an EXISTING transaction
+    // (manual or any source) by date + signed amount + currency, so the same
+    // operation isn't duplicated even when it has no externalRef. Greedy 1-to-1
+    // so N existing rows only absorb N import rows; extras stay importable.
+    await this.flagContentDuplicates(accountId, paired);
+
     return {
       status: 'parsed',
       detectedBankId: parser.id,
@@ -216,6 +222,66 @@ export class ImportBankService {
       rows: paired,
       headerFingerprint: fingerprint,
     };
+  }
+
+  /**
+   * Mark import rows that already exist in the account as `alreadyImported`,
+   * matching on (date, signed-amount-in-cents, currency) against existing
+   * Expense/Income regardless of source. Uses a multiset so the match is
+   * one-to-one: if the file has two identical rows but only one already
+   * exists, only one is flagged and the other remains importable. FX rows are
+   * excluded (they dedup by externalRef only).
+   */
+  private async flagContentDuplicates(accountId: string, rows: ImportRow[]): Promise<void> {
+    const candidates = rows.filter((r) => r.kind !== 'fx');
+    if (candidates.length === 0) return;
+
+    const isoDates = [...new Set(candidates.map((r) => r.date))].filter(Boolean).sort();
+    if (isoDates.length === 0) return;
+
+    const dateFilter = { in: isoDates.map((d) => new Date(d)) };
+    const [exps, incs] = await Promise.all([
+      this.prisma.expense.findMany({
+        where: { accountId, date: dateFilter },
+        select: { date: true, amount: true, currencyCode: true },
+      }),
+      this.prisma.income.findMany({
+        where: { accountId, date: dateFilter },
+        select: { date: true, amount: true, currencyCode: true },
+      }),
+    ]);
+
+    const keyOf = (isoDate: string, signedCents: number, currency: string) =>
+      `${isoDate}|${signedCents}|${currency}`;
+    const toIso = (d: Date) => new Date(d).toISOString().slice(0, 10);
+    const cents = (amount: number, sign: number) => Math.round(sign * Number(amount) * 100);
+
+    // Multiset of existing transactions available to absorb a duplicate.
+    const counts = new Map<string, number>();
+    const bump = (k: string, by: number) => counts.set(k, (counts.get(k) ?? 0) + by);
+    for (const e of exps) bump(keyOf(toIso(e.date), cents(e.amount as unknown as number, -1), e.currencyCode), 1);
+    for (const i of incs) bump(keyOf(toIso(i.date), cents(i.amount as unknown as number, 1), i.currencyCode), 1);
+
+    const rowKey = (r: ImportRow) =>
+      keyOf(r.date, cents(r.amount, r.kind === 'expense' ? -1 : 1), r.currencyCode);
+
+    // Rows already flagged via externalRef correspond to an existing row, so
+    // consume their slot first to avoid double-counting against content dups.
+    for (const r of candidates) {
+      if (!r.alreadyImported) continue;
+      const k = rowKey(r);
+      if ((counts.get(k) ?? 0) > 0) bump(k, -1);
+    }
+
+    // Greedily flag remaining rows that still have an existing match available.
+    for (const r of candidates) {
+      if (r.alreadyImported) continue;
+      const k = rowKey(r);
+      if ((counts.get(k) ?? 0) > 0) {
+        r.alreadyImported = true;
+        bump(k, -1);
+      }
+    }
   }
 
   async commit(
