@@ -1257,7 +1257,7 @@ export type ImportPreviewResponse = WiseImportPreviewResponse;
 // Bank Import — new types
 
 export interface BankParserDescriptor {
-  id: 'mbank' | 'pko' | 'ing' | 'millennium' | 'pekao' | 'universal';
+  id: 'mbank' | 'pko' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'universal';
   displayName: string;
 }
 

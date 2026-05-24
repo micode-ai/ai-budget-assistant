@@ -13,8 +13,13 @@ export interface ParserResult {
 }
 
 export interface BankParser {
-  id: 'mbank' | 'pko' | 'ing' | 'millennium' | 'pekao' | 'universal';
+  id: 'mbank' | 'pko' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'universal';
   displayName: string;
+  /**
+   * Input format the parser consumes. 'csv' parsers receive decoded CSV text;
+   * 'pdf' parsers receive text extracted from a PDF statement. Defaults to 'csv'.
+   */
+  format?: 'csv' | 'pdf';
   detect(headers: string[], sampleRows: string[][]): boolean;
   parse(text: string, opts?: ParserOptions): ParserResult;
 }

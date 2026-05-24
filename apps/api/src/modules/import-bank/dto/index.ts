@@ -75,7 +75,7 @@ export class BankImportCommitBodyDto {
   saveMapping?: SaveMappingDto;
 
   @IsOptional()
-  @IsIn(['mbank', 'pko', 'ing', 'millennium', 'pekao', 'universal'])
+  @IsIn(['mbank', 'pko', 'ing', 'millennium', 'pekao', 'erste', 'universal'])
   bankId?: string;
 
   @IsOptional()

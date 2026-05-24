@@ -1,0 +1,160 @@
+Wyciąg
+JAN KOWALSKI
+UL. TESTOWA 1
+00-000 GDAŃSK
+Dane wyciągu
+data wyciągu 24.04.2026 r.
+numer wyciągu: 2026/004 za okres od: 25.03.2026 r. do: 24.04.2026 r.
+sposób wysyłania: eWyciąg
+nazwa rachunku: Konto Smart w: PLN
+numer rachunku: 00 0000 0000 0000 0000 0000 0000
+oprocentowanie w skali roku: 0,00000%
+liczba pozycji: 15
+Wyciąg
+data
+księgowania
+data
+operacji
+opis wpływy wydatki saldo
+25.03.2026 – Saldo początkowe: – – 306,19
+28.03.2026 26.03.2026 TRANSAKCJA KARTĄ DOP. VISA
+421352******5334 PŁATNOŚĆ
+KARTĄ 25.00 PLN CUKIERNIA
+BACCATE GDANSK
+0,00 25,00 281,19
+28.03.2026 26.03.2026 TRANSAKCJA KARTĄ DOP. VISA
+421352******5334 PŁATNOŚĆ
+KARTĄ 4.99 PLN ZABKA ZF351 K.2
+GDANSK
+0,00 4,99 276,20
+31.03.2026 31.03.2026 PRZELEW NA RACHUNEK W SAN PL -
+ONLINE sushi
+???????? ???????
+00000000000000000000000000
+0,00 36,45 239,75
+
+-- 1 of 4 --
+
+numer wyciągu: 2026/004
+numer rachunku: 00 0000 0000 0000 0000 0000 0000
+data
+księgowania
+data
+operacji
+opis wpływy wydatki saldo
+1.04.2026 30.03.2026 TRANSAKCJA KARTĄ DOP. VISA
+421352******5334 PŁATNOŚĆ
+KARTĄ 18.00 PLN Galeria Madison
+Gdansk
+0,00 18,00 221,75
+1.04.2026 1.04.2026 TRANSAKCJA KARTĄ DOP. VISA
+421352******5334 WPŁATA WE
+WPŁATOMACIE KARTĄ 1200.00 PLN
+BYLY 7 ODDZIAL W GDANSKU
+GDANSK
+1 200,00 0,00 1 421,75
+1.04.2026 1.04.2026 TRANSAKCJA KARTĄ DOP. VISA
+421352******5334 WPŁATA WE
+WPŁATOMACIE KARTĄ 400.00 PLN
+BYLY 7 ODDZIAL W GDANSKU
+GDANSK
+400,00 0,00 1 821,75
+2.04.2026 2.04.2026 OBCIĄŻENIE Zakup BLIK Autopay S.A.
+Powstancow Warszawy 681-718
+Sopot ref:93708581013
+eWalletPSP 02-04-2026 0
+93708581013 EWLTPSP 50
+02-04-2026498504
+00000000000000000000000000
+0,00 1 721,99 99,76
+4.04.2026 2.04.2026 TRANSAKCJA KARTĄ DOP. VISA
+421352******5334 PŁATNOŚĆ
+KARTĄ 14.49 PLN ROSSMANN 41
+GDANSK
+0,00 14,49 85,27
+7.04.2026 7.04.2026 OBCIĄŻENIE Zakup BLIK InPost
+Mobile - Nadan Pana Tadeusza 4-
+ref:93732566373
+eWalletPSP 07-04-2026 0
+93732566373 EWLTPSP 50
+07-04-202696646
+00000000000000000000000000
+0,00 18,49 66,78
+13.04.2026 13.04.2026 OBCIĄŻENIE Zakup BLIK FUNDACJA
+UNIWERSYTET Tyniecka 35
+ref:93787202495
+eWalletPSP 13-04-2026 0
+93787202495 EWLTPSP 50
+13-04-2026664952
+00000000000000000000000000
+0,00 1,00 65,78
+15.04.2026 15.04.2026 OBCIĄŻENIE Przelew na telefon
+ANNA NOWAK
+00000000000000000000000000
+0,00 50,00 15,78
+Strona 2/3
+
+-- 2 of 4 --
+
+numer wyciągu: 2026/004
+numer rachunku: 00 0000 0000 0000 0000 0000 0000
+Erste Bank Polska S.A.-10901098-0156155674-0043 Dokument pochodzi z
+naszego systemu i nie wymaga podpisu.
+data
+księgowania
+data
+operacji
+opis wpływy wydatki saldo
+16.04.2026 16.04.2026 UZNANIE Świadczenie
+ZUS010000C260418TSW/1015594079Św.
+wychowawczeJAN
+KOWALSKI
+ZUS Centrum Obsługi Świadczeń dla
+R odzin ul. Młynowa 29 15-404
+Białystok ELIXIR 16-04-2026
+00000000000000000000000000
+800,00 0,00 815,78
+16.04.2026 16.04.2026 UZNANIE Twój cashback od goodie
+MILLENNIUM GOODIE SPÓŁKA Z
+OGRANICZ ONĄ
+ODPOWIEDZIALNOSCIĄ UL
+STANISŁAWA ŻARYNA 2A 02-593
+WARSZAWA ELIXIR 16-04-2026
+00000000000000000000000000
+42,25 0,00 858,03
+17.04.2026 17.04.2026 OBCIĄŻENIE Zakup BLIK InPost
+Mobile - Nadan Pana Tadeusza 4-
+ref:93817170383
+eWalletPSP 17-04-2026 0
+93817170383 EWLTPSP 50
+17-04-2026340800
+00000000000000000000000000
+0,00 20,49 837,54
+20.04.2026 20.04.2026 OBCIĄŻENIE Zakup BLIK Temu.com
+First Floor, 25 St Stephens Green,
+ref:93842094255
+eWalletPSP 20-04-2026 0
+93842094255 EWLTPSP 50
+20-04-2026790612
+00000000000000000000000000
+0,00 75,19 762,35
+– – Saldo końcowe: 2 442,25 1 986,09 762,35
+Dodatkowe informacje
+Pieniądze na rachunku są gwarantowane przez Bankowy Fundusz Gwarancyjny (BFG) do
+równowartości w złotych 100 000 EUR. Gwarancja nie obejmuje przypadków opisanych w
+ustawie o BFG. Więcej na www.bfg.pl.
+Strona 3/3
+
+-- 3 of 4 --
+
+Dokument został sporządzony elektronicznie i nie wymaga dodatkowych podpisów oraz stempla bankowego.
+This document is prepared electronically and does not require any additional signatures or bank stamp.
+POŚWIADCZENIE ELEKTRONICZNE DOKUMENTU
+ELECTRONIC CERTIFICATION OF THE DOCUMENT
+Dokument elektroniczny wystawiony w dniu:
+Electronic document issued on:
+Sygnatura dokumentu:
+Document reference:
+
+-- 4 of 4 --
+

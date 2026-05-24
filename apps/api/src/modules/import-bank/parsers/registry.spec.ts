@@ -1,9 +1,9 @@
-import { PARSERS, getParserById, detectParser } from './registry';
+import { PARSERS, getParserById, detectParser, detectPdfParser } from './registry';
 
 describe('parser registry', () => {
-  it('has all 6 parsers in detection order', () => {
+  it('has all parsers in detection order', () => {
     expect(PARSERS.map((p) => p.id)).toEqual([
-      'mbank', 'pko', 'ing', 'millennium', 'pekao', 'universal',
+      'mbank', 'pko', 'ing', 'millennium', 'pekao', 'erste', 'universal',
     ]);
   });
 
@@ -21,5 +21,14 @@ describe('parser registry', () => {
 
   it('never auto-detects universal', () => {
     expect(detectParser(['anything'])?.id).not.toBe('universal');
+  });
+
+  it('CSV detection never returns the PDF-only Erste parser', () => {
+    expect(detectParser(['Erste Bank Polska S.A.', 'Wyciąg'])?.id).not.toBe('erste');
+  });
+
+  it('detectPdfParser finds Erste from statement text lines', () => {
+    expect(detectPdfParser(['Erste Bank Polska S.A.', 'Wyciąg'])?.id).toBe('erste');
+    expect(detectPdfParser(['Some random pdf'])).toBeUndefined();
   });
 });
