@@ -20,6 +20,7 @@ const BANKS = [
   { id: 'mbank', label: 'mBank' },
   { id: 'pko', label: 'PKO BP' },
   { id: 'erste', label: 'Erste Bank (PDF)' },
+  { id: 'alior', label: 'Alior Bank (PDF)' },
   { id: 'universal', label: 'Other (custom CSV)' },
 ];
 
@@ -76,6 +77,7 @@ export default function ImportHubScreen() {
     const asset = picked.assets[0];
     const isPdf =
       bankId === 'erste' ||
+      bankId === 'alior' ||
       asset.mimeType === 'application/pdf' ||
       (asset.name ?? '').toLowerCase().endsWith('.pdf');
     const file = {
