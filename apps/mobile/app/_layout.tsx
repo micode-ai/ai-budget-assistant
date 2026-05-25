@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import {
@@ -654,15 +655,17 @@ export default function RootLayout() {
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider>
-          <SafeAreaProvider>
-            <QueryClientProvider client={queryClient}>
-              <DatabaseProvider>
-                <RootNavigator />
-              </DatabaseProvider>
-            </QueryClientProvider>
-          </SafeAreaProvider>
-        </ThemeProvider>
+        <KeyboardProvider>
+          <ThemeProvider>
+            <SafeAreaProvider>
+              <QueryClientProvider client={queryClient}>
+                <DatabaseProvider>
+                  <RootNavigator />
+                </DatabaseProvider>
+              </QueryClientProvider>
+            </SafeAreaProvider>
+          </ThemeProvider>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </ErrorBoundary>
   );
