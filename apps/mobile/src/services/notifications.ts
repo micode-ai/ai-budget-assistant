@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { router } from 'expo-router';
 import { api } from './api';
+import { useAccountStore } from '@/stores/accountStore';
 
 // Configure foreground notification display (native only — expo-notifications
 // throws "not available on web" for the handler API).
@@ -103,6 +104,24 @@ export function handleNotificationResponse(
     case 'shared_expense':
       router.push('/(tabs)/expenses');
       break;
+    case 'chat_mention': {
+      const conversationId = data.conversationId ? String(data.conversationId) : undefined;
+      const accountId = data.accountId ? String(data.accountId) : undefined;
+      // The mentioned conversation belongs to `accountId`; switch to it so the
+      // chat screen loads under the right account context.
+      if (accountId) {
+        const accountStore = useAccountStore.getState();
+        if (accountStore.currentAccountId !== accountId && accountStore.accounts.some((a) => a.id === accountId)) {
+          accountStore.switchAccount(accountId);
+        }
+      }
+      router.push(
+        conversationId
+          ? { pathname: '/(tabs)/chat', params: { conversationId } }
+          : '/(tabs)/chat',
+      );
+      break;
+    }
     default:
       break;
   }
