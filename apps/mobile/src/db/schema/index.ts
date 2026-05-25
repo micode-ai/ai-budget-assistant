@@ -259,6 +259,8 @@ export const expenseCategorySplits = sqliteTable('expense_category_splits', {
 export const chatConversations = sqliteTable('chat_conversations', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull(),
+  accountId: text('account_id'),
+  isShared: integer('is_shared').default(0),
   title: text('title'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
@@ -270,6 +272,9 @@ export const chatMessages = sqliteTable('chat_messages', {
   conversationId: text('conversation_id').notNull(),
   role: text('role').notNull(),
   content: text('content').notNull(),
+  senderUserId: text('sender_user_id'),
+  senderName: text('sender_name'),
+  mentionedUserIds: text('mentioned_user_ids'),
   tokensUsed: integer('tokens_used'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });

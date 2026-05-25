@@ -857,6 +857,17 @@ You can browse and reopen previous AI conversations at any time:
 
 > Loaded conversation history is also saved locally for offline access after the first load.
 
+## Shared Conversations
+
+If you share an account with other members, you can turn a conversation into a **shared group chat** where everyone talks with the AI together.
+
+- **Turn sharing on or off:** the account **owner** sees a **Shared / Private** toggle at the top of the chat. Tap it to make the current conversation shared (visible to all members) or private again. Only the owner can change this; other members see a read-only "Shared" label. The toggle only appears when the account has more than one member.
+- **Everyone sees the conversation:** in a shared conversation, messages from other members appear with their name, and new messages show up automatically while you have the chat open.
+- **Address a person instead of the AI:** type **@** and pick a member to mention them. When you mention a member, the AI stays silent — the message is meant for that person, not the assistant. If you don't mention anyone, the AI answers as usual.
+- **Notifications:** if you mention a member who isn't currently viewing the chat, they receive a push notification so they don't miss it. This respects your "Shared activity" notification setting.
+
+> Private conversations work exactly as before — only you can see them, and the AI always answers.
+
 ## Chat Features
 
 - **Conversation history** — previous messages are preserved during your session and can be reopened via the History button
@@ -4308,6 +4319,17 @@ iOS, Android, Web
 
 > Загруженная история сохраняется локально и доступна без интернета после первой загрузки.
 
+## Общие разговоры
+
+Если вы используете счёт совместно с другими участниками, вы можете превратить разговор в **общий групповой чат**, где все общаются с ИИ вместе.
+
+- **Включение и отключение общего доступа:** **владелец** счёта видит переключатель **Общий / Личный** вверху чата. Нажмите на него, чтобы сделать текущий разговор общим (видимым всем участникам) или снова личным. Менять это может только владелец; остальные участники видят метку «Общий» только для чтения. Переключатель появляется только тогда, когда в счёте больше одного участника.
+- **Разговор виден всем:** в общем разговоре сообщения других участников отображаются с их именами, а новые сообщения появляются автоматически, пока у вас открыт чат.
+- **Обращение к человеку вместо ИИ:** введите **@** и выберите участника, чтобы упомянуть его. Когда вы упоминаете участника, ИИ молчит — сообщение предназначено для этого человека, а не для ассистента. Если вы никого не упоминаете, ИИ отвечает как обычно.
+- **Уведомления:** если вы упоминаете участника, который сейчас не открыл чат, он получает push-уведомление, чтобы не пропустить его. Это учитывает вашу настройку уведомлений «Общая активность».
+
+> Личные разговоры работают точно так же, как раньше — их видите только вы, и ИИ всегда отвечает.
+
 ## Возможности чата
 
 - **История разговора** — предыдущие сообщения сохраняются в течение сессии и могут быть открыты повторно через кнопку «История»
@@ -7753,6 +7775,17 @@ iOS, Android, Web
 
 > Завантажена історія зберігається локально і доступна без інтернету після першого завантаження.
 
+## Спільні розмови
+
+Якщо ви користуєтеся рахунком спільно з іншими учасниками, ви можете перетворити розмову на **спільний груповий чат**, де всі спілкуються з ШІ разом.
+
+- **Увімкнення та вимкнення спільного доступу:** **власник** рахунку бачить перемикач **Спільний / Особистий** угорі чату. Натисніть на нього, щоб зробити поточну розмову спільною (видимою всім учасникам) або знову особистою. Змінювати це може лише власник; інші учасники бачать позначку «Спільний» лише для читання. Перемикач з'являється лише тоді, коли в рахунку більше одного учасника.
+- **Розмову бачать усі:** у спільній розмові повідомлення інших учасників відображаються з їхніми іменами, а нові повідомлення з'являються автоматично, поки у вас відкритий чат.
+- **Звернення до людини замість ШІ:** введіть **@** та виберіть учасника, щоб згадати його. Коли ви згадуєте учасника, ШІ мовчить — повідомлення призначене для цієї людини, а не для асистента. Якщо ви нікого не згадуєте, ШІ відповідає як зазвичай.
+- **Сповіщення:** якщо ви згадуєте учасника, який зараз не відкрив чат, він отримує push-сповіщення, щоб не пропустити його. Це враховує ваше налаштування сповіщень «Спільна активність».
+
+> Особисті розмови працюють точно так само, як раніше — їх бачите лише ви, і ШІ завжди відповідає.
+
 ## Можливості чату
 
 - **Історія розмови** — попередні повідомлення зберігаються протягом сесії та можуть бути знову відкриті через кнопку «Історія»
@@ -11134,6 +11167,17 @@ Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
 
 > Załadowana historia jest zapisywana lokalnie i dostępna offline po pierwszym załadowaniu.
 
+## Wspolne rozmowy
+
+Jeśli dzielisz konto z innymi członkami, możesz zamienić rozmowę we **wspólny czat grupowy**, w którym wszyscy rozmawiają z AI razem.
+
+- **Włączanie i wyłączanie udostępniania:** **właściciel** konta widzi przełącznik **Wspólny / Prywatny** u góry czatu. Dotknij go, aby uczynić bieżącą rozmowę wspólną (widoczną dla wszystkich członków) lub znowu prywatną. Tylko właściciel może to zmienić; pozostali członkowie widzą etykietę "Wspólny" tylko do odczytu. Przełącznik pojawia się tylko wtedy, gdy konto ma więcej niż jednego członka.
+- **Wszyscy widzą rozmowę:** we wspólnej rozmowie wiadomości od innych członków pojawiają się z ich imieniem, a nowe wiadomości wyświetlają się automatycznie, gdy masz czat otwarty.
+- **Zwracanie się do osoby zamiast do AI:** wpisz **@** i wybierz członka, aby go wspomnieć. Gdy wspomnisz członka, AI milczy — wiadomość jest przeznaczona dla tej osoby, a nie dla asystenta. Jeśli nikogo nie wspomnisz, AI odpowiada jak zwykle.
+- **Powiadomienia:** jeśli wspomnisz członka, który aktualnie nie ma otwartego czatu, otrzyma on powiadomienie push, aby go nie przeoczył. Uwzględnia to Twoje ustawienie powiadomień "Wspólna aktywność".
+
+> Prywatne rozmowy działają dokładnie tak jak wcześniej — tylko Ty możesz je zobaczyć, a AI zawsze odpowiada.
+
 ## Funkcje czatu
 
 - **Historia rozmow** — poprzednie wiadomości są zachowywane podczas sesji i można je ponownie otworzyć za pomocą przycisku Historia
@@ -14499,6 +14543,17 @@ Du kannst frühere KI-Gespräche jederzeit aufrufen:
 
 > Der geladene Verlauf wird lokal gespeichert und steht nach dem ersten Laden auch offline zur Verfügung.
 
+## Geteilte Gespräche
+
+Wenn du ein Konto mit anderen Mitgliedern teilst, kannst du ein Gespräch in einen **geteilten Gruppenchat** verwandeln, in dem alle gemeinsam mit der KI sprechen.
+
+- **Teilen ein- oder ausschalten:** der **Eigentümer** des Kontos sieht oben im Chat einen **Geteilt / Privat**-Schalter. Tippe darauf, um das aktuelle Gespräch geteilt (für alle Mitglieder sichtbar) oder wieder privat zu machen. Nur der Eigentümer kann das ändern; andere Mitglieder sehen ein schreibgeschütztes "Geteilt"-Label. Der Schalter erscheint nur, wenn das Konto mehr als ein Mitglied hat.
+- **Alle sehen das Gespräch:** in einem geteilten Gespräch erscheinen Nachrichten anderer Mitglieder mit ihrem Namen, und neue Nachrichten werden automatisch angezeigt, solange du den Chat geöffnet hast.
+- **Eine Person statt der KI ansprechen:** tippe **@** und wähle ein Mitglied, um es zu erwähnen. Wenn du ein Mitglied erwähnst, bleibt die KI still — die Nachricht ist für diese Person bestimmt, nicht für den Assistenten. Wenn du niemanden erwähnst, antwortet die KI wie gewohnt.
+- **Benachrichtigungen:** wenn du ein Mitglied erwähnst, das den Chat gerade nicht ansieht, erhält es eine Push-Benachrichtigung, damit es sie nicht verpasst. Dies berücksichtigt deine Benachrichtigungseinstellung "Geteilte Aktivität".
+
+> Private Gespräche funktionieren genau wie zuvor — nur du kannst sie sehen, und die KI antwortet immer.
+
 ## Chat-Funktionen
 
 - **Konversationsverlauf** — vorherige Nachrichten bleiben während deiner Sitzung erhalten und können über den Verlauf-Button wieder geöffnet werden
@@ -17862,6 +17917,17 @@ Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
 
 > El historial cargado se guarda localmente para acceso sin conexión después de la primera carga.
 
+## Conversaciones compartidas
+
+Si compartes una cuenta con otros miembros, puedes convertir una conversación en un **chat de grupo compartido** donde todos hablan con la IA juntos.
+
+- **Activar o desactivar el uso compartido:** el **propietario** de la cuenta ve un interruptor **Compartido / Privado** en la parte superior del chat. Tócalo para hacer que la conversación actual sea compartida (visible para todos los miembros) o privada de nuevo. Solo el propietario puede cambiarlo; los demás miembros ven una etiqueta "Compartido" de solo lectura. El interruptor solo aparece cuando la cuenta tiene más de un miembro.
+- **Todos ven la conversación:** en una conversación compartida, los mensajes de otros miembros aparecen con su nombre, y los mensajes nuevos se muestran automáticamente mientras tienes el chat abierto.
+- **Dirigirte a una persona en lugar de a la IA:** escribe **@** y elige un miembro para mencionarlo. Cuando mencionas a un miembro, la IA permanece en silencio — el mensaje es para esa persona, no para el asistente. Si no mencionas a nadie, la IA responde como siempre.
+- **Notificaciones:** si mencionas a un miembro que no está viendo el chat en ese momento, recibe una notificación push para que no se lo pierda. Esto respeta tu ajuste de notificaciones "Actividad compartida".
+
+> Las conversaciones privadas funcionan exactamente como antes — solo tú puedes verlas, y la IA siempre responde.
+
 ## Funciones del chat
 
 - **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion y pueden reabrirse con el botón de Historial
@@ -21220,6 +21286,17 @@ Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment 
 
 > L'historique chargé est enregistré localement pour un accès hors ligne après le premier chargement.
 
+## Conversations partagees
+
+Si vous partagez un compte avec d'autres membres, vous pouvez transformer une conversation en un **chat de groupe partage** ou tout le monde discute avec l'IA ensemble.
+
+- **Activer ou desactiver le partage :** le **proprietaire** du compte voit un interrupteur **Partagé / Privé** en haut du chat. Appuyez dessus pour rendre la conversation actuelle partagee (visible par tous les membres) ou de nouveau privee. Seul le proprietaire peut le modifier ; les autres membres voient une etiquette "Partagé" en lecture seule. L'interrupteur n'apparait que lorsque le compte compte plus d'un membre.
+- **Tout le monde voit la conversation :** dans une conversation partagee, les messages des autres membres apparaissent avec leur nom, et les nouveaux messages s'affichent automatiquement tant que vous avez le chat ouvert.
+- **S'adresser a une personne plutot qu'a l'IA :** tapez **@** et choisissez un membre pour le mentionner. Lorsque vous mentionnez un membre, l'IA reste silencieuse — le message est destine a cette personne, pas a l'assistant. Si vous ne mentionnez personne, l'IA repond comme d'habitude.
+- **Notifications :** si vous mentionnez un membre qui ne consulte pas le chat a ce moment-la, il recoit une notification push pour ne pas la manquer. Cela respecte votre parametre de notification "Activite partagee".
+
+> Les conversations privees fonctionnent exactement comme avant — vous seul pouvez les voir, et l'IA repond toujours.
+
 ## Fonctionnalites du chat
 
 - **Historique de conversation** — les messages precedents sont conserves pendant votre session et peuvent être rouverts via le bouton Historique
@@ -24575,6 +24652,17 @@ iOS, Android, Web
 5. Каб пачаць нанова, націсніце **Новая размова** (уверсе злева)
 
 > Загружаная гісторыя захоўваецца лакальна і даступна без інтэрнэту пасля першай загрузкі.
+
+## Агульныя размовы
+
+Калі вы карыстаецеся рахункам сумесна з іншымі ўдзельнікамі, вы можаце ператварыць размову ў **агульны групавы чат**, дзе ўсе размаўляюць з ІІ разам.
+
+- **Уключэнне і выключэнне агульнага доступу:** **уладальнік** рахунку бачыць пераключальнік **Агульны / Асабісты** уверсе чата. Націсніце на яго, каб зрабіць бягучую размову агульнай (бачнай усім удзельнікам) або зноў асабістай. Змяняць гэта можа толькі ўладальнік; астатнія ўдзельнікі бачаць метку «Агульны» толькі для чытання. Пераключальнік з'яўляецца толькі тады, калі ў рахунку больш за аднаго ўдзельніка.
+- **Размову бачаць усе:** у агульнай размове паведамленні іншых удзельнікаў адлюстроўваюцца з іх імёнамі, а новыя паведамленні з'яўляюцца аўтаматычна, пакуль у вас адкрыты чат.
+- **Зварот да чалавека замест ІІ:** увядзіце **@** і выберыце ўдзельніка, каб згадаць яго. Калі вы згадваеце ўдзельніка, ІІ маўчыць — паведамленне прызначана для гэтага чалавека, а не для асістэнта. Калі вы нікога не згадваеце, ІІ адказвае як звычайна.
+- **Апавяшчэнні:** калі вы згадваеце ўдзельніка, які зараз не адкрыў чат, ён атрымлівае push-апавяшчэнне, каб не прапусціць яго. Гэта ўлічвае вашу настройку апавяшчэнняў «Агульная актыўнасць».
+
+> Асабістыя размовы працуюць дакладна так сама, як раней — іх бачыце толькі вы, і ІІ заўсёды адказвае.
 
 ## Магчымасці чата
 

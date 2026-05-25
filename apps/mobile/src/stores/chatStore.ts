@@ -6,12 +6,18 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import i18n from '@/i18n';
 import * as chatRepository from '@/db/chatRepository';
 
+// Module-level polling timer handle
+let pollTimer: ReturnType<typeof setInterval> | null = null;
+
 // Re-export ChatMessage type for use in components
 export interface ChatMessage {
   id: string;
   conversationId?: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  senderUserId?: string;
+  senderName?: string;
+  mentionedUserIds?: string[];
   tokensUsed?: number;
   createdAt: Date;
   pendingAction?: ChatPendingAction;
@@ -25,9 +31,12 @@ interface ChatState {
   isLoading: boolean;
   isConfirming: boolean;
   error: string | null;
+  currentIsShared: boolean;
+  lastSyncedAt: string | null;
+  isPolling: boolean;
 
   // Actions
-  sendMessage: (content: string) => Promise<void>;
+  sendMessage: (content: string, mentions?: { userId: string }[]) => Promise<void>;
   confirmAction: (actionId: string) => Promise<void>;
   rejectAction: (actionId: string, reason?: string) => Promise<void>;
   addMessage: (message: ChatMessage) => void;
@@ -36,6 +45,10 @@ interface ChatState {
   loadConversations: () => Promise<void>;
   loadConversation: (conversationId: string) => Promise<void>;
   clearMessages: () => void;
+  setConversationShared: (isShared: boolean) => Promise<void>;
+  pollNewMessages: () => Promise<void>;
+  startPolling: () => void;
+  stopPolling: () => void;
 }
 
 export const useChatStore = create<ChatState>()((set, get) => ({
@@ -45,61 +58,73 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   isLoading: false,
   isConfirming: false,
   error: null,
+  currentIsShared: false,
+  lastSyncedAt: null,
+  isPolling: false,
 
-  sendMessage: async (content: string) => {
-    const { currentConversationId } = get();
+  sendMessage: async (content: string, mentions?: { userId: string }[]) => {
+    const { currentConversationId, currentIsShared } = get();
 
-    // Create user message
+    const tempId = generateUUID();
     const userMessage: ChatMessage = {
-      id: generateUUID(),
+      id: tempId,
       conversationId: currentConversationId || undefined,
       role: 'user',
       content,
+      mentionedUserIds: mentions?.map((m) => m.userId) ?? [],
       createdAt: new Date(),
     };
 
-    // Add user message immediately (optimistic UI)
-    set((state) => ({
-      messages: [...state.messages, userMessage],
-      isLoading: true,
-      error: null,
-    }));
+    set((state) => ({ messages: [...state.messages, userMessage], isLoading: true, error: null }));
 
     try {
-      // Call the real API
-      const response = await api.chat(content, currentConversationId || undefined);
+      const response = await api.chat(
+        content,
+        currentConversationId || undefined,
+        mentions,
+        currentConversationId ? undefined : currentIsShared || undefined,
+      );
 
-      // Update conversation ID if this is a new conversation
       if (!currentConversationId && response.conversationId) {
         set({ currentConversationId: response.conversationId });
       }
 
-      const assistantMessage: ChatMessage = {
-        id: generateUUID(),
-        conversationId: response.conversationId,
-        role: 'assistant',
-        content: response.message,
-        createdAt: new Date(),
-        pendingAction: response.pendingAction as ChatPendingAction | undefined,
-        actionResult: response.actionResult as ChatActionResult | undefined,
-      };
-
       set((state) => ({
-        messages: [...state.messages, assistantMessage],
-        isLoading: false,
+        messages: state.messages.map((m) =>
+          m.id === tempId
+            ? { ...m, id: response.userMessageId, conversationId: response.conversationId, createdAt: new Date(response.userMessageCreatedAt) }
+            : m,
+        ),
+        lastSyncedAt: response.userMessageCreatedAt,
       }));
 
-      // Refresh AI usage counter
+      if (response.aiResponded) {
+        const assistantMessage: ChatMessage = {
+          id: response.assistantMessageId ?? generateUUID(),
+          conversationId: response.conversationId,
+          role: 'assistant',
+          content: response.message,
+          createdAt: response.assistantCreatedAt ? new Date(response.assistantCreatedAt) : new Date(),
+          pendingAction: response.pendingAction as ChatPendingAction | undefined,
+          actionResult: response.actionResult as ChatActionResult | undefined,
+        };
+        set((state) => ({
+          messages: [...state.messages, assistantMessage],
+          isLoading: false,
+          lastSyncedAt: response.assistantCreatedAt ?? state.lastSyncedAt,
+        }));
+      } else {
+        set({ isLoading: false });
+      }
+
       useSubscriptionStore.getState().loadUsage();
     } catch (error) {
-      // Add error message to chat
       const errorMessage: ChatMessage = {
         id: generateUUID(),
         role: 'assistant',
         content: i18n.t('errors.chatError'),
         createdAt: new Date(),
       };
-
       set((state) => ({
         messages: [...state.messages, errorMessage],
         error: error instanceof Error ? error.message : i18n.t('errors.sendMessageFailed'),
@@ -199,6 +224,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       currentConversationId: null,
       messages: [],
       error: null,
+      currentIsShared: false,
+      lastSyncedAt: null,
     });
   },
 
@@ -209,7 +236,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       const userId = authStore.useAuthStore.getState().user?.id;
       if (!userId) return;
 
-      const cached = await chatRepository.getConversations(userId);
+      const { useAccountStore } = await import('@/stores/accountStore');
+      const accountId = useAccountStore.getState().currentAccountId ?? undefined;
+      const cached = await chatRepository.getConversations(userId, accountId);
       if (cached.length > 0) {
         set({ conversations: cached });
       }
@@ -219,6 +248,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       const conversations: import('@budget/shared-types').ChatConversation[] = remote.map((c) => ({
         id: c.id,
         userId,
+        accountId: undefined,
+        isShared: c.isShared,
         title: c.title ?? undefined,
         createdAt: new Date(c.createdAt),
         updatedAt: new Date(c.updatedAt),
@@ -248,11 +279,17 @@ export const useChatStore = create<ChatState>()((set, get) => ({
             conversationId: m.conversationId,
             role: m.role as 'user' | 'assistant' | 'system',
             content: m.content,
+            senderUserId: m.senderUserId,
+            senderName: m.senderName,
+            mentionedUserIds: m.mentionedUserIds,
             tokensUsed: m.tokensUsed,
             createdAt: m.createdAt,
           })),
         });
       }
+
+      const conv = get().conversations.find((c) => c.id === conversationId);
+      const isShared = conv?.isShared ?? false;
 
       // Fetch from API (up to 50 messages, pending_action filtered server-side)
       const remote = await api.getChatConversationMessages(conversationId);
@@ -261,11 +298,15 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         conversationId: m.conversationId,
         role: m.role as 'user' | 'assistant' | 'system',
         content: m.content,
+        senderUserId: m.senderUserId ?? undefined,
+        senderName: m.senderName ?? undefined,
+        mentionedUserIds: m.mentionedUserIds,
         tokensUsed: m.tokensUsed ?? undefined,
         createdAt: new Date(m.createdAt),
       }));
 
-      set({ messages, isLoading: false });
+      const lastSyncedAt = messages.length > 0 ? messages[messages.length - 1].createdAt.toISOString() : null;
+      set({ messages, isLoading: false, currentIsShared: isShared, lastSyncedAt });
 
       // Persist to SQLite (all API messages always have conversationId)
       for (const msg of messages) {
@@ -285,6 +326,68 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     set({
       messages: [],
       currentConversationId: null,
+      currentIsShared: false,
+      lastSyncedAt: null,
     });
+  },
+
+  setConversationShared: async (isShared: boolean) => {
+    const { currentConversationId } = get();
+    if (!currentConversationId) {
+      set({ currentIsShared: isShared });
+      return;
+    }
+    try {
+      const res = await api.setChatConversationShared(currentConversationId, isShared);
+      set((state) => ({
+        currentIsShared: res.isShared,
+        conversations: state.conversations.map((c) => (c.id === currentConversationId ? { ...c, isShared: res.isShared } : c)),
+      }));
+    } catch (error) {
+      set({ error: error instanceof Error ? error.message : i18n.t('errors.chatError') });
+    }
+  },
+
+  pollNewMessages: async () => {
+    const { currentConversationId, lastSyncedAt, messages } = get();
+    if (!currentConversationId) return;
+    try {
+      const remote = await api.pollChatMessages(currentConversationId, lastSyncedAt ?? undefined);
+      if (remote.length === 0) return;
+      const existingIds = new Set(messages.map((m) => m.id));
+      const fresh = remote
+        .filter((m) => !existingIds.has(m.id))
+        .map((m) => ({
+          id: m.id,
+          conversationId: m.conversationId,
+          role: m.role as 'user' | 'assistant' | 'system',
+          content: m.content,
+          senderUserId: m.senderUserId ?? undefined,
+          senderName: m.senderName ?? undefined,
+          mentionedUserIds: m.mentionedUserIds,
+          tokensUsed: m.tokensUsed ?? undefined,
+          createdAt: new Date(m.createdAt),
+        }));
+      if (fresh.length === 0) return;
+      const newest = remote[remote.length - 1].createdAt;
+      set((state) => ({ messages: [...state.messages, ...fresh], lastSyncedAt: newest }));
+      for (const msg of fresh) {
+        if (msg.conversationId) await chatRepository.upsertMessage(msg as import('@budget/shared-types').ChatMessage);
+      }
+    } catch {
+      // non-fatal
+    }
+  },
+
+  startPolling: () => {
+    const { isPolling } = get();
+    if (isPolling || pollTimer) return;
+    set({ isPolling: true });
+    pollTimer = setInterval(() => { get().pollNewMessages(); }, 4000);
+  },
+
+  stopPolling: () => {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    set({ isPolling: false });
   },
 }));

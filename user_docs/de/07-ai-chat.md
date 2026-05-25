@@ -69,6 +69,17 @@ Du kannst frühere KI-Gespräche jederzeit aufrufen:
 
 > Der geladene Verlauf wird lokal gespeichert und steht nach dem ersten Laden auch offline zur Verfügung.
 
+## Geteilte Gespräche
+
+Wenn du ein Konto mit anderen Mitgliedern teilst, kannst du ein Gespräch in einen **geteilten Gruppenchat** verwandeln, in dem alle gemeinsam mit der KI sprechen.
+
+- **Teilen ein- oder ausschalten:** der **Eigentümer** des Kontos sieht oben im Chat einen **Geteilt / Privat**-Schalter. Tippe darauf, um das aktuelle Gespräch geteilt (für alle Mitglieder sichtbar) oder wieder privat zu machen. Nur der Eigentümer kann das ändern; andere Mitglieder sehen ein schreibgeschütztes "Geteilt"-Label. Der Schalter erscheint nur, wenn das Konto mehr als ein Mitglied hat.
+- **Alle sehen das Gespräch:** in einem geteilten Gespräch erscheinen Nachrichten anderer Mitglieder mit ihrem Namen, und neue Nachrichten werden automatisch angezeigt, solange du den Chat geöffnet hast.
+- **Eine Person statt der KI ansprechen:** tippe **@** und wähle ein Mitglied, um es zu erwähnen. Wenn du ein Mitglied erwähnst, bleibt die KI still — die Nachricht ist für diese Person bestimmt, nicht für den Assistenten. Wenn du niemanden erwähnst, antwortet die KI wie gewohnt.
+- **Benachrichtigungen:** wenn du ein Mitglied erwähnst, das den Chat gerade nicht ansieht, erhält es eine Push-Benachrichtigung, damit es sie nicht verpasst. Dies berücksichtigt deine Benachrichtigungseinstellung "Geteilte Aktivität".
+
+> Private Gespräche funktionieren genau wie zuvor — nur du kannst sie sehen, und die KI antwortet immer.
+
 ## Chat-Funktionen
 
 - **Konversationsverlauf** — vorherige Nachrichten bleiben während deiner Sitzung erhalten und können über den Verlauf-Button wieder geöffnet werden

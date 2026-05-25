@@ -69,6 +69,17 @@ Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
 
 > Załadowana historia jest zapisywana lokalnie i dostępna offline po pierwszym załadowaniu.
 
+## Wspolne rozmowy
+
+Jeśli dzielisz konto z innymi członkami, możesz zamienić rozmowę we **wspólny czat grupowy**, w którym wszyscy rozmawiają z AI razem.
+
+- **Włączanie i wyłączanie udostępniania:** **właściciel** konta widzi przełącznik **Wspólny / Prywatny** u góry czatu. Dotknij go, aby uczynić bieżącą rozmowę wspólną (widoczną dla wszystkich członków) lub znowu prywatną. Tylko właściciel może to zmienić; pozostali członkowie widzą etykietę "Wspólny" tylko do odczytu. Przełącznik pojawia się tylko wtedy, gdy konto ma więcej niż jednego członka.
+- **Wszyscy widzą rozmowę:** we wspólnej rozmowie wiadomości od innych członków pojawiają się z ich imieniem, a nowe wiadomości wyświetlają się automatycznie, gdy masz czat otwarty.
+- **Zwracanie się do osoby zamiast do AI:** wpisz **@** i wybierz członka, aby go wspomnieć. Gdy wspomnisz członka, AI milczy — wiadomość jest przeznaczona dla tej osoby, a nie dla asystenta. Jeśli nikogo nie wspomnisz, AI odpowiada jak zwykle.
+- **Powiadomienia:** jeśli wspomnisz członka, który aktualnie nie ma otwartego czatu, otrzyma on powiadomienie push, aby go nie przeoczył. Uwzględnia to Twoje ustawienie powiadomień "Wspólna aktywność".
+
+> Prywatne rozmowy działają dokładnie tak jak wcześniej — tylko Ty możesz je zobaczyć, a AI zawsze odpowiada.
+
 ## Funkcje czatu
 
 - **Historia rozmow** — poprzednie wiadomości są zachowywane podczas sesji i można je ponownie otworzyć za pomocą przycisku Historia

@@ -289,6 +289,8 @@ export default {
     newConversation: 'Новый разговор',
     loadingHistory: 'Загрузка...',
     conversationUntitled: 'Разговор',
+    shared: 'Общий',
+    private: 'Личный',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

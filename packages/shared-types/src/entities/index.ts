@@ -16,7 +16,7 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention';
 
 export type RecurringPeriod = 'weekly' | 'monthly' | 'yearly';
 
@@ -448,6 +448,8 @@ export interface BudgetPrediction {
 export interface ChatConversation {
   id: string;
   userId: string;
+  accountId?: string;
+  isShared: boolean;
   title?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -458,6 +460,9 @@ export interface ChatMessage {
   conversationId: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  senderUserId?: string;
+  senderName?: string;
+  mentionedUserIds?: string[];
   tokensUsed?: number;
   createdAt: Date;
 }

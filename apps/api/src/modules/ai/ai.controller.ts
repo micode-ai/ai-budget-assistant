@@ -74,9 +74,19 @@ export class AiController {
   @TrackAiUsage('chat', 1.0)
   async chat(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { message: string; conversationId?: string },
+    @Body() body: { message: string; conversationId?: string; mentions?: { userId: string }[]; isShared?: boolean },
   ) {
-    return this.chatService.chat(req.user.id, body.message, body.conversationId, req.accountId);
+    return this.chatService.chat(
+      req.user.id,
+      body.message,
+      body.conversationId,
+      req.accountId,
+      undefined,
+      req.accountRole,
+      (req.user as { name?: string }).name ?? null,
+      body.mentions,
+      body.isShared,
+    );
   }
 
   @Post('chat/confirm')
@@ -94,12 +104,12 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { conversationId: string; actionId: string; reason?: string },
   ) {
-    return this.chatService.rejectAction(req.user.id, body.conversationId, body.actionId, body.reason);
+    return this.chatService.rejectAction(req.user.id, body.conversationId, body.actionId, body.reason, req.accountId);
   }
 
   @Get('chat/conversations')
   async getConversations(@Req() req: AuthenticatedRequest) {
-    return this.chatService.getConversations(req.user.id);
+    return this.chatService.getConversations(req.user.id, req.accountId);
   }
 
   @Get('chat/conversations/:id/messages')
@@ -107,7 +117,25 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
   ) {
-    return this.chatService.getConversationMessages(req.user.id, id);
+    return this.chatService.getConversationMessages(req.user.id, id, req.accountId);
+  }
+
+  @Get('chat/conversations/:id/poll')
+  async pollConversation(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('since') since?: string,
+  ) {
+    return this.chatService.pollMessages(req.user.id, id, req.accountId, since);
+  }
+
+  @Patch('chat/conversations/:id/shared')
+  async setConversationShared(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: { isShared: boolean },
+  ) {
+    return this.chatService.setConversationShared(req.user.id, id, req.accountId, req.accountRole, body.isShared);
   }
 
   @Post('scan-receipt')

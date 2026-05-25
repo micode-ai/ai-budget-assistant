@@ -69,6 +69,17 @@ Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment 
 
 > L'historique chargé est enregistré localement pour un accès hors ligne après le premier chargement.
 
+## Conversations partagees
+
+Si vous partagez un compte avec d'autres membres, vous pouvez transformer une conversation en un **chat de groupe partage** ou tout le monde discute avec l'IA ensemble.
+
+- **Activer ou desactiver le partage :** le **proprietaire** du compte voit un interrupteur **Partagé / Privé** en haut du chat. Appuyez dessus pour rendre la conversation actuelle partagee (visible par tous les membres) ou de nouveau privee. Seul le proprietaire peut le modifier ; les autres membres voient une etiquette "Partagé" en lecture seule. L'interrupteur n'apparait que lorsque le compte compte plus d'un membre.
+- **Tout le monde voit la conversation :** dans une conversation partagee, les messages des autres membres apparaissent avec leur nom, et les nouveaux messages s'affichent automatiquement tant que vous avez le chat ouvert.
+- **S'adresser a une personne plutot qu'a l'IA :** tapez **@** et choisissez un membre pour le mentionner. Lorsque vous mentionnez un membre, l'IA reste silencieuse — le message est destine a cette personne, pas a l'assistant. Si vous ne mentionnez personne, l'IA repond comme d'habitude.
+- **Notifications :** si vous mentionnez un membre qui ne consulte pas le chat a ce moment-la, il recoit une notification push pour ne pas la manquer. Cela respecte votre parametre de notification "Activite partagee".
+
+> Les conversations privees fonctionnent exactement comme avant — vous seul pouvez les voir, et l'IA repond toujours.
+
 ## Fonctionnalites du chat
 
 - **Historique de conversation** — les messages precedents sont conserves pendant votre session et peuvent être rouverts via le bouton Historique

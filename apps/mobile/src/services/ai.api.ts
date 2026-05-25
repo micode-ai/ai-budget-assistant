@@ -26,25 +26,20 @@ export const aiApi = {
     });
   },
 
-  chat(message: string, conversationId?: string) {
+  chat(message: string, conversationId?: string, mentions?: { userId: string }[], isShared?: boolean) {
     return httpClient.request<{
       message: string;
       conversationId: string;
-      pendingAction?: {
-        id: string;
-        actionType: string;
-        data: Record<string, unknown>;
-        displaySummary: string;
-      };
-      actionResult?: {
-        actionType: string;
-        success: boolean;
-        data?: Record<string, unknown>;
-        errorMessage?: string;
-      };
+      aiResponded: boolean;
+      userMessageId: string;
+      userMessageCreatedAt: string;
+      assistantMessageId?: string;
+      assistantCreatedAt?: string;
+      pendingAction?: { id: string; actionType: string; data: Record<string, unknown>; displaySummary: string };
+      actionResult?: { actionType: string; success: boolean; data?: Record<string, unknown>; errorMessage?: string };
     }>('/ai/chat', {
       method: 'POST',
-      body: JSON.stringify({ message, conversationId }),
+      body: JSON.stringify({ message, conversationId, mentions, isShared }),
     });
   },
 
@@ -78,6 +73,8 @@ export const aiApi = {
     return httpClient.request<Array<{
       id: string;
       title: string | null;
+      isShared: boolean;
+      isOwner: boolean;
       createdAt: string;
       updatedAt: string;
     }>>('/ai/chat/conversations');
@@ -89,9 +86,34 @@ export const aiApi = {
       conversationId: string;
       role: string;
       content: string;
+      senderUserId: string | null;
+      senderName: string | null;
+      mentionedUserIds: string[];
       tokensUsed: number | null;
       createdAt: string;
     }>>(`/ai/chat/conversations/${conversationId}/messages`);
+  },
+
+  pollChatMessages(conversationId: string, since?: string) {
+    const qs = since ? `?since=${encodeURIComponent(since)}` : '';
+    return httpClient.request<Array<{
+      id: string;
+      conversationId: string;
+      role: string;
+      content: string;
+      senderUserId: string | null;
+      senderName: string | null;
+      mentionedUserIds: string[];
+      tokensUsed: number | null;
+      createdAt: string;
+    }>>(`/ai/chat/conversations/${conversationId}/poll${qs}`);
+  },
+
+  setChatConversationShared(conversationId: string, isShared: boolean) {
+    return httpClient.request<{ id: string; isShared: boolean }>(
+      `/ai/chat/conversations/${conversationId}/shared`,
+      { method: 'PATCH', body: JSON.stringify({ isShared }) },
+    );
   },
 
   scanReceipt(imageBase64: string, userPrompt?: string, mimeType?: string) {

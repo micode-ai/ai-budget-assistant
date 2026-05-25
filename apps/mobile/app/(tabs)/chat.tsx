@@ -16,7 +16,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import Markdown from 'react-native-markdown-display';
+import { useFocusEffect } from 'expo-router';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
+import { useAccountStore } from '@/stores/accountStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { ActionConfirmationCard, ActionResultCard } from '@/components/chat';
@@ -32,6 +35,14 @@ export default function ChatScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const { currentAccount, isOwner, members, loadMembers } = useAccountStore();
+  const account = currentAccount();
+  const accountMembers = account ? (members[account.id] ?? []) : [];
+  const hasOtherMembers = accountMembers.length > 1;
+  const canToggleShared = isOwner() && hasOtherMembers;
+  const userId = useAuthStore((s) => s.user?.id);
+  const [pendingMentions, setPendingMentions] = useState<{ userId: string }[]>([]);
+
   const {
     messages,
     conversations,
@@ -44,6 +55,10 @@ export default function ChatScreen() {
     startNewConversation,
     loadConversations,
     loadConversation,
+    currentIsShared,
+    setConversationShared,
+    startPolling,
+    stopPolling,
   } = useChatStore();
 
   const markdownStyles = useMemo(
@@ -149,12 +164,27 @@ export default function ChatScreen() {
     }
   }, [transcription, sendMessage]);
 
+  useEffect(() => {
+    if (account?.id) loadMembers(account.id);
+  }, [account?.id, loadMembers]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (currentIsShared) startPolling();
+      return () => stopPolling();
+    }, [currentIsShared, startPolling, stopPolling]),
+  );
+
   const handleSend = async () => {
     if (!inputText.trim() || isLoading) return;
-
     const text = inputText.trim();
+    const stillMentioned = pendingMentions.filter((pm) => {
+      const name = accountMembers.find((m) => m.userId === pm.userId)?.user?.name;
+      return name ? text.includes(`@${name}`) : false;
+    });
     setInputText('');
-    await sendMessage(text);
+    setPendingMentions([]);
+    await sendMessage(text, currentIsShared ? stillMentioned : undefined);
   };
 
   const handleVoicePress = async () => {
@@ -186,7 +216,9 @@ export default function ChatScreen() {
   }, [startNewConversation]);
 
   const renderMessage = ({ item }: { item: ChatMessage }) => {
-    const isUser = item.role === 'user';
+    const isOwnMessage = item.role === 'user' && (!item.senderUserId || item.senderUserId === userId);
+    const isOtherMember = item.role === 'user' && !!item.senderUserId && item.senderUserId !== userId;
+    const isUser = isOwnMessage;
 
     const handleLongPress = () => {
       const preview = item.content.length > 80 ? item.content.slice(0, 80) + '…' : item.content;
@@ -201,7 +233,7 @@ export default function ChatScreen() {
 
     return (
       <View style={[styles.messageContainer, isUser && styles.userMessageContainer]}>
-        {!isUser && (
+        {!isUser && !isOtherMember && (
           <View style={styles.avatarContainer}>
             <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
           </View>
@@ -212,10 +244,11 @@ export default function ChatScreen() {
           delayLongPress={400}
         >
           <View style={[styles.messageBubble, isUser && styles.userMessageBubble]}>
-            {isUser ? (
-              <Text style={[styles.messageText, styles.userMessageText]}>
-                {item.content}
-              </Text>
+            {isOtherMember && item.senderName && (
+              <Text style={styles.senderLabel}>{item.senderName}</Text>
+            )}
+            {isUser || isOtherMember ? (
+              <Text style={[styles.messageText, isUser && styles.userMessageText]}>{item.content}</Text>
             ) : (
               <Markdown style={markdownStyles}>
                 {item.content}
@@ -263,6 +296,9 @@ export default function ChatScreen() {
           >
             {title}
           </Text>
+          {item.isShared && (
+            <Ionicons name="people" size={14} color={theme.colors.primary} style={{ marginLeft: 4 }} />
+          )}
         </View>
         <Text style={styles.conversationDate}>{dateLabel}</Text>
       </TouchableOpacity>
@@ -305,6 +341,22 @@ export default function ChatScreen() {
     </View>
   );
 
+  const mentionQuery = (() => {
+    const m = inputText.match(/(?:^|\s)@([\p{L}\p{N}_]*)$/u);
+    return m ? m[1].toLowerCase() : null;
+  })();
+  const mentionCandidates = currentIsShared && mentionQuery !== null
+    ? accountMembers
+        .filter((mem) => mem.userId !== userId)
+        .filter((mem) => (mem.user?.name ?? '').toLowerCase().includes(mentionQuery))
+    : [];
+
+  const insertMention = (mem: { userId: string; user?: { name?: string } }) => {
+    const name = mem.user?.name ?? 'member';
+    setInputText((prev) => prev.replace(/@[\p{L}\p{N}_]*$/u, `@${name} `));
+    setPendingMentions((prev) => (prev.some((p) => p.userId === mem.userId) ? prev : [...prev, { userId: mem.userId }]));
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       {/* History button row */}
@@ -317,10 +369,27 @@ export default function ChatScreen() {
         ) : (
           <View />
         )}
-        <TouchableOpacity style={styles.historyButton} onPress={handleOpenHistory}>
-          <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
-          <Text style={styles.historyButtonText}>{t('chat.history')}</Text>
-        </TouchableOpacity>
+        <View style={styles.topBarRight}>
+          {hasOtherMembers && (
+            canToggleShared ? (
+              <TouchableOpacity style={styles.sharedToggle} onPress={() => setConversationShared(!currentIsShared)}>
+                <Ionicons name={currentIsShared ? 'people' : 'person'} size={16} color={currentIsShared ? theme.colors.primary : theme.colors.textSecondary} />
+                <Text style={[styles.sharedToggleText, currentIsShared && { color: theme.colors.primary }]}>
+                  {currentIsShared ? t('chat.shared') : t('chat.private')}
+                </Text>
+              </TouchableOpacity>
+            ) : currentIsShared ? (
+              <View style={styles.sharedToggle}>
+                <Ionicons name="people" size={16} color={theme.colors.primary} />
+                <Text style={[styles.sharedToggleText, { color: theme.colors.primary }]}>{t('chat.shared')}</Text>
+              </View>
+            ) : null
+          )}
+          <TouchableOpacity style={styles.historyButton} onPress={handleOpenHistory}>
+            <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+            <Text style={styles.historyButtonText}>{t('chat.history')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <KeyboardAvoidingView
@@ -358,6 +427,16 @@ export default function ChatScreen() {
         <View style={styles.usageBadgeRow}>
           <AiUsageBadge />
         </View>
+
+        {mentionCandidates.length > 0 && (
+          <View style={styles.mentionBar}>
+            {mentionCandidates.map((mem) => (
+              <TouchableOpacity key={mem.userId} style={styles.mentionChip} onPress={() => insertMention(mem)}>
+                <Text style={styles.mentionChipText}>@{mem.user?.name ?? 'member'}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         <View style={styles.inputContainer}>
           <TouchableOpacity
@@ -726,5 +805,49 @@ const createStyles = (theme: Theme) => ({
   historyEmptyText: {
     ...theme.textStyles.bodyLarge,
     color: theme.colors.textTertiary,
+  },
+  topBarRight: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  sharedToggle: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  sharedToggleText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+  },
+  senderLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
+    marginBottom: theme.spacing[1],
+  },
+  mentionBar: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.borderLight,
+  },
+  mentionChip: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius['2xl'],
+    backgroundColor: theme.colors.primaryLight,
+  },
+  mentionChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
 });

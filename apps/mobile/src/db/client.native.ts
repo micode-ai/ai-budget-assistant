@@ -159,6 +159,8 @@ export async function initializeDatabase(): Promise<void> {
       CREATE TABLE IF NOT EXISTS chat_conversations (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
+        account_id TEXT,
+        is_shared INTEGER DEFAULT 0,
         title TEXT,
         created_at INTEGER NOT NULL,
         updated_at INTEGER NOT NULL
@@ -169,6 +171,9 @@ export async function initializeDatabase(): Promise<void> {
         conversation_id TEXT NOT NULL,
         role TEXT NOT NULL,
         content TEXT NOT NULL,
+        sender_user_id TEXT,
+        sender_name TEXT,
+        mentioned_user_ids TEXT,
         tokens_used INTEGER,
         created_at INTEGER NOT NULL
       );
@@ -541,6 +546,13 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN external_ref TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN external_ref TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE currency_exchanges ADD COLUMN external_ref TEXT`); } catch {}
+
+    // Shared AI chat columns (migration for existing DBs)
+    try { expoDb.execSync(`ALTER TABLE chat_conversations ADD COLUMN account_id TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE chat_conversations ADD COLUMN is_shared INTEGER DEFAULT 0`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE chat_messages ADD COLUMN sender_user_id TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE chat_messages ADD COLUMN sender_name TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE chat_messages ADD COLUMN mentioned_user_ids TEXT`); } catch {}
 
     // Debt indexes
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_expenses_debt ON expenses(account_id, is_debt)`);

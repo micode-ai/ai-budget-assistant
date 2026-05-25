@@ -69,6 +69,17 @@ Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
 
 > El historial cargado se guarda localmente para acceso sin conexión después de la primera carga.
 
+## Conversaciones compartidas
+
+Si compartes una cuenta con otros miembros, puedes convertir una conversación en un **chat de grupo compartido** donde todos hablan con la IA juntos.
+
+- **Activar o desactivar el uso compartido:** el **propietario** de la cuenta ve un interruptor **Compartido / Privado** en la parte superior del chat. Tócalo para hacer que la conversación actual sea compartida (visible para todos los miembros) o privada de nuevo. Solo el propietario puede cambiarlo; los demás miembros ven una etiqueta "Compartido" de solo lectura. El interruptor solo aparece cuando la cuenta tiene más de un miembro.
+- **Todos ven la conversación:** en una conversación compartida, los mensajes de otros miembros aparecen con su nombre, y los mensajes nuevos se muestran automáticamente mientras tienes el chat abierto.
+- **Dirigirte a una persona en lugar de a la IA:** escribe **@** y elige un miembro para mencionarlo. Cuando mencionas a un miembro, la IA permanece en silencio — el mensaje es para esa persona, no para el asistente. Si no mencionas a nadie, la IA responde como siempre.
+- **Notificaciones:** si mencionas a un miembro que no está viendo el chat en ese momento, recibe una notificación push para que no se lo pierda. Esto respeta tu ajuste de notificaciones "Actividad compartida".
+
+> Las conversaciones privadas funcionan exactamente como antes — solo tú puedes verlas, y la IA siempre responde.
+
 ## Funciones del chat
 
 - **Historial de conversacion** — los mensajes anteriores se conservan durante tu sesion y pueden reabrirse con el botón de Historial
