@@ -7,8 +7,8 @@ import {
   ActivityIndicator,
   Alert,
   Image,
-  ScrollView,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -186,7 +186,7 @@ export default function ReceiptExpenseScreen() {
         <AiUsageBadge />
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {!showConfirm ? (
           <>
             <View style={styles.instructionContainer}>
@@ -386,7 +386,7 @@ export default function ReceiptExpenseScreen() {
             </TouchableOpacity>
           </View>
         )}
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

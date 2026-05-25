@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   TextInput,
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -116,7 +116,7 @@ export default function ChangeEmailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScreen style={styles.scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.iconRow}>
           <View style={styles.iconBg}>
             <Ionicons name="mail-outline" size={32} color={theme.colors.primary} />
@@ -196,7 +196,7 @@ export default function ChangeEmailScreen() {
             </TouchableOpacity>
           </>
         )}
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

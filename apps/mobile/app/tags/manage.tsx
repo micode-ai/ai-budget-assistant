@@ -119,6 +119,7 @@ export default function ManageTagsScreen() {
         data={tags}
         renderItem={renderTag}
         keyExtractor={(item) => item.id}
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <View style={styles.empty}>

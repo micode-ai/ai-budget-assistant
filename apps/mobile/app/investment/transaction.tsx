@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -69,7 +70,7 @@ export default function AddTransactionScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         <Text style={styles.title}>{t('investments.addTransaction')}</Text>
 
         {/* Type Selector */}
@@ -229,7 +230,7 @@ export default function AddTransactionScreen() {
         >
           <Text style={styles.submitButtonText}>{t('common.save')}</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

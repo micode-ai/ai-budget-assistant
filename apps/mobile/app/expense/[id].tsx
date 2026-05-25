@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   Alert,
   TextInput,
   Image,
@@ -12,6 +11,7 @@ import {
   Platform,
   InteractionManager,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -484,7 +484,7 @@ export default function ExpenseDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <KeyboardAwareScreen contentContainerStyle={styles.scrollContent}>
         {/* Amount Card */}
         <View style={styles.amountCard}>
           {isEditing ? (
@@ -969,7 +969,7 @@ export default function ExpenseDetailScreen() {
             </View>
           )}
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

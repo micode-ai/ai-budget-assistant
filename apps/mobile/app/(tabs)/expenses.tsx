@@ -498,6 +498,7 @@ export default function ExpensesScreen() {
           data={expenses}
           renderItem={renderExpenseItem}
           keyExtractor={(item) => item.id}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.listContent}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -510,6 +511,7 @@ export default function ExpensesScreen() {
           data={incomes}
           renderItem={renderIncomeItem}
           keyExtractor={(item) => item.id}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.listContent}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -55,7 +56,7 @@ export default function ConverterScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         <Text style={styles.title}>{t('converter.title')}</Text>
 
         <View style={styles.card}>
@@ -123,7 +124,7 @@ export default function ConverterScreen() {
             </Text>
           ) : null}
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

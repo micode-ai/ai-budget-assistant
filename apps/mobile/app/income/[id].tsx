@@ -3,11 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   Alert,
   TextInput,
   Platform,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -96,7 +96,7 @@ export default function IncomeDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen contentContainerStyle={styles.content}>
         {/* Amount Card */}
         <View style={styles.amountCard}>
           {isEditing ? (
@@ -302,7 +302,7 @@ export default function IncomeDetailScreen() {
             </>
           )}
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }
