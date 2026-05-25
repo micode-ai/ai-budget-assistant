@@ -91,20 +91,20 @@ export default function RequestBankScreen() {
             <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
           )}
         </TouchableOpacity>
-      </KeyboardAwareScreen>
 
-      <TouchableOpacity
-        style={[styles.primary, (!bankName.trim() || sending) && { opacity: 0.4 }]}
-        onPress={send}
-        disabled={!bankName.trim() || sending}
-        activeOpacity={0.8}
-      >
-        {sending ? (
-          <ActivityIndicator color={theme.colors.textInverse} />
-        ) : (
-          <Text style={styles.primaryText}>{t('bankImport.requestSend')}</Text>
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.primary, (!bankName.trim() || sending) && { opacity: 0.4 }]}
+          onPress={send}
+          disabled={!bankName.trim() || sending}
+          activeOpacity={0.8}
+        >
+          {sending ? (
+            <ActivityIndicator color={theme.colors.textInverse} />
+          ) : (
+            <Text style={styles.primaryText}>{t('bankImport.requestSend')}</Text>
+          )}
+        </TouchableOpacity>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }
@@ -145,7 +145,7 @@ const createStyles = (theme: Theme) => ({
   attachLabel: { ...theme.textStyles.body, color: theme.colors.textPrimary },
   attachHint: { ...theme.textStyles.caption, color: theme.colors.textTertiary, marginTop: 2 },
   primary: {
-    margin: theme.spacing[4],
+    marginTop: theme.spacing[4],
     padding: theme.spacing[3],
     borderRadius: theme.borderRadius.md,
     backgroundColor: theme.colors.primary,
