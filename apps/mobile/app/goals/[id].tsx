@@ -10,7 +10,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -667,7 +667,6 @@ export default function GoalDetailScreen() {
 
       {/* Add Funds Modal */}
       <Modal visible={showAddFunds} transparent animationType="slide" onRequestClose={handleCloseAddFunds}>
-        <KeyboardProvider>
         <KeyboardAvoidingView
           behavior="padding"
           style={styles.modalOverlay}
@@ -720,7 +719,6 @@ export default function GoalDetailScreen() {
             </View>
           </View>
         </KeyboardAvoidingView>
-        </KeyboardProvider>
       </Modal>
     </SafeAreaView>
   );

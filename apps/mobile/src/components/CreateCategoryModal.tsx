@@ -7,7 +7,7 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '../stores/categoryStore';
@@ -69,7 +69,6 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
-      <KeyboardProvider>
       <KeyboardAvoidingView
         behavior="padding"
         style={styles.overlay}
@@ -123,7 +122,6 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
           </View>
         </View>
       </KeyboardAvoidingView>
-      </KeyboardProvider>
     </Modal>
   );
 };
