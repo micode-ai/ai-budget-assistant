@@ -96,15 +96,6 @@ android {
         versionName "1.1.0"
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
-
-        // Windows MAX_PATH workaround: force CMake to use short, hashed object
-        // file names so the deeply-nested Fabric codegen path of native modules
-        // (e.g. react-native-keyboard-controller) stays under the 260-char limit.
-        externalNativeBuild {
-            cmake {
-                arguments "-DCMAKE_OBJECT_PATH_MAX=240"
-            }
-        }
     }
     signingConfigs {
         debug {
