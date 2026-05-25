@@ -69,6 +69,17 @@ You can browse and reopen previous AI conversations at any time:
 
 > Loaded conversation history is also saved locally for offline access after the first load.
 
+## Shared Conversations
+
+If you share an account with other members, you can turn a conversation into a **shared group chat** where everyone talks with the AI together.
+
+- **Turn sharing on or off:** the account **owner** sees a **Shared / Private** toggle at the top of the chat. Tap it to make the current conversation shared (visible to all members) or private again. Only the owner can change this; other members see a read-only "Shared" label. The toggle only appears when the account has more than one member.
+- **Everyone sees the conversation:** in a shared conversation, messages from other members appear with their name, and new messages show up automatically while you have the chat open.
+- **Address a person instead of the AI:** type **@** and pick a member to mention them. When you mention a member, the AI stays silent — the message is meant for that person, not the assistant. If you don't mention anyone, the AI answers as usual.
+- **Notifications:** if you mention a member who isn't currently viewing the chat, they receive a push notification so they don't miss it. This respects your "Shared activity" notification setting.
+
+> Private conversations work exactly as before — only you can see them, and the AI always answers.
+
 ## Chat Features
 
 - **Conversation history** — previous messages are preserved during your session and can be reopened via the History button

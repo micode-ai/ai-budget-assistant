@@ -66,6 +66,11 @@ interface RecurringExpenseParams {
   period: string;
 }
 
+interface ChatMentionParams {
+  senderName: string;
+  preview: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -97,6 +102,8 @@ const translations: Record<string, {
   debtOverdueBody: (p: DebtOverdueParams) => string;
   recurringExpenseTitle: (p: RecurringExpenseParams) => string;
   recurringExpenseBody: (p: RecurringExpenseParams) => string;
+  chatMentionTitle: (p: ChatMentionParams) => string;
+  chatMentionBody: (p: ChatMentionParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -141,6 +148,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Recurring expense logged: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${currencyCode} ${amount} auto-logged (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} mentioned you`,
+    chatMentionBody: ({ preview }) => preview,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -185,6 +194,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Регулярный расход записан: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} автоматически добавлено (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} упомянул вас`,
+    chatMentionBody: ({ preview }) => preview,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -229,6 +240,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Регулярний витрат записано: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} автоматично додано (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} згадав вас`,
+    chatMentionBody: ({ preview }) => preview,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -273,6 +286,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Cykliczny wydatek zarejestrowany: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} automatycznie dodane (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} wspomniał o tobie`,
+    chatMentionBody: ({ preview }) => preview,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -317,6 +332,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Gasto recurrente registrado: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${currencyCode} ${amount} registrado automáticamente (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} te mencionó`,
+    chatMentionBody: ({ preview }) => preview,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -361,6 +378,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Dépense récurrente enregistrée : ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} enregistré automatiquement (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} vous a mentionné`,
+    chatMentionBody: ({ preview }) => preview,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -405,6 +424,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Wiederkehrende Ausgabe gebucht: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} automatisch hinzugefügt (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} hat dich erwähnt`,
+    chatMentionBody: ({ preview }) => preview,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -449,6 +470,8 @@ const translations: Record<string, {
     recurringExpenseTitle: ({ description }) => `Рэгулярны расход запісаны: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} аўтаматычна дадана (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} згадаў вас`,
+    chatMentionBody: ({ preview }) => preview,
   },
 };
 
@@ -554,4 +577,10 @@ export function recurringExpenseTitle(lang: Lang, params: RecurringExpenseParams
 }
 export function recurringExpenseBody(lang: Lang, params: RecurringExpenseParams): string {
   return t(lang).recurringExpenseBody(params);
+}
+export function chatMentionTitle(lang: Lang, params: ChatMentionParams): string {
+  return t(lang).chatMentionTitle(params);
+}
+export function chatMentionBody(lang: Lang, params: ChatMentionParams): string {
+  return t(lang).chatMentionBody(params);
 }

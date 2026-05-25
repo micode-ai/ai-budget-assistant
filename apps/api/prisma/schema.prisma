@@ -206,6 +206,7 @@ model Account {
   telegramLinks           TelegramLink[]
   whatsappLinks           WhatsAppLink[]
   csvImportMappings       CsvImportMapping[]
+  chatConversations       ChatConversation[]
 
   @@map("accounts")
 }
@@ -469,24 +470,31 @@ model BudgetAlert {
 model ChatConversation {
   id        String   @id @default(uuid())
   userId    String   @map("user_id")
+  accountId String?  @map("account_id")
+  isShared  Boolean  @default(false) @map("is_shared")
   title     String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade)
   messages ChatMessage[]
 
+  @@index([accountId, updatedAt])
   @@map("chat_conversations")
 }
 
 model ChatMessage {
-  id             String   @id @default(uuid())
-  conversationId String   @map("conversation_id")
-  role           String
-  content        String
-  tokensUsed     Int?     @map("tokens_used")
-  createdAt      DateTime @default(now()) @map("created_at")
+  id               String   @id @default(uuid())
+  conversationId   String   @map("conversation_id")
+  role             String
+  content          String
+  // Soft reference (no FK): preserves shared-chat history if the author is deleted; name resolved at read time
+  senderUserId     String?  @map("sender_user_id")
+  mentionedUserIds String[] @map("mentioned_user_ids")
+  tokensUsed       Int?     @map("tokens_used")
+  createdAt        DateTime @default(now()) @map("created_at")
 
   // Relations
   conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

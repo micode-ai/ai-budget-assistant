@@ -289,6 +289,8 @@ export default {
     newConversation: 'Nouvelle conversation',
     loadingHistory: 'Chargement...',
     conversationUntitled: 'Conversation',
+    shared: 'Partagé',
+    private: 'Privé',
   },
   expenseNew: {
     amountPlaceholder: '0,00',

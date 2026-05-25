@@ -51,6 +51,7 @@ export class NotificationsService {
     if (notificationType === 'shared_expense' && !user.notifySharedActivity) return false;
     if (notificationType === 'debt_reminder' && !user.notifyDebtReminders) return false;
     if (notificationType === 'recurring_expense' && !user.notifyRecurringExpenses) return false;
+    if (notificationType === 'chat_mention' && !user.notifySharedActivity) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);
@@ -105,6 +106,7 @@ export class NotificationsService {
       if (notificationType === 'shared_expense' && !u.notifySharedActivity) return false;
       if (notificationType === 'debt_reminder' && !u.notifyDebtReminders) return false;
       if (notificationType === 'recurring_expense' && !u.notifyRecurringExpenses) return false;
+      if (notificationType === 'chat_mention' && !u.notifySharedActivity) return false;
       return true;
     });
 

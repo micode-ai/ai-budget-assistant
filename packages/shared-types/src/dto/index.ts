@@ -520,6 +520,57 @@ export interface ChatRejectActionRequest {
   reason?: string;
 }
 
+// ── Shared Chat DTOs ──
+
+export interface ChatMention {
+  userId: string;
+}
+
+export interface SendChatRequest {
+  message: string;
+  conversationId?: string;
+  mentions?: ChatMention[];
+  isShared?: boolean;
+}
+
+export interface SendChatResponse {
+  message: string;
+  conversationId: string;
+  aiResponded: boolean;
+  userMessageId: string;
+  userMessageCreatedAt: string;
+  assistantMessageId?: string;
+  assistantCreatedAt?: string;
+  pendingAction?: ChatPendingAction;
+  actionResult?: ChatActionResult;
+  encryptionRestricted?: boolean;
+}
+
+export interface ChatConversationSummary {
+  id: string;
+  title: string | null;
+  isShared: boolean;
+  isOwner: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChatMessageResponse {
+  id: string;
+  conversationId: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  senderUserId: string | null;
+  senderName: string | null;
+  mentionedUserIds: string[];
+  tokensUsed: number | null;
+  createdAt: string;
+}
+
+export interface SetConversationSharedRequest {
+  isShared: boolean;
+}
+
 // Savings Goal DTOs
 export interface CreateGoalDto {
   name: string;
