@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   Alert,
   ActivityIndicator,
 } from 'react-native';
@@ -15,6 +14,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -53,7 +53,7 @@ export default function CreateAccountScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Account Name */}
         <Text style={styles.label}>{t('accounts.name')}</Text>
         <TextInput
@@ -130,7 +130,7 @@ export default function CreateAccountScreen() {
             <Text style={styles.submitButtonText}>{t('accounts.create')}</Text>
           )}
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

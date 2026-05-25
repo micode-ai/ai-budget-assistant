@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,7 +45,7 @@ export default function JoinAccountScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <View style={styles.content}>
+      <KeyboardAwareScreen contentContainerStyle={styles.content}>
         <View style={styles.iconContainer}>
           <Ionicons name="people-outline" size={48} color={theme.colors.primary} />
         </View>
@@ -72,7 +73,7 @@ export default function JoinAccountScreen() {
             <Text style={styles.submitButtonText}>{t('accounts.join')}</Text>
           )}
         </TouchableOpacity>
-      </View>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }
@@ -83,7 +84,7 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.background,
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     padding: theme.spacing[5],
     justifyContent: 'center' as const,
   },

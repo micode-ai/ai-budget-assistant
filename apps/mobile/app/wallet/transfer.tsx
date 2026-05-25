@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -151,7 +152,7 @@ export default function TransferScreen() {
           ),
         }}
       />
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* From Account */}
         <View style={styles.card}>
           <Text style={styles.label}>{t('transfer.fromAccount')}</Text>
@@ -296,7 +297,7 @@ export default function TransferScreen() {
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>{t('transfer.submit')}</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

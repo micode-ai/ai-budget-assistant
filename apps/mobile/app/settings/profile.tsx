@@ -2,13 +2,13 @@ import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   TextInput,
   Modal,
   FlatList,
   Alert,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -114,7 +114,7 @@ export default function ProfileSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Avatar */}
         <View style={styles.avatarRow}>
           <View style={styles.avatar}>
@@ -216,7 +216,7 @@ export default function ProfileSettingsScreen() {
             <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
 
       {/* Timezone Picker Modal */}
       <Modal visible={timezonePicker} transparent animationType="slide">

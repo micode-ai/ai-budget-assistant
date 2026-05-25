@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   TextInput,
   Alert,
@@ -16,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole, AccountMember, AccountInvitation } from '@budget/shared-types';
 import { api } from '@/services/api';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 
 export default function AccountDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -197,7 +197,7 @@ export default function AccountDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Account Info */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('accounts.details')}</Text>
@@ -340,7 +340,7 @@ export default function AccountDetailScreen() {
             </TouchableOpacity>
           )}
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

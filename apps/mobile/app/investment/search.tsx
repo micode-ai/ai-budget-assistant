@@ -172,6 +172,7 @@ export default function AssetSearchScreen() {
         data={results}
         renderItem={renderResultItem}
         keyExtractor={(item) => `${item.symbol}-${item.exchange}`}
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={EmptyComponent}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

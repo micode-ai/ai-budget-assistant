@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   Alert,
   ActivityIndicator,
   Share,
@@ -17,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole } from '@budget/shared-types';
 import * as Clipboard from 'expo-clipboard';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 
 const ROLES: { role: AccountRole; icon: keyof typeof Ionicons.glyphMap }[] = [
   { role: 'editor', icon: 'pencil-outline' },
@@ -113,7 +113,7 @@ export default function InviteScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Mode Selector */}
         <View style={styles.modeRow}>
           <TouchableOpacity
@@ -204,7 +204,7 @@ export default function InviteScreen() {
             <Text style={styles.submitButtonText}>{t('accounts.sendInvite')}</Text>
           )}
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </SafeAreaView>
   );
 }

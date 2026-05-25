@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -51,7 +52,7 @@ export default function RequestBankScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScreen contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.intro}>{t('bankImport.requestIntro')}</Text>
 
         <Text style={styles.label}>{t('bankImport.requestBankName')}</Text>
@@ -90,7 +91,7 @@ export default function RequestBankScreen() {
             <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
           )}
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScreen>
 
       <TouchableOpacity
         style={[styles.primary, (!bankName.trim() || sending) && { opacity: 0.4 }]}

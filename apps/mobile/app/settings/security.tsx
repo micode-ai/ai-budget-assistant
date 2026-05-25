@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   TextInput,
   Modal,
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
@@ -126,7 +126,7 @@ export default function SecuritySettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+      <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         <View style={styles.card}>
           {!e2eeSetUp ? (
             <>
@@ -248,7 +248,7 @@ export default function SecuritySettingsScreen() {
             </>
           )}
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
 
       {/* Recovery Key Modal */}
       <Modal visible={showRecoveryKey !== null} transparent animationType="slide">
