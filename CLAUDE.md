@@ -157,6 +157,13 @@ Hetzner VPS (Hetzner cloud), Docker Compose. Stack defined in `docker-compose.pr
 - **Snap-installed Docker is held and disabled** (`snap refresh --hold docker`, `snap disable docker`) after the 2026-04-27 incident where snap auto-refresh hijacked `/var/run/docker.sock` from the apt-installed daemon. Do not re-enable snap docker; only the apt-installed `dockerd` (system data root `/var/lib/docker`) owns prod state.
 - Adding env vars: `docker restart` does NOT reload `env_file`. Must `docker compose -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate <service>`.
 
+## Mobile releases (Android)
+
+- **Bare Expo workflow** — `apps/mobile/android/` is committed, so EAS builds from the native project and does **not** run prebuild or read `app.json` for the version. The version shown in **Google Play comes from `apps/mobile/android/app/build.gradle` `versionName`**, not `app.json`. `eas.json` `appVersionSource: "remote"` + production `autoIncrement: true` only manage the integer `versionCode` (build number) remotely; they never touch `versionName`. (Historically this caused every release to ship as `1.0.0` while `versionCode` quietly incremented — ABA-131.)
+- **Before each release**: bump `versionName` in `android/app/build.gradle` (source of truth for Play) AND `version` in `app.json` (kept in sync for the in-app update gate) to the same value. Do not hand-edit `versionCode` — EAS remote autoIncrement owns it.
+- **CI guard**: `apps/mobile/scripts/check-release-version.js` runs as a production-only step in `mobile-build.yml` and `mobile-eas-build.yml`. It fails the build if `build.gradle` versionName ≠ `app.json` version, and (best effort) if the version isn't strictly greater than the latest `v*.*.*` git tag (skipped when no release tags exist).
+- **Publish**: run the *Mobile Build & Publish* workflow (`mobile-build.yml`, profile `production`, submit `true`) → builds AAB `--local` → `eas submit` to the Play production track. After release, also add the new version in **admin → App Versions** so the in-app `UpdatePrompt` knows about it.
+
 ## Observability
 
 - **Health**: `GET /api/v1/health` (public, no auth) — runs `SELECT 1` on Postgres, returns `{status, db, uptimeSeconds, timestamp}`. 503 if DB fails. Used by Docker `HEALTHCHECK` (requires HTTP 200) and CI verify-step.

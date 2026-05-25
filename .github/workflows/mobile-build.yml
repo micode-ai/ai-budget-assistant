@@ -46,6 +46,14 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: Check release version
+        # Bare project: Google Play shows android/app/build.gradle versionName,
+        # not app.json. Fail fast if they drifted (or the version wasn't bumped
+        # above the latest release tag) so we never ship 1.0.0 by accident.
+        if: inputs.profile == 'production'
+        working-directory: apps/mobile
+        run: node scripts/check-release-version.js
+
       - name: Build AAB locally
         # GOOGLE_SERVICES_JSON is consumed by `eas-build-pre-install` (see
         # apps/mobile/scripts/write-google-services.js). The hook runs inside
