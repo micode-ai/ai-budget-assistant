@@ -141,6 +141,7 @@ export default {
     periodAll: 'All',
     periodCustom: 'Custom',
     categoryAll: 'All',
+    searchPlaceholder: 'Search transactions...',
   },
   incomes: {
     noIncomes: 'No income yet',
@@ -711,6 +712,13 @@ export default {
     requestSent: 'Thanks! Your request was sent — we\'ll take a look.',
     requestErrorNoName: 'Please enter the bank name.',
     requestError: 'Could not send the request. Please try again later.',
+    pastImportsHeader: 'Past imports',
+    noPastImports: 'No imports yet',
+    transactionCount_one: '{{count}} transaction',
+    transactionCount_other: '{{count}} transactions',
+    undoImportTitle: 'Undo import',
+    undoImportConfirm: 'This will remove {{count}} transactions from this import. You can re-import the same file afterwards.',
+    undoImportAction: 'Undo import',
     error: {
       encodingUnknown: 'Could not detect file encoding. Try saving the CSV as UTF-8.',
       parseFailed: 'Could not parse the file. Check the format and try again.',

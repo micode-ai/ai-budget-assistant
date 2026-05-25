@@ -38,6 +38,17 @@ Chaque ligne devient soit une Dépense, soit un Revenu, soit un Échange de devi
 
 Si votre banque ne figure pas dans la liste, choisissez **Other (custom CSV)**. L'application affiche un aperçu de votre fichier et vous demande d'indiquer quelle colonne contient la date, le montant et la description. Vous pouvez enregistrer ce mappage avec un nom : le prochain CSV avec la même structure de colonnes sera importé automatiquement.
 
+## Importations passées et annulation
+
+La section **Importations passées** en bas de **Paramètres → Importer des transactions** affiche les 20 dernières importations — banque source, date et nombre de transactions créées.
+
+Pour annuler une importation récente, appuyez sur la **flèche d'annulation** (↩) à droite de la ligne. Une confirmation est demandée avant toute suppression.
+
+- L'annulation est disponible pendant **30 jours** après l'importation d'origine.
+- Toutes les transactions de cette importation sont supprimées de votre compte.
+- Le verrou de déduplication est effacé pour que vous puissiez réimporter le même fichier.
+- Les importations de plus de 30 jours n'affichent pas le bouton d'annulation.
+
 ## Votre banque n'est pas dans la liste ?
 
 En bas de **Paramètres → Importer des transactions**, vous trouverez une carte **« Votre banque n'est pas dans la liste ? »**. Appuyez dessus, saisissez le nom de votre banque et joignez un exemple du relevé qu'elle vous fournit (CSV ou PDF). Envoyez-le et nous l'utiliserons pour ajouter la prise en charge de cette banque. Votre demande va directement à notre équipe — rien n'est publié publiquement.

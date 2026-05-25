@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { createHash, randomUUID } from 'crypto';
 import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
+import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
@@ -31,6 +32,7 @@ export interface PreviewOptions {
 export class ImportBankService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly importBatches: ImportBatchesService,
     private readonly mapping: MappingService,
     private readonly telegram: TelegramService,
   ) {}
@@ -329,10 +331,14 @@ export class ImportBankService {
     let createdIncomes = 0;
     let createdExchanges = 0;
     let skippedDuplicates = 0;
+    let batchId!: string;
 
     const categoryCache = new Map<string, string | null>();
+    const source = `bank:${dto.bankId ?? 'universal'}`;
 
     await this.prisma.$transaction(async (tx) => {
+      batchId = await this.importBatches.createBatch(tx as any, { accountId, userId, source });
+
       for (const row of toImport) {
         try {
           if (row.kind === 'expense') {
@@ -353,6 +359,7 @@ export class ImportBankService {
                 date: new Date(row.date),
                 source: 'import',
                 externalRef: row.externalRef,
+                importBatchId: batchId,
                 ...(categoryId ? { categoryId } : {}),
               },
             });
@@ -374,6 +381,7 @@ export class ImportBankService {
                 description: row.description,
                 date: new Date(row.date),
                 externalRef: row.externalRef,
+                importBatchId: batchId,
                 ...(categoryId ? { categoryId } : {}),
               },
             });
@@ -391,6 +399,7 @@ export class ImportBankService {
                 exchangeRate: row.fxRate ?? 0,
                 date: new Date(row.date),
                 externalRef: row.externalRef,
+                importBatchId: batchId,
               },
             });
             createdExchanges++;
@@ -403,6 +412,8 @@ export class ImportBankService {
           throw err;
         }
       }
+
+      await this.importBatches.finalizeBatch(tx as any, batchId, createdExpenses + createdIncomes + createdExchanges);
     });
 
     let savedMappingId: string | undefined;
@@ -427,6 +438,7 @@ export class ImportBankService {
       skippedDuplicates,
       parseErrors: 0,
       savedMappingId,
+      batchId,
     };
   }
 

@@ -962,3 +962,17 @@ export interface AppVersion {
   publishedAt: string;
   updatedAt: string;
 }
+
+
+// Import batch history
+export type ImportBatchStatus = 'committed' | 'rolled_back';
+
+export interface ImportBatch {
+  id: string;
+  accountId: string;
+  userId: string;
+  source: string;
+  importedAt: string;
+  rowCount: number;
+  status: ImportBatchStatus;
+}

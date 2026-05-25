@@ -141,6 +141,7 @@ export default {
     periodAll: 'Все',
     periodCustom: 'Выбрать',
     categoryAll: 'Все',
+    searchPlaceholder: 'Поиск транзакций...',
   },
   incomes: {
     noIncomes: 'Доходов пока нет',
@@ -711,6 +712,15 @@ export default {
     requestSent: 'Спасибо! Ваш запрос отправлен — мы рассмотрим его.',
     requestErrorNoName: 'Пожалуйста, введите название банка.',
     requestError: 'Не удалось отправить запрос. Пожалуйста, попробуйте позже.',
+    pastImportsHeader: 'История импортов',
+    noPastImports: 'Импортов ещё нет',
+    transactionCount_one: '{{count}} транзакция',
+    transactionCount_few: '{{count}} транзакции',
+    transactionCount_many: '{{count}} транзакций',
+    transactionCount_other: '{{count}} транзакции',
+    undoImportTitle: 'Отменить импорт',
+    undoImportConfirm: 'Это удалит {{count}} транзакций из этого импорта. После этого можно повторно импортировать тот же файл.',
+    undoImportAction: 'Отменить импорт',
     error: {
       encodingUnknown: 'Не удалось определить кодировку файла. Попробуйте сохранить CSV в формате UTF-8.',
       parseFailed: 'Не удалось разобрать файл. Проверьте формат и повторите попытку.',

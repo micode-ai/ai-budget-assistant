@@ -5,6 +5,8 @@ import type {
   BankImportCommitResponse,
   CsvImportMapping,
   CreateCsvImportMappingDto,
+  ImportBatchListResponse,
+  RollbackImportBatchResponse,
 } from '@budget/shared-types';
 
 export const importBankApi = {
@@ -76,6 +78,16 @@ export const importBankApi = {
 
   deleteCsvImportMapping(id: string): Promise<void> {
     return httpClient.request<void>(`/import/bank/mappings/${id}`, { method: 'DELETE' });
+  },
+
+  listImportBatches(): Promise<ImportBatchListResponse> {
+    return httpClient.request<ImportBatchListResponse>('/import/batches');
+  },
+
+  rollbackImportBatch(batchId: string): Promise<RollbackImportBatchResponse> {
+    return httpClient.request<RollbackImportBatchResponse>(`/import/batches/${batchId}`, {
+      method: 'DELETE',
+    });
   },
 
   async requestBank(payload: {

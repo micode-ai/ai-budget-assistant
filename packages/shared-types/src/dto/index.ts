@@ -1297,6 +1297,7 @@ export interface WiseImportCommitResponse {
   createdExpenses: number;
   createdIncomes: number;
   createdExchanges: number;
+  batchId: string;
 }
 
 // Bank Import — neutral type aliases reused by Wise + Polish parsers
@@ -1357,6 +1358,7 @@ export interface BankImportCommitResponse {
   skippedDuplicates: number;
   parseErrors: number;
   savedMappingId?: string;
+  batchId: string;
 }
 
 export interface CsvImportMapping {
@@ -1383,4 +1385,23 @@ export interface CreateCsvImportMappingDto {
   encoding?: string;
   amountFormat?: 'polish' | 'standard';
   dateFormat?: 'auto' | 'DD.MM.YYYY' | 'DD-MM-YYYY' | 'YYYY-MM-DD';
+}
+
+// Import Batch History DTOs
+
+export interface ImportBatchDto {
+  id: string;
+  source: string;
+  importedAt: string;
+  rowCount: number;
+  status: 'committed' | 'rolled_back';
+  canRollback: boolean;
+}
+
+export interface ImportBatchListResponse {
+  batches: ImportBatchDto[];
+}
+
+export interface RollbackImportBatchResponse {
+  rolledBack: number;
 }

@@ -141,6 +141,7 @@ export default {
     periodAll: 'Alle',
     periodCustom: 'Benutzerdefiniert',
     categoryAll: 'Alle',
+    searchPlaceholder: 'Transaktionen suchen...',
   },
   incomes: {
     noIncomes: 'Noch kein Einkommen',
@@ -711,6 +712,13 @@ export default {
     requestSent: 'Danke! Ihre Anfrage wurde gesendet — wir schauen uns das an.',
     requestErrorNoName: 'Bitte geben Sie den Banknamen ein.',
     requestError: 'Die Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.',
+    pastImportsHeader: 'Vergangene Importe',
+    noPastImports: 'Noch keine Importe',
+    transactionCount_one: '{{count}} Transaktion',
+    transactionCount_other: '{{count}} Transaktionen',
+    undoImportTitle: 'Import rückgängig machen',
+    undoImportConfirm: 'Dadurch werden {{count}} Transaktionen aus diesem Import entfernt. Anschließend kann die gleiche Datei erneut importiert werden.',
+    undoImportAction: 'Import rückgängig',
     error: {
       encodingUnknown: 'Dateicodierung konnte nicht erkannt werden. Versuchen Sie, die CSV-Datei als UTF-8 zu speichern.',
       parseFailed: 'Die Datei konnte nicht verarbeitet werden. Überprüfen Sie das Format und versuchen Sie es erneut.',

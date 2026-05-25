@@ -158,6 +158,8 @@ model User {
   whatsappLink      WhatsAppLink?
   whatsappLinkCodes WhatsAppLinkCode[]
 
+  importBatches     ImportBatch[]
+
   @@map("users")
 }
 
@@ -207,6 +209,7 @@ model Account {
   whatsappLinks           WhatsAppLink[]
   csvImportMappings       CsvImportMapping[]
   chatConversations       ChatConversation[]
+  importBatches           ImportBatch[]
 
   @@map("accounts")
 }
@@ -302,6 +305,7 @@ model Expense {
   recurringPeriod String?  @map("recurring_period")
   source       String   @default("manual")
   externalRef  String?  @map("external_ref")
+  importBatchId String? @map("import_batch_id")
   isDebt           Boolean   @default(false) @map("is_debt")
   isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
   debtContactName  String?   @map("debt_contact_name")
@@ -322,6 +326,7 @@ model Expense {
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category?     @relation(fields: [categoryId], references: [id])
+  importBatch ImportBatch? @relation(fields: [importBatchId], references: [id])
   items    ExpenseItem[]
   expenseTags      ExpenseTag[]
   categorySplits   ExpenseCategorySplit[]
@@ -369,6 +374,7 @@ model Income {
   notes        String?
   date         DateTime @db.Date
   externalRef  String?  @map("external_ref")
+  importBatchId String? @map("import_batch_id")
   isDebt           Boolean   @default(false) @map("is_debt")
   isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
   debtContactName  String?   @map("debt_contact_name")
@@ -385,6 +391,7 @@ model Income {
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category? @relation(fields: [categoryId], references: [id])
+  importBatch ImportBatch? @relation(fields: [importBatchId], references: [id])
   incomeTags      IncomeTag[]
   projectIncomes  ProjectIncome[]
   linkedTransfer  AccountTransfer? @relation("TransferLinkedIncome")
@@ -560,6 +567,7 @@ model CurrencyExchange {
   date         DateTime @db.Date
   notes        String?
   externalRef  String?  @map("external_ref")
+  importBatchId String? @map("import_batch_id")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -570,6 +578,7 @@ model CurrencyExchange {
   // Relations
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  importBatch ImportBatch? @relation(fields: [importBatchId], references: [id])
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -1292,6 +1301,28 @@ model AppVersion {
 
   @@index([platform, publishedAt(sort: Desc)])
   @@map("app_versions")
+}
+
+// ---- Import Batch History ----
+
+model ImportBatch {
+  id         String   @id @default(uuid())
+  accountId  String   @map("account_id")
+  userId     String   @map("user_id")
+  source     String
+  importedAt DateTime @default(now()) @map("imported_at")
+  rowCount   Int      @default(0) @map("row_count")
+  status     String   @default("committed")
+
+  account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expenses          Expense[]
+  incomes           Income[]
+  currencyExchanges CurrencyExchange[]
+
+  @@index([accountId, importedAt(sort: Desc)])
+  @@map("import_batches")
 }
 
 // ---- CSV Import Mappings ----

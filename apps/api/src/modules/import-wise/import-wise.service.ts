@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
+import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { WiseImportCommitDto } from './dto';
 import type { WiseImportPreviewResponse, WiseImportRow, WiseImportCommitResponse } from '@budget/shared-types';
 
@@ -81,7 +82,10 @@ function suggestCategory(merchant: string | undefined): string | undefined {
 
 @Injectable()
 export class ImportWiseService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly importBatches: ImportBatchesService,
+  ) {}
 
   async parsePreview(
     accountId: string,
@@ -241,10 +245,13 @@ export class ImportWiseService {
     let createdExpenses = 0;
     let createdIncomes = 0;
     let createdExchanges = 0;
+    let batchId!: string;
 
     const categoryCache = new Map<string, string | null>();
 
     await this.prisma.$transaction(async (tx) => {
+      batchId = await this.importBatches.createBatch(tx, { accountId, userId, source: 'wise' });
+
       for (const row of rowsToImport) {
         try {
           if (row.kind === 'expense') {
@@ -273,6 +280,7 @@ export class ImportWiseService {
                 date: new Date(row.date),
                 source: 'import',
                 externalRef: row.externalRef,
+                importBatchId: batchId,
                 ...(categoryId ? { categoryId } : {}),
               },
             });
@@ -302,6 +310,7 @@ export class ImportWiseService {
                 description: row.description,
                 date: new Date(row.date),
                 externalRef: row.externalRef,
+                importBatchId: batchId,
                 ...(categoryId ? { categoryId } : {}),
               },
             });
@@ -319,6 +328,7 @@ export class ImportWiseService {
                 exchangeRate: row.fxRate!,
                 date: new Date(row.date),
                 externalRef: row.externalRef,
+                importBatchId: batchId,
               },
             });
             createdExchanges++;
@@ -330,8 +340,10 @@ export class ImportWiseService {
           throw err;
         }
       }
+
+      await this.importBatches.finalizeBatch(tx, batchId, createdExpenses + createdIncomes + createdExchanges);
     });
 
-    return { createdExpenses, createdIncomes, createdExchanges };
+    return { createdExpenses, createdIncomes, createdExchanges, batchId };
   }
 }

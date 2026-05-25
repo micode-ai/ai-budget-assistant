@@ -141,6 +141,7 @@ export default {
     periodAll: 'Tout',
     periodCustom: 'Personnalisé',
     categoryAll: 'Tout',
+    searchPlaceholder: 'Rechercher des transactions...',
   },
   incomes: {
     noIncomes: 'Aucun revenu pour le moment',
@@ -711,6 +712,13 @@ export default {
     requestSent: 'Merci ! Votre demande a été envoyée — nous allons l\'examiner.',
     requestErrorNoName: 'Veuillez saisir le nom de la banque.',
     requestError: 'Impossible d\'envoyer la demande. Veuillez réessayer plus tard.',
+    pastImportsHeader: 'Importations passées',
+    noPastImports: 'Aucune importation pour l\'instant',
+    transactionCount_one: '{{count}} transaction',
+    transactionCount_other: '{{count}} transactions',
+    undoImportTitle: 'Annuler l\'importation',
+    undoImportConfirm: 'Cela supprimera {{count}} transactions de cet import. Vous pourrez réimporter le même fichier ensuite.',
+    undoImportAction: 'Annuler l\'import',
     error: {
       encodingUnknown: 'Impossible de détecter l\'encodage du fichier. Essayez d\'enregistrer le CSV en UTF-8.',
       parseFailed: 'Impossible d\'analyser le fichier. Vérifiez le format et réessayez.',

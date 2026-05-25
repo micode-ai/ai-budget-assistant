@@ -141,6 +141,7 @@ export default {
     periodAll: 'Wszystko',
     periodCustom: 'Własny',
     categoryAll: 'Wszystkie',
+    searchPlaceholder: 'Szukaj transakcji...',
   },
   incomes: {
     noIncomes: 'Brak przychodów',
@@ -711,6 +712,15 @@ export default {
     requestSent: 'Dziękujemy! Twoje zgłoszenie zostało wysłane — przyjrzymy się temu.',
     requestErrorNoName: 'Proszę podać nazwę banku.',
     requestError: 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie później.',
+    pastImportsHeader: 'Historia importów',
+    noPastImports: 'Brak importów',
+    transactionCount_one: '{{count}} transakcja',
+    transactionCount_few: '{{count}} transakcje',
+    transactionCount_many: '{{count}} transakcji',
+    transactionCount_other: '{{count}} transakcji',
+    undoImportTitle: 'Cofnij import',
+    undoImportConfirm: 'Spowoduje to usunięcie {{count}} transakcji z tego importu. Możesz ponownie zaimportować ten sam plik.',
+    undoImportAction: 'Cofnij import',
     error: {
       encodingUnknown: 'Nie udało się wykryć kodowania pliku. Spróbuj zapisać plik CSV jako UTF-8.',
       parseFailed: 'Nie udało się przetworzyć pliku. Sprawdź format i spróbuj ponownie.',

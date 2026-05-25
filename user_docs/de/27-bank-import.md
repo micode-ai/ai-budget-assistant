@@ -38,6 +38,17 @@ Jede Zeile wird zu einer Ausgabe, einer Einnahme oder einem Währungsumtausch (w
 
 Wenn Ihre Bank nicht in der Liste steht, wählen Sie **Other (custom CSV)**. Die App zeigt eine Vorschau Ihrer Datei und fordert Sie auf, die Spalten für Datum, Betrag und Beschreibung zu benennen. Sie können diese Zuordnung unter einem Namen speichern; die nächste CSV-Datei mit demselben Spaltenaufbau wird dann automatisch importiert.
 
+## Vergangene Importe & Rückgängig machen
+
+Im Bereich **Vergangene Importe** unten in **Einstellungen → Transaktionen importieren** werden die letzten 20 Importe angezeigt — Quellbank, Datum und Anzahl der erstellten Transaktionen.
+
+Um einen kürzlichen Import rückgängig zu machen, tippe auf den **Rückgängig-Pfeil** (↩) auf der rechten Seite der Zeile. Vor dem Löschen wird eine Bestätigung angefordert.
+
+- Rückgängig machen ist innerhalb von **30 Tagen** nach dem ursprünglichen Import möglich.
+- Alle Transaktionen aus diesem Import werden aus deinem Konto entfernt.
+- Die Deduplizierungssperre wird zurückgesetzt, sodass dieselbe Datei erneut importiert werden kann.
+- Importe, die älter als 30 Tage sind, zeigen keine Rückgängig-Schaltfläche.
+
 ## Ihre Bank nicht dabei?
 
 Am unteren Ende von **Einstellungen → Transaktionen importieren** finden Sie eine Karte **„Ihre Bank nicht dabei?"**. Tippen Sie darauf, geben Sie den Namen Ihrer Bank ein und fügen Sie ein Beispiel des von ihr ausgegebenen Kontoauszugs bei (CSV oder PDF). Senden Sie die Anfrage, und wir werden die Unterstützung für diese Bank hinzufügen. Ihre Anfrage geht direkt an unser Team — sie wird nicht öffentlich gepostet.
