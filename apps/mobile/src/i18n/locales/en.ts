@@ -1151,6 +1151,7 @@ export default {
   splits: {
     title: 'Split Categories',
     splitExpense: 'Split Expense',
+    selectCategory: 'Select category',
     addCategory: 'Add Category',
     amount: 'Amount',
     percentage: 'Percentage',
