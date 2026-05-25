@@ -5,13 +5,12 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   Modal,
   Alert,
   FlatList,
   Share,
 } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { PercentSlider } from '@/components/PercentSlider';
@@ -203,7 +202,7 @@ export default function ScenarioSimulatorScreen() {
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior="padding"
       >
         {/* ── Action bar ── */}
         <View style={styles.actionBar}>
@@ -472,7 +471,7 @@ export default function ScenarioSimulatorScreen() {
         onRequestClose={() => setSaveModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <KeyboardAvoidingView behavior="padding">
             <View style={styles.modalCard}>
               <Text style={styles.modalTitle}>{t('scenarioSimulator.saveScenario')}</Text>
               <TextInput

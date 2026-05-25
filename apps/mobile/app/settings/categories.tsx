@@ -7,9 +7,8 @@ import {
   Alert,
   Modal,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
+import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -189,8 +188,9 @@ export default function CategoriesSettingsScreen() {
       </ScrollView>
 
       <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={closeModal}>
+        <KeyboardProvider>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior="padding"
           style={styles.overlay}
         >
           <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeModal} />
@@ -244,6 +244,7 @@ export default function CategoriesSettingsScreen() {
             </View>
           </View>
         </KeyboardAvoidingView>
+        </KeyboardProvider>
       </Modal>
     </SafeAreaView>
   );

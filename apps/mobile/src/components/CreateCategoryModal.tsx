@@ -6,9 +6,8 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
+import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '../stores/categoryStore';
@@ -70,8 +69,9 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
+      <KeyboardProvider>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior="padding"
         style={styles.overlay}
       >
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleClose} />
@@ -123,6 +123,7 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
           </View>
         </View>
       </KeyboardAvoidingView>
+      </KeyboardProvider>
     </Modal>
   );
 };
