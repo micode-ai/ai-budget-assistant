@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
@@ -21,6 +21,7 @@ export default function SettingsIndexScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const { user, logout } = useAuthStore();
 
   const categories: SettingsCategory[] = [
@@ -133,7 +134,10 @@ export default function SettingsIndexScreen() {
     <SafeAreaView style={styles.container} edges={[]}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: theme.spacing[10] + insets.bottom },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {/* Profile header */}
