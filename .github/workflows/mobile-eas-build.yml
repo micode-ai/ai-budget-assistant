@@ -49,6 +49,13 @@ jobs:
             echo "name=production" >> $GITHUB_OUTPUT
           fi
 
+      - name: Check release version
+        # Bare project: Play shows build.gradle versionName, not app.json.
+        # Block production builds where the two drifted or weren't bumped.
+        if: steps.profile.outputs.name == 'production'
+        working-directory: apps/mobile
+        run: node scripts/check-release-version.js
+
       - name: Run EAS Build
         # GOOGLE_SERVICES_JSON consumed by eas-build-pre-install hook
         # (apps/mobile/scripts/write-google-services.js).
