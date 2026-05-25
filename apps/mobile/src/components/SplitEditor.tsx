@@ -6,6 +6,9 @@ import {
   TextInput,
   StyleSheet,
   Alert,
+  Modal,
+  Pressable,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +21,10 @@ interface Split {
   amount: number;
   percentage: number;
   notes?: string;
+  // Raw text shown in the amount field. Kept separate from `amount` so what the
+  // user types (e.g. "5." or "0.0") is preserved instead of being mangled by a
+  // parseFloat round-trip on every keystroke.
+  amountText?: string;
 }
 
 interface SplitEditorProps {
@@ -41,6 +48,7 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
   const [splits, setSplits] = useState<Split[]>(
     initialSplits || [],
   );
+  const [pickerIndex, setPickerIndex] = useState<number | null>(null);
 
   const remainingAmount = totalAmount - splits.reduce((sum, s) => sum + s.amount, 0);
 
@@ -49,11 +57,13 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
     const availableCategory = categories.find(c => !usedIds.has(c.id));
     if (!availableCategory) return;
 
+    const amount = Math.max(0, Math.round(remainingAmount * 100) / 100);
     const newSplit: Split = {
       categoryId: availableCategory.id,
       categoryName: getCategoryDisplayName(availableCategory, t),
-      amount: Math.max(0, remainingAmount),
-      percentage: totalAmount > 0 ? Math.max(0, (remainingAmount / totalAmount) * 100) : 0,
+      amount,
+      percentage: totalAmount > 0 ? Math.max(0, (amount / totalAmount) * 100) : 0,
+      amountText: amount > 0 ? String(amount) : '',
     };
     setSplits([...splits, newSplit]);
   }, [splits, categories, remainingAmount, totalAmount, t]);
@@ -63,15 +73,32 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
   }, [splits]);
 
   const updateSplitAmount = useCallback((index: number, amountStr: string) => {
-    const amount = parseFloat(amountStr) || 0;
+    // Keep digits + a single decimal separator; preserve the user's raw text.
+    const normalized = amountStr.replace(',', '.').replace(/[^0-9.]/g, '');
+    const amount = parseFloat(normalized) || 0;
     const newSplits = [...splits];
     newSplits[index] = {
       ...newSplits[index],
       amount,
+      amountText: normalized,
       percentage: totalAmount > 0 ? (amount / totalAmount) * 100 : 0,
     };
     setSplits(newSplits);
   }, [splits, totalAmount]);
+
+  const selectCategory = useCallback((categoryId: string) => {
+    if (pickerIndex === null) return;
+    const cat = categories.find(c => c.id === categoryId);
+    if (!cat) { setPickerIndex(null); return; }
+    const newSplits = [...splits];
+    newSplits[pickerIndex] = {
+      ...newSplits[pickerIndex],
+      categoryId: cat.id,
+      categoryName: getCategoryDisplayName(cat, t),
+    };
+    setSplits(newSplits);
+    setPickerIndex(null);
+  }, [pickerIndex, splits, categories, t]);
 
   const handleConfirm = useCallback(() => {
     const total = splits.reduce((sum, s) => sum + s.amount, 0);
@@ -86,8 +113,16 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
       Alert.alert('', t('splits.addCategory') || 'Add at least 2 categories');
       return;
     }
-    onSplitsChange(splits);
+    // Strip the internal display-only field before handing splits to the parent.
+    onSplitsChange(splits.map(({ amountText: _amountText, ...rest }) => rest));
   }, [splits, totalAmount, onSplitsChange, t]);
+
+  // Categories available in the picker = all except those used by OTHER splits
+  // (the currently-edited split may keep its own category).
+  const usedByOthers = new Set(
+    splits.filter((_, i) => i !== pickerIndex).map(s => s.categoryId),
+  );
+  const pickerCategories = categories.filter(c => !usedByOthers.has(c.id));
 
   return (
     <View style={styles.container}>
@@ -99,17 +134,19 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
 
       {splits.map((split, index) => (
         <View key={index} style={styles.splitRow}>
-          <TouchableOpacity style={styles.categorySelector}>
+          <TouchableOpacity style={styles.categorySelector} onPress={() => setPickerIndex(index)}>
             <View style={[styles.colorDot, { backgroundColor: categories.find(c => c.id === split.categoryId)?.color || '#6B7280' }]} />
-            <Text style={styles.categoryName}>{split.categoryName}</Text>
+            <Text style={styles.categoryName} numberOfLines={1}>{split.categoryName}</Text>
+            <Ionicons name="chevron-down" size={14} color="#9CA3AF" />
           </TouchableOpacity>
 
           <TextInput
             style={styles.amountInput}
-            value={split.amount > 0 ? split.amount.toString() : ''}
+            value={split.amountText ?? (split.amount > 0 ? split.amount.toString() : '')}
             onChangeText={(text) => updateSplitAmount(index, text)}
             keyboardType="decimal-pad"
             placeholder="0.00"
+            placeholderTextColor="#9CA3AF"
           />
 
           <Text style={styles.percentage}>
@@ -137,6 +174,27 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
           <Text style={styles.confirmText}>{t('splits.confirmSplit') || 'Confirm Split'}</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={pickerIndex !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setPickerIndex(null)}
+      >
+        <Pressable style={styles.modalOverlay} onPress={() => setPickerIndex(null)}>
+          <Pressable style={styles.modalCard} onPress={() => {}}>
+            <Text style={styles.modalTitle}>{t('splits.selectCategory') || 'Select category'}</Text>
+            <ScrollView style={styles.modalList}>
+              {pickerCategories.map((cat) => (
+                <TouchableOpacity key={cat.id} style={styles.categoryOption} onPress={() => selectCategory(cat.id)}>
+                  <View style={[styles.colorDot, { backgroundColor: cat.color || '#6B7280' }]} />
+                  <Text style={styles.categoryOptionText}>{getCategoryDisplayName(cat, t)}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   );
 };
@@ -237,5 +295,38 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#fff',
     fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    padding: 32,
+  },
+  modalCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    paddingVertical: 12,
+    maxHeight: '70%',
+  },
+  modalTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#111827',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  modalList: {
+    paddingHorizontal: 8,
+  },
+  categoryOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  categoryOptionText: {
+    fontSize: 15,
+    color: '#374151',
   },
 });
