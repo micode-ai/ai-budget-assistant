@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import Markdown from 'react-native-markdown-display';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useChatStore, ChatMessage } from '@/stores/chatStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -174,6 +174,15 @@ export default function ChatScreen() {
       return () => stopPolling();
     }, [currentIsShared, startPolling, stopPolling]),
   );
+
+  // Deep link from a chat-mention push: open the originating conversation.
+  const { conversationId: deepLinkConversationId } = useLocalSearchParams<{ conversationId?: string }>();
+  useEffect(() => {
+    if (deepLinkConversationId && deepLinkConversationId !== currentConversationId) {
+      loadConversation(deepLinkConversationId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deepLinkConversationId]);
 
   const handleSend = async () => {
     if (!inputText.trim() || isLoading) return;

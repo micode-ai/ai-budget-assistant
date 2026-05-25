@@ -288,7 +288,14 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         });
       }
 
-      const conv = get().conversations.find((c) => c.id === conversationId);
+      // Resolve the conversation's shared flag from the list. On a deep link
+      // (push tap) the list may not be loaded yet, so fetch it once as a fallback
+      // — without it, currentIsShared stays false and polling never starts.
+      let conv = get().conversations.find((c) => c.id === conversationId);
+      if (!conv) {
+        await get().loadConversations();
+        conv = get().conversations.find((c) => c.id === conversationId);
+      }
       const isShared = conv?.isShared ?? false;
 
       // Fetch from API (up to 50 messages, pending_action filtered server-side)
