@@ -1138,6 +1138,7 @@ export default {
   splits: {
     title: 'Раздзяленне катэгорый',
     splitExpense: 'Раздзяліць расход',
+    selectCategory: 'Выберыце катэгорыю',
     addCategory: 'Дадаць катэгорыю',
     amount: 'Сума',
     percentage: 'Працэнт',
