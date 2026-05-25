@@ -1,20 +1,20 @@
 import { ReactNode } from 'react';
-import { ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { Platform, ScrollView, ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
+import { useKeyboardHeight } from '@/hooks/useKeyboardHeight';
 
 interface KeyboardAwareScreenProps extends ScrollViewProps {
   children: ReactNode;
   // Kept for API compatibility with the previous wrapper; merged into `style`.
   containerStyle?: StyleProp<ViewStyle>;
-  // Extra gap between the focused input and the keyboard (added to a 24px base).
+  // Extra gap added below the content when the keyboard is open.
   keyboardVerticalOffset?: number;
 }
 
-// Drop-in replacement for a form screen's root vertical ScrollView. Backed by
-// react-native-keyboard-controller's KeyboardAwareScrollView, which reads the
-// real IME insets (works under RN New Architecture + Android edge-to-edge where
-// the classic KeyboardAvoidingView/adjustResize is unreliable) and auto-scrolls
-// the focused input into view. Requires <KeyboardProvider> at the app root.
+// Pure-JS drop-in for a form screen's root vertical ScrollView (no native
+// module → builds on Windows). On Android it pads the content by the measured
+// keyboard height so the focused field can scroll above the keyboard (works
+// under New Architecture + edge-to-edge, where adjustResize is unreliable). On
+// iOS it uses the built-in `automaticallyAdjustKeyboardInsets`.
 export function KeyboardAwareScreen({
   children,
   containerStyle,
@@ -23,16 +23,23 @@ export function KeyboardAwareScreen({
   style,
   ...scrollProps
 }: KeyboardAwareScreenProps) {
+  const keyboardHeight = useKeyboardHeight();
+  const androidPad =
+    Platform.OS === 'android' && keyboardHeight > 0
+      ? { paddingBottom: keyboardHeight + keyboardVerticalOffset + 24 }
+      : null;
+
   return (
-    <KeyboardAwareScrollView
+    <ScrollView
       style={[{ flex: 1 }, containerStyle, style]}
-      contentContainerStyle={contentContainerStyle}
+      contentContainerStyle={[contentContainerStyle, androidPad]}
       keyboardShouldPersistTaps="handled"
-      bottomOffset={keyboardVerticalOffset + 24}
+      keyboardDismissMode="on-drag"
+      automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
       showsVerticalScrollIndicator={false}
       {...scrollProps}
     >
       {children}
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 }
