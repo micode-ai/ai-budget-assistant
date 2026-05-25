@@ -8,7 +8,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -188,7 +188,6 @@ export default function CategoriesSettingsScreen() {
       </ScrollView>
 
       <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={closeModal}>
-        <KeyboardProvider>
         <KeyboardAvoidingView
           behavior="padding"
           style={styles.overlay}
@@ -244,7 +243,6 @@ export default function CategoriesSettingsScreen() {
             </View>
           </View>
         </KeyboardAvoidingView>
-        </KeyboardProvider>
       </Modal>
     </SafeAreaView>
   );
