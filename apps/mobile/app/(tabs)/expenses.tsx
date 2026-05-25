@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator, TextInput } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,14 +27,54 @@ export default function ExpensesScreen() {
   const [fabOpen, setFabOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('expenses');
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<TextInput>(null);
+  const { loadExpenses, getFilteredExpenses, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
+  const { loadIncomes, getFilteredIncomes, deleteIncome, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
 
   useEffect(() => {
     if (tab === 'income' || tab === 'expenses') {
       setActiveTab(tab);
     }
   }, [tab]);
-  const { loadExpenses, getFilteredExpenses, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
-  const { loadIncomes, getFilteredIncomes, deleteIncome, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
+
+  const handleSearchChange = (text: string) => {
+    setSearchQuery(text);
+    if (activeTab === 'expenses') {
+      setExpenseFilters({ searchQuery: text });
+    } else {
+      setIncomeFilters({ searchQuery: text });
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setExpenseFilters({ searchQuery: '' });
+    setIncomeFilters({ searchQuery: '' });
+    searchInputRef.current?.focus();
+  };
+
+  const toggleSearch = () => {
+    if (searchVisible) {
+      setSearchVisible(false);
+      setSearchQuery('');
+      setExpenseFilters({ searchQuery: '' });
+      setIncomeFilters({ searchQuery: '' });
+    } else {
+      setSearchVisible(true);
+      setTimeout(() => searchInputRef.current?.focus(), 50);
+    }
+  };
+
+  const switchTab = (nextTab: ActiveTab) => {
+    setActiveTab(nextTab);
+    setSearchVisible(false);
+    setSearchQuery('');
+    setExpenseFilters({ searchQuery: '' });
+    setIncomeFilters({ searchQuery: '' });
+    setShowCategoryPicker(false);
+  };
   const expensesLoading = useExpenseStore((s) => s.isLoading);
   const incomesLoading = useIncomeStore((s) => s.isLoading);
   const canEdit = useAccountStore((s) => s.canEdit());
@@ -263,24 +303,57 @@ export default function ExpensesScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       {/* Segmented Control */}
-      <View style={styles.segmentedControl}>
-        <TouchableOpacity
-          style={[styles.segmentButton, activeTab === 'expenses' && styles.segmentButtonActive]}
-          onPress={() => { setActiveTab('expenses'); setIncomeFilters({ categoryId: null }); setShowCategoryPicker(false); }}
-        >
-          <Text style={[styles.segmentText, activeTab === 'expenses' && styles.segmentTextActive]}>
-            {t('expenses.tabExpenses')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.segmentButton, activeTab === 'income' && styles.segmentButtonActive]}
-          onPress={() => { setActiveTab('income'); setExpenseFilters({ categoryId: null }); setShowCategoryPicker(false); }}
-        >
-          <Text style={[styles.segmentText, activeTab === 'income' && styles.segmentTextActive]}>
-            {t('expenses.tabIncome')}
-          </Text>
+      <View style={styles.segmentedControlRow}>
+        <View style={styles.segmentedControl}>
+          <TouchableOpacity
+            style={[styles.segmentButton, activeTab === 'expenses' && styles.segmentButtonActive]}
+            onPress={() => switchTab('expenses')}
+          >
+            <Text style={[styles.segmentText, activeTab === 'expenses' && styles.segmentTextActive]}>
+              {t('expenses.tabExpenses')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.segmentButton, activeTab === 'income' && styles.segmentButtonActive]}
+            onPress={() => switchTab('income')}
+          >
+            <Text style={[styles.segmentText, activeTab === 'income' && styles.segmentTextActive]}>
+              {t('expenses.tabIncome')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={toggleSearch} style={styles.searchToggleButton}>
+          <Ionicons
+            name={searchVisible ? 'close' : 'search'}
+            size={20}
+            color={searchVisible ? theme.colors.primary : theme.colors.textSecondary}
+          />
         </TouchableOpacity>
       </View>
+
+      {/* Search Bar */}
+      {searchVisible && (
+        <View style={styles.searchBar}>
+          <Ionicons name="search" size={16} color={theme.colors.textTertiary} style={styles.searchIcon} />
+          <TextInput
+            ref={searchInputRef}
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={handleSearchChange}
+            placeholder={t('expenses.searchPlaceholder')}
+            placeholderTextColor={theme.colors.textTertiary}
+            returnKeyType="search"
+            autoCapitalize="none"
+            autoCorrect={false}
+            clearButtonMode="never"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={clearSearch} style={styles.searchClearButton}>
+              <Ionicons name="close-circle" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
 
       {/* Period Filter */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.periodFilterScroll} contentContainerStyle={styles.periodFilterRow}>
@@ -617,14 +690,53 @@ const createStyles = (theme: Theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  segmentedControl: {
+  segmentedControlRow: {
     flexDirection: 'row' as const,
+    alignItems: 'center' as const,
     marginHorizontal: theme.spacing[4],
     marginTop: theme.spacing[3],
     marginBottom: theme.spacing[1],
+    gap: theme.spacing[2],
+  },
+  segmentedControl: {
+    flex: 1,
+    flexDirection: 'row' as const,
     backgroundColor: theme.colors.surfaceSecondary,
     borderRadius: theme.borderRadius.lg,
     padding: 3,
+  },
+  searchToggleButton: {
+    width: 36,
+    height: 36,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surfaceSecondary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  searchBar: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginHorizontal: theme.spacing[4],
+    marginBottom: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.borderLight,
+  },
+  searchIcon: {
+    marginRight: theme.spacing[2],
+  },
+  searchInput: {
+    flex: 1,
+    ...theme.textStyles.bodyLarge,
+    color: theme.colors.textPrimary,
+    padding: 0,
+  },
+  searchClearButton: {
+    marginLeft: theme.spacing[1],
+    padding: 2,
   },
   segmentButton: {
     flex: 1,

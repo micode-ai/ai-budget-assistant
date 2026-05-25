@@ -38,6 +38,17 @@ Each row becomes an Expense, an Income, or a Currency Exchange (when the app det
 
 If your bank isn't in the list, pick **Other (custom CSV)**. The app shows a preview of your file and asks you to point at which column holds the date, amount, and description. You can save this mapping with a name, and the next CSV with the same column layout is imported automatically.
 
+## Past imports & Undo
+
+The **Past imports** section at the bottom of **Settings → Import transactions** shows the last 20 imports — source bank, date, and how many transactions were created.
+
+To undo a recent import, tap the **undo arrow** (↩) on the right side of the row. You'll be asked to confirm before anything is deleted.
+
+- Undo is available within **30 days** of the original import.
+- All transactions from that import are removed from your account.
+- The dedup lock is cleared, so you can re-import the same file cleanly.
+- Imports older than 30 days don't show the undo button.
+
 ## Don't see your bank?
 
 At the bottom of **Settings → Import transactions** there's a **"Don't see your bank?"** card. Tap it, enter the bank's name, and attach an example of the statement it gives you (CSV or PDF). Send it and we'll use it to add support for that bank. Your request goes straight to our team — nothing is posted publicly.

@@ -5,10 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { useTranslation } from 'react-i18next';
-import type { CsvImportMapping } from '@budget/shared-types';
+import type { CsvImportMapping, ImportBatchDto } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { useImportStore } from '@/stores/importStore';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
@@ -24,12 +26,24 @@ const BANKS = [
   { id: 'universal', label: 'Other (custom CSV)' },
 ];
 
+function getBatchSourceLabel(source: string): string {
+  if (source === 'wise') return 'Wise';
+  if (source.startsWith('bank:')) {
+    const bankId = source.slice(5);
+    const bank = BANKS.find((b) => b.id === bankId);
+    return bank?.label ?? bankId;
+  }
+  return source;
+}
+
 export default function ImportHubScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [mappings, setMappings] = useState<CsvImportMapping[]>([]);
   const [loading, setLoading] = useState(true);
+  const [batches, setBatches] = useState<ImportBatchDto[]>([]);
+  const [batchesLoading, setBatchesLoading] = useState(true);
   const reset = useImportStore((s) => s.reset);
   const setFileAsset = useImportStore((s) => s.setFileAsset);
   const setPickedBankId = useImportStore((s) => s.setPickedBankId);
@@ -47,10 +61,23 @@ export default function ImportHubScreen() {
     }
   }, []);
 
+  const loadBatches = useCallback(async () => {
+    try {
+      setBatchesLoading(true);
+      const result = await api.listImportBatches();
+      setBatches(result.batches);
+    } catch {
+      setBatches([]);
+    } finally {
+      setBatchesLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     reset();
     loadMappings();
-  }, [loadMappings, reset]);
+    loadBatches();
+  }, [loadMappings, loadBatches, reset]);
 
   const pickAndPreview = async (bankId?: string, mappingId?: string) => {
     if (bankId === 'wise') {
@@ -120,6 +147,33 @@ export default function ImportHubScreen() {
     );
   };
 
+  const handleUndo = (batch: ImportBatchDto) => {
+    Alert.alert(
+      t('bankImport.undoImportTitle'),
+      t('bankImport.undoImportConfirm', { count: batch.rowCount }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('bankImport.undoImportAction'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.rollbackImportBatch(batch.id);
+              await useExpenseStore.getState().loadExpenses({ force: true });
+              await useIncomeStore.getState().loadIncomes({ force: true });
+              loadBatches();
+            } catch (err) {
+              Alert.alert(
+                t('common.error'),
+                err instanceof Error ? err.message : String(err),
+              );
+            }
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <FlatList
@@ -177,6 +231,41 @@ export default function ImportHubScreen() {
               </View>
               <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
             </TouchableOpacity>
+
+            <Text style={styles.sectionHeader}>{t('bankImport.pastImportsHeader')}</Text>
+            {batchesLoading ? (
+              <ActivityIndicator style={styles.loadingIndicator} color={theme.colors.primary} />
+            ) : batches.length === 0 ? (
+              <Text style={styles.empty}>{t('bankImport.noPastImports')}</Text>
+            ) : (
+              batches.map((batch) => (
+                <View key={batch.id} style={styles.row}>
+                  <View style={styles.mappingMain}>
+                    <Ionicons
+                      name={batch.status === 'rolled_back' ? 'close-circle-outline' : 'checkmark-circle-outline'}
+                      size={20}
+                      color={batch.status === 'rolled_back' ? theme.colors.textTertiary : theme.colors.success}
+                    />
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.rowLabel}>{getBatchSourceLabel(batch.source)}</Text>
+                      <Text style={styles.batchMeta}>
+                        {new Date(batch.importedAt).toLocaleDateString()}
+                        {' · '}
+                        {t('bankImport.transactionCount', { count: batch.rowCount })}
+                      </Text>
+                    </View>
+                  </View>
+                  {batch.canRollback && (
+                    <TouchableOpacity
+                      onPress={() => handleUndo(batch)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.danger} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              ))
+            )}
           </>
         }
       />
@@ -217,6 +306,11 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.body,
     color: theme.colors.textPrimary,
     flex: 1,
+  },
+  batchMeta: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: 1,
   },
   loadingIndicator: {
     padding: theme.spacing[4],

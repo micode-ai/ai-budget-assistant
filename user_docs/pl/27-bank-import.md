@@ -38,6 +38,17 @@ Każdy wiersz staje się Wydatkiem, Przychodem lub Wymianą walut (gdy aplikacja
 
 Jeśli twojego banku nie ma na liście, wybierz **Other (custom CSV)**. Aplikacja wyświetli podgląd pliku i poprosi o wskazanie, która kolumna zawiera datę, kwotę i opis. Możesz zapisać to mapowanie z nazwą — kolejny CSV z tym samym układem kolumn zostanie zaimportowany automatycznie.
 
+## Historia importów i cofanie
+
+Sekcja **Historia importów** na dole ekranu **Ustawienia → Importuj transakcje** pokazuje ostatnie 20 importów — bank źródłowy, datę i liczbę utworzonych transakcji.
+
+Aby cofnąć niedawny import, naciśnij **strzałkę cofania** (↩) po prawej stronie wiersza. Przed usunięciem zostanie poproszona o potwierdzenie.
+
+- Cofanie jest dostępne przez **30 dni** od pierwotnego importu.
+- Wszystkie transakcje z tego importu zostaną usunięte z Twojego konta.
+- Blokada deduplikacji zostanie wyczyszczona, dzięki czemu możesz ponownie zaimportować ten sam plik.
+- Importy starsze niż 30 dni nie pokazują przycisku cofania.
+
 ## Nie ma twojego banku?
 
 Na dole ekranu **Ustawienia → Import transakcji** znajdziesz kartę **„Nie ma twojego banku?"**. Dotknij jej, wpisz nazwę banku i dołącz przykład wyciągu, który on udostępnia (CSV lub PDF). Wyślij — wykorzystamy to, żeby dodać obsługę tego banku. Twoje zgłoszenie trafia bezpośrednio do naszego zespołu — nic nie jest publikowane publicznie.

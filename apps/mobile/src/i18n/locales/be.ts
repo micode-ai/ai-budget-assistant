@@ -139,6 +139,7 @@ export default {
     periodAll: 'Усё',
     periodCustom: 'Абраць',
     categoryAll: 'Усе',
+    searchPlaceholder: 'Пошук транзакцый...',
   },
   incomes: {
     noIncomes: 'Даходаў пакуль няма',
@@ -702,6 +703,15 @@ export default {
     requestSent: 'Дзякуй! Ваш запыт адпраўлены — мы разгледзім яго.',
     requestErrorNoName: 'Калі ласка, увядзіце назву банка.',
     requestError: 'Не атрымалася адправіць запыт. Калі ласка, паспрабуйце пазней.',
+    pastImportsHeader: 'Гісторыя імпартаў',
+    noPastImports: 'Імпартаў яшчэ няма',
+    transactionCount_one: '{{count}} транзакцыя',
+    transactionCount_few: '{{count}} транзакцыі',
+    transactionCount_many: '{{count}} транзакцый',
+    transactionCount_other: '{{count}} транзакцыі',
+    undoImportTitle: 'Адмяніць імпарт',
+    undoImportConfirm: 'Гэта выдаліць {{count}} транзакцый з гэтага імпарту. Пасля гэтага можна паўторна імпартаваць той жа файл.',
+    undoImportAction: 'Адмяніць імпарт',
     error: {
       encodingUnknown: 'Не атрымалася вызначыць кадыроўку файла. Паспрабуйце захаваць CSV у фармаце UTF-8.',
       parseFailed: 'Не атрымалася разабраць файл. Праверце фармат і паўтарыце спробу.',

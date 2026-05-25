@@ -38,6 +38,17 @@ Cada fila se convierte en un Gasto, un Ingreso o un Cambio de divisa (cuando la 
 
 Si su banco no está en la lista, elija **Other (custom CSV)**. La aplicación muestra una vista previa del archivo y le pide que indique qué columna contiene la fecha, el importe y la descripción. Puede guardar este mapeo con un nombre y el próximo CSV con el mismo diseño de columnas se importará automáticamente.
 
+## Importaciones pasadas y deshacer
+
+La sección **Importaciones pasadas** en la parte inferior de **Ajustes → Importar transacciones** muestra las últimas 20 importaciones — banco de origen, fecha y número de transacciones creadas.
+
+Para deshacer una importación reciente, toca la **flecha de deshacer** (↩) en el lado derecho de la fila. Se pedirá confirmación antes de eliminar nada.
+
+- Deshacer está disponible durante **30 días** desde la importación original.
+- Todas las transacciones de esa importación se eliminan de tu cuenta.
+- El bloqueo de deduplicación se elimina para que puedas volver a importar el mismo archivo.
+- Las importaciones de más de 30 días no muestran el botón de deshacer.
+
 ## ¿No ve su banco?
 
 En la parte inferior de **Ajustes → Importar transacciones** hay una tarjeta **"¿No ve su banco?"**. Púlsela, introduzca el nombre del banco y adjunte un ejemplo del extracto que le proporciona (CSV o PDF). Envíelo y lo usaremos para añadir compatibilidad con ese banco. Su solicitud va directamente a nuestro equipo — no se publica nada públicamente.

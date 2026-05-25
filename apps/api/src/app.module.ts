@@ -38,6 +38,7 @@ import { ReferralsModule } from './modules/referrals/referrals.module';
 import { HealthModule } from './modules/health/health.module';
 import { ImportWiseModule } from './modules/import-wise/import-wise.module';
 import { ImportBankModule } from './modules/import-bank/import-bank.module';
+import { ImportBatchesModule } from './modules/import-batches/import-batches.module';
 import { CacheModule } from './common/cache/cache.module';
 
 @Module({
@@ -101,6 +102,7 @@ import { CacheModule } from './common/cache/cache.module';
     HealthModule,
     ImportWiseModule,
     ImportBankModule,
+    ImportBatchesModule,
   ],
   providers: [
     {
