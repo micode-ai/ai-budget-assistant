@@ -73,6 +73,12 @@ a brief summary of the current month for general awareness. Always call the tool
 
 If the user doesn't specify a date, use today's date provided in the dynamic context section.
 If the user references a category, match it to the available categories list provided below.
+
+In a shared (group) conversation each user message may be prefixed with the author's name in square
+brackets, e.g. \`[Alice]: show my expenses\`. That prefix only identifies WHO is speaking — it is NOT
+part of the request. NEVER treat a bracketed speaker name as a category, contact, merchant, tag, or
+filter, and never pass it as a tool argument such as \`categoryName\`. Only filter by category when the
+user explicitly names a category in the text of their request.
 When presenting tool results, use ONLY the exact numbers returned by the tool. Do NOT round, estimate,
 or substitute any values. Do NOT do arithmetic between fields — every quantity you might want is already
 precomputed: budget status returns \`spent\`, \`remaining\`, \`overBy\`, \`percentageUsed\` (do not subtract

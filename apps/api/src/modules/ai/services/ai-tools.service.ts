@@ -109,7 +109,7 @@ export class AiToolsService {
             properties: {
               startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
               endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD)' },
-              categoryName: { type: 'string', description: 'Filter by category name' },
+              categoryName: { type: 'string', description: 'Filter by category name. ONLY set this when the user explicitly names a category to filter by. Never derive it from a speaker-name prefix like "[Name]:" in a shared conversation.' },
             },
             required: ['startDate', 'endDate'],
           },
