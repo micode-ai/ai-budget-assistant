@@ -47,6 +47,8 @@ export const aiApi = {
     return httpClient.request<{
       message: string;
       conversationId: string;
+      assistantMessageId?: string;
+      assistantCreatedAt?: string;
       actionResult?: {
         actionType: string;
         success: boolean;
@@ -63,6 +65,8 @@ export const aiApi = {
     return httpClient.request<{
       message: string;
       conversationId: string;
+      assistantMessageId?: string;
+      assistantCreatedAt?: string;
     }>('/ai/chat/reject', {
       method: 'POST',
       body: JSON.stringify({ conversationId, actionId, reason }),

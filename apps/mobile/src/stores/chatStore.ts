@@ -151,13 +151,14 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         ),
       }));
 
-      // Add the result message
+      // Add the result message. Use the server-assigned id so the shared-chat
+      // poller can dedup it (a client-random id would be re-added on next poll).
       const resultMessage: ChatMessage = {
-        id: generateUUID(),
+        id: response.assistantMessageId ?? generateUUID(),
         conversationId: currentConversationId,
         role: 'assistant',
         content: response.message,
-        createdAt: new Date(),
+        createdAt: response.assistantCreatedAt ? new Date(response.assistantCreatedAt) : new Date(),
         actionResult: response.actionResult as ChatActionResult | undefined,
       };
 
@@ -191,13 +192,14 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         ),
       }));
 
-      // Add the rejection message
+      // Add the rejection message. Use the server-assigned id so the
+      // shared-chat poller can dedup it instead of re-adding a copy.
       const rejectMessage: ChatMessage = {
-        id: generateUUID(),
+        id: response.assistantMessageId ?? generateUUID(),
         conversationId: currentConversationId,
         role: 'assistant',
         content: response.message,
-        createdAt: new Date(),
+        createdAt: response.assistantCreatedAt ? new Date(response.assistantCreatedAt) : new Date(),
       };
 
       set((state) => ({
