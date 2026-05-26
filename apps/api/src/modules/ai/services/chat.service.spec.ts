@@ -117,6 +117,12 @@ describe('ChatService', () => {
       expect(mockChatCreate).toHaveBeenCalled();
       expect(res.aiResponded).toBe(true);
       expect(res.message).toBe('Sure!');
+      // Regression (ABA-135): the assistant message insert must include
+      // mentionedUserIds — the column is NOT NULL with no DB default, so
+      // omitting it crashed every chat reply with a Prisma null-constraint error.
+      expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ role: 'assistant', mentionedUserIds: [] }) }),
+      );
     });
   });
 
