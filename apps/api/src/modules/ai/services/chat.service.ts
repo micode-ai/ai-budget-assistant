@@ -188,6 +188,7 @@ export class ChatService {
       const functionName = toolCall.function.name as ChatActionType;
       let functionArgs: Record<string, unknown>;
       try { functionArgs = JSON.parse(toolCall.function.arguments); } catch { functionArgs = {}; }
+      this.logger.log(`[ai/chat] tool=${functionName} argKeys=[${Object.keys(functionArgs).join(',')}]`);
 
       if (this.aiToolsService.isWriteAction(functionName)) {
         const r = await this.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
@@ -268,7 +269,7 @@ export class ChatService {
       ? this.promptBuilder.getConfirmText(lang, localizedSummary)
       : this.promptBuilder.getFailText(lang, result.errorMessage);
 
-    await this.prisma.chatMessage.create({
+    const assistantMsg = await this.prisma.chatMessage.create({
       data: {
         conversationId,
         role: 'assistant',
@@ -281,6 +282,8 @@ export class ChatService {
       message: confirmText,
       conversationId,
       actionResult: result,
+      assistantMessageId: assistantMsg.id,
+      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
     };
   }
 
@@ -320,7 +323,7 @@ export class ChatService {
 
     const lang = await this.detectConversationLanguage(conversationId);
     const rejectText = this.promptBuilder.getRejectText(lang);
-    await this.prisma.chatMessage.create({
+    const assistantMsg = await this.prisma.chatMessage.create({
       data: {
         conversationId,
         role: 'assistant',
@@ -332,6 +335,8 @@ export class ChatService {
     return {
       message: rejectText,
       conversationId,
+      assistantMessageId: assistantMsg.id,
+      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
     };
   }
 
@@ -461,7 +466,7 @@ export class ChatService {
 
     const confirmMessage = confirmResponse.choices[0]?.message?.content || `I'd like to ${displaySummary}. Please confirm or cancel this action.`;
 
-    await this.prisma.chatMessage.create({
+    const confirmMsg = await this.prisma.chatMessage.create({
       data: {
         conversationId: conversation.id,
         role: 'assistant',
@@ -474,6 +479,8 @@ export class ChatService {
       message: confirmMessage,
       conversationId: conversation.id,
       pendingAction,
+      assistantMessageId: confirmMsg.id,
+      assistantCreatedAt: confirmMsg.createdAt.toISOString(),
     };
   }
 
@@ -517,7 +524,7 @@ export class ChatService {
     const summaryText = followUpResponse.choices[0]?.message?.content || 'Here are your results.';
     const tokensUsed = followUpResponse.usage?.total_tokens || 0;
 
-    await this.prisma.chatMessage.create({
+    const assistantMsg = await this.prisma.chatMessage.create({
       data: {
         conversationId: conversation.id,
         role: 'assistant',
@@ -531,6 +538,8 @@ export class ChatService {
       message: summaryText,
       conversationId: conversation.id,
       actionResult: result,
+      assistantMessageId: assistantMsg.id,
+      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
     };
   }
 }

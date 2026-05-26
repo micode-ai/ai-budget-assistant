@@ -27,7 +27,8 @@ function buildDeps() {
   };
   const cache = { get: jest.fn().mockResolvedValue(null), set: jest.fn(), del: jest.fn() };
   const notifications = { sendToUser: jest.fn() };
-  return { prisma, cache, notifications };
+  const aiTools = { getToolDefinitions: () => [], isWriteAction: () => false, executeAction: jest.fn(), executeWithCache: jest.fn() };
+  return { prisma, cache, notifications, aiTools };
 }
 
 describe('ChatService', () => {
@@ -45,7 +46,7 @@ describe('ChatService', () => {
         { provide: CacheService, useValue: deps.cache },
         { provide: NotificationsService, useValue: deps.notifications },
         { provide: UserContextBuilder, useValue: { build: jest.fn().mockResolvedValue({}) } },
-        { provide: AiToolsService, useValue: { getToolDefinitions: () => [], isWriteAction: () => false, executeAction: jest.fn(), executeWithCache: jest.fn() } },
+        { provide: AiToolsService, useValue: deps.aiTools },
         { provide: PromptBuilder, useValue: { buildSystemPrompt: () => 'SYS', detectLanguage: () => 'English', buildActionSummary: () => 'summary', getConfirmText: () => 'ok', getFailText: () => 'fail', getRejectText: () => 'rejected' } },
       ],
     }).compile();
@@ -123,6 +124,22 @@ describe('ChatService', () => {
       expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(
         expect.objectContaining({ data: expect.objectContaining({ role: 'assistant', mentionedUserIds: [] }) }),
       );
+    });
+
+    // Regression (ABA-136): a read action (e.g. get_expenses) must return the
+    // server-assigned assistantMessageId. Without it the mobile client tags the
+    // bubble with a random UUID, and the shared-chat poller — which dedups by id
+    // — re-adds the same server message, producing a duplicate reply.
+    it('returns the server assistantMessageId for a read action', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: true, messages: [] });
+      deps.aiTools.executeWithCache.mockResolvedValue({ data: { recentExpenses: [] } });
+      mockChatCreate
+        .mockResolvedValueOnce({ choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'get_expenses', arguments: '{"startDate":"2026-05-01","endDate":"2026-05-31"}' } }] } }], usage: { total_tokens: 10 } })
+        .mockResolvedValueOnce({ choices: [{ message: { content: 'Here are your May expenses.' } }], usage: { total_tokens: 5 } });
+      const res = await service.chat('owner-1', 'my may expenses', 'conv-1', 'acc-1', 'Family', 'owner', 'Alice', []);
+      expect(res.message).toBe('Here are your May expenses.');
+      expect(res.assistantMessageId).toBe('m1');
+      expect(res.assistantCreatedAt).toBeDefined();
     });
   });
 
