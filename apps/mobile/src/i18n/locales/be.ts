@@ -1,5 +1,6 @@
 export default {
   common: {
+    total: 'Разам',
     save: 'Захаваць',
     cancel: 'Скасаваць',
     delete: 'Выдаліць',

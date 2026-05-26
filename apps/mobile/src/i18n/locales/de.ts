@@ -1,5 +1,6 @@
 export default {
   common: {
+    total: 'Gesamt',
     save: 'Speichern',
     cancel: 'Abbrechen',
     delete: 'Löschen',
