@@ -200,7 +200,7 @@ export class ChatService {
     const assistantMessage = choice?.message?.content || 'I apologize, but I could not generate a response.';
     const tokensUsed = response.usage?.total_tokens || 0;
     const assistantMsg = await this.prisma.chatMessage.create({
-      data: { conversationId: conversation.id, role: 'assistant', content: assistantMessage, tokensUsed },
+      data: { conversationId: conversation.id, role: 'assistant', content: assistantMessage, tokensUsed, mentionedUserIds: [] },
     });
 
     return {
@@ -273,6 +273,7 @@ export class ChatService {
         conversationId,
         role: 'assistant',
         content: confirmText,
+        mentionedUserIds: [],
       },
     });
 
@@ -324,6 +325,7 @@ export class ChatService {
         conversationId,
         role: 'assistant',
         content: rejectText,
+        mentionedUserIds: [],
       },
     });
 
@@ -437,6 +439,7 @@ export class ChatService {
         role: 'pending_action',
         content: JSON.stringify({ ...pendingAction, accountId }),
         senderUserId: userId,
+        mentionedUserIds: [],
       },
     });
 
@@ -463,6 +466,7 @@ export class ChatService {
         conversationId: conversation.id,
         role: 'assistant',
         content: confirmMessage,
+        mentionedUserIds: [],
       },
     });
 
@@ -519,6 +523,7 @@ export class ChatService {
         role: 'assistant',
         content: summaryText,
         tokensUsed,
+        mentionedUserIds: [],
       },
     });
 
