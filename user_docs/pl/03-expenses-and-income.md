@@ -68,6 +68,13 @@ Lacz wydatki z projektami w celu grupowego sledzenia:
 - Przegladaj sumy wydatkow projektu w sekcji Projekty
 - Zmien lub usun projekt pozniej — otworz wydatek, dotknij **Edytuj**, a nastepnie wybierz inny projekt lub dotknij **Wyczysc**
 
+### Sprzedawca
+
+Śledź, gdzie wydałeś pieniądze — sprzedawca (sklep lub firma):
+- Wypełniany automatycznie podczas skanowania paragonu lub importu transakcji bankowych/Wise
+- Dodaj lub edytuj go ręcznie przy dowolnym wydatku; zacznij pisać, aby wybrać z wcześniej używanych sprzedawców
+- Pokazywany przy wydatku i na liście; dotknij filtra sprzedawcy na karcie Wydatki, aby zobaczyć wszystkie wydatki u jednego sprzedawcy
+
 ### Podziel wydatek
 
 Rozdziel pojedynczy wydatek miedzy wiele kategorii:

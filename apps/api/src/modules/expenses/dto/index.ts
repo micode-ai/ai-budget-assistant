@@ -8,6 +8,7 @@ import {
   IsArray,
   Min,
   Max,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
@@ -170,6 +171,11 @@ export class CreateExpenseDto {
   projectId?: string;
 
   @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  merchant?: string;
+
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateExpenseSplitDto)
@@ -264,6 +270,11 @@ export class UpdateExpenseDto {
   @IsOptional()
   @IsUUID()
   projectId?: string | null;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  merchant?: string | null;
 
   @IsOptional()
   @IsBoolean()

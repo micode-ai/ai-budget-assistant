@@ -28,6 +28,7 @@ import type { Currency, ExpenseCategorySplit, RecurringPeriod } from '@budget/sh
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
+import { MerchantInput } from '@/components/MerchantInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 function getContrastTextColor(hexColor: string | undefined): string {
@@ -48,6 +49,7 @@ export default function NewExpenseScreen() {
   const params = useLocalSearchParams<{
     amount?: string;
     description?: string;
+    merchant?: string;
     categoryId?: string;
     currencyCode?: string;
     isDebt?: string;
@@ -64,6 +66,7 @@ export default function NewExpenseScreen() {
 
   const [amount, setAmount] = useState(params.amount || '');
   const [description, setDescription] = useState(params.description || '');
+  const [merchant, setMerchant] = useState(params.merchant || '');
   const [selectedCategory, setSelectedCategory] = useState(params.categoryId || '');
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
@@ -122,6 +125,7 @@ export default function NewExpenseScreen() {
         amount: numericAmount,
         currencyCode,
         description: description.trim(),
+        merchant: merchant.trim() || undefined,
         categoryId: selectedCategory || undefined,
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
         projectId: selectedProjectId || undefined,
@@ -229,6 +233,11 @@ export default function NewExpenseScreen() {
               placeholder={t('expenseNew.descriptionPlaceholder')}
               placeholderTextColor={theme.colors.textTertiary}
             />
+          </View>
+
+          {/* Merchant */}
+          <View style={styles.fieldContainer}>
+            <MerchantInput value={merchant} onChangeText={setMerchant} />
           </View>
 
           {/* Category */}

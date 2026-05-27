@@ -129,6 +129,7 @@ export default function ReceiptExpenseScreen() {
         discountAmount: scannedReceipt.discountAmount ?? undefined,
         currencyCode: scannedReceipt.currencyCode as Currency,
         description: scannedReceipt.description,
+        merchant: scannedReceipt.merchant ?? undefined,
         categoryId: resolvedCategoryId,
         date: expenseDate,
         source: 'ocr',

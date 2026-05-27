@@ -367,6 +367,13 @@ Link expenses to projects for grouped tracking:
 - View project spending totals in the Projects section
 - Change or remove the project later — open the expense, tap **Edit**, then pick a different project or tap **Clear**
 
+### Merchant
+
+Track where you spent — the merchant (store or business):
+- Auto-filled when you scan a receipt or import bank/Wise transactions
+- Add or edit it manually on any expense; start typing to pick from merchants you've used before
+- Shown on the expense and in the list; tap the merchant filter on the Expenses tab to see all spending at one merchant
+
 ### Split Expense
 
 Divide a single expense across multiple categories:
@@ -3841,6 +3848,13 @@ iOS, Android, Web
 - Просматривайте общие расходы по проектам в разделе Проекты
 - Измените или удалите проект позже — откройте расход, нажмите **Редактировать**, затем выберите другой проект или нажмите **Очистить**
 
+### Продавец
+
+Отслеживайте, где вы потратили — продавец (магазин или компания):
+- Заполняется автоматически при сканировании чека или импорте банковских/Wise транзакций
+- Добавьте или измените вручную в любом расходе; начните вводить, чтобы выбрать из ранее использованных продавцов
+- Показывается в расходе и в списке; нажмите фильтр продавца на вкладке Расходы, чтобы увидеть все траты у одного продавца
+
 ### Разделить расход
 
 Разделите один расход по нескольким категориям:
@@ -7309,6 +7323,13 @@ iOS, Android, Web
 - Переглядайте загальні витрати за проєктом у розділі Проєкти
 - Змініть або видаліть проєкт пізніше — відкрийте витрату, натисніть **Редагувати**, потім виберіть інший проєкт або натисніть **Очистити**
 
+### Продавець
+
+Відстежуйте, де ви витратили — продавець (магазин або компанія):
+- Заповнюється автоматично під час сканування чека або імпорту банківських/Wise транзакцій
+- Додайте або змініть вручну в будь-якій витраті; почніть вводити, щоб обрати з раніше використаних продавців
+- Показується у витраті та у списку; натисніть фільтр продавця на вкладці Витрати, щоб побачити всі витрати в одного продавця
+
 ### Розподілити витрату
 
 Розподіліть одну витрату між кількома категоріями:
@@ -10713,6 +10734,13 @@ Lacz wydatki z projektami w celu grupowego sledzenia:
 - Przegladaj sumy wydatkow projektu w sekcji Projekty
 - Zmien lub usun projekt pozniej — otworz wydatek, dotknij **Edytuj**, a nastepnie wybierz inny projekt lub dotknij **Wyczysc**
 
+### Sprzedawca
+
+Śledź, gdzie wydałeś pieniądze — sprzedawca (sklep lub firma):
+- Wypełniany automatycznie podczas skanowania paragonu lub importu transakcji bankowych/Wise
+- Dodaj lub edytuj go ręcznie przy dowolnym wydatku; zacznij pisać, aby wybrać z wcześniej używanych sprzedawców
+- Pokazywany przy wydatku i na liście; dotknij filtra sprzedawcy na karcie Wydatki, aby zobaczyć wszystkie wydatki u jednego sprzedawcy
+
 ### Podziel wydatek
 
 Rozdziel pojedynczy wydatek miedzy wiele kategorii:
@@ -14101,6 +14129,13 @@ Verknupfe Ausgaben mit Projekten fur gruppierte Verfolgung:
 - Sieh die Gesamtausgaben pro Projekt im Projektebereich
 - Andere oder entferne das Projekt spater — offne die Ausgabe, tippe auf **Bearbeiten** und wahle ein anderes Projekt oder tippe auf **Loschen**
 
+### Händler
+
+Erfasse, wo du eingekauft hast — den Händler (Geschäft oder Unternehmen):
+- Wird automatisch ausgefüllt beim Scannen eines Belegs oder beim Import von Bank-/Wise-Transaktionen
+- Manuell hinzufügen oder bearbeiten; tippe los, um aus bereits verwendeten Händlern zu wählen
+- Wird bei der Ausgabe und in der Liste angezeigt; tippe auf den Händler-Filter im Ausgaben-Tab, um alle Ausgaben bei einem Händler zu sehen
+
 ### Ausgabe aufteilen
 
 Teile eine einzelne Ausgabe auf mehrere Kategorien auf:
@@ -17487,6 +17522,13 @@ Vincula gastos a proyectos para un seguimiento agrupado:
 - Consulta los totales de gasto del proyecto en la seccion de Proyectos
 - Cambia o quita el proyecto mas tarde: abre el gasto, toca **Editar** y elige otro proyecto o toca **Borrar**
 
+### Comercio
+
+Registra dónde gastaste — el comercio (tienda o negocio):
+- Se rellena automáticamente al escanear un recibo o importar transacciones de banco/Wise
+- Añádelo o edítalo manualmente en cualquier gasto; empieza a escribir para elegir entre comercios que ya has usado
+- Se muestra en el gasto y en la lista; toca el filtro de comercio en la pestaña Gastos para ver todo el gasto en un comercio
+
 ### Dividir gasto
 
 Divide un gasto individual entre multiples categorias:
@@ -20868,6 +20910,13 @@ Associez des depenses a des projets pour un suivi groupe :
 - Consultez les totaux de depenses par projet dans la section Projets
 - Modifiez ou retirez le projet plus tard : ouvrez la depense, appuyez sur **Modifier**, puis choisissez un autre projet ou appuyez sur **Effacer**
 
+### Commerçant
+
+Gardez une trace de vos achats — le commerçant (magasin ou entreprise) :
+- Rempli automatiquement lors du scan d'un reçu ou de l'import de transactions bancaires/Wise
+- Ajoutez-le ou modifiez-le manuellement sur toute dépense ; commencez à taper pour choisir parmi les commerçants déjà utilisés
+- Affiché sur la dépense et dans la liste ; appuyez sur le filtre commerçant dans l'onglet Dépenses pour voir toutes les dépenses chez un commerçant
+
 ### Diviser la depense
 
 Repartissez une depense unique entre plusieurs categories :
@@ -24246,6 +24295,13 @@ iOS, Android, Web
 - Націсніце **+**, каб стварыць новы праект
 - Праглядайце агульныя выдаткі па праектах у раздзеле Праекты
 - Змяніце або выдаліце праект пазней — адкрыйце выдатак, націсніце **Рэдагаваць**, затым выберыце іншы праект або націсніце **Ачысціць**
+
+### Прадавец
+
+Адсочвайце, дзе вы выдаткавалі — прадавец (крама або кампанія):
+- Запаўняецца аўтаматычна пры сканаванні чэка або імпарце банкаўскіх/Wise транзакцый
+- Дадайце або змяніце ўручную ў любым выдатку; пачніце ўводзіць, каб выбраць з раней выкарыстаных прадаўцоў
+- Паказваецца ў выдатку і ў спісе; націсніце фільтр прадаўца на ўкладцы Выдаткі, каб убачыць усе выдаткі ў аднаго прадаўца
 
 ### Падзяліць выдатак
 

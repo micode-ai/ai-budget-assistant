@@ -30,6 +30,7 @@ import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
+import { getDistinctMerchants as computeDistinctMerchants } from '@/utils/merchant';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
@@ -38,6 +39,7 @@ import { useGamificationStore } from './gamificationStore';
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
   categoryId: string | null;
+  merchant: string | null;
   searchQuery: string;
   customMonth?: number; // 0-11
   customYear?: number;
@@ -89,6 +91,7 @@ interface ExpenseState {
 
   // Selectors
   getFilteredExpenses: () => Expense[];
+  getDistinctMerchants: () => string[];
   getExpensesByCategory: () => CategoryBreakdown[];
   getTrendVsLastPeriod: () => number;
 
@@ -110,6 +113,7 @@ export const useExpenseStore = create<ExpenseState>()(
     filters: {
       dateRange: 'month',
       categoryId: null,
+      merchant: null,
       searchQuery: '',
     },
     expenseItems: {},
@@ -266,6 +270,7 @@ export const useExpenseStore = create<ExpenseState>()(
               currencyCode: decrypted.currencyCode,
               description: decrypted.description ?? undefined,
               notes: decrypted.notes ?? undefined,
+              merchant: decrypted.merchant ?? localExpense?.merchant,
               categoryId: serverCategoryId || localExpense?.categoryId,
               date: new Date(decrypted.date),
               time: decrypted.time ?? undefined,
@@ -559,6 +564,7 @@ export const useExpenseStore = create<ExpenseState>()(
       maybeEncrypt('expense', {
         description: newExpense.description,
         notes: newExpense.notes,
+        merchant: newExpense.merchant,
         amount: newExpense.amount,
         discountAmount: newExpense.discountAmount,
         debtContactName: newExpense.debtContactName,
@@ -570,6 +576,7 @@ export const useExpenseStore = create<ExpenseState>()(
           currencyCode: newExpense.currencyCode,
           description: encPayload.description ?? newExpense.description,
           notes: encPayload.notes ?? newExpense.notes,
+          merchant: encPayload.merchant ?? newExpense.merchant,
           categoryId: resolveCatId(newExpense.categoryId),
           tagIds: tagIds?.length ? tagIds : undefined,
           projectId: projectId || undefined,
@@ -903,6 +910,8 @@ export const useExpenseStore = create<ExpenseState>()(
           const { payload: encPayload, encryptedPayload, encryptionKeyVersion } = await maybeEncrypt('expense', {
             description: expense.description,
             notes: expense.notes,
+            merchant: expense.merchant,
+            debtContactName: expense.debtContactName,
             amount: expense.amount,
             discountAmount: expense.discountAmount,
           }, expense.accountId);
@@ -914,6 +923,7 @@ export const useExpenseStore = create<ExpenseState>()(
             currencyCode: expense.currencyCode,
             description: encPayload.description ?? expense.description,
             notes: encPayload.notes ?? expense.notes,
+            merchant: encPayload.merchant ?? expense.merchant,
             categoryId: expense.categoryId || undefined,
             tagIds: localTags.length > 0 ? localTags.map(t => t.id) : undefined,
             projectId: localProjectId || undefined,
@@ -921,7 +931,7 @@ export const useExpenseStore = create<ExpenseState>()(
             source: expense.source,
             isDebt: expense.isDebt || undefined,
             isDebtRepayment: expense.isDebtRepayment || undefined,
-            debtContactName: expense.debtContactName || undefined,
+            debtContactName: encPayload.debtContactName ?? expense.debtContactName,
             debtDueDate: expense.debtDueDate ? (expense.debtDueDate instanceof Date ? expense.debtDueDate.toISOString() : String(expense.debtDueDate)) : undefined,
             relatedDebtIncomeId: expense.relatedDebtIncomeId || undefined,
             encryptedPayload,
@@ -989,19 +999,27 @@ export const useExpenseStore = create<ExpenseState>()(
         filtered = filtered.filter((e) => e.categoryId === filters.categoryId);
       }
 
+      // Apply merchant filter
+      if (filters.merchant) {
+        filtered = filtered.filter((e) => e.merchant === filters.merchant);
+      }
+
       // Apply search filter
       if (filters.searchQuery) {
         const query = filters.searchQuery.toLowerCase();
         filtered = filtered.filter(
           (e) =>
             e.description?.toLowerCase().includes(query) ||
-            e.notes?.toLowerCase().includes(query)
+            e.notes?.toLowerCase().includes(query) ||
+            e.merchant?.toLowerCase().includes(query)
         );
       }
 
       // Sort by date descending
       return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     },
+
+    getDistinctMerchants: () => computeDistinctMerchants(get().expenses),
 
     getExpensesByCategory: () => {
       const filtered = get().getFilteredExpenses();

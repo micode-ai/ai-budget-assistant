@@ -125,7 +125,7 @@ export const PORTFOLIO_CHART_COLORS = [
 // Defines which fields are encrypted per entity type and tier
 export const ENCRYPTION_FIELDS: Record<string, { tier1: string[]; tier2: string[] }> = {
   expense: {
-    tier1: ['description', 'notes', 'locationName', 'receiptUrl', 'receiptImageBase64', 'debtContactName'],
+    tier1: ['description', 'notes', 'merchant', 'locationName', 'receiptUrl', 'receiptImageBase64', 'debtContactName'],
     tier2: ['amount', 'discountAmount'],
   },
   expense_item: {

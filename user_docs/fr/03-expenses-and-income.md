@@ -68,6 +68,13 @@ Associez des depenses a des projets pour un suivi groupe :
 - Consultez les totaux de depenses par projet dans la section Projets
 - Modifiez ou retirez le projet plus tard : ouvrez la depense, appuyez sur **Modifier**, puis choisissez un autre projet ou appuyez sur **Effacer**
 
+### Commerçant
+
+Gardez une trace de vos achats — le commerçant (magasin ou entreprise) :
+- Rempli automatiquement lors du scan d'un reçu ou de l'import de transactions bancaires/Wise
+- Ajoutez-le ou modifiez-le manuellement sur toute dépense ; commencez à taper pour choisir parmi les commerçants déjà utilisés
+- Affiché sur la dépense et dans la liste ; appuyez sur le filtre commerçant dans l'onglet Dépenses pour voir toutes les dépenses chez un commerçant
+
 ### Diviser la depense
 
 Repartissez une depense unique entre plusieurs categories :

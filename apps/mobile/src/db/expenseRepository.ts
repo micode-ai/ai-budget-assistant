@@ -12,6 +12,7 @@ interface ExpenseRow {
   currency_code: string;
   description: string | null;
   notes: string | null;
+  merchant: string | null;
   category_id: string | null;
   date: number;
   time: string | null;
@@ -48,6 +49,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     currencyCode: row.currency_code as Currency,
     description: row.description ?? undefined,
     notes: row.notes ?? undefined,
+    merchant: row.merchant ?? undefined,
     categoryId: row.category_id ?? undefined,
     date: new Date(row.date),
     time: row.time ?? undefined,
@@ -90,6 +92,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.currencyCode,
     expense.description ?? null,
     expense.notes ?? null,
+    expense.merchant ?? null,
     expense.categoryId ?? null,
     expense.date.getTime(),
     expense.time ?? null,
@@ -133,14 +136,14 @@ export async function insertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
-      description, notes, category_id, date, time,
+      description, notes, merchant, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, recurring_period, source,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -165,6 +168,10 @@ export async function updateExpenseInDb(
   if (updates.description !== undefined) {
     setClauses.push('description = ?');
     params.push(updates.description ?? null);
+  }
+  if (updates.merchant !== undefined) {
+    setClauses.push('merchant = ?');
+    params.push(updates.merchant ?? null);
   }
   if (updates.notes !== undefined) {
     setClauses.push('notes = ?');
@@ -275,14 +282,14 @@ export async function upsertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
-      description, notes, category_id, date, time,
+      description, notes, merchant, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, recurring_period, source,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -293,6 +300,7 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       currency_code = excluded.currency_code,
       description = excluded.description,
       notes = excluded.notes,
+      merchant = excluded.merchant,
       category_id = COALESCE(excluded.category_id, category_id),
       date = excluded.date,
       time = excluded.time,

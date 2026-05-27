@@ -143,6 +143,10 @@ export default {
     periodCustom: 'Выбрать',
     categoryAll: 'Все',
     searchPlaceholder: 'Поиск транзакций...',
+    merchant: 'Продавец',
+    merchantPlaceholder: 'напр. Biedronka, Amazon',
+    merchantAll: 'Все продавцы',
+    merchantNone: 'Пока нет продавцов',
   },
   incomes: {
     noIncomes: 'Доходов пока нет',

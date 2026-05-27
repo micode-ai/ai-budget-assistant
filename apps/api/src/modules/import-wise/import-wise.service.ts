@@ -277,6 +277,7 @@ export class ImportWiseService {
                 amount: row.amount,
                 currencyCode: row.currencyCode,
                 description: row.description,
+                merchant: row.merchant ?? null,
                 date: new Date(row.date),
                 source: 'import',
                 externalRef: row.externalRef,
