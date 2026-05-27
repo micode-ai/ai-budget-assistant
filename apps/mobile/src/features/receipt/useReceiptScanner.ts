@@ -174,15 +174,11 @@ export function useReceiptScanner() {
 
     try {
       // Read image as base64
-      console.log('[ReceiptScanner] Reading image from:', imageUri);
       const file = new File(imageUri);
       const base64 = await file.base64();
-      console.log('[ReceiptScanner] Base64 length:', base64.length);
 
       // Send to API for OCR
-      console.log('[ReceiptScanner] Calling api.scanReceipt...');
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined);
-      console.log('[ReceiptScanner] Scan result:', JSON.stringify(scannedReceipt).substring(0, 200));
 
       setState((s) => ({
         ...s,

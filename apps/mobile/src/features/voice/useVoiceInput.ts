@@ -34,11 +34,8 @@ export function useVoiceInput() {
   const recordingRef = useRef<Audio.Recording | null>(null);
 
   const startRecording = useCallback(async () => {
-    console.log('[VoiceInput] startRecording called');
     try {
-      console.log('[VoiceInput] Requesting microphone permission...');
       const { status } = await Audio.requestPermissionsAsync();
-      console.log('[VoiceInput] Permission status:', status);
       if (status !== 'granted') {
         setState((s) => ({ ...s, error: i18n.t('errors.micPermissionDenied') }));
         return false;

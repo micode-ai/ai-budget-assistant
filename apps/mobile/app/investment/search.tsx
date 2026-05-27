@@ -54,8 +54,7 @@ export default function AssetSearchScreen() {
       try {
         const data = await api.searchAssets(text.trim());
         setResults(data || []);
-      } catch (e) {
-        console.log('Search failed:', e);
+      } catch {
         setResults([]);
       } finally {
         setLoading(false);
@@ -73,8 +72,8 @@ export default function AssetSearchScreen() {
         assetCurrency: asset.currency,
       });
       router.back();
-    } catch (e) {
-      console.log('Failed to add holding:', e);
+    } catch {
+      // ignore — user stays on search screen
     }
   };
 

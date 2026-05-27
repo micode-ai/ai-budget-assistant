@@ -48,8 +48,7 @@ export const db = {
 
 // Database initialization
 export async function initializeDatabase(): Promise<void> {
-  console.log('[WebDB] Database initialized (web mock - data not persisted)');
-  console.log('[WebDB] For full functionality, please use the mobile app on iOS/Android');
+  // web mock — no-op
 }
 
 // No-op transaction wrapper on web (mock DB has no real persistence anyway).

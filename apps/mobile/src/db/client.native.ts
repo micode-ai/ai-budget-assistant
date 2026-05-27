@@ -628,7 +628,6 @@ export async function initializeDatabase(): Promise<void> {
       }
     }
 
-    console.log('Database initialized successfully');
   } catch (error) {
     console.error('Database initialization failed:', error);
     throw error;
