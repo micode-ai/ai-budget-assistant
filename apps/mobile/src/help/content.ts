@@ -365,6 +365,7 @@ Link expenses to projects for grouped tracking:
 - Select an existing project (e.g., **Vacation**)
 - Tap **+** to create a new project
 - View project spending totals in the Projects section
+- Change or remove the project later — open the expense, tap **Edit**, then pick a different project or tap **Clear**
 
 ### Split Expense
 
@@ -3838,6 +3839,7 @@ iOS, Android, Web
 - Выберите существующий проект (например, **Отпуск**)
 - Нажмите **+**, чтобы создать новый проект
 - Просматривайте общие расходы по проектам в разделе Проекты
+- Измените или удалите проект позже — откройте расход, нажмите **Редактировать**, затем выберите другой проект или нажмите **Очистить**
 
 ### Разделить расход
 
@@ -7305,6 +7307,7 @@ iOS, Android, Web
 - Оберіть існуючий проєкт (наприклад, **Відпустка**)
 - Натисніть **+**, щоб створити новий проєкт
 - Переглядайте загальні витрати за проєктом у розділі Проєкти
+- Змініть або видаліть проєкт пізніше — відкрийте витрату, натисніть **Редагувати**, потім виберіть інший проєкт або натисніть **Очистити**
 
 ### Розподілити витрату
 
@@ -10708,6 +10711,7 @@ Lacz wydatki z projektami w celu grupowego sledzenia:
 - Wybierz istniejacy projekt (np. **Wakacje**)
 - Dotknij **+**, aby utworzyc nowy projekt
 - Przegladaj sumy wydatkow projektu w sekcji Projekty
+- Zmien lub usun projekt pozniej — otworz wydatek, dotknij **Edytuj**, a nastepnie wybierz inny projekt lub dotknij **Wyczysc**
 
 ### Podziel wydatek
 
@@ -14095,6 +14099,7 @@ Verknupfe Ausgaben mit Projekten fur gruppierte Verfolgung:
 - Wahle ein vorhandenes Projekt (z.B. **Urlaub**)
 - Tippe auf **+**, um ein neues Projekt zu erstellen
 - Sieh die Gesamtausgaben pro Projekt im Projektebereich
+- Andere oder entferne das Projekt spater — offne die Ausgabe, tippe auf **Bearbeiten** und wahle ein anderes Projekt oder tippe auf **Loschen**
 
 ### Ausgabe aufteilen
 
@@ -17480,6 +17485,7 @@ Vincula gastos a proyectos para un seguimiento agrupado:
 - Selecciona un proyecto existente (por ejemplo, **Vacaciones**)
 - Toca **+** para crear un nuevo proyecto
 - Consulta los totales de gasto del proyecto en la seccion de Proyectos
+- Cambia o quita el proyecto mas tarde: abre el gasto, toca **Editar** y elige otro proyecto o toca **Borrar**
 
 ### Dividir gasto
 
@@ -20860,6 +20866,7 @@ Associez des depenses a des projets pour un suivi groupe :
 - Selectionnez un projet existant (par ex. **Vacances**)
 - Appuyez sur **+** pour creer un nouveau projet
 - Consultez les totaux de depenses par projet dans la section Projets
+- Modifiez ou retirez le projet plus tard : ouvrez la depense, appuyez sur **Modifier**, puis choisissez un autre projet ou appuyez sur **Effacer**
 
 ### Diviser la depense
 
@@ -24238,6 +24245,7 @@ iOS, Android, Web
 - Выберыце існуючы праект (напрыклад, **Адпачынак**)
 - Націсніце **+**, каб стварыць новы праект
 - Праглядайце агульныя выдаткі па праектах у раздзеле Праекты
+- Змяніце або выдаліце праект пазней — адкрыйце выдатак, націсніце **Рэдагаваць**, затым выберыце іншы праект або націсніце **Ачысціць**
 
 ### Падзяліць выдатак
 

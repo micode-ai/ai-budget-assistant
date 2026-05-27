@@ -66,6 +66,7 @@ Verknupfe Ausgaben mit Projekten fur gruppierte Verfolgung:
 - Wahle ein vorhandenes Projekt (z.B. **Urlaub**)
 - Tippe auf **+**, um ein neues Projekt zu erstellen
 - Sieh die Gesamtausgaben pro Projekt im Projektebereich
+- Andere oder entferne das Projekt spater — offne die Ausgabe, tippe auf **Bearbeiten** und wahle ein anderes Projekt oder tippe auf **Loschen**
 
 ### Ausgabe aufteilen
 

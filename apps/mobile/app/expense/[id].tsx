@@ -31,6 +31,7 @@ import { getTagsForExpense } from '@/db/tagRepository';
 import { getSplitsForExpense, insertSplit, deleteAllSplitsForExpense } from '@/db/splitRepository';
 import { api } from '@/services/api';
 import { TagChip } from '@/components/TagChip';
+import { ProjectPicker } from '@/components/ProjectPicker';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { SplitEditor } from '@/components/SplitEditor';
 import { formatCurrency, formatDate, generateUUID } from '@budget/shared-utils';
@@ -46,6 +47,7 @@ export default function ExpenseDetailScreen() {
   const {
     expenses,
     updateExpense,
+    setExpenseProject,
     deleteExpense,
     stopRecurringExpense,
     expenseItems,
@@ -58,7 +60,7 @@ export default function ExpenseDetailScreen() {
     deleteReceiptImage,
   } = useExpenseStore();
   useTagStore();
-  const { projects } = useProjectStore();
+  const { projects, loadProjects } = useProjectStore();
   const { getExpenseCategories, getCategoryById, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const expense = expenses.find((e) => e.id === id);
 
@@ -75,6 +77,7 @@ export default function ExpenseDetailScreen() {
   const [editDescription, setEditDescription] = useState(expense?.description || '');
   const [editAmount, setEditAmount] = useState(expense?.amount?.toString() || '');
   const [editCategory, setEditCategory] = useState(expense?.categoryId || '');
+  const [editProjectId, setEditProjectId] = useState<string | null>(expense?.projectId ?? null);
   const [editDate, setEditDate] = useState(expense?.date ? new Date(expense.date) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -96,6 +99,7 @@ export default function ExpenseDetailScreen() {
 
   useEffect(() => {
     if (!categoriesInitialized) loadCategories();
+    loadProjects();
     if (id && expense?.source === 'ocr') {
       loadExpenseItems(id);
     }
@@ -413,6 +417,9 @@ export default function ExpenseDetailScreen() {
       date: editDate,
     });
 
+    // Persist project association change (in-memory + SQLite join + server).
+    await setExpenseProject(expense.id, editProjectId);
+
     try {
       if (splits.length > 0 && numericAmount !== oldAmount && oldAmount > 0) {
         const ratio = numericAmount / oldAmount;
@@ -644,7 +651,14 @@ export default function ExpenseDetailScreen() {
           )}
 
           {/* Project Section */}
-          {expense.projectId && (() => {
+          {isEditing ? (
+            <View style={styles.detailRow}>
+              <ProjectPicker
+                selectedProjectId={editProjectId}
+                onProjectChange={setEditProjectId}
+              />
+            </View>
+          ) : expense.projectId ? (() => {
             const project = projects.find(p => p.id === expense.projectId);
             return project ? (
               <View style={styles.detailRow}>
@@ -655,7 +669,7 @@ export default function ExpenseDetailScreen() {
                 </View>
               </View>
             ) : null;
-          })()}
+          })() : null}
 
           {/* Category Splits Section */}
           {splits.length > 0 && !showSplitEditor && (
@@ -941,6 +955,7 @@ export default function ExpenseDetailScreen() {
                   setEditDescription(expense.description || '');
                   setEditAmount(expense.amount.toString());
                   setEditCategory(expense.categoryId || '');
+                  setEditProjectId(expense.projectId ?? null);
                   setEditDate(new Date(expense.date));
                   setShowDatePicker(false);
                 }}
