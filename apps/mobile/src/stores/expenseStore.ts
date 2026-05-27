@@ -444,7 +444,7 @@ export const useExpenseStore = create<ExpenseState>()(
           ]);
         } catch (e) {
           // Server pull failed (offline?) — local data is still shown
-          console.log('Server pull skipped:', e);
+          console.warn('Server pull skipped:', e);
         }
       } catch (e) {
         console.error('Failed to load expenses from SQLite:', e);
@@ -641,7 +641,6 @@ export const useExpenseStore = create<ExpenseState>()(
           console.error('Failed to update expense in SQLite:', e),
         );
 
-        console.log('[updateExpense] updates:', JSON.stringify(updates));
         api.updateExpense(id, updates).catch((e) =>
           console.error('Failed to update expense on server:', e),
         );

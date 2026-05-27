@@ -171,7 +171,7 @@ export const useBudgetStore = create<BudgetState>()(
             setLastSyncTime(Date.now());
           }
         } catch (e) {
-          console.log('Budget server sync skipped:', e);
+          console.warn('Budget server sync skipped:', e);
         }
       } catch (e) {
         console.error('Failed to load budgets from SQLite:', e);

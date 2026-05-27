@@ -200,7 +200,7 @@ export const useWalletStore = create<WalletState>()(
               }
             }
           } catch (e) {
-            console.log('Transfer server sync skipped:', e);
+            console.warn('Transfer server sync skipped:', e);
           }
 
           // Reload after server sync
@@ -215,7 +215,7 @@ export const useWalletStore = create<WalletState>()(
           set({ walletSummary: updatedSummary });
           setLastSyncTime(Date.now());
         } catch (e) {
-          console.log('Wallet server sync skipped:', e);
+          console.warn('Wallet server sync skipped:', e);
         }
       } catch (e) {
         console.error('Failed to load wallet:', e);
