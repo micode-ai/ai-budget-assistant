@@ -83,9 +83,6 @@ export class ExpensesService {
         ? Buffer.from(dto.receiptImageBase64, 'base64')
         : undefined;
       const receiptMimeType = dto.receiptMimeType || (receiptImage ? 'image/jpeg' : undefined);
-      if (receiptImage) {
-        console.log(`[ExpensesService.create] receiptMimeType from dto: "${dto.receiptMimeType}", resolved: "${receiptMimeType}", imageSize: ${receiptImage.length}`);
-      }
 
       // Check if this is a new expense or an update (for notification dedup)
       const existing = await tx.expense.findUnique({

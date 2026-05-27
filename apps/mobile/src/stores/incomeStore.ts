@@ -250,7 +250,7 @@ export const useIncomeStore = create<IncomeState>()(
           _lastIncomesSyncAt = Date.now();
           _lastIncomesSyncedAccountId = accountId;
         } catch (e) {
-          console.log('Server pull skipped (incomes):', e);
+          console.warn('Server pull skipped (incomes):', e);
         }
       } catch (e) {
         console.error('Failed to load incomes from SQLite:', e);
