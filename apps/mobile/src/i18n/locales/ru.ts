@@ -1588,6 +1588,8 @@ export default {
     walletDesc: 'Балансы, долги, начальный баланс',
     categories: 'Категории',
     categoriesDesc: 'Управление и удаление категорий',
+    merchants: 'Магазины',
+    merchantsDesc: 'Переименовать, объединить или удалить магазины',
     subscriptionDesc: 'Тариф, использование, улучшение',
   },
   categories: {
@@ -1626,6 +1628,19 @@ export default {
       gifts: 'Подарки',
       otherIncome: 'Другой доход',
     },
+  },
+  merchants: {
+    title: 'Магазины',
+    rename: 'Переименовать',
+    delete: 'Удалить',
+    renameTitle: 'Переименовать магазин',
+    renamePlaceholder: 'Название магазина',
+    nameRequired: 'Введите название магазина',
+    expensesCount: '{{count}} расходов',
+    deleteConfirm: 'Убрать магазин из {{count}} расходов?',
+    renamed: 'Обновлено {{count}} расходов',
+    deleted: 'Очищено {{count}} расходов',
+    empty: 'Пока нет магазинов',
   },
   aiUsage: {
     confirmTitle: 'Использование AI',

@@ -74,6 +74,8 @@ Registra dónde gastaste — el comercio (tienda o negocio):
 - Se rellena automáticamente al escanear un recibo o importar transacciones de banco/Wise
 - Añádelo o edítalo manualmente en cualquier gasto; empieza a escribir para elegir entre comercios que ya has usado
 - Se muestra en el gasto y en la lista; toca el filtro de comercio en la pestaña Gastos para ver todo el gasto en un comercio
+- Gestiona tus comercios en **Ajustes → Comercios**: renombrar, fusionar duplicados o eliminar un comercio
+- Al escanear un recibo o usar la voz, el comercio se asocia a los que ya tienes para evitar duplicados
 
 ### Dividir gasto
 

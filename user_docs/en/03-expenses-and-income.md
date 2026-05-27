@@ -74,6 +74,8 @@ Track where you spent — the merchant (store or business):
 - Auto-filled when you scan a receipt or import bank/Wise transactions
 - Add or edit it manually on any expense; start typing to pick from merchants you've used before
 - Shown on the expense and in the list; tap the merchant filter on the Expenses tab to see all spending at one merchant
+- Manage your merchants in **Settings → Merchants**: rename, merge duplicates into one, or remove a merchant
+- When you scan a receipt or use voice, the merchant is matched to your existing ones so you don't get duplicates
 
 ### Split Expense
 

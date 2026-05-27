@@ -1493,6 +1493,8 @@ export default {
     walletDesc: 'Балансы, даўгі, пачатковы баланс',
     categories: 'Катэгорыі',
     categoriesDesc: 'Кіраванне і выдаленне катэгорый',
+    merchants: 'Крамы',
+    merchantsDesc: 'Перайменаваць, аб\'яднаць або выдаліць крамы',
     subscriptionDesc: 'Тарыф, выкарыстанне, паляпшэнне',
   },
   categories: {
@@ -1531,6 +1533,19 @@ export default {
       gifts: 'Падарункі',
       otherIncome: 'Іншы даход',
     },
+  },
+  merchants: {
+    title: 'Крамы',
+    rename: 'Перайменаваць',
+    delete: 'Выдаліць',
+    renameTitle: 'Перайменаваць краму',
+    renamePlaceholder: 'Назва крамы',
+    nameRequired: 'Увядзіце назву крамы',
+    expensesCount: '{{count}} выдаткаў',
+    deleteConfirm: 'Прыбраць краму з {{count}} выдаткаў?',
+    renamed: 'Абноўлена {{count}} выдаткаў',
+    deleted: 'Ачышчана {{count}} выдаткаў',
+    empty: 'Пакуль няма крам',
   },
   aiUsage: {
     confirmTitle: 'Выкарыстанне AI',

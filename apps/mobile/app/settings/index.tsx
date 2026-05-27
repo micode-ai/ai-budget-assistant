@@ -87,6 +87,12 @@ export default function SettingsIndexScreen() {
       route: '/settings/categories',
     },
     {
+      icon: 'storefront-outline',
+      label: t('settingsNav.merchants'),
+      description: t('settingsNav.merchantsDesc'),
+      route: '/settings/merchants',
+    },
+    {
       icon: 'wallet-outline',
       label: t('settingsNav.wallet'),
       description: t('settingsNav.walletDesc'),

@@ -1585,6 +1585,8 @@ export default {
     walletDesc: 'Saldos, deudas, saldo inicial',
     categories: 'Categorías',
     categoriesDesc: 'Gestionar y eliminar categorías',
+    merchants: 'Comercios',
+    merchantsDesc: 'Renombrar, fusionar o eliminar comercios',
     subscriptionDesc: 'Plan, uso, mejora',
   },
   categories: {
@@ -1623,6 +1625,19 @@ export default {
       gifts: 'Regalos',
       otherIncome: 'Otros ingresos',
     },
+  },
+  merchants: {
+    title: 'Comercios',
+    rename: 'Renombrar',
+    delete: 'Eliminar',
+    renameTitle: 'Renombrar comercio',
+    renamePlaceholder: 'Nombre del comercio',
+    nameRequired: 'Introduce el nombre del comercio',
+    expensesCount: '{{count}} gastos',
+    deleteConfirm: '¿Eliminar comercio de {{count}} gastos?',
+    renamed: '{{count}} gastos actualizados',
+    deleted: 'Comercio eliminado de {{count}} gastos',
+    empty: 'Aún no hay comercios',
   },
   aiUsage: {
     confirmTitle: 'Uso de AI',

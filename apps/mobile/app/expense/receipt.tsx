@@ -18,6 +18,8 @@ import { File } from 'expo-file-system/next';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
+import { MerchantInput } from '@/components/MerchantInput';
+import { resolveExistingMerchant } from '@/utils/merchant';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
@@ -43,7 +45,9 @@ export default function ReceiptExpenseScreen() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [saveImage, setSaveImage] = useState(true);
   const [userPrompt, setUserPrompt] = useState('');
+  const [merchant, setMerchant] = useState('');
   const { addExpense } = useExpenseStore();
+  const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { user } = useAuthStore();
 
   const {
@@ -67,8 +71,10 @@ export default function ReceiptExpenseScreen() {
   useEffect(() => {
     if (scannedReceipt) {
       setShowConfirm(true);
+      setMerchant(resolveExistingMerchant(scannedReceipt.merchant, getDistinctMerchants()));
       useSubscriptionStore.getState().loadUsage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
 
   const handleCameraPress = async () => {
@@ -129,7 +135,7 @@ export default function ReceiptExpenseScreen() {
         discountAmount: scannedReceipt.discountAmount ?? undefined,
         currencyCode: scannedReceipt.currencyCode as Currency,
         description: scannedReceipt.description,
-        merchant: scannedReceipt.merchant ?? undefined,
+        merchant: merchant.trim() || undefined,
         categoryId: resolvedCategoryId,
         date: expenseDate,
         source: 'ocr',
@@ -161,6 +167,7 @@ export default function ReceiptExpenseScreen() {
     const params = {
       amount: scannedReceipt.amount.toString(),
       description: scannedReceipt.description,
+      merchant: merchant.trim(),
       categoryId: resolvedCategoryId,
       currencyCode: scannedReceipt.currencyCode,
     };
@@ -291,12 +298,9 @@ export default function ReceiptExpenseScreen() {
                 <Text style={styles.expenseValue}>{scannedReceipt?.description}</Text>
               </View>
 
-              {scannedReceipt?.merchant && (
-                <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>{t('receipt.merchant')}</Text>
-                  <Text style={styles.expenseValue}>{scannedReceipt.merchant}</Text>
-                </View>
-              )}
+              <View style={styles.merchantField}>
+                <MerchantInput value={merchant} onChangeText={setMerchant} />
+              </View>
 
               <View style={styles.expenseRow}>
                 <Text style={styles.expenseLabel}>{t('receipt.category')}</Text>
@@ -658,5 +662,8 @@ const createStyles = (theme: Theme) => ({
   retryButtonText: {
     fontSize: 14,
     color: theme.colors.textSecondary,
+  },
+  merchantField: {
+    marginTop: theme.spacing[2],
   },
 });

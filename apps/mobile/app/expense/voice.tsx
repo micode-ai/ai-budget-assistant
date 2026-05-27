@@ -16,6 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { useVoiceInput } from '@/features/voice/useVoiceInput';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
+import { MerchantInput } from '@/components/MerchantInput';
+import { resolveExistingMerchant } from '@/utils/merchant';
 import { useCategoryStore } from '@/stores/categoryStore';
 import type { Currency } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
@@ -30,6 +32,7 @@ export default function VoiceExpenseScreen() {
   const styles = useStyles(createStyles);
   const [showConfirm, setShowConfirm] = useState(false);
   const { addExpense } = useExpenseStore();
+  const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { user } = useAuthStore();
   const { getExpenseCategories, getCategoryByName, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
 
@@ -69,7 +72,7 @@ export default function VoiceExpenseScreen() {
     if (parsedExpense) {
       setEditAmount(parsedExpense.amount.toString());
       setEditDescription(parsedExpense.description || '');
-      setEditMerchant(parsedExpense.merchant || '');
+      setEditMerchant(resolveExistingMerchant(parsedExpense.merchant, getDistinctMerchants()));
       // Map AI-suggested category name to category ID
       const suggestedName = parsedExpense.categorySuggestion || '';
       const matchedCategory = suggestedName ? getCategoryByName(suggestedName, 'expense') : undefined;
@@ -117,7 +120,7 @@ export default function VoiceExpenseScreen() {
         amount: numericAmount,
         currencyCode: editCurrencyCode as Currency,
         description: editDescription.trim(),
-        notes: editMerchant.trim() || undefined,
+        merchant: editMerchant.trim() || undefined,
         categoryId: editCategory || undefined,
         date: new Date(),
         source: 'voice',
@@ -263,14 +266,7 @@ export default function VoiceExpenseScreen() {
 
               {/* Merchant */}
               <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>{t('voice.merchant')}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={editMerchant}
-                  onChangeText={setEditMerchant}
-                  placeholder={t('voice.merchant')}
-                  placeholderTextColor={theme.colors.textTertiary}
-                />
+                <MerchantInput value={editMerchant} onChangeText={setEditMerchant} />
               </View>
 
               {/* Category */}

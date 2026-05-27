@@ -74,6 +74,8 @@ Lacz wydatki z projektami w celu grupowego sledzenia:
 - Wypełniany automatycznie podczas skanowania paragonu lub importu transakcji bankowych/Wise
 - Dodaj lub edytuj go ręcznie przy dowolnym wydatku; zacznij pisać, aby wybrać z wcześniej używanych sprzedawców
 - Pokazywany przy wydatku i na liście; dotknij filtra sprzedawcy na karcie Wydatki, aby zobaczyć wszystkie wydatki u jednego sprzedawcy
+- Zarządzaj sprzedawcami w **Ustawienia → Sprzedawcy**: zmień nazwę, scal duplikaty lub usuń sprzedawcę
+- Podczas skanowania paragonu lub dodawania głosem sprzedawca jest dopasowywany do istniejących, aby uniknąć duplikatów
 
 ### Podziel wydatek
 

@@ -1585,6 +1585,8 @@ export default {
     walletDesc: 'Balances, debts, initial balance',
     categories: 'Categories',
     categoriesDesc: 'Manage and delete categories',
+    merchants: 'Merchants',
+    merchantsDesc: 'Rename, merge, or remove merchants',
     subscriptionDesc: 'Plan, usage, upgrade',
   },
   categories: {
@@ -1623,6 +1625,19 @@ export default {
       gifts: 'Gifts',
       otherIncome: 'Other Income',
     },
+  },
+  merchants: {
+    title: 'Merchants',
+    rename: 'Rename',
+    delete: 'Delete',
+    renameTitle: 'Rename merchant',
+    renamePlaceholder: 'Merchant name',
+    nameRequired: 'Enter a merchant name',
+    expensesCount: '{{count}} expenses',
+    deleteConfirm: 'Clear merchant from {{count}} expenses?',
+    renamed: 'Updated {{count}} expenses',
+    deleted: 'Cleared {{count}} expenses',
+    empty: 'No merchants yet',
   },
   aiUsage: {
     confirmTitle: 'AI Usage',
