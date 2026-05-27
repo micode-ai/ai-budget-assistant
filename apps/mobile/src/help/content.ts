@@ -373,6 +373,7 @@ Track where you spent — the merchant (store or business):
 - Auto-filled when you scan a receipt or import bank/Wise transactions
 - Add or edit it manually on any expense; start typing to pick from merchants you've used before
 - Shown on the expense and in the list; tap the merchant filter on the Expenses tab to see all spending at one merchant
+- The merchant filter lets you pick **several merchants at once** (untap to remove one), and the Expenses tab shows the **total of what's currently filtered**, converted to your main currency
 - Manage your merchants in **Settings → Merchants**: rename, merge duplicates into one, or remove a merchant
 - When you scan a receipt or use voice, the merchant is matched to your existing ones so you don't get duplicates
 
@@ -3856,6 +3857,7 @@ iOS, Android, Web
 - Заполняется автоматически при сканировании чека или импорте банковских/Wise транзакций
 - Добавьте или измените вручную в любом расходе; начните вводить, чтобы выбрать из ранее использованных продавцов
 - Показывается в расходе и в списке; нажмите фильтр продавца на вкладке Расходы, чтобы увидеть все траты у одного продавца
+- Фильтр продавцов позволяет выбрать **несколько продавцов сразу** (нажмите ещё раз, чтобы убрать одного), а вкладка Расходы показывает **сумму отфильтрованного**, переведённую в вашу основную валюту
 - Управляйте продавцами в **Настройки → Продавцы**: переименование, объединение дубликатов или удаление продавца
 - При сканировании чека или голосовом вводе продавец сопоставляется с уже имеющимися, чтобы не появлялись дубликаты
 
@@ -7333,6 +7335,7 @@ iOS, Android, Web
 - Заповнюється автоматично під час сканування чека або імпорту банківських/Wise транзакцій
 - Додайте або змініть вручну в будь-якій витраті; почніть вводити, щоб обрати з раніше використаних продавців
 - Показується у витраті та у списку; натисніть фільтр продавця на вкладці Витрати, щоб побачити всі витрати в одного продавця
+- Фільтр продавців дозволяє вибрати **кількох продавців одразу** (натисніть ще раз, щоб прибрати одного), а вкладка Витрати показує **суму відфільтрованого**, переведену у вашу основну валюту
 - Керуйте продавцями в **Налаштування → Продавці**: перейменування, об'єднання дублікатів або видалення продавця
 - Під час сканування чека або голосового введення продавець зіставляється з наявними, щоб уникнути дублікатів
 
@@ -10746,6 +10749,7 @@ Lacz wydatki z projektami w celu grupowego sledzenia:
 - Wypełniany automatycznie podczas skanowania paragonu lub importu transakcji bankowych/Wise
 - Dodaj lub edytuj go ręcznie przy dowolnym wydatku; zacznij pisać, aby wybrać z wcześniej używanych sprzedawców
 - Pokazywany przy wydatku i na liście; dotknij filtra sprzedawcy na karcie Wydatki, aby zobaczyć wszystkie wydatki u jednego sprzedawcy
+- Filtr sprzedawców pozwala wybrać **kilku sprzedawców naraz** (dotknij ponownie, aby usunąć jednego), a karta Wydatki pokazuje **sumę aktualnie przefiltrowanych** pozycji, przeliczoną na Twoją walutę główną
 - Zarządzaj sprzedawcami w **Ustawienia → Sprzedawcy**: zmień nazwę, scal duplikaty lub usuń sprzedawcę
 - Podczas skanowania paragonu lub dodawania głosem sprzedawca jest dopasowywany do istniejących, aby uniknąć duplikatów
 
@@ -14143,6 +14147,7 @@ Erfasse, wo du eingekauft hast — den Händler (Geschäft oder Unternehmen):
 - Wird automatisch ausgefüllt beim Scannen eines Belegs oder beim Import von Bank-/Wise-Transaktionen
 - Manuell hinzufügen oder bearbeiten; tippe los, um aus bereits verwendeten Händlern zu wählen
 - Wird bei der Ausgabe und in der Liste angezeigt; tippe auf den Händler-Filter im Ausgaben-Tab, um alle Ausgaben bei einem Händler zu sehen
+- Der Händler-Filter erlaubt die Auswahl **mehrerer Händler gleichzeitig** (zum Entfernen erneut tippen), und der Ausgaben-Tab zeigt die **Summe der aktuell gefilterten Einträge**, umgerechnet in deine Hauptwährung
 - Verwalte deine Händler unter **Einstellungen → Händler**: umbenennen, Duplikate zusammenführen oder einen Händler entfernen
 - Beim Scannen eines Belegs oder per Spracheingabe wird der Händler deinen vorhandenen zugeordnet, damit keine Duplikate entstehen
 
@@ -17538,6 +17543,7 @@ Registra dónde gastaste — el comercio (tienda o negocio):
 - Se rellena automáticamente al escanear un recibo o importar transacciones de banco/Wise
 - Añádelo o edítalo manualmente en cualquier gasto; empieza a escribir para elegir entre comercios que ya has usado
 - Se muestra en el gasto y en la lista; toca el filtro de comercio en la pestaña Gastos para ver todo el gasto en un comercio
+- El filtro de comercios permite elegir **varios comercios a la vez** (toca de nuevo para quitar uno), y la pestaña Gastos muestra el **total de lo filtrado**, convertido a tu moneda principal
 - Gestiona tus comercios en **Ajustes → Comercios**: renombrar, fusionar duplicados o eliminar un comercio
 - Al escanear un recibo o usar la voz, el comercio se asocia a los que ya tienes para evitar duplicados
 
@@ -20928,6 +20934,7 @@ Gardez une trace de vos achats — le commerçant (magasin ou entreprise) :
 - Rempli automatiquement lors du scan d'un reçu ou de l'import de transactions bancaires/Wise
 - Ajoutez-le ou modifiez-le manuellement sur toute dépense ; commencez à taper pour choisir parmi les commerçants déjà utilisés
 - Affiché sur la dépense et dans la liste ; appuyez sur le filtre commerçant dans l'onglet Dépenses pour voir toutes les dépenses chez un commerçant
+- Le filtre commerçants permet d'en choisir **plusieurs à la fois** (appuyez de nouveau pour en retirer un), et l'onglet Dépenses affiche le **total filtré**, converti dans votre devise principale
 - Gérez vos commerçants dans **Réglages → Commerçants** : renommer, fusionner les doublons ou supprimer un commerçant
 - Lors d'un scan de reçu ou d'une saisie vocale, le commerçant est rapproché de ceux que vous avez déjà pour éviter les doublons
 
@@ -24316,6 +24323,7 @@ iOS, Android, Web
 - Запаўняецца аўтаматычна пры сканаванні чэка або імпарце банкаўскіх/Wise транзакцый
 - Дадайце або змяніце ўручную ў любым выдатку; пачніце ўводзіць, каб выбраць з раней выкарыстаных прадаўцоў
 - Паказваецца ў выдатку і ў спісе; націсніце фільтр прадаўца на ўкладцы Выдаткі, каб убачыць усе выдаткі ў аднаго прадаўца
+- Фільтр прадаўцоў дазваляе выбраць **некалькіх прадаўцоў адразу** (націсніце яшчэ раз, каб прыбраць аднаго), а ўкладка Выдаткі паказвае **суму адфільтраванага**, пераведзеную ў вашу асноўную валюту
 - Кіруйце прадаўцамі ў **Налады → Прадаўцы**: перайменаванне, аб'яднанне дублікатаў або выдаленне прадаўца
 - Пры сканаванні чэка або галасавым уводзе прадавец супастаўляецца з наяўнымі, каб пазбегнуць дублікатаў
 

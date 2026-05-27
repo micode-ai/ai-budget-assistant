@@ -147,6 +147,7 @@ export default {
     merchantPlaceholder: 'p. ej. Biedronka, Amazon',
     merchantAll: 'Todos los comercios',
     merchantNone: 'Aún no hay comercios',
+    merchantsSelected: '{{count}} seleccionados',
   },
   incomes: {
     noIncomes: 'Aún no hay ingresos',

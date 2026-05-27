@@ -147,6 +147,7 @@ export default {
     merchantPlaceholder: 'напр. Biedronka, Amazon',
     merchantAll: 'Усі продавці',
     merchantNone: 'Поки немає продавців',
+    merchantsSelected: 'Вибрано: {{count}}',
   },
   incomes: {
     noIncomes: 'Доходів ще немає',

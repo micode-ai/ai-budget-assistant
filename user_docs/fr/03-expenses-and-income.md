@@ -74,6 +74,7 @@ Gardez une trace de vos achats — le commerçant (magasin ou entreprise) :
 - Rempli automatiquement lors du scan d'un reçu ou de l'import de transactions bancaires/Wise
 - Ajoutez-le ou modifiez-le manuellement sur toute dépense ; commencez à taper pour choisir parmi les commerçants déjà utilisés
 - Affiché sur la dépense et dans la liste ; appuyez sur le filtre commerçant dans l'onglet Dépenses pour voir toutes les dépenses chez un commerçant
+- Le filtre commerçants permet d'en choisir **plusieurs à la fois** (appuyez de nouveau pour en retirer un), et l'onglet Dépenses affiche le **total filtré**, converti dans votre devise principale
 - Gérez vos commerçants dans **Réglages → Commerçants** : renommer, fusionner les doublons ou supprimer un commerçant
 - Lors d'un scan de reçu ou d'une saisie vocale, le commerçant est rapproché de ceux que vous avez déjà pour éviter les doublons
 

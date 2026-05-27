@@ -40,7 +40,7 @@ import { useGamificationStore } from './gamificationStore';
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
   categoryId: string | null;
-  merchant: string | null;
+  merchants: string[];
   searchQuery: string;
   customMonth?: number; // 0-11
   customYear?: number;
@@ -116,7 +116,7 @@ export const useExpenseStore = create<ExpenseState>()(
     filters: {
       dateRange: 'month',
       categoryId: null,
-      merchant: null,
+      merchants: [],
       searchQuery: '',
     },
     expenseItems: {},
@@ -1002,9 +1002,9 @@ export const useExpenseStore = create<ExpenseState>()(
         filtered = filtered.filter((e) => e.categoryId === filters.categoryId);
       }
 
-      // Apply merchant filter
-      if (filters.merchant) {
-        filtered = filtered.filter((e) => e.merchant === filters.merchant);
+      // Apply merchant filter (multi-select)
+      if (filters.merchants.length > 0) {
+        filtered = filtered.filter((e) => e.merchant != null && filters.merchants.includes(e.merchant));
       }
 
       // Apply search filter
