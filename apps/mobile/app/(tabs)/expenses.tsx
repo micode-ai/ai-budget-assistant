@@ -412,7 +412,7 @@ export default function ExpensesScreen() {
                 onPress={() => setShowCategoryPicker(!showCategoryPicker)}
               >
                 <Ionicons name={(selectedCategory?.icon as any) || 'pricetag-outline'} size={14} color={hasCat ? accent : theme.colors.textTertiary} />
-                <Text style={[styles.categoryFilterButtonText, hasCat && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]} numberOfLines={1}>
+                <Text style={[styles.categoryFilterButtonText, styles.filterPillText, hasCat && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]} numberOfLines={1}>
                   {selectedCategory ? selectedCategory.name : t('expenses.categoryAll')}
                 </Text>
                 <Ionicons name={showCategoryPicker ? 'chevron-up' : 'chevron-down'} size={14} color={hasCat ? accent : theme.colors.textTertiary} />
@@ -424,15 +424,15 @@ export default function ExpensesScreen() {
                   onPress={() => setShowMerchantPicker(true)}
                 >
                   <Ionicons name="storefront-outline" size={14} color={hasMerchants ? theme.colors.primary : theme.colors.textTertiary} />
-                  <Text style={[styles.categoryFilterButtonText, hasMerchants && styles.categoryChipTextActive]} numberOfLines={1}>
+                  <Text style={[styles.categoryFilterButtonText, styles.filterPillText, hasMerchants && styles.categoryChipTextActive]} numberOfLines={1}>
                     {hasMerchants ? t('expenses.merchantsSelected', { count: expenseFilters.merchants.length }) : t('expenses.merchantAll')}
                   </Text>
                   <Ionicons name="chevron-down" size={14} color={hasMerchants ? theme.colors.primary : theme.colors.textTertiary} />
                 </TouchableOpacity>
               )}
 
-              <Text style={[styles.filterTotal, { color: isExpense ? theme.colors.danger : theme.colors.success }]} numberOfLines={1}>
-                {isExpense ? '−' : '+'}{formatCurrency(filteredTotal, baseCurrency)}
+              <Text style={styles.filterTotal} numberOfLines={1}>
+                {formatCurrency(filteredTotal, baseCurrency)}
               </Text>
             </View>
 
@@ -873,12 +873,19 @@ const createStyles = (theme: Theme) => ({
   },
   filterPill: {
     flexShrink: 1,
+    minWidth: 0,
+    alignSelf: 'center' as const,
+  },
+  filterPillText: {
+    flexShrink: 1,
   },
   filterTotal: {
     marginLeft: 'auto' as const,
+    paddingLeft: theme.spacing[2],
     fontSize: 15,
     fontWeight: '700' as const,
     flexShrink: 0,
+    color: theme.colors.textPrimary,
   },
   merchantModalHeader: {
     flexDirection: 'row' as const,
