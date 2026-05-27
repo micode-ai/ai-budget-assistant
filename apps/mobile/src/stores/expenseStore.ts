@@ -25,7 +25,7 @@ import {
   deduplicateItemsByExpenseId,
 } from '@/db/expenseItemRepository';
 import { insertExpenseTag, getTagsForExpense } from '@/db/tagRepository';
-import { addExpenseToProject, getProjectIdForExpense, getAllProjectExpenseMappings, upsertProject } from '@/db/projectRepository';
+import { addExpenseToProject, removeExpenseFromProject, getProjectIdForExpense, getAllProjectExpenseMappings, upsertProject } from '@/db/projectRepository';
 import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
@@ -68,6 +68,7 @@ interface ExpenseState {
   setExpenses: (expenses: Expense[]) => void;
   addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense>) => void;
+  setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
   stopRecurringExpense: (id: string) => Promise<void>;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
@@ -635,6 +636,51 @@ export const useExpenseStore = create<ExpenseState>()(
           console.error('Failed to update expense on server:', e),
         );
       }
+    },
+
+    // Assign/clear the project for an existing expense. projectId lives in the
+    // project_expenses join table (not an expenses column), so the generic
+    // updateExpense can't manage it — and `undefined` would be dropped from the
+    // JSON body, making it impossible to clear server-side. We handle all three
+    // layers here: in-memory, local SQLite join table, and server (explicit null).
+    setExpenseProject: async (expenseId, projectId) => {
+      const current = get().expenses.find((e) => e.id === expenseId);
+      if (!current) return;
+      const oldProjectId = current.projectId || null;
+      if (oldProjectId === projectId) return;
+
+      set((state) => ({
+        expenses: state.expenses.map((e) =>
+          e.id === expenseId
+            ? { ...e, projectId: projectId || undefined, updatedAt: new Date() }
+            : e
+        ),
+      }));
+
+      try {
+        if (oldProjectId) {
+          await removeExpenseFromProject(oldProjectId, expenseId);
+        }
+        if (projectId) {
+          const now = new Date();
+          await addExpenseToProject({
+            id: generateUUID(),
+            projectId,
+            expenseId,
+            createdAt: now,
+            updatedAt: now,
+            isDeleted: false,
+            syncVersion: 0,
+          });
+        }
+      } catch (e) {
+        console.error('Failed to update project association in SQLite:', e);
+      }
+
+      // Explicit null clears the association server-side (DTO accepts string | null).
+      api.updateExpense(expenseId, { projectId }).catch((e) =>
+        console.error('Failed to update project on server:', e),
+      );
     },
 
     deleteExpense: (id) => {

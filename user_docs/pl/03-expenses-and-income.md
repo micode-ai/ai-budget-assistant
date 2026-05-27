@@ -66,6 +66,7 @@ Lacz wydatki z projektami w celu grupowego sledzenia:
 - Wybierz istniejacy projekt (np. **Wakacje**)
 - Dotknij **+**, aby utworzyc nowy projekt
 - Przegladaj sumy wydatkow projektu w sekcji Projekty
+- Zmien lub usun projekt pozniej — otworz wydatek, dotknij **Edytuj**, a nastepnie wybierz inny projekt lub dotknij **Wyczysc**
 
 ### Podziel wydatek
 

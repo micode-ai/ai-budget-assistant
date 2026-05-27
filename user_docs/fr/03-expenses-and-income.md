@@ -66,6 +66,7 @@ Associez des depenses a des projets pour un suivi groupe :
 - Selectionnez un projet existant (par ex. **Vacances**)
 - Appuyez sur **+** pour creer un nouveau projet
 - Consultez les totaux de depenses par projet dans la section Projets
+- Modifiez ou retirez le projet plus tard : ouvrez la depense, appuyez sur **Modifier**, puis choisissez un autre projet ou appuyez sur **Effacer**
 
 ### Diviser la depense
 

@@ -66,6 +66,7 @@ Link expenses to projects for grouped tracking:
 - Select an existing project (e.g., **Vacation**)
 - Tap **+** to create a new project
 - View project spending totals in the Projects section
+- Change or remove the project later — open the expense, tap **Edit**, then pick a different project or tap **Clear**
 
 ### Split Expense
 

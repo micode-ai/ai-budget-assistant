@@ -66,6 +66,7 @@ Vincula gastos a proyectos para un seguimiento agrupado:
 - Selecciona un proyecto existente (por ejemplo, **Vacaciones**)
 - Toca **+** para crear un nuevo proyecto
 - Consulta los totales de gasto del proyecto en la seccion de Proyectos
+- Cambia o quita el proyecto mas tarde: abre el gasto, toca **Editar** y elige otro proyecto o toca **Borrar**
 
 ### Dividir gasto
 
