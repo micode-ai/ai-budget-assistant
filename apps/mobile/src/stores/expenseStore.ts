@@ -12,6 +12,7 @@ import {
   saveReceiptImageLocally,
   getReceiptImageFromDb,
   deleteReceiptImageLocally,
+  bulkRenameMerchant,
 } from '@/db/expenseRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { withTransaction } from '@/db/client';
@@ -30,7 +31,7 @@ import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
-import { getDistinctMerchants as computeDistinctMerchants } from '@/utils/merchant';
+import { getDistinctMerchants as computeDistinctMerchants, getMerchantCounts as computeMerchantCounts } from '@/utils/merchant';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
@@ -92,6 +93,8 @@ interface ExpenseState {
   // Selectors
   getFilteredExpenses: () => Expense[];
   getDistinctMerchants: () => string[];
+  getMerchantCounts: () => { merchant: string; count: number }[];
+  renameMerchant: (from: string, to: string | null) => Promise<number>;
   getExpensesByCategory: () => CategoryBreakdown[];
   getTrendVsLastPeriod: () => number;
 
@@ -1020,6 +1023,40 @@ export const useExpenseStore = create<ExpenseState>()(
     },
 
     getDistinctMerchants: () => computeDistinctMerchants(get().expenses),
+
+    getMerchantCounts: () => computeMerchantCounts(get().expenses),
+
+    // Bulk rename/merge/delete a merchant across the account's expenses.
+    // Renaming to an existing name merges; to = null clears. Reuses the offline
+    // sync path (syncPendingExpenses re-encrypts for E2EE accounts).
+    renameMerchant: async (from, to) => {
+      if (to === from) return 0;
+      const accountId = useAccountStore.getState().currentAccountId || '';
+      const affected = get().expenses.filter((e) => !e.isDeleted && e.merchant === from);
+      if (affected.length === 0) return 0;
+      const now = new Date();
+      set((state) => ({
+        expenses: state.expenses.map((e) =>
+          !e.isDeleted && e.merchant === from
+            ? {
+                ...e,
+                merchant: to || undefined,
+                updatedAt: now,
+                syncStatus: 'pending' as SyncStatus,
+              }
+            : e
+        ),
+      }));
+      try {
+        await bulkRenameMerchant(accountId, from, to);
+      } catch (e) {
+        console.error('Failed to bulk-rename merchant in SQLite:', e);
+      }
+      get().syncPendingExpenses().catch((e) =>
+        console.error('Failed to sync merchant rename:', e),
+      );
+      return affected.length;
+    },
 
     getExpensesByCategory: () => {
       const filtered = get().getFilteredExpenses();

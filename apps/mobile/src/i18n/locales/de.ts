@@ -1585,6 +1585,8 @@ export default {
     walletDesc: 'Salden, Schulden, Anfangssaldo',
     categories: 'Kategorien',
     categoriesDesc: 'Kategorien verwalten und löschen',
+    merchants: 'Händler',
+    merchantsDesc: 'Händler umbenennen, zusammenführen oder entfernen',
     subscriptionDesc: 'Tarif, Nutzung, Upgrade',
   },
   categories: {
@@ -1623,6 +1625,19 @@ export default {
       gifts: 'Geschenke',
       otherIncome: 'Sonstiges Einkommen',
     },
+  },
+  merchants: {
+    title: 'Händler',
+    rename: 'Umbenennen',
+    delete: 'Löschen',
+    renameTitle: 'Händler umbenennen',
+    renamePlaceholder: 'Händlername',
+    nameRequired: 'Bitte Händlernamen eingeben',
+    expensesCount: '{{count}} Ausgaben',
+    deleteConfirm: 'Händler aus {{count}} Ausgaben entfernen?',
+    renamed: '{{count}} Ausgaben aktualisiert',
+    deleted: '{{count}} Ausgaben bereinigt',
+    empty: 'Noch keine Händler',
   },
   aiUsage: {
     confirmTitle: 'AI-Nutzung',

@@ -278,6 +278,22 @@ export async function deleteReceiptImageLocally(
   );
 }
 
+/**
+ * Bulk set merchant for all of an account's non-deleted expenses whose merchant
+ * exactly equals `from`. `to = null` clears it. Marks rows pending for sync.
+ */
+export async function bulkRenameMerchant(
+  accountId: string,
+  from: string,
+  to: string | null,
+): Promise<void> {
+  await executeSql(
+    `UPDATE expenses SET merchant = ?, updated_at = ?, sync_status = 'pending'
+     WHERE account_id = ? AND merchant = ? AND is_deleted = 0`,
+    [to, Date.now(), accountId, from],
+  );
+}
+
 export async function upsertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (

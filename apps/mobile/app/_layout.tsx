@@ -478,6 +478,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/merchants"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.merchants'),
+          }}
+        />
+        <Stack.Screen
           name="settings/change-email"
           options={{
             headerShown: true,

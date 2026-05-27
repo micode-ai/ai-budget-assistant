@@ -1588,6 +1588,8 @@ export default {
     walletDesc: 'Salda, długi, saldo początkowe',
     categories: 'Kategorie',
     categoriesDesc: 'Zarządzanie i usuwanie kategorii',
+    merchants: 'Sprzedawcy',
+    merchantsDesc: 'Zmień nazwy, scal lub usuń sprzedawców',
     subscriptionDesc: 'Plan, zużycie, ulepszenie',
   },
   categories: {
@@ -1626,6 +1628,19 @@ export default {
       gifts: 'Prezenty',
       otherIncome: 'Inne przychody',
     },
+  },
+  merchants: {
+    title: 'Sprzedawcy',
+    rename: 'Zmień nazwę',
+    delete: 'Usuń',
+    renameTitle: 'Zmień nazwę sprzedawcy',
+    renamePlaceholder: 'Nazwa sprzedawcy',
+    nameRequired: 'Wpisz nazwę sprzedawcy',
+    expensesCount: '{{count}} wydatków',
+    deleteConfirm: 'Usunąć sprzedawcę z {{count}} wydatków?',
+    renamed: 'Zaktualizowano {{count}} wydatków',
+    deleted: 'Wyczyszczono {{count}} wydatków',
+    empty: 'Brak sprzedawców',
   },
   aiUsage: {
     confirmTitle: 'Użycie AI',

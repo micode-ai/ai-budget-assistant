@@ -1585,6 +1585,8 @@ export default {
     walletDesc: 'Soldes, dettes, solde initial',
     categories: 'Catégories',
     categoriesDesc: 'Gérer et supprimer les catégories',
+    merchants: 'Commerçants',
+    merchantsDesc: 'Renommer, fusionner ou supprimer des commerçants',
     subscriptionDesc: 'Forfait, utilisation, mise à niveau',
   },
   categories: {
@@ -1623,6 +1625,19 @@ export default {
       gifts: 'Cadeaux',
       otherIncome: 'Autre revenu',
     },
+  },
+  merchants: {
+    title: 'Commerçants',
+    rename: 'Renommer',
+    delete: 'Supprimer',
+    renameTitle: 'Renommer le commerçant',
+    renamePlaceholder: 'Nom du commerçant',
+    nameRequired: 'Entrez un nom de commerçant',
+    expensesCount: '{{count}} dépenses',
+    deleteConfirm: 'Effacer le commerçant de {{count}} dépenses ?',
+    renamed: '{{count}} dépenses mises à jour',
+    deleted: '{{count}} dépenses effacées',
+    empty: 'Aucun commerçant pour l\'instant',
   },
   aiUsage: {
     confirmTitle: 'Utilisation AI',
