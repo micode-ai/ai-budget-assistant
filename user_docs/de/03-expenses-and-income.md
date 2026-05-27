@@ -68,6 +68,13 @@ Verknupfe Ausgaben mit Projekten fur gruppierte Verfolgung:
 - Sieh die Gesamtausgaben pro Projekt im Projektebereich
 - Andere oder entferne das Projekt spater — offne die Ausgabe, tippe auf **Bearbeiten** und wahle ein anderes Projekt oder tippe auf **Loschen**
 
+### Händler
+
+Erfasse, wo du eingekauft hast — den Händler (Geschäft oder Unternehmen):
+- Wird automatisch ausgefüllt beim Scannen eines Belegs oder beim Import von Bank-/Wise-Transaktionen
+- Manuell hinzufügen oder bearbeiten; tippe los, um aus bereits verwendeten Händlern zu wählen
+- Wird bei der Ausgabe und in der Liste angezeigt; tippe auf den Händler-Filter im Ausgaben-Tab, um alle Ausgaben bei einem Händler zu sehen
+
 ### Ausgabe aufteilen
 
 Teile eine einzelne Ausgabe auf mehrere Kategorien auf:

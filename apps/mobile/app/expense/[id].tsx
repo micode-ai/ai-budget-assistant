@@ -31,6 +31,7 @@ import { getTagsForExpense } from '@/db/tagRepository';
 import { getSplitsForExpense, insertSplit, deleteAllSplitsForExpense } from '@/db/splitRepository';
 import { api } from '@/services/api';
 import { TagChip } from '@/components/TagChip';
+import { MerchantInput } from '@/components/MerchantInput';
 import { ProjectPicker } from '@/components/ProjectPicker';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { SplitEditor } from '@/components/SplitEditor';
@@ -78,6 +79,7 @@ export default function ExpenseDetailScreen() {
   const [editAmount, setEditAmount] = useState(expense?.amount?.toString() || '');
   const [editCategory, setEditCategory] = useState(expense?.categoryId || '');
   const [editProjectId, setEditProjectId] = useState<string | null>(expense?.projectId ?? null);
+  const [editMerchant, setEditMerchant] = useState(expense?.merchant || '');
   const [editDate, setEditDate] = useState(expense?.date ? new Date(expense.date) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -383,6 +385,7 @@ export default function ExpenseDetailScreen() {
         description: expense.description || '',
         categoryId: expense.categoryId || '',
         currencyCode: expense.currencyCode,
+        merchant: expense.merchant || '',
       },
     });
   };
@@ -414,6 +417,7 @@ export default function ExpenseDetailScreen() {
       amount: numericAmount,
       description: editDescription.trim(),
       categoryId: editCategory || undefined,
+      merchant: editMerchant.trim() === '' ? '' : editMerchant.trim(),
       date: editDate,
     });
 
@@ -564,6 +568,18 @@ export default function ExpenseDetailScreen() {
               <Text style={styles.detailValue}>{expense.description || t('expenseDetail.noDescription')}</Text>
             )}
           </View>
+
+          {/* Merchant Section */}
+          {isEditing ? (
+            <View style={styles.detailRow}>
+              <MerchantInput value={editMerchant} onChangeText={setEditMerchant} />
+            </View>
+          ) : expense.merchant ? (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>{t('expenses.merchant')}</Text>
+              <Text style={styles.detailValue}>{expense.merchant}</Text>
+            </View>
+          ) : null}
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('expenseDetail.date')}</Text>
@@ -956,6 +972,7 @@ export default function ExpenseDetailScreen() {
                   setEditAmount(expense.amount.toString());
                   setEditCategory(expense.categoryId || '');
                   setEditProjectId(expense.projectId ?? null);
+                  setEditMerchant(expense.merchant || '');
                   setEditDate(new Date(expense.date));
                   setShowDatePicker(false);
                 }}

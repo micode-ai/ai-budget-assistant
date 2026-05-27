@@ -143,6 +143,10 @@ export default {
     periodCustom: 'Personalizado',
     categoryAll: 'Todo',
     searchPlaceholder: 'Buscar transacciones...',
+    merchant: 'Comercio',
+    merchantPlaceholder: 'p. ej. Biedronka, Amazon',
+    merchantAll: 'Todos los comercios',
+    merchantNone: 'Aún no hay comercios',
   },
   incomes: {
     noIncomes: 'Aún no hay ingresos',

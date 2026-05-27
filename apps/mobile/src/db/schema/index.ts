@@ -37,6 +37,7 @@ export const expenses = sqliteTable('expenses', {
   currencyCode: text('currency_code').notNull().default('USD'),
   description: text('description'),
   notes: text('notes'),
+  merchant: text('merchant'),
   categoryId: text('category_id'),
   date: integer('date', { mode: 'timestamp' }).notNull(),
   time: text('time'),

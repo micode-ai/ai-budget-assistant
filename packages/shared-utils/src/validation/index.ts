@@ -56,6 +56,7 @@ export const CreateExpenseSchema = z.object({
   currencyCode: CurrencySchema,
   description: z.string().max(500).optional(),
   notes: z.string().max(2000).optional(),
+  merchant: z.string().max(120).optional(),
   categoryId: z.string().uuid().optional(),
   date: z.string().datetime({ offset: true }),
   time: z
@@ -83,6 +84,7 @@ export const UpdateExpenseSchema = z.object({
   currencyCode: CurrencySchema.optional(),
   description: z.string().max(500).optional(),
   notes: z.string().max(2000).optional(),
+  merchant: z.string().max(120).nullable().optional(),
   categoryId: z.string().uuid().nullable().optional(),
   date: z.string().datetime({ offset: true }).optional(),
   time: z

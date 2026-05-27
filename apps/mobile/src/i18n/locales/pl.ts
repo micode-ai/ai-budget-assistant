@@ -143,6 +143,10 @@ export default {
     periodCustom: 'Własny',
     categoryAll: 'Wszystkie',
     searchPlaceholder: 'Szukaj transakcji...',
+    merchant: 'Sprzedawca',
+    merchantPlaceholder: 'np. Biedronka, Amazon',
+    merchantAll: 'Wszyscy sprzedawcy',
+    merchantNone: 'Brak sprzedawców',
   },
   incomes: {
     noIncomes: 'Brak przychodów',

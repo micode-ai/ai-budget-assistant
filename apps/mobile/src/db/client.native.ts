@@ -523,6 +523,9 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN debt_due_date INTEGER`); } catch {}
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN related_debt_income_id TEXT`); } catch {}
 
+    // Merchant field for expenses
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN merchant TEXT`); } catch {}
+
     // Debt tracking fields for incomes
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN is_debt INTEGER DEFAULT 0`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN is_debt_repayment INTEGER DEFAULT 0`); } catch {}

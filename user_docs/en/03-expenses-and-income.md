@@ -68,6 +68,13 @@ Link expenses to projects for grouped tracking:
 - View project spending totals in the Projects section
 - Change or remove the project later — open the expense, tap **Edit**, then pick a different project or tap **Clear**
 
+### Merchant
+
+Track where you spent — the merchant (store or business):
+- Auto-filled when you scan a receipt or import bank/Wise transactions
+- Add or edit it manually on any expense; start typing to pick from merchants you've used before
+- Shown on the expense and in the list; tap the merchant filter on the Expenses tab to see all spending at one merchant
+
 ### Split Expense
 
 Divide a single expense across multiple categories:

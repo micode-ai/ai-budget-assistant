@@ -295,6 +295,7 @@ model Expense {
   currencyCode   String   @default("USD") @map("currency_code")
   description  String?
   notes        String?
+  merchant     String?
   date         DateTime @db.Date
   time         String?
   locationLat  Decimal? @map("location_lat") @db.Decimal(10, 8)
@@ -337,6 +338,7 @@ model Expense {
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
   @@index([accountId, isDebt])
+  @@index([accountId, merchant])
   @@map("expenses")
 }
 

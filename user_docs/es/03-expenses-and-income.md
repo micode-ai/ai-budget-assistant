@@ -68,6 +68,13 @@ Vincula gastos a proyectos para un seguimiento agrupado:
 - Consulta los totales de gasto del proyecto en la seccion de Proyectos
 - Cambia o quita el proyecto mas tarde: abre el gasto, toca **Editar** y elige otro proyecto o toca **Borrar**
 
+### Comercio
+
+Registra dónde gastaste — el comercio (tienda o negocio):
+- Se rellena automáticamente al escanear un recibo o importar transacciones de banco/Wise
+- Añádelo o edítalo manualmente en cualquier gasto; empieza a escribir para elegir entre comercios que ya has usado
+- Se muestra en el gasto y en la lista; toca el filtro de comercio en la pestaña Gastos para ver todo el gasto en un comercio
+
 ### Dividir gasto
 
 Divide un gasto individual entre multiples categorias:

@@ -207,6 +207,7 @@ export interface Expense {
   currencyCode: Currency;
   description?: string;
   notes?: string;
+  merchant?: string;
   categoryId?: string;
   date: Date;
   time?: string;

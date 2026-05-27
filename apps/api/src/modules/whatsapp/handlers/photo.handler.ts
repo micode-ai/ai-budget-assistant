@@ -246,6 +246,7 @@ export class PhotoHandler {
         discountAmount: data.discountAmount || undefined,
         currencyCode: data.currencyCode,
         description: data.description,
+        merchant: data.merchant ?? undefined,
         categoryId: data.categoryId || undefined,
         date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
         source: 'ocr',

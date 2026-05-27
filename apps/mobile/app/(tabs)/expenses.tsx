@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator, TextInput } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator, TextInput, Modal } from 'react-native';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,10 +27,11 @@ export default function ExpensesScreen() {
   const [fabOpen, setFabOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('expenses');
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const [showMerchantPicker, setShowMerchantPicker] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<TextInput>(null);
-  const { loadExpenses, getFilteredExpenses, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
+  const { loadExpenses, getFilteredExpenses, getDistinctMerchants, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
   const { loadIncomes, getFilteredIncomes, deleteIncome, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
 
   useEffect(() => {
@@ -226,6 +227,9 @@ export default function ExpensesScreen() {
         <Text style={styles.expenseDescription} numberOfLines={1}>
           {item.description || 'Expense'}
         </Text>
+        {item.merchant ? (
+          <Text style={styles.expenseMerchant} numberOfLines={1}>{item.merchant}</Text>
+        ) : null}
         <Text style={styles.expenseDate}>{formatDate(item.date, undefined, getIntlLocale())}</Text>
       </View>
       <Text style={styles.expenseAmount}>
@@ -459,6 +463,29 @@ export default function ExpensesScreen() {
         );
       })()}
 
+      {/* Merchant Filter (expenses only) */}
+      {activeTab === 'expenses' && (() => {
+        const hasFilter = expenseFilters.merchant !== null;
+        return (
+          <View style={styles.categoryFilterWrapper}>
+            <TouchableOpacity
+              style={[styles.categoryFilterButton, hasFilter && styles.categoryFilterButtonActive]}
+              onPress={() => setShowMerchantPicker(true)}
+            >
+              <Ionicons name="storefront-outline" size={14} color={hasFilter ? theme.colors.primary : theme.colors.textTertiary} />
+              <Text style={[styles.categoryFilterButtonText, hasFilter && styles.categoryChipTextActive]} numberOfLines={1}>
+                {expenseFilters.merchant || t('expenses.merchantAll')}
+              </Text>
+              {hasFilter && (
+                <TouchableOpacity onPress={() => setExpenseFilters({ merchant: null })}>
+                  <Ionicons name="close-circle" size={16} color={theme.colors.primary} />
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+          </View>
+        );
+      })()}
+
       {/* Month/Year Navigator (visible when custom is selected) */}
       {(() => {
         const currentFilters = activeTab === 'expenses' ? expenseFilters : incomeFilters;
@@ -675,6 +702,36 @@ export default function ExpensesScreen() {
           </Animated.View>
         </TouchableOpacity>
       </View>}
+      <Modal visible={showMerchantPicker} transparent animationType="slide" onRequestClose={() => setShowMerchantPicker(false)}>
+        <TouchableOpacity style={styles.merchantModalOverlay} activeOpacity={1} onPress={() => setShowMerchantPicker(false)}>
+          <View style={styles.merchantModalSheet}>
+            <Text style={styles.merchantModalTitle}>{t('expenses.merchant')}</Text>
+            <ScrollView style={{ maxHeight: 360 }}>
+              <TouchableOpacity
+                style={styles.merchantRow}
+                onPress={() => { setExpenseFilters({ merchant: null }); setShowMerchantPicker(false); }}
+              >
+                <Text style={styles.merchantRowText}>{t('expenses.merchantAll')}</Text>
+                {expenseFilters.merchant === null && <Ionicons name="checkmark" size={18} color={theme.colors.primary} />}
+              </TouchableOpacity>
+              {getDistinctMerchants().map((m) => (
+                <TouchableOpacity
+                  key={m}
+                  style={styles.merchantRow}
+                  onPress={() => { setExpenseFilters({ merchant: m }); setShowMerchantPicker(false); }}
+                >
+                  <Text style={styles.merchantRowText} numberOfLines={1}>{m}</Text>
+                  {expenseFilters.merchant === m && <Ionicons name="checkmark" size={18} color={theme.colors.primary} />}
+                </TouchableOpacity>
+              ))}
+              {getDistinctMerchants().length === 0 && (
+                <Text style={styles.merchantEmpty}>{t('expenses.merchantNone')}</Text>
+              )}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
       <TransactionActionSheet
         visible={actionSheetVisible}
         onClose={() => setActionSheetVisible(false)}
@@ -905,6 +962,11 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
   },
+  expenseMerchant: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    marginTop: 1,
+  },
   expenseAmount: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.danger,
@@ -991,4 +1053,23 @@ const createStyles = (theme: Theme) => ({
     overflow: 'hidden' as const,
     ...theme.shadows.md,
   },
+  merchantModalOverlay: { flex: 1, backgroundColor: theme.colors.overlay, justifyContent: 'flex-end' as const },
+  merchantModalSheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius['2xl'],
+    borderTopRightRadius: theme.borderRadius['2xl'],
+    padding: theme.spacing[5],
+    paddingBottom: theme.spacing[10],
+  },
+  merchantModalTitle: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textPrimary, marginBottom: theme.spacing[3] },
+  merchantRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.divider,
+  },
+  merchantRowText: { fontSize: 15, color: theme.colors.textPrimary, flex: 1, marginRight: theme.spacing[2] },
+  merchantEmpty: { fontSize: 14, color: theme.colors.textTertiary, textAlign: 'center' as const, paddingVertical: theme.spacing[4] },
 });
