@@ -9,6 +9,8 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { useExchangeRateStore } from '@/stores/exchangeRateStore';
+import { sumConverted } from '@/utils/total';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { Expense, Income } from '@budget/shared-types';
@@ -75,6 +77,7 @@ export default function ExpensesScreen() {
     setExpenseFilters({ searchQuery: '' });
     setIncomeFilters({ searchQuery: '' });
     setShowCategoryPicker(false);
+    setShowMerchantPicker(false);
   };
   const expensesLoading = useExpenseStore((s) => s.isLoading);
   const incomesLoading = useIncomeStore((s) => s.isLoading);
@@ -82,10 +85,15 @@ export default function ExpensesScreen() {
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const expenses = getFilteredExpenses();
   const incomes = getFilteredIncomes();
+  const rates = useExchangeRateStore((s) => s.rates);
+  const baseCurrencyRaw = useExchangeRateStore((s) => s.baseCurrency);
+  const baseCurrency = baseCurrencyRaw || 'USD';
+  const filteredTotal = sumConverted(activeTab === 'expenses' ? expenses : incomes, baseCurrency, rates);
   const allCategories = useCategoryStore((s) => s.categories);
   const categories = allCategories.filter(
     (c) => c.type === (activeTab === 'expenses' ? 'expense' : 'income') && !c.isDeleted
   );
+  const merchantList = getDistinctMerchants();
   const fabAnimation = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -388,101 +396,89 @@ export default function ExpensesScreen() {
         })}
       </ScrollView>
 
-      {/* Category Filter */}
+      {/* Filter row: category + merchant pills + filtered total */}
       {(() => {
-        const currentFilters = activeTab === 'expenses' ? expenseFilters : incomeFilters;
         const isExpense = activeTab === 'expenses';
+        const currentFilters = isExpense ? expenseFilters : incomeFilters;
         const selectedCategory = categories.find((c) => c.id === currentFilters.categoryId);
-        const hasFilter = currentFilters.categoryId !== null;
+        const hasCat = currentFilters.categoryId !== null;
+        const hasMerchants = expenseFilters.merchants.length > 0;
+        const accent = isExpense ? theme.colors.primary : theme.colors.success;
         return (
-          <View style={styles.categoryFilterWrapper}>
-            <TouchableOpacity
-              style={[styles.categoryFilterButton, hasFilter && (isExpense ? styles.categoryFilterButtonActive : styles.categoryFilterButtonActiveIncome)]}
-              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-            >
-              {selectedCategory?.icon ? (
-                <Ionicons
-                  name={selectedCategory.icon as any}
-                  size={14}
-                  color={hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textTertiary}
-                />
-              ) : (
-                <Ionicons name="pricetag-outline" size={14} color={hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textTertiary} />
-              )}
-              <Text style={[styles.categoryFilterButtonText, hasFilter && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
-                {selectedCategory ? selectedCategory.name : t('expenses.categoryAll')}
-              </Text>
-              <Ionicons name={showCategoryPicker ? 'chevron-up' : 'chevron-down'} size={14} color={hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textTertiary} />
-            </TouchableOpacity>
+          <>
+            <View style={styles.filterRow}>
+              <TouchableOpacity
+                style={[styles.categoryFilterButton, styles.filterPill, hasCat && (isExpense ? styles.categoryFilterButtonActive : styles.categoryFilterButtonActiveIncome)]}
+                onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+              >
+                <Ionicons name={(selectedCategory?.icon as any) || 'pricetag-outline'} size={14} color={hasCat ? accent : theme.colors.textTertiary} />
+                <Text style={[styles.categoryFilterButtonText, hasCat && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]} numberOfLines={1}>
+                  {selectedCategory ? selectedCategory.name : t('expenses.categoryAll')}
+                </Text>
+                <Ionicons name={showCategoryPicker ? 'chevron-up' : 'chevron-down'} size={14} color={hasCat ? accent : theme.colors.textTertiary} />
+              </TouchableOpacity>
 
-            {showCategoryPicker && (
-              <View style={styles.categoryPickerContainer}>
-                <ScrollView style={styles.categoryPickerScroll} nestedScrollEnabled>
-                  <TouchableOpacity
-                    style={[styles.categoryPickerItem, !hasFilter && styles.categoryPickerItemSelected]}
-                    onPress={() => {
-                      if (isExpense) setExpenseFilters({ categoryId: null });
-                      else setIncomeFilters({ categoryId: null });
-                      setShowCategoryPicker(false);
-                    }}
-                  >
-                    <Ionicons name="list-outline" size={18} color={!hasFilter ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
-                    <Text style={[styles.categoryPickerItemText, !hasFilter && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
-                      {t('expenses.categoryAll')}
-                    </Text>
-                    {!hasFilter && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
-                  </TouchableOpacity>
-                  {categories.map((cat) => {
-                    const isSelected = currentFilters.categoryId === cat.id;
-                    return (
-                      <TouchableOpacity
-                        key={cat.id}
-                        style={[styles.categoryPickerItem, isSelected && styles.categoryPickerItemSelected]}
-                        onPress={() => {
-                          if (isExpense) setExpenseFilters({ categoryId: cat.id });
-                          else setIncomeFilters({ categoryId: cat.id });
-                          setShowCategoryPicker(false);
-                        }}
-                      >
-                        {cat.icon ? (
-                          <Ionicons name={cat.icon as any} size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
-                        ) : (
-                          <Ionicons name="pricetag-outline" size={18} color={isSelected ? (isExpense ? theme.colors.primary : theme.colors.success) : theme.colors.textSecondary} />
-                        )}
-                        <Text style={[styles.categoryPickerItemText, isSelected && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
-                          {cat.name}
-                        </Text>
-                        {isSelected && <Ionicons name="checkmark" size={18} color={isExpense ? theme.colors.primary : theme.colors.success} style={styles.categoryPickerCheck} />}
-                      </TouchableOpacity>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-            )}
-          </View>
-        );
-      })()}
-
-      {/* Merchant Filter (expenses only) */}
-      {activeTab === 'expenses' && (() => {
-        const hasFilter = expenseFilters.merchant !== null;
-        return (
-          <View style={styles.categoryFilterWrapper}>
-            <TouchableOpacity
-              style={[styles.categoryFilterButton, hasFilter && styles.categoryFilterButtonActive]}
-              onPress={() => setShowMerchantPicker(true)}
-            >
-              <Ionicons name="storefront-outline" size={14} color={hasFilter ? theme.colors.primary : theme.colors.textTertiary} />
-              <Text style={[styles.categoryFilterButtonText, hasFilter && styles.categoryChipTextActive]} numberOfLines={1}>
-                {expenseFilters.merchant || t('expenses.merchantAll')}
-              </Text>
-              {hasFilter && (
-                <TouchableOpacity onPress={() => setExpenseFilters({ merchant: null })}>
-                  <Ionicons name="close-circle" size={16} color={theme.colors.primary} />
+              {isExpense && (
+                <TouchableOpacity
+                  style={[styles.categoryFilterButton, styles.filterPill, hasMerchants && styles.categoryFilterButtonActive]}
+                  onPress={() => setShowMerchantPicker(true)}
+                >
+                  <Ionicons name="storefront-outline" size={14} color={hasMerchants ? theme.colors.primary : theme.colors.textTertiary} />
+                  <Text style={[styles.categoryFilterButtonText, hasMerchants && styles.categoryChipTextActive]} numberOfLines={1}>
+                    {hasMerchants ? t('expenses.merchantsSelected', { count: expenseFilters.merchants.length }) : t('expenses.merchantAll')}
+                  </Text>
+                  <Ionicons name="chevron-down" size={14} color={hasMerchants ? theme.colors.primary : theme.colors.textTertiary} />
                 </TouchableOpacity>
               )}
-            </TouchableOpacity>
-          </View>
+
+              <Text style={[styles.filterTotal, { color: isExpense ? theme.colors.danger : theme.colors.success }]} numberOfLines={1}>
+                {isExpense ? '−' : '+'}{formatCurrency(filteredTotal, baseCurrency)}
+              </Text>
+            </View>
+
+            {showCategoryPicker && (
+              <View style={styles.categoryFilterWrapper}>
+                <View style={styles.categoryPickerContainer}>
+                  <ScrollView style={styles.categoryPickerScroll} nestedScrollEnabled>
+                    <TouchableOpacity
+                      style={[styles.categoryPickerItem, !hasCat && styles.categoryPickerItemSelected]}
+                      onPress={() => {
+                        if (isExpense) setExpenseFilters({ categoryId: null });
+                        else setIncomeFilters({ categoryId: null });
+                        setShowCategoryPicker(false);
+                      }}
+                    >
+                      <Ionicons name="list-outline" size={18} color={!hasCat ? accent : theme.colors.textSecondary} />
+                      <Text style={[styles.categoryPickerItemText, !hasCat && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                        {t('expenses.categoryAll')}
+                      </Text>
+                      {!hasCat && <Ionicons name="checkmark" size={18} color={accent} style={styles.categoryPickerCheck} />}
+                    </TouchableOpacity>
+                    {categories.map((cat) => {
+                      const isSelected = currentFilters.categoryId === cat.id;
+                      return (
+                        <TouchableOpacity
+                          key={cat.id}
+                          style={[styles.categoryPickerItem, isSelected && styles.categoryPickerItemSelected]}
+                          onPress={() => {
+                            if (isExpense) setExpenseFilters({ categoryId: cat.id });
+                            else setIncomeFilters({ categoryId: cat.id });
+                            setShowCategoryPicker(false);
+                          }}
+                        >
+                          <Ionicons name={(cat.icon as any) || 'pricetag-outline'} size={18} color={isSelected ? accent : theme.colors.textSecondary} />
+                          <Text style={[styles.categoryPickerItemText, isSelected && (isExpense ? styles.categoryChipTextActive : styles.categoryChipTextActiveIncome)]}>
+                            {cat.name}
+                          </Text>
+                          {isSelected && <Ionicons name="checkmark" size={18} color={accent} style={styles.categoryPickerCheck} />}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
+                </View>
+              </View>
+            )}
+          </>
         );
       })()}
 
@@ -705,26 +701,38 @@ export default function ExpensesScreen() {
       <Modal visible={showMerchantPicker} transparent animationType="slide" onRequestClose={() => setShowMerchantPicker(false)}>
         <TouchableOpacity style={styles.merchantModalOverlay} activeOpacity={1} onPress={() => setShowMerchantPicker(false)}>
           <View style={styles.merchantModalSheet}>
-            <Text style={styles.merchantModalTitle}>{t('expenses.merchant')}</Text>
+            <View style={styles.merchantModalHeader}>
+              <Text style={styles.merchantModalTitle}>{t('expenses.merchant')}</Text>
+              <TouchableOpacity onPress={() => setShowMerchantPicker(false)}>
+                <Text style={styles.merchantDone}>{t('common.done')}</Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView style={{ maxHeight: 360 }}>
               <TouchableOpacity
                 style={styles.merchantRow}
-                onPress={() => { setExpenseFilters({ merchant: null }); setShowMerchantPicker(false); }}
+                onPress={() => setExpenseFilters({ merchants: [] })}
               >
                 <Text style={styles.merchantRowText}>{t('expenses.merchantAll')}</Text>
-                {expenseFilters.merchant === null && <Ionicons name="checkmark" size={18} color={theme.colors.primary} />}
+                {expenseFilters.merchants.length === 0 && <Ionicons name="checkmark" size={18} color={theme.colors.primary} />}
               </TouchableOpacity>
-              {getDistinctMerchants().map((m) => (
-                <TouchableOpacity
-                  key={m}
-                  style={styles.merchantRow}
-                  onPress={() => { setExpenseFilters({ merchant: m }); setShowMerchantPicker(false); }}
-                >
-                  <Text style={styles.merchantRowText} numberOfLines={1}>{m}</Text>
-                  {expenseFilters.merchant === m && <Ionicons name="checkmark" size={18} color={theme.colors.primary} />}
-                </TouchableOpacity>
-              ))}
-              {getDistinctMerchants().length === 0 && (
+              {merchantList.map((m) => {
+                const selected = expenseFilters.merchants.includes(m);
+                return (
+                  <TouchableOpacity
+                    key={m}
+                    style={styles.merchantRow}
+                    onPress={() => setExpenseFilters({
+                      merchants: selected
+                        ? expenseFilters.merchants.filter((x) => x !== m)
+                        : [...expenseFilters.merchants, m],
+                    })}
+                  >
+                    <Text style={styles.merchantRowText} numberOfLines={1}>{m}</Text>
+                    {selected && <Ionicons name="checkmark" size={18} color={theme.colors.primary} />}
+                  </TouchableOpacity>
+                );
+              })}
+              {merchantList.length === 0 && (
                 <Text style={styles.merchantEmpty}>{t('expenses.merchantNone')}</Text>
               )}
             </ScrollView>
@@ -854,6 +862,34 @@ const createStyles = (theme: Theme) => ({
     paddingHorizontal: theme.spacing[4],
     paddingBottom: theme.spacing[2],
     zIndex: 10,
+  },
+  filterRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[4],
+    paddingBottom: theme.spacing[2],
+    zIndex: 10,
+  },
+  filterPill: {
+    flexShrink: 1,
+  },
+  filterTotal: {
+    marginLeft: 'auto' as const,
+    fontSize: 15,
+    fontWeight: '700' as const,
+    flexShrink: 0,
+  },
+  merchantModalHeader: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[3],
+  },
+  merchantDone: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
   },
   categoryFilterButton: {
     flexDirection: 'row' as const,
@@ -1061,7 +1097,7 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[5],
     paddingBottom: theme.spacing[10],
   },
-  merchantModalTitle: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textPrimary, marginBottom: theme.spacing[3] },
+  merchantModalTitle: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textPrimary },
   merchantRow: {
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
