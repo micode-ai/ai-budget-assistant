@@ -1,3 +1,4 @@
+/* eslint-disable no-console -- dev-only perf logger, hard-gated by __DEV__ */
 // Lightweight perf instrumentation. DEV-ONLY: hard-gated by __DEV__ so this
 // is a guaranteed no-op in release/production builds (Metro strips dead branches).
 // In dev you can additionally silence it at runtime by setting

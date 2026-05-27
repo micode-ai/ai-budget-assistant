@@ -44,8 +44,8 @@ export default function ExchangeScreen() {
           setToAmount((parseFloat(fromAmount) * rate).toFixed(2));
         }
       }
-    } catch (e) {
-      console.log('Failed to fetch rate:', e);
+    } catch {
+      // ignore — rate field stays empty
     } finally {
       setLoadingRate(false);
     }

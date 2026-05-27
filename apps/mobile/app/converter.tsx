@@ -32,8 +32,7 @@ export default function ConverterScreen() {
       const data = await api.getExchangeRates(fromCurrency);
       const r = data.rates[toCurrency];
       setRate(r ?? null);
-    } catch (e) {
-      console.log('Failed to fetch rate:', e);
+    } catch {
       setRate(null);
     } finally {
       setLoadingRate(false);

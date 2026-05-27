@@ -75,8 +75,8 @@ export default function PortfolioAnalyticsScreen() {
       const benchmark = includeBenchmark ? selectedBenchmark : undefined;
       const data = await api.getPortfolioAnalytics(PERIOD_MAP[selectedPeriod], benchmark);
       setAnalytics(data);
-    } catch (e) {
-      console.log('Failed to fetch portfolio analytics:', e);
+    } catch {
+      // ignore — UI stays with previous data or null
     } finally {
       setLoading(false);
     }
@@ -95,8 +95,8 @@ export default function PortfolioAnalyticsScreen() {
           benchmarkName: data.performance?.benchmarkName,
         },
       } : data);
-    } catch (e) {
-      console.log('Failed to fetch benchmark:', e);
+    } catch {
+      // ignore — benchmark data stays stale
     } finally {
       setBenchmarkLoading(false);
     }

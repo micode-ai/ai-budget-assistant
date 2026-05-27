@@ -337,7 +337,7 @@ export async function refreshWidgetData(): Promise<void> {
           BudgetWidgetLarge({ data }),
       }),
     ]);
-  } catch (e) {
-    console.log('Widget data refresh failed:', e);
+  } catch {
+    // ignore — widget stays with stale data
   }
 }

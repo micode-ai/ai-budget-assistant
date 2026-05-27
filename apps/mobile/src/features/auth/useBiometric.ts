@@ -32,7 +32,6 @@ export function useBiometric() {
 
   const enableBiometric = useCallback(async (): Promise<boolean> => {
     if (Platform.OS === 'web') {
-      console.log('[Web] Biometric authentication is not available');
       return false;
     }
     return false;

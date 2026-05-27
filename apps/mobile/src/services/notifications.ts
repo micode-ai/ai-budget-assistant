@@ -27,7 +27,6 @@ export async function registerForPushNotifications(): Promise<string | null> {
   }
   try {
     if (!Device.isDevice) {
-      console.log('[Notifications] Not a physical device, skipping registration');
       return null;
     }
 
@@ -40,7 +39,6 @@ export async function registerForPushNotifications(): Promise<string | null> {
     }
 
     if (finalStatus !== 'granted') {
-      console.log('[Notifications] Permission not granted');
       return null;
     }
 
@@ -133,8 +131,8 @@ export function setupNotificationListeners(): () => void {
     return () => {};
   }
 
-  const notificationSub = Notifications.addNotificationReceivedListener((notification) => {
-    console.log('[Notifications] Received in foreground:', notification.request.content.title);
+  const notificationSub = Notifications.addNotificationReceivedListener((_notification) => {
+    // foreground notification received — no debug logging needed
   });
 
   const responseSub = Notifications.addNotificationResponseReceivedListener(
