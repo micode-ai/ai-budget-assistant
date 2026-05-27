@@ -38,7 +38,7 @@ export default function AboutSettingsScreen() {
           <View style={styles.divider} />
           <TouchableOpacity
             style={styles.fieldRow}
-            onPress={() => Linking.openURL('mailto:support@aibudget.app')}
+            onPress={() => Linking.openURL(legalUrls.support)}
           >
             <Text style={styles.fieldLabel}>{t('settings.support')}</Text>
             <Ionicons name="mail-outline" size={18} color={theme.colors.textTertiary} />
