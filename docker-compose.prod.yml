@@ -25,7 +25,7 @@ services:
     image: redis:7-alpine
     container_name: budget-redis-prod
     restart: unless-stopped
-    command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
     networks:
@@ -38,7 +38,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 96M
+          memory: 320M
 
   migrator:
     build:
@@ -67,7 +67,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3000"
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_budget}?schema=public"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_budget}?schema=public&connection_limit=10"
       REDIS_URL: "redis://redis:6379"
     depends_on:
       postgres:

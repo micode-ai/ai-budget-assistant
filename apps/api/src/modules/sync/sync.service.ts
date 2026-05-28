@@ -54,19 +54,21 @@ export class SyncService {
   ) {}
 
   async pushChanges(accountId: string, userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
+    const BATCH_SIZE = 10;
     const results: SyncResult[] = [];
 
-    for (const change of changes) {
-      try {
-        const result = await this.processChange(accountId, userId, change);
-        results.push(result);
-      } catch (error) {
-        results.push({
-          entityId: change.entityId,
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
-      }
+    for (let i = 0; i < changes.length; i += BATCH_SIZE) {
+      const batch = changes.slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.all(
+        batch.map((change) =>
+          this.processChange(accountId, userId, change).catch((error) => ({
+            entityId: change.entityId,
+            status: 'error' as const,
+            error: error instanceof Error ? error.message : 'Unknown error',
+          })),
+        ),
+      );
+      results.push(...batchResults);
     }
 
     // Update user's last sync timestamp

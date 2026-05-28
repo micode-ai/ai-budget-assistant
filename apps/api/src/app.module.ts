@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { RedisThrottlerStorage } from './common/cache/redis-throttler-storage';
 import { SentryExceptionFilter } from './common/filters/sentry-exception.filter';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
@@ -49,13 +50,15 @@ import { CacheModule } from './common/cache/cache.module';
       envFilePath: ['.env.local', '.env'],
     }),
 
-    // Rate limiting
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000, // 1 minute
-        limit: 100, // 100 requests per minute
-      },
-    ]),
+    // Rate limiting — storage backed by Redis so limits survive restarts and work across replicas
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        throttlers: [{ ttl: 60000, limit: 100 }],
+        storage: new RedisThrottlerStorage(config),
+      }),
+    }),
 
     // Scheduling
     ScheduleModule.forRoot(),
