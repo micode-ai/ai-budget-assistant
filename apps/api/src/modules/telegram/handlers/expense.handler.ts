@@ -4,6 +4,7 @@ import { ExpensesService } from '../../expenses/expenses.service';
 import { BotContext } from '../types';
 import { parseAmount } from '../helpers/parse-amount';
 import { formatCurrency } from '../helpers/format-telegram';
+import { t } from '../helpers/i18n';
 
 export class ExpenseHandler {
   private readonly logger = new Logger(ExpenseHandler.name);
@@ -14,6 +15,11 @@ export class ExpenseHandler {
     try {
       if (!ctx.userState) {
         await ctx.reply('Please link your account first. Use /link <code>.');
+        return;
+      }
+
+      if (ctx.userState.accountRole === 'viewer') {
+        await ctx.reply(t('viewerRestricted', ctx.userState.language));
         return;
       }
 

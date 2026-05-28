@@ -82,6 +82,7 @@ export class WhatsAppBotService {
       ? {
           userId: link.userId,
           accountId: link.defaultAccountId,
+          accountRole: link.accountRole,
           conversationId: link.conversationId,
           currencyCode: link.user.currencyCode,
           language: link.user.language || 'en',

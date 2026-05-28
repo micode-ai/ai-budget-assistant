@@ -14,6 +14,7 @@ import {
 import { ProjectsService } from './projects.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import {
   CreateProjectDto,
@@ -42,6 +43,7 @@ export class ProjectsController {
   }
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   async create(
     @Req() req: AuthenticatedRequest,
     @Body() dto: CreateProjectDto,
@@ -50,6 +52,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
+  @UseGuards(new ViewerBlockGuard())
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -59,11 +62,13 @@ export class ProjectsController {
   }
 
   @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.projectsService.remove(req.accountId, id);
   }
 
   @Post(':id/expenses')
+  @UseGuards(new ViewerBlockGuard())
   async addExpense(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -73,6 +78,7 @@ export class ProjectsController {
   }
 
   @Delete(':id/expenses/:expenseId')
+  @UseGuards(new ViewerBlockGuard())
   async removeExpense(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -82,6 +88,7 @@ export class ProjectsController {
   }
 
   @Post(':id/incomes')
+  @UseGuards(new ViewerBlockGuard())
   async addIncome(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -91,6 +98,7 @@ export class ProjectsController {
   }
 
   @Delete(':id/incomes/:incomeId')
+  @UseGuards(new ViewerBlockGuard())
   async removeIncome(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,

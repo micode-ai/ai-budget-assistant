@@ -13,6 +13,7 @@ import {
 import { BudgetsService } from './budgets.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('budgets')
@@ -21,6 +22,7 @@ export class BudgetsController {
   constructor(private readonly budgetsService: BudgetsService) {}
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   async create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
     return this.budgetsService.create(req.accountId, req.user.id, dto);
   }
@@ -50,11 +52,13 @@ export class BudgetsController {
   }
 
   @Patch(':id')
+  @UseGuards(new ViewerBlockGuard())
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
     return this.budgetsService.update(req.accountId, id, dto);
   }
 
   @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.budgetsService.remove(req.accountId, id);
   }

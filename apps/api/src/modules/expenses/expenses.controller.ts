@@ -17,6 +17,7 @@ import { BudgetAlertService } from '../budgets/budget-alert.service';
 import { SharedActivityService } from '../notifications/shared-activity.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
@@ -32,6 +33,7 @@ export class ExpensesController {
   ) {}
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateExpenseDto) {
     const { expense, isNew } = await this.expensesService.create(req.accountId, req.user.id, dto);
 
@@ -62,6 +64,7 @@ export class ExpensesController {
   }
 
   @Patch(':id')
+  @UseGuards(new ViewerBlockGuard())
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateExpenseDto) {
     const expense = await this.expensesService.update(req.accountId, id, dto);
 
@@ -75,11 +78,13 @@ export class ExpensesController {
   }
 
   @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.remove(req.accountId, id);
   }
 
   @Patch(':id/stop-recurring')
+  @UseGuards(new ViewerBlockGuard())
   async stopRecurring(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.stopRecurring(req.accountId, id);
   }
@@ -92,6 +97,7 @@ export class ExpensesController {
   }
 
   @Post(':id/items')
+  @UseGuards(new ViewerBlockGuard())
   async createItem(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -101,6 +107,7 @@ export class ExpensesController {
   }
 
   @Patch(':id/items/:itemId')
+  @UseGuards(new ViewerBlockGuard())
   async updateItem(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -111,6 +118,7 @@ export class ExpensesController {
   }
 
   @Delete(':id/items/:itemId')
+  @UseGuards(new ViewerBlockGuard())
   async removeItem(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -127,6 +135,7 @@ export class ExpensesController {
   }
 
   @Put(':id/receipt-image')
+  @UseGuards(new ViewerBlockGuard())
   async saveReceiptImage(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -136,6 +145,7 @@ export class ExpensesController {
   }
 
   @Delete(':id/receipt-image')
+  @UseGuards(new ViewerBlockGuard())
   async deleteReceiptImage(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.deleteReceiptImage(req.accountId, id);
   }
@@ -143,6 +153,7 @@ export class ExpensesController {
   // ---- Category Splits ----
 
   @Post(':id/splits')
+  @UseGuards(new ViewerBlockGuard())
   async setSplits(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -152,6 +163,7 @@ export class ExpensesController {
   }
 
   @Delete(':id/splits')
+  @UseGuards(new ViewerBlockGuard())
   async removeSplits(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,

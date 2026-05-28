@@ -13,6 +13,7 @@ import { TagsService } from './tags.service';
 import { CreateTagDto, UpdateTagDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('tags')
@@ -26,6 +27,7 @@ export class TagsController {
   }
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   async create(
     @Req() req: AuthenticatedRequest,
     @Body() createTagDto: CreateTagDto,
@@ -34,6 +36,7 @@ export class TagsController {
   }
 
   @Patch(':id')
+  @UseGuards(new ViewerBlockGuard())
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -43,11 +46,13 @@ export class TagsController {
   }
 
   @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.tagsService.remove(req.accountId, id);
   }
 
   @Post(':id/expenses/:expenseId')
+  @UseGuards(new ViewerBlockGuard())
   async addToExpense(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -57,6 +62,7 @@ export class TagsController {
   }
 
   @Delete(':id/expenses/:expenseId')
+  @UseGuards(new ViewerBlockGuard())
   async removeFromExpense(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,

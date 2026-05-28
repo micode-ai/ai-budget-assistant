@@ -14,6 +14,7 @@ import { CurrencyExchangeService } from './currency-exchange.service';
 import { ExchangeRateService } from './exchange-rate.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('currency-exchanges')
@@ -25,6 +26,7 @@ export class CurrencyExchangeController {
   ) {}
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   async create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
     return this.exchangeService.create(req.accountId, req.user.id, dto);
   }
@@ -45,11 +47,13 @@ export class CurrencyExchangeController {
   }
 
   @Patch(':id')
+  @UseGuards(new ViewerBlockGuard())
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
     return this.exchangeService.update(req.accountId, id, dto);
   }
 
   @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.exchangeService.remove(req.accountId, id);
   }

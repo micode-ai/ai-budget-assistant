@@ -499,6 +499,16 @@ const messages: Record<string, Record<string, string>> = {
     pl: '*Dostępne polecenia:*\n\nexpense <kwota> [opis] — Dodaj wydatek\nincome <kwota> [opis] — Dodaj dochód\ncategory [typ] <nazwa> — Utwórz kategorię\ncategories — Lista kategorii\nusage — Użycie AI i limity\naccount — Zmień konto\nnewchat — Nowa rozmowa z AI\nunlink — Odłącz WhatsApp\nhelp — Pokaż to polecenie\n\n*Inne funkcje:*\n🎤 Wyślij *wiadomość głosową*\n📷 Wyślij *zdjęcie paragonu*\n💬 Napisz, aby *porozmawiać z AI*',
     be: '*Даступныя каманды:*\n\nexpense <сума> [апісанне] — Дадаць выдатак\nincome <сума> [апісанне] — Дадаць даход\ncategory [тып] <назва> — Стварыць катэгорыю\ncategories — Спіс катэгорый\nusage — Выкарыстанне AI і ліміты\naccount — Пераключыць акаўнт\nnewchat — Новая размова з ІІ\nunlink — Адвязаць WhatsApp\nhelp — Паказаць гэта паведамленне\n\n*Іншыя магчымасці:*\n🎤 Адпраўце *галасавое паведамленне*\n📷 Адпраўце *фота чэка*\n💬 Проста напішыце для *чата з ІІ*',
   },
+  viewerRestricted: {
+    en: '🔒 You have view-only access. Only editors and owners can create or modify data.',
+    ru: '🔒 У вас только права просмотра. Создавать и изменять данные могут редакторы и владельцы.',
+    ua: '🔒 У вас лише права перегляду. Редагувати можуть лише редактори та власники.',
+    de: '🔒 Sie haben nur Leserechte. Nur Editoren und Eigentümer können Daten bearbeiten.',
+    es: '🔒 Solo tienes acceso de lectura. Solo los editores y propietarios pueden modificar datos.',
+    fr: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent modifier.',
+    pl: '🔒 Masz tylko dostęp do odczytu. Edytować mogą tylko edytorzy i właściciele.',
+    be: '🔒 У вас толькі правы прагляду. Рэдагаваць могуць толькі рэдактары і ўладальнікі.',
+  },
 };
 
 export function t(key: string, lang?: string, params?: Record<string, string>): string {
