@@ -68,6 +68,11 @@ export class PhotoHandler {
         return;
       }
 
+      if (ctx.userState.accountRole === 'viewer') {
+        await ctx.reply(t('viewerRestricted', ctx.userState.language));
+        return;
+      }
+
       if (!ctx.message || !('photo' in ctx.message) || !ctx.message.photo?.length) {
         await ctx.reply('Could not process the photo. Please try again.');
         return;
@@ -177,6 +182,11 @@ export class PhotoHandler {
     try {
       if (!ctx.userState) {
         await ctx.reply(t('linkFirst', ctx.from?.language_code), { parse_mode: 'HTML' });
+        return;
+      }
+
+      if (ctx.userState.accountRole === 'viewer') {
+        await ctx.reply(t('viewerRestricted', ctx.userState.language));
         return;
       }
 

@@ -87,13 +87,20 @@ export class TelegramLinkService {
   }
 
   async getLink(telegramUserId: string) {
-    return this.prisma.telegramLink.findUnique({
+    const link = await this.prisma.telegramLink.findUnique({
       where: { telegramUserId, isActive: true },
       include: {
         user: { select: { id: true, name: true, currencyCode: true, language: true } },
         account: { select: { id: true, name: true, currencyCode: true } },
       },
     });
+    if (!link) return null;
+
+    const membership = await this.prisma.accountMember.findUnique({
+      where: { accountId_userId: { accountId: link.defaultAccountId, userId: link.userId } },
+      select: { role: true },
+    });
+    return { ...link, accountRole: (membership?.role ?? 'owner') as 'owner' | 'editor' | 'viewer' };
   }
 
   async getLinkByUserId(userId: string) {

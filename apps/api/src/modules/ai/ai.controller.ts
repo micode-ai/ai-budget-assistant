@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
-import { AccountRoleGuard, RequireRole } from '../accounts/guards/account-role.guard';
+import { AccountRoleGuard, RequireRole, ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AiUsageGuard } from '../subscriptions/guards/ai-usage.guard';
 import { TrackAiUsage } from '../subscriptions/decorators/track-ai-usage.decorator';
 import { AuthenticatedRequest } from '../../common/types';
@@ -246,7 +246,7 @@ export class AiController {
   // ── Savings Goals ──
 
   @Post('goals')
-  @UseGuards(AiUsageGuard)
+  @UseGuards(new ViewerBlockGuard(), AiUsageGuard)
   @TrackAiUsage('goal_plan', 2.0)
   async createGoal(
     @Req() req: AuthenticatedRequest,
@@ -271,6 +271,7 @@ export class AiController {
   }
 
   @Patch('goals/:id')
+  @UseGuards(new ViewerBlockGuard())
   async updateGoal(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -280,12 +281,13 @@ export class AiController {
   }
 
   @Delete('goals/:id')
+  @UseGuards(new ViewerBlockGuard())
   async deleteGoal(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.goalPlannerService.deleteGoal(req.accountId, id);
   }
 
   @Post('goals/:id/regenerate-plan')
-  @UseGuards(AiUsageGuard)
+  @UseGuards(new ViewerBlockGuard(), AiUsageGuard)
   @TrackAiUsage('goal_plan', 2.0)
   async regenerateGoalPlan(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.goalPlannerService.generatePlan(req.accountId, id, req.user.id);

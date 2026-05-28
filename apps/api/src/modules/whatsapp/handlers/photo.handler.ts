@@ -44,6 +44,11 @@ export class PhotoHandler {
   async handleImage(msg: WaMediaMessage, userState: WhatsAppUserState): Promise<void> {
     const { userId, accountId, waPhoneNumber, language } = userState;
     try {
+      if (userState.accountRole === 'viewer') {
+        await this.client.sendText(waPhoneNumber, t('viewerRestricted', language));
+        return;
+      }
+
       const media = msg.image;
       if (!media) {
         this.logger.warn(`PhotoHandler.handleImage: no image in message ${msg.id}`);
@@ -104,6 +109,11 @@ export class PhotoHandler {
   async handleDocument(msg: WaMediaMessage, userState: WhatsAppUserState): Promise<void> {
     const { userId, accountId, waPhoneNumber, language } = userState;
     try {
+      if (userState.accountRole === 'viewer') {
+        await this.client.sendText(waPhoneNumber, t('viewerRestricted', language));
+        return;
+      }
+
       const media = msg.document;
       if (!media) {
         this.logger.warn(`PhotoHandler.handleDocument: no document in message ${msg.id}`);

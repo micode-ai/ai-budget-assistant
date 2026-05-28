@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { CategoriesService } from '../../categories/categories.service';
 import { BotContext } from '../types';
 import { escapeHtml } from '../helpers/format-telegram';
+import { t } from '../helpers/i18n';
 
 export class CategoryHandler {
   private readonly logger = new Logger(CategoryHandler.name);
@@ -29,6 +30,11 @@ export class CategoryHandler {
           'Use /categories to see all categories.',
           { parse_mode: 'HTML' },
         );
+        return;
+      }
+
+      if (ctx.userState.accountRole === 'viewer') {
+        await ctx.reply(t('viewerRestricted', ctx.userState.language));
         return;
       }
 
