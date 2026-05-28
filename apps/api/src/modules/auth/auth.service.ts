@@ -30,6 +30,7 @@ export class AuthService {
   private resetVerifyAttempts = new Map<string, number[]>();
   private emailChangeRequestAttempts = new Map<string, number[]>();
   private emailChangeVerifyAttempts = new Map<string, number[]>();
+  private verifyEmailAttempts = new Map<string, number[]>();
 
   private checkRateLimit(map: Map<string, number[]>, key: string, maxAttempts: number): void {
     const now = Date.now();
@@ -283,6 +284,8 @@ export class AuthService {
   }
 
   async verifyEmail(email: string, code: string) {
+    this.checkRateLimit(this.verifyEmailAttempts, email, 10);
+
     const user = await this.usersService.findByEmail(email);
 
     if (!user || user.isVerified || !user.emailVerificationCode || !user.emailVerificationExpiresAt) {

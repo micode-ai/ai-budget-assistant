@@ -24,6 +24,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(TelegramBotService.name);
   private bot: Telegraf<BotContext> | null = null;
   private botUsername: string = '';
+  private webhookSecret: string | null = null;
 
   // Handlers
   private commandHandler!: CommandHandler;
@@ -88,7 +89,10 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       const webhookUrl = this.config.get<string>('TELEGRAM_WEBHOOK_URL');
       if (webhookUrl) {
         const fullUrl = `${webhookUrl}/telegram/webhook`;
-        await this.bot.telegram.setWebhook(fullUrl);
+        this.webhookSecret = this.config.get<string>('TELEGRAM_WEBHOOK_SECRET') ?? null;
+        await this.bot.telegram.setWebhook(fullUrl, {
+          secret_token: this.webhookSecret ?? undefined,
+        });
         this.logger.log(`Telegram webhook set to ${fullUrl}`);
       } else {
         // Long polling mode for development
@@ -113,6 +117,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
 
   getBotUsername(): string {
     return this.botUsername;
+  }
+
+  verifyWebhookSecret(token: string | undefined): boolean {
+    // If no secret is configured (long-polling / dev mode), allow all requests
+    if (!this.webhookSecret) return true;
+    return token === this.webhookSecret;
   }
 
   async handleUpdate(body: unknown): Promise<void> {

@@ -33,8 +33,6 @@ export class ExpensesController {
 
   @Post()
   async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateExpenseDto) {
-    this.logger.debug(`[CREATE] raw body: ${JSON.stringify(req.body)}`);
-    this.logger.debug(`[CREATE] dto: ${JSON.stringify(dto)}`);
     const { expense, isNew } = await this.expensesService.create(req.accountId, req.user.id, dto);
 
     // Fire-and-forget notifications (only for genuinely new expenses, not upsert updates)
@@ -65,8 +63,6 @@ export class ExpensesController {
 
   @Patch(':id')
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateExpenseDto) {
-    this.logger.debug(`[UPDATE] id=${id} raw body: ${JSON.stringify(req.body)}`);
-    this.logger.debug(`[UPDATE] dto: ${JSON.stringify(dto)}`);
     const expense = await this.expensesService.update(req.accountId, id, dto);
 
     // Re-check budget alerts if amount or currency changed

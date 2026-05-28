@@ -24,9 +24,12 @@ async function bootstrap() {
     exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook'],
   });
 
-  // CORS
+  // CORS — allow only explicitly configured origins; fall back to localhost for local dev
+  const corsOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+    : ['http://localhost:8081', 'http://localhost:3001'];
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: corsOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
