@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBankService } from './import-bank.service';
+import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
 
@@ -22,6 +23,10 @@ describe('ImportBankService.parsePreview', () => {
     sendMessage: jest.fn().mockResolvedValue(true),
     sendDocument: jest.fn().mockResolvedValue(true),
   };
+  const importBatches = {
+    createBatch: jest.fn().mockResolvedValue('batch-1'),
+    finalizeBatch: jest.fn().mockResolvedValue(undefined),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -32,6 +37,7 @@ describe('ImportBankService.parsePreview', () => {
       providers: [
         ImportBankService,
         { provide: PrismaService, useValue: prisma },
+        { provide: ImportBatchesService, useValue: importBatches },
         { provide: MappingService, useValue: mapping },
         { provide: TelegramService, useValue: telegram },
       ],
