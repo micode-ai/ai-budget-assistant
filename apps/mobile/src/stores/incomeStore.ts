@@ -341,7 +341,9 @@ export const useIncomeStore = create<IncomeState>()(
           ),
         }));
       }).catch((e) =>
-        console.error('Failed to sync income to server:', e),
+        // Expected when offline — the row stays 'pending' and syncPendingIncomes
+        // retries on reconnect. warn (not error) so RN LogBox doesn't red-screen.
+        console.warn('Income sync deferred (offline?):', e),
       );
 
       // Fire-and-forget gamification check
@@ -376,7 +378,8 @@ export const useIncomeStore = create<IncomeState>()(
         );
 
         api.updateIncome(id, updates).catch((e) =>
-          console.error('Failed to update income on server:', e),
+          // Expected offline; local SQLite already updated + marked pending.
+          console.warn('Income update sync deferred (offline?):', e),
         );
       }
     },
@@ -391,7 +394,8 @@ export const useIncomeStore = create<IncomeState>()(
       );
 
       api.deleteIncome(id).catch((e) =>
-        console.error('Failed to delete income on server:', e),
+        // Expected offline; local row soft-deleted + marked pending.
+        console.warn('Income delete sync deferred (offline?):', e),
       );
     },
 
