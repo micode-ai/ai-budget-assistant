@@ -27,6 +27,11 @@ export class CategoryHandler {
     try {
       const { waPhoneNumber, language } = userState;
 
+      if (userState.accountRole === 'viewer') {
+        await this.whatsappClient.sendText(waPhoneNumber, t('viewerRestricted', language));
+        return;
+      }
+
       if (!args || !args.trim()) {
         await this.whatsappClient.sendText(
           waPhoneNumber,

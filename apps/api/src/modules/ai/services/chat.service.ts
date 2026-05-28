@@ -191,6 +191,32 @@ export class ChatService {
       this.logger.log(`[ai/chat] tool=${functionName} argKeys=[${Object.keys(functionArgs).join(',')}]`);
 
       if (this.aiToolsService.isWriteAction(functionName)) {
+        if (accountRole === 'viewer') {
+          const lang = this.promptBuilder.detectLanguage(message);
+          const viewerRefusals: Record<string, string> = {
+            Russian: '🔒 У вас права только для просмотра. Создавать и изменять данные могут редакторы и владельцы аккаунта.',
+            Ukrainian: '🔒 У вас лише права перегляду. Створювати і змінювати дані можуть редактори та власники акаунту.',
+            Belarusian: '🔒 У вас толькі правы прагляду. Ствараць і змяняць дадзеныя могуць рэдактары і ўладальнікі акаўнту.',
+            German: '🔒 Sie haben nur Leserechte. Daten können nur von Editoren und Kontoinhabern erstellt oder geändert werden.',
+            Spanish: '🔒 Solo tienes acceso de lectura. Solo los editores y propietarios pueden crear o modificar datos.',
+            French: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent créer ou modifier des données.',
+            Polish: '🔒 Masz tylko dostęp do odczytu. Tworzenie i edycja danych jest możliwa tylko dla edytorów i właścicieli.',
+            English: '🔒 You have view-only access. Only editors and owners can create or modify data.',
+          };
+          const refusalMsg = viewerRefusals[lang] ?? viewerRefusals['English'];
+          const assistantMsg = await this.prisma.chatMessage.create({
+            data: { conversationId: conversation.id, role: 'assistant', content: refusalMsg, mentionedUserIds: [] },
+          });
+          return {
+            message: refusalMsg,
+            conversationId: conversation.id,
+            aiResponded: true,
+            userMessageId: userMsg.id,
+            userMessageCreatedAt: userMsg.createdAt.toISOString(),
+            assistantMessageId: assistantMsg.id,
+            assistantCreatedAt: assistantMsg.createdAt.toISOString(),
+          };
+        }
         const r = await this.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }

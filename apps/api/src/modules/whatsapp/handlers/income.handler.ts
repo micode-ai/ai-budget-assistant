@@ -19,6 +19,11 @@ export class IncomeHandler {
     try {
       const lang = userState.language;
 
+      if (userState.accountRole === 'viewer') {
+        await this.whatsappClient.sendText(userState.waPhoneNumber, t('viewerRestricted', lang));
+        return;
+      }
+
       if (!args || !args.trim()) {
         await this.whatsappClient.sendText(
           userState.waPhoneNumber,
