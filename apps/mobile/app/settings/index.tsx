@@ -81,16 +81,10 @@ export default function SettingsIndexScreen() {
       route: '/settings/security',
     },
     {
-      icon: 'pricetags-outline',
-      label: t('settingsNav.categories'),
-      description: t('settingsNav.categoriesDesc'),
-      route: '/settings/categories',
-    },
-    {
-      icon: 'storefront-outline',
-      label: t('settingsNav.merchants'),
-      description: t('settingsNav.merchantsDesc'),
-      route: '/settings/merchants',
+      icon: 'library-outline',
+      label: t('settingsNav.referenceData'),
+      description: t('settingsNav.referenceDataDesc'),
+      route: '/settings/reference',
     },
     {
       icon: 'wallet-outline',
