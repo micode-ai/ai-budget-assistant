@@ -607,7 +607,9 @@ export const useExpenseStore = create<ExpenseState>()(
           ),
         }));
         updateExpenseInDb(id, {}, new Date(), 'pending').catch(() => {});
-        console.error('Failed to sync expense to server:', e);
+        // Expected when offline — the row stays 'pending' and syncPendingExpenses
+        // retries on reconnect. warn (not error) so RN LogBox doesn't red-screen.
+        console.warn('Expense sync deferred (offline?):', e);
       });
 
       // Fire-and-forget gamification check
@@ -642,7 +644,8 @@ export const useExpenseStore = create<ExpenseState>()(
         );
 
         api.updateExpense(id, updates).catch((e) =>
-          console.error('Failed to update expense on server:', e),
+          // Expected offline; local SQLite already updated + marked pending.
+          console.warn('Expense update sync deferred (offline?):', e),
         );
       }
     },
@@ -688,7 +691,8 @@ export const useExpenseStore = create<ExpenseState>()(
 
       // Explicit null clears the association server-side (DTO accepts string | null).
       api.updateExpense(expenseId, { projectId }).catch((e) =>
-        console.error('Failed to update project on server:', e),
+        // Expected offline; local join table already updated.
+        console.warn('Expense project sync deferred (offline?):', e),
       );
     },
 
@@ -702,7 +706,8 @@ export const useExpenseStore = create<ExpenseState>()(
       );
 
       api.deleteExpense(id).catch((e) =>
-        console.error('Failed to delete expense on server:', e),
+        // Expected offline; local row soft-deleted + marked pending.
+        console.warn('Expense delete sync deferred (offline?):', e),
       );
     },
 
@@ -843,7 +848,8 @@ export const useExpenseStore = create<ExpenseState>()(
       );
 
       api.deleteExpenseItem(expenseId, itemId).catch((e) =>
-        console.error('Failed to delete expense item on server:', e),
+        // Expected offline; local item already soft-deleted.
+        console.warn('Expense item delete sync deferred (offline?):', e),
       );
     },
 
@@ -878,7 +884,8 @@ export const useExpenseStore = create<ExpenseState>()(
       try {
         await saveReceiptImageLocally(expenseId, imageBase64, mimeType);
         api.saveReceiptImage(expenseId, imageBase64, mimeType).catch((e) =>
-          console.error('Failed to sync receipt image to server:', e),
+          // Expected offline; receipt is stored locally and re-syncs later.
+          console.warn('Receipt image sync deferred (offline?):', e),
         );
       } catch (e) {
         console.error('Failed to save receipt image:', e);
@@ -1052,7 +1059,8 @@ export const useExpenseStore = create<ExpenseState>()(
         console.error('Failed to bulk-rename merchant in SQLite:', e);
       }
       get().syncPendingExpenses().catch((e) =>
-        console.error('Failed to sync merchant rename:', e),
+        // Expected offline; rows marked pending re-sync on reconnect.
+        console.warn('Merchant rename sync deferred (offline?):', e),
       );
       return affected.length;
     },
