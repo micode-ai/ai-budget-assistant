@@ -1588,6 +1588,12 @@ export default {
     categoriesDesc: 'Kategorien verwalten und löschen',
     merchants: 'Händler',
     merchantsDesc: 'Händler umbenennen, zusammenführen oder entfernen',
+    referenceData: 'Stammdaten',
+    referenceDataDesc: 'Kategorien, Händler, Tags und Projekte',
+    tags: 'Tags',
+    tagsDesc: 'Tags erstellen, umbenennen oder löschen',
+    projects: 'Projekte',
+    projectsDesc: 'Projekte verwalten',
     subscriptionDesc: 'Tarif, Nutzung, Upgrade',
   },
   categories: {
