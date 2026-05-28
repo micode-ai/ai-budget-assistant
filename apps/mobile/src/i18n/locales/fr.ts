@@ -1588,6 +1588,12 @@ export default {
     categoriesDesc: 'Gérer et supprimer les catégories',
     merchants: 'Commerçants',
     merchantsDesc: 'Renommer, fusionner ou supprimer des commerçants',
+    referenceData: 'Données de référence',
+    referenceDataDesc: 'Catégories, marchands, tags et projets',
+    tags: 'Tags',
+    tagsDesc: 'Créer, renommer ou supprimer des tags',
+    projects: 'Projets',
+    projectsDesc: 'Gérer vos projets',
     subscriptionDesc: 'Forfait, utilisation, mise à niveau',
   },
   categories: {

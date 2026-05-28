@@ -1496,6 +1496,12 @@ export default {
     categoriesDesc: 'Кіраванне і выдаленне катэгорый',
     merchants: 'Крамы',
     merchantsDesc: 'Перайменаваць, аб\'яднаць або выдаліць крамы',
+    referenceData: 'Даведнікі',
+    referenceDataDesc: 'Катэгорыі, прадаўцы, тэгі і праекты',
+    tags: 'Тэгі',
+    tagsDesc: 'Стварэнне, перайменаванне і выдаленне тэгаў',
+    projects: 'Праекты',
+    projectsDesc: 'Кіраванне праектамі',
     subscriptionDesc: 'Тарыф, выкарыстанне, паляпшэнне',
   },
   categories: {

@@ -1588,6 +1588,12 @@ export default {
     categoriesDesc: 'Gestionar y eliminar categorías',
     merchants: 'Comercios',
     merchantsDesc: 'Renombrar, fusionar o eliminar comercios',
+    referenceData: 'Datos de referencia',
+    referenceDataDesc: 'Categorías, comercios, etiquetas y proyectos',
+    tags: 'Etiquetas',
+    tagsDesc: 'Crear, renombrar o eliminar etiquetas',
+    projects: 'Proyectos',
+    projectsDesc: 'Gestiona tus proyectos',
     subscriptionDesc: 'Plan, uso, mejora',
   },
   categories: {

@@ -139,7 +139,7 @@ Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees finan
 
 ## Categories
 
-Acces via **Parametres → Categories**.
+Acces via **Parametres → Données de référence → Categories**.
 
 Visualisez et gerez toutes vos categories de depenses et de revenus en un seul endroit.
 
