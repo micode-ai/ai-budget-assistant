@@ -19,9 +19,10 @@ import { BudgetsModule } from '../budgets/budgets.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { DebtsModule } from '../debts/debts.module';
+import { AccountsModule } from '../accounts/accounts.module';
 
 @Module({
-  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule],
+  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule],
   controllers: [AiController],
   providers: [
     WhisperService,
