@@ -4,6 +4,8 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import {
@@ -20,8 +22,20 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class EncryptionService {
   private readonly logger = new Logger(EncryptionService.name);
+  private readonly recoveryAttempts = new Map<string, number[]>();
 
   constructor(private readonly prisma: PrismaService) {}
+
+  private checkRecoveryRateLimit(email: string): void {
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000;
+    const attempts = (this.recoveryAttempts.get(email) || []).filter((t) => now - t < windowMs);
+    if (attempts.length >= 5) {
+      throw new HttpException('Too many recovery attempts. Please try again later.', HttpStatus.TOO_MANY_REQUESTS);
+    }
+    attempts.push(now);
+    this.recoveryAttempts.set(email, attempts);
+  }
 
   async setupEncryption(userId: string, dto: SetupEncryptionDto) {
     return this.prisma.userEncryptionProfile.upsert({
@@ -386,6 +400,8 @@ export class EncryptionService {
   }
 
   async recover(dto: RecoverEncryptionDto) {
+    this.checkRecoveryRateLimit(dto.email);
+
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
       select: { id: true },

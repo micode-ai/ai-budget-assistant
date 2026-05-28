@@ -39,13 +39,17 @@ export class ExpensesService {
    */
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
     if (!categoryId) return null;
-    // UUID v4 pattern — use directly
+    // UUID v4 pattern — validate ownership before trusting the id
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId)) {
-      return categoryId;
+      const owned = await this.prisma.category.findUnique({
+        where: { id: categoryId },
+        select: { id: true, accountId: true },
+      });
+      return owned?.accountId === accountId ? owned.id : null;
     }
-    // Try exact name match
+    // Try exact name match scoped to this account
     const category = await this.prisma.category.findFirst({
-      where: { name: { equals: categoryId, mode: 'insensitive' } },
+      where: { accountId, name: { equals: categoryId, mode: 'insensitive' } },
     });
     if (category) return category.id;
 

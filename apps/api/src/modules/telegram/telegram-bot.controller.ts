@@ -8,6 +8,10 @@ export class TelegramBotController {
 
   @Post('webhook')
   async handleWebhook(@Req() req: Request, @Res() res: Response): Promise<void> {
+    if (!this.botService.verifyWebhookSecret(req.headers['x-telegram-bot-api-secret-token'] as string | undefined)) {
+      res.sendStatus(403);
+      return;
+    }
     await this.botService.handleUpdate(req.body);
     res.sendStatus(200);
   }

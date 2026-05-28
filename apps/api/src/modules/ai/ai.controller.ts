@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { AccountRoleGuard, RequireRole } from '../accounts/guards/account-role.guard';
 import { AiUsageGuard } from '../subscriptions/guards/ai-usage.guard';
 import { TrackAiUsage } from '../subscriptions/decorators/track-ai-usage.decorator';
 import { AuthenticatedRequest } from '../../common/types';
@@ -90,7 +91,8 @@ export class AiController {
   }
 
   @Post('chat/confirm')
-  @UseGuards(AiUsageGuard)
+  @UseGuards(AccountRoleGuard, AiUsageGuard)
+  @RequireRole('editor')
   @TrackAiUsage('chat', 0.5)
   async confirmAction(
     @Req() req: AuthenticatedRequest,

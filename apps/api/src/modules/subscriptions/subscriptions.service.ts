@@ -425,14 +425,11 @@ export class SubscriptionsService {
   }
 
   constructWebhookEvent(payload: Buffer, signature: string): Stripe.Event {
-    const webhookSecret = this.configService.get<string>(
-      'STRIPE_WEBHOOK_SECRET',
-    );
-    return this.stripe.webhooks.constructEvent(
-      payload,
-      signature,
-      webhookSecret || '',
-    );
+    const webhookSecret = this.configService.get<string>('STRIPE_WEBHOOK_SECRET');
+    if (!webhookSecret) {
+      throw new Error('STRIPE_WEBHOOK_SECRET is not configured — cannot verify webhook');
+    }
+    return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
   }
 
   // ---- Private Helpers ----
