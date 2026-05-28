@@ -1591,6 +1591,12 @@ export default {
     categoriesDesc: 'Zarządzanie i usuwanie kategorii',
     merchants: 'Sprzedawcy',
     merchantsDesc: 'Zmień nazwy, scal lub usuń sprzedawców',
+    referenceData: 'Słowniki',
+    referenceDataDesc: 'Kategorie, sprzedawcy, tagi i projekty',
+    tags: 'Tagi',
+    tagsDesc: 'Twórz, zmieniaj nazwy lub usuwaj tagi',
+    projects: 'Projekty',
+    projectsDesc: 'Zarządzaj projektami',
     subscriptionDesc: 'Plan, zużycie, ulepszenie',
   },
   categories: {

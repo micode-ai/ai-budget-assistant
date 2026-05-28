@@ -485,6 +485,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/reference"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.referenceData'),
+          }}
+        />
+        <Stack.Screen
           name="settings/change-email"
           options={{
             headerShown: true,

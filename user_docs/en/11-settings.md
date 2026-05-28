@@ -152,7 +152,7 @@ Set up end-to-end encryption (E2EE) to protect your financial data. See [Encrypt
 
 ## Categories
 
-Access via **Settings → Categories**.
+Access via **Settings → Reference data → Categories**.
 
 View and manage all your expense and income categories in one place.
 
