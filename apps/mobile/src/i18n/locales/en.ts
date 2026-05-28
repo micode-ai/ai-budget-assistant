@@ -1588,6 +1588,12 @@ export default {
     categoriesDesc: 'Manage and delete categories',
     merchants: 'Merchants',
     merchantsDesc: 'Rename, merge, or remove merchants',
+    referenceData: 'Reference data',
+    referenceDataDesc: 'Categories, merchants, tags and projects',
+    tags: 'Tags',
+    tagsDesc: 'Create, rename, or remove tags',
+    projects: 'Projects',
+    projectsDesc: 'Manage your projects',
     subscriptionDesc: 'Plan, usage, upgrade',
   },
   categories: {

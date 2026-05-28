@@ -1591,6 +1591,12 @@ export default {
     categoriesDesc: 'Керування та видалення категорій',
     merchants: 'Магазини',
     merchantsDesc: 'Перейменувати, об\'єднати або видалити магазини',
+    referenceData: 'Довідники',
+    referenceDataDesc: 'Категорії, продавці, теги та проєкти',
+    tags: 'Теги',
+    tagsDesc: 'Створення, перейменування та видалення тегів',
+    projects: 'Проєкти',
+    projectsDesc: 'Керування проєктами',
     subscriptionDesc: 'Тариф, використання, покращення',
   },
   categories: {
