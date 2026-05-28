@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../database/prisma.service';
+import { CacheService } from '../../../common/cache/cache.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { DebtsService } from '../../debts/debts.service';
+
+const UC_TTL_SEC = 60;
+export const ucKey = (accountId: string) => `uc:${accountId}`;
 
 export interface UserContext {
   totalSpentThisMonth: number;
@@ -35,11 +39,16 @@ interface BudgetRecord {
 export class UserContextBuilder {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly cache: CacheService,
     private readonly categoriesService: CategoriesService,
     private readonly debtsService: DebtsService,
   ) {}
 
   async build(userId: string, accountId?: string): Promise<UserContext> {
+    if (accountId) {
+      const cached = await this.cache.get<UserContext>(ucKey(accountId));
+      if (cached) return cached;
+    }
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
@@ -181,7 +190,7 @@ export class UserContextBuilder {
       ];
     }
 
-    return {
+    const context: UserContext = {
       totalSpentThisMonth: totalSpent,
       monthlyBudget,
       topCategories,
@@ -193,5 +202,11 @@ export class UserContextBuilder {
       categoryNames,
       activeDebts,
     };
+
+    if (accountId) {
+      await this.cache.set(ucKey(accountId), context, UC_TTL_SEC);
+    }
+
+    return context;
   }
 }

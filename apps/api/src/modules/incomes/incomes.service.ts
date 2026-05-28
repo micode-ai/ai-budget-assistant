@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
 import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 
@@ -8,6 +9,7 @@ import { GamificationService } from '../gamification/gamification.service';
 export class IncomesService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly cache: CacheService,
     private readonly gamificationService: GamificationService,
   ) {}
 
@@ -160,8 +162,9 @@ export class IncomesService {
       return full ? this.toIncomeResponse(full) : full;
     });
 
-    // Fire-and-forget gamification check
+    // Fire-and-forget gamification check and cache invalidation
     this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+    this.cache.del(`uc:${accountId}`).catch(() => {});
 
     return result;
   }
@@ -254,7 +257,7 @@ export class IncomesService {
       ? await this.resolveCategoryId(dto.categoryId, accountId)
       : undefined;
 
-    return this.prisma.$transaction(async (tx: PrismaClient) => {
+    const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const incomeUpdData = {
           amount: dto.amount,
           currencyCode: dto.currencyCode,
@@ -339,6 +342,8 @@ export class IncomesService {
       });
       return updated ? this.toIncomeResponse(updated) : updated;
     });
+    this.cache.del(`uc:${accountId}`).catch(() => {});
+    return result;
   }
 
   async remove(accountId: string, id: string) {
@@ -352,6 +357,7 @@ export class IncomesService {
       },
     });
 
+    this.cache.del(`uc:${accountId}`).catch(() => {});
     return { success: true };
   }
 

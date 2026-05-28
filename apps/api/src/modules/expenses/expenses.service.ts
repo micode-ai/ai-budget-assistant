@@ -29,6 +29,7 @@ export class ExpensesService {
       this.cacheService.delByPrefix(`chat:get_expenses:${accountId}:`),
       this.cacheService.delByPrefix(`chat:get_budget_status:${accountId}:`),
       this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`),
+      this.cacheService.del(`uc:${accountId}`),
     ]);
   }
 

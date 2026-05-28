@@ -4,7 +4,7 @@ import { CacheService } from './cache.service';
 const mockGet = jest.fn();
 const mockSet = jest.fn();
 const mockDel = jest.fn();
-const mockKeys = jest.fn();
+const mockScan = jest.fn();
 const mockPing = jest.fn();
 const mockQuit = jest.fn();
 const mockOn = jest.fn();
@@ -15,7 +15,7 @@ jest.mock('ioredis', () => ({
     get: mockGet,
     set: mockSet,
     del: mockDel,
-    keys: mockKeys,
+    scan: mockScan,
     ping: mockPing,
     quit: mockQuit,
     on: mockOn,
@@ -26,7 +26,7 @@ describe('CacheService', () => {
   let cache: CacheService;
 
   beforeEach(() => {
-    [mockGet, mockSet, mockDel, mockKeys, mockPing, mockQuit, mockOn].forEach((m) => m.mockReset());
+    [mockGet, mockSet, mockDel, mockScan, mockPing, mockQuit, mockOn].forEach((m) => m.mockReset());
     cache = new CacheService({ get: () => 'redis://localhost:6379' } as unknown as ConfigService);
   });
 
@@ -80,20 +80,29 @@ describe('CacheService', () => {
 
   describe('delByPrefix', () => {
     it('scans keys + dels them', async () => {
-      mockKeys.mockResolvedValueOnce(['p:a', 'p:b']);
+      mockScan.mockResolvedValueOnce(['0', ['p:a', 'p:b']]);
       await cache.delByPrefix('p:');
-      expect(mockKeys).toHaveBeenCalledWith('p:*');
+      expect(mockScan).toHaveBeenCalledWith('0', 'MATCH', 'p:*', 'COUNT', 100);
+      expect(mockDel).toHaveBeenCalledWith('p:a', 'p:b');
+    });
+
+    it('iterates across multiple scan pages', async () => {
+      mockScan
+        .mockResolvedValueOnce(['42', ['p:a']])
+        .mockResolvedValueOnce(['0', ['p:b']]);
+      await cache.delByPrefix('p:');
+      expect(mockScan).toHaveBeenCalledTimes(2);
       expect(mockDel).toHaveBeenCalledWith('p:a', 'p:b');
     });
 
     it('is a no-op when no keys match', async () => {
-      mockKeys.mockResolvedValueOnce([]);
+      mockScan.mockResolvedValueOnce(['0', []]);
       await cache.delByPrefix('p:');
       expect(mockDel).not.toHaveBeenCalled();
     });
 
     it('swallows redis errors', async () => {
-      mockKeys.mockRejectedValueOnce(new Error('timeout'));
+      mockScan.mockRejectedValueOnce(new Error('timeout'));
       await expect(cache.delByPrefix('p:')).resolves.toBeUndefined();
     });
   });

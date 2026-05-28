@@ -6,10 +6,6 @@ import Redis from 'ioredis';
  * Thin ioredis wrapper for opportunistic caching. Failures are logged and
  * swallowed — cache is best-effort, never on the critical path. Kept simple:
  * get/set/del/delByPrefix/ping. Values are JSON-serialized.
- *
- * Note: delByPrefix uses the KEYS command, which is O(N) and blocks the Redis
- * thread. Acceptable for our scale (mid-thousands of keys, prefix scans on
- * write paths). If usage grows, swap for SCAN cursor iteration.
  */
 @Injectable()
 export class CacheService implements OnModuleDestroy {
@@ -55,8 +51,15 @@ export class CacheService implements OnModuleDestroy {
 
   async delByPrefix(prefix: string): Promise<void> {
     try {
-      const keys = await this.redis.keys(`${prefix}*`);
-      if (keys.length > 0) await this.redis.del(...keys);
+      const pattern = `${prefix}*`;
+      let cursor = '0';
+      const toDelete: string[] = [];
+      do {
+        const [nextCursor, keys] = await this.redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+        cursor = nextCursor;
+        toDelete.push(...keys);
+      } while (cursor !== '0');
+      if (toDelete.length > 0) await this.redis.del(...toDelete);
     } catch (err) {
       this.logger.warn(`cache delByPrefix failed for ${prefix}: ${(err as Error).message}`);
     }
