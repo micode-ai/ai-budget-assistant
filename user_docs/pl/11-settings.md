@@ -139,7 +139,7 @@ Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zob
 
 ## Kategorie
 
-Dostep przez **Ustawienia → Kategorie**.
+Dostep przez **Ustawienia → Słowniki → Kategorie**.
 
 Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w jednym miejscu.
 

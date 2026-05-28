@@ -139,7 +139,7 @@ Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financi
 
 ## Categorias
 
-Accede desde **Ajustes → Categorias**.
+Accede desde **Ajustes → Datos de referencia → Categorias**.
 
 Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 

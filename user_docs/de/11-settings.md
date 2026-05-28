@@ -139,7 +139,7 @@ Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen
 
 ## Kategorien
 
-Zugriff uber **Einstellungen → Kategorien**.
+Zugriff uber **Einstellungen → Stammdaten → Kategorien**.
 
 Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 

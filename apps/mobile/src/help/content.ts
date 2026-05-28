@@ -1539,7 +1539,7 @@ Set up end-to-end encryption (E2EE) to protect your financial data. See Encrypti
 
 ## Categories
 
-Access via **Settings → Categories**.
+Access via **Settings → Reference data → Categories**.
 
 View and manage all your expense and income categories in one place.
 
@@ -5012,7 +5012,7 @@ iOS, Android, Web
 
 ## Категории
 
-Доступ: **Настройки → Категории**.
+Доступ: **Настройки → Справочники → Категории**.
 
 Просматривайте все категории расходов и доходов и управляйте ими в одном месте.
 
@@ -8498,7 +8498,7 @@ iOS, Android, Web
 
 ## Категорії
 
-Доступ: **Налаштування → Категорії**.
+Доступ: **Налаштування → Довідники → Категорії**.
 
 Переглядайте всі категорії витрат та доходів і керуйте ними в одному місці.
 
@@ -11906,7 +11906,7 @@ Skonfiguruj szyfrowanie end-to-end (E2EE), aby chronic swoje dane finansowe. Zob
 
 ## Kategorie
 
-Dostep przez **Ustawienia → Kategorie**.
+Dostep przez **Ustawienia → Słowniki → Kategorie**.
 
 Przegladaj wszystkie swoje kategorie wydatkow i przychodow oraz zarzadzaj nimi w jednym miejscu.
 
@@ -15301,7 +15301,7 @@ Richte Ende-zu-Ende-Verschlusselung (E2EE) ein, um deine Finanzdaten zu schutzen
 
 ## Kategorien
 
-Zugriff uber **Einstellungen → Kategorien**.
+Zugriff uber **Einstellungen → Stammdaten → Kategorien**.
 
 Zeige und verwalte alle deine Ausgaben- und Einnahmenkategorien an einem Ort.
 
@@ -18698,7 +18698,7 @@ Configura el cifrado de extremo a extremo (E2EE) para proteger tus datos financi
 
 ## Categorias
 
-Accede desde **Ajustes → Categorias**.
+Accede desde **Ajustes → Datos de referencia → Categorias**.
 
 Visualiza y gestiona todas tus categorias de gastos e ingresos en un solo lugar.
 
@@ -22087,7 +22087,7 @@ Configurez le chiffrement de bout en bout (E2EE) pour proteger vos donnees finan
 
 ## Categories
 
-Acces via **Parametres → Categories**.
+Acces via **Parametres → Données de référence → Categories**.
 
 Visualisez et gerez toutes vos categories de depenses et de revenus en un seul endroit.
 
@@ -25478,7 +25478,7 @@ iOS, Android, Web
 
 ## Катэгорыі
 
-Доступ: **Налады → Катэгорыі**.
+Доступ: **Налады → Даведнікі → Катэгорыі**.
 
 Прагляд усіх катэгорый расходаў і даходаў і кіраванне імі ў адным месцы.
 
