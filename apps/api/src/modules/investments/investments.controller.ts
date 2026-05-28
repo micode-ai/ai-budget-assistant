@@ -14,6 +14,7 @@ import { InvestmentsService } from './investments.service';
 import { InvestmentInsightsService } from './investment-insights.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import {
   CreatePortfolioHoldingDto,
@@ -45,6 +46,7 @@ export class InvestmentsController {
   }
 
   @Post('holdings')
+  @UseGuards(new ViewerBlockGuard())
   async createHolding(
     @Req() req: AuthenticatedRequest,
     @Body() dto: CreatePortfolioHoldingDto,
@@ -53,6 +55,7 @@ export class InvestmentsController {
   }
 
   @Delete('holdings/:id')
+  @UseGuards(new ViewerBlockGuard())
   async removeHolding(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -71,6 +74,7 @@ export class InvestmentsController {
   }
 
   @Post('transactions')
+  @UseGuards(new ViewerBlockGuard())
   async createTransaction(
     @Req() req: AuthenticatedRequest,
     @Body() dto: CreateInvestmentTransactionDto,
@@ -79,6 +83,7 @@ export class InvestmentsController {
   }
 
   @Patch('transactions/:id')
+  @UseGuards(new ViewerBlockGuard())
   async updateTransaction(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -88,6 +93,7 @@ export class InvestmentsController {
   }
 
   @Delete('transactions/:id')
+  @UseGuards(new ViewerBlockGuard())
   async removeTransaction(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -124,6 +130,7 @@ export class InvestmentsController {
   }
 
   @Post('refresh-prices')
+  @UseGuards(new ViewerBlockGuard())
   async refreshPrices(@Req() req: AuthenticatedRequest) {
     return this.investmentsService.refreshPrices(req.accountId);
   }

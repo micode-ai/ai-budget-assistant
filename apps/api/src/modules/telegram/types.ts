@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 export interface TelegramUserState {
   userId: string;
   accountId: string;
+  accountRole: 'owner' | 'editor' | 'viewer';
   conversationId: string | null;
   currencyCode: string;
   language: string;

@@ -5,6 +5,7 @@
 export interface WhatsAppUserState {
   userId: string;
   accountId: string;
+  accountRole: 'owner' | 'editor' | 'viewer';
   conversationId: string | null;
   currencyCode: string;
   language: string;

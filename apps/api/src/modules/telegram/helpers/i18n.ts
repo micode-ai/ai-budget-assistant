@@ -329,6 +329,16 @@ const messages: Record<string, Record<string, string>> = {
     pl: '<b>Dostępne polecenia:</b>\n\n/expense &lt;kwota&gt; [opis] — Dodaj wydatek\n/income &lt;kwota&gt; [opis] — Dodaj dochód\n/category [typ] &lt;nazwa&gt; — Utwórz kategorię\n/categories — Lista kategorii\n/usage — Użycie AI i limity\n/account — Zmień konto\n/newchat — Nowa rozmowa z AI\n/unlink — Odłącz Telegram\n/help — Pokaż to polecenie\n\n<b>Inne funkcje:</b>\n🎤 Wyślij <b>wiadomość głosową</b>\n📷 Wyślij <b>zdjęcie paragonu</b>\n💬 Napisz, aby <b>porozmawiać z AI</b>',
     be: '<b>Даступныя каманды:</b>\n\n/expense &lt;сума&gt; [апісанне] — Дадаць выдатак\n/income &lt;сума&gt; [апісанне] — Дадаць даход\n/category [тып] &lt;назва&gt; — Стварыць катэгорыю\n/categories — Спіс катэгорый\n/usage — Выкарыстанне AI і ліміты\n/account — Пераключыць акаўнт\n/newchat — Новая размова з ІІ\n/unlink — Адвязаць Telegram\n/help — Паказаць гэта паведамленне\n\n<b>Іншыя магчымасці:</b>\n🎤 Адпраўце <b>галасавое паведамленне</b>\n📷 Адпраўце <b>фота чэка</b>\n💬 Проста напішыце для <b>чата з ІІ</b>',
   },
+  viewerRestricted: {
+    en: '🔒 You have view-only access. Only editors and owners can create or modify data.',
+    ru: '🔒 У вас только права просмотра. Создавать и изменять данные могут редакторы и владельцы.',
+    ua: '🔒 У вас лише права перегляду. Редагувати можуть лише редактори та власники.',
+    de: '🔒 Sie haben nur Leserechte. Nur Editoren und Eigentümer können Daten bearbeiten.',
+    es: '🔒 Solo tienes acceso de lectura. Solo los editores y propietarios pueden modificar datos.',
+    fr: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent modifier.',
+    pl: '🔒 Masz tylko dostęp do odczytu. Edytować mogą tylko edytorzy i właściciele.',
+    be: '🔒 У вас толькі правы прагляду. Рэдагаваць могуць толькі рэдактары і ўладальнікі.',
+  },
 };
 
 export function t(key: string, lang?: string, params?: Record<string, string>): string {

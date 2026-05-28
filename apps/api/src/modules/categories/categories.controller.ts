@@ -16,11 +16,15 @@ export class CategoriesController {
   }
 
   @Post()
+  @UseGuards(AccountRoleGuard)
+  @RequireRole('editor')
   async create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
     return this.categoriesService.create(req.accountId, req.user.id, dto);
   }
 
   @Patch(':id')
+  @UseGuards(AccountRoleGuard)
+  @RequireRole('editor')
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
     return this.categoriesService.update(req.accountId, id, dto);
   }

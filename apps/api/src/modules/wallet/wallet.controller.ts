@@ -11,6 +11,7 @@ import {
 import { WalletService } from './wallet.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('wallet')
@@ -19,6 +20,7 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   async setBalance(@Req() req: AuthenticatedRequest, @Body() dto: any) {
     return this.walletService.setBalance(req.accountId, req.user.id, dto);
   }
@@ -34,6 +36,7 @@ export class WalletController {
   }
 
   @Delete(':currencyCode')
+  @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('currencyCode') currencyCode: string) {
     return this.walletService.remove(req.accountId, currencyCode);
   }
