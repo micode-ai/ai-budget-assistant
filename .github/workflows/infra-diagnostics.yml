@@ -1,0 +1,31 @@
+name: Infra Diagnostics
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: infra-diagnostics
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    name: Disk usage breakdown
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (for script)
+        uses: actions/checkout@v4
+
+      - name: Configure SSH key
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_diag
+          chmod 600 ~/.ssh/id_diag
+
+      - name: Run diagnostics over SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new -o BatchMode=yes -i ~/.ssh/id_diag \
+            "$SSH_USER@$SSH_HOST" 'bash -s' < scripts/infra-diagnostics.sh
