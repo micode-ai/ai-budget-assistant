@@ -34,6 +34,8 @@ Create `apps/api/.env`:
 
 ```env
 # Database
+# In production, append connection_limit=10 to cap the Prisma connection pool
+# (matches docker-compose.prod.yml), e.g. ...:5432/ai_budget?connection_limit=10
 DATABASE_URL=postgresql://user:password@localhost:5432/budget_assistant
 
 # Redis (optional)
@@ -49,6 +51,10 @@ OPENAI_API_KEY=sk-your-openai-api-key
 
 # Server
 PORT=3000
+# Dev can use '*'. PRODUCTION must be an explicit comma-separated origin list
+# (never '*'): with credentials enabled, cors matches '*' as a literal origin,
+# so the admin browser gets no Access-Control-Allow-Origin and login breaks.
+# e.g. CORS_ORIGIN=https://admin.ai-budget.pl,https://ai-budget.pl
 CORS_ORIGIN=*
 
 # Push notifications use Expo Push API — no additional config required.
@@ -57,6 +63,17 @@ CORS_ORIGIN=*
 # uptime-check GitHub Actions workflow for downtime alerts)
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
+
+# WhatsApp Business Cloud API (Meta). Token scope: whatsapp_business_messaging.
+WHATSAPP_ACCESS_TOKEN=your-meta-access-token
+WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
+WHATSAPP_BUSINESS_ACCOUNT_ID=your-business-account-id
+WHATSAPP_VERIFY_TOKEN=your-webhook-verify-token
+# HMAC key used to verify inbound webhook signatures.
+WHATSAPP_APP_SECRET=your-app-secret
+# Shown in the mobile app as a wa.me deep link.
+WHATSAPP_BUSINESS_PHONE_NUMBER=+1234567890
+WHATSAPP_API_VERSION=v21.0
 
 # Stripe (subscriptions). apiVersion in code is pinned to
 # '2026-01-28.clover' to match the SDK locked in package-lock.json.
@@ -417,6 +434,58 @@ docker image prune -f            # dangling untagged images
 # NEVER: docker system prune --volumes  (would wipe postgres data)
 ```
 
+## Database Backups
+
+Production PostgreSQL is backed up nightly and off-host (ABA-166). The backup
+runner never touches live data and holds only the encryption **public** key, so
+even a fully compromised CI cannot read past backups.
+
+### Nightly workflow
+
+`.github/workflows/backup-db.yml` runs on cron `0 2 * * *` (02:00 UTC) and can
+also be triggered manually via `workflow_dispatch`. It runs on a GitHub Actions
+runner (not the VPS) and performs:
+
+1. SSH into the VPS and `docker exec budget-db-prod pg_dump -Fc` (custom format)
+   — see `scripts/backup-db.sh`.
+2. Sanity-check the dump: minimum size (10 KB) and `pg_restore --list` object
+   count (≥ 10). A suspect dump fails the run.
+3. Encrypt with `age` (asymmetric) using the recipient public key — the runner
+   never has the private key.
+4. Publish the encrypted archive as a Release asset
+   (`ai_budget-YYYY-MM-DD.dump.age`, tag `backup-YYYY-MM-DD`) in the **private**
+   backup repo `BACKUP_REPO`.
+5. Prune old backups with GFS retention (`scripts/prune-backups.sh`):
+   **7 daily** + **4 weekly** (Sunday anchors) + **6 monthly** (1st-of-month
+   anchors); everything else is deleted.
+6. On failure, send a Telegram alert via `TELEGRAM_BOT_TOKEN` /
+   `TELEGRAM_CHAT_ID`.
+
+### Scope and RPO
+
+- **RPO ≤ 24 h** (worst case = data written since the last 02:00 UTC dump).
+- **Redis is NOT backed up** — it is cache only and can be rebuilt.
+- **Receipt images are stored in-DB**, so the `pg_dump` already includes them;
+  there is no separate blob backup.
+
+### Decryption key (offline)
+
+The `age` **private key is offline** and owner-held (e.g. in a password
+manager). It is **not** in CI and is the only thing that can decrypt any backup.
+Losing it means losing every backup. The full restore procedure (download →
+decrypt → verify into a scratch DB → restore to production) lives in
+[`docs/ops/restore-runbook.md`](../ops/restore-runbook.md).
+
+### Required GitHub Secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `AGE_PUBLIC_KEY` | `age1...` recipient public key the runner encrypts to |
+| `BACKUP_REPO` | `owner/repo` of the private backup repo holding the Release assets |
+| `BACKUP_REPO_TOKEN` | PAT with `contents:write` on the backup repo (publish + prune) |
+| `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY` | VPS access for the dump (reused from deploy) |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Failure alerts (reused from uptime/ops) |
+
 ## Monitoring & Observability
 
 ### Health endpoint
@@ -487,10 +556,17 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `JWT_REFRESH_EXPIRES_IN` | Refresh token expiry | `7d` |
 | `OPENAI_API_KEY` | OpenAI API key | required |
 | `PORT` | Server port | `3000` |
-| `CORS_ORIGIN` | Allowed origins | `*` |
+| `CORS_ORIGIN` | Allowed origins. Prod: explicit comma-separated list, never `*` | `*` |
 | `STRIPE_SECRET_KEY` | Stripe key (apiVersion pinned to `2026-01-28.clover`) | required for billing |
 | `TELEGRAM_BOT_TOKEN` | Telegram bot token (in-app + ops alerts) | optional |
 | `TELEGRAM_CHAT_ID` | Chat ID for system/uptime notifications | optional |
+| `WHATSAPP_ACCESS_TOKEN` | Meta Cloud API access token (`whatsapp_business_messaging` scope) | optional |
+| `WHATSAPP_PHONE_NUMBER_ID` | WhatsApp phone number ID | optional |
+| `WHATSAPP_BUSINESS_ACCOUNT_ID` | WhatsApp Business Account ID | optional |
+| `WHATSAPP_VERIFY_TOKEN` | Webhook verification token | optional |
+| `WHATSAPP_APP_SECRET` | HMAC key for inbound webhook signature verification | optional |
+| `WHATSAPP_BUSINESS_PHONE_NUMBER` | Phone number shown as a `wa.me` deep link in the app | optional |
+| `WHATSAPP_API_VERSION` | Meta Graph API version (e.g. `v21.0`) | optional |
 | `SENTRY_DSN` | Sentry DSN; absence makes the SDK a no-op | optional |
 
 ### Mobile Configuration

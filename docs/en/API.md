@@ -2152,6 +2152,121 @@ Content-Type: application/json
 }
 ```
 
+**Note:** `confirm`/`reject` are scoped to the user who initiated the pending action — only the sender who triggered the `pendingAction` can confirm or reject it, and only within their own account.
+
+---
+
+### List Chat Conversations
+
+Returns the last 20 conversations for the account. Account-scoped: a conversation is visible when `accountId` matches the `X-Account-Id` header **AND** (`isShared` is true **OR** the conversation was created by the caller).
+
+```http
+GET /ai/chat/conversations
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "conversation-uuid",
+    "title": "Food spending this month",
+    "isShared": false,
+    "lastMessageAt": "2026-05-20T14:30:00Z",
+    "createdAt": "2026-05-20T14:00:00Z"
+  }
+]
+```
+
+---
+
+### Get Conversation Messages
+
+Returns the last 50 messages (user + assistant roles only) for a conversation. Same access predicate as the conversation list.
+
+```http
+GET /ai/chat/conversations/:id/messages
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "message-uuid",
+    "role": "user",
+    "content": "How much did I spend on food this month?",
+    "senderUserId": "user-uuid",
+    "createdAt": "2026-05-20T14:30:00Z"
+  },
+  {
+    "id": "message-uuid",
+    "role": "assistant",
+    "content": "This month you've spent $342.50 on Food & Dining.",
+    "createdAt": "2026-05-20T14:30:02Z"
+  }
+]
+```
+
+---
+
+### Poll Conversation
+
+Returns messages newer than the `since` timestamp and refreshes the caller's Redis presence marker for the conversation (TTL 45s). Used by the mobile client to live-update a focused shared conversation (polled every ~4s).
+
+```http
+GET /ai/chat/conversations/:id/poll?since=2026-05-20T14:30:00Z
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `since` | ISO 8601 | Return only messages created after this timestamp (optional) |
+
+**Response** `200 OK`
+```json
+{
+  "messages": [
+    {
+      "id": "message-uuid",
+      "role": "user",
+      "content": "@John can you check this?",
+      "senderUserId": "user-uuid",
+      "createdAt": "2026-05-20T14:31:00Z"
+    }
+  ]
+}
+```
+
+---
+
+### Toggle Conversation Sharing
+
+Marks a conversation as shared (visible to all account members) or private (creator-only). **Owner-only** — only an account `owner` may change the sharing flag.
+
+```http
+PATCH /ai/chat/conversations/:id/shared
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "isShared": true
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "id": "conversation-uuid",
+  "isShared": true
+}
+```
+
 ---
 
 ## Analytics
@@ -2379,6 +2494,296 @@ Wraps every insert in one `prisma.$transaction`. Rows with `alreadyImported: tru
   "createdIncomes": 19,
   "createdExchanges": 3
 }
+```
+
+---
+
+## Bank Import
+
+Bulk-create transactions from a bank statement (CSV or PDF). All endpoints require `X-Account-Id` and are guarded by `JwtAuthGuard + AccountContextGuard`.
+
+Supported banks: `mbank`, `pko`, `ing`, `millennium`, `pekao`, `erste` (PDF), `alior` (PDF), plus a `universal` column-mapping fallback. CSV encoding (UTF-8 / Windows-1250) is auto-detected. PDF statements (detected by the `%PDF` header) skip CSV header/mapping/fingerprint handling and have their text extracted before parsing.
+
+### Preview a Bank Statement Upload
+
+```http
+POST /import/bank/preview?bankId=mbank&mappingId=<uuid>&encoding=auto
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: multipart/form-data
+
+file=<statement.csv | statement.pdf>
+```
+
+Max file size: 5 MB. The parser is chosen in this order: `mappingId` → `bankId` → saved header-fingerprint → auto-detect. FX rows (same date, opposite sign, different currency) are paired into a single `fx` row. Each row gets a deterministic `externalRef` (`bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(normalizedDesc).slice(0,8)>`). Two dedup layers run: (1) exact `externalRef` match (re-import of the same file); (2) content match on `(date, signedAmountCents, currency)` against all account Expense/Income regardless of source. Matched rows are returned with `alreadyImported: true` (auto-unchecked in the UI).
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bankId` | string | Force a specific bank parser (optional) |
+| `mappingId` | string | Apply a saved column mapping (optional) |
+| `encoding` | string | `auto`, `utf-8`, or `windows-1250` (optional) |
+
+**Body Fields (multipart)**
+| Field | Type | Description |
+|-------|------|-------------|
+| `file` | file | The statement file (CSV or PDF) |
+| `mapping` | string | Inline `ColumnMapping` JSON for the universal parser (optional) |
+| `delimiter` | string | CSV delimiter override (optional) |
+| `amountFormat` | string | `polish` or `standard` (optional) |
+| `dateFormat` | string | `auto`, `DD.MM.YYYY`, `DD-MM-YYYY`, or `YYYY-MM-DD` (optional) |
+
+**Response** `200 OK`
+```json
+{
+  "status": "parsed",
+  "detectedBankId": "mbank",
+  "totalRows": 124,
+  "importable": 118,
+  "skipped": 6,
+  "parseErrors": 0,
+  "headerFingerprint": "a1b2c3d4",
+  "rows": [
+    {
+      "idx": 0,
+      "kind": "expense",
+      "date": "2024-10-19",
+      "amount": 22.19,
+      "currencyCode": "PLN",
+      "description": "Biedronka Gdansk",
+      "merchant": "Biedronka",
+      "externalRef": "bank:mbank:2024-10-19:-2219:9f8a2b1c",
+      "suggestedCategoryName": "Groceries",
+      "alreadyImported": false
+    }
+  ]
+}
+```
+
+### Commit Selected Rows
+
+```http
+POST /import/bank/commit
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "rows": [ /* ImportRow[] — only rows the user kept */ ],
+  "bankId": "mbank",
+  "headerFingerprint": "a1b2c3d4",
+  "saveMapping": { "name": "My mBank export" }
+}
+```
+
+Writes every insert in one `prisma.$transaction` with `source: 'import'` and the deterministic `externalRef`. Rows with `alreadyImported: true` are dropped server-side; duplicate-key violations are counted as `skippedDuplicates`. An `ImportBatch` is created in the same transaction so the import can be rolled back later (see **Import Batches**). The optional `saveMapping` persists the column mapping (keyed by `headerFingerprint`) for auto-application on future imports.
+
+**Response** `200 OK`
+```json
+{
+  "createdExpenses": 96,
+  "createdIncomes": 19,
+  "createdExchanges": 3,
+  "skippedDuplicates": 6,
+  "parseErrors": 0,
+  "savedMappingId": "mapping-uuid",
+  "batchId": "batch-uuid"
+}
+```
+
+### List Saved Mappings
+
+```http
+GET /import/bank/mappings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Returns the account's saved column mappings (one per `headerFingerprint`).
+
+### Create a Saved Mapping
+
+```http
+POST /import/bank/mappings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "My bank export",
+  "headerFingerprint": "a1b2c3d4",
+  "bankId": "universal",
+  "mapping": { "date": "Data", "amount": "Kwota", "description": "Opis" },
+  "delimiter": ";",
+  "encoding": "windows-1250",
+  "amountFormat": "polish",
+  "dateFormat": "DD.MM.YYYY"
+}
+```
+
+**Response** `201 Created` — the saved mapping.
+
+### Delete a Saved Mapping
+
+```http
+DELETE /import/bank/mappings/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+### Request a New Bank
+
+Forwards a bank-support request (name, optional notes, optional example statement) to the **ops Telegram chat** — never to the requesting user.
+
+```http
+POST /import/bank/request-bank
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: multipart/form-data
+
+file=<example-statement.csv | example-statement.pdf>   (optional)
+bankName=Revolut
+notes=CSV export from the mobile app
+```
+
+Max file size: 5 MB.
+
+**Response** `200 OK`
+```json
+{ "ok": true }
+```
+
+---
+
+## Import Batches
+
+Tracks committed imports (Wise + bank) so they can be rolled back. All endpoints require `X-Account-Id` and are guarded by `JwtAuthGuard + AccountContextGuard`.
+
+### List Import Batches
+
+Returns the last 20 import batches for the account. `canRollback` is `true` when the batch is still `committed` and within the 30-day rollback window.
+
+```http
+GET /import/batches
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "batches": [
+    {
+      "id": "batch-uuid",
+      "source": "bank",
+      "importedAt": "2026-05-20T14:00:00Z",
+      "rowCount": 118,
+      "status": "committed",
+      "canRollback": true
+    }
+  ]
+}
+```
+
+### Roll Back an Import Batch
+
+Soft-deletes (`isDeleted: true`) every transaction created by the batch and clears their `externalRef` so the same file can be re-imported cleanly, then marks the batch `rolled_back`.
+
+```http
+DELETE /import/batches/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{ "rolledBack": 118 }
+```
+
+**Errors:**
+- `404 Not Found` — Batch not found in this account
+- `403 Forbidden` — Already rolled back, or the 30-day rollback window has expired
+
+---
+
+## WhatsApp
+
+The WhatsApp bot runs on the Meta Business Cloud API. The webhook endpoints are **excluded from the `/api/v1` prefix** — their full path is `/whatsapp/webhook` (no version prefix). They are not JWT-guarded; inbound events are verified by HMAC signature instead.
+
+### Webhook Verification (Handshake)
+
+Meta sends a GET handshake when the webhook is registered. The endpoint echoes back the `hub.challenge` only when `hub.mode=subscribe` and `hub.verify_token` matches the configured `WHATSAPP_VERIFY_TOKEN`.
+
+```http
+GET /whatsapp/webhook?hub.mode=subscribe&hub.verify_token=<token>&hub.challenge=<challenge>
+```
+
+**Response** `200 OK` — plain-text `hub.challenge` value (or `403 Forbidden` on mismatch).
+
+### Inbound Webhook Event
+
+Receives WhatsApp message events. The request body is verified with an HMAC-SHA256 signature (`X-Hub-Signature-256` header) computed over the raw request body using `WHATSAPP_APP_SECRET`. On a valid signature the endpoint ACKs `200` immediately and dispatches the update asynchronously (Meta retries on any non-200).
+
+```http
+POST /whatsapp/webhook
+X-Hub-Signature-256: sha256=<hmac>
+Content-Type: application/json
+
+{ /* Meta WhatsApp webhook payload */ }
+```
+
+**Response** `200 OK` (empty) on success, `401 Unauthorized` on an invalid/missing signature.
+
+### Generate WhatsApp Link Code
+
+JWT-guarded (also requires `X-Account-Id`). Generates a 6-hex linking code the user sends to the bot via a `wa.me` deep link to connect their WhatsApp number.
+
+```http
+POST /users/me/whatsapp-link-code
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "code": "a1b2c3",
+  "expiresAt": "2026-05-20T14:10:00Z",
+  "waPhoneNumber": "+15551234567"
+}
+```
+
+### Get WhatsApp Link Status
+
+```http
+GET /users/me/whatsapp-link
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+{
+  "linked": true,
+  "waPhoneNumber": "+15559876543",
+  "waProfileName": "John Doe",
+  "linkedAt": "2026-05-19T10:00:00Z"
+}
+```
+
+Returns `{ "linked": false }` when no WhatsApp number is linked.
+
+### Unlink WhatsApp
+
+```http
+DELETE /users/me/whatsapp-link
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+{ "success": true }
 ```
 
 ---

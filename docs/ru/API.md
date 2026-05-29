@@ -2088,6 +2088,121 @@ Content-Type: application/json
 }
 ```
 
+**Примечание:** `confirm`/`reject` привязаны к пользователю, инициировавшему ожидающее действие — только отправитель, создавший `pendingAction`, может подтвердить или отклонить его, и только в рамках своего аккаунта.
+
+---
+
+### Список разговоров чата
+
+Возвращает последние 20 разговоров аккаунта. Привязано к аккаунту: разговор виден, когда `accountId` совпадает с заголовком `X-Account-Id` **И** (`isShared` равно true **ИЛИ** разговор создан вызывающим пользователем).
+
+```http
+GET /ai/chat/conversations
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "conversation-uuid",
+    "title": "Расходы на еду в этом месяце",
+    "isShared": false,
+    "lastMessageAt": "2026-05-20T14:30:00Z",
+    "createdAt": "2026-05-20T14:00:00Z"
+  }
+]
+```
+
+---
+
+### Получить сообщения разговора
+
+Возвращает последние 50 сообщений (только роли user + assistant) для разговора. Тот же предикат доступа, что и для списка разговоров.
+
+```http
+GET /ai/chat/conversations/:id/messages
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "message-uuid",
+    "role": "user",
+    "content": "Сколько я потратил на еду в этом месяце?",
+    "senderUserId": "user-uuid",
+    "createdAt": "2026-05-20T14:30:00Z"
+  },
+  {
+    "id": "message-uuid",
+    "role": "assistant",
+    "content": "В этом месяце вы потратили 20 550 ₽ на категорию \"Еда и рестораны\".",
+    "createdAt": "2026-05-20T14:30:02Z"
+  }
+]
+```
+
+---
+
+### Опрос разговора
+
+Возвращает сообщения новее метки времени `since` и обновляет маркер присутствия вызывающего пользователя в Redis для разговора (TTL 45с). Используется мобильным клиентом для живого обновления активного общего разговора (опрос каждые ~4с).
+
+```http
+GET /ai/chat/conversations/:id/poll?since=2026-05-20T14:30:00Z
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `since` | ISO 8601 | Вернуть только сообщения, созданные после этой метки времени (опционально) |
+
+**Ответ** `200 OK`
+```json
+{
+  "messages": [
+    {
+      "id": "message-uuid",
+      "role": "user",
+      "content": "@John можешь проверить это?",
+      "senderUserId": "user-uuid",
+      "createdAt": "2026-05-20T14:31:00Z"
+    }
+  ]
+}
+```
+
+---
+
+### Переключить общий доступ к разговору
+
+Помечает разговор как общий (виден всем участникам аккаунта) или приватный (только для создателя). **Только для владельца** — изменить флаг общего доступа может только `owner` аккаунта.
+
+```http
+PATCH /ai/chat/conversations/:id/shared
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "isShared": true
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "id": "conversation-uuid",
+  "isShared": true
+}
+```
+
 ---
 
 ## Аналитика
@@ -2234,6 +2349,377 @@ X-Account-Id: <account-uuid>
     }
   ]
 }
+```
+
+---
+
+## Импорт
+
+Массовое создание транзакций из выписки Wise в формате CSV. Оба эндпоинта требуют заголовок `X-Account-Id`.
+
+### Предпросмотр загрузки CSV Wise
+
+```http
+POST /import/wise/preview
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: multipart/form-data
+
+file=<wise-statement.csv>
+```
+
+Максимальный размер файла: 5 МБ. Парсится через `papaparse`, удаляется BOM, каждая строка классифицируется как `expense` / `income` / `fx`, строки конвертации валют объединяются в пары по совпадению `Payment Reference + Date + противоположный знак`, комиссия `Total fees` сворачивается в абсолютную сумму, и выполняется дедупликация путём проверки `externalRef = 'wise:<TransferWise ID>'` по существующим строкам `Expense`/`Income`/`CurrencyExchange` в аккаунте.
+
+**Ответ** `200 OK`
+```json
+{
+  "totalRows": 124,
+  "importable": 118,
+  "skipped": 6,
+  "rows": [
+    {
+      "idx": 0,
+      "kind": "expense",
+      "date": "2024-10-19",
+      "amount": 22.19,
+      "currencyCode": "EUR",
+      "description": "Reserved.com Gdansk",
+      "merchant": "Reserved.com Gdansk",
+      "externalRef": "wise:5478821093",
+      "suggestedCategoryName": null,
+      "alreadyImported": false
+    },
+    {
+      "idx": 7,
+      "kind": "fx",
+      "date": "2024-10-15",
+      "amount": 120.00,
+      "currencyCode": "USD",
+      "description": "Currency exchange",
+      "externalRef": "wise:5478811010+5478811011",
+      "alreadyImported": false,
+      "fxFromCurrency": "USD",
+      "fxFromAmount": 120.00,
+      "fxToCurrency": "EUR",
+      "fxToAmount": 109.50,
+      "fxRate": 0.9125
+    }
+  ]
+}
+```
+
+### Подтверждение выбранных строк
+
+```http
+POST /import/wise/commit
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "rows": [ /* WiseImportRow[] — только строки, которые оставил пользователь */ ]
+}
+```
+
+Все вставки оборачиваются в одну `prisma.$transaction`. Строки с `alreadyImported: true` отбрасываются на сервере. Каждая созданная запись получает `source: 'import'` (на `Expense`) и `externalRef`. Нарушения уникальности ключа (`P2002`) проглатываются для каждой строки.
+
+**Ответ** `200 OK`
+```json
+{
+  "createdExpenses": 96,
+  "createdIncomes": 19,
+  "createdExchanges": 3
+}
+```
+
+---
+
+## Импорт из банка
+
+Массовое создание транзакций из банковской выписки (CSV или PDF). Все эндпоинты требуют `X-Account-Id` и защищены `JwtAuthGuard + AccountContextGuard`.
+
+Поддерживаемые банки: `mbank`, `pko`, `ing`, `millennium`, `pekao`, `erste` (PDF), `alior` (PDF), а также универсальный резервный вариант с маппингом колонок `universal`. Кодировка CSV (UTF-8 / Windows-1250) определяется автоматически. PDF-выписки (определяются по заголовку `%PDF`) пропускают обработку заголовков/маппинга/отпечатка CSV, и их текст извлекается перед парсингом.
+
+### Предпросмотр загрузки банковской выписки
+
+```http
+POST /import/bank/preview?bankId=mbank&mappingId=<uuid>&encoding=auto
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: multipart/form-data
+
+file=<statement.csv | statement.pdf>
+```
+
+Максимальный размер файла: 5 МБ. Парсер выбирается в следующем порядке: `mappingId` → `bankId` → сохранённый отпечаток заголовка → автоопределение. FX-строки (одна дата, противоположный знак, разная валюта) объединяются в одну строку `fx`. Каждая строка получает детерминированный `externalRef` (`bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(normalizedDesc).slice(0,8)>`). Выполняются два слоя дедупликации: (1) точное совпадение `externalRef` (повторный импорт того же файла); (2) совпадение по содержимому `(date, signedAmountCents, currency)` со всеми Expense/Income аккаунта независимо от источника. Совпавшие строки возвращаются с `alreadyImported: true` (автоматически снимаются в интерфейсе).
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `bankId` | string | Принудительно использовать конкретный парсер банка (опционально) |
+| `mappingId` | string | Применить сохранённый маппинг колонок (опционально) |
+| `encoding` | string | `auto`, `utf-8` или `windows-1250` (опционально) |
+
+**Поля тела (multipart)**
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `file` | file | Файл выписки (CSV или PDF) |
+| `mapping` | string | Встроенный JSON `ColumnMapping` для универсального парсера (опционально) |
+| `delimiter` | string | Переопределение разделителя CSV (опционально) |
+| `amountFormat` | string | `polish` или `standard` (опционально) |
+| `dateFormat` | string | `auto`, `DD.MM.YYYY`, `DD-MM-YYYY` или `YYYY-MM-DD` (опционально) |
+
+**Ответ** `200 OK`
+```json
+{
+  "status": "parsed",
+  "detectedBankId": "mbank",
+  "totalRows": 124,
+  "importable": 118,
+  "skipped": 6,
+  "parseErrors": 0,
+  "headerFingerprint": "a1b2c3d4",
+  "rows": [
+    {
+      "idx": 0,
+      "kind": "expense",
+      "date": "2024-10-19",
+      "amount": 22.19,
+      "currencyCode": "PLN",
+      "description": "Biedronka Gdansk",
+      "merchant": "Biedronka",
+      "externalRef": "bank:mbank:2024-10-19:-2219:9f8a2b1c",
+      "suggestedCategoryName": "Продукты",
+      "alreadyImported": false
+    }
+  ]
+}
+```
+
+### Подтверждение выбранных строк
+
+```http
+POST /import/bank/commit
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "rows": [ /* ImportRow[] — только строки, которые оставил пользователь */ ],
+  "bankId": "mbank",
+  "headerFingerprint": "a1b2c3d4",
+  "saveMapping": { "name": "Моя выписка mBank" }
+}
+```
+
+Все вставки записываются в одну `prisma.$transaction` с `source: 'import'` и детерминированным `externalRef`. Строки с `alreadyImported: true` отбрасываются на сервере; нарушения уникальности ключа подсчитываются как `skippedDuplicates`. В той же транзакции создаётся `ImportBatch`, чтобы импорт можно было откатить позже (см. **Партии импорта**). Опциональное поле `saveMapping` сохраняет маппинг колонок (по ключу `headerFingerprint`) для автоматического применения при будущих импортах.
+
+**Ответ** `200 OK`
+```json
+{
+  "createdExpenses": 96,
+  "createdIncomes": 19,
+  "createdExchanges": 3,
+  "skippedDuplicates": 6,
+  "parseErrors": 0,
+  "savedMappingId": "mapping-uuid",
+  "batchId": "batch-uuid"
+}
+```
+
+### Список сохранённых маппингов
+
+```http
+GET /import/bank/mappings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Возвращает сохранённые маппинги колонок аккаунта (один на `headerFingerprint`).
+
+### Создать сохранённый маппинг
+
+```http
+POST /import/bank/mappings
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "name": "Моя банковская выписка",
+  "headerFingerprint": "a1b2c3d4",
+  "bankId": "universal",
+  "mapping": { "date": "Data", "amount": "Kwota", "description": "Opis" },
+  "delimiter": ";",
+  "encoding": "windows-1250",
+  "amountFormat": "polish",
+  "dateFormat": "DD.MM.YYYY"
+}
+```
+
+**Ответ** `201 Created` — сохранённый маппинг.
+
+### Удалить сохранённый маппинг
+
+```http
+DELETE /import/bank/mappings/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+### Запросить новый банк
+
+Пересылает запрос на поддержку банка (название, опциональные заметки, опциональная пример-выписка) в **операционный чат Telegram** — никогда не запрашивающему пользователю.
+
+```http
+POST /import/bank/request-bank
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: multipart/form-data
+
+file=<example-statement.csv | example-statement.pdf>   (опционально)
+bankName=Revolut
+notes=CSV-экспорт из мобильного приложения
+```
+
+Максимальный размер файла: 5 МБ.
+
+**Ответ** `200 OK`
+```json
+{ "ok": true }
+```
+
+---
+
+## Партии импорта
+
+Отслеживает подтверждённые импорты (Wise + банк), чтобы их можно было откатить. Все эндпоинты требуют `X-Account-Id` и защищены `JwtAuthGuard + AccountContextGuard`.
+
+### Список партий импорта
+
+Возвращает последние 20 партий импорта аккаунта. `canRollback` равно `true`, когда партия всё ещё в статусе `committed` и находится в пределах 30-дневного окна отката.
+
+```http
+GET /import/batches
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "batches": [
+    {
+      "id": "batch-uuid",
+      "source": "bank",
+      "importedAt": "2026-05-20T14:00:00Z",
+      "rowCount": 118,
+      "status": "committed",
+      "canRollback": true
+    }
+  ]
+}
+```
+
+### Откатить партию импорта
+
+Мягко удаляет (`isDeleted: true`) каждую транзакцию, созданную партией, и очищает их `externalRef`, чтобы тот же файл можно было повторно импортировать без проблем, затем помечает партию как `rolled_back`.
+
+```http
+DELETE /import/batches/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{ "rolledBack": 118 }
+```
+
+**Ошибки:**
+- `404 Not Found` — Партия не найдена в этом аккаунте
+- `403 Forbidden` — Уже откачена или истекло 30-дневное окно отката
+
+---
+
+## WhatsApp
+
+WhatsApp-бот работает на Meta Business Cloud API. Эндпоинты webhook **исключены из префикса `/api/v1`** — их полный путь `/whatsapp/webhook` (без префикса версии). Они не защищены JWT; вместо этого входящие события проверяются HMAC-подписью.
+
+### Верификация webhook (рукопожатие)
+
+Meta отправляет GET-рукопожатие при регистрации webhook. Эндпоинт отвечает значением `hub.challenge` только когда `hub.mode=subscribe` и `hub.verify_token` совпадает с настроенным `WHATSAPP_VERIFY_TOKEN`.
+
+```http
+GET /whatsapp/webhook?hub.mode=subscribe&hub.verify_token=<token>&hub.challenge=<challenge>
+```
+
+**Ответ** `200 OK` — текстовое значение `hub.challenge` (или `403 Forbidden` при несовпадении).
+
+### Входящее событие webhook
+
+Принимает события сообщений WhatsApp. Тело запроса проверяется подписью HMAC-SHA256 (заголовок `X-Hub-Signature-256`), вычисленной по сырому телу запроса с использованием `WHATSAPP_APP_SECRET`. При корректной подписи эндпоинт немедленно отвечает `200` и обрабатывает обновление асинхронно (Meta повторяет запрос при любом ответе, отличном от 200).
+
+```http
+POST /whatsapp/webhook
+X-Hub-Signature-256: sha256=<hmac>
+Content-Type: application/json
+
+{ /* полезная нагрузка webhook WhatsApp от Meta */ }
+```
+
+**Ответ** `200 OK` (пустой) при успехе, `401 Unauthorized` при недействительной/отсутствующей подписи.
+
+### Сгенерировать код привязки WhatsApp
+
+Защищён JWT (также требует `X-Account-Id`). Генерирует 6-значный шестнадцатеричный код привязки, который пользователь отправляет боту через `wa.me` deep-link, чтобы подключить свой номер WhatsApp.
+
+```http
+POST /users/me/whatsapp-link-code
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "code": "a1b2c3",
+  "expiresAt": "2026-05-20T14:10:00Z",
+  "waPhoneNumber": "+15551234567"
+}
+```
+
+### Получить статус привязки WhatsApp
+
+```http
+GET /users/me/whatsapp-link
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "linked": true,
+  "waPhoneNumber": "+15559876543",
+  "waProfileName": "John Doe",
+  "linkedAt": "2026-05-19T10:00:00Z"
+}
+```
+
+Возвращает `{ "linked": false }`, когда номер WhatsApp не привязан.
+
+### Отвязать WhatsApp
+
+```http
+DELETE /users/me/whatsapp-link
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK`
+```json
+{ "success": true }
 ```
 
 ---
