@@ -307,6 +307,7 @@ export default {
   },
   expenseDetail: {
     notFound: 'Расход не знойдзены',
+    amount: 'Сума',
     noDescription: 'Без апісання',
     description: 'Апісанне',
     date: 'Дата',
