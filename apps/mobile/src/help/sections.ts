@@ -31,10 +31,9 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '19-fat-finder', icon: 'search-outline', color: '#FF9800' },
   { id: '20-ai-response-mode', icon: 'options-outline', color: '#00BCD4' },
   { id: '21-widgets', icon: 'grid-outline', color: '#4ECDC4' },
-  { id: '22-telegram-bot', icon: 'paper-plane-outline', color: '#0088CC' },
+  { id: '22-chat-bots', icon: 'chatbubble-ellipses-outline', color: '#6366F1' },
   { id: '23-scenario-simulator', icon: 'flask-outline', color: '#FF9800' },
   { id: '24-referral', icon: 'gift-outline', color: '#E91E63' },
-  { id: '25-whatsapp-bot', icon: 'logo-whatsapp', color: '#25D366' },
-  { id: '26-wise-import', icon: 'swap-horizontal-outline', color: '#00B9FF' },
   { id: '27-bank-import', icon: 'business-outline', color: '#E91E63' },
+  { id: '28-reference-data', icon: 'pricetags-outline', color: '#10B981' },
 ];

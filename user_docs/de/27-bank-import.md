@@ -1,6 +1,6 @@
-# Transaktionen aus Ihrer Bank importieren
+# Transaktionen aus deiner Bank importieren
 
-> Importieren Sie Transaktionen aus einem CSV- oder PDF-Kontoauszug Ihrer Bank oder aus einer beliebigen Bank über den universellen Spaltenzuordner.
+> Importiere Transaktionen aus einem CSV- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Wise und jede andere Bank über den universellen Spalten-Mapper.
 
 ## Unterstützte Banken
 
@@ -8,55 +8,49 @@
 - **PKO BP** — CSV-Export
 - **Erste Bank** — PDF-Kontoauszug
 - **Alior Bank** — PDF-Kontoauszug
-- **Wise** — CSV-Export (siehe [Wise-Import](./26-wise-import.md))
-- **Other** — beliebige Bank, über den universellen Spaltenzuordner (CSV)
+- **Wise** — CSV-Export (mehrsprachig, FX-Konversionen werden automatisch erkannt)
+- **Andere** — beliebige Bank, über den universellen Spalten-Mapper (CSV)
 
-Weitere Banken werden laufend hinzugefügt. Wenn Ihre Bank noch nicht aufgeführt ist, verwenden Sie **Other** und ordnen Sie die Spalten manuell zu.
+## So importierst du
 
-## So importieren Sie
+1. Gehe zu **Einstellungen → Transaktionen importieren**
+2. Wähle deine Bank aus der Liste (oder **Andere (CSV)**, wenn sie nicht aufgeführt ist)
+3. Wähle die aus deiner Bank exportierte Datei
+4. Die App zeigt eine Vorschau — jede Zeile ist als Ausgabe, Einnahme oder Währungstausch markiert
+5. Deaktiviere unerwünschte Zeilen und tippe **Importieren**
 
-1. Gehen Sie zu **Einstellungen → Transaktionen importieren**
-2. Wählen Sie Ihre Bank aus der Liste (oder **Other (custom CSV)**, wenn sie nicht aufgeführt ist)
-3. Wählen Sie die aus Ihrer Bank exportierte Datei — eine **CSV**-Datei für mBank/PKO, einen **PDF**-Kontoauszug für Erste/Alior
-4. Die App zeigt eine Vorschau, in der jede Zeile als Ausgabe, Einnahme oder Währungsumtausch markiert ist
-5. Deaktivieren Sie alle Zeilen, die Sie nicht möchten, und tippen Sie dann auf **Importieren**
+Die App überspringt Zeilen, die bereits im Konto vorhanden sind, durch Abgleich von Datum, Betrag und Währung.
 
-Die App überspringt Zeilen, die in Ihrem Konto bereits vorhanden sind — egal ob Sie diese früher importiert oder manuell eingegeben haben — indem sie Datum, Betrag und Währung abgleicht. Dadurch entstehen beim Import keine Duplikate. Abgeglichene Zeilen sind standardmäßig nicht ausgewählt; aktivieren Sie eine solche Zeile, wenn es sich tatsächlich um eine separate Transaktion handelt.
+## Wo du den Export in deiner Bank findest
 
-## Wo Sie die Datei in Ihrer Bank finden
+- **Wise**: wise.com → Transactions → Statements and Reports → Datumsbereich wählen → CSV → Währung/Saldo wählen → Herunterladen
 
-- **mBank**: Web-Banking → Historia operacji → Eksport → CSV
-- **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
-- **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
-- **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
+> **Wise-Tipp:** Wise erstellt eine CSV pro Währungsguthaben. Importiere jede Währung separat. Bis zu 469 Tage pro Export.
+
+## Wise — Währungsumrechnungen und Gebühren
+
+Bei einer Währungsumrechnung in Wise (z.B. 100 USD → EUR) entstehen zwei Zeilen. Die App erkennt diese Paare automatisch und erstellt einen einzelnen **Währungstausch**-Eintrag (Wallet → Tausche).
+
+Wise-Gebühren aus der Spalte `Total fees` werden automatisch in den Ausgabenbetrag eingerechnet.
 
 ## Was importiert wird
 
-Jede Zeile wird zu einer Ausgabe, einer Einnahme oder einem Währungsumtausch (wenn die App eine gekoppelte Devisentransaktion am gleichen Datum in verschiedenen Währungen erkennt). Kategorien werden automatisch für bekannte Händler vorgeschlagen (Biedronka, Żabka, Orlen, Lidl, Rossmann usw.) — Sie können diese später ändern.
+Jede Zeile wird zu einer Ausgabe, Einnahme oder Währungsumrechnung. Kategorien werden automatisch für bekannte Händler vorgeschlagen. Jede Zeile erhält eine eindeutige ID — ein erneuter Import derselben Datei ist sicher.
 
-## „Other" — universeller CSV-Zuordner
+## „Andere" — universeller Mapper
 
-Wenn Ihre Bank nicht in der Liste steht, wählen Sie **Other (custom CSV)**. Die App zeigt eine Vorschau Ihrer Datei und fordert Sie auf, die Spalten für Datum, Betrag und Beschreibung zu benennen. Sie können diese Zuordnung unter einem Namen speichern; die nächste CSV-Datei mit demselben Spaltenaufbau wird dann automatisch importiert.
+Wenn deine Bank nicht in der Liste ist, wähle **Andere (CSV)**. Die App zeigt eine Dateivorschau und fragt, welche Spalte Datum, Betrag und Beschreibung enthält. Speichere diese Zuordnung für den nächsten Import.
 
-## Vergangene Importe & Rückgängig machen
+## Importverlauf & Rückgängig
 
-Im Bereich **Vergangene Importe** unten in **Einstellungen → Transaktionen importieren** werden die letzten 20 Importe angezeigt — Quellbank, Datum und Anzahl der erstellten Transaktionen.
+Der Bereich **Vergangene Importe** zeigt die letzten 20 Importe. Tippe auf den **Rückgängig-Pfeil** (↩) rechts, um einen Import zu widerrufen. Alle Transaktionen aus diesem Import werden entfernt.
 
-Um einen kürzlichen Import rückgängig zu machen, tippe auf den **Rückgängig-Pfeil** (↩) auf der rechten Seite der Zeile. Vor dem Löschen wird eine Bestätigung angefordert.
+- Rückgängig ist **30 Tage** nach dem Import möglich.
 
-- Rückgängig machen ist innerhalb von **30 Tagen** nach dem ursprünglichen Import möglich.
-- Alle Transaktionen aus diesem Import werden aus deinem Konto entfernt.
-- Die Deduplizierungssperre wird zurückgesetzt, sodass dieselbe Datei erneut importiert werden kann.
-- Importe, die älter als 30 Tage sind, zeigen keine Rückgängig-Schaltfläche.
+## Deine Bank nicht dabei?
 
-## Ihre Bank nicht dabei?
-
-Am unteren Ende von **Einstellungen → Transaktionen importieren** finden Sie eine Karte **„Ihre Bank nicht dabei?"**. Tippen Sie darauf, geben Sie den Namen Ihrer Bank ein und fügen Sie ein Beispiel des von ihr ausgegebenen Kontoauszugs bei (CSV oder PDF). Senden Sie die Anfrage, und wir werden die Unterstützung für diese Bank hinzufügen. Ihre Anfrage geht direkt an unser Team — sie wird nicht öffentlich gepostet.
-
-## Zeichenkodierung
-
-Bei CSV-Dateien erkennt die App automatisch UTF-8 und Windows-1250 (die am häufigsten verwendete Kodierung polnischer Banken). Wenn in der Vorschau polnische Zeichen unleserlich dargestellt werden, wählen Sie die Kodierung im Zuordner manuell aus. PDF-Kontoauszüge werden direkt gelesen — keine Kodierungsauswahl erforderlich.
+Unten bei **Einstellungen → Transaktionen importieren** gibt es eine **„Bank nicht gefunden?"**-Karte. Tippe darauf, gib den Banknamen ein und füge einen Musterauszug bei.
 
 ---
 
-*Siehe auch: [Wise-Import](./26-wise-import.md) | [Ausgaben und Einnahmen](./03-expenses-and-income.md) | [Einstellungen](./11-settings.md)*
+*Siehe auch: [Ausgaben & Einnahmen](./03-expenses-and-income.md) | [Wallet & Tausch](./10-wallet-and-exchange.md) | [Einstellungen](./11-settings.md)*
