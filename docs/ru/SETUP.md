@@ -409,7 +409,8 @@ Hetzner VPS. Ключевые отличия от dev compose выше:
 
 1. SSH на VPS, запускает `scripts/deploy.sh` (git reset, `npm install` с
    копией `package-lock.json`, `prisma migrate deploy`,
-   `up -d --force-recreate api admin`).
+   `up -d --force-recreate api admin`, затем `docker image prune -f` +
+   `docker builder prune -af` — чистит build-кэш на каждом деплое).
 2. Verify-step опрашивает `https://api.ai-budget.pl/api/v1/health` до 120с
    и валит run с дампом логов, если сервис не стал healthy.
 
@@ -429,13 +430,22 @@ snap обратно. Системный data-root — `/var/lib/docker`, его 
 
 ### Гигиена диска
 
+`scripts/deploy.sh` уже выполняет `docker image prune -f` + `docker builder prune -af`
+на каждом деплое — именно build-кэш был главной причиной заполнения диска до 89%
+(ABA-168), т.к. образы собираются на VPS. Ручная чистка теперь нужна редко:
+
 ```bash
 journalctl --vacuum-size=500M    # обрезать journal-логи (~2-3 GB)
 apt-get clean                    # apt-кеш (~400 МБ)
-docker builder prune -f          # только build-cache (без volumes)
+docker builder prune -af         # весь build-cache (без volumes)
 docker image prune -f            # dangling untagged образы
 # НИКОГДА: docker system prune --volumes  (затрёт данные postgres)
 ```
+
+Чтобы понять, что занимает диск, не заходя по SSH вручную, запустите workflow
+**Infra Diagnostics** (`.github/workflows/infra-diagnostics.yml`, ручной
+`workflow_dispatch`). Он выполняет `scripts/infra-diagnostics.sh` по SSH и
+печатает в лог `df -h`, `docker system df` и разбивку `du`.
 
 ## Резервное копирование БД
 

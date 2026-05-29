@@ -405,7 +405,8 @@ touches `apps/api/**`, `apps/admin/**`, `packages/**`, `docker/**`,
 
 1. SSHs into the VPS and runs `scripts/deploy.sh` (git reset, `npm install`
    with `package-lock.json` copied, `prisma migrate deploy`,
-   `up -d --force-recreate api admin`).
+   `up -d --force-recreate api admin`, then `docker image prune -f` +
+   `docker builder prune -af` to reclaim the build cache each deploy).
 2. Verify-step polls `https://api.ai-budget.pl/api/v1/health` for up to 120s
    and fails the run with log dump if the service does not become healthy.
 
@@ -426,13 +427,22 @@ Do not re-enable the snap version. The system data root is
 
 ### Disk hygiene
 
+`scripts/deploy.sh` already runs `docker image prune -f` + `docker builder prune -af`
+on every deploy — the build cache was the main cause of the disk reaching 89%
+(ABA-168), since images are built on the VPS. Manual cleanup is rarely needed now:
+
 ```bash
 journalctl --vacuum-size=500M    # cap journal logs (~2-3 GB savings)
 apt-get clean                    # apt cache (~400 MB)
-docker builder prune -f          # build cache only (safe; no volumes)
+docker builder prune -af         # all build cache (safe; no volumes)
 docker image prune -f            # dangling untagged images
 # NEVER: docker system prune --volumes  (would wipe postgres data)
 ```
+
+To investigate what is consuming disk without SSHing in yourself, run the
+**Infra Diagnostics** workflow (`.github/workflows/infra-diagnostics.yml`,
+manual `workflow_dispatch`). It runs `scripts/infra-diagnostics.sh` over SSH and
+prints `df -h`, `docker system df`, and a `du` breakdown to the run log.
 
 ## Database Backups
 
