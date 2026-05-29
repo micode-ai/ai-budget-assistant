@@ -136,9 +136,17 @@ export class BackupsService {
     const skippedCounts: Record<string, number> = {};
     const errors: string[] = [];
 
+    // Maps a backup category id to the category id it resolved to in THIS
+    // account (an existing match or a freshly-created row). Restore never reuses
+    // the source primary keys — they are global and collide when importing into
+    // any account that already holds those rows — so expense/income.categoryId
+    // references must be remapped through this.
+    let categoryIdMap = new Map<string, string>();
+
     // Restore categories first (others may reference them)
     if (backup.data.categories?.length) {
-      const { restored, skipped, errs } = await this.restoreCategories(accountId, userId, backup.data.categories, dto.overwrite);
+      const { restored, skipped, errs, idMap } = await this.restoreCategories(accountId, userId, backup.data.categories, dto.overwrite);
+      categoryIdMap = idMap;
       restoredCounts.categories = restored;
       skippedCounts.categories = skipped;
       errors.push(...errs);
@@ -178,7 +186,7 @@ export class BackupsService {
 
     // Restore expenses (with items, tags, splits, projects)
     if (backup.data.expenses?.length) {
-      const { restored, skipped, errs } = await this.restoreExpenses(accountId, userId, backup.data.expenses, dto.overwrite);
+      const { restored, skipped, errs } = await this.restoreExpenses(accountId, userId, backup.data.expenses, dto.overwrite, categoryIdMap);
       restoredCounts.expenses = restored;
       skippedCounts.expenses = skipped;
       errors.push(...errs);
@@ -186,7 +194,7 @@ export class BackupsService {
 
     // Restore incomes
     if (backup.data.incomes?.length) {
-      const { restored, skipped, errs } = await this.restoreIncomes(accountId, userId, backup.data.incomes, dto.overwrite);
+      const { restored, skipped, errs } = await this.restoreIncomes(accountId, userId, backup.data.incomes, dto.overwrite, categoryIdMap);
       restoredCounts.incomes = restored;
       skippedCounts.incomes = skipped;
       errors.push(...errs);
@@ -225,26 +233,49 @@ export class BackupsService {
   private async restoreCategories(accountId: string, userId: string, categories: any[], overwrite: boolean) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
+    const idMap = new Map<string, string>();
+    const createdIds = new Set<string>(); // backup ids that were freshly created (need a parentId pass)
+
+    // Pass 1: match by (name, type) or create fresh. parentId is set in pass 2
+    // once every category has a resolved target id.
     for (const cat of categories) {
       try {
         const existing = await this.prisma.category.findFirst({
           where: { accountId, name: cat.name, type: cat.type },
         });
-        if (existing && !overwrite) { skipped++; continue; }
-        if (existing && overwrite) {
+        if (existing) {
+          idMap.set(cat.id, existing.id);
+          if (!overwrite) { skipped++; continue; }
           await this.prisma.category.update({
             where: { id: existing.id },
-            data: { icon: cat.icon, color: cat.color, parentId: cat.parentId, encryptedPayload: cat.encryptedPayload, encryptionKeyVersion: cat.encryptionKeyVersion },
+            data: { icon: cat.icon, color: cat.color, encryptedPayload: cat.encryptedPayload, encryptionKeyVersion: cat.encryptionKeyVersion },
           });
         } else {
-          await this.prisma.category.create({
-            data: { id: cat.id, accountId, userId, name: cat.name, icon: cat.icon, color: cat.color, type: cat.type, parentId: cat.parentId, isSystem: false, encryptedPayload: cat.encryptedPayload, encryptionKeyVersion: cat.encryptionKeyVersion },
+          const created = await this.prisma.category.create({
+            // No `id` — let the DB generate one. Reusing the backup's global id
+            // collides whenever that category still exists in another account.
+            data: { accountId, userId, name: cat.name, icon: cat.icon, color: cat.color, type: cat.type, isSystem: false, encryptedPayload: cat.encryptedPayload, encryptionKeyVersion: cat.encryptionKeyVersion },
           });
+          idMap.set(cat.id, created.id);
+          createdIds.add(cat.id);
         }
         restored++;
       } catch (e) { errs.push(`category ${cat.name}: ${e instanceof Error ? e.message : String(e)}`); }
     }
-    return { restored, skipped, errs };
+
+    // Pass 2: wire up parent links on the categories we created, remapping the
+    // parent's backup id to its new id.
+    for (const cat of categories) {
+      if (!cat.parentId || !createdIds.has(cat.id)) continue;
+      const targetId = idMap.get(cat.id);
+      const newParentId = idMap.get(cat.parentId);
+      if (!targetId || !newParentId) continue;
+      try {
+        await this.prisma.category.update({ where: { id: targetId }, data: { parentId: newParentId } });
+      } catch (e) { errs.push(`category parent ${cat.name}: ${e instanceof Error ? e.message : String(e)}`); }
+    }
+
+    return { restored, skipped, errs, idMap };
   }
 
   private async restoreTags(accountId: string, tags: any[], overwrite: boolean) {
@@ -257,7 +288,7 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.tag.update({ where: { id: existing.id }, data: { color: tag.color, icon: tag.icon, encryptedPayload: tag.encryptedPayload, encryptionKeyVersion: tag.encryptionKeyVersion } });
         } else {
-          await this.prisma.tag.create({ data: { id: tag.id, accountId, name: tag.name, color: tag.color, icon: tag.icon, usageCount: tag.usageCount || 0, encryptedPayload: tag.encryptedPayload, encryptionKeyVersion: tag.encryptionKeyVersion } });
+          await this.prisma.tag.create({ data: { accountId, name: tag.name, color: tag.color, icon: tag.icon, usageCount: tag.usageCount || 0, encryptedPayload: tag.encryptedPayload, encryptionKeyVersion: tag.encryptionKeyVersion } });
         }
         restored++;
       } catch (e) { errs.push(`tag ${tag.name}: ${e instanceof Error ? e.message : String(e)}`); }
@@ -275,7 +306,7 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.project.update({ where: { id: existing.id }, data: { name: proj.name, description: proj.description, color: proj.color, icon: proj.icon, startDate: proj.startDate, endDate: proj.endDate, budget: proj.budget, currencyCode: proj.currencyCode, isArchived: proj.isArchived, encryptedPayload: proj.encryptedPayload, encryptionKeyVersion: proj.encryptionKeyVersion } });
         } else {
-          await this.prisma.project.create({ data: { id: proj.id, accountId, clientId: proj.clientId, name: proj.name, description: proj.description, color: proj.color, icon: proj.icon, startDate: proj.startDate, endDate: proj.endDate, budget: proj.budget, currencyCode: proj.currencyCode, isArchived: proj.isArchived || false, encryptedPayload: proj.encryptedPayload, encryptionKeyVersion: proj.encryptionKeyVersion } });
+          await this.prisma.project.create({ data: { accountId, clientId: proj.clientId, name: proj.name, description: proj.description, color: proj.color, icon: proj.icon, startDate: proj.startDate, endDate: proj.endDate, budget: proj.budget, currencyCode: proj.currencyCode, isArchived: proj.isArchived || false, encryptedPayload: proj.encryptedPayload, encryptionKeyVersion: proj.encryptionKeyVersion } });
         }
         restored++;
       } catch (e) { errs.push(`project ${proj.name}: ${e instanceof Error ? e.message : String(e)}`); }
@@ -293,7 +324,7 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.budget.update({ where: { id: existing.id }, data: { name: b.name, amount: b.amount, currencyCode: b.currencyCode, period: b.period, startDate: b.startDate, endDate: b.endDate, alertThreshold: b.alertThreshold, isActive: b.isActive, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
         } else {
-          await this.prisma.budget.create({ data: { id: b.id, accountId, userId, clientId: b.clientId, name: b.name, amount: b.amount, currencyCode: b.currencyCode || 'USD', period: b.period || 'monthly', startDate: b.startDate, alertThreshold: b.alertThreshold ?? 80, isActive: b.isActive ?? true, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
+          await this.prisma.budget.create({ data: { accountId, userId, clientId: b.clientId, name: b.name, amount: b.amount, currencyCode: b.currencyCode || 'USD', period: b.period || 'monthly', startDate: b.startDate, alertThreshold: b.alertThreshold ?? 80, isActive: b.isActive ?? true, encryptedPayload: b.encryptedPayload, encryptionKeyVersion: b.encryptionKeyVersion } });
         }
         restored++;
       } catch (e) { errs.push(`budget ${b.name}: ${e instanceof Error ? e.message : String(e)}`); }
@@ -311,7 +342,7 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.walletBalance.update({ where: { id: existing.id }, data: { initialAmount: w.initialAmount, encryptedPayload: w.encryptedPayload, encryptionKeyVersion: w.encryptionKeyVersion } });
         } else {
-          await this.prisma.walletBalance.create({ data: { id: w.id, accountId, userId, clientId: w.clientId, currencyCode: w.currencyCode, initialAmount: w.initialAmount, encryptedPayload: w.encryptedPayload, encryptionKeyVersion: w.encryptionKeyVersion } });
+          await this.prisma.walletBalance.create({ data: { accountId, userId, clientId: w.clientId, currencyCode: w.currencyCode, initialAmount: w.initialAmount, encryptedPayload: w.encryptedPayload, encryptionKeyVersion: w.encryptionKeyVersion } });
         }
         restored++;
       } catch (e) { errs.push(`wallet ${w.currencyCode}: ${e instanceof Error ? e.message : String(e)}`); }
@@ -319,7 +350,7 @@ export class BackupsService {
     return { restored, skipped, errs };
   }
 
-  private async restoreExpenses(accountId: string, userId: string, expenses: any[], overwrite: boolean) {
+  private async restoreExpenses(accountId: string, userId: string, expenses: any[], overwrite: boolean, categoryIdMap: Map<string, string>) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
     for (const exp of expenses) {
@@ -328,7 +359,9 @@ export class BackupsService {
         if (existing && !overwrite) { skipped++; continue; }
 
         const data = {
-          userId, accountId, clientId: exp.clientId, categoryId: exp.categoryId,
+          userId, accountId, clientId: exp.clientId,
+          // Remap to this account's category id; null if the category wasn't restored.
+          categoryId: exp.categoryId ? (categoryIdMap.get(exp.categoryId) ?? null) : null,
           amount: exp.amount, discountAmount: exp.discountAmount, currencyCode: exp.currencyCode || 'USD',
           description: exp.description, notes: exp.notes, date: new Date(exp.date), time: exp.time,
           locationLat: exp.locationLat, locationLng: exp.locationLng, receiptUrl: exp.receiptUrl,
@@ -339,7 +372,8 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.expense.update({ where: { id: existing.id }, data });
         } else {
-          await this.prisma.expense.create({ data: { id: exp.id, ...data } });
+          // No `id` — let the DB generate one (reusing the global backup id collides).
+          await this.prisma.expense.create({ data });
         }
         restored++;
       } catch (e) { errs.push(`expense ${exp.clientId}: ${e instanceof Error ? e.message : String(e)}`); }
@@ -347,7 +381,7 @@ export class BackupsService {
     return { restored, skipped, errs };
   }
 
-  private async restoreIncomes(accountId: string, userId: string, incomes: any[], overwrite: boolean) {
+  private async restoreIncomes(accountId: string, userId: string, incomes: any[], overwrite: boolean, categoryIdMap: Map<string, string>) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
     for (const inc of incomes) {
@@ -356,7 +390,8 @@ export class BackupsService {
         if (existing && !overwrite) { skipped++; continue; }
 
         const data = {
-          userId, accountId, clientId: inc.clientId, categoryId: inc.categoryId,
+          userId, accountId, clientId: inc.clientId,
+          categoryId: inc.categoryId ? (categoryIdMap.get(inc.categoryId) ?? null) : null,
           amount: inc.amount, currencyCode: inc.currencyCode || 'USD',
           description: inc.description, notes: inc.notes, date: new Date(inc.date),
           encryptedPayload: inc.encryptedPayload, encryptionKeyVersion: inc.encryptionKeyVersion,
@@ -365,7 +400,7 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.income.update({ where: { id: existing.id }, data });
         } else {
-          await this.prisma.income.create({ data: { id: inc.id, ...data } });
+          await this.prisma.income.create({ data });
         }
         restored++;
       } catch (e) { errs.push(`income ${inc.clientId}: ${e instanceof Error ? e.message : String(e)}`); }
@@ -392,7 +427,7 @@ export class BackupsService {
         if (existing && overwrite) {
           await this.prisma.currencyExchange.update({ where: { id: existing.id }, data });
         } else {
-          await this.prisma.currencyExchange.create({ data: { id: ex.id, ...data } });
+          await this.prisma.currencyExchange.create({ data });
         }
         restored++;
       } catch (e) { errs.push(`exchange ${ex.clientId}: ${e instanceof Error ? e.message : String(e)}`); }
