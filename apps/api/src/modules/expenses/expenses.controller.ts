@@ -63,6 +63,16 @@ export class ExpensesController {
     return this.expensesService.findOne(req.accountId, id);
   }
 
+  // `bulk` MUST be declared before the `:id` PATCH routes below: Express matches in
+  // declaration order, so a `:id` route placed first would capture `/expenses/bulk`
+  // (routing it to update() with id="bulk") and silently break bulk delete/update.
+  // Covered by expenses.controller.spec.ts.
+  @Patch('bulk')
+  @UseGuards(new ViewerBlockGuard())
+  async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateExpensesDto) {
+    return this.expensesService.bulkUpdate(req.accountId, dto);
+  }
+
   @Patch(':id')
   @UseGuards(new ViewerBlockGuard())
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateExpenseDto) {
@@ -81,12 +91,6 @@ export class ExpensesController {
   @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.remove(req.accountId, id);
-  }
-
-  @Patch('bulk')
-  @UseGuards(new ViewerBlockGuard())
-  async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateExpensesDto) {
-    return this.expensesService.bulkUpdate(req.accountId, dto);
   }
 
   @Patch(':id/stop-recurring')
