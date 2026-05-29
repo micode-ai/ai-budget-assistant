@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
+import { SetWalletBalanceDto } from './dto';
 
 @Controller('wallet')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -21,7 +22,7 @@ export class WalletController {
 
   @Post()
   @UseGuards(new ViewerBlockGuard())
-  async setBalance(@Req() req: AuthenticatedRequest, @Body() dto: any) {
+  async setBalance(@Req() req: AuthenticatedRequest, @Body() dto: SetWalletBalanceDto) {
     return this.walletService.setBalance(req.accountId, req.user.id, dto);
   }
 

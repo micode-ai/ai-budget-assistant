@@ -15,6 +15,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
+import { CreateBudgetDto, UpdateBudgetDto, BudgetFiltersDto } from './dto';
 
 @Controller('budgets')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -23,12 +24,12 @@ export class BudgetsController {
 
   @Post()
   @UseGuards(new ViewerBlockGuard())
-  async create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
+  async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateBudgetDto) {
     return this.budgetsService.create(req.accountId, req.user.id, dto);
   }
 
   @Get()
-  async findAll(@Req() req: AuthenticatedRequest, @Query() filters: any) {
+  async findAll(@Req() req: AuthenticatedRequest, @Query() filters: BudgetFiltersDto) {
     return this.budgetsService.findAll(req.accountId, filters);
   }
 
@@ -53,7 +54,7 @@ export class BudgetsController {
 
   @Patch(':id')
   @UseGuards(new ViewerBlockGuard())
-  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
+  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateBudgetDto) {
     return this.budgetsService.update(req.accountId, id, dto);
   }
 

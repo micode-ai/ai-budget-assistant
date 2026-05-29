@@ -16,6 +16,11 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
+import {
+  CreateCurrencyExchangeDto,
+  UpdateCurrencyExchangeDto,
+  CurrencyExchangeFiltersDto,
+} from './dto';
 
 @Controller('currency-exchanges')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -27,12 +32,12 @@ export class CurrencyExchangeController {
 
   @Post()
   @UseGuards(new ViewerBlockGuard())
-  async create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
+  async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateCurrencyExchangeDto) {
     return this.exchangeService.create(req.accountId, req.user.id, dto);
   }
 
   @Get()
-  async findAll(@Req() req: AuthenticatedRequest, @Query() filters: any) {
+  async findAll(@Req() req: AuthenticatedRequest, @Query() filters: CurrencyExchangeFiltersDto) {
     return this.exchangeService.findAll(req.accountId, filters);
   }
 
@@ -48,7 +53,7 @@ export class CurrencyExchangeController {
 
   @Patch(':id')
   @UseGuards(new ViewerBlockGuard())
-  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
+  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateCurrencyExchangeDto) {
     return this.exchangeService.update(req.accountId, id, dto);
   }
 

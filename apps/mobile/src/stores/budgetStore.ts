@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Budget, BudgetProgress, BudgetCategoryProgress, BudgetCategoryAllocation, BudgetPeriod, Currency, SyncStatus, BudgetHistoryEntry } from '@budget/shared-types';
-import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { generateUUID, computeBudgetPeriod } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
@@ -441,36 +441,8 @@ export const useBudgetStore = create<BudgetState>()(
 
       const expenses = useExpenseStore.getState().expenses.filter((e) => !e.isDeleted);
 
-      // Get period dates
-      let periodStart: Date;
-      let periodEnd: Date;
       const now = referenceDate ?? new Date();
-
-      switch (budget.period) {
-        case 'daily':
-          periodStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-          periodEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-          break;
-        case 'weekly':
-          periodStart = getStartOfWeek(now);
-          periodEnd = getEndOfWeek(now);
-          break;
-        case 'monthly':
-          periodStart = getStartOfMonth(now);
-          periodEnd = getEndOfMonth(now);
-          break;
-        case 'yearly':
-          periodStart = new Date(now.getFullYear(), 0, 1);
-          periodEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
-          break;
-        case 'custom':
-          periodStart = new Date(budget.startDate);
-          periodEnd = budget.endDate ? new Date(budget.endDate) : now;
-          break;
-        default:
-          periodStart = getStartOfMonth(now);
-          periodEnd = getEndOfMonth(now);
-      }
+      const { periodStart, periodEnd } = computeBudgetPeriod(budget, now);
 
       // Filter expenses for this budget period and matching currency
       let periodExpenses = expenses.filter((e) => {

@@ -1,11 +1,17 @@
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { CreateAccountTransferDto, UpdateAccountTransferDto } from './dto';
 
 @Injectable()
 export class AccountTransferService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId: string, dto: any) {
+  async create(accountId: string, userId: string, dto: CreateAccountTransferDto) {
+    // The current account must be one of the two sides of the transfer
+    if (dto.fromAccountId !== accountId && dto.toAccountId !== accountId) {
+      throw new ForbiddenException('Current account must be a party to the transfer');
+    }
+
     // Validate user is member of both accounts
     const fromMembership = await this.prisma.accountMember.findUnique({
       where: { accountId_userId: { accountId: dto.fromAccountId, userId } },
@@ -62,23 +68,31 @@ export class AccountTransferService {
     });
   }
 
-  async findAll(userId: string) {
+  async findAll(accountId: string, userId: string) {
     return this.prisma.accountTransfer.findMany({
-      where: { userId, isDeleted: false },
+      where: {
+        userId,
+        isDeleted: false,
+        OR: [{ fromAccountId: accountId }, { toAccountId: accountId }],
+      },
       orderBy: { date: 'desc' },
     });
   }
 
-  async update(userId: string, id: string, dto: any) {
+  async update(accountId: string, userId: string, id: string, dto: UpdateAccountTransferDto) {
     const transfer = await this.prisma.accountTransfer.findFirst({
-      where: { id, userId, isDeleted: false },
+      where: {
+        id,
+        userId,
+        isDeleted: false,
+        OR: [{ fromAccountId: accountId }, { toAccountId: accountId }],
+      },
     });
     if (!transfer) throw new NotFoundException('Transfer not found');
 
     return this.prisma.$transaction(async (tx) => {
       const countAsIncome = dto.countAsIncome ?? transfer.countAsIncome;
 
-      // Handle countAsIncome toggle
       if (countAsIncome && !transfer.countAsIncome) {
         // Turned ON: create linked income
         const income = await tx.income.create({
@@ -103,7 +117,7 @@ export class AccountTransferService {
           },
         });
       } else if (!countAsIncome && transfer.countAsIncome && transfer.linkedIncomeId) {
-        // Turned OFF: delete linked income
+        // Turned OFF: soft-delete linked income
         await tx.income.update({
           where: { id: transfer.linkedIncomeId },
           data: { isDeleted: true, syncVersion: { increment: 1 } },
@@ -118,7 +132,7 @@ export class AccountTransferService {
           },
         });
       } else {
-        // No toggle — just update fields; also update linked income if it exists
+        // No toggle — update fields; keep linked income in sync if present
         if (transfer.linkedIncomeId && countAsIncome) {
           await tx.income.update({
             where: { id: transfer.linkedIncomeId },
@@ -142,8 +156,8 @@ export class AccountTransferService {
     });
   }
 
-  private buildUpdateData(dto: any) {
-    const data: any = {};
+  private buildUpdateData(dto: UpdateAccountTransferDto) {
+    const data: Record<string, unknown> = {};
     if (dto.fromAmount !== undefined) data.fromAmount = dto.fromAmount;
     if (dto.toAmount !== undefined) data.toAmount = dto.toAmount;
     if (dto.exchangeRate !== undefined) data.exchangeRate = dto.exchangeRate;
@@ -152,14 +166,18 @@ export class AccountTransferService {
     return data;
   }
 
-  async remove(userId: string, id: string) {
+  async remove(accountId: string, userId: string, id: string) {
     const transfer = await this.prisma.accountTransfer.findFirst({
-      where: { id, userId, isDeleted: false },
+      where: {
+        id,
+        userId,
+        isDeleted: false,
+        OR: [{ fromAccountId: accountId }, { toAccountId: accountId }],
+      },
     });
     if (!transfer) throw new NotFoundException('Transfer not found');
 
     await this.prisma.$transaction(async (tx) => {
-      // Soft-delete the linked income if this transfer was counted as income
       if (transfer.countAsIncome && transfer.linkedIncomeId) {
         await tx.income.update({
           where: { id: transfer.linkedIncomeId },

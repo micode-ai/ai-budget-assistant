@@ -2,7 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
 import { ExpensesService } from '../../expenses/expenses.service';
+import { CreateExpenseDto, ExpenseFiltersDto } from '../../expenses/dto';
 import { IncomesService } from '../../incomes/incomes.service';
+import { CreateIncomeDto } from '../../incomes/dto';
 import { BudgetsService } from '../../budgets/budgets.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { AnalyticsService } from '../../analytics/analytics.service';
@@ -290,7 +292,7 @@ export class AiToolsService {
     accountId: string,
     userId: string,
   ): Promise<ChatActionResult> {
-    const dto = {
+    const dto: CreateExpenseDto = {
       localId: randomUUID(),
       amount: Number(data.amount),
       currencyCode: String(data.currencyCode),
@@ -300,7 +302,7 @@ export class AiToolsService {
       source: 'manual',
     };
 
-    const { expense } = await this.expensesService.create(accountId, userId, dto as any);
+    const { expense } = await this.expensesService.create(accountId, userId, dto);
     if (!expense) {
       return { actionType: 'create_expense', success: false, errorMessage: 'Failed to create expense' };
     }
@@ -312,7 +314,7 @@ export class AiToolsService {
         amount: Number(expense.amount),
         currencyCode: expense.currencyCode,
         description: expense.description,
-        category: (expense as any).category?.name,
+        category: expense.category?.name,
         date: expense.date,
       },
     };
@@ -323,7 +325,7 @@ export class AiToolsService {
     accountId: string,
     userId: string,
   ): Promise<ChatActionResult> {
-    const dto = {
+    const dto: CreateIncomeDto = {
       localId: randomUUID(),
       amount: Number(data.amount),
       currencyCode: String(data.currencyCode),
@@ -332,7 +334,7 @@ export class AiToolsService {
       date: String(data.date || new Date().toISOString().split('T')[0]),
     };
 
-    const income = await this.incomesService.create(accountId, userId, dto as any);
+    const income = await this.incomesService.create(accountId, userId, dto);
     if (!income) {
       return { actionType: 'create_income', success: false, errorMessage: 'Failed to create income' };
     }
@@ -414,8 +416,8 @@ export class AiToolsService {
           type: category.type,
         },
       };
-    } catch (error: any) {
-      if (error?.code === 'P2002') {
+    } catch (error: unknown) {
+      if ((error as { code?: string })?.code === 'P2002') {
         return { actionType: 'create_category', success: false, errorMessage: `Category "${name}" already exists` };
       }
       throw error;
@@ -426,7 +428,7 @@ export class AiToolsService {
     data: Record<string, unknown>,
     accountId: string,
   ): Promise<ChatActionResult> {
-    const filters: any = {
+    const filters: ExpenseFiltersDto = {
       startDate: String(data.startDate),
       endDate: String(data.endDate),
       limit: 500,
@@ -441,9 +443,9 @@ export class AiToolsService {
     }
 
     const result = await this.expensesService.findAll(accountId, filters);
-    const expenses = (result as any).data || result;
-    const pagination = (result as any).pagination;
-    const expenseList = (Array.isArray(expenses) ? expenses : []).map((e: any) => ({
+    const expenses = result.data;
+    const pagination = result.pagination;
+    const expenseList = (Array.isArray(expenses) ? expenses : []).map((e) => ({
       id: e.id,
       amount: Number(e.amount),
       currencyCode: e.currencyCode,
@@ -562,9 +564,9 @@ export class AiToolsService {
       actionType: 'get_category_breakdown',
       success: true,
       data: {
-        categories: (summary as any).expensesByCategory || [],
-        totalExpenses: (summary as any).totalExpenses || 0,
-        expensesByCurrency: (summary as any).expensesByCurrency || [],
+        categories: summary.expensesByCategory,
+        totalExpenses: summary.totalExpenses,
+        expensesByCurrency: summary.expensesByCurrency,
         period: { startDate: data.startDate, endDate: data.endDate },
       },
     };
@@ -573,8 +575,8 @@ export class AiToolsService {
   private async executeGetDebtSummary(accountId: string): Promise<ChatActionResult> {
     const summary = await this.debtsService.getDebtSummary(accountId);
     const activeDebts = [
-      ...summary.lent.filter((d: any) => d.status !== 'paid'),
-      ...summary.borrowed.filter((d: any) => d.status !== 'paid'),
+      ...summary.lent.filter(d => d.status !== 'paid'),
+      ...summary.borrowed.filter(d => d.status !== 'paid'),
     ];
     return {
       actionType: 'get_debt_summary',
