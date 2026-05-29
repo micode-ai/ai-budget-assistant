@@ -309,6 +309,7 @@ export default {
   },
   expenseDetail: {
     notFound: 'Витрату не знайдено',
+    amount: 'Сума',
     noDescription: 'Без опису',
     description: 'Опис',
     date: 'Дата',
