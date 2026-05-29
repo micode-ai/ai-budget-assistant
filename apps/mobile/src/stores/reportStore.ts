@@ -228,8 +228,7 @@ export const useReportStore = create<ReportState>()((set, get) => ({
   exportBackup: async (): Promise<BackupExportResult> => {
     set({ isExporting: true, error: null });
     try {
-      const response = await api.exportBackup();
-      const blob = await api.downloadBackupData();
+      const { blob, fileName } = await api.downloadBackupData();
       const content = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result as string);
@@ -242,14 +241,14 @@ export const useReportStore = create<ReportState>()((set, get) => ({
       if (Platform.OS === 'android') {
         try {
           const dir = await Directory.pickDirectoryAsync();
-          const destFile = dir.createFile(response.fileName, 'application/json');
+          const destFile = dir.createFile(fileName, 'application/json');
           destFile.write(content);
           await get().loadBackupHistory();
           set({ isExporting: false });
           // Surface the chosen folder so the user knows where the file is.
-          let location = response.fileName;
+          let location = fileName;
           try {
-            location = `${decodeURIComponent(dir.uri)}/${response.fileName}`;
+            location = `${decodeURIComponent(dir.uri)}/${fileName}`;
           } catch {
             // keep the bare file name if the SAF URI can't be decoded
           }
@@ -272,13 +271,13 @@ export const useReportStore = create<ReportState>()((set, get) => ({
         reader2.readAsDataURL(blob);
       });
 
-      const file = new File(Paths.cache, response.fileName);
+      const file = new File(Paths.cache, fileName);
       file.write(base64, { encoding: 'base64' });
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(file.uri, {
           mimeType: 'application/json',
-          dialogTitle: response.fileName,
+          dialogTitle: fileName,
         });
         await get().loadBackupHistory();
         set({ isExporting: false });

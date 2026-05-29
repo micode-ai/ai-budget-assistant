@@ -11,7 +11,7 @@ export class BackupsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async exportBackup(accountId: string, userId: string) {
+  async exportBackup(accountId: string, userId: string): Promise<{ jsonStr: string; fileName: string }> {
     const account = await this.prisma.account.findUnique({
       where: { id: accountId },
       select: { encryptionEnabled: true, encryptionTier: true },
@@ -55,11 +55,16 @@ export class BackupsService {
       currencyExchanges: currencyExchanges.length,
     };
 
+    const fileName = `backup_${accountId.slice(0, 8)}_${new Date().toISOString().split('T')[0]}.json`;
+
+    // `version` and `data` live at the TOP level so restore (client + server)
+    // can validate and read the file directly — no outer envelope.
     const backup = {
       version: BACKUP_VERSION,
       appVersion: '1.0.0',
       exportedAt: new Date().toISOString(),
       accountId,
+      fileName,
       encrypted: account.encryptionEnabled,
       encryptionTier: account.encryptionTier,
       entityCounts,
@@ -75,6 +80,10 @@ export class BackupsService {
       },
     };
 
+    // Serialize ONCE. The controller streams this string straight to the
+    // response body, so Nest never re-serializes the (potentially large)
+    // object graph — this is what previously tripled peak memory and OOM-crashed
+    // the API container.
     const jsonStr = JSON.stringify(backup);
     const fileSize = Buffer.byteLength(jsonStr, 'utf-8');
 
@@ -95,14 +104,7 @@ export class BackupsService {
       },
     });
 
-    return {
-      backupId: 'export',
-      fileName: `backup_${accountId.slice(0, 8)}_${new Date().toISOString().split('T')[0]}.json`,
-      fileSize,
-      entityCounts,
-      encrypted: account.encryptionEnabled,
-      data: backup,
-    };
+    return { jsonStr, fileName };
   }
 
   async restoreBackup(accountId: string, userId: string, dto: RestoreBackupDto) {

@@ -5,7 +5,6 @@ import type {
   MonthlyDigestResponse,
   UpdateReportPreferencesDto,
   ReportPreferencesResponse,
-  CreateBackupResponse,
   RestoreBackupResponse,
   BackupHistoryItem,
 } from '@budget/shared-types';
@@ -59,13 +58,10 @@ export const reportsApi = {
     });
   },
 
-  exportBackup() {
-    return httpClient.request<CreateBackupResponse>('/backups/export', {
-      method: 'POST',
-    });
-  },
-
-  async downloadBackupData(): Promise<Blob> {
+  // Single call: the backup JSON streams in the body and the filename comes
+  // back in the X-Backup-Filename header (the API no longer round-trips the
+  // whole payload twice).
+  async downloadBackupData(): Promise<{ blob: Blob; fileName: string }> {
     const token = await httpClient.getAuthToken();
     const accountId = httpClient.accountIdGetter?.();
     const headers: Record<string, string> = {};
@@ -80,7 +76,11 @@ export const reportsApi = {
       const error = await response.json().catch(() => ({ message: 'Export failed' }));
       throw new Error(error.message || `HTTP ${response.status}`);
     }
-    return response.blob();
+    const fileName =
+      response.headers.get('X-Backup-Filename') ||
+      `backup_${new Date().toISOString().split('T')[0]}.json`;
+    const blob = await response.blob();
+    return { blob, fileName };
   },
 
   restoreBackup(data: string, overwrite: boolean) {
