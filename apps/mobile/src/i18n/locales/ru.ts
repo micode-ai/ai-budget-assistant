@@ -1456,6 +1456,8 @@ export default {
     saturday: 'Сб',
     exportBackup: 'Создать резервную копию',
     backupExported: 'Резервная копия создана!',
+    backupSavedTo: 'Резервная копия сохранена в:\n{{location}}',
+    backupShared: 'Резервная копия создана. Выберите в меню, куда её сохранить.',
     restoreBackup: 'Импортировать резервную копию',
     exporting: 'Создание...',
     restoring: 'Импорт...',

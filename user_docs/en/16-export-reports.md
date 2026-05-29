@@ -50,6 +50,7 @@ A list of your recently generated reports showing:
 Available on **all plans**:
 
 - **Export Backup** — creates a full JSON backup of your account data (expenses, incomes, budgets, categories, tags, projects, wallets, etc.)
+  - **Where the file is saved:** On Android, a folder picker opens and the backup is written to the folder you choose — the app then shows you the exact path. If you skip the picker (or on iOS), the system share sheet opens instead so you can "Save to Files", Downloads, or a cloud drive. The success message only appears once the file is actually saved or shared.
 - **Restore Backup** — import a previously exported backup
 - If encryption is enabled, encrypted fields are included as-is in the backup
 

@@ -50,6 +50,7 @@ Lista ostatnio wygenerowanych raportow pokazujaca:
 Dostepne na **wszystkich planach**:
 
 - **Eksportuj kopie zapasowa** — tworzy pelna kopie zapasowa JSON danych Twojego konta (wydatki, przychody, budzety, kategorie, tagi, projekty, portfele itp.)
+  - **Gdzie zapisywany jest plik:** W systemie Android otwiera sie wybor folderu, a kopia zapasowa jest zapisywana w wybranym folderze — aplikacja pokazuje nastepnie dokladna sciezke. Jesli pominiesz wybor folderu (lub w systemie iOS), otworzy sie systemowe menu udostepniania, dzieki czemu mozesz "Zapisac w Plikach", Pobranych lub na dysku w chmurze. Komunikat o powodzeniu pojawia sie dopiero po faktycznym zapisaniu lub udostepnieniu pliku.
 - **Przywroc kopie zapasowa** — importuj wczesniej wyeksportowana kopie zapasowa
 - Jesli szyfrowanie jest wlaczone, zaszyfrowane pola sa uwzgledniane w kopii zapasowej w stanie niezmienionym
 
