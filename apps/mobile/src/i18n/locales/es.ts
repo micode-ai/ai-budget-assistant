@@ -309,6 +309,7 @@ export default {
   },
   expenseDetail: {
     notFound: 'Gasto no encontrado',
+    amount: 'Importe',
     noDescription: 'Sin descripción',
     description: 'Descripción',
     date: 'Fecha',

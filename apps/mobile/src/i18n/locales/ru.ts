@@ -309,6 +309,7 @@ export default {
   },
   expenseDetail: {
     notFound: 'Расход не найден',
+    amount: 'Сумма',
     noDescription: 'Без описания',
     description: 'Описание',
     date: 'Дата',

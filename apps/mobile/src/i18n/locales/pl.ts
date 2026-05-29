@@ -309,6 +309,7 @@ export default {
   },
   expenseDetail: {
     notFound: 'Nie znaleziono wydatku',
+    amount: 'Kwota',
     noDescription: 'Brak opisu',
     description: 'Opis',
     date: 'Data',
