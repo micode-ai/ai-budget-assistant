@@ -67,6 +67,10 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3000"
+      # Without this, Node caps the V8 heap at ~half the container memory
+      # (~256 MB at 512 MB), which OOM-crashed the backup export. Raise it to
+      # use the larger limit below while leaving headroom for non-heap memory.
+      NODE_OPTIONS: "--max-old-space-size=768"
       DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ai_budget}?schema=public&connection_limit=10"
       REDIS_URL: "redis://redis:6379"
     depends_on:
@@ -79,7 +83,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512M
+          memory: 1G
 
   admin:
     build:
