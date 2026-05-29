@@ -72,7 +72,10 @@ fi
 echo "=== Health checks ==="
 $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" ps
 
-echo "=== Cleaning up old images ==="
+echo "=== Cleaning up old images and build cache ==="
 docker image prune -f
+# Build cache accumulates several GB per deploy (images are built on the VPS)
+# and was the main cause of the disk filling to 89% (ABA-168). Prune it each deploy.
+docker builder prune -af
 
 echo "=== Deployment complete ==="
