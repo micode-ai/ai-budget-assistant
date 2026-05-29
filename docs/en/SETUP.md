@@ -521,6 +521,41 @@ Used by:
 To override the URL (e.g. for a staging probe), set repo variable
 `HEALTH_URL`.
 
+### Infra watch (disk + containers)
+
+`.github/workflows/infra-watch.yml` runs every 30 minutes:
+
+1. SSHes to the VPS and pipes `scripts/infra-check.sh` over the connection
+   (`ssh … 'bash -s' < scripts/infra-check.sh`), so it does not depend on a
+   deploy having landed.
+2. The script checks root-disk usage on `/` (alerts if above `DISK_THRESHOLD`,
+   default `85`%) and that each prod container (`budget-db-prod`,
+   `budget-redis-prod`, `budget-api-prod`, `budget-admin-prod`) is running and
+   not `unhealthy`.
+3. On any problem, the captured summary is sent to Telegram (same secrets as
+   the uptime monitor). No new secrets are required.
+
+This complements the uptime monitor with disk pressure and per-container
+granularity the HTTP probe cannot see.
+
+### Log rotation
+
+`docker-compose.prod.yml` sets a `json-file` logging driver with
+`max-size: "10m"` / `max-file: "3"` on `postgres`, `redis`, `api`, and `admin`
+(~30 MB cap per container) so container logs cannot fill the disk. The limit
+applies after the next `up -d` recreates the containers.
+
+### Disaster recovery
+
+- `docs/ops/restore-runbook.md` — restore the database onto a working server.
+- `docs/ops/disaster-recovery-runbook.md` — rebuild the whole stack after a
+  total VPS loss.
+
+Both require the **offline `age` private key** (decrypts the backups). The full
+rebuild also requires an **offline copy of `.env.production`** — the prod
+secrets live only on the VPS, so keep a copy in the password manager. Redis is
+cache-only and is intentionally **not** persisted (it repopulates on restart).
+
 ### Sentry
 
 `apps/api/src/instrument.ts` is imported as the very first line of
