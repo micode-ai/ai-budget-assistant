@@ -50,6 +50,7 @@ Una lista de tus informes generados recientemente que muestra:
 Disponible en **todos los planes**:
 
 - **Exportar copia de seguridad** — crea una copia de seguridad JSON completa de los datos de tu cuenta (gastos, ingresos, presupuestos, categorias, etiquetas, proyectos, billeteras, etc.)
+  - **Donde se guarda el archivo:** En Android se abre un selector de carpetas y la copia se escribe en la carpeta que elijas; despues la app te muestra la ruta exacta. Si omites el selector (o en iOS), se abre el menu del sistema para compartir, de modo que puedas "Guardar en Archivos", Descargas o una unidad en la nube. El mensaje de exito solo aparece cuando el archivo se ha guardado o compartido realmente.
 - **Restaurar copia de seguridad** — importa una copia de seguridad exportada previamente
 - Si el cifrado esta activado, los campos cifrados se incluyen tal cual en la copia de seguridad
 

@@ -1456,6 +1456,8 @@ export default {
     saturday: 'Sob',
     exportBackup: 'Utwórz kopię zapasową',
     backupExported: 'Kopia zapasowa utworzona pomyślnie!',
+    backupSavedTo: 'Kopia zapasowa zapisana w:\n{{location}}',
+    backupShared: 'Kopia zapasowa utworzona. Wybierz w menu, gdzie ją zapisać.',
     restoreBackup: 'Importuj kopię zapasową',
     exporting: 'Tworzenie...',
     restoring: 'Importowanie...',

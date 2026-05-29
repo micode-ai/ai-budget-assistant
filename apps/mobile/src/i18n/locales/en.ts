@@ -1453,6 +1453,8 @@ export default {
     saturday: 'Sat',
     exportBackup: 'Create Backup',
     backupExported: 'Backup created successfully!',
+    backupSavedTo: 'Backup saved to:\n{{location}}',
+    backupShared: 'Backup created. Choose where to save it in the menu.',
     restoreBackup: 'Import Backup',
     exporting: 'Creating...',
     restoring: 'Importing...',

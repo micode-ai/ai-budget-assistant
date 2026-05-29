@@ -50,6 +50,7 @@ Une liste de vos rapports recemment generes affichant :
 Disponible sur **tous les plans** :
 
 - **Exporter la sauvegarde** — cree une sauvegarde JSON complete des donnees de votre compte (depenses, revenus, budgets, categories, etiquettes, projets, portefeuilles, etc.)
+  - **Ou le fichier est enregistre :** Sur Android, un selecteur de dossier s'ouvre et la sauvegarde est ecrite dans le dossier que vous choisissez ; l'application affiche ensuite le chemin exact. Si vous ignorez le selecteur (ou sur iOS), le menu de partage du systeme s'ouvre afin que vous puissiez "Enregistrer dans Fichiers", Telechargements ou un espace cloud. Le message de reussite n'apparait qu'une fois le fichier reellement enregistre ou partage.
 - **Restaurer la sauvegarde** — importer une sauvegarde precedemment exportee
 - Si le chiffrement est active, les champs chiffres sont inclus tels quels dans la sauvegarde
 

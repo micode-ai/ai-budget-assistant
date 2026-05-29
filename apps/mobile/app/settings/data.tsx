@@ -107,8 +107,14 @@ export default function DataSettingsScreen() {
 
   const handleExportBackup = async () => {
     try {
-      await exportBackup();
-      Alert.alert(t('common.success'), t('reports.backupExported'));
+      const result = await exportBackup();
+      if (result.status === 'saved') {
+        Alert.alert(t('common.success'), t('reports.backupSavedTo', { location: result.location }));
+      } else if (result.status === 'shared') {
+        Alert.alert(t('common.success'), t('reports.backupShared'));
+      } else {
+        Alert.alert(t('common.error'), result.error || t('errors.unknown'));
+      }
     } catch (e) {
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }

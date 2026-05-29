@@ -1453,6 +1453,8 @@ export default {
     saturday: 'Sam',
     exportBackup: 'Créer une sauvegarde',
     backupExported: 'Sauvegarde créée avec succès !',
+    backupSavedTo: 'Sauvegarde enregistrée dans :\n{{location}}',
+    backupShared: 'Sauvegarde créée. Choisissez où l’enregistrer dans le menu.',
     restoreBackup: 'Importer une sauvegarde',
     exporting: 'Création...',
     restoring: 'Importation...',

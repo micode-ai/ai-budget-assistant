@@ -1453,6 +1453,8 @@ export default {
     saturday: 'Sáb',
     exportBackup: 'Crear copia de seguridad',
     backupExported: '¡Copia de seguridad creada con éxito!',
+    backupSavedTo: 'Copia de seguridad guardada en:\n{{location}}',
+    backupShared: 'Copia de seguridad creada. Elige dónde guardarla en el menú.',
     restoreBackup: 'Importar copia de seguridad',
     exporting: 'Creando...',
     restoring: 'Importando...',

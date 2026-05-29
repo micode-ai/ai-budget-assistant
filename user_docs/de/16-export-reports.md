@@ -50,6 +50,7 @@ Eine Liste deiner kürzlich generierten Berichte mit:
 Verfügbar in **allen Plänen**:
 
 - **Backup exportieren** — erstellt ein vollständiges JSON-Backup deiner Kontodaten (Ausgaben, Einkommen, Budgets, Kategorien, Tags, Projekte, Geldbörsen usw.)
+  - **Wo die Datei gespeichert wird:** Unter Android öffnet sich eine Ordnerauswahl und das Backup wird in den gewählten Ordner geschrieben — die App zeigt dir anschließend den genauen Pfad. Wenn du die Auswahl überspringst (oder unter iOS) öffnet sich stattdessen das System-Teilen-Menü, sodass du es in "Dateien", Downloads oder einem Cloud-Speicher sichern kannst. Die Erfolgsmeldung erscheint erst, wenn die Datei tatsächlich gespeichert oder geteilt wurde.
 - **Backup wiederherstellen** — importiere ein zuvor exportiertes Backup
 - Wenn Verschlüsselung aktiviert ist, werden verschlüsselte Felder unverändert im Backup enthalten
 
