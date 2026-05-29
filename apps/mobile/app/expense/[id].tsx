@@ -24,6 +24,7 @@ import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -44,6 +45,7 @@ export default function ExpenseDetailScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const canEdit = useAccountStore((s) => s.canEdit());
   const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
   const {
     expenses,
@@ -986,18 +988,22 @@ export default function ExpenseDetailScreen() {
             </View>
           ) : (
             <View style={styles.editActions}>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => setIsEditing(true)}
-              >
-                <Ionicons name="pencil" size={22} color={theme.colors.primary} />
-              </TouchableOpacity>
+              {canEdit && (
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => setIsEditing(true)}
+                >
+                  <Ionicons name="pencil" size={22} color={theme.colors.primary} />
+                </TouchableOpacity>
+              )}
               <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
                 <Ionicons name="copy-outline" size={22} color={theme.colors.secondary} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                <Ionicons name="trash" size={22} color={theme.colors.danger} />
-              </TouchableOpacity>
+              {canEdit && (
+                <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+                  <Ionicons name="trash" size={22} color={theme.colors.danger} />
+                </TouchableOpacity>
+              )}
             </View>
           )}
         </View>

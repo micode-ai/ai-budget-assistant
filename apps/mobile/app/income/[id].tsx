@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useIncomeStore } from '@/stores/incomeStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { getTagsForIncome } from '@/db/tagRepository';
 import { TagChip } from '@/components/TagChip';
@@ -27,6 +28,7 @@ export default function IncomeDetailScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const canEdit = useAccountStore((s) => s.canEdit());
   const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
   const { incomes, updateIncome, deleteIncome } = useIncomeStore();
   const { getIncomeCategories, getCategoryById, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
@@ -289,7 +291,7 @@ export default function IncomeDetailScreen() {
                 <Text style={styles.saveButtonText}>{t('common.save')}</Text>
               </TouchableOpacity>
             </>
-          ) : (
+          ) : canEdit ? (
             <>
               <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
                 <Ionicons name="create-outline" size={20} color={theme.colors.primary} />
@@ -300,7 +302,7 @@ export default function IncomeDetailScreen() {
                 <Text style={styles.deleteButtonText} numberOfLines={1}>{t('common.delete')}</Text>
               </TouchableOpacity>
             </>
-          )}
+          ) : null}
         </View>
       </KeyboardAwareScreen>
     </SafeAreaView>
