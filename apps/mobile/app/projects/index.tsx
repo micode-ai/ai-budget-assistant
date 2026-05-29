@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Stack, router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { useProjectStore } from '../../src/stores/projectStore';
+import { useProjectStore } from '@/stores/projectStore';
+import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ProjectsScreen() {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
   const { loadProjects, getActiveProjects, getArchivedProjects } = useProjectStore();
 
   useEffect(() => {
@@ -23,60 +20,62 @@ export default function ProjectsScreen() {
 
   const active = getActiveProjects();
   const archived = getArchivedProjects();
+  const all = [...active, ...archived];
 
   const renderProject = ({ item }: { item: any }) => (
     <TouchableOpacity
       style={styles.projectCard}
       onPress={() => router.push(`/projects/${item.id}`)}
+      activeOpacity={0.7}
     >
-      <View style={[styles.colorBar, { backgroundColor: item.color || '#6366F1' }]} />
+      <View style={[styles.colorBar, { backgroundColor: item.color || theme.colors.primary }]} />
       <View style={styles.projectInfo}>
         <Text style={styles.projectName}>{item.name}</Text>
-        {item.description && (
+        {item.description ? (
           <Text style={styles.projectDesc} numberOfLines={1}>{item.description}</Text>
-        )}
-        {item.budget && (
+        ) : null}
+        {item.budget ? (
           <Text style={styles.projectBudget}>
-            {t('projects.budget') || 'Budget'}: {item.currencyCode || ''} {Number(item.budget).toFixed(2)}
+            {t('projects.budget')}: {item.currencyCode || ''} {Number(item.budget).toFixed(2)}
           </Text>
-        )}
+        ) : null}
       </View>
-      <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+      {item.isArchived ? (
+        <Ionicons name="archive-outline" size={16} color={theme.colors.textTertiary} style={{ marginRight: 4 }} />
+      ) : null}
+      <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen
         options={{
-          title: t('projects.title') || 'Projects',
+          title: t('projects.title'),
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push('/projects/new')} style={{ marginRight: 16 }}>
-              <Ionicons name="add-circle" size={28} color="#6366F1" />
+              <Ionicons name="add-circle" size={28} color={theme.colors.primary} />
             </TouchableOpacity>
           ),
         }}
       />
 
       <FlatList
-        data={[...active, ...archived]}
+        data={all}
         renderItem={renderProject}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
-          active.length > 0 ? (
-            <Text style={styles.sectionTitle}>{t('projects.activeProjects') || 'Active Projects'}</Text>
+          active.length > 0 && archived.length > 0 ? (
+            <Text style={styles.sectionTitle}>{t('projects.activeProjects')}</Text>
           ) : null
         }
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Ionicons name="folder-open-outline" size={48} color="#D1D5DB" />
-            <Text style={styles.emptyText}>{t('projects.noProjects') || 'No projects yet'}</Text>
-            <TouchableOpacity
-              onPress={() => router.push('/projects/new')}
-              style={styles.emptyBtn}
-            >
-              <Text style={styles.emptyBtnText}>{t('projects.createProject') || 'Create Project'}</Text>
+            <Ionicons name="folder-open-outline" size={48} color={theme.colors.textDisabled} />
+            <Text style={styles.emptyText}>{t('projects.noProjects')}</Text>
+            <TouchableOpacity onPress={() => router.push('/projects/new')} style={styles.emptyBtn}>
+              <Text style={styles.emptyBtnText}>{t('projects.createProject')}</Text>
             </TouchableOpacity>
           </View>
         }
@@ -85,27 +84,41 @@ export default function ProjectsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  list: { padding: 16 },
-  sectionTitle: { fontSize: 14, fontWeight: '600', color: '#6B7280', marginBottom: 8 },
+const createStyles = (theme: Theme) => ({
+  container: { flex: 1, backgroundColor: theme.colors.background },
+  list: { padding: theme.spacing[4] },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[2],
+  },
   projectCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 8,
-    overflow: 'hidden',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[2],
+    overflow: 'hidden' as const,
   },
-  colorBar: { width: 4, alignSelf: 'stretch' },
-  projectInfo: { flex: 1, padding: 12 },
-  projectName: { fontSize: 16, fontWeight: '600', color: '#111827' },
-  projectDesc: { fontSize: 13, color: '#6B7280', marginTop: 2 },
-  projectBudget: { fontSize: 12, color: '#6366F1', marginTop: 4, fontWeight: '500' },
-  empty: { alignItems: 'center', paddingTop: 48, gap: 12 },
-  emptyText: { fontSize: 16, color: '#9CA3AF' },
+  colorBar: { width: 4, alignSelf: 'stretch' as const },
+  projectInfo: { flex: 1, padding: theme.spacing[3] },
+  projectName: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textPrimary },
+  projectDesc: { fontSize: 13, color: theme.colors.textSecondary, marginTop: 2 },
+  projectBudget: {
+    fontSize: 12,
+    color: theme.colors.primary,
+    marginTop: 4,
+    fontWeight: '500' as const,
+  },
+  empty: { alignItems: 'center' as const, paddingTop: theme.spacing[12], gap: theme.spacing[3] },
+  emptyText: { fontSize: 16, color: theme.colors.textTertiary },
   emptyBtn: {
-    backgroundColor: '#6366F1', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, marginTop: 8,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing[5],
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.md,
+    marginTop: theme.spacing[2],
   },
-  emptyBtnText: { color: '#fff', fontWeight: '600' },
+  emptyBtnText: { color: theme.colors.textInverse, fontWeight: '600' as const },
 });
