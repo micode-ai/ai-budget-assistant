@@ -73,6 +73,7 @@ interface ExpenseState {
   updateExpense: (id: string, updates: Partial<Expense>) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
+  bulkUpdateExpenses: (ids: string[], patch: { categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }) => Promise<void>;
   stopRecurringExpense: (id: string) => Promise<void>;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
 
@@ -710,6 +711,51 @@ export const useExpenseStore = create<ExpenseState>()(
       api.deleteExpense(id).catch((e) =>
         // Expected offline; local row soft-deleted + marked pending.
         console.warn('Expense delete sync deferred (offline?):', e),
+      );
+    },
+
+    bulkUpdateExpenses: async (ids, patch) => {
+      const { expenses } = get();
+      const now = new Date();
+
+      // Optimistic in-memory update
+      set({
+        expenses: expenses
+          .map((e) => {
+            if (!ids.includes(e.id)) return e;
+            if (patch.isDeleted) return { ...e, isDeleted: true, updatedAt: now };
+            return {
+              ...e,
+              ...(patch.categoryId !== undefined ? { categoryId: patch.categoryId ?? undefined } : {}),
+              ...(patch.tagIds !== undefined
+                ? { tagIds: [...new Set([...(e.tagIds ?? []), ...patch.tagIds])] }
+                : {}),
+              updatedAt: now,
+              syncStatus: 'pending' as SyncStatus,
+            };
+          })
+          .filter((e) => !e.isDeleted),
+      });
+
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) return;
+
+      // Persist to SQLite
+      for (const id of ids) {
+        if (patch.isDeleted) {
+          await softDeleteExpenseInDb(id, now);
+        } else {
+          const updates: Record<string, any> = {};
+          if (patch.categoryId !== undefined) updates.categoryId = patch.categoryId;
+          if (Object.keys(updates).length > 0) {
+            await updateExpenseInDb(id, updates, now, 'pending');
+          }
+        }
+      }
+
+      // Server call (fire-and-forget; failures stay pending for syncPendingExpenses)
+      api.bulkUpdateExpenses({ ids, ...patch }).catch((e: any) =>
+        console.warn('[expenseStore] bulkUpdate server error:', e?.message || e)
       );
     },
 

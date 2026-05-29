@@ -18,7 +18,7 @@ import { SharedActivityService } from '../notifications/shared-activity.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('expenses')
@@ -81,6 +81,12 @@ export class ExpensesController {
   @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.remove(req.accountId, id);
+  }
+
+  @Patch('bulk')
+  @UseGuards(new ViewerBlockGuard())
+  async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateExpensesDto) {
+    return this.expensesService.bulkUpdate(req.accountId, dto);
   }
 
   @Patch(':id/stop-recurring')

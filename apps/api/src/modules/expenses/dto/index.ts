@@ -10,6 +10,8 @@ import {
   Max,
   MaxLength,
   ValidateNested,
+  ArrayMinSize,
+  ArrayMaxSize,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
@@ -358,4 +360,25 @@ export class ExpenseFiltersDto {
   @IsOptional()
   @Transform(({ value }) => value === 'true')
   isDebtRepayment?: boolean;
+}
+
+export class BulkUpdateExpensesDto {
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  @ArrayMaxSize(500)
+  ids: string[];
+
+  @IsOptional()
+  @IsString()
+  categoryId?: string | null;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  tagIds?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  isDeleted?: boolean;
 }
