@@ -44,6 +44,15 @@ export class BackupsService {
       this.prisma.currencyExchange.findMany({ where: { accountId, isDeleted: false } }),
     ]);
 
+    // Drop the binary receipt images. They are stored as DB blobs and dominate
+    // backup size — a Bytes field serializes to a per-byte integer array (~4-6x
+    // its size), which is what pushed backups past the 50 MB limit — and restore
+    // never reads them back. Setting to undefined frees the buffers for GC and
+    // omits them from JSON.stringify.
+    for (const exp of expenses) {
+      (exp as { receiptImage?: Buffer | null }).receiptImage = undefined;
+    }
+
     const entityCounts = {
       expenses: expenses.length,
       incomes: incomes.length,
