@@ -1,5 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, Animated, ScrollView, Image, Alert, ActivityIndicator, TextInput, Modal } from 'react-native';
-import { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +16,7 @@ import { getIntlLocale } from '@/i18n';
 import type { Expense, Income } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { TransactionActionSheet } from '@/components/TransactionActionSheet';
+import { useTagStore } from '@/stores/tagStore';
 
 type ActiveTab = 'expenses' | 'income';
 type DateRange = 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -33,7 +34,13 @@ export default function ExpensesScreen() {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<TextInput>(null);
-  const { loadExpenses, getFilteredExpenses, getDistinctMerchants, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters } = useExpenseStore();
+  // Multi-select mode (expenses tab only)
+  const [isMultiSelect, setIsMultiSelect] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [showBulkCategoryPicker, setShowBulkCategoryPicker] = useState(false);
+  const [showBulkTagPicker, setShowBulkTagPicker] = useState(false);
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+  const { loadExpenses, getFilteredExpenses, getDistinctMerchants, deleteExpense, filters: expenseFilters, setFilters: setExpenseFilters, bulkUpdateExpenses } = useExpenseStore();
   const { loadIncomes, getFilteredIncomes, deleteIncome, filters: incomeFilters, setFilters: setIncomeFilters } = useIncomeStore();
 
   useEffect(() => {
@@ -72,6 +79,10 @@ export default function ExpensesScreen() {
 
   const switchTab = (nextTab: ActiveTab) => {
     setActiveTab(nextTab);
+    setIsMultiSelect(false);
+    setSelectedIds(new Set());
+    setShowBulkCategoryPicker(false);
+    setShowBulkTagPicker(false);
     setSearchVisible(false);
     setSearchQuery('');
     setExpenseFilters({ searchQuery: '' });
@@ -94,6 +105,7 @@ export default function ExpensesScreen() {
     (c) => c.type === (activeTab === 'expenses' ? 'expense' : 'income') && !c.isDeleted
   );
   const merchantList = getDistinctMerchants();
+  const allTags = useTagStore((s) => s.tags);
   const fabAnimation = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -155,7 +167,94 @@ export default function ExpensesScreen() {
     router.push('/expense/receipt');
   };
 
+  const enterMultiSelect = (firstId: string) => {
+    setIsMultiSelect(true);
+    setSelectedIds(new Set([firstId]));
+    setFabOpen(false);
+    fabAnimation.setValue(0);
+    setShowCategoryPicker(false);
+  };
+
+  const exitMultiSelect = () => {
+    setIsMultiSelect(false);
+    setSelectedIds(new Set());
+    setShowBulkCategoryPicker(false);
+    setShowBulkTagPicker(false);
+  };
+
+  const toggleSelection = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      if (next.size === 0) setIsMultiSelect(false);
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedIds(new Set(expenses.map((e) => e.id)));
+  };
+
+  const handleBulkSetCategory = async (categoryId: string) => {
+    if (selectedIds.size === 0) return;
+    setShowBulkCategoryPicker(false);
+    setIsBulkProcessing(true);
+    try {
+      await bulkUpdateExpenses(Array.from(selectedIds), { categoryId });
+      Alert.alert('', t('expenses.bulkCategoryApplied', { count: selectedIds.size }));
+      exitMultiSelect();
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
+  const handleBulkAddTags = async (tagIds: string[]) => {
+    if (selectedIds.size === 0 || tagIds.length === 0) return;
+    setShowBulkTagPicker(false);
+    setIsBulkProcessing(true);
+    try {
+      await bulkUpdateExpenses(Array.from(selectedIds), { tagIds });
+      Alert.alert('', t('expenses.bulkTagsApplied', { count: selectedIds.size }));
+      exitMultiSelect();
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    Alert.alert(
+      t('expenses.bulkDeleteConfirm', { count: selectedIds.size }),
+      t('expenses.bulkDeleteConfirmMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('expenses.bulkDelete'),
+          style: 'destructive',
+          onPress: async () => {
+            setIsBulkProcessing(true);
+            try {
+              await bulkUpdateExpenses(Array.from(selectedIds), { isDeleted: true });
+              Alert.alert('', t('expenses.bulkDeleted', { count: selectedIds.size }));
+              exitMultiSelect();
+            } finally {
+              setIsBulkProcessing(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const handleLongPress = (item: Expense | Income, type: 'expense' | 'income') => {
+    if (type === 'expense' && canEdit) {
+      enterMultiSelect(item.id);
+      return;
+    }
     setSelectedTransaction({
       id: item.id,
       type,
@@ -213,38 +312,55 @@ export default function ExpensesScreen() {
     );
   };
 
-  const renderExpenseItem = ({ item }: { item: Expense }) => (
-    <TouchableOpacity
-      style={styles.expenseCard}
-      onPress={() => router.push(`/expense/${item.id}`)}
-      onLongPress={() => handleLongPress(item, 'expense')}
-      delayLongPress={400}
-    >
-      <View style={styles.expenseIcon}>
-        {item.source === 'ocr' ? (
-          <Image
-            source={require('../../assets/icons/scan-receipt.png')}
-            style={{ width: 24, height: 24 }}
-            resizeMode="contain"
-          />
-        ) : (
-          <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
+  const renderExpenseItem = ({ item }: { item: Expense }) => {
+    const isSelected = selectedIds.has(item.id);
+    return (
+      <TouchableOpacity
+        style={[styles.expenseCard, isMultiSelect && isSelected && styles.expenseCardSelected]}
+        onPress={() => {
+          if (isMultiSelect) {
+            toggleSelection(item.id);
+          } else {
+            router.push(`/expense/${item.id}`);
+          }
+        }}
+        onLongPress={() => handleLongPress(item, 'expense')}
+        delayLongPress={400}
+        activeOpacity={0.7}
+      >
+        {isMultiSelect && (
+          <View style={styles.checkboxContainer}>
+            <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
+              {isSelected && <Ionicons name="checkmark" size={14} color={theme.colors.textInverse} />}
+            </View>
+          </View>
         )}
-      </View>
-      <View style={styles.expenseDetails}>
-        <Text style={styles.expenseDescription} numberOfLines={1}>
-          {item.description || 'Expense'}
+        <View style={styles.expenseIcon}>
+          {item.source === 'ocr' ? (
+            <Image
+              source={require('../../assets/icons/scan-receipt.png')}
+              style={{ width: 24, height: 24 }}
+              resizeMode="contain"
+            />
+          ) : (
+            <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
+          )}
+        </View>
+        <View style={styles.expenseDetails}>
+          <Text style={styles.expenseDescription} numberOfLines={1}>
+            {item.description || 'Expense'}
+          </Text>
+          {item.merchant ? (
+            <Text style={styles.expenseMerchant} numberOfLines={1}>{item.merchant}</Text>
+          ) : null}
+          <Text style={styles.expenseDate}>{formatDate(item.date, undefined, getIntlLocale())}</Text>
+        </View>
+        <Text style={styles.expenseAmount}>
+          -{formatCurrency(item.amount, item.currencyCode)}
         </Text>
-        {item.merchant ? (
-          <Text style={styles.expenseMerchant} numberOfLines={1}>{item.merchant}</Text>
-        ) : null}
-        <Text style={styles.expenseDate}>{formatDate(item.date, undefined, getIntlLocale())}</Text>
-      </View>
-      <Text style={styles.expenseAmount}>
-        -{formatCurrency(item.amount, item.currencyCode)}
-      </Text>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   const renderIncomeItem = ({ item }: { item: Income }) => (
     <TouchableOpacity
@@ -314,34 +430,48 @@ export default function ExpensesScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      {/* Segmented Control */}
-      <View style={styles.segmentedControlRow}>
-        <View style={styles.segmentedControl}>
-          <TouchableOpacity
-            style={[styles.segmentButton, activeTab === 'expenses' && styles.segmentButtonActive]}
-            onPress={() => switchTab('expenses')}
-          >
-            <Text style={[styles.segmentText, activeTab === 'expenses' && styles.segmentTextActive]}>
-              {t('expenses.tabExpenses')}
-            </Text>
+      {/* Multi-select header / Segmented Control */}
+      {isMultiSelect ? (
+        <View style={styles.multiSelectHeader}>
+          <TouchableOpacity onPress={exitMultiSelect} style={styles.multiSelectCancel}>
+            <Text style={styles.multiSelectCancelText}>{t('expenses.bulkCancel')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.segmentButton, activeTab === 'income' && styles.segmentButtonActive]}
-            onPress={() => switchTab('income')}
-          >
-            <Text style={[styles.segmentText, activeTab === 'income' && styles.segmentTextActive]}>
-              {t('expenses.tabIncome')}
-            </Text>
+          <Text style={styles.multiSelectCount}>
+            {t('expenses.bulkSelected', { count: selectedIds.size })}
+          </Text>
+          <TouchableOpacity onPress={selectAll} style={styles.multiSelectSelectAll}>
+            <Text style={styles.multiSelectSelectAllText}>{t('expenses.bulkSelectAll')}</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={toggleSearch} style={styles.searchToggleButton}>
-          <Ionicons
-            name={searchVisible ? 'close' : 'search'}
-            size={20}
-            color={searchVisible ? theme.colors.primary : theme.colors.textSecondary}
-          />
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={styles.segmentedControlRow}>
+          <View style={styles.segmentedControl}>
+            <TouchableOpacity
+              style={[styles.segmentButton, activeTab === 'expenses' && styles.segmentButtonActive]}
+              onPress={() => switchTab('expenses')}
+            >
+              <Text style={[styles.segmentText, activeTab === 'expenses' && styles.segmentTextActive]}>
+                {t('expenses.tabExpenses')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.segmentButton, activeTab === 'income' && styles.segmentButtonActive]}
+              onPress={() => switchTab('income')}
+            >
+              <Text style={[styles.segmentText, activeTab === 'income' && styles.segmentTextActive]}>
+                {t('expenses.tabIncome')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={toggleSearch} style={styles.searchToggleButton}>
+            <Ionicons
+              name={searchVisible ? 'close' : 'search'}
+              size={20}
+              color={searchVisible ? theme.colors.primary : theme.colors.textSecondary}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Search Bar */}
       {searchVisible && (
@@ -565,7 +695,7 @@ export default function ExpensesScreen() {
         />
       )}
 
-      {canEdit && activeTab === 'expenses' && <View style={styles.fabContainer}>
+      {canEdit && activeTab === 'expenses' && !isMultiSelect && <View style={styles.fabContainer}>
         {/* Receipt Button */}
         <Animated.View
           style={[
@@ -736,6 +866,90 @@ export default function ExpensesScreen() {
                 <Text style={styles.merchantEmpty}>{t('expenses.merchantNone')}</Text>
               )}
             </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Bulk action bar */}
+      {isMultiSelect && (
+        <View style={styles.bulkActionBar}>
+          {isBulkProcessing ? (
+            <ActivityIndicator color={theme.colors.primary} />
+          ) : (
+            <>
+              <TouchableOpacity
+                style={styles.bulkActionButton}
+                onPress={() => { setShowBulkTagPicker(false); setShowBulkCategoryPicker(true); }}
+                disabled={selectedIds.size === 0}
+              >
+                <Ionicons name="pricetag-outline" size={20} color={selectedIds.size > 0 ? theme.colors.primary : theme.colors.textDisabled} />
+                <Text style={[styles.bulkActionText, selectedIds.size === 0 && styles.bulkActionTextDisabled]}>
+                  {t('expenses.bulkSetCategory')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.bulkActionButton}
+                onPress={() => { setShowBulkCategoryPicker(false); setShowBulkTagPicker(true); }}
+                disabled={selectedIds.size === 0}
+              >
+                <Ionicons name="bookmark-outline" size={20} color={selectedIds.size > 0 ? theme.colors.accent : theme.colors.textDisabled} />
+                <Text style={[styles.bulkActionText, selectedIds.size === 0 && styles.bulkActionTextDisabled]}>
+                  {t('expenses.bulkAddTag')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.bulkActionButton}
+                onPress={handleBulkDelete}
+                disabled={selectedIds.size === 0}
+              >
+                <Ionicons name="trash-outline" size={20} color={selectedIds.size > 0 ? theme.colors.danger : theme.colors.textDisabled} />
+                <Text style={[styles.bulkActionText, { color: selectedIds.size > 0 ? theme.colors.danger : theme.colors.textDisabled }]}>
+                  {t('expenses.bulkDelete')}
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+      )}
+
+      {/* Bulk Category Picker Modal */}
+      <Modal visible={showBulkCategoryPicker} transparent animationType="slide" onRequestClose={() => setShowBulkCategoryPicker(false)}>
+        <TouchableOpacity style={styles.merchantModalOverlay} activeOpacity={1} onPress={() => setShowBulkCategoryPicker(false)}>
+          <View style={styles.merchantModalSheet}>
+            <View style={styles.merchantModalHeader}>
+              <Text style={styles.merchantModalTitle}>{t('expenses.bulkSetCategory')}</Text>
+              <TouchableOpacity onPress={() => setShowBulkCategoryPicker(false)}>
+                <Text style={styles.merchantDone}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={{ maxHeight: 360 }}>
+              {categories.filter((c) => !c.isDeleted).map((cat) => (
+                <TouchableOpacity
+                  key={cat.id}
+                  style={styles.merchantRow}
+                  onPress={() => handleBulkSetCategory(cat.id)}
+                >
+                  <Ionicons name={(cat.icon as any) || 'pricetag-outline'} size={18} color={theme.colors.primary} style={{ marginRight: 8 }} />
+                  <Text style={styles.merchantRowText}>{cat.name}</Text>
+                </TouchableOpacity>
+              ))}
+              {categories.filter((c) => !c.isDeleted).length === 0 && (
+                <Text style={styles.merchantEmpty}>{t('expenses.categoryAll')}</Text>
+              )}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Bulk Tag Picker Modal */}
+      <Modal visible={showBulkTagPicker} transparent animationType="slide" onRequestClose={() => setShowBulkTagPicker(false)}>
+        <TouchableOpacity style={styles.merchantModalOverlay} activeOpacity={1} onPress={() => setShowBulkTagPicker(false)}>
+          <View style={styles.merchantModalSheet}>
+            <BulkTagPickerSheet
+              tags={allTags}
+              onConfirm={handleBulkAddTags}
+              onClose={() => setShowBulkTagPicker(false)}
+            />
           </View>
         </TouchableOpacity>
       </Modal>
@@ -1115,4 +1329,127 @@ const createStyles = (theme: Theme) => ({
   },
   merchantRowText: { fontSize: 15, color: theme.colors.textPrimary, flex: 1, marginRight: theme.spacing[2] },
   merchantEmpty: { fontSize: 14, color: theme.colors.textTertiary, textAlign: 'center' as const, paddingVertical: theme.spacing[4] },
+  multiSelectHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    marginTop: theme.spacing[3],
+    marginBottom: theme.spacing[1],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    marginHorizontal: theme.spacing[4],
+    ...theme.shadows.sm,
+  },
+  multiSelectCancel: {
+    minWidth: 60,
+  },
+  multiSelectCancelText: {
+    fontSize: 15,
+    color: theme.colors.primary,
+  },
+  multiSelectCount: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  multiSelectSelectAll: {
+    minWidth: 60,
+    alignItems: 'flex-end' as const,
+  },
+  multiSelectSelectAllText: {
+    fontSize: 15,
+    color: theme.colors.primary,
+  },
+  checkboxContainer: {
+    width: 36,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    flexShrink: 0,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  checkboxSelected: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  expenseCardSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  bulkActionBar: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-around' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.borderLight,
+  },
+  bulkActionButton: {
+    flex: 1,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+  },
+  bulkActionText: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  bulkActionTextDisabled: {
+    color: theme.colors.textDisabled,
+  },
 });
+
+function BulkTagPickerSheet({ tags, onConfirm, onClose }: { tags: { id: string; name: string; isDeleted?: boolean }[]; onConfirm: (tagIds: string[]) => void; onClose: () => void }) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const [pickedTagIds, setPickedTagIds] = useState<string[]>([]);
+  const activeTags = tags.filter((tag) => !tag.isDeleted);
+  return (
+    <>
+      <View style={styles.merchantModalHeader}>
+        <Text style={styles.merchantModalTitle}>{t('expenses.bulkAddTag')}</Text>
+        <TouchableOpacity onPress={onClose}>
+          <Text style={styles.merchantDone}>{t('common.cancel')}</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView style={{ maxHeight: 360 }}>
+        {activeTags.map((tag) => {
+          const picked = pickedTagIds.includes(tag.id);
+          return (
+            <TouchableOpacity
+              key={tag.id}
+              style={styles.merchantRow}
+              onPress={() => setPickedTagIds((prev) => picked ? prev.filter((id) => id !== tag.id) : [...prev, tag.id])}
+            >
+              <Ionicons name="bookmark-outline" size={18} color={picked ? theme.colors.accent : theme.colors.textSecondary} style={{ marginRight: 8 }} />
+              <Text style={[styles.merchantRowText, picked && { color: theme.colors.accent }]}>{tag.name}</Text>
+              {picked && <Ionicons name="checkmark" size={18} color={theme.colors.accent} />}
+            </TouchableOpacity>
+          );
+        })}
+        {activeTags.length === 0 && (
+          <Text style={styles.merchantEmpty}>{t('tags.noTags') || 'No tags yet'}</Text>
+        )}
+      </ScrollView>
+      <TouchableOpacity
+        style={[styles.addButton, { margin: 16, opacity: pickedTagIds.length === 0 ? 0.4 : 1 }]}
+        disabled={pickedTagIds.length === 0}
+        onPress={() => onConfirm(pickedTagIds)}
+      >
+        <Text style={styles.addButtonText}>{t('common.done')}</Text>
+      </TouchableOpacity>
+    </>
+  );
+}

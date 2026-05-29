@@ -28,6 +28,13 @@ export const expensesApi = {
     return httpClient.request<void>(`/expenses/${id}`, { method: 'DELETE' });
   },
 
+  bulkUpdateExpenses(data: { ids: string[]; categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }) {
+    return httpClient.request<{ updated: number }>('/expenses/bulk', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
   stopRecurringExpense(id: string) {
     return httpClient.request<{ id: string; isRecurring: boolean }>(`/expenses/${id}/stop-recurring`, {
       method: 'PATCH',

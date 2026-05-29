@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 
@@ -517,6 +517,62 @@ export class ExpensesService {
     this.invalidateChatCache(accountId).catch(() => undefined);
 
     return { success: true };
+  }
+
+  async bulkUpdate(accountId: string, dto: BulkUpdateExpensesDto): Promise<{ updated: number }> {
+    const { ids, categoryId, tagIds, isDeleted } = dto;
+
+    // Validate that all IDs belong to this account
+    const owned = await this.prisma.expense.findMany({
+      where: { id: { in: ids }, accountId, isDeleted: false },
+      select: { id: true },
+    });
+    const ownedIds = owned.map((e) => e.id);
+    if (ownedIds.length === 0) return { updated: 0 };
+
+    const now = new Date();
+    const updateData: Record<string, any> = { updatedAt: now };
+
+    if (isDeleted === true) {
+      updateData.isDeleted = true;
+    } else {
+      if (categoryId !== undefined) {
+        if (categoryId === null) {
+          updateData.categoryId = null;
+        } else {
+          const resolved = await this.resolveCategoryId(categoryId, accountId);
+          updateData.categoryId = resolved;
+        }
+      }
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.expense.updateMany({
+        where: { id: { in: ownedIds }, accountId },
+        data: updateData,
+      });
+
+      if (!isDeleted && tagIds !== undefined && tagIds.length > 0) {
+        const validTags = await tx.tag.findMany({
+          where: { id: { in: tagIds }, accountId },
+          select: { id: true },
+        });
+        const validTagIds = validTags.map((t) => t.id);
+
+        for (const expenseId of ownedIds) {
+          for (const tagId of validTagIds) {
+            await tx.expenseTag.upsert({
+              where: { expenseId_tagId: { expenseId, tagId } },
+              create: { expenseId, tagId },
+              update: {},
+            });
+          }
+        }
+      }
+    });
+
+    await this.invalidateChatCache(accountId);
+    return { updated: ownedIds.length };
   }
 
   async stopRecurring(accountId: string, id: string) {
