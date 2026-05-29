@@ -65,4 +65,4 @@ Record each rehearsal so we know the procedure actually works:
 
 | Date | Tag restored | Scratch row counts OK? | By |
 |------|--------------|------------------------|----|
-| _not yet test-restored_ | | | |
+| 2026-05-29 | backup-2026-05-29 | yes — scratch restore into throwaway postgres:16, row counts verified | Mihail Perevertkin |
