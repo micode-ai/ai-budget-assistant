@@ -3,6 +3,11 @@ services:
     image: postgres:16-alpine
     container_name: budget-db-prod
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -25,6 +30,11 @@ services:
     image: redis:7-alpine
     container_name: budget-redis-prod
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
@@ -62,6 +72,11 @@ services:
       dockerfile: docker/Dockerfile.api
     container_name: budget-api-prod
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     env_file:
       - .env.production
     environment:
@@ -94,6 +109,11 @@ services:
         NEXT_PUBLIC_BASE_PATH: ""
     container_name: budget-admin-prod
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       NODE_ENV: production
       HOSTNAME: 0.0.0.0
