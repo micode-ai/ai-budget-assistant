@@ -1,6 +1,6 @@
-# Import transakcji z banku
+# Importowanie transakcji z banku
 
-> Importuj transakcje z pliku CSV lub wyciągu PDF swojego banku albo z dowolnego banku za pomocą uniwersalnego mapera kolumn.
+> Importuj transakcje z wyciągu CSV lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Wise oraz dowolny bank przez uniwersalny mapper kolumn.
 
 ## Obsługiwane banki
 
@@ -8,55 +8,59 @@
 - **PKO BP** — eksport CSV
 - **Erste Bank** — wyciąg PDF
 - **Alior Bank** — wyciąg PDF
-- **Wise** — eksport CSV (zobacz [Import z Wise](./26-wise-import.md))
-- **Other** — dowolny bank, przez uniwersalny maper kolumn (CSV)
-
-Obsługa kolejnych banków jest sukcesywnie dodawana. Jeśli twojego banku nie ma jeszcze na liście, wybierz **Other** i samodzielnie zmapuj kolumny.
+- **Wise** — eksport CSV (wielowalutowy, konwersje wykrywane automatycznie)
+- **Inny** — dowolny bank, przez uniwersalny mapper kolumn (CSV)
 
 ## Jak importować
 
 1. Przejdź do **Ustawienia → Import transakcji**
-2. Wybierz swój bank z listy (lub **Other (custom CSV)**, jeśli go nie ma)
-3. Wybierz plik wyeksportowany z banku — **CSV** dla mBank/PKO, wyciąg **PDF** dla Erste/Alior
-4. Aplikacja wyświetla podgląd, gdzie każdy wiersz jest oznaczony jako wydatek, przychód lub wymiana walut
-5. Odznacz wiersze, których nie chcesz, a następnie dotknij **Importuj**
+2. Wybierz swój bank z listy (lub **Inny (CSV)**, jeśli go nie ma)
+3. Wybierz plik wyeksportowany z banku
+4. Aplikacja pokazuje podgląd — każdy wiersz oznaczony jako wydatek, dochód lub wymiana waluty
+5. Odznacz niepotrzebne wiersze i kliknij **Importuj**
 
-Aplikacja pomija wiersze, które już istnieją na Twoim koncie — niezależnie od tego, czy importowałeś je wcześniej, czy dodałeś ręcznie — dopasowując je po dacie, kwocie i walucie, dzięki czemu import nie tworzy duplikatów. Dopasowane wiersze są domyślnie odznaczone; zaznacz jeden ponownie, jeśli to naprawdę odrębna transakcja.
+Aplikacja pomija wiersze, które już istnieją w koncie, dopasowując po dacie, kwocie i walucie.
 
-## Gdzie znaleźć plik w swoim banku
+## Gdzie znaleźć eksport w swoim banku
 
 - **mBank**: Bankowość internetowa → Historia operacji → Eksport → CSV
 - **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
 - **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
 - **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
+- **Wise**: wise.com → Transactions → Statements and Reports → wybierz zakres dat → CSV → wybierz walutę → Pobierz
 
-## Co zostaje zaimportowane
+> **Wskazówka dla Wise:** Wise generuje jeden CSV na każde saldo walutowe. Importuj każdą walutę osobno. Do 469 dni na eksport.
 
-Każdy wiersz staje się Wydatkiem, Przychodem lub Wymianą walut (gdy aplikacja wykryje sparowaną transakcję FX z tą samą datą w różnych walutach). Kategorie są sugerowane automatycznie dla popularnych sprzedawców (Biedronka, Żabka, Orlen, Lidl, Rossmann i inni) — możesz je później zmienić.
+## Wise — konwersje walut i opłaty
 
-## „Other" — uniwersalny maper CSV
+Przy konwersji walut w Wise (np. 100 USD → EUR) powstają dwa wiersze. Aplikacja automatycznie wykrywa te pary i tworzy jeden rekord **Wymiany walut** (Portfel → Wymiany).
 
-Jeśli twojego banku nie ma na liście, wybierz **Other (custom CSV)**. Aplikacja wyświetli podgląd pliku i poprosi o wskazanie, która kolumna zawiera datę, kwotę i opis. Możesz zapisać to mapowanie z nazwą — kolejny CSV z tym samym układem kolumn zostanie zaimportowany automatycznie.
+Opłaty Wise z kolumny `Total fees` są automatycznie wliczane w kwotę wydatku.
 
-## Historia importów i cofanie
+## Co jest importowane
 
-Sekcja **Historia importów** na dole ekranu **Ustawienia → Importuj transakcje** pokazuje ostatnie 20 importów — bank źródłowy, datę i liczbę utworzonych transakcji.
+Każdy wiersz staje się Wydatkiem, Dochodem lub Wymianą walut. Kategorie są sugerowane automatycznie dla popularnych sklepów. Każdy wiersz jest oznaczony unikalnym ID — ponowny import tego samego pliku jest bezpieczny.
 
-Aby cofnąć niedawny import, naciśnij **strzałkę cofania** (↩) po prawej stronie wiersza. Przed usunięciem zostanie poproszona o potwierdzenie.
+## „Inny" — uniwersalny mapper
 
-- Cofanie jest dostępne przez **30 dni** od pierwotnego importu.
-- Wszystkie transakcje z tego importu zostaną usunięte z Twojego konta.
-- Blokada deduplikacji zostanie wyczyszczona, dzięki czemu możesz ponownie zaimportować ten sam plik.
-- Importy starsze niż 30 dni nie pokazują przycisku cofania.
+Jeśli Twojego banku nie ma na liście, wybierz **Inny (CSV)**. Aplikacja pokaże podgląd pliku i poprosi o wskazanie kolumn z datą, kwotą i opisem. Zapisz to mapowanie — kolejny CSV z takim samym układem kolumn zostanie zaimportowany automatycznie.
 
-## Nie ma twojego banku?
+## Historia importów i Cofnięcie
 
-Na dole ekranu **Ustawienia → Import transakcji** znajdziesz kartę **„Nie ma twojego banku?"**. Dotknij jej, wpisz nazwę banku i dołącz przykład wyciągu, który on udostępnia (CSV lub PDF). Wyślij — wykorzystamy to, żeby dodać obsługę tego banku. Twoje zgłoszenie trafia bezpośrednio do naszego zespołu — nic nie jest publikowane publicznie.
+Sekcja **Poprzednie importy** na dole **Ustawienia → Import transakcji** pokazuje ostatnie 20 importów.
+
+Aby cofnąć import, dotknij **strzałki cofania** (↩) po prawej. Wszystkie transakcje z tego importu zostaną usunięte, a blokada duplikatów zostanie wyczyszczona.
+
+- Cofnięcie jest dostępne przez **30 dni** od importu.
+
+## Nie widzisz swojego banku?
+
+Na dole **Ustawienia → Import transakcji** jest karta **„Nie widzisz swojego banku?"**. Dotknij, podaj nazwę banku i załącz przykładowy wyciąg.
 
 ## Kodowanie
 
-W przypadku plików CSV aplikacja automatycznie wykrywa UTF-8 i Windows-1250 (najpopularniejsze kodowanie polskich banków). Jeśli podgląd pokazuje zniekształcone polskie znaki, ręcznie wybierz kodowanie w maperze. Wyciągi PDF są odczytywane bezpośrednio — wybór kodowania nie jest potrzebny.
+Dla CSV aplikacja automatycznie wykrywa UTF-8 i Windows-1250. Wyciągi PDF są odczytywane bezpośrednio.
 
 ---
 
-*Zobacz też: [Import z Wise](./26-wise-import.md) | [Wydatki i przychody](./03-expenses-and-income.md) | [Ustawienia](./11-settings.md)*
+*Zobacz też: [Wydatki i dochody](./03-expenses-and-income.md) | [Portfel i wymiana](./10-wallet-and-exchange.md) | [Ustawienia](./11-settings.md)*

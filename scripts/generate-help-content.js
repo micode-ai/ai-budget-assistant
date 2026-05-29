@@ -26,12 +26,11 @@ const SECTIONS = [
   '19-fat-finder',
   '20-ai-response-mode',
   '21-widgets',
-  '22-telegram-bot',
+  '22-chat-bots',
   '23-scenario-simulator',
   '24-referral',
-  '25-whatsapp-bot',
-  '26-wise-import',
   '27-bank-import',
+  '28-reference-data',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

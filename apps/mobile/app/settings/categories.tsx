@@ -13,6 +13,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Category } from '@budget/shared-types';
 
@@ -29,6 +30,7 @@ export default function CategoriesSettingsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const styles = useStyles(createStyles);
+  const canEdit = useAccountStore((s) => s.canEdit());
   const {
     getExpenseCategories,
     getIncomeCategories,
@@ -132,8 +134,8 @@ export default function CategoriesSettingsScreen() {
     <View key={category.id} style={styles.row}>
       <TouchableOpacity
         style={styles.rowContent}
-        onPress={() => openEditModal(category)}
-        activeOpacity={0.7}
+        onPress={canEdit ? () => openEditModal(category) : undefined}
+        activeOpacity={canEdit ? 0.7 : 1}
       >
         <View style={[styles.colorDot, { backgroundColor: category.color || theme.colors.textTertiary }]} />
         <Ionicons
@@ -151,9 +153,11 @@ export default function CategoriesSettingsScreen() {
           )}
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => handleDelete(category)} hitSlop={8}>
-        <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
-      </TouchableOpacity>
+      {canEdit && (
+        <TouchableOpacity onPress={() => handleDelete(category)} hitSlop={8}>
+          <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -161,9 +165,11 @@ export default function CategoriesSettingsScreen() {
     <>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{title}</Text>
-        <TouchableOpacity onPress={() => openCreateModal(type)} hitSlop={8}>
-          <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} />
-        </TouchableOpacity>
+        {canEdit && (
+          <TouchableOpacity onPress={() => openCreateModal(type)} hitSlop={8}>
+            <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} />
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.card}>
         {items.length === 0 ? (
