@@ -697,6 +697,8 @@ export const useExpenseStore = create<ExpenseState>()(
     },
 
     deleteExpense: (id) => {
+      if (!useAccountStore.getState().canEdit()) return;
+
       set((state) => ({
         expenses: state.expenses.filter((e) => e.id !== id),
       }));

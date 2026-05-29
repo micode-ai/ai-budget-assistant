@@ -14,8 +14,8 @@ import { getCategoryById as getCategoryFromDb, upsertCategory } from '@/db/categ
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { withTransaction } from '@/db/client';
 import { api } from '@/services/api';
-import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
+import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
 
@@ -385,6 +385,8 @@ export const useIncomeStore = create<IncomeState>()(
     },
 
     deleteIncome: (id) => {
+      if (!useAccountStore.getState().canEdit()) return;
+
       set((state) => ({
         incomes: state.incomes.filter((i) => i.id !== id),
       }));
