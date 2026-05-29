@@ -429,7 +429,7 @@ Do not re-enable the snap version. The system data root is
 
 `scripts/deploy.sh` already runs `docker image prune -f` + `docker builder prune -af`
 on every deploy — the build cache was the main cause of the disk reaching 89%
-(ABA-168), since images are built on the VPS. Manual cleanup is rarely needed now:
+(ABA-165), since images are built on the VPS. Manual cleanup is rarely needed now:
 
 ```bash
 journalctl --vacuum-size=500M    # cap journal logs (~2-3 GB savings)
@@ -446,7 +446,7 @@ prints `df -h`, `docker system df`, and a `du` breakdown to the run log.
 
 ## Database Backups
 
-Production PostgreSQL is backed up nightly and off-host (ABA-166). The backup
+Production PostgreSQL is backed up nightly and off-host (ABA-163). The backup
 runner never touches live data and holds only the encryption **public** key, so
 even a fully compromised CI cannot read past backups.
 
