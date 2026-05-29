@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { AuthenticatedRequest } from '../../common/types';
 import { AccountRoleGuard, RequireRole } from '../accounts/guards/account-role.guard';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 
 @Controller('categories')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -18,14 +19,14 @@ export class CategoriesController {
   @Post()
   @UseGuards(AccountRoleGuard)
   @RequireRole('editor')
-  async create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
+  async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateCategoryDto) {
     return this.categoriesService.create(req.accountId, req.user.id, dto);
   }
 
   @Patch(':id')
   @UseGuards(AccountRoleGuard)
   @RequireRole('editor')
-  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: any) {
+  async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateCategoryDto) {
     return this.categoriesService.update(req.accountId, id, dto);
   }
 

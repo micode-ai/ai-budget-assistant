@@ -167,6 +167,37 @@ export function formatCompactNumber(value: number): string {
   return value.toString();
 }
 
+// Compute the rolling [periodStart, periodEnd] window for a budget.
+// Shared between the mobile store and (via budget-period.util.ts) the API so
+// all three callers stay in sync on week boundaries and period edges.
+export function computeBudgetPeriod(
+  budget: { period: string; startDate: Date | string; endDate?: Date | string | null },
+  now: Date = new Date(),
+): { periodStart: Date; periodEnd: Date } {
+  switch (budget.period) {
+    case 'daily': {
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      return { periodStart: start, periodEnd: end };
+    }
+    case 'weekly':
+      return { periodStart: getStartOfWeek(now), periodEnd: getEndOfWeek(now) };
+    case 'yearly': {
+      const start = new Date(now.getFullYear(), 0, 1);
+      const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+      return { periodStart: start, periodEnd: end };
+    }
+    case 'custom':
+      return {
+        periodStart: new Date(budget.startDate),
+        periodEnd: budget.endDate ? new Date(budget.endDate) : now,
+      };
+    case 'monthly':
+    default:
+      return { periodStart: getStartOfMonth(now), periodEnd: getEndOfMonth(now) };
+  }
+}
+
 /**
  * Sanitizes a user-supplied string before embedding it in an AI prompt.
  * Prevents prompt injection by removing newlines (the primary injection vector)

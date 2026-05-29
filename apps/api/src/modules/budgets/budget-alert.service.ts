@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { computeBudgetPeriod } from './budget-period.util';
 
 const THRESHOLDS = [50, 80, 100];
 
@@ -150,43 +151,8 @@ export class BudgetAlertService {
     }
   }
 
-  private getCurrentPeriod(budget: any): { periodStart: Date; periodEnd: Date } {
-    const now = new Date();
-    switch (budget.period) {
-      case 'daily':
-        return {
-          periodStart: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-          periodEnd: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59),
-        };
-      case 'weekly': {
-        const dayOfWeek = now.getDay();
-        const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        endOfWeek.setHours(23, 59, 59);
-        return { periodStart: startOfWeek, periodEnd: endOfWeek };
-      }
-      case 'monthly':
-        return {
-          periodStart: new Date(now.getFullYear(), now.getMonth(), 1),
-          periodEnd: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59),
-        };
-      case 'yearly':
-        return {
-          periodStart: new Date(now.getFullYear(), 0, 1),
-          periodEnd: new Date(now.getFullYear(), 11, 31, 23, 59, 59),
-        };
-      case 'custom':
-      default:
-        return {
-          periodStart: budget.startDate,
-          periodEnd: budget.endDate || now,
-        };
-    }
-  }
-
   private async checkBudgetThresholds(accountId: string, budget: any): Promise<void> {
-    const { periodStart, periodEnd } = this.getCurrentPeriod(budget);
+    const { periodStart, periodEnd } = computeBudgetPeriod(budget);
 
     const whereExpenses: any = {
       accountId,
