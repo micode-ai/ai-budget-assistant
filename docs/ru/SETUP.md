@@ -34,6 +34,9 @@ npm install
 
 ```env
 # База данных
+# В продакшене добавьте connection_limit=10 к строке подключения, чтобы
+# ограничить пул соединений Prisma (как в docker-compose.prod.yml),
+# например ...:5432/ai_budget?connection_limit=10
 DATABASE_URL=postgresql://user:password@localhost:5432/budget_assistant
 
 # Redis (опционально)
@@ -49,6 +52,11 @@ OPENAI_API_KEY=sk-ваш-openai-api-ключ
 
 # Сервер
 PORT=3000
+# В dev можно использовать '*'. В ПРОДАКШЕНЕ это должен быть явный список
+# источников через запятую (никогда не '*'): при включённых credentials cors
+# трактует '*' как буквальный origin, поэтому браузер админки не получает
+# Access-Control-Allow-Origin и логин ломается.
+# напр. CORS_ORIGIN=https://admin.ai-budget.pl,https://ai-budget.pl
 CORS_ORIGIN=*
 
 # Push-уведомления используют Expo Push API — дополнительная настройка не требуется.
@@ -58,6 +66,17 @@ CORS_ORIGIN=*
 # uptime-check GitHub Actions workflow для алертов о падениях)
 TELEGRAM_BOT_TOKEN=ваш-токен-telegram-бота
 TELEGRAM_CHAT_ID=ваш-chat-id
+
+# WhatsApp Business Cloud API (Meta). Scope токена: whatsapp_business_messaging.
+WHATSAPP_ACCESS_TOKEN=ваш-meta-access-token
+WHATSAPP_PHONE_NUMBER_ID=ваш-phone-number-id
+WHATSAPP_BUSINESS_ACCOUNT_ID=ваш-business-account-id
+WHATSAPP_VERIFY_TOKEN=ваш-webhook-verify-token
+# HMAC-ключ для проверки подписи входящих вебхуков.
+WHATSAPP_APP_SECRET=ваш-app-secret
+# Показывается в мобильном приложении как wa.me deep link.
+WHATSAPP_BUSINESS_PHONE_NUMBER=+1234567890
+WHATSAPP_API_VERSION=v21.0
 
 # Stripe (подписки). apiVersion в коде зафиксирован на
 # '2026-01-28.clover' — должен совпадать с SDK из package-lock.json.
@@ -418,6 +437,60 @@ docker image prune -f            # dangling untagged образы
 # НИКОГДА: docker system prune --volumes  (затрёт данные postgres)
 ```
 
+## Резервное копирование БД
+
+Production-PostgreSQL резервируется каждую ночь и вне хоста (ABA-166). Раннер
+бэкапа не касается live-данных и держит только **публичный** ключ шифрования,
+поэтому даже полностью скомпрометированный CI не сможет прочитать прошлые
+бэкапы.
+
+### Ночной workflow
+
+`.github/workflows/backup-db.yml` запускается по cron `0 2 * * *` (02:00 UTC),
+а также вручную через `workflow_dispatch`. Выполняется на раннере GitHub Actions
+(не на VPS) и делает:
+
+1. SSH на VPS и `docker exec budget-db-prod pg_dump -Fc` (custom format) —
+   см. `scripts/backup-db.sh`.
+2. Sanity-проверка дампа: минимальный размер (10 КБ) и количество объектов по
+   `pg_restore --list` (≥ 10). Подозрительный дамп валит run.
+3. Шифрование через `age` (асимметричное) публичным ключом получателя — у
+   раннера никогда нет приватного ключа.
+4. Публикация зашифрованного архива как Release-ассета
+   (`ai_budget-YYYY-MM-DD.dump.age`, тег `backup-YYYY-MM-DD`) в **приватном**
+   репозитории бэкапов `BACKUP_REPO`.
+5. Очистка старых бэкапов по схеме GFS (`scripts/prune-backups.sh`):
+   **7 daily** + **4 weekly** (якоря по воскресеньям) + **6 monthly** (якоря на
+   1-е число); всё остальное удаляется.
+6. При сбое — алерт в Telegram через `TELEGRAM_BOT_TOKEN` /
+   `TELEGRAM_CHAT_ID`.
+
+### Охват и RPO
+
+- **RPO ≤ 24 ч** (худший случай = данные, записанные с момента последнего
+  дампа в 02:00 UTC).
+- **Redis НЕ резервируется** — это только кеш, он восстанавливается.
+- **Изображения чеков хранятся в БД**, поэтому `pg_dump` уже включает их;
+  отдельного бэкапа блобов нет.
+
+### Ключ расшифровки (offline)
+
+**Приватный** ключ `age` хранится offline у владельца (например, в менеджере
+паролей). Его **нет** в CI, и это единственное, чем можно расшифровать любой
+бэкап. Потеря ключа = потеря всех бэкапов. Полная процедура восстановления
+(скачать → расшифровать → проверить в scratch-БД → восстановить в продакшен)
+описана в [`docs/ops/restore-runbook.md`](../ops/restore-runbook.md).
+
+### Необходимые GitHub Secrets
+
+| Секрет | Назначение |
+|--------|------------|
+| `AGE_PUBLIC_KEY` | публичный ключ получателя `age1...`, которым шифрует раннер |
+| `BACKUP_REPO` | `owner/repo` приватного репозитория бэкапов с Release-ассетами |
+| `BACKUP_REPO_TOKEN` | PAT с правом `contents:write` на репо бэкапов (публикация + очистка) |
+| `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY` | доступ к VPS для дампа (переиспользуются из deploy) |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | алерты о сбоях (переиспользуются из uptime/ops) |
+
 ## Мониторинг и observability
 
 ### Health-эндпоинт
@@ -488,10 +561,17 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `JWT_REFRESH_EXPIRES_IN` | Время жизни refresh токена | `7d` |
 | `OPENAI_API_KEY` | API ключ OpenAI | обязательно |
 | `PORT` | Порт сервера | `3000` |
-| `CORS_ORIGIN` | Разрешённые источники | `*` |
+| `CORS_ORIGIN` | Разрешённые источники. Прод: явный список через запятую, никогда `*` | `*` |
 | `STRIPE_SECRET_KEY` | Ключ Stripe (apiVersion закреплён `2026-01-28.clover`) | для биллинга |
 | `TELEGRAM_BOT_TOKEN` | Токен Telegram бота (in-app + ops-алерты) | опционально |
 | `TELEGRAM_CHAT_ID` | Chat ID для системных и uptime-уведомлений | опционально |
+| `WHATSAPP_ACCESS_TOKEN` | Access-токен Meta Cloud API (scope `whatsapp_business_messaging`) | опционально |
+| `WHATSAPP_PHONE_NUMBER_ID` | ID номера телефона WhatsApp | опционально |
+| `WHATSAPP_BUSINESS_ACCOUNT_ID` | ID бизнес-аккаунта WhatsApp | опционально |
+| `WHATSAPP_VERIFY_TOKEN` | Токен верификации вебхука | опционально |
+| `WHATSAPP_APP_SECRET` | HMAC-ключ для проверки подписи входящих вебхуков | опционально |
+| `WHATSAPP_BUSINESS_PHONE_NUMBER` | Номер, показываемый как `wa.me` deep link в приложении | опционально |
+| `WHATSAPP_API_VERSION` | Версия Meta Graph API (напр. `v21.0`) | опционально |
 | `SENTRY_DSN` | DSN Sentry; без него SDK работает no-op | опционально |
 
 ### Конфигурация мобильного приложения

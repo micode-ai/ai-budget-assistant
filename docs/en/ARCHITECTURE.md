@@ -47,6 +47,16 @@ The application supports multi-account access with role-based control:
 - **Account scoping**: All data requests include `X-Account-Id` header; `AccountContextGuard` resolves membership and role
 - **Invitations**: Users can be invited to accounts via invite codes with expiration
 
+### Role-Based Access Control
+
+Write access is enforced at multiple layers so a `viewer` can never mutate account-scoped data:
+
+- **`AccountContextGuard`** resolves membership from the `X-Account-Id` header and sets `req.accountId` + `req.accountRole`
+- **`AccountRoleGuard` + `@RequireRole('owner'|'editor')`** — DI-based guard (needs `AccountsModule`) for endpoints that require a specific role
+- **`ViewerBlockGuard`** — a zero-dependency guard (no `AccountsModule` import) applied as `@UseGuards(new ViewerBlockGuard())` on any POST/PATCH/PUT/DELETE that mutates account-scoped data; reads `req.accountRole`
+- **AI chat & bots**: viewer write-actions are blocked in `chat.service.ts` before a pending action is queued; Telegram/WhatsApp user state carries `accountRole` and write handlers check it before executing
+- **Mobile UI gating**: `useAccountStore(s => s.canEdit())` returns `false` for viewers; reference-data and write-action screens hide `+`/pencil/trash controls and disable row press feedback (UI-only — the API still enforces server-side)
+
 ## Mobile Application
 
 ### Technology Stack
@@ -468,11 +478,42 @@ src/
 │   │       ├── format-telegram.ts
 │   │       ├── parse-amount.ts
 │   │       └── resolve-account.ts
-│   └── import-wise/             # Wise CSV statement import
-│       ├── import-wise.module.ts
-│       ├── import-wise.controller.ts
-│       ├── import-wise.service.ts
-│       └── dto/index.ts
+│   ├── import-wise/             # Wise CSV statement import
+│   │   ├── import-wise.module.ts
+│   │   ├── import-wise.controller.ts
+│   │   ├── import-wise.service.ts
+│   │   └── dto/index.ts
+│   ├── import-bank/             # Polish bank CSV/PDF statement import (strategy registry)
+│   │   ├── import-bank.controller.ts
+│   │   ├── import-bank.service.ts
+│   │   ├── parsers/            # per-bank parsers (mbank, pko, ing, millennium, pekao, erste, alior, universal)
+│   │   ├── merchants/         # merchants-pl.ts brand→category hints
+│   │   ├── mapping/           # saved column mappings
+│   │   └── utils/             # polish-amount, polish-date, encoding, fx-pairing, pdf-text
+│   ├── import-batches/         # Import batch history + rollback
+│   │   ├── import-batches.controller.ts
+│   │   └── import-batches.service.ts
+│   ├── backups/                # Full account snapshot export/restore
+│   │   ├── backups.controller.ts
+│   │   ├── backups.service.ts
+│   │   └── dto/index.ts
+│   ├── reports/                # Reports, digests, scheduled emails
+│   │   ├── reports.controller.ts
+│   │   ├── reports.service.ts
+│   │   ├── digest.service.ts
+│   │   └── generators/        # csv / pdf / excel generators
+│   ├── account-transfers/      # Transfers between accounts
+│   ├── debts/                  # Debts & loans, repayments, reminder cron
+│   ├── encryption/             # Client-side E2EE key management
+│   ├── app-versions/           # App version gate (update prompt)
+│   ├── health/                 # Public health check (SELECT 1)
+│   └── whatsapp/               # WhatsApp Business Cloud bot
+│       ├── whatsapp-bot.service.ts
+│       ├── whatsapp-bot.controller.ts
+│       ├── whatsapp-client.service.ts
+│       ├── whatsapp-link.service.ts
+│       ├── handlers/
+│       └── helpers/
 ├── common/
 │   ├── decorators/
 │   ├── filters/
@@ -1027,6 +1068,29 @@ The application uses optimistic version-based synchronization with last-write-wi
 4. **Resolution Strategy**: Stored in SyncLog for auditability
 5. **Manual Resolution**: User can choose which version to keep (future feature)
 
+## Bank & Statement Import
+
+### Bank Import (strategy registry)
+
+The `import-bank` module imports CSV/PDF bank statements through a **strategy registry** of per-bank parsers. Each parser in `parsers/*.parser.ts` implements `BankParser { id, displayName, format?: 'csv'|'pdf', detect(), parse() }` and is registered in `registry.ts`.
+
+- **Banks**: `mbank`, `pko`, `ing`, `millennium`, `pekao` (CSV) + `erste`, `alior` (PDF) + a `universal` column-mapping fallback (`detect()` always returns `false`)
+- **Visible vs hidden** (mobile `BANKS` list): Wise, mBank, PKO, Erste (PDF), Alior (PDF), Other are shown; ING / Millennium / Pekao exist in the registry but are hidden until validated against real exports
+- **Flow** (`ImportBankService`): `decodeCsvBuffer` (UTF-8 / Windows-1250 auto-detect via `iconv-lite`) → parser dispatch (mappingId → bankId → saved fingerprint → auto-detect) → normalized rows → `pairFxRows` (same date, opposite sign, different currency) → `buildExternalRef` → dedup. PDF statements are detected by a `%PDF` header, text-extracted via `pdf-parse`, and routed to PDF parsers (CSV header/mapping/fingerprint steps skipped)
+- **Two dedup layers** in `buildPreviewResponse`: (1) exact `externalRef` match (re-import of the same file); (2) content match on `(date, signedAmountCents, currency)` against all account Expense/Income regardless of source (greedy 1-to-1, FX excluded). Matched rows are flagged `alreadyImported` and auto-unchecked in the preview
+- **Dedup key**: `bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(normalize(desc)).slice(0,8)>`
+- **Saved mappings**: `csv_import_mappings` table (`@@unique([accountId, headerFingerprint])`) persists a column mapping so a recognized layout auto-applies on the next import
+- **Request-a-bank**: `POST /import/bank/request-bank` forwards an optional sample file + bank name to the **ops Telegram chat** (`TELEGRAM_CHAT_ID`), never to the user
+
+Endpoints are guarded by `JwtAuthGuard + AccountContextGuard`. Wise CSV import (`import-wise`) follows the same preview/commit + `externalRef` dedup model, emitting in-wallet FX rows as `CurrencyExchange`.
+
+### Import Batch History & Rollback
+
+Every Wise and bank commit creates an `ImportBatch` row (table `import_batches`) inside the same transaction and stamps each created record with `importBatchId`.
+
+- `GET /import/batches` returns the last 20 batches; each carries `canRollback` (`status === 'committed'` and within a 30-day window)
+- `DELETE /import/batches/:id` rolls back: sets `isDeleted = true` and **clears `externalRef`** on linked rows (so the same file can be re-imported) and marks the batch `rolled_back`
+
 ## AI Integration
 
 ### Model Selection
@@ -1091,6 +1155,16 @@ All user-controlled string fields (expense descriptions, project names, tag name
 
 User context is passed to the model as a structurally isolated JSON data block delimited by `--- USER FINANCIAL DATA ---` / `--- END USER FINANCIAL DATA ---` markers, so the model treats it as data rather than instructions.
 
+### Shared AI Chat
+
+Conversations support a per-conversation opt-in group mode for shared accounts. `ChatConversation` carries `accountId` + `isShared`; chat history is account-scoped (`accountId = X-Account-Id AND (isShared OR userId = me)`).
+
+- **Sharing toggle**: `isShared` is **owner-only** to set (via `PATCH /ai/chat/conversations/:id/shared` or `chat()`'s `initialIsShared`, gated on `accountRole === 'owner'`). Shared conversations are visible to all members; private ones stay creator-only
+- **Mentions**: a message that `@mentions` a member (`{userId}[]`, validated, self excluded) **silences the AI** and pushes a `chat_mention` notification (gated by `notifySharedActivity`) to each mentioned member who is not currently present; a message with no mention gets a normal AI reply
+- **Presence**: tracked in Redis under `chat:presence:{conversationId}:{userId}` (TTL 45s); mobile polls `…/poll?since=` every 4s while a shared conversation is focused and refreshes its own presence key
+- **AI history**: each member's message is prefixed with a sanitized `[Name]: ` so the model can attribute turns
+- **Deep-link**: tapping a `chat_mention` push switches `accountId` and opens the conversation
+
 ## Notifications
 
 ### Push Notifications (Expo Push API)
@@ -1121,6 +1195,20 @@ The Telegram module provides two services:
 - **Account linking**: 6-char codes with 10-minute TTL, stored in `TelegramLinkCode` table. One-to-one mapping: Telegram user ↔ App user
 - **Account context resolution**: `resolve-account.ts` helper detects account names in user messages and overrides the default accountId for that query (without permanently switching). This allows users to query different accounts by mentioning the account name (e.g., "Show expenses in Family")
 - **Webhook/Polling**: Uses webhook mode when `TELEGRAM_WEBHOOK_URL` is set, otherwise falls back to long polling for development
+
+### WhatsApp Integration
+
+The WhatsApp module is a `@Global()` bot on the **Meta Business Cloud API**, running in parallel to Telegram and reusing the same shared services (`ChatService`, `WhisperService`, `OcrService`, `ExpensesService`, `IncomesService`, `CategoriesService`, `SubscriptionsService`). It exposes the same feature set: AI chat, voice transcription, and receipt OCR.
+
+Key differences from Telegram:
+
+- **Webhook-only**: `POST /whatsapp/webhook` (excluded from the `/api/v1` global prefix in `main.ts`). No polling mode
+- **Signature verification**: HMAC-SHA256 over `req.rawBody` (key = `WHATSAPP_APP_SECRET`) on every inbound request
+- **State in Redis** (not in-memory): `wa:msg:{id}` (idempotency, 24h), `wa:pa:{shortId}` (pending actions, 1800s), `wa:receipt:{shortId}` + `wa:awaiting_date:{phone}`, `wa:cat:{shortId}`
+- **Callback IDs use `--` separator** (UUIDs contain single `-`)
+- **Interactive UI**: `WhatsAppClientService.sendButtons` (max 3 × 20 char) / `sendList` (max 10 rows); WhatsApp markdown (`*bold*`, `_italic_`) via `markdownToWhatsApp`
+- **Account linking**: 6-hex code — mobile shows a QR + `wa.me/{phone}?text=link%20{code}` deep link; `CommandHandler.handleLink` is the only command accepted from an unlinked number
+- **Localization**: `helpers/i18n.ts` ports Telegram's keys across 8 languages
 
 ### Email (Mail)
 
@@ -1191,6 +1279,16 @@ The Insights module provides:
 
 1. **Spending Anomalies**: Compares current month's category spending against 3-month average. Categories with >30% increase are flagged.
 2. **Budget Predictions**: Forecasts budget exhaustion dates based on daily burn rate and projects end-of-period totals.
+
+## Merchant Tracking
+
+`Expense.merchant` is a free-text column (Prisma `merchant String?` + `@@index([accountId, merchant])`; mobile SQLite `merchant TEXT`). Income has no merchant field.
+
+- **Auto-fill**: populated from receipt OCR (mobile + Telegram/WhatsApp photo handlers) and bank/Wise import commit; manually editable via the shared `MerchantInput` component (free text + autocomplete from `getDistinctMerchants()`)
+- **Encryption**: encrypted client-side **like `description`** — it lives in `ENCRYPTION_FIELDS.expense.tier1`, so push paths run it through `maybeEncrypt` and the pull merge reads `decrypted.merchant`
+- **Management**: a Settings → **Merchants** screen lists distinct merchants with counts and supports rename / merge / delete (`renameMerchant(from, to|null)` → in-memory update + one account-scoped `bulkRenameMerchant` SQL `UPDATE` → re-sync, which re-encrypts for E2EE)
+- **Capture reconciliation**: OCR and voice pre-fill the merchant via `resolveExistingMerchant()` (exact case-insensitive match snaps to the canonical value)
+- **Filtering is client-side only** (no `?merchant=` API param): `ExpenseFilters.merchants: string[]` multi-select; the Expenses-tab search box also matches merchant substring
 
 ## Gamification
 
@@ -1481,4 +1579,11 @@ The investment module includes GPT-4-powered portfolio insights that analyze hol
 - **Redis Cache**: Frequently accessed data cached
 - **Database Indexes**: Optimized queries on accountId, date, categoryId
 - **Batch Operations**: Sync processes multiple changes at once; notifications sent in batches of 100
-- **Connection Pooling**: Prisma manages DB connections
+- **Connection Pooling**: Prisma manages DB connections; prod `DATABASE_URL` pins `connection_limit=10` to cap the pool
+
+### Caching & Throttling Layer
+
+- **`CacheService`** (`common/cache/cache.service.ts`): a `@Global()` ioredis wrapper. `delByPrefix` uses cursor-based `SCAN` (not the blocking `KEYS`) for safe prefix invalidation
+- **`RedisThrottlerStorage`**: implements the `ThrottlerStorage` v5 interface (INCR + PEXPIRE NX + PTTL pipeline, `keyPrefix: 'throttle:'`), registered via `ThrottlerModule.forRootAsync` so rate limits survive API restarts
+- **UserContext cache**: `UserContextBuilder.build()` caches its result under `uc:{accountId}` (TTL 60s); expense/income mutations call `CacheService.del('uc:{accountId}')` so the next AI request rebuilds promptly
+- **Parallel sync batches**: `SyncService.pushChanges()` processes the `changes[]` array in parallel batches of 10, speeding large resyncs without unbounded contention

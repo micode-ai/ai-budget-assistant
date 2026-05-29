@@ -47,6 +47,16 @@ AI Budget Assistant построен на монорепозитории с дв
 - **Контекст аккаунта**: Все запросы данных включают заголовок `X-Account-Id`; `AccountContextGuard` проверяет членство и роль
 - **Приглашения**: Пользователей можно приглашать в аккаунты по инвайт-кодам с истечением срока действия
 
+### Ролевая модель доступа
+
+Право на запись проверяется на нескольких слоях, чтобы `viewer` никогда не мог изменить данные аккаунта:
+
+- **`AccountContextGuard`** определяет членство по заголовку `X-Account-Id` и устанавливает `req.accountId` + `req.accountRole`
+- **`AccountRoleGuard` + `@RequireRole('owner'|'editor')`** — гард на основе DI (требует `AccountsModule`) для эндпоинтов, требующих конкретной роли
+- **`ViewerBlockGuard`** — гард без зависимостей (без импорта `AccountsModule`), применяется как `@UseGuards(new ViewerBlockGuard())` на любом POST/PATCH/PUT/DELETE, изменяющем данные аккаунта; читает `req.accountRole`
+- **AI-чат и боты**: write-действия для viewer блокируются в `chat.service.ts` до постановки действия в очередь; состояние пользователя Telegram/WhatsApp несёт `accountRole`, и обработчики записи проверяют его перед выполнением
+- **Гейтинг в мобильном UI**: `useAccountStore(s => s.canEdit())` возвращает `false` для viewer; экраны справочных данных и действий записи скрывают кнопки `+`/карандаш/корзина и отключают отклик нажатия на строку (только UI — API всё равно блокирует на сервере)
+
 ## Мобильное приложение
 
 ### Технологический стек
@@ -464,23 +474,53 @@ src/
 │   │   └── dto/index.ts
 │   ├── mail/                    # Email инфраструктура
 │   │   └── mail.service.ts
-│   └── telegram/                # Интеграция с Telegram ботом
-│       ├── telegram.service.ts
-│       ├── telegram-bot.service.ts
-│       ├── telegram-bot.controller.ts
-│       ├── telegram-link.service.ts
-│       ├── types.ts
+│   ├── referrals/               # Реферальная программа
+│   │   ├── referrals.controller.ts
+│   │   ├── referrals.service.ts
+│   │   └── referral-qualification.cron.ts
+│   ├── import-wise/             # Импорт выписок Wise (CSV)
+│   │   ├── import-wise.controller.ts
+│   │   ├── import-wise.service.ts
+│   │   └── dto/index.ts
+│   ├── import-bank/             # Импорт выписок польских банков (CSV/PDF, реестр стратегий)
+│   │   ├── import-bank.controller.ts
+│   │   ├── import-bank.service.ts
+│   │   ├── parsers/            # парсеры по банкам (mbank, pko, ing, millennium, pekao, erste, alior, universal)
+│   │   ├── merchants/         # merchants-pl.ts подсказки бренд→категория
+│   │   ├── mapping/           # сохранённые маппинги колонок
+│   │   └── utils/             # polish-amount, polish-date, encoding, fx-pairing, pdf-text
+│   ├── import-batches/         # История импортов + откат
+│   │   ├── import-batches.controller.ts
+│   │   └── import-batches.service.ts
+│   ├── account-transfers/      # Переводы между аккаунтами
+│   ├── debts/                  # Долги и займы, возвраты, cron напоминаний
+│   ├── encryption/             # Управление ключами клиентского E2EE-шифрования
+│   ├── app-versions/           # Контроль версий приложения (запрос обновления)
+│   ├── health/                 # Публичная проверка работоспособности (SELECT 1)
+│   ├── telegram/                # Интеграция с Telegram ботом
+│   │   ├── telegram.service.ts
+│   │   ├── telegram-bot.service.ts
+│   │   ├── telegram-bot.controller.ts
+│   │   ├── telegram-link.service.ts
+│   │   ├── types.ts
+│   │   ├── handlers/
+│   │   │   ├── chat.handler.ts
+│   │   │   ├── command.handler.ts
+│   │   │   ├── expense.handler.ts
+│   │   │   ├── income.handler.ts
+│   │   │   ├── voice.handler.ts
+│   │   │   └── photo.handler.ts
+│   │   └── helpers/
+│   │       ├── format-telegram.ts
+│   │       ├── parse-amount.ts
+│   │       └── resolve-account.ts
+│   └── whatsapp/               # Бот WhatsApp Business Cloud
+│       ├── whatsapp-bot.service.ts
+│       ├── whatsapp-bot.controller.ts
+│       ├── whatsapp-client.service.ts
+│       ├── whatsapp-link.service.ts
 │       ├── handlers/
-│       │   ├── chat.handler.ts
-│       │   ├── command.handler.ts
-│       │   ├── expense.handler.ts
-│       │   ├── income.handler.ts
-│       │   ├── voice.handler.ts
-│       │   └── photo.handler.ts
 │       └── helpers/
-│           ├── format-telegram.ts
-│           ├── parse-amount.ts
-│           └── resolve-account.ts
 ├── common/
 │   ├── decorators/
 │   ├── filters/
@@ -1032,6 +1072,29 @@ model SpendingStory {
 4. **Стратегия разрешения**: Сохраняется в SyncLog для аудита
 5. **Ручное разрешение**: Пользователь может выбрать версию (планируется)
 
+## Импорт банковских выписок
+
+### Импорт из банков (реестр стратегий)
+
+Модуль `import-bank` импортирует выписки CSV/PDF через **реестр стратегий** парсеров по банкам. Каждый парсер в `parsers/*.parser.ts` реализует `BankParser { id, displayName, format?: 'csv'|'pdf', detect(), parse() }` и регистрируется в `registry.ts`.
+
+- **Банки**: `mbank`, `pko`, `ing`, `millennium`, `pekao` (CSV) + `erste`, `alior` (PDF) + резервный `universal` маппинг колонок (`detect()` всегда возвращает `false`)
+- **Видимые и скрытые** (список `BANKS` в мобильном): показываются Wise, mBank, PKO, Erste (PDF), Alior (PDF), Other; ING / Millennium / Pekao есть в реестре, но скрыты до проверки на реальных выписках
+- **Поток** (`ImportBankService`): `decodeCsvBuffer` (авто-определение UTF-8 / Windows-1250 через `iconv-lite`) → выбор парсера (mappingId → bankId → сохранённый fingerprint → авто-определение) → нормализованные строки → `pairFxRows` (та же дата, противоположный знак, другая валюта) → `buildExternalRef` → дедупликация. PDF-выписки определяются по заголовку `%PDF`, текст извлекается через `pdf-parse` и направляется в PDF-парсеры (шаги CSV-заголовка/маппинга/fingerprint пропускаются)
+- **Два слоя дедупликации** в `buildPreviewResponse`: (1) точное совпадение `externalRef` (повторный импорт того же файла); (2) совпадение по содержимому `(date, signedAmountCents, currency)` со всеми Expense/Income аккаунта независимо от источника (жадное 1-к-1, FX исключаются). Совпавшие строки помечаются `alreadyImported` и автоматически снимаются в предпросмотре
+- **Ключ дедупликации**: `bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(normalize(desc)).slice(0,8)>`
+- **Сохранённые маппинги**: таблица `csv_import_mappings` (`@@unique([accountId, headerFingerprint])`) хранит маппинг колонок, чтобы распознанный формат применялся автоматически при следующем импорте
+- **Запрос банка**: `POST /import/bank/request-bank` пересылает опциональный файл-образец + название банка в **ops-чат Telegram** (`TELEGRAM_CHAT_ID`), но никогда пользователю
+
+Эндпоинты защищены `JwtAuthGuard + AccountContextGuard`. Импорт Wise (`import-wise`) следует той же модели preview/commit + дедупликации по `externalRef`, эмитируя внутрикошельковые FX-строки как `CurrencyExchange`.
+
+### История импортов и откат
+
+Каждый commit Wise и банка создаёт строку `ImportBatch` (таблица `import_batches`) в той же транзакции и проставляет каждой созданной записи `importBatchId`.
+
+- `GET /import/batches` возвращает последние 20 батчей; у каждого есть `canRollback` (`status === 'committed'` и в пределах 30-дневного окна)
+- `DELETE /import/batches/:id` откатывает: устанавливает `isDeleted = true` и **очищает `externalRef`** у связанных строк (чтобы тот же файл можно было импортировать снова) и помечает батч `rolled_back`
+
 ## Интеграция с AI
 
 ### Выбор модели ИИ
@@ -1107,6 +1170,16 @@ const context = {
 
 Контекст пользователя передаётся модели в виде структурно изолированного JSON-блока, ограниченного маркерами `--- USER FINANCIAL DATA ---` / `--- END USER FINANCIAL DATA ---`, что заставляет модель воспринимать его как данные, а не как инструкции.
 
+### Общий AI-чат
+
+Диалоги поддерживают опциональный групповой режим для общих аккаунтов (per-conversation opt-in). `ChatConversation` несёт `accountId` + `isShared`; история чата ограничена аккаунтом (`accountId = X-Account-Id AND (isShared OR userId = me)`).
+
+- **Переключатель доступа**: `isShared` устанавливает **только владелец** (через `PATCH /ai/chat/conversations/:id/shared` или `initialIsShared` в `chat()`, при условии `accountRole === 'owner'`). Общие диалоги видны всем участникам; приватные остаются доступны только создателю
+- **Упоминания**: сообщение с `@упоминанием` участника (`{userId}[]`, валидируется, себя исключает) **отключает AI** и отправляет push `chat_mention` (с учётом `notifySharedActivity`) каждому упомянутому участнику, который сейчас отсутствует; сообщение без упоминания получает обычный ответ AI
+- **Присутствие**: отслеживается в Redis по ключу `chat:presence:{conversationId}:{userId}` (TTL 45с); мобильный опрашивает `…/poll?since=` каждые 4с, пока общий диалог в фокусе, и обновляет свой ключ присутствия
+- **История для AI**: сообщение каждого участника предваряется санированным `[Name]: `, чтобы модель различала участников
+- **Deep-link**: нажатие на push `chat_mention` переключает `accountId` и открывает диалог
+
 ## Уведомления
 
 ### Push-уведомления (Expo Push API)
@@ -1138,6 +1211,20 @@ const context = {
 - **Автоматическое определение счёта**: хелпер `resolve-account.ts` определяет названия счетов в сообщениях пользователя и подменяет `accountId` для данного запроса (без постоянного переключения). Это позволяет пользователям запрашивать данные разных счетов, упоминая название (например, «Покажи расходы в Family»)
 - **Webhook/Polling**: Использует webhook при установленном `TELEGRAM_WEBHOOK_URL`, иначе — long polling для разработки
 
+### Интеграция с WhatsApp
+
+Модуль WhatsApp — это `@Global()` бот на **Meta Business Cloud API**, работающий параллельно Telegram и переиспользующий те же общие сервисы (`ChatService`, `WhisperService`, `OcrService`, `ExpensesService`, `IncomesService`, `CategoriesService`, `SubscriptionsService`). Предоставляет тот же набор функций: AI-чат, транскрипция голоса и OCR чеков.
+
+Ключевые отличия от Telegram:
+
+- **Только webhook**: `POST /whatsapp/webhook` (исключён из глобального префикса `/api/v1` в `main.ts`). Режима polling нет
+- **Проверка подписи**: HMAC-SHA256 по `req.rawBody` (ключ = `WHATSAPP_APP_SECRET`) на каждом входящем запросе
+- **Состояние в Redis** (не в памяти): `wa:msg:{id}` (идемпотентность, 24ч), `wa:pa:{shortId}` (ожидающие действия, 1800с), `wa:receipt:{shortId}` + `wa:awaiting_date:{phone}`, `wa:cat:{shortId}`
+- **ID колбэков используют разделитель `--`** (UUID содержат одиночный `-`)
+- **Интерактивный UI**: `WhatsAppClientService.sendButtons` (макс. 3 × 20 симв.) / `sendList` (макс. 10 строк); markdown WhatsApp (`*bold*`, `_italic_`) через `markdownToWhatsApp`
+- **Привязка аккаунта**: 6-символьный hex-код — мобильное показывает QR + deep link `wa.me/{phone}?text=link%20{code}`; `CommandHandler.handleLink` — единственная команда, принимаемая от непривязанного номера
+- **Локализация**: `helpers/i18n.ts` портирует ключи Telegram на 8 языков
+
 ### Email (Почта)
 
 Модуль почты предоставляет инфраструктуру для отправки транзакционных email:
@@ -1153,6 +1240,16 @@ const context = {
 
 1. **Аномалии расходов**: Сравнивает расходы текущего месяца по категориям со средним за 3 месяца. Категории с увеличением >30% помечаются.
 2. **Прогнозы бюджетов**: Прогнозирует даты исчерпания бюджетов на основе ежедневного темпа расходов и проецирует итоговые суммы на конец периода.
+
+## Учёт мерчантов (продавцов)
+
+`Expense.merchant` — это свободное текстовое поле (Prisma `merchant String?` + `@@index([accountId, merchant])`; в мобильном SQLite `merchant TEXT`). У доходов поля мерчанта нет.
+
+- **Авто-заполнение**: заполняется из OCR чеков (мобильное + photo-обработчики Telegram/WhatsApp) и при commit импорта из банка/Wise; редактируется вручную через общий компонент `MerchantInput` (свободный текст + автодополнение из `getDistinctMerchants()`)
+- **Шифрование**: шифруется на клиенте **как `description`** — поле входит в `ENCRYPTION_FIELDS.expense.tier1`, поэтому пути записи прогоняют его через `maybeEncrypt`, а слияние при загрузке читает `decrypted.merchant`
+- **Управление**: экран Настройки → **Мерчанты** перечисляет уникальных мерчантов с количеством и поддерживает переименование / объединение / удаление (`renameMerchant(from, to|null)` → обновление в памяти + один SQL `UPDATE` `bulkRenameMerchant` в рамках аккаунта → ре-синхронизация с повторным шифрованием для E2EE)
+- **Сверка при захвате**: OCR и голос предзаполняют мерчанта через `resolveExistingMerchant()` (точное совпадение без учёта регистра привязывает к каноническому значению)
+- **Фильтрация только на клиенте** (без параметра API `?merchant=`): `ExpenseFilters.merchants: string[]` — мультивыбор; поле поиска на вкладке расходов также сопоставляет подстроку мерчанта
 
 ## Система подписок
 
@@ -1501,4 +1598,11 @@ app/investment/
 - **Redis кэш**: Часто запрашиваемые данные кэшируются
 - **Индексы БД**: Оптимизированные запросы по accountId, date, categoryId
 - **Пакетные операции**: Синхронизация обрабатывает несколько изменений сразу; уведомления отправляются батчами по 100
-- **Пул соединений**: Prisma управляет соединениями с БД
+- **Пул соединений**: Prisma управляет соединениями с БД; в проде `DATABASE_URL` фиксирует `connection_limit=10` для ограничения пула
+
+### Слой кэширования и троттлинга
+
+- **`CacheService`** (`common/cache/cache.service.ts`): `@Global()` обёртка над ioredis. `delByPrefix` использует курсорный `SCAN` (а не блокирующий `KEYS`) для безопасной инвалидации по префиксу
+- **`RedisThrottlerStorage`**: реализует интерфейс `ThrottlerStorage` v5 (пайплайн INCR + PEXPIRE NX + PTTL, `keyPrefix: 'throttle:'`), регистрируется через `ThrottlerModule.forRootAsync`, так что лимиты переживают перезапуск API
+- **Кэш UserContext**: `UserContextBuilder.build()` кэширует результат по ключу `uc:{accountId}` (TTL 60с); мутации расходов/доходов вызывают `CacheService.del('uc:{accountId}')`, чтобы следующий AI-запрос быстро пересобрал контекст
+- **Параллельные батчи синхронизации**: `SyncService.pushChanges()` обрабатывает массив `changes[]` параллельными батчами по 10, ускоряя крупные ре-синхронизации без неограниченной конкуренции
