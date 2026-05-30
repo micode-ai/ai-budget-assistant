@@ -522,9 +522,15 @@ export class ExpensesService {
   async bulkUpdate(accountId: string, dto: BulkUpdateExpensesDto): Promise<{ updated: number }> {
     const { ids, categoryId, tagIds, isDeleted } = dto;
 
-    // Validate that all IDs belong to this account
+    // IDs from the mobile client may be server PKs OR local clientIds (offline-first).
+    // Resolve against both — mirrors findOne()'s `OR: [{ id }, { clientId: id }]`.
+    // Matching only on `id` silently no-ops bulk delete/update for every synced expense.
     const owned = await this.prisma.expense.findMany({
-      where: { id: { in: ids }, accountId, isDeleted: false },
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id: { in: ids } }, { clientId: { in: ids } }],
+      },
       select: { id: true },
     });
     const ownedIds = owned.map((e) => e.id);
