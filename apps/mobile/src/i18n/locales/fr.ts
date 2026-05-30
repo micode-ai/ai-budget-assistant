@@ -260,6 +260,8 @@ export default {
     merchantOther: 'Autres',
     byTag: 'Par tags',
     byProject: 'Par projets',
+    byIncomeCategory: 'Revenus par catégorie',
+    incomeCategoryOther: 'Autres',
     tagBreakdown: 'Répartition par tags',
     tagTrends: 'Tendances des tags',
     projectComparison: 'Comparaison des projets',

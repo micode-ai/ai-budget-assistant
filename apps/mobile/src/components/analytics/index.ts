@@ -9,3 +9,4 @@ export { DayOfWeekSection } from './DayOfWeekSection';
 export { QuickInsights } from './QuickInsights';
 export { TopReceiptItems } from './TopReceiptItems';
 export { AiInsightsSection } from './AiInsightsSection';
+export { IncomeCategoryBreakdown } from './IncomeCategoryBreakdown';

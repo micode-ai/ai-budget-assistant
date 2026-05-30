@@ -38,6 +38,14 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 ## Graphiques
 
+### Revenus par categorie (Graphique en anneau)
+
+- Affiche vos revenus ventiles par categorie pour la periode selectionnee
+- Apparait uniquement si vous avez des entrees de revenus avec categories (ex. Salaire, Freelance, Dividendes, Loyer)
+- Code couleur dans une palette vert/bleu-vert pour se distinguer des graphiques de depenses
+- Les revenus sans categorie sont regroupes sous « Autres »
+- Apparait au-dessus du graphique de tendance des depenses
+
 ### Tendance des depenses (Graphique en barres)
 
 - Affiche les depenses quotidiennes ou mensuelles sur la periode selectionnee

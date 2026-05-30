@@ -721,6 +721,14 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 
 ## Charts
 
+### Income by Category (Donut Chart)
+
+- Breaks down your income by category for the selected period
+- Shows only when you have income entries with categories (e.g., Salary, Freelance, Dividends, Rental)
+- Color-coded in a green/teal palette to distinguish from expense charts
+- Uncategorized income is grouped as "Other"
+- Appears above the spending trend chart
+
 ### Spending Trend (Bar Chart)
 
 - Shows daily or monthly spending over the selected period
@@ -4016,6 +4024,14 @@ iOS, Android, Web
 
 ## Графики
 
+### Доходы по категориям (Кольцевая диаграмма)
+
+- Показывает ваши доходы с разбивкой по категориям за выбранный период
+- Отображается только при наличии доходов с категориями (например, Зарплата, Фриланс, Дивиденды, Аренда)
+- Цветовая палитра в зелёно-бирюзовых тонах для визуального отличия от диаграмм расходов
+- Некатегоризированные доходы объединяются в «Другие»
+- Находится выше графика динамики расходов
+
 ### Динамика расходов (Столбчатый график)
 
 - Показывает ежедневные или ежемесячные расходы за выбранный период
@@ -7301,6 +7317,14 @@ iOS, Android, Web
 
 ## Графіки
 
+### Доходи за категоріями (Кільцева діаграма)
+
+- Показує ваші доходи з розбивкою за категоріями за обраний період
+- Відображається лише за наявності доходів з категоріями (наприклад, Зарплата, Фриланс, Дивіденди, Оренда)
+- Кольорова палітра у зелено-бірюзових тонах для візуального відрізнення від діаграм витрат
+- Некатегоризовані доходи об'єднуються в «Інші»
+- Розташована вище графіка тенденції витрат
+
 ### Тенденція витрат (стовпчаста діаграма)
 
 - Показує щоденні або щомісячні витрати за обраний період
@@ -10549,6 +10573,14 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 ## Wykresy
 
+### Przychody wedlug kategorii (wykres pierścieniowy)
+
+- Pokazuje Twoje przychody podzielone wedlug kategorii dla wybranego okresu
+- Wyswietla sie tylko wtedy, gdy masz wpisy przychodow z kategoriami (np. Wynagrodzenie, Freelance, Dywidendy, Najem)
+- Kodowany kolorami w palecie zielono-morskiej, odrozniajac sie od wykresow wydatkow
+- Przychody bez kategorii sa grupowane jako „Inne"
+- Pojawia sie powyzej wykresu trendu wydatkow
+
 ### Trend wydatkow (wykres slupkowy)
 
 - Pokazuje dzienne lub miesieczne wydatki w wybranym okresie
@@ -13793,6 +13825,14 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 
 ## Diagramme
 
+### Einnahmen nach Kategorie (Donut-Diagramm)
+
+- Zeigt Ihre Einnahmen aufgeteilt nach Kategorien für den ausgewählten Zeitraum
+- Wird nur angezeigt, wenn Einnahmen mit Kategorien vorhanden sind (z. B. Gehalt, Freiberuflich, Dividenden, Mieteinnahmen)
+- Farbcodiert in einem Grün/Blaugrün-Schema zur Unterscheidung von Ausgabendiagrammen
+- Nicht kategorisierte Einnahmen werden als „Sonstige" zusammengefasst
+- Erscheint oberhalb des Ausgabentrends
+
 ### Ausgabentrend (Balkendiagramm)
 
 - Zeigt tagliche oder monatliche Ausgaben uber den ausgewahlten Zeitraum
@@ -17007,6 +17047,14 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 
 ## Graficos
 
+### Ingresos por categoria (Grafico de dona)
+
+- Muestra sus ingresos desglosados por categoria para el periodo seleccionado
+- Solo aparece cuando hay entradas de ingresos con categorias (p. ej., Salario, Freelance, Dividendos, Alquiler)
+- Codificado en colores en una paleta verde/turquesa para distinguirlo de los graficos de gastos
+- Los ingresos sin categoria se agrupan como "Otros"
+- Aparece encima del grafico de tendencia de gastos
+
 ### Tendencia de gastos (Grafico de barras)
 
 - Muestra el gasto diario o mensual durante el periodo seleccionado
@@ -20210,6 +20258,14 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 
 ## Graphiques
 
+### Revenus par categorie (Graphique en anneau)
+
+- Affiche vos revenus ventiles par categorie pour la periode selectionnee
+- Apparait uniquement si vous avez des entrees de revenus avec categories (ex. Salaire, Freelance, Dividendes, Loyer)
+- Code couleur dans une palette vert/bleu-vert pour se distinguer des graphiques de depenses
+- Les revenus sans categorie sont regroupes sous « Autres »
+- Apparait au-dessus du graphique de tendance des depenses
+
 ### Tendance des depenses (Graphique en barres)
 
 - Affiche les depenses quotidiennes ou mensuelles sur la periode selectionnee
@@ -23410,6 +23466,14 @@ iOS, Android, Web
 > **Заўвага:** Карыстальнікі бясплатнага плану бачаць прапанову палепшыць тарыф: «Перайдзіце на Pro для ІІ-інсайтаў».
 
 ## Графікі
+
+### Даходы па катэгорыях (Кольцавая дыяграма)
+
+- Паказвае вашы даходы з разбіўкай па катэгорыях за абраны перыяд
+- Адлюстроўваецца толькі пры наяўнасці даходаў з катэгорыямі (напрыклад, Зарплата, Фрыланс, Дывідэнды, Арэнда)
+- Каляровая палітра ў зелёна-блакітных тонах для адрознення ад дыяграм выдаткаў
+- Некатэгарызаваныя даходы аб'ядноўваюцца ў «Іншыя»
+- Знаходзіцца вышэй графіка дынамікі выдаткаў
 
 ### Дынаміка выдаткаў (Слупковы графік)
 

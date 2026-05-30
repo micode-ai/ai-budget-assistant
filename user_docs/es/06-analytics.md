@@ -38,6 +38,14 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 
 ## Graficos
 
+### Ingresos por categoria (Grafico de dona)
+
+- Muestra sus ingresos desglosados por categoria para el periodo seleccionado
+- Solo aparece cuando hay entradas de ingresos con categorias (p. ej., Salario, Freelance, Dividendos, Alquiler)
+- Codificado en colores en una paleta verde/turquesa para distinguirlo de los graficos de gastos
+- Los ingresos sin categoria se agrupan como "Otros"
+- Aparece encima del grafico de tendencia de gastos
+
 ### Tendencia de gastos (Grafico de barras)
 
 - Muestra el gasto diario o mensual durante el periodo seleccionado

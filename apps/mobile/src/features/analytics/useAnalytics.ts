@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { InteractionManager } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useTagStore } from '@/stores/tagStore';
@@ -117,6 +118,14 @@ export interface MerchantSpending {
   color: string;
 }
 
+export interface IncomeCategorySpending {
+  categoryId: string | null;
+  name: string;
+  amount: number;
+  percentage: number;
+  color: string;
+}
+
 const TAG_COLORS = [
   '#6366F1', // Indigo
   '#EC4899', // Pink
@@ -155,9 +164,23 @@ const MERCHANT_COLORS = [
 ];
 const MERCHANT_OTHER_COLOR = '#9CA3AF';
 
+const INCOME_CATEGORY_COLORS = [
+  '#10B981', // Emerald
+  '#34D399', // Light Emerald
+  '#059669', // Dark Emerald
+  '#6EE7B7', // Very Light Emerald
+  '#14B8A6', // Teal
+  '#2DD4BF', // Light Teal
+  '#0D9488', // Dark Teal
+  '#22D3EE', // Cyan
+  '#0EA5E9', // Sky Blue
+  '#6366F1', // Indigo
+];
+
 export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: string, selectedMonth?: number, selectedYear?: number) {
   const { t } = useTranslation();
   const { expenses } = useExpenseStore();
+  const { incomes } = useIncomeStore();
   const { categories, loadCategories } = useCategoryStore();
   const { tags, loadTags } = useTagStore();
   const { projects, loadProjects } = useProjectStore();
@@ -217,6 +240,15 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
       return expenseDate >= dateRange.startDate && expenseDate <= dateRange.endDate;
     });
   }, [expenses, dateRange, currencyCode]);
+
+  const filteredIncomes = useMemo(() => {
+    return incomes.filter((i) => {
+      if (i.isDeleted) return false;
+      if (currencyCode && i.currencyCode !== currencyCode) return false;
+      const incomeDate = new Date(i.date);
+      return incomeDate >= dateRange.startDate && incomeDate <= dateRange.endDate;
+    });
+  }, [incomes, dateRange, currencyCode]);
 
   // Get expense amount converted to display currency
   const getAmount = useMemo(() => {
@@ -389,6 +421,35 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
     return result;
   }, [filteredExpenses, getAmount, t]);
+
+  const incomeByCategory = useMemo((): IncomeCategorySpending[] => {
+    const total = filteredIncomes.reduce((sum, i) => sum + toDisplayCurrency(i.amount, i.currencyCode), 0);
+    if (total === 0) return [];
+
+    const categoryMap = new Map<string | null, number>();
+    for (const income of filteredIncomes) {
+      const key = income.categoryId || null;
+      categoryMap.set(key, (categoryMap.get(key) || 0) + toDisplayCurrency(income.amount, income.currencyCode));
+    }
+
+    const result: IncomeCategorySpending[] = [];
+    let colorIndex = 0;
+    for (const [categoryId, amount] of categoryMap) {
+      const category = categoryId
+        ? categories.find(c => c.id === categoryId) || categories.find(c => c.name === categoryId)
+        : undefined;
+      result.push({
+        categoryId,
+        name: category ? getCategoryDisplayName(category, t) : t('analytics.incomeCategoryOther'),
+        amount,
+        percentage: (amount / total) * 100,
+        color: INCOME_CATEGORY_COLORS[colorIndex % INCOME_CATEGORY_COLORS.length],
+      });
+      colorIndex++;
+    }
+
+    return result.sort((a, b) => b.amount - a.amount);
+  }, [filteredIncomes, categories, t, toDisplayCurrency]);
 
   const summary = useMemo((): AnalyticsSummary => {
     const totalSpent = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
@@ -797,6 +858,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     dailySpending,
     categorySpending,
     merchantSpending,
+    incomeByCategory,
     summary,
     dateRange,
     itemBreakdown,

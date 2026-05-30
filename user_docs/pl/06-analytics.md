@@ -38,6 +38,14 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 
 ## Wykresy
 
+### Przychody wedlug kategorii (wykres pierścieniowy)
+
+- Pokazuje Twoje przychody podzielone wedlug kategorii dla wybranego okresu
+- Wyswietla sie tylko wtedy, gdy masz wpisy przychodow z kategoriami (np. Wynagrodzenie, Freelance, Dywidendy, Najem)
+- Kodowany kolorami w palecie zielono-morskiej, odrozniajac sie od wykresow wydatkow
+- Przychody bez kategorii sa grupowane jako „Inne"
+- Pojawia sie powyzej wykresu trendu wydatkow
+
 ### Trend wydatkow (wykres slupkowy)
 
 - Pokazuje dzienne lub miesieczne wydatki w wybranym okresie

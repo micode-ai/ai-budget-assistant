@@ -258,6 +258,8 @@ export default {
     merchantOther: 'Іншыя',
     byTag: 'Па тэгах',
     byProject: 'Па праектах',
+    byIncomeCategory: 'Даходы па катэгорыях',
+    incomeCategoryOther: 'Іншыя',
     tagBreakdown: 'Разбіўка па тэгах',
     tagTrends: 'Трэнды тэгаў',
     projectComparison: 'Параўнанне праектаў',
