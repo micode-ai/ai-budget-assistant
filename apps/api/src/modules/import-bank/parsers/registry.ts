@@ -1,6 +1,7 @@
 import type { BankParser } from './parser.interface';
 import { MBankParser } from './mbank.parser';
 import { PkoParser } from './pko.parser';
+import { RevolutParser } from './revolut.parser';
 import { IngParser } from './ing.parser';
 import { MillenniumParser } from './millennium.parser';
 import { PekaoParser } from './pekao.parser';
@@ -11,6 +12,7 @@ import { UniversalParser } from './universal.parser';
 export const PARSERS: BankParser[] = [
   new MBankParser(),
   new PkoParser(),
+  new RevolutParser(),
   new IngParser(),
   new MillenniumParser(),
   new PekaoParser(),

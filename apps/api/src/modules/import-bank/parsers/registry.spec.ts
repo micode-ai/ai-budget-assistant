@@ -3,7 +3,7 @@ import { PARSERS, getParserById, detectParser, detectPdfParser } from './registr
 describe('parser registry', () => {
   it('has all parsers in detection order', () => {
     expect(PARSERS.map((p) => p.id)).toEqual([
-      'mbank', 'pko', 'ing', 'millennium', 'pekao', 'erste', 'alior', 'universal',
+      'mbank', 'pko', 'revolut', 'ing', 'millennium', 'pekao', 'erste', 'alior', 'universal',
     ]);
   });
 

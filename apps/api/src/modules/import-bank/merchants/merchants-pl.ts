@@ -50,6 +50,15 @@ export const MERCHANTS_PL: Record<string, string> = {
   SPOTIFY: 'Subscriptions',
   HBO: 'Subscriptions',
   DISNEY: 'Subscriptions',
+  APPLE: 'Subscriptions',
+  GOOGLE: 'Subscriptions',
+  // Revolut-specific descriptions
+  TOPUP: 'Income',
+  'TOP-UP': 'Income',
+  CASHBACK: 'Income',
+  REFUND: 'Income',
+  EXCHANGE: 'Currency Exchange',
+  REVOLUT: 'Transfers',
 };
 
 export function suggestCategoryFromMerchantPL(merchant: string | undefined): string | undefined {
