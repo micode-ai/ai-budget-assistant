@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { AdminService } from './admin.service';
+import { AdminAnalyticsService } from './admin-analytics.service';
 
 const ADMIN_ROOM = 'admin';
 
@@ -32,6 +33,7 @@ export class AdminGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     private readonly adminService: AdminService,
+    private readonly adminAnalyticsService: AdminAnalyticsService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -89,7 +91,7 @@ export class AdminGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       const [health, overview] = await Promise.all([
         this.adminService.getSystemHealth(),
-        this.adminService.getAnalyticsOverview(),
+        this.adminAnalyticsService.getAnalyticsOverview(),
       ]);
 
       room.emit('admin:stats', {

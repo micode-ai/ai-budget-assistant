@@ -14,6 +14,8 @@ import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
 import { AdminService } from './admin.service';
+import { AdminAnalyticsService } from './admin-analytics.service';
+import { AdminNotificationService } from './admin-notification.service';
 import { ReferralsService } from '../referrals/referrals.service';
 
 interface AdminRequest extends Request {
@@ -25,6 +27,8 @@ interface AdminRequest extends Request {
 export class AdminController {
   constructor(
     private readonly adminService: AdminService,
+    private readonly adminAnalyticsService: AdminAnalyticsService,
+    private readonly adminNotificationService: AdminNotificationService,
     private readonly referralsService: ReferralsService,
   ) {}
 
@@ -41,7 +45,7 @@ export class AdminController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
-    return this.adminService.getDashboard(startDate, endDate);
+    return this.adminAnalyticsService.getDashboard(startDate, endDate);
   }
 
   // ─── Users ───────────────────────────────────────
@@ -79,14 +83,7 @@ export class AdminController {
     @Req() req: AdminRequest,
   ) {
     const result = await this.adminService.updateUser(id, body);
-    await this.adminService.logAction(
-      req.user.id,
-      'user.update',
-      'user',
-      id,
-      body,
-      this.getIp(req),
-    );
+    await this.adminService.logAction(req.user.id, 'user.update', 'user', id, body, this.getIp(req));
     return result;
   }
 
@@ -97,14 +94,7 @@ export class AdminController {
     @Req() req: AdminRequest,
   ) {
     const result = await this.adminService.changeSubscriptionTier(id, body.tier);
-    await this.adminService.logAction(
-      req.user.id,
-      'subscription.change_tier',
-      'user',
-      id,
-      { tier: body.tier },
-      this.getIp(req),
-    );
+    await this.adminService.logAction(req.user.id, 'subscription.change_tier', 'user', id, { tier: body.tier }, this.getIp(req));
     return result;
   }
 
@@ -115,14 +105,7 @@ export class AdminController {
     @Req() req: AdminRequest,
   ) {
     const result = await this.adminService.setCustomAiLimit(id, body.customAiLimit);
-    await this.adminService.logAction(
-      req.user.id,
-      'subscription.set_ai_limit',
-      'user',
-      id,
-      { customAiLimit: body.customAiLimit },
-      this.getIp(req),
-    );
+    await this.adminService.logAction(req.user.id, 'subscription.set_ai_limit', 'user', id, { customAiLimit: body.customAiLimit }, this.getIp(req));
     return result;
   }
 
@@ -135,16 +118,8 @@ export class AdminController {
     if (permanent === 'true') {
       return this.adminService.deleteUser(id, req.user.id, this.getIp(req));
     }
-
     const result = await this.adminService.deactivateUser(id);
-    await this.adminService.logAction(
-      req.user.id,
-      'user.deactivate',
-      'user',
-      id,
-      null,
-      this.getIp(req),
-    );
+    await this.adminService.logAction(req.user.id, 'user.deactivate', 'user', id, null, this.getIp(req));
     return result;
   }
 
@@ -155,20 +130,8 @@ export class AdminController {
     @Body() body: { userIds: string[]; title: string; body: string },
     @Req() req: AdminRequest,
   ) {
-    const result = await this.adminService.sendPush(
-      req.user.id,
-      body.userIds,
-      body.title,
-      body.body,
-    );
-    await this.adminService.logAction(
-      req.user.id,
-      'notification.send_push',
-      'notification',
-      null,
-      { userIds: body.userIds, title: body.title },
-      this.getIp(req),
-    );
+    const result = await this.adminNotificationService.sendPush(req.user.id, body.userIds, body.title, body.body);
+    await this.adminService.logAction(req.user.id, 'notification.send_push', 'notification', null, { userIds: body.userIds, title: body.title }, this.getIp(req));
     return result;
   }
 
@@ -177,20 +140,8 @@ export class AdminController {
     @Body() body: { userIds: string[]; subject: string; html: string },
     @Req() req: AdminRequest,
   ) {
-    const result = await this.adminService.sendEmail(
-      req.user.id,
-      body.userIds,
-      body.subject,
-      body.html,
-    );
-    await this.adminService.logAction(
-      req.user.id,
-      'notification.send_email',
-      'notification',
-      null,
-      { userIds: body.userIds, subject: body.subject },
-      this.getIp(req),
-    );
+    const result = await this.adminNotificationService.sendEmail(req.user.id, body.userIds, body.subject, body.html);
+    await this.adminService.logAction(req.user.id, 'notification.send_email', 'notification', null, { userIds: body.userIds, subject: body.subject }, this.getIp(req));
     return result;
   }
 
@@ -206,15 +157,8 @@ export class AdminController {
     },
     @Req() req: AdminRequest,
   ) {
-    const result = await this.adminService.sendBroadcast(req.user.id, body.type, body);
-    await this.adminService.logAction(
-      req.user.id,
-      'notification.broadcast',
-      'notification',
-      null,
-      { type: body.type, filters: body.filters },
-      this.getIp(req),
-    );
+    const result = await this.adminNotificationService.sendBroadcast(req.user.id, body.type, body);
+    await this.adminService.logAction(req.user.id, 'notification.broadcast', 'notification', null, { type: body.type, filters: body.filters }, this.getIp(req));
     return result;
   }
 
@@ -224,7 +168,7 @@ export class AdminController {
     @Query('limit') limit = '20',
     @Query('userId') userId?: string,
   ) {
-    return this.adminService.getNotificationHistory(
+    return this.adminNotificationService.getNotificationHistory(
       parseInt(page, 10),
       Math.min(parseInt(limit, 10), 100),
       userId,
@@ -244,21 +188,14 @@ export class AdminController {
     },
     @Req() req: AdminRequest,
   ) {
-    const result = await this.adminService.scheduleNotification(req.user.id, body);
-    await this.adminService.logAction(
-      req.user.id,
-      'notification.schedule',
-      'notification',
-      result.id,
-      { type: body.type, scheduledAt: body.scheduledAt },
-      this.getIp(req),
-    );
+    const result = await this.adminNotificationService.scheduleNotification(req.user.id, body);
+    await this.adminService.logAction(req.user.id, 'notification.schedule', 'notification', result.id, { type: body.type, scheduledAt: body.scheduledAt }, this.getIp(req));
     return result;
   }
 
   @Get('notifications/scheduled')
   async getScheduledNotifications() {
-    return this.adminService.getScheduledNotifications();
+    return this.adminNotificationService.getScheduledNotifications();
   }
 
   @Delete('notifications/scheduled/:id')
@@ -266,15 +203,8 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AdminRequest,
   ) {
-    const result = await this.adminService.cancelScheduledNotification(id);
-    await this.adminService.logAction(
-      req.user.id,
-      'notification.cancel_scheduled',
-      'notification',
-      id,
-      null,
-      this.getIp(req),
-    );
+    const result = await this.adminNotificationService.cancelScheduledNotification(id);
+    await this.adminService.logAction(req.user.id, 'notification.cancel_scheduled', 'notification', id, null, this.getIp(req));
     return result;
   }
 
@@ -282,7 +212,7 @@ export class AdminController {
 
   @Get('analytics/overview')
   async getAnalyticsOverview() {
-    return this.adminService.getAnalyticsOverview();
+    return this.adminAnalyticsService.getAnalyticsOverview();
   }
 
   @Get('analytics/ai-usage')
@@ -290,12 +220,12 @@ export class AdminController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
-    return this.adminService.getAiUsageTrends(startDate, endDate);
+    return this.adminAnalyticsService.getAiUsageTrends(startDate, endDate);
   }
 
   @Get('analytics/subscriptions')
   async getSubscriptionStats() {
-    return this.adminService.getSubscriptionStats();
+    return this.adminAnalyticsService.getSubscriptionStats();
   }
 
   // ─── Audit Log ───────────────────────────────────
