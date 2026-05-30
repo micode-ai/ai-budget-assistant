@@ -95,6 +95,7 @@ Turborepo monorepo with 5 packages:
 - API types: `packages/shared-types/src/api/index.ts` — API endpoint types
 - Types use `PascalCase` interfaces, enums use string literal unions (e.g., `type AccountRole = 'owner' | 'editor' | 'viewer'`)
 - Key enums: `Currency` (USD/EUR/PLN/GBP/UAH/RUB), `AccountRole` (owner/editor/viewer), `AccountType` (personal/business/shared/investment), `ExpenseSource` (manual/voice/ocr/import), `BudgetPeriod` (daily/weekly/monthly/yearly/custom), `SubscriptionTier` (free/pro/business), `SyncStatus` (pending/synced/conflict/error)
+- **Sync DTOs** (ABA-177): `packages/shared-types/src/dto/sync.ts` — `SyncChange` is a **discriminated union** keyed on `entityType`. Each entity type has its own payload interface (e.g. `SyncTagPayload`, `SyncProjectPayload`, `SyncPortfolioHoldingPayload`). `sync.service.ts` handlers take `Extract<SyncChange, { entityType: '...' }>` for compile-time payload validation. Do NOT add a local `SyncChange` interface in the API — always import from `@budget/shared-types`.
 
 ### Shared Utils
 - Validation: `packages/shared-utils/src/validation/index.ts` — Zod schemas for auth, expenses, incomes, budgets, categories, tags, projects, sync
