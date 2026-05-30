@@ -256,6 +256,8 @@ export default {
     vsAvgDown: '{{pct}}% unter 3-Monats-Schnitt',
     totalSavings: 'Quittungsersparnisse',
     totalSavingsText: 'Sie haben {{amount}} durch Rabatte in diesem {{range}} gespart.',
+    byMerchant: 'Nach Händlern',
+    merchantOther: 'Sonstige',
     byTag: 'Nach Tags',
     byProject: 'Nach Projekten',
     tagBreakdown: 'Tag-Übersicht',

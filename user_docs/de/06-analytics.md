@@ -60,6 +60,12 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Musteranalyse, die zeigt, an welchen Tagen du am meisten ausgibst
 - Einblick: "Am meisten gibst du samstags aus"
 
+### Nach Händlern
+
+- Top-Händler, bei denen du im ausgewählten Zeitraum Geld ausgegeben hast
+- Zeigt bis zu 8 einzelne Händler; der Rest wird als "Sonstige" zusammengefasst
+- Erscheint nur, wenn mindestens eine Ausgabe einen Händler hat
+
 ### Nach Tags / Nach Projekten
 
 - **Tag-Ubersicht** — Ausgaben gruppiert nach deinen benutzerdefinierten Tags

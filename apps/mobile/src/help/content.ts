@@ -743,6 +743,12 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Pattern analysis showing which days you spend the most
 - Insight: "You spend the most on Saturdays"
 
+### By Merchants
+
+- Top merchants where you spent money in the selected period
+- Shows up to 8 individual merchants; the rest are grouped as "Other"
+- Only appears when at least one expense has a merchant value
+
 ### By Tags / By Projects
 
 - **Tag Breakdown** — spending grouped by your custom tags
@@ -4032,6 +4038,12 @@ iOS, Android, Web
 - Анализ паттернов: в какие дни вы тратите больше всего
 - Инсайт: «Больше всего вы тратите по субботам»
 
+### По магазинам
+
+- Топ магазинов и сервисов, где вы тратили деньги в выбранном периоде
+- Показывает до 8 отдельных магазинов; остальные объединяются в «Другие»
+- Отображается только если у хотя бы одного расхода указан магазин
+
 ### По тегам / По проектам
 
 - **Разбивка по тегам** — расходы, сгруппированные по вашим пользовательским тегам
@@ -7311,6 +7323,12 @@ iOS, Android, Web
 - Аналіз патернів, що показує, у які дні ви витрачаєте найбільше
 - Інсайт: "Найбільше ви витрачаєте по суботах"
 
+### За магазинами
+
+- Топ магазинів і сервісів, де ви витрачали гроші у вибраному періоді
+- Показує до 8 окремих магазинів; решта об'єднується в «Інші»
+- Відображається лише якщо хоча б одна витрата має вказаний магазин
+
 ### За тегами / За проєктами
 
 - **Розподіл за тегами** — витрати, згруповані за вашими тегами
@@ -10553,6 +10571,12 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 - Analiza wzorcow pokazujaca, w ktore dni wydajesz najwiecej
 - Wnioski: "Najwiecej wydajesz w soboty"
 
+### Wedlug sprzedawcow
+
+- Glowni sprzedawcy, u ktorych wydawales w wybranym okresie
+- Pokazuje do 8 pojedynczych sprzedawcow; reszta jest grupowana jako "Inne"
+- Pojawia sie tylko gdy co najmniej jeden wydatek ma przypisanego sprzedawce
+
 ### Wedlug tagow / Wedlug projektow
 
 - **Podzial tagow** — wydatki pogrupowane wedlug Twoich niestandardowych tagow
@@ -13791,6 +13815,12 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Musteranalyse, die zeigt, an welchen Tagen du am meisten ausgibst
 - Einblick: "Am meisten gibst du samstags aus"
 
+### Nach Händlern
+
+- Top-Händler, bei denen du im ausgewählten Zeitraum Geld ausgegeben hast
+- Zeigt bis zu 8 einzelne Händler; der Rest wird als "Sonstige" zusammengefasst
+- Erscheint nur, wenn mindestens eine Ausgabe einen Händler hat
+
 ### Nach Tags / Nach Projekten
 
 - **Tag-Ubersicht** — Ausgaben gruppiert nach deinen benutzerdefinierten Tags
@@ -16999,6 +17029,12 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Analisis de patrones que muestra en que dias gastas mas
 - Informacion: "Gastas mas los sabados"
 
+### Por comerciantes
+
+- Los principales comerciantes donde gastaste en el periodo seleccionado
+- Muestra hasta 8 comerciantes individuales; el resto se agrupa como "Otros"
+- Solo aparece cuando al menos un gasto tiene un comerciante asignado
+
 ### Por etiquetas / Por proyectos
 
 - **Desglose por etiquetas** — gasto agrupado por tus etiquetas personalizadas
@@ -20196,6 +20232,12 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Analyse des habitudes montrant quels jours vous depensez le plus
 - Apercu : "Vous depensez le plus le samedi"
 
+### Par marchands
+
+- Principaux marchands ou vous avez depense dans la periode selectionnee
+- Affiche jusqu'a 8 marchands individuels ; le reste est groupe sous "Autres"
+- Apparait uniquement quand au moins une depense a un marchand renseigne
+
 ### Par etiquettes / Par projets
 
 - **Repartition par etiquettes** — depenses groupees par vos etiquettes personnalisees
@@ -23390,6 +23432,12 @@ iOS, Android, Web
 
 - Аналіз патэрнаў: у якія дні вы траціце больш за ўсё
 - Інсайт: «Больш за ўсё вы траціце па суботах»
+
+### Па крамах
+
+- Топ крам і сэрвісаў, дзе вы трацілі грошы ў выбраным перыядзе
+- Паказвае да 8 асобных крам; астатнія аб'ядноўваюцца ў «Іншыя»
+- Адлюстроўваецца толькі калі хоць бы адзін выдатак мае ўказаную краму
 
 ### Па тэгах / Па праектах
 

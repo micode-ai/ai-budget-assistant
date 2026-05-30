@@ -2,6 +2,7 @@ export { AnalyticsHeader } from './AnalyticsHeader';
 export { SummaryCards } from './SummaryCards';
 export { SpendingTrendChart } from './SpendingTrendChart';
 export { CategoryBreakdown } from './CategoryBreakdown';
+export { MerchantBreakdown } from './MerchantBreakdown';
 export { TagBreakdown } from './TagBreakdown';
 export { ProjectBreakdown } from './ProjectBreakdown';
 export { DayOfWeekSection } from './DayOfWeekSection';
