@@ -5,10 +5,13 @@ import { ExpensesService } from './expenses.service';
 // server PK `id` AND `clientId`. Matching only on `id` silently no-ops bulk
 // delete/recategorize/tag for every synced (device-created) expense.
 describe('ExpensesService.bulkUpdate id resolution', () => {
-  function makeService(findManyResult: Array<{ id: string }>) {
+  function makeService(
+    findManyResult: Array<{ id: string }>,
+    tagFindManyResult: Array<{ id: string }> = [],
+  ) {
     const tx = {
       expense: { updateMany: jest.fn().mockResolvedValue({ count: findManyResult.length }) },
-      tag: { findMany: jest.fn().mockResolvedValue([]) },
+      tag: { findMany: jest.fn().mockResolvedValue(tagFindManyResult) },
       expenseTag: { upsert: jest.fn().mockResolvedValue({}) },
     };
     const prisma: any = {
@@ -58,5 +61,28 @@ describe('ExpensesService.bulkUpdate id resolution', () => {
 
     expect(res).toEqual({ updated: 0 });
     expect(tx.expense.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('resolves tagIds by clientId and links the resolved server ids', async () => {
+    // Both the expense ids and tag ids arrive as mobile clientIds.
+    const { service, tx } = makeService(
+      [{ id: 'server-exp-1' }], // resolved expense PK
+      [{ id: 'server-tag-1' }], // resolved tag PK
+    );
+
+    await service.bulkUpdate('acc-1', { ids: ['client-exp-1'], tagIds: ['client-tag-1'] });
+
+    // Tag lookup must resolve by id OR clientId.
+    const tagWhere = tx.tag.findMany.mock.calls[0][0].where;
+    expect(tagWhere.accountId).toBe('acc-1');
+    expect(tagWhere.OR).toEqual([
+      { id: { in: ['client-tag-1'] } },
+      { clientId: { in: ['client-tag-1'] } },
+    ]);
+
+    // The junction row must use the RESOLVED server PKs, not the client ids.
+    expect(tx.expenseTag.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({ create: { expenseId: 'server-exp-1', tagId: 'server-tag-1' } }),
+    );
   });
 });

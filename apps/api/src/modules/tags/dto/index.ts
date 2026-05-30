@@ -14,6 +14,12 @@ export class CreateTagDto {
   @IsString()
   @MaxLength(50)
   icon?: string;
+
+  // The mobile client's local tag id, so the server can resolve client-supplied
+  // tag ids back to its own PK (offline-first). See tags.service resolution.
+  @IsOptional()
+  @IsString()
+  clientId?: string;
 }
 
 export class UpdateTagDto {

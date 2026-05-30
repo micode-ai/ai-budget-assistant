@@ -559,8 +559,9 @@ export class ExpensesService {
       });
 
       if (!isDeleted && tagIds !== undefined && tagIds.length > 0) {
+        // tagIds may be server PKs or mobile clientIds — resolve both.
         const validTags = await tx.tag.findMany({
-          where: { id: { in: tagIds }, accountId },
+          where: { accountId, OR: [{ id: { in: tagIds } }, { clientId: { in: tagIds } }] },
           select: { id: true },
         });
         const validTagIds = validTags.map((t) => t.id);

@@ -62,9 +62,10 @@ export const useTagStore = create<TagState>((set, get) => ({
     };
     await tagRepo.insertTag(tag);
     set({ tags: [...get().tags, tag] });
-    // Fire-and-forget: sync to server with encryption
+    // Fire-and-forget: sync to server with encryption. Send the local id as
+    // clientId so the server can resolve client-supplied tag ids back to its PK.
     maybeEncrypt('tag', { name }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
-      api.createTag({ name: encPayload.name ?? name, color, icon, encryptedPayload, encryptionKeyVersion } as any);
+      api.createTag({ name: encPayload.name ?? name, color, icon, clientId: id, encryptedPayload, encryptionKeyVersion } as any);
     }).catch(() => {});
     return tag;
   },
@@ -121,7 +122,9 @@ export const useTagStore = create<TagState>((set, get) => ({
       const decrypted = await maybeDecrypt('tag', tag, tag.accountId);
 
       await tagRepo.upsertTag({
-        id: tag.id,
+        // Converge to the server's clientId when it has one, so a tag created on
+        // this device keeps its local id; otherwise adopt the server PK.
+        id: tag.clientId ?? tag.id,
         accountId: tag.accountId,
         name: decrypted.name,
         color: tag.color || undefined,
@@ -137,6 +140,22 @@ export const useTagStore = create<TagState>((set, get) => ({
     // Reload from local DB only (don't call loadTags to avoid infinite loop)
     const accountId = useAccountStore.getState().currentAccountId;
     if (!accountId) return;
+    // Drop orphaned local 'pending' tags whose name now exists as a synced
+    // server tag — legacy duplicates from before clientId reconciliation.
+    const all = await tagRepo.getAllTags(accountId);
+    const syncedIdByName = new Map<string, string>();
+    for (const t of all) {
+      if (t.syncStatus === 'synced') syncedIdByName.set(t.name, t.id);
+    }
+    for (const t of all) {
+      if (
+        t.syncStatus === 'pending' &&
+        syncedIdByName.has(t.name) &&
+        syncedIdByName.get(t.name) !== t.id
+      ) {
+        await tagRepo.deleteTag(t.id);
+      }
+    }
     const tags = await tagRepo.getAllTags(accountId);
     set({ tags });
   },

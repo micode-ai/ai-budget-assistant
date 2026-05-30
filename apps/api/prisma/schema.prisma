@@ -719,6 +719,7 @@ model SpendingStory {
 
 model Tag {
   id          String   @id @default(uuid())
+  clientId    String?  @map("client_id")
   accountId   String   @map("account_id")
   name        String
   color       String?
@@ -738,6 +739,7 @@ model Tag {
   incomeTags  IncomeTag[]
 
   @@unique([accountId, name])
+  @@unique([accountId, clientId])
   @@index([accountId])
   @@map("tags")
 }

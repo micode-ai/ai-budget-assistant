@@ -750,6 +750,25 @@ export const useExpenseStore = create<ExpenseState>()(
           if (Object.keys(updates).length > 0) {
             await updateExpenseInDb(id, updates, now, 'pending');
           }
+          // Persist tag links to the local join table so they show immediately
+          // (the optimistic in-memory tagIds above isn't enough on reload).
+          if (patch.tagIds && patch.tagIds.length > 0) {
+            for (const tagId of patch.tagIds) {
+              try {
+                await insertExpenseTag({
+                  id: generateUUID(),
+                  expenseId: id,
+                  tagId,
+                  createdAt: now,
+                  updatedAt: now,
+                  isDeleted: false,
+                  syncVersion: 0,
+                });
+              } catch {
+                /* already linked */
+              }
+            }
+          }
         }
       }
 

@@ -27,7 +27,7 @@ export const categoriesApi = {
     return httpClient.request<any[]>('/tags');
   },
 
-  createTag(data: { name: string; color?: string; icon?: string }) {
+  createTag(data: { name: string; color?: string; icon?: string; clientId?: string }) {
     return httpClient.request<any>('/tags', {
       method: 'POST',
       body: JSON.stringify(data),
