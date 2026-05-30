@@ -8,6 +8,9 @@ import type {
   WiseImportPreviewResponse,
   WiseImportCommitDto,
   WiseImportCommitResponse,
+  SyncChange,
+  SyncPushResponse,
+  SyncPullResponse,
 } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
@@ -53,15 +56,15 @@ export const subscriptionsApi = {
     });
   },
 
-  pushChanges(changes: any[]) {
-    return httpClient.request<any>('/sync/push', {
+  pushChanges(changes: SyncChange[]) {
+    return httpClient.request<SyncPushResponse>('/sync/push', {
       method: 'POST',
       body: JSON.stringify({ changes }),
     });
   },
 
   pullChanges(since: string) {
-    return httpClient.request<any>(`/sync/pull?since=${since}`);
+    return httpClient.request<SyncPullResponse>(`/sync/pull?since=${since}`);
   },
 
   getGamificationProfile() {

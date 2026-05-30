@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
+import type { SyncChange } from '@budget/shared-types';
 
 @Controller('sync')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -12,7 +13,7 @@ export class SyncController {
 
   @Post('push')
   @UseGuards(new ViewerBlockGuard())
-  async pushChanges(@Req() req: AuthenticatedRequest, @Body() body: { changes: any[] }) {
+  async pushChanges(@Req() req: AuthenticatedRequest, @Body() body: { changes: SyncChange[] }) {
     const results = await this.syncService.pushChanges(req.accountId, req.user.id, body.changes);
 
     return {

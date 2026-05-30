@@ -2,23 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
-
-interface SyncChange {
-  entityType: 'expense' | 'expense_item' | 'budget' | 'category' | 'income' | 'tag' | 'project' | 'expense_tag' | 'income_tag' | 'project_expense' | 'project_income' | 'expense_category_split' | 'portfolio_holding' | 'investment_transaction';
-  entityId: string;
-  operation: 'create' | 'update' | 'delete';
-  payload: any;
-  encryptedPayload?: string;
-  encryptionKeyVersion?: number;
-  clientVersion: number;
-}
+import type { SyncChange } from '@budget/shared-types';
 
 export interface SyncResult {
   entityId: string;
   status: 'success' | 'conflict' | 'error';
   serverVersion?: number;
   serverId?: string;
-  serverData?: any;
+  serverData?: unknown;
   error?: string;
 }
 
@@ -42,6 +33,11 @@ export interface CategoryRecord {
   syncVersion: number;
   updatedAt: Date;
 }
+
+type RelationChange = Extract<
+  SyncChange,
+  { entityType: 'expense_tag' | 'income_tag' | 'project_expense' | 'project_income' | 'expense_category_split' }
+>;
 
 @Injectable()
 export class SyncService {
@@ -110,12 +106,16 @@ export class SyncService {
         return {
           entityId: change.entityId,
           status: 'error',
-          error: `Unknown entity type: ${change.entityType}`,
+          error: `Unknown entity type: ${(change as SyncChange).entityType}`,
         };
     }
   }
 
-  private async processExpenseChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processExpenseChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'expense' }>,
+  ): Promise<SyncResult> {
     const { operation, payload, encryptedPayload, encryptionKeyVersion, clientVersion, entityId } = change;
 
     // Check for existing record
@@ -146,7 +146,7 @@ export class SyncService {
         localId: entityId,
         encryptedPayload,
         encryptionKeyVersion,
-      });
+      } as any);
 
       if (!created) {
         return { entityId, status: 'error', error: 'Failed to create expense' };
@@ -183,7 +183,7 @@ export class SyncService {
         ...payload,
         encryptedPayload,
         encryptionKeyVersion,
-      });
+      } as any);
       if (!updated) {
         return { entityId, status: 'error', error: 'Failed to update expense' };
       }
@@ -209,11 +209,14 @@ export class SyncService {
     };
   }
 
-  private async processExpenseItemChange(accountId: string, change: SyncChange): Promise<SyncResult> {
+  private async processExpenseItemChange(
+    accountId: string,
+    change: Extract<SyncChange, { entityType: 'expense_item' }>,
+  ): Promise<SyncResult> {
     const { operation, payload, clientVersion, entityId } = change;
 
     // Verify that the parent expense belongs to this account
-    if (payload?.expenseId) {
+    if (payload.expenseId) {
       const parentExpense = await this.prisma.expense.findFirst({
         where: { id: payload.expenseId, accountId },
       });
@@ -263,7 +266,11 @@ export class SyncService {
       const updated = await this.prisma.expenseItem.update({
         where: { id: entityId },
         data: {
-          ...payload,
+          description: payload.description,
+          quantity: payload.quantity,
+          unitPrice: payload.unitPrice,
+          totalPrice: payload.totalPrice,
+          sortOrder: payload.sortOrder,
           encryptedPayload: change.encryptedPayload,
           encryptionKeyVersion: change.encryptionKeyVersion,
           syncVersion: { increment: 1 },
@@ -283,7 +290,10 @@ export class SyncService {
     return { entityId, status: 'error', error: 'Invalid operation' };
   }
 
-  private async processBudgetChange(accountId: string, change: SyncChange): Promise<SyncResult> {
+  private async processBudgetChange(
+    accountId: string,
+    change: Extract<SyncChange, { entityType: 'budget' }>,
+  ): Promise<SyncResult> {
     // Similar implementation for budgets
     return {
       entityId: change.entityId,
@@ -291,7 +301,10 @@ export class SyncService {
     };
   }
 
-  private async processCategoryChange(accountId: string, change: SyncChange): Promise<SyncResult> {
+  private async processCategoryChange(
+    accountId: string,
+    change: Extract<SyncChange, { entityType: 'category' }>,
+  ): Promise<SyncResult> {
     // Similar implementation for categories
     return {
       entityId: change.entityId,
@@ -299,7 +312,11 @@ export class SyncService {
     };
   }
 
-  private async processIncomeChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
+  private async processIncomeChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'income' }>,
+  ): Promise<SyncResult> {
     const { operation, payload, encryptedPayload, encryptionKeyVersion, clientVersion, entityId } = change;
 
     const existing = await this.incomesService.getByClientId(accountId, entityId);
@@ -317,7 +334,7 @@ export class SyncService {
         localId: entityId,
         encryptedPayload,
         encryptionKeyVersion,
-      });
+      } as any);
 
       if (!created) {
         return { entityId, status: 'error', error: 'Failed to create income' };
@@ -339,7 +356,7 @@ export class SyncService {
         ...payload,
         encryptedPayload,
         encryptionKeyVersion,
-      });
+      } as any);
       return { entityId, status: 'success', serverVersion: updated?.syncVersion ?? existing.syncVersion + 1 };
     }
 
@@ -351,13 +368,18 @@ export class SyncService {
     return { entityId, status: 'error', error: 'Invalid operation' };
   }
 
-  private async processTagChange(accountId: string, change: SyncChange): Promise<SyncResult> {
+  private async processTagChange(
+    accountId: string,
+    change: Extract<SyncChange, { entityType: 'tag' }>,
+  ): Promise<SyncResult> {
+    const { payload } = change;
     const encData = { encryptedPayload: change.encryptedPayload, encryptionKeyVersion: change.encryptionKeyVersion };
+
     if (change.operation === 'create') {
       const tag = await this.prisma.tag.upsert({
-        where: { accountId_name: { accountId, name: (change.payload as any).name } },
-        create: { accountId, ...(change.payload as any), ...encData },
-        update: { ...(change.payload as any), ...encData, isDeleted: false },
+        where: { accountId_name: { accountId, name: payload.name } },
+        create: { accountId, name: payload.name, color: payload.color, icon: payload.icon, clientId: payload.clientId, ...encData },
+        update: { name: payload.name, color: payload.color, icon: payload.icon, ...encData, isDeleted: false },
       });
       return { entityId: change.entityId, status: 'success', serverId: tag.id, serverVersion: tag.syncVersion };
     }
@@ -366,7 +388,7 @@ export class SyncService {
       if (!tag) return { entityId: change.entityId, status: 'error', error: 'Tag not found' };
       const updated = await this.prisma.tag.update({
         where: { id: change.entityId },
-        data: { ...(change.payload as any), ...encData, syncVersion: { increment: 1 } },
+        data: { name: payload.name, color: payload.color, icon: payload.icon, ...encData, syncVersion: { increment: 1 } },
       });
       return { entityId: change.entityId, status: 'success', serverVersion: updated.syncVersion };
     }
@@ -380,9 +402,14 @@ export class SyncService {
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
   }
 
-  private async processProjectChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
-    const payload = change.payload as any;
+  private async processProjectChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'project' }>,
+  ): Promise<SyncResult> {
+    const { payload } = change;
     const encData = { encryptedPayload: change.encryptedPayload, encryptionKeyVersion: change.encryptionKeyVersion };
+
     if (change.operation === 'create') {
       const project = await this.prisma.project.upsert({
         where: { accountId_clientId: { accountId, clientId: payload.localId || change.entityId } },
@@ -399,7 +426,18 @@ export class SyncService {
           currencyCode: payload.currencyCode,
           ...encData,
         },
-        update: { ...payload, ...encData, isDeleted: false },
+        update: {
+          name: payload.name,
+          description: payload.description,
+          color: payload.color,
+          icon: payload.icon,
+          startDate: payload.startDate ? new Date(payload.startDate) : undefined,
+          endDate: payload.endDate ? new Date(payload.endDate) : undefined,
+          budget: payload.budget,
+          currencyCode: payload.currencyCode,
+          ...encData,
+          isDeleted: false,
+        },
       });
       return { entityId: change.entityId, status: 'success', serverId: project.id, serverVersion: project.syncVersion };
     }
@@ -408,7 +446,18 @@ export class SyncService {
       if (!project) return { entityId: change.entityId, status: 'error', error: 'Project not found' };
       const updated = await this.prisma.project.update({
         where: { id: change.entityId },
-        data: { ...payload, ...encData, syncVersion: { increment: 1 } },
+        data: {
+          name: payload.name,
+          description: payload.description,
+          color: payload.color,
+          icon: payload.icon,
+          startDate: payload.startDate ? new Date(payload.startDate) : undefined,
+          endDate: payload.endDate ? new Date(payload.endDate) : undefined,
+          budget: payload.budget,
+          currencyCode: payload.currencyCode,
+          ...encData,
+          syncVersion: { increment: 1 },
+        },
       });
       return { entityId: change.entityId, status: 'success', serverVersion: updated.syncVersion };
     }
@@ -422,8 +471,13 @@ export class SyncService {
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
   }
 
-  private async processPortfolioHoldingChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
-    const payload = change.payload as any;
+  private async processPortfolioHoldingChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'portfolio_holding' }>,
+  ): Promise<SyncResult> {
+    const { payload } = change;
+
     if (change.operation === 'create') {
       // Find or create asset
       let asset = await this.prisma.asset.findFirst({
@@ -463,8 +517,13 @@ export class SyncService {
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
   }
 
-  private async processInvestmentTransactionChange(accountId: string, userId: string, change: SyncChange): Promise<SyncResult> {
-    const payload = change.payload as any;
+  private async processInvestmentTransactionChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'investment_transaction' }>,
+  ): Promise<SyncResult> {
+    const { payload } = change;
+
     if (change.operation === 'create') {
       const holding = await this.prisma.portfolioHolding.findFirst({
         where: { OR: [{ id: payload.holdingId }, { clientId: payload.holdingId }], accountId },
@@ -505,12 +564,10 @@ export class SyncService {
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
   }
 
-  private async processRelationChange(accountId: string, change: SyncChange): Promise<SyncResult> {
-    // For relation entities (expense_tag, income_tag, project_expense, project_income, expense_category_split)
-    // These are simple create/delete operations
-    const payload = change.payload as any;
+  private async processRelationChange(accountId: string, change: RelationChange): Promise<SyncResult> {
     try {
       if (change.entityType === 'expense_tag') {
+        const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.expenseTag.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
         } else {
@@ -521,6 +578,7 @@ export class SyncService {
           });
         }
       } else if (change.entityType === 'income_tag') {
+        const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.incomeTag.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
         } else {
@@ -531,6 +589,7 @@ export class SyncService {
           });
         }
       } else if (change.entityType === 'project_expense') {
+        const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.projectExpense.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
         } else {
@@ -541,6 +600,7 @@ export class SyncService {
           });
         }
       } else if (change.entityType === 'project_income') {
+        const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.projectIncome.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
         } else {
@@ -551,6 +611,7 @@ export class SyncService {
           });
         }
       } else if (change.entityType === 'expense_category_split') {
+        const { payload } = change;
         if (change.operation === 'delete') {
           await this.prisma.expenseCategorySplit.updateMany({ where: { id: change.entityId }, data: { isDeleted: true } });
         } else {
