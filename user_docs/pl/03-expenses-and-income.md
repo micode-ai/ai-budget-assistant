@@ -27,6 +27,13 @@ Przytrzymaj dowolna transakcje na liscie, aby otworzyc menu szybkich akcji:
 
 > **Uwaga:** Duplikowanie i usuwanie sa dostepne tylko dla wlascicieli i edytorow konta.
 
+### Akcje zbiorcze
+
+W przypadku wydatkow menu zawiera dodatkowo **Zaznacz wiele**. Dotknij, aby wlaczyc tryb wielokrotnego wyboru:
+- Dotykaj wierszy, aby zaznaczyc te, ktore chcesz, lub uzyj **Zaznacz wszystko**, aby zaznaczyc wszystkie
+- Dolny pasek pozwala wykonac akcje na wszystkich zaznaczonych wydatkach naraz: **Ustaw kategorie**, **Dodaj tag** lub **Usun**
+- Dotknij **Anuluj**, aby wyjsc z trybu wielokrotnego wyboru bez zmian
+
 Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
 ## Dodawanie nowego wydatku (recznie)

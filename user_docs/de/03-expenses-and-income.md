@@ -27,6 +27,13 @@ Halte eine beliebige Transaktion in der Liste gedruckt, um das Schnellaktionsmen
 
 > **Hinweis:** Duplizieren und Loschen sind nur fur Kontoinhaber und Bearbeiter verfugbar.
 
+### Massenaktionen
+
+Bei Ausgaben enthalt das Menu zusatzlich **Mehrere auswahlen**. Tippe darauf, um den Mehrfachauswahlmodus zu aktivieren:
+- Tippe auf Zeilen, um die gewunschten zu markieren, oder nutze **Alle auswahlen**, um alles zu markieren
+- Uber die untere Leiste kannst du alle ausgewahlten Ausgaben auf einmal bearbeiten: **Kategorie festlegen**, **Tag hinzufugen** oder **Loschen**
+- Tippe auf **Abbrechen**, um den Mehrfachauswahlmodus ohne Anderungen zu verlassen
+
 Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transaktion hinzuzufugen.
 
 ## Neue Ausgabe hinzufugen (Manuell)

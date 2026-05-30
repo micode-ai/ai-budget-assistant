@@ -1,6 +1,6 @@
 # Importing transactions from your bank
 
-> Import transactions from a CSV or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Wise, and any other bank via the universal column mapper.
+> Import transactions from a CSV or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.
 
 ## Supported banks
 
@@ -8,6 +8,7 @@
 - **PKO BP** — CSV export
 - **Erste Bank** — PDF statement
 - **Alior Bank** — PDF statement
+- **Revolut** — CSV export
 - **Wise** — CSV export (multi-currency, FX conversions detected automatically)
 - **Other** — any bank, via the universal column mapper (CSV)
 
@@ -29,6 +30,7 @@ The app skips rows that already exist in your account by matching on date, amoun
 - **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
 - **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
 - **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
+- **Revolut**: Revolut app → Statements → choose date range → CSV → Download
 - **Wise**: wise.com → Transactions → Statements and Reports → choose date range → CSV → choose currency/balance → Download
 
 > **Wise tip:** Wise generates one CSV per currency balance. Import each currency separately. Up to 469 days per export.

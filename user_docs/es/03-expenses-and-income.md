@@ -27,6 +27,13 @@ Mantén presionada cualquier transaccion en la lista para abrir el menu de accio
 
 > **Nota:** Duplicar y Eliminar solo estan disponibles para propietarios y editores de la cuenta.
 
+### Acciones masivas
+
+En los gastos, el menu tambien incluye **Seleccionar varios**. Tocalo para activar el modo de seleccion multiple:
+- Toca las filas para marcar las que quieras, o usa **Seleccionar todo** para marcarlas todas
+- La barra inferior te permite actuar sobre todos los gastos seleccionados a la vez: **Asignar categoria**, **Anadir etiqueta** o **Eliminar**
+- Toca **Cancelar** para salir del modo de seleccion multiple sin hacer cambios
+
 Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva transaccion.
 
 ## Agregar un nuevo gasto (Manual)

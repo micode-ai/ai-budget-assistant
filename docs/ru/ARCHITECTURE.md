@@ -485,7 +485,7 @@ src/
 │   ├── import-bank/             # Импорт выписок польских банков (CSV/PDF, реестр стратегий)
 │   │   ├── import-bank.controller.ts
 │   │   ├── import-bank.service.ts
-│   │   ├── parsers/            # парсеры по банкам (mbank, pko, ing, millennium, pekao, erste, alior, universal)
+│   │   ├── parsers/            # парсеры по банкам (mbank, pko, revolut, ing, millennium, pekao, erste, alior, universal)
 │   │   ├── merchants/         # merchants-pl.ts подсказки бренд→категория
 │   │   ├── mapping/           # сохранённые маппинги колонок
 │   │   └── utils/             # polish-amount, polish-date, encoding, fx-pairing, pdf-text
@@ -1072,14 +1072,19 @@ model SpendingStory {
 4. **Стратегия разрешения**: Сохраняется в SyncLog для аудита
 5. **Ручное разрешение**: Пользователь может выбрать версию (планируется)
 
+### Массовые операции с расходами
+
+`PATCH /expenses/bulk` (`BulkUpdateExpensesDto`) обеспечивает работу мобильного режима множественного выбора — массовое **удаление / смену категории / добавление тегов** одним запросом. Поскольку мобильный клиент может отправлять ещё не синхронизированные строки, и `ids` расходов, и `tagIds` разрешаются как по серверным PK, так и по локальным `clientId` через `OR: [{ id }, { clientId }]` (`Expense.clientId`, `Tag.clientId`), поэтому синхронизированные и несинхронизированные строки сопоставляются одинаково. При `isDeleted: true` выполняется мягкое удаление; иначе применяются `categoryId` и/или `tagIds` (теги добавляются).
+
 ## Импорт банковских выписок
 
 ### Импорт из банков (реестр стратегий)
 
 Модуль `import-bank` импортирует выписки CSV/PDF через **реестр стратегий** парсеров по банкам. Каждый парсер в `parsers/*.parser.ts` реализует `BankParser { id, displayName, format?: 'csv'|'pdf', detect(), parse() }` и регистрируется в `registry.ts`.
 
-- **Банки**: `mbank`, `pko`, `ing`, `millennium`, `pekao` (CSV) + `erste`, `alior` (PDF) + резервный `universal` маппинг колонок (`detect()` всегда возвращает `false`)
-- **Видимые и скрытые** (список `BANKS` в мобильном): показываются Wise, mBank, PKO, Erste (PDF), Alior (PDF), Other; ING / Millennium / Pekao есть в реестре, но скрыты до проверки на реальных выписках
+- **Банки**: `mbank`, `pko`, `revolut`, `ing`, `millennium`, `pekao` (CSV) + `erste`, `alior` (PDF) + резервный `universal` маппинг колонок (`detect()` всегда возвращает `false`)
+- **Видимые и скрытые** (список `BANKS` в мобильном): показываются Wise, mBank, PKO, Revolut, Erste (PDF), Alior (PDF), Other; ING / Millennium / Pekao есть в реестре, но скрыты до проверки на реальных выписках
+- **Revolut** (`parsers/revolut.parser.ts`): CSV-экспорт `Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance`. Берутся только строки `State = COMPLETED`; `Amount` со знаком (отрицательное — расход), `Fee` уже включён; строки `EXCHANGE` объединяются в FX через `pairFxRows`
 - **Поток** (`ImportBankService`): `decodeCsvBuffer` (авто-определение UTF-8 / Windows-1250 через `iconv-lite`) → выбор парсера (mappingId → bankId → сохранённый fingerprint → авто-определение) → нормализованные строки → `pairFxRows` (та же дата, противоположный знак, другая валюта) → `buildExternalRef` → дедупликация. PDF-выписки определяются по заголовку `%PDF`, текст извлекается через `pdf-parse` и направляется в PDF-парсеры (шаги CSV-заголовка/маппинга/fingerprint пропускаются)
 - **Два слоя дедупликации** в `buildPreviewResponse`: (1) точное совпадение `externalRef` (повторный импорт того же файла); (2) совпадение по содержимому `(date, signedAmountCents, currency)` со всеми Expense/Income аккаунта независимо от источника (жадное 1-к-1, FX исключаются). Совпавшие строки помечаются `alreadyImported` и автоматически снимаются в предпросмотре
 - **Ключ дедупликации**: `bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(normalize(desc)).slice(0,8)>`
