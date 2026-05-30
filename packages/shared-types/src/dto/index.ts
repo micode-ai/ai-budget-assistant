@@ -183,6 +183,7 @@ export interface CreateTagDto {
   name: string;
   color?: string;
   icon?: string;
+  clientId?: string;
 }
 
 export interface UpdateTagDto {

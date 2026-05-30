@@ -26,11 +26,12 @@ export class TagsService {
   }
 
   async findOne(accountId: string, id: string) {
+    // `id` may be the server PK or the mobile's local clientId (offline-first).
     const tag = await this.prisma.tag.findFirst({
       where: {
-        id,
         accountId,
         isDeleted: false,
+        OR: [{ id }, { clientId: id }],
       },
     });
 
@@ -41,16 +42,41 @@ export class TagsService {
     return tag;
   }
 
+  /** Resolve an expense by server PK or mobile clientId; null if not found. */
+  private async resolveExpensePk(accountId: string, idOrClientId: string): Promise<string | null> {
+    const e = await this.prisma.expense.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+      select: { id: true },
+    });
+    return e?.id ?? null;
+  }
+
+  /** Resolve an income by server PK or mobile clientId; null if not found. */
+  private async resolveIncomePk(accountId: string, idOrClientId: string): Promise<string | null> {
+    const i = await this.prisma.income.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+      select: { id: true },
+    });
+    return i?.id ?? null;
+  }
+
   async create(accountId: string, userId: string, dto: CreateTagDto) {
     void userId;
-    const created = await this.prisma.tag.create({
-      data: {
+    // Idempotent on the existing (accountId, name) unique — re-creating a tag
+    // returns the existing one instead of throwing. Stores the mobile's local
+    // id as clientId so later tag ops can resolve client-supplied ids back to
+    // this server PK.
+    const created = await this.prisma.tag.upsert({
+      where: { accountId_name: { accountId, name: dto.name } },
+      create: {
         accountId,
         name: dto.name,
         color: dto.color,
         icon: dto.icon,
+        clientId: dto.clientId,
         usageCount: 0,
       },
+      update: dto.clientId ? { clientId: dto.clientId } : {},
     });
     void this.embeddingService.embedAndStore('tag', created.id, created.name);
     return created;
@@ -86,42 +112,30 @@ export class TagsService {
   }
 
   async addToExpense(accountId: string, tagId: string, expenseId: string) {
-    // Verify tag belongs to account
-    await this.findOne(accountId, tagId);
-
-    // Verify expense belongs to account
-    const expense = await this.prisma.expense.findFirst({
-      where: {
-        id: expenseId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!expense) {
+    // Resolve tag + expense to server PKs (ids may be mobile clientIds).
+    const tag = await this.findOne(accountId, tagId);
+    const expensePk = await this.resolveExpensePk(accountId, expenseId);
+    if (!expensePk) {
       throw new NotFoundException('Expense not found');
     }
 
     // Create ExpenseTag record (upsert to handle duplicates)
     await this.prisma.expenseTag.upsert({
       where: {
-        expenseId_tagId: {
-          expenseId,
-          tagId,
-        },
+        expenseId_tagId: { expenseId: expensePk, tagId: tag.id },
       },
       update: {
         isDeleted: false,
       },
       create: {
-        expenseId,
-        tagId,
+        expenseId: expensePk,
+        tagId: tag.id,
       },
     });
 
     // Increment usage count
     await this.prisma.tag.update({
-      where: { id: tagId },
+      where: { id: tag.id },
       data: {
         usageCount: {
           increment: 1,
@@ -133,40 +147,20 @@ export class TagsService {
   }
 
   async removeFromExpense(accountId: string, tagId: string, expenseId: string) {
-    // Verify tag belongs to account
-    await this.findOne(accountId, tagId);
-
-    // Verify expense belongs to account
-    const expense = await this.prisma.expense.findFirst({
-      where: {
-        id: expenseId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!expense) {
+    const tag = await this.findOne(accountId, tagId);
+    const expensePk = await this.resolveExpensePk(accountId, expenseId);
+    if (!expensePk) {
       throw new NotFoundException('Expense not found');
     }
 
     // Soft delete ExpenseTag record
     const expenseTag = await this.prisma.expenseTag.findUnique({
-      where: {
-        expenseId_tagId: {
-          expenseId,
-          tagId,
-        },
-      },
+      where: { expenseId_tagId: { expenseId: expensePk, tagId: tag.id } },
     });
 
     if (expenseTag) {
       await this.prisma.expenseTag.update({
-        where: {
-          expenseId_tagId: {
-            expenseId,
-            tagId,
-          },
-        },
+        where: { expenseId_tagId: { expenseId: expensePk, tagId: tag.id } },
         data: {
           isDeleted: true,
         },
@@ -174,7 +168,7 @@ export class TagsService {
 
       // Decrement usage count
       await this.prisma.tag.update({
-        where: { id: tagId },
+        where: { id: tag.id },
         data: {
           usageCount: {
             decrement: 1,
@@ -187,42 +181,30 @@ export class TagsService {
   }
 
   async addToIncome(accountId: string, tagId: string, incomeId: string) {
-    // Verify tag belongs to account
-    await this.findOne(accountId, tagId);
-
-    // Verify income belongs to account
-    const income = await this.prisma.income.findFirst({
-      where: {
-        id: incomeId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!income) {
+    // Resolve tag + income to server PKs (ids may be mobile clientIds).
+    const tag = await this.findOne(accountId, tagId);
+    const incomePk = await this.resolveIncomePk(accountId, incomeId);
+    if (!incomePk) {
       throw new NotFoundException('Income not found');
     }
 
     // Create IncomeTag record (upsert to handle duplicates)
     await this.prisma.incomeTag.upsert({
       where: {
-        incomeId_tagId: {
-          incomeId,
-          tagId,
-        },
+        incomeId_tagId: { incomeId: incomePk, tagId: tag.id },
       },
       update: {
         isDeleted: false,
       },
       create: {
-        incomeId,
-        tagId,
+        incomeId: incomePk,
+        tagId: tag.id,
       },
     });
 
     // Increment usage count
     await this.prisma.tag.update({
-      where: { id: tagId },
+      where: { id: tag.id },
       data: {
         usageCount: {
           increment: 1,
@@ -234,40 +216,21 @@ export class TagsService {
   }
 
   async removeFromIncome(accountId: string, tagId: string, incomeId: string) {
-    // Verify tag belongs to account
-    await this.findOne(accountId, tagId);
-
-    // Verify income belongs to account
-    const income = await this.prisma.income.findFirst({
-      where: {
-        id: incomeId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!income) {
+    // Resolve tag + income to server PKs (ids may be mobile clientIds).
+    const tag = await this.findOne(accountId, tagId);
+    const incomePk = await this.resolveIncomePk(accountId, incomeId);
+    if (!incomePk) {
       throw new NotFoundException('Income not found');
     }
 
     // Soft delete IncomeTag record
     const incomeTag = await this.prisma.incomeTag.findUnique({
-      where: {
-        incomeId_tagId: {
-          incomeId,
-          tagId,
-        },
-      },
+      where: { incomeId_tagId: { incomeId: incomePk, tagId: tag.id } },
     });
 
     if (incomeTag) {
       await this.prisma.incomeTag.update({
-        where: {
-          incomeId_tagId: {
-            incomeId,
-            tagId,
-          },
-        },
+        where: { incomeId_tagId: { incomeId: incomePk, tagId: tag.id } },
         data: {
           isDeleted: true,
         },
@@ -275,7 +238,7 @@ export class TagsService {
 
       // Decrement usage count
       await this.prisma.tag.update({
-        where: { id: tagId },
+        where: { id: tag.id },
         data: {
           usageCount: {
             decrement: 1,

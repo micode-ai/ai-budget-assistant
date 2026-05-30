@@ -274,6 +274,7 @@ export interface Income {
 
 export interface Tag {
   id: string;
+  clientId?: string;
   accountId: string;
   name: string;
   color?: string;
