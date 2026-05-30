@@ -23,6 +23,7 @@ export default {
     no: 'No',
     showAll: 'Mostrar todo',
     duplicate: 'Duplicar',
+    selectMultiple: 'Seleccionar varios',
     import: 'Importar',
     addedBy: 'Agregado por {{name}}',
     deleteConfirmTitle: 'Eliminar transacción',

@@ -23,6 +23,7 @@ export default {
     no: 'Нет',
     showAll: 'Показать все',
     duplicate: 'Дублировать',
+    selectMultiple: 'Выбрать несколько',
     import: 'Импортировать',
     addedBy: 'Добавил(а) {{name}}',
     deleteConfirmTitle: 'Удалить транзакцию',
