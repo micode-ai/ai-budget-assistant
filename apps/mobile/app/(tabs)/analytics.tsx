@@ -18,7 +18,7 @@ import { getIntlLocale } from '@/i18n';
 import { usePeriodNavigation } from '@/hooks/usePeriodNavigation';
 import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
-  TagBreakdown, ProjectBreakdown, DayOfWeekSection, QuickInsights,
+  MerchantBreakdown, TagBreakdown, ProjectBreakdown, DayOfWeekSection, QuickInsights,
   TopReceiptItems, AiInsightsSection,
 } from '@/components/analytics';
 import type { Currency } from '@budget/shared-types';
@@ -41,7 +41,7 @@ export default function AnalyticsScreen() {
     selectedRange !== 'week' ? selectedMonth : undefined,
     selectedYear,
   );
-  const { dailySpending, categorySpending, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
+  const { dailySpending, categorySpending, merchantSpending, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
 
   const { aiInsights, loadAIInsights } = useInsightsStore();
   const { loadRates } = useExchangeRateStore();
@@ -130,6 +130,7 @@ export default function AnalyticsScreen() {
         <AiInsightsSection aiInsights={aiInsights} />
         <SpendingTrendChart dailySpending={dailySpending} selectedRange={selectedRange} onBarPress={openDrillDown} />
         <CategoryBreakdown categorySpending={categorySpending} currency={currency} />
+        {merchantSpending.length > 0 && <MerchantBreakdown merchantSpending={merchantSpending} currency={currency} />}
         {tagSpending.length > 0 && <TagBreakdown tagSpending={tagSpending} currency={currency} />}
         {projectSpending.length > 0 && <ProjectBreakdown projectSpending={projectSpending} currency={currency} />}
         {dayOfWeekSpending.some((d) => d.totalAmount > 0) && <DayOfWeekSection dayOfWeekSpending={dayOfWeekSpending} />}

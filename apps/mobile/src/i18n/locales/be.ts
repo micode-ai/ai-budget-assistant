@@ -254,6 +254,8 @@ export default {
     vsAvgDown: '{{pct}}% ніжэй сярэдняга за 3 месяцы',
     totalSavings: 'Эканомія па чэках',
     totalSavingsText: 'Вы зэканомілі {{amount}} на зніжках за {{range}}.',
+    byMerchant: 'Па крамах',
+    merchantOther: 'Іншыя',
     byTag: 'Па тэгах',
     byProject: 'Па праектах',
     tagBreakdown: 'Разбіўка па тэгах',

@@ -60,6 +60,12 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Pattern analysis showing which days you spend the most
 - Insight: "You spend the most on Saturdays"
 
+### By Merchants
+
+- Top merchants where you spent money in the selected period
+- Shows up to 8 individual merchants; the rest are grouped as "Other"
+- Only appears when at least one expense has a merchant value
+
 ### By Tags / By Projects
 
 - **Tag Breakdown** — spending grouped by your custom tags

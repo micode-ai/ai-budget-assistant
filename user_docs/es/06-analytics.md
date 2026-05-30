@@ -60,6 +60,12 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Analisis de patrones que muestra en que dias gastas mas
 - Informacion: "Gastas mas los sabados"
 
+### Por comerciantes
+
+- Los principales comerciantes donde gastaste en el periodo seleccionado
+- Muestra hasta 8 comerciantes individuales; el resto se agrupa como "Otros"
+- Solo aparece cuando al menos un gasto tiene un comerciante asignado
+
 ### Por etiquetas / Por proyectos
 
 - **Desglose por etiquetas** — gasto agrupado por tus etiquetas personalizadas

@@ -256,6 +256,8 @@ export default {
     vsAvgDown: '{{pct}}% en-dessous de la moy. 3 mois',
     totalSavings: 'Économies sur les tickets',
     totalSavingsText: 'Vous avez économisé {{amount}} en remises ce {{range}}.',
+    byMerchant: 'Par marchands',
+    merchantOther: 'Autres',
     byTag: 'Par tags',
     byProject: 'Par projets',
     tagBreakdown: 'Répartition par tags',

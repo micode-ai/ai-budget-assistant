@@ -110,6 +110,13 @@ export interface ProjectSpending {
   budget?: number;
 }
 
+export interface MerchantSpending {
+  merchant: string;
+  amount: number;
+  percentage: number;
+  color: string;
+}
+
 const TAG_COLORS = [
   '#6366F1', // Indigo
   '#EC4899', // Pink
@@ -135,6 +142,18 @@ const CATEGORY_COLORS = [
   '#BB8FCE', // Purple
   '#85C1E9', // Light Blue
 ];
+
+const MERCHANT_COLORS = [
+  '#FF6B6B',
+  '#4ECDC4',
+  '#45B7D1',
+  '#96CEB4',
+  '#FFEAA7',
+  '#DDA0DD',
+  '#F97316',
+  '#6366F1',
+];
+const MERCHANT_OTHER_COLOR = '#9CA3AF';
 
 export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: string, selectedMonth?: number, selectedYear?: number) {
   const { t } = useTranslation();
@@ -332,6 +351,44 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
 
     return result.sort((a, b) => b.amount - a.amount);
   }, [filteredExpenses, expenses, categories, t, getAmount, toDisplayCurrency, timeRange, dateRange, currencyCode]);
+
+  const merchantSpending = useMemo((): MerchantSpending[] => {
+    const withMerchant = filteredExpenses.filter((e) => e.merchant != null && e.merchant.trim() !== '');
+    if (withMerchant.length === 0) return [];
+
+    const merchantMap = new Map<string, number>();
+    for (const e of withMerchant) {
+      const key = e.merchant!.trim();
+      merchantMap.set(key, (merchantMap.get(key) || 0) + getAmount(e));
+    }
+
+    const total = Array.from(merchantMap.values()).reduce((s, a) => s + a, 0);
+    if (total === 0) return [];
+
+    const sorted = Array.from(merchantMap.entries()).sort((a, b) => b[1] - a[1]);
+    const TOP = 8;
+    const top = sorted.slice(0, TOP);
+    const rest = sorted.slice(TOP);
+
+    const result: MerchantSpending[] = top.map(([merchant, amount], i) => ({
+      merchant,
+      amount,
+      percentage: (amount / total) * 100,
+      color: MERCHANT_COLORS[i % MERCHANT_COLORS.length],
+    }));
+
+    if (rest.length > 0) {
+      const otherAmount = rest.reduce((s, [, a]) => s + a, 0);
+      result.push({
+        merchant: t('analytics.merchantOther'),
+        amount: otherAmount,
+        percentage: (otherAmount / total) * 100,
+        color: MERCHANT_OTHER_COLOR,
+      });
+    }
+
+    return result;
+  }, [filteredExpenses, getAmount, t]);
 
   const summary = useMemo((): AnalyticsSummary => {
     const totalSpent = filteredExpenses.reduce((sum, e) => sum + getAmount(e), 0);
@@ -739,6 +796,7 @@ export function useAnalytics(timeRange: TimeRange = 'month', currencyCode?: stri
     isLoading,
     dailySpending,
     categorySpending,
+    merchantSpending,
     summary,
     dateRange,
     itemBreakdown,

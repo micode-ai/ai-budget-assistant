@@ -60,6 +60,12 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Analyse des habitudes montrant quels jours vous depensez le plus
 - Apercu : "Vous depensez le plus le samedi"
 
+### Par marchands
+
+- Principaux marchands ou vous avez depense dans la periode selectionnee
+- Affiche jusqu'a 8 marchands individuels ; le reste est groupe sous "Autres"
+- Apparait uniquement quand au moins une depense a un marchand renseigne
+
 ### Par etiquettes / Par projets
 
 - **Repartition par etiquettes** — depenses groupees par vos etiquettes personnalisees

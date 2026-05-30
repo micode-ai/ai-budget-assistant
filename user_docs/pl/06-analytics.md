@@ -60,6 +60,12 @@ Kazda karta wnioskow ma poziom waznosci: krytyczny (czerwony), ostrzezenie (zolt
 - Analiza wzorcow pokazujaca, w ktore dni wydajesz najwiecej
 - Wnioski: "Najwiecej wydajesz w soboty"
 
+### Wedlug sprzedawcow
+
+- Glowni sprzedawcy, u ktorych wydawales w wybranym okresie
+- Pokazuje do 8 pojedynczych sprzedawcow; reszta jest grupowana jako "Inne"
+- Pojawia sie tylko gdy co najmniej jeden wydatek ma przypisanego sprzedawce
+
 ### Wedlug tagow / Wedlug projektow
 
 - **Podzial tagow** — wydatki pogrupowane wedlug Twoich niestandardowych tagow
