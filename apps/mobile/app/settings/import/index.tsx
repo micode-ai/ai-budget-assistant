@@ -14,13 +14,13 @@ import { useIncomeStore } from '@/stores/incomeStore';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
-// registry) until validated against real CSVs. Alior / Revolut to be added
-// once their parsers land. Erste accepts a PDF statement, the rest take CSV.
-// See ABA-126.
+// registry) until validated against real CSVs. Erste accepts a PDF statement,
+// the rest take CSV. See ABA-126.
 const BANKS = [
   { id: 'wise', label: 'Wise' },
   { id: 'mbank', label: 'mBank' },
   { id: 'pko', label: 'PKO BP' },
+  { id: 'revolut', label: 'Revolut' },
   { id: 'erste', label: 'Erste Bank (PDF)' },
   { id: 'alior', label: 'Alior Bank (PDF)' },
   { id: 'universal', label: 'Other (custom CSV)' },

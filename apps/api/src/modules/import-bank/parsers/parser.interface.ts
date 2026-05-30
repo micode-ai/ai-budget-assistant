@@ -13,7 +13,7 @@ export interface ParserResult {
 }
 
 export interface BankParser {
-  id: 'mbank' | 'pko' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal';
+  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal';
   displayName: string;
   /**
    * Input format the parser consumes. 'csv' parsers receive decoded CSV text;
