@@ -486,7 +486,7 @@ src/
 │   ├── import-bank/             # Polish bank CSV/PDF statement import (strategy registry)
 │   │   ├── import-bank.controller.ts
 │   │   ├── import-bank.service.ts
-│   │   ├── parsers/            # per-bank parsers (mbank, pko, ing, millennium, pekao, erste, alior, universal)
+│   │   ├── parsers/            # per-bank parsers (mbank, pko, revolut, ing, millennium, pekao, erste, alior, universal)
 │   │   ├── merchants/         # merchants-pl.ts brand→category hints
 │   │   ├── mapping/           # saved column mappings
 │   │   └── utils/             # polish-amount, polish-date, encoding, fx-pairing, pdf-text
@@ -1068,14 +1068,19 @@ The application uses optimistic version-based synchronization with last-write-wi
 4. **Resolution Strategy**: Stored in SyncLog for auditability
 5. **Manual Resolution**: User can choose which version to keep (future feature)
 
+### Bulk Expense Operations
+
+`PATCH /expenses/bulk` (`BulkUpdateExpensesDto`) powers mobile multi-select bulk **delete / recategorize / tag** in one round-trip. Because the mobile client may send rows that have not yet synced, both the expense `ids` and the `tagIds` are resolved against **server PKs and local `clientId`s** via `OR: [{ id }, { clientId }]` (`Expense.clientId`, `Tag.clientId`), so synced and unsynced rows are matched alike. `isDeleted: true` soft-deletes; otherwise `categoryId` and/or `tagIds` are applied (tags appended).
+
 ## Bank & Statement Import
 
 ### Bank Import (strategy registry)
 
 The `import-bank` module imports CSV/PDF bank statements through a **strategy registry** of per-bank parsers. Each parser in `parsers/*.parser.ts` implements `BankParser { id, displayName, format?: 'csv'|'pdf', detect(), parse() }` and is registered in `registry.ts`.
 
-- **Banks**: `mbank`, `pko`, `ing`, `millennium`, `pekao` (CSV) + `erste`, `alior` (PDF) + a `universal` column-mapping fallback (`detect()` always returns `false`)
-- **Visible vs hidden** (mobile `BANKS` list): Wise, mBank, PKO, Erste (PDF), Alior (PDF), Other are shown; ING / Millennium / Pekao exist in the registry but are hidden until validated against real exports
+- **Banks**: `mbank`, `pko`, `revolut`, `ing`, `millennium`, `pekao` (CSV) + `erste`, `alior` (PDF) + a `universal` column-mapping fallback (`detect()` always returns `false`)
+- **Visible vs hidden** (mobile `BANKS` list): Wise, mBank, PKO, Revolut, Erste (PDF), Alior (PDF), Other are shown; ING / Millennium / Pekao exist in the registry but are hidden until validated against real exports
+- **Revolut** (`parsers/revolut.parser.ts`): CSV export `Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance`. Only `State = COMPLETED` rows are kept; `Amount` is signed (negative = expense) with `Fee` already folded in; `EXCHANGE` rows are paired into FX via `pairFxRows`
 - **Flow** (`ImportBankService`): `decodeCsvBuffer` (UTF-8 / Windows-1250 auto-detect via `iconv-lite`) → parser dispatch (mappingId → bankId → saved fingerprint → auto-detect) → normalized rows → `pairFxRows` (same date, opposite sign, different currency) → `buildExternalRef` → dedup. PDF statements are detected by a `%PDF` header, text-extracted via `pdf-parse`, and routed to PDF parsers (CSV header/mapping/fingerprint steps skipped)
 - **Two dedup layers** in `buildPreviewResponse`: (1) exact `externalRef` match (re-import of the same file); (2) content match on `(date, signedAmountCents, currency)` against all account Expense/Income regardless of source (greedy 1-to-1, FX excluded). Matched rows are flagged `alreadyImported` and auto-unchecked in the preview
 - **Dedup key**: `bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(normalize(desc)).slice(0,8)>`

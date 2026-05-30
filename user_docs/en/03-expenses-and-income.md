@@ -27,6 +27,13 @@ Long-press any transaction in the list to open a quick action menu:
 
 > **Note:** Duplicate and Delete are only available for account owners and editors.
 
+### Bulk Actions
+
+For expenses, the long-press menu also includes **Select multiple**. Tap it to turn on multi-select mode:
+- Tap rows to check the ones you want, or use **Select all** to check everything
+- The bottom bar lets you act on all selected expenses at once: **Set category**, **Add tag**, or **Delete**
+- Tap **Cancel** to leave multi-select mode without making changes
+
 Use the floating **+** button (bottom-right) to add a new transaction.
 
 ## Adding a New Expense (Manual)

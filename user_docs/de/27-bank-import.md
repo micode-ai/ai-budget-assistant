@@ -1,6 +1,6 @@
 # Transaktionen aus deiner Bank importieren
 
-> Importiere Transaktionen aus einem CSV- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Wise und jede andere Bank über den universellen Spalten-Mapper.
+> Importiere Transaktionen aus einem CSV- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.
 
 ## Unterstützte Banken
 
@@ -8,6 +8,7 @@
 - **PKO BP** — CSV-Export
 - **Erste Bank** — PDF-Kontoauszug
 - **Alior Bank** — PDF-Kontoauszug
+- **Revolut** — CSV-Export
 - **Wise** — CSV-Export (mehrsprachig, FX-Konversionen werden automatisch erkannt)
 - **Andere** — beliebige Bank, über den universellen Spalten-Mapper (CSV)
 
@@ -23,6 +24,7 @@ Die App überspringt Zeilen, die bereits im Konto vorhanden sind, durch Abgleich
 
 ## Wo du den Export in deiner Bank findest
 
+- **Revolut**: Revolut-App → Statements → Datumsbereich wählen → CSV → Herunterladen
 - **Wise**: wise.com → Transactions → Statements and Reports → Datumsbereich wählen → CSV → Währung/Saldo wählen → Herunterladen
 
 > **Wise-Tipp:** Wise erstellt eine CSV pro Währungsguthaben. Importiere jede Währung separat. Bis zu 469 Tage pro Export.

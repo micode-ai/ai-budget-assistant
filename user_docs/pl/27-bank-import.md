@@ -1,6 +1,6 @@
 # Importowanie transakcji z banku
 
-> Importuj transakcje z wyciągu CSV lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Wise oraz dowolny bank przez uniwersalny mapper kolumn.
+> Importuj transakcje z wyciągu CSV lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise oraz dowolny bank przez uniwersalny mapper kolumn.
 
 ## Obsługiwane banki
 
@@ -8,6 +8,7 @@
 - **PKO BP** — eksport CSV
 - **Erste Bank** — wyciąg PDF
 - **Alior Bank** — wyciąg PDF
+- **Revolut** — eksport CSV
 - **Wise** — eksport CSV (wielowalutowy, konwersje wykrywane automatycznie)
 - **Inny** — dowolny bank, przez uniwersalny mapper kolumn (CSV)
 
@@ -27,6 +28,7 @@ Aplikacja pomija wiersze, które już istnieją w koncie, dopasowując po dacie,
 - **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
 - **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
 - **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
+- **Revolut**: aplikacja Revolut → Statements → wybierz zakres dat → CSV → Pobierz
 - **Wise**: wise.com → Transactions → Statements and Reports → wybierz zakres dat → CSV → wybierz walutę → Pobierz
 
 > **Wskazówka dla Wise:** Wise generuje jeden CSV na każde saldo walutowe. Importuj każdą walutę osobno. Do 469 dni na eksport.

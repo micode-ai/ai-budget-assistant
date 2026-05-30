@@ -555,6 +555,43 @@ X-Account-Id: <account-uuid>
 
 **Response** `204 No Content`
 
+### Bulk Update Expenses
+
+Bulk update or soft-delete multiple expenses in one call. Powers the mobile multi-select bulk delete / recategorize / tag actions.
+
+```http
+PATCH /expenses/bulk
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "ids": ["uuid-1", "uuid-2"],
+  "categoryId": "uuid",
+  "tagIds": ["tag-uuid-1"],
+  "isDeleted": false
+}
+```
+
+**Guards:** `JwtAuthGuard` + `AccountContextGuard` + `ViewerBlockGuard` (write action — viewers blocked).
+
+**Body** (`BulkUpdateExpensesDto`)
+| Field | Type | Description |
+|-------|------|-------------|
+| `ids` | string[] | Required. 1–500 expense identifiers. |
+| `categoryId` | string \| null | Optional. Reassign category; `null` clears it. |
+| `tagIds` | string[] | Optional. Tags to append to each expense. |
+| `isDeleted` | boolean | Optional. When `true`, soft-deletes the expenses (overrides `categoryId`/`tagIds`). |
+
+**Behaviour:** Validates that the ids belong to the account. When `isDeleted: true`, the matched expenses are soft-deleted; otherwise the supplied `categoryId` and/or `tagIds` are applied (tags are appended, not replaced).
+
+**Note:** `ids` and `tagIds` may be **server PKs or the mobile's local `clientId`s** (offline-first). The service resolves both via `OR: [{ id }, { clientId }]`, so synced and unsynced rows are matched alike.
+
+**Response** `200 OK`
+```json
+{ "updated": 2 }
+```
+
 ### Expense Items
 
 #### List Items

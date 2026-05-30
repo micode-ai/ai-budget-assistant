@@ -1,6 +1,6 @@
 # Імпорт транзакцій з банку
 
-> Імпортуйте транзакції з CSV або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Wise та будь-який інший банк через універсальний маппер колонок.
+> Імпортуйте транзакції з CSV або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise та будь-який інший банк через універсальний маппер колонок.
 
 ## Підтримувані банки
 
@@ -8,6 +8,7 @@
 - **PKO BP** — експорт CSV
 - **Erste Bank** — PDF-виписка
 - **Alior Bank** — PDF-виписка
+- **Revolut** — експорт CSV
 - **Wise** — експорт CSV (мультивалютний, конвертації визначаються автоматично)
 - **Інший** — будь-який банк, через універсальний маппер колонок (CSV)
 
@@ -25,6 +26,7 @@
 - **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
 - **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
 - **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
+- **Revolut**: застосунок Revolut → Statements → виберіть діапазон дат → CSV → Download
 - **Wise**: wise.com → Transactions → Statements and Reports → виберіть діапазон дат → CSV → виберіть валюту → Download
 
 > **Порада для Wise:** Wise створює один CSV на кожен валютний баланс. Імпортуйте кожну валюту окремо. До 469 днів за один експорт.

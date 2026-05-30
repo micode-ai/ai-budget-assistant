@@ -27,6 +27,13 @@ Maintenez appuye sur une transaction dans la liste pour ouvrir le menu d'actions
 
 > **Remarque :** Dupliquer et Supprimer ne sont disponibles que pour les proprietaires et editeurs du compte.
 
+### Actions groupees
+
+Pour les depenses, le menu inclut aussi **Selectionner plusieurs**. Touchez-le pour activer le mode selection multiple :
+- Touchez les lignes pour cocher celles que vous voulez, ou utilisez **Tout selectionner** pour tout cocher
+- La barre du bas vous permet d'agir sur toutes les depenses selectionnees en une fois : **Definir la categorie**, **Ajouter une etiquette** ou **Supprimer**
+- Touchez **Annuler** pour quitter le mode selection multiple sans modification
+
 Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle transaction.
 
 ## Ajouter une nouvelle depense (Saisie manuelle)
