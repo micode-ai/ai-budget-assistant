@@ -1,78 +1,79 @@
 # Release Notes — AI Budget Assistant
 
-Сводные заметки по релизам, от самого первого. Версия — это `versionName` в
-`apps/mobile/android/app/build.gradle` (источник истины для Google Play) и `version`
-в `apps/mobile/app.json`. Детальные пофичные заметки за отдельные даты лежат рядом
-в `docs/release-notes/` (напр. `2026-04-16.md`).
+Consolidated notes for every release, newest first. The version is `versionName` in
+`apps/mobile/android/app/build.gradle` (source of truth for Google Play) and `version`
+in `apps/mobile/app.json`. Russian translation: [`CHANGELOG.ru.md`](./CHANGELOG.ru.md).
+Detailed per-feature notes for individual dates live alongside in `docs/release-notes/`
+(e.g. `2026-04-16.md`).
 
 ---
 
 ## 1.3.0 — 2026-05-30
 
-**Аналитика**
-- Раздел **«Топ-мерчанты»** на вкладке «Аналитика» — где тратится больше всего, по продавцам (ABA-171).
-- **Разбивка доходов по категориям** (donut), в дополнение к разбивке расходов (ABA-175).
+**Analytics**
+- New **Top merchants** breakdown on the Analytics tab — where you spend the most, by merchant (ABA-171).
+- **Income breakdown by category** (donut), alongside the existing expense breakdown (ABA-175).
 
-**Массовые операции с расходами** (ABA-173 и исправления)
-- Мультивыбор: выделить несколько расходов и одним действием **сменить категорию**, **добавить тег** или **удалить**.
-- Длинное нажатие по строке снова открывает меню **Редактировать / Дублировать / Удалить**, а массовый режим — пункт **«Выбрать несколько»** (регресс long-press исправлен, ABA-168).
-- Исправлено массовое **удаление**, при котором расходы возвращались после обновления — две причины: порядок маршрутов на сервере и сопоставление локальных id (`clientId`) (ABA-166).
-- Исправлена **привязка тегов**: серверная привязка не сохранялась из-за рассинхрона id тегов — добавлена реконсиляция через `Tag.clientId`; теги теперь подгружаются в массовом пикере (ABA-167).
+**Bulk expense operations** (ABA-173 + fixes)
+- Multi-select: select several expenses and **set category**, **add tag**, or **delete** them at once.
+- Long-press a row again opens the **Edit / Duplicate / Delete** menu; bulk mode is the **Select multiple** item (long-press regression fixed, ABA-168).
+- Fixed bulk **delete** where expenses reappeared after refresh — two causes: server route ordering and local-id (`clientId`) resolution (ABA-166).
+- Fixed **tag assignment**: server-side links weren't saved due to a tag-id mismatch — added reconciliation via `Tag.clientId`; tags now load in the bulk picker (ABA-167).
 
-**Импорт**
-- **Импорт выписок Revolut** (CSV) (ABA-176).
+**Import**
+- **Revolut statement import** (CSV) (ABA-176).
 
-**Под капотом**
-- Типизация payload синхронизации по сущностям, без `as any` (ABA-174).
-- Документация: эндпоинт `PATCH /expenses/bulk`, массовые операции, реконсиляция тегов, Revolut — в техническом и пользовательском справочнике (ABA-177).
+**Under the hood**
+- Sync payload typed per entity, no `as any` casts (ABA-174).
+- Docs: `PATCH /expenses/bulk` endpoint, bulk operations, tag reconciliation, Revolut — in both technical and user help (ABA-177).
 
-> Инфраструктура прода (автобэкап БД с шифрованием и off-site, мониторинг диска/контейнеров, ротация логов, DR-runbook, очистка build-кэша при деплое) вошла в 1.2.0 (см. ниже) и продолжает работать.
+> Production infrastructure (encrypted off-site DB backups, disk/container monitoring, log rotation, DR runbook, build-cache pruning on deploy) shipped in 1.2.0 (below) and continues to run.
 
 ---
 
 ## 1.2.0 — 2026-05-29
 
-Крупный релиз: ~196 коммитов после 1.0.0. Основные темы.
+Large release: ~196 commits after 1.0.0. Main themes.
 
-**Импорт банков и переводов**
-- Импорт выписок польских банков: **mBank, PKO** (CSV), **Erste, Alior** (PDF), универсальный маппинг колонок; **импорт Wise** (CSV).
-- **История импортов** с откатом (rollback) и дедупликацией; запрос на добавление банка.
+**Bank & transfer import**
+- Polish bank statement import: **mBank, PKO** (CSV), **Erste, Alior** (PDF), universal column mapping; **Wise import** (CSV).
+- **Import history** with rollback and deduplication; request-a-bank flow.
 
-**Расходы и категоризация**
-- Поле **«Мерчант»** у расходов (OCR/импорт/ручной ввод), экран **управления мерчантами** (переименование/слияние/удаление).
-- Повторяющиеся расходы, разделение расходов по категориям, привязка к проектам.
+**Expenses & categorization**
+- **Merchant** field on expenses (OCR / import / manual), **merchant management** screen (rename / merge / delete).
+- Recurring expenses, category splits, project links.
 
-**AI и боты**
-- **Telegram** и **WhatsApp** боты: AI-чат, голосовые (Whisper), OCR чеков.
-- Общий AI-чат для совместных аккаунтов, AI-команды для долгов и целей накоплений.
+**AI & bots**
+- **Telegram** and **WhatsApp** bots: AI chat, voice (Whisper), receipt OCR.
+- Shared AI chat for shared accounts; AI commands for debts and savings goals.
 
-**Финансы**
-- **Долги и займы**, **цели накоплений**, **инвестиционный портфель**, **рефералы**, **геймификация**.
-- Кошелёк, обмен валют, переводы между счетами; редактирование начального баланса.
+**Finance**
+- **Debts & loans**, **savings goals**, **investment portfolio**, **referrals**, **gamification**.
+- Wallet, currency exchange, account transfers; initial-balance editing.
 
-**Безопасность и приватность**
-- **End-to-end шифрование** синхронизации (E2EE) с восстановлением.
-- Роль **viewer** (только просмотр) с блокировкой записи на сервере, в AI-чате и ботах.
+**Security & privacy**
+- **End-to-end encryption** of sync (E2EE) with recovery.
+- **Viewer** role (read-only) with write blocking on the server, in AI chat, and in bots.
 
-**Производительность и инфраструктура**
-- Слой кэширования (Redis), restart-resilient троттлинг, пул соединений, параллельная синхронизация.
-- **Автоматический бэкап PostgreSQL**: ночной, зашифрованный (`age`), off-site в GitHub Releases, GFS-ретеншн, алерты в Telegram, runbook восстановления.
-- **Отказоустойчивость**: мониторинг диска/контейнеров, ротация логов Docker, DR-runbook «rebuild from scratch», очистка build-кэша при деплое.
+**Performance & infrastructure**
+- Caching layer (Redis), restart-resilient throttling, connection pool, parallel sync.
+- **Automated PostgreSQL backups**: nightly, encrypted (`age`), off-site to GitHub Releases, GFS retention, Telegram alerts, restore runbook.
+- **Fault tolerance**: disk/container monitoring, Docker log rotation, full-server-rebuild DR runbook, build-cache pruning on deploy.
 
-**Прочее**
-- Симулятор сценариев, виджеты, справочник данных, единый экран ботов, гейт версий приложения, и многое другое.
+**Other**
+- Scenario simulator, widgets, reference-data hub, unified bots screen, app-version gate, and more.
 
 ---
 
 ## 1.0.0 — 2026-04-10
 
-Первый публичный релиз.
+First public release.
 
-- Учёт **расходов и доходов**, **бюджеты** с периодами и историей.
-- **Аналитика**: разбивки, тренды, drill-down, календарь.
-- **AI-ассистент**: вопросы по финансам и выполнение действий через чат (создание расходов/бюджетов и т.д.), определение языка (8 языков).
-- **Мультиаккаунты** (личный/совместный/бизнес) с ролями и приглашениями.
-- **Голосовой ввод** и **сканирование чеков** (OCR).
-- Кошелёк и мультивалютность, теги, проекты.
-- Офлайн-первый подход: локальная SQLite + синхронизация с сервером.
-- 8 языков интерфейса, тёмная/светлая темы.
+- **Expense & income** tracking, **budgets** with periods and history.
+- **Analytics**: breakdowns, trends, drill-down, calendar.
+- **AI assistant**: financial Q&A and actions via chat (create expenses/budgets, etc.), with automatic language detection (8 languages).
+- **Multi-account** (personal / shared / business) with roles and invitations.
+- **Voice input** and **receipt scanning** (OCR).
+- Wallet and multi-currency, tags, projects.
+- Offline-first: local SQLite + server sync.
+- 8 UI languages, dark / light themes.
