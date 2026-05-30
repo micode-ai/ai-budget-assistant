@@ -106,6 +106,7 @@ export default function ExpensesScreen() {
   );
   const merchantList = getDistinctMerchants();
   const allTags = useTagStore((s) => s.tags);
+  const loadTags = useTagStore((s) => s.loadTags);
   const fabAnimation = useRef(new Animated.Value(0)).current;
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -123,6 +124,9 @@ export default function ExpensesScreen() {
   useEffect(() => {
     if (currentAccountId) {
       hydrateTransactions();
+      // Tags power the bulk-tag picker; load them here so it isn't empty when
+      // the user opens it without first visiting the tags reference screen.
+      loadTags();
     }
   }, [currentAccountId]);
 
