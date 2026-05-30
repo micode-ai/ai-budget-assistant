@@ -38,6 +38,14 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 
 ## Diagramme
 
+### Einnahmen nach Kategorie (Donut-Diagramm)
+
+- Zeigt Ihre Einnahmen aufgeteilt nach Kategorien für den ausgewählten Zeitraum
+- Wird nur angezeigt, wenn Einnahmen mit Kategorien vorhanden sind (z. B. Gehalt, Freiberuflich, Dividenden, Mieteinnahmen)
+- Farbcodiert in einem Grün/Blaugrün-Schema zur Unterscheidung von Ausgabendiagrammen
+- Nicht kategorisierte Einnahmen werden als „Sonstige" zusammengefasst
+- Erscheint oberhalb des Ausgabentrends
+
 ### Ausgabentrend (Balkendiagramm)
 
 - Zeigt tagliche oder monatliche Ausgaben uber den ausgewahlten Zeitraum

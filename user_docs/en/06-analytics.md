@@ -38,6 +38,14 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 
 ## Charts
 
+### Income by Category (Donut Chart)
+
+- Breaks down your income by category for the selected period
+- Shows only when you have income entries with categories (e.g., Salary, Freelance, Dividends, Rental)
+- Color-coded in a green/teal palette to distinguish from expense charts
+- Uncategorized income is grouped as "Other"
+- Appears above the spending trend chart
+
 ### Spending Trend (Bar Chart)
 
 - Shows daily or monthly spending over the selected period

@@ -18,8 +18,8 @@ import { getIntlLocale } from '@/i18n';
 import { usePeriodNavigation } from '@/hooks/usePeriodNavigation';
 import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
-  MerchantBreakdown, TagBreakdown, ProjectBreakdown, DayOfWeekSection, QuickInsights,
-  TopReceiptItems, AiInsightsSection,
+  IncomeCategoryBreakdown, MerchantBreakdown, TagBreakdown, ProjectBreakdown,
+  DayOfWeekSection, QuickInsights, TopReceiptItems, AiInsightsSection,
 } from '@/components/analytics';
 import type { Currency } from '@budget/shared-types';
 
@@ -41,7 +41,7 @@ export default function AnalyticsScreen() {
     selectedRange !== 'week' ? selectedMonth : undefined,
     selectedYear,
   );
-  const { dailySpending, categorySpending, merchantSpending, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
+  const { dailySpending, categorySpending, merchantSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
 
   const { aiInsights, loadAIInsights } = useInsightsStore();
   const { loadRates } = useExchangeRateStore();
@@ -128,6 +128,7 @@ export default function AnalyticsScreen() {
         </TouchableOpacity>
 
         <AiInsightsSection aiInsights={aiInsights} />
+        {incomeByCategory.length > 0 && <IncomeCategoryBreakdown incomeByCategory={incomeByCategory} currency={currency} />}
         <SpendingTrendChart dailySpending={dailySpending} selectedRange={selectedRange} onBarPress={openDrillDown} />
         <CategoryBreakdown categorySpending={categorySpending} currency={currency} />
         {merchantSpending.length > 0 && <MerchantBreakdown merchantSpending={merchantSpending} currency={currency} />}

@@ -260,6 +260,8 @@ export default {
     merchantOther: 'Інші',
     byTag: 'За тегами',
     byProject: 'За проєктами',
+    byIncomeCategory: 'Доходи за категоріями',
+    incomeCategoryOther: 'Інші',
     tagBreakdown: 'Розподіл за тегами',
     tagTrends: 'Тренди тегів',
     projectComparison: 'Порівняння проєктів',
