@@ -255,10 +255,8 @@ export default function ExpensesScreen() {
   };
 
   const handleLongPress = (item: Expense | Income, type: 'expense' | 'income') => {
-    if (type === 'expense' && canEdit) {
-      enterMultiSelect(item.id);
-      return;
-    }
+    // Long-press opens the per-row action sheet (edit / duplicate / delete).
+    // Multi-select is reachable from there via "Select multiple" (expenses only).
     setSelectedTransaction({
       id: item.id,
       type,
@@ -965,6 +963,11 @@ export default function ExpensesScreen() {
         onDuplicate={handleDuplicate}
         onDelete={handleDeleteFromList}
         canEdit={canEdit}
+        onSelectMultiple={
+          selectedTransaction?.type === 'expense'
+            ? () => enterMultiSelect(selectedTransaction.id)
+            : undefined
+        }
       />
     </SafeAreaView>
   );

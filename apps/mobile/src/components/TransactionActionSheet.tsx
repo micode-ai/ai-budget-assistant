@@ -19,6 +19,7 @@ interface TransactionActionSheetProps {
   onDuplicate: () => void;
   onDelete: () => void;
   canEdit: boolean;
+  onSelectMultiple?: () => void;
 }
 
 export function TransactionActionSheet({
@@ -28,6 +29,7 @@ export function TransactionActionSheet({
   onDuplicate,
   onDelete,
   canEdit,
+  onSelectMultiple,
 }: TransactionActionSheetProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -107,6 +109,16 @@ export function TransactionActionSheet({
               >
                 <Ionicons name="copy-outline" size={22} color={theme.colors.primary} />
                 <Text style={styles.menuItemText}>{t('common.duplicate')}</Text>
+              </TouchableOpacity>
+            )}
+
+            {canEdit && onSelectMultiple && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => handleAction(onSelectMultiple)}
+              >
+                <Ionicons name="checkmark-circle-outline" size={22} color={theme.colors.primary} />
+                <Text style={styles.menuItemText}>{t('common.selectMultiple')}</Text>
               </TouchableOpacity>
             )}
 

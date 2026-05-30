@@ -21,6 +21,7 @@ export default {
     clear: 'Ачысціць',
     showAll: 'Паказаць усё',
     duplicate: 'Дубліраваць',
+    selectMultiple: 'Выбраць некалькі',
     import: 'Імпартаваць',
     addedBy: 'Дадаў(ла) {{name}}',
     deleteConfirmTitle: 'Выдаліць транзакцыю',
