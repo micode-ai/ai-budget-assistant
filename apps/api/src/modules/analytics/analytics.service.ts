@@ -11,6 +11,12 @@ interface ExpenseWithCategory {
   date: Date;
   categoryId: string | null;
   category?: { name: string } | null;
+  discountAmount: unknown;
+  categorySplits: Array<{
+    categoryId: string;
+    amount: unknown;
+    category?: { name: string } | null;
+  }>;
 }
 
 /**
@@ -177,7 +183,7 @@ export class AnalyticsService {
     });
 
     const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
-    const totalDiscountSavings = expenses.reduce((sum: number, e: any) => sum + Number(e.discountAmount || 0), 0);
+    const totalDiscountSavings = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.discountAmount || 0), 0);
 
     // Group expenses by currency
     const currencyTotals = new Map<string, { total: number; count: number }>();
@@ -198,7 +204,7 @@ export class AnalyticsService {
 
     // Group by category
     const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
-    for (const expense of expenses as any[]) {
+    for (const expense of expenses) {
       // If expense has splits, use those instead of single category
       if (expense.categorySplits && expense.categorySplits.length > 0) {
         for (const split of expense.categorySplits) {
@@ -409,11 +415,11 @@ export class AnalyticsService {
     });
 
     const totalExpenses = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
-    const totalDiscountSavings = expenses.reduce((sum: number, e: any) => sum + Number(e.discountAmount || 0), 0);
+    const totalDiscountSavings = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.discountAmount || 0), 0);
 
     // Group by category
     const categoryMap = new Map<string, { amount: number; count: number; name: string }>();
-    for (const expense of expenses as any[]) {
+    for (const expense of expenses) {
       // If expense has splits, use those instead of single category
       if (expense.categorySplits && expense.categorySplits.length > 0) {
         for (const split of expense.categorySplits) {
