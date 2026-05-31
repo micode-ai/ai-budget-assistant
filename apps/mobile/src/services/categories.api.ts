@@ -1,19 +1,20 @@
+import type { Category, Tag } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const categoriesApi = {
   getCategories() {
-    return httpClient.request<any[]>('/categories');
+    return httpClient.request<Category[]>('/categories');
   },
 
   createCategory(data: { name: string; icon?: string; color?: string; type: string; parentId?: string }) {
-    return httpClient.request<any>('/categories', {
+    return httpClient.request<Category>('/categories', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
   updateCategory(id: string, data: { name?: string; icon?: string; color?: string }) {
-    return httpClient.request<any>(`/categories/${id}`, {
+    return httpClient.request<Category>(`/categories/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -24,18 +25,18 @@ export const categoriesApi = {
   },
 
   getTags() {
-    return httpClient.request<any[]>('/tags');
+    return httpClient.request<Tag[]>('/tags');
   },
 
   createTag(data: { name: string; color?: string; icon?: string; clientId?: string }) {
-    return httpClient.request<any>('/tags', {
+    return httpClient.request<Tag>('/tags', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
   updateTag(id: string, data: { name?: string; color?: string; icon?: string }) {
-    return httpClient.request<any>(`/tags/${id}`, {
+    return httpClient.request<Tag>(`/tags/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

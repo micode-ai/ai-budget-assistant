@@ -1,5 +1,12 @@
-import type { Account, AccountMember, AccountInvitation } from '@budget/shared-types';
-import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto } from '@budget/shared-types';
+import type { Account, AccountMember, AccountInvitation, AccountTransfer } from '@budget/shared-types';
+import type {
+  CreateAccountDto,
+  UpdateAccountDto,
+  CreateInvitationDto,
+  CreateAccountTransferDto,
+  UpdateAccountTransferDto,
+  AccountTransferResponse,
+} from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const accountsApi = {
@@ -64,32 +71,32 @@ export const accountsApi = {
   },
 
   acceptInvitation(inviteCode: string) {
-    return httpClient.request<any>('/accounts/invitations/accept', {
+    return httpClient.request<{ member: AccountMember; account: Account }>('/accounts/invitations/accept', {
       method: 'POST',
       body: JSON.stringify({ inviteCode }),
     });
   },
 
   declineInvitation(inviteCode: string) {
-    return httpClient.request<any>('/accounts/invitations/decline', {
+    return httpClient.request<AccountInvitation>('/accounts/invitations/decline', {
       method: 'POST',
       body: JSON.stringify({ inviteCode }),
     });
   },
 
   getAccountTransfers() {
-    return httpClient.request<any[]>('/account-transfers');
+    return httpClient.request<AccountTransferResponse[]>('/account-transfers');
   },
 
-  createAccountTransfer(data: any) {
-    return httpClient.request<any>('/account-transfers', {
+  createAccountTransfer(data: CreateAccountTransferDto) {
+    return httpClient.request<AccountTransferResponse>('/account-transfers', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  updateAccountTransfer(id: string, data: any) {
-    return httpClient.request<any>(`/account-transfers/${id}`, {
+  updateAccountTransfer(id: string, data: UpdateAccountTransferDto) {
+    return httpClient.request<AccountTransferResponse>(`/account-transfers/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

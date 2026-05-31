@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus } from '@budget/shared-types';
+import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, Currency } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import i18n from '@/i18n';
 import {
@@ -170,7 +170,7 @@ export const useExpenseStore = create<ExpenseState>()(
           const serverResult = await api.getExpenses();
           // Guard: abort if account switched during server call
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          const serverExpenses: any[] = (serverResult as any).data || serverResult;
+          const serverExpenses = serverResult.data;
 
           // -------- PHASE A: build local lookup + dedup category/project maps --------
           const localById = new Map<string, Expense>();
@@ -237,7 +237,7 @@ export const useExpenseStore = create<ExpenseState>()(
                     startDate: proj.startDate ? new Date(proj.startDate) : undefined,
                     endDate: proj.endDate ? new Date(proj.endDate) : undefined,
                     budget: proj.budget ?? undefined,
-                    currencyCode: proj.currencyCode ?? undefined,
+                    currencyCode: (proj.currencyCode ?? undefined) as Currency | undefined,
                     isArchived: proj.isArchived ?? false,
                     createdAt: proj.createdAt ? new Date(proj.createdAt) : pn,
                     updatedAt: proj.updatedAt ? new Date(proj.updatedAt) : pn,

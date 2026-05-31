@@ -18,6 +18,7 @@ export interface CreatePortfolioHoldingDto {
   assetName: string;
   assetType: AssetType;
   assetExchange?: string;
+  assetCurrency?: string;
   notes?: string;
 }
 

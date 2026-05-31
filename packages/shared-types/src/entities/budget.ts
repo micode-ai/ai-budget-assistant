@@ -26,6 +26,8 @@ export interface Budget {
   id: string;
   localId: string;
   serverId?: string;
+  /** Server-side copy of the mobile device's local ID. Present on API responses. */
+  clientId?: string | null;
   userId: string;
   accountId: string;
   name: string;

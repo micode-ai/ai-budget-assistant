@@ -22,11 +22,15 @@ export interface CreateCurrencyExchangeDto {
 }
 
 export interface UpdateCurrencyExchangeDto {
+  fromCurrency?: Currency;
+  toCurrency?: Currency;
   fromAmount?: number;
   toAmount?: number;
   exchangeRate?: number;
   date?: string;
   notes?: string;
+  encryptedPayload?: string | null;
+  encryptionKeyVersion?: string | number | null;
 }
 
 export interface CreateAccountTransferDto {
@@ -69,6 +73,8 @@ export interface AccountTransferResponse {
   linkedIncomeId?: string;
   createdAt: string;
   updatedAt: string;
+  isDeleted?: boolean;
+  syncVersion?: number;
 }
 
 export interface WalletSummaryResponse {
