@@ -1,4 +1,14 @@
+import type { Expense, ExpenseItem, ExpenseCategorySplit } from '@budget/shared-types';
+import type { CreateExpenseDto, UpdateExpenseDto } from '@budget/shared-types';
+import type { PaginatedResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
+
+/** Accepts UpdateExpenseDto with date as string or Date (JSON.stringify normalises both). */
+type UpdateExpenseInput = Omit<UpdateExpenseDto, 'date' | 'debtDueDate'> & {
+  date?: string | Date;
+  debtDueDate?: string | Date | null;
+  [key: string]: unknown;
+};
 
 export const expensesApi = {
   getExpenses(filters?: { startDate?: string; endDate?: string; categoryId?: string }) {
@@ -7,18 +17,18 @@ export const expensesApi = {
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.categoryId) params.append('categoryId', filters.categoryId);
-    return httpClient.request<any[]>(`/expenses?${params.toString()}`);
+    return httpClient.request<PaginatedResponse<Expense>>(`/expenses?${params.toString()}`);
   },
 
-  createExpense(data: any) {
-    return httpClient.request<any>('/expenses', {
+  createExpense(data: CreateExpenseDto) {
+    return httpClient.request<Expense>('/expenses', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  updateExpense(id: string, data: any) {
-    return httpClient.request<any>(`/expenses/${id}`, {
+  updateExpense(id: string, data: UpdateExpenseInput) {
+    return httpClient.request<Expense>(`/expenses/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -42,18 +52,18 @@ export const expensesApi = {
   },
 
   getExpenseItems(expenseId: string) {
-    return httpClient.request<any[]>(`/expenses/${expenseId}/items`);
+    return httpClient.request<ExpenseItem[]>(`/expenses/${expenseId}/items`);
   },
 
-  createExpenseItem(expenseId: string, data: any) {
-    return httpClient.request<any>(`/expenses/${expenseId}/items`, {
+  createExpenseItem(expenseId: string, data: { description: string; quantity: number; unitPrice: number; sortOrder?: number }) {
+    return httpClient.request<ExpenseItem>(`/expenses/${expenseId}/items`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  updateExpenseItem(expenseId: string, itemId: string, data: any) {
-    return httpClient.request<any>(`/expenses/${expenseId}/items/${itemId}`, {
+  updateExpenseItem(expenseId: string, itemId: string, data: { description?: string; quantity?: number; unitPrice?: number; sortOrder?: number }) {
+    return httpClient.request<ExpenseItem>(`/expenses/${expenseId}/items/${itemId}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -88,7 +98,7 @@ export const expensesApi = {
     expenseId: string,
     splits: { categoryId: string; amount: number; percentage: number; notes?: string }[],
   ) {
-    return httpClient.request<any>(`/expenses/${expenseId}/splits`, {
+    return httpClient.request<ExpenseCategorySplit[]>(`/expenses/${expenseId}/splits`, {
       method: 'POST',
       body: JSON.stringify({ splits }),
     });

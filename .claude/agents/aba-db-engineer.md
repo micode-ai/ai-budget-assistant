@@ -26,18 +26,19 @@ You do NOT touch services, controllers, screens, or stores. If a schema change r
 5. **Sync metadata on mobile entities that sync**: `localId`, `serverId`, `syncStatus`, `syncVersion`, `updatedAt`. Look at `expenses` table in `apps/mobile/src/db/schema/index.ts` as the canonical example.
 6. **Column naming**: Prisma uses `camelCase` field with `@map("snake_case")` for the DB column. SQLite uses `snake_case` in the column literal but `camelCase` in the JS object key.
 7. **Enums**: defined as Prisma enums on the server (e.g., `AccountType`, `AccountRole`); on mobile and shared-types, they're string literal unions in `packages/shared-types/src/entities/index.ts`. Keep the values identical.
+8. **Importable entities use `externalRef` + `importBatchId`**: any entity that can be created by an import (Wise/bank CSV/PDF) must carry `externalRef String?` with `@@unique([accountId, externalRef])` (NULLs distinct in Postgres) and a nullable `importBatchId` FK referencing `import_batches`. These two fields power re-import dedup (`buildExternalRef`) and batch rollback (`DELETE /import/batches/:id` nulls out `externalRef`). Mirror `Expense` in `schema.prisma` as the canonical example.
 
 ## Workflow for adding an entity
 
 1. Add the interface to `packages/shared-types/src/entities/index.ts`, plus any enum union type. Export it.
-2. Add the Prisma model to `schema.prisma`. Include `accountId` FK if account-scoped, plus an `@@index([accountId])` (and any other access patterns).
+2. Add the Prisma model to `schema.prisma`. Include `accountId` FK if account-scoped, plus an `@@index([accountId])` (and any other access patterns). **If the entity can be created by an import (Wise/bank CSV/PDF), also add `externalRef String?` with `@@unique([accountId, externalRef])` and a nullable `importBatchId` FK referencing `import_batches` — see `Expense` as the canonical example.**
 3. Run migration:
    ```bash
    cd apps/api
    npx prisma migrate dev --name add_<entity>
    npx prisma generate
    ```
-4. If the mobile app stores it locally, add a `sqliteTable` to `apps/mobile/src/db/schema/index.ts` with matching fields + sync metadata.
+4. If the mobile app stores it locally, add a `sqliteTable` to `apps/mobile/src/db/schema/index.ts` with matching fields + sync metadata. If the entity is importable, also mirror the `externalRef` (text, nullable) and `importBatchId` (text, nullable) columns in the SQLite table.
 5. Output a handoff note listing what the backend/mobile engineers need to do next (services, repositories, stores, API client methods).
 
 ## Workflow for changing a field

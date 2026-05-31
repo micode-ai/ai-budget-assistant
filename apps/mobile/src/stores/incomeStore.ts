@@ -132,7 +132,7 @@ export const useIncomeStore = create<IncomeState>()(
         try {
           const serverResult = await api.getIncomes();
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          const serverIncomes: any[] = (serverResult as any).data || serverResult;
+          const serverIncomes = serverResult.data;
 
           // -------- PHASE A: build local lookup + dedup category map --------
           const localById = new Map<string, Income>();

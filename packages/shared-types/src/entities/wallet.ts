@@ -4,6 +4,8 @@ export interface WalletBalance {
   id: string;
   localId: string;
   serverId?: string;
+  /** Server-side copy of the mobile device's local ID. Present on API responses. */
+  clientId?: string | null;
   accountId: string;
   userId: string;
   currencyCode: Currency;
@@ -19,6 +21,8 @@ export interface CurrencyExchange {
   id: string;
   localId: string;
   serverId?: string;
+  /** Server-side copy of the mobile device's local ID. Present on API responses. */
+  clientId?: string | null;
   accountId: string;
   userId: string;
   fromCurrency: Currency;

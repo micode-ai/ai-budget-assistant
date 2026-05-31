@@ -1,16 +1,25 @@
+import type { WalletBalance, CurrencyExchange } from '@budget/shared-types';
+import type {
+  CreateWalletBalanceDto,
+  CreateCurrencyExchangeDto,
+  UpdateCurrencyExchangeDto,
+  WalletSummaryResponse,
+  ExchangeRatesResponse,
+  DebtSummaryResponse,
+} from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const walletApi = {
   getWalletBalances() {
-    return httpClient.request<any[]>('/wallet');
+    return httpClient.request<WalletBalance[]>('/wallet');
   },
 
   getWalletSummary() {
-    return httpClient.request<any>('/wallet/summary');
+    return httpClient.request<WalletSummaryResponse>('/wallet/summary');
   },
 
-  setWalletBalance(data: { localId: string; currencyCode: string; initialAmount: number }) {
-    return httpClient.request<any>('/wallet', {
+  setWalletBalance(data: CreateWalletBalanceDto) {
+    return httpClient.request<WalletBalance>('/wallet', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -25,18 +34,18 @@ export const walletApi = {
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     const query = params.toString();
-    return httpClient.request<any[]>(`/currency-exchanges${query ? `?${query}` : ''}`);
+    return httpClient.request<CurrencyExchange[]>(`/currency-exchanges${query ? `?${query}` : ''}`);
   },
 
-  createCurrencyExchange(data: any) {
-    return httpClient.request<any>('/currency-exchanges', {
+  createCurrencyExchange(data: CreateCurrencyExchangeDto) {
+    return httpClient.request<CurrencyExchange>('/currency-exchanges', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  updateCurrencyExchange(id: string, data: any) {
-    return httpClient.request<any>(`/currency-exchanges/${id}`, {
+  updateCurrencyExchange(id: string, data: UpdateCurrencyExchangeDto) {
+    return httpClient.request<CurrencyExchange>(`/currency-exchanges/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
@@ -47,12 +56,12 @@ export const walletApi = {
   },
 
   getExchangeRates(baseCurrency: string = 'USD') {
-    return httpClient.request<{ base: string; rates: Record<string, number>; updatedAt: string }>(
+    return httpClient.request<ExchangeRatesResponse>(
       `/currency-exchanges/rates?base=${baseCurrency}`,
     );
   },
 
   getDebtSummary() {
-    return httpClient.request<any>('/debts/summary');
+    return httpClient.request<DebtSummaryResponse>('/debts/summary');
   },
 };

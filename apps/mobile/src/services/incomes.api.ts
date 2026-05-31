@@ -1,4 +1,14 @@
+import type { Income } from '@budget/shared-types';
+import type { CreateIncomeDto, UpdateIncomeDto } from '@budget/shared-types';
+import type { PaginatedResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
+
+/** Accepts UpdateIncomeDto with date as string or Date (JSON.stringify normalises both). */
+type UpdateIncomeInput = Omit<UpdateIncomeDto, 'date' | 'debtDueDate'> & {
+  date?: string | Date;
+  debtDueDate?: string | Date | null;
+  [key: string]: unknown;
+};
 
 export const incomesApi = {
   getIncomes(filters?: { startDate?: string; endDate?: string; categoryId?: string }) {
@@ -7,18 +17,18 @@ export const incomesApi = {
     if (filters?.startDate) params.append('startDate', filters.startDate);
     if (filters?.endDate) params.append('endDate', filters.endDate);
     if (filters?.categoryId) params.append('categoryId', filters.categoryId);
-    return httpClient.request<any[]>(`/incomes?${params.toString()}`);
+    return httpClient.request<PaginatedResponse<Income>>(`/incomes?${params.toString()}`);
   },
 
-  createIncome(data: any) {
-    return httpClient.request<any>('/incomes', {
+  createIncome(data: CreateIncomeDto) {
+    return httpClient.request<Income>('/incomes', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  updateIncome(id: string, data: any) {
-    return httpClient.request<any>(`/incomes/${id}`, {
+  updateIncome(id: string, data: UpdateIncomeInput) {
+    return httpClient.request<Income>(`/incomes/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

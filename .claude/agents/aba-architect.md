@@ -48,7 +48,7 @@ For each new or changed endpoint:
 - Which store(s) own the state? New store or extend existing?
 - Which repositories?
 - Tab-hydration considerations if the data shows on a tab.
-- Bot account-linking: if the feature involves a Telegram or WhatsApp bot, the mobile settings screens (`app/settings/telegram.tsx`, `app/settings/whatsapp.tsx`) that surface the linking flow must be covered here when relevant.
+- Bot account-linking: if the feature involves a Telegram or WhatsApp bot, the mobile settings screen (`app/settings/bots.tsx` — unified Telegram + WhatsApp) that surfaces the linking flow must be covered here when relevant.
 
 ### 5. Dependency order
 

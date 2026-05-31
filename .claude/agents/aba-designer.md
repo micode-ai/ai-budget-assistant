@@ -27,12 +27,14 @@ Before designing anything new, read the closest existing screen in `apps/mobile/
 
 Check:
 - `apps/mobile/src/theme/` — color tokens, spacing, typography.
-- `apps/mobile/src/components/` — existing UI primitives (`AccountSwitcher`, `Paywall`, `TagChip`, charts).
+- **Scan `apps/mobile/src/components/`** (glob `**/*.tsx`) before proposing any new primitive. The list changes with every feature; a scan is the only way to stay accurate. Examples of what exists: `AccountSwitcher`, `Paywall`, `TagChip`, `MerchantInput`, `SplitEditor`, `CreateCategoryModal`, `KeyboardAwareScreen`, `KeyboardAvoidingScreen` — but treat these as illustrations, not an exhaustive list.
 - `apps/mobile/src/components/charts/` and `interactive-charts/` — chart styles already in use.
 - Existing screen header/footer/safe-area patterns.
 - Check an existing screen for icon imports — they look like `import { Ionicons } from '@expo/vector-icons'`.
+- If you find a component that does 80 % of what the new design needs, prefer extending it over creating a new one.
 
 For **admin work**, also check:
+- **Scan `apps/admin/src/components/ui/` and `apps/admin/src/components/common/`** before proposing a new shadcn/ui wrapper.
 - `apps/admin/src/components/` — existing shadcn/ui-based primitives. Check there before proposing a new component.
 - `AlertDialog` is **not** in the admin codebase — use `Dialog` with confirmation buttons instead (per CLAUDE.md).
 
