@@ -182,8 +182,29 @@ export class InvestmentsService {
       },
     });
 
-    // Recalculate holding aggregates
-    await this.recalculateHolding(dto.holdingId);
+    // Apply delta to holding aggregates without re-reading all transactions
+    const oldQty = Number(holding.quantity);
+    const oldTotalInvested = Number(holding.totalInvested);
+    let newQty: number;
+    let newTotalInvested: number;
+    if (dto.type === 'buy') {
+      newQty = oldQty + dto.quantity;
+      newTotalInvested = oldTotalInvested + dto.quantity * dto.pricePerUnit + fee;
+    } else {
+      const avgCost = oldQty > 0 ? oldTotalInvested / oldQty : 0;
+      newQty = oldQty - dto.quantity;
+      newTotalInvested = oldTotalInvested - dto.quantity * avgCost;
+    }
+    const newAvgCost = newQty > 0 ? newTotalInvested / newQty : 0;
+    await this.prisma.portfolioHolding.update({
+      where: { id: dto.holdingId },
+      data: {
+        quantity: Math.max(0, newQty),
+        averageCostBasis: Math.max(0, newAvgCost),
+        totalInvested: Math.max(0, newTotalInvested),
+        syncVersion: { increment: 1 },
+      },
+    });
 
     return transaction;
   }
@@ -618,17 +639,26 @@ export class InvestmentsService {
 
     const prices = await this.twelveData.getBatchPrices(symbols);
 
-    for (const holding of holdings) {
-      const symbolKey = holding.asset.exchange
-        ? `${holding.asset.symbol}:${holding.asset.exchange}`
-        : holding.asset.symbol;
-      const price = prices.get(symbolKey);
-      if (price !== undefined) {
-        await this.prisma.asset.update({
-          where: { id: holding.asset.id },
-          data: { currentPrice: price, lastPriceUpdate: new Date() },
-        });
-      }
+    const now = new Date();
+    const priceUpdates = holdings
+      .map((holding) => {
+        const symbolKey = holding.asset.exchange
+          ? `${holding.asset.symbol}:${holding.asset.exchange}`
+          : holding.asset.symbol;
+        const price = prices.get(symbolKey);
+        return price !== undefined ? { id: holding.asset.id, price } : null;
+      })
+      .filter((u): u is { id: string; price: number } => u !== null);
+
+    if (priceUpdates.length > 0) {
+      await this.prisma.$transaction(
+        priceUpdates.map(({ id, price }) =>
+          this.prisma.asset.update({
+            where: { id },
+            data: { currentPrice: price, lastPriceUpdate: now },
+          }),
+        ),
+      );
     }
 
     return { success: true };
