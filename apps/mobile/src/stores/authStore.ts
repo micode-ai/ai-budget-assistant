@@ -14,6 +14,7 @@ import { useInvestmentStore } from './investmentStore';
 import { useInsightsStore } from './insightsStore';
 import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
+import { applyCurrencyChange } from '../utils/currency';
 
 let isLoggingOut = false;
 
@@ -34,6 +35,7 @@ interface AuthState {
   biometricLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
+  setCurrency: (currencyCode: Currency) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearError: () => void;
   forgotPassword: (email: string) => Promise<void>;
@@ -538,6 +540,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           set({ user: updatedUser });
           secureStorage.setItem('user', JSON.stringify(updatedUser));
         }
+      },
+
+      setCurrency: (currencyCode: Currency) => {
+        const { user, updateUser } = get();
+        applyCurrencyChange(currencyCode, {
+          currentCurrency: user?.currencyCode,
+          applyLocal: (code) => updateUser({ currencyCode: code }),
+          persist: (code) => api.updateProfile({ currencyCode: code }),
+          onPersistError: (error) =>
+            console.warn('Failed to persist currency change:', error),
+        });
       },
 
       setTokens: (accessToken: string, refreshToken: string) => {

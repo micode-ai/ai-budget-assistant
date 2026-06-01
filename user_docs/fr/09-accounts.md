@@ -31,6 +31,17 @@ Chaque compte affiche son type et votre role (Proprietaire, Editeur ou Observate
 
 Appuyez sur **Gerer les comptes** en bas du menu deroulant pour acceder a la liste complete des comptes.
 
+## Changer la devise d'affichage
+
+Changez la devise dans laquelle tous vos totaux sont affiches — depuis n'importe quel ecran, sans ouvrir les Parametres.
+
+1. Appuyez sur le **nom du compte** dans le coin superieur gauche de n'importe quel ecran. Le symbole de la devise actuelle apparait a cote du nom (par ex. `Personnel · $`).
+2. Dans le menu qui s'ouvre, trouvez la section **Devise d'affichage** sous votre liste de comptes.
+3. Appuyez sur la devise souhaitee (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Tous les montants de l'application sont instantanement convertis dans la devise selectionnee aux derniers taux de change.
+
+> Il s'agit de votre devise d'affichage personnelle, enregistree pour la prochaine fois. Cela change uniquement la facon dont les montants sont *affiches* — vos transactions conservent leurs devises d'origine. Chaque membre (y compris les Observateurs) peut choisir sa propre devise d'affichage.
+
 ## Creer un compte
 
 1. Accedez a la liste des comptes (via **Gerer les comptes** ou depuis les Parametres)

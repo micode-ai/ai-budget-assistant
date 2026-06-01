@@ -31,6 +31,17 @@ Cada cuenta muestra su tipo y tu rol (Propietario, Editor u Observador).
 
 Toca **Gestionar cuentas** en la parte inferior del menu desplegable para ir a la lista completa de cuentas.
 
+## Cambiar la moneda de visualizacion
+
+Cambia la moneda en la que se muestran todos tus totales — desde cualquier pantalla, sin abrir Ajustes.
+
+1. Toca el **nombre de la cuenta** en la esquina superior izquierda de cualquier pantalla. Junto al nombre aparece el simbolo de la moneda actual (por ejemplo, `Personal · $`).
+2. En el menu que se abre, busca la seccion **Moneda de visualizacion** debajo de tu lista de cuentas.
+3. Toca la moneda que quieras (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Todos los importes de la app se convierten al instante a la moneda seleccionada con los ultimos tipos de cambio.
+
+> Esta es tu moneda de visualizacion personal y se guarda para la proxima vez. Solo cambia como se *muestran* los importes — tus transacciones conservan sus monedas originales. Cada miembro (incluidos los Visores) puede elegir su propia moneda de visualizacion.
+
 ## Crear una cuenta
 
 1. Ve a la lista de Cuentas (a traves de **Gestionar cuentas** o desde Ajustes)

@@ -31,6 +31,17 @@ Jedes Konto zeigt seinen Typ und deine Rolle (Eigentumer, Bearbeiter oder Betrac
 
 Tippe auf **Konten verwalten** am unteren Rand des Dropdowns, um zur vollstandigen Kontoliste zu gelangen.
 
+## Anzeigewahrung andern
+
+Andere die Wahrung, in der alle deine Summen angezeigt werden — von jedem Bildschirm aus, ohne die Einstellungen zu offnen.
+
+1. Tippe oben links auf einem beliebigen Bildschirm auf den **Kontonamen**. Neben dem Namen erscheint das aktuelle Wahrungssymbol (z. B. `Personlich · $`).
+2. Im sich offnenden Menu findest du unter deiner Kontoliste den Abschnitt **Anzeigewahrung**.
+3. Tippe auf die gewunschte Wahrung (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Alle Betrage in der App werden sofort zu den neuesten Wechselkursen in die gewahlte Wahrung umgerechnet.
+
+> Dies ist deine personliche Anzeigewahrung und wird fur das nachste Mal gespeichert. Es andert nur, wie Betrage *angezeigt* werden — deine Transaktionen behalten ihre ursprunglichen Wahrungen. Jedes Mitglied (auch Betrachter) kann seine eigene Anzeigewahrung wahlen.
+
 ## Konto erstellen
 
 1. Gehe zur Kontoliste (uber **Konten verwalten** oder aus den Einstellungen)

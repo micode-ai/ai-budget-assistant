@@ -492,6 +492,7 @@ export default {
   },
   accounts: {
     switchAccount: 'Przełącz konto',
+    displayCurrency: 'Waluta wyświetlania',
     manage: 'Zarządzaj kontami',
     create: 'Utwórz konto',
     personal: 'Osobiste',

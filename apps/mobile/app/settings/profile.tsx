@@ -17,8 +17,9 @@ import { useAuthStore } from '@/stores/authStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
 const TIMEZONES: string[] = [
   'Africa/Abidjan', 'Africa/Accra', 'Africa/Algiers', 'Africa/Cairo', 'Africa/Casablanca',
   'Africa/Johannesburg', 'Africa/Lagos', 'Africa/Nairobi', 'Africa/Tunis',
@@ -54,7 +55,7 @@ export default function ProfileSettingsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { user, updateUser } = useAuthStore();
+  const { user, updateUser, setCurrency } = useAuthStore();
 
   const [name, setName] = useState(user?.name || '');
   const [editingName, setEditingName] = useState(false);
@@ -87,14 +88,10 @@ export default function ProfileSettingsScreen() {
     }
   };
 
-  const handleCurrencyChange = async (currency: Currency) => {
-    if (currency === user?.currencyCode) return;
-    try {
-      await api.updateProfile({ currencyCode: currency });
-      updateUser({ currencyCode: currency });
-    } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-    }
+  const handleCurrencyChange = (currency: Currency) => {
+    // setCurrency no-ops on an unchanged value, updates locally first, and
+    // persists in the background (offline-tolerant; failures logged, not alerted).
+    setCurrency(currency);
   };
 
   const handleTimezoneChange = async (timezone: string) => {

@@ -1117,6 +1117,17 @@ Each account shows its type and your role (Owner, Editor, or Viewer).
 
 Tap **Manage Accounts** at the bottom of the dropdown to go to the full account list.
 
+## Changing the Display Currency
+
+Change the currency that all your totals are shown in — from any screen, without opening Settings.
+
+1. Tap the **account name** in the top-left corner of any screen. The current currency symbol appears next to the name (e.g., \`Personal · \$\`).
+2. In the menu that opens, find the **Display currency** section below your account list.
+3. Tap the currency you want (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Every amount in the app is instantly converted to the selected currency at the latest exchange rates.
+
+> This is your personal display currency and is saved for next time. It only changes how amounts are *shown* — your transactions keep their original currencies. Each member (including Viewers) can pick their own display currency.
+
 ## Creating an Account
 
 1. Go to the Accounts list (via **Manage Accounts** or from Settings)
@@ -4429,6 +4440,17 @@ iOS, Android, Web
 
 Нажмите **Управление счетами** в нижней части выпадающего списка, чтобы перейти к полному списку счетов.
 
+## Изменение валюты отображения
+
+Меняйте валюту, в которой показываются все ваши суммы, — с любого экрана, не заходя в Настройки.
+
+1. Нажмите на **название счёта** в верхнем левом углу любого экрана. Рядом с названием показан символ текущей валюты (например, \`Личный · \$\`).
+2. В открывшемся меню найдите раздел **Валюта отображения** под списком счетов.
+3. Нажмите нужную валюту (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Все суммы в приложении мгновенно пересчитываются в выбранную валюту по актуальным курсам.
+
+> Это ваша личная валюта отображения, она сохраняется на будущее. Меняется только то, как суммы *показываются*, — ваши транзакции сохраняют свои исходные валюты. Каждый участник (включая Наблюдателей) может выбрать свою валюту отображения.
+
 ## Создание счёта
 
 1. Перейдите к списку счетов (через **Управление счетами** или из Настроек)
@@ -7731,6 +7753,17 @@ iOS, Android, Web
 
 Натисніть **Керування рахунками** внизу випадаючого меню, щоб перейти до повного списку рахунків.
 
+## Зміна валюти відображення
+
+Змінюйте валюту, у якій показуються всі ваші суми, — з будь-якого екрана, не заходячи в Налаштування.
+
+1. Натисніть **назву рахунку** у верхньому лівому куті будь-якого екрана. Поруч із назвою показано символ поточної валюти (наприклад, \`Особистий · \$\`).
+2. У меню, що відкриється, знайдіть розділ **Валюта відображення** під списком рахунків.
+3. Натисніть потрібну валюту (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Усі суми в застосунку миттєво перераховуються в обрану валюту за актуальними курсами.
+
+> Це ваша особиста валюта відображення, вона зберігається на майбутнє. Змінюється лише те, як суми *показуються*, — ваші транзакції зберігають свої початкові валюти. Кожен учасник (зокрема Спостерігачі) може обрати власну валюту відображення.
+
 ## Створення рахунку
 
 ### Покроково: Створити рахунок
@@ -10996,6 +11029,17 @@ Kazde konto wyswietla swoj typ i Twoja role (Wlasciciel, Edytor lub Obserwator).
 
 Dotknij **Zarzadzaj kontami** na dole menu, aby przejsc do pelnej listy kont.
 
+## Zmiana waluty wyswietlania
+
+Zmien walute, w ktorej wyswietlane sa wszystkie Twoje sumy — z dowolnego ekranu, bez otwierania Ustawien.
+
+1. Dotknij **nazwe konta** w lewym gornym rogu dowolnego ekranu. Obok nazwy widoczny jest symbol biezacej waluty (np. \`Osobiste · \$\`).
+2. W otwartym menu znajdz sekcje **Waluta wyswietlania** pod lista kont.
+3. Dotknij wybrana walute (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Wszystkie kwoty w aplikacji sa natychmiast przeliczane na wybrana walute po najnowszych kursach.
+
+> To Twoja osobista waluta wyswietlania i jest zapisywana na przyszlosc. Zmienia tylko sposob *wyswietlania* kwot — Twoje transakcje zachowuja swoje oryginalne waluty. Kazdy czlonek (w tym Obserwatorzy) moze wybrac wlasna walute wyswietlania.
+
 ## Tworzenie konta
 
 1. Przejdz do listy kont (przez **Zarzadzaj kontami** lub z Ustawien)
@@ -14257,6 +14301,17 @@ Jedes Konto zeigt seinen Typ und deine Rolle (Eigentumer, Bearbeiter oder Betrac
 
 Tippe auf **Konten verwalten** am unteren Rand des Dropdowns, um zur vollstandigen Kontoliste zu gelangen.
 
+## Anzeigewahrung andern
+
+Andere die Wahrung, in der alle deine Summen angezeigt werden — von jedem Bildschirm aus, ohne die Einstellungen zu offnen.
+
+1. Tippe oben links auf einem beliebigen Bildschirm auf den **Kontonamen**. Neben dem Namen erscheint das aktuelle Wahrungssymbol (z. B. \`Personlich · \$\`).
+2. Im sich offnenden Menu findest du unter deiner Kontoliste den Abschnitt **Anzeigewahrung**.
+3. Tippe auf die gewunschte Wahrung (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Alle Betrage in der App werden sofort zu den neuesten Wechselkursen in die gewahlte Wahrung umgerechnet.
+
+> Dies ist deine personliche Anzeigewahrung und wird fur das nachste Mal gespeichert. Es andert nur, wie Betrage *angezeigt* werden — deine Transaktionen behalten ihre ursprunglichen Wahrungen. Jedes Mitglied (auch Betrachter) kann seine eigene Anzeigewahrung wahlen.
+
 ## Konto erstellen
 
 1. Gehe zur Kontoliste (uber **Konten verwalten** oder aus den Einstellungen)
@@ -17488,6 +17543,17 @@ Cada cuenta muestra su tipo y tu rol (Propietario, Editor u Observador).
 
 Toca **Gestionar cuentas** en la parte inferior del menu desplegable para ir a la lista completa de cuentas.
 
+## Cambiar la moneda de visualizacion
+
+Cambia la moneda en la que se muestran todos tus totales — desde cualquier pantalla, sin abrir Ajustes.
+
+1. Toca el **nombre de la cuenta** en la esquina superior izquierda de cualquier pantalla. Junto al nombre aparece el simbolo de la moneda actual (por ejemplo, \`Personal · \$\`).
+2. En el menu que se abre, busca la seccion **Moneda de visualizacion** debajo de tu lista de cuentas.
+3. Toca la moneda que quieras (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Todos los importes de la app se convierten al instante a la moneda seleccionada con los ultimos tipos de cambio.
+
+> Esta es tu moneda de visualizacion personal y se guarda para la proxima vez. Solo cambia como se *muestran* los importes — tus transacciones conservan sus monedas originales. Cada miembro (incluidos los Visores) puede elegir su propia moneda de visualizacion.
+
 ## Crear una cuenta
 
 1. Ve a la lista de Cuentas (a traves de **Gestionar cuentas** o desde Ajustes)
@@ -20708,6 +20774,17 @@ Chaque compte affiche son type et votre role (Proprietaire, Editeur ou Observate
 
 Appuyez sur **Gerer les comptes** en bas du menu deroulant pour acceder a la liste complete des comptes.
 
+## Changer la devise d'affichage
+
+Changez la devise dans laquelle tous vos totaux sont affiches — depuis n'importe quel ecran, sans ouvrir les Parametres.
+
+1. Appuyez sur le **nom du compte** dans le coin superieur gauche de n'importe quel ecran. Le symbole de la devise actuelle apparait a cote du nom (par ex. \`Personnel · \$\`).
+2. Dans le menu qui s'ouvre, trouvez la section **Devise d'affichage** sous votre liste de comptes.
+3. Appuyez sur la devise souhaitee (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Tous les montants de l'application sont instantanement convertis dans la devise selectionnee aux derniers taux de change.
+
+> Il s'agit de votre devise d'affichage personnelle, enregistree pour la prochaine fois. Cela change uniquement la facon dont les montants sont *affiches* — vos transactions conservent leurs devises d'origine. Chaque membre (y compris les Observateurs) peut choisir sa propre devise d'affichage.
+
 ## Creer un compte
 
 1. Accedez a la liste des comptes (via **Gerer les comptes** ou depuis les Parametres)
@@ -23925,6 +24002,17 @@ iOS, Android, Web
 5. Усе экраны абнаўляюцца, адлюстроўваючы даныя абранага рахунку
 
 Націсніце **Кіраванне рахункамі** ў ніжняй частцы выпадальнага спісу, каб перайсці да поўнага спісу рахункаў.
+
+## Змена валюты адлюстравання
+
+Мяняйце валюту, у якой паказваюцца ўсе вашы сумы, — з любога экрана, не заходзячы ў Налады.
+
+1. Націсніце на **назву рахунку** ў верхнім левым куце любога экрана. Побач з назвай паказаны сімвал бягучай валюты (напрыклад, \`Асабісты · \$\`).
+2. У меню, што адкрыецца, знайдзіце раздзел **Валюта адлюстравання** пад спісам рахункаў.
+3. Націсніце патрэбную валюту (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Усе сумы ў дадатку імгненна пералічваюцца ў абраную валюту па актуальных курсах.
+
+> Гэта ваша асабістая валюта адлюстравання, яна захоўваецца на будучыню. Мяняецца толькі тое, як сумы *паказваюцца*, — вашы транзакцыі захоўваюць свае зыходныя валюты. Кожны ўдзельнік (у тым ліку Назіральнікі) можа абраць сваю валюту адлюстравання.
 
 ## Стварэнне рахунку
 
