@@ -490,6 +490,7 @@ export default {
   },
   accounts: {
     switchAccount: 'Пераключыць рахунак',
+    displayCurrency: 'Валюта адлюстравання',
     manage: 'Кіраванне рахункамі',
     create: 'Стварыць рахунак',
     personal: 'Асабісты',

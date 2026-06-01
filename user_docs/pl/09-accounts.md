@@ -31,6 +31,17 @@ Kazde konto wyswietla swoj typ i Twoja role (Wlasciciel, Edytor lub Obserwator).
 
 Dotknij **Zarzadzaj kontami** na dole menu, aby przejsc do pelnej listy kont.
 
+## Zmiana waluty wyswietlania
+
+Zmien walute, w ktorej wyswietlane sa wszystkie Twoje sumy — z dowolnego ekranu, bez otwierania Ustawien.
+
+1. Dotknij **nazwe konta** w lewym gornym rogu dowolnego ekranu. Obok nazwy widoczny jest symbol biezacej waluty (np. `Osobiste · $`).
+2. W otwartym menu znajdz sekcje **Waluta wyswietlania** pod lista kont.
+3. Dotknij wybrana walute (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Wszystkie kwoty w aplikacji sa natychmiast przeliczane na wybrana walute po najnowszych kursach.
+
+> To Twoja osobista waluta wyswietlania i jest zapisywana na przyszlosc. Zmienia tylko sposob *wyswietlania* kwot — Twoje transakcje zachowuja swoje oryginalne waluty. Kazdy czlonek (w tym Obserwatorzy) moze wybrac wlasna walute wyswietlania.
+
 ## Tworzenie konta
 
 1. Przejdz do listy kont (przez **Zarzadzaj kontami** lub z Ustawien)

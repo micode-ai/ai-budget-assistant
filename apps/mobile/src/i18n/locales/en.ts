@@ -492,6 +492,7 @@ export default {
   },
   accounts: {
     switchAccount: 'Switch Account',
+    displayCurrency: 'Display currency',
     manage: 'Manage Accounts',
     create: 'Create Account',
     personal: 'Personal',

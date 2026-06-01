@@ -31,6 +31,17 @@ Each account shows its type and your role (Owner, Editor, or Viewer).
 
 Tap **Manage Accounts** at the bottom of the dropdown to go to the full account list.
 
+## Changing the Display Currency
+
+Change the currency that all your totals are shown in — from any screen, without opening Settings.
+
+1. Tap the **account name** in the top-left corner of any screen. The current currency symbol appears next to the name (e.g., `Personal · $`).
+2. In the menu that opens, find the **Display currency** section below your account list.
+3. Tap the currency you want (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Every amount in the app is instantly converted to the selected currency at the latest exchange rates.
+
+> This is your personal display currency and is saved for next time. It only changes how amounts are *shown* — your transactions keep their original currencies. Each member (including Viewers) can pick their own display currency.
+
 ## Creating an Account
 
 1. Go to the Accounts list (via **Manage Accounts** or from Settings)

@@ -16,7 +16,9 @@ import { useWalletStore } from '@/stores/walletStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import type { AccountType } from '@budget/shared-types';
+import type { AccountType, Currency } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES, getCurrencySymbol } from '@budget/shared-utils';
+import { useAuthStore } from '@/stores/authStore';
 
 const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = {
   personal: 'person-outline',
@@ -37,6 +39,10 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
 
   const currentAccount = accounts.find((a) => a.id === currentAccountId);
 
+  const user = useAuthStore((s) => s.user);
+  const setCurrency = useAuthStore((s) => s.setCurrency);
+  const currencyCode = (user?.currencyCode || 'USD') as Currency;
+
   const handleSwitch = async (accountId: string) => {
     setVisible(false);
     if (accountId === currentAccountId) return;
@@ -47,12 +53,9 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
   };
 
   const handleTriggerPress = () => {
-    if (accounts.length <= 1) {
-      // Single account — go directly to account management
-      router.push('/account/list');
-    } else {
-      setVisible(true);
-    }
+    // Always open the menu so the currency control is reachable even with a
+    // single account. Account management is the "Manage accounts" button inside.
+    setVisible(true);
   };
 
   return (
@@ -66,9 +69,10 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
         <Text style={[styles.triggerText, compact && styles.triggerTextCompact]} numberOfLines={1}>
           {currentAccount?.name || t('accounts.personal')}
         </Text>
-        {accounts.length > 1 && (
-          <Ionicons name="chevron-down" size={compact ? 12 : 16} color={theme.colors.textInverse} />
-        )}
+        <Text style={[styles.triggerCurrency, compact && styles.triggerCurrencyCompact]}>
+          {` · ${getCurrencySymbol(currencyCode)}`}
+        </Text>
+        <Ionicons name="chevron-down" size={compact ? 12 : 16} color={theme.colors.textInverse} />
       </TouchableOpacity>
 
       <Modal
@@ -82,6 +86,7 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
             <Text style={styles.dropdownTitle}>{t('accounts.switchAccount')}</Text>
 
             <FlatList
+              style={styles.accountList}
               data={accounts}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
@@ -118,6 +123,34 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
                 </TouchableOpacity>
               )}
             />
+
+            <View style={styles.currencySection}>
+              <Text style={styles.currencyTitle}>{t('accounts.displayCurrency')}</Text>
+              <View style={styles.currencyChips}>
+                {SUPPORTED_CURRENCIES.map((c) => {
+                  const active = c.code === currencyCode;
+                  return (
+                    <TouchableOpacity
+                      key={c.code}
+                      style={[styles.currencyChip, active && styles.currencyChipActive]}
+                      onPress={() => {
+                        setVisible(false);
+                        setCurrency(c.code);
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.currencyChipText,
+                          active && styles.currencyChipTextActive,
+                        ]}
+                      >
+                        {c.code}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
 
             <TouchableOpacity
               style={styles.manageButton}
@@ -162,6 +195,15 @@ const createStyles = (theme: Theme) => ({
   triggerTextCompact: {
     fontSize: 12,
   },
+  triggerCurrency: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textInverse,
+    fontWeight: '700' as const,
+    flexShrink: 0,
+  },
+  triggerCurrencyCompact: {
+    fontSize: 12,
+  },
   overlay: {
     flex: 1,
     backgroundColor: theme.colors.overlay,
@@ -173,7 +215,7 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     paddingVertical: theme.spacing[4],
-    maxHeight: 400,
+    maxHeight: 440,
     ...theme.shadows.lg,
   },
   dropdownTitle: {
@@ -229,5 +271,44 @@ const createStyles = (theme: Theme) => ({
   manageButtonText: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.primary,
+  },
+  accountList: {
+    maxHeight: 180,
+  },
+  currencySection: {
+    paddingHorizontal: theme.spacing[5],
+    paddingTop: theme.spacing[3],
+    paddingBottom: theme.spacing[3],
+    marginTop: theme.spacing[2],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+  },
+  currencyTitle: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textTransform: 'uppercase' as const,
+    marginBottom: theme.spacing[2],
+  },
+  currencyChips: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+  },
+  currencyChip: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  currencyChipActive: {
+    backgroundColor: theme.colors.primary,
+  },
+  currencyChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+  },
+  currencyChipTextActive: {
+    color: theme.colors.textInverse,
+    fontWeight: '700' as const,
   },
 });
