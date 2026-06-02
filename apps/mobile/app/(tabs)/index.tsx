@@ -44,7 +44,7 @@ export default function DashboardScreen() {
   const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
   const { lentDebts, borrowedDebts, loadDebts } = useDebtStore();
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
-  const { visibility: widgetVisibility } = useWidgetVisibilityStore();
+  const { visibility: widgetVisibility, order: widgetOrder } = useWidgetVisibilityStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -208,181 +208,205 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        {widgetVisibility.gamification && <TouchableOpacity style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
-          <View style={styles.chevronHint}>
-            <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-          </View>
-          <Text style={styles.gamificationDate}>
-            {new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
-          </Text>
-          <View style={styles.gamificationRow}>
-            <View style={styles.gamificationItem}>
-              <View style={[styles.levelBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.levelBadgeText}>{level}</Text>
-              </View>
-              <View>
-                <Text style={styles.gamificationItemTitle}>{t('gamification.level', { level })}</Text>
-                <View style={styles.xpBarContainer}>
-                  <View style={styles.xpBar}>
-                    <View style={[styles.xpBarFill, { width: `${levelProgress}%`, backgroundColor: theme.colors.primary }]} />
+        {widgetOrder.map((key) => {
+          switch (key) {
+            case 'gamification':
+              return widgetVisibility.gamification ? (
+                <TouchableOpacity key="gamification" style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
+                  <View style={styles.chevronHint}>
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
                   </View>
-                </View>
-              </View>
-            </View>
-            <View style={styles.gamificationDivider} />
-            <View style={styles.gamificationItem}>
-              <Text style={styles.streakEmoji}>{currentStreak > 0 ? '🔥' : '❄️'}</Text>
-              <View style={styles.gamificationTextContainer}>
-                <Text style={styles.gamificationItemTitle} numberOfLines={1}>
-                  {t('gamification.streak.days', { count: currentStreak })}
-                </Text>
-                <Text style={styles.gamificationItemSubtitle} numberOfLines={1}>
-                  {currentStreak > 0 ? t('gamification.streak.keepGoing') : t('gamification.streak.broken')}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <Text style={styles.gamificationLink}>{t('gamification.dashboardWidget.viewAll')}</Text>
-        </TouchableOpacity>}
-
-        {widgetVisibility.monthlyBudget && monthlyBudgetSummary.budgetCount > 0 && <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
-          <View style={styles.chevronHint}>
-            <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-          </View>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
-          </View>
-          <View style={styles.budgetOverview}>
-            <View style={styles.budgetAmount}>
-              <Text style={[styles.remainingAmount, remaining < 0 && { color: theme.colors.danger }]}>
-                {formatCurrency(remaining, currency)}
-              </Text>
-              <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
-            </View>
-            <View style={styles.progressContainer}>
-              <View style={styles.progressBar}>
-                <View
-                  style={[
-                    styles.progressFill,
-                    { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
-                  ]}
-                />
-              </View>
-              <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
-            </View>
-          </View>
-        </TouchableOpacity>}
-
-        {widgetVisibility.incomeExpenses && (
-          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses' })}>
-            <View style={styles.chevronHint}>
-              <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-            </View>
-            <View style={styles.incomeExpenseRow}>
-              <View style={styles.incomeExpenseCol}>
-                <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
-                <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
-              </View>
-              <View style={styles.incomeExpenseDivider} />
-              <View style={styles.incomeExpenseCol}>
-                <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalExpenses')}</Text>
-                <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-
-        {widgetVisibility.debts && (
-          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
-            <View style={styles.chevronHint}>
-              <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-            </View>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
-            </View>
-            {lentDebts.length > 0 || borrowedDebts.length > 0 ? (
-              <View style={styles.debtRow}>
-                <View style={styles.debtCol}>
-                  <Ionicons name="arrow-up-circle-outline" size={20} color={theme.colors.success} />
-                  <Text style={styles.debtLabel}>{t('debt.peopleOweYou')}</Text>
-                  <Text style={[styles.debtAmount, { color: theme.colors.success }]}>
-                    {formatCurrency(convertedLentTotal, currency)}
+                  <Text style={styles.gamificationDate}>
+                    {new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
                   </Text>
-                </View>
-                <View style={styles.debtDivider} />
-                <View style={styles.debtCol}>
-                  <Ionicons name="arrow-down-circle-outline" size={20} color={theme.colors.danger} />
-                  <Text style={styles.debtLabel}>{t('debt.youOwe')}</Text>
-                  <Text style={[styles.debtAmount, { color: theme.colors.danger }]}>
-                    {formatCurrency(convertedBorrowedTotal, currency)}
-                  </Text>
-                </View>
-              </View>
-            ) : (
-              <View style={styles.debtEmptyState}>
-                <Ionicons name="people-outline" size={32} color={theme.colors.textDisabled} />
-                <Text style={styles.debtEmptyText}>{t('debt.noDebts')}</Text>
-                <View style={styles.debtAddButton}>
-                  <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
-                  <Text style={styles.debtAddButtonText}>{t('debt.addDebt')}</Text>
-                </View>
-              </View>
-            )}
-          </TouchableOpacity>
-        )}
-
-        {widgetVisibility.netProfit && <NetProfitWidget refreshKey={widgetRefreshKey} />}
-        {widgetVisibility.netCapital && <NetCapitalWidget />}
-
-        {widgetVisibility.fatFinder && <FatFinderCard />}
-
-        {widgetVisibility.calendar && <CalendarWidget refreshKey={widgetRefreshKey} />}
-
-        {widgetVisibility.goals && <GoalsCard />}
-
-        {widgetVisibility.wallets && <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{t('dashboard.walletBalances')}</Text>
-            {walletSummary.length > 0 && (
-              <TouchableOpacity onPress={() => router.push('/wallet')}>
-                <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          {walletSummary.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
-              <Text style={styles.emptyStateText}>{t('wallet.noBalances')}</Text>
-              <Text style={styles.emptyStateSubtext}>{t('wallet.noBalancesHint')}</Text>
-              {canEdit && (
-                <TouchableOpacity style={styles.emptyStateButton} onPress={() => router.push('/wallet/set-balance')}>
-                  <Text style={styles.emptyStateButtonText}>{t('wallet.addBalance')}</Text>
+                  <View style={styles.gamificationRow}>
+                    <View style={styles.gamificationItem}>
+                      <View style={[styles.levelBadge, { backgroundColor: theme.colors.primary }]}>
+                        <Text style={styles.levelBadgeText}>{level}</Text>
+                      </View>
+                      <View>
+                        <Text style={styles.gamificationItemTitle}>{t('gamification.level', { level })}</Text>
+                        <View style={styles.xpBarContainer}>
+                          <View style={styles.xpBar}>
+                            <View style={[styles.xpBarFill, { width: `${levelProgress}%`, backgroundColor: theme.colors.primary }]} />
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                    <View style={styles.gamificationDivider} />
+                    <View style={styles.gamificationItem}>
+                      <Text style={styles.streakEmoji}>{currentStreak > 0 ? '🔥' : '❄️'}</Text>
+                      <View style={styles.gamificationTextContainer}>
+                        <Text style={styles.gamificationItemTitle} numberOfLines={1}>
+                          {t('gamification.streak.days', { count: currentStreak })}
+                        </Text>
+                        <Text style={styles.gamificationItemSubtitle} numberOfLines={1}>
+                          {currentStreak > 0 ? t('gamification.streak.keepGoing') : t('gamification.streak.broken')}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <Text style={styles.gamificationLink}>{t('gamification.dashboardWidget.viewAll')}</Text>
                 </TouchableOpacity>
-              )}
-            </View>
-          ) : (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.walletGrid}
-              style={styles.walletGridScroll}
-            >
-              {walletSummary.map((summary) => (
-                <TouchableOpacity key={summary.currencyCode} style={styles.walletCard} onPress={() => router.push('/wallet')}>
-                  <Text style={styles.walletCurrency}>{summary.currencyCode}</Text>
-                  <Text
-                    style={[styles.walletBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.7}
-                  >
-                    {formatCurrency(summary.currentBalance, summary.currencyCode)}
-                  </Text>
+              ) : null;
+
+            case 'monthlyBudget':
+              return widgetVisibility.monthlyBudget && monthlyBudgetSummary.budgetCount > 0 ? (
+                <TouchableOpacity key="monthlyBudget" style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
+                  <View style={styles.chevronHint}>
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+                  </View>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
+                  </View>
+                  <View style={styles.budgetOverview}>
+                    <View style={styles.budgetAmount}>
+                      <Text style={[styles.remainingAmount, remaining < 0 && { color: theme.colors.danger }]}>
+                        {formatCurrency(remaining, currency)}
+                      </Text>
+                      <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
+                    </View>
+                    <View style={styles.progressContainer}>
+                      <View style={styles.progressBar}>
+                        <View
+                          style={[
+                            styles.progressFill,
+                            { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
+                          ]}
+                        />
+                      </View>
+                      <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
+                    </View>
+                  </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
-        </View>}
+              ) : null;
+
+            case 'incomeExpenses':
+              return widgetVisibility.incomeExpenses ? (
+                <TouchableOpacity key="incomeExpenses" style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses' })}>
+                  <View style={styles.chevronHint}>
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+                  </View>
+                  <View style={styles.incomeExpenseRow}>
+                    <View style={styles.incomeExpenseCol}>
+                      <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
+                      <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
+                    </View>
+                    <View style={styles.incomeExpenseDivider} />
+                    <View style={styles.incomeExpenseCol}>
+                      <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalExpenses')}</Text>
+                      <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ) : null;
+
+            case 'debts':
+              return widgetVisibility.debts ? (
+                <TouchableOpacity key="debts" style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
+                  <View style={styles.chevronHint}>
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+                  </View>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
+                  </View>
+                  {lentDebts.length > 0 || borrowedDebts.length > 0 ? (
+                    <View style={styles.debtRow}>
+                      <View style={styles.debtCol}>
+                        <Ionicons name="arrow-up-circle-outline" size={20} color={theme.colors.success} />
+                        <Text style={styles.debtLabel}>{t('debt.peopleOweYou')}</Text>
+                        <Text style={[styles.debtAmount, { color: theme.colors.success }]}>
+                          {formatCurrency(convertedLentTotal, currency)}
+                        </Text>
+                      </View>
+                      <View style={styles.debtDivider} />
+                      <View style={styles.debtCol}>
+                        <Ionicons name="arrow-down-circle-outline" size={20} color={theme.colors.danger} />
+                        <Text style={styles.debtLabel}>{t('debt.youOwe')}</Text>
+                        <Text style={[styles.debtAmount, { color: theme.colors.danger }]}>
+                          {formatCurrency(convertedBorrowedTotal, currency)}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={styles.debtEmptyState}>
+                      <Ionicons name="people-outline" size={32} color={theme.colors.textDisabled} />
+                      <Text style={styles.debtEmptyText}>{t('debt.noDebts')}</Text>
+                      <View style={styles.debtAddButton}>
+                        <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
+                        <Text style={styles.debtAddButtonText}>{t('debt.addDebt')}</Text>
+                      </View>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ) : null;
+
+            case 'netProfit':
+              return widgetVisibility.netProfit ? <NetProfitWidget key="netProfit" refreshKey={widgetRefreshKey} /> : null;
+
+            case 'netCapital':
+              return widgetVisibility.netCapital ? <NetCapitalWidget key="netCapital" /> : null;
+
+            case 'fatFinder':
+              return widgetVisibility.fatFinder ? <FatFinderCard key="fatFinder" /> : null;
+
+            case 'calendar':
+              return widgetVisibility.calendar ? <CalendarWidget key="calendar" refreshKey={widgetRefreshKey} /> : null;
+
+            case 'goals':
+              return widgetVisibility.goals ? <GoalsCard key="goals" /> : null;
+
+            case 'wallets':
+              return widgetVisibility.wallets ? (
+                <View key="wallets" style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>{t('dashboard.walletBalances')}</Text>
+                    {walletSummary.length > 0 && (
+                      <TouchableOpacity onPress={() => router.push('/wallet')}>
+                        <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  {walletSummary.length === 0 ? (
+                    <View style={styles.emptyState}>
+                      <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
+                      <Text style={styles.emptyStateText}>{t('wallet.noBalances')}</Text>
+                      <Text style={styles.emptyStateSubtext}>{t('wallet.noBalancesHint')}</Text>
+                      {canEdit && (
+                        <TouchableOpacity style={styles.emptyStateButton} onPress={() => router.push('/wallet/set-balance')}>
+                          <Text style={styles.emptyStateButtonText}>{t('wallet.addBalance')}</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ) : (
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={styles.walletGrid}
+                      style={styles.walletGridScroll}
+                    >
+                      {walletSummary.map((summary) => (
+                        <TouchableOpacity key={summary.currencyCode} style={styles.walletCard} onPress={() => router.push('/wallet')}>
+                          <Text style={styles.walletCurrency}>{summary.currencyCode}</Text>
+                          <Text
+                            style={[styles.walletBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}
+                            numberOfLines={1}
+                            adjustsFontSizeToFit
+                            minimumFontScale={0.7}
+                          >
+                            {formatCurrency(summary.currentBalance, summary.currencyCode)}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  )}
+                </View>
+              ) : null;
+
+            default:
+              return null;
+          }
+        })}
 
       </ScrollView>
       <NewBadgeModal />

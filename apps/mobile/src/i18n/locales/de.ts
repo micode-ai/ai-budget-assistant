@@ -613,6 +613,8 @@ export default {
       subtitle: 'Telegram & WhatsApp verbinden',
     },
     dashboardWidgets: 'Dashboard-Widgets',
+    widgetsReorderHint: 'Griff ziehen zum Sortieren',
+    widgetsResetOrder: 'Standardreihenfolge wiederherstellen',
     widget: {
       gamification: 'Gamification',
       monthlyBudget: 'Monatsbudget',

@@ -613,6 +613,8 @@ export default {
       subtitle: 'Conectar Telegram y WhatsApp',
     },
     dashboardWidgets: 'Widgets del panel',
+    widgetsReorderHint: 'Arrastra el asa para reordenar',
+    widgetsResetOrder: 'Restablecer orden predeterminado',
     widget: {
       gamification: 'Gamificación',
       monthlyBudget: 'Presupuesto mensual',

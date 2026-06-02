@@ -604,6 +604,8 @@ export default {
       subtitle: 'Падключыць Telegram і WhatsApp',
     },
     dashboardWidgets: 'Віджэты галоўнага экрана',
+    widgetsReorderHint: 'Перацягніце ручку для змены парадку',
+    widgetsResetOrder: 'Аднавіць парадак па змаўчанні',
     widget: {
       gamification: 'Гейміфікацыя',
       monthlyBudget: 'Месячны бюджэт',

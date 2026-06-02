@@ -613,6 +613,8 @@ export default {
       subtitle: 'Підключити Telegram і WhatsApp',
     },
     dashboardWidgets: 'Віджети головного екрану',
+    widgetsReorderHint: 'Перетягніть ручку для зміни порядку',
+    widgetsResetOrder: 'Відновити порядок за замовчуванням',
     widget: {
       gamification: 'Гейміфікація',
       monthlyBudget: 'Місячний бюджет',
