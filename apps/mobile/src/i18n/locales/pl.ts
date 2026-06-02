@@ -613,6 +613,8 @@ export default {
       subtitle: 'Połącz Telegram i WhatsApp',
     },
     dashboardWidgets: 'Widżety pulpitu',
+    widgetsReorderHint: 'Przeciągnij uchwyt, aby zmienić kolejność',
+    widgetsResetOrder: 'Przywróć domyślną kolejność',
     widget: {
       gamification: 'Grywalizacja',
       monthlyBudget: 'Miesięczny budżet',
