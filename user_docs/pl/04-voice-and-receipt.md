@@ -77,6 +77,58 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Trzymaj aparat stabilnie, aby uniknac rozmazania
 - Uzyj **Dodatkowe instrukcje dla AI** do specjalnej obslugi (np. "To jest w EUR", "Pomin pierwsza pozycje")
 
+## Głosowe przychody
+
+Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
+
+### Jak to działa
+
+1. Dotknij **Głosowe przychody** z szybkich akcji na Pulpicie lub dotknij ikony mikrofonu w stopce formularza **Dodaj przychód**
+2. Dotknij (zielonego) przycisku mikrofonu, aby rozpocząć nagrywanie
+3. Mów naturalnie, na przykład: *"Otrzymano 500 od klienta, opłata za konsultację"*
+4. Dotknij ponownie, aby zatrzymać nagrywanie
+5. Aplikacja wyodrębnia kwotę, opis i najlepiej pasującą **kategorię przychodu**
+
+### Ekran potwierdzenia
+
+- **Kwota** — wyodrębniona z Twojej mowy (można edytować)
+- **Opis** — za co była płatność (można edytować)
+- **Kategoria** — kategoria przychodu przypisana automatycznie (można edytować)
+- **Waluta** — wykryta lub domyślnie ustawiona na Twoją walutę bazową
+
+Dotknij **Zapisz przychód**, aby potwierdzić, lub **Spróbuj ponownie**, aby nagrać ponownie.
+
+### Wskazówki dla najlepszych wyników
+
+- Wspomnij kwotę i krótki opis
+- Podaj walutę, jeżeli różni się od Twojej domyślnej
+
+---
+
+## Skanowanie faktury
+
+Sfotografuj lub prześlij fakturę lub dokument płatności, aby automatycznie zarejestrować przychód.
+
+### Jak to działa
+
+1. Dotknij **Skanuj fakturę** z szybkich akcji na Pulpicie lub dotknij ikony dokumentu w stopce formularza **Dodaj przychód**
+2. Wybierz **Zrób zdjęcie**, **Wybierz z galerii** lub **Wgraj PDF**
+3. Opcjonalnie wprowadź dodatkowe instrukcje dla AI
+4. Aplikacja wyodrębnia łączną kwotę, datę i kategorię
+
+### Ekran potwierdzenia
+
+- **Łączna kwota** — wyodrębniona z dokumentu
+- **Opis** — wygenerowane podsumowanie
+- **Kategoria** — kategoria przychodu przypisana automatycznie
+- **Data** — z dokumentu
+
+Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otworzyć pełny formularz Dodaj przychód z wstępnie wypełnionymi danymi.
+
+> **Uwaga:** OCR faktur wyodrębnia wyłącznie łączną kwotę i datę. Pozycje z faktur są celowo ignorowane, aby uniknąć podwójnego liczenia w wielopozycyjnych dokumentach rozliczeniowych.
+
+---
+
 ## FAQ
 
 - **P: Jakie jezyki obsluguje wprowadzanie glosowe?**

@@ -535,6 +535,58 @@ Review and correct any details, then:
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
 
+## Voice Income
+
+Capture received payments by voice — same flow as Voice Expense, optimised for income.
+
+### How It Works
+
+1. Tap **Voice Income** from the Dashboard quick actions, or tap the microphone icon in the **Add Income** form footer
+2. Tap the (green) microphone button to start recording
+3. Speak naturally, for example: *"Received 500 from client, consulting fee"*
+4. Tap again to stop recording
+5. The app extracts the amount, description, and best-matching **income category**
+
+### Confirmation Screen
+
+- **Amount** — extracted from your speech (editable)
+- **Description** — what the payment was for (editable)
+- **Category** — income category automatically assigned (editable)
+- **Currency** — detected or defaulted to your base currency
+
+Tap **Save Income** to confirm, or **Try Again** to re-record.
+
+### Tips for Best Results
+
+- Mention the amount and a brief description
+- Mention the currency if it differs from your default
+
+---
+
+## Scan Invoice
+
+Photograph or upload an invoice or payment document to capture income automatically.
+
+### How It Works
+
+1. Tap **Scan Invoice** from the Dashboard quick actions, or tap the document icon in the **Add Income** form footer
+2. Choose **Take Photo**, **Choose from Gallery**, or **Upload PDF**
+3. Optionally, enter additional instructions for the AI
+4. The app extracts the total amount, date, and category
+
+### Confirmation Screen
+
+- **Total Amount** — extracted from the document
+- **Description** — generated summary
+- **Category** — income category automatically assigned
+- **Date** — from the document
+
+Review the details, tap ✓ to save or the pencil icon to open the full Add Income form with the data pre-filled.
+
+> **Note:** Invoice OCR extracts the total and date only. Line items from invoices are intentionally ignored to avoid double-counting on multi-line billing documents.
+
+---
+
 ## FAQ
 
 - **Q: Which languages does voice input support?**
@@ -3858,6 +3910,58 @@ iOS, Android, Web
 - Держите камеру ровно, чтобы избежать размытия
 - Используйте **Дополнительные инструкции для ИИ** для особых случаев (например, «Это в EUR», «Игнорировать первую позицию»)
 
+## Голосовой ввод дохода
+
+Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.
+
+### Как это работает
+
+1. Нажмите **Голосовой ввод дохода** в быстрых действиях на Главной или нажмите значок микрофона в нижней части формы **Добавить доход**
+2. Нажмите (зелёную) кнопку микрофона, чтобы начать запись
+3. Говорите естественно, например: *«Получено 500 от клиента, консультационная услуга»*
+4. Нажмите снова, чтобы остановить запись
+5. Приложение извлекает сумму, описание и наиболее подходящую **категорию дохода**
+
+### Экран подтверждения
+
+- **Сумма** — извлечена из вашей речи (можно редактировать)
+- **Описание** — за что был платёж (можно редактировать)
+- **Категория** — категория дохода назначена автоматически (можно редактировать)
+- **Валюта** — определена или по умолчанию установлена в вашу базовую валюту
+
+Нажмите **Сохранить доход**, чтобы подтвердить, или **Попробовать снова**, чтобы перезаписать.
+
+### Советы для лучших результатов
+
+- Упомяните сумму и краткое описание
+- Укажите валюту, если она отличается от вашей валюты по умолчанию
+
+---
+
+## Сканирование счёта/накладной
+
+Сфотографируйте или загрузите счёт или платёжный документ, чтобы автоматически зафиксировать доход.
+
+### Как это работает
+
+1. Нажмите **Сканировать счёт** в быстрых действиях на Главной или нажмите значок документа в нижней части формы **Добавить доход**
+2. Выберите **Сделать фото**, **Выбрать из галереи** или **Загрузить PDF**
+3. По желанию введите дополнительные инструкции для ИИ
+4. Приложение извлекает общую сумму, дату и категорию
+
+### Экран подтверждения
+
+- **Итоговая сумма** — извлечена из документа
+- **Описание** — сгенерированное описание
+- **Категория** — категория дохода назначена автоматически
+- **Дата** — из документа
+
+Просмотрите детали, нажмите ✓ для сохранения или значок карандаша, чтобы открыть полную форму добавления дохода с предзаполненными данными.
+
+> **Примечание:** OCR счёта извлекает только итоговую сумму и дату. Позиции из счетов намеренно игнорируются, чтобы избежать двойного учёта в многострочных расчётных документах.
+
+---
+
 ## Часто задаваемые вопросы
 
 - **В: На каких языках работает голосовой ввод?**
@@ -7171,6 +7275,58 @@ iOS, Android, Web
 - Тримайте камеру стабільно, щоб уникнути розмиття
 - Використовуйте **Додаткові інструкції для ШІ** для спеціальної обробки (наприклад, "Це в EUR", "Ігнорувати першу позицію")
 
+## Голосовий дохід
+
+Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.
+
+### Як це працює
+
+1. Натисніть **Голосовий дохід** серед швидких дій на Головній, або натисніть іконку мікрофона в нижній частині форми **Додати дохід**
+2. Натисніть (зелену) кнопку мікрофона, щоб почати запис
+3. Говоріть природно, наприклад: *"Отримано 500 від клієнта, консультаційна послуга"*
+4. Натисніть ще раз, щоб зупинити запис
+5. Додаток розпізнає суму, опис і найбільш відповідну **категорію доходу**
+
+### Екран підтвердження
+
+- **Сума** — розпізнана з вашого мовлення (можна редагувати)
+- **Опис** — за що був платіж (можна редагувати)
+- **Категорія** — категорія доходу автоматично визначена (можна редагувати)
+- **Валюта** — визначена або за замовчуванням встановлена на вашу базову валюту
+
+Натисніть **Зберегти дохід**, щоб підтвердити, або **Спробувати знову**, щоб перезаписати.
+
+### Поради для найкращих результатів
+
+- Вкажіть суму та короткий опис
+- Вкажіть валюту, якщо вона відрізняється від вашої стандартної
+
+---
+
+## Сканування рахунку
+
+Сфотографуйте або завантажте рахунок чи платіжний документ, щоб автоматично зафіксувати дохід.
+
+### Як це працює
+
+1. Натисніть **Сканувати рахунок** серед швидких дій на Головній, або натисніть іконку документа в нижній частині форми **Додати дохід**
+2. Оберіть **Зробити фото**, **Обрати з галереї** або **Завантажити PDF**
+3. За бажанням введіть додаткові інструкції для ШІ
+4. Додаток розпізнає загальну суму, дату та категорію
+
+### Екран підтвердження
+
+- **Загальна сума** — розпізнана з документа
+- **Опис** — згенероване резюме
+- **Категорія** — категорія доходу автоматично визначена
+- **Дата** — з документа
+
+Перегляньте деталі, натисніть ✓ для збереження або іконку олівця, щоб відкрити повну форму додавання доходу з попередньо заповненими даними.
+
+> **Примітка:** OCR рахунку розпізнає лише загальну суму та дату. Рядки позицій з рахунків навмисно ігноруються, щоб уникнути подвійного обліку в багаторядкових розрахункових документах.
+
+---
+
 ## Часті запитання
 
 - **П:** Які мови підтримує голосовий ввід?
@@ -10447,6 +10603,58 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Trzymaj aparat stabilnie, aby uniknac rozmazania
 - Uzyj **Dodatkowe instrukcje dla AI** do specjalnej obslugi (np. "To jest w EUR", "Pomin pierwsza pozycje")
 
+## Głosowe przychody
+
+Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
+
+### Jak to działa
+
+1. Dotknij **Głosowe przychody** z szybkich akcji na Pulpicie lub dotknij ikony mikrofonu w stopce formularza **Dodaj przychód**
+2. Dotknij (zielonego) przycisku mikrofonu, aby rozpocząć nagrywanie
+3. Mów naturalnie, na przykład: *"Otrzymano 500 od klienta, opłata za konsultację"*
+4. Dotknij ponownie, aby zatrzymać nagrywanie
+5. Aplikacja wyodrębnia kwotę, opis i najlepiej pasującą **kategorię przychodu**
+
+### Ekran potwierdzenia
+
+- **Kwota** — wyodrębniona z Twojej mowy (można edytować)
+- **Opis** — za co była płatność (można edytować)
+- **Kategoria** — kategoria przychodu przypisana automatycznie (można edytować)
+- **Waluta** — wykryta lub domyślnie ustawiona na Twoją walutę bazową
+
+Dotknij **Zapisz przychód**, aby potwierdzić, lub **Spróbuj ponownie**, aby nagrać ponownie.
+
+### Wskazówki dla najlepszych wyników
+
+- Wspomnij kwotę i krótki opis
+- Podaj walutę, jeżeli różni się od Twojej domyślnej
+
+---
+
+## Skanowanie faktury
+
+Sfotografuj lub prześlij fakturę lub dokument płatności, aby automatycznie zarejestrować przychód.
+
+### Jak to działa
+
+1. Dotknij **Skanuj fakturę** z szybkich akcji na Pulpicie lub dotknij ikony dokumentu w stopce formularza **Dodaj przychód**
+2. Wybierz **Zrób zdjęcie**, **Wybierz z galerii** lub **Wgraj PDF**
+3. Opcjonalnie wprowadź dodatkowe instrukcje dla AI
+4. Aplikacja wyodrębnia łączną kwotę, datę i kategorię
+
+### Ekran potwierdzenia
+
+- **Łączna kwota** — wyodrębniona z dokumentu
+- **Opis** — wygenerowane podsumowanie
+- **Kategoria** — kategoria przychodu przypisana automatycznie
+- **Data** — z dokumentu
+
+Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otworzyć pełny formularz Dodaj przychód z wstępnie wypełnionymi danymi.
+
+> **Uwaga:** OCR faktur wyodrębnia wyłącznie łączną kwotę i datę. Pozycje z faktur są celowo ignorowane, aby uniknąć podwójnego liczenia w wielopozycyjnych dokumentach rozliczeniowych.
+
+---
+
 ## FAQ
 
 - **P: Jakie jezyki obsluguje wprowadzanie glosowe?**
@@ -13719,6 +13927,58 @@ Uberprufe und korrigiere Details, dann:
 - Halte die Kamera ruhig, um Unscharfe zu vermeiden
 - Verwende **Zusatzliche Anweisungen fur KI** fur besondere Handhabung (z.B. "Das ist in EUR", "Ersten Artikel ignorieren")
 
+## Spracheingabe Einnahmen
+
+Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
+
+### So funktioniert es
+
+1. Tippe auf **Spracheingabe Einnahmen** bei den Schnellaktionen der Übersicht, oder tippe auf das Mikrofonsymbol in der Fußzeile des **Einnahme hinzufügen**-Formulars
+2. Tippe auf die (grüne) Mikrofon-Schaltfläche, um die Aufnahme zu starten
+3. Sprich natürlich, zum Beispiel: *"500 vom Kunden erhalten, Beratungshonorar"*
+4. Tippe erneut, um die Aufnahme zu stoppen
+5. Die App extrahiert den Betrag, die Beschreibung und die am besten passende **Einnahmenkategorie**
+
+### Bestätigungsbildschirm
+
+- **Betrag** — aus deiner Sprache extrahiert (bearbeitbar)
+- **Beschreibung** — wofür die Zahlung war (bearbeitbar)
+- **Kategorie** — Einnahmenkategorie automatisch zugewiesen (bearbeitbar)
+- **Währung** — erkannt oder auf deine Standardwährung zurückgesetzt
+
+Tippe auf **Einnahme speichern**, um zu bestätigen, oder auf **Erneut versuchen**, um neu aufzunehmen.
+
+### Tipps für beste Ergebnisse
+
+- Nenne den Betrag und eine kurze Beschreibung
+- Gib die Währung an, wenn sie sich von deiner Standardwährung unterscheidet
+
+---
+
+## Rechnung scannen
+
+Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahmen automatisch zu erfassen.
+
+### So funktioniert es
+
+1. Tippe auf **Rechnung scannen** bei den Schnellaktionen der Übersicht, oder tippe auf das Dokumentsymbol in der Fußzeile des **Einnahme hinzufügen**-Formulars
+2. Wähle **Foto aufnehmen**, **Aus Galerie wählen** oder **PDF hochladen**
+3. Optional kannst du **Zusätzliche Anweisungen für KI** eingeben
+4. Die App extrahiert den Gesamtbetrag, das Datum und die Kategorie
+
+### Bestätigungsbildschirm
+
+- **Gesamtbetrag** — aus dem Dokument extrahiert
+- **Beschreibung** — generierte Zusammenfassung
+- **Kategorie** — Einnahmenkategorie automatisch zugewiesen
+- **Datum** — aus dem Dokument
+
+Überprüfe die Details, tippe auf ✓ zum Speichern oder auf das Stiftsymbol, um das vollständige Einnahme-Formular mit vorausgefüllten Daten zu öffnen.
+
+> **Hinweis:** Die Rechnungs-OCR extrahiert nur Gesamtbetrag und Datum. Einzelpositionen aus Rechnungen werden absichtlich ignoriert, um Doppelzählungen bei mehrzeiligen Abrechnungsdokumenten zu vermeiden.
+
+---
+
 ## FAQ
 
 - **F: Welche Sprachen unterstutzt die Spracheingabe?**
@@ -16961,6 +17221,58 @@ Revisa y corrige cualquier detalle, luego:
 - Mantene la camara estable para evitar desenfoque
 - Usa **Instrucciones adicionales para la IA** para un tratamiento especial (por ejemplo, "Esto esta en EUR", "Ignorar el primer articulo")
 
+## Ingresos por voz
+
+Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
+
+### Cómo funciona
+
+1. Toca **Ingresos por voz** desde las acciones rápidas del Panel, o toca el icono del micrófono en el pie del formulario **Agregar ingreso**
+2. Toca el botón (verde) del micrófono para empezar a grabar
+3. Habla de forma natural, por ejemplo: *"Recibidos 500 del cliente, honorarios de consultoría"*
+4. Toca de nuevo para detener la grabación
+5. La aplicación extrae el importe, la descripción y la **categoría de ingreso** más adecuada
+
+### Pantalla de confirmación
+
+- **Importe** — extraído de tu voz (editable)
+- **Descripción** — para qué fue el pago (editable)
+- **Categoría** — categoría de ingreso asignada automáticamente (editable)
+- **Moneda** — detectada o establecida por defecto en tu moneda base
+
+Toca **Guardar ingreso** para confirmar, o **Intentar de nuevo** para volver a grabar.
+
+### Consejos para mejores resultados
+
+- Menciona el importe y una breve descripción
+- Especifica la moneda si difiere de tu moneda predeterminada
+
+---
+
+## Escanear factura
+
+Fotografía o sube una factura o documento de pago para capturar ingresos automáticamente.
+
+### Cómo funciona
+
+1. Toca **Escanear factura** desde las acciones rápidas del Panel, o toca el icono del documento en el pie del formulario **Agregar ingreso**
+2. Elige **Tomar foto**, **Elegir de la galería** o **Subir PDF**
+3. Opcionalmente, introduce instrucciones adicionales para la IA
+4. La aplicación extrae el importe total, la fecha y la categoría
+
+### Pantalla de confirmación
+
+- **Importe total** — extraído del documento
+- **Descripción** — resumen generado
+- **Categoría** — categoría de ingreso asignada automáticamente
+- **Fecha** — del documento
+
+Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el formulario completo de Agregar ingreso con los datos pre-rellenados.
+
+> **Nota:** El OCR de facturas extrae únicamente el total y la fecha. Los elementos de línea de las facturas se ignoran intencionalmente para evitar el doble conteo en documentos de facturación de varias líneas.
+
+---
+
 ## Preguntas frecuentes
 
 - **P: Que idiomas admite la entrada de voz?**
@@ -20192,6 +20504,58 @@ Verifiez et corrigez les details, puis :
 - Tenez l'appareil photo stable pour eviter le flou
 - Utilisez les **Instructions supplementaires pour l'IA** pour un traitement special (par ex. "C'est en EUR", "Ignorer le premier article")
 
+## Revenus vocaux
+
+Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
+
+### Comment ça marche
+
+1. Appuyez sur **Revenus vocaux** dans les actions rapides du Tableau de bord, ou appuyez sur l'icône du microphone dans le pied du formulaire **Ajouter un revenu**
+2. Appuyez sur le bouton (vert) du microphone pour lancer l'enregistrement
+3. Parlez naturellement, par exemple : *"Reçu 500 du client, honoraires de conseil"*
+4. Appuyez à nouveau pour arrêter l'enregistrement
+5. L'application extrait le montant, la description et la **catégorie de revenu** la plus appropriée
+
+### Écran de confirmation
+
+- **Montant** — extrait de votre parole (modifiable)
+- **Description** — objet du paiement (modifiable)
+- **Catégorie** — catégorie de revenu attribuée automatiquement (modifiable)
+- **Devise** — détectée ou définie par défaut sur votre devise de base
+
+Appuyez sur **Enregistrer le revenu** pour confirmer, ou sur **Réessayer** pour ré-enregistrer.
+
+### Conseils pour de meilleurs résultats
+
+- Mentionnez le montant et une brève description
+- Précisez la devise si elle diffère de votre devise par défaut
+
+---
+
+## Scanner une facture
+
+Photographiez ou importez une facture ou un document de paiement pour capturer automatiquement des revenus.
+
+### Comment ça marche
+
+1. Appuyez sur **Scanner une facture** dans les actions rapides du Tableau de bord, ou appuyez sur l'icône du document dans le pied du formulaire **Ajouter un revenu**
+2. Choisissez **Prendre une photo**, **Choisir depuis la galerie** ou **Importer un PDF**
+3. Optionnellement, entrez des instructions supplémentaires pour l'IA
+4. L'application extrait le montant total, la date et la catégorie
+
+### Écran de confirmation
+
+- **Montant total** — extrait du document
+- **Description** — résumé généré
+- **Catégorie** — catégorie de revenu attribuée automatiquement
+- **Date** — du document
+
+Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon pour ouvrir le formulaire complet Ajouter un revenu avec les données pré-remplies.
+
+> **Remarque :** L'OCR de facture extrait uniquement le total et la date. Les lignes de détail des factures sont intentionnellement ignorées pour éviter les doubles comptages sur les documents de facturation multi-lignes.
+
+---
+
 ## FAQ
 
 - **Q : Quelles langues la saisie vocale prend-elle en charge ?**
@@ -23420,6 +23784,58 @@ iOS, Android, Web
 - Пераканайцеся, што ўвесь чэк бачны і размешчаны роўна
 - Трымайце камеру роўна, каб пазбегнуць размыцця
 - Выкарыстоўвайце **Дадатковыя інструкцыі для ІІ** для асаблівых выпадкаў (напрыклад, «Гэта ў EUR», «Ігнараваць першую пазіцыю»)
+
+## Галасавы даход
+
+Рэгіструйце атрыманыя плацяжы голасам — той самы працэс, што і для галасавога выдатку, аптымізаваны для даходаў.
+
+### Як гэта працуе
+
+1. Націсніце **Галасавы даход** у хуткіх дзеяннях на Галоўнай або націсніце значок мікрафона ў ніжняй частцы формы **Дадаць даход**
+2. Націсніце (зялёную) кнопку мікрафона, каб пачаць запіс
+3. Гаварыце натуральна, напрыклад: *«Атрымана 500 ад кліента, кансультацыйная паслуга»*
+4. Націсніце зноў, каб спыніць запіс
+5. Праграма здабывае суму, апісанне і найбольш адпаведную **катэгорыю даходу**
+
+### Экран пацвярджэння
+
+- **Сума** — здабыта з вашай гаворкі (можна рэдагаваць)
+- **Апісанне** — за што быў плацёж (можна рэдагаваць)
+- **Катэгорыя** — катэгорыя даходу прызначана аўтаматычна (можна рэдагаваць)
+- **Валюта** — вызначана або па змаўчанні ўстаноўлена на вашу базавую валюту
+
+Націсніце **Захаваць даход**, каб пацвердзіць, або **Паспрабаваць зноў**, каб перазапісаць.
+
+### Парады для лепшых вынікаў
+
+- Згадайце суму і кароткае апісанне
+- Укажыце валюту, калі яна адрозніваецца ад вашай валюты па змаўчанні
+
+---
+
+## Сканаванне рахунку
+
+Сфатаграфуйце або загрузіце рахунак ці платаёжны дакумент, каб аўтаматычна зафіксаваць даход.
+
+### Як гэта працуе
+
+1. Націсніце **Сканаваць рахунак** у хуткіх дзеяннях на Галоўнай або націсніце значок дакумента ў ніжняй частцы формы **Дадаць даход**
+2. Выберыце **Зрабіць фота**, **Выбраць з галерэі** або **Загрузіць PDF**
+3. Па жаданні ўвядзіце дадатковыя інструкцыі для ІІ
+4. Праграма здабывае агульную суму, дату і катэгорыю
+
+### Экран пацвярджэння
+
+- **Агульная сума** — здабыта з дакумента
+- **Апісанне** — згенераванае рэзюмэ
+- **Катэгорыя** — катэгорыя даходу прызначана аўтаматычна
+- **Дата** — з дакумента
+
+Праглядзіце дэталі, націсніце ✓ для захавання або значок аловак, каб адкрыць поўную форму дадання даходу з папярэдне запоўненымі данымі.
+
+> **Заўвага:** OCR рахунку здабывае толькі агульную суму і дату. Пазіцыі з рахункаў наўмысна ігнаруюцца, каб пазбегнуць падвойнага ўліку ў шматрадковых разліковых дакументах.
+
+---
 
 ## Частыя пытанні
 

@@ -495,6 +495,7 @@ export const useWalletStore = create<WalletState>()(
           currencyCode: data.toCurrency,
           description: 'Transfer from account',
           date: data.date,
+          source: 'manual',
           isDebt: false,
           isDebtRepayment: false,
           createdAt: now,

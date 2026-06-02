@@ -375,6 +375,7 @@ model Income {
   description  String?
   notes        String?
   date         DateTime @db.Date
+  source       String   @default("manual")
   externalRef  String?  @map("external_ref")
   importBatchId String? @map("import_batch_id")
   isDebt           Boolean   @default(false) @map("is_debt")

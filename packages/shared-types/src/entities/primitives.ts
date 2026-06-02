@@ -4,6 +4,8 @@ export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
 
 export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import';
 
+export type IncomeSource = 'manual' | 'voice' | 'ocr' | 'import';
+
 export type BudgetPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
 
 export type CategoryType = 'income' | 'expense';

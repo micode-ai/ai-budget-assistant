@@ -77,6 +77,58 @@ Revisa y corrige cualquier detalle, luego:
 - Mantene la camara estable para evitar desenfoque
 - Usa **Instrucciones adicionales para la IA** para un tratamiento especial (por ejemplo, "Esto esta en EUR", "Ignorar el primer articulo")
 
+## Ingresos por voz
+
+Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
+
+### Cómo funciona
+
+1. Toca **Ingresos por voz** desde las acciones rápidas del Panel, o toca el icono del micrófono en el pie del formulario **Agregar ingreso**
+2. Toca el botón (verde) del micrófono para empezar a grabar
+3. Habla de forma natural, por ejemplo: *"Recibidos 500 del cliente, honorarios de consultoría"*
+4. Toca de nuevo para detener la grabación
+5. La aplicación extrae el importe, la descripción y la **categoría de ingreso** más adecuada
+
+### Pantalla de confirmación
+
+- **Importe** — extraído de tu voz (editable)
+- **Descripción** — para qué fue el pago (editable)
+- **Categoría** — categoría de ingreso asignada automáticamente (editable)
+- **Moneda** — detectada o establecida por defecto en tu moneda base
+
+Toca **Guardar ingreso** para confirmar, o **Intentar de nuevo** para volver a grabar.
+
+### Consejos para mejores resultados
+
+- Menciona el importe y una breve descripción
+- Especifica la moneda si difiere de tu moneda predeterminada
+
+---
+
+## Escanear factura
+
+Fotografía o sube una factura o documento de pago para capturar ingresos automáticamente.
+
+### Cómo funciona
+
+1. Toca **Escanear factura** desde las acciones rápidas del Panel, o toca el icono del documento en el pie del formulario **Agregar ingreso**
+2. Elige **Tomar foto**, **Elegir de la galería** o **Subir PDF**
+3. Opcionalmente, introduce instrucciones adicionales para la IA
+4. La aplicación extrae el importe total, la fecha y la categoría
+
+### Pantalla de confirmación
+
+- **Importe total** — extraído del documento
+- **Descripción** — resumen generado
+- **Categoría** — categoría de ingreso asignada automáticamente
+- **Fecha** — del documento
+
+Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el formulario completo de Agregar ingreso con los datos pre-rellenados.
+
+> **Nota:** El OCR de facturas extrae únicamente el total y la fecha. Los elementos de línea de las facturas se ignoran intencionalmente para evitar el doble conteo en documentos de facturación de varias líneas.
+
+---
+
 ## Preguntas frecuentes
 
 - **P: Que idiomas admite la entrada de voz?**

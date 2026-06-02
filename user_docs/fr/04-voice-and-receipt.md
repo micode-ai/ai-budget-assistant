@@ -77,6 +77,58 @@ Verifiez et corrigez les details, puis :
 - Tenez l'appareil photo stable pour eviter le flou
 - Utilisez les **Instructions supplementaires pour l'IA** pour un traitement special (par ex. "C'est en EUR", "Ignorer le premier article")
 
+## Revenus vocaux
+
+Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
+
+### Comment ça marche
+
+1. Appuyez sur **Revenus vocaux** dans les actions rapides du Tableau de bord, ou appuyez sur l'icône du microphone dans le pied du formulaire **Ajouter un revenu**
+2. Appuyez sur le bouton (vert) du microphone pour lancer l'enregistrement
+3. Parlez naturellement, par exemple : *"Reçu 500 du client, honoraires de conseil"*
+4. Appuyez à nouveau pour arrêter l'enregistrement
+5. L'application extrait le montant, la description et la **catégorie de revenu** la plus appropriée
+
+### Écran de confirmation
+
+- **Montant** — extrait de votre parole (modifiable)
+- **Description** — objet du paiement (modifiable)
+- **Catégorie** — catégorie de revenu attribuée automatiquement (modifiable)
+- **Devise** — détectée ou définie par défaut sur votre devise de base
+
+Appuyez sur **Enregistrer le revenu** pour confirmer, ou sur **Réessayer** pour ré-enregistrer.
+
+### Conseils pour de meilleurs résultats
+
+- Mentionnez le montant et une brève description
+- Précisez la devise si elle diffère de votre devise par défaut
+
+---
+
+## Scanner une facture
+
+Photographiez ou importez une facture ou un document de paiement pour capturer automatiquement des revenus.
+
+### Comment ça marche
+
+1. Appuyez sur **Scanner une facture** dans les actions rapides du Tableau de bord, ou appuyez sur l'icône du document dans le pied du formulaire **Ajouter un revenu**
+2. Choisissez **Prendre une photo**, **Choisir depuis la galerie** ou **Importer un PDF**
+3. Optionnellement, entrez des instructions supplémentaires pour l'IA
+4. L'application extrait le montant total, la date et la catégorie
+
+### Écran de confirmation
+
+- **Montant total** — extrait du document
+- **Description** — résumé généré
+- **Catégorie** — catégorie de revenu attribuée automatiquement
+- **Date** — du document
+
+Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon pour ouvrir le formulaire complet Ajouter un revenu avec les données pré-remplies.
+
+> **Remarque :** L'OCR de facture extrait uniquement le total et la date. Les lignes de détail des factures sont intentionnellement ignorées pour éviter les doubles comptages sur les documents de facturation multi-lignes.
+
+---
+
 ## FAQ
 
 - **Q : Quelles langues la saisie vocale prend-elle en charge ?**

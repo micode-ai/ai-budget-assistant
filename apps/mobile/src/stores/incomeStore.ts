@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Income, Currency, SyncStatus } from '@budget/shared-types';
+import type { Income, Currency, IncomeSource, SyncStatus } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import {
   loadAllIncomes,
@@ -47,6 +47,7 @@ interface IncomeState {
     tagIds?: string[];
     projectId?: string;
     date: Date;
+    source?: IncomeSource;
     isDebt?: boolean;
     isDebtRepayment?: boolean;
     debtContactName?: string;
@@ -182,6 +183,7 @@ export const useIncomeStore = create<IncomeState>()(
               notes: decrypted.notes ?? undefined,
               categoryId: serverCategoryId || localIncome?.categoryId,
               date: new Date(decrypted.date),
+              source: (decrypted.source ?? 'manual') as Income['source'],
               isDebt: decrypted.isDebt || false,
               isDebtRepayment: decrypted.isDebtRepayment || false,
               debtContactName: decrypted.debtContactName ?? undefined,
@@ -272,6 +274,7 @@ export const useIncomeStore = create<IncomeState>()(
         id,
         localId: id,
         accountId,
+        source: coreData.source ?? 'manual',
         isDebt: coreData.isDebt || false,
         isDebtRepayment: coreData.isDebtRepayment || false,
         createdAt: now,
@@ -324,6 +327,7 @@ export const useIncomeStore = create<IncomeState>()(
           notes: encPayload.notes ?? newIncome.notes,
           categoryId: resolvedCategoryId,
           date: newIncome.date instanceof Date ? newIncome.date.toISOString() : newIncome.date,
+          source: newIncome.source,
           tagIds: tagIds?.length ? tagIds : undefined,
           projectId: projectId || undefined,
           isDebt: newIncome.isDebt || undefined,

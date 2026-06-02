@@ -76,6 +76,7 @@ export const incomes = sqliteTable('incomes', {
   notes: text('notes'),
   categoryId: text('category_id'),
   date: integer('date', { mode: 'timestamp' }).notNull(),
+  source: text('source').notNull().default('manual'),
   externalRef: text('external_ref'),
   isDebt: integer('is_debt', { mode: 'boolean' }).default(false),
   isDebtRepayment: integer('is_debt_repayment', { mode: 'boolean' }).default(false),

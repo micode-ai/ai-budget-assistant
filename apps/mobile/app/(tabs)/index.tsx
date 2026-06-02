@@ -149,6 +149,18 @@ export default function DashboardScreen() {
               </View>
               <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/income/voice')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.voice_input} style={[styles.quickActionImage, { tintColor: theme.colors.success }]} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceIncome')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/income/receipt')}>
+              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                <Image source={quickActionIcons.scan_receipt} style={[styles.quickActionImage, { tintColor: theme.colors.success }]} />
+              </View>
+              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanInvoice')}</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
               <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
                 <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />

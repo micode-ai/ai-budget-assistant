@@ -254,6 +254,7 @@ export async function initializeDatabase(): Promise<void> {
         notes TEXT,
         category_id TEXT,
         date INTEGER NOT NULL,
+        source TEXT NOT NULL DEFAULT 'manual',
         created_at INTEGER NOT NULL,
         updated_at INTEGER NOT NULL,
         is_deleted INTEGER DEFAULT 0,
@@ -532,6 +533,9 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN debt_contact_name TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN debt_due_date INTEGER`); } catch {}
     try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN related_debt_expense_id TEXT`); } catch {}
+
+    // Source field for incomes (voice/ocr/import/manual)
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN source TEXT NOT NULL DEFAULT 'manual'`); } catch {}
 
     // Count-as-income fields for account transfers
     try { expoDb.execSync(`ALTER TABLE account_transfers ADD COLUMN count_as_income INTEGER DEFAULT 0`); } catch {}

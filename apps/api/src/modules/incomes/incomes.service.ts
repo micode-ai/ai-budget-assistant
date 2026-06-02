@@ -72,6 +72,7 @@ export class IncomesService {
         notes: dto.notes,
         categoryId: resolvedCategoryId,
         date: new Date(dto.date),
+        source: dto.source ?? 'manual',
         isDebt: dto.isDebt ?? false,
         isDebtRepayment: dto.isDebtRepayment ?? false,
         debtContactName: dto.debtContactName,
