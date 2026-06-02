@@ -8,6 +8,20 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.3.1 — 2026-06-02
+
+**Currency**
+- Switch your **display currency** straight from the account switcher — the pill now shows the base-currency symbol (e.g. `Personal · $`), and its menu has a **Display currency** chip for each supported currency. Changing it instantly reconverts every total across the app, for all roles (ABA-187).
+
+**Stability**
+- Fixed a crash on launch where the app would close right after opening (and Samsung Device Care reported it "crashing frequently"). It happened when Android restored the app after the OS had killed it in the background (ABA-188).
+
+**Under the hood**
+- Faster investment asset-price updates and transaction creation (ABA-186).
+- Internal refactors and more test coverage — large screens/hooks split into focused modules, tighter API typing (ABA-180, ABA-181, ABA-182, ABA-183, ABA-184, ABA-185).
+
+---
+
 ## 1.3.0 — 2026-05-30
 
 **Analytics**
