@@ -20,7 +20,14 @@ class MainActivity : ReactActivity() {
     // @generated begin expo-splashscreen - expo prebuild (DO NOT MODIFY) sync-f3ff59a738c56c9a6119210cb55f0b613eb8b6af
     SplashScreenManager.registerOnActivity(this)
     // @generated end expo-splashscreen
-    super.onCreate(savedInstanceState)
+    // Pass `null` instead of `savedInstanceState` so Android does not try to
+    // restore react-native-screens fragments after the OS kills the process in
+    // the background. Restoring them throws IllegalStateException("Screen
+    // fragments should never be restored") in MainActivity.onCreate, crashing
+    // the app on launch (Samsung Device Care: "crashing frequently"). RN/Expo
+    // own screen state on the JS side, so native fragment restoration must be
+    // disabled. See react-native-screens issue #17.
+    super.onCreate(null)
   }
 
   /**
