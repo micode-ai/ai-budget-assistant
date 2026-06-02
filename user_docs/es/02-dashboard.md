@@ -23,6 +23,27 @@ Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las 
 | **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
 | **Cambio** | Abre el formulario de cambio de divisa |
 
+## Salud Financiera
+
+El widget **Salud Financiera** muestra una puntuación única de 0–100 que resume tu salud financiera general del mes actual:
+
+- **Verde (70–100)** — las finanzas están en excelente estado
+- **Amarillo (40–69)** — algunas áreas necesitan atención
+- **Rojo (0–39)** — se detectaron problemas significativos
+
+El indicador circular en la parte superior derecha de la tarjeta se llena proporcionalmente a tu puntuación. Toca la tarjeta para abrir un desglose con cuatro componentes:
+
+| Componente | Pts máx | Descripción |
+|---|---|---|
+| Cumplimiento del presupuesto | 25 | % de presupuestos activos sin superar el límite |
+| Tasa de ahorro | 25 | Mapea tu % de ahorro mensual linealmente (0% → 0 pts, 20%+ → 25 pts) |
+| Progreso de metas | 25 | % de metas de ahorro activas en camino hacia su fecha límite |
+| Salud de deudas | 25 | Deducción proporcional por deudas vencidas |
+
+> **«Datos insuficientes»** aparece cuando menos de dos componentes tienen datos (p. ej., una cuenta nueva sin presupuestos, metas, deudas ni ingresos todavía).
+
+La puntuación se calcula completamente en el dispositivo, sin necesidad de conexión a internet ni llamadas a IA.
+
 ## Widget de Gamificacion
 
 Debajo de las acciones rapidas, una tarjeta compacta muestra tu progreso de gamificacion:

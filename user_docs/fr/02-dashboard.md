@@ -23,6 +23,27 @@ Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent u
 | **Scanner un recu** | Ouvre l'appareil photo pour photographier un recu et en extraire les informations par IA |
 | **Change** | Ouvre le formulaire de change de devises |
 
+## Santé Financière
+
+Le widget **Santé Financière** affiche un score unique de 0 à 100 résumant votre santé financière globale pour le mois en cours :
+
+- **Vert (70–100)** — finances en excellente forme
+- **Jaune (40–69)** — certains domaines nécessitent une attention
+- **Rouge (0–39)** — problèmes importants détectés
+
+La jauge circulaire en haut à droite de la carte se remplit proportionnellement à votre score. Appuyez sur la carte pour ouvrir un détail avec quatre composantes :
+
+| Composante | Pts max | Description |
+|---|---|---|
+| Respect du budget | 25 | % des budgets actifs ne dépassant pas la limite |
+| Taux d'épargne | 25 | Cartographie votre % d'épargne mensuelle linéairement (0% → 0 pts, 20%+ → 25 pts) |
+| Avancement des objectifs | 25 | % des objectifs d'épargne actifs en bonne voie |
+| Santé des dettes | 25 | Déduction proportionnelle pour les dettes en retard |
+
+> **« Pas assez de données »** s'affiche lorsque moins de deux composantes ont des données (p. ex., un nouveau compte sans budgets, objectifs, dettes ou revenus).
+
+Le score est calculé entièrement sur l'appareil — aucune connexion Internet ni appel IA requis.
+
 ## Widget Gamification
 
 Sous les actions rapides, une carte compacte de gamification affiche votre progression :

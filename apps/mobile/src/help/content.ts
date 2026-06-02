@@ -185,6 +185,27 @@ Four quick action buttons below the greeting give you fast access to the most co
 | **Scan Receipt** | Opens the camera to photograph a receipt for AI extraction |
 | **Exchange** | Opens the currency exchange form |
 
+## Financial Health Score
+
+The **Financial Health Score** widget shows a single 0–100 score summarizing your overall financial health for the current month:
+
+- **Green (70–100)** — finances are in great shape
+- **Yellow (40–69)** — some areas need attention
+- **Red (0–39)** — significant issues detected
+
+The circular gauge in the top-right of the card fills proportionally to your score. Tap the card to open a breakdown sheet showing four components:
+
+| Component | Max pts | Description |
+|---|---|---|
+| Budget adherence | 25 | % of active budgets not exceeding their limit |
+| Savings rate | 25 | Maps your monthly savings % linearly (0% → 0 pts, 20%+ → 25 pts) |
+| Goal progress | 25 | % of active savings goals on track toward their deadline |
+| Debt health | 25 | Deducted proportionally for overdue debts |
+
+> **"Not enough data"** appears when fewer than two components have data (e.g., a brand-new account with no budgets, goals, debts, or income yet).
+
+The score is computed entirely on-device — no internet connection or AI calls required.
+
 ## Gamification Widget
 
 Below the quick actions, a compact card shows your gamification progress:
@@ -3560,6 +3581,27 @@ iOS, Android, Web
 | **Сканировать чек** | Открывает камеру для фотографирования чека и извлечения данных с помощью ИИ |
 | **Обмен** | Открывает форму обмена валют |
 
+## Финансовое здоровье
+
+Виджет **Финансовое здоровье** показывает единый показатель от 0 до 100, отражающий общее состояние ваших финансов за текущий месяц:
+
+- **Зелёный (70–100)** — финансы в отличном состоянии
+- **Жёлтый (40–69)** — некоторые области требуют внимания
+- **Красный (0–39)** — обнаружены серьёзные проблемы
+
+Круговой индикатор в правом верхнем углу карточки заполняется пропорционально оценке. Нажмите на карточку, чтобы открыть детальную разбивку с четырьмя компонентами:
+
+| Компонент | Макс баллы | Описание |
+|---|---|---|
+| Соблюдение бюджета | 25 | % активных бюджетов, не превышающих лимит |
+| Норма сбережений | 25 | Линейное отображение % ежемесячных сбережений (0% → 0 баллов, 20%+ → 25 баллов) |
+| Прогресс по целям | 25 | % активных сберегательных целей, идущих по графику |
+| Состояние долгов | 25 | Пропорциональный вычет за просроченные долги |
+
+> **«Недостаточно данных»** отображается, когда менее двух компонентов имеют данные (например, совсем новый счёт без бюджетов, целей, долгов или доходов).
+
+Показатель вычисляется полностью на устройстве — без подключения к интернету или обращений к ИИ.
+
 ## Виджет геймификации
 
 Под кнопками быстрых действий отображается компактная карточка вашего прогресса:
@@ -6925,6 +6967,27 @@ iOS, Android, Web
 | **Сканувати чек** | Відкриває камеру для фотографування чека та ШІ-розпізнавання |
 | **Обмін** | Відкриває форму обміну валют |
 
+## Фінансове здоров'я
+
+Віджет **Фінансове здоров'я** показує єдиний показник від 0 до 100, що відображає загальний стан ваших фінансів за поточний місяць:
+
+- **Зелений (70–100)** — фінанси у відмінному стані
+- **Жовтий (40–69)** — деякі сфери потребують уваги
+- **Червоний (0–39)** — виявлено серйозні проблеми
+
+Кругловий індикатор у верхньому правому куті картки заповнюється пропорційно оцінці. Натисніть на картку, щоб відкрити детальну розбивку з чотирма компонентами:
+
+| Компонент | Макс балів | Опис |
+|---|---|---|
+| Дотримання бюджету | 25 | % активних бюджетів, що не перевищують ліміт |
+| Норма заощаджень | 25 | Лінійне відображення % щомісячних заощаджень (0% → 0 балів, 20%+ → 25 балів) |
+| Прогрес цілей | 25 | % активних цілей заощаджень, що йдуть за графіком |
+| Стан боргів | 25 | Пропорційне вирахування за простроченими боргами |
+
+> **«Недостатньо даних»** відображається, коли менше двох компонентів мають дані (наприклад, зовсім новий рахунок без бюджетів, цілей, боргів або доходів).
+
+Показник обчислюється повністю на пристрої — без підключення до інтернету або звернень до ШІ.
+
 ## Віджет гейміфікації
 
 Під кнопками швидких дій відображається компактна картка вашого прогресу:
@@ -10253,6 +10316,27 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 | **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
 | **Kantor** | Otwiera formularz wymiany walut |
 
+## Kondycja Finansowa
+
+Widget **Kondycja Finansowa** wyświetla pojedynczy wynik od 0 do 100 podsumowujący Twoją ogólną kondycję finansową w bieżącym miesiącu:
+
+- **Zielony (70–100)** — finanse w doskonałym stanie
+- **Żółty (40–69)** — niektóre obszary wymagają uwagi
+- **Czerwony (0–39)** — wykryto poważne problemy
+
+Okrągły wskaźnik w prawym górnym rogu karty wypełnia się proporcjonalnie do wyniku. Kliknij kartę, aby otworzyć szczegółowy widok z czterema składnikami:
+
+| Składnik | Maks pkt | Opis |
+|---|---|---|
+| Przestrzeganie budżetu | 25 | % aktywnych budżetów nieprzekraczających limitu |
+| Stopa oszczędności | 25 | Liniowe mapowanie % miesięcznych oszczędności (0% → 0 pkt, 20%+ → 25 pkt) |
+| Postęp celów | 25 | % aktywnych celów oszczędnościowych realizowanych terminowo |
+| Stan zadłużenia | 25 | Proporcjonalne odliczenie za przeterminowane długi |
+
+> **„Za mało danych"** pojawia się, gdy mniej niż dwa składniki mają dane (np. zupełnie nowe konto bez budżetów, celów, długów ani przychodów).
+
+Wynik jest obliczany wyłącznie na urządzeniu — bez połączenia z internetem ani wywołań AI.
+
 ## Widget grywalizacji
 
 Ponizej szybkich akcji kompaktowa karta pokazuje Twoj postep w grywalizacji:
@@ -13577,6 +13661,27 @@ Vier Schnellaktions-Schaltflachen unterhalb der Begrussung geben dir schnellen Z
 | **Beleg scannen** | Offnet die Kamera zum Fotografieren eines Belegs fur KI-Extraktion |
 | **Umtausch** | Offnet das Wahrungsumtausch-Formular |
 
+## Finanzielle Gesundheit
+
+Das Widget **Finanzielle Gesundheit** zeigt eine einzelne Punktzahl von 0–100, die Ihre finanzielle Gesundheit im aktuellen Monat zusammenfasst:
+
+- **Grün (70–100)** — Finanzen sind in ausgezeichnetem Zustand
+- **Gelb (40–69)** — Einige Bereiche brauchen Aufmerksamkeit
+- **Rot (0–39)** — Erhebliche Probleme erkannt
+
+Die Kreisanzeige oben rechts auf der Karte füllt sich proportional zur Punktzahl. Tippen Sie auf die Karte, um eine Detailansicht mit vier Komponenten zu öffnen:
+
+| Komponente | Max Pkt | Beschreibung |
+|---|---|---|
+| Budgeteinhaltung | 25 | % der aktiven Budgets, die das Limit nicht überschreiten |
+| Sparquote | 25 | Bildet Ihren monatlichen Sparanteil linear ab (0% → 0 Pkt, 20%+ → 25 Pkt) |
+| Zielfortschritt | 25 | % der aktiven Sparziele auf dem Weg zum Zieldatum |
+| Schuldengesundheit | 25 | Proportionaler Abzug für überfällige Schulden |
+
+> **„Nicht genug Daten"** erscheint, wenn weniger als zwei Komponenten Daten haben (z.B. ein brandneues Konto ohne Budgets, Ziele, Schulden oder Einkommen).
+
+Die Punktzahl wird vollständig lokal berechnet – keine Internetverbindung oder KI-Anfragen erforderlich.
+
 ## Gamification-Widget
 
 Unterhalb der Schnellaktionen zeigt eine kompakte Gamification-Karte deinen Fortschritt:
@@ -16871,6 +16976,27 @@ Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las 
 | **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
 | **Cambio** | Abre el formulario de cambio de divisa |
 
+## Salud Financiera
+
+El widget **Salud Financiera** muestra una puntuación única de 0–100 que resume tu salud financiera general del mes actual:
+
+- **Verde (70–100)** — las finanzas están en excelente estado
+- **Amarillo (40–69)** — algunas áreas necesitan atención
+- **Rojo (0–39)** — se detectaron problemas significativos
+
+El indicador circular en la parte superior derecha de la tarjeta se llena proporcionalmente a tu puntuación. Toca la tarjeta para abrir un desglose con cuatro componentes:
+
+| Componente | Pts máx | Descripción |
+|---|---|---|
+| Cumplimiento del presupuesto | 25 | % de presupuestos activos sin superar el límite |
+| Tasa de ahorro | 25 | Mapea tu % de ahorro mensual linealmente (0% → 0 pts, 20%+ → 25 pts) |
+| Progreso de metas | 25 | % de metas de ahorro activas en camino hacia su fecha límite |
+| Salud de deudas | 25 | Deducción proporcional por deudas vencidas |
+
+> **«Datos insuficientes»** aparece cuando menos de dos componentes tienen datos (p. ej., una cuenta nueva sin presupuestos, metas, deudas ni ingresos todavía).
+
+La puntuación se calcula completamente en el dispositivo, sin necesidad de conexión a internet ni llamadas a IA.
+
 ## Widget de Gamificacion
 
 Debajo de las acciones rapidas, una tarjeta compacta muestra tu progreso de gamificacion:
@@ -20154,6 +20280,27 @@ Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent u
 | **Scanner un recu** | Ouvre l'appareil photo pour photographier un recu et en extraire les informations par IA |
 | **Change** | Ouvre le formulaire de change de devises |
 
+## Santé Financière
+
+Le widget **Santé Financière** affiche un score unique de 0 à 100 résumant votre santé financière globale pour le mois en cours :
+
+- **Vert (70–100)** — finances en excellente forme
+- **Jaune (40–69)** — certains domaines nécessitent une attention
+- **Rouge (0–39)** — problèmes importants détectés
+
+La jauge circulaire en haut à droite de la carte se remplit proportionnellement à votre score. Appuyez sur la carte pour ouvrir un détail avec quatre composantes :
+
+| Composante | Pts max | Description |
+|---|---|---|
+| Respect du budget | 25 | % des budgets actifs ne dépassant pas la limite |
+| Taux d'épargne | 25 | Cartographie votre % d'épargne mensuelle linéairement (0% → 0 pts, 20%+ → 25 pts) |
+| Avancement des objectifs | 25 | % des objectifs d'épargne actifs en bonne voie |
+| Santé des dettes | 25 | Déduction proportionnelle pour les dettes en retard |
+
+> **« Pas assez de données »** s'affiche lorsque moins de deux composantes ont des données (p. ex., un nouveau compte sans budgets, objectifs, dettes ou revenus).
+
+Le score est calculé entièrement sur l'appareil — aucune connexion Internet ni appel IA requis.
+
 ## Widget Gamification
 
 Sous les actions rapides, une carte compacte de gamification affiche votre progression :
@@ -23434,6 +23581,27 @@ iOS, Android, Web
 | **Галасавы ўвод** | Адкрывае экран галасавога выдатку — вымавіце выдатак натуральнай мовай |
 | **Сканаваць чэк** | Адкрывае камеру для фатаграфавання чэка і здабывання даных з дапамогай ІІ |
 | **Абмен** | Адкрывае форму абмену валют |
+
+## Фінансавае здароўе
+
+Віджэт **Фінансавае здароўе** паказвае адзіны паказчык ад 0 да 100, які адлюстроўвае агульны стан вашых фінансаў за бягучы месяц:
+
+- **Зялёны (70–100)** — фінансы ў выдатным стане
+- **Жоўты (40–69)** — некаторыя сферы патрабуюць увагі
+- **Чырвоны (0–39)** — выяўлены сур'ёзныя праблемы
+
+Кругавы індыкатар у верхнім правым куце картачкі запаўняецца прапарцыйна ацэнцы. Націсніце на картачку, каб адкрыць дэталёвую разбіўку з чатырма кампанентамі:
+
+| Кампанент | Макс балаў | Апісанне |
+|---|---|---|
+| Выкананне бюджэту | 25 | % актыўных бюджэтаў, якія не перавышаюць ліміт |
+| Норма зберажэнняў | 25 | Лінейнае адлюстраванне % штомесачных зберажэнняў (0% → 0 балаў, 20%+ → 25 балаў) |
+| Прагрэс мэтаў | 25 | % актыўных мэтаў зберажэнняў, якія ідуць па графіку |
+| Стан запазычанасцяў | 25 | Прапарцыйнае адлічэнне за прасрочаныя запазычанасці |
+
+> **«Недастаткова дадзеных»** адлюстроўваецца, калі менш за два кампаненты маюць дадзеныя (напрыклад, зусім новы рахунак без бюджэтаў, мэтаў, запазычанасцяў або даходаў).
+
+Паказчык вылічваецца цалкам на прыладзе — без падлучэння да інтэрнэту або зваротаў да ШІ.
 
 ## Віджэт геміфікацыі
 

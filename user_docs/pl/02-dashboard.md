@@ -23,6 +23,27 @@ Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczest
 | **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
 | **Kantor** | Otwiera formularz wymiany walut |
 
+## Kondycja Finansowa
+
+Widget **Kondycja Finansowa** wyświetla pojedynczy wynik od 0 do 100 podsumowujący Twoją ogólną kondycję finansową w bieżącym miesiącu:
+
+- **Zielony (70–100)** — finanse w doskonałym stanie
+- **Żółty (40–69)** — niektóre obszary wymagają uwagi
+- **Czerwony (0–39)** — wykryto poważne problemy
+
+Okrągły wskaźnik w prawym górnym rogu karty wypełnia się proporcjonalnie do wyniku. Kliknij kartę, aby otworzyć szczegółowy widok z czterema składnikami:
+
+| Składnik | Maks pkt | Opis |
+|---|---|---|
+| Przestrzeganie budżetu | 25 | % aktywnych budżetów nieprzekraczających limitu |
+| Stopa oszczędności | 25 | Liniowe mapowanie % miesięcznych oszczędności (0% → 0 pkt, 20%+ → 25 pkt) |
+| Postęp celów | 25 | % aktywnych celów oszczędnościowych realizowanych terminowo |
+| Stan zadłużenia | 25 | Proporcjonalne odliczenie za przeterminowane długi |
+
+> **„Za mało danych"** pojawia się, gdy mniej niż dwa składniki mają dane (np. zupełnie nowe konto bez budżetów, celów, długów ani przychodów).
+
+Wynik jest obliczany wyłącznie na urządzeniu — bez połączenia z internetem ani wywołań AI.
+
 ## Widget grywalizacji
 
 Ponizej szybkich akcji kompaktowa karta pokazuje Twoj postep w grywalizacji:
