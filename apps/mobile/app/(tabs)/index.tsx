@@ -28,7 +28,7 @@ import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
-import { NetProfitWidget, NetCapitalWidget, CalendarWidget } from '@/components/widgets';
+import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget } from '@/components/widgets';
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 
 export default function DashboardScreen() {
@@ -222,6 +222,9 @@ export default function DashboardScreen() {
 
         {widgetOrder.map((key) => {
           switch (key) {
+            case 'financialHealth':
+              return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
+
             case 'gamification':
               return widgetVisibility.gamification ? (
                 <TouchableOpacity key="gamification" style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>

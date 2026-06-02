@@ -23,6 +23,27 @@ Vier Schnellaktions-Schaltflachen unterhalb der Begrussung geben dir schnellen Z
 | **Beleg scannen** | Offnet die Kamera zum Fotografieren eines Belegs fur KI-Extraktion |
 | **Umtausch** | Offnet das Wahrungsumtausch-Formular |
 
+## Finanzielle Gesundheit
+
+Das Widget **Finanzielle Gesundheit** zeigt eine einzelne Punktzahl von 0–100, die Ihre finanzielle Gesundheit im aktuellen Monat zusammenfasst:
+
+- **Grün (70–100)** — Finanzen sind in ausgezeichnetem Zustand
+- **Gelb (40–69)** — Einige Bereiche brauchen Aufmerksamkeit
+- **Rot (0–39)** — Erhebliche Probleme erkannt
+
+Die Kreisanzeige oben rechts auf der Karte füllt sich proportional zur Punktzahl. Tippen Sie auf die Karte, um eine Detailansicht mit vier Komponenten zu öffnen:
+
+| Komponente | Max Pkt | Beschreibung |
+|---|---|---|
+| Budgeteinhaltung | 25 | % der aktiven Budgets, die das Limit nicht überschreiten |
+| Sparquote | 25 | Bildet Ihren monatlichen Sparanteil linear ab (0% → 0 Pkt, 20%+ → 25 Pkt) |
+| Zielfortschritt | 25 | % der aktiven Sparziele auf dem Weg zum Zieldatum |
+| Schuldengesundheit | 25 | Proportionaler Abzug für überfällige Schulden |
+
+> **„Nicht genug Daten"** erscheint, wenn weniger als zwei Komponenten Daten haben (z.B. ein brandneues Konto ohne Budgets, Ziele, Schulden oder Einkommen).
+
+Die Punktzahl wird vollständig lokal berechnet – keine Internetverbindung oder KI-Anfragen erforderlich.
+
 ## Gamification-Widget
 
 Unterhalb der Schnellaktionen zeigt eine kompakte Gamification-Karte deinen Fortschritt:

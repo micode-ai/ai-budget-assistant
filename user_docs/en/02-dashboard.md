@@ -23,6 +23,27 @@ Four quick action buttons below the greeting give you fast access to the most co
 | **Scan Receipt** | Opens the camera to photograph a receipt for AI extraction |
 | **Exchange** | Opens the currency exchange form |
 
+## Financial Health Score
+
+The **Financial Health Score** widget shows a single 0–100 score summarizing your overall financial health for the current month:
+
+- **Green (70–100)** — finances are in great shape
+- **Yellow (40–69)** — some areas need attention
+- **Red (0–39)** — significant issues detected
+
+The circular gauge in the top-right of the card fills proportionally to your score. Tap the card to open a breakdown sheet showing four components:
+
+| Component | Max pts | Description |
+|---|---|---|
+| Budget adherence | 25 | % of active budgets not exceeding their limit |
+| Savings rate | 25 | Maps your monthly savings % linearly (0% → 0 pts, 20%+ → 25 pts) |
+| Goal progress | 25 | % of active savings goals on track toward their deadline |
+| Debt health | 25 | Deducted proportionally for overdue debts |
+
+> **"Not enough data"** appears when fewer than two components have data (e.g., a brand-new account with no budgets, goals, debts, or income yet).
+
+The score is computed entirely on-device — no internet connection or AI calls required.
+
 ## Gamification Widget
 
 Below the quick actions, a compact card shows your gamification progress:
