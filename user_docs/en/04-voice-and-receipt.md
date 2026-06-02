@@ -77,6 +77,58 @@ Review and correct any details, then:
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
 
+## Voice Income
+
+Capture received payments by voice — same flow as Voice Expense, optimised for income.
+
+### How It Works
+
+1. Tap **Voice Income** from the Dashboard quick actions, or tap the microphone icon in the **Add Income** form footer
+2. Tap the (green) microphone button to start recording
+3. Speak naturally, for example: *"Received 500 from client, consulting fee"*
+4. Tap again to stop recording
+5. The app extracts the amount, description, and best-matching **income category**
+
+### Confirmation Screen
+
+- **Amount** — extracted from your speech (editable)
+- **Description** — what the payment was for (editable)
+- **Category** — income category automatically assigned (editable)
+- **Currency** — detected or defaulted to your base currency
+
+Tap **Save Income** to confirm, or **Try Again** to re-record.
+
+### Tips for Best Results
+
+- Mention the amount and a brief description
+- Mention the currency if it differs from your default
+
+---
+
+## Scan Invoice
+
+Photograph or upload an invoice or payment document to capture income automatically.
+
+### How It Works
+
+1. Tap **Scan Invoice** from the Dashboard quick actions, or tap the document icon in the **Add Income** form footer
+2. Choose **Take Photo**, **Choose from Gallery**, or **Upload PDF**
+3. Optionally, enter additional instructions for the AI
+4. The app extracts the total amount, date, and category
+
+### Confirmation Screen
+
+- **Total Amount** — extracted from the document
+- **Description** — generated summary
+- **Category** — income category automatically assigned
+- **Date** — from the document
+
+Review the details, tap ✓ to save or the pencil icon to open the full Add Income form with the data pre-filled.
+
+> **Note:** Invoice OCR extracts the total and date only. Line items from invoices are intentionally ignored to avoid double-counting on multi-line billing documents.
+
+---
+
 ## FAQ
 
 - **Q: Which languages does voice input support?**

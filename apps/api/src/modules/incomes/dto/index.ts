@@ -68,6 +68,10 @@ export class CreateIncomeDto {
 
   @IsOptional()
   @IsString()
+  source?: string;
+
+  @IsOptional()
+  @IsString()
   encryptedPayload?: string;
 
   @IsOptional()

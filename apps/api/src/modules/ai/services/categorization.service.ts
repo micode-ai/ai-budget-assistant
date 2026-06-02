@@ -167,6 +167,74 @@ Only return valid JSON, no other text.`;
     };
   }
 
+  async parseIncomeFromText(text: string, userId: string, accountId: string) {
+    const userPref = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { aiModel: true },
+    });
+    const { model: aiModel } = resolveAiModel(userPref?.aiModel);
+
+    const historySuggestion = await this.suggestFromHistory(accountId, text);
+    const embeddingHint = historySuggestion
+      ? null
+      : await this.embeddingService.matchCategory(accountId, text).catch(() => null);
+
+    const categories = await this.prisma.category.findMany({
+      where: {
+        OR: [{ isSystem: true }, { accountId }],
+        type: 'income',
+        isDeleted: false,
+      },
+    });
+
+    const safeText = sanitizeForPrompt(text, 500);
+    const categoryNames = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50)).join(', ');
+
+    const prompt = `Parse the following income description and extract structured data.
+
+--- INPUT DATA ---
+Description: "${safeText}"
+Available income categories: ${categoryNames}
+--- END INPUT DATA ---
+
+Return a JSON object with:
+- amount: number (the income amount)
+- currency: string (currency code like USD, EUR, PLN)
+- description: string (a brief description of the income)
+- category: string (the most appropriate income category from the list)
+- confidence: number (0-1, how confident you are in the categorization)
+
+If the amount is not specified, estimate a reasonable amount or set to 0.
+If the currency is not specified, default to USD.
+
+Only return valid JSON, no other text.`;
+
+    const response = await this.openai.chat.completions.create({
+      model: aiModel,
+      messages: [{ role: 'user', content: prompt }],
+      response_format: { type: 'json_object' },
+    });
+
+    const content = response.choices[0]?.message?.content;
+    if (!content) {
+      throw new Error('No response from AI');
+    }
+    const result = JSON.parse(content);
+
+    const matchedCategory = categories.find(
+      (c: CategoryWithName) => c.name.toLowerCase() === result.category?.toLowerCase(),
+    );
+
+    return {
+      amount: result.amount || 0,
+      currencyCode: result.currency || 'USD',
+      description: result.description || text,
+      categoryId: historySuggestion?.categoryId || embeddingHint?.categoryId || matchedCategory?.id,
+      categorySuggestion: historySuggestion?.categoryName || embeddingHint?.categoryName || result.category,
+      confidence: historySuggestion?.confidence || embeddingHint?.similarity || result.confidence || 0.5,
+    };
+  }
+
   async categorize(description: string, userId: string, accountId: string) {
     // Cheap model: classification only.
     void userId;

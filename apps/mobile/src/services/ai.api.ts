@@ -26,6 +26,20 @@ export const aiApi = {
     });
   },
 
+  parseIncome(text: string) {
+    return httpClient.request<{
+      amount: number;
+      currencyCode: string;
+      description: string;
+      categoryId?: string;
+      categorySuggestion: string;
+      confidence: number;
+    }>('/ai/parse-income', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  },
+
   chat(message: string, conversationId?: string, mentions?: { userId: string }[], isShared?: boolean) {
     return httpClient.request<{
       message: string;

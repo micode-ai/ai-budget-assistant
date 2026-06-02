@@ -311,6 +311,20 @@ export default function NewIncomeScreen() {
 
         {/* Submit Button */}
         <View style={styles.footer}>
+          <View style={styles.captureRow}>
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={() => { router.back(); router.push('/income/voice'); }}
+            >
+              <Ionicons name="mic-outline" size={22} color={theme.colors.success} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={() => { router.back(); router.push('/income/receipt'); }}
+            >
+              <Ionicons name="document-text-outline" size={22} color={theme.colors.success} />
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
             onPress={handleSubmit}
@@ -443,6 +457,22 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[4],
     borderTopWidth: 1,
     borderTopColor: theme.colors.divider,
+    gap: theme.spacing[3],
+  },
+  captureRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[4],
+  },
+  captureButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: theme.colors.success,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: theme.colors.surface,
   },
   submitButton: {
     backgroundColor: theme.colors.success,

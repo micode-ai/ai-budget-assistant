@@ -1,4 +1,4 @@
-import type { Currency, SyncStatus } from './primitives';
+import type { Currency, IncomeSource, SyncStatus } from './primitives';
 import type { Category } from './category';
 import type { IncomeTag } from './tag';
 
@@ -18,6 +18,7 @@ export interface Income {
   /** Populated category object returned by the API (in addition to categoryId). */
   category?: Category | null;
   date: Date;
+  source: IncomeSource;
   externalRef?: string;
   tags?: IncomeTag[];
   /** Prisma relation name used in API responses (alias for tags). */

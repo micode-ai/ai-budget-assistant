@@ -542,6 +542,23 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="income/voice"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('incomeVoice.title'),
+            headerRight: () => <AiUsageBadge />,
+          }}
+        />
+        <Stack.Screen
+          name="income/receipt"
+          options={{
+            presentation: 'modal',
+            headerShown: false,
+            title: t('incomeReceipt.title'),
+          }}
+        />
+        <Stack.Screen
           name="income/[id]"
           options={{
             headerShown: true,

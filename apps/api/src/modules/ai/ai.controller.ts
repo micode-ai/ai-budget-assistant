@@ -60,6 +60,16 @@ export class AiController {
     return this.categorizationService.parseExpenseFromText(body.text, req.user.id, req.accountId);
   }
 
+  @Post('parse-income')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('parse', 1.0)
+  async parseIncome(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { text: string },
+  ) {
+    return this.categorizationService.parseIncomeFromText(body.text, req.user.id, req.accountId);
+  }
+
   @Post('categorize')
   @UseGuards(AiUsageGuard)
   @TrackAiUsage('categorization', 0.5)

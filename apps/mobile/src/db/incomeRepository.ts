@@ -13,6 +13,7 @@ interface IncomeRow {
   notes: string | null;
   category_id: string | null;
   date: number;
+  source: string;
   is_debt: number;
   is_debt_repayment: number;
   debt_contact_name: string | null;
@@ -39,6 +40,7 @@ function rowToIncome(row: IncomeRow): Income {
     notes: row.notes ?? undefined,
     categoryId: row.category_id ?? undefined,
     date: new Date(row.date),
+    source: (row.source ?? 'manual') as Income['source'],
     isDebt: row.is_debt === 1,
     isDebtRepayment: row.is_debt_repayment === 1,
     debtContactName: row.debt_contact_name ?? undefined,
@@ -66,6 +68,7 @@ function incomeToParams(income: Income): (string | number | null)[] {
     income.notes ?? null,
     income.categoryId ?? null,
     income.date.getTime(),
+    income.source ?? 'manual',
     income.isDebt ? 1 : 0,
     income.isDebtRepayment ? 1 : 0,
     income.debtContactName ?? null,
@@ -98,12 +101,12 @@ export async function insertIncome(income: Income): Promise<void> {
   await executeSql(
     `INSERT INTO incomes (
       id, local_id, server_id, user_id, account_id, amount, currency_code,
-      description, notes, category_id, date,
+      description, notes, category_id, date, source,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_expense_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     incomeToParams(income),
   );
 }
@@ -112,12 +115,12 @@ export async function upsertIncome(income: Income): Promise<void> {
   await executeSql(
     `INSERT INTO incomes (
       id, local_id, server_id, user_id, account_id, amount, currency_code,
-      description, notes, category_id, date,
+      description, notes, category_id, date, source,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_expense_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -129,6 +132,7 @@ export async function upsertIncome(income: Income): Promise<void> {
       notes = excluded.notes,
       category_id = COALESCE(excluded.category_id, category_id),
       date = excluded.date,
+      source = excluded.source,
       is_debt = excluded.is_debt,
       is_debt_repayment = excluded.is_debt_repayment,
       debt_contact_name = excluded.debt_contact_name,

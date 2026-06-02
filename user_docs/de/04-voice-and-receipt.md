@@ -77,6 +77,58 @@ Uberprufe und korrigiere Details, dann:
 - Halte die Kamera ruhig, um Unscharfe zu vermeiden
 - Verwende **Zusatzliche Anweisungen fur KI** fur besondere Handhabung (z.B. "Das ist in EUR", "Ersten Artikel ignorieren")
 
+## Spracheingabe Einnahmen
+
+Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
+
+### So funktioniert es
+
+1. Tippe auf **Spracheingabe Einnahmen** bei den Schnellaktionen der Übersicht, oder tippe auf das Mikrofonsymbol in der Fußzeile des **Einnahme hinzufügen**-Formulars
+2. Tippe auf die (grüne) Mikrofon-Schaltfläche, um die Aufnahme zu starten
+3. Sprich natürlich, zum Beispiel: *"500 vom Kunden erhalten, Beratungshonorar"*
+4. Tippe erneut, um die Aufnahme zu stoppen
+5. Die App extrahiert den Betrag, die Beschreibung und die am besten passende **Einnahmenkategorie**
+
+### Bestätigungsbildschirm
+
+- **Betrag** — aus deiner Sprache extrahiert (bearbeitbar)
+- **Beschreibung** — wofür die Zahlung war (bearbeitbar)
+- **Kategorie** — Einnahmenkategorie automatisch zugewiesen (bearbeitbar)
+- **Währung** — erkannt oder auf deine Standardwährung zurückgesetzt
+
+Tippe auf **Einnahme speichern**, um zu bestätigen, oder auf **Erneut versuchen**, um neu aufzunehmen.
+
+### Tipps für beste Ergebnisse
+
+- Nenne den Betrag und eine kurze Beschreibung
+- Gib die Währung an, wenn sie sich von deiner Standardwährung unterscheidet
+
+---
+
+## Rechnung scannen
+
+Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahmen automatisch zu erfassen.
+
+### So funktioniert es
+
+1. Tippe auf **Rechnung scannen** bei den Schnellaktionen der Übersicht, oder tippe auf das Dokumentsymbol in der Fußzeile des **Einnahme hinzufügen**-Formulars
+2. Wähle **Foto aufnehmen**, **Aus Galerie wählen** oder **PDF hochladen**
+3. Optional kannst du **Zusätzliche Anweisungen für KI** eingeben
+4. Die App extrahiert den Gesamtbetrag, das Datum und die Kategorie
+
+### Bestätigungsbildschirm
+
+- **Gesamtbetrag** — aus dem Dokument extrahiert
+- **Beschreibung** — generierte Zusammenfassung
+- **Kategorie** — Einnahmenkategorie automatisch zugewiesen
+- **Datum** — aus dem Dokument
+
+Überprüfe die Details, tippe auf ✓ zum Speichern oder auf das Stiftsymbol, um das vollständige Einnahme-Formular mit vorausgefüllten Daten zu öffnen.
+
+> **Hinweis:** Die Rechnungs-OCR extrahiert nur Gesamtbetrag und Datum. Einzelpositionen aus Rechnungen werden absichtlich ignoriert, um Doppelzählungen bei mehrzeiligen Abrechnungsdokumenten zu vermeiden.
+
+---
+
 ## FAQ
 
 - **F: Welche Sprachen unterstutzt die Spracheingabe?**
