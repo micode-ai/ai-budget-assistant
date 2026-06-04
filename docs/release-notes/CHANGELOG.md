@@ -8,6 +8,24 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.4.1 — 2026-06-04
+
+**Chat bots**
+- New **Slack bot** — connect your account to Slack and manage money straight from a direct message: AI chat, add expenses and income by text or voice, scan receipt photos, manage budgets and categories. Full feature parity with the Telegram and WhatsApp bots; link with a 6-character code (ABA-194).
+- The Slack bot shows a **💭 "thinking" indicator** while it works, and echoes the recognized transcript for voice messages, so it's always clear it's processing (ABA-196).
+
+**Home screen**
+- **Financial Health Score** — a single 0–100 gauge on the Dashboard summarizing budget adherence, savings rate, goal progress, and debt health, computed entirely on-device with no AI cost (ABA-193).
+- **Reorder your Dashboard widgets** — drag the handle in Settings → Dashboard Widgets to arrange the home screen your way; "Reset to default order" restores the original layout (ABA-189).
+
+**Income**
+- Capture income by **voice** or by **scanning an invoice/receipt** — the same fast capture flow already available for expenses (ABA-190).
+
+**Under the hood**
+- Refactored the chat screen into focused hooks and components (ABA-198).
+
+---
+
 ## 1.3.1 — 2026-06-02
 
 **Currency**
