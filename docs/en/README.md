@@ -40,6 +40,9 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 - **AI Model Selection** - Choose between Fast (gpt-4o-mini, ×0.75 cost), Balanced (gpt-4o, ×1 cost), and Quality (gpt-4.1, ×1.5 cost) models globally across all AI features
 - **Subscription Tiers** - Free, Pro, and Business tiers with configurable AI usage limits; model choice scales quota consumption
 - **Admin Dashboard** - System stats, subscription breakdown, per-user AI usage monitoring, and communications center with notification history (delivery stats, recipient details, type filters)
+- **Telegram Bot** - Interact with your budget via Telegram: text, voice (Whisper), photo receipts (OCR), AI chat, and quick expense/income/category commands
+- **WhatsApp Bot** - Same features as the Telegram bot over WhatsApp Business Cloud API, with Redis-backed state and Block-Kit-style interactive buttons
+- **Slack Bot** - Same features available in Slack DMs via webhook-only integration (Events API + Block Kit buttons), secured by HMAC-SHA256 signature verification
 - **Offline-First** - Full functionality without internet connection
 - **Cross-Platform** - iOS, Android, and Web support
 

@@ -1,7 +1,7 @@
 import './instrument';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { json } from 'express';
+import { json, urlencoded } from 'express';
 import * as Sentry from '@sentry/node';
 import { AppModule } from './app.module';
 
@@ -18,10 +18,18 @@ async function bootstrap() {
       },
     }),
   );
+  app.use(
+    urlencoded({
+      extended: true,
+      verify: (req: any, _res, buf) => {
+        req.rawBody = buf;
+      },
+    }),
+  );
 
   // Global prefix (exclude webhook routes from versioning)
   app.setGlobalPrefix('api/v1', {
-    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook'],
+    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook', 'slack/events', 'slack/interactivity'],
   });
 
   // CORS — allow only explicitly configured origins; fall back to localhost for local dev
