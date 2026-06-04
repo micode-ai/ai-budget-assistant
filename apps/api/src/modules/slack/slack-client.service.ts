@@ -69,10 +69,10 @@ export class SlackClientService {
     }
   }
 
-  /** Replace a message's content with plain text (clears any blocks). */
+  /** Replace a message's content with plain text (renders mrkdwn; no blocks field so Slack shows the text body in-channel). */
   async updateText(channel: string, ts: string, text: string): Promise<void> {
     if (!this.isConfigured()) return;
-    await this.client.chat.update({ channel, ts, text, blocks: [] });
+    await this.client.chat.update({ channel, ts, text });
   }
 
   /** Replace a message's content with a Block Kit buttons message. */
