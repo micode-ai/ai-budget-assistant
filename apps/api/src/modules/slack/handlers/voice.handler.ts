@@ -19,6 +19,7 @@ export class VoiceHandler {
 
   async handle(file: SlackFile, userState: SlackUserState): Promise<void> {
     const { userId, accountId, channel, language } = userState;
+    let ts: string | undefined;
 
     try {
       // Step 1: track AI usage (2.0 for voice) BEFORE downloading — cheap fast-fail
@@ -39,6 +40,10 @@ export class VoiceHandler {
         await this.slackClient.sendText(channel, t('voiceFailed', language));
         return;
       }
+
+      // Post placeholder now that we know we're going to Whisper — the slow part
+      ts = await this.slackClient.postPlaceholder(channel, t('thinking', language));
+
       const { buffer, mimeType } = await this.slackClient.downloadFile(
         url,
         file.mimetype,
@@ -49,20 +54,18 @@ export class VoiceHandler {
 
       // Step 4: guard empty transcript
       if (!transcription.text || transcription.text.trim().length === 0) {
-        await this.slackClient.sendText(channel, t('speechNotRecognized', language));
+        await this.slackClient.replyText(channel, ts, t('speechNotRecognized', language));
         return;
       }
 
       const transcript = transcription.text.trim();
 
-      // Step 5: echo the transcript so the user sees what was understood
-      await this.slackClient.sendText(channel, `🎤 _"${transcript}"_`);
-
-      // Step 6: dispatch transcript through ChatHandler as if the user typed it
-      await this.chatHandler.handleText(transcript, userState);
+      // Step 5: dispatch transcript through ChatHandler as if the user typed it.
+      // Pass ts so the chat handler replaces our placeholder with the AI reply (no extra message).
+      await this.chatHandler.handleText(transcript, userState, ts);
     } catch (error) {
       this.logger.error(`VoiceHandler error for ${channel}: ${error}`);
-      await this.slackClient.sendText(channel, t('voiceFailed', language));
+      await this.slackClient.replyText(channel, ts, t('voiceFailed', language));
     }
   }
 }

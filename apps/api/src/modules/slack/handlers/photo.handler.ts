@@ -43,6 +43,7 @@ export class PhotoHandler {
 
   async handleImage(file: SlackFile, userState: SlackUserState): Promise<void> {
     const { userId, accountId, channel, language } = userState;
+    let ts: string | undefined;
     try {
       if (userState.accountRole === 'viewer') {
         await this.client.sendText(channel, t('viewerRestricted', language));
@@ -66,6 +67,10 @@ export class PhotoHandler {
         await this.client.sendText(channel, t('receiptScanFailed', language));
         return;
       }
+
+      // Post placeholder before OCR — the slow part
+      ts = await this.client.postPlaceholder(channel, t('thinking', language));
+
       const { buffer, mimeType } = await this.client.downloadFile(
         imageUrl,
         file.mimetype,
@@ -75,7 +80,7 @@ export class PhotoHandler {
       const receipt = await this.ocrService.parseReceipt(base64, userId, accountId);
 
       if (!receipt || receipt.amount <= 0) {
-        await this.client.sendText(channel, t('receiptScanFailed', language));
+        await this.client.replyText(channel, ts, t('receiptScanFailed', language));
         return;
       }
 
@@ -98,19 +103,20 @@ export class PhotoHandler {
       await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
       const summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
-      await this.client.sendButtons(channel, summary, [
+      await this.client.replyButtons(channel, ts, summary, [
         { id: `receipt_add:${shortId}`, title: t('addExpense', language) },
         { id: `receipt_date:${shortId}`, title: t('changeDate', language) },
         { id: `receipt_cancel:${shortId}`, title: t('cancel', language) },
       ]);
     } catch (error) {
       this.logger.error(`PhotoHandler.handleImage error for ${userState.channel}: ${error}`);
-      await this.client.sendText(userState.channel, t('receiptScanFailed', userState.language));
+      await this.client.replyText(userState.channel, ts, t('receiptScanFailed', userState.language));
     }
   }
 
   async handleDocument(file: SlackFile, userState: SlackUserState): Promise<void> {
     const { userId, accountId, channel, language } = userState;
+    let ts: string | undefined;
     try {
       if (userState.accountRole === 'viewer') {
         await this.client.sendText(channel, t('viewerRestricted', language));
@@ -141,6 +147,10 @@ export class PhotoHandler {
         await this.client.sendText(channel, t('receiptScanFailed', language));
         return;
       }
+
+      // Post placeholder before OCR — the slow part
+      ts = await this.client.postPlaceholder(channel, t('thinking', language));
+
       const { buffer } = await this.client.downloadFile(
         docUrl,
         file.mimetype,
@@ -155,7 +165,7 @@ export class PhotoHandler {
       }
 
       if (!receipt || receipt.amount <= 0) {
-        await this.client.sendText(channel, t('receiptScanFailed', language));
+        await this.client.replyText(channel, ts, t('receiptScanFailed', language));
         return;
       }
 
@@ -178,14 +188,14 @@ export class PhotoHandler {
       await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
       const summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
-      await this.client.sendButtons(channel, summary, [
+      await this.client.replyButtons(channel, ts, summary, [
         { id: `receipt_add:${shortId}`, title: t('addExpense', language) },
         { id: `receipt_date:${shortId}`, title: t('changeDate', language) },
         { id: `receipt_cancel:${shortId}`, title: t('cancel', language) },
       ]);
     } catch (error) {
       this.logger.error(`PhotoHandler.handleDocument error for ${userState.channel}: ${error}`);
-      await this.client.sendText(userState.channel, t('receiptScanFailed', userState.language));
+      await this.client.replyText(userState.channel, ts, t('receiptScanFailed', userState.language));
     }
   }
 
