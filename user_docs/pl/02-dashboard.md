@@ -145,7 +145,7 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
   **O:** Nie dodales jeszcze zadnych wydatkow ani przychodow. Uzyj przyciskow szybkich akcji, aby dodac swoja pierwsza transakcje.
 
 - **P: Czy moge dostosowac wyglad Pulpitu?**
-  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu.
+  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu. Możesz też przeciągać widgety, aby je przestawiać.
 
 ---
 

@@ -127,6 +127,8 @@ Control which sections appear on your [Dashboard](./02-dashboard.md). Tap the to
 
 > **Tip:** Your choices are saved automatically and persist across app restarts.
 
+You can also **drag the handle** next to a widget to reorder it on the Dashboard, and tap **Reset to default order** to restore the original arrangement.
+
 ## Notifications & Integrations
 
 ![Settings — Notifications section](../img/settings.jpg)

@@ -145,7 +145,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
   **A:** Du hast noch keine Ausgaben oder Einkommen hinzugefugt. Verwende die Schnellaktions-Schaltflachen, um deine erste Transaktion hinzuzufugen.
 
 - **F: Kann ich anpassen, was auf der Ubersicht angezeigt wird?**
-  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten.
+  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten. Du kannst auch Widgets ziehen, um sie neu anzuordnen.
 
 ---
 

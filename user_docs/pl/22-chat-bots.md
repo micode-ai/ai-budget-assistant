@@ -1,10 +1,10 @@
-# Czat-boty — Telegram i WhatsApp
+# Czat-boty — Telegram, WhatsApp i Slack
 
-> Zarządzaj finansami bezpośrednio z Telegrama lub WhatsAppa. Rozmawiaj z AI, dodawaj wydatki, skanuj paragony i wysyłaj wiadomości głosowe — bez otwierania aplikacji.
+> Zarządzaj finansami bezpośrednio z Telegrama, WhatsAppa lub Slacka. Rozmawiaj z AI, dodawaj wydatki, skanuj paragony i wysyłaj wiadomości głosowe — bez otwierania aplikacji.
 
 ## Przegląd
 
-Połącz konto z **Telegramem**, **WhatsAppem** lub z oboma jednocześnie. Oba boty oferują identyczne funkcje — używaj tego komunikatora, który preferujesz.
+Połącz konto z **Telegramem**, **WhatsAppem**, **Slackiem** lub dowolną kombinacją jednocześnie. Wszystkie trzy boty oferują identyczne funkcje — używaj tego komunikatora, który preferujesz.
 
 Aby połączyć: **Ustawienia → Czat-boty**.
 
@@ -22,7 +22,13 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 3. Wyślij `link TWÓJ_KOD` do bota
 4. Zobaczysz „Konto połączone pomyślnie!"
 
-> Telegram i WhatsApp mogą być połączone jednocześnie z tym samym kontem.
+### Slack
+1. Dotknij **Połącz Slacka** — pojawi się 6-znakowy kod (ważny 10 minut)
+2. Otwórz Slacka, znajdź aplikację **AI Budget Assistant** i otwórz z nią wiadomość bezpośrednią
+3. Wyślij `link TWÓJ_KOD` (np. `link A3F2B1`)
+4. Zobaczysz „Konto połączone pomyślnie!"
+
+> Telegram, WhatsApp i Slack mogą być wszystkie połączone jednocześnie z tym samym kontem.
 
 ## Co możesz robić
 
@@ -47,7 +53,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 | `/unlink` | Rozłącz bota |
 | `/help` | Pokaż wszystkie polecenia |
 
-> W **WhatsApp** polecenia działają z `/` lub bez. Możesz też wpisać tylko kwotę i opis: `50 obiad`.
+> W **WhatsApp** i **Slacku** polecenia działają z `/` lub bez. Możesz też wpisać tylko kwotę i opis: `50 obiad`.
 
 ## Skanowanie paragonów
 
@@ -77,8 +83,8 @@ Bot rozpoznaje symbole: ₴ (UAH), $ (USD), € (EUR), zł (PLN), £ (GBP), ₽ 
 
 ## FAQ
 
-**P: Czy można połączyć Telegrama i WhatsApp jednocześnie?**
-Tak — są to niezależne połączenia i działają jednocześnie.
+**P: Czy można połączyć Telegrama, WhatsApp i Slacka?**
+Tak — są to niezależne połączenia i wszystkie działają jednocześnie.
 
 **P: W jakim języku odpowiada bot?**
 W języku ustawionym w Ustawienia → Wygląd.

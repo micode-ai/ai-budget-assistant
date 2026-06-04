@@ -145,7 +145,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
   **A:** You haven't added any expenses or income yet. Use the quick action buttons to add your first transaction.
 
 - **Q: Can I customize what appears on the Dashboard?**
-  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts.
+  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts. You can also drag widgets to reorder them.
 
 ---
 

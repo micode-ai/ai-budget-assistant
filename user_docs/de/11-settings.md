@@ -114,6 +114,8 @@ Steuere, welche Bereiche auf deinem [Dashboard](./02-dashboard.md) erscheinen. T
 
 > **Tipp:** Deine Einstellungen werden automatisch gespeichert und bleiben nach Neustarts erhalten.
 
+Du kannst auch den **Anfasser** neben einem Widget ziehen, um es auf dem Dashboard neu anzuordnen, und auf **Standardreihenfolge wiederherstellen** tippen, um die ursprüngliche Anordnung wiederherzustellen.
+
 ## Benachrichtigungen & Integrationen
 
 ![Einstellungen — Benachrichtigungsbereich](../img/settings.jpg)

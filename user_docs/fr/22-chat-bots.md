@@ -1,10 +1,10 @@
-# Chatbots — Telegram et WhatsApp
+# Chatbots — Telegram, WhatsApp et Slack
 
-> Gérez vos finances directement depuis Telegram ou WhatsApp. Chattez avec l'IA, ajoutez des dépenses, scannez des reçus et envoyez des messages vocaux — sans ouvrir l'application.
+> Gérez vos finances directement depuis Telegram, WhatsApp ou Slack. Chattez avec l'IA, ajoutez des dépenses, scannez des reçus et envoyez des messages vocaux — sans ouvrir l'application.
 
 ## Aperçu
 
-Connectez votre compte à **Telegram**, **WhatsApp** ou aux deux simultanément. Les deux bots offrent des fonctionnalités identiques — utilisez la messagerie que vous préférez.
+Connectez votre compte à **Telegram**, **WhatsApp**, **Slack** ou toute combinaison simultanément. Les trois bots offrent des fonctionnalités identiques — utilisez la messagerie que vous préférez.
 
 Pour connecter : **Paramètres → Chatbots**.
 
@@ -22,7 +22,13 @@ Pour connecter : **Paramètres → Chatbots**.
 3. Envoyez `link VOTRE_CODE` au bot
 4. Vous verrez « Compte lié avec succès ! »
 
-> Telegram et WhatsApp peuvent être connectés simultanément au même compte.
+### Slack
+1. Appuyez sur **Connecter Slack** — un code à 6 caractères apparaît (valide 10 minutes)
+2. Ouvrez Slack, trouvez l'application **AI Budget Assistant** et ouvrez un message direct avec elle
+3. Envoyez `link VOTRE_CODE` (ex. `link A3F2B1`)
+4. Vous verrez « Compte lié avec succès ! »
+
+> Telegram, WhatsApp et Slack peuvent tous être connectés simultanément au même compte.
 
 ## Ce que vous pouvez faire
 
@@ -46,7 +52,7 @@ Pour connecter : **Paramètres → Chatbots**.
 | `/unlink` | Déconnecter le bot |
 | `/help` | Afficher toutes les commandes |
 
-> Sur **WhatsApp**, les commandes fonctionnent avec ou sans `/`.
+> Sur **WhatsApp** et **Slack**, les commandes fonctionnent avec ou sans `/`. Vous pouvez aussi simplement taper un montant et une description : `50 déjeuner`.
 
 ## Scan de reçus
 
@@ -62,6 +68,11 @@ Pour connecter : **Paramètres → Chatbots**.
 | Message texte / chat IA | 1 |
 | Message vocal | 2 |
 | Photo de reçu | 2 |
+
+## FAQ
+
+**Q : Puis-je connecter Telegram, WhatsApp et Slack ?**
+Oui — ce sont des liens indépendants et ils fonctionnent tous simultanément.
 
 ---
 

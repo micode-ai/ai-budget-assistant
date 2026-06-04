@@ -1,10 +1,10 @@
-# Chatbots — Telegram y WhatsApp
+# Chatbots — Telegram, WhatsApp y Slack
 
-> Gestiona tus finanzas directamente desde Telegram o WhatsApp. Chatea con IA, añade gastos, escanea recibos y envía mensajes de voz — sin abrir la app.
+> Gestiona tus finanzas directamente desde Telegram, WhatsApp o Slack. Chatea con IA, añade gastos, escanea recibos y envía mensajes de voz — sin abrir la app.
 
 ## Resumen
 
-Conecta tu cuenta a **Telegram**, **WhatsApp** o a ambos a la vez. Ambos bots ofrecen funciones idénticas — usa el mensajero que prefieras.
+Conecta tu cuenta a **Telegram**, **WhatsApp**, **Slack** o cualquier combinación a la vez. Los tres bots ofrecen funciones idénticas — usa el mensajero que prefieras.
 
 Para conectar: **Ajustes → Chatbots**.
 
@@ -22,7 +22,13 @@ Para conectar: **Ajustes → Chatbots**.
 3. Envía `link TU_CÓDIGO` al bot
 4. Verás «¡Cuenta vinculada con éxito!»
 
-> Telegram y WhatsApp pueden estar conectados simultáneamente a la misma cuenta.
+### Slack
+1. Toca **Conectar Slack** — aparece un código de 6 caracteres (válido 10 minutos)
+2. Abre Slack, encuentra la app **AI Budget Assistant** y abre un mensaje directo con ella
+3. Envía `link TU_CÓDIGO` (ej. `link A3F2B1`)
+4. Verás «¡Cuenta vinculada con éxito!»
+
+> Telegram, WhatsApp y Slack pueden estar todos conectados simultáneamente a la misma cuenta.
 
 ## Qué puedes hacer
 
@@ -46,7 +52,7 @@ Para conectar: **Ajustes → Chatbots**.
 | `/unlink` | Desconectar el bot |
 | `/help` | Mostrar todos los comandos |
 
-> En **WhatsApp** los comandos funcionan con o sin `/`.
+> En **WhatsApp** y **Slack** los comandos funcionan con o sin `/`. También puedes escribir solo un importe y descripción: `50 almuerzo`.
 
 ## Escaneo de recibos
 
@@ -62,6 +68,11 @@ Para conectar: **Ajustes → Chatbots**.
 | Mensaje de texto / chat IA | 1 |
 | Mensaje de voz | 2 |
 | Foto de recibo | 2 |
+
+## Preguntas frecuentes
+
+**P: ¿Puedo conectar Telegram, WhatsApp y Slack?**
+Sí — son enlaces independientes y todos funcionan simultáneamente.
 
 ---
 

@@ -145,7 +145,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
   **R :** Vous n'avez pas encore ajoute de depenses ou de revenus. Utilisez les boutons d'actions rapides pour ajouter votre premiere transaction.
 
 - **Q : Puis-je personnaliser ce qui apparait sur le Tableau de bord ?**
-  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages.
+  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages. Vous pouvez également faire glisser les widgets pour les réordonner.
 
 ---
 

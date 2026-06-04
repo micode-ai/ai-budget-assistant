@@ -114,6 +114,8 @@ Controla qué secciones aparecen en tu [Panel](./02-dashboard.md). Toca el inter
 
 > **Consejo:** Tus preferencias se guardan automaticamente y persisten entre reinicios.
 
+También puedes **arrastrar el control** junto a un widget para reordenarlo en el Panel, y tocar **Restablecer orden predeterminado** para restaurar la disposición original.
+
 ## Notificaciones e integraciones
 
 ![Ajustes — Seccion de Notificaciones](../img/settings.jpg)
