@@ -53,22 +53,62 @@ export class SlackClientService {
     await this.client.chat.postMessage({
       channel,
       text: bodyText,
-      blocks: [
-        { type: 'section', text: { type: 'mrkdwn', text: bodyText } },
-        {
-          type: 'actions',
-          elements: buttons.map((b) => ({
-            type: 'button',
-            action_id: b.id,
-            value: b.id,
-            text: { type: 'plain_text', text: b.title.slice(0, 75) },
-          })),
-        },
-      ],
+      blocks: this.buildButtonBlocks(bodyText, buttons),
     });
+  }
+
+  /** Post a transient placeholder; returns its message ts (undefined if unconfigured/failed). */
+  async postPlaceholder(channel: string, text: string): Promise<string | undefined> {
+    if (!this.isConfigured()) return undefined;
+    try {
+      const res = await this.client.chat.postMessage({ channel, text, mrkdwn: true });
+      return res.ts as string | undefined;
+    } catch (err) {
+      this.logger.warn(`postPlaceholder failed: ${err}`);
+      return undefined;
+    }
+  }
+
+  /** Replace a message's content with plain text (clears any blocks). */
+  async updateText(channel: string, ts: string, text: string): Promise<void> {
+    if (!this.isConfigured()) return;
+    await this.client.chat.update({ channel, ts, text, blocks: [] });
+  }
+
+  /** Replace a message's content with a Block Kit buttons message. */
+  async updateButtons(channel: string, ts: string, bodyText: string, buttons: SlackButton[]): Promise<void> {
+    if (!this.isConfigured()) return;
+    await this.client.chat.update({ channel, ts, text: bodyText, blocks: this.buildButtonBlocks(bodyText, buttons) });
+  }
+
+  /** Reply by UPDATING the placeholder if we have a ts, else send a fresh message. */
+  async replyText(channel: string, ts: string | undefined, text: string): Promise<void> {
+    if (ts) return this.updateText(channel, ts, text);
+    return this.sendText(channel, text);
+  }
+
+  async replyButtons(channel: string, ts: string | undefined, bodyText: string, buttons: SlackButton[]): Promise<void> {
+    if (ts) return this.updateButtons(channel, ts, bodyText, buttons);
+    return this.sendButtons(channel, bodyText, buttons);
   }
 
   async downloadFile(urlPrivateDownload: string, mimeType: string): Promise<DownloadedFile> {
     return downloadSlackFile(urlPrivateDownload, this.botToken, mimeType);
+  }
+
+  /** Build the Block Kit blocks array shared by sendButtons and updateButtons. */
+  private buildButtonBlocks(bodyText: string, buttons: SlackButton[]) {
+    return [
+      { type: 'section', text: { type: 'mrkdwn', text: bodyText } },
+      {
+        type: 'actions',
+        elements: buttons.map((b) => ({
+          type: 'button',
+          action_id: b.id,
+          value: b.id,
+          text: { type: 'plain_text', text: b.title.slice(0, 75) },
+        })),
+      },
+    ];
   }
 }

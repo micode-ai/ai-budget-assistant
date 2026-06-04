@@ -1,4 +1,14 @@
 const messages: Record<string, Record<string, string>> = {
+  thinking: {
+    en: '💭 One moment…',
+    ru: '💭 Секунду…',
+    ua: '💭 Секунду…',
+    de: '💭 Einen Moment…',
+    es: '💭 Un momento…',
+    fr: '💭 Un instant…',
+    pl: '💭 Chwila…',
+    be: '💭 Секунду…',
+  },
   linkFirst: {
     en: 'Please link your account first. Send `link YOUR_CODE` — get the code in the app (Settings → Chat bots).',
     ru: 'Сначала привяжите аккаунт. Отправьте `link ВАШ_КОД` — код получите в приложении (Настройки → Чат-боты).',

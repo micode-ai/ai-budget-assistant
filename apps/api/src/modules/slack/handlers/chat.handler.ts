@@ -24,7 +24,8 @@ export class ChatHandler {
     @Inject(SLACK_REDIS) private readonly redis: Redis,
   ) {}
 
-  async handleText(text: string, userState: SlackUserState): Promise<void> {
+  async handleText(text: string, userState: SlackUserState, placeholderTs?: string): Promise<void> {
+    let ts = placeholderTs;
     try {
       const { userId, accountId, conversationId, channel, language } = userState;
 
@@ -48,12 +49,17 @@ export class ChatHandler {
         effectiveAccountName = resolved.resolvedAccountName;
       }
 
+      // Post placeholder if caller did not already post one
+      if (!ts) {
+        ts = await this.slackClient.postPlaceholder(channel, t('thinking', language));
+      }
+
       // Track AI usage (1.0 for chat)
       try {
         await this.subscriptionsService.trackAiUsage(userId, 'chat', 1.0, effectiveAccountId);
       } catch (e) {
         if (e instanceof ForbiddenException) {
-          await this.slackClient.sendText(channel, t('aiLimitReached', language));
+          await this.slackClient.replyText(channel, ts, t('aiLimitReached', language));
           return;
         }
         throw e;
@@ -87,7 +93,7 @@ export class ChatHandler {
           'EX',
           1800,
         );
-        await this.slackClient.sendButtons(channel, markdownToSlack(response.message), [
+        await this.slackClient.replyButtons(channel, ts, markdownToSlack(response.message), [
           { id: `ca:${shortId}`, title: t('confirm', language) },
           { id: `ra:${shortId}`, title: t('cancel', language) },
         ]);
@@ -95,11 +101,12 @@ export class ChatHandler {
       }
 
       // Plain text or read action result
-      await this.slackClient.sendText(channel, markdownToSlack(response.message));
+      await this.slackClient.replyText(channel, ts, markdownToSlack(response.message));
     } catch (error) {
       this.logger.error(`Error in ChatHandler.handleText: ${error}`);
-      await this.slackClient.sendText(
+      await this.slackClient.replyText(
         userState.channel,
+        ts,
         t('somethingWrong', userState.language),
       );
     }
