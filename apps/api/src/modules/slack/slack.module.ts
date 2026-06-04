@@ -5,6 +5,9 @@ import { SlackLinkService } from './slack-link.service';
 import { SlackClientService } from './slack-client.service';
 import { SlackBotService } from './slack-bot.service';
 import { SlackBotController } from './slack-bot.controller';
+import { SlackInstallationService } from './slack-installation.service';
+import { SlackOAuthService } from './slack-oauth.service';
+import { SlackOAuthController } from './slack-oauth.controller';
 import { CommandHandler } from './handlers/command.handler';
 import { ChatHandler } from './handlers/chat.handler';
 import { ExpenseHandler } from './handlers/expense.handler';
@@ -22,9 +25,11 @@ import { SLACK_REDIS } from './types';
 @Global()
 @Module({
   imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule],
-  controllers: [SlackBotController],
+  controllers: [SlackBotController, SlackOAuthController],
   providers: [
     SlackLinkService,
+    SlackInstallationService,
+    SlackOAuthService,
     SlackClientService,
     SlackBotService,
     CommandHandler,
@@ -41,6 +46,6 @@ import { SLACK_REDIS } from './types';
       inject: [ConfigService],
     },
   ],
-  exports: [SlackLinkService, SlackClientService, SlackBotService, SLACK_REDIS],
+  exports: [SlackLinkService, SlackInstallationService, SlackClientService, SlackBotService, SLACK_REDIS],
 })
 export class SlackModule {}

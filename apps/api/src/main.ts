@@ -29,7 +29,7 @@ async function bootstrap() {
 
   // Global prefix (exclude webhook routes from versioning)
   app.setGlobalPrefix('api/v1', {
-    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook', 'slack/events', 'slack/interactivity'],
+    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook', 'slack/events', 'slack/interactivity', 'slack/install', 'slack/oauth/callback'],
   });
 
   // CORS — allow only explicitly configured origins; fall back to localhost for local dev

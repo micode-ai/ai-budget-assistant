@@ -8,6 +8,11 @@ import {
   ActivityIndicator,
   Linking,
 } from 'react-native';
+
+const API_ORIGIN = (process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1').replace(
+  /\/api(\/v1)?\/?$/,
+  '',
+);
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
@@ -178,6 +183,12 @@ export default function BotsSettingsScreen() {
           Alert.alert(t('common.error'), t('errors.unknown'));
         });
       }
+    });
+  };
+
+  const handleAddToSlack = () => {
+    Linking.openURL(`${API_ORIGIN}/slack/install`).catch(() => {
+      Alert.alert(t('common.error'), t('errors.unknown'));
     });
   };
 
@@ -676,6 +687,26 @@ export default function BotsSettingsScreen() {
                 </>
               ) : (
                 <>
+                  {/* ── Add to Slack (workspace-admin action) ─────────── */}
+                  <TouchableOpacity
+                    style={[styles.primaryButton, { backgroundColor: '#4A154B', marginBottom: theme.spacing[2] }]}
+                    onPress={handleAddToSlack}
+                  >
+                    <Ionicons
+                      name="add-circle-outline"
+                      size={20}
+                      color="#ffffff"
+                      style={styles.buttonIcon}
+                    />
+                    <Text style={styles.primaryButtonText}>{t('slackBot.addToSlack')}</Text>
+                  </TouchableOpacity>
+                  <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[4] }]}>
+                    {t('slackBot.addToSlackHint')}
+                  </Text>
+
+                  <View style={styles.divider} />
+
+                  {/* ── Personal account link (per-user code) ─────────── */}
                   <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[4] }]}>
                     {t('slackBot.subtitle')}
                   </Text>
