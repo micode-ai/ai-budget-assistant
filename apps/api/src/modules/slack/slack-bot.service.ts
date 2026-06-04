@@ -43,7 +43,7 @@ export class SlackBotService {
 
     // Loop guard: ignore bot/self messages and edits
     if (event.bot_id || event.subtype) return;
-    const botUserId = await this.client.getBotUserId();
+    const botUserId = await this.client.getBotUserId(body.team_id);
     if (event.user && botUserId && event.user === botUserId) return;
     if (!event.user || !event.channel) return;
 
@@ -62,7 +62,7 @@ export class SlackBotService {
     } catch (err) {
       this.logger.error(`Handler crash on event ${body.event_id}: ${err instanceof Error ? err.stack || err.message : err}`);
       try {
-        await this.client.sendText(event.channel, t('somethingWrong', userState?.language));
+        await this.client.sendText(body.team_id, event.channel, t('somethingWrong', userState?.language));
       } catch {
         // last-ditch reply failed — already logged
       }
@@ -77,14 +77,15 @@ export class SlackBotService {
 
     const channelId = payload.channel?.id;
     if (!channelId) return;
+    const teamId = payload.user.team_id;
 
     const userState = await this.resolveUserState(
       payload.user.id,
-      payload.user.team_id,
+      teamId,
       channelId,
     );
     if (!userState) {
-      await this.client.sendText(channelId, t('linkFirst'));
+      await this.client.sendText(teamId, channelId, t('linkFirst'));
       return;
     }
 
@@ -126,7 +127,7 @@ export class SlackBotService {
     const file = event.files?.[0];
     if (file) {
       if (!userState) {
-        await this.client.sendText(channel, t('linkFirst'));
+        await this.client.sendText(teamId, channel, t('linkFirst'));
         return;
       }
       const ft = (file.filetype || file.mimetype || '').toLowerCase();
@@ -157,7 +158,7 @@ export class SlackBotService {
     }
 
     if (!userState) {
-      await this.client.sendText(channel, t('linkFirst'));
+      await this.client.sendText(teamId, channel, t('linkFirst'));
       return;
     }
 

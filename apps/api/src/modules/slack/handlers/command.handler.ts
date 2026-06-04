@@ -20,6 +20,7 @@ export class CommandHandler {
   /**
    * `link <code>` — works before the user is linked (no userState available).
    * Falls back to English because we have no language hint yet.
+   * Uses the slackTeamId PARAMETER (not userState.slackTeamId — there is no userState here).
    */
   async handleLink(
     slackUserId: string,
@@ -30,7 +31,7 @@ export class CommandHandler {
   ): Promise<void> {
     try {
       if (!code || code.trim().length === 0) {
-        await this.slackClient.sendText(channel, t('linkProvideCode', 'en'));
+        await this.slackClient.sendText(slackTeamId, channel, t('linkProvideCode', 'en'));
         return;
       }
 
@@ -40,23 +41,23 @@ export class CommandHandler {
         // Reload the link to get the user's language preference
         const link = await this.linkService.getLink(slackUserId);
         const lang = link?.user?.language || 'en';
-        await this.slackClient.sendText(channel, t('linkSuccess', lang));
+        await this.slackClient.sendText(slackTeamId, channel, t('linkSuccess', lang));
       } else {
         // User language unknown pre-link — reply in English
-        await this.slackClient.sendText(channel, `❌ ${result.error}`);
+        await this.slackClient.sendText(slackTeamId, channel, `❌ ${result.error}`);
       }
     } catch (error) {
       this.logger.error(`Error in handleLink: ${error}`);
-      await this.slackClient.sendText(channel, t('somethingWrong', 'en'));
+      await this.slackClient.sendText(slackTeamId, channel, t('somethingWrong', 'en'));
     }
   }
 
   async handleHelp(userState: SlackUserState): Promise<void> {
     try {
-      await this.slackClient.sendText(userState.channel, t('helpText', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('helpText', userState.language));
     } catch (error) {
       this.logger.error(`Error in handleHelp: ${error}`);
-      await this.slackClient.sendText(userState.channel, t('somethingWrong', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }
 
@@ -64,13 +65,13 @@ export class CommandHandler {
     try {
       const success = await this.linkService.unlinkByUserId(userState.userId);
       if (success) {
-        await this.slackClient.sendText(userState.channel, t('unlinkSuccess', userState.language));
+        await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('unlinkSuccess', userState.language));
       } else {
-        await this.slackClient.sendText(userState.channel, t('notLinked', userState.language));
+        await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('notLinked', userState.language));
       }
     } catch (error) {
       this.logger.error(`Error in handleUnlink: ${error}`);
-      await this.slackClient.sendText(userState.channel, t('somethingWrong', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }
 
@@ -82,14 +83,16 @@ export class CommandHandler {
       });
 
       const lang = userState.language;
+      const teamId = userState.slackTeamId;
 
       if (memberships.length === 0) {
-        await this.slackClient.sendText(userState.channel, t('notLinked', lang));
+        await this.slackClient.sendText(teamId, userState.channel, t('notLinked', lang));
         return;
       }
 
       if (memberships.length === 1) {
         await this.slackClient.sendText(
+          teamId,
           userState.channel,
           t('oneAccount', lang, { name: memberships[0].account.name }),
         );
@@ -103,6 +106,7 @@ export class CommandHandler {
       const overflow = memberships.slice(23);
 
       await this.slackClient.sendButtons(
+        teamId,
         userState.channel,
         t('chooseAccount', lang),
         shown.map((m) => ({
@@ -114,23 +118,24 @@ export class CommandHandler {
       if (overflow.length > 0) {
         const overflowNames = overflow.map((m) => m.account.name).join(', ');
         await this.slackClient.sendText(
+          teamId,
           userState.channel,
           `_Also: ${overflowNames}_`,
         );
       }
     } catch (error) {
       this.logger.error(`Error in handleAccount: ${error}`);
-      await this.slackClient.sendText(userState.channel, t('somethingWrong', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }
 
   async handleNewChat(userState: SlackUserState): Promise<void> {
     try {
       await this.linkService.resetConversation(userState.slackUserId);
-      await this.slackClient.sendText(userState.channel, t('newChatStarted', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('newChatStarted', userState.language));
     } catch (error) {
       this.logger.error(`Error in handleNewChat: ${error}`);
-      await this.slackClient.sendText(userState.channel, t('somethingWrong', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }
 
@@ -163,10 +168,10 @@ export class CommandHandler {
         message += `\n_${t('resets', lang)}: ${resetDate.toLocaleDateString()}_`;
       }
 
-      await this.slackClient.sendText(userState.channel, message);
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, message);
     } catch (error) {
       this.logger.error(`Error in handleUsage: ${error}`);
-      await this.slackClient.sendText(userState.channel, t('somethingWrong', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }
 
@@ -181,12 +186,13 @@ export class CommandHandler {
 
       const name = membership?.account?.name ?? accountId;
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('activeAccount', userState.language, { name }),
       );
     } catch (error) {
       this.logger.error(`Error in handleAccountCallback: ${error}`);
-      await this.slackClient.sendText(userState.channel, t('somethingWrong', userState.language));
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }
 }
