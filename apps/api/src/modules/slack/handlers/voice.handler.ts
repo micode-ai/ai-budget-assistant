@@ -60,9 +60,16 @@ export class VoiceHandler {
 
       const transcript = transcription.text.trim();
 
-      // Step 5: dispatch transcript through ChatHandler as if the user typed it.
-      // Pass ts so the chat handler replaces our placeholder with the AI reply (no extra message).
-      await this.chatHandler.handleText(transcript, userState, ts);
+      // Step 5: Turn the placeholder into the permanent transcript echo so the user
+      // can verify what Whisper heard, then let the chat handler post its own fresh
+      // "thinking" slot and ultimately the AI answer.
+      const echo = `🎤 _"${transcript}"_`;
+      if (ts) {
+        await this.slackClient.updateText(userState.channel, ts, echo);
+      } else {
+        await this.slackClient.sendText(userState.channel, echo);
+      }
+      await this.chatHandler.handleText(transcript, userState);
     } catch (error) {
       this.logger.error(`VoiceHandler error for ${channel}: ${error}`);
       await this.slackClient.replyText(channel, ts, t('voiceFailed', language));
