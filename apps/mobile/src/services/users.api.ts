@@ -81,6 +81,23 @@ export const usersApi = {
     return httpClient.request<{ success: boolean }>('/users/me/whatsapp-link', { method: 'DELETE' });
   },
 
+  generateSlackLinkCode(): Promise<{ code: string; expiresAt: string }> {
+    return httpClient.request<{ code: string; expiresAt: string }>(
+      '/users/me/slack-link-code',
+      { method: 'POST' },
+    );
+  },
+
+  getSlackLinkStatus(): Promise<{ linked: boolean; slackProfileName?: string; linkedAt?: string }> {
+    return httpClient.request<{ linked: boolean; slackProfileName?: string; linkedAt?: string }>(
+      '/users/me/slack-link',
+    );
+  },
+
+  unlinkSlack(): Promise<{ success: boolean }> {
+    return httpClient.request<{ success: boolean }>('/users/me/slack-link', { method: 'DELETE' });
+  },
+
   getReferralCode() {
     return httpClient.request<{ code: string }>('/referrals/my-code');
   },
