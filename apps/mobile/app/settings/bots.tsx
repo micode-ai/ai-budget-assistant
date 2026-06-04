@@ -32,6 +32,17 @@ interface LinkCodeState {
   waPhoneNumber: string;
 }
 
+interface SlackStatus {
+  linked: boolean;
+  slackProfileName?: string;
+  linkedAt?: string;
+}
+
+interface SlackLinkCodeState {
+  code: string;
+  expiresAt: string;
+}
+
 // ── Screen ──────────────────────────────────────────────────────────────────
 
 export default function BotsSettingsScreen() {
@@ -98,6 +109,97 @@ export default function BotsSettingsScreen() {
               setTelegramLinkCode(null);
             } catch (e) {
               Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  // ── Slack state ──────────────────────────────────────────────────────────
+
+  const [slackStatus, setSlackStatus] = useState<SlackStatus | null>(null);
+  const [slackLinkCode, setSlackLinkCode] = useState<SlackLinkCodeState | null>(null);
+  const [slackStatusLoading, setSlackStatusLoading] = useState(true);
+  const [slackCodeLoading, setSlackCodeLoading] = useState(false);
+  const [slackUnlinkLoading, setSlackUnlinkLoading] = useState(false);
+
+  const loadSlackStatus = useCallback(async () => {
+    try {
+      const result = await api.getSlackLinkStatus();
+      setSlackStatus(result);
+      if (result.linked) {
+        setSlackLinkCode(null);
+      }
+    } catch {
+      // Ignore — feature may not be available yet
+    } finally {
+      setSlackStatusLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadSlackStatus();
+  }, [loadSlackStatus]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadSlackStatus();
+    }, [loadSlackStatus]),
+  );
+
+  const handleGenerateSlackCode = async () => {
+    setSlackCodeLoading(true);
+    try {
+      const result = await api.generateSlackLinkCode();
+      setSlackLinkCode(result);
+    } catch (e) {
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    } finally {
+      setSlackCodeLoading(false);
+    }
+  };
+
+  const handleCopySlackCode = async () => {
+    if (!slackLinkCode) return;
+    await Clipboard.setStringAsync(slackLinkCode.code);
+    Alert.alert('', t('slackBot.copyCode'));
+  };
+
+  const handleSlackRefresh = async () => {
+    setSlackStatusLoading(true);
+    await loadSlackStatus();
+  };
+
+  const handleOpenSlack = () => {
+    Linking.canOpenURL('slack://open').then((supported) => {
+      if (supported) {
+        Linking.openURL('slack://open').catch(() => {
+          Alert.alert(t('common.error'), t('errors.unknown'));
+        });
+      }
+    });
+  };
+
+  const handleUnlinkSlack = () => {
+    Alert.alert(
+      t('slackBot.confirmDisconnect'),
+      '',
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('slackBot.disconnectButton'),
+          style: 'destructive',
+          onPress: async () => {
+            setSlackUnlinkLoading(true);
+            try {
+              await api.unlinkSlack();
+              setSlackStatus({ linked: false });
+              setSlackLinkCode(null);
+            } catch (e) {
+              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+            } finally {
+              setSlackUnlinkLoading(false);
             }
           },
         },
@@ -458,6 +560,155 @@ export default function BotsSettingsScreen() {
             </View>
           )}
         </View>
+
+        {/* ── Slack section ─────────────────────────────────────────── */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('slackBot.title')}</Text>
+
+          {slackStatusLoading ? (
+            <View style={[styles.card, styles.centered]}>
+              <ActivityIndicator size="small" color={theme.colors.primary} />
+            </View>
+          ) : slackStatus?.linked ? (
+            /* ── Linked state ── */
+            <View style={styles.card}>
+              <View style={styles.fieldRow}>
+                <View style={styles.fieldInfo}>
+                  <Text style={styles.fieldLabel}>
+                    {slackStatus.slackProfileName
+                      ? t('slackBot.linkedAs', { name: slackStatus.slackProfileName })
+                      : t('slackBot.linked')}
+                  </Text>
+                </View>
+                <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
+              </View>
+
+              <View style={styles.divider} />
+
+              <TouchableOpacity
+                style={styles.fieldRow}
+                onPress={handleSlackRefresh}
+                disabled={slackStatusLoading}
+              >
+                <Ionicons
+                  name="refresh-outline"
+                  size={18}
+                  color={theme.colors.primary}
+                  style={styles.actionIcon}
+                />
+                <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>
+                  {t('slackBot.refresh')}
+                </Text>
+              </TouchableOpacity>
+
+              <View style={styles.divider} />
+
+              <TouchableOpacity
+                style={styles.fieldRow}
+                onPress={handleUnlinkSlack}
+                disabled={slackUnlinkLoading}
+              >
+                {slackUnlinkLoading ? (
+                  <ActivityIndicator size="small" color={theme.colors.danger} />
+                ) : (
+                  <>
+                    <Ionicons
+                      name="unlink-outline"
+                      size={18}
+                      color={theme.colors.danger}
+                      style={styles.actionIcon}
+                    />
+                    <Text style={[styles.fieldLabel, { color: theme.colors.danger }]}>
+                      {t('slackBot.disconnectButton')}
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+          ) : (
+            /* ── Not linked state ── */
+            <View style={styles.card}>
+              {slackLinkCode ? (
+                <>
+                  <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[4] }]}>
+                    {t('slackBot.codeInstructions', { code: slackLinkCode.code })}
+                  </Text>
+
+                  {/* Code text */}
+                  <View style={styles.codeBox}>
+                    <Text style={styles.codeText}>{slackLinkCode.code}</Text>
+                  </View>
+
+                  {/* Action buttons */}
+                  <TouchableOpacity style={[styles.primaryButton, { backgroundColor: '#4A154B' }]} onPress={handleOpenSlack}>
+                    <Ionicons
+                      name="logo-slack"
+                      size={20}
+                      color="#ffffff"
+                      style={styles.buttonIcon}
+                    />
+                    <Text style={styles.primaryButtonText}>{t('slackBot.openButton')}</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.secondaryButton} onPress={handleCopySlackCode}>
+                    <Ionicons
+                      name="copy-outline"
+                      size={18}
+                      color={theme.colors.primary}
+                      style={styles.buttonIcon}
+                    />
+                    <Text style={styles.secondaryButtonText}>{t('slackBot.copyCode')}</Text>
+                  </TouchableOpacity>
+
+                  <View style={styles.divider} />
+
+                  <TouchableOpacity style={styles.fieldRow} onPress={handleSlackRefresh}>
+                    <Ionicons
+                      name="refresh-outline"
+                      size={18}
+                      color={theme.colors.primary}
+                      style={styles.actionIcon}
+                    />
+                    <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>
+                      {t('slackBot.refresh')}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[4] }]}>
+                    {t('slackBot.subtitle')}
+                  </Text>
+                  <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[3] }]}>
+                    {t('slackBot.notLinked')}
+                  </Text>
+                  <TouchableOpacity
+                    style={[styles.fieldRow, { justifyContent: 'center' }]}
+                    onPress={handleGenerateSlackCode}
+                    disabled={slackCodeLoading}
+                  >
+                    {slackCodeLoading ? (
+                      <ActivityIndicator size="small" color={theme.colors.primary} />
+                    ) : (
+                      <>
+                        <Ionicons
+                          name="logo-slack"
+                          size={20}
+                          color={theme.colors.primary}
+                          style={styles.actionIcon}
+                        />
+                        <Text style={[styles.fieldLabel, { color: theme.colors.primary }]}>
+                          {t('slackBot.connectButton')}
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          )}
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );

@@ -6,6 +6,7 @@ import { AuthenticatedRequest } from '../../common/types';
 import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
+import { SlackLinkService } from '../slack/slack-link.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -15,6 +16,7 @@ export class UsersController {
     private readonly telegramLinkService: TelegramLinkService,
     private readonly telegramBotService: TelegramBotService,
     private readonly whatsAppLinkService: WhatsAppLinkService,
+    private readonly slackLinkService: SlackLinkService,
   ) {}
 
   @Get('me')
@@ -154,6 +156,32 @@ export class UsersController {
   @Delete('me/whatsapp-link')
   async unlinkWhatsApp(@Req() req: AuthenticatedRequest) {
     await this.whatsAppLinkService.unlinkByUserId(req.user.id);
+    return { success: true };
+  }
+
+  // ── Slack ──
+
+  @Post('me/slack-link-code')
+  @UseGuards(AccountContextGuard)
+  async generateSlackLinkCode(@Req() req: AuthenticatedRequest) {
+    const result = await this.slackLinkService.generateCode(req.user.id, req.accountId);
+    return { code: result.code, expiresAt: result.expiresAt.toISOString() };
+  }
+
+  @Get('me/slack-link')
+  async getSlackLinkStatus(@Req() req: AuthenticatedRequest) {
+    const link = await this.slackLinkService.getLinkByUserId(req.user.id);
+    if (!link) return { linked: false };
+    return {
+      linked: true,
+      slackProfileName: link.slackProfileName,
+      linkedAt: link.createdAt.toISOString(),
+    };
+  }
+
+  @Delete('me/slack-link')
+  async unlinkSlack(@Req() req: AuthenticatedRequest) {
+    await this.slackLinkService.unlinkByUserId(req.user.id);
     return { success: true };
   }
 }
