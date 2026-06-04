@@ -1,10 +1,10 @@
-# Chat Bots — Telegram & WhatsApp
+# Chat Bots — Telegram, WhatsApp & Slack
 
-> Manage your finances directly from Telegram or WhatsApp. Chat with AI, add expenses, scan receipts, and send voice messages — without opening the app.
+> Manage your finances directly from Telegram, WhatsApp, or Slack. Chat with AI, add expenses, scan receipts, and send voice messages — without opening the app.
 
 ## Overview
 
-Connect your account to **Telegram**, **WhatsApp**, or both at the same time. Both bots offer identical features — use whichever messenger you prefer.
+Connect your account to **Telegram**, **WhatsApp**, **Slack**, or any combination at the same time. All three bots offer identical features — use whichever messenger you prefer.
 
 To connect: **Settings → Chat Bots**.
 
@@ -22,7 +22,13 @@ To connect: **Settings → Chat Bots**.
 3. Send `link YOUR_CODE` to the bot
 4. You'll see "Account linked successfully!"
 
-> Both Telegram and WhatsApp can be connected to the same account at the same time.
+### Slack
+1. Tap **Connect Slack** — a 6-character code appears (valid 10 minutes)
+2. Open Slack, find the **AI Budget Assistant** app and open a direct message with it
+3. Send `link YOUR_CODE` (e.g. `link A3F2B1`)
+4. You'll see "Account linked successfully!"
+
+> Telegram, WhatsApp, and Slack can all be connected to the same account at the same time.
 
 ## What You Can Do
 
@@ -47,7 +53,7 @@ To connect: **Settings → Chat Bots**.
 | `/unlink` | Disconnect the bot |
 | `/help` | Show all commands |
 
-> In **WhatsApp**, commands work with or without the leading `/`. You can also just type an amount and description: `50 lunch`.
+> In **WhatsApp** and **Slack**, commands work with or without the leading `/`. You can also just type an amount and description: `50 lunch`.
 
 ## Receipt Scanning
 
@@ -80,8 +86,8 @@ The bot recognizes currency symbols: ₴ (UAH), $ (USD), € (EUR), zł (PLN), �
 
 ## FAQ
 
-**Q: Can I connect both Telegram and WhatsApp?**
-Yes — they are independent links and both work simultaneously.
+**Q: Can I connect Telegram, WhatsApp, and Slack?**
+Yes — they are independent links and all work simultaneously.
 
 **Q: What language does the bot use?**
 The language from Settings → Appearance.

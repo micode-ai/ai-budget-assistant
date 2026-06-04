@@ -145,7 +145,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
   **R:** Aun no has agregado ningun gasto o ingreso. Usa los botones de accion rapida para agregar tu primera transaccion.
 
 - **P: Puedo personalizar lo que aparece en el Panel?**
-  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios.
+  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios. También puedes arrastrar widgets para reordenarlos.
 
 ---
 

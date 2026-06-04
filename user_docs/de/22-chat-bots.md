@@ -1,10 +1,10 @@
-# Chat-Bots — Telegram & WhatsApp
+# Chat-Bots — Telegram, WhatsApp & Slack
 
-> Verwalte deine Finanzen direkt aus Telegram oder WhatsApp. Chatte mit KI, füge Ausgaben hinzu, scanne Belege und sende Sprachnachrichten — ohne die App zu öffnen.
+> Verwalte deine Finanzen direkt aus Telegram, WhatsApp oder Slack. Chatte mit KI, füge Ausgaben hinzu, scanne Belege und sende Sprachnachrichten — ohne die App zu öffnen.
 
 ## Übersicht
 
-Verbinde dein Konto mit **Telegram**, **WhatsApp** oder mit beiden gleichzeitig. Beide Bots bieten identische Funktionen — nutze den Messenger deiner Wahl.
+Verbinde dein Konto mit **Telegram**, **WhatsApp**, **Slack** oder einer beliebigen Kombination gleichzeitig. Alle drei Bots bieten identische Funktionen — nutze den Messenger deiner Wahl.
 
 Zum Verbinden: **Einstellungen → Chat-Bots**.
 
@@ -22,7 +22,13 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 3. Sende `link DEIN_CODE` an den Bot
 4. Du siehst „Konto erfolgreich verknüpft!"
 
-> Telegram und WhatsApp können gleichzeitig mit demselben Konto verbunden werden.
+### Slack
+1. Tippe **Slack verbinden** — ein 6-stelliger Code erscheint (10 Minuten gültig)
+2. Öffne Slack, suche die App **AI Budget Assistant** und öffne eine Direktnachricht
+3. Sende `link DEIN_CODE` (z.B. `link A3F2B1`)
+4. Du siehst „Konto erfolgreich verknüpft!"
+
+> Telegram, WhatsApp und Slack können alle gleichzeitig mit demselben Konto verbunden werden.
 
 ## Was du tun kannst
 
@@ -46,7 +52,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 | `/unlink` | Bot trennen |
 | `/help` | Alle Befehle anzeigen |
 
-> Bei **WhatsApp** funktionieren Befehle mit oder ohne `/`.
+> Bei **WhatsApp** und **Slack** funktionieren Befehle mit oder ohne `/`. Du kannst auch einfach Betrag und Beschreibung eingeben: `50 Mittagessen`.
 
 ## Belegscan
 
@@ -67,6 +73,11 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 | Textnachricht / KI-Chat | 1 |
 | Sprachnachricht | 2 |
 | Belegfoto | 2 |
+
+## FAQ
+
+**F: Kann ich Telegram, WhatsApp und Slack gleichzeitig verbinden?**
+Ja — sie sind unabhängige Verknüpfungen und funktionieren alle gleichzeitig.
 
 ---
 

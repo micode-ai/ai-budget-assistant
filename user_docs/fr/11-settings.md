@@ -114,6 +114,8 @@ Controlez quelles sections apparaissent sur votre [Tableau de bord](./02-dashboa
 
 > **Conseil :** Vos preferences sont sauvegardees automatiquement et persistent entre les redemarrages.
 
+Vous pouvez également **faire glisser la poignée** à côté d'un widget pour le réordonner sur le Tableau de bord, et appuyer sur **Rétablir l'ordre par défaut** pour restaurer la disposition d'origine.
+
 ## Notifications et integrations
 
 ![Parametres — Section Notifications](../img/settings.jpg)

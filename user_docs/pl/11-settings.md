@@ -114,6 +114,8 @@ Kontroluj, ktore sekcje pojawiaja sie na Twoim [Pulpicie](./02-dashboard.md). Do
 
 > **Wskazowka:** Twoje preferencje sa zapisywane automatycznie i pozostaja po ponownym uruchomieniu.
 
+Możesz też **przeciągnąć uchwyt** obok widgetu, aby zmienić jego kolejność na Pulpicie, i dotknąć **Przywróć domyślną kolejność**, aby przywrócić oryginalny układ.
+
 ## Powiadomienia i integracje
 
 ![Ustawienia — sekcja Powiadomienia](../img/settings.jpg)
