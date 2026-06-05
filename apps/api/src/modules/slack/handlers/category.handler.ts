@@ -26,14 +26,16 @@ export class CategoryHandler {
   async handle(args: string, userState: SlackUserState): Promise<void> {
     try {
       const { channel, language } = userState;
+      const teamId = userState.slackTeamId;
 
       if (userState.accountRole === 'viewer') {
-        await this.slackClient.sendText(channel, t('viewerRestricted', language));
+        await this.slackClient.sendText(teamId, channel, t('viewerRestricted', language));
         return;
       }
 
       if (!args || !args.trim()) {
         await this.slackClient.sendText(
+          teamId,
           channel,
           t('categoryUsage', language),
         );
@@ -52,6 +54,7 @@ export class CategoryHandler {
 
         if (!name) {
           await this.slackClient.sendText(
+            teamId,
             channel,
             t('categoryNameRequired', language),
           );
@@ -63,6 +66,7 @@ export class CategoryHandler {
 
       if (name.length > 50) {
         await this.slackClient.sendText(
+          teamId,
           channel,
           t('categoryNameTooLong', language),
         );
@@ -77,6 +81,7 @@ export class CategoryHandler {
         await this.redis.set(`slack:cat:${shortId}`, name, 'EX', 600);
 
         await this.slackClient.sendButtons(
+          teamId,
           channel,
           t('categoryChooseType', language, { name }),
           [
@@ -88,6 +93,7 @@ export class CategoryHandler {
     } catch (error) {
       this.logger.error(`Error in CategoryHandler.handle: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );
@@ -102,11 +108,12 @@ export class CategoryHandler {
   async handleList(userState: SlackUserState): Promise<void> {
     try {
       const { channel, language } = userState;
+      const teamId = userState.slackTeamId;
 
       const categories = await this.categoriesService.findAll(userState.accountId);
 
       if (categories.length === 0) {
-        await this.slackClient.sendText(channel, t('categoryNone', language));
+        await this.slackClient.sendText(teamId, channel, t('categoryNone', language));
         return;
       }
 
@@ -120,6 +127,7 @@ export class CategoryHandler {
           return `${emoji} ${c.name}`;
         });
         await this.slackClient.sendText(
+          teamId,
           channel,
           `*${t('categoriesTitle', language)}*\n\n${lines.join('\n')}`,
         );
@@ -134,6 +142,7 @@ export class CategoryHandler {
         const restNames = rest.map((c) => `${c.type === 'expense' ? '💰' : '📈'} ${c.name}`).join(', ');
 
         await this.slackClient.sendButtons(
+          teamId,
           channel,
           `*${t('categoriesTitle', language)}*\n${t('categoryTooMany', language, { count: String(custom.length) })}\n\n_Showing first 20. Also: ${restNames}_`,
           first20.map((c) => ({
@@ -146,6 +155,7 @@ export class CategoryHandler {
 
       // Send buttons where each is a deletable custom category
       await this.slackClient.sendButtons(
+        teamId,
         channel,
         `*${t('categoriesTitle', language)}* — ${t('categoryDeleteBtn', language)}`,
         custom.map((c) => ({
@@ -156,6 +166,7 @@ export class CategoryHandler {
     } catch (error) {
       this.logger.error(`Error in CategoryHandler.handleList: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );
@@ -173,10 +184,12 @@ export class CategoryHandler {
   ): Promise<void> {
     try {
       const { channel, language } = userState;
+      const teamId = userState.slackTeamId;
 
       const name = await this.redis.get(`slack:cat:${shortId}`);
       if (!name) {
         await this.slackClient.sendText(
+          teamId,
           channel,
           t('categoryExpired', language),
         );
@@ -188,6 +201,7 @@ export class CategoryHandler {
     } catch (error) {
       this.logger.error(`Error in CategoryHandler.handleTypeCallback: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );
@@ -200,12 +214,14 @@ export class CategoryHandler {
   async handleDeleteCallback(categoryId: string, userState: SlackUserState): Promise<void> {
     try {
       const { channel, language } = userState;
+      const teamId = userState.slackTeamId;
 
       await this.categoriesService.remove(userState.accountId, categoryId);
-      await this.slackClient.sendText(channel, t('categoryDeleted', language));
+      await this.slackClient.sendText(teamId, channel, t('categoryDeleted', language));
     } catch (error) {
       this.logger.error(`Error in CategoryHandler.handleDeleteCallback: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );
@@ -220,16 +236,19 @@ export class CategoryHandler {
     userState: SlackUserState,
   ): Promise<void> {
     const { channel, language, accountId, userId } = userState;
+    const teamId = userState.slackTeamId;
     try {
       const category = await this.categoriesService.create(accountId, userId, { name, type });
       const emoji = type === 'expense' ? '💰' : '📈';
       await this.slackClient.sendText(
+        teamId,
         channel,
         t('categoryCreated', language, { emoji, name: category.name, type }),
       );
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         await this.slackClient.sendText(
+          teamId,
           channel,
           t('categoryAlreadyExists', language, { name, type }),
         );

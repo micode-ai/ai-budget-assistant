@@ -18,14 +18,16 @@ export class ExpenseHandler {
   async handle(args: string, userState: SlackUserState): Promise<void> {
     try {
       const lang = userState.language;
+      const teamId = userState.slackTeamId;
 
       if (userState.accountRole === 'viewer') {
-        await this.slackClient.sendText(userState.channel, t('viewerRestricted', lang));
+        await this.slackClient.sendText(teamId, userState.channel, t('viewerRestricted', lang));
         return;
       }
 
       if (!args || !args.trim()) {
         await this.slackClient.sendText(
+          teamId,
           userState.channel,
           'Usage: *expense <amount> [description]*\n\nExamples:\n  expense 50 lunch\n  expense 100 UAH taxi\n  expense €25 coffee',
         );
@@ -35,6 +37,7 @@ export class ExpenseHandler {
       const parsed = parseAmount(args);
       if (!parsed) {
         await this.slackClient.sendText(
+          teamId,
           userState.channel,
           '❌ Could not parse the amount. Please use: expense 50 description',
         );
@@ -63,12 +66,14 @@ export class ExpenseHandler {
       const descPart = parsed.description ? ` — ${parsed.description}` : '';
 
       await this.slackClient.sendText(
+        teamId,
         userState.channel,
         `${t('expenseCreated', lang)}: *${amountStr}*${descPart}${categoryName}`,
       );
     } catch (error) {
       this.logger.error(`Error creating expense: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );

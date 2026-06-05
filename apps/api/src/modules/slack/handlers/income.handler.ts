@@ -18,14 +18,16 @@ export class IncomeHandler {
   async handle(args: string, userState: SlackUserState): Promise<void> {
     try {
       const lang = userState.language;
+      const teamId = userState.slackTeamId;
 
       if (userState.accountRole === 'viewer') {
-        await this.slackClient.sendText(userState.channel, t('viewerRestricted', lang));
+        await this.slackClient.sendText(teamId, userState.channel, t('viewerRestricted', lang));
         return;
       }
 
       if (!args || !args.trim()) {
         await this.slackClient.sendText(
+          teamId,
           userState.channel,
           'Usage: *income <amount> [description]*\n\nExamples:\n  income 3000 salary\n  income 500 UAH freelance',
         );
@@ -35,6 +37,7 @@ export class IncomeHandler {
       const parsed = parseAmount(args);
       if (!parsed) {
         await this.slackClient.sendText(
+          teamId,
           userState.channel,
           '❌ Could not parse the amount. Please use: income 3000 description',
         );
@@ -63,12 +66,14 @@ export class IncomeHandler {
       const descPart = parsed.description ? ` — ${parsed.description}` : '';
 
       await this.slackClient.sendText(
+        teamId,
         userState.channel,
         `${t('incomeCreated', lang)}: *${amountStr}*${descPart}${categoryName}`,
       );
     } catch (error) {
       this.logger.error(`Error creating income: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );

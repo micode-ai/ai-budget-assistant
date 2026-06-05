@@ -1336,6 +1336,22 @@ model SlackLinkCode {
   @@map("slack_link_codes")
 }
 
+model SlackInstallation {
+  id                     String   @id @default(uuid())
+  teamId                 String   @unique @map("team_id")
+  teamName               String?  @map("team_name")
+  botToken               String   @map("bot_token")
+  botUserId              String   @map("bot_user_id")
+  appId                  String?  @map("app_id")
+  enterpriseId           String?  @map("enterprise_id")
+  scope                  String?
+  installedBySlackUserId String?  @map("installed_by_slack_user_id")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  @@map("slack_installations")
+}
+
 model AppVersion {
   id                  String      @id @default(cuid())
   platform            AppPlatform

@@ -19,6 +19,7 @@ export class VoiceHandler {
 
   async handle(file: SlackFile, userState: SlackUserState): Promise<void> {
     const { userId, accountId, channel, language } = userState;
+    const teamId = userState.slackTeamId;
     let ts: string | undefined;
 
     try {
@@ -27,7 +28,7 @@ export class VoiceHandler {
         await this.subscriptionsService.trackAiUsage(userId, 'voice', 2.0, accountId);
       } catch (e) {
         if (e instanceof ForbiddenException) {
-          await this.slackClient.sendText(channel, t('aiLimitReached', language));
+          await this.slackClient.sendText(teamId, channel, t('aiLimitReached', language));
           return;
         }
         throw e;
@@ -37,14 +38,15 @@ export class VoiceHandler {
       const url = file.url_private_download;
       if (!url) {
         this.logger.warn(`Voice file ${file.id} has no url_private_download`);
-        await this.slackClient.sendText(channel, t('voiceFailed', language));
+        await this.slackClient.sendText(teamId, channel, t('voiceFailed', language));
         return;
       }
 
       // Post placeholder now that we know we're going to Whisper — the slow part
-      ts = await this.slackClient.postPlaceholder(channel, t('thinking', language));
+      ts = await this.slackClient.postPlaceholder(teamId, channel, t('thinking', language));
 
       const { buffer, mimeType } = await this.slackClient.downloadFile(
+        teamId,
         url,
         file.mimetype,
       );
@@ -54,7 +56,7 @@ export class VoiceHandler {
 
       // Step 4: guard empty transcript
       if (!transcription.text || transcription.text.trim().length === 0) {
-        await this.slackClient.replyText(channel, ts, t('speechNotRecognized', language));
+        await this.slackClient.replyText(teamId, channel, ts, t('speechNotRecognized', language));
         return;
       }
 
@@ -65,14 +67,14 @@ export class VoiceHandler {
       // "thinking" slot and ultimately the AI answer.
       const echo = `🎤 _"${transcript}"_`;
       if (ts) {
-        await this.slackClient.updateText(userState.channel, ts, echo);
+        await this.slackClient.updateText(teamId, userState.channel, ts, echo);
       } else {
-        await this.slackClient.sendText(userState.channel, echo);
+        await this.slackClient.sendText(teamId, userState.channel, echo);
       }
       await this.chatHandler.handleText(transcript, userState);
     } catch (error) {
       this.logger.error(`VoiceHandler error for ${channel}: ${error}`);
-      await this.slackClient.replyText(channel, ts, t('voiceFailed', language));
+      await this.slackClient.replyText(teamId, channel, ts, t('voiceFailed', language));
     }
   }
 }

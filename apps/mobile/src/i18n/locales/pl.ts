@@ -731,6 +731,8 @@ export default {
     notLinked: 'Niepołączony',
     confirmDisconnect: 'Rozłączyć Slack?',
     refresh: 'Odśwież status',
+    addToSlack: 'Dodaj do Slack',
+    addToSlackHint: 'Administratorzy workspace: dodaj bota do swojego workspace Slack (jednorazowo). Następnie każdy użytkownik łączy swoje konto za pomocą kodu.',
   },
   wiseImport: {
     title: 'Import z Wise',
