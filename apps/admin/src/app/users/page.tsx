@@ -24,8 +24,10 @@ import { TierBadge } from "@/components/common/tier-badge";
 import { StatusBadge } from "@/components/common/status-badge";
 import { TableSkeleton } from "@/components/common/loading-skeleton";
 import { formatDate, formatRelative } from "@/lib/utils";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import type { SubscriptionTier } from "@/types";
+
+type SortField = "name" | "email" | "createdAt" | "lastSyncAt";
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
@@ -33,13 +35,48 @@ export default function UsersPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [tier, setTier] = useState<string>("");
   const [isActive, setIsActive] = useState<string>("");
+  const [sortBy, setSortBy] = useState<SortField>("createdAt");
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
 
   const { data, isLoading } = useUsers({
     page,
     search: debouncedSearch,
     tier: tier || undefined,
     isActive: isActive || undefined,
+    sortBy,
+    order,
   });
+
+  const toggleSort = (field: SortField) => {
+    if (sortBy === field) {
+      setOrder((o) => (o === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setOrder("asc");
+    }
+    setPage(1);
+  };
+
+  const SortableHead = ({ field, label }: { field: SortField; label: string }) => (
+    <TableHead>
+      <button
+        type="button"
+        onClick={() => toggleSort(field)}
+        className="flex items-center gap-1 hover:text-foreground"
+      >
+        {label}
+        {sortBy === field ? (
+          order === "asc" ? (
+            <ChevronUp className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5" />
+          )
+        ) : (
+          <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />
+        )}
+      </button>
+    </TableHead>
+  );
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -97,13 +134,13 @@ export default function UsersPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
+                  <SortableHead field="name" label="Name" />
+                  <SortableHead field="email" label="Email" />
                   <TableHead>Tier</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>AI Requests</TableHead>
-                  <TableHead>Registered</TableHead>
-                  <TableHead>Last Login</TableHead>
+                  <SortableHead field="createdAt" label="Registered" />
+                  <SortableHead field="lastSyncAt" label="Last Login" />
                 </TableRow>
               </TableHeader>
               <TableBody>
