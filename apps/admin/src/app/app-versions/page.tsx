@@ -39,10 +39,11 @@ type PlatformPanelProps = {
   versions: AppVersion[];
   isLoading: boolean;
   onNew: (platform: AppPlatform) => void;
+  onOpen: (v: AppVersion) => void;
   onDelete: (v: AppVersion) => void;
 };
 
-function PlatformPanel({ platform, versions, isLoading, onNew, onDelete }: PlatformPanelProps) {
+function PlatformPanel({ platform, versions, isLoading, onNew, onOpen, onDelete }: PlatformPanelProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -66,7 +67,11 @@ function PlatformPanel({ platform, versions, isLoading, onNew, onDelete }: Platf
                 key={v.id}
                 className="flex items-start justify-between rounded-md border p-3"
               >
-                <div className="space-y-1">
+                <button
+                  type="button"
+                  onClick={() => onOpen(v)}
+                  className="flex-1 space-y-1 text-left hover:opacity-80"
+                >
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{v.latestVersion}</span>
                     <span className="text-xs text-muted-foreground">
@@ -82,7 +87,7 @@ function PlatformPanel({ platform, versions, isLoading, onNew, onDelete }: Platf
                       {v.releaseNotes.en}
                     </p>
                   )}
-                </div>
+                </button>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -107,6 +112,7 @@ export default function AppVersionsPage() {
   const [activePlatform, setActivePlatform] = useState<AppPlatform>("android");
   const [showNewDialog, setShowNewDialog] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<AppVersion | null>(null);
+  const [detailVersion, setDetailVersion] = useState<AppVersion | null>(null);
 
   // Form state
   const [latestVersion, setLatestVersion] = useState("");
@@ -199,6 +205,7 @@ export default function AppVersionsPage() {
             versions={filtered("android")}
             isLoading={isLoading}
             onNew={(p) => openNewDialog(p)}
+            onOpen={(v) => setDetailVersion(v)}
             onDelete={(v) => setConfirmDelete(v)}
           />
         </TabsContent>
@@ -208,6 +215,7 @@ export default function AppVersionsPage() {
             versions={filtered("ios")}
             isLoading={isLoading}
             onNew={(p) => openNewDialog(p)}
+            onOpen={(v) => setDetailVersion(v)}
             onDelete={(v) => setConfirmDelete(v)}
           />
         </TabsContent>
@@ -294,6 +302,85 @@ export default function AppVersionsPage() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Version detail dialog */}
+      <Dialog
+        open={!!detailVersion}
+        onOpenChange={(open) => !open && setDetailVersion(null)}
+      >
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          {detailVersion && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <span className="capitalize">{detailVersion.platform}</span>
+                  <span>{detailVersion.latestVersion}</span>
+                </DialogTitle>
+                <DialogDescription>
+                  Published {formatDateTime(detailVersion.publishedAt)}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 text-sm">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs uppercase text-muted-foreground">
+                      Latest version
+                    </Label>
+                    <p>{detailVersion.latestVersion}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs uppercase text-muted-foreground">
+                      Min supported
+                    </Label>
+                    <p>{detailVersion.minSupportedVersion}</p>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs uppercase text-muted-foreground">
+                    Store URL
+                  </Label>
+                  <a
+                    href={detailVersion.storeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block break-all text-primary hover:underline"
+                  >
+                    {detailVersion.storeUrl}
+                  </a>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase text-muted-foreground">
+                    Release notes
+                  </Label>
+                  {LOCALES.some((l) => detailVersion.releaseNotes?.[l]) ? (
+                    <div className="space-y-2">
+                      {LOCALES.filter((l) => detailVersion.releaseNotes?.[l]).map(
+                        (l) => (
+                          <div key={l} className="rounded-md border p-2">
+                            <div className="text-xs uppercase text-muted-foreground">
+                              {l}
+                            </div>
+                            <p className="whitespace-pre-wrap">
+                              {detailVersion.releaseNotes?.[l]}
+                            </p>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground">No release notes.</p>
+                  )}
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => setDetailVersion(null)}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
 
