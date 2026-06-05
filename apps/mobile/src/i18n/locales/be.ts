@@ -722,6 +722,8 @@ export default {
     notLinked: 'Не падключана',
     confirmDisconnect: 'Адключыць Slack?',
     refresh: 'Абнавіць статус',
+    addToSlack: 'Дадаць у Slack',
+    addToSlackHint: 'Адміністратары workspace: дадайце бота ў свой Slack-workspace (аднаразова). Пасля гэтага кожны ўдзельнік падключае свой акаўнт з дапамогай кода.',
   },
   wiseImport: {
     title: 'Імпарт з Wise',

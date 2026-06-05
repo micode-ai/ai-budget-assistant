@@ -731,6 +731,8 @@ export default {
     notLinked: 'Nicht verbunden',
     confirmDisconnect: 'Slack trennen?',
     refresh: 'Status aktualisieren',
+    addToSlack: 'Zu Slack hinzufügen',
+    addToSlackHint: 'Workspace-Admins: Fügen Sie den Bot einmalig zu Ihrem Slack-Workspace hinzu. Danach kann jedes Mitglied sein Konto mit einem Code verknüpfen.',
   },
   wiseImport: {
     title: 'Wise-Import',

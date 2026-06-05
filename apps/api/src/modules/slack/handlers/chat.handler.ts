@@ -28,6 +28,7 @@ export class ChatHandler {
     let ts = placeholderTs;
     try {
       const { userId, accountId, conversationId, channel, language } = userState;
+      const teamId = userState.slackTeamId;
 
       // Resolve effective account from message text (e.g., "в счёте Family")
       let effectiveAccountId = accountId;
@@ -51,7 +52,7 @@ export class ChatHandler {
 
       // Post placeholder if caller did not already post one
       if (!ts) {
-        ts = await this.slackClient.postPlaceholder(channel, t('thinking', language));
+        ts = await this.slackClient.postPlaceholder(teamId, channel, t('thinking', language));
       }
 
       // Track AI usage (1.0 for chat)
@@ -59,7 +60,7 @@ export class ChatHandler {
         await this.subscriptionsService.trackAiUsage(userId, 'chat', 1.0, effectiveAccountId);
       } catch (e) {
         if (e instanceof ForbiddenException) {
-          await this.slackClient.replyText(channel, ts, t('aiLimitReached', language));
+          await this.slackClient.replyText(teamId, channel, ts, t('aiLimitReached', language));
           return;
         }
         throw e;
@@ -93,7 +94,7 @@ export class ChatHandler {
           'EX',
           1800,
         );
-        await this.slackClient.replyButtons(channel, ts, markdownToSlack(response.message), [
+        await this.slackClient.replyButtons(teamId, channel, ts, markdownToSlack(response.message), [
           { id: `ca:${shortId}`, title: t('confirm', language) },
           { id: `ra:${shortId}`, title: t('cancel', language) },
         ]);
@@ -101,10 +102,11 @@ export class ChatHandler {
       }
 
       // Plain text or read action result
-      await this.slackClient.replyText(channel, ts, markdownToSlack(response.message));
+      await this.slackClient.replyText(teamId, channel, ts, markdownToSlack(response.message));
     } catch (error) {
       this.logger.error(`Error in ChatHandler.handleText: ${error}`);
       await this.slackClient.replyText(
+        userState.slackTeamId,
         userState.channel,
         ts,
         t('somethingWrong', userState.language),
@@ -115,10 +117,12 @@ export class ChatHandler {
   async handleConfirmCallback(shortId: string, userState: SlackUserState): Promise<void> {
     try {
       const { channel, language, userId, accountId } = userState;
+      const teamId = userState.slackTeamId;
 
       const raw = await this.redis.get(`slack:pa:${shortId}`);
       if (!raw) {
         await this.slackClient.sendText(
+          teamId,
           channel,
           `${t('cancelled', language)} Action expired.`,
         );
@@ -135,7 +139,7 @@ export class ChatHandler {
         await this.subscriptionsService.trackAiUsage(userId, 'chat', 0.5, accountId);
       } catch (e) {
         if (e instanceof ForbiddenException) {
-          await this.slackClient.sendText(channel, t('aiLimitReached', language));
+          await this.slackClient.sendText(teamId, channel, t('aiLimitReached', language));
           return;
         }
         throw e;
@@ -150,10 +154,11 @@ export class ChatHandler {
 
       await this.redis.del(`slack:pa:${shortId}`);
 
-      await this.slackClient.sendText(channel, markdownToSlack(result.message));
+      await this.slackClient.sendText(teamId, channel, markdownToSlack(result.message));
     } catch (error) {
       this.logger.error(`Error in ChatHandler.handleConfirmCallback: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );
@@ -163,10 +168,12 @@ export class ChatHandler {
   async handleRejectCallback(shortId: string, userState: SlackUserState): Promise<void> {
     try {
       const { channel, language, userId } = userState;
+      const teamId = userState.slackTeamId;
 
       const raw = await this.redis.get(`slack:pa:${shortId}`);
       if (!raw) {
         await this.slackClient.sendText(
+          teamId,
           channel,
           `${t('cancelled', language)} Action expired.`,
         );
@@ -182,10 +189,11 @@ export class ChatHandler {
 
       await this.redis.del(`slack:pa:${shortId}`);
 
-      await this.slackClient.sendText(channel, markdownToSlack(result.message));
+      await this.slackClient.sendText(teamId, channel, markdownToSlack(result.message));
     } catch (error) {
       this.logger.error(`Error in ChatHandler.handleRejectCallback: ${error}`);
       await this.slackClient.sendText(
+        userState.slackTeamId,
         userState.channel,
         t('somethingWrong', userState.language),
       );
