@@ -10,6 +10,7 @@ import {
   UIManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -20,6 +21,7 @@ import { useAiCostConfirmation } from '@/hooks/useAiCostConfirmation';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import type { FatFinderFinding, FatFinderFindingType, Currency } from '@budget/shared-types';
+import { useAccountStore } from '@/stores/accountStore';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -45,6 +47,7 @@ export default function FatFinderScreen() {
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
 
+  const canEdit = useAccountStore((s) => s.canEdit());
   const fatFinderReport = useInsightsStore((s) => s.fatFinderReport);
   const fatFinderLoading = useInsightsStore((s) => s.fatFinderLoading);
   const fatFinderError = useInsightsStore((s) => s.fatFinderError);
@@ -226,6 +229,28 @@ export default function FatFinderScreen() {
             <Ionicons name="bulb-outline" size={16} color={theme.colors.primary} />
             <Text style={styles.actionText}>{finding.actionSuggestion}</Text>
           </View>
+        )}
+
+        {/* Track this subscription */}
+        {finding.type === 'subscription' && canEdit && (
+          <TouchableOpacity
+            style={styles.trackButton}
+            activeOpacity={0.7}
+            onPress={() => {
+              const detectedFrom = finding.relatedExpenses?.[0]?.description || '';
+              router.push({
+                pathname: '/subscriptions/new' as any,
+                params: {
+                  name: finding.title,
+                  amount: String(finding.currentMonthly),
+                  detectedFrom,
+                },
+              });
+            }}
+          >
+            <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
+            <Text style={styles.trackButtonText}>{t('fatFinder.trackSubscription')}</Text>
+          </TouchableOpacity>
         )}
 
         {/* Related expenses (collapsible) */}
@@ -605,6 +630,19 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     flex: 1,
     lineHeight: 18,
+  },
+
+  // Track subscription button
+  trackButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingVertical: theme.spacing[2],
+    marginBottom: theme.spacing[1],
+  },
+  trackButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
 
   // Related expenses

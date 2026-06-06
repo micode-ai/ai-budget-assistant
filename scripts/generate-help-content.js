@@ -31,6 +31,7 @@ const SECTIONS = [
   '24-referral',
   '27-bank-import',
   '28-reference-data',
+  '29-subscription-manager',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');
