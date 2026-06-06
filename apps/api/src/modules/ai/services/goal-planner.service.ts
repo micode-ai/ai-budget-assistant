@@ -112,6 +112,7 @@ export class GoalPlannerService {
       pl: 'Polish',
       ua: 'Ukrainian',
       be: 'Belarusian',
+      nl: 'Dutch',
     };
     const languageName = languageMap[userLanguage] || 'English';
 

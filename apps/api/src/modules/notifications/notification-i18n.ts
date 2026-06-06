@@ -473,6 +473,52 @@ const translations: Record<string, {
     chatMentionTitle: ({ senderName }) => `${senderName} згадаў вас`,
     chatMentionBody: ({ preview }) => preview,
   },
+  nl: {
+    sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
+    sharedExpenseBody: ({ creatorName, currencyCode, amount, description }) =>
+      `${creatorName} heeft ${currencyCode} ${amount} toegevoegd voor ${description}`,
+    budgetThresholdTitle: ({ budgetName, threshold }) => `Budget "${budgetName}" op ${threshold}%`,
+    budgetThresholdBody: ({ currencyCode, spent, total }) =>
+      `${currencyCode} ${spent} van ${currencyCode} ${total} gebruikt.`,
+    budgetExceededTitle: ({ budgetName }) => `Budget "${budgetName}" overschreden!`,
+    budgetExceededBody: ({ currencyCode, spent, total }) =>
+      `Je hebt ${currencyCode} ${spent} van je budget van ${currencyCode} ${total} uitgegeven.`,
+    anomalyTitle: ({ categoryName }) => `Ongewone uitgaven: ${categoryName}`,
+    anomalyBody: ({ categoryName, percent }) =>
+      `Je hebt deze maand ${percent}% meer dan gebruikelijk uitgegeven aan ${categoryName}.`,
+    subscriptionActivatedTitle: () => 'Abonnement geactiveerd!',
+    subscriptionActivatedBody: ({ tier }) => `Je proefperiode is beëindigd. Het ${tier}-abonnement is nu actief.`,
+    paymentSuccessTitle: () => 'Betaling geslaagd',
+    paymentSuccessBody: ({ amount, currency, tier }) => `Betaling van ${amount} ${currency} voor het ${tier}-abonnement is geslaagd.`,
+    paymentFailedTitle: () => 'Betaling mislukt',
+    paymentFailedBody: () => 'De abonnementsbetaling is mislukt. Werk je betaalmethode bij om toegang te behouden.',
+    trialReminderTitle: () => 'Proefperiode eindigt morgen',
+    trialReminderBody: ({ tier }) => `Je ${tier}-proefperiode eindigt morgen. Daarna wordt de betaling afgeschreven.`,
+    trialReminderEmailSubject: () => 'Je proefperiode eindigt morgen',
+    trialReminderEmailHtml: (name, { tier }) =>
+      `<h2>Hoi ${name}!</h2><p>Je <strong>${tier}</strong>-proefperiode eindigt morgen.</p><p>Na de proefperiode wordt je kaart automatisch belast voor het abonnement.</p><p>Als je niet wilt doorgaan, annuleer dan je abonnement in het onderdeel "Abonnement" van de app.</p>`,
+    newReferralTitle: () => 'Nieuwe verwijzing!',
+    newReferralBody: ({ name }) => `Je vriend ${name} is lid geworden via jouw verwijzingscode!`,
+    referralQualifiedTitle: () => 'Verwijzing bevestigd!',
+    referralQualifiedBody: ({ name, bonus }) => `Je verwijzing ${name} is actief! Je hebt +${bonus} AI-verzoeken verdiend.`,
+    referralMilestone5Title: () => '5 verwijzingen!',
+    referralMilestone5Body: () => 'Je hebt een gratis maand Pro verdiend! Controleer je e-mail.',
+    debtUpcomingTitle: ({ contactName, days }) => `Schuld over ${days} dag${days === 1 ? '' : 'en'}: ${contactName}`,
+    debtUpcomingBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `Je hebt ${currencyCode} ${amount} uitgeleend — aflossing binnenkort`
+        : `Je hebt ${currencyCode} ${amount} geleend — aflossing binnenkort`,
+    debtOverdueTitle: ({ contactName }) => `Schuld achterstallig: ${contactName}`,
+    debtOverdueBody: ({ amount, currencyCode, type }) =>
+      type === 'lent'
+        ? `${currencyCode} ${amount} die je hebt uitgeleend is achterstallig`
+        : `${currencyCode} ${amount} die je hebt geleend is achterstallig`,
+    recurringExpenseTitle: ({ description }) => `Terugkerende uitgave geregistreerd: ${description}`,
+    recurringExpenseBody: ({ amount, currencyCode, period }) =>
+      `${currencyCode} ${amount} automatisch geregistreerd (${period})`,
+    chatMentionTitle: ({ senderName }) => `${senderName} heeft je genoemd`,
+    chatMentionBody: ({ preview }) => preview,
+  },
 };
 
 function t(lang: Lang) {
