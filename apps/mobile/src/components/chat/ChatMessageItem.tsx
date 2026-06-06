@@ -101,7 +101,12 @@ export function ChatMessageItem({
           <Ionicons name="sparkles" size={20} color={theme.colors.primary} />
         </View>
       )}
-      <TouchableOpacity onLongPress={handleLongPress} activeOpacity={0.85} delayLongPress={400}>
+      <TouchableOpacity
+        style={styles.bubbleTouchable}
+        onLongPress={handleLongPress}
+        activeOpacity={0.85}
+        delayLongPress={400}
+      >
         <View style={[styles.messageBubble, isUser && styles.userMessageBubble]}>
           {isOtherMember && item.senderName && (
             <Text style={styles.senderLabel}>{item.senderName}</Text>
@@ -147,8 +152,11 @@ const createStyles = (theme: Theme) =>
       alignItems: 'center',
       marginRight: theme.spacing[2],
     },
-    messageBubble: {
+    bubbleTouchable: {
       maxWidth: '80%' as const,
+      flexShrink: 1,
+    },
+    messageBubble: {
       backgroundColor: theme.colors.messageBubbleAI,
       borderRadius: theme.borderRadius.xl,
       borderBottomLeftRadius: theme.spacing[1],
