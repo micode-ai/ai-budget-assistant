@@ -668,6 +668,28 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="subscriptions/index"
+          options={{
+            headerShown: true,
+            title: t('subscriptionManager.title'),
+          }}
+        />
+        <Stack.Screen
+          name="subscriptions/new"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('subscriptionManager.addTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="subscriptions/[id]"
+          options={{
+            headerShown: true,
+            title: t('subscriptionManager.editTitle'),
+          }}
+        />
+        <Stack.Screen
           name="scenario-simulator"
           options={{
             headerShown: true,

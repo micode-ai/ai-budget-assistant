@@ -41,6 +41,7 @@ export class NotificationsService {
         notifySharedActivity: true,
         notifyDebtReminders: true,
         notifyRecurringExpenses: true,
+        notifySubscriptionRenewals: true,
       },
     });
 
@@ -52,6 +53,7 @@ export class NotificationsService {
     if (notificationType === 'debt_reminder' && !user.notifyDebtReminders) return false;
     if (notificationType === 'recurring_expense' && !user.notifyRecurringExpenses) return false;
     if (notificationType === 'chat_mention' && !user.notifySharedActivity) return false;
+    if (notificationType === 'subscription_renewal' && !user.notifySubscriptionRenewals) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);

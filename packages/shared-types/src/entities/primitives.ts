@@ -16,7 +16,9 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal';
+
+export type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 
 export type RecurringPeriod = 'weekly' | 'monthly' | 'yearly';
 

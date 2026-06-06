@@ -21,6 +21,7 @@ export default function NotificationsSettingsScreen() {
   const [notifSharedActivity, setNotifSharedActivity] = useState(true);
   const [notifDebtReminders, setNotifDebtReminders] = useState(true);
   const [notifRecurringExpenses, setNotifRecurringExpenses] = useState(true);
+  const [notifSubscriptionRenewals, setNotifSubscriptionRenewals] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   const loadNotificationPreferences = useCallback(async () => {
@@ -30,6 +31,7 @@ export default function NotificationsSettingsScreen() {
       setNotifSharedActivity(prefs.sharedAccountActivity);
       setNotifDebtReminders(prefs.debtReminders);
       setNotifRecurringExpenses(prefs.recurringExpenses ?? true);
+      setNotifSubscriptionRenewals(prefs.subscriptionRenewals ?? true);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -81,18 +83,30 @@ export default function NotificationsSettingsScreen() {
     }
   };
 
+  const handleToggleSubscriptionRenewals = async (value: boolean) => {
+    setNotifSubscriptionRenewals(value);
+    try {
+      await api.updateNotificationPreferences({ subscriptionRenewals: value });
+    } catch (e) {
+      setNotifSubscriptionRenewals(!value);
+      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
     setNotifDebtReminders(value);
     setNotifRecurringExpenses(value);
+    setNotifSubscriptionRenewals(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
       setNotifDebtReminders(!value);
       setNotifRecurringExpenses(!value);
+      setNotifSubscriptionRenewals(!value);
       Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -110,7 +124,7 @@ export default function NotificationsSettingsScreen() {
                 <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
               </View>
               <Switch
-                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses}
+                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals}
                 onValueChange={handleToggleAllNotifications}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
@@ -172,6 +186,21 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 value={notifRecurringExpenses}
                 onValueChange={handleToggleRecurringExpenses}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.subscriptionRenewals')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.subscriptionRenewalsDesc')}</Text>
+              </View>
+              <Switch
+                value={notifSubscriptionRenewals}
+                onValueChange={handleToggleSubscriptionRenewals}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
               />

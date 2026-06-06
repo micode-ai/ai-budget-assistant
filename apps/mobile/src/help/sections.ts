@@ -36,4 +36,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '24-referral', icon: 'gift-outline', color: '#E91E63' },
   { id: '27-bank-import', icon: 'business-outline', color: '#E91E63' },
   { id: '28-reference-data', icon: 'pricetags-outline', color: '#10B981' },
+  { id: '29-subscription-manager', icon: 'repeat-outline', color: '#6366F1' },
 ];
