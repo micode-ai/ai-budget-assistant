@@ -201,6 +201,7 @@ export class ChatService {
             Spanish: '🔒 Solo tienes acceso de lectura. Solo los editores y propietarios pueden crear o modificar datos.',
             French: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent créer ou modifier des données.',
             Polish: '🔒 Masz tylko dostęp do odczytu. Tworzenie i edycja danych jest możliwa tylko dla edytorów i właścicieli.',
+            Dutch: '🔒 Je hebt alleen leestoegang. Alleen editors en eigenaren kunnen gegevens aanmaken of wijzigen.',
             English: '🔒 You have view-only access. Only editors and owners can create or modify data.',
           };
           const refusalMsg = viewerRefusals[lang] ?? viewerRefusals['English'];
