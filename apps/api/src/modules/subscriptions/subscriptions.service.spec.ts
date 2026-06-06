@@ -147,6 +147,41 @@ describe('SubscriptionsService — trackAiUsage (tier gating)', () => {
   });
 });
 
+// ── getOrCreateSubscription (race safety) ─────────────────────────────────────
+
+describe('SubscriptionsService — getOrCreateSubscription', () => {
+  it('falls back to findUniqueOrThrow when a concurrent insert wins the race (P2002)', async () => {
+    const existingSub = {
+      id: 'sub-1',
+      userId: 'u1',
+      tier: 'free',
+      status: 'active',
+    };
+    const p2002 = Object.assign(new Error('Unique constraint failed'), { code: 'P2002' });
+    const { service, prisma } = makeService({
+      subscription: {
+        upsert: jest.fn().mockRejectedValue(p2002),
+        findUniqueOrThrow: jest.fn().mockResolvedValue(existingSub),
+      },
+    });
+
+    await expect(service.getOrCreateSubscription('u1')).resolves.toEqual(existingSub);
+    expect(prisma.subscription.findUniqueOrThrow).toHaveBeenCalledWith({ where: { userId: 'u1' } });
+  });
+
+  it('rethrows non-P2002 errors', async () => {
+    const otherError = Object.assign(new Error('connection lost'), { code: 'P1001' });
+    const { service } = makeService({
+      subscription: {
+        upsert: jest.fn().mockRejectedValue(otherError),
+        findUniqueOrThrow: jest.fn(),
+      },
+    });
+
+    await expect(service.getOrCreateSubscription('u1')).rejects.toThrow('connection lost');
+  });
+});
+
 // ── checkMemberLimit ──────────────────────────────────────────────────────────
 
 describe('SubscriptionsService — checkMemberLimit', () => {
