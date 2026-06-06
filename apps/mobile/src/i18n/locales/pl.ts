@@ -1210,6 +1210,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Subskrypcje',
+    settingsSubtitle: 'Śledź cykliczne opłaty i odnowienia',
     addTitle: 'Dodaj subskrypcję',
     editTitle: 'Edytuj subskrypcję',
     monthlyTotal: 'Miesięczny koszt',

@@ -1207,6 +1207,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Abonnementen',
+    settingsSubtitle: 'Houd terugkerende kosten en verlengingen bij',
     addTitle: 'Abonnement toevoegen',
     editTitle: 'Abonnement bewerken',
     monthlyTotal: 'Maandelijkse kosten',

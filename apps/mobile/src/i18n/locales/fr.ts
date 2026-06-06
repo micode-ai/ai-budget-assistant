@@ -1207,6 +1207,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Abonnements',
+    settingsSubtitle: 'Suivez les paiements récurrents et les renouvellements',
     addTitle: 'Ajouter un abonnement',
     editTitle: 'Modifier l\'abonnement',
     monthlyTotal: 'Coût mensuel',

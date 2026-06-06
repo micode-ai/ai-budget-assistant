@@ -1207,6 +1207,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Subscriptions',
+    settingsSubtitle: 'Track recurring charges and renewals',
     addTitle: 'Add Subscription',
     editTitle: 'Edit Subscription',
     monthlyTotal: 'Monthly Cost',

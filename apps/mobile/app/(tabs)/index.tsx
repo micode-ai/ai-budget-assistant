@@ -42,6 +42,7 @@ const quickActionRoutes: Record<QuickActionKey, string> = {
   exchange: '/wallet/exchange',
   converter: '/converter',
   transfers: '/wallet/transfer',
+  subscriptions: '/subscriptions',
 };
 
 const quickActionLabelKey: Record<QuickActionKey, string> = {
@@ -53,6 +54,7 @@ const quickActionLabelKey: Record<QuickActionKey, string> = {
   exchange: 'dashboard.exchangeCurrency',
   converter: 'dashboard.currencyConverter',
   transfers: 'dashboard.transfers',
+  subscriptions: 'subscriptionManager.title',
 };
 
 export default function DashboardScreen() {
@@ -156,6 +158,8 @@ export default function DashboardScreen() {
         return <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />;
       case 'transfers':
         return <Ionicons name="swap-horizontal-outline" size={28} color={theme.colors.primary} />;
+      case 'subscriptions':
+        return <Ionicons name="repeat-outline" size={28} color={theme.colors.primary} />;
       default:
         return null;
     }
