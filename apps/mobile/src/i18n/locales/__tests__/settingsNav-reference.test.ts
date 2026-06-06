@@ -6,8 +6,9 @@ import pl from '../pl';
 import ru from '../ru';
 import ua from '../ua';
 import be from '../be';
+import nl from '../nl';
 
-const locales = { en, de, es, fr, pl, ru, ua, be } as const;
+const locales = { en, de, es, fr, pl, ru, ua, be, nl } as const;
 const keys = [
   'referenceData',
   'referenceDataDesc',

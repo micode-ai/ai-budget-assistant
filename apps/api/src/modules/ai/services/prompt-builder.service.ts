@@ -17,6 +17,7 @@ export class PromptBuilder {
     if (/[áéíóúñÁÉÍÓÚÑ¿¡]/.test(text)) return 'Spanish';
     if (/[àâäæçèéêëîïôœùûüÿÀÂÄÆÇÈÉÊËÎÏÔŒÙÛÜŸ]/.test(text)) return 'French';
     if (/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(text)) return 'Polish';
+    if (/\b(het|een|ik|niet|uitgave|inkomsten|vandaag|gisteren|betaald|boodschappen|rekening|geld)\b/i.test(text)) return 'Dutch';
     return 'English';
   }
 
@@ -333,6 +334,27 @@ ${JSON.stringify(contextData, null, 2)}
           default:
             return `${actionType}`;
         }
+      case 'Dutch':
+        switch (actionType) {
+          case 'create_expense':
+            return `uitgave ${amt}${desc ? ` — ${desc}` : ''}${cat}`;
+          case 'create_income':
+            return `inkomsten ${amt}${desc ? ` — ${desc}` : ''}`;
+          case 'create_budget':
+            return `budget "${safeName}" voor ${amt} (${args.period})`;
+          case 'record_debt_repayment': {
+            const safeContact = sanitizeForPrompt(typeof args.contactName === 'string' ? args.contactName : '', 50);
+            return `schuldaflossing ${args.amount} ${args.currencyCode || ''}${safeContact ? ` van ${safeContact}` : ''}`;
+          }
+          case 'create_debt':
+            return `nieuwe schuld: ${args.direction === 'lent' ? 'geleend aan' : 'geleend van'} ${sanitizeForPrompt(typeof args.contactName === 'string' ? args.contactName : '', 50)} ${args.amount} ${args.currencyCode}`;
+          case 'update_goal_balance': {
+            const safeGoal = sanitizeForPrompt(typeof args.goalName === 'string' ? args.goalName : '', 100);
+            return `spaardoel bijgewerkt${safeGoal ? ` voor "${safeGoal}"` : ''}: ${args.newAmount}`;
+          }
+          default:
+            return `${actionType}`;
+        }
       default: // English
         switch (actionType) {
           case 'create_expense':
@@ -366,6 +388,7 @@ ${JSON.stringify(contextData, null, 2)}
       case 'Spanish': return `✅ ¡Listo! ${summary} — creado con éxito.`;
       case 'French': return `✅ Terminé ! ${summary} — créé avec succès.`;
       case 'Polish': return `✅ Gotowe! ${summary} — utworzono pomyślnie.`;
+      case 'Dutch': return `✅ Klaar! ${summary} — succesvol aangemaakt.`;
       default: return `✅ Done! ${summary} — successfully created.`;
     }
   }
@@ -380,6 +403,7 @@ ${JSON.stringify(contextData, null, 2)}
       case 'Spanish': return `❌ Error: ${err}`;
       case 'French': return `❌ Erreur : ${err}`;
       case 'Polish': return `❌ Błąd: ${err}`;
+      case 'Dutch': return `❌ Fout: ${err}`;
       default: return `❌ Failed to execute: ${err}`;
     }
   }
@@ -393,6 +417,7 @@ ${JSON.stringify(contextData, null, 2)}
       case 'Spanish': return 'Acción cancelada. Avísame si necesitas algo más.';
       case 'French': return 'Action annulée. Dites-moi si vous avez besoin d\'autre chose.';
       case 'Polish': return 'Anulowano. Daj znać, jeśli potrzebujesz czegoś jeszcze.';
+      case 'Dutch': return 'Actie geannuleerd. Laat het me weten als je nog iets nodig hebt.';
       default: return 'Action cancelled. Let me know if you need anything else.';
     }
   }

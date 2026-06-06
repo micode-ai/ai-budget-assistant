@@ -8,7 +8,7 @@ export interface HelpSection {
   body: string;
 }
 
-export type HelpLanguage = 'en' | 'ru' | 'ua' | 'pl' | 'de' | 'es' | 'fr' | 'be';
+export type HelpLanguage = 'en' | 'ru' | 'ua' | 'pl' | 'de' | 'es' | 'fr' | 'be' | 'nl';
 
 export const helpContent: Record<HelpLanguage, HelpSection[]> = {
   en: [
@@ -26751,6 +26751,3410 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ---
 
 *Гл. таксама: Выдаткі і даходы | Аналітыка | Налады*
+`,
+    },
+  ],
+  nl: [
+    {
+      id: '00-index',
+      title: `AI Budget Assistant — Gebruikershandleiding`,
+      description: `AI Budget Assistant is je slimme financiële metgezel. Houd uitgaven bij — handmatig, met spraak of door bonnen te scannen. Beheer budgetten in meerdere valuta's, krijg AI-gestuurde inzichten in je uitgaven en werk samen met familie of teamleden op gedeelde accounts.`,
+      body: `# AI Budget Assistant — Gebruikershandleiding
+
+> AI Budget Assistant is je slimme financiële metgezel. Houd uitgaven bij — handmatig, met spraak of door bonnen te scannen. Beheer budgetten in meerdere valuta's, krijg AI-gestuurde inzichten in je uitgaven en werk samen met familie of teamleden op gedeelde accounts.
+
+## Belangrijkste functies
+
+- **Slim uitgaven bijhouden** — voeg uitgaven handmatig toe, met spraak of door bonnen te scannen met AI-gestuurde OCR
+- **Multi-valuta portemonnee** — houd saldo's bij in USD, EUR, PLN, GBP, UAH, RUB en BYN met live wisselkoersen
+- **AI-chat** — stel vragen over je financiën en krijg persoonlijk advies
+- **Spending Stories** — AI-gegenereerde verhalende rapporten met prestaties en inzichten
+- **Gamification** — prestaties, dagelijkse reeksen, XP/levels en een verzameling badges om je gemotiveerd te houden
+- **Budgetten** — stel uitgavenlimieten in met realtime voortgang en meldingen
+- **Interactieve analyse** — grafieken met drill-down, categorie-uitsplitsingen en trendanalyse
+- **Export & rapporten** — PDF/Excel/CSV-rapporten, maandelijkse overzichten, versleutelde back-ups, e-mailsamenvattingen
+- **Beleggingsportefeuille** — houd aandelen, ETF's, crypto en obligaties bij met realtime koersen en benchmarkvergelijking
+- **Meerdere accounts** — Persoonlijke, Gedeelde, Zakelijke en Beleggingsaccounts met rolgebaseerde toegang (Eigenaar, Bewerker, Kijker)
+- **Offline-first** — gegevens worden lokaal opgeslagen en automatisch gesynchroniseerd wanneer je online bent
+- **8 talen** — English, Deutsch, Espanol, Francais, Polski, Русский, Українська, Беларуская
+
+## Inhoudsopgave
+
+1. Aan de slag — registratie, inloggen, eerste stappen
+2. Dashboard — overzicht van het startscherm en snelle acties
+3. Uitgaven & Inkomsten — transacties beheren
+4. Spraakinvoer & Bonnen scannen — AI-gestuurde uitgaveninvoer
+5. Budgetten — uitgavenlimieten maken en bijhouden
+6. Analyse — grafieken, inzichten en data-exploratie
+7. AI-chat — je persoonlijke financiële assistent
+8. Spending Story — AI-gegenereerde financiële verhalen
+9. Accounts — persoonlijke, gedeelde en zakelijke accounts
+10. Portemonnee & Valutawissel — multi-valutabeheer
+11. Instellingen — profiel, weergave en voorkeuren
+12. Abonnementen — Free-, Pro- en Business-abonnementen
+13. Prestaties & Gamification — reeksen, XP, levels en badges
+14. Beleggingsportefeuille — aandelen, ETF's, crypto bijhouden en analyseren
+15. End-to-end-versleuteling — bescherm je gegevens met E2EE
+16. Export & Rapporten — PDF/Excel/CSV-rapporten, back-ups, e-mailoverzichten
+17. Schulden & Leningen — uitgeleend en geleend geld, aflossingen en vervaldatums bijhouden
+18. Spaardoelen — AI-gestuurde spaarplannen met inlegdoelen en checkpoints
+19. Fat Finder — maandelijkse uitgaventoets om verspilling op te sporen en besparingen voor te stellen
+20. AI-antwoordmodus — pas de communicatiestijl van de AI aan (Eenvoudig, Gebalanceerd, Expert)
+
+## Ondersteunde valuta's
+
+USD, EUR, PLN, GBP, UAH, RUB, BYN
+
+## Ondersteunde platforms
+
+iOS, Android, Web
+`,
+    },
+    {
+      id: '01-getting-started',
+      title: `Aan de slag`,
+      description: `Download AI Budget Assistant en maak je account aan in minder dan een minuut. Stel je voorkeursvaluta en -taal in en begin meteen met het bijhouden van je financiën.`,
+      body: `# Aan de slag
+
+> Download AI Budget Assistant en maak je account aan in minder dan een minuut. Stel je voorkeursvaluta en -taal in en begin meteen met het bijhouden van je financiën.
+
+## Je account aanmaken
+
+1. Open de app en tik op **Registreren**
+2. Voer je **Volledige naam** in (minimaal 2 tekens)
+3. Voer je **E-mailadres** in
+4. Maak een **Wachtwoord** aan (minimaal 8 tekens, moet een hoofdletter A-Z, een kleine letter a-z en een cijfer 0-9 bevatten)
+5. Bevestig je wachtwoord
+6. Selecteer je voorkeurs **Valuta** (USD, EUR, PLN, GBP, UAH, RUB of BYN)
+7. Selecteer je voorkeurs **Taal** (English, Deutsch, Espanol, Francais, Polski, Русский, Українська of Беларуская)
+8. Tik op **Account aanmaken**
+9. Controleer je e-mail op een **6-cijferige verificatiecode**
+10. Voer de code in de app in en tik op **Verifiëren**
+
+## Inloggen
+
+1. Open de app en tik op **Inloggen**
+2. Voer je **E-mailadres** en **Wachtwoord** in
+3. Tik op **Inloggen**
+
+### Biometrisch inloggen
+
+Na je eerste keer inloggen kun je biometrische authenticatie (Face ID of vingerafdruk) gebruiken voor snelle toegang:
+
+1. Tik op het inlogscherm op **Face ID gebruiken** / **Vingerafdruk gebruiken**
+2. Authenticeer met de biometrische sensor van je apparaat
+3. Je bent binnen!
+
+### Wachtwoord vergeten
+
+Als je je wachtwoord bent vergeten:
+
+1. Tik op het inlogscherm op **Wachtwoord vergeten?**
+2. Voer je **E-mailadres** in en tik op **Code verzenden**
+3. Controleer je e-mail op een **6-cijferige code** (30 minuten geldig)
+4. Voer de code, je **Nieuwe wachtwoord** in en bevestig het
+5. Tik op **Wachtwoord opnieuw instellen**
+6. Je wordt teruggeleid naar het inlogscherm — log in met je nieuwe wachtwoord
+
+> Als je de code niet ontvangt, controleer dan je spammap of tik op **Code opnieuw verzenden**.
+
+## Welkomstscherm
+
+Na je eerste keer inloggen zie je het **Welkom**-scherm:
+
+- **Je gratis abonnement bevat:**
+  - 50 AI-verzoeken per maand
+  - 3 persoonlijke accounts
+  - 1 lid
+  - Volledig uitgaven bijhouden
+- Tik op **Doorgaan met Free** om te beginnen, of verken de upgrade-opties
+
+## Eerste stappen na het inloggen
+
+1. Je **Persoonlijke** account wordt automatisch aangemaakt
+2. Ga naar **Instellingen** om je profiel, tijdzone en weergave aan te passen
+3. Voeg je eerste uitgave toe vanaf het **Dashboard** met de snelle-actieknoppen
+4. Stel een maandbudget in op het tabblad **Budgetten**
+
+## Navigatieoverzicht
+
+De app heeft 5 hoofdtabbladen onderaan het scherm:
+
+| Tabblad | Doel |
+|---|---|
+| **Dashboard** | Snel overzicht, budgetstatus, snelle acties |
+| **Transacties** | Uitgaven en inkomsten bekijken en beheren |
+| **Budgetten** | Uitgavenlimieten maken en bijhouden |
+| **Analyse** | Grafieken, inzichten en uitgavenanalyse |
+| **AI-chat** | Stel vragen over je financiën |
+
+Aanvullende navigatie:
+- **Accountwisselaar** — tik op de accountnaam (linksboven) om tussen accounts te wisselen
+- **Instellingen** — tik op het tandwielpictogram (rechtsboven) om naar de instellingen te gaan
+- **Tactiele feedback** — bij het tikken op een tabblad voel je een lichte trilling op ondersteunde apparaten, zodat je weet dat je tik is geregistreerd
+- **Laadindicator** — een dunne voortgangsbalk bovenaan het scherm verschijnt terwijl de app gegevens ophaalt of synchroniseert
+
+---
+
+*Volgende: Dashboard*
+`,
+    },
+    {
+      id: '02-dashboard',
+      title: `Dashboard`,
+      description: `Je financiële commandocentrum. Bekijk je budgetstatus, inkomsten, uitgaven en portemonneesaldo's in één oogopslag, met snelle acties om met één tik een uitgave toe te voegen. Je kunt afzonderlijke secties tonen of verbergen via [Instellingen](./11-settings.md) → Dashboard-widgets.`,
+      body: `# Dashboard
+
+> Je financiële commandocentrum. Bekijk je budgetstatus, inkomsten, uitgaven en portemonneesaldo's in één oogopslag, met snelle acties om met één tik een uitgave toe te voegen. Je kunt afzonderlijke secties tonen of verbergen via Instellingen → Dashboard-widgets.
+
+## Overzicht
+
+Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont een persoonlijke begroeting, je huidige accountcontext en de belangrijkste financiële cijfers voor de huidige maand.
+
+![Dashboard met snelle acties en budgetoverzicht]({{IMG:home-1.jpg}})
+
+## Accountwisselaar
+
+Tik linksboven op de accountnaam (bijv. **Familie**) om het uitklapmenu **Account wisselen** te openen. Je kunt schakelen tussen je Persoonlijke, Gedeelde en Zakelijke accounts. Alle gegevens op het Dashboard worden bijgewerkt naar het geselecteerde account.
+
+## Snelle acties
+
+Vier snelle-actieknoppen onder de begroeting geven je snelle toegang tot de meest voorkomende taken:
+
+| Knop | Actie |
+|---|---|
+| **Uitgave toevoegen** | Opent het handmatige uitgavenformulier |
+| **Spraakinvoer** | Opent het spraakuitgavenscherm — spreek je uitgave op natuurlijke wijze in |
+| **Bon scannen** | Opent de camera om een bon te fotograferen voor AI-extractie |
+| **Wisselen** | Opent het valutawisselformulier |
+
+## Financiële gezondheidsscore
+
+De widget **Financiële gezondheidsscore** toont één score van 0–100 die je algehele financiële gezondheid voor de huidige maand samenvat:
+
+- **Groen (70–100)** — financiën zijn in topvorm
+- **Geel (40–69)** — sommige punten hebben aandacht nodig
+- **Rood (0–39)** — er zijn aanzienlijke problemen gedetecteerd
+
+De cirkelvormige meter rechtsboven op de kaart vult zich evenredig met je score. Tik op de kaart om een uitsplitsingsblad te openen met vier onderdelen:
+
+| Onderdeel | Max. ptn | Beschrijving |
+|---|---|---|
+| Budgetnaleving | 25 | % van actieve budgetten dat de limiet niet overschrijdt |
+| Spaarquote | 25 | Zet je maandelijkse spaarpercentage lineair om (0% → 0 ptn, 20%+ → 25 ptn) |
+| Doelvoortgang | 25 | % van actieve spaardoelen die op schema liggen voor hun deadline |
+| Schuldgezondheid | 25 | Evenredig afgetrokken voor achterstallige schulden |
+
+> **"Onvoldoende gegevens"** verschijnt wanneer minder dan twee onderdelen gegevens hebben (bijv. een gloednieuw account zonder budgetten, doelen, schulden of inkomsten).
+
+De score wordt volledig op het apparaat berekend — geen internetverbinding of AI-aanroepen nodig.
+
+## Gamification-widget
+
+Onder de snelle acties toont een compacte kaart je gamification-voortgang:
+
+- **Level** — je huidige level met een XP-voortgangsbalk naar het volgende level
+- **Reeks** — het aantal dagen van je dagelijkse bijhoudreeks met een vuur- of sneeuwvlokemoji
+
+Tik op deze kaart om het volledige **Prestaties**-scherm te openen met alle badges, reeksdetails en categoriefilters.
+
+> Zie Prestaties & Gamification voor details over hoe XP, levels en prestaties werken.
+
+## Maandbudgetkaart
+
+- Toont je huidige uitgaven afgezet tegen je maandbudget (bijv. **2 846,83 zl van 20 000,00 zl**)
+- Kleurgecodeerde voortgangsbalk: groen (onder controle), geel (limiet nadert), rood/oranje (bijna over of over budget)
+- Toont het **gebruikte percentage** (bijv. 86% gebruikt)
+- Tik op de kaart om naar het tabblad **Budgetten** te gaan voor details
+
+> **Let op:** Als er geen maandbudget is ingesteld, zie je een hint om er een te maken.
+
+## Inkomsten & Uitgaven
+
+![Dashboard gescrold — inkomsten, uitgaven, portemonnee]({{IMG:home-2.jpg}})
+
+Een gecombineerde kaart die je maandtotalen naast elkaar toont:
+
+- **Inkomsten** (links, groen) — je totale inkomsten voor de huidige maand (bijv. **+\$2.482,52**). Tik om naar het tabblad **Transacties** te gaan (Inkomstenweergave)
+- **Uitgaven** (rechts) — je totale uitgaven voor de huidige maand (bijv. **-\$4.838,99**). Tik om naar het tabblad **Transacties** te gaan (Uitgavenweergave)
+
+## Nettowinst
+
+Onder de inkomsten- en uitgavenkaarten toont de widget **Nettowinst** hoeveel geld je deze maand daadwerkelijk hebt gespaard of verloren, en volgt de trend over de afgelopen 6 maanden als een lijngrafiek:
+
+- **Nettowinst huidige maand** — boven de grafiek weergegeven in groen (positief) of rood (negatief)
+- **Trend van 6 maanden** — een lijngrafiek die de maandelijkse nettowinst (inkomsten − uitgaven) over de afgelopen 6 maanden toont
+- Tik op een datapunt in de grafiek om de exacte waarde voor die maand te zien
+
+> **Formule:** Nettowinst = Totale inkomsten − Totale uitgaven (beide omgerekend naar je basisvaluta)
+
+## Nettokapitaal
+
+De widget **Nettokapitaal** toont je totale nettowaarde over alle portemonneevaluta's, omgerekend naar je basisvaluta:
+
+- **Totaal nettokapitaal** — de som van alle portemonneesaldo's omgerekend naar je instellingenvaluta, weergegeven in groen (positief) of rood (negatief)
+- **Uitsplitsing per valuta** — het huidige saldo van elke valuta wordt onder het totaal vermeld
+
+> **Let op:** Nettokapitaal verschijnt pas nadat je je beginsaldo's in de portemonnee hebt ingesteld. Zie Portemonnee & Wissel om ze te configureren.
+
+## Fat Finder-kaart
+
+Onder de schuldensectie toont de **Fat Finder**-kaart een samenvatting van je maandelijkse uitgaventoets:
+
+- **Totale mogelijke besparing** — hoeveel je per maand zou kunnen besparen
+- **Top 3 bevindingen** — een korte lijst met ernststippen en besparingsbedragen
+- **Volledig rapport bekijken** — tik om het gedetailleerde Fat Finder-scherm te openen
+
+Deze kaart vereist een **Pro- of Business-abonnement**. Gebruikers met een gratis abonnement zien een upgradeprompt.
+
+> Zie Fat Finder voor de volledige functiehandleiding.
+
+## Kalender
+
+De **Kalender**-widget toont een maandkalenderraster met gekleurde stippen die dagen met transacties aangeven:
+
+- **Groene stip** — inkomsten geregistreerd op die dag
+- **Rode stip** — uitgave geregistreerd op die dag
+- **Vandaag** is gemarkeerd met een oranje cirkel
+- **Maandnavigatie** — gebruik de pijlen links/rechts om tussen maanden te wisselen
+
+Onder het kalenderraster toont een samenvattingsrij:
+
+- **Inkomsten** — totale inkomsten voor de geselecteerde maand (omgerekend naar je basisvaluta)
+- **Uitgaven** — totale uitgaven voor de geselecteerde maand
+- **Nettowinst** — inkomsten min uitgaven, groen bij positief, rood bij negatief
+
+Tik op **Tik om details te bekijken** om het volledige Kalender-scherm met drie tabbladen te openen:
+
+| Tabblad | Inhoud |
+|---|---|
+| **Categorieën** | Inkomsten- en uitgavenuitsplitsingen per categorie — elke rij toont het categoriepictogram, de naam, het percentage en het bedrag. De nettowinst staat onderaan |
+| **Portemonnees** | Het huidige saldo voor elke valutaportemonnee met het percentage van het totaal |
+| **Transacties** | Chronologische lijst van alle transacties voor de maand. Tik op een dag in de kalender om naar die specifieke dag te filteren; tik nogmaals om de selectie op te heffen |
+
+> **Tip:** Alle bedragen in de Kalender worden automatisch omgerekend naar je basisvaluta, zodat je nauwkeurige totalen ziet, zelfs over meerdere valuta's heen.
+
+## Portemonneesaldo's
+
+- Horizontaal scrollbare kaarten die je saldo in elke valuta tonen (bijv. **EUR 16.723,00**, **PLN 2 192,89**, **USD \$56...**)
+- Tik op **Alles bekijken** om naar de volledige Portemonnee-weergave met gedetailleerde uitsplitsingen te gaan
+- Als er geen saldo's zijn ingesteld, zie je een prompt om je beginsaldo toe te voegen
+
+## Trek omlaag om te vernieuwen
+
+Trek ergens op het Dashboard omlaag om alle gegevens te vernieuwen en met de server te synchroniseren.
+
+## Veelgestelde vragen
+
+- **V: Waarom toont het Dashboard overal \$0?**
+  **A:** Je hebt nog geen uitgaven of inkomsten toegevoegd. Gebruik de snelle-actieknoppen om je eerste transactie toe te voegen.
+
+- **V: Kan ik aanpassen wat er op het Dashboard verschijnt?**
+  **A:** Ja. Ga naar **Instellingen → Dashboard-widgets** en zet afzonderlijke secties aan of uit. Je voorkeuren worden opgeslagen en blijven behouden na een herstart. Je kunt widgets ook verslepen om ze te herordenen.
+
+---
+
+*Zie ook: Uitgaven & Inkomsten | Portemonnee & Wissel | Fat Finder | Analyse*
+`,
+    },
+    {
+      id: '03-expenses-and-income',
+      title: `Uitgaven & Inkomsten`,
+      description: `Bekijk, voeg toe en beheer al je transacties. Wissel tussen de tabbladen Uitgaven en Inkomsten, met ondersteuning voor meerdere valuta's, categorieën, tags, projecten en uitgavensplitsingen.`,
+      body: `# Uitgaven & Inkomsten
+
+> Bekijk, voeg toe en beheer al je transacties. Wissel tussen de tabbladen Uitgaven en Inkomsten, met ondersteuning voor meerdere valuta's, categorieën, tags, projecten en uitgavensplitsingen.
+
+## Transactielijst
+
+![Transactielijst met uitgaven]({{IMG:expenses-2.jpg}})
+
+Het scherm **Transacties** heeft bovenaan twee tabbladen:
+- **Uitgaven** — al je uitgaven, gesorteerd op datum (nieuwste eerst)
+- **Inkomsten** — al je inkomstenposten
+
+Elke transactie toont:
+- Categoriepictogram
+- Omschrijving (bijv. "Hosting", "Huur", "Kinderdagverblijf")
+- Datum
+- Bedrag met valuta, kleurgecodeerd: rood voor uitgaven (bijv. **-3 750,00 zl**), groen voor inkomsten
+
+Tik op een transactie om de volledige details te bekijken.
+
+### Snelle acties (lang indrukken)
+
+Houd een transactie in de lijst lang ingedrukt om een snelle-actiemenu te openen:
+- **Bewerken** — open de transactie in bewerkmodus
+- **Dupliceren** — maak een nieuwe transactie aan, vooraf ingevuld met dezelfde gegevens
+- **Verwijderen** — verwijder de transactie (met bevestiging)
+
+> **Let op:** Dupliceren en Verwijderen zijn alleen beschikbaar voor accounteigenaren en -bewerkers.
+
+### Bulkacties
+
+Voor uitgaven bevat het lang-indrukkenmenu ook **Meerdere selecteren**. Tik erop om de multiselectiemodus aan te zetten:
+- Tik op rijen om de gewenste aan te vinken, of gebruik **Alles selecteren** om alles aan te vinken
+- Met de balk onderaan kun je alle geselecteerde uitgaven tegelijk bewerken: **Categorie instellen**, **Tag toevoegen** of **Verwijderen**
+- Tik op **Annuleren** om de multiselectiemodus te verlaten zonder wijzigingen aan te brengen
+
+Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voegen.
+
+## Een nieuwe uitgave toevoegen (handmatig)
+
+![Formulier nieuwe uitgave]({{IMG:expense-3.jpg}})
+
+### Stap voor stap
+
+1. Tik op de **+**-knop op het scherm Transacties, of op **Uitgave toevoegen** op het Dashboard
+2. Als je de **+**-knop gebruikt, selecteer dan **Handmatige invoer** in het menu
+3. Tik op het valutasymbool om de valuta te wijzigen (USD, EUR, PLN, GBP, UAH, RUB, BYN)
+4. Voer het **bedrag** in
+5. Voer een **Omschrijving** in (bijv. "Waar was deze uitgave voor?")
+6. Selecteer een **Categorie** uit de chips:
+   - Eten & Uit eten, Boodschappen, Vervoer, Winkelen, Entertainment, Gezondheid & Fitness, Rekeningen & Nutsvoorzieningen, Onderwijs, Reizen, Koffie & Drankjes, Abonnementen, Kleding, Persoonlijke verzorging
+   - Tik op de **+**-knop om een aangepaste categorie te maken
+7. Zoek en selecteer **Tags** (bijv. #thee, #bier, #supermarkt) — optioneel
+8. Selecteer **Aan project toevoegen** (bijv. "Vakantie") — optioneel
+9. Tik op **Uitgave splitsen** om de uitgave over meerdere categorieën te verdelen — optioneel
+10. Tik op **Uitgave opslaan**
+
+### Categorieën
+
+De app biedt 14 ingebouwde uitgavencategorieën. Je kunt ook aangepaste categorieën maken door op de **+**-knop in de categoriekiezer te tikken. Elke categorie heeft een unieke kleur, zodat je ze makkelijk herkent in grafieken en lijsten.
+
+### Tags
+
+Tags helpen je uitgaven te ordenen met aangepaste labels:
+- Zoek bestaande tags met het zoekveld
+- Kies uit recente of populaire tags
+- De AI kan relevante tags voorstellen op basis van je omschrijving
+- Tags verschijnen als chips (bijv. **#thee**, **#bier**, **#supermarkt**)
+
+### Projecten
+
+Koppel uitgaven aan projecten om ze gegroepeerd bij te houden:
+- Selecteer een bestaand project (bijv. **Vakantie**)
+- Tik op **+** om een nieuw project te maken
+- Bekijk projectuitgaventotalen in de sectie Projecten
+- Wijzig of verwijder het project later — open de uitgave, tik op **Bewerken** en kies een ander project of tik op **Wissen**
+
+### Verkoper
+
+Houd bij waar je hebt uitgegeven — de verkoper (winkel of bedrijf):
+- Automatisch ingevuld wanneer je een bon scant of bank-/Wise-transacties importeert
+- Voeg deze handmatig toe of bewerk hem op elke uitgave; begin met typen om te kiezen uit verkopers die je eerder hebt gebruikt
+- Wordt getoond op de uitgave en in de lijst; tik op het verkoperfilter op het tabblad Uitgaven om alle uitgaven bij één verkoper te zien
+- Met het verkoperfilter kun je **meerdere verkopers tegelijk** kiezen (tik nogmaals om er een te verwijderen), en het tabblad Uitgaven toont het **totaal van wat er nu gefilterd is**, omgerekend naar je hoofdvaluta
+- Beheer je verkopers in **Instellingen → Verkopers**: hernoem, voeg duplicaten samen of verwijder een verkoper
+- Wanneer je een bon scant of spraak gebruikt, wordt de verkoper gekoppeld aan je bestaande verkopers, zodat je geen duplicaten krijgt
+
+### Uitgave splitsen
+
+Verdeel één uitgave over meerdere categorieën:
+1. Tik op **Uitgave splitsen** in het uitgavenformulier
+2. Voeg categorieën toe met bedragen of percentages
+3. Het totaal moet gelijk zijn aan het oorspronkelijke uitgavenbedrag
+4. Tik op **Splitsing bevestigen**
+
+> **Tip:** Gebruik **Splitsing voorstellen** om de AI te laten aanbevelen hoe je de uitgave verdeelt.
+
+## Inkomsten toevoegen
+
+### Stap voor stap
+
+1. Ga naar het tabblad **Transacties** en wissel naar het tabblad **Inkomsten**
+2. Tik op de **+**-knop
+3. Tik op het valutasymbool om je valuta te selecteren
+4. Voer het **bedrag** in
+5. Voer een **Omschrijving** in (bijv. "Waar waren deze inkomsten voor?")
+6. Selecteer een **Categorie**: Salaris, Freelance, Beleggingen, Geschenken of Overige inkomsten
+7. Voeg optionele **Notities** toe
+8. Tik op **Inkomsten opslaan**
+
+## Uitgavedetails
+
+Tik op een uitgave om de volledige details te bekijken:
+
+- **Omschrijving** en bedrag met valuta
+- **Datum** van de uitgave
+- **Categorie** met kleurindicator
+- **Notities** (indien toegevoegd)
+- **Toegevoegd door** — wordt getoond in gedeelde accounts; toont de naam van het accountlid dat deze post heeft aangemaakt
+- **Synchronisatiestatus** — in behandeling, gesynchroniseerd, conflict of fout
+- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen of Geïmporteerd
+- **Bonitems** — afzonderlijke items (voor gescande bonnen)
+- **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde
+
+### Acties op uitgavedetails:
+- **Bewerken** — de uitgave wijzigen
+- **Kopiëren** — een duplicaat maken
+- **Verwijderen** — de uitgave verwijderen (met bevestiging)
+
+## Inkomstendetails
+
+Tik op een inkomstenpost om de details te bekijken:
+- Omschrijving, datum, categorie, notities
+- **Toegevoegd door** — in gedeelde accounts wordt getoond wie deze inkomstenpost heeft aangemaakt
+- Bewerk- of verwijderopties
+
+## Veelgestelde vragen
+
+- **V: Kan ik uitgaven in verschillende valuta's toevoegen?**
+  **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN.
+
+- **V: Hoe bewerk ik een bestaande uitgave?**
+  **A:** Tik op de uitgave in de lijst om de details te openen en tik vervolgens op **Bewerken**.
+
+- **V: Wat is het verschil tussen categorieën en tags?**
+  **A:** Elke uitgave heeft één categorie (bijv. "Eten & Uit eten") maar kan meerdere tags hebben (bijv. #lunch, #werk). Categorieën worden gebruikt voor budgetten en grafieken; tags bieden extra flexibiliteit bij het filteren.
+
+- **V: Waarom opent het tabblad Transacties direct, zelfs zonder internet?**
+  **A:** De app slaat je transacties lokaal op je apparaat op. Wanneer je het tabblad opent, wordt de lijst direct getoond vanuit deze lokale kopie, en eventuele nieuwe wijzigingen van de server worden op de achtergrond geladen. Als de lijst bij de eerste keer leeg is, zie je kort een laadspinner terwijl het apparaat je gegevens ophaalt.
+
+---
+
+*Zie ook: Spraakinvoer & Bonnen scannen | Budgetten*
+`,
+    },
+    {
+      id: '04-voice-and-receipt',
+      title: `Spraakinvoer & Bonnen scannen`,
+      description: `Laat de AI het werk doen. Spreek je uitgave natuurlijk uit of fotografeer een bon — de app haalt automatisch het bedrag, de omschrijving, de verkoper en de categorie eruit.`,
+      body: `# Spraakinvoer & Bonnen scannen
+
+> Laat de AI het werk doen. Spreek je uitgave natuurlijk uit of fotografeer een bon — de app haalt automatisch het bedrag, de omschrijving, de verkoper en de categorie eruit.
+
+## Spraakuitgave
+
+![Scherm Spraakuitgave]({{IMG:voice-expense-4.jpg}})
+
+### Hoe het werkt
+
+1. Tik op **Spraakinvoer** bij de snelle acties op het Dashboard, of tik op **+** op het scherm Transacties en selecteer **Spraakinvoer**
+2. Je ziet een groot microfoonpictogram met de tekst **"Tik om te beginnen met spreken"**
+3. Tik op de microfoonknop om de opname te starten
+4. Spreek natuurlijk, bijvoorbeeld: *"Koffie bij Starbucks, vijf dollar"*
+5. Tik nogmaals om de opname te stoppen
+6. De app verwerkt je spraak en haalt de uitgavedetails eruit
+
+### Bevestigingsscherm
+
+Na verwerking zie je een bevestiging met de uitgelezen gegevens:
+
+- **Bedrag** — uit je spraak gehaald (bewerkbaar)
+- **Omschrijving** — waar de uitgave voor was (bewerkbaar)
+- **Verkoper** — waar je hebt uitgegeven (bewerkbaar)
+- **Categorie** — automatisch toegewezen (bewerkbaar)
+- **Betrouwbaarheids**indicator — hoge betrouwbaarheid of gemiddelde betrouwbaarheid
+
+Controleer de details, breng eventuele correcties aan en daarna:
+- Tik op **Uitgave opslaan** om te bevestigen en op te slaan
+- Tik op **Opnieuw proberen** om opnieuw op te nemen
+
+Na het opslaan kun je op **Nog een toevoegen** tikken om een nieuwe spraakuitgave op te nemen.
+
+### Tips voor het beste resultaat
+
+- Spreek duidelijk en noem zowel het item/de omschrijving als het bedrag
+- Noem de naam van de verkoper als die relevant is (bijv. "Lunch bij McDonald's, twaalf euro")
+- Geef de valuta op als die afwijkt van je standaard
+- Houd het simpel — één uitgave per opname
+
+## Bon scannen
+
+![Scherm Bon scannen]({{IMG:scan-receipt-4.jpg}})
+
+### Hoe het werkt
+
+1. Tik op **Bon scannen** bij de snelle acties op het Dashboard, of tik op **+** op het scherm Transacties en selecteer **Bon scannen**
+2. Je ziet drie opties:
+   - **Foto maken** — opent je camera om de bon te fotograferen
+   - **Kies uit galerij** — selecteer een bestaande foto
+   - **Pdf uploaden** — kies een pdf-bestand (digitale facturen, gescande bonnen tot 10 MB)
+3. Optioneel kun je **Aanvullende instructies voor de AI** invoeren (bijv. "Gelijk verdelen tussen twee personen", "Negeer de fooi")
+4. De app analyseert de bon en haalt de gegevens eruit
+
+### Bevestigingsscherm
+
+Na de AI-analyse zie je:
+
+- **Totaalbedrag** — uit de bon gehaald (bewerkbaar)
+- **Omschrijving** — gegenereerde samenvatting (bewerkbaar)
+- **Verkoper** — naam van de winkel/het restaurant (bewerkbaar)
+- **Categorie** — automatisch toegewezen (bewerkbaar)
+- **Datum** — van de bon (bewerkbaar)
+- **Items** — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd)
+- **Korting** — kortingsbedrag (indien aanwezig op de bon)
+- **Betrouwbaarheids**indicator — hoog of gemiddeld
+- Schakelaar **Bonafbeelding opslaan** — houd de foto gekoppeld aan de uitgave
+
+Controleer en corrigeer eventuele details en daarna:
+- Tik op **Uitgave opslaan** om te bevestigen
+- Tik op **Opnieuw scannen** om een andere foto te proberen
+
+### Tips voor het beste resultaat
+
+- Fotografeer bij goed licht — vermijd schaduwen en weerkaatsing
+- Zorg dat de hele bon zichtbaar en vlak is
+- Houd de camera stil om vervaging te voorkomen
+- Gebruik **Aanvullende instructies voor de AI** voor speciale behandeling (bijv. "Dit is in EUR", "Negeer het eerste item")
+
+## Spraakinkomsten
+
+Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.
+
+### Hoe het werkt
+
+1. Tik op **Spraakinkomsten** bij de snelle acties op het Dashboard, of tik op het microfoonpictogram in de voettekst van het formulier **Inkomsten toevoegen**
+2. Tik op de (groene) microfoonknop om de opname te starten
+3. Spreek natuurlijk, bijvoorbeeld: *"500 ontvangen van klant, consultancyhonorarium"*
+4. Tik nogmaals om de opname te stoppen
+5. De app haalt het bedrag, de omschrijving en de best passende **inkomstencategorie** eruit
+
+### Bevestigingsscherm
+
+- **Bedrag** — uit je spraak gehaald (bewerkbaar)
+- **Omschrijving** — waar de betaling voor was (bewerkbaar)
+- **Categorie** — inkomstencategorie automatisch toegewezen (bewerkbaar)
+- **Valuta** — gedetecteerd of standaard ingesteld op je basisvaluta
+
+Tik op **Inkomsten opslaan** om te bevestigen, of op **Opnieuw proberen** om opnieuw op te nemen.
+
+### Tips voor het beste resultaat
+
+- Noem het bedrag en een korte omschrijving
+- Noem de valuta als die afwijkt van je standaard
+
+---
+
+## Factuur scannen
+
+Fotografeer of upload een factuur of betalingsdocument om inkomsten automatisch vast te leggen.
+
+### Hoe het werkt
+
+1. Tik op **Factuur scannen** bij de snelle acties op het Dashboard, of tik op het documentpictogram in de voettekst van het formulier **Inkomsten toevoegen**
+2. Kies **Foto maken**, **Kies uit galerij** of **Pdf uploaden**
+3. Voer optioneel aanvullende instructies voor de AI in
+4. De app haalt het totaalbedrag, de datum en de categorie eruit
+
+### Bevestigingsscherm
+
+- **Totaalbedrag** — uit het document gehaald
+- **Omschrijving** — gegenereerde samenvatting
+- **Categorie** — inkomstencategorie automatisch toegewezen
+- **Datum** — van het document
+
+Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om het volledige formulier Inkomsten toevoegen te openen met de gegevens vooraf ingevuld.
+
+> **Let op:** Factuur-OCR haalt alleen het totaal en de datum eruit. Regelitems van facturen worden bewust genegeerd om dubbeltellen op factuurdocumenten met meerdere regels te voorkomen.
+
+---
+
+## Veelgestelde vragen
+
+- **V: Welke talen ondersteunt spraakinvoer?**
+  **A:** Spraakinvoer werkt het best in de taal waarop je app is ingesteld. Het ondersteunt alle 8 app-talen.
+
+- **V: Kan ik bonnen in elke taal scannen?**
+  **A:** Ja, de AI kan bonnen in de meeste talen verwerken en haalt bedragen en items eruit, ongeacht de taal van de bon.
+
+- **V: Welke pdf-bestanden worden ondersteund?**
+  **A:** Zowel digitale pdf's (bijv. Amazon- of PayPal-facturen) als gescande pdf-bonnen worden ondersteund. De maximale bestandsgrootte is 10 MB. Digitale pdf's met selecteerbare tekst worden sneller en nauwkeuriger verwerkt. Zorg voor het beste resultaat met gescande pdf's dat de scan helder is en veel contrast heeft.
+
+- **V: Waarom was het bedrag verkeerd na het scannen?**
+  **A:** AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven.
+
+- **V: Gebruikt spraak-/bonnenscannen mijn AI-verzoeken?**
+  **A:** Ja, elke spraakinvoer of bonscan gebruikt één AI-verzoek uit je maandelijkse tegoed.
+
+---
+
+*Zie ook: Uitgaven & Inkomsten | AI-chat*
+`,
+    },
+    {
+      id: '05-budgets',
+      title: `Budgetten`,
+      description: `Stel uitgavenlimieten in en volg je voortgang in realtime. Maak budgetten voor specifieke categorieën of verdeel je budget over meerdere categorieën, met aanpasbare perioden en automatische waarschuwingsdrempels.`,
+      body: `# Budgetten
+
+> Stel uitgavenlimieten in en volg je voortgang in realtime. Maak budgetten voor specifieke categorieën of verdeel je budget over meerdere categorieën, met aanpasbare perioden en automatische waarschuwingsdrempels.
+
+## Overzicht
+
+Budgetten helpen je je uitgaven te beheersen door limieten in te stellen voor specifieke tijdsperioden. De app houdt je uitgaven bij ten opzichte van deze limieten en stuurt een melding wanneer je je budget nadert of overschrijdt.
+
+## Budgetlijst
+
+Het tabblad **Budgetten** toont al je actieve budgetten:
+
+- **Budgetnaam** en periode (Dagelijks, Wekelijks, Maandelijks, Jaarlijks, Aangepast)
+- **Voortgangsbalk** — visuele indicator van uitgaven versus limiet
+- **Uitgegeven bedrag** van het totale budget (bijv. "2 846 zl van 20 000 zl")
+- **Statusbadge**:
+  - **Op schema** (groen) — uitgaven liggen binnen de limiet
+  - **Over budget** (rood) — uitgaven hebben de limiet overschreden
+- **Resterend** bedrag of overschrijding
+
+> **Let op:** Als je nog geen budgetten hebt, zie je een prompt: "Maak een budget om je uitgavenlimieten bij te houden."
+
+## Een budget maken
+
+### Stap voor stap
+
+1. Tik op **Budget maken** op het tabblad Budgetten (of de **+**-knop)
+2. Voer een **Budgetnaam** in (bijv. "Maandelijkse boodschappen")
+3. Selecteer de **Valuta**
+4. Kies een **Budgetmodus**:
+   - **Totaal** — stel één totaalbedrag in, optioneel gekoppeld aan één categorie
+   - **Per categorie** — verdeel het budget over meerdere categorieën, elk met zijn eigen limiet
+5. Voer het **Bedrag** in (modus Totaal) of voeg categorieën met bedragen toe (modus Per categorie)
+6. Kies een **Periode**:
+   - **Dagelijks** — wordt elke dag opnieuw ingesteld
+   - **Wekelijks** — wordt elke week opnieuw ingesteld
+   - **Maandelijks** — wordt elke maand opnieuw ingesteld
+   - **Jaarlijks** — wordt elk jaar opnieuw ingesteld
+7. Stel de drempel **Waarschuwen bij** in (standaard: 80%) — je krijgt een melding wanneer je uitgaven dit percentage bereiken
+8. Tik op **Budget maken**
+
+### Modus Per categorie
+
+In de modus **Per categorie** kun je aan elke uitgavencategorie een uitgavenlimiet toewijzen:
+
+- Tik op **Categorie toevoegen** om een categorie uit de lijst te kiezen
+- Voer het bedrag voor elke categorie in
+- Het totale budget is gelijk aan de som van alle categoriebedragen
+- Je kunt zoveel categorieën toevoegen als nodig is
+
+## Budgetdetails
+
+Tik op een budget om de volledige details te zien:
+
+- **Voortgangsvisualisatie** — balk die uitgegeven versus limiet toont
+- **Status** — Op schema of Over budget
+- **Categorie-uitsplitsing** — voor budgetten met meerdere categorieën zie je de voortgang van elke categorie:
+  - Kleurstip + categorienaam
+  - Uitgegeven / toegewezen bedragen
+  - Voortgangsbalk per categorie (groen/geel/rood op basis van gebruik)
+- **Periode** — het tijdsbereik van het budget
+- **Waarschuwingsdrempel** — het meldingstriggerpunt (bijv. 80%)
+- **Resterende dagen** — hoeveel dagen er nog over zijn in de huidige periode
+- **Geprognosticeerd totaal** — geschatte totale uitgaven aan het einde van de periode op basis van het huidige tempo
+- **Actief/Inactief** — de huidige status van het budget
+
+### Acties:
+- **Bewerken** (potloodpictogram) — naam, bedrag, categorieën, periode of waarschuwingsdrempel wijzigen
+- **Verwijderen** — het budget verwijderen (met bevestiging)
+
+## Uitgavengeschiedenis
+
+De kaart **Geschiedenis** toont hoe je het de afgelopen 6 perioden hebt gedaan ten opzichte van dit budget. Deze is beschikbaar voor alle periodetypen behalve Aangepast.
+
+- **Staafdiagram** — elke groep toont twee staven: je werkelijke uitgaven (gekleurd) en de budgetlimiet (grijs) voor die periode.
+  - Groene staaf — uitgegeven binnen de limiet
+  - Rode staaf — limiet overschreden
+- **Nalevingssamenvatting** — bijv. "Over budget in 3 van de 6 perioden" of "Gem. besparing: \$42"
+- **Gemiddelde overschrijding** — als je in sommige perioden over de limiet ging, toont dit het gemiddelde bedrag waarmee je de limiet overschreed
+
+> **Tip:** Gebruik de geschiedeniskaart om terugkerende patronen van te veel uitgeven op te sporen. Als je 3–4 rode staven op rij ziet, overweeg dan de limiet te verhogen of je gewoonten voor die categorie aan te passen.
+
+## Een budget bewerken
+
+Tik op het **potloodpictogram** op het budgetdetailscherm om naar de bewerkmodus te schakelen:
+
+- Wijzig de budgetnaam, valuta, periode of waarschuwingsdrempel
+- Wissel tussen de modi **Totaal** en **Per categorie**
+- In de modus Per categorie: voeg categorieën toe, verwijder ze of wijzig bedragen
+- Tik op **Opslaan** om de wijzigingen toe te passen, of op **Annuleren** om ze te verwerpen
+
+## Budgetwaarschuwingen
+
+De app bewaakt je budgetten automatisch en stuurt meldingen:
+
+- **Drempelwaarschuwing** — wanneer je uitgaven het ingestelde waarschuwingspercentage bereiken (bijv. 80%)
+- **Over-budgetwaarschuwing** — wanneer je uitgaven 100% overschrijden
+- De kleur van de voortgangsbalk verandert dynamisch:
+  - Groen — minder dan 80% gebruikt
+  - Geel/Oranje — 80–100% gebruikt
+  - Rood — meer dan 100% gebruikt
+
+> **Tip:** De Maandbudgetkaart op het Dashboard toont in één oogopslag de status van je primaire budget.
+
+## Veelgestelde vragen
+
+- **V: Kan ik meerdere budgetten tegelijk hebben?**
+  **A:** Ja! Je kunt zoveel budgetten maken als je nodig hebt — voor verschillende categorieën, perioden of algemene uitgaven.
+
+- **V: Wat is het verschil tussen de modi Totaal en Per categorie?**
+  **A:** Totaal stelt één totale limiet in (optioneel voor één categorie). Per categorie laat je individuele limieten instellen voor elke categorie — handig wanneer je boodschappen, vervoer en entertainment apart wilt bijhouden binnen één budget.
+
+- **V: Wat gebeurt er wanneer een budgetperiode eindigt?**
+  **A:** Het budget wordt automatisch opnieuw ingesteld voor de nieuwe periode. Je vorige uitgavengegevens worden bewaard in Analyse.
+
+- **V: Houdt het budget uitgaven in alle valuta's bij?**
+  **A:** Elk budget is gekoppeld aan één valuta. Alleen uitgaven in die valuta tellen mee voor het budget.
+
+---
+
+*Zie ook: Dashboard | Analyse*
+`,
+    },
+    {
+      id: '06-analytics',
+      title: `Analyse`,
+      description: `Visualiseer je uitgavenpatronen met interactieve grafieken. Filter op tijdsperiode en valuta, zoom in op details en krijg AI-gestuurde inzichten om je financiën beter te begrijpen.`,
+      body: `# Analyse
+
+> Visualiseer je uitgavenpatronen met interactieve grafieken. Filter op tijdsperiode en valuta, zoom in op details en krijg AI-gestuurde inzichten om je financiën beter te begrijpen.
+
+## Overzicht
+
+Het tabblad **Analyse** biedt een uitgebreid overzicht van je uitgaven via grafieken, inzichten en gegevensverkenning. Alle gegevens zijn gebaseerd op je uitgaven in het geselecteerde account.
+
+## Tijdsbereik & Filters
+
+Bovenaan het scherm Analyse:
+
+- **Schakelaar tijdsbereik**: **Week** | **Maand** | **Jaar**
+- **Valutafilter**: **Alle** valuta's, of selecteer een specifieke (USD, EUR, PLN, enz.)
+
+Het geselecteerde bereik beïnvloedt alle grafieken en inzichten hieronder.
+
+## Samenvattingskaarten
+
+- **Totaal uitgegeven** — je totale uitgaven voor de geselecteerde periode
+  - **vs. vorige periode** — "meer dan vorige week/maand/jaar" of "minder dan vorige week/maand/jaar" met percentage
+  - **vs. 3-maandsgemiddelde** — getoond onder de periodevergelijking zodra je minstens 1 voorgaande volledige maand aan gegevens hebt, bijv. "18% boven 3-maandsgem." (groen = onder het gemiddelde, rood = boven het gemiddelde)
+- **Gem. per dag** — gemiddelde dagelijkse uitgaven
+
+## AI-inzichtencarrousel
+
+Een horizontaal scrollbare carrousel met door AI gegenereerde inzichten (Pro-abonnement vereist):
+
+- **Uitgaveafwijkingen** — ongebruikelijke uitgaven gedetecteerd (bijv. "78% meer dan normaal aan Vervoer")
+- **Budgetvoorspellingen** — wanneer je budget naar verwachting op is
+- **Besparingskansen** — suggesties om uitgaven te verminderen
+- **Categorievergelijkingen** — hoe je uitgaven zich verhouden tussen categorieën
+- **Trendveranderingen** — significante verschuivingen in uitgavenpatronen
+
+Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (blauw).
+
+> **Let op:** Gebruikers met een gratis abonnement zien een prompt om te upgraden: "Upgrade naar Pro voor AI-inzichten."
+
+## Grafieken
+
+### Inkomsten per categorie (donutdiagram)
+
+- Splitst je inkomsten uit per categorie voor de geselecteerde periode
+- Wordt alleen getoond wanneer je inkomstenposten met categorieën hebt (bijv. Salaris, Freelance, Dividenden, Verhuur)
+- Kleurgecodeerd in een groen/teal palet om het te onderscheiden van uitgavengrafieken
+- Niet-gecategoriseerde inkomsten worden gegroepeerd als "Overig"
+- Verschijnt boven de uitgaventrendgrafiek
+
+### Uitgaventrend (staafdiagram)
+
+- Toont dagelijkse of maandelijkse uitgaven over de geselecteerde periode
+- Interactief: tik op een staaf om in te zoomen op dat tijdsegment
+
+### Uitgaven per categorie (donutdiagram)
+
+- Categorie-uitsplitsing met percentages
+- Kleurgecodeerd per categorie
+- Tik op een segment om de uitgaven van die categorie te verkennen
+
+### Budget versus werkelijk (gegroepeerd staafdiagram)
+
+- Vergelijking naast elkaar van budgetlimieten versus werkelijke uitgaven
+- Toont **Op schema** of **Over budget** per categorie
+- Verschijnt alleen als je actieve budgetten hebt
+
+### Uitgaven per weekdag (weekdaggrafiek)
+
+- Patroonanalyse die laat zien op welke dagen je het meest uitgeeft
+- Inzicht: "Je geeft het meest uit op zaterdag"
+
+### Per verkoper
+
+- Top-verkopers waar je in de geselecteerde periode geld hebt uitgegeven
+- Toont tot 8 afzonderlijke verkopers; de rest wordt gegroepeerd als "Overig"
+- Verschijnt alleen wanneer minstens één uitgave een verkoperwaarde heeft
+
+### Per tag / Per project
+
+- **Taguitsplitsing** — uitgaven gegroepeerd op je aangepaste tags
+- **Projectvergelijking** — uitgaven gegroepeerd op projecten
+- Helpt thematische uitgaven bij te houden (bijv. alle #koffie-uitgaven of de kosten van het project "Vakantie")
+
+## Inzoomen
+
+Tik op een grafiekelement om dieper te verkennen:
+
+1. **Jaar**-weergave — tik op een maandstaaf om in te zoomen op die maand
+2. **Maand**-weergave — tik op een week om in te zoomen op die week
+3. **Week**-weergave — tik op een dag om de dagelijkse transacties te zien
+4. **Dag**-weergave — bekijk individuele transacties
+
+Gebruik de knop **Terug** om omhoog door de niveaus te navigeren.
+
+## Snelle inzichten
+
+Onder de grafieken vind je tekstgebaseerde snelle inzichten:
+
+- **Topcategorie** — je categorie met de hoogste uitgaven deze periode
+- **Piekdag voor uitgaven** — de dag met de meeste uitgaven
+- **Dagelijkse budgettip** — aanbevolen dagelijkse uitgaven om op schema te blijven
+- **Bonbesparingen** — totaalbedrag bespaard met kortingen
+
+## Top-bonitems
+
+Een tabel met je meest gekochte bonitems:
+- Itemnaam
+- Totaal uitgegeven
+- Aantal aankopen
+
+## Export
+
+Tik op **Rapport exporteren** om het scherm Export & Rapporten te openen, waar je PDF-, Excel- en CSV-rapporten kunt genereren, maandelijkse overzichten kunt bekijken en gegevensback-ups kunt beheren.
+
+## Veelgestelde vragen
+
+- **V: Waarom zie ik geen grafieken?**
+  **A:** Grafieken verschijnen nadat je uitgavengegevens hebt. Voeg eerst wat uitgaven toe en bekijk daarna Analyse.
+
+- **V: Hoe worden AI-inzichten gegenereerd?**
+  **A:** Inzichten worden gegenereerd door je uitgavenpatronen te analyseren, te vergelijken met historische gegevens en afwijkingen te identificeren. Hiervoor is een Pro- of Business-abonnement vereist.
+
+---
+
+*Zie ook: Budgetten | Uitgavenverhaal | Export & Rapporten*
+`,
+    },
+    {
+      id: '07-ai-chat',
+      title: `AI-chat`,
+      description: `Stel vragen over je financiën in natuurlijke taal. Krijg uitgavenanalyses, budgetadvies en persoonlijke bespaartips — aangedreven door AI.`,
+      body: `# AI-chat
+
+> Stel vragen over je financiën in natuurlijke taal. Krijg uitgavenanalyses, budgetadvies en persoonlijke bespaartips — aangedreven door AI.
+
+## Overzicht
+
+![AI-chatgesprek]({{IMG:chat-7.jpg}})
+
+Het tabblad **AI-chat** is je persoonlijke financiële assistent. Je kunt vragen stellen in gewone taal en gedetailleerde antwoorden krijgen op basis van je werkelijke uitgavengegevens.
+
+## Hoe te gebruiken
+
+1. Tik op het tabblad **AI-chat** (het meest rechtse tabblad in de onderste navigatie)
+2. Typ een vraag in het tekstveld onderaan (tijdelijke tekst: "Vraag over je budget...")
+3. Tik op de knop **verzenden** (pijlpictogram)
+4. Lees het AI-antwoord in de chatbubbel
+
+De AI-assistent reageert met een analyse op basis van je echte transactiegegevens voor het huidige account.
+
+## Snelle-actieknoppen
+
+Er verschijnen drie vooraf ingestelde knoppen voor veelgestelde vragen:
+
+| Knop | Verzonden vraag |
+|---|---|
+| **Topuitgaven** | "Waar heb ik deze maand het meest aan uitgegeven?" |
+| **Budgetstatus** | "Lig ik op schema met mijn budget?" |
+| **Bespaartips** | "Geef me tips om geld te besparen" |
+
+Tik op een knop om die vraag direct te verzenden.
+
+## Spraakinvoer in de chat
+
+1. Tik op de **microfoon**knop (links van de tekstinvoer)
+2. Spreek je vraag in
+3. De getranscribeerde tekst wordt verwerkt en verzonden
+
+> **Let op:** De status van spraakverwerking wordt getoond als "Spraak verwerken..." terwijl deze wordt getranscribeerd.
+
+## Voorbeeldvragen
+
+**Analysevragen:**
+- "Waar heb ik deze maand het meest aan uitgegeven?"
+- "Hoeveel heb ik vorige week aan eten uitgegeven?"
+- "Lig ik op schema met mijn budget?"
+- "Vergelijk mijn uitgaven van deze maand met vorige maand"
+- "Wat zijn mijn top 3 uitgavencategorieën?"
+- "Hoeveel heb ik dit jaar aan vervoer uitgegeven?"
+- "Geef me tips om geld te besparen"
+- "Wanneer is mijn maandbudget op in dit tempo?"
+
+**Natuurlijke-taalcommando's:**
+- "Voeg uitgave 500₴ voor boodschappen toe"
+- "Maak budget 10000₴ voor entertainment voor maart"
+- "Voeg inkomsten 50000₴ van salaris toe"
+- "Toon mijn uitgaven van vorige week"
+- "Wat is mijn budgetstatus?"
+- "Toon categorie-uitsplitsing voor deze maand"
+
+## Gespreksgeschiedenis
+
+Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:
+
+1. Tik op de knop **Geschiedenis** (klokpictogram) bovenaan het chattabblad
+2. Er verschijnt een lijst met eerdere gesprekken met de titel en datum
+3. Tik op een gesprek om de berichten te laden
+4. Je kunt het gesprek voortzetten door een nieuw bericht te typen
+5. Om opnieuw te beginnen, tik je op de knop **Nieuw gesprek** (linksboven, zichtbaar wanneer een eerder gesprek is geladen)
+
+> Geladen gespreksgeschiedenis wordt na het eerste laden ook lokaal opgeslagen voor offline toegang.
+
+## Gedeelde gesprekken
+
+Als je een account met andere leden deelt, kun je een gesprek omzetten in een **gedeelde groepschat** waarin iedereen samen met de AI praat.
+
+- **Delen aan- of uitzetten:** de account**eigenaar** ziet bovenaan de chat een schakelaar **Gedeeld / Privé**. Tik erop om het huidige gesprek gedeeld te maken (zichtbaar voor alle leden) of weer privé. Alleen de eigenaar kan dit wijzigen; andere leden zien een alleen-lezen label "Gedeeld". De schakelaar verschijnt alleen wanneer het account meer dan één lid heeft.
+- **Iedereen ziet het gesprek:** in een gedeeld gesprek verschijnen berichten van andere leden met hun naam, en nieuwe berichten verschijnen automatisch zolang je de chat open hebt.
+- **Een persoon aanspreken in plaats van de AI:** typ **@** en kies een lid om het te vermelden. Wanneer je een lid vermeldt, blijft de AI stil — het bericht is bedoeld voor die persoon, niet voor de assistent. Als je niemand vermeldt, antwoordt de AI zoals gewoonlijk.
+- **Meldingen:** als je een lid vermeldt dat de chat op dat moment niet bekijkt, krijgt deze een pushmelding zodat hij het niet mist. Dit respecteert je meldingsinstelling "Gedeelde activiteit".
+
+> Privégesprekken werken precies zoals voorheen — alleen jij kunt ze zien, en de AI antwoordt altijd.
+
+## Chatfuncties
+
+- **Gespreksgeschiedenis** — eerdere berichten blijven bewaard tijdens je sessie en kunnen opnieuw worden geopend via de knop Geschiedenis
+- **Typindicator** — toont "Nadenken..." terwijl de AI je vraag verwerkt
+- **Foutafhandeling** — als er iets misgaat, zie je een foutmelding met een optie om opnieuw te proberen
+- **Natuurlijke-taalcommando's** — maak uitgaven, inkomsten, budgetten en categorieën aan en bevraag gegevens in gewone taal
+- **Actiebevestiging** — bij het aanmaken van financiële posten toont de AI een voorbeeld en vraagt om bevestiging voordat er wordt opgeslagen
+- **Slimme taaldetectie** — de AI antwoordt automatisch in jouw taal (Engels, Russisch, Oekraïens, Wit-Russisch, Duits, Spaans, Frans, Pools)
+- **Valutaherkenning** — ondersteunt symbolen: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB)
+- **Telegram-bot** — gebruik dezelfde AI-chat vanuit Telegram. Stuur tekst, spraak of bonfoto's rechtstreeks naar de bot
+- **Automatische accountdetectie** — vermeld een accountnaam in je bericht (bijv. "Toon uitgaven in Familie") en de AI bevraagt dat account automatisch
+
+## AI-verzoeklimieten
+
+Elk bericht dat je verstuurt gebruikt één AI-verzoek uit je maandelijkse tegoed:
+
+| Abonnement | AI-verzoeken per maand |
+|---|---|
+| **Free** | 5 |
+| **Pro** | 200 |
+| **Business** | Onbeperkt |
+
+Wanneer je verzoeken op zijn, word je gevraagd je abonnement te upgraden.
+
+## Natuurlijke-taalcommando's
+
+Je kunt nu **echte acties uitvoeren** rechtstreeks vanuit de chat:
+
+### Posten aanmaken
+
+1. Typ een commando zoals: **"Voeg uitgave 500₴ voor boodschappen toe"**
+2. De AI toont een **bevestigingskaart** met:
+   - Bedrag en valuta
+   - Categorie (automatisch gedetecteerd of standaard)
+   - Datum (standaard vandaag)
+3. Tik op **Bevestigen** om de uitgave aan te maken, of op **Annuleren** om te verwerpen
+4. Na bevestiging wordt de uitgave opgeslagen en zie je een succesbericht
+
+**Ondersteunde aanmaakcommando's:**
+- **Uitgaven:** "Voeg uitgave 500₴ voor boodschappen toe", "Gisteren 1200₴ aan vervoer uitgegeven"
+- **Inkomsten:** "Voeg inkomsten 50000₴ van salaris toe", "5000₴ bonus ontvangen"
+- **Budgetten:** "Maak budget 10000₴ voor entertainment voor maart", "Stel maandbudget 3000₴ voor eten in"
+- **Categorieën:** "Maak uitgavencategorie Eten", "Voeg inkomstencategorie Freelance toe"
+
+### Schuld- & leningcommando's
+
+Beheer je schulden rechtstreeks vanuit de chat — geen noodzaak om het scherm Schulden te openen:
+
+- **"Sarah heeft me \$80 terugbetaald"** → registreert een gedeeltelijke terugbetaling voor Sarahs schuld (toont eerst een bevestiging)
+- **"Ik heb John \$200 geleend tot vrijdag"** → maakt een nieuwe post voor uitgeleend geld aan
+- **"5000₴ geleend van mam"** → maakt een nieuwe post voor geleend geld aan
+- **"Toon mijn schulden"** → toont direct alle actieve schulden met de resterende saldo's
+
+> Als je meerdere schulden met dezelfde contactnaam hebt, vraagt de AI welke je bedoelt.
+
+### Spaardoelcommando's
+
+Werk de voortgang van je spaardoel bij zonder de chat te verlaten:
+
+- **"Ik heb \$200 gespaard voor mijn vakantiepot"** → werkt het huidige saldo van je Vakantie-doel bij
+- **"Voeg 500₴ toe aan mijn auto-doel"** → verhoogt het saldo van het Auto-doel
+- **"Stel mijn noodfonds in op \$3000"** → stelt het huidige bedrag rechtstreeks in
+
+> De AI koppelt doelnamen aan je lijst met actieve doelen. Bevestig de actie in de voorbeeldkaart voordat deze wordt opgeslagen.
+
+### Gegevens bevragen
+
+Deze commando's worden **direct** uitgevoerd en tonen resultaten:
+
+- **"Toon mijn uitgaven van vorige week"** → toont een uitgavenlijst met totaal
+- **"Wat is mijn budgetstatus?"** → toont alle budgetten met voortgangsbalken
+- **"Toon categorie-uitsplitsing voor deze maand"** → toont uitgaven per categorie met percentages
+- **"Toon mijn schulden"** → toont alle actieve schulden met verschuldigde bedragen
+
+## Veelgestelde vragen
+
+- **V: Heeft de AI toegang tot al mijn financiële gegevens?**
+  **A:** De AI heeft toegang tot je uitgaven, inkomsten, budgetten en categorieën voor het momenteel geselecteerde account. Het heeft geen toegang tot andere accounts of persoonlijke gegevens buiten financiële transacties.
+
+- **V: Kan ik AI-chat offline gebruiken?**
+  **A:** Nee, AI-chat vereist een internetverbinding om je vragen te verwerken.
+
+- **V: De AI gaf een onjuist antwoord. Wat moet ik doen?**
+  **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, of de gegevens controleren op het tabblad Analyse.
+
+- **V: Kan ik een bevestigde actie ongedaan maken?**
+  **A:** Nadat je een actie hebt bevestigd (zoals het aanmaken van een uitgave), wordt deze opgeslagen in je account. Je kunt deze handmatig verwijderen op het tabblad Uitgaven.
+
+- **V: Wat gebeurt er als ik een actie verwerp?**
+  **A:** Als je op een bevestigingskaart op "Annuleren" tikt, wordt de actie verworpen en wordt er niets opgeslagen. De AI bevestigt de verwerping.
+
+- **V: Kan ik AI-chat vanuit Telegram gebruiken?**
+  **A:** Ja! Koppel je Telegram via Instellingen en chat rechtstreeks met de AI-bot. Alle functies werken hetzelfde — tekst, spraak, commando's en bonnen scannen. Zie Telegram-bot voor details.
+
+- **V: Hoe weet de AI welk account ik bedoel?**
+  **A:** Als je een accountnaam in je bericht vermeldt (bijv. "uitgaven in Familie"), bevraagt de AI dat account automatisch. Anders gebruikt het je huidige standaardaccount.
+
+---
+
+*Zie ook: Uitgavenverhaal | Analyse*
+`,
+    },
+    {
+      id: '08-spending-story',
+      title: `Uitgavenverhaal`,
+      description: `Krijg een door AI gegenereerd verhalend rapport van je financiën. Bekijk prestaties, waarschuwingen en inzichten gepresenteerd als een boeiend visueel verhaal.`,
+      body: `# Uitgavenverhaal
+
+> Krijg een door AI gegenereerd verhalend rapport van je financiën. Bekijk prestaties, waarschuwingen en inzichten gepresenteerd als een boeiend visueel verhaal.
+
+## Overzicht
+
+![Uitgavenverhaal met inzichten en prestaties]({{IMG:spending-story-8.jpg}})
+
+De functie **Uitgavenverhaal** maakt een persoonlijk, verhalend rapport van je financiële activiteit. Het belicht belangrijke gebeurtenissen, prestaties en aandachtspunten in een gemakkelijk leesbaar kaartformaat.
+
+## Hoe te openen
+
+- Tik op het tabblad **Analyse** op de banner **Bekijk je uitgavenverhaal**
+- Het verhaal wordt automatisch gegenereerd op basis van je geselecteerde periode
+
+## Periodeschakelaar
+
+Bovenaan het scherm Uitgavenverhaal:
+
+- **Week** — verhaal over de financiën van de huidige week
+- **Maand** — verhaal over de financiën van de huidige maand
+
+Tik om tussen weergaven te wisselen. De inhoud van het verhaal wordt dienovereenkomstig bijgewerkt.
+
+## Verhaalblokken
+
+De AI genereert verschillende soorten inzichtblokken:
+
+### Waarschuwing voor te veel uitgeven (waarschuwing)
+- Gele kaart met waarschuwingspictogram
+- Verschijnt wanneer je uitgaven hoger zijn dan je inkomsten
+- Voorbeeld: *"Je uitgaven overschreden je inkomsten met 8.346,74 PLN. Het is een herinnering om je plannen voor de komende maanden te bekijken en bij te stellen."*
+
+### Onder-budgetoverwinning (prestatie)
+- Gouden kaart met bekerpictogram
+- Verschijnt wanneer je onder een budgetlimiet bent gebleven
+- Voorbeeld: *"Gefeliciteerd! Je bleef met 1.325,52 PLN onder je totale levensbudgetlimiet. Een indrukwekkende prestatie gezien de onverwachte uitgaven deze maand."*
+
+### Topuitgave om in de gaten te houden
+- Blauwe kaart met gloeilamppictogram
+- Belicht je categorie met de hoogste uitgaven
+- Voorbeeld: *"De categorie 'Vervoer' voerde je uitgaven aan met 6.250 PLN. Overweeg mogelijke besparingen op dit gebied voor volgende maand."*
+
+### Aanvullende verhaalelementen
+- **Categorie-uitsplitsingen** met percentages
+- **Samenvattende verhalen** die je algehele financiële situatie beschrijven
+- **Vergelijkingsinzichten** ten opzichte van eerdere perioden
+- **Grafieken en visualisaties** ingebed in het verhaal
+
+## Acties
+
+- **Opnieuw genereren** — tik om een vers gegenereerd verhaal met bijgewerkte gegevens aan te vragen
+- **Verhaal delen** — deel je uitgavenverhaal met anderen
+- Tijdstempel **Laatst bijgewerkt** — toont wanneer het verhaal voor het laatst is gegenereerd
+
+## Vereisten
+
+- **Pro- of Business-abonnement** vereist — gebruikers met een gratis abonnement zien een prompt om te upgraden
+- **Voldoende transactiegegevens** — de app heeft genoeg uitgaven nodig om zinvolle inzichten te genereren. Als je niet genoeg gegevens hebt, zie je: "Nog niet genoeg gegevens om een verhaal te genereren."
+- Elke verhaalgeneratie gebruikt AI-verzoeken uit je maandelijkse tegoed
+
+## Veelgestelde vragen
+
+- **V: Hoe vaak moet ik mijn Uitgavenverhaal bekijken?**
+  **A:** Het verhaal is het nuttigst aan het einde van elke week of maand. Tik op **Opnieuw genereren** om de nieuwste analyse te krijgen.
+
+- **V: Kan ik mijn Uitgavenverhaal delen?**
+  **A:** Ja, tik op **Verhaal delen** om het te delen via de deelopties van je apparaat.
+
+---
+
+*Zie ook: Analyse | AI-chat*
+`,
+    },
+    {
+      id: '09-accounts',
+      title: `Accounts`,
+      description: `Organiseer je financiën met aparte accounts. Gebruik Persoonlijk voor individueel bijhouden, Gedeeld voor gezinsbudgetten en Zakelijk voor bedrijfsuitgaven. Nodig leden uit met rolgebaseerde toegangscontrole.`,
+      body: `# Accounts
+
+> Organiseer je financiën met aparte accounts. Gebruik Persoonlijk voor individueel bijhouden, Gedeeld voor gezinsbudgetten en Zakelijk voor bedrijfsuitgaven. Nodig leden uit met rolgebaseerde toegangscontrole.
+
+## Overzicht
+
+De app ondersteunt meerdere accounts om verschillende financiële contexten te scheiden. Elk account heeft zijn eigen uitgaven, inkomsten, budgetten en portemonnee.
+
+## Accounttypen
+
+![Accountlijst]({{IMG:accounts.jpg}})
+
+| Type | Pictogram | Doel |
+|---|---|---|
+| **Persoonlijk** | Persoonpictogram | Individueel uitgaven bijhouden |
+| **Gedeeld** | Mensenpictogram | Gezins- of groepsbudgetten (bijv. "Familie") |
+| **Zakelijk** | Aktetaspictogram | Bedrijfs- of teamuitgaven (bijv. "MiCode") |
+| **Beleggingen** | Stijgende-trendpictogram | Beleggingsportefeuilles en -activa bijhouden |
+
+Elk account toont zijn type en jouw rol (Eigenaar, Bewerker of Kijker).
+
+## Wisselen van account
+
+![Uitklapmenu Account wisselen]({{IMG:switch-account.jpg}})
+
+1. Tik op de **accountnaam** linksboven in een willekeurig scherm (bijv. "Familie")
+2. Het uitklapmenu **Account wisselen** opent met al je accounts
+3. Tik op het account waarnaar je wilt wisselen
+4. Het actieve account is gemarkeerd met een groen vinkje
+5. Alle schermen worden bijgewerkt naar de gegevens van het geselecteerde account
+
+Tik op **Accounts beheren** onderaan het uitklapmenu om naar de volledige accountlijst te gaan.
+
+## De weergavevaluta wijzigen
+
+Wijzig de valuta waarin al je totalen worden getoond — vanuit elk scherm, zonder Instellingen te openen.
+
+1. Tik op de **accountnaam** linksboven in een willekeurig scherm. Het huidige valutasymbool verschijnt naast de naam (bijv. \`Persoonlijk · \$\`).
+2. Zoek in het menu dat opent de sectie **Weergavevaluta** onder je accountlijst.
+3. Tik op de gewenste valuta (USD, EUR, PLN, GBP, UAH, RUB, BYN).
+4. Elk bedrag in de app wordt direct omgerekend naar de geselecteerde valuta tegen de meest recente wisselkoersen.
+
+> Dit is jouw persoonlijke weergavevaluta en wordt voor de volgende keer opgeslagen. Het verandert alleen hoe bedragen worden *getoond* — je transacties behouden hun oorspronkelijke valuta's. Elk lid (ook Kijkers) kan zijn eigen weergavevaluta kiezen.
+
+## Een account aanmaken
+
+1. Ga naar de accountlijst (via **Accounts beheren** of vanuit Instellingen)
+2. Tik op **Account aanmaken**
+3. Voer een **Accountnaam** in (bijv. "Mijn budget")
+4. Selecteer het **Accounttype**: Persoonlijk, Gedeeld, Zakelijk of Beleggingen
+5. Selecteer de **Valuta** voor dit account
+6. Tik op **Aanmaken**
+
+> **Let op:** Het gratis abonnement staat 3 accounts toe, Pro tot 5, Business onbeperkt accounts.
+
+## Lid worden van een account
+
+Als iemand je voor zijn account heeft uitgenodigd:
+
+1. Tik op **Lid worden van account** in de accountlijst
+2. Voer de **uitnodigingscode** in die je hebt ontvangen
+3. Tik op **Deelnemen**
+4. Je ziet een succesbericht: "Je bent succesvol lid geworden van het account!"
+5. Het account verschijnt nu in je accountlijst
+
+## Accountinstellingen
+
+![Accountinstellingen]({{IMG:account-settings.jpg}})
+
+Tik op een account om de instellingen ervan te openen:
+
+### Details
+- Account**naam** (bewerkbaar door de Eigenaar)
+- Account**type** en **valuta** (alleen weergave)
+
+### Leden
+- Lijst van alle accountleden met hun rollen
+- Elk lid toont: avatar, naam en rolbadge (Eigenaar, Bewerker, Kijker)
+
+### Leden uitnodigen
+
+1. Open de Accountinstellingen voor het account
+2. Tik op het **uitnodigingspictogram** (persoon+-pictogram rechtsboven in de sectie Leden)
+3. Kies een uitnodigingsmethode:
+   - **Per e-mail** — voer het e-mailadres van de persoon in, selecteer zijn rol (Bewerker of Kijker), tik op **Uitnodiging verzenden**
+   - **Per link** — er wordt een code gegenereerd die je kunt delen. Tik om te kopiëren of te delen via berichten-apps
+
+### Leden beheren (alleen Eigenaar)
+
+- **Rol wijzigen** — tik op het rolwijzigingspictogram naast een lid om een nieuwe rol toe te wijzen
+- **Lid verwijderen** — tik op het verwijderpictogram om een lid te verwijderen (met bevestiging)
+
+### Openstaande uitnodigingen
+
+- Bekijk uitnodigingen die nog niet zijn geaccepteerd
+- **Uitnodiging annuleren** — een openstaande uitnodiging intrekken
+
+## Rollen en machtigingen
+
+| Machtiging | Eigenaar | Bewerker | Kijker |
+|---|---|---|---|
+| Uitgaven & inkomsten bekijken | Ja | Ja | Ja |
+| Uitgaven toevoegen/bewerken | Ja | Ja | Nee |
+| Inkomsten toevoegen/bewerken | Ja | Ja | Nee |
+| Budgetten maken/bewerken | Ja | Ja | Nee |
+| Leden beheren | Ja | Nee | Nee |
+| Accountinstellingen bewerken | Ja | Nee | Nee |
+| Account verwijderen | Ja | Nee | Nee |
+
+### Rolbeschrijvingen
+- **Eigenaar** — volledige controle over het account, kan leden en instellingen beheren
+- **Bewerker** — kan uitgaven, inkomsten en budgetten toevoegen en bewerken
+- **Kijker** — kan alleen gegevens bekijken (alleen-lezentoegang)
+
+## Een account verwijderen
+
+1. Open de Accountinstellingen
+2. Scrol naar onderen en tik op **Account verwijderen**
+3. Bevestig de verwijdering
+
+> **Waarschuwing:** Bij het verwijderen van een account worden alle bijbehorende gegevens (uitgaven, inkomsten, budgetten) permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.
+
+## Een account verlaten
+
+Als je lid (niet de Eigenaar) bent van een gedeeld account:
+1. Open de Accountinstellingen
+2. Tik op **Account verlaten**
+3. Bevestig — je wordt uit het account verwijderd
+
+## Account wisselen in Telegram
+
+Wanneer je de Telegram-bot gebruikt, kun je op twee manieren van account wisselen:
+
+1. **Handmatig** — stuur \`/account\` en tik op de accountknop
+2. **Automatisch** — vermeld een accountnaam in je bericht (bijv. "Toon uitgaven in Familie") en de AI bevraagt dat account voor het huidige verzoek
+
+De automatische detectie verandert je standaardaccount niet — het geldt alleen voor het huidige bericht. Gebruik \`/account\` om permanent te wisselen.
+
+## Veelgestelde vragen
+
+- **V: Hoeveel accounts kan ik hebben?**
+  **A:** Free: 3 accounts, Pro: tot 5, Business: onbeperkt.
+
+- **V: Kan ik het eigenaarschap van een account overdragen?**
+  **A:** Op dit moment is de aanmaker van het account altijd de Eigenaar. Neem contact op met de ondersteuning voor het overdragen van eigenaarschap.
+
+- **V: Kan ik zien wie een uitgave heeft toegevoegd in een gedeeld account?**
+  **A:** Uitgaven in gedeelde accounts tonen welk lid ze heeft aangemaakt.
+
+- **V: Kan ik verschillende accounts gebruiken in de Telegram-bot?**
+  **A:** Ja. Stuur \`/account\` om je standaardaccount te wisselen, of vermeld simpelweg de accountnaam in je bericht voor eenmalige zoekopdrachten. Zie Telegram-bot voor details.
+
+---
+
+*Zie ook: Instellingen | Abonnementen*
+`,
+    },
+    {
+      id: '10-wallet-and-exchange',
+      title: `Portemonnee & Valutawissel`,
+      description: `Houd saldo's in meerdere valuta's bij en wissel ertussen met live wisselkoersen. De portemonnee wordt automatisch bijgewerkt wanneer je uitgaven en inkomsten toevoegt.`,
+      body: `# Portemonnee & Valutawissel
+
+> Houd saldo's in meerdere valuta's bij en wissel ertussen met live wisselkoersen. De portemonnee wordt automatisch bijgewerkt wanneer je uitgaven en inkomsten toevoegt.
+
+## Overzicht
+
+Met de Portemonnee-functie kun je je werkelijke saldo's in elke ondersteunde valuta bijhouden. Wanneer je uitgaven en inkomsten toevoegt, wordt de portemonnee automatisch bijgewerkt om je huidige financiële situatie weer te geven.
+
+## Portemonnee-saldo's
+
+Open de Portemonnee via:
+- **Dashboard** — tik op **Alles bekijken** naast het gedeelte Portemonnee-saldo's
+- **Dashboard** — tik op de snelactieknop **Overboekingen** voor snelle toegang tot overboekingen
+- **Instellingen** — ga naar Portemonnee > **Saldo's**
+
+Voor elke valuta zie je:
+
+| Veld | Beschrijving |
+|---|---|
+| **Huidig saldo** | Je realtime saldo in deze valuta |
+| **Beginsaldo** | Het startsaldo dat je hebt ingesteld |
+| **Totale inkomsten** | Som van alle inkomsten in deze valuta |
+| **Totaal uitgegeven** | Som van alle uitgaven in deze valuta |
+| **Ingewisseld in** | Bedrag ontvangen uit valutawissels |
+| **Ingewisseld uit** | Bedrag besteed aan valutawissels |
+| **Overgemaakt in** | Bedrag ontvangen van andere accounts |
+| **Overgemaakt uit** | Bedrag verstuurd naar andere accounts |
+
+De formule: **Huidig saldo = Beginsaldo + Totale inkomsten - Totaal uitgegeven + Ingewisseld in - Ingewisseld uit + Overgemaakt in - Overgemaakt uit**
+
+## Totaalsaldo
+
+Als je saldo's in meerdere valuta's hebt, toont de portemonnee bovenaan een kaart **Totaalsaldo**. Deze kaart rekent al je valutasaldo's om naar de gekozen valuta in je instellingen (geconfigureerd in **Instellingen** > **Valuta**) met de meest recente wisselkoersen, zodat je één gecombineerd overzicht van je financiën krijgt.
+
+## Beginsaldo instellen
+
+Stel je startsaldo voor elke valuta in:
+
+1. Ga naar **Instellingen** > **Portemonnee** > **Saldo instellen**
+2. Selecteer de **Valuta** (USD, EUR, PLN, GBP, UAH, RUB of BYN)
+3. Voer het **Bedrag** in — je huidige echte saldo in die valuta
+4. Tik op **Opslaan**
+
+Je krijgt een bevestiging te zien: "Saldo succesvol ingesteld."
+
+> **Tip:** Stel je beginsaldo's in wanneer je de app voor het eerst gaat gebruiken, zodat de portemonnee je financiën vanaf dag één nauwkeurig weergeeft.
+
+## Valutawissel
+
+![Scherm Valutawissel]({{IMG:exchange.jpg}})
+
+Wissel geld tussen je valutaportemonnees:
+
+### Stap voor stap
+
+1. Tik op **Wisselen** in de snelacties van het Dashboard, of ga naar **Instellingen** > **Portemonnee**
+2. Selecteer de valuta **Van** (bijv. USD) — tik op een valutachip om te selecteren
+3. Selecteer de valuta **Naar** (bijv. EUR) — tik op een valutachip om te selecteren
+4. Voer het bedrag in het veld "Van" of "Naar" in — het andere wordt automatisch berekend
+5. De **Wisselkoers** wordt automatisch opgehaald (bijv. "1 USD = 0,8407 EUR")
+6. Je kunt op de knop **wisselen** (pijlen in het midden) tikken om de valuta's om te draaien
+7. Pas eventueel de wisselkoers handmatig aan als je een andere koers hebt gekregen
+8. Voeg optionele **Notities** toe (bijv. "Wissel op luchthaven" of "Bankoverboeking")
+9. Tik op **Wisselen** om af te ronden
+
+### Functies
+
+- **Live wisselkoersen** — automatisch opgehaald en weergegeven
+- **Wisselknop** — draai snel de valuta's Van en Naar om
+- **Handmatige koers overschrijven** — bewerk de koers als je werkelijke koers afwijkt
+- **Notitieveld** — voeg context toe aan de wissel
+- **Recente wissels** — bekijk je wisselgeschiedenis
+
+### Recente wissels
+
+Onder het wisselformulier vind je de 5 meest recente valutawissels met:
+- Gewisselde valuta's (Van → Naar)
+- Bedragen
+- Gebruikte wisselkoers
+- Datum
+- Notities (indien toegevoegd)
+
+Tik op **Alles tonen** om het volledige scherm Wisselgeschiedenis te openen.
+
+### Wisselgeschiedenis
+
+Het scherm **Wisselgeschiedenis** toont een volledige lijst van al je valutawissels. Open het door op **Alles tonen** te tikken in het gedeelte Recente wissels.
+
+Beschikbare filters:
+- **Valuta** — filter op een specifiek valutapaar
+- **Periode** — kies uit **Alle tijd**, **Deze maand**, **Laatste 3 maanden** of **Dit jaar**
+
+### Een wissel bewerken of verwijderen
+
+Tik op een wissel in de geschiedenis om het detailscherm te openen. Daar kun je:
+- Op het **potlood**-pictogram tikken om de bedragen, wisselkoers of notities te bewerken — daarna **Opslaan**
+- Op het **prullenbak**-pictogram tikken om de wissel te verwijderen (er verschijnt een bevestigingsvenster)
+
+De portemonnee-saldo's worden automatisch opnieuw berekend na bewerkingen of verwijderingen.
+
+## Accountoverboekingen
+
+Met accountoverboekingen kun je geld tussen verschillende accounts verplaatsen — bijvoorbeeld van je Zakelijke account naar je Persoonlijke account. Dit verschilt van een valutawissel, die binnen hetzelfde account tussen valuta's converteert.
+
+### Stap voor stap
+
+1. Ga naar **Instellingen** > **Portemonnee** > **Overboeking**
+2. Selecteer het **Van account** (het bronaccount)
+3. Selecteer het **Naar account** (het doelaccount)
+4. Kies de **Valuta**
+5. Voer het **Bedrag** in dat je wilt overboeken
+6. Als de accounts verschillende valuta's gebruiken, verschijnt er een veld **Wisselkoers** — pas het aan als je werkelijke koers afwijkt
+7. Voeg optionele **Notities** toe (bijv. "Maandelijks sparen" of "Vergoeding")
+8. Tik op **Overboeken** om af te ronden
+
+### Recente overboekingen
+
+Onder het overboekingsformulier vind je de 5 meest recente accountoverboekingen met:
+- Bron- en doelaccounts (Van → Naar)
+- Bedrag en valuta
+- Wisselkoers (als de valuta's verschillen)
+- Datum
+- Notities (indien toegevoegd)
+
+Tik op **Alles tonen** om het volledige scherm Overboekingsgeschiedenis te openen.
+
+### Overboekingsgeschiedenis
+
+Het scherm **Overboekingsgeschiedenis** toont een volledige lijst van al je accountoverboekingen. Open het door op **Alles tonen** te tikken in het gedeelte Recente overboekingen.
+
+Beschikbare filters:
+- **Account** — filter op een specifiek bron- of doelaccount
+- **Periode** — kies uit **Alle tijd**, **Deze maand**, **Laatste 3 maanden** of **Dit jaar**
+
+## Ondersteunde valuta's
+
+| Code | Valuta |
+|---|---|
+| USD | Amerikaanse dollar |
+| EUR | Euro |
+| PLN | Poolse zloty |
+| GBP | Britse pond |
+| UAH | Oekraïense hryvnia |
+| RUB | Russische roebel |
+| BYN | Wit-Russische roebel |
+
+## Veelgestelde vragen
+
+- **V: Waar komen de wisselkoersen vandaan?**
+  **A:** Wisselkoersen worden opgehaald van een online dienst en regelmatig bijgewerkt. Ze vertegenwoordigen geschatte marktkoersen.
+
+- **V: Kan ik valuta wisselen als ik niet genoeg saldo heb?**
+  **A:** De app waarschuwt je voor onvoldoende saldo, maar je kunt de wissel toch vastleggen om je administratie nauwkeurig te houden.
+
+- **V: Telt een valutawissel als een uitgave?**
+  **A:** Nee. Valutawissels staan los van uitgaven — ze verplaatsen geld tussen valutaportemonnees zonder je uitgaventotalen te beïnvloeden.
+
+- **V: Wat is het verschil tussen een overboeking en een wissel?**
+  **A:** Een wissel converteert tussen valuta's binnen hetzelfde account. Een overboeking verplaatst geld tussen verschillende accounts (bijv. Zakelijk naar Persoonlijk).
+
+- **V: Beïnvloedt een overboeking mijn portemonnee-saldo?**
+  **A:** Ja. De portemonnee van het bronaccount neemt af en de portemonnee van het doelaccount neemt toe met de overgeboekte bedragen.
+
+---
+
+*Zie ook: Dashboard | Instellingen*
+`,
+    },
+    {
+      id: '11-settings',
+      title: `Instellingen`,
+      description: `Pas je profiel, weergave, dashboardwidgets, meldingen en gegevenssynchronisatie aan. Wijzig je taal, valuta en thema en beheer je accountvoorkeuren.`,
+      body: `# Instellingen
+
+> Pas je profiel, weergave, dashboardwidgets, meldingen en gegevenssynchronisatie aan. Wijzig je taal, valuta en thema en beheer je accountvoorkeuren.
+
+## Overzicht
+
+Open Instellingen door op het **tandwielpictogram** in de rechterbovenhoek van een scherm te tikken.
+
+Instellingen zijn georganiseerd in categorieën. Tik op een categorie om het bijbehorende scherm te openen:
+
+| Categorie | Wat er in zit |
+|---|---|
+| **Profiel & Account** | Naam, e-mail, tijdzone, valuta |
+| **Abonnement beheren** | Huidig abonnement, gebruik, upgrade-opties |
+| **Weergave & Taal** | Thema, taal |
+| **AI-voorkeuren** | Antwoordstijl, modelselectie |
+| **Dashboardwidgets** | Widgets op het startscherm tonen of verbergen |
+| **Meldingen & Integraties** | Pushmeldingen, Telegram-bot |
+| **Beveiliging & Versleuteling** | Instellen van end-to-end-versleuteling |
+| **Portemonnee** | Saldo's, schulden, beginsaldo |
+| **Gegevens & Rapporten** | Synchronisatie, e-mailrapporten, back-up & herstel |
+| **Over** | Versie, hulp, ondersteuning, juridisch |
+
+## Profiel & Account
+
+![Instellingen — gedeelte Profiel]({{IMG:settings-0.jpg}})
+
+- **Avatar** — toont je initialen met een gekleurde achtergrond
+- **Naam** — je weergavenaam. Tik op het potloodpictogram om te bewerken
+- **E-mail** — je account-e-mail. Tik op het potloodpictogram om een e-mailwijziging te starten (zie [E-mailadres wijzigen](#e-mailadres-wijzigen) hieronder)
+- **Tijdzone** — tik op het potloodpictogram om te wijzigen. Er verschijnt een doorzoekbare kiezer met meer dan 90 tijdzones (bijv. "Europe/Warsaw")
+
+### Valuta
+
+Selecteer je standaardvaluta door op een van de valutachips te tikken:
+
+**USD** | **EUR** | **PLN** | **GBP** | **UAH** | **RUB** | **BYN**
+
+De geselecteerde valuta is gemarkeerd. Dit stelt de standaardvaluta in voor nieuwe uitgaven, inkomsten en weergaven op het Dashboard.
+
+### E-mailadres wijzigen
+
+Om je account-e-mail te wijzigen:
+
+1. Ga naar **Instellingen → Profiel** en tik op het potloodpictogram naast je huidige e-mailadres.
+2. Voer op het scherm **E-mail wijzigen** je **nieuwe e-mailadres** en je **huidige wachtwoord** in.
+3. Tik op **Verificatiecode verzenden** — er wordt een 6-cijferige code naar het *nieuwe* adres gestuurd.
+4. Voer de code in de volgende stap in en tik op **E-mailwijziging bevestigen**.
+
+Je e-mail wordt direct bijgewerkt en er worden nieuwe inlogtokens uitgegeven. Als je de app sluit voordat je de code invoert, hervat het scherm E-mail wijzigen de volgende keer bij Stap 2 voor maximaal 30 minuten.
+
+> **Opmerking:** De verificatiecode verloopt na 30 minuten. Tik op **Code opnieuw verzenden** om terug te gaan naar Stap 1 en een nieuwe code aan te vragen.
+
+## Weergave & Taal
+
+### Taal
+
+Kies uit 8 ondersteunde talen:
+
+| Code | Taal |
+|---|---|
+| EN | English |
+| RU | Русский |
+| UA | Українська |
+| PL | Polski |
+| ES | Espanol |
+| FR | Francais |
+| DE | Deutsch |
+| BY | Беларуская |
+
+Tik op een taalchip om te wisselen. De interface wordt direct bijgewerkt.
+
+### Weergave
+
+Kies je thema:
+
+- **Systeem** — volgt de licht/donker-instelling van je apparaat
+- **Licht** — gebruik altijd het lichte thema
+- **Donker** — gebruik altijd het donkere thema
+
+## AI-voorkeuren
+
+### AI-antwoordstijl
+
+Bepaal hoe de AI met je communiceert in alle AI-functies (Chat, Verhalen, Inzichten, Fat Finder, Doelen):
+
+| Modus | Beschrijving |
+|---|---|
+| **Eenvoudig** | Gewone taal, geen jargon — ideaal voor beginners |
+| **Gebalanceerd** | Mix van eenvoudig en technisch — de standaard |
+| **Expert** | Financiële terminologie, gedetailleerde analyse — voor professionals |
+
+Tik op een chip om te wisselen. De wijziging wordt direct toegepast op alle nieuwe AI-gegenereerde inhoud.
+
+> Zie AI-antwoordmodus voor details over wat elke modus verandert.
+
+### AI-model
+
+Kies het AI-model dat wordt gebruikt voor alle AI-functies (Chat, Bonnen scannen, Categorisering, Inzichten, Verhalen, Doelen). Dit beïnvloedt direct de **antwoordkwaliteit** en het **AI-quotaverbruik**:
+
+| Model | Snelheid | Kosten | Beste voor |
+|---|---|---|---|
+| ⚡ **Snel** | Snelst | ×0,75 quota | Snelle categorisering, eenvoudige vragen |
+| ⚖️ **Gebalanceerd** | Gemiddeld | ×1 quota | Algemeen gebruik — de standaard |
+| ✨ **Kwaliteit** | Langzamer | ×1,5 quota | Complexe analyse, gedetailleerde inzichten |
+
+> **Tip:** Met het Gratis-abonnement (50 AI-verzoeken/maand) geeft overschakelen naar **Snel** je ~66,7 effectieve verzoeken. Overschakelen naar **Kwaliteit** geeft je ~33,3.
+
+Tik op een chip om te wijzigen. Het model treedt direct in werking voor alle nieuwe AI-verzoeken.
+
+## Dashboardwidgets
+
+Bepaal welke onderdelen op je Dashboard verschijnen. Tik op de schakelaar naast elke widget om deze te tonen of te verbergen:
+
+| Widget | Beschrijving |
+|---|---|
+| **Gamificatie** | Niveau, XP-voortgangsbalk en dagelijkse reeks |
+| **Maandbudget** | Resterend budget met een kleurgecodeerde voortgangsbalk |
+| **Inkomsten & Uitgaven** | Gecombineerde kaart met maandelijkse inkomsten en uitgaven naast elkaar |
+| **Schulden & Leningen** | Overzicht van wat aan jou verschuldigd is en wat jij verschuldigd bent |
+| **Nettowinstgrafiek** | Lijngrafiek van 6 maanden van de nettowinst (inkomsten − uitgaven) |
+| **Nettokapitaal** | Totaal nettovermogen over alle portemonnees |
+| **Fat Finder (AI-inzichten)** | Maandelijkse uitgavencontrole met besparingsmogelijkheden |
+| **Kalender** | Maandkalenderraster met stippen voor inkomsten/uitgaven |
+| **Doelen** | Belangrijkste actieve spaardoel met voortgangsbalk |
+| **Portemonnee-saldo's** | Horizontale scroll van portemonnee-saldo's per valuta |
+
+> **Tip:** Je keuzes worden automatisch opgeslagen en blijven behouden na het opnieuw opstarten van de app.
+
+Je kunt ook de **handgreep** naast een widget **slepen** om deze op het Dashboard opnieuw te ordenen, en op **Standaardvolgorde herstellen** tikken om de oorspronkelijke indeling te herstellen.
+
+## Meldingen & Integraties
+
+![Instellingen — gedeelte Meldingen]({{IMG:settings.jpg}})
+
+### Meldingen
+
+Schakelaars voor meldingsvoorkeuren:
+
+| Instelling | Beschrijving |
+|---|---|
+| **Pushmeldingen** | Hoofdschakelaar — alle pushmeldingen in- of uitschakelen |
+| **Budgetwaarschuwingen** | Ontvang een melding wanneer je budgetdrempels bereikt |
+| **Activiteit gedeeld account** | Ontvang een melding wanneer anderen uitgaven toevoegen aan gedeelde accounts |
+| **Schuldherinneringen** | Ontvang 3 dagen voor de vervaldatum van een schuld een melding en wanneer deze achterstallig wordt |
+
+### Telegram-bot
+
+Koppel je Telegram-account om meldingen te ontvangen en uitgaven te beheren via de Telegram-bot. Zie Telegram-bot voor details.
+
+## Beveiliging & Versleuteling
+
+Stel end-to-end-versleuteling (E2EE) in om je financiële gegevens te beschermen. Zie Versleuteling voor details.
+
+## Categorieën
+
+Open via **Instellingen → Referentiegegevens → Categorieën**.
+
+Bekijk en beheer al je uitgaven- en inkomstencategorieën op één plek.
+
+- **Alle categorieën weergegeven** — zowel uitgaven- als inkomstencategorieën worden samen getoond
+- **Een categorie verwijderen** — veeg op een categorie naar links of tik op het verwijderpictogram om deze te verwijderen
+- **Verwijderen is geblokkeerd** als de categorie gerelateerde uitgaven, inkomsten of budgetten heeft — je moet die records eerst opnieuw toewijzen of verwijderen
+- **Systeemcategorieën** kunnen ook worden verwijderd als ze geen gerelateerde records hebben
+
+> **Opmerking:** Het verwijderen van een categorie is permanent en kan niet ongedaan worden gemaakt.
+
+## Gegevens & Rapporten
+
+### Gegevens & Synchronisatie
+
+- **Laatst gesynchroniseerd** — toont wanneer je gegevens voor het laatst met de server zijn gesynchroniseerd (bijv. "5 min geleden" of "Nooit")
+- **Nu synchroniseren** — tik om handmatig een gegevenssynchronisatie te starten
+
+> **Opmerking:** De app werkt offline. Je gegevens worden op je apparaat opgeslagen en automatisch gesynchroniseerd zodra je weer online bent. Gebruik **Nu synchroniseren** om een onmiddellijke synchronisatie te forceren.
+
+### Rapporten & E-mail
+
+Beheer je rapport- en e-mailvoorkeuren:
+
+- **Wekelijks e-mailoverzicht** (Business) — aan/uit zetten, kies de dag van de week
+- **Maandelijkse e-maildigest** (Pro+) — aan/uit zetten
+- **Rapport genereren** — opent het scherm Export & Rapporten
+- **Back-up exporteren** — maakt een volledige JSON-back-up van je accountgegevens
+- **Back-up herstellen** — importeer een eerder geëxporteerd back-upbestand
+
+## Over
+
+- **Versie** — huidig versienummer van de app
+- **Hulp** — opent het ingebouwde helpcentrum
+- **Ondersteuning** — stuur een e-mail naar het ondersteuningsteam
+- **Privacybeleid** — bekijk het privacybeleid
+- **Servicevoorwaarden** — bekijk de servicevoorwaarden
+
+## Uitloggen
+
+Tik op het hoofdscherm Instellingen onderaan op **Uitloggen**. Er verschijnt een bevestigingsvenster — bevestig om je af te melden bij je account.
+
+## Veelgestelde vragen
+
+- **V: Ik heb mijn taal gewijzigd, maar sommige tekst is nog in de oude taal. Wat moet ik doen?**
+  **A:** De taalwijziging is direct voor alle interface-elementen. Als je onvertaalde tekst ziet, probeer dan de app opnieuw te starten.
+
+- **V: Hoe wijzig ik mijn e-mail?**
+  **A:** Ga naar **Instellingen → Profiel**, tik op het potloodpictogram naast je e-mail en volg de tweestapsverificatie. Er wordt een 6-cijferige code naar je nieuwe adres gestuurd om de wijziging te bevestigen.
+
+- **V: Wat gebeurt er met mijn gegevens wanneer ik uitlog?**
+  **A:** Je gegevens blijven op de server opgeslagen. Wanneer je weer inlogt, wordt alles hersteld. Lokale gegevens op het apparaat kunnen worden gewist.
+
+---
+
+*Zie ook: Accounts | Abonnementen | Export & Rapporten | AI-antwoordmodus | AI-chat*
+`,
+    },
+    {
+      id: '12-subscription',
+      title: `Abonnementen`,
+      description: `Kies het abonnement dat bij je past. Begin gratis met volledige uitgavenregistratie, upgrade naar Pro voor geavanceerde AI-functies, of ga voor Business voor onbeperkt alles.`,
+      body: `# Abonnementen
+
+> Kies het abonnement dat bij je past. Begin gratis met volledige uitgavenregistratie, upgrade naar Pro voor geavanceerde AI-functies, of ga voor Business voor onbeperkt alles.
+
+## Overzicht
+
+AI Budget Assistant biedt drie abonnementsniveaus. Elke nieuwe gebruiker begint met het Gratis-abonnement met volledige toegang tot de kernfuncties voor uitgavenregistratie.
+
+## Abonnementsvergelijking
+
+Alle functies zijn beschikbaar in elk abonnement. Abonnementen verschillen alleen in gebruikslimieten:
+
+| Functie | Gratis | Pro | Business |
+|---|---|---|---|
+| **AI-verzoeken per maand** | 50 | 300 | Onbeperkt |
+| **Accounts** | 3 | Tot 5 | Onbeperkt |
+| **Leden per account** | 1 | Tot 5 | Onbeperkt |
+| **Alle functies** | Ja | Ja | Ja |
+
+Alle gebruikers hebben toegang tot: uitgavenregistratie, AI-chat, Spraakinvoer, Bonnen scannen, Uitgavenverhalen, Fat Finder, AI-inzichten, voorspellende analyse, anomaliedetectie, PDF-/Excel-rapporten, wekelijkse e-mailrapporten, maandelijkse digest, versleutelde back-ups en alle valuta's.
+
+## Gratis-abonnement
+
+Je startabonnement bevat:
+- **50 AI-verzoeken per maand**
+- **3 persoonlijke accounts**
+- **1 lid** (jij)
+- **Alle functies** — geen functionele beperkingen
+
+## Pro-abonnement
+
+Alles in Gratis, met hogere limieten:
+- **300 AI-verzoeken per maand**
+- **Tot 5 accounts** — beheer persoonlijke, gedeelde en zakelijke financiën
+- **Tot 5 leden per account** — werk samen met familie of team
+
+### Gratis proefperiode van 7 dagen
+Probeer Pro 7 dagen gratis. Annuleer op elk moment voordat de proefperiode afloopt om kosten te voorkomen.
+
+## Business-abonnement
+
+Alles in Pro, zonder limieten:
+- **Onbeperkte AI-verzoeken**
+- **Onbeperkte accounts**
+- **Onbeperkte leden**
+
+## AI-gebruik
+
+Volg je AI-gebruik via **Instellingen** > **Abonnement beheren**:
+
+- **Gebruik deze maand** — toont hoeveel AI-verzoeken je hebt gebruikt (bijv. "3 van 50")
+- **Voortgangsbalk** — visuele indicator van het gebruik
+- Wordt aan het begin van elke maand opnieuw ingesteld
+- **AI-gebruiksbadge** — een compacte teller (bijv. "12/50 AI") wordt getoond op alle AI-aangedreven schermen: AI-chat, Uitgavenverhaal, Fat Finder, Analyse (AI-inzichten) en Beleggingsinzichten. Tik erop om je abonnement te bekijken.
+
+### Bevestiging bij eerste gebruik
+
+Wanneer je een dure AI-functie (Uitgavenverhaal, Fat Finder, AI-inzichten, Beleggingsinzichten) voor het eerst gebruikt, toont de app een bevestigingsvenster met de kosten en je resterende saldo. Je kunt "Niet meer vragen" kiezen om toekomstige bevestigingen voor die functie over te slaan.
+
+### Gebruiksdetails
+
+Tik op **Details bekijken** op het abonnementsscherm om een gedetailleerd overzicht van je AI-gebruik te zien:
+
+- **Totaal gebruikt** — totaal aantal AI-verzoeken dat deze maand is verbruikt
+- **Per functie** — overzicht van hoeveel verzoeken elke functie heeft gebruikt (AI-chat, Spraakinvoer, Bon scannen, Uitgavenverhaal, Fat Finder, enz.)
+- **Geschiedenis** — chronologisch logboek van elk AI-verzoek met datum, tijd en kosten
+- **Maandnavigatie** — blader door het gebruik van voorgaande maanden
+
+### Wat telt als een AI-verzoek:
+- Een bericht versturen in **AI-chat** (1 verzoek)
+- **Spraakinvoer** gebruiken om een uitgave toe te voegen (1 verzoek)
+- Een **bon scannen** (2 verzoeken)
+- Een **Uitgavenverhaal** genereren (3 verzoeken)
+- **Fat Finder** uitvoeren (3 verzoeken)
+- **AI-inzichten** krijgen in Analyse (2 verzoeken)
+- **Beleggingsinzichten** (2,5 verzoeken)
+
+## Je abonnement beheren
+
+1. Ga naar **Instellingen** > **Abonnement beheren**
+2. Bekijk je huidige abonnement en status
+3. Tik op **Upgraden** om over te schakelen naar Pro of Business
+4. Bekijk de beschikbare abonnementen en prijzen
+
+### Abonnementsstatussen
+
+| Status | Betekenis |
+|---|---|
+| **Actief** | Abonnement is actief en wordt normaal gefactureerd |
+| **Proef** | Je bent in de gratis proefperiode van 7 dagen |
+| **Geannuleerd** | Abonnement eindigt op de annuleringsdatum |
+| **Achterstallig** | Betaling mislukt — werk je betaalmethode bij |
+| **Onvolledig** | Eerste betaling niet voltooid |
+| **Gepauzeerd** | Abonnement is tijdelijk gepauzeerd |
+
+## Veelgestelde vragen
+
+- **V: Wat gebeurt er als ik door mijn AI-verzoeken heen ben?**
+  **A:** Je ziet een melding "AI-limiet bereikt". Je kunt wachten tot volgende maand voor een reset, of je abonnement upgraden voor meer verzoeken.
+
+- **V: Kan ik downgraden van Pro naar Gratis?**
+  **A:** Ja, je kunt je abonnement op elk moment annuleren. Je behoudt de Pro-functies tot het einde van je factureringsperiode.
+
+- **V: Is er een jaarabonnement?**
+  **A:** Prijsopties worden getoond op het scherm Abonnement beheren in de app.
+
+---
+
+*Zie ook: AI-chat | Instellingen | Export & Rapporten*
+`,
+    },
+    {
+      id: '13-gamification',
+      title: `Prestaties & Gamificatie`,
+      description: `Blijf gemotiveerd met prestaties, dagelijkse reeksen, XP en niveaus. Volg je financiële gewoonten en verdien badges terwijl je consistentie opbouwt.`,
+      body: `# Prestaties & Gamificatie
+
+> Blijf gemotiveerd met prestaties, dagelijkse reeksen, XP en niveaus. Volg je financiële gewoonten en verdien badges terwijl je consistentie opbouwt.
+
+## Overzicht
+
+Het gamificatiesysteem beloont je voor het consequent bijhouden van je financiën. Elke uitgave, inkomst en elk budget dat je beheert, draagt bij aan je voortgang. Verdien prestaties, houd dagelijkse reeksen vol en stijg in niveau terwijl je betere financiële gewoonten opbouwt.
+
+## Dashboardwidget
+
+Op je startscherm zie je een compacte gamificatiekaart met:
+
+- **Niveau** — je huidige niveau met een XP-voortgangsbalk
+- **Reeks** — je huidige dagelijkse registratiereeks (vuuremoji wanneer actief, sneeuwvlok wanneer inactief)
+
+Tik op de widget om het volledige scherm **Prestaties** te openen.
+
+## Prestaties
+
+Prestaties zijn mijlpalen die je belonen voor specifiek financieel gedrag. Elke prestatie heeft:
+
+- **Pictogram** — een visuele emoji die de prestatie voorstelt
+- **Titel & Beschrijving** — wat je moet doen om deze te verdienen
+- **Zeldzaamheid** — Gewoon, Zeldzaam, Episch of Legendarisch
+- **XP-beloning** — ervaringspunten die je bij voltooiing verdient
+- **Voortgang** — percentage richting voltooiing (voor onvoltooide prestaties)
+
+### Prestatiecategorieën
+
+| Categorie | Voorbeelden |
+|---|---|
+| **Mijlpaal** | Registreer je eerste uitgave, bereik 10/50/100/500 uitgaven |
+| **Budget** | Maak je eerste budget, blijf 1 of 3 maanden binnen budget |
+| **Reeks** | Houd een registratiereeks van 3/7/30/100 dagen vol |
+| **Sparen** | Registreer je eerste inkomst, eindig een maand met inkomsten hoger dan uitgaven |
+
+### Prestaties bekijken
+
+1. Tik op de gamificatiewidget op het Dashboard of navigeer naar het scherm Prestaties
+2. Gebruik **categoriefilters** (Alle, Budget, Registratie, Reeks, Mijlpaal, Sparen) om te bladeren
+3. **Tik op een badge** om de volledige beschrijving, zeldzaamheid, XP-waarde en je voortgang te zien
+
+Voltooide prestaties verschijnen in volle kleur met hun zeldzaamheidsrand. Vergrendelde prestaties verschijnen grijs met een voortgangsbalk.
+
+## Dagelijkse reeks
+
+Je reeks telt opeenvolgende dagen waarop je ten minste één uitgave of inkomst registreert. De reeks wordt opnieuw ingesteld als je een dag overslaat.
+
+- **Actieve reeks** — getoond met een vuuremoji en het aantal dagen
+- **Onderbroken reeks** — getoond met een sneeuwvlokemoji en een aansporing om opnieuw te beginnen
+- **Langste reeks** — je persoonlijke record wordt bijgehouden en weergegeven op het scherm Prestaties
+
+> **Tip:** Voeg elke dag minstens één transactie toe om je reeks gaande te houden!
+
+## XP & Niveaus
+
+- Elke voltooide prestatie levert XP (ervaringspunten) op
+- **100 XP** is nodig om één niveau te stijgen
+- XP-beloningen variëren van **10 XP** (Gewone prestaties) tot **500 XP** (Legendarische prestaties)
+- Je niveau en XP-voortgang worden weergegeven op zowel de Dashboardwidget als het scherm Prestaties
+
+## Prestatiezeldzaamheid
+
+| Zeldzaamheid | Kleur | XP-bereik |
+|---|---|---|
+| **Gewoon** | Grijs | 10-25 XP |
+| **Zeldzaam** | Blauw | 25-50 XP |
+| **Episch** | Turquoise | 50-100 XP |
+| **Legendarisch** | Goud | 100-500 XP |
+
+Legendarische prestaties hebben een speciaal gouden glittereffect wanneer ze worden ontgrendeld.
+
+## Melding Prestatie ontgrendeld
+
+Wanneer je een nieuwe prestatie verdient (bijvoorbeeld na het toevoegen van een uitgave), verschijnt er een feestvenster met:
+
+- Het prestatiepictogram en de naam
+- Verdiende XP
+- Een knop om te sluiten
+
+Deze melding verschijnt automatisch en onderbreekt je workflow niet.
+
+## Veelgestelde vragen
+
+- **V: Hoe worden prestaties bijgehouden?**
+  **A:** Prestaties worden automatisch geëvalueerd telkens wanneer je een uitgave, inkomst of budget toevoegt. Er is geen handmatige actie nodig.
+
+- **V: Wordt mijn reeks opnieuw ingesteld als ik offline ben?**
+  **A:** Je reeks wordt aan de serverkant bijgehouden op basis van je tijdzone. Als je offline een transactie toevoegt, wordt deze geëvalueerd zodra je synchroniseert.
+
+- **V: Zijn prestaties beschikbaar in het Gratis-abonnement?**
+  **A:** Ja! Alle prestaties, reeksen en gamificatiefuncties zijn gratis voor alle gebruikers.
+
+- **V: Kan ik mijn voortgang richting vergrendelde prestaties zien?**
+  **A:** Ja, tik op een vergrendelde prestatiebadge om je huidige voortgangspercentage te zien en wat er nodig is om deze te ontgrendelen.
+
+---
+
+*Zie ook: Dashboard | Uitgaven & Inkomsten*
+`,
+    },
+    {
+      id: '14-investments',
+      title: `Beleggingsportefeuille`,
+      description: ``,
+      body: `# Beleggingsportefeuille
+
+Volg je beleggingsportefeuille met realtime marktprijzen. Houd aandelen, ETF's, cryptovaluta's, obligaties en grondstoffen allemaal op één plek in de gaten.
+
+## Overzicht
+
+Met de functie Beleggingsportefeuille kun je:
+
+- Posities volgen over meerdere activatypes
+- Realtime prijzen en portefeuillewaarde bekijken
+- Prestaties analyseren over verschillende perioden
+- Je rendement vergelijken met marktbenchmarks (SPY, QQQ, DIA, IWM)
+- Koop-/verkooptransacties met kosten vastleggen
+
+## Een beleggingsaccount aanmaken
+
+Voor het volgen van beleggingen is een speciaal accounttype **Belegging** nodig:
+
+1. Ga naar het tabblad **Accounts**
+2. Tik op **Account aanmaken**
+3. Selecteer **Belegging** als accounttype
+4. Geef je portefeuille een naam (bijv. "Hoofdportefeuille", "Pensioen")
+5. Tik op **Aanmaken**
+
+## Posities toevoegen
+
+### Naar activa zoeken
+
+1. Open je beleggingsaccount
+2. Tik op **Positie toevoegen**
+3. Zoek op tickersymbool (bijv. "AAPL") of bedrijfsnaam (bijv. "Apple")
+4. Selecteer het juiste activum uit de zoekresultaten
+5. Voeg optionele notities toe
+6. Tik op **Opslaan**
+
+### Ondersteunde activatypes
+
+| Type | Voorbeelden |
+|------|----------|
+| Aandelen | AAPL, MSFT, GOOGL |
+| ETF's | SPY, QQQ, VTI |
+| Crypto | BTC, ETH, SOL |
+| Obligaties | Staats- en bedrijfsobligaties |
+| Grondstoffen | Goud, Zilver, Olie |
+
+## Transacties vastleggen
+
+Nadat je een positie hebt toegevoegd, leg je je koop-/verkooptransacties vast:
+
+1. Open de positiedetails
+2. Tik op **Transactie toevoegen**
+3. Selecteer het transactietype: **Kopen** of **Verkopen**
+4. Voer in:
+   - **Aantal** — aantal aandelen/eenheden
+   - **Prijs per eenheid** — aankoop-/verkoopprijs
+   - **Kosten** — makelaarscommissie (optioneel)
+   - **Datum** — transactiedatum
+   - **Notities** — eventuele aanvullende informatie (optioneel)
+5. Tik op **Opslaan**
+
+De app berekent automatisch:
+- **Gemiddelde kostprijs** — gewogen gemiddelde aankoopprijs
+- **Totaal geïnvesteerd** — som van alle aankopen minus verkopen
+- **Huidige W&V** — winst/verlies op basis van de huidige prijs
+
+## Portefeuilleoverzicht
+
+Het hoofdscherm voor beleggingen toont:
+
+- **Totale waarde** — huidige marktwaarde van alle posities
+- **Totale W&V** — totaal bedrag winst/verlies
+- **Totale W&V %** — procentueel rendement
+- **Dagwijziging** — waardewijziging van vandaag
+
+Elke positie toont:
+- Huidige prijs en dagelijkse wijziging
+- Je aantal en gemiddelde kostprijs
+- Individuele W&V en allocatiepercentage
+
+## Analyse
+
+Krijg toegang tot gedetailleerde portefeuilleanalyse:
+
+1. Tik op de knop **Analyse**
+2. Selecteer een periode: 1W, 1M, 3M, 1J of Alle
+
+### Prestatiegrafiek
+
+Toont de portefeuillewaarde in de tijd vergeleken met het geïnvesteerde bedrag. Het gebied ertussen vertegenwoordigt je winst of verlies.
+
+### Allocatie per type
+
+Visualiseert hoe je portefeuille is verdeeld over activatypes (aandelen, ETF's, crypto, enz.).
+
+### Grootste stijgers & dalers
+
+Toont je best en slechtst presterende posities op basis van procentueel rendement.
+
+### AI-portefeuille-inzichten (Pro+)
+
+Krijg een AI-aangedreven analyse van je portefeuille met praktische aanbevelingen:
+
+1. Open het tabblad **Analyse**
+2. Scroll naar de **Inzichten**-carrousel bovenaan
+3. Veeg naar links/rechts om verschillende inzichten te bekijken
+4. Tik op de sluitknop om een inzicht te verbergen
+
+**Inzichttypes:**
+
+| Type | Beschrijving |
+|------|-------------|
+| Concentratierisico | Waarschuwt wanneer één activum je portefeuille domineert |
+| Sectoronevenwicht | Waarschuwt bij een zware weging naar één activatype |
+| Onderpresteerder | Identificeert activa die achterblijven bij de markt |
+| Overpresteerder | Markeert kansen om te herbalanceren |
+| Benchmarkafwijking | Toont wanneer de portefeuille afwijkt van de benchmark |
+| Diversificatiekloof | Suggereert ontbrekende activatypes |
+| Kostprijswaarschuwing | Fiscaal relevante ongerealiseerde winsten/verliezen |
+| Kostenimpact | Waarschuwt wanneer kosten aan je rendement knagen |
+
+Elk inzicht bevat een visualisatie (grafiek) en een praktische suggestie.
+
+**Opmerking:** AI-inzichten worden 24 uur gecached en kosten 2,5 AI-credits per vernieuwing.
+
+### Benchmarkvergelijking (Pro+)
+
+Vergelijk je portefeuillerendement met marktindexen:
+
+| Benchmark | Beschrijving |
+|-----------|-------------|
+| SPY | S&P 500-index |
+| QQQ | Nasdaq 100-index |
+| DIA | Dow Jones Industrial |
+| IWM | Russell 2000 (Small Cap) |
+
+**De vergelijking begrijpen:**
+- **Portefeuillerendement** — je werkelijke procentuele winst/verlies
+- **Benchmarkrendement** — indexprestatie voor dezelfde periode
+- **Verschil** — hoeveel beter of slechter je presteerde
+
+## Berekeningen begrijpen
+
+Tik op een analysekaart om de uitleg van de formule te zien:
+
+### Prestatie
+\`\`\`
+Rendement % = ((Eindwaarde - Beginwaarde) / Beginwaarde) x 100
+\`\`\`
+
+### W&V (Winst & Verlies)
+\`\`\`
+W&V = Huidige waarde - Totaal geïnvesteerd
+W&V % = (W&V / Totaal geïnvesteerd) x 100
+\`\`\`
+
+### Allocatie
+\`\`\`
+Allocatie % = (Activawaarde / Totale portefeuillewaarde) x 100
+\`\`\`
+
+## Prijsupdates
+
+- Prijzen worden elke 15 minuten automatisch bijgewerkt
+- Tik op de knop **Vernieuwen** om direct bij te werken
+- Historische prijzen worden gecached om dataverbruik te minimaliseren
+
+## Tips
+
+1. **Volg gespreid** — Voeg al je beleggingen toe voor een volledig beeld
+2. **Leg kosten vast** — Neem makelaarscommissies op voor een nauwkeurige W&V
+3. **Gebruik benchmarks** — Vergelijk met indexen om prestaties te meten
+4. **Bekijk regelmatig** — Controleer de analyse wekelijks om trends te ontdekken
+
+## Beperkingen
+
+- Prijsgegevens worden geleverd door de Twelve Data API
+- Sommige exotische effecten zijn mogelijk niet beschikbaar
+- Historische gegevens worden beperkt door handelsdagen op de markt
+- Realtime prijzen kunnen een vertraging van 15 minuten hebben
+
+---
+
+Vorige: Prestaties & Gamificatie | Terug naar index
+`,
+    },
+    {
+      id: '15-encryption',
+      title: `End-to-end-versleuteling`,
+      description: `Bescherm je financiële gegevens met end-to-end-versleuteling (E2EE). Alle gevoelige informatie wordt op je apparaat versleuteld voordat deze naar de server wordt gestuurd — niemand behalve jij (en de leden van je gedeelde accounts) kan deze lezen.`,
+      body: `# End-to-end-versleuteling
+
+> Bescherm je financiële gegevens met end-to-end-versleuteling (E2EE). Alle gevoelige informatie wordt op je apparaat versleuteld voordat deze naar de server wordt gestuurd — niemand behalve jij (en de leden van je gedeelde accounts) kan deze lezen.
+
+## Overzicht
+
+End-to-end-versleuteling zorgt ervoor dat je beschrijvingen, notities, categorienamen en andere tekstgegevens op je apparaat worden versleuteld voordat ze worden gesynchroniseerd. De server slaat alleen versleutelde gegevens op en kan deze niet lezen, zelfs niet als de database wordt gecompromitteerd.
+
+Je beheert versleuteling met een aparte **versleutelingswachtwoordzin** die nooit naar de server wordt gestuurd.
+
+## Versleuteling instellen
+
+1. Open **Instellingen**
+2. Scroll naar het gedeelte **Beveiliging**
+3. Tik op **Versleuteling inschakelen**
+4. Voer een **versleutelingswachtwoordzin** in (minimaal 8 tekens)
+   - Dit staat los van je inlogwachtwoord
+   - Kies een sterke wachtwoordzin die je kunt onthouden
+5. Bevestig de wachtwoordzin
+6. Er wordt een **Herstelsleutel** op het scherm weergegeven
+
+> **Belangrijk:** Bewaar je Herstelsleutel onmiddellijk! Schrijf hem op of bewaar hem in een wachtwoordmanager. Formaat: \`XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX\`. Dit is de **enige manier** om je gegevens te herstellen als je de wachtwoordzin vergeet.
+
+Na het instellen wordt versleuteling automatisch ingeschakeld voor je huidige account.
+
+## Versleuteling ontgrendelen
+
+Na het opnieuw opstarten van de app of wanneer je sessie verloopt, is versleuteling vergrendeld. Je gegevens worden nog steeds veilig opgeslagen, maar versleutelde velden lijken leeg totdat je ontgrendelt.
+
+Om te ontgrendelen:
+
+1. Open **Instellingen** > **Beveiliging**
+2. Tik op **Versleuteling ontgrendelen**
+3. Voer je versleutelingswachtwoordzin in
+4. Je gegevens worden weer leesbaar
+
+## Wat wordt versleuteld
+
+Versleuteling werkt in twee niveaus:
+
+### Niveau 1 — Tekstvelden (standaard)
+
+| Gegevens | Versleuteld |
+|---|---|
+| Uitgavenbeschrijvingen en notities | Ja |
+| Locatienamen | Ja |
+| Bongegevens | Ja |
+| Categorienamen | Ja |
+| Tagnamen | Ja |
+| Projectnamen en -beschrijvingen | Ja |
+| Budgetnamen | Ja |
+| Bedragen, datums, valuta's | Nee — blijft platte tekst |
+
+**Serverfuncties** (analyse, budgetwaarschuwingen, AI-inzichten) blijven werken omdat bedragen en datums toegankelijk blijven.
+
+### Niveau 2 — Volledige versleuteling (opt-in)
+
+Alles uit Niveau 1, plus:
+
+| Gegevens | Versleuteld |
+|---|---|
+| Bedragen (uitgaven, inkomsten, budgetten) | Ja |
+| Prijzen en wisselkoersen | Ja |
+| Portemonnee-saldo's | Ja |
+
+> **Opmerking:** Met Niveau 2 zijn serverzijdige analyses en AI-functies niet beschikbaar omdat de server geen bedragen kan lezen. Alle analyses worden lokaal op je apparaat berekend.
+
+## Herstel
+
+Als je je wachtwoordzin vergeet maar je Herstelsleutel hebt:
+
+1. Open **Instellingen** > **Beveiliging**
+2. Tik op **Herstellen**
+3. Voer je Herstelsleutel in
+4. Stel een nieuwe wachtwoordzin in
+5. Er wordt een nieuwe Herstelsleutel gegenereerd — bewaar deze opnieuw
+
+## Versleuteling opnieuw instellen
+
+Als je zowel je wachtwoordzin als je Herstelsleutel verliest:
+
+1. Open **Instellingen** > **Beveiliging**
+2. Tik op **Versleuteling resetten** (rode knop)
+3. Bevestig de actie
+
+> **Waarschuwing:** Eerder versleutelde gegevens op de server worden **permanent onleesbaar**. Lokale gegevens op je apparaat worden niet beïnvloed. Je kunt versleuteling opnieuw instellen met een nieuwe wachtwoordzin.
+
+## Gedeelde accounts
+
+Wanneer versleuteling is ingeschakeld voor een gedeeld account:
+
+- De **accounteigenaar** moet versleutelingssleutels aan elk lid verlenen
+- Nieuwe leden kunnen metadata zien (bedragen, datums, categorieën) maar **kunnen versleutelde tekstvelden niet lezen** totdat de eigenaar toegang verleent
+- Het verlenen van sleutels gebeurt wanneer de eigenaar de app opent en openstaande leden goedkeurt
+- Wanneer een lid uit een gedeeld account wordt **verwijderd**, worden de sleutels om veiligheidsredenen geroteerd — het verwijderde lid kan nieuwe gegevens niet meer ontsleutelen
+
+## Impact op app-functies
+
+| Functie | Niveau 1 (Tekst) | Niveau 2 (Volledig) |
+|---|---|---|
+| Analyse en grafieken | Werkt volledig | Lokaal berekend |
+| Budgetwaarschuwingen | Werkt volledig | Niet beschikbaar |
+| AI-chat | Gedeeltelijk (geen beschrijvingen) | Niet beschikbaar |
+| AI-inzichten | Gedeeltelijk | Niet beschikbaar |
+| Uitgavenverhaal | Gedeeltelijk | Niet beschikbaar |
+| Spraakinvoer | Werkt volledig | Werkt volledig |
+| Bonnen scannen | Werkt volledig | Werkt volledig |
+| CSV-/PDF-/Excel-rapporten | Bedragen correct, tekstvelden leeg | Niet beschikbaar |
+| Maandelijkse digest | Werkt (namen lokaal opgelost) | Niet beschikbaar |
+| Versleutelde back-up | Werkt volledig | Werkt volledig |
+| E-mailrapporten | Bedragen correct, tekstvelden leeg | Niet beschikbaar |
+
+## Veelgestelde vragen
+
+- **V: Is de versleutelingswachtwoordzin hetzelfde als mijn inlogwachtwoord?**
+  **A:** Nee. De versleutelingswachtwoordzin staat los en wordt nooit naar de server gestuurd. Je inlogwachtwoord authenticeert je account; de versleutelingswachtwoordzin beschermt je gegevens.
+
+- **V: Wat gebeurt er als ik mijn wachtwoordzin vergeet en mijn Herstelsleutel verlies?**
+  **A:** Eerder versleutelde gegevens op de server worden permanent onleesbaar. Je kunt versleuteling resetten en opnieuw beginnen, maar oude versleutelde gegevens kunnen niet worden hersteld.
+
+- **V: Kunnen de app-ontwikkelaars mijn versleutelde gegevens lezen?**
+  **A:** Nee. De server slaat alleen versleutelde blobs op. Zonder je wachtwoordzin of Herstelsleutel kan niemand je gegevens ontsleutelen.
+
+- **V: Vertraagt versleuteling de app?**
+  **A:** De eerste instelling duurt een paar seconden voor sleutelafleiding. Daarna gaat het versleutelen en ontsleutelen van afzonderlijke velden vrijwel direct.
+
+- **V: Kan ik versleuteling uitschakelen nadat ik deze heb ingeschakeld?**
+  **A:** Je kunt versleuteling resetten, waarmee de versleutelingsconfiguratie wordt verwijderd. Gegevens die op de server zijn versleuteld, blijven echter versleuteld en worden onleesbaar.
+
+---
+
+*Zie ook: Instellingen | Accounts | Export & Rapporten*
+`,
+    },
+    {
+      id: '16-export-reports',
+      title: `Export & Rapporten`,
+      description: `Genereer PDF-, Excel- en CSV-rapporten van je financiën. Bekijk maandelijkse uitgavendigests, maak versleutelde back-ups en ontvang geautomatiseerde e-mailoverzichten.`,
+      body: `# Export & Rapporten
+
+> Genereer PDF-, Excel- en CSV-rapporten van je financiën. Bekijk maandelijkse uitgavendigests, maak versleutelde back-ups en ontvang geautomatiseerde e-mailoverzichten.
+
+## Overzicht
+
+Op het scherm **Export & Rapporten** kun je financiële rapporten genereren, maandelijkse digests bekijken, rapporten downloaden/delen en gegevensback-ups beheren. Open het via de knop **Rapport exporteren** op het tabblad Analyse, of via **Instellingen** > **Rapporten & E-mail** > **Rapport genereren**.
+
+## Rapportformaten
+
+Er zijn drie exportformaten beschikbaar:
+
+| Formaat | Beschrijving | Beschikbaarheid |
+|---|---|---|
+| **CSV** | Door komma's gescheiden waarden, compatibel met Excel en Google Sheets | Alle abonnementen |
+| **PDF** | Opgemaakt rapport met overzicht, categorieverdeling en transactielijst | Pro & Business |
+| **Excel** | Werkmap met meerdere bladen: Overzicht, Uitgaven en Inkomsten | Pro & Business |
+
+## Een rapport genereren
+
+1. Selecteer een **formaat** (CSV, PDF of Excel)
+2. Kies een **periode** (Vorige week, Deze maand, Vorig kwartaal, Dit jaar)
+3. Tik op **Genereren**
+4. Het rapport wordt gegenereerd en direct geopend via het systeemdeelvenster — sla het daar op of verstuur het
+5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
+
+Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
+
+## Maandelijkse digest (Pro+)
+
+Een momentopname van de financiële activiteit van je huidige maand:
+
+- **Totale inkomsten** en **Totale uitgaven**
+- **Spaarquote** — percentage van de inkomsten dat is gespaard
+- **Topcategorieën** — je grootste uitgavencategorieën met bedragen
+- Gegevens worden 7 dagen gecached en automatisch vernieuwd
+
+## Recente rapporten
+
+Een lijst van je recent gegenereerde rapporten met:
+
+- Formaatpictogram (CSV/PDF/Excel)
+- Bestandsnaam en aanmaakdatum
+- Bestandsgrootte
+- Knop **Downloaden** — slaat het bestand direct op je apparaat op (Android: kies een map via de Storage Access Framework; iOS: opslaan in Bestanden)
+- Knop **Delen** — opent het systeemdeelvenster om het rapport te versturen via e-mail, berichten of andere apps
+
+## Gegevensback-up
+
+Beschikbaar in **alle abonnementen**:
+
+- **Back-up exporteren** — maakt een volledige JSON-back-up van je accountgegevens (uitgaven, inkomsten, budgetten, categorieën, tags, projecten, portemonnees, enz.)
+  - **Waar het bestand wordt opgeslagen:** Op Android wordt een mapkiezer geopend en wordt de back-up naar de gekozen map geschreven — de app toont je vervolgens het exacte pad. Als je de kiezer overslaat (of op iOS), wordt in plaats daarvan het systeemdeelvenster geopend zodat je "Opslaan in Bestanden", Downloads of een clouddrive kunt kiezen. Het succesbericht verschijnt pas wanneer het bestand daadwerkelijk is opgeslagen of gedeeld.
+- **Back-up herstellen** — importeer een eerder geëxporteerde back-up
+- Als versleuteling is ingeschakeld, worden versleutelde velden ongewijzigd opgenomen in de back-up
+
+Open back-up via **Instellingen** > **Rapporten & E-mail**.
+
+## E-mailrapporten
+
+Geautomatiseerde e-mailoverzichten die in je inbox worden bezorgd:
+
+| Functie | Beschrijving | Vereist abonnement |
+|---|---|---|
+| **Wekelijks e-mailoverzicht** | Wekelijks uitgavenoverzicht met topcategorieën | Business |
+| **Maandelijkse e-maildigest** | Maandelijks overzicht met maand-op-maandvergelijking | Pro & Business |
+
+Configureer deze in **Instellingen** > **Rapporten & E-mail**:
+
+- Wekelijkse/maandelijkse e-mails aan/uit zetten
+- Kies de dag van de week voor wekelijkse rapporten (standaard maandag)
+
+## Versleuteling & Rapporten
+
+- **Niveau 0** (geen versleuteling) — alle gegevens correct weergegeven in rapporten
+- **Niveau 1** (tekstversleuteling) — bedragen worden correct getoond; categorienamen en beschrijvingen kunnen leeg lijken in serverzijdig gegenereerde rapporten. De maandelijkse digest haalt categorienamen op uit je lokale apparaatgegevens
+- **Niveau 2** (volledige versleuteling) — rapporten zijn niet beschikbaar (bedragen zijn aan de serverkant versleuteld)
+
+## Veelgestelde vragen
+
+- **V: Waarom zie ik lege categorienamen in mijn PDF-rapport?**
+  **A:** Als je E2EE hebt ingeschakeld (Niveau 1), zijn categorienamen op de server versleuteld. Het serverzijdig gegenereerde rapport kan ze niet ontsleutelen. Bedragen blijven correct.
+
+- **V: Hoe lang worden rapporten bewaard?**
+  **A:** Rapporten worden na 7 dagen automatisch verwijderd. Download ze direct na het genereren.
+
+- **V: Kan ik gegevens uit een gedeeld account exporteren?**
+  **A:** Ja, elk accountlid kan rapporten en back-ups voor het gedeelde account genereren.
+
+- **V: Wat zit er in een back-up?**
+  **A:** Alles: uitgaven, inkomsten, budgetten, categorieën, tags, projecten, portemonnees, overboekingen en valutawissels voor het huidige account.
+
+---
+
+*Zie ook: Analyse | Instellingen | Abonnementen | Versleuteling*
+`,
+    },
+    {
+      id: '17-debts-and-loans',
+      title: `Schulden & Leningen`,
+      description: `Houd geld bij dat je uitleent en leent. Zie wie jou geld verschuldigd is, wie jij geld verschuldigd bent, leg terugbetalingen vast en bewaak vervaldatums — allemaal geïntegreerd met je uitgaven en inkomsten.`,
+      body: `# Schulden & Leningen
+
+> Houd geld bij dat je uitleent en leent. Zie wie jou geld verschuldigd is, wie jij geld verschuldigd bent, leg terugbetalingen vast en bewaak vervaldatums — allemaal geïntegreerd met je uitgaven en inkomsten.
+
+## Overzicht
+
+Met de functie Schulden & Leningen kun je twee soorten financiële verplichtingen bijhouden:
+
+- **Uitgeleend geld** — geld dat je aan iemand hebt gegeven (vastgelegd als een uitgave met schuldmarkering)
+- **Geleend geld** — geld dat iemand aan jou heeft gegeven (vastgelegd als een inkomst met schuldmarkering)
+
+Terugbetalingen werken op dezelfde manier:
+- Wanneer iemand **jou terugbetaalt**, wordt dit vastgelegd als inkomst gekoppeld aan de oorspronkelijke schulduitgave
+- Wanneer **jij iemand terugbetaalt**, wordt dit vastgelegd als uitgave gekoppeld aan de oorspronkelijke schuldinkomst
+
+De schuldstatus wordt automatisch berekend:
+- **Actief** — er is nog een openstaand saldo
+- **Betaald** — de schuld is volledig terugbetaald
+- **Achterstallig** — de vervaldatum is verstreken en het saldo is nog steeds openstaand
+
+## Een schuld aanmaken
+
+De snelste manier om een schuld toe te voegen is via het scherm **Schulden & Leningen**:
+
+1. Open het scherm **Schulden & Leningen** (via de Dashboardwidget of Instellingen)
+2. Tik op de knop **+** in de rechterbenedenhoek
+3. Kies **Geld uitlenen** of **Geld lenen**
+4. Vul het bedrag, de beschrijving, de contactnaam en een optionele vervaldatum in
+5. Tik op **Opslaan**
+
+Je kunt schulden ook handmatig aanmaken vanuit de uitgaven- of inkomstenformulieren (zie hieronder).
+
+## Geld uitlenen
+
+### Stap voor stap
+
+1. Ga naar **Transacties** en tik op de knop **+**
+2. Selecteer **Handmatige invoer**
+3. Voer het **bedrag** in dat je uitleent
+4. Voer een **beschrijving** in (bijv. "Lening aan Jan")
+5. Schakel de schakelaar **Ik heb geld uitgeleend** in
+6. Voer de **contactnaam** in — aan wie je uitleent
+7. Stel optioneel een **vervaldatum** in — wanneer je verwacht terugbetaald te worden
+8. Tik op **Uitgave opslaan**
+
+De uitgave wordt gemarkeerd als een schuld en verschijnt op het scherm Schulden & Leningen.
+
+> **Opmerking:** Het bedrag beïnvloedt je portemonnee-saldo als een gewone uitgave (geld eruit).
+
+## Geld lenen
+
+### Stap voor stap
+
+1. Ga naar **Transacties**, schakel over naar het tabblad **Inkomsten** en tik op **+**
+2. Voer het **bedrag** in dat je leent
+3. Voer een **beschrijving** in (bijv. "Lening van Maria")
+4. Schakel de schakelaar **Ik heb geld geleend** in
+5. Voer de **contactnaam** in — van wie je leent
+6. Stel optioneel een **vervaldatum** in — wanneer je moet terugbetalen
+7. Tik op **Inkomst opslaan**
+
+De inkomst wordt gemarkeerd als een schuld en verschijnt op het scherm Schulden & Leningen.
+
+> **Opmerking:** Het bedrag beïnvloedt je portemonnee-saldo als gewone inkomst (geld erin).
+
+## Een terugbetaling vastleggen
+
+### Wanneer iemand jou terugbetaalt (voor uitgeleend geld)
+
+1. Open de oorspronkelijke **uitgave** (de lening die je hebt gegeven)
+2. Tik op **Terugbetaling vastleggen**
+3. Je wordt doorgestuurd naar een nieuw inkomstenformulier met vooraf ingevulde contactnaam en valuta
+4. Voer het **terugbetalingsbedrag** in (kan gedeeltelijk zijn)
+5. Tik op **Inkomst opslaan**
+
+### Wanneer jij iemand terugbetaalt (voor geleend geld)
+
+1. Open de oorspronkelijke **inkomst** (de lening die je hebt ontvangen)
+2. Tik op **Terugbetaling vastleggen**
+3. Je wordt doorgestuurd naar een nieuw uitgavenformulier met vooraf ingevulde contactnaam en valuta
+4. Voer het **terugbetalingsbedrag** in (kan gedeeltelijk zijn)
+5. Tik op **Uitgave opslaan**
+
+> **Tip:** Je kunt meerdere gedeeltelijke terugbetalingen vastleggen. Het resterende saldo wordt automatisch bijgewerkt.
+
+## Scherm Schulden & Leningen
+
+Open het scherm Schulden & Leningen via **Instellingen > Schulden & Leningen**, of door op de schuldwidget op het Dashboard te tikken.
+
+### Overzichtskaarten
+
+Bovenaan het scherm tonen twee overzichtskaarten:
+- **Mensen zijn jou verschuldigd** — totaal resterend bedrag dat anderen jou verschuldigd zijn (groen)
+- **Jij bent verschuldigd** — totaal resterend bedrag dat jij anderen verschuldigd bent (rood)
+
+Bedragen worden automatisch omgerekend naar je basisvaluta met de huidige wisselkoersen.
+
+### Tabbladen
+
+Schakel tussen twee weergaven:
+- **Uitgeleend geld** — schulden waarbij je geld aan anderen hebt uitgeleend
+- **Geleend geld** — schulden waarbij je geld van anderen hebt geleend
+
+### Filterchips
+
+Filter schulden op status:
+- **Alle** — toon alle schulden
+- **Actief** — alleen schulden met openstaand saldo
+- **Achterstallig** — alleen schulden die hun vervaldatum hebben overschreden
+- **Betaald** — alleen volledig terugbetaalde schulden
+
+### Schuldkaart
+
+Elke schuld toont:
+- **Contactnaam** — met wie de schuld is
+- **Beschrijving** — waar de schuld voor was
+- **Statusbadge** — Actief (blauw), Achterstallig (rood) of Betaald (groen)
+- **Oorspronkelijk bedrag** — het initiële schuldbedrag in de oorspronkelijke valuta
+- **Resterend bedrag** — hoeveel er nog verschuldigd is
+- **Voortgangsbalk** — visuele indicator van de terugbetalingsvoortgang (percentage)
+- **Vervaldatum** — wanneer de schuld vervalt (indien ingesteld)
+
+Tik op een schuldkaart om de volledige uitgaven- of inkomstendetails te bekijken, waar je terugbetalingen kunt vastleggen.
+
+## Pushherinneringen
+
+Wanneer een schuld een vervaldatum heeft, stuurt de app automatisch pushmeldingen om je op koers te houden:
+
+- **3 dagen voor de vervaldatum** — een aankomende herinnering: "Schuld vervalt over 3 dagen: Jan"
+- **De dag na de vervaldatum** — een achterstalligheidswaarschuwing: "Schuld achterstallig: Jan"
+
+Meldingen worden gestuurd naar de persoon die de schuld heeft vastgelegd (de schuldeigenaar), niet naar de tegenpartij.
+
+Om deze herinneringen in of uit te schakelen, ga je naar **Instellingen → Meldingen & Integraties → Schuldherinneringen**.
+
+## Dashboardwidget
+
+De widget Schulden & Leningen is altijd zichtbaar op het Dashboard (wanneer ingeschakeld in de widgetinstellingen):
+
+- **Wanneer je schulden hebt:** toont de totalen "Mensen zijn jou verschuldigd" en "Jij bent verschuldigd", plus een knop **+** om snel naar het scherm Schulden & Leningen te navigeren
+- **Wanneer je geen schulden hebt:** toont een lege staat met een knop **Schuld toevoegen** om te beginnen
+
+Tik op de widget om direct naar het scherm Schulden & Leningen te gaan.
+
+## Ondersteuning voor meerdere valuta's
+
+Schulden kunnen in elke ondersteunde valuta zijn. De overzichtstotalen op het Dashboard en het scherm Schulden worden automatisch omgerekend naar je basisvaluta met live wisselkoersen. Individuele schuldkaarten tonen bedragen altijd in de oorspronkelijke valuta.
+
+## Veelgestelde vragen
+
+- **V: Kan ik geld in de ene valuta uitlenen en terugbetaling in een andere ontvangen?**
+  **A:** Terugbetalingen worden vastgelegd in dezelfde valuta als de oorspronkelijke schuld om nauwkeurige registratie te garanderen.
+
+- **V: Beïnvloedt het uitlenen van geld mijn budget?**
+  **A:** Ja, uitlenen wordt vastgelegd als een uitgave en lenen als inkomst. Ze beïnvloeden je portemonnee-saldo en budgetregistratie net als elke andere transactie.
+
+- **V: Kan ik een schuld bewerken nadat ik deze heb aangemaakt?**
+  **A:** Ja, tik op de schuld om de details te bekijken en gebruik vervolgens de knop Bewerken. Je kunt de beschrijving, contactnaam en vervaldatum wijzigen.
+
+- **V: Wat gebeurt er wanneer een schuld volledig is terugbetaald?**
+  **A:** De status verandert automatisch in "Betaald" en de voortgangsbalk toont 100%. De schuld blijft in je geschiedenis ter referentie.
+
+- **V: Hoe verwijder ik een schuld?**
+  **A:** Open de schulddetails en tik op Verwijderen. Houd er rekening mee dat hiermee ook de onderliggende uitgaven- of inkomstenpost wordt verwijderd.
+
+---
+
+*Zie ook: Uitgaven & Inkomsten | Portemonnee & Valutawissel*
+`,
+    },
+    {
+      id: '18-savings-goals',
+      title: `Spaardoelen`,
+      description: `Stel een financieel doel in en de AI bouwt een gepersonaliseerd plan — met maandelijkse bijdragen, categoriegebonden uitgavenlimieten en mijlpaalcontroles om je op koers te houden.`,
+      body: `# Spaardoelen
+
+> Stel een financieel doel in en de AI bouwt een gepersonaliseerd plan — met maandelijkse bijdragen, categoriegebonden uitgavenlimieten en mijlpaalcontroles om je op koers te houden.
+
+## Overzicht
+
+Met de functie **Spaardoelen** kun je doelen definiëren zoals "Spaar 20.000 PLN voor volgende zomer". De AI analyseert je inkomsten, uitgaven en uitgavengewoonten van de afgelopen 3 maanden en genereert vervolgens een stapsgewijs plan om je te helpen je doel te bereiken.
+
+## Hoe te openen
+
+- Navigeer naar **Doelen** vanaf het startscherm of de instellingen
+- De lijst met Doelen toont al je actieve, gepauzeerde, voltooide en mislukte doelen
+
+## Een doel aanmaken
+
+1. Tik op de knop **+** op het scherm Doelen
+2. Vul het formulier in:
+   - **Doelnaam** — bijv. "Vakantiefonds", "Noodspaarpot"
+   - **Streefbedrag** — het bedrag dat je wilt sparen
+   - **Valuta** — selecteer uit USD, EUR, PLN, GBP, UAH, RUB, BYN
+   - **Deadline** — kies een streefdatum, of gebruik de snelkeuzeknoppen: 3 maanden, 6 maanden, 1 jaar, 2 jaar
+3. Tik op **Doel aanmaken**
+
+De AI genereert automatisch een spaarplan na het aanmaken. Dit gebruikt **2 AI-verzoeken** van je maandelijkse toewijzing.
+
+## AI-plan
+
+Na het aanmaken van een doel genereert de AI een gedetailleerd plan met:
+
+### Bijdragebedragen
+- **Maandelijkse bijdrage** — hoeveel je per maand opzij moet zetten
+- **Wekelijkse bijdrage** — opgesplitst in wekelijkse bedragen
+
+### Haalbaarheidsbeoordeling
+
+De AI beoordeelt hoe realistisch je doel is:
+
+| Beoordeling | Betekenis |
+|---|---|
+| **Eenvoudig** | Haalbaar met minimale veranderingen in levensstijl |
+| **Gematigd** | Vereist enkele aanpassingen aan je uitgaven |
+| **Uitdagend** | Vereist aanzienlijke bezuinigingen op je huidige uitgaven |
+| **Onrealistisch** | Zeer onwaarschijnlijk zonder grote veranderingen in inkomsten/uitgaven |
+
+### Categoriegebonden uitgavenlimieten
+
+Een tabel die voor elke uitgavencategorie toont:
+- **Huidig** — je gemiddelde maandelijkse uitgaven
+- **Voorgesteld** — de door de AI aanbevolen limiet
+- **Besparing** — hoeveel je per maand zou besparen
+
+### Controlepunten
+
+Een visuele tijdlijn met 3–5 mijlpalen:
+- Elk controlepunt heeft een **datum**, **streefbedrag** en **label**
+- Bereikte controlepunten tonen een groen vinkje
+- Helpt je bij te houden of je op schema ligt
+
+### Samenvatting
+
+Een korte tekstuele uitleg van het plan met praktisch advies dat is afgestemd op je uitgavenpatronen.
+
+## Voortgang volgen
+
+Het detailscherm van het doel toont:
+
+- **Voortgangsbalk** — percentage van het streefbedrag dat is gespaard
+- Indicator **Op schema / Achterop**
+- **Verwachte voltooiingsdatum** — wanneer je het doel bereikt bij je huidige tempo
+- **Maandelijks nodig** — hoeveel je nog per maand moet sparen
+- **Achterop met** — hoeveel je achterloopt op schema (indien van toepassing)
+
+## Doelen beheren
+
+- **Bedrag bijwerken** — pas je huidige spaarbedrag aan naarmate je spaart
+- **Doel bewerken** — wijzig naam, streefbedrag of deadline
+- **Pauzeren / Hervatten** — pauzeer een doel tijdelijk
+- **Plan opnieuw genereren** — krijg een nieuw AI-plan op basis van bijgewerkte uitgavengegevens (kost 2 AI-verzoeken)
+- **Verwijderen** — verwijder een doel permanent
+
+## Doelstatussen
+
+| Status | Betekenis |
+|---|---|
+| **Actief** | Doel is in uitvoering |
+| **Gepauzeerd** | Tijdelijk gepauzeerd |
+| **Voltooid** | Streefbedrag bereikt |
+| **Mislukt** | Deadline verstreken zonder het streefbedrag te bereiken |
+
+## AI-kosten
+
+| Actie | AI-verzoeken |
+|---|---|
+| Doel aanmaken (inclusief plangeneratie) | 2 |
+| Plan opnieuw genereren | 2 |
+| Doelen / voortgang bekijken | Gratis |
+
+## Veelgestelde vragen
+
+- **V: Werkt de AI het plan automatisch bij?**
+  **A:** Nee. Het plan wordt één keer gegenereerd wanneer je het doel aanmaakt. Tik op **Plan opnieuw genereren** om een bijgewerkt plan te krijgen op basis van je nieuwste uitgavengegevens.
+
+- **V: Kan ik meerdere doelen tegelijk hebben?**
+  **A:** Ja, je kunt zoveel doelen aanmaken als je wilt. Elk doel wordt onafhankelijk bijgehouden.
+
+- **V: Hoe kent de AI mijn uitgavenpatronen?**
+  **A:** Het analyseert je uitgaven- en inkomstengeschiedenis van de afgelopen 3 maanden in het momenteel geselecteerde account.
+
+- **V: Worden mijn doelgegevens met iemand gedeeld?**
+  **A:** Doelen zijn gekoppeld aan je account. In gedeelde accounts kunnen andere leden met toegang de doelen zien.
+
+---
+
+*Zie ook: AI-chat | Budgetten | Fat Finder*
+`,
+    },
+    {
+      id: '19-fat-finder',
+      title: `Fat Finder (Uitgavencontrole)`,
+      description: `Een AI-aangedreven maandelijkse controle die je uitgaven analyseert, verspilling identificeert — abonnementen, terugkerende uitspattingen, onnodige diensten — en concrete bezuinigingen voorstelt met geschatte besparingen. ("Fat Finder" is de naam van de functie; letterlijk "vetzoeker" — het spoort overtollige uitgaven op.)`,
+      body: `# Fat Finder (Uitgavencontrole)
+
+> Een AI-aangedreven maandelijkse controle die je uitgaven analyseert, verspilling identificeert — abonnementen, terugkerende uitspattingen, onnodige diensten — en concrete bezuinigingen voorstelt met geschatte besparingen. ("Fat Finder" is de naam van de functie; letterlijk "vetzoeker" — het spoort overtollige uitgaven op.)
+
+## Overzicht
+
+De **Fat Finder** scant 3 maanden van je transactiegeschiedenis, detecteert uitgavenpatronen en genereert een rapport dat aangeeft waar je geld zou kunnen besparen. Elke bevinding bevat specifieke bedragen, ernstniveaus en praktische suggesties.
+
+## Hoe te openen
+
+- **Dashboardkaart** — toont gecachede Fat Finder-resultaten op het startscherm. Tik om het volledige rapport te openen en een nieuwe analyse te genereren.
+- **Directe navigatie** — navigeer naar het Fat Finder-scherm vanaf de dashboardkaart
+
+## Vereisten
+
+- Elke rapportgeneratie gebruikt **3 AI-verzoeken** van je maandelijkse toewijzing
+- Rapporten worden **30 dagen gecached** per analyseperiode
+
+## Rapportsamenvatting
+
+Bovenaan het rapport zie je:
+- **Totale potentiële maandelijkse besparing** — het gecombineerde bedrag dat je zou kunnen besparen
+- **Analyseperiode** — het geanalyseerde datumbereik
+- **Aantal bevindingen** — hoeveel mogelijkheden zijn geïdentificeerd
+
+## Bevindingstypes
+
+De AI identificeert deze categorieën van uitgavenverspilling:
+
+| Type | Beschrijving |
+|---|---|
+| **Abonnement** | Terugkerende kosten van vergelijkbare bedragen per maand (streaming, sportschool, SaaS-tools) |
+| **Terugkerende uitspatting** | Regelmatige niet-essentiële uitgaven die oplopen (vaak uit eten, koffierondjes) |
+| **Grote eenmalige uitgave** | Individuele uitgaven die aanzienlijk hoger zijn dan je gemiddelde transactie |
+| **Categorieoverschrijding** | Categorieën waar de uitgaven met meer dan 20% maand-op-maand zijn gegroeid |
+| **Overmatig dienstgebruik** | Veel gebruik van bezorg-, taxi- of vergelijkbare diensten |
+
+## Bevindingsdetails
+
+Elke bevindingskaart bevat:
+
+- **Titel** — korte beschrijving van het probleem
+- **Ernstbadge** — Laag, Gemiddeld of Hoog
+  - **Laag** — minder dan 5% van de totale uitgaven
+  - **Gemiddeld** — 5–10% van de totale uitgaven
+  - **Hoog** — meer dan 10% van de totale uitgaven
+- **Beschrijving** — gedetailleerde uitleg met specifieke bedragen
+- **Huidig vs. Voorgesteld** — je huidige maandelijkse kosten vergeleken met de aanbeveling van de AI
+- **Potentiële besparing** — hoeveel je per maand zou besparen
+- **Actiesuggestie** — een concrete aanbeveling van één zin
+- **Gerelateerde uitgaven** — uitklapbare lijst van specifieke transacties die deze bevinding hebben veroorzaakt
+
+## Acties
+
+- **Opnieuw genereren** — forceer een nieuwe analyse met de nieuwste gegevens (kost 3 AI-verzoeken)
+- **Uitklappen/inklappen** — tik op bevindingen om beschrijvingen en gerelateerde uitgaven te tonen of te verbergen
+
+## Dashboardkaart
+
+De compacte Fat Finder-kaart op het startscherm toont:
+- Totale potentiële besparing prominent weergegeven
+- Top 3 bevindingen met ernststippen en besparingsbedragen
+- Knop **Volledig rapport bekijken** om alle details te zien
+
+Als er geen bevindingen worden gedetecteerd, zie je een bericht "Het ziet er goed uit!".
+
+## Veelgestelde vragen
+
+- **V: Hoe vaak moet ik de Fat Finder controleren?**
+  **A:** Het rapport beslaat de huidige maand. Controleer het eens per maand voor de meest relevante inzichten. Tik op **Opnieuw genereren** om een nieuwe analyse te krijgen.
+
+- **V: Waarom zie ik elke maand andere bevindingen?**
+  **A:** De AI analyseert je meest recente 3 maanden aan gegevens. Naarmate je uitgavenpatronen veranderen, worden de bevindingen dienovereenkomstig bijgewerkt.
+
+- **V: De AI markeerde een noodzakelijke uitgave. Kan ik deze negeren?**
+  **A:** Momenteel kunnen individuele bevindingen niet worden genegeerd. De AI geeft suggesties — jij beslist op welke je actie onderneemt.
+
+- **V: Werkt het met versleutelde accounts?**
+  **A:** Voor accounts met volledige versleuteling (Niveau 2) kan de Fat Finder uitgavenbeschrijvingen niet analyseren, dus produceert deze mogelijk minder of minder specifieke bevindingen.
+
+---
+
+*Zie ook: Spaardoelen | Uitgavenverhaal | AI-chat*
+`,
+    },
+    {
+      id: '20-ai-response-mode',
+      title: `AI-antwoordmodus`,
+      description: `Kies hoe de AI met je praat. Eenvoudige uitleg voor beginners, evenwichtig advies voor dagelijks gebruik, of financiële analyse op expertniveau voor professionals.`,
+      body: `# AI-antwoordmodus
+
+> Kies hoe de AI met je praat. Eenvoudige uitleg voor beginners, evenwichtig advies voor dagelijks gebruik, of financiële analyse op expertniveau voor professionals.
+
+## Overzicht
+
+Met de instelling **AI-antwoordmodus** bepaal je de toon en het detailniveau van alle door AI gegenereerde inhoud in de app. Dit heeft invloed op AI-chatantwoorden, Bestedingsverhalen, AI-inzichten en Fat Finder-rapporten.
+
+## Hoe je het wijzigt
+
+1. Ga naar **Instellingen** (tandwielpictogram)
+2. Scroll naar het gedeelte **App-instellingen**
+3. Zoek **AI-antwoordstijl**
+4. Tik op een van de drie opties
+
+## Beschikbare modi
+
+### Eenvoudig
+
+Ideaal voor mensen die nieuw zijn in persoonlijke financiën.
+
+- Gebruikt alledaagse taal, vermijdt financieel jargon
+- Gebruikt analogieën en vergelijkingen (bijv. "denk aan een budget als een pot koekjes")
+- Korte zinnen en opsommingstekens
+- Rondt bedragen af op hele getallen
+- Aanmoedigende, ondersteunende toon
+- Legt financiële termen tussen haakjes uit wanneer ze gebruikt moeten worden
+
+### Evenwichtig (Standaard)
+
+Goed voor de meeste gebruikers die duidelijk, praktisch advies willen.
+
+- Mix van begrijpelijke taal en basale financiële termen
+- Legt concepten uit bij de eerste vermelding
+- Gebruikt concrete getallen, maar rondt af waar gepast
+- Uitvoerbare en praktische aanbevelingen
+
+### Expert
+
+Ontworpen voor financieel onderlegde gebruikers en professionals.
+
+- Gebruikt vakspecifieke financiële terminologie (burn rate, cashflow, liquiditeit, allocatie)
+- Bevat ratio's en percentages (spaarquote, uitgaven-inkomstenverhouding)
+- Verwijst naar richtwaarden (50/30/20-regel, aanbevolen noodfonds)
+- Datadichte antwoorden: tabellen, precieze getallen, trendvergelijkingen
+- Stelt geavanceerde strategieën voor (belastingoptimalisatie, prognoses voor samengestelde rente)
+- Professionele, analytische toon
+
+## AI-model vs. AI-antwoordmodus
+
+Dit zijn twee aparte instellingen:
+
+| Instelling | Wat het verandert |
+|---|---|
+| **AI-antwoordmodus** | *Hoe* de AI met je praat — toon, woordenschat, detailniveau |
+| **AI-model** | *Welk* onderliggend model wordt gebruikt — beïnvloedt kwaliteit, snelheid en quotumverbruik |
+
+Je kunt ze vrij combineren: bijv. Expert-modus met Fast-model, of Eenvoudig-modus met Quality-model.
+
+## Wat het beïnvloedt
+
+De antwoordmodus verandert de communicatiestijl van de AI in **alle AI-functies**:
+
+| Functie | Effect |
+|---|---|
+| **AI-chat** | Antwoordtoon, woordenschat en detailniveau |
+| **Bestedingsverhaal** | Verhaalstijl en complexiteit van inzichten |
+| **AI-inzichten** | Hoe grafiekbeschrijvingen en suggesties worden geformuleerd |
+| **Fat Finder** | Beschrijvingen van bevindingen en actiesuggesties |
+| **Spaardoelen** | Taal van plansamenvatting en advies |
+
+## Opslag
+
+- Je keuze wordt opgeslagen in je profiel en gesynchroniseerd tussen apparaten
+- Het geldt direct voor alle nieuwe door AI gegenereerde inhoud
+- Eerder gegenereerde inhoud (gecachte verhalen, inzichten) wordt niet opnieuw gegenereerd — tik op **Opnieuw genereren** op die schermen om de nieuwe stijl te zien
+
+## Veelgestelde vragen
+
+- **V: Beïnvloedt de antwoordmodus de nauwkeurigheid van de analyse?**
+  **A:** Nee. De onderliggende financiële analyse is identiek, ongeacht de modus. Alleen de communicatiestijl verandert.
+
+- **V: Kan ik het op elk moment terugzetten?**
+  **A:** Ja. Wissel vrij tussen de modi in Instellingen. De wijziging gaat direct in voor nieuwe AI-antwoorden.
+
+- **V: Welke modus moet ik kiezen?**
+  **A:** Als je het niet zeker weet, begin dan met **Evenwichtig**. Schakel over naar **Eenvoudig** als antwoorden te technisch aanvoelen, of naar **Expert** als je meer gedetailleerde financiële analyse wilt.
+
+---
+
+*Zie ook: Instellingen | AI-chat | Bestedingsverhaal*
+`,
+    },
+    {
+      id: '21-widgets',
+      title: `Widgets voor het startscherm`,
+      description: `Voeg Android-widgets toe aan je startscherm voor directe toegang tot je bestedingsgegevens — of om uitgaven toe te voegen zonder de app zelfs maar te openen.`,
+      body: `# Widgets voor het startscherm
+
+> Voeg Android-widgets toe aan je startscherm voor directe toegang tot je bestedingsgegevens — of om uitgaven toe te voegen zonder de app zelfs maar te openen.
+
+## Wat zijn widgets?
+
+Widgets zijn kleine interactieve panelen die op je Android-startscherm staan. AI Budget Assistant biedt vier widgets:
+
+| Widget | Grootte | Wat het toont |
+|--------|------|---------------|
+| **Budget – Vandaag** | Klein | Totale uitgaven van vandaag + verandering t.o.v. gisteren |
+| **Budget – Week** | Middel | Staafdiagram van de laatste 7 dagen |
+| **Budget – Overzicht** | Groot | Voortgangsbalken van budgetten + belangrijkste bestedingscategorieën |
+| **Budget – Snel toevoegen** | Compacte strip | Drie knoppen om te tikken en te openen |
+
+> **Alleen Android.** iOS ondersteunt geen widgets voor het startscherm. Alle dezelfde functies zijn beschikbaar in de app.
+
+---
+
+## Een widget toevoegen
+
+1. **Houd lang ingedrukt** op een leeg gedeelte van je startscherm
+2. Tik op **Widgets**
+3. Scroll om **AI Budget Assistant** te vinden
+4. **Houd lang ingedrukt** op de widget die je wilt en sleep die naar je startscherm
+5. Laat los om hem te plaatsen
+
+Herhaal dit om meerdere widgets toe te voegen.
+
+---
+
+## Budget – Vandaag (Klein)
+
+![Kleine widget]({{IMG:home-1.jpg}})
+
+De kleinste widget toont een snelle dagelijkse momentopname:
+
+- **Totaal van vandaag** aan uitgaven
+- **Verschilindicator** — of je meer of minder hebt uitgegeven dan gisteren (groen = minder, rood = meer)
+
+**Grootte**: 110 × 40 dp (ongeveer 1 kolom × 1 rij op de meeste launchers)
+
+Tik op de widget om de app te openen.
+
+---
+
+## Budget – Week (Middel)
+
+De middelgrote widget geeft je in één oogopslag een weekoverzicht:
+
+- **Staafdiagram** van de uitgaven voor elk van de laatste 7 dagen
+- **Totaal van vandaag** weergegeven onder de grafiek
+
+**Grootte**: 250 × 110 dp (ongeveer 2 kolommen × 2 rijen)
+
+Tik op de widget om de app te openen.
+
+---
+
+## Budget – Overzicht (Groot)
+
+De grote widget is je financiële dashboard op het startscherm:
+
+- **Voortgangsbalken van budgetten** voor elk actief budget — toont hoeveel van de budgetperiode je hebt gebruikt
+- **Belangrijkste bestedingscategorieën** met bedragen voor de huidige periode
+
+**Grootte**: 250 × 180 dp (ongeveer 2 kolommen × 4 rijen)
+
+Tik op de widget om de app te openen.
+
+---
+
+## Budget – Snel toevoegen
+
+Met de widget Snel toevoegen kun je met één tik beginnen met het toevoegen van een uitgave — je hoeft de app niet eerst te openen.
+
+\`\`\`
+┌──────────────────────────────────────┐
+│   🎤 Stem   │  📷 Scan  │  ✏️ Toevoegen  │
+└──────────────────────────────────────┘
+\`\`\`
+
+| Knop | Wat er gebeurt |
+|--------|-------------|
+| 🎤 **Stem** | Opent de app op het scherm voor spraakopname |
+| 📷 **Scan** | Opent de app op de bonscanner |
+| ✏️ **Toevoegen** | Opent de app op het handmatige uitgavenformulier |
+
+**Grootte**: 250 × 60 dp (compacte horizontale strip)
+
+> **Tip:** Snel toevoegen toont geen gegevens — het is altijd up-to-date en gebruikt geen batterij voor verversen op de achtergrond.
+
+---
+
+## Vernieuwen van widgetgegevens
+
+| Widget | Vernieuwingsinterval |
+|--------|-----------------|
+| Budget – Vandaag | Elke 30 minuten |
+| Budget – Week | Elke 30 minuten |
+| Budget – Overzicht | Elke 30 minuten |
+| Budget – Snel toevoegen | Statisch, vernieuwt nooit |
+
+Datawidgets halen gegevens uit de lokale opslag van je apparaat, dus ze werken ook zonder internetverbinding.
+
+---
+
+## Veelgestelde vragen
+
+**V: Waarom verschijnen widgets niet in de widgetkiezer?**
+A: Zorg ervoor dat de app is geïnstalleerd en dat je minstens één keer bent ingelogd. Als de widgets niet verschijnen, probeer dan je launcher opnieuw te starten of de app opnieuw te installeren.
+
+**V: Mijn widget toont "Nog geen gegevens". Wat moet ik doen?**
+A: Open de app en voeg minstens één uitgave toe of controleer of de synchronisatie is voltooid. De widget wordt binnen 30 minuten vernieuwd, of je kunt handmatig een synchronisatie starten via **Instellingen → Nu synchroniseren**.
+
+**V: Zijn widgets beschikbaar op iOS?**
+A: Nee. Widgets voor het startscherm vereisen Android. Alle dezelfde functies zijn beschikbaar in de app op iOS.
+
+**V: Kan ik de grootte van de widgets aanpassen?**
+A: Budget – Vandaag en Budget – Snel toevoegen hebben een vaste grootte. Budget – Week kan horizontaal worden vergroot of verkleind. Budget – Overzicht kan zowel horizontaal als verticaal worden aangepast.
+
+---
+
+*Zie ook: Spraakinvoer & bonnen scannen | Uitgaven & inkomsten*
+`,
+    },
+    {
+      id: '22-chat-bots',
+      title: `Chatbots — Telegram, WhatsApp & Slack`,
+      description: `Beheer je financiën rechtstreeks vanuit Telegram, WhatsApp of Slack. Chat met AI, voeg uitgaven toe, scan bonnen en stuur spraakberichten — zonder de app te openen.`,
+      body: `# Chatbots — Telegram, WhatsApp & Slack
+
+> Beheer je financiën rechtstreeks vanuit Telegram, WhatsApp of Slack. Chat met AI, voeg uitgaven toe, scan bonnen en stuur spraakberichten — zonder de app te openen.
+
+## Overzicht
+
+Verbind je account met **Telegram**, **WhatsApp**, **Slack** of een willekeurige combinatie tegelijk. Alle drie de bots bieden dezelfde functies — gebruik welke messenger je maar wilt.
+
+Om te verbinden: **Instellingen → Chatbots**.
+
+## Je account koppelen
+
+### Telegram
+1. Tik op **Telegram verbinden** — er verschijnt een code van 6 tekens (10 minuten geldig)
+2. Open Telegram en zoek de bot
+3. Stuur \`/link JOUW_CODE\` (bijv. \`/link A3F2B1\`)
+4. Je ziet "Account succesvol gekoppeld!"
+
+### WhatsApp
+1. Tik op **WhatsApp verbinden** — er verschijnen een code en een QR-code
+2. Tik op **WhatsApp openen** (het bericht is al ingevuld) of scan de QR-code
+3. Stuur \`link JOUW_CODE\` naar de bot
+4. Je ziet "Account succesvol gekoppeld!"
+
+### Slack
+1. Tik op **Slack verbinden** — er verschijnt een code van 6 tekens (10 minuten geldig)
+2. Open Slack, zoek de **AI Budget Assistant**-app en open er een direct bericht mee
+3. Stuur \`link JOUW_CODE\` (bijv. \`link A3F2B1\`)
+4. Je ziet "Account succesvol gekoppeld!"
+
+> Telegram, WhatsApp en Slack kunnen allemaal tegelijkertijd met hetzelfde account worden verbonden.
+
+## Wat je kunt doen
+
+- **Uitgaven of inkomsten toevoegen**: typ op natuurlijke wijze of gebruik commando's
+- **AI-chat**: stel elke financiële vraag — dezelfde AI als in de app
+- **Spraakberichten**: spreek je uitgave of vraag in (2 AI-verzoeken per bericht)
+- **Bonfoto's**: stuur een foto om automatisch te scannen (2 AI-verzoeken per foto)
+- **AI-gebruik controleren**: \`/usage\`
+- **Van account wisselen**: \`/account\`
+
+## Commando's
+
+| Commando | Wat het doet |
+|---|---|
+| \`/link CODE\` | Koppel je messenger aan de app |
+| \`/expense 50 lunch\` | Voeg een uitgave toe |
+| \`/income 3000 salary\` | Voeg inkomsten toe |
+| \`/category expense Food\` | Maak een categorie aan |
+| \`/usage\` | Bekijk AI-verzoekgebruik en limieten |
+| \`/account\` | Wissel van actief account |
+| \`/newchat\` | Start een nieuw AI-gesprek |
+| \`/unlink\` | Ontkoppel de bot |
+| \`/help\` | Toon alle commando's |
+
+> In **WhatsApp** en **Slack** werken commando's met of zonder de voorloop-\`/\`. Je kunt ook gewoon een bedrag en omschrijving typen: \`50 lunch\`.
+
+## Bonnen scannen
+
+1. Maak een foto van een bon en stuur die naar de bot
+2. De bot haalt het bedrag, de datum en de verkoper eruit met OCR
+3. Als de datum onjuist is, stuur de juiste datum in het formaat \`DD.MM.JJJJ\`
+4. Bevestig om de uitgave toe te voegen, of annuleer
+
+## Meerdere accounts
+
+Als je meerdere accounts hebt (bijv. "Persoonlijk" en "Familie"):
+- Noem de accountnaam in je bericht: "Toon uitgaven in Familie" — de AI bevraagt dat account alleen voor dit bericht
+- Gebruik \`/account\` om het standaardaccount voor de bot permanent te wisselen
+
+## Kosten van AI-verzoeken
+
+| Actie | Gebruikte AI-verzoeken |
+|---|---|
+| Tekstbericht / AI-chat | 1 |
+| Spraakbericht | 2 |
+| Bonfoto | 2 |
+
+Wanneer je limiet is bereikt, laat de bot het je weten in plaats van het verzoek te verwerken. Gebruik \`/usage\` om resterende verzoeken te controleren.
+
+## Valutaondersteuning
+
+De bot herkent valutasymbolen: ₴ (UAH), \$ (USD), € (EUR), zł (PLN), £ (GBP), ₽ (RUB).
+
+**Voorbeelden:** \`/expense 50\$ lunch\` · \`50 zł lunch\` · \`expense 100₴ groceries\`
+
+## Veelgestelde vragen
+
+**V: Kan ik Telegram, WhatsApp en Slack verbinden?**
+Ja — het zijn onafhankelijke koppelingen en ze werken allemaal tegelijk.
+
+**V: Welke taal gebruikt de bot?**
+De taal uit Instellingen → Weergave.
+
+**V: Heb ik een abonnement nodig om de bots te gebruiken?**
+De bots gebruiken AI-verzoeken uit het maandelijkse tegoed van je abonnement. Gebruikers van het gratis abonnement hebben een lagere maandlimiet.
+
+---
+
+*Zie ook: AI-chat | Accounts | Instellingen*
+`,
+    },
+    {
+      id: '23-scenario-simulator',
+      title: `Scenariosimulator`,
+      description: `Versleep schuifregelaars om je uitgaven- en inkomstencategorieën aan te passen — en zie precies hoeveel je spaargeld kan veranderen over 3, 6 of 12 maanden.`,
+      body: `# Scenariosimulator
+
+> Versleep schuifregelaars om je uitgaven- en inkomstencategorieën aan te passen — en zie precies hoeveel je spaargeld kan veranderen over 3, 6 of 12 maanden.
+
+## Overzicht
+
+Met de **Scenariosimulator** kun je "wat als?"-vragen over je financiën beantwoorden zonder echte gegevens aan te raken. Verschuif een schuifregelaar om je voedseluitgaven met 20% te verlagen, voeg een bijbaaninkomen van 1.000 zł toe, en zie direct hoe je cumulatieve spaargeld er over 6 maanden uitziet.
+
+Alle berekeningen zijn lokaal — er worden geen gegevens ergens naartoe gestuurd, en er verandert niets in je werkelijke uitgavengeschiedenis.
+
+## Hoe je het opent
+
+Open het tabblad **Analyses** en tik op de banner **Scenariosimulator** boven aan het scherm.
+
+## Hoe de cijfers worden berekend
+
+De simulator gebruikt je **laatste 3 maanden aan transacties** om een maandgemiddelde per categorie te schatten:
+
+\`\`\`
+maandgemiddelde = totaal voor categorie over de laatste 3 maanden ÷ 3
+\`\`\`
+
+Alle bedragen worden omgerekend naar je basisvaluta met de huidige wisselkoersen.
+
+## Uitgaven aanpassen
+
+Elke uitgavencategorie verschijnt met het huidige maandgemiddelde en een schuifregelaar van **−100%** tot **+100%** in stappen van 5%.
+
+- Sleep naar **links** (negatief) om bezuinigingen te modelleren — de balk wordt groen
+- Sleep naar **rechts** (positief) om hogere uitgaven te modelleren — de balk wordt rood
+- Het label onder de schuifregelaar toont het resulterende bedrag
+
+## Inkomsten aanpassen
+
+Inkomstencategorieën werken op dezelfde manier. Sleep naar rechts voor een salarisverhoging, sleep naar links voor een verlaging.
+
+### Extra inkomsten toevoegen
+
+Tik op **Extra inkomsten toevoegen** in de sectie Inkomsten om een eenmalige bron in te voeren (bijv. een bijproject of freelancewerk). Voer een omschrijving en een maandbedrag in. Je kunt meerdere rijen met extra inkomsten toevoegen.
+
+## Projectiegrafiek
+
+De grafiek toont het cumulatieve spaargeld over de geselecteerde periode:
+
+- **Grijze lijn** — huidige koers (geen wijzigingen)
+- **Gekleurde lijn** — scenariokoers (met jouw aanpassingen)
+
+Gebruik de chips **3 / 6 / 12 maanden** boven de grafiek om de projectieperiode te wijzigen.
+
+## Samenvattingskaarten
+
+Drie kaarten onder de grafiek tonen de scenariototalen voor 3, 6 en 12 maanden naast elkaar. De momenteel geselecteerde periode is gemarkeerd. Elke kaart toont:
+
+- Cumulatief spaargeld van het scenario
+- Huidig cumulatief spaargeld (ter vergelijking)
+- Verschil ten opzichte van de huidige koers
+
+## Samenvattingsbalk (boven aan het scherm)
+
+De kaart helemaal boven aan het scherm wordt in realtime bijgewerkt:
+
+| Linkerkant | Rechterkant |
+|---|---|
+| Huidig maandelijks spaargeld | Maandelijks spaargeld van het scenario |
+| (ongewijzigd) | ↑ of ↓ verschil |
+
+## Scenario's opslaan
+
+Tik op **Scenario opslaan** in de actiebalk bovenaan om de huidige stand van de schuifregelaars en de projectieperiode op te slaan onder een naam die je kiest (bijv. "Uit eten 30% minder"). Opgeslagen scenario's blijven op je apparaat bewaard — je kunt er op elk moment naar terugkeren.
+
+- **Gratis abonnement**: maximaal 5 opgeslagen scenario's
+- **Pro / Business**: onbeperkt
+
+## Een opgeslagen scenario laden
+
+Tik op **Opgeslagen scenario's** (mappictogram) in de actiebalk om de lijst met opgeslagen scenario's te openen. Tik op een rij om alle schuifregelaars en de periode direct naar die staat te herstellen. Om een opgeslagen scenario te verwijderen, tik op het prullenbakpictogram op de rij.
+
+## Een projectie delen
+
+Tik op **Delen** (naast de knop Resetten onder aan het scherm) om het systeem-deelmenu te openen met een tekstsamenvatting van de huidige projectie. De samenvatting bevat:
+
+- Huidig versus scenario maandelijks spaargeld
+- Maandelijks verschil
+- Cumulatieve totalen voor de geselecteerde periode
+
+Er worden geen gegevens geüpload — het deelmenu gebruikt alleen tekst, lokaal gegenereerd.
+
+## Resetten
+
+Tik op **Alles resetten** onderaan om elke schuifregelaar en alle extra inkomsten naar nul terug te zetten. Opgeslagen scenario's worden niet beïnvloed door het resetten.
+
+## Veelgestelde vragen
+
+- **V: Beïnvloedt het wijzigen van schuifregelaars mijn echte gegevens?**
+  **A:** Nee. De simulator is alleen-lezen — hij leest alleen je historische gegevens om gemiddelden te berekenen. Er wordt niets opgeslagen of gewijzigd.
+
+- **V: Waarom lijken de categoriebedragen lager dan verwacht?**
+  **A:** De bedragen zijn een gemiddelde over 3 maanden. Als je in een van die maanden ongewoon weinig hebt uitgegeven (bijv. je was weg), is het gemiddelde lager.
+
+- **V: Mijn inkomstencategorie ontbreekt.**
+  **A:** Alleen categorieën met minstens één transactie in de laatste 3 maanden verschijnen in de simulator.
+
+- **V: De projectie lijkt fout — mijn spaargeld wordt als negatief weergegeven.**
+  **A:** Als je huidige uitgaven hoger zijn dan je inkomsten, is de basislijn al negatief. De simulator laat zien met hoeveel het scenario dat gat verbetert of verergert.
+
+---
+
+*Zie ook: Analyses | Fat Finder | Spaardoelen*
+`,
+    },
+    {
+      id: '24-referral',
+      title: `Vrienden uitnodigen — Verwijzingsprogramma`,
+      description: `Nodig vrienden uit, verdien bonus-AI-verzoeken en ontgrendel mijlpalen. Deel je unieke verwijzingscode en word beloond wanneer vrienden de app actief gebruiken.`,
+      body: `# Vrienden uitnodigen — Verwijzingsprogramma
+
+> Nodig vrienden uit, verdien bonus-AI-verzoeken en ontgrendel mijlpalen. Deel je unieke verwijzingscode en word beloond wanneer vrienden de app actief gebruiken.
+
+## Overzicht
+
+Met het Verwijzingsprogramma kun je vrienden uitnodigen voor AI Budget Assistant. Wanneer ze zich aanmelden met jouw code en de app 7 dagen actief gebruiken, verdien je **+30 bonus-AI-verzoeken**. Verwezen vrienden krijgen een **verlengde proefperiode van 14 dagen** in plaats van de standaard 7 dagen.
+
+## Je verwijzingscode
+
+Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op het scherm **Vrienden uitnodigen**:
+
+1. Ga naar **Instellingen** → **Vrienden uitnodigen**
+2. Je code wordt boven aan het scherm weergegeven
+3. Gebruik **Kopiëren** om de code naar je klembord te kopiëren
+4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen
+
+## Hoe het werkt
+
+1. **Deel je code** — stuur deze naar vrienden via een messenger of sociale media
+2. **Vriend registreert** — ze voeren jouw code in tijdens de registratie (optioneel veld)
+3. **Wachtperiode van 7 dagen** — de verwijzing blijft in de status "In behandeling"
+4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (gegevens synchroniseren)
+5. **Verwijzing wordt Actief** — je ontvangt **+30 AI-verzoeken** als bonus
+
+## Verwijzingsstatussen
+
+| Status | Betekenis |
+|---|---|
+| **In behandeling** | Vriend geregistreerd, 7 dagen wachten op activiteitsbevestiging |
+| **Actief** | Vriend bevestigd als actieve gebruiker, bonus aan jou toegekend |
+| **Verlopen** | 30 dagen verstreken zonder dat de vriend actief werd |
+
+## Statistieken
+
+Het scherm Vrienden uitnodigen toont je verwijzingsstatistieken:
+
+- **Totaal** — hoeveel mensen je code hebben gebruikt
+- **Actief** — bevestigde actieve verwijzingen (bonus toegekend)
+- **In behandeling** — wachtend op activiteitsbevestiging
+
+## Bonus-AI-verzoeken
+
+Voor elke verwijzing die **Actief** wordt, ontvang je **+30 AI-verzoeken**. Deze bonusverzoeken komen bovenop de maandlimiet van je abonnement en worden niet elke maand opnieuw ingesteld.
+
+Je totale bonusverzoeken worden weergegeven op het scherm Vrienden uitnodigen.
+
+## Mijlpalen
+
+Naarmate je actieve verwijzingen verzamelt, ontgrendel je mijlpalen:
+
+| Mijlpaal | Beloning |
+|---|---|
+| **5 actieve verwijzingen** | Gratis maand Pro (promotiecode naar je e-mail gestuurd) |
+| **10 actieve verwijzingen** | Ambassadeursbadge |
+
+Je voortgang naar de volgende mijlpaal wordt weergegeven als een voortgangsbalk op het scherm Vrienden uitnodigen.
+
+## Voordelen voor verwezen vrienden
+
+Vrienden die zich registreren met jouw verwijzingscode ontvangen:
+
+- **Verlengde proefperiode van 14 dagen** (in plaats van de standaard proefperiode van 7 dagen)
+- De einddatum van de proefperiode wordt weergegeven op het scherm **Abonnement**
+
+## Veelgestelde vragen
+
+- **V: Waar vind ik mijn verwijzingscode?**
+  **A:** Ga naar Instellingen → Vrienden uitnodigen. Je code wordt bovenaan weergegeven.
+
+- **V: Waarom staat mijn verwijzing nog op "In behandeling"?**
+  **A:** Verwijzingen blijven minstens 7 dagen in behandeling. De vriend moet de app in die periode ook actief gebruiken (uitgaven toevoegen, gegevens synchroniseren).
+
+- **V: Wanneer verloopt een verwijzing?**
+  **A:** Als de verwezen vriend niet binnen 30 dagen een actieve gebruiker wordt, verloopt de verwijzing.
+
+- **V: Worden bonus-AI-verzoeken maandelijks opnieuw ingesteld?**
+  **A:** Nee, bonusverzoeken uit verwijzingen zijn permanent en worden niet opnieuw ingesteld.
+
+- **V: Kan ik mijn eigen verwijzingscode gebruiken?**
+  **A:** Nee, zelfverwijzing is niet toegestaan.
+
+---
+
+*Zie ook: Abonnement | AI-chat*
+`,
+    },
+    {
+      id: '27-bank-import',
+      title: `Transacties importeren vanaf je bank`,
+      description: `Importeer transacties uit een CSV- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.`,
+      body: `# Transacties importeren vanaf je bank
+
+> Importeer transacties uit een CSV- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.
+
+## Ondersteunde banken
+
+- **mBank** — CSV-export
+- **PKO BP** — CSV-export
+- **Erste Bank** — PDF-afschrift
+- **Alior Bank** — PDF-afschrift
+- **Revolut** — CSV-export
+- **Wise** — CSV-export (meerdere valuta's, FX-conversies automatisch gedetecteerd)
+- **Overig** — elke bank, via de universele kolomtoewijzer (CSV)
+
+Er worden in de loop van de tijd meer banken toegevoegd. Als die van jou er nog niet bij staat, gebruik dan **Overig** en wijs de kolommen zelf toe.
+
+## Hoe te importeren
+
+1. Ga naar **Instellingen → Transacties importeren**
+2. Kies je bank uit de lijst (of **Overig (eigen CSV)** als die er niet bij staat)
+3. Selecteer het bestand dat je van je bank hebt geëxporteerd
+4. De app toont een voorbeeld — elke rij is gemarkeerd als een uitgave, inkomsten of valutawissel
+5. Vink de rijen uit die je niet wilt, en tik vervolgens op **Importeren**
+
+De app slaat rijen over die al in je account bestaan door te matchen op datum, bedrag en valuta — hetzelfde bestand twee keer importeren maakt geen duplicaten aan. Gematchte rijen zijn standaard uitgevinkt; vink er één opnieuw aan als het werkelijk een aparte transactie is.
+
+## Waar je de export van je bank vindt
+
+- **mBank**: Web banking → Historia operacji → Eksport → CSV
+- **PKO BP**: iPKO → Historia operacji → Eksportuj → CSV
+- **Erste Bank**: bankowość internetowa → Wyciągi → pobierz wyciąg (PDF)
+- **Alior Bank**: Alior Online → Wyciągi → pobierz wyciąg (PDF)
+- **Revolut**: Revolut-app → Statements → kies datumbereik → CSV → Download
+- **Wise**: wise.com → Transactions → Statements and Reports → kies datumbereik → CSV → kies valuta/saldo → Download
+
+> **Wise-tip:** Wise genereert één CSV per valutasaldo. Importeer elke valuta apart. Maximaal 469 dagen per export.
+
+## Wise — valutaconversies en kosten
+
+Wanneer je binnen Wise valuta's omzet (bijv. 100 USD → EUR), maakt Wise twee rijen aan. De app detecteert deze paren automatisch en maakt één enkel **Valutawissel**-record aan (zichtbaar onder Portemonnee → Wissels) in plaats van twee niet-gerelateerde transacties.
+
+Wise rapporteert kosten ook in een aparte kolom \`Total fees\` — de app vouwt de kosten in het uitgavebedrag zodat het totaal overeenkomt met wat er daadwerkelijk van je saldo is afgegaan.
+
+## Wat wordt geïmporteerd
+
+Elke rij wordt een Uitgave, Inkomsten of Valutawissel. Categorieën worden automatisch voorgesteld voor populaire verkopers — je kunt ze later wijzigen. Elke geïmporteerde rij wordt gemarkeerd met de bronbank en een unieke ID, zodat hetzelfde bestand opnieuw importeren altijd veilig is.
+
+## "Overig" — universele CSV-toewijzer
+
+Als je bank niet in de lijst staat, kies dan **Overig (eigen CSV)**. De app toont een voorbeeld van je bestand en vraagt je aan te wijzen welke kolom de datum, het bedrag en de omschrijving bevat. Sla deze toewijzing op met een naam en de volgende CSV met dezelfde kolomindeling wordt automatisch geïmporteerd.
+
+## Eerdere imports & ongedaan maken
+
+De sectie **Eerdere imports** onder aan **Instellingen → Transacties importeren** toont de laatste 20 imports — bron, datum en aantal rijen.
+
+Om een recente import ongedaan te maken, tik op de **pijl voor ongedaan maken** (↩) aan de rechterkant. Alle transacties van die import worden verwijderd en de dedup-vergrendeling wordt opgeheven zodat je hetzelfde bestand schoon opnieuw kunt importeren.
+
+- Ongedaan maken is beschikbaar binnen **30 dagen** na de oorspronkelijke import.
+- Imports ouder dan 30 dagen tonen de knop voor ongedaan maken niet.
+
+## Zie je je bank niet?
+
+Onder aan **Instellingen → Transacties importeren** staat een kaart **"Zie je je bank niet?"**. Tik erop, voer de naam van de bank in en voeg een voorbeeldafschrift toe. Je verzoek gaat rechtstreeks naar ons team.
+
+## Codering
+
+Voor CSV-bestanden detecteert de app automatisch UTF-8 en Windows-1250 (gangbaar voor Poolse bankexports). PDF-afschriften worden direct gelezen — geen keuze voor codering nodig.
+
+---
+
+*Zie ook: Uitgaven & inkomsten | Portemonnee & wissel | Instellingen*
+`,
+    },
+    {
+      id: '28-reference-data',
+      title: `Referentiegegevens`,
+      description: `Categorieën, verkopers, tags en projecten zijn de bouwstenen voor het organiseren van je uitgaven. Beheer ze allemaal vanuit **Instellingen → Referentiegegevens**.`,
+      body: `# Referentiegegevens
+
+> Categorieën, verkopers, tags en projecten zijn de bouwstenen voor het organiseren van je uitgaven. Beheer ze allemaal vanuit **Instellingen → Referentiegegevens**.
+
+## Overzicht
+
+Alle vier de soorten referentiegegevens worden beheerd vanuit één centrale plek in Instellingen. De interface is consistent: **tik op een rij om te bewerken**, tik op **+** om toe te voegen, tik op het **prullenbakpictogram** om te verwijderen.
+
+> **Kijker**-rol: Leden met Kijker-toegang kunnen referentiegegevens bekijken, maar niet toevoegen, hernoemen of verwijderen.
+
+## Categorieën
+
+Categorieën classificeren je uitgaven en inkomsten. Elke categorie heeft een naam en een kleur.
+
+- Tik op een categorierij om deze te hernoemen of de kleur te wijzigen
+- Tik op **+** naast "Uitgavencategorieën" of "Inkomstencategorieën" om een nieuwe aan te maken
+- Tik op het prullenbakpictogram om een categorie te verwijderen
+  - Verwijderen is geblokkeerd als de categorie wordt gebruikt door actieve uitgaven of budgetten
+  - Systeemcategorieën (vooraf gedefinieerd) kunnen niet worden verwijderd
+
+**Tip:** Gebruik onderscheidende kleuren voor categorieën die je snel wilt herkennen in grafieken.
+
+## Verkopers
+
+Verkopers worden automatisch aangemaakt wanneer je uitgaven toevoegt — via handmatige invoer, bonscannen of spraakinvoer. Gebruik het scherm Verkopers om duplicaten op te ruimen of typefouten te corrigeren.
+
+- Tik op een verkoperrij om deze te hernoemen
+- Hernoemen voegt alle bestaande uitgaven met de oude naam samen onder de nieuwe naam (bulkupdate)
+- Verwijderen haalt de verkopernaam uit alle bijpassende uitgaven (de uitgaven zelf blijven behouden)
+
+> Je kunt verkopers niet handmatig aanmaken — ze verschijnen automatisch terwijl je uitgaven toevoegt.
+
+## Tags
+
+Met tags kun je uitgaven labelen met vrije trefwoorden die categorieën overstijgen.
+
+- Tik op **+** om een tag aan te maken (voer een naam in en kies een kleur)
+- Tik op een tagrij om deze te hernoemen of de kleur te wijzigen
+- Tik op het prullenbakpictogram om de tag uit alle uitgaven te verwijderen
+
+**Tip:** Gebruik tags voor kortstondige tracering: "Zakenreis", "Verbouwing", "Cadeaubudget".
+
+## Projecten
+
+Projecten groeperen uitgaven op doel of activiteit — klantwerk, reizen, woningverbouwing, enzovoort.
+
+- Tik op **+** om een project aan te maken (naam, optionele omschrijving, kleur, optionele budgetlimiet)
+- Tik op een projectrij om het detailscherm te openen
+  - Bekijk alle gekoppelde uitgaven, totaal besteed en resterend budget
+  - Gebruik het **potloodpictogram** (rechtsboven) om het project te bewerken
+  - Gebruik het **prullenbakpictogram** (rechtsboven) om het te verwijderen
+- Om een uitgave aan een project te koppelen, open je de uitgave en kies je een project in het veld Project
+
+**Tip:** Stel een budget in op een project om uitgaven af te zetten tegen een doel en het resterende bedrag te zien.
+
+---
+
+*Zie ook: Uitgaven & inkomsten | Analyses | Instellingen*
 `,
     },
   ],

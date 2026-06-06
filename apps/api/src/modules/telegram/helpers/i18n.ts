@@ -8,6 +8,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Veuillez d\'abord lier votre compte. Utilisez /link <code>.',
     pl: 'Najpierw połącz swoje konto. Użyj /link <kod>.',
     be: 'Спачатку прывяжыце акаўнт. Выкарыстоўвайце /link <код>.',
+    nl: 'Koppel je account eerst. Gebruik /link <code>.',
   },
   aiLimitReached: {
     en: '⚠️ AI request limit reached. Upgrade your subscription for more AI features.',
@@ -18,6 +19,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '⚠️ Limite de requêtes AI atteinte. Améliorez votre abonnement pour plus de fonctionnalités AI.',
     pl: '⚠️ Limit zapytań AI osiągnięty. Uaktualnij subskrypcję, aby uzyskać więcej funkcji AI.',
     be: '⚠️ Ліміт AI-запытаў вычарпаны. Абнавіце падпіску для большай колькасці AI-функцый.',
+    nl: '⚠️ AI-verzoeklimiet bereikt. Upgrade je abonnement voor meer AI-functies.',
   },
   somethingWrong: {
     en: 'Something went wrong. Please try again later.',
@@ -28,6 +30,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Quelque chose s\'est mal passé. Veuillez réessayer plus tard.',
     pl: 'Coś poszło nie tak. Spróbuj ponownie później.',
     be: 'Нешта пайшло не так. Паспрабуйце пазней.',
+    nl: 'Er is iets misgegaan. Probeer het later opnieuw.',
   },
   speechNotRecognized: {
     en: 'Could not recognize speech. Please try again.',
@@ -38,6 +41,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Impossible de reconnaître la parole. Veuillez réessayer.',
     pl: 'Nie udało się rozpoznać mowy. Spróbuj ponownie.',
     be: 'Не атрымалася распазнаць маўленне. Паспрабуйце яшчэ раз.',
+    nl: 'Spraak kon niet worden herkend. Probeer het opnieuw.',
   },
   receiptScanFailed: {
     en: '❌ Could not scan the receipt. Please try again or add the expense manually.',
@@ -48,6 +52,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Impossible de scanner le reçu. Veuillez réessayer ou ajouter la dépense manuellement.',
     pl: '❌ Nie udało się zeskanować paragonu. Spróbuj ponownie lub dodaj wydatek ręcznie.',
     be: '❌ Не атрымалася адсканаваць чэк. Паспрабуйце яшчэ раз або дадайце выдатак уручную.',
+    nl: '❌ De bon kon niet worden gescand. Probeer het opnieuw of voeg de uitgave handmatig toe.',
   },
   voiceFailed: {
     en: '❌ Could not process the voice message. Please try again.',
@@ -58,6 +63,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Impossible de traiter le message vocal. Veuillez réessayer.',
     pl: '❌ Nie udało się przetworzyć wiadomości głosowej. Spróbuj ponownie.',
     be: '❌ Не атрымалася апрацаваць галасавое паведамленне. Паспрабуйце яшчэ раз.',
+    nl: '❌ Het spraakbericht kon niet worden verwerkt. Probeer het opnieuw.',
   },
   receiptScanned: {
     en: '📄 <b>Receipt scanned</b>',
@@ -68,6 +74,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📄 <b>Reçu scanné</b>',
     pl: '📄 <b>Paragon zeskanowany</b>',
     be: '📄 <b>Чэк адсканаваны</b>',
+    nl: '📄 <b>Bon gescand</b>',
   },
   confirm: {
     en: '✅ Confirm',
@@ -78,6 +85,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Confirmer',
     pl: '✅ Potwierdź',
     be: '✅ Пацвердзіць',
+    nl: '✅ Bevestigen',
   },
   cancel: {
     en: '❌ Cancel',
@@ -88,6 +96,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Annuler',
     pl: '❌ Anuluj',
     be: '❌ Адмяніць',
+    nl: '❌ Annuleren',
   },
   addExpense: {
     en: '✅ Add expense',
@@ -98,6 +107,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Ajouter dépense',
     pl: '✅ Dodaj wydatek',
     be: '✅ Дадаць выдатак',
+    nl: '✅ Uitgave toevoegen',
   },
   expenseCreated: {
     en: '✅ Expense created',
@@ -108,6 +118,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Dépense créée',
     pl: '✅ Wydatek utworzony',
     be: '✅ Выдатак створаны',
+    nl: '✅ Uitgave aangemaakt',
   },
   cancelled: {
     en: '❌ Cancelled',
@@ -118,6 +129,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Annulé',
     pl: '❌ Anulowano',
     be: '❌ Адменена',
+    nl: '❌ Geannuleerd',
   },
   receiptCancelled: {
     en: '❌ Receipt scan cancelled.',
@@ -128,6 +140,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Scan du reçu annulé.',
     pl: '❌ Skanowanie paragonu anulowane.',
     be: '❌ Сканаванне чэка адменена.',
+    nl: '❌ Bonscan geannuleerd.',
   },
   usageTitle: {
     en: '📊 <b>AI Usage This Month</b>',
@@ -138,6 +151,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📊 <b>Utilisation AI ce mois-ci</b>',
     pl: '📊 <b>Użycie AI w tym miesiącu</b>',
     be: '📊 <b>Выкарыстанне AI гэтага месяца</b>',
+    nl: '📊 <b>AI-gebruik deze maand</b>',
   },
   used: {
     en: 'Used',
@@ -148,6 +162,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Utilisé',
     pl: 'Wykorzystano',
     be: 'Выкарыстана',
+    nl: 'Gebruikt',
   },
   tier: {
     en: 'Tier',
@@ -158,6 +173,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Forfait',
     pl: 'Plan',
     be: 'Тарыф',
+    nl: 'Niveau',
   },
   breakdown: {
     en: 'Breakdown',
@@ -168,6 +184,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Ventilation',
     pl: 'Podział',
     be: 'Разбіўка',
+    nl: 'Overzicht',
   },
   resets: {
     en: 'Resets',
@@ -178,6 +195,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Réinitialisation',
     pl: 'Resetuje się',
     be: 'Скід',
+    nl: 'Herstelt',
   },
   changeDate: {
     en: '📅 Change date',
@@ -188,6 +206,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📅 Changer la date',
     pl: '📅 Zmień datę',
     be: '📅 Змяніць дату',
+    nl: '📅 Datum wijzigen',
   },
   sendDate: {
     en: '📅 Send the correct date in format <b>DD.MM.YYYY</b> (e.g., 28.03.2026):',
@@ -198,6 +217,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📅 Envoyez la bonne date au format <b>JJ.MM.AAAA</b> (ex. 28.03.2026) :',
     pl: '📅 Wyślij poprawną datę w formacie <b>DD.MM.RRRR</b> (np. 28.03.2026):',
     be: '📅 Адпраўце правільную дату ў фармаце <b>ДД.ММ.ГГГГ</b> (напрыклад, 28.03.2026):',
+    nl: '📅 Stuur de juiste datum in het formaat <b>DD.MM.YYYY</b> (bijv. 28.03.2026):',
   },
   dateUpdated: {
     en: '✅ Date updated to {{date}}',
@@ -208,6 +228,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Date mise à jour : {{date}}',
     pl: '✅ Data zmieniona na {{date}}',
     be: '✅ Дата зменена на {{date}}',
+    nl: '✅ Datum bijgewerkt naar {{date}}',
   },
   invalidDate: {
     en: '❌ Invalid date format. Please use DD.MM.YYYY',
@@ -218,6 +239,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Format de date invalide. Utilisez JJ.MM.AAAA',
     pl: '❌ Nieprawidłowy format daty. Użyj DD.MM.RRRR',
     be: '❌ Няправільны фармат даты. Выкарыстоўвайце ДД.ММ.ГГГГ',
+    nl: '❌ Ongeldig datumformaat. Gebruik DD.MM.YYYY',
   },
   welcomeBack: {
     en: 'Welcome back! You are linked to account <b>{{account}}</b>.\n\nSend /help to see available commands.',
@@ -228,6 +250,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Bon retour ! Vous êtes lié au compte <b>{{account}}</b>.\n\nEnvoyez /help pour voir les commandes.',
     pl: 'Witaj ponownie! Jesteś połączony z kontem <b>{{account}}</b>.\n\nWyślij /help, aby zobaczyć dostępne polecenia.',
     be: 'З вяртаннем! Вы прывязаны да акаўнта <b>{{account}}</b>.\n\nАдпраўце /help для спісу каманд.',
+    nl: 'Welkom terug! Je bent gekoppeld aan account <b>{{account}}</b>.\n\nStuur /help om de beschikbare opdrachten te zien.',
   },
   welcomeNew: {
     en: '👋 Welcome to Budget Assistant Bot!\n\nTo get started, link your account:\n1. Open the app → Settings → Telegram Bot\n2. Tap "Connect Telegram"\n3. Send the code here: /link YOUR_CODE\n\nExample: <code>/link A3K9F2</code>',
@@ -238,6 +261,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '👋 Bienvenue sur Budget Assistant Bot !\n\nPour commencer, liez votre compte :\n1. Ouvrez l\'app → Paramètres → Bot Telegram\n2. Appuyez sur « Connecter Telegram »\n3. Envoyez le code ici : /link VOTRE_CODE\n\nExemple : <code>/link A3K9F2</code>',
     pl: '👋 Witaj w Budget Assistant Bot!\n\nAby rozpocząć, połącz swoje konto:\n1. Otwórz aplikację → Ustawienia → Telegram Bot\n2. Dotknij „Połącz Telegram"\n3. Wyślij kod tutaj: /link TWÓJ_KOD\n\nPrzykład: <code>/link A3K9F2</code>',
     be: '👋 Сардэчна запрашаем у Budget Assistant Bot!\n\nДля пачатку прывяжыце акаўнт:\n1. Адкрыйце праграму → Налады → Telegram Бот\n2. Націсніце «Падключыць Telegram»\n3. Адпраўце код сюды: /link ВАШ_КОД\n\nПрыклад: <code>/link A3K9F2</code>',
+    nl: '👋 Welkom bij Budget Assistant Bot!\n\nKoppel je account om te beginnen:\n1. Open de app → Instellingen → Telegram Bot\n2. Tik op "Telegram koppelen"\n3. Stuur de code hier: /link JOUW_CODE\n\nVoorbeeld: <code>/link A3K9F2</code>',
   },
   linkProvideCode: {
     en: 'Please provide a link code.\n\nUsage: <code>/link YOUR_CODE</code>',
@@ -248,6 +272,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Veuillez fournir un code de liaison.\n\nUtilisation : <code>/link VOTRE_CODE</code>',
     pl: 'Podaj kod połączenia.\n\nUżycie: <code>/link TWÓJ_KOD</code>',
     be: 'Пакажыце код прывязкі.\n\nВыкарыстанне: <code>/link ВАШ_КОД</code>',
+    nl: 'Geef een koppelcode op.\n\nGebruik: <code>/link JOUW_CODE</code>',
   },
   linkSuccess: {
     en: '✅ Account linked successfully!\n\nYou can now:\n• Add expenses: <code>/expense 50 lunch</code>\n• Add incomes: <code>/income 3000 salary</code>\n• Send voice messages to add expenses/chat\n• Send receipt photos to scan them\n• Chat with AI — just type any question\n\nSend /help for all commands.',
@@ -258,6 +283,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Compte lié avec succès !\n\nVous pouvez maintenant :\n• Ajouter des dépenses : <code>/expense 50 déjeuner</code>\n• Ajouter des revenus : <code>/income 3000 salaire</code>\n• Envoyer des messages vocaux\n• Envoyer des photos de reçus\n• Discuter avec l\'IA — tapez votre question\n\nEnvoyez /help pour toutes les commandes.',
     pl: '✅ Konto połączone!\n\nTeraz możesz:\n• Dodawać wydatki: <code>/expense 50 obiad</code>\n• Dodawać dochody: <code>/income 3000 pensja</code>\n• Wysyłać wiadomości głosowe\n• Wysyłać zdjęcia paragonów\n• Rozmawiać z AI — po prostu wpisz pytanie\n\nWyślij /help, aby zobaczyć polecenia.',
     be: '✅ Акаўнт паспяхова прывязаны!\n\nЦяпер вы можаце:\n• Дадаваць выдаткі: <code>/expense 50 абед</code>\n• Дадаваць даходы: <code>/income 3000 зарплата</code>\n• Адпраўляць галасавыя\n• Адпраўляць фота чэкаў\n• Размаўляць з ІІ — проста напішыце пытанне\n\nАдпраўце /help для спісу каманд.',
+    nl: '✅ Account succesvol gekoppeld!\n\nJe kunt nu:\n• Uitgaven toevoegen: <code>/expense 50 lunch</code>\n• Inkomsten toevoegen: <code>/income 3000 salaris</code>\n• Spraakberichten sturen om uitgaven toe te voegen/te chatten\n• Foto\'s van bonnen sturen om te scannen\n• Chatten met AI — typ gewoon een vraag\n\nStuur /help voor alle opdrachten.',
   },
   unlinkSuccess: {
     en: '✅ Your Telegram has been unlinked. Send /link <code> to connect again.',
@@ -268,6 +294,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Telegram dissocié. Envoyez /link <code> pour reconnecter.',
     pl: '✅ Telegram odłączony. Wyślij /link <kod>, aby połączyć ponownie.',
     be: '✅ Telegram адвязаны. Адпраўце /link <код> для паўторнага падключэння.',
+    nl: '✅ Je Telegram is losgekoppeld. Stuur /link <code> om opnieuw te verbinden.',
   },
   notLinked: {
     en: 'Your Telegram is not linked to any account.',
@@ -278,6 +305,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Votre Telegram n\'est lié à aucun compte.',
     pl: 'Twój Telegram nie jest połączony z żadnym kontem.',
     be: 'Ваш Telegram не прывязаны ні да якога акаўнта.',
+    nl: 'Je Telegram is niet gekoppeld aan een account.',
   },
   newChatStarted: {
     en: '🔄 New conversation started. Ask me anything!',
@@ -288,6 +316,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '🔄 Nouvelle conversation commencée. Posez-moi vos questions !',
     pl: '🔄 Nowa rozmowa rozpoczęta. Pytaj o cokolwiek!',
     be: '🔄 Новая размова пачата. Пытайце што заўгодна!',
+    nl: '🔄 Nieuw gesprek gestart. Stel me van alles!',
   },
   chooseAccount: {
     en: 'Choose an account:',
@@ -298,6 +327,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Choisissez un compte :',
     pl: 'Wybierz konto:',
     be: 'Абярыце акаўнт:',
+    nl: 'Kies een account:',
   },
   oneAccount: {
     en: 'You have one account: <b>{{name}}</b> (already active).',
@@ -308,6 +338,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Vous avez un compte : <b>{{name}}</b> (déjà actif).',
     pl: 'Masz jedno konto: <b>{{name}}</b> (już aktywne).',
     be: 'У вас адзін акаўнт: <b>{{name}}</b> (ужо актыўны).',
+    nl: 'Je hebt één account: <b>{{name}}</b> (al actief).',
   },
   activeAccount: {
     en: '✅ Active account: <b>{{name}}</b>',
@@ -318,6 +349,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Compte actif : <b>{{name}}</b>',
     pl: '✅ Aktywne konto: <b>{{name}}</b>',
     be: '✅ Актыўны акаўнт: <b>{{name}}</b>',
+    nl: '✅ Actief account: <b>{{name}}</b>',
   },
   helpText: {
     en: '<b>Available commands:</b>\n\n/expense &lt;amount&gt; [description] — Add an expense\n/income &lt;amount&gt; [description] — Add income\n/category [type] &lt;name&gt; — Create a category\n/categories — List &amp; delete categories\n/usage — View AI usage and limits\n/account — Switch between accounts\n/newchat — Start a new AI conversation\n/unlink — Disconnect Telegram\n/help — Show this message\n\n<b>Other features:</b>\n🎤 Send a <b>voice message</b> to add expenses or chat with AI\n📷 Send a <b>receipt photo</b> to scan and create an expense\n💬 Just type any message to <b>chat with the AI assistant</b>',
@@ -328,6 +360,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '<b>Commandes disponibles :</b>\n\n/expense &lt;montant&gt; [description] — Ajouter une dépense\n/income &lt;montant&gt; [description] — Ajouter un revenu\n/category [type] &lt;nom&gt; — Créer une catégorie\n/categories — Lister les catégories\n/usage — Utilisation AI et limites\n/account — Changer de compte\n/newchat — Nouvelle conversation IA\n/unlink — Dissocier Telegram\n/help — Afficher ce message\n\n<b>Autres fonctions :</b>\n🎤 Envoyez un <b>message vocal</b>\n📷 Envoyez une <b>photo de reçu</b>\n💬 Écrivez pour <b>discuter avec l\'IA</b>',
     pl: '<b>Dostępne polecenia:</b>\n\n/expense &lt;kwota&gt; [opis] — Dodaj wydatek\n/income &lt;kwota&gt; [opis] — Dodaj dochód\n/category [typ] &lt;nazwa&gt; — Utwórz kategorię\n/categories — Lista kategorii\n/usage — Użycie AI i limity\n/account — Zmień konto\n/newchat — Nowa rozmowa z AI\n/unlink — Odłącz Telegram\n/help — Pokaż to polecenie\n\n<b>Inne funkcje:</b>\n🎤 Wyślij <b>wiadomość głosową</b>\n📷 Wyślij <b>zdjęcie paragonu</b>\n💬 Napisz, aby <b>porozmawiać z AI</b>',
     be: '<b>Даступныя каманды:</b>\n\n/expense &lt;сума&gt; [апісанне] — Дадаць выдатак\n/income &lt;сума&gt; [апісанне] — Дадаць даход\n/category [тып] &lt;назва&gt; — Стварыць катэгорыю\n/categories — Спіс катэгорый\n/usage — Выкарыстанне AI і ліміты\n/account — Пераключыць акаўнт\n/newchat — Новая размова з ІІ\n/unlink — Адвязаць Telegram\n/help — Паказаць гэта паведамленне\n\n<b>Іншыя магчымасці:</b>\n🎤 Адпраўце <b>галасавое паведамленне</b>\n📷 Адпраўце <b>фота чэка</b>\n💬 Проста напішыце для <b>чата з ІІ</b>',
+    nl: '<b>Beschikbare opdrachten:</b>\n\n/expense &lt;bedrag&gt; [omschrijving] — Uitgave toevoegen\n/income &lt;bedrag&gt; [omschrijving] — Inkomsten toevoegen\n/category [type] &lt;naam&gt; — Categorie aanmaken\n/categories — Categorieën weergeven &amp; verwijderen\n/usage — AI-gebruik en limieten bekijken\n/account — Tussen accounts wisselen\n/newchat — Nieuw AI-gesprek starten\n/unlink — Telegram ontkoppelen\n/help — Dit bericht tonen\n\n<b>Andere functies:</b>\n🎤 Stuur een <b>spraakbericht</b> om uitgaven toe te voegen of te chatten met AI\n📷 Stuur een <b>foto van een bon</b> om te scannen en een uitgave aan te maken\n💬 Typ gewoon een bericht om <b>met de AI-assistent te chatten</b>',
   },
   viewerRestricted: {
     en: '🔒 You have view-only access. Only editors and owners can create or modify data.',
@@ -338,6 +371,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent modifier.',
     pl: '🔒 Masz tylko dostęp do odczytu. Edytować mogą tylko edytorzy i właściciele.',
     be: '🔒 У вас толькі правы прагляду. Рэдагаваць могуць толькі рэдактары і ўладальнікі.',
+    nl: '🔒 Je hebt alleen leestoegang. Alleen redacteurs en eigenaren kunnen gegevens aanmaken of wijzigen.',
   },
 };
 

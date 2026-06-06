@@ -8,6 +8,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '💭 Un instant…',
     pl: '💭 Chwila…',
     be: '💭 Секунду…',
+    nl: '💭 Een moment…',
   },
   linkFirst: {
     en: 'Please link your account first. Send `link YOUR_CODE` — get the code in the app (Settings → Chat bots).',
@@ -18,6 +19,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Veuillez d\'abord lier votre compte. Envoyez `link VOTRE_CODE` — obtenez le code dans l\'app (Paramètres → Bots de chat).',
     pl: 'Najpierw połącz swoje konto. Wyślij `link TWÓJ_KOD` — kod znajdziesz w aplikacji (Ustawienia → Boty czatu).',
     be: 'Спачатку прывяжыце акаўнт. Адпраўце `link ВАШ_КОД` — код атрымайце ў праграме (Налады → Чат-боты).',
+    nl: 'Koppel je account eerst. Stuur `link JOUW_CODE` — haal de code op in de app (Instellingen → Chat bots).',
   },
   aiLimitReached: {
     en: '⚠️ AI request limit reached. Upgrade your subscription for more AI features.',
@@ -28,6 +30,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '⚠️ Limite de requêtes AI atteinte. Améliorez votre abonnement pour plus de fonctionnalités AI.',
     pl: '⚠️ Limit zapytań AI osiągnięty. Uaktualnij subskrypcję, aby uzyskać więcej funkcji AI.',
     be: '⚠️ Ліміт AI-запытаў вычарпаны. Абнавіце падпіску для большай колькасці AI-функцый.',
+    nl: '⚠️ AI-verzoeklimiet bereikt. Upgrade je abonnement voor meer AI-functies.',
   },
   somethingWrong: {
     en: 'Something went wrong. Please try again later.',
@@ -38,6 +41,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Quelque chose s\'est mal passé. Veuillez réessayer plus tard.',
     pl: 'Coś poszło nie tak. Spróbuj ponownie później.',
     be: 'Нешта пайшло не так. Паспрабуйце пазней.',
+    nl: 'Er is iets misgegaan. Probeer het later opnieuw.',
   },
   speechNotRecognized: {
     en: 'Could not recognize speech. Please try again.',
@@ -48,6 +52,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Impossible de reconnaître la parole. Veuillez réessayer.',
     pl: 'Nie udało się rozpoznać mowy. Spróbuj ponownie.',
     be: 'Не атрымалася распазнаць маўленне. Паспрабуйце яшчэ раз.',
+    nl: 'Spraak kon niet worden herkend. Probeer het opnieuw.',
   },
   receiptScanFailed: {
     en: '❌ Could not scan the receipt. Please try again or add the expense manually.',
@@ -58,6 +63,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Impossible de scanner le reçu. Veuillez réessayer ou ajouter la dépense manuellement.',
     pl: '❌ Nie udało się zeskanować paragonu. Spróbuj ponownie lub dodaj wydatek ręcznie.',
     be: '❌ Не атрымалася адсканаваць чэк. Паспрабуйце яшчэ раз або дадайце выдатак уручную.',
+    nl: '❌ De bon kon niet worden gescand. Probeer het opnieuw of voeg de uitgave handmatig toe.',
   },
   voiceFailed: {
     en: '❌ Could not process the voice message. Please try again.',
@@ -68,6 +74,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Impossible de traiter le message vocal. Veuillez réessayer.',
     pl: '❌ Nie udało się przetworzyć wiadomości głosowej. Spróbuj ponownie.',
     be: '❌ Не атрымалася апрацаваць галасавое паведамленне. Паспрабуйце яшчэ раз.',
+    nl: '❌ Het spraakbericht kon niet worden verwerkt. Probeer het opnieuw.',
   },
   receiptScanned: {
     en: '📄 *Receipt scanned*',
@@ -78,6 +85,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📄 *Reçu scanné*',
     pl: '📄 *Paragon zeskanowany*',
     be: '📄 *Чэк адсканаваны*',
+    nl: '📄 *Bon gescand*',
   },
   confirm: {
     en: '✅ Confirm',
@@ -88,6 +96,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Confirmer',
     pl: '✅ Potwierdź',
     be: '✅ Пацвердзіць',
+    nl: '✅ Bevestigen',
   },
   cancel: {
     en: '❌ Cancel',
@@ -98,6 +107,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Annuler',
     pl: '❌ Anuluj',
     be: '❌ Адмяніць',
+    nl: '❌ Annuleren',
   },
   addExpense: {
     en: '✅ Add expense',
@@ -108,6 +118,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Ajouter dépense',
     pl: '✅ Dodaj wydatek',
     be: '✅ Дадаць выдатак',
+    nl: '✅ Uitgave toevoegen',
   },
   expenseCreated: {
     en: '✅ Expense created',
@@ -118,6 +129,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Dépense créée',
     pl: '✅ Wydatek utworzony',
     be: '✅ Выдатак створаны',
+    nl: '✅ Uitgave aangemaakt',
   },
   incomeCreated: {
     en: '✅ Income added',
@@ -128,6 +140,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Revenu ajouté',
     pl: '✅ Dochód dodany',
     be: '✅ Даход дададзены',
+    nl: '✅ Inkomsten toegevoegd',
   },
   cancelled: {
     en: '❌ Cancelled',
@@ -138,6 +151,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Annulé',
     pl: '❌ Anulowano',
     be: '❌ Адменена',
+    nl: '❌ Geannuleerd',
   },
   receiptCancelled: {
     en: '❌ Receipt scan cancelled.',
@@ -148,6 +162,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Scan du reçu annulé.',
     pl: '❌ Skanowanie paragonu anulowane.',
     be: '❌ Сканаванне чэка адменена.',
+    nl: '❌ Bonscan geannuleerd.',
   },
   usageTitle: {
     en: '📊 *AI Usage This Month*',
@@ -158,6 +173,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📊 *Utilisation AI ce mois-ci*',
     pl: '📊 *Użycie AI w tym miesiącu*',
     be: '📊 *Выкарыстанне AI гэтага месяца*',
+    nl: '📊 *AI-gebruik deze maand*',
   },
   used: {
     en: 'Used',
@@ -168,6 +184,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Utilisé',
     pl: 'Wykorzystano',
     be: 'Выкарыстана',
+    nl: 'Gebruikt',
   },
   tier: {
     en: 'Tier',
@@ -178,6 +195,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Forfait',
     pl: 'Plan',
     be: 'Тарыф',
+    nl: 'Niveau',
   },
   breakdown: {
     en: 'Breakdown',
@@ -188,6 +206,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Ventilation',
     pl: 'Podział',
     be: 'Разбіўка',
+    nl: 'Overzicht',
   },
   resets: {
     en: 'Resets',
@@ -198,6 +217,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Réinitialisation',
     pl: 'Resetuje się',
     be: 'Скід',
+    nl: 'Herstelt',
   },
   changeDate: {
     en: '📅 Change date',
@@ -208,6 +228,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📅 Changer la date',
     pl: '📅 Zmień datę',
     be: '📅 Змяніць дату',
+    nl: '📅 Datum wijzigen',
   },
   sendDate: {
     en: '📅 Send the correct date in format *DD.MM.YYYY* (e.g., 28.03.2026):',
@@ -218,6 +239,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📅 Envoyez la bonne date au format *JJ.MM.AAAA* (ex. 28.03.2026) :',
     pl: '📅 Wyślij poprawną datę w formacie *DD.MM.RRRR* (np. 28.03.2026):',
     be: '📅 Адпраўце правільную дату ў фармаце *ДД.ММ.ГГГГ* (напрыклад, 28.03.2026):',
+    nl: '📅 Stuur de juiste datum in het formaat *DD.MM.YYYY* (bijv. 28.03.2026):',
   },
   dateUpdated: {
     en: '✅ Date updated to {{date}}',
@@ -228,6 +250,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Date mise à jour : {{date}}',
     pl: '✅ Data zmieniona na {{date}}',
     be: '✅ Дата зменена на {{date}}',
+    nl: '✅ Datum bijgewerkt naar {{date}}',
   },
   invalidDate: {
     en: '❌ Invalid date format. Please use DD.MM.YYYY',
@@ -238,6 +261,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Format de date invalide. Utilisez JJ.MM.AAAA',
     pl: '❌ Nieprawidłowy format daty. Użyj DD.MM.RRRR',
     be: '❌ Няправільны фармат даты. Выкарыстоўвайце ДД.ММ.ГГГГ',
+    nl: '❌ Ongeldig datumformaat. Gebruik DD.MM.YYYY',
   },
   welcomeBack: {
     en: 'Welcome back! You are linked to account *{{account}}*.\n\nSend help to see available commands.',
@@ -248,6 +272,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Bon retour ! Vous êtes lié au compte *{{account}}*.\n\nEnvoyez help pour voir les commandes.',
     pl: 'Witaj ponownie! Jesteś połączony z kontem *{{account}}*.\n\nWyślij help, aby zobaczyć dostępne polecenia.',
     be: 'З вяртаннем! Вы прывязаны да акаўнта *{{account}}*.\n\nАдпраўце help для спісу каманд.',
+    nl: 'Welkom terug! Je bent gekoppeld aan account *{{account}}*.\n\nStuur help om de beschikbare opdrachten te zien.',
   },
   welcomeNew: {
     en: '👋 Welcome to Budget Assistant!\n\nTo connect this Slack workspace to your account, open the app:\n1. Settings → Chat bots\n2. Tap "Connect Slack"\n3. Send the code here: `link YOUR_CODE`\n\nExample: `link A3K9F2`',
@@ -258,6 +283,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '👋 Bienvenue sur Budget Assistant !\n\nPour lier ce Slack à votre compte, ouvrez l\'app :\n1. Paramètres → Bots de chat\n2. Appuyez sur « Connecter Slack »\n3. Envoyez le code ici : `link VOTRE_CODE`\n\nExemple : `link A3K9F2`',
     pl: '👋 Witaj w Budget Assistant!\n\nAby połączyć tego Slacka z kontem, otwórz aplikację:\n1. Ustawienia → Boty czatu\n2. Dotknij „Połącz Slack"\n3. Wyślij kod tutaj: `link TWÓJ_KOD`\n\nPrzykład: `link A3K9F2`',
     be: '👋 Сардэчна запрашаем у Budget Assistant!\n\nКаб прывязаць гэты Slack да акаўнта, адкрыйце праграму:\n1. Налады → Чат-боты\n2. Націсніце «Падключыць Slack»\n3. Адпраўце код сюды: `link ВАШ_КОД`\n\nПрыклад: `link A3K9F2`',
+    nl: '👋 Welkom bij Budget Assistant!\n\nOm deze Slack-werkruimte aan je account te koppelen, open de app:\n1. Instellingen → Chat bots\n2. Tik op "Slack koppelen"\n3. Stuur de code hier: `link JOUW_CODE`\n\nVoorbeeld: `link A3K9F2`',
   },
   linkProvideCode: {
     en: 'Please provide a link code.\n\nUsage: `/link YOUR_CODE`',
@@ -268,6 +294,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Veuillez fournir un code de liaison.\n\nUtilisation : `/link VOTRE_CODE`',
     pl: 'Podaj kod połączenia.\n\nUżycie: `/link TWÓJ_KOD`',
     be: 'Пакажыце код прывязкі.\n\nВыкарыстанне: `/link ВАШ_КОД`',
+    nl: 'Geef een koppelcode op.\n\nGebruik: `/link JOUW_CODE`',
   },
   linkSuccess: {
     en: '✅ Account linked successfully!\n\nYou can now:\n• Add expenses: `expense 50 lunch`\n• Add incomes: `income 3000 salary`\n• Send voice messages to add expenses/chat\n• Send receipt photos to scan them\n• Chat with AI — just type any question\n\nSend help for all commands.',
@@ -278,6 +305,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Compte lié avec succès !\n\nVous pouvez maintenant :\n• Ajouter des dépenses : `expense 50 déjeuner`\n• Ajouter des revenus : `income 3000 salaire`\n• Envoyer des messages vocaux\n• Envoyer des photos de reçus\n• Discuter avec l\'IA — tapez votre question\n\nEnvoyez help pour toutes les commandes.',
     pl: '✅ Konto połączone!\n\nTeraz możesz:\n• Dodawać wydatki: `expense 50 obiad`\n• Dodawać dochody: `income 3000 pensja`\n• Wysyłać wiadomości głosowe\n• Wysyłać zdjęcia paragonów\n• Rozmawiać z AI — po prostu wpisz pytanie\n\nWyślij help, aby zobaczyć polecenia.',
     be: '✅ Акаўнт паспяхова прывязаны!\n\nЦяпер вы можаце:\n• Дадаваць выдаткі: `expense 50 абед`\n• Дадаваць даходы: `income 3000 зарплата`\n• Адпраўляць галасавыя\n• Адпраўляць фота чэкаў\n• Размаўляць з ІІ — проста напішыце пытанне\n\nАдпраўце help для спісу каманд.',
+    nl: '✅ Account succesvol gekoppeld!\n\nJe kunt nu:\n• Uitgaven toevoegen: `expense 50 lunch`\n• Inkomsten toevoegen: `income 3000 salaris`\n• Spraakberichten sturen om uitgaven toe te voegen/te chatten\n• Foto\'s van bonnen sturen om te scannen\n• Chatten met AI — typ gewoon een vraag\n\nStuur help voor alle opdrachten.',
   },
   unlinkSuccess: {
     en: '✅ Your Slack has been unlinked. Send `link YOUR_CODE` to connect again.',
@@ -288,6 +316,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Slack dissocié. Envoyez `link VOTRE_CODE` pour reconnecter.',
     pl: '✅ Slack odłączony. Wyślij `link TWÓJ_KOD`, aby połączyć ponownie.',
     be: '✅ Slack адвязаны. Адпраўце `link ВАШ_КОД` для паўторнага падключэння.',
+    nl: '✅ Je Slack is losgekoppeld. Stuur `link JOUW_CODE` om opnieuw te verbinden.',
   },
   notLinked: {
     en: 'Your Slack is not linked to any account.',
@@ -298,6 +327,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Votre Slack n\'est lié à aucun compte.',
     pl: 'Twój Slack nie jest połączony z żadnym kontem.',
     be: 'Ваш Slack не прывязаны ні да якога акаўнта.',
+    nl: 'Je Slack is niet gekoppeld aan een account.',
   },
   newChatStarted: {
     en: '🔄 New conversation started. Ask me anything!',
@@ -308,6 +338,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '🔄 Nouvelle conversation commencée. Posez-moi vos questions !',
     pl: '🔄 Nowa rozmowa rozpoczęta. Pytaj o cokolwiek!',
     be: '🔄 Новая размова пачата. Пытайце што заўгодна!',
+    nl: '🔄 Nieuw gesprek gestart. Stel me van alles!',
   },
   chooseAccount: {
     en: 'Choose an account:',
@@ -318,6 +349,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Choisissez un compte :',
     pl: 'Wybierz konto:',
     be: 'Абярыце акаўнт:',
+    nl: 'Kies een account:',
   },
   oneAccount: {
     en: 'You have one account: *{{name}}* (already active).',
@@ -328,6 +360,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Vous avez un compte : *{{name}}* (déjà actif).',
     pl: 'Masz jedno konto: *{{name}}* (już aktywne).',
     be: 'У вас адзін акаўнт: *{{name}}* (ужо актыўны).',
+    nl: 'Je hebt één account: *{{name}}* (al actief).',
   },
   activeAccount: {
     en: '✅ Active account: *{{name}}*',
@@ -338,6 +371,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Compte actif : *{{name}}*',
     pl: '✅ Aktywne konto: *{{name}}*',
     be: '✅ Актыўны акаўнт: *{{name}}*',
+    nl: '✅ Actief account: *{{name}}*',
   },
   categoryUsage: {
     en: 'Create a category:\n\n  category expense Food\n  category income Salary\n  category Shopping — will ask for type\n\nUse *categories* to see all categories.',
@@ -348,6 +382,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Créer une catégorie :\n\n  category expense Nourriture\n  category income Salaire\n  category Achats — demandera le type\n\nEnvoyez *categories* pour voir.',
     pl: 'Utwórz kategorię:\n\n  category expense Jedzenie\n  category income Pensja\n  category Zakupy — zapyta o typ\n\nWyślij *categories*, aby zobaczyć.',
     be: 'Стварыць катэгорыю:\n\n  category expense Ежа\n  category income Зарплата\n  category Пакупкі — запытае тып\n\nАдпраўце *categories* для прагляду.',
+    nl: 'Maak een categorie aan:\n\n  category expense Boodschappen\n  category income Salaris\n  category Winkelen — vraagt om type\n\nGebruik *categories* om alle categorieën te zien.',
   },
   categoryNameRequired: {
     en: '❌ Please provide a category name.\n\nExample: category expense Food',
@@ -358,6 +393,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Veuillez fournir un nom de catégorie.\n\nExemple : category expense Nourriture',
     pl: '❌ Podaj nazwę kategorii.\n\nPrzykład: category expense Jedzenie',
     be: '❌ Пакажыце назву катэгорыі.\n\nПрыклад: category expense Ежа',
+    nl: '❌ Geef een categorienaam op.\n\nVoorbeeld: category expense Boodschappen',
   },
   categoryNameTooLong: {
     en: '❌ Category name must be 50 characters or less.',
@@ -368,6 +404,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ Le nom de la catégorie doit contenir 50 caractères ou moins.',
     pl: '❌ Nazwa kategorii może mieć maksymalnie 50 znaków.',
     be: '❌ Назва катэгорыі не павінна перавышаць 50 сімвалаў.',
+    nl: '❌ De categorienaam mag maximaal 50 tekens lang zijn.',
   },
   categoryChooseType: {
     en: 'Choose type for category "{{name}}":',
@@ -378,6 +415,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Choisissez le type pour la catégorie "{{name}}" :',
     pl: 'Wybierz typ dla kategorii "{{name}}":',
     be: 'Выберыце тып для катэгорыі "{{name}}":',
+    nl: 'Kies het type voor categorie "{{name}}":',
   },
   categoryExpenseBtn: {
     en: '💰 Expense',
@@ -388,6 +426,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '💰 Dépense',
     pl: '💰 Wydatek',
     be: '💰 Выдатак',
+    nl: '💰 Uitgave',
   },
   categoryIncomeBtn: {
     en: '📈 Income',
@@ -398,6 +437,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '📈 Revenu',
     pl: '📈 Dochód',
     be: '📈 Даход',
+    nl: '📈 Inkomsten',
   },
   categoryNone: {
     en: 'No categories yet. Create one with:\n  category expense Food\n  category income Salary',
@@ -408,6 +448,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Aucune catégorie pour l\'instant. Créez avec :\n  category expense Nourriture\n  category income Salaire',
     pl: 'Brak kategorii. Utwórz z:\n  category expense Jedzenie\n  category income Pensja',
     be: 'Катэгорый пакуль няма. Стварыце:\n  category expense Ежа\n  category income Зарплата',
+    nl: 'Nog geen categorieën. Maak er een aan met:\n  category expense Boodschappen\n  category income Salaris',
   },
   categoriesTitle: {
     en: 'Categories',
@@ -418,6 +459,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Catégories',
     pl: 'Kategorie',
     be: 'Катэгорыі',
+    nl: 'Categorieën',
   },
   categoryTooMany: {
     en: 'You have {{count}} custom categories. Manage them in the app — too many for chat.',
@@ -428,6 +470,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Vous avez {{count}} catégories personnalisées. Gérez-les dans l\'application.',
     pl: 'Masz {{count}} niestandardowych kategorii. Zarządzaj nimi w aplikacji.',
     be: 'У вас {{count}} карыстальніцкіх катэгорый. Кіруйце імі ў праграме.',
+    nl: 'Je hebt {{count}} aangepaste categorieën. Beheer ze in de app — te veel voor de chat.',
   },
   categoryDeleteBtn: {
     en: 'Tap to delete',
@@ -438,6 +481,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Appuyer pour supprimer',
     pl: 'Dotknij, aby usunąć',
     be: 'Націсніце для выдалення',
+    nl: 'Tik om te verwijderen',
   },
   categoryTypeExpense: {
     en: 'Expense',
@@ -448,6 +492,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Dépense',
     pl: 'Wydatek',
     be: 'Выдатак',
+    nl: 'Uitgave',
   },
   categoryTypeIncome: {
     en: 'Income',
@@ -458,6 +503,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: 'Revenu',
     pl: 'Dochód',
     be: 'Даход',
+    nl: 'Inkomsten',
   },
   categoryExpired: {
     en: '❌ The category creation request has expired. Please try again.',
@@ -468,6 +514,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ La demande de création de catégorie a expiré. Veuillez réessayer.',
     pl: '❌ Żądanie utworzenia kategorii wygasło. Spróbuj ponownie.',
     be: '❌ Запыт на стварэнне катэгорыі прасрочаны. Паспрабуйце яшчэ раз.',
+    nl: '❌ Het verzoek om een categorie aan te maken is verlopen. Probeer het opnieuw.',
   },
   categoryCreated: {
     en: '✅ Category created: {{emoji}} *{{name}}* ({{type}})',
@@ -478,6 +525,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Catégorie créée : {{emoji}} *{{name}}* ({{type}})',
     pl: '✅ Kategoria utworzona: {{emoji}} *{{name}}* ({{type}})',
     be: '✅ Катэгорыя створана: {{emoji}} *{{name}}* ({{type}})',
+    nl: '✅ Categorie aangemaakt: {{emoji}} *{{name}}* ({{type}})',
   },
   categoryAlreadyExists: {
     en: '❌ Category "*{{name}}*" already exists for {{type}}.',
@@ -488,6 +536,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '❌ La catégorie "*{{name}}*" existe déjà pour {{type}}.',
     pl: '❌ Kategoria "*{{name}}*" już istnieje dla {{type}}.',
     be: '❌ Катэгорыя "*{{name}}*" ужо існуе для {{type}}.',
+    nl: '❌ Categorie "*{{name}}*" bestaat al voor {{type}}.',
   },
   categoryDeleted: {
     en: '✅ Category deleted.',
@@ -498,6 +547,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '✅ Catégorie supprimée.',
     pl: '✅ Kategoria usunięta.',
     be: '✅ Катэгорыя выдалена.',
+    nl: '✅ Categorie verwijderd.',
   },
   helpText: {
     en: '*Available commands:*\n\nexpense <amount> [description] — Add an expense\nincome <amount> [description] — Add income\ncategory [type] <name> — Create a category\ncategories — List & delete categories\nusage — View AI usage and limits\naccount — Switch between accounts\nnewchat — Start a new AI conversation\nunlink — Disconnect Slack\nhelp — Show this message\n\n*Other features:*\n🎤 Send a *voice message* to add expenses or chat with AI\n📷 Send a *receipt photo* to scan and create an expense\n💬 Just type any message to *chat with the AI assistant*',
@@ -508,6 +558,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '*Commandes disponibles :*\n\nexpense <montant> [description] — Ajouter une dépense\nincome <montant> [description] — Ajouter un revenu\ncategory [type] <nom> — Créer une catégorie\ncategories — Lister les catégories\nusage — Utilisation AI et limites\naccount — Changer de compte\nnewchat — Nouvelle conversation IA\nunlink — Dissocier Slack\nhelp — Afficher ce message\n\n*Autres fonctions :*\n🎤 Envoyez un *message vocal*\n📷 Envoyez une *photo de reçu*\n💬 Écrivez pour *discuter avec l\'IA*',
     pl: '*Dostępne polecenia:*\n\nexpense <kwota> [opis] — Dodaj wydatek\nincome <kwota> [opis] — Dodaj dochód\ncategory [typ] <nazwa> — Utwórz kategorię\ncategories — Lista kategorii\nusage — Użycie AI i limity\naccount — Zmień konto\nnewchat — Nowa rozmowa z AI\nunlink — Odłącz Slack\nhelp — Pokaż to polecenie\n\n*Inne funkcje:*\n🎤 Wyślij *wiadomość głosową*\n📷 Wyślij *zdjęcie paragonu*\n💬 Napisz, aby *porozmawiać z AI*',
     be: '*Даступныя каманды:*\n\nexpense <сума> [апісанне] — Дадаць выдатак\nincome <сума> [апісанне] — Дадаць даход\ncategory [тып] <назва> — Стварыць катэгорыю\ncategories — Спіс катэгорый\nusage — Выкарыстанне AI і ліміты\naccount — Пераключыць акаўнт\nnewchat — Новая размова з ІІ\nunlink — Адвязаць Slack\nhelp — Паказаць гэта паведамленне\n\n*Іншыя магчымасці:*\n🎤 Адпраўце *галасавое паведамленне*\n📷 Адпраўце *фота чэка*\n💬 Проста напішыце для *чата з ІІ*',
+    nl: '*Beschikbare opdrachten:*\n\nexpense <bedrag> [omschrijving] — Uitgave toevoegen\nincome <bedrag> [omschrijving] — Inkomsten toevoegen\ncategory [type] <naam> — Categorie aanmaken\ncategories — Categorieën weergeven & verwijderen\nusage — AI-gebruik en limieten bekijken\naccount — Tussen accounts wisselen\nnewchat — Nieuw AI-gesprek starten\nunlink — Slack ontkoppelen\nhelp — Dit bericht tonen\n\n*Andere functies:*\n🎤 Stuur een *spraakbericht* om uitgaven toe te voegen of te chatten met AI\n📷 Stuur een *foto van een bon* om te scannen en een uitgave aan te maken\n💬 Typ gewoon een bericht om *met de AI-assistent te chatten*',
   },
   viewerRestricted: {
     en: '🔒 You have view-only access. Only editors and owners can create or modify data.',
@@ -518,6 +569,7 @@ const messages: Record<string, Record<string, string>> = {
     fr: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent modifier.',
     pl: '🔒 Masz tylko dostęp do odczytu. Edytować mogą tylko edytorzy i właściciele.',
     be: '🔒 У вас толькі правы прагляду. Рэдагаваць могуць толькі рэдактары і ўладальнікі.',
+    nl: '🔒 Je hebt alleen leestoegang. Alleen redacteurs en eigenaren kunnen gegevens aanmaken of wijzigen.',
   },
 };
 
