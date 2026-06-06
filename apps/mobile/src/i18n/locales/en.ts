@@ -659,8 +659,10 @@ export default {
       subtitle: 'Connect Telegram & WhatsApp',
     },
     dashboardWidgets: 'Dashboard Widgets',
-    widgetsReorderHint: 'Drag handle to reorder widgets',
+    widgetsReorderHint: 'Drag the handle to reorder',
     widgetsResetOrder: 'Reset to default order',
+    quickActionsTitle: 'Quick actions',
+    widgetsTitle: 'Widgets',
     widget: {
       gamification: 'Gamification',
       monthlyBudget: 'Monthly Budget',

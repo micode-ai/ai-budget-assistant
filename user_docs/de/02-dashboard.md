@@ -14,14 +14,22 @@ In der oberen linken Ecke tippe auf den Kontonamen (z.B. **Family**), um das **K
 
 ## Schnellaktionen
 
-Vier Schnellaktions-Schaltflachen unterhalb der Begrussung geben dir schnellen Zugriff auf die haufigsten Aufgaben:
+Die Schnellaktionsleiste unterhalb der Begrüßung ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wische nach links, um mehr zu sehen.
 
-| Schaltflache | Aktion |
+Verfügbare Aktionen:
+
+| Aktion | Beschreibung |
 |---|---|
-| **Ausgabe hinzufugen** | Offnet das manuelle Ausgabenformular |
-| **Spracheingabe** | Offnet den Sprachausgabe-Bildschirm — sprich deine Ausgabe naturlich aus |
-| **Beleg scannen** | Offnet die Kamera zum Fotografieren eines Belegs fur KI-Extraktion |
-| **Umtausch** | Offnet das Wahrungsumtausch-Formular |
+| **Ausgabe hinzufugen** | Öffnet das manuelle Ausgabenformular |
+| **Beleg scannen** | Öffnet die Kamera zum Fotografieren eines Belegs für KI-Extraktion |
+| **Spracheingabe** | Sprich deine Ausgabe natürlich aus |
+| **Einnahme per Sprache** | Sprich deine Einnahme natürlich aus (standardmäßig ausgeblendet) |
+| **Rechnung scannen** | Fotografiere eine Rechnung, um eine Einnahme zu erfassen (standardmäßig ausgeblendet) |
+| **Umtausch** | Öffnet das Währungsumtausch-Formular |
+| **Konverter** | Öffnet den Währungsrechner |
+| **Überweisungen** | Öffnet das Formular für Geldbörsen-Überweisungen |
+
+Du kannst diese Leiste anpassen: Gehe zu **Einstellungen → Dashboard-Widgets**, öffne den Bereich **Schnellaktionen**, aktiviere oder deaktiviere beliebige Aktionen und ziehe die Griffe, um sie neu anzuordnen. **Einnahme per Sprache** und **Rechnung scannen** sind standardmäßig ausgeblendet — aktiviere sie dort, wenn du Einnahmen per Sprache oder Rechnungsscan erfasst.
 
 ## Finanzielle Gesundheit
 
@@ -145,7 +153,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
   **A:** Du hast noch keine Ausgaben oder Einkommen hinzugefugt. Verwende die Schnellaktions-Schaltflachen, um deine erste Transaktion hinzuzufugen.
 
 - **F: Kann ich anpassen, was auf der Ubersicht angezeigt wird?**
-  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten. Du kannst auch Widgets ziehen, um sie neu anzuordnen.
+  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten. Du kannst auch Widgets ziehen, um sie neu anzuordnen. Die Schnellaktionsleiste ist auf dieselbe Weise anpassbar — öffne den Bereich **Schnellaktionen** in Einstellungen → Dashboard-Widgets, um Schaltflächen ein- oder auszublenden oder neu anzuordnen.
 
 ---
 

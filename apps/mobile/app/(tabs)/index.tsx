@@ -30,6 +30,30 @@ import { GoalsCard } from '@/components/goals/GoalsCard';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget } from '@/components/widgets';
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
+import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
+
+// Static maps — no render-time dependency, hoisted to module scope.
+const quickActionRoutes: Record<QuickActionKey, string> = {
+  add_expense: '/expense/new',
+  scan_receipt: '/expense/receipt',
+  voice_expense: '/expense/voice',
+  voice_income: '/income/voice',
+  scan_invoice: '/income/receipt',
+  exchange: '/wallet/exchange',
+  converter: '/converter',
+  transfers: '/wallet/transfer',
+};
+
+const quickActionLabelKey: Record<QuickActionKey, string> = {
+  add_expense: 'dashboard.addExpense',
+  scan_receipt: 'dashboard.scanReceipt',
+  voice_expense: 'dashboard.voiceInput',
+  voice_income: 'dashboard.voiceIncome',
+  scan_invoice: 'dashboard.scanInvoice',
+  exchange: 'dashboard.exchangeCurrency',
+  converter: 'dashboard.currencyConverter',
+  transfers: 'dashboard.transfers',
+};
 
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -45,6 +69,7 @@ export default function DashboardScreen() {
   const { lentDebts, borrowedDebts, loadDebts } = useDebtStore();
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
   const { visibility: widgetVisibility, order: widgetOrder } = useWidgetVisibilityStore();
+  const { visibility: quickActionVisibility, order: quickActionOrder } = useQuickActionStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -103,12 +128,50 @@ export default function DashboardScreen() {
       ? theme.colors.warning
       : theme.colors.primary;
 
+  const renderQuickActionIcon = (key: QuickActionKey) => {
+    switch (key) {
+      case 'add_expense':
+        return <Image source={quickActionIcons.add_expense} style={styles.quickActionImage} />;
+      case 'scan_receipt':
+        return <Image source={quickActionIcons.scan_receipt} style={styles.quickActionImage} />;
+      case 'voice_expense':
+        return <Image source={quickActionIcons.voice_input} style={styles.quickActionImage} />;
+      case 'voice_income':
+        return (
+          <Image
+            source={quickActionIcons.voice_input}
+            style={[styles.quickActionImage, { tintColor: theme.colors.success }]}
+          />
+        );
+      case 'scan_invoice':
+        return (
+          <Image
+            source={quickActionIcons.scan_receipt}
+            style={[styles.quickActionImage, { tintColor: theme.colors.success }]}
+          />
+        );
+      case 'exchange':
+        return <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />;
+      case 'converter':
+        return <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />;
+      case 'transfers':
+        return <Ionicons name="swap-horizontal-outline" size={28} color={theme.colors.primary} />;
+      default:
+        return null;
+    }
+  };
+
+  const visibleQuickActions = quickActionOrder.filter((k) => quickActionVisibility[k]);
+  // The header's bottom padding only exists to let the strip's icons overlap up
+  // into the orange. With no strip (viewer role, or every action hidden), drop it.
+  const showQuickActions = canEdit && visibleQuickActions.length > 0;
+
   const ICON_BOX = 48;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Orange Hero Header */}
-      <View style={styles.heroHeader}>
+      <View style={[styles.heroHeader, !showQuickActions && styles.heroHeaderNoStrip]}>
         <View style={styles.heroTopRow}>
           <AccountSwitcher compact />
           <Text style={styles.welcomeText} numberOfLines={1}>
@@ -124,61 +187,27 @@ export default function DashboardScreen() {
       </View>
 
       {/* Quick Actions — fixed between header and scroll content */}
-      {canEdit && (
+      {showQuickActions && (
         <View style={styles.quickActionsWrapper}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.quickActionsRow}
           >
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/new')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.add_expense} style={styles.quickActionImage} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.addExpense')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/receipt')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.scan_receipt} style={styles.quickActionImage} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanReceipt')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/expense/voice')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.voice_input} style={styles.quickActionImage} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceInput')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/income/voice')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.voice_input} style={[styles.quickActionImage, { tintColor: theme.colors.success }]} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.voiceIncome')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/income/receipt')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.scan_receipt} style={[styles.quickActionImage, { tintColor: theme.colors.success }]} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.scanInvoice')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/exchange')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.exchangeCurrency')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/converter')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.currencyConverter')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionButton} onPress={() => router.push('/wallet/transfer')}>
-              <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                <Ionicons name="swap-horizontal-outline" size={28} color={theme.colors.primary} />
-              </View>
-              <Text style={styles.quickActionText} numberOfLines={2}>{t('dashboard.transfers')}</Text>
-            </TouchableOpacity>
+            {visibleQuickActions.map((key) => (
+              <TouchableOpacity
+                key={key}
+                style={styles.quickActionButton}
+                onPress={() => router.push(quickActionRoutes[key] as any)}
+              >
+                <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
+                  {renderQuickActionIcon(key)}
+                </View>
+                <Text style={styles.quickActionText} numberOfLines={2}>
+                  {t(quickActionLabelKey[key])}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </ScrollView>
         </View>
       )}
@@ -439,6 +468,9 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.primary,
     paddingHorizontal: theme.spacing[4],
     paddingBottom: 24, // = ICON_BOX / 2
+  },
+  heroHeaderNoStrip: {
+    paddingBottom: theme.spacing[4],
   },
   heroTopRow: {
     flexDirection: 'row' as const,

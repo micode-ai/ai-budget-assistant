@@ -176,14 +176,22 @@ At the top-left corner, tap the account name (e.g., **Family**) to open the **Sw
 
 ## Quick Actions
 
-Four quick action buttons below the greeting give you fast access to the most common tasks:
+The quick-action strip below the greeting is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. Swipe left to see more.
 
-| Button | Action |
+Available actions:
+
+| Action | What it does |
 |---|---|
 | **Add Expense** | Opens the manual expense form |
-| **Voice Input** | Opens the voice expense screen — speak your expense naturally |
 | **Scan Receipt** | Opens the camera to photograph a receipt for AI extraction |
+| **Voice Expense** | Speak your expense naturally |
+| **Voice Income** | Speak your income naturally (hidden by default) |
+| **Scan Invoice** | Photograph an invoice to record income (hidden by default) |
 | **Exchange** | Opens the currency exchange form |
+| **Converter** | Opens the currency converter |
+| **Transfers** | Opens the wallet transfer form |
+
+You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
 
 ## Financial Health Score
 
@@ -307,7 +315,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
   **A:** You haven't added any expenses or income yet. Use the quick action buttons to add your first transaction.
 
 - **Q: Can I customize what appears on the Dashboard?**
-  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts. You can also drag widgets to reorder them.
+  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts. You can also drag widgets to reorder them. The quick-action strip is customizable the same way — open the **Quick actions** section in Settings → Dashboard Widgets to show, hide, or reorder its buttons.
 
 ---
 
@@ -3580,14 +3588,22 @@ iOS, Android, Web
 
 ## Быстрые действия
 
-Четыре кнопки быстрых действий под приветствием обеспечивают быстрый доступ к наиболее частым задачам:
+Панель быстрых действий под приветствием — это горизонтальный прокручиваемый ряд ярлыков в одно нажатие для наиболее частых задач. Проведите влево, чтобы увидеть больше.
 
-| Кнопка | Действие |
+Доступные действия:
+
+| Действие | Описание |
 |---|---|
 | **Добавить расход** | Открывает форму ручного ввода расхода |
-| **Голосовой ввод** | Открывает экран голосового расхода — произнесите расход естественным языком |
 | **Сканировать чек** | Открывает камеру для фотографирования чека и извлечения данных с помощью ИИ |
+| **Голосовой ввод** | Произнесите расход естественным языком |
+| **Доход голосом** | Произнесите доход естественным языком (скрыто по умолчанию) |
+| **Сканировать счёт** | Сфотографируйте счёт, чтобы зафиксировать доход (скрыто по умолчанию) |
 | **Обмен** | Открывает форму обмена валют |
+| **Конвертер** | Открывает конвертер валют |
+| **Переводы** | Открывает форму перевода между кошельками |
+
+Вы можете настроить эту панель: перейдите в **Настройки → Виджеты главного экрана**, откройте раздел **Быстрые действия**, включите или отключите любые действия и перетащите ручки для изменения порядка. **Доход голосом** и **Сканировать счёт** скрыты по умолчанию — включите их там, если вы записываете доходы голосом или сканируя счета.
 
 ## Финансовое здоровье
 
@@ -3711,7 +3727,7 @@ iOS, Android, Web
   **О:** Вы ещё не добавили расходы или доходы. Используйте кнопки быстрых действий, чтобы добавить первую транзакцию.
 
 - **В: Можно ли настроить, что отображается на Главной?**
-  **О:** Да. Перейдите в **Настройки → Виджеты главного экрана** и включите или выключите нужные секции. Настройки сохраняются и не сбрасываются при перезапуске. Также можно перетаскивать виджеты для изменения их порядка.
+  **О:** Да. Перейдите в **Настройки → Виджеты главного экрана** и включите или выключите нужные секции. Настройки сохраняются и не сбрасываются при перезапуске. Также можно перетаскивать виджеты для изменения их порядка. Панель быстрых действий настраивается таким же образом — откройте раздел **Быстрые действия** в Настройки → Виджеты главного экрана, чтобы показать, скрыть или изменить порядок её кнопок.
 
 ---
 
@@ -6974,14 +6990,22 @@ iOS, Android, Web
 
 ## Швидкі дії
 
-Чотири кнопки швидких дій під привітанням надають швидкий доступ до найпоширеніших завдань:
+Панель швидких дій під привітанням — це горизонтальний прокручуваний рядок ярликів в одне натискання для найпоширеніших завдань. Проведіть вліво, щоб побачити більше.
 
-| Кнопка | Дія |
+Доступні дії:
+
+| Дія | Опис |
 |---|---|
 | **Додати витрату** | Відкриває форму ручного введення витрати |
-| **Голосовий ввід** | Відкриває екран голосової витрати — озвучте витрату природною мовою |
 | **Сканувати чек** | Відкриває камеру для фотографування чека та ШІ-розпізнавання |
+| **Голосовий ввід** | Озвучте витрату природною мовою |
+| **Дохід голосом** | Озвучте дохід природною мовою (приховано за замовчуванням) |
+| **Сканувати рахунок** | Сфотографуйте рахунок, щоб зафіксувати дохід (приховано за замовчуванням) |
 | **Обмін** | Відкриває форму обміну валют |
+| **Конвертер** | Відкриває конвертер валют |
+| **Перекази** | Відкриває форму переказу між гаманцями |
+
+Ви можете налаштувати цю панель: перейдіть до **Налаштування → Віджети головного екрану**, відкрийте розділ **Швидкі дії**, увімкніть або вимкніть будь-які дії та перетягніть ручки для зміни порядку. **Дохід голосом** і **Сканувати рахунок** приховані за замовчуванням — увімкніть їх там, якщо ви записуєте доходи голосом або скануючи рахунки.
 
 ## Фінансове здоров'я
 
@@ -7105,7 +7129,7 @@ iOS, Android, Web
   **В:** Ви ще не додали жодних витрат чи доходів. Скористайтеся кнопками швидких дій, щоб додати першу транзакцію.
 
 - **П:** Чи можу я налаштувати, що відображається на Головній?
-  **В:** Так. Перейдіть до **Налаштування → Віджети головного екрану** та вмикайте або вимикайте потрібні секції. Налаштування зберігаються і не скидаються при перезапуску. Також можна перетягувати віджети для зміни їхнього порядку.
+  **В:** Так. Перейдіть до **Налаштування → Віджети головного екрану** та вмикайте або вимикайте потрібні секції. Налаштування зберігаються і не скидаються при перезапуску. Також можна перетягувати віджети для зміни їхнього порядку. Панель швидких дій налаштовується так само — відкрийте розділ **Швидкі дії** в Налаштування → Віджети головного екрану, щоб показати, приховати або змінити порядок її кнопок.
 
 ---
 
@@ -10331,14 +10355,22 @@ W lewym gornym rogu dotknij nazwy konta (np. **Rodzina**), aby otworzyc menu **P
 
 ## Szybkie akcje
 
-Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczestszych zadan:
+Pasek szybkich akcji pod powitaniem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Przesuń w lewo, aby zobaczyć więcej.
 
-| Przycisk | Akcja |
+Dostępne akcje:
+
+| Akcja | Opis |
 |---|---|
-| **Dodaj wydatek** | Otwiera formularz recznego dodawania wydatku |
-| **Glosowo** | Otwiera ekran wydatku glosowego — powiedz swoj wydatek naturalnie |
-| **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
+| **Dodaj wydatek** | Otwiera formularz ręcznego dodawania wydatku |
+| **Skanuj paragon** | Otwiera aparat, aby sfotografować paragon do ekstrakcji AI |
+| **Glosowo** | Powiedz swój wydatek naturalnie |
+| **Przychód głosowo** | Powiedz swój przychód naturalnie (domyślnie ukryte) |
+| **Skanuj fakturę** | Sfotografuj fakturę, aby zarejestrować przychód (domyślnie ukryte) |
 | **Kantor** | Otwiera formularz wymiany walut |
+| **Kalkulator walut** | Otwiera kalkulator walutowy |
+| **Przelewy** | Otwiera formularz przelewu między portfelami |
+
+Możesz dostosować ten pasek: przejdź do **Ustawienia → Widgety pulpitu**, otwórz sekcję **Szybkie akcje**, włącz lub wyłącz dowolne akcje i przeciągnij uchwyty, aby je przestawić. **Przychód głosowo** i **Skanuj fakturę** są domyślnie ukryte — włącz je tam, jeśli rejestrujesz przychody głosowo lub skanując faktury.
 
 ## Kondycja Finansowa
 
@@ -10462,7 +10494,7 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
   **O:** Nie dodales jeszcze zadnych wydatkow ani przychodow. Uzyj przyciskow szybkich akcji, aby dodac swoja pierwsza transakcje.
 
 - **P: Czy moge dostosowac wyglad Pulpitu?**
-  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu. Możesz też przeciągać widgety, aby je przestawiać.
+  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu. Możesz też przeciągać widgety, aby je przestawiać. Pasek szybkich akcji można dostosować w ten sam sposób — otwórz sekcję **Szybkie akcje** w Ustawienia → Widgety pulpitu, aby pokazać, ukryć lub przestawić jego przyciski.
 
 ---
 
@@ -13684,14 +13716,22 @@ In der oberen linken Ecke tippe auf den Kontonamen (z.B. **Family**), um das **K
 
 ## Schnellaktionen
 
-Vier Schnellaktions-Schaltflachen unterhalb der Begrussung geben dir schnellen Zugriff auf die haufigsten Aufgaben:
+Die Schnellaktionsleiste unterhalb der Begrüßung ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wische nach links, um mehr zu sehen.
 
-| Schaltflache | Aktion |
+Verfügbare Aktionen:
+
+| Aktion | Beschreibung |
 |---|---|
-| **Ausgabe hinzufugen** | Offnet das manuelle Ausgabenformular |
-| **Spracheingabe** | Offnet den Sprachausgabe-Bildschirm — sprich deine Ausgabe naturlich aus |
-| **Beleg scannen** | Offnet die Kamera zum Fotografieren eines Belegs fur KI-Extraktion |
-| **Umtausch** | Offnet das Wahrungsumtausch-Formular |
+| **Ausgabe hinzufugen** | Öffnet das manuelle Ausgabenformular |
+| **Beleg scannen** | Öffnet die Kamera zum Fotografieren eines Belegs für KI-Extraktion |
+| **Spracheingabe** | Sprich deine Ausgabe natürlich aus |
+| **Einnahme per Sprache** | Sprich deine Einnahme natürlich aus (standardmäßig ausgeblendet) |
+| **Rechnung scannen** | Fotografiere eine Rechnung, um eine Einnahme zu erfassen (standardmäßig ausgeblendet) |
+| **Umtausch** | Öffnet das Währungsumtausch-Formular |
+| **Konverter** | Öffnet den Währungsrechner |
+| **Überweisungen** | Öffnet das Formular für Geldbörsen-Überweisungen |
+
+Du kannst diese Leiste anpassen: Gehe zu **Einstellungen → Dashboard-Widgets**, öffne den Bereich **Schnellaktionen**, aktiviere oder deaktiviere beliebige Aktionen und ziehe die Griffe, um sie neu anzuordnen. **Einnahme per Sprache** und **Rechnung scannen** sind standardmäßig ausgeblendet — aktiviere sie dort, wenn du Einnahmen per Sprache oder Rechnungsscan erfasst.
 
 ## Finanzielle Gesundheit
 
@@ -13815,7 +13855,7 @@ Ziehe auf der Ubersicht nach unten, um alle Daten zu aktualisieren und mit dem S
   **A:** Du hast noch keine Ausgaben oder Einkommen hinzugefugt. Verwende die Schnellaktions-Schaltflachen, um deine erste Transaktion hinzuzufugen.
 
 - **F: Kann ich anpassen, was auf der Ubersicht angezeigt wird?**
-  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten. Du kannst auch Widgets ziehen, um sie neu anzuordnen.
+  **A:** Ja. Gehe zu **Einstellungen → Dashboard-Widgets** und schalte einzelne Bereiche ein oder aus. Deine Einstellungen werden gespeichert und bleiben nach Neustarts erhalten. Du kannst auch Widgets ziehen, um sie neu anzuordnen. Die Schnellaktionsleiste ist auf dieselbe Weise anpassbar — öffne den Bereich **Schnellaktionen** in Einstellungen → Dashboard-Widgets, um Schaltflächen ein- oder auszublenden oder neu anzuordnen.
 
 ---
 
@@ -17012,14 +17052,22 @@ En la esquina superior izquierda, toca el nombre de la cuenta (por ejemplo, **Fa
 
 ## Acciones rapidas
 
-Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las tareas mas comunes:
+La barra de acciones rápidas debajo del saludo es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Desliza hacia la izquierda para ver más.
 
-| Boton | Accion |
+Acciones disponibles:
+
+| Accion | Descripción |
 |---|---|
 | **Agregar gasto** | Abre el formulario de gasto manual |
-| **Entrada de voz** | Abre la pantalla de gasto por voz — describe tu gasto de forma natural |
-| **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
+| **Escanear recibo** | Abre la cámara para fotografiar un recibo para extracción con IA |
+| **Entrada de voz** | Describe tu gasto de forma natural por voz |
+| **Ingreso por voz** | Describe tu ingreso de forma natural por voz (oculto por defecto) |
+| **Escanear factura** | Fotografía una factura para registrar un ingreso (oculto por defecto) |
 | **Cambio** | Abre el formulario de cambio de divisa |
+| **Conversor** | Abre el conversor de divisas |
+| **Transferencias** | Abre el formulario de transferencia entre billeteras |
+
+Puedes personalizar esta barra: ve a **Ajustes → Widgets del panel**, abre la sección **Acciones rápidas**, activa o desactiva cualquier acción, y arrastra los controles para reordenarlas. **Ingreso por voz** y **Escanear factura** están ocultos por defecto — actívalos allí si registras ingresos por voz o escaneando facturas.
 
 ## Salud Financiera
 
@@ -17143,7 +17191,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
   **R:** Aun no has agregado ningun gasto o ingreso. Usa los botones de accion rapida para agregar tu primera transaccion.
 
 - **P: Puedo personalizar lo que aparece en el Panel?**
-  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios. También puedes arrastrar widgets para reordenarlos.
+  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios. También puedes arrastrar widgets para reordenarlos. La barra de acciones rápidas se personaliza de la misma manera — abre la sección **Acciones rápidas** en Ajustes → Widgets del panel para mostrar, ocultar o reordenar sus botones.
 
 ---
 
@@ -20329,14 +20377,22 @@ Dans le coin superieur gauche, appuyez sur le nom du compte (par ex. **Famille**
 
 ## Actions rapides
 
-Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent un acces rapide aux taches les plus courantes :
+La barre d'actions rapides sous le message d'accueil est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Faites glisser vers la gauche pour en voir plus.
 
-| Bouton | Action |
+Actions disponibles :
+
+| Action | Description |
 |---|---|
-| **Ajouter une depense** | Ouvre le formulaire de saisie manuelle de depense |
-| **Saisie vocale** | Ouvre l'ecran de depense vocale — decrivez votre depense naturellement |
-| **Scanner un recu** | Ouvre l'appareil photo pour photographier un recu et en extraire les informations par IA |
+| **Ajouter une depense** | Ouvre le formulaire de saisie manuelle de dépense |
+| **Scanner un recu** | Ouvre l'appareil photo pour photographier un reçu et en extraire les informations par IA |
+| **Saisie vocale** | Décrivez votre dépense naturellement par voix |
+| **Revenu par voix** | Décrivez votre revenu naturellement par voix (masqué par défaut) |
+| **Scanner une facture** | Photographiez une facture pour enregistrer un revenu (masqué par défaut) |
 | **Change** | Ouvre le formulaire de change de devises |
+| **Convertisseur** | Ouvre le convertisseur de devises |
+| **Virements** | Ouvre le formulaire de virement entre portefeuilles |
+
+Vous pouvez personnaliser cette barre : allez dans **Paramètres → Widgets du tableau de bord**, ouvrez la section **Actions rapides**, activez ou désactivez n'importe quelle action, et faites glisser les poignées pour les réordonner. **Revenu par voix** et **Scanner une facture** sont masqués par défaut — activez-les là si vous enregistrez vos revenus par voix ou en scannant des factures.
 
 ## Santé Financière
 
@@ -20460,7 +20516,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
   **R :** Vous n'avez pas encore ajoute de depenses ou de revenus. Utilisez les boutons d'actions rapides pour ajouter votre premiere transaction.
 
 - **Q : Puis-je personnaliser ce qui apparait sur le Tableau de bord ?**
-  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages. Vous pouvez également faire glisser les widgets pour les réordonner.
+  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages. Vous pouvez également faire glisser les widgets pour les réordonner. La barre d'actions rapides est personnalisable de la même façon — ouvrez la section **Actions rapides** dans Paramètres → Widgets du tableau de bord pour afficher, masquer ou réordonner ses boutons.
 
 ---
 
@@ -23644,14 +23700,22 @@ iOS, Android, Web
 
 ## Хуткія дзеянні
 
-Чатыры кнопкі хуткіх дзеянняў пад прывітаннем забяспечваюць хуткі доступ да найбольш частых задач:
+Панэль хуткіх дзеянняў пад прывітаннем — гэта гарызантальны пракручваемы рад ярлыкоў у адно дакрананне да найбольш частых задач. Правядзіце ўлева, каб убачыць больш.
 
-| Кнопка | Дзеянне |
+Даступныя дзеянні:
+
+| Дзеянне | Апісанне |
 |---|---|
 | **Дадаць выдатак** | Адкрывае форму ручнога ўводу выдатку |
-| **Галасавы ўвод** | Адкрывае экран галасавога выдатку — вымавіце выдатак натуральнай мовай |
 | **Сканаваць чэк** | Адкрывае камеру для фатаграфавання чэка і здабывання даных з дапамогай ІІ |
+| **Галасавы ўвод** | Вымавіце выдатак натуральнай мовай |
+| **Даход голасам** | Вымавіце даход натуральнай мовай (схавана па змаўчанні) |
+| **Сканаваць рахунак** | Сфатаграфуйце рахунак, каб зафіксаваць даход (схавана па змаўчанні) |
 | **Абмен** | Адкрывае форму абмену валют |
+| **Канвертар** | Адкрывае канвертар валют |
+| **Пераводы** | Адкрывае форму пераводу паміж кашалькамі |
+
+Вы можаце наладзіць гэту панэль: перайдзіце ў **Налады → Віджэты галоўнага экрана**, адкрыйце раздзел **Хуткія дзеянні**, уключыце або выключыце любыя дзеянні і перацягніце ручкі для змены парадку. **Даход голасам** і **Сканаваць рахунак** схаваны па змаўчанні — уключыце іх там, калі вы запісваеце даходы голасам або скануючы рахункі.
 
 ## Фінансавае здароўе
 
@@ -23775,7 +23839,7 @@ iOS, Android, Web
   **А:** Вы яшчэ не дадалі выдаткі або даходы. Выкарыстоўвайце кнопкі хуткіх дзеянняў, каб дадаць першую транзакцыю.
 
 - **П: Ці можна наладзіць, што адлюстроўваецца на Галоўнай?**
-  **А:** Так. Перайдзіце ў **Налады → Віджэты галоўнага экрана** і ўключайце або выключайце патрэбныя секцыі. Налады захоўваюцца і не скідаюцца пры перазапуску. Таксама можна перацягваць віджэты для змены іх парадку.
+  **А:** Так. Перайдзіце ў **Налады → Віджэты галоўнага экрана** і ўключайце або выключайце патрэбныя секцыі. Налады захоўваюцца і не скідаюцца пры перазапуску. Таксама можна перацягваць віджэты для змены іх парадку. Панэль хуткіх дзеянняў наладжваецца такім жа чынам — адкрыйце раздзел **Хуткія дзеянні** ў Налады → Віджэты галоўнага экрана, каб паказаць, схаваць або змяніць парадак яе кнопак.
 
 ---
 
@@ -26919,14 +26983,22 @@ Tik linksboven op de accountnaam (bijv. **Familie**) om het uitklapmenu **Accoun
 
 ## Snelle acties
 
-Vier snelle-actieknoppen onder de begroeting geven je snelle toegang tot de meest voorkomende taken:
+De balk met snelle acties onder de begroeting is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Veeg naar links om meer te zien.
 
-| Knop | Actie |
+Beschikbare acties:
+
+| Actie | Beschrijving |
 |---|---|
 | **Uitgave toevoegen** | Opent het handmatige uitgavenformulier |
-| **Spraakinvoer** | Opent het spraakuitgavenscherm — spreek je uitgave op natuurlijke wijze in |
 | **Bon scannen** | Opent de camera om een bon te fotograferen voor AI-extractie |
+| **Spraakinvoer** | Spreek je uitgave op natuurlijke wijze in |
+| **Inkomsten via spraak** | Spreek je inkomsten op natuurlijke wijze in (standaard verborgen) |
+| **Factuur scannen** | Fotografeer een factuur om inkomsten te registreren (standaard verborgen) |
 | **Wisselen** | Opent het valutawisselformulier |
+| **Wisselkoers** | Opent de valutaomrekener |
+| **Overboekingen** | Opent het formulier voor portemonnee-overboekingen |
+
+Je kunt deze balk aanpassen: ga naar **Instellingen → Dashboard-widgets**, open de sectie **Snelle acties**, zet acties aan of uit en sleep de handvatten om ze te herordenen. **Inkomsten via spraak** en **Factuur scannen** zijn standaard verborgen — schakel ze daar in als je inkomsten bijhoudt via spraak of factuurscan.
 
 ## Financiële gezondheidsscore
 
@@ -27050,7 +27122,7 @@ Trek ergens op het Dashboard omlaag om alle gegevens te vernieuwen en met de ser
   **A:** Je hebt nog geen uitgaven of inkomsten toegevoegd. Gebruik de snelle-actieknoppen om je eerste transactie toe te voegen.
 
 - **V: Kan ik aanpassen wat er op het Dashboard verschijnt?**
-  **A:** Ja. Ga naar **Instellingen → Dashboard-widgets** en zet afzonderlijke secties aan of uit. Je voorkeuren worden opgeslagen en blijven behouden na een herstart. Je kunt widgets ook verslepen om ze te herordenen.
+  **A:** Ja. Ga naar **Instellingen → Dashboard-widgets** en zet afzonderlijke secties aan of uit. Je voorkeuren worden opgeslagen en blijven behouden na een herstart. Je kunt widgets ook verslepen om ze te herordenen. De balk met snelle acties is op dezelfde manier aanpasbaar — open de sectie **Snelle acties** in Instellingen → Dashboard-widgets om de knoppen te tonen, verbergen of herordenen.
 
 ---
 

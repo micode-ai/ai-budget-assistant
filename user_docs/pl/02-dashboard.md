@@ -14,14 +14,22 @@ W lewym gornym rogu dotknij nazwy konta (np. **Rodzina**), aby otworzyc menu **P
 
 ## Szybkie akcje
 
-Cztery przyciski szybkich akcji ponizej powitania daja szybki dostep do najczestszych zadan:
+Pasek szybkich akcji pod powitaniem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Przesuń w lewo, aby zobaczyć więcej.
 
-| Przycisk | Akcja |
+Dostępne akcje:
+
+| Akcja | Opis |
 |---|---|
-| **Dodaj wydatek** | Otwiera formularz recznego dodawania wydatku |
-| **Glosowo** | Otwiera ekran wydatku glosowego — powiedz swoj wydatek naturalnie |
-| **Skanuj paragon** | Otwiera aparat, aby sfotografowac paragon do ekstrakcji AI |
+| **Dodaj wydatek** | Otwiera formularz ręcznego dodawania wydatku |
+| **Skanuj paragon** | Otwiera aparat, aby sfotografować paragon do ekstrakcji AI |
+| **Glosowo** | Powiedz swój wydatek naturalnie |
+| **Przychód głosowo** | Powiedz swój przychód naturalnie (domyślnie ukryte) |
+| **Skanuj fakturę** | Sfotografuj fakturę, aby zarejestrować przychód (domyślnie ukryte) |
 | **Kantor** | Otwiera formularz wymiany walut |
+| **Kalkulator walut** | Otwiera kalkulator walutowy |
+| **Przelewy** | Otwiera formularz przelewu między portfelami |
+
+Możesz dostosować ten pasek: przejdź do **Ustawienia → Widgety pulpitu**, otwórz sekcję **Szybkie akcje**, włącz lub wyłącz dowolne akcje i przeciągnij uchwyty, aby je przestawić. **Przychód głosowo** i **Skanuj fakturę** są domyślnie ukryte — włącz je tam, jeśli rejestrujesz przychody głosowo lub skanując faktury.
 
 ## Kondycja Finansowa
 
@@ -145,7 +153,7 @@ Przeciagnij w dol w dowolnym miejscu na Pulpicie, aby odswiezyc wszystkie dane i
   **O:** Nie dodales jeszcze zadnych wydatkow ani przychodow. Uzyj przyciskow szybkich akcji, aby dodac swoja pierwsza transakcje.
 
 - **P: Czy moge dostosowac wyglad Pulpitu?**
-  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu. Możesz też przeciągać widgety, aby je przestawiać.
+  **O:** Tak. Przejdz do **Ustawienia → Widgety pulpitu** i wlacz lub wylacz poszczegolne sekcje. Twoje preferencje sa zapisywane i zachowywane po ponownym uruchomieniu. Możesz też przeciągać widgety, aby je przestawiać. Pasek szybkich akcji można dostosować w ten sam sposób — otwórz sekcję **Szybkie akcje** w Ustawienia → Widgety pulpitu, aby pokazać, ukryć lub przestawić jego przyciski.
 
 ---
 

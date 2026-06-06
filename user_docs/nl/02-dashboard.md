@@ -14,14 +14,22 @@ Tik linksboven op de accountnaam (bijv. **Familie**) om het uitklapmenu **Accoun
 
 ## Snelle acties
 
-Vier snelle-actieknoppen onder de begroeting geven je snelle toegang tot de meest voorkomende taken:
+De balk met snelle acties onder de begroeting is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Veeg naar links om meer te zien.
 
-| Knop | Actie |
+Beschikbare acties:
+
+| Actie | Beschrijving |
 |---|---|
 | **Uitgave toevoegen** | Opent het handmatige uitgavenformulier |
-| **Spraakinvoer** | Opent het spraakuitgavenscherm — spreek je uitgave op natuurlijke wijze in |
 | **Bon scannen** | Opent de camera om een bon te fotograferen voor AI-extractie |
+| **Spraakinvoer** | Spreek je uitgave op natuurlijke wijze in |
+| **Inkomsten via spraak** | Spreek je inkomsten op natuurlijke wijze in (standaard verborgen) |
+| **Factuur scannen** | Fotografeer een factuur om inkomsten te registreren (standaard verborgen) |
 | **Wisselen** | Opent het valutawisselformulier |
+| **Wisselkoers** | Opent de valutaomrekener |
+| **Overboekingen** | Opent het formulier voor portemonnee-overboekingen |
+
+Je kunt deze balk aanpassen: ga naar **Instellingen → Dashboard-widgets**, open de sectie **Snelle acties**, zet acties aan of uit en sleep de handvatten om ze te herordenen. **Inkomsten via spraak** en **Factuur scannen** zijn standaard verborgen — schakel ze daar in als je inkomsten bijhoudt via spraak of factuurscan.
 
 ## Financiële gezondheidsscore
 
@@ -145,7 +153,7 @@ Trek ergens op het Dashboard omlaag om alle gegevens te vernieuwen en met de ser
   **A:** Je hebt nog geen uitgaven of inkomsten toegevoegd. Gebruik de snelle-actieknoppen om je eerste transactie toe te voegen.
 
 - **V: Kan ik aanpassen wat er op het Dashboard verschijnt?**
-  **A:** Ja. Ga naar **Instellingen → Dashboard-widgets** en zet afzonderlijke secties aan of uit. Je voorkeuren worden opgeslagen en blijven behouden na een herstart. Je kunt widgets ook verslepen om ze te herordenen.
+  **A:** Ja. Ga naar **Instellingen → Dashboard-widgets** en zet afzonderlijke secties aan of uit. Je voorkeuren worden opgeslagen en blijven behouden na een herstart. Je kunt widgets ook verslepen om ze te herordenen. De balk met snelle acties is op dezelfde manier aanpasbaar — open de sectie **Snelle acties** in Instellingen → Dashboard-widgets om de knoppen te tonen, verbergen of herordenen.
 
 ---
 
