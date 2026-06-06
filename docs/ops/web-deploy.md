@@ -1,139 +1,137 @@
-# Web deploy — host the mobile app as a static site
+# Web deploy — mobile app hosted as a static site at ai-budget.pl
 
-The Expo mobile app can be exported to a **static web bundle** and served by the
-existing `accounting-nginx` with ~zero extra RAM (no new app process — nginx just
-hands out files; all app logic runs in the visitor's browser, data still comes
-from the live `api.ai-budget.pl`).
+**Status: LIVE at https://ai-budget.pl** (ABA-213).
 
-This is intentionally lightweight infra: a folder of files + one nginx `server`
-block. Nothing here adds a container or memory pressure to the prod stack.
+The Expo mobile app is exported to a static SPA and served on the prod VPS with a
+tiny dedicated nginx container, fronted by the shared reverse proxy. All app logic
+runs in the visitor's browser; data comes from the live `api.ai-budget.pl`.
 
-## Domain: serve at the apex `ai-budget.pl`
+## Live setup (what's actually deployed)
 
-Use the **apex** `ai-budget.pl`, not a subdomain. Reason: prod `CORS_ORIGIN`
-already includes `https://ai-budget.pl` (see CLAUDE.md → Production → CORS), so the
-browser's cross-origin calls to `api.ai-budget.pl` work **without any CORS change
-or `api` restart**. A new subdomain (e.g. `app.ai-budget.pl`) would require adding
-it to `CORS_ORIGIN` in `.env.production` and force-recreating the `api` container.
+- **Build**: `scripts/build-web.sh` → `npx expo export --platform web` → `apps/mobile/dist/`
+  (SPA, `web.output: "single"`). `EXPO_PUBLIC_API_URL` is baked in at build time
+  (defaults to `https://api.ai-budget.pl/api/v1`). Bundle ~24 MB (incl. bundled
+  help images).
+- **Static container** `ai-budget-web-prod` — `nginx:alpine`, 32 MB limit, on the
+  `ai-budget_budget-network`. Compose + SPA config live on the VPS at
+  `/opt/ai-budget-web/` (`docker-compose.yml`, `default.conf`, `html/` = the dist).
+  Serves the files with SPA `try_files … /index.html` + asset caching.
+- **Shared proxy** `shared-nginx` (container; configs at `/opt/shared-nginx/conf.d/`)
+  has an apex `server { listen 443 ssl; server_name ai-budget.pl; … proxy_pass
+  http://ai-budget-web-prod:80; }` block appended to `ai-budget.conf`. TLS uses the
+  existing `/etc/letsencrypt/live/ai-budget.pl/` cert — its SANs already cover the
+  apex (`ai-budget.pl`, `admin.`, `api.`), so **no new cert** was needed.
+- **CORS**: prod `CORS_ORIGIN` already contains `https://ai-budget.pl`, so the
+  browser's calls to `api.ai-budget.pl` are allowed — **no CORS / api change**.
 
-> ⚠️ **Confirm what currently serves `ai-budget.pl`.** If a landing/marketing page
-> lives there today, this replaces it. If it's empty/placeholder, you're clear.
+> Before this, the apex had no 443 block and fell through to the first 443 server
+> (`www.eksiegowyai.pl`), which 301-redirected to `eksiegowyai.pl`. The new exact
+> `server_name ai-budget.pl` block intercepts the apex ahead of that fallback.
 
-## Web caveats (already known, see CLAUDE.md → Mobile → Platforms)
+> VPS access + specs: see the `prod-vps-ssh-access` memory. The box also hosts the
+> live `eksiegowyai.pl` and `marketing-ai` — changes here use graceful `nginx -s
+> reload` (never recreate `shared-nginx`).
 
-Web is for UI/quick testing, not full functional use: SQLite/offline-first is
-disabled (in-memory mock), and receipts/voice/biometric are degraded. API-backed
-screens (auth, subscriptions, lists, etc.) work normally.
+## Web caveats (CLAUDE.md → Mobile → Platforms)
+
+SQLite/offline-first is disabled on web (in-memory mock); receipts/voice/biometric
+degraded. API-backed screens (auth, subscriptions, lists…) work normally.
 
 ---
 
-## 1. Build the static bundle
+## Deploy an update (each release)
+
+Rebuild and push the static files — **no container restart, no nginx reload** (the
+`html/` dir is bind-mounted; nginx serves the new files immediately; `index.html`
+is sent `no-cache`, hashed assets are immutable):
 
 ```bash
 scripts/build-web.sh
+tar -czf - -C apps/mobile/dist . | \
+  ssh -i ~/.ssh/id_ed25519 root@46.225.23.232 \
+  "rm -rf /opt/ai-budget-web/html/* && tar -xzf - -C /opt/ai-budget-web/html"
 ```
 
-- Output: `apps/mobile/dist/` (gitignored — never committed).
-- `EXPO_PUBLIC_API_URL` is baked in at build time; the script defaults to
-  `https://api.ai-budget.pl/api/v1`. Override only to point at a local API.
-- Contents: `index.html`, one `_expo/static/js/web/index-*.js` bundle (~9 MB),
-  `favicon.ico`, and hashed assets. SPA (`web.output: "single"` in `app.json`) →
-  all routing is client-side, so nginx must fall back to `index.html`.
-
-## 2. One-time VPS setup
-
-### a. Place + mount the web root
-
-Pick a host path, e.g. `/srv/ai-budget-web/`, and mount it **read-only** into the
-`accounting-nginx` container (in that stack's compose file):
-
-```yaml
-    volumes:
-      - /srv/ai-budget-web:/usr/share/nginx/html/ai-budget:ro
-```
-
-Recreate nginx once after adding the mount:
-
-```bash
-docker compose -f <accounting-nginx-compose>.yml up -d --force-recreate <nginx-service>
-```
-
-### b. nginx server block for ai-budget.pl
-
-Add to the `accounting-nginx` config (alongside the existing `api.`/`admin.`
-blocks). TLS lines assume Let's Encrypt the same way the other vhosts get certs —
-issue/extend the cert to cover `ai-budget.pl` (and `www.` if desired) first
-(`certbot --nginx -d ai-budget.pl -d www.ai-budget.pl`, or your existing flow).
-
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name ai-budget.pl www.ai-budget.pl;
-    # ACME challenge handled by your existing certbot setup; redirect the rest:
-    return 301 https://ai-budget.pl$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name ai-budget.pl;
-
-    ssl_certificate     /etc/letsencrypt/live/ai-budget.pl/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ai-budget.pl/privkey.pem;
-
-    root /usr/share/nginx/html/ai-budget;   # = the mounted /srv/ai-budget-web
-    index index.html;
-
-    # Hashed JS/assets are immutable — cache hard.
-    location /_expo/ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-        try_files $uri =404;
-    }
-    location ~* \.(?:js|css|png|jpg|jpeg|gif|svg|ico|woff2?)$ {
-        expires 30d;
-        add_header Cache-Control "public";
-        try_files $uri =404;
-    }
-
-    # SPA fallback — every unknown path serves index.html (client-side routing).
-    # index.html itself must NOT be cached, so new deploys are picked up.
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-    location = /index.html {
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-}
-```
-
-Reload nginx after editing the config:
-
-```bash
-docker exec <nginx-container> nginx -t && docker exec <nginx-container> nginx -s reload
-```
-
-## 3. Deploy / update (each release)
-
-```bash
-scripts/build-web.sh
-rsync -avz --delete apps/mobile/dist/ <SSH_USER>@<SSH_HOST>:/srv/ai-budget-web/
-```
-
-No nginx reload needed for content updates (static files are served directly).
-`--delete` removes stale hashed bundles. Because `index.html` is sent
-`no-cache`, visitors get the new bundle on their next load.
-
-## 4. (Optional) CI automation
-
-Mirror `deploy.yml`'s SSH pattern (`appleboy/ssh-action`, secrets `SSH_HOST` /
-`SSH_USER` / `SSH_PRIVATE_KEY`). A `workflow_dispatch` job that runs
-`scripts/build-web.sh` then rsyncs `apps/mobile/dist/` to the web root. Deferred
-until the host path + mount above are settled — wire it up once the manual flow
-is verified.
+(or `rsync -avz --delete -e 'ssh -i ~/.ssh/id_ed25519' apps/mobile/dist/ root@46.225.23.232:/opt/ai-budget-web/html/` if rsync is available.)
 
 ## Rollback
 
-Keep the previous `dist/` (or re-run `build-web.sh` on the prior git tag) and
-rsync it back. Static files have no migrations/state, so rollback is instant.
+- **Content**: re-deploy a previous `dist/` (rebuild on the prior git tag, push).
+- **Take the app down / restore old behavior**: remove the apex `server` block from
+  `/opt/shared-nginx/conf.d/ai-budget.conf` (a timestamped `*.bak.*` backup is kept
+  next to it) and `docker exec shared-nginx nginx -t && docker exec shared-nginx
+  nginx -s reload`. Stop the container with `docker compose -f
+  /opt/ai-budget-web/docker-compose.yml down`.
+
+## One-time setup (already done — recorded for rebuild/DR)
+
+On the VPS:
+
+1. `mkdir -p /opt/ai-budget-web/html` and place the dist (see deploy step).
+2. `/opt/ai-budget-web/default.conf` — inner nginx SPA config:
+
+   ```nginx
+   server {
+       listen 80;
+       server_name _;
+       root /usr/share/nginx/html;
+       index index.html;
+       location /_expo/ { expires 1y; add_header Cache-Control "public, immutable"; try_files $uri =404; }
+       location ~* \.(?:js|css|png|jpg|jpeg|gif|svg|ico|woff2?)$ { expires 30d; add_header Cache-Control "public"; try_files $uri =404; }
+       location = /index.html { add_header Cache-Control "no-cache, no-store, must-revalidate"; }
+       location / { try_files $uri $uri/ /index.html; }
+   }
+   ```
+
+3. `/opt/ai-budget-web/docker-compose.yml`:
+
+   ```yaml
+   services:
+     web:
+       image: nginx:alpine
+       container_name: ai-budget-web-prod
+       volumes:
+         - ./html:/usr/share/nginx/html:ro
+         - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+       restart: unless-stopped
+       deploy:
+         resources:
+           limits:
+             memory: 32M
+       networks:
+         - budget-network
+   networks:
+     budget-network:
+       external: true
+       name: ai-budget_budget-network
+   ```
+   `cd /opt/ai-budget-web && docker compose up -d`
+
+4. Append to `/opt/shared-nginx/conf.d/ai-budget.conf` (back it up first):
+
+   ```nginx
+   # Mobile web app (static SPA) — apex ai-budget.pl (ABA-213)
+   server {
+       listen 443 ssl;
+       server_name ai-budget.pl;
+       ssl_certificate     /etc/letsencrypt/live/ai-budget.pl/fullchain.pem;
+       ssl_certificate_key /etc/letsencrypt/live/ai-budget.pl/privkey.pem;
+       ssl_protocols       TLSv1.2 TLSv1.3;
+       ssl_ciphers         HIGH:!aNULL:!MD5;
+       ssl_session_cache   shared:SSL_BUDGET_WEB:10m;
+       add_header X-Content-Type-Options nosniff always;
+       add_header Strict-Transport-Security "max-age=31536000" always;
+       resolver 127.0.0.11 valid=30s;
+       set $upstream_budget_web http://ai-budget-web-prod:80;
+       location / {
+           proxy_pass $upstream_budget_web;
+           proxy_http_version 1.1;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+   Then `docker exec shared-nginx nginx -t && docker exec shared-nginx nginx -s reload`.
+   (Apex HTTP→HTTPS is already handled by the existing port-80 block in the same file.)
