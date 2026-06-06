@@ -87,6 +87,12 @@ export default function SettingsIndexScreen() {
       route: '/settings/reference',
     },
     {
+      icon: 'repeat-outline',
+      label: t('subscriptionManager.title'),
+      description: t('subscriptionManager.settingsSubtitle'),
+      route: '/subscriptions',
+    },
+    {
       icon: 'wallet-outline',
       label: t('settingsNav.wallet'),
       description: t('settingsNav.walletDesc'),

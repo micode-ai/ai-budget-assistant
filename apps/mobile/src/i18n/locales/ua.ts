@@ -1210,6 +1210,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Підписки',
+    settingsSubtitle: 'Відстежуйте регулярні платежі та продовження',
     addTitle: 'Додати підписку',
     editTitle: 'Редагувати підписку',
     monthlyTotal: 'Місячна вартість',

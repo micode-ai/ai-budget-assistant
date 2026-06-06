@@ -36,6 +36,7 @@ export default function WidgetsSettingsScreen() {
     exchange: t('dashboard.exchangeCurrency'),
     converter: t('dashboard.currencyConverter'),
     transfers: t('dashboard.transfers'),
+    subscriptions: t('subscriptionManager.title'),
   };
 
   const widgetLabels: Record<WidgetKey, string> = {

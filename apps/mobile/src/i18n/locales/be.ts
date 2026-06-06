@@ -1194,6 +1194,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Падпіскі',
+    settingsSubtitle: 'Сачыце за рэгулярнымі плацяжамі і працягамі',
     addTitle: 'Дадаць падпіску',
     editTitle: 'Рэдагаваць падпіску',
     monthlyTotal: 'Месячны кошт',

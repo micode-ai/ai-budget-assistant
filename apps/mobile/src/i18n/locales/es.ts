@@ -1207,6 +1207,7 @@ export default {
   },
   subscriptionManager: {
     title: 'Suscripciones',
+    settingsSubtitle: 'Controla cargos recurrentes y renovaciones',
     addTitle: 'Añadir suscripción',
     editTitle: 'Editar suscripción',
     monthlyTotal: 'Costo mensual',
