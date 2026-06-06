@@ -14,14 +14,22 @@ Dans le coin superieur gauche, appuyez sur le nom du compte (par ex. **Famille**
 
 ## Actions rapides
 
-Quatre boutons d'actions rapides situes sous le message d'accueil vous donnent un acces rapide aux taches les plus courantes :
+La barre d'actions rapides sous le message d'accueil est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Faites glisser vers la gauche pour en voir plus.
 
-| Bouton | Action |
+Actions disponibles :
+
+| Action | Description |
 |---|---|
-| **Ajouter une depense** | Ouvre le formulaire de saisie manuelle de depense |
-| **Saisie vocale** | Ouvre l'ecran de depense vocale — decrivez votre depense naturellement |
-| **Scanner un recu** | Ouvre l'appareil photo pour photographier un recu et en extraire les informations par IA |
+| **Ajouter une depense** | Ouvre le formulaire de saisie manuelle de dépense |
+| **Scanner un recu** | Ouvre l'appareil photo pour photographier un reçu et en extraire les informations par IA |
+| **Saisie vocale** | Décrivez votre dépense naturellement par voix |
+| **Revenu par voix** | Décrivez votre revenu naturellement par voix (masqué par défaut) |
+| **Scanner une facture** | Photographiez une facture pour enregistrer un revenu (masqué par défaut) |
 | **Change** | Ouvre le formulaire de change de devises |
+| **Convertisseur** | Ouvre le convertisseur de devises |
+| **Virements** | Ouvre le formulaire de virement entre portefeuilles |
+
+Vous pouvez personnaliser cette barre : allez dans **Paramètres → Widgets du tableau de bord**, ouvrez la section **Actions rapides**, activez ou désactivez n'importe quelle action, et faites glisser les poignées pour les réordonner. **Revenu par voix** et **Scanner une facture** sont masqués par défaut — activez-les là si vous enregistrez vos revenus par voix ou en scannant des factures.
 
 ## Santé Financière
 
@@ -145,7 +153,7 @@ Tirez vers le bas n'importe ou sur le Tableau de bord pour actualiser toutes les
   **R :** Vous n'avez pas encore ajoute de depenses ou de revenus. Utilisez les boutons d'actions rapides pour ajouter votre premiere transaction.
 
 - **Q : Puis-je personnaliser ce qui apparait sur le Tableau de bord ?**
-  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages. Vous pouvez également faire glisser les widgets pour les réordonner.
+  **R :** Oui. Allez dans **Parametres → Widgets du tableau de bord** et activez ou desactivez les sections souhaitees. Vos preferences sont sauvegardees et persistent apres les redemarrages. Vous pouvez également faire glisser les widgets pour les réordonner. La barre d'actions rapides est personnalisable de la même façon — ouvrez la section **Actions rapides** dans Paramètres → Widgets du tableau de bord pour afficher, masquer ou réordonner ses boutons.
 
 ---
 

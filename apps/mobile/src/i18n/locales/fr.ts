@@ -661,6 +661,8 @@ export default {
     dashboardWidgets: 'Widgets du tableau de bord',
     widgetsReorderHint: 'Glisser la poignée pour réorganiser',
     widgetsResetOrder: 'Rétablir l\'ordre par défaut',
+    quickActionsTitle: 'Actions rapides',
+    widgetsTitle: 'Widgets',
     widget: {
       gamification: 'Gamification',
       monthlyBudget: 'Budget mensuel',

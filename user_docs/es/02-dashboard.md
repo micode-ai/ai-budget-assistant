@@ -14,14 +14,22 @@ En la esquina superior izquierda, toca el nombre de la cuenta (por ejemplo, **Fa
 
 ## Acciones rapidas
 
-Cuatro botones de accion rapida debajo del saludo te dan acceso inmediato a las tareas mas comunes:
+La barra de acciones rápidas debajo del saludo es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Desliza hacia la izquierda para ver más.
 
-| Boton | Accion |
+Acciones disponibles:
+
+| Accion | Descripción |
 |---|---|
 | **Agregar gasto** | Abre el formulario de gasto manual |
-| **Entrada de voz** | Abre la pantalla de gasto por voz — describe tu gasto de forma natural |
-| **Escanear recibo** | Abre la camara para fotografiar un recibo para extraccion con IA |
+| **Escanear recibo** | Abre la cámara para fotografiar un recibo para extracción con IA |
+| **Entrada de voz** | Describe tu gasto de forma natural por voz |
+| **Ingreso por voz** | Describe tu ingreso de forma natural por voz (oculto por defecto) |
+| **Escanear factura** | Fotografía una factura para registrar un ingreso (oculto por defecto) |
 | **Cambio** | Abre el formulario de cambio de divisa |
+| **Conversor** | Abre el conversor de divisas |
+| **Transferencias** | Abre el formulario de transferencia entre billeteras |
+
+Puedes personalizar esta barra: ve a **Ajustes → Widgets del panel**, abre la sección **Acciones rápidas**, activa o desactiva cualquier acción, y arrastra los controles para reordenarlas. **Ingreso por voz** y **Escanear factura** están ocultos por defecto — actívalos allí si registras ingresos por voz o escaneando facturas.
 
 ## Salud Financiera
 
@@ -145,7 +153,7 @@ Desliza hacia abajo en cualquier parte del Panel para actualizar todos los datos
   **R:** Aun no has agregado ningun gasto o ingreso. Usa los botones de accion rapida para agregar tu primera transaccion.
 
 - **P: Puedo personalizar lo que aparece en el Panel?**
-  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios. También puedes arrastrar widgets para reordenarlos.
+  **R:** Si. Ve a **Ajustes → Widgets del panel** y activa o desactiva las secciones que quieras. Tus preferencias se guardan y persisten entre reinicios. También puedes arrastrar widgets para reordenarlos. La barra de acciones rápidas se personaliza de la misma manera — abre la sección **Acciones rápidas** en Ajustes → Widgets del panel para mostrar, ocultar o reordenar sus botones.
 
 ---
 

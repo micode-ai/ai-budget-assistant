@@ -652,6 +652,8 @@ export default {
     dashboardWidgets: 'Віджэты галоўнага экрана',
     widgetsReorderHint: 'Перацягніце ручку для змены парадку',
     widgetsResetOrder: 'Аднавіць парадак па змаўчанні',
+    quickActionsTitle: 'Хуткія дзеянні',
+    widgetsTitle: 'Віджэты',
     widget: {
       gamification: 'Гейміфікацыя',
       monthlyBudget: 'Месячны бюджэт',

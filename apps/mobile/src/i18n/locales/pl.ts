@@ -661,6 +661,8 @@ export default {
     dashboardWidgets: 'Widżety pulpitu',
     widgetsReorderHint: 'Przeciągnij uchwyt, aby zmienić kolejność',
     widgetsResetOrder: 'Przywróć domyślną kolejność',
+    quickActionsTitle: 'Szybkie akcje',
+    widgetsTitle: 'Widżety',
     widget: {
       gamification: 'Grywalizacja',
       monthlyBudget: 'Miesięczny budżet',

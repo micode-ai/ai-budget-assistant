@@ -661,6 +661,8 @@ export default {
     dashboardWidgets: 'Dashboard-Widgets',
     widgetsReorderHint: 'Griff ziehen zum Sortieren',
     widgetsResetOrder: 'Standardreihenfolge wiederherstellen',
+    quickActionsTitle: 'Schnellaktionen',
+    widgetsTitle: 'Widgets',
     widget: {
       gamification: 'Gamification',
       monthlyBudget: 'Monatsbudget',

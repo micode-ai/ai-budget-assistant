@@ -661,6 +661,8 @@ export default {
     dashboardWidgets: 'Виджеты главного экрана',
     widgetsReorderHint: 'Перетащите ручку для изменения порядка',
     widgetsResetOrder: 'Восстановить порядок по умолчанию',
+    quickActionsTitle: 'Быстрые действия',
+    widgetsTitle: 'Виджеты',
     widget: {
       gamification: 'Геймификация',
       monthlyBudget: 'Месячный бюджет',

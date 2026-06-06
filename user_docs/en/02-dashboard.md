@@ -14,14 +14,22 @@ At the top-left corner, tap the account name (e.g., **Family**) to open the **Sw
 
 ## Quick Actions
 
-Four quick action buttons below the greeting give you fast access to the most common tasks:
+The quick-action strip below the greeting is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. Swipe left to see more.
 
-| Button | Action |
+Available actions:
+
+| Action | What it does |
 |---|---|
 | **Add Expense** | Opens the manual expense form |
-| **Voice Input** | Opens the voice expense screen — speak your expense naturally |
 | **Scan Receipt** | Opens the camera to photograph a receipt for AI extraction |
+| **Voice Expense** | Speak your expense naturally |
+| **Voice Income** | Speak your income naturally (hidden by default) |
+| **Scan Invoice** | Photograph an invoice to record income (hidden by default) |
 | **Exchange** | Opens the currency exchange form |
+| **Converter** | Opens the currency converter |
+| **Transfers** | Opens the wallet transfer form |
+
+You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
 
 ## Financial Health Score
 
@@ -145,7 +153,7 @@ Pull down anywhere on the Dashboard to refresh all data and sync with the server
   **A:** You haven't added any expenses or income yet. Use the quick action buttons to add your first transaction.
 
 - **Q: Can I customize what appears on the Dashboard?**
-  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts. You can also drag widgets to reorder them.
+  **A:** Yes. Go to **Settings → Dashboard Widgets** and toggle individual sections on or off. Your preferences are saved and persist across restarts. You can also drag widgets to reorder them. The quick-action strip is customizable the same way — open the **Quick actions** section in Settings → Dashboard Widgets to show, hide, or reorder its buttons.
 
 ---
 

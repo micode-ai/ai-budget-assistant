@@ -661,6 +661,8 @@ export default {
     dashboardWidgets: 'Widgets del panel',
     widgetsReorderHint: 'Arrastra el asa para reordenar',
     widgetsResetOrder: 'Restablecer orden predeterminado',
+    quickActionsTitle: 'Acciones rápidas',
+    widgetsTitle: 'Widgets',
     widget: {
       gamification: 'Gamificación',
       monthlyBudget: 'Presupuesto mensual',
