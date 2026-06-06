@@ -71,15 +71,27 @@ export class SubscriptionsService {
   // ---- Subscription CRUD ----
 
   async getOrCreateSubscription(userId: string): Promise<SubscriptionRecord> {
-    return this.prisma.subscription.upsert({
-      where: { userId },
-      create: {
-        userId,
-        tier: 'free',
-        status: 'active',
-      },
-      update: {},
-    });
+    // `upsert` is NOT atomic: under concurrency (e.g. the mobile app firing
+    // several requests in parallel right after login) two find-then-insert
+    // round-trips can race and both attempt the INSERT, so the second hits the
+    // `user_id` unique constraint with P2002. Catch that race and read the row
+    // that the winning request created.
+    try {
+      return await this.prisma.subscription.upsert({
+        where: { userId },
+        create: {
+          userId,
+          tier: 'free',
+          status: 'active',
+        },
+        update: {},
+      });
+    } catch (error) {
+      if ((error as { code?: string })?.code === 'P2002') {
+        return this.prisma.subscription.findUniqueOrThrow({ where: { userId } });
+      }
+      throw error;
+    }
   }
 
   async getCurrent(userId: string) {
