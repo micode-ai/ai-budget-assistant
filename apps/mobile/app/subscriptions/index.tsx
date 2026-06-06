@@ -126,17 +126,16 @@ export default function SubscriptionsScreen() {
               <Text style={styles.inactiveLabel}>{t('subscriptionManager.inactive')}</Text>
             )}
           </View>
+          {canEdit && (
+            <TouchableOpacity
+              style={styles.deleteBtn}
+              hitSlop={8}
+              onPress={() => handleDelete(item)}
+            >
+              <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
+            </TouchableOpacity>
+          )}
         </View>
-
-        {canEdit && (
-          <TouchableOpacity
-            style={styles.deleteBtn}
-            hitSlop={8}
-            onPress={() => handleDelete(item)}
-          >
-            <Ionicons name="trash-outline" size={16} color={theme.colors.danger} />
-          </TouchableOpacity>
-        )}
       </TouchableOpacity>
     );
   };
@@ -319,10 +318,8 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
   },
   deleteBtn: {
-    position: 'absolute' as const,
-    top: theme.spacing[2],
-    right: theme.spacing[3],
     padding: theme.spacing[1],
+    alignSelf: 'center' as const,
   },
   fab: {
     position: 'absolute' as const,
