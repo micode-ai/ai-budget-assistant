@@ -31,6 +31,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
+import { applyWebViewportFix } from '@/utils/webViewportFix';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -50,6 +51,12 @@ function RootNavigator() {
   const theme = useTheme();
 
   useOrientationLock();
+
+  // Web-only: keep the bottom tab bar clear of the system nav bar / home
+  // indicator (no-op on native). Runs once on mount.
+  useEffect(() => {
+    applyWebViewportFix();
+  }, []);
 
   const [fontsLoaded] = useFonts({
     Montserrat_400Regular,
