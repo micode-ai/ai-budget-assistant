@@ -165,7 +165,8 @@ export default function DashboardScreen() {
     }
   };
 
-  const visibleQuickActions = quickActionOrder.filter((k) => quickActionVisibility[k]);
+  // De-dupe so a duplicate in the stored order can't render an action twice.
+  const visibleQuickActions = [...new Set(quickActionOrder)].filter((k) => quickActionVisibility[k]);
   // The header's bottom padding only exists to let the strip's icons overlap up
   // into the orange. With no strip (viewer role, or every action hidden), drop it.
   const showQuickActions = canEdit && visibleQuickActions.length > 0;
@@ -253,7 +254,9 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         )}
 
-        {widgetOrder.map((key) => {
+        {/* De-dupe at the render site: a duplicate key in the stored order
+            would render the same widget twice (doubled card + broken modal). */}
+        {[...new Set(widgetOrder)].map((key) => {
           switch (key) {
             case 'financialHealth':
               return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
