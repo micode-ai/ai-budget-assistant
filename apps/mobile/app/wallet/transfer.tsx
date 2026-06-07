@@ -1,4 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { router, Stack } from 'expo-router';
@@ -101,11 +102,11 @@ export default function TransferScreen() {
 
   const handleSubmit = () => {
     if (!fromAccountId || !toAccountId) {
-      Alert.alert(t('common.error'), t('transfer.sameAccountError'));
+      showAlert(t('common.error'), t('transfer.sameAccountError'));
       return;
     }
     if (fromAccountId === toAccountId) {
-      Alert.alert(t('common.error'), t('transfer.sameAccountError'));
+      showAlert(t('common.error'), t('transfer.sameAccountError'));
       return;
     }
 
@@ -114,7 +115,7 @@ export default function TransferScreen() {
     const rate = parseFloat(exchangeRate);
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 

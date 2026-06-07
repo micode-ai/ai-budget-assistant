@@ -4,10 +4,10 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   TextInput,
   ScrollView,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -66,7 +66,7 @@ export default function VoiceIncomeScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: handleReset }]);
+      showAlert(t('common.error'), error, [{ text: 'OK', onPress: handleReset }]);
     }
   }, [error, t]);
 
@@ -148,11 +148,11 @@ export default function VoiceIncomeScreen() {
   const handleConfirmIncome = async () => {
     const numericAmount = parseFloat(editAmount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
     if (!editDescription.trim()) {
-      Alert.alert(t('common.error'), t('validation.noDescription'));
+      showAlert(t('common.error'), t('validation.noDescription'));
       return;
     }
     try {
@@ -167,12 +167,12 @@ export default function VoiceIncomeScreen() {
         isDebt: false,
         isDebtRepayment: false,
       });
-      Alert.alert(t('common.success'), t('incomeVoice.success'), [
+      showAlert(t('common.success'), t('incomeVoice.success'), [
         { text: t('incomeVoice.addAnother'), onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
-      Alert.alert(t('common.error'), t('incomeVoice.saveFailed'));
+      showAlert(t('common.error'), t('incomeVoice.saveFailed'));
     }
   };
 

@@ -1,4 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { router, Stack } from 'expo-router';
@@ -94,7 +95,7 @@ export default function ExchangeScreen() {
 
   const handleSubmit = () => {
     if (fromCurrency === toCurrency) {
-      Alert.alert(t('common.error'), t('exchange.sameCurrencyError'));
+      showAlert(t('common.error'), t('exchange.sameCurrencyError'));
       return;
     }
 
@@ -103,7 +104,7 @@ export default function ExchangeScreen() {
     const rate = parseFloat(exchangeRate);
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 

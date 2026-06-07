@@ -5,9 +5,9 @@ import {
   ScrollView,
   TouchableOpacity,
   Switch,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -63,9 +63,9 @@ export default function DataSettingsScreen() {
       ]);
       const time = await getLastSyncTime();
       setLastSyncTimeState(time);
-      Alert.alert(t('common.success'), t('settings.syncComplete'));
+      showAlert(t('common.success'), t('settings.syncComplete'));
     } catch {
-      Alert.alert(t('common.error'), t('settings.syncFailed'));
+      showAlert(t('common.error'), t('settings.syncFailed'));
     } finally {
       setIsSyncing(false);
     }
@@ -85,7 +85,7 @@ export default function DataSettingsScreen() {
     try {
       await updateReportPrefs({ weeklyEmailEnabled: value });
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -93,7 +93,7 @@ export default function DataSettingsScreen() {
     try {
       await updateReportPrefs({ monthlyDigestEnabled: value });
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -101,7 +101,7 @@ export default function DataSettingsScreen() {
     try {
       await updateReportPrefs({ weeklyEmailDay: day });
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -109,14 +109,14 @@ export default function DataSettingsScreen() {
     try {
       const result = await exportBackup();
       if (result.status === 'saved') {
-        Alert.alert(t('common.success'), t('reports.backupSavedTo', { location: result.location }));
+        showAlert(t('common.success'), t('reports.backupSavedTo', { location: result.location }));
       } else if (result.status === 'shared') {
-        Alert.alert(t('common.success'), t('reports.backupShared'));
+        showAlert(t('common.success'), t('reports.backupShared'));
       } else {
-        Alert.alert(t('common.error'), result.error || t('errors.unknown'));
+        showAlert(t('common.error'), result.error || t('errors.unknown'));
       }
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -132,15 +132,15 @@ export default function DataSettingsScreen() {
       try {
         const parsed = JSON.parse(data);
         if (!parsed.version || !parsed.data) {
-          Alert.alert(t('common.error'), t('errors.unknown'));
+          showAlert(t('common.error'), t('errors.unknown'));
           return;
         }
       } catch {
-        Alert.alert(t('common.error'), t('errors.unknown'));
+        showAlert(t('common.error'), t('errors.unknown'));
         return;
       }
 
-      Alert.alert(
+      showAlert(
         t('reports.restoreConfirmTitle'),
         t('reports.restoreConfirmMerge'),
         [
@@ -149,7 +149,7 @@ export default function DataSettingsScreen() {
             text: t('reports.overwrite'),
             style: 'destructive',
             onPress: async () => {
-              Alert.alert(
+              showAlert(
                 t('reports.restoreConfirmTitle'),
                 t('reports.restoreConfirmOverwrite'),
                 [
@@ -160,9 +160,9 @@ export default function DataSettingsScreen() {
                     onPress: async () => {
                       const res = await restoreBackup(data, true);
                       if (res.errors.length === 0) {
-                        Alert.alert(t('common.success'), t('reports.backupRestored'));
+                        showAlert(t('common.success'), t('reports.backupRestored'));
                       } else {
-                        Alert.alert(t('common.error'), res.errors.join('\n'));
+                        showAlert(t('common.error'), res.errors.join('\n'));
                       }
                     },
                   },
@@ -175,16 +175,16 @@ export default function DataSettingsScreen() {
             onPress: async () => {
               const res = await restoreBackup(data, false);
               if (res.errors.length === 0) {
-                Alert.alert(t('common.success'), t('reports.backupRestored'));
+                showAlert(t('common.success'), t('reports.backupRestored'));
               } else {
-                Alert.alert(t('common.error'), res.errors.join('\n'));
+                showAlert(t('common.error'), res.errors.join('\n'));
               }
             },
           },
         ],
       );
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 

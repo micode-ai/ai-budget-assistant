@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { useTranslation } from 'react-i18next';
 import type { Expense } from '@budget/shared-types';
 
@@ -53,7 +53,7 @@ export function useExpenseMultiSelect(
     setIsBulkProcessing(true);
     try {
       await bulkUpdateExpenses(Array.from(selectedIds), { categoryId });
-      Alert.alert('', t('expenses.bulkCategoryApplied', { count: selectedIds.size }));
+      showAlert('', t('expenses.bulkCategoryApplied', { count: selectedIds.size }));
       exitMultiSelect();
     } finally {
       setIsBulkProcessing(false);
@@ -66,7 +66,7 @@ export function useExpenseMultiSelect(
     setIsBulkProcessing(true);
     try {
       await bulkUpdateExpenses(Array.from(selectedIds), { tagIds });
-      Alert.alert('', t('expenses.bulkTagsApplied', { count: selectedIds.size }));
+      showAlert('', t('expenses.bulkTagsApplied', { count: selectedIds.size }));
       exitMultiSelect();
     } finally {
       setIsBulkProcessing(false);
@@ -75,7 +75,7 @@ export function useExpenseMultiSelect(
 
   const handleBulkDelete = () => {
     if (selectedIds.size === 0) return;
-    Alert.alert(
+    showAlert(
       t('expenses.bulkDeleteConfirm', { count: selectedIds.size }),
       t('expenses.bulkDeleteConfirmMessage'),
       [
@@ -87,7 +87,7 @@ export function useExpenseMultiSelect(
             setIsBulkProcessing(true);
             try {
               await bulkUpdateExpenses(Array.from(selectedIds), { isDeleted: true });
-              Alert.alert('', t('expenses.bulkDeleted', { count: selectedIds.size }));
+              showAlert('', t('expenses.bulkDeleted', { count: selectedIds.size }));
               exitMultiSelect();
             } finally {
               setIsBulkProcessing(false);

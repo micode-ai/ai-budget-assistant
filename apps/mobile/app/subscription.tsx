@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -78,7 +79,7 @@ export default function SubscriptionScreen() {
       await loadSubscription();
       await loadUsage();
       if (result.type === 'success') {
-        Alert.alert(
+        showAlert(
           t('subscription.upgraded'),
           t('subscription.upgradeSuccess'),
         );

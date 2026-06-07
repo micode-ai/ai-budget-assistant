@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -60,7 +60,7 @@ export default function SubscriptionsScreen() {
 
   const handleDelete = useCallback(
     (sub: UserSubscription) => {
-      Alert.alert(
+      showAlert(
         t('subscriptionManager.deleteTitle'),
         t('subscriptionManager.deleteMessage', { name: sub.name }),
         [
@@ -68,7 +68,7 @@ export default function SubscriptionsScreen() {
           {
             text: t('common.delete'),
             style: 'destructive',
-            onPress: () => deleteSubscription(sub.id).catch(() => Alert.alert(t('common.error'), t('errors.unknown'))),
+            onPress: () => deleteSubscription(sub.id).catch(() => showAlert(t('common.error'), t('errors.unknown'))),
           },
         ],
       );

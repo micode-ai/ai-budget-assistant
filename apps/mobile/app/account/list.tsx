@@ -4,8 +4,8 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,7 +36,7 @@ export default function AccountListScreen() {
   };
 
   const handleDelete = (id: string, name: string) => {
-    Alert.alert(
+    showAlert(
       t('accounts.deleteConfirm'),
       t('accounts.deleteConfirmMessage', { name }),
       [
@@ -48,7 +48,7 @@ export default function AccountListScreen() {
             try {
               await deleteAccount(id);
             } catch (e) {
-              Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },

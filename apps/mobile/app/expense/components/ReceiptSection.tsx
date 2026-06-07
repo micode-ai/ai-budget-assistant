@@ -3,12 +3,12 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert,
   Image,
   Modal,
   ActivityIndicator,
   InteractionManager,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker';
@@ -69,13 +69,13 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
     if (isPdf) return handleShareImage();
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert(t('common.error'), t('expenseDetail.galleryPermissionDenied'));
+      showAlert(t('common.error'), t('expenseDetail.galleryPermissionDenied'));
       return;
     }
     const file = new File(Paths.cache, `receipt-${expenseId}.jpg`);
     file.write(receiptImageBase64, { encoding: 'base64' });
     await MediaLibrary.saveToLibraryAsync(file.uri);
-    Alert.alert('', t('expenseDetail.imageSaved'));
+    showAlert('', t('expenseDetail.imageSaved'));
   };
 
   const compressImageToBase64 = async (uri: string): Promise<string> => {
@@ -91,7 +91,7 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
   const handleAttachFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert(t('common.error'), t('expenseDetail.cameraPermissionDenied'));
+      showAlert(t('common.error'), t('expenseDetail.cameraPermissionDenied'));
       return;
     }
     const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8 });
@@ -126,7 +126,7 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
   };
 
   const handleShowAttachOptions = () => {
-    Alert.alert(
+    showAlert(
       t('expenseDetail.attachReceipt'),
       undefined,
       [
@@ -140,7 +140,7 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
   };
 
   const handleDeleteImage = () => {
-    Alert.alert(t('expenseDetail.confirmDeleteImage'), '', [
+    showAlert(t('expenseDetail.confirmDeleteImage'), '', [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'),

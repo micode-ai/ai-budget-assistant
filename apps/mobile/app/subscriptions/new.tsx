@@ -5,9 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -48,12 +48,12 @@ export default function NewSubscriptionScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert(t('common.error'), t('subscriptionManager.errorName'));
+      showAlert(t('common.error'), t('subscriptionManager.errorName'));
       return;
     }
     const amountNum = parseFloat(amount.replace(',', '.'));
     if (isNaN(amountNum) || amountNum <= 0) {
-      Alert.alert(t('common.error'), t('subscriptionManager.errorAmount'));
+      showAlert(t('common.error'), t('subscriptionManager.errorAmount'));
       return;
     }
 
@@ -70,7 +70,7 @@ export default function NewSubscriptionScreen() {
       });
       router.back();
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setSaving(false);
     }

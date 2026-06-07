@@ -4,9 +4,9 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -59,7 +59,7 @@ export default function ChangeEmailScreen() {
 
   const handleSendCode = async () => {
     if (!newEmail.trim() || !currentPassword) {
-      Alert.alert(t('common.error'), t('validation.requiredFields'));
+      showAlert(t('common.error'), t('validation.requiredFields'));
       return;
     }
     setLoading(true);
@@ -70,7 +70,7 @@ export default function ChangeEmailScreen() {
       setPendingEmail(newEmail.trim());
       setStep(2);
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,7 @@ export default function ChangeEmailScreen() {
 
   const handleConfirm = async () => {
     if (!code.trim()) {
-      Alert.alert(t('common.error'), t('validation.requiredFields'));
+      showAlert(t('common.error'), t('validation.requiredFields'));
       return;
     }
     setLoading(true);
@@ -87,13 +87,13 @@ export default function ChangeEmailScreen() {
       updateUser({ email: pendingEmail });
       setTokens(result.accessToken, result.refreshToken);
       await secureStorage.removeItem(PENDING_KEY);
-      Alert.alert(
+      showAlert(
         t('settings.changeEmail.success'),
         t('settings.changeEmail.successMessage'),
         [{ text: t('common.ok'), onPress: () => router.back() }],
       );
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setLoading(false);
     }

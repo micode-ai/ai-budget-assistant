@@ -5,8 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +44,7 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
   const handleCreate = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      Alert.alert(t('common.error'), t('categoryCreate.nameRequired'));
+      showAlert(t('common.error'), t('categoryCreate.nameRequired'));
       return;
     }
 
@@ -55,7 +55,7 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
       setSelectedColor(PRESET_COLORS[0]);
       onCreated(category.id);
     } catch {
-      Alert.alert(t('common.error'), t('errors.saveFailed'));
+      showAlert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsCreating(false);
     }

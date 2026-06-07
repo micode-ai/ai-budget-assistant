@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { TagChip } from './TagChip';
@@ -33,7 +33,7 @@ export const TagPicker: React.FC<TagPickerProps> = ({
 
   const handleSuggestPress = useCallback(async () => {
     if (!description || description.length < 3) {
-      Alert.alert(t('tags.suggestTags'), t('tags.descriptionRequired') || 'Enter a description first (at least 3 characters)');
+      showAlert(t('tags.suggestTags'), t('tags.descriptionRequired') || 'Enter a description first (at least 3 characters)');
       return;
     }
     setIsLoadingSuggestions(true);
@@ -44,7 +44,7 @@ export const TagPicker: React.FC<TagPickerProps> = ({
       }
     } catch (e: any) {
       console.error('[TagPicker] suggestTags error:', e?.message || e);
-      Alert.alert(t('tags.suggestTags'), e?.message || 'Failed to load suggestions');
+      showAlert(t('tags.suggestTags'), e?.message || 'Failed to load suggestions');
     } finally {
       setIsLoadingSuggestions(false);
     }

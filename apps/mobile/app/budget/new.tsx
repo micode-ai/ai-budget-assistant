@@ -5,8 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -56,7 +56,7 @@ export default function NewBudgetScreen() {
 
   const handleSubmit = async () => {
     if (!name.trim()) {
-      Alert.alert(t('common.error'), t('budgetNew.errorName'));
+      showAlert(t('common.error'), t('budgetNew.errorName'));
       return;
     }
 
@@ -65,12 +65,12 @@ export default function NewBudgetScreen() {
       : parseFloat(amount);
 
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(t('common.error'), t('budgetNew.errorAmount'));
+      showAlert(t('common.error'), t('budgetNew.errorAmount'));
       return;
     }
 
     if (budgetMode === 'byCategory' && categoryAllocations.length === 0) {
-      Alert.alert(t('common.error'), t('budgetNew.errorNoCategories'));
+      showAlert(t('common.error'), t('budgetNew.errorNoCategories'));
       return;
     }
 
@@ -112,7 +112,7 @@ export default function NewBudgetScreen() {
 
       router.back();
     } catch {
-      Alert.alert(t('common.error'), t('budgetNew.errorFailed'));
+      showAlert(t('common.error'), t('budgetNew.errorFailed'));
     } finally {
       setIsSubmitting(false);
     }

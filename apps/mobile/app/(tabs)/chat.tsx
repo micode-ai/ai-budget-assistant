@@ -6,10 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   StyleSheet,
   Platform,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -85,7 +85,7 @@ export default function ChatScreen() {
   }, [messages]);
 
   useEffect(() => {
-    if (voiceError) Alert.alert(t('common.error'), voiceError);
+    if (voiceError) showAlert(t('common.error'), voiceError);
   }, [voiceError, t]);
 
   useEffect(() => {

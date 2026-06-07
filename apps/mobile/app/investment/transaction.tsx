@@ -1,4 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -41,17 +42,17 @@ export default function AddTransactionScreen() {
 
   const handleSave = () => {
     if (!quantity || quantityNum <= 0) {
-      Alert.alert(t('common.error'), t('investments.invalidQuantity'));
+      showAlert(t('common.error'), t('investments.invalidQuantity'));
       return;
     }
 
     if (!pricePerUnit || priceNum <= 0) {
-      Alert.alert(t('common.error'), t('investments.invalidPrice'));
+      showAlert(t('common.error'), t('investments.invalidPrice'));
       return;
     }
 
     if (!holdingId) {
-      Alert.alert(t('common.error'), t('investments.holdingNotFound'));
+      showAlert(t('common.error'), t('investments.holdingNotFound'));
       return;
     }
 

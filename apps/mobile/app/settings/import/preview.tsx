@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -59,7 +60,7 @@ export default function ImportPreviewScreen() {
                 const res = await api.importBankPreview(file, { bankId: b.id });
                 setPreview(res);
               } catch (err) {
-                Alert.alert(
+                showAlert(
                   t('bankImport.error.parseFailed'),
                   err instanceof Error ? err.message : String(err),
                 );
@@ -121,7 +122,7 @@ export default function ImportPreviewScreen() {
       await useExpenseStore.getState().loadExpenses({ force: true });
       await useIncomeStore.getState().loadIncomes({ force: true });
 
-      Alert.alert(
+      showAlert(
         t('common.done'),
         t('bankImport.summary', {
           expenses: result.createdExpenses,
@@ -131,7 +132,7 @@ export default function ImportPreviewScreen() {
         [{ text: t('common.ok'), onPress: () => router.replace('/settings') }],
       );
     } catch (err) {
-      Alert.alert(
+      showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );

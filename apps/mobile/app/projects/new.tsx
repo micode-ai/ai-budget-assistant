@@ -5,8 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -34,7 +34,7 @@ export default function NewProjectScreen() {
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      Alert.alert(t('common.error'), t('projects.projectName'));
+      showAlert(t('common.error'), t('projects.projectName'));
       return;
     }
 
@@ -48,7 +48,7 @@ export default function NewProjectScreen() {
       });
       router.back();
     } catch {
-      Alert.alert(t('common.error'), t('common.retry'));
+      showAlert(t('common.error'), t('common.retry'));
     } finally {
       setIsSubmitting(false);
     }

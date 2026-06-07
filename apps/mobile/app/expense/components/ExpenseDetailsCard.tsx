@@ -3,10 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert,
   TextInput,
   Platform,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -113,7 +113,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
       triggerSave: async () => {
         const numericAmount = parseFloat(editAmount);
         if (!numericAmount || numericAmount <= 0) {
-          Alert.alert(t('common.error'), t('validation.invalidAmount'));
+          showAlert(t('common.error'), t('validation.invalidAmount'));
           return;
         }
 
@@ -179,7 +179,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
     };
 
     const handleRemoveSplits = async () => {
-      Alert.alert(t('splits.removeSplit'), '', [
+      showAlert(t('splits.removeSplit'), '', [
         { text: t('common.cancel'), style: 'cancel' },
         {
           text: t('common.delete'),

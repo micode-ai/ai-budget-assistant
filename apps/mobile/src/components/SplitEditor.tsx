@@ -5,11 +5,11 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
-  Alert,
   Modal,
   Pressable,
   ScrollView,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '../stores/categoryStore';
@@ -103,14 +103,14 @@ export const SplitEditor: React.FC<SplitEditorProps> = ({
   const handleConfirm = useCallback(() => {
     const total = splits.reduce((sum, s) => sum + s.amount, 0);
     if (Math.abs(total - totalAmount) > 0.01) {
-      Alert.alert(
+      showAlert(
         t('splits.totalMustMatch') || 'Total must match',
         `Split total: ${total.toFixed(2)}, Expense: ${totalAmount.toFixed(2)}`,
       );
       return;
     }
     if (splits.length < 2) {
-      Alert.alert('', t('splits.addCategory') || 'Add at least 2 categories');
+      showAlert('', t('splits.addCategory') || 'Add at least 2 categories');
       return;
     }
     // Strip the internal display-only field before handing splits to the parent.

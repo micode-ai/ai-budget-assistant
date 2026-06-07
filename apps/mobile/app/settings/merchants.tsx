@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, Modal, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,23 +37,23 @@ export default function MerchantsSettingsScreen() {
   const handleSave = async () => {
     if (!editing) return;
     const next = name.trim();
-    if (!next) { Alert.alert(t('common.error'), t('merchants.nameRequired')); return; }
+    if (!next) { showAlert(t('common.error'), t('merchants.nameRequired')); return; }
     if (next === editing) { closeModal(); return; }
     setSaving(true);
     const count = await renameMerchant(editing, next);
     setSaving(false);
     closeModal();
-    Alert.alert('', t('merchants.renamed', { count }));
+    showAlert('', t('merchants.renamed', { count }));
   };
 
   const handleDelete = (merchant: string, count: number) => {
-    Alert.alert(t('merchants.delete'), t('merchants.deleteConfirm', { count }), [
+    showAlert(t('merchants.delete'), t('merchants.deleteConfirm', { count }), [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('merchants.delete'), style: 'destructive',
         onPress: async () => {
           const n = await renameMerchant(merchant, null);
-          Alert.alert('', t('merchants.deleted', { count: n }));
+          showAlert('', t('merchants.deleted', { count: n }));
         },
       },
     ]);

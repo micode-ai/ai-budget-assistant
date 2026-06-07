@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -57,7 +58,7 @@ export default function ExpenseDetailScreen() {
   }
 
   const handleStopRecurring = () => {
-    Alert.alert(
+    showAlert(
       t('recurring.stopRecurring'),
       t('recurring.stopRecurringConfirm'),
       [
@@ -68,9 +69,9 @@ export default function ExpenseDetailScreen() {
           onPress: async () => {
             try {
               await stopRecurringExpense(expense.id);
-              Alert.alert('', t('recurring.stopped'));
+              showAlert('', t('recurring.stopped'));
             } catch {
-              Alert.alert(t('common.error'), t('errors.saveFailed'));
+              showAlert(t('common.error'), t('errors.saveFailed'));
             }
           },
         },
@@ -92,7 +93,7 @@ export default function ExpenseDetailScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert(t('expenseDetail.deleteTitle'), t('expenseDetail.deleteConfirm'), [
+    showAlert(t('expenseDetail.deleteTitle'), t('expenseDetail.deleteConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'),

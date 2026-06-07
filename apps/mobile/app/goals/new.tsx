@@ -5,9 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Platform,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -58,7 +58,7 @@ export default function NewGoalScreen() {
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('goals.errorName') || 'Please enter a goal name',
       );
@@ -67,7 +67,7 @@ export default function NewGoalScreen() {
 
     const numericAmount = parseFloat(targetAmount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('goals.errorAmount') || 'Please enter a valid target amount',
       );
@@ -75,7 +75,7 @@ export default function NewGoalScreen() {
     }
 
     if (!deadlineDate) {
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('goals.errorDeadline') || 'Please set a deadline',
       );
@@ -83,7 +83,7 @@ export default function NewGoalScreen() {
     }
 
     if (deadlineDate <= new Date()) {
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('goals.errorPastDate') || 'Deadline must be in the future',
       );
@@ -100,7 +100,7 @@ export default function NewGoalScreen() {
       });
       router.back();
     } catch {
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('goals.errorCreate') || 'Failed to create goal. Please try again.',
       );
