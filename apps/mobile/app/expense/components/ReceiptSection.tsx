@@ -15,6 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
 import { File, Paths } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import { useExpenseStore } from '@/stores/expenseStore';
@@ -84,8 +85,7 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
       [{ resize: { width: 800 } }],
       { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG },
     );
-    const compressedFile = new File(compressed.uri);
-    return await compressedFile.base64();
+    return await uriToBase64(compressed.uri);
   };
 
   const handleAttachFromCamera = async () => {
@@ -118,8 +118,7 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
     });
     if (result.canceled) return;
     const asset = result.assets[0];
-    const file = new File(asset.uri);
-    const base64 = await file.base64();
+    const base64 = await uriToBase64(asset.uri);
     await saveReceiptImage(expenseId, base64, 'application/pdf');
     setReceiptImageBase64(base64);
     setReceiptMimeType('application/pdf');

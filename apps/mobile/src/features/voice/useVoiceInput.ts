@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { Audio } from 'expo-av';
-import { File } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
 
@@ -96,8 +96,7 @@ export function useVoiceInput() {
       }
 
       // Read the recording file as base64 string
-      const file = new File(uri);
-      const base64Audio = await file.base64();
+      const base64Audio = await uriToBase64(uri);
 
       // Transcribe audio
       const transcriptionResult = await api.transcribeAudio(base64Audio);
