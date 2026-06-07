@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -119,7 +120,7 @@ export default function SettingsIndexScreen() {
   ];
 
   const handleLogout = () => {
-    Alert.alert(
+    showAlert(
       t('settings.logout'),
       t('settings.logoutConfirm'),
       [

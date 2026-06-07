@@ -4,9 +4,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -39,7 +39,7 @@ export default function CreateAccountScreen() {
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      Alert.alert(t('errors.error'), t('accounts.nameRequired'));
+      showAlert(t('errors.error'), t('accounts.nameRequired'));
       return;
     }
 
@@ -47,7 +47,7 @@ export default function CreateAccountScreen() {
       await createAccount({ name: name.trim(), type, currencyCode });
       router.back();
     } catch (e) {
-      Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 

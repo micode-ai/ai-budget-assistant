@@ -6,8 +6,8 @@ import {
   TextInput,
   Modal,
   FlatList,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -72,7 +72,7 @@ export default function ProfileSettingsScreen() {
   const handleSaveName = async () => {
     const trimmed = name.trim();
     if (!trimmed || trimmed.length < 2) {
-      Alert.alert(t('common.error'), t('validation.nameMin2'));
+      showAlert(t('common.error'), t('validation.nameMin2'));
       return;
     }
     setIsSaving(true);
@@ -80,9 +80,9 @@ export default function ProfileSettingsScreen() {
       await api.updateProfile({ name: trimmed });
       updateUser({ name: trimmed });
       setEditingName(false);
-      Alert.alert(t('common.success'), t('settings.profileUpdated'));
+      showAlert(t('common.success'), t('settings.profileUpdated'));
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setIsSaving(false);
     }
@@ -103,9 +103,9 @@ export default function ProfileSettingsScreen() {
       await api.updateProfile({ timezone });
       updateUser({ timezone });
       setTimezonePicker(false);
-      Alert.alert(t('common.success'), t('settings.timezoneUpdated'));
+      showAlert(t('common.success'), t('settings.timezoneUpdated'));
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 

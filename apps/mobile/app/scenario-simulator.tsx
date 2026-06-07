@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
-  Alert,
   FlatList,
   Share,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -97,7 +97,7 @@ export default function ScenarioSimulatorScreen() {
   // --- Save ---
   const handleSavePress = useCallback(() => {
     if (!canSave(isPro)) {
-      Alert.alert(
+      showAlert(
         t('scenarioSimulator.savedScenarios'),
         t('scenarioSimulator.scenarioLimitFree'),
       );
@@ -111,9 +111,9 @@ export default function ScenarioSimulatorScreen() {
     const result = saveScenario(scenarioName, { expenseAdj, incomeAdj, extraIncomes, horizon }, isPro);
     setSaveModalVisible(false);
     if (result === 'ok') {
-      Alert.alert('', t('scenarioSimulator.scenarioSaved'));
+      showAlert('', t('scenarioSimulator.scenarioSaved'));
     } else {
-      Alert.alert(
+      showAlert(
         t('scenarioSimulator.savedScenarios'),
         t('scenarioSimulator.scenarioLimitFree'),
       );
@@ -130,7 +130,7 @@ export default function ScenarioSimulatorScreen() {
   }, []);
 
   const handleDeleteScenario = useCallback((id: string) => {
-    Alert.alert(
+    showAlert(
       t('scenarioSimulator.deleteScenario'),
       t('common.deleteConfirmMessage'),
       [

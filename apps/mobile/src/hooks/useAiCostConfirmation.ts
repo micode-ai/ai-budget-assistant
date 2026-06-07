@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { Alert } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { useTranslation } from 'react-i18next';
 import { MMKV } from 'react-native-mmkv';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
@@ -31,7 +31,7 @@ export function useAiCostConfirmation() {
       const currentT = tRef.current;
 
       return new Promise((resolve) => {
-        Alert.alert(
+        showAlert(
           currentT('aiUsage.confirmTitle'),
           currentT('aiUsage.confirmMessage', {
             cost: costCredits,

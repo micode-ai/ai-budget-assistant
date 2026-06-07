@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -57,7 +58,7 @@ export default function GoalDetailScreen() {
   }, [loadProgressData]);
 
   const handleDelete = () => {
-    Alert.alert(
+    showAlert(
       t('goals.deleteTitle') || 'Delete Goal',
       t('goals.deleteConfirm') || `Are you sure you want to delete "${goal?.name}"?`,
       [
@@ -70,7 +71,7 @@ export default function GoalDetailScreen() {
               await deleteGoal(id!);
               setTimeout(() => router.back(), 0);
             } catch {
-              Alert.alert(t('common.error'), t('goals.errorDelete') || 'Failed to delete goal');
+              showAlert(t('common.error'), t('goals.errorDelete') || 'Failed to delete goal');
             }
           },
         },
@@ -85,7 +86,7 @@ export default function GoalDetailScreen() {
       await regeneratePlan(id);
       await loadProgressData();
     } catch {
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('goals.errorRegenerate') || 'Failed to regenerate plan',
       );
@@ -102,7 +103,7 @@ export default function GoalDetailScreen() {
       await loadProgressData();
       setShowAddFunds(false);
     } catch {
-      Alert.alert(t('common.error'), t('goals.errorAddFunds') || 'Failed to add funds');
+      showAlert(t('common.error'), t('goals.errorAddFunds') || 'Failed to add funds');
     }
   };
 

@@ -3,10 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert,
   TextInput,
   Modal,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
@@ -60,7 +60,7 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
   const handleSaveItem = () => {
     const total = parseFloat(itemTotalPrice);
     if (!itemDescription.trim() || isNaN(total) || total <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
@@ -84,7 +84,7 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
   };
 
   const handleDeleteItem = (item: ExpenseItem) => {
-    Alert.alert(t('expenseDetail.confirmDeleteItem'), '', [
+    showAlert(t('expenseDetail.confirmDeleteItem'), '', [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'),

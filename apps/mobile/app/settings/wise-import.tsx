@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -59,13 +59,13 @@ export default function WiseImportScreen() {
         setScreenState('preview');
       } catch (err) {
         setScreenState('idle');
-        Alert.alert(
+        showAlert(
           t('wiseImport.error.parseFailed'),
           err instanceof Error ? err.message : String(err),
         );
       }
     } catch (err) {
-      Alert.alert(
+      showAlert(
         t('wiseImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );
@@ -103,7 +103,7 @@ export default function WiseImportScreen() {
       setScreenState('done');
     } catch (err) {
       setScreenState('preview');
-      Alert.alert(
+      showAlert(
         t('wiseImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );
