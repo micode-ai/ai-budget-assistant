@@ -1,0 +1,71 @@
+name: Deploy Web to VPS
+
+on:
+  push:
+    branches: [development]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web-production
+  cancel-in-progress: true
+
+jobs:
+  deploy-web:
+    name: Build & deploy static web app
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web bundle
+        env:
+          # Baked into the bundle at build time — the web app talks to prod API.
+          EXPO_PUBLIC_API_URL: https://api.ai-budget.pl/api/v1
+        run: bash scripts/build-web.sh
+
+      - name: Verify build output
+        run: |
+          set -e
+          test -f apps/mobile/dist/index.html || { echo "::error::dist/index.html missing — aborting before deploy"; exit 1; }
+          ls apps/mobile/dist/_expo/static/js/web/*.js >/dev/null 2>&1 || { echo "::error::no JS bundle in dist — aborting"; exit 1; }
+          echo "dist OK: $(du -sh apps/mobile/dist | cut -f1)"
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy to web root
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new" \
+            apps/mobile/dist/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/ai-budget-web/html/"
+
+      - name: Verify site is live
+        run: |
+          set -e
+          for i in $(seq 1 10); do
+            code=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 8 https://ai-budget.pl || echo "000")
+            if [ "$code" = "200" ]; then
+              echo "ai-budget.pl healthy on attempt $i (HTTP $code)"
+              exit 0
+            fi
+            echo "  ($i/10) https://ai-budget.pl -> $code, retrying in 3s..."
+            sleep 3
+          done
+          echo "::error::ai-budget.pl did not return 200 after deploy"
+          exit 1
