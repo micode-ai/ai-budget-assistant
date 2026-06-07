@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Switch,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,12 +61,12 @@ export default function SubscriptionDetailScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert(t('common.error'), t('subscriptionManager.errorName'));
+      showAlert(t('common.error'), t('subscriptionManager.errorName'));
       return;
     }
     const amountNum = parseFloat(amount.replace(',', '.'));
     if (isNaN(amountNum) || amountNum <= 0) {
-      Alert.alert(t('common.error'), t('subscriptionManager.errorAmount'));
+      showAlert(t('common.error'), t('subscriptionManager.errorAmount'));
       return;
     }
     setSaving(true);
@@ -81,14 +81,14 @@ export default function SubscriptionDetailScreen() {
       });
       router.back();
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = () => {
-    Alert.alert(
+    showAlert(
       t('subscriptionManager.deleteTitle'),
       t('subscriptionManager.deleteMessage', { name: sub.name }),
       [
@@ -99,7 +99,7 @@ export default function SubscriptionDetailScreen() {
           onPress: () =>
             deleteSubscription(id)
               .then(() => router.back())
-              .catch(() => Alert.alert(t('common.error'), t('errors.unknown'))),
+              .catch(() => showAlert(t('common.error'), t('errors.unknown'))),
         },
       ],
     );

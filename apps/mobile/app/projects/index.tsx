@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, Alert, Modal, TextInput,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Stack, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -57,7 +63,7 @@ export default function ProjectsScreen() {
 
   const handleCreate = async () => {
     const trimmed = name.trim();
-    if (!trimmed) { Alert.alert(t('common.error'), t('projects.projectName')); return; }
+    if (!trimmed) { showAlert(t('common.error'), t('projects.projectName')); return; }
     setIsSaving(true);
     try {
       await createProject({
@@ -68,14 +74,14 @@ export default function ProjectsScreen() {
       });
       closeModal();
     } catch {
-      Alert.alert(t('common.error'), t('common.retry'));
+      showAlert(t('common.error'), t('common.retry'));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleDelete = (project: Project) => {
-    Alert.alert(t('projects.deleteProject'), t('projects.confirmDelete'), [
+    showAlert(t('projects.deleteProject'), t('projects.confirmDelete'), [
       { text: t('common.cancel'), style: 'cancel' },
       { text: t('common.delete'), style: 'destructive', onPress: () => deleteProject(project.id) },
     ]);

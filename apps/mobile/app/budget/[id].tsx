@@ -4,8 +4,8 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -144,7 +144,7 @@ export default function BudgetDetailScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert(t('budgetDetail.deleteTitle'), t('budgetDetail.deleteConfirm'), [
+    showAlert(t('budgetDetail.deleteTitle'), t('budgetDetail.deleteConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'),

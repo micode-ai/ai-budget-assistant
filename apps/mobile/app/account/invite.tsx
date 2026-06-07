@@ -4,10 +4,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
   Share,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -40,7 +40,7 @@ export default function InviteScreen() {
     if (!accountId) return;
 
     if (mode === 'email' && !email.trim()) {
-      Alert.alert(t('errors.error'), t('accounts.emailRequired'));
+      showAlert(t('errors.error'), t('accounts.emailRequired'));
       return;
     }
 
@@ -52,7 +52,7 @@ export default function InviteScreen() {
       });
       setInviteCode(invitation.inviteCode);
     } catch (e) {
-      Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +61,7 @@ export default function InviteScreen() {
   const handleCopyCode = async () => {
     if (inviteCode) {
       await Clipboard.setStringAsync(inviteCode);
-      Alert.alert(t('common.success'), t('accounts.codeCopied'));
+      showAlert(t('common.success'), t('accounts.codeCopied'));
     }
   };
 

@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -71,7 +71,7 @@ export default function ResetPasswordScreen() {
 
     try {
       await resetPassword(email!, code, newPassword);
-      Alert.alert('', t('auth.passwordResetSuccess'));
+      showAlert('', t('auth.passwordResetSuccess'));
       router.replace('/(auth)/login');
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';

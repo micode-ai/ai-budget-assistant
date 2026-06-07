@@ -5,9 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   Image,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -64,7 +64,7 @@ export default function ReceiptExpenseScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
+      showAlert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
     }
   }, [error, reset, t]);
 
@@ -146,12 +146,12 @@ export default function ReceiptExpenseScreen() {
         receiptImageBase64,
       });
 
-      Alert.alert(t('common.success'), t('receipt.success'), [
+      showAlert(t('common.success'), t('receipt.success'), [
         { text: t('receipt.scanAnother'), onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
-      Alert.alert(t('common.error'), t('receipt.saveFailed'));
+      showAlert(t('common.error'), t('receipt.saveFailed'));
     }
   };
 
