@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Income, Currency, IncomeSource, SyncStatus } from '@budget/shared-types';
@@ -119,7 +120,21 @@ export const useIncomeStore = create<IncomeState>()(
         // 1. Show local data immediately
         const localIncomes = await loadAllIncomes(accountId);
         if (useAccountStore.getState().currentAccountId !== accountId) return;
-        set({ incomes: localIncomes, isLoading: false });
+
+        // On web SQLite is a no-op mock, so `localIncomes` is ALWAYS empty.
+        // Blindly setting it here wipes the in-memory rows a previous server
+        // pull populated; combined with the sync-skip early-return below, the
+        // list would then stay blank on every re-hydrate within the skip window
+        // (e.g. switching to the Income tab) — which is why nothing showed on
+        // web. Only clobber when the local read has data, or when the in-memory
+        // rows belong to a DIFFERENT account (so account-switch still clears).
+        const inMemorySameAccount =
+          get().incomes.length === 0 || get().incomes[0].accountId === accountId;
+        if (Platform.OS !== 'web' || localIncomes.length > 0 || !inMemorySameAccount) {
+          set({ incomes: localIncomes, isLoading: false });
+        } else {
+          set({ isLoading: false });
+        }
 
         // Skip server-pull if we synced recently for this account (unless forced).
         const msSinceLastSync = Date.now() - _lastIncomesSyncAt;
