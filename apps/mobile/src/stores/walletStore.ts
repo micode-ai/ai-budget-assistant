@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Platform } from 'react-native';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
@@ -29,6 +30,23 @@ import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
+import { useExpenseStore } from './expenseStore';
+import { useIncomeStore } from './incomeStore';
+
+// Sum amounts grouped by a currency key. Used to aggregate in-memory store
+// data on web, where the SQLite GROUP BY helpers are no-ops.
+function sumByCurrency<T>(
+  items: T[],
+  keyOf: (t: T) => string,
+  amountOf: (t: T) => number,
+): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const it of items) {
+    const k = keyOf(it);
+    out[k] = (out[k] || 0) + amountOf(it);
+  }
+  return out;
+}
 
 interface WalletState {
   walletBalances: WalletBalance[];
@@ -108,6 +126,12 @@ export const useWalletStore = create<WalletState>()(
 
         // 3. Sync from server
         try {
+          // Collect freshly-built server rows so web (no real SQLite) can fall
+          // back to them when the post-sync read-back comes up empty.
+          const builtBalances: WalletBalance[] = [];
+          const builtExchanges: CurrencyExchange[] = [];
+          const builtTransfers: AccountTransfer[] = [];
+
           const serverBalances = await api.getWalletBalances();
           // Guard: abort if account switched during server call
           if (useAccountStore.getState().currentAccountId !== accountId) return;
@@ -130,6 +154,7 @@ export const useWalletStore = create<WalletState>()(
                 syncStatus: 'synced' as SyncStatus,
                 syncVersion: sb.syncVersion || 0,
               };
+              builtBalances.push(balance);
               await upsertWalletBalance(balance);
             }
           }
@@ -161,6 +186,7 @@ export const useWalletStore = create<WalletState>()(
                 syncStatus: 'synced' as SyncStatus,
                 syncVersion: se.syncVersion || 0,
               };
+              builtExchanges.push(exchange);
               await insertExchange(exchange);
             }
           }
@@ -195,6 +221,7 @@ export const useWalletStore = create<WalletState>()(
                     syncStatus: 'synced' as SyncStatus,
                     syncVersion: st.syncVersion || 0,
                   };
+                  builtTransfers.push(transfer);
                   await insertTransfer(transfer);
                 }
               }
@@ -209,7 +236,12 @@ export const useWalletStore = create<WalletState>()(
           const mergedTransfers = await loadTransfersByAccount(accountId);
           // Guard: abort if account switched during merge
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          set({ walletBalances: merged, exchanges: mergedExchanges, transfers: mergedTransfers });
+          // Web (no real SQLite): read-back is empty — fall back to built rows.
+          set({
+            walletBalances: merged.length > 0 ? merged : builtBalances.filter((b) => !b.isDeleted),
+            exchanges: mergedExchanges.length > 0 ? mergedExchanges : builtExchanges.filter((e) => !e.isDeleted),
+            transfers: mergedTransfers.length > 0 ? mergedTransfers : builtTransfers.filter((t) => !t.isDeleted),
+          });
 
           const updatedSummary = await get().computeWalletSummary();
           set({ walletSummary: updatedSummary });
@@ -602,10 +634,43 @@ export const useWalletStore = create<WalletState>()(
       if (!accountId) return [];
 
       const balances = get().walletBalances.filter((b) => !b.isDeleted);
-      const expenseTotals = await getExpenseTotalsByCurrency(accountId);
-      const incomeTotals = await getIncomeTotalsByCurrency(accountId);
-      const { exchangedIn, exchangedOut } = await getExchangeTotals(accountId);
-      const { transferredIn, transferredOut } = await getTransferTotals(accountId);
+
+      let expenseTotals: Record<string, number>;
+      let incomeTotals: Record<string, number>;
+      let exchangedIn: Record<string, number>;
+      let exchangedOut: Record<string, number>;
+      let transferredIn: Record<string, number>;
+      let transferredOut: Record<string, number>;
+
+      if (Platform.OS === 'web') {
+        // SQLite aggregate helpers are no-ops on web — derive the same totals
+        // from the in-memory stores so balances reflect actual transactions
+        // (otherwise currentBalance would just equal the initial amount).
+        const expenses = useExpenseStore.getState().expenses.filter((e) => !e.isDeleted);
+        const incomes = useIncomeStore.getState().incomes.filter((i) => !i.isDeleted);
+        const exchanges = get().exchanges.filter((x) => !x.isDeleted);
+        const transfers = get().transfers.filter((t) => !t.isDeleted);
+
+        expenseTotals = sumByCurrency(expenses, (e) => e.currencyCode, (e) => e.amount);
+        incomeTotals = sumByCurrency(incomes, (i) => i.currencyCode, (i) => i.amount);
+        exchangedIn = sumByCurrency(exchanges, (x) => x.toCurrency, (x) => x.toAmount);
+        exchangedOut = sumByCurrency(exchanges, (x) => x.fromCurrency, (x) => x.fromAmount);
+        transferredIn = sumByCurrency(
+          transfers.filter((t) => t.toAccountId === accountId && !t.countAsIncome),
+          (t) => t.toCurrency,
+          (t) => t.toAmount,
+        );
+        transferredOut = sumByCurrency(
+          transfers.filter((t) => t.fromAccountId === accountId),
+          (t) => t.fromCurrency,
+          (t) => t.fromAmount,
+        );
+      } else {
+        expenseTotals = await getExpenseTotalsByCurrency(accountId);
+        incomeTotals = await getIncomeTotalsByCurrency(accountId);
+        ({ exchangedIn, exchangedOut } = await getExchangeTotals(accountId));
+        ({ transferredIn, transferredOut } = await getTransferTotals(accountId));
+      }
 
       const summary: WalletSummary[] = balances.map((wb) => {
         const totalIncomes = incomeTotals[wb.currencyCode] || 0;

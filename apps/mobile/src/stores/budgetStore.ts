@@ -94,6 +94,10 @@ export const useBudgetStore = create<BudgetState>()(
           const serverBudgets = await api.getBudgets();
           if (useAccountStore.getState().currentAccountId !== accountId) return;
 
+          // Collect built server budgets so web (no real SQLite) can fall back
+          // to them when the post-sync read-back is empty.
+          const builtBudgets: Budget[] = [];
+
           if (Array.isArray(serverBudgets)) {
             for (const sb of serverBudgets) {
               // Decrypt encrypted fields if present
@@ -144,6 +148,8 @@ export const useBudgetStore = create<BudgetState>()(
                 }
                 budget.categoryAllocations = allocations.length > 0 ? allocations : undefined;
               }
+
+              builtBudgets.push(budget);
             }
 
             // Soft-delete locally-synced budgets the server no longer returns
@@ -166,7 +172,8 @@ export const useBudgetStore = create<BudgetState>()(
               }
             }
 
-            set({ budgets: merged });
+            // Web (no real SQLite): read-back is empty — fall back to built rows.
+            set({ budgets: merged.length > 0 ? merged : builtBudgets.filter((b) => !b.isDeleted) });
 
             setLastSyncTime(Date.now());
           }

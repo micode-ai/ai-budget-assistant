@@ -247,7 +247,10 @@ export const useIncomeStore = create<IncomeState>()(
           // Reload from SQLite after merge
           const merged = await loadAllIncomes(accountId);
           if (useAccountStore.getState().currentAccountId !== accountId) return;
-          set({ incomes: merged });
+          // Web (no real SQLite): the read-back is empty, so fall back to the
+          // freshly-built server rows instead of dropping everything.
+          const finalIncomes = merged.length > 0 ? merged : builtIncomes.filter((i) => !i.isDeleted);
+          set({ incomes: finalIncomes });
           setLastSyncTime(Date.now());
           _lastIncomesSyncAt = Date.now();
           _lastIncomesSyncedAccountId = accountId;
