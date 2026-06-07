@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -292,6 +293,18 @@ export default function ChatScreen() {
             multiline
             maxLength={4000}
             onSubmitEditing={handleSend}
+            // Web: multiline maps to a <textarea>, where onSubmitEditing never
+            // fires. Send on Enter (Shift+Enter inserts a newline).
+            onKeyPress={
+              Platform.OS === 'web'
+                ? (e: any) => {
+                    if (e?.nativeEvent?.key === 'Enter' && !e?.shiftKey && !e?.nativeEvent?.shiftKey) {
+                      e.preventDefault?.();
+                      handleSend();
+                    }
+                  }
+                : undefined
+            }
           />
 
           <TouchableOpacity

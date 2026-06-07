@@ -177,6 +177,9 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   },
 
   syncFromServer: async (serverProjects: any[]) => {
+    // Collect built rows so web (no real SQLite) can fall back to them when the
+    // post-upsert read-back is empty.
+    const built: Project[] = [];
     for (const proj of serverProjects) {
       // The server's clientId is the local project's id.
       // If they differ, a duplicate local row exists — clean it up.
@@ -192,7 +195,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       // Decrypt encrypted fields if present
       const decrypted = await maybeDecrypt('project', proj, proj.accountId);
 
-      await projectRepo.upsertProject({
+      const entity: Project = {
         id: proj.id,
         accountId: proj.accountId,
         localId: localId || proj.id,
@@ -210,12 +213,15 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         isDeleted: proj.isDeleted ?? false,
         syncStatus: 'synced',
         syncVersion: proj.syncVersion || 0,
-      });
+      };
+      await projectRepo.upsertProject(entity);
+      if (!entity.isDeleted) built.push(entity);
     }
     // Reload from local DB only (don't call loadProjects to avoid infinite loop)
     const accountId = useAccountStore.getState().currentAccountId;
     if (!accountId) return;
     const projects = await projectRepo.getAllProjects(accountId);
-    set({ projects });
+    // Web (no real SQLite): read-back is empty — fall back to built server rows.
+    set({ projects: projects.length > 0 ? projects : built });
   },
 }));
