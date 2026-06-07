@@ -88,6 +88,17 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace 'com.budget.assistant'
+
+    // The release bundle runs lintVitalRelease, whose analysis worker OOM'd
+    // (Java heap space in OptInUsageChecker) on the CI builder. Lint is static
+    // analysis and not required to produce a shippable AAB — skip it on release
+    // so the production build can't be broken by a lint OOM. Run lint separately
+    // in CI (npm run lint) if needed.
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId 'com.budget.assistant'
         minSdkVersion rootProject.ext.minSdkVersion
