@@ -32,6 +32,7 @@ const SECTIONS = [
   '27-bank-import',
   '28-reference-data',
   '29-subscription-manager',
+  '30-web-app',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');
