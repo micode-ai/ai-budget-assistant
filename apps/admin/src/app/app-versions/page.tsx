@@ -26,7 +26,7 @@ import {
 } from "@/hooks/use-app-versions";
 import type { AppPlatform, AppVersion } from "@budget/shared-types";
 
-const LOCALES = ["en", "de", "es", "fr", "pl", "ru", "ua", "be"] as const;
+const LOCALES = ["en", "de", "es", "fr", "pl", "ru", "ua", "be", "nl"] as const;
 type Locale = (typeof LOCALES)[number];
 
 const DEFAULT_STORE_URL: Record<AppPlatform, string> = {
