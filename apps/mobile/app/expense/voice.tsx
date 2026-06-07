@@ -130,7 +130,7 @@ export default function VoiceExpenseScreen() {
       });
 
       showAlert(t('common.success'), t('voice.success'), [
-        { text: t('voice.addAnother'), onPress: handleReset },
+        { text: t('voice.addAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {

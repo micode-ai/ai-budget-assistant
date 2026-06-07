@@ -87,7 +87,7 @@ export default function ReceiptIncomeScreen() {
       });
 
       showAlert(t('common.success'), t('incomeReceipt.success'), [
-        { text: t('incomeReceipt.scanAnother'), onPress: handleReset },
+        { text: t('incomeReceipt.scanAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
