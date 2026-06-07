@@ -66,6 +66,24 @@ async function getCurrentUserId(): Promise<string | null> {
   }
 }
 
+// Normalize a server account payload into the in-memory shape the store uses.
+// Used as a fallback when the local SQLite read-back returns no rows — notably
+// on web, where SQLite is a no-op mock, so the round-trip through the local DB
+// would otherwise drop the accounts the API just returned.
+function toAccountWithRole(
+  account: Account & { myRole?: AccountRole },
+  userId: string | null,
+): Account & { myRole: AccountRole } {
+  const myRole: AccountRole =
+    account.myRole ?? (userId && account.ownerId === userId ? 'owner' : 'editor');
+  return {
+    ...account,
+    myRole,
+    createdAt: account.createdAt ? new Date(account.createdAt) : new Date(),
+    updatedAt: account.updatedAt ? new Date(account.updatedAt) : new Date(),
+  };
+}
+
 export const useAccountStore = create<AccountState>()((set, get) => ({
   accounts: [],
   currentAccountId: null,
@@ -84,7 +102,15 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       await insertAccounts(serverAccounts as (Account & { myRole?: AccountRole })[], userId);
 
       // Load from local DB to get consistent format with myRole (filtered by userId)
-      const localAccounts = await loadAllAccounts(userId);
+      let localAccounts = await loadAllAccounts(userId);
+
+      // Web (no real SQLite) returns nothing from the read-back — fall back to
+      // the server payload so the accounts the API returned are still shown.
+      if (localAccounts.length === 0 && serverAccounts.length > 0) {
+        localAccounts = serverAccounts.map((a) =>
+          toAccountWithRole(a as Account & { myRole?: AccountRole }, userId),
+        );
+      }
 
       const currentId = defaultAccountId || localAccounts[0]?.id || null;
 
@@ -147,7 +173,16 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         await insertAccounts(serverAccounts, userId);
       }
 
-      const localAccounts = await loadAllAccounts(userId ?? undefined);
+      let localAccounts = await loadAllAccounts(userId ?? undefined);
+
+      // Web (no real SQLite) returns nothing from the read-back — fall back to
+      // the server payload so the accounts the API returned are still shown.
+      if (localAccounts.length === 0 && serverAccounts.length > 0) {
+        localAccounts = serverAccounts.map((a) =>
+          toAccountWithRole(a as Account & { myRole?: AccountRole }, userId),
+        );
+      }
+
       const { currentAccountId } = get();
 
       set({
