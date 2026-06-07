@@ -46,6 +46,22 @@ export const db = {
   }),
 };
 
+export type QueryResult<T = Record<string, unknown>> = T[];
+
+// Raw-SQL escape hatch used by the repositories. expo-sqlite has no web
+// backend, so this is a no-op that always resolves to an empty result set.
+// IMPORTANT: this MUST be exported here — repositories import `executeSql`
+// from `./client`, which Metro resolves to this file on web. If it is missing,
+// the import is `undefined` and every repository call throws at runtime
+// (e.g. accounts never load after login on https://ai-budget.pl). Stores are
+// expected to fall back to the API response when this returns no rows.
+export function executeSql<T = Record<string, unknown>>(
+  _sql: string,
+  _params?: (string | number | null)[],
+): Promise<QueryResult<T>> {
+  return Promise.resolve([]);
+}
+
 // Database initialization
 export async function initializeDatabase(): Promise<void> {
   // web mock — no-op
