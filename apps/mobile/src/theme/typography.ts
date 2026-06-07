@@ -89,5 +89,9 @@ export const textStyles = {
   tabLabel: {
     fontFamily: fontFamilies.medium,
     fontSize: 12,
+    // Pin the line box so web (react-native-web) doesn't inflate it to the
+    // font's natural ~1.5 line-height, which pushed the label out of the tab
+    // bar's fixed height and clipped it.
+    lineHeight: 14,
   } as TextStyle,
 } as const;
