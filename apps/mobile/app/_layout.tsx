@@ -113,7 +113,12 @@ function RootNavigator() {
 
   useEffect(() => {
     if (isInitializing || !isAuthenticated) return;
-
+    // Web: the browser URL is already the route and Expo Router handles it
+    // natively. Running the custom-scheme deep-link logic here would treat the
+    // domain as a path segment (budget://expense/voice puts the first segment
+    // in URL.host), turning https://ai-budget.pl/expenses into a push to
+    // "/ai-budget.pl/expenses" → https://ai-budget.pl/ai-budget.pl/expenses.
+    if (Platform.OS === 'web') return;
     function navigateToDeepLink(url: string) {
       // Subscription deep links are handled by WebBrowser.openAuthSessionAsync — ignore here
       if (url.includes('subscription/success') || url.includes('subscription/cancel')) return;
@@ -128,10 +133,17 @@ function RootNavigator() {
       let fullPath: string | null = null;
       try {
         const parsed = new URL(url);
-        const path = parsed.pathname || parsed.host;
-        if (path && path !== '/') {
-          // Normalize: budget://expense/voice has host="expense", path="/voice"
-          fullPath = parsed.host ? `/${parsed.host}${parsed.pathname}` : parsed.pathname;
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+          // http(s) link (App Link / Universal Link): host is the domain, not a
+          // path segment — the pathname already IS the route.
+          const p = parsed.pathname + parsed.search;
+          if (p && p !== '/') fullPath = p;
+        } else {
+          // Custom scheme: budget://expense/voice has host="expense", path="/voice"
+          const path = parsed.pathname || parsed.host;
+          if (path && path !== '/') {
+            fullPath = parsed.host ? `/${parsed.host}${parsed.pathname}` : parsed.pathname;
+          }
         }
       } catch {
         // Fallback: strip scheme manually
