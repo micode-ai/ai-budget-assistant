@@ -4,9 +4,9 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -88,12 +88,12 @@ export default function AccountDetailScreen() {
       await updateAccount(id, { name: name.trim() });
       setEditMode(false);
     } catch (e) {
-      Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
   const handleDelete = () => {
-    Alert.alert(
+    showAlert(
       t('accounts.deleteConfirm'),
       t('accounts.deleteConfirmMessage', { name: account.name }),
       [
@@ -106,7 +106,7 @@ export default function AccountDetailScreen() {
               await deleteAccount(id!);
               router.back();
             } catch (e) {
-              Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },
@@ -115,7 +115,7 @@ export default function AccountDetailScreen() {
   };
 
   const handleLeave = () => {
-    Alert.alert(
+    showAlert(
       t('accounts.leaveConfirm'),
       t('accounts.leaveConfirmMessage', { name: account.name }),
       [
@@ -128,7 +128,7 @@ export default function AccountDetailScreen() {
               await leaveAccount(id!);
               router.back();
             } catch (e) {
-              Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },
@@ -137,7 +137,7 @@ export default function AccountDetailScreen() {
   };
 
   const handleRemoveMember = (member: AccountMember) => {
-    Alert.alert(
+    showAlert(
       t('accounts.removeMemberConfirm'),
       t('accounts.removeMemberMessage', { name: member.user?.name || member.user?.email }),
       [
@@ -149,7 +149,7 @@ export default function AccountDetailScreen() {
             try {
               await removeMember(id!, member.id);
             } catch (e) {
-              Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },
@@ -158,7 +158,7 @@ export default function AccountDetailScreen() {
   };
 
   const handleCancelInvitation = (invitation: AccountInvitation) => {
-    Alert.alert(
+    showAlert(
       t('accounts.cancelInvitation'),
       t('accounts.cancelInvitationMessage'),
       [
@@ -171,7 +171,7 @@ export default function AccountDetailScreen() {
               await api.cancelInvitation(id!, invitation.id);
               setInvitations((prev) => prev.filter((inv) => inv.id !== invitation.id));
             } catch (e) {
-              Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },
@@ -187,12 +187,12 @@ export default function AccountDetailScreen() {
         try {
           await updateMemberRole(id!, member.id, role);
         } catch (e) {
-          Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+          showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
         }
       },
     }));
     buttons.push({ text: t('common.cancel'), onPress: async () => {} });
-    Alert.alert(t('accounts.changeRole'), t('accounts.selectRole'), buttons as any);
+    showAlert(t('accounts.changeRole'), t('accounts.selectRole'), buttons as any);
   };
 
   return (

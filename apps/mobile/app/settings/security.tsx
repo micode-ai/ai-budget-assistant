@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -47,11 +47,11 @@ export default function SecuritySettingsScreen() {
 
   const handleSetupE2EE = async () => {
     if (e2eePassphrase.length < 8) {
-      Alert.alert(t('common.error'), t('encryption.passphraseMin'));
+      showAlert(t('common.error'), t('encryption.passphraseMin'));
       return;
     }
     if (e2eePassphrase !== e2eePassphraseConfirm) {
-      Alert.alert(t('common.error'), t('encryption.passphraseMismatch'));
+      showAlert(t('common.error'), t('encryption.passphraseMismatch'));
       return;
     }
     try {
@@ -68,7 +68,7 @@ export default function SecuritySettingsScreen() {
       setShowE2EESetup(false);
       setShowRecoveryKey(recoveryKey);
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -85,10 +85,10 @@ export default function SecuritySettingsScreen() {
       }
       setE2eePassphrase('');
       setShowE2EEUnlock(false);
-      Alert.alert(t('common.success'), t('encryption.unlocked'));
+      showAlert(t('common.success'), t('encryption.unlocked'));
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
-      Alert.alert(
+      showAlert(
         t('common.error'),
         t('encryption.unlockFailed') + (msg ? `\n\n${msg}` : ''),
       );
@@ -96,7 +96,7 @@ export default function SecuritySettingsScreen() {
   };
 
   const handleResetE2EE = () => {
-    Alert.alert(
+    showAlert(
       t('encryption.resetTitle'),
       t('encryption.resetConfirm'),
       [
@@ -107,9 +107,9 @@ export default function SecuritySettingsScreen() {
           onPress: async () => {
             try {
               await resetE2EE();
-              Alert.alert(t('common.success'), t('encryption.resetSuccess'));
+              showAlert(t('common.success'), t('encryption.resetSuccess'));
             } catch (e) {
-              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },
@@ -120,7 +120,7 @@ export default function SecuritySettingsScreen() {
   const handleCopyRecoveryKey = async () => {
     if (showRecoveryKey) {
       await Clipboard.setStringAsync(showRecoveryKey);
-      Alert.alert(t('common.success'), t('encryption.recoveryKeyCopied'));
+      showAlert(t('common.success'), t('encryption.recoveryKeyCopied'));
     }
   };
 

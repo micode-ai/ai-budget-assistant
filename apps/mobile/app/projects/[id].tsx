@@ -1,7 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, Alert, Modal, TextInput,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -64,7 +70,7 @@ export default function ProjectDetailScreen() {
       });
       closeEdit();
     } catch {
-      Alert.alert(t('common.error'), t('common.retry'));
+      showAlert(t('common.error'), t('common.retry'));
     } finally {
       setIsSaving(false);
     }
@@ -72,7 +78,7 @@ export default function ProjectDetailScreen() {
 
   const handleDelete = () => {
     if (!project) return;
-    Alert.alert(t('projects.deleteProject'), t('projects.confirmDelete'), [
+    showAlert(t('projects.deleteProject'), t('projects.confirmDelete'), [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'), style: 'destructive',

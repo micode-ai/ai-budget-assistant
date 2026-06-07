@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
@@ -22,7 +23,7 @@ export const ProjectPicker: React.FC<ProjectPickerProps> = ({
   );
 
   const handleDeleteProject = (projectId: string, projectName: string) => {
-    Alert.alert(
+    showAlert(
       t('projects.deleteProject') || 'Delete Project',
       t('projects.confirmDelete') || 'Are you sure you want to delete this project?',
       [

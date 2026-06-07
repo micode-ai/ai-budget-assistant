@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Switch, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -68,7 +69,7 @@ export default function ColumnMapperScreen() {
       setPreview(res);
       router.replace('/settings/import/preview');
     } catch (err) {
-      Alert.alert(
+      showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );

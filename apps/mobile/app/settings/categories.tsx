@@ -4,10 +4,10 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Modal,
   TextInput,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -76,7 +76,7 @@ export default function CategoriesSettingsScreen() {
   const handleSave = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      Alert.alert(t('common.error'), t('categoryCreate.nameRequired'));
+      showAlert(t('common.error'), t('categoryCreate.nameRequired'));
       return;
     }
 
@@ -89,14 +89,14 @@ export default function CategoriesSettingsScreen() {
       }
       closeModal();
     } catch {
-      Alert.alert(t('common.error'), t('errors.saveFailed'));
+      showAlert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleDelete = (category: Category) => {
-    Alert.alert(
+    showAlert(
       t('categories.deleteConfirmTitle'),
       t('categories.deleteConfirmMessage', { name: category.name }),
       [
@@ -107,11 +107,11 @@ export default function CategoriesSettingsScreen() {
           onPress: async () => {
             try {
               await deleteCategory(category.id);
-              Alert.alert(t('categories.deleteSuccess'));
+              showAlert(t('categories.deleteSuccess'));
             } catch (error: any) {
               if (error?.status === 409) {
                 const d = error.details || {};
-                Alert.alert(
+                showAlert(
                   t('common.error'),
                   t('categories.deleteErrorHasRecords', {
                     expenses: d.expenses || 0,
@@ -121,7 +121,7 @@ export default function CategoriesSettingsScreen() {
                   }),
                 );
               } else {
-                Alert.alert(t('common.error'), error?.message || t('common.error'));
+                showAlert(t('common.error'), error?.message || t('common.error'));
               }
             }
           },

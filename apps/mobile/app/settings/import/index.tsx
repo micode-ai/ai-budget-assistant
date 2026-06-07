@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -92,7 +93,7 @@ export default function ImportHubScreen() {
         copyToCacheDirectory: true,
       });
     } catch (err) {
-      Alert.alert(
+      showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );
@@ -122,7 +123,7 @@ export default function ImportHubScreen() {
       useImportStore.getState().setPreview(preview);
       router.push('/settings/import/preview');
     } catch (err) {
-      Alert.alert(
+      showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );
@@ -130,7 +131,7 @@ export default function ImportHubScreen() {
   };
 
   const deleteMapping = (m: CsvImportMapping) => {
-    Alert.alert(
+    showAlert(
       t('bankImport.deleteMapping'),
       t('bankImport.deleteMappingConfirm'),
       [
@@ -148,7 +149,7 @@ export default function ImportHubScreen() {
   };
 
   const handleUndo = (batch: ImportBatchDto) => {
-    Alert.alert(
+    showAlert(
       t('bankImport.undoImportTitle'),
       t('bankImport.undoImportConfirm', { count: batch.rowCount }),
       [
@@ -163,7 +164,7 @@ export default function ImportHubScreen() {
               await useIncomeStore.getState().loadIncomes({ force: true });
               loadBatches();
             } catch (err) {
-              Alert.alert(
+              showAlert(
                 t('common.error'),
                 err instanceof Error ? err.message : String(err),
               );

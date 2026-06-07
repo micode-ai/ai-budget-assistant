@@ -5,16 +5,16 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   Image,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { File } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -34,8 +34,7 @@ async function compressAndEncodeImage(uri: string): Promise<string> {
     [{ resize: { width: 800 } }],
     { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG },
   );
-  const file = new File(result.uri);
-  return await file.base64();
+  return await uriToBase64(result.uri);
 }
 
 export default function ReceiptExpenseScreen() {
@@ -64,7 +63,7 @@ export default function ReceiptExpenseScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
+      showAlert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
     }
   }, [error, reset, t]);
 
@@ -146,12 +145,12 @@ export default function ReceiptExpenseScreen() {
         receiptImageBase64,
       });
 
-      Alert.alert(t('common.success'), t('receipt.success'), [
-        { text: t('receipt.scanAnother'), onPress: handleReset },
+      showAlert(t('common.success'), t('receipt.success'), [
+        { text: t('receipt.scanAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
-      Alert.alert(t('common.error'), t('receipt.saveFailed'));
+      showAlert(t('common.error'), t('receipt.saveFailed'));
     }
   };
 

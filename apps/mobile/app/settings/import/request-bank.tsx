@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,16 +36,16 @@ export default function RequestBankScreen() {
 
   const send = async () => {
     if (!bankName.trim()) {
-      Alert.alert(t('bankImport.requestErrorNoName'));
+      showAlert(t('bankImport.requestErrorNoName'));
       return;
     }
     setSending(true);
     try {
       await api.requestBank({ bankName: bankName.trim(), notes: notes.trim() || undefined, file: file ?? undefined });
-      Alert.alert(t('bankImport.requestSent'));
+      showAlert(t('bankImport.requestSent'));
       router.back();
     } catch (err) {
-      Alert.alert(t('bankImport.requestError'), err instanceof Error ? err.message : String(err));
+      showAlert(t('bankImport.requestError'), err instanceof Error ? err.message : String(err));
     } finally {
       setSending(false);
     }

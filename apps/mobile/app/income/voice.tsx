@@ -4,17 +4,17 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   TextInput,
   ScrollView,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Audio } from 'expo-av';
-import { File } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -66,7 +66,7 @@ export default function VoiceIncomeScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert(t('common.error'), error, [{ text: 'OK', onPress: handleReset }]);
+      showAlert(t('common.error'), error, [{ text: 'OK', onPress: handleReset }]);
     }
   }, [error, t]);
 
@@ -114,8 +114,7 @@ export default function VoiceIncomeScreen() {
       setRecordingRef(null);
       if (!uri) throw new Error('No recording URI');
 
-      const file = new File(uri);
-      const base64Audio = await file.base64();
+      const base64Audio = await uriToBase64(uri);
       const transcriptionResult = await api.transcribeAudio(base64Audio);
       setTranscription(transcriptionResult.text);
 
@@ -148,11 +147,11 @@ export default function VoiceIncomeScreen() {
   const handleConfirmIncome = async () => {
     const numericAmount = parseFloat(editAmount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
     if (!editDescription.trim()) {
-      Alert.alert(t('common.error'), t('validation.noDescription'));
+      showAlert(t('common.error'), t('validation.noDescription'));
       return;
     }
     try {
@@ -167,12 +166,12 @@ export default function VoiceIncomeScreen() {
         isDebt: false,
         isDebtRepayment: false,
       });
-      Alert.alert(t('common.success'), t('incomeVoice.success'), [
-        { text: t('incomeVoice.addAnother'), onPress: handleReset },
+      showAlert(t('common.success'), t('incomeVoice.success'), [
+        { text: t('incomeVoice.addAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
-      Alert.alert(t('common.error'), t('incomeVoice.saveFailed'));
+      showAlert(t('common.error'), t('incomeVoice.saveFailed'));
     }
   };
 
