@@ -297,7 +297,11 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '600' as const,
   },
   sheetScroll: {
-    flex: 1,
+    // NOT flex:1 — the sheet is sized by content (maxHeight only), so flex:1
+    // (flexBasis:0 + grow) collapses this ScrollView to height 0 on native and
+    // only the header shows (which looks like the widget). flexShrink sizes it
+    // to content and still lets it shrink/scroll within the sheet's 80% cap.
+    flexShrink: 1,
   },
   sheetScrollContent: {
     paddingHorizontal: theme.spacing[5],
