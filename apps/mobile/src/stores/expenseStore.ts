@@ -431,7 +431,12 @@ export const useExpenseStore = create<ExpenseState>()(
             if (pid) exp.projectId = pid;
           }
 
-          set({ expenses: merged });
+          // Web (no real SQLite): the read-back is empty, so fall back to the
+          // freshly-built server rows instead of dropping everything (which
+          // left all account sums blank on https://ai-budget.pl).
+          const finalExpenses = merged.length > 0 ? merged : builtExpenses.filter((e) => !e.isDeleted);
+
+          set({ expenses: finalExpenses });
           setLastSyncTime(Date.now());
           _lastExpensesSyncAt = Date.now();
           _lastExpensesSyncedAccountId = accountId;
