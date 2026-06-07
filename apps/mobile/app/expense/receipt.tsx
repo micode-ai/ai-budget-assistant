@@ -14,7 +14,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { File } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -34,8 +34,7 @@ async function compressAndEncodeImage(uri: string): Promise<string> {
     [{ resize: { width: 800 } }],
     { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG },
   );
-  const file = new File(result.uri);
-  return await file.base64();
+  return await uriToBase64(result.uri);
 }
 
 export default function ReceiptExpenseScreen() {
