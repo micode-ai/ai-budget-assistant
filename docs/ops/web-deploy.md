@@ -39,20 +39,25 @@ degraded. API-backed screens (auth, subscriptions, lists…) work normally.
 
 ---
 
-## Deploy an update (each release)
+## Deploy an update
 
-Rebuild and push the static files — **no container restart, no nginx reload** (the
-`html/` dir is bind-mounted; nginx serves the new files immediately; `index.html`
-is sent `no-cache`, hashed assets are immutable):
+**Automatic (CI):** `.github/workflows/web-deploy.yml` runs on every push to
+`development` and via `workflow_dispatch`. It builds the bundle **on the GitHub
+runner** (not the VPS — no prod load), guards that `dist/index.html` + a JS bundle
+exist, then `rsync --delete`s `apps/mobile/dist/` to `/opt/ai-budget-web/html/`
+over SSH (same `SSH_HOST`/`SSH_USER`/`SSH_PRIVATE_KEY` secrets as `deploy.yml`),
+and verifies `https://ai-budget.pl` returns 200. No container restart / nginx
+reload (the `html/` dir is bind-mounted; nginx serves new files immediately;
+`index.html` is `no-cache`, hashed assets immutable). Concurrency-guarded so two
+web deploys can't race.
+
+**Manual fallback** (if CI is unavailable):
 
 ```bash
 scripts/build-web.sh
-tar -czf - -C apps/mobile/dist . | \
-  ssh -i ~/.ssh/id_ed25519 root@46.225.23.232 \
-  "rm -rf /opt/ai-budget-web/html/* && tar -xzf - -C /opt/ai-budget-web/html"
+rsync -avz --delete -e 'ssh -i ~/.ssh/id_ed25519' \
+  apps/mobile/dist/ root@46.225.23.232:/opt/ai-budget-web/html/
 ```
-
-(or `rsync -avz --delete -e 'ssh -i ~/.ssh/id_ed25519' apps/mobile/dist/ root@46.225.23.232:/opt/ai-budget-web/html/` if rsync is available.)
 
 ## Rollback
 
