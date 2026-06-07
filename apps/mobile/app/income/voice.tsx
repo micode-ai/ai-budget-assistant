@@ -167,7 +167,7 @@ export default function VoiceIncomeScreen() {
         isDebtRepayment: false,
       });
       showAlert(t('common.success'), t('incomeVoice.success'), [
-        { text: t('incomeVoice.addAnother'), onPress: handleReset },
+        { text: t('incomeVoice.addAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {

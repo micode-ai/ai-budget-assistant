@@ -146,7 +146,7 @@ export default function ReceiptExpenseScreen() {
       });
 
       showAlert(t('common.success'), t('receipt.success'), [
-        { text: t('receipt.scanAnother'), onPress: handleReset },
+        { text: t('receipt.scanAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
