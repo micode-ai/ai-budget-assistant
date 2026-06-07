@@ -33,9 +33,14 @@ const loadOrder = (): WidgetKey[] => {
   if (!stored) return [...WIDGET_KEYS];
   try {
     const parsed = JSON.parse(stored) as string[];
-    const valid = parsed.filter((k): k is WidgetKey =>
-      (WIDGET_KEYS as readonly string[]).includes(k),
-    );
+    // De-dupe: a duplicate key here renders the same widget twice (two React
+    // elements with the same key → doubled card + broken modal state). Set
+    // preserves first-occurrence order.
+    const valid = [
+      ...new Set(
+        parsed.filter((k): k is WidgetKey => (WIDGET_KEYS as readonly string[]).includes(k)),
+      ),
+    ];
     const missing = WIDGET_KEYS.filter((k) => !valid.includes(k));
     return [...valid, ...missing];
   } catch {
@@ -71,9 +76,12 @@ export const useWidgetVisibilityStore = create<WidgetVisibilityState>((set) => (
 
   reorder: (newOrder) =>
     set(() => {
-      const valid = newOrder.filter((k): k is WidgetKey =>
-        (WIDGET_KEYS as readonly string[]).includes(k),
-      );
+      // De-dupe so a duplicate can never be persisted (see loadOrder).
+      const valid = [
+        ...new Set(
+          newOrder.filter((k): k is WidgetKey => (WIDGET_KEYS as readonly string[]).includes(k)),
+        ),
+      ];
       const missing = WIDGET_KEYS.filter((k) => !valid.includes(k));
       const finalOrder = [...valid, ...missing];
       mmkv.set('widget-order', JSON.stringify(finalOrder));
