@@ -46,8 +46,11 @@ export default function TabLayout() {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.borderLight,
           paddingTop: 8,
-          paddingBottom: 8 + insets.bottom,
-          height: 60 + insets.bottom,
+          // Web needs more vertical room: react-native-web renders the icon +
+          // label taller than native, so the label was clipped by the fixed
+          // 60px height. Give it extra height + bottom padding on web only.
+          paddingBottom: Platform.OS === 'web' ? 12 : 8 + insets.bottom,
+          height: (Platform.OS === 'web' ? 74 : 60) + insets.bottom,
         },
         tabBarLabelStyle: {
           ...theme.textStyles.tabLabel,
