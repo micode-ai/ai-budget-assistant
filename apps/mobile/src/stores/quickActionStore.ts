@@ -47,9 +47,12 @@ export const resolveOrder = (raw: string | undefined): QuickActionKey[] => {
   if (!raw) return [...QUICK_ACTION_KEYS];
   try {
     const parsed = JSON.parse(raw) as string[];
-    const valid = parsed.filter((k): k is QuickActionKey =>
-      (QUICK_ACTION_KEYS as readonly string[]).includes(k),
-    );
+    // De-dupe so a duplicate key can't render the same action twice.
+    const valid = [
+      ...new Set(
+        parsed.filter((k): k is QuickActionKey => (QUICK_ACTION_KEYS as readonly string[]).includes(k)),
+      ),
+    ];
     const missing = QUICK_ACTION_KEYS.filter((k) => !valid.includes(k));
     return [...valid, ...missing];
   } catch {
@@ -85,9 +88,12 @@ export const useQuickActionStore = create<QuickActionState>((set) => ({
 
   reorder: (newOrder) =>
     set(() => {
-      const valid = newOrder.filter((k): k is QuickActionKey =>
-        (QUICK_ACTION_KEYS as readonly string[]).includes(k),
-      );
+      // De-dupe so a duplicate can never be persisted (see resolveOrder).
+      const valid = [
+        ...new Set(
+          newOrder.filter((k): k is QuickActionKey => (QUICK_ACTION_KEYS as readonly string[]).includes(k)),
+        ),
+      ];
       const missing = QUICK_ACTION_KEYS.filter((k) => !valid.includes(k));
       const finalOrder = [...valid, ...missing];
       mmkv.set('quick-action-order', JSON.stringify(finalOrder));

@@ -98,8 +98,14 @@ export function ReorderableToggleList<K extends string>({
           if (logicalIdx !== currentIdx) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             setLocalOrder((prev) => {
+              // Recompute the index from `prev` (the array actually being
+              // spliced) — using an index derived from localOrderRef can point
+              // at the wrong element if the two diverge, which would remove a
+              // different key and leave dragKey duplicated.
+              const curIdx = prev.indexOf(dragKey.current!);
+              if (curIdx === -1) return prev;
               const next = [...prev];
-              next.splice(currentIdx, 1);
+              next.splice(curIdx, 1);
               next.splice(logicalIdx, 0, dragKey.current!);
               localOrderRef.current = next;
               return next;
