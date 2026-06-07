@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Platform } from 'react-native';
 import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
 import type { User, Currency } from '@budget/shared-types';
@@ -74,7 +75,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             // Only gate behind biometric if the user has verified their email.
             // Unverified sessions should go straight through so the user can
             // reach the verify-email screen without a fingerprint prompt.
-            if (biometricEnabled === 'true' && storedUser?.isVerified) {
+            // Web has no biometric (useBiometric.web is a no-op), so never gate
+            // a web reload behind it — otherwise the saved session is stuck
+            // waiting for a fingerprint prompt that can't fire and the user is
+            // forced to log in again on every refresh.
+            if (biometricEnabled === 'true' && storedUser?.isVerified && Platform.OS !== 'web') {
               // Session exists but biometric required — wait for biometric verification
               set({ hasSavedSession: true, isInitializing: false });
             } else if (storedUser) {
