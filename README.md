@@ -2,6 +2,8 @@
 
 AI-powered personal finance management application with voice input, receipt scanning, and intelligent expense categorization.
 
+Available on **iOS**, **Android**, and the **web** — try it in your browser at **[ai-budget.pl](https://ai-budget.pl)**.
+
 ## Documentation
 
 ### Developer Docs
@@ -25,6 +27,7 @@ AI-powered personal finance management application with voice input, receipt sca
 | Español | [Guía del usuario](user_docs/es/00-index.md) |
 | Français | [Guide utilisateur](user_docs/fr/00-index.md) |
 | Беларуская | [Кіраўніцтва карыстальніка](user_docs/be/00-index.md) |
+| Nederlands | [Gebruikershandleiding](user_docs/nl/00-index.md) |
 
 #### User Docs Sections
 
@@ -45,3 +48,17 @@ AI-powered personal finance management application with voice input, receipt sca
 | 13 | [Achievements & Gamification](user_docs/en/13-gamification.md) |
 | 14 | [Investment Portfolio](user_docs/en/14-investments.md) |
 | 15 | [End-to-End Encryption](user_docs/en/15-encryption.md) |
+| 16 | [Export & Reports](user_docs/en/16-export-reports.md) |
+| 17 | [Debts & Loans](user_docs/en/17-debts-and-loans.md) |
+| 18 | [Savings Goals](user_docs/en/18-savings-goals.md) |
+| 19 | [Fat Finder (Expense Audit)](user_docs/en/19-fat-finder.md) |
+| 20 | [AI Response Mode](user_docs/en/20-ai-response-mode.md) |
+| 21 | [Home Screen Widgets](user_docs/en/21-widgets.md) |
+| 22 | [Chat Bots — Telegram, WhatsApp & Slack](user_docs/en/22-chat-bots.md) |
+| 23 | [Scenario Simulator](user_docs/en/23-scenario-simulator.md) |
+| 24 | [Invite Friends — Referral Program](user_docs/en/24-referral.md) |
+| 26 | [Wise Import](user_docs/en/26-wise-import.md) |
+| 27 | [Bank Statement Import](user_docs/en/27-bank-import.md) |
+| 28 | [Reference Data](user_docs/en/28-reference-data.md) |
+| 29 | [Subscription Manager](user_docs/en/29-subscription-manager.md) |
+| 30 | [Web App](user_docs/en/30-web-app.md) |
