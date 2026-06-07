@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { Ionicons } from '@expo/vector-icons';
 import Markdown from 'react-native-markdown-display';
 import * as Clipboard from 'expo-clipboard';
@@ -88,7 +89,7 @@ export function ChatMessageItem({
 
   const handleLongPress = () => {
     const preview = item.content.length > 80 ? item.content.slice(0, 80) + '…' : item.content;
-    Alert.alert('', preview, [
+    showAlert('', preview, [
       { text: t('common.copy'), onPress: () => Clipboard.setStringAsync(item.content) },
       { text: t('common.cancel'), style: 'cancel' },
     ]);

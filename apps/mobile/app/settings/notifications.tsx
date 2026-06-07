@@ -4,8 +4,8 @@ import {
   Text,
   ScrollView,
   Switch,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -49,7 +49,7 @@ export default function NotificationsSettingsScreen() {
       await api.updateNotificationPreferences({ budgetAlerts: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -59,7 +59,7 @@ export default function NotificationsSettingsScreen() {
       await api.updateNotificationPreferences({ sharedAccountActivity: value });
     } catch (e) {
       setNotifSharedActivity(!value);
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -69,7 +69,7 @@ export default function NotificationsSettingsScreen() {
       await api.updateNotificationPreferences({ debtReminders: value });
     } catch (e) {
       setNotifDebtReminders(!value);
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -79,7 +79,7 @@ export default function NotificationsSettingsScreen() {
       await api.updateNotificationPreferences({ recurringExpenses: value });
     } catch (e) {
       setNotifRecurringExpenses(!value);
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -89,7 +89,7 @@ export default function NotificationsSettingsScreen() {
       await api.updateNotificationPreferences({ subscriptionRenewals: value });
     } catch (e) {
       setNotifSubscriptionRenewals(!value);
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 
@@ -107,7 +107,7 @@ export default function NotificationsSettingsScreen() {
       setNotifDebtReminders(!value);
       setNotifRecurringExpenses(!value);
       setNotifSubscriptionRenewals(!value);
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
 

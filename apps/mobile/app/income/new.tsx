@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Platform,
   Switch,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -74,12 +74,12 @@ export default function NewIncomeScreen() {
   const handleSubmit = async () => {
     const numericAmount = parseFloat(amount);
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
     if (!description.trim()) {
-      Alert.alert(t('common.error'), t('validation.noDescription'));
+      showAlert(t('common.error'), t('validation.noDescription'));
       return;
     }
 
@@ -103,7 +103,7 @@ export default function NewIncomeScreen() {
 
       router.back();
     } catch {
-      Alert.alert(t('common.error'), t('errors.saveFailed'));
+      showAlert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSubmitting(false);
     }

@@ -4,9 +4,9 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -106,7 +106,7 @@ export default function ReportsScreen() {
   };
 
   const handleDelete = (report: ReportListItem) => {
-    Alert.alert(
+    showAlert(
       t('reports.deleteTitle'),
       t('reports.deleteConfirm'),
       [

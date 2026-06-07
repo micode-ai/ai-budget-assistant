@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -44,7 +45,7 @@ export default function ExchangeDetailScreen() {
     const rate = parseFloat(editExchangeRate);
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
@@ -66,7 +67,7 @@ export default function ExchangeDetailScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert(t('exchange.deleteTitle'), t('exchange.deleteConfirm'), [
+    showAlert(t('exchange.deleteTitle'), t('exchange.deleteConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'),

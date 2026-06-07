@@ -5,8 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -81,7 +81,7 @@ export function BudgetEditForm({ budget, onSaved, onCancel }: BudgetEditFormProp
 
   const handleSave = () => {
     if (!editName.trim()) {
-      Alert.alert(t('common.error'), t('budgetNew.errorName'));
+      showAlert(t('common.error'), t('budgetNew.errorName'));
       return;
     }
 
@@ -89,12 +89,12 @@ export function BudgetEditForm({ budget, onSaved, onCancel }: BudgetEditFormProp
     const numericAmount = editBudgetMode === 'byCategory' ? totalFromAllocations : parseFloat(editAmount);
 
     if (!numericAmount || numericAmount <= 0) {
-      Alert.alert(t('common.error'), t('budgetNew.errorAmount'));
+      showAlert(t('common.error'), t('budgetNew.errorAmount'));
       return;
     }
 
     if (editBudgetMode === 'byCategory' && editCategoryAllocations.length === 0) {
-      Alert.alert(t('common.error'), t('budgetNew.errorNoCategories'));
+      showAlert(t('common.error'), t('budgetNew.errorNoCategories'));
       return;
     }
 

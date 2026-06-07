@@ -6,11 +6,11 @@ import {
   RefreshControl,
   Animated,
   ScrollView,
-  Alert,
   ActivityIndicator,
   TextInput,
   Modal,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -215,7 +215,7 @@ export default function ExpensesScreen() {
 
   const handleDeleteFromList = () => {
     if (!selectedTransaction) return;
-    Alert.alert(t('common.deleteConfirmTitle'), t('common.deleteConfirmMessage'), [
+    showAlert(t('common.deleteConfirmTitle'), t('common.deleteConfirmMessage'), [
       { text: t('common.cancel'), style: 'cancel' },
       {
         text: t('common.delete'),

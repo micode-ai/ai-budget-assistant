@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity, Alert, Modal, TextInput,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Stack } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -75,7 +81,7 @@ export default function ManageTagsScreen() {
   };
 
   const handleDelete = (tag: Tag) => {
-    Alert.alert(t('tags.deleteTag'), t('tags.confirmDelete'), [
+    showAlert(t('tags.deleteTag'), t('tags.confirmDelete'), [
       { text: t('common.cancel'), style: 'cancel' },
       { text: t('common.delete'), style: 'destructive', onPress: () => deleteTag(tag.id) },
     ]);

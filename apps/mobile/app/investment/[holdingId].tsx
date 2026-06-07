@@ -1,4 +1,5 @@
-import { View, Text, FlatList, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { useState, useEffect, useMemo } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -63,7 +64,7 @@ export default function AssetDetailScreen() {
   }, [priceHistory]);
 
   const handleDeleteTransaction = (transactionId: string) => {
-    Alert.alert(
+    showAlert(
       t('investments.deleteTransaction'),
       t('investments.deleteTransactionConfirm'),
       [
@@ -80,7 +81,7 @@ export default function AssetDetailScreen() {
   };
 
   const handleDeleteHolding = () => {
-    Alert.alert(
+    showAlert(
       t('investments.deleteHolding'),
       t('investments.deleteHoldingConfirm'),
       [

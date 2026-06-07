@@ -4,10 +4,10 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
   Linking,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 
 const API_ORIGIN = (process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1').replace(
   /\/api(\/v1)?\/?$/,
@@ -84,7 +84,7 @@ export default function BotsSettingsScreen() {
       setTelegramLinkCode(result.code);
       setTelegramBotUsername(result.botUsername);
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setTelegramLoading(false);
     }
@@ -93,12 +93,12 @@ export default function BotsSettingsScreen() {
   const handleCopyTelegramCode = async () => {
     if (telegramLinkCode) {
       await Clipboard.setStringAsync(telegramLinkCode);
-      Alert.alert(t('settings.telegram.codeCopied'));
+      showAlert(t('settings.telegram.codeCopied'));
     }
   };
 
   const handleUnlinkTelegram = async () => {
-    Alert.alert(
+    showAlert(
       t('settings.telegram.disconnect'),
       t('settings.telegram.disconnectConfirm'),
       [
@@ -113,7 +113,7 @@ export default function BotsSettingsScreen() {
               setTelegramUsername(null);
               setTelegramLinkCode(null);
             } catch (e) {
-              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
             }
           },
         },
@@ -159,7 +159,7 @@ export default function BotsSettingsScreen() {
       const result = await api.generateSlackLinkCode();
       setSlackLinkCode(result);
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setSlackCodeLoading(false);
     }
@@ -168,7 +168,7 @@ export default function BotsSettingsScreen() {
   const handleCopySlackCode = async () => {
     if (!slackLinkCode) return;
     await Clipboard.setStringAsync(slackLinkCode.code);
-    Alert.alert('', t('slackBot.copyCode'));
+    showAlert('', t('slackBot.copyCode'));
   };
 
   const handleSlackRefresh = async () => {
@@ -180,7 +180,7 @@ export default function BotsSettingsScreen() {
     Linking.canOpenURL('slack://open').then((supported) => {
       if (supported) {
         Linking.openURL('slack://open').catch(() => {
-          Alert.alert(t('common.error'), t('errors.unknown'));
+          showAlert(t('common.error'), t('errors.unknown'));
         });
       }
     });
@@ -188,12 +188,12 @@ export default function BotsSettingsScreen() {
 
   const handleAddToSlack = () => {
     Linking.openURL(`${API_ORIGIN}/slack/install`).catch(() => {
-      Alert.alert(t('common.error'), t('errors.unknown'));
+      showAlert(t('common.error'), t('errors.unknown'));
     });
   };
 
   const handleUnlinkSlack = () => {
-    Alert.alert(
+    showAlert(
       t('slackBot.confirmDisconnect'),
       '',
       [
@@ -208,7 +208,7 @@ export default function BotsSettingsScreen() {
               setSlackStatus({ linked: false });
               setSlackLinkCode(null);
             } catch (e) {
-              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
             } finally {
               setSlackUnlinkLoading(false);
             }
@@ -256,7 +256,7 @@ export default function BotsSettingsScreen() {
       const result = await api.generateWhatsAppLinkCode();
       setLinkCode(result);
     } catch (e) {
-      Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setWaCodeLoading(false);
     }
@@ -271,14 +271,14 @@ export default function BotsSettingsScreen() {
     if (!linkCode) return;
     const url = buildWaMeUrl(linkCode.waPhoneNumber, linkCode.code);
     Linking.openURL(url).catch(() => {
-      Alert.alert(t('common.error'), t('errors.unknown'));
+      showAlert(t('common.error'), t('errors.unknown'));
     });
   };
 
   const handleCopyWaCode = async () => {
     if (!linkCode) return;
     await Clipboard.setStringAsync(linkCode.code);
-    Alert.alert('', t('whatsappBot.copyCode'));
+    showAlert('', t('whatsappBot.copyCode'));
   };
 
   const handleWaRefresh = async () => {
@@ -287,7 +287,7 @@ export default function BotsSettingsScreen() {
   };
 
   const handleUnlinkWa = () => {
-    Alert.alert(
+    showAlert(
       t('whatsappBot.confirmDisconnect'),
       '',
       [
@@ -302,7 +302,7 @@ export default function BotsSettingsScreen() {
               setWaStatus({ linked: false });
               setLinkCode(null);
             } catch (e) {
-              Alert.alert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
             } finally {
               setWaUnlinkLoading(false);
             }

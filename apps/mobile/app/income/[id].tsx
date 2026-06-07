@@ -3,10 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert,
   TextInput,
   Platform,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -79,7 +79,7 @@ export default function IncomeDetailScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert(
+    showAlert(
       t('incomeDetail.deleteTitle'),
       t('incomeDetail.deleteConfirm'),
       [

@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -41,18 +42,18 @@ export default function SetBalanceScreen() {
   const handleSave = () => {
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount < 0) {
-      Alert.alert(t('common.error'), t('validation.invalidAmount'));
+      showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
     if (isEditMode && editingBalance) {
       updateInitialBalance(editingBalance.id, parsedAmount);
       router.setParams({ editId: '' });
-      Alert.alert(t('common.success'), t('wallet.balanceUpdated'));
+      showAlert(t('common.success'), t('wallet.balanceUpdated'));
     } else {
       setInitialBalance(selectedCurrency, parsedAmount);
       setAmount('');
-      Alert.alert(t('common.success'), t('wallet.balanceSaved'));
+      showAlert(t('common.success'), t('wallet.balanceSaved'));
     }
   };
 
@@ -65,7 +66,7 @@ export default function SetBalanceScreen() {
   };
 
   const handleDelete = (id: string, currencyCode: string) => {
-    Alert.alert(
+    showAlert(
       t('wallet.deleteBalance'),
       t('wallet.deleteConfirm'),
       [

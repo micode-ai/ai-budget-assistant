@@ -4,9 +4,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
+import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,18 +26,18 @@ export default function JoinAccountScreen() {
 
   const handleJoin = async () => {
     if (!inviteCode.trim()) {
-      Alert.alert(t('errors.error'), t('accounts.codeRequired'));
+      showAlert(t('errors.error'), t('accounts.codeRequired'));
       return;
     }
 
     setIsLoading(true);
     try {
       await acceptInvitation(inviteCode.trim());
-      Alert.alert(t('common.success'), t('accounts.joinedSuccess'), [
+      showAlert(t('common.success'), t('accounts.joinedSuccess'), [
         { text: t('common.ok'), onPress: () => router.back() },
       ]);
     } catch (e) {
-      Alert.alert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     } finally {
       setIsLoading(false);
     }

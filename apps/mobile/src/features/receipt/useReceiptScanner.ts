@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { File } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
 
@@ -136,8 +136,7 @@ export function useReceiptScanner() {
         scannedReceipt: null,
       }));
 
-      const file = new File(asset.uri);
-      const base64 = await file.base64();
+      const base64 = await uriToBase64(asset.uri);
 
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined, 'application/pdf');
 
@@ -174,8 +173,7 @@ export function useReceiptScanner() {
 
     try {
       // Read image as base64
-      const file = new File(imageUri);
-      const base64 = await file.base64();
+      const base64 = await uriToBase64(imageUri);
 
       // Send to API for OCR
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined);
