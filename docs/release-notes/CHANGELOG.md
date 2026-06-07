@@ -8,6 +8,35 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.5.1 — 2026-06-07
+
+**Web app**
+- **AI Budget Assistant is now on the web** — open it right in your browser at [ai-budget.pl](https://ai-budget.pl). Log in, manage accounts, add expenses and income, chat with the AI, and browse your dashboard — no install needed (ABA-213, ABA-214).
+- Web parity polish — reference-data screens, login/chat **Enter to submit**, centered action strips, dialogs, lists, tab bar, and safe-area fixes; debts now feed the Financial Health score correctly on web (ABA-218, ABA-220).
+
+**Subscription Manager**
+- **Track your recurring charges** (Netflix, gym, SaaS…) in one place — add a subscription with its amount, billing cycle, and next renewal date, and see your monthly total at a glance. Reachable from Settings, the home quick-action strip, and the Fat Finder "Track this" button (ABA-208, ABA-209).
+- Get a **reminder 3 days before** each renewal, and the app can **auto-record the expense** on the renewal date and advance to the next cycle (ABA-211).
+
+**Home screen**
+- **Customize your quick actions** — choose which shortcuts appear in the home strip and drag to reorder them, right alongside the widget settings (ABA-207).
+
+**Languages**
+- Added **Dutch (Nederlands)** across the app, bots, and help docs (ABA-204).
+
+**Chat bots**
+- **Slack: add to any workspace** — connect the Slack bot through a one-tap "Add to Slack" install flow, with each workspace's token encrypted at rest (ABA-200).
+
+**Admin**
+- Sortable **Users** table (name, email, registered, last login) and clickable **App Versions** rows that open full release details (ABA-202).
+
+**Fixes**
+- Fixed AI chat where your message bubbles could wrap one character per line (ABA-206).
+- Fixed a doubled Financial Health widget and the detail breakdown collapsing on mobile (ABA-219, ABA-221).
+- Fixed the Subscriptions list row where the delete button overlapped the amount (ABA-212).
+
+---
+
 ## 1.4.1 — 2026-06-04
 
 **Chat bots**
