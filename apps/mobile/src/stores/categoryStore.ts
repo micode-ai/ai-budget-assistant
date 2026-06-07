@@ -83,6 +83,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
             await get().syncFromServer(serverCategories);
             categories = await getAllCategories(accountId);
             setLastSyncTime(Date.now());
+            // Web (no real SQLite): syncFromServer already set state from built
+            // server rows; the local read-back is empty and the native seeding /
+            // color-patch below would clobber it back to empty. Keep them and stop.
+            // (Don't mark _seededAccounts so later loads re-fetch from server.)
+            if (categories.length === 0 && get().categories.length > 0) {
+              set({ isInitialized: true });
+              return;
+            }
           }
         } catch {
           // Server unavailable — will seed defaults below
@@ -218,11 +226,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   },
 
   syncFromServer: async (serverCategories: any[]) => {
+    // Collect the built rows so web (no real SQLite) can fall back to them when
+    // the post-upsert read-back is empty.
+    const built: Category[] = [];
     for (const cat of serverCategories) {
       // Decrypt encrypted fields if present
       const decrypted = await maybeDecrypt('category', cat, cat.accountId);
 
-      await upsertCategory({
+      const entity: Category = {
         id: cat.id,
         userId: cat.userId || undefined,
         accountId: cat.accountId || undefined,
@@ -236,13 +247,16 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         updatedAt: new Date(cat.updatedAt),
         isDeleted: cat.isDeleted ?? false,
         syncVersion: cat.syncVersion || 0,
-      });
+      };
+      await upsertCategory(entity);
+      if (!entity.isDeleted) built.push(entity);
     }
     // Reload without recursive fetch
     const accountId = useAccountStore.getState().currentAccountId;
     if (accountId) {
       const categories = await getAllCategories(accountId);
-      set({ categories, isInitialized: true });
+      // Web (no real SQLite): read-back is empty — fall back to built rows.
+      set({ categories: categories.length > 0 ? categories : built, isInitialized: true });
     }
   },
 

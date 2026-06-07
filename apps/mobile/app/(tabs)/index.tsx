@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, Platform } from 'react-native';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -196,7 +196,7 @@ export default function DashboardScreen() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.quickActionsRow}
+            contentContainerStyle={[styles.quickActionsRow, Platform.OS === 'web' && styles.webCenterRow]}
           >
             {visibleQuickActions.map((key) => (
               <TouchableOpacity
@@ -430,7 +430,7 @@ export default function DashboardScreen() {
                     <ScrollView
                       horizontal
                       showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={styles.walletGrid}
+                      contentContainerStyle={[styles.walletGrid, Platform.OS === 'web' && styles.webCenterRow]}
                       style={styles.walletGridScroll}
                     >
                       {walletSummary.map((summary) => (
@@ -508,6 +508,13 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     paddingHorizontal: theme.spacing[3],
     gap: theme.spacing[3],
+  },
+  // Web-only: on a wide viewport, center the horizontal strip instead of
+  // hugging the left edge. flexGrow makes the content fill the ScrollView so
+  // justifyContent can center; harmless on mobile (content overflows → scrolls).
+  webCenterRow: {
+    flexGrow: 1,
+    justifyContent: 'center' as const,
   },
   quickActionButton: {
     alignItems: 'center' as const,

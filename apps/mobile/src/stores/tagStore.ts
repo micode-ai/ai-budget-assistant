@@ -117,11 +117,14 @@ export const useTagStore = create<TagState>((set, get) => ({
   },
 
   syncFromServer: async (serverTags: any[]) => {
+    // Collect built rows so web (no real SQLite) can fall back to them when the
+    // post-upsert read-back is empty.
+    const built: Tag[] = [];
     for (const tag of serverTags) {
       // Decrypt encrypted fields if present
       const decrypted = await maybeDecrypt('tag', tag, tag.accountId);
 
-      await tagRepo.upsertTag({
+      const entity: Tag = {
         // Converge to the server's clientId when it has one, so a tag created on
         // this device keeps its local id; otherwise adopt the server PK.
         id: tag.clientId ?? tag.id,
@@ -135,7 +138,9 @@ export const useTagStore = create<TagState>((set, get) => ({
         isDeleted: tag.isDeleted ?? false,
         syncStatus: 'synced',
         syncVersion: tag.syncVersion || 0,
-      });
+      };
+      await tagRepo.upsertTag(entity);
+      if (!entity.isDeleted) built.push(entity);
     }
     // Reload from local DB only (don't call loadTags to avoid infinite loop)
     const accountId = useAccountStore.getState().currentAccountId;
@@ -157,6 +162,7 @@ export const useTagStore = create<TagState>((set, get) => ({
       }
     }
     const tags = await tagRepo.getAllTags(accountId);
-    set({ tags });
+    // Web (no real SQLite): read-back is empty — fall back to built server rows.
+    set({ tags: tags.length > 0 ? tags : built });
   },
 }));
