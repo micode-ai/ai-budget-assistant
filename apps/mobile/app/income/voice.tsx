@@ -14,7 +14,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Audio } from 'expo-av';
-import { File } from 'expo-file-system/next';
+import { uriToBase64 } from '@/utils/fileBase64';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -114,8 +114,7 @@ export default function VoiceIncomeScreen() {
       setRecordingRef(null);
       if (!uri) throw new Error('No recording URI');
 
-      const file = new File(uri);
-      const base64Audio = await file.base64();
+      const base64Audio = await uriToBase64(uri);
       const transcriptionResult = await api.transcribeAudio(base64Audio);
       setTranscription(transcriptionResult.text);
 
