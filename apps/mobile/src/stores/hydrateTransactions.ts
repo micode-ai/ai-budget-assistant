@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Platform } from 'react-native';
 import { useExpenseStore } from './expenseStore';
 import { useIncomeStore } from './incomeStore';
 
@@ -30,6 +31,17 @@ export function hydrateTransactions(opts?: { force?: boolean }): Promise<void> {
     try {
       await useExpenseStore.getState().loadExpenses(opts);
       await useIncomeStore.getState().loadIncomes(opts);
+      // Web: walletSummary is derived from these in-memory stores (SQLite is a
+      // no-op there), and loadWallet may have computed it before transactions
+      // loaded — recompute now so NetCapital reflects actual transactions.
+      // Dynamic import avoids a static cycle (walletStore → authStore → here).
+      if (Platform.OS === 'web') {
+        try {
+          const { useWalletStore } = await import('./walletStore');
+          const summary = await useWalletStore.getState().computeWalletSummary();
+          useWalletStore.setState({ walletSummary: summary });
+        } catch { /* wallet not ready — loadWallet will compute it */ }
+      }
     } finally {
       useHydrationStore.setState({ isHydrating: false });
     }
