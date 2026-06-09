@@ -1,6 +1,6 @@
 # AI Budget Assistant — Feature Posts
 
-Шесть рекламных постов о ключевой функциональности приложения.
+Тринадцать рекламных постов о ключевой функциональности приложения.
 Каждый пост представлен на трёх языках: русский, английский, польский. Каждый блок — готовый к копированию пост для Facebook или Telegram.
 
 Ссылка на приложение: https://play.google.com/store/apps/details?id=com.budget.assistant
@@ -748,4 +748,253 @@ Otwierasz Ustawienia → Import z Wise. Trzy tapnięcia i gotowe.
 👉 https://play.google.com/store/apps/details?id=com.budget.assistant
 
 #AIBudgetAssistant #Wise #import #budżet #finanse #wieleWalut #CSV #fintech #finanseOsobiste
+```
+
+---
+
+## Пост 11 — Facebook · Менеджер подписок
+
+### 🇷🇺 Русский
+
+```
+🔁 Netflix, Spotify, спортзал, iCloud, тот сервис, который ты включил «на месяц попробовать» полтора года назад…
+
+Подписки — это деньги, которые утекают тихо. По чуть-чуть, каждый месяц, мимо внимания.
+
+AI Budget Assistant теперь ведёт их за тебя.
+
+Что умеет менеджер подписок:
+📋 Все подписки в одном списке — название, сумма, валюта, дата следующего списания
+📊 Сумма в месяц целиком — годовые и квартальные пересчитываются в месячный эквивалент, чтобы видеть реальную нагрузку
+⏰ Напоминание за 3 дня до списания — push, чтобы успеть отменить ненужное
+🤖 Автосписание в расход — в день продления подписка сама добавляется в расходы и переносит дату на следующий цикл. Учёт ведётся сам.
+🔎 Fat Finder находит подписки в твоих тратах — увидел регулярный платёж, нажал «Отслеживать» — и он уже в списке
+
+Циклы любые: неделя, месяц, квартал, год.
+
+Заходишь в Настройки → Подписки (или выноси кнопку на главный экран). Видишь всю правду про свои регулярные платежи на одном экране.
+
+Сколько из них ты бы отменил прямо сейчас?
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #подписки #бюджет #финансы #экономия #финтех #личныефинансы
+```
+
+### 🇬🇧 English
+
+```
+🔁 Netflix, Spotify, the gym, iCloud, that service you turned on "just to try for a month" a year and a half ago…
+
+Subscriptions are money that leaks out quietly. A little at a time, every month, under the radar.
+
+AI Budget Assistant now tracks them for you.
+
+What the subscription manager does:
+📋 All subscriptions in one list — name, amount, currency, next billing date
+📊 Full monthly total — yearly and quarterly plans are converted to a monthly equivalent so you see the real load
+⏰ Reminder 3 days before billing — a push so you can cancel what you don't need in time
+🤖 Auto-logs as an expense — on renewal day the subscription adds itself to your expenses and rolls the date to the next cycle. Bookkeeping runs itself.
+🔎 Fat Finder spots subscriptions in your spending — sees a recurring charge, tap "Track", and it's on the list
+
+Any cycle: weekly, monthly, quarterly, yearly.
+
+Open Settings → Subscriptions (or pin it to your home screen). See the whole truth about your recurring payments on one screen.
+
+How many would you cancel right now?
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #subscriptions #budget #finance #moneytips #fintech #personalfinance
+```
+
+### 🇵🇱 Polski
+
+```
+🔁 Netflix, Spotify, siłownia, iCloud, ta usługa, którą włączyłeś „na miesiąc, żeby przetestować" półtora roku temu…
+
+Subskrypcje to pieniądze, które wyciekają po cichu. Po trochu, co miesiąc, niezauważalnie.
+
+AI Budget Assistant od teraz pilnuje ich za ciebie.
+
+Co potrafi menedżer subskrypcji:
+📋 Wszystkie subskrypcje w jednej liście — nazwa, kwota, waluta, data następnego pobrania
+📊 Pełna suma miesięczna — plany roczne i kwartalne przeliczane na ekwiwalent miesięczny, żebyś widział realne obciążenie
+⏰ Przypomnienie 3 dni przed pobraniem — push, żebyś zdążył anulować to, czego nie potrzebujesz
+🤖 Automatyczny wpis jako wydatek — w dniu odnowienia subskrypcja sama dodaje się do wydatków i przesuwa datę na kolejny cykl. Księgowość robi się sama.
+🔎 Fat Finder wykrywa subskrypcje w twoich wydatkach — widzi cykliczną płatność, tapnij „Śledź" i już jest na liście
+
+Dowolny cykl: tydzień, miesiąc, kwartał, rok.
+
+Wchodzisz w Ustawienia → Subskrypcje (albo przypnij do ekranu głównego). Widzisz całą prawdę o swoich cyklicznych płatnościach na jednym ekranie.
+
+Ile z nich anulowałbyś od razu?
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #subskrypcje #budżet #finanse #oszczędzanie #fintech #finanseOsobiste
+```
+
+---
+
+## Пост 12 — Facebook · Веб-версия (браузер, ai-budget.pl)
+
+### 🇷🇺 Русский
+
+```
+💻 Не всем удобно вести бюджет с телефона. Иногда хочется большой экран, клавиатуру и мышку.
+
+Теперь AI Budget Assistant открывается прямо в браузере — на компьютере, ноутбуке или планшете. Без установки.
+
+Заходишь на 👉 ai-budget.pl (или www.ai-budget.pl) — логинишься тем же аккаунтом, что и в приложении. Всё на месте: расходы, бюджеты, аналитика, AI-чат.
+
+Зачем это нужно:
+🖥 Большой экран для аналитики — графики, разбивка по категориям и календарь видно целиком, а не по кусочкам
+⌨️ Удобный ввод — занёс пачку расходов с клавиатуры за пару минут
+🔄 Один аккаунт везде — записал на телефоне, открыл на компьютере, всё уже там
+🌍 Тот же ИИ-чат — спрашивай про финансы прямо из браузера
+🚀 Ничего не нужно ставить — открыл ссылку и работаешь
+
+Идеально, когда разбираешь финансы за месяц вечером за столом, а не на бегу.
+
+Телефон в кармане, браузер на столе — одни и те же данные.
+
+👉 https://ai-budget.pl
+
+#AIBudgetAssistant #веб #браузер #бюджет #финансы #финтех #личныефинансы
+```
+
+### 🇬🇧 English
+
+```
+💻 Not everyone wants to manage a budget from a phone. Sometimes you want a big screen, a keyboard and a mouse.
+
+AI Budget Assistant now opens right in your browser — on a desktop, laptop or tablet. No install.
+
+Go to 👉 ai-budget.pl (or www.ai-budget.pl) and log in with the same account as the app. It's all there: expenses, budgets, analytics, AI chat.
+
+Why it's handy:
+🖥 A big screen for analytics — charts, category breakdowns and the calendar all at once, not in fragments
+⌨️ Comfortable input — enter a batch of expenses from the keyboard in a couple of minutes
+🔄 One account everywhere — log it on the phone, open it on the computer, it's already there
+🌍 The same AI chat — ask about your finances straight from the browser
+🚀 Nothing to install — open the link and go
+
+Perfect for sorting out the month's finances in the evening at your desk, not on the run.
+
+Phone in your pocket, browser on your desk — the same data.
+
+👉 https://ai-budget.pl
+
+#AIBudgetAssistant #web #browser #budget #finance #fintech #personalfinance
+```
+
+### 🇵🇱 Polski
+
+```
+💻 Nie każdy chce prowadzić budżet z telefonu. Czasem chcesz duży ekran, klawiaturę i myszkę.
+
+AI Budget Assistant od teraz otwiera się prosto w przeglądarce — na komputerze, laptopie albo tablecie. Bez instalacji.
+
+Wchodzisz na 👉 ai-budget.pl (albo www.ai-budget.pl) i logujesz się tym samym kontem co w aplikacji. Wszystko na miejscu: wydatki, budżety, analityka, czat z AI.
+
+Po co to:
+🖥 Duży ekran do analityki — wykresy, podział po kategoriach i kalendarz widać w całości, a nie po kawałku
+⌨️ Wygodne wpisywanie — wprowadzasz paczkę wydatków z klawiatury w parę minut
+🔄 Jedno konto wszędzie — wpiszesz na telefonie, otworzysz na komputerze i już tam jest
+🌍 Ten sam czat z AI — pytaj o finanse prosto z przeglądarki
+🚀 Nic nie instalujesz — otwierasz link i działasz
+
+Idealne, gdy rozliczasz miesiąc wieczorem przy biurku, a nie w biegu.
+
+Telefon w kieszeni, przeglądarka na biurku — te same dane.
+
+👉 https://ai-budget.pl
+
+#AIBudgetAssistant #web #przeglądarka #budżet #finanse #fintech #finanseOsobiste
+```
+
+---
+
+## Пост 13 — Facebook · Slack-бот
+
+### 🇷🇺 Русский
+
+```
+💼 Твоя команда живёт в Slack. Расходы по проекту, подписки на сервисы, командировочные — всё обсуждается там же. Так пусть там же и записывается.
+
+AI Budget Assistant теперь работает в Slack. Полный набор функций, прямо в личке с ботом.
+
+Что умеет:
+💬 ИИ-чат — «сколько ушло на рекламу в этом месяце?», «создай бюджет на софт 1000 в месяц»
+🗣 Голосовые — наговори расход, бот расшифрует через Whisper
+📸 Фото чека — отправь скан, OCR разберёт сумму, дату и магазин
+✅ Подтверждение кнопками — перед записью бот покажет «Создать / Отмена» через Block Kit, ничего не запишется случайно
+💭 Видно, что бот думает — на долгих операциях появляется индикатор, а потом заменяется ответом
+
+Подключение за минуту:
+🔗 Нажми «Add to Slack» — бот ставится в твоё рабочее пространство (OAuth, поддерживается сколько угодно воркспейсов)
+🔑 Или свяжи аккаунт 6-значным кодом из приложения
+
+Всё синхронизируется с мобильным приложением, Telegram- и WhatsApp-ботами. Четыре точки входа, одна база.
+
+Идеально для команд, фрилансеров и тех, у кого Slack открыт весь рабочий день.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #Slack #бюджет #финансы #ИИ #команда #финтех #бизнес
+```
+
+### 🇬🇧 English
+
+```
+💼 Your team lives in Slack. Project costs, service subscriptions, travel expenses — it's all discussed there. So log it there too.
+
+AI Budget Assistant now works in Slack. The full feature set, right in a DM with the bot.
+
+What it does:
+💬 AI chat — "how much went to ads this month?", "create a software budget of 1000 a month"
+🗣 Voice messages — say an expense out loud, the bot transcribes it via Whisper
+📸 Receipt photos — send a scan, OCR reads the amount, date and store
+✅ Button confirmation — before saving, the bot shows "Create / Cancel" via Block Kit. Nothing gets logged by accident.
+💭 You can see it thinking — slow operations show an indicator, then it's replaced by the answer
+
+Connect in a minute:
+🔗 Hit "Add to Slack" — the bot installs into your workspace (OAuth, any number of workspaces supported)
+🔑 Or link your account with a 6-character code from the app
+
+Everything syncs with the mobile app, the Telegram and WhatsApp bots. Four entry points, one database.
+
+Perfect for teams, freelancers, and anyone with Slack open all workday.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #Slack #budget #finance #AI #team #fintech #business
+```
+
+### 🇵🇱 Polski
+
+```
+💼 Twój zespół żyje w Slacku. Koszty projektów, subskrypcje usług, delegacje — wszystko omawiacie tam. Więc tam też to zapisuj.
+
+AI Budget Assistant od teraz działa w Slacku. Pełen zestaw funkcji, prosto w DM z botem.
+
+Co potrafi:
+💬 Czat z AI — „ile poszło na reklamy w tym miesiącu?", „stwórz budżet na oprogramowanie 1000 zł miesięcznie"
+🗣 Wiadomości głosowe — powiedz wydatek na głos, bot przepisze przez Whisper
+📸 Zdjęcia paragonów — wyślij skan, OCR odczyta kwotę, datę i sklep
+✅ Potwierdzenie przyciskami — przed zapisem bot pokazuje „Utwórz / Anuluj" przez Block Kit. Nic nie zapisze się przypadkiem.
+💭 Widać, że bot myśli — przy dłuższych operacjach pojawia się wskaźnik, a potem zastępuje go odpowiedź
+
+Podłączenie w minutę:
+🔗 Kliknij „Add to Slack" — bot instaluje się w twoim workspace (OAuth, dowolna liczba workspace'ów)
+🔑 Albo połącz konto 6-znakowym kodem z aplikacji
+
+Wszystko synchronizuje się z aplikacją mobilną, botami na Telegramie i WhatsAppie. Cztery punkty wejścia, jedna baza.
+
+Idealne dla zespołów, freelancerów i każdego, kto ma Slacka otwartego cały dzień pracy.
+
+👉 https://play.google.com/store/apps/details?id=com.budget.assistant
+
+#AIBudgetAssistant #Slack #budżet #finanse #AI #zespół #fintech #biznes
 ```
