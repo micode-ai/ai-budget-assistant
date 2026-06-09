@@ -1,15 +1,12 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Modal,
-  FlatList,
   Share,
 } from 'react-native';
-import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,55 +16,46 @@ import { LineChart } from 'react-native-gifted-charts';
 import { Dimensions } from 'react-native';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
-import { useSubscriptionStore } from '@/stores/subscriptionStore';
-import { useScenarioStore, type SavedScenario } from '@/stores/scenarioStore';
 import { formatCurrency } from '@budget/shared-utils';
 import {
   useScenarioProjection,
   type ExtraIncome,
 } from '@/features/scenario/useScenarioProjection';
+import { useScenarioChartData } from '@/features/scenario/useScenarioChartData';
+import { ScenarioManager } from '@/components/scenario/ScenarioManager';
+import { type SavedScenario } from '@/stores/scenarioStore';
 import { generateUUID } from '@budget/shared-utils';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 type Horizon = 3 | 6 | 12;
+const HORIZONS: Horizon[] = [3, 6, 12];
 
 export default function ScenarioSimulatorScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
-  const isPro = useSubscriptionStore(s => s.isPro());
-  const { scenarios, saveScenario, deleteScenario, canSave } = useScenarioStore();
 
-  // Adjustments state: categoryId -> percent change (-100..100)
   const [expenseAdj, setExpenseAdj] = useState<Record<string, number>>({});
   const [incomeAdj, setIncomeAdj] = useState<Record<string, number>>({});
   const [extraIncomes, setExtraIncomes] = useState<ExtraIncome[]>([]);
   const [horizon, setHorizon] = useState<Horizon>(6);
-  // Disable ScrollView while a slider is being dragged
   const [scrollEnabled, setScrollEnabled] = useState(true);
 
-  // Save modal state
-  const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [scenarioName, setScenarioName] = useState('');
-
-  // Load modal state
-  const [loadModalVisible, setLoadModalVisible] = useState(false);
-
   const projection = useScenarioProjection(expenseAdj, incomeAdj, extraIncomes, horizon);
+  const { chartData, chartData2 } = useScenarioChartData(projection.projectionPoints);
 
   const currency = projection.baseCurrency || user?.currencyCode || 'USD';
+  const fmt = (amount: number) => formatCurrency(Math.abs(amount), currency as never);
+  const fmtSigned = (amount: number) => `${amount >= 0 ? '+' : '−'}${fmt(amount)}`;
 
-  // --- Handlers ---
   const handleExpenseSlider = useCallback((catId: string | null, value: number) => {
-    const key = catId ?? 'null';
-    setExpenseAdj(prev => ({ ...prev, [key]: Math.round(value) }));
+    setExpenseAdj(prev => ({ ...prev, [catId ?? 'null']: Math.round(value) }));
   }, []);
 
   const handleIncomeSlider = useCallback((catId: string | null, value: number) => {
-    const key = catId ?? 'null';
-    setIncomeAdj(prev => ({ ...prev, [key]: Math.round(value) }));
+    setIncomeAdj(prev => ({ ...prev, [catId ?? 'null']: Math.round(value) }));
   }, []);
 
   const handleAddExtraIncome = useCallback(() => {
@@ -94,56 +82,12 @@ export default function ScenarioSimulatorScreen() {
     setExtraIncomes([]);
   }, []);
 
-  // --- Save ---
-  const handleSavePress = useCallback(() => {
-    if (!canSave(isPro)) {
-      showAlert(
-        t('scenarioSimulator.savedScenarios'),
-        t('scenarioSimulator.scenarioLimitFree'),
-      );
-      return;
-    }
-    setScenarioName('');
-    setSaveModalVisible(true);
-  }, [canSave, isPro, t]);
-
-  const handleConfirmSave = useCallback(() => {
-    const result = saveScenario(scenarioName, { expenseAdj, incomeAdj, extraIncomes, horizon }, isPro);
-    setSaveModalVisible(false);
-    if (result === 'ok') {
-      showAlert('', t('scenarioSimulator.scenarioSaved'));
-    } else {
-      showAlert(
-        t('scenarioSimulator.savedScenarios'),
-        t('scenarioSimulator.scenarioLimitFree'),
-      );
-    }
-  }, [saveScenario, scenarioName, expenseAdj, incomeAdj, extraIncomes, horizon, isPro, t]);
-
-  // --- Load ---
   const handleLoadScenario = useCallback((scenario: SavedScenario) => {
     setExpenseAdj(scenario.expenseAdj);
     setIncomeAdj(scenario.incomeAdj);
     setExtraIncomes(scenario.extraIncomes);
     setHorizon(scenario.horizon);
-    setLoadModalVisible(false);
   }, []);
-
-  const handleDeleteScenario = useCallback((id: string) => {
-    showAlert(
-      t('scenarioSimulator.deleteScenario'),
-      t('common.deleteConfirmMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('common.delete'), style: 'destructive', onPress: () => deleteScenario(id) },
-      ],
-    );
-  }, [deleteScenario, t]);
-
-  // --- Share ---
-  const fmt = (amount: number) => formatCurrency(Math.abs(amount), currency as never);
-  const fmtSigned = (amount: number) =>
-    `${amount >= 0 ? '+' : '−'}${fmt(amount)}`;
 
   const handleShare = useCallback(async () => {
     const savingsDiff = projection.monthlySavingsDiff;
@@ -165,26 +109,9 @@ export default function ScenarioSimulatorScreen() {
     }
   }, [projection, horizon, t, fmt, fmtSigned]);
 
-  // --- Chart data ---
-  const chartData = useMemo(() => {
-    return projection.projectionPoints.map(p => ({
-      value: Math.max(0, p.currentCumulative),
-      label: p.label,
-    }));
-  }, [projection.projectionPoints]);
-
-  const chartData2 = useMemo(() => {
-    return projection.projectionPoints.map(p => ({
-      value: Math.max(0, p.scenarioCumulative),
-      label: p.label,
-    }));
-  }, [projection.projectionPoints]);
-
   const chartWidth = screenWidth - 64;
   const savingsDiff = projection.monthlySavingsDiff;
   const diffIsPositive = savingsDiff >= 0;
-
-  const HORIZONS: Horizon[] = [3, 6, 12];
 
   if (!projection.hasData) {
     return (
@@ -200,26 +127,14 @@ export default function ScenarioSimulatorScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding"
-      >
-        {/* ── Action bar ── */}
-        <View style={styles.actionBar}>
-          <TouchableOpacity style={styles.actionBarBtn} onPress={() => setLoadModalVisible(true)}>
-            <Ionicons name="folder-outline" size={20} color={theme.colors.primary} />
-            <Text style={styles.actionBarBtnText}>{t('scenarioSimulator.savedScenarios')}</Text>
-            {scenarios.length > 0 && (
-              <View style={styles.scenarioBadge}>
-                <Text style={styles.scenarioBadgeText}>{scenarios.length}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBarBtn} onPress={handleSavePress}>
-            <Ionicons name="bookmark-outline" size={20} color={theme.colors.primary} />
-            <Text style={styles.actionBarBtnText}>{t('scenarioSimulator.saveScenario')}</Text>
-          </TouchableOpacity>
-        </View>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <ScenarioManager
+          expenseAdj={expenseAdj}
+          incomeAdj={incomeAdj}
+          extraIncomes={extraIncomes}
+          horizon={horizon}
+          onLoad={handleLoadScenario}
+        />
 
         <ScrollView
           style={styles.scrollView}
@@ -231,9 +146,7 @@ export default function ScenarioSimulatorScreen() {
           <View style={styles.summaryCard}>
             <View style={styles.summaryHalf}>
               <Text style={styles.summaryLabel}>{t('scenarioSimulator.currentSavings')}</Text>
-              <Text style={styles.summaryAmount}>
-                {fmtSigned(projection.currentMonthlySavings)}
-              </Text>
+              <Text style={styles.summaryAmount}>{fmtSigned(projection.currentMonthlySavings)}</Text>
               <Text style={styles.summarySubLabel}>{t('scenarioSimulator.perMonth')}</Text>
             </View>
             <View style={styles.summaryDivider} />
@@ -357,9 +270,7 @@ export default function ScenarioSimulatorScreen() {
                       pct < 0 && { color: theme.colors.success },
                       pct > 0 && { color: theme.colors.danger },
                     ]}>
-                      {pct === 0
-                        ? t('scenarioSimulator.unchanged')
-                        : `${pct > 0 ? '+' : ''}${pct}%`}
+                      {pct === 0 ? t('scenarioSimulator.unchanged') : `${pct > 0 ? '+' : ''}${pct}%`}
                     </Text>
                     {pct !== 0 && (
                       <Text style={styles.categoryResult}>
@@ -400,9 +311,7 @@ export default function ScenarioSimulatorScreen() {
                       pct > 0 && { color: theme.colors.success },
                       pct < 0 && { color: theme.colors.danger },
                     ]}>
-                      {pct === 0
-                        ? t('scenarioSimulator.unchanged')
-                        : `${pct > 0 ? '+' : ''}${pct}%`}
+                      {pct === 0 ? t('scenarioSimulator.unchanged') : `${pct > 0 ? '+' : ''}${pct}%`}
                     </Text>
                     {pct !== 0 && (
                       <Text style={styles.categoryResult}>
@@ -462,93 +371,6 @@ export default function ScenarioSimulatorScreen() {
           <View style={{ height: 40 }} />
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {/* ── Save Modal ── */}
-      <Modal
-        visible={saveModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setSaveModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <KeyboardAvoidingView behavior="padding">
-            <View style={styles.modalCard}>
-              <Text style={styles.modalTitle}>{t('scenarioSimulator.saveScenario')}</Text>
-              <TextInput
-                style={styles.modalInput}
-                placeholder={t('scenarioSimulator.saveNamePlaceholder')}
-                placeholderTextColor={theme.colors.textTertiary}
-                value={scenarioName}
-                onChangeText={setScenarioName}
-                autoFocus
-                returnKeyType="done"
-                onSubmitEditing={handleConfirmSave}
-              />
-              <View style={styles.modalActions}>
-                <TouchableOpacity style={styles.modalCancel} onPress={() => setSaveModalVisible(false)}>
-                  <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalSave} onPress={handleConfirmSave}>
-                  <Text style={styles.modalSaveText}>{t('common.save')}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-        </View>
-      </Modal>
-
-      {/* ── Load Modal ── */}
-      <Modal
-        visible={loadModalVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setLoadModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.loadSheet}>
-            <View style={styles.loadSheetHandle} />
-            <Text style={styles.loadSheetTitle}>{t('scenarioSimulator.savedScenarios')}</Text>
-            {scenarios.length === 0 ? (
-              <View style={styles.loadEmptyState}>
-                <Ionicons name="folder-open-outline" size={40} color={theme.colors.textDisabled} />
-                <Text style={styles.loadEmptyText}>{t('scenarioSimulator.noSavedScenarios')}</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={scenarios}
-                keyExtractor={s => s.id}
-                style={styles.loadList}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.loadRow}
-                    onPress={() => handleLoadScenario(item)}
-                  >
-                    <View style={styles.loadRowContent}>
-                      <Ionicons name="bookmark" size={16} color={theme.colors.primary} />
-                      <View style={styles.loadRowText}>
-                        <Text style={styles.loadRowName} numberOfLines={1}>{item.name}</Text>
-                        <Text style={styles.loadRowDate}>
-                          {new Date(item.createdAt).toLocaleDateString()}
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => handleDeleteScenario(item.id)}
-                      style={styles.loadRowDelete}
-                    >
-                      <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                )}
-                ItemSeparatorComponent={() => <View style={styles.loadSeparator} />}
-              />
-            )}
-            <TouchableOpacity style={styles.loadCloseBtn} onPress={() => setLoadModalVisible(false)}>
-              <Text style={styles.loadCloseBtnText}>{t('common.done')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }
@@ -564,46 +386,6 @@ const createStyles = (theme: Theme) => ({
   content: {
     padding: theme.spacing[4],
   },
-
-  // Action bar
-  actionBar: {
-    flexDirection: 'row' as const,
-    gap: theme.spacing[2],
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.borderLight,
-    backgroundColor: theme.colors.background,
-  },
-  actionBarBtn: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[1],
-    paddingVertical: theme.spacing[1],
-    paddingHorizontal: theme.spacing[2],
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.primaryLight,
-  },
-  actionBarBtnText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.primary,
-  },
-  scenarioBadge: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: 10,
-    minWidth: 18,
-    height: 18,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingHorizontal: 4,
-  },
-  scenarioBadgeText: {
-    ...theme.textStyles.caption,
-    color: '#fff',
-    fontSize: 11,
-  },
-
-  // Empty state
   emptyContainer: {
     flex: 1,
     alignItems: 'center' as const,
@@ -621,8 +403,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
     textAlign: 'center' as const,
   },
-
-  // Summary card
   summaryCard: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
@@ -657,8 +437,6 @@ const createStyles = (theme: Theme) => ({
     marginTop: theme.spacing[0.5],
     textAlign: 'center' as const,
   },
-
-  // Horizon selector
   horizonRow: {
     flexDirection: 'row' as const,
     gap: theme.spacing[2],
@@ -684,8 +462,6 @@ const createStyles = (theme: Theme) => ({
   horizonChipTextActive: {
     color: '#fff',
   },
-
-  // Chart card
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
@@ -718,8 +494,6 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textSecondary,
   },
-
-  // Horizon totals
   horizonTotalsRow: {
     flexDirection: 'row' as const,
     gap: theme.spacing[2],
@@ -757,15 +531,11 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.success,
     marginTop: 2,
   },
-
-  // Section group title
   groupTitle: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
     marginBottom: theme.spacing[2],
   },
-
-  // Category rows inside card
   categoryRow: {
     paddingVertical: theme.spacing[3],
   },
@@ -808,8 +578,6 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
   },
-
-  // Extra income
   extraIncomeRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
@@ -844,8 +612,6 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     color: theme.colors.primary,
   },
-
-  // Bottom actions row
   bottomActionsRow: {
     flexDirection: 'row' as const,
     gap: theme.spacing[2],
@@ -869,147 +635,5 @@ const createStyles = (theme: Theme) => ({
   bottomBtnText: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textSecondary,
-  },
-
-  // Save modal
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-    padding: theme.spacing[6],
-  },
-  modalCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing[5],
-    width: '100%' as const,
-    gap: theme.spacing[4],
-  },
-  modalTitle: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-    textAlign: 'center' as const,
-  },
-  modalInput: {
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.md,
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
-    ...theme.textStyles.body,
-    color: theme.colors.textPrimary,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  modalActions: {
-    flexDirection: 'row' as const,
-    gap: theme.spacing[3],
-  },
-  modalCancel: {
-    flex: 1,
-    paddingVertical: theme.spacing[3],
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    alignItems: 'center' as const,
-  },
-  modalCancelText: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textSecondary,
-  },
-  modalSave: {
-    flex: 1,
-    paddingVertical: theme.spacing[3],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.primary,
-    alignItems: 'center' as const,
-  },
-  modalSaveText: {
-    ...theme.textStyles.bodyMedium,
-    color: '#fff',
-  },
-
-  // Load sheet
-  loadSheet: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing[5],
-    width: '100%' as const,
-    maxHeight: '80%' as any,
-    alignSelf: 'flex-end' as const,
-    position: 'absolute' as const,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingBottom: theme.spacing[8],
-  },
-  loadSheetHandle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
-  },
-  loadSheetTitle: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[4],
-  },
-  loadList: {
-    maxHeight: 320,
-  },
-  loadEmptyState: {
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[8],
-    gap: theme.spacing[3],
-  },
-  loadEmptyText: {
-    ...theme.textStyles.body,
-    color: theme.colors.textSecondary,
-    textAlign: 'center' as const,
-  },
-  loadRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[3],
-    justifyContent: 'space-between' as const,
-  },
-  loadRowContent: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[3],
-    flex: 1,
-  },
-  loadRowText: {
-    flex: 1,
-  },
-  loadRowName: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
-  },
-  loadRowDate: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textSecondary,
-    marginTop: 2,
-  },
-  loadRowDelete: {
-    padding: theme.spacing[2],
-    marginLeft: theme.spacing[2],
-  },
-  loadSeparator: {
-    height: 1,
-    backgroundColor: theme.colors.borderLight,
-  },
-  loadCloseBtn: {
-    marginTop: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.surfaceSecondary,
-    alignItems: 'center' as const,
-  },
-  loadCloseBtnText: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
   },
 });
