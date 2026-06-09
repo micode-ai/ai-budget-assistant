@@ -396,7 +396,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
-          if (biometricEnabled === 'true') {
+          // Web has no biometric (useBiometric.web is a no-op) and initialize()
+          // never gates a web reload behind it — so on web we MUST fully clear
+          // the tokens here, otherwise logout keeps them and the next refresh
+          // restores the session ("logged in again after logout").
+          if (biometricEnabled === 'true' && Platform.OS !== 'web') {
             // Keep tokens in storage for biometric re-login
             set({
               user: null,
