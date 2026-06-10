@@ -1,318 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Linking,
 } from 'react-native';
-import { showAlert } from '@/utils/alert';
-
-const API_ORIGIN = (process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1').replace(
-  /\/api(\/v1)?\/?$/,
-  '',
-);
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import * as Clipboard from 'expo-clipboard';
 import { useTranslation } from 'react-i18next';
-import { useFocusEffect } from 'expo-router';
 import QRCode from 'react-native-qrcode-svg';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { api } from '@/services/api';
-
-// ── WhatsApp types (moved verbatim from whatsapp.tsx) ──────────────────────
-
-interface WhatsAppStatus {
-  linked: boolean;
-  waPhoneNumber?: string;
-  waProfileName?: string | null;
-  linkedAt?: string;
-}
-
-interface LinkCodeState {
-  code: string;
-  expiresAt: string;
-  waPhoneNumber: string;
-}
-
-interface SlackStatus {
-  linked: boolean;
-  slackProfileName?: string;
-  linkedAt?: string;
-}
-
-interface SlackLinkCodeState {
-  code: string;
-  expiresAt: string;
-}
-
-// ── Screen ──────────────────────────────────────────────────────────────────
+import { useTelegramBot } from '@/hooks/useTelegramBot';
+import { useWhatsAppBot } from '@/hooks/useWhatsAppBot';
+import { useSlackBot } from '@/hooks/useSlackBot';
 
 export default function BotsSettingsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  // ── Telegram state (moved verbatim from notifications.tsx) ────────────────
-
-  const [telegramLinked, setTelegramLinked] = useState(false);
-  const [telegramUsername, setTelegramUsername] = useState<string | null>(null);
-  const [telegramLinkCode, setTelegramLinkCode] = useState<string | null>(null);
-  const [telegramBotUsername, setTelegramBotUsername] = useState<string>('');
-  const [telegramLoading, setTelegramLoading] = useState(false);
-
-  const loadTelegramStatus = useCallback(async () => {
-    try {
-      const status = await api.getTelegramLinkStatus();
-      setTelegramLinked(status.linked);
-      setTelegramUsername(status.telegramUsername || null);
-    } catch {
-      // Ignore — telegram feature may not be available
-    }
-  }, []);
-
-  useEffect(() => {
-    loadTelegramStatus();
-  }, [loadTelegramStatus]);
-
-  const handleGenerateTelegramCode = async () => {
-    setTelegramLoading(true);
-    try {
-      const result = await api.generateTelegramLinkCode();
-      setTelegramLinkCode(result.code);
-      setTelegramBotUsername(result.botUsername);
-    } catch (e) {
-      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-    } finally {
-      setTelegramLoading(false);
-    }
-  };
-
-  const handleCopyTelegramCode = async () => {
-    if (telegramLinkCode) {
-      await Clipboard.setStringAsync(telegramLinkCode);
-      showAlert(t('settings.telegram.codeCopied'));
-    }
-  };
-
-  const handleUnlinkTelegram = async () => {
-    showAlert(
-      t('settings.telegram.disconnect'),
-      t('settings.telegram.disconnectConfirm'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('settings.telegram.disconnect'),
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await api.unlinkTelegram();
-              setTelegramLinked(false);
-              setTelegramUsername(null);
-              setTelegramLinkCode(null);
-            } catch (e) {
-              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-            }
-          },
-        },
-      ],
-    );
-  };
-
-  // ── Slack state ──────────────────────────────────────────────────────────
-
-  const [slackStatus, setSlackStatus] = useState<SlackStatus | null>(null);
-  const [slackLinkCode, setSlackLinkCode] = useState<SlackLinkCodeState | null>(null);
-  const [slackStatusLoading, setSlackStatusLoading] = useState(true);
-  const [slackCodeLoading, setSlackCodeLoading] = useState(false);
-  const [slackUnlinkLoading, setSlackUnlinkLoading] = useState(false);
-
-  const loadSlackStatus = useCallback(async () => {
-    try {
-      const result = await api.getSlackLinkStatus();
-      setSlackStatus(result);
-      if (result.linked) {
-        setSlackLinkCode(null);
-      }
-    } catch {
-      // Ignore — feature may not be available yet
-    } finally {
-      setSlackStatusLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadSlackStatus();
-  }, [loadSlackStatus]);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadSlackStatus();
-    }, [loadSlackStatus]),
-  );
-
-  const handleGenerateSlackCode = async () => {
-    setSlackCodeLoading(true);
-    try {
-      const result = await api.generateSlackLinkCode();
-      setSlackLinkCode(result);
-    } catch (e) {
-      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-    } finally {
-      setSlackCodeLoading(false);
-    }
-  };
-
-  const handleCopySlackCode = async () => {
-    if (!slackLinkCode) return;
-    await Clipboard.setStringAsync(slackLinkCode.code);
-    showAlert('', t('slackBot.copyCode'));
-  };
-
-  const handleSlackRefresh = async () => {
-    setSlackStatusLoading(true);
-    await loadSlackStatus();
-  };
-
-  const handleOpenSlack = () => {
-    Linking.canOpenURL('slack://open').then((supported) => {
-      if (supported) {
-        Linking.openURL('slack://open').catch(() => {
-          showAlert(t('common.error'), t('errors.unknown'));
-        });
-      }
-    });
-  };
-
-  const handleAddToSlack = () => {
-    Linking.openURL(`${API_ORIGIN}/slack/install`).catch(() => {
-      showAlert(t('common.error'), t('errors.unknown'));
-    });
-  };
-
-  const handleUnlinkSlack = () => {
-    showAlert(
-      t('slackBot.confirmDisconnect'),
-      '',
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('slackBot.disconnectButton'),
-          style: 'destructive',
-          onPress: async () => {
-            setSlackUnlinkLoading(true);
-            try {
-              await api.unlinkSlack();
-              setSlackStatus({ linked: false });
-              setSlackLinkCode(null);
-            } catch (e) {
-              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-            } finally {
-              setSlackUnlinkLoading(false);
-            }
-          },
-        },
-      ],
-    );
-  };
-
-  // ── WhatsApp state (moved verbatim from whatsapp.tsx) ────────────────────
-
-  const [waStatus, setWaStatus] = useState<WhatsAppStatus | null>(null);
-  const [linkCode, setLinkCode] = useState<LinkCodeState | null>(null);
-  const [waStatusLoading, setWaStatusLoading] = useState(true);
-  const [waCodeLoading, setWaCodeLoading] = useState(false);
-  const [waUnlinkLoading, setWaUnlinkLoading] = useState(false);
-
-  const loadWaStatus = useCallback(async () => {
-    try {
-      const result = await api.getWhatsAppLinkStatus();
-      setWaStatus(result);
-      if (result.linked) {
-        setLinkCode(null);
-      }
-    } catch {
-      // Ignore — feature may not be available yet
-    } finally {
-      setWaStatusLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadWaStatus();
-  }, [loadWaStatus]);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadWaStatus();
-    }, [loadWaStatus]),
-  );
-
-  const handleGenerateWaCode = async () => {
-    setWaCodeLoading(true);
-    try {
-      const result = await api.generateWhatsAppLinkCode();
-      setLinkCode(result);
-    } catch (e) {
-      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-    } finally {
-      setWaCodeLoading(false);
-    }
-  };
-
-  const buildWaMeUrl = (waPhoneNumber: string, code: string) => {
-    const phoneDigits = waPhoneNumber.replace(/^\+/, '');
-    return `https://wa.me/${phoneDigits}?text=link%20${code}`;
-  };
-
-  const handleOpenWhatsApp = () => {
-    if (!linkCode) return;
-    const url = buildWaMeUrl(linkCode.waPhoneNumber, linkCode.code);
-    Linking.openURL(url).catch(() => {
-      showAlert(t('common.error'), t('errors.unknown'));
-    });
-  };
-
-  const handleCopyWaCode = async () => {
-    if (!linkCode) return;
-    await Clipboard.setStringAsync(linkCode.code);
-    showAlert('', t('whatsappBot.copyCode'));
-  };
-
-  const handleWaRefresh = async () => {
-    setWaStatusLoading(true);
-    await loadWaStatus();
-  };
-
-  const handleUnlinkWa = () => {
-    showAlert(
-      t('whatsappBot.confirmDisconnect'),
-      '',
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('whatsappBot.disconnectButton'),
-          style: 'destructive',
-          onPress: async () => {
-            setWaUnlinkLoading(true);
-            try {
-              await api.unlinkWhatsApp();
-              setWaStatus({ linked: false });
-              setLinkCode(null);
-            } catch (e) {
-              showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
-            } finally {
-              setWaUnlinkLoading(false);
-            }
-          },
-        },
-      ],
-    );
-  };
-
-  // ── Render ────────────────────────────────────────────────────────────────
+  const telegram = useTelegramBot();
+  const whatsapp = useWhatsAppBot();
+  const slack = useSlackBot();
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -322,19 +32,19 @@ export default function BotsSettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.telegram.title')}</Text>
           <View style={styles.card}>
-            {telegramLinked ? (
+            {telegram.linked ? (
               <>
                 <View style={styles.fieldRow}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.fieldLabel}>{t('settings.telegram.linked')}</Text>
-                    {telegramUsername && (
-                      <Text style={styles.fieldDesc}>@{telegramUsername}</Text>
+                    {telegram.username && (
+                      <Text style={styles.fieldDesc}>@{telegram.username}</Text>
                     )}
                   </View>
                   <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
                 </View>
                 <View style={styles.divider} />
-                <TouchableOpacity style={styles.fieldRow} onPress={handleUnlinkTelegram}>
+                <TouchableOpacity style={styles.fieldRow} onPress={telegram.unlink}>
                   <Text style={[styles.fieldLabel, { color: theme.colors.danger }]}>
                     {t('settings.telegram.disconnect')}
                   </Text>
@@ -345,7 +55,7 @@ export default function BotsSettingsScreen() {
                 <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[3] }]}>
                   {t('settings.telegram.description')}
                 </Text>
-                {telegramLinkCode ? (
+                {telegram.linkCode ? (
                   <>
                     <TouchableOpacity
                       style={[
@@ -356,7 +66,7 @@ export default function BotsSettingsScreen() {
                           padding: theme.spacing[3],
                         },
                       ]}
-                      onPress={handleCopyTelegramCode}
+                      onPress={telegram.copyCode}
                     >
                       <View style={{ flex: 1 }}>
                         <Text
@@ -365,7 +75,7 @@ export default function BotsSettingsScreen() {
                             { fontSize: 24, letterSpacing: 4, textAlign: 'center' },
                           ]}
                         >
-                          {telegramLinkCode}
+                          {telegram.linkCode}
                         </Text>
                         <Text
                           style={[
@@ -379,17 +89,17 @@ export default function BotsSettingsScreen() {
                     </TouchableOpacity>
                     <Text style={[styles.fieldDesc, { marginTop: theme.spacing[3] }]}>
                       {t('settings.telegram.linkInstructions', {
-                        botUsername: telegramBotUsername || 'BudgetBot',
+                        botUsername: telegram.botUsername || 'BudgetBot',
                       })}
                     </Text>
                   </>
                 ) : (
                   <TouchableOpacity
                     style={[styles.fieldRow, { justifyContent: 'center' }]}
-                    onPress={handleGenerateTelegramCode}
-                    disabled={telegramLoading}
+                    onPress={telegram.generateCode}
+                    disabled={telegram.loading}
                   >
-                    {telegramLoading ? (
+                    {telegram.loading ? (
                       <ActivityIndicator size="small" color={theme.colors.primary} />
                     ) : (
                       <>
@@ -415,22 +125,22 @@ export default function BotsSettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('whatsappBot.title')}</Text>
 
-          {waStatusLoading ? (
+          {whatsapp.statusLoading ? (
             <View style={[styles.card, styles.centered]}>
               <ActivityIndicator size="small" color={theme.colors.primary} />
             </View>
-          ) : waStatus?.linked ? (
+          ) : whatsapp.status?.linked ? (
             /* ── Linked state ── */
             <View style={styles.card}>
               <View style={styles.fieldRow}>
                 <View style={styles.fieldInfo}>
                   <Text style={styles.fieldLabel}>
                     {t('whatsappBot.linkedAs', {
-                      name: waStatus.waProfileName ?? waStatus.waPhoneNumber ?? '',
+                      name: whatsapp.status.waProfileName ?? whatsapp.status.waPhoneNumber ?? '',
                     })}
                   </Text>
-                  {waStatus.waPhoneNumber && waStatus.waProfileName && (
-                    <Text style={styles.fieldDesc}>{waStatus.waPhoneNumber}</Text>
+                  {whatsapp.status.waPhoneNumber && whatsapp.status.waProfileName && (
+                    <Text style={styles.fieldDesc}>{whatsapp.status.waPhoneNumber}</Text>
                   )}
                 </View>
                 <Ionicons name="checkmark-circle" size={24} color={theme.colors.success} />
@@ -440,8 +150,8 @@ export default function BotsSettingsScreen() {
 
               <TouchableOpacity
                 style={styles.fieldRow}
-                onPress={handleWaRefresh}
-                disabled={waStatusLoading}
+                onPress={whatsapp.refresh}
+                disabled={whatsapp.statusLoading}
               >
                 <Ionicons
                   name="refresh-outline"
@@ -458,10 +168,10 @@ export default function BotsSettingsScreen() {
 
               <TouchableOpacity
                 style={styles.fieldRow}
-                onPress={handleUnlinkWa}
-                disabled={waUnlinkLoading}
+                onPress={whatsapp.unlink}
+                disabled={whatsapp.unlinkLoading}
               >
-                {waUnlinkLoading ? (
+                {whatsapp.unlinkLoading ? (
                   <ActivityIndicator size="small" color={theme.colors.danger} />
                 ) : (
                   <>
@@ -481,7 +191,7 @@ export default function BotsSettingsScreen() {
           ) : (
             /* ── Not linked state ── */
             <View style={styles.card}>
-              {linkCode ? (
+              {whatsapp.linkCode ? (
                 <>
                   <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[4] }]}>
                     {t('whatsappBot.codeInstructions')}
@@ -490,7 +200,7 @@ export default function BotsSettingsScreen() {
                   {/* QR code */}
                   <View style={styles.qrContainer}>
                     <QRCode
-                      value={buildWaMeUrl(linkCode.waPhoneNumber, linkCode.code)}
+                      value={whatsapp.getQrUrl()}
                       size={220}
                       backgroundColor={theme.colors.surface}
                       color={theme.colors.textPrimary}
@@ -499,11 +209,11 @@ export default function BotsSettingsScreen() {
 
                   {/* Code text */}
                   <View style={styles.codeBox}>
-                    <Text style={styles.codeText}>{linkCode.code}</Text>
+                    <Text style={styles.codeText}>{whatsapp.linkCode.code}</Text>
                   </View>
 
                   {/* Action buttons */}
-                  <TouchableOpacity style={styles.primaryButton} onPress={handleOpenWhatsApp}>
+                  <TouchableOpacity style={styles.primaryButton} onPress={whatsapp.openWhatsApp}>
                     <Ionicons
                       name="logo-whatsapp"
                       size={20}
@@ -513,7 +223,7 @@ export default function BotsSettingsScreen() {
                     <Text style={styles.primaryButtonText}>{t('whatsappBot.openButton')}</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.secondaryButton} onPress={handleCopyWaCode}>
+                  <TouchableOpacity style={styles.secondaryButton} onPress={whatsapp.copyCode}>
                     <Ionicons
                       name="copy-outline"
                       size={18}
@@ -525,7 +235,7 @@ export default function BotsSettingsScreen() {
 
                   <View style={styles.divider} />
 
-                  <TouchableOpacity style={styles.fieldRow} onPress={handleWaRefresh}>
+                  <TouchableOpacity style={styles.fieldRow} onPress={whatsapp.refresh}>
                     <Ionicons
                       name="refresh-outline"
                       size={18}
@@ -547,10 +257,10 @@ export default function BotsSettingsScreen() {
                   </Text>
                   <TouchableOpacity
                     style={[styles.fieldRow, { justifyContent: 'center' }]}
-                    onPress={handleGenerateWaCode}
-                    disabled={waCodeLoading}
+                    onPress={whatsapp.generateCode}
+                    disabled={whatsapp.codeLoading}
                   >
-                    {waCodeLoading ? (
+                    {whatsapp.codeLoading ? (
                       <ActivityIndicator size="small" color={theme.colors.primary} />
                     ) : (
                       <>
@@ -576,18 +286,18 @@ export default function BotsSettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('slackBot.title')}</Text>
 
-          {slackStatusLoading ? (
+          {slack.statusLoading ? (
             <View style={[styles.card, styles.centered]}>
               <ActivityIndicator size="small" color={theme.colors.primary} />
             </View>
-          ) : slackStatus?.linked ? (
+          ) : slack.status?.linked ? (
             /* ── Linked state ── */
             <View style={styles.card}>
               <View style={styles.fieldRow}>
                 <View style={styles.fieldInfo}>
                   <Text style={styles.fieldLabel}>
-                    {slackStatus.slackProfileName
-                      ? t('slackBot.linkedAs', { name: slackStatus.slackProfileName })
+                    {slack.status.slackProfileName
+                      ? t('slackBot.linkedAs', { name: slack.status.slackProfileName })
                       : t('slackBot.linked')}
                   </Text>
                 </View>
@@ -598,8 +308,8 @@ export default function BotsSettingsScreen() {
 
               <TouchableOpacity
                 style={styles.fieldRow}
-                onPress={handleSlackRefresh}
-                disabled={slackStatusLoading}
+                onPress={slack.refresh}
+                disabled={slack.statusLoading}
               >
                 <Ionicons
                   name="refresh-outline"
@@ -616,10 +326,10 @@ export default function BotsSettingsScreen() {
 
               <TouchableOpacity
                 style={styles.fieldRow}
-                onPress={handleUnlinkSlack}
-                disabled={slackUnlinkLoading}
+                onPress={slack.unlink}
+                disabled={slack.unlinkLoading}
               >
-                {slackUnlinkLoading ? (
+                {slack.unlinkLoading ? (
                   <ActivityIndicator size="small" color={theme.colors.danger} />
                 ) : (
                   <>
@@ -639,19 +349,19 @@ export default function BotsSettingsScreen() {
           ) : (
             /* ── Not linked state ── */
             <View style={styles.card}>
-              {slackLinkCode ? (
+              {slack.linkCode ? (
                 <>
                   <Text style={[styles.fieldDesc, { marginBottom: theme.spacing[4] }]}>
-                    {t('slackBot.codeInstructions', { code: slackLinkCode.code })}
+                    {t('slackBot.codeInstructions', { code: slack.linkCode.code })}
                   </Text>
 
                   {/* Code text */}
                   <View style={styles.codeBox}>
-                    <Text style={styles.codeText}>{slackLinkCode.code}</Text>
+                    <Text style={styles.codeText}>{slack.linkCode.code}</Text>
                   </View>
 
                   {/* Action buttons */}
-                  <TouchableOpacity style={[styles.primaryButton, { backgroundColor: '#4A154B' }]} onPress={handleOpenSlack}>
+                  <TouchableOpacity style={[styles.primaryButton, { backgroundColor: '#4A154B' }]} onPress={slack.openSlack}>
                     <Ionicons
                       name="logo-slack"
                       size={20}
@@ -661,7 +371,7 @@ export default function BotsSettingsScreen() {
                     <Text style={styles.primaryButtonText}>{t('slackBot.openButton')}</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.secondaryButton} onPress={handleCopySlackCode}>
+                  <TouchableOpacity style={styles.secondaryButton} onPress={slack.copyCode}>
                     <Ionicons
                       name="copy-outline"
                       size={18}
@@ -673,7 +383,7 @@ export default function BotsSettingsScreen() {
 
                   <View style={styles.divider} />
 
-                  <TouchableOpacity style={styles.fieldRow} onPress={handleSlackRefresh}>
+                  <TouchableOpacity style={styles.fieldRow} onPress={slack.refresh}>
                     <Ionicons
                       name="refresh-outline"
                       size={18}
@@ -690,7 +400,7 @@ export default function BotsSettingsScreen() {
                   {/* ── Add to Slack (workspace-admin action) ─────────── */}
                   <TouchableOpacity
                     style={[styles.primaryButton, { backgroundColor: '#4A154B', marginBottom: theme.spacing[2] }]}
-                    onPress={handleAddToSlack}
+                    onPress={slack.addToSlack}
                   >
                     <Ionicons
                       name="add-circle-outline"
@@ -715,10 +425,10 @@ export default function BotsSettingsScreen() {
                   </Text>
                   <TouchableOpacity
                     style={[styles.fieldRow, { justifyContent: 'center' }]}
-                    onPress={handleGenerateSlackCode}
-                    disabled={slackCodeLoading}
+                    onPress={slack.generateCode}
+                    disabled={slack.codeLoading}
                   >
-                    {slackCodeLoading ? (
+                    {slack.codeLoading ? (
                       <ActivityIndicator size="small" color={theme.colors.primary} />
                     ) : (
                       <>
