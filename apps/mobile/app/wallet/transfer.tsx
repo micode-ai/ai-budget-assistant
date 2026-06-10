@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { router, Stack } from 'expo-router';
@@ -65,7 +66,7 @@ export default function TransferScreen() {
       if (rate) {
         setExchangeRate(rate.toFixed(4));
         if (fromAmount) {
-          setToAmount((parseFloat(fromAmount) * rate).toFixed(2));
+          setToAmount((parseAmount(fromAmount) * rate).toFixed(2));
         }
       }
     } catch {
@@ -78,7 +79,7 @@ export default function TransferScreen() {
   const onFromAmountChange = (value: string) => {
     setFromAmount(value);
     if (value && exchangeRate) {
-      setToAmount((parseFloat(value) * parseFloat(exchangeRate)).toFixed(2));
+      setToAmount((parseAmount(value) * parseAmount(exchangeRate)).toFixed(2));
     } else {
       setToAmount('');
     }
@@ -87,7 +88,7 @@ export default function TransferScreen() {
   const onToAmountChange = (value: string) => {
     setToAmount(value);
     if (value && exchangeRate) {
-      setFromAmount((parseFloat(value) / parseFloat(exchangeRate)).toFixed(2));
+      setFromAmount((parseAmount(value) / parseAmount(exchangeRate)).toFixed(2));
     } else {
       setFromAmount('');
     }
@@ -96,7 +97,7 @@ export default function TransferScreen() {
   const onRateChange = (value: string) => {
     setExchangeRate(value);
     if (fromAmount && value) {
-      setToAmount((parseFloat(fromAmount) * parseFloat(value)).toFixed(2));
+      setToAmount((parseAmount(fromAmount) * parseAmount(value)).toFixed(2));
     }
   };
 
@@ -110,9 +111,9 @@ export default function TransferScreen() {
       return;
     }
 
-    const from = parseFloat(fromAmount);
-    const to = parseFloat(toAmount);
-    const rate = parseFloat(exchangeRate);
+    const from = parseAmount(fromAmount);
+    const to = parseAmount(toAmount);
+    const rate = parseAmount(exchangeRate);
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));

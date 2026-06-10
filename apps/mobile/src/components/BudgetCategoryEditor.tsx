@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { parseAmount } from '@/utils/amount';
 import {
   View,
   Text,
@@ -64,7 +65,7 @@ export const BudgetCategoryEditor: React.FC<BudgetCategoryEditorProps> = ({
   }, [allocations, onAllocationsChange]);
 
   const updateAmount = useCallback((index: number, amountStr: string) => {
-    const amount = parseFloat(amountStr) || 0;
+    const amount = parseAmount(amountStr) || 0;
     const newAllocations = [...allocations];
     newAllocations[index] = { ...newAllocations[index], amount };
     onAllocationsChange(newAllocations);

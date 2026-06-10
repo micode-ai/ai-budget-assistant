@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -35,9 +36,9 @@ export default function AddTransactionScreen() {
   const [notes, setNotes] = useState('');
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
 
-  const quantityNum = parseFloat(quantity) || 0;
-  const priceNum = parseFloat(pricePerUnit) || 0;
-  const feeNum = parseFloat(fee) || 0;
+  const quantityNum = parseAmount(quantity) || 0;
+  const priceNum = parseAmount(pricePerUnit) || 0;
+  const feeNum = parseAmount(fee) || 0;
   const total = quantityNum * priceNum + feeNum;
 
   const handleSave = () => {

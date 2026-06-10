@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -62,7 +63,7 @@ export default function NewBudgetScreen() {
 
     const numericAmount = budgetMode === 'byCategory'
       ? totalFromAllocations
-      : parseFloat(amount);
+      : parseAmount(amount);
 
     if (!numericAmount || numericAmount <= 0) {
       showAlert(t('common.error'), t('budgetNew.errorAmount'));

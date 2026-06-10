@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -44,7 +45,7 @@ export default function ConverterScreen() {
     setToCurrency(fromCurrency);
   };
 
-  const parsedAmount = parseFloat(amount);
+  const parsedAmount = parseAmount(amount);
   const convertedAmount =
     isFinite(parsedAmount) && parsedAmount > 0 && rate != null && rate > 0
       ? (parsedAmount * rate).toFixed(2)

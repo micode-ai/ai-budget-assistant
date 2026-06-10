@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -65,7 +66,7 @@ export default function NewGoalScreen() {
       return;
     }
 
-    const numericAmount = parseFloat(targetAmount);
+    const numericAmount = parseAmount(targetAmount);
     if (!numericAmount || numericAmount <= 0) {
       showAlert(
         t('common.error'),

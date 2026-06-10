@@ -7,6 +7,7 @@ import {
   Modal,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
@@ -58,7 +59,7 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
   };
 
   const handleSaveItem = () => {
-    const total = parseFloat(itemTotalPrice);
+    const total = parseAmount(itemTotalPrice);
     if (!itemDescription.trim() || isNaN(total) || total <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
@@ -67,15 +68,15 @@ export function ExpenseItemsSection({ expenseId, currencyCode }: ExpenseItemsSec
     if (editingItem) {
       updateExpenseItem(expenseId, editingItem.id, {
         description: itemDescription.trim(),
-        quantity: parseFloat(itemQuantity) || 1,
-        unitPrice: parseFloat(itemUnitPrice) || 0,
+        quantity: parseAmount(itemQuantity) || 1,
+        unitPrice: parseAmount(itemUnitPrice) || 0,
         totalPrice: total,
       });
     } else {
       addExpenseItem(expenseId, {
         description: itemDescription.trim(),
-        quantity: parseFloat(itemQuantity) || 1,
-        unitPrice: parseFloat(itemUnitPrice) || 0,
+        quantity: parseAmount(itemQuantity) || 1,
+        unitPrice: parseAmount(itemUnitPrice) || 0,
         totalPrice: total,
         sortOrder: items.length,
       });
