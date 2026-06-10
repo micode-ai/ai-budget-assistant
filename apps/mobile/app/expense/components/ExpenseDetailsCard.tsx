@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -111,7 +112,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
     useImperativeHandle(ref, () => ({
       triggerSave: async () => {
-        const numericAmount = parseFloat(editAmount);
+        const numericAmount = parseAmount(editAmount);
         if (!numericAmount || numericAmount <= 0) {
           showAlert(t('common.error'), t('validation.invalidAmount'));
           return;

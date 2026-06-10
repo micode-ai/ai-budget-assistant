@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -65,7 +66,7 @@ export default function IncomeDetailScreen() {
   }
 
   const handleSave = () => {
-    const numericAmount = parseFloat(editAmount);
+    const numericAmount = parseAmount(editAmount);
     if (!numericAmount || numericAmount <= 0) return;
 
     updateIncome(income.id, {

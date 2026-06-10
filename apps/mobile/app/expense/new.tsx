@@ -9,6 +9,7 @@ import {
   Switch,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -98,7 +99,7 @@ export default function NewExpenseScreen() {
   }, []);
 
   const handleSubmit = async () => {
-    const numericAmount = parseFloat(amount);
+    const numericAmount = parseAmount(amount);
     if (!numericAmount || numericAmount <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
@@ -403,10 +404,10 @@ export default function NewExpenseScreen() {
           )}
 
           {/* Category Split */}
-          {showSplitEditor && parseFloat(amount) > 0 ? (
+          {showSplitEditor && parseAmount(amount) > 0 ? (
             <View style={styles.fieldContainer}>
               <SplitEditor
-                totalAmount={parseFloat(amount) || 0}
+                totalAmount={parseAmount(amount) || 0}
                 currencyCode={currencyCode}
                 initialSplits={pendingSplits}
                 onSplitsChange={(splits) => {

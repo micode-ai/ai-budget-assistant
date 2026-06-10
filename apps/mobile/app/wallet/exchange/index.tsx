@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
 import { router, Stack } from 'expo-router';
@@ -42,7 +43,7 @@ export default function ExchangeScreen() {
       if (rate) {
         setExchangeRate(rate.toFixed(4));
         if (fromAmount) {
-          setToAmount((parseFloat(fromAmount) * rate).toFixed(2));
+          setToAmount((parseAmount(fromAmount) * rate).toFixed(2));
         }
       }
     } catch {
@@ -54,8 +55,8 @@ export default function ExchangeScreen() {
 
   const onFromAmountChange = (value: string) => {
     setFromAmount(value);
-    const from = parseFloat(value);
-    const rate = parseFloat(exchangeRate);
+    const from = parseAmount(value);
+    const rate = parseAmount(exchangeRate);
     if (isFinite(from) && isFinite(rate) && rate > 0) {
       setToAmount((from * rate).toFixed(2));
     } else {
@@ -65,8 +66,8 @@ export default function ExchangeScreen() {
 
   const onToAmountChange = (value: string) => {
     setToAmount(value);
-    const to = parseFloat(value);
-    const rate = parseFloat(exchangeRate);
+    const to = parseAmount(value);
+    const rate = parseAmount(exchangeRate);
     if (isFinite(to) && isFinite(rate) && rate > 0) {
       setFromAmount((to / rate).toFixed(2));
     } else {
@@ -76,8 +77,8 @@ export default function ExchangeScreen() {
 
   const onRateChange = (value: string) => {
     setExchangeRate(value);
-    const from = parseFloat(fromAmount);
-    const rate = parseFloat(value);
+    const from = parseAmount(fromAmount);
+    const rate = parseAmount(value);
     if (isFinite(from) && isFinite(rate) && rate > 0) {
       setToAmount((from * rate).toFixed(2));
     }
@@ -88,8 +89,8 @@ export default function ExchangeScreen() {
     setToCurrency(fromCurrency);
     setFromAmount(toAmount);
     setToAmount(fromAmount);
-    if (exchangeRate && parseFloat(exchangeRate) > 0) {
-      setExchangeRate((1 / parseFloat(exchangeRate)).toFixed(4));
+    if (exchangeRate && parseAmount(exchangeRate) > 0) {
+      setExchangeRate((1 / parseAmount(exchangeRate)).toFixed(4));
     }
   };
 
@@ -99,9 +100,9 @@ export default function ExchangeScreen() {
       return;
     }
 
-    const from = parseFloat(fromAmount);
-    const to = parseFloat(toAmount);
-    const rate = parseFloat(exchangeRate);
+    const from = parseAmount(fromAmount);
+    const to = parseAmount(toAmount);
+    const rate = parseAmount(exchangeRate);
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));

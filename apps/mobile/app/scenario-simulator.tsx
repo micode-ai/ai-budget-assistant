@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { parseAmount } from '@/utils/amount';
 import {
   View,
   Text,
@@ -66,7 +67,7 @@ export default function ScenarioSimulatorScreen() {
     setExtraIncomes(prev =>
       prev.map(e =>
         e.id === id
-          ? { ...e, [field]: field === 'amount' ? parseFloat(value) || 0 : value }
+          ? { ...e, [field]: field === 'amount' ? parseAmount(value) || 0 : value }
           : e,
       ),
     );

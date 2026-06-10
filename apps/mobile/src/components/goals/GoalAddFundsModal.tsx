@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { parseAmount } from '@/utils/amount';
 import {
   View,
   Text,
@@ -39,7 +40,7 @@ export function GoalAddFundsModal({
     });
 
   const handleConfirm = async () => {
-    const amount = parseFloat(fundAmount);
+    const amount = parseAmount(fundAmount);
     if (isNaN(amount) || amount <= 0) return;
     setIsLoading(true);
     try {
@@ -55,7 +56,7 @@ export function GoalAddFundsModal({
     onClose();
   };
 
-  const parsed = parseFloat(fundAmount);
+  const parsed = parseAmount(fundAmount);
   const isDisabled = !fundAmount || isNaN(parsed) || parsed <= 0 || isLoading;
 
   return (

@@ -9,6 +9,7 @@ import {
   Switch,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -72,7 +73,7 @@ export default function NewIncomeScreen() {
   }, []);
 
   const handleSubmit = async () => {
-    const numericAmount = parseFloat(amount);
+    const numericAmount = parseAmount(amount);
     if (!numericAmount || numericAmount <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;

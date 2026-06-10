@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -40,9 +41,9 @@ export default function ExchangeDetailScreen() {
   }
 
   const handleSave = () => {
-    const from = parseFloat(editFromAmount);
-    const to = parseFloat(editToAmount);
-    const rate = parseFloat(editExchangeRate);
+    const from = parseAmount(editFromAmount);
+    const to = parseAmount(editToAmount);
+    const rate = parseAmount(editExchangeRate);
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
@@ -82,24 +83,24 @@ export default function ExchangeDetailScreen() {
 
   const onFromAmountChange = (value: string) => {
     setEditFromAmount(value);
-    const rate = parseFloat(editExchangeRate);
+    const rate = parseAmount(editExchangeRate);
     if (value && rate) {
-      setEditToAmount((parseFloat(value) * rate).toFixed(2));
+      setEditToAmount((parseAmount(value) * rate).toFixed(2));
     }
   };
 
   const onToAmountChange = (value: string) => {
     setEditToAmount(value);
-    const rate = parseFloat(editExchangeRate);
+    const rate = parseAmount(editExchangeRate);
     if (value && rate) {
-      setEditFromAmount((parseFloat(value) / rate).toFixed(2));
+      setEditFromAmount((parseAmount(value) / rate).toFixed(2));
     }
   };
 
   const onRateChange = (value: string) => {
     setEditExchangeRate(value);
-    const from = parseFloat(editFromAmount);
-    const rate = parseFloat(value);
+    const from = parseAmount(editFromAmount);
+    const rate = parseAmount(value);
     if (isFinite(from) && isFinite(rate) && rate > 0) {
       setEditToAmount((from * rate).toFixed(2));
     }

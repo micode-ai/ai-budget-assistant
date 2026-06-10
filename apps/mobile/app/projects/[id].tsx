@@ -8,6 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -66,7 +67,7 @@ export default function ProjectDetailScreen() {
         name: trimmed,
         description: description.trim() || undefined,
         color: selectedColor,
-        budget: budget ? parseFloat(budget) : undefined,
+        budget: budget ? parseAmount(budget) : undefined,
       });
       closeEdit();
     } catch {

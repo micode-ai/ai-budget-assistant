@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -44,7 +45,7 @@ export default function NewProjectScreen() {
         name: name.trim(),
         description: description.trim() || undefined,
         color: selectedColor,
-        budget: budget ? parseFloat(budget) : undefined,
+        budget: budget ? parseAmount(budget) : undefined,
       });
       router.back();
     } catch {

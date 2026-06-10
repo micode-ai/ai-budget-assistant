@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect, useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,7 +41,7 @@ export default function SetBalanceScreen() {
   }, [editingBalance]);
 
   const handleSave = () => {
-    const parsedAmount = parseFloat(amount);
+    const parsedAmount = parseAmount(amount);
     if (isNaN(parsedAmount) || parsedAmount < 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;

@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -145,7 +146,7 @@ export default function VoiceIncomeScreen() {
   };
 
   const handleConfirmIncome = async () => {
-    const numericAmount = parseFloat(editAmount);
+    const numericAmount = parseAmount(editAmount);
     if (!numericAmount || numericAmount <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
