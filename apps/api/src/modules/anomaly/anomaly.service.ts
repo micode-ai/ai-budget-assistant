@@ -380,17 +380,24 @@ export class AnomalyService {
     });
   }
 
-  /** Same merchant + amount + currency within ±1 calendar day → possible double billing. */
+  /**
+   * Same payee + amount + currency within ±1 calendar day → possible double billing.
+   * The "payee" is the merchant, or the description when no merchant is set, so a
+   * duplicated expense without a merchant (just a description) is still caught.
+   */
   async detectDuplicateCharge(accountId: string, userId: string, expense: DetectorExpense): Promise<void> {
-    const merchant: string | null = expense.merchant?.trim() ? expense.merchant : null;
-    if (!merchant) return;
+    const payeeOf = (e: { merchant?: string | null; description?: string | null }) =>
+      (e.merchant?.trim() || e.description?.trim() || '').toLowerCase();
+    const label = payeeOf(expense);
+    if (!label) return; // nothing to identify the charge by
 
-    const other = await this.prisma.expense.findFirst({
+    // Candidates share amount + currency + date window; the payee label is
+    // matched in JS so merchant OR description can identify the duplicate.
+    const candidates = await this.prisma.expense.findMany({
       where: {
         accountId,
         isDeleted: false,
         id: { not: expense.id },
-        merchant: { equals: merchant, mode: 'insensitive' },
         amount: expense.amount as string | number,
         currencyCode: expense.currencyCode,
         date: {
@@ -399,12 +406,13 @@ export class AnomalyService {
         },
         ...(expense.importBatchId ? { NOT: { importBatchId: expense.importBatchId } } : {}),
       },
-      select: { id: true },
+      select: { id: true, merchant: true, description: true },
     });
+    const other = candidates.find((c: { merchant?: string | null; description?: string | null }) => payeeOf(c) === label);
     if (!other) return;
 
     const params = {
-      merchant,
+      merchant: expense.merchant?.trim() || expense.description?.trim() || '',
       amount: Number(expense.amount).toFixed(2),
       currencyCode: expense.currencyCode,
       otherExpenseId: other.id,
