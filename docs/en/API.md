@@ -3875,12 +3875,12 @@ Proactive anomaly alerts generated automatically on expense write events and aft
 **Alert types:**
 | Type | Description |
 |------|-------------|
-| `category_spike` | Category spending increased >50% vs the 30-day rolling average |
-| `price_increase` | Same merchant charged >20% more than the previous transaction |
-| `duplicate_charge` | Near-identical charge (same amount + merchant) within 24 hours |
-| `recurring_suggestion` | Identical charge detected ≥3 months in a row — possible untracked subscription |
+| `category_spike` | The category's current-calendar-month total (per currency) is ≥30% above the average of the previous ≥2 months |
+| `price_increase` | A tracked subscription or `recurringId` series charged **>10%** more than before (same currency) |
+| `duplicate_charge` | Same payee (merchant, or description when no merchant) + amount + currency within **±1 calendar day** (same-import-batch pairs excluded) |
+| `recurring_suggestion` | 3+ same-amount charges from an untracked merchant on a regular cadence (monthly 25–35 d / weekly 6–8 d) — possible untracked subscription |
 
-**Generation:** Alerts are produced synchronously on `POST /expenses` (manual/voice/OCR) and asynchronously after bank/Wise import commits. Each alert type uses a deterministic `dedupKey` (`@@unique([accountId, dedupKey])`) so the same event never produces duplicate rows.
+**Generation:** Alerts are produced **fire-and-forget** on expense create (manual/voice/OCR and all bots, plus mobile sync) and after bank/Wise import commits. Each alert type uses a deterministic `dedupKey` (`@@unique([accountId, dedupKey])`) so the same event never produces duplicate rows.
 
 **Push notifications:** sent via the `spending_anomaly` notification type, gated by the `anomalyAlerts` user preference (`GET/PATCH /users/me/notification-preferences`), capped at 3 pushes per account per calendar day.
 
@@ -3909,10 +3909,9 @@ X-Account-Id: <account-uuid>
       "userId": "user-uuid",
       "type": "category_spike",
       "params": {
+        "categoryId": "category-uuid",
         "categoryName": "Food & Dining",
-        "currentAmount": 320.00,
-        "avgAmount": 180.00,
-        "spikePercent": 78
+        "percent": 78
       },
       "expenseId": "expense-uuid",
       "categoryId": "category-uuid",
@@ -3928,10 +3927,10 @@ X-Account-Id: <account-uuid>
 **`params` shape by type:**
 | Type | Key fields |
 |------|-----------|
-| `category_spike` | `categoryName`, `currentAmount`, `avgAmount`, `spikePercent` |
-| `price_increase` | `merchant`, `previousAmount`, `currentAmount`, `increasePercent` |
-| `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `previousExpenseId` |
-| `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `monthCount` |
+| `category_spike` | `categoryId`, `categoryName`, `percent` |
+| `price_increase` | `merchant`, `oldAmount`, `newAmount`, `currencyCode`, `percent` |
+| `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `otherExpenseId` |
+| `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `cycle` (`monthly` \| `weekly`) |
 
 ### Mark All Alerts Read
 

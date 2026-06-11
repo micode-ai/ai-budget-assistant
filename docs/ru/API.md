@@ -3713,12 +3713,12 @@ GET /subscriptions/usage/details?month=3&year=2026
 **Типы оповещений:**
 | Тип | Описание |
 |-----|----------|
-| `category_spike` | Расходы по категории выросли более чем на 50% относительно скользящего среднего за 30 дней |
-| `price_increase` | Тот же мерчант выставил счёт более чем на 20% выше предыдущей транзакции |
-| `duplicate_charge` | Почти идентичный платёж (тот же мерчант + сумма) в течение 24 часов |
-| `recurring_suggestion` | Одинаковый платёж зафиксирован в ≥3 отдельных календарных месяцах — возможная неотслеживаемая подписка |
+| `category_spike` | Сумма по категории за текущий календарный месяц (в разрезе валюты) на ≥30% выше среднего за предыдущие ≥2 месяца |
+| `price_increase` | Отслеживаемая подписка или серия `recurringId` списывает **более чем на 10%** больше прежнего (та же валюта) |
+| `duplicate_charge` | Тот же плательщик (мерчант, либо описание, если мерчанта нет) + сумма + валюта в пределах **±1 календарного дня** (пары из одного импорта исключены) |
+| `recurring_suggestion` | 3+ списания одинаковой суммы у неотслеживаемого мерчанта с регулярным интервалом (месяц 25–35 д / неделя 6–8 д) — возможная неотслеживаемая подписка |
 
-**Генерация:** Оповещения создаются синхронно при `POST /expenses` (ручной/голосовой/OCR) и асинхронно после коммита импорта (bank/Wise). Дедупликация через детерминированный `dedupKey` (`@@unique([accountId, dedupKey])`).
+**Генерация:** Оповещения создаются **fire-and-forget** при создании расхода (ручной/голосовой/OCR и все боты, плюс синхронизация мобильного) и после коммита импорта (bank/Wise). Дедупликация через детерминированный `dedupKey` (`@@unique([accountId, dedupKey])`).
 
 **Push-уведомления:** отправляются с типом `spending_anomaly`, управляются настройкой `anomalyAlerts` (`GET/PATCH /users/me/notification-preferences`), ограничены 3 пушами на аккаунт в сутки.
 
@@ -3747,10 +3747,9 @@ X-Account-Id: <account-uuid>
       "userId": "user-uuid",
       "type": "category_spike",
       "params": {
+        "categoryId": "category-uuid",
         "categoryName": "Еда и рестораны",
-        "currentAmount": 320.00,
-        "avgAmount": 180.00,
-        "spikePercent": 78
+        "percent": 78
       },
       "expenseId": "expense-uuid",
       "categoryId": "category-uuid",
@@ -3766,10 +3765,10 @@ X-Account-Id: <account-uuid>
 **Поля `params` по типу:**
 | Тип | Ключевые поля |
 |-----|--------------|
-| `category_spike` | `categoryName`, `currentAmount`, `avgAmount`, `spikePercent` |
-| `price_increase` | `merchant`, `previousAmount`, `currentAmount`, `increasePercent` |
-| `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `previousExpenseId` |
-| `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `monthCount` |
+| `category_spike` | `categoryId`, `categoryName`, `percent` |
+| `price_increase` | `merchant`, `oldAmount`, `newAmount`, `currencyCode`, `percent` |
+| `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `otherExpenseId` |
+| `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `cycle` (`monthly` \| `weekly`) |
 
 ### Отметить все оповещения прочитанными
 
