@@ -62,3 +62,4 @@ Available on **iOS**, **Android**, and the **web** — try it in your browser at
 | 28 | [Reference Data](user_docs/en/28-reference-data.md) |
 | 29 | [Subscription Manager](user_docs/en/29-subscription-manager.md) |
 | 30 | [Web App](user_docs/en/30-web-app.md) |
+| 31 | [Anomaly Alerts](user_docs/en/31-anomaly-alerts.md) |

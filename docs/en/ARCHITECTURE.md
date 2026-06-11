@@ -1302,14 +1302,14 @@ The `anomaly` module (37th API module) runs **rule-based on-write detection** an
 
 | Detector | Trigger condition |
 |----------|-------------------|
-| `category_spike` | New expense causes the category's rolling 30-day total to exceed 150% of the prior 30-day average |
-| `price_increase` | Same merchant charged >20% more than the most recent prior transaction |
-| `duplicate_charge` | Same merchant + amount within 24 hours of a previous expense |
-| `recurring_suggestion` | Identical merchant + amount detected in ≥3 separate calendar months |
+| `category_spike` | The expense's category total for the current calendar month (per currency) is ≥30% above the average of the previous ≥2 months. No budget required. |
+| `price_increase` | An active tracked `UserSubscription` (matched by normalized name) or a `recurringId` series is charged **>10%** more than before, same currency. |
+| `duplicate_charge` | Same **payee** (merchant, or description when no merchant) + amount + currency within **±1 calendar day**; pairs from the same import batch are excluded. |
+| `recurring_suggestion` | 3+ same-amount charges from an **untracked** merchant on a regular cadence (monthly 25–35 days / weekly 6–8 days); fires once ever per merchant. |
 
 **Dedup:** each alert has a deterministic `dedupKey` with a `@@unique([accountId, dedupKey])` constraint — the same event cannot produce duplicate rows regardless of retry or race conditions.
 
-**Push cap:** at most 3 `spending_anomaly` push notifications are sent per account per calendar day; further alerts are written to the feed but not pushed. Gate: `user.anomalyAlerts` preference (default `true`).
+**Push cap:** at most 3 `spending_anomaly` push notifications are sent per account per calendar day; further alerts are written to the feed but not pushed. Gate: the `anomalyAlerts` notification preference (`user.notifyAnomalyAlerts`, default `true`).
 
 **Hooks:** `ExpensesService.create` calls `AnomalyService.analyzeExpense(expense)` synchronously after the expense row is committed. Import commit endpoints (`import-wise`, `import-bank`) call `AnomalyService.analyzeExpenseBatch(expenses)` asynchronously (fire-and-forget) so import throughput is unaffected.
 
