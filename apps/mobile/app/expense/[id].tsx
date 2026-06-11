@@ -28,7 +28,12 @@ export default function ExpenseDetailScreen() {
   const { expenses, deleteExpense, stopRecurringExpense } = useExpenseStore();
   const { loadProjects } = useProjectStore();
   const { loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
-  const expense = expenses.find((e) => e.id === id);
+  // Match local id, the server PK (`serverId`), or the clientId — anomaly-alert
+  // deep-links carry the server expense id, which on a device equals `serverId`
+  // (the local row id is the clientId).
+  const expense = expenses.find(
+    (e) => e.id === id || e.serverId === id || e.clientId === id || e.localId === id,
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const detailsCardRef = useRef<ExpenseDetailsCardHandle>(null);
