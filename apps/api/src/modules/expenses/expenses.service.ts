@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
 
 @Injectable()
 export class ExpensesService {
@@ -11,6 +12,7 @@ export class ExpensesService {
     private readonly prisma: PrismaService,
     private readonly gamificationService: GamificationService,
     private readonly cacheService: CacheService,
+    private readonly anomalyService: AnomalyService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -261,6 +263,13 @@ export class ExpensesService {
 
     // Fire-and-forget cache invalidation; never block the create response.
     this.invalidateChatCache(accountId).catch(() => undefined);
+
+    // Fire-and-forget anomaly detection — only for genuinely new expenses.
+    if (result.isNew && result.expense) {
+      this.anomalyService
+        .checkExpense(accountId, userId, result.expense.id)
+        .catch(() => {});
+    }
 
     return result;
   }

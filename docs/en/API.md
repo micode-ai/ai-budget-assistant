@@ -3868,6 +3868,157 @@ When a valid code is provided:
 
 ---
 
+## Alerts
+
+Proactive anomaly alerts generated automatically on expense write events and after import commits. All endpoints require JWT + `X-Account-Id` header.
+
+**Alert types:**
+| Type | Description |
+|------|-------------|
+| `category_spike` | Category spending increased >50% vs the 30-day rolling average |
+| `price_increase` | Same merchant charged >20% more than the previous transaction |
+| `duplicate_charge` | Near-identical charge (same amount + merchant) within 24 hours |
+| `recurring_suggestion` | Identical charge detected ≥3 months in a row — possible untracked subscription |
+
+**Generation:** Alerts are produced synchronously on `POST /expenses` (manual/voice/OCR) and asynchronously after bank/Wise import commits. Each alert type uses a deterministic `dedupKey` (`@@unique([accountId, dedupKey])`) so the same event never produces duplicate rows.
+
+**Push notifications:** sent via the `spending_anomaly` notification type, gated by the `anomalyAlerts` user preference (`GET/PATCH /users/me/notification-preferences`), capped at 3 pushes per account per calendar day.
+
+### List Alerts
+
+Returns the last 50 non-dismissed alerts for the account (newest first) plus the count of unread alerts.
+
+```http
+GET /alerts?unread=true
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `unread` | boolean | When `true`, returns only alerts where `readAt` is null (optional) |
+
+**Response** `200 OK`
+```json
+{
+  "alerts": [
+    {
+      "id": "uuid",
+      "accountId": "account-uuid",
+      "userId": "user-uuid",
+      "type": "category_spike",
+      "params": {
+        "categoryName": "Food & Dining",
+        "currentAmount": 320.00,
+        "avgAmount": 180.00,
+        "spikePercent": 78
+      },
+      "expenseId": "expense-uuid",
+      "categoryId": "category-uuid",
+      "readAt": null,
+      "dismissedAt": null,
+      "createdAt": "2026-06-10T14:22:00Z"
+    }
+  ],
+  "unreadCount": 3
+}
+```
+
+**`params` shape by type:**
+| Type | Key fields |
+|------|-----------|
+| `category_spike` | `categoryName`, `currentAmount`, `avgAmount`, `spikePercent` |
+| `price_increase` | `merchant`, `previousAmount`, `currentAmount`, `increasePercent` |
+| `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `previousExpenseId` |
+| `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `monthCount` |
+
+### Mark All Alerts Read
+
+Marks all unread alerts in the account as read. **Viewer role blocked** (403).
+
+```http
+PATCH /alerts/read-all
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{ "updated": 3 }
+```
+
+### Mark One Alert Read
+
+Marks a single alert as read. **Viewer role blocked** (403).
+
+```http
+PATCH /alerts/:id/read
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "id": "uuid",
+  "readAt": "2026-06-10T15:00:00Z"
+}
+```
+
+**Errors:**
+- `404 Not Found` — Alert not found in this account
+
+### Dismiss Alert
+
+Soft-hides an alert (sets `dismissedAt`). Dismissed alerts are excluded from `GET /alerts`. **Viewer role blocked** (403).
+
+```http
+DELETE /alerts/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+**Errors:**
+- `404 Not Found` — Alert not found in this account
+
+### Notification Preferences
+
+The `anomalyAlerts` field is part of the standard notification preferences object:
+
+```http
+GET /users/me/notification-preferences
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+{
+  "budgetAlerts": true,
+  "sharedActivity": true,
+  "debtReminders": true,
+  "recurringExpenses": true,
+  "subscriptionRenewals": true,
+  "anomalyAlerts": true
+}
+```
+
+```http
+PATCH /users/me/notification-preferences
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "anomalyAlerts": false
+}
+```
+
+**Response** `200 OK` — updated preferences object.
+
+---
+
 ## Error Responses
 
 ### Error Format

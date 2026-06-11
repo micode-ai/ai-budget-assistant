@@ -22,6 +22,7 @@ export default function NotificationsSettingsScreen() {
   const [notifDebtReminders, setNotifDebtReminders] = useState(true);
   const [notifRecurringExpenses, setNotifRecurringExpenses] = useState(true);
   const [notifSubscriptionRenewals, setNotifSubscriptionRenewals] = useState(true);
+  const [notifAnomalyAlerts, setNotifAnomalyAlerts] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   const loadNotificationPreferences = useCallback(async () => {
@@ -32,6 +33,7 @@ export default function NotificationsSettingsScreen() {
       setNotifDebtReminders(prefs.debtReminders);
       setNotifRecurringExpenses(prefs.recurringExpenses ?? true);
       setNotifSubscriptionRenewals(prefs.subscriptionRenewals ?? true);
+      setNotifAnomalyAlerts(prefs.anomalyAlerts ?? true);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -93,20 +95,32 @@ export default function NotificationsSettingsScreen() {
     }
   };
 
+  const handleToggleAnomalyAlerts = async (value: boolean) => {
+    setNotifAnomalyAlerts(value);
+    try {
+      await api.updateNotificationPreferences({ anomalyAlerts: value });
+    } catch (e) {
+      setNotifAnomalyAlerts(!value);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
     setNotifDebtReminders(value);
     setNotifRecurringExpenses(value);
     setNotifSubscriptionRenewals(value);
+    setNotifAnomalyAlerts(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
       setNotifDebtReminders(!value);
       setNotifRecurringExpenses(!value);
       setNotifSubscriptionRenewals(!value);
+      setNotifAnomalyAlerts(!value);
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -124,7 +138,7 @@ export default function NotificationsSettingsScreen() {
                 <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
               </View>
               <Switch
-                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals}
+                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts}
                 onValueChange={handleToggleAllNotifications}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
@@ -201,6 +215,21 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 value={notifSubscriptionRenewals}
                 onValueChange={handleToggleSubscriptionRenewals}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.anomalyAlerts')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.anomalyAlertsDesc')}</Text>
+              </View>
+              <Switch
+                value={notifAnomalyAlerts}
+                onValueChange={handleToggleAnomalyAlerts}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
               />

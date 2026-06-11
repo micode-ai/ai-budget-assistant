@@ -29,7 +29,6 @@ describe('ExpensesController routing', () => {
   };
   const budgetAlertService = {
     checkBudgetsForAccount: jest.fn().mockResolvedValue(undefined),
-    checkSpendingAnomalies: jest.fn().mockResolvedValue(undefined),
   };
   const sharedActivityService = {
     notifyExpenseCreated: jest.fn().mockResolvedValue(undefined),

@@ -41,8 +41,6 @@ export class ExpensesController {
     if (isNew) {
       this.budgetAlertService.checkBudgetsForAccount(req.accountId, dto.currencyCode)
         .catch(e => this.logger.error('Budget alert check failed', e));
-      this.budgetAlertService.checkSpendingAnomalies(req.accountId, req.user.id)
-        .catch(e => this.logger.error('Spending anomaly check failed', e));
       if (expense) {
         this.sharedActivityService.notifyExpenseCreated(
           req.accountId, req.user.id, expense.id, dto.amount, dto.currencyCode, dto.description,

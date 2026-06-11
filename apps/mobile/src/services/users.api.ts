@@ -35,13 +35,13 @@ export const usersApi = {
   },
 
   getNotificationPreferences() {
-    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean }>(
+    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean }>(
       '/users/me/notification-preferences',
     );
   },
 
-  updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean }) {
-    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean }>(
+  updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean }) {
+    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean }>(
       '/users/me/notification-preferences',
       {
         method: 'PATCH',

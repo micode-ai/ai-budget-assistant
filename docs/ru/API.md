@@ -3706,6 +3706,157 @@ GET /subscriptions/usage/details?month=3&year=2026
 
 ---
 
+## Оповещения об аномалиях
+
+Проактивные оповещения, генерируемые автоматически при записи расходов и после коммита импорта. Все эндпоинты требуют JWT + заголовок `X-Account-Id`.
+
+**Типы оповещений:**
+| Тип | Описание |
+|-----|----------|
+| `category_spike` | Расходы по категории выросли более чем на 50% относительно скользящего среднего за 30 дней |
+| `price_increase` | Тот же мерчант выставил счёт более чем на 20% выше предыдущей транзакции |
+| `duplicate_charge` | Почти идентичный платёж (тот же мерчант + сумма) в течение 24 часов |
+| `recurring_suggestion` | Одинаковый платёж зафиксирован в ≥3 отдельных календарных месяцах — возможная неотслеживаемая подписка |
+
+**Генерация:** Оповещения создаются синхронно при `POST /expenses` (ручной/голосовой/OCR) и асинхронно после коммита импорта (bank/Wise). Дедупликация через детерминированный `dedupKey` (`@@unique([accountId, dedupKey])`).
+
+**Push-уведомления:** отправляются с типом `spending_anomaly`, управляются настройкой `anomalyAlerts` (`GET/PATCH /users/me/notification-preferences`), ограничены 3 пушами на аккаунт в сутки.
+
+### Список оповещений
+
+Возвращает последние 50 неотклонённых оповещений аккаунта (сначала новые) и количество непрочитанных.
+
+```http
+GET /alerts?unread=true
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `unread` | boolean | Если `true` — возвращает только оповещения, где `readAt` равен null (необязательно) |
+
+**Ответ** `200 OK`
+```json
+{
+  "alerts": [
+    {
+      "id": "uuid",
+      "accountId": "account-uuid",
+      "userId": "user-uuid",
+      "type": "category_spike",
+      "params": {
+        "categoryName": "Еда и рестораны",
+        "currentAmount": 320.00,
+        "avgAmount": 180.00,
+        "spikePercent": 78
+      },
+      "expenseId": "expense-uuid",
+      "categoryId": "category-uuid",
+      "readAt": null,
+      "dismissedAt": null,
+      "createdAt": "2026-06-10T14:22:00Z"
+    }
+  ],
+  "unreadCount": 3
+}
+```
+
+**Поля `params` по типу:**
+| Тип | Ключевые поля |
+|-----|--------------|
+| `category_spike` | `categoryName`, `currentAmount`, `avgAmount`, `spikePercent` |
+| `price_increase` | `merchant`, `previousAmount`, `currentAmount`, `increasePercent` |
+| `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `previousExpenseId` |
+| `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `monthCount` |
+
+### Отметить все оповещения прочитанными
+
+Отмечает все непрочитанные оповещения аккаунта как прочитанные. **Роль viewer заблокирована** (403).
+
+```http
+PATCH /alerts/read-all
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{ "updated": 3 }
+```
+
+### Отметить одно оповещение прочитанным
+
+Отмечает одно оповещение как прочитанное. **Роль viewer заблокирована** (403).
+
+```http
+PATCH /alerts/:id/read
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "id": "uuid",
+  "readAt": "2026-06-10T15:00:00Z"
+}
+```
+
+**Ошибки:**
+- `404 Not Found` — Оповещение не найдено в данном аккаунте
+
+### Скрыть оповещение
+
+Мягко скрывает оповещение (устанавливает `dismissedAt`). Скрытые оповещения исключаются из `GET /alerts`. **Роль viewer заблокирована** (403).
+
+```http
+DELETE /alerts/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+**Ошибки:**
+- `404 Not Found` — Оповещение не найдено в данном аккаунте
+
+### Настройки уведомлений
+
+Поле `anomalyAlerts` входит в стандартный объект настроек уведомлений:
+
+```http
+GET /users/me/notification-preferences
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "budgetAlerts": true,
+  "sharedActivity": true,
+  "debtReminders": true,
+  "recurringExpenses": true,
+  "subscriptionRenewals": true,
+  "anomalyAlerts": true
+}
+```
+
+```http
+PATCH /users/me/notification-preferences
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "anomalyAlerts": false
+}
+```
+
+**Ответ** `200 OK` — обновлённый объект настроек.
+
+---
+
 ## Ответы с ошибками
 
 ### Формат ошибки

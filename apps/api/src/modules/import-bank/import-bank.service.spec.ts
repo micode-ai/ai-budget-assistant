@@ -4,6 +4,7 @@ import { ImportBankService } from './import-bank.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
 
 const MBANK_CSV = [
   '#Data operacji;#Data księgowania;#Opis operacji;#Tytuł;#Nadawca/Odbiorca;#Numer konta;#Kwota;#Saldo po operacji',
@@ -27,6 +28,7 @@ describe('ImportBankService.parsePreview', () => {
     createBatch: jest.fn().mockResolvedValue('batch-1'),
     finalizeBatch: jest.fn().mockResolvedValue(undefined),
   };
+  const anomaly = { checkExpenseBatch: jest.fn().mockResolvedValue(undefined) };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -40,6 +42,7 @@ describe('ImportBankService.parsePreview', () => {
         { provide: ImportBatchesService, useValue: importBatches },
         { provide: MappingService, useValue: mapping },
         { provide: TelegramService, useValue: telegram },
+        { provide: AnomalyService, useValue: anomaly },
       ],
     }).compile();
     service = mod.get(ImportBankService);

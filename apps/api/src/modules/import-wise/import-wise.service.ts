@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto';
 import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
 import { WiseImportCommitDto } from './dto';
 import type { WiseImportPreviewResponse, WiseImportRow, WiseImportCommitResponse } from '@budget/shared-types';
 
@@ -85,6 +86,7 @@ export class ImportWiseService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly importBatches: ImportBatchesService,
+    private readonly anomaly: AnomalyService,
   ) {}
 
   async parsePreview(
@@ -246,6 +248,7 @@ export class ImportWiseService {
     let createdIncomes = 0;
     let createdExchanges = 0;
     let batchId!: string;
+    const createdExpenseIds: string[] = [];
 
     const categoryCache = new Map<string, string | null>();
 
@@ -269,7 +272,7 @@ export class ImportWiseService {
               }
             }
 
-            await tx.expense.create({
+            const created = await tx.expense.create({
               data: {
                 accountId,
                 userId,
@@ -284,7 +287,9 @@ export class ImportWiseService {
                 importBatchId: batchId,
                 ...(categoryId ? { categoryId } : {}),
               },
+              select: { id: true },
             });
+            createdExpenseIds.push(created.id);
             createdExpenses++;
           } else if (row.kind === 'income') {
             let categoryId: string | null = null;
@@ -344,6 +349,9 @@ export class ImportWiseService {
 
       await this.importBatches.finalizeBatch(tx, batchId, createdExpenses + createdIncomes + createdExchanges);
     });
+
+    // Fire-and-forget anomaly detection on the committed expenses.
+    this.anomaly.checkExpenseBatch(accountId, userId, createdExpenseIds).catch(() => {});
 
     return { createdExpenses, createdIncomes, createdExchanges, batchId };
   }
