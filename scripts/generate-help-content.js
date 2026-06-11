@@ -33,6 +33,7 @@ const SECTIONS = [
   '28-reference-data',
   '29-subscription-manager',
   '30-web-app',
+  '31-anomaly-alerts',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

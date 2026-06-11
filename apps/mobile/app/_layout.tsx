@@ -702,6 +702,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="alerts/index"
+          options={{
+            headerShown: true,
+            title: t('alerts.title'),
+          }}
+        />
+        <Stack.Screen
           name="scenario-simulator"
           options={{
             headerShown: true,

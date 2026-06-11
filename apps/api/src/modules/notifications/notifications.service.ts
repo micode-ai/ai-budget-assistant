@@ -42,13 +42,14 @@ export class NotificationsService {
         notifyDebtReminders: true,
         notifyRecurringExpenses: true,
         notifySubscriptionRenewals: true,
+        notifyAnomalyAlerts: true,
       },
     });
 
     if (!user?.pushToken) return false;
 
     if (notificationType === 'budget_alert' && !user.notifyBudgetAlerts) return false;
-    if (notificationType === 'spending_anomaly' && !user.notifyBudgetAlerts) return false;
+    if (notificationType === 'spending_anomaly' && !user.notifyAnomalyAlerts) return false;
     if (notificationType === 'shared_expense' && !user.notifySharedActivity) return false;
     if (notificationType === 'debt_reminder' && !user.notifyDebtReminders) return false;
     if (notificationType === 'recurring_expense' && !user.notifyRecurringExpenses) return false;
@@ -97,6 +98,7 @@ export class NotificationsService {
         notifySharedActivity: true,
         notifyDebtReminders: true,
         notifyRecurringExpenses: true,
+        notifyAnomalyAlerts: true,
       },
     });
 
@@ -104,7 +106,7 @@ export class NotificationsService {
     const eligible = users.filter((u: UserWithToken) => {
       if (!u.pushToken || !this.isValidExpoPushToken(u.pushToken)) return false;
       if (notificationType === 'budget_alert' && !u.notifyBudgetAlerts) return false;
-      if (notificationType === 'spending_anomaly' && !u.notifyBudgetAlerts) return false;
+      if (notificationType === 'spending_anomaly' && !u.notifyAnomalyAlerts) return false;
       if (notificationType === 'shared_expense' && !u.notifySharedActivity) return false;
       if (notificationType === 'debt_reminder' && !u.notifyDebtReminders) return false;
       if (notificationType === 'recurring_expense' && !u.notifyRecurringExpenses) return false;

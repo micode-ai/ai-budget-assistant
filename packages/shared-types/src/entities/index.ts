@@ -22,3 +22,4 @@ export * from './fat-finder';
 export * from './app-version';
 export * from './import';
 export * from './user-subscription';
+export * from './anomaly-alert';

@@ -5,6 +5,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
 import { isPdfBuffer, extractPdfText } from './utils/pdf-text';
 import { headerFingerprint } from './utils/header-fingerprint';
@@ -35,6 +36,7 @@ export class ImportBankService {
     private readonly importBatches: ImportBatchesService,
     private readonly mapping: MappingService,
     private readonly telegram: TelegramService,
+    private readonly anomaly: AnomalyService,
   ) {}
 
   /**
@@ -332,6 +334,7 @@ export class ImportBankService {
     let createdExchanges = 0;
     let skippedDuplicates = 0;
     let batchId!: string;
+    const createdExpenseIds: string[] = [];
 
     const categoryCache = new Map<string, string | null>();
     const source = `bank:${dto.bankId ?? 'universal'}`;
@@ -348,7 +351,7 @@ export class ImportBankService {
               row.suggestedCategoryName,
               categoryCache,
             );
-            await (tx as any).expense.create({
+            const created = await (tx as any).expense.create({
               data: {
                 accountId,
                 userId,
@@ -363,7 +366,9 @@ export class ImportBankService {
                 importBatchId: batchId,
                 ...(categoryId ? { categoryId } : {}),
               },
+              select: { id: true },
             });
+            createdExpenseIds.push(created.id);
             createdExpenses++;
           } else if (row.kind === 'income') {
             const categoryId = await this.resolveCategoryId(
@@ -416,6 +421,9 @@ export class ImportBankService {
 
       await this.importBatches.finalizeBatch(tx as any, batchId, createdExpenses + createdIncomes + createdExchanges);
     });
+
+    // Fire-and-forget anomaly detection on the committed expenses.
+    this.anomaly.checkExpenseBatch(accountId, userId, createdExpenseIds).catch(() => {});
 
     let savedMappingId: string | undefined;
     if (dto.saveMapping && dto.mapping && dto.headerFingerprint) {

@@ -31,6 +31,7 @@ import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget } from '@/components/widgets';
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
+import { useAlertStore } from '@/stores/alertStore';
 
 // Static maps — no render-time dependency, hoisted to module scope.
 const quickActionRoutes: Record<QuickActionKey, string> = {
@@ -72,6 +73,8 @@ export default function DashboardScreen() {
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
   const { visibility: widgetVisibility, order: widgetOrder } = useWidgetVisibilityStore();
   const { visibility: quickActionVisibility, order: quickActionOrder } = useQuickActionStore();
+  const unreadAlertCount = useAlertStore((s) => s.unreadCount);
+  const loadAlerts = useAlertStore((s) => s.loadAlerts);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -96,11 +99,12 @@ export default function DashboardScreen() {
     if (currentAccountId) {
       hydrateTransactions().then(() => loadDebts());
       loadProfile();
+      loadAlerts();
       if (currentAccountType === 'investment') {
         loadInvestmentSummary();
       }
     }
-  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary, loadAlerts]);
 
   const monthlyBudgetSummary = getMonthlyBudgetSummary();
   const totalBudget = monthlyBudgetSummary.totalAmount;
@@ -110,7 +114,7 @@ export default function DashboardScreen() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const promises: Promise<any>[] = [loadWallet(), loadRates(), loadProfile()];
+      const promises: Promise<any>[] = [loadWallet(), loadRates(), loadProfile(), loadAlerts()];
       if (currentAccountType === 'investment') {
         promises.push(loadInvestmentSummary());
       }
@@ -120,7 +124,7 @@ export default function DashboardScreen() {
       setRefreshing(false);
       setWidgetRefreshKey((k) => k + 1);
     }
-  }, [loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+  }, [loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary, loadAlerts]);
 
   const remaining = totalBudget - budgetSpent;
 
@@ -182,6 +186,17 @@ export default function DashboardScreen() {
           <Text style={styles.welcomeText} numberOfLines={1}>
             {t('dashboard.hello', { name: (user?.name || 'User').trim() })}
           </Text>
+          <TouchableOpacity
+            onPress={() => router.push('/alerts' as any)}
+            style={[styles.settingsButton, styles.bellButton]}
+          >
+            <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
+            {unreadAlertCount > 0 && (
+              <View style={styles.alertBadge}>
+                <Text style={styles.alertBadgeText}>{unreadAlertCount > 9 ? '9+' : unreadAlertCount}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => router.push('/settings')}
             style={styles.settingsButton}
@@ -493,6 +508,26 @@ const createStyles = (theme: Theme) => ({
     flexShrink: 0,
     backgroundColor: 'rgba(255,255,255,0.15)',
     borderRadius: 18,
+  },
+  bellButton: {
+    marginRight: theme.spacing[2],
+  },
+  alertBadge: {
+    position: 'absolute' as const,
+    top: 2,
+    right: 2,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#E53935',
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingHorizontal: 3,
+  },
+  alertBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '700' as const,
   },
   welcomeText: {
     fontFamily: theme.fonts.semiBold,

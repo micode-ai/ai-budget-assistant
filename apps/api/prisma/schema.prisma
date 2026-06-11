@@ -93,6 +93,7 @@ model User {
   notifyDebtReminders     Boolean   @default(true) @map("notify_debt_reminders")
   notifyRecurringExpenses Boolean   @default(true) @map("notify_recurring_expenses")
   notifySubscriptionRenewals Boolean @default(true) @map("notify_subscription_renewals")
+  notifyAnomalyAlerts     Boolean   @default(true) @map("notify_anomaly_alerts")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
@@ -217,6 +218,7 @@ model Account {
   chatConversations       ChatConversation[]
   importBatches           ImportBatch[]
   userSubscriptions       UserSubscription[]
+  anomalyAlerts           AnomalyAlert[]
 
   @@map("accounts")
 }
@@ -1413,6 +1415,29 @@ model UserSubscription {
 
   @@index([accountId, isActive])
   @@map("user_subscriptions")
+}
+
+// ---- Anomaly Alerts ----
+
+model AnomalyAlert {
+  id          String    @id @default(uuid())
+  accountId   String    @map("account_id")
+  userId      String    @map("user_id")
+  type        String
+  dedupKey    String    @map("dedup_key")
+  params      Json
+  expenseId   String?   @map("expense_id")
+  categoryId  String?   @map("category_id")
+  pushSent    Boolean   @default(false) @map("push_sent")
+  readAt      DateTime? @map("read_at")
+  dismissedAt DateTime? @map("dismissed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, dedupKey])
+  @@index([accountId, createdAt])
+  @@map("anomaly_alerts")
 }
 
 // ---- CSV Import Mappings ----

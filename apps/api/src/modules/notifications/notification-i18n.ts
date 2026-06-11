@@ -71,6 +71,26 @@ interface ChatMentionParams {
   preview: string;
 }
 
+interface PriceIncreaseParams {
+  merchant: string;
+  oldAmount: string;
+  newAmount: string;
+  currencyCode: string;
+  percent: number;
+}
+
+interface DuplicateChargeParams {
+  merchant: string;
+  amount: string;
+  currencyCode: string;
+}
+
+interface RecurringSuggestionParams {
+  merchant: string;
+  amount: string;
+  currencyCode: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -104,6 +124,12 @@ const translations: Record<string, {
   recurringExpenseBody: (p: RecurringExpenseParams) => string;
   chatMentionTitle: (p: ChatMentionParams) => string;
   chatMentionBody: (p: ChatMentionParams) => string;
+  priceIncreaseTitle: (p: PriceIncreaseParams) => string;
+  priceIncreaseBody: (p: PriceIncreaseParams) => string;
+  duplicateChargeTitle: (p: DuplicateChargeParams) => string;
+  duplicateChargeBody: (p: DuplicateChargeParams) => string;
+  recurringSuggestionTitle: (p: RecurringSuggestionParams) => string;
+  recurringSuggestionBody: (p: RecurringSuggestionParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -150,6 +176,15 @@ const translations: Record<string, {
       `${currencyCode} ${amount} auto-logged (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} mentioned you`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} got more expensive`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} charged ${currencyCode} ${newAmount}, up from ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Possible duplicate charge',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} charged ${currencyCode} ${amount} twice within two days. Worth checking.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} looks like a subscription`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} charges ${currencyCode} ${amount} regularly. Track it as a subscription?`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -196,6 +231,15 @@ const translations: Record<string, {
       `${amount} ${currencyCode} автоматически добавлено (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} упомянул вас`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} подорожал`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} списал ${currencyCode} ${newAmount} вместо ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Возможен повторный платёж',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} списал ${currencyCode} ${amount} дважды за два дня. Стоит проверить.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} похож на подписку`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} регулярно списывает ${currencyCode} ${amount}. Отслеживать как подписку?`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -242,6 +286,15 @@ const translations: Record<string, {
       `${amount} ${currencyCode} автоматично додано (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} згадав вас`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} подорожчав`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} списав ${currencyCode} ${newAmount} замість ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Можливий повторний платіж',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} списав ${currencyCode} ${amount} двічі за два дні. Варто перевірити.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} схожий на підписку`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} регулярно списує ${currencyCode} ${amount}. Відстежувати як підписку?`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -288,6 +341,15 @@ const translations: Record<string, {
       `${amount} ${currencyCode} automatycznie dodane (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} wspomniał o tobie`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} podrożał`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} pobrał ${currencyCode} ${newAmount} zamiast ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Możliwa podwójna płatność',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} pobrał ${currencyCode} ${amount} dwa razy w ciągu dwóch dni. Warto sprawdzić.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} wygląda na subskrypcję`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} regularnie pobiera ${currencyCode} ${amount}. Śledzić jako subskrypcję?`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -334,6 +396,15 @@ const translations: Record<string, {
       `${currencyCode} ${amount} registrado automáticamente (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} te mencionó`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} ha subido de precio`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} cobró ${currencyCode} ${newAmount}, antes ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Posible cargo duplicado',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} cobró ${currencyCode} ${amount} dos veces en dos días. Conviene revisarlo.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} parece una suscripción`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} cobra ${currencyCode} ${amount} con regularidad. ¿Quieres seguirla como suscripción?`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -380,6 +451,15 @@ const translations: Record<string, {
       `${amount} ${currencyCode} enregistré automatiquement (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} vous a mentionné`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} a augmenté`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} a prélevé ${currencyCode} ${newAmount} au lieu de ${currencyCode} ${oldAmount} (+${percent} %).`,
+    duplicateChargeTitle: () => 'Possible double prélèvement',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} a prélevé ${currencyCode} ${amount} deux fois en deux jours. À vérifier.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} ressemble à un abonnement`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} prélève ${currencyCode} ${amount} régulièrement. Le suivre comme abonnement ?`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -426,6 +506,15 @@ const translations: Record<string, {
       `${amount} ${currencyCode} automatisch hinzugefügt (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} hat dich erwähnt`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} ist teurer geworden`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} hat ${currencyCode} ${newAmount} statt ${currencyCode} ${oldAmount} abgebucht (+${percent} %).`,
+    duplicateChargeTitle: () => 'Mögliche doppelte Abbuchung',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} hat ${currencyCode} ${amount} zweimal innerhalb von zwei Tagen abgebucht. Bitte prüfen.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} sieht nach einem Abo aus`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} bucht regelmäßig ${currencyCode} ${amount} ab. Als Abo verfolgen?`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -472,6 +561,15 @@ const translations: Record<string, {
       `${amount} ${currencyCode} аўтаматычна дадана (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} згадаў вас`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} падаражэў`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} спісаў ${currencyCode} ${newAmount} замест ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Магчымы паўторны плацёж',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} спісаў ${currencyCode} ${amount} двойчы за два дні. Варта праверыць.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} падобны на падпіску`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} рэгулярна спісвае ${currencyCode} ${amount}. Адсочваць як падпіску?`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -518,6 +616,15 @@ const translations: Record<string, {
       `${currencyCode} ${amount} automatisch geregistreerd (${period})`,
     chatMentionTitle: ({ senderName }) => `${senderName} heeft je genoemd`,
     chatMentionBody: ({ preview }) => preview,
+    priceIncreaseTitle: ({ merchant }) => `${merchant} is duurder geworden`,
+    priceIncreaseBody: ({ merchant, oldAmount, newAmount, currencyCode, percent }) =>
+      `${merchant} rekende ${currencyCode} ${newAmount} af in plaats van ${currencyCode} ${oldAmount} (+${percent}%).`,
+    duplicateChargeTitle: () => 'Mogelijk dubbele afschrijving',
+    duplicateChargeBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} schreef ${currencyCode} ${amount} twee keer af binnen twee dagen. Controleer dit even.`,
+    recurringSuggestionTitle: ({ merchant }) => `${merchant} lijkt op een abonnement`,
+    recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
+      `${merchant} schrijft regelmatig ${currencyCode} ${amount} af. Volgen als abonnement?`,
   },
 };
 
@@ -629,4 +736,28 @@ export function chatMentionTitle(lang: Lang, params: ChatMentionParams): string 
 }
 export function chatMentionBody(lang: Lang, params: ChatMentionParams): string {
   return t(lang).chatMentionBody(params);
+}
+
+export function priceIncreaseTitle(lang: Lang, params: PriceIncreaseParams): string {
+  return t(lang).priceIncreaseTitle(params);
+}
+
+export function priceIncreaseBody(lang: Lang, params: PriceIncreaseParams): string {
+  return t(lang).priceIncreaseBody(params);
+}
+
+export function duplicateChargeTitle(lang: Lang, params: DuplicateChargeParams): string {
+  return t(lang).duplicateChargeTitle(params);
+}
+
+export function duplicateChargeBody(lang: Lang, params: DuplicateChargeParams): string {
+  return t(lang).duplicateChargeBody(params);
+}
+
+export function recurringSuggestionTitle(lang: Lang, params: RecurringSuggestionParams): string {
+  return t(lang).recurringSuggestionTitle(params);
+}
+
+export function recurringSuggestionBody(lang: Lang, params: RecurringSuggestionParams): string {
+  return t(lang).recurringSuggestionBody(params);
 }

@@ -120,6 +120,9 @@ export function handleNotificationResponse(
       );
       break;
     }
+    case 'spending_anomaly':
+      router.push('/alerts' as any);
+      break;
     default:
       break;
   }

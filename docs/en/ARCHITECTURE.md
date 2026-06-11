@@ -507,6 +507,7 @@ src/
 │   ├── encryption/             # Client-side E2EE key management
 │   ├── app-versions/           # App version gate (update prompt)
 │   ├── health/                 # Public health check (SELECT 1)
+│   ├── anomaly/                # Rule-based on-write anomaly detection → AnomalyAlert feed
 │   └── whatsapp/               # WhatsApp Business Cloud bot
 │       ├── whatsapp-bot.service.ts
 │       ├── whatsapp-bot.controller.ts
@@ -1178,12 +1179,20 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 
 **Notification types:**
 - `budget_alert` — triggered when spending exceeds budget threshold
-- `spending_anomaly` — triggered when category spending increases >30% from 3-month average
+- `spending_anomaly` — triggered by the anomaly module (category spike, price increase, duplicate charge, recurring suggestion); capped at 3 per account per day
 - `shared_expense` — triggered when a member creates an expense in a shared account
+- `debt_reminder` — upcoming or overdue debt due-date reminder
+- `recurring_expense` — auto-created recurring expense notification
+- `subscription_renewal` — subscription renewal reminder or auto-charge notification
+- `chat_mention` — user was @mentioned in a shared AI conversation
 
-**User preferences:**
-- `notifyBudgetAlerts` — controls budget_alert and spending_anomaly notifications
-- `notifySharedActivity` — controls shared_expense notifications
+**User preferences** (`GET/PATCH /users/me/notification-preferences`)
+- `budgetAlerts` — controls `budget_alert` notifications
+- `sharedActivity` — controls `shared_expense` and `chat_mention` notifications
+- `debtReminders` — controls `debt_reminder` notifications
+- `recurringExpenses` — controls `recurring_expense` notifications
+- `subscriptionRenewals` — controls `subscription_renewal` notifications
+- `anomalyAlerts` — controls `spending_anomaly` push notifications from the anomaly module (default `true`)
 
 **Batch processing:** Notifications are sent in batches of 100 messages.
 
@@ -1284,6 +1293,27 @@ The Insights module provides:
 
 1. **Spending Anomalies**: Compares current month's category spending against 3-month average. Categories with >30% increase are flagged.
 2. **Budget Predictions**: Forecasts budget exhaustion dates based on daily burn rate and projects end-of-period totals.
+
+### Proactive Anomaly Alerts (`anomaly` module)
+
+The `anomaly` module (37th API module) runs **rule-based on-write detection** and persists results to the `anomaly_alerts` feed table. Unlike the passive Insights endpoint, alerts are pushed to users as they happen.
+
+**4 detectors:**
+
+| Detector | Trigger condition |
+|----------|-------------------|
+| `category_spike` | New expense causes the category's rolling 30-day total to exceed 150% of the prior 30-day average |
+| `price_increase` | Same merchant charged >20% more than the most recent prior transaction |
+| `duplicate_charge` | Same merchant + amount within 24 hours of a previous expense |
+| `recurring_suggestion` | Identical merchant + amount detected in ≥3 separate calendar months |
+
+**Dedup:** each alert has a deterministic `dedupKey` with a `@@unique([accountId, dedupKey])` constraint — the same event cannot produce duplicate rows regardless of retry or race conditions.
+
+**Push cap:** at most 3 `spending_anomaly` push notifications are sent per account per calendar day; further alerts are written to the feed but not pushed. Gate: `user.anomalyAlerts` preference (default `true`).
+
+**Hooks:** `ExpensesService.create` calls `AnomalyService.analyzeExpense(expense)` synchronously after the expense row is committed. Import commit endpoints (`import-wise`, `import-bank`) call `AnomalyService.analyzeExpenseBatch(expenses)` asynchronously (fire-and-forget) so import throughput is unaffected.
+
+**API:** `GET /alerts`, `PATCH /alerts/read-all`, `PATCH /alerts/:id/read`, `DELETE /alerts/:id` — all behind `JwtAuthGuard + AccountContextGuard`; write endpoints guarded by `ViewerBlockGuard`.
 
 ## Merchant Tracking
 

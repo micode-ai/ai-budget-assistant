@@ -42,6 +42,7 @@ import { ImportWiseModule } from './modules/import-wise/import-wise.module';
 import { ImportBankModule } from './modules/import-bank/import-bank.module';
 import { ImportBatchesModule } from './modules/import-batches/import-batches.module';
 import { UserSubscriptionsModule } from './modules/user-subscriptions/user-subscriptions.module';
+import { AnomalyModule } from './modules/anomaly/anomaly.module';
 import { CacheModule } from './common/cache/cache.module';
 
 @Module({
@@ -95,6 +96,7 @@ import { CacheModule } from './common/cache/cache.module';
     InsightsModule,
     SubscriptionsModule,
     AdminModule,
+    AnomalyModule,
     TagsModule,
     ProjectsModule,
     GamificationModule,
