@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Platform } from 'react-native';
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { QuickActionIcon } from '@/components/QuickActionIcon';
@@ -92,12 +92,24 @@ export default function DashboardScreen() {
     if (currentAccountId) {
       hydrateTransactions().then(() => loadDebts());
       loadProfile();
-      loadAlerts();
       if (currentAccountType === 'investment') {
         loadInvestmentSummary();
       }
     }
-  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary, loadAlerts]);
+  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+
+  // Refresh the alerts feed whenever the home tab regains focus (e.g. after
+  // adding an expense and returning). The server creates anomaly alerts
+  // asynchronously, so re-check once more shortly after to catch a fresh one
+  // — this keeps the bell badge current without a manual pull-to-refresh.
+  useFocusEffect(
+    useCallback(() => {
+      if (!currentAccountId) return;
+      loadAlerts();
+      const t = setTimeout(() => loadAlerts(), 2500);
+      return () => clearTimeout(t);
+    }, [loadAlerts, currentAccountId]),
+  );
 
   const monthlyBudgetSummary = getMonthlyBudgetSummary();
   const totalBudget = monthlyBudgetSummary.totalAmount;
