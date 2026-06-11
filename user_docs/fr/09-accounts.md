@@ -35,6 +35,8 @@ Appuyez sur **Gerer les comptes** en bas du menu deroulant pour acceder a la lis
 
 Changez la devise dans laquelle tous vos totaux sont affiches — depuis n'importe quel ecran, sans ouvrir les Parametres.
 
+Sur l'écran d'accueil, la façon la plus rapide est la **pastille de devise** dédiée à côté du nom du compte — appuyez dessus et choisissez une devise. Sur les autres écrans :
+
 1. Appuyez sur le **nom du compte** dans le coin superieur gauche de n'importe quel ecran. Le symbole de la devise actuelle apparait a cote du nom (par ex. `Personnel · $`).
 2. Dans le menu qui s'ouvre, trouvez la section **Devise d'affichage** sous votre liste de comptes.
 3. Appuyez sur la devise souhaitee (USD, EUR, PLN, GBP, UAH, RUB, BYN).

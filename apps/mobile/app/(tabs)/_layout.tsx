@@ -1,11 +1,12 @@
 import { Tabs, Redirect, router } from 'expo-router';
-import { TouchableOpacity, Image, StyleSheet, View, Platform } from 'react-native';
+import { TouchableOpacity, Text, Image, StyleSheet, View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
-import { AccountSwitcher } from '@/components/AccountSwitcher';
+import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
+import { useAlertStore } from '@/stores/alertStore';
 import { useTheme } from '@/theme';
 import { HydrationProgressBar } from '@/components/HydrationProgressBar';
 
@@ -16,6 +17,90 @@ const tabIcons = {
   analytics: require('../../assets/widget-icons/analytics.png'),
   ai_chat: require('../../assets/widget-icons/ai_chat.png'),
 };
+
+function TabHeader({ title }: { title: string }) {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  const unreadAlertCount = useAlertStore((s) => s.unreadCount);
+
+  const btn = {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+  };
+
+  return (
+    <View style={{ backgroundColor: theme.colors.primary, paddingTop: insets.top }}>
+      {/* Controls row */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, marginTop: 8 }}>
+        <AccountSwitcher compact showCurrency={false} />
+        <CurrencyPill compact />
+        <View style={{ flex: 1 }} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <TouchableOpacity onPress={() => router.push('/alerts')} style={btn}>
+            <Ionicons name="notifications-outline" size={20} color={theme.colors.textInverse} />
+            {unreadAlertCount > 0 && (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -1,
+                  right: -1,
+                  minWidth: 15,
+                  height: 15,
+                  borderRadius: 7.5,
+                  backgroundColor: '#E53935',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingHorizontal: 3,
+                }}
+              >
+                <Text style={{ color: '#FFFFFF', fontSize: 9, fontWeight: '700' }}>
+                  {unreadAlertCount > 9 ? '9+' : unreadAlertCount}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/settings')} style={btn}>
+            <Ionicons name="settings-outline" size={20} color={theme.colors.textInverse} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Divider under the controls — same geometry as the home header
+          (16px side padding + 95% width) so it lines up with page content. */}
+      <View style={{ alignItems: 'center', paddingHorizontal: 16 }}>
+        <View
+          style={{
+            width: '95%',
+            height: 1.5,
+            borderRadius: 1,
+            backgroundColor: 'rgba(255,255,255,0.55)',
+            marginTop: 10,
+          }}
+        />
+      </View>
+
+      {/* Page title — below the divider, its own row */}
+      <Text
+        numberOfLines={1}
+        style={{
+          textAlign: 'center',
+          color: theme.colors.textInverse,
+          fontFamily: theme.fonts.regular,
+          fontSize: 17,
+          paddingTop: 8,
+          paddingBottom: 10,
+          paddingHorizontal: 16,
+        }}
+      >
+        {title}
+      </Text>
+    </View>
+  );
+}
 
 export default function TabLayout() {
   const { isAuthenticated } = useAuthStore();
@@ -55,24 +140,12 @@ export default function TabLayout() {
         tabBarLabelStyle: {
           ...theme.textStyles.tabLabel,
         },
-        headerStyle: {
-          backgroundColor: theme.colors.primary,
-        },
-        headerTintColor: theme.colors.textInverse,
-        headerTitleStyle: {
-          fontFamily: theme.fonts.bold,
-          fontSize: 18,
-        },
-        headerTitleAlign: 'center',
-        headerTitleContainerStyle: { transform: [{ translateX: 20 }] },
-        headerLeft: () => <AccountSwitcher />,
-        headerRight: () => (
-          <TouchableOpacity
-            onPress={() => router.push('/settings')}
-            style={{ marginRight: 16, width: 56, alignItems: 'flex-end' }}
-          >
-            <Ionicons name="settings-outline" size={24} color={theme.colors.textInverse} />
-          </TouchableOpacity>
+        // Custom two-row header: page title on its own top row, then the
+        // account/currency pills + bell/settings row, then the divider.
+        // Gives precise control over spacing (RN's default header centres the
+        // side controls vertically, which left a long title overlapping them).
+        header: ({ options }) => (
+          <TabHeader title={typeof options.title === 'string' ? options.title : ''} />
         ),
       }}
     >

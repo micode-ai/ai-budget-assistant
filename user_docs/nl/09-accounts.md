@@ -35,6 +35,8 @@ Tik op **Accounts beheren** onderaan het uitklapmenu om naar de volledige accoun
 
 Wijzig de valuta waarin al je totalen worden getoond — vanuit elk scherm, zonder Instellingen te openen.
 
+Op het startscherm gaat het het snelst via de speciale **valutaknop** naast de accountnaam — tik erop en kies een valuta. Op andere schermen:
+
 1. Tik op de **accountnaam** linksboven in een willekeurig scherm. Het huidige valutasymbool verschijnt naast de naam (bijv. `Persoonlijk · $`).
 2. Zoek in het menu dat opent de sectie **Weergavevaluta** onder je accountlijst.
 3. Tik op de gewenste valuta (USD, EUR, PLN, GBP, UAH, RUB, BYN).

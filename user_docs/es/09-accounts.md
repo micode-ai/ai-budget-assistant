@@ -35,6 +35,8 @@ Toca **Gestionar cuentas** en la parte inferior del menu desplegable para ir a l
 
 Cambia la moneda en la que se muestran todos tus totales — desde cualquier pantalla, sin abrir Ajustes.
 
+En la pantalla de inicio, la forma más rápida es la **pastilla de moneda** dedicada junto al nombre de la cuenta — tócala y elige una moneda. En otras pantallas:
+
 1. Toca el **nombre de la cuenta** en la esquina superior izquierda de cualquier pantalla. Junto al nombre aparece el simbolo de la moneda actual (por ejemplo, `Personal · $`).
 2. En el menu que se abre, busca la seccion **Moneda de visualizacion** debajo de tu lista de cuentas.
 3. Toca la moneda que quieras (USD, EUR, PLN, GBP, UAH, RUB, BYN).

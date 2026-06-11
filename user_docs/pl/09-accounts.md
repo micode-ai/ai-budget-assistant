@@ -35,6 +35,8 @@ Dotknij **Zarzadzaj kontami** na dole menu, aby przejsc do pelnej listy kont.
 
 Zmien walute, w ktorej wyswietlane sa wszystkie Twoje sumy — z dowolnego ekranu, bez otwierania Ustawien.
 
+Na ekranie głównym najszybszym sposobem jest dedykowany **przycisk waluty** obok nazwy konta — dotknij go i wybierz walutę. Na pozostałych ekranach:
+
 1. Dotknij **nazwe konta** w lewym gornym rogu dowolnego ekranu. Obok nazwy widoczny jest symbol biezacej waluty (np. `Osobiste · $`).
 2. W otwartym menu znajdz sekcje **Waluta wyswietlania** pod lista kont.
 3. Dotknij wybrana walute (USD, EUR, PLN, GBP, UAH, RUB, BYN).

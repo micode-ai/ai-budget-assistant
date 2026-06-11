@@ -27,7 +27,14 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = 
   investment: 'trending-up-outline',
 };
 
-export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
+export function AccountSwitcher({
+  compact = false,
+  showCurrency = true,
+}: {
+  compact?: boolean;
+  /** Hide the inline currency symbol when a separate CurrencyPill sits next to the switcher. */
+  showCurrency?: boolean;
+}) {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
   const { accounts, currentAccountId, switchAccount } = useAccountStore();
@@ -69,9 +76,11 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
         <Text style={[styles.triggerText, compact && styles.triggerTextCompact]} numberOfLines={1}>
           {currentAccount?.name || t('accounts.personal')}
         </Text>
-        <Text style={[styles.triggerCurrency, compact && styles.triggerCurrencyCompact]}>
-          {` · ${getCurrencySymbol(currencyCode)}`}
-        </Text>
+        {showCurrency && (
+          <Text style={[styles.triggerCurrency, compact && styles.triggerCurrencyCompact]}>
+            {` · ${getCurrencySymbol(currencyCode)}`}
+          </Text>
+        )}
         <Ionicons name="chevron-down" size={compact ? 12 : 16} color={theme.colors.textInverse} />
       </TouchableOpacity>
 
@@ -169,6 +178,74 @@ export function AccountSwitcher({ compact = false }: { compact?: boolean }) {
   );
 }
 
+/**
+ * Standalone display-currency pill for the home hero header. Opens the same
+ * currency chips the AccountSwitcher menu offers; changes route through
+ * authStore.setCurrency (single source of the optimistic/persist logic).
+ * Currency is a user preference, not account-scoped — no canEdit gate.
+ */
+export function CurrencyPill({ compact = false }: { compact?: boolean }) {
+  const [visible, setVisible] = useState(false);
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+
+  const user = useAuthStore((s) => s.user);
+  const setCurrency = useAuthStore((s) => s.setCurrency);
+  const currencyCode = (user?.currencyCode || 'USD') as Currency;
+
+  return (
+    <>
+      <TouchableOpacity
+        style={[styles.trigger, compact && styles.triggerCompact, styles.currencyPillTrigger]}
+        onPress={() => setVisible(true)}
+      >
+        <Text style={[styles.triggerCurrency, compact && styles.triggerCurrencyCompact]}>
+          {getCurrencySymbol(currencyCode)}
+        </Text>
+        <Ionicons name="chevron-down" size={compact ? 12 : 16} color={theme.colors.textInverse} />
+      </TouchableOpacity>
+
+      <Modal
+        visible={visible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setVisible(false)}
+      >
+        <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
+          <View style={styles.dropdown}>
+            <Text style={styles.dropdownTitle}>{t('accounts.displayCurrency')}</Text>
+            <View style={styles.currencyPillChips}>
+              {SUPPORTED_CURRENCIES.map((c) => {
+                const active = c.code === currencyCode;
+                return (
+                  <TouchableOpacity
+                    key={c.code}
+                    style={[styles.currencyChip, active && styles.currencyChipActive]}
+                    onPress={() => {
+                      setVisible(false);
+                      setCurrency(c.code);
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.currencyChipText,
+                        active && styles.currencyChipTextActive,
+                      ]}
+                    >
+                      {c.code}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
+    </>
+  );
+}
+
 const createStyles = (theme: Theme) => ({
   trigger: {
     flexDirection: 'row' as const,
@@ -203,6 +280,17 @@ const createStyles = (theme: Theme) => ({
   },
   triggerCurrencyCompact: {
     fontSize: 12,
+  },
+  currencyPillTrigger: {
+    marginLeft: theme.spacing[2],
+    maxWidth: undefined,
+  },
+  currencyPillChips: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[5],
+    paddingBottom: theme.spacing[2],
   },
   overlay: {
     flex: 1,

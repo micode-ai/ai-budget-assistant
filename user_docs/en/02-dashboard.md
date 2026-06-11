@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Dashboard is the first screen you see after logging in. It displays a personalized greeting, your current account context, and key financial metrics for the current month.
+The Dashboard is the first screen you see after logging in. It displays your current account context and key financial metrics for the current month.
 
 ![Dashboard with quick actions and budget overview](../img/home-1.jpg)
 
@@ -12,9 +12,11 @@ The Dashboard is the first screen you see after logging in. It displays a person
 
 At the top-left corner, tap the account name (e.g., **Family**) to open the **Switch Account** dropdown. You can switch between your Personal, Shared, and Business accounts. All data on the Dashboard updates to reflect the selected account.
 
+Next to the account name there is a separate **currency pill** (e.g., `zł`) — tap it to instantly change the display currency.
+
 ## Quick Actions
 
-The quick-action strip below the greeting is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. Swipe left to see more.
+The quick-action strip below the header is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. When there are more actions than fit on screen, a chevron appears at the right edge — swipe left to reveal the rest.
 
 Available actions:
 

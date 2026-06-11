@@ -4,7 +4,7 @@
 
 ## Overzicht
 
-Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont een persoonlijke begroeting, je huidige accountcontext en de belangrijkste financiële cijfers voor de huidige maand.
+Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont je huidige accountcontext en de belangrijkste financiële cijfers voor de huidige maand.
 
 ![Dashboard met snelle acties en budgetoverzicht](../img/home-1.jpg)
 
@@ -12,9 +12,11 @@ Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont een pe
 
 Tik linksboven op de accountnaam (bijv. **Familie**) om het uitklapmenu **Account wisselen** te openen. Je kunt schakelen tussen je Persoonlijke, Gedeelde en Zakelijke accounts. Alle gegevens op het Dashboard worden bijgewerkt naar het geselecteerde account.
 
+Naast de accountnaam staat een aparte **valutaknop** (bijv. `zł`) — tik erop om de weergavevaluta direct te wijzigen.
+
 ## Snelle acties
 
-De balk met snelle acties onder de begroeting is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Veeg naar links om meer te zien.
+De balk met snelle acties onder de header is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Wanneer er meer acties zijn dan op het scherm passen, verschijnt aan de rechterkant een chevron — veeg naar links om de rest te zien.
 
 Beschikbare acties:
 

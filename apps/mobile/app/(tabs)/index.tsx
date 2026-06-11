@@ -1,8 +1,9 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, Platform } from 'react-native';
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, Platform, type NativeSyntheticEvent, type NativeScrollEvent } from 'react-native';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const quickActionIcons = {
   add_expense: require('../../assets/widget-icons/add_expense.png'),
@@ -27,7 +28,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
-import { AccountSwitcher } from '@/components/AccountSwitcher';
+import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
 import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget } from '@/components/widgets';
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
@@ -177,15 +178,29 @@ export default function DashboardScreen() {
 
   const ICON_BOX = 48;
 
+  // Right-edge "more actions" affordance: show a fading chevron when the quick-action
+  // strip overflows and isn't scrolled to the end, so users know it scrolls horizontally.
+  const [quickActionsCanScroll, setQuickActionsCanScroll] = useState(false);
+  const [quickActionsAtEnd, setQuickActionsAtEnd] = useState(false);
+  const stripViewportWidth = useRef(0);
+  const stripContentWidth = useRef(0);
+  const recomputeStripScroll = useCallback(() => {
+    setQuickActionsCanScroll(stripContentWidth.current > stripViewportWidth.current + 1);
+  }, []);
+  const onStripScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
+    setQuickActionsAtEnd(contentOffset.x + layoutMeasurement.width >= contentSize.width - 4);
+  }, []);
+  const showScrollHint = showQuickActions && quickActionsCanScroll && !quickActionsAtEnd;
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Orange Hero Header */}
       <View style={[styles.heroHeader, !showQuickActions && styles.heroHeaderNoStrip]}>
         <View style={styles.heroTopRow}>
-          <AccountSwitcher compact />
-          <Text style={styles.welcomeText} numberOfLines={1}>
-            {t('dashboard.hello', { name: (user?.name || 'User').trim() })}
-          </Text>
+          <AccountSwitcher compact showCurrency={false} />
+          <CurrencyPill compact />
+          <View style={styles.heroTopSpacer} />
           <TouchableOpacity
             onPress={() => router.push('/alerts' as any)}
             style={[styles.settingsButton, styles.bellButton]}
@@ -204,6 +219,7 @@ export default function DashboardScreen() {
             <Ionicons name="settings-outline" size={22} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
+        <View style={styles.heroDivider} />
       </View>
 
       {/* Quick Actions — fixed between header and scroll content */}
@@ -212,6 +228,16 @@ export default function DashboardScreen() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            onLayout={(e) => {
+              stripViewportWidth.current = e.nativeEvent.layout.width;
+              recomputeStripScroll();
+            }}
+            onContentSizeChange={(w) => {
+              stripContentWidth.current = w;
+              recomputeStripScroll();
+            }}
+            scrollEventThrottle={16}
+            onScroll={onStripScroll}
             contentContainerStyle={[styles.quickActionsRow, Platform.OS === 'web' && styles.webCenterRow]}
           >
             {visibleQuickActions.map((key) => (
@@ -229,6 +255,17 @@ export default function DashboardScreen() {
               </TouchableOpacity>
             ))}
           </ScrollView>
+          {showScrollHint && (
+            <LinearGradient
+              colors={['transparent', theme.colors.background]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.scrollHint}
+              pointerEvents="none"
+            >
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.primary} />
+            </LinearGradient>
+          )}
         </View>
       )}
 
@@ -529,18 +566,37 @@ const createStyles = (theme: Theme) => ({
     fontSize: 10,
     fontWeight: '700' as const,
   },
-  welcomeText: {
-    fontFamily: theme.fonts.semiBold,
-    fontSize: 18,
-    color: '#FFFFFF',
+  heroTopSpacer: {
     flex: 1,
-    textAlign: 'center' as const,
+  },
+  // Centered white separator under the header controls (matches the tab headers).
+  heroDivider: {
+    alignSelf: 'center' as const,
+    width: '95%' as const,
+    height: 1.5,
+    borderRadius: 1,
+    backgroundColor: 'rgba(255,255,255,0.55)',
+    marginBottom: theme.spacing[2],
   },
   // Quick actions row — sits between header and ScrollView, overlaps header by 24px
   quickActionsWrapper: {
     marginTop: -24, // pulls top half of icons into orange header
     zIndex: 1,
     paddingBottom: theme.spacing[3],
+  },
+  // Right-edge fade + chevron that signals the quick-action strip scrolls horizontally.
+  // Starts at y=24 (the strip's overlap into the orange header) so the fade only
+  // covers the on-background portion — never paints over the orange hero.
+  scrollHint: {
+    position: 'absolute' as const,
+    right: 0,
+    top: 24,
+    bottom: theme.spacing[3],
+    width: 44,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'flex-end' as const,
+    paddingRight: theme.spacing[1],
   },
   quickActionsRow: {
     flexDirection: 'row' as const,

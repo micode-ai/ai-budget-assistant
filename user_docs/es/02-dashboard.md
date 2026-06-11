@@ -4,7 +4,7 @@
 
 ## Vista general
 
-El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra un saludo personalizado, el contexto de tu cuenta actual y las metricas financieras clave del mes en curso.
+El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra el contexto de tu cuenta actual y las metricas financieras clave del mes en curso.
 
 ![Panel con acciones rapidas y resumen de presupuesto](../img/home-1.jpg)
 
@@ -12,9 +12,11 @@ El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra un sa
 
 En la esquina superior izquierda, toca el nombre de la cuenta (por ejemplo, **Familia**) para abrir el menu desplegable **Cambiar cuenta**. Puedes alternar entre tus cuentas Personal, Compartida y Empresa. Todos los datos del Panel se actualizan para reflejar la cuenta seleccionada.
 
+Junto al nombre de la cuenta hay una **pastilla de moneda** independiente (p. ej., `zł`) — tócala para cambiar al instante la moneda de visualización.
+
 ## Acciones rapidas
 
-La barra de acciones rápidas debajo del saludo es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Desliza hacia la izquierda para ver más.
+La barra de acciones rápidas debajo de la cabecera es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Cuando hay más acciones de las que caben en pantalla, aparece un chevron en el borde derecho — desliza hacia la izquierda para ver el resto.
 
 Acciones disponibles:
 

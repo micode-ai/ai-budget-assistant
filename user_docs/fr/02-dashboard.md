@@ -4,7 +4,7 @@
 
 ## Apercu
 
-Le Tableau de bord est le premier ecran que vous voyez apres vous etre connecte. Il affiche un message d'accueil personnalise, le contexte de votre compte actuel et les indicateurs financiers cles du mois en cours.
+Le Tableau de bord est le premier ecran que vous voyez apres vous etre connecte. Il affiche le contexte de votre compte actuel et les indicateurs financiers cles du mois en cours.
 
 ![Tableau de bord avec actions rapides et apercu du budget](../img/home-1.jpg)
 
@@ -12,9 +12,11 @@ Le Tableau de bord est le premier ecran que vous voyez apres vous etre connecte.
 
 Dans le coin superieur gauche, appuyez sur le nom du compte (par ex. **Famille**) pour ouvrir le menu deroulant **Changer de compte**. Vous pouvez basculer entre vos comptes Personnel, Partage et Professionnel. Toutes les donnees du Tableau de bord se mettent a jour pour refleter le compte selectionne.
 
+À côté du nom du compte se trouve une **pastille de devise** séparée (par ex. `zł`) — appuyez dessus pour changer instantanément la devise d'affichage.
+
 ## Actions rapides
 
-La barre d'actions rapides sous le message d'accueil est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Faites glisser vers la gauche pour en voir plus.
+La barre d'actions rapides sous l'en-tête est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Lorsqu'il y a plus d'actions que l'écran ne peut en afficher, un chevron apparaît sur le bord droit — faites glisser vers la gauche pour voir le reste.
 
 Actions disponibles :
 
