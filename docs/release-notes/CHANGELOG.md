@@ -8,6 +8,23 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.6.0 — 2026-06-11
+
+**Anomaly alerts**
+- **The app now watches your money for you** — it proactively flags unusual activity: a possible duplicate charge, a subscription or recurring payment that got more expensive, a merchant that "looks like a subscription", or a category spike well above your usual. Tap the new bell on the home screen to see every alert, and turn them on/off in Settings → Notifications (ABA-242).
+- Alerts work for expenses added by hand, by voice, from receipts, via the bots, and from bank imports; the duplicate-charge check matches by merchant **or** description, so a copied expense is caught even without a merchant (ABA-245).
+
+**Refreshed home & header**
+- **New unified header** across the home screen and every tab — the account and display currency are now separate pills, the greeting was removed for a cleaner look, and a white divider tidies the layout (ABA-243).
+- **Quick actions wrap to rows** — every shortcut is visible at once instead of hiding behind a horizontal scroll, with refreshed brand icons (ABA-244).
+
+**Fixes**
+- Amount fields now accept a **comma** as the decimal separator (ABA-241).
+- Web: fixed logout not clearing the session, so you stay logged out after a refresh (ABA-235).
+- Belarusian: added the missing encryption-screen translations (ABA-236).
+
+---
+
 ## 1.5.1 — 2026-06-07
 
 **Web app**
