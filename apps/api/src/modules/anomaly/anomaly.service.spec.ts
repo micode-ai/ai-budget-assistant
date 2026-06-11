@@ -122,9 +122,9 @@ function expenseRow(overrides: Record<string, unknown> = {}) {
 }
 
 describe('detectDuplicateCharge', () => {
-  it('alerts when another same-merchant same-amount expense exists within ±1 day', async () => {
+  it('alerts when another same-payee same-amount expense exists within ±1 day', async () => {
     const { service, prisma } = makeService();
-    prisma.expense.findFirst = jest.fn().mockResolvedValue({ id: 'e-old' });
+    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-old', merchant: 'Netflix', description: 'Netflix' }]);
     const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
 
     await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow() as any);
@@ -134,32 +134,43 @@ describe('detectDuplicateCharge', () => {
     expect(arg.type).toBe('duplicate_charge');
     expect(arg.dedupKey).toBe('dup:e-new');
     expect(arg.expenseId).toBe('e-new');
-    const where = (prisma.expense.findFirst as jest.Mock).mock.calls[0][0].where;
+    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
     expect(where.id).toEqual({ not: 'e-new' });
-    expect(where.merchant).toEqual({ equals: 'Netflix', mode: 'insensitive' });
+    expect(where.currencyCode).toBe('PLN');
   });
 
-  it('does nothing without a merchant', async () => {
+  it('matches by description when the expense has no merchant', async () => {
+    const { service, prisma } = makeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-old', merchant: null, description: 'Coffee' }]);
+    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: 'Coffee' }) as any);
+
+    expect(createSpy).toHaveBeenCalledTimes(1);
+    expect(createSpy.mock.calls[0][0].params.merchant).toBe('Coffee');
+  });
+
+  it('does nothing when both merchant and description are empty', async () => {
     const { service } = makeService();
     const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null }) as any);
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: null }) as any);
     expect(createSpy).not.toHaveBeenCalled();
   });
 
-  it('does nothing when no candidate is found', async () => {
+  it('does nothing when no candidate matches the payee label', async () => {
     const { service, prisma } = makeService();
-    prisma.expense.findFirst = jest.fn().mockResolvedValue(null);
+    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-old', merchant: 'Spotify', description: 'Spotify' }]);
     const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow() as any);
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow() as any); // label "Netflix"
     expect(createSpy).not.toHaveBeenCalled();
   });
 
   it('excludes rows from the same import batch', async () => {
     const { service, prisma } = makeService();
-    prisma.expense.findFirst = jest.fn().mockResolvedValue(null);
+    prisma.expense.findMany = jest.fn().mockResolvedValue([]);
     jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
     await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ importBatchId: 'batch-1' }) as any);
-    const where = (prisma.expense.findFirst as jest.Mock).mock.calls[0][0].where;
+    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
     expect(where.NOT).toEqual({ importBatchId: 'batch-1' });
   });
 });
