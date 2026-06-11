@@ -16,7 +16,7 @@ Neben dem Kontonamen gibt es eine separate **Währungsschaltfläche** (z.B. `zł
 
 ## Schnellaktionen
 
-Die Schnellaktionsleiste unterhalb des Headers ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wenn mehr Aktionen vorhanden sind als auf den Bildschirm passen, erscheint am rechten Rand ein Pfeil — wische nach links, um den Rest anzuzeigen.
+Die Schnellaktionen unterhalb des Headers sind ein Raster von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wenn mehr Aktionen vorhanden sind als in eine Zeile passen, werden sie in die nächste Zeile umgebrochen, sodass alle Aktionen sichtbar bleiben.
 
 Verfügbare Aktionen:
 

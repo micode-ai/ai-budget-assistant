@@ -16,7 +16,7 @@ Junto al nombre de la cuenta hay una **pastilla de moneda** independiente (p. ej
 
 ## Acciones rapidas
 
-La barra de acciones rápidas debajo de la cabecera es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Cuando hay más acciones de las que caben en pantalla, aparece un chevron en el borde derecho — desliza hacia la izquierda para ver el resto.
+Las acciones rápidas debajo de la cabecera son una cuadrícula de atajos de un solo toque a las tareas más comunes. Cuando hay más acciones de las que caben en una fila, se distribuyen en la siguiente fila para que todas las acciones permanezcan visibles.
 
 Acciones disponibles:
 

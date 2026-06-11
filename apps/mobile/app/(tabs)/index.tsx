@@ -1,17 +1,9 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, Platform, type NativeSyntheticEvent, type NativeScrollEvent } from 'react-native';
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Platform } from 'react-native';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-
-const quickActionIcons = {
-  add_expense: require('../../assets/widget-icons/add_expense.png'),
-  scan_receipt: require('../../assets/widget-icons/scan_receipt.png'),
-  voice_input: require('../../assets/widget-icons/voice_input.png'),
-  exchange: require('../../assets/widget-icons/exchange.png'),
-  converter: require('../../assets/widget-icons/converter.png'),
-};
+import { QuickActionIcon } from '@/components/QuickActionIcon';
 import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -136,38 +128,10 @@ export default function DashboardScreen() {
       : theme.colors.primary;
 
   const renderQuickActionIcon = (key: QuickActionKey) => {
-    switch (key) {
-      case 'add_expense':
-        return <Image source={quickActionIcons.add_expense} style={styles.quickActionImage} />;
-      case 'scan_receipt':
-        return <Image source={quickActionIcons.scan_receipt} style={styles.quickActionImage} />;
-      case 'voice_expense':
-        return <Image source={quickActionIcons.voice_input} style={styles.quickActionImage} />;
-      case 'voice_income':
-        return (
-          <Image
-            source={quickActionIcons.voice_input}
-            style={[styles.quickActionImage, { tintColor: theme.colors.success }]}
-          />
-        );
-      case 'scan_invoice':
-        return (
-          <Image
-            source={quickActionIcons.scan_receipt}
-            style={[styles.quickActionImage, { tintColor: theme.colors.success }]}
-          />
-        );
-      case 'exchange':
-        return <Image source={quickActionIcons.exchange} style={styles.quickActionImage} />;
-      case 'converter':
-        return <Image source={quickActionIcons.converter} style={{ width: 28, height: 28 }} />;
-      case 'transfers':
-        return <Ionicons name="swap-horizontal-outline" size={28} color={theme.colors.primary} />;
-      case 'subscriptions':
-        return <Ionicons name="repeat-outline" size={28} color={theme.colors.primary} />;
-      default:
-        return null;
-    }
+    // Income variants reuse the expense SVGs recolored green.
+    if (key === 'voice_income') return <QuickActionIcon name="voice_income" color={theme.colors.success} />;
+    if (key === 'scan_invoice') return <QuickActionIcon name="scan_invoice" color={theme.colors.success} />;
+    return <QuickActionIcon name={key} />;
   };
 
   // De-dupe so a duplicate in the stored order can't render an action twice.
@@ -175,23 +139,6 @@ export default function DashboardScreen() {
   // The header's bottom padding only exists to let the strip's icons overlap up
   // into the orange. With no strip (viewer role, or every action hidden), drop it.
   const showQuickActions = canEdit && visibleQuickActions.length > 0;
-
-  const ICON_BOX = 48;
-
-  // Right-edge "more actions" affordance: show a fading chevron when the quick-action
-  // strip overflows and isn't scrolled to the end, so users know it scrolls horizontally.
-  const [quickActionsCanScroll, setQuickActionsCanScroll] = useState(false);
-  const [quickActionsAtEnd, setQuickActionsAtEnd] = useState(false);
-  const stripViewportWidth = useRef(0);
-  const stripContentWidth = useRef(0);
-  const recomputeStripScroll = useCallback(() => {
-    setQuickActionsCanScroll(stripContentWidth.current > stripViewportWidth.current + 1);
-  }, []);
-  const onStripScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
-    setQuickActionsAtEnd(contentOffset.x + layoutMeasurement.width >= contentSize.width - 4);
-  }, []);
-  const showScrollHint = showQuickActions && quickActionsCanScroll && !quickActionsAtEnd;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -222,50 +169,21 @@ export default function DashboardScreen() {
         <View style={styles.heroDivider} />
       </View>
 
-      {/* Quick Actions — fixed between header and scroll content */}
+      {/* Quick Actions — wrapping grid (4 per row); extra rows push content down */}
       {showQuickActions && (
-        <View style={styles.quickActionsWrapper}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            onLayout={(e) => {
-              stripViewportWidth.current = e.nativeEvent.layout.width;
-              recomputeStripScroll();
-            }}
-            onContentSizeChange={(w) => {
-              stripContentWidth.current = w;
-              recomputeStripScroll();
-            }}
-            scrollEventThrottle={16}
-            onScroll={onStripScroll}
-            contentContainerStyle={[styles.quickActionsRow, Platform.OS === 'web' && styles.webCenterRow]}
-          >
-            {visibleQuickActions.map((key) => (
-              <TouchableOpacity
-                key={key}
-                style={styles.quickActionButton}
-                onPress={() => router.push(quickActionRoutes[key] as any)}
-              >
-                <View style={[styles.quickActionIcon, { width: ICON_BOX, height: ICON_BOX }]}>
-                  {renderQuickActionIcon(key)}
-                </View>
-                <Text style={styles.quickActionText} numberOfLines={2}>
-                  {t(quickActionLabelKey[key])}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          {showScrollHint && (
-            <LinearGradient
-              colors={['transparent', theme.colors.background]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              style={styles.scrollHint}
-              pointerEvents="none"
+        <View style={[styles.quickActionsGrid, Platform.OS === 'web' && styles.webCenterRow]}>
+          {visibleQuickActions.map((key) => (
+            <TouchableOpacity
+              key={key}
+              style={styles.quickActionButton}
+              onPress={() => router.push(quickActionRoutes[key] as any)}
             >
-              <Ionicons name="chevron-forward" size={20} color={theme.colors.primary} />
-            </LinearGradient>
-          )}
+              {renderQuickActionIcon(key)}
+              <Text style={styles.quickActionText} numberOfLines={2}>
+                {t(quickActionLabelKey[key])}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
       )}
 
@@ -522,14 +440,15 @@ const createStyles = (theme: Theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  // Orange Hero Header — paddingBottom creates room for top half of quick action icons
+  // Orange Hero Header — paddingBottom leaves room for the first quick-action
+  // row to overlap up into the orange (the grid uses a matching negative margin).
   heroHeader: {
     backgroundColor: theme.colors.primary,
     paddingHorizontal: theme.spacing[4],
-    paddingBottom: 24, // = ICON_BOX / 2
+    paddingBottom: 24,
   },
   heroHeaderNoStrip: {
-    paddingBottom: theme.spacing[4],
+    paddingBottom: theme.spacing[1],
   },
   heroTopRow: {
     flexDirection: 'row' as const,
@@ -578,58 +497,28 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: 'rgba(255,255,255,0.55)',
     marginBottom: theme.spacing[2],
   },
-  // Quick actions row — sits between header and ScrollView, overlaps header by 24px
-  quickActionsWrapper: {
-    marginTop: -24, // pulls top half of icons into orange header
+  // Quick actions — wrapping, centered grid. The first row overlaps up into the
+  // orange hero (marginTop) like before; extra rows grow the block downward and
+  // push the page content below it down (no horizontal scroll).
+  quickActionsGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    justifyContent: 'center' as const,
+    columnGap: theme.spacing[2],
+    rowGap: theme.spacing[3],
+    paddingHorizontal: theme.spacing[2],
+    paddingBottom: theme.spacing[1],
+    marginTop: -22, // pull the first row up into the orange header (backed icons stay visible)
     zIndex: 1,
-    paddingBottom: theme.spacing[3],
   },
-  // Right-edge fade + chevron that signals the quick-action strip scrolls horizontally.
-  // Starts at y=24 (the strip's overlap into the orange header) so the fade only
-  // covers the on-background portion — never paints over the orange hero.
-  scrollHint: {
-    position: 'absolute' as const,
-    right: 0,
-    top: 24,
-    bottom: theme.spacing[3],
-    width: 44,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'flex-end' as const,
-    paddingRight: theme.spacing[1],
-  },
-  quickActionsRow: {
-    flexDirection: 'row' as const,
-    paddingHorizontal: theme.spacing[3],
-    gap: theme.spacing[3],
-  },
-  // Web-only: on a wide viewport, center the horizontal strip instead of
-  // hugging the left edge. flexGrow makes the content fill the ScrollView so
-  // justifyContent can center; harmless on mobile (content overflows → scrolls).
+  // Web no-op kept so the JSX style array stays valid (grid already centers).
   webCenterRow: {
-    flexGrow: 1,
     justifyContent: 'center' as const,
   },
   quickActionButton: {
+    width: 76,
     alignItems: 'center' as const,
     gap: theme.spacing[1.5],
-    width: 62,
-  },
-  quickActionIcon: {
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    backgroundColor: theme.colors.surface,
-    borderRadius: 14,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: theme.isDark ? 0.5 : 0.15,
-    shadowRadius: 6,
-    elevation: 6,
-  },
-  quickActionImage: {
-    width: 28,
-    height: 28,
-    resizeMode: 'contain' as const,
   },
   quickActionText: {
     ...theme.textStyles.caption,
