@@ -16,7 +16,7 @@ Obok nazwy konta widoczny jest osobny **przycisk waluty** (np. `zł`) — dotkni
 
 ## Szybkie akcje
 
-Pasek szybkich akcji pod nagłówkiem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Gdy akcji jest więcej niż mieści się na ekranie, po prawej krawędzi pojawia się strzałka — przesuń w lewo, aby zobaczyć pozostałe.
+Szybkie akcje pod nagłówkiem to siatka skrótów jednego dotknięcia do najczęstszych zadań. Gdy akcji jest więcej niż mieści się w jednym rzędzie, zawijają się do kolejnego, dzięki czemu wszystkie akcje pozostają widoczne.
 
 Dostępne akcje:
 

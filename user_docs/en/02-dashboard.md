@@ -16,7 +16,7 @@ Next to the account name there is a separate **currency pill** (e.g., `zł`) —
 
 ## Quick Actions
 
-The quick-action strip below the header is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. When there are more actions than fit on screen, a chevron appears at the right edge — swipe left to reveal the rest.
+The quick actions below the header are a grid of one-tap shortcuts to the most common tasks. When there are more actions than fit on one row, they wrap onto the next row so every action stays visible.
 
 Available actions:
 

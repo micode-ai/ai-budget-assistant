@@ -16,7 +16,7 @@ Naast de accountnaam staat een aparte **valutaknop** (bijv. `zł`) — tik erop 
 
 ## Snelle acties
 
-De balk met snelle acties onder de header is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Wanneer er meer acties zijn dan op het scherm passen, verschijnt aan de rechterkant een chevron — veeg naar links om de rest te zien.
+De snelle acties onder de header zijn een raster van knoppen voor de meest voorkomende taken. Wanneer er meer acties zijn dan in één rij passen, lopen ze door naar de volgende rij zodat alle acties zichtbaar blijven.
 
 Beschikbare acties:
 

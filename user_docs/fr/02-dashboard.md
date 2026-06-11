@@ -16,7 +16,7 @@ Dans le coin superieur gauche, appuyez sur le nom du compte (par ex. **Famille**
 
 ## Actions rapides
 
-La barre d'actions rapides sous l'en-tête est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Lorsqu'il y a plus d'actions que l'écran ne peut en afficher, un chevron apparaît sur le bord droit — faites glisser vers la gauche pour voir le reste.
+Les actions rapides sous l'en-tête forment une grille de raccourcis en un seul appui vers les tâches les plus courantes. Lorsqu'il y a plus d'actions que l'écran ne peut en afficher sur une ligne, elles passent à la ligne suivante afin que toutes les actions restent visibles.
 
 Actions disponibles :
 

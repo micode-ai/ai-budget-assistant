@@ -1,0 +1,16 @@
+<svg width="56" height="49" viewBox="0 0 56 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="11.5" y="9" width="11" height="11" stroke="#E37F2B"/>
+<rect x="15" y="12.5" width="4" height="4" fill="#E37F2B"/>
+<rect x="33.5" y="9" width="11" height="11" stroke="#E37F2B"/>
+<rect x="37" y="12.5" width="4" height="4" fill="#E37F2B"/>
+<rect x="11.5" y="32" width="11" height="11" stroke="#E37F2B"/>
+<rect x="15" y="35.5" width="4" height="4" fill="#E37F2B"/>
+<rect x="37" y="35.5" width="3" height="3" fill="#E37F2B"/>
+<rect x="33" y="31.5" width="3" height="3" fill="#E37F2B"/>
+<rect x="33" y="38.5" width="3" height="3" fill="#E37F2B"/>
+<rect x="41" y="31.5" width="3" height="3" fill="#E37F2B"/>
+<rect x="41" y="38.5" width="3" height="3" fill="#E37F2B"/>
+<rect y="24.5" width="56" height="2" fill="#E37F2B"/>
+<path d="M4 14V4.5C4 2.29086 5.79086 0.5 8 0.5H48C50.2091 0.5 52 2.29086 52 4.5V14" stroke="#E37F2B"/>
+<path d="M4 36.5V44.5C4 46.7091 5.79086 48.5 8 48.5H48C50.2091 48.5 52 46.7091 52 44.5V36.5" stroke="#E37F2B"/>
+</svg>
