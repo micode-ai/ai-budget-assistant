@@ -35,6 +35,8 @@ Tippe auf **Konten verwalten** am unteren Rand des Dropdowns, um zur vollstandig
 
 Andere die Wahrung, in der alle deine Summen angezeigt werden — von jedem Bildschirm aus, ohne die Einstellungen zu offnen.
 
+Auf dem Hauptbildschirm geht es am schnellsten über die eigene **Währungsschaltfläche** neben dem Kontonamen — tippe darauf und wähle eine Währung. Auf anderen Bildschirmen:
+
 1. Tippe oben links auf einem beliebigen Bildschirm auf den **Kontonamen**. Neben dem Namen erscheint das aktuelle Wahrungssymbol (z. B. `Personlich · $`).
 2. Im sich offnenden Menu findest du unter deiner Kontoliste den Abschnitt **Anzeigewahrung**.
 3. Tippe auf die gewunschte Wahrung (USD, EUR, PLN, GBP, UAH, RUB, BYN).

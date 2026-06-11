@@ -35,6 +35,8 @@ Tap **Manage Accounts** at the bottom of the dropdown to go to the full account 
 
 Change the currency that all your totals are shown in — from any screen, without opening Settings.
 
+On the home screen, the fastest way is the dedicated **currency pill** next to the account name — tap it and pick a currency. On other screens:
+
 1. Tap the **account name** in the top-left corner of any screen. The current currency symbol appears next to the name (e.g., `Personal · $`).
 2. In the menu that opens, find the **Display currency** section below your account list.
 3. Tap the currency you want (USD, EUR, PLN, GBP, UAH, RUB, BYN).

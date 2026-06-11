@@ -4,7 +4,7 @@
 
 ## Uberblick
 
-Die Ubersicht ist der erste Bildschirm, den du nach der Anmeldung siehst. Sie zeigt eine personalisierte Begrussung, deinen aktuellen Kontokontext und wichtige Finanzkennzahlen fur den aktuellen Monat.
+Die Ubersicht ist der erste Bildschirm, den du nach der Anmeldung siehst. Sie zeigt deinen aktuellen Kontokontext und wichtige Finanzkennzahlen fur den aktuellen Monat.
 
 ![Ubersicht mit Schnellaktionen und Budgetuberblick](../img/home-1.jpg)
 
@@ -12,9 +12,11 @@ Die Ubersicht ist der erste Bildschirm, den du nach der Anmeldung siehst. Sie ze
 
 In der oberen linken Ecke tippe auf den Kontonamen (z.B. **Family**), um das **Konto wechseln**-Dropdown zu offnen. Du kannst zwischen deinen Personlichen, Gemeinsamen und Geschaftlichen Konten wechseln. Alle Daten auf der Ubersicht werden aktualisiert, um das ausgewahlte Konto widerzuspiegeln.
 
+Neben dem Kontonamen gibt es eine separate **Währungsschaltfläche** (z.B. `zł`) — tippe darauf, um die Anzeigewährung sofort zu wechseln.
+
 ## Schnellaktionen
 
-Die Schnellaktionsleiste unterhalb der Begrüßung ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wische nach links, um mehr zu sehen.
+Die Schnellaktionsleiste unterhalb des Headers ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wenn mehr Aktionen vorhanden sind als auf den Bildschirm passen, erscheint am rechten Rand ein Pfeil — wische nach links, um den Rest anzuzeigen.
 
 Verfügbare Aktionen:
 

@@ -4,7 +4,7 @@
 
 ## Przeglad
 
-Pulpit to pierwszy ekran, ktory widzisz po zalogowaniu. Wyswietla spersonalizowane powitanie, kontekst aktualnego konta oraz kluczowe wskazniki finansowe za biezacy miesiac.
+Pulpit to pierwszy ekran, ktory widzisz po zalogowaniu. Wyswietla kontekst aktualnego konta oraz kluczowe wskazniki finansowe za biezacy miesiac.
 
 ![Pulpit z szybkimi akcjami i przegladem budzetu](../img/home-1.jpg)
 
@@ -12,9 +12,11 @@ Pulpit to pierwszy ekran, ktory widzisz po zalogowaniu. Wyswietla spersonalizowa
 
 W lewym gornym rogu dotknij nazwy konta (np. **Rodzina**), aby otworzyc menu **Przelacz konto**. Mozesz przelaczac miedzy kontami Osobistymi, Wspolnymi i Firmowymi. Wszystkie dane na Pulpicie aktualizuja sie zgodnie z wybranym kontem.
 
+Obok nazwy konta widoczny jest osobny **przycisk waluty** (np. `zł`) — dotknij go, aby natychmiast zmienić walutę wyświetlania.
+
 ## Szybkie akcje
 
-Pasek szybkich akcji pod powitaniem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Przesuń w lewo, aby zobaczyć więcej.
+Pasek szybkich akcji pod nagłówkiem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Gdy akcji jest więcej niż mieści się na ekranie, po prawej krawędzi pojawia się strzałka — przesuń w lewo, aby zobaczyć pozostałe.
 
 Dostępne akcje:
 

@@ -166,7 +166,7 @@ Additional navigation:
 
 ## Overview
 
-The Dashboard is the first screen you see after logging in. It displays a personalized greeting, your current account context, and key financial metrics for the current month.
+The Dashboard is the first screen you see after logging in. It displays your current account context and key financial metrics for the current month.
 
 ![Dashboard with quick actions and budget overview]({{IMG:home-1.jpg}})
 
@@ -174,9 +174,11 @@ The Dashboard is the first screen you see after logging in. It displays a person
 
 At the top-left corner, tap the account name (e.g., **Family**) to open the **Switch Account** dropdown. You can switch between your Personal, Shared, and Business accounts. All data on the Dashboard updates to reflect the selected account.
 
+Next to the account name there is a separate **currency pill** (e.g., \`zł\`) — tap it to instantly change the display currency.
+
 ## Quick Actions
 
-The quick-action strip below the greeting is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. Swipe left to see more.
+The quick-action strip below the header is a horizontal, scrollable row of one-tap shortcuts to the most common tasks. When there are more actions than fit on screen, a chevron appears at the right edge — swipe left to reveal the rest.
 
 Available actions:
 
@@ -1201,6 +1203,8 @@ Tap **Manage Accounts** at the bottom of the dropdown to go to the full account 
 ## Changing the Display Currency
 
 Change the currency that all your totals are shown in — from any screen, without opening Settings.
+
+On the home screen, the fastest way is the dedicated **currency pill** next to the account name — tap it and pick a currency. On other screens:
 
 1. Tap the **account name** in the top-left corner of any screen. The current currency symbol appears next to the name (e.g., \`Personal · \$\`).
 2. In the menu that opens, find the **Display currency** section below your account list.
@@ -3732,7 +3736,7 @@ iOS, Android, Web
 
 ## Обзор
 
-**Главная** - это первый экран, который вы видите после входа в систему. Он отображает персональное приветствие, контекст текущего счёта и ключевые финансовые показатели за текущий месяц.
+**Главная** - это первый экран, который вы видите после входа в систему. Он отображает контекст текущего счёта и ключевые финансовые показатели за текущий месяц.
 
 ![Главная с быстрыми действиями и обзором бюджета]({{IMG:home-1.jpg}})
 
@@ -3740,9 +3744,11 @@ iOS, Android, Web
 
 В верхнем левом углу нажмите на название счёта (например, **Семья**), чтобы открыть выпадающий список **Переключить счёт**. Вы можете переключаться между Личным, Общим и Бизнес счетами. Все данные на Главной обновляются в соответствии с выбранным счётом.
 
+Рядом с названием счёта расположена отдельная **кнопка валюты** (например, \`zł\`) — нажмите её, чтобы мгновенно сменить валюту отображения.
+
 ## Быстрые действия
 
-Панель быстрых действий под приветствием — это горизонтальный прокручиваемый ряд ярлыков в одно нажатие для наиболее частых задач. Проведите влево, чтобы увидеть больше.
+Панель быстрых действий под заголовком — это горизонтальный прокручиваемый ряд ярлыков в одно нажатие для наиболее частых задач. Если действий больше, чем помещается на экране, у правого края появляется стрелка — проведите влево, чтобы увидеть остальные.
 
 Доступные действия:
 
@@ -4767,6 +4773,8 @@ iOS, Android, Web
 ## Изменение валюты отображения
 
 Меняйте валюту, в которой показываются все ваши суммы, — с любого экрана, не заходя в Настройки.
+
+На главном экране самый быстрый способ — отдельная **кнопка валюты** рядом с названием счёта: нажмите на неё и выберите нужную валюту. На остальных экранах:
 
 1. Нажмите на **название счёта** в верхнем левом углу любого экрана. Рядом с названием показан символ текущей валюты (например, \`Личный · \$\`).
 2. В открывшемся меню найдите раздел **Валюта отображения** под списком счетов.
@@ -7288,7 +7296,7 @@ iOS, Android, Web
 
 ## Огляд
 
-**Головна** — це перший екран, який ви бачите після входу в систему. Він відображає персональне привітання, контекст поточного рахунку та ключові фінансові показники за поточний місяць.
+**Головна** — це перший екран, який ви бачите після входу в систему. Він відображає контекст поточного рахунку та ключові фінансові показники за поточний місяць.
 
 ![Головна зі швидкими діями та оглядом бюджету]({{IMG:home-1.jpg}})
 
@@ -7296,9 +7304,11 @@ iOS, Android, Web
 
 У верхньому лівому куті натисніть назву рахунку (наприклад, **Family**), щоб відкрити випадаюче меню **Переключити рахунок**. Ви можете переключатися між Особистим, Спільним та Бізнес рахунками. Усі дані на **Головна** оновлюються відповідно до обраного рахунку.
 
+Поруч із назвою рахунку є окрема **кнопка валюти** (наприклад, \`zł\`) — натисніть її, щоб миттєво змінити валюту відображення.
+
 ## Швидкі дії
 
-Панель швидких дій під привітанням — це горизонтальний прокручуваний рядок ярликів в одне натискання для найпоширеніших завдань. Проведіть вліво, щоб побачити більше.
+Панель швидких дій під заголовком — це горизонтальний прокручуваний рядок ярликів в одне натискання для найпоширеніших завдань. Якщо дій більше, ніж вміщується на екрані, біля правого краю з'являється стрілка — проведіть вліво, щоб побачити решту.
 
 Доступні дії:
 
@@ -8323,6 +8333,8 @@ iOS, Android, Web
 ## Зміна валюти відображення
 
 Змінюйте валюту, у якій показуються всі ваші суми, — з будь-якого екрана, не заходячи в Налаштування.
+
+На головному екрані найшвидший спосіб — окрема **кнопка валюти** поруч із назвою рахунку: натисніть її та оберіть потрібну валюту. На інших екранах:
 
 1. Натисніть **назву рахунку** у верхньому лівому куті будь-якого екрана. Поруч із назвою показано символ поточної валюти (наприклад, \`Особистий · \$\`).
 2. У меню, що відкриється, знайдіть розділ **Валюта відображення** під списком рахунків.
@@ -10807,7 +10819,7 @@ Dodatkowa nawigacja:
 
 ## Przeglad
 
-Pulpit to pierwszy ekran, ktory widzisz po zalogowaniu. Wyswietla spersonalizowane powitanie, kontekst aktualnego konta oraz kluczowe wskazniki finansowe za biezacy miesiac.
+Pulpit to pierwszy ekran, ktory widzisz po zalogowaniu. Wyswietla kontekst aktualnego konta oraz kluczowe wskazniki finansowe za biezacy miesiac.
 
 ![Pulpit z szybkimi akcjami i przegladem budzetu]({{IMG:home-1.jpg}})
 
@@ -10815,9 +10827,11 @@ Pulpit to pierwszy ekran, ktory widzisz po zalogowaniu. Wyswietla spersonalizowa
 
 W lewym gornym rogu dotknij nazwy konta (np. **Rodzina**), aby otworzyc menu **Przelacz konto**. Mozesz przelaczac miedzy kontami Osobistymi, Wspolnymi i Firmowymi. Wszystkie dane na Pulpicie aktualizuja sie zgodnie z wybranym kontem.
 
+Obok nazwy konta widoczny jest osobny **przycisk waluty** (np. \`zł\`) — dotknij go, aby natychmiast zmienić walutę wyświetlania.
+
 ## Szybkie akcje
 
-Pasek szybkich akcji pod powitaniem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Przesuń w lewo, aby zobaczyć więcej.
+Pasek szybkich akcji pod nagłówkiem to poziomy, przewijalny rząd skrótów jednego dotknięcia do najczęstszych zadań. Gdy akcji jest więcej niż mieści się na ekranie, po prawej krawędzi pojawia się strzałka — przesuń w lewo, aby zobaczyć pozostałe.
 
 Dostępne akcje:
 
@@ -11842,6 +11856,8 @@ Dotknij **Zarzadzaj kontami** na dole menu, aby przejsc do pelnej listy kont.
 ## Zmiana waluty wyswietlania
 
 Zmien walute, w ktorej wyswietlane sa wszystkie Twoje sumy — z dowolnego ekranu, bez otwierania Ustawien.
+
+Na ekranie głównym najszybszym sposobem jest dedykowany **przycisk waluty** obok nazwy konta — dotknij go i wybierz walutę. Na pozostałych ekranach:
 
 1. Dotknij **nazwe konta** w lewym gornym rogu dowolnego ekranu. Obok nazwy widoczny jest symbol biezacej waluty (np. \`Osobiste · \$\`).
 2. W otwartym menu znajdz sekcje **Waluta wyswietlania** pod lista kont.
@@ -14322,7 +14338,7 @@ Zusatzliche Navigation:
 
 ## Uberblick
 
-Die Ubersicht ist der erste Bildschirm, den du nach der Anmeldung siehst. Sie zeigt eine personalisierte Begrussung, deinen aktuellen Kontokontext und wichtige Finanzkennzahlen fur den aktuellen Monat.
+Die Ubersicht ist der erste Bildschirm, den du nach der Anmeldung siehst. Sie zeigt deinen aktuellen Kontokontext und wichtige Finanzkennzahlen fur den aktuellen Monat.
 
 ![Ubersicht mit Schnellaktionen und Budgetuberblick]({{IMG:home-1.jpg}})
 
@@ -14330,9 +14346,11 @@ Die Ubersicht ist der erste Bildschirm, den du nach der Anmeldung siehst. Sie ze
 
 In der oberen linken Ecke tippe auf den Kontonamen (z.B. **Family**), um das **Konto wechseln**-Dropdown zu offnen. Du kannst zwischen deinen Personlichen, Gemeinsamen und Geschaftlichen Konten wechseln. Alle Daten auf der Ubersicht werden aktualisiert, um das ausgewahlte Konto widerzuspiegeln.
 
+Neben dem Kontonamen gibt es eine separate **Währungsschaltfläche** (z.B. \`zł\`) — tippe darauf, um die Anzeigewährung sofort zu wechseln.
+
 ## Schnellaktionen
 
-Die Schnellaktionsleiste unterhalb der Begrüßung ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wische nach links, um mehr zu sehen.
+Die Schnellaktionsleiste unterhalb des Headers ist eine horizontal scrollbare Reihe von Einzel-Tipp-Kurzbefehlen zu den häufigsten Aufgaben. Wenn mehr Aktionen vorhanden sind als auf den Bildschirm passen, erscheint am rechten Rand ein Pfeil — wische nach links, um den Rest anzuzeigen.
 
 Verfügbare Aktionen:
 
@@ -15357,6 +15375,8 @@ Tippe auf **Konten verwalten** am unteren Rand des Dropdowns, um zur vollstandig
 ## Anzeigewahrung andern
 
 Andere die Wahrung, in der alle deine Summen angezeigt werden — von jedem Bildschirm aus, ohne die Einstellungen zu offnen.
+
+Auf dem Hauptbildschirm geht es am schnellsten über die eigene **Währungsschaltfläche** neben dem Kontonamen — tippe darauf und wähle eine Währung. Auf anderen Bildschirmen:
 
 1. Tippe oben links auf einem beliebigen Bildschirm auf den **Kontonamen**. Neben dem Namen erscheint das aktuelle Wahrungssymbol (z. B. \`Personlich · \$\`).
 2. Im sich offnenden Menu findest du unter deiner Kontoliste den Abschnitt **Anzeigewahrung**.
@@ -17812,7 +17832,7 @@ Navegacion adicional:
 
 ## Vista general
 
-El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra un saludo personalizado, el contexto de tu cuenta actual y las metricas financieras clave del mes en curso.
+El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra el contexto de tu cuenta actual y las metricas financieras clave del mes en curso.
 
 ![Panel con acciones rapidas y resumen de presupuesto]({{IMG:home-1.jpg}})
 
@@ -17820,9 +17840,11 @@ El Panel es la primera pantalla que ves despues de iniciar sesion. Muestra un sa
 
 En la esquina superior izquierda, toca el nombre de la cuenta (por ejemplo, **Familia**) para abrir el menu desplegable **Cambiar cuenta**. Puedes alternar entre tus cuentas Personal, Compartida y Empresa. Todos los datos del Panel se actualizan para reflejar la cuenta seleccionada.
 
+Junto al nombre de la cuenta hay una **pastilla de moneda** independiente (p. ej., \`zł\`) — tócala para cambiar al instante la moneda de visualización.
+
 ## Acciones rapidas
 
-La barra de acciones rápidas debajo del saludo es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Desliza hacia la izquierda para ver más.
+La barra de acciones rápidas debajo de la cabecera es una fila horizontal y desplazable de atajos de un solo toque a las tareas más comunes. Cuando hay más acciones de las que caben en pantalla, aparece un chevron en el borde derecho — desliza hacia la izquierda para ver el resto.
 
 Acciones disponibles:
 
@@ -18847,6 +18869,8 @@ Toca **Gestionar cuentas** en la parte inferior del menu desplegable para ir a l
 ## Cambiar la moneda de visualizacion
 
 Cambia la moneda en la que se muestran todos tus totales — desde cualquier pantalla, sin abrir Ajustes.
+
+En la pantalla de inicio, la forma más rápida es la **pastilla de moneda** dedicada junto al nombre de la cuenta — tócala y elige una moneda. En otras pantallas:
 
 1. Toca el **nombre de la cuenta** en la esquina superior izquierda de cualquier pantalla. Junto al nombre aparece el simbolo de la moneda actual (por ejemplo, \`Personal · \$\`).
 2. En el menu que se abre, busca la seccion **Moneda de visualizacion** debajo de tu lista de cuentas.
@@ -21291,7 +21315,7 @@ Navigation supplementaire :
 
 ## Apercu
 
-Le Tableau de bord est le premier ecran que vous voyez apres vous etre connecte. Il affiche un message d'accueil personnalise, le contexte de votre compte actuel et les indicateurs financiers cles du mois en cours.
+Le Tableau de bord est le premier ecran que vous voyez apres vous etre connecte. Il affiche le contexte de votre compte actuel et les indicateurs financiers cles du mois en cours.
 
 ![Tableau de bord avec actions rapides et apercu du budget]({{IMG:home-1.jpg}})
 
@@ -21299,9 +21323,11 @@ Le Tableau de bord est le premier ecran que vous voyez apres vous etre connecte.
 
 Dans le coin superieur gauche, appuyez sur le nom du compte (par ex. **Famille**) pour ouvrir le menu deroulant **Changer de compte**. Vous pouvez basculer entre vos comptes Personnel, Partage et Professionnel. Toutes les donnees du Tableau de bord se mettent a jour pour refleter le compte selectionne.
 
+À côté du nom du compte se trouve une **pastille de devise** séparée (par ex. \`zł\`) — appuyez dessus pour changer instantanément la devise d'affichage.
+
 ## Actions rapides
 
-La barre d'actions rapides sous le message d'accueil est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Faites glisser vers la gauche pour en voir plus.
+La barre d'actions rapides sous l'en-tête est une rangée horizontale et défilante de raccourcis en un seul appui vers les tâches les plus courantes. Lorsqu'il y a plus d'actions que l'écran ne peut en afficher, un chevron apparaît sur le bord droit — faites glisser vers la gauche pour voir le reste.
 
 Actions disponibles :
 
@@ -22326,6 +22352,8 @@ Appuyez sur **Gerer les comptes** en bas du menu deroulant pour acceder a la lis
 ## Changer la devise d'affichage
 
 Changez la devise dans laquelle tous vos totaux sont affiches — depuis n'importe quel ecran, sans ouvrir les Parametres.
+
+Sur l'écran d'accueil, la façon la plus rapide est la **pastille de devise** dédiée à côté du nom du compte — appuyez dessus et choisissez une devise. Sur les autres écrans :
 
 1. Appuyez sur le **nom du compte** dans le coin superieur gauche de n'importe quel ecran. Le symbole de la devise actuelle apparait a cote du nom (par ex. \`Personnel · \$\`).
 2. Dans le menu qui s'ouvre, trouvez la section **Devise d'affichage** sous votre liste de comptes.
@@ -24768,7 +24796,7 @@ iOS, Android, Web
 
 ## Агляд
 
-**Галоўная** — гэта першы экран, які вы бачыце пасля ўваходу ў сістэму. Ён адлюстроўвае персанальнае прывітанне, кантэкст бягучага рахунку і ключавыя фінансавыя паказчыкі за бягучы месяц.
+**Галоўная** — гэта першы экран, які вы бачыце пасля ўваходу ў сістэму. Ён адлюстроўвае кантэкст бягучага рахунку і ключавыя фінансавыя паказчыкі за бягучы месяц.
 
 ![Галоўная з хуткімі дзеяннямі і аглядам бюджэту]({{IMG:home-1.jpg}})
 
@@ -24776,9 +24804,11 @@ iOS, Android, Web
 
 У верхнім левым куце націсніце на назву рахунку (напрыклад, **Сям'я**), каб адкрыць выпадальны спіс **Пераключыць рахунак**. Вы можаце пераключацца паміж Асабістым, Агульным і Бізнес рахункамі. Усе даныя на Галоўнай абнаўляюцца ў адпаведнасці з абраным рахункам.
 
+Побач з назвай рахунку знаходзіцца асобная **кнопка валюты** (напрыклад, \`zł\`) — націсніце яе, каб імгненна змяніць валюту адлюстравання.
+
 ## Хуткія дзеянні
 
-Панэль хуткіх дзеянняў пад прывітаннем — гэта гарызантальны пракручваемы рад ярлыкоў у адно дакрананне да найбольш частых задач. Правядзіце ўлева, каб убачыць больш.
+Панэль хуткіх дзеянняў пад загалоўкам — гэта гарызантальны пракручваемы рад ярлыкоў у адно дакрананне да найбольш частых задач. Калі дзеянняў больш, чым змяшчаецца на экране, каля правага краю з'яўляецца стрэлка — правядзіце ўлева, каб убачыць астатнія.
 
 Даступныя дзеянні:
 
@@ -25803,6 +25833,8 @@ iOS, Android, Web
 ## Змена валюты адлюстравання
 
 Мяняйце валюту, у якой паказваюцца ўсе вашы сумы, — з любога экрана, не заходзячы ў Налады.
+
+На галоўным экране самы хуткі спосаб — асобная **кнопка валюты** побач з назвай рахунку: націсніце яе і абярыце патрэбную валюту. На астатніх экранах:
 
 1. Націсніце на **назву рахунку** ў верхнім левым куце любога экрана. Побач з назвай паказаны сімвал бягучай валюты (напрыклад, \`Асабісты · \$\`).
 2. У меню, што адкрыецца, знайдзіце раздзел **Валюта адлюстравання** пад спісам рахункаў.
@@ -28205,7 +28237,7 @@ Aanvullende navigatie:
 
 ## Overzicht
 
-Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont een persoonlijke begroeting, je huidige accountcontext en de belangrijkste financiële cijfers voor de huidige maand.
+Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont je huidige accountcontext en de belangrijkste financiële cijfers voor de huidige maand.
 
 ![Dashboard met snelle acties en budgetoverzicht]({{IMG:home-1.jpg}})
 
@@ -28213,9 +28245,11 @@ Het Dashboard is het eerste scherm dat je ziet na het inloggen. Het toont een pe
 
 Tik linksboven op de accountnaam (bijv. **Familie**) om het uitklapmenu **Account wisselen** te openen. Je kunt schakelen tussen je Persoonlijke, Gedeelde en Zakelijke accounts. Alle gegevens op het Dashboard worden bijgewerkt naar het geselecteerde account.
 
+Naast de accountnaam staat een aparte **valutaknop** (bijv. \`zł\`) — tik erop om de weergavevaluta direct te wijzigen.
+
 ## Snelle acties
 
-De balk met snelle acties onder de begroeting is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Veeg naar links om meer te zien.
+De balk met snelle acties onder de header is een horizontale, scrollbare rij met knoppen voor de meest voorkomende taken. Wanneer er meer acties zijn dan op het scherm passen, verschijnt aan de rechterkant een chevron — veeg naar links om de rest te zien.
 
 Beschikbare acties:
 
@@ -29240,6 +29274,8 @@ Tik op **Accounts beheren** onderaan het uitklapmenu om naar de volledige accoun
 ## De weergavevaluta wijzigen
 
 Wijzig de valuta waarin al je totalen worden getoond — vanuit elk scherm, zonder Instellingen te openen.
+
+Op het startscherm gaat het het snelst via de speciale **valutaknop** naast de accountnaam — tik erop en kies een valuta. Op andere schermen:
 
 1. Tik op de **accountnaam** linksboven in een willekeurig scherm. Het huidige valutasymbool verschijnt naast de naam (bijv. \`Persoonlijk · \$\`).
 2. Zoek in het menu dat opent de sectie **Weergavevaluta** onder je accountlijst.
