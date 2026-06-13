@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { NotificationsService } from '../../notifications/notifications.service';
-import * as ni18n from '@budget/shared-types/notification-strings';
+import * as ni18n from '../../notifications/notification-i18n';
 import { AiResponseMode } from './response-mode.helper';
 import { resolveAiModel, resolveCheapModel } from './model-resolver';
 import { UserContextBuilder } from './user-context-builder.service';
