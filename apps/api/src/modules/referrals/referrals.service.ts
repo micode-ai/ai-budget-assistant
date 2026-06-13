@@ -6,7 +6,7 @@ import { MailService } from '../mail/mail.service';
 import { TelegramService } from '../telegram/telegram.service';
 import Stripe from 'stripe';
 import * as crypto from 'crypto';
-import * as ni18n from '../notifications/notification-i18n';
+import * as ni18n from '@budget/shared-types/notification-strings';
 
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I/L
 const CODE_LENGTH = 6;

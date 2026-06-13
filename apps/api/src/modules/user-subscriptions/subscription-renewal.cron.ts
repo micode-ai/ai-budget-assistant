@@ -3,6 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import * as ni18n from '@budget/shared-types/notification-strings';
 
 export type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 
@@ -115,8 +116,8 @@ export class SubscriptionRenewalCron {
       this.notificationsService
         .sendToUser(
           userId,
-          (lang) => this.getChargedTitle(lang, { name }),
-          (lang) => this.getChargedBody(lang, { name, amount, currencyCode }),
+          (lang) => ni18n.subscriptionChargedTitle(lang, { name }),
+          (lang) => ni18n.subscriptionChargedBody(lang, { name, amount, currencyCode }),
           { subscriptionId: sub.id, charged: true },
           'subscription_renewal',
         )
@@ -124,36 +125,6 @@ export class SubscriptionRenewalCron {
     }
 
     this.logger.log(`Subscription auto-charge complete — created ${charged} expense(s)`);
-  }
-
-  private getChargedTitle(lang: string, p: { name: string }): string {
-    const titles: Record<string, string> = {
-      en: `${p.name} charged`,
-      ru: `Списано за ${p.name}`,
-      ua: `Списано за ${p.name}`,
-      de: `${p.name} abgebucht`,
-      es: `${p.name} cobrado`,
-      fr: `${p.name} prélevé`,
-      pl: `Pobrano za ${p.name}`,
-      be: `Спісана за ${p.name}`,
-      nl: `${p.name} afgeschreven`,
-    };
-    return titles[lang] ?? titles.en;
-  }
-
-  private getChargedBody(lang: string, p: { name: string; amount: string; currencyCode: string }): string {
-    const bodies: Record<string, string> = {
-      en: `${p.amount} ${p.currencyCode} added to your expenses for ${p.name}`,
-      ru: `${p.amount} ${p.currencyCode} добавлено в расходы за ${p.name}`,
-      ua: `${p.amount} ${p.currencyCode} додано до витрат за ${p.name}`,
-      de: `${p.amount} ${p.currencyCode} zu deinen Ausgaben für ${p.name} hinzugefügt`,
-      es: `${p.amount} ${p.currencyCode} añadido a tus gastos por ${p.name}`,
-      fr: `${p.amount} ${p.currencyCode} ajouté à vos dépenses pour ${p.name}`,
-      pl: `${p.amount} ${p.currencyCode} dodano do wydatków za ${p.name}`,
-      be: `${p.amount} ${p.currencyCode} дададзена ў выдаткі за ${p.name}`,
-      nl: `${p.amount} ${p.currencyCode} toegevoegd aan je uitgaven voor ${p.name}`,
-    };
-    return bodies[lang] ?? bodies.en;
   }
 
   @Cron('0 9 * * *')
@@ -196,8 +167,8 @@ export class SubscriptionRenewalCron {
         this.notificationsService
           .sendToUser(
             userId,
-            (lang) => this.getTitle(lang, { name }),
-            (lang) => this.getBody(lang, { name, amount, currencyCode }),
+            (lang) => ni18n.subscriptionReminderTitle(lang, { name }),
+            (lang) => ni18n.subscriptionReminderBody(lang, { name, amount, currencyCode }),
             { subscriptionId: sub.id },
             'subscription_renewal',
           )
@@ -206,35 +177,5 @@ export class SubscriptionRenewalCron {
     }
 
     this.logger.log(`Sent renewal reminders for ${subscriptions.length} subscriptions`);
-  }
-
-  private getTitle(lang: string, p: { name: string }): string {
-    const titles: Record<string, string> = {
-      en: `${p.name} renews in 3 days`,
-      ru: `${p.name} продлится через 3 дня`,
-      ua: `${p.name} поновлюється через 3 дні`,
-      de: `${p.name} verlängert sich in 3 Tagen`,
-      es: `${p.name} se renueva en 3 días`,
-      fr: `${p.name} se renouvelle dans 3 jours`,
-      pl: `${p.name} odnawia się za 3 dni`,
-      be: `${p.name} аднаўляецца праз 3 дні`,
-      nl: `${p.name} verlengt over 3 dagen`,
-    };
-    return titles[lang] ?? titles.en;
-  }
-
-  private getBody(lang: string, p: { name: string; amount: string; currencyCode: string }): string {
-    const bodies: Record<string, string> = {
-      en: `${p.amount} ${p.currencyCode} will be charged for ${p.name}`,
-      ru: `${p.amount} ${p.currencyCode} будет списано за ${p.name}`,
-      ua: `${p.amount} ${p.currencyCode} буде знято за ${p.name}`,
-      de: `${p.amount} ${p.currencyCode} wird für ${p.name} abgebucht`,
-      es: `${p.amount} ${p.currencyCode} se cobrarán por ${p.name}`,
-      fr: `${p.amount} ${p.currencyCode} seront prélevés pour ${p.name}`,
-      pl: `${p.amount} ${p.currencyCode} zostanie pobrane za ${p.name}`,
-      be: `${p.amount} ${p.currencyCode} будзе спісана за ${p.name}`,
-      nl: `${p.amount} ${p.currencyCode} wordt afgeschreven voor ${p.name}`,
-    };
-    return bodies[lang] ?? bodies.en;
   }
 }

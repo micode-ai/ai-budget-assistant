@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./entities": "./src/entities/index.ts",
     "./dto": "./src/dto/index.ts",
-    "./api": "./src/api/index.ts"
+    "./api": "./src/api/index.ts",
+    "./notification-strings": "./src/notification-strings.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
