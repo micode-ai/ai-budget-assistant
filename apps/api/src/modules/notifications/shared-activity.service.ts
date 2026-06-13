@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from './notifications.service';
-import * as ni18n from '@budget/shared-types/notification-strings';
+import * as ni18n from './notification-i18n';
 
 @Injectable()
 export class SharedActivityService {

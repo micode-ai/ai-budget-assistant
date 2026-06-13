@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import * as ni18n from '@budget/shared-types/notification-strings';
+import * as ni18n from '../notifications/notification-i18n';
 
 @Injectable()
 export class DebtReminderCron {
