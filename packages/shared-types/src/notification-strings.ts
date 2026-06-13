@@ -91,6 +91,12 @@ interface RecurringSuggestionParams {
   currencyCode: string;
 }
 
+interface SubscriptionRenewalParams {
+  name: string;
+  amount: string;
+  currencyCode: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -130,6 +136,10 @@ const translations: Record<string, {
   duplicateChargeBody: (p: DuplicateChargeParams) => string;
   recurringSuggestionTitle: (p: RecurringSuggestionParams) => string;
   recurringSuggestionBody: (p: RecurringSuggestionParams) => string;
+  subscriptionReminderTitle: (p: Pick<SubscriptionRenewalParams, 'name'>) => string;
+  subscriptionReminderBody: (p: SubscriptionRenewalParams) => string;
+  subscriptionChargedTitle: (p: Pick<SubscriptionRenewalParams, 'name'>) => string;
+  subscriptionChargedBody: (p: SubscriptionRenewalParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -185,6 +195,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} looks like a subscription`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} charges ${currencyCode} ${amount} regularly. Track it as a subscription?`,
+    subscriptionReminderTitle: ({ name }) => `${name} renews in 3 days`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} will be charged for ${name}`,
+    subscriptionChargedTitle: ({ name }) => `${name} charged`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} added to your expenses for ${name}`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -240,6 +254,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} похож на подписку`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} регулярно списывает ${currencyCode} ${amount}. Отслеживать как подписку?`,
+    subscriptionReminderTitle: ({ name }) => `${name} продлится через 3 дня`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} будет списано за ${name}`,
+    subscriptionChargedTitle: ({ name }) => `Списано за ${name}`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} добавлено в расходы за ${name}`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -295,6 +313,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} схожий на підписку`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} регулярно списує ${currencyCode} ${amount}. Відстежувати як підписку?`,
+    subscriptionReminderTitle: ({ name }) => `${name} поновлюється через 3 дні`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} буде знято за ${name}`,
+    subscriptionChargedTitle: ({ name }) => `Списано за ${name}`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} додано до витрат за ${name}`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -350,6 +372,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} wygląda na subskrypcję`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} regularnie pobiera ${currencyCode} ${amount}. Śledzić jako subskrypcję?`,
+    subscriptionReminderTitle: ({ name }) => `${name} odnawia się za 3 dni`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zostanie pobrane za ${name}`,
+    subscriptionChargedTitle: ({ name }) => `Pobrano za ${name}`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} dodano do wydatków za ${name}`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -405,6 +431,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} parece una suscripción`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} cobra ${currencyCode} ${amount} con regularidad. ¿Quieres seguirla como suscripción?`,
+    subscriptionReminderTitle: ({ name }) => `${name} se renueva en 3 días`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} se cobrarán por ${name}`,
+    subscriptionChargedTitle: ({ name }) => `${name} cobrado`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} añadido a tus gastos por ${name}`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -460,6 +490,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} ressemble à un abonnement`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} prélève ${currencyCode} ${amount} régulièrement. Le suivre comme abonnement ?`,
+    subscriptionReminderTitle: ({ name }) => `${name} se renouvelle dans 3 jours`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} seront prélevés pour ${name}`,
+    subscriptionChargedTitle: ({ name }) => `${name} prélevé`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} ajouté à vos dépenses pour ${name}`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -515,6 +549,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} sieht nach einem Abo aus`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} bucht regelmäßig ${currencyCode} ${amount} ab. Als Abo verfolgen?`,
+    subscriptionReminderTitle: ({ name }) => `${name} verlängert sich in 3 Tagen`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} wird für ${name} abgebucht`,
+    subscriptionChargedTitle: ({ name }) => `${name} abgebucht`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zu deinen Ausgaben für ${name} hinzugefügt`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -570,6 +608,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} падобны на падпіску`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} рэгулярна спісвае ${currencyCode} ${amount}. Адсочваць як падпіску?`,
+    subscriptionReminderTitle: ({ name }) => `${name} аднаўляецца праз 3 дні`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} будзе спісана за ${name}`,
+    subscriptionChargedTitle: ({ name }) => `Спісана за ${name}`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} дададзена ў выдаткі за ${name}`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -625,6 +667,10 @@ const translations: Record<string, {
     recurringSuggestionTitle: ({ merchant }) => `${merchant} lijkt op een abonnement`,
     recurringSuggestionBody: ({ merchant, amount, currencyCode }) =>
       `${merchant} schrijft regelmatig ${currencyCode} ${amount} af. Volgen als abonnement?`,
+    subscriptionReminderTitle: ({ name }) => `${name} verlengt over 3 dagen`,
+    subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} wordt afgeschreven voor ${name}`,
+    subscriptionChargedTitle: ({ name }) => `${name} afgeschreven`,
+    subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} toegevoegd aan je uitgaven voor ${name}`,
   },
 };
 
@@ -760,4 +806,20 @@ export function recurringSuggestionTitle(lang: Lang, params: RecurringSuggestion
 
 export function recurringSuggestionBody(lang: Lang, params: RecurringSuggestionParams): string {
   return t(lang).recurringSuggestionBody(params);
+}
+
+export function subscriptionReminderTitle(lang: Lang, params: Pick<SubscriptionRenewalParams, 'name'>): string {
+  return t(lang).subscriptionReminderTitle(params);
+}
+
+export function subscriptionReminderBody(lang: Lang, params: SubscriptionRenewalParams): string {
+  return t(lang).subscriptionReminderBody(params);
+}
+
+export function subscriptionChargedTitle(lang: Lang, params: Pick<SubscriptionRenewalParams, 'name'>): string {
+  return t(lang).subscriptionChargedTitle(params);
+}
+
+export function subscriptionChargedBody(lang: Lang, params: SubscriptionRenewalParams): string {
+  return t(lang).subscriptionChargedBody(params);
 }

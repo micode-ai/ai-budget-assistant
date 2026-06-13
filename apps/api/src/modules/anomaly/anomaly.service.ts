@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import type { AnomalyAlertType } from '@budget/shared-types';
-import * as ni18n from '../notifications/notification-i18n';
+import * as ni18n from '@budget/shared-types/notification-strings';
 
 const PUSH_DAILY_CAP = 3;
 export const PRICE_INCREASE_FACTOR = 1.1;
