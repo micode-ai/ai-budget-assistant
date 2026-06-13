@@ -4,14 +4,22 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
-type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
+export type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 
-function addCycle(date: Date, cycle: BillingCycle): Date {
+// Exported for testing. Uses set-to-1st trick to avoid month-overflow on dates like Jan 31.
+export function addCycle(date: Date, cycle: BillingCycle): Date {
   const next = new Date(date);
-  if (cycle === 'weekly') next.setDate(next.getDate() + 7);
-  else if (cycle === 'quarterly') next.setMonth(next.getMonth() + 3);
-  else if (cycle === 'yearly') next.setFullYear(next.getFullYear() + 1);
-  else next.setMonth(next.getMonth() + 1); // monthly (default)
+  if (cycle === 'weekly') {
+    next.setDate(next.getDate() + 7);
+  } else {
+    const day = next.getDate();
+    next.setDate(1); // avoid overflow when adding months/years
+    if (cycle === 'quarterly') next.setMonth(next.getMonth() + 3);
+    else if (cycle === 'yearly') next.setFullYear(next.getFullYear() + 1);
+    else next.setMonth(next.getMonth() + 1); // monthly
+    const lastDay = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate();
+    next.setDate(Math.min(day, lastDay));
+  }
   return next;
 }
 

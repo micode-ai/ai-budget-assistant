@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateUserSubscriptionDto, UpdateUserSubscriptionDto } from './dto';
+
+type UserSubscriptionRow = Prisma.UserSubscriptionGetPayload<object>;
 
 @Injectable()
 export class UserSubscriptionsService {
@@ -27,7 +30,7 @@ export class UserSubscriptionsService {
     return Math.round((renewal.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   }
 
-  private mapSubscription(sub: any) {
+  private mapSubscription(sub: UserSubscriptionRow) {
     return {
       id: sub.id,
       accountId: sub.accountId,
@@ -78,7 +81,7 @@ export class UserSubscriptionsService {
     const existing = await this.prisma.userSubscription.findFirst({ where: { id, accountId } });
     if (!existing) throw new NotFoundException('Subscription not found');
 
-    const data: Record<string, any> = {};
+    const data: Prisma.UserSubscriptionUncheckedUpdateInput = {};
     if (dto.name !== undefined) data.name = dto.name;
     if (dto.amount !== undefined) data.amount = dto.amount;
     if (dto.currencyCode !== undefined) data.currencyCode = dto.currencyCode;
