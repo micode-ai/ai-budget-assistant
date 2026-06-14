@@ -39,6 +39,8 @@ Les frais Wise de la colonne `Total fees` sont automatiquement intégrés dans l
 
 Chaque ligne devient une Dépense, un Revenu ou un Échange de devises. Les catégories sont suggérées automatiquement pour les commerçants populaires. Chaque ligne a un ID unique — réimporter le même fichier est sûr.
 
+**Des noms de marchands plus lisibles.** Les grandes enseignes connues sont reconnues automatiquement : une ligne de relevé comme `BIEDRONKA 1234 WARSZAWA` est enregistrée simplement sous **Biedronka**. Un même magasin apparaît ainsi comme un seul marchand dans vos analyses, plutôt que sous des dizaines d'entrées distinctes.
+
 ## « Autre » — mappeur universel
 
 Si votre banque n'est pas dans la liste, choisissez **Autre (CSV)**. L'application affiche un aperçu du fichier et vous demande d'indiquer quelle colonne contient la date, le montant et la description. Enregistrez ce mappage pour une utilisation future.

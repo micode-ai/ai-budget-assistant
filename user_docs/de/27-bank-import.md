@@ -39,6 +39,8 @@ Wise-Gebühren aus der Spalte `Total fees` werden automatisch in den Ausgabenbet
 
 Jede Zeile wird zu einer Ausgabe, Einnahme oder Währungsumrechnung. Kategorien werden automatisch für bekannte Händler vorgeschlagen. Jede Zeile erhält eine eindeutige ID — ein erneuter Import derselben Datei ist sicher.
 
+**Übersichtlichere Händlernamen.** Bekannte Ladenketten werden automatisch erkannt, sodass ein Kontoauszugseintrag wie `BIEDRONKA 1234 WARSZAWA` einfach als **Biedronka** gespeichert wird. Dadurch erscheint ein Geschäft in deiner Analyse als ein einziger Händler, statt als dutzende separate Einträge.
+
 ## „Andere" — universeller Mapper
 
 Wenn deine Bank nicht in der Liste ist, wähle **Andere (CSV)**. Die App zeigt eine Dateivorschau und fragt, welche Spalte Datum, Betrag und Beschreibung enthält. Speichere diese Zuordnung für den nächsten Import.

@@ -74,6 +74,8 @@ Cada tarjeta de informacion tiene un nivel de severidad: critico (rojo), adverte
 - Muestra hasta 8 comerciantes individuales; el resto se agrupa como "Otros"
 - Solo aparece cuando al menos un gasto tiene un comerciante asignado
 
+Si la misma tienda aparece con varios nombres, abre **Ajustes → Comerciantes** para ordenarlos: toca **Seleccionar**, marca las variantes y **Combinar** en un solo nombre. La app también sugiere grupos probables (por ejemplo varias entradas de *Biedronka*) que puedes combinar con un solo toque, de modo que cuenten como un único comerciante en estos gráficos.
+
 ### Por etiquetas / Por proyectos
 
 - **Desglose por etiquetas** — gasto agrupado por tus etiquetas personalizadas

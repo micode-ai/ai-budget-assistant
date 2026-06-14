@@ -74,6 +74,8 @@ Each insight card has severity: critical (red), warning (yellow), or info (blue)
 - Shows up to 8 individual merchants; the rest are grouped as "Other"
 - Only appears when at least one expense has a merchant value
 
+If the same shop appears under several names, open **Settings → Merchants** to tidy them up: tap **Select**, tick the variants, and **Merge** them into one name. The app also suggests likely groups (for example several *Biedronka* entries) that you can merge in a single tap — so they count as one merchant in these charts.
+
 ### By Tags / By Projects
 
 - **Tag Breakdown** — spending grouped by your custom tags

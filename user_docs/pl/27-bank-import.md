@@ -43,6 +43,8 @@ Opłaty Wise z kolumny `Total fees` są automatycznie wliczane w kwotę wydatku.
 
 Każdy wiersz staje się Wydatkiem, Dochodem lub Wymianą walut. Kategorie są sugerowane automatycznie dla popularnych sklepów. Każdy wiersz jest oznaczony unikalnym ID — ponowny import tego samego pliku jest bezpieczny.
 
+**Schludniejsze nazwy sprzedawców.** Znane sieci sklepów są rozpoznawane automatycznie, dzięki czemu wiersz z wyciągu taki jak `BIEDRONKA 1234 WARSZAWA` jest zapisywany po prostu jako **Biedronka**. Jeden sklep jest wtedy widoczny w analityce jako jeden sprzedawca, a nie dziesiątki oddzielnych wpisów.
+
 ## „Inny" — uniwersalny mapper
 
 Jeśli Twojego banku nie ma na liście, wybierz **Inny (CSV)**. Aplikacja pokaże podgląd pliku i poprosi o wskazanie kolumn z datą, kwotą i opisem. Zapisz to mapowanie — kolejny CSV z takim samym układem kolumn zostanie zaimportowany automatycznie.

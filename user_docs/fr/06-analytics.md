@@ -74,6 +74,8 @@ Chaque carte d'apercu a un niveau de gravite : critique (rouge), avertissement (
 - Affiche jusqu'a 8 marchands individuels ; le reste est groupe sous "Autres"
 - Apparait uniquement quand au moins une depense a un marchand renseigne
 
+Si le même magasin apparaît sous plusieurs noms, ouvrez **Paramètres → Marchands** pour les réorganiser : appuyez sur **Sélectionner**, cochez les variantes et **Fusionner** en un seul nom. L'application suggère également des groupes probables (par exemple plusieurs entrées *Biedronka*) que vous pouvez fusionner en un seul appui — afin qu'ils comptent comme un seul marchand dans ces graphiques.
+
 ### Par etiquettes / Par projets
 
 - **Repartition par etiquettes** — depenses groupees par vos etiquettes personnalisees
