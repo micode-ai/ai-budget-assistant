@@ -1797,7 +1797,6 @@ export default {
     empty: 'Aucun commerçant pour l\'instant',
     select: 'Sélectionner',
     selected: '{{count}} sélectionnés',
-    selectAll: 'Tout sélectionner',
     merge: 'Fusionner',
     mergeTitle: 'Fusionner les commerçants',
     mergeInto: 'Fusionner dans',

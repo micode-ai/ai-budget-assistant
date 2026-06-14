@@ -1797,7 +1797,6 @@ export default {
     empty: 'Noch keine Händler',
     select: 'Auswählen',
     selected: '{{count}} ausgewählt',
-    selectAll: 'Alle auswählen',
     merge: 'Zusammenführen',
     mergeTitle: 'Händler zusammenführen',
     mergeInto: 'Zusammenführen in',
