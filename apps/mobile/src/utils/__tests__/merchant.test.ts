@@ -46,3 +46,42 @@ describe('resolveExistingMerchant', () => {
     expect(resolveExistingMerchant(undefined, ['Lidl'])).toBe('');
   });
 });
+
+import { merchantFingerprint, suggestMerchantGroups } from '../merchant';
+
+describe('merchantFingerprint', () => {
+  it('keys on the first significant (>=4 char) token, ignoring numbers/city', () => {
+    expect(merchantFingerprint('BIEDRONKA 1234 WARSZAWA')).toBe('BIEDRONKA');
+    expect(merchantFingerprint('Biedronka 5678 Krakow')).toBe('BIEDRONKA');
+  });
+  it('returns empty when there is no significant token', () => {
+    expect(merchantFingerprint('12 99')).toBe('');
+    expect(merchantFingerprint('PL 1')).toBe('');
+  });
+});
+
+describe('suggestMerchantGroups', () => {
+  it('groups variants sharing a fingerprint (>=2 members), canonical = title-cased brand', () => {
+    const groups = suggestMerchantGroups([
+      { merchant: 'BIEDRONKA 1234 WARSZAWA', count: 5 },
+      { merchant: 'BIEDRONKA 5678 KRAKOW', count: 3 },
+      { merchant: 'Lidl', count: 10 },
+    ]);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].canonical).toBe('Biedronka');
+    expect(groups[0].members).toEqual(['BIEDRONKA 1234 WARSZAWA', 'BIEDRONKA 5678 KRAKOW']);
+    expect(groups[0].totalCount).toBe(8);
+  });
+  it('does not suggest singletons', () => {
+    expect(suggestMerchantGroups([{ merchant: 'Lidl', count: 2 }])).toEqual([]);
+  });
+  it('sorts groups by total count desc', () => {
+    const groups = suggestMerchantGroups([
+      { merchant: 'ROSSMANN 1', count: 1 },
+      { merchant: 'ROSSMANN 2', count: 1 },
+      { merchant: 'BIEDRONKA A', count: 5 },
+      { merchant: 'BIEDRONKA B', count: 5 },
+    ]);
+    expect(groups.map((g) => g.canonical)).toEqual(['Biedronka', 'Rossmann']);
+  });
+});

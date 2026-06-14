@@ -48,3 +48,63 @@ export function resolveExistingMerchant(input: string | null | undefined, existi
   const match = existing.find((m) => m.trim().toLowerCase() === lower);
   return match ?? trimmed;
 }
+
+export interface MerchantGroup {
+  /** Brand fingerprint key (uppercase). */
+  fingerprint: string;
+  /** Suggested canonical name (title-cased brand). User can edit before merging. */
+  canonical: string;
+  /** Variant names in the group, highest-count first. */
+  members: string[];
+  /** Sum of expense counts across members. */
+  totalCount: number;
+}
+
+/**
+ * Brand key for fuzzy grouping: the first alphabetic token of length >= 4,
+ * uppercased. Strips store numbers and short noise tokens. Returns '' when no
+ * significant token exists. Intentionally coarse — it powers suggestions the
+ * user confirms, never an automatic merge, so over-grouping is acceptable.
+ */
+export function merchantFingerprint(name: string): string {
+  const tokens = name
+    .toUpperCase()
+    .split(/[^A-ZÀ-ÿĄĆĘŁŃÓŚŹŻ]+/i)
+    .filter(Boolean);
+  return tokens.find((t) => t.length >= 4) ?? '';
+}
+
+const titleCaseBrand = (fp: string): string =>
+  fp.charAt(0).toUpperCase() + fp.slice(1).toLowerCase();
+
+/**
+ * Group merchant variants that share a fingerprint, returning only groups with
+ * >=2 members (something to merge). Each group suggests a title-cased canonical
+ * name; members are sorted by count desc. Groups sorted by total count desc.
+ */
+export function suggestMerchantGroups(
+  merchants: { merchant: string; count: number }[],
+): MerchantGroup[] {
+  const buckets = new Map<string, { merchant: string; count: number }[]>();
+  for (const m of merchants) {
+    const fp = merchantFingerprint(m.merchant);
+    if (!fp) continue;
+    const arr = buckets.get(fp) ?? [];
+    arr.push(m);
+    buckets.set(fp, arr);
+  }
+  const groups: MerchantGroup[] = [];
+  for (const [fp, members] of buckets) {
+    if (members.length < 2) continue;
+    const sorted = [...members].sort(
+      (a, b) => b.count - a.count || a.merchant.localeCompare(b.merchant),
+    );
+    groups.push({
+      fingerprint: fp,
+      canonical: titleCaseBrand(fp),
+      members: sorted.map((s) => s.merchant),
+      totalCount: sorted.reduce((s, x) => s + x.count, 0),
+    });
+  }
+  return groups.sort((a, b) => b.totalCount - a.totalCount);
+}
