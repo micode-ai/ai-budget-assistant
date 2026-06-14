@@ -1768,7 +1768,6 @@ export default {
     empty: 'Пакуль няма крам',
     select: 'Выбраць',
     selected: '{{count}} выбрана',
-    selectAll: 'Выбраць усё',
     merge: 'Аб\'яднаць',
     mergeTitle: 'Аб\'яднаць крамы',
     mergeInto: 'Аб\'яднаць у',

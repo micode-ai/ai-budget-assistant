@@ -1797,7 +1797,6 @@ export default {
     empty: 'Aún no hay comercios',
     select: 'Seleccionar',
     selected: '{{count}} seleccionados',
-    selectAll: 'Seleccionar todo',
     merge: 'Combinar',
     mergeTitle: 'Combinar comercios',
     mergeInto: 'Combinar en',

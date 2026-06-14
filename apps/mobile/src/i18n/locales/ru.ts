@@ -1800,7 +1800,6 @@ export default {
     empty: 'Пока нет магазинов',
     select: 'Выбрать',
     selected: '{{count}} выбрано',
-    selectAll: 'Выбрать все',
     merge: 'Объединить',
     mergeTitle: 'Объединить магазины',
     mergeInto: 'Объединить в',

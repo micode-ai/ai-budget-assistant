@@ -87,7 +87,6 @@ export const MERCHANT_CANONICAL_PL: Record<string, string> = {
   CARREFOUR: 'Carrefour',
   AUCHAN: 'Auchan',
   TESCO: 'Tesco',
-  NETTO: 'Netto',
   STOKROTKA: 'Stokrotka',
   DINO: 'Dino',
   ALDI: 'Aldi',

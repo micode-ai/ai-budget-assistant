@@ -39,4 +39,7 @@ describe('normalizeMerchantPL', () => {
   it('is idempotent on an already-canonical name', () => {
     expect(normalizeMerchantPL('Biedronka')).toBe('Biedronka');
   });
+  it('does not normalize the accounting term "netto" to a brand', () => {
+    expect(normalizeMerchantPL('PRZELEW KWOTA NETTO 100 PLN')).toBe('PRZELEW KWOTA NETTO 100 PLN');
+  });
 });

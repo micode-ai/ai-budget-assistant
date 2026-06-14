@@ -1797,7 +1797,6 @@ export default {
     empty: 'No merchants yet',
     select: 'Select',
     selected: '{{count}} selected',
-    selectAll: 'Select all',
     merge: 'Merge',
     mergeTitle: 'Merge merchants',
     mergeInto: 'Merge into',

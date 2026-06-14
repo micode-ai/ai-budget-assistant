@@ -1797,7 +1797,6 @@ export default {
     empty: 'Nog geen verkopers',
     select: 'Selecteren',
     selected: '{{count}} geselecteerd',
-    selectAll: 'Alles selecteren',
     merge: 'Samenvoegen',
     mergeTitle: 'Verkopers samenvoegen',
     mergeInto: 'Samenvoegen in',

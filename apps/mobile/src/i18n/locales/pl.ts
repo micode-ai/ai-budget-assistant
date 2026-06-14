@@ -1800,7 +1800,6 @@ export default {
     empty: 'Brak sprzedawców',
     select: 'Wybierz',
     selected: '{{count}} zaznaczonych',
-    selectAll: 'Zaznacz wszystkich',
     merge: 'Scal',
     mergeTitle: 'Scal sprzedawców',
     mergeInto: 'Scal w',

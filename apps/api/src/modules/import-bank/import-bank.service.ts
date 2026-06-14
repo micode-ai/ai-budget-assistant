@@ -361,6 +361,7 @@ export class ImportBankService {
                 amount: row.amount,
                 currencyCode: row.currencyCode,
                 description: row.description,
+                // Re-normalize defensively (idempotent) in case an old client sent a raw merchant.
                 merchant: normalizeMerchantPL(row.merchant) ?? null,
                 date: new Date(row.date),
                 source: 'import',
