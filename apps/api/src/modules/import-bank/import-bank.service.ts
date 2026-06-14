@@ -6,6 +6,7 @@ import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { normalizeMerchantPL } from './merchants/merchants-pl';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
 import { isPdfBuffer, extractPdfText } from './utils/pdf-text';
 import { headerFingerprint } from './utils/header-fingerprint';
@@ -214,6 +215,7 @@ export class ImportBankService {
   ): Promise<BankImportPreviewResponse> {
     const withRefs: ImportRow[] = parsedRows.map((r) => ({
       ...r,
+      merchant: normalizeMerchantPL(r.merchant),
       externalRef: buildExternalRef(parser.id, r),
       alreadyImported: false,
     }));
@@ -359,7 +361,7 @@ export class ImportBankService {
                 amount: row.amount,
                 currencyCode: row.currencyCode,
                 description: row.description,
-                merchant: row.merchant ?? null,
+                merchant: normalizeMerchantPL(row.merchant) ?? null,
                 date: new Date(row.date),
                 source: 'import',
                 externalRef: row.externalRef,
