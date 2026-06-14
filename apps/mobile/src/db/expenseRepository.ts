@@ -294,6 +294,25 @@ export async function bulkRenameMerchant(
   );
 }
 
+/**
+ * Merge several merchant variants into one canonical name in a single UPDATE.
+ * Account-scoped, marks affected rows pending for re-sync (re-encryption).
+ * Rows already named `target` are skipped (no-op churn avoided).
+ */
+export async function bulkMergeMerchants(
+  accountId: string,
+  sources: string[],
+  target: string,
+): Promise<void> {
+  if (sources.length === 0) return;
+  const placeholders = sources.map(() => '?').join(', ');
+  await executeSql(
+    `UPDATE expenses SET merchant = ?, updated_at = ?, sync_status = 'pending'
+     WHERE account_id = ? AND merchant IN (${placeholders}) AND merchant != ? AND is_deleted = 0`,
+    [target, Date.now(), accountId, ...sources, target],
+  );
+}
+
 export async function upsertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
