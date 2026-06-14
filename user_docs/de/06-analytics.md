@@ -74,6 +74,8 @@ Jede Einblickkarte hat einen Schweregrad: Kritisch (rot), Warnung (gelb) oder In
 - Zeigt bis zu 8 einzelne Händler; der Rest wird als "Sonstige" zusammengefasst
 - Erscheint nur, wenn mindestens eine Ausgabe einen Händler hat
 
+Wenn dasselbe Geschäft unter verschiedenen Namen erscheint, öffne **Einstellungen → Händler**, um sie zu bereinigen: Tippe auf **Auswählen**, markiere die Varianten und **Zusammenführen** zu einem Namen. Die App schlägt auch mögliche Gruppen vor (zum Beispiel mehrere *Biedronka*-Einträge), die du mit einem einzigen Tippen zusammenführen kannst — damit gelten sie in diesen Diagrammen als ein einziger Händler.
+
 ### Nach Tags / Nach Projekten
 
 - **Tag-Ubersicht** — Ausgaben gruppiert nach deinen benutzerdefinierten Tags

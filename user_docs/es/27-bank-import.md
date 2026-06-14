@@ -39,6 +39,8 @@ Las comisiones de Wise de la columna `Total fees` se incluyen automáticamente e
 
 Cada fila se convierte en un Gasto, Ingreso o Cambio de divisa. Las categorías se sugieren automáticamente para comercios populares. Cada fila tiene un ID único — reimportar el mismo archivo es seguro.
 
+**Nombres de comercios más claros.** Las cadenas de tiendas conocidas se reconocen automáticamente, de modo que una línea del extracto como `BIEDRONKA 1234 WARSZAWA` se guarda simplemente como **Biedronka**. Así, una misma tienda aparece como un único comercio en tus análisis, en lugar de docenas de entradas separadas.
+
 ## «Otro» — mapeador universal
 
 Si tu banco no está en la lista, elige **Otro (CSV)**. La app muestra una vista previa y te pide indicar qué columna contiene la fecha, el importe y la descripción. Guarda este mapeo para importaciones futuras.

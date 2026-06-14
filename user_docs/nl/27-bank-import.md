@@ -45,6 +45,8 @@ Wise rapporteert kosten ook in een aparte kolom `Total fees` — de app vouwt de
 
 Elke rij wordt een Uitgave, Inkomsten of Valutawissel. Categorieën worden automatisch voorgesteld voor populaire verkopers — je kunt ze later wijzigen. Elke geïmporteerde rij wordt gemarkeerd met de bronbank en een unieke ID, zodat hetzelfde bestand opnieuw importeren altijd veilig is.
 
+**Nettere verkoopnamen.** Bekende winkelketens worden automatisch herkend, zodat een afschriftregel als `BIEDRONKA 1234 WARSZAWA` gewoon wordt opgeslagen als **Biedronka**. Zo verschijnt één winkel in je analyse als één verkoper in plaats van tientallen afzonderlijke vermeldingen.
+
 ## "Overig" — universele CSV-toewijzer
 
 Als je bank niet in de lijst staat, kies dan **Overig (eigen CSV)**. De app toont een voorbeeld van je bestand en vraagt je aan te wijzen welke kolom de datum, het bedrag en de omschrijving bevat. Sla deze toewijzing op met een naam en de volgende CSV met dezelfde kolomindeling wordt automatisch geïmporteerd.

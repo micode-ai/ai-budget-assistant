@@ -45,6 +45,8 @@ Wise also reports fees in a separate `Total fees` column — the app folds the f
 
 Each row becomes an Expense, an Income, or a Currency Exchange. Categories are suggested automatically for popular merchants — you can change them later. Every imported row is tagged with its source bank and a unique ID so re-importing the same file is always safe.
 
+**Tidier merchant names.** Well-known store chains are recognised automatically, so a statement line like `BIEDRONKA 1234 WARSZAWA` is saved simply as **Biedronka**. This keeps one shop as a single merchant in your analytics instead of dozens of separate store entries.
+
 ## "Other" — universal CSV mapper
 
 If your bank isn't in the list, pick **Other (custom CSV)**. The app shows a preview of your file and asks you to point at which column holds the date, amount, and description. Save this mapping with a name and the next CSV with the same column layout is imported automatically.

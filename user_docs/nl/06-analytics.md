@@ -74,6 +74,8 @@ Elke inzichtkaart heeft een ernst: kritiek (rood), waarschuwing (geel) of info (
 - Toont tot 8 afzonderlijke verkopers; de rest wordt gegroepeerd als "Overig"
 - Verschijnt alleen wanneer minstens één uitgave een verkoperwaarde heeft
 
+Als dezelfde winkel onder meerdere namen voorkomt, open dan **Instellingen → Verkopers** om ze op te ruimen: tik op **Selecteren**, vink de varianten aan en **Samenvoegen** tot één naam. De app stelt ook waarschijnlijke groepen voor (bijvoorbeeld meerdere *Biedronka*-vermeldingen) die je met één tik kunt samenvoegen — zodat ze als één verkoper tellen in deze grafieken.
+
 ### Per tag / Per project
 
 - **Taguitsplitsing** — uitgaven gegroepeerd op je aangepaste tags
