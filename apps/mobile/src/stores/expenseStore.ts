@@ -12,6 +12,7 @@ import {
   getReceiptImageFromDb,
   deleteReceiptImageLocally,
   bulkRenameMerchant,
+  bulkMergeMerchants,
 } from '@/db/expenseRepository';
 import {
   loadItemsByExpenseId,
@@ -91,6 +92,7 @@ interface ExpenseState {
   getDistinctMerchants: () => string[];
   getMerchantCounts: () => { merchant: string; count: number }[];
   renameMerchant: (from: string, to: string | null) => Promise<number>;
+  mergeMerchants: (sources: string[], target: string) => Promise<number>;
   getExpensesByCategory: () => CategoryBreakdown[];
   getTrendVsLastPeriod: () => number;
 
@@ -681,6 +683,34 @@ export const useExpenseStore = create<ExpenseState>()(
       }
       get().syncPendingExpenses().catch((e) =>
         console.warn('Merchant rename sync deferred (offline?):', e),
+      );
+      return affected.length;
+    },
+
+    mergeMerchants: async (sources, target) => {
+      const trimmed = target.trim();
+      if (!trimmed || sources.length === 0) return 0;
+      const sourceSet = new Set(sources);
+      const accountId = useAccountStore.getState().currentAccountId || '';
+      const matches = (e: Expense) =>
+        !e.isDeleted && e.merchant != null && sourceSet.has(e.merchant) && e.merchant !== trimmed;
+      const affected = get().expenses.filter(matches);
+      if (affected.length === 0) return 0;
+      const now = new Date();
+      set((state) => ({
+        expenses: state.expenses.map((e) =>
+          matches(e)
+            ? { ...e, merchant: trimmed, updatedAt: now, syncStatus: 'pending' as SyncStatus }
+            : e,
+        ),
+      }));
+      try {
+        await bulkMergeMerchants(accountId, sources, trimmed);
+      } catch (e) {
+        console.error('Failed to bulk-merge merchants in SQLite:', e);
+      }
+      get().syncPendingExpenses().catch((e) =>
+        console.warn('Merchant merge sync deferred (offline?):', e),
       );
       return affected.length;
     },
