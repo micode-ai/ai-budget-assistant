@@ -1455,6 +1455,50 @@ Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
+### Balance History (daily)
+
+```http
+GET /wallet/balance-history?days=30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Daily per-currency balance snapshots over the last N days. `days` defaults to `30` and is capped at `90`.
+
+> **Note:** kept for already-released app versions. The current mobile client uses the monthly endpoint below.
+
+**Response** `200 OK`
+```json
+{
+  "points": [
+    { "date": "2026-06-01", "balances": { "USD": 5000.00, "EUR": 2000.00 } },
+    { "date": "2026-06-02", "balances": { "USD": 4950.00, "EUR": 2000.00 } }
+  ],
+  "currencies": ["USD", "EUR"]
+}
+```
+
+### Balance History (monthly)
+
+```http
+GET /wallet/balance-history/monthly?months=6
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Net per-currency balance change for each calendar month (income +, expense −, exchange ±, transfers ±). `months` defaults to `6`, clamped to `1`–`12`. Every month in the range is returned, including months with no activity.
+
+**Response** `200 OK`
+```json
+{
+  "months": [
+    { "month": "2026-01", "deltas": { "USD": 320.00, "EUR": -50.00 } },
+    { "month": "2026-02", "deltas": { "USD": -120.50, "EUR": 0 } }
+  ],
+  "currencies": ["USD", "EUR"]
+}
+```
+
 ### Remove Balance
 
 ```http

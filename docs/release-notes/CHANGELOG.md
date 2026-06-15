@@ -8,6 +8,29 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.7.0 — 2026-06-15
+
+**Wallet**
+- **See how your balance changes over time** — the wallet now shows a monthly balance-change chart, with a green/red bar for each month, a 6-month / 12-month toggle, and a currency switch to view totals in any supported currency (ABA-257, ABA-258).
+
+**Subscriptions**
+- **Renewal calendar** — switch the Subscriptions screen between List and Calendar views to see, at a glance, which days your subscriptions renew (ABA-259).
+
+**Merchants**
+- **Cleaner merchant names from bank imports** — Polish bank brands now import under one tidy name (e.g. every "BIEDRONKA 1234 WARSZAWA" becomes "Biedronka") (ABA-254).
+- **Merge merchants in bulk** — on the Merchants screen, select several variants and merge them into one; the app also suggests likely groupings, and dismissed suggestions stay dismissed across sessions (ABA-254).
+
+**Email**
+- Summary report emails were **restyled to match the app's look and feel** (ABA-250).
+
+**Fixes**
+- Slack bot: receipt photos, voice messages, and PDF statements work again — uploaded files were being silently dropped (ABA-256).
+
+**Under the hood**
+- Moved push-notification strings into the shared types package, added test coverage for the subscription manager, and sped up the Windows dev bundler by scoping Metro's file crawl (ABA-251, ABA-252, ABA-253, ABA-255).
+
+---
+
 ## 1.6.0 — 2026-06-11
 
 **Anomaly alerts**
