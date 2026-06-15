@@ -19,4 +19,33 @@ config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
 ];
 
+// --- Metro file-map crawl scoping (Windows monorepo, no Watchman) ---
+// Watchman publishes no Windows builds, so Metro falls back to its JS Node
+// crawler, which walks every watchFolder on each cold start. Because
+// watchFolders is the whole workspaceRoot, that crawl includes apps/api
+// (NestJS + Prisma + its own node_modules) and apps/admin (Next.js + its own
+// node_modules) plus the @budget/* workspace symlinks — none of which the
+// mobile bundle needs. As those apps grew, the crawl stopped finishing within
+// Metro's startup budget and bundling hung before it could even start.
+// blockList is the file-map ignorePattern (see metro createFileMap.js) and the
+// Node crawler applies it at directory level (skips the whole subtree before
+// recursing into it), so excluding the unrelated apps keeps the crawl to
+// apps/mobile + root node_modules + packages/shared-*. shared-types/shared-utils
+// are intentionally NOT excluded — the mobile app imports them.
+const defaultBlockList = config.resolver.blockList;
+const baseExclusions = Array.isArray(defaultBlockList)
+  ? defaultBlockList.filter(Boolean)
+  : defaultBlockList
+    ? [defaultBlockList]
+    : [];
+const extraExclusions = [
+  /[\\/]apps[\\/](api|admin)[\\/]/,
+  /[\\/]node_modules[\\/]@budget[\\/](api|mobile)[\\/]/,
+  /[\\/]node_modules[\\/]admin[\\/]/,
+];
+config.resolver.blockList = new RegExp(
+  [...baseExclusions, ...extraExclusions].map((re) => `(${re.source})`).join('|'),
+  baseExclusions[0] ? baseExclusions[0].flags : '',
+);
+
 module.exports = config;
