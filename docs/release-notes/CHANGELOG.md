@@ -19,6 +19,7 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 **Merchants**
 - **Cleaner merchant names from bank imports** — Polish bank brands now import under one tidy name (e.g. every "BIEDRONKA 1234 WARSZAWA" becomes "Biedronka") (ABA-254).
 - **Merge merchants in bulk** — on the Merchants screen, select several variants and merge them into one; the app also suggests likely groupings, and dismissed suggestions stay dismissed across sessions (ABA-254).
+- **The app learns your categories** — when you change an expense's category, the app remembers the merchant → category mapping and automatically applies it to future bank and Wise imports. Manage the learned rules at the bottom of the Merchants screen; they sync across your devices (ABA-260).
 
 **Email**
 - Summary report emails were **restyled to match the app's look and feel** (ABA-250).

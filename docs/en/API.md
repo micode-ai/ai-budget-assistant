@@ -1511,6 +1511,47 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Merchant Category Rules
+
+Learned `merchant → category` mappings. A rule is created/updated automatically whenever an expense that has a merchant gets a category assigned; future bank and Wise imports auto-apply the matching category. All endpoints require JWT + `X-Account-Id` header.
+
+### List Rules
+
+```http
+GET /merchant-rules
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "merchantNormalized": "amazon",
+    "categoryId": "uuid",
+    "categoryName": "Shopping",
+    "categoryIcon": "cart",
+    "createdAt": "2026-06-15T10:00:00.000Z",
+    "updatedAt": "2026-06-15T10:00:00.000Z"
+  }
+]
+```
+
+### Delete Rule
+
+```http
+DELETE /merchant-rules/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Stops auto-assigning that category. **Viewer role blocked** (403).
+
+**Response** `200 OK`
+
+---
+
 ## Currency Exchange
 
 All currency exchange endpoints require `X-Account-Id` header.
