@@ -861,6 +861,9 @@ export default {
     balanceUpdated: 'Guthaben erfolgreich aktualisiert',
     transferredIn: 'Eingehende Überweisung',
     transferredOut: 'Ausgehende Überweisung',
+    balanceHistory: 'Guthaben-Verlauf',
+    historyDays: '{{count}}T',
+    noHistoryYet: 'Füge Transaktionen hinzu, um den Guthabentrend zu sehen',
   },
   exchange: {
     title: 'Umtausch',

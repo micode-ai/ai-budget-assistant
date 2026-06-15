@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
+import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus, WalletBalanceHistoryPoint } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import {
   loadAllWalletBalances,
@@ -53,11 +53,15 @@ interface WalletState {
   exchanges: CurrencyExchange[];
   transfers: AccountTransfer[];
   walletSummary: WalletSummary[];
+  balanceHistory: WalletBalanceHistoryPoint[];
+  selectedHistoryDays: 30 | 60 | 90;
+  isHistoryLoading: boolean;
   isLoading: boolean;
   error: string | null;
 
   // Actions
   loadWallet: () => Promise<void>;
+  loadBalanceHistory: (days: 30 | 60 | 90) => Promise<void>;
   setInitialBalance: (currencyCode: Currency, amount: number) => WalletBalance;
   updateInitialBalance: (id: string, amount: number) => void;
   removeBalance: (id: string) => void;
@@ -100,8 +104,21 @@ export const useWalletStore = create<WalletState>()(
     exchanges: [],
     transfers: [],
     walletSummary: [],
+    balanceHistory: [],
+    selectedHistoryDays: 30,
+    isHistoryLoading: false,
     isLoading: false,
     error: null,
+
+    loadBalanceHistory: async (days) => {
+      set({ isHistoryLoading: true, selectedHistoryDays: days });
+      try {
+        const result = await api.getWalletBalanceHistory(days);
+        set({ balanceHistory: result.points, isHistoryLoading: false });
+      } catch {
+        set({ isHistoryLoading: false });
+      }
+    },
 
     loadWallet: async () => {
       set({ isLoading: true, error: null });
@@ -704,6 +721,6 @@ export const useWalletStore = create<WalletState>()(
       return summary?.currentBalance ?? 0;
     },
 
-    reset: () => set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], isLoading: false, error: null }),
+    reset: () => set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], balanceHistory: [], selectedHistoryDays: 30, isHistoryLoading: false, isLoading: false, error: null }),
   })),
 );

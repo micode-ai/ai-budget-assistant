@@ -861,6 +861,9 @@ export default {
     balanceUpdated: 'Solde mis à jour avec succès',
     transferredIn: 'Reçu par virement',
     transferredOut: 'Viré',
+    balanceHistory: 'Historique du solde',
+    historyDays: '{{count}}j',
+    noHistoryYet: 'Ajoutez des transactions pour voir l\'évolution de votre solde',
   },
   exchange: {
     title: 'Change',

@@ -11,6 +11,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
+import { WalletSparklineCard } from '@/components/wallet/WalletSparklineCard';
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -77,6 +78,7 @@ export default function WalletScreen() {
           </View>
         ) : (
           <>
+            <WalletSparklineCard />
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t('wallet.balances')}</Text>
               {hasMultipleCurrencies && hasRates && (

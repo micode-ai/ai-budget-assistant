@@ -861,6 +861,9 @@ export default {
     balanceUpdated: 'Saldo succesvol bijgewerkt',
     transferredIn: 'Ontvangen overboeking',
     transferredOut: 'Uitgaande overboeking',
+    balanceHistory: 'Saldogeschiedenis',
+    historyDays: '{{count}}d',
+    noHistoryYet: 'Voeg transacties toe om de saldotrend te zien',
   },
   exchange: {
     title: 'Omwisselen',

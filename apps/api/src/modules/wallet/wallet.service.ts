@@ -167,4 +167,105 @@ export class WalletService {
 
     return { balances };
   }
+
+  async getBalanceHistory(accountId: string, days: number) {
+    const cappedDays = Math.min(Math.max(1, days), 90);
+
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - cappedDays);
+    startDate.setHours(0, 0, 0, 0);
+
+    // Run all queries in parallel
+    const [currentSummary, incomes, expenses, exchanges, transfersOut, transfersIn] =
+      await Promise.all([
+        this.getSummary(accountId),
+        this.prisma.income.findMany({
+          where: { accountId, isDeleted: false, date: { gte: startDate, lte: today } },
+          select: { date: true, amount: true, currencyCode: true },
+        }),
+        this.prisma.expense.findMany({
+          where: { accountId, isDeleted: false, date: { gte: startDate, lte: today } },
+          select: { date: true, amount: true, currencyCode: true },
+        }),
+        this.prisma.currencyExchange.findMany({
+          where: { accountId, isDeleted: false, date: { gte: startDate, lte: today } },
+          select: { date: true, fromAmount: true, toAmount: true, fromCurrency: true, toCurrency: true },
+        }),
+        this.prisma.accountTransfer.findMany({
+          where: { fromAccountId: accountId, isDeleted: false, date: { gte: startDate, lte: today } },
+          select: { date: true, fromAmount: true, fromCurrency: true },
+        }),
+        this.prisma.accountTransfer.findMany({
+          where: { toAccountId: accountId, isDeleted: false, countAsIncome: false, date: { gte: startDate, lte: today } },
+          select: { date: true, toAmount: true, toCurrency: true },
+        }),
+      ]);
+
+    // Current balance per currency
+    const currentBalances: Record<string, number> = {};
+    const currencies: string[] = [];
+    for (const s of currentSummary.balances) {
+      currentBalances[s.currencyCode] = s.currentBalance;
+      currencies.push(s.currencyCode);
+    }
+
+    if (currencies.length === 0) {
+      return { points: [], currencies: [] };
+    }
+
+    // Build daily delta map: dateStr -> currency -> net delta
+    const dailyDeltas = new Map<string, Map<string, number>>();
+
+    const addDelta = (date: Date, currency: string, delta: number) => {
+      const dateStr = date.toISOString().split('T')[0];
+      if (!dailyDeltas.has(dateStr)) dailyDeltas.set(dateStr, new Map());
+      const dayMap = dailyDeltas.get(dateStr)!;
+      dayMap.set(currency, (dayMap.get(currency) ?? 0) + delta);
+    };
+
+    for (const r of incomes) addDelta(r.date, r.currencyCode, Number(r.amount));
+    for (const r of expenses) addDelta(r.date, r.currencyCode, -Number(r.amount));
+    for (const r of exchanges) {
+      addDelta(r.date, r.fromCurrency, -Number(r.fromAmount));
+      addDelta(r.date, r.toCurrency, Number(r.toAmount));
+    }
+    for (const r of transfersOut) addDelta(r.date, r.fromCurrency, -Number(r.fromAmount));
+    for (const r of transfersIn) addDelta(r.date, r.toCurrency, Number(r.toAmount));
+
+    // Total delta in the range per currency
+    const rangeDelta: Record<string, number> = {};
+    for (const dayMap of dailyDeltas.values()) {
+      for (const [currency, delta] of dayMap) {
+        rangeDelta[currency] = (rangeDelta[currency] ?? 0) + delta;
+      }
+    }
+
+    // Starting balance = current balance minus everything that happened in the window
+    const running: Record<string, number> = {};
+    for (const currency of currencies) {
+      running[currency] = (currentBalances[currency] ?? 0) - (rangeDelta[currency] ?? 0);
+    }
+
+    // Walk day-by-day and emit points
+    const points: { date: string; balances: Record<string, number> }[] = [];
+    for (let i = 0; i <= cappedDays; i++) {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      const dateStr = d.toISOString().split('T')[0];
+
+      const dayMap = dailyDeltas.get(dateStr);
+      if (dayMap) {
+        for (const [currency, delta] of dayMap) {
+          running[currency] = (running[currency] ?? 0) + delta;
+        }
+      }
+
+      points.push({ date: dateStr, balances: { ...running } });
+    }
+
+    return { points, currencies };
+  }
 }
