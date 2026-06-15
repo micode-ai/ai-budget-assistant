@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useMerchantSuggestionStore } from '@/stores/merchantSuggestionStore';
 import { getMerchantCounts, suggestMerchantGroups } from '@/utils/merchant';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -36,8 +37,9 @@ export default function MerchantsSettingsScreen() {
   const [mergeSources, setMergeSources] = useState<string[] | null>(null);
   const [mergeName, setMergeName] = useState('');
 
-  // Suggestions (session-dismissed by fingerprint)
-  const [dismissed, setDismissed] = useState<Set<string>>(new Set());
+  // Suggestions — dismissals persist across sessions (MMKV), keyed by fingerprint.
+  const dismissed = useMerchantSuggestionStore((s) => s.dismissed);
+  const dismissSuggestion = useMerchantSuggestionStore((s) => s.dismiss);
   // Cap visible banners so suggestions don't bury the merchant list; the next
   // batch surfaces on recompute after the top ones are merged/dismissed.
   const suggestions = useMemo(
@@ -167,7 +169,7 @@ export default function MerchantsSettingsScreen() {
             <View style={styles.suggestionActions}>
               <TouchableOpacity
                 style={styles.dismissButton}
-                onPress={() => setDismissed((p) => new Set(p).add(g.fingerprint))}
+                onPress={() => dismissSuggestion(g.fingerprint)}
               >
                 <Text style={styles.dismissText}>{t('merchants.dismiss')}</Text>
               </TouchableOpacity>
