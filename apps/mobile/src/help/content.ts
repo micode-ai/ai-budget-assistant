@@ -1366,6 +1366,17 @@ The formula: **Current Balance = Initial Balance + Total Income - Total Spent + 
 
 If you hold balances in multiple currencies, the wallet displays a **Total Balance** card at the top. This card converts all your currency balances into your chosen settings currency (configured in **Settings** > **Currency**) using the latest exchange rates, giving you a single combined view of your finances.
 
+You can switch the display currency right here: tap a currency chip above the total to instantly recalculate the total and the Balance History chart in that currency. This is a view-only switch for the Wallet screen — it does not change your app-wide currency setting and resets to your default when you leave the screen.
+
+## Balance History
+
+At the top of the Wallet screen, the **Balance History** card shows how your total balance changed each month as a bar chart:
+
+- **Green bars** mean your balance grew that month; **red bars** mean it shrank.
+- Tap any bar to see the exact change for that month.
+- Use the **6M / 12M** toggle to switch between the last 6 or 12 months.
+- Amounts follow the currency you pick in the currency chips, converted at the latest exchange rates.
+
 ## Setting Initial Balance
 
 Set your starting balance for each currency:
@@ -4939,6 +4950,17 @@ iOS, Android, Web
 ## Общий баланс
 
 Если у вас есть балансы в нескольких валютах, приложение показывает карточку **Общий баланс** в верхней части экрана Кошелька. Эта карточка конвертирует все ваши валютные балансы в единую валюту (установленную в Настройках) по актуальным курсам обмена, чтобы вы могли видеть общую стоимость всех ваших средств в одном месте.
+
+Вы можете переключить валюту отображения прямо здесь: нажмите на чип валюты над общей суммой, чтобы мгновенно пересчитать сумму и диаграмму «История баланса» в этой валюте. Это переключатель только для просмотра на экране Кошелька — он не изменяет общую настройку валюты в приложении и сбрасывается к вашей валюте по умолчанию при выходе с экрана.
+
+## История баланса
+
+В верхней части экрана Кошелька карточка **История баланса** показывает, как менялся ваш общий баланс каждый месяц в виде столбчатой диаграммы:
+
+- **Зелёные столбцы** означают, что баланс вырос в этом месяце; **красные столбцы** означают, что он снизился.
+- Нажмите на любой столбец, чтобы увидеть точное изменение за этот месяц.
+- Используйте переключатель **6 мес. / 12 мес.**, чтобы переключаться между последними 6 или 12 месяцами.
+- Суммы отображаются в валюте, которую вы выбираете в чипах валюты, с конвертацией по актуальным курсам обмена.
 
 ## Установка начального баланса
 
@@ -8527,6 +8549,17 @@ iOS, Android, Web
 
 > **Примітка:** Загальний баланс є приблизним, оскільки курси обміну постійно змінюються.
 
+Ви можете змінити валюту відображення прямо тут: натисніть на валютний чіп над загальною сумою, щоб миттєво перерахувати суму та графік «Історія балансу» у цій валюті. Це перемикач лише для перегляду на екрані Гаманця — він не змінює загальне налаштування валюти в додатку і скидається до вашої валюти за замовчуванням при виході з екрана.
+
+## Історія балансу
+
+У верхній частині екрана Гаманця картка **Історія балансу** показує, як змінювався ваш загальний баланс щомісяця у вигляді стовпчастої діаграми:
+
+- **Зелені стовпці** означають, що баланс зріс у цьому місяці; **червоні стовпці** означають, що він зменшився.
+- Натисніть на будь-який стовпець, щоб побачити точну зміну за цей місяць.
+- Використовуйте перемикач **6М / 12М**, щоб переключатися між останніми 6 або 12 місяцями.
+- Суми відображаються у валюті, яку ви обираєте у валютних чіпах, конвертованій за актуальними курсами обміну.
+
 ## Обмін валют
 
 ![Екран обміну валют]({{IMG:exchange.jpg}})
@@ -12048,6 +12081,17 @@ Gdy posiadasz salda w wielu walutach, aplikacja wyświetla łączne saldo przeli
 - Przeliczenie odbywa się na podstawie aktualnych kursów wymiany
 - Saldo całkowite uwzględnia wszystkie portfele walutowe (salda początkowe, przychody, wydatki, wymiany i przelewy)
 
+Możesz zmienić walutę wyświetlania bezpośrednio tutaj: dotknij elementu waluty nad saldem całkowitym, aby natychmiast przeliczyć saldo i wykres Historii salda na wybraną walutę. To wyłącznie przełącznik widoku na ekranie Portfela — nie zmienia ogólnoaplikacyjnego ustawienia waluty i powraca do domyślnej waluty po opuszczeniu ekranu.
+
+## Historia salda
+
+W górnej części ekranu Portfela karta **Historia salda** pokazuje, jak zmieniało się Twoje saldo całkowite w poszczególnych miesiącach w formie wykresu słupkowego:
+
+- **Zielone słupki** oznaczają, że saldo wzrosło w danym miesiącu; **czerwone słupki** oznaczają, że zmalało.
+- Dotknij dowolnego słupka, aby zobaczyć dokładną zmianę w danym miesiącu.
+- Użyj przełącznika **6M / 12M**, aby przełączyć między ostatnimi 6 lub 12 miesiącami.
+- Kwoty są wyświetlane w walucie wybranej w elementach waluty, przeliczonej po aktualnych kursach wymiany.
+
 ## Wymiana walut
 
 ![Ekran wymiany walut]({{IMG:exchange.jpg}})
@@ -15555,6 +15599,17 @@ Die Formel: **Aktueller Saldo = Anfangssaldo + Gesamteinkommen - Gesamtausgaben 
 Wenn du Salden in mehreren Wahrungen hast, zeigt die App einen **Gesamtsaldo** an, der alle Wahrungssalden in deine in den Einstellungen festgelegte Hauptwahrung umrechnet. So erhaltst du einen schnellen Uberblick uber dein gesamtes Vermogen, ohne manuell zwischen Wahrungen rechnen zu mussen.
 
 Der Gesamtsaldo wird auf der Ubersicht und in der Geldborse-Ansicht angezeigt und aktualisiert sich automatisch mit den aktuellen Wechselkursen.
+
+Du kannst die Anzeigewahrung direkt hier wechseln: Tippe auf einen Wahrungschip oberhalb der Gesamtsumme, um die Gesamtsumme und das Saldoverlauf-Diagramm sofort in dieser Wahrung neu zu berechnen. Dies ist nur ein Anzeigewechsel fur den Geldborse-Bildschirm — er andert nicht deine app-weite Wahrungseinstellung und wird zuruck auf deine Standardwahrung gesetzt, wenn du den Bildschirm verlasst.
+
+## Saldoverlauf
+
+Oben auf dem Geldborse-Bildschirm zeigt die Karte **Saldoverlauf**, wie sich dein Gesamtsaldo jeden Monat verandert hat — als Balkendiagramm:
+
+- **Grune Balken** bedeuten, dass dein Saldo in diesem Monat gewachsen ist; **rote Balken** bedeuten, dass er gesunken ist.
+- Tippe auf einen Balken, um die genaue Veranderung fur diesen Monat zu sehen.
+- Nutze den **6M / 12M**-Schalter, um zwischen den letzten 6 oder 12 Monaten zu wechseln.
+- Die Betrage richten sich nach der Wahrung, die du bei den Wahrungschips auswahlst, umgerechnet zu den aktuellen Wechselkursen.
 
 ## Anfangssaldo festlegen
 
@@ -19069,6 +19124,17 @@ Cuando tienes saldos en varias monedas, la aplicacion muestra un **Saldo total**
 - La conversion utiliza las tasas de cambio mas recientes obtenidas automaticamente.
 - Si cambias la moneda principal en **Ajustes**, el saldo total se recalcula de inmediato.
 
+Puedes cambiar la moneda de visualizacion directamente aqui: toca una ficha de moneda encima del total para recalcular al instante el total y el grafico de Historial de saldo en esa moneda. Este es un cambio de visualizacion exclusivo para la pantalla de Billetera — no modifica la configuracion de moneda global de la aplicacion y se restablece a tu moneda predeterminada cuando abandonas la pantalla.
+
+## Historial de saldo
+
+En la parte superior de la pantalla de Billetera, la tarjeta **Historial de saldo** muestra como cambio tu saldo total cada mes en forma de grafico de barras:
+
+- Las **barras verdes** significan que tu saldo crecio ese mes; las **barras rojas** significan que disminuyo.
+- Toca cualquier barra para ver el cambio exacto de ese mes.
+- Usa el selector **6M / 12M** para alternar entre los ultimos 6 o 12 meses.
+- Los importes siguen la moneda que elijas en las fichas de moneda, convertidos a las tasas de cambio mas recientes.
+
 ## Transferencias entre cuentas
 
 Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Personal):
@@ -22552,6 +22618,17 @@ Vous verrez une confirmation : "Solde defini avec succes."
 
 Lorsque vous possedez des soldes dans plusieurs devises, l'application calcule un **solde total** converti dans la devise definie dans vos parametres. Le taux de change utilise pour la conversion est le taux en temps reel recupere automatiquement. Cela vous donne une vue d'ensemble de votre patrimoine dans une seule devise de reference.
 
+Vous pouvez changer la devise d'affichage directement ici : appuyez sur une pastille de devise au-dessus du total pour recalculer instantanement le total et le graphique d'Historique du solde dans cette devise. Il s'agit uniquement d'un changement d'affichage pour l'ecran Portefeuille — cela ne modifie pas le parametre de devise global de l'application et revient a votre devise par defaut lorsque vous quittez l'ecran.
+
+## Historique du solde
+
+En haut de l'ecran Portefeuille, la carte **Historique du solde** montre comment votre solde total a evolue chaque mois sous forme de graphique en barres :
+
+- Les **barres vertes** indiquent que votre solde a augmente ce mois-la ; les **barres rouges** indiquent qu'il a diminue.
+- Appuyez sur une barre pour voir le changement exact de ce mois.
+- Utilisez le bouton **6M / 12M** pour basculer entre les 6 ou 12 derniers mois.
+- Les montants suivent la devise que vous selectionnez dans les pastilles de devise, convertis aux taux de change les plus recents.
+
 ## Change de devises
 
 ![Ecran de change de devises]({{IMG:exchange.jpg}})
@@ -26024,6 +26101,17 @@ iOS, Android, Web
 
 Калі ў вас ёсць балансы ў некалькіх валютах, праграма паказвае картку **Агульны баланс** у верхняй частцы экрана Кашалька. Гэтая картка канвертуе ўсе вашы валютныя балансы ў адзіную валюту (устаноўленую ў Наладах) па актуальных курсах абмену, каб вы маглі бачыць агульны кошт усіх вашых сродкаў у адным месцы.
 
+Вы можаце перамкнуць валюту адлюстравання прама тут: націсніце на чып валюты над агульнай сумай, каб імгненна пералічыць суму і дыяграму «Гісторыя балансу» ў гэтай валюце. Гэта толькі перамыкач прагляду для экрана Кашалька — ён не змяняе агульнае налада валюты ў праграме і скідаецца да вашай валюты па змаўчанні пры выхадзе з экрана.
+
+## Гісторыя балансу
+
+У верхняй частцы экрана Кашалька картка **Гісторыя балансу** паказвае, як мяняўся ваш агульны баланс кожны месяц у выглядзе слупковай дыяграмы:
+
+- **Зялёныя слупкі** азначаюць, што баланс вырас у гэтым месяцы; **чырвоныя слупкі** азначаюць, што ён знізіўся.
+- Націсніце на любы слупок, каб убачыць дакладную змену за гэты месяц.
+- Выкарыстоўвайце перамыкач **6 мес. / 12 мес.**, каб пераключацца паміж апошнімі 6 або 12 месяцамі.
+- Сумы адлюстроўваюцца ў валюце, якую вы выбіраеце ў чыпах валюты, з канвертацыяй па актуальных курсах абмену.
+
 ## Устаноўка пачатковага балансу
 
 Усталюйце стартавы баланс для кожнай валюты:
@@ -29468,6 +29556,17 @@ De formule: **Huidig saldo = Beginsaldo + Totale inkomsten - Totaal uitgegeven +
 ## Totaalsaldo
 
 Als je saldo's in meerdere valuta's hebt, toont de portemonnee bovenaan een kaart **Totaalsaldo**. Deze kaart rekent al je valutasaldo's om naar de gekozen valuta in je instellingen (geconfigureerd in **Instellingen** > **Valuta**) met de meest recente wisselkoersen, zodat je één gecombineerd overzicht van je financiën krijgt.
+
+Je kunt de weergavevaluta hier direct wisselen: tik op een valutachip boven het totaal om het totaal en het diagram Saldogeschiedenis onmiddellijk om te rekenen naar die valuta. Dit is een weergave-only schakelaar voor het Portemonnee-scherm — het wijzigt je app-brede valuta-instelling niet en keert terug naar je standaardvaluta wanneer je het scherm verlaat.
+
+## Saldogeschiedenis
+
+Bovenaan het Portemonnee-scherm toont de kaart **Saldogeschiedenis** hoe je totale saldo elke maand is veranderd als een staafdiagram:
+
+- **Groene staven** betekenen dat je saldo die maand is gegroeid; **rode staven** betekenen dat het is gekrompen.
+- Tik op een staaf om de exacte verandering voor die maand te zien.
+- Gebruik de schakelaar **6M / 12M** om te wisselen tussen de laatste 6 of 12 maanden.
+- Bedragen volgen de valuta die je kiest in de valutachips, omgerekend tegen de meest recente wisselkoersen.
 
 ## Beginsaldo instellen
 

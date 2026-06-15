@@ -862,7 +862,9 @@ export default {
     transferredIn: 'Transferred In',
     transferredOut: 'Transferred Out',
     balanceHistory: 'Balance History',
-    historyDays: '{{count}}d',
+    monthsWindow: '{{count}}M',
+    monthlyChange: 'in {{month}}',
+    displayCurrency: 'Display currency',
     noHistoryYet: 'Add transactions to see your balance trend',
   },
   exchange: {

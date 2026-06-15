@@ -32,6 +32,17 @@ De formule: **Huidig saldo = Beginsaldo + Totale inkomsten - Totaal uitgegeven +
 
 Als je saldo's in meerdere valuta's hebt, toont de portemonnee bovenaan een kaart **Totaalsaldo**. Deze kaart rekent al je valutasaldo's om naar de gekozen valuta in je instellingen (geconfigureerd in **Instellingen** > **Valuta**) met de meest recente wisselkoersen, zodat je één gecombineerd overzicht van je financiën krijgt.
 
+Je kunt de weergavevaluta hier direct wisselen: tik op een valutachip boven het totaal om het totaal en het diagram Saldogeschiedenis onmiddellijk om te rekenen naar die valuta. Dit is een weergave-only schakelaar voor het Portemonnee-scherm — het wijzigt je app-brede valuta-instelling niet en keert terug naar je standaardvaluta wanneer je het scherm verlaat.
+
+## Saldogeschiedenis
+
+Bovenaan het Portemonnee-scherm toont de kaart **Saldogeschiedenis** hoe je totale saldo elke maand is veranderd als een staafdiagram:
+
+- **Groene staven** betekenen dat je saldo die maand is gegroeid; **rode staven** betekenen dat het is gekrompen.
+- Tik op een staaf om de exacte verandering voor die maand te zien.
+- Gebruik de schakelaar **6M / 12M** om te wisselen tussen de laatste 6 of 12 maanden.
+- Bedragen volgen de valuta die je kiest in de valutachips, omgerekend tegen de meest recente wisselkoersen.
+
 ## Beginsaldo instellen
 
 Stel je startsaldo voor elke valuta in:

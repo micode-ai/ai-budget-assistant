@@ -268,4 +268,77 @@ export class WalletService {
 
     return { points, currencies };
   }
+
+  async getMonthlyBalanceHistory(accountId: string, months: number) {
+    const cappedMonths = Math.min(Math.max(1, months), 12);
+
+    const now = new Date();
+    // First day of the earliest month in the window (UTC)
+    const start = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (cappedMonths - 1), 1, 0, 0, 0, 0),
+    );
+    // Last day of the current month (UTC)
+    const end = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0, 23, 59, 59, 999),
+    );
+
+    const [incomes, expenses, exchanges, transfersOut, transfersIn] = await Promise.all([
+      this.prisma.income.findMany({
+        where: { accountId, isDeleted: false, date: { gte: start, lte: end } },
+        select: { date: true, amount: true, currencyCode: true },
+      }),
+      this.prisma.expense.findMany({
+        where: { accountId, isDeleted: false, date: { gte: start, lte: end } },
+        select: { date: true, amount: true, currencyCode: true },
+      }),
+      this.prisma.currencyExchange.findMany({
+        where: { accountId, isDeleted: false, date: { gte: start, lte: end } },
+        select: { date: true, fromAmount: true, toAmount: true, fromCurrency: true, toCurrency: true },
+      }),
+      this.prisma.accountTransfer.findMany({
+        where: { fromAccountId: accountId, isDeleted: false, date: { gte: start, lte: end } },
+        select: { date: true, fromAmount: true, fromCurrency: true },
+      }),
+      this.prisma.accountTransfer.findMany({
+        where: { toAccountId: accountId, isDeleted: false, countAsIncome: false, date: { gte: start, lte: end } },
+        select: { date: true, toAmount: true, toCurrency: true },
+      }),
+    ]);
+
+    const monthKey = (date: Date): string =>
+      `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+
+    // monthKey -> currency -> net delta
+    const monthMap = new Map<string, Map<string, number>>();
+    const currencySet = new Set<string>();
+    const add = (date: Date, currency: string, delta: number) => {
+      const key = monthKey(new Date(date));
+      if (!monthMap.has(key)) monthMap.set(key, new Map());
+      const m = monthMap.get(key)!;
+      m.set(currency, (m.get(currency) ?? 0) + delta);
+      currencySet.add(currency);
+    };
+
+    for (const r of incomes) add(r.date, r.currencyCode, Number(r.amount));
+    for (const r of expenses) add(r.date, r.currencyCode, -Number(r.amount));
+    for (const r of exchanges) {
+      add(r.date, r.fromCurrency, -Number(r.fromAmount));
+      add(r.date, r.toCurrency, Number(r.toAmount));
+    }
+    for (const r of transfersOut) add(r.date, r.fromCurrency, -Number(r.fromAmount));
+    for (const r of transfersIn) add(r.date, r.toCurrency, Number(r.toAmount));
+
+    // Emit one entry per month in the window, chronological, including empty months
+    const result: { month: string; deltas: Record<string, number> }[] = [];
+    for (let i = 0; i < cappedMonths; i++) {
+      const d = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + i, 1));
+      const key = monthKey(d);
+      const m = monthMap.get(key);
+      const deltas: Record<string, number> = {};
+      if (m) for (const [c, v] of m) deltas[c] = v;
+      result.push({ month: key, deltas });
+    }
+
+    return { months: result, currencies: Array.from(currencySet) };
+  }
 }

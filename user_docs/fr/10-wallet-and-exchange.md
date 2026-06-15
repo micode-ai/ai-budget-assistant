@@ -45,6 +45,17 @@ Vous verrez une confirmation : "Solde defini avec succes."
 
 Lorsque vous possedez des soldes dans plusieurs devises, l'application calcule un **solde total** converti dans la devise definie dans vos parametres. Le taux de change utilise pour la conversion est le taux en temps reel recupere automatiquement. Cela vous donne une vue d'ensemble de votre patrimoine dans une seule devise de reference.
 
+Vous pouvez changer la devise d'affichage directement ici : appuyez sur une pastille de devise au-dessus du total pour recalculer instantanement le total et le graphique d'Historique du solde dans cette devise. Il s'agit uniquement d'un changement d'affichage pour l'ecran Portefeuille — cela ne modifie pas le parametre de devise global de l'application et revient a votre devise par defaut lorsque vous quittez l'ecran.
+
+## Historique du solde
+
+En haut de l'ecran Portefeuille, la carte **Historique du solde** montre comment votre solde total a evolue chaque mois sous forme de graphique en barres :
+
+- Les **barres vertes** indiquent que votre solde a augmente ce mois-la ; les **barres rouges** indiquent qu'il a diminue.
+- Appuyez sur une barre pour voir le changement exact de ce mois.
+- Utilisez le bouton **6M / 12M** pour basculer entre les 6 ou 12 derniers mois.
+- Les montants suivent la devise que vous selectionnez dans les pastilles de devise, convertis aux taux de change les plus recents.
+
 ## Change de devises
 
 ![Ecran de change de devises](../img/exchange.jpg)

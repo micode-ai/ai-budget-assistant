@@ -855,7 +855,9 @@ export default {
     transferredIn: 'Атрымана пераводам',
     transferredOut: 'Пераведзена',
     balanceHistory: 'Гісторыя балансу',
-    historyDays: '{{count}}д',
+    monthsWindow: '{{count}} міс.',
+    monthlyChange: 'за {{month}}',
+    displayCurrency: 'Валюта адлюстравання',
     noHistoryYet: 'Дадайце транзакцыі, каб убачыць дынаміку балансу',
   },
   exchange: {

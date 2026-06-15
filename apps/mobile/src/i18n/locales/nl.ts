@@ -862,7 +862,9 @@ export default {
     transferredIn: 'Ontvangen overboeking',
     transferredOut: 'Uitgaande overboeking',
     balanceHistory: 'Saldogeschiedenis',
-    historyDays: '{{count}}d',
+    monthsWindow: '{{count}}M',
+    monthlyChange: 'in {{month}}',
+    displayCurrency: 'Weergavevaluta',
     noHistoryYet: 'Voeg transacties toe om de saldotrend te zien',
   },
   exchange: {

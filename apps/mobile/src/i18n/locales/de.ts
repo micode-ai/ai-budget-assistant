@@ -862,7 +862,9 @@ export default {
     transferredIn: 'Eingehende Überweisung',
     transferredOut: 'Ausgehende Überweisung',
     balanceHistory: 'Guthaben-Verlauf',
-    historyDays: '{{count}}T',
+    monthsWindow: '{{count}}M',
+    monthlyChange: 'im {{month}}',
+    displayCurrency: 'Anzeigewährung',
     noHistoryYet: 'Füge Transaktionen hinzu, um den Guthabentrend zu sehen',
   },
   exchange: {

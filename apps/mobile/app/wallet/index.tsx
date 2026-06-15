@@ -1,17 +1,17 @@
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { useExchangeRateStore } from '@/stores/exchangeRateStore';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useAuthStore } from '@/stores/authStore';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
-import { WalletSparklineCard } from '@/components/wallet/WalletSparklineCard';
+import { WalletBalanceCard } from '@/components/wallet/WalletBalanceCard';
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -24,6 +24,8 @@ export default function WalletScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const [displayCurrency, setDisplayCurrency] = useState(userCurrency);
+
   const handleEditBalance = (currencyCode: string) => {
     const balance = walletBalances.find((b) => b.currencyCode === currencyCode && !b.isDeleted);
     if (!balance) return;
@@ -32,14 +34,18 @@ export default function WalletScreen() {
 
   const hasMultipleCurrencies = walletSummary.length > 1;
   const hasRates = Object.keys(rates).length > 0;
-  const totalBalanceInUserCurrency = hasMultipleCurrencies && hasRates
-    ? walletSummary.reduce((sum, s) => {
-        if (s.currencyCode === userCurrency) return sum + s.currentBalance;
-        const rate = rates[s.currencyCode];
-        if (!rate || rate === 0) return sum + s.currentBalance;
-        return sum + s.currentBalance / rate;
-      }, 0)
-    : 0;
+  const totalInDisplayCurrency = useMemo(
+    () =>
+      walletSummary.reduce(
+        (sum, s) => sum + convertAmount(s.currentBalance, s.currencyCode, displayCurrency, rates),
+        0,
+      ),
+    [walletSummary, displayCurrency, rates],
+  );
+  const showTotalCard =
+    hasRates &&
+    walletSummary.length > 0 &&
+    (hasMultipleCurrencies || displayCurrency !== walletSummary[0]?.currencyCode);
 
   useEffect(() => {
     loadWallet();
@@ -78,16 +84,37 @@ export default function WalletScreen() {
           </View>
         ) : (
           <>
-            <WalletSparklineCard />
+            <WalletBalanceCard displayCurrency={displayCurrency} />
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t('wallet.balances')}</Text>
-              {hasMultipleCurrencies && hasRates && (
+              {hasRates && (
+                <View style={styles.currencyRow} accessibilityLabel={t('wallet.displayCurrency')}>
+                  {SUPPORTED_CURRENCIES.map((c) => (
+                    <TouchableOpacity
+                      key={c.code}
+                      style={[styles.currencyChip, displayCurrency === c.code && styles.currencyChipActive]}
+                      onPress={() => setDisplayCurrency(c.code)}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.currencyChipText,
+                          displayCurrency === c.code && styles.currencyChipTextActive,
+                        ]}
+                      >
+                        {c.code}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+              {showTotalCard && (
                 <View style={styles.totalBalanceCard}>
                   <Text style={styles.totalBalanceLabel}>
-                    {t('wallet.totalBalance', { currency: userCurrency })}
+                    {t('wallet.totalBalance', { currency: displayCurrency })}
                   </Text>
-                  <Text style={[styles.totalBalanceAmount, totalBalanceInUserCurrency < 0 && { color: '#FF6B6B' }]}>
-                    {formatCurrency(totalBalanceInUserCurrency, userCurrency)}
+                  <Text style={[styles.totalBalanceAmount, totalInDisplayCurrency < 0 && { color: '#FF6B6B' }]}>
+                    {formatCurrency(totalInDisplayCurrency, displayCurrency)}
                   </Text>
                 </View>
               )}
@@ -308,6 +335,31 @@ const createStyles = (theme: Theme) => ({
   },
   totalBalanceAmount: {
     ...theme.textStyles.h1,
+    color: '#FFFFFF',
+  },
+  currencyRow: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[4],
+  },
+  currencyChip: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  currencyChipActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  currencyChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+  },
+  currencyChipTextActive: {
     color: '#FFFFFF',
   },
   emptyState: {

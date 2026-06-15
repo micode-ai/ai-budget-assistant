@@ -47,6 +47,16 @@ export class WalletController {
     return this.walletService.getBalanceHistory(req.accountId, safeDays);
   }
 
+  @Get('balance-history/monthly')
+  async getMonthlyBalanceHistory(
+    @Req() req: AuthenticatedRequest,
+    @Query('months') months?: string,
+  ) {
+    const parsedMonths = months ? parseInt(months, 10) : 6;
+    const safeMonths = Number.isNaN(parsedMonths) ? 6 : parsedMonths;
+    return this.walletService.getMonthlyBalanceHistory(req.accountId, safeMonths);
+  }
+
   @Delete(':currencyCode')
   @UseGuards(new ViewerBlockGuard())
   async remove(@Req() req: AuthenticatedRequest, @Param('currencyCode') currencyCode: string) {

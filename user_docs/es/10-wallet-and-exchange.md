@@ -49,6 +49,17 @@ Cuando tienes saldos en varias monedas, la aplicacion muestra un **Saldo total**
 - La conversion utiliza las tasas de cambio mas recientes obtenidas automaticamente.
 - Si cambias la moneda principal en **Ajustes**, el saldo total se recalcula de inmediato.
 
+Puedes cambiar la moneda de visualizacion directamente aqui: toca una ficha de moneda encima del total para recalcular al instante el total y el grafico de Historial de saldo en esa moneda. Este es un cambio de visualizacion exclusivo para la pantalla de Billetera — no modifica la configuracion de moneda global de la aplicacion y se restablece a tu moneda predeterminada cuando abandonas la pantalla.
+
+## Historial de saldo
+
+En la parte superior de la pantalla de Billetera, la tarjeta **Historial de saldo** muestra como cambio tu saldo total cada mes en forma de grafico de barras:
+
+- Las **barras verdes** significan que tu saldo crecio ese mes; las **barras rojas** significan que disminuyo.
+- Toca cualquier barra para ver el cambio exacto de ese mes.
+- Usa el selector **6M / 12M** para alternar entre los ultimos 6 o 12 meses.
+- Los importes siguen la moneda que elijas en las fichas de moneda, convertidos a las tasas de cambio mas recientes.
+
 ## Transferencias entre cuentas
 
 Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Personal):
