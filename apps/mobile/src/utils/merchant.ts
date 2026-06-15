@@ -61,17 +61,38 @@ export interface MerchantGroup {
 }
 
 /**
- * Brand key for fuzzy grouping: the first alphabetic token of length >= 4,
- * uppercased. Strips store numbers and short noise tokens. Returns '' when no
- * significant token exists. Intentionally coarse — it powers suggestions the
- * user confirms, never an automatic merge, so over-grouping is acceptable.
+ * Generic words that must NOT become a brand fingerprint: venue/category nouns,
+ * legal forms, and common Polish cities. Without this, names like
+ * "Restauracja IKEA" / "Restauracja McDonald's" would both key on RESTAURACJA
+ * (and merge into one), and "... GDANSK" rows would group by city. Uppercase,
+ * diacritics included (matched after `toUpperCase()`).
+ */
+const FINGERPRINT_STOPWORDS = new Set<string>([
+  // venue / category nouns (PL + EN)
+  'RESTAURACJA', 'RESTAURANT', 'APTEKA', 'SKLEP', 'MARKET', 'SUPERMARKET',
+  'STACJA', 'HOTEL', 'KAWIARNIA', 'PIEKARNIA', 'CUKIERNIA', 'PARKING',
+  'STORE', 'SHOP', 'MARKT', 'FORUM', 'CENTRUM', 'GALERIA', 'POZIOM',
+  // legal forms / operators
+  'SPÓŁKA', 'SPOLKA', 'POLSKA', 'POLAND', 'GROUP', 'GRUPA', 'HANDLOWA', 'SIEĆ', 'SIEC',
+  // common PL cities / districts
+  'WARSZAWA', 'KRAKÓW', 'KRAKOW', 'GDAŃSK', 'GDANSK', 'WROCŁAW', 'WROCLAW',
+  'POZNAŃ', 'POZNAN', 'ŁÓDŹ', 'LODZ', 'SZCZECIN', 'LUBLIN', 'KATOWICE',
+  'GDYNIA', 'OLIWA', 'BYDGOSZCZ', 'BIAŁYSTOK', 'BIALYSTOK',
+]);
+
+/**
+ * Brand key for fuzzy grouping: the first alphabetic token of length >= 4 that
+ * is not a generic stopword (see FINGERPRINT_STOPWORDS), uppercased. Strips
+ * store numbers and short noise tokens. Returns '' when no distinctive token
+ * exists. Intentionally coarse — it powers suggestions the user confirms, never
+ * an automatic merge, so some over-grouping is acceptable.
  */
 export function merchantFingerprint(name: string): string {
   const tokens = name
     .toUpperCase()
     .split(/[^A-ZÀ-ÿĄĆĘŁŃÓŚŹŻ]+/i)
     .filter(Boolean);
-  return tokens.find((t) => t.length >= 4) ?? '';
+  return tokens.find((t) => t.length >= 4 && !FINGERPRINT_STOPWORDS.has(t)) ?? '';
 }
 
 const titleCaseBrand = (fp: string): string =>

@@ -38,8 +38,13 @@ export default function MerchantsSettingsScreen() {
 
   // Suggestions (session-dismissed by fingerprint)
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
+  // Cap visible banners so suggestions don't bury the merchant list; the next
+  // batch surfaces on recompute after the top ones are merged/dismissed.
   const suggestions = useMemo(
-    () => suggestMerchantGroups(merchants).filter((g) => !dismissed.has(g.fingerprint)),
+    () =>
+      suggestMerchantGroups(merchants)
+        .filter((g) => !dismissed.has(g.fingerprint))
+        .slice(0, 3),
     [merchants, dismissed],
   );
 
@@ -160,14 +165,19 @@ export default function MerchantsSettingsScreen() {
               {g.members.join(', ')}
             </Text>
             <View style={styles.suggestionActions}>
-              <TouchableOpacity onPress={() => setDismissed((p) => new Set(p).add(g.fingerprint))}>
+              <TouchableOpacity
+                style={styles.dismissButton}
+                onPress={() => setDismissed((p) => new Set(p).add(g.fingerprint))}
+              >
                 <Text style={styles.dismissText}>{t('merchants.dismiss')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.suggestionMergeButton}
                 onPress={() => openMergeFromSuggestion(g.members, g.canonical)}
               >
-                <Text style={styles.suggestionMergeText}>{t('merchants.suggestionMerge', { name: g.canonical })}</Text>
+                <Text style={styles.suggestionMergeText} numberOfLines={1} ellipsizeMode="tail">
+                  {t('merchants.suggestionMerge', { name: g.canonical })}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -364,15 +374,20 @@ const createStyles = (theme: Theme) => ({
   suggestionBody: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, marginBottom: theme.spacing[3] },
   suggestionActions: {
     flexDirection: 'row' as const, alignItems: 'center' as const,
-    justifyContent: 'flex-end' as const, gap: theme.spacing[4],
+    gap: theme.spacing[3],
   },
+  dismissButton: { paddingVertical: theme.spacing[2], paddingHorizontal: theme.spacing[1] },
   dismissText: { ...theme.textStyles.bodyMedium, color: theme.colors.textSecondary },
   suggestionMergeButton: {
+    flex: 1,
     backgroundColor: theme.colors.primary,
     paddingHorizontal: theme.spacing[4], paddingVertical: theme.spacing[2],
     borderRadius: theme.borderRadius.md,
   },
-  suggestionMergeText: { ...theme.textStyles.bodyMedium, color: theme.colors.textInverse },
+  suggestionMergeText: {
+    ...theme.textStyles.bodyMedium, color: theme.colors.textInverse,
+    textAlign: 'center' as const,
+  },
   // Bottom merge bar
   bottomBar: {
     paddingHorizontal: theme.spacing[4], paddingTop: theme.spacing[3],
