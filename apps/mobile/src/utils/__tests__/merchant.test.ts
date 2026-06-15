@@ -58,6 +58,14 @@ describe('merchantFingerprint', () => {
     expect(merchantFingerprint('12 99')).toBe('');
     expect(merchantFingerprint('PL 1')).toBe('');
   });
+  it('skips generic stopwords and cities to find the real brand', () => {
+    expect(merchantFingerprint('Restauracja IKEA')).toBe('IKEA');
+    expect(merchantFingerprint('Jmp S.A. Biedronka 1759 GDANSK')).toBe('BIEDRONKA');
+  });
+  it('returns empty when only generic/city words remain', () => {
+    expect(merchantFingerprint('Gdansk Forum Poziom -1 Gdansk')).toBe('');
+    expect(merchantFingerprint('Apteka Polska')).toBe('');
+  });
 });
 
 describe('suggestMerchantGroups', () => {
@@ -83,5 +91,22 @@ describe('suggestMerchantGroups', () => {
       { merchant: 'BIEDRONKA B', count: 5 },
     ]);
     expect(groups.map((g) => g.canonical)).toEqual(['Biedronka', 'Rossmann']);
+  });
+  it('groups by real brand even behind a generic prefix', () => {
+    const groups = suggestMerchantGroups([
+      { merchant: 'Restauracja IKEA', count: 2 },
+      { merchant: 'IKEA Janki', count: 5 },
+    ]);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].canonical).toBe('Ikea');
+  });
+  it('does not group different sellers that only share a generic word', () => {
+    expect(
+      suggestMerchantGroups([
+        { merchant: 'DOZ Apteka', count: 3 },
+        { merchant: 'Apteka Dbam o Zdrowie', count: 2 },
+        { merchant: 'Apteka Polska', count: 1 },
+      ]),
+    ).toEqual([]);
   });
 });
