@@ -41,8 +41,12 @@ export class SlackBotService {
     const event = body.event;
     if (!event || event.type !== 'message') return;
 
-    // Loop guard: ignore bot/self messages and edits
-    if (event.bot_id || event.subtype) return;
+    // Loop guard: ignore bot/self messages and edit/delete/system subtypes.
+    // `file_share` is the subtype Slack puts on a message when a user uploads or
+    // pastes a file (image/voice/PDF) — it must pass through so the file gets
+    // dispatched, otherwise receipt photos silently do nothing.
+    if (event.bot_id) return;
+    if (event.subtype && event.subtype !== 'file_share') return;
     const botUserId = await this.client.getBotUserId(body.team_id);
     if (event.user && botUserId && event.user === botUserId) return;
     if (!event.user || !event.channel) return;
