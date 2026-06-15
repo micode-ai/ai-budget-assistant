@@ -1483,6 +1483,47 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Правила категорий для продавцов
+
+Выученные связи `продавец → категория`. Правило создаётся/обновляется автоматически, когда расходу с указанным продавцом назначается категория; при будущих импортах из банков и Wise соответствующая категория подставляется автоматически. Все эндпоинты требуют JWT + заголовок `X-Account-Id`.
+
+### Список правил
+
+```http
+GET /merchant-rules
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "merchantNormalized": "amazon",
+    "categoryId": "uuid",
+    "categoryName": "Shopping",
+    "categoryIcon": "cart",
+    "createdAt": "2026-06-15T10:00:00.000Z",
+    "updatedAt": "2026-06-15T10:00:00.000Z"
+  }
+]
+```
+
+### Удалить правило
+
+```http
+DELETE /merchant-rules/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Перестаёт автоматически назначать эту категорию. **Роль viewer заблокирована** (403).
+
+**Ответ** `200 OK`
+
+---
+
 ## Обмен валют
 
 Все эндпоинты обмена валют требуют заголовок `X-Account-Id`.
