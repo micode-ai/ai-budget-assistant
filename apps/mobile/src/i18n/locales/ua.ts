@@ -1266,6 +1266,10 @@ export default {
       quarterly: 'Щокварталу',
       weekly: 'Щотижня',
     },
+    calendarView: 'Календар',
+    listView: 'Список',
+    noRenewalsThisMonth: 'Немає поновлень у цьому місяці',
+    renewalsOnDay: 'Поновлення {{day}}',
   },
   tags: {
     title: 'Теги',

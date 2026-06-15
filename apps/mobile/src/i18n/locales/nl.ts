@@ -1263,6 +1263,10 @@ export default {
       quarterly: 'Driemaandelijks',
       weekly: 'Wekelijks',
     },
+    calendarView: 'Kalender',
+    listView: 'Lijst',
+    noRenewalsThisMonth: 'Geen verlengingen deze maand',
+    renewalsOnDay: 'Verlengingen op {{day}}',
   },
   tags: {
     title: 'Tags',

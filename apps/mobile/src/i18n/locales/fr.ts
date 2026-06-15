@@ -1263,6 +1263,10 @@ export default {
       quarterly: 'Trimestriel',
       weekly: 'Hebdomadaire',
     },
+    calendarView: 'Calendrier',
+    listView: 'Liste',
+    noRenewalsThisMonth: 'Aucun renouvellement ce mois-ci',
+    renewalsOnDay: 'Renouvellements le {{day}}',
   },
   tags: {
     title: 'Tags',
