@@ -1818,6 +1818,10 @@ export default {
     suggestionTitle: 'Wygląda jak ten sam sprzedawca',
     suggestionMerge: 'Scal w {{name}}',
     dismiss: 'Odrzuć',
+    categoryRules: 'Reguły kategorii',
+    noRules: 'Brak zapamiętanych reguł',
+    ruleDeleteConfirm: 'Usunąć regułę auto-kategorii dla „{{merchant}}"?',
+    ruleDeleted: 'Reguła usunięta',
   },
   aiUsage: {
     confirmTitle: 'Użycie AI',

@@ -4,6 +4,7 @@ import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { WiseImportCommitDto } from './dto';
 import type { WiseImportPreviewResponse, WiseImportRow, WiseImportCommitResponse } from '@budget/shared-types';
 
@@ -87,6 +88,7 @@ export class ImportWiseService {
     private readonly prisma: PrismaService,
     private readonly importBatches: ImportBatchesService,
     private readonly anomaly: AnomalyService,
+    private readonly merchantRules: MerchantRulesService,
   ) {}
 
   async parsePreview(
@@ -251,6 +253,7 @@ export class ImportWiseService {
     const createdExpenseIds: string[] = [];
 
     const categoryCache = new Map<string, string | null>();
+    const merchantRulesMap = await this.merchantRules.getRulesMap(accountId);
 
     await this.prisma.$transaction(async (tx) => {
       batchId = await this.importBatches.createBatch(tx, { accountId, userId, source: 'wise' });
@@ -258,8 +261,12 @@ export class ImportWiseService {
       for (const row of rowsToImport) {
         try {
           if (row.kind === 'expense') {
-            let categoryId: string | null = null;
-            if (row.suggestedCategoryName) {
+            // Apply user's learned rule first (higher priority than static hints)
+            const normalizedMerchant = row.merchant?.trim().toLowerCase();
+            const userRuleCategoryId = normalizedMerchant ? merchantRulesMap.get(normalizedMerchant) ?? null : null;
+
+            let categoryId: string | null = userRuleCategoryId;
+            if (!categoryId && row.suggestedCategoryName) {
               if (categoryCache.has(row.suggestedCategoryName)) {
                 categoryId = categoryCache.get(row.suggestedCategoryName)!;
               } else {

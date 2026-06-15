@@ -43,6 +43,7 @@ import { ImportBankModule } from './modules/import-bank/import-bank.module';
 import { ImportBatchesModule } from './modules/import-batches/import-batches.module';
 import { UserSubscriptionsModule } from './modules/user-subscriptions/user-subscriptions.module';
 import { AnomalyModule } from './modules/anomaly/anomaly.module';
+import { MerchantRulesModule } from './modules/merchant-rules/merchant-rules.module';
 import { CacheModule } from './common/cache/cache.module';
 
 @Module({
@@ -97,6 +98,7 @@ import { CacheModule } from './common/cache/cache.module';
     SubscriptionsModule,
     AdminModule,
     AnomalyModule,
+    MerchantRulesModule,
     TagsModule,
     ProjectsModule,
     GamificationModule,

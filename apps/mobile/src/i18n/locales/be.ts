@@ -1786,6 +1786,10 @@ export default {
     suggestionTitle: 'Падобна на аднаго прадаўца',
     suggestionMerge: 'Аб\'яднаць у {{name}}',
     dismiss: 'Закрыць',
+    categoryRules: 'Правілы катэгорый',
+    noRules: 'Вывучаных правілаў пакуль няма',
+    ruleDeleteConfirm: 'Выдаліць правіла аўтакатэгорыі для «{{merchant}}»?',
+    ruleDeleted: 'Правіла выдалена',
   },
   aiUsage: {
     confirmTitle: 'Выкарыстанне AI',

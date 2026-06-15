@@ -16,6 +16,7 @@ import { subscriptionsApi } from './subscriptions.api';
 import { importBankApi } from './import-bank.api';
 import { userSubscriptionsApi } from './userSubscriptions.api';
 import { alertsApi } from './alerts.api';
+import { merchantRulesApi } from './merchantRules.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -37,6 +38,7 @@ export const api = {
   ...importBankApi,
   ...userSubscriptionsApi,
   ...alertsApi,
+  ...merchantRulesApi,
 };
 
 export function getApiBaseUrl(): string {

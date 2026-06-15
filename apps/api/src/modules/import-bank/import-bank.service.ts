@@ -6,6 +6,7 @@ import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { normalizeMerchantPL } from './merchants/merchants-pl';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
 import { isPdfBuffer, extractPdfText } from './utils/pdf-text';
@@ -38,6 +39,7 @@ export class ImportBankService {
     private readonly mapping: MappingService,
     private readonly telegram: TelegramService,
     private readonly anomaly: AnomalyService,
+    private readonly merchantRules: MerchantRulesService,
   ) {}
 
   /**
@@ -340,6 +342,7 @@ export class ImportBankService {
 
     const categoryCache = new Map<string, string | null>();
     const source = `bank:${dto.bankId ?? 'universal'}`;
+    const merchantRulesMap = await this.merchantRules.getRulesMap(accountId);
 
     await this.prisma.$transaction(async (tx) => {
       batchId = await this.importBatches.createBatch(tx as any, { accountId, userId, source });
@@ -347,7 +350,11 @@ export class ImportBankService {
       for (const row of toImport) {
         try {
           if (row.kind === 'expense') {
-            const categoryId = await this.resolveCategoryId(
+            // Apply user's learned merchant rule (higher priority than parser-suggested category)
+            const normalizedMerchant = row.merchant?.trim().toLowerCase();
+            const userRuleCategoryId = normalizedMerchant ? merchantRulesMap.get(normalizedMerchant) ?? null : null;
+
+            const categoryId = userRuleCategoryId ?? await this.resolveCategoryId(
               tx as any,
               accountId,
               row.suggestedCategoryName,

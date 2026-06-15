@@ -1815,6 +1815,10 @@ export default {
     suggestionTitle: 'Parece el mismo vendedor',
     suggestionMerge: 'Combinar en {{name}}',
     dismiss: 'Descartar',
+    categoryRules: 'Reglas de categoría',
+    noRules: 'Aún no hay reglas aprendidas',
+    ruleDeleteConfirm: '¿Eliminar la regla automática para "{{merchant}}"?',
+    ruleDeleted: 'Regla eliminada',
   },
   aiUsage: {
     confirmTitle: 'Uso de AI',

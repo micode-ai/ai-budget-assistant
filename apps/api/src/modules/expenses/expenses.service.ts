@@ -5,6 +5,7 @@ import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseIte
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 
 @Injectable()
 export class ExpensesService {
@@ -13,6 +14,7 @@ export class ExpensesService {
     private readonly gamificationService: GamificationService,
     private readonly cacheService: CacheService,
     private readonly anomalyService: AnomalyService,
+    private readonly merchantRules: MerchantRulesService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -508,6 +510,10 @@ export class ExpensesService {
       });
     }).then((updated) => {
       this.invalidateChatCache(accountId).catch(() => undefined);
+      if (updated?.merchant && dto.categoryId !== undefined && resolvedCategoryId) {
+        const merchantNormalized = updated.merchant.trim().toLowerCase();
+        this.merchantRules.upsertRule(accountId, merchantNormalized, resolvedCategoryId).catch(() => undefined);
+      }
       return updated ? this.toExpenseResponse(updated) : updated;
     });
   }

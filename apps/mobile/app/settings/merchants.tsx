@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useMerchantSuggestionStore } from '@/stores/merchantSuggestionStore';
+import { useMerchantRulesStore } from '@/stores/merchantRulesStore';
 import { getMerchantCounts, suggestMerchantGroups } from '@/utils/merchant';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -25,6 +26,31 @@ export default function MerchantsSettingsScreen() {
     () => new Map(merchants.map((m) => [m.merchant, m.count])),
     [merchants],
   );
+
+  // Merchant category rules
+  const rules = useMerchantRulesStore((s) => s.rules);
+  const isRulesLoaded = useMerchantRulesStore((s) => s.isLoaded);
+  const loadRules = useMerchantRulesStore((s) => s.loadRules);
+  const deleteRule = useMerchantRulesStore((s) => s.deleteRule);
+
+  React.useEffect(() => {
+    if (!isRulesLoaded) loadRules();
+  }, []);
+
+  const handleDeleteRule = (id: string, merchant: string) => {
+    showAlert(
+      t('merchants.categoryRules'),
+      t('merchants.ruleDeleteConfirm', { merchant }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => deleteRule(id).then(() => showAlert('', t('merchants.ruleDeleted'))),
+        },
+      ],
+    );
+  };
 
   // Single rename modal
   const [editing, setEditing] = useState<string | null>(null);
@@ -231,6 +257,44 @@ export default function MerchantsSettingsScreen() {
                 </React.Fragment>
               );
             })
+          )}
+        </View>
+
+        {/* Category rules section */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>{t('merchants.categoryRules')}</Text>
+        </View>
+
+        <View style={styles.card}>
+          {rules.length === 0 ? (
+            <Text style={styles.empty}>{t('merchants.noRules')}</Text>
+          ) : (
+            rules.map((rule, i) => (
+              <React.Fragment key={rule.id}>
+                <View style={styles.row}>
+                  <View style={styles.iconWrap}>
+                    <Ionicons
+                      name={(rule.categoryIcon as any) ?? 'pricetag-outline'}
+                      size={18}
+                      color={theme.colors.primary}
+                    />
+                  </View>
+                  <View style={styles.nameContainer}>
+                    <Text style={styles.name} numberOfLines={1}>{rule.merchantNormalized}</Text>
+                    <Text style={styles.sub}>{rule.categoryName}</Text>
+                  </View>
+                  {canEdit && (
+                    <TouchableOpacity
+                      onPress={() => handleDeleteRule(rule.id, rule.merchantNormalized)}
+                      hitSlop={8}
+                    >
+                      <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                {i < rules.length - 1 && <View style={styles.divider} />}
+              </React.Fragment>
+            ))
           )}
         </View>
       </ScrollView>

@@ -28,6 +28,14 @@ Sklepy są tworzone automatycznie podczas dodawania wydatków. Ekran Sklepy słu
 
 > Sklepów nie można tworzyć ręcznie — pojawiają się automatycznie przy dodawaniu wydatków.
 
+### Reguły kategorii
+
+Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Przy następnym imporcie wyciągu bankowego lub CSV Wise aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
+
+- Nauczone reguły wyświetlają się w sekcji **Reguły kategorii** na dole ekranu Sklepy
+- Dotknij ikony kosza, aby usunąć regułę
+- Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
+
 ## Tagi
 
 Tagi pozwalają oznaczać wydatki dowolnymi słowami kluczowymi, niezależnie od kategorii.

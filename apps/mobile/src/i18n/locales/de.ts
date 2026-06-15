@@ -1815,6 +1815,10 @@ export default {
     suggestionTitle: 'Sieht aus wie ein Verkäufer',
     suggestionMerge: 'Mit {{name}} zusammenführen',
     dismiss: 'Schließen',
+    categoryRules: 'Kategorieregeln',
+    noRules: 'Noch keine erlernten Regeln',
+    ruleDeleteConfirm: 'Auto-Kategorieregel für „{{merchant}}" löschen?',
+    ruleDeleted: 'Regel gelöscht',
   },
   aiUsage: {
     confirmTitle: 'AI-Nutzung',
