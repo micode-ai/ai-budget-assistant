@@ -3,100 +3,84 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useWalletStore } from '@/stores/walletStore';
-import { useAuthStore } from '@/stores/authStore';
-import { useExchangeRateStore } from '@/stores/exchangeRateStore';
-import { InteractiveLineChart } from '@/components/interactive-charts';
+import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { formatCurrency } from '@budget/shared-utils';
-import type { ChartDataPoint } from '@budget/shared-types';
+import { getIntlLocale } from '@/i18n';
+import { WalletMonthlyChart, type MonthlyDeltaBar } from './WalletMonthlyChart';
 
-const PERIODS: Array<30 | 60 | 90> = [30, 60, 90];
+const MONTH_WINDOWS: Array<6 | 12> = [6, 12];
 
-function toBaseAmount(
+function convertBalances(
   balances: Record<string, number>,
-  baseCurrency: string,
+  toCurrency: string,
   rates: Record<string, number>,
 ): number {
   let total = 0;
   for (const [currency, amount] of Object.entries(balances)) {
-    if (currency === baseCurrency) {
-      total += amount;
-    } else {
-      const rate = rates[currency];
-      if (rate && rate !== 0) {
-        total += amount / rate;
-      } else {
-        total += amount;
-      }
-    }
+    total += convertAmount(amount, currency, toCurrency, rates);
   }
   return total;
 }
 
-export function WalletSparklineCard() {
+/** 'YYYY-MM' -> localized short month label, e.g. 'Jun'. */
+function monthLabel(key: string): string {
+  const [y, m] = key.split('-').map(Number);
+  return new Date(y, (m ?? 1) - 1, 1).toLocaleDateString(getIntlLocale(), { month: 'short' });
+}
+
+interface Props {
+  displayCurrency: string;
+}
+
+export function WalletBalanceCard({ displayCurrency }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  const { balanceHistory, selectedHistoryDays, isHistoryLoading, loadBalanceHistory, walletSummary } =
+  const { monthlyHistory, selectedMonths, isHistoryLoading, loadMonthlyHistory, walletSummary } =
     useWalletStore();
-  const baseCurrency = useAuthStore((s) => s.user?.currencyCode ?? 'USD');
   const rates = useExchangeRateStore((s) => s.rates);
 
   useEffect(() => {
     if (walletSummary.length > 0) {
-      loadBalanceHistory(selectedHistoryDays);
+      loadMonthlyHistory(selectedMonths);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletSummary.length]);
 
-  const handlePeriodChange = useCallback(
-    (days: 30 | 60 | 90) => {
-      if (days !== selectedHistoryDays) {
-        loadBalanceHistory(days);
-      }
+  const handleWindowChange = useCallback(
+    (months: 6 | 12) => {
+      if (months !== selectedMonths) loadMonthlyHistory(months);
     },
-    [selectedHistoryDays, loadBalanceHistory],
+    [selectedMonths, loadMonthlyHistory],
   );
 
   if (walletSummary.length === 0) return null;
 
-  // Build chart data — one point per day converted to base currency
-  // Subsample to at most 30 points for readability when period > 30 days
-  const allPoints = balanceHistory.map((p) => ({
-    value: toBaseAmount(p.balances, baseCurrency, rates),
-    label: p.date.slice(5), // MM-DD
-  })) as ChartDataPoint[];
+  const bars: MonthlyDeltaBar[] = monthlyHistory.map((p) => ({
+    month: p.month,
+    label: monthLabel(p.month),
+    value: convertBalances(p.deltas, displayCurrency, rates),
+  }));
 
-  const step = allPoints.length > 30 ? Math.ceil(allPoints.length / 30) : 1;
-  const chartPoints = allPoints.filter((_, i) => i % step === 0 || i === allPoints.length - 1);
-
-  const firstValue = chartPoints[0]?.value ?? 0;
-  const lastValue = chartPoints[chartPoints.length - 1]?.value ?? 0;
-  const isPositiveTrend = lastValue >= firstValue;
-  const lineColor = isPositiveTrend ? theme.colors.success : theme.colors.danger;
-
-  const delta = lastValue - firstValue;
-  const deltaSign = delta >= 0 ? '+' : '';
+  const latest = bars[bars.length - 1];
+  const latestValue = latest?.value ?? 0;
+  const latestColor = latestValue >= 0 ? theme.colors.success : theme.colors.danger;
 
   return (
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.title}>{t('wallet.balanceHistory')}</Text>
         <View style={styles.periodSelector}>
-          {PERIODS.map((p) => (
+          {MONTH_WINDOWS.map((m) => (
             <TouchableOpacity
-              key={p}
-              style={[styles.periodChip, selectedHistoryDays === p && { backgroundColor: theme.colors.primary }]}
-              onPress={() => handlePeriodChange(p)}
+              key={m}
+              style={[styles.periodChip, selectedMonths === m && { backgroundColor: theme.colors.primary }]}
+              onPress={() => handleWindowChange(m)}
               activeOpacity={0.7}
             >
-              <Text
-                style={[
-                  styles.periodChipText,
-                  selectedHistoryDays === p && { color: '#fff' },
-                ]}
-              >
-                {t('wallet.historyDays', { count: p })}
+              <Text style={[styles.periodChipText, selectedMonths === m && { color: '#fff' }]}>
+                {t('wallet.monthsWindow', { count: m })}
               </Text>
             </TouchableOpacity>
           ))}
@@ -107,27 +91,22 @@ export function WalletSparklineCard() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator color={theme.colors.primary} />
         </View>
-      ) : chartPoints.length < 2 ? (
+      ) : bars.length < 1 ? (
         <View style={styles.loadingContainer}>
           <Text style={styles.emptyText}>{t('wallet.noHistoryYet')}</Text>
         </View>
       ) : (
         <>
-          <View style={styles.deltaRow}>
-            <Text style={[styles.deltaText, { color: lineColor }]}>
-              {deltaSign}
-              {formatCurrency(Math.abs(delta), baseCurrency)}
-            </Text>
-            <Text style={styles.currentTotal}>{formatCurrency(lastValue, baseCurrency)}</Text>
-          </View>
-          <InteractiveLineChart
-            data={chartPoints}
-            height={90}
-            lineColor={lineColor}
-            areaChart
-            animate={false}
-            formatValue={(v) => formatCurrency(v, baseCurrency)}
-          />
+          {latest && (
+            <View style={styles.deltaRow}>
+              <Text style={[styles.deltaText, { color: latestColor }]}>
+                {latestValue >= 0 ? '+' : ''}
+                {formatCurrency(latestValue, displayCurrency)}
+              </Text>
+              <Text style={styles.deltaMonth}>{t('wallet.monthlyChange', { month: latest.label })}</Text>
+            </View>
+          )}
+          <WalletMonthlyChart data={bars} formatValue={(v) => formatCurrency(v, displayCurrency)} />
         </>
       )}
     </View>
@@ -172,7 +151,7 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
   },
   loadingContainer: {
-    height: 90,
+    height: 120,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
   },
@@ -188,9 +167,9 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[2],
   },
   deltaText: {
-    ...theme.textStyles.bodySmMedium,
+    ...theme.textStyles.bodyLargeSemiBold,
   },
-  currentTotal: {
+  deltaMonth: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
   },

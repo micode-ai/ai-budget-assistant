@@ -34,6 +34,17 @@ Wenn du Salden in mehreren Wahrungen hast, zeigt die App einen **Gesamtsaldo** a
 
 Der Gesamtsaldo wird auf der Ubersicht und in der Geldborse-Ansicht angezeigt und aktualisiert sich automatisch mit den aktuellen Wechselkursen.
 
+Du kannst die Anzeigewahrung direkt hier wechseln: Tippe auf einen Wahrungschip oberhalb der Gesamtsumme, um die Gesamtsumme und das Saldoverlauf-Diagramm sofort in dieser Wahrung neu zu berechnen. Dies ist nur ein Anzeigewechsel fur den Geldborse-Bildschirm — er andert nicht deine app-weite Wahrungseinstellung und wird zuruck auf deine Standardwahrung gesetzt, wenn du den Bildschirm verlasst.
+
+## Saldoverlauf
+
+Oben auf dem Geldborse-Bildschirm zeigt die Karte **Saldoverlauf**, wie sich dein Gesamtsaldo jeden Monat verandert hat — als Balkendiagramm:
+
+- **Grune Balken** bedeuten, dass dein Saldo in diesem Monat gewachsen ist; **rote Balken** bedeuten, dass er gesunken ist.
+- Tippe auf einen Balken, um die genaue Veranderung fur diesen Monat zu sehen.
+- Nutze den **6M / 12M**-Schalter, um zwischen den letzten 6 oder 12 Monaten zu wechseln.
+- Die Betrage richten sich nach der Wahrung, die du bei den Wahrungschips auswahlst, umgerechnet zu den aktuellen Wechselkursen.
+
 ## Anfangssaldo festlegen
 
 Lege deinen Startsaldo fur jede Wahrung fest:

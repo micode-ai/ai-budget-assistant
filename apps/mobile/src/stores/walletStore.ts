@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus, WalletBalanceHistoryPoint } from '@budget/shared-types';
+import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus, WalletMonthlyDeltaPoint } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import {
   loadAllWalletBalances,
@@ -53,15 +53,15 @@ interface WalletState {
   exchanges: CurrencyExchange[];
   transfers: AccountTransfer[];
   walletSummary: WalletSummary[];
-  balanceHistory: WalletBalanceHistoryPoint[];
-  selectedHistoryDays: 30 | 60 | 90;
+  monthlyHistory: WalletMonthlyDeltaPoint[];
+  selectedMonths: 6 | 12;
   isHistoryLoading: boolean;
   isLoading: boolean;
   error: string | null;
 
   // Actions
   loadWallet: () => Promise<void>;
-  loadBalanceHistory: (days: 30 | 60 | 90) => Promise<void>;
+  loadMonthlyHistory: (months: 6 | 12) => Promise<void>;
   setInitialBalance: (currencyCode: Currency, amount: number) => WalletBalance;
   updateInitialBalance: (id: string, amount: number) => void;
   removeBalance: (id: string) => void;
@@ -104,17 +104,17 @@ export const useWalletStore = create<WalletState>()(
     exchanges: [],
     transfers: [],
     walletSummary: [],
-    balanceHistory: [],
-    selectedHistoryDays: 30,
+    monthlyHistory: [],
+    selectedMonths: 6,
     isHistoryLoading: false,
     isLoading: false,
     error: null,
 
-    loadBalanceHistory: async (days) => {
-      set({ isHistoryLoading: true, selectedHistoryDays: days });
+    loadMonthlyHistory: async (months) => {
+      set({ isHistoryLoading: true, selectedMonths: months });
       try {
-        const result = await api.getWalletBalanceHistory(days);
-        set({ balanceHistory: result.points, isHistoryLoading: false });
+        const result = await api.getWalletMonthlyHistory(months);
+        set({ monthlyHistory: result.months, isHistoryLoading: false });
       } catch {
         set({ isHistoryLoading: false });
       }
@@ -721,6 +721,6 @@ export const useWalletStore = create<WalletState>()(
       return summary?.currentBalance ?? 0;
     },
 
-    reset: () => set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], balanceHistory: [], selectedHistoryDays: 30, isHistoryLoading: false, isLoading: false, error: null }),
+    reset: () => set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null }),
   })),
 );

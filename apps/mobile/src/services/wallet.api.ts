@@ -4,7 +4,7 @@ import type {
   CreateCurrencyExchangeDto,
   UpdateCurrencyExchangeDto,
   WalletSummaryResponse,
-  WalletBalanceHistoryResponse,
+  WalletMonthlyHistoryResponse,
   ExchangeRatesResponse,
   DebtSummaryResponse,
 } from '@budget/shared-types';
@@ -62,9 +62,9 @@ export const walletApi = {
     );
   },
 
-  getWalletBalanceHistory(days: number = 30) {
-    return httpClient.request<WalletBalanceHistoryResponse>(
-      `/wallet/balance-history?days=${days}`,
+  getWalletMonthlyHistory(months: number = 6) {
+    return httpClient.request<WalletMonthlyHistoryResponse>(
+      `/wallet/balance-history/monthly?months=${months}`,
     );
   },
 

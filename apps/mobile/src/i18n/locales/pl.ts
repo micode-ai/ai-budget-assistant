@@ -864,7 +864,9 @@ export default {
     transferredIn: 'Otrzymano przelewem',
     transferredOut: 'Przelano',
     balanceHistory: 'Historia salda',
-    historyDays: '{{count}}d',
+    monthsWindow: '{{count}}M',
+    monthlyChange: 'w {{month}}',
+    displayCurrency: 'Waluta wyświetlania',
     noHistoryYet: 'Dodaj transakcje, aby zobaczyć trend salda',
   },
   exchange: {

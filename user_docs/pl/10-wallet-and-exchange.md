@@ -49,6 +49,17 @@ Gdy posiadasz salda w wielu walutach, aplikacja wyświetla łączne saldo przeli
 - Przeliczenie odbywa się na podstawie aktualnych kursów wymiany
 - Saldo całkowite uwzględnia wszystkie portfele walutowe (salda początkowe, przychody, wydatki, wymiany i przelewy)
 
+Możesz zmienić walutę wyświetlania bezpośrednio tutaj: dotknij elementu waluty nad saldem całkowitym, aby natychmiast przeliczyć saldo i wykres Historii salda na wybraną walutę. To wyłącznie przełącznik widoku na ekranie Portfela — nie zmienia ogólnoaplikacyjnego ustawienia waluty i powraca do domyślnej waluty po opuszczeniu ekranu.
+
+## Historia salda
+
+W górnej części ekranu Portfela karta **Historia salda** pokazuje, jak zmieniało się Twoje saldo całkowite w poszczególnych miesiącach w formie wykresu słupkowego:
+
+- **Zielone słupki** oznaczają, że saldo wzrosło w danym miesiącu; **czerwone słupki** oznaczają, że zmalało.
+- Dotknij dowolnego słupka, aby zobaczyć dokładną zmianę w danym miesiącu.
+- Użyj przełącznika **6M / 12M**, aby przełączyć między ostatnimi 6 lub 12 miesiącami.
+- Kwoty są wyświetlane w walucie wybranej w elementach waluty, przeliczonej po aktualnych kursach wymiany.
+
 ## Wymiana walut
 
 ![Ekran wymiany walut](../img/exchange.jpg)

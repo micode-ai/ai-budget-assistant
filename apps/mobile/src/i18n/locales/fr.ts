@@ -862,7 +862,9 @@ export default {
     transferredIn: 'Reçu par virement',
     transferredOut: 'Viré',
     balanceHistory: 'Historique du solde',
-    historyDays: '{{count}}j',
+    monthsWindow: '{{count}}M',
+    monthlyChange: 'en {{month}}',
+    displayCurrency: "Devise d'affichage",
     noHistoryYet: 'Ajoutez des transactions pour voir l\'évolution de votre solde',
   },
   exchange: {

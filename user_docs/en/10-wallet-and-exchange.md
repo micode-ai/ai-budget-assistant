@@ -32,6 +32,17 @@ The formula: **Current Balance = Initial Balance + Total Income - Total Spent + 
 
 If you hold balances in multiple currencies, the wallet displays a **Total Balance** card at the top. This card converts all your currency balances into your chosen settings currency (configured in **Settings** > **Currency**) using the latest exchange rates, giving you a single combined view of your finances.
 
+You can switch the display currency right here: tap a currency chip above the total to instantly recalculate the total and the Balance History chart in that currency. This is a view-only switch for the Wallet screen — it does not change your app-wide currency setting and resets to your default when you leave the screen.
+
+## Balance History
+
+At the top of the Wallet screen, the **Balance History** card shows how your total balance changed each month as a bar chart:
+
+- **Green bars** mean your balance grew that month; **red bars** mean it shrank.
+- Tap any bar to see the exact change for that month.
+- Use the **6M / 12M** toggle to switch between the last 6 or 12 months.
+- Amounts follow the currency you pick in the currency chips, converted at the latest exchange rates.
+
 ## Setting Initial Balance
 
 Set your starting balance for each currency:

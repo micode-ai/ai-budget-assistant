@@ -108,3 +108,15 @@ export interface WalletBalanceHistoryResponse {
   points: WalletBalanceHistoryPoint[];
   currencies: string[];
 }
+
+export interface WalletMonthlyDeltaPoint {
+  /** Month key 'YYYY-MM' */
+  month: string;
+  /** Net balance change during this month, per currency code */
+  deltas: Record<string, number>;
+}
+
+export interface WalletMonthlyHistoryResponse {
+  months: WalletMonthlyDeltaPoint[];
+  currencies: string[];
+}
