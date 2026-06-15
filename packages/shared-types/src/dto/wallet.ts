@@ -96,3 +96,15 @@ export interface ExchangeRatesResponse {
   rates: Partial<Record<Currency, number>>;
   updatedAt: string;
 }
+
+export interface WalletBalanceHistoryPoint {
+  /** ISO date string 'YYYY-MM-DD' */
+  date: string;
+  /** Balance per currency code at end of this day */
+  balances: Record<string, number>;
+}
+
+export interface WalletBalanceHistoryResponse {
+  points: WalletBalanceHistoryPoint[];
+  currencies: string[];
+}

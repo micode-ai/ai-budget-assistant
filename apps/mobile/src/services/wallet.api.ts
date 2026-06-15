@@ -4,6 +4,7 @@ import type {
   CreateCurrencyExchangeDto,
   UpdateCurrencyExchangeDto,
   WalletSummaryResponse,
+  WalletBalanceHistoryResponse,
   ExchangeRatesResponse,
   DebtSummaryResponse,
 } from '@budget/shared-types';
@@ -58,6 +59,12 @@ export const walletApi = {
   getExchangeRates(baseCurrency: string = 'USD') {
     return httpClient.request<ExchangeRatesResponse>(
       `/currency-exchanges/rates?base=${baseCurrency}`,
+    );
+  },
+
+  getWalletBalanceHistory(days: number = 30) {
+    return httpClient.request<WalletBalanceHistoryResponse>(
+      `/wallet/balance-history?days=${days}`,
     );
   },
 

@@ -863,6 +863,9 @@ export default {
     balanceUpdated: 'Saldo zaktualizowane pomyślnie',
     transferredIn: 'Otrzymano przelewem',
     transferredOut: 'Przelano',
+    balanceHistory: 'Historia salda',
+    historyDays: '{{count}}d',
+    noHistoryYet: 'Dodaj transakcje, aby zobaczyć trend salda',
   },
   exchange: {
     title: 'Kantor',

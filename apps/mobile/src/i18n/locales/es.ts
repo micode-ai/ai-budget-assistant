@@ -861,6 +861,9 @@ export default {
     balanceUpdated: 'Saldo actualizado correctamente',
     transferredIn: 'Recibido por transferencia',
     transferredOut: 'Transferido',
+    balanceHistory: 'Historial de saldo',
+    historyDays: '{{count}}d',
+    noHistoryYet: 'Agrega transacciones para ver la tendencia de tu saldo',
   },
   exchange: {
     title: 'Cambio',

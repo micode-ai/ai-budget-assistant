@@ -863,6 +863,9 @@ export default {
     balanceUpdated: 'Баланс обновлён',
     transferredIn: 'Получено переводом',
     transferredOut: 'Переведено',
+    balanceHistory: 'История баланса',
+    historyDays: '{{count}}д',
+    noHistoryYet: 'Добавьте транзакции, чтобы увидеть динамику баланса',
   },
   exchange: {
     title: 'Обмен валют',

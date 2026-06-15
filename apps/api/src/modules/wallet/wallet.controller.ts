@@ -5,6 +5,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
   Req,
 } from '@nestjs/common';
@@ -34,6 +35,16 @@ export class WalletController {
   @Get('summary')
   async getSummary(@Req() req: AuthenticatedRequest) {
     return this.walletService.getSummary(req.accountId);
+  }
+
+  @Get('balance-history')
+  async getBalanceHistory(
+    @Req() req: AuthenticatedRequest,
+    @Query('days') days?: string,
+  ) {
+    const parsedDays = days ? parseInt(days, 10) : 30;
+    const safeDays = Number.isNaN(parsedDays) ? 30 : parsedDays;
+    return this.walletService.getBalanceHistory(req.accountId, safeDays);
   }
 
   @Delete(':currencyCode')
