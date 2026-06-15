@@ -409,6 +409,20 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Merchant category rules table (learned from user corrections)
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS merchant_category_rules (
+        id TEXT PRIMARY KEY NOT NULL,
+        account_id TEXT NOT NULL,
+        merchant_normalized TEXT NOT NULL,
+        category_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_merchant_rules_account_merchant
+        ON merchant_category_rules(account_id, merchant_normalized);
+    `);
+
     // Investment tables
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS assets (

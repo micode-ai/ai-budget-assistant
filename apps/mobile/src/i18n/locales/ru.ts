@@ -1818,6 +1818,10 @@ export default {
     suggestionTitle: 'Похоже на одного продавца',
     suggestionMerge: 'Объединить в {{name}}',
     dismiss: 'Закрыть',
+    categoryRules: 'Правила категорий',
+    noRules: 'Заученных правил пока нет',
+    ruleDeleteConfirm: 'Удалить правило автокатегории для «{{merchant}}»?',
+    ruleDeleted: 'Правило удалено',
   },
   aiUsage: {
     confirmTitle: 'Использование AI',

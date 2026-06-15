@@ -1815,6 +1815,10 @@ export default {
     suggestionTitle: 'Looks like one seller',
     suggestionMerge: 'Merge into {{name}}',
     dismiss: 'Dismiss',
+    categoryRules: 'Category rules',
+    noRules: 'No learned rules yet',
+    ruleDeleteConfirm: 'Delete auto-category rule for "{{merchant}}"?',
+    ruleDeleted: 'Rule deleted',
   },
   aiUsage: {
     confirmTitle: 'AI Usage',

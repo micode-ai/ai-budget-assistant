@@ -1815,6 +1815,10 @@ export default {
     suggestionTitle: 'Ressemble au même vendeur',
     suggestionMerge: 'Fusionner dans {{name}}',
     dismiss: 'Ignorer',
+    categoryRules: 'Règles de catégorie',
+    noRules: "Aucune règle apprise pour l'instant",
+    ruleDeleteConfirm: 'Supprimer la règle automatique pour « {{merchant}} » ?',
+    ruleDeleted: 'Règle supprimée',
   },
   aiUsage: {
     confirmTitle: 'Utilisation AI',

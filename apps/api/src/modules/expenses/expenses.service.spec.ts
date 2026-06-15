@@ -24,7 +24,8 @@ describe('ExpensesService.bulkUpdate id resolution', () => {
     };
     const gamificationService: any = {};
     const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
-    const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService);
+    const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+    const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
     return { service, prisma, tx };
   }
 

@@ -219,6 +219,7 @@ model Account {
   importBatches           ImportBatch[]
   userSubscriptions       UserSubscription[]
   anomalyAlerts           AnomalyAlert[]
+  merchantCategoryRules   MerchantCategoryRule[]
 
   @@map("accounts")
 }
@@ -289,6 +290,7 @@ model Category {
   expenseCategorySplits ExpenseCategorySplit[]
   budgetCategories      BudgetCategory[]
   userSubscriptions     UserSubscription[]
+  merchantCategoryRules MerchantCategoryRule[]
 
   @@unique([accountId, name, type])
   @@map("categories")
@@ -1461,4 +1463,20 @@ model CsvImportMapping {
   @@unique([accountId, headerFingerprint])
   @@index([accountId])
   @@map("csv_import_mappings")
+}
+
+model MerchantCategoryRule {
+  id                 String   @id @default(uuid())
+  accountId          String   @map("account_id")
+  merchantNormalized String   @map("merchant_normalized")
+  categoryId         String   @map("category_id")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, merchantNormalized])
+  @@index([accountId])
+  @@map("merchant_category_rules")
 }

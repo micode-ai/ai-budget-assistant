@@ -1815,6 +1815,10 @@ export default {
     suggestionTitle: 'Lijkt dezelfde verkoper',
     suggestionMerge: 'Samenvoegen in {{name}}',
     dismiss: 'Sluiten',
+    categoryRules: 'Categorieregels',
+    noRules: 'Nog geen geleerde regels',
+    ruleDeleteConfirm: 'Automatische categorieregel voor "{{merchant}}" verwijderen?',
+    ruleDeleted: 'Regel verwijderd',
   },
   aiUsage: {
     confirmTitle: 'AI-gebruik',

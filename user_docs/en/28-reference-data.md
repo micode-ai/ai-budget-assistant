@@ -30,6 +30,17 @@ Merchants are created automatically when you add expenses — from manual entry,
 
 > You cannot create merchants manually — they appear automatically as you add expenses.
 
+### Category rules
+
+The app learns from your corrections. Every time you change the category of an expense that has a merchant name, a **category rule** is saved automatically. The next time you import a bank statement or Wise CSV containing that merchant, the app applies your rule and assigns the category without any manual fix.
+
+- Learned rules appear in the **Category rules** section at the bottom of the Merchants screen
+- Each row shows the merchant name and the category it maps to
+- Tap the trash icon to delete a rule (the app will no longer auto-assign that category)
+- Rules are stored on the server and sync across all your devices
+
+**Example:** You import a Revolut statement and fix "AMAZON" → Shopping. Next month's import automatically puts Amazon transactions in Shopping.
+
 ## Tags
 
 Tags let you label expenses with free-form keywords that cut across categories.

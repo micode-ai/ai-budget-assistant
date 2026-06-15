@@ -28,6 +28,14 @@ Händler werden automatisch erstellt wenn du Ausgaben hinzufügst. Der Händler-
 
 > Händler können nicht manuell erstellt werden.
 
+### Kategorieregeln
+
+Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Ausgabe mit Händlernamen änderst, wird automatisch eine **Kategorieregel** gespeichert. Beim nächsten Import eines Kontoauszugs oder Wise-CSV wendet die App deine Regel an und weist die Kategorie automatisch zu.
+
+- Erlernte Regeln erscheinen im Abschnitt **Kategorieregeln** unten auf dem Händler-Bildschirm
+- Tippe auf den Mülleimer, um eine Regel zu löschen
+- Regeln werden auf dem Server gespeichert und auf allen Geräten synchronisiert
+
 ## Tags
 
 Tags ermöglichen die Kennzeichnung von Ausgaben mit freien Schlüsselwörtern.
