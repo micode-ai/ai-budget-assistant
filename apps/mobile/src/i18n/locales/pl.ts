@@ -1266,6 +1266,10 @@ export default {
       quarterly: 'Kwartalnie',
       weekly: 'Tygodniowo',
     },
+    calendarView: 'Kalendarz',
+    listView: 'Lista',
+    noRenewalsThisMonth: 'Brak odnowień w tym miesiącu',
+    renewalsOnDay: 'Odnowienia {{day}}.',
   },
   tags: {
     title: 'Tagi',

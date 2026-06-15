@@ -1263,6 +1263,10 @@ export default {
       quarterly: 'Trimestral',
       weekly: 'Semanal',
     },
+    calendarView: 'Calendario',
+    listView: 'Lista',
+    noRenewalsThisMonth: 'Sin renovaciones este mes',
+    renewalsOnDay: 'Renovaciones el día {{day}}',
   },
   tags: {
     title: 'Etiquetas',

@@ -1250,6 +1250,10 @@ export default {
       quarterly: 'Штоквартал',
       weekly: 'Штотыдзень',
     },
+    calendarView: 'Каляндар',
+    listView: 'Спіс',
+    noRenewalsThisMonth: 'Няма падаўжэнняў у гэтым месяцы',
+    renewalsOnDay: 'Падаўжэнні {{day}}',
   },
   tags: {
     title: 'Тэгі',

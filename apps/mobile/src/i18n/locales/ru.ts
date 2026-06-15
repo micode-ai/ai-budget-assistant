@@ -1266,6 +1266,10 @@ export default {
       quarterly: 'Ежеквартально',
       weekly: 'Еженедельно',
     },
+    calendarView: 'Календарь',
+    listView: 'Список',
+    noRenewalsThisMonth: 'Нет продлений в этом месяце',
+    renewalsOnDay: 'Продления {{day}}',
   },
   tags: {
     title: 'Теги',

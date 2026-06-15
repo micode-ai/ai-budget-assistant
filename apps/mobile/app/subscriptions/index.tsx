@@ -3,7 +3,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
+  ScrollView,
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
@@ -18,6 +18,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { UserSubscription } from '@budget/shared-types';
+import { SubscriptionCalendarView } from '@/components/subscriptions/SubscriptionCalendarView';
 
 const CYCLE_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
   monthly: 'calendar-outline',
@@ -25,6 +26,8 @@ const CYCLE_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
   quarterly: 'calendar-clear-outline',
   weekly: 'today-outline',
 };
+
+type ViewMode = 'list' | 'calendar';
 
 export default function SubscriptionsScreen() {
   const { t } = useTranslation();
@@ -38,6 +41,33 @@ export default function SubscriptionsScreen() {
   const canEdit = useAccountStore((s) => s.canEdit());
 
   const [refreshing, setRefreshing] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+
+  // Calendar navigation state
+  const now = new Date();
+  const [calendarMonth, setCalendarMonth] = useState(now.getMonth() + 1);
+  const [calendarYear, setCalendarYear] = useState(now.getFullYear());
+  const isCurrentCalendarPeriod =
+    calendarMonth === now.getMonth() + 1 && calendarYear === now.getFullYear();
+
+  const goToPrevMonth = useCallback(() => {
+    if (calendarMonth === 1) {
+      setCalendarMonth(12);
+      setCalendarYear((y) => y - 1);
+    } else {
+      setCalendarMonth((m) => m - 1);
+    }
+  }, [calendarMonth]);
+
+  const goToNextMonth = useCallback(() => {
+    if (isCurrentCalendarPeriod) return;
+    if (calendarMonth === 12) {
+      setCalendarMonth(1);
+      setCalendarYear((y) => y + 1);
+    } else {
+      setCalendarMonth((m) => m + 1);
+    }
+  }, [calendarMonth, isCurrentCalendarPeriod]);
 
   useEffect(() => {
     loadSubscriptions();
@@ -89,7 +119,7 @@ export default function SubscriptionsScreen() {
     return theme.colors.textTertiary;
   };
 
-  const renderSubscription = ({ item }: { item: UserSubscription }) => {
+  const renderSubscriptionCard = (item: UserSubscription) => {
     const cycleIcon = CYCLE_ICONS[item.billingCycle] || 'calendar-outline';
     const cycleLabel = t(`subscriptionManager.cycle.${item.billingCycle}`);
     const renewalDays = item.daysUntilRenewal;
@@ -97,6 +127,7 @@ export default function SubscriptionsScreen() {
 
     return (
       <TouchableOpacity
+        key={item.id}
         style={[styles.card, !item.isActive && styles.cardInactive]}
         activeOpacity={0.7}
         onPress={() => router.push(`/subscriptions/${item.id}` as any)}
@@ -146,19 +177,6 @@ export default function SubscriptionsScreen() {
 
   const listData = [...activeSubscriptions, ...inactiveSubscriptions];
 
-  const renderHeader = () => (
-    <View style={styles.headerSection}>
-      <View style={styles.totalCard}>
-        <Text style={styles.totalLabel}>{t('subscriptionManager.monthlyTotal')}</Text>
-        <Text style={styles.totalAmount}>{formatCurrency(monthlyTotal, userCurrency as any)}</Text>
-        <Text style={styles.totalSub}>{t('subscriptionManager.activeCount', { count: activeSubscriptions.length })}</Text>
-      </View>
-      {activeSubscriptions.length > 0 && (
-        <Text style={styles.sectionTitle}>{t('subscriptionManager.activeTitle')}</Text>
-      )}
-    </View>
-  );
-
   if (isLoading && subscriptions.length === 0) {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -192,15 +210,72 @@ export default function SubscriptionsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <FlatList
-        data={listData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderSubscription}
-        ListHeaderComponent={renderHeader}
-        contentContainerStyle={styles.listContent}
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         showsVerticalScrollIndicator={false}
-      />
+      >
+        {/* Monthly total card */}
+        <View style={styles.totalCard}>
+          <Text style={styles.totalLabel}>{t('subscriptionManager.monthlyTotal')}</Text>
+          <Text style={styles.totalAmount}>{formatCurrency(monthlyTotal, userCurrency as any)}</Text>
+          <Text style={styles.totalSub}>{t('subscriptionManager.activeCount', { count: activeSubscriptions.length })}</Text>
+        </View>
+
+        {/* List / Calendar toggle */}
+        <View style={styles.toggleRow}>
+          <TouchableOpacity
+            style={[styles.toggleBtn, viewMode === 'list' && styles.toggleBtnActive]}
+            onPress={() => setViewMode('list')}
+          >
+            <Ionicons
+              name="list-outline"
+              size={16}
+              color={viewMode === 'list' ? theme.colors.primary : theme.colors.textTertiary}
+            />
+            <Text style={[styles.toggleLabel, viewMode === 'list' && styles.toggleLabelActive]}>
+              {t('subscriptionManager.listView')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.toggleBtn, viewMode === 'calendar' && styles.toggleBtnActive]}
+            onPress={() => setViewMode('calendar')}
+          >
+            <Ionicons
+              name="calendar-outline"
+              size={16}
+              color={viewMode === 'calendar' ? theme.colors.primary : theme.colors.textTertiary}
+            />
+            <Text style={[styles.toggleLabel, viewMode === 'calendar' && styles.toggleLabelActive]}>
+              {t('subscriptionManager.calendarView')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Calendar view */}
+        {viewMode === 'calendar' && (
+          <SubscriptionCalendarView
+            subscriptions={subscriptions}
+            selectedMonth={calendarMonth}
+            selectedYear={calendarYear}
+            onPrevMonth={goToPrevMonth}
+            onNextMonth={goToNextMonth}
+            isCurrentPeriod={isCurrentCalendarPeriod}
+            userCurrency={userCurrency}
+          />
+        )}
+
+        {/* List view */}
+        {viewMode === 'list' && (
+          <View>
+            {activeSubscriptions.length > 0 && (
+              <Text style={styles.sectionTitle}>{t('subscriptionManager.activeTitle')}</Text>
+            )}
+            {listData.map(renderSubscriptionCard)}
+          </View>
+        )}
+      </ScrollView>
+
       {canEdit && (
         <TouchableOpacity
           style={[styles.fab, { bottom: 24 }]}
@@ -226,19 +301,16 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[6],
     gap: theme.spacing[3],
   },
-  listContent: {
+  scrollContent: {
     padding: theme.spacing[4],
     paddingBottom: theme.spacing[20],
-  },
-  headerSection: {
-    marginBottom: theme.spacing[4],
   },
   totalCard: {
     backgroundColor: theme.colors.primary,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
     alignItems: 'center' as const,
-    marginBottom: theme.spacing[4],
+    marginBottom: theme.spacing[3],
     ...theme.shadows.sm,
   },
   totalLabel: {
@@ -256,6 +328,36 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: 'rgba(255,255,255,0.7)',
     marginTop: theme.spacing[1],
+  },
+  toggleRow: {
+    flexDirection: 'row' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[1],
+    marginBottom: theme.spacing[4],
+    gap: theme.spacing[1],
+  },
+  toggleBtn: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+  },
+  toggleBtnActive: {
+    backgroundColor: theme.colors.surface,
+    ...theme.shadows.sm,
+  },
+  toggleLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    fontWeight: '500' as const,
+  },
+  toggleLabelActive: {
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   sectionTitle: {
     ...theme.textStyles.label,
