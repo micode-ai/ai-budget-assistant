@@ -10,6 +10,7 @@ import { CategoriesService } from '../../categories/categories.service';
 import { AnalyticsService } from '../../analytics/analytics.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { DebtsService } from '../../debts/debts.service';
+import { ExchangeRateService } from '../../currency-exchange/exchange-rate.service';
 import { GoalPlannerService } from './goal-planner.service';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
@@ -26,7 +27,30 @@ export class AiToolsService {
     private readonly cacheService: CacheService,
     private readonly debtsService: DebtsService,
     private readonly goalPlannerService: GoalPlannerService,
+    private readonly exchangeRateService: ExchangeRateService,
   ) {}
+
+  /**
+   * Fetch exchange rates for `base` (1 base = rates[X] X). Returns null if no base
+   * currency is given or the rate provider is unavailable (caller keeps native amounts).
+   */
+  private async getRatesSafe(base?: string): Promise<Record<string, number> | null> {
+    if (!base) return null;
+    try {
+      const { rates } = await this.exchangeRateService.getRates(base);
+      return rates || null;
+    } catch {
+      return null;
+    }
+  }
+
+  /** Convert `amount` from `from` currency into `base`. Returns null if no rate is known. */
+  private convertAmount(amount: number, from: string, base: string, rates: Record<string, number>): number | null {
+    if (from === base) return amount;
+    const r = rates[from];
+    if (!r || r <= 0) return null;
+    return Math.round((amount / r) * 100) / 100;
+  }
 
   getToolDefinitions(): OpenAI.Chat.Completions.ChatCompletionTool[] {
     return [
@@ -217,11 +241,15 @@ export class AiToolsService {
     actionType: ChatActionType,
     accountId: string,
     args: Record<string, unknown>,
+    baseCurrency?: string,
   ): string {
     const sortedArgs = Object.keys(args)
       .sort()
       .reduce((acc, k) => { acc[k] = args[k]; return acc; }, {} as Record<string, unknown>);
-    return `chat:${actionType}:${accountId}:${JSON.stringify(sortedArgs)}`;
+    // baseCurrency is per-user (display currency) and changes the converted amounts,
+    // so it MUST be part of the key — otherwise two members of one account with
+    // different display currencies would share a cached (wrongly-converted) result.
+    return `chat:${actionType}:${accountId}:${baseCurrency || '-'}:${JSON.stringify(sortedArgs)}`;
   }
 
   async executeAction(
@@ -229,6 +257,7 @@ export class AiToolsService {
     data: Record<string, unknown>,
     accountId: string,
     userId: string,
+    baseCurrency?: string,
   ): Promise<ChatActionResult> {
     try {
       switch (actionType) {
@@ -241,9 +270,9 @@ export class AiToolsService {
         case 'create_category':
           return await this.executeCreateCategory(data, accountId, userId);
         case 'get_expenses':
-          return await this.executeGetExpenses(data, accountId);
+          return await this.executeGetExpenses(data, accountId, baseCurrency);
         case 'get_budget_status':
-          return await this.executeGetBudgetStatus(data, accountId);
+          return await this.executeGetBudgetStatus(data, accountId, baseCurrency);
         case 'get_category_breakdown':
           return await this.executeGetCategoryBreakdown(data, accountId);
         case 'get_debt_summary':
@@ -271,20 +300,21 @@ export class AiToolsService {
     args: Record<string, unknown>,
     accountId: string,
     userId: string,
+    baseCurrency?: string,
   ): Promise<ChatActionResult> {
-    const cacheKey = accountId ? this.buildToolCacheKey(actionType, accountId, args) : null;
+    const cacheKey = accountId ? this.buildToolCacheKey(actionType, accountId, args, baseCurrency) : null;
     if (cacheKey) {
       const cached = await this.cacheService.get<ChatActionResult>(cacheKey);
       if (cached) {
         this.logger.log(`[chat] cache hit ${cacheKey}`);
         return cached;
       }
-      const result = await this.executeAction(actionType, args, accountId, userId);
+      const result = await this.executeAction(actionType, args, accountId, userId, baseCurrency);
       // 10-min TTL keeps "this month" answers fresh enough
       await this.cacheService.set(cacheKey, result, 600);
       return result;
     }
-    return this.executeAction(actionType, args, accountId, userId);
+    return this.executeAction(actionType, args, accountId, userId, baseCurrency);
   }
 
   private async executeCreateExpense(
@@ -427,6 +457,7 @@ export class AiToolsService {
   private async executeGetExpenses(
     data: Record<string, unknown>,
     accountId: string,
+    baseCurrency?: string,
   ): Promise<ChatActionResult> {
     const filters: ExpenseFiltersDto = {
       startDate: String(data.startDate),
@@ -445,7 +476,7 @@ export class AiToolsService {
     const result = await this.expensesService.findAll(accountId, filters);
     const expenses = result.data;
     const pagination = result.pagination;
-    const expenseList = (Array.isArray(expenses) ? expenses : []).map((e) => ({
+    const rawList = (Array.isArray(expenses) ? expenses : []).map((e) => ({
       id: e.id,
       amount: Number(e.amount),
       currencyCode: e.currencyCode,
@@ -454,10 +485,25 @@ export class AiToolsService {
       date: e.date,
     }));
 
+    // Convert every amount into the user's display currency so the chat answers in one
+    // currency. If rates are unavailable we keep native amounts (graceful fallback).
+    const rates = await this.getRatesSafe(baseCurrency);
+    let fxConverted = false;
+    const expenseList = rawList.map((e) => {
+      if (baseCurrency && rates) {
+        const conv = this.convertAmount(e.amount, e.currencyCode || baseCurrency, baseCurrency, rates);
+        if (conv != null) {
+          fxConverted = true;
+          return { ...e, amount: conv, currencyCode: baseCurrency, originalAmount: e.amount, originalCurrencyCode: e.currencyCode };
+        }
+      }
+      return e;
+    });
+
     const totalsByCurrency: Record<string, number> = {};
     for (const e of expenseList) {
       const cur = e.currencyCode || 'USD';
-      totalsByCurrency[cur] = (totalsByCurrency[cur] || 0) + e.amount;
+      totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
     }
 
     const categoryBreakdown: Record<string, { amount: number; count: number; currency: string }> = {};
@@ -488,6 +534,7 @@ export class AiToolsService {
         count: actualCount,
         startDate: data.startDate,
         endDate: data.endDate,
+        ...(fxConverted ? { baseCurrency, fxConverted: true, fxApproximate: true } : {}),
       },
     };
   }
@@ -495,6 +542,7 @@ export class AiToolsService {
   private async executeGetBudgetStatus(
     data: Record<string, unknown>,
     accountId: string,
+    baseCurrency?: string,
   ): Promise<ChatActionResult> {
     const budgets = await this.budgetsService.findAll(accountId, { isActive: true });
     let targetBudgets = Array.isArray(budgets) ? budgets : [];
@@ -510,21 +558,34 @@ export class AiToolsService {
       );
     }
 
+    // Convert monetary fields into the display currency; percentageUsed is a ratio (unchanged).
+    const rates = await this.getRatesSafe(baseCurrency);
+    let fxConverted = false;
+    // Convert a value from the budget's currency into the display currency (no-op without rates).
+    const conv = (val: number, from: string): { value: number; currency: string } => {
+      if (baseCurrency && rates) {
+        const c = this.convertAmount(val, from || baseCurrency, baseCurrency, rates);
+        if (c != null) { fxConverted = true; return { value: c, currency: baseCurrency }; }
+      }
+      return { value: val, currency: from };
+    };
+
     const progressList = await Promise.all(
       targetBudgets.map(async (b: any) => {
+        const cur = b.currencyCode;
         try {
           const progress = await this.budgetsService.getProgress(accountId, b.id);
           return {
             name: b.name,
-            amount: Number(b.amount),
-            currencyCode: b.currencyCode,
+            amount: conv(Number(b.amount), cur).value,
+            currencyCode: conv(Number(b.amount), cur).currency,
             period: b.period,
             category: b.category?.name,
-            spent: progress.spent,
-            remaining: progress.remaining,
+            spent: conv(progress.spent, cur).value,
+            remaining: conv(progress.remaining, cur).value,
             // overBy is precomputed server-side — the LLM must report this
             // verbatim; never recompute spent − amount.
-            overBy: progress.overBy,
+            overBy: conv(progress.overBy, cur).value,
             percentageUsed: progress.percentageUsed,
             isOverBudget: progress.isOverBudget,
             daysRemaining: progress.daysRemaining,
@@ -532,8 +593,8 @@ export class AiToolsService {
         } catch {
           return {
             name: b.name,
-            amount: Number(b.amount),
-            currencyCode: b.currencyCode,
+            amount: conv(Number(b.amount), cur).value,
+            currencyCode: conv(Number(b.amount), cur).currency,
             period: b.period,
             error: 'Could not calculate progress',
           };
@@ -547,6 +608,7 @@ export class AiToolsService {
       data: {
         budgets: progressList,
         count: progressList.length,
+        ...(fxConverted ? { baseCurrency, fxConverted: true, fxApproximate: true } : {}),
       },
     };
   }
