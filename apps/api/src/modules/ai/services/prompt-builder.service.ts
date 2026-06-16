@@ -48,9 +48,10 @@ export class PromptBuilder {
     userMessage = '',
     history: Array<{ role: string; content: string }> = [],
     accountName?: string | null,
+    baseCurrency?: string | null,
   ): string {
     const staticPrefix = this.buildStaticSystemPrefix(responseMode);
-    const dynamicSuffix = this.buildDynamicSystemSuffix(context, encryptionTier, userMessage, history, accountName);
+    const dynamicSuffix = this.buildDynamicSystemSuffix(context, encryptionTier, userMessage, history, accountName, baseCurrency);
     return `${staticPrefix}\n\n${dynamicSuffix}`;
   }
 
@@ -59,6 +60,11 @@ export class PromptBuilder {
 Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.
 
 Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB
+CRITICAL currency rule: every amount in the tool results and dynamic context carries its OWN
+\`currencyCode\` field. ALWAYS label each amount with the currency from that field — use the ISO code
+(e.g. "123.45 PLN") or the matching symbol from the mapping above (PLN→zł, USD→$, EUR→€). NEVER show an
+amount with a currency that does not match its \`currencyCode\`. In particular, do NOT default to € (euro)
+for amounts whose \`currencyCode\` is not EUR. When in doubt, write the ISO code rather than a symbol.
 
 You can help analyze spending by tags, by projects, and by individual purchased items from receipts.
 When users reference tags with #, look them up. When they mention project names, match to active projects.
@@ -121,6 +127,7 @@ the user did not enter; if they ask "did I spend on X?", call the appropriate to
     userMessage: string,
     history: Array<{ role: string; content: string }>,
     accountName?: string | null,
+    baseCurrency?: string | null,
   ): string {
     const encryptionNotice = encryptionTier >= 1
       ? `IMPORTANT: This account has end-to-end encryption enabled (text fields). Expense descriptions, notes, tag names, and project names shown below may be encrypted/unavailable. Focus your analysis on numerical data (amounts, category totals) and general spending patterns. Do not attempt to interpret encrypted text values.\n\n`
@@ -139,7 +146,7 @@ the user did not enter; if they ask "did I spend on X?", call the appropriate to
     const today = new Date().toISOString().split('T')[0];
 
     return `${encryptionNotice}${languageInstruction}--- DYNAMIC CONTEXT ---
-Today's date: ${today}${accountName ? `\nCurrently viewing account: [account]` : ''}
+Today's date: ${today}${accountName ? `\nCurrently viewing account: [account]` : ''}${baseCurrency ? `\nUser's base/display currency: ${baseCurrency} (use this when a total has no explicit currency; never relabel amounts that already carry their own currencyCode)` : ''}
 Available categories: ${categoriesListText}
 
 Current user's financial context (summary only — use tools for accurate data):

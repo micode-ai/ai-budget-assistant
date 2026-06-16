@@ -54,15 +54,19 @@ function ExpensesResult({ data }: { data: Record<string, unknown> }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const expenses = (data.expenses as any[]) || [];
-  const total = Number(data.total || 0);
+  // The get_expenses tool returns `recentExpenses` + `totalsByCurrency` (per-currency totals);
+  // fall back to legacy keys for older cached results.
+  const expenses = (data.recentExpenses as any[]) || (data.expenses as any[]) || [];
+  const count = Number(data.count ?? expenses.length);
+  const totalsByCurrency = (data.totalsByCurrency as Record<string, number>) || {};
+  const totalEntries = Object.entries(totalsByCurrency);
 
   return (
     <View style={styles.card}>
       <View style={styles.header}>
         <Ionicons name="receipt-outline" size={18} color={theme.colors.primary} />
         <Text style={styles.headerText}>
-          {t('chat.actionGetExpenses')} ({expenses.length})
+          {t('chat.actionGetExpenses')} ({count})
         </Text>
       </View>
       {expenses.slice(0, 5).map((exp: any, idx: number) => (
@@ -78,10 +82,16 @@ function ExpensesResult({ data }: { data: Record<string, unknown> }) {
       {expenses.length > 5 && (
         <Text style={styles.moreText}>+{expenses.length - 5} more</Text>
       )}
-      <View style={styles.totalRow}>
-        <Text style={styles.totalLabel}>{t('common.total') || 'Total'}:</Text>
-        <Text style={styles.totalValue}>{total.toFixed(2)}</Text>
-      </View>
+      {totalEntries.length > 0 && (
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>{t('common.total') || 'Total'}:</Text>
+          <Text style={styles.totalValue}>
+            {totalEntries
+              .map(([cur, amt]) => `${Number(amt).toFixed(2)} ${cur}`)
+              .join(' · ')}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
