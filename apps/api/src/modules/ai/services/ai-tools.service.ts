@@ -274,7 +274,7 @@ export class AiToolsService {
         case 'get_budget_status':
           return await this.executeGetBudgetStatus(data, accountId, baseCurrency);
         case 'get_category_breakdown':
-          return await this.executeGetCategoryBreakdown(data, accountId);
+          return await this.executeGetCategoryBreakdown(data, accountId, baseCurrency);
         case 'get_debt_summary':
           return await this.executeGetDebtSummary(accountId);
         case 'record_debt_repayment':
@@ -616,20 +616,63 @@ export class AiToolsService {
   private async executeGetCategoryBreakdown(
     data: Record<string, unknown>,
     accountId: string,
+    baseCurrency?: string,
   ): Promise<ChatActionResult> {
-    const startDate = new Date(String(data.startDate));
-    const endDate = new Date(String(data.endDate));
+    // Compute the breakdown from the raw expenses (converting each into the display
+    // currency) rather than analyticsService.getSummary, which sums across currencies
+    // into one currency-blind number that cannot be correctly converted afterwards.
+    const result = await this.expensesService.findAll(accountId, {
+      startDate: String(data.startDate),
+      endDate: String(data.endDate),
+      limit: 1000,
+    });
+    const expenses = Array.isArray(result.data) ? result.data : [];
 
-    const summary = await this.analyticsService.getSummary(accountId, startDate, endDate);
+    const rates = await this.getRatesSafe(baseCurrency);
+    let fxConverted = false;
+
+    const catMap = new Map<string, { categoryId?: string; categoryName: string; amount: number; count: number }>();
+    const totalsByCurrency: Record<string, number> = {};
+    let total = 0;
+    for (const e of expenses) {
+      const raw = Number(e.amount);
+      const from = e.currencyCode || baseCurrency || 'USD';
+      let value = raw;
+      if (baseCurrency && rates) {
+        const c = this.convertAmount(raw, from, baseCurrency, rates);
+        if (c != null) { value = c; fxConverted = true; }
+      }
+      totalsByCurrency[from] = Math.round(((totalsByCurrency[from] || 0) + raw) * 100) / 100;
+      const name = e.category?.name || 'Uncategorized';
+      const entry = catMap.get(name) || { categoryId: e.category?.id, categoryName: name, amount: 0, count: 0 };
+      entry.amount += value;
+      entry.count += 1;
+      catMap.set(name, entry);
+      total += value;
+    }
+
+    const outCurrency = fxConverted ? baseCurrency : undefined;
+    const categories = Array.from(catMap.values())
+      .map((c) => ({
+        categoryId: c.categoryId,
+        categoryName: c.categoryName,
+        amount: Math.round(c.amount * 100) / 100,
+        percentage: total > 0 ? Math.round((c.amount / total) * 1000) / 10 : 0,
+        count: c.count,
+        currencyCode: outCurrency,
+      }))
+      .sort((a, b) => b.amount - a.amount);
 
     return {
       actionType: 'get_category_breakdown',
       success: true,
       data: {
-        categories: summary.expensesByCategory,
-        totalExpenses: summary.totalExpenses,
-        expensesByCurrency: summary.expensesByCurrency,
+        categories,
+        totalExpenses: Math.round(total * 100) / 100,
+        // Native per-currency totals, for transparency when amounts are mixed/unconverted.
+        expensesByCurrency: totalsByCurrency,
         period: { startDate: data.startDate, endDate: data.endDate },
+        ...(fxConverted ? { baseCurrency, fxConverted: true, fxApproximate: true } : {}),
       },
     };
   }
