@@ -238,4 +238,8 @@ export const aiApi = {
   regenerateGoalPlan(id: string) {
     return httpClient.request<any>(`/ai/goals/${id}/regenerate-plan`, { method: 'POST' });
   },
+
+  getGoalContributions(id: string) {
+    return httpClient.request<any[]>(`/ai/goals/${id}/contributions`);
+  },
 };

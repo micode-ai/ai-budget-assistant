@@ -52,13 +52,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async changeEmailRequest(@Req() req: any, @Body() dto: ChangeEmailRequestDto) {
-    return this.authService.changeEmailRequest(req.user.sub, dto);
+    return this.authService.changeEmailRequest(req.user.id, dto);
   }
 
   @Post('change-email/confirm')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async changeEmailConfirm(@Req() req: any, @Body() dto: ChangeEmailConfirmDto) {
-    return this.authService.changeEmailConfirm(req.user.sub, dto);
+    return this.authService.changeEmailConfirm(req.user.id, dto);
   }
 }

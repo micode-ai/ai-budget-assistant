@@ -1188,6 +1188,10 @@ export default {
     addFundsConfirm: 'Toevoegen',
     currentSaved: 'Momenteel gespaard',
     errorAddFunds: 'Bedrag toevoegen mislukt',
+    contributionsTitle: 'Storingsgeschiedenis',
+    noContributions: 'Nog geen stortingen geregistreerd.',
+    contributions: 'Stortingen',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Uitgavenaudit',

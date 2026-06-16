@@ -1188,6 +1188,10 @@ export default {
     addFundsConfirm: 'Add',
     currentSaved: 'Currently saved',
     errorAddFunds: 'Failed to add funds',
+    contributionsTitle: 'Contribution History',
+    noContributions: 'No contributions recorded yet.',
+    contributions: 'Contributions',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Expense Audit',

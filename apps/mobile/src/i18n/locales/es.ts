@@ -1188,6 +1188,10 @@ export default {
     addFundsConfirm: 'Agregar',
     currentSaved: 'Ahorrado actualmente',
     errorAddFunds: 'Error al agregar fondos',
+    contributionsTitle: 'Historial de aportes',
+    noContributions: 'Aún no hay aportes registrados.',
+    contributions: 'Aportes',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Auditoría de gastos',

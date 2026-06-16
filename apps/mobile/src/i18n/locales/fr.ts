@@ -1188,6 +1188,10 @@ export default {
     addFundsConfirm: 'Ajouter',
     currentSaved: 'Déjà économisé',
     errorAddFunds: 'Échec de l\'ajout des fonds',
+    contributionsTitle: 'Historique des dépôts',
+    noContributions: 'Aucun dépôt enregistré pour l\'instant.',
+    contributions: 'Dépôts',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Audit des dépenses',

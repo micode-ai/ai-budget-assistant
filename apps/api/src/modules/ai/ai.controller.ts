@@ -287,13 +287,18 @@ export class AiController {
     @Param('id') id: string,
     @Body() body: { name?: string; targetAmount?: number; deadline?: string; currentAmount?: number; status?: string },
   ) {
-    return this.goalPlannerService.updateGoal(req.accountId, id, body);
+    return this.goalPlannerService.updateGoal(req.accountId, id, body, { userId: req.user.id });
   }
 
   @Delete('goals/:id')
   @UseGuards(new ViewerBlockGuard())
   async deleteGoal(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.goalPlannerService.deleteGoal(req.accountId, id);
+  }
+
+  @Get('goals/:id/contributions')
+  async getGoalContributions(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.goalPlannerService.getContributions(req.accountId, id);
   }
 
   @Post('goals/:id/regenerate-plan')

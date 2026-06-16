@@ -71,6 +71,16 @@ La pantalla de detalle de la meta muestra:
 - **Necesario mensualmente** — cuanto aun necesitas ahorrar por mes
 - **Atrasado por** — cuanto estas por detras del calendario (si aplica)
 
+## Historial de aportes
+
+Cada vez que tocas **Agregar fondos**, la aplicación registra el depósito como una entrada separada en el historial. La pantalla de detalle de la meta muestra una sección **Historial de aportes** debajo de la barra de progreso, con:
+
+- El importe depositado y la moneda de la meta
+- La fecha de cada depósito
+- Una nota para los aportes realizados mediante el chat de IA («AI update»)
+
+El historial comienza desde la primera vez que usas «Agregar fondos». Las ediciones manuales anteriores no se retroalimentan. Se muestran hasta 20 aportes más recientes.
+
 ## Gestionar metas
 
 - **Actualizar monto** — ajusta tu cantidad ahorrada actual a medida que ahorras

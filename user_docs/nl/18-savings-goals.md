@@ -70,6 +70,16 @@ Het detailscherm van het doel toont:
 - **Maandelijks nodig** — hoeveel je nog per maand moet sparen
 - **Achterop met** — hoeveel je achterloopt op schema (indien van toepassing)
 
+## Storingsgeschiedenis
+
+Elke keer dat je op **Bedrag toevoegen** tikt, registreert de app de storting als een aparte invoer in de geschiedenis. Het detailscherm van het doel toont een sectie **Storingsgeschiedenis** onder de voortgangsbalk, met:
+
+- Het gestorte bedrag en de valuta van het doel
+- De datum van elke storting
+- Een opmerking voor stortingen via de AI-chat ("AI update")
+
+De geschiedenis begint vanaf de eerste keer dat je "Bedrag toevoegen" gebruikt. Eerdere handmatige bewerkingen worden niet met terugwerkende kracht opgenomen. Er worden tot 20 meest recente stortingen weergegeven.
+
 ## Doelen beheren
 
 - **Bedrag bijwerken** — pas je huidige spaarbedrag aan naarmate je spaart
