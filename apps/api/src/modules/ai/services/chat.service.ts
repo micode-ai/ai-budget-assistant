@@ -221,7 +221,7 @@ export class ChatService {
         const r = await this.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
-      const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId);
+      const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, user?.currencyCode);
       return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
     }
 
@@ -520,8 +520,9 @@ export class ChatService {
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
     userMessage: string,
     accountId?: string,
+    baseCurrency?: string | null,
   ) {
-    const result = await this.aiToolsService.executeWithCache(actionType, args, accountId || '', '');
+    const result = await this.aiToolsService.executeWithCache(actionType, args, accountId || '', '', baseCurrency || undefined);
 
     const toolResultJson = JSON.stringify(result.data || {});
     const followUpResponse = await this.openai.chat.completions.create({
@@ -539,7 +540,7 @@ export class ChatService {
         {
           role: 'tool',
           tool_call_id: toolCall.id,
-          content: `IMPORTANT: Present ONLY these exact numbers to the user. Do NOT modify, round, or estimate any values. Label every amount with the currency from its own \`currencyCode\` field (PLN→zł, USD→$, EUR→€, UAH→₴, GBP→£, RUB→₽, or the ISO code) — NEVER show a currency that differs from the amount's currencyCode, and never default to € for non-EUR amounts.\n\n${toolResultJson}`,
+          content: `IMPORTANT: Present ONLY these exact numbers to the user. Do NOT modify, round, or estimate any values. Label every amount with the currency from its own \`currencyCode\` field (PLN→zł, USD→$, EUR→€, UAH→₴, GBP→£, RUB→₽, or the ISO code) — NEVER show a currency that differs from the amount's currencyCode, and never default to € for non-EUR amounts. If the data has \`fxConverted: true\`, the amounts were already converted into the user's display currency (\`baseCurrency\`) at approximate current exchange rates — present them as-is and add a short note that the conversion is approximate.\n\n${toolResultJson}`,
         },
       ],
       temperature: 0,

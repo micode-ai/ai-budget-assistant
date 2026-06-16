@@ -20,9 +20,10 @@ import { CategoriesModule } from '../categories/categories.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { DebtsModule } from '../debts/debts.module';
 import { AccountsModule } from '../accounts/accounts.module';
+import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.module';
 
 @Module({
-  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule],
+  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule],
   controllers: [AiController],
   providers: [
     WhisperService,
