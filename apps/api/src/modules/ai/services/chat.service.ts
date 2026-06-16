@@ -145,7 +145,7 @@ export class ChatService {
       };
     }
 
-    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true, currencyCode: true } });
     const responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
     const { model: aiModel } = resolveAiModel(user?.aiModel);
     const context = await this.userContextBuilder.build(userId, accountId);
@@ -166,7 +166,7 @@ export class ChatService {
       ? `[${this.sanitizeName(userName || nameByUserId.get(userId))}]: ${message}`
       : message;
 
-    const systemPrompt = this.promptBuilder.buildSystemPrompt(context, encryptionTier, responseMode, message, history, accountName);
+    const systemPrompt = this.promptBuilder.buildSystemPrompt(context, encryptionTier, responseMode, message, history, accountName, user?.currencyCode);
 
     const response = await this.openai.chat.completions.create({
       model: aiModel,
@@ -539,7 +539,7 @@ export class ChatService {
         {
           role: 'tool',
           tool_call_id: toolCall.id,
-          content: `IMPORTANT: Present ONLY these exact numbers to the user. Do NOT modify, round, or estimate any values.\n\n${toolResultJson}`,
+          content: `IMPORTANT: Present ONLY these exact numbers to the user. Do NOT modify, round, or estimate any values. Label every amount with the currency from its own \`currencyCode\` field (PLN→zł, USD→$, EUR→€, UAH→₴, GBP→£, RUB→₽, or the ISO code) — NEVER show a currency that differs from the amount's currencyCode, and never default to € for non-EUR amounts.\n\n${toolResultJson}`,
         },
       ],
       temperature: 0,
