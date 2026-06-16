@@ -253,7 +253,7 @@ export class AiToolsService {
         case 'create_debt':
           return await this.executeCreateDebt(data, accountId, userId);
         case 'update_goal_balance':
-          return await this.executeUpdateGoalBalance(data, accountId);
+          return await this.executeUpdateGoalBalance(data, accountId, userId);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -663,6 +663,7 @@ export class AiToolsService {
   private async executeUpdateGoalBalance(
     data: Record<string, unknown>,
     accountId: string,
+    userId: string,
   ): Promise<ChatActionResult> {
     const goalId = String(data.goalId || '');
     const newAmount = Number(data.newAmount);
@@ -672,7 +673,12 @@ export class AiToolsService {
     }
 
     try {
-      const updated = await this.goalPlannerService.updateGoal(accountId, goalId, { currentAmount: newAmount });
+      const updated = await this.goalPlannerService.updateGoal(
+        accountId,
+        goalId,
+        { currentAmount: newAmount },
+        { userId, note: 'AI update' },
+      );
       return {
         actionType: 'update_goal_balance',
         success: true,

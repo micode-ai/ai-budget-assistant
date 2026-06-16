@@ -70,6 +70,16 @@ Ekran szczegolow celu pokazuje:
 - **Wymagane miesiecznie** — ile jeszcze musisz odkladac miesiecznie
 - **Opoznienie o** — o ile jestes za harmonogramem (jesli dotyczy)
 
+## Historia wpłat
+
+Za każdym razem, gdy dotkniesz **Dodaj kwotę**, aplikacja zapisuje wpłatę jako osobny wpis w historii. Ekran szczegółów celu pokazuje sekcję **Historia wpłat** poniżej paska postępu, zawierającą:
+
+- Wpłaconą kwotę i walutę celu
+- Datę każdej wpłaty
+- Notatkę dla wpłat wykonanych przez czat AI („AI update")
+
+Historia zaczyna się od pierwszego użycia „Dodaj kwotę". Wcześniejsze ręczne edycje nie są wstecznie uwzględniane. Wyświetlane jest do 20 najnowszych wpłat.
+
 ## Zarzadzanie celami
 
 - **Zaktualizuj kwote** — skoryguj biezaca kwote oszczednosci

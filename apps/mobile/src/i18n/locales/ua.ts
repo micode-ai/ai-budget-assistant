@@ -1191,6 +1191,10 @@ export default {
     addFundsConfirm: 'Внести',
     currentSaved: 'Вже заощаджено',
     errorAddFunds: 'Не вдалося внести суму',
+    contributionsTitle: 'Історія поповнень',
+    noContributions: 'Поповнень ще немає.',
+    contributions: 'Поповнення',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Аудит витрат',

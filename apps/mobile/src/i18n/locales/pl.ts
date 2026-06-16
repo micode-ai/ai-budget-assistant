@@ -1191,6 +1191,10 @@ export default {
     addFundsConfirm: 'Dodaj',
     currentSaved: 'Już zaoszczędzono',
     errorAddFunds: 'Nie udało się dodać kwoty',
+    contributionsTitle: 'Historia wpłat',
+    noContributions: 'Brak zarejestrowanych wpłat.',
+    contributions: 'Wpłaty',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Audyt wydatków',

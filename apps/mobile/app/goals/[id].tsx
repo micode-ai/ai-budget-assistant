@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useGoalStore } from '@/stores/goalStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import type { SavingsGoal, GoalStatus } from '@budget/shared-types';
+import type { SavingsGoal, GoalStatus, GoalContribution } from '@budget/shared-types';
 import { GoalAddFundsModal } from '@/components/goals/GoalAddFundsModal';
 import { GoalAIPlan } from '@/components/goals/GoalAIPlan';
 import { GoalProgressSection } from '@/components/goals/GoalProgressSection';
@@ -26,9 +26,10 @@ export default function GoalDetailScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { goals, deleteGoal, getProgress, regeneratePlan, updateGoal } = useGoalStore();
+  const { goals, contributions, deleteGoal, getProgress, regeneratePlan, updateGoal, loadContributions } = useGoalStore();
 
   const goal = goals.find((g) => g.id === id);
+  const goalContributions: GoalContribution[] = contributions[id ?? ''] ?? [];
   const [progressData, setProgressData] = useState<ProgressData | null>(null);
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -46,7 +47,8 @@ export default function GoalDetailScreen() {
 
   useEffect(() => {
     loadProgressData();
-  }, [loadProgressData]);
+    if (id) loadContributions(id);
+  }, [loadProgressData, id, loadContributions]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -100,7 +102,7 @@ export default function GoalDetailScreen() {
     const newAmount = goal.currentAmount + amount;
     try {
       await updateGoal(id, { currentAmount: newAmount });
-      await loadProgressData();
+      await Promise.all([loadProgressData(), loadContributions(id)]);
       setShowAddFunds(false);
     } catch {
       showAlert(t('common.error'), t('goals.errorAddFunds') || 'Failed to add funds');
@@ -224,6 +226,31 @@ export default function GoalDetailScreen() {
           formatDate={formatDate}
           formatAmount={formatAmount}
         />
+
+        {/* Contribution History */}
+        <View style={styles.contributionsCard}>
+          <View style={styles.contributionHeader}>
+            <Ionicons name="time-outline" size={18} color={theme.colors.primary} />
+            <Text style={styles.contributionTitle}>{t('goals.contributionsTitle') || 'Contribution History'}</Text>
+          </View>
+          {goalContributions.length === 0 ? (
+            <Text style={styles.contributionEmpty}>{t('goals.noContributions') || 'No contributions recorded yet.'}</Text>
+          ) : (
+            goalContributions.map((c) => (
+              <View key={c.id} style={styles.contributionRow}>
+                <View style={styles.contributionLeft}>
+                  <Text style={styles.contributionAmount}>
+                    +{formatAmount(c.amount)} {c.currencyCode}
+                  </Text>
+                  {c.note ? (
+                    <Text style={styles.contributionNote}>{t('goals.contributionNote', { note: c.note }) || c.note}</Text>
+                  ) : null}
+                </View>
+                <Text style={styles.contributionDate}>{formatDate(c.createdAt)}</Text>
+              </View>
+            ))
+          )}
+        </View>
 
         <GoalAIPlan
           goal={goal}
@@ -350,5 +377,53 @@ const createStyles = (theme: Theme) => ({
     fontSize: 16,
     fontWeight: '600' as const,
     color: theme.colors.danger,
+  },
+  contributionsCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[4],
+    ...theme.shadows.md,
+  },
+  contributionHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[3],
+  },
+  contributionTitle: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  contributionEmpty: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+  },
+  contributionRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[2.5],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+  },
+  contributionLeft: {
+    flex: 1,
+    marginRight: theme.spacing[3],
+  },
+  contributionAmount: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+    color: theme.colors.success,
+  },
+  contributionNote: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: 2,
+  },
+  contributionDate: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
   },
 });

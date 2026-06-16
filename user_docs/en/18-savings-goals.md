@@ -70,6 +70,16 @@ The goal detail screen shows:
 - **Monthly needed** — how much you still need to save per month
 - **Behind by** — how much you're behind schedule (if applicable)
 
+## Contribution History
+
+Every time you tap **Add Funds**, the app records the deposit as a separate entry in your contribution history. The goal detail screen shows a **Contribution History** section below the progress bar with:
+
+- The amount added and the goal's currency
+- The date of each deposit
+- A note for contributions made via the AI chat ("AI update")
+
+History starts from when you first use "Add Funds" — earlier manual edits to the current amount are not backfilled. Up to 20 most recent contributions are shown.
+
 ## Managing Goals
 
 - **Update amount** — adjust your current savings amount as you save

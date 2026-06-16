@@ -262,7 +262,12 @@ Return ONLY valid JSON:
     };
   }
 
-  async updateGoal(accountId: string, goalId: string, dto: { name?: string; targetAmount?: number; deadline?: string; currentAmount?: number; status?: string }) {
+  async updateGoal(
+    accountId: string,
+    goalId: string,
+    dto: { name?: string; targetAmount?: number; deadline?: string; currentAmount?: number; status?: string },
+    contributionMeta?: { userId: string; note?: string },
+  ) {
     const goal = await this.prisma.savingsGoal.findFirst({
       where: { id: goalId, accountId },
     });
@@ -283,11 +288,59 @@ Return ONLY valid JSON:
       }
     }
 
+    // Record contribution when funds are added (positive delta)
+    const shouldRecordContribution =
+      contributionMeta &&
+      dto.currentAmount !== undefined &&
+      Number(dto.currentAmount) > Number(goal.currentAmount);
+
+    if (shouldRecordContribution) {
+      const delta = Number(dto.currentAmount) - Number(goal.currentAmount);
+      const [updated] = await this.prisma.$transaction([
+        this.prisma.savingsGoal.update({ where: { id: goalId }, data }),
+        this.prisma.goalContribution.create({
+          data: {
+            goalId,
+            accountId,
+            userId: contributionMeta!.userId,
+            amount: delta,
+            currencyCode: goal.currencyCode,
+            note: contributionMeta!.note ?? null,
+          },
+        }),
+      ]);
+      return this.mapGoal(updated);
+    }
+
     const updated = await this.prisma.savingsGoal.update({
       where: { id: goalId },
       data,
     });
     return this.mapGoal(updated);
+  }
+
+  async getContributions(accountId: string, goalId: string) {
+    const goal = await this.prisma.savingsGoal.findFirst({
+      where: { id: goalId, accountId },
+    });
+    if (!goal) return [];
+
+    const rows = await this.prisma.goalContribution.findMany({
+      where: { goalId, accountId },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    });
+
+    return rows.map((r) => ({
+      id: r.id,
+      goalId: r.goalId,
+      accountId: r.accountId,
+      userId: r.userId,
+      amount: Number(r.amount),
+      currencyCode: r.currencyCode,
+      note: r.note ?? null,
+      createdAt: r.createdAt,
+    }));
   }
 
   async deleteGoal(accountId: string, goalId: string) {

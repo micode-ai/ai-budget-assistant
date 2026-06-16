@@ -71,6 +71,16 @@ Der Ziel-Detailbildschirm zeigt:
 - **Monatlich benotigt** — wie viel du noch pro Monat sparen musst
 - **Im Ruckstand um** — wie weit du hinter dem Zeitplan liegst (falls zutreffend)
 
+## Einzahlungsverlauf
+
+Jedes Mal, wenn du auf **Betrag hinzufügen** tippst, wird der Beitrag als separater Eintrag im Verlauf gespeichert. Der Detailbildschirm zeigt einen Abschnitt **Einzahlungsverlauf** unterhalb des Fortschrittsbalkens mit:
+
+- Eingezahltem Betrag und der Währung des Ziels
+- Datum jeder Einzahlung
+- Einem Hinweis für Beiträge via KI-Chat („AI update")
+
+Der Verlauf beginnt ab der ersten Nutzung von „Betrag hinzufügen". Ältere manuelle Bearbeitungen werden nicht rückwirkend übernommen. Es werden bis zu 20 neueste Einzahlungen angezeigt.
+
 ## Ziele verwalten
 
 - **Betrag aktualisieren** — passe deinen aktuellen Sparbetrag an, wenn du sparst

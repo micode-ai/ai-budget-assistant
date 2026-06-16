@@ -1188,6 +1188,10 @@ export default {
     addFundsConfirm: 'Hinzufügen',
     currentSaved: 'Bereits gespart',
     errorAddFunds: 'Betrag konnte nicht hinzugefügt werden',
+    contributionsTitle: 'Einzahlungsverlauf',
+    noContributions: 'Noch keine Einzahlungen erfasst.',
+    contributions: 'Einzahlungen',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Ausgabenprüfung',

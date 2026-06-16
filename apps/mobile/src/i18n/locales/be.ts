@@ -1175,6 +1175,10 @@ export default {
     addFundsConfirm: 'Унесці',
     currentSaved: 'Ужо зэканомлена',
     errorAddFunds: 'Не атрымалася ўнесці суму',
+    contributionsTitle: 'Гісторыя папаўненняў',
+    noContributions: 'Папаўненняў пакуль няма.',
+    contributions: 'Папаўненні',
+    contributionNote: '{{note}}',
   },
   fatFinder: {
     title: 'Аўдыт расходаў',

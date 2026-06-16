@@ -71,6 +71,16 @@ L'ecran de detail de l'objectif affiche :
 - **Montant mensuel necessaire** — combien vous devez encore epargner par mois
 - **En retard de** — de combien vous etes en retard sur le calendrier (le cas echeant)
 
+## Historique des dépôts
+
+Chaque fois que vous appuyez sur **Ajouter des fonds**, l'application enregistre le dépôt comme une entrée distincte dans l'historique. L'écran de détail de l'objectif affiche une section **Historique des dépôts** sous la barre de progression, avec :
+
+- Le montant déposé et la devise de l'objectif
+- La date de chaque dépôt
+- Une note pour les dépôts effectués via le chat IA (« AI update »)
+
+L'historique commence à partir de la première utilisation de « Ajouter des fonds ». Les modifications manuelles précédentes ne sont pas reprises rétroactivement. Jusqu'à 20 dépôts les plus récents sont affichés.
+
 ## Gerer les objectifs
 
 - **Mettre a jour le montant** — ajustez votre montant epargne actuel au fur et a mesure

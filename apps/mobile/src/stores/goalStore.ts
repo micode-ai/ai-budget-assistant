@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
-import type { SavingsGoal, GoalPlan } from '@budget/shared-types';
+import type { SavingsGoal, GoalPlan, GoalContribution } from '@budget/shared-types';
 
 interface GoalProgressData {
   goal: SavingsGoal;
@@ -13,6 +13,7 @@ interface GoalProgressData {
 
 interface GoalState {
   goals: SavingsGoal[];
+  contributions: Record<string, GoalContribution[]>;
   isLoading: boolean;
   error: string | null;
 
@@ -21,12 +22,14 @@ interface GoalState {
   updateGoal: (id: string, dto: { name?: string; targetAmount?: number; deadline?: string; currentAmount?: number; status?: string }) => Promise<void>;
   deleteGoal: (id: string) => Promise<void>;
   getProgress: (id: string) => Promise<GoalProgressData>;
+  loadContributions: (id: string) => Promise<void>;
   regeneratePlan: (id: string) => Promise<{ goal: SavingsGoal; plan: GoalPlan }>;
   reset: () => void;
 }
 
 export const useGoalStore = create<GoalState>()((set) => ({
   goals: [],
+  contributions: {},
   isLoading: false,
   error: null,
 
@@ -78,6 +81,9 @@ export const useGoalStore = create<GoalState>()((set) => ({
       await api.deleteGoal(id);
       set((state) => ({
         goals: state.goals.filter((g) => g.id !== id),
+        contributions: Object.fromEntries(
+          Object.entries(state.contributions).filter(([k]) => k !== id),
+        ),
       }));
     } catch (err) {
       set({ error: err instanceof Error ? err.message : 'Failed to delete goal' });
@@ -87,6 +93,15 @@ export const useGoalStore = create<GoalState>()((set) => ({
 
   getProgress: async (id) => {
     return api.getGoalProgress(id);
+  },
+
+  loadContributions: async (id) => {
+    try {
+      const rows = await api.getGoalContributions(id);
+      set((state) => ({ contributions: { ...state.contributions, [id]: rows } }));
+    } catch {
+      // contributions are supplemental; silently fail
+    }
   },
 
   regeneratePlan: async (id) => {
@@ -108,6 +123,6 @@ export const useGoalStore = create<GoalState>()((set) => ({
   },
 
   reset: () => {
-    set({ goals: [], isLoading: false, error: null });
+    set({ goals: [], contributions: {}, isLoading: false, error: null });
   },
 }));

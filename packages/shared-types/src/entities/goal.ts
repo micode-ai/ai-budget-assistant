@@ -23,6 +23,17 @@ export interface GoalPlan {
   summary: string;
 }
 
+export interface GoalContribution {
+  id: string;
+  goalId: string;
+  accountId: string;
+  userId: string;
+  amount: number;
+  currencyCode: string;
+  note?: string | null;
+  createdAt: Date;
+}
+
 export interface SavingsGoal {
   id: string;
   accountId: string;

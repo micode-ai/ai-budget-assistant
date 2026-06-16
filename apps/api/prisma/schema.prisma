@@ -220,6 +220,7 @@ model Account {
   userSubscriptions       UserSubscription[]
   anomalyAlerts           AnomalyAlert[]
   merchantCategoryRules   MerchantCategoryRule[]
+  goalContributions       GoalContribution[]
 
   @@map("accounts")
 }
@@ -1150,12 +1151,31 @@ model SavingsGoal {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account       Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contributions GoalContribution[]
 
   @@index([accountId, status])
   @@index([userId])
   @@map("savings_goals")
+}
+
+model GoalContribution {
+  id           String   @id @default(uuid())
+  goalId       String   @map("goal_id")
+  accountId    String   @map("account_id")
+  userId       String   @map("user_id")
+  amount       Decimal  @db.Decimal(12, 2)
+  currencyCode String   @map("currency_code")
+  note         String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  goal    SavingsGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  account Account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([goalId])
+  @@index([accountId, createdAt(sort: Desc)])
+  @@map("goal_contributions")
 }
 
 model FatFinderReport {
