@@ -145,7 +145,7 @@ export class ChatService {
       };
     }
 
-    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true, currencyCode: true } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true, currencyCode: true, language: true } });
     const responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
     const { model: aiModel } = resolveAiModel(user?.aiModel);
     const context = await this.userContextBuilder.build(userId, accountId);
@@ -166,7 +166,7 @@ export class ChatService {
       ? `[${this.sanitizeName(userName || nameByUserId.get(userId))}]: ${message}`
       : message;
 
-    const systemPrompt = this.promptBuilder.buildSystemPrompt(context, encryptionTier, responseMode, message, history, accountName, user?.currencyCode);
+    const systemPrompt = this.promptBuilder.buildSystemPrompt(context, encryptionTier, responseMode, message, history, accountName, user?.currencyCode, user?.language);
 
     const response = await this.openai.chat.completions.create({
       model: aiModel,
