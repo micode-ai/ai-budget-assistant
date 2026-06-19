@@ -160,6 +160,49 @@ def parse(path):
 def to_html(body):
     return md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
 
+_QLINE = re.compile(r"^\*\*(.+\?)\*\*\s*$")
+
+def _plain(t):
+    t = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", t)  # strip markdown links -> text
+    return t.replace("**", "").replace("*", "").strip()
+
+def extract_faq(body):
+    """Pull Q&A from the FAQ section (the H2 section with the most bold-question lines)."""
+    sections, cur = [], []
+    for ln in body.split("\n"):
+        if ln.startswith("## "):
+            if cur:
+                sections.append(cur)
+            cur = [ln]
+        else:
+            cur.append(ln)
+    if cur:
+        sections.append(cur)
+    best, best_n = None, 1
+    for sec in sections:
+        n = sum(1 for ln in sec if _QLINE.match(ln.strip()))
+        if n >= best_n:
+            best, best_n = sec, n
+    if not best:
+        return []
+    pairs, q, ans = [], None, []
+    for ln in best:
+        s = ln.strip()
+        m = _QLINE.match(s)
+        if m:
+            if q and ans:
+                pairs.append((_plain(q), _plain(" ".join(ans))))
+            q, ans = m.group(1), []
+        elif s.startswith("##") or s.startswith("---") or s.lower().startswith("*related") or s.lower().startswith("_related"):
+            if q and ans:
+                pairs.append((_plain(q), _plain(" ".join(ans))))
+            q, ans = None, []
+        elif s and q:
+            ans.append(s)
+    if q and ans:
+        pairs.append((_plain(q), _plain(" ".join(ans))))
+    return [(q, a) for q, a in pairs if q and a]
+
 def lang_menu(lang, alt_map, langs):
     links = "".join(
         f'<a class="{"active" if l == lang else ""}" href="{alt_map.get(l, f"/blog/{l}/")}">{LANG_NAMES[l]}</a>'
@@ -291,7 +334,12 @@ def build():
         rel = "".join(f'<a href="/blog/{lang}/{s["m"]["slug"]}/">{html.escape(s["m"].get("title", ""))}</a>'
                       for s in siblings)
         t = I18N[lang]
-        page = (head(lang, title, desc, url, article_jsonld(lang, title, desc, url, og), alts, og, menu)
+        ld = article_jsonld(lang, title, desc, url, og)
+        faq = extract_faq(a["body"])
+        if len(faq) >= 2:
+            ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
+                {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faq]})
+        page = (head(lang, title, desc, url, ld, alts, og, menu)
                 + f'<main class="wrap"><nav class="crumb"><a href="/">{t["home"]}</a> / <a href="/blog/{lang}/">{t["blog"]}</a></nav>'
                 + f'<article>{to_html(a["body"])}</article>{cta_block(lang)}'
                 + f'<section class="related"><h2>{t["related"]}</h2>{rel}</section></main>' + foot(lang))

@@ -468,6 +468,16 @@ def build():
         open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
         open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(
             f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+        open(os.path.join(OUT, "404.html"), "w", encoding="utf-8", newline="\n").write(
+            '<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width, initial-scale=1">'
+            '<meta name="robots" content="noindex"><title>404 - AI Budget Assistant</title>'
+            '<style>body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;display:flex;'
+            'min-height:100vh;align-items:center;justify-content:center;margin:0;text-align:center;color:#1a1a1d}'
+            '.box{padding:24px}h1{font-size:72px;margin:0;color:#F58320}p{color:#5b5b66;font-size:18px}'
+            'a{color:#c96a12;font-weight:700;text-decoration:none;margin:0 10px}</style></head>'
+            '<body><div class="box"><h1>404</h1><p>Strona nie znaleziona &middot; Page not found</p>'
+            '<p><a href="/">Strona główna</a><a href="/blog/">Blog</a></p></div></body></html>\n')
     print(f"built SEO landing for {len(langs)} langs ({','.join(langs)}) BASE='{BASE}' ROBOTS='{ROBOTS}' -> {OUT}")
 
 if __name__ == "__main__":
