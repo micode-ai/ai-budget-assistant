@@ -61,6 +61,9 @@ def cookies_url(lang):
     return "/cookies/" if lang == "pl" else "/en/cookies/"
 def about_url(lang):
     return "/about/" if lang == "pl" else f"/{lang}/about/"
+def home_url(lang):
+    # language-matched landing home: pl at apex /, others at /<lang>/ (mirrors landing lp())
+    return "/" if lang == "pl" else f"/{lang}/"
 ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
                 "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
 PUBLISH_DATE = "2026-06-19"
@@ -294,7 +297,7 @@ def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type=
 {alt_tags}
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>
-<header class="site"><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>
+<header class="site"><div class="wrap"><a class="brand" href="{home_url(lang)}">AI <span>Budget</span> Assistant</a>
 <nav class="nav">{langmenu}<a href="/blog/{lang}/">{t['blog']}</a><a class="btn-login" href="{APP}">{t['login']}</a></nav></div></header>
 """
 
@@ -409,7 +412,7 @@ def build():
             ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faq]})
         page = (head(lang, title, desc, url, ld, alts, og, menu)
-                + f'<main class="wrap"><nav class="crumb"><a href="/">{t["home"]}</a> / <a href="/blog/{lang}/">{t["blog"]}</a></nav>'
+                + f'<main class="wrap"><nav class="crumb"><a href="{home_url(lang)}">{t["home"]}</a> / <a href="/blog/{lang}/">{t["blog"]}</a></nav>'
                 + f'<article>{to_html(a["body"])}</article>{cta_block(lang)}'
                 + f'<section class="related"><h2>{t["related"]}</h2>{rel}</section></main>' + foot(lang))
         d = os.path.join(OUT, "blog", lang, m["slug"])
@@ -428,7 +431,7 @@ def build():
         menu = lang_menu(lang, alt_map, langs)
         ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": t["blogTitle"], "inLanguage": lang, "url": url}
         page = (head(lang, t["blogTitle"], t["blogDesc"], url, ld, alts, f"/blog/{lang}/assets/og-default.png", menu, og_type="website")
-                + f'<main class="wrap"><nav class="crumb"><a href="/">{t["home"]}</a> / {t["blog"]}</nav>'
+                + f'<main class="wrap"><nav class="crumb"><a href="{home_url(lang)}">{t["home"]}</a> / {t["blog"]}</nav>'
                 + f'<h1>{t["blogH1"]}</h1><p>{t["blogIntro"]}</p>{cards}{cta_block(lang)}</main>' + foot(lang))
         open(os.path.join(OUT, "blog", lang, "index.html"), "w", encoding="utf-8", newline="\n").write(page)
 
