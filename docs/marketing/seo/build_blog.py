@@ -23,7 +23,15 @@ SITE = "https://ai-budget.pl"
 APP = "https://app.ai-budget.pl"
 PLAY = "https://play.google.com/store/apps/details?id=com.budget.assistant"
 COMPANY = "MICODE sp. z o.o."
+COMPANY_URL = "https://mi-code.pl/"
 YEAR = "2026"
+SAMEAS = [
+    "https://www.facebook.com/profile.php?id=61570771625318",
+    "https://t.me/aibudgetassistant",
+    "https://t.me/aibudgetassistantEn",
+    "https://t.me/aibudgetassistantBy",
+    "https://play.google.com/store/apps/details?id=com.budget.assistant",
+]
 PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "en"  # x-default
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
@@ -238,8 +246,8 @@ def foot(lang):
     return (f'<footer class="site"><div class="wrap">'
             f'<div class="f-links"><a href="/blog/{lang}/">{t["blog"]}</a>'
             f'<a href="{APP}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
-            f'<div class="f-co"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30">'
-            f'<span>&copy; {YEAR} AI Budget Assistant &mdash; {COMPANY}. {html.escape(t["rights"])}</span></div>'
+            f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
+            f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
             f'</div></footer>\n</body></html>')
 
 def cta_block(lang):
@@ -255,7 +263,7 @@ def article_jsonld(lang, title, desc, url, og_path):
          "datePublished": PUBLISH_DATE, "dateModified": PUBLISH_DATE,
          "mainEntityOfPage": {"@type": "WebPage", "@id": url},
          "author": {"@type": "Organization", "name": "AI Budget Assistant"},
-         "publisher": {"@type": "Organization", "name": COMPANY,
+         "publisher": {"@type": "Organization", "name": COMPANY, "url": COMPANY_URL, "sameAs": SAMEAS,
                        "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg"}},
          "image": f"{SITE}{og_path}"},
         {"@type": "BreadcrumbList", "itemListElement": [
