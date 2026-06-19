@@ -729,6 +729,9 @@ def build():
             for loc in re.findall(r"<loc>([^<]+)</loc>", open(blog_sm, encoding="utf-8").read()):
                 if "/blog/" in loc:
                     urls.append(loc)
+        urls += [SITE + about_url(l) for l in LANG_NAMES if l in ABOUT]  # About (9 langs)
+        for k in ("cookies", "privacy", "terms"):                        # legal (pl + en)
+            urls += [f"{SITE}/{k}/", f"{SITE}/en/{k}/"]
         sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
         for u in urls:
             sm.append(f'<url><loc>{u}</loc><lastmod>{PUBLISH_DATE}</lastmod>'
