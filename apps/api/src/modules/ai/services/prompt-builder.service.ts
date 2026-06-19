@@ -14,31 +14,65 @@ export class PromptBuilder {
       return 'Russian';
     }
     if (/[äöüßÄÖÜ]/.test(text)) return 'German';
-    if (/[áéíóúñÁÉÍÓÚÑ¿¡]/.test(text)) return 'Spanish';
-    if (/[àâäæçèéêëîïôœùûüÿÀÂÄÆÇÈÉÊËÎÏÔŒÙÛÜŸ]/.test(text)) return 'French';
-    if (/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(text)) return 'Polish';
+    if (/[ąćęłńśźżĄĆĘŁŃŚŹŻ]/.test(text)) return 'Polish';
+
+    // French and Spanish share the accented letter "é"/"É", so it must NOT decide
+    // between them (it is one of the most common letters in French: dépense, café,
+    // été). Decide on characters UNIQUE to each language; only when none of those
+    // are present do we leave it ambiguous (returns 'English') for the caller to
+    // resolve via the user's UI locale.
+    const frenchUnique = /[àâæçèêëîïôœùûÿÀÂÆÇÈÊËÎÏÔŒÙÛŸ]/.test(text);
+    const spanishMarker = /[áíóúñÁÍÓÚÑ¿¡]/.test(text);
+    if (frenchUnique && !spanishMarker) return 'French';
+    if (spanishMarker && !frenchUnique) return 'Spanish';
+    if (frenchUnique && spanishMarker) return 'French';
+
     if (/\b(het|een|ik|niet|uitgave|inkomsten|vandaag|gisteren|betaald|boodschappen|rekening|geld)\b/i.test(text)) return 'Dutch';
     return 'English';
+  }
+
+  /** Maps an app UI locale code (e.g. 'fr', 'ua', 'es') to the language name used in prompts. */
+  localeToLanguageName(locale?: string | null): string | null {
+    if (!locale) return null;
+    const map: Record<string, string> = {
+      en: 'English',
+      ru: 'Russian',
+      ua: 'Ukrainian',
+      uk: 'Ukrainian',
+      be: 'Belarusian',
+      de: 'German',
+      es: 'Spanish',
+      fr: 'French',
+      pl: 'Polish',
+      nl: 'Dutch',
+    };
+    return map[locale.toLowerCase().split('-')[0]] ?? null;
   }
 
   detectUserLanguage(
     userMessage: string,
     history: Array<{ role: string; content: string }>,
+    uiLanguage?: string | null,
   ): string {
-    let userLanguage = 'English';
+    // 1. Strongest signal: the language detected from the current message's
+    //    script/unique characters (Cyrillic, German, Polish, clear FR/ES, …).
+    const fromMessage = this.detectLanguage(userMessage);
+    if (fromMessage !== 'English') return fromMessage;
+
+    // 2. Ambiguous or plain-ASCII message: honor the user's app UI language.
+    //    This is what fixes "interface is French but the AI replies in Spanish" —
+    //    a French message whose only accent is the shared "é" no longer guesses ES.
+    const fromUi = this.localeToLanguageName(uiLanguage);
+    if (fromUi && fromUi !== 'English') return fromUi;
+
+    // 3. Legacy fallback: infer from recent assistant replies (older clients that
+    //    never send a UI locale).
     const recentAssistantMessages = history.filter(m => m.role === 'assistant').slice(-3);
     if (recentAssistantMessages.length > 0) {
-      const allAssistantText = recentAssistantMessages.map(m => m.content).join(' ');
-      const detectedFromHistory = this.detectLanguage(allAssistantText);
-      if (detectedFromHistory !== 'English') {
-        userLanguage = detectedFromHistory;
-      }
+      const detectedFromHistory = this.detectLanguage(recentAssistantMessages.map(m => m.content).join(' '));
+      if (detectedFromHistory !== 'English') return detectedFromHistory;
     }
-    const currentMessageLanguage = this.detectLanguage(userMessage);
-    if (currentMessageLanguage !== 'English') {
-      userLanguage = currentMessageLanguage;
-    }
-    return userLanguage;
+    return 'English';
   }
 
   buildSystemPrompt(
@@ -49,9 +83,10 @@ export class PromptBuilder {
     history: Array<{ role: string; content: string }> = [],
     accountName?: string | null,
     baseCurrency?: string | null,
+    uiLanguage?: string | null,
   ): string {
     const staticPrefix = this.buildStaticSystemPrefix(responseMode);
-    const dynamicSuffix = this.buildDynamicSystemSuffix(context, encryptionTier, userMessage, history, accountName, baseCurrency);
+    const dynamicSuffix = this.buildDynamicSystemSuffix(context, encryptionTier, userMessage, history, accountName, baseCurrency, uiLanguage);
     return `${staticPrefix}\n\n${dynamicSuffix}`;
   }
 
@@ -128,12 +163,13 @@ the user did not enter; if they ask "did I spend on X?", call the appropriate to
     history: Array<{ role: string; content: string }>,
     accountName?: string | null,
     baseCurrency?: string | null,
+    uiLanguage?: string | null,
   ): string {
     const encryptionNotice = encryptionTier >= 1
       ? `IMPORTANT: This account has end-to-end encryption enabled (text fields). Expense descriptions, notes, tag names, and project names shown below may be encrypted/unavailable. Focus your analysis on numerical data (amounts, category totals) and general spending patterns. Do not attempt to interpret encrypted text values.\n\n`
       : '';
 
-    const userLanguage = this.detectUserLanguage(userMessage, history);
+    const userLanguage = this.detectUserLanguage(userMessage, history, uiLanguage);
     const languageInstruction = userLanguage !== 'English'
       ? `CRITICAL: The user is writing in ${userLanguage}. You MUST respond in ${userLanguage}, NOT in English. All your responses, including action confirmations and data summaries, must be in ${userLanguage}.\n\n`
       : '';

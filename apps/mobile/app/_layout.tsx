@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Linking, Platform } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -85,22 +85,41 @@ function RootNavigator() {
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
 
+  // A notification that cold-started the app (tapped while the app was killed).
+  // It must NOT be acted on until the navigation tree is mounted and the
+  // auth/account context is loaded — see the deferred-flush effect below.
+  const [pendingNotification, setPendingNotification] =
+    useState<Notifications.NotificationResponse | null>(null);
+
   // Set up notification listeners
   useEffect(() => {
     const cleanup = setupNotificationListeners();
 
-    // Handle notification that launched the app (cold start) — native only;
-    // expo-notifications throws "not available on web" otherwise.
+    // Capture the notification that launched the app (cold start) — native only;
+    // expo-notifications throws "not available on web" otherwise. We only STORE it
+    // here; navigating now would target an unmounted <Stack> (RootNavigator still
+    // returns null while initializing) and switchAccount() would no-op against the
+    // not-yet-loaded accounts list, wedging the app on a blank screen.
     if (Platform.OS !== 'web') {
       Notifications.getLastNotificationResponseAsync().then((response) => {
         if (response) {
-          handleNotificationResponse(response);
+          setPendingNotification(response);
         }
       }).catch(() => {});
     }
 
     return cleanup;
   }, []);
+
+  // Flush a cold-start notification deep-link once the app is fully ready, the
+  // same gate the Linking deep-link handler below uses. Depending on which
+  // settles last (init/auth vs the async getLastNotificationResponseAsync), this
+  // effect re-runs and navigates exactly once.
+  useEffect(() => {
+    if (isInitializing || !isAuthenticated || !fontsLoaded || !pendingNotification) return;
+    handleNotificationResponse(pendingNotification);
+    setPendingNotification(null);
+  }, [isInitializing, isAuthenticated, fontsLoaded, pendingNotification]);
 
   useEffect(() => {
     if (!isInitializing && fontsLoaded) {
