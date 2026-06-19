@@ -52,6 +52,17 @@ jobs:
           test -f apps/mobile/dist/robots.txt || { echo "::error::robots.txt missing"; exit 1; }
           echo "blog + sitemap + robots staged into dist"
 
+      - name: Stage landing PREVIEW into web root (/preview, noindex)
+        run: |
+          set -e
+          # Temporary design preview of the new marketing landing (ABA-269).
+          # noindex; lives at ai-budget.pl/preview until the apex cutover.
+          # Regenerate: LANDING_BASE=preview ROBOTS="noindex,follow" python docs/marketing/landing/build_landing.py
+          mkdir -p apps/mobile/dist/preview
+          cp -r docs/marketing/landing/site/. apps/mobile/dist/preview/
+          test -f apps/mobile/dist/preview/index.html || { echo "::error::landing preview missing"; exit 1; }
+          echo "landing preview staged into dist/preview"
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
