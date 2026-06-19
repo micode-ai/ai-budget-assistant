@@ -54,9 +54,9 @@ LEGAL_LABELS = {
  "ua": ("Конфіденційність", "Умови", "Cookie"), "be": ("Прыватнасць", "Умовы", "Cookie"),
  "nl": ("Privacy", "Voorwaarden", "Cookies")}
 def priv_url(lang):
-    return f"{LEGAL_BASE}/{'pl' if lang == 'pl' else 'en'}/privacy.html"
+    return "/privacy/" if lang == "pl" else "/en/privacy/"
 def terms_url(lang):
-    return f"{LEGAL_BASE}/{'pl' if lang == 'pl' else 'en'}/terms.html"
+    return "/terms/" if lang == "pl" else "/en/terms/"
 def cookies_url(lang):
     return "/cookies/" if lang == "pl" else "/en/cookies/"
 def about_url(lang):
