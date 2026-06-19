@@ -60,7 +60,7 @@ def terms_url(lang):
 def cookies_url(lang):
     return "/cookies/" if lang == "pl" else "/en/cookies/"
 def about_url(lang):
-    return "/about/" if lang == "pl" else "/en/about/"
+    return "/about/" if lang == "pl" else f"/{lang}/about/"
 ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
                 "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
 PUBLISH_DATE = "2026-06-19"
