@@ -8,16 +8,17 @@ AI Budget Assistant bietet drei Abonnementstufen. Jeder neue Nutzer startet mit 
 
 ## Planuberblick
 
-Alle Funktionen sind in jedem Tarif verfügbar. Tarife unterscheiden sich nur in den Nutzungslimits:
+Tarife unterscheiden sich in den Nutzungslimits und im Zugang zu erweiterten KI-Funktionen:
 
 | Funktion | Free | Pro | Business |
 |---|---|---|---|
 | **KI-Anfragen pro Monat** | 50 | 300 | Unbegrenzt |
 | **Konten** | 3 | Bis zu 5 | Unbegrenzt |
 | **Mitglieder pro Konto** | 1 | Bis zu 5 | Unbegrenzt |
-| **Alle Funktionen** | Ja | Ja | Ja |
+| **Kernfunktionen** (Verfolgung, KI-Chat, Sprache, Belege) | Ja | Ja | Ja |
+| **Erweitertes KI** (Ausgabengeschichte, Fat Finder, KI-Einblicke) | — | Ja | Ja |
 
-> Alle Nutzer haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Ausgabengeschichte, Fat Finder, KI-Einblicke, pradiktive Analysen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, wochentlicher E-Mail-Bericht, monatliche Zusammenfassung, verschlusselte Backups und alle Wahrungen.
+> Alle Nutzer (auch Free) haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, wochentlicher E-Mail-Bericht, monatliche Zusammenfassung, verschlusselte Backups und alle Wahrungen. Ausgabengeschichte, Fat Finder und KI-Einblicke erfordern Pro oder Business.
 
 ## Free-Plan
 
@@ -25,7 +26,7 @@ Dein Einstiegsplan beinhaltet:
 - **50 KI-Anfragen pro Monat** — nutze KI-Chat, Spracheingabe, Beleg scannen
 - **3 Konten**
 - **1 Mitglied** (du)
-- **Alle Funktionen** — keine Funktionseinschränkungen
+- **Kernfunktionen** — Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen (erweiterte KI-Funktionen erfordern Pro)
 
 ## Pro-Plan
 
@@ -33,6 +34,7 @@ Mit höheren Limits:
 - **300 KI-Anfragen pro Monat**
 - **Bis zu 5 Konten** — personliche, gemeinsame und geschaftliche Finanzen verwalten
 - **Bis zu 5 Mitglieder pro Konto** — mit Familie oder Team zusammenarbeiten
+- **Erweiterte KI-Funktionen** — Ausgabengeschichte, Fat Finder und KI-Einblicke
 
 ### 7-tagige kostenlose Testversion
 Probiere Pro 7 Tage kostenlos aus. Kundige jederzeit vor Ende der Testversion, um Kosten zu vermeiden.
@@ -96,7 +98,7 @@ Tippen Sie auf **Details anzeigen** auf dem Abonnement-Bildschirm, um eine detai
 ## FAQ
 
 - **F: Was passiert, wenn mir die KI-Anfragen ausgehen?**
-  **A:** Du siehst die Meldung "KI-Limit erreicht". Du kannst bis nachsten Monat auf eine Zurucksetzung warten oder deinen Plan fur mehr Anfragen upgraden.
+  **A:** Wenn du dein monatliches Limit im KI-Chat erreichst, erscheint direkt im Chat ein Upgrade-Bildschirm mit den Pro-Tarifen und einer 7-tagigen kostenlosen Testversion. Du kannst die Testversion starten oder upgraden, um mehr KI-Anfragen zu erhalten, oder einfach warten, bis sich dein Limit zu Beginn des nachsten Monats zurucksetzt.
 
 - **F: Kann ich von Pro auf Free herabstufen?**
   **A:** Ja, du kannst dein Abonnement jederzeit kundigen. Du behaltst die Pro-Funktionen bis zum Ende deines Abrechnungszeitraums.

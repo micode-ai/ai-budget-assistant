@@ -17,39 +17,53 @@ export class TrialReminderCron {
 
   /**
    * Runs daily at 10:00 UTC.
-   * Finds subscriptions whose trial ends tomorrow and sends a reminder.
+   * Sends T-3 reminder to trials ending in 3 days and T-1 reminder to trials ending tomorrow.
    */
   @Cron('0 10 * * *')
   async handleTrialReminder() {
-    this.logger.log('Checking for trials ending tomorrow...');
-
     const now = new Date();
+
+    // T-1: trials ending tomorrow
     const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
     const tomorrowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2);
 
-    const expiringTrials = await this.prisma.subscription.findMany({
-      where: {
-        status: 'trialing',
-        trialEnd: {
-          gte: tomorrowStart,
-          lt: tomorrowEnd,
+    // T-3: trials ending in 3 days
+    const in3Start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3);
+    const in3End = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4);
+
+    const [expiringTomorrow, expiringIn3] = await Promise.all([
+      this.prisma.subscription.findMany({
+        where: {
+          status: 'trialing',
+          trialEnd: { gte: tomorrowStart, lt: tomorrowEnd },
         },
-      },
-      include: {
-        user: { select: { id: true, name: true, email: true, language: true } },
-      },
-    });
+        include: {
+          user: { select: { id: true, name: true, email: true, language: true } },
+        },
+      }),
+      this.prisma.subscription.findMany({
+        where: {
+          status: 'trialing',
+          trialEnd: { gte: in3Start, lt: in3End },
+        },
+        include: {
+          user: { select: { id: true, name: true, email: true, language: true } },
+        },
+      }),
+    ]);
 
-    this.logger.log(`Found ${expiringTrials.length} trials expiring tomorrow`);
+    this.logger.log(
+      `Found ${expiringTomorrow.length} trials expiring tomorrow, ${expiringIn3.length} expiring in 3 days`,
+    );
 
-    for (const sub of expiringTrials) {
+    // Send T-1 reminders
+    for (const sub of expiringTomorrow) {
       const { user } = sub;
       if (!user) continue;
 
       const tierUpper = sub.tier.toUpperCase();
       const lang = user.language || 'en';
 
-      // Push notification
       this.notificationsService.sendToUser(
         user.id,
         (l: string) => ni18n.trialReminderTitle(l),
@@ -57,9 +71,28 @@ export class TrialReminderCron {
         { type: 'trial_reminder' },
       ).catch(() => {});
 
-      // Email
       const subject = ni18n.trialReminderEmailSubject(lang);
       const html = ni18n.trialReminderEmailHtml(lang, user.name, { tier: tierUpper });
+      this.mailService.sendMail(user.email, subject, html).catch(() => {});
+    }
+
+    // Send T-3 reminders
+    for (const sub of expiringIn3) {
+      const { user } = sub;
+      if (!user) continue;
+
+      const tierUpper = sub.tier.toUpperCase();
+      const lang = user.language || 'en';
+
+      this.notificationsService.sendToUser(
+        user.id,
+        (l: string) => ni18n.trialReminderIn3Title(l),
+        (l: string) => ni18n.trialReminderIn3Body(l, { tier: tierUpper }),
+        { type: 'trial_reminder' },
+      ).catch(() => {});
+
+      const subject = ni18n.trialReminderIn3EmailSubject(lang);
+      const html = ni18n.trialReminderIn3EmailHtml(lang, user.name, { tier: tierUpper });
       this.mailService.sendMail(user.email, subject, html).catch(() => {});
     }
   }

@@ -325,6 +325,7 @@ export default function ChatScreen() {
         isLoading={isLoading}
         onSelectConversation={handleSelectConversation}
       />
+
     </SafeAreaView>
   );
 }

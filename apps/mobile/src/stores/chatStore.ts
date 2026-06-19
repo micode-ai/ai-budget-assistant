@@ -3,6 +3,7 @@ import type { ChatConversation, ChatPendingAction, ChatActionResult } from '@bud
 import { generateUUID } from '@budget/shared-utils';
 import { api } from '@/services/api';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useUpgradeStore } from '@/stores/upgradeStore';
 import i18n from '@/i18n';
 import * as chatRepository from '@/db/chatRepository';
 
@@ -119,10 +120,11 @@ export const useChatStore = create<ChatState>()((set, get) => ({
 
       useSubscriptionStore.getState().loadUsage();
     } catch (error) {
+      const isLimitReached = (error as { status?: number }).status === 403;
       const errorMessage: ChatMessage = {
         id: generateUUID(),
         role: 'assistant',
-        content: i18n.t('errors.chatError'),
+        content: isLimitReached ? i18n.t('subscription.limitReachedBody') : i18n.t('errors.chatError'),
         createdAt: new Date(),
       };
       set((state) => ({
@@ -130,6 +132,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         error: error instanceof Error ? error.message : i18n.t('errors.sendMessageFailed'),
         isLoading: false,
       }));
+      if (isLimitReached) {
+        useUpgradeStore.getState().show(i18n.t('subscription.limitReachedBody'), 'pro');
+      }
     }
   },
 

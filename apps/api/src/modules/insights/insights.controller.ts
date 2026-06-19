@@ -5,6 +5,8 @@ import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
+import { RequireTier } from '../subscriptions/decorators/require-tier.decorator';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('insights')
@@ -23,6 +25,8 @@ export class InsightsController {
   }
 
   @Get('ai-charts')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('pro')
   async getAICharts(
     @Req() req: AuthenticatedRequest,
     @Query('language') language?: string,
@@ -31,6 +35,8 @@ export class InsightsController {
   }
 
   @Post('story')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('pro')
   async getSpendingStory(
     @Req() req: AuthenticatedRequest,
     @Body() body: { period: 'week' | 'month'; forceRegenerate?: boolean; language?: string; month?: number; year?: number },
@@ -47,6 +53,8 @@ export class InsightsController {
   }
 
   @Post('fat-finder')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('pro')
   async getFatFinderReport(
     @Req() req: AuthenticatedRequest,
     @Body() body: { forceRegenerate?: boolean; language?: string; month?: number; year?: number },

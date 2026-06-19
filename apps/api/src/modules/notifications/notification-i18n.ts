@@ -116,6 +116,10 @@ const translations: Record<string, {
   trialReminderBody: (p: TrialReminderParams) => string;
   trialReminderEmailSubject: () => string;
   trialReminderEmailHtml: (name: string, p: TrialReminderParams) => string;
+  trialReminderIn3Title: () => string;
+  trialReminderIn3Body: (p: TrialReminderParams) => string;
+  trialReminderIn3EmailSubject: () => string;
+  trialReminderIn3EmailHtml: (name: string, p: TrialReminderParams) => string;
   newReferralTitle: () => string;
   newReferralBody: (p: ReferralNameParams) => string;
   referralQualifiedTitle: () => string;
@@ -165,6 +169,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Your trial ends tomorrow',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Hi ${name}!</h2><p>Your <strong>${tier}</strong> trial ends tomorrow.</p><p>After the trial period, your card will be automatically charged for the subscription.</p><p>If you don't want to continue, cancel your subscription in the app's Subscription section.</p>`,
+    trialReminderIn3Title: () => 'Trial Ends in 3 Days',
+    trialReminderIn3Body: ({ tier }) => `Your ${tier} trial ends in 3 days. Payment will be charged after that.`,
+    trialReminderIn3EmailSubject: () => 'Your trial ends in 3 days',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Hi ${name}!</h2><p>Your <strong>${tier}</strong> trial ends in 3 days.</p><p>After the trial period, your card will be automatically charged for the subscription.</p><p>If you don't want to continue, cancel your subscription in the app's Subscription section.</p>`,
     newReferralTitle: () => 'New Referral!',
     newReferralBody: ({ name }) => `Your friend ${name} joined using your referral code!`,
     referralQualifiedTitle: () => 'Referral Qualified!',
@@ -224,6 +233,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Ваш пробный период заканчивается завтра',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Привет, ${name}!</h2><p>Ваш пробный период <strong>${tier}</strong> заканчивается завтра.</p><p>После окончания пробного периода с вашей карты будет автоматически списана оплата за подписку.</p><p>Если вы не хотите продолжать, отмените подписку через раздел «Подписка» в приложении.</p>`,
+    trialReminderIn3Title: () => 'Пробный период заканчивается через 3 дня',
+    trialReminderIn3Body: ({ tier }) => `Ваш пробный период ${tier} заканчивается через 3 дня. После этого будет списана оплата.`,
+    trialReminderIn3EmailSubject: () => 'Ваш пробный период заканчивается через 3 дня',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Привет, ${name}!</h2><p>Ваш пробный период <strong>${tier}</strong> заканчивается через 3 дня.</p><p>После окончания пробного периода с вашей карты будет автоматически списана оплата за подписку.</p><p>Если вы не хотите продолжать, отмените подписку через раздел «Подписка» в приложении.</p>`,
     newReferralTitle: () => 'Новый реферал!',
     newReferralBody: ({ name }) => `Ваш друг ${name} присоединился по вашему коду!`,
     referralQualifiedTitle: () => 'Реферал подтверждён!',
@@ -283,6 +297,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Ваш пробний період закінчується завтра',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Привіт, ${name}!</h2><p>Ваш пробний період <strong>${tier}</strong> закінчується завтра.</p><p>Після закінчення пробного періоду з вашої картки буде автоматично списано оплату за підписку.</p><p>Якщо ви не хочете продовжувати, скасуйте підписку в розділі «Підписка» в додатку.</p>`,
+    trialReminderIn3Title: () => 'Пробний період закінчується через 3 дні',
+    trialReminderIn3Body: ({ tier }) => `Ваш пробний період ${tier} закінчується через 3 дні. Після цього буде списано оплату.`,
+    trialReminderIn3EmailSubject: () => 'Ваш пробний період закінчується через 3 дні',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Привіт, ${name}!</h2><p>Ваш пробний період <strong>${tier}</strong> закінчується через 3 дні.</p><p>Після закінчення пробного періоду з вашої картки буде автоматично списано оплату за підписку.</p><p>Якщо ви не хочете продовжувати, скасуйте підписку в розділі «Підписка» в додатку.</p>`,
     newReferralTitle: () => 'Новий реферал!',
     newReferralBody: ({ name }) => `Ваш друг ${name} приєднався за вашим кодом!`,
     referralQualifiedTitle: () => 'Реферал підтверджено!',
@@ -342,6 +361,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Twój okres próbny kończy się jutro',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Cześć ${name}!</h2><p>Twój okres próbny <strong>${tier}</strong> kończy się jutro.</p><p>Po zakończeniu okresu próbnego z Twojej karty zostanie automatycznie pobrana opłata za subskrypcję.</p><p>Jeśli nie chcesz kontynuować, anuluj subskrypcję w sekcji „Subskrypcja" w aplikacji.</p>`,
+    trialReminderIn3Title: () => 'Okres próbny kończy się za 3 dni',
+    trialReminderIn3Body: ({ tier }) => `Twój okres próbny ${tier} kończy się za 3 dni. Po tym zostanie pobrana opłata.`,
+    trialReminderIn3EmailSubject: () => 'Twój okres próbny kończy się za 3 dni',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Cześć ${name}!</h2><p>Twój okres próbny <strong>${tier}</strong> kończy się za 3 dni.</p><p>Po zakończeniu okresu próbnego z Twojej karty zostanie automatycznie pobrana opłata za subskrypcję.</p><p>Jeśli nie chcesz kontynuować, anuluj subskrypcję w sekcji „Subskrypcja" w aplikacji.</p>`,
     newReferralTitle: () => 'Nowe polecenie!',
     newReferralBody: ({ name }) => `Twój znajomy ${name} dołączył z twoim kodem!`,
     referralQualifiedTitle: () => 'Polecenie potwierdzone!',
@@ -401,6 +425,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Tu periodo de prueba termina mañana',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>¡Hola ${name}!</h2><p>Tu periodo de prueba <strong>${tier}</strong> termina mañana.</p><p>Después del periodo de prueba, se cobrará automáticamente a tu tarjeta la suscripción.</p><p>Si no deseas continuar, cancela tu suscripción en la sección "Suscripción" de la app.</p>`,
+    trialReminderIn3Title: () => 'La prueba termina en 3 días',
+    trialReminderIn3Body: ({ tier }) => `Tu periodo de prueba ${tier} termina en 3 días. Después se cobrará el pago.`,
+    trialReminderIn3EmailSubject: () => 'Tu periodo de prueba termina en 3 días',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>¡Hola ${name}!</h2><p>Tu periodo de prueba <strong>${tier}</strong> termina en 3 días.</p><p>Después del periodo de prueba, se cobrará automáticamente a tu tarjeta la suscripción.</p><p>Si no deseas continuar, cancela tu suscripción en la sección "Suscripción" de la app.</p>`,
     newReferralTitle: () => '¡Nuevo referido!',
     newReferralBody: ({ name }) => `¡Tu amigo ${name} se unió con tu código!`,
     referralQualifiedTitle: () => '¡Referido confirmado!',
@@ -460,6 +489,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Votre essai se termine demain',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Bonjour ${name} !</h2><p>Votre essai <strong>${tier}</strong> se termine demain.</p><p>Après la période d'essai, votre carte sera automatiquement débitée pour l'abonnement.</p><p>Si vous ne souhaitez pas continuer, annulez votre abonnement dans la section « Abonnement » de l'application.</p>`,
+    trialReminderIn3Title: () => 'L\'essai se termine dans 3 jours',
+    trialReminderIn3Body: ({ tier }) => `Votre essai ${tier} se termine dans 3 jours. Le paiement sera prélevé après.`,
+    trialReminderIn3EmailSubject: () => 'Votre essai se termine dans 3 jours',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Bonjour ${name} !</h2><p>Votre essai <strong>${tier}</strong> se termine dans 3 jours.</p><p>Après la période d'essai, votre carte sera automatiquement débitée pour l'abonnement.</p><p>Si vous ne souhaitez pas continuer, annulez votre abonnement dans la section « Abonnement » de l'application.</p>`,
     newReferralTitle: () => 'Nouveau parrainage !',
     newReferralBody: ({ name }) => `Votre ami ${name} a rejoint avec votre code !`,
     referralQualifiedTitle: () => 'Parrainage confirmé !',
@@ -519,6 +553,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Deine Testphase endet morgen',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Hallo ${name}!</h2><p>Deine <strong>${tier}</strong>-Testphase endet morgen.</p><p>Nach der Testphase wird deine Karte automatisch für das Abonnement belastet.</p><p>Wenn du nicht fortfahren möchtest, kündige dein Abonnement im Abschnitt „Abonnement" der App.</p>`,
+    trialReminderIn3Title: () => 'Testphase endet in 3 Tagen',
+    trialReminderIn3Body: ({ tier }) => `Deine ${tier}-Testphase endet in 3 Tagen. Danach wird die Zahlung abgebucht.`,
+    trialReminderIn3EmailSubject: () => 'Deine Testphase endet in 3 Tagen',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Hallo ${name}!</h2><p>Deine <strong>${tier}</strong>-Testphase endet in 3 Tagen.</p><p>Nach der Testphase wird deine Karte automatisch für das Abonnement belastet.</p><p>Wenn du nicht fortfahren möchtest, kündige dein Abonnement im Abschnitt „Abonnement" der App.</p>`,
     newReferralTitle: () => 'Neue Empfehlung!',
     newReferralBody: ({ name }) => `Dein Freund ${name} ist mit deinem Code beigetreten!`,
     referralQualifiedTitle: () => 'Empfehlung bestätigt!',
@@ -578,6 +617,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Ваш пробны перыяд заканчваецца заўтра',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Прывітанне, ${name}!</h2><p>Ваш пробны перыяд <strong>${tier}</strong> заканчваецца заўтра.</p><p>Пасля заканчэння пробнага перыяду з вашай карткі будзе аўтаматычна спісана аплата за падпіску.</p><p>Калі вы не жадаеце працягваць, скасуйце падпіску ў раздзеле «Падпіска» ў дадатку.</p>`,
+    trialReminderIn3Title: () => 'Пробны перыяд заканчваецца праз 3 дні',
+    trialReminderIn3Body: ({ tier }) => `Ваш пробны перыяд ${tier} заканчваецца праз 3 дні. Пасля гэтага будзе спісана аплата.`,
+    trialReminderIn3EmailSubject: () => 'Ваш пробны перыяд заканчваецца праз 3 дні',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Прывітанне, ${name}!</h2><p>Ваш пробны перыяд <strong>${tier}</strong> заканчваецца праз 3 дні.</p><p>Пасля заканчэння пробнага перыяду з вашай карткі будзе аўтаматычна спісана аплата за падпіску.</p><p>Калі вы не жадаеце працягваць, скасуйце падпіску ў раздзеле «Падпіска» ў дадатку.</p>`,
     newReferralTitle: () => 'Новы рэферал!',
     newReferralBody: ({ name }) => `Ваш сябар ${name} далучыўся па вашаму коду!`,
     referralQualifiedTitle: () => 'Рэферал пацверджаны!',
@@ -637,6 +681,11 @@ const translations: Record<string, {
     trialReminderEmailSubject: () => 'Je proefperiode eindigt morgen',
     trialReminderEmailHtml: (name, { tier }) =>
       `<h2>Hoi ${name}!</h2><p>Je <strong>${tier}</strong>-proefperiode eindigt morgen.</p><p>Na de proefperiode wordt je kaart automatisch belast voor het abonnement.</p><p>Als je niet wilt doorgaan, annuleer dan je abonnement in het onderdeel "Abonnement" van de app.</p>`,
+    trialReminderIn3Title: () => 'Proefperiode eindigt over 3 dagen',
+    trialReminderIn3Body: ({ tier }) => `Je ${tier}-proefperiode eindigt over 3 dagen. Daarna wordt de betaling afgeschreven.`,
+    trialReminderIn3EmailSubject: () => 'Je proefperiode eindigt over 3 dagen',
+    trialReminderIn3EmailHtml: (name, { tier }) =>
+      `<h2>Hoi ${name}!</h2><p>Je <strong>${tier}</strong>-proefperiode eindigt over 3 dagen.</p><p>Na de proefperiode wordt je kaart automatisch belast voor het abonnement.</p><p>Als je niet wilt doorgaan, annuleer dan je abonnement in het onderdeel "Abonnement" van de app.</p>`,
     newReferralTitle: () => 'Nieuwe verwijzing!',
     newReferralBody: ({ name }) => `Je vriend ${name} is lid geworden via jouw verwijzingscode!`,
     referralQualifiedTitle: () => 'Verwijzing bevestigd!',
@@ -739,6 +788,18 @@ export function trialReminderEmailSubject(lang: Lang): string {
 }
 export function trialReminderEmailHtml(lang: Lang, name: string, params: TrialReminderParams): string {
   return t(lang).trialReminderEmailHtml(name, params);
+}
+export function trialReminderIn3Title(lang: Lang): string {
+  return t(lang).trialReminderIn3Title();
+}
+export function trialReminderIn3Body(lang: Lang, params: TrialReminderParams): string {
+  return t(lang).trialReminderIn3Body(params);
+}
+export function trialReminderIn3EmailSubject(lang: Lang): string {
+  return t(lang).trialReminderIn3EmailSubject();
+}
+export function trialReminderIn3EmailHtml(lang: Lang, name: string, params: TrialReminderParams): string {
+  return t(lang).trialReminderIn3EmailHtml(name, params);
 }
 
 export function newReferralTitle(lang: Lang): string {
