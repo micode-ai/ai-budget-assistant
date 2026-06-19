@@ -996,6 +996,8 @@ export default {
     trialActive: 'Okres próbny aktywny',
     trialEndsAt: 'Okres próbny kończy się {{date}}',
     limitReached: 'Osiągnięto limit AI',
+    limitReachedBody: 'Wykorzystałeś darmowy limit AI w tym miesiącu. Przejdź na Pro, aby mieć więcej zapytań AI i funkcje premium.',
+    startTrial: 'Rozpocznij 7-dniowy darmowy okres próbny',
     aiRequests: 'Zapytania AI',
     usageThisMonth: 'Wykorzystanie w tym miesiącu',
     availablePlans: 'Dostępne plany',

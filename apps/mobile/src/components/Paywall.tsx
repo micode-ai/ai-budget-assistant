@@ -49,6 +49,11 @@ export function Paywall({ feature, requiredTier, onDismiss }: PaywallProps) {
 
       <Text style={styles.message}>{feature}</Text>
 
+      <View style={styles.trialBadge}>
+        <Ionicons name="gift-outline" size={16} color="#F5A623" />
+        <Text style={styles.trialBadgeText}>{t('subscription.startTrial')}</Text>
+      </View>
+
       {plan && (
         <View style={styles.plans}>
           <TouchableOpacity
@@ -76,8 +81,6 @@ export function Paywall({ feature, requiredTier, onDismiss }: PaywallProps) {
           </TouchableOpacity>
         </View>
       )}
-
-      <Text style={styles.trial}>{t('subscription.trial')}</Text>
 
       <Text style={styles.legalText}>
         {t('legal.bySubscribing')}{' '}
@@ -178,10 +181,21 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     marginTop: 4,
   },
-  trial: {
-    fontSize: 13,
-    color: theme.colors.textTertiary,
-    marginBottom: 12,
+  trialBadge: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 6,
+    alignSelf: 'center' as const,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: theme.colors.warningLight,
+    marginBottom: 20,
+  },
+  trialBadgeText: {
+    fontSize: 14,
+    fontWeight: '700' as const,
+    color: theme.colors.primary,
   },
   dismissButton: {
     paddingVertical: 8,

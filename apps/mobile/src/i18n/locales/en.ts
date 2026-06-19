@@ -994,6 +994,8 @@ export default {
     trialActive: 'Trial active',
     trialEndsAt: 'Trial ends on {{date}}',
     limitReached: 'AI limit reached',
+    limitReachedBody: "You've reached your free AI limit for this month. Upgrade to Pro for more AI requests and premium features.",
+    startTrial: 'Start your 7-day free trial',
     aiRequests: 'AI requests',
     usageThisMonth: 'Usage This Month',
     availablePlans: 'Available Plans',

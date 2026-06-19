@@ -994,6 +994,8 @@ export default {
     trialActive: 'Essai actif',
     trialEndsAt: 'L\'essai se termine le {{date}}',
     limitReached: 'Limite IA atteinte',
+    limitReachedBody: 'Vous avez atteint votre limite IA gratuite ce mois-ci. Passez à Pro pour plus de requêtes IA et des fonctions premium.',
+    startTrial: 'Commencez votre essai gratuit de 7 jours',
     aiRequests: 'Requêtes IA',
     usageThisMonth: 'Utilisation ce mois',
     availablePlans: 'Plans disponibles',

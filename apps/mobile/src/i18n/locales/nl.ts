@@ -994,6 +994,8 @@ export default {
     trialActive: 'Proefperiode actief',
     trialEndsAt: 'Proefperiode eindigt op {{date}}',
     limitReached: 'AI-limiet bereikt',
+    limitReachedBody: 'Je hebt je gratis AI-limiet voor deze maand bereikt. Upgrade naar Pro voor meer AI-verzoeken en premiumfuncties.',
+    startTrial: 'Start je gratis proefperiode van 7 dagen',
     aiRequests: 'AI-verzoeken',
     usageThisMonth: 'Gebruik deze maand',
     availablePlans: 'Beschikbare plannen',
