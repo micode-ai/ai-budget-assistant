@@ -27,7 +27,15 @@ SITE = "https://ai-budget.pl"
 APP = "https://app.ai-budget.pl"
 PLAY = "https://play.google.com/store/apps/details?id=com.budget.assistant"
 COMPANY = "MICODE sp. z o.o."
+COMPANY_URL = "https://mi-code.pl/"
 YEAR = "2026"
+SAMEAS = [
+    "https://www.facebook.com/profile.php?id=61570771625318",
+    "https://t.me/aibudgetassistant",
+    "https://t.me/aibudgetassistantEn",
+    "https://t.me/aibudgetassistantBy",
+    "https://play.google.com/store/apps/details?id=com.budget.assistant",
+]
 _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
 ROBOTS = os.environ.get("ROBOTS", "noindex,follow")
@@ -366,9 +374,11 @@ def jsonld(lang, langs):
     og = f"{SITE}/blog/{lang if lang in ('en','pl') else 'en'}/assets/og-default.png"
     return {"@context": "https://schema.org", "@graph": [
         {"@type": "WebSite", "name": "AI Budget Assistant", "url": url, "inLanguage": lang},
-        {"@type": "Organization", "name": COMPANY, "url": SITE, "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg"}},
+        {"@type": "Organization", "name": COMPANY, "url": COMPANY_URL,
+         "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg"}, "sameAs": SAMEAS},
         {"@type": "SoftwareApplication", "name": "AI Budget Assistant", "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": lang, "url": url, "image": og,
+         "downloadUrl": PLAY, "sameAs": [PLAY],
          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}},
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
@@ -425,8 +435,8 @@ def page(lang, langs):
           f'<a class="btn p" href="{APP}">{t["cta_band_btn"]}</a></div></section>'
         + f'<footer><div class="wrap"><div class="f-links"><a href="{blog}">{t["nav_blog"]}</a>'
           f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a></div>'
-          f'<div class="f-co"><img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30">'
-          f'<span>&copy; {YEAR} AI Budget Assistant &mdash; {COMPANY}. {html.escape(t["rights"])}</span></div></div></footer>'
+          f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
+          f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div></div></footer>'
         + lbs + '</body></html>')
 
 def copy_assets(langs):
