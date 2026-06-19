@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Build static, crawlable HTML blog pages from the SEO markdown articles.
+Build static, crawlable, MULTILINGUAL HTML blog pages from the SEO markdown.
 
-Why this exists: ai-budget.pl is an Expo "single" SPA (JS-rendered, one <title>,
-no per-page meta), so it cannot rank for article keywords. This generates real
-HTML files with full <head> (title, meta, canonical, OG, JSON-LD, hreflang) that
-nginx serves directly (its `try_files $uri $uri/ /index.html` serves real files
-before the SPA fallback). web-deploy.yml copies site/ into dist/ before rsync.
+Why: ai-budget.pl is an Expo "single" SPA (JS-rendered, one <title>, no per-page
+meta) -> can't rank. This emits real HTML with full <head> per page.
 
-Run:  python build_blog.py
-Out:  docs/marketing/seo/site/  -> blog/index.html, blog/<slug>/index.html,
-      sitemap.xml, robots.txt, blog/assets/og-default.png
+SEO-safe i18n (NOT a forced redirect of content):
+- Each language has its own crawlable URL: /blog/<lang>/<slug>/ and /blog/<lang>/.
+- hreflang links the en/pl counterparts (paired by the `pair` frontmatter key);
+  x-default -> English.
+- sitemap.xml lists every language URL so Googlebot crawls all versions directly.
+- /blog/ is a tiny client-side language dispatcher (navigator.language): pl -> pl,
+  else -> en. It is noindex and NOT in the sitemap, so it never blocks crawling.
+
+nginx serves these real files via `try_files $uri $uri/ /index.html` before the SPA
+fallback. web-deploy.yml copies site/ into dist/ before rsync.
+
+Sources: docs/marketing/seo/*.md (pl) + docs/marketing/seo/en/*.md (en) — lang is
+read from frontmatter. Run: python build_blog.py
 """
 import os, re, json, html, glob, shutil
 import markdown as md_lib
@@ -20,28 +27,39 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "site")
 SITE = "https://ai-budget.pl"
 PLAY = "https://play.google.com/store/apps/details?id=com.budget.assistant"
-LANG = "pl"
-PUBLISH_DATE = "2026-06-19"  # keep builds deterministic; bump on real edits
-OG_PATH = "/blog/assets/og-default.png"
+PUBLISH_DATE = "2026-06-19"  # deterministic builds; bump on real edits
+DEFAULT_LANG = "en"          # English is the global default (x-default)
+LOCALE = {"en": "en_US", "pl": "pl_PL"}
 
-# ---------- markdown + frontmatter ----------
-def parse(path):
-    raw = open(path, encoding="utf-8").read()
-    meta = {}
-    body = raw
-    m = re.match(r"^---\n(.*?)\n---\n(.*)$", raw, re.S)
-    if m:
-        for line in m.group(1).splitlines():
-            if ":" in line:
-                k, v = line.split(":", 1)
-                meta[k.strip()] = v.strip().strip('"').strip("'")
-        body = m.group(2)
-    return meta, body
+I18N = {
+    "en": {
+        "openApp": "Open the app", "home": "Home", "blog": "Blog",
+        "blogTitle": "Personal finance blog | AI Budget Assistant",
+        "blogDesc": "Practical guides: how to budget, track expenses and save money with an AI assistant.",
+        "blogH1": "Blog", "blogIntro": "Guides on personal finance, budgeting and saving money.",
+        "related": "Related articles",
+        "ctaTitle": "Manage your money with AI",
+        "ctaText": "Add expenses by voice or a photo of a receipt, track budgets and savings, together with your family. Start free.",
+        "btnWeb": "Open in browser", "btnPlay": "Get it on Google Play",
+        "footer": "AI Budget Assistant - all-in-one finance app with an AI assistant.",
+    },
+    "pl": {
+        "openApp": "Otwórz aplikację", "home": "Strona glowna", "blog": "Blog",
+        "blogTitle": "Blog o budzecie domowym i oszczedzaniu | AI Budget Assistant",
+        "blogDesc": "Praktyczne poradniki: jak prowadzic budzet domowy, kontrolowac wydatki i oszczedzac pieniadze.",
+        "blogH1": "Blog", "blogIntro": "Poradniki o finansach osobistych, budzecie domowym i oszczedzaniu.",
+        "related": "Powiazane artykuly",
+        "ctaTitle": "Prowadz budzet domowy z AI",
+        "ctaText": "Dodawaj wydatki glosem lub zdjeciem paragonu, sledz budzety i oszczednosci, wspolnie z rodzina. Zacznij za darmo.",
+        "btnWeb": "Otworz w przegladarce", "btnPlay": "Pobierz z Google Play",
+        "footer": "AI Budget Assistant - aplikacja do budzetu domowego z AI.",
+    },
+}
+OG_TEXT = {
+    "en": ("Budget with an", "AI assistant", "Expenses, budgets, savings - with your family"),
+    "pl": ("Budzet domowy", "z asystentem AI", "Wydatki, budzety, oszczednosci - z rodzina"),
+}
 
-def to_html(body):
-    return md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
-
-# ---------- page template ----------
 CSS = """
 :root{--o:#F58320;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -51,6 +69,9 @@ header.site{border-bottom:1px solid var(--line)}
 header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
 .brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}
 .brand span{color:var(--o)}
+.top-right{display:flex;align-items:center;gap:14px}
+.lang{font-size:13px;color:var(--mut);text-decoration:none}
+.lang.active{color:var(--ink);font-weight:700}
 header .cta-top{font-size:14px;font-weight:600;color:#fff;background:var(--o);padding:8px 14px;border-radius:8px;text-decoration:none}
 nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}
 nav.crumb a{color:var(--mut)}
@@ -77,73 +98,95 @@ footer.site a{color:var(--mut)}
 .card p{margin:0;color:var(--mut);font-size:15px}
 """
 
-def head(title, desc, url, jsonld, og_type="article"):
+def parse(path):
+    raw = open(path, encoding="utf-8").read()
+    meta, body = {}, raw
+    m = re.match(r"^---\n(.*?)\n---\n(.*)$", raw, re.S)
+    if m:
+        for line in m.group(1).splitlines():
+            if ":" in line:
+                k, v = line.split(":", 1)
+                meta[k.strip()] = v.strip().strip('"').strip("'")
+        body = m.group(2)
+    return meta, body
+
+def to_html(body):
+    return md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
+
+def lang_links(lang, alternates):
+    # small EN | PL switcher in the header
+    out = []
+    for hl, href in alternates:
+        if hl == "x-default":
+            continue
+        cls = "lang active" if hl == lang else "lang"
+        out.append(f'<a class="{cls}" href="{href}">{hl.upper()}</a>')
+    return " ".join(out)
+
+def head(lang, title, desc, url, jsonld, alternates, og_path, og_type="article", robots="index,follow,max-image-preview:large"):
+    alt_tags = "\n".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alternates)
+    t = I18N[lang]
     return f"""<!DOCTYPE html>
-<html lang="{LANG}">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{url}">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="{robots}">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="AI Budget Assistant">
-<meta property="og:locale" content="pl_PL">
+<meta property="og:locale" content="{LOCALE[lang]}">
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}{OG_PATH}">
+<meta property="og:image" content="{SITE}{og_path}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{html.escape(title)}">
 <meta name="twitter:description" content="{html.escape(desc)}">
-<meta name="twitter:image" content="{SITE}{OG_PATH}">
-<link rel="alternate" hreflang="pl" href="{url}">
-<link rel="alternate" hreflang="x-default" href="{url}">
+<meta name="twitter:image" content="{SITE}{og_path}">
+{alt_tags}
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
 <style>{CSS}</style>
 </head>
 <body>
-<header class="site"><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a><a class="cta-top" href="{SITE}/">Otwórz aplikację</a></div></header>
+<header class="site"><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>
+<div class="top-right">{lang_links(lang, alternates)}<a class="cta-top" href="{SITE}/">{t['openApp']}</a></div></div></header>
 """
 
-FOOT = f"""<footer class="site"><div class="wrap">AI Budget Assistant - aplikacja do budzetu domowego z AI. <a href="{SITE}/">Wersja webowa</a> - <a href="{PLAY}">Google Play</a></div></footer>
-</body></html>"""
+def foot(lang):
+    return (f'<footer class="site"><div class="wrap">{I18N[lang]["footer"]} '
+            f'<a href="{SITE}/">Web</a> - <a href="{PLAY}">Google Play</a></div></footer>\n</body></html>')
 
-def cta_block():
-    return f"""<aside class="cta">
-<h3>Prowadz budzet domowy z AI</h3>
-<p>Dodawaj wydatki glosem lub zdjeciem paragonu, sledz budzety i oszczednosci, wspolnie z rodzina. Zacznij za darmo.</p>
-<a class="btn p" href="{SITE}/">Otworz w przegladarce</a>
-<a class="btn s" href="{PLAY}">Pobierz z Google Play</a>
-</aside>"""
+def cta_block(lang):
+    t = I18N[lang]
+    return (f'<aside class="cta"><h3>{t["ctaTitle"]}</h3><p>{t["ctaText"]}</p>'
+            f'<a class="btn p" href="{SITE}/">{t["btnWeb"]}</a>'
+            f'<a class="btn s" href="{PLAY}">{t["btnPlay"]}</a></aside>')
 
-def article_jsonld(title, desc, url):
-    return {
-        "@context": "https://schema.org",
-        "@graph": [
-            {"@type": "Article", "headline": title, "description": desc,
-             "inLanguage": LANG, "datePublished": PUBLISH_DATE, "dateModified": PUBLISH_DATE,
-             "mainEntityOfPage": {"@type": "WebPage", "@id": url},
-             "author": {"@type": "Organization", "name": "AI Budget Assistant"},
-             "publisher": {"@type": "Organization", "name": "AI Budget Assistant",
-                           "logo": {"@type": "ImageObject", "url": f"{SITE}{OG_PATH}"}},
-             "image": f"{SITE}{OG_PATH}"},
-            {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Strona glowna", "item": f"{SITE}/"},
-                {"@type": "ListItem", "position": 2, "name": "Blog", "item": f"{SITE}/blog/"},
-                {"@type": "ListItem", "position": 3, "name": title, "item": url}]},
-        ],
-    }
+def article_jsonld(lang, title, desc, url, og_path):
+    t = I18N[lang]
+    return {"@context": "https://schema.org", "@graph": [
+        {"@type": "Article", "headline": title, "description": desc, "inLanguage": lang,
+         "datePublished": PUBLISH_DATE, "dateModified": PUBLISH_DATE,
+         "mainEntityOfPage": {"@type": "WebPage", "@id": url},
+         "author": {"@type": "Organization", "name": "AI Budget Assistant"},
+         "publisher": {"@type": "Organization", "name": "AI Budget Assistant",
+                       "logo": {"@type": "ImageObject", "url": f"{SITE}{og_path}"}},
+         "image": f"{SITE}{og_path}"},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": t["home"], "item": f"{SITE}/"},
+            {"@type": "ListItem", "position": 2, "name": t["blog"], "item": f"{SITE}/blog/{lang}/"},
+            {"@type": "ListItem", "position": 3, "name": title, "item": url}]}]}
 
-# ---------- og image ----------
-def build_og(path):
+def build_og(path, lang):
     W, H = 1200, 630
     img = Image.new("RGB", (W, H), (24, 16, 9))
     d = ImageDraw.Draw(img)
     for y in range(H):
-        t = y / H
-        d.line([(0, y), (W, y)], fill=(int(40 - 16 * t), int(26 - 12 * t), int(14 - 6 * t)))
+        tt = y / H
+        d.line([(0, y), (W, y)], fill=(int(40 - 16 * tt), int(26 - 12 * tt), int(14 - 6 * tt)))
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(glow).ellipse([700, -150, 1400, 480], fill=(245, 131, 42, 150))
     img = Image.alpha_composite(img.convert("RGBA"), glow.filter(ImageFilter.GaussianBlur(160))).convert("RGB")
@@ -154,79 +197,106 @@ def build_og(path):
         brand = ImageFont.truetype("C:/Windows/Fonts/segoeuib.ttf", 30)
     except OSError:
         bold = reg = brand = ImageFont.load_default()
-    d.rounded_rectangle([80, 70, 80 + 90, 70 + 10], radius=5, fill=(245, 131, 42))
+    l1, l2, sub = OG_TEXT[lang]
+    d.rounded_rectangle([80, 70, 170, 80], radius=5, fill=(245, 131, 42))
     d.text((80, 110), "AI Budget Assistant", font=brand, fill=(245, 131, 42))
-    d.text((80, 250), "Budzet domowy", font=bold, fill=(250, 250, 252))
-    d.text((80, 330), "z asystentem AI", font=bold, fill=(250, 250, 252))
-    d.text((80, 470), "Wydatki, budzety, oszczednosci - razem z rodzina", font=reg, fill=(205, 205, 212))
+    d.text((80, 250), l1, font=bold, fill=(250, 250, 252))
+    d.text((80, 330), l2, font=bold, fill=(250, 250, 252))
+    d.text((80, 470), sub, font=reg, fill=(205, 205, 212))
     os.makedirs(os.path.dirname(path), exist_ok=True)
     img.save(path, "PNG")
 
-# ---------- build ----------
+def read_articles():
+    arts = []
+    for path in sorted(glob.glob(os.path.join(ROOT, "*.md")) + glob.glob(os.path.join(ROOT, "en", "*.md"))):
+        meta, body = parse(path)
+        if not meta.get("slug") or not meta.get("lang") or not meta.get("pair"):
+            continue
+        arts.append({"m": meta, "body": body, "lang": meta["lang"]})
+    return arts
+
+def url_for(a):
+    return f"{SITE}/blog/{a['lang']}/{a['m']['slug']}/"
+
+def alternates_for_pair(by_pair, pair):
+    alts = [(a["lang"], url_for(a)) for a in by_pair.get(pair, [])]
+    xdef = next((u for l, u in alts if l == DEFAULT_LANG), alts[0][1] if alts else f"{SITE}/blog/")
+    return alts + [("x-default", xdef)]
+
 def build():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
-    os.makedirs(os.path.join(OUT, "blog"))
-    build_og(os.path.join(OUT, "blog", "assets", "og-default.png"))
+    arts = read_articles()
+    langs = sorted({a["lang"] for a in arts})
+    by_pair = {}
+    for a in arts:
+        by_pair.setdefault(a["m"]["pair"], []).append(a)
 
-    arts = []
-    for f in sorted(glob.glob(os.path.join(ROOT, "0*.md"))):
-        meta, body = parse(f)
-        if not meta.get("slug"):
-            print("  skip (no slug):", f); continue
-        arts.append({"meta": meta, "body": body})
+    for lang in langs:
+        build_og(os.path.join(OUT, "blog", lang, "assets", "og-default.png"), lang)
 
     # article pages
-    for i, a in enumerate(arts):
-        m = a["meta"]
-        slug = m["slug"]
-        url = f"{SITE}/blog/{slug}/"
-        title = m.get("title", slug)
-        desc = m.get("meta_description", "")
-        related = [x for j, x in enumerate(arts) if j != i]
-        rel_html = "".join(
-            f'<a href="/blog/{r["meta"]["slug"]}/">{html.escape(r["meta"].get("title", ""))}</a>'
-            for r in related)
-        page = (head(title, desc, url, article_jsonld(title, desc, url))
-                + '<main class="wrap"><nav class="crumb"><a href="/">Strona glowna</a> / <a href="/blog/">Blog</a></nav>'
-                + f'<article>{to_html(a["body"])}</article>'
-                + cta_block()
-                + f'<section class="related"><h2>Powiazane artykuly</h2>{rel_html}</section>'
-                + '</main>' + FOOT)
-        d = os.path.join(OUT, "blog", slug)
+    for a in arts:
+        lang, m = a["lang"], a["m"]
+        url = url_for(a)
+        og = f"/blog/{lang}/assets/og-default.png"
+        title, desc = m.get("title", m["slug"]), m.get("meta_description", "")
+        alts = alternates_for_pair(by_pair, m["pair"])
+        siblings = [x for x in arts if x["lang"] == lang and x is not a]
+        rel = "".join(f'<a href="/blog/{lang}/{s["m"]["slug"]}/">{html.escape(s["m"].get("title",""))}</a>'
+                      for s in siblings)
+        t = I18N[lang]
+        page = (head(lang, title, desc, url, article_jsonld(lang, title, desc, url, og), alts, og)
+                + f'<main class="wrap"><nav class="crumb"><a href="/">{t["home"]}</a> / <a href="/blog/{lang}/">{t["blog"]}</a></nav>'
+                + f'<article>{to_html(a["body"])}</article>{cta_block(lang)}'
+                + f'<section class="related"><h2>{t["related"]}</h2>{rel}</section></main>' + foot(lang))
+        d = os.path.join(OUT, "blog", lang, m["slug"])
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(page)
 
-    # blog index
-    cards = "".join(
-        f'<a class="card" href="/blog/{a["meta"]["slug"]}/"><h2>{html.escape(a["meta"].get("title",""))}</h2>'
-        f'<p>{html.escape(a["meta"].get("meta_description",""))}</p></a>'
-        for a in arts)
-    idx_url = f"{SITE}/blog/"
-    idx_ld = {"@context": "https://schema.org", "@type": "CollectionPage",
-              "name": "Blog - AI Budget Assistant", "inLanguage": LANG, "url": idx_url}
-    idx = (head("Blog o budzecie domowym i oszczedzaniu | AI Budget Assistant",
-                "Praktyczne poradniki: jak prowadzic budzet domowy, kontrolowac wydatki i oszczedzac pieniadze.",
-                idx_url, idx_ld, og_type="website")
-           + '<main class="wrap"><nav class="crumb"><a href="/">Strona glowna</a> / Blog</nav>'
-           + '<h1>Blog</h1><p>Poradniki o finansach osobistych, budzecie domowym i oszczedzaniu.</p>'
-           + cards + cta_block() + '</main>' + FOOT)
-    open(os.path.join(OUT, "blog", "index.html"), "w", encoding="utf-8", newline="\n").write(idx)
+    # per-language index
+    for lang in langs:
+        t = I18N[lang]
+        items = [a for a in arts if a["lang"] == lang]
+        cards = "".join(f'<a class="card" href="/blog/{lang}/{a["m"]["slug"]}/"><h2>{html.escape(a["m"].get("title",""))}</h2>'
+                        f'<p>{html.escape(a["m"].get("meta_description",""))}</p></a>' for a in items)
+        url = f"{SITE}/blog/{lang}/"
+        alts = [(l, f"{SITE}/blog/{l}/") for l in langs] + [("x-default", f"{SITE}/blog/{DEFAULT_LANG}/")]
+        ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": t["blogTitle"], "inLanguage": lang, "url": url}
+        page = (head(lang, t["blogTitle"], t["blogDesc"], url, ld, alts, f"/blog/{lang}/assets/og-default.png", og_type="website")
+                + f'<main class="wrap"><nav class="crumb"><a href="/">{t["home"]}</a> / {t["blog"]}</nav>'
+                + f'<h1>{t["blogH1"]}</h1><p>{t["blogIntro"]}</p>{cards}{cta_block(lang)}</main>' + foot(lang))
+        open(os.path.join(OUT, "blog", lang, "index.html"), "w", encoding="utf-8", newline="\n").write(page)
 
-    # sitemap + robots
-    urls = [(f"{SITE}/", "weekly", "1.0"), (idx_url, "weekly", "0.8")]
-    urls += [(f"{SITE}/blog/{a['meta']['slug']}/", "monthly", "0.7") for a in arts]
-    sm = ['<?xml version="1.0" encoding="UTF-8"?>',
-          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    # /blog/ language dispatcher (noindex, not in sitemap)
+    disp = f"""<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Blog - AI Budget Assistant</title>
+<link rel="canonical" href="{SITE}/blog/{DEFAULT_LANG}/">
+<script>(function(){{var l=(navigator.language||navigator.userLanguage||'en').toLowerCase();
+location.replace(l.indexOf('pl')===0?'/blog/pl/':'/blog/{DEFAULT_LANG}/');}})();</script>
+</head><body>
+<p>Continue to the blog: <a href="/blog/en/">English</a> | <a href="/blog/pl/">Polski</a></p>
+</body></html>"""
+    os.makedirs(os.path.join(OUT, "blog"), exist_ok=True)
+    open(os.path.join(OUT, "blog", "index.html"), "w", encoding="utf-8", newline="\n").write(disp)
+
+    # sitemap (NOT the /blog/ dispatcher) + robots
+    urls = [(f"{SITE}/", "weekly", "1.0")]
+    for lang in langs:
+        urls.append((f"{SITE}/blog/{lang}/", "weekly", "0.8"))
+    for a in arts:
+        urls.append((url_for(a), "monthly", "0.7"))
+    sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u, cf, pr in urls:
-        sm.append(f"<url><loc>{u}</loc><lastmod>{PUBLISH_DATE}</lastmod>"
-                  f"<changefreq>{cf}</changefreq><priority>{pr}</priority></url>")
+        sm.append(f"<url><loc>{u}</loc><lastmod>{PUBLISH_DATE}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority></url>")
     sm.append("</urlset>")
     open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
     open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(
         f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
 
-    print(f"built {len(arts)} articles + index + sitemap + robots -> {OUT}")
+    print(f"built {len(arts)} articles in {len(langs)} langs ({','.join(langs)}) -> {OUT}")
 
 if __name__ == "__main__":
     build()

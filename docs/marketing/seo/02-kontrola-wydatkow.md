@@ -3,6 +3,8 @@ title: "Kontrola wydatków: aplikacja, która robi to za ciebie"
 meta_description: "Jak realnie kontrolować wydatki bez Excela i ręcznego wpisywania? Sprawdzone metody, porównanie podejść i aplikacje do wydatków, które naprawdę działają."
 target_keyword: "kontrola wydatków"
 slug: "kontrola-wydatkow-aplikacja"
+pair: "expenses"
+lang: "pl"
 ---
 
 # Kontrola wydatków bez ręcznego wpisywania wszystkiego

@@ -3,6 +3,8 @@ title: "Jak prowadzić budżet domowy krok po kroku (2026)"
 meta_description: "Praktyczny poradnik: jak prowadzić budżet domowy razem z rodziną, jakich błędów unikać i jakie narzędzia naprawdę pomagają. Gotowe szablony i porady."
 target_keyword: "budżet domowy"
 slug: "jak-prowadzic-budzet-domowy"
+pair: "budget"
+lang: "pl"
 ---
 
 # Jak prowadzić budżet domowy, który naprawdę działa
