@@ -3,6 +3,8 @@ title: "Jak oszczędzać pieniądze - konkretny plan na start"
 meta_description: "Jak oszczędzać pieniądze, gdy pensja ledwo starcza? Sprawdzone metody, priorytety oszczędzania i narzędzia, które pomagają budować oszczędności krok po kroku."
 target_keyword: "jak oszczędzać pieniądze"
 slug: "jak-oszczedzac-pieniadze"
+pair: "saving"
+lang: "pl"
 ---
 
 # Jak oszczędzać pieniądze, nawet gdy "nie ma z czego"
