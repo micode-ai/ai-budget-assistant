@@ -41,27 +41,20 @@ jobs:
           ls apps/mobile/dist/_expo/static/js/web/*.js >/dev/null 2>&1 || { echo "::error::no JS bundle in dist — aborting"; exit 1; }
           echo "dist OK: $(du -sh apps/mobile/dist | cut -f1)"
 
-      - name: Stage static SEO blog into web root
+      - name: Assemble apex tree (landing + blog)
         run: |
           set -e
-          # Pre-generated crawlable HTML (docs/marketing/seo/site -> blog/, sitemap.xml, robots.txt).
-          # Regenerate locally with: python docs/marketing/seo/build_blog.py
-          cp -r docs/marketing/seo/site/. apps/mobile/dist/
-          test -f apps/mobile/dist/blog/index.html || { echo "::error::blog/index.html missing"; exit 1; }
-          test -f apps/mobile/dist/sitemap.xml || { echo "::error::sitemap.xml missing"; exit 1; }
-          test -f apps/mobile/dist/robots.txt || { echo "::error::robots.txt missing"; exit 1; }
-          echo "blog + sitemap + robots staged into dist"
-
-      - name: Stage landing PREVIEW into web root (/preview, noindex)
-        run: |
-          set -e
-          # Temporary design preview of the new marketing landing (ABA-269).
-          # noindex; lives at ai-budget.pl/preview until the apex cutover.
-          # Regenerate: LANDING_BASE=preview ROBOTS="noindex,follow" python docs/marketing/landing/build_landing.py
-          mkdir -p apps/mobile/dist/preview
-          cp -r docs/marketing/landing/site/. apps/mobile/dist/preview/
-          test -f apps/mobile/dist/preview/index.html || { echo "::error::landing preview missing"; exit 1; }
-          echo "landing preview staged into dist/preview"
+          # apex ai-budget.pl = static marketing landing (9 langs, indexable) + /blog (ABA-269).
+          # Committed builds (regenerate then commit):
+          #   landing apex: LANDING_BASE= ROBOTS="index,follow,max-image-preview:large" python docs/marketing/landing/build_landing.py
+          #   blog:         python docs/marketing/seo/build_blog.py
+          rm -rf apex && mkdir -p apex
+          cp -r docs/marketing/landing/site/. apex/
+          cp -r docs/marketing/seo/site/blog apex/blog
+          test -f apex/index.html       || { echo "::error::landing index.html missing"; exit 1; }
+          test -f apex/blog/index.html  || { echo "::error::blog/index.html missing"; exit 1; }
+          test -f apex/sitemap.xml      || { echo "::error::sitemap.xml missing"; exit 1; }
+          echo "apex tree: $(du -sh apex | cut -f1)"
 
       - name: Setup SSH
         run: |
@@ -70,24 +63,31 @@ jobs:
           chmod 600 ~/.ssh/id_deploy
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Deploy to web root
+      - name: Deploy app (SPA) to app.ai-budget.pl
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new" \
             apps/mobile/dist/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/ai-budget-app/html/"
+
+      - name: Deploy apex (landing + blog) to ai-budget.pl
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new" \
+            apex/ \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/ai-budget-web/html/"
 
-      - name: Verify site is live
+      - name: Verify sites are live
         run: |
           set -e
-          for i in $(seq 1 10); do
-            code=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 8 https://ai-budget.pl || echo "000")
-            if [ "$code" = "200" ]; then
-              echo "ai-budget.pl healthy on attempt $i (HTTP $code)"
-              exit 0
-            fi
-            echo "  ($i/10) https://ai-budget.pl -> $code, retrying in 3s..."
-            sleep 3
-          done
-          echo "::error::ai-budget.pl did not return 200 after deploy"
-          exit 1
+          check() {
+            for i in $(seq 1 10); do
+              code=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 8 "$1" || echo "000")
+              [ "$code" = "200" ] && { echo "$1 -> OK ($code)"; return 0; }
+              echo "  ($i/10) $1 -> $code, retry in 3s..."; sleep 3
+            done
+            echo "::error::$1 did not return 200 after deploy"; return 1
+          }
+          check https://ai-budget.pl/
+          check https://ai-budget.pl/blog/
+          check https://app.ai-budget.pl/

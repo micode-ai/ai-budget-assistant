@@ -17,7 +17,7 @@ BASE/ROBOTS gate the noindex /preview build vs the apex cutover:
   preview: LANDING_BASE=preview ROBOTS="noindex,follow"
   cutover: LANDING_BASE=""      ROBOTS="index,follow,max-image-preview:large"
 """
-import os, json, html, shutil
+import os, re, json, html, shutil
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -31,6 +31,7 @@ YEAR = "2026"
 _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
 ROBOTS = os.environ.get("ROBOTS", "noindex,follow")
+PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "pl"
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
           "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL"}
@@ -451,6 +452,22 @@ def build():
         d = OUT if lang == DEFAULT_LANG else os.path.join(OUT, lang)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(page(lang, langs))
+    # apex cutover build (BASE==""): emit sitemap.xml (landing + blog) + robots.txt
+    if not BASE:
+        urls = [SITE + lp(l) for l in langs]
+        blog_sm = os.path.join(ROOT, "..", "seo", "site", "sitemap.xml")
+        if os.path.exists(blog_sm):
+            for loc in re.findall(r"<loc>([^<]+)</loc>", open(blog_sm, encoding="utf-8").read()):
+                if "/blog/" in loc:
+                    urls.append(loc)
+        sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+        for u in urls:
+            sm.append(f'<url><loc>{u}</loc><lastmod>{PUBLISH_DATE}</lastmod>'
+                      f'<priority>{"1.0" if u == SITE + "/" else "0.7"}</priority></url>')
+        sm.append('</urlset>')
+        open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
+        open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(
+            f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
     print(f"built SEO landing for {len(langs)} langs ({','.join(langs)}) BASE='{BASE}' ROBOTS='{ROBOTS}' -> {OUT}")
 
 if __name__ == "__main__":
