@@ -88,13 +88,23 @@ def legal_lang(lang):
     return "pl" if lang == "pl" else "en"
 
 def priv_url(lang):
-    return f"{LEGAL_BASE}/{legal_lang(lang)}/privacy.html"
+    return "/privacy/" if lang == "pl" else "/en/privacy/"
 
 def terms_url(lang):
-    return f"{LEGAL_BASE}/{legal_lang(lang)}/terms.html"
+    return "/terms/" if lang == "pl" else "/en/terms/"
 
 def cookies_url(lang):
     return "/cookies/" if lang == "pl" else "/en/cookies/"
+
+LEGAL_DIR = os.path.join(ROOT, "legal")
+LEGAL_TITLES = {
+ "privacy": {"en": "Privacy Policy - AI Budget Assistant", "pl": "Polityka prywatności - AI Budget Assistant"},
+ "terms": {"en": "Terms of Service - AI Budget Assistant", "pl": "Regulamin - AI Budget Assistant"}}
+LEGAL_DESC = {
+ "privacy": {"en": "Privacy Policy for AI Budget Assistant by MICODE sp. z o.o.",
+             "pl": "Polityka prywatności AI Budget Assistant, MICODE sp. z o.o."},
+ "terms": {"en": "Terms of Service for AI Budget Assistant by MICODE sp. z o.o.",
+           "pl": "Regulamin AI Budget Assistant, MICODE sp. z o.o."}}
 
 def about_url(lang):
     return "/about/" if lang == "pl" else "/en/about/"
@@ -451,6 +461,9 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .legal{max-width:760px;padding:34px 22px 56px}.legal h1{font-size:34px;margin:0 0 18px}
 .legal h2{font-size:20px;margin:28px 0 8px}.legal p{font-size:16px;color:#3a3a42;margin:0 0 12px;line-height:1.7}
 .legal a{color:#c96a12}.legal code{background:#f3f3f5;padding:1px 5px;border-radius:4px;font-size:14px}
+.legal h3{font-size:17px;margin:20px 0 6px}.legal ul{padding-left:22px;margin:0 0 12px}
+.legal li{font-size:16px;color:#3a3a42;margin:4px 0}.legal .updated{color:#888;font-size:14px;margin:-8px 0 24px}
+.legal strong{color:#1a1a1d}
 """
 
 def lp(lang):
@@ -612,6 +625,26 @@ def copy_assets(langs):
             nw = 540; nh = round(img.height * nw / img.width)
             img.resize((nw, nh), Image.LANCZOS).save(os.path.join(dst, shot), "PNG", optimize=True)
 
+def legal_page(lang, kind):
+    L = "pl" if lang == "pl" else "en"
+    body = open(os.path.join(LEGAL_DIR, L, kind + ".html"), encoding="utf-8").read()
+    title, meta = LEGAL_TITLES[kind][L], LEGAL_DESC[kind][L]
+    self_url = priv_url(lang) if kind == "privacy" else terms_url(lang)
+    url = SITE + self_url
+    pl_path = "/privacy/" if kind == "privacy" else "/terms/"
+    en_path = "/en/privacy/" if kind == "privacy" else "/en/terms/"
+    alts = [("pl", SITE + pl_path), ("en", SITE + en_path), ("x-default", SITE + en_path)]
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
+    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
+            f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
+            f'<style>{CSS}</style></head><body>'
+            f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
+            f'<nav class="nav"><a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<main class="wrap legal">{body}</main>'
+            + footer_html(lang) + consent_html(lang) + '</body></html>')
+
 def build():
     shutil.rmtree(OUT, ignore_errors=True)
     langs = list(C.keys())
@@ -630,6 +663,13 @@ def build():
         d = os.path.join(OUT, "about") if lang == "pl" else os.path.join(OUT, "en", "about")
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(about_page(lang))
+    # Privacy + Terms pages (pl + en), copied on-domain from the GitHub Pages legal docs
+    for kind in ("privacy", "terms"):
+        for lang in ("pl", "en"):
+            sub = kind if lang == "pl" else os.path.join("en", kind)
+            d = os.path.join(OUT, sub)
+            os.makedirs(d, exist_ok=True)
+            open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(legal_page(lang, kind))
 
     # apex cutover build (BASE==""): emit sitemap.xml (landing + blog) + robots.txt
     if not BASE:
