@@ -44,6 +44,21 @@ CONSENT = {
  "be": ("Мы выкарыстоўваем файлы cookie для аналізу трафіку і паляпшэння сайта.", "Прыняць", "Адхіліць"),
  "nl": ("We gebruiken cookies om verkeer te meten en de site te verbeteren.", "Accepteren", "Weigeren"),
 }
+MORE = {"en": "Learn more", "pl": "Więcej", "de": "Mehr", "es": "Más", "fr": "En savoir plus",
+        "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer"}
+LEGAL_BASE = "https://micode-ai.github.io/ai-budget-assistant"
+LEGAL_LABELS = {
+ "en": ("Privacy", "Terms", "Cookies"), "pl": ("Prywatność", "Regulamin", "Cookie"),
+ "de": ("Datenschutz", "AGB", "Cookies"), "es": ("Privacidad", "Términos", "Cookies"),
+ "fr": ("Confidentialité", "Conditions", "Cookies"), "ru": ("Конфиденциальность", "Условия", "Cookie"),
+ "ua": ("Конфіденційність", "Умови", "Cookie"), "be": ("Прыватнасць", "Умовы", "Cookie"),
+ "nl": ("Privacy", "Voorwaarden", "Cookies")}
+def priv_url(lang):
+    return f"{LEGAL_BASE}/{'pl' if lang == 'pl' else 'en'}/privacy.html"
+def terms_url(lang):
+    return f"{LEGAL_BASE}/{'pl' if lang == 'pl' else 'en'}/terms.html"
+def cookies_url(lang):
+    return "/cookies/" if lang == "pl" else "/en/cookies/"
 PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "en"  # x-default
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
@@ -244,7 +259,9 @@ _CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
 
 def consent_html(lang):
     txt, ok, no = CONSENT.get(lang, CONSENT["en"])
-    return (_CONSENT_TPL.replace("__TXT__", html.escape(txt)).replace("__OK__", html.escape(ok))
+    txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320">'
+                f'{html.escape(MORE.get(lang, MORE["en"]))}</a>')
+    return (_CONSENT_TPL.replace("__TXT__", txt_html).replace("__OK__", html.escape(ok))
             .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID))
 
 def lang_menu(lang, alt_map, langs):
@@ -281,6 +298,9 @@ def foot(lang):
     t = I18N[lang]
     return (f'<footer class="site"><div class="wrap">'
             f'<div class="f-links"><a href="/blog/{lang}/">{t["blog"]}</a>'
+            f'<a href="{priv_url(lang)}">{LEGAL_LABELS[lang][0]}</a>'
+            f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
+            f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
             f'<a href="{APP}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'

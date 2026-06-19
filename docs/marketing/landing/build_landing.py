@@ -48,6 +48,53 @@ CONSENT = {
  "be": ("Мы выкарыстоўваем файлы cookie для аналізу трафіку і паляпшэння сайта.", "Прыняць", "Адхіліць"),
  "nl": ("We gebruiken cookies om verkeer te meten en de site te verbeteren.", "Accepteren", "Weigeren"),
 }
+MORE = {"en": "Learn more", "pl": "Więcej", "de": "Mehr", "es": "Más", "fr": "En savoir plus",
+        "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer"}
+LEGAL_BASE = "https://micode-ai.github.io/ai-budget-assistant"
+SUPPORT_EMAIL = "perevertkinma@gmail.com"
+LEGAL_LABELS = {  # (privacy, terms, cookies)
+ "en": ("Privacy", "Terms", "Cookies"), "pl": ("Prywatność", "Regulamin", "Cookie"),
+ "de": ("Datenschutz", "AGB", "Cookies"), "es": ("Privacidad", "Términos", "Cookies"),
+ "fr": ("Confidentialité", "Conditions", "Cookies"), "ru": ("Конфиденциальность", "Условия", "Cookie"),
+ "ua": ("Конфіденційність", "Умови", "Cookie"), "be": ("Прыватнасць", "Умовы", "Cookie"),
+ "nl": ("Privacy", "Voorwaarden", "Cookies")}
+# Cookie Policy page content (pl + en; other langs link to the en page)
+COOKIES = {
+ "en": ("Cookie Policy - AI Budget Assistant",
+        "How ai-budget.pl uses cookies and Google Analytics, and how to manage your consent.",
+        "Cookie Policy",
+        "<h2>What cookies we use</h2><p>This website uses <strong>Google Analytics 4</strong> to measure traffic and improve the site. "
+        "GA4 sets analytics cookies (such as <code>_ga</code>) to count visits and understand how pages are used. We do not use advertising or cross-site tracking cookies.</p>"
+        "<h2>Your consent</h2><p>Analytics is off by default. GA4 loads <strong>only after you click Accept</strong> on the cookie banner. "
+        "If you Decline, no analytics cookies are set. To change your choice, clear this site's data in your browser and the banner will appear again.</p>"
+        "<h2>What is collected</h2><p>Analytics data is aggregated and does not identify you. This website does not collect your name, email or financial data.</p>"
+        "<h2>More information</h2><p>For how the AI Budget Assistant app handles your account and financial data, see the full "
+        "<a href=\"__PRIV__\">Privacy Policy</a> and <a href=\"__TERMS__\">Terms of Service</a>. "
+        "Data controller: MICODE Sp. z o.o. Contact: <a href=\"mailto:__MAIL__\">__MAIL__</a>.</p><p><em>Last updated: June 2026.</em></p>"),
+ "pl": ("Polityka cookie - AI Budget Assistant",
+        "Jak ai-budget.pl używa plików cookie i Google Analytics oraz jak zarządzać zgodą.",
+        "Polityka cookie",
+        "<h2>Jakie pliki cookie wykorzystujemy</h2><p>Ta strona używa <strong>Google Analytics 4</strong> do analizy ruchu i ulepszania serwisu. "
+        "GA4 ustawia pliki cookie analityczne (np. <code>_ga</code>), aby liczyć wizyty i rozumieć, jak korzystasz ze stron. Nie używamy plików cookie reklamowych ani śledzących między witrynami.</p>"
+        "<h2>Twoja zgoda</h2><p>Analityka jest domyślnie wyłączona. GA4 ładuje się <strong>dopiero po kliknięciu Akceptuję</strong> w banerze cookie. "
+        "Jeśli klikniesz Odrzuć, żadne pliki cookie analityczne nie zostaną ustawione. Aby zmienić wybór, wyczyść dane tej strony w przeglądarce, a baner pojawi się ponownie.</p>"
+        "<h2>Co zbieramy</h2><p>Dane analityczne są zagregowane i nie identyfikują Ciebie. Ta strona nie zbiera imienia, adresu e-mail ani danych finansowych.</p>"
+        "<h2>Więcej informacji</h2><p>Jak aplikacja AI Budget Assistant przetwarza dane konta i finansowe, opisuje pełna "
+        "<a href=\"__PRIV__\">Polityka prywatności</a> i <a href=\"__TERMS__\">Regulamin</a>. "
+        "Administrator danych: MICODE Sp. z o.o. Kontakt: <a href=\"mailto:__MAIL__\">__MAIL__</a>.</p><p><em>Ostatnia aktualizacja: czerwiec 2026.</em></p>"),
+}
+
+def legal_lang(lang):
+    return "pl" if lang == "pl" else "en"
+
+def priv_url(lang):
+    return f"{LEGAL_BASE}/{legal_lang(lang)}/privacy.html"
+
+def terms_url(lang):
+    return f"{LEGAL_BASE}/{legal_lang(lang)}/terms.html"
+
+def cookies_url(lang):
+    return "/cookies/" if lang == "pl" else "/en/cookies/"
 _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
 ROBOTS = os.environ.get("ROBOTS", "noindex,follow")
@@ -379,6 +426,9 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
 .cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
 .cc .ok{background:#F58320;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.legal{max-width:760px;padding:34px 22px 56px}.legal h1{font-size:34px;margin:0 0 18px}
+.legal h2{font-size:20px;margin:28px 0 8px}.legal p{font-size:16px;color:#3a3a42;margin:0 0 12px;line-height:1.7}
+.legal a{color:#c96a12}.legal code{background:#f3f3f5;padding:1px 5px;border-radius:4px;font-size:14px}
 """
 
 def lp(lang):
@@ -402,8 +452,43 @@ _CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
 
 def consent_html(lang):
     txt, ok, no = CONSENT.get(lang, CONSENT["en"])
-    return (_CONSENT_TPL.replace("__TXT__", html.escape(txt)).replace("__OK__", html.escape(ok))
+    txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320">'
+                f'{html.escape(MORE.get(lang, MORE["en"]))}</a>')
+    return (_CONSENT_TPL.replace("__TXT__", txt_html).replace("__OK__", html.escape(ok))
             .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID))
+
+def footer_html(lang):
+    t = C[lang]
+    blog = f"/blog/{lang if lang in ('en', 'pl') else 'en'}/"
+    pl, tl, cl = LEGAL_LABELS[lang]
+    return (f'<footer><div class="wrap"><div class="f-links">'
+            f'<a href="{blog}">{t["nav_blog"]}</a>'
+            f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
+            f'<a href="{cookies_url(lang)}">{cl}</a>'
+            f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a></div>'
+            f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
+            f'<img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
+            f'<span>&copy; {YEAR} AI Budget Assistant &mdash; '
+            f'<a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. '
+            f'{html.escape(t["rights"])}</span></div></div></footer>')
+
+def cookies_page(lang):
+    L = lang if lang in COOKIES else "en"
+    title, meta, h1, body = COOKIES[L]
+    body = body.replace("__PRIV__", priv_url(lang)).replace("__TERMS__", terms_url(lang)).replace("__MAIL__", SUPPORT_EMAIL)
+    url = SITE + cookies_url(lang)
+    alts = [("pl", f"{SITE}/cookies/"), ("en", f"{SITE}/en/cookies/"), ("x-default", f"{SITE}/en/cookies/")]
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
+    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
+            f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
+            f'<style>{CSS}</style></head><body>'
+            f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
+            f'<nav class="nav"><a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
+            f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
+            + footer_html(lang) + consent_html(lang) + '</body></html>')
 
 def jsonld(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
@@ -469,10 +554,7 @@ def page(lang, langs):
         + f'<div class="blogcta"><a href="{blog}">{t["blog_cta"]} &rarr;</a></div>'
         + f'<section class="band"><div class="wrap"><h2>{html.escape(t["cta_band"])}</h2>'
           f'<a class="btn p" href="{APP}">{t["cta_band_btn"]}</a></div></section>'
-        + f'<footer><div class="wrap"><div class="f-links"><a href="{blog}">{t["nav_blog"]}</a>'
-          f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a></div>'
-          f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
-          f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div></div></footer>'
+        + footer_html(lang)
         + lbs + consent_html(lang) + '</body></html>')
 
 def copy_assets(langs):
@@ -498,6 +580,12 @@ def build():
         d = OUT if lang == DEFAULT_LANG else os.path.join(OUT, lang)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(page(lang, langs))
+    # Cookie Policy pages (pl + en; other languages link to /en/cookies/)
+    for lang in ("pl", "en"):
+        d = os.path.join(OUT, "cookies") if lang == "pl" else os.path.join(OUT, "en", "cookies")
+        os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(cookies_page(lang))
+
     # apex cutover build (BASE==""): emit sitemap.xml (landing + blog) + robots.txt
     if not BASE:
         urls = [SITE + lp(l) for l in langs]
