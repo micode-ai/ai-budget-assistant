@@ -95,6 +95,28 @@ def terms_url(lang):
 
 def cookies_url(lang):
     return "/cookies/" if lang == "pl" else "/en/cookies/"
+
+def about_url(lang):
+    return "/about/" if lang == "pl" else "/en/about/"
+
+ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
+                "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
+ABOUT = {
+ "en": ("About - AI Budget Assistant",
+        "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MICODE sp. z o.o.",
+        "About AI Budget Assistant",
+        "<h2>What is AI Budget Assistant</h2><p>AI Budget Assistant is a personal and family finance app that brings expenses, budgets, savings goals, debts and bank import into one place, with an AI assistant that does the tedious data entry for you. Add expenses by voice or a photo of a receipt, ask questions in plain language, and share one budget with your family in real time. It works on Android and on the web, in 9 languages.</p>"
+        "<h2>Who is behind it</h2><p>The app is built and operated by <strong>MICODE sp. z o.o.</strong>, a software company based in Poland (see <a href=\"https://mi-code.pl/\">mi-code.pl</a>). We build practical, privacy-respecting tools that help people manage money without spreadsheets.</p>"
+        "<h2>Our approach</h2><p>We focus on three things: making data entry effortless with AI, letting families budget together in real time, and keeping your financial data private. The core features are free; advanced tools are available on Pro.</p>"
+        "<h2>Contact</h2><p>Questions or feedback: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Get the app on <a href=\"https://play.google.com/store/apps/details?id=com.budget.assistant\">Google Play</a> or open the <a href=\"https://app.ai-budget.pl\">web version</a>. Read our <a href=\"/blog/en/\">blog</a> for budgeting guides.</p>"),
+ "pl": ("O nas - AI Budget Assistant",
+        "O AI Budget Assistant, aplikacji do finansów osobistych i rodzinnych z asystentem AI, stworzonej przez MICODE sp. z o.o.",
+        "O AI Budget Assistant",
+        "<h2>Czym jest AI Budget Assistant</h2><p>AI Budget Assistant to aplikacja do finansów osobistych i rodzinnych, która łączy wydatki, budżety, cele oszczędnościowe, długi i import z banku w jednym miejscu, a asystent AI wykonuje za Ciebie żmudne wpisywanie danych. Dodawaj wydatki głosem lub zdjęciem paragonu, pytaj zwykłym językiem i prowadź wspólny budżet z rodziną na żywo. Działa na Androidzie i w przeglądarce, w 9 językach.</p>"
+        "<h2>Kto za tym stoi</h2><p>Aplikację tworzy i prowadzi <strong>MICODE sp. z o.o.</strong>, polska firma programistyczna (zobacz <a href=\"https://mi-code.pl/\">mi-code.pl</a>). Budujemy praktyczne narzędzia szanujące prywatność, które pomagają zarządzać pieniędzmi bez arkuszy kalkulacyjnych.</p>"
+        "<h2>Nasze podejście</h2><p>Skupiamy się na trzech rzeczach: bezwysiłkowym wpisywaniu danych dzięki AI, wspólnym budżecie rodziny na żywo i prywatności Twoich danych finansowych. Podstawowe funkcje są darmowe; zaawansowane narzędzia dostępne są w planie Pro.</p>"
+        "<h2>Kontakt</h2><p>Pytania lub opinie: <a href=\"mailto:perevertkinma@gmail.com\">perevertkinma@gmail.com</a>. Pobierz aplikację z <a href=\"https://play.google.com/store/apps/details?id=com.budget.assistant\">Google Play</a> lub otwórz <a href=\"https://app.ai-budget.pl\">wersję webową</a>. Czytaj nasz <a href=\"/blog/pl/\">blog</a> z poradnikami.</p>"),
+}
 _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
 ROBOTS = os.environ.get("ROBOTS", "noindex,follow")
@@ -463,6 +485,7 @@ def footer_html(lang):
     pl, tl, cl = LEGAL_LABELS[lang]
     return (f'<footer><div class="wrap"><div class="f-links">'
             f'<a href="{blog}">{t["nav_blog"]}</a>'
+            f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
             f'<a href="{cookies_url(lang)}">{cl}</a>'
             f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a></div>'
@@ -486,6 +509,23 @@ def cookies_page(lang):
             f'<style>{CSS}</style></head><body>'
             f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
+            f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
+            + footer_html(lang) + consent_html(lang) + '</body></html>')
+
+def about_page(lang):
+    L = lang if lang in ABOUT else "en"
+    title, meta, h1, body = ABOUT[L]
+    url = SITE + about_url(lang)
+    alts = [("pl", f"{SITE}/about/"), ("en", f"{SITE}/en/about/"), ("x-default", f"{SITE}/en/about/")]
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
+    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
+            f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
+            f'<style>{CSS}</style></head><body>'
+            f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
+            f'<nav class="nav"><a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
@@ -585,6 +625,11 @@ def build():
         d = os.path.join(OUT, "cookies") if lang == "pl" else os.path.join(OUT, "en", "cookies")
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(cookies_page(lang))
+    # About page (pl + en; other languages link to /en/about/)
+    for lang in ("pl", "en"):
+        d = os.path.join(OUT, "about") if lang == "pl" else os.path.join(OUT, "en", "about")
+        os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(about_page(lang))
 
     # apex cutover build (BASE==""): emit sitemap.xml (landing + blog) + robots.txt
     if not BASE:

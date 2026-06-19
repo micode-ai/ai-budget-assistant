@@ -59,6 +59,10 @@ def terms_url(lang):
     return f"{LEGAL_BASE}/{'pl' if lang == 'pl' else 'en'}/terms.html"
 def cookies_url(lang):
     return "/cookies/" if lang == "pl" else "/en/cookies/"
+def about_url(lang):
+    return "/about/" if lang == "pl" else "/en/about/"
+ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
+                "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
 PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "en"  # x-default
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
@@ -298,6 +302,7 @@ def foot(lang):
     t = I18N[lang]
     return (f'<footer class="site"><div class="wrap">'
             f'<div class="f-links"><a href="/blog/{lang}/">{t["blog"]}</a>'
+            f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{LEGAL_LABELS[lang][0]}</a>'
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
