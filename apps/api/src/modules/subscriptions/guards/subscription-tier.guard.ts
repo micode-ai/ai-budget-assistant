@@ -42,9 +42,12 @@ export class SubscriptionTierGuard implements CanActivate {
     const requiredTierLevel = TIER_HIERARCHY[requiredTier as SubscriptionTier];
 
     if (userTierLevel < requiredTierLevel) {
-      throw new ForbiddenException(
-        `This feature requires a ${requiredTier} subscription or higher`,
-      );
+      throw new ForbiddenException({
+        message: `This feature requires a ${requiredTier} subscription or higher`,
+        requiredTier,
+        currentTier: subscription.tier,
+        code: 'TIER_REQUIRED',
+      });
     }
 
     return true;

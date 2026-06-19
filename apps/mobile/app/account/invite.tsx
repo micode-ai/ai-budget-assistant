@@ -17,6 +17,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole } from '@budget/shared-types';
 import * as Clipboard from 'expo-clipboard';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
+import { useUpgradeStore } from '@/stores/upgradeStore';
 
 const ROLES: { role: AccountRole; icon: keyof typeof Ionicons.glyphMap }[] = [
   { role: 'editor', icon: 'pencil-outline' },
@@ -35,6 +36,7 @@ export default function InviteScreen() {
   const [role, setRole] = useState<AccountRole>('editor');
   const [isLoading, setIsLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState<string | null>(null);
+  const showUpgrade = useUpgradeStore((s) => s.show);
 
   const handleInvite = async () => {
     if (!accountId) return;
@@ -52,7 +54,11 @@ export default function InviteScreen() {
       });
       setInviteCode(invitation.inviteCode);
     } catch (e) {
-      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      if ((e as { status?: number }).status === 403) {
+        showUpgrade(t('subscription.limitReachedBody'), 'pro');
+      } else {
+        showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      }
     } finally {
       setIsLoading(false);
     }

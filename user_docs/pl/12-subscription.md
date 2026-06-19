@@ -8,16 +8,17 @@ AI Budget Assistant oferuje trzy poziomy subskrypcji. Kazdy nowy uzytkownik zacz
 
 ## Porownanie planow
 
-Wszystkie funkcje są dostępne w każdym planie. Plany różnią się tylko limitami użycia:
+Plany roznia sie limitami uzycia oraz dostepem do zaawansowanych funkcji AI:
 
 | Funkcja | Free | Pro | Business |
 |---|---|---|---|
 | **Zapytania AI miesiecznie** | 50 | 300 | Bez limitu |
 | **Konta** | 3 | Do 5 | Bez limitu |
 | **Czlonkowie na konto** | 1 | Do 5 | Bez limitu |
-| **Wszystkie funkcje** | Tak | Tak | Tak |
+| **Funkcje podstawowe** (sledzenie, Czat AI, glos, paragony) | Tak | Tak | Tak |
+| **Zaawansowane AI** (Historia wydatkow, Fat Finder, Wnioski AI) | — | Tak | Tak |
 
-> Wszyscy uzytkownicy maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, Historii wydatkow, Fat Finder, Wnioskow AI, analityki predykcyjnej, wykrywania anomalii, raportow PDF/Excel, tygodniowych raportow e-mail, miesiecznego podsumowania, zaszyfrowanych kopii zapasowych i wszystkich walut.
+> Wszyscy uzytkownicy (rowniez Free) maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, wykrywania anomalii, raportow PDF/Excel, tygodniowych raportow e-mail, miesiecznego podsumowania, zaszyfrowanych kopii zapasowych i wszystkich walut. Historia wydatkow, Fat Finder i Wnioski AI wymagaja planu Pro lub Business.
 
 ## Plan Free
 
@@ -25,7 +26,7 @@ Twoj startowy plan obejmuje:
 - **50 zapytan AI miesiecznie** — uzyj Czatu AI, Wprowadzania glosowego, Skanowania paragonow
 - **3 konta**
 - **1 czlonek** (Ty)
-- **Wszystkie funkcje** — bez ograniczeń funkcjonalności
+- **Funkcje podstawowe** — sledzenie wydatkow, Czat AI, wprowadzanie glosowe, skanowanie paragonow (zaawansowane funkcje AI wymagaja planu Pro)
 
 ## Plan Pro
 
@@ -33,6 +34,7 @@ Ze zwiększonymi limitami:
 - **300 zapytan AI miesiecznie**
 - **Do 5 kont** — zarzadzaj finansami osobistymi, wspolnymi i firmowymi
 - **Do 5 czlonkow na konto** — wspolpracuj z rodzina lub zespolem
+- **Zaawansowane funkcje AI** — Historia wydatkow, Fat Finder i Wnioski AI
 
 ### 7-dniowy bezplatny okres probny
 Wyprobuj Pro za darmo przez 7 dni. Anuluj w dowolnym momencie przed koncem okresu probnego, aby uniknac oplat.
@@ -96,7 +98,7 @@ Dotknij **Zobacz szczegóły** na ekranie subskrypcji, aby zobaczyć szczegóło
 ## FAQ
 
 - **P: Co sie stanie, gdy wyczerpia mi sie zapytania AI?**
-  **O:** Zobaczysz komunikat "Osiagnieto limit AI". Mozesz poczekac do nastepnego miesiaca na reset lub ulepszyc plan, aby uzyskac wiecej zapytan.
+  **O:** Gdy osiagniesz miesieczny limit w Czacie AI, bezposrednio w czacie pojawi sie ekran ulepszenia z planami Pro i 7-dniowym bezplatnym okresem probnym. Mozesz rozpoczac okres probny lub ulepszyc plan, aby uzyskac wiecej zapytan, albo po prostu poczekac na reset limitu na poczatku nastepnego miesiaca.
 
 - **P: Czy moge przejsc z Pro na Free?**
   **O:** Tak, mozesz anulowac subskrypcje w dowolnym momencie. Zachowasz funkcje Pro do konca okresu rozliczeniowego.

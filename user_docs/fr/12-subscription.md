@@ -8,16 +8,17 @@ AI Budget Assistant propose trois niveaux d'abonnement. Chaque nouvel utilisateu
 
 ## Comparaison des plans
 
-Toutes les fonctionnalités sont disponibles sur chaque forfait. Les forfaits diffèrent uniquement par les limites d'utilisation :
+Les forfaits diffèrent par les limites d'utilisation et par l'accès aux fonctionnalités IA avancées :
 
 | Fonctionnalite | Gratuit | Pro | Business |
 |---|---|---|---|
 | **Requetes IA par mois** | 50 | 300 | Illimite |
 | **Comptes** | 3 | Jusqu'a 5 | Illimite |
 | **Membres par compte** | 1 | Jusqu'a 5 | Illimite |
-| **Toutes les fonctionnalités** | Oui | Oui | Oui |
+| **Fonctionnalites principales** (suivi, Chat IA, voix, recus) | Oui | Oui | Oui |
+| **IA avancee** (Histoire des depenses, Fat Finder, Apercus IA) | — | Oui | Oui |
 
-> Tous les utilisateurs ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, Histoire des depenses, Fat Finder, Apercus IA, analyses predictives, detection d'anomalies, rapports PDF/Excel, rapport hebdomadaire par email, resume mensuel, sauvegardes chiffrees et toutes les devises.
+> Tous les utilisateurs (y compris Gratuit) ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, detection d'anomalies, rapports PDF/Excel, rapport hebdomadaire par email, resume mensuel, sauvegardes chiffrees et toutes les devises. L'Histoire des depenses, Fat Finder et les Apercus IA necessitent le plan Pro ou Business.
 
 ## Plan Gratuit
 
@@ -25,7 +26,7 @@ Votre plan de depart inclut :
 - **50 requetes IA par mois** — utilisez le Chat IA, la Saisie vocale et le Scan de recus
 - **3 comptes**
 - **1 membre** (vous)
-- **Toutes les fonctionnalités** — aucune restriction de fonctionnalité
+- **Fonctionnalites principales** — suivi des depenses, Chat IA, saisie vocale, scan de recus (les fonctionnalites IA avancees necessitent le plan Pro)
 
 ## Plan Pro
 
@@ -33,6 +34,7 @@ Avec des limites plus élevées :
 - **300 requetes IA par mois**
 - **Jusqu'a 5 comptes** — gerez vos finances personnelles, partagees et professionnelles
 - **Jusqu'a 5 membres par compte** — collaborez avec votre famille ou votre equipe
+- **Fonctionnalites IA avancees** — Histoire des depenses, Fat Finder et Apercus IA
 
 ### Essai gratuit de 7 jours
 Essayez le plan Pro gratuitement pendant 7 jours. Annulez a tout moment avant la fin de l'essai pour eviter les frais.
@@ -96,7 +98,7 @@ Appuyez sur **Voir les détails** sur l'écran d'abonnement pour voir une ventil
 ## FAQ
 
 - **Q : Que se passe-t-il lorsque j'ai epuise mes requetes IA ?**
-  **R :** Vous verrez un message "Limite IA atteinte". Vous pouvez attendre le mois suivant pour une reinitialisation, ou ameliorer votre plan pour obtenir plus de requetes.
+  **R :** Lorsque vous atteignez votre limite mensuelle dans le Chat IA, un ecran de mise a niveau apparait directement dans le chat, affichant les plans Pro et un essai gratuit de 7 jours. Vous pouvez demarrer l'essai ou passer a un plan superieur pour obtenir plus de requetes, ou simplement attendre que votre limite se reinitialise au debut du mois suivant.
 
 - **Q : Puis-je passer du plan Pro au plan Gratuit ?**
   **R :** Oui, vous pouvez annuler votre abonnement a tout moment. Vous conserverez les fonctionnalites Pro jusqu'a la fin de votre periode de facturation.

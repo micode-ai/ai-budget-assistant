@@ -17,6 +17,32 @@ const FREE_FEATURES: { icon: IconName; key: string }[] = [
   { icon: 'receipt-outline', key: 'freeTracking' },
 ];
 
+interface PlanFeature {
+  icon: IconName;
+  featureKey: string;
+}
+
+const PRO_FEATURES: PlanFeature[] = [
+  { icon: 'sparkles-outline', featureKey: 'aiRequests300' },
+  { icon: 'people-outline', featureKey: 'accounts5' },
+  { icon: 'person-add-outline', featureKey: 'members5' },
+  { icon: 'analytics-outline', featureKey: 'predictiveAnalytics' },
+  { icon: 'alert-circle-outline', featureKey: 'anomalyDetection' },
+  { icon: 'wallet-outline', featureKey: 'unlimitedCurrencies' },
+];
+
+const BUSINESS_FEATURES: PlanFeature[] = [
+  { icon: 'infinite-outline', featureKey: 'unlimitedAi' },
+  { icon: 'business-outline', featureKey: 'unlimitedAccounts' },
+  { icon: 'people-outline', featureKey: 'unlimitedMembers' },
+  { icon: 'document-text-outline', featureKey: 'advancedReporting' },
+];
+
+const PLAN_FEATURES: Record<string, PlanFeature[]> = {
+  pro: PRO_FEATURES,
+  business: BUSINESS_FEATURES,
+};
+
 const PLAN_COLORS: Record<string, string> = {
   pro: '#4ECDC4',
   business: '#F5A623',
@@ -91,6 +117,7 @@ export default function WelcomeScreen() {
             {plans.map((plan) => {
               const color = PLAN_COLORS[plan.tier] || theme.colors.primary;
               const icon = PLAN_ICONS[plan.tier] || ('star-outline' as IconName);
+              const localFeatures = PLAN_FEATURES[plan.tier] ?? [];
 
               return (
                 <View key={plan.tier} style={[styles.planCard, { borderColor: color }]}>
@@ -104,10 +131,12 @@ export default function WelcomeScreen() {
                     <Text style={styles.planPricePeriod}>/{t('subscription.month')}</Text>
                   </View>
 
-                  {plan.features.map((feature, i) => (
-                    <View key={i} style={styles.planFeatureRow}>
-                      <Ionicons name="checkmark-circle-outline" size={16} color={color} />
-                      <Text style={styles.planFeatureText}>{feature}</Text>
+                  {localFeatures.map((feature) => (
+                    <View key={feature.featureKey} style={styles.planFeatureRow}>
+                      <Ionicons name={feature.icon} size={16} color={color} />
+                      <Text style={styles.planFeatureText}>
+                        {t(`subscription.features.${feature.featureKey}`)}
+                      </Text>
                     </View>
                   ))}
 

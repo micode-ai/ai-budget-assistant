@@ -43,7 +43,7 @@ export default function AnalyticsScreen() {
   );
   const { dailySpending, categorySpending, merchantSpending, incomeByCategory, summary, itemBreakdown, dayOfWeekSpending, periodComparison, anomalies, predictions, dateRange, tagSpending, projectSpending } = analytics;
 
-  const { aiInsights, loadAIInsights } = useInsightsStore();
+  const { aiInsights, aiInsightsProGated, loadAIInsights } = useInsightsStore();
   const { loadRates } = useExchangeRateStore();
   const { loadTags } = useTagStore();
   const { loadProjects } = useProjectStore();
@@ -127,7 +127,7 @@ export default function AnalyticsScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 
-        <AiInsightsSection aiInsights={aiInsights} />
+        <AiInsightsSection aiInsights={aiInsights} proGated={aiInsightsProGated} />
         {incomeByCategory.length > 0 && <IncomeCategoryBreakdown incomeByCategory={incomeByCategory} currency={currency} />}
         <SpendingTrendChart dailySpending={dailySpending} selectedRange={selectedRange} onBarPress={openDrillDown} />
         <CategoryBreakdown categorySpending={categorySpending} currency={currency} />

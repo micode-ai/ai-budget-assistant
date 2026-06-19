@@ -7,6 +7,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useUpgradeStore } from '@/stores/upgradeStore';
 import { getIntlLocale } from '@/i18n';
 import { StoryBlockRenderer } from '@/components/story';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
@@ -75,7 +76,11 @@ export default function StoryScreen() {
         setStory(response.story);
         useSubscriptionStore.getState().loadUsage();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load story');
+        if ((err as { status?: number }).status === 403) {
+          useUpgradeStore.getState().show(t('subscription.limitReachedBody'), 'pro');
+        } else {
+          setError(err instanceof Error ? err.message : 'Failed to load story');
+        }
       } finally {
         setIsLoading(false);
       }

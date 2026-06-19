@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useUpgradeStore } from '@/stores/upgradeStore';
+import i18n from '@/i18n';
 import type { AIInsightChart, FatFinderReport } from '@budget/shared-types';
 
 interface InsightsState {
@@ -8,12 +10,14 @@ interface InsightsState {
   isLoading: boolean;
   error: string | null;
   lastFetched: string | null;
+  aiInsightsProGated: boolean;
 
   fatFinderReport: FatFinderReport | null;
   fatFinderLoading: boolean;
   fatFinderError: string | null;
   fatFinderMonth: number; // 1-based (1=January)
   fatFinderYear: number;
+  fatFinderProGated: boolean;
 
   loadAIInsights: (language?: string) => Promise<void>;
   dismissInsight: (id: string) => void;
@@ -29,15 +33,17 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
   isLoading: false,
   error: null,
   lastFetched: null,
+  aiInsightsProGated: false,
 
   fatFinderReport: null,
   fatFinderLoading: false,
   fatFinderError: null,
   fatFinderMonth: now.getMonth() + 1,
   fatFinderYear: now.getFullYear(),
+  fatFinderProGated: false,
 
   loadAIInsights: async (language?: string) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, aiInsightsProGated: false });
     try {
       const response = await api.getAIInsights(language);
       set({
@@ -46,10 +52,15 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
         lastFetched: response.generatedAt,
       });
     } catch (err) {
+      const isProGated = (err as { status?: number }).status === 403;
       set({
         isLoading: false,
         error: err instanceof Error ? err.message : 'Failed to load insights',
+        aiInsightsProGated: isProGated,
       });
+      if (isProGated) {
+        useUpgradeStore.getState().show(i18n.t('insights.proRequired'), 'pro');
+      }
     }
   },
 
@@ -60,7 +71,7 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
   },
 
   loadFatFinder: async (language?: string, forceRegenerate?: boolean, month?: number, year?: number) => {
-    set({ fatFinderLoading: true, fatFinderError: null });
+    set({ fatFinderLoading: true, fatFinderError: null, fatFinderProGated: false });
     if (month != null && year != null) {
       set({ fatFinderMonth: month, fatFinderYear: year });
     }
@@ -72,10 +83,15 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
       });
       useSubscriptionStore.getState().loadUsage();
     } catch (err) {
+      const isProGated = (err as { status?: number }).status === 403;
       set({
         fatFinderLoading: false,
         fatFinderError: err instanceof Error ? err.message : 'Failed to load fat finder report',
+        fatFinderProGated: isProGated,
       });
+      if (isProGated) {
+        useUpgradeStore.getState().show(i18n.t('subscription.limitReachedBody'), 'pro');
+      }
     }
   },
 
@@ -90,11 +106,13 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
       isLoading: false,
       error: null,
       lastFetched: null,
+      aiInsightsProGated: false,
       fatFinderReport: null,
       fatFinderLoading: false,
       fatFinderError: null,
       fatFinderMonth: current.getMonth() + 1,
       fatFinderYear: current.getFullYear(),
+      fatFinderProGated: false,
     });
   },
 }));

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useUpgradeStore } from '@/stores/upgradeStore';
 
 interface AiInsight {
   id: string;
@@ -15,18 +16,37 @@ interface AiInsight {
 
 interface Props {
   aiInsights: AiInsight[];
+  proGated?: boolean;
 }
 
-export function AiInsightsSection({ aiInsights }: Props) {
+export function AiInsightsSection({ aiInsights, proGated }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [expandedInsightId, setExpandedInsightId] = useState<string | null>(null);
+  const showUpgrade = useUpgradeStore((s) => s.show);
 
   const toggleInsight = useCallback((id: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedInsightId((prev) => (prev === id ? null : id));
   }, []);
+
+  if (proGated) {
+    return (
+      <TouchableOpacity
+        style={styles.proGatedCard}
+        activeOpacity={0.8}
+        onPress={() => showUpgrade(t('insights.proRequired'), 'pro')}
+      >
+        <Ionicons name="lock-closed" size={20} color={theme.colors.warning} />
+        <Text style={styles.proGatedTitle}>{t('insights.aiSuggested')}</Text>
+        <Text style={styles.proGatedSubtitle}>{t('insights.proRequired')}</Text>
+        <View style={styles.proGatedChip}>
+          <Text style={styles.proGatedChipText}>{t('subscription.upgrade')}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 
   if (aiInsights.length === 0) return null;
 
@@ -101,6 +121,39 @@ export function AiInsightsSection({ aiInsights }: Props) {
 }
 
 const createStyles = (theme: Theme) => ({
+  proGatedCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[5],
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    borderWidth: 1,
+    borderColor: theme.colors.warningLight,
+    ...theme.shadows.sm,
+  },
+  proGatedTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
+  },
+  proGatedSubtitle: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  proGatedChip: {
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius['2xl'],
+    marginTop: theme.spacing[1],
+  },
+  proGatedChipText: {
+    fontSize: 13,
+    fontWeight: '700' as const,
+    color: theme.colors.textInverse,
+  },
   section: {
     marginBottom: theme.spacing[5],
   },

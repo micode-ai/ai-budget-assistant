@@ -8,16 +8,17 @@ AI Budget Assistant ofrece tres niveles de suscripcion. Cada nuevo usuario comie
 
 ## Comparacion de planes
 
-Todas las funciones están disponibles en todos los planes. Los planes difieren solo en los límites de uso:
+Los planes difieren en los límites de uso y en el acceso a funciones avanzadas de IA:
 
 | Funcion | Gratuito | Pro | Business |
 |---|---|---|---|
 | **Solicitudes IA por mes** | 50 | 300 | Ilimitadas |
 | **Cuentas** | 3 | Hasta 5 | Ilimitadas |
 | **Miembros por cuenta** | 1 | Hasta 5 | Ilimitados |
-| **Todas las funciones** | Si | Si | Si |
+| **Funciones principales** (seguimiento, Chat IA, voz, recibos) | Si | Si | Si |
+| **IA avanzada** (Historia de gastos, Fat Finder, Informacion de IA) | — | Si | Si |
 
-> Todos los usuarios tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, Historia de gastos, Fat Finder, Informacion de IA, analisis predictivo, deteccion de anomalias, informes PDF/Excel, resumen semanal por email, resumen mensual, copias de seguridad cifradas y todas las monedas.
+> Todos los usuarios (incluido Gratuito) tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, deteccion de anomalias, informes PDF/Excel, resumen semanal por email, resumen mensual, copias de seguridad cifradas y todas las monedas. Historia de gastos, Fat Finder e Informacion de IA requieren Pro o Business.
 
 ## Plan Gratuito
 
@@ -25,7 +26,7 @@ Tu plan inicial incluye:
 - **50 solicitudes IA por mes** — usa Chat IA, Entrada de voz, Escaneo de recibos
 - **3 cuentas**
 - **1 miembro** (tu)
-- **Todas las funciones** — sin restricciones de funcionalidad
+- **Funciones principales** — seguimiento de gastos, Chat IA, entrada de voz, escaneo de recibos (las funciones avanzadas de IA requieren Pro)
 
 ## Plan Pro
 
@@ -33,6 +34,7 @@ Con límites más altos:
 - **300 solicitudes IA por mes**
 - **Hasta 5 cuentas** — gestiona finanzas personales, compartidas y de empresa
 - **Hasta 5 miembros por cuenta** — colabora con familia o equipo
+- **Funciones avanzadas de IA** — Historia de gastos, Fat Finder e Informacion de IA
 
 ### Prueba gratuita de 7 dias
 Prueba Pro gratis durante 7 dias. Cancela en cualquier momento antes de que termine la prueba para evitar cargos.
@@ -96,7 +98,7 @@ Toca **Ver detalles** en la pantalla de suscripción para ver un desglose detall
 ## Preguntas frecuentes
 
 - **P: Que pasa cuando se agotan mis solicitudes IA?**
-  **R:** Veras un mensaje de "Limite de IA alcanzado". Puedes esperar hasta el proximo mes para un reinicio, o mejorar tu plan para obtener mas solicitudes.
+  **R:** Cuando alcanzas tu limite mensual en el Chat IA, aparece directamente en el chat una pantalla de mejora con los planes Pro y una prueba gratuita de 7 dias. Puedes iniciar la prueba o mejorar tu plan para obtener mas solicitudes, o simplemente esperar hasta que tu limite se reinicie al comienzo del proximo mes.
 
 - **P: Puedo bajar de Pro a Gratuito?**
   **R:** Si, puedes cancelar tu suscripcion en cualquier momento. Conservaras las funciones Pro hasta el final de tu periodo de facturacion.

@@ -30,6 +30,7 @@ import {
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
+import { UpgradeGate } from '@/components/UpgradeGate';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 
 // Keep the splash screen visible while we fetch resources
@@ -736,6 +737,7 @@ function RootNavigator() {
         />
       </Stack>
       <UpdatePrompt />
+      <UpgradeGate />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>
   );

@@ -22,9 +22,9 @@ const AI_REQUEST_LIMITS: Record<SubscriptionTier, number> = {
 };
 
 const TRIAL_REQUEST_LIMITS: Record<SubscriptionTier, number> = {
-  free: 5,
-  pro: 15,
-  business: 100,
+  free: 50,
+  pro: 300,
+  business: Infinity,
 };
 
 const MEMBER_LIMITS: Record<SubscriptionTier, number> = {
@@ -139,8 +139,8 @@ export class SubscriptionsService {
           yearly:  { amount: p.pro_yearly,  display: `${p.symbol}${fmt(p.pro_yearly)}`,  priceEnvKey: `STRIPE_PRO_YEARLY_PRICE_ID_${code}` },
           monthlyEquivalent: `${p.symbol}${fmt(Math.round(p.pro_yearly / 12))}`,
           features: [
-            '200 AI requests/month',
-            'Up to 3 accounts',
+            '300 AI requests/month',
+            'Up to 5 accounts',
             'Up to 5 members',
             'Predictive analytics',
             'Anomaly detection',

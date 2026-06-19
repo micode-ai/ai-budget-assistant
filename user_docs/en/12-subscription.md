@@ -8,16 +8,17 @@ AI Budget Assistant offers three subscription tiers. Every new user starts on th
 
 ## Plans Comparison
 
-All features are available on every plan. Plans differ only in usage limits:
+Plans differ in usage limits and in access to advanced AI features:
 
 | Feature | Free | Pro | Business |
 |---|---|---|---|
 | **AI requests per month** | 50 | 300 | Unlimited |
 | **Accounts** | 3 | Up to 5 | Unlimited |
 | **Members per account** | 1 | Up to 5 | Unlimited |
-| **All features** | Yes | Yes | Yes |
+| **Core features** (tracking, AI Chat, voice, receipts) | Yes | Yes | Yes |
+| **Advanced AI** (Spending Story, Fat Finder, AI Insights) | — | Yes | Yes |
 
-All users have access to: expense tracking, AI Chat, Voice Input, Receipt Scanning, Spending Stories, Fat Finder, AI Insights, predictive analytics, anomaly detection, PDF/Excel reports, weekly email reports, monthly digest, encrypted backups, and all currencies.
+All users (including Free) have: expense tracking, AI Chat, Voice Input, Receipt Scanning, anomaly detection, PDF/Excel reports, weekly email reports, monthly digest, encrypted backups, and all currencies. Spending Stories, Fat Finder, and AI Insights require Pro or Business.
 
 ## Free Plan
 
@@ -25,7 +26,7 @@ Your starting plan includes:
 - **50 AI requests per month**
 - **3 personal accounts**
 - **1 member** (you)
-- **All features** — no functionality restrictions
+- **Core features** — expense tracking, AI Chat, voice input, receipt scanning (advanced AI features require Pro)
 
 ## Pro Plan
 
@@ -33,6 +34,7 @@ Everything in Free, with higher limits:
 - **300 AI requests per month**
 - **Up to 5 accounts** — manage personal, shared, and business finances
 - **Up to 5 members per account** — collaborate with family or team
+- **Advanced AI features** — Spending Story, Fat Finder, and AI Insights
 
 ### 7-Day Free Trial
 Try Pro free for 7 days. Cancel anytime before the trial ends to avoid charges.
@@ -96,7 +98,7 @@ Tap **View Details** on the subscription screen to see a detailed breakdown of y
 ## FAQ
 
 - **Q: What happens when I run out of AI requests?**
-  **A:** You'll see a "AI limit reached" message. You can wait until next month for a reset, or upgrade your plan for more requests.
+  **A:** When you hit your monthly limit in AI Chat, an upgrade screen appears right in the chat, showing the Pro plans and a 7-day free trial. You can start the trial or upgrade for more requests, or simply wait until your limit resets at the start of next month.
 
 - **Q: Can I downgrade from Pro to Free?**
   **A:** Yes, you can cancel your subscription at any time. You'll retain Pro features until the end of your billing period.
