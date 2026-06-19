@@ -41,6 +41,17 @@ jobs:
           ls apps/mobile/dist/_expo/static/js/web/*.js >/dev/null 2>&1 || { echo "::error::no JS bundle in dist — aborting"; exit 1; }
           echo "dist OK: $(du -sh apps/mobile/dist | cut -f1)"
 
+      - name: Stage static SEO blog into web root
+        run: |
+          set -e
+          # Pre-generated crawlable HTML (docs/marketing/seo/site -> blog/, sitemap.xml, robots.txt).
+          # Regenerate locally with: python docs/marketing/seo/build_blog.py
+          cp -r docs/marketing/seo/site/. apps/mobile/dist/
+          test -f apps/mobile/dist/blog/index.html || { echo "::error::blog/index.html missing"; exit 1; }
+          test -f apps/mobile/dist/sitemap.xml || { echo "::error::sitemap.xml missing"; exit 1; }
+          test -f apps/mobile/dist/robots.txt || { echo "::error::robots.txt missing"; exit 1; }
+          echo "blog + sitemap + robots staged into dist"
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh

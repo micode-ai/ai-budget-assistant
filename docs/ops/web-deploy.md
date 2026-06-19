@@ -51,6 +51,14 @@ reload (the `html/` dir is bind-mounted; nginx serves new files immediately;
 `index.html` is `no-cache`, hashed assets immutable). Concurrency-guarded so two
 web deploys can't race.
 
+**Static SEO blog (ABA-267):** after building `dist/`, the workflow copies the
+pre-generated `docs/marketing/seo/site/.` (crawlable HTML `/blog/`, `sitemap.xml`,
+`robots.txt`, OG image) into `dist/` so it ships in the same rsync. These are real
+files served by the inner nginx's `try_files $uri $uri/ /index.html` before the SPA
+fallback — no nginx change. Regenerate after editing any article:
+`python docs/marketing/seo/build_blog.py` (needs `markdown` + `Pillow`), then commit
+`docs/marketing/seo/site/`.
+
 **Manual fallback** (if CI is unavailable):
 
 ```bash
