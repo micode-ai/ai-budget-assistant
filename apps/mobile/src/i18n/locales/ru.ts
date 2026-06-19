@@ -996,6 +996,8 @@ export default {
     trialActive: 'Пробный период активен',
     trialEndsAt: 'Пробный период до {{date}}',
     limitReached: 'Лимит AI достигнут',
+    limitReachedBody: 'Вы исчерпали бесплатный лимит AI в этом месяце. Перейдите на Pro для большего числа AI-запросов и премиум-функций.',
+    startTrial: 'Начните 7-дневный бесплатный период',
     aiRequests: 'Запросы AI',
     usageThisMonth: 'Использование в этом месяце',
     availablePlans: 'Доступные тарифы',

@@ -994,6 +994,8 @@ export default {
     trialActive: 'Testversion aktiv',
     trialEndsAt: 'Testversion endet am {{date}}',
     limitReached: 'KI-Limit erreicht',
+    limitReachedBody: 'Du hast dein kostenloses KI-Limit für diesen Monat erreicht. Upgrade auf Pro für mehr KI-Anfragen und Premium-Funktionen.',
+    startTrial: 'Starte deine 7-tägige kostenlose Testphase',
     aiRequests: 'KI-Anfragen',
     usageThisMonth: 'Nutzung diesen Monat',
     availablePlans: 'Verfügbare Pläne',
