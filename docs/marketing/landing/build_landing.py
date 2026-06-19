@@ -543,7 +543,7 @@ def consent_html(lang):
 
 def footer_html(lang):
     t = C[lang]
-    blog = f"/blog/{lang if lang in ('en', 'pl') else 'en'}/"
+    blog = f"/blog/{lang}/"
     pl, tl, cl = LEGAL_LABELS[lang]
     return (f'<footer><div class="wrap"><div class="f-links">'
             f'<a href="{blog}">{t["nav_blog"]}</a>'
@@ -569,7 +569,7 @@ def cookies_page(lang):
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
             f'<style>{CSS}</style></head><body>'
-            f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
+            f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
             f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
@@ -586,7 +586,7 @@ def about_page(lang):
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
             f'<style>{CSS}</style></head><body>'
-            f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
+            f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
@@ -594,7 +594,7 @@ def about_page(lang):
 
 def jsonld(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
-    og = f"{SITE}/blog/{lang if lang in ('en','pl') else 'en'}/assets/og-default.png"
+    og = f"{SITE}/blog/{lang}/assets/og-default.png"
     return {"@context": "https://schema.org", "@graph": [
         {"@type": "WebSite", "name": "AI Budget Assistant", "url": url, "inLanguage": lang},
         {"@type": "Organization", "name": COMPANY, "url": COMPANY_URL,
@@ -611,7 +611,7 @@ def head(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
     alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{SITE+lp(l)}">' for l in langs)
     alts += f'<link rel="alternate" hreflang="x-default" href="{SITE + (lp("en") if "en" in langs else lp(lang))}">'
-    og = f"{SITE}/blog/{lang if lang in ('en','pl') else 'en'}/assets/og-default.png"
+    og = f"{SITE}/blog/{lang}/assets/og-default.png"
     return f"""<!DOCTYPE html><html lang="{lang}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(t['title'])}</title>
@@ -628,7 +628,7 @@ def head(lang, langs):
 
 def page(lang, langs):
     t = C[lang]
-    blog = f"/blog/{lang if lang in ('en','pl') else 'en'}/"
+    blog = f"/blog/{lang}/"
     langlinks = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}">{LANG_NAMES[l]}</a>' for l in langs)
     langmenu = f'<details class="langmenu"><summary>{LANG_NAMES[lang]} &#9662;</summary><div class="langlist">{langlinks}</div></details>'
     cards, lbs = "", ""
@@ -689,7 +689,7 @@ def legal_page(lang, kind):
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
             f'<style>{CSS}</style></head><body>'
-            f'<header><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>'
+            f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal">{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
