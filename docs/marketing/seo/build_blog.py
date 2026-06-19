@@ -32,6 +32,18 @@ SAMEAS = [
     "https://t.me/aibudgetassistantBy",
     "https://play.google.com/store/apps/details?id=com.budget.assistant",
 ]
+GA_ID = "G-WMEFHYETVX"
+CONSENT = {
+ "en": ("We use cookies to measure traffic and improve the site.", "Accept", "Decline"),
+ "pl": ("Używamy plików cookie do analizy ruchu i ulepszania strony.", "Akceptuję", "Odrzuć"),
+ "de": ("Wir verwenden Cookies, um den Traffic zu messen und die Seite zu verbessern.", "Akzeptieren", "Ablehnen"),
+ "es": ("Usamos cookies para medir el tráfico y mejorar el sitio.", "Aceptar", "Rechazar"),
+ "fr": ("Nous utilisons des cookies pour mesurer le trafic et améliorer le site.", "Accepter", "Refuser"),
+ "ru": ("Мы используем файлы cookie для анализа трафика и улучшения сайта.", "Принять", "Отклонить"),
+ "ua": ("Ми використовуємо файли cookie для аналізу трафіку та покращення сайту.", "Прийняти", "Відхилити"),
+ "be": ("Мы выкарыстоўваем файлы cookie для аналізу трафіку і паляпшэння сайта.", "Прыняць", "Адхіліць"),
+ "nl": ("We gebruiken cookies om verkeer te meten en de site te verbeteren.", "Accepteren", "Weigeren"),
+}
 PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "en"  # x-default
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
@@ -151,6 +163,11 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:#F58320;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
 """
 
 def parse(path):
@@ -211,6 +228,25 @@ def extract_faq(body):
         pairs.append((_plain(q), _plain(" ".join(ans))))
     return [(q, a) for q, a in pairs if q and a]
 
+_CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
+                '<button class="no" id="cc-no">__NO__</button>'
+                '<button class="ok" id="cc-ok">__OK__</button></div></div>\n'
+                '<script>(function(){var ID="__GA__",K="cc-consent";'
+                'function L(){var s=document.createElement("script");s.async=1;'
+                's.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);'
+                'window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}'
+                'window.gtag=g;g("js",new Date());g("config",ID);}'
+                'var v=localStorage.getItem(K),b=document.getElementById("cc");'
+                'if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");'
+                'document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};'
+                'document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}'
+                '})();</script>')
+
+def consent_html(lang):
+    txt, ok, no = CONSENT.get(lang, CONSENT["en"])
+    return (_CONSENT_TPL.replace("__TXT__", html.escape(txt)).replace("__OK__", html.escape(ok))
+            .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID))
+
 def lang_menu(lang, alt_map, langs):
     links = "".join(
         f'<a class="{"active" if l == lang else ""}" href="{alt_map.get(l, f"/blog/{l}/")}">{LANG_NAMES[l]}</a>'
@@ -248,7 +284,7 @@ def foot(lang):
             f'<a href="{APP}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
-            f'</div></footer>\n</body></html>')
+            f'</div></footer>\n' + consent_html(lang) + '</body></html>')
 
 def cta_block(lang):
     t = I18N[lang]
