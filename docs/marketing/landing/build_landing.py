@@ -22,7 +22,7 @@ from PIL import Image
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "site")
-FEAT = os.path.join(ROOT, "..", "feature_graphics", "marketing")
+FEAT = os.path.join(ROOT, "..", "feature_graphics", "by-language")  # clean raw screenshots (no headline plaque)
 SITE = "https://ai-budget.pl"
 APP = "https://app.ai-budget.pl"
 PLAY = "https://play.google.com/store/apps/details?id=com.budget.assistant"
@@ -34,6 +34,8 @@ ROBOTS = os.environ.get("ROBOTS", "noindex,follow")
 DEFAULT_LANG = "pl"
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
           "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL"}
+LANG_NAMES = {"pl": "Polski", "en": "English", "de": "Deutsch", "es": "Español", "fr": "Français",
+              "ru": "Русский", "ua": "Українська", "be": "Беларуская", "nl": "Nederlands"}
 
 # Each feature: (title, description, screenshot-file in feature_graphics/marketing/<lang>/)
 C = {
@@ -133,15 +135,21 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .faq h3{margin:0 0 6px;font-size:18px}.faq p{margin:0;color:#5b5b66;font-size:16px}
 .blogcta{text-align:center;padding:0 0 60px}.blogcta a{color:#c96a12;font-weight:700;font-size:16px}
 .band{background:#1a1a1d;color:#fff;text-align:center}.band .wrap{padding:56px 22px}.band h2{font-size:28px;margin:0 0 22px}
-footer{border-top:1px solid #ececf0;background:#fafafb;color:#8a8a93;font-size:14px}
-footer .wrap{padding:30px 22px;display:flex;flex-direction:column;gap:16px}
-.f-links{display:flex;gap:18px;flex-wrap:wrap}.f-links a{color:#5b5b66;font-weight:600}
-.f-co{display:flex;align-items:center;gap:12px;border-top:1px solid #ececf0;padding-top:16px}
+footer{border-top:1px solid #ececf0;background:#fafafb;color:#8a8a93;font-size:14px;text-align:center}
+footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:#5b5b66;font-weight:600}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid #ececf0;padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:#5b5b66;font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid #ececf0;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:#F58320}
+.lbcb{position:absolute;width:0;height:0;opacity:0;overflow:hidden}
 .lb{display:none;position:fixed;inset:0;background:rgba(10,10,12,.82);z-index:50;align-items:center;justify-content:center;padding:24px}
-.lb:target{display:flex}.lb .bg{position:absolute;inset:0}
+.lbcb:checked + .lb{display:flex}.lb .bg{position:absolute;inset:0;cursor:default}
 .lb img{position:relative;max-height:86vh;max-width:360px;width:100%;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.lb .x{position:absolute;top:16px;right:22px;color:#fff;font-size:32px;font-weight:700;z-index:2}
+.lb .x{position:absolute;top:16px;right:22px;color:#fff;font-size:34px;font-weight:700;z-index:2;cursor:pointer;line-height:1}
 """
 
 def lp(lang):
@@ -184,19 +192,21 @@ def head(lang, langs):
 def page(lang, langs):
     t = C[lang]
     blog = f"/blog/{lang if lang in ('en','pl') else 'en'}/"
-    langsw = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}">{l.upper()}</a>' for l in langs)
+    langlinks = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}">{LANG_NAMES[l]}</a>' for l in langs)
+    langmenu = f'<details class="langmenu"><summary>{LANG_NAMES[lang]} &#9662;</summary><div class="langlist">{langlinks}</div></details>'
     cards, lbs = "", ""
     for i, (h, p, shot) in enumerate(t["features"]):
-        sid = f"shot{i+1}"
-        cards += (f'<a class="card" href="#{sid}"><div class="ic"><b>{i+1}</b></div>'
+        cid = f"cb{i+1}"
+        cards += (f'<label class="card" for="{cid}"><div class="ic"><b>{i+1}</b></div>'
                   f'<h3>{html.escape(h)}</h3><p>{html.escape(p)}</p>'
-                  f'<span class="see">{html.escape(t["see"])} &rarr;</span></a>')
-        lbs += (f'<div class="lb" id="{sid}"><a class="bg" href="#"></a><a class="x" href="#">&times;</a>'
+                  f'<span class="see">{html.escape(t["see"])} &rarr;</span></label>')
+        lbs += (f'<input class="lbcb" type="checkbox" id="{cid}">'
+                f'<div class="lb"><label class="bg" for="{cid}"></label><label class="x" for="{cid}">&times;</label>'
                 f'<img loading="lazy" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></div>')
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
     return (head(lang, langs)
         + f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
-          f'<nav class="nav"><div class="langs">{langsw}</div><a href="{blog}">{t["nav_blog"]}</a>'
+          f'<nav class="nav">{langmenu}<a href="{blog}">{t["nav_blog"]}</a>'
           f'<a class="btn p" href="{APP}">{t["nav_login"]}</a></nav></div></header>'
         + f'<section class="hero"><div class="wrap"><h1>{html.escape(t["hero_h1"])}</h1>'
           f'<p>{html.escape(t["hero_sub"])}</p><a class="btn p" href="{APP}">{t["cta_primary"]}</a>'
@@ -221,10 +231,10 @@ def copy_assets(langs):
         dst = os.path.join(OUT, "assets", "screens", lang)
         os.makedirs(dst, exist_ok=True)
         for shot in {s for _, _, s in C[lang]["features"]}:
-            src = os.path.join(FEAT, lang, shot)
+            src = os.path.join(FEAT, lang, os.path.splitext(shot)[0] + ".jpg")
             if not os.path.exists(src):
                 print("  MISSING screenshot:", lang, shot); continue
-            img = Image.open(src)
+            img = Image.open(src).convert("RGB")
             nw = 540; nh = round(img.height * nw / img.width)
             img.resize((nw, nh), Image.LANCZOS).save(os.path.join(dst, shot), "PNG", optimize=True)
 
