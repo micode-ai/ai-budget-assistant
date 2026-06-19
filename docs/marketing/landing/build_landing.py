@@ -145,7 +145,7 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid #ececf0;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
 .langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600}
 .langlist a:hover{background:#fff3e6}.langlist a.active{color:#F58320}
-.lbcb{position:absolute;width:0;height:0;opacity:0;overflow:hidden}
+.lbcb{position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none}
 .lb{display:none;position:fixed;inset:0;background:rgba(10,10,12,.82);z-index:50;align-items:center;justify-content:center;padding:24px}
 .lbcb:checked + .lb{display:flex}.lb .bg{position:absolute;inset:0;cursor:default}
 .lb img{position:relative;max-height:86vh;max-width:360px;width:100%;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
