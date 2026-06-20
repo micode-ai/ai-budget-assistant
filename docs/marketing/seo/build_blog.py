@@ -429,7 +429,11 @@ def build():
         alts = [(l, f"{SITE}/blog/{l}/") for l in langs] + [("x-default", f"{SITE}/blog/{DEFAULT_LANG}/")]
         alt_map = {l: f"/blog/{l}/" for l in langs}
         menu = lang_menu(lang, alt_map, langs)
-        ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": t["blogTitle"], "inLanguage": lang, "url": url}
+        ld = {"@context": "https://schema.org", "@type": "Blog", "name": t["blogTitle"],
+              "description": t["blogDesc"], "inLanguage": lang, "url": url,
+              "blogPost": [{"@type": "BlogPosting", "headline": a["m"].get("title", ""),
+                            "url": f"{SITE}/blog/{lang}/{a['m']['slug']}/", "datePublished": PUBLISH_DATE,
+                            "inLanguage": lang} for a in items]}
         page = (head(lang, t["blogTitle"], t["blogDesc"], url, ld, alts, f"/blog/{lang}/assets/og-default.png", menu, og_type="website")
                 + f'<main class="wrap"><nav class="crumb"><a href="{home_url(lang)}">{t["home"]}</a> / {t["blog"]}</nav>'
                 + f'<h1>{t["blogH1"]}</h1><p>{t["blogIntro"]}</p>{cards}{cta_block(lang)}</main>' + foot(lang))
