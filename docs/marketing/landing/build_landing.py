@@ -17,7 +17,7 @@ BASE/ROBOTS gate the noindex /preview build vs the apex cutover:
   preview: LANDING_BASE=preview ROBOTS="noindex,follow"
   cutover: LANDING_BASE=""      ROBOTS="index,follow,max-image-preview:large"
 """
-import os, re, json, html, shutil
+import os, re, json, html, glob, shutil
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -50,6 +50,8 @@ CONSENT = {
 }
 MORE = {"en": "Learn more", "pl": "Więcej", "de": "Mehr", "es": "Más", "fr": "En savoir plus",
         "ru": "Подробнее", "ua": "Докладніше", "be": "Падрабязней", "nl": "Meer"}
+FROM_BLOG_TITLE = {"en": "From the blog", "pl": "Z bloga", "de": "Aus dem Blog", "es": "Del blog",
+                   "fr": "Du blog", "ru": "Из блога", "ua": "З блогу", "be": "З блога", "nl": "Uit de blog"}
 LEGAL_BASE = "https://micode-ai.github.io/ai-budget-assistant"
 SUPPORT_EMAIL = "perevertkinma@gmail.com"
 LEGAL_LABELS = {  # (privacy, terms, cookies)
@@ -486,6 +488,8 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .faq{max-width:760px;margin:30px auto 0}.faq .qa{padding:18px 0;border-bottom:1px solid #ececf0}
 .faq h3{margin:0 0 6px;font-size:18px}.faq p{margin:0;color:#5b5b66;font-size:16px}
 .blogcta{text-align:center;padding:0 0 60px}.blogcta a{color:#c96a12;font-weight:700;font-size:16px}
+.fromblog{list-style:none;max-width:760px;margin:0 auto;padding:0}.fromblog li{border-bottom:1px solid #ececf0}
+.fromblog a{display:block;padding:15px 2px;color:#1a1a1d;font-weight:600;font-size:17px}.fromblog a:hover{color:#F58320}
 .band{background:#1a1a1d;color:#fff;text-align:center}.band .wrap{padding:56px 22px}.band h2{font-size:28px;margin:0 0 22px}
 footer{border-top:1px solid #ececf0;background:#fafafb;color:#8a8a93;font-size:14px;text-align:center}
 footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
@@ -519,6 +523,33 @@ def lp(lang):
     if lang == DEFAULT_LANG:
         return f"{BASE}/" if BASE else "/"
     return f"{BASE}/{lang}/"
+
+BLOG_SRC = os.path.join(ROOT, "..", "seo")
+FROM_BLOG_PAIRS = ["budget", "shared-budget", "best-apps", "saving"]  # curated homepage -> article internal links
+
+def _blog_front(path):
+    raw = open(path, encoding="utf-8").read()
+    m = re.match(r"^---\n(.*?)\n---", raw, re.S)
+    meta = {}
+    if m:
+        for line in m.group(1).splitlines():
+            if ":" in line:
+                k, v = line.split(":", 1)
+                meta[k.strip()] = v.strip().strip('"').strip("'")
+    return meta
+
+def read_blog_index():
+    """Map (lang, pair) -> (slug, title) from the blog markdown so the landing can link real articles."""
+    idx = {}
+    for p in glob.glob(os.path.join(BLOG_SRC, "*.md")) + glob.glob(os.path.join(BLOG_SRC, "*", "*.md")):
+        if os.sep + "site" + os.sep in p:
+            continue
+        m = _blog_front(p)
+        if m.get("slug") and m.get("lang") and m.get("pair"):
+            idx[(m["lang"], m["pair"])] = (m["slug"], m.get("title", m["slug"]))
+    return idx
+
+BLOG_IDX = read_blog_index()
 
 _CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
                 '<button class="no" id="cc-no">__NO__</button>'
@@ -641,6 +672,11 @@ def page(lang, langs):
                 f'<div class="lb"><label class="bg" for="{cid}"></label><label class="x" for="{cid}">&times;</label>'
                 f'<img loading="lazy" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></div>')
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
+    fb = "".join(
+        f'<li><a href="/blog/{lang}/{BLOG_IDX[(lang, pr)][0]}/">{html.escape(BLOG_IDX[(lang, pr)][1])}</a></li>'
+        for pr in FROM_BLOG_PAIRS if (lang, pr) in BLOG_IDX)
+    fromblog_sec = (f'<section class="sec"><div class="wrap"><h2>{html.escape(FROM_BLOG_TITLE.get(lang, FROM_BLOG_TITLE["en"]))}</h2>'
+                    f'<ul class="fromblog">{fb}</ul></div></section>') if fb else ""
     return (head(lang, langs)
         + f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
           f'<nav class="nav">{langmenu}<a href="{blog}">{t["nav_blog"]}</a>'
@@ -653,6 +689,7 @@ def page(lang, langs):
         + f'<section class="sec"><div class="wrap"><h2>{html.escape(t["features_title"])}</h2>'
           f'<p class="hint">{html.escape(t["features_hint"])}</p><div class="grid">{cards}</div></div></section>'
         + f'<section class="sec"><div class="wrap"><h2>{html.escape(t["faq_title"])}</h2><div class="faq">{faq}</div></div></section>'
+        + fromblog_sec
         + f'<div class="blogcta"><a href="{blog}">{t["blog_cta"]} &rarr;</a></div>'
         + f'<section class="band"><div class="wrap"><h2>{html.escape(t["cta_band"])}</h2>'
           f'<a class="btn p" href="{APP}">{t["cta_band_btn"]}</a></div></section>'
