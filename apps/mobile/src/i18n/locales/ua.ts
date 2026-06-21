@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Введіть 6-значний код, надісланий на {{email}}',
     signingIn: 'Вхід...',
     loadingData: 'Завантаження ваших даних...',
+    continueWithGoogle: 'Продовжити з Google',
+    or: 'або',
+    googleTermsNote: 'Продовжуючи, ви приймаєте Умови та Політику конфіденційності',
   },
   dashboard: {
     hello: 'Привіт, {{name}}!',
@@ -959,6 +962,9 @@ export default {
     verificationCodeExpired: 'Термін дії коду закінчився',
     verificationFailed: 'Помилка підтвердження',
     unknown: 'Сталася непередбачена помилка',
+    googleSignInFailed: 'Не вдалося увійти через Google. Спробуйте ще раз.',
+    googleEmailNotVerified: 'Електронна пошта вашого облікового запису Google не підтверджена.',
+    usePasswordLogin: 'Цей обліковий запис використовує вхід через Google. Натисніть «Продовжити з Google».',
   },
   insights: {
     title: 'Прогнозна аналітика',

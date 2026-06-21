@@ -13,6 +13,7 @@ import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
+import { useGoogleAuth } from '@/features/auth/useGoogleAuth';
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -56,11 +57,27 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register, isLoading } = useAuthStore();
+  const { signIn: googleSignIn, isReady: googleReady } = useGoogleAuth();
   const scrollRef = useRef<ScrollView>(null);
 
   const showError = (msg: string) => {
     setError(msg);
     scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
+  const handleGoogle = async () => {
+    setError(null);
+    try {
+      const outcome = await googleSignIn(i18n.language);
+      if (outcome === 'success') {
+        router.replace('/(tabs)');
+      } else if (outcome === 'error') {
+        showError(t('errors.googleSignInFailed'));
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
+      showError(mapApiError(msg, t, 'errors.googleSignInFailed'));
+    }
   };
 
   const handleRegister = async () => {
@@ -308,6 +325,23 @@ export default function RegisterScreen() {
               )}
             </TouchableOpacity>
 
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>{t('auth.or')}</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              style={styles.googleButton}
+              onPress={handleGoogle}
+              disabled={isLoading || !googleReady}
+            >
+              <Ionicons name="logo-google" size={18} color={theme.colors.textPrimary} />
+              <Text style={styles.googleButtonText}>{t('auth.continueWithGoogle')}</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.googleTerms}>{t('auth.googleTermsNote')}</Text>
+
             <View style={styles.footer}>
               <Text style={styles.footerText}>{t('auth.haveAccount')}</Text>
               <Link href="/(auth)/login" asChild>
@@ -481,5 +515,40 @@ const createStyles = (theme: Theme) => ({
   termsLink: {
     color: theme.colors.primary,
     fontWeight: '600' as const,
+  },
+  dividerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    marginVertical: theme.spacing[2],
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: theme.colors.border,
+  },
+  dividerText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+  },
+  googleButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    paddingVertical: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  googleButtonText: {
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
+  },
+  googleTerms: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
   },
 });

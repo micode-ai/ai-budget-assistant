@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Введите 6-значный код, отправленный на {{email}}',
     signingIn: 'Вход...',
     loadingData: 'Загрузка ваших данных...',
+    continueWithGoogle: 'Продолжить с Google',
+    or: 'или',
+    googleTermsNote: 'Продолжая, вы принимаете Условия и Политику конфиденциальности',
   },
   dashboard: {
     hello: 'Привет, {{name}}!',
@@ -959,6 +962,9 @@ export default {
     loadConversationFailed: 'Не удалось загрузить диалог',
     chatError: 'Извините, произошла ошибка. Проверьте подключение и попробуйте снова.',
     unknown: 'Произошла непредвиденная ошибка',
+    googleSignInFailed: 'Не удалось войти через Google. Попробуйте ещё раз.',
+    googleEmailNotVerified: 'Электронная почта вашего аккаунта Google не подтверждена.',
+    usePasswordLogin: 'Этот аккаунт использует вход через Google. Нажмите «Продолжить с Google».',
   },
   insights: {
     title: 'Прогнозная аналитика',

@@ -15,11 +15,16 @@
 9. Revisa tu correo para obtener un **código de verificación de 6 dígitos**
 10. Ingresa el código en la aplicación y toca **Verificar**
 
+> **Más rápido: Continuar con Google.** En la pantalla de registro, toca **Continuar con Google** y elige tu cuenta de Google — tu cuenta se crea al instante (sin necesidad de código de verificación por correo) y quedas conectado de inmediato. Puedes cambiar la moneda y el nombre más tarde en Ajustes.
+
 ## Iniciar sesion
 
 1. Abre la aplicacion y toca **Iniciar sesion**
 2. Introduce tu **Correo electronico** y **Contrasena**
 3. Toca **Iniciar sesion**
+
+### Iniciar sesión con Google
+En la pantalla de inicio de sesión, toca **Continuar con Google** y elige tu cuenta de Google. Si ya te registraste con el mismo correo verificado, tu cuenta de Google se vincula automáticamente y quedas conectado.
 
 ### Inicio de sesion biometrico
 

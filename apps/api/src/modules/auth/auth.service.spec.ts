@@ -9,11 +9,13 @@ import * as bcrypt from 'bcrypt';
 function makeService() {
   const usersService: any = {
     findByEmail: jest.fn(),
+    findByGoogleId: jest.fn(),
     findById: jest.fn(),
     updatePasswordReset: jest.fn().mockResolvedValue(undefined),
     updateEmailVerification: jest.fn().mockResolvedValue(undefined),
     updateEmailChange: jest.fn().mockResolvedValue(undefined),
     updateLastSync: jest.fn().mockResolvedValue(undefined),
+    update: jest.fn(),
     create: jest.fn(),
   };
   const accountsService: any = {
@@ -41,6 +43,10 @@ function makeService() {
     applyReferralCode: jest.fn().mockResolvedValue(undefined),
   };
 
+  const googleVerifier: any = {
+    verify: jest.fn(),
+  };
+
   const service = new AuthService(
     usersService,
     accountsService,
@@ -50,9 +56,10 @@ function makeService() {
     configService,
     adminGateway,
     referralsService,
+    googleVerifier,
   );
 
-  return { service, usersService, mailService, jwtService };
+  return { service, usersService, accountsService, mailService, jwtService, googleVerifier };
 }
 
 describe('AuthService — forgotPassword', () => {
@@ -262,5 +269,130 @@ describe('AuthService — login', () => {
 
     expect(result.accessToken).toBeTruthy();
     expect(jwtService.signAsync).toHaveBeenCalled();
+  });
+});
+
+describe('AuthService — googleLogin', () => {
+  const goodPayload = {
+    sub: 'google-123',
+    email: 'User@Example.com',
+    email_verified: true,
+    name: 'Google User',
+  };
+
+  it('rejects a token whose email is not verified', async () => {
+    const { service, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue({ ...goodPayload, email_verified: false });
+
+    await expect(service.googleLogin({ idToken: 'tok' })).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('signs in an existing user matched by googleId', async () => {
+    const { service, usersService, jwtService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(goodPayload);
+    usersService.findByGoogleId.mockResolvedValue({
+      id: 'u1', email: 'user@example.com', name: 'Google User',
+      isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-1',
+    });
+
+    const result = await service.googleLogin({ idToken: 'tok' });
+
+    expect(result.accessToken).toBeTruthy();
+    expect(jwtService.signAsync).toHaveBeenCalled();
+    expect(usersService.create).not.toHaveBeenCalled();
+  });
+
+  it('auto-links an existing password user matched by email', async () => {
+    const { service, usersService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(goodPayload);
+    usersService.findByGoogleId.mockResolvedValue(null);
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u2', email: 'user@example.com', name: 'Existing', isActive: true, isVerified: true, currencyCode: 'USD',
+    });
+    usersService.update.mockResolvedValue({
+      id: 'u2', email: 'user@example.com', name: 'Existing', isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-2',
+    });
+
+    const result = await service.googleLogin({ idToken: 'tok' });
+
+    expect(usersService.update).toHaveBeenCalledWith('u2', expect.objectContaining({ googleId: 'google-123' }));
+    expect(usersService.create).not.toHaveBeenCalled();
+    expect(result.user.id).toBe('u2');
+  });
+
+  it('creates a new verified user with defaults when no match exists', async () => {
+    const { service, usersService, accountsService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(goodPayload);
+    usersService.findByGoogleId.mockResolvedValue(null);
+    usersService.findByEmail.mockResolvedValue(null);
+    usersService.create.mockResolvedValue({
+      id: 'u3', email: 'user@example.com', name: 'Google User', isActive: true, isVerified: true, currencyCode: 'USD',
+    });
+    accountsService.createDefaultAccount.mockResolvedValue({ id: 'acc-3' });
+
+    const result = await service.googleLogin({ idToken: 'tok', language: 'pl' });
+
+    expect(usersService.create).toHaveBeenCalledWith(expect.objectContaining({
+      email: 'user@example.com',
+      googleId: 'google-123',
+      isVerified: true,
+    }));
+    expect(accountsService.createDefaultAccount).toHaveBeenCalled();
+    expect(result.accessToken).toBeTruthy();
+    expect(result.user.defaultAccountId).toBe('acc-3');
+  });
+
+  it('marks an auto-linked unverified user as verified', async () => {
+    const { service, usersService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(goodPayload);
+    usersService.findByGoogleId.mockResolvedValue(null);
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u4', email: 'user@example.com', name: 'Existing', isActive: true, isVerified: false, currencyCode: 'USD',
+    });
+    usersService.update.mockResolvedValue({
+      id: 'u4', email: 'user@example.com', name: 'Existing', isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-4',
+    });
+
+    await service.googleLogin({ idToken: 'tok' });
+
+    expect(usersService.update).toHaveBeenCalledWith('u4', expect.objectContaining({ googleId: 'google-123', isVerified: true }));
+  });
+
+  it('rejects a deactivated account on auto-link and does not link it', async () => {
+    const { service, usersService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue(goodPayload);
+    usersService.findByGoogleId.mockResolvedValue(null);
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u5', email: 'user@example.com', name: 'Deactivated', isActive: false, isVerified: true, currencyCode: 'USD',
+    });
+
+    await expect(service.googleLogin({ idToken: 'tok' })).rejects.toThrow(UnauthorizedException);
+    expect(usersService.update).not.toHaveBeenCalled();
+  });
+});
+
+describe('AuthService — login passwordless guard', () => {
+  it('directs Google-only accounts to Google sign-in', async () => {
+    const { service, usersService } = makeService();
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u1', email: 'g@x.com', isActive: true, isVerified: true, passwordHash: null,
+    });
+
+    await expect(service.login({ email: 'g@x.com', password: 'pw' })).rejects.toThrow(
+      'Use Google sign-in for this account',
+    );
+  });
+});
+
+describe('AuthService — changeEmailRequest passwordless guard', () => {
+  it('rejects email change for a Google-only account (no password)', async () => {
+    const { service, usersService } = makeService();
+    usersService.findById.mockResolvedValue({
+      id: 'u1', email: 'g@x.com', isActive: true, passwordHash: null,
+    });
+
+    await expect(
+      service.changeEmailRequest('u1', { newEmail: 'new@x.com', currentPassword: 'x' } as any),
+    ).rejects.toThrow(BadRequestException);
   });
 });

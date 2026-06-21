@@ -10,6 +10,7 @@ export interface NotificationPreferences {
 export interface User {
   id: string;
   email: string;
+  googleId?: string;
   name: string;
   currencyCode: Currency;
   timezone: string;

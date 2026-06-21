@@ -14,12 +14,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { useBiometric } from '@/features/auth/useBiometric';
+import { useGoogleAuth } from '@/features/auth/useGoogleAuth';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const API_ERROR_MAP: Record<string, string> = {
   'Invalid credentials': 'errors.invalidCredentials',
   'Account is deactivated': 'errors.accountDeactivated',
   'Session expired': 'errors.sessionExpired',
+  'Use Google sign-in for this account': 'errors.usePasswordLogin',
+  'Google account email is not verified': 'errors.googleEmailNotVerified',
 };
 
 function mapApiError(message: string, t: (key: string) => string, fallbackKey: string): string {
@@ -28,7 +31,7 @@ function mapApiError(message: string, t: (key: string) => string, fallbackKey: s
 }
 
 export default function LoginScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +41,22 @@ export default function LoginScreen() {
 
   const { login, biometricLogin, isLoading, hasSavedSession } = useAuthStore();
   const { isBiometricAvailable, authenticate: biometricAuth, getBiometricTypeName } = useBiometric();
+  const { signIn: googleSignIn, isReady: googleReady } = useGoogleAuth();
+
+  const handleGoogle = async () => {
+    setError(null);
+    try {
+      const outcome = await googleSignIn(i18n.language);
+      if (outcome === 'success') {
+        router.replace('/(tabs)');
+      } else if (outcome === 'error') {
+        setError(t('errors.googleSignInFailed'));
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
+      setError(mapApiError(msg, t, 'errors.googleSignInFailed'));
+    }
+  };
 
   const showBiometric = isBiometricAvailable && hasSavedSession;
   const showQuickLogin = hasSavedSession && !isBiometricAvailable;
@@ -177,6 +196,21 @@ export default function LoginScreen() {
             )}
           </TouchableOpacity>
 
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>{t('auth.or')}</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={handleGoogle}
+            disabled={isLoading || !googleReady}
+          >
+            <Ionicons name="logo-google" size={18} color={theme.colors.textPrimary} />
+            <Text style={styles.googleButtonText}>{t('auth.continueWithGoogle')}</Text>
+          </TouchableOpacity>
+
           {showBiometric && (
             <TouchableOpacity
               style={styles.biometricButton}
@@ -309,6 +343,36 @@ const createStyles = (theme: Theme) => ({
   buttonText: {
     ...theme.textStyles.h3,
     color: theme.colors.textInverse,
+  },
+  dividerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    marginVertical: theme.spacing[2],
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: theme.colors.border,
+  },
+  dividerText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+  },
+  googleButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    paddingVertical: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  googleButtonText: {
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
   },
   biometricButton: {
     paddingVertical: theme.spacing[4],

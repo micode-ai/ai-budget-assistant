@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, RefreshTokenDto, ForgotPasswordDto, ResetPasswordDto, VerifyEmailDto, ChangeEmailRequestDto, ChangeEmailConfirmDto } from './dto';
+import { RegisterDto, LoginDto, RefreshTokenDto, ForgotPasswordDto, ResetPasswordDto, VerifyEmailDto, ChangeEmailRequestDto, ChangeEmailConfirmDto, GoogleAuthDto } from './dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
@@ -46,6 +46,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resendVerification(@Body() dto: ForgotPasswordDto) {
     return this.authService.resendVerificationEmail(dto.email);
+  }
+
+  @Post('google')
+  @HttpCode(HttpStatus.OK)
+  async googleLogin(@Body() dto: GoogleAuthDto) {
+    return this.authService.googleLogin(dto);
   }
 
   @Post('change-email/request')

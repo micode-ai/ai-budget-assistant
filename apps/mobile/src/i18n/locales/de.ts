@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Geben Sie den 6-stelligen Code ein, der an {{email}} gesendet wurde',
     signingIn: 'Anmeldung...',
     loadingData: 'Ihre Daten werden geladen...',
+    continueWithGoogle: 'Mit Google fortfahren',
+    or: 'oder',
+    googleTermsNote: 'Mit der Fortsetzung akzeptieren Sie unsere AGB und Datenschutzrichtlinie',
   },
   dashboard: {
     hello: 'Hallo, {{name}}!',
@@ -957,6 +960,9 @@ export default {
     verificationCodeExpired: 'Verifizierungscode abgelaufen',
     verificationFailed: 'Verifizierung fehlgeschlagen',
     unknown: 'Ein unerwarteter Fehler ist aufgetreten',
+    googleSignInFailed: 'Google-Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.',
+    googleEmailNotVerified: 'Die E-Mail-Adresse Ihres Google-Kontos ist nicht verifiziert.',
+    usePasswordLogin: 'Dieses Konto verwendet die Google-Anmeldung. Tippen Sie auf „Mit Google fortfahren".',
   },
   insights: {
     title: 'Vorausschauende Einblicke',

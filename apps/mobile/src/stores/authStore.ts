@@ -33,6 +33,7 @@ interface AuthState {
   initialize: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string, currencyCode?: string, referralCode?: string, language?: string) => Promise<void>;
+  googleLogin: (idToken: string, language?: string) => Promise<void>;
   biometricLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
@@ -290,6 +291,70 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Registration failed',
+            isLoading: false,
+          });
+          throw error;
+        }
+      },
+
+      googleLogin: async (idToken: string, language?: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await api.loginWithGoogle(idToken, language);
+
+          const user: User = {
+            id: response.user.id,
+            email: response.user.email,
+            name: response.user.name,
+            currencyCode: (response.user.currencyCode || 'USD') as Currency,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            defaultAccountId: response.user.defaultAccountId,
+            isVerified: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+
+          await secureStorage.setItem('accessToken', response.accessToken);
+          await secureStorage.setItem('refreshToken', response.refreshToken);
+          await secureStorage.setItem('user', JSON.stringify(user));
+          await secureStorage.setItem('biometricEnabled', 'true');
+
+          set({
+            user,
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+            hasSavedSession: false,
+          });
+
+          if (response.accounts) {
+            await useAccountStore.getState().initialize(
+              response.accounts,
+              response.user.defaultAccountId || '',
+              user.id,
+            );
+          }
+
+          try {
+            const profile = await api.getProfile();
+            if (profile.isAdmin || profile.aiResponseMode || profile.aiModel) {
+              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced', aiModel: profile.aiModel || 'balanced' };
+              set({ user: updatedUser });
+              await secureStorage.setItem('user', JSON.stringify(updatedUser));
+            }
+          } catch { /* non-critical */ }
+
+          await useExchangeRateStore.getState().loadRates();
+          await Promise.allSettled([
+            hydrateTransactions(),
+            useCategoryStore.getState().loadCategories(),
+            useWalletStore.getState().loadWallet(),
+            useBudgetStore.getState().loadBudgets(),
+          ]);
+
+          set({ isAuthenticated: true, isLoading: false });
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Google sign-in failed',
             isLoading: false,
           });
           throw error;

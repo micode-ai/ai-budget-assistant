@@ -88,11 +88,16 @@ iOS, Android, Web
 9. Check your email for a **6-digit verification code**
 10. Enter the code in the app and tap **Verify**
 
+> **Faster: Continue with Google.** On the Sign Up screen, tap **Continue with Google** and choose your Google account — your account is created instantly (no email verification code needed) and you're signed straight in. You can change your currency and name later in Settings.
+
 ## Signing In
 
 1. Open the app and tap **Sign In**
 2. Enter your **Email** and **Password**
 3. Tap **Sign In**
+
+### Sign in with Google
+On the Sign In screen, tap **Continue with Google** and pick your Google account. If you already registered with the same verified email, your Google account is linked automatically and you're signed in.
 
 ### Biometric Login
 
@@ -3696,11 +3701,16 @@ iOS, Android, Web
 9. Проверьте почту — вам придёт **6-значный код подтверждения**
 10. Введите код в приложении и нажмите **Подтвердить**
 
+> **Быстрее: Войти через Google.** На экране регистрации нажмите **Войти через Google** и выберите свой аккаунт Google — аккаунт создаётся мгновенно (код подтверждения на почту не нужен), и вы сразу входите в приложение. Валюту и имя можно изменить позже в Настройках.
+
 ## Вход в систему
 
 1. Откройте приложение и нажмите **Войти**
 2. Введите свою **Электронная почта** и **Пароль**
 3. Нажмите **Войти**
+
+### Вход через Google
+На экране входа нажмите **Войти через Google** и выберите свой аккаунт Google. Если вы уже регистрировались с тем же подтверждённым адресом электронной почты, ваш аккаунт Google привязывается автоматически и вы входите в систему.
 
 ### Биометрический вход
 
@@ -7280,11 +7290,16 @@ iOS, Android, Web
 9. Перевірте пошту — вам надійде **6-значний код підтвердження**
 10. Введіть код у додатку та натисніть **Підтвердити**
 
+> **Швидше: Увійти через Google.** На екрані реєстрації натисніть **Увійти через Google** і виберіть свій акаунт Google — акаунт створюється миттєво (код підтвердження на пошту не потрібен), і ви одразу входите в додаток. Валюту та ім'я можна змінити пізніше в Налаштуваннях.
+
 ## Вхід в систему
 
 1. Відкрийте додаток та натисніть **Увійти**
 2. Введіть **Електронна пошта** та **Пароль**
 3. Натисніть **Увійти**
+
+### Вхід через Google
+На екрані входу натисніть **Увійти через Google** і виберіть свій акаунт Google. Якщо ви вже реєструвалися з тією самою підтвердженою електронною поштою, ваш акаунт Google прив'язується автоматично і ви входите в систему.
 
 ### Біометричний вхід
 
@@ -10849,11 +10864,16 @@ iOS, Android, Web
 9. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod weryfikacyjny**
 10. Wprowadź kod w aplikacji i naciśnij **Zweryfikuj**
 
+> **Szybciej: Kontynuuj z Google.** Na ekranie rejestracji dotknij **Kontynuuj z Google** i wybierz swoje konto Google — konto zostanie utworzone natychmiast (bez kodu weryfikacyjnego na e-mail) i od razu się zalogujesz. Walutę i imię możesz zmienić później w Ustawieniach.
+
 ## Logowanie
 
 1. Otworz aplikacje i dotknij **Zaloguj sie**
 2. Wprowadz swoj **E-mail** i **Haslo**
 3. Dotknij **Zaloguj sie**
+
+### Logowanie przez Google
+Na ekranie logowania dotknij **Kontynuuj z Google** i wybierz swoje konto Google. Jeśli już rejestrowałeś się tym samym zweryfikowanym adresem e-mail, Twoje konto Google zostanie automatycznie powiązane i zaloguje Cię.
 
 ### Logowanie biometryczne
 
@@ -14403,11 +14423,16 @@ iOS, Android, Web
 9. Überprüfen Sie Ihre E-Mail auf einen **6-stelligen Verifizierungscode**
 10. Geben Sie den Code in der App ein und tippen Sie auf **Verifizieren**
 
+> **Schneller: Mit Google fortfahren.** Tippe auf dem Registrierungsbildschirm auf **Mit Google fortfahren** und wähle dein Google-Konto — dein Konto wird sofort erstellt (kein E-Mail-Verifizierungscode nötig) und du bist direkt eingeloggt. Währung und Name kannst du später in den Einstellungen ändern.
+
 ## Anmelden
 
 1. Offne die App und tippe auf **Anmelden**
 2. Gib deine **E-Mail** und dein **Passwort** ein
 3. Tippe auf **Anmelden**
+
+### Mit Google anmelden
+Tippe auf dem Anmeldebildschirm auf **Mit Google fortfahren** und wähle dein Google-Konto. Wenn du dich bereits mit derselben verifizierten E-Mail-Adresse registriert hast, wird dein Google-Konto automatisch verknüpft und du bist eingeloggt.
 
 ### Biometrische Anmeldung
 
@@ -17932,11 +17957,16 @@ iOS, Android, Web
 9. Revisa tu correo para obtener un **código de verificación de 6 dígitos**
 10. Ingresa el código en la aplicación y toca **Verificar**
 
+> **Más rápido: Continuar con Google.** En la pantalla de registro, toca **Continuar con Google** y elige tu cuenta de Google — tu cuenta se crea al instante (sin necesidad de código de verificación por correo) y quedas conectado de inmediato. Puedes cambiar la moneda y el nombre más tarde en Ajustes.
+
 ## Iniciar sesion
 
 1. Abre la aplicacion y toca **Iniciar sesion**
 2. Introduce tu **Correo electronico** y **Contrasena**
 3. Toca **Iniciar sesion**
+
+### Iniciar sesión con Google
+En la pantalla de inicio de sesión, toca **Continuar con Google** y elige tu cuenta de Google. Si ya te registraste con el mismo correo verificado, tu cuenta de Google se vincula automáticamente y quedas conectado.
 
 ### Inicio de sesion biometrico
 
@@ -21450,11 +21480,16 @@ iOS, Android, Web
 9. Vérifiez votre e-mail pour un **code de vérification à 6 chiffres**
 10. Entrez le code dans l'application et appuyez sur **Vérifier**
 
+> **Plus rapide : Continuer avec Google.** Sur l'écran d'inscription, appuyez sur **Continuer avec Google** et choisissez votre compte Google — votre compte est créé instantanément (aucun code de vérification par e-mail requis) et vous êtes connecté directement. Vous pouvez modifier votre devise et votre nom plus tard dans les Paramètres.
+
 ## Se connecter
 
 1. Ouvrez l'application et appuyez sur **Se connecter**
 2. Entrez votre **E-mail** et votre **Mot de passe**
 3. Appuyez sur **Se connecter**
+
+### Se connecter avec Google
+Sur l'écran de connexion, appuyez sur **Continuer avec Google** et choisissez votre compte Google. Si vous vous êtes déjà inscrit avec le même e-mail vérifié, votre compte Google est lié automatiquement et vous êtes connecté.
 
 ### Connexion biometrique
 
@@ -24966,11 +25001,16 @@ iOS, Android, Web
 9. Праверце пошту — вам прыйдзе **6-значны код пацверджання**
 10. Увядзіце код у праграме і націсніце **Пацвердзіць**
 
+> **Хутчэй: Увайсці праз Google.** На экране рэгістрацыі націсніце **Увайсці праз Google** і выберыце свой акаўнт Google — акаўнт ствараецца імгненна (код пацверджання на пошту не патрэбны), і вы адразу ўваходзіце ў праграму. Валюту і імя можна змяніць пазней у Наладах.
+
 ## Уваход у сістэму
 
 1. Адкрыйце праграму і націсніце **Увайсці**
 2. Увядзіце сваю **Электронная пошта** і **Пароль**
 3. Націсніце **Увайсці**
+
+### Уваход праз Google
+На экране ўваходу націсніце **Увайсці праз Google** і выберыце свой акаўнт Google. Калі вы ўжо рэгістраваліся з тым жа пацверджаным адрасам электроннай пошты, ваш акаўнт Google прывязваецца аўтаматычна і вы ўваходзіце ў сістэму.
 
 ### Біяметрычны ўваход
 
@@ -28442,11 +28482,16 @@ iOS, Android, Web
 9. Controleer je e-mail op een **6-cijferige verificatiecode**
 10. Voer de code in de app in en tik op **Verifiëren**
 
+> **Sneller: Doorgaan met Google.** Tik op het registratiescherm op **Doorgaan met Google** en kies je Google-account — je account wordt direct aangemaakt (geen verificatiecode per e-mail nodig) en je bent meteen ingelogd. Je kunt later in Instellingen je valuta en naam wijzigen.
+
 ## Inloggen
 
 1. Open de app en tik op **Inloggen**
 2. Voer je **E-mailadres** en **Wachtwoord** in
 3. Tik op **Inloggen**
+
+### Inloggen met Google
+Tik op het inlogscherm op **Doorgaan met Google** en kies je Google-account. Als je je al hebt geregistreerd met hetzelfde geverifieerde e-mailadres, wordt je Google-account automatisch gekoppeld en ben je ingelogd.
 
 ### Biometrisch inloggen
 

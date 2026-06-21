@@ -10,7 +10,8 @@ import { AccountsService } from '../accounts/accounts.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AdminGateway } from '../admin/admin.gateway';
 import { ReferralsService } from '../referrals/referrals.service';
-import { RegisterDto, LoginDto, ChangeEmailRequestDto, ChangeEmailConfirmDto } from './dto';
+import { RegisterDto, LoginDto, ChangeEmailRequestDto, ChangeEmailConfirmDto, GoogleAuthDto } from './dto';
+import { GoogleTokenVerifier } from './google-token-verifier';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ export class AuthService {
     @Inject(forwardRef(() => AdminGateway))
     private readonly adminGateway: AdminGateway,
     private readonly referralsService: ReferralsService,
+    private readonly googleVerifier: GoogleTokenVerifier,
   ) {}
 
   private resetRequestAttempts = new Map<string, number[]>();
@@ -132,6 +134,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!user.passwordHash) {
+      throw new UnauthorizedException('Use Google sign-in for this account');
+    }
+
     // Verify password
     const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
     if (!isPasswordValid) {
@@ -180,6 +186,90 @@ export class AuthService {
         name: user.name,
         currencyCode: user.currencyCode,
         defaultAccountId: user.defaultAccountId,
+        isVerified: true,
+      },
+      accounts,
+    };
+  }
+
+  async googleLogin(dto: GoogleAuthDto) {
+    const payload = await this.googleVerifier.verify(dto.idToken);
+
+    if (!payload.email || payload.email_verified !== true) {
+      throw new UnauthorizedException('Google account email is not verified');
+    }
+
+    const email = payload.email.toLowerCase();
+    const googleId = payload.sub;
+    const name = payload.name || email.split('@')[0];
+
+    // 1. Existing Google user
+    let user = await this.usersService.findByGoogleId(googleId);
+
+    // 2. Auto-link to an existing password account by verified email
+    if (!user) {
+      const byEmail = await this.usersService.findByEmail(email);
+      if (byEmail) {
+        if (!byEmail.isActive) {
+          throw new UnauthorizedException('Account is deactivated');
+        }
+        user = await this.usersService.update(byEmail.id, {
+          googleId,
+          ...(byEmail.isVerified ? {} : { isVerified: true }),
+        });
+      }
+    }
+
+    // 3. Brand-new user — create with defaults
+    let createdAccountId: string | undefined;
+    if (!user) {
+      user = await this.usersService.create({
+        email,
+        name,
+        googleId,
+        isVerified: true,
+        currencyCode: dto.currencyCode,
+        language: dto.language,
+      });
+
+      this.telegramService.notifyNewUser(user.name, user.email);
+      this.adminGateway.emitNewUser({
+        userId: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date().toISOString(),
+      });
+
+      if (dto.referralCode) {
+        await this.referralsService.applyReferralCode(user.id, dto.referralCode);
+      }
+
+      const defaultAccount = await this.accountsService.createDefaultAccount(
+        user.id,
+        dto.currencyCode || 'USD',
+        dto.language || 'en',
+      );
+      createdAccountId = defaultAccount.id;
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
+    this.usersService.updateLastSync(user.id).catch(() => null);
+
+    const tokens = await this.generateTokens(user.id, user.email);
+    const accounts = await this.accountsService.findAllForUser(user.id);
+
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        currencyCode: user.currencyCode,
+        defaultAccountId: user.defaultAccountId || createdAccountId,
         isVerified: true,
       },
       accounts,
@@ -377,6 +467,10 @@ export class AuthService {
     const user = await this.usersService.findById(userId);
     if (!user || !user.isActive) {
       throw new UnauthorizedException('User not found');
+    }
+
+    if (!user.passwordHash) {
+      throw new BadRequestException('This account uses Google sign-in and has no password to verify');
     }
 
     const isPasswordValid = await bcrypt.compare(dto.currentPassword, user.passwordHash);

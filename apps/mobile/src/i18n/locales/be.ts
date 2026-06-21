@@ -99,6 +99,9 @@ export default {
     enterVerificationCode: 'Увядзіце 6-значны код, адпраўлены на {{email}}',
     signingIn: 'Уваход...',
     loadingData: 'Загрузка вашых даных...',
+    continueWithGoogle: 'Працягнуць з Google',
+    or: 'або',
+    googleTermsNote: 'Працягваючы, вы прымаеце Умовы і Палітыку прыватнасці',
   },
   dashboard: {
     hello: 'Прывітанне, {{name}}!',
@@ -944,6 +947,9 @@ export default {
     verificationCodeExpired: 'Тэрмін дзеяння коду скончыўся',
     verificationFailed: 'Памылка пацвярджэння',
     unknown: 'Адбылася непрадбачаная памылка',
+    googleSignInFailed: 'Не ўдалося ўвайсці праз Google. Паспрабуйце яшчэ раз.',
+    googleEmailNotVerified: 'Электронная пошта вашага ўліковага запісу Google не пацверджана.',
+    usePasswordLogin: 'Гэты ўліковы запіс выкарыстоўвае ўваход праз Google. Націсніце «Працягнуць з Google».',
   },
   insights: {
     title: 'Прагнозная аналітыка',

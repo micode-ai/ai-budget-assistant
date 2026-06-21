@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Ingresa el código de 6 dígitos enviado a {{email}}',
     signingIn: 'Iniciando sesión...',
     loadingData: 'Cargando tus datos...',
+    continueWithGoogle: 'Continuar con Google',
+    or: 'o',
+    googleTermsNote: 'Al continuar, aceptas nuestros Términos y la Política de Privacidad',
   },
   dashboard: {
     hello: '¡Hola, {{name}}!',
@@ -957,6 +960,9 @@ export default {
     verificationCodeExpired: 'El código de verificación ha expirado',
     verificationFailed: 'La verificación falló',
     unknown: 'Ocurrió un error inesperado',
+    googleSignInFailed: 'Error al iniciar sesión con Google. Inténtalo de nuevo.',
+    googleEmailNotVerified: 'El correo de tu cuenta de Google no está verificado.',
+    usePasswordLogin: 'Esta cuenta usa el inicio de sesión con Google. Toca "Continuar con Google".',
   },
   insights: {
     title: 'Análisis predictivo',

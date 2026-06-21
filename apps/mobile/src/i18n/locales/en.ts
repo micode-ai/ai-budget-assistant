@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Enter the 6-digit code sent to {{email}}',
     signingIn: 'Signing in...',
     loadingData: 'Loading your data...',
+    continueWithGoogle: 'Continue with Google',
+    or: 'or',
+    googleTermsNote: 'By continuing you accept our Terms and Privacy Policy',
   },
   dashboard: {
     hello: 'Hello, {{name}}!',
@@ -957,6 +960,9 @@ export default {
     loadConversationFailed: 'Failed to load conversation',
     chatError: 'Sorry, I encountered an error. Please check your connection and try again.',
     unknown: 'An unexpected error occurred',
+    googleSignInFailed: 'Google sign-in failed. Please try again.',
+    googleEmailNotVerified: 'Your Google account email is not verified.',
+    usePasswordLogin: 'This account uses Google sign-in. Tap "Continue with Google".',
   },
   insights: {
     title: 'Predictive Insights',
