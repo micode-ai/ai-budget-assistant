@@ -24,6 +24,17 @@ export const authApi = {
     );
   },
 
+  loginWithGoogle(idToken: string, language?: string, currencyCode?: string, referralCode?: string) {
+    return httpClient.request<{ accessToken: string; refreshToken: string; user: any; accounts: Account[] }>(
+      '/auth/google',
+      {
+        method: 'POST',
+        body: JSON.stringify({ idToken, language, currencyCode, referralCode }),
+        skipAuth: true,
+      },
+    );
+  },
+
   forgotPassword(email: string) {
     return httpClient.request<{ message: string }>('/auth/forgot-password', {
       method: 'POST',

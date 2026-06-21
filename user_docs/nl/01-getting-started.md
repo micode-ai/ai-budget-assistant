@@ -15,11 +15,16 @@
 9. Controleer je e-mail op een **6-cijferige verificatiecode**
 10. Voer de code in de app in en tik op **Verifiëren**
 
+> **Sneller: Doorgaan met Google.** Tik op het registratiescherm op **Doorgaan met Google** en kies je Google-account — je account wordt direct aangemaakt (geen verificatiecode per e-mail nodig) en je bent meteen ingelogd. Je kunt later in Instellingen je valuta en naam wijzigen.
+
 ## Inloggen
 
 1. Open de app en tik op **Inloggen**
 2. Voer je **E-mailadres** en **Wachtwoord** in
 3. Tik op **Inloggen**
+
+### Inloggen met Google
+Tik op het inlogscherm op **Doorgaan met Google** en kies je Google-account. Als je je al hebt geregistreerd met hetzelfde geverifieerde e-mailadres, wordt je Google-account automatisch gekoppeld en ben je ingelogd.
 
 ### Biometrisch inloggen
 

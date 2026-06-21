@@ -15,11 +15,16 @@
 9. Vérifiez votre e-mail pour un **code de vérification à 6 chiffres**
 10. Entrez le code dans l'application et appuyez sur **Vérifier**
 
+> **Plus rapide : Continuer avec Google.** Sur l'écran d'inscription, appuyez sur **Continuer avec Google** et choisissez votre compte Google — votre compte est créé instantanément (aucun code de vérification par e-mail requis) et vous êtes connecté directement. Vous pouvez modifier votre devise et votre nom plus tard dans les Paramètres.
+
 ## Se connecter
 
 1. Ouvrez l'application et appuyez sur **Se connecter**
 2. Entrez votre **E-mail** et votre **Mot de passe**
 3. Appuyez sur **Se connecter**
+
+### Se connecter avec Google
+Sur l'écran de connexion, appuyez sur **Continuer avec Google** et choisissez votre compte Google. Si vous vous êtes déjà inscrit avec le même e-mail vérifié, votre compte Google est lié automatiquement et vous êtes connecté.
 
 ### Connexion biometrique
 

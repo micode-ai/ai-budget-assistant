@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Voer de 6-cijferige code in die naar {{email}} is verzonden',
     signingIn: 'Inloggen...',
     loadingData: 'Je gegevens worden geladen...',
+    continueWithGoogle: 'Doorgaan met Google',
+    or: 'of',
+    googleTermsNote: 'Door door te gaan accepteer je onze Voorwaarden en het Privacybeleid',
   },
   dashboard: {
     hello: 'Hallo, {{name}}!',
@@ -957,6 +960,9 @@ export default {
     loadConversationFailed: 'Gesprek laden mislukt',
     chatError: 'Sorry, er is een fout opgetreden. Controleer je verbinding en probeer het opnieuw.',
     unknown: 'Er is een onverwachte fout opgetreden',
+    googleSignInFailed: 'Inloggen met Google is mislukt. Probeer het opnieuw.',
+    googleEmailNotVerified: 'Het e-mailadres van je Google-account is niet geverifieerd.',
+    usePasswordLogin: 'Dit account gebruikt Google-aanmelding. Tik op "Doorgaan met Google".',
   },
   insights: {
     title: 'Voorspellende inzichten',

@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Wprowadź 6-cyfrowy kod wysłany na {{email}}',
     signingIn: 'Logowanie...',
     loadingData: 'Ładowanie Twoich danych...',
+    continueWithGoogle: 'Kontynuuj z Google',
+    or: 'lub',
+    googleTermsNote: 'Kontynuując, akceptujesz nasz Regulamin i Politykę prywatności',
   },
   dashboard: {
     hello: 'Cześć, {{name}}!',
@@ -959,6 +962,9 @@ export default {
     verificationCodeExpired: 'Kod weryfikacyjny wygasł',
     verificationFailed: 'Weryfikacja nie powiodła się',
     unknown: 'Wystąpił nieoczekiwany błąd',
+    googleSignInFailed: 'Logowanie przez Google nie powiodło się. Spróbuj ponownie.',
+    googleEmailNotVerified: 'Adres e-mail Twojego konta Google nie został zweryfikowany.',
+    usePasswordLogin: 'To konto korzysta z logowania Google. Naciśnij „Kontynuuj z Google".',
   },
   insights: {
     title: 'Analiza predykcyjna',

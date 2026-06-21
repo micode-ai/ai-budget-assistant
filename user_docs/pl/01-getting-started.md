@@ -15,11 +15,16 @@
 9. Sprawdź swoją pocztę — otrzymasz **6-cyfrowy kod weryfikacyjny**
 10. Wprowadź kod w aplikacji i naciśnij **Zweryfikuj**
 
+> **Szybciej: Kontynuuj z Google.** Na ekranie rejestracji dotknij **Kontynuuj z Google** i wybierz swoje konto Google — konto zostanie utworzone natychmiast (bez kodu weryfikacyjnego na e-mail) i od razu się zalogujesz. Walutę i imię możesz zmienić później w Ustawieniach.
+
 ## Logowanie
 
 1. Otworz aplikacje i dotknij **Zaloguj sie**
 2. Wprowadz swoj **E-mail** i **Haslo**
 3. Dotknij **Zaloguj sie**
+
+### Logowanie przez Google
+Na ekranie logowania dotknij **Kontynuuj z Google** i wybierz swoje konto Google. Jeśli już rejestrowałeś się tym samym zweryfikowanym adresem e-mail, Twoje konto Google zostanie automatycznie powiązane i zaloguje Cię.
 
 ### Logowanie biometryczne
 

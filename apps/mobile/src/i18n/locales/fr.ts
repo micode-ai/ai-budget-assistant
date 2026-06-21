@@ -101,6 +101,9 @@ export default {
     enterVerificationCode: 'Entrez le code à 6 chiffres envoyé à {{email}}',
     signingIn: 'Connexion...',
     loadingData: 'Chargement de vos données...',
+    continueWithGoogle: 'Continuer avec Google',
+    or: 'ou',
+    googleTermsNote: 'En continuant, vous acceptez nos Conditions et la Politique de confidentialité',
   },
   dashboard: {
     hello: 'Bonjour, {{name}}!',
@@ -957,6 +960,9 @@ export default {
     verificationCodeExpired: 'Le code de vérification a expiré',
     verificationFailed: 'La vérification a échoué',
     unknown: 'Une erreur inattendue est survenue',
+    googleSignInFailed: 'Échec de la connexion Google. Veuillez réessayer.',
+    googleEmailNotVerified: "L'adresse e-mail de votre compte Google n'est pas vérifiée.",
+    usePasswordLogin: 'Ce compte utilise la connexion Google. Appuyez sur « Continuer avec Google ».',
   },
   insights: {
     title: 'Analyses prédictives',

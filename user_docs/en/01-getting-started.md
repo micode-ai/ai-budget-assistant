@@ -15,11 +15,16 @@
 9. Check your email for a **6-digit verification code**
 10. Enter the code in the app and tap **Verify**
 
+> **Faster: Continue with Google.** On the Sign Up screen, tap **Continue with Google** and choose your Google account — your account is created instantly (no email verification code needed) and you're signed straight in. You can change your currency and name later in Settings.
+
 ## Signing In
 
 1. Open the app and tap **Sign In**
 2. Enter your **Email** and **Password**
 3. Tap **Sign In**
+
+### Sign in with Google
+On the Sign In screen, tap **Continue with Google** and pick your Google account. If you already registered with the same verified email, your Google account is linked automatically and you're signed in.
 
 ### Biometric Login
 

@@ -15,11 +15,16 @@
 9. Überprüfen Sie Ihre E-Mail auf einen **6-stelligen Verifizierungscode**
 10. Geben Sie den Code in der App ein und tippen Sie auf **Verifizieren**
 
+> **Schneller: Mit Google fortfahren.** Tippe auf dem Registrierungsbildschirm auf **Mit Google fortfahren** und wähle dein Google-Konto — dein Konto wird sofort erstellt (kein E-Mail-Verifizierungscode nötig) und du bist direkt eingeloggt. Währung und Name kannst du später in den Einstellungen ändern.
+
 ## Anmelden
 
 1. Offne die App und tippe auf **Anmelden**
 2. Gib deine **E-Mail** und dein **Passwort** ein
 3. Tippe auf **Anmelden**
+
+### Mit Google anmelden
+Tippe auf dem Anmeldebildschirm auf **Mit Google fortfahren** und wähle dein Google-Konto. Wenn du dich bereits mit derselben verifizierten E-Mail-Adresse registriert hast, wird dein Google-Konto automatisch verknüpft und du bist eingeloggt.
 
 ### Biometrische Anmeldung
 

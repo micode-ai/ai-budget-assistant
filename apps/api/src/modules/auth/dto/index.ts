@@ -92,3 +92,22 @@ export class ChangeEmailConfirmDto {
   @Matches(/^\d{6}$/, { message: 'Code must be 6 digits' })
   code: string;
 }
+
+export class GoogleAuthDto {
+  @IsString()
+  @MinLength(1)
+  idToken: string;
+
+  @IsOptional()
+  @IsString()
+  language?: string;
+
+  @IsOptional()
+  @IsString()
+  currencyCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^[A-Z0-9]{4,10}$/, { message: 'Invalid referral code format' })
+  referralCode?: string;
+}

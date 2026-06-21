@@ -3,11 +3,13 @@ import { PrismaService } from '../../database/prisma.service';
 
 interface CreateUserData {
   email: string;
-  passwordHash: string;
+  passwordHash?: string;
   name: string;
   currencyCode?: string;
   timezone?: string;
   language?: string;
+  googleId?: string;
+  isVerified?: boolean;
   emailVerificationCode?: string;
   emailVerificationExpiresAt?: Date;
 }
@@ -20,10 +22,13 @@ export class UsersService {
     return this.prisma.user.create({
       data: {
         email: data.email,
-        passwordHash: data.passwordHash,
+        passwordHash: data.passwordHash ?? null,
         name: data.name,
         currencyCode: data.currencyCode || 'USD',
         timezone: data.timezone || 'UTC',
+        language: data.language || 'en',
+        googleId: data.googleId,
+        isVerified: data.isVerified ?? false,
         emailVerificationCode: data.emailVerificationCode,
         emailVerificationExpiresAt: data.emailVerificationExpiresAt,
       },
@@ -39,6 +44,12 @@ export class UsersService {
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
+    });
+  }
+
+  async findByGoogleId(googleId: string) {
+    return this.prisma.user.findUnique({
+      where: { googleId },
     });
   }
 
