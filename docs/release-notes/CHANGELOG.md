@@ -8,6 +8,26 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.8.0 — 2026-06-22
+
+**Sign in with Google**
+- **"Continue with Google"** is now available on the login and registration screens — no password needed. Existing accounts are automatically linked if the email matches your Google account (ABA-282).
+
+**AI chat**
+- **Amounts now appear in your display currency** — when you ask the AI about expenses, budgets, or category breakdowns, it converts every figure to your selected currency on the fly (ABA-263).
+- **Better language detection** — the AI no longer confuses French for Spanish when your message contains accented characters that both languages share (ABA-264).
+
+**Savings goals**
+- **Contribution history** — the goal detail screen now shows a log of every deposit: how much, when, and whether it was added manually or by the AI (ABA-262).
+
+**Pro plan**
+- **AI features are now Pro** — Fat Finder, Spending Story, and AI Insights require a Pro subscription. A prominent 7-day free trial invite appears when you hit the limit (ABA-265, ABA-266).
+
+**Web**
+- Marketing landing at [ai-budget.pl](https://ai-budget.pl) in 9 languages, with an SEO blog, Privacy Policy, Cookie Policy, and About page (ABA-267–ABA-281).
+
+---
+
 ## 1.7.0 — 2026-06-15
 
 **Wallet**
