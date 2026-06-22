@@ -1,6 +1,6 @@
 # Alertes : activité inhabituelle
 
-L'application surveille vos dépenses et vous prévient quand quelque chose semble inhabituel — aucune configuration nécessaire. Appuyez sur l'icône de cloche sur l'écran d'accueil pour voir toutes les alertes.
+> L'application surveille vos dépenses et vous prévient quand quelque chose semble inhabituel — aucune configuration nécessaire. Appuyez sur l'icône de cloche sur l'écran d'accueil pour voir toutes les alertes.
 
 ## Ce que l'application détecte
 

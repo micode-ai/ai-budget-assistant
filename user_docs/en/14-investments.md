@@ -1,6 +1,6 @@
 # Investment Portfolio
 
-Track your investment portfolio with real-time market prices. Monitor stocks, ETFs, cryptocurrencies, bonds, and commodities all in one place.
+> Track your investment portfolio with real-time market prices. Monitor stocks, ETFs, cryptocurrencies, bonds, and commodities all in one place.
 
 ## Overview
 

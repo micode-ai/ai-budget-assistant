@@ -6,6 +6,8 @@
 
 Zakladka **Analityka** zapewnia kompleksowy widok Twoich wydatkow poprzez wykresy, wnioski i eksploracje danych. Wszystkie dane bazuja na wydatkach z wybranego konta.
 
+![Ekran analityki z historią wydatków i przychodami według kategorii](../img/analytics.jpg)
+
 ## Zakres czasowy i filtry
 
 U gory ekranu Analityki:

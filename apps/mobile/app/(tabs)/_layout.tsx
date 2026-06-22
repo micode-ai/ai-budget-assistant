@@ -9,6 +9,7 @@ import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
 import { useAlertStore } from '@/stores/alertStore';
 import { useTheme } from '@/theme';
 import { HydrationProgressBar } from '@/components/HydrationProgressBar';
+import { useIsDesktopWeb } from '@/components/webLayout.constants';
 
 const tabIcons = {
   home: require('../../assets/widget-icons/home.png'),
@@ -107,6 +108,7 @@ export default function TabLayout() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const isDesktopWeb = useIsDesktopWeb();
 
   // If user is not authenticated, redirect to login
   if (!isAuthenticated) {
@@ -127,19 +129,25 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: theme.colors.tabBarActive,
         tabBarInactiveTintColor: theme.colors.tabBarInactive,
-        tabBarStyle: {
-          backgroundColor: theme.colors.surface,
-          borderTopColor: theme.colors.borderLight,
-          paddingTop: 8,
-          // Web needs more vertical room: react-native-web renders the icon +
-          // label taller than native, so the label was clipped by the fixed
-          // 60px height. Give it extra height + bottom padding on web only.
-          paddingBottom: Platform.OS === 'web' ? 12 : 8 + insets.bottom,
-          height: (Platform.OS === 'web' ? 74 : 60) + insets.bottom,
-        },
+        tabBarStyle: isDesktopWeb
+          ? { display: 'none' }
+          : {
+              backgroundColor: theme.colors.surface,
+              borderTopColor: theme.colors.borderLight,
+              paddingTop: 8,
+              // Web needs more vertical room: react-native-web renders the icon +
+              // label taller than native, so the label was clipped by the fixed
+              // 60px height. Give it extra height + bottom padding on web only.
+              paddingBottom: Platform.OS === 'web' ? 12 : 8 + insets.bottom,
+              height: (Platform.OS === 'web' ? 74 : 60) + insets.bottom,
+            },
         tabBarLabelStyle: {
           ...theme.textStyles.tabLabel,
         },
+        // On desktop web the full-width WebTopBar (in WebShell) carries the
+        // account/currency/alerts/settings controls + section title, so the
+        // per-screen tab header is hidden to avoid a duplicate header.
+        headerShown: !isDesktopWeb,
         // Custom two-row header: page title on its own top row, then the
         // account/currency pills + bell/settings row, then the divider.
         // Gives precise control over spacing (RN's default header centres the

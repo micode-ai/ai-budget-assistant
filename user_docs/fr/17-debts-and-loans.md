@@ -6,6 +6,8 @@
 
 La fonctionnalite «Dettes et Prets» vous permet de suivre deux types d'obligations financieres :
 
+![Écran Dettes et Prêts avec l'argent prêté et emprunté](../img/debts.jpg)
+
 - **Argent prete** — argent que vous avez donne a quelqu'un (enregistre comme depense avec indicateur de dette)
 - **Argent emprunte** — argent que quelqu'un vous a donne (enregistre comme revenu avec indicateur de dette)
 

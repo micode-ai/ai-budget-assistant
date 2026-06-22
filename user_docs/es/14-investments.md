@@ -1,6 +1,6 @@
 # Cartera de inversiones
 
-Realiza un seguimiento de tu cartera de inversiones con precios de mercado en tiempo real. Monitoriza acciones, ETFs, criptomonedas, bonos y materias primas en un solo lugar.
+> Realiza un seguimiento de tu cartera de inversiones con precios de mercado en tiempo real. Monitoriza acciones, ETFs, criptomonedas, bonos y materias primas en un solo lugar.
 
 ## Descripcion general
 

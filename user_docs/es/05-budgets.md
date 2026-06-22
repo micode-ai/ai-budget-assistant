@@ -6,6 +6,8 @@
 
 Los presupuestos te ayudan a controlar tus gastos estableciendo límites para períodos de tiempo específicos. La aplicación rastrea tus gastos en comparación con estos límites y te notifica cuando te acercas o excedes tu presupuesto.
 
+![Detalles del presupuesto con desglose por categoría](../img/budgets.jpg)
+
 ## Lista de presupuestos
 
 La pestaña **Presupuestos** muestra todos tus presupuestos activos:

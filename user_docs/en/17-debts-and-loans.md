@@ -6,6 +6,8 @@
 
 The Debts & Loans feature lets you track two types of financial obligations:
 
+![Debts and Loans screen with money lent and borrowed](../img/debts.jpg)
+
 - **Money Lent** — money you gave to someone (recorded as an expense with debt flag)
 - **Money Borrowed** — money someone gave to you (recorded as an income with debt flag)
 

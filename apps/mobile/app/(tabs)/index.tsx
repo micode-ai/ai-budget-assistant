@@ -25,6 +25,7 @@ import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidge
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
 import { useAlertStore } from '@/stores/alertStore';
+import { useIsDesktopWeb } from '@/components/webLayout.constants';
 
 // Static maps — no render-time dependency, hoisted to module scope.
 const quickActionRoutes: Record<QuickActionKey, string> = {
@@ -70,6 +71,9 @@ export default function DashboardScreen() {
   const loadAlerts = useAlertStore((s) => s.loadAlerts);
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  // On desktop web the full-width WebTopBar carries the account/currency/alerts/
+  // settings controls, so the hero's control row + divider are hidden there.
+  const isDesktopWeb = useIsDesktopWeb();
 
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
@@ -154,36 +158,39 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Orange Hero Header */}
-      <View style={[styles.heroHeader, !showQuickActions && styles.heroHeaderNoStrip]}>
-        <View style={styles.heroTopRow}>
-          <AccountSwitcher compact showCurrency={false} />
-          <CurrencyPill compact />
-          <View style={styles.heroTopSpacer} />
-          <TouchableOpacity
-            onPress={() => router.push('/alerts' as any)}
-            style={[styles.settingsButton, styles.bellButton]}
-          >
-            <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
-            {unreadAlertCount > 0 && (
-              <View style={styles.alertBadge}>
-                <Text style={styles.alertBadgeText}>{unreadAlertCount > 9 ? '9+' : unreadAlertCount}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push('/settings')}
-            style={styles.settingsButton}
-          >
-            <Ionicons name="settings-outline" size={22} color="#FFFFFF" />
-          </TouchableOpacity>
+      {/* Orange Hero Header — the controls row + divider are hidden on desktop
+          web, where WebTopBar provides account/currency/alerts/settings. */}
+      {!isDesktopWeb && (
+        <View style={[styles.heroHeader, !showQuickActions && styles.heroHeaderNoStrip]}>
+          <View style={styles.heroTopRow}>
+            <AccountSwitcher compact showCurrency={false} />
+            <CurrencyPill compact />
+            <View style={styles.heroTopSpacer} />
+            <TouchableOpacity
+              onPress={() => router.push('/alerts' as any)}
+              style={[styles.settingsButton, styles.bellButton]}
+            >
+              <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
+              {unreadAlertCount > 0 && (
+                <View style={styles.alertBadge}>
+                  <Text style={styles.alertBadgeText}>{unreadAlertCount > 9 ? '9+' : unreadAlertCount}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.push('/settings')}
+              style={styles.settingsButton}
+            >
+              <Ionicons name="settings-outline" size={22} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.heroDivider} />
         </View>
-        <View style={styles.heroDivider} />
-      </View>
+      )}
 
       {/* Quick Actions — wrapping grid (4 per row); extra rows push content down */}
       {showQuickActions && (
-        <View style={[styles.quickActionsGrid, Platform.OS === 'web' && styles.webCenterRow]}>
+        <View style={[styles.quickActionsGrid, Platform.OS === 'web' && styles.webCenterRow, isDesktopWeb && styles.quickActionsGridDesktop]}>
           {visibleQuickActions.map((key) => (
             <TouchableOpacity
               key={key}
@@ -204,8 +211,9 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.primary} />}
       >
-        {currentAccountType === 'investment' && investmentSummary && (
-          <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={() => router.push('/investment')}>
+        {(() => {
+          const investmentEl = currentAccountType === 'investment' && investmentSummary ? (
+          <TouchableOpacity key="investment" style={styles.card} activeOpacity={0.7} onPress={() => router.push('/investment')}>
             <View style={styles.chevronHint}>
               <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
             </View>
@@ -234,11 +242,11 @@ export default function DashboardScreen() {
               {t('investments.holdingsCount', { count: investmentSummary.holdings.length })}
             </Text>
           </TouchableOpacity>
-        )}
+          ) : null;
 
-        {/* De-dupe at the render site: a duplicate key in the stored order
-            would render the same widget twice (doubled card + broken modal). */}
-        {[...new Set(widgetOrder)].map((key) => {
+          // De-dupe at the render site: a duplicate key in the stored order
+          // would render the same widget twice (doubled card + broken modal).
+          const mapped = [...new Set(widgetOrder)].map((key) => {
           switch (key) {
             case 'financialHealth':
               return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
@@ -439,7 +447,23 @@ export default function DashboardScreen() {
             default:
               return null;
           }
-        })}
+          });
+
+          const els = [investmentEl, ...mapped].filter(Boolean);
+          if (!isDesktopWeb) return els;
+
+          // Desktop web: lay the widgets out in two balanced columns
+          // (alternating by display order) so the wide viewport isn't a
+          // single sparse column. Native/narrow web keep the 1-col list.
+          const leftCol = els.filter((_, i) => i % 2 === 0);
+          const rightCol = els.filter((_, i) => i % 2 === 1);
+          return (
+            <View style={styles.webTwoCol}>
+              <View style={styles.webCol}>{leftCol}</View>
+              <View style={styles.webCol}>{rightCol}</View>
+            </View>
+          );
+        })()}
 
       </ScrollView>
       <NewBadgeModal />
@@ -527,6 +551,11 @@ const createStyles = (theme: Theme) => ({
   webCenterRow: {
     justifyContent: 'center' as const,
   },
+  // Desktop web hides the hero, so the negative overlap margin would clip the
+  // first row under the top bar — give it normal top spacing instead.
+  quickActionsGridDesktop: {
+    marginTop: theme.spacing[4],
+  },
   quickActionButton: {
     width: 76,
     alignItems: 'center' as const,
@@ -539,6 +568,16 @@ const createStyles = (theme: Theme) => ({
   },
   // Scroll content
   scrollView: {
+    flex: 1,
+  },
+  // Desktop web: two side-by-side widget columns. Each column stacks its cards
+  // (cards keep their own marginBottom); columnGap separates the two columns.
+  webTwoCol: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    columnGap: theme.spacing[4],
+  },
+  webCol: {
     flex: 1,
   },
   content: {

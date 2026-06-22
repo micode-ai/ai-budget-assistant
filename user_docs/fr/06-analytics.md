@@ -6,6 +6,8 @@
 
 L'onglet **Analyses** offre une vue complete de vos depenses a travers des graphiques, des aperçus et l'exploration des donnees. Toutes les donnees sont basees sur vos depenses dans le compte selectionne.
 
+![Écran Analyses avec votre histoire de dépenses et les revenus par catégorie](../img/analytics.jpg)
+
 ## Periode et filtres
 
 En haut de l'ecran Analyses :

@@ -6,6 +6,8 @@
 
 The **Analytics** tab provides a comprehensive view of your spending through charts, insights, and data exploration. All data is based on your expenses in the selected account.
 
+![Analytics screen with your spending story and income by category](../img/analytics.jpg)
+
 ## Time Range & Filters
 
 At the top of the Analytics screen:

@@ -1,10 +1,12 @@
 # Gestor de suscripciones
 
-Lleva el control de todos tus cargos recurrentes en un solo lugar: servicios de streaming, herramientas SaaS, gimnasio y más.
+> Lleva el control de todos tus cargos recurrentes en un solo lugar: servicios de streaming, herramientas SaaS, gimnasio y más.
 
 ## ¿Qué es el gestor de suscripciones?
 
 El gestor de suscripciones es un tracker dedicado para tus pagos recurrentes. A diferencia de las transacciones, las suscripciones no se detectan automáticamente — las agregas manualmente o mediante el botón **«Rastrear esta suscripción»** en los resultados de Fat Finder.
+
+![Pantalla de Suscripciones con coste mensual y renovaciones](../img/subscriptions.jpg)
 
 Cada suscripción almacena:
 - Nombre (Netflix, Spotify, gimnasio…)

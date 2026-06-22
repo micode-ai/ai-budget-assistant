@@ -6,6 +6,8 @@
 
 Met het Verwijzingsprogramma kun je vrienden uitnodigen voor AI Budget Assistant. Wanneer ze zich aanmelden met jouw code en de app 7 dagen actief gebruiken, verdien je **+30 bonus-AI-verzoeken**. Verwezen vrienden krijgen een **verlengde proefperiode van 14 dagen** in plaats van de standaard 7 dagen.
 
+![Scherm Vrienden uitnodigen met verwijzingscode en mijlpalen](../img/referral.jpg)
+
 ## Je verwijzingscode
 
 Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op het scherm **Vrienden uitnodigen**:

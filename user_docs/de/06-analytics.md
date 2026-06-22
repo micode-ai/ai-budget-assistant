@@ -6,6 +6,8 @@
 
 Der **Analysen**-Tab bietet einen umfassenden Blick auf deine Ausgaben durch Diagramme, Einblicke und Datenexploration. Alle Daten basieren auf deinen Ausgaben im ausgewahlten Konto.
 
+![Analysen-Bildschirm mit deiner Ausgabengeschichte und Einnahmen nach Kategorie](../img/analytics.jpg)
+
 ## Zeitbereich & Filter
 
 Am oberen Rand des Analysen-Bildschirms:

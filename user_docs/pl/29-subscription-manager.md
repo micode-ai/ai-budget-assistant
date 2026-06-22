@@ -1,10 +1,12 @@
 # Menedżer subskrypcji
 
-Śledź wszystkie cykliczne płatności w jednym miejscu — serwisy streamingowe, narzędzia SaaS, siłownia i wiele więcej.
+> Śledź wszystkie cykliczne płatności w jednym miejscu — serwisy streamingowe, narzędzia SaaS, siłownia i wiele więcej.
 
 ## Czym jest menedżer subskrypcji?
 
 Menedżer subskrypcji to dedykowany tracker regularnych płatności. W przeciwieństwie do transakcji, subskrypcje nie są wykrywane automatycznie — dodajesz je ręcznie lub za pomocą przycisku **„Śledź tę subskrypcję"** w wynikach Fat Finder.
+
+![Ekran Subskrypcji z miesięcznym kosztem i odnowieniami](../img/subscriptions.jpg)
 
 Każda subskrypcja zawiera:
 - Nazwę (Netflix, Spotify, siłownia…)

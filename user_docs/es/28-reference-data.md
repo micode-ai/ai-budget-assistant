@@ -6,6 +6,8 @@
 
 Los cuatro tipos de datos de referencia se gestionan desde un único lugar en Ajustes. La interfaz es coherente: **toca una fila para editar**, toca **+** para añadir, toca el **icono de papelera** para eliminar.
 
+![Centro de datos de referencia con categorías, comercios, etiquetas y proyectos](../img/reference-data.jpg)
+
 > **Rol Observador**: los miembros con rol Observador pueden ver los datos de referencia pero no pueden añadir, renombrar ni eliminar.
 
 ## Categorías

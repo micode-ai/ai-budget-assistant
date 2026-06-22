@@ -1,10 +1,10 @@
 # Web-App
 
-Nutze AI Budget Assistant direkt im Browser unter **https://ai-budget.pl** — ohne Installation. Es teilt sich dasselbe Konto und dieselben Daten wie die mobile App.
+> Nutze AI Budget Assistant direkt im Browser unter https://ai-budget.pl — ohne Installation. Es teilt sich dasselbe Konto und dieselben Daten wie die mobile App.
 
 ## Die Web-App öffnen
 
-1. Öffne **https://ai-budget.pl** in einem beliebigen modernen Browser (Chrome, Safari, Firefox, Edge)
+1. Öffne https://ai-budget.pl in einem beliebigen modernen Browser (Chrome, Safari, Firefox, Edge)
 2. Melde dich mit **derselben E-Mail und demselben Passwort** an wie auf dem Smartphone
 3. Deine Konten, Transaktionen und Einstellungen erscheinen automatisch — sie werden vom selben Server synchronisiert
 

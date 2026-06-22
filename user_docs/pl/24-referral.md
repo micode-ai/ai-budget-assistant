@@ -6,6 +6,8 @@
 
 Program poleceń pozwala zapraszać znajomych do AI Budget Assistant. Gdy zarejestrują się z twoim kodem i aktywnie korzystają z aplikacji przez 7 dni, otrzymujesz **+30 bonusowych zapytań AI**. Zaproszeni znajomi otrzymują **przedłużony 14-dniowy okres próbny** zamiast standardowych 7 dni.
 
+![Ekran Zaproś znajomych z kodem polecenia i kamieniami milowymi](../img/referral.jpg)
+
 ## Twój kod polecenia
 
 Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie **Zaproś znajomych**:

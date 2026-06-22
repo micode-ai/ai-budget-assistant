@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
-import { Link, router } from 'expo-router';
+import { Link, router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -42,6 +42,16 @@ export default function LoginScreen() {
   const { login, biometricLogin, isLoading, hasSavedSession } = useAuthStore();
   const { isBiometricAvailable, authenticate: biometricAuth, getBiometricTypeName } = useBiometric();
   const { signIn: googleSignIn, isReady: googleReady } = useGoogleAuth();
+  const { googleError } = useLocalSearchParams<{ googleError?: string }>();
+
+  // The native Google flow completes on app/oauth.tsx, which redirects back here
+  // with ?googleError=1 when sign-in failed (so the user sees why).
+  useEffect(() => {
+    if (googleError) {
+      setError(t('errors.googleSignInFailed'));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleError]);
 
   const handleGoogle = async () => {
     setError(null);

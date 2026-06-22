@@ -6,6 +6,8 @@
 
 Op het scherm **Export & Rapporten** kun je financiële rapporten genereren, maandelijkse digests bekijken, rapporten downloaden/delen en gegevensback-ups beheren. Open het via de knop **Rapport exporteren** op het tabblad Analyse, of via **Instellingen** > **Rapporten & E-mail** > **Rapport genereren**.
 
+![Scherm Gegevens en Rapporten met synchronisatie, e-mailoverzichten en back-up](../img/data-reports.jpg)
+
 ## Rapportformaten
 
 Er zijn drie exportformaten beschikbaar:

@@ -1,6 +1,6 @@
 # Portefeuille d'investissement
 
-Suivez votre portefeuille d'investissement avec des prix de marche en temps reel. Surveillez les actions, ETFs, cryptomonnaies, obligations et matieres premieres en un seul endroit.
+> Suivez votre portefeuille d'investissement avec des prix de marche en temps reel. Surveillez les actions, ETFs, cryptomonnaies, obligations et matieres premieres en un seul endroit.
 
 ## Apercu
 

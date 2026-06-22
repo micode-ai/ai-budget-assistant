@@ -6,6 +6,8 @@
 
 Das Empfehlungsprogramm ermöglicht es dir, Freunde zu AI Budget Assistant einzuladen. Wenn sie sich mit deinem Code registrieren und die App 7 Tage aktiv nutzen, erhältst du **+30 Bonus-AI-Anfragen**. Eingeladene Freunde erhalten eine **verlängerte 14-tägige Testphase** statt der standardmäßigen 7 Tage.
 
+![Bildschirm Freunde einladen mit Empfehlungscode und Meilensteinen](../img/referral.jpg)
+
 ## Dein Empfehlungscode
 
 Jeder Benutzer hat einen einzigartigen 6-stelligen Empfehlungscode. Du findest ihn auf dem Bildschirm **Freunde einladen**:

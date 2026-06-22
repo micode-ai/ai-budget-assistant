@@ -6,6 +6,8 @@
 
 Alle vier de soorten referentiegegevens worden beheerd vanuit één centrale plek in Instellingen. De interface is consistent: **tik op een rij om te bewerken**, tik op **+** om toe te voegen, tik op het **prullenbakpictogram** om te verwijderen.
 
+![Hub voor referentiegegevens met categorieën, verkopers, tags en projecten](../img/reference-data.jpg)
+
 > **Kijker**-rol: Leden met Kijker-toegang kunnen referentiegegevens bekijken, maar niet toevoegen, hernoemen of verwijderen.
 
 ## Categorieën

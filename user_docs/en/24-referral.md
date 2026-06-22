@@ -6,6 +6,8 @@
 
 The Referral Program lets you invite friends to AI Budget Assistant. When they sign up with your code and actively use the app for 7 days, you earn **+30 bonus AI requests**. Referred friends get an **extended 14-day trial** instead of the standard 7 days.
 
+![Invite Friends screen with referral code and milestones](../img/referral.jpg)
+
 ## Your Referral Code
 
 Every user has a unique 6-character referral code. You can find it on the **Invite Friends** screen:

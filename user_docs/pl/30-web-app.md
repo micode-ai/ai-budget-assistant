@@ -1,10 +1,10 @@
 # Aplikacja webowa
 
-Korzystaj z AI Budget Assistant prosto w przeglądarce pod adresem **https://ai-budget.pl** — bez instalacji. To samo konto i te same dane, co w aplikacji mobilnej.
+> Korzystaj z AI Budget Assistant prosto w przeglądarce pod adresem https://ai-budget.pl — bez instalacji. To samo konto i te same dane, co w aplikacji mobilnej.
 
 ## Jak otworzyć wersję webową
 
-1. Otwórz **https://ai-budget.pl** w dowolnej nowoczesnej przeglądarce (Chrome, Safari, Firefox, Edge)
+1. Otwórz https://ai-budget.pl w dowolnej nowoczesnej przeglądarce (Chrome, Safari, Firefox, Edge)
 2. Zaloguj się **tym samym e-mailem i hasłem**, co na telefonie
 3. Twoje konta, transakcje i ustawienia pojawią się automatycznie — synchronizują się z tego samego serwera
 

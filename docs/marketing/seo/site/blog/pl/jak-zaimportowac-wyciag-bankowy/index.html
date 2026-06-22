@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jak zaimportować wyciąg bankowy do budżetu</title>
+<meta name="description" content="Jak zaimportować wyciąg bankowy do aplikacji budżetowej i nadrobić miesiące wydatków w kilka minut. Krok po kroku, bez duplikatów, dla polskich banków.">
+<link rel="canonical" href="https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="pl_PL"><meta property="og:title" content="Jak zaimportować wyciąg bankowy do budżetu">
+<meta property="og:description" content="Jak zaimportować wyciąg bankowy do aplikacji budżetowej i nadrobić miesiące wydatków w kilka minut. Krok po kroku, bez duplikatów, dla polskich banków."><meta property="og:url" content="https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/">
+<meta property="og:image" content="https://ai-budget.pl/blog/pl/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Jak zaimportować wyciąg bankowy do budżetu">
+<meta name="twitter:description" content="Jak zaimportować wyciąg bankowy do aplikacji budżetowej i nadrobić miesiące wydatków w kilka minut. Krok po kroku, bez duplikatów, dla polskich banków."><meta name="twitter:image" content="https://ai-budget.pl/blog/pl/assets/og-default.png">
+<link rel="alternate" hreflang="pl" href="https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/">
+<link rel="alternate" hreflang="be" href="https://ai-budget.pl/blog/be/import-bankauskay-vypiski/">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/blog/de/kontoauszug-importieren/">
+<link rel="alternate" hreflang="en" href="https://ai-budget.pl/blog/en/import-bank-statement/">
+<link rel="alternate" hreflang="es" href="https://ai-budget.pl/blog/es/importar-extracto-bancario/">
+<link rel="alternate" hreflang="fr" href="https://ai-budget.pl/blog/fr/importer-releve-bancaire/">
+<link rel="alternate" hreflang="nl" href="https://ai-budget.pl/blog/nl/bankafschrift-importeren/">
+<link rel="alternate" hreflang="ru" href="https://ai-budget.pl/blog/ru/import-bankovskoy-vypiski/">
+<link rel="alternate" hreflang="ua" href="https://ai-budget.pl/blog/ua/import-bankivskoyi-vypysky/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/blog/en/import-bank-statement/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "headline": "Jak zaimportować wyciąg bankowy do budżetu", "description": "Jak zaimportować wyciąg bankowy do aplikacji budżetowej i nadrobić miesiące wydatków w kilka minut. Krok po kroku, bez duplikatów, dla polskich banków.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-06-19", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant"}, "publisher": {"@type": "Organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg"}}, "image": "https://ai-budget.pl/blog/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ai-budget.pl/blog/pl/"}, {"@type": "ListItem", "position": 3, "name": "Jak zaimportować wyciąg bankowy do budżetu", "item": "https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Jaki format pliku jest potrzebny do importu wyciągu?", "acceptedAnswer": {"@type": "Answer", "text": "Najlepszy jest CSV, czyli plik danych, który da się wyeksportować z większości bankowości internetowych, bo importuje się najczyściej. Niektóre banki udostępniają tylko PDF, a AI Budget Assistant obsługuje też wyciągi PDF z wybranych banków, jak Erste czy Alior. Jeśli masz wybór, sięgnij po CSV."}}, {"@type": "Question", "name": "Czy import utworzy zduplikowane transakcje?", "acceptedAnswer": {"@type": "Answer", "text": "Nie, jeśli aplikacja wykrywa duplikaty. AI Budget Assistant rozpoznaje transakcje, które już ma, po dacie, kwocie i opisie, i automatycznie odznacza je w podglądzie. Dzięki temu możesz importować nakładające się na siebie wyciągi miesiąc po miesiącu bez ryzyka, że ta sama operacja policzy się dwa razy."}}, {"@type": "Question", "name": "Czy mogę zaimportować wyciągi z dowolnego banku?", "acceptedAnswer": {"@type": "Answer", "text": "AI Budget Assistant obsługuje polskie banki, w tym mBank, PKO i Revolut, a także Wise oraz wyciągi PDF z banków takich jak Erste i Alior. Przy mniej typowych plikach CSV możesz raz ręcznie przypisać kolumny, a aplikacja zapamięta to mapowanie, więc kolejne importy z tego samego banku przebiegają automatycznie."}}, {"@type": "Question", "name": "Czy import wyciągu bankowego jest bezpieczny?", "acceptedAnswer": {"@type": "Answer", "text": "Tak. Importujesz statyczny plik wyciągu, który sam pobierasz z banku, więc nie podajesz aplikacji loginu ani hasła do bankowości i nie dajesz jej dostępu do konta. Aplikacja czyta tylko historię transakcji z pliku, który jej przekazujesz, a ty zachowujesz pełną kontrolę nad tym, co i kiedy wgrywasz."}}]}]}</script>
+<style>
+:root{--o:#F58320;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:#c96a12}article ul{padding-left:22px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#8a8a93;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:#F58320;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Polski</span><span class="lang-short">PL</span> &#9662;</summary><div class="langlist"><a class="active" href="https://ai-budget.pl/blog/pl/jak-zaimportowac-wyciag-bankowy/">Polski</a><a class="" href="https://ai-budget.pl/blog/en/import-bank-statement/">English</a><a class="" href="https://ai-budget.pl/blog/de/kontoauszug-importieren/">Deutsch</a><a class="" href="https://ai-budget.pl/blog/es/importar-extracto-bancario/">Español</a><a class="" href="https://ai-budget.pl/blog/fr/importer-releve-bancaire/">Français</a><a class="" href="https://ai-budget.pl/blog/ru/import-bankovskoy-vypiski/">Русский</a><a class="" href="https://ai-budget.pl/blog/ua/import-bankivskoyi-vypysky/">Українська</a><a class="" href="https://ai-budget.pl/blog/be/import-bankauskay-vypiski/">Беларуская</a><a class="" href="https://ai-budget.pl/blog/nl/bankafschrift-importeren/">Nederlands</a></div></details><a href="/blog/pl/">Blog</a><a class="btn-login" href="https://app.ai-budget.pl">Zaloguj się</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/">Strona główna</a> / <a href="/blog/pl/">Blog</a></nav><article><h1>Jak zaimportować wyciąg bankowy i nadrobić miesiące w kilka minut</h1>
+<p>Numerem jeden powodów, dla których budżety umierają, jest ręczne wpisywanie. Po dwóch tygodniach przepisywania każdej transakcji z ręki większość ludzi po prostu odpuszcza. Import wyciągu bankowego rozwiązuje to za jednym zamachem: zamiast wklepywać setki pozycji, wgrywasz jeden plik i nadrabiasz całe miesiące wydatków w kilka minut. W tym poradniku pokażę krok po kroku, jak to zrobić i jak uniknąć duplikatów.</p>
+<p>To jedna z tych rzeczy, które brzmią technicznie, a w praktyce zajmują mniej czasu niż zrobienie jednych zakupów.</p>
+<h2>Dlaczego import bije ręczne wpisywanie</h2>
+<p>Ręczne wpisywanie ma dwa problemy. Pierwszy to wysiłek: dodawanie każdej transakcji osobno jest nużące i łatwo o tym zapomnieć. Drugi to luki: pominiesz kilka dni, potem tydzień, i nagle twój budżet jest niekompletny, więc przestajesz mu ufać. A budżet, któremu nie ufasz, jest bezużyteczny.</p>
+<p>Import załatwia oba naraz. Bank ma już zapisaną każdą twoją transakcję, co do grosza i co do dnia. Zamiast odtwarzać te dane ręcznie, po prostu je przenosisz. Dostajesz kompletną, dokładną historię bez wysiłku, a kompletność jest tym, co sprawia, że budżet zaczyna mówić prawdę.</p>
+<p>Jest też dodatkowa korzyść: import wstecz. Możesz wgrać wyciąg sprzed trzech miesięcy i od razu zobaczyć realne wzorce wydatków, zamiast czekać miesiącami, aż ręcznie uzbierasz dość danych.</p>
+<h2>Pobierz plik z banku</h2>
+<p>Najpierw potrzebujesz pliku wyciągu. Niemal każdy bank pozwala go wyeksportować z bankowości internetowej, zwykle w formacie CSV (arkusz danych) albo PDF.</p>
+<p>Ścieżka różni się między bankami, ale schemat jest podobny. Zaloguj się do bankowości internetowej na komputerze, wejdź w historię operacji albo wyciągi danego konta, wybierz zakres dat i poszukaj opcji „Eksportuj”, „Pobierz” lub „Wyciąg”. Wybierz CSV, jeśli jest dostępny, bo to format danych, który importuje się najczystszej. Gdy bank daje tylko PDF, to też się nada przy obsługiwanych bankach.</p>
+<p>Dobra rada: za pierwszym razem pobierz dłuższy zakres, na przykład trzy miesiące. Dzięki temu od razu nadrobisz historię, zamiast importować po jednym miesiącu.</p>
+<h2>Import krok po kroku</h2>
+<p>Gdy masz plik, sam import jest prosty.</p>
+<p><strong>Wgraj plik.</strong> W aplikacji budżetowej wybierz import wyciągu i wskaż pobrany plik CSV lub PDF.</p>
+<p><strong>Rozpoznanie banku lub mapowanie kolumn.</strong> Dobra aplikacja sama rozpozna twój bank po układzie pliku i wie, która kolumna to data, która kwota, a która opis. Przy mniej typowych plikach możesz raz ręcznie przypisać kolumny, a aplikacja zapamięta to mapowanie na przyszłość.</p>
+<p><strong>Sprawdź podgląd.</strong> Zanim cokolwiek się zapisze, zobaczysz podgląd wszystkich transakcji: data, kwota, opis i podpowiedziana kategoria. To moment na rzut oka, czy wszystko się zgadza, oraz na poprawienie kategorii, które chcesz zmienić.</p>
+<p><strong>Kategorie podpowiedziane automatycznie.</strong> Aplikacja stara się sama przypisać kategorie na podstawie nazwy sklepu, więc nie zaczynasz od zera. Twoim zadaniem jest co najwyżej poprawić kilka pozycji, a nie kategoryzować wszystko ręcznie.</p>
+<p><strong>Zatwierdź.</strong> Gdy podgląd wygląda dobrze, potwierdzasz i transakcje trafiają do budżetu. Miesiące wydatków, gotowe w kilka minut.</p>
+<h2>Jak uniknąć duplikatów przy ponownym imporcie</h2>
+<p>Największa obawa przy imporcie brzmi: a co, jeśli zaimportuję ten sam plik dwa razy i wszystko się zdubluje? To słuszna obawa, bo zakresy wyciągów lubią się nakładać. Pobierasz styczeń, potem luty, a one zachodzą na siebie kilkoma dniami.</p>
+<p>Rozwiązaniem jest wykrywanie duplikatów. Solidna aplikacja rozpoznaje transakcje, które już ma, po dacie, kwocie i opisie, i automatycznie odznacza je w podglądzie, żeby nie wpadły drugi raz. Dzięki temu możesz importować zachodzące na siebie wyciągi bez obawy, że napompujesz wydatki, a budżet utrzymujesz na bieżąco, dorzucając co miesiąc świeży wyciąg.</p>
+<h2>Jak działa import w AI Budget Assistant</h2>
+<p>AI Budget Assistant obsługuje import wyciągów z polskich banków, w tym mBank, PKO i Revolut, a także z Wise oraz wyciągi PDF z banków takich jak Erste czy Alior. Wgrywasz plik, a aplikacja rozpoznaje bank, mapuje kolumny i pokazuje podgląd z automatycznie podpowiedzianymi kategoriami, więc większość pracy jest już zrobiona, zanim cokolwiek zatwierdzisz.</p>
+<p>Pod spodem dzieje się więcej. Aplikacja paruje powiązane operacje walutowe, więc przewalutowania nie liczą się podwójnie, i wykrywa duplikaty, dzięki czemu ponowny import nakładającego się wyciągu nigdy nie zdubluje transakcji. Po imporcie reguły sklepów uczą się z twoich poprawek, więc każdy kolejny import wymaga jeszcze mniej porządkowania.</p>
+<p>AI Budget Assistant jest darmowy na start, działa w przeglądarce na <a href="https://ai-budget.pl">ai-budget.pl</a> bez podawania karty, oraz na <a href="https://play.google.com/store/apps/details?id=com.budget.assistant">Google Play</a> na Androida. Jeśli chcesz w kilka minut nadrobić ostatnie miesiące wydatków, wyciąg z banku możesz wgrać już teraz.</p>
+<hr />
+<h2>FAQ: Import wyciągu bankowego</h2>
+<p><strong>Jaki format pliku jest potrzebny do importu wyciągu?</strong></p>
+<p>Najlepszy jest CSV, czyli plik danych, który da się wyeksportować z większości bankowości internetowych, bo importuje się najczyściej. Niektóre banki udostępniają tylko PDF, a AI Budget Assistant obsługuje też wyciągi PDF z wybranych banków, jak Erste czy Alior. Jeśli masz wybór, sięgnij po CSV.</p>
+<p><strong>Czy import utworzy zduplikowane transakcje?</strong></p>
+<p>Nie, jeśli aplikacja wykrywa duplikaty. AI Budget Assistant rozpoznaje transakcje, które już ma, po dacie, kwocie i opisie, i automatycznie odznacza je w podglądzie. Dzięki temu możesz importować nakładające się na siebie wyciągi miesiąc po miesiącu bez ryzyka, że ta sama operacja policzy się dwa razy.</p>
+<p><strong>Czy mogę zaimportować wyciągi z dowolnego banku?</strong></p>
+<p>AI Budget Assistant obsługuje polskie banki, w tym mBank, PKO i Revolut, a także Wise oraz wyciągi PDF z banków takich jak Erste i Alior. Przy mniej typowych plikach CSV możesz raz ręcznie przypisać kolumny, a aplikacja zapamięta to mapowanie, więc kolejne importy z tego samego banku przebiegają automatycznie.</p>
+<p><strong>Czy import wyciągu bankowego jest bezpieczny?</strong></p>
+<p>Tak. Importujesz statyczny plik wyciągu, który sam pobierasz z banku, więc nie podajesz aplikacji loginu ani hasła do bankowości i nie dajesz jej dostępu do konta. Aplikacja czyta tylko historię transakcji z pliku, który jej przekazujesz, a ty zachowujesz pełną kontrolę nad tym, co i kiedy wgrywasz.</p>
+<hr />
+<p><em>Powiązane artykuły: <a href="/blog/pl/kontrola-wydatkow-aplikacja/">Kontrola wydatków w aplikacji</a> | <a href="/blog/pl/kategorie-wydatkow/">Kategorie wydatków, które naprawdę działają</a></em></p></article><aside class="cta"><h3>Prowadź budżet domowy z AI</h3><p>Dodawaj wydatki głosem lub zdjęciem paragonu, śledź budżety i oszczędności, wspólnie z rodziną. Zacznij za darmo.</p><a class="btn p" href="https://app.ai-budget.pl">Otwórz aplikację</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant">Pobierz z Google Play</a></aside><section class="related"><h2>Powiązane artykuły</h2><a href="/blog/pl/jak-prowadzic-budzet-domowy/">Jak prowadzić budżet domowy krok po kroku (2026)</a><a href="/blog/pl/kontrola-wydatkow-aplikacja/">Kontrola wydatków: aplikacja, która robi to za ciebie</a><a href="/blog/pl/jak-oszczedzac-pieniadze/">Jak oszczędzać pieniądze - konkretny plan na start</a><a href="/blog/pl/wspolny-budzet-dla-par/">Wspólny budżet dla par - plan bez kłótni</a><a href="/blog/pl/metoda-kopertowa/">Metoda kopertowa - jak przestać przepłacać</a><a href="/blog/pl/zasada-50-30-20/">Zasada 50/30/20 - praktyczny poradnik</a><a href="/blog/pl/najlepsze-aplikacje-do-budzetu/">Najlepsze aplikacje do budżetu w 2026 roku</a><a href="/blog/pl/poduszka-finansowa/">Poduszka finansowa - ile i jak ją zbudować</a><a href="/blog/pl/jak-zarzadzac-subskrypcjami/">Jak zarządzać subskrypcjami, zanim cię zdrenują</a><a href="/blog/pl/jak-oszczedzac-na-jedzeniu/">Jak oszczędzać na jedzeniu bez kuponów</a><a href="/blog/pl/kategorie-wydatkow/">Kategorie wydatków, które naprawdę działają</a><a href="/blog/pl/jak-splacic-dlugi/">Jak spłacić długi: kula śnieżna czy lawina</a><a href="/blog/pl/budzet-domowy-z-dziecmi/">Budżet domowy z dziećmi, który się spina</a><a href="/blog/pl/ai-w-zarzadzaniu-finansami/">AI w zarządzaniu finansami: jak naprawdę pomaga</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/pl/">Blog</a><a href="/help/pl/">Pomoc</a><a href="/about/">O nas</a><a href="/privacy/">Prywatność</a><a href="/terms/">Regulamin</a><a href="/cookies/">Cookie</a><a href="https://app.ai-budget.pl">Zaloguj się</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant">Google Play</a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MICODE sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MICODE sp. z o.o.</a>. Wszelkie prawa zastrzeżone.</span></div></div></footer>
+<div class="cc" id="cc"><p>Używamy plików cookie do analizy ruchu i ulepszania strony. <a href="/cookies/" style="color:#F58320">Więcej</a></p><div class="row"><button class="no" id="cc-no">Odrzuć</button><button class="ok" id="cc-ok">Akceptuję</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

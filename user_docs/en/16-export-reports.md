@@ -6,6 +6,8 @@
 
 The **Export & Reports** screen lets you generate financial reports, view monthly digests, download/share reports, and manage data backups. Access it from the Analytics tab via the **Export Report** button, or from **Settings** > **Reports & Email** > **Generate Report**.
 
+![Data and Reports screen with sync, email summaries and backup](../img/data-reports.jpg)
+
 ## Report Formats
 
 Three export formats available:

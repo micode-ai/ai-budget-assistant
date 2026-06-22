@@ -6,6 +6,8 @@
 
 Funkcja «Dlugi i Pozyczki» umozliwia sledzenie dwoch typow zobowiazan finansowych:
 
+![Ekran Długi i Pożyczki z pieniędzmi pożyczonymi i wziętymi w dług](../img/debts.jpg)
+
 - **Pozyczone pieniadze** — pieniadze, ktore dales komus (rejestrowane jako wydatek z oznaczeniem dlugu)
 - **Pieniadze wzięte w dlug** — pieniadze, ktore ktos dal tobie (rejestrowane jako przychod z oznaczeniem dlugu)
 

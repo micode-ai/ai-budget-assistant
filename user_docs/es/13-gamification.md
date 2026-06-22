@@ -6,6 +6,8 @@
 
 El sistema de Gamificacion te recompensa por hacer un seguimiento constante de tus finanzas. Cada gasto, ingreso y presupuesto que gestionas contribuye a tu progreso. Gana logros, mantiene rachas diarias y sube de nivel mientras desarrollas mejores habitos financieros.
 
+![Pantalla de logros con nivel, racha e insignias](../img/achievements.jpg)
+
 ## Widget del Panel
 
 En tu pantalla de inicio, veras una tarjeta compacta de gamificacion que muestra:

@@ -1,10 +1,12 @@
 # Abonnement-Verwaltung
 
-Verfolge alle wiederkehrenden Kosten an einem Ort – Streaming-Dienste, SaaS-Tools, Fitnessstudio und mehr.
+> Verfolge alle wiederkehrenden Kosten an einem Ort – Streaming-Dienste, SaaS-Tools, Fitnessstudio und mehr.
 
 ## Was ist die Abonnement-Verwaltung?
 
 Die Abonnement-Verwaltung ist ein dedizierter Tracker für regelmäßige Zahlungen. Im Gegensatz zu Transaktionen werden Abonnements nicht automatisch erkannt – du fügst sie manuell oder über die Schaltfläche **„Dieses Abonnement verfolgen"** in den Fat-Finder-Ergebnissen hinzu.
+
+![Abonnements-Bildschirm mit monatlichen Kosten und Verlängerungen](../img/subscriptions.jpg)
 
 Jedes Abonnement enthält:
 - Name (Netflix, Spotify, Fitnessstudio…)

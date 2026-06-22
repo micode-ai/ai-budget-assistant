@@ -1,10 +1,12 @@
 # Subscription Manager
 
-Track all your recurring charges in one place — streaming services, SaaS tools, gym memberships, and more.
+> Track all your recurring charges in one place — streaming services, SaaS tools, gym memberships, and more.
 
 ## What is the Subscription Manager?
 
 The Subscription Manager is a dedicated tracker for your recurring payments. Unlike transactions, subscriptions are not automatically detected — you add them manually or via the **"Track this"** button on a Fat Finder finding.
+
+![Subscriptions screen with monthly cost and renewals](../img/subscriptions.jpg)
 
 Each subscription stores:
 - Name (Netflix, Spotify, gym…)

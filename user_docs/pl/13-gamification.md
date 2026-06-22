@@ -6,6 +6,8 @@
 
 System grywalizacji nagradza Cie za konsekwentne sledzenie finansow. Kazdy wydatek, przychod i budzet, ktorym zarzadzasz, przyczynia sie do Twojego postepu. Zdobywaj osiagniecia, utrzymuj codzienne serie i awansuj na kolejne poziomy, budujac lepsze nawyki finansowe.
 
+![Ekran osiągnięć z poziomem, serią i odznakami](../img/achievements.jpg)
+
 ## Widget na Pulpicie
 
 Na ekranie glownym zobaczysz kompaktowa karte grywalizacji pokazujaca:

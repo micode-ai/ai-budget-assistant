@@ -6,6 +6,8 @@
 
 Der Bildschirm **Export & Berichte** ermöglicht es dir, Finanzberichte zu generieren, monatliche Zusammenfassungen anzusehen, Berichte herunterzuladen/zu teilen und Daten-Backups zu verwalten. Greife darauf vom Analysen-Tab über die Schaltfläche **Bericht exportieren** zu, oder über **Einstellungen** > **Berichte & E-Mail** > **Bericht generieren**.
 
+![Bildschirm Daten und Berichte mit Synchronisierung, E-Mail-Zusammenfassungen und Backup](../img/data-reports.jpg)
+
 ## Berichtsformate
 
 Drei Exportformate verfügbar:
