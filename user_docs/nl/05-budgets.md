@@ -6,6 +6,8 @@
 
 Budgetten helpen je je uitgaven te beheersen door limieten in te stellen voor specifieke tijdsperioden. De app houdt je uitgaven bij ten opzichte van deze limieten en stuurt een melding wanneer je je budget nadert of overschrijdt.
 
+![Budgetdetails met categorieverdeling](../img/budgets.jpg)
+
 ## Budgetlijst
 
 Het tabblad **Budgetten** toont al je actieve budgetten:

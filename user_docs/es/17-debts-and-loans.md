@@ -6,6 +6,8 @@
 
 La funcion «Deudas y Prestamos» te permite rastrear dos tipos de obligaciones financieras:
 
+![Pantalla de Deudas y Préstamos con dinero prestado y tomado en préstamo](../img/debts.jpg)
+
 - **Dinero prestado** — dinero que le diste a alguien (registrado como gasto con marca de deuda)
 - **Dinero tomado en prestamo** — dinero que alguien te dio (registrado como ingreso con marca de deuda)
 

@@ -1,6 +1,6 @@
 # Anlageportfolio
 
-Verfolge dein Anlageportfolio mit aktuellen Marktpreisen. Uberwache Aktien, ETFs, Kryptowahrungen, Anleihen und Rohstoffe an einem Ort.
+> Verfolge dein Anlageportfolio mit aktuellen Marktpreisen. Uberwache Aktien, ETFs, Kryptowahrungen, Anleihen und Rohstoffe an einem Ort.
 
 ## Uberblick
 

@@ -6,6 +6,8 @@
 
 Le systeme de Gamification vous recompense pour le suivi regulier de vos finances. Chaque depense, revenu et budget que vous gerez contribue a votre progression. Debloquez des succes, maintenez vos series quotidiennes et montez de niveau en adoptant de meilleures habitudes financieres.
 
+![Écran des succès avec niveau, série et badges](../img/achievements.jpg)
+
 ## Widget du Tableau de bord
 
 Sur votre ecran d'accueil, vous verrez une carte de gamification compacte affichant :

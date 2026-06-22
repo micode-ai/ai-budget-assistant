@@ -6,6 +6,8 @@
 
 Les budgets vous aident à contrôler vos dépenses en définissant des limites pour des périodes spécifiques. L'application suit vos dépenses par rapport à ces limites et vous avertit lorsque vous approchez ou dépassez votre budget.
 
+![Détails du budget avec répartition par catégorie](../img/budgets.jpg)
+
 ## Liste des budgets
 
 L'onglet **Budgets** affiche tous vos budgets actifs :

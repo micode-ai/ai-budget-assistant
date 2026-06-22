@@ -1,6 +1,6 @@
 # Alerty: nietypowa aktywność
 
-Aplikacja monitoruje Twoje wydatki i powiadamia Cię, gdy coś wygląda nietypowo — bez żadnej konfiguracji. Kliknij ikonę dzwonka na ekranie głównym, aby zobaczyć wszystkie alerty.
+> Aplikacja monitoruje Twoje wydatki i powiadamia Cię, gdy coś wygląda nietypowo — bez żadnej konfiguracji. Kliknij ikonę dzwonka na ekranie głównym, aby zobaczyć wszystkie alerty.
 
 ## Co wykrywa aplikacja
 

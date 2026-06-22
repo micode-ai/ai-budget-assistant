@@ -31,6 +31,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { UpgradeGate } from '@/components/UpgradeGate';
+import { WebShell } from '@/components/WebShell';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 
 // Keep the splash screen visible while we fetch resources
@@ -203,16 +204,17 @@ function RootNavigator() {
 
   return (
     <>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          headerStyle,
-          headerTintColor,
-          headerTitleStyle,
-          headerTitleAlign: 'center',
-          contentStyle: { backgroundColor: theme.colors.background },
-        }}
-      >
+      <WebShell>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            headerStyle,
+            headerTintColor,
+            headerTitleStyle,
+            headerTitleAlign: 'center',
+            contentStyle: { backgroundColor: theme.colors.background },
+          }}
+        >
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
@@ -735,7 +737,8 @@ function RootNavigator() {
             title: t('scenarioSimulator.title'),
           }}
         />
-      </Stack>
+        </Stack>
+      </WebShell>
       <UpdatePrompt />
       <UpgradeGate />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />

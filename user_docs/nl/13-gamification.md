@@ -6,6 +6,8 @@
 
 Het gamificatiesysteem beloont je voor het consequent bijhouden van je financiën. Elke uitgave, inkomst en elk budget dat je beheert, draagt bij aan je voortgang. Verdien prestaties, houd dagelijkse reeksen vol en stijg in niveau terwijl je betere financiële gewoonten opbouwt.
 
+![Prestatiescherm met niveau, reeks en badges](../img/achievements.jpg)
+
 ## Dashboardwidget
 
 Op je startscherm zie je een compacte gamificatiekaart met:

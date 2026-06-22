@@ -30,7 +30,7 @@ translation pipeline, hreflang-grouped by the `pair` key.
 | 5 | **Emergency fund: how much & how to build** | emergency-fund | poduszka finansowa, fundusz awaryjny | emergency fund (how much to save) | how-to | Savings goals |
 | 6 | **Track & cancel subscriptions to save** | subscriptions | jak zarządzać subskrypcjami | how to track and cancel subscriptions | how-to | Subscription manager + anomaly alerts |
 
-## Wave 2 — next (6 topics)
+## Wave 2 — ✅ DONE (ABA-283): the 6 topics below were published in all 9 languages (files `1[0-5]-*.md`, pairs `groceries`/`categories`/`debt`/`bank-import`/`family`/`ai-budget`). Blog now at 135 articles. Follow-ups: add pillar→cluster down-links, a landing "From the blog" entry, and an IndexNow ping.
 | # | Topic | pair | PL keyword | EN keyword | App tie |
 |---|---|---|---|---|---|
 | 7 | Save money on groceries | groceries | jak oszczędzać na jedzeniu | how to save money on groceries | Spending analytics |

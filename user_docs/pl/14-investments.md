@@ -1,6 +1,6 @@
 # Portfel inwestycyjny
 
-Sledz swoj portfel inwestycyjny z aktualnymi cenami rynkowymi. Monitoruj akcje, ETF, kryptowaluty, obligacje i towary w jednym miejscu.
+> Sledz swoj portfel inwestycyjny z aktualnymi cenami rynkowymi. Monitoruj akcje, ETF, kryptowaluty, obligacje i towary w jednym miejscu.
 
 ## Przeglad
 

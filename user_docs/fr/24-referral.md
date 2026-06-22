@@ -6,6 +6,8 @@
 
 Le programme de parrainage vous permet d'inviter des amis sur AI Budget Assistant. Lorsqu'ils s'inscrivent avec votre code et utilisent activement l'application pendant 7 jours, vous recevez **+30 requêtes AI bonus**. Les amis parrainés bénéficient d'un **essai prolongé de 14 jours** au lieu des 7 jours standard.
 
+![Écran Inviter des amis avec le code de parrainage et les objectifs](../img/referral.jpg)
+
 ## Votre code de parrainage
 
 Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous le trouverez sur l'écran **Inviter des amis** :

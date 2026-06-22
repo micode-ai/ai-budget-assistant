@@ -9,6 +9,8 @@ Met de functie Schulden & Leningen kun je twee soorten financiële verplichtinge
 - **Uitgeleend geld** — geld dat je aan iemand hebt gegeven (vastgelegd als een uitgave met schuldmarkering)
 - **Geleend geld** — geld dat iemand aan jou heeft gegeven (vastgelegd als een inkomst met schuldmarkering)
 
+![Scherm Schulden & Leningen met uitgeleend en geleend geld](../img/debts.jpg)
+
 Terugbetalingen werken op dezelfde manier:
 - Wanneer iemand **jou terugbetaalt**, wordt dit vastgelegd als inkomst gekoppeld aan de oorspronkelijke schulduitgave
 - Wanneer **jij iemand terugbetaalt**, wordt dit vastgelegd als uitgave gekoppeld aan de oorspronkelijke schuldinkomst

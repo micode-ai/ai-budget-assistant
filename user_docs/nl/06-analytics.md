@@ -6,6 +6,8 @@
 
 Het tabblad **Analyse** biedt een uitgebreid overzicht van je uitgaven via grafieken, inzichten en gegevensverkenning. Alle gegevens zijn gebaseerd op je uitgaven in het geselecteerde account.
 
+![Analysescherm met je uitgavenverhaal en inkomsten per categorie](../img/analytics.jpg)
+
 ## Tijdsbereik & Filters
 
 Bovenaan het scherm Analyse:

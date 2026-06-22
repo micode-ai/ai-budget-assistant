@@ -6,6 +6,8 @@
 
 La pantalla **Exportacion e informes** te permite generar informes financieros, ver resumenes mensuales, descargar/compartir informes y gestionar copias de seguridad de datos. Accede a ella desde la pestana Analisis mediante el boton **Exportar informe**, o desde **Ajustes** > **Informes y email** > **Generar informe**.
 
+![Pantalla de Datos e Informes con sincronización, resúmenes por email y copia de seguridad](../img/data-reports.jpg)
+
 ## Formatos de informe
 
 Tres formatos de exportacion disponibles:

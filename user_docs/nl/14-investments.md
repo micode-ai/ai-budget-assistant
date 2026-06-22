@@ -1,6 +1,6 @@
 # Beleggingsportefeuille
 
-Volg je beleggingsportefeuille met realtime marktprijzen. Houd aandelen, ETF's, cryptovaluta's, obligaties en grondstoffen allemaal op één plek in de gaten.
+> Volg je beleggingsportefeuille met realtime marktprijzen. Houd aandelen, ETF's, cryptovaluta's, obligaties en grondstoffen allemaal op één plek in de gaten.
 
 ## Overzicht
 

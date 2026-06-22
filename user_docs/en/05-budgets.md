@@ -6,6 +6,8 @@
 
 Budgets help you control your spending by setting limits for specific time periods. The app tracks your expenses against these limits and notifies you when you're approaching or exceeding your budget.
 
+![Budget details with category breakdown](../img/budgets.jpg)
+
 ## Budget List
 
 The **Budgets** tab shows all your active budgets:

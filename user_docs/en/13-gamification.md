@@ -6,6 +6,8 @@
 
 The Gamification system rewards you for consistently tracking your finances. Every expense, income, and budget you manage contributes to your progress. Earn achievements, maintain daily streaks, and level up as you build better financial habits.
 
+![Achievements screen with level, streak and badges](../img/achievements.jpg)
+
 ## Dashboard Widget
 
 On your home screen, you'll see a compact gamification card showing:

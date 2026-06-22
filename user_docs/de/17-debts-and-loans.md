@@ -6,6 +6,8 @@
 
 Die Funktion «Schulden & Darlehen» ermoglicht es dir, zwei Arten von finanziellen Verpflichtungen zu verfolgen:
 
+![Bildschirm Schulden & Darlehen mit verliehenem und geliehenem Geld](../img/debts.jpg)
+
 - **Verliehenes Geld** — Geld, das du jemandem gegeben hast (als Ausgabe mit Schulden-Markierung erfasst)
 - **Geliehenes Geld** — Geld, das jemand dir gegeben hat (als Einnahme mit Schulden-Markierung erfasst)
 

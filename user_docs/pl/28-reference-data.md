@@ -6,6 +6,8 @@
 
 Wszystkie cztery typy danych referencyjnych zarządzane są z jednego miejsca w Ustawieniach. Interfejs jest spójny: **dotknij wiersza, aby edytować**, dotknij **+** aby dodać, dotknij **ikony kosza** aby usunąć.
 
+![Centrum danych referencyjnych z kategoriami, sklepami, tagami i projektami](../img/reference-data.jpg)
+
 > **Rola Obserwatora**: członkowie z rolą Obserwatora mogą przeglądać dane referencyjne, ale nie mogą dodawać, zmieniać nazw ani usuwać.
 
 ## Kategorie

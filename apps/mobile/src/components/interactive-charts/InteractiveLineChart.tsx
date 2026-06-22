@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text } from 'react-native';
+import { useContentWidth } from '@/hooks/useContentWidth';
 import { LineChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -15,8 +16,6 @@ interface InteractiveLineChartProps {
   areaChart?: boolean;
 }
 
-const screenWidth = Dimensions.get('window').width;
-
 export function InteractiveLineChart({
   data,
   height = 200,
@@ -29,6 +28,7 @@ export function InteractiveLineChart({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const screenWidth = useContentWidth();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const resolvedLineColor = lineColor ?? theme.colors.primary;

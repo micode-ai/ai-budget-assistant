@@ -1,6 +1,6 @@
 # Alerts: unusual activity
 
-The app watches your spending and notifies you when something looks unusual — no setup needed. Tap the bell icon on the home screen to see all alerts.
+> The app watches your spending and notifies you when something looks unusual — no setup needed. Tap the bell icon on the home screen to see all alerts.
 
 ## What the app detects
 

@@ -6,6 +6,8 @@
 
 Budżety pomagają kontrolować wydatki poprzez ustalanie limitów na określone okresy. Aplikacja śledzi Twoje wydatki w stosunku do tych limitów i powiadamia Cię, gdy zbliżasz się do limitu lub go przekraczasz.
 
+![Szczegóły budżetu z podziałem na kategorie](../img/budgets.jpg)
+
 ## Lista budżetów
 
 Zakładka **Budżety** wyświetla wszystkie aktywne budżety:

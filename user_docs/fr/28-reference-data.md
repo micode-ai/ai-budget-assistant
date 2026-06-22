@@ -6,6 +6,8 @@
 
 Les quatre types de données de référence sont gérés depuis un emplacement unique dans les Paramètres. L'interface est cohérente : **appuyez sur une ligne pour modifier**, **+** pour ajouter, **icône poubelle** pour supprimer.
 
+![Centre des données de référence avec catégories, commerçants, étiquettes et projets](../img/reference-data.jpg)
+
 > **Rôle Observateur** : les membres avec ce rôle peuvent consulter les données de référence mais ne peuvent pas ajouter, renommer ni supprimer.
 
 ## Catégories

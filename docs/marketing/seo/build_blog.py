@@ -66,6 +66,8 @@ def home_url(lang):
     return "/" if lang == "pl" else f"/{lang}/"
 ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
                 "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
+HELP_LABELS = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
+               "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
 PUBLISH_DATE = "2026-06-19"
 DEFAULT_LANG = "en"  # x-default
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
@@ -155,6 +157,7 @@ OG_TEXT = {
 CSS = """
 :root{--o:#F58320;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
+html,body{overflow-x:hidden}
 body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
 .wrap{max-width:760px;margin:0 auto;padding:0 22px}
 header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
@@ -171,7 +174,13 @@ nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(-
 article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
 article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
 article p,article li{font-size:17px;color:#27272e}article a{color:#c96a12}article ul{padding-left:22px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
 .cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
 .cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
 .btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
@@ -190,6 +199,9 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
 .cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
 .cc .ok{background:#F58320;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
 """
 
 def parse(path):
@@ -205,7 +217,11 @@ def parse(path):
     return meta, body
 
 def to_html(body):
-    return md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
+    out = md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
+    # wrap tables so wide ones scroll horizontally on mobile (CSS .tablewrap)
+    out = re.sub(r"<table>(.*?)</table>", r'<div class="tablewrap"><table>\1</table></div>',
+                 out, flags=re.S)
+    return out
 
 _QLINE = re.compile(r"^\*\*(.+\?)\*\*\s*$")
 
@@ -275,7 +291,7 @@ def lang_menu(lang, alt_map, langs):
     links = "".join(
         f'<a class="{"active" if l == lang else ""}" href="{alt_map.get(l, f"/blog/{l}/")}">{LANG_NAMES[l]}</a>'
         for l in langs)
-    return (f'<details class="langmenu"><summary>{LANG_NAMES[lang]} &#9662;</summary>'
+    return (f'<details class="langmenu"><summary><span class="lang-full">{LANG_NAMES[lang]}</span><span class="lang-short">{lang.upper()}</span> &#9662;</summary>'
             f'<div class="langlist">{links}</div></details>')
 
 def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type="article",
@@ -305,6 +321,7 @@ def foot(lang):
     t = I18N[lang]
     return (f'<footer class="site"><div class="wrap">'
             f'<div class="f-links"><a href="/blog/{lang}/">{t["blog"]}</a>'
+            f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{LEGAL_LABELS[lang][0]}</a>'
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'

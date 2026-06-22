@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, useWindowDimensions } from 'react-native';
+import { View, Text } from 'react-native';
+import { useContentWidth } from '@/hooks/useContentWidth';
 import { BarChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -27,7 +28,7 @@ export function InteractiveBarChart({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { width: screenWidth } = useWindowDimensions();
+  const screenWidth = useContentWidth();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const defaultBarColor = barColor ?? theme.colors.primary;

@@ -1,10 +1,12 @@
 # Abonnementenbeheer
 
-Houd al je terugkerende kosten bij op één plek — streamingdiensten, SaaS-tools, sportschool en meer.
+> Houd al je terugkerende kosten bij op één plek — streamingdiensten, SaaS-tools, sportschool en meer.
 
 ## Wat is het abonnementenbeheer?
 
 Het abonnementenbeheer is een speciale tracker voor je terugkerende betalingen. In tegenstelling tot transacties worden abonnementen niet automatisch gedetecteerd — je voegt ze handmatig toe of via de knop **'Dit abonnement bijhouden'** in de Fat Finder-bevindingen.
+
+![Abonnementenscherm met maandelijkse kosten en verlengingen](../img/subscriptions.jpg)
 
 Elk abonnement bevat:
 - Naam (Netflix, Spotify, sportschool…)

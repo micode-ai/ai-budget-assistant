@@ -6,6 +6,8 @@
 
 L'ecran **Export et rapports** vous permet de generer des rapports financiers, de consulter des resumes mensuels, de telecharger/partager des rapports et de gerer les sauvegardes de donnees. Accedez-y depuis l'onglet Analyses via le bouton **Exporter le rapport**, ou depuis **Parametres** > **Rapports et email** > **Generer un rapport**.
 
+![Écran Données et rapports avec synchronisation, résumés par email et sauvegarde](../img/data-reports.jpg)
+
 ## Formats de rapport
 
 Trois formats d'export disponibles :

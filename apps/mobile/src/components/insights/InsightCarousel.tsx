@@ -4,10 +4,10 @@ import {
   ScrollView,
   Text,
   ActivityIndicator,
-  useWindowDimensions,
   type NativeSyntheticEvent,
   type NativeScrollEvent,
 } from 'react-native';
+import { useContentWidth } from '@/hooks/useContentWidth';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { InsightCard } from './InsightCard';
 import type { AIInsightChart } from '@budget/shared-types';
@@ -21,7 +21,7 @@ interface InsightCarouselProps {
 export function InsightCarousel({ insights, isLoading, onDismiss }: InsightCarouselProps) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { width: windowWidth } = useWindowDimensions();
+  const windowWidth = useContentWidth();
   const [activeIndex, setActiveIndex] = useState(0);
 
   // scrollContent paddingHorizontal (8) + card marginHorizontal (8) = 16px each side

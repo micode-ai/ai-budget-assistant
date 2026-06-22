@@ -6,6 +6,8 @@
 
 Das Gamification-System belohnt dich fur die konsequente Verfolgung deiner Finanzen. Jede Ausgabe, jedes Einkommen und jedes Budget, das du verwaltest, tragt zu deinem Fortschritt bei. Verdiene Erfolge, halte tagliche Serien aufrecht und steige im Level auf, wahrend du bessere Finanzgewohnheiten entwickelst.
 
+![Erfolge-Bildschirm mit Level, Serie und Abzeichen](../img/achievements.jpg)
+
 ## Ubersicht-Widget
 
 Auf deinem Startbildschirm siehst du eine kompakte Gamification-Karte mit:

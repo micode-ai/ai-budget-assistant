@@ -1,6 +1,6 @@
 # Meldingen: ongewone activiteit
 
-De app bewaakt je uitgaven en stuurt je een melding wanneer iets er ongewoon uitziet — geen instelling nodig. Tik op het belpictogram op het startscherm om alle meldingen te zien.
+> De app bewaakt je uitgaven en stuurt je een melding wanneer iets er ongewoon uitziet — geen instelling nodig. Tik op het belpictogram op het startscherm om alle meldingen te zien.
 
 ## Wat de app detecteert
 

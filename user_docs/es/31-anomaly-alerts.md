@@ -1,6 +1,6 @@
 # Alertas: actividad inusual
 
-La app vigila tus gastos y te avisa cuando algo parece inusual — sin configuración previa. Toca el icono de campana en la pantalla de inicio para ver todas las alertas.
+> La app vigila tus gastos y te avisa cuando algo parece inusual — sin configuración previa. Toca el icono de campana en la pantalla de inicio para ver todas las alertas.
 
 ## Qué detecta la app
 

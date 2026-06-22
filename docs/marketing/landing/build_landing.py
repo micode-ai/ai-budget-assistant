@@ -113,6 +113,8 @@ def about_url(lang):
 
 ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca de", "fr": "À propos",
                 "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
+HELP_LABELS = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
+               "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
 ABOUT = {
  "en": ("About - AI Budget Assistant",
         "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MICODE sp. z o.o.",
@@ -462,7 +464,7 @@ C = {
 }
 
 CSS = """
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1d;line-height:1.65}
+*{box-sizing:border-box}html,body{overflow-x:hidden}body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1a1a1d;line-height:1.65}
 a{text-decoration:none}.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
 header{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #ececf0;z-index:10}
 header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
@@ -479,7 +481,9 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .hint{text-align:center;color:#9a9aa3;font-size:14px;margin:0 0 30px}
 .intro p{font-size:18px;color:#3a3a42;max-width:760px;margin:18px auto 0;text-align:center}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.hero h1{font-size:34px}.hero p{font-size:17px}}
+.lang-short{display:none}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.hero h1{font-size:34px}.hero p{font-size:17px}header .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.nav .btn{padding:9px 14px;font-size:14px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
 .card{display:block;padding:24px;border:1px solid #ececf0;border-radius:16px;background:#fff;transition:.15s;color:inherit;cursor:pointer}
 .card:hover{border-color:#F58320;box-shadow:0 8px 24px rgba(245,131,42,.12);transform:translateY(-2px)}
 .card .ic{width:42px;height:42px;border-radius:11px;background:#fff3e6;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
@@ -525,7 +529,7 @@ def lp(lang):
     return f"{BASE}/{lang}/"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["budget", "shared-budget", "best-apps", "saving"]  # curated homepage -> article internal links
+FROM_BLOG_PAIRS = ["budget", "ai-budget", "family", "shared-budget", "bank-import", "best-apps", "saving"]  # curated homepage -> article internal links (USP + high-intent topics first)
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()
@@ -578,6 +582,7 @@ def footer_html(lang):
     pl, tl, cl = LEGAL_LABELS[lang]
     return (f'<footer><div class="wrap"><div class="f-links">'
             f'<a href="{blog}">{t["nav_blog"]}</a>'
+            f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
             f'<a href="{cookies_url(lang)}">{cl}</a>'
@@ -661,7 +666,7 @@ def page(lang, langs):
     t = C[lang]
     blog = f"/blog/{lang}/"
     langlinks = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}">{LANG_NAMES[l]}</a>' for l in langs)
-    langmenu = f'<details class="langmenu"><summary>{LANG_NAMES[lang]} &#9662;</summary><div class="langlist">{langlinks}</div></details>'
+    langmenu = f'<details class="langmenu"><summary><span class="lang-full">{LANG_NAMES[lang]}</span><span class="lang-short">{lang.upper()}</span> &#9662;</summary><div class="langlist">{langlinks}</div></details>'
     cards, lbs = "", ""
     for i, (h, p, shot) in enumerate(t["features"]):
         cid = f"cb{i+1}"
@@ -758,6 +763,37 @@ def build():
             os.makedirs(d, exist_ok=True)
             open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(legal_page(lang, kind))
 
+    # Google OAuth relay for native Android sign-in (ABA-282): Google Console only
+    # accepts HTTPS redirect URIs, so Google redirects here, and this page JS-forwards
+    # the id_token (returned in the URL fragment) to budget://oauth?... — a
+    # navigation->intent that Chrome Custom Tab dispatches reliably. Always emitted
+    # (the redirect_uri is hardcoded to https://ai-budget.pl/oauth/callback).
+    d = os.path.join(OUT, "oauth", "callback")
+    os.makedirs(d, exist_ok=True)
+    open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(
+        '<!DOCTYPE html><html><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<meta name="robots" content="noindex, nofollow"><title>Signing in...</title>'
+        '<style>body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;'
+        'display:flex;flex-direction:column;align-items:center;justify-content:center;'
+        'height:100vh;margin:0;background:#000;color:#fff;text-align:center}'
+        'p{opacity:.7;font-size:16px}'
+        'a{display:none;margin-top:18px;padding:12px 22px;background:#F58320;color:#fff;'
+        'text-decoration:none;border-radius:10px;font-weight:700;font-size:16px}</style></head>'
+        '<body><p id="m">Signing in, please wait...</p>'
+        '<a id="b" href="#">Open the app</a><script>'
+        "var h=window.location.hash.replace(/^#/,'');"
+        "var s=window.location.search.replace(/^\\?/,'');"
+        "var p=h||s;"
+        "if(p){var t='budget://oauth?'+p;var b=document.getElementById('b');b.href=t;"
+        # Auto-redirect first; if the Custom Tab blocks the JS navigation to the
+        # custom scheme (some Chrome versions require a user gesture), reveal the
+        # button so the user can tap to finish.
+        "window.location.replace(t);"
+        "setTimeout(function(){b.style.display='inline-block';"
+        "document.getElementById('m').textContent='Tap to finish signing in';},1200);}"
+        '</script></body></html>\n')
+
     # apex cutover build (BASE==""): emit sitemap.xml (landing + blog) + robots.txt
     if not BASE:
         urls = [SITE + lp(l) for l in langs]
@@ -765,6 +801,11 @@ def build():
         if os.path.exists(blog_sm):
             for loc in re.findall(r"<loc>([^<]+)</loc>", open(blog_sm, encoding="utf-8").read()):
                 if "/blog/" in loc:
+                    urls.append(loc)
+        help_sm = os.path.join(ROOT, "..", "help", "site", "sitemap.xml")
+        if os.path.exists(help_sm):
+            for loc in re.findall(r"<loc>([^<]+)</loc>", open(help_sm, encoding="utf-8").read()):
+                if "/help/" in loc:
                     urls.append(loc)
         urls += [SITE + about_url(l) for l in LANG_NAMES if l in ABOUT]  # About (9 langs)
         for k in ("cookies", "privacy", "terms"):                        # legal (pl + en)

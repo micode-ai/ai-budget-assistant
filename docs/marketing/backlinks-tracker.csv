@@ -1,0 +1,44 @@
+Tier,Site,Submit URL,Link type,Week,Status,Date submitted,Live URL,Notes
+1,AlternativeTo,https://alternativeto.net/ (user menu -> Suggest new application),follow,W1,todo,,,List platforms Android/Web; add the alternative-to targets. Top priority.
+1,There's An AI For That,https://theresanaiforthat.com/submit,dofollow,W1,todo,,,DR ~76 AI dir; free queue.
+1,Futurepedia,https://www.futurepedia.io/submit-tool,follow,W1,todo,,,Category Finance.
+1,Future Tools,https://www.futuretools.io/ (Submit a Tool),dofollow,W1,todo,,,DR ~69.
+1,Toolify,https://www.toolify.ai/submit,follow,W2,todo,,,High-traffic AI dir.
+1,SaaSHub,https://www.saashub.com/ (Submit a product),dofollow,W1,todo,,,Free dofollow; list alternatives.
+1,Product Hunt,https://www.producthunt.com/ (Submit a product),nofollow,W1,todo,,,Create page now; plan a real launch day later.
+1,Crunchbase,https://www.crunchbase.com/ (Add -> Organization),nofollow,W1,todo,,,Brand SERP + Organization sameAs. List MICODE + product.
+1,G2,https://www.g2.com/ (Add your product),follow,W2,todo,,,Personal-finance category; ask early users for reviews.
+1,Capterra,https://www.capterra.com/vendors/sign-up,follow,W2,todo,,,One Gartner signup -> Capterra+GetApp+Software Advice. Category Budgeting.
+1,GetApp,(via Gartner Digital Markets signup),follow,W2,todo,,,Same signup as Capterra.
+1,Software Advice,(via Gartner Digital Markets signup),follow,W2,todo,,,Same signup as Capterra.
+2,F6S,https://www.f6s.com/ (create company profile),dofollow,W2,todo,,,Startup profile + founder.
+2,BetaList,https://betalist.com/submit,follow,W2,todo,,,Curated; good for newer products.
+2,Indie Hackers,https://www.indiehackers.com/ (Products + founder story),nofollow,W3,todo,,,Pair with a 0->first-users story post.
+2,Slant,https://www.slant.co/,follow,W2,todo,,,Best budgeting app question pages.
+2,Good AI Tools,https://www.goodaitools.com/submit/,follow,W2,todo,,,DR ~66 AI dir.
+2,The Next AI,(site Submit form),mixed,W2,todo,,,Batch-submit AI dir.
+2,TheAISurf,(site Submit form),mixed,W2,todo,,,Batch-submit AI dir.
+2,AIxploria,(site Submit form),mixed,W2,todo,,,Batch-submit AI dir.
+2,TopAI.tools,https://topai.tools/submit,mixed,W2,todo,,,Batch-submit AI dir.
+2,Trustpilot,https://business.trustpilot.com/,nofollow,W3,todo,,,Reviews = social proof + brand SERP.
+2,LinkedIn,https://www.linkedin.com/ (create/optimize company page),nofollow,W3,todo,,,Entity/brand signal; post the blog.
+3,antyweb.pl,editorial pitch (email/DM),editorial,W3,todo,,,Use the PL pitch in backlinks-outreach.md.
+3,spidersweb.pl,editorial pitch (email/DM),editorial,W3,todo,,,PL pitch.
+3,geex.pl,editorial pitch (email/DM),editorial,W3,todo,,,PL pitch.
+3,mamstartup.pl,editorial pitch (email/DM),editorial,W3,todo,,,PL startup outlet.
+3,my-company.pl,editorial pitch (email/DM),editorial,W3,todo,,,PL business outlet.
+3,Telepolis (app section),listing/pitch,editorial,W3,todo,,,PL app listing.
+3,ITHardware,listing/pitch,editorial,W3,todo,,,PL tech listing.
+3,startup.pfr.pl ecosystem,listing,follow,W3,todo,,,PL startup ecosystem.
+3,r/budgeting,https://www.reddit.com/r/budgeting/,nofollow,W3,todo,,,Value-first; disclose maker. Draft in outreach doc.
+3,r/personalfinance,https://www.reddit.com/r/personalfinance/,nofollow,W3,todo,,,Answer existing best-app threads only.
+3,r/androidapps,https://www.reddit.com/r/androidapps/,nofollow,W3,todo,,,Follow weekly self-promo thread rules.
+3,r/povertyfinance,https://www.reddit.com/r/povertyfinance/,nofollow,W3,todo,,,Free-tier angle.
+3,Quora,https://www.quora.com/,nofollow,W3,todo,,,Answer best budgeting app questions. Draft in outreach doc.
+3,Medium,https://medium.com/,nofollow,W3,todo,,,Repost a blog article with rel=canonical to ai-budget.pl.
+3,dev.to,https://dev.to/new,nofollow,W3,todo,,,Repost with canonical_url frontmatter.
+3,AppAdvice,https://appadvice.com/ (app submission),mixed,W3,todo,,,App-review site.
+3,AppGrooves,https://appgrooves.com/,mixed,W3,todo,,,App-review site.
+3,Clutch,https://clutch.co/ (list MICODE as maker),follow,W3,todo,,,Studio directory for MICODE.
+3,GoodFirms,https://www.goodfirms.co/,follow,W3,todo,,,Studio directory for MICODE.
+3,Sortlist,https://www.sortlist.com/,follow,W3,todo,,,Studio directory for MICODE.

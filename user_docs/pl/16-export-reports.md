@@ -6,6 +6,8 @@
 
 Ekran **Eksport i raporty** umozliwia generowanie raportow finansowych, przegladanie miesiecznych podsumowań, pobieranie/udostepnianie raportow i zarzadzanie kopiami zapasowymi danych. Uzyskaj dostep z zakladki Analityka za pomoca przycisku **Eksportuj raport** lub z **Ustawienia** > **Raporty i e-mail** > **Generuj raport**.
 
+![Ekran Danych i raportów z synchronizacją, podsumowaniami e-mail i kopią zapasową](../img/data-reports.jpg)
+
 ## Formaty raportow
 
 Dostepne sa trzy formaty eksportu:

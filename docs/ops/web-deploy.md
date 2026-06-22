@@ -59,6 +59,16 @@ fallback — no nginx change. Regenerate after editing any article:
 `python docs/marketing/seo/build_blog.py` (needs `markdown` + `Pillow`), then commit
 `docs/marketing/seo/site/`.
 
+**Public help center (ABA-284):** same mechanism for `/help` — the workflow copies
+`docs/marketing/help/site/help` into the apex tree (`apex/help`). Generated from
+`user_docs/<lang>/NN-slug.md` by `python docs/marketing/help/build_help.py` (reuses
+`build_blog.py`'s chrome; needs `markdown` + `Pillow`). **Build order matters**: run
+blog + help BEFORE landing, because `build_landing.py`'s apex `sitemap.xml` merges the
+blog and help sitemaps. Regenerate all three and commit their `site/` trees after
+editing any `user_docs` file: `python docs/marketing/seo/build_blog.py && python
+docs/marketing/help/build_help.py && LANDING_BASE= ROBOTS="index,follow,max-image-preview:large"
+python docs/marketing/landing/build_landing.py`.
+
 **Manual fallback** (if CI is unavailable):
 
 ```bash

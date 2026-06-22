@@ -1,10 +1,12 @@
 # Gestionnaire d'abonnements
 
-Suivez tous vos frais récurrents en un seul endroit : services de streaming, outils SaaS, salle de sport, etc.
+> Suivez tous vos frais récurrents en un seul endroit : services de streaming, outils SaaS, salle de sport, etc.
 
 ## Qu'est-ce que le gestionnaire d'abonnements ?
 
 Le gestionnaire d'abonnements est un tracker dédié à vos paiements récurrents. Contrairement aux transactions, les abonnements ne sont pas détectés automatiquement — vous les ajoutez manuellement ou via le bouton **« Suivre cet abonnement »** dans les résultats de Fat Finder.
+
+![Écran Abonnements avec le coût mensuel et les renouvellements](../img/subscriptions.jpg)
 
 Chaque abonnement contient :
 - Nom (Netflix, Spotify, salle de sport…)

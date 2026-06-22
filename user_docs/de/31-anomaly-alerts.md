@@ -1,6 +1,6 @@
 # Hinweise: ungewöhnliche Aktivität
 
-Die App beobachtet deine Ausgaben und benachrichtigt dich, wenn etwas ungewöhnlich aussieht — keine Einrichtung erforderlich. Tippe auf das Glockensymbol auf dem Startbildschirm, um alle Hinweise zu sehen.
+> Die App beobachtet deine Ausgaben und benachrichtigt dich, wenn etwas ungewöhnlich aussieht — keine Einrichtung erforderlich. Tippe auf das Glockensymbol auf dem Startbildschirm, um alle Hinweise zu sehen.
 
 ## Was die App erkennt
 

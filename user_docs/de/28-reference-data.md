@@ -6,6 +6,8 @@
 
 Alle vier Typen von Referenzdaten werden an einem zentralen Ort in den Einstellungen verwaltet. Die Oberfläche ist einheitlich: **Zeile antippen zum Bearbeiten**, **+** zum Hinzufügen, **Mülleimer** zum Löschen.
 
+![Referenzdaten-Hub mit Kategorien, Händlern, Tags und Projekten](../img/reference-data.jpg)
+
 > **Betrachter-Rolle**: Mitglieder mit Betrachter-Rolle können Referenzdaten ansehen, aber nicht hinzufügen, umbenennen oder löschen.
 
 ## Kategorien

@@ -6,6 +6,8 @@
 
 All four types of reference data are managed from a single hub in Settings. The interface is consistent: **tap a row to edit**, tap **+** to add, tap the **trash icon** to delete.
 
+![Reference data hub with categories, merchants, tags and projects](../img/reference-data.jpg)
+
 > **Viewer** role: Members with Viewer access can browse reference data but cannot add, rename, or delete.
 
 ## Categories

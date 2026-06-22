@@ -6,6 +6,8 @@
 
 La pestana **Analisis** ofrece una vista completa de tus gastos a traves de graficos, informacion e exploracion de datos. Todos los datos se basan en tus gastos en la cuenta seleccionada.
 
+![Pantalla de análisis con tu historia de gastos e ingresos por categoría](../img/analytics.jpg)
+
 ## Rango de tiempo y filtros
 
 En la parte superior de la pantalla de Analisis:

@@ -6,6 +6,8 @@
 
 El programa de referidos te permite invitar amigos a AI Budget Assistant. Cuando se registran con tu código y usan activamente la app durante 7 días, recibes **+30 solicitudes AI de bonificación**. Los amigos referidos obtienen una **prueba extendida de 14 días** en lugar de los 7 días estándar.
 
+![Pantalla de Invitar amigos con código de referido e hitos](../img/referral.jpg)
+
 ## Tu código de referido
 
 Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontrarlo en la pantalla **Invitar amigos**:
