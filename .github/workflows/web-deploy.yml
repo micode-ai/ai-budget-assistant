@@ -32,6 +32,8 @@ jobs:
         env:
           # Baked into the bundle at build time — the web app talks to prod API.
           EXPO_PUBLIC_API_URL: https://api.ai-budget.pl/api/v1
+          EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: 587710971480-l2noql6vqb8bikcfc0ef3juom9h51gbi.apps.googleusercontent.com
+          EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID: 587710971480-2sc9b42b8f6tbq9ee9pat3ivc24nt7kd.apps.googleusercontent.com
         run: bash scripts/build-web.sh
 
       - name: Verify build output
