@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: 'Сповіщення за 3 дні до поновлення відстежуваної підписки',
     anomalyAlerts: 'Аномалії',
     anomalyAlertsDesc: 'Незвичайні витрати, подорожчання та повторні платежі',
+    trackingReminder: 'Нагадування про записи',
+    trackingReminderDesc: 'Сповіщення, якщо ви не записували витрати 3+ дні',
   },
   alerts: {
     title: 'Сповіщення',

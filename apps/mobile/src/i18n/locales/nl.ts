@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: 'Ontvang een melding 3 dagen vóór de verlenging van een bijgehouden abonnement',
     anomalyAlerts: 'Anomaliemeldingen',
     anomalyAlertsDesc: 'Ongewone uitgaven, prijsstijgingen en dubbele afschrijvingen',
+    trackingReminder: 'Trackingherinnering',
+    trackingReminderDesc: 'Ontvang een melding als je al 3+ dagen geen uitgaven hebt geregistreerd',
   },
   alerts: {
     title: 'Meldingen',

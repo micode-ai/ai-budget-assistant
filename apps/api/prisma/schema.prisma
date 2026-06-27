@@ -95,6 +95,7 @@ model User {
   notifyRecurringExpenses Boolean   @default(true) @map("notify_recurring_expenses")
   notifySubscriptionRenewals Boolean @default(true) @map("notify_subscription_renewals")
   notifyAnomalyAlerts     Boolean   @default(true) @map("notify_anomaly_alerts")
+  notifyTrackingGap       Boolean   @default(true) @map("notify_tracking_gap")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")

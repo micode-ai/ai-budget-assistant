@@ -144,6 +144,8 @@ const translations: Record<string, {
   subscriptionReminderBody: (p: SubscriptionRenewalParams) => string;
   subscriptionChargedTitle: (p: Pick<SubscriptionRenewalParams, 'name'>) => string;
   subscriptionChargedBody: (p: SubscriptionRenewalParams) => string;
+  trackingGapTitle: () => string;
+  trackingGapBody: () => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -208,6 +210,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} will be charged for ${name}`,
     subscriptionChargedTitle: ({ name }) => `${name} charged`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} added to your expenses for ${name}`,
+    trackingGapTitle: () => 'Time to log your expenses!',
+    trackingGapBody: () => "You haven't recorded anything in 3+ days. Add a transaction to keep your budget on track.",
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -272,6 +276,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} будет списано за ${name}`,
     subscriptionChargedTitle: ({ name }) => `Списано за ${name}`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} добавлено в расходы за ${name}`,
+    trackingGapTitle: () => 'Пора записать расходы!',
+    trackingGapBody: () => 'Вы не записывали транзакции уже 3+ дня. Добавьте запись, чтобы бюджет был под контролем.',
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -336,6 +342,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} буде знято за ${name}`,
     subscriptionChargedTitle: ({ name }) => `Списано за ${name}`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} додано до витрат за ${name}`,
+    trackingGapTitle: () => 'Час записати витрати!',
+    trackingGapBody: () => 'Ви не записували транзакції вже 3+ дні. Додайте запис, щоб бюджет був під контролем.',
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -400,6 +408,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zostanie pobrane za ${name}`,
     subscriptionChargedTitle: ({ name }) => `Pobrano za ${name}`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} dodano do wydatków za ${name}`,
+    trackingGapTitle: () => 'Czas zapisać wydatki!',
+    trackingGapBody: () => 'Nie rejestrowałeś transakcji od ponad 3 dni. Dodaj wpis, żeby budżet był pod kontrolą.',
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -464,6 +474,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} se cobrarán por ${name}`,
     subscriptionChargedTitle: ({ name }) => `${name} cobrado`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} añadido a tus gastos por ${name}`,
+    trackingGapTitle: () => '¡Es hora de registrar tus gastos!',
+    trackingGapBody: () => 'No has registrado transacciones en más de 3 días. Añade un registro para mantener tu presupuesto al día.',
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -528,6 +540,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} seront prélevés pour ${name}`,
     subscriptionChargedTitle: ({ name }) => `${name} prélevé`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} ajouté à vos dépenses pour ${name}`,
+    trackingGapTitle: () => "Il est temps d'enregistrer vos dépenses !",
+    trackingGapBody: () => "Vous n'avez enregistré aucune transaction depuis plus de 3 jours. Ajoutez une entrée pour rester dans votre budget.",
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -592,6 +606,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} wird für ${name} abgebucht`,
     subscriptionChargedTitle: ({ name }) => `${name} abgebucht`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zu deinen Ausgaben für ${name} hinzugefügt`,
+    trackingGapTitle: () => 'Zeit, deine Ausgaben einzutragen!',
+    trackingGapBody: () => 'Du hast seit über 3 Tagen keine Transaktionen erfasst. Trag eine ein, um dein Budget im Blick zu behalten.',
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -656,6 +672,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} будзе спісана за ${name}`,
     subscriptionChargedTitle: ({ name }) => `Спісана за ${name}`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} дададзена ў выдаткі за ${name}`,
+    trackingGapTitle: () => 'Час запісаць выдаткі!',
+    trackingGapBody: () => 'Вы не запісвалі транзакцыі ўжо 3+ дні. Дадайце запіс, каб бюджэт быў пад кантролем.',
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -720,6 +738,8 @@ const translations: Record<string, {
     subscriptionReminderBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} wordt afgeschreven voor ${name}`,
     subscriptionChargedTitle: ({ name }) => `${name} afgeschreven`,
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} toegevoegd aan je uitgaven voor ${name}`,
+    trackingGapTitle: () => 'Tijd om je uitgaven bij te houden!',
+    trackingGapBody: () => 'Je hebt al meer dan 3 dagen geen transacties geregistreerd. Voeg er een toe om je budget op koers te houden.',
   },
 };
 
@@ -883,4 +903,12 @@ export function subscriptionChargedTitle(lang: Lang, params: Pick<SubscriptionRe
 
 export function subscriptionChargedBody(lang: Lang, params: SubscriptionRenewalParams): string {
   return t(lang).subscriptionChargedBody(params);
+}
+
+export function trackingGapTitle(lang: Lang): string {
+  return t(lang).trackingGapTitle();
+}
+
+export function trackingGapBody(lang: Lang): string {
+  return t(lang).trackingGapBody();
 }

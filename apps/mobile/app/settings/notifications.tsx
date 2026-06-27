@@ -23,6 +23,7 @@ export default function NotificationsSettingsScreen() {
   const [notifRecurringExpenses, setNotifRecurringExpenses] = useState(true);
   const [notifSubscriptionRenewals, setNotifSubscriptionRenewals] = useState(true);
   const [notifAnomalyAlerts, setNotifAnomalyAlerts] = useState(true);
+  const [notifTrackingGap, setNotifTrackingGap] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   const loadNotificationPreferences = useCallback(async () => {
@@ -34,6 +35,7 @@ export default function NotificationsSettingsScreen() {
       setNotifRecurringExpenses(prefs.recurringExpenses ?? true);
       setNotifSubscriptionRenewals(prefs.subscriptionRenewals ?? true);
       setNotifAnomalyAlerts(prefs.anomalyAlerts ?? true);
+      setNotifTrackingGap(prefs.trackingGap ?? true);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -105,6 +107,16 @@ export default function NotificationsSettingsScreen() {
     }
   };
 
+  const handleToggleTrackingGap = async (value: boolean) => {
+    setNotifTrackingGap(value);
+    try {
+      await api.updateNotificationPreferences({ trackingGap: value });
+    } catch (e) {
+      setNotifTrackingGap(!value);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
@@ -112,8 +124,9 @@ export default function NotificationsSettingsScreen() {
     setNotifRecurringExpenses(value);
     setNotifSubscriptionRenewals(value);
     setNotifAnomalyAlerts(value);
+    setNotifTrackingGap(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
@@ -121,6 +134,7 @@ export default function NotificationsSettingsScreen() {
       setNotifRecurringExpenses(!value);
       setNotifSubscriptionRenewals(!value);
       setNotifAnomalyAlerts(!value);
+      setNotifTrackingGap(!value);
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -138,7 +152,7 @@ export default function NotificationsSettingsScreen() {
                 <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
               </View>
               <Switch
-                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts}
+                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap}
                 onValueChange={handleToggleAllNotifications}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
@@ -230,6 +244,21 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 value={notifAnomalyAlerts}
                 onValueChange={handleToggleAnomalyAlerts}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.trackingReminder')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.trackingReminderDesc')}</Text>
+              </View>
+              <Switch
+                value={notifTrackingGap}
+                onValueChange={handleToggleTrackingGap}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
               />

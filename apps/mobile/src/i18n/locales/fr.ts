@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: 'Notification 3 jours avant le renouvellement d\'un abonnement suivi',
     anomalyAlerts: "Alertes d'anomalies",
     anomalyAlertsDesc: 'Dépenses inhabituelles, hausses de prix et doubles prélèvements',
+    trackingReminder: 'Rappel de suivi',
+    trackingReminderDesc: "Recevez une notification si vous n'avez pas enregistré de dépenses depuis 3+ jours",
   },
   alerts: {
     title: 'Alertes',

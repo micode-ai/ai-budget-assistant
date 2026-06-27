@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: 'Powiadomienie 3 dni przed odnowieniem śledzonej subskrypcji',
     anomalyAlerts: 'Anomalie',
     anomalyAlertsDesc: 'Nietypowe wydatki, podwyżki cen i podwójne płatności',
+    trackingReminder: 'Przypomnienie o śledzeniu',
+    trackingReminderDesc: 'Otrzymuj powiadomienie, gdy nie zapisałeś wydatków przez 3+ dni',
   },
   alerts: {
     title: 'Alerty',
