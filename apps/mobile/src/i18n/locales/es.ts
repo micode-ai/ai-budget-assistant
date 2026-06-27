@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: 'Notificación 3 días antes de que se renueve una suscripción',
     anomalyAlerts: 'Alertas de anomalías',
     anomalyAlertsDesc: 'Gastos inusuales, subidas de precio y cargos duplicados',
+    trackingReminder: 'Recordatorio de seguimiento',
+    trackingReminderDesc: 'Recibe una notificación cuando no hayas registrado gastos en 3+ días',
   },
   alerts: {
     title: 'Alertas',

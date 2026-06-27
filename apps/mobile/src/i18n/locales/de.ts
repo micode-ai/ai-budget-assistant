@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: '3 Tage vor der Verlängerung eines Abonnements benachrichtigt werden',
     anomalyAlerts: 'Anomalie-Hinweise',
     anomalyAlertsDesc: 'Ungewöhnliche Ausgaben, Preiserhöhungen und doppelte Abbuchungen',
+    trackingReminder: 'Tracking-Erinnerung',
+    trackingReminderDesc: 'Benachrichtigung, wenn du seit 3+ Tagen keine Ausgaben eingetragen hast',
   },
   alerts: {
     title: 'Hinweise',

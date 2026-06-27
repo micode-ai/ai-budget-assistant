@@ -106,6 +106,7 @@ export class UsersService {
         notifyRecurringExpenses: true,
         notifySubscriptionRenewals: true,
         notifyAnomalyAlerts: true,
+        notifyTrackingGap: true,
       },
     });
     return {
@@ -115,12 +116,13 @@ export class UsersService {
       recurringExpenses: user?.notifyRecurringExpenses ?? true,
       subscriptionRenewals: user?.notifySubscriptionRenewals ?? true,
       anomalyAlerts: user?.notifyAnomalyAlerts ?? true,
+      trackingGap: user?.notifyTrackingGap ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
@@ -129,6 +131,7 @@ export class UsersService {
     if (prefs.recurringExpenses !== undefined) data.notifyRecurringExpenses = prefs.recurringExpenses;
     if (prefs.subscriptionRenewals !== undefined) data.notifySubscriptionRenewals = prefs.subscriptionRenewals;
     if (prefs.anomalyAlerts !== undefined) data.notifyAnomalyAlerts = prefs.anomalyAlerts;
+    if (prefs.trackingGap !== undefined) data.notifyTrackingGap = prefs.trackingGap;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);

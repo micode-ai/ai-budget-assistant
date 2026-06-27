@@ -713,6 +713,8 @@ export default {
     subscriptionRenewalsDesc: 'Get notified 3 days before a tracked subscription renews',
     anomalyAlerts: 'Anomaly alerts',
     anomalyAlertsDesc: 'Unusual spending, price increases and duplicate charges',
+    trackingReminder: 'Tracking Reminder',
+    trackingReminderDesc: "Get notified when you haven't logged expenses in 3+ days",
   },
   alerts: {
     title: 'Alerts',

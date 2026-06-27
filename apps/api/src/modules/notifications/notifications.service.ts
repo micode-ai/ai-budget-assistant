@@ -43,6 +43,7 @@ export class NotificationsService {
         notifyRecurringExpenses: true,
         notifySubscriptionRenewals: true,
         notifyAnomalyAlerts: true,
+        notifyTrackingGap: true,
       },
     });
 
@@ -55,6 +56,7 @@ export class NotificationsService {
     if (notificationType === 'recurring_expense' && !user.notifyRecurringExpenses) return false;
     if (notificationType === 'chat_mention' && !user.notifySharedActivity) return false;
     if (notificationType === 'subscription_renewal' && !user.notifySubscriptionRenewals) return false;
+    if (notificationType === 'tracking_gap_reminder' && !user.notifyTrackingGap) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);

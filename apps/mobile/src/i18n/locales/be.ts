@@ -704,6 +704,8 @@ export default {
     subscriptionRenewalsDesc: 'Паведамленне за 3 дні да аднаўлення падпіскі',
     anomalyAlerts: 'Анамаліі',
     anomalyAlertsDesc: 'Незвычайныя выдаткі, падаражанні і паўторныя плацяжы',
+    trackingReminder: 'Нагадванне аб запісах',
+    trackingReminderDesc: 'Паведамленне, калі вы не запісвалі выдаткі 3+ дні',
   },
   alerts: {
     title: 'Апавяшчэнні',
