@@ -1,7 +1,7 @@
 Tier,Site,Submit URL,Link type,Week,Status,Date submitted,Live URL,Notes
 1,AlternativeTo,https://alternativeto.net/ (user menu -> Suggest new application),follow,W1,todo,,,List platforms Android/Web; add the alternative-to targets. Top priority.
-1,There's An AI For That,https://theresanaiforthat.com/submit,dofollow,W1,todo,,,DR ~76 AI dir; free queue.
-1,Futurepedia,https://www.futurepedia.io/submit-tool,follow,W1,todo,,,Category Finance.
+1,There's An AI For That,https://theresanaiforthat.com/launch/,dofollow,later,paid-skip,,,NOW PAID (~$347 one-off); free only via their monthly X/Twitter thread. Use Futurepedia/DropYourAI for the free push.
+1,Futurepedia,https://www.futurepedia.io/submit-tool,follow,later,paid-skip,,,NOW PAID on submit page. Skip. For free AI dirs use curated lists (github best-of-ai/ai-directories) and bail on paywalls.
 1,Future Tools,https://www.futuretools.io/ (Submit a Tool),dofollow,W1,todo,,,DR ~69.
 1,Toolify,https://www.toolify.ai/submit,follow,W2,todo,,,High-traffic AI dir.
 1,SaaSHub,https://www.saashub.com/ (Submit a product),dofollow,W1,todo,,,Free dofollow; list alternatives.
