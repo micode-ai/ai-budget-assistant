@@ -72,3 +72,8 @@ docs/scaling
 docs/marketing
 # Superpowers brainstorm artifacts
 .superpowers/
+
+# Personal / local files (never commit)
+account-statement_*.csv
+My Learning _ NVIDIA.pdf
+nvidia.png
