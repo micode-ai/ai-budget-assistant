@@ -57,9 +57,11 @@ Sur Android, l'application peut créer automatiquement une dépense à partir de
 
 Le texte des notifications est traité **uniquement sur votre appareil**. Le nom du marchand, le montant et la devise sont extraits localement ; seule la dépense résultante est synchronisée avec le serveur — le texte brut de la notification n'est jamais envoyé nulle part.
 
-### Banques prises en charge (Pologne)
+### Banques prises en charge (Europe)
 
-La capture automatique fonctionne avec les notifications des principales banques polonaises, notamment PKO BP, mBank, Pekao, Revolut et d'autres. La liste des applications prises en charge est affichée sur l'écran de capture automatique.
+La capture automatique fonctionne avec les notifications des principales banques de détail à travers l'Europe. Pays pris en charge : Pologne (PKO BP, mBank, Pekao, ING, Millennium, Santander, Alior, BNP Paribas, Crédit Agricole, Nest Bank), Allemagne/Autriche (Deutsche Bank, Commerzbank, DKB, ING-DiBa, Sparkasse, George/Erste), France (BNP Paribas, Crédit Agricole, Boursorama, Société Générale), Espagne (BBVA, Santander, CaixaBank, Bankinter), Pays-Bas (ING, Rabobank, ABN AMRO, bunq), Ukraine (PrivatBank, monobank, Oschadbank) et Russie (Sberbank, Tinkoff, Alfa-Bank). Les néobanques transfrontalières Revolut et N26 sont également prises en charge. La liste complète est affichée sur l'écran de capture automatique.
+
+**Note sur les catégories :** Pour les banques hors de Pologne, il est possible qu'aucune catégorie ne soit suggérée automatiquement. La dépense sera enregistrée sans catégorie et vous pourrez la corriger manuellement — l'application apprend de vos corrections.
 
 ### Déduplication
 

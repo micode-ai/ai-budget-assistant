@@ -57,9 +57,11 @@ Auf Android kann die App automatisch eine Ausgabe aus den Push-Benachrichtigunge
 
 Der Benachrichtigungstext wird **ausschließlich auf deinem Gerät** verarbeitet. Händlername, Betrag und Währung werden lokal extrahiert; nur die resultierende Ausgabe wird mit dem Server synchronisiert — der rohe Benachrichtigungstext wird nirgends gesendet.
 
-### Unterstützte Banken (Polen)
+### Unterstützte Banken (Europa)
 
-Die Auto-Erfassung funktioniert mit Benachrichtigungen von großen polnischen Banken, darunter PKO BP, mBank, Pekao, Revolut und andere. Die Liste der unterstützten Apps wird auf dem Auto-Erfassungs-Bildschirm angezeigt.
+Die Auto-Erfassung funktioniert mit Benachrichtigungen von großen Privatkundenbanken in ganz Europa. Unterstützte Länder: Polen (PKO BP, mBank, Pekao, ING, Millennium, Santander, Alior, BNP Paribas, Crédit Agricole, Nest Bank), Deutschland/Österreich (Deutsche Bank, Commerzbank, DKB, ING-DiBa, Sparkasse, George/Erste), Frankreich (BNP Paribas, Crédit Agricole, Boursorama, Société Générale), Spanien (BBVA, Santander, CaixaBank, Bankinter), Niederlande (ING, Rabobank, ABN AMRO, bunq), Ukraine (PrivatBank, monobank, Oschadbank) und Russland (Sberbank, Tinkoff, Alfa-Bank). Die grenzüberschreitenden Neobanken Revolut und N26 werden ebenfalls unterstützt. Die vollständige Liste der unterstützten Apps wird auf dem Auto-Erfassungs-Bildschirm angezeigt.
+
+**Hinweis zu Händlerkategorien:** Für Banken außerhalb Polens wird möglicherweise keine Kategorie automatisch vorgeschlagen. Der Ausgabe wird ohne Kategorie erfasst und kann manuell korrigiert werden — die App lernt aus Ihren Korrekturen.
 
 ### Deduplizierung
 

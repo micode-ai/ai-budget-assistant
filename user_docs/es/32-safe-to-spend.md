@@ -57,9 +57,11 @@ En Android, la app puede crear automáticamente un gasto a partir de las notific
 
 El texto de las notificaciones se procesa **solo en tu dispositivo**. El nombre del comercio, el importe y la divisa se extraen localmente; solo el gasto resultante se sincroniza con el servidor — el texto bruto de la notificación nunca se envía a ningún sitio.
 
-### Bancos compatibles (Polonia)
+### Bancos compatibles (Europa)
 
-La captura automática funciona con notificaciones de los principales bancos polacos, como PKO BP, mBank, Pekao, Revolut y otros. La lista de apps compatibles se muestra en la pantalla de Captura automática.
+La captura automática funciona con notificaciones de los principales bancos minoristas de toda Europa. Países compatibles: Polonia (PKO BP, mBank, Pekao, ING, Millennium, Santander, Alior, BNP Paribas, Crédit Agricole, Nest Bank), Alemania/Austria (Deutsche Bank, Commerzbank, DKB, ING-DiBa, Sparkasse, George/Erste), Francia (BNP Paribas, Crédit Agricole, Boursorama, Société Générale), España (BBVA, Santander, CaixaBank, Bankinter), Países Bajos (ING, Rabobank, ABN AMRO, bunq), Ucrania (PrivatBank, monobank, Oschadbank) y Rusia (Sberbank, Tinkoff, Alfa-Bank). Los neobанcos Revolut y N26 también son compatibles. La lista completa de apps compatibles se muestra en la pantalla de Captura automática.
+
+**Nota sobre categorías:** Para bancos fuera de Polonia, es posible que no se sugiera una categoría automáticamente. El gasto se registrará sin categoría y podrás corregirlo manualmente — la app aprende de tus correcciones.
 
 ### Deduplicación
 
