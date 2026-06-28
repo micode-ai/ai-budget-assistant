@@ -281,7 +281,7 @@ const createStyles = (theme: Theme) => ({
   },
   sectionTitle: {
     ...theme.textStyles.h3,
-    color: theme.colors.text,
+    color: theme.colors.textPrimary,
     marginBottom: theme.spacing[2],
   },
   sectionSubtitle: {
@@ -313,7 +313,7 @@ const createStyles = (theme: Theme) => ({
   permissionGrantedText: {
     ...theme.textStyles.body,
     color: theme.colors.success,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.semiBold,
   },
   permissionHint: {
     ...theme.textStyles.caption,
@@ -332,7 +332,7 @@ const createStyles = (theme: Theme) => ({
   buttonText: {
     ...theme.textStyles.body,
     color: theme.colors.textInverse,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.semiBold,
   },
   toggleRow: {
     flexDirection: 'row' as const,
@@ -341,7 +341,7 @@ const createStyles = (theme: Theme) => ({
   },
   toggleLabel: {
     ...theme.textStyles.body,
-    color: theme.colors.text,
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   toggleHint: {
@@ -353,7 +353,7 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     textTransform: 'uppercase' as const,
-    fontFamily: theme.fonts.semibold,
+    fontFamily: theme.fonts.semiBold,
     marginBottom: theme.spacing[2],
   },
   bankRow: {
@@ -368,7 +368,7 @@ const createStyles = (theme: Theme) => ({
   },
   bankLabel: {
     ...theme.textStyles.body,
-    color: theme.colors.text,
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   capturedRow: {
@@ -382,7 +382,7 @@ const createStyles = (theme: Theme) => ({
   },
   capturedMerchant: {
     ...theme.textStyles.body,
-    color: theme.colors.text,
+    color: theme.colors.textPrimary,
     fontFamily: theme.fonts.medium,
   },
   capturedMeta: {
