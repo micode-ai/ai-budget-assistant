@@ -12,7 +12,7 @@
  *
  * canEdit-gated — viewers see the list but cannot toggle the feature.
  */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -51,6 +51,11 @@ export default function AutoCaptureScreen() {
   const [captureEnabled, setCaptureEnabled] = useState(false);
   const [checkingPermission, setCheckingPermission] = useState(true);
 
+  // The user tapped "enable" before granting the OS permission, so we opened the
+  // system settings screen and bailed. When they return with permission granted,
+  // finish turning the feature on automatically instead of making them tap again.
+  const pendingEnable = useRef(false);
+
   // Expenses captured via notification (for the review list)
   const expenses = useExpenseStore((s) => s.expenses);
   const capturedExpenses = expenses
@@ -60,9 +65,19 @@ export default function AutoCaptureScreen() {
   const checkPermission = useCallback(async () => {
     setCheckingPermission(true);
     try {
-      const [granted, enabled] = await Promise.all([isPermissionGranted(), isEnabled()]);
+      const granted = await isPermissionGranted();
       setPermissionGranted(granted);
-      setCaptureEnabled(granted && enabled);
+      if (granted && pendingEnable.current) {
+        // Returned from the OS settings screen with permission now granted and a
+        // pending intent to enable — complete it (write the flag + start capture).
+        pendingEnable.current = false;
+        await setEnabled(true);
+        subscribeToCapture();
+        setCaptureEnabled(true);
+      } else {
+        const enabled = await isEnabled();
+        setCaptureEnabled(granted && enabled);
+      }
     } catch {
       setPermissionGranted(false);
       setCaptureEnabled(false);
@@ -85,7 +100,8 @@ export default function AutoCaptureScreen() {
   const handleToggle = async (value: boolean) => {
     if (!canEdit) return;
     if (value && !permissionGranted) {
-      // Redirect to OS settings first
+      // Redirect to OS settings first; remember the intent so we auto-enable on return.
+      pendingEnable.current = true;
       await openPermissionSettings();
       return;
     }
@@ -105,6 +121,8 @@ export default function AutoCaptureScreen() {
   };
 
   const handleGrantPermission = async () => {
+    // Granting permission implies intent to use the feature — auto-enable on return.
+    pendingEnable.current = true;
     await openPermissionSettings();
     // Permission check happens on focus return via useFocusEffect
   };
