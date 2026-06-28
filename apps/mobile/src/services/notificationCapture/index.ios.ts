@@ -37,4 +37,4 @@ export function addBankNotificationListener(
   return () => {};
 }
 
-export const BANK_PACKAGES_DISPLAY: Array<{ packageName: string; label: string }> = [];
+export const BANK_PACKAGES_DISPLAY: Array<{ packageName: string; label: string; country: string }> = [];

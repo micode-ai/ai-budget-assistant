@@ -57,9 +57,11 @@ Na Androidzie aplikacja może automatycznie tworzyć wydatek z powiadomień push
 
 Tekst powiadomień jest przetwarzany **wyłącznie na Twoim urządzeniu**. Nazwa sprzedawcy, kwota i waluta są wyodrębniane lokalnie; tylko wynikowy wydatek jest synchronizowany z serwerem — surowy tekst powiadomienia nigdy nie jest nigdzie wysyłany.
 
-### Obsługiwane banki (Polska)
+### Obsługiwane banki (Europa)
 
-Automatyczne przechwytywanie działa z powiadomieniami z największych polskich banków, w tym PKO BP, mBank, Pekao, Revolut i innych. Lista obsługiwanych aplikacji jest wyświetlana na ekranie automatycznego przechwytywania.
+Automatyczne przechwytywanie działa z powiadomieniami z dużych banków detalicznych w całej Europie. Obsługiwane kraje: Polska (PKO BP, mBank, Pekao, ING, Millennium, Santander, Alior, BNP Paribas, Credit Agricole, Nest Bank), Niemcy/Austria (Deutsche Bank, Commerzbank, DKB, ING-DiBa, Sparkasse, George/Erste), Francja (BNP Paribas, Crédit Agricole, Boursorama, Société Générale), Hiszpania (BBVA, Santander, CaixaBank, Bankinter), Holandia (ING, Rabobank, ABN AMRO, bunq), Ukraina (PrivatBank, monobank, Oschadbank) oraz Rosja (Sberbank, Tinkoff, Alfa-Bank). Obsługiwane są również neobanki Revolut i N26. Pełna lista obsługiwanych aplikacji jest wyświetlana na ekranie automatycznego przechwytywania.
+
+**Uwaga dotycząca kategorii:** Dla banków spoza Polski kategoria może nie zostać zaproponowana automatycznie. Wydatek zostanie zapisany bez kategorii i można ją poprawić ręcznie — aplikacja uczy się na podstawie poprawek.
 
 ### Deduplikacja
 

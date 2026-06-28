@@ -181,23 +181,44 @@ export default function AutoCaptureScreen() {
           )}
         </View>
 
-        {/* Bank allow-list */}
+        {/* Bank allow-list — grouped by country */}
         <Text style={styles.sectionHeader}>{t('autoCapture.banks')}</Text>
-        <View style={styles.card}>
-          {BANK_PACKAGES_DISPLAY.map((bank, index) => (
-            <View
-              key={bank.packageName}
-              style={[
-                styles.bankRow,
-                index < BANK_PACKAGES_DISPLAY.length - 1 && styles.bankRowDivider,
-              ]}
-            >
-              <Ionicons name="business-outline" size={18} color={theme.colors.primary} />
-              <Text style={styles.bankLabel}>{bank.label}</Text>
-              <Ionicons name="checkmark" size={16} color={theme.colors.success} />
+        {(() => {
+          // Group banks by country preserving first-seen order
+          const groups: { country: string; banks: typeof BANK_PACKAGES_DISPLAY[number][] }[] = [];
+          const countryIndex: Record<string, number> = {};
+          for (const bank of BANK_PACKAGES_DISPLAY) {
+            if (countryIndex[bank.country] === undefined) {
+              countryIndex[bank.country] = groups.length;
+              groups.push({ country: bank.country, banks: [] });
+            }
+            groups[countryIndex[bank.country]].banks.push(bank);
+          }
+          const COUNTRY_LABELS: Record<string, string> = {
+            PL: 'Poland', EU: 'Europe', DE: 'Germany / Austria', FR: 'France',
+            ES: 'Spain', NL: 'Netherlands', UA: 'Ukraine', RU: 'Russia', BY: 'Belarus',
+          };
+          return groups.map((group) => (
+            <View key={group.country} style={styles.card}>
+              <Text style={styles.bankGroupHeader}>
+                {COUNTRY_LABELS[group.country] ?? group.country}
+              </Text>
+              {group.banks.map((bank, index) => (
+                <View
+                  key={bank.packageName}
+                  style={[
+                    styles.bankRow,
+                    index < group.banks.length - 1 && styles.bankRowDivider,
+                  ]}
+                >
+                  <Ionicons name="business-outline" size={18} color={theme.colors.primary} />
+                  <Text style={styles.bankLabel}>{bank.label}</Text>
+                  <Ionicons name="checkmark" size={16} color={theme.colors.success} />
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
+          ));
+        })()}
 
         {/* Last captured review */}
         <Text style={styles.sectionHeader}>{t('autoCapture.reviewLast')}</Text>
@@ -327,6 +348,13 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[2],
+  },
+  bankGroupHeader: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textTransform: 'uppercase' as const,
+    fontFamily: theme.fonts.semibold,
+    marginBottom: theme.spacing[2],
   },
   bankRow: {
     flexDirection: 'row' as const,
