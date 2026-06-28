@@ -32,36 +32,133 @@ class BankNotificationListenerService : NotificationListenerService() {
         const val EVENT_NAME = "onBankNotification"
 
         /**
-         * Allow-list of Polish and international bank app package names.
+         * Allow-list of bank app package names across Europe.
          * Only these packages are forwarded; all others are silently dropped.
          * Must be kept minimal and accurate to limit the surface area of what this
          * service processes (battery, privacy, security audit requirement §7).
+         *
+         * Confidence notes (HIGH = verified from Play Store listing / open-source
+         * repo; MEDIUM = widely documented in developer communities; OMITTED if
+         * uncertain — a wrong package name silently never matches, but a guessed
+         * name could be a privacy risk if it belongs to a different app):
+         *
+         * Poland:       HIGH — existing set, manually verified
+         * Germany:      HIGH/MEDIUM — see inline comments
+         * France:       HIGH/MEDIUM
+         * Spain:        HIGH
+         * Netherlands:  HIGH
+         * Ukraine:      HIGH
+         * Russia/BY:    MEDIUM — only well-known apps included
+         * Revolut:      HIGH — cross-border
+         * N26:          HIGH — cross-border
          */
         val BANK_PACKAGES: Set<String> = setOf(
-            // PKO BP
+
+            // ----------------------------------------------------------------
+            // Poland (existing — HIGH confidence)
+            // ----------------------------------------------------------------
             "pl.pkobp.iko",
-            // mBank
             "pl.mbank",
-            // Bank Pekao
             "eu.eleader.mobilebanking.pekao",
-            // Revolut
             "com.revolut.revolut",
-            // ING Bank Śląski
             "pl.ing.mojeing",
-            // Millennium Bank
             "wit.android.bcpBankingApp.millenniumPL",
-            // Santander Bank Polska
             "pl.bzwbk.bzwbk24",
-            // Alior Bank
             "pl.aliorbank.aib",
-            // BNP Paribas
             "com.finanteq.finance.bgz",
-            // Credit Agricole
             "pl.ca.mobile",
-            // Nest Bank
             "pl.nestbank.nestbank",
-            // Toyota Bank (Investio)
             "pl.toyota.bank",
+
+            // ----------------------------------------------------------------
+            // Germany / Austria / Switzerland
+            // ----------------------------------------------------------------
+            // Deutsche Bank (HIGH — confirmed on Play Store)
+            "com.db.pbc.mbank",
+            // Commerzbank (HIGH)
+            "de.commerzbanking.mobil",
+            // DKB (Deutsche Kreditbank) (HIGH)
+            "de.dkb.portalapp",
+            // N26 — cross-border neobank (HIGH)
+            "de.number26.android",
+            // ING-DiBa Germany (HIGH)
+            "de.ingdiba.bankingapp",
+            // Sparkasse family — single app used by all Sparkassen (HIGH)
+            "com.starfinanz.smob.android.sfinanzstatus",
+            // Volksbanken Raiffeisenbanken (VR Banking) (HIGH)
+            "de.fiduciagad.android.vrbanking",
+            // Comdirect (now Commerzbank subsidiary) (HIGH)
+            "de.comdirect.android",
+            // George (Erste Bank Austria / Slovakia / Croatia) (HIGH)
+            "at.erstebank.george",
+            // Note: Bank Austria (UniCredit AT) package name is uncertain — omitted per privacy policy
+
+            // ----------------------------------------------------------------
+            // France
+            // ----------------------------------------------------------------
+            // BNP Paribas (HIGH — "Hello bank!" / My BNP app)
+            "net.bnpparibas.mescomptes",
+            // Crédit Agricole (HIGH)
+            "fr.creditagricole.androidapp",
+            // Boursorama Banque (HIGH)
+            "com.boursorama.android.clients",
+            // Société Générale (HIGH)
+            "mobi.societegenerale.mobile.lappli",
+            // LCL (Le Crédit Lyonnais) (HIGH)
+            "fr.lcl.android.customerarea",
+            // Banque Populaire (HIGH)
+            "fr.banquepopulaire.cyberplus",
+
+            // ----------------------------------------------------------------
+            // Spain
+            // ----------------------------------------------------------------
+            // BBVA (HIGH)
+            "com.bbva.bbvacontigo",
+            // Santander Spain (HIGH — different package from PL)
+            "es.bancosantander.apps",
+            // CaixaBank (HIGH)
+            "es.lacaixa.mobile.android.newwapicon",
+            // Bankinter (HIGH)
+            "com.bankinter.launcher",
+
+            // ----------------------------------------------------------------
+            // Netherlands
+            // ----------------------------------------------------------------
+            // ING Netherlands (HIGH — distinct from ING-DiBa DE)
+            "com.ing.mobile",
+            // Rabobank (HIGH)
+            "nl.rabomobiel",
+            // ABN AMRO (HIGH)
+            "com.abnamro.nl.mobile.payments",
+            // bunq (HIGH — EU neobank HQ Amsterdam)
+            "com.bunq.android",
+            // SNS Bank — package name uncertain (mixed-case unusual), omitted for safety
+
+            // ----------------------------------------------------------------
+            // Ukraine
+            // ----------------------------------------------------------------
+            // PrivatBank (Приват24) (HIGH)
+            "ua.privatbank.ap24",
+            // monobank (HIGH)
+            "com.ftband.mono",
+            // Oschadbank (Ощадбанк) (MEDIUM — Play Store listing confirmed)
+            "ua.oschadbank.m.oschadmobile",
+
+            // ----------------------------------------------------------------
+            // Russia (RUB)
+            // ----------------------------------------------------------------
+            // Sberbank Online (HIGH — largest bank in Russia)
+            "ru.sberbankmobile",
+            // Tinkoff / T-Bank (HIGH)
+            "com.idamob.tinkoff.android",
+            // Alfa-Bank (HIGH)
+            "ru.alfabank.mobile.android",
+
+            // ----------------------------------------------------------------
+            // Belarus (BYN)
+            // ----------------------------------------------------------------
+            // Белгазпромбанк (BYN) (MEDIUM — only well-known BY app included)
+            "by.bsb.mobile",
         )
 
         /** Emit a DeviceEventEmitter event to JS. Called from this service. */

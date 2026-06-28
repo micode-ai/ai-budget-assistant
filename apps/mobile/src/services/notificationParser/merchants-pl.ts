@@ -7,7 +7,13 @@
  * the API boundary. Keep in sync manually when the API version is updated.
  *
  * Last synced from API version: 2026-06-28.
+ *
+ * NOTE: normalizeMerchant (generic base) lives in generic.ts.
+ * normalizeMerchantPL (PL canonical overlay) is in this file.
+ * normalizeMerchantWithPLOverride (combined) is also in this file.
  */
+
+import { normalizeMerchant } from './generic';
 
 export const MERCHANTS_PL: Record<string, string> = {
   // Groceries
@@ -122,19 +128,39 @@ export const MERCHANT_CANONICAL_PL: Record<string, string> = {
   DISNEY: 'Disney+',
 };
 
-const CANONICAL_KEYS_BY_LENGTH = Object.keys(MERCHANT_CANONICAL_PL).sort(
+/** Sorted longest-first so multi-word keys match before their prefixes. */
+export const MERCHANT_CANONICAL_KEYS_SORTED: string[] = Object.keys(MERCHANT_CANONICAL_PL).sort(
   (a, b) => b.length - a.length,
 );
 
 /**
- * If `name` contains a known brand substring, return its canonical display name;
+ * If `name` contains a known PL brand substring, return its canonical display name;
  * otherwise return `name` unchanged. Undefined passes through. Idempotent.
  */
 export function normalizeMerchantPL(name: string | undefined): string | undefined {
   if (!name) return name;
   const upper = name.toUpperCase();
-  for (const key of CANONICAL_KEYS_BY_LENGTH) {
+  for (const key of MERCHANT_CANONICAL_KEYS_SORTED) {
     if (upper.includes(key)) return MERCHANT_CANONICAL_PL[key];
   }
   return name;
 }
+
+/**
+ * Apply the generic base normalizer then the PL canonical brand overlay.
+ * Used by index.ts on the generic fallback path so European banks whose
+ * notifications mention "BIEDRONKA", "IKEA", "Starbucks" etc. still get
+ * canonical names even without a PL-specific template.
+ */
+export function normalizeMerchantWithPLOverride(raw: string | undefined): string | undefined {
+  const base = normalizeMerchant(raw);
+  if (!base) return base;
+  const upper = base.toUpperCase();
+  for (const key of MERCHANT_CANONICAL_KEYS_SORTED) {
+    if (upper.includes(key)) return MERCHANT_CANONICAL_PL[key];
+  }
+  return base;
+}
+
+/** Re-export the generic base normalizer for callers that need it directly. */
+export { normalizeMerchant };
