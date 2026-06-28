@@ -116,8 +116,4 @@ class NotificationCaptureModule(private val reactContext: ReactApplicationContex
             promise.resolve(false)
         }
     }
-
-    // Required for DeviceEventEmitter subscriptions on new React Native versions
-    override fun addListener(eventName: String) { /* no-op */ }
-    override fun removeListeners(count: Double) { /* no-op */ }
 }
