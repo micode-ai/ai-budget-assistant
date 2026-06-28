@@ -363,34 +363,9 @@ export default function DashboardScreen() {
           const mapped = [...new Set(widgetOrder)].map((key) => {
           switch (key) {
             case 'safeToSpend':
-              return widgetVisibility.safeToSpend && hasSafeToSpend && safeToSpendData ? (
-                <TouchableOpacity
-                  key="safeToSpend"
-                  style={styles.card}
-                  activeOpacity={0.7}
-                  onPress={() => setSafeToSpendSheetVisible(true)}
-                >
-                  <View style={styles.chevronHint}>
-                    <Ionicons name="information-circle-outline" size={16} color={theme.colors.textTertiary} />
-                  </View>
-                  <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{t('safeToSpend.title')}</Text>
-                  </View>
-                  <Text style={styles.safeToSpendAmount}>
-                    {formatCurrency(safeToSpendData.safeToSpendToday, safeToSpendData.baseCurrency)}
-                  </Text>
-                  <Text style={styles.safeToSpendSubtitle}>
-                    {t('safeToSpend.subtitle')}
-                    {safeToSpendData.safeToSpendToday === 0 ? ` · ${t('safeToSpend.today')}: 0` : ''}
-                  </Text>
-                  {safeToSpendData.fxApproximate && (
-                    <Text style={styles.safeToSpendNote}>{t('safeToSpend.approxRate')}</Text>
-                  )}
-                  {!safeToSpendData.incomeInferred && (
-                    <Text style={styles.safeToSpendNote}>{t('safeToSpend.noIncomeAssumed')}</Text>
-                  )}
-                </TouchableOpacity>
-              ) : null;
+              // Shown as the home hero number (tap → breakdown sheet). No duplicate
+              // dashboard card — the hero is the single in-app surface for this value.
+              return null;
 
             case 'financialHealth':
               return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
@@ -1068,28 +1043,6 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '900' as const,
   },
 
-  // Safe-to-spend widget card
-  safeToSpendAmount: {
-    fontSize: 32,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary,
-    fontWeight: '900' as const,
-    textAlign: 'center' as const,
-    marginBottom: theme.spacing[1],
-  },
-  safeToSpendSubtitle: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-    textAlign: 'center' as const,
-  },
-  safeToSpendNote: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textTertiary,
-    textAlign: 'center' as const,
-    marginTop: theme.spacing[1],
-    fontStyle: 'italic' as const,
-  },
-
   // Safe-to-spend bottom-sheet
   stsBackdrop: {
     flex: 1,
@@ -1122,6 +1075,7 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
     alignItems: 'center' as const,
+    gap: theme.spacing[3],
     paddingVertical: theme.spacing[2],
     borderBottomWidth: 0.5,
     borderBottomColor: theme.colors.border,
@@ -1129,10 +1083,13 @@ const createStyles = (theme: Theme) => ({
   stsRowLabel: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
+    flex: 1,
   },
   stsRowValue: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textPrimary,
+    flexShrink: 0,
+    textAlign: 'right' as const,
   },
   stsDivider: {
     height: 1,
@@ -1143,17 +1100,21 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
     alignItems: 'center' as const,
+    gap: theme.spacing[3],
     marginTop: theme.spacing[2],
   },
   stsTotalLabel: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textPrimary,
     fontWeight: '600' as const,
+    flex: 1,
   },
   stsTotalValue: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.primary,
     fontWeight: '900' as const,
+    flexShrink: 0,
+    textAlign: 'right' as const,
   },
   stsNote: {
     ...theme.textStyles.caption,
