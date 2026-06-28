@@ -3,7 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { WalletService } from '../wallet/wallet.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { CacheService } from '../../common/cache/cache.service';
-import { computeSafeToSpend } from '@budget/shared-utils';
+import { computeSafeToSpend } from './safe-to-spend.util';
 import type { SafeToSpendResponse, AffordabilityVerdict } from '@budget/shared-types';
 
 // How far back we look when inferring monthly income (90 days)
