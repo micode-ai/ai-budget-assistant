@@ -2,7 +2,7 @@ export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB' | 'BYN';
 
 export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
 
-export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack';
+export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack' | 'notification';
 
 export type IncomeSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack';
 
