@@ -3,6 +3,7 @@ import { InsightsService } from './insights.service';
 import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
+import { SafeToSpendService } from './safe-to-spend.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
@@ -17,11 +18,25 @@ export class InsightsController {
     private readonly aiInsightsService: AiInsightsService,
     private readonly storyService: StoryService,
     private readonly fatFinderService: FatFinderService,
+    private readonly safeToSpendService: SafeToSpendService,
   ) {}
 
   @Get()
   async getInsights(@Req() req: AuthenticatedRequest) {
     return this.insightsService.getInsights(req.accountId);
+  }
+
+  /**
+   * GET /insights/safe-to-spend
+   * Returns the deterministic safe-to-spend number for today.
+   * No role guard — read-only; viewers may access it.
+   * No subscription tier guard — this is a FREE feature.
+   * baseCurrency resolved from user.currencyCode (same pattern as chat.service.ts).
+   */
+  @Get('safe-to-spend')
+  async getSafeToSpend(@Req() req: AuthenticatedRequest) {
+    const baseCurrency = req.user.currencyCode || 'USD';
+    return this.safeToSpendService.compute(req.accountId, req.user.id, baseCurrency);
   }
 
   @Get('ai-charts')

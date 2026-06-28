@@ -206,6 +206,49 @@ describe('ChatService', () => {
     });
   });
 
+  describe('check_affordability (read action, no confirmation)', () => {
+    it('executes check_affordability immediately and returns the verdict in actionResult', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      const mockVerdict = {
+        affordable: true,
+        amount: 50,
+        currencyCode: 'USD',
+        amountInBase: 50,
+        safeToSpendToday: 120,
+        reasonCode: 'within_safe',
+        baseCurrency: 'USD',
+      };
+      deps.aiTools.isWriteAction = jest.fn().mockReturnValue(false);
+      deps.aiTools.executeWithCache = jest.fn().mockResolvedValue({
+        actionType: 'check_affordability',
+        success: true,
+        data: mockVerdict,
+      });
+      mockChatCreate
+        .mockResolvedValueOnce({
+          choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'check_affordability', arguments: '{"amount":50,"currencyCode":"USD","description":"shoes"}' } }] } }],
+          usage: { total_tokens: 10 },
+        })
+        .mockResolvedValueOnce({
+          choices: [{ message: { content: 'Yes, you can afford $50 shoes — within your safe daily budget.' } }],
+          usage: { total_tokens: 8 },
+        });
+
+      const res = await service.chat('owner-1', 'can I afford $50 shoes?', 'conv-1', 'acc-1', 'Personal', 'owner', 'Alice', []);
+      expect(res.aiResponded).toBe(true);
+      expect(deps.aiTools.executeWithCache).toHaveBeenCalledWith(
+        'check_affordability',
+        expect.any(Object),
+        'acc-1',
+        'owner-1',
+        expect.any(String),
+      );
+      // Must NOT have called executeAction for a write confirmation
+      expect(deps.prisma.chatMessage.create).toHaveBeenCalled();
+    });
+  });
+
   describe('chat() isShared on create', () => {
     it('creates a shared conversation when an owner sets isShared on first message', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
