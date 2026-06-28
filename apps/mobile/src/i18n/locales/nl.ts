@@ -1966,4 +1966,17 @@ export default {
       overdueDebts: '{{overdueCount}} achterstallige schuld(en)',
     },
   },
+  autoCapture: {
+    title: 'Automatisch vastleggen via meldingen',
+    subtitle: 'Automatisch kaartbetalingen vastleggen vanuit push-meldingen van de bank',
+    privacy: 'De meldingstekst wordt op het apparaat verwerkt. Alleen de resulterende uitgave wordt gesynchroniseerd — ruwe meldingsdata verlaat nooit uw telefoon.',
+    enable: 'Automatisch vastleggen inschakelen',
+    grantPermission: 'Toegang tot meldingen verlenen',
+    permissionGranted: 'Toegang tot meldingen verleend',
+    banks: 'Ondersteunde banken',
+    androidOnly: 'Automatisch vastleggen is alleen beschikbaar op Android. Gebruik op iOS de bonnenscanner.',
+    captured: '{{amount}} {{currency}} vastgelegd · {{merchant}}',
+    reviewLast: 'Laatst vastgelegde uitgaven',
+    testTitle: 'Nog geen automatisch vastgelegde uitgaven. Schakel vastleggen in en doe een kaartbetaling.',
+  },
 } as const;

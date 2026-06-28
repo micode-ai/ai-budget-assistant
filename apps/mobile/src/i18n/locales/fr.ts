@@ -1966,4 +1966,17 @@ export default {
       overdueDebts: '{{overdueCount}} dette(s) en retard',
     },
   },
+  autoCapture: {
+    title: 'Capture automatique depuis les notifications',
+    subtitle: 'Enregistrer automatiquement les paiements par carte depuis les notifications push bancaires',
+    privacy: 'Le texte de la notification est traité sur l\'appareil. Seule la dépense résultante est synchronisée — les données brutes ne quittent jamais votre téléphone.',
+    enable: 'Activer la capture automatique',
+    grantPermission: 'Accorder l\'accès aux notifications',
+    permissionGranted: 'Accès aux notifications accordé',
+    banks: 'Banques prises en charge',
+    androidOnly: 'La capture automatique est disponible uniquement sur Android. Sur iOS, utilisez le scanner de reçus.',
+    captured: '{{amount}} {{currency}} capturé · {{merchant}}',
+    reviewLast: 'Dernières dépenses capturées',
+    testTitle: 'Aucune dépense capturée automatiquement pour l\'instant. Activez la capture et effectuez un paiement par carte.',
+  },
 } as const;

@@ -1966,4 +1966,17 @@ export default {
       overdueDebts: '{{overdueCount}} overdue debt(s)',
     },
   },
+  autoCapture: {
+    title: 'Auto-Capture from Notifications',
+    subtitle: 'Automatically record bank card payments from push notifications',
+    privacy: 'Notification text is parsed on-device. Only the resulting expense syncs to the server — raw notification data never leaves your phone.',
+    enable: 'Enable auto-capture',
+    grantPermission: 'Grant notification access',
+    permissionGranted: 'Notification access granted',
+    banks: 'Supported banks',
+    androidOnly: 'Auto-capture is available on Android only. On iOS, use the receipt scanner to capture expenses.',
+    captured: 'Captured {{amount}} {{currency}} · {{merchant}}',
+    reviewLast: 'Last captured expenses',
+    testTitle: 'No auto-captured expenses yet. Enable auto-capture and make a card payment to see it here.',
+  },
 } as const;
