@@ -57,9 +57,11 @@ On Android, the app can automatically create an expense from your bank's push no
 
 Notification text is parsed **on your device only**. The merchant name, amount, and currency are extracted locally; only the resulting expense is synced to the server — the raw notification text is never sent anywhere.
 
-### Supported banks (Poland)
+### Supported banks (Europe)
 
-The auto-capture works with notifications from major Polish banks including PKO BP, mBank, Pekao, Revolut, and others. The list of supported apps is shown on the Auto-capture screen.
+The auto-capture works with notifications from major retail banks across Europe. Supported countries include Poland (PKO BP, mBank, Pekao, ING, Millennium, Santander, Alior, BNP Paribas, Crédit Agricole, Nest Bank), Germany/Austria (Deutsche Bank, Commerzbank, DKB, ING-DiBa, Sparkasse, George/Erste), France (BNP Paribas, Crédit Agricole, Boursorama, Société Générale), Spain (BBVA, Santander, CaixaBank, Bankinter), Netherlands (ING, Rabobank, ABN AMRO, bunq), Ukraine (PrivatBank, monobank, Oschadbank), and Russia (Sberbank, Tinkoff, Alfa-Bank). The cross-border neobanks Revolut and N26 are also supported. The complete list of supported apps is shown on the Auto-capture screen.
+
+**Note on merchant categories:** for banks outside Poland, the app may not automatically suggest a category. The expense will be recorded without a category and you can correct it manually — the app learns from your corrections and applies them automatically in the future.
 
 ### Deduplication
 

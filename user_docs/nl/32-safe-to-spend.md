@@ -57,9 +57,11 @@ Op Android kan de app automatisch een uitgave aanmaken vanuit de pushmeldingen v
 
 De meldingstekst wordt **uitsluitend op je apparaat** verwerkt. De naam van de handelaar, het bedrag en de valuta worden lokaal geëxtraheerd; alleen de resulterende uitgave wordt gesynchroniseerd met de server — de ruwe meldingstekst wordt nergens naartoe verstuurd.
 
-### Ondersteunde banken (Polen)
+### Ondersteunde banken (Europa)
 
-Automatisch vastleggen werkt met meldingen van grote Poolse banken, waaronder PKO BP, mBank, Pekao, Revolut en andere. De lijst met ondersteunde apps wordt getoond op het scherm Automatisch vastleggen.
+Automatisch vastleggen werkt met meldingen van grote retailbanken door heel Europa. Ondersteunde landen: Polen (PKO BP, mBank, Pekao, ING, Millennium, Santander, Alior, BNP Paribas, Crédit Agricole, Nest Bank), Duitsland/Oostenrijk (Deutsche Bank, Commerzbank, DKB, ING-DiBa, Sparkasse, George/Erste), Frankrijk (BNP Paribas, Crédit Agricole, Boursorama, Société Générale), Spanje (BBVA, Santander, CaixaBank, Bankinter), Nederland (ING, Rabobank, ABN AMRO, bunq), Oekraïne (PrivatBank, monobank, Oschadbank) en Rusland (Sberbank, Tinkoff, Alfa-Bank). De grensoverschrijdende neobanken Revolut en N26 worden ook ondersteund. De volledige lijst is te zien op het scherm Automatisch vastleggen.
+
+**Opmerking over categorieën:** Voor banken buiten Polen wordt mogelijk geen categorie automatisch voorgesteld. De uitgave wordt vastgelegd zonder categorie; u kunt dit handmatig corrigeren — de app leert van uw correcties.
 
 ### Deduplicatie
 
