@@ -1,4 +1,5 @@
 import type { Currency, BudgetPeriod } from '../entities';
+import type { AffordabilityVerdict } from './insights';
 
 export interface TranscribeRequest {
   language?: string;
@@ -41,7 +42,8 @@ export type ChatActionType =
   | 'record_debt_repayment'
   | 'create_debt'
   | 'get_debt_summary'
-  | 'update_goal_balance';
+  | 'update_goal_balance'
+  | 'check_affordability';
 
 export interface CreateExpenseActionData {
   amount: number;
@@ -115,6 +117,20 @@ export interface UpdateGoalBalanceActionData {
   newAmount: number;
 }
 
+// Read action — no confirmation required. Carries the full verdict so the
+// ActionResultCard can render deterministically without re-parsing the LLM narrative.
+export interface CheckAffordabilityActionData {
+  affordable: AffordabilityVerdict['affordable'];
+  amount: AffordabilityVerdict['amount'];
+  currencyCode: AffordabilityVerdict['currencyCode'];
+  reasonCode: AffordabilityVerdict['reasonCode'];
+  safeToSpendToday: AffordabilityVerdict['safeToSpendToday'];
+  amountInBase: AffordabilityVerdict['amountInBase'];
+  baseCurrency: AffordabilityVerdict['baseCurrency'];
+  goalImpact?: AffordabilityVerdict['goalImpact'];
+  suggestedDate?: AffordabilityVerdict['suggestedDate'];
+}
+
 export type ChatActionData =
   | CreateExpenseActionData
   | CreateIncomeActionData
@@ -126,7 +142,8 @@ export type ChatActionData =
   | RecordDebtRepaymentActionData
   | CreateDebtActionData
   | GetDebtSummaryActionData
-  | UpdateGoalBalanceActionData;
+  | UpdateGoalBalanceActionData
+  | CheckAffordabilityActionData;
 
 export interface ChatPendingAction {
   id: string;

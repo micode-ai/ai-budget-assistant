@@ -34,6 +34,7 @@ const SECTIONS = [
   '29-subscription-manager',
   '30-web-app',
   '31-anomaly-alerts',
+  '32-safe-to-spend',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

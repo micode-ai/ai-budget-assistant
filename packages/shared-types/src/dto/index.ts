@@ -25,3 +25,4 @@ export * from './import';
 export * from './notification';
 export * from './subscription';
 export * from './wallet';
+export * from './insights';
