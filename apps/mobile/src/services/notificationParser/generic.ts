@@ -282,7 +282,7 @@ export function parseGeneric(title: string, text: string): GenericParseResult | 
 
   // --- Merchant (best-effort, may be null) ---
   const rawMerchant = extractMerchantRaw(fullText);
-  const merchant = normalizeMerchant(rawMerchant) ?? null;
+  const merchant = normalizeMerchant(rawMerchant ?? undefined) ?? null;
 
   return { amount, currencyCode: currencyResult.code, merchant };
 }
