@@ -1,4 +1,4 @@
-import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse } from '@budget/shared-types';
+import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const analyticsApi = {
@@ -74,5 +74,9 @@ export const analyticsApi = {
       method: 'POST',
       body: JSON.stringify({ language, forceRegenerate, month, year }),
     });
+  },
+
+  getSafeToSpend() {
+    return httpClient.request<SafeToSpendResponse>('/insights/safe-to-spend');
   },
 };

@@ -40,6 +40,7 @@ export default function WidgetsSettingsScreen() {
   };
 
   const widgetLabels: Record<WidgetKey, string> = {
+    safeToSpend: t('safeToSpend.widgetLabel'),
     financialHealth: t('settings.widget.financialHealth'),
     gamification: t('settings.widget.gamification'),
     monthlyBudget: t('settings.widget.monthlyBudget'),

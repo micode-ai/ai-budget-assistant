@@ -1,9 +1,29 @@
 import { create } from 'zustand';
+import { MMKV } from 'react-native-mmkv';
 import { api } from '@/services/api';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import i18n from '@/i18n';
-import type { AIInsightChart, FatFinderReport } from '@budget/shared-types';
+import type { AIInsightChart, FatFinderReport, SafeToSpendResponse } from '@budget/shared-types';
+
+const stsStorage = new MMKV({ id: 'safe-to-spend' });
+
+const STS_DATA_KEY = 'sts_data';
+const STS_UPDATED_AT_KEY = 'sts_updated_at';
+
+function loadCachedSafeToSpend(): SafeToSpendResponse | null {
+  try {
+    const raw = stsStorage.getString(STS_DATA_KEY);
+    return raw ? (JSON.parse(raw) as SafeToSpendResponse) : null;
+  } catch {
+    return null;
+  }
+}
+
+function loadCachedSafeToSpendUpdatedAt(): number | null {
+  const raw = stsStorage.getNumber(STS_UPDATED_AT_KEY);
+  return raw ?? null;
+}
 
 interface InsightsState {
   aiInsights: AIInsightChart[];
@@ -19,10 +39,16 @@ interface InsightsState {
   fatFinderYear: number;
   fatFinderProGated: boolean;
 
+  safeToSpend: SafeToSpendResponse | null;
+  safeToSpendLoading: boolean;
+  safeToSpendError: string | null;
+  safeToSpendUpdatedAt: number | null;
+
   loadAIInsights: (language?: string) => Promise<void>;
   dismissInsight: (id: string) => void;
   loadFatFinder: (language?: string, forceRegenerate?: boolean, month?: number, year?: number) => Promise<void>;
   setFatFinderPeriod: (month: number, year: number) => void;
+  loadSafeToSpend: () => Promise<void>;
   reset: () => void;
 }
 
@@ -41,6 +67,11 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
   fatFinderMonth: now.getMonth() + 1,
   fatFinderYear: now.getFullYear(),
   fatFinderProGated: false,
+
+  safeToSpend: loadCachedSafeToSpend(),
+  safeToSpendLoading: false,
+  safeToSpendError: null,
+  safeToSpendUpdatedAt: loadCachedSafeToSpendUpdatedAt(),
 
   loadAIInsights: async (language?: string) => {
     set({ isLoading: true, error: null, aiInsightsProGated: false });
@@ -99,6 +130,28 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
     set({ fatFinderMonth: month, fatFinderYear: year, fatFinderReport: null });
   },
 
+  loadSafeToSpend: async () => {
+    set({ safeToSpendLoading: true, safeToSpendError: null });
+    try {
+      const response = await api.getSafeToSpend();
+      const updatedAt = Date.now();
+      // Persist to MMKV for offline display
+      stsStorage.set(STS_DATA_KEY, JSON.stringify(response));
+      stsStorage.set(STS_UPDATED_AT_KEY, updatedAt);
+      set({
+        safeToSpend: response,
+        safeToSpendLoading: false,
+        safeToSpendUpdatedAt: updatedAt,
+      });
+    } catch (err) {
+      // Leave cached data intact; only update loading/error state
+      set({
+        safeToSpendLoading: false,
+        safeToSpendError: err instanceof Error ? err.message : 'Failed to load safe-to-spend',
+      });
+    }
+  },
+
   reset: () => {
     const current = new Date();
     set({
@@ -113,6 +166,10 @@ export const useInsightsStore = create<InsightsState>()((set) => ({
       fatFinderMonth: current.getMonth() + 1,
       fatFinderYear: current.getFullYear(),
       fatFinderProGated: false,
+      safeToSpend: null,
+      safeToSpendLoading: false,
+      safeToSpendError: null,
+      safeToSpendUpdatedAt: null,
     });
   },
 }));

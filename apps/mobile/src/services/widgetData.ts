@@ -22,6 +22,7 @@ export interface WidgetLabels {
   scan: string;
   add: string;
   dayNames: string[]; // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+  safeToSpend: string;
 }
 
 const DEFAULT_LABELS: WidgetLabels = {
@@ -34,6 +35,7 @@ const DEFAULT_LABELS: WidgetLabels = {
   scan: 'Scan',
   add: 'Add',
   dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  safeToSpend: 'Safe to Spend',
 };
 
 export interface WidgetSmallData {
@@ -43,6 +45,8 @@ export interface WidgetSmallData {
   currencyCode: string;
   updatedAt: string;
   labels: WidgetLabels;
+  safeToSpendToday: string;
+  safeToSpendLabel: string;
 }
 
 export interface WidgetMediumData extends WidgetSmallData {
@@ -92,6 +96,7 @@ export class WidgetDataService {
       icon: string;
     }[];
     currencyCode: Currency;
+    safeToSpendToday?: number;
   }): Promise<void> {
     const {
       todayExpenses,
@@ -101,6 +106,7 @@ export class WidgetDataService {
       budgets,
       topCategories,
       currencyCode,
+      safeToSpendToday,
     } = params;
 
     // Compute delta
@@ -122,6 +128,8 @@ export class WidgetDataService {
       currencyCode,
       updatedAt: new Date().toISOString(),
       labels,
+      safeToSpendToday: safeToSpendToday != null ? formatCurrency(safeToSpendToday, currencyCode) : '',
+      safeToSpendLabel: labels.safeToSpend,
       weekTotal: formatCurrency(weekTotal, currencyCode),
       weekBars: weeklyExpenses.map((w) => ({
         day: w.day,
@@ -169,6 +177,8 @@ export class WidgetDataService {
       currencyCode: data.currencyCode,
       updatedAt: data.updatedAt,
       labels: data.labels ?? DEFAULT_LABELS,
+      safeToSpendToday: data.safeToSpendToday ?? '',
+      safeToSpendLabel: data.safeToSpendLabel ?? (data.labels ?? DEFAULT_LABELS).safeToSpend,
     };
   }
 
@@ -183,6 +193,8 @@ export class WidgetDataService {
       currencyCode: data.currencyCode,
       updatedAt: data.updatedAt,
       labels: data.labels ?? DEFAULT_LABELS,
+      safeToSpendToday: data.safeToSpendToday ?? '',
+      safeToSpendLabel: data.safeToSpendLabel ?? (data.labels ?? DEFAULT_LABELS).safeToSpend,
       weekTotal: data.weekTotal,
       weekBars: data.weekBars,
     };
@@ -204,6 +216,7 @@ function getWidgetLabels(): WidgetLabels {
       scan: t('widgets.scan'),
       add: t('widgets.add'),
       dayNames: Array.isArray(dayNames) ? dayNames : DEFAULT_LABELS.dayNames,
+      safeToSpend: t('safeToSpend.widgetLabel'),
     };
   } catch {
     return DEFAULT_LABELS;
@@ -223,6 +236,7 @@ export async function refreshWidgetData(): Promise<void> {
     const { useBudgetStore } = require('@/stores/budgetStore');
     const { useCategoryStore } = require('@/stores/categoryStore');
     const { useAccountStore } = require('@/stores/accountStore');
+    const { useInsightsStore } = require('@/stores/insightsStore');
 
     const expenses = useExpenseStore.getState().expenses.filter(
       (e: any) => !e.isDeleted,
@@ -302,6 +316,10 @@ export async function refreshWidgetData(): Promise<void> {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 3);
 
+    // Safe-to-spend from the insights store (MMKV-cached; may be null)
+    const safeToSpendData = useInsightsStore.getState().safeToSpend;
+    const safeToSpendToday = safeToSpendData ? safeToSpendData.safeToSpendToday : undefined;
+
     await WidgetDataService.updateWidgetData({
       todayExpenses,
       yesterdayExpenses,
@@ -310,6 +328,7 @@ export async function refreshWidgetData(): Promise<void> {
       budgets,
       topCategories,
       currencyCode,
+      safeToSpendToday,
     });
 
     // Re-render all data widgets on the home screen
