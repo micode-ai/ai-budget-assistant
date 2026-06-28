@@ -1966,4 +1966,17 @@ export default {
       overdueDebts: '{{overdueCount}} deuda(s) vencida(s)',
     },
   },
+  autoCapture: {
+    title: 'Captura automática desde notificaciones',
+    subtitle: 'Registrar automáticamente pagos con tarjeta desde notificaciones push del banco',
+    privacy: 'El texto de la notificación se procesa en el dispositivo. Solo el gasto resultante se sincroniza; los datos en bruto nunca salen de tu teléfono.',
+    enable: 'Activar captura automática',
+    grantPermission: 'Conceder acceso a notificaciones',
+    permissionGranted: 'Acceso a notificaciones concedido',
+    banks: 'Bancos compatibles',
+    androidOnly: 'La captura automática solo está disponible en Android. En iOS, usa el escáner de recibos.',
+    captured: '{{amount}} {{currency}} capturado · {{merchant}}',
+    reviewLast: 'Últimos gastos capturados',
+    testTitle: 'Aún no hay gastos capturados automáticamente. Activa la captura y realiza un pago con tarjeta.',
+  },
 } as const;

@@ -1969,4 +1969,17 @@ export default {
       overdueDebts: '{{overdueCount}} przeterminowany(-ch) dług(-ów)',
     },
   },
+  autoCapture: {
+    title: 'Automatyczne przechwytywanie z powiadomień',
+    subtitle: 'Automatycznie rejestruj płatności kartą z powiadomień push banku',
+    privacy: 'Treść powiadomienia jest przetwarzana na urządzeniu. Tylko wynikowy wydatek jest synchronizowany — surowe dane nigdy nie opuszczają telefonu.',
+    enable: 'Włącz automatyczne przechwytywanie',
+    grantPermission: 'Przyznaj dostęp do powiadomień',
+    permissionGranted: 'Dostęp do powiadomień przyznany',
+    banks: 'Obsługiwane banki',
+    androidOnly: 'Automatyczne przechwytywanie jest dostępne tylko na Androidzie. Na iOS użyj skanera paragonów.',
+    captured: 'Przechwycono {{amount}} {{currency}} · {{merchant}}',
+    reviewLast: 'Ostatnio przechwycone wydatki',
+    testTitle: 'Brak automatycznie przechwyconych wydatków. Włącz przechwytywanie i dokonaj płatności kartą.',
+  },
 } as const;

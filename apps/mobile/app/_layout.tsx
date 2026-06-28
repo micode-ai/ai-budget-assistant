@@ -33,6 +33,11 @@ import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { UpgradeGate } from '@/components/UpgradeGate';
 import { WebShell } from '@/components/WebShell';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
+import {
+  subscribeToCapture,
+  unsubscribeFromCapture,
+} from '@/services/notificationCapture/captureService';
+import { isEnabled as isCaptureEnabled } from '@/services/notificationCapture';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -86,6 +91,29 @@ function RootNavigator() {
     }, 1500);
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
+
+  // Start the bank-notification capture subscription on Android once the user
+  // is authenticated and the feature is enabled in SharedPreferences. Mirrors
+  // the same gate used for deep-link / push-notification handlers below.
+  // On iOS/web this is a harmless no-op (subscribeToCapture() returns early
+  // when Platform.OS !== 'android'; isCaptureEnabled() returns false from the
+  // no-op stub, so the async check never reaches subscribeToCapture at all).
+  useEffect(() => {
+    if (isInitializing || !isAuthenticated || !fontsLoaded) return;
+    if (Platform.OS !== 'android') return;
+
+    let active = true;
+    isCaptureEnabled().then((enabled) => {
+      if (enabled && active) {
+        subscribeToCapture();
+      }
+    }).catch(() => {});
+
+    return () => {
+      active = false;
+      unsubscribeFromCapture();
+    };
+  }, [isInitializing, isAuthenticated, fontsLoaded]);
 
   // A notification that cold-started the app (tapped while the app was killed).
   // It must NOT be acted on until the navigation tree is mounted and the
@@ -502,6 +530,13 @@ function RootNavigator() {
           options={{
             headerShown: true,
             title: t('bankImport.requestTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="settings/auto-capture"
+          options={{
+            headerShown: true,
+            title: t('autoCapture.title'),
           }}
         />
         <Stack.Screen

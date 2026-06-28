@@ -1966,4 +1966,17 @@ export default {
       overdueDebts: '{{overdueCount}} überfällige Schuld(en)',
     },
   },
+  autoCapture: {
+    title: 'Automatische Erfassung aus Benachrichtigungen',
+    subtitle: 'Kartenzahlungen automatisch aus Bank-Push-Benachrichtigungen erfassen',
+    privacy: 'Der Benachrichtigungstext wird auf dem Gerät verarbeitet. Nur die resultierende Ausgabe wird synchronisiert – die Rohdaten verlassen Ihr Gerät nie.',
+    enable: 'Automatische Erfassung aktivieren',
+    grantPermission: 'Benachrichtigungszugriff erteilen',
+    permissionGranted: 'Benachrichtigungszugriff erteilt',
+    banks: 'Unterstützte Banken',
+    androidOnly: 'Die automatische Erfassung ist nur auf Android verfügbar. Verwenden Sie auf iOS den Belegscanner.',
+    captured: '{{amount}} {{currency}} erfasst · {{merchant}}',
+    reviewLast: 'Zuletzt erfasste Ausgaben',
+    testTitle: 'Noch keine automatisch erfassten Ausgaben. Aktivieren Sie die Erfassung und führen Sie eine Kartenzahlung durch.',
+  },
 } as const;
