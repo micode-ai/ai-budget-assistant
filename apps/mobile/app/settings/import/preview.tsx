@@ -144,6 +144,10 @@ export default function ImportPreviewScreen() {
   const renderRow = ({ item }: { item: ImportRow }) => {
     const checked = selected.has(item.idx);
     const isDisabled = item.alreadyImported;
+    // A possibleMerge row has at least one candidate in a different currency.
+    // Default action = import as new (row stays selected). The user can open the
+    // merge screen to merge with an existing record instead.
+    const hasPossibleMerge = !isDisabled && item.kind === 'expense' && (item as any).possibleMerge === true;
 
     let kindIcon: React.ComponentProps<typeof Ionicons>['name'];
     let kindColor: string;
@@ -216,7 +220,51 @@ export default function ImportPreviewScreen() {
                 </Text>
               </View>
             )}
+
+            {hasPossibleMerge && (
+              <View style={styles.possibleMergePill}>
+                <Text style={styles.possibleMergeText}>
+                  {t('bankImport.possibleMerge')}
+                </Text>
+              </View>
+            )}
           </View>
+
+          {/* Possible-merge action row: offered only when a cross-currency match exists. */}
+          {hasPossibleMerge && (
+            <View style={styles.mergeActionRow}>
+              <TouchableOpacity
+                style={styles.mergeActionBtn}
+                activeOpacity={0.7}
+                onPress={() => {
+                  const candidateIds: string[] = (item as any).mergeCandidateIds ?? [];
+                  if (candidateIds.length === 0) return;
+                  // Navigate to the merge screen with the first candidate.
+                  // The import row doesn't yet have a local id, so we exclude it
+                  // from commit by de-selecting it first.
+                  setSelected((prev) => {
+                    const next = new Set(prev);
+                    next.delete(item.idx);
+                    return next;
+                  });
+                  router.push({
+                    pathname: '/expense/merge' as any,
+                    params: {
+                      // bId = the existing server-side candidate; aId left blank (row not yet created)
+                      bId: candidateIds[0],
+                      aId: '',
+                    },
+                  });
+                }}
+              >
+                <Ionicons name="git-merge-outline" size={14} color={theme.colors.primary} />
+                <Text style={styles.mergeActionText}>{t('bankImport.mergeWithExisting')}</Text>
+              </TouchableOpacity>
+              <Text style={styles.mergeOrText}>{t('common.or', 'or')}</Text>
+              <Text style={styles.importAsNewText}>{t('bankImport.importAsNew')}</Text>
+            </View>
+          )}
+
         </View>
       </TouchableOpacity>
     );
@@ -434,6 +482,45 @@ const createStyles = (theme: Theme) => ({
     paddingVertical: 2,
   },
   alreadyImportedText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+  },
+  possibleMergePill: {
+    backgroundColor: theme.colors.warningLight,
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: 2,
+  },
+  possibleMergeText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.warning,
+  },
+  mergeActionRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[2],
+    gap: theme.spacing[2],
+    flexWrap: 'wrap' as const,
+  },
+  mergeActionBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    backgroundColor: theme.colors.primaryLight,
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: 4,
+  },
+  mergeActionText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.primary,
+    fontFamily: theme.fonts.medium,
+  },
+  mergeOrText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+  },
+  importAsNewText: {
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
   },

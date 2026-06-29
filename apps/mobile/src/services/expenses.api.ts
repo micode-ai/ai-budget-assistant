@@ -1,5 +1,5 @@
 import type { Expense, ExpenseItem, ExpenseCategorySplit } from '@budget/shared-types';
-import type { CreateExpenseDto, UpdateExpenseDto } from '@budget/shared-types';
+import type { CreateExpenseDto, UpdateExpenseDto, MergeExpensesDto, MergeExpensesResponse } from '@budget/shared-types';
 import type { PaginatedResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
@@ -106,5 +106,12 @@ export const expensesApi = {
 
   removeExpenseSplits(expenseId: string) {
     return httpClient.request<void>(`/expenses/${expenseId}/splits`, { method: 'DELETE' });
+  },
+
+  mergeExpenses(body: MergeExpensesDto): Promise<MergeExpensesResponse> {
+    return httpClient.request<MergeExpensesResponse>('/expenses/merge', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
   },
 };

@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto, MergeExpensesDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 
 @Injectable()
@@ -35,6 +36,62 @@ export class ExpensesService {
       this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`),
       this.cacheService.del(`uc:${accountId}`),
     ]);
+  }
+
+  /**
+   * Tier 1 Case A — stub-yield reconciliation.
+   * Called AFTER the create transaction commits (to keep the create lock short)
+   * and BEFORE anomalyService.checkExpense fires (so detectDuplicateCharge
+   * won't see the already-reconciled stub and raise a spurious alert).
+   *
+   * Finds a non-deleted source:'notification' expense in the same account that
+   * satisfies predicate P (same amount + currency + date ±1 day + same payee)
+   * and soft-deletes it. SAFETY: only source:'notification' rows are candidates —
+   * two genuine non-notification expenses can never delete each other.
+   */
+  private async reconcileNotificationStub(accountId: string, newExpenseId: string): Promise<void> {
+    const e = await this.prisma.expense.findFirst({
+      where: { id: newExpenseId, accountId, isDeleted: false },
+      select: {
+        id: true,
+        amount: true,
+        currencyCode: true,
+        date: true,
+        merchant: true,
+        description: true,
+      },
+    });
+    if (!e) return;
+
+    const label = expensePayee(e as any);
+    if (!label) return; // unidentifiable — never dedup blank vs blank
+
+    const stubs = await this.prisma.expense.findMany({
+      where: {
+        accountId,
+        isDeleted: false,
+        source: 'notification',
+        id: { not: e.id },
+        amount: e.amount as any,
+        currencyCode: e.currencyCode,
+        date: {
+          gte: new Date((e.date as Date).getTime() - DUP_DAY_MS),
+          lte: new Date((e.date as Date).getTime() + DUP_DAY_MS),
+        },
+      },
+      select: { id: true, merchant: true, description: true },
+    });
+
+    const stub = stubs.find((s) => expensePayee(s as any) === label);
+    if (!stub) return;
+
+    await this.prisma.expense.update({
+      where: { id: stub.id },
+      data: { isDeleted: true, syncVersion: { increment: 1 } },
+    });
+
+    // Also invalidate the cache since we mutated a row outside the main transaction.
+    await this.invalidateChatCache(accountId);
   }
 
   /**
@@ -266,11 +323,21 @@ export class ExpensesService {
     // Fire-and-forget cache invalidation; never block the create response.
     this.invalidateChatCache(accountId).catch(() => undefined);
 
-    // Fire-and-forget anomaly detection — only for genuinely new expenses.
+    // Fire-and-forget post-create side effects — only for genuinely new expenses.
+    // ORDERING IS CRITICAL: reconcileNotificationStub must run BEFORE checkExpense
+    // so detectDuplicateCharge sees the stub already gone (isDeleted:true) and
+    // does not raise a spurious duplicate_charge alert for the auto-reconciled pair.
     if (result.isNew && result.expense) {
-      this.anomalyService
-        .checkExpense(accountId, userId, result.expense.id)
-        .catch(() => {});
+      const run = async () => {
+        if (result.expense.source !== 'notification') {
+          // Case A: a richer source supersedes the stub. Soft-delete any matching
+          // source:'notification' stub. SAFETY: query is hard-scoped to notification
+          // rows — two genuine non-notification expenses can never delete each other.
+          await this.reconcileNotificationStub(accountId, result.expense.id).catch(() => {});
+        }
+        await this.anomalyService.checkExpense(accountId, userId, result.expense.id).catch(() => {});
+      };
+      run().catch(() => {});
     }
 
     return result;
@@ -780,5 +847,110 @@ export class ExpensesService {
     });
 
     return { success: true };
+  }
+
+  /**
+   * Tier 2 — user-confirmed cross-currency merge.
+   * Resolves both keepId and mergeId via OR:[{id},{clientId}] (mirrors bulkUpdate),
+   * gap-fills survivor fields from the merged row, unions tags, carries over the
+   * project association, then soft-deletes the secondary and bumps both syncVersions
+   * so the standard pull-merge propagates the change to all devices.
+   * Currency of the survivor is whatever the caller picked via keepId — no FX conversion.
+   */
+  async mergeExpenses(accountId: string, _userId: string, dto: MergeExpensesDto): Promise<{ keptId: string; mergedId: string }> {
+    const { keepId, mergeId, fieldChoices } = dto;
+    if (keepId === mergeId) {
+      throw new BadRequestException('keepId and mergeId must be different');
+    }
+
+    const result = await this.prisma.$transaction(async (tx: any) => {
+      // Resolve both ids by server PK or clientId, scoped to this account.
+      const [keepRow, mergeRow] = await Promise.all([
+        tx.expense.findFirst({
+          where: { accountId, isDeleted: false, OR: [{ id: keepId }, { clientId: keepId }] },
+          include: {
+            expenseTags: { where: { isDeleted: false }, select: { tagId: true } },
+            projectExpenses: { where: { isDeleted: false }, select: { projectId: true } },
+          },
+        }),
+        tx.expense.findFirst({
+          where: { accountId, isDeleted: false, OR: [{ id: mergeId }, { clientId: mergeId }] },
+          include: {
+            expenseTags: { where: { isDeleted: false }, select: { tagId: true } },
+            projectExpenses: { where: { isDeleted: false }, select: { projectId: true } },
+          },
+        }),
+      ]);
+
+      if (!keepRow) throw new NotFoundException(`Expense to keep not found: ${keepId}`);
+      if (!mergeRow) throw new NotFoundException(`Expense to merge not found: ${mergeId}`);
+
+      // Extra safety: both must be in this account (the query already scopes by accountId,
+      // but be explicit so a crafted mergeId from another account is rejected loudly).
+      if (keepRow.accountId !== accountId || mergeRow.accountId !== accountId) {
+        throw new NotFoundException('One or both expenses do not belong to this account');
+      }
+
+      const now = new Date();
+
+      // Gap-fill: carry over fields from the merged row if the survivor lacks them
+      // (or if the caller explicitly forced the field via fieldChoices).
+      const carriedFields: Record<string, any> = {};
+      if ((fieldChoices?.merchant === true || !keepRow.merchant) && mergeRow.merchant) {
+        carriedFields.merchant = mergeRow.merchant;
+      }
+      if ((fieldChoices?.notes === true || !keepRow.notes) && mergeRow.notes) {
+        carriedFields.notes = mergeRow.notes;
+      }
+      if ((fieldChoices?.categoryId === true || !keepRow.categoryId) && mergeRow.categoryId) {
+        carriedFields.categoryId = mergeRow.categoryId;
+      }
+      if ((fieldChoices?.receiptImage === true || !keepRow.receiptImage) && mergeRow.receiptImage) {
+        carriedFields.receiptImage = mergeRow.receiptImage;
+        carriedFields.receiptMimeType = mergeRow.receiptMimeType;
+      }
+
+      // Tags: union — upsert every tag from the merged row onto the survivor.
+      const existingTagIds = new Set(keepRow.expenseTags.map((et: any) => et.tagId));
+      for (const et of mergeRow.expenseTags) {
+        if (!existingTagIds.has(et.tagId)) {
+          await tx.expenseTag.upsert({
+            where: { expenseId_tagId: { expenseId: keepRow.id, tagId: et.tagId } },
+            create: { expenseId: keepRow.id, tagId: et.tagId },
+            update: {},
+          });
+        }
+      }
+
+      // Project carry-over: upsert the merge row's project association onto the survivor
+      // (only if the survivor doesn't already have a project association, or fieldChoices forces).
+      const keepHasProject = keepRow.projectExpenses.length > 0;
+      if ((fieldChoices?.projectId === true || !keepHasProject) && mergeRow.projectExpenses.length > 0) {
+        for (const pe of mergeRow.projectExpenses) {
+          await tx.projectExpense.upsert({
+            where: { projectId_expenseId: { projectId: pe.projectId, expenseId: keepRow.id } },
+            create: { projectId: pe.projectId, expenseId: keepRow.id },
+            update: { isDeleted: false },
+          });
+        }
+      }
+
+      // Soft-delete the secondary row and bump its syncVersion.
+      await tx.expense.update({
+        where: { id: mergeRow.id },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+
+      // Enrich the survivor with any carried fields and bump its syncVersion.
+      await tx.expense.update({
+        where: { id: keepRow.id },
+        data: { ...carriedFields, syncVersion: { increment: 1 }, updatedAt: now },
+      });
+
+      return { keptId: keepRow.id, mergedId: mergeRow.id };
+    });
+
+    await this.invalidateChatCache(accountId);
+    return result;
   }
 }

@@ -354,6 +354,7 @@ model Expense {
   @@index([categoryId])
   @@index([accountId, isDebt])
   @@index([accountId, merchant])
+  @@index([accountId, source])
   @@map("expenses")
 }
 
