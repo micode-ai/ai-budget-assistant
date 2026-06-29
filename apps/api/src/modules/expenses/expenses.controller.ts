@@ -18,7 +18,7 @@ import { SharedActivityService } from '../notifications/shared-activity.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto, MergeExpensesDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('expenses')
@@ -61,14 +61,20 @@ export class ExpensesController {
     return this.expensesService.findOne(req.accountId, id);
   }
 
-  // `bulk` MUST be declared before the `:id` PATCH routes below: Express matches in
-  // declaration order, so a `:id` route placed first would capture `/expenses/bulk`
-  // (routing it to update() with id="bulk") and silently break bulk delete/update.
+  // `bulk` and `merge` MUST be declared before the `:id` PATCH/param routes below.
+  // Express matches in declaration order; a `:id` route placed first would capture
+  // `/expenses/bulk` and `/expenses/merge` as id="bulk"/"merge" and silently break them.
   // Covered by expenses.controller.spec.ts.
   @Patch('bulk')
   @UseGuards(new ViewerBlockGuard())
   async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateExpensesDto) {
     return this.expensesService.bulkUpdate(req.accountId, dto);
+  }
+
+  @Post('merge')
+  @UseGuards(new ViewerBlockGuard())
+  async mergeExpenses(@Req() req: AuthenticatedRequest, @Body() dto: MergeExpensesDto) {
+    return this.expensesService.mergeExpenses(req.accountId, req.user.id, dto);
   }
 
   @Patch(':id')
