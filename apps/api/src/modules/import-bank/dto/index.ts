@@ -38,6 +38,15 @@ export class ImportRowDto {
   alreadyImported: boolean;
 
   @IsOptional()
+  @IsBoolean()
+  possibleMerge?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  mergeCandidateIds?: string[];
+
+  @IsOptional()
   @IsString()
   fxFromCurrency?: string;
 

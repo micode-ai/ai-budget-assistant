@@ -362,6 +362,45 @@ export class ExpenseFiltersDto {
   isDebtRepayment?: boolean;
 }
 
+class MergeExpensesFieldChoicesDto {
+  @IsOptional()
+  @IsBoolean()
+  merchant?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  notes?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  categoryId?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  projectId?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  tagIds?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  receiptImage?: boolean;
+}
+
+export class MergeExpensesDto {
+  @IsString()
+  keepId: string;
+
+  @IsString()
+  mergeId: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => MergeExpensesFieldChoicesDto)
+  fieldChoices?: MergeExpensesFieldChoicesDto;
+}
+
 export class BulkUpdateExpensesDto {
   @IsArray()
   @IsString({ each: true })
