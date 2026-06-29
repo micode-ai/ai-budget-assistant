@@ -451,7 +451,8 @@ src/
 │   │   ├── gamification.controller.ts
 │   │   ├── gamification.service.ts
 │   │   ├── streak.service.ts
-│   │   └── achievement-definitions.ts
+│   │   ├── achievement-definitions.ts
+│   │   └── tracking-gap-reminder.cron.ts  # Daily cron — nudge when no expense logged 3+ days
 │   ├── referrals/               # Referral program
 │   │   ├── referrals.controller.ts
 │   │   ├── referrals.service.ts
@@ -1185,6 +1186,7 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 - `recurring_expense` — auto-created recurring expense notification
 - `subscription_renewal` — subscription renewal reminder or auto-charge notification
 - `chat_mention` — user was @mentioned in a shared AI conversation
+- `tracking_gap_reminder` — nudge sent when no expense has been logged for 3+ days (fires on day 3, 6, 9…)
 
 **User preferences** (`GET/PATCH /users/me/notification-preferences`)
 - `budgetAlerts` — controls `budget_alert` notifications
@@ -1193,6 +1195,7 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 - `recurringExpenses` — controls `recurring_expense` notifications
 - `subscriptionRenewals` — controls `subscription_renewal` notifications
 - `anomalyAlerts` — controls `spending_anomaly` push notifications from the anomaly module (default `true`)
+- `trackingGap` — controls `tracking_gap_reminder` notifications (default `true`)
 
 **Batch processing:** Notifications are sent in batches of 100 messages.
 

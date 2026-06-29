@@ -4085,7 +4085,8 @@ Authorization: Bearer <token>
   "debtReminders": true,
   "recurringExpenses": true,
   "subscriptionRenewals": true,
-  "anomalyAlerts": true
+  "anomalyAlerts": true,
+  "trackingGap": true
 }
 ```
 

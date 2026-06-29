@@ -55,7 +55,7 @@ Your email is updated immediately and new login tokens are issued. If you close 
 
 ### Language
 
-Choose from 8 supported languages:
+Choose from 9 supported languages:
 
 | Code | Language |
 |---|---|
@@ -67,6 +67,7 @@ Choose from 8 supported languages:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Tap a language chip to switch. The interface updates immediately.
 
@@ -143,6 +144,10 @@ Toggle switches for notification preferences:
 | **Budget Alerts** | Get notified when you reach budget thresholds |
 | **Shared Account Activity** | Get notified when others add expenses to shared accounts |
 | **Debt Reminders** | Get notified 3 days before a debt is due and when it becomes overdue |
+| **Recurring Expenses** | Get notified when the app automatically records a recurring expense |
+| **Subscription Renewals** | Get notified 3 days before a tracked subscription renews |
+| **Anomaly Alerts** | Get notified about unusual spending: duplicate charges, price increases, or category spikes |
+| **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days |
 
 ### Telegram Bot
 

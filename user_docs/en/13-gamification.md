@@ -54,6 +54,8 @@ Your streak counts consecutive days that you track at least one expense or incom
 
 > **Tip:** Add at least one transaction every day to keep your streak going!
 
+> **Tracking reminder:** If you haven't logged any expenses for 3 or more days, the app sends a push notification to nudge you back. It repeats every 3 days (day 3, 6, 9…). Toggle this in **Settings → Notifications → Tracking Reminder**.
+
 ## XP & Levels
 
 - Each completed achievement awards XP (experience points)

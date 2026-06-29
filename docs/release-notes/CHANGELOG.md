@@ -8,6 +8,16 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.9.0 — 2026-06-29
+
+**Notifications**
+- **Tracking gap reminder** — if you haven't logged any expenses for 3 or more days, the app sends a gentle nudge to keep your streak going. Reminds every 3 days (day 3, 6, 9…). Toggle it off in Settings → Notifications (ABA-292).
+
+**Fixes**
+- Sign in with Google now works correctly on the web app — the nonce required by Google's OpenID flow is now generated and sent, eliminating the "invalid_request" error (ABA-291).
+
+---
+
 ## 1.8.0 — 2026-06-22
 
 **Sign in with Google**
