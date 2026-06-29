@@ -10,6 +10,13 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ## 1.9.0 — 2026-06-29
 
+**Safe-to-Spend**
+- **"Can I afford this?"** — a new card on the home screen shows how much you can safely spend for the rest of the month, based on your income, recurring expenses, active budgets, and saving goals. Ask the AI "can I buy X for Y?" and get an instant yes/no with reasoning (ABA-293, ABA-294).
+
+**Bank notification capture (Android)**
+- **Expenses from bank notifications** — the app can now read your bank's push notifications (e.g. "Card charged: 45.00 PLN at Biedronka") and suggest adding the expense automatically. Works with Polish banks (mBank, PKO, ING, Millennium, Pekao, Santander, Alior) and a generic fallback for other countries. Enable in Settings → Auto-capture (ABA-295).
+- **Smart dedup** — if a captured notification matches a transaction you already imported via bank CSV, the app detects the duplicate and suggests merging instead of creating a double entry (ABA-296).
+
 **Web — Desktop layout**
 - **The web app now has a laptop-friendly layout** — at 1024 px and wider you get a left sidebar for navigation, a full-width top bar (account, currency, alerts, settings), and a two-column widget grid on the Dashboard. Mobile and narrow browser windows are unchanged (ABA-289, ABA-290).
 
