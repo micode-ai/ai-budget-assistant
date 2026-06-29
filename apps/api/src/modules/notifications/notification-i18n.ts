@@ -97,6 +97,14 @@ interface SubscriptionRenewalParams {
   currencyCode: string;
 }
 
+interface PossibleMergeParams {
+  merchant: string;
+  amountA: string;
+  currencyA: string;
+  amountB: string;
+  currencyB: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -146,6 +154,8 @@ const translations: Record<string, {
   subscriptionChargedBody: (p: SubscriptionRenewalParams) => string;
   trackingGapTitle: () => string;
   trackingGapBody: () => string;
+  possibleMergeTitle: (p: PossibleMergeParams) => string;
+  possibleMergeBody: (p: PossibleMergeParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -212,6 +222,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} added to your expenses for ${name}`,
     trackingGapTitle: () => 'Time to log your expenses!',
     trackingGapBody: () => "You haven't recorded anything in 3+ days. Add a transaction to keep your budget on track.",
+    possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -278,6 +291,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} добавлено в расходы за ${name}`,
     trackingGapTitle: () => 'Пора записать расходы!',
     trackingGapBody: () => 'Вы не записывали транзакции уже 3+ дня. Добавьте запись, чтобы бюджет был под контролем.',
+    possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -344,6 +360,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} додано до витрат за ${name}`,
     trackingGapTitle: () => 'Час записати витрати!',
     trackingGapBody: () => 'Ви не записували транзакції вже 3+ дні. Додайте запис, щоб бюджет був під контролем.',
+    possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -410,6 +429,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} dodano do wydatków za ${name}`,
     trackingGapTitle: () => 'Czas zapisać wydatki!',
     trackingGapBody: () => 'Nie rejestrowałeś transakcji od ponad 3 dni. Dodaj wpis, żeby budżet był pod kontrolą.',
+    possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -476,6 +498,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} añadido a tus gastos por ${name}`,
     trackingGapTitle: () => '¡Es hora de registrar tus gastos!',
     trackingGapBody: () => 'No has registrado transacciones en más de 3 días. Añade un registro para mantener tu presupuesto al día.',
+    possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -542,6 +567,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} ajouté à vos dépenses pour ${name}`,
     trackingGapTitle: () => "Il est temps d'enregistrer vos dépenses !",
     trackingGapBody: () => "Vous n'avez enregistré aucune transaction depuis plus de 3 jours. Ajoutez une entrée pour rester dans votre budget.",
+    possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -608,6 +636,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zu deinen Ausgaben für ${name} hinzugefügt`,
     trackingGapTitle: () => 'Zeit, deine Ausgaben einzutragen!',
     trackingGapBody: () => 'Du hast seit über 3 Tagen keine Transaktionen erfasst. Trag eine ein, um dein Budget im Blick zu behalten.',
+    possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -674,6 +705,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} дададзена ў выдаткі за ${name}`,
     trackingGapTitle: () => 'Час запісаць выдаткі!',
     trackingGapBody: () => 'Вы не запісвалі транзакцыі ўжо 3+ дні. Дадайце запіс, каб бюджэт быў пад кантролем.',
+    possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -740,6 +774,9 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} toegevoegd aan je uitgaven voor ${name}`,
     trackingGapTitle: () => 'Tijd om je uitgaven bij te houden!',
     trackingGapBody: () => 'Je hebt al meer dan 3 dagen geen transacties geregistreerd. Voeg er een toe om je budget op koers te houden.',
+    possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
+    possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
+      `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
   },
 };
 
@@ -911,4 +948,12 @@ export function trackingGapTitle(lang: Lang): string {
 
 export function trackingGapBody(lang: Lang): string {
   return t(lang).trackingGapBody();
+}
+
+export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {
+  return t(lang).possibleMergeTitle(params);
+}
+
+export function possibleMergeBody(lang: Lang, params: PossibleMergeParams): string {
+  return t(lang).possibleMergeBody(params);
 }

@@ -9,6 +9,19 @@ export const PRICE_INCREASE_FACTOR = 1.1;
 export const SPIKE_THRESHOLD_PERCENT = 30;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** Milliseconds in one calendar day — exported so other modules can reuse the same constant. */
+export const DUP_DAY_MS = DAY_MS;
+
+/**
+ * Canonical payee label for dedup predicates P and Q.
+ * Prefers merchant over description, trims whitespace, lowercases.
+ * Returns '' when both fields are absent/empty — callers must treat '' as "unidentifiable"
+ * and must NOT match it against another '' (empty-vs-empty is NOT a match).
+ */
+export function expensePayee(e: { merchant?: string | null; description?: string | null }): string {
+  return (e.merchant?.trim() || e.description?.trim() || '').toLowerCase();
+}
+
 export function normalizeMerchant(merchant: string): string {
   return merchant.trim().toLowerCase();
 }
@@ -125,6 +138,8 @@ export class AnomalyService {
       await this.detectPriceIncrease(accountId, userId, expense as DetectorExpense);
       await this.detectRecurringSuggestion(accountId, userId, expense as DetectorExpense);
       await this.detectCategorySpike(accountId, userId, expense.categoryId, expense.currencyCode);
+      // possible_merge is last — lower priority than genuine duplicate/price alerts
+      await this.detectPossibleMerge(accountId, userId, expense as DetectorExpense);
     } catch (error) {
       this.logger.error(`checkExpense failed: ${error}`);
     }
@@ -386,9 +401,7 @@ export class AnomalyService {
    * duplicated expense without a merchant (just a description) is still caught.
    */
   async detectDuplicateCharge(accountId: string, userId: string, expense: DetectorExpense): Promise<void> {
-    const payeeOf = (e: { merchant?: string | null; description?: string | null }) =>
-      (e.merchant?.trim() || e.description?.trim() || '').toLowerCase();
-    const label = payeeOf(expense);
+    const label = expensePayee(expense);
     if (!label) return; // nothing to identify the charge by
 
     // Candidates share amount + currency + date window; the payee label is
@@ -408,7 +421,7 @@ export class AnomalyService {
       },
       select: { id: true, merchant: true, description: true },
     });
-    const other = candidates.find((c: { merchant?: string | null; description?: string | null }) => payeeOf(c) === label);
+    const other = candidates.find((c: { merchant?: string | null; description?: string | null }) => expensePayee(c) === label);
     if (!other) return;
 
     const params = {
@@ -426,6 +439,63 @@ export class AnomalyService {
       expenseId: expense.id,
       pushTitle: (lang) => ni18n.duplicateChargeTitle(lang, { merchant: params.merchant, amount: params.amount, currencyCode: params.currencyCode }),
       pushBody: (lang) => ni18n.duplicateChargeBody(lang, { merchant: params.merchant, amount: params.amount, currencyCode: params.currencyCode }),
+    });
+  }
+
+  /**
+   * Tier 2 — cross-currency suggest-merge (predicate Q).
+   * Fires when a newly-created expense Q-matches an existing account expense:
+   * same payee + date ±1 day + DIFFERENT currency. Never auto-acts; inserts a
+   * 'possible_merge' feed row so the user can confirm the merge manually.
+   * P and Q are mutually exclusive (same-currency vs different-currency), so this
+   * can never fire on the same pair as detectDuplicateCharge.
+   */
+  async detectPossibleMerge(accountId: string, userId: string, expense: DetectorExpense): Promise<void> {
+    const label = expensePayee(expense);
+    if (!label) return;
+
+    const candidates = await this.prisma.expense.findMany({
+      where: {
+        accountId,
+        isDeleted: false,
+        id: { not: expense.id },
+        // Q: currencies DIFFER — distinguishes this from detectDuplicateCharge (same currency)
+        currencyCode: { not: expense.currencyCode },
+        date: {
+          gte: new Date(expense.date.getTime() - DAY_MS),
+          lte: new Date(expense.date.getTime() + DAY_MS),
+        },
+      },
+      select: { id: true, merchant: true, description: true, currencyCode: true, amount: true },
+    });
+
+    const other = candidates.find((c) => expensePayee(c) === label);
+    if (!other) return;
+
+    const params = {
+      expenseId: expense.id,
+      otherExpenseId: other.id,
+      merchant: expense.merchant?.trim() || expense.description?.trim() || '',
+      currencyA: expense.currencyCode,
+      currencyB: other.currencyCode,
+      amountA: Number(expense.amount).toFixed(2),
+      amountB: Number(other.amount).toFixed(2),
+    };
+
+    // dedupKey is order-independent: same sorted pair produces the same key regardless
+    // of which expense was created second. The @@unique on anomaly_alerts makes this
+    // fire exactly once per pair, ever.
+    const dedupKey = `merge:${[expense.id, other.id].sort().join(':')}`;
+
+    await this.createAlert({
+      accountId,
+      userId,
+      type: 'possible_merge',
+      dedupKey,
+      params,
+      expenseId: expense.id,
+      pushTitle: (lang) => ni18n.possibleMergeTitle(lang, params),
+      pushBody: (lang) => ni18n.possibleMergeBody(lang, params),
     });
   }
 }

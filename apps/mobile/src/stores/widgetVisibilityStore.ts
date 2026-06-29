@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { MMKV } from 'react-native-mmkv';
 
 export const WIDGET_KEYS = [
+  'safeToSpend',
   'financialHealth',
   'gamification',
   'monthlyBudget',
