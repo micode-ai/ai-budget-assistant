@@ -42,7 +42,7 @@ Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow
 
 ### Jezyk
 
-Wybierz z 8 obslugiwanych jezykow:
+Wybierz z 9 obslugiwanych jezykow:
 
 | Kod | Jezyk |
 |---|---|
@@ -54,6 +54,7 @@ Wybierz z 8 obslugiwanych jezykow:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
 
@@ -130,6 +131,10 @@ Przelaczniki dla preferencji powiadomien:
 | **Alerty Budzetowe** | Otrzymuj powiadomienia po osiagnieciu progow budzetowych |
 | **Aktywnosc Wspolnego Konta** | Otrzymuj powiadomienia, gdy inni dodaja wydatki do wspolnych kont |
 | **Przypomnienia o długach** | Powiadomienie 3 dni przed terminem spłaty i po jego przekroczeniu |
+| **Wydatki cykliczne** | Powiadomienie, gdy aplikacja automatycznie rejestruje wydatek cykliczny |
+| **Odnowienia subskrypcji** | Powiadomienie 3 dni przed odnowieniem śledzonej subskrypcji |
+| **Alerty anomalii** | Powiadomienie o nietypowych wydatkach: duplikaty, wzrosty cen lub skoki kategorii |
+| **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni |
 
 ### Bot Telegram
 

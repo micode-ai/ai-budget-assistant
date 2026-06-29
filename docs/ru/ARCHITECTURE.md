@@ -452,7 +452,8 @@ src/
 │   │   ├── gamification.controller.ts
 │   │   ├── gamification.service.ts
 │   │   ├── streak.service.ts
-│   │   └── achievement-definitions.ts
+│   │   ├── achievement-definitions.ts
+│   │   └── tracking-gap-reminder.cron.ts  # Ежедневный cron — напоминание при отсутствии расходов 3+ дней
 │   ├── notifications/           # Push-уведомления (Expo)
 │   │   ├── notifications.service.ts
 │   │   └── shared-activity.service.ts
@@ -1200,6 +1201,7 @@ const context = {
 - `recurring_expense` — уведомление об авто-созданном рекуррентном расходе
 - `subscription_renewal` — напоминание о продлении подписки или уведомление об авто-списании
 - `chat_mention` — пользователь упомянут через @ в общем AI-разговоре
+- `tracking_gap_reminder` — напоминание, когда расходы не записывались 3+ дней (отправляется на 3-й, 6-й, 9-й день…)
 
 **Пользовательские настройки** (`GET/PATCH /users/me/notification-preferences`)
 - `budgetAlerts` — управляет уведомлениями `budget_alert`
@@ -1208,6 +1210,7 @@ const context = {
 - `recurringExpenses` — управляет уведомлениями `recurring_expense`
 - `subscriptionRenewals` — управляет уведомлениями `subscription_renewal`
 - `anomalyAlerts` — управляет push-уведомлениями `spending_anomaly` от модуля аномалий (по умолчанию `true`)
+- `trackingGap` — управляет уведомлениями `tracking_gap_reminder` (по умолчанию `true`)
 
 **Пакетная обработка:** Уведомления отправляются батчами по 100 сообщений.
 

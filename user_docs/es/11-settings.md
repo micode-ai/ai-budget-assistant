@@ -42,7 +42,7 @@ La moneda seleccionada se resalta. Esto establece la moneda predeterminada para 
 
 ### Idioma
 
-Elige entre 8 idiomas disponibles:
+Elige entre 9 idiomas disponibles:
 
 | Codigo | Idioma |
 |---|---|
@@ -54,6 +54,7 @@ Elige entre 8 idiomas disponibles:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 
@@ -130,6 +131,10 @@ Interruptores para las preferencias de notificaciones:
 | **Alertas de Presupuesto** | Recibe notificaciones cuando alcances los umbrales de presupuesto |
 | **Actividad de Cuenta Compartida** | Recibe notificaciones cuando otros agregan gastos a cuentas compartidas |
 | **Recordatorios de deudas** | Notificación 3 días antes del vencimiento y cuando se vence |
+| **Gastos recurrentes** | Notificación cuando la app registra automáticamente un gasto recurrente |
+| **Renovaciones de suscripciones** | Notificación 3 días antes de que se renueve una suscripción rastreada |
+| **Alertas de anomalías** | Notificación por gastos inusuales: cargos duplicados, aumentos de precio o picos de categoría |
+| **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días |
 
 ### Bot de Telegram
 

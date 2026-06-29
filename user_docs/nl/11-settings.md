@@ -55,7 +55,7 @@ Je e-mail wordt direct bijgewerkt en er worden nieuwe inlogtokens uitgegeven. Al
 
 ### Taal
 
-Kies uit 8 ondersteunde talen:
+Kies uit 9 ondersteunde talen:
 
 | Code | Taal |
 |---|---|
@@ -67,6 +67,7 @@ Kies uit 8 ondersteunde talen:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Tik op een taalchip om te wisselen. De interface wordt direct bijgewerkt.
 
@@ -143,6 +144,10 @@ Schakelaars voor meldingsvoorkeuren:
 | **Budgetwaarschuwingen** | Ontvang een melding wanneer je budgetdrempels bereikt |
 | **Activiteit gedeeld account** | Ontvang een melding wanneer anderen uitgaven toevoegen aan gedeelde accounts |
 | **Schuldherinneringen** | Ontvang 3 dagen voor de vervaldatum van een schuld een melding en wanneer deze achterstallig wordt |
+| **Terugkerende uitgaven** | Melding wanneer de app automatisch een terugkerende uitgave registreert |
+| **Abonnementsverlengingen** | Melding 3 dagen voor verlenging van een gevolgd abonnement |
+| **Anomaliemeldingen** | Melding bij ongewone uitgaven: dubbele kosten, prijsstijgingen of categoriepieken |
+| **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd |
 
 ### Telegram-bot
 

@@ -42,7 +42,7 @@ Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neu
 
 ### Sprache
 
-Wahle aus 8 unterstutzten Sprachen:
+Wahle aus 9 unterstutzten Sprachen:
 
 | Code | Sprache |
 |---|---|
@@ -54,6 +54,7 @@ Wahle aus 8 unterstutzten Sprachen:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
 
@@ -130,6 +131,10 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Budget-Warnungen** | Benachrichtigung bei Erreichen von Budget-Schwellenwerten |
 | **Gemeinsame Kontoaktivitat** | Benachrichtigung, wenn andere Ausgaben zu gemeinsamen Konten hinzufugen |
 | **Schulden-Erinnerungen** | Erinnerung 3 Tage vor Fälligkeit und bei Überschreitung |
+| **Wiederkehrende Ausgaben** | Benachrichtigung, wenn die App automatisch eine wiederkehrende Ausgabe erfasst |
+| **Abonnementverlängerungen** | Benachrichtigung 3 Tage vor Verlängerung eines verfolgten Abonnements |
+| **Anomalie-Warnungen** | Benachrichtigung bei ungewöhnlichen Ausgaben: Duplikate, Preiserhöhungen oder Kategorie-Spitzen |
+| **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast |
 
 ### Telegram-Bot
 

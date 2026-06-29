@@ -42,7 +42,7 @@ La devise selectionnee est mise en surbrillance. Cela definit la devise par defa
 
 ### Langue
 
-Choisissez parmi 8 langues prises en charge :
+Choisissez parmi 9 langues prises en charge :
 
 | Code | Langue |
 |---|---|
@@ -54,6 +54,7 @@ Choisissez parmi 8 langues prises en charge :
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
 
@@ -130,6 +131,10 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Alertes Budget** | Etre averti lorsque vous atteignez les seuils de budget |
 | **Activite Compte Partage** | Etre averti lorsque d'autres personnes ajoutent des depenses aux comptes partages |
 | **Rappels de dettes** | Notification 3 jours avant l'échéance et en cas de retard |
+| **Dépenses récurrentes** | Notification quand l'app enregistre automatiquement une dépense récurrente |
+| **Renouvellements d'abonnements** | Notification 3 jours avant le renouvellement d'un abonnement suivi |
+| **Alertes d'anomalies** | Notification pour les dépenses inhabituelles : doublons, hausses de prix ou pics de catégorie |
+| **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours |
 
 ### Bot Telegram
 
