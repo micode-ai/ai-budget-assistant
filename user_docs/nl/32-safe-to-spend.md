@@ -63,9 +63,14 @@ Automatisch vastleggen werkt met meldingen van grote retailbanken door heel Euro
 
 **Opmerking over categorieën:** Voor banken buiten Polen wordt mogelijk geen categorie automatisch voorgesteld. De uitgave wordt vastgelegd zonder categorie; u kunt dit handmatig corrigeren — de app leert van uw correcties.
 
-### Deduplicatie
+### Deduplicatie en afstemming tussen bronnen
 
 Als een melding meer dan eens wordt afgeleverd, of als je dezelfde transactie ook importeert uit een bank-CSV, dedupliceert de app automatisch. Elke vastgelegde melding krijgt een unieke vingerafdruk; duplicaten worden stil verwijderd.
+
+De app stemt vastgelegde meldingen ook af met uitgaven die via andere wegen zijn toegevoegd:
+
+- **Zelfde valuta:** als je dezelfde betaling later handmatig registreert, via een bonnetjescanner of via een bot, behoudt de app automatisch de uitgebreidere vermelding en verwijdert de meldingsstub. Er is geen actie vereist.
+- **Andere valuta:** soms verschijnt dezelfde aankoop in twee valuta's — bijvoorbeeld een kaartbetaling in euro's terwijl de bankmelding het bedrag in złoty toont. De app kan deze niet automatisch samenvoegen (de bedragen verschillen), dus toont een suggestie in het alertoverzicht. Tik op de melding om het samenvoegscherm te openen, kies welke vermelding je wilt bewaren en bevestig. Je kunt ook samenvoegen vanuit het importvoorbeeldscherm als een rij het label "Bestaat mogelijk al in een andere valuta" draagt.
 
 ### Vastleggingen controleren
 
