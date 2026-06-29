@@ -16,6 +16,8 @@ export interface WiseImportRow {
   fxToCurrency?: string;
   fxToAmount?: number;
   fxRate?: number;
+  possibleMerge?: boolean;
+  mergeCandidateIds?: string[];
 }
 
 export interface WiseImportPreviewResponse {
