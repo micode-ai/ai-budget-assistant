@@ -278,6 +278,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="expense/merge"
+          options={{
+            headerShown: true,
+            title: t('expenses.merge.title'),
+          }}
+        />
+        <Stack.Screen
           name="budget/new"
           options={{
             presentation: 'modal',

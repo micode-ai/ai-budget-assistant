@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus } from '@budget/shared-types';
+import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import i18n from '@/i18n';
 import {
@@ -70,6 +70,7 @@ interface ExpenseState {
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
   bulkUpdateExpenses: (ids: string[], patch: { categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }) => Promise<void>;
+  mergeExpenses: (keepId: string, mergeId: string, fieldChoices?: MergeExpensesFieldChoices) => Promise<void>;
   stopRecurringExpense: (id: string) => Promise<void>;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
 
@@ -413,6 +414,124 @@ export const useExpenseStore = create<ExpenseState>()(
 
       api.bulkUpdateExpenses({ ids, ...patch }).catch((e: any) =>
         console.warn('[expenseStore] bulkUpdate server error:', e?.message || e)
+      );
+    },
+
+    mergeExpenses: async (keepId, mergeId, fieldChoices) => {
+      const { expenses } = get();
+      const now = new Date();
+
+      // Resolve survivor and merged row by local id (may be a clientId or localId)
+      const survivor = expenses.find(
+        (e) => !e.isDeleted && (e.id === keepId || e.localId === keepId || (e as any).clientId === keepId),
+      );
+      const merged = expenses.find(
+        (e) => !e.isDeleted && (e.id === mergeId || e.localId === mergeId || (e as any).clientId === mergeId),
+      );
+
+      if (!survivor || !merged || survivor.id === merged.id) return;
+
+      // --- Optimistic in-memory update ---
+      // Apply gap-fill: copy fields from merged into survivor where survivor is blank
+      // (or where fieldChoices[field] === true forces a copy).
+      const shouldCopy = (field: keyof MergeExpensesFieldChoices, survivorVal: unknown, mergedVal: unknown): boolean => {
+        if (fieldChoices && fieldChoices[field] === true) return true;
+        return !survivorVal && !!mergedVal;
+      };
+
+      const carriedFields: Partial<Expense> = {};
+      if (shouldCopy('merchant', survivor.merchant, merged.merchant)) {
+        carriedFields.merchant = merged.merchant;
+      }
+      if (shouldCopy('notes', survivor.notes, merged.notes)) {
+        carriedFields.notes = merged.notes;
+      }
+      if (shouldCopy('categoryId', survivor.categoryId, merged.categoryId)) {
+        carriedFields.categoryId = merged.categoryId;
+      }
+      if (shouldCopy('projectId', survivor.projectId, merged.projectId)) {
+        carriedFields.projectId = merged.projectId;
+      }
+
+      // Union tag ids
+      const survivorTags = survivor.tagIds ?? [];
+      const mergedTags = (merged.tagIds ?? []).filter((t) => !survivorTags.includes(t));
+      const unifiedTags = [...survivorTags, ...mergedTags];
+
+      set((state) => ({
+        expenses: state.expenses
+          .map((e) => {
+            if (e.id === survivor.id) {
+              return {
+                ...e,
+                ...carriedFields,
+                tagIds: unifiedTags,
+                updatedAt: now,
+                syncStatus: 'pending' as SyncStatus,
+              };
+            }
+            if (e.id === merged.id) {
+              return { ...e, isDeleted: true, updatedAt: now };
+            }
+            return e;
+          })
+          .filter((e) => !e.isDeleted),
+      }));
+
+      // --- SQLite persist ---
+      try {
+        await softDeleteExpenseInDb(merged.id, now);
+      } catch (e) {
+        console.error('[expenseStore] mergeExpenses: failed to soft-delete merged in SQLite:', e);
+      }
+
+      try {
+        const dbUpdates: Record<string, unknown> = { ...carriedFields };
+        if (Object.keys(dbUpdates).length > 0) {
+          await updateExpenseInDb(survivor.id, dbUpdates, now, 'pending');
+        }
+        // Persist merged tag links
+        for (const tagId of mergedTags) {
+          try {
+            await insertExpenseTag({
+              id: generateUUID(),
+              expenseId: survivor.id,
+              tagId,
+              createdAt: now,
+              updatedAt: now,
+              isDeleted: false,
+              syncVersion: 0,
+            });
+          } catch { /* already linked */ }
+        }
+        // Persist project carry-over (join table, not a column)
+        if (carriedFields.projectId && !survivor.projectId) {
+          try {
+            await addExpenseToProject({
+              id: generateUUID(),
+              projectId: carriedFields.projectId,
+              expenseId: survivor.id,
+              createdAt: now,
+              updatedAt: now,
+              isDeleted: false,
+              syncVersion: 0,
+            });
+          } catch (e) {
+            console.error('[expenseStore] mergeExpenses: failed to carry project in SQLite:', e);
+          }
+        }
+      } catch (e) {
+        console.error('[expenseStore] mergeExpenses: failed to update survivor in SQLite:', e);
+      }
+
+      // --- Server fire-and-forget (offline-safe: failures are console.warn, rows stay pending) ---
+      api.mergeExpenses({ keepId, mergeId, fieldChoices }).catch((e: unknown) =>
+        console.warn('[expenseStore] mergeExpenses: server error (offline?):', e),
+      );
+
+      // Re-encrypt E2EE fields (merchant, notes) on the modified survivor
+      get().syncPendingExpenses().catch((e: unknown) =>
+        console.warn('[expenseStore] mergeExpenses: syncPendingExpenses deferred (offline?):', e),
       );
     },
 

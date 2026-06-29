@@ -21,6 +21,7 @@ const TYPE_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   price_increase: 'trending-up-outline',
   category_spike: 'flame-outline',
   recurring_suggestion: 'repeat-outline',
+  possible_merge: 'git-merge-outline',
 };
 
 export default function AlertsScreen() {
@@ -75,6 +76,17 @@ export default function AlertsScreen() {
               cycle: t(p.cycle === 'weekly' ? 'alerts.cycleWeekly' : 'alerts.cycleMonthly'),
             }),
           };
+        case 'possible_merge':
+          return {
+            title: t('alerts.mergeTitle'),
+            body: t('alerts.mergeBody', {
+              merchant: p.merchant,
+              amountA: p.amountA,
+              currencyA: p.currencyA,
+              amountB: p.amountB,
+              currencyB: p.currencyB,
+            }),
+          };
         default:
           return { title: String(alert.type), body: '' };
       }
@@ -90,6 +102,17 @@ export default function AlertsScreen() {
         router.push({
           pathname: '/subscriptions/new' as any,
           params: { name: p.merchant, amount: String(p.amount), detectedFrom: p.merchant },
+        });
+      } else if (alert.type === 'possible_merge' && canEdit) {
+        const p = alert.params as Record<string, string>;
+        // Navigate to the merge screen; both ids come from the alert params.
+        // aId = the expense that triggered the alert; bId = the other candidate.
+        router.push({
+          pathname: '/expense/merge' as any,
+          params: {
+            aId: p.expenseId ?? alert.expenseId ?? '',
+            bId: p.otherExpenseId ?? '',
+          },
         });
       } else if (alert.expenseId) {
         router.push(`/expense/${alert.expenseId}` as any);
