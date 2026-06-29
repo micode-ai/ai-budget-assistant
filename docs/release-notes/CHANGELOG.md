@@ -10,6 +10,9 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ## 1.9.0 — 2026-06-29
 
+**Web — Desktop layout**
+- **The web app now has a laptop-friendly layout** — at 1024 px and wider you get a left sidebar for navigation, a full-width top bar (account, currency, alerts, settings), and a two-column widget grid on the Dashboard. Mobile and narrow browser windows are unchanged (ABA-289, ABA-290).
+
 **Notifications**
 - **Tracking gap reminder** — if you haven't logged any expenses for 3 or more days, the app sends a gentle nudge to keep your streak going. Reminds every 3 days (day 3, 6, 9…). Toggle it off in Settings → Notifications (ABA-292).
 
