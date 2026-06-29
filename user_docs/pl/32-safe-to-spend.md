@@ -63,9 +63,14 @@ Automatyczne przechwytywanie działa z powiadomieniami z dużych banków detalic
 
 **Uwaga dotycząca kategorii:** Dla banków spoza Polski kategoria może nie zostać zaproponowana automatycznie. Wydatek zostanie zapisany bez kategorii i można ją poprawić ręcznie — aplikacja uczy się na podstawie poprawek.
 
-### Deduplikacja
+### Deduplikacja i uzgadnianie między źródłami
 
 Jeśli powiadomienie zostanie dostarczone więcej niż raz, lub jeśli zaimportujesz tę samą transakcję z pliku CSV banku, aplikacja automatycznie usuwa duplikaty. Każde przechwycone powiadomienie otrzymuje unikalny odcisk palca; duplikaty są cicho odrzucane.
+
+Aplikacja uzgadnia też przechwycone powiadomienia z wydatkami dodanymi innymi ścieżkami:
+
+- **Ta sama waluta:** jeśli później zarejestrujesz tę samą płatność ręcznie, skanując paragon lub przez bota, aplikacja automatycznie zachowuje bogatszy rekord i usuwa szkic z powiadomienia. Żadna akcja nie jest wymagana.
+- **Inna waluta:** czasem ta sama płatność pojawia się w dwóch walutach — na przykład karta obciążona w euro, a powiadomienie bankowe pokazuje kwotę w złotych. Aplikacja nie może automatycznie scalić takich rekordów (kwoty się różnią), więc wyświetla sugestię w kanale alertów. Kliknij alert, aby otworzyć ekran scalania, wybierz, który rekord zachować, i potwierdź. Możesz też scalić bezpośrednio z podglądu importu, jeśli widzisz oznaczenie „Może już istnieć w innej walucie" przy danym wierszu.
 
 ### Sprawdzanie przechwytywań
 

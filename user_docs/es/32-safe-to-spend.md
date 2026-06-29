@@ -63,9 +63,14 @@ La captura automática funciona con notificaciones de los principales bancos min
 
 **Nota sobre categorías:** Para bancos fuera de Polonia, es posible que no se sugiera una categoría automáticamente. El gasto se registrará sin categoría y podrás corregirlo manualmente — la app aprende de tus correcciones.
 
-### Deduplicación
+### Deduplicación y conciliación entre fuentes
 
 Si una notificación se entrega más de una vez, o si también importas la misma transacción desde un CSV bancario, la app deduplica automáticamente. Cada notificación capturada recibe una huella única; los duplicados se descartan silenciosamente.
+
+La app también concilia las notificaciones capturadas con los gastos añadidos por otras vías:
+
+- **Misma divisa:** si más tarde registras el mismo pago manualmente, escaneando un recibo o mediante un bot, la app conserva automáticamente el registro más completo y elimina el borrador de notificación. No se requiere ninguna acción.
+- **Divisa diferente:** a veces el mismo pago aparece en dos divisas — por ejemplo, una tarjeta cobrada en euros mientras la notificación bancaria muestra el importe en eslotis. La app no puede fusionarlos automáticamente (los importes difieren), por lo que muestra una sugerencia en el feed de alertas. Toca la alerta para abrir la pantalla de fusión, elige qué registro conservar y confirma. También puedes fusionar directamente desde la vista previa de importación si ves la marca "Puede que ya exista en otra divisa" en una fila.
 
 ### Revisar capturas
 
