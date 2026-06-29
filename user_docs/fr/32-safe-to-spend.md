@@ -63,9 +63,14 @@ La capture automatique fonctionne avec les notifications des principales banques
 
 **Note sur les catégories :** Pour les banques hors de Pologne, il est possible qu'aucune catégorie ne soit suggérée automatiquement. La dépense sera enregistrée sans catégorie et vous pourrez la corriger manuellement — l'application apprend de vos corrections.
 
-### Déduplication
+### Déduplication et réconciliation entre sources
 
 Si une notification est livrée plus d'une fois, ou si vous importez également la même transaction depuis un CSV bancaire, l'application déduplique automatiquement. Chaque notification capturée reçoit une empreinte unique ; les doublons sont silencieusement supprimés.
+
+L'application réconcilie également les notifications capturées avec les dépenses ajoutées par d'autres voies :
+
+- **Même devise :** si vous enregistrez ensuite le même paiement manuellement, en scannant un reçu ou via un bot, l'application conserve automatiquement l'enregistrement le plus complet et supprime l'ébauche de notification. Aucune action n'est nécessaire.
+- **Devise différente :** parfois le même achat apparaît dans deux devises — par exemple, une carte débitée en euros tandis que la notification bancaire affiche le montant en zlotys. L'application ne peut pas fusionner ces enregistrements automatiquement (les montants diffèrent), elle affiche donc une suggestion dans le fil d'alertes. Appuyez sur l'alerte pour ouvrir l'écran de fusion, choisissez quel enregistrement conserver et confirmez. Vous pouvez également fusionner directement depuis l'écran de prévisualisation d'importation si une ligne porte la mention « Peut-être déjà présent dans une autre devise ».
 
 ### Vérifier les captures
 

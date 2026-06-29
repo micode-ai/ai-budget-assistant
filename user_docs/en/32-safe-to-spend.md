@@ -63,9 +63,14 @@ The auto-capture works with notifications from major retail banks across Europe.
 
 **Note on merchant categories:** for banks outside Poland, the app may not automatically suggest a category. The expense will be recorded without a category and you can correct it manually — the app learns from your corrections and applies them automatically in the future.
 
-### Deduplication
+### Deduplication and cross-source reconciliation
 
 If a notification is delivered more than once, or if you also import the same transaction from a bank CSV, the app deduplicates automatically. Each captured notification gets a unique fingerprint; duplicates are silently discarded.
+
+The app also reconciles captured notifications with expenses added through other paths:
+
+- **Same currency:** if you later record the same payment manually, by scanning a receipt, or via a bot, the app automatically keeps the richer record and removes the notification stub. No action needed.
+- **Different currency:** occasionally the same purchase appears in two currencies — for example, a card charged in euros while the bank notification shows the amount in złoty. The app cannot merge these automatically (the amounts differ), so it shows a suggestion in your alerts feed. Tap the alert to open the merge screen, choose which record to keep, and confirm. You can also merge directly from the import preview screen if you see a "May already exist in another currency" flag on a row.
 
 ### Reviewing captures
 
