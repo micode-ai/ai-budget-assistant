@@ -6,6 +6,7 @@ import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { normalizeMerchantPL } from './merchants/merchants-pl';
 import { decodeCsvBuffer, type EncodingHint } from './utils/encoding';
@@ -255,6 +256,12 @@ export class ImportBankService {
     // so N existing rows only absorb N import rows; extras stay importable.
     await this.flagContentDuplicates(accountId, paired);
 
+    // Tier 2 — suggest-merge: flag rows that match an existing account expense
+    // under predicate Q (same payee + date ±1d, DIFFERENT currency). Only
+    // non-alreadyImported expense rows are eligible. Does NOT touch importable/
+    // skipped counts — possibleMerge rows still import as new by default.
+    await this.flagPossibleMerges(accountId, paired);
+
     return {
       status: 'parsed',
       detectedBankId: parser.id,
@@ -323,6 +330,51 @@ export class ImportBankService {
       if ((counts.get(k) ?? 0) > 0) {
         r.alreadyImported = true;
         bump(k, -1);
+      }
+    }
+  }
+
+  /**
+   * Tier 2 — predicate Q suggest-merge pass.
+   * For each NON-alreadyImported expense row, query existing account expenses
+   * that match on payee + date ±1d + DIFFERENT currency. Sets possibleMerge:true
+   * and mergeCandidateIds on matching rows. Does NOT change alreadyImported,
+   * importable, or skipped counts — the row still imports as new by default.
+   * P and Q are mutually exclusive (same vs different currency), so a row
+   * that content-deduped under P cannot also Q-match the same expense.
+   */
+  private async flagPossibleMerges(accountId: string, rows: ImportRow[]): Promise<void> {
+    const eligible = rows.filter((r) => !r.alreadyImported && r.kind === 'expense');
+    if (eligible.length === 0) return;
+
+    const isoDates = [...new Set(eligible.map((r) => r.date))].filter(Boolean).sort();
+    if (isoDates.length === 0) return;
+
+    // Build a date window spanning all eligible rows' ±1 day.
+    const allMs = isoDates.map((d) => new Date(d).getTime());
+    const minDate = new Date(Math.min(...allMs) - DUP_DAY_MS);
+    const maxDate = new Date(Math.max(...allMs) + DUP_DAY_MS);
+
+    const existing = await this.prisma.expense.findMany({
+      where: { accountId, isDeleted: false, date: { gte: minDate, lte: maxDate } },
+      select: { id: true, date: true, merchant: true, description: true, currencyCode: true },
+    });
+
+    for (const r of eligible) {
+      const label = expensePayee({ merchant: r.merchant, description: r.description });
+      if (!label) continue;
+
+      const rowDateMs = new Date(r.date).getTime();
+      const matches = existing.filter(
+        (e) =>
+          expensePayee({ merchant: e.merchant, description: e.description }) === label &&
+          e.currencyCode !== r.currencyCode && // Q: currencies DIFFER
+          Math.abs(new Date(e.date).getTime() - rowDateMs) <= DUP_DAY_MS,
+      );
+
+      if (matches.length > 0) {
+        r.possibleMerge = true;
+        r.mergeCandidateIds = matches.map((m) => m.id);
       }
     }
   }
