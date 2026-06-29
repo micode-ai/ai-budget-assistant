@@ -12,6 +12,7 @@ import { CacheService } from '../../../common/cache/cache.service';
 import { DebtsService } from '../../debts/debts.service';
 import { ExchangeRateService } from '../../currency-exchange/exchange-rate.service';
 import { GoalPlannerService } from './goal-planner.service';
+import { SafeToSpendService } from '../../insights/safe-to-spend.service';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
 @Injectable()
@@ -28,6 +29,7 @@ export class AiToolsService {
     private readonly debtsService: DebtsService,
     private readonly goalPlannerService: GoalPlannerService,
     private readonly exchangeRateService: ExchangeRateService,
+    private readonly safeToSpendService: SafeToSpendService,
   ) {}
 
   /**
@@ -230,9 +232,27 @@ export class AiToolsService {
           },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'check_affordability',
+          description: 'Answer "can I afford X" questions. Computes a deterministic YES/NO from the cashflow engine. Use whenever the user asks if they can afford/buy something for an amount.',
+          parameters: {
+            type: 'object',
+            properties: {
+              amount: { type: 'number', description: 'The price the user wants to spend' },
+              currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'], description: 'Currency code. Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB' },
+              description: { type: 'string', description: 'What they want to buy (optional)' },
+            },
+            required: ['amount'],
+          },
+        },
+      },
     ];
   }
 
+  // 'check_affordability' is intentionally NOT in this list — it is a READ action
+  // (no confirmation required, executes immediately via executeWithCache).
   isWriteAction(actionType: string): boolean {
     return ['create_expense', 'create_income', 'create_budget', 'create_category', 'record_debt_repayment', 'create_debt', 'update_goal_balance'].includes(actionType);
   }
@@ -283,6 +303,8 @@ export class AiToolsService {
           return await this.executeCreateDebt(data, accountId, userId);
         case 'update_goal_balance':
           return await this.executeUpdateGoalBalance(data, accountId, userId);
+        case 'check_affordability':
+          return await this.executeCheckAffordability(data, accountId, userId, baseCurrency);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -800,6 +822,62 @@ export class AiToolsService {
         actionType: 'update_goal_balance',
         success: false,
         errorMessage: error instanceof Error ? error.message : 'Failed to update goal',
+      };
+    }
+  }
+
+  /**
+   * READ action: deterministic affordability verdict from the cashflow engine.
+   * No confirmation required — executes immediately via executeWithCache.
+   * The LLM receives the verdict struct and writes the one-liner narration only.
+   */
+  private async executeCheckAffordability(
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+    baseCurrency?: string,
+  ): Promise<ChatActionResult> {
+    const amount = Number(data.amount);
+    // Default to baseCurrency when the LLM omits currencyCode (common for unambiguous requests)
+    const currencyCode = data.currencyCode ? String(data.currencyCode) : (baseCurrency || 'USD');
+
+    if (!amount || amount <= 0) {
+      return { actionType: 'check_affordability', success: false, errorMessage: 'Invalid amount' };
+    }
+
+    const resolvedBase = baseCurrency || 'USD';
+
+    try {
+      const verdict = await this.safeToSpendService.checkAffordability(
+        accountId,
+        userId,
+        resolvedBase,
+        amount,
+        currencyCode,
+      );
+
+      return {
+        actionType: 'check_affordability',
+        success: true,
+        data: {
+          affordable: verdict.affordable,
+          amount: verdict.amount,
+          currencyCode: verdict.currencyCode,
+          amountInBase: verdict.amountInBase,
+          safeToSpendToday: verdict.safeToSpendToday,
+          reasonCode: verdict.reasonCode,
+          goalImpact: verdict.goalImpact,
+          suggestedDate: verdict.suggestedDate,
+          baseCurrency: verdict.baseCurrency,
+          // Hint for the LLM: report `affordable` and `reasonCode` verbatim — never guess.
+          // If fxConverted, note the conversion was approximate.
+        },
+      };
+    } catch (error) {
+      return {
+        actionType: 'check_affordability',
+        success: false,
+        errorMessage: error instanceof Error ? error.message : 'Failed to check affordability',
       };
     }
   }

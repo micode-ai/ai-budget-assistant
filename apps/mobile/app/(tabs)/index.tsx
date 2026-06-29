@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Platform, Modal } from 'react-native';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,6 +26,7 @@ import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
 import { useAlertStore } from '@/stores/alertStore';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
+import { useSafeToSpend } from '@/features/insights/useSafeToSpend';
 
 // Static maps — no render-time dependency, hoisted to module scope.
 const quickActionRoutes: Record<QuickActionKey, string> = {
@@ -55,6 +56,7 @@ const quickActionLabelKey: Record<QuickActionKey, string> = {
 export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [widgetRefreshKey, setWidgetRefreshKey] = useState(0);
+  const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const { getMonthlyBudgetSummary } = useBudgetStore();
@@ -74,6 +76,7 @@ export default function DashboardScreen() {
   // On desktop web the full-width WebTopBar carries the account/currency/alerts/
   // settings controls, so the hero's control row + divider are hidden there.
   const isDesktopWeb = useIsDesktopWeb();
+  const { data: safeToSpendData, hasEnoughData: hasSafeToSpend } = useSafeToSpend();
 
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
@@ -185,6 +188,22 @@ export default function DashboardScreen() {
             </TouchableOpacity>
           </View>
           <View style={styles.heroDivider} />
+          {/* Safe-to-spend hero number — shown when widget is visible and data available */}
+          {widgetVisibility.safeToSpend && hasSafeToSpend && safeToSpendData && (
+            <TouchableOpacity
+              style={styles.heroStsRow}
+              onPress={() => setSafeToSpendSheetVisible(true)}
+              activeOpacity={0.7}
+            >
+              <View>
+                <Text style={styles.heroStsLabel}>{t('safeToSpend.title')}</Text>
+                <Text style={styles.heroStsAmount}>
+                  {formatCurrency(safeToSpendData.safeToSpendToday, safeToSpendData.baseCurrency)}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.7)" />
+            </TouchableOpacity>
+          )}
         </View>
       )}
 
@@ -204,6 +223,101 @@ export default function DashboardScreen() {
             </TouchableOpacity>
           ))}
         </View>
+      )}
+
+      {/* Safe-to-Spend breakdown bottom-sheet */}
+      {safeToSpendData && (
+        <Modal
+          visible={safeToSpendSheetVisible}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setSafeToSpendSheetVisible(false)}
+        >
+          <TouchableOpacity
+            style={styles.stsBackdrop}
+            activeOpacity={1}
+            onPress={() => setSafeToSpendSheetVisible(false)}
+          >
+            <View style={styles.stsSheet}>
+              <View style={styles.stsHandle} />
+              <Text style={styles.stsSheetTitle}>{t('safeToSpend.breakdownTitle')}</Text>
+
+              <View style={styles.stsRow}>
+                <Text style={styles.stsRowLabel}>{t('safeToSpend.wallet')}</Text>
+                <Text style={styles.stsRowValue}>
+                  {formatCurrency(safeToSpendData.breakdown.walletBalance, safeToSpendData.baseCurrency)}
+                </Text>
+              </View>
+              {safeToSpendData.breakdown.expectedIncome > 0 && (
+                <View style={styles.stsRow}>
+                  <Text style={styles.stsRowLabel}>{t('safeToSpend.expectedIncome')}</Text>
+                  <Text style={[styles.stsRowValue, { color: theme.colors.success }]}>
+                    +{formatCurrency(safeToSpendData.breakdown.expectedIncome, safeToSpendData.baseCurrency)}
+                  </Text>
+                </View>
+              )}
+              {safeToSpendData.breakdown.upcomingSubscriptions > 0 && (
+                <View style={styles.stsRow}>
+                  <Text style={styles.stsRowLabel}>{t('safeToSpend.subscriptions')}</Text>
+                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
+                    -{formatCurrency(safeToSpendData.breakdown.upcomingSubscriptions, safeToSpendData.baseCurrency)}
+                  </Text>
+                </View>
+              )}
+              {safeToSpendData.breakdown.upcomingRecurring > 0 && (
+                <View style={styles.stsRow}>
+                  <Text style={styles.stsRowLabel}>{t('safeToSpend.recurring')}</Text>
+                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
+                    -{formatCurrency(safeToSpendData.breakdown.upcomingRecurring, safeToSpendData.baseCurrency)}
+                  </Text>
+                </View>
+              )}
+              {safeToSpendData.breakdown.goalContributions > 0 && (
+                <View style={styles.stsRow}>
+                  <Text style={styles.stsRowLabel}>{t('safeToSpend.goals')}</Text>
+                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
+                    -{formatCurrency(safeToSpendData.breakdown.goalContributions, safeToSpendData.baseCurrency)}
+                  </Text>
+                </View>
+              )}
+              {safeToSpendData.breakdown.buffer > 0 && (
+                <View style={styles.stsRow}>
+                  <Text style={styles.stsRowLabel}>{t('safeToSpend.buffer')}</Text>
+                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
+                    -{formatCurrency(safeToSpendData.breakdown.buffer, safeToSpendData.baseCurrency)}
+                  </Text>
+                </View>
+              )}
+
+              <View style={styles.stsDivider} />
+
+              <View style={styles.stsRow}>
+                <Text style={styles.stsRowLabel}>{t('safeToSpend.daysLeft')}</Text>
+                <Text style={styles.stsRowValue}>{safeToSpendData.daysRemaining}</Text>
+              </View>
+              <View style={styles.stsTotalRow}>
+                <Text style={styles.stsTotalLabel}>{t('safeToSpend.today')}</Text>
+                <Text style={styles.stsTotalValue}>
+                  {formatCurrency(safeToSpendData.safeToSpendToday, safeToSpendData.baseCurrency)}
+                </Text>
+              </View>
+
+              {!safeToSpendData.incomeInferred && (
+                <Text style={styles.stsNote}>{t('safeToSpend.noIncomeAssumed')}</Text>
+              )}
+              {safeToSpendData.fxApproximate && (
+                <Text style={styles.stsNote}>{t('safeToSpend.approxRate')}</Text>
+              )}
+
+              <TouchableOpacity
+                style={styles.stsCloseButton}
+                onPress={() => setSafeToSpendSheetVisible(false)}
+              >
+                <Text style={styles.stsCloseText}>{t('common.done')}</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       )}
 
       <ScrollView
@@ -248,6 +362,11 @@ export default function DashboardScreen() {
           // would render the same widget twice (doubled card + broken modal).
           const mapped = [...new Set(widgetOrder)].map((key) => {
           switch (key) {
+            case 'safeToSpend':
+              // Shown as the home hero number (tap → breakdown sheet). No duplicate
+              // dashboard card — the hero is the single in-app surface for this value.
+              return null;
+
             case 'financialHealth':
               return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
 
@@ -902,5 +1021,118 @@ const createStyles = (theme: Theme) => ({
   debtAddButtonText: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.primary,
+  },
+
+  // Safe-to-spend hero number
+  heroStsRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingHorizontal: theme.spacing[1],
+    paddingBottom: theme.spacing[3],
+  },
+  heroStsLabel: {
+    ...theme.textStyles.caption,
+    color: 'rgba(255,255,255,0.75)',
+    marginBottom: 2,
+  },
+  heroStsAmount: {
+    fontSize: 22,
+    fontFamily: theme.fonts.bold,
+    color: '#FFFFFF',
+    fontWeight: '900' as const,
+  },
+
+  // Safe-to-spend bottom-sheet
+  stsBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'flex-end' as const,
+  },
+  stsSheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    paddingHorizontal: theme.spacing[5],
+    paddingBottom: theme.spacing[8],
+    paddingTop: theme.spacing[3],
+  },
+  stsHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.border,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  stsSheetTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[4],
+    textAlign: 'center' as const,
+  },
+  stsRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    borderBottomWidth: 0.5,
+    borderBottomColor: theme.colors.border,
+  },
+  stsRowLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    flex: 1,
+  },
+  stsRowValue: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+    flexShrink: 0,
+    textAlign: 'right' as const,
+  },
+  stsDivider: {
+    height: 1,
+    backgroundColor: theme.colors.border,
+    marginVertical: theme.spacing[3],
+  },
+  stsTotalRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[2],
+  },
+  stsTotalLabel: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
+    flex: 1,
+  },
+  stsTotalValue: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    color: theme.colors.primary,
+    fontWeight: '900' as const,
+    flexShrink: 0,
+    textAlign: 'right' as const,
+  },
+  stsNote: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[2],
+    fontStyle: 'italic' as const,
+  },
+  stsCloseButton: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[3],
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[5],
+  },
+  stsCloseText: {
+    ...theme.textStyles.bodyMedium,
+    color: '#FFFFFF',
+    fontWeight: '600' as const,
   },
 });

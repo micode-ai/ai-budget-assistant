@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Platform } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -220,6 +220,20 @@ export default function ImportHubScreen() {
               ))
             )}
 
+            {Platform.OS === 'android' && (
+              <TouchableOpacity
+                style={styles.requestCard}
+                onPress={() => router.push('/settings/auto-capture' as any)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="notifications-outline" size={22} color={theme.colors.primary} />
+                <View style={styles.requestTextWrap}>
+                  <Text style={styles.requestTitle}>{t('autoCapture.title')}</Text>
+                  <Text style={styles.requestSubtitle}>{t('autoCapture.subtitle')}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={styles.requestCard}
               onPress={() => router.push('/settings/import/request-bank')}

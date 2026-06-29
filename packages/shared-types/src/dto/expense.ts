@@ -48,6 +48,26 @@ export interface UpdateExpenseDto {
   relatedDebtIncomeId?: string | null;
 }
 
+export interface MergeExpensesFieldChoices {
+  merchant?: boolean;
+  notes?: boolean;
+  categoryId?: boolean;
+  projectId?: boolean;
+  tagIds?: boolean;
+  receiptImage?: boolean;
+}
+
+export interface MergeExpensesDto {
+  keepId: string;
+  mergeId: string;
+  fieldChoices?: MergeExpensesFieldChoices;
+}
+
+export interface MergeExpensesResponse {
+  keptId: string;
+  mergedId: string;
+}
+
 export interface CreateExpenseCategorySplitDto {
   categoryId: string;
   amount: number;
