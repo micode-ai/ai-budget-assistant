@@ -23,6 +23,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useMerchantRulesStore } from '@/stores/merchantRulesStore';
 import { useAuthStore } from '@/stores/authStore';
 import { sha256SimpleHex } from './dedup';
+import { contentMatchesExisting } from './contentMatch';
 
 /** In-app toast callback — injected by the settings screen / app root to avoid hard dep on UI. */
 let _toastHandler: ((message: string, expenseId: string) => void) | null = null;
@@ -75,6 +76,30 @@ async function handleBankNotification(payload: BankNotificationPayload): Promise
       (e) => e.externalRef === externalRef && !e.isDeleted,
     );
     if (alreadyExists) return; // server-side unique constraint is the backstop, this is the fast path
+
+    // --- Content-dedup (Tier 1, Case B) ---
+    // After the externalRef fast-path check, also reject the stub when a richer
+    // expense already covers the same transaction (same amount + currency + date ±1d
+    // + payee). This prevents a double-count when the user manually logged the same
+    // expense before the bank push arrived — or when the stub fires for a transaction
+    // already recorded via OCR / voice / manual. The richer source wins; the stub is
+    // silently skipped. Case A on the server will reconcile any stubs that slip
+    // through to the API (notification-before-manual race) via the sync pull.
+    //
+    // ACCEPTED MISS: push "Żabka" vs OCR "ZABKA Z123 WARSZAWA" will NOT match here
+    // (exact equality only, no fuzzy). Case A is the backstop for that scenario.
+    const contentDup = contentMatchesExisting(
+      { amount, currencyCode, occurredAt, merchant: merchant ?? null },
+      existingExpenses,
+    );
+    if (contentDup) {
+      // A richer expense already exists for this transaction — do not create a stub.
+      console.warn(
+        '[NotificationCapture] Content-dedup: skipping stub — existing expense matches',
+        { amount, currencyCode, merchant, isoDate },
+      );
+      return;
+    }
 
     // --- Category resolution ---
     // Priority: merchantRulesStore (user-trained) → suggestCategoryFromMerchantPL → undefined
