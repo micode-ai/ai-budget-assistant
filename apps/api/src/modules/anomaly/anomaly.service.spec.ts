@@ -1,4 +1,4 @@
-import { AnomalyService, detectCycle, normalizeMerchant, monthKey } from './anomaly.service';
+import { AnomalyService, detectCycle, normalizeMerchant, monthKey, expensePayee, DUP_DAY_MS } from './anomaly.service';
 
 function makeService(overrides: {
   alertCreate?: jest.Mock;
@@ -27,6 +27,27 @@ function makeService(overrides: {
 describe('pure helpers', () => {
   it('normalizeMerchant trims and lowercases', () => {
     expect(normalizeMerchant('  Netflix ')).toBe('netflix');
+  });
+
+  // expensePayee
+  it('expensePayee prefers merchant over description', () => {
+    expect(expensePayee({ merchant: ' Netflix ', description: 'Other' })).toBe('netflix');
+  });
+
+  it('expensePayee falls back to description when merchant is absent', () => {
+    expect(expensePayee({ merchant: null, description: '  Coffee  ' })).toBe('coffee');
+  });
+
+  it('expensePayee falls back to description when merchant is empty string', () => {
+    expect(expensePayee({ merchant: '', description: 'Tea' })).toBe('tea');
+  });
+
+  it('expensePayee returns empty string when both merchant and description are absent', () => {
+    expect(expensePayee({ merchant: null, description: null })).toBe('');
+  });
+
+  it('DUP_DAY_MS equals 24 * 60 * 60 * 1000', () => {
+    expect(DUP_DAY_MS).toBe(86_400_000);
   });
 
   it('monthKey formats UTC year-month', () => {
@@ -345,5 +366,95 @@ describe('checkExpense', () => {
     prisma.expense.findFirst = jest.fn().mockResolvedValue(expenseRow());
     jest.spyOn(service, 'detectDuplicateCharge').mockRejectedValue(new Error('detector boom'));
     await expect(service.checkExpense('acc-1', 'user-1', 'e-new')).resolves.toBeUndefined();
+  });
+
+  it('calls detectPossibleMerge AFTER detectDuplicateCharge', async () => {
+    const { service, prisma } = makeService();
+    prisma.expense.findFirst = jest.fn().mockResolvedValue(expenseRow());
+    const callOrder: string[] = [];
+    jest.spyOn(service, 'detectDuplicateCharge').mockImplementation(async () => { callOrder.push('dup'); });
+    jest.spyOn(service, 'detectPriceIncrease').mockImplementation(async () => { callOrder.push('price'); });
+    jest.spyOn(service, 'detectRecurringSuggestion').mockImplementation(async () => { callOrder.push('recur'); });
+    jest.spyOn(service, 'detectCategorySpike').mockImplementation(async () => { callOrder.push('spike'); });
+    jest.spyOn(service, 'detectPossibleMerge').mockImplementation(async () => { callOrder.push('merge'); });
+    await service.checkExpense('acc-1', 'user-1', 'e-new');
+    const dupIdx = callOrder.indexOf('dup');
+    const mergeIdx = callOrder.indexOf('merge');
+    expect(dupIdx).toBeGreaterThanOrEqual(0);
+    expect(mergeIdx).toBeGreaterThan(dupIdx);
+  });
+});
+
+describe('detectPossibleMerge', () => {
+  function makeMergeService() {
+    const { service, prisma } = makeService();
+    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
+    return { service, prisma, createSpy };
+  }
+
+  const baseExpense = expenseRow({ currencyCode: 'EUR', id: 'e-eur' });
+
+  it('creates a possible_merge alert when same payee + date ±1d + DIFFERENT currency', async () => {
+    const { service, prisma, createSpy } = makeMergeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      { id: 'e-pln', merchant: 'Netflix', description: 'Netflix', currencyCode: 'PLN', amount: 43 },
+    ]);
+    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
+    expect(createSpy).toHaveBeenCalledTimes(1);
+    const arg = createSpy.mock.calls[0][0];
+    expect(arg.type).toBe('possible_merge');
+    expect(arg.params).toMatchObject({
+      expenseId: 'e-eur',
+      otherExpenseId: 'e-pln',
+      currencyA: 'EUR',
+      currencyB: 'PLN',
+    });
+  });
+
+  it('does NOT fire when same currency (that is detectDuplicateCharge territory)', async () => {
+    const { service, prisma, createSpy } = makeMergeService();
+    // The query filters out same currency via currencyCode:{not:...}, so findMany returns []
+    prisma.expense.findMany = jest.fn().mockResolvedValue([]);
+    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
+    expect(createSpy).not.toHaveBeenCalled();
+    // Confirm the query asked for a different currency
+    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
+    expect(where.currencyCode).toEqual({ not: 'EUR' });
+  });
+
+  it('does NOT fire when empty payee', async () => {
+    const { service, createSpy } = makeMergeService();
+    await service.detectPossibleMerge('acc-1', 'user-1', expenseRow({ merchant: null, description: null }) as any);
+    expect(createSpy).not.toHaveBeenCalled();
+  });
+
+  it('does NOT fire when the payees differ', async () => {
+    const { service, prisma, createSpy } = makeMergeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      { id: 'e-pln', merchant: 'Spotify', description: 'Spotify', currencyCode: 'PLN', amount: 20 },
+    ]);
+    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
+    expect(createSpy).not.toHaveBeenCalled();
+  });
+
+  it('dedupKey is order-independent — sorted ids produce the same key', async () => {
+    const { service, prisma, createSpy } = makeMergeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      { id: 'e-pln', merchant: 'Netflix', description: 'Netflix', currencyCode: 'PLN', amount: 43 },
+    ]);
+
+    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
+    const key1 = createSpy.mock.calls[0][0].dedupKey;
+
+    // Now swap roles: e-pln is the new expense, e-eur is the candidate.
+    const expensePln = expenseRow({ id: 'e-pln', currencyCode: 'PLN', merchant: 'Netflix', description: 'Netflix' });
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      { id: 'e-eur', merchant: 'Netflix', description: 'Netflix', currencyCode: 'EUR', amount: 10 },
+    ]);
+    await service.detectPossibleMerge('acc-1', 'user-1', expensePln as any);
+    const key2 = createSpy.mock.calls[1][0].dedupKey;
+
+    expect(key1).toBe(key2);
+    expect(key1).toBe('merge:e-eur:e-pln'); // sorted
   });
 });
