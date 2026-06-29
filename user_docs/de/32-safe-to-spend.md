@@ -63,9 +63,14 @@ Die Auto-Erfassung funktioniert mit Benachrichtigungen von großen Privatkundenb
 
 **Hinweis zu Händlerkategorien:** Für Banken außerhalb Polens wird möglicherweise keine Kategorie automatisch vorgeschlagen. Der Ausgabe wird ohne Kategorie erfasst und kann manuell korrigiert werden — die App lernt aus Ihren Korrekturen.
 
-### Deduplizierung
+### Deduplizierung und quellenübergreifender Abgleich
 
 Wenn eine Benachrichtigung mehrfach zugestellt wird oder du dieselbe Transaktion auch per CSV importierst, dedupliziert die App automatisch. Jede erfasste Benachrichtigung erhält einen eindeutigen Fingerabdruck; Duplikate werden still verworfen.
+
+Die App gleicht erfasste Benachrichtigungen auch mit Ausgaben ab, die auf anderem Wege hinzugefügt wurden:
+
+- **Gleiche Währung:** Wenn du dieselbe Zahlung später manuell, per Belegscan oder über einen Bot einträgst, behält die App automatisch den detaillierteren Eintrag und entfernt den Benachrichtigungs-Stub. Es ist keine Aktion erforderlich.
+- **Unterschiedliche Währung:** Manchmal erscheint dieselbe Zahlung in zwei Währungen – z. B. eine Kartenzahlung in Euro, während die Bankbenachrichtigung den Betrag in Złoty anzeigt. Da sich die Beträge unterscheiden, kann die App diese nicht automatisch zusammenführen. Sie zeigt stattdessen einen Vorschlag im Benachrichtigungs-Feed an. Tippe auf den Hinweis, um den Zusammenführungsbildschirm zu öffnen, wähle den zu behaltenden Eintrag und bestätige. Du kannst auch direkt in der Importvorschau zusammenführen, wenn eine Zeile mit „Möglicherweise bereits in anderer Währung vorhanden" markiert ist.
 
 ### Erfassungen prüfen
 
