@@ -1388,6 +1388,10 @@ export default {
     notifPurchaseRequestsDesc: 'Новые запросы, голоса и решения',
     titleLabel: 'Название',
     amountLabel: 'Сумма',
+    editRequest: 'Редактировать запрос',
+    editTitle: 'Редактирование запроса',
+    deleteRequest: 'Удалить запрос',
+    deleteConfirm: 'Запрос будет безвозвратно удалён',
   },
   splits: {
     title: 'Разделение категорий',

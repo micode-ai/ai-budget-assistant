@@ -10,6 +10,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import type {
   CreatePurchaseRequestDto,
+  UpdatePurchaseRequestDto,
   VotePurchaseRequestDto,
   PurchaseRequest,
   ApprovalRule,
@@ -62,6 +63,38 @@ export class PurchaseRequestsService {
   }
 
   // ─── CRUD ────────────────────────────────────────────────────────────
+
+  async update(
+    id: string,
+    accountId: string,
+    userId: string,
+    userRole: string,
+    dto: UpdatePurchaseRequestDto,
+  ): Promise<PurchaseRequest> {
+    const pr = await this.prisma.purchaseRequest.findFirst({ where: { id, accountId } });
+    if (!pr) throw new NotFoundException('Purchase request not found');
+    if (pr.status !== 'PENDING') throw new BadRequestException('Only pending requests can be edited');
+    if (pr.createdByUserId !== userId && userRole !== 'owner') {
+      throw new ForbiddenException('Only the creator or account owner can edit this request');
+    }
+
+    const updated = await this.prisma.purchaseRequest.update({
+      where: { id },
+      data: {
+        ...(dto.title !== undefined && { title: dto.title }),
+        ...(dto.amount !== undefined && { amount: dto.amount }),
+        ...(dto.currency !== undefined && { currency: dto.currency }),
+        ...(dto.description !== undefined && { description: dto.description }),
+        ...(dto.merchant !== undefined && { merchant: dto.merchant }),
+        ...(dto.imageUrl !== undefined && { imageUrl: dto.imageUrl }),
+      },
+      include: {
+        createdBy: { select: { name: true } },
+        votes: true,
+      },
+    });
+    return this.toResponse(updated);
+  }
 
   async create(
     accountId: string,
@@ -315,6 +348,14 @@ export class PurchaseRequestsService {
       where: { id },
       data: { status: 'REJECTED' as any },
     });
+
+    void this.familyFeed
+      ?.recordEvent(pr.accountId, pr.createdByUserId, 'PURCHASE_REQUEST_REJECTED', pr.id, {
+        amount: Number(pr.amount),
+        currency: pr.currency,
+        title: pr.title,
+      })
+      .catch(() => {});
   }
 
   async updateApprovalRule(accountId: string, rule: ApprovalRule): Promise<void> {

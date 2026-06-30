@@ -126,7 +126,8 @@ export class HttpClient {
       throw apiError;
     }
 
-    return response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : (undefined as unknown as T);
   }
 }
 

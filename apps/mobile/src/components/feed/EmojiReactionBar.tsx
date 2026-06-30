@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/theme';
 
 const EMOJIS = ['👍', '❤️', '😮', '😂', '🔥', '😬'] as const;
@@ -45,12 +46,18 @@ export function EmojiReactionBar({ eventId, reactions, myReaction, onReact, onRe
     </Modal>
   );
 
-  // No reactions yet — show a minimal inline "react" hint so the bar doesn't consume a full row
+  // No reactions yet — show a subtle icon button
   if (reactions.length === 0) {
     return (
       <View style={styles.emptyRow}>
-        <TouchableOpacity onPress={() => setPickerVisible(true)} activeOpacity={0.6} hitSlop={{ top: 6, bottom: 6, left: 8, right: 8 }}>
-          <Text style={[styles.emptyHint, { color: theme.colors.textTertiary }]}>😊 ＋</Text>
+        <TouchableOpacity
+          onPress={() => setPickerVisible(true)}
+          activeOpacity={0.6}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          style={styles.emptyBtn}
+        >
+          <Ionicons name="happy-outline" size={16} color={theme.colors.textTertiary} />
+          <Text style={[styles.emptyPlus, { color: theme.colors.textTertiary }]}>+</Text>
         </TouchableOpacity>
         {picker}
       </View>
@@ -92,7 +99,8 @@ export function EmojiReactionBar({ eventId, reactions, myReaction, onReact, onRe
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginTop: 8 },
   emptyRow: { marginTop: 8 },
-  emptyHint: { fontSize: 13 },
+  emptyBtn: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  emptyPlus: { fontSize: 12, fontWeight: '700', lineHeight: 16 },
   chip: {
     flexDirection: 'row', alignItems: 'center', gap: 3,
     paddingHorizontal: 7, paddingVertical: 3,

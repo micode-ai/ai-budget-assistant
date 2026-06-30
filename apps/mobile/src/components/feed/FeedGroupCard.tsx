@@ -17,6 +17,7 @@ const TYPE_COLOR: Record<string, string> = {
   purchase_request_created:    '#F59E0B',
   purchase_request_approved:   '#10B981',
   purchase_request_purchased:  '#6366F1',
+  purchase_request_rejected:   '#EF4444',
 };
 
 const TYPE_ICON: Record<string, React.ComponentProps<typeof Ionicons>['name']> = {
@@ -25,6 +26,7 @@ const TYPE_ICON: Record<string, React.ComponentProps<typeof Ionicons>['name']> =
   purchase_request_created:    'cart-outline',
   purchase_request_approved:   'checkmark-circle',
   purchase_request_purchased:  'bag-check-outline',
+  purchase_request_rejected:   'close-circle',
 };
 
 // PR status pill colors
@@ -67,10 +69,16 @@ export function FeedGroupCard({ group }: Props) {
     ? t('familyFeed.yesterday')
     : new Date(group.date + 'T12:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
 
-  // Type pill label
-  const typeLabel = isPR
-    ? t('familyFeed.typeRequest')
-    : t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome');
+  // Type pill label — for PRs, reflect current status directly in the pill
+  const typeLabel = !isPR
+    ? t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome')
+    : group.type === 'purchase_request_approved'
+    ? t('familyFeed.purchaseApproved')
+    : group.type === 'purchase_request_purchased'
+    ? t('familyFeed.purchaseMade')
+    : group.type === 'purchase_request_rejected'
+    ? t('familyFeed.purchaseRejected')
+    : t('familyFeed.purchaseShort');
 
   // Amount with sign
   const sign = group.type === 'expenses' ? '−' : group.type === 'incomes' ? '+' : '';
@@ -245,29 +253,29 @@ export function FeedGroupCard({ group }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
     borderLeftWidth: 4,
-    padding: 14,
-    marginBottom: 10,
+    padding: 12,
+    marginBottom: 8,
   },
 
   // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginBottom: 12,
+    gap: 8,
+    marginBottom: 8,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarLetter: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
   },
   headerMeta: {
@@ -296,21 +304,21 @@ const styles = StyleSheet.create({
 
   // Body (shared)
   body: {
-    marginBottom: 8,
+    marginBottom: 6,
   },
 
   // Expense/income: amount
   amount: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '700',
-    letterSpacing: -0.3,
-    marginBottom: 6,
+    letterSpacing: -0.2,
+    marginBottom: 4,
   },
 
   // Single item: whole tappable block
   singleBlock: {
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 8,
+    padding: 8,
     marginBottom: 2,
   },
   singleRow: {
@@ -366,10 +374,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   prTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     flex: 1,
-    lineHeight: 20,
+    lineHeight: 18,
   },
   prMeta: {
     flexDirection: 'row',
@@ -378,7 +386,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   prAmount: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
   },
   statusChip: {

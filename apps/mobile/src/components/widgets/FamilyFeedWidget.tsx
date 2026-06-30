@@ -16,6 +16,7 @@ const TYPE_META: Record<string, { color: string; icon: React.ComponentProps<type
   purchase_request_created:    { color: '#F59E0B', icon: 'cart-outline' },
   purchase_request_approved:   { color: '#10B981', icon: 'checkmark-circle' },
   purchase_request_purchased:  { color: '#6366F1', icon: 'bag-check-outline' },
+  purchase_request_rejected:   { color: '#EF4444', icon: 'close-circle' },
 };
 
 function typeMeta(type: string) {
@@ -37,10 +38,16 @@ function StoryBubble({ group }: { group: FeedGroup }) {
     ? `${group.type === 'expenses' ? '−' : '+'}${formatCurrency(group.totalAmount, group.currency)}`
     : `×${group.count}`;
 
-  // Line 2: type label in same color — makes type crystal clear
-  const typeLabel = isPR
-    ? t('familyFeed.typeRequest')
-    : t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome');
+  // Line 2: type label — for PRs reflects current status (approved/rejected/pending)
+  const typeLabel = !isPR
+    ? t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome')
+    : group.type === 'purchase_request_approved'
+    ? t('familyFeed.purchaseApproved')
+    : group.type === 'purchase_request_purchased'
+    ? t('familyFeed.purchaseMade')
+    : group.type === 'purchase_request_rejected'
+    ? t('familyFeed.purchaseRejected')
+    : t('familyFeed.purchaseShort');
 
   return (
     <TouchableOpacity

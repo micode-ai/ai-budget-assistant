@@ -44,8 +44,11 @@ export default function PurchaseRequestDetailScreen() {
   const rejectCount = pr.votes?.filter(v => v.vote === 'REJECT').length ?? 0;
   const totalVotes = pr.votes?.length ?? 0;
 
-  const canCancel = (pr.createdByUserId === userId || accountRole === 'owner') && pr.status === 'PENDING';
-  const canVote = pr.status === 'PENDING' && !myVote;
+  const isCreatorOrOwner = pr.createdByUserId === userId || accountRole === 'owner';
+  const isPending = pr.status === 'PENDING';
+  const canEdit = isCreatorOrOwner && isPending && accountRole !== 'viewer';
+  const canDelete = isCreatorOrOwner && isPending;
+  const canVote = isPending && !myVote;
   const canConvert = pr.status === 'APPROVED' && !pr.plannedExpenseId;
 
   const handleVote = async (v: VoteChoice) => {
@@ -76,18 +79,26 @@ export default function PurchaseRequestDetailScreen() {
     }
   };
 
-  const handleCancel = () => {
-    Alert.alert(t('purchaseRequests.cancelRequest'), '', [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('common.confirm'),
-        style: 'destructive',
-        onPress: () => {
-          router.back();
-          cancelRequest(pr.id).catch(() => {});
+  const handleEdit = () => {
+    router.push(`/purchase-requests/new?editId=${pr.id}`);
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      t('purchaseRequests.deleteRequest'),
+      t('purchaseRequests.deleteConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => {
+            router.back();
+            cancelRequest(pr.id).catch(() => {});
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const statusColor = (status: string): string => {
@@ -195,12 +206,23 @@ export default function PurchaseRequestDetailScreen() {
         </TouchableOpacity>
       ) : null}
 
-      {canCancel ? (
+      {canEdit ? (
+        <TouchableOpacity
+          style={[styles.actionBtn, { backgroundColor: theme.colors.surface, borderWidth: 1, borderColor: theme.colors.border }]}
+          onPress={handleEdit}
+        >
+          <Text style={[styles.actionBtnText, { color: theme.colors.textPrimary }]}>
+            {t('purchaseRequests.editRequest')}
+          </Text>
+        </TouchableOpacity>
+      ) : null}
+
+      {canDelete ? (
         <TouchableOpacity
           style={[styles.actionBtn, { backgroundColor: '#EF4444' }]}
-          onPress={handleCancel}
+          onPress={handleDelete}
         >
-          <Text style={styles.actionBtnText}>{t('purchaseRequests.cancelRequest')}</Text>
+          <Text style={styles.actionBtnText}>{t('purchaseRequests.deleteRequest')}</Text>
         </TouchableOpacity>
       ) : null}
     </ScrollView>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { useTheme } from '@/theme';
@@ -14,7 +14,11 @@ export default function NewPurchaseRequestScreen() {
   const router = useRouter();
   const theme = useTheme();
   const baseCurrency = useAuthStore(s => s.user?.currencyCode ?? 'USD');
-  const { createRequest } = usePurchaseRequestStore();
+  const { createRequest, updateRequest, requests } = usePurchaseRequestStore();
+
+  const { editId } = useLocalSearchParams<{ editId?: string }>();
+  const existing = editId ? requests.find(r => r.id === editId) : undefined;
+  const isEdit = !!editId;
 
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
@@ -23,19 +27,39 @@ export default function NewPurchaseRequestScreen() {
   const [description, setDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
+  useEffect(() => {
+    if (existing) {
+      setTitle(existing.title);
+      setAmount(String(existing.amount));
+      setCurrency(existing.currency);
+      setMerchant(existing.merchant ?? '');
+      setDescription(existing.description ?? '');
+    }
+  }, [existing?.id]);
+
   const canSave = title.trim().length > 0 && parseFloat(amount) > 0;
 
   const handleSave = async () => {
     if (!canSave) return;
     setIsSaving(true);
     try {
-      await createRequest({
-        title: title.trim(),
-        amount: parseFloat(amount),
-        currency,
-        merchant: merchant.trim() || undefined,
-        description: description.trim() || undefined,
-      });
+      if (isEdit && editId) {
+        await updateRequest(editId, {
+          title: title.trim(),
+          amount: parseFloat(amount),
+          currency,
+          merchant: merchant.trim() || undefined,
+          description: description.trim() || undefined,
+        });
+      } else {
+        await createRequest({
+          title: title.trim(),
+          amount: parseFloat(amount),
+          currency,
+          merchant: merchant.trim() || undefined,
+          description: description.trim() || undefined,
+        });
+      }
       router.back();
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : t('errors.unknown');
@@ -47,6 +71,7 @@ export default function NewPurchaseRequestScreen() {
 
   return (
     <KeyboardAwareScreen contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {isEdit ? <Stack.Screen options={{ title: t('purchaseRequests.editTitle') }} /> : null}
       <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
         <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
           {t('purchaseRequests.titleLabel')} *

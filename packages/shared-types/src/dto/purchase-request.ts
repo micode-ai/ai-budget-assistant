@@ -11,6 +11,15 @@ export interface CreatePurchaseRequestDto {
   expiresAt?: string;
 }
 
+export interface UpdatePurchaseRequestDto {
+  title?: string;
+  amount?: number;
+  currency?: string;
+  description?: string;
+  merchant?: string;
+  imageUrl?: string;
+}
+
 export interface VotePurchaseRequestDto {
   vote: VoteChoice;
   comment?: string;
