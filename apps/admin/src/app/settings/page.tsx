@@ -7,16 +7,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Activity, Database, Server, Wifi } from "lucide-react";
 import type { SystemHealth } from "@/types";
 
 export default function SettingsPage() {
+  const queryClient = useQueryClient();
+
   const { data: health, isLoading } = useQuery<SystemHealth>({
     queryKey: ["admin", "system", "health"],
     queryFn: () => api.get("admin/system/health").json(),
     refetchInterval: 30000,
   });
+
+  const { data: config } = useQuery<Record<string, string>>({
+    queryKey: ["admin", "config"],
+    queryFn: () => api.get("admin/config").json(),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (payload: { key: string; value: string }) =>
+      api.patch("admin/config", { json: payload }).json(),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "config"] }),
+  });
+
+  const [retention, setRetention] = useState("");
+  const currentRetention = config?.familyFeedRetentionDays ?? "5";
+
+  const handleSaveRetention = () => {
+    const v = parseInt(retention, 10);
+    if (!retention || isNaN(v) || v < 1) return;
+    mutation.mutate({ key: "familyFeedRetentionDays", value: String(v) });
+    setRetention("");
+  };
 
   return (
     <div className="space-y-6">
@@ -27,7 +49,7 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle className="text-base">System Health</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           {isLoading ? (
             <p className="text-muted-foreground">Loading...</p>
           ) : health ? (
@@ -50,15 +72,41 @@ export default function SettingsPage() {
             <p className="text-muted-foreground">Unable to fetch health status</p>
           )}
           {health && (
-            <p className="text-sm text-muted-foreground mt-4">
+            <p className="text-sm text-muted-foreground">
               Memory usage: {health.memoryUsage} MB
             </p>
           )}
+
+          <div className="border-t pt-4">
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <p className="text-sm font-medium">Family Feed retention</p>
+                <p className="text-xs text-muted-foreground">
+                  Events older than this are deleted daily at 03:00 UTC. Current: <strong>{currentRetention} days</strong>
+                </p>
+              </div>
+              <Input
+                type="number"
+                min={1}
+                placeholder={currentRetention}
+                value={retention}
+                onChange={(e) => setRetention(e.target.value)}
+                className="w-20"
+              />
+              <Button
+                onClick={handleSaveRetention}
+                disabled={mutation.isPending || !retention}
+                size="sm"
+              >
+                {mutation.isPending ? "…" : "Save"}
+              </Button>
+              {mutation.isSuccess && !retention && (
+                <span className="text-sm text-green-600">Saved</span>
+              )}
+            </div>
+          </div>
         </CardContent>
       </Card>
-
-      {/* App Configuration */}
-      <AppConfigCard />
 
       {/* AI Cost Rates */}
       <Card>
@@ -74,10 +122,7 @@ export default function SettingsPage() {
               { feature: "categorization", cost: 0.005, desc: "GPT-4 Turbo categorization" },
               { feature: "ocr", cost: 0.012, desc: "GPT-4o Vision OCR" },
             ].map((rate) => (
-              <div
-                key={rate.feature}
-                className="flex items-center justify-between rounded-lg border p-3"
-              >
+              <div key={rate.feature} className="flex items-center justify-between rounded-lg border p-3">
                 <div>
                   <p className="text-sm font-medium capitalize">{rate.feature}</p>
                   <p className="text-xs text-muted-foreground">{rate.desc}</p>
@@ -98,76 +143,11 @@ export default function SettingsPage() {
           <p className="text-sm text-muted-foreground">
             Admin access is controlled via the{" "}
             <code className="text-xs bg-muted px-1 py-0.5 rounded">ADMIN_EMAILS</code>{" "}
-            environment variable on the API server. Contact the system administrator to add or
-            remove admin users.
+            environment variable on the API server.
           </p>
         </CardContent>
       </Card>
     </div>
-  );
-}
-
-function AppConfigCard() {
-  const queryClient = useQueryClient();
-  const { data: config } = useQuery<Record<string, string>>({
-    queryKey: ["admin", "config"],
-    queryFn: () => api.get("admin/config").json(),
-  });
-
-  const mutation = useMutation({
-    mutationFn: (payload: { key: string; value: string }) =>
-      api.patch("admin/config", { json: payload }).json(),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "config"] }),
-  });
-
-  const [retention, setRetention] = useState<string>("");
-  const current = config?.familyFeedRetentionDays ?? "5";
-
-  const handleSave = () => {
-    const v = parseInt(retention, 10);
-    if (!retention || isNaN(v) || v < 1) return;
-    mutation.mutate({ key: "familyFeedRetentionDays", value: String(v) });
-    setRetention("");
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">App Configuration</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="max-w-sm space-y-2">
-          <Label htmlFor="feed-retention">
-            Family Feed retention (days)
-          </Label>
-          <p className="text-xs text-muted-foreground">
-            Feed events older than this are deleted by a daily cron at 03:00 UTC.
-            Current value: <strong>{current}</strong>.
-          </p>
-          <div className="flex gap-2">
-            <Input
-              id="feed-retention"
-              type="number"
-              min={1}
-              placeholder={current}
-              value={retention}
-              onChange={(e) => setRetention(e.target.value)}
-              className="w-28"
-            />
-            <Button
-              onClick={handleSave}
-              disabled={mutation.isPending || !retention}
-              size="sm"
-            >
-              {mutation.isPending ? "Saving…" : "Save"}
-            </Button>
-            {mutation.isSuccess && (
-              <span className="self-center text-sm text-green-600">Saved</span>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   );
 }
 
