@@ -247,6 +247,19 @@ export class AdminController {
     });
   }
 
+  // ─── System Config ───────────────────────────────
+
+  @Get('config')
+  async getConfig() {
+    return this.adminService.getAllConfig();
+  }
+
+  @Patch('config')
+  async setConfig(@Body() body: { key: string; value: string }) {
+    await this.adminService.setConfig(body.key, body.value);
+    return { ok: true };
+  }
+
   // ─── System ──────────────────────────────────────
 
   @Get('system/health')

@@ -1620,3 +1620,11 @@ model FeedReaction {
   @@unique([eventId, userId])
   @@map("feed_reactions")
 }
+
+model SystemConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_config")
+}
