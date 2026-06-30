@@ -190,6 +190,7 @@ export class ExpensesService {
         // E2EE: pass through encrypted payload if provided
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
         ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
+        ...(dto.externalRef !== undefined && { externalRef: dto.externalRef }),
       };
 
       const updateData = {

@@ -23,6 +23,7 @@ export interface CreateExpenseDto {
   debtContactName?: string;
   debtDueDate?: string;
   relatedDebtIncomeId?: string;
+  externalRef?: string;
 }
 
 export interface UpdateExpenseDto {

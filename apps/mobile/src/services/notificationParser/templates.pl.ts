@@ -42,10 +42,14 @@ const AMOUNT_PATTERN_PL =
 const CURRENCY_PATTERN = /\b(PLN|EUR|USD|GBP|UAH|RUB|CHF|CZK|NOK|SEK|DKK|HUF|BYN)\b/i;
 
 export const TEMPLATES: Record<string, NotificationTemplate> = {
-  // PKO BP — "Płatność kartą -123,45 PLN w SKLEP NAZWA"
+  // PKO BP — two notification formats:
+  //   New: "Autoryzacja transakcji kartowej" / "Kwota: 2,70 PLN.\nMiejsce: ZABKA ZB817 K.2, GDANSK."
+  //   Old: "Płatność kartą -123,45 PLN w SKLEP NAZWA"
   'pl.pkobp.iko': {
-    amountRegex: /(?:P[łl]atno[śs][śc][ćc]|Przelew|Wyp[łl]ata|Op[łl]ata|Obci[ąa][żz]enie(?:\s+karty?)?).*?([\d][\d\s]*[,.][\d]{1,2})/i,
-    merchantRegex: /\bw\s+(.+?)(?:\s*$|\s+na\s+)/i,
+    amountRegex: /(?:Kwota\s*:\s*|P[łl]atno[śs][śc][ćc]|Przelew|Wyp[łl]ata|Op[łl]ata|Obci[ąa][żz]enie(?:\s+karty?)?)[^0-9]*([\d][\d\s]*[,.][\d]{1,2})/i,
+    // New format: "Miejsce: ZABKA ZB817 K.2, GDANSK." → captures "ZABKA ZB817 K.2"
+    // Old format: "... PLN w SKLEP NAZWA" → captures "SKLEP NAZWA"
+    merchantRegex: /(?:Miejsce\s*:\s*|\bw\s+)(.+?)(?:,\s*[A-Z]{2,}\.?\s*(?:\n|$)|\.?\s*$|\s+na\s+)/im,
     currencyRegex: CURRENCY_PATTERN,
     currencyDefault: 'PLN',
   },
