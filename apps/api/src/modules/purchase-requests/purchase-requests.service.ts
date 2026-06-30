@@ -242,6 +242,10 @@ export class PurchaseRequestsService {
           { purchaseRequestId: id },
           'purchase_request_rejected',
         );
+        // Remove all feed events for this PR so it disappears from the family feed
+        void this.prisma.familyFeedEvent
+          .deleteMany({ where: { entityId: id, accountId } })
+          .catch(() => {});
       }
     } else {
       // Notify creator of the new vote
