@@ -28,6 +28,7 @@ export default {
     addedBy: 'Added by {{name}}',
     deleteConfirmTitle: 'Delete Transaction',
     deleteConfirmMessage: 'Are you sure? This action cannot be undone.',
+    confirm: 'Confirm',
   },
   dates: {
     today: 'Today',
@@ -2049,6 +2050,7 @@ export default {
     proposedPurchase: 'proposed a purchase',
     purchaseApproved: 'Purchase approved',
     purchaseMade: 'Purchased!',
+    purchaseShort: 'Request',
     noActivity: 'No activity yet',
     noActivityDesc: 'Expenses and purchases from all account members will appear here',
     expand: 'Show details',

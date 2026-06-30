@@ -28,6 +28,7 @@ export default {
     addedBy: 'Добавил(а) {{name}}',
     deleteConfirmTitle: 'Удалить транзакцию',
     deleteConfirmMessage: 'Вы уверены? Это действие нельзя отменить.',
+    confirm: 'Подтвердить',
   },
   dates: {
     today: 'Сегодня',
@@ -2052,6 +2053,7 @@ export default {
     proposedPurchase: 'предложил/а покупку',
     purchaseApproved: 'Покупка одобрена',
     purchaseMade: 'Куплено!',
+    purchaseShort: 'Запрос',
     noActivity: 'Нет активности',
     noActivityDesc: 'Здесь будут отображаться расходы и покупки всех участников счёта',
     expand: 'Показать детали',

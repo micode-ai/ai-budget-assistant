@@ -28,6 +28,7 @@ export default {
     addedBy: 'Agregado por {{name}}',
     deleteConfirmTitle: 'Eliminar transacción',
     deleteConfirmMessage: '¿Estás seguro? Esta acción no se puede deshacer.',
+    confirm: 'Confirmar',
   },
   dates: {
     today: 'Hoy',
@@ -2049,6 +2050,7 @@ export default {
     proposedPurchase: 'propuso una compra',
     purchaseApproved: 'Compra aprobada',
     purchaseMade: '¡Comprado!',
+    purchaseShort: 'Solicitud',
     noActivity: 'Sin actividad aún',
     noActivityDesc: 'Aquí aparecerán los gastos y compras de todos los miembros de la cuenta',
     expand: 'Mostrar detalles',

@@ -28,6 +28,7 @@ export default {
     addedBy: 'Hinzugefügt von {{name}}',
     deleteConfirmTitle: 'Transaktion löschen',
     deleteConfirmMessage: 'Sind Sie sicher? Diese Aktion kann nicht rückgängig gemacht werden.',
+    confirm: 'Bestätigen',
   },
   dates: {
     today: 'Heute',
@@ -2049,6 +2050,7 @@ export default {
     proposedPurchase: 'hat einen Kauf vorgeschlagen',
     purchaseApproved: 'Kauf genehmigt',
     purchaseMade: 'Gekauft!',
+    purchaseShort: 'Anfrage',
     noActivity: 'Noch keine Aktivität',
     noActivityDesc: 'Hier erscheinen Ausgaben und Käufe aller Kontomitglieder',
     expand: 'Details anzeigen',

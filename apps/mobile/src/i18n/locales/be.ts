@@ -26,6 +26,7 @@ export default {
     addedBy: 'Дадаў(ла) {{name}}',
     deleteConfirmTitle: 'Выдаліць транзакцыю',
     deleteConfirmMessage: 'Вы ўпэўнены? Гэта дзеянне нельга адмяніць.',
+    confirm: 'Пацвердзіць',
   },
   dates: {
     today: 'Сёння',
@@ -2020,6 +2021,7 @@ export default {
     proposedPurchase: 'прапанаваў/ла пакупку',
     purchaseApproved: 'Пакупка зацверджана',
     purchaseMade: 'Куплена!',
+    purchaseShort: 'Запыт',
     noActivity: 'Няма актыўнасці',
     noActivityDesc: 'Тут будуць адлюстроўвацца выдаткі і пакупкі ўсіх удзельнікаў рахунку',
     expand: 'Паказаць дэталі',

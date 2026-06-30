@@ -28,6 +28,7 @@ export default {
     addedBy: 'Dodane przez {{name}}',
     deleteConfirmTitle: 'Usuń transakcję',
     deleteConfirmMessage: 'Czy na pewno? Tej akcji nie można cofnąć.',
+    confirm: 'Potwierdź',
   },
   dates: {
     today: 'Dzisiaj',
@@ -2052,6 +2053,7 @@ export default {
     proposedPurchase: 'zaproponował/a zakup',
     purchaseApproved: 'Zakup zatwierdzony',
     purchaseMade: 'Zakupiono!',
+    purchaseShort: 'Wniosek',
     noActivity: 'Brak aktywności',
     noActivityDesc: 'Tutaj pojawią się wydatki i zakupy wszystkich członków konta',
     expand: 'Pokaż szczegóły',
