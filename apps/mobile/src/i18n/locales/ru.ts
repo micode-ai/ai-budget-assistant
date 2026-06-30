@@ -2054,6 +2054,7 @@ export default {
     purchaseApproved: 'Покупка одобрена',
     purchaseMade: 'Куплено!',
     purchaseShort: 'Запрос',
+    purchaseRejected: 'Отклонено',
     typeExpense: 'Расход',
     typeIncome: 'Доход',
     typeRequest: 'Заявка на покупку',

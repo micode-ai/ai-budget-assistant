@@ -2054,6 +2054,7 @@ export default {
     purchaseApproved: 'Zakup zatwierdzony',
     purchaseMade: 'Zakupiono!',
     purchaseShort: 'Wniosek',
+    purchaseRejected: 'Odrzucono',
     typeExpense: 'Wydatek',
     typeIncome: 'Przychód',
     typeRequest: 'Wniosek zakupu',

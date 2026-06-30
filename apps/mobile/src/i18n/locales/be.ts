@@ -2022,6 +2022,7 @@ export default {
     purchaseApproved: 'Пакупка зацверджана',
     purchaseMade: 'Куплена!',
     purchaseShort: 'Запыт',
+    purchaseRejected: 'Адхілена',
     typeExpense: 'Выдатак',
     typeIncome: 'Прыбытак',
     typeRequest: 'Запыт на пакупку',

@@ -2051,6 +2051,7 @@ export default {
     purchaseApproved: 'Purchase approved',
     purchaseMade: 'Purchased!',
     purchaseShort: 'Request',
+    purchaseRejected: 'Rejected',
     typeExpense: 'Expense',
     typeIncome: 'Income',
     typeRequest: 'Purchase request',
