@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useFamilyFeedStore } from '@/stores/familyFeedStore';
 import type {
   PurchaseRequest,
   PurchaseRequestStatus,
@@ -46,6 +47,7 @@ export const usePurchaseRequestStore = create<PurchaseRequestState>()((set, get)
   createRequest: async (dto) => {
     const pr = await api.createPurchaseRequest(dto);
     set((s) => ({ requests: [pr, ...s.requests] }));
+    void useFamilyFeedStore.getState().loadFeed().catch(() => {});
   },
 
   updateRequest: async (id, dto) => {
@@ -81,6 +83,7 @@ export const usePurchaseRequestStore = create<PurchaseRequestState>()((set, get)
   cancelRequest: async (id) => {
     await api.cancelPurchaseRequest(id);
     set((s) => ({ requests: s.requests.filter((r) => r.id !== id) }));
+    void useFamilyFeedStore.getState().loadFeed().catch(() => {});
   },
 
   updateApprovalRule: async (rule) => {

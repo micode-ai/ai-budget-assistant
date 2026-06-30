@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
-  View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator,
+  View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, RefreshControl,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,7 +20,7 @@ export default function PurchaseRequestsScreen() {
   const { requests, isLoading, loadRequests } = usePurchaseRequestStore();
   const [activeTab, setActiveTab] = useState<Tab>('PENDING');
 
-  useEffect(() => { loadRequests(); }, []);
+  useFocusEffect(useCallback(() => { void loadRequests(); }, [loadRequests]));
 
   const filtered = requests.filter(r => {
     if (activeTab === 'PENDING') return r.status === 'PENDING';
@@ -99,6 +99,9 @@ export default function PurchaseRequestsScreen() {
           keyExtractor={i => i.id}
           renderItem={renderItem}
           contentContainerStyle={{ padding: 16, gap: 12 }}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={loadRequests} />
+          }
         />
       )}
 
