@@ -149,15 +149,10 @@ export function FeedGroupCard({ group }: Props) {
       ) : (
         /* Expense / income card */
         <View style={styles.body}>
-          {/* Main amount */}
-          {amountStr ? (
-            <Text style={[styles.amount, { color }]}>{amountStr}</Text>
-          ) : null}
-
-          {/* Single item → direct deep-link */}
+          {/* Single item — whole block is tappable */}
           {group.count === 1 && group.eventIds?.length === 1 ? (
             <TouchableOpacity
-              style={styles.singleRow}
+              style={[styles.singleBlock, { backgroundColor: color + '0D' }]}
               onPress={() =>
                 router.push(
                   (group.type === 'expenses'
@@ -167,10 +162,15 @@ export function FeedGroupCard({ group }: Props) {
               }
               activeOpacity={0.7}
             >
-              <Text style={[styles.singleLabel, { color: theme.colors.textSecondary }]}>
-                {t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome')}
-              </Text>
-              <Ionicons name="chevron-forward" size={14} color={theme.colors.textTertiary} />
+              {amountStr ? (
+                <Text style={[styles.amount, { color }]}>{amountStr}</Text>
+              ) : null}
+              <View style={styles.singleRow}>
+                <Text style={[styles.singleLabel, { color: theme.colors.textSecondary }]}>
+                  {t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome')}
+                </Text>
+                <Ionicons name="chevron-forward" size={14} color={color} />
+              </View>
             </TouchableOpacity>
           ) : group.count && group.count > 1 ? (
             /* Multiple items → collapsible list */
@@ -307,14 +307,21 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  // Single item tap row
+  // Single item: whole tappable block
+  singleBlock: {
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 2,
+  },
   singleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    marginTop: 2,
   },
   singleLabel: {
     fontSize: 13,
+    flex: 1,
   },
 
   // Multi-item expand toggle
