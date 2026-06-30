@@ -95,7 +95,7 @@ export class PurchaseRequestsService {
     });
 
     // Notify all account members except the creator
-    void this.notifyMembers(accountId, userId, pr.title, 'purchase_request_created');
+    void this.notifyMembers(accountId, userId, pr.title, 'purchase_request_created', pr.id);
 
     // fire-and-forget: record in family feed (non-personal accounts only)
     void this.familyFeed
@@ -193,7 +193,7 @@ export class PurchaseRequestsService {
         data: { status: decision as any },
       });
       if (decision === 'APPROVED') {
-        void this.notifyMembers(accountId, null, pr.title, 'purchase_request_approved');
+        void this.notifyMembers(accountId, null, pr.title, 'purchase_request_approved', id);
         void this.familyFeed
           ?.recordEvent(pr.accountId, pr.createdByUserId, 'PURCHASE_REQUEST_APPROVED', pr.id, {
             amount: Number(pr.amount),
@@ -337,18 +337,20 @@ export class PurchaseRequestsService {
     excludeUserId: string | null,
     title: string,
     type: 'purchase_request_created' | 'purchase_request_approved',
+    purchaseRequestId?: string,
   ): Promise<void> {
     const members = await this.prisma.accountMember.findMany({
       where: { accountId },
       select: { userId: true },
     });
+    const data = purchaseRequestId ? { purchaseRequestId } : {};
     for (const { userId } of members) {
       if (userId === excludeUserId) continue;
       void this.notifications.sendToUser(
         userId,
         (lang) => this.t(lang, `${type}_title`),
         (_lang) => title,
-        {},
+        data,
         type,
       );
     }
