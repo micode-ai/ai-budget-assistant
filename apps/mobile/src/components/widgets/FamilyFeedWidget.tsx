@@ -49,10 +49,24 @@ function StoryBubble({ group }: { group: FeedGroup }) {
     ? t('familyFeed.purchaseRejected')
     : t('familyFeed.purchaseShort');
 
+  const handlePress = () => {
+    if (isPR && group.purchaseRequest?.id) {
+      router.push(`/purchase-requests/${group.purchaseRequest.id}` as any);
+    } else if (group.count === 1 && group.eventIds?.length === 1) {
+      router.push(
+        (group.type === 'expenses'
+          ? `/expense/${group.eventIds[0]}`
+          : `/income/${group.eventIds[0]}`) as any,
+      );
+    } else {
+      router.push('/family-feed' as any);
+    }
+  };
+
   return (
     <TouchableOpacity
       style={s.bubble}
-      onPress={() => router.push('/family-feed' as any)}
+      onPress={handlePress}
       activeOpacity={0.72}
     >
       {/* Avatar: colored ring + tinted background + person letter */}
