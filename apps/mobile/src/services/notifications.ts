@@ -120,6 +120,16 @@ export function handleNotificationResponse(
       );
       break;
     }
+    case 'purchase_request_created':
+    case 'purchase_request_voted':
+    case 'purchase_request_approved':
+    case 'purchase_request_rejected':
+      if (data.purchaseRequestId) {
+        router.push(`/purchase-requests/${data.purchaseRequestId}` as any);
+      } else {
+        router.push('/purchase-requests' as any);
+      }
+      break;
     case 'spending_anomaly':
       router.push('/alerts' as any);
       break;

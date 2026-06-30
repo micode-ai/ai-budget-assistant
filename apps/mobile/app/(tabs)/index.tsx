@@ -39,7 +39,7 @@ const quickActionRoutes: Record<QuickActionKey, string> = {
   converter: '/converter',
   transfers: '/wallet/transfer',
   subscriptions: '/subscriptions',
-  purchase_request: '/purchase-requests/new',
+  purchase_request: '/purchase-requests',
 };
 
 const quickActionLabelKey: Record<QuickActionKey, string> = {
