@@ -47,7 +47,7 @@ export default function PurchaseRequestDetailScreen() {
   const isCreatorOrOwner = pr.createdByUserId === userId || accountRole === 'owner';
   const isPending = pr.status === 'PENDING';
   const canEdit = isCreatorOrOwner && isPending && accountRole !== 'viewer';
-  const canDelete = isCreatorOrOwner && isPending;
+  const canDelete = isCreatorOrOwner;
   const canVote = isPending && !myVote;
   const canConvert = pr.status === 'APPROVED' && !pr.plannedExpenseId;
 
