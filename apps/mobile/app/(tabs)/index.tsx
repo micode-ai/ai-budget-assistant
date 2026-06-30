@@ -39,6 +39,7 @@ const quickActionRoutes: Record<QuickActionKey, string> = {
   converter: '/converter',
   transfers: '/wallet/transfer',
   subscriptions: '/subscriptions',
+  purchase_request: '/purchase-requests/new',
 };
 
 const quickActionLabelKey: Record<QuickActionKey, string> = {
@@ -51,6 +52,7 @@ const quickActionLabelKey: Record<QuickActionKey, string> = {
   converter: 'dashboard.currencyConverter',
   transfers: 'dashboard.transfers',
   subscriptions: 'subscriptionManager.title',
+  purchase_request: 'dashboard.purchaseRequest',
 };
 
 export default function DashboardScreen() {

@@ -10,6 +10,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import {
@@ -25,7 +26,7 @@ export default function ExpenseDetailScreen() {
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
   const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
-  const { expenses, deleteExpense, stopRecurringExpense } = useExpenseStore();
+  const { expenses, deleteExpense, stopRecurringExpense, updateExpense } = useExpenseStore();
   const { loadProjects } = useProjectStore();
   const { loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   // Match local id, the server PK (`serverId`), or the clientId — anomaly-alert
@@ -34,6 +35,13 @@ export default function ExpenseDetailScreen() {
   const expense = expenses.find(
     (e) => e.id === id || e.serverId === id || e.clientId === id || e.localId === id,
   );
+
+  const { requests, markAsPurchased, loadRequests } = usePurchaseRequestStore();
+  const linkedPR = expense?.isPlanned
+    ? requests.find(
+        (r) => r.plannedExpenseId === expense.serverId || r.plannedExpenseId === expense.id,
+      )
+    : null;
 
   const [isEditing, setIsEditing] = useState(false);
   const detailsCardRef = useRef<ExpenseDetailsCardHandle>(null);
@@ -47,6 +55,11 @@ export default function ExpenseDetailScreen() {
     loadProjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    if (expense?.isPlanned && requests.length === 0) loadRequests('APPROVED');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expense?.isPlanned]);
 
   if (!expense) {
     return (
@@ -183,6 +196,45 @@ export default function ExpenseDetailScreen() {
             </TouchableOpacity>
           </View>
         )}
+
+        {/* Planned Purchase Banner */}
+        {expense.isPlanned ? (
+          <TouchableOpacity
+            style={[
+              styles.plannedBanner,
+              { backgroundColor: theme.colors.primary + '18', borderColor: theme.colors.primary },
+            ]}
+            onPress={() => {
+              if (!linkedPR) return;
+              showAlert(
+                t('purchaseRequests.markAsPurchased'),
+                '',
+                [
+                  { text: t('common.cancel'), style: 'cancel' },
+                  {
+                    text: t('purchaseRequests.markAsPurchased'),
+                    style: 'default',
+                    onPress: async () => {
+                      updateExpense(expense.id, { isPlanned: false }); // optimistic — hide banner immediately
+                      try {
+                        await markAsPurchased(linkedPR.id);
+                      } catch {
+                        updateExpense(expense.id, { isPlanned: true }); // rollback on failure
+                        showAlert(t('common.error'), t('errors.saveFailed'));
+                      }
+                    },
+                  },
+                ],
+              );
+            }}
+            activeOpacity={linkedPR ? 0.7 : 1}
+          >
+            <Ionicons name="cart-outline" size={18} color={theme.colors.primary} />
+            <Text style={[styles.plannedBannerText, { color: theme.colors.primary }]}>
+              {t('purchaseRequests.plannedBanner')}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
 
         {/* Details Card (owns edit form state + splits + tags) */}
         <ExpenseDetailsCard
@@ -425,5 +477,19 @@ const createStyles = (theme: Theme) => ({
     fontSize: 13,
     fontWeight: '600' as const,
     color: theme.colors.danger,
+  },
+  plannedBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 8,
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginHorizontal: 16,
+    marginTop: 8,
+  },
+  plannedBannerText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
   },
 });

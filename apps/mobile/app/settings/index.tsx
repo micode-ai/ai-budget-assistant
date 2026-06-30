@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
@@ -6,6 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
+import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -16,6 +17,7 @@ interface SettingsCategory {
   description: string;
   route: string;
   iconColor?: string;
+  badge?: number;
 }
 
 export default function SettingsIndexScreen() {
@@ -24,6 +26,11 @@ export default function SettingsIndexScreen() {
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
   const { user, logout } = useAuthStore();
+  const { pendingCount, loadPendingCount } = usePurchaseRequestStore();
+
+  useEffect(() => {
+    loadPendingCount();
+  }, [loadPendingCount]);
 
   const categories: SettingsCategory[] = [
     {
@@ -92,6 +99,13 @@ export default function SettingsIndexScreen() {
       label: t('subscriptionManager.title'),
       description: t('subscriptionManager.settingsSubtitle'),
       route: '/subscriptions',
+    },
+    {
+      icon: 'cart-outline',
+      label: t('purchaseRequests.settingsTitle'),
+      description: t('purchaseRequests.settingsSubtitle'),
+      route: '/purchase-requests',
+      badge: pendingCount > 0 ? pendingCount : undefined,
     },
     {
       icon: 'wallet-outline',
@@ -182,6 +196,11 @@ export default function SettingsIndexScreen() {
                     {category.description}
                   </Text>
                 </View>
+                {category.badge !== undefined && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{category.badge}</Text>
+                  </View>
+                )}
                 <Ionicons
                   name="chevron-forward"
                   size={18}
@@ -313,6 +332,22 @@ const createStyles = (theme: Theme) => ({
     height: 1,
     backgroundColor: theme.colors.divider,
     marginVertical: theme.spacing[2],
+  },
+  badge: {
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: theme.spacing[1],
+    marginRight: theme.spacing[1],
+  },
+  badgeText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textInverse,
+    fontFamily: theme.fonts.semiBold,
+    fontSize: 11,
   },
 
   // Logout

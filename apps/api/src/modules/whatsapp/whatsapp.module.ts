@@ -12,16 +12,18 @@ import { IncomeHandler } from './handlers/income.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
+import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
 import { WA_REDIS } from './types';
 
 @Global()
 @Module({
-  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule],
+  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule, PurchaseRequestsModule],
   controllers: [WhatsAppBotController],
   providers: [
     WhatsAppLinkService,
@@ -34,6 +36,7 @@ import { WA_REDIS } from './types';
     CategoryHandler,
     VoiceHandler,
     PhotoHandler,
+    PurchaseRequestHandler,
     {
       provide: WA_REDIS,
       useFactory: (config: ConfigService) =>

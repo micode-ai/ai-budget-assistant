@@ -318,6 +318,7 @@ async function _doPullAndMerge(
           recurringPeriod: decrypted.recurringPeriod ?? undefined,
           isDebt: decrypted.isDebt || false,
           isDebtRepayment: decrypted.isDebtRepayment || false,
+          isPlanned: decrypted.isPlanned || false,
           debtContactName: decrypted.debtContactName ?? undefined,
           debtDueDate: decrypted.debtDueDate
             ? new Date(decrypted.debtDueDate)

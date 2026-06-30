@@ -45,6 +45,7 @@ import { UserSubscriptionsModule } from './modules/user-subscriptions/user-subsc
 import { AnomalyModule } from './modules/anomaly/anomaly.module';
 import { MerchantRulesModule } from './modules/merchant-rules/merchant-rules.module';
 import { CacheModule } from './common/cache/cache.module';
+import { PurchaseRequestsModule } from './modules/purchase-requests/purchase-requests.module';
 
 @Module({
   imports: [
@@ -114,6 +115,7 @@ import { CacheModule } from './common/cache/cache.module';
     ImportBankModule,
     ImportBatchesModule,
     UserSubscriptionsModule,
+    PurchaseRequestsModule,
   ],
   providers: [
     {
