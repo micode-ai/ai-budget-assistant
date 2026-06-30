@@ -92,28 +92,27 @@ function RootNavigator() {
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
 
-  // Start the bank-notification capture subscription on Android once the user
-  // is authenticated and the feature is enabled in SharedPreferences. Mirrors
-  // the same gate used for deep-link / push-notification handlers below.
-  // On iOS/web this is a harmless no-op (subscribeToCapture() returns early
-  // when Platform.OS !== 'android'; isCaptureEnabled() returns false from the
-  // no-op stub, so the async check never reaches subscribeToCapture at all).
+  // Subscribe to bank-notification capture events as early as possible on Android.
+  // Previously gated on isAuthenticated+fontsLoaded+!isInitializing, which caused a
+  // startup race: a bank push that arrived during boot was emitted by Kotlin before JS
+  // registered its listener, and was silently dropped. Now we subscribe on mount (empty
+  // deps). Safety: Kotlin's onNotificationPosted checks the SharedPreferences flag
+  // FIRST, so no event is forwarded unless the user explicitly enabled capture.
+  // handleBankNotification returns early gracefully when auth isn't ready yet.
+  // iOS/web: subscribeToCapture() is a no-op (Platform.OS !== 'android' early-return).
   useEffect(() => {
-    if (isInitializing || !isAuthenticated || !fontsLoaded) return;
     if (Platform.OS !== 'android') return;
 
     let active = true;
     isCaptureEnabled().then((enabled) => {
-      if (enabled && active) {
-        subscribeToCapture();
-      }
+      if (enabled && active) subscribeToCapture();
     }).catch(() => {});
 
     return () => {
       active = false;
       unsubscribeFromCapture();
     };
-  }, [isInitializing, isAuthenticated, fontsLoaded]);
+  }, []);
 
   // A notification that cold-started the app (tapped while the app was killed).
   // It must NOT be acted on until the navigation tree is mounted and the

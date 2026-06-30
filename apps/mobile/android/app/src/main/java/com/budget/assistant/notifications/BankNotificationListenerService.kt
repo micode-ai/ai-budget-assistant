@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactContext
-import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.WritableMap
 
 /**
  * Legacy Old-Arch NotificationListenerService that forwards bank push notifications to JS via
@@ -161,22 +161,37 @@ class BankNotificationListenerService : NotificationListenerService() {
             "by.bsb.mobile",
         )
 
-        /** Emit a DeviceEventEmitter event to JS. Called from this service. */
-        fun emitEvent(reactContext: ReactContext?, packageName: String, title: String, text: String, postedAt: Long) {
-            reactContext ?: return
-            if (!reactContext.hasActiveReactInstance()) return
-            try {
-                val params = Arguments.createMap().apply {
+        /**
+         * One-slot queue for events that arrive before the JS bridge initialises.
+         * Set here, flushed in NotificationCaptureModule.init when the bridge is ready.
+         * Volatile; only the most recent event is retained (bank notifications are not
+         * worth queuing indefinitely — the user can always pull-to-refresh).
+         */
+        @Volatile internal var pendingEvent: WritableMap? = null
+
+        /**
+         * Emit onBankNotification to JS via New-Arch-safe emitDeviceEvent.
+         * If the bridge is not yet ready, stores the event so NotificationCaptureModule
+         * can flush it once the JS context is live.
+         */
+        fun emitEvent(reactContext: ReactApplicationContext?, packageName: String, title: String, text: String, postedAt: Long) {
+            val params = try {
+                Arguments.createMap().apply {
                     putString("packageName", packageName)
                     putString("title", title)
                     putString("text", text)
                     putDouble("postedAt", postedAt.toDouble())
                 }
-                reactContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                    .emit(EVENT_NAME, params)
+            } catch (_: Exception) { return }
+
+            if (reactContext == null || !reactContext.hasActiveReactInstance()) {
+                pendingEvent = params // queue for bridge-ready flush
+                return
+            }
+            try {
+                reactContext.emitDeviceEvent(EVENT_NAME, params)
             } catch (_: Exception) {
-                // DeviceEventEmitter failure is non-fatal; log nothing (no crash reporting)
+                // emitDeviceEvent failure is non-fatal; log nothing (no crash reporting)
             }
         }
     }

@@ -35,6 +35,16 @@ class NotificationCaptureModule(private val reactContext: ReactApplicationContex
 
     init {
         instance = this
+        // Flush any notification that arrived before the JS bridge was ready.
+        // runOnJSQueueThread guarantees we emit after the DeviceEventEmitter
+        // subscriber in JS has been registered.
+        BankNotificationListenerService.pendingEvent?.let { params ->
+            BankNotificationListenerService.pendingEvent = null
+            reactContext.runOnJSQueueThread {
+                try { reactContext.emitDeviceEvent(BankNotificationListenerService.EVENT_NAME, params) }
+                catch (_: Exception) {}
+            }
+        }
     }
 
     override fun getName(): String = "NotificationCaptureModule"

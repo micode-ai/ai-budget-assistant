@@ -243,6 +243,7 @@ export const useExpenseStore = create<ExpenseState>()(
           projectId: projectId || undefined,
           date: newExpense.date instanceof Date ? newExpense.date.toISOString() : newExpense.date,
           source: newExpense.source,
+          externalRef: newExpense.externalRef,
           items: sanitizedItems,
           receiptImageBase64,
           splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
