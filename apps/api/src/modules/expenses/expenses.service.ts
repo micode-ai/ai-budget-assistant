@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Optional } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto, MergeExpensesDto } from './dto';
@@ -7,6 +7,7 @@ import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
 import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
+import { FamilyFeedService } from '../family-feed/family-feed.service';
 
 @Injectable()
 export class ExpensesService {
@@ -16,6 +17,7 @@ export class ExpensesService {
     private readonly cacheService: CacheService,
     private readonly anomalyService: AnomalyService,
     private readonly merchantRules: MerchantRulesService,
+    @Optional() private readonly familyFeed?: FamilyFeedService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -338,6 +340,14 @@ export class ExpensesService {
         await this.anomalyService.checkExpense(accountId, userId, result.expense.id).catch(() => {});
       };
       run().catch(() => {});
+
+      // fire-and-forget: record in family feed (non-personal accounts only)
+      void this.familyFeed
+        ?.recordEvent(accountId, userId, 'EXPENSE_ADDED', result.expense.id, {
+          amount: Number(result.expense.amount),
+          currency: result.expense.currencyCode,
+        })
+        .catch(() => {});
     }
 
     return result;

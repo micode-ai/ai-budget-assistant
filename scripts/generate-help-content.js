@@ -35,6 +35,8 @@ const SECTIONS = [
   '30-web-app',
   '31-anomaly-alerts',
   '32-safe-to-spend',
+  '33-purchase-requests',
+  '34-family-feed',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

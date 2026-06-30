@@ -25,3 +25,4 @@ export * from './user-subscription';
 export * from './anomaly-alert';
 export * from './merchant-rule';
 export * from './purchase-request';
+export * from './family-feed';

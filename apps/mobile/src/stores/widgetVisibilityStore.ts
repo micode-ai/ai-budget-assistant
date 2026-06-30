@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { MMKV } from 'react-native-mmkv';
 
 export const WIDGET_KEYS = [
+  'familyFeed',
   'safeToSpend',
   'financialHealth',
   'gamification',
@@ -43,7 +44,20 @@ const loadOrder = (): WidgetKey[] => {
       ),
     ];
     const missing = WIDGET_KEYS.filter((k) => !valid.includes(k));
-    return [...valid, ...missing];
+    if (missing.length === 0) return valid;
+    // Insert each missing key at its intended position (by WIDGET_KEYS order)
+    // so new high-priority widgets (e.g. familyFeed at index 0) appear at
+    // the top for existing users, not appended to the end.
+    const result = [...valid];
+    for (const key of missing) {
+      const targetIdx = WIDGET_KEYS.indexOf(key as WidgetKey);
+      const insertAt = result.findIndex(
+        (k) => WIDGET_KEYS.indexOf(k as WidgetKey) > targetIdx,
+      );
+      if (insertAt === -1) result.push(key);
+      else result.splice(insertAt, 0, key);
+    }
+    return result;
   } catch {
     return [...WIDGET_KEYS];
   }

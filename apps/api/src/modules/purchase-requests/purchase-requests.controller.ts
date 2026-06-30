@@ -82,7 +82,7 @@ export class PurchaseRequestsController {
   @Post(':id/mark-purchased')
   @UseGuards(new ViewerBlockGuard())
   markPurchased(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.svc.markPurchased(id, req.accountId);
+    return this.svc.markPurchased(id, req.accountId, req.user.id);
   }
 
   @Delete(':id')

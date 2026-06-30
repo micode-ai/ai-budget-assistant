@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
+import { FamilyFeedService } from '../family-feed/family-feed.service';
 
 @Injectable()
 export class IncomesService {
@@ -11,6 +12,7 @@ export class IncomesService {
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
     private readonly gamificationService: GamificationService,
+    @Optional() private readonly familyFeed?: FamilyFeedService,
   ) {}
 
   private toIncomeResponse(income: any) {
@@ -166,6 +168,16 @@ export class IncomesService {
     // Fire-and-forget gamification check and cache invalidation
     this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
     this.cache.del(`uc:${accountId}`).catch(() => {});
+
+    // fire-and-forget: record in family feed (non-personal accounts only)
+    if (result) {
+      void this.familyFeed
+        ?.recordEvent(accountId, userId, 'INCOME_ADDED', result.id, {
+          amount: Number(result.amount),
+          currency: result.currencyCode,
+        })
+        .catch(() => {});
+    }
 
     return result;
   }
