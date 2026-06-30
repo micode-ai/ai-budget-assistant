@@ -12,10 +12,12 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 **Purchase Requests**
 - **Agree on group purchases together** — any member of a shared account can propose a purchase for the group to vote on. All other members get a push notification, tap it to open the request directly, and vote Approve or Reject — including from the Telegram and WhatsApp bots. When the group decides (majority, unanimous, or owner-only — configurable per account), everyone is notified. An approved request can be converted into a planned expense in one tap and marked as purchased once the item arrives (ABA-298).
+- **Edit and delete your proposals** — the creator (or account owner) can now edit the title, amount, currency, merchant, and description of a pending request, or delete it entirely before voting is complete (ABA-302).
 
 **Family Feed**
 - **See what everyone is spending** — shared accounts now have an activity feed (like Instagram Stories) showing expenses and incomes added by all members, grouped by person and day. Tap any card to open the transaction. React with an emoji (👍 😮 💸 ❤️ 😂 🎉) to comment without words (ABA-299).
 - **Family Feed widget** — a compact version of the feed appears on the home screen; tap "View all" for the full feed. Hidden automatically for personal accounts (ABA-299).
+- Feed automatically clears events older than the configured retention period (default 5 days, adjustable in the admin panel); rejected purchase requests disappear from the feed immediately; the widget now shows the purchase amount on request cards rather than repeating the status label (ABA-303).
 
 **Bank notification fixes (Android)**
 - Five fixes for the notification auto-capture feature: PKO BP card-debit messages ("Obciążenie kartą") now parse correctly; captured events from the Kotlin service now reliably reach JavaScript under React Native's New Architecture; startup race conditions that silently dropped the first notification after app launch are resolved (ABA-297).
