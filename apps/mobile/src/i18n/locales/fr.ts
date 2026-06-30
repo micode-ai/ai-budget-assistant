@@ -28,6 +28,7 @@ export default {
     addedBy: 'Ajouté par {{name}}',
     deleteConfirmTitle: 'Supprimer la transaction',
     deleteConfirmMessage: 'Êtes-vous sûr ? Cette action est irréversible.',
+    confirm: 'Confirmer',
   },
   dates: {
     today: "Aujourd'hui",
@@ -2049,6 +2050,7 @@ export default {
     proposedPurchase: 'a proposé un achat',
     purchaseApproved: 'Achat approuvé',
     purchaseMade: 'Acheté !',
+    purchaseShort: 'Demande',
     noActivity: 'Aucune activité',
     noActivityDesc: "Les dépenses et achats de tous les membres du compte apparaîtront ici",
     expand: 'Afficher les détails',

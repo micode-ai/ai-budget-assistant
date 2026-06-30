@@ -28,6 +28,7 @@ export default {
     addedBy: 'Toegevoegd door {{name}}',
     deleteConfirmTitle: 'Transactie verwijderen',
     deleteConfirmMessage: 'Weet je het zeker? Deze actie kan niet ongedaan worden gemaakt.',
+    confirm: 'Bevestigen',
   },
   dates: {
     today: 'Vandaag',
@@ -2049,6 +2050,7 @@ export default {
     proposedPurchase: 'stelde een aankoop voor',
     purchaseApproved: 'Aankoop goedgekeurd',
     purchaseMade: 'Gekocht!',
+    purchaseShort: 'Aanvraag',
     noActivity: 'Nog geen activiteit',
     noActivityDesc: 'Uitgaven en aankopen van alle accountleden verschijnen hier',
     expand: 'Details tonen',

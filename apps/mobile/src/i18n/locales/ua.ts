@@ -28,6 +28,7 @@ export default {
     addedBy: 'Додав(ла) {{name}}',
     deleteConfirmTitle: 'Видалити транзакцію',
     deleteConfirmMessage: 'Ви впевнені? Цю дію не можна скасувати.',
+    confirm: 'Підтвердити',
   },
   dates: {
     today: 'Сьогодні',
@@ -2052,6 +2053,7 @@ export default {
     proposedPurchase: 'запропонував/ла покупку',
     purchaseApproved: 'Покупку схвалено',
     purchaseMade: 'Куплено!',
+    purchaseShort: 'Запит',
     noActivity: 'Немає активності',
     noActivityDesc: 'Тут відображатимуться витрати та покупки всіх учасників рахунку',
     expand: 'Показати деталі',

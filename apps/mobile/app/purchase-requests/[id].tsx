@@ -80,11 +80,11 @@ export default function PurchaseRequestDetailScreen() {
     Alert.alert(t('purchaseRequests.cancelRequest'), '', [
       { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Confirm',
+        text: t('common.confirm'),
         style: 'destructive',
-        onPress: async () => {
-          await cancelRequest(pr.id);
+        onPress: () => {
           router.back();
+          cancelRequest(pr.id).catch(() => {});
         },
       },
     ]);
