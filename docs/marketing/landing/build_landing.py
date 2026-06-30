@@ -638,7 +638,32 @@ def jsonld(lang, langs):
         {"@type": "SoftwareApplication", "name": "AI Budget Assistant", "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": lang, "url": url, "image": og,
          "downloadUrl": PLAY, "sameAs": [PLAY],
-         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}},
+         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+         "featureList": [
+             "Voice expense capture via AI transcription",
+             "Receipt scanning with OCR",
+             "Bank notification auto-capture (Android, 40+ European banks)",
+             "Bank statement import: Wise, mBank, PKO BP, Revolut, Erste, Alior, CSV",
+             "AI chat assistant for natural language financial questions",
+             "Shared family accounts with role-based access",
+             "Category budgets with period tracking and overspend alerts",
+             "Savings goals with contribution history",
+             "Subscription manager with renewal reminders",
+             "Telegram, WhatsApp and Slack bots",
+             "Offline-first with end-to-end encryption",
+             "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB",
+             "9 interface languages",
+             "Safe-to-spend daily limit calculation",
+             "Spending anomaly detection",
+         ],
+         "screenshot": [
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/01-home.png", "name": "Home dashboard"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/02-ai-chat.png", "name": "AI assistant"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/03-receipt-scan.png", "name": "Receipt scanning"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/04-analytics.png", "name": "Spending analytics"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/05-budget-detail.png", "name": "Budget tracking"},
+             {"@type": "ImageObject", "url": f"{SITE}/assets/screens/{lang}/06-bank-import.png", "name": "Bank import"},
+         ]},
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
     ]}
@@ -818,6 +843,43 @@ def build():
         open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
         open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(
             f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+        open(os.path.join(OUT, "llms.txt"), "w", encoding="utf-8", newline="\n").write(
+            f"# AI Budget Assistant\n\n"
+            f"> Free AI-powered budget app for individuals and families. "
+            f"Track expenses by voice or receipt photo, plan budgets and savings goals, "
+            f"manage subscriptions, import bank statements, and budget together in real time. "
+            f"Multi-currency, 9 languages, Android and web.\n\n"
+            f"## Product\n\n"
+            f"- Name: AI Budget Assistant\n"
+            f"- URL: {SITE}\n"
+            f"- App: {APP}\n"
+            f"- Google Play: {PLAY}\n"
+            f"- Company: {COMPANY} ({COMPANY_URL})\n"
+            f"- Launched: April 2026\n"
+            f"- Pricing: Free core; Pro and Business subscription tiers\n"
+            f"- Platforms: Android, Web\n"
+            f"- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch\n"
+            f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB\n\n"
+            f"## Key Features\n\n"
+            f"- Voice expense capture: log expenses by speaking naturally, transcribed by AI\n"
+            f"- Receipt scanning: photograph a receipt to extract amount, merchant and category via OCR\n"
+            f"- Bank notification capture: Android app intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials required)\n"
+            f"- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, Revolut, Erste, Alior\n"
+            f"- AI chat assistant: ask financial questions and give commands in natural language (GPT-4)\n"
+            f"- Shared family accounts with owner/editor/viewer roles and live activity feed\n"
+            f"- Group purchase voting and approval workflows\n"
+            f"- Category budgets with history, alerts and period tracking\n"
+            f"- Savings goals with contribution log\n"
+            f"- Subscription manager with renewal reminders and auto-charge simulation\n"
+            f"- Telegram, WhatsApp and Slack bots\n"
+            f"- Offline-first architecture with end-to-end encryption\n"
+            f"- Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations\n"
+            f"- Anomaly detection: duplicate charges, price increases, spending spikes\n\n"
+            f"## Content\n\n"
+            f"- Blog (9 languages): {SITE}/blog/en/\n"
+            f"- Help center (9 languages): {SITE}/help/en/\n"
+            f"- Sitemap: {SITE}/sitemap.xml\n"
+        )
         open(os.path.join(OUT, "404.html"), "w", encoding="utf-8", newline="\n").write(
             '<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
