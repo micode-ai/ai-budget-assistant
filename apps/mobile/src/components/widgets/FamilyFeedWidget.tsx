@@ -31,9 +31,11 @@ function StoryBubble({ group }: { group: FeedGroup }) {
   const { color, icon } = typeMeta(group.type);
   const isPR = group.type.startsWith('purchase_request');
 
-  // Line 1: colored amount with sign prefix (or "Request" for PRs)
+  // Line 1: colored amount (PR shows its own amount, expenses/incomes show total with sign)
   const amountLabel = isPR
-    ? t('familyFeed.purchaseShort')
+    ? group.purchaseRequest?.amount != null && group.purchaseRequest?.currency
+      ? formatCurrency(group.purchaseRequest.amount, group.purchaseRequest.currency)
+      : t('familyFeed.purchaseShort')
     : group.totalAmount != null && group.currency
     ? `${group.type === 'expenses' ? '−' : '+'}${formatCurrency(group.totalAmount, group.currency)}`
     : `×${group.count}`;
