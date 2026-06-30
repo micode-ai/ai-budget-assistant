@@ -359,8 +359,11 @@ export class PurchaseRequestsService {
         })
         .catch(() => {});
     } else {
-      // History cleanup → hard delete
-      await this.prisma.purchaseRequest.delete({ where: { id } });
+      // History cleanup → hard delete + remove orphaned feed events
+      await this.prisma.$transaction([
+        this.prisma.familyFeedEvent.deleteMany({ where: { entityId: id, accountId } }),
+        this.prisma.purchaseRequest.delete({ where: { id } }),
+      ]);
     }
   }
 
