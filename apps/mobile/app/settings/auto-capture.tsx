@@ -332,6 +332,7 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.body,
     color: theme.colors.success,
     fontFamily: theme.fonts.semiBold,
+    flex: 1,
   },
   permissionHint: {
     ...theme.textStyles.caption,
