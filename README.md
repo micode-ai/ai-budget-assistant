@@ -1,8 +1,57 @@
 # AI Budget Assistant
 
-AI-powered personal finance management application with voice input, receipt scanning, and intelligent expense categorization.
+**AI-powered budget app for individuals and families.**
+Track expenses by voice or receipt photo, set budgets and savings goals, manage subscriptions, import bank statements, and budget together in real time.
 
-Available on **iOS**, **Android**, and the **web** — try it in your browser at **[ai-budget.pl](https://ai-budget.pl)**.
+**[Open the app](https://app.ai-budget.pl)** · **[Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant)** · **[Website](https://ai-budget.pl)**
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="https://ai-budget.pl/assets/screens/en/01-home.png" width="160" alt="Home dashboard" />
+  <img src="https://ai-budget.pl/assets/screens/en/02-ai-chat.png" width="160" alt="AI assistant" />
+  <img src="https://ai-budget.pl/assets/screens/en/03-receipt-scan.png" width="160" alt="Receipt scanning" />
+  <img src="https://ai-budget.pl/assets/screens/en/04-analytics.png" width="160" alt="Analytics" />
+  <img src="https://ai-budget.pl/assets/screens/en/05-budget-detail.png" width="160" alt="Budgets" />
+  <img src="https://ai-budget.pl/assets/screens/en/06-bank-import.png" width="160" alt="Bank import" />
+</p>
+
+---
+
+## Features
+
+- **Voice capture** — say what you spent, AI logs it instantly via Whisper
+- **Receipt scanning** — photograph a receipt, AI extracts amount, merchant, and category
+- **Bank notification capture** — Android intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials)
+- **Bank import** — Wise, mBank, PKO BP, Revolut, Erste, Alior, universal CSV/PDF
+- **AI chat** — ask financial questions or give commands in natural language (GPT-4)
+- **Shared accounts** — family budgeting with owner/editor/viewer roles, activity feed, group purchase voting
+- **Budgets & goals** — category budgets with history, savings goals with contribution log
+- **Subscription manager** — track recurring charges with renewal reminders
+- **Bots** — Telegram, WhatsApp, Slack: log expenses and chat with AI without opening the app
+- **Safe-to-spend** — daily spendable amount calculated from balance minus upcoming obligations
+- **Anomaly detection** — duplicate charges, price increases, spending spikes
+- **Offline-first** — works without internet, end-to-end encryption, syncs when connected
+- **Multi-currency** — USD, EUR, PLN, GBP, UAH, RUB with live exchange rates
+- **9 languages** — EN, PL, DE, ES, FR, RU, UA, BE, NL
+
+---
+
+## Architecture
+
+Turborepo monorepo with 5 packages:
+
+| Package | Tech | Purpose |
+|---|---|---|
+| `apps/api` | NestJS 10 + Prisma 5 + PostgreSQL + Redis | REST API |
+| `apps/mobile` | Expo 54 + React Native 0.81 + Zustand + SQLite | Mobile app (Android / Web) |
+| `apps/admin` | Next.js 16 + shadcn/ui + Recharts | Admin dashboard |
+| `packages/shared-types` | TypeScript | Shared entities and DTOs |
+| `packages/shared-utils` | Zod + formatting | Shared validation and utilities |
+
+---
 
 ## Documentation
 
@@ -10,56 +59,27 @@ Available on **iOS**, **Android**, and the **web** — try it in your browser at
 
 | Language | Files |
 |---|---|
-| English | [README](docs/en/README.md) \| [Architecture](docs/en/ARCHITECTURE.md) \| [API](docs/en/API.md) \| [Setup](docs/en/SETUP.md) \| [Encryption](docs/en/ENCRYPTION.md) |
-| Russian | [README](docs/ru/README.md) \| [Architecture](docs/ru/ARCHITECTURE.md) \| [API](docs/ru/API.md) \| [Setup](docs/ru/SETUP.md) \| [Encryption](docs/ru/ENCRYPTION.md) |
-
-[TODO](docs/TODO.md)
+| English | [README](docs/en/README.md) · [Architecture](docs/en/ARCHITECTURE.md) · [API](docs/en/API.md) · [Setup](docs/en/SETUP.md) · [Encryption](docs/en/ENCRYPTION.md) |
+| Russian | [README](docs/ru/README.md) · [Architecture](docs/ru/ARCHITECTURE.md) · [API](docs/ru/API.md) · [Setup](docs/ru/SETUP.md) · [Encryption](docs/ru/ENCRYPTION.md) |
 
 ### User Docs
 
-| Language | Guide |
-|---|---|
-| English | [User Guide](user_docs/en/00-index.md) |
-| Русский | [Руководство пользователя](user_docs/ru/00-index.md) |
-| Українська | [Посібник користувача](user_docs/ua/00-index.md) |
-| Polski | [Przewodnik użytkownika](user_docs/pl/00-index.md) |
-| Deutsch | [Benutzerhandbuch](user_docs/de/00-index.md) |
-| Español | [Guía del usuario](user_docs/es/00-index.md) |
-| Français | [Guide utilisateur](user_docs/fr/00-index.md) |
-| Беларуская | [Кіраўніцтва карыстальніка](user_docs/be/00-index.md) |
-| Nederlands | [Gebruikershandleiding](user_docs/nl/00-index.md) |
+Available in 9 languages — [English](user_docs/en/00-index.md) · [Polski](user_docs/pl/00-index.md) · [Русский](user_docs/ru/00-index.md) · [Deutsch](user_docs/de/00-index.md) · [Español](user_docs/es/00-index.md) · [Français](user_docs/fr/00-index.md) · [Українська](user_docs/ua/00-index.md) · [Беларуская](user_docs/be/00-index.md) · [Nederlands](user_docs/nl/00-index.md)
 
-#### User Docs Sections
+---
 
-| # | Section |
-|---|---|
-| 01 | [Getting Started](user_docs/en/01-getting-started.md) |
-| 02 | [Dashboard](user_docs/en/02-dashboard.md) |
-| 03 | [Expenses & Income](user_docs/en/03-expenses-and-income.md) |
-| 04 | [Voice Input & Receipt Scanning](user_docs/en/04-voice-and-receipt.md) |
-| 05 | [Budgets](user_docs/en/05-budgets.md) |
-| 06 | [Analytics](user_docs/en/06-analytics.md) |
-| 07 | [AI Chat](user_docs/en/07-ai-chat.md) |
-| 08 | [Spending Story](user_docs/en/08-spending-story.md) |
-| 09 | [Accounts](user_docs/en/09-accounts.md) |
-| 10 | [Wallet & Exchange](user_docs/en/10-wallet-and-exchange.md) |
-| 11 | [Settings](user_docs/en/11-settings.md) |
-| 12 | [Subscription Plans](user_docs/en/12-subscription.md) |
-| 13 | [Achievements & Gamification](user_docs/en/13-gamification.md) |
-| 14 | [Investment Portfolio](user_docs/en/14-investments.md) |
-| 15 | [End-to-End Encryption](user_docs/en/15-encryption.md) |
-| 16 | [Export & Reports](user_docs/en/16-export-reports.md) |
-| 17 | [Debts & Loans](user_docs/en/17-debts-and-loans.md) |
-| 18 | [Savings Goals](user_docs/en/18-savings-goals.md) |
-| 19 | [Fat Finder (Expense Audit)](user_docs/en/19-fat-finder.md) |
-| 20 | [AI Response Mode](user_docs/en/20-ai-response-mode.md) |
-| 21 | [Home Screen Widgets](user_docs/en/21-widgets.md) |
-| 22 | [Chat Bots — Telegram, WhatsApp & Slack](user_docs/en/22-chat-bots.md) |
-| 23 | [Scenario Simulator](user_docs/en/23-scenario-simulator.md) |
-| 24 | [Invite Friends — Referral Program](user_docs/en/24-referral.md) |
-| 26 | [Wise Import](user_docs/en/26-wise-import.md) |
-| 27 | [Bank Statement Import](user_docs/en/27-bank-import.md) |
-| 28 | [Reference Data](user_docs/en/28-reference-data.md) |
-| 29 | [Subscription Manager](user_docs/en/29-subscription-manager.md) |
-| 30 | [Web App](user_docs/en/30-web-app.md) |
-| 31 | [Anomaly Alerts](user_docs/en/31-anomaly-alerts.md) |
+## Quick Start
+
+```bash
+npm install          # install all dependencies
+npm run dev          # start all dev servers (API + mobile + admin)
+npm run dev:web      # mobile app in browser (localhost:8081)
+```
+
+See [docs/en/SETUP.md](docs/en/SETUP.md) for full setup including environment variables.
+
+---
+
+## License
+
+Proprietary. © 2026 [MICODE sp. z o.o.](https://mi-code.pl/)
