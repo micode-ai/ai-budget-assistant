@@ -17,6 +17,8 @@ import { ChatHandler } from './handlers/chat.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { CategoryHandler } from './handlers/category.handler';
+import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
+import { PurchaseRequestsService } from '../purchase-requests/purchase-requests.service';
 import { BotContext } from './types';
 
 @Injectable()
@@ -34,6 +36,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
   private voiceHandler!: VoiceHandler;
   private photoHandler!: PhotoHandler;
   private categoryHandler!: CategoryHandler;
+  private purchaseRequestHandler!: PurchaseRequestHandler;
 
   constructor(
     private readonly config: ConfigService,
@@ -46,6 +49,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     private readonly incomesService: IncomesService,
     private readonly categoriesService: CategoriesService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly purchaseRequestsService: PurchaseRequestsService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -66,6 +70,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       this.voiceHandler = new VoiceHandler(this.whisperService, this.chatHandler, this.subscriptionsService);
       this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService, this.subscriptionsService);
       this.categoryHandler = new CategoryHandler(this.categoriesService);
+      this.purchaseRequestHandler = new PurchaseRequestHandler(this.purchaseRequestsService);
 
       // Get bot info
       const botInfo = await this.bot.telegram.getMe();
@@ -236,6 +241,15 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       if (data.startsWith('receipt_cancel:')) {
         const receiptId = data.slice('receipt_cancel:'.length);
         await this.photoHandler.handleReceiptCancelCallback(ctx, receiptId);
+        return;
+      }
+
+      // Purchase request approve/reject callbacks
+      if (data.startsWith('pr_approve:') || data.startsWith('pr_reject:')) {
+        const colonIdx = data.indexOf(':');
+        const action = data.substring(0, colonIdx);
+        const requestId = data.substring(colonIdx + 1);
+        await this.purchaseRequestHandler.handleCallback(ctx, action, requestId);
         return;
       }
     });

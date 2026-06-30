@@ -16,7 +16,7 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal' | 'tracking_gap_reminder';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal' | 'tracking_gap_reminder' | 'purchase_request_created' | 'purchase_request_voted' | 'purchase_request_approved' | 'purchase_request_rejected';
 
 export type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 

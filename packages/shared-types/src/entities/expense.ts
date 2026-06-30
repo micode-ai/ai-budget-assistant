@@ -107,6 +107,7 @@ export interface Expense {
   debtDueDate?: Date;
   relatedDebtIncomeId?: string;
   createdByUserName?: string | null;
+  isPlanned?: boolean;
   /** E2EE encrypted payload field (present on API responses when encryption is enabled). */
   encryptedPayload?: string | null;
   /** E2EE key version field. */

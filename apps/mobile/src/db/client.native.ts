@@ -558,6 +558,9 @@ export async function initializeDatabase(): Promise<void> {
     // Recurring period for expense series
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN recurring_period TEXT`); } catch {}
 
+    // Planned expense flag (linked to an approved PurchaseRequest)
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN is_planned INTEGER DEFAULT 0`); } catch {}
+
     // Transaction attribution: cache the creator's display name on each row so
     // shared-account screens can show "Added by …" without an extra user lookup.
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN created_by_user_name TEXT`); } catch {}

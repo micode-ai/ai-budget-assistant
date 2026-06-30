@@ -44,6 +44,7 @@ export class NotificationsService {
         notifySubscriptionRenewals: true,
         notifyAnomalyAlerts: true,
         notifyTrackingGap: true,
+        notifyPurchaseRequests: true,
       },
     });
 
@@ -57,6 +58,10 @@ export class NotificationsService {
     if (notificationType === 'chat_mention' && !user.notifySharedActivity) return false;
     if (notificationType === 'subscription_renewal' && !user.notifySubscriptionRenewals) return false;
     if (notificationType === 'tracking_gap_reminder' && !user.notifyTrackingGap) return false;
+    if (notificationType === 'purchase_request_created' && !user.notifyPurchaseRequests) return false;
+    if (notificationType === 'purchase_request_voted' && !user.notifyPurchaseRequests) return false;
+    if (notificationType === 'purchase_request_approved' && !user.notifyPurchaseRequests) return false;
+    if (notificationType === 'purchase_request_rejected' && !user.notifyPurchaseRequests) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);
@@ -101,6 +106,7 @@ export class NotificationsService {
         notifyDebtReminders: true,
         notifyRecurringExpenses: true,
         notifyAnomalyAlerts: true,
+        notifyPurchaseRequests: true,
       },
     });
 
@@ -113,6 +119,10 @@ export class NotificationsService {
       if (notificationType === 'debt_reminder' && !u.notifyDebtReminders) return false;
       if (notificationType === 'recurring_expense' && !u.notifyRecurringExpenses) return false;
       if (notificationType === 'chat_mention' && !u.notifySharedActivity) return false;
+      if (notificationType === 'purchase_request_created' && !u.notifyPurchaseRequests) return false;
+      if (notificationType === 'purchase_request_voted' && !u.notifyPurchaseRequests) return false;
+      if (notificationType === 'purchase_request_approved' && !u.notifyPurchaseRequests) return false;
+      if (notificationType === 'purchase_request_rejected' && !u.notifyPurchaseRequests) return false;
       return true;
     });
 

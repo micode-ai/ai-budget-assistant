@@ -11,6 +11,7 @@ export const QUICK_ACTION_KEYS = [
   'converter',
   'transfers',
   'subscriptions',
+  'purchase_request',
 ] as const;
 
 export type QuickActionKey = (typeof QUICK_ACTION_KEYS)[number];
@@ -26,6 +27,7 @@ export const DEFAULT_VISIBILITY: Record<QuickActionKey, boolean> = {
   converter: true,
   transfers: true,
   subscriptions: true,
+  purchase_request: true,
 };
 
 const mmkv = new MMKV({ id: 'quick-actions' });

@@ -61,6 +61,7 @@ export const expenses = sqliteTable('expenses', {
   isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
   syncStatus: text('sync_status').notNull().default('pending'),
   syncVersion: integer('sync_version').default(0),
+  isPlanned: integer('is_planned', { mode: 'boolean' }).default(false),
 });
 
 // Incomes table

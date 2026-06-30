@@ -8,10 +8,11 @@ import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
 
 @Global()
 @Module({
-  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule],
+  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule, PurchaseRequestsModule],
   controllers: [TelegramBotController],
   providers: [TelegramService, TelegramBotService, TelegramLinkService],
   exports: [TelegramService, TelegramLinkService, TelegramBotService],

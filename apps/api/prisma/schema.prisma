@@ -77,6 +77,26 @@ enum AppPlatform {
   @@map("app_platform")
 }
 
+enum PurchaseRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PURCHASED
+  EXPIRED
+}
+
+enum ApprovalRule {
+  MAJORITY
+  UNANIMOUS
+  OWNER_ONLY
+}
+
+enum VoteChoice {
+  APPROVE
+  REJECT
+  ABSTAIN
+}
+
 // ---- Models ----
 
 model User {
@@ -96,6 +116,7 @@ model User {
   notifySubscriptionRenewals Boolean @default(true) @map("notify_subscription_renewals")
   notifyAnomalyAlerts     Boolean   @default(true) @map("notify_anomaly_alerts")
   notifyTrackingGap       Boolean   @default(true) @map("notify_tracking_gap")
+  notifyPurchaseRequests  Boolean   @default(true) @map("notify_purchase_requests")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
@@ -167,6 +188,8 @@ model User {
   slackLinkCodes SlackLinkCode[]
 
   importBatches     ImportBatch[]
+  purchaseRequests      PurchaseRequest[]     @relation("PurchaseRequestCreator")
+  purchaseRequestVotes  PurchaseRequestVote[] @relation("PurchaseRequestVoter")
 
   @@map("users")
 }
@@ -184,6 +207,7 @@ model Account {
   keyRotationNeeded Boolean     @default(false) @map("key_rotation_needed")
   createdAt         DateTime    @default(now()) @map("created_at")
   updatedAt         DateTime    @updatedAt @map("updated_at")
+  purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
 
   // Relations
   owner       User                @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
@@ -223,6 +247,7 @@ model Account {
   anomalyAlerts           AnomalyAlert[]
   merchantCategoryRules   MerchantCategoryRule[]
   goalContributions       GoalContribution[]
+  purchaseRequests        PurchaseRequest[]
 
   @@map("accounts")
 }
@@ -328,6 +353,7 @@ model Expense {
   debtDueDate      DateTime? @map("debt_due_date") @db.Date
   relatedDebtIncomeId String? @map("related_debt_income_id")
   isDeleted    Boolean  @default(false) @map("is_deleted")
+  isPlanned    Boolean  @default(false) @map("is_planned")
   syncVersion  Int      @default(0) @map("sync_version")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -347,6 +373,7 @@ model Expense {
   expenseTags      ExpenseTag[]
   categorySplits   ExpenseCategorySplit[]
   projectExpenses  ProjectExpense[]
+  purchaseRequest  PurchaseRequest? @relation("PlannedPurchase")
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -355,6 +382,7 @@ model Expense {
   @@index([accountId, isDebt])
   @@index([accountId, merchant])
   @@index([accountId, source])
+  @@index([accountId, isPlanned])
   @@map("expenses")
 }
 
@@ -1502,4 +1530,48 @@ model MerchantCategoryRule {
   @@unique([accountId, merchantNormalized])
   @@index([accountId])
   @@map("merchant_category_rules")
+}
+
+// ---- Purchase Requests ----
+
+model PurchaseRequest {
+  id               String                @id @default(cuid())
+  accountId        String                @map("account_id")
+  createdByUserId  String                @map("created_by_user_id")
+  title            String
+  description      String?
+  amount           Decimal               @db.Decimal(12, 2)
+  currency         String
+  categoryId       String?               @map("category_id")
+  merchant         String?
+  imageUrl         String?               @map("image_url")
+  status           PurchaseRequestStatus @default(PENDING)
+  approvalRule     ApprovalRule          @map("approval_rule")
+  plannedExpenseId String?               @unique @map("planned_expense_id")
+  expiresAt        DateTime?             @map("expires_at")
+  createdAt        DateTime              @default(now()) @map("created_at")
+  updatedAt        DateTime              @updatedAt @map("updated_at")
+
+  account        Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdBy      User                  @relation("PurchaseRequestCreator", fields: [createdByUserId], references: [id])
+  votes          PurchaseRequestVote[]
+  plannedExpense Expense?              @relation("PlannedPurchase", fields: [plannedExpenseId], references: [id])
+
+  @@index([accountId, status])
+  @@map("purchase_requests")
+}
+
+model PurchaseRequestVote {
+  id        String     @id @default(cuid())
+  requestId String     @map("request_id")
+  userId    String     @map("user_id")
+  vote      VoteChoice
+  comment   String?
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  request PurchaseRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user    User            @relation("PurchaseRequestVoter", fields: [userId], references: [id])
+
+  @@unique([requestId, userId])
+  @@map("purchase_request_votes")
 }

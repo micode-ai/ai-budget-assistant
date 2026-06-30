@@ -743,6 +743,28 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="purchase-requests/index"
+          options={{
+            headerShown: true,
+            title: t('purchaseRequests.title'),
+          }}
+        />
+        <Stack.Screen
+          name="purchase-requests/new"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('purchaseRequests.new'),
+          }}
+        />
+        <Stack.Screen
+          name="purchase-requests/[id]"
+          options={{
+            headerShown: true,
+            title: t('purchaseRequests.title'),
+          }}
+        />
+        <Stack.Screen
           name="subscriptions/index"
           options={{
             headerShown: true,

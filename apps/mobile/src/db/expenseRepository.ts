@@ -26,6 +26,7 @@ interface ExpenseRow {
   source: string;
   is_debt: number;
   is_debt_repayment: number;
+  is_planned: number;
   debt_contact_name: string | null;
   debt_due_date: number | null;
   related_debt_income_id: string | null;
@@ -68,6 +69,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     source: row.source as ExpenseSource,
     isDebt: row.is_debt === 1,
     isDebtRepayment: row.is_debt_repayment === 1,
+    isPlanned: row.is_planned === 1,
     debtContactName: row.debt_contact_name ?? undefined,
     debtDueDate: row.debt_due_date ? new Date(row.debt_due_date) : undefined,
     relatedDebtIncomeId: row.related_debt_income_id ?? undefined,
@@ -115,19 +117,20 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.isDeleted ? 1 : 0,
     expense.syncStatus,
     expense.syncVersion,
+    expense.isPlanned ? 1 : 0,
   ];
 }
 
 export async function loadAllExpenses(accountId?: string): Promise<Expense[]> {
   if (accountId) {
     const rows = await executeSql<ExpenseRow>(
-      'SELECT * FROM expenses WHERE is_deleted = 0 AND account_id = ? ORDER BY date DESC',
+      'SELECT * FROM expenses WHERE is_deleted = 0 AND (is_planned IS NULL OR is_planned = 0) AND account_id = ? ORDER BY date DESC',
       [accountId],
     );
     return rows.map(rowToExpense);
   }
   const rows = await executeSql<ExpenseRow>(
-    'SELECT * FROM expenses WHERE is_deleted = 0 ORDER BY date DESC',
+    'SELECT * FROM expenses WHERE is_deleted = 0 AND (is_planned IS NULL OR is_planned = 0) ORDER BY date DESC',
   );
   return rows.map(rowToExpense);
 }
@@ -142,8 +145,8 @@ export async function insertExpense(expense: Expense): Promise<void> {
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
-      is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      is_deleted, sync_status, sync_version, is_planned
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -216,6 +219,10 @@ export async function updateExpenseInDb(
   if (updates.isDebtRepayment !== undefined) {
     setClauses.push('is_debt_repayment = ?');
     params.push(updates.isDebtRepayment ? 1 : 0);
+  }
+  if (updates.isPlanned !== undefined) {
+    setClauses.push('is_planned = ?');
+    params.push(updates.isPlanned ? 1 : 0);
   }
   if (updates.debtContactName !== undefined) {
     setClauses.push('debt_contact_name = ?');
@@ -323,8 +330,8 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
-      is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      is_deleted, sync_status, sync_version, is_planned
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -349,6 +356,7 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       source = excluded.source,
       is_debt = excluded.is_debt,
       is_debt_repayment = excluded.is_debt_repayment,
+      is_planned = excluded.is_planned,
       debt_contact_name = excluded.debt_contact_name,
       debt_due_date = excluded.debt_due_date,
       related_debt_income_id = excluded.related_debt_income_id,

@@ -9,6 +9,8 @@ export interface UpdateNotificationPreferencesDto {
   recurringExpenses?: boolean;
   subscriptionRenewals?: boolean;
   anomalyAlerts?: boolean;
+  trackingGap?: boolean;
+  purchaseRequests?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -18,4 +20,6 @@ export interface NotificationPreferencesResponse {
   recurringExpenses: boolean;
   subscriptionRenewals: boolean;
   anomalyAlerts: boolean;
+  trackingGap: boolean;
+  purchaseRequests: boolean;
 }
