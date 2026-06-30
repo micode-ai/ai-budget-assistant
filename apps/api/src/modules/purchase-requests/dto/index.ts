@@ -36,6 +36,37 @@ export class CreatePurchaseRequestApiDto {
   expiresAt?: string;
 }
 
+export class UpdatePurchaseRequestApiDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  title?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  amount?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  currency?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(1000)
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  merchant?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+}
+
 export class VotePurchaseRequestApiDto {
   @IsIn(['APPROVE', 'REJECT', 'ABSTAIN'])
   vote: 'APPROVE' | 'REJECT' | 'ABSTAIN';

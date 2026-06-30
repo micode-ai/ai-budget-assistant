@@ -1372,6 +1372,10 @@ export default {
     notifPurchaseRequestsDesc: 'Новыя запыты, галасы і рашэнні',
     titleLabel: 'Назва',
     amountLabel: 'Сума',
+    editRequest: 'Рэдагаваць запыт',
+    editTitle: 'Рэдагаванне запыту',
+    deleteRequest: 'Выдаліць запыт',
+    deleteConfirm: 'Запыт будзе назаўжды выдалены',
   },
   splits: {
     title: 'Раздзяленне катэгорый',

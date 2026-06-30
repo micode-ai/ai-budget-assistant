@@ -5,6 +5,7 @@ import type {
   PurchaseRequest,
   PurchaseRequestStatus,
   CreatePurchaseRequestDto,
+  UpdatePurchaseRequestDto,
   VotePurchaseRequestDto,
   ApprovalRule,
 } from '@budget/shared-types';
@@ -16,6 +17,7 @@ interface PurchaseRequestState {
 
   loadRequests: (status?: PurchaseRequestStatus) => Promise<void>;
   createRequest: (dto: CreatePurchaseRequestDto) => Promise<void>;
+  updateRequest: (id: string, dto: UpdatePurchaseRequestDto) => Promise<void>;
   vote: (id: string, dto: VotePurchaseRequestDto) => Promise<void>;
   convertToPlanned: (id: string) => Promise<string>;
   markAsPurchased: (prId: string) => Promise<void>;
@@ -44,6 +46,11 @@ export const usePurchaseRequestStore = create<PurchaseRequestState>()((set, get)
   createRequest: async (dto) => {
     const pr = await api.createPurchaseRequest(dto);
     set((s) => ({ requests: [pr, ...s.requests] }));
+  },
+
+  updateRequest: async (id, dto) => {
+    const updated = await api.updatePurchaseRequest(id, dto);
+    set((s) => ({ requests: s.requests.map((r) => (r.id === id ? updated : r)) }));
   },
 
   vote: async (id, dto) => {

@@ -3,6 +3,7 @@ import type {
   PurchaseRequestStatus,
   ApprovalRule,
   CreatePurchaseRequestDto,
+  UpdatePurchaseRequestDto,
   VotePurchaseRequestDto,
 } from '@budget/shared-types';
 import { httpClient } from './http-client';
@@ -40,6 +41,13 @@ export const purchaseRequestsApi = {
   markPurchaseRequestAsPurchased(id: string) {
     return httpClient.request<void>(`/purchase-requests/${id}/mark-purchased`, {
       method: 'POST',
+    });
+  },
+
+  updatePurchaseRequest(id: string, dto: UpdatePurchaseRequestDto) {
+    return httpClient.request<PurchaseRequest>(`/purchase-requests/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
     });
   },
 

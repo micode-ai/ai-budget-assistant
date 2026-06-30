@@ -20,9 +20,15 @@ export class FamilyFeedService {
 
   // ── pure helper — public for testing ─────────────────────────────────
 
-  groupEvents(events: RawFeedEvent[], callerUserId: string): FeedGroup[] {
+  groupEvents(
+    events: RawFeedEvent[],
+    callerUserId: string,
+    prStatusMap: Map<string, string> = new Map(),
+  ): FeedGroup[] {
     const groups: FeedGroup[] = [];
     const dayKeys = new Map<string, FeedGroup>();
+    // events are sorted DESC — first event per PR is the most recent one
+    const seenPrIds = new Set<string>();
 
     for (const event of events) {
       const date = event.createdAt.toISOString().slice(0, 10);
@@ -55,9 +61,26 @@ export class FamilyFeedService {
           groups.push(g);
         }
       } else {
-        // PURCHASE_REQUEST_* — always individual card
+        // PURCHASE_REQUEST_* — one card per PR (most recent event wins, since events are DESC)
+        if (seenPrIds.has(event.entityId)) continue;
+        seenPrIds.add(event.entityId);
+
         const meta = event.metadata as { amount: number; currency: string; title?: string };
-        const prType = event.type.toLowerCase() as FeedGroup['type'];
+
+        // Use live status from DB (covers old events created before rejection/approval events existed)
+        const liveStatus = prStatusMap.get(event.entityId);
+        const prStatus = liveStatus ?? (
+          event.type === 'PURCHASE_REQUEST_APPROVED'
+            ? 'APPROVED'
+            : event.type === 'PURCHASE_REQUEST_REJECTED'
+            ? 'REJECTED'
+            : event.type === 'PURCHASE_REQUEST_PURCHASED'
+            ? 'PURCHASED'
+            : 'PENDING'
+        );
+        // Derive card type from live status so color/icon always reflects current state
+        const prType = (`purchase_request_${prStatus.toLowerCase()}`) as FeedGroup['type'];
+
         groups.push({
           id: event.id,
           type: prType,
@@ -69,12 +92,7 @@ export class FamilyFeedService {
             title: meta.title ?? '',
             amount: meta.amount,
             currency: meta.currency,
-            status:
-              event.type === 'PURCHASE_REQUEST_CREATED'
-                ? 'PENDING'
-                : event.type === 'PURCHASE_REQUEST_APPROVED'
-                ? 'APPROVED'
-                : 'PURCHASED',
+            status: prStatus,
           },
           reactions,
           myReaction,
@@ -116,7 +134,26 @@ export class FamilyFeedService {
         reactions: { select: { emoji: true, userId: true } },
       },
     });
-    return this.groupEvents(events as RawFeedEvent[], userId);
+
+    // Fetch live statuses for all PR feed events so old "PENDING" cards
+    // correctly reflect approval/rejection that happened after the feed event was created.
+    const prEntityIds = [
+      ...new Set(
+        events
+          .filter((e) => e.type.startsWith('PURCHASE_REQUEST'))
+          .map((e) => e.entityId),
+      ),
+    ];
+    const prStatusMap = new Map<string, string>();
+    if (prEntityIds.length > 0) {
+      const prs = await this.prisma.purchaseRequest.findMany({
+        where: { id: { in: prEntityIds }, accountId },
+        select: { id: true, status: true },
+      });
+      for (const pr of prs) prStatusMap.set(pr.id, pr.status as string);
+    }
+
+    return this.groupEvents(events as RawFeedEvent[], userId, prStatusMap);
   }
 
   async react(accountId: string, userId: string, eventId: string, emoji: string): Promise<void> {

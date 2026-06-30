@@ -3,7 +3,8 @@ export type FeedEventType =
   | 'INCOME_ADDED'
   | 'PURCHASE_REQUEST_CREATED'
   | 'PURCHASE_REQUEST_APPROVED'
-  | 'PURCHASE_REQUEST_PURCHASED';
+  | 'PURCHASE_REQUEST_PURCHASED'
+  | 'PURCHASE_REQUEST_REJECTED';
 
 export interface FamilyFeedEvent {
   id: string;
@@ -31,7 +32,8 @@ export interface FeedGroup {
     | 'incomes'
     | 'purchase_request_created'
     | 'purchase_request_approved'
-    | 'purchase_request_purchased';
+    | 'purchase_request_purchased'
+    | 'purchase_request_rejected';
   userId: string;
   userName: string;
   date: string; // 'YYYY-MM-DD' UTC

@@ -1385,6 +1385,10 @@ export default {
     notifPurchaseRequestsDesc: 'Nouvelles demandes, votes et décisions',
     titleLabel: 'Titre',
     amountLabel: 'Montant',
+    editRequest: 'Modifier la demande',
+    editTitle: 'Modifier la demande',
+    deleteRequest: 'Supprimer la demande',
+    deleteConfirm: 'La demande sera définitivement supprimée',
   },
   splits: {
     title: 'Diviser les catégories',

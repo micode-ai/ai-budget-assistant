@@ -1388,6 +1388,10 @@ export default {
     notifPurchaseRequestsDesc: 'Нові запити, голоси та рішення',
     titleLabel: 'Назва',
     amountLabel: 'Сума',
+    editRequest: 'Редагувати запит',
+    editTitle: 'Редагування запиту',
+    deleteRequest: 'Видалити запит',
+    deleteConfirm: 'Запит буде безповоротно видалено',
   },
   splits: {
     title: 'Розподіл категорій',

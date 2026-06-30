@@ -18,6 +18,7 @@ import { PurchaseRequestsService } from './purchase-requests.service';
 import type { AuthenticatedRequest } from '../../common/types/index';
 import {
   CreatePurchaseRequestApiDto,
+  UpdatePurchaseRequestApiDto,
   VotePurchaseRequestApiDto,
   UpdateApprovalRuleApiDto,
 } from './dto';
@@ -83,6 +84,16 @@ export class PurchaseRequestsController {
   @UseGuards(new ViewerBlockGuard())
   markPurchased(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.svc.markPurchased(id, req.accountId, req.user.id);
+  }
+
+  @Patch(':id')
+  @UseGuards(new ViewerBlockGuard())
+  updateRequest(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: UpdatePurchaseRequestApiDto,
+  ) {
+    return this.svc.update(id, req.accountId, req.user.id, req.accountRole, dto);
   }
 
   @Delete(':id')

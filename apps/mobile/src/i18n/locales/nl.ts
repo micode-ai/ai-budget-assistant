@@ -1385,6 +1385,10 @@ export default {
     notifPurchaseRequestsDesc: 'Nieuwe verzoeken, stemmen en beslissingen',
     titleLabel: 'Titel',
     amountLabel: 'Bedrag',
+    editRequest: 'Verzoek bewerken',
+    editTitle: 'Verzoek bewerken',
+    deleteRequest: 'Verzoek verwijderen',
+    deleteConfirm: 'Het verzoek wordt permanent verwijderd',
   },
   splits: {
     title: 'Categorieën splitsen',

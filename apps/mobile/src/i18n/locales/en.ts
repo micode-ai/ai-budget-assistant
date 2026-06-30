@@ -1385,6 +1385,10 @@ export default {
     notifPurchaseRequestsDesc: 'New requests, votes, and decisions',
     titleLabel: 'Title',
     amountLabel: 'Amount',
+    editRequest: 'Edit request',
+    editTitle: 'Edit Request',
+    deleteRequest: 'Delete request',
+    deleteConfirm: 'The request will be permanently removed',
   },
   splits: {
     title: 'Split Categories',

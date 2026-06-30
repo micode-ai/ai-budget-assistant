@@ -1388,6 +1388,10 @@ export default {
     notifPurchaseRequestsDesc: 'Nowe wnioski, głosy i decyzje',
     titleLabel: 'Tytuł',
     amountLabel: 'Kwota',
+    editRequest: 'Edytuj wniosek',
+    editTitle: 'Edytuj wniosek',
+    deleteRequest: 'Usuń wniosek',
+    deleteConfirm: 'Wniosek zostanie trwale usunięty',
   },
   splits: {
     title: 'Podział kategorii',
