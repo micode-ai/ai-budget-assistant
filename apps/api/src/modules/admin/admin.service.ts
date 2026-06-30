@@ -302,6 +302,21 @@ export class AdminService {
     return { id: user.id, email: user.email, name: user.name, deleted: true };
   }
 
+  // ─── System Config ───────────────────────────────
+
+  async getAllConfig(): Promise<Record<string, string>> {
+    const rows = await this.prisma.systemConfig.findMany();
+    return Object.fromEntries(rows.map((r) => [r.key, r.value]));
+  }
+
+  async setConfig(key: string, value: string): Promise<void> {
+    await this.prisma.systemConfig.upsert({
+      where: { key },
+      create: { key, value },
+      update: { value },
+    });
+  }
+
   // ─── System Health ───────────────────────────────
 
   async getSystemHealth() {

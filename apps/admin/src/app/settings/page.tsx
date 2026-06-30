@@ -1,11 +1,15 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { SystemHealth } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Activity, Database, Server, Wifi } from "lucide-react";
+import type { SystemHealth } from "@/types";
 
 export default function SettingsPage() {
   const { data: health, isLoading } = useQuery<SystemHealth>({
@@ -28,27 +32,16 @@ export default function SettingsPage() {
             <p className="text-muted-foreground">Loading...</p>
           ) : health ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <HealthItem
-                icon={Server}
-                label="API"
-                status={health.api}
-              />
-              <HealthItem
-                icon={Database}
-                label="Database"
-                status={health.database}
-              />
-              <HealthItem
-                icon={Wifi}
-                label="Redis"
-                status={health.redis}
-              />
+              <HealthItem icon={Server} label="API" status={health.api} />
+              <HealthItem icon={Database} label="Database" status={health.database} />
+              <HealthItem icon={Wifi} label="Redis" status={health.redis} />
               <div className="flex items-center gap-3 rounded-lg border p-4">
                 <Activity className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Uptime</p>
                   <p className="text-sm text-muted-foreground">
-                    {Math.floor(health.uptime / 3600)}h {Math.floor((health.uptime % 3600) / 60)}m
+                    {Math.floor(health.uptime / 3600)}h{" "}
+                    {Math.floor((health.uptime % 3600) / 60)}m
                   </p>
                 </div>
               </div>
@@ -64,6 +57,9 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* App Configuration */}
+      <AppConfigCard />
+
       {/* AI Cost Rates */}
       <Card>
         <CardHeader>
@@ -78,7 +74,10 @@ export default function SettingsPage() {
               { feature: "categorization", cost: 0.005, desc: "GPT-4 Turbo categorization" },
               { feature: "ocr", cost: 0.012, desc: "GPT-4o Vision OCR" },
             ].map((rate) => (
-              <div key={rate.feature} className="flex items-center justify-between rounded-lg border p-3">
+              <div
+                key={rate.feature}
+                className="flex items-center justify-between rounded-lg border p-3"
+              >
                 <div>
                   <p className="text-sm font-medium capitalize">{rate.feature}</p>
                   <p className="text-xs text-muted-foreground">{rate.desc}</p>
@@ -97,12 +96,78 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Admin access is controlled via the <code className="text-xs bg-muted px-1 py-0.5 rounded">ADMIN_EMAILS</code> environment
-            variable on the API server. Contact the system administrator to add or remove admin users.
+            Admin access is controlled via the{" "}
+            <code className="text-xs bg-muted px-1 py-0.5 rounded">ADMIN_EMAILS</code>{" "}
+            environment variable on the API server. Contact the system administrator to add or
+            remove admin users.
           </p>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function AppConfigCard() {
+  const queryClient = useQueryClient();
+  const { data: config } = useQuery<Record<string, string>>({
+    queryKey: ["admin", "config"],
+    queryFn: () => api.get("admin/config").json(),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (payload: { key: string; value: string }) =>
+      api.patch("admin/config", { json: payload }).json(),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "config"] }),
+  });
+
+  const [retention, setRetention] = useState<string>("");
+  const current = config?.familyFeedRetentionDays ?? "5";
+
+  const handleSave = () => {
+    const v = parseInt(retention, 10);
+    if (!retention || isNaN(v) || v < 1) return;
+    mutation.mutate({ key: "familyFeedRetentionDays", value: String(v) });
+    setRetention("");
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">App Configuration</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="max-w-sm space-y-2">
+          <Label htmlFor="feed-retention">
+            Family Feed retention (days)
+          </Label>
+          <p className="text-xs text-muted-foreground">
+            Feed events older than this are deleted by a daily cron at 03:00 UTC.
+            Current value: <strong>{current}</strong>.
+          </p>
+          <div className="flex gap-2">
+            <Input
+              id="feed-retention"
+              type="number"
+              min={1}
+              placeholder={current}
+              value={retention}
+              onChange={(e) => setRetention(e.target.value)}
+              className="w-28"
+            />
+            <Button
+              onClick={handleSave}
+              disabled={mutation.isPending || !retention}
+              size="sm"
+            >
+              {mutation.isPending ? "Saving…" : "Save"}
+            </Button>
+            {mutation.isSuccess && (
+              <span className="self-center text-sm text-green-600">Saved</span>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -121,9 +186,7 @@ function HealthItem({
       <div className="flex-1">
         <p className="text-sm font-medium">{label}</p>
       </div>
-      <Badge variant={status === "ok" ? "default" : "destructive"}>
-        {status}
-      </Badge>
+      <Badge variant={status === "ok" ? "default" : "destructive"}>{status}</Badge>
     </div>
   );
 }
