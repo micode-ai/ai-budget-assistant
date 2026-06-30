@@ -29,13 +29,6 @@ const TYPE_ICON: Record<string, React.ComponentProps<typeof Ionicons>['name']> =
   purchase_request_rejected:   'close-circle',
 };
 
-// PR status pill colors
-const STATUS_COLOR: Record<string, string> = {
-  PENDING:  '#F59E0B',
-  APPROVED: '#10B981',
-  PURCHASED:'#6366F1',
-  REJECTED: '#EF4444',
-};
 
 function typeColor(t: string) {
   return TYPE_COLOR[t] ?? '#6B7280';
@@ -86,14 +79,6 @@ export function FeedGroupCard({ group }: Props) {
     ? `${sign}${formatCurrency(group.totalAmount, group.currency)}`
     : '';
 
-  // PR status chip
-  const prStatus  = group.purchaseRequest?.status ?? 'PENDING';
-  const prColor   = STATUS_COLOR[prStatus] ?? '#6B7280';
-  const prStatusLabel =
-    prStatus === 'APPROVED' ? t('familyFeed.purchaseApproved') :
-    prStatus === 'PURCHASED'? t('familyFeed.purchaseMade') :
-    prStatus === 'REJECTED' ? t('familyFeed.purchaseRejected') :
-    t('familyFeed.purchaseShort');
 
   return (
     <View
@@ -144,15 +129,9 @@ export function FeedGroupCard({ group }: Props) {
             </Text>
             <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
           </View>
-          <View style={styles.prMeta}>
-            <Text style={[styles.prAmount, { color: theme.colors.textPrimary }]}>
-              {formatCurrency(group.purchaseRequest.amount, group.purchaseRequest.currency)}
-            </Text>
-            <View style={[styles.statusChip, { backgroundColor: prColor + '1A' }]}>
-              <View style={[styles.statusDot, { backgroundColor: prColor }]} />
-              <Text style={[styles.statusText, { color: prColor }]}>{prStatusLabel}</Text>
-            </View>
-          </View>
+          <Text style={[styles.prAmount, { color: theme.colors.textPrimary }]}>
+            {formatCurrency(group.purchaseRequest.amount, group.purchaseRequest.currency)}
+          </Text>
         </TouchableOpacity>
       ) : (
         /* Expense / income card */
@@ -253,11 +232,11 @@ export function FeedGroupCard({ group }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 12,
+    borderRadius: 10,
     borderWidth: 1,
     borderLeftWidth: 4,
-    padding: 12,
-    marginBottom: 8,
+    padding: 10,
+    marginBottom: 6,
   },
 
   // Header
@@ -265,7 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   avatar: {
     width: 34,
@@ -371,7 +350,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 4,
-    marginBottom: 8,
+    marginBottom: 4,
   },
   prTitle: {
     fontSize: 14,
@@ -379,31 +358,8 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 18,
   },
-  prMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
   prAmount: {
     fontSize: 16,
     fontWeight: '700',
-  },
-  statusChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 10,
-  },
-  statusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  statusText: {
-    fontSize: 11,
-    fontWeight: '600',
   },
 });
