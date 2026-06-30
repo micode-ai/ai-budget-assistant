@@ -96,6 +96,7 @@ export interface AdminUserDetail {
     aiRequestsUsed: number;
     aiRequestsResetAt: string | null;
     cancelAtPeriodEnd: boolean;
+    customAiLimit: number | null;
   } | null;
   accounts: Array<{
     id: string;
