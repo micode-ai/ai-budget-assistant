@@ -85,7 +85,7 @@ export function NetProfitWidget({ refreshKey: _refreshKey = 0 }: NetProfitWidget
       )}
       <InteractiveLineChart
         data={data}
-        height={160}
+        height={200}
         lineColor={lineColor}
         areaChart
         formatValue={(v) => formatCurrency(v, displayCurrency)}
@@ -102,6 +102,7 @@ const createStyles = (theme: Theme) => ({
     marginBottom: theme.spacing[5],
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
+    overflow: 'hidden' as const,
   },
   headerRow: {
     flexDirection: 'row' as const,
