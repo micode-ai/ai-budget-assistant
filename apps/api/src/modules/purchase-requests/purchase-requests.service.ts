@@ -341,21 +341,27 @@ export class PurchaseRequestsService {
     if (!pr) throw new NotFoundException('Purchase request not found');
     if (pr.createdByUserId !== userId && userRole !== 'owner') {
       throw new ForbiddenException(
-        'Only the creator or account owner can cancel this request',
+        'Only the creator or account owner can delete this request',
       );
     }
-    await this.prisma.purchaseRequest.update({
-      where: { id },
-      data: { status: 'REJECTED' as any },
-    });
 
-    void this.familyFeed
-      ?.recordEvent(pr.accountId, pr.createdByUserId, 'PURCHASE_REQUEST_REJECTED', pr.id, {
-        amount: Number(pr.amount),
-        currency: pr.currency,
-        title: pr.title,
-      })
-      .catch(() => {});
+    if (pr.status === 'PENDING') {
+      // Cancel pending → set REJECTED and record in family feed
+      await this.prisma.purchaseRequest.update({
+        where: { id },
+        data: { status: 'REJECTED' as any },
+      });
+      void this.familyFeed
+        ?.recordEvent(pr.accountId, pr.createdByUserId, 'PURCHASE_REQUEST_REJECTED', pr.id, {
+          amount: Number(pr.amount),
+          currency: pr.currency,
+          title: pr.title,
+        })
+        .catch(() => {});
+    } else {
+      // History cleanup → hard delete
+      await this.prisma.purchaseRequest.delete({ where: { id } });
+    }
   }
 
   async updateApprovalRule(accountId: string, rule: ApprovalRule): Promise<void> {
