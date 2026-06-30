@@ -72,7 +72,15 @@ export function InteractiveLineChart({
     ),
   }));
 
-  const maxValue = Math.max(...data.map((d) => Math.abs(d.value)), 1);
+  // When the data contains negative values, gifted-charts allocates extra space below
+  // the x-axis beyond `height`. We must explicitly set mostNegativeValue +
+  // noOfSectionsBelowXAxis so the chart distributes sections within the given height.
+  const hasNegative = data.some((d) => d.value < 0);
+  const maxDataAbs = Math.max(...data.map((d) => Math.abs(d.value)), 1);
+  const minDataValue = hasNegative ? Math.min(...data.map((d) => d.value)) : 0;
+  const maxValue = maxDataAbs * 1.15;
+  const mostNegativeValue = hasNegative ? minDataValue * 1.15 : undefined;
+  const noOfSectionsBelowXAxis = hasNegative ? 4 : undefined;
 
   return (
     <View style={styles.container}>
@@ -91,8 +99,10 @@ export function InteractiveLineChart({
         isAnimated={animate}
         animationDuration={600}
         curved
-        maxValue={maxValue * 1.1}
+        maxValue={maxValue}
         noOfSections={4}
+        mostNegativeValue={mostNegativeValue}
+        noOfSectionsBelowXAxis={noOfSectionsBelowXAxis}
         yAxisThickness={0}
         xAxisThickness={1}
         xAxisColor={theme.colors.border}
