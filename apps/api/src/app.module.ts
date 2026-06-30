@@ -46,6 +46,7 @@ import { AnomalyModule } from './modules/anomaly/anomaly.module';
 import { MerchantRulesModule } from './modules/merchant-rules/merchant-rules.module';
 import { CacheModule } from './common/cache/cache.module';
 import { PurchaseRequestsModule } from './modules/purchase-requests/purchase-requests.module';
+import { FamilyFeedModule } from './modules/family-feed/family-feed.module';
 
 @Module({
   imports: [
@@ -116,6 +117,7 @@ import { PurchaseRequestsModule } from './modules/purchase-requests/purchase-req
     ImportBatchesModule,
     UserSubscriptionsModule,
     PurchaseRequestsModule,
+    FamilyFeedModule,
   ],
   providers: [
     {

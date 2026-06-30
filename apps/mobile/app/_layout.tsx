@@ -800,6 +800,14 @@ function RootNavigator() {
             title: t('scenarioSimulator.title'),
           }}
         />
+        <Stack.Screen
+          name="family-feed/index"
+          options={{
+            headerShown: true,
+            title: t('familyFeed.title'),
+            headerBackTitle: '',
+          }}
+        />
         </Stack>
       </WebShell>
       <UpdatePrompt />

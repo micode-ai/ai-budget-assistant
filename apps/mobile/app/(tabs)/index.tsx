@@ -21,7 +21,7 @@ import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
-import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget } from '@/components/widgets';
+import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget, FamilyFeedWidget } from '@/components/widgets';
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
 import { useAlertStore } from '@/stores/alertStore';
@@ -368,6 +368,11 @@ export default function DashboardScreen() {
               // Shown as the home hero number (tap → breakdown sheet). No duplicate
               // dashboard card — the hero is the single in-app surface for this value.
               return null;
+
+            case 'familyFeed':
+              return widgetVisibility.familyFeed && currentAccountType !== 'personal'
+                ? <FamilyFeedWidget key="familyFeed" />
+                : null;
 
             case 'financialHealth':
               return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;

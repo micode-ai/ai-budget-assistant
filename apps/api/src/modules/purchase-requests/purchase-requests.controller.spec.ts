@@ -79,7 +79,7 @@ describe('PurchaseRequestsController', () => {
 
   it('POST /:id/mark-purchased calls markPurchased', async () => {
     await ctrl.markPurchased(req, 'pr1');
-    expect(mockSvc.markPurchased).toHaveBeenCalledWith('pr1', 'acc1');
+    expect(mockSvc.markPurchased).toHaveBeenCalledWith('pr1', 'acc1', 'user1');
   });
 
   it('DELETE /:id calls cancel with userRole', async () => {

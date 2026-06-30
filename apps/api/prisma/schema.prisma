@@ -97,6 +97,14 @@ enum VoteChoice {
   ABSTAIN
 }
 
+enum FeedEventType {
+  EXPENSE_ADDED
+  INCOME_ADDED
+  PURCHASE_REQUEST_CREATED
+  PURCHASE_REQUEST_APPROVED
+  PURCHASE_REQUEST_PURCHASED
+}
+
 // ---- Models ----
 
 model User {
@@ -190,6 +198,8 @@ model User {
   importBatches     ImportBatch[]
   purchaseRequests      PurchaseRequest[]     @relation("PurchaseRequestCreator")
   purchaseRequestVotes  PurchaseRequestVote[] @relation("PurchaseRequestVoter")
+  feedEvents            FamilyFeedEvent[]
+  feedReactions         FeedReaction[]
 
   @@map("users")
 }
@@ -248,6 +258,7 @@ model Account {
   merchantCategoryRules   MerchantCategoryRule[]
   goalContributions       GoalContribution[]
   purchaseRequests        PurchaseRequest[]
+  feedEvents              FamilyFeedEvent[]
 
   @@map("accounts")
 }
@@ -1574,4 +1585,37 @@ model PurchaseRequestVote {
 
   @@unique([requestId, userId])
   @@map("purchase_request_votes")
+}
+
+// ---- Family Feed ----
+
+model FamilyFeedEvent {
+  id        String        @id @default(cuid())
+  accountId String        @map("account_id")
+  userId    String        @map("user_id")
+  type      FeedEventType
+  entityId  String        @map("entity_id")
+  metadata  Json
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  account   Account        @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reactions FeedReaction[]
+
+  @@index([accountId, createdAt(sort: Desc)])
+  @@map("family_feed_events")
+}
+
+model FeedReaction {
+  id        String   @id @default(cuid())
+  eventId   String   @map("event_id")
+  userId    String   @map("user_id")
+  emoji     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  event FamilyFeedEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@map("feed_reactions")
 }

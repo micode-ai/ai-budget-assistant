@@ -3,9 +3,11 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { FamilyFeedService } from '../family-feed/family-feed.service';
 import type {
   CreatePurchaseRequestDto,
   VotePurchaseRequestDto,
@@ -21,6 +23,7 @@ export class PurchaseRequestsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    @Optional() private readonly familyFeed?: FamilyFeedService,
   ) {}
 
   // ─── pure helpers (accessible in tests via cast) ─────────────────────
@@ -93,6 +96,15 @@ export class PurchaseRequestsService {
 
     // Notify all account members except the creator
     void this.notifyMembers(accountId, userId, pr.title, 'purchase_request_created');
+
+    // fire-and-forget: record in family feed (non-personal accounts only)
+    void this.familyFeed
+      ?.recordEvent(pr.accountId, pr.createdByUserId, 'PURCHASE_REQUEST_CREATED', pr.id, {
+        amount: Number(pr.amount),
+        currency: pr.currency,
+        title: pr.title,
+      })
+      .catch(() => {});
 
     return this.toResponse(pr);
   }
@@ -182,6 +194,13 @@ export class PurchaseRequestsService {
       });
       if (decision === 'APPROVED') {
         void this.notifyMembers(accountId, null, pr.title, 'purchase_request_approved');
+        void this.familyFeed
+          ?.recordEvent(pr.accountId, pr.createdByUserId, 'PURCHASE_REQUEST_APPROVED', pr.id, {
+            amount: Number(pr.amount),
+            currency: pr.currency,
+            title: pr.title,
+          })
+          .catch(() => {});
       } else {
         void this.notifications.sendToUser(
           pr.createdByUserId,
@@ -247,7 +266,7 @@ export class PurchaseRequestsService {
     return { expenseId: expense.id };
   }
 
-  async markPurchased(id: string, accountId: string): Promise<void> {
+  async markPurchased(id: string, accountId: string, userId: string): Promise<void> {
     const pr = await this.prisma.purchaseRequest.findFirst({
       where: { id, accountId },
     });
@@ -266,6 +285,15 @@ export class PurchaseRequestsService {
         data: { status: 'PURCHASED' as any },
       }),
     ]);
+
+    // fire-and-forget: record in family feed (non-personal accounts only)
+    void this.familyFeed
+      ?.recordEvent(pr.accountId, userId, 'PURCHASE_REQUEST_PURCHASED', pr.id, {
+        amount: Number(pr.amount),
+        currency: pr.currency,
+        title: pr.title,
+      })
+      .catch(() => {});
   }
 
   async cancel(
