@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -8,16 +9,17 @@ import { useFamilyFeedStore } from '@/stores/familyFeedStore';
 import { useAccountStore } from '@/stores/accountStore';
 import type { FeedGroup } from '@budget/shared-types';
 
-const RING_COLORS = {
-  expenses: '#EF4444',
-  incomes: '#10B981',
-  purchase_request_created: '#F59E0B',
-  purchase_request_approved: '#10B981',
-  purchase_request_purchased: '#6366F1',
-} as const;
+// Color + icon per event type — makes each bubble self-explanatory at a glance
+const TYPE_META: Record<string, { color: string; icon: React.ComponentProps<typeof Ionicons>['name'] }> = {
+  expenses:                    { color: '#EF4444', icon: 'arrow-down' },
+  incomes:                     { color: '#10B981', icon: 'arrow-up' },
+  purchase_request_created:    { color: '#F59E0B', icon: 'cart-outline' },
+  purchase_request_approved:   { color: '#10B981', icon: 'checkmark-circle' },
+  purchase_request_purchased:  { color: '#6366F1', icon: 'bag-check-outline' },
+};
 
-function ringColor(type: string): string {
-  return (RING_COLORS as Record<string, string>)[type] ?? '#6B7280';
+function typeMeta(type: string) {
+  return TYPE_META[type] ?? { color: '#6B7280', icon: 'ellipsis-horizontal' as const };
 }
 
 function StoryBubble({ group }: { group: FeedGroup }) {
@@ -25,31 +27,55 @@ function StoryBubble({ group }: { group: FeedGroup }) {
   const theme = useTheme();
   const router = useRouter();
 
+  const { color, icon } = typeMeta(group.type);
   const isPR = group.type.startsWith('purchase_request');
-  const label = isPR
+
+  // Line 1: colored amount with sign prefix (or "Request" for PRs)
+  const amountLabel = isPR
     ? t('familyFeed.purchaseShort')
     : group.totalAmount != null && group.currency
-    ? formatCurrency(group.totalAmount, group.currency)
+    ? `${group.type === 'expenses' ? '−' : '+'}${formatCurrency(group.totalAmount, group.currency)}`
     : `×${group.count}`;
+
+  // Line 2: type label in same color — makes type crystal clear
+  const typeLabel = isPR
+    ? t('familyFeed.typeRequest')
+    : t(group.type === 'expenses' ? 'familyFeed.typeExpense' : 'familyFeed.typeIncome');
 
   return (
     <TouchableOpacity
-      style={bubbleStyles.bubble}
+      style={s.bubble}
       onPress={() => router.push('/family-feed' as any)}
-      activeOpacity={0.75}
+      activeOpacity={0.72}
     >
-      <View style={[bubbleStyles.ringWrap, { borderColor: ringColor(group.type) }]}>
-        <View style={[bubbleStyles.avatar, { backgroundColor: theme.colors.primary + '22' }]}>
-          <Text style={[bubbleStyles.avatarLetter, { color: theme.colors.primary }]}>
-            {group.userName.charAt(0).toUpperCase()}
-          </Text>
+      {/* Avatar: colored ring + tinted background + person letter */}
+      <View style={s.avatarWrapper}>
+        <View style={[s.ring, { borderColor: color }]}>
+          <View style={[s.avatar, { backgroundColor: color + '20' }]}>
+            <Text style={[s.initial, { color: theme.colors.textPrimary }]}>
+              {group.userName.charAt(0).toUpperCase()}
+            </Text>
+          </View>
+        </View>
+        {/* Type badge — small circle with icon at bottom-right */}
+        <View style={[s.badge, { backgroundColor: color }]}>
+          <Ionicons name={icon} size={9} color="#fff" />
         </View>
       </View>
-      <Text style={[bubbleStyles.bubbleName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+
+      {/* Name */}
+      <Text style={[s.name, { color: theme.colors.textPrimary }]} numberOfLines={1}>
         {group.userName.split(' ')[0]}
       </Text>
-      <Text style={[bubbleStyles.bubbleLabel, { color: theme.colors.textSecondary }]} numberOfLines={1}>
-        {label}
+
+      {/* Amount in type color */}
+      <Text style={[s.amount, { color }]} numberOfLines={1}>
+        {amountLabel}
+      </Text>
+
+      {/* Type label — explicit text so the user never has to guess */}
+      <Text style={[s.typeLabel, { color }]} numberOfLines={1}>
+        {typeLabel}
       </Text>
     </TouchableOpacity>
   );
@@ -93,44 +119,72 @@ export function FamilyFeedWidget() {
   );
 }
 
-const bubbleStyles = StyleSheet.create({
+// Static styles (no theme dependency) for StoryBubble
+const s = StyleSheet.create({
   bubble: {
     alignItems: 'center',
-    width: 68,
-    marginRight: 12,
+    width: 72,
+    marginRight: 14,
   },
-  ringWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+  avatarWrapper: {
+    width: 56,
+    height: 56,
+    position: 'relative',
+  },
+  ring: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     borderWidth: 2.5,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 2,
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 47,
+    height: 47,
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarLetter: {
-    fontSize: 18,
+  initial: {
+    fontSize: 19,
     fontWeight: '700',
   },
-  bubbleName: {
+  badge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // white border so it separates from the ring on any background
+    borderWidth: 1.5,
+    borderColor: '#fff',
+  },
+  name: {
     fontSize: 11,
     fontWeight: '600',
-    marginTop: 5,
+    marginTop: 6,
     textAlign: 'center',
-    width: 64,
+    width: 70,
   },
-  bubbleLabel: {
+  amount: {
     fontSize: 10,
+    fontWeight: '700',
+    marginTop: 2,
+    textAlign: 'center',
+    width: 70,
+  },
+  typeLabel: {
+    fontSize: 9,
+    fontWeight: '500',
     marginTop: 1,
     textAlign: 'center',
-    width: 64,
+    width: 70,
+    opacity: 0.85,
   },
 });
 
@@ -140,7 +194,7 @@ const createStyles = (theme: Theme) =>
       borderRadius: 16,
       borderWidth: 1,
       paddingTop: 14,
-      paddingBottom: 14,
+      paddingBottom: 16,
       paddingHorizontal: 16,
       marginBottom: 12,
     },
@@ -148,7 +202,7 @@ const createStyles = (theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 12,
+      marginBottom: 14,
     },
     title: {
       fontSize: 16,
