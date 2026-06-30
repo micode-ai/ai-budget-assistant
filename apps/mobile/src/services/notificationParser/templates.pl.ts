@@ -44,7 +44,7 @@ const CURRENCY_PATTERN = /\b(PLN|EUR|USD|GBP|UAH|RUB|CHF|CZK|NOK|SEK|DKK|HUF|BYN
 export const TEMPLATES: Record<string, NotificationTemplate> = {
   // PKO BP — "Płatność kartą -123,45 PLN w SKLEP NAZWA"
   'pl.pkobp.iko': {
-    amountRegex: /(?:P[łl]atno[śs][śc][ćc]|Przelew|Wyp[łl]ata|Op[łl]ata).*?([\d][\d\s]*[,.][\d]{1,2})/i,
+    amountRegex: /(?:P[łl]atno[śs][śc][ćc]|Przelew|Wyp[łl]ata|Op[łl]ata|Obci[ąa][żz]enie(?:\s+karty?)?).*?([\d][\d\s]*[,.][\d]{1,2})/i,
     merchantRegex: /\bw\s+(.+?)(?:\s*$|\s+na\s+)/i,
     currencyRegex: CURRENCY_PATTERN,
     currencyDefault: 'PLN',
