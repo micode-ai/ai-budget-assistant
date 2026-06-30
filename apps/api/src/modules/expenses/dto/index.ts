@@ -222,6 +222,10 @@ export class CreateExpenseDto {
   @IsOptional()
   @IsNumber()
   encryptionKeyVersion?: number;
+
+  @IsOptional()
+  @IsString()
+  externalRef?: string;
 }
 
 export class UpdateExpenseDto {
