@@ -181,14 +181,15 @@ export class FamilyFeedService {
     await this.prisma.feedReaction.deleteMany({ where: { eventId, userId } });
   }
 
-  // Runs daily at 03:00 UTC — delete events older than 90 days
+  // Runs daily at 03:00 UTC — delete events older than FAMILY_FEED_RETENTION_DAYS (default 5)
   @Cron('0 3 * * *')
   async pruneOldEvents(): Promise<void> {
-    const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+    const days = Math.max(1, parseInt(process.env.FAMILY_FEED_RETENTION_DAYS ?? '5', 10) || 5);
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     const { count } = await this.prisma.familyFeedEvent.deleteMany({
       where: { createdAt: { lt: cutoff } },
     });
-    if (count > 0) this.logger.log(`Pruned ${count} family feed events older than 90 days`);
+    if (count > 0) this.logger.log(`Pruned ${count} family feed events older than ${days} days`);
   }
 
   // ── private ──────────────────────────────────────────────────────────
