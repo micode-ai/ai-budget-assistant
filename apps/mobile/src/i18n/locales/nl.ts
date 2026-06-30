@@ -2051,6 +2051,7 @@ export default {
     purchaseApproved: 'Aankoop goedgekeurd',
     purchaseMade: 'Gekocht!',
     purchaseShort: 'Aanvraag',
+    purchaseRejected: 'Afgewezen',
     typeExpense: 'Uitgave',
     typeIncome: 'Inkomst',
     typeRequest: 'Aankoopverzoek',

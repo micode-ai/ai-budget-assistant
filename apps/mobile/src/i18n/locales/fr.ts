@@ -2051,6 +2051,7 @@ export default {
     purchaseApproved: 'Achat approuvé',
     purchaseMade: 'Acheté !',
     purchaseShort: 'Demande',
+    purchaseRejected: 'Refusé',
     typeExpense: 'Dépense',
     typeIncome: 'Revenu',
     typeRequest: "Demande d'achat",
