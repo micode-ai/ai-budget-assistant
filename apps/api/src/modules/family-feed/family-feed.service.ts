@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { FeedEventType } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import type { FeedGroup } from '@budget/shared-types';
@@ -16,6 +17,8 @@ type RawFeedEvent = {
 
 @Injectable()
 export class FamilyFeedService {
+  private readonly logger = new Logger(FamilyFeedService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   // ── pure helper — public for testing ─────────────────────────────────
@@ -176,6 +179,16 @@ export class FamilyFeedService {
     if (!event) throw new NotFoundException('Feed event not found');
 
     await this.prisma.feedReaction.deleteMany({ where: { eventId, userId } });
+  }
+
+  // Runs daily at 03:00 UTC — delete events older than 90 days
+  @Cron('0 3 * * *')
+  async pruneOldEvents(): Promise<void> {
+    const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+    const { count } = await this.prisma.familyFeedEvent.deleteMany({
+      where: { createdAt: { lt: cutoff } },
+    });
+    if (count > 0) this.logger.log(`Pruned ${count} family feed events older than 90 days`);
   }
 
   // ── private ──────────────────────────────────────────────────────────
