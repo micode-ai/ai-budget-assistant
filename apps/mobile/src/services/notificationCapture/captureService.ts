@@ -34,6 +34,10 @@ export function setToastHandler(handler: (message: string, expenseId: string) =>
 
 let _unsubscribe: (() => void) | null = null;
 
+// Tracks externalRefs currently being processed to prevent a race where two identical
+// notifications arrive before the first addExpense updates the in-memory store.
+const _inFlight = new Set<string>();
+
 /**
  * Start listening for bank notification events.
  * Safe to call on all platforms — on iOS/web the subscription is a no-op.
@@ -71,81 +75,94 @@ async function handleBankNotification(payload: BankNotificationPayload): Promise
     const dedupKey = `${payload.packageName}|${amount}|${merchant ?? ''}|${isoDate}`;
     const externalRef = `notif:${await sha256SimpleHex(dedupKey)}`;
 
+    // In-flight guard: prevents race where two identical events arrive before the first
+    // addExpense updates the in-memory store (TOCTOU). Must be checked before the store
+    // lookup and removed in the finally block regardless of success/failure.
+    if (_inFlight.has(externalRef)) return;
+    _inFlight.add(externalRef);
+
     const existingExpenses = useExpenseStore.getState().expenses;
     const alreadyExists = existingExpenses.some(
       (e) => e.externalRef === externalRef && !e.isDeleted,
     );
-    if (alreadyExists) return; // server-side unique constraint is the backstop, this is the fast path
-
-    // --- Content-dedup (Tier 1, Case B) ---
-    // After the externalRef fast-path check, also reject the stub when a richer
-    // expense already covers the same transaction (same amount + currency + date ±1d
-    // + payee). This prevents a double-count when the user manually logged the same
-    // expense before the bank push arrived — or when the stub fires for a transaction
-    // already recorded via OCR / voice / manual. The richer source wins; the stub is
-    // silently skipped. Case A on the server will reconcile any stubs that slip
-    // through to the API (notification-before-manual race) via the sync pull.
-    //
-    // ACCEPTED MISS: push "Żabka" vs OCR "ZABKA Z123 WARSZAWA" will NOT match here
-    // (exact equality only, no fuzzy). Case A is the backstop for that scenario.
-    const contentDup = contentMatchesExisting(
-      { amount, currencyCode, occurredAt, merchant: merchant ?? null },
-      existingExpenses,
-    );
-    if (contentDup) {
-      // A richer expense already exists for this transaction — do not create a stub.
-      console.warn(
-        '[NotificationCapture] Content-dedup: skipping stub — existing expense matches',
-        { amount, currencyCode, merchant, isoDate },
-      );
+    if (alreadyExists) {
+      _inFlight.delete(externalRef);
       return;
     }
 
-    // --- Category resolution ---
-    // Priority: merchantRulesStore (user-trained) → suggestCategoryFromMerchantPL → undefined
-    let categoryId: string | undefined;
-    if (merchant) {
-      const merchantRulesStore = useMerchantRulesStore.getState();
-      if (!merchantRulesStore.isLoaded) {
-        // Best-effort load; skip if not available (offline or first launch)
-        try { await merchantRulesStore.loadRules(); } catch { /* ignore */ }
+    try {
+      // --- Content-dedup (Tier 1, Case B) ---
+      // After the externalRef fast-path check, also reject the stub when a richer
+      // expense already covers the same transaction (same amount + currency + date ±1d
+      // + payee). This prevents a double-count when the user manually logged the same
+      // expense before the bank push arrived — or when the stub fires for a transaction
+      // already recorded via OCR / voice / manual. The richer source wins; the stub is
+      // silently skipped. Case A on the server will reconcile any stubs that slip
+      // through to the API (notification-before-manual race) via the sync pull.
+      //
+      // ACCEPTED MISS: push "Żabka" vs OCR "ZABKA Z123 WARSZAWA" will NOT match here
+      // (exact equality only, no fuzzy). Case A is the backstop for that scenario.
+      const contentDup = contentMatchesExisting(
+        { amount, currencyCode, occurredAt, merchant: merchant ?? null },
+        existingExpenses,
+      );
+      if (contentDup) {
+        // A richer expense already exists for this transaction — do not create a stub.
+        console.warn(
+          '[NotificationCapture] Content-dedup: skipping stub — existing expense matches',
+          { amount, currencyCode, merchant, isoDate },
+        );
+        return;
       }
-      const ruleCategoryId = merchant ? merchantRulesStore.getRuleForMerchant(merchant) : null;
-      if (ruleCategoryId) {
-        categoryId = ruleCategoryId;
-      } else if (suggestedCategory) {
-        // Resolve category name to local id
-        const catStore = useCategoryStore.getState();
-        const cat = catStore.getCategoryByName(suggestedCategory, 'expense');
-        categoryId = cat?.id;
+
+      // --- Category resolution ---
+      // Priority: merchantRulesStore (user-trained) → suggestCategoryFromMerchantPL → undefined
+      let categoryId: string | undefined;
+      if (merchant) {
+        const merchantRulesStore = useMerchantRulesStore.getState();
+        if (!merchantRulesStore.isLoaded) {
+          // Best-effort load; skip if not available (offline or first launch)
+          try { await merchantRulesStore.loadRules(); } catch { /* ignore */ }
+        }
+        const ruleCategoryId = merchant ? merchantRulesStore.getRuleForMerchant(merchant) : null;
+        if (ruleCategoryId) {
+          categoryId = ruleCategoryId;
+        } else if (suggestedCategory) {
+          // Resolve category name to local id
+          const catStore = useCategoryStore.getState();
+          const cat = catStore.getCategoryByName(suggestedCategory, 'expense');
+          categoryId = cat?.id;
+        }
       }
-    }
 
-    // --- Create expense (offline-first) ---
-    const userId = useAuthStore.getState().user?.id ?? '';
-    const expense = await useExpenseStore.getState().addExpense({
-      userId,
-      amount,
-      currencyCode: currencyCode as any,
-      description: merchant
-        ? `${merchant} (auto-captured)`
-        : `Bank notification (auto-captured)`,
-      merchant: merchant ?? undefined,
-      date: occurredAt,
-      categoryId,
-      source: 'notification',
-      externalRef,
-      isRecurring: false,
-      isDebt: false,
-      isDebtRepayment: false,
-    });
+      // --- Create expense (offline-first) ---
+      const userId = useAuthStore.getState().user?.id ?? '';
+      const expense = await useExpenseStore.getState().addExpense({
+        userId,
+        amount,
+        currencyCode: currencyCode as any,
+        description: merchant
+          ? `${merchant} (auto-captured)`
+          : `Bank notification (auto-captured)`,
+        merchant: merchant ?? undefined,
+        date: occurredAt,
+        categoryId,
+        source: 'notification',
+        externalRef,
+        isRecurring: false,
+        isDebt: false,
+        isDebtRepayment: false,
+      });
 
-    // --- UX feedback: in-app toast ---
-    if (_toastHandler) {
-      const label = merchant
-        ? `${amount.toFixed(2)} ${currencyCode} · ${merchant}`
-        : `${amount.toFixed(2)} ${currencyCode}`;
-      _toastHandler(label, expense.id);
+      // --- UX feedback: in-app toast ---
+      if (_toastHandler) {
+        const label = merchant
+          ? `${amount.toFixed(2)} ${currencyCode} · ${merchant}`
+          : `${amount.toFixed(2)} ${currencyCode}`;
+        _toastHandler(label, expense.id);
+      }
+    } finally {
+      _inFlight.delete(externalRef);
     }
   } catch (e) {
     // Log with warn, never error (CLAUDE.md offline-logging rule + no crash reporting)

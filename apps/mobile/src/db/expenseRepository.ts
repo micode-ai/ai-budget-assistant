@@ -24,6 +24,7 @@ interface ExpenseRow {
   recurring_id: string | null;
   recurring_period: string | null;
   source: string;
+  external_ref: string | null;
   is_debt: number;
   is_debt_repayment: number;
   is_planned: number;
@@ -67,6 +68,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     recurringId: row.recurring_id ?? undefined,
     recurringPeriod: (row.recurring_period as RecurringPeriod) ?? undefined,
     source: row.source as ExpenseSource,
+    externalRef: row.external_ref ?? undefined,
     isDebt: row.is_debt === 1,
     isDebtRepayment: row.is_debt_repayment === 1,
     isPlanned: row.is_planned === 1,
@@ -106,6 +108,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.recurringId ?? null,
     expense.recurringPeriod ?? null,
     expense.source,
+    expense.externalRef ?? null,
     expense.isDebt ? 1 : 0,
     expense.isDebtRepayment ? 1 : 0,
     expense.debtContactName ?? null,
@@ -141,12 +144,12 @@ export async function insertExpense(expense: Expense): Promise<void> {
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, merchant, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
-      is_recurring, recurring_id, recurring_period, source,
+      is_recurring, recurring_id, recurring_period, source, external_ref,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version, is_planned
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -326,12 +329,12 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
       description, notes, merchant, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
-      is_recurring, recurring_id, recurring_period, source,
+      is_recurring, recurring_id, recurring_period, source, external_ref,
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_income_id,
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version, is_planned
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -354,6 +357,7 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       recurring_id = excluded.recurring_id,
       recurring_period = excluded.recurring_period,
       source = excluded.source,
+      external_ref = COALESCE(excluded.external_ref, external_ref),
       is_debt = excluded.is_debt,
       is_debt_repayment = excluded.is_debt_repayment,
       is_planned = excluded.is_planned,
