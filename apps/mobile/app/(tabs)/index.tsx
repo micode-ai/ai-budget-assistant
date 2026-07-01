@@ -1,326 +1,112 @@
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Platform, Modal } from 'react-native';
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import { router, useFocusEffect } from 'expo-router';
+import { View, ScrollView, RefreshControl } from 'react-native';
+import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { QuickActionIcon } from '@/components/QuickActionIcon';
-import { hydrateTransactions } from '@/stores/hydrateTransactions';
-import { useBudgetStore } from '@/stores/budgetStore';
-import { useAuthStore } from '@/stores/authStore';
-import { useAccountStore } from '@/stores/accountStore';
-import { useWalletStore } from '@/stores/walletStore';
-import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
-import { useGamificationStore } from '@/stores/gamificationStore';
-import { useInvestmentStore } from '@/stores/investmentStore';
-import { useDebtStore } from '@/stores/debtStore';
-import { formatCurrency } from '@budget/shared-utils';
-import { useTranslation } from 'react-i18next';
-import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
-import { FatFinderCard } from '@/components/insights/FatFinderCard';
-import { GoalsCard } from '@/components/goals/GoalsCard';
-import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
-import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget, FamilyFeedWidget } from '@/components/widgets';
-import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
-import { useQuickActionStore, type QuickActionKey } from '@/stores/quickActionStore';
-import { useAlertStore } from '@/stores/alertStore';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
-import { useSafeToSpend } from '@/features/insights/useSafeToSpend';
-
-// Static maps — no render-time dependency, hoisted to module scope.
-const quickActionRoutes: Record<QuickActionKey, string> = {
-  add_expense: '/expense/new',
-  scan_receipt: '/expense/receipt',
-  voice_expense: '/expense/voice',
-  voice_income: '/income/voice',
-  scan_invoice: '/income/receipt',
-  exchange: '/wallet/exchange',
-  converter: '/converter',
-  transfers: '/wallet/transfer',
-  subscriptions: '/subscriptions',
-  purchase_request: '/purchase-requests',
-};
-
-const quickActionLabelKey: Record<QuickActionKey, string> = {
-  add_expense: 'dashboard.addExpense',
-  scan_receipt: 'dashboard.scanReceipt',
-  voice_expense: 'dashboard.voiceInput',
-  voice_income: 'dashboard.voiceIncome',
-  scan_invoice: 'dashboard.scanInvoice',
-  exchange: 'dashboard.exchangeCurrency',
-  converter: 'dashboard.currencyConverter',
-  transfers: 'dashboard.transfers',
-  subscriptions: 'subscriptionManager.title',
-  purchase_request: 'dashboard.purchaseRequest',
-};
+import { useHomeScreenData } from '@/hooks/useHomeScreenData';
+import { HomeHeroHeader } from '@/components/home/HomeHeroHeader';
+import { HomeQuickActionStrip } from '@/components/home/HomeQuickActionStrip';
+import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
+import { InvestmentCard, renderHomeWidget, type HomeWidgetContext } from '@/components/home/HomeWidgetSwitch';
+import type { QuickActionKey } from '@/stores/quickActionStore';
 
 export default function DashboardScreen() {
-  const [refreshing, setRefreshing] = useState(false);
-  const [widgetRefreshKey, setWidgetRefreshKey] = useState(0);
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
-  const { t } = useTranslation();
-  const { user } = useAuthStore();
-  const { getMonthlyBudgetSummary } = useBudgetStore();
-  const canEdit = useAccountStore((s) => s.canEdit());
-  const { walletSummary, loadWallet } = useWalletStore();
-  const { convertedIncomeTotal, convertedExpenseTotal, loadRates, rates } = useExchangeRateStore();
-  const { level, levelProgress, currentStreak, loadProfile } = useGamificationStore();
-  const { summary: investmentSummary, loadSummary: loadInvestmentSummary } = useInvestmentStore();
-  const { lentDebts, borrowedDebts, loadDebts } = useDebtStore();
-  const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
-  const { visibility: widgetVisibility, order: widgetOrder } = useWidgetVisibilityStore();
-  const { visibility: quickActionVisibility, order: quickActionOrder } = useQuickActionStore();
-  const unreadAlertCount = useAlertStore((s) => s.unreadCount);
-  const loadAlerts = useAlertStore((s) => s.loadAlerts);
   const theme = useTheme();
   const styles = useStyles(createStyles);
   // On desktop web the full-width WebTopBar carries the account/currency/alerts/
   // settings controls, so the hero's control row + divider are hidden there.
   const isDesktopWeb = useIsDesktopWeb();
-  const { data: safeToSpendData, hasEnoughData: hasSafeToSpend } = useSafeToSpend();
 
-  const currentAccountId = useAccountStore((s) => s.currentAccountId);
-
-  const currency = user?.currencyCode || 'USD';
-
-  const convertedLentTotal = useMemo(
-    () => lentDebts.reduce(
-      (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
-    ),
-    [lentDebts, currency, rates],
-  );
-  const convertedBorrowedTotal = useMemo(
-    () => borrowedDebts.reduce(
-      (sum, d) => sum + convertAmount(d.remainingAmount, d.currencyCode, currency, rates), 0,
-    ),
-    [borrowedDebts, currency, rates],
-  );
-
-  useEffect(() => {
-    if (currentAccountId) {
-      hydrateTransactions().then(() => loadDebts());
-      loadProfile();
-      if (currentAccountType === 'investment') {
-        loadInvestmentSummary();
-      }
-    }
-  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
-
-  // Refresh the alerts feed whenever the home tab regains focus (e.g. after
-  // adding an expense and returning). The server creates anomaly alerts
-  // asynchronously, so re-check once more shortly after to catch a fresh one
-  // — this keeps the bell badge current without a manual pull-to-refresh.
-  useFocusEffect(
-    useCallback(() => {
-      if (!currentAccountId) return;
-      loadAlerts();
-      const t = setTimeout(() => loadAlerts(), 2500);
-      return () => clearTimeout(t);
-    }, [loadAlerts, currentAccountId]),
-  );
-
-  const monthlyBudgetSummary = getMonthlyBudgetSummary();
-  const totalBudget = monthlyBudgetSummary.totalAmount;
-  const budgetSpent = monthlyBudgetSummary.totalSpent;
-  const budgetUsedPercent = totalBudget > 0 ? (budgetSpent / totalBudget) * 100 : 0;
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      const promises: Promise<any>[] = [loadWallet(), loadRates(), loadProfile(), loadAlerts()];
-      if (currentAccountType === 'investment') {
-        promises.push(loadInvestmentSummary());
-      }
-      await Promise.all([hydrateTransactions({ force: true }), ...promises]);
-      await loadDebts();
-    } finally {
-      setRefreshing(false);
-      setWidgetRefreshKey((k) => k + 1);
-    }
-  }, [loadWallet, loadRates, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary, loadAlerts]);
-
-  const remaining = totalBudget - budgetSpent;
-
-  const progressColor = budgetUsedPercent > 90
-    ? theme.colors.danger
-    : budgetUsedPercent > 70
-      ? theme.colors.warning
-      : theme.colors.primary;
-
-  const renderQuickActionIcon = (key: QuickActionKey) => {
-    // Income variants reuse the expense SVGs recolored green.
-    if (key === 'voice_income') return <QuickActionIcon name="voice_income" color={theme.colors.success} />;
-    if (key === 'scan_invoice') return <QuickActionIcon name="scan_invoice" color={theme.colors.success} />;
-    return <QuickActionIcon name={key} />;
-  };
+  const {
+    canEdit,
+    currency,
+    walletSummary,
+    convertedIncomeTotal,
+    convertedExpenseTotal,
+    level,
+    levelProgress,
+    currentStreak,
+    investmentSummary,
+    lentDebts,
+    borrowedDebts,
+    convertedLentTotal,
+    convertedBorrowedTotal,
+    currentAccountType,
+    widgetVisibility,
+    widgetOrder,
+    quickActionVisibility,
+    quickActionOrder,
+    unreadAlertCount,
+    monthlyBudgetSummary,
+    totalBudget,
+    budgetUsedPercent,
+    remaining,
+    refreshing,
+    widgetRefreshKey,
+    onRefresh,
+    safeToSpendData,
+    hasSafeToSpend,
+    rates,
+  } = useHomeScreenData();
 
   // De-dupe so a duplicate in the stored order can't render an action twice.
-  const visibleQuickActions = [...new Set(quickActionOrder)].filter((k) => quickActionVisibility[k]);
+  const visibleQuickActions: QuickActionKey[] = [...new Set(quickActionOrder)].filter((k) => quickActionVisibility[k]);
   // The header's bottom padding only exists to let the strip's icons overlap up
   // into the orange. With no strip (viewer role, or every action hidden), drop it.
   const showQuickActions = canEdit && visibleQuickActions.length > 0;
+
+  const widgetCtx: HomeWidgetContext = {
+    widgetVisibility,
+    monthlyBudgetSummary,
+    remaining,
+    totalBudget,
+    budgetUsedPercent,
+    convertedIncomeTotal,
+    convertedExpenseTotal,
+    currency,
+    lentDebts,
+    borrowedDebts,
+    convertedLentTotal,
+    convertedBorrowedTotal,
+    widgetRefreshKey,
+    walletSummary,
+    canEdit,
+    level,
+    levelProgress,
+    currentStreak,
+    investmentSummary,
+    currentAccountType,
+    rates,
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Orange Hero Header — the controls row + divider are hidden on desktop
           web, where WebTopBar provides account/currency/alerts/settings. */}
       {!isDesktopWeb && (
-        <View style={[styles.heroHeader, !showQuickActions && styles.heroHeaderNoStrip]}>
-          <View style={styles.heroTopRow}>
-            <AccountSwitcher compact showCurrency={false} />
-            <CurrencyPill compact />
-            <View style={styles.heroTopSpacer} />
-            <TouchableOpacity
-              onPress={() => router.push('/alerts' as any)}
-              style={[styles.settingsButton, styles.bellButton]}
-            >
-              <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
-              {unreadAlertCount > 0 && (
-                <View style={styles.alertBadge}>
-                  <Text style={styles.alertBadgeText}>{unreadAlertCount > 9 ? '9+' : unreadAlertCount}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => router.push('/settings')}
-              style={styles.settingsButton}
-            >
-              <Ionicons name="settings-outline" size={22} color="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.heroDivider} />
-          {/* Safe-to-spend hero number — shown when widget is visible and data available */}
-          {widgetVisibility.safeToSpend && hasSafeToSpend && safeToSpendData && (
-            <TouchableOpacity
-              style={styles.heroStsRow}
-              onPress={() => setSafeToSpendSheetVisible(true)}
-              activeOpacity={0.7}
-            >
-              <View>
-                <Text style={styles.heroStsLabel}>{t('safeToSpend.title')}</Text>
-                <Text style={styles.heroStsAmount}>
-                  {formatCurrency(safeToSpendData.safeToSpendToday, safeToSpendData.baseCurrency)}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.7)" />
-            </TouchableOpacity>
-          )}
-        </View>
+        <HomeHeroHeader
+          showQuickActions={showQuickActions}
+          unreadAlertCount={unreadAlertCount}
+          showSafeToSpend={widgetVisibility.safeToSpend}
+          hasSafeToSpend={hasSafeToSpend}
+          safeToSpendData={safeToSpendData}
+          onOpenSafeToSpend={() => setSafeToSpendSheetVisible(true)}
+        />
       )}
 
       {/* Quick Actions — wrapping grid (4 per row); extra rows push content down */}
       {showQuickActions && (
-        <View style={[styles.quickActionsGrid, Platform.OS === 'web' && styles.webCenterRow, isDesktopWeb && styles.quickActionsGridDesktop]}>
-          {visibleQuickActions.map((key) => (
-            <TouchableOpacity
-              key={key}
-              style={styles.quickActionButton}
-              onPress={() => router.push(quickActionRoutes[key] as any)}
-            >
-              {renderQuickActionIcon(key)}
-              <Text style={styles.quickActionText} numberOfLines={2}>
-                {t(quickActionLabelKey[key])}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <HomeQuickActionStrip visibleQuickActions={visibleQuickActions} isDesktopWeb={isDesktopWeb} />
       )}
 
       {/* Safe-to-Spend breakdown bottom-sheet */}
-      {safeToSpendData && (
-        <Modal
-          visible={safeToSpendSheetVisible}
-          transparent
-          animationType="slide"
-          onRequestClose={() => setSafeToSpendSheetVisible(false)}
-        >
-          <TouchableOpacity
-            style={styles.stsBackdrop}
-            activeOpacity={1}
-            onPress={() => setSafeToSpendSheetVisible(false)}
-          >
-            <View style={styles.stsSheet}>
-              <View style={styles.stsHandle} />
-              <Text style={styles.stsSheetTitle}>{t('safeToSpend.breakdownTitle')}</Text>
-
-              <View style={styles.stsRow}>
-                <Text style={styles.stsRowLabel}>{t('safeToSpend.wallet')}</Text>
-                <Text style={styles.stsRowValue}>
-                  {formatCurrency(safeToSpendData.breakdown.walletBalance, safeToSpendData.baseCurrency)}
-                </Text>
-              </View>
-              {safeToSpendData.breakdown.expectedIncome > 0 && (
-                <View style={styles.stsRow}>
-                  <Text style={styles.stsRowLabel}>{t('safeToSpend.expectedIncome')}</Text>
-                  <Text style={[styles.stsRowValue, { color: theme.colors.success }]}>
-                    +{formatCurrency(safeToSpendData.breakdown.expectedIncome, safeToSpendData.baseCurrency)}
-                  </Text>
-                </View>
-              )}
-              {safeToSpendData.breakdown.upcomingSubscriptions > 0 && (
-                <View style={styles.stsRow}>
-                  <Text style={styles.stsRowLabel}>{t('safeToSpend.subscriptions')}</Text>
-                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
-                    -{formatCurrency(safeToSpendData.breakdown.upcomingSubscriptions, safeToSpendData.baseCurrency)}
-                  </Text>
-                </View>
-              )}
-              {safeToSpendData.breakdown.upcomingRecurring > 0 && (
-                <View style={styles.stsRow}>
-                  <Text style={styles.stsRowLabel}>{t('safeToSpend.recurring')}</Text>
-                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
-                    -{formatCurrency(safeToSpendData.breakdown.upcomingRecurring, safeToSpendData.baseCurrency)}
-                  </Text>
-                </View>
-              )}
-              {safeToSpendData.breakdown.goalContributions > 0 && (
-                <View style={styles.stsRow}>
-                  <Text style={styles.stsRowLabel}>{t('safeToSpend.goals')}</Text>
-                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
-                    -{formatCurrency(safeToSpendData.breakdown.goalContributions, safeToSpendData.baseCurrency)}
-                  </Text>
-                </View>
-              )}
-              {safeToSpendData.breakdown.buffer > 0 && (
-                <View style={styles.stsRow}>
-                  <Text style={styles.stsRowLabel}>{t('safeToSpend.buffer')}</Text>
-                  <Text style={[styles.stsRowValue, { color: theme.colors.danger }]}>
-                    -{formatCurrency(safeToSpendData.breakdown.buffer, safeToSpendData.baseCurrency)}
-                  </Text>
-                </View>
-              )}
-
-              <View style={styles.stsDivider} />
-
-              <View style={styles.stsRow}>
-                <Text style={styles.stsRowLabel}>{t('safeToSpend.daysLeft')}</Text>
-                <Text style={styles.stsRowValue}>{safeToSpendData.daysRemaining}</Text>
-              </View>
-              <View style={styles.stsTotalRow}>
-                <Text style={styles.stsTotalLabel}>{t('safeToSpend.today')}</Text>
-                <Text style={styles.stsTotalValue}>
-                  {formatCurrency(safeToSpendData.safeToSpendToday, safeToSpendData.baseCurrency)}
-                </Text>
-              </View>
-
-              {!safeToSpendData.incomeInferred && (
-                <Text style={styles.stsNote}>{t('safeToSpend.noIncomeAssumed')}</Text>
-              )}
-              {safeToSpendData.fxApproximate && (
-                <Text style={styles.stsNote}>{t('safeToSpend.approxRate')}</Text>
-              )}
-
-              <TouchableOpacity
-                style={styles.stsCloseButton}
-                onPress={() => setSafeToSpendSheetVisible(false)}
-              >
-                <Text style={styles.stsCloseText}>{t('common.done')}</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-      )}
+      <SafeToSpendSheet
+        visible={safeToSpendSheetVisible}
+        onClose={() => setSafeToSpendSheetVisible(false)}
+        data={safeToSpendData}
+      />
 
       <ScrollView
         style={styles.scrollView}
@@ -329,251 +115,12 @@ export default function DashboardScreen() {
       >
         {(() => {
           const investmentEl = currentAccountType === 'investment' && investmentSummary ? (
-          <TouchableOpacity key="investment" style={styles.card} activeOpacity={0.7} onPress={() => router.push('/investment')}>
-            <View style={styles.chevronHint}>
-              <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-            </View>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{t('investments.portfolio')}</Text>
-            </View>
-            <View style={styles.investmentRow}>
-              <View style={styles.investmentCol}>
-                <Text style={styles.investmentLabel}>{t('investments.totalValue')}</Text>
-                <Text style={styles.investmentValue}>
-                  {formatCurrency(convertAmount(investmentSummary.totalValue, 'USD', currency, rates), currency)}
-                </Text>
-              </View>
-              <View style={styles.investmentCol}>
-                <Text style={styles.investmentLabel}>{t('investments.dayChange')}</Text>
-                <Text style={[
-                  styles.investmentValue,
-                  { color: investmentSummary.totalPnL >= 0 ? theme.colors.success : theme.colors.danger },
-                ]}>
-                  {investmentSummary.totalPnL >= 0 ? '+' : ''}
-                  {formatCurrency(convertAmount(investmentSummary.totalPnL, 'USD', currency, rates), currency)}
-                </Text>
-              </View>
-            </View>
-            <Text style={styles.investmentHoldingsCount}>
-              {t('investments.holdingsCount', { count: investmentSummary.holdings.length })}
-            </Text>
-          </TouchableOpacity>
+            <InvestmentCard key="investment" ctx={widgetCtx} />
           ) : null;
 
           // De-dupe at the render site: a duplicate key in the stored order
           // would render the same widget twice (doubled card + broken modal).
-          const mapped = [...new Set(widgetOrder)].map((key) => {
-          switch (key) {
-            case 'safeToSpend':
-              // Shown as the home hero number (tap → breakdown sheet). No duplicate
-              // dashboard card — the hero is the single in-app surface for this value.
-              return null;
-
-            case 'familyFeed':
-              return widgetVisibility.familyFeed && currentAccountType !== 'personal'
-                ? <FamilyFeedWidget key="familyFeed" />
-                : null;
-
-            case 'financialHealth':
-              return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
-
-            case 'gamification':
-              return widgetVisibility.gamification ? (
-                <TouchableOpacity key="gamification" style={styles.gamificationCard} activeOpacity={0.7} onPress={() => router.push('/achievements')}>
-                  <View style={styles.chevronHint}>
-                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-                  </View>
-                  <Text style={styles.gamificationDate}>
-                    {new Date().toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
-                  </Text>
-                  <View style={styles.gamificationRow}>
-                    <View style={styles.gamificationItem}>
-                      <View style={[styles.levelBadge, { backgroundColor: theme.colors.primary }]}>
-                        <Text style={styles.levelBadgeText}>{level}</Text>
-                      </View>
-                      <View>
-                        <Text style={styles.gamificationItemTitle}>{t('gamification.level', { level })}</Text>
-                        <View style={styles.xpBarContainer}>
-                          <View style={styles.xpBar}>
-                            <View style={[styles.xpBarFill, { width: `${levelProgress}%`, backgroundColor: theme.colors.primary }]} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={styles.gamificationDivider} />
-                    <View style={styles.gamificationItem}>
-                      <Text style={styles.streakEmoji}>{currentStreak > 0 ? '🔥' : '❄️'}</Text>
-                      <View style={styles.gamificationTextContainer}>
-                        <Text style={styles.gamificationItemTitle} numberOfLines={1}>
-                          {t('gamification.streak.days', { count: currentStreak })}
-                        </Text>
-                        <Text style={styles.gamificationItemSubtitle} numberOfLines={1}>
-                          {currentStreak > 0 ? t('gamification.streak.keepGoing') : t('gamification.streak.broken')}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <Text style={styles.gamificationLink}>{t('gamification.dashboardWidget.viewAll')}</Text>
-                </TouchableOpacity>
-              ) : null;
-
-            case 'monthlyBudget':
-              return widgetVisibility.monthlyBudget && monthlyBudgetSummary.budgetCount > 0 ? (
-                <TouchableOpacity key="monthlyBudget" style={styles.card} activeOpacity={0.7} onPress={() => router.push('/(tabs)/budgets')}>
-                  <View style={styles.chevronHint}>
-                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-                  </View>
-                  <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
-                  </View>
-                  <View style={styles.budgetOverview}>
-                    <View style={styles.budgetAmount}>
-                      <Text style={[styles.remainingAmount, remaining < 0 && { color: theme.colors.danger }]}>
-                        {formatCurrency(remaining, currency)}
-                      </Text>
-                      <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
-                    </View>
-                    <View style={styles.progressContainer}>
-                      <View style={styles.progressBar}>
-                        <View
-                          style={[
-                            styles.progressFill,
-                            { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
-                          ]}
-                        />
-                      </View>
-                      <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ) : null;
-
-            case 'incomeExpenses':
-              return widgetVisibility.incomeExpenses ? (
-                <TouchableOpacity key="incomeExpenses" style={styles.card} activeOpacity={0.7} onPress={() => router.push({ pathname: '/(tabs)/expenses' })}>
-                  <View style={styles.chevronHint}>
-                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-                  </View>
-                  <View style={styles.incomeExpenseRow}>
-                    <View style={styles.incomeExpenseCol}>
-                      <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
-                      <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
-                    </View>
-                    <View style={styles.incomeExpenseDivider} />
-                    <View style={styles.incomeExpenseCol}>
-                      <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalExpenses')}</Text>
-                      <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ) : null;
-
-            case 'debts':
-              return widgetVisibility.debts ? (
-                <TouchableOpacity key="debts" style={styles.card} activeOpacity={0.7} onPress={() => router.push('/debts')}>
-                  <View style={styles.chevronHint}>
-                    <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
-                  </View>
-                  <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{t('debt.debtsAndLoans')}</Text>
-                  </View>
-                  {lentDebts.length > 0 || borrowedDebts.length > 0 ? (
-                    <View style={styles.debtRow}>
-                      <View style={styles.debtCol}>
-                        <Ionicons name="arrow-up-circle-outline" size={20} color={theme.colors.success} />
-                        <Text style={styles.debtLabel}>{t('debt.peopleOweYou')}</Text>
-                        <Text style={[styles.debtAmount, { color: theme.colors.success }]}>
-                          {formatCurrency(convertedLentTotal, currency)}
-                        </Text>
-                      </View>
-                      <View style={styles.debtDivider} />
-                      <View style={styles.debtCol}>
-                        <Ionicons name="arrow-down-circle-outline" size={20} color={theme.colors.danger} />
-                        <Text style={styles.debtLabel}>{t('debt.youOwe')}</Text>
-                        <Text style={[styles.debtAmount, { color: theme.colors.danger }]}>
-                          {formatCurrency(convertedBorrowedTotal, currency)}
-                        </Text>
-                      </View>
-                    </View>
-                  ) : (
-                    <View style={styles.debtEmptyState}>
-                      <Ionicons name="people-outline" size={32} color={theme.colors.textDisabled} />
-                      <Text style={styles.debtEmptyText}>{t('debt.noDebts')}</Text>
-                      <View style={styles.debtAddButton}>
-                        <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
-                        <Text style={styles.debtAddButtonText}>{t('debt.addDebt')}</Text>
-                      </View>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              ) : null;
-
-            case 'netProfit':
-              return widgetVisibility.netProfit ? <NetProfitWidget key="netProfit" refreshKey={widgetRefreshKey} /> : null;
-
-            case 'netCapital':
-              return widgetVisibility.netCapital ? <NetCapitalWidget key="netCapital" /> : null;
-
-            case 'fatFinder':
-              return widgetVisibility.fatFinder ? <FatFinderCard key="fatFinder" /> : null;
-
-            case 'calendar':
-              return widgetVisibility.calendar ? <CalendarWidget key="calendar" refreshKey={widgetRefreshKey} /> : null;
-
-            case 'goals':
-              return widgetVisibility.goals ? <GoalsCard key="goals" /> : null;
-
-            case 'wallets':
-              return widgetVisibility.wallets ? (
-                <View key="wallets" style={styles.section}>
-                  <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>{t('dashboard.walletBalances')}</Text>
-                    {walletSummary.length > 0 && (
-                      <TouchableOpacity onPress={() => router.push('/wallet')}>
-                        <Text style={styles.seeAllText}>{t('dashboard.seeAll')}</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                  {walletSummary.length === 0 ? (
-                    <View style={styles.emptyState}>
-                      <Ionicons name="wallet-outline" size={48} color={theme.colors.textTertiary} />
-                      <Text style={styles.emptyStateText}>{t('wallet.noBalances')}</Text>
-                      <Text style={styles.emptyStateSubtext}>{t('wallet.noBalancesHint')}</Text>
-                      {canEdit && (
-                        <TouchableOpacity style={styles.emptyStateButton} onPress={() => router.push('/wallet/set-balance')}>
-                          <Text style={styles.emptyStateButtonText}>{t('wallet.addBalance')}</Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  ) : (
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={[styles.walletGrid, Platform.OS === 'web' && styles.webCenterRow]}
-                      style={styles.walletGridScroll}
-                    >
-                      {walletSummary.map((summary) => (
-                        <TouchableOpacity key={summary.currencyCode} style={styles.walletCard} onPress={() => router.push('/wallet')}>
-                          <Text style={styles.walletCurrency}>{summary.currencyCode}</Text>
-                          <Text
-                            style={[styles.walletBalance, summary.currentBalance < 0 && { color: theme.colors.danger }]}
-                            numberOfLines={1}
-                            adjustsFontSizeToFit
-                            minimumFontScale={0.7}
-                          >
-                            {formatCurrency(summary.currentBalance, summary.currencyCode)}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  )}
-                </View>
-              ) : null;
-
-            default:
-              return null;
-          }
-          });
+          const mapped = [...new Set(widgetOrder)].map((key) => renderHomeWidget(key, widgetCtx));
 
           const els = [investmentEl, ...mapped].filter(Boolean);
           if (!isDesktopWeb) return els;
@@ -602,97 +149,6 @@ const createStyles = (theme: Theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  // Orange Hero Header — paddingBottom leaves room for the first quick-action
-  // row to overlap up into the orange (the grid uses a matching negative margin).
-  heroHeader: {
-    backgroundColor: theme.colors.primary,
-    paddingHorizontal: theme.spacing[4],
-    paddingBottom: 24,
-  },
-  heroHeaderNoStrip: {
-    paddingBottom: theme.spacing[1],
-  },
-  heroTopRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    paddingTop: theme.spacing[2],
-    paddingBottom: theme.spacing[3],
-  },
-  settingsButton: {
-    width: 36,
-    height: 36,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    flexShrink: 0,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 18,
-  },
-  bellButton: {
-    marginRight: theme.spacing[2],
-  },
-  alertBadge: {
-    position: 'absolute' as const,
-    top: 2,
-    right: 2,
-    minWidth: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: '#E53935',
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingHorizontal: 3,
-  },
-  alertBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: '700' as const,
-  },
-  heroTopSpacer: {
-    flex: 1,
-  },
-  // Centered white separator under the header controls (matches the tab headers).
-  heroDivider: {
-    alignSelf: 'center' as const,
-    width: '95%' as const,
-    height: 1.5,
-    borderRadius: 1,
-    backgroundColor: 'rgba(255,255,255,0.55)',
-    marginBottom: theme.spacing[2],
-  },
-  // Quick actions — wrapping, centered grid. The first row overlaps up into the
-  // orange hero (marginTop) like before; extra rows grow the block downward and
-  // push the page content below it down (no horizontal scroll).
-  quickActionsGrid: {
-    flexDirection: 'row' as const,
-    flexWrap: 'wrap' as const,
-    justifyContent: 'center' as const,
-    columnGap: theme.spacing[2],
-    rowGap: theme.spacing[3],
-    paddingHorizontal: theme.spacing[2],
-    paddingBottom: theme.spacing[1],
-    marginTop: -22, // pull the first row up into the orange header (backed icons stay visible)
-    zIndex: 1,
-  },
-  // Web no-op kept so the JSX style array stays valid (grid already centers).
-  webCenterRow: {
-    justifyContent: 'center' as const,
-  },
-  // Desktop web hides the hero, so the negative overlap margin would clip the
-  // first row under the top bar — give it normal top spacing instead.
-  quickActionsGridDesktop: {
-    marginTop: theme.spacing[4],
-  },
-  quickActionButton: {
-    width: 76,
-    alignItems: 'center' as const,
-    gap: theme.spacing[1.5],
-  },
-  quickActionText: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textSecondary,
-    textAlign: 'center' as const,
-  },
-  // Scroll content
   scrollView: {
     flex: 1,
   },
@@ -709,437 +165,5 @@ const createStyles = (theme: Theme) => ({
   content: {
     paddingHorizontal: theme.spacing[4],
     paddingBottom: theme.spacing[8],
-  },
-  card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing[5],
-    marginBottom: theme.spacing[4],
-    borderWidth: 2,
-    borderColor: theme.colors.borderLight,
-  },
-  chevronHint: {
-    position: 'absolute' as const,
-    top: theme.spacing[3],
-    right: theme.spacing[3],
-    zIndex: 1,
-  },
-  cardHeader: {
-    alignSelf: 'center' as const,
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.xl,
-    paddingVertical: theme.spacing[2],
-    paddingHorizontal: theme.spacing[5],
-    marginBottom: theme.spacing[4],
-  },
-  cardTitle: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.textPrimary,
-  },
-  incomeExpenseRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-  },
-  incomeExpenseCol: {
-    flex: 1,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-  },
-  incomeExpenseDivider: {
-    width: 1,
-    height: 48,
-    backgroundColor: theme.colors.borderLight,
-  },
-  incomeExpenseLabel: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.textPrimary,
-    fontWeight: '700' as const,
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.xl,
-    paddingVertical: theme.spacing[1.5],
-    paddingHorizontal: theme.spacing[4],
-    overflow: 'hidden' as const,
-    textAlign: 'center' as const,
-  },
-  incomeAmount: {
-    fontSize: 20,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.primary,
-    fontWeight: '900' as const,
-    textAlign: 'center' as const,
-  },
-  expenseTotalAmount: {
-    fontSize: 20,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary,
-    fontWeight: '900' as const,
-    textAlign: 'center' as const,
-  },
-  remainingAmount: {
-    fontSize: 28,
-    fontFamily: theme.fonts.bold,
-    color: theme.colors.textPrimary,
-    fontWeight: '900' as const,
-  },
-  budgetOverview: {
-    gap: theme.spacing[4],
-  },
-  budgetAmount: {
-    flexDirection: 'row' as const,
-    alignItems: 'baseline' as const,
-    gap: theme.spacing[2],
-    justifyContent: 'center' as const,
-  },
-  budgetTotal: {
-    ...theme.textStyles.bodyLarge,
-    color: theme.colors.textTertiary,
-  },
-  progressContainer: {
-    gap: theme.spacing[2],
-  },
-  progressBar: {
-    height: 8,
-    backgroundColor: theme.colors.progressTrack,
-    borderRadius: theme.borderRadius.sm,
-    overflow: 'hidden' as const,
-  },
-  progressFill: {
-    height: '100%' as const,
-    borderRadius: theme.borderRadius.sm,
-  },
-  progressText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-    textAlign: 'center' as const,
-  },
-  section: {
-    marginBottom: theme.spacing[6],
-  },
-  sectionHeader: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    marginBottom: theme.spacing[3],
-  },
-  sectionTitle: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-  },
-  seeAllText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textLink,
-  },
-  emptyState: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[8],
-    alignItems: 'center' as const,
-  },
-  emptyStateText: {
-    ...theme.textStyles.bodyLargeMedium,
-    color: theme.colors.textSecondary,
-    marginTop: theme.spacing[3],
-  },
-  emptyStateSubtext: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[1],
-  },
-  emptyStateButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.lg,
-    paddingVertical: theme.spacing[2.5],
-    paddingHorizontal: theme.spacing[5],
-    marginTop: theme.spacing[4],
-  },
-  emptyStateButtonText: {
-    ...theme.textStyles.bodyMedium,
-    color: '#FFFFFF',
-    fontWeight: '600' as const,
-  },
-  walletGridScroll: {
-    marginHorizontal: -theme.spacing[4],
-  },
-  walletGrid: {
-    flexDirection: 'row' as const,
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[1],
-    gap: theme.spacing[2],
-  },
-  walletCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
-    width: 140,
-    ...theme.shadows.sm,
-  },
-  walletCurrency: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textTertiary,
-    marginBottom: theme.spacing[1],
-  },
-  walletBalance: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.textPrimary,
-  },
-  gamificationCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing[5],
-    marginBottom: theme.spacing[4],
-    borderWidth: 2,
-    borderColor: theme.colors.borderLight,
-  },
-  gamificationDate: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-    textAlign: 'center' as const,
-    marginBottom: theme.spacing[3],
-  },
-  gamificationRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-  },
-  gamificationItem: {
-    flex: 1,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-  },
-  gamificationTextContainer: {
-    flex: 1,
-    minWidth: 0,
-  },
-  gamificationDivider: {
-    width: 1,
-    height: 32,
-    backgroundColor: theme.colors.borderLight,
-    marginHorizontal: theme.spacing[3],
-  },
-  levelBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-  },
-  levelBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700' as const,
-  },
-  gamificationItemTitle: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textPrimary,
-  },
-  gamificationItemSubtitle: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textTertiary,
-    marginTop: 1,
-  },
-  xpBarContainer: {
-    marginTop: 3,
-  },
-  xpBar: {
-    height: 3,
-    width: 60,
-    backgroundColor: theme.colors.progressTrack,
-    borderRadius: 1.5,
-    overflow: 'hidden' as const,
-  },
-  xpBarFill: {
-    height: '100%' as const,
-    borderRadius: 1.5,
-  },
-  streakEmoji: {
-    fontSize: 24,
-  },
-  gamificationLink: {
-    ...theme.textStyles.bodySmMedium,
-    color: '#FFFFFF',
-    textAlign: 'center' as const,
-    marginTop: theme.spacing[3],
-    backgroundColor: theme.colors.primary,
-    alignSelf: 'center' as const,
-    paddingVertical: theme.spacing[1],
-    paddingHorizontal: theme.spacing[3],
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden' as const,
-  },
-  investmentRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    gap: theme.spacing[4],
-  },
-  investmentCol: {
-    flex: 1,
-  },
-  investmentLabel: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginBottom: theme.spacing[1],
-  },
-  investmentValue: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.textPrimary,
-  },
-  investmentHoldingsCount: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[3],
-  },
-  debtRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-  },
-  debtCol: {
-    flex: 1,
-    alignItems: 'center' as const,
-    gap: theme.spacing[1],
-  },
-  debtDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: theme.colors.borderLight,
-    marginHorizontal: theme.spacing[2],
-  },
-  debtLabel: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textTertiary,
-  },
-  debtAmount: {
-    ...theme.textStyles.bodyLargeSemiBold,
-  },
-  debtEmptyState: {
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[4],
-    gap: theme.spacing[2],
-  },
-  debtEmptyText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-  },
-  debtAddButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[1],
-    marginTop: theme.spacing[1],
-  },
-  debtAddButtonText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.primary,
-  },
-
-  // Safe-to-spend hero number
-  heroStsRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
-    paddingHorizontal: theme.spacing[1],
-    paddingBottom: theme.spacing[3],
-  },
-  heroStsLabel: {
-    ...theme.textStyles.caption,
-    color: 'rgba(255,255,255,0.75)',
-    marginBottom: 2,
-  },
-  heroStsAmount: {
-    fontSize: 22,
-    fontFamily: theme.fonts.bold,
-    color: '#FFFFFF',
-    fontWeight: '900' as const,
-  },
-
-  // Safe-to-spend bottom-sheet
-  stsBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'flex-end' as const,
-  },
-  stsSheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: theme.borderRadius.xl,
-    borderTopRightRadius: theme.borderRadius.xl,
-    paddingHorizontal: theme.spacing[5],
-    paddingBottom: theme.spacing[8],
-    paddingTop: theme.spacing[3],
-  },
-  stsHandle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
-  },
-  stsSheetTitle: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[4],
-    textAlign: 'center' as const,
-  },
-  stsRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[3],
-    paddingVertical: theme.spacing[2],
-    borderBottomWidth: 0.5,
-    borderBottomColor: theme.colors.border,
-  },
-  stsRowLabel: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-    flex: 1,
-  },
-  stsRowValue: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textPrimary,
-    flexShrink: 0,
-    textAlign: 'right' as const,
-  },
-  stsDivider: {
-    height: 1,
-    backgroundColor: theme.colors.border,
-    marginVertical: theme.spacing[3],
-  },
-  stsTotalRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[3],
-    marginTop: theme.spacing[2],
-  },
-  stsTotalLabel: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
-    fontWeight: '600' as const,
-    flex: 1,
-  },
-  stsTotalValue: {
-    ...theme.textStyles.bodyLargeSemiBold,
-    color: theme.colors.primary,
-    fontWeight: '900' as const,
-    flexShrink: 0,
-    textAlign: 'right' as const,
-  },
-  stsNote: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textTertiary,
-    textAlign: 'center' as const,
-    marginTop: theme.spacing[2],
-    fontStyle: 'italic' as const,
-  },
-  stsCloseButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.lg,
-    paddingVertical: theme.spacing[3],
-    alignItems: 'center' as const,
-    marginTop: theme.spacing[5],
-  },
-  stsCloseText: {
-    ...theme.textStyles.bodyMedium,
-    color: '#FFFFFF',
-    fontWeight: '600' as const,
   },
 });
