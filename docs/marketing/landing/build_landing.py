@@ -911,6 +911,64 @@ def about_page(lang):
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
+def pricing_page(lang):
+    t = PRICING[lang]
+    cards = ""
+    for i, key in enumerate(TIER_KEYS):
+        name = TIER_NAMES[key]
+        subtitle = t[f"tier_{'biz' if key == 'business' else key}_subtitle"]
+        intro = t.get(f"tier_{'biz' if key == 'business' else key}_intro")
+        features = t[f"tier_{'biz' if key == 'business' else key}_features"]
+        price_m, price_y = tier_price_display(lang, key)
+        cta = t["cta_free"] if key == "free" else t["cta_paid"]
+        pop = key == "pro"
+        feat_items = (f'<li>{html.escape(intro)}</li>' if intro else '') + \
+            "".join(f'<li>{html.escape(f)}</li>' for f in features)
+        cards += (
+            f'<div class="pcard{" pop" if pop else ""}">'
+            + (f'<span class="pop-badge">{html.escape(t["popular"])}</span>' if pop else '')
+            + f'<div class="ic"><b>{i+1}</b></div><h3>{html.escape(name)}</h3>'
+            + f'<p class="psub">{html.escape(subtitle)}</p>'
+            + f'<div class="price"><span class="price-m">{price_m}<small>{html.escape(t["per_month"])}</small></span>'
+            + f'<span class="price-y">{price_y}<small>{html.escape(t["per_year"])}</small></span></div>'
+            + f'<a class="btn p pfull" href="{APP}">{html.escape(cta)}</a>'
+            + f'<ul class="pfeat">{feat_items}</ul></div>'
+        )
+    faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
+    url = SITE + pricing_url(lang)
+    alts = [(l, SITE + pricing_url(l)) for l in LANG_NAMES if l in PRICING] + [("x-default", SITE + pricing_url("en"))]
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
+    og = f"{SITE}/blog/{lang}/assets/og-default.png"
+    offers_jsonld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "Product", "name": f"AI Budget Assistant {TIER_NAMES[k]}",
+         "offers": {"@type": "Offer", "price": f"{tier_amounts(lang, k)[0]:.2f}",
+                    "priceCurrency": LANG_CURRENCY[lang], "url": url}}
+        for k in TIER_KEYS
+    ]}
+    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
+            f'<title>{html.escape(t["title"])}</title><meta name="description" content="{html.escape(t["meta"])}">'
+            f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
+            f'<meta property="og:type" content="website"><meta property="og:title" content="{html.escape(t["title"])}">'
+            f'<meta property="og:description" content="{html.escape(t["meta"])}"><meta property="og:url" content="{url}">'
+            f'<meta property="og:image" content="{og}">'
+            f'<script type="application/ld+json">{json.dumps(offers_jsonld, ensure_ascii=False)}</script>'
+            f'<style>{CSS}</style></head><body>'
+            f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
+            f'<nav class="nav"><a href="{pricing_url(lang)}">{PRICING_LABELS[lang]}</a>'
+            f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<section class="hero"><div class="wrap"><h1>{html.escape(t["h1"])}</h1><p>{html.escape(t["sub"])}</p></div></section>'
+            f'<section class="sec"><div class="wrap">'
+            f'<input type="radio" name="bill" id="bm" class="billcb" checked>'
+            f'<input type="radio" name="bill" id="by" class="billcb">'
+            f'<div class="billwrap"><div class="billswitch"><label for="bm">{html.escape(t["toggle_monthly"])}</label>'
+            f'<label for="by">{html.escape(t["toggle_yearly"])} <span class="save">{html.escape(t["toggle_save"])}</span></label></div></div>'
+            f'<div class="pricing-grid">{cards}</div></div></section>'
+            f'<section class="sec"><div class="wrap"><h2>{html.escape(t["faq_title"])}</h2><div class="faq">{faq}</div></div></section>'
+            + f'<section class="band"><div class="wrap"><h2>{html.escape(C[lang]["cta_band"])}</h2>'
+              f'<a class="btn p" href="{APP}">{html.escape(C[lang]["cta_band_btn"])}</a></div></section>'
+            + footer_html(lang) + consent_html(lang) + '</body></html>')
+
 def jsonld(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
     og = f"{SITE}/blog/{lang}/assets/og-default.png"
