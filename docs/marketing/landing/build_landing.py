@@ -945,6 +945,9 @@ def pricing_page(lang):
          "offers": {"@type": "Offer", "price": f"{tier_amounts(lang, k)[0]:.2f}",
                     "priceCurrency": LANG_CURRENCY[lang], "url": url}}
         for k in TIER_KEYS
+    ] + [
+        {"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
     ]}
     return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
