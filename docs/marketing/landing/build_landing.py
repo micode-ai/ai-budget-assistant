@@ -115,6 +115,47 @@ ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca d
                 "ru": "О нас", "ua": "Про нас", "be": "Пра нас", "nl": "Over ons"}
 HELP_LABELS = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
                "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
+
+# Pricing (ABA landing pricing page): amounts must match PRICING in
+# apps/api/src/modules/subscriptions/subscriptions.service.ts exactly.
+CURRENCY_PRICING = {
+    "USD": {"symbol": "$",  "pro_m": 9.99,   "pro_y": 95.88,   "biz_m": 19.99,  "biz_y": 191.88},
+    "EUR": {"symbol": "€",  "pro_m": 8.99,   "pro_y": 86.28,   "biz_m": 17.99,  "biz_y": 172.68},
+    "PLN": {"symbol": "zł", "pro_m": 29.99,  "pro_y": 287.88,  "biz_m": 59.99,  "biz_y": 575.88},
+    "RUB": {"symbol": "₽",  "pro_m": 499.00, "pro_y": 4789.00, "biz_m": 999.00, "biz_y": 9589.00},
+    "UAH": {"symbol": "₴",  "pro_m": 199.00, "pro_y": 1909.00, "biz_m": 399.00, "biz_y": 3829.00},
+}
+# be (Belarusian) has no BYN in CURRENCY_PRICING and no Stripe price for it,
+# so it falls back to USD display (confirmed intended behavior, not a bug).
+LANG_CURRENCY = {
+    "en": "USD", "pl": "PLN", "de": "EUR", "es": "EUR", "fr": "EUR",
+    "ru": "RUB", "ua": "UAH", "be": "USD", "nl": "EUR",
+}
+TIER_KEYS = ["free", "pro", "business"]
+TIER_NAMES = {"free": "Free", "pro": "Pro", "business": "Business"}
+
+def tier_amounts(lang, tier):
+    """Return (monthly, yearly) float amounts in the language's display currency."""
+    if tier == "free":
+        return 0.0, 0.0
+    cur = CURRENCY_PRICING[LANG_CURRENCY[lang]]
+    prefix = "pro" if tier == "pro" else "biz"
+    return cur[f"{prefix}_m"], cur[f"{prefix}_y"]
+
+def tier_price_display(lang, tier):
+    """Return (monthly, yearly) formatted price strings, e.g. ('$9.99', '$95.88')."""
+    sym = CURRENCY_PRICING[LANG_CURRENCY[lang]]["symbol"]
+    m, y = tier_amounts(lang, tier)
+    return f"{sym}{m:.2f}", f"{sym}{y:.2f}"
+
+def pricing_url(lang):
+    return "/pricing/" if lang == "pl" else f"/{lang}/pricing/"
+
+PRICING_LABELS = {
+    "en": "Pricing", "pl": "Cennik", "de": "Preise", "es": "Precios", "fr": "Tarifs",
+    "ru": "Тарифы", "ua": "Тарифи", "be": "Тарыфы", "nl": "Prijzen",
+}
+
 ABOUT = {
  "en": ("About - AI Budget Assistant",
         "About AI Budget Assistant, a personal and family finance app with an AI assistant, built by MICODE sp. z o.o.",
