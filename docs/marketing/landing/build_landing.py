@@ -1128,7 +1128,6 @@ def build():
         d = os.path.join(OUT, sub)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(pricing_page(lang))
-        open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(pricing_page(lang))
     # Privacy + Terms pages (pl + en), copied on-domain from the GitHub Pages legal docs
     for kind in ("privacy", "terms"):
         for lang in ("pl", "en"):
