@@ -865,6 +865,7 @@ def footer_html(lang):
     pl, tl, cl = LEGAL_LABELS[lang]
     return (f'<footer><div class="wrap"><div class="f-links">'
             f'<a href="{blog}">{t["nav_blog"]}</a>'
+            f'<a href="{pricing_url(lang)}">{PRICING_LABELS[lang]}</a>'
             f'<a href="/help/{lang}/">{HELP_LABELS[lang]}</a>'
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
@@ -1121,6 +1122,13 @@ def build():
         d = os.path.join(OUT, sub)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(about_page(lang))
+    # Pricing page (all 9 languages)
+    for lang in [l for l in LANG_NAMES if l in PRICING]:
+        sub = "pricing" if lang == "pl" else os.path.join(lang, "pricing")
+        d = os.path.join(OUT, sub)
+        os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(pricing_page(lang))
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(pricing_page(lang))
     # Privacy + Terms pages (pl + en), copied on-domain from the GitHub Pages legal docs
     for kind in ("privacy", "terms"):
         for lang in ("pl", "en"):
@@ -1174,6 +1182,7 @@ def build():
                 if "/help/" in loc:
                     urls.append(loc)
         urls += [SITE + about_url(l) for l in LANG_NAMES if l in ABOUT]  # About (9 langs)
+        urls += [SITE + pricing_url(l) for l in LANG_NAMES if l in PRICING]  # Pricing (9 langs)
         for k in ("cookies", "privacy", "terms"):                        # legal (pl + en)
             urls += [f"{SITE}/{k}/", f"{SITE}/en/{k}/"]
         sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
