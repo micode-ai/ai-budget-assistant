@@ -781,6 +781,29 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .legal h3{font-size:17px;margin:20px 0 6px}.legal ul{padding-left:22px;margin:0 0 12px}
 .legal li{font-size:16px;color:#3a3a42;margin:4px 0}.legal .updated{color:#888;font-size:14px;margin:-8px 0 24px}
 .legal strong{color:#1a1a1d}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
+@media(max-width:760px){.pricing-grid{grid-template-columns:1fr}}
+.pcard{position:relative;padding:28px 24px;border:1px solid #ececf0;border-radius:16px;background:#fff}
+.pcard.pop{border-color:#F58320;box-shadow:0 8px 24px rgba(245,131,42,.16)}
+.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#F58320;color:#fff;font-size:12px;font-weight:800;letter-spacing:.4px;padding:5px 14px;border-radius:999px}
+.pcard h3{margin:0 0 4px;font-size:20px}
+.psub{margin:0 0 18px;color:#5b5b66;font-size:14px}
+.price{margin:0 0 20px}
+.price-m,.price-y{font-size:34px;font-weight:800}
+.price-y{display:none}
+.price small{font-size:15px;font-weight:600;color:#9a9aa3;margin-left:4px}
+.pfull{display:block;text-align:center;margin-bottom:20px}
+.pfeat{list-style:none;margin:0;padding:0}
+.pfeat li{position:relative;padding:7px 0 7px 28px;font-size:15px;color:#3a3a42}
+.pfeat li:before{content:"✓";position:absolute;left:0;top:7px;width:18px;height:18px;border-radius:50%;background:#fff3e6;color:#F58320;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.billcb{position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none}
+.billwrap{text-align:center;margin-bottom:34px}
+.billswitch{display:inline-flex;padding:4px;background:#f3f3f5;border-radius:999px}
+.billswitch label{padding:9px 18px;border-radius:999px;font-weight:700;font-size:14px;color:#5b5b66;cursor:pointer}
+.billswitch .save{color:#1f9d55;font-weight:700}
+#bm:checked ~ .billwrap .billswitch label[for=bm],#by:checked ~ .billwrap .billswitch label[for=by]{background:#fff;color:#1a1a1d;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+#by:checked ~ .pricing-grid .price-m{display:none}
+#by:checked ~ .pricing-grid .price-y{display:inline}
 """
 
 def lp(lang):
