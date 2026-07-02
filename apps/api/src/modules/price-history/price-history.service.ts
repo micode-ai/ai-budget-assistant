@@ -94,10 +94,12 @@ export class PriceHistoryService {
       create: { accountId, rawName, canonicalName },
       update: { canonicalName },
     });
+    await this.invalidatePriceHistoryCache(accountId);
   }
 
   async deleteAlias(accountId: string, rawName: string): Promise<void> {
     await (this.prisma as any).productAlias.deleteMany({ where: { accountId, rawName } });
+    await this.invalidatePriceHistoryCache(accountId);
   }
 
   async ignoreProduct(accountId: string, rawName: string): Promise<void> {
@@ -106,6 +108,7 @@ export class PriceHistoryService {
       create: { accountId, rawName, canonicalName: IGNORED_SENTINEL },
       update: { canonicalName: IGNORED_SENTINEL },
     });
+    await this.invalidatePriceHistoryCache(accountId);
   }
 
   async mergeProducts(accountId: string, rawNames: string[], canonicalName: string): Promise<void> {
@@ -118,6 +121,7 @@ export class PriceHistoryService {
         }),
       ),
     );
+    await this.invalidatePriceHistoryCache(accountId);
   }
 
   async backfillWithAi(accountId: string): Promise<{ updatedCount: number }> {
@@ -198,6 +202,10 @@ export class PriceHistoryService {
   }
 
   // ── private helpers ──────────────────────────────────────────────────────
+
+  private async invalidatePriceHistoryCache(accountId: string): Promise<void> {
+    await this.cache.delByPrefix(`ph:${accountId}:`);
+  }
 
   private async fetchRows(accountId: string): Promise<RawItemRow[]> {
     const aliases = await this.getAliasMap(accountId);
