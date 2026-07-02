@@ -8,9 +8,9 @@ interface PriceHistoryState {
   isLoading: boolean;
   isLoadingProducts: boolean;
   hasAttemptedLoad: boolean;
-  selectedPeriod: '3m' | '6m' | '12m';
+  selectedPeriod: '3m' | '6m' | '12m' | 'all';
 
-  loadPriceHistory: (period?: '3m' | '6m' | '12m') => Promise<void>;
+  loadPriceHistory: (period?: '3m' | '6m' | '12m' | 'all') => Promise<void>;
   loadProducts: () => Promise<void>;
   backfillWithAi: () => Promise<{ updatedCount: number }>;
   upsertAlias: (rawName: string, canonicalName: string) => Promise<void>;

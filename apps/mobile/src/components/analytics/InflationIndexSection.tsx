@@ -17,15 +17,16 @@ import { useAccountStore } from '@/stores/accountStore';
 import { InteractiveLineChart } from '@/components/interactive-charts';
 import type { PriceHistoryProduct } from '@budget/shared-types';
 
-type Period = '3m' | '6m' | '12m';
+type Period = '3m' | '6m' | '12m' | 'all';
 
 const PERIOD_KEYS: Record<Period, string> = {
   '3m': 'priceHistory.period3m',
   '6m': 'priceHistory.period6m',
   '12m': 'priceHistory.period12m',
+  'all': 'priceHistory.periodAll',
 };
 
-const PERIODS: Period[] = ['3m', '6m', '12m'];
+const PERIODS: Period[] = ['3m', '6m', '12m', 'all'];
 
 export function InflationIndexSection() {
   const { t } = useTranslation();
@@ -76,8 +77,8 @@ export function InflationIndexSection() {
   const displayProducts = showAll ? products : products.slice(0, 3);
   const remaining = products.length - 3;
 
-  // Empty state: loaded but no tracked products
-  if (!isLoading && (history === null || history.productCount === 0)) {
+  // Empty state: never scanned any receipts (history === null means no data at all)
+  if (!isLoading && history === null) {
     return (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('priceHistory.title')}</Text>
@@ -120,6 +121,11 @@ export function InflationIndexSection() {
       </View>
 
       <View style={styles.card}>
+        {/* Period-specific empty state: has data but not enough for this period */}
+        {!isLoading && history !== null && history.productCount === 0 && (
+          <Text style={styles.emptyText}>{t('priceHistory.noDataForPeriod')}</Text>
+        )}
+
         {/* Inflation headline */}
         {history && history.inflationIndex !== null && (
           <>

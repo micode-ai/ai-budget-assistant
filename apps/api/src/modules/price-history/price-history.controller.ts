@@ -27,9 +27,9 @@ export class PriceHistoryController {
   @Get()
   getPriceHistory(
     @Req() req: AuthenticatedRequest,
-    @Query('period') period: '3m' | '6m' | '12m' = '6m',
+    @Query('period') period: '3m' | '6m' | '12m' | 'all' = '6m',
   ) {
-    const p: '3m' | '6m' | '12m' = ['3m', '6m', '12m'].includes(period) ? period : '6m';
+    const p: '3m' | '6m' | '12m' | 'all' = ['3m', '6m', '12m', 'all'].includes(period) ? period : '6m';
     return this.priceHistoryService.getPriceHistory(req.accountId, p);
   }
 

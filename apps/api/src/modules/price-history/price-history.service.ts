@@ -5,11 +5,12 @@ import { CacheService } from '../../common/cache/cache.service';
 import type {
   PriceHistoryResponse,
   PriceHistoryProduct,
+  PriceHistoryPeriod,
   ProductListItem,
   StoreLatestPrice,
 } from '@budget/shared-types';
 
-type Period = '3m' | '6m' | '12m';
+type Period = PriceHistoryPeriod;
 
 interface RawItemRow {
   rawName: string;       // original expense_items.canonical_name, before alias resolution
@@ -248,13 +249,35 @@ export class PriceHistoryService {
     period: Period,
     now: Date = new Date(),
   ): { inflationIndex: number | null; productCount: number; products: PriceHistoryProduct[] } {
-    const months = { '3m': 3, '6m': 6, '12m': 12 }[period];
-    // periodStart = last day of the Nth month before now
-    // e.g. now=2026-07-02, 6m → 2026-01-31
-    const periodStart = this.lastDayOfMonthNBack(now, months);
-    // baseStart = last day of the 2Nth month before now
-    // e.g. now=2026-07-02, 6m → 2025-07-31
-    const baseStart = this.lastDayOfMonthNBack(now, months * 2);
+    // Period semantics: the chip label = the TOTAL window of data examined.
+    // Split point = midpoint of that window.
+    //   3m  → base=[3 months ago .. 1.5m ago], current=[1.5m ago .. now]
+    //   6m  → base=[6 months ago .. 3m ago],   current=[3m ago .. now]
+    //   12m → base=[12 months ago .. 6m ago],  current=[6m ago .. now]
+    //   all → base=[earliest date .. midpoint], current=[midpoint .. now]
+    let baseStart: Date;
+    let periodStart: Date;
+
+    if (period === 'all') {
+      const allDates = rows.map((r) => r.date);
+      if (allDates.length === 0) {
+        return { inflationIndex: null, productCount: 0, products: [] };
+      }
+      const minDate = new Date(Math.min(...allDates.map((d) => d.getTime())));
+      const midMs = (minDate.getTime() + now.getTime()) / 2;
+      periodStart = new Date(midMs);
+      baseStart = minDate;
+    } else {
+      const months = { '3m': 3, '6m': 6, '12m': 12 }[period];
+      // Math.round: 3m→2, 6m→3, 12m→6 (nearest whole month for the midpoint)
+      const halfMonths = Math.round(months / 2);
+      // periodStart = last day of the (N/2)th month before now
+      // e.g. now=2026-07-02, 6m → 2026-04-30 (3 months back)
+      periodStart = this.lastDayOfMonthNBack(now, halfMonths);
+      // baseStart = last day of the Nth month before now
+      // e.g. now=2026-07-02, 6m → 2026-01-31 (6 months back)
+      baseStart = this.lastDayOfMonthNBack(now, months);
+    }
 
     // Group by resolved name; track first rawName per group for alias writes
     const byProduct = new Map<string, RawItemRow[]>();

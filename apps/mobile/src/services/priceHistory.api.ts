@@ -7,7 +7,7 @@ import type {
 } from '@budget/shared-types';
 
 export const priceHistoryApi = {
-  getPriceHistory(period: '3m' | '6m' | '12m' = '6m') {
+  getPriceHistory(period: '3m' | '6m' | '12m' | 'all' = '6m') {
     return httpClient.request<PriceHistoryResponse>(`/price-history?period=${period}`);
   },
 
