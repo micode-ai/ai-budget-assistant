@@ -2146,5 +2146,9 @@ export default {
     resetAlias: 'Скинути',
     mergeSelected: 'Об\'єднати {{count}} товарів',
     purchasesCount: '{{count}} покупок',
+    reanalyzeWithAi: 'Перейменувати з AI',
+    reanalyzing: 'Аналізую...',
+    reanalyzeSuccess: 'Оновлено {{count}} товарів',
+    reanalyzeConfirm: 'AI згенерує нові назви товарів на основі описів із чеків. Це може зайняти деякий час.',
   },
 } as const;

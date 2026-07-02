@@ -2114,5 +2114,9 @@ export default {
     resetAlias: 'Сбросіць',
     mergeSelected: 'Аб\'яднаць {{count}} тавараў',
     purchasesCount: '{{count}} пакупак',
+    reanalyzeWithAi: 'Перайменаваць з AI',
+    reanalyzing: 'Аналізую...',
+    reanalyzeSuccess: 'Абноўлена {{count}} тавараў',
+    reanalyzeConfirm: 'AI згенеруе новыя назвы тавараў на аснове апісанняў з чэкаў.',
   },
 } as const;

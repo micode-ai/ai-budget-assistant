@@ -2154,5 +2154,9 @@ export default {
     resetAlias: 'Reset',
     mergeSelected: 'Merge {{count}} products',
     purchasesCount: '{{count}} purchases',
+    reanalyzeWithAi: 'Re-analyze with AI',
+    reanalyzing: 'Analyzing...',
+    reanalyzeSuccess: 'Updated {{count}} products',
+    reanalyzeConfirm: 'This will re-generate product names from your receipt descriptions using AI. This may take a moment.',
   },
 } as const;

@@ -2146,5 +2146,9 @@ export default {
     resetAlias: 'Zresetuj',
     mergeSelected: 'Scal {{count}} produktów',
     purchasesCount: '{{count}} zakupów',
+    reanalyzeWithAi: 'Przenalizuj z AI',
+    reanalyzing: 'Analizuję...',
+    reanalyzeSuccess: 'Zaktualizowano {{count}} produktów',
+    reanalyzeConfirm: 'AI wygeneruje nowe nazwy produktów na podstawie opisów z paragonów. To może chwilę potrwać.',
   },
 } as const;

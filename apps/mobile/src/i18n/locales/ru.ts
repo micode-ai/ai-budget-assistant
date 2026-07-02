@@ -2146,5 +2146,9 @@ export default {
     resetAlias: 'Сбросить',
     mergeSelected: 'Объединить {{count}} товаров',
     purchasesCount: '{{count}} покупок',
+    reanalyzeWithAi: 'Переименовать с AI',
+    reanalyzing: 'Анализирую...',
+    reanalyzeSuccess: 'Обновлено {{count}} товаров',
+    reanalyzeConfirm: 'AI сгенерирует новые названия товаров на основе описаний из чеков. Это может занять немного времени.',
   },
 } as const;
