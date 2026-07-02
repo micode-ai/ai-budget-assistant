@@ -1,0 +1,39 @@
+# AI Budget Assistant
+
+> Free AI-powered budget app for individuals and families. Track expenses by voice or receipt photo, plan budgets and savings goals, manage subscriptions, import bank statements, and budget together in real time. Multi-currency, 9 languages, Android and web.
+
+## Product
+
+- Name: AI Budget Assistant
+- URL: https://ai-budget.pl
+- App: https://app.ai-budget.pl
+- Google Play: https://play.google.com/store/apps/details?id=com.budget.assistant
+- Company: MICODE sp. z o.o. (https://mi-code.pl/)
+- Launched: April 2026
+- Pricing: Free core; Pro and Business subscription tiers
+- Platforms: Android, Web
+- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch
+- Currencies: USD, EUR, PLN, GBP, UAH, RUB
+
+## Key Features
+
+- Voice expense capture: log expenses by speaking naturally, transcribed by AI
+- Receipt scanning: photograph a receipt to extract amount, merchant and category via OCR
+- Bank notification capture: Android app intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials required)
+- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, Revolut, Erste, Alior
+- AI chat assistant: ask financial questions and give commands in natural language (GPT-4)
+- Shared family accounts with owner/editor/viewer roles and live activity feed
+- Group purchase voting and approval workflows
+- Category budgets with history, alerts and period tracking
+- Savings goals with contribution log
+- Subscription manager with renewal reminders and auto-charge simulation
+- Telegram, WhatsApp and Slack bots
+- Offline-first architecture with end-to-end encryption
+- Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations
+- Anomaly detection: duplicate charges, price increases, spending spikes
+
+## Content
+
+- Blog (9 languages): https://ai-budget.pl/blog/en/
+- Help center (9 languages): https://ai-budget.pl/help/en/
+- Sitemap: https://ai-budget.pl/sitemap.xml
