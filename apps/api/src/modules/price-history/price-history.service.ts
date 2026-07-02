@@ -17,6 +17,7 @@ type Period = PriceHistoryPeriod;
 const IGNORED_SENTINEL = '__ignored__';
 
 interface RawItemRow {
+  id: string;
   rawName: string;       // original expense_items.canonical_name, before alias resolution
   resolvedName: string;
   date: Date;
@@ -107,6 +108,21 @@ export class PriceHistoryService {
       where: { accountId_rawName: { accountId, rawName } },
       create: { accountId, rawName, canonicalName: IGNORED_SENTINEL },
       update: { canonicalName: IGNORED_SENTINEL },
+    });
+    await this.invalidatePriceHistoryCache(accountId);
+  }
+
+  async deletePricePoint(accountId: string, itemId: string): Promise<void> {
+    // Verify ownership before mutating
+    const item = await (this.prisma as any).expenseItem.findFirst({
+      where: { id: itemId, expense: { accountId, isDeleted: false }, isDeleted: false },
+      select: { id: true },
+    });
+    if (!item) throw new Error('Not found');
+    // Clear canonicalName so the point is excluded from all price-history queries
+    await (this.prisma as any).expenseItem.update({
+      where: { id: itemId },
+      data: { canonicalName: null },
     });
     await this.invalidatePriceHistoryCache(accountId);
   }
@@ -210,6 +226,7 @@ export class PriceHistoryService {
   private async fetchRows(accountId: string): Promise<RawItemRow[]> {
     const aliases = await this.getAliasMap(accountId);
     const items: Array<{
+      id: string;
       canonicalName: string;
       unitPrice: number;
       quantity: number;
@@ -222,6 +239,7 @@ export class PriceHistoryService {
         isDeleted: false,
       },
       select: {
+        id: true,
         canonicalName: true,
         unitPrice: true,
         quantity: true,
@@ -233,6 +251,7 @@ export class PriceHistoryService {
     return items
       .filter((item) => (aliases.get(item.canonicalName) ?? '') !== IGNORED_SENTINEL)
       .map((item) => ({
+        id: item.id,
         rawName: item.canonicalName,
         resolvedName: aliases.get(item.canonicalName) ?? item.canonicalName,
         date: item.expense.date,
@@ -365,6 +384,7 @@ export class PriceHistoryService {
         pricePoints: items
           .sort((a, b) => a.date.getTime() - b.date.getTime())
           .map((i) => ({
+            itemId: i.id,
             date: i.date.toISOString().slice(0, 10),
             price: i.unitPrice,
             merchant: i.merchant,

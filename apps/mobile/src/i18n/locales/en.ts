@@ -2152,6 +2152,8 @@ export default {
     deleteAlias: 'Reset to original name',
     ignoreProduct: 'Remove from tracking',
     ignoreConfirm: 'Remove "{{name}}" from price tracking? You can restore it by resetting the alias later.',
+    removePrice: 'Remove this price',
+    removePriceConfirm: 'Remove the price from {{date}} ({{price}})? This is useful for one-time discounts that would distort your inflation index.',
     noProducts: 'No tracked products yet',
     showMore: '+{{count}} more',
     productsHint: 'Products are detected from receipt scans. Tap a product to rename it, or use Merge to combine variants of the same product.',

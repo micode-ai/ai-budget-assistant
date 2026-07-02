@@ -2141,6 +2141,8 @@ export default {
     deleteAlias: 'Originele naam herstellen',
     ignoreProduct: 'Verwijder uit tracking',
     ignoreConfirm: '"{{name}}" uit prijsregistratie verwijderen? Je kunt het later herstellen door de alias te resetten.',
+    removePrice: 'Deze prijs verwijderen',
+    removePriceConfirm: 'Prijs van {{date}} ({{price}}) verwijderen? Handig voor eenmalige kortingen die je inflatie-index zouden verstoren.',
     noProducts: 'Nog geen gevolgde producten',
     showMore: '+{{count}} meer',
     productsHint: 'Producten worden gedetecteerd uit bonscans. Tik op een product om het een ander naam te geven of gebruik Samenvoegen om varianten van hetzelfde product te combineren.',
