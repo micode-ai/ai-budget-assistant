@@ -244,6 +244,7 @@ export class SyncService {
           id: entityId,
           expenseId: payload.expenseId,
           description: payload.description,
+          canonicalName: payload.canonicalName ?? null,
           quantity: payload.quantity ?? 1,
           unitPrice: payload.unitPrice ?? 0,
           totalPrice: payload.totalPrice,
@@ -269,6 +270,7 @@ export class SyncService {
         where: { id: entityId },
         data: {
           description: payload.description,
+          canonicalName: payload.canonicalName ?? null,
           quantity: payload.quantity,
           unitPrice: payload.unitPrice,
           totalPrice: payload.totalPrice,

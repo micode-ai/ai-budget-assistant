@@ -4104,6 +4104,136 @@ Content-Type: application/json
 
 ---
 
+## Price History
+
+Personal Inflation Index — tracks how prices of individual grocery/receipt line items change over time, computed as a Laspeyres index. All endpoints require `Authorization: Bearer <token>` + `X-Account-Id` header. No tier guard — available on the free plan.
+
+### Get Inflation Index
+
+Returns a Laspeyres price index for the account's tracked products over the requested period. Cached in Redis under `ph:{accountId}:{period}` with a 300-second TTL.
+
+```http
+GET /price-history?period=3m
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Query Parameters**
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `period` | `3m` \| `6m` \| `12m` | `3m` | Comparison window |
+
+**Response** `200 OK`
+```json
+{
+  "period": "3m",
+  "indexValue": 1.087,
+  "inflationPercent": 8.7,
+  "baseDate": "2026-04-01",
+  "currentDate": "2026-07-01",
+  "productCount": 24,
+  "fxApproximate": false
+}
+```
+
+### List Products
+
+Returns the list of distinct canonical products tracked for the account, with their latest unit prices per store.
+
+```http
+GET /price-history/products
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "products": [
+    {
+      "canonicalName": "Milk 1L",
+      "rawName": "MLEKO 1L ŁACIATE",
+      "latestPrice": 3.49,
+      "currencyCode": "PLN",
+      "latestDate": "2026-06-28",
+      "storeCount": 2,
+      "storeLatestPrices": [
+        { "store": "Biedronka", "price": 3.39, "date": "2026-06-20" },
+        { "store": "Żabka",     "price": 3.49, "date": "2026-06-28" }
+      ]
+    }
+  ]
+}
+```
+
+### Upsert Product Alias
+
+Maps a raw OCR product name to a canonical name (creates or updates the `product_aliases` row). **Viewer role blocked** (403).
+
+```http
+PATCH /price-history/products/alias
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "rawName": "MLEKO 1L ŁACIATE",
+  "canonicalName": "Milk 1L"
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "id": "uuid",
+  "accountId": "account-uuid",
+  "rawName": "MLEKO 1L ŁACIATE",
+  "canonicalName": "Milk 1L",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-01T09:00:00Z"
+}
+```
+
+### Delete Product Alias
+
+Removes a raw-name → canonical-name mapping from `product_aliases`. **Viewer role blocked** (403).
+
+```http
+DELETE /price-history/products/alias/:rawName
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+**Errors:**
+- `404 Not Found` — Alias not found in this account
+
+### Merge Product Variants
+
+Renames all `ExpenseItem` rows and product aliases sharing a source canonical name to a target canonical name, consolidating price history. **Viewer role blocked** (403).
+
+```http
+POST /price-history/products/merge
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "sourceCanonicalName": "Milk 1L",
+  "targetCanonicalName": "Whole Milk 1L"
+}
+```
+
+**Response** `200 OK`
+```json
+{ "mergedItems": 14, "mergedAliases": 3 }
+```
+
+**DTOs** (`packages/shared-types/src/dto/price-history.ts`): `PriceHistoryResponse`, `PriceHistoryProduct`, `StoreLatestPrice`, `ProductListItem`, `UpsertAliasDto`, `MergeProductsDto`.
+
+---
+
 ## Error Responses
 
 ### Error Format

@@ -3880,6 +3880,73 @@ Only the trip owner can archive it, from the trip account screen.
 You'll get a reminder when a trip ends and it's time to settle up. You can turn this off in **Settings → Notifications**.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Personal Inflation Index`,
+      description: ``,
+      body: `# Personal Inflation Index
+
+The Personal Inflation Index shows how the prices you actually pay have changed over time — calculated from your own receipt scans. Unlike official inflation figures, this reflects your real shopping basket.
+
+## How It Works
+
+When you scan a receipt, the app extracts individual line items (e.g. "Mleko Łaciate", "Chleb Razowy") and records the price you paid and the store name. Over time, the app builds a price history for each product and calculates your personal inflation as a weighted average across all tracked products.
+
+The formula weights products by how much you spend on them (items you buy often and at high prices influence the index more), giving you a fair picture of how price changes affect your specific spending.
+
+## Where to Find It
+
+The Personal Inflation Index appears in the **Analytics** tab, below the AI Insights section. It shows:
+
+- A headline number: **"Your inflation: +11.4%"** over the selected period
+- How many products are being tracked
+- A list of products with their individual price changes
+- Per-product price history chart and store comparison (tap any product)
+
+## Period Selection
+
+Tap **3M**, **6M**, or **12M** to change the comparison period. The app compares prices from the first half of the period (the "base") to the second half (the "current"), so a 6-month period compares months 1–3 against months 4–6.
+
+The index shows \`null\` until at least 3 products have been purchased in both the base and current periods.
+
+## Store Comparison
+
+Tap any product to see:
+- A price history chart over time
+- A table showing the latest price at each store you've bought that product, sorted cheapest first
+- An option to rename the product (see below)
+
+## Managing Product Names
+
+The app assigns a short, clean name to each product automatically (e.g. "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"). You can correct or customize these names.
+
+### Rename a Single Product
+
+Tap any product row in the inflation section, then tap the rename option. Enter the name you prefer and save. This only affects how the product is displayed — the underlying price history is preserved.
+
+### Manage All Products
+
+Go to **Settings → Reference Data → Products** to see all tracked products. From here you can:
+
+- **Rename** any product (tap a row)
+- **Merge** multiple product variants into one (long-press to select, then tap Merge) — useful when the same product appears under slightly different names
+- **Reset** a custom name back to the original (tap the reset icon on a row that has been renamed)
+
+### Merging Products
+
+If you see "Mleko 3.2%" and "Mleko Łaciate" separately but they're the same product, select both, tap Merge, and enter the canonical name you want. All price history from both names will be combined under that single name going forward.
+
+## Getting More Data
+
+The index requires at least 3 products with purchases in both the base and current periods. If you see the "Scan a few receipts" message, continue scanning receipts over time — the index will appear automatically once enough data is available.
+
+Only receipts scanned with the camera (OCR) contribute to the index. Manually entered expenses and bank imports do not include product-level line items.
+
+## Privacy
+
+All price history is stored in your account on the server. It is not shared across accounts or used to build any shared product catalog. If you delete your account, all price history is deleted with it.
+`,
+    },
   ],
   ru: [
     {
@@ -7737,6 +7804,73 @@ AI Budget Assistant предлагает три уровня подписки. �
 Вы получите напоминание, когда поездка закончится и придёт время рассчитаться. Это можно отключить в **Настройки → Уведомления**.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Персональный индекс инфляции`,
+      description: ``,
+      body: `# Персональный индекс инфляции
+
+Персональный индекс инфляции показывает, как изменились цены, которые вы реально платите, — рассчитанный на основе ваших собственных сканов чеков. В отличие от официальных показателей инфляции, он отражает вашу реальную потребительскую корзину.
+
+## Как это работает
+
+Когда вы сканируете чек, приложение извлекает отдельные позиции (например, «Mleko Łaciate», «Chleb Razowy») и фиксирует уплаченную цену и название магазина. Со временем приложение строит историю цен на каждый товар и рассчитывает вашу персональную инфляцию как взвешенное среднее по всем отслеживаемым товарам.
+
+Формула взвешивает товары по объёму ваших трат (товары, которые вы покупаете часто и по высоким ценам, влияют на индекс сильнее), что даёт точную картину того, как изменение цен сказывается на ваших конкретных расходах.
+
+## Где найти
+
+Персональный индекс инфляции отображается на вкладке **Аналитика**, ниже раздела «ИИ-инсайты». Он показывает:
+
+- Главную цифру: **«Ваша инфляция: +11,4 %»** за выбранный период
+- Количество отслеживаемых товаров
+- Список товаров с их индивидуальными изменениями цен
+- График истории цен и сравнение магазинов по каждому товару (нажмите на любой товар)
+
+## Выбор периода
+
+Нажмите **3М**, **6М** или **12М**, чтобы изменить период сравнения. Приложение сравнивает цены из первой половины периода («база») со второй половиной («текущий период»), то есть при периоде в 6 месяцев сравниваются месяцы 1–3 с месяцами 4–6.
+
+Индекс показывает \`null\` до тех пор, пока хотя бы 3 товара не будут куплены в обоих периодах — базовом и текущем.
+
+## Сравнение магазинов
+
+Нажмите на любой товар, чтобы увидеть:
+- График динамики цен за всё время
+- Таблицу с последней ценой в каждом магазине, где вы покупали этот товар, отсортированную от дешёвого к дорогому
+- Возможность переименовать товар (см. ниже)
+
+## Управление названиями товаров
+
+Приложение автоматически присваивает каждому товару короткое и понятное название (например, «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Вы можете исправить или настроить эти названия.
+
+### Переименовать отдельный товар
+
+Нажмите на любую строку товара в разделе инфляции, затем выберите опцию переименования. Введите нужное название и сохраните. Это влияет только на отображение товара — история цен при этом сохраняется.
+
+### Управление всеми товарами
+
+Перейдите в **Настройки → Справочные данные → Товары**, чтобы увидеть все отслеживаемые товары. Отсюда вы можете:
+
+- **Переименовать** любой товар (нажмите на строку)
+- **Объединить** несколько вариантов одного товара в один (удерживайте для выбора, затем нажмите «Объединить») — полезно, когда один и тот же товар встречается под немного разными названиями
+- **Сбросить** пользовательское название к исходному (нажмите на значок сброса в строке с переименованным товаром)
+
+### Объединение товаров
+
+Если вы видите «Mleko 3,2 %» и «Mleko Łaciate» отдельно, но это один и тот же товар, выберите оба, нажмите «Объединить» и введите каноническое название, которое хотите использовать. Вся история цен обоих названий будет объединена под этим единым названием.
+
+## Накопление данных
+
+Для работы индексу нужно минимум 3 товара, которые покупались как в базовом, так и в текущем периоде. Если вы видите сообщение «Отсканируйте несколько чеков», продолжайте сканировать чеки — индекс появится автоматически, как только накопится достаточно данных.
+
+В индекс входят только чеки, отсканированные через камеру (OCR). Расходы, введённые вручную, и банковские импорты не содержат позиций на уровне отдельных товаров.
+
+## Конфиденциальность
+
+Вся история цен хранится в вашем аккаунте на сервере. Она не передаётся между аккаунтами и не используется для создания общего каталога товаров. При удалении аккаунта вся история цен также удаляется.
+`,
+    },
   ],
   ua: [
     {
@@ -11564,6 +11698,73 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 Ви отримаєте нагадування, коли подорож завершиться і настане час розрахуватися. Це можна вимкнути в **Налаштування → Сповіщення**.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Персональний індекс інфляції`,
+      description: ``,
+      body: `# Персональний індекс інфляції
+
+Персональний індекс інфляції показує, як змінилися ціни, які ви реально платите, — розрахований на основі ваших власних сканів чеків. На відміну від офіційних показників інфляції, він відображає вашу реальну споживчу корзину.
+
+## Як це працює
+
+Коли ви скануєте чек, застосунок витягує окремі позиції (наприклад, «Mleko Łaciate», «Chleb Razowy») і фіксує сплачену ціну та назву магазину. З часом застосунок будує історію цін на кожен товар і розраховує вашу персональну інфляцію як зважене середнє за всіма відстежуваними товарами.
+
+Формула зважує товари за обсягом ваших витрат (товари, які ви купуєте часто та за високими цінами, впливають на індекс сильніше), що дає точну картину того, як зміна цін позначається на ваших конкретних витратах.
+
+## Де знайти
+
+Персональний індекс інфляції відображається на вкладці **Аналітика**, нижче розділу «ШІ-інсайти». Він показує:
+
+- Головну цифру: **«Ваша інфляція: +11,4 %»** за вибраний період
+- Кількість відстежуваних товарів
+- Список товарів з їхніми індивідуальними змінами цін
+- Графік історії цін і порівняння магазинів за кожним товаром (натисніть на будь-який товар)
+
+## Вибір періоду
+
+Натисніть **3М**, **6М** або **12М**, щоб змінити період порівняння. Застосунок порівнює ціни з першої половини періоду («база») з другою половиною («поточний період»), тобто при 6-місячному періоді порівнюються місяці 1–3 з місяцями 4–6.
+
+Індекс показує \`null\` до того часу, поки щонайменше 3 товари не буде придбано в обох періодах — базовому та поточному.
+
+## Порівняння магазинів
+
+Натисніть на будь-який товар, щоб побачити:
+- Графік динаміки цін за весь час
+- Таблицю з останньою ціною в кожному магазині, де ви купували цей товар, відсортовану від найдешевшого до найдорожчого
+- Можливість перейменувати товар (див. нижче)
+
+## Управління назвами товарів
+
+Застосунок автоматично присвоює кожному товару коротку і зрозумілу назву (наприклад, «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Ви можете виправити або налаштувати ці назви.
+
+### Перейменувати окремий товар
+
+Натисніть на будь-який рядок товару в розділі інфляції, потім виберіть опцію перейменування. Введіть потрібну назву і збережіть. Це впливає лише на відображення товару — історія цін при цьому зберігається.
+
+### Керувати всіма товарами
+
+Перейдіть до **Налаштування → Довідкові дані → Товари**, щоб побачити всі відстежувані товари. Звідси ви можете:
+
+- **Перейменувати** будь-який товар (натисніть на рядок)
+- **Об'єднати** кілька варіантів одного товару в один (утримуйте для вибору, потім натисніть «Об'єднати») — корисно, коли один і той самий товар зустрічається під дещо різними назвами
+- **Скинути** користувацьку назву до початкової (натисніть на значок скидання в рядку з перейменованим товаром)
+
+### Об'єднання товарів
+
+Якщо ви бачите «Mleko 3,2 %» і «Mleko Łaciate» окремо, але це один і той самий товар, виберіть обидва, натисніть «Об'єднати» і введіть канонічну назву, яку хочете використовувати. Уся історія цін обох назв буде об'єднана під цією єдиною назвою.
+
+## Накопичення даних
+
+Для роботи індексу потрібно щонайменше 3 товари, які купувалися як у базовому, так і в поточному periodах. Якщо ви бачите повідомлення «Відскануйте кілька чеків», продовжуйте сканувати чеки — індекс з'явиться автоматично, як тільки накопичиться достатньо даних.
+
+До індексу входять лише чеки, відскановані через камеру (OCR). Витрати, введені вручну, та банківські імпорти не містять позицій на рівні окремих товарів.
+
+## Конфіденційність
+
+Уся історія цін зберігається у вашому обліковому записі на сервері. Вона не передається між обліковими записами і не використовується для створення спільного каталогу товарів. При видаленні облікового запису вся історія цін також видаляється.
+`,
+    },
   ],
   pl: [
     {
@@ -15376,6 +15577,73 @@ Tylko właściciel podróży może ją zarchiwizować — z ekranu konta podró�
 Otrzymasz przypomnienie, gdy podróż się zakończy i czas będzie się rozliczyć. Możesz je wyłączyć w **Ustawienia → Powiadomienia**.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Osobisty wskaźnik inflacji`,
+      description: ``,
+      body: `# Osobisty wskaźnik inflacji
+
+Osobisty wskaźnik inflacji pokazuje, jak zmieniły się ceny, które rzeczywiście płacisz — wyliczony na podstawie Twoich własnych skanów paragonów. W odróżnieniu od oficjalnych danych inflacyjnych, odzwierciedla Twój realny koszyk zakupów.
+
+## Jak to działa
+
+Kiedy skantujesz paragon, aplikacja wyodrębnia poszczególne pozycje (np. "Mleko Łaciate", "Chleb Razowy") i rejestruje zapłaconą cenę oraz nazwę sklepu. Z czasem aplikacja buduje historię cen dla każdego produktu i oblicza Twoją osobistą inflację jako ważoną średnią wszystkich śledzonych produktów.
+
+Formuła nadaje większą wagę produktom, na które wydajesz więcej (te, które kupujesz często i drogo, mają większy wpływ na wskaźnik), dzięki czemu uzyskujesz rzetelny obraz tego, jak zmiany cen wpływają na Twoje konkretne wydatki.
+
+## Gdzie to znaleźć
+
+Osobisty wskaźnik inflacji pojawia się na karcie **Analityka**, poniżej sekcji AI Insights. Pokazuje:
+
+- Nagłówek z liczbą: **"Twoja inflacja: +11,4%"** w wybranym okresie
+- Liczbę śledzonych produktów
+- Listę produktów z indywidualnymi zmianami cen
+- Wykres historii cen i porównanie sklepów dla każdego produktu (stuknij w dowolny produkt)
+
+## Wybór okresu
+
+Stuknij **3M**, **6M** lub **12M**, aby zmienić okres porównania. Aplikacja porównuje ceny z pierwszej połowy okresu ("baza") z drugą połową ("bieżący"), więc okres 6-miesięczny porównuje miesiące 1–3 z miesiącami 4–6.
+
+Wskaźnik pokazuje wartość \`null\`, dopóki co najmniej 3 produkty nie będą miały zakupów zarówno w okresie bazowym, jak i bieżącym.
+
+## Porównanie sklepów
+
+Stuknij w dowolny produkt, aby zobaczyć:
+- Wykres historii cen w czasie
+- Tabelę z najnowszą ceną w każdym sklepie, w którym kupowałeś ten produkt, posortowaną od najtańszej
+- Opcję zmiany nazwy produktu (patrz niżej)
+
+## Zarządzanie nazwami produktów
+
+Aplikacja automatycznie przypisuje krótką, czystą nazwę do każdego produktu (np. "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"). Możesz korygować lub dostosowywać te nazwy.
+
+### Zmiana nazwy jednego produktu
+
+Stuknij w dowolną pozycję produktu w sekcji inflacji, a następnie wybierz opcję zmiany nazwy. Wpisz preferowaną nazwę i zapisz. Dotyczy to tylko sposobu wyświetlania produktu — historia cen jest zachowana.
+
+### Zarządzanie wszystkimi produktami
+
+Przejdź do **Ustawienia → Dane referencyjne → Produkty**, aby zobaczyć wszystkie śledzone produkty. Stąd możesz:
+
+- **Zmienić nazwę** dowolnego produktu (stuknij w wiersz)
+- **Scalić** wiele wariantów produktu w jeden (przytrzymaj, aby zaznaczyć, następnie stuknij Scal) — przydatne, gdy ten sam produkt pojawia się pod nieco różnymi nazwami
+- **Zresetować** niestandardową nazwę do oryginalnej (stuknij ikonę resetowania w wierszu, który został przemianowany)
+
+### Scalanie produktów
+
+Jeśli widzisz "Mleko 3,2%" i "Mleko Łaciate" osobno, ale to ten sam produkt, zaznacz oba, stuknij Scal i podaj żądaną kanoniczną nazwę. Cała historia cen obu nazw zostanie połączona pod tą jedną nazwą.
+
+## Jak uzyskać więcej danych
+
+Wskaźnik wymaga co najmniej 3 produktów z zakupami zarówno w okresie bazowym, jak i bieżącym. Jeśli widzisz komunikat "Zeskanuj kilka paragonów", kontynuuj skanowanie — wskaźnik pojawi się automatycznie po zebraniu wystarczającej ilości danych.
+
+Do wskaźnika przyczyniają się tylko paragony skanowane aparatem (OCR). Ręcznie wprowadzone wydatki i importy bankowe nie zawierają pozycji produktowych.
+
+## Prywatność
+
+Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udostępniana między kontami ani nie służy do budowania żadnego wspólnego katalogu produktów. Jeśli usuniesz konto, cała historia cen zostanie usunięta razem z nim.
+`,
+    },
   ],
   de: [
     {
@@ -19163,6 +19431,73 @@ Nur der Reisebesitzer kann sie archivieren — über den Reisekonto-Bildschirm.
 Du erhältst eine Erinnerung, wenn eine Reise endet und es Zeit zum Abrechnen ist. Du kannst dies unter **Einstellungen → Benachrichtigungen** deaktivieren.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Persönlicher Inflationsindex`,
+      description: ``,
+      body: `# Persönlicher Inflationsindex
+
+Der persönliche Inflationsindex zeigt, wie sich die Preise, die du tatsächlich zahlst, im Laufe der Zeit verändert haben — berechnet aus deinen eigenen Kassenbonscans. Im Gegensatz zu offiziellen Inflationszahlen spiegelt er deinen echten Einkaufskorb wider.
+
+## Wie es funktioniert
+
+Wenn du einen Kassenbon scannst, extrahiert die App die einzelnen Positionen (z. B. „Mleko Łaciate", „Chleb Razowy") und erfasst den bezahlten Preis sowie den Filialname. Im Laufe der Zeit erstellt die App einen Preisverlauf für jedes Produkt und berechnet deine persönliche Inflation als gewichteten Durchschnitt aller erfassten Produkte.
+
+Die Formel gewichtet Produkte nach deinen Ausgaben dafür (Artikel, die du häufig und zu hohen Preisen kaufst, beeinflussen den Index stärker), sodass du ein realistisches Bild davon bekommst, wie sich Preisänderungen auf deine konkreten Ausgaben auswirken.
+
+## Wo du es findest
+
+Der persönliche Inflationsindex erscheint in der Registerkarte **Analysen**, unterhalb des Abschnitts „KI-Einblicke". Er zeigt:
+
+- Eine Hauptzahl: **„Deine Inflation: +11,4 %"** für den ausgewählten Zeitraum
+- Wie viele Produkte erfasst werden
+- Eine Liste der Produkte mit ihren individuellen Preisänderungen
+- Preisverlaufdiagramm und Filialvergleich pro Produkt (tippe auf ein Produkt)
+
+## Zeitraumauswahl
+
+Tippe auf **3M**, **6M** oder **12M**, um den Vergleichszeitraum zu ändern. Die App vergleicht die Preise aus der ersten Hälfte des Zeitraums (die „Basis") mit der zweiten Hälfte (der „aktuellen" Phase) — bei einem 6-Monats-Zeitraum werden also Monat 1–3 mit Monat 4–6 verglichen.
+
+Der Index zeigt \`null\`, bis mindestens 3 Produkte sowohl im Basis- als auch im aktuellen Zeitraum gekauft wurden.
+
+## Filialvergleich
+
+Tippe auf ein beliebiges Produkt, um Folgendes zu sehen:
+- Ein Preisverlaufdiagramm über die Zeit
+- Eine Tabelle mit dem aktuellen Preis in jeder Filiale, in der du das Produkt gekauft hast, sortiert vom günstigsten Preis
+- Eine Option, das Produkt umzubenennen (siehe unten)
+
+## Produktnamen verwalten
+
+Die App vergibt jedem Produkt automatisch einen kurzen, übersichtlichen Namen (z. B. „PIWO TYSKIE 0,5L 4,7%" → „Tyskie Piwo"). Du kannst diese Namen korrigieren oder anpassen.
+
+### Ein einzelnes Produkt umbenennen
+
+Tippe auf eine beliebige Produktzeile im Inflationsbereich und dann auf die Umbenennungsoption. Gib den gewünschten Namen ein und speichere. Dies betrifft nur die Anzeige des Produkts — der zugrunde liegende Preisverlauf bleibt erhalten.
+
+### Alle Produkte verwalten
+
+Gehe zu **Einstellungen → Referenzdaten → Produkte**, um alle erfassten Produkte zu sehen. Von hier aus kannst du:
+
+- **Umbenennen** eines beliebigen Produkts (tippe auf eine Zeile)
+- **Zusammenführen** mehrerer Produktvarianten zu einem Eintrag (lang drücken zum Auswählen, dann auf „Zusammenführen" tippen) — nützlich, wenn dasselbe Produkt unter leicht unterschiedlichen Namen erscheint
+- **Zurücksetzen** eines benutzerdefinierten Namens auf den ursprünglichen Namen (tippe auf das Zurücksetzen-Symbol einer umbenannten Zeile)
+
+### Produkte zusammenführen
+
+Wenn du „Mleko 3,2 %" und „Mleko Łaciate" getrennt siehst, es sich aber um dasselbe Produkt handelt, wähle beide aus, tippe auf „Zusammenführen" und gib den kanonischen Namen ein, den du möchtest. Der gesamte Preisverlauf beider Namen wird unter diesem einzigen Namen zusammengeführt.
+
+## Mehr Daten sammeln
+
+Der Index benötigt mindestens 3 Produkte mit Käufen sowohl im Basis- als auch im aktuellen Zeitraum. Wenn du die Meldung „Scanne ein paar Bons" siehst, scanne einfach weiter Kassenbons — der Index erscheint automatisch, sobald genügend Daten vorhanden sind.
+
+Nur mit der Kamera gescannte Kassenbons (OCR) fließen in den Index ein. Manuell eingegebene Ausgaben und Bankimporte enthalten keine produktspezifischen Positionen.
+
+## Datenschutz
+
+Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wird nicht kontoübergreifend geteilt und nicht zur Erstellung eines gemeinsamen Produktkatalogs verwendet. Wenn du dein Konto löschst, wird der gesamte Preisverlauf damit gelöscht.
+`,
+    },
   ],
   es: [
     {
@@ -22939,6 +23274,73 @@ Solo el propietario del viaje puede archivarlo, desde la pantalla de la cuenta d
 Recibirás un recordatorio cuando un viaje termine y sea hora de liquidar cuentas. Puedes desactivarlo en **Ajustes → Notificaciones**.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Índice de Inflación Personal`,
+      description: ``,
+      body: `# Índice de Inflación Personal
+
+El Índice de Inflación Personal muestra cómo han cambiado con el tiempo los precios que realmente pagas — calculado a partir de tus propios escaneos de tiques. A diferencia de las cifras oficiales de inflación, refleja tu cesta de la compra real.
+
+## Cómo funciona
+
+Cuando escaneas un tique, la app extrae las líneas de productos individuales (p. ej., «Mleko Łaciate», «Chleb Razowy») y registra el precio que pagaste y el nombre del establecimiento. Con el tiempo, la app construye un historial de precios para cada producto y calcula tu inflación personal como una media ponderada de todos los productos rastreados.
+
+La fórmula pondera los productos según cuánto gastas en ellos (los artículos que compras con frecuencia y a precios elevados influyen más en el índice), dándote una imagen fiel de cómo los cambios de precios afectan a tus gastos concretos.
+
+## Dónde encontrarlo
+
+El Índice de Inflación Personal aparece en la pestaña **Análisis**, debajo de la sección de Perspectivas de IA. Muestra:
+
+- Un número principal: **«Tu inflación: +11,4 %»** durante el período seleccionado
+- Cuántos productos están siendo rastreados
+- Una lista de productos con sus cambios de precio individuales
+- Gráfico del historial de precios y comparación de tiendas por producto (toca cualquier producto)
+
+## Selección de período
+
+Toca **3M**, **6M** o **12M** para cambiar el período de comparación. La app compara los precios de la primera mitad del período (la «base») con la segunda mitad (la «actual»), de modo que un período de 6 meses compara los meses 1–3 con los meses 4–6.
+
+El índice muestra \`null\` hasta que al menos 3 productos hayan sido comprados en ambos períodos, base y actual.
+
+## Comparación de tiendas
+
+Toca cualquier producto para ver:
+- Un gráfico del historial de precios a lo largo del tiempo
+- Una tabla con el último precio en cada tienda donde has comprado ese producto, ordenada del más barato al más caro
+- Una opción para renombrar el producto (ver más abajo)
+
+## Gestión de nombres de productos
+
+La app asigna automáticamente un nombre corto y limpio a cada producto (p. ej., «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Puedes corregir o personalizar estos nombres.
+
+### Renombrar un producto
+
+Toca cualquier fila de producto en la sección de inflación y luego toca la opción de renombrar. Introduce el nombre que prefieras y guarda. Esto solo afecta a cómo se muestra el producto — el historial de precios subyacente se conserva.
+
+### Gestionar todos los productos
+
+Ve a **Ajustes → Datos de referencia → Productos** para ver todos los productos rastreados. Desde aquí puedes:
+
+- **Renombrar** cualquier producto (toca una fila)
+- **Combinar** varias variantes de un producto en una sola (mantén pulsado para seleccionar, luego toca Combinar) — útil cuando el mismo producto aparece con nombres ligeramente diferentes
+- **Restablecer** un nombre personalizado al original (toca el icono de restablecer en una fila que haya sido renombrada)
+
+### Combinar productos
+
+Si ves «Mleko 3,2 %» y «Mleko Łaciate» por separado pero son el mismo producto, selecciona ambos, toca Combinar e introduce el nombre canónico que desees. Todo el historial de precios de ambos nombres se unificará bajo ese nombre único a partir de ese momento.
+
+## Obtener más datos
+
+El índice requiere al menos 3 productos con compras en ambos períodos, base y actual. Si ves el mensaje «Escanea algunos tiques», sigue escaneando tiques con el tiempo — el índice aparecerá automáticamente en cuanto haya suficientes datos disponibles.
+
+Solo los tiques escaneados con la cámara (OCR) contribuyen al índice. Los gastos introducidos manualmente y las importaciones bancarias no incluyen líneas de productos individuales.
+
+## Privacidad
+
+Todo el historial de precios se almacena en tu cuenta en el servidor. No se comparte entre cuentas ni se utiliza para construir ningún catálogo de productos compartido. Si eliminas tu cuenta, todo el historial de precios se elimina con ella.
+`,
+    },
   ],
   fr: [
     {
@@ -26713,6 +27115,73 @@ Seul le propriétaire du voyage peut l'archiver, depuis l'écran du compte voyag
 Vous recevrez un rappel lorsqu'un voyage se termine et qu'il est temps de régler les comptes. Vous pouvez désactiver cela dans **Paramètres → Notifications**.
 `,
     },
+    {
+      id: '36-personal-inflation-index',
+      title: `Indice d'Inflation Personnel`,
+      description: ``,
+      body: `# Indice d'Inflation Personnel
+
+L'Indice d'Inflation Personnel montre comment les prix que vous payez réellement ont évolué dans le temps — calculé à partir de vos propres scans de tickets de caisse. Contrairement aux chiffres officiels d'inflation, il reflète votre panier d'achat réel.
+
+## Fonctionnement
+
+Lorsque vous scannez un ticket de caisse, l'application extrait les articles individuels (p. ex. « Mleko Łaciate », « Chleb Razowy ») et enregistre le prix payé ainsi que le nom du magasin. Au fil du temps, l'application constitue un historique des prix pour chaque produit et calcule votre inflation personnelle comme une moyenne pondérée de tous les produits suivis.
+
+La formule pondère les produits selon vos dépenses (les articles que vous achetez souvent et à prix élevé influencent davantage l'indice), vous donnant une image fidèle de l'impact des variations de prix sur vos dépenses réelles.
+
+## Où le trouver
+
+L'Indice d'Inflation Personnel apparaît dans l'onglet **Analyses**, sous la section Insights IA. Il affiche :
+
+- Un chiffre principal : **« Votre inflation : +11,4 % »** sur la période sélectionnée
+- Le nombre de produits suivis
+- Une liste de produits avec leurs variations de prix individuelles
+- Un graphique d'historique des prix et une comparaison des magasins par produit (appuyez sur un produit)
+
+## Sélection de la période
+
+Appuyez sur **3M**, **6M** ou **12M** pour modifier la période de comparaison. L'application compare les prix de la première moitié de la période (la « base ») à la seconde moitié (la période « actuelle »), ainsi une période de 6 mois compare les mois 1 à 3 avec les mois 4 à 6.
+
+L'indice affiche \`null\` jusqu'à ce qu'au moins 3 produits aient été achetés à la fois dans la période de base et dans la période actuelle.
+
+## Comparaison des magasins
+
+Appuyez sur un produit pour voir :
+- Un graphique d'historique des prix dans le temps
+- Un tableau affichant le dernier prix dans chaque magasin où vous avez acheté ce produit, trié du moins cher au plus cher
+- Une option pour renommer le produit (voir ci-dessous)
+
+## Gestion des noms de produits
+
+L'application attribue automatiquement un nom court et lisible à chaque produit (p. ex. « PIWO TYSKIE 0,5L 4,7% » → « Tyskie Piwo »). Vous pouvez corriger ou personnaliser ces noms.
+
+### Renommer un seul produit
+
+Appuyez sur une ligne de produit dans la section inflation, puis sur l'option de renommage. Saisissez le nom souhaité et enregistrez. Cela n'affecte que l'affichage du produit — l'historique des prix sous-jacent est conservé.
+
+### Gérer tous les produits
+
+Allez dans **Paramètres → Données de référence → Produits** pour voir tous les produits suivis. Depuis là, vous pouvez :
+
+- **Renommer** n'importe quel produit (appuyez sur une ligne)
+- **Fusionner** plusieurs variantes d'un même produit en un seul (appui long pour sélectionner, puis appuyez sur Fusionner) — utile quand le même produit apparaît sous des noms légèrement différents
+- **Réinitialiser** un nom personnalisé vers l'original (appuyez sur l'icône de réinitialisation d'une ligne renommée)
+
+### Fusionner des produits
+
+Si vous voyez « Mleko 3,2 % » et « Mleko Łaciate » séparément alors qu'il s'agit du même produit, sélectionnez les deux, appuyez sur Fusionner et saisissez le nom canonique souhaité. Tout l'historique des prix des deux noms sera regroupé sous ce nom unique à partir de ce moment.
+
+## Obtenir plus de données
+
+L'indice requiert au moins 3 produits avec des achats dans les deux périodes, base et actuelle. Si vous voyez le message « Scannez quelques tickets », continuez à scanner des tickets au fil du temps — l'indice apparaîtra automatiquement dès que suffisamment de données seront disponibles.
+
+Seuls les tickets scannés avec l'appareil photo (OCR) contribuent à l'indice. Les dépenses saisies manuellement et les imports bancaires n'incluent pas les articles individuels.
+
+## Confidentialité
+
+Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'est pas partagé entre comptes et n'est pas utilisé pour construire un catalogue de produits commun. Si vous supprimez votre compte, tout l'historique des prix est supprimé avec lui.
+`,
+    },
   ],
   be: [
     {
@@ -30445,6 +30914,73 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Апавяшчэнні
 
 Вы атрымаеце напамінак, калі паездка завершыцца і настане час разлічыцца. Гэта можна выключыць у **Налады → Апавяшчэнні**.
+`,
+    },
+    {
+      id: '36-personal-inflation-index',
+      title: `Персанальны індэкс інфляцыі`,
+      description: ``,
+      body: `# Персанальны індэкс інфляцыі
+
+Персанальны індэкс інфляцыі паказвае, як змяніліся цэны, якія вы рэальна плаціце, — разлічаны на аснове вашых уласных сканаў чэкаў. У адрозненне ад афіцыйных паказчыкаў інфляцыі, ён адлюстроўвае вашу рэальную спажывецкую кошык.
+
+## Як гэта працуе
+
+Калі вы скануеце чэк, праграма выцягвае асобныя пазіцыі (напрыклад, «Mleko Łaciate», «Chleb Razowy») і фіксуе заплачаную цану і назву крамы. З часам праграма будуе гісторыю цэн на кожны тавар і разлічвае вашу персанальную інфляцыю як узважанае сярэдняе па ўсіх адсочваемых таварах.
+
+Формула ўзважвае тавары паводле аб'ёму вашых выдаткаў (тавары, якія вы купляеце часта і па высокіх цэнах, уплываюць на індэкс мацней), што дае дакладную карціну таго, як змяненне цэн адбіваецца на вашых канкрэтных расходах.
+
+## Дзе знайсці
+
+Персанальны індэкс інфляцыі адлюстроўваецца на ўкладцы **Аналітыка**, ніжэй раздзела «ІІ-інсайты». Ён паказвае:
+
+- Галоўную лічбу: **«Ваша інфляцыя: +11,4 %»** за абраны перыяд
+- Колькасць адсочваемых тавараў
+- Спіс тавараў з іх індывідуальнымі змяненнямі цэн
+- Графік гісторыі цэн і параўнанне крам па кожным таваре (націсніце на любы тавар)
+
+## Выбар перыяду
+
+Націсніце **3М**, **6М** або **12М**, каб змяніць перыяд параўнання. Праграма параўноўвае цэны з першай паловы перыяду («база») з другой паловай («бягучы перыяд»), гэта значыць пры 6-месячным перыядзе параўноўваюцца месяцы 1–3 з месяцамі 4–6.
+
+Індэкс паказвае \`null\` да таго часу, пакуль хаця б 3 тавары не будуць куплены ў абодвух перыядах — базавым і бягучым.
+
+## Параўнанне крам
+
+Націсніце на любы тавар, каб убачыць:
+- Графік дынамікі цэн за ўвесь час
+- Табліцу з апошняй цаной у кожнай краме, дзе вы куплялі гэты тавар, адсартаваную ад самай танной да самай дарагой
+- Магчымасць перайменаваць тавар (гл. ніжэй)
+
+## Кіраванне назвамі тавараў
+
+Праграма аўтаматычна прысвойвае кожнаму тавару кароткую і зразумелую назву (напрыклад, «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Вы можаце выправіць або наладзіць гэтыя назвы.
+
+### Перайменаваць асобны тавар
+
+Націсніце на любы радок тавару ў раздзеле інфляцыі, затым выберыце опцыю перайменавання. Увядзіце патрэбную назву і захавайце. Гэта ўплывае толькі на адлюстраванне тавару — гісторыя цэн пры гэтым захоўваецца.
+
+### Кіраваць усімі таварамі
+
+Перайдзіце ў **Налады → Даведачныя дадзеныя → Тавары**, каб убачыць усе адсочваемыя тавары. Адсюль вы можаце:
+
+- **Перайменаваць** любы тавар (націсніце на радок)
+- **Аб'яднаць** некалькі варыянтаў аднаго тавару ў адзін (утрымлівайце для выбару, затым націсніце «Аб'яднаць») — карысна, калі адзін і той жа тавар сустракаецца пад крыху рознымі назвамі
+- **Скінуць** карыстальніцкую назву да зыходнай (націсніце на значок скіду ў радку з перайменаваным таварам)
+
+### Аб'яднанне тавараў
+
+Калі вы бачыце «Mleko 3,2 %» і «Mleko Łaciate» асобна, але гэта адзін і той жа тавар, выберыце абодва, націсніце «Аб'яднаць» і ўвядзіце кананічную назву, якую хочаце выкарыстоўваць. Уся гісторыя цэн абодвух назваў будзе аб'яднана пад гэтай адзінай назвай.
+
+## Назапашванне дадзеных
+
+Для працы індэксу патрэбна мінімум 3 тавары, якія куплялісіся як у базавым, так і ў бягучым перыядах. Калі вы бачыце паведамленне «Адскануйце некалькі чэкаў», працягвайце сканаваць чэкі — індэкс з'явіцца аўтаматычна, як толькі назбярэцца дастаткова дадзеных.
+
+У індэкс уваходзяць толькі чэкі, адсканаваныя праз камеру (OCR). Расходы, уведзеныя ўручную, і банкаўскія імпарты не ўтрымліваюць пазіцый на ўзроўні асобных тавараў.
+
+## Канфідэнцыяльнасць
+
+Уся гісторыя цэн захоўваецца ў вашым уліковым запісе на серверы. Яна не перадаецца паміж уліковымі запісамі і не выкарыстоўваецца для стварэння агульнага каталога тавараў. Пры выдаленні ўліковага запісу ўся гісторыя цэн таксама выдаляецца.
 `,
     },
   ],
@@ -34298,6 +34834,73 @@ Alleen de eigenaar van de reis kan deze archiveren, vanaf het reisaccountscherm.
 ## Meldingen
 
 Je krijgt een herinnering wanneer een reis eindigt en het tijd is om af te rekenen. Je kunt dit uitschakelen bij **Instellingen → Meldingen**.
+`,
+    },
+    {
+      id: '36-personal-inflation-index',
+      title: `Persoonlijke Inflatie-index`,
+      description: ``,
+      body: `# Persoonlijke Inflatie-index
+
+De Persoonlijke Inflatie-index laat zien hoe de prijzen die je daadwerkelijk betaalt in de loop van de tijd zijn veranderd — berekend op basis van je eigen bonnetjesscans. In tegenstelling tot officiële inflatiecijfers weerspiegelt dit jouw echte winkelmandje.
+
+## Hoe het werkt
+
+Wanneer je een bonnetje scant, extraheert de app de afzonderlijke artikelen (bijv. « Mleko Łaciate », « Chleb Razowy ») en registreert de betaalde prijs en de winkelnaam. Na verloop van tijd bouwt de app een prijsgeschiedenis op voor elk product en berekent je persoonlijke inflatie als een gewogen gemiddelde over alle bijgehouden producten.
+
+De formule weegt producten naar hoeveel je eraan uitgeeft (artikelen die je vaak en tegen hoge prijzen koopt, beïnvloeden de index meer), zodat je een eerlijk beeld krijgt van hoe prijswijzigingen jouw specifieke uitgaven beïnvloeden.
+
+## Waar je het vindt
+
+De Persoonlijke Inflatie-index verschijnt op het tabblad **Analyses**, onder de sectie AI-inzichten. Het toont:
+
+- Een hoofdgetal: **« Jouw inflatie: +11,4 % »** over de geselecteerde periode
+- Hoeveel producten worden bijgehouden
+- Een lijst van producten met hun individuele prijswijzigingen
+- Een prijshistoriegrafiek en winkelvergelijking per product (tik op een product)
+
+## Periodeselect
+
+Tik op **3M**, **6M** of **12M** om de vergelijkingsperiode te wijzigen. De app vergelijkt de prijzen uit de eerste helft van de periode (de « basis ») met de tweede helft (de « huidige » periode), dus een periode van 6 maanden vergelijkt maanden 1–3 met maanden 4–6.
+
+De index toont \`null\` totdat minimaal 3 producten zijn gekocht in zowel de basis- als de huidige periode.
+
+## Winkelvergelijking
+
+Tik op een product om te zien:
+- Een prijshistoriegrafiek in de tijd
+- Een tabel met de laatste prijs in elke winkel waar je dat product hebt gekocht, gesorteerd van goedkoopst naar duurste
+- Een optie om het product te hernoemen (zie hieronder)
+
+## Productnamen beheren
+
+De app geeft elk product automatisch een korte, duidelijke naam (bijv. « PIWO TYSKIE 0,5L 4,7% » → « Tyskie Piwo »). Je kunt deze namen corrigeren of aanpassen.
+
+### Eén product hernoemen
+
+Tik op een productrij in de inflatiesectie en tik daarna op de hernoemoptie. Voer de gewenste naam in en sla op. Dit beïnvloedt alleen hoe het product wordt weergegeven — de onderliggende prijsgeschiedenis blijft bewaard.
+
+### Alle producten beheren
+
+Ga naar **Instellingen → Referentiegegevens → Producten** om alle bijgehouden producten te zien. Vanaf hier kun je:
+
+- **Hernoemen** van een willekeurig product (tik op een rij)
+- **Samenvoegen** van meerdere productvarianten tot één (lang indrukken om te selecteren, tik daarna op Samenvoegen) — handig wanneer hetzelfde product onder iets verschillende namen verschijnt
+- **Terugzetten** van een aangepaste naam naar de oorspronkelijke naam (tik op het terugstelicoon van een hernoemde rij)
+
+### Producten samenvoegen
+
+Als je « Mleko 3,2 % » en « Mleko Łaciate » afzonderlijk ziet maar het hetzelfde product is, selecteer dan beide, tik op Samenvoegen en voer de canonieke naam in die je wilt. Alle prijsgeschiedenis van beide namen wordt samengevoegd onder die ene naam.
+
+## Meer data verzamelen
+
+De index vereist minimaal 3 producten met aankopen in zowel de basis- als de huidige periode. Als je het bericht « Scan een paar bonnetjes » ziet, blijf dan in de loop van de tijd bonnetjes scannen — de index verschijnt automatisch zodra er voldoende data beschikbaar is.
+
+Alleen bonnetjes die met de camera zijn gescand (OCR) dragen bij aan de index. Handmatig ingevoerde uitgaven en bankimports bevatten geen afzonderlijke artikelregels.
+
+## Privacy
+
+Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd.
 `,
     },
   ],

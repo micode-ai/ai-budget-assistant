@@ -20,6 +20,7 @@ import { merchantRulesApi } from './merchantRules.api';
 import { purchaseRequestsApi } from './purchase-requests.api';
 import { familyFeedApi } from './family-feed.api';
 import { tripApi } from './trip.api';
+import { priceHistoryApi } from './priceHistory.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -45,6 +46,7 @@ export const api = {
   ...purchaseRequestsApi,
   ...familyFeedApi,
   ...tripApi,
+  ...priceHistoryApi,
 };
 
 export function getApiBaseUrl(): string {

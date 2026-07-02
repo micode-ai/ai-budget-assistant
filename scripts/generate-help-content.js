@@ -38,6 +38,7 @@ const SECTIONS = [
   '33-purchase-requests',
   '34-family-feed',
   '35-group-trip-wallet',
+  '36-personal-inflation-index',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

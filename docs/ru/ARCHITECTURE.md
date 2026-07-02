@@ -499,6 +499,10 @@ src/
 │   ├── app-versions/           # Контроль версий приложения (запрос обновления)
 │   ├── health/                 # Публичная проверка работоспособности (SELECT 1)
 │   ├── anomaly/                # Правило-based детекция аномалий при записи → лента AnomalyAlert
+│   ├── price-history/          # Персональный индекс инфляции — индекс Ласпейреса по позициям чеков OCR
+│   │   ├── price-history.module.ts
+│   │   ├── price-history.controller.ts
+│   │   └── price-history.service.ts
 │   ├── telegram/                # Интеграция с Telegram ботом
 │   │   ├── telegram.service.ts
 │   │   ├── telegram-bot.service.ts
@@ -709,19 +713,34 @@ model Expense {
 }
 
 model ExpenseItem {
-  id          String   @id @default(uuid())
-  expenseId   String
-  description String
-  quantity    Decimal  @default(1) @db.Decimal(10, 3)
-  unitPrice   Decimal  @default(0) @db.Decimal(12, 2)
-  totalPrice  Decimal  @db.Decimal(12, 2)
-  sortOrder   Int      @default(0)
-  isDeleted   Boolean  @default(false)
-  syncVersion Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  expenseId     String
+  description   String
+  canonicalName String?  // нормализованное название товара, установленное OCR-сервисом или пользовательским псевдонимом (миграция 20260702160001)
+  quantity      Decimal  @default(1) @db.Decimal(10, 3)
+  unitPrice     Decimal  @default(0) @db.Decimal(12, 2)
+  totalPrice    Decimal  @db.Decimal(12, 2)
+  sortOrder     Int      @default(0)
+  isDeleted     Boolean  @default(false)
+  syncVersion   Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   expense Expense
+}
+
+model ProductAlias {
+  id            String   @id @default(uuid())
+  accountId     String
+  rawName       String
+  canonicalName String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@unique([accountId, rawName])
+  @@map("product_aliases")
 }
 
 model Budget {
@@ -1278,6 +1297,33 @@ const context = {
 **Хуки:** `ExpensesService.create` вызывает `AnomalyService.analyzeExpense(expense)` синхронно после фиксации строки расхода. Коммит импорта (`import-wise`, `import-bank`) вызывает `AnomalyService.analyzeExpenseBatch(expenses)` асинхронно (fire-and-forget), чтобы не снижать пропускную способность импорта.
 
 **API:** `GET /alerts`, `PATCH /alerts/read-all`, `PATCH /alerts/:id/read`, `DELETE /alerts/:id` — все под `JwtAuthGuard + AccountContextGuard`; эндпоинты записи защищены `ViewerBlockGuard`.
+
+## Персональный индекс инфляции
+
+Модуль `price-history` (ABA-307) рассчитывает индекс цен Ласпейреса по позициям чеков аккаунта, позволяя пользователям отслеживать изменение цен в собственной «продуктовой корзине» без каких-либо затрат на AI.
+
+### Принцип работы
+
+1. **Захват данных**: OCR-сервис (`ocr.service.ts`) устанавливает поле `ReceiptItem.canonicalName` для каждой позиции отсканированного чека с помощью эвристики `buildCanonicalNameFallback(description)`. Пользовательские псевдонимы (таблица `product_aliases`, `@@unique([accountId, rawName])`) могут переопределять необработанные имена OCR в чистое каноническое представление.
+2. **Хранение**: `ExpenseItem.canonicalName` (миграция `20260702160001_add_expense_item_canonical_name`) сохраняет разрешённое каноническое имя рядом с исходным полем `description`.
+3. **Расчёт индекса**: `PriceHistoryService.getInflationIndex(accountId, period)` извлекает самые ранние и последние цены за единицу по каждому каноническому товару за период, рассчитывает индекс Ласпейреса (`Σ(p₁ × q₀) / Σ(p₀ × q₀)`) и кеширует результат в Redis (`ph:{accountId}:{period}`, TTL 300 с).
+4. **Управление товарами**: Пользователи могут просматривать историю цен по товарам, создавать/обновлять псевдонимы rawName→canonicalName и объединять дублирующиеся варианты товаров (5 эндпоинтов, все на бесплатном тарифе, операции записи защищены `ViewerBlockGuard`).
+
+### Таблицы базы данных
+
+- `expense_items.canonical_name TEXT` — nullable-колонка, добавленная в существующую таблицу `expense_items` (миграция `20260702160001`)
+- `product_aliases` — новая таблица: `id`, `accountId`, `rawName`, `canonicalName`, `createdAt`, `updatedAt`; `@@unique([accountId, rawName])` (миграция `20260702160002_add_product_aliases`)
+
+### Интеграция с мобильным приложением
+
+- **`priceHistoryStore.ts`**: server-only хранилище Zustand (без кеша SQLite — цены требуют консистентности между устройствами)
+- **`priceHistory.api.ts`**: методы API-клиента для всех 5 эндпоинтов
+- **`InflationIndexSection`**: компонент на вкладке Аналитика, отображающий текущее значение индекса и изменения цен по товарам
+- **`app/settings/products.tsx`**: экран управления псевдонимами товаров; доступен из хаба справочных данных
+
+### API эндпоинты
+
+`GET /price-history`, `GET /price-history/products`, `PATCH /price-history/products/alias`, `DELETE /price-history/products/alias/:rawName`, `POST /price-history/products/merge` — все под `JwtAuthGuard + AccountContextGuard`; операции записи защищены `ViewerBlockGuard`. `SubscriptionTierGuard` не используется — доступно на бесплатном тарифе.
 
 ## Учёт мерчантов (продавцов)
 

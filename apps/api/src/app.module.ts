@@ -48,6 +48,7 @@ import { CacheModule } from './common/cache/cache.module';
 import { PurchaseRequestsModule } from './modules/purchase-requests/purchase-requests.module';
 import { FamilyFeedModule } from './modules/family-feed/family-feed.module';
 import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.module';
+import { PriceHistoryModule } from './modules/price-history/price-history.module';
 
 @Module({
   imports: [
@@ -120,6 +121,7 @@ import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.modu
     PurchaseRequestsModule,
     FamilyFeedModule,
     TripSettleUpModule,
+    PriceHistoryModule,
   ],
   providers: [
     {

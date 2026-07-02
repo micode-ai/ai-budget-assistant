@@ -1,0 +1,82 @@
+import { create } from 'zustand';
+import { api } from '@/services/api';
+import type { PriceHistoryResponse, ProductListItem } from '@budget/shared-types';
+
+interface PriceHistoryState {
+  history: PriceHistoryResponse | null;
+  products: ProductListItem[];
+  isLoading: boolean;
+  hasAttemptedLoad: boolean;
+  selectedPeriod: '3m' | '6m' | '12m';
+
+  loadPriceHistory: (period?: '3m' | '6m' | '12m') => Promise<void>;
+  loadProducts: () => Promise<void>;
+  upsertAlias: (rawName: string, canonicalName: string) => Promise<void>;
+  deleteAlias: (rawName: string) => Promise<void>;
+  mergeProducts: (rawNames: string[], canonicalName: string) => Promise<void>;
+  reset: () => void;
+}
+
+export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
+  history: null,
+  products: [],
+  isLoading: false,
+  hasAttemptedLoad: false,
+  selectedPeriod: '6m',
+
+  loadPriceHistory: async (period) => {
+    const resolvedPeriod = period ?? get().selectedPeriod;
+    set({ isLoading: true, selectedPeriod: resolvedPeriod });
+    try {
+      const history = await api.getPriceHistory(resolvedPeriod);
+      set({ history, isLoading: false, hasAttemptedLoad: true });
+    } catch (e) {
+      console.warn('[priceHistoryStore] loadPriceHistory failed', e);
+      set({ isLoading: false, hasAttemptedLoad: true });
+    }
+  },
+
+  loadProducts: async () => {
+    try {
+      const products = await api.getProducts();
+      set({ products });
+    } catch (e) {
+      console.warn('[priceHistoryStore] loadProducts failed', e);
+    }
+  },
+
+  upsertAlias: async (rawName, canonicalName) => {
+    try {
+      await api.upsertAlias({ rawName, canonicalName });
+      await get().loadPriceHistory();
+      await get().loadProducts();
+    } catch (e) {
+      console.warn('[priceHistoryStore] upsertAlias failed', e);
+      throw e;
+    }
+  },
+
+  deleteAlias: async (rawName) => {
+    try {
+      await api.deleteAlias(rawName);
+      await get().loadPriceHistory();
+      await get().loadProducts();
+    } catch (e) {
+      console.warn('[priceHistoryStore] deleteAlias failed', e);
+      throw e;
+    }
+  },
+
+  mergeProducts: async (rawNames, canonicalName) => {
+    try {
+      await api.mergeProducts({ rawNames, canonicalName });
+      await get().loadPriceHistory();
+      await get().loadProducts();
+    } catch (e) {
+      console.warn('[priceHistoryStore] mergeProducts failed', e);
+      throw e;
+    }
+  },
+
+  reset: () => set({ history: null, products: [], isLoading: false, hasAttemptedLoad: false, selectedPeriod: '6m' }),
+}));

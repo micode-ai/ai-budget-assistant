@@ -3942,6 +3942,136 @@ Content-Type: application/json
 
 ---
 
+## История цен
+
+Персональный индекс инфляции — отслеживает изменение цен на отдельные товарные позиции из чеков OCR с течением времени; рассчитывается как индекс Ласпейреса. Все эндпоинты требуют `Authorization: Bearer <token>` + заголовок `X-Account-Id`. Ограничений по тарифному плану нет — доступно на бесплатном тарифе.
+
+### Получить индекс инфляции
+
+Возвращает индекс цен Ласпейреса по отслеживаемым товарам аккаунта за запрошенный период. Кешируется в Redis под ключом `ph:{accountId}:{period}` с TTL 300 секунд.
+
+```http
+GET /price-history?period=3m
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Параметры запроса**
+| Параметр | Тип | По умолчанию | Описание |
+|----------|-----|-------------|----------|
+| `period` | `3m` \| `6m` \| `12m` | `3m` | Окно сравнения |
+
+**Ответ** `200 OK`
+```json
+{
+  "period": "3m",
+  "indexValue": 1.087,
+  "inflationPercent": 8.7,
+  "baseDate": "2026-04-01",
+  "currentDate": "2026-07-01",
+  "productCount": 24,
+  "fxApproximate": false
+}
+```
+
+### Список товаров
+
+Возвращает список уникальных канонических товаров, отслеживаемых в аккаунте, с последними ценами по магазинам.
+
+```http
+GET /price-history/products
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "products": [
+    {
+      "canonicalName": "Молоко 1Л",
+      "rawName": "MLEKO 1L ŁACIATE",
+      "latestPrice": 3.49,
+      "currencyCode": "PLN",
+      "latestDate": "2026-06-28",
+      "storeCount": 2,
+      "storeLatestPrices": [
+        { "store": "Biedronka", "price": 3.39, "date": "2026-06-20" },
+        { "store": "Żabka",     "price": 3.49, "date": "2026-06-28" }
+      ]
+    }
+  ]
+}
+```
+
+### Создать/обновить псевдоним товара
+
+Сопоставляет необработанное имя товара из OCR с каноническим именем (создаёт или обновляет запись в `product_aliases`). **Роль viewer заблокирована** (403).
+
+```http
+PATCH /price-history/products/alias
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "rawName": "MLEKO 1L ŁACIATE",
+  "canonicalName": "Молоко 1Л"
+}
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "id": "uuid",
+  "accountId": "account-uuid",
+  "rawName": "MLEKO 1L ŁACIATE",
+  "canonicalName": "Молоко 1Л",
+  "createdAt": "2026-07-01T09:00:00Z",
+  "updatedAt": "2026-07-01T09:00:00Z"
+}
+```
+
+### Удалить псевдоним товара
+
+Удаляет соответствие rawName → canonicalName из таблицы `product_aliases`. **Роль viewer заблокирована** (403).
+
+```http
+DELETE /price-history/products/alias/:rawName
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `204 No Content`
+
+**Ошибки:**
+- `404 Not Found` — Псевдоним не найден в данном аккаунте
+
+### Объединить варианты товара
+
+Переименовывает все строки `ExpenseItem` и псевдонимы товаров с указанным исходным каноническим именем в целевое каноническое имя, объединяя историю цен. **Роль viewer заблокирована** (403).
+
+```http
+POST /price-history/products/merge
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "sourceCanonicalName": "Молоко 1Л",
+  "targetCanonicalName": "Цельное молоко 1Л"
+}
+```
+
+**Ответ** `200 OK`
+```json
+{ "mergedItems": 14, "mergedAliases": 3 }
+```
+
+**DTO** (`packages/shared-types/src/dto/price-history.ts`): `PriceHistoryResponse`, `PriceHistoryProduct`, `StoreLatestPrice`, `ProductListItem`, `UpsertAliasDto`, `MergeProductsDto`.
+
+---
+
 ## Ответы с ошибками
 
 ### Формат ошибки

@@ -20,7 +20,9 @@ import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
   IncomeCategoryBreakdown, MerchantBreakdown, TagBreakdown, ProjectBreakdown,
   DayOfWeekSection, QuickInsights, TopReceiptItems, AiInsightsSection,
+  InflationIndexSection,
 } from '@/components/analytics';
+import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
 import type { Currency } from '@budget/shared-types';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -66,6 +68,8 @@ export default function AnalyticsScreen() {
   useEffect(() => {
     if (!currentAccountId) return;
     hydrateTransactions();
+    usePriceHistoryStore.getState().reset();
+    usePriceHistoryStore.getState().loadPriceHistory();
   }, [currentAccountId]);
 
   const openDrillDown = useCallback(() => {
@@ -128,6 +132,7 @@ export default function AnalyticsScreen() {
         </TouchableOpacity>
 
         <AiInsightsSection aiInsights={aiInsights} proGated={aiInsightsProGated} />
+        <InflationIndexSection />
         {incomeByCategory.length > 0 && <IncomeCategoryBreakdown incomeByCategory={incomeByCategory} currency={currency} />}
         <SpendingTrendChart dailySpending={dailySpending} selectedRange={selectedRange} onBarPress={openDrillDown} />
         <CategoryBreakdown categorySpending={categorySpending} currency={currency} />

@@ -233,6 +233,7 @@ export class ExpensesService {
           data: dto.items.map((item, index) => ({
             expenseId: expense.id,
             description: item.description,
+            canonicalName: item.canonicalName ?? null,
             quantity: item.quantity ?? 1,
             unitPrice: item.unitPrice ?? 0,
             totalPrice: item.totalPrice,
