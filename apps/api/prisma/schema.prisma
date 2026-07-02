@@ -365,6 +365,7 @@ model Category {
   incomes  Income[]
   expenseCategorySplits ExpenseCategorySplit[]
   budgetCategories      BudgetCategory[]
+  budgetAlerts          BudgetAlert[]
   userSubscriptions     UserSubscription[]
   merchantCategoryRules MerchantCategoryRule[]
 
@@ -556,6 +557,7 @@ model BudgetCategory {
 model BudgetAlert {
   id                  String   @id @default(uuid())
   budgetId            String   @map("budget_id")
+  categoryId          String?  @map("category_id")
   userId              String   @map("user_id")
   thresholdPercentage Int      @map("threshold_percentage")
   triggeredAt         DateTime @map("triggered_at")
@@ -564,11 +566,15 @@ model BudgetAlert {
   isRead              Boolean  @default(false) @map("is_read")
   notificationSent    Boolean  @default(false) @map("notification_sent")
 
-  // Relations
-  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  budget   Budget    @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
-  @@unique([budgetId, thresholdPercentage, periodStart])
+  // Dedup uniqueness is enforced by two partial unique indexes in raw SQL
+  // (migration 20260702152451): budget_alert_overall_unique (WHERE category_id IS NULL)
+  // and budget_alert_category_unique (WHERE category_id IS NOT NULL).
+  // Prisma does not support partial index syntax in schema.
+  @@index([budgetId])
   @@map("budget_alerts")
 }
 
