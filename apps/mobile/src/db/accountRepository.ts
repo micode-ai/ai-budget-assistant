@@ -1,5 +1,5 @@
 import { executeSql } from './client';
-import type { Account, AccountMember, AccountType, AccountRole, Currency } from '@budget/shared-types';
+import type { Account, AccountMember, AccountType, AccountRole, Currency, TripStatus } from '@budget/shared-types';
 
 interface AccountRow {
   id: string;
@@ -10,6 +10,9 @@ interface AccountRow {
   icon: string | null;
   is_active: number;
   my_role: string;
+  trip_status: string | null;
+  trip_start_date: number | null;
+  trip_end_date: number | null;
   created_at: number;
   updated_at: number;
 }
@@ -33,6 +36,9 @@ function rowToAccount(row: AccountRow): Account & { myRole: AccountRole } {
     ownerId: row.owner_id,
     icon: row.icon ?? undefined,
     isActive: row.is_active === 1,
+    tripStatus: row.trip_status ? (row.trip_status as TripStatus) : undefined,
+    tripStartDate: row.trip_start_date ? new Date(row.trip_start_date).toISOString() : undefined,
+    tripEndDate: row.trip_end_date ? new Date(row.trip_end_date).toISOString() : undefined,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     myRole: row.my_role as AccountRole,
@@ -83,8 +89,9 @@ export async function insertAccount(
 ): Promise<void> {
   await executeSql(
     `INSERT OR REPLACE INTO accounts (
-      id, name, type, currency_code, owner_id, icon, is_active, my_role, created_at, updated_at, session_user_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      id, name, type, currency_code, owner_id, icon, is_active, my_role,
+      trip_status, trip_start_date, trip_end_date, created_at, updated_at, session_user_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       account.id,
       account.name,
@@ -94,6 +101,9 @@ export async function insertAccount(
       account.icon ?? null,
       account.isActive ? 1 : 0,
       myRole,
+      account.tripStatus ?? null,
+      account.tripStartDate ? new Date(account.tripStartDate).getTime() : null,
+      account.tripEndDate ? new Date(account.tripEndDate).getTime() : null,
       account.createdAt instanceof Date ? account.createdAt.getTime() : account.createdAt,
       account.updatedAt instanceof Date ? account.updatedAt.getTime() : account.updatedAt,
       sessionUserId ?? '',
@@ -123,6 +133,18 @@ export async function updateAccountInDb(
   if (updates.isActive !== undefined) {
     setClauses.push('is_active = ?');
     params.push(updates.isActive ? 1 : 0);
+  }
+  if (updates.tripStatus !== undefined) {
+    setClauses.push('trip_status = ?');
+    params.push(updates.tripStatus ?? null);
+  }
+  if (updates.tripStartDate !== undefined) {
+    setClauses.push('trip_start_date = ?');
+    params.push(updates.tripStartDate ? new Date(updates.tripStartDate).getTime() : null);
+  }
+  if (updates.tripEndDate !== undefined) {
+    setClauses.push('trip_end_date = ?');
+    params.push(updates.tripEndDate ? new Date(updates.tripEndDate).getTime() : null);
   }
 
   if (setClauses.length === 0) return;

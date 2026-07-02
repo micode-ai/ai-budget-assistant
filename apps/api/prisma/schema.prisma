@@ -14,6 +14,33 @@ enum AccountType {
   business
   shared
   investment
+  trip
+}
+
+enum TripStatus {
+  active
+  settling
+  archived
+}
+
+enum ShareType {
+  equal
+  exact
+  percentage
+  shares
+}
+
+enum SettleMethod {
+  blik
+  revolut
+  paypal
+  cash
+  other
+}
+
+enum SettleStatus {
+  pending
+  confirmed
 }
 
 enum AccountRole {
@@ -126,6 +153,7 @@ model User {
   notifyAnomalyAlerts     Boolean   @default(true) @map("notify_anomaly_alerts")
   notifyTrackingGap       Boolean   @default(true) @map("notify_tracking_gap")
   notifyPurchaseRequests  Boolean   @default(true) @map("notify_purchase_requests")
+  notifyTripSettleUp      Boolean   @default(true) @map("notify_trip_settle_up")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
@@ -201,6 +229,7 @@ model User {
   purchaseRequestVotes  PurchaseRequestVote[] @relation("PurchaseRequestVoter")
   feedEvents            FamilyFeedEvent[]
   feedReactions         FeedReaction[]
+  tripExpenseShares     TripExpenseShare[]
 
   @@map("users")
 }
@@ -219,6 +248,9 @@ model Account {
   createdAt         DateTime    @default(now()) @map("created_at")
   updatedAt         DateTime    @updatedAt @map("updated_at")
   purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
+  tripStartDate DateTime?   @db.Date @map("trip_start_date")
+  tripEndDate   DateTime?   @db.Date @map("trip_end_date")
+  tripStatus    TripStatus? @map("trip_status")
 
   // Relations
   owner       User                @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
@@ -260,6 +292,7 @@ model Account {
   goalContributions       GoalContribution[]
   purchaseRequests        PurchaseRequest[]
   feedEvents              FamilyFeedEvent[]
+  settleUpTransactions    SettleUpTransaction[]
 
   @@map("accounts")
 }
@@ -272,6 +305,9 @@ model AccountMember {
   joinedAt  DateTime    @default(now()) @map("joined_at")
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime    @updatedAt @map("updated_at")
+
+  paymentMethod SettleMethod? @map("payment_method")
+  paymentHandle String?       @map("payment_handle")
 
   // Relations
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -376,6 +412,8 @@ model Expense {
   receiptImage     Bytes?  @map("receipt_image")
   receiptMimeType  String? @map("receipt_mime_type")
 
+  paidByUserId String? @map("paid_by_user_id")
+
   // Relations
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -386,6 +424,7 @@ model Expense {
   categorySplits   ExpenseCategorySplit[]
   projectExpenses  ProjectExpense[]
   purchaseRequest  PurchaseRequest? @relation("PlannedPurchase")
+  shares           TripExpenseShare[]
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -1627,4 +1666,37 @@ model SystemConfig {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("system_config")
+}
+
+// ---- Group Trip Wallet ----
+
+model TripExpenseShare {
+  id          String    @id @default(uuid())
+  expenseId   String    @map("expense_id")
+  expense     Expense   @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  userId      String    @map("user_id")
+  user        User      @relation(fields: [userId], references: [id])
+  shareType   ShareType @map("share_type")
+  shareAmount Decimal   @map("share_amount") @db.Decimal(12, 2)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@unique([expenseId, userId])
+  @@index([userId])
+  @@map("trip_expense_shares")
+}
+
+model SettleUpTransaction {
+  id          String        @id @default(uuid())
+  accountId   String        @map("account_id")
+  account     Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  fromUserId  String        @map("from_user_id")
+  toUserId    String        @map("to_user_id")
+  amount      Decimal       @db.Decimal(12, 2)
+  method      SettleMethod?
+  status      SettleStatus  @default(pending)
+  confirmedAt DateTime?     @map("confirmed_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  @@index([accountId])
+  @@map("settle_up_transactions")
 }

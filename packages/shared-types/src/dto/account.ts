@@ -5,6 +5,8 @@ export interface CreateAccountDto {
   type: AccountType;
   currencyCode?: Currency;
   icon?: string;
+  tripStartDate?: string;
+  tripEndDate?: string; // required by the API when type === 'trip'
 }
 
 export interface UpdateAccountDto {

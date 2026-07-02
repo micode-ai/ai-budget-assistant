@@ -10,6 +10,9 @@ export const accounts = sqliteTable('accounts', {
   icon: text('icon'),
   isActive: integer('is_active', { mode: 'boolean' }).default(true),
   myRole: text('my_role').notNull().default('owner'), // cached role for current user
+  tripStatus: text('trip_status'), // 'active' | 'settling' | 'archived' (trip accounts only)
+  tripStartDate: integer('trip_start_date', { mode: 'timestamp' }),
+  tripEndDate: integer('trip_end_date', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
@@ -62,6 +65,7 @@ export const expenses = sqliteTable('expenses', {
   syncStatus: text('sync_status').notNull().default('pending'),
   syncVersion: integer('sync_version').default(0),
   isPlanned: integer('is_planned', { mode: 'boolean' }).default(false),
+  paidByUserId: text('paid_by_user_id'),
 });
 
 // Incomes table
@@ -258,6 +262,19 @@ export const expenseCategorySplits = sqliteTable('expense_category_splits', {
   syncVersion: integer('sync_version').default(0),
 });
 
+// Trip expense shares table (per-member split of a trip expense)
+export const tripExpenseShares = sqliteTable('trip_expense_shares', {
+  id: text('id').primaryKey(),
+  expenseId: text('expense_id').notNull(),
+  userId: text('user_id').notNull(),
+  shareType: text('share_type').notNull(),
+  shareAmount: real('share_amount').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncVersion: integer('sync_version').default(0),
+});
+
 // Chat conversations table
 export const chatConversations = sqliteTable('chat_conversations', {
   id: text('id').primaryKey(),
@@ -387,3 +404,5 @@ export type ProjectIncomeRecord = typeof projectIncomes.$inferSelect;
 export type NewProjectIncomeRecord = typeof projectIncomes.$inferInsert;
 export type ExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferSelect;
 export type NewExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferInsert;
+export type TripExpenseShareRecord = typeof tripExpenseShares.$inferSelect;
+export type NewTripExpenseShareRecord = typeof tripExpenseShares.$inferInsert;

@@ -42,4 +42,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '32-safe-to-spend', icon: 'shield-checkmark-outline', color: '#10B981' },
   { id: '33-purchase-requests', icon: 'cart-outline', color: '#8B5CF6' },
   { id: '34-family-feed', icon: 'people-outline', color: '#EC4899' },
+  { id: '35-group-trip-wallet', icon: 'airplane-outline', color: '#0891B2' },
 ];

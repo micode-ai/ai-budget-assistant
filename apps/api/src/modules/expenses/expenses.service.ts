@@ -8,6 +8,7 @@ import { AnomalyService } from '../anomaly/anomaly.service';
 import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
+import { resolveShares } from './trip-share-calculator';
 
 @Injectable()
 export class ExpensesService {
@@ -187,6 +188,7 @@ export class ExpensesService {
         debtContactName: dto.debtContactName,
         debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
         relatedDebtIncomeId: dto.relatedDebtIncomeId,
+        paidByUserId: dto.paidByUserId ?? userId,
         // E2EE: pass through encrypted payload if provided
         ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
         ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
@@ -214,6 +216,7 @@ export class ExpensesService {
           debtContactName: dto.debtContactName,
           debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : undefined,
           relatedDebtIncomeId: dto.relatedDebtIncomeId,
+          paidByUserId: dto.paidByUserId ?? userId,
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
         };
@@ -317,6 +320,22 @@ export class ExpensesService {
           user: { select: { name: true } },
         },
       });
+
+      // Trip expense shares: always fully replace (delete+recreate), never partial-patch.
+      // No-op for every non-trip expense — dto.shares is undefined/empty there.
+      if (dto.shares && dto.shares.length > 0 && full) {
+        const resolved = resolveShares(Number(full.amount), dto.splitType ?? 'equal', dto.shares);
+        await tx.tripExpenseShare.deleteMany({ where: { expenseId: full.id } });
+        await tx.tripExpenseShare.createMany({
+          data: resolved.map((r) => ({
+            expenseId: full.id,
+            userId: r.userId,
+            shareType: dto.splitType ?? 'equal',
+            shareAmount: r.shareAmount,
+          })),
+        });
+      }
+
       return { expense: this.toExpenseResponse(full), isNew };
     });
 
@@ -510,6 +529,7 @@ export class ExpensesService {
           debtContactName: dto.debtContactName,
           debtDueDate: dto.debtDueDate ? new Date(dto.debtDueDate) : dto.debtDueDate === null ? null : undefined,
           relatedDebtIncomeId: dto.relatedDebtIncomeId,
+          paidByUserId: dto.paidByUserId,
           syncVersion: { increment: 1 },
           ...(dto.encryptedPayload !== undefined && { encryptedPayload: dto.encryptedPayload }),
           ...(dto.encryptionKeyVersion !== undefined && { encryptionKeyVersion: dto.encryptionKeyVersion }),
@@ -573,6 +593,25 @@ export class ExpensesService {
             });
           }
         }
+      }
+
+      // Trip expense shares: always fully replace (delete+recreate) on edit — never
+      // partially patched. No-op for every non-trip expense — dto.shares is undefined there.
+      if (dto.shares && dto.shares.length > 0) {
+        const resolved = resolveShares(
+          Number(dto.amount ?? expense.amount),
+          dto.splitType ?? 'equal',
+          dto.shares,
+        );
+        await tx.tripExpenseShare.deleteMany({ where: { expenseId: expense.id } });
+        await tx.tripExpenseShare.createMany({
+          data: resolved.map((r) => ({
+            expenseId: expense.id,
+            userId: r.userId,
+            shareType: dto.splitType ?? 'equal',
+            shareAmount: r.shareAmount,
+          })),
+        });
       }
 
       return tx.expense.findUnique({

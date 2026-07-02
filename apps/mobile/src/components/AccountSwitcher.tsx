@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useAccountStore } from '@/stores/accountStore';
+import { useAccountStore, getTripDaysLeft } from '@/stores/accountStore';
 import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useWalletStore } from '@/stores/walletStore';
@@ -25,6 +25,7 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = 
   business: 'briefcase-outline',
   shared: 'people-outline',
   investment: 'trending-up-outline',
+  trip: 'briefcase-outline',
 };
 
 export function AccountSwitcher({
@@ -36,6 +37,7 @@ export function AccountSwitcher({
   showCurrency?: boolean;
 }) {
   const [visible, setVisible] = useState(false);
+  const [pastTripsExpanded, setPastTripsExpanded] = useState(false);
   const { t } = useTranslation();
   const { accounts, currentAccountId, switchAccount } = useAccountStore();
   const { loadCategories } = useCategoryStore();
@@ -45,6 +47,12 @@ export function AccountSwitcher({
   const styles = useStyles(createStyles);
 
   const currentAccount = accounts.find((a) => a.id === currentAccountId);
+
+  // Archived trips get their own collapsible section below the main list
+  // (they're read-only — TripArchivedGuard blocks writes server-side — but
+  // still switchable so members can review old spend).
+  const visibleAccounts = accounts.filter((a) => a.tripStatus !== 'archived');
+  const archivedTripAccounts = accounts.filter((a) => a.tripStatus === 'archived');
 
   const user = useAuthStore((s) => s.user);
   const setCurrency = useAuthStore((s) => s.setCurrency);
@@ -63,6 +71,67 @@ export function AccountSwitcher({
     // Always open the menu so the currency control is reachable even with a
     // single account. Account management is the "Manage accounts" button inside.
     setVisible(true);
+  };
+
+  const renderAccountRow = (item: (typeof accounts)[number]) => {
+    const isActive = item.id === currentAccountId;
+    return (
+      <TouchableOpacity
+        key={item.id}
+        style={[styles.accountItem, isActive && styles.accountItemActive]}
+        onPress={() => handleSwitch(item.id)}
+      >
+        <View style={styles.accountIcon}>
+          <Ionicons
+            name={ACCOUNT_TYPE_ICONS[item.type]}
+            size={20}
+            color={isActive ? theme.colors.primary : theme.colors.textSecondary}
+          />
+        </View>
+        <View style={styles.accountInfo}>
+          <View style={styles.accountNameRow}>
+            {item.type === 'trip' && (
+              <Ionicons
+                name="briefcase-outline"
+                size={13}
+                color={theme.colors.textTertiary}
+                style={styles.tripNameIcon}
+              />
+            )}
+            <Text
+              style={[styles.accountName, isActive && styles.accountNameActive]}
+              numberOfLines={1}
+            >
+              {item.name}
+            </Text>
+          </View>
+          <Text style={styles.accountType}>{t(`accounts.types.${item.type}`)}</Text>
+          {item.type === 'trip' && item.tripStatus === 'active' && (
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(false);
+                router.push(`/trip/${item.id}/settle-up`);
+              }}
+            >
+              <Text style={styles.tripBadge}>
+                {t('trip.daysLeft', { count: getTripDaysLeft(item) ?? 0 })}
+              </Text>
+            </TouchableOpacity>
+          )}
+          {item.type === 'trip' && item.tripStatus === 'settling' && (
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(false);
+                router.push(`/trip/${item.id}/settle-up`);
+              }}
+            >
+              <Text style={[styles.tripBadge, styles.tripBadgeUrgent]}>{t('trip.tripEnded')}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        {isActive && <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />}
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -96,42 +165,34 @@ export function AccountSwitcher({
 
             <FlatList
               style={styles.accountList}
-              data={accounts}
+              data={visibleAccounts}
               keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.accountItem,
-                    item.id === currentAccountId && styles.accountItemActive,
-                  ]}
-                  onPress={() => handleSwitch(item.id)}
-                >
-                  <View style={styles.accountIcon}>
-                    <Ionicons
-                      name={ACCOUNT_TYPE_ICONS[item.type]}
-                      size={20}
-                      color={item.id === currentAccountId ? theme.colors.primary : theme.colors.textSecondary}
-                    />
-                  </View>
-                  <View style={styles.accountInfo}>
-                    <Text
-                      style={[
-                        styles.accountName,
-                        item.id === currentAccountId && styles.accountNameActive,
-                      ]}
-                    >
-                      {item.name}
-                    </Text>
-                    <Text style={styles.accountType}>
-                      {t(`accounts.types.${item.type}`)}
-                    </Text>
-                  </View>
-                  {item.id === currentAccountId && (
-                    <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
-                  )}
-                </TouchableOpacity>
-              )}
+              renderItem={({ item }) => renderAccountRow(item)}
             />
+
+            {archivedTripAccounts.length > 0 && (
+              <View style={styles.pastTripsSection}>
+                <TouchableOpacity
+                  style={styles.pastTripsHeader}
+                  onPress={() => setPastTripsExpanded((v) => !v)}
+                >
+                  <Text style={styles.pastTripsTitle}>{t('trip.pastTrips')}</Text>
+                  <Ionicons
+                    name={pastTripsExpanded ? 'chevron-up' : 'chevron-down'}
+                    size={16}
+                    color={theme.colors.textTertiary}
+                  />
+                </TouchableOpacity>
+                {pastTripsExpanded && (
+                  <FlatList
+                    style={styles.pastTripsList}
+                    data={archivedTripAccounts}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => renderAccountRow(item)}
+                  />
+                )}
+              </View>
+            )}
 
             <View style={styles.currencySection}>
               <Text style={styles.currencyTitle}>{t('accounts.displayCurrency')}</Text>
@@ -345,6 +406,41 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[0.5],
+  },
+  accountNameRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+  },
+  tripNameIcon: {
+    marginRight: theme.spacing[1],
+  },
+  tripBadge: {
+    fontSize: 11,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[0.5],
+  },
+  tripBadgeUrgent: {
+    color: theme.colors.danger,
+    fontWeight: '600' as const,
+  },
+  pastTripsSection: {
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.divider,
+  },
+  pastTripsHeader: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingHorizontal: theme.spacing[5],
+    paddingVertical: theme.spacing[2.5],
+  },
+  pastTripsTitle: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textTransform: 'uppercase' as const,
+  },
+  pastTripsList: {
+    maxHeight: 140,
   },
   manageButton: {
     flexDirection: 'row' as const,

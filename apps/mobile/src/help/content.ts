@@ -1581,7 +1581,7 @@ Your email is updated immediately and new login tokens are issued. If you close 
 
 ### Language
 
-Choose from 8 supported languages:
+Choose from 9 supported languages:
 
 | Code | Language |
 |---|---|
@@ -1593,6 +1593,7 @@ Choose from 8 supported languages:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Tap a language chip to switch. The interface updates immediately.
 
@@ -1669,6 +1670,10 @@ Toggle switches for notification preferences:
 | **Budget Alerts** | Get notified when you reach budget thresholds |
 | **Shared Account Activity** | Get notified when others add expenses to shared accounts |
 | **Debt Reminders** | Get notified 3 days before a debt is due and when it becomes overdue |
+| **Recurring Expenses** | Get notified when the app automatically records a recurring expense |
+| **Subscription Renewals** | Get notified 3 days before a tracked subscription renews |
+| **Anomaly Alerts** | Get notified about unusual spending: duplicate charges, price increases, or category spikes |
+| **Tracking Reminder** | Get a nudge if you haven't logged any expenses for 3+ days |
 
 ### Telegram Bot
 
@@ -1914,6 +1919,8 @@ Your streak counts consecutive days that you track at least one expense or incom
 - **Longest streak** — your personal best is tracked and displayed on the Achievements screen
 
 > **Tip:** Add at least one transaction every day to keep your streak going!
+
+> **Tracking reminder:** If you haven't logged any expenses for 3 or more days, the app sends a push notification to nudge you back. It repeats every 3 days (day 3, 6, 9…). Toggle this in **Settings → Notifications → Tracking Reminder**.
 
 ## XP & Levels
 
@@ -3726,6 +3733,153 @@ Tap the capture toast ("Captured 54 zł · Żabka — tap to review") to open th
 Auto-capture is an Android feature. On iOS and web, this section does not appear. An alternative for iOS is to scan a receipt photo through the existing receipt capture feature.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Purchase Requests`,
+      description: ``,
+      body: `# Purchase Requests
+
+Purchase Requests let any account member propose a purchase for group approval before it enters the budget. Other members vote directly in the app or through Telegram and WhatsApp; approved requests become planned expenses you can convert to real expenses with one tap.
+
+## Creating a request
+
+1. Go to **Settings → Purchase Requests**.
+2. Tap the **+** button.
+3. Fill in the title and amount (required). Optionally add a category, merchant, description, photo, and deadline.
+4. Tap **Send** — all other account members receive a notification and can vote.
+
+## Voting
+
+Open the request from **Settings → Purchase Requests** or from the push notification. Tap **Approve**, **Reject**, or **Abstain**. You can change your vote at any time while the request is still pending.
+
+Telegram and WhatsApp members can vote directly from the bot message using the inline buttons.
+
+## Approval rules
+
+The account owner can set the approval rule under **Settings → Purchase Requests → Approval rule**:
+
+- **Majority** (default) — more than half of all members must approve.
+- **Unanimous** — every member must approve; one rejection closes the request.
+- **Owner only** — only the account owner's vote counts.
+
+Abstaining members are not counted in the denominator, so non-participating members do not block a decision.
+
+## After approval
+
+When a request is approved, any editor or owner can tap **Add to purchase plan**. This creates a planned expense — it appears on the expense detail screen with a **"Planned · Mark as purchased"** banner but does not affect your budget totals yet.
+
+When you actually make the purchase, open the expense and tap the banner to mark it as purchased. The planned flag is removed and the expense enters your budget normally.
+
+## Notifications
+
+You will receive push notifications when:
+
+- A new purchase request is created (all members except the creator).
+- Someone votes on your request.
+- A request you are part of is approved or rejected.
+
+You can disable purchase request notifications under **Settings → Notifications → Purchase requests**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Family Feed`,
+      description: ``,
+      body: `# Family Feed
+
+The Family Feed is a shared activity stream for family and couple accounts. It shows what each member has been spending and earning, and lets you react with emoji — making shared finances feel collaborative.
+
+## What appears in the feed
+
+- **Expenses** — grouped by member and day. If a member adds 3 expenses on the same day, they appear as one card ("3 expenses · 120 USD").
+- **Incomes** — same grouping as expenses.
+- **Purchase requests** — each proposal, approval, and purchase appears as its own card.
+
+The feed only appears for **shared accounts** (family, couple, business). Personal accounts do not have a feed.
+
+## Home widget
+
+The **Family Feed** widget on the home screen shows the 3 most recent activity cards. Tap **Show all** to open the full feed.
+
+You can show or hide the widget in **Settings → Widgets**.
+
+## Full feed screen
+
+Tap **Show all** or navigate to the Family Feed screen to see the complete history. Pull down to refresh. The feed reloads automatically when you switch accounts.
+
+## Reacting with emoji
+
+Every card has a reaction bar. Tap **＋** to open the emoji picker and choose from:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Tap your own emoji to remove your reaction. Tap a different emoji to change it — only one reaction per person per card.
+
+All members (including viewers) can react.
+
+## Tapping a card
+
+- **Single expense or income card** — tap to open the expense or income detail screen.
+- **Grouped card (multiple on same day)** — tap **Show details** to expand the list, then tap an individual row to open it.
+- **Purchase request card** — tap to open the purchase request detail screen.
+
+## Privacy
+
+The feed shows activity from all members of the shared account. There is no option to hide individual transactions from the feed in v1.
+
+Merchants and descriptions are intentionally omitted from feed cards (they may be encrypted on your device). Cards show amount and currency only.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Group Trip Wallet`,
+      description: ``,
+      body: `# Group Trip Wallet
+
+A trip account is a temporary shared account for a group trip — friends or a couple traveling together. Everyone logs expenses, the app splits them, and at the end you settle up who owes whom.
+
+## Creating a trip
+
+Go to **Add account** and choose **Trip**. Give it a name, pick an end date, and choose the currency you'll mostly be spending in. Invite your travel companions the same way you'd invite anyone to a shared account — share the invite link or code.
+
+## Splitting an expense
+
+When you add an expense inside a trip account, a **Split between** section appears below the amount. Pick who the expense applies to, then choose how to split it:
+
+- **Equally** — the amount is divided evenly among the selected members.
+- **Exact amounts** — enter exactly how much each person owes; the amounts must add up to the total.
+- **Percentage** — enter a percentage for each person; the percentages must add up to 100%.
+- **Shares** — give each person a number of shares (for example, 2 shares for a couple, 1 share for someone traveling alone); the total is divided proportionally.
+
+You can also change **who paid** — it defaults to whoever added the expense, but you can pick someone else if you're logging a purchase on their behalf.
+
+## Settling up
+
+Tap the trip in your account switcher — while the trip is active or has just ended, you'll see a days-left badge you can tap to open **Settle Up**.
+
+The Settle Up screen shows the minimum number of payments needed to clear everyone's balances. If you owe someone money, tap **Pay** — if they've added a Revolut or PayPal handle in their payment settings, the app opens a pre-filled payment link. For BLIK, you'll see their phone number to send the transfer manually. If they haven't set up a payment method, just mark the debt as settled once you've paid them another way.
+
+If someone owes you money, once they've paid, tap **Confirm Received** to clear the debt from the balance.
+
+## Setting your payment info
+
+Open **Payment Settings** from the trip account screen to add how others should pay you back — a Revolut or PayPal username, or your phone number for BLIK.
+
+## Trip lifecycle
+
+A trip has three states:
+
+- **Active** — the trip is ongoing. Expenses can be added and edited normally.
+- **Settling** — the trip's end date has passed. You'll get a reminder to settle up. Expenses can still be added if you're catching up on the last few days.
+- **Archived** — the trip owner has closed it out. The account becomes read-only forever, kept as a record of the trip. Archiving usually requires all debts to be confirmed first, though the owner can force-close it if needed.
+
+Only the trip owner can archive it, from the trip account screen.
+
+## Notifications
+
+You'll get a reminder when a trip ends and it's time to settle up. You can turn this off in **Settings → Notifications**.
+`,
+    },
   ],
   ru: [
     {
@@ -5271,7 +5425,7 @@ iOS, Android, Web
 
 - **Аватар** — отображает ваши инициалы на цветном фоне
 - **Имя** — ваше отображаемое имя. Нажмите значок карандаша для редактирования
-- **Эл. почта** — email вашего аккаунта (только для просмотра)
+- **Эл. почта** — email вашего аккаунта. Нажмите значок карандаша, чтобы начать смену адреса (см. [Смена email](#смена-email) ниже)
 - **Часовой пояс** — нажмите значок карандаша для изменения. Откроется выбор с поиском среди 90+ часовых поясов (например, «Europe/Moscow»)
 
 ### Валюта
@@ -5282,11 +5436,24 @@ iOS, Android, Web
 
 Выбранная валюта подсвечена. Она устанавливается как валюта по умолчанию для новых расходов, доходов и отображения на Главной.
 
+### Смена email
+
+Чтобы изменить email аккаунта:
+
+1. Перейдите в **Настройки → Профиль** и нажмите значок карандаша рядом с текущим email.
+2. На экране **Смена email** введите **новый адрес** и **текущий пароль**.
+3. Нажмите **Отправить код** — 6-значный код придёт на *новый* адрес.
+4. Введите код и нажмите **Подтвердить смену email**.
+
+Email обновляется мгновенно, выдаются новые токены входа. Если закрыть приложение до ввода кода, при следующем открытии экран сменой email продолжится с шага 2 в течение 30 минут.
+
+> **Примечание:** Код действителен 30 минут. Нажмите **Отправить повторно**, чтобы вернуться к шагу 1 и запросить новый код.
+
 ## Оформление и язык
 
 ### Язык
 
-Выберите один из 8 поддерживаемых языков:
+Выберите один из 9 поддерживаемых языков:
 
 | Код | Язык |
 |---|---|
@@ -5298,6 +5465,7 @@ iOS, Android, Web
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Нажмите на чип языка для переключения. Интерфейс обновляется мгновенно.
 
@@ -5374,6 +5542,10 @@ iOS, Android, Web
 | **Оповещения о бюджете** | Уведомления при достижении порогов бюджета |
 | **Активность общего счёта** | Уведомления, когда другие добавляют расходы в общие счета |
 | **Напоминания о долгах** | Уведомление за 3 дня до срока долга и при просрочке |
+| **Повторяющиеся расходы** | Уведомление, когда приложение автоматически записывает повторяющийся расход |
+| **Продление подписок** | Уведомление за 3 дня до продления отслеживаемой подписки |
+| **Аномальные расходы** | Уведомление о нетипичных тратах: дубли, повышение цен, всплески по категории |
+| **Напоминание о трекинге** | Напоминание, если вы не записывали расходы 3+ дней |
 
 ### Telegram-бот
 
@@ -5431,7 +5603,7 @@ iOS, Android, Web
   **О:** Смена языка мгновенна для всех элементов интерфейса. Если вы заметили непереведённый текст, попробуйте перезапустить приложение.
 
 - **В: Как изменить email?**
-  **О:** В настоящее время смена email в приложении не поддерживается. Обратитесь в службу поддержки за помощью.
+  **О:** Перейдите в **Настройки → Профиль** и нажмите значок карандаша рядом с вашим email. Введите новый адрес и текущий пароль, затем подтвердите смену 6-значным кодом, который придёт на новый адрес.
 
 - **В: Что происходит с моими данными при выходе?**
   **О:** Ваши данные остаются на сервере. Когда вы снова войдёте в систему, всё будет восстановлено. Локальные данные на устройстве могут быть удалены.
@@ -5619,6 +5791,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 - **Лучшая серия** — ваш личный рекорд отслеживается и показывается на экране Достижений
 
 > **Совет:** Добавляйте хотя бы одну транзакцию каждый день, чтобы серия не прерывалась!
+
+> **Напоминание о трекинге:** Если вы не записывали расходы 3 и более дней, приложение пришлёт мягкое push-уведомление. Напоминает каждые 3 дня (день 3, 6, 9…). Управляется в **Настройки → Уведомления → Напоминание о трекинге**.
 
 ## Опыт и уровни
 
@@ -7418,6 +7592,151 @@ AI Budget Assistant предлагает три уровня подписки. �
 Авто-захват — это функция Android. На iOS и в браузере этот раздел не отображается. Альтернатива для iOS — сканирование фото чека через существующую функцию захвата чеков.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Запросы на покупку`,
+      description: ``,
+      body: `# Запросы на покупку
+
+Запросы на покупку позволяют любому участнику счёта предложить покупку для группового согласования до того, как она войдёт в бюджет. Другие участники голосуют прямо в приложении или через ботов Telegram и WhatsApp; одобренные запросы становятся запланированными расходами, которые можно превратить в реальные одним нажатием.
+
+## Создание запроса
+
+1. Перейдите в **Настройки → Запросы на покупку**.
+2. Нажмите кнопку **+**.
+3. Заполните название и сумму (обязательно). При желании добавьте категорию, продавца, описание, фото и срок.
+4. Нажмите **Отправить** — все остальные участники счёта получат уведомление и смогут проголосовать.
+
+## Голосование
+
+Откройте запрос из **Настройки → Запросы на покупку** или из push-уведомления. Нажмите **Одобрить**, **Отклонить** или **Воздержаться**. Вы можете изменить свой голос в любое время, пока запрос ещё ожидает решения.
+
+Участники Telegram и WhatsApp могут голосовать прямо из сообщения бота, используя встроенные кнопки.
+
+## Правила одобрения
+
+Владелец счёта может задать правило одобрения в **Настройки → Запросы на покупку → Правило одобрения**:
+
+- **Большинство** (по умолчанию) — более половины всех участников должны одобрить.
+- **Единогласно** — каждый участник должен одобрить; одно отклонение закрывает запрос.
+- **Только владелец** — учитывается только голос владельца счёта.
+
+Воздержавшиеся участники не включаются в знаменатель, поэтому неактивные участники не блокируют решение.
+
+## После одобрения
+
+Когда запрос одобрен, любой редактор или владелец может нажать **Добавить в план покупок**. Это создаёт запланированный расход — он появляется на экране деталей расхода с баннером **«Запланировано · Отметить как купленное»**, но пока не влияет на итоги бюджета.
+
+Когда вы фактически совершите покупку, откройте расход и нажмите баннер, чтобы отметить его как купленное. Флаг планирования снимается, и расход нормально входит в бюджет.
+
+## Уведомления
+
+Вы получите push-уведомления, когда:
+
+- Создаётся новый запрос на покупку (все участники, кроме создателя).
+- Кто-то голосует по вашему запросу.
+- Запрос, в котором вы участвуете, одобрен или отклонён.
+
+Вы можете отключить уведомления о запросах на покупку в **Настройки → Уведомления → Запросы на покупку**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Семейная лента`,
+      description: ``,
+      body: `# Семейная лента
+
+Семейная лента — это общий поток активности для семейных и парных счетов. Она показывает, что каждый участник тратил и зарабатывал, и позволяет реагировать эмодзи — совместные финансы становятся более вовлекающими.
+
+## Что отображается в ленте
+
+- **Расходы** — сгруппированы по участнику и дню. Если участник добавил 3 расхода в один день, они отображаются одной карточкой («3 расхода · 5000 ₽»).
+- **Доходы** — группируются так же, как расходы.
+- **Запросы на покупку** — каждое предложение, одобрение и покупка отображаются отдельной карточкой.
+
+Лента доступна только для **общих счетов** (семейных, парных, бизнес-счетов). Личные счета ленты не имеют.
+
+## Виджет на главном экране
+
+Виджет **Семейная лента** на главном экране показывает 3 последние карточки активности. Нажмите **Показать все**, чтобы открыть полную ленту.
+
+Видимость виджета можно изменить в **Настройки → Виджеты**.
+
+## Полный экран ленты
+
+Нажмите **Показать все**, чтобы увидеть полную историю. Потяните вниз для обновления. Лента автоматически перезагружается при смене счёта.
+
+## Реакции эмодзи
+
+У каждой карточки есть панель реакций. Нажмите **＋**, чтобы открыть выбор эмодзи:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Нажмите на свой эмодзи, чтобы удалить реакцию. Нажмите другой эмодзи, чтобы заменить — только одна реакция на человека на карточку.
+
+Все участники (в том числе наблюдатели) могут реагировать.
+
+## Нажатие на карточку
+
+- **Карточка с одним расходом или доходом** — открывает детали записи.
+- **Сгруппированная карточка (несколько за день)** — нажмите **Показать детали**, чтобы развернуть список, затем нажмите на отдельную строку.
+- **Карточка запроса на покупку** — открывает детали запроса.
+
+## Конфиденциальность
+
+Лента показывает активность всех участников общего счёта. Названия продавцов и описания намеренно не отображаются (они могут быть зашифрованы на устройстве). Карточки показывают только сумму и валюту.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Кошелёк поездки`,
+      description: ``,
+      body: `# Кошелёк поездки
+
+Аккаунт поездки — это временный общий аккаунт для совместной поездки: с друзьями или партнёром. Каждый добавляет траты, приложение делит их между участниками, а в конце вы рассчитываетесь, кто кому должен.
+
+## Создание поездки
+
+Перейдите в **Добавить аккаунт** и выберите **Поездка**. Дайте ей название, выберите дату окончания и валюту, в которой вы будете в основном тратить. Пригласите попутчиков так же, как и в любой другой общий аккаунт — поделитесь ссылкой или кодом приглашения.
+
+## Разделение траты
+
+При добавлении траты в аккаунте поездки под суммой появляется раздел **Разделить между**. Выберите, кого касается трата, а затем способ деления:
+
+- **Поровну** — сумма делится поровну между выбранными участниками.
+- **Точные суммы** — введите, сколько именно должен каждый; суммы должны в итоге совпасть с общей.
+- **Проценты** — введите процент для каждого; проценты должны в сумме составить 100%.
+- **Доли** — дайте каждому число долей (например, 2 доли для пары, 1 доля для того, кто путешествует один); сумма делится пропорционально.
+
+Можно также изменить, **кто заплатил** — по умолчанию это тот, кто добавил трату, но можно указать другого человека, если вы вносите покупку от его имени.
+
+## Расчёт
+
+Нажмите на поездку в переключателе аккаунтов — пока поездка активна или только что завершилась, вы увидите значок с количеством оставшихся дней, по которому можно перейти к экрану **Расчёт**.
+
+Экран расчёта показывает минимальное количество переводов, необходимых для закрытия всех балансов. Если вы кому-то должны, нажмите **Оплатить** — если у этого человека указан Revolut или PayPal в настройках оплаты, приложение откроет готовую ссылку для оплаты. Для BLIK вы увидите его номер телефона для ручного перевода. Если способ оплаты не настроен, просто отметьте долг как погашенный после оплаты другим способом.
+
+Если кто-то должен вам деньги, после получения оплаты нажмите **Подтвердить получение**, чтобы закрыть долг в балансе.
+
+## Настройка платёжных данных
+
+Откройте **Настройки оплаты** с экрана аккаунта поездки, чтобы указать, как другим вас вернуть деньги — имя пользователя Revolut или PayPal, либо номер телефона для BLIK.
+
+## Жизненный цикл поездки
+
+У поездки три состояния:
+
+- **Активна** — поездка продолжается. Траты можно добавлять и редактировать как обычно.
+- **Расчёт** — дата окончания поездки прошла. Вы получите напоминание рассчитаться. Траты всё ещё можно добавлять, если вы вносите последние дни.
+- **Архивирована** — владелец поездки закрыл её. Аккаунт становится навсегда доступным только для чтения — как память о поездке. Для архивации обычно требуется, чтобы все долги были подтверждены, но владелец может закрыть её принудительно при необходимости.
+
+Архивировать поездку может только её владелец — с экрана аккаунта поездки.
+
+## Уведомления
+
+Вы получите напоминание, когда поездка закончится и придёт время рассчитаться. Это можно отключить в **Настройки → Уведомления**.
+`,
+    },
   ],
   ua: [
     {
@@ -8997,7 +9316,7 @@ iOS, Android, Web
 
 ### Мова
 
-Оберіть з 8 підтримуваних мов:
+Оберіть з 9 підтримуваних мов:
 
 | Код | Мова |
 |---|---|
@@ -9009,6 +9328,7 @@ iOS, Android, Web
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Натисніть мовний чіп, щоб переключитися. Інтерфейс оновлюється миттєво.
 
@@ -9085,6 +9405,10 @@ iOS, Android, Web
 | **Сповіщення про бюджет** | Отримувати сповіщення при досягненні порогів бюджету |
 | **Активність спільного рахунку** | Отримувати сповіщення, коли інші додають витрати до спільних рахунків |
 | **Нагадування про борги** | Сповіщення за 3 дні до терміну боргу та при простроченні |
+| **Повторювані витрати** | Сповіщення, коли застосунок автоматично записує повторюваний витрат |
+| **Продовження підписок** | Сповіщення за 3 дні до продовження відстежуваної підписки |
+| **Аномальні витрати** | Сповіщення про нетипові витрати: дублі, підвищення цін або сплески по категорії |
+| **Нагадування про трекінг** | Нагадування, якщо ви не записували витрати 3+ дні |
 
 ### Telegram-бот
 
@@ -11095,6 +11419,151 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 Авто-захоплення — це функція Android. На iOS та у браузері цей розділ не відображається. Альтернатива для iOS — сканування фото чека через наявну функцію захоплення чеків.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Запити на покупку`,
+      description: ``,
+      body: `# Запити на покупку
+
+Запити на покупку дозволяють будь-якому учаснику рахунку запропонувати покупку для групового погодження до того, як вона увійде до бюджету. Інші учасники голосують безпосередньо в додатку або через ботів Telegram і WhatsApp; схвалені запити стають запланованими витратами, які можна перетворити на реальні одним дотиком.
+
+## Створення запиту
+
+1. Перейдіть до **Налаштування → Запити на покупку**.
+2. Натисніть кнопку **+**.
+3. Заповніть назву та суму (обов'язково). За бажанням додайте категорію, продавця, опис, фото та термін.
+4. Натисніть **Надіслати** — всі інші учасники рахунку отримають сповіщення та зможуть проголосувати.
+
+## Голосування
+
+Відкрийте запит з **Налаштування → Запити на покупку** або зі сповіщення. Натисніть **Схвалити**, **Відхилити** або **Утриматися**. Ви можете змінити свій голос у будь-який час, поки запит ще очікує рішення.
+
+Учасники Telegram і WhatsApp можуть голосувати безпосередньо з повідомлення бота, використовуючи вбудовані кнопки.
+
+## Правила схвалення
+
+Власник рахунку може встановити правило схвалення в **Налаштування → Запити на покупку → Правило схвалення**:
+
+- **Більшість** (за замовчуванням) — понад половина всіх учасників повинна схвалити.
+- **Одностайно** — кожен учасник повинен схвалити; одне відхилення закриває запит.
+- **Тільки власник** — враховується лише голос власника рахунку.
+
+Учасники, які утримуються, не включаються до знаменника, тому неактивні учасники не блокують рішення.
+
+## Після схвалення
+
+Коли запит схвалено, будь-який редактор або власник може натиснути **Додати до плану покупок**. Це створює заплановану витрату — вона з'являється на екрані деталей витрати з банером **«Заплановано · Позначити як куплене»**, але поки не впливає на підсумки бюджету.
+
+Коли ви фактично зробите покупку, відкрийте витрату та натисніть банер, щоб позначити її як куплену. Прапорець планування знімається, і витрата нормально входить до бюджету.
+
+## Сповіщення
+
+Ви отримаєте push-сповіщення, коли:
+
+- Створюється новий запит на покупку (всі учасники, крім автора).
+- Хтось голосує за вашим запитом.
+- Запит, у якому ви берете участь, схвалено або відхилено.
+
+Ви можете вимкнути сповіщення про запити на покупку в **Налаштування → Сповіщення → Запити на покупку**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Сімейна стрічка`,
+      description: ``,
+      body: `# Сімейна стрічка
+
+Сімейна стрічка — це спільний потік активності для сімейних і парних рахунків. Вона показує, що кожен учасник витрачав і заробляв, та дозволяє реагувати емодзі — спільні фінанси стають більш залученими.
+
+## Що відображається у стрічці
+
+- **Витрати** — згруповані за учасником і днем. Якщо учасник додав 3 витрати в один день, вони відображаються однією карткою («3 витрати · 500 UAH»).
+- **Доходи** — групуються так само, як витрати.
+- **Запити на покупку** — кожна пропозиція, схвалення та покупка відображаються окремою карткою.
+
+Стрічка доступна лише для **спільних рахунків** (сімейних, парних, бізнес). Особисті рахунки стрічки не мають.
+
+## Віджет на головному екрані
+
+Віджет **Сімейна стрічка** на головному екрані показує 3 останні картки активності. Натисніть **Показати все**, щоб відкрити повну стрічку.
+
+Видимість віджета можна змінити у **Налаштування → Віджети**.
+
+## Повний екран стрічки
+
+Натисніть **Показати все**, щоб переглянути повну історію. Потягніть вниз для оновлення. Стрічка автоматично перезавантажується при зміні рахунку.
+
+## Реакції емодзі
+
+Кожна картка має панель реакцій. Натисніть **＋**, щоб відкрити вибір емодзі:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Натисніть на свій емодзі, щоб видалити реакцію. Натисніть інший емодзі, щоб змінити — лише одна реакція на людину на картку.
+
+Усі учасники (зокрема спостерігачі) можуть реагувати.
+
+## Натискання на картку
+
+- **Картка з одним витратом або доходом** — відкриває деталі запису.
+- **Згрупована картка (кілька за день)** — натисніть **Показати деталі**, щоб розгорнути список, потім натисніть на окремий рядок.
+- **Картка запиту на покупку** — відкриває деталі запиту.
+
+## Конфіденційність
+
+Стрічка показує активність усіх учасників спільного рахунку. Назви продавців і описи навмисно не відображаються (вони можуть бути зашифровані на пристрої). Картки показують лише суму та валюту.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Гаманець подорожі`,
+      description: ``,
+      body: `# Гаманець подорожі
+
+Обліковий запис подорожі — це тимчасовий спільний обліковий запис для спільної подорожі: з друзями чи партнером. Кожен додає витрати, застосунок ділить їх між учасниками, а наприкінці ви розраховуєтесь, хто кому винен.
+
+## Створення подорожі
+
+Перейдіть у **Додати обліковий запис** і виберіть **Подорож**. Дайте їй назву, виберіть дату завершення та валюту, в якій ви переважно витрачатимете. Запросіть попутників так само, як і в будь-якому спільному обліковому записі — поділіться посиланням або кодом запрошення.
+
+## Розділення витрати
+
+Під час додавання витрати в обліковому записі подорожі під сумою з'являється розділ **Розділити між**. Виберіть, кого стосується витрата, а потім спосіб поділу:
+
+- **Порівну** — сума ділиться порівну між обраними учасниками.
+- **Точні суми** — введіть, скільки саме винен кожен; суми мають у підсумку збігтися із загальною.
+- **Відсотки** — введіть відсоток для кожного; відсотки мають у сумі становити 100%.
+- **Частки** — дайте кожному кількість часток (наприклад, 2 частки для пари, 1 частка для того, хто подорожує самостійно); сума ділиться пропорційно.
+
+Ви також можете змінити, **хто заплатив** — за замовчуванням це той, хто додав витрату, але можна вказати іншу людину, якщо ви вносите покупку від її імені.
+
+## Розрахунок
+
+Натисніть на подорож у перемикачі облікових записів — поки подорож активна або щойно завершилася, ви побачите значок із кількістю днів, що залишилися, за яким можна перейти до екрана **Розрахунок**.
+
+Екран розрахунку показує мінімальну кількість переказів, необхідних для закриття всіх балансів. Якщо ви комусь винні, натисніть **Оплатити** — якщо ця людина вказала Revolut чи PayPal у налаштуваннях оплати, застосунок відкриє готове посилання для оплати. Для BLIK ви побачите її номер телефону для ручного переказу. Якщо спосіб оплати не налаштовано, просто позначте борг як погашений після оплати іншим способом.
+
+Якщо хтось винен вам гроші, після отримання оплати натисніть **Підтвердити отримання**, щоб закрити борг у балансі.
+
+## Налаштування платіжних даних
+
+Відкрийте **Налаштування оплати** з екрана облікового запису подорожі, щоб вказати, як інші можуть повернути вам гроші — ім'я користувача Revolut чи PayPal або номер телефону для BLIK.
+
+## Життєвий цикл подорожі
+
+Подорож має три стани:
+
+- **Активна** — подорож триває. Витрати можна додавати та редагувати як зазвичай.
+- **Розрахунок** — дата завершення подорожі минула. Ви отримаєте нагадування розрахуватися. Витрати все ще можна додавати, якщо ви вносите останні дні.
+- **Заархівована** — власник подорожі закрив її. Обліковий запис назавжди стає доступним лише для читання — як пам'ять про подорож. Для архівування зазвичай потрібно, щоб усі борги були підтверджені, але власник може закрити її примусово за потреби.
+
+Архівувати подорож може лише її власник — з екрана облікового запису подорожі.
+
+## Сповіщення
+
+Ви отримаєте нагадування, коли подорож завершиться і настане час розрахуватися. Це можна вимкнути в **Налаштування → Сповіщення**.
+`,
+    },
   ],
   pl: [
     {
@@ -12657,7 +13126,7 @@ Wybrana waluta jest podswietlona. Ustawia to domyslna walute dla nowych wydatkow
 
 ### Jezyk
 
-Wybierz z 8 obslugiwanych jezykow:
+Wybierz z 9 obslugiwanych jezykow:
 
 | Kod | Jezyk |
 |---|---|
@@ -12669,6 +13138,7 @@ Wybierz z 8 obslugiwanych jezykow:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Dotknij element jezyka, aby przelaczyc. Interfejs aktualizuje sie natychmiast.
 
@@ -12745,6 +13215,10 @@ Przelaczniki dla preferencji powiadomien:
 | **Alerty Budzetowe** | Otrzymuj powiadomienia po osiagnieciu progow budzetowych |
 | **Aktywnosc Wspolnego Konta** | Otrzymuj powiadomienia, gdy inni dodaja wydatki do wspolnych kont |
 | **Przypomnienia o długach** | Powiadomienie 3 dni przed terminem spłaty i po jego przekroczeniu |
+| **Wydatki cykliczne** | Powiadomienie, gdy aplikacja automatycznie rejestruje wydatek cykliczny |
+| **Odnowienia subskrypcji** | Powiadomienie 3 dni przed odnowieniem śledzonej subskrypcji |
+| **Alerty anomalii** | Powiadomienie o nietypowych wydatkach: duplikaty, wzrosty cen lub skoki kategorii |
+| **Przypomnienie o śledzeniu** | Powiadomienie, gdy nie rejestrowałeś wydatków przez 3+ dni |
 
 ### Bot Telegram
 
@@ -14757,6 +15231,151 @@ Kliknij powiadomienie o przechwyceniu („Przechwycono 54 zł · Żabka — klik
 Automatyczne przechwytywanie to funkcja Androida. Na iOS i w przeglądarce ta sekcja nie pojawia się. Alternatywą dla iOS jest skanowanie zdjęcia paragonu przez istniejącą funkcję przechwytywania paragonów.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Wnioski zakupowe`,
+      description: ``,
+      body: `# Wnioski zakupowe
+
+Wnioski zakupowe pozwalają każdemu członkowi konta zaproponować zakup do grupowego zatwierdzenia przed wejściem do budżetu. Inni członkowie głosują w aplikacji lub przez boty Telegram i WhatsApp; zatwierdzone wnioski stają się planowanymi wydatkami, które możesz jednym dotknięciem przekształcić w realne wydatki.
+
+## Tworzenie wniosku
+
+1. Przejdź do **Ustawienia → Wnioski zakupowe**.
+2. Dotknij przycisku **+**.
+3. Wypełnij tytuł i kwotę (wymagane). Opcjonalnie dodaj kategorię, sprzedawcę, opis, zdjęcie i termin.
+4. Dotknij **Wyślij** — wszyscy inni członkowie konta otrzymają powiadomienie i będą mogli głosować.
+
+## Głosowanie
+
+Otwórz wniosek z **Ustawienia → Wnioski zakupowe** lub z powiadomienia push. Dotknij **Zatwierdź**, **Odrzuć** lub **Wstrzymaj się**. Możesz zmienić swój głos w dowolnym momencie, gdy wniosek jest jeszcze oczekujący.
+
+Członkowie Telegrama i WhatsApp mogą głosować bezpośrednio z wiadomości bota, używając przycisków.
+
+## Reguły zatwierdzania
+
+Właściciel konta może ustawić regułę zatwierdzania w **Ustawienia → Wnioski zakupowe → Reguła zatwierdzania**:
+
+- **Większość** (domyślnie) — ponad połowa wszystkich członków musi zatwierdzić.
+- **Jednomyślność** — każdy członek musi zatwierdzić; jedno odrzucenie zamyka wniosek.
+- **Tylko właściciel** — liczy się tylko głos właściciela konta.
+
+Wstrzymujący się członkowie nie są wliczani do mianownika, więc nieaktywni członkowie nie blokują decyzji.
+
+## Po zatwierdzeniu
+
+Gdy wniosek zostanie zatwierdzony, każdy edytor lub właściciel może dotknąć **Dodaj do planu zakupów**. Tworzy to planowany wydatek — pojawia się na ekranie szczegółów wydatku z banerem **„Planowany · Oznacz jako zakupiony"**, ale jeszcze nie wpływa na sumy budżetu.
+
+Gdy faktycznie dokonasz zakupu, otwórz wydatek i dotknij banera, aby oznaczyć go jako zakupiony. Flaga planowania zostaje usunięta i wydatek normalnie wchodzi do budżetu.
+
+## Powiadomienia
+
+Otrzymasz powiadomienia push, gdy:
+
+- Zostanie utworzony nowy wniosek zakupowy (wszyscy członkowie poza twórcą).
+- Ktoś zagłosuje na Twój wniosek.
+- Wniosek, którego jesteś częścią, zostanie zatwierdzony lub odrzucony.
+
+Możesz wyłączyć powiadomienia o wnioskach zakupowych w **Ustawienia → Powiadomienia → Wnioski zakupowe**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Rodzinna tablica`,
+      description: ``,
+      body: `# Rodzinna tablica
+
+Rodzinna tablica to wspólny strumień aktywności dla kont rodzinnych i par. Pokazuje wydatki i przychody każdego członka oraz umożliwia reagowanie emoji — wspólne finanse stają się bardziej angażujące.
+
+## Co pojawia się w tablicy
+
+- **Wydatki** — grupowane według członka i dnia. Jeśli członek doda 3 wydatki tego samego dnia, pojawią się jako jedna karta („3 wydatki · 500 PLN").
+- **Przychody** — grupowane tak samo jak wydatki.
+- **Prośby o zakup** — każda propozycja, zatwierdzenie i zakup pojawia się jako osobna karta.
+
+Tablica jest dostępna tylko dla **kont wspólnych** (rodzinne, para, firmowe). Konta osobiste nie mają tablicy.
+
+## Widget na ekranie głównym
+
+Widget **Rodzinna tablica** na ekranie głównym pokazuje 3 najnowsze karty aktywności. Stuknij **Pokaż wszystkie**, aby otworzyć pełną tablicę.
+
+Widoczność widgetu można zmienić w **Ustawienia → Widgety**.
+
+## Pełny ekran tablicy
+
+Stuknij **Pokaż wszystkie**, aby zobaczyć pełną historię. Pociągnij w dół, aby odświeżyć. Tablica odświeża się automatycznie po przełączeniu konta.
+
+## Reagowanie emoji
+
+Każda karta ma pasek reakcji. Stuknij **＋**, aby otworzyć selektor emoji i wybrać spośród:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Stuknij własne emoji, aby usunąć reakcję. Stuknij inne emoji, aby je zmienić — tylko jedna reakcja na osobę na kartę.
+
+Wszyscy członkowie (w tym obserwatorzy) mogą reagować.
+
+## Stukanie w kartę
+
+- **Karta z jednym wydatkiem lub przychodem** — otwiera szczegóły wydatku lub przychodu.
+- **Karta zgrupowana (kilka tego samego dnia)** — stuknij **Pokaż szczegóły**, aby rozwinąć listę, a następnie stuknij pojedynczy wiersz.
+- **Karta prośby o zakup** — otwiera szczegóły prośby o zakup.
+
+## Prywatność
+
+Tablica pokazuje aktywność wszystkich członków konta wspólnego. Nazwy sprzedawców i opisy są celowo pominięte (mogą być zaszyfrowane na urządzeniu). Karty pokazują tylko kwotę i walutę.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Portfel podróży`,
+      description: ``,
+      body: `# Portfel podróży
+
+Konto podróży to tymczasowe konto wspólne na wspólny wyjazd — z przyjaciółmi lub partnerem. Każdy dodaje wydatki, aplikacja dzieli je między uczestników, a na koniec rozliczacie, kto komu jest winien.
+
+## Tworzenie podróży
+
+Przejdź do **Dodaj konto** i wybierz **Podróż**. Nadaj jej nazwę, wybierz datę zakończenia i walutę, w której będziecie głównie wydawać. Zaproś towarzyszy podróży tak samo jak przy każdym koncie wspólnym — udostępnij link lub kod zaproszenia.
+
+## Dzielenie wydatku
+
+Podczas dodawania wydatku na koncie podróży pod kwotą pojawia się sekcja **Podziel między**. Wybierz, kogo dotyczy wydatek, a następnie sposób podziału:
+
+- **Po równo** — kwota dzielona jest równo między wybranych członków.
+- **Dokładne kwoty** — wpisz dokładnie, ile jest winien każdy uczestnik; kwoty muszą się sumować do całości.
+- **Procentowo** — wpisz procent dla każdej osoby; procenty muszą sumować się do 100%.
+- **Udziały** — przydziel każdej osobie liczbę udziałów (np. 2 udziały dla pary, 1 udział dla osoby podróżującej samotnie); kwota dzielona jest proporcjonalnie.
+
+Możesz też zmienić, **kto zapłacił** — domyślnie jest to osoba dodająca wydatek, ale możesz wskazać kogoś innego, jeśli dodajesz zakup w jej imieniu.
+
+## Rozliczanie się
+
+Stuknij podróż w przełączniku kont — gdy podróż trwa lub właśnie się zakończyła, zobaczysz odznakę z liczbą dni, którą można stuknąć, aby otworzyć **Rozliczenie**.
+
+Ekran rozliczenia pokazuje minimalną liczbę przelewów potrzebnych do wyrównania sald wszystkich uczestników. Jeśli jesteś komuś winien, stuknij **Zapłać** — jeśli dana osoba dodała swój numer Revolut lub PayPal w ustawieniach płatności, aplikacja otworzy gotowy link do zapłaty. Dla BLIK-a zobaczysz jej numer telefonu do ręcznego przelewu. Jeśli nie ustawiła metody płatności, po prostu oznacz dług jako rozliczony, gdy zapłacisz w inny sposób.
+
+Jeśli ktoś jest Ci winien pieniądze, po otrzymaniu wpłaty stuknij **Potwierdź otrzymanie**, aby wyczyścić dług z salda.
+
+## Ustawianie danych do płatności
+
+Otwórz **Ustawienia płatności** z ekranu konta podróży, aby dodać, jak inni mogą Ci zwrócić pieniądze — nazwę użytkownika Revolut lub PayPal albo numer telefonu do BLIK-a.
+
+## Cykl życia podróży
+
+Podróż ma trzy stany:
+
+- **Aktywna** — podróż trwa. Wydatki można dodawać i edytować normalnie.
+- **Rozliczanie** — minęła data zakończenia podróży. Otrzymasz przypomnienie o rozliczeniu. Wydatki nadal można dodawać, jeśli uzupełniasz ostatnie dni.
+- **Zarchiwizowana** — właściciel podróży ją zamknął. Konto staje się na stałe tylko do odczytu, jako zapis podróży. Archiwizacja zwykle wymaga potwierdzenia wszystkich długów, choć właściciel może w razie potrzeby zamknąć ją na siłę.
+
+Tylko właściciel podróży może ją zarchiwizować — z ekranu konta podróży.
+
+## Powiadomienia
+
+Otrzymasz przypomnienie, gdy podróż się zakończy i czas będzie się rozliczyć. Możesz je wyłączyć w **Ustawienia → Powiadomienia**.
+`,
+    },
   ],
   de: [
     {
@@ -16316,7 +16935,7 @@ Die ausgewahlte Wahrung ist hervorgehoben. Dies legt die Standardwahrung fur neu
 
 ### Sprache
 
-Wahle aus 8 unterstutzten Sprachen:
+Wahle aus 9 unterstutzten Sprachen:
 
 | Code | Sprache |
 |---|---|
@@ -16328,6 +16947,7 @@ Wahle aus 8 unterstutzten Sprachen:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Tippe auf einen Sprachchip, um zu wechseln. Die Oberflache aktualisiert sich sofort.
 
@@ -16404,6 +17024,10 @@ Umschaltflachen fur Benachrichtigungspraferenzen:
 | **Budget-Warnungen** | Benachrichtigung bei Erreichen von Budget-Schwellenwerten |
 | **Gemeinsame Kontoaktivitat** | Benachrichtigung, wenn andere Ausgaben zu gemeinsamen Konten hinzufugen |
 | **Schulden-Erinnerungen** | Erinnerung 3 Tage vor Fälligkeit und bei Überschreitung |
+| **Wiederkehrende Ausgaben** | Benachrichtigung, wenn die App automatisch eine wiederkehrende Ausgabe erfasst |
+| **Abonnementverlängerungen** | Benachrichtigung 3 Tage vor Verlängerung eines verfolgten Abonnements |
+| **Anomalie-Warnungen** | Benachrichtigung bei ungewöhnlichen Ausgaben: Duplikate, Preiserhöhungen oder Kategorie-Spitzen |
+| **Tracking-Erinnerung** | Hinweis, wenn du seit 3+ Tagen keine Ausgaben erfasst hast |
 
 ### Telegram-Bot
 
@@ -18394,6 +19018,151 @@ Tippe auf den Erfassungshinweis („54 zł erfasst · Żabka — zum Prüfen tip
 Die Auto-Erfassung ist eine Android-Funktion. Auf iOS und im Web erscheint dieser Bereich nicht. Eine Alternative für iOS ist das Scannen eines Belegfotos über die bestehende Belegerfassung.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Kaufanfragen`,
+      description: ``,
+      body: `# Kaufanfragen
+
+Mit Kaufanfragen kann jedes Kontomitglied einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Andere Mitglieder stimmen direkt in der App oder über die Telegram- und WhatsApp-Bots ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp in echte Ausgaben umwandeln kannst.
+
+## Anfrage erstellen
+
+1. Gehe zu **Einstellungen → Kaufanfragen**.
+2. Tippe auf die Schaltfläche **+**.
+3. Fülle Titel und Betrag aus (erforderlich). Optional kannst du Kategorie, Händler, Beschreibung, Foto und Frist hinzufügen.
+4. Tippe auf **Senden** — alle anderen Kontomitglieder erhalten eine Benachrichtigung und können abstimmen.
+
+## Abstimmen
+
+Öffne die Anfrage unter **Einstellungen → Kaufanfragen** oder über die Push-Benachrichtigung. Tippe auf **Genehmigen**, **Ablehnen** oder **Enthalten**. Du kannst deine Stimme jederzeit ändern, solange die Anfrage noch aussteht.
+
+Telegram- und WhatsApp-Mitglieder können direkt über die Inline-Schaltflächen in der Bot-Nachricht abstimmen.
+
+## Genehmigungsregeln
+
+Der Kontoinhaber kann die Genehmigungsregel unter **Einstellungen → Kaufanfragen → Genehmigungsregel** festlegen:
+
+- **Mehrheit** (Standard) — mehr als die Hälfte aller Mitglieder muss zustimmen.
+- **Einstimmig** — jedes Mitglied muss zustimmen; eine Ablehnung schließt die Anfrage.
+- **Nur Inhaber** — nur die Stimme des Kontoinhabers zählt.
+
+Enthaltene Mitglieder werden nicht in den Nenner eingerechnet, sodass inaktive Mitglieder keine Entscheidung blockieren.
+
+## Nach der Genehmigung
+
+Wenn eine Anfrage genehmigt wird, kann jeder Redakteur oder Inhaber auf **Zum Kaufplan hinzufügen** tippen. Dadurch wird eine geplante Ausgabe erstellt — sie erscheint im Ausgabendetail mit dem Banner **„Geplant · Als gekauft markieren"**, beeinflusst aber noch nicht deine Budgetsummen.
+
+Wenn du den Kauf tatsächlich tätigst, öffne die Ausgabe und tippe auf das Banner, um sie als gekauft zu markieren. Das Planungs-Flag wird entfernt und die Ausgabe fließt normal in dein Budget ein.
+
+## Benachrichtigungen
+
+Du erhältst Push-Benachrichtigungen, wenn:
+
+- Eine neue Kaufanfrage erstellt wird (alle Mitglieder außer dem Ersteller).
+- Jemand auf deine Anfrage abstimmt.
+- Eine Anfrage, an der du beteiligt bist, genehmigt oder abgelehnt wird.
+
+Du kannst Kaufanfragen-Benachrichtigungen unter **Einstellungen → Benachrichtigungen → Kaufanfragen** deaktivieren.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Familien-Feed`,
+      description: ``,
+      body: `# Familien-Feed
+
+Der Familien-Feed ist ein gemeinsamer Aktivitätsstrom für Familien- und Paar-Konten. Er zeigt, was jedes Mitglied ausgegeben und eingenommen hat, und ermöglicht Emoji-Reaktionen — gemeinsame Finanzen werden kollaborativer.
+
+## Was im Feed erscheint
+
+- **Ausgaben** — nach Mitglied und Tag gruppiert. Wenn ein Mitglied am selben Tag 3 Ausgaben hinzufügt, erscheinen sie als eine Karte („3 Ausgaben · 120 EUR").
+- **Einnahmen** — gleiche Gruppierung wie Ausgaben.
+- **Kaufanfragen** — jeder Vorschlag, jede Genehmigung und jeder Kauf erscheint als eigene Karte.
+
+Der Feed ist nur für **gemeinsame Konten** (Familie, Paar, Geschäft) verfügbar. Persönliche Konten haben keinen Feed.
+
+## Home-Widget
+
+Das Widget **Familien-Feed** auf dem Startbildschirm zeigt die 3 neuesten Aktivitätskarten. Tippe auf **Alle anzeigen**, um den vollständigen Feed zu öffnen.
+
+Die Sichtbarkeit des Widgets kann unter **Einstellungen → Widgets** geändert werden.
+
+## Vollständiger Feed-Bildschirm
+
+Tippe auf **Alle anzeigen**, um den vollständigen Verlauf zu sehen. Nach unten ziehen zum Aktualisieren. Der Feed lädt automatisch neu, wenn das Konto gewechselt wird.
+
+## Mit Emoji reagieren
+
+Jede Karte hat eine Reaktionsleiste. Tippe auf **＋**, um den Emoji-Picker zu öffnen und aus folgenden zu wählen:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Tippe auf dein eigenes Emoji, um die Reaktion zu entfernen. Tippe auf ein anderes Emoji, um es zu ändern — nur eine Reaktion pro Person pro Karte.
+
+Alle Mitglieder (einschließlich Beobachter) können reagieren.
+
+## Auf eine Karte tippen
+
+- **Einzelne Ausgaben- oder Einnahmenkarte** — öffnet die Detailansicht.
+- **Gruppierte Karte (mehrere am selben Tag)** — tippe auf **Details anzeigen**, um die Liste zu erweitern, dann auf eine einzelne Zeile.
+- **Kaufanfragen-Karte** — öffnet die Detailansicht der Kaufanfrage.
+
+## Datenschutz
+
+Der Feed zeigt Aktivitäten aller Mitglieder des gemeinsamen Kontos. Händlernamen und Beschreibungen werden absichtlich weggelassen (sie können auf dem Gerät verschlüsselt sein). Karten zeigen nur Betrag und Währung.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Reisekasse`,
+      description: ``,
+      body: `# Reisekasse
+
+Ein Reisekonto ist ein temporäres gemeinsames Konto für eine Gruppenreise — mit Freunden oder als Paar. Alle erfassen Ausgaben, die App teilt sie auf, und am Ende rechnet ihr ab, wer wem etwas schuldet.
+
+## Reise erstellen
+
+Gehe zu **Konto hinzufügen** und wähle **Reise**. Gib ihr einen Namen, wähle ein Enddatum und die Währung, in der ihr hauptsächlich ausgeben werdet. Lade deine Reisebegleiter genauso ein wie bei jedem gemeinsamen Konto — teile den Einladungslink oder -code.
+
+## Ausgabe aufteilen
+
+Beim Hinzufügen einer Ausgabe in einem Reisekonto erscheint unter dem Betrag der Bereich **Aufteilen zwischen**. Wähle, wen die Ausgabe betrifft, und dann die Aufteilungsmethode:
+
+- **Gleichmäßig** — der Betrag wird gleichmäßig auf die ausgewählten Mitglieder aufgeteilt.
+- **Genaue Beträge** — gib genau ein, wie viel jede Person schuldet; die Beträge müssen sich zur Gesamtsumme addieren.
+- **Prozent** — gib für jede Person einen Prozentsatz ein; die Prozentsätze müssen sich zu 100 % summieren.
+- **Anteile** — vergib jeder Person eine Anzahl Anteile (z. B. 2 Anteile für ein Paar, 1 Anteil für eine Einzelreisende Person); die Summe wird proportional aufgeteilt.
+
+Du kannst auch ändern, **wer bezahlt hat** — standardmäßig ist es die Person, die die Ausgabe erfasst hat, aber du kannst jemand anderen auswählen, wenn du einen Kauf in ihrem Namen einträgst.
+
+## Abrechnen
+
+Tippe in der Kontoauswahl auf die Reise — solange die Reise aktiv ist oder gerade erst geendet hat, siehst du ein Badge mit den verbleibenden Tagen, das du antippen kannst, um **Abrechnen** zu öffnen.
+
+Der Abrechnungsbildschirm zeigt die minimale Anzahl an Zahlungen, die nötig sind, um alle Salden auszugleichen. Wenn du jemandem Geld schuldest, tippe auf **Bezahlen** — hat diese Person in ihren Zahlungseinstellungen einen Revolut- oder PayPal-Namen hinterlegt, öffnet die App einen vorausgefüllten Zahlungslink. Bei BLIK siehst du die Telefonnummer für eine manuelle Überweisung. Wurde keine Zahlungsmethode eingerichtet, markiere die Schuld einfach als beglichen, sobald du auf anderem Weg bezahlt hast.
+
+Schuldet dir jemand Geld, tippe nach Erhalt der Zahlung auf **Erhalt bestätigen**, um die Schuld aus dem Saldo zu entfernen.
+
+## Zahlungsinformationen festlegen
+
+Öffne **Zahlungseinstellungen** über den Reisekonto-Bildschirm, um festzulegen, wie andere dich zurückzahlen sollen — einen Revolut- oder PayPal-Benutzernamen oder deine Telefonnummer für BLIK.
+
+## Lebenszyklus einer Reise
+
+Eine Reise hat drei Zustände:
+
+- **Aktiv** — die Reise läuft. Ausgaben können normal hinzugefügt und bearbeitet werden.
+- **Abrechnung** — das Enddatum der Reise ist verstrichen. Du erhältst eine Erinnerung zum Abrechnen. Ausgaben können weiterhin nachgetragen werden.
+- **Archiviert** — der Reisebesitzer hat sie abgeschlossen. Das Konto wird dauerhaft schreibgeschützt und dient als Erinnerung an die Reise. Zum Archivieren müssen normalerweise alle Schulden bestätigt sein, der Besitzer kann sie aber bei Bedarf auch erzwingen.
+
+Nur der Reisebesitzer kann sie archivieren — über den Reisekonto-Bildschirm.
+
+## Benachrichtigungen
+
+Du erhältst eine Erinnerung, wenn eine Reise endet und es Zeit zum Abrechnen ist. Du kannst dies unter **Einstellungen → Benachrichtigungen** deaktivieren.
+`,
+    },
   ],
   es: [
     {
@@ -19954,7 +20723,7 @@ La moneda seleccionada se resalta. Esto establece la moneda predeterminada para 
 
 ### Idioma
 
-Elige entre 8 idiomas disponibles:
+Elige entre 9 idiomas disponibles:
 
 | Codigo | Idioma |
 |---|---|
@@ -19966,6 +20735,7 @@ Elige entre 8 idiomas disponibles:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Toca una ficha de idioma para cambiar. La interfaz se actualiza de inmediato.
 
@@ -20042,6 +20812,10 @@ Interruptores para las preferencias de notificaciones:
 | **Alertas de Presupuesto** | Recibe notificaciones cuando alcances los umbrales de presupuesto |
 | **Actividad de Cuenta Compartida** | Recibe notificaciones cuando otros agregan gastos a cuentas compartidas |
 | **Recordatorios de deudas** | Notificación 3 días antes del vencimiento y cuando se vence |
+| **Gastos recurrentes** | Notificación cuando la app registra automáticamente un gasto recurrente |
+| **Renovaciones de suscripciones** | Notificación 3 días antes de que se renueve una suscripción rastreada |
+| **Alertas de anomalías** | Notificación por gastos inusuales: cargos duplicados, aumentos de precio o picos de categoría |
+| **Recordatorio de seguimiento** | Aviso si no has registrado gastos en 3+ días |
 
 ### Bot de Telegram
 
@@ -22020,6 +22794,151 @@ Toca el aviso de captura ("Capturado 54 zł · Żabka — toca para revisar") pa
 La captura automática es una función de Android. En iOS y web, esta sección no aparece. Una alternativa para iOS es escanear una foto de recibo a través de la función de captura de recibos existente.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Solicitudes de compra`,
+      description: ``,
+      body: `# Solicitudes de compra
+
+Las solicitudes de compra permiten que cualquier miembro de la cuenta proponga una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan directamente en la aplicación o a través de los bots de Telegram y WhatsApp; las solicitudes aprobadas se convierten en gastos planificados que puedes convertir en gastos reales con un solo toque.
+
+## Crear una solicitud
+
+1. Ve a **Configuración → Solicitudes de compra**.
+2. Toca el botón **+**.
+3. Completa el título y el monto (obligatorios). Opcionalmente, agrega categoría, comerciante, descripción, foto y fecha límite.
+4. Toca **Enviar** — todos los demás miembros de la cuenta recibirán una notificación y podrán votar.
+
+## Votar
+
+Abre la solicitud desde **Configuración → Solicitudes de compra** o desde la notificación push. Toca **Aprobar**, **Rechazar** o **Abstenerse**. Puedes cambiar tu voto en cualquier momento mientras la solicitud aún esté pendiente.
+
+Los miembros de Telegram y WhatsApp pueden votar directamente desde el mensaje del bot usando los botones en línea.
+
+## Reglas de aprobación
+
+El propietario de la cuenta puede establecer la regla de aprobación en **Configuración → Solicitudes de compra → Regla de aprobación**:
+
+- **Mayoría** (predeterminado) — más de la mitad de todos los miembros debe aprobar.
+- **Unánime** — cada miembro debe aprobar; un rechazo cierra la solicitud.
+- **Solo el propietario** — solo cuenta el voto del propietario de la cuenta.
+
+Los miembros que se abstienen no se cuentan en el denominador, por lo que los miembros inactivos no bloquean una decisión.
+
+## Después de la aprobación
+
+Cuando se aprueba una solicitud, cualquier editor o propietario puede tocar **Agregar al plan de compras**. Esto crea un gasto planificado — aparece en la pantalla de detalles del gasto con el banner **"Planificado · Marcar como comprado"**, pero aún no afecta los totales de tu presupuesto.
+
+Cuando realmente realices la compra, abre el gasto y toca el banner para marcarlo como comprado. El indicador de planificación se elimina y el gasto entra al presupuesto normalmente.
+
+## Notificaciones
+
+Recibirás notificaciones push cuando:
+
+- Se cree una nueva solicitud de compra (todos los miembros excepto el creador).
+- Alguien vote en tu solicitud.
+- Una solicitud en la que participas sea aprobada o rechazada.
+
+Puedes desactivar las notificaciones de solicitudes de compra en **Configuración → Notificaciones → Solicitudes de compra**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Feed familiar`,
+      description: ``,
+      body: `# Feed familiar
+
+El Feed familiar es un flujo de actividad compartido para cuentas de familia y pareja. Muestra lo que cada miembro ha gastado e ingresado, y permite reaccionar con emoji — las finanzas compartidas se vuelven más colaborativas.
+
+## Qué aparece en el feed
+
+- **Gastos** — agrupados por miembro y día. Si un miembro añade 3 gastos el mismo día, aparecen como una tarjeta ("3 gastos · 120 EUR").
+- **Ingresos** — misma agrupación que los gastos.
+- **Solicitudes de compra** — cada propuesta, aprobación y compra aparece como una tarjeta individual.
+
+El feed solo aparece en **cuentas compartidas** (familia, pareja, empresa). Las cuentas personales no tienen feed.
+
+## Widget de inicio
+
+El widget **Feed familiar** en la pantalla de inicio muestra las 3 tarjetas de actividad más recientes. Toca **Ver todo** para abrir el feed completo.
+
+La visibilidad del widget se puede cambiar en **Configuración → Widgets**.
+
+## Pantalla completa del feed
+
+Toca **Ver todo** para ver el historial completo. Desliza hacia abajo para actualizar. El feed se recarga automáticamente al cambiar de cuenta.
+
+## Reaccionar con emoji
+
+Cada tarjeta tiene una barra de reacciones. Toca **＋** para abrir el selector de emoji y elegir entre:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Toca tu propio emoji para eliminar tu reacción. Toca un emoji diferente para cambiarlo — solo una reacción por persona por tarjeta.
+
+Todos los miembros (incluidos los observadores) pueden reaccionar.
+
+## Tocar una tarjeta
+
+- **Tarjeta de gasto o ingreso único** — abre la pantalla de detalle.
+- **Tarjeta agrupada (varios el mismo día)** — toca **Mostrar detalles** para expandir la lista, luego toca una fila individual.
+- **Tarjeta de solicitud de compra** — abre el detalle de la solicitud de compra.
+
+## Privacidad
+
+El feed muestra la actividad de todos los miembros de la cuenta compartida. Los nombres de comerciantes y descripciones se omiten intencionalmente (pueden estar cifrados en el dispositivo). Las tarjetas muestran solo el importe y la moneda.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Billetera de viaje`,
+      description: ``,
+      body: `# Billetera de viaje
+
+Una cuenta de viaje es una cuenta compartida temporal para un viaje en grupo: con amigos o en pareja. Todos registran gastos, la app los divide, y al final liquidáis quién le debe a quién.
+
+## Crear un viaje
+
+Ve a **Añadir cuenta** y elige **Viaje**. Dale un nombre, elige una fecha de fin y la moneda en la que gastaréis principalmente. Invita a tus compañeros de viaje igual que en cualquier cuenta compartida — comparte el enlace o código de invitación.
+
+## Dividir un gasto
+
+Al añadir un gasto en una cuenta de viaje, aparece la sección **Dividir entre** debajo del importe. Elige a quién afecta el gasto y luego cómo dividirlo:
+
+- **A partes iguales** — el importe se reparte por igual entre los miembros seleccionados.
+- **Importes exactos** — introduce exactamente cuánto debe cada persona; los importes deben sumar el total.
+- **Porcentaje** — introduce un porcentaje para cada persona; los porcentajes deben sumar 100 %.
+- **Partes** — asigna a cada persona un número de partes (por ejemplo, 2 partes para una pareja, 1 parte para quien viaja solo); el total se reparte proporcionalmente.
+
+También puedes cambiar **quién pagó** — por defecto es quien añadió el gasto, pero puedes elegir a otra persona si estás registrando una compra en su nombre.
+
+## Liquidar cuentas
+
+Toca el viaje en el selector de cuentas — mientras el viaje esté activo o acabe de terminar, verás una insignia con los días restantes que puedes tocar para abrir **Liquidar cuentas**.
+
+La pantalla de liquidación muestra el número mínimo de pagos necesarios para saldar todos los balances. Si le debes dinero a alguien, toca **Pagar** — si esa persona ha añadido un usuario de Revolut o PayPal en su configuración de pago, la app abrirá un enlace de pago ya rellenado. Para BLIK, verás su número de teléfono para transferir manualmente. Si no ha configurado ningún método de pago, simplemente marca la deuda como liquidada una vez que hayas pagado de otra forma.
+
+Si alguien te debe dinero, en cuanto te haya pagado, toca **Confirmar recepción** para eliminar la deuda del balance.
+
+## Configurar tus datos de pago
+
+Abre **Configuración de pago** desde la pantalla de la cuenta de viaje para indicar cómo pueden devolverte el dinero — un usuario de Revolut o PayPal, o tu número de teléfono para BLIK.
+
+## Ciclo de vida del viaje
+
+Un viaje tiene tres estados:
+
+- **Activo** — el viaje está en curso. Los gastos se pueden añadir y editar con normalidad.
+- **Liquidando** — la fecha de fin del viaje ya ha pasado. Recibirás un recordatorio para liquidar cuentas. Todavía puedes añadir gastos si estás poniéndote al día con los últimos días.
+- **Archivado** — el propietario del viaje lo ha cerrado. La cuenta pasa a ser de solo lectura para siempre, como registro del viaje. Archivar normalmente requiere que todas las deudas estén confirmadas, aunque el propietario puede forzar el cierre si es necesario.
+
+Solo el propietario del viaje puede archivarlo, desde la pantalla de la cuenta de viaje.
+
+## Notificaciones
+
+Recibirás un recordatorio cuando un viaje termine y sea hora de liquidar cuentas. Puedes desactivarlo en **Ajustes → Notificaciones**.
+`,
+    },
   ],
   fr: [
     {
@@ -23578,7 +24497,7 @@ La devise selectionnee est mise en surbrillance. Cela definit la devise par defa
 
 ### Langue
 
-Choisissez parmi 8 langues prises en charge :
+Choisissez parmi 9 langues prises en charge :
 
 | Code | Langue |
 |---|---|
@@ -23590,6 +24509,7 @@ Choisissez parmi 8 langues prises en charge :
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Appuyez sur une pastille de langue pour changer. L'interface se met a jour immediatement.
 
@@ -23666,6 +24586,10 @@ Interrupteurs a bascule pour les preferences de notifications :
 | **Alertes Budget** | Etre averti lorsque vous atteignez les seuils de budget |
 | **Activite Compte Partage** | Etre averti lorsque d'autres personnes ajoutent des depenses aux comptes partages |
 | **Rappels de dettes** | Notification 3 jours avant l'échéance et en cas de retard |
+| **Dépenses récurrentes** | Notification quand l'app enregistre automatiquement une dépense récurrente |
+| **Renouvellements d'abonnements** | Notification 3 jours avant le renouvellement d'un abonnement suivi |
+| **Alertes d'anomalies** | Notification pour les dépenses inhabituelles : doublons, hausses de prix ou pics de catégorie |
+| **Rappel de suivi** | Notification si vous n'avez pas enregistré de dépenses depuis 3+ jours |
 
 ### Bot Telegram
 
@@ -25644,6 +26568,151 @@ Appuyez sur le toast de capture (« 54 zł capturés · Żabka — appuyez pour 
 La capture automatique est une fonctionnalité Android. Sur iOS et le web, cette section n'apparaît pas. Une alternative pour iOS est de scanner une photo de reçu via la fonctionnalité de capture de reçus existante.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Demandes d'achat`,
+      description: ``,
+      body: `# Demandes d'achat
+
+Les demandes d'achat permettent à n'importe quel membre du compte de proposer un achat pour approbation collective avant qu'il entre dans le budget. Les autres membres votent directement dans l'application ou via les bots Telegram et WhatsApp ; les demandes approuvées deviennent des dépenses planifiées que vous pouvez convertir en dépenses réelles en un seul geste.
+
+## Créer une demande
+
+1. Allez dans **Paramètres → Demandes d'achat**.
+2. Appuyez sur le bouton **+**.
+3. Remplissez le titre et le montant (obligatoires). Vous pouvez optionnellement ajouter une catégorie, un commerçant, une description, une photo et une date limite.
+4. Appuyez sur **Envoyer** — tous les autres membres du compte recevront une notification et pourront voter.
+
+## Voter
+
+Ouvrez la demande depuis **Paramètres → Demandes d'achat** ou depuis la notification push. Appuyez sur **Approuver**, **Refuser** ou **S'abstenir**. Vous pouvez modifier votre vote à tout moment tant que la demande est en attente.
+
+Les membres Telegram et WhatsApp peuvent voter directement depuis le message du bot en utilisant les boutons en ligne.
+
+## Règles d'approbation
+
+Le propriétaire du compte peut définir la règle d'approbation sous **Paramètres → Demandes d'achat → Règle d'approbation** :
+
+- **Majorité** (par défaut) — plus de la moitié de tous les membres doit approuver.
+- **Unanime** — chaque membre doit approuver ; un refus ferme la demande.
+- **Propriétaire uniquement** — seul le vote du propriétaire du compte compte.
+
+Les membres qui s'abstiennent ne sont pas comptés dans le dénominateur, de sorte que les membres inactifs ne bloquent pas une décision.
+
+## Après l'approbation
+
+Lorsqu'une demande est approuvée, tout éditeur ou propriétaire peut appuyer sur **Ajouter au plan d'achat**. Cela crée une dépense planifiée — elle apparaît sur l'écran de détail de la dépense avec la bannière **« Planifié · Marquer comme acheté »**, mais n'affecte pas encore vos totaux budgétaires.
+
+Lorsque vous effectuez réellement l'achat, ouvrez la dépense et appuyez sur la bannière pour la marquer comme achetée. L'indicateur de planification est supprimé et la dépense entre normalement dans votre budget.
+
+## Notifications
+
+Vous recevrez des notifications push lorsque :
+
+- Une nouvelle demande d'achat est créée (tous les membres sauf le créateur).
+- Quelqu'un vote sur votre demande.
+- Une demande à laquelle vous participez est approuvée ou rejetée.
+
+Vous pouvez désactiver les notifications de demandes d'achat sous **Paramètres → Notifications → Demandes d'achat**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Fil familial`,
+      description: ``,
+      body: `# Fil familial
+
+Le Fil familial est un flux d'activité partagé pour les comptes famille et couple. Il affiche ce que chaque membre a dépensé et gagné, et permet de réagir avec des emoji — les finances partagées deviennent plus collaboratives.
+
+## Ce qui apparaît dans le fil
+
+- **Dépenses** — regroupées par membre et par jour. Si un membre ajoute 3 dépenses le même jour, elles apparaissent comme une seule carte (« 3 dépenses · 120 EUR »).
+- **Revenus** — même regroupement que les dépenses.
+- **Demandes d'achat** — chaque proposition, approbation et achat apparaît comme une carte individuelle.
+
+Le fil n'est disponible que pour les **comptes partagés** (famille, couple, entreprise). Les comptes personnels n'ont pas de fil.
+
+## Widget d'accueil
+
+Le widget **Fil familial** sur l'écran d'accueil affiche les 3 cartes d'activité les plus récentes. Appuyez sur **Tout afficher** pour ouvrir le fil complet.
+
+La visibilité du widget peut être modifiée dans **Paramètres → Widgets**.
+
+## Écran complet du fil
+
+Appuyez sur **Tout afficher** pour voir l'historique complet. Tirez vers le bas pour actualiser. Le fil se recharge automatiquement lors du changement de compte.
+
+## Réagir avec des emoji
+
+Chaque carte dispose d'une barre de réactions. Appuyez sur **＋** pour ouvrir le sélecteur d'emoji et choisir parmi :
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Appuyez sur votre propre emoji pour supprimer votre réaction. Appuyez sur un emoji différent pour le changer — une seule réaction par personne par carte.
+
+Tous les membres (y compris les observateurs) peuvent réagir.
+
+## Appuyer sur une carte
+
+- **Carte de dépense ou revenu unique** — ouvre l'écran de détail.
+- **Carte groupée (plusieurs le même jour)** — appuyez sur **Afficher les détails** pour développer la liste, puis appuyez sur une ligne individuelle.
+- **Carte de demande d'achat** — ouvre le détail de la demande d'achat.
+
+## Confidentialité
+
+Le fil affiche l'activité de tous les membres du compte partagé. Les noms de marchands et les descriptions sont intentionnellement omis (ils peuvent être chiffrés sur l'appareil). Les cartes n'affichent que le montant et la devise.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Portefeuille de voyage`,
+      description: ``,
+      body: `# Portefeuille de voyage
+
+Un compte voyage est un compte partagé temporaire pour un voyage en groupe — entre amis ou en couple. Chacun enregistre ses dépenses, l'application les répartit, et à la fin vous réglez qui doit quoi à qui.
+
+## Créer un voyage
+
+Allez dans **Ajouter un compte** et choisissez **Voyage**. Donnez-lui un nom, choisissez une date de fin et la devise que vous utiliserez principalement. Invitez vos compagnons de voyage comme pour tout compte partagé — partagez le lien ou le code d'invitation.
+
+## Partager une dépense
+
+Lors de l'ajout d'une dépense dans un compte voyage, la section **Répartir entre** apparaît sous le montant. Choisissez qui est concerné par la dépense, puis la méthode de répartition :
+
+- **Également** — le montant est réparti équitablement entre les membres sélectionnés.
+- **Montants exacts** — indiquez exactement ce que chaque personne doit ; les montants doivent totaliser la somme.
+- **Pourcentage** — indiquez un pourcentage pour chaque personne ; les pourcentages doivent totaliser 100 %.
+- **Parts** — attribuez à chaque personne un nombre de parts (par exemple, 2 parts pour un couple, 1 part pour une personne voyageant seule) ; le total est réparti proportionnellement.
+
+Vous pouvez aussi modifier **qui a payé** — par défaut, c'est la personne qui a ajouté la dépense, mais vous pouvez choisir quelqu'un d'autre si vous enregistrez un achat en son nom.
+
+## Régler les comptes
+
+Appuyez sur le voyage dans le sélecteur de comptes — tant que le voyage est actif ou vient de se terminer, vous verrez un badge indiquant le nombre de jours restants, sur lequel appuyer pour ouvrir **Régler les comptes**.
+
+L'écran de règlement affiche le nombre minimal de paiements nécessaires pour équilibrer tous les soldes. Si vous devez de l'argent à quelqu'un, appuyez sur **Payer** — si cette personne a renseigné un identifiant Revolut ou PayPal dans ses paramètres de paiement, l'application ouvre un lien de paiement pré-rempli. Pour BLIK, vous verrez son numéro de téléphone pour effectuer un virement manuel. Si aucun moyen de paiement n'est configuré, marquez simplement la dette comme réglée une fois que vous avez payé autrement.
+
+Si quelqu'un vous doit de l'argent, une fois payé(e), appuyez sur **Confirmer la réception** pour effacer la dette du solde.
+
+## Configurer vos informations de paiement
+
+Ouvrez **Paramètres de paiement** depuis l'écran du compte voyage pour indiquer comment les autres peuvent vous rembourser — un identifiant Revolut ou PayPal, ou votre numéro de téléphone pour BLIK.
+
+## Cycle de vie d'un voyage
+
+Un voyage a trois états :
+
+- **Actif** — le voyage est en cours. Les dépenses peuvent être ajoutées et modifiées normalement.
+- **Règlement** — la date de fin du voyage est passée. Vous recevrez un rappel pour régler les comptes. Les dépenses peuvent encore être ajoutées si vous rattrapez les derniers jours.
+- **Archivé** — le propriétaire du voyage l'a clôturé. Le compte devient définitivement en lecture seule, conservé comme trace du voyage. L'archivage nécessite généralement que toutes les dettes soient confirmées, bien que le propriétaire puisse forcer la clôture si besoin.
+
+Seul le propriétaire du voyage peut l'archiver, depuis l'écran du compte voyage.
+
+## Notifications
+
+Vous recevrez un rappel lorsqu'un voyage se termine et qu'il est temps de régler les comptes. Vous pouvez désactiver cela dans **Paramètres → Notifications**.
+`,
+    },
   ],
   be: [
     {
@@ -27204,7 +28273,7 @@ iOS, Android, Web
 
 ### Мова
 
-Выберыце адну з 8 падтрыманых моў:
+Выберыце адну з 9 падтрыманых моў:
 
 | Код | Мова |
 |---|---|
@@ -27216,6 +28285,7 @@ iOS, Android, Web
 | ES | Espanol |
 | FR | Francais |
 | DE | Deutsch |
+| NL | Nederlands |
 
 Націсніце на чып мовы для пераключэння. Інтэрфейс абнаўляецца імгненна.
 
@@ -27292,6 +28362,10 @@ iOS, Android, Web
 | **Абвесткі пра бюджэт** | Апавяшчэнні пры дасягненні парогаў бюджэту |
 | **Актыўнасць агульнага рахунку** | Апавяшчэнні, калі іншыя дадаюць выдаткі ў агульныя рахункі |
 | **Напамінанні пра даўгі** | Паведамленне за 3 дні да тэрміну даўгу і пры прасрочцы |
+| **Паўтаральныя выдаткі** | Апавяшчэнне, калі праграма аўтаматычна запісвае паўтаральны выдатак |
+| **Падаўжэнні падпісак** | Апавяшчэнне за 3 дні да падаўжэння адсочваемай падпіскі |
+| **Аномальныя выдаткі** | Апавяшчэнне пра нетыповыя выдаткі: дублі, падвышэнне цэн або ўсплёскі па катэгорыі |
+| **Нагадванне пра трэкінг** | Нагадванне, калі не запісвалі выдаткі 3+ дні |
 
 ### Telegram-бот
 
@@ -29228,6 +30302,151 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 Аўтаздымак — гэта функцыя Android. На iOS і ў браўзеры гэты раздзел не адлюстроўваецца. Альтэрнатыва для iOS — сканаванне фота чэка праз існуючую функцыю захопу чэкаў.
 `,
     },
+    {
+      id: '33-purchase-requests',
+      title: `Запыты на пакупку`,
+      description: ``,
+      body: `# Запыты на пакупку
+
+Запыты на пакупку дазваляюць любому ўдзельніку рахунку прапанаваць пакупку для групавога ўзгаднення да таго, як яна ўвойдзе ў бюджэт. Іншыя ўдзельнікі галасуюць непасрэдна ў дадатку або праз боты Telegram і WhatsApp; зацверджаныя запыты становяцца запланаванымі выдаткамі, якія можна ператварыць у рэальныя адным дотыкам.
+
+## Стварэнне запыту
+
+1. Перайдзіце ў **Налады → Запыты на пакупку**.
+2. Націсніце кнопку **+**.
+3. Запоўніце назву і суму (абавязкова). Па жаданні дадайце катэгорыю, прадаўца, апісанне, фота і тэрмін.
+4. Націсніце **Адправіць** — усе іншыя ўдзельнікі рахунку атрымаюць апавяшчэнне і змогуць прагаласаваць.
+
+## Галасаванне
+
+Адкрыйце запыт з **Налады → Запыты на пакупку** або з push-апавяшчэння. Націсніце **Зацвердзіць**, **Адхіліць** або **Устрымацца**. Вы можаце змяніць свой голас у любы момант, пакуль запыт яшчэ чакае рашэння.
+
+Удзельнікі Telegram і WhatsApp могуць галасаваць непасрэдна з паведамлення бота, выкарыстоўваючы ўбудаваныя кнопкі.
+
+## Правілы зацвярджэння
+
+Уладальнік рахунку можа задаць правіла зацвярджэння ў **Налады → Запыты на пакупку → Правіла зацвярджэння**:
+
+- **Большасць** (па змаўчанні) — больш за палову ўсіх удзельнікаў павінны зацвердзіць.
+- **Аднагалосна** — кожны ўдзельнік павінен зацвердзіць; адно адхіленне закрывае запыт.
+- **Толькі ўладальнік** — улічваецца толькі голас уладальніка рахунку.
+
+Удзельнікі, якія ўстрымаліся, не ўключаюцца ў назоўнік, таму неактыўныя ўдзельнікі не блакіруюць рашэнне.
+
+## Пасля зацвярджэння
+
+Калі запыт зацверджаны, любы рэдактар або ўладальнік можа націснуць **Дадаць у план пакупак**. Гэта стварае запланаваны выдатак — ён з'яўляецца на экране дэталяў выдатку з банэрам **«Запланавана · Адзначыць як куплена»**, але пакуль не ўплывае на вынікі бюджэту.
+
+Калі вы фактычна зробіце пакупку, адкрыйце выдатак і націсніце банэр, каб адзначыць яго як куплена. Сцяг планавання здымаецца, і выдатак нармальна ўваходзіць у бюджэт.
+
+## Апавяшчэнні
+
+Вы атрымаеце push-апавяшчэнні, калі:
+
+- Стварыцца новы запыт на пакупку (усе ўдзельнікі, акрамя аўтара).
+- Нехта прагаласуе па вашым запыце.
+- Запыт, у якім вы ўдзельнічаеце, будзе зацверджаны або адхілены.
+
+Вы можаце адключыць апавяшчэнні пра запыты на пакупку ў **Налады → Апавяшчэнні → Запыты на пакупку**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Сямейная стужка`,
+      description: ``,
+      body: `# Сямейная стужка
+
+Сямейная стужка — гэта агульны паток актыўнасці для сямейных і парных рахункаў. Яна паказвае, што кожны ўдзельнік тратіў і зарабляў, і дазваляе рэагаваць эмодзі — агульныя фінансы становяцца больш цікавымі.
+
+## Што адлюстроўваецца ў стужцы
+
+- **Выдаткі** — згрупаваныя па ўдзельніку і дні. Калі ўдзельнік дадаў 3 выдаткі ў адзін дзень, яны адлюстроўваюцца адной карткай («3 выдаткі · 300 BYN»).
+- **Даходы** — групуюцца гэтак жа, як выдаткі.
+- **Запыты на пакупку** — кожная прапанова, зацверджанне і пакупка адлюстроўваюцца асобнай карткай.
+
+Стужка даступная толькі для **агульных рахункаў** (сямейных, парных, бізнес). Асабістыя рахункі стужкі не маюць.
+
+## Віджэт на галоўным экране
+
+Віджэт **Сямейная стужка** на галоўным экране паказвае 3 апошніх карткі актыўнасці. Націсніце **Паказаць усё**, каб адкрыць поўную стужку.
+
+Бачнасць віджэта можна змяніць у **Налады → Віджэты**.
+
+## Поўны экран стужкі
+
+Націсніце **Паказаць усё**, каб убачыць поўную гісторыю. Пацягніце ўніз для абнаўлення. Стужка аўтаматычна перазагружаецца пры змяненні рахунку.
+
+## Рэакцыі эмодзі
+
+Кожная картка мае панэль рэакцый. Націсніце **＋**, каб адкрыць выбар эмодзі:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Націсніце на сваё эмодзі, каб выдаліць рэакцыю. Націсніце іншае эмодзі, каб змяніць — толькі адна рэакцыя на чалавека на картку.
+
+Усе ўдзельнікі (у тым ліку назіральнікі) могуць рэагаваць.
+
+## Націсканне на картку
+
+- **Картка з адным выдаткам або даходам** — адкрывае дэталі запісу.
+- **Згрупаваная картка (некалькі за дзень)** — націсніце **Паказаць дэталі**, каб разгарнуць спіс, потым націсніце на асобны радок.
+- **Картка запыту на пакупку** — адкрывае дэталі запыту.
+
+## Прыватнасць
+
+Стужка паказвае актыўнасць усіх удзельнікаў агульнага рахунку. Назвы прадаўцоў і апісанні наўмысна не адлюстроўваюцца (яны могуць быць зашыфраваны на прыладзе). Карткі паказваюць толькі суму і валюту.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Кашалёк паездкі`,
+      description: ``,
+      body: `# Кашалёк паездкі
+
+Уліковы запіс паездкі — гэта часовы агульны ўліковы запіс для сумеснай паездкі: з сябрамі ці партнёрам. Кожны дадае выдаткі, праграма дзеліць іх паміж удзельнікамі, а ў канцы вы разлічваецеся, хто каму вінен.
+
+## Стварэнне паездкі
+
+Перайдзіце ў **Дадаць уліковы запіс** і выберыце **Паездка**. Дайце ёй назву, выберыце дату завяршэння і валюту, у якой вы пераважна будзеце траціць. Запрасіце спадарожнікаў гэтак жа, як і ў любым агульным уліковым запісе — падзяліцеся спасылкай ці кодам запрашэння.
+
+## Падзел выдаткаў
+
+Пры даданні выдатку ва ўліковым запісе паездкі пад сумай з'яўляецца раздзел **Падзяліць паміж**. Выберыце, каго тычыцца выдатак, а затым спосаб падзелу:
+
+- **Пароўну** — сума дзеліцца пароўну паміж абранымі ўдзельнікамі.
+- **Дакладныя сумы** — увядзіце, колькі менавіта вінен кожны; сумы павінны ў выніку супасці з агульнай.
+- **Працэнты** — увядзіце працэнт для кожнага; працэнты павінны ў суме складаць 100%.
+- **Долі** — дайце кожнаму колькасць доляў (напрыклад, 2 долі для пары, 1 доля для таго, хто падарожнічае самастойна); сума дзеліцца прапарцыйна.
+
+Вы таксама можаце змяніць, **хто заплаціў** — па змаўчанні гэта той, хто дадаў выдатак, але можна ўказаць іншага чалавека, калі вы ўносіце пакупку ад яго імя.
+
+## Разлік
+
+Націсніце на паездку ў пераключальніку ўліковых запісаў — пакуль паездка актыўная або толькі што завяршылася, вы ўбачыце значок з колькасцю дзён, што засталіся, па якім можна перайсці да экрана **Разлік**.
+
+Экран разліку паказвае мінімальную колькасць пераводаў, неабходных для закрыцця ўсіх балансаў. Калі вы камусьці вінны, націсніце **Заплаціць** — калі гэты чалавек указаў Revolut ці PayPal у наладах аплаты, праграма адкрые гатовую спасылку для аплаты. Для BLIK вы ўбачыце яго нумар тэлефона для ручнога перавода. Калі спосаб аплаты не наладжаны, проста пазначце доўг як пагашаны пасля аплаты іншым спосабам.
+
+Калі хтосьці вінен вам грошы, пасля атрымання аплаты націсніце **Пацвердзіць атрыманне**, каб закрыць доўг у балансе.
+
+## Наладжванне плацежных дадзеных
+
+Адкрыйце **Налады аплаты** з экрана ўліковага запісу паездкі, каб указаць, як іншыя могуць вярнуць вам грошы — імя карыстальніка Revolut ці PayPal альбо нумар тэлефона для BLIK.
+
+## Жыццёвы цыкл паездкі
+
+Паездка мае тры станы:
+
+- **Актыўная** — паездка працягваецца. Выдаткі можна дадаваць і рэдагаваць як звычайна.
+- **Разлік** — дата завяршэння паездкі мінула. Вы атрымаеце напамінак разлічыцца. Выдаткі ўсё яшчэ можна дадаваць, калі вы ўносіце апошнія дні.
+- **Заархіваваная** — уладальнік паездкі закрыў яе. Уліковы запіс назаўжды становіцца даступным толькі для чытання — як памяць пра паездку. Для архівавання звычайна патрабуецца, каб усе даўгі былі пацверджаны, але ўладальнік можа закрыць яе прымусова пры неабходнасці.
+
+Архіваваць паездку можа толькі яе ўладальнік — з экрана ўліковага запісу паездкі.
+
+## Апавяшчэнні
+
+Вы атрымаеце напамінак, калі паездка завершыцца і настане час разлічыцца. Гэта можна выключыць у **Налады → Апавяшчэнні**.
+`,
+    },
   ],
   nl: [
     {
@@ -30799,7 +32018,7 @@ Je e-mail wordt direct bijgewerkt en er worden nieuwe inlogtokens uitgegeven. Al
 
 ### Taal
 
-Kies uit 8 ondersteunde talen:
+Kies uit 9 ondersteunde talen:
 
 | Code | Taal |
 |---|---|
@@ -30811,6 +32030,7 @@ Kies uit 8 ondersteunde talen:
 | FR | Francais |
 | DE | Deutsch |
 | BY | Беларуская |
+| NL | Nederlands |
 
 Tik op een taalchip om te wisselen. De interface wordt direct bijgewerkt.
 
@@ -30887,6 +32107,10 @@ Schakelaars voor meldingsvoorkeuren:
 | **Budgetwaarschuwingen** | Ontvang een melding wanneer je budgetdrempels bereikt |
 | **Activiteit gedeeld account** | Ontvang een melding wanneer anderen uitgaven toevoegen aan gedeelde accounts |
 | **Schuldherinneringen** | Ontvang 3 dagen voor de vervaldatum van een schuld een melding en wanneer deze achterstallig wordt |
+| **Terugkerende uitgaven** | Melding wanneer de app automatisch een terugkerende uitgave registreert |
+| **Abonnementsverlengingen** | Melding 3 dagen voor verlenging van een gevolgd abonnement |
+| **Anomaliemeldingen** | Melding bij ongewone uitgaven: dubbele kosten, prijsstijgingen of categoriepieken |
+| **Trackingherinnering** | Melding als je 3+ dagen geen uitgaven hebt geregistreerd |
 
 ### Telegram-bot
 
@@ -32929,6 +34153,151 @@ Tik op de vastleggingsmelding ("54 zł vastgelegd · Żabka — tik om te contro
 ### Alleen Android
 
 Automatisch vastleggen is een Android-functie. Op iOS en web verschijnt dit gedeelte niet. Een alternatief voor iOS is het scannen van een bonnetjefoto via de bestaande bonnetjescanner.
+`,
+    },
+    {
+      id: '33-purchase-requests',
+      title: `Aankoopverzoeken`,
+      description: ``,
+      body: `# Aankoopverzoeken
+
+Met aankoopverzoeken kan elk accountlid een aankoop voorstellen voor groepsgoedkeuring voordat deze het budget ingaat. Andere leden stemmen direct in de app of via de Telegram- en WhatsApp-bots; goedgekeurde verzoeken worden geplande uitgaven die je met één tik kunt omzetten in echte uitgaven.
+
+## Een verzoek aanmaken
+
+1. Ga naar **Instellingen → Aankoopverzoeken**.
+2. Tik op de **+** knop.
+3. Vul de titel en het bedrag in (verplicht). Voeg optioneel een categorie, handelaar, beschrijving, foto en deadline toe.
+4. Tik op **Verzenden** — alle andere accountleden ontvangen een melding en kunnen stemmen.
+
+## Stemmen
+
+Open het verzoek via **Instellingen → Aankoopverzoeken** of via de pushmelding. Tik op **Goedkeuren**, **Afwijzen** of **Onthouden**. Je kunt je stem op elk moment wijzigen zolang het verzoek nog in behandeling is.
+
+Telegram- en WhatsApp-leden kunnen direct vanuit het botbericht stemmen via de inlineknopppen.
+
+## Goedkeuringsregels
+
+De accounteigenaar kan de goedkeuringsregel instellen via **Instellingen → Aankoopverzoeken → Goedkeuringsregel**:
+
+- **Meerderheid** (standaard) — meer dan de helft van alle leden moet goedkeuren.
+- **Unaniem** — elk lid moet goedkeuren; één afwijzing sluit het verzoek.
+- **Alleen eigenaar** — alleen de stem van de accounteigenaar telt.
+
+Onthoudende leden worden niet meegeteld in de noemer, zodat inactieve leden een beslissing niet blokkeren.
+
+## Na goedkeuring
+
+Wanneer een verzoek is goedgekeurd, kan elke redacteur of eigenaar tikken op **Toevoegen aan aankoopplan**. Hiermee wordt een geplande uitgave aangemaakt — deze verschijnt op het detailscherm van de uitgave met de banner **"Gepland · Markeren als gekocht"**, maar beïnvloedt je budgettotalen nog niet.
+
+Wanneer je de aankoop daadwerkelijk doet, open dan de uitgave en tik op de banner om deze als gekocht te markeren. De planningsvlag wordt verwijderd en de uitgave gaat normaal in je budget.
+
+## Meldingen
+
+Je ontvangt pushmeldingen wanneer:
+
+- Er een nieuw aankoopverzoek wordt aangemaakt (alle leden behalve de maker).
+- Iemand op jouw verzoek stemt.
+- Een verzoek waaraan je deelneemt wordt goedgekeurd of afgewezen.
+
+Je kunt meldingen voor aankoopverzoeken uitschakelen via **Instellingen → Meldingen → Aankoopverzoeken**.
+`,
+    },
+    {
+      id: '34-family-feed',
+      title: `Gezinsfeed`,
+      description: ``,
+      body: `# Gezinsfeed
+
+De Gezinsfeed is een gedeelde activiteitsstroom voor gezins- en koppelrekeningen. Het toont wat elk lid heeft uitgegeven en verdiend, en biedt de mogelijkheid te reageren met emoji — gedeelde financiën worden meer collaboratief.
+
+## Wat verschijnt in de feed
+
+- **Uitgaven** — gegroepeerd per lid en dag. Als een lid op dezelfde dag 3 uitgaven toevoegt, verschijnen ze als één kaart ("3 uitgaven · 120 EUR").
+- **Inkomsten** — dezelfde groepering als uitgaven.
+- **Aankoopverzoeken** — elk voorstel, goedkeuring en aankoop verschijnt als een aparte kaart.
+
+De feed is alleen beschikbaar voor **gedeelde rekeningen** (gezin, koppel, zakelijk). Persoonlijke rekeningen hebben geen feed.
+
+## Widget op het startscherm
+
+De widget **Gezinsfeed** op het startscherm toont de 3 meest recente activiteitskaarten. Tik op **Alles weergeven** om de volledige feed te openen.
+
+De zichtbaarheid van de widget kan worden gewijzigd via **Instellingen → Widgets**.
+
+## Volledig feedscherm
+
+Tik op **Alles weergeven** om de volledige geschiedenis te bekijken. Trek naar beneden om te vernieuwen. De feed laadt automatisch opnieuw bij het wisselen van rekening.
+
+## Reageren met emoji
+
+Elke kaart heeft een reactiebalk. Tik op **＋** om de emoji-kiezer te openen en te kiezen uit:
+
+👍 ❤️ 😮 😂 🔥 😬
+
+Tik op je eigen emoji om je reactie te verwijderen. Tik op een ander emoji om deze te wijzigen — slechts één reactie per persoon per kaart.
+
+Alle leden (inclusief kijkers) kunnen reageren.
+
+## Tikken op een kaart
+
+- **Kaart met één uitgave of inkomst** — opent het detailscherm.
+- **Gegroepeerde kaart (meerdere op dezelfde dag)** — tik op **Details tonen** om de lijst uit te vouwen, tik dan op een afzonderlijke rij.
+- **Kaart voor aankoopverzoek** — opent het detail van het aankoopverzoek.
+
+## Privacy
+
+De feed toont de activiteit van alle leden van de gedeelde rekening. Namen van handelaars en beschrijvingen worden bewust weggelaten (ze kunnen versleuteld zijn op het apparaat). Kaarten tonen alleen bedrag en valuta.
+`,
+    },
+    {
+      id: '35-group-trip-wallet',
+      title: `Reisportemonnee`,
+      description: ``,
+      body: `# Reisportemonnee
+
+Een reisaccount is een tijdelijke gedeelde account voor een groepsreis — met vrienden of als koppel. Iedereen registreert uitgaven, de app verdeelt ze, en aan het einde reken je af wie wie iets verschuldigd is.
+
+## Een reis aanmaken
+
+Ga naar **Account toevoegen** en kies **Reis**. Geef de reis een naam, kies een einddatum en de valuta waarin jullie vooral zullen uitgeven. Nodig je reisgenoten uit zoals bij elke gedeelde account — deel de uitnodigingslink of -code.
+
+## Een uitgave splitsen
+
+Bij het toevoegen van een uitgave in een reisaccount verschijnt onder het bedrag de sectie **Verdelen tussen**. Kies wie de uitgave betreft en kies daarna de verdeelmethode:
+
+- **Gelijk** — het bedrag wordt gelijk verdeeld over de geselecteerde leden.
+- **Exacte bedragen** — vul precies in hoeveel iedereen verschuldigd is; de bedragen moeten optellen tot het totaal.
+- **Percentage** — vul voor iedereen een percentage in; de percentages moeten optellen tot 100%.
+- **Aandelen** — geef iedereen een aantal aandelen (bijvoorbeeld 2 aandelen voor een koppel, 1 aandeel voor iemand die alleen reist); het totaal wordt proportioneel verdeeld.
+
+Je kunt ook wijzigen **wie heeft betaald** — standaard is dit degene die de uitgave heeft toegevoegd, maar je kunt iemand anders kiezen als je een aankoop namens die persoon registreert.
+
+## Afrekenen
+
+Tik op de reis in de accountwisselaar — zolang de reis actief is of net is afgelopen, zie je een badge met het aantal resterende dagen waarop je kunt tikken om **Afrekenen** te openen.
+
+Het afrekenscherm toont het minimale aantal betalingen dat nodig is om alle saldi te vereffenen. Als je iemand geld verschuldigd bent, tik dan op **Betalen** — als die persoon een Revolut- of PayPal-gebruikersnaam heeft ingesteld bij de betaalinstellingen, opent de app een vooraf ingevulde betaallink. Voor BLIK zie je het telefoonnummer om handmatig over te maken. Als er geen betaalmethode is ingesteld, markeer de schuld dan gewoon als vereffend zodra je op een andere manier hebt betaald.
+
+Als iemand jou geld verschuldigd is, tik dan na ontvangst van de betaling op **Ontvangst bevestigen** om de schuld uit het saldo te verwijderen.
+
+## Je betaalgegevens instellen
+
+Open **Betaalinstellingen** vanaf het reisaccountscherm om aan te geven hoe anderen je kunnen terugbetalen — een Revolut- of PayPal-gebruikersnaam, of je telefoonnummer voor BLIK.
+
+## Levenscyclus van een reis
+
+Een reis heeft drie statussen:
+
+- **Actief** — de reis loopt. Uitgaven kunnen normaal worden toegevoegd en bewerkt.
+- **Afrekenen** — de einddatum van de reis is verstreken. Je krijgt een herinnering om af te rekenen. Uitgaven kunnen nog steeds worden toegevoegd als je de laatste dagen aan het bijwerken bent.
+- **Gearchiveerd** — de eigenaar van de reis heeft deze afgesloten. De account wordt permanent alleen-lezen, bewaard als vastlegging van de reis. Archiveren vereist meestal dat alle schulden zijn bevestigd, hoewel de eigenaar dit indien nodig kan forceren.
+
+Alleen de eigenaar van de reis kan deze archiveren, vanaf het reisaccountscherm.
+
+## Meldingen
+
+Je krijgt een herinnering wanneer een reis eindigt en het tijd is om af te rekenen. Je kunt dit uitschakelen bij **Instellingen → Meldingen**.
 `,
     },
   ],

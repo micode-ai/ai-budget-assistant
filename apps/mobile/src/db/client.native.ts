@@ -578,6 +578,30 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE chat_messages ADD COLUMN sender_name TEXT`); } catch {}
     try { expoDb.execSync(`ALTER TABLE chat_messages ADD COLUMN mentioned_user_ids TEXT`); } catch {}
 
+    // Group trip wallet: who paid the expense (migration for existing DBs)
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN paid_by_user_id TEXT`); } catch {}
+
+    // Group trip wallet: trip status/dates on accounts (migration for existing DBs)
+    try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_status TEXT`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_start_date INTEGER`); } catch {}
+    try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_end_date INTEGER`); } catch {}
+
+    // Group trip wallet: per-member expense shares
+    expoDb.execSync(`
+      CREATE TABLE IF NOT EXISTS trip_expense_shares (
+        id TEXT PRIMARY KEY,
+        expense_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        share_type TEXT NOT NULL,
+        share_amount REAL NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        is_deleted INTEGER DEFAULT 0,
+        sync_version INTEGER DEFAULT 0,
+        FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE
+      );
+    `);
+
     // Debt indexes
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_expenses_debt ON expenses(account_id, is_debt)`);
     expoDb.execSync(`CREATE INDEX IF NOT EXISTS idx_incomes_debt ON incomes(account_id, is_debt)`);
@@ -623,6 +647,9 @@ export async function initializeDatabase(): Promise<void> {
       // Splits indexes
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_expense ON expense_category_splits(expense_id)',
       'CREATE INDEX IF NOT EXISTS idx_expense_splits_category ON expense_category_splits(category_id)',
+      // Trip expense shares indexes
+      'CREATE INDEX IF NOT EXISTS idx_trip_expense_shares_expense ON trip_expense_shares(expense_id)',
+      'CREATE INDEX IF NOT EXISTS idx_trip_expense_shares_user ON trip_expense_shares(user_id)',
       // Budget categories indexes
       'CREATE INDEX IF NOT EXISTS idx_budget_categories_budget ON budget_categories(budget_id)',
       'CREATE INDEX IF NOT EXISTS idx_budget_categories_category ON budget_categories(category_id)',

@@ -31,6 +31,7 @@ export default function AccountDetailScreen() {
     removeMember,
     updateMemberRole,
     leaveAccount,
+    archiveTrip,
     isLoading,
   } = useAccountStore();
   const ROLE_COLORS: Record<AccountRole, string> = {
@@ -195,6 +196,41 @@ export default function AccountDetailScreen() {
     showAlert(t('accounts.changeRole'), t('accounts.selectRole'), buttons as any);
   };
 
+  const doArchiveTrip = async (force: boolean) => {
+    if (!id) return;
+    try {
+      await archiveTrip(id, force);
+    } catch (e) {
+      // The API returns a 400 (no `code` field) specifically when there are
+      // still unconfirmed settle-up transactions and `force` wasn't passed —
+      // see accounts.service.ts archiveTrip(). Offer the force override.
+      const status = (e as { status?: number } | undefined)?.status;
+      if (!force && status === 400) {
+        showAlert(t('trip.archiveTrip'), t('trip.archiveTripUnconfirmedWarning'), [
+          { text: t('common.cancel'), style: 'cancel' },
+          {
+            text: t('trip.archiveTripForce'),
+            style: 'destructive',
+            onPress: () => doArchiveTrip(true),
+          },
+        ]);
+        return;
+      }
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleArchiveTrip = () => {
+    showAlert(t('trip.archiveTrip'), t('trip.archiveTripConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('trip.archiveTrip'),
+        style: 'destructive',
+        onPress: () => doArchiveTrip(false),
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
@@ -241,6 +277,32 @@ export default function AccountDetailScreen() {
             )}
           </View>
         </View>
+
+        {/* Trip actions (only for trip accounts) */}
+        {account.type === 'trip' && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('trip.tripName')}</Text>
+            <View style={styles.card}>
+              <TouchableOpacity
+                style={styles.tripActionRow}
+                onPress={() => router.push(`/trip/${id}/settle-up`)}
+              >
+                <Ionicons name="swap-horizontal-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.tripActionText}>{t('trip.settleUp')}</Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+              <View style={styles.divider} />
+              <TouchableOpacity
+                style={styles.tripActionRow}
+                onPress={() => router.push(`/trip/payment-settings?id=${id}`)}
+              >
+                <Ionicons name="card-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.tripActionText}>{t('trip.paymentSettingsTitle')}</Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         {/* Members Section (for shared accounts) */}
         {(account.type === 'shared' || account.type === 'business' || account.type === 'investment') && (
@@ -328,6 +390,15 @@ export default function AccountDetailScreen() {
 
         {/* Danger Zone */}
         <View style={styles.section}>
+          {isOwner && account.type === 'trip' && account.tripStatus !== 'archived' && (
+            <TouchableOpacity
+              style={[styles.dangerButton, styles.tripArchiveButton]}
+              onPress={handleArchiveTrip}
+            >
+              <Ionicons name="archive-outline" size={20} color={theme.colors.danger} />
+              <Text style={styles.dangerButtonText}>{t('trip.archiveTrip')}</Text>
+            </TouchableOpacity>
+          )}
           {isOwner ? (
             <TouchableOpacity style={styles.dangerButton} onPress={handleDelete}>
               <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
@@ -422,6 +493,24 @@ const createStyles = (theme: Theme) => ({
     borderRadius: 18,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
+  },
+  tripActionRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[3],
+  },
+  tripActionText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: theme.colors.divider,
+  },
+  tripArchiveButton: {
+    marginBottom: theme.spacing[3],
   },
   memberCard: {
     flexDirection: 'row' as const,

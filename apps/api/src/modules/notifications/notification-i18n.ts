@@ -105,6 +105,10 @@ interface PossibleMergeParams {
   currencyB: string;
 }
 
+interface TripSettleUpParams {
+  tripName: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -156,6 +160,8 @@ const translations: Record<string, {
   trackingGapBody: () => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
+  tripSettleUpTitle: (p: TripSettleUpParams) => string;
+  tripSettleUpBody: (p: TripSettleUpParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -225,6 +231,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
+    tripSettleUpTitle: ({ tripName }) => `${tripName} has ended`,
+    tripSettleUpBody: () => 'Time to settle up with your trip group',
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -294,6 +302,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
+    tripSettleUpTitle: ({ tripName }) => `Поездка "${tripName}" завершена`,
+    tripSettleUpBody: () => 'Пора рассчитаться с группой поездки',
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -363,6 +373,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
+    tripSettleUpTitle: ({ tripName }) => `Поїздка "${tripName}" завершена`,
+    tripSettleUpBody: () => 'Час розрахуватися з групою поїздки',
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -432,6 +444,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
+    tripSettleUpTitle: ({ tripName }) => `Wyjazd "${tripName}" się zakończył`,
+    tripSettleUpBody: () => 'Czas rozliczyć się z grupą wyjazdową',
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -501,6 +515,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
+    tripSettleUpTitle: ({ tripName }) => `El viaje "${tripName}" ha terminado`,
+    tripSettleUpBody: () => 'Es hora de saldar cuentas con tu grupo de viaje',
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -570,6 +586,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
+    tripSettleUpTitle: ({ tripName }) => `Le voyage "${tripName}" est terminé`,
+    tripSettleUpBody: () => 'Il est temps de faire les comptes avec votre groupe de voyage',
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -639,6 +657,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
+    tripSettleUpTitle: ({ tripName }) => `Die Reise "${tripName}" ist zu Ende`,
+    tripSettleUpBody: () => 'Zeit, mit deiner Reisegruppe abzurechnen',
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -708,6 +728,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
+    tripSettleUpTitle: ({ tripName }) => `Паездка "${tripName}" завершана`,
+    tripSettleUpBody: () => 'Час разлічыцца з групай паездкі',
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -777,6 +799,8 @@ const translations: Record<string, {
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
+    tripSettleUpTitle: ({ tripName }) => `Reis "${tripName}" is afgelopen`,
+    tripSettleUpBody: () => 'Tijd om af te rekenen met je reisgroep',
   },
 };
 
@@ -956,4 +980,12 @@ export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): str
 
 export function possibleMergeBody(lang: Lang, params: PossibleMergeParams): string {
   return t(lang).possibleMergeBody(params);
+}
+
+export function tripSettleUpTitle(lang: Lang, params: TripSettleUpParams): string {
+  return t(lang).tripSettleUpTitle(params);
+}
+
+export function tripSettleUpBody(lang: Lang, params: TripSettleUpParams): string {
+  return t(lang).tripSettleUpBody(params);
 }

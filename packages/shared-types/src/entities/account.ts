@@ -1,4 +1,4 @@
-import type { Currency, AccountType, AccountRole, InvitationStatus } from './primitives';
+import type { Currency, AccountType, AccountRole, InvitationStatus, TripStatus, SettleMethod } from './primitives';
 import type { User } from './user';
 
 export interface Account {
@@ -9,6 +9,9 @@ export interface Account {
   ownerId: string;
   icon?: string;
   isActive: boolean;
+  tripStartDate?: string;
+  tripEndDate?: string;
+  tripStatus?: TripStatus;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +22,8 @@ export interface AccountMember {
   userId: string;
   role: AccountRole;
   joinedAt: Date;
+  paymentMethod?: SettleMethod;
+  paymentHandle?: string;
   user?: Pick<User, 'id' | 'name' | 'email'>;
 }
 

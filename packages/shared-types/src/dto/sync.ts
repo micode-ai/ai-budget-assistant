@@ -1,3 +1,5 @@
+import type { ShareType } from '../entities/primitives';
+
 export type SyncOperation = 'create' | 'update' | 'delete';
 
 export type SyncEntityType =
@@ -16,7 +18,8 @@ export type SyncEntityType =
   | 'project_income'
   | 'expense_category_split'
   | 'portfolio_holding'
-  | 'investment_transaction';
+  | 'investment_transaction'
+  | 'tripExpenseShare';
 
 // ---- Per-entity payload interfaces ----
 
@@ -106,6 +109,13 @@ export interface SyncInvestmentTransactionPayload {
   notes?: string;
 }
 
+export interface SyncTripExpenseSharePayload {
+  expenseId: string;
+  userId: string;
+  shareType: ShareType;
+  shareAmount: number;
+}
+
 export interface SyncExpenseTagPayload {
   expenseId: string;
   tagId: string;
@@ -155,6 +165,7 @@ export type SyncChange =
   | (SyncChangeBase & { entityType: 'project'; payload: SyncProjectPayload })
   | (SyncChangeBase & { entityType: 'portfolio_holding'; payload: SyncPortfolioHoldingPayload })
   | (SyncChangeBase & { entityType: 'investment_transaction'; payload: SyncInvestmentTransactionPayload })
+  | (SyncChangeBase & { entityType: 'tripExpenseShare'; payload: SyncTripExpenseSharePayload })
   | (SyncChangeBase & { entityType: 'expense_tag'; payload: SyncExpenseTagPayload })
   | (SyncChangeBase & { entityType: 'income_tag'; payload: SyncIncomeTagPayload })
   | (SyncChangeBase & { entityType: 'project_expense'; payload: SyncProjectExpensePayload })

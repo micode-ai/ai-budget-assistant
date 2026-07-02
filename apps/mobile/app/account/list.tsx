@@ -21,6 +21,7 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, IconName> = {
   business: 'briefcase-outline',
   shared: 'people-outline',
   investment: 'trending-up-outline',
+  trip: 'briefcase-outline',
 };
 
 export default function AccountListScreen() {

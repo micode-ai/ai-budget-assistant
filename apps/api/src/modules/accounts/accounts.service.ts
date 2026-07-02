@@ -12,6 +12,7 @@ import { MailService } from '../mail/mail.service';
 import { CreateAccountDto, UpdateAccountDto, CreateInvitationDto, UpdateMemberRoleDto } from './dto';
 import { PrismaClient } from '@prisma/client';
 import { randomBytes } from 'crypto';
+import type { AccountMemberPaymentInfoDto } from '@budget/shared-types';
 
 @Injectable()
 export class AccountsService {
@@ -23,6 +24,12 @@ export class AccountsService {
   ) {}
 
   async create(userId: string, dto: CreateAccountDto) {
+    if (dto.type === 'trip') {
+      if (!dto.tripEndDate) {
+        throw new BadRequestException('tripEndDate is required for trip accounts');
+      }
+    }
+
     // Validate account type limits
     if (dto.type === 'personal' || dto.type === 'business' || dto.type === 'investment') {
       const existing = await this.prisma.account.findFirst({
@@ -43,6 +50,13 @@ export class AccountsService {
           currencyCode: dto.currencyCode || 'USD',
           ownerId: userId,
           icon: dto.icon,
+          ...(dto.type === 'trip'
+            ? {
+                tripStartDate: dto.tripStartDate ? new Date(dto.tripStartDate) : new Date(),
+                tripEndDate: new Date(dto.tripEndDate as string),
+                tripStatus: 'active' as const,
+              }
+            : {}),
         },
       });
 
@@ -406,6 +420,41 @@ export class AccountsService {
     });
 
     return { success: true };
+  }
+
+  async updatePaymentInfo(accountId: string, userId: string, dto: AccountMemberPaymentInfoDto) {
+    await this.prisma.accountMember.updateMany({
+      where: { accountId, userId },
+      data: { paymentMethod: dto.paymentMethod, paymentHandle: dto.paymentHandle },
+    });
+    return { paymentMethod: dto.paymentMethod, paymentHandle: dto.paymentHandle };
+  }
+
+  // ---- Trip lifecycle ----
+
+  async archiveTrip(accountId: string, userId: string, force?: boolean) {
+    const account = await this.prisma.account.findFirst({
+      where: { id: accountId, ownerId: userId },
+    });
+    if (!account) {
+      throw new ForbiddenException('Only the trip owner can archive it');
+    }
+
+    if (!force) {
+      const unconfirmed = await this.prisma.settleUpTransaction.count({
+        where: { accountId, status: 'pending' },
+      });
+      if (unconfirmed > 0) {
+        throw new BadRequestException(
+          'There are unconfirmed settle-up transactions — pass force to archive anyway',
+        );
+      }
+    }
+
+    return this.prisma.account.update({
+      where: { id: accountId },
+      data: { tripStatus: 'archived' },
+    });
   }
 
   // ---- Helper for auto-creating default account ----

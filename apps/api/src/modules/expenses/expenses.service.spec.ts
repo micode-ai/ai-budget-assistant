@@ -205,6 +205,204 @@ describe('reconcileNotificationStub (Tier 1 Case A)', () => {
 });
 
 // ---------------------------------------------------------------------------
+// create() — trip expense shares (paidByUserId + resolveShares wiring)
+// ---------------------------------------------------------------------------
+
+/**
+ * Mocks the create() $transaction end-to-end (unlike makeCreateService, which only
+ * exercises the private reconcileNotificationStub method). expense.findUnique is
+ * called twice inside create(): once for the existing-by-clientId lookup (must
+ * resolve null so isNew=true), and once for the final `full` refetch — the second
+ * mock captures whatever paidByUserId/amount/currencyCode the upsert was given so
+ * the assertions below observe the real values the service computed, not fixtures.
+ */
+function makeTripShareCreateService() {
+  let paidByUserId: string | undefined;
+  let amount = 0;
+  let currencyCode = 'USD';
+
+  const upsertMock = jest.fn().mockImplementation(async (args: any) => {
+    paidByUserId = args.create.paidByUserId;
+    amount = args.create.amount;
+    currencyCode = args.create.currencyCode;
+    return { id: 'e-new' };
+  });
+
+  const findUniqueMock = jest
+    .fn()
+    .mockImplementationOnce(async () => null) // existing-by-clientId check -> not found (isNew)
+    .mockImplementationOnce(async () => ({
+      id: 'e-new',
+      accountId: 'trip-acc-1',
+      amount,
+      currencyCode,
+      paidByUserId,
+      category: null,
+      items: [],
+      expenseTags: [],
+      categorySplits: [],
+      projectExpenses: [],
+      user: { name: 'Alice' },
+    }));
+
+  const shareDeleteMany = jest.fn().mockResolvedValue({});
+  const shareCreateMany = jest.fn().mockResolvedValue({});
+
+  const tx = {
+    expense: { findUnique: findUniqueMock, upsert: upsertMock },
+    expenseItem: { createMany: jest.fn().mockResolvedValue({}) },
+    tag: { findMany: jest.fn().mockResolvedValue([]) },
+    expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
+    project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
+    projectExpense: { upsert: jest.fn().mockResolvedValue({}) },
+    expenseCategorySplit: { createMany: jest.fn().mockResolvedValue({}) },
+    tripExpenseShare: { deleteMany: shareDeleteMany, createMany: shareCreateMany },
+  };
+
+  const prisma: any = {
+    $transaction: jest.fn(async (cb: any) => cb(tx)),
+  };
+  const cacheService: any = {
+    delByPrefix: jest.fn().mockResolvedValue(undefined),
+    del: jest.fn().mockResolvedValue(undefined),
+  };
+  const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+  const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
+  return { service, tx, shareCreateMany, shareDeleteMany, upsertMock };
+}
+
+describe('create — trip expense shares', () => {
+  it('defaults paidByUserId to the creator and persists resolved shares', async () => {
+    const { service, shareCreateMany, shareDeleteMany } = makeTripShareCreateService();
+
+    const { expense } = await service.create('trip-acc-1', 'alice', {
+      localId: 'client-1',
+      amount: 90,
+      currencyCode: 'USD',
+      date: '2026-08-01',
+      source: 'manual',
+      splitType: 'equal',
+      shares: [{ userId: 'alice', value: 0 }, { userId: 'bob', value: 0 }, { userId: 'carol', value: 0 }],
+    });
+
+    expect(expense.paidByUserId).toBe('alice');
+    expect(shareDeleteMany).toHaveBeenCalledWith({ where: { expenseId: 'e-new' } });
+    expect(shareCreateMany).toHaveBeenCalledTimes(1);
+    const created = shareCreateMany.mock.calls[0][0].data;
+    expect(created).toHaveLength(3);
+    expect(created.find((s: any) => s.userId === 'carol')?.shareAmount).toBe(30);
+    expect(created.every((s: any) => s.shareType === 'equal')).toBe(true);
+  });
+
+  it('uses an explicit paidByUserId when provided', async () => {
+    const { service } = makeTripShareCreateService();
+
+    const { expense } = await service.create('trip-acc-1', 'alice', {
+      localId: 'client-2',
+      amount: 40,
+      currencyCode: 'USD',
+      date: '2026-08-01',
+      source: 'manual',
+      paidByUserId: 'bob',
+      splitType: 'exact',
+      shares: [{ userId: 'bob', value: 40 }],
+    });
+    expect(expense.paidByUserId).toBe('bob');
+  });
+
+  it('does not touch tripExpenseShare when no shares are provided (non-trip expense, no-op)', async () => {
+    const { service, shareCreateMany, shareDeleteMany } = makeTripShareCreateService();
+
+    const { expense } = await service.create('acc-1', 'alice', {
+      localId: 'client-3',
+      amount: 10,
+      currencyCode: 'USD',
+      date: '2026-08-01',
+      source: 'manual',
+    });
+
+    // Still defaults paidByUserId to the creator (harmless new column, never read elsewhere).
+    expect(expense.paidByUserId).toBe('alice');
+    expect(shareCreateMany).not.toHaveBeenCalled();
+    expect(shareDeleteMany).not.toHaveBeenCalled();
+  });
+
+  it('preserves an edited paidByUserId on the upsert update: branch (offline retry of the same localId)', async () => {
+    // Simulates the offline-first retry path: the client pushes the same `localId`
+    // twice (e.g. the first push succeeded server-side but the client never got the
+    // ack and retries). The second `create()` call hits Prisma's upsert `update:`
+    // branch, not `create:` — this is where paidByUserId used to be silently dropped.
+    const upsertMock = jest.fn().mockResolvedValue({ id: 'e-retry' });
+
+    const existingRow = {
+      id: 'e-retry',
+      accountId: 'acc-1',
+      amount: 10,
+      currencyCode: 'USD',
+      category: null,
+      items: [],
+      expenseTags: [],
+      categorySplits: [],
+      projectExpenses: [],
+      user: { name: 'Alice' },
+    };
+
+    // findUnique is called twice per create(): (1) existing-by-clientId check,
+    // (2) post-upsert full refetch. First create() has no existing row; the second
+    // create() (the retry) finds it, then both refetch the "full" row.
+    const findUniqueMock = jest
+      .fn()
+      .mockImplementationOnce(async () => null) // call 1: existing check (first create) -> isNew
+      .mockImplementationOnce(async () => ({ ...existingRow, paidByUserId: 'alice' })) // call 2: full refetch
+      .mockImplementationOnce(async () => ({ id: 'e-retry' })) // call 3: existing check (retry) -> found
+      .mockImplementationOnce(async () => ({ ...existingRow, paidByUserId: 'bob' })); // call 4: full refetch
+
+    const tx = {
+      expense: { findUnique: findUniqueMock, upsert: upsertMock },
+      expenseItem: { createMany: jest.fn().mockResolvedValue({}) },
+      tag: { findMany: jest.fn().mockResolvedValue([]) },
+      expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
+      project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
+      projectExpense: { upsert: jest.fn().mockResolvedValue({}) },
+      expenseCategorySplit: { createMany: jest.fn().mockResolvedValue({}) },
+      tripExpenseShare: { deleteMany: jest.fn().mockResolvedValue({}), createMany: jest.fn().mockResolvedValue({}) },
+    };
+
+    const prisma: any = { $transaction: jest.fn(async (cb: any) => cb(tx)) };
+    const cacheService: any = {
+      delByPrefix: jest.fn().mockResolvedValue(undefined),
+      del: jest.fn().mockResolvedValue(undefined),
+    };
+    const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+    const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+    const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
+
+    const dto = {
+      localId: 'client-retry-1',
+      amount: 10,
+      currencyCode: 'USD',
+      date: '2026-08-01',
+      source: 'manual',
+    };
+
+    // First push: creates the expense.
+    await service.create('acc-1', 'alice', dto as any);
+
+    // Retry push of the SAME localId, now with an edited paidByUserId — this is the
+    // upsert's update: branch.
+    const { expense } = await service.create('acc-1', 'alice', { ...dto, paidByUserId: 'bob' } as any);
+
+    expect(upsertMock).toHaveBeenCalledTimes(2);
+    const secondUpsertArgs = upsertMock.mock.calls[1][0];
+    expect(secondUpsertArgs.update.paidByUserId).toBe('bob');
+    expect(expense.paidByUserId).toBe('bob');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // mergeExpenses (Tier 2 merge action)
 // ---------------------------------------------------------------------------
 

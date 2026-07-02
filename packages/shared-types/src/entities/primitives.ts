@@ -10,13 +10,21 @@ export type BudgetPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
 
 export type CategoryType = 'income' | 'expense';
 
-export type AccountType = 'personal' | 'business' | 'shared' | 'investment';
+export type AccountType = 'personal' | 'business' | 'shared' | 'investment' | 'trip';
+
+export type TripStatus = 'active' | 'settling' | 'archived';
+
+export type ShareType = 'equal' | 'exact' | 'percentage' | 'shares';
+
+export type SettleMethod = 'blik' | 'revolut' | 'paypal' | 'cash' | 'other';
+
+export type SettleStatus = 'pending' | 'confirmed';
 
 export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal' | 'tracking_gap_reminder' | 'purchase_request_created' | 'purchase_request_voted' | 'purchase_request_approved' | 'purchase_request_rejected';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal' | 'tracking_gap_reminder' | 'purchase_request_created' | 'purchase_request_voted' | 'purchase_request_approved' | 'purchase_request_rejected' | 'trip_settle_up';
 
 export type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 

@@ -6,6 +6,7 @@ import {
   IsDateString,
   IsBoolean,
   IsArray,
+  IsIn,
   Min,
   Max,
   MaxLength,
@@ -14,6 +15,7 @@ import {
   ArrayMaxSize,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
+import type { ShareType, ExpenseShareDto } from '@budget/shared-types';
 
 class LocationDto {
   @IsNumber()
@@ -226,6 +228,18 @@ export class CreateExpenseDto {
   @IsOptional()
   @IsString()
   externalRef?: string;
+
+  @IsOptional()
+  @IsIn(['equal', 'exact', 'percentage', 'shares'])
+  splitType?: ShareType;
+
+  @IsOptional()
+  @IsArray()
+  shares?: ExpenseShareDto[];
+
+  @IsOptional()
+  @IsUUID()
+  paidByUserId?: string;
 }
 
 export class UpdateExpenseDto {
@@ -321,6 +335,18 @@ export class UpdateExpenseDto {
   @IsOptional()
   @IsNumber()
   encryptionKeyVersion?: number;
+
+  @IsOptional()
+  @IsIn(['equal', 'exact', 'percentage', 'shares'])
+  splitType?: ShareType;
+
+  @IsOptional()
+  @IsArray()
+  shares?: ExpenseShareDto[];
+
+  @IsOptional()
+  @IsUUID()
+  paidByUserId?: string | null;
 }
 
 export class ExpenseFiltersDto {

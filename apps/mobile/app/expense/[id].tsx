@@ -25,6 +25,9 @@ export default function ExpenseDetailScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccount = useAccountStore((s) => s.currentAccount());
+  const accountMembersMap = useAccountStore((s) => s.members);
+  const loadMembers = useAccountStore((s) => s.loadMembers);
   const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
   const { expenses, deleteExpense, stopRecurringExpense, updateExpense } = useExpenseStore();
   const { loadProjects } = useProjectStore();
@@ -60,6 +63,24 @@ export default function ExpenseDetailScreen() {
     if (expense?.isPlanned && requests.length === 0) loadRequests('APPROVED');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expense?.isPlanned]);
+
+  // Trip Expense Splitting (Group Trip Wallet): only relevant for `trip`
+  // accounts — a complete no-op (no member fetch, no extra props) for every
+  // other account type.
+  const isTripAccount = currentAccount?.type === 'trip';
+  const tripMembers = isTripAccount && currentAccount
+    ? (accountMembersMap[currentAccount.id] || []).map((m) => ({
+        userId: m.userId,
+        name: m.user?.name || m.user?.email || m.userId,
+      }))
+    : [];
+
+  useEffect(() => {
+    if (isTripAccount && currentAccount) {
+      loadMembers(currentAccount.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAccount?.id, isTripAccount]);
 
   if (!expense) {
     return (
@@ -242,6 +263,8 @@ export default function ExpenseDetailScreen() {
           expense={expense}
           isEditing={isEditing}
           onSaved={() => setIsEditing(false)}
+          isTripAccount={isTripAccount}
+          tripMembers={tripMembers}
         />
 
         {/* Receipt Items (OCR expenses only) */}

@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices } from '@budget/shared-types';
+import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices, ExpenseShareDto, ShareType } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
 import i18n from '@/i18n';
 import {
@@ -25,6 +25,7 @@ import {
 } from '@/db/expenseItemRepository';
 import { insertExpenseTag, getTagsForExpense } from '@/db/tagRepository';
 import { addExpenseToProject, removeExpenseFromProject, getProjectIdForExpense } from '@/db/projectRepository';
+import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt } from '@/services/encryptionHelper';
 import { getDistinctMerchants as computeDistinctMerchants, getMerchantCounts as computeMerchantCounts } from '@/utils/merchant';
@@ -65,8 +66,8 @@ interface ExpenseState {
   // Actions
   loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[] }) => Promise<Expense>;
-  updateExpense: (id: string, updates: Partial<Expense>) => void;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
+  updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
   bulkUpdateExpenses: (ids: string[], patch: { categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }) => Promise<void>;
@@ -121,7 +122,7 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: async (expenseData) => {
-      const { items, receiptImageBase64, tagIds, projectId, splits, ...coreData } = expenseData;
+      const { items, receiptImageBase64, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
@@ -145,6 +146,22 @@ export const useExpenseStore = create<ExpenseState>()(
 
       // Await local SQLite writes so data is persisted before navigation
       await insertExpense(newExpense);
+
+      // Trip expense shares (Group Trip Wallet): only present when the expense
+      // was created with a split — a no-op for every other expense create.
+      if (shares && shares.length > 0) {
+        await tripExpenseShareRepository.deleteAllSharesForExpense(id);
+        await tripExpenseShareRepository.bulkInsertShares(
+          shares.map((s) => ({
+            id: `${id}:${s.userId}`,
+            expenseId: id,
+            userId: s.userId,
+            shareType: splitType ?? 'equal',
+            shareAmount: s.value, // exact resolution happens server-side; local copy is a best-effort mirror for offline display
+            createdAt: now.toISOString(),
+          })),
+        );
+      }
 
       if (tagIds && tagIds.length > 0) {
         for (const tagId of tagIds) {
@@ -255,6 +272,9 @@ export const useExpenseStore = create<ExpenseState>()(
           isRecurring: newExpense.isRecurring || undefined,
           recurringId: newExpense.recurringId,
           recurringPeriod: newExpense.recurringPeriod,
+          splitType,
+          shares,
+          paidByUserId: newExpense.paidByUserId,
           encryptedPayload,
           encryptionKeyVersion,
         } as any);
@@ -298,6 +318,30 @@ export const useExpenseStore = create<ExpenseState>()(
         ).catch((e) =>
           console.error('Failed to update expense in SQLite:', e),
         );
+
+        // Trip expense shares (Group Trip Wallet): only present when the caller
+        // is editing a split — a no-op for every other expense update.
+        if (updates.shares && updates.shares.length > 0) {
+          const shares = updates.shares;
+          const shareType = updates.splitType ?? 'equal';
+          tripExpenseShareRepository
+            .deleteAllSharesForExpense(id)
+            .then(() =>
+              tripExpenseShareRepository.bulkInsertShares(
+                shares.map((s) => ({
+                  id: `${id}:${s.userId}`,
+                  expenseId: id,
+                  userId: s.userId,
+                  shareType,
+                  shareAmount: s.value,
+                  createdAt: new Date().toISOString(),
+                })),
+              ),
+            )
+            .catch((e) =>
+              console.warn('Failed to persist trip expense shares in SQLite:', e),
+            );
+        }
 
         api.updateExpense(id, updates).catch((e) =>
           console.warn('Expense update sync deferred (offline?):', e),
