@@ -26,7 +26,7 @@ export default function ProductsSettingsScreen() {
   const insets = useSafeAreaInsets();
   const canEdit = useAccountStore((s) => s.canEdit());
 
-  const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, mergeProducts } =
+  const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, mergeProducts, backfillWithAi } =
     usePriceHistoryStore();
 
   useEffect(() => { loadProducts(); }, []);
@@ -35,6 +35,31 @@ export default function ProductsSettingsScreen() {
   const [editing, setEditing] = useState<ProductListItem | null>(null);
   const [renameName, setRenameName] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const [isBackfilling, setIsBackfilling] = useState(false);
+
+  const handleBackfill = () => {
+    showAlert(
+      t('priceHistory.reanalyzeWithAi'),
+      t('priceHistory.reanalyzeConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('priceHistory.reanalyzeWithAi'),
+          onPress: async () => {
+            setIsBackfilling(true);
+            try {
+              const { updatedCount } = await backfillWithAi();
+              showAlert('', t('priceHistory.reanalyzeSuccess', { count: updatedCount }));
+            } catch {
+              // warn'd in store
+            }
+            setIsBackfilling(false);
+          },
+        },
+      ],
+    );
+  };
 
   // Multi-select + merge
   const [selecting, setSelecting] = useState(false);
@@ -125,12 +150,33 @@ export default function ProductsSettingsScreen() {
           contentContainerStyle={[styles.content, { paddingBottom: theme.spacing[10] + insets.bottom }]}
           showsVerticalScrollIndicator={false}
         >
-          {/* Hint */}
+          {/* Hint + AI re-analyze */}
           {!selecting && (
-            <View style={styles.hintCard}>
-              <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
-              <Text style={styles.hintText}>{t('priceHistory.productsHint')}</Text>
-            </View>
+            <>
+              <View style={styles.hintCard}>
+                <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                <Text style={styles.hintText}>{t('priceHistory.productsHint')}</Text>
+              </View>
+              {canEdit && products.length > 0 && (
+                <TouchableOpacity
+                  style={styles.aiButton}
+                  onPress={handleBackfill}
+                  disabled={isBackfilling}
+                  activeOpacity={0.75}
+                >
+                  {isBackfilling ? (
+                    <ActivityIndicator size="small" color={theme.colors.textInverse} />
+                  ) : (
+                    <Ionicons name="sparkles-outline" size={16} color={theme.colors.textInverse} />
+                  )}
+                  <Text style={styles.aiButtonText}>
+                    {isBackfilling
+                      ? t('priceHistory.reanalyzing')
+                      : t('priceHistory.reanalyzeWithAi')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </>
           )}
 
           {/* Section header */}
@@ -348,6 +394,17 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[3],
   },
   hintText: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, flex: 1, lineHeight: 18 },
+  aiButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+  },
+  aiButtonText: { fontSize: 14, fontWeight: '600' as const, color: theme.colors.textInverse },
 
   sectionHeader: {
     flexDirection: 'row' as const,

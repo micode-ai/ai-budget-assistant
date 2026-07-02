@@ -12,6 +12,7 @@ interface PriceHistoryState {
 
   loadPriceHistory: (period?: '3m' | '6m' | '12m') => Promise<void>;
   loadProducts: () => Promise<void>;
+  backfillWithAi: () => Promise<{ updatedCount: number }>;
   upsertAlias: (rawName: string, canonicalName: string) => Promise<void>;
   deleteAlias: (rawName: string) => Promise<void>;
   mergeProducts: (rawNames: string[], canonicalName: string) => Promise<void>;
@@ -47,6 +48,13 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
       console.warn('[priceHistoryStore] loadProducts failed', e);
       set({ isLoadingProducts: false });
     }
+  },
+
+  backfillWithAi: async () => {
+    const result = await api.backfillProductNames();
+    await get().loadPriceHistory();
+    await get().loadProducts();
+    return result;
   },
 
   upsertAlias: async (rawName, canonicalName) => {

@@ -35,4 +35,10 @@ export const priceHistoryApi = {
       body: JSON.stringify(body),
     });
   },
+
+  backfillProductNames() {
+    return httpClient.request<{ updatedCount: number }>('/price-history/products/backfill-ai', {
+      method: 'POST',
+    });
+  },
 };
