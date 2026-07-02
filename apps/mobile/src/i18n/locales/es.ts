@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Eliminar transacción',
     deleteConfirmMessage: '¿Estás seguro? Esta acción no se puede deshacer.',
     confirm: 'Confirmar',
+    search: 'Buscar',
+    noResults: 'Sin resultados',
   },
   dates: {
     today: 'Hoy',

@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Видалити транзакцію',
     deleteConfirmMessage: 'Ви впевнені? Цю дію не можна скасувати.',
     confirm: 'Підтвердити',
+    search: 'Пошук',
+    noResults: 'Немає результатів',
   },
   dates: {
     today: 'Сьогодні',

@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Supprimer la transaction',
     deleteConfirmMessage: 'Êtes-vous sûr ? Cette action est irréversible.',
     confirm: 'Confirmer',
+    search: 'Rechercher',
+    noResults: 'Aucun résultat',
   },
   dates: {
     today: "Aujourd'hui",

@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Transaktion löschen',
     deleteConfirmMessage: 'Sind Sie sicher? Diese Aktion kann nicht rückgängig gemacht werden.',
     confirm: 'Bestätigen',
+    search: 'Suchen',
+    noResults: 'Keine Ergebnisse',
   },
   dates: {
     today: 'Heute',
