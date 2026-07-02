@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import type {
@@ -19,12 +20,20 @@ interface RawItemRow {
   currency: string;
 }
 
+const AI_BACKFILL_BATCH = 50;
+const AI_BACKFILL_MAX_UNIQUE = 500;
+
 @Injectable()
 export class PriceHistoryService {
+  private readonly logger = new Logger(PriceHistoryService.name);
+  private readonly openai: OpenAI;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
-  ) {}
+  ) {
+    this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
 
   async getPriceHistory(accountId: string, period: Period = '6m'): Promise<PriceHistoryResponse> {
     const cacheKey = `ph:${accountId}:${period}`;
@@ -95,6 +104,69 @@ export class PriceHistoryService {
         }),
       ),
     );
+  }
+
+  async backfillWithAi(accountId: string): Promise<{ updatedCount: number }> {
+    if (!process.env.OPENAI_API_KEY) {
+      this.logger.warn('OPENAI_API_KEY not set — skipping AI backfill');
+      return { updatedCount: 0 };
+    }
+
+    // Fetch items with no or single-word canonical names (not yet aliased by user)
+    const items: Array<{ id: string; description: string | null; canonicalName: string | null }> =
+      await (this.prisma as any).expenseItem.findMany({
+        where: {
+          expense: { accountId, isDeleted: false },
+          description: { not: null },
+          isDeleted: false,
+          OR: [
+            { canonicalName: null },
+            // Single-word names have no space — multi-word LLM names are preserved
+            { canonicalName: { not: { contains: ' ' } } },
+          ],
+        },
+        select: { id: true, description: true, canonicalName: true },
+      });
+
+    if (items.length === 0) return { updatedCount: 0 };
+
+    // Deduplicate descriptions to minimise API calls
+    const descToIds = new Map<string, string[]>();
+    for (const item of items) {
+      const desc = item.description?.trim();
+      if (!desc) continue;
+      const existing = descToIds.get(desc) ?? [];
+      existing.push(item.id);
+      descToIds.set(desc, existing);
+    }
+
+    const uniqueDescs = [...descToIds.keys()].slice(0, AI_BACKFILL_MAX_UNIQUE);
+    let updatedCount = 0;
+
+    for (let i = 0; i < uniqueDescs.length; i += AI_BACKFILL_BATCH) {
+      const batch = uniqueDescs.slice(i, i + AI_BACKFILL_BATCH);
+      let names: string[];
+      try {
+        names = await this.extractCanonicalNames(batch);
+      } catch (err) {
+        this.logger.warn('AI backfill batch failed', err);
+        continue;
+      }
+
+      for (let j = 0; j < batch.length; j++) {
+        const name = names[j]?.trim();
+        if (!name) continue;
+        const ids = descToIds.get(batch[j]) ?? [];
+        if (ids.length === 0) continue;
+        const result = await (this.prisma as any).expenseItem.updateMany({
+          where: { id: { in: ids } },
+          data: { canonicalName: name },
+        });
+        updatedCount += result.count;
+      }
+    }
+
+    return { updatedCount };
   }
 
   // ── private helpers ──────────────────────────────────────────────────────
@@ -239,5 +311,36 @@ export class PriceHistoryService {
         : null;
 
     return { inflationIndex, productCount, products };
+  }
+
+  private async extractCanonicalNames(descriptions: string[]): Promise<string[]> {
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      temperature: 0,
+      max_tokens: descriptions.length * 20,
+      messages: [
+        {
+          role: 'system',
+          content: `You extract clean canonical product names from grocery receipt OCR text.
+Rules:
+- Return ONLY brand + product variant (e.g. "Activia Truskawkowy", "Mleko Łaciate 3.2%", "Heinz Ketchup")
+- Remove: weight (125G, 500ML, 6SZT), unit prices (3,49), store codes, percentages that are nutrition specs unless they identify the product variant (e.g. 3.2% fat milk → keep 3.2%)
+- Keep: brand name, product type, key variant (flavor, key spec)
+- Use Title Case
+- One name per line, same order as input — no numbering, no extra lines
+- Unknown/unclear → best guess product type`,
+        },
+        {
+          role: 'user',
+          content: descriptions.join('\n'),
+        },
+      ],
+    });
+
+    const content = response.choices[0]?.message?.content ?? '';
+    const lines = content.split('\n').map((l) => l.trim()).filter(Boolean);
+    // Ensure count matches input (pad with empty strings if response is short)
+    while (lines.length < descriptions.length) lines.push('');
+    return lines.slice(0, descriptions.length);
   }
 }

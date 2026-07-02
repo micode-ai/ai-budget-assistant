@@ -59,4 +59,13 @@ export class PriceHistoryController {
   mergeProducts(@Req() req: AuthenticatedRequest, @Body() dto: MergeProductsDto) {
     return this.priceHistoryService.mergeProducts(req.accountId, dto.rawNames, dto.canonicalName);
   }
+
+  // POST /price-history/products/backfill-ai
+  // Re-generates canonical names for single-word / missing entries using GPT-4o-mini.
+  // Editors and owners only (viewers can't mutate).
+  @Post('products/backfill-ai')
+  @UseGuards(new ViewerBlockGuard())
+  backfillWithAi(@Req() req: AuthenticatedRequest) {
+    return this.priceHistoryService.backfillWithAi(req.accountId);
+  }
 }
