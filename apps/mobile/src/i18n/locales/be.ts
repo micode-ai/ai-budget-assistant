@@ -27,6 +27,8 @@ export default {
     deleteConfirmTitle: 'Выдаліць транзакцыю',
     deleteConfirmMessage: 'Вы ўпэўнены? Гэта дзеянне нельга адмяніць.',
     confirm: 'Пацвердзіць',
+    search: 'Пошук',
+    noResults: 'Няма вынікаў',
   },
   dates: {
     today: 'Сёння',

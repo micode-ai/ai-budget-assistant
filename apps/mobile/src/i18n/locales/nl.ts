@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Transactie verwijderen',
     deleteConfirmMessage: 'Weet je het zeker? Deze actie kan niet ongedaan worden gemaakt.',
     confirm: 'Bevestigen',
+    search: 'Zoeken',
+    noResults: 'Geen resultaten',
   },
   dates: {
     today: 'Vandaag',

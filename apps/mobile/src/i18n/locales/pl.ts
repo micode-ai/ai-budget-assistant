@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Usuń transakcję',
     deleteConfirmMessage: 'Czy na pewno? Tej akcji nie można cofnąć.',
     confirm: 'Potwierdź',
+    search: 'Szukaj',
+    noResults: 'Brak wyników',
   },
   dates: {
     today: 'Dzisiaj',

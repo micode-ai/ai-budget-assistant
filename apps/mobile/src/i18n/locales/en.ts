@@ -29,6 +29,8 @@ export default {
     deleteConfirmTitle: 'Delete Transaction',
     deleteConfirmMessage: 'Are you sure? This action cannot be undone.',
     confirm: 'Confirm',
+    search: 'Search',
+    noResults: 'No results',
   },
   dates: {
     today: 'Today',

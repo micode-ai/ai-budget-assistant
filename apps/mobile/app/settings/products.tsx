@@ -61,6 +61,8 @@ export default function ProductsSettingsScreen() {
     );
   };
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Multi-select + merge
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -79,6 +81,7 @@ export default function ProductsSettingsScreen() {
   const exitSelect = useCallback(() => {
     setSelecting(false);
     setSelected(new Set());
+    setSearchQuery('');
   }, []);
 
   const openRename = (item: ProductListItem) => {
@@ -205,20 +208,54 @@ export default function ProductsSettingsScreen() {
             )}
           </View>
 
+          {/* Search */}
+          {products.length > 0 && !selecting && (
+            <View style={styles.searchRow}>
+              <Ionicons name="search-outline" size={16} color={theme.colors.textTertiary} style={styles.searchIcon} />
+              <TextInput
+                style={styles.searchInput}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder={t('common.search')}
+                placeholderTextColor={theme.colors.textTertiary}
+                returnKeyType="search"
+                clearButtonMode="while-editing"
+                autoCorrect={false}
+              />
+              {searchQuery.length > 0 && (
+                <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={8}>
+                  <Ionicons name="close-circle" size={16} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+
           {/* List */}
+          {(() => {
+            const q = searchQuery.trim().toLowerCase();
+            const filteredProducts = q
+              ? products.filter(
+                  (p) =>
+                    p.canonicalName.toLowerCase().includes(q) ||
+                    p.rawName.toLowerCase().includes(q),
+                )
+              : products;
+            return (
           <View style={styles.card}>
             {isLoadingProducts ? (
               <ActivityIndicator
                 color={theme.colors.primary}
                 style={{ paddingVertical: theme.spacing[6] }}
               />
-            ) : products.length === 0 ? (
+            ) : filteredProducts.length === 0 ? (
               <View style={styles.emptyWrap}>
                 <Ionicons name="bar-chart-outline" size={32} color={theme.colors.textTertiary} />
-                <Text style={styles.emptyText}>{t('priceHistory.noProducts')}</Text>
+                <Text style={styles.emptyText}>
+                  {q ? t('common.noResults') : t('priceHistory.noProducts')}
+                </Text>
               </View>
             ) : (
-              products.map((item, i) => {
+              filteredProducts.map((item, i) => {
                 const isSelected = selected.has(item.rawName);
                 const hasAlias = item.rawName !== item.canonicalName;
                 return (
@@ -283,12 +320,14 @@ export default function ProductsSettingsScreen() {
                         </>
                       )}
                     </View>
-                    {i < products.length - 1 && <View style={styles.divider} />}
+                    {i < filteredProducts.length - 1 && <View style={styles.divider} />}
                   </React.Fragment>
                 );
               })
             )}
           </View>
+            );
+          })()}
         </ScrollView>
 
         {/* Bottom merge bar */}
@@ -453,6 +492,24 @@ const createStyles = (theme: Theme) => ({
   },
   sectionTitle: { ...theme.textStyles.bodyMedium, color: theme.colors.textSecondary },
   headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+
+  searchRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[2],
+  },
+  searchIcon: { marginRight: 2 },
+  searchInput: {
+    flex: 1,
+    ...theme.textStyles.body,
+    color: theme.colors.text,
+    paddingVertical: 2,
+  },
 
   card: {
     backgroundColor: theme.colors.surface,
