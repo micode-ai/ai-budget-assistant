@@ -81,7 +81,6 @@ export default function ProductsSettingsScreen() {
   const exitSelect = useCallback(() => {
     setSelecting(false);
     setSelected(new Set());
-    setSearchQuery('');
   }, []);
 
   const openRename = (item: ProductListItem) => {
@@ -209,7 +208,7 @@ export default function ProductsSettingsScreen() {
           </View>
 
           {/* Search */}
-          {products.length > 0 && !selecting && (
+          {products.length > 0 && (
             <View style={styles.searchRow}>
               <Ionicons name="search-outline" size={16} color={theme.colors.textTertiary} style={styles.searchIcon} />
               <TextInput
