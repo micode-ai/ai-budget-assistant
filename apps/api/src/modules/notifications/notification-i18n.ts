@@ -16,6 +16,12 @@ interface BudgetThresholdParams {
   total: string;
 }
 
+interface BudgetCategoryThresholdParams {
+  budgetName: string;
+  categoryName: string;
+  threshold: number;
+}
+
 interface SpendingAnomalyParams {
   categoryName: string;
   percent: number;
@@ -116,6 +122,10 @@ const translations: Record<string, {
   budgetThresholdBody: (p: BudgetThresholdParams) => string;
   budgetExceededTitle: (p: BudgetThresholdParams) => string;
   budgetExceededBody: (p: BudgetThresholdParams) => string;
+  budgetCategoryThresholdTitle: (p: BudgetCategoryThresholdParams) => string;
+  budgetCategoryThresholdBody: (p: BudgetCategoryThresholdParams) => string;
+  budgetCategoryExceededTitle: (p: BudgetCategoryThresholdParams) => string;
+  budgetCategoryExceededBody: (p: BudgetCategoryThresholdParams) => string;
   anomalyTitle: (p: SpendingAnomalyParams) => string;
   anomalyBody: (p: SpendingAnomalyParams) => string;
   subscriptionActivatedTitle: () => string;
@@ -173,6 +183,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Budget "${budgetName}" exceeded!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `You've spent ${currencyCode} ${spent} of your ${currencyCode} ${total} budget.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% used`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Budget «${budgetName}» — ${categoryName} reached ${threshold}% of its limit`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} over limit`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Budget «${budgetName}» — ${categoryName} exceeded its allocation`,
     anomalyTitle: ({ categoryName }) => `Unusual spending on ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `You've spent ${percent}% more than usual on ${categoryName} this month.`,
@@ -244,6 +260,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Бюджет "${budgetName}" превышен!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Потрачено ${spent} ${currencyCode} из запланированных ${total} ${currencyCode}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: использовано ${threshold}%`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Бюджет «${budgetName}» — ${categoryName} достиг ${threshold}% лимита`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} превышена`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Бюджет «${budgetName}» — ${categoryName} превысила лимит категории`,
     anomalyTitle: ({ categoryName }) => `Необычные траты: ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `В этом месяце вы потратили на ${percent}% больше обычного на ${categoryName}.`,
@@ -315,6 +337,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Бюджет "${budgetName}" перевищено!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Витрачено ${spent} ${currencyCode} із запланованих ${total} ${currencyCode}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: використано ${threshold}%`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Бюджет «${budgetName}» — ${categoryName} досяг ${threshold}% ліміту`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} перевищена`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Бюджет «${budgetName}» — ${categoryName} перевищила ліміт категорії`,
     anomalyTitle: ({ categoryName }) => `Незвичайні витрати: ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `Цього місяця ви витратили на ${percent}% більше за звичайне на ${categoryName}.`,
@@ -386,6 +414,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Budżet "${budgetName}" przekroczony!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Wydano ${spent} ${currencyCode} z planowanych ${total} ${currencyCode}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% wykorzystane`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Budżet «${budgetName}» — ${categoryName} osiągnął ${threshold}% limitu`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} przekroczona`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Budżet «${budgetName}» — ${categoryName} przekroczyła limit kategorii`,
     anomalyTitle: ({ categoryName }) => `Nietypowe wydatki: ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `W tym miesiącu wydałeś ${percent}% więcej niż zwykle na ${categoryName}.`,
@@ -457,6 +491,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `¡Presupuesto "${budgetName}" superado!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Has gastado ${spent} ${currencyCode} de tu presupuesto de ${total} ${currencyCode}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% usado`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Presupuesto «${budgetName}» — ${categoryName} alcanzó el ${threshold}% de su límite`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} superada`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Presupuesto «${budgetName}» — ${categoryName} superó el límite de su categoría`,
     anomalyTitle: ({ categoryName }) => `Gasto inusual en ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `Has gastado ${percent}% más de lo habitual en ${categoryName} este mes.`,
@@ -528,6 +568,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Budget "${budgetName}" dépassé !`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Vous avez dépensé ${spent} ${currencyCode} sur votre budget de ${total} ${currencyCode}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName} : ${threshold}% utilisé`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Budget «${budgetName}» — ${categoryName} a atteint ${threshold}% de sa limite`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} dépassée`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Budget «${budgetName}» — ${categoryName} a dépassé la limite de sa catégorie`,
     anomalyTitle: ({ categoryName }) => `Dépense inhabituellement élevée : ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `Vous avez dépensé ${percent}% de plus que d'habitude pour ${categoryName} ce mois-ci.`,
@@ -599,6 +645,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Budget "${budgetName}" überschritten!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Du hast ${spent} ${currencyCode} von deinem Budget von ${total} ${currencyCode} ausgegeben.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% genutzt`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Budget «${budgetName}» — ${categoryName} hat ${threshold}% des Limits erreicht`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} überschritten`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Budget «${budgetName}» — ${categoryName} hat das Kategorienlimit überschritten`,
     anomalyTitle: ({ categoryName }) => `Ungewöhnliche Ausgaben: ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `Du hast diesen Monat ${percent}% mehr als üblich für ${categoryName} ausgegeben.`,
@@ -670,6 +722,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Бюджэт "${budgetName}" перавышаны!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Патрачана ${spent} ${currencyCode} з запланаваных ${total} ${currencyCode}.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: выкарыстана ${threshold}%`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Бюджэт «${budgetName}» — ${categoryName} дасягнуў ${threshold}% ліміту`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} перавышана`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Бюджэт «${budgetName}» — ${categoryName} перавысіла ліміт катэгорыі`,
     anomalyTitle: ({ categoryName }) => `Незвычайныя выдаткі: ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `У гэтым месяцы вы патрацілі на ${percent}% больш за звычайнае на ${categoryName}.`,
@@ -741,6 +799,12 @@ const translations: Record<string, {
     budgetExceededTitle: ({ budgetName }) => `Budget "${budgetName}" overschreden!`,
     budgetExceededBody: ({ currencyCode, spent, total }) =>
       `Je hebt ${currencyCode} ${spent} van je budget van ${currencyCode} ${total} uitgegeven.`,
+    budgetCategoryThresholdTitle: ({ categoryName, threshold }) => `${categoryName}: ${threshold}% gebruikt`,
+    budgetCategoryThresholdBody: ({ budgetName, categoryName, threshold }) =>
+      `Budget «${budgetName}» — ${categoryName} heeft ${threshold}% van zijn limiet bereikt`,
+    budgetCategoryExceededTitle: ({ categoryName }) => `${categoryName} overschreden`,
+    budgetCategoryExceededBody: ({ budgetName, categoryName }) =>
+      `Budget «${budgetName}» — ${categoryName} heeft de categorielimiet overschreden`,
     anomalyTitle: ({ categoryName }) => `Ongewone uitgaven: ${categoryName}`,
     anomalyBody: ({ categoryName, percent }) =>
       `Je hebt deze maand ${percent}% meer dan gebruikelijk uitgegeven aan ${categoryName}.`,
@@ -988,4 +1052,20 @@ export function tripSettleUpTitle(lang: Lang, params: TripSettleUpParams): strin
 
 export function tripSettleUpBody(lang: Lang, params: TripSettleUpParams): string {
   return t(lang).tripSettleUpBody(params);
+}
+
+export function budgetCategoryThresholdTitle(lang: Lang, params: BudgetCategoryThresholdParams): string {
+  return t(lang).budgetCategoryThresholdTitle(params);
+}
+
+export function budgetCategoryThresholdBody(lang: Lang, params: BudgetCategoryThresholdParams): string {
+  return t(lang).budgetCategoryThresholdBody(params);
+}
+
+export function budgetCategoryExceededTitle(lang: Lang, params: BudgetCategoryThresholdParams): string {
+  return t(lang).budgetCategoryExceededTitle(params);
+}
+
+export function budgetCategoryExceededBody(lang: Lang, params: BudgetCategoryThresholdParams): string {
+  return t(lang).budgetCategoryExceededBody(params);
 }
