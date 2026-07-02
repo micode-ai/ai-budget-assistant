@@ -7,6 +7,7 @@ import { BudgetAlertService } from '../budgets/budget-alert.service';
 import { SharedActivityService } from '../notifications/shared-activity.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { TripArchivedGuard } from '../accounts/guards/trip-archived.guard';
 
 // Authenticate + attach account context so the class guards and the inline
 // ViewerBlockGuard let the request through to the handler.
@@ -47,6 +48,11 @@ describe('ExpensesController routing', () => {
       .useValue(passThroughGuard)
       .overrideGuard(AccountContextGuard)
       .useValue(passThroughGuard)
+      // TripArchivedGuard is DI-resolved (needs PrismaService) — this standalone
+      // testing module doesn't wire up the database, so override it with a
+      // trivial pass-through, same as the class-level guards above.
+      .overrideGuard(TripArchivedGuard)
+      .useValue({ canActivate: () => true })
       .compile();
 
     app = moduleRef.createNestApplication();

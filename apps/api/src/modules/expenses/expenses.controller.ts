@@ -18,6 +18,7 @@ import { SharedActivityService } from '../notifications/shared-activity.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
+import { TripArchivedGuard } from '../accounts/guards/trip-archived.guard';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto, MergeExpensesDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
@@ -33,7 +34,7 @@ export class ExpensesController {
   ) {}
 
   @Post()
-  @UseGuards(new ViewerBlockGuard())
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
   async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateExpenseDto) {
     const { expense, isNew } = await this.expensesService.create(req.accountId, req.user.id, dto);
 
@@ -66,7 +67,7 @@ export class ExpensesController {
   // `/expenses/bulk` and `/expenses/merge` as id="bulk"/"merge" and silently break them.
   // Covered by expenses.controller.spec.ts.
   @Patch('bulk')
-  @UseGuards(new ViewerBlockGuard())
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
   async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateExpensesDto) {
     return this.expensesService.bulkUpdate(req.accountId, dto);
   }
@@ -78,7 +79,7 @@ export class ExpensesController {
   }
 
   @Patch(':id')
-  @UseGuards(new ViewerBlockGuard())
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
   async update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateExpenseDto) {
     const expense = await this.expensesService.update(req.accountId, id, dto);
 
@@ -92,7 +93,7 @@ export class ExpensesController {
   }
 
   @Delete(':id')
-  @UseGuards(new ViewerBlockGuard())
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.remove(req.accountId, id);
   }

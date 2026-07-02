@@ -17,15 +17,21 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { TagPicker } from '@/components/TagPicker';
 import { ProjectPicker } from '@/components/ProjectPicker';
 import { SplitEditor } from '@/components/SplitEditor';
+import {
+  TripExpenseSplitPicker,
+  validateTripSplit,
+  type TripExpenseShareValue,
+} from '@/components/expenses/TripExpenseSplitPicker';
 import { insertSplit } from '@/db/splitRepository';
 import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
-import type { Currency, ExpenseCategorySplit, RecurringPeriod } from '@budget/shared-types';
+import type { Currency, ExpenseCategorySplit, RecurringPeriod, ShareType } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
@@ -61,9 +67,25 @@ export default function NewExpenseScreen() {
 
   const { addExpense } = useExpenseStore();
   const { user } = useAuthStore();
+  const currentAccount = useAccountStore((s) => s.currentAccount());
+  const accountMembersMap = useAccountStore((s) => s.members);
+  const loadMembers = useAccountStore((s) => s.loadMembers);
   const { getExpenseCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const { loadTags } = useTagStore();
   const { loadProjects } = useProjectStore();
+
+  // Trip Expense Splitting (Group Trip Wallet): only relevant for `trip`
+  // accounts — a complete no-op (no extra state used, no extra fields sent)
+  // for every other account type.
+  const isTripAccount = currentAccount?.type === 'trip';
+  const tripMembers = isTripAccount && currentAccount
+    ? (accountMembersMap[currentAccount.id] || []).map((m) => ({
+        userId: m.userId,
+        name: m.user?.name || m.user?.email || m.userId,
+      }))
+    : [];
+  const [splitType, setSplitType] = useState<ShareType>('equal');
+  const [shares, setShares] = useState<TripExpenseShareValue[]>([]);
 
   const [amount, setAmount] = useState(params.amount || '');
   const [description, setDescription] = useState(params.description || '');
@@ -98,6 +120,13 @@ export default function NewExpenseScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (isTripAccount && currentAccount) {
+      loadMembers(currentAccount.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAccount?.id, isTripAccount]);
+
   const handleSubmit = async () => {
     const numericAmount = parseAmount(amount);
     if (!numericAmount || numericAmount <= 0) {
@@ -107,6 +136,16 @@ export default function NewExpenseScreen() {
 
     if (!description.trim()) {
       showAlert(t('common.error'), t('validation.noDescription'));
+      return;
+    }
+
+    if (isTripAccount && !validateTripSplit(splitType, shares, numericAmount)) {
+      showAlert(
+        t('common.error'),
+        splitType === 'exact'
+          ? t('trip.splitExactMismatch', { amount: numericAmount.toFixed(2) })
+          : t('trip.splitPercentageMismatch'),
+      );
       return;
     }
 
@@ -141,6 +180,7 @@ export default function NewExpenseScreen() {
         debtDueDate: isDebt && debtDueDate ? debtDueDate : undefined,
         relatedDebtIncomeId: isDebtRepayment ? params.relatedDebtIncomeId : undefined,
         splits: splitsPayload,
+        ...(isTripAccount ? { splitType, shares } : {}),
       });
 
       // Save category splits locally
@@ -222,6 +262,24 @@ export default function NewExpenseScreen() {
                 </TouchableOpacity>
               ))}
             </View>
+          )}
+
+          {/* Trip Expense Split (Group Trip Wallet, trip accounts only).
+              Gated on tripMembers.length > 0 (not just isTripAccount) —
+              tripMembers comes from an async loadMembers() call, and
+              TripExpenseSplitPicker seeds its selection from `members` only
+              once at mount, so mounting it before members resolve would
+              silently leave `shares` empty forever. Mirrors the same gate
+              in ExpenseDetailsCard.tsx. */}
+          {isTripAccount && tripMembers.length > 0 && (
+            <TripExpenseSplitPicker
+              members={tripMembers}
+              totalAmount={parseAmount(amount) || 0}
+              onChange={(nextSplitType, nextShares) => {
+                setSplitType(nextSplitType);
+                setShares(nextShares);
+              }}
+            />
           )}
 
           {/* Description */}

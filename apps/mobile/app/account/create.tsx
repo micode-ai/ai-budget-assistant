@@ -23,6 +23,10 @@ const ACCOUNT_TYPES: { type: AccountType; icon: IconName }[] = [
   { type: 'business', icon: 'briefcase-outline' },
   { type: 'shared', icon: 'people-outline' },
   { type: 'investment', icon: 'trending-up-outline' },
+  // 'trip' is a distinct creation flow (name + end date + currency, no
+  // owner-only restriction concerns) handled by its own screen — selecting
+  // it below navigates to /trip/new instead of driving this generic form.
+  { type: 'trip', icon: 'airplane-outline' },
 ];
 
 const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
@@ -75,7 +79,9 @@ export default function CreateAccountScreen() {
                 styles.typeCard,
                 type === item.type && styles.typeCardActive,
               ]}
-              onPress={() => setType(item.type)}
+              onPress={() =>
+                item.type === 'trip' ? router.push('/trip/new') : setType(item.type)
+              }
             >
               <Ionicons
                 name={item.icon}

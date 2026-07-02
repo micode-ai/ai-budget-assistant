@@ -19,6 +19,7 @@ import {
   CreateInvitationDto,
   AcceptInvitationDto,
   UpdateMemberRoleDto,
+  AccountMemberPaymentInfoDto,
 } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
@@ -109,6 +110,15 @@ export class AccountsController {
     return this.accountsService.getMembers(id, req.user.id);
   }
 
+  @Patch(':id/members/me/payment-info')
+  async updatePaymentInfo(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: AccountMemberPaymentInfoDto,
+  ) {
+    return this.accountsService.updatePaymentInfo(id, req.user.id, dto);
+  }
+
   @Patch(':id/members/:memberId')
   async updateMemberRole(
     @Req() req: AuthenticatedRequest,
@@ -131,5 +141,16 @@ export class AccountsController {
   @Post(':id/leave')
   async leaveAccount(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.accountsService.leaveAccount(id, req.user.id);
+  }
+
+  // ---- Trip lifecycle ----
+
+  @Patch(':id/archive-trip')
+  async archiveTrip(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: { force?: boolean },
+  ) {
+    return this.accountsService.archiveTrip(id, req.user.id, body.force);
   }
 }

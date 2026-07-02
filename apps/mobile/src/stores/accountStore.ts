@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
+import { tripApi } from '../services/trip.api';
 import type {
   Account,
   AccountMember,
   AccountInvitation,
   AccountRole,
+  Currency,
+  SettleMethod,
 } from '@budget/shared-types';
 import type { CreateAccountDto, UpdateAccountDto, CreateInvitationDto } from '@budget/shared-types';
 import {
@@ -38,6 +41,20 @@ interface AccountState {
   createAccount: (dto: CreateAccountDto) => Promise<Account>;
   updateAccount: (id: string, dto: UpdateAccountDto) => Promise<void>;
   deleteAccount: (id: string) => Promise<void>;
+
+  // Trip accounts
+  createTripAccount: (
+    name: string,
+    tripEndDate: string,
+    currencyCode: Currency,
+    tripStartDate?: string,
+  ) => Promise<Account>;
+  archiveTrip: (accountId: string, force?: boolean) => Promise<void>;
+  updatePaymentInfo: (
+    accountId: string,
+    paymentMethod: SettleMethod,
+    paymentHandle: string,
+  ) => Promise<void>;
 
   // Members & Invitations
   loadMembers: (accountId: string) => Promise<AccountMember[]>;
@@ -82,6 +99,24 @@ function toAccountWithRole(
     createdAt: account.createdAt ? new Date(account.createdAt) : new Date(),
     updatedAt: account.updatedAt ? new Date(account.updatedAt) : new Date(),
   };
+}
+
+// Pure helper: days remaining until an active trip's end date. Returns null
+// for non-trip accounts, non-active trips, or accounts missing tripEndDate.
+export function getTripDaysLeft(account: {
+  type: string;
+  tripStatus?: string;
+  tripEndDate?: string;
+}): number | null {
+  if (account.type !== 'trip' || account.tripStatus !== 'active' || !account.tripEndDate) {
+    return null;
+  }
+  const end = new Date(account.tripEndDate);
+  end.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffMs = end.getTime() - today.getTime();
+  return Math.max(0, Math.round(diffMs / (1000 * 60 * 60 * 24)));
 }
 
 export const useAccountStore = create<AccountState>()((set, get) => ({
@@ -269,6 +304,73 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     }
   },
 
+  // Trip accounts
+  //
+  // Note: archiveTrip/updatePaymentInfo patch in-memory state directly from
+  // the server response rather than writing through to local SQLite. The
+  // `accounts` table (accountRepository.ts) DOES persist tripStatus/
+  // tripStartDate/tripEndDate (trip_status/trip_start_date/trip_end_date
+  // columns), so a full reload (loadAccountsFromServer) correctly picks up
+  // the authoritative row including trip fields — it re-fetches from the
+  // server and round-trips through insertAccounts/loadAllAccounts, which now
+  // read/write those columns instead of silently dropping them.
+
+  createTripAccount: async (name, tripEndDate, currencyCode, tripStartDate) => {
+    set({ isLoading: true, error: null });
+    try {
+      const account = await api.createAccount({
+        name,
+        type: 'trip',
+        currencyCode,
+        tripEndDate,
+        tripStartDate,
+      });
+      set((state) => ({
+        accounts: [...state.accounts, { ...account, myRole: 'owner' as AccountRole }],
+        isLoading: false,
+      }));
+      return account;
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to create trip',
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  archiveTrip: async (accountId, force) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = await tripApi.archiveTrip(accountId, force);
+      set((state) => ({
+        accounts: state.accounts.map((a) => (a.id === accountId ? { ...a, ...updated } : a)),
+        isLoading: false,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to archive trip',
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  updatePaymentInfo: async (accountId, paymentMethod, paymentHandle) => {
+    const updated = await tripApi.updatePaymentInfo(accountId, { paymentMethod, paymentHandle });
+    const userId = await getCurrentUserId();
+    set((state) => ({
+      members: {
+        ...state.members,
+        [accountId]: (state.members[accountId] || []).map((m) =>
+          m.userId === userId
+            ? { ...m, paymentMethod: updated.paymentMethod, paymentHandle: updated.paymentHandle }
+            : m,
+        ),
+      },
+    }));
+  },
+
   // Members & Invitations
 
   loadMembers: async (accountId) => {
@@ -358,6 +460,7 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
   canEdit: () => {
     const account = get().currentAccount();
     if (!account) return false;
+    if (account.tripStatus === 'archived') return false;
     return account.myRole === 'owner' || account.myRole === 'editor';
   },
 

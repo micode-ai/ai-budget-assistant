@@ -22,11 +22,17 @@ import { TagChip } from '@/components/TagChip';
 import { MerchantInput } from '@/components/MerchantInput';
 import { ProjectPicker } from '@/components/ProjectPicker';
 import { SplitEditor } from '@/components/SplitEditor';
+import {
+  TripExpenseSplitPicker,
+  validateTripSplit,
+  type TripExpenseShareValue,
+} from '@/components/expenses/TripExpenseSplitPicker';
+import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { formatDate, formatCurrency, generateUUID } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import type { Expense, ExpenseCategorySplit, Tag } from '@budget/shared-types';
+import type { Expense, ExpenseCategorySplit, ShareType, Tag } from '@budget/shared-types';
 
 export interface ExpenseDetailsCardHandle {
   triggerSave: () => Promise<void>;
@@ -36,10 +42,18 @@ interface ExpenseDetailsCardProps {
   expense: Expense;
   isEditing: boolean;
   onSaved: () => void;
+  /** Group Trip Wallet (Task 28): true only for `trip`-type accounts. Every
+   * prop below is unused/omitted for all other account types, keeping this
+   * card a complete no-op there. */
+  isTripAccount?: boolean;
+  tripMembers?: { userId: string; name: string }[];
 }
 
 export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDetailsCardProps>(
-  function ExpenseDetailsCard({ expense, isEditing, onSaved }, ref) {
+  function ExpenseDetailsCard(
+    { expense, isEditing, onSaved, isTripAccount = false, tripMembers = [] },
+    ref,
+  ) {
     const { t } = useTranslation();
     const theme = useTheme();
     const styles = useStyles(createStyles);
@@ -61,10 +75,40 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
     const [showSplitEditor, setShowSplitEditor] = useState(false);
     const [expenseTags, setExpenseTags] = useState<Tag[]>([]);
 
+    // Trip Expense Splitting (Group Trip Wallet, ABA task 28): local state
+    // mirrors the current split; seeded from the expense's existing shares
+    // (if any) so re-entering edit mode on a trip expense shows the
+    // previously-selected split, not a fresh 'equal' default.
+    const [tripSplitType, setTripSplitType] = useState<ShareType>('equal');
+    const [tripShares, setTripShares] = useState<TripExpenseShareValue[]>([]);
+    // Mirrors the last-known-persisted split (loaded from the DB, or updated
+    // right after a successful save). Cancelling out of edit mode reverts
+    // tripSplitType/tripShares to these values instead of leaving whatever
+    // unsaved edit the user made in the picker — otherwise a discarded split
+    // would silently resurface (and get saved) the next time the user edits.
+    const [persistedTripSplitType, setPersistedTripSplitType] = useState<ShareType>('equal');
+    const [persistedTripShares, setPersistedTripShares] = useState<TripExpenseShareValue[]>([]);
+
     useEffect(() => {
       getTagsForExpense(expense.id).then(setExpenseTags).catch(() => {});
       getSplitsForExpense(expense.id).then(setSplits).catch(() => {});
     }, [expense.id]);
+
+    useEffect(() => {
+      if (!isTripAccount) return;
+      tripExpenseShareRepository
+        .getSharesForExpense(expense.id)
+        .then((existing) => {
+          if (existing.length === 0) return;
+          const loadedSplitType = existing[0].shareType as ShareType;
+          const loadedShares = existing.map((s) => ({ userId: s.userId, value: s.shareAmount }));
+          setTripSplitType(loadedSplitType);
+          setTripShares(loadedShares);
+          setPersistedTripSplitType(loadedSplitType);
+          setPersistedTripShares(loadedShares);
+        })
+        .catch(() => {});
+    }, [expense.id, isTripAccount]);
 
     // Reset edit state whenever editing is turned off
     useEffect(() => {
@@ -76,6 +120,8 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         setEditMerchant(expense?.merchant || '');
         setEditDate(expense?.date ? new Date(expense.date) : new Date());
         setShowDatePicker(false);
+        setTripSplitType(persistedTripSplitType);
+        setTripShares(persistedTripShares);
       }
     }, [isEditing]);
 
@@ -118,6 +164,16 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
           return;
         }
 
+        if (isTripAccount && !validateTripSplit(tripSplitType, tripShares, numericAmount)) {
+          showAlert(
+            t('common.error'),
+            tripSplitType === 'exact'
+              ? t('trip.splitExactMismatch', { amount: numericAmount.toFixed(2) })
+              : t('trip.splitPercentageMismatch'),
+          );
+          return;
+        }
+
         const oldAmount = expense.amount;
 
         updateExpense(expense.id, {
@@ -126,7 +182,16 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
           categoryId: editCategory || undefined,
           merchant: editMerchant.trim() === '' ? '' : editMerchant.trim(),
           date: editDate,
+          ...(isTripAccount ? { splitType: tripSplitType, shares: tripShares } : {}),
         });
+
+        if (isTripAccount) {
+          // Advance the persisted mirror to what was just saved, so a future
+          // Cancel (after further unsaved edits) reverts to THIS split, not
+          // the one that was persisted before this save.
+          setPersistedTripSplitType(tripSplitType);
+          setPersistedTripShares(tripShares);
+        }
 
         await setExpenseProject(expense.id, editProjectId);
 
@@ -208,6 +273,22 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
               onChangeText={setEditAmount}
               keyboardType="decimal-pad"
               autoFocus
+            />
+          </View>
+        )}
+
+        {/* Trip Expense Split (Group Trip Wallet, trip accounts only) */}
+        {isEditing && isTripAccount && tripMembers.length > 0 && (
+          <View style={styles.detailRow}>
+            <TripExpenseSplitPicker
+              members={tripMembers}
+              totalAmount={parseAmount(editAmount) || 0}
+              initialSplitType={tripShares.length > 0 ? tripSplitType : undefined}
+              initialShares={tripShares.length > 0 ? tripShares : undefined}
+              onChange={(nextSplitType, nextShares) => {
+                setTripSplitType(nextSplitType);
+                setTripShares(nextShares);
+              }}
             />
           </View>
         )}

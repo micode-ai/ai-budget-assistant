@@ -47,6 +47,7 @@ import { MerchantRulesModule } from './modules/merchant-rules/merchant-rules.mod
 import { CacheModule } from './common/cache/cache.module';
 import { PurchaseRequestsModule } from './modules/purchase-requests/purchase-requests.module';
 import { FamilyFeedModule } from './modules/family-feed/family-feed.module';
+import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.module';
 
 @Module({
   imports: [
@@ -118,6 +119,7 @@ import { FamilyFeedModule } from './modules/family-feed/family-feed.module';
     UserSubscriptionsModule,
     PurchaseRequestsModule,
     FamilyFeedModule,
+    TripSettleUpModule,
   ],
   providers: [
     {

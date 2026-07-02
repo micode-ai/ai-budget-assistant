@@ -1,4 +1,9 @@
-import type { Currency, ExpenseSource } from '../entities';
+import type { Currency, ExpenseSource, ShareType, SettleMethod, SettleUpTransaction } from '../entities';
+
+export interface ExpenseShareDto {
+  userId: string;
+  value: number; // interpretation depends on the parent request's splitType
+}
 
 export interface CreateExpenseDto {
   localId: string;
@@ -24,6 +29,9 @@ export interface CreateExpenseDto {
   debtDueDate?: string;
   relatedDebtIncomeId?: string;
   externalRef?: string;
+  splitType?: ShareType;
+  shares?: ExpenseShareDto[];
+  paidByUserId?: string;
 }
 
 export interface UpdateExpenseDto {
@@ -47,6 +55,9 @@ export interface UpdateExpenseDto {
   debtContactName?: string | null;
   debtDueDate?: string | null;
   relatedDebtIncomeId?: string | null;
+  splitType?: ShareType;
+  shares?: ExpenseShareDto[];
+  paidByUserId?: string | null;
 }
 
 export interface MergeExpensesFieldChoices {
@@ -90,4 +101,42 @@ export interface SplitSuggestionResponse {
     percentage: number;
     reasoning: string;
   }>;
+}
+
+export interface SettleUpBalance {
+  userId: string;
+  userName: string;
+  netAmount: number; // in Account.currencyCode; positive = is owed, negative = owes
+}
+
+export interface SuggestedTransfer {
+  fromUserId: string;
+  toUserId: string;
+  amount: number; // in Account.currencyCode
+}
+
+export interface SettleUpResponse {
+  balances: SettleUpBalance[];
+  suggestedTransfers: SuggestedTransfer[];
+  currencyCode: Currency;
+  fxApproximate: boolean;
+  pendingTransactions: SettleUpTransaction[];
+}
+
+export interface SettleUpPayDto {
+  fromUserId: string;
+  toUserId: string;
+  amount: number;
+}
+
+export interface SettleUpPayResponse {
+  transactionId: string;
+  paymentLink: string | null;
+  manualInstructions: boolean;
+  paymentHandle: string | null;
+}
+
+export interface AccountMemberPaymentInfoDto {
+  paymentMethod: SettleMethod;
+  paymentHandle: string;
 }

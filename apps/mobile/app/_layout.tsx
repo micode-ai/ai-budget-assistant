@@ -38,6 +38,9 @@ import {
   unsubscribeFromCapture,
 } from '@/services/notificationCapture/captureService';
 import { isEnabled as isCaptureEnabled } from '@/services/notificationCapture';
+import { useAccountStore } from '@/stores/accountStore';
+import { extractTripInviteCode } from '@/utils/deepLink';
+import { showAlert } from '@/utils/alert';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -150,6 +153,59 @@ function RootNavigator() {
     setPendingNotification(null);
   }, [isInitializing, isAuthenticated, fontsLoaded, pendingNotification]);
 
+  // A trip-invite universal link (https://ai-budget.pl/trip-invite/<code>) that opened or
+  // cold-started the app. Same two-phase pattern as the notification handling above: this
+  // effect only CAPTURES the code (mount + warm 'url' events); it must NOT be acted on until
+  // the navigation tree is mounted and the auth/account context is loaded — see the
+  // deferred-flush effect below, gated identically to the notification flush.
+  const [pendingInviteCode, setPendingInviteCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const sub = Linking.addEventListener('url', (event) => {
+      const code = extractTripInviteCode(event.url);
+      if (code) setPendingInviteCode(code);
+    });
+
+    Linking.getInitialURL()
+      .then((url) => {
+        if (url) {
+          const code = extractTripInviteCode(url);
+          if (code) setPendingInviteCode(code);
+        }
+      })
+      .catch(() => {});
+
+    return () => sub.remove();
+  }, []);
+
+  // Flush a pending trip-invite auto-accept once the app is fully ready — the exact same
+  // gate as the notification flush effect above (`isInitializing || !isAuthenticated ||
+  // !fontsLoaded`), per the documented "keep the two deep-link paths gated symmetrically"
+  // rule. Auto-accepting (instead of routing to the manual account/join.tsx code-entry
+  // screen) uses the same acceptInvitation() the manual flow calls; the newly joined
+  // account is identified by diffing the account list before/after since acceptInvitation
+  // only resolves void (it already reloads accounts internally).
+  useEffect(() => {
+    if (isInitializing || !isAuthenticated || !fontsLoaded || !pendingInviteCode) return;
+    const beforeIds = new Set(useAccountStore.getState().accounts.map((a) => a.id));
+    useAccountStore
+      .getState()
+      .acceptInvitation(pendingInviteCode)
+      .then(() => {
+        const newAccount = useAccountStore
+          .getState()
+          .accounts.find((a) => !beforeIds.has(a.id));
+        if (newAccount) {
+          useAccountStore.getState().switchAccount(newAccount.id);
+        }
+        router.replace('/(tabs)');
+      })
+      .catch((e) => {
+        showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+      });
+    setPendingInviteCode(null);
+  }, [isInitializing, isAuthenticated, fontsLoaded, pendingInviteCode, t]);
+
   useEffect(() => {
     if (!isInitializing && fontsLoaded) {
       SplashScreen.hideAsync();
@@ -170,6 +226,10 @@ function RootNavigator() {
     function navigateToDeepLink(url: string) {
       // Subscription deep links are handled by WebBrowser.openAuthSessionAsync — ignore here
       if (url.includes('subscription/success') || url.includes('subscription/cancel')) return;
+
+      // Trip-invite links are handled by the dedicated capture/flush effects above —
+      // ignore here to avoid a duplicate push to an unmatched "/trip-invite/<code>" route.
+      if (url.includes('trip-invite/')) return;
 
       // Prevent duplicate navigation for the same URL
       if (lastHandledUrl.current === url) return;
@@ -311,6 +371,28 @@ function RootNavigator() {
             presentation: 'modal',
             headerShown: true,
             title: t('nav.createAccount'),
+          }}
+        />
+        <Stack.Screen
+          name="trip/new"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('trip.createTrip'),
+          }}
+        />
+        <Stack.Screen
+          name="trip/[id]/settle-up"
+          options={{
+            headerShown: true,
+            title: t('trip.settleUp'),
+          }}
+        />
+        <Stack.Screen
+          name="trip/payment-settings"
+          options={{
+            headerShown: true,
+            title: t('trip.paymentSettingsTitle'),
           }}
         />
         <Stack.Screen

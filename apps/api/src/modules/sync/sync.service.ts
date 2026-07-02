@@ -102,6 +102,8 @@ export class SyncService {
         return this.processPortfolioHoldingChange(accountId, userId, change);
       case 'investment_transaction':
         return this.processInvestmentTransactionChange(accountId, userId, change);
+      case 'tripExpenseShare':
+        return this.processTripExpenseShareChange(accountId, change);
       default:
         return {
           entityId: change.entityId,
@@ -562,6 +564,53 @@ export class SyncService {
       return { entityId: change.entityId, status: 'success' };
     }
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
+  }
+
+  private async processTripExpenseShareChange(
+    accountId: string,
+    change: Extract<SyncChange, { entityType: 'tripExpenseShare' }>,
+  ): Promise<SyncResult> {
+    try {
+      // Verify the expense belongs to this account before touching any share of it
+      const expense = await this.prisma.expense.findFirst({
+        where: { id: change.payload.expenseId, accountId },
+      });
+      if (!expense) {
+        return { entityId: change.entityId, status: 'error', error: 'Expense not found' };
+      }
+
+      // Verify the target user is actually a member of this account
+      const member = await this.prisma.accountMember.findFirst({
+        where: { accountId, userId: change.payload.userId },
+      });
+      if (!member) {
+        return { entityId: change.entityId, status: 'error', error: 'User is not a member of this account' };
+      }
+
+      if (change.operation === 'delete') {
+        await this.prisma.tripExpenseShare.deleteMany({
+          where: { expenseId: change.payload.expenseId, userId: change.payload.userId },
+        });
+        return { entityId: change.entityId, status: 'success' };
+      }
+
+      const row = await this.prisma.tripExpenseShare.upsert({
+        where: { expenseId_userId: { expenseId: change.payload.expenseId, userId: change.payload.userId } },
+        create: {
+          expenseId: change.payload.expenseId,
+          userId: change.payload.userId,
+          shareType: change.payload.shareType,
+          shareAmount: change.payload.shareAmount,
+        },
+        update: {
+          shareType: change.payload.shareType,
+          shareAmount: change.payload.shareAmount,
+        },
+      });
+      return { entityId: change.entityId, status: 'success', serverId: row.id };
+    } catch (error) {
+      return { entityId: change.entityId, status: 'error', error: (error as Error).message };
+    }
   }
 
   private async processRelationChange(accountId: string, change: RelationChange): Promise<SyncResult> {
