@@ -506,7 +506,7 @@ const createStyles = (theme: Theme) => ({
   searchInput: {
     flex: 1,
     ...theme.textStyles.body,
-    color: theme.colors.text,
+    color: theme.colors.textPrimary,
     paddingVertical: 2,
   },
 
