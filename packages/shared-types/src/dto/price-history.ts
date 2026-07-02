@@ -16,9 +16,11 @@ export interface PriceHistoryProduct {
   pricePoints: { date: string; price: number; merchant: string }[];
 }
 
+export type PriceHistoryPeriod = '3m' | '6m' | '12m' | 'all';
+
 export interface PriceHistoryResponse {
   inflationIndex: number | null; // null when < 3 qualifying products
-  period: '3m' | '6m' | '12m';
+  period: PriceHistoryPeriod;
   productCount: number;
   currency: string;
   products: PriceHistoryProduct[];
