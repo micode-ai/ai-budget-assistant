@@ -6,6 +6,7 @@ interface PriceHistoryState {
   history: PriceHistoryResponse | null;
   products: ProductListItem[];
   isLoading: boolean;
+  isLoadingProducts: boolean;
   hasAttemptedLoad: boolean;
   selectedPeriod: '3m' | '6m' | '12m';
 
@@ -21,6 +22,7 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
   history: null,
   products: [],
   isLoading: false,
+  isLoadingProducts: false,
   hasAttemptedLoad: false,
   selectedPeriod: '6m',
 
@@ -37,11 +39,13 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
   },
 
   loadProducts: async () => {
+    set({ isLoadingProducts: true });
     try {
       const products = await api.getProducts();
-      set({ products });
+      set({ products, isLoadingProducts: false });
     } catch (e) {
       console.warn('[priceHistoryStore] loadProducts failed', e);
+      set({ isLoadingProducts: false });
     }
   },
 
@@ -78,5 +82,5 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
     }
   },
 
-  reset: () => set({ history: null, products: [], isLoading: false, hasAttemptedLoad: false, selectedPeriod: '6m' }),
+  reset: () => set({ history: null, products: [], isLoading: false, isLoadingProducts: false, hasAttemptedLoad: false, selectedPeriod: '6m' }),
 }));

@@ -1,5 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
 import { Stack } from 'expo-router';
 import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
@@ -18,15 +26,12 @@ export default function ProductsSettingsScreen() {
   const insets = useSafeAreaInsets();
   const canEdit = useAccountStore((s) => s.canEdit());
 
-  const products = usePriceHistoryStore((s) => s.products);
-  const loadProducts = usePriceHistoryStore((s) => s.loadProducts);
-  const upsertAlias = usePriceHistoryStore((s) => s.upsertAlias);
-  const deleteAlias = usePriceHistoryStore((s) => s.deleteAlias);
-  const mergeProducts = usePriceHistoryStore((s) => s.mergeProducts);
+  const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, mergeProducts } =
+    usePriceHistoryStore();
 
   useEffect(() => { loadProducts(); }, []);
 
-  // Single rename modal
+  // Single rename
   const [editing, setEditing] = useState<ProductListItem | null>(null);
   const [renameName, setRenameName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -40,7 +45,8 @@ export default function ProductsSettingsScreen() {
   const toggleSelect = useCallback((rawName: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(rawName)) next.delete(rawName); else next.add(rawName);
+      if (next.has(rawName)) next.delete(rawName);
+      else next.add(rawName);
       return next;
     });
   }, []);
@@ -62,57 +68,48 @@ export default function ProductsSettingsScreen() {
   const handleSaveRename = async () => {
     if (!editing) return;
     const next = renameName.trim();
-    if (!next) return;
-    if (next === editing.canonicalName) { closeRename(); return; }
+    if (!next || next === editing.canonicalName) { closeRename(); return; }
     setSaving(true);
-    try {
-      await upsertAlias(editing.rawName, next);
-    } catch {
-      // error already console.warn'd in store
-    }
+    try { await upsertAlias(editing.rawName, next); } catch { /* warn'd */ }
     setSaving(false);
     closeRename();
   };
 
-  const handleDeleteAlias = useCallback((rawName: string) => {
-    showAlert(t('priceHistory.deleteAlias'), rawName, [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('common.confirm'),
-        onPress: async () => {
-          try { await deleteAlias(rawName); } catch { /* warn'd in store */ }
+  const handleResetAlias = useCallback((item: ProductListItem) => {
+    showAlert(
+      t('priceHistory.resetAliasTitle'),
+      t('priceHistory.resetAliasBody', { name: item.rawName }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('priceHistory.resetAlias'),
+          onPress: async () => {
+            try { await deleteAlias(item.rawName); } catch { /* warn'd */ }
+          },
         },
-      },
-    ]);
+      ],
+    );
   }, [deleteAlias, t]);
 
-  // Merge
-  const defaultCanonical = (sources: string[]) => {
-    const countByRaw = new Map(products.map((p) => [p.rawName, p.purchaseCount]));
-    return [...sources].sort(
-      (a, b) => (countByRaw.get(b) ?? 0) - (countByRaw.get(a) ?? 0),
-    )[0] ?? '';
+  const defaultMergeName = (sources: string[]) => {
+    const byCount = new Map(products.map((p) => [p.rawName, p.purchaseCount]));
+    return [...sources].sort((a, b) => (byCount.get(b) ?? 0) - (byCount.get(a) ?? 0))[0] ?? '';
   };
 
-  const openMergeFromSelection = () => {
+  const openMerge = () => {
     const sources = [...selected];
     if (sources.length < 2) return;
     setMergeSources(sources);
-    setMergeName(defaultCanonical(sources));
+    setMergeName(defaultMergeName(sources));
   };
-  const closeMerge = () => {
-    setMergeSources(null);
-    setMergeName('');
-  };
+  const closeMerge = () => { setMergeSources(null); setMergeName(''); };
 
   const handleConfirmMerge = async () => {
     if (!mergeSources) return;
     const target = mergeName.trim();
     if (!target) return;
     setSaving(true);
-    try {
-      await mergeProducts(mergeSources, target);
-    } catch { /* warn'd in store */ }
+    try { await mergeProducts(mergeSources, target); } catch { /* warn'd */ }
     setSaving(false);
     closeMerge();
     exitSelect();
@@ -128,6 +125,14 @@ export default function ProductsSettingsScreen() {
           contentContainerStyle={[styles.content, { paddingBottom: theme.spacing[10] + insets.bottom }]}
           showsVerticalScrollIndicator={false}
         >
+          {/* Hint */}
+          {!selecting && (
+            <View style={styles.hintCard}>
+              <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+              <Text style={styles.hintText}>{t('priceHistory.productsHint')}</Text>
+            </View>
+          )}
+
           {/* Section header */}
           <View style={styles.sectionHeader}>
             {selecting ? (
@@ -135,7 +140,7 @@ export default function ProductsSettingsScreen() {
                 <Text style={styles.sectionTitle}>
                   {t('merchants.selected', { count: selected.size })}
                 </Text>
-                <TouchableOpacity onPress={exitSelect}>
+                <TouchableOpacity onPress={exitSelect} hitSlop={8}>
                   <Text style={styles.headerAction}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
               </>
@@ -143,17 +148,27 @@ export default function ProductsSettingsScreen() {
               <>
                 <Text style={styles.sectionTitle}>{t('priceHistory.manageProducts')}</Text>
                 {canEdit && products.length > 1 && (
-                  <TouchableOpacity onPress={() => setSelecting(true)}>
-                    <Text style={styles.headerAction}>{t('merchants.select')}</Text>
+                  <TouchableOpacity style={styles.mergeChip} onPress={() => setSelecting(true)} hitSlop={8}>
+                    <Ionicons name="git-merge-outline" size={13} color={theme.colors.primary} />
+                    <Text style={styles.mergeChipText}>{t('priceHistory.mergeProducts')}</Text>
                   </TouchableOpacity>
                 )}
               </>
             )}
           </View>
 
+          {/* List */}
           <View style={styles.card}>
-            {products.length === 0 ? (
-              <Text style={styles.empty}>{t('priceHistory.noProducts')}</Text>
+            {isLoadingProducts ? (
+              <ActivityIndicator
+                color={theme.colors.primary}
+                style={{ paddingVertical: theme.spacing[6] }}
+              />
+            ) : products.length === 0 ? (
+              <View style={styles.emptyWrap}>
+                <Ionicons name="bar-chart-outline" size={32} color={theme.colors.textTertiary} />
+                <Text style={styles.emptyText}>{t('priceHistory.noProducts')}</Text>
+              </View>
             ) : (
               products.map((item, i) => {
                 const isSelected = selected.has(item.rawName);
@@ -161,48 +176,63 @@ export default function ProductsSettingsScreen() {
                 return (
                   <React.Fragment key={item.rawName}>
                     <View style={styles.row}>
-                      <TouchableOpacity
-                        style={styles.rowContent}
-                        onPress={
-                          !canEdit
-                            ? undefined
-                            : selecting
-                              ? () => toggleSelect(item.rawName)
-                              : () => openRename(item)
-                        }
-                        onLongPress={
-                          canEdit && !selecting
-                            ? () => { setSelecting(true); toggleSelect(item.rawName); }
-                            : undefined
-                        }
-                        activeOpacity={canEdit ? 0.7 : 1}
-                      >
-                        {selecting ? (
+                      {selecting ? (
+                        <TouchableOpacity
+                          style={styles.rowInner}
+                          onPress={() => toggleSelect(item.rawName)}
+                          activeOpacity={0.7}
+                        >
                           <Ionicons
                             name={isSelected ? 'checkbox' : 'square-outline'}
                             size={22}
                             color={isSelected ? theme.colors.primary : theme.colors.textTertiary}
                           />
-                        ) : (
-                          <View style={styles.iconWrap}>
-                            <Ionicons name="bar-chart-outline" size={18} color={theme.colors.primary} />
+                          <View style={styles.nameWrap}>
+                            <Text style={styles.productName} numberOfLines={2}>{item.canonicalName}</Text>
+                            {hasAlias && (
+                              <Text style={styles.productSub} numberOfLines={1}>{item.rawName}</Text>
+                            )}
                           </View>
-                        )}
-                        <View style={styles.nameContainer}>
-                          <Text style={styles.name} numberOfLines={1}>{item.canonicalName}</Text>
-                          {hasAlias && (
-                            <Text style={styles.sub} numberOfLines={1}>{item.rawName}</Text>
-                          )}
-                        </View>
-                        <Text style={styles.count}>{item.purchaseCount}×</Text>
-                      </TouchableOpacity>
-                      {canEdit && !selecting && hasAlias && (
-                        <TouchableOpacity
-                          onPress={() => handleDeleteAlias(item.rawName)}
-                          hitSlop={8}
-                        >
-                          <Ionicons name="refresh-outline" size={20} color={theme.colors.textTertiary} />
+                          <Text style={styles.countBadge}>{item.purchaseCount}×</Text>
                         </TouchableOpacity>
+                      ) : (
+                        <>
+                          <TouchableOpacity
+                            style={styles.rowInner}
+                            onPress={canEdit ? () => openRename(item) : undefined}
+                            activeOpacity={canEdit ? 0.7 : 1}
+                          >
+                            <View style={styles.iconCircle}>
+                              <Ionicons name="bar-chart-outline" size={16} color={theme.colors.primary} />
+                            </View>
+                            <View style={styles.nameWrap}>
+                              <Text style={styles.productName} numberOfLines={2}>{item.canonicalName}</Text>
+                              {hasAlias ? (
+                                <Text style={styles.productSub} numberOfLines={1}>{item.rawName}</Text>
+                              ) : (
+                                <Text style={styles.productSub}>
+                                  {t('priceHistory.purchasesCount', { count: item.purchaseCount })}
+                                </Text>
+                              )}
+                            </View>
+                            {canEdit && (
+                              <Ionicons
+                                name="create-outline"
+                                size={17}
+                                color={theme.colors.textTertiary}
+                              />
+                            )}
+                          </TouchableOpacity>
+                          {canEdit && hasAlias && (
+                            <TouchableOpacity
+                              onPress={() => handleResetAlias(item)}
+                              hitSlop={10}
+                              style={styles.resetBtn}
+                            >
+                              <Ionicons name="close-circle-outline" size={20} color={theme.colors.danger} />
+                            </TouchableOpacity>
+                          )}
+                        </>
                       )}
                     </View>
                     {i < products.length - 1 && <View style={styles.divider} />}
@@ -213,32 +243,32 @@ export default function ProductsSettingsScreen() {
           </View>
         </ScrollView>
 
-        {/* Bottom merge bar in selection mode */}
+        {/* Bottom merge bar */}
         {selecting && (
           <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
             <TouchableOpacity
-              style={[styles.mergeButton, selected.size < 2 && styles.mergeButtonDisabled]}
-              onPress={openMergeFromSelection}
+              style={[styles.mergeBtn, selected.size < 2 && styles.mergeBtnDisabled]}
+              onPress={openMerge}
               disabled={selected.size < 2}
             >
               <Ionicons name="git-merge-outline" size={18} color={theme.colors.textInverse} />
-              <Text style={styles.mergeButtonText}>{t('priceHistory.mergeProducts')}</Text>
+              <Text style={styles.mergeBtnText}>
+                {t('priceHistory.mergeSelected', { count: selected.size })}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
 
-        {/* Single rename modal */}
-        <Modal
-          visible={editing !== null}
-          transparent
-          animationType="slide"
-          onRequestClose={closeRename}
-        >
+        {/* Rename modal */}
+        <Modal visible={editing !== null} transparent animationType="slide" onRequestClose={closeRename}>
           <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
             <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeRename} />
             <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
               <View style={styles.handle} />
               <Text style={styles.modalTitle}>{t('priceHistory.renameProduct')}</Text>
+              {editing?.rawName !== editing?.canonicalName && (
+                <Text style={styles.modalSub}>{editing?.rawName}</Text>
+              )}
               <TextInput
                 style={styles.input}
                 value={renameName}
@@ -247,12 +277,12 @@ export default function ProductsSettingsScreen() {
                 autoFocus
                 autoCapitalize="words"
               />
-              <View style={styles.actions}>
-                <TouchableOpacity style={styles.cancelButton} onPress={closeRename}>
+              <View style={styles.rowActions}>
+                <TouchableOpacity style={styles.cancelBtn} onPress={closeRename}>
                   <Text style={styles.cancelText}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.saveButton, saving && styles.saveButtonDisabled]}
+                  style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
                   onPress={handleSaveRename}
                   disabled={saving}
                 >
@@ -264,18 +294,18 @@ export default function ProductsSettingsScreen() {
         </Modal>
 
         {/* Merge modal */}
-        <Modal
-          visible={mergeSources !== null}
-          transparent
-          animationType="slide"
-          onRequestClose={closeMerge}
-        >
+        <Modal visible={mergeSources !== null} transparent animationType="slide" onRequestClose={closeMerge}>
           <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
             <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeMerge} />
             <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
               <View style={styles.handle} />
               <Text style={styles.modalTitle}>{t('priceHistory.mergeProducts')}</Text>
-              <Text style={styles.mergeLabel}>{t('priceHistory.mergeInto')}</Text>
+              <Text style={styles.modalSub} numberOfLines={2}>
+                {mergeSources
+                  ?.map((s) => products.find((x) => x.rawName === s)?.canonicalName ?? s)
+                  .join(' + ')}
+              </Text>
+              <Text style={styles.fieldLabel}>{t('priceHistory.mergeInto')}</Text>
               <TextInput
                 style={styles.input}
                 value={mergeName}
@@ -284,12 +314,12 @@ export default function ProductsSettingsScreen() {
                 autoFocus
                 autoCapitalize="words"
               />
-              <View style={styles.actions}>
-                <TouchableOpacity style={styles.cancelButton} onPress={closeMerge}>
+              <View style={styles.rowActions}>
+                <TouchableOpacity style={styles.cancelBtn} onPress={closeMerge}>
                   <Text style={styles.cancelText}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.saveButton, saving && styles.saveButtonDisabled]}
+                  style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
                   onPress={handleConfirmMerge}
                   disabled={saving}
                 >
@@ -307,59 +337,82 @@ export default function ProductsSettingsScreen() {
 const createStyles = (theme: Theme) => ({
   container: { flex: 1, backgroundColor: theme.colors.background },
   scrollView: { flex: 1 },
-  content: { padding: theme.spacing[4] },
+  content: { padding: theme.spacing[4], gap: theme.spacing[3] },
+
+  hintCard: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.primary + '14',
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3],
+  },
+  hintText: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, flex: 1, lineHeight: 18 },
+
   sectionHeader: {
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
     alignItems: 'center' as const,
-    marginBottom: theme.spacing[2],
-    marginTop: theme.spacing[4],
   },
   sectionTitle: { ...theme.textStyles.bodyMedium, color: theme.colors.textSecondary },
   headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  mergeChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.full,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1],
+  },
+  mergeChipText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
+  },
+
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
   },
   row: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    paddingVertical: theme.spacing[1],
+    paddingVertical: theme.spacing[2],
   },
-  rowContent: {
+  rowInner: {
     flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    minHeight: 44,
   },
-  iconWrap: {
-    width: 32,
-    height: 32,
+  iconCircle: {
+    width: 30,
+    height: 30,
     borderRadius: theme.borderRadius.md,
     backgroundColor: theme.colors.primary + '15',
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
+    flexShrink: 0,
   },
-  nameContainer: { flex: 1, marginLeft: theme.spacing[3] },
-  name: { ...theme.textStyles.body, color: theme.colors.textPrimary },
-  sub: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary, marginTop: 2 },
-  count: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textSecondary,
-    marginRight: theme.spacing[2],
+  nameWrap: { flex: 1 },
+  productName: { ...theme.textStyles.body, color: theme.colors.textPrimary },
+  productSub: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary, marginTop: 2 },
+  countBadge: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, flexShrink: 0 },
+  resetBtn: { paddingLeft: theme.spacing[2] },
+  divider: { height: 1, backgroundColor: theme.colors.divider },
+
+  emptyWrap: {
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[6],
+    gap: theme.spacing[2],
   },
-  divider: {
-    height: 1,
-    backgroundColor: theme.colors.divider,
-    marginVertical: theme.spacing[2],
-  },
-  empty: {
-    ...theme.textStyles.body,
-    color: theme.colors.textTertiary,
-    textAlign: 'center' as const,
-    paddingVertical: theme.spacing[4],
-  },
-  // Bottom merge bar
+  emptyText: { ...theme.textStyles.body, color: theme.colors.textTertiary, textAlign: 'center' as const },
+
   bottomBar: {
     paddingHorizontal: theme.spacing[4],
     paddingTop: theme.spacing[3],
@@ -367,7 +420,7 @@ const createStyles = (theme: Theme) => ({
     borderTopWidth: 1,
     borderTopColor: theme.colors.divider,
   },
-  mergeButton: {
+  mergeBtn: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -376,9 +429,9 @@ const createStyles = (theme: Theme) => ({
     paddingVertical: theme.spacing[3.5],
     borderRadius: theme.borderRadius.lg,
   },
-  mergeButtonDisabled: { opacity: 0.5 },
-  mergeButtonText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
-  // Modals
+  mergeBtnDisabled: { opacity: 0.45 },
+  mergeBtnText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
+
   overlay: { flex: 1, justifyContent: 'flex-end' as const },
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
   sheet: {
@@ -386,6 +439,7 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius['2xl'],
     borderTopRightRadius: theme.borderRadius['2xl'],
     padding: theme.spacing[6],
+    gap: theme.spacing[3],
   },
   handle: {
     width: 36,
@@ -393,20 +447,19 @@ const createStyles = (theme: Theme) => ({
     borderRadius: 2,
     backgroundColor: theme.colors.border,
     alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
   },
-  modalTitle: { ...theme.textStyles.h3, color: theme.colors.textPrimary, marginBottom: theme.spacing[4] },
-  mergeLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, marginBottom: theme.spacing[2] },
+  modalTitle: { ...theme.textStyles.h3, color: theme.colors.textPrimary },
+  modalSub: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary },
+  fieldLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
   input: {
     backgroundColor: theme.colors.surfaceSecondary,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing[4],
     fontSize: 16,
     color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[4],
   },
-  actions: { flexDirection: 'row' as const, gap: theme.spacing[3] },
-  cancelButton: {
+  rowActions: { flexDirection: 'row' as const, gap: theme.spacing[3] },
+  cancelBtn: {
     flex: 1,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -416,7 +469,7 @@ const createStyles = (theme: Theme) => ({
     borderColor: theme.colors.border,
   },
   cancelText: { fontSize: 16, fontWeight: '500' as const, color: theme.colors.textSecondary },
-  saveButton: {
+  saveBtn: {
     flex: 1,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -424,6 +477,6 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.primary,
   },
-  saveButtonDisabled: { opacity: 0.6 },
+  saveBtnDisabled: { opacity: 0.6 },
   saveText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
 });

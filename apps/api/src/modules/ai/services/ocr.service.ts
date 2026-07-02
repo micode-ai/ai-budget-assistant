@@ -20,12 +20,14 @@ export interface ReceiptItem {
 
 export function buildCanonicalNameFallback(description: string): string | null {
   const tokens = description.split(/\s+/);
+  const meaningful: string[] = [];
   for (const token of tokens) {
     if (token.length >= 3 && !/^\d+([.,]\d+)?%?[GLKgmMlL]*$/.test(token)) {
-      return token;
+      meaningful.push(token);
+      if (meaningful.length === 3) break;
     }
   }
-  return null;
+  return meaningful.length > 0 ? meaningful.join(' ') : null;
 }
 
 export interface ParsedReceipt {
