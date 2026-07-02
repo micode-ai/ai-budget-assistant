@@ -2137,5 +2137,11 @@ export default {
     deleteAlias: 'Rétablir le nom original',
     noProducts: 'Aucun produit suivi',
     showMore: '+{{count}} de plus',
+    productsHint: 'Les produits sont détectés à partir des scans de reçus. Appuyez sur un produit pour le renommer ou utilisez Fusionner pour combiner des variantes du même produit.',
+    resetAliasTitle: 'Réinitialiser le nom',
+    resetAliasBody: 'Réinitialiser au nom original «{{name}}»?',
+    resetAlias: 'Réinitialiser',
+    mergeSelected: 'Fusionner {{count}} produits',
+    purchasesCount: '{{count}} achats',
   },
 } as const;
