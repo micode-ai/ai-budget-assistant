@@ -2143,5 +2143,9 @@ export default {
     resetAlias: 'Resetten',
     mergeSelected: 'Samenvoegen {{count}} producten',
     purchasesCount: '{{count}} aankopen',
+    reanalyzeWithAi: 'Heranalyse met AI',
+    reanalyzing: 'Analyseren...',
+    reanalyzeSuccess: '{{count}} producten bijgewerkt',
+    reanalyzeConfirm: 'AI genereert nieuwe productnamen op basis van je bonnetjesbeschrijvingen. Dit kan even duren.',
   },
 } as const;

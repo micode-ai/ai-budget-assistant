@@ -2143,5 +2143,9 @@ export default {
     resetAlias: 'Réinitialiser',
     mergeSelected: 'Fusionner {{count}} produits',
     purchasesCount: '{{count}} achats',
+    reanalyzeWithAi: 'Ré-analyser avec l\'IA',
+    reanalyzing: 'Analyse en cours...',
+    reanalyzeSuccess: '{{count}} produits mis à jour',
+    reanalyzeConfirm: 'L\'IA va générer de nouveaux noms de produits à partir de vos descriptions de reçus. Cela peut prendre un moment.',
   },
 } as const;

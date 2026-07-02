@@ -2143,5 +2143,9 @@ export default {
     resetAlias: 'Zurücksetzen',
     mergeSelected: 'Merge {{count}} Produkte',
     purchasesCount: '{{count}} Käufe',
+    reanalyzeWithAi: 'Mit KI analysieren',
+    reanalyzing: 'Analysiere...',
+    reanalyzeSuccess: '{{count}} Produkte aktualisiert',
+    reanalyzeConfirm: 'KI generiert neue Produktnamen aus deinen Bon-Beschreibungen. Das kann einen Moment dauern.',
   },
 } as const;

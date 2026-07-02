@@ -2143,5 +2143,9 @@ export default {
     resetAlias: 'Restablecer',
     mergeSelected: 'Combinar {{count}} productos',
     purchasesCount: '{{count}} compras',
+    reanalyzeWithAi: 'Re-analizar con IA',
+    reanalyzing: 'Analizando...',
+    reanalyzeSuccess: '{{count}} productos actualizados',
+    reanalyzeConfirm: 'La IA generará nuevos nombres de producto a partir de las descripciones de tus recibos. Puede tardar un momento.',
   },
 } as const;
