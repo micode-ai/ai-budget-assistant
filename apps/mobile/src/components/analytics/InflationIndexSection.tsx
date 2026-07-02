@@ -11,10 +11,12 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStyles, useTheme, type Theme } from '@/theme';
 import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { InteractiveLineChart } from '@/components/interactive-charts';
+import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import type { PriceHistoryProduct } from '@budget/shared-types';
 
 type Period = '3m' | '6m' | '12m' | 'all';
@@ -32,6 +34,7 @@ export function InflationIndexSection() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const { history, isLoading, hasAttemptedLoad, selectedPeriod, loadPriceHistory, upsertAlias } =
     usePriceHistoryStore();
   const canEdit = useAccountStore((s) => s.canEdit());
@@ -206,10 +209,11 @@ export function InflationIndexSection() {
         animationType="slide"
         onRequestClose={closeSheet}
       >
-        <Pressable style={styles.backdrop} onPress={closeSheet} />
-        <View style={styles.sheet}>
+        <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
+          <Pressable style={styles.backdrop} onPress={closeSheet} />
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16) + 8 }]}>
           {selectedProduct && (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
               <View style={styles.sheetHandle} />
               <Text style={styles.sheetTitle}>{selectedProduct.canonicalName}</Text>
 
@@ -271,7 +275,8 @@ export function InflationIndexSection() {
               )}
             </ScrollView>
           )}
-        </View>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -390,6 +395,10 @@ const createStyles = (theme: Theme) => ({
   ctaText: {
     ...theme.textStyles.bodyMedium,
     color: '#fff',
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end' as const,
   },
   backdrop: {
     flex: 1,
