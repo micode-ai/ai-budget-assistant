@@ -176,6 +176,16 @@ export default function ProductsSettingsScreen() {
                   </Text>
                 </TouchableOpacity>
               )}
+              {canEdit && products.length > 1 && (
+                <TouchableOpacity
+                  style={styles.mergeButton}
+                  onPress={() => setSelecting(true)}
+                  activeOpacity={0.75}
+                >
+                  <Ionicons name="git-merge-outline" size={16} color={theme.colors.primary} />
+                  <Text style={styles.mergeButtonText}>{t('priceHistory.mergeProducts')}</Text>
+                </TouchableOpacity>
+              )}
             </>
           )}
 
@@ -191,15 +201,7 @@ export default function ProductsSettingsScreen() {
                 </TouchableOpacity>
               </>
             ) : (
-              <>
-                <Text style={styles.sectionTitle}>{t('priceHistory.manageProducts')}</Text>
-                {canEdit && products.length > 1 && (
-                  <TouchableOpacity style={styles.mergeChip} onPress={() => setSelecting(true)} hitSlop={8}>
-                    <Ionicons name="git-merge-outline" size={13} color={theme.colors.primary} />
-                    <Text style={styles.mergeChipText}>{t('priceHistory.mergeProducts')}</Text>
-                  </TouchableOpacity>
-                )}
-              </>
+              <Text style={styles.sectionTitle}>{t('priceHistory.manageProducts')}</Text>
             )}
           </View>
 
@@ -405,6 +407,18 @@ const createStyles = (theme: Theme) => ({
     paddingHorizontal: theme.spacing[4],
   },
   aiButtonText: { fontSize: 14, fontWeight: '600' as const, color: theme.colors.textInverse },
+  mergeButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    borderWidth: 1.5,
+    borderColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+  },
+  mergeButtonText: { fontSize: 14, fontWeight: '600' as const, color: theme.colors.primary },
 
   sectionHeader: {
     flexDirection: 'row' as const,
@@ -413,21 +427,6 @@ const createStyles = (theme: Theme) => ({
   },
   sectionTitle: { ...theme.textStyles.bodyMedium, color: theme.colors.textSecondary },
   headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
-  mergeChip: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: 4,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.full,
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[1],
-  },
-  mergeChipText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.primary,
-    fontWeight: '600' as const,
-  },
 
   card: {
     backgroundColor: theme.colors.surface,
