@@ -20,14 +20,36 @@ export interface ReceiptItem {
 
 export function buildCanonicalNameFallback(description: string): string | null {
   const tokens = description.split(/\s+/);
-  const meaningful: string[] = [];
+  const result: string[] = [];
+  let textCount = 0;
+
   for (const token of tokens) {
-    if (token.length >= 3 && !/^\d+([.,]\d+)?%?[GLKgmMlL]*$/.test(token)) {
-      meaningful.push(token);
-      if (meaningful.length === 3) break;
+    // Extract size from multiplier+size compound token (e.g. "4X130G" → "130G", "6x0,5L" → "0,5L")
+    const multiplierSize = token.match(/^\d+[xX×](\d+([.,]\d+)?[GgKkLlMmDd]{1,3})$/i);
+    if (multiplierSize) {
+      result.push(multiplierSize[1]);
+      continue;
+    }
+    // Keep size discriminators: weight (G/KG/ML/L/etc.) and fat%/alcohol%
+    const isSizeToken =
+      /^\d+([.,]\d+)?(G|KG|DAG|MG|ML|CL|DL|L)$/i.test(token) ||
+      /^\d+([.,]\d+)?%$/.test(token);
+    if (isSizeToken) {
+      result.push(token);
+      continue;
+    }
+    // Filter noise: purely numeric, bare multipliers (4X, 4×), quantity units (6SZT/PCS)
+    const isNoise =
+      /^\d+([.,]\d+)?$/.test(token) ||
+      /^\d+[xX×]$/i.test(token) ||
+      /^\d+(SZT|SZTUK|SZTUKI|PCS|PACK|OPAK|PKT|PAK)$/i.test(token);
+    if (!isNoise && token.length >= 3 && textCount < 3) {
+      result.push(token);
+      textCount++;
     }
   }
-  return meaningful.length > 0 ? meaningful.join(' ') : null;
+
+  return result.length > 0 ? result.join(' ') : null;
 }
 
 export interface ParsedReceipt {
@@ -201,7 +223,7 @@ Return a JSON object with the following structure:
   "items": [
     {
       "description": "clean, normalized product name (see normalization rules below)",
-      "canonicalName": "short product name in title case, no quantity/weight/volume/percentage/codes",
+      "canonicalName": "product name with size discriminators in title case (see canonicalName rules below)",
       "quantity": 1,
       "unitPrice": 10.00,
       "totalPrice": 10.00
@@ -227,9 +249,15 @@ Item name normalization rules for the "description" field:
 - Keep the product name in the original receipt language
 - Only fix obvious single-character OCR errors within the same word, do NOT guess or substitute brand names
 
-canonicalName rules — short product name in title case, stripped of quantity/weight/volume/percentage/packaging/codes:
-- canonicalName examples: "MLEKO 3,2% ŁACIATE 1L 6SZT" → "Mleko Łaciate", "CHLEB RAZOWY WIEJSKI 500G" → "Chleb Razowy", "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"
-- Remove all numeric tokens, percentages, volume (L/ml/cl), weight (g/kg), pack counts (SZT/PCS), and product codes
+canonicalName rules — brand/product name with size discriminators, for price-history tracking across purchases:
+- KEEP: weight/volume per single unit (500g, 1L, 250ml, 130g), fat/alcohol/content percentage (3,2%, 4,7%), flavour/variant descriptors (Truskawkowy, Naturalny)
+- STRIP: pack-quantity multipliers (6SZT, ×6, 4×, 4x130G — but extract the unit "130g" from it), product codes, PLU numbers
+- canonicalName examples:
+  "MLEKO 3,2% ŁACIATE 1L 6SZT"       → "Mleko Łaciate 3,2% 1L"     (keep fat% + volume, strip 6SZT)
+  "CHLEB RAZOWY WIEJSKI 500G"         → "Chleb Razowy Wiejski 500g"  (keep weight)
+  "PIWO TYSKIE 0,5L 4,7%"            → "Tyskie 0,5l 4,7%"           (keep volume + alcohol%)
+  "SERK DANIO TRUSKAWKOWY 4×130G"    → "Danio Truskawkowy 130g"      (extract per-unit size from multiplier)
+  "JOGURT ACTIVIA BRZOSKWINIA 150G"  → "Activia Brzoskwinia 150g"
 - Use title case (first letter of each word capitalised)
 
 Discount extraction (read carefully — Polish/Lidl/Biedronka receipts often have many small discount lines that must be summed):
