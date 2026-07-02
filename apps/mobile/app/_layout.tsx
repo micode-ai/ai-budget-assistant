@@ -642,6 +642,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/products"
+          options={{
+            headerShown: true,
+            title: t('settingsNav.products'),
+          }}
+        />
+        <Stack.Screen
           name="settings/reference"
           options={{
             headerShown: true,

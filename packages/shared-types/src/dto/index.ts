@@ -28,3 +28,4 @@ export * from './wallet';
 export * from './insights';
 export * from './purchase-request';
 export * from './family-feed';
+export * from './price-history';

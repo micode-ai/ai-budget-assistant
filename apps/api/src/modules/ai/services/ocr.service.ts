@@ -12,9 +12,20 @@ import { sanitizeForPrompt } from '../utils/sanitize';
 
 export interface ReceiptItem {
   description: string;
+  canonicalName?: string;
   quantity?: number;
   unitPrice?: number;
   totalPrice: number;
+}
+
+export function buildCanonicalNameFallback(description: string): string | null {
+  const tokens = description.split(/\s+/);
+  for (const token of tokens) {
+    if (token.length >= 3 && !/^\d+([.,]\d+)?%?[GLKgmMlL]*$/.test(token)) {
+      return token;
+    }
+  }
+  return null;
 }
 
 export interface ParsedReceipt {
@@ -188,6 +199,7 @@ Return a JSON object with the following structure:
   "items": [
     {
       "description": "clean, normalized product name (see normalization rules below)",
+      "canonicalName": "short product name in title case, no quantity/weight/volume/percentage/codes",
       "quantity": 1,
       "unitPrice": 10.00,
       "totalPrice": 10.00
@@ -212,6 +224,11 @@ Item name normalization rules for the "description" field:
 - Include size/weight/volume when present (e.g. "0.5L", "500g", "1kg")
 - Keep the product name in the original receipt language
 - Only fix obvious single-character OCR errors within the same word, do NOT guess or substitute brand names
+
+canonicalName rules — short product name in title case, stripped of quantity/weight/volume/percentage/packaging/codes:
+- canonicalName examples: "MLEKO 3,2% ŁACIATE 1L 6SZT" → "Mleko Łaciate", "CHLEB RAZOWY WIEJSKI 500G" → "Chleb Razowy", "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"
+- Remove all numeric tokens, percentages, volume (L/ml/cl), weight (g/kg), pack counts (SZT/PCS), and product codes
+- Use title case (first letter of each word capitalised)
 
 Discount extraction (read carefully — Polish/Lidl/Biedronka receipts often have many small discount lines that must be summed):
 - Recognize ANY line that subtracts from the running total as a discount. Strong signals:
@@ -359,6 +376,13 @@ Important:
     }
 
     parsed.discount = discount;
+
+    if (parsed.items && parsed.items.length > 0) {
+      for (const item of parsed.items) {
+        item.canonicalName = item.canonicalName?.trim() || buildCanonicalNameFallback(item.description) || undefined;
+      }
+    }
+
     return parsed;
   }
 

@@ -38,6 +38,10 @@ export class CreateExpenseItemDto {
   description: string;
 
   @IsOptional()
+  @IsString()
+  canonicalName?: string;
+
+  @IsOptional()
   @IsNumber()
   @Min(0)
   quantity?: number;

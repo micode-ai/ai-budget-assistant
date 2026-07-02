@@ -509,6 +509,10 @@ src/
 │   ├── app-versions/           # App version gate (update prompt)
 │   ├── health/                 # Public health check (SELECT 1)
 │   ├── anomaly/                # Rule-based on-write anomaly detection → AnomalyAlert feed
+│   ├── price-history/          # Personal Inflation Index — Laspeyres index over OCR receipt items
+│   │   ├── price-history.module.ts
+│   │   ├── price-history.controller.ts
+│   │   └── price-history.service.ts
 │   └── whatsapp/               # WhatsApp Business Cloud bot
 │       ├── whatsapp-bot.service.ts
 │       ├── whatsapp-bot.controller.ts
@@ -705,19 +709,34 @@ model Expense {
 }
 
 model ExpenseItem {
-  id          String   @id @default(uuid())
-  expenseId   String
-  description String
-  quantity    Decimal  @default(1) @db.Decimal(10, 3)
-  unitPrice   Decimal  @default(0) @db.Decimal(12, 2)
-  totalPrice  Decimal  @db.Decimal(12, 2)
-  sortOrder   Int      @default(0)
-  isDeleted   Boolean  @default(false)
-  syncVersion Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  expenseId     String
+  description   String
+  canonicalName String?  // normalised product name set by OCR service or user alias (migration 20260702160001)
+  quantity      Decimal  @default(1) @db.Decimal(10, 3)
+  unitPrice     Decimal  @default(0) @db.Decimal(12, 2)
+  totalPrice    Decimal  @db.Decimal(12, 2)
+  sortOrder     Int      @default(0)
+  isDeleted     Boolean  @default(false)
+  syncVersion   Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   expense Expense
+}
+
+model ProductAlias {
+  id            String   @id @default(uuid())
+  accountId     String
+  rawName       String
+  canonicalName String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@unique([accountId, rawName])
+  @@map("product_aliases")
 }
 
 model Budget {
@@ -1317,6 +1336,33 @@ The `anomaly` module (37th API module) runs **rule-based on-write detection** an
 **Hooks:** `ExpensesService.create` calls `AnomalyService.analyzeExpense(expense)` synchronously after the expense row is committed. Import commit endpoints (`import-wise`, `import-bank`) call `AnomalyService.analyzeExpenseBatch(expenses)` asynchronously (fire-and-forget) so import throughput is unaffected.
 
 **API:** `GET /alerts`, `PATCH /alerts/read-all`, `PATCH /alerts/:id/read`, `DELETE /alerts/:id` — all behind `JwtAuthGuard + AccountContextGuard`; write endpoints guarded by `ViewerBlockGuard`.
+
+## Personal Inflation Index
+
+The `price-history` module (ABA-307) computes a Laspeyres price index over the account's receipt line items, enabling users to track how their personal "shopping basket" prices change over time without any AI cost.
+
+### How It Works
+
+1. **Data capture**: The OCR service (`ocr.service.ts`) sets `ReceiptItem.canonicalName` for each scanned line item via a `buildCanonicalNameFallback(description)` heuristic. User-defined aliases (`product_aliases` table, `@@unique([accountId, rawName])`) can override raw OCR names to a clean canonical form.
+2. **Storage**: `ExpenseItem.canonicalName` (migration `20260702160001_add_expense_item_canonical_name`) persists the resolved canonical name alongside the raw `description`.
+3. **Index calculation**: `PriceHistoryService.getInflationIndex(accountId, period)` fetches the earliest and latest unit prices per canonical product within the period, computes a Laspeyres index (`Σ(p₁ × q₀) / Σ(p₀ × q₀)`), and caches the result in Redis (`ph:{accountId}:{period}`, TTL 300 s).
+4. **Product management**: Users can view per-product price trends, create/update raw→canonical aliases, and merge duplicate product variants (5 endpoints, all free-tier, `ViewerBlockGuard` on write paths).
+
+### Database Tables
+
+- `expense_items.canonical_name TEXT` — nullable column added to the existing `expense_items` table (migration `20260702160001`)
+- `product_aliases` — new table: `id`, `accountId`, `rawName`, `canonicalName`, `createdAt`, `updatedAt`; `@@unique([accountId, rawName])` (migration `20260702160002_add_product_aliases`)
+
+### Mobile Integration
+
+- **`priceHistoryStore.ts`**: server-only Zustand store (no SQLite cache — prices require cross-device consistency)
+- **`priceHistory.api.ts`**: API client methods for all 5 endpoints
+- **`InflationIndexSection`**: component in the Analytics tab showing the current index value and per-product price changes
+- **`app/settings/products.tsx`**: product alias management screen; accessible from the reference-data hub
+
+### API Endpoints
+
+`GET /price-history`, `GET /price-history/products`, `PATCH /price-history/products/alias`, `DELETE /price-history/products/alias/:rawName`, `POST /price-history/products/merge` — all behind `JwtAuthGuard + AccountContextGuard`; write endpoints guarded by `ViewerBlockGuard`. No `SubscriptionTierGuard` — available on the free plan.
 
 ## Merchant Tracking
 

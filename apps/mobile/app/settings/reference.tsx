@@ -35,6 +35,12 @@ export default function ReferenceDataScreen() {
       route: '/settings/merchants',
     },
     {
+      icon: 'bar-chart-outline' as IconName,
+      label: t('settingsNav.products'),
+      description: t('settingsNav.productsDesc'),
+      route: '/settings/products',
+    },
+    {
       icon: 'pricetag-outline',
       label: t('settingsNav.tags'),
       description: t('settingsNav.tagsDesc'),
