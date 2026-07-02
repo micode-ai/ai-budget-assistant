@@ -112,6 +112,16 @@ export class PriceHistoryService {
       return { updatedCount: 0 };
     }
 
+    // Exclude rawNames that the user has already aliased (rename/merge) — backfill must not
+    // overwrite them, because the alias key is the canonical_name value in expense_items;
+    // changing that value orphans the alias and silently breaks the merge.
+    const userAliasedNames: string[] = (
+      await (this.prisma as any).productAlias.findMany({
+        where: { accountId },
+        select: { rawName: true },
+      })
+    ).map((a: { rawName: string }) => a.rawName);
+
     // Fetch items with no or single-word canonical names (not yet aliased by user)
     const items: Array<{ id: string; description: string | null; canonicalName: string | null }> =
       await (this.prisma as any).expenseItem.findMany({
@@ -119,6 +129,10 @@ export class PriceHistoryService {
           expense: { accountId, isDeleted: false },
           description: { not: null },
           isDeleted: false,
+          // Skip any item whose canonical_name is the key of a user alias
+          ...(userAliasedNames.length > 0
+            ? { NOT: { canonicalName: { in: userAliasedNames } } }
+            : {}),
           OR: [
             { canonicalName: null },
             // Single-word names have no space — multi-word LLM names are preserved
