@@ -36,6 +36,13 @@ export const priceHistoryApi = {
     });
   },
 
+  ignoreProduct(rawName: string) {
+    return httpClient.request<void>(
+      `/price-history/products/ignore/${encodeURIComponent(rawName)}`,
+      { method: 'POST' },
+    );
+  },
+
   backfillProductNames() {
     return httpClient.request<{ updatedCount: number }>('/price-history/products/backfill-ai', {
       method: 'POST',

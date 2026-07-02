@@ -12,6 +12,10 @@ import type {
 
 type Period = PriceHistoryPeriod;
 
+// Sentinel stored in product_aliases.canonical_name to exclude a product from all tracking.
+// No migration needed — reuses the existing non-null canonicalName column.
+const IGNORED_SENTINEL = '__ignored__';
+
 interface RawItemRow {
   rawName: string;       // original expense_items.canonical_name, before alias resolution
   resolvedName: string;
@@ -74,6 +78,7 @@ export class PriceHistoryService {
     }
 
     return Array.from(productMap.entries())
+      .filter(([rawName]) => (aliases.get(rawName) ?? '') !== IGNORED_SENTINEL)
       .map(([rawName, { count, lastSeen }]) => ({
         rawName,
         canonicalName: aliases.get(rawName) ?? rawName,
@@ -93,6 +98,14 @@ export class PriceHistoryService {
 
   async deleteAlias(accountId: string, rawName: string): Promise<void> {
     await (this.prisma as any).productAlias.deleteMany({ where: { accountId, rawName } });
+  }
+
+  async ignoreProduct(accountId: string, rawName: string): Promise<void> {
+    await (this.prisma as any).productAlias.upsert({
+      where: { accountId_rawName: { accountId, rawName } },
+      create: { accountId, rawName, canonicalName: IGNORED_SENTINEL },
+      update: { canonicalName: IGNORED_SENTINEL },
+    });
   }
 
   async mergeProducts(accountId: string, rawNames: string[], canonicalName: string): Promise<void> {
@@ -191,6 +204,8 @@ export class PriceHistoryService {
     const items: Array<{
       canonicalName: string;
       unitPrice: number;
+      quantity: number;
+      totalPrice: number;
       expense: { date: Date; merchant: string | null; currencyCode: string };
     }> = await (this.prisma as any).expenseItem.findMany({
       where: {
@@ -201,18 +216,27 @@ export class PriceHistoryService {
       select: {
         canonicalName: true,
         unitPrice: true,
+        quantity: true,
+        totalPrice: true,
         expense: { select: { date: true, merchant: true, currencyCode: true } },
       },
     });
 
-    return items.map((item) => ({
-      rawName: item.canonicalName,
-      resolvedName: aliases.get(item.canonicalName) ?? item.canonicalName,
-      date: item.expense.date,
-      unitPrice: Number(item.unitPrice),
-      merchant: item.expense.merchant ?? 'Unknown',
-      currency: item.expense.currencyCode ?? 'PLN',
-    }));
+    return items
+      .filter((item) => (aliases.get(item.canonicalName) ?? '') !== IGNORED_SENTINEL)
+      .map((item) => ({
+        rawName: item.canonicalName,
+        resolvedName: aliases.get(item.canonicalName) ?? item.canonicalName,
+        date: item.expense.date,
+        // When quantity > 1 (e.g. "JOGURT 2SZT 6.98"), derive per-unit price from totalPrice.
+        // When quantity <= 1 (single unit or weight-based), unitPrice is already correct.
+        unitPrice:
+          Number(item.quantity) > 1
+            ? Number(item.totalPrice) / Number(item.quantity)
+            : Number(item.unitPrice),
+        merchant: item.expense.merchant ?? 'Unknown',
+        currency: item.expense.currencyCode ?? 'PLN',
+      }));
   }
 
   private async getAliasMap(accountId: string): Promise<Map<string, string>> {

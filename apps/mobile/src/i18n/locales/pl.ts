@@ -2140,6 +2140,8 @@ export default {
     mergeInto: 'Scal w',
     merged: 'Scalono',
     deleteAlias: 'Przywróć oryginalną nazwę',
+    ignoreProduct: 'Usuń ze śledzenia',
+    ignoreConfirm: 'Usunąć "{{name}}" ze śledzenia cen? Możesz przywrócić go później resetując alias.',
     noProducts: 'Brak śledzonych produktów',
     showMore: '+{{count}} więcej',
     productsHint: 'Produkty są wykrywane ze skanów paragonów. Kliknij produkt, aby zmienić jego nazwę, lub użyj Scal, aby połączyć warianty tego samego produktu.',

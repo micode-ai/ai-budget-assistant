@@ -2137,6 +2137,8 @@ export default {
     mergeInto: 'Zusammenführen in',
     merged: 'Zusammengeführt',
     deleteAlias: 'Originalname wiederherstellen',
+    ignoreProduct: 'Aus Verfolgung entfernen',
+    ignoreConfirm: '"{{name}}" aus der Preisverfolgung entfernen? Du kannst es später durch Zurücksetzen des Alias wiederherstellen.',
     noProducts: 'Noch keine verfolgten Produkte',
     showMore: '+{{count}} mehr',
     productsHint: 'Produkte werden aus Belegscans erkannt. Tippe auf ein Produkt, um es umzubenennen, oder verwende Merge, um Produktvarianten zu kombinieren.',

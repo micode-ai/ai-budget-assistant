@@ -53,6 +53,13 @@ export class PriceHistoryController {
     return this.priceHistoryService.deleteAlias(req.accountId, rawName);
   }
 
+  // POST /price-history/products/ignore/:rawName
+  @Post('products/ignore/:rawName')
+  @UseGuards(new ViewerBlockGuard())
+  ignoreProduct(@Req() req: AuthenticatedRequest, @Param('rawName') rawName: string) {
+    return this.priceHistoryService.ignoreProduct(req.accountId, rawName);
+  }
+
   // POST /price-history/products/merge
   @Post('products/merge')
   @UseGuards(new ViewerBlockGuard())

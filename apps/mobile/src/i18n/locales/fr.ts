@@ -2137,6 +2137,8 @@ export default {
     mergeInto: 'Fusionner dans',
     merged: 'Fusionné',
     deleteAlias: 'Rétablir le nom original',
+    ignoreProduct: 'Retirer du suivi',
+    ignoreConfirm: 'Retirer "{{name}}" du suivi des prix ? Vous pouvez le restaurer plus tard en réinitialisant l\'alias.',
     noProducts: 'Aucun produit suivi',
     showMore: '+{{count}} de plus',
     productsHint: 'Les produits sont détectés à partir des scans de reçus. Appuyez sur un produit pour le renommer ou utilisez Fusionner pour combiner des variantes du même produit.',
