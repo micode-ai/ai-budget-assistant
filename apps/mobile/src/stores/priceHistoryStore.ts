@@ -17,6 +17,7 @@ interface PriceHistoryState {
   deleteAlias: (rawName: string) => Promise<void>;
   ignoreProduct: (rawName: string) => Promise<void>;
   mergeProducts: (rawNames: string[], canonicalName: string) => Promise<void>;
+  deletePricePoint: (itemId: string) => Promise<void>;
   reset: () => void;
 }
 
@@ -98,6 +99,16 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
       await get().loadProducts();
     } catch (e) {
       console.warn('[priceHistoryStore] mergeProducts failed', e);
+      throw e;
+    }
+  },
+
+  deletePricePoint: async (itemId) => {
+    try {
+      await api.deletePricePoint(itemId);
+      await get().loadPriceHistory();
+    } catch (e) {
+      console.warn('[priceHistoryStore] deletePricePoint failed', e);
       throw e;
     }
   },

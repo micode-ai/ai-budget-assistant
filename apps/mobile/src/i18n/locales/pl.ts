@@ -2144,6 +2144,8 @@ export default {
     deleteAlias: 'Przywróć oryginalną nazwę',
     ignoreProduct: 'Usuń ze śledzenia',
     ignoreConfirm: 'Usunąć "{{name}}" ze śledzenia cen? Możesz przywrócić go później resetując alias.',
+    removePrice: 'Usuń tę cenę',
+    removePriceConfirm: 'Usunąć cenę z {{date}} ({{price}})? Przydatne dla jednorazowych promocji, które zakłócają indeks inflacji.',
     noProducts: 'Brak śledzonych produktów',
     showMore: '+{{count}} więcej',
     productsHint: 'Produkty są wykrywane ze skanów paragonów. Kliknij produkt, aby zmienić jego nazwę, lub użyj Scal, aby połączyć warianty tego samego produktu.',

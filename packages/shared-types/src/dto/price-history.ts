@@ -13,7 +13,7 @@ export interface PriceHistoryProduct {
   currency: string;
   purchaseCount: number;
   stores: StoreLatestPrice[];
-  pricePoints: { date: string; price: number; merchant: string }[];
+  pricePoints: { itemId: string; date: string; price: number; merchant: string }[];
 }
 
 export type PriceHistoryPeriod = '3m' | '6m' | '12m' | 'all';

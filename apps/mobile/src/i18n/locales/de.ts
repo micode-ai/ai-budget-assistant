@@ -2141,6 +2141,8 @@ export default {
     deleteAlias: 'Originalname wiederherstellen',
     ignoreProduct: 'Aus Verfolgung entfernen',
     ignoreConfirm: '"{{name}}" aus der Preisverfolgung entfernen? Du kannst es später durch Zurücksetzen des Alias wiederherstellen.',
+    removePrice: 'Diesen Preis entfernen',
+    removePriceConfirm: 'Preis vom {{date}} ({{price}}) entfernen? Nützlich für einmalige Rabatte, die den Inflationsindex verfälschen würden.',
     noProducts: 'Noch keine verfolgten Produkte',
     showMore: '+{{count}} mehr',
     productsHint: 'Produkte werden aus Belegscans erkannt. Tippe auf ein Produkt, um es umzubenennen, oder verwende Merge, um Produktvarianten zu kombinieren.',

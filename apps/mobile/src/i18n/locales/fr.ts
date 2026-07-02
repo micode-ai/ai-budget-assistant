@@ -2141,6 +2141,8 @@ export default {
     deleteAlias: 'Rétablir le nom original',
     ignoreProduct: 'Retirer du suivi',
     ignoreConfirm: 'Retirer "{{name}}" du suivi des prix ? Vous pouvez le restaurer plus tard en réinitialisant l\'alias.',
+    removePrice: 'Supprimer ce prix',
+    removePriceConfirm: 'Supprimer le prix du {{date}} ({{price}}) ? Utile pour les remises ponctuelles qui fausseraient votre indice d\'inflation.',
     noProducts: 'Aucun produit suivi',
     showMore: '+{{count}} de plus',
     productsHint: 'Les produits sont détectés à partir des scans de reçus. Appuyez sur un produit pour le renommer ou utilisez Fusionner pour combiner des variantes du même produit.',

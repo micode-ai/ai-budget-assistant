@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   TextInput,
+  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,7 +36,7 @@ export function InflationIndexSection() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
-  const { history, isLoading, hasAttemptedLoad, selectedPeriod, loadPriceHistory, upsertAlias } =
+  const { history, isLoading, hasAttemptedLoad, selectedPeriod, loadPriceHistory, upsertAlias, deletePricePoint } =
     usePriceHistoryStore();
   const canEdit = useAccountStore((s) => s.canEdit());
 
@@ -43,6 +44,8 @@ export function InflationIndexSection() {
   const [selectedProduct, setSelectedProduct] = useState<PriceHistoryProduct | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const [isRenaming, setIsRenaming] = useState(false);
+  const [selectedPointIndex, setSelectedPointIndex] = useState<number | null>(null);
+  const [isDeletingPoint, setIsDeletingPoint] = useState(false);
 
   const handlePeriodChange = useCallback(
     (p: Period) => {
@@ -58,6 +61,7 @@ export function InflationIndexSection() {
 
   const closeSheet = useCallback(() => {
     setSelectedProduct(null);
+    setSelectedPointIndex(null);
   }, []);
 
   const handleRename = useCallback(async () => {
@@ -227,7 +231,45 @@ export function InflationIndexSection() {
                 height={180}
                 lineColor={theme.colors.primary}
                 formatValue={(v) => v.toFixed(2)}
+                onPointPress={(_item, index) => setSelectedPointIndex(index)}
               />
+              {canEdit && selectedPointIndex !== null && selectedProduct.pricePoints[selectedPointIndex] && (
+                <TouchableOpacity
+                  style={[styles.removePriceBtn, isDeletingPoint && styles.ctaButtonDisabled]}
+                  disabled={isDeletingPoint}
+                  onPress={async () => {
+                    const point = selectedProduct.pricePoints[selectedPointIndex];
+                    Alert.alert(
+                      t('priceHistory.removePrice'),
+                      t('priceHistory.removePriceConfirm', {
+                        date: point.date,
+                        price: `${point.price.toFixed(2)} ${selectedProduct.currency}`,
+                      }),
+                      [
+                        { text: t('common.cancel'), style: 'cancel' },
+                        {
+                          text: t('priceHistory.removePrice'),
+                          style: 'destructive',
+                          onPress: async () => {
+                            setIsDeletingPoint(true);
+                            try {
+                              await deletePricePoint(point.itemId);
+                              setSelectedPointIndex(null);
+                            } catch {
+                              // warn'd in store
+                            } finally {
+                              setIsDeletingPoint(false);
+                            }
+                          },
+                        },
+                      ],
+                    );
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={14} color={theme.colors.danger} />
+                  <Text style={styles.removePriceBtnText}>{t('priceHistory.removePrice')}</Text>
+                </TouchableOpacity>
+              )}
 
               {/* Store comparison — sorted cheapest-first */}
               <Text style={styles.sheetSubtitle}>{t('priceHistory.storeComparison')}</Text>
@@ -395,6 +437,18 @@ const createStyles = (theme: Theme) => ({
   ctaText: {
     ...theme.textStyles.bodyMedium,
     color: '#fff',
+  },
+  removePriceBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    alignSelf: 'flex-start' as const,
+    marginTop: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+  },
+  removePriceBtnText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.danger,
   },
   overlay: {
     flex: 1,

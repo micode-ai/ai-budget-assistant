@@ -43,6 +43,12 @@ export const priceHistoryApi = {
     );
   },
 
+  deletePricePoint(itemId: string) {
+    return httpClient.request<void>(`/price-history/price-points/${encodeURIComponent(itemId)}`, {
+      method: 'DELETE',
+    });
+  },
+
   backfillProductNames() {
     return httpClient.request<{ updatedCount: number }>('/price-history/products/backfill-ai', {
       method: 'POST',
