@@ -26,7 +26,7 @@ export default function ProductsSettingsScreen() {
   const insets = useSafeAreaInsets();
   const canEdit = useAccountStore((s) => s.canEdit());
 
-  const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, mergeProducts, backfillWithAi } =
+  const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, ignoreProduct, mergeProducts, backfillWithAi } =
     usePriceHistoryStore();
 
   useEffect(() => { loadProducts(); }, []);
@@ -337,6 +337,32 @@ export default function ProductsSettingsScreen() {
                   <Text style={styles.saveText}>{t('common.save')}</Text>
                 </TouchableOpacity>
               </View>
+              {canEdit && editing && (
+                <TouchableOpacity
+                  style={styles.ignoreBtn}
+                  onPress={() => {
+                    const item = editing;
+                    showAlert(
+                      t('priceHistory.ignoreProduct'),
+                      t('priceHistory.ignoreConfirm', { name: item.canonicalName }),
+                      [
+                        { text: t('common.cancel'), style: 'cancel' },
+                        {
+                          text: t('priceHistory.ignoreProduct'),
+                          style: 'destructive',
+                          onPress: async () => {
+                            closeRename();
+                            try { await ignoreProduct(item.rawName); } catch { /* warn'd */ }
+                          },
+                        },
+                      ],
+                    );
+                  }}
+                >
+                  <Ionicons name="eye-off-outline" size={14} color={theme.colors.danger} />
+                  <Text style={styles.ignoreBtnText}>{t('priceHistory.ignoreProduct')}</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </KeyboardAvoidingView>
         </Modal>
@@ -535,4 +561,13 @@ const createStyles = (theme: Theme) => ({
   },
   saveBtnDisabled: { opacity: 0.6 },
   saveText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
+  ignoreBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: 6,
+    marginTop: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+  },
+  ignoreBtnText: { fontSize: 14, color: theme.colors.danger },
 });

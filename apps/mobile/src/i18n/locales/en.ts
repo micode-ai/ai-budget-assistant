@@ -2148,6 +2148,8 @@ export default {
     mergeInto: 'Merge into',
     merged: 'Merged',
     deleteAlias: 'Reset to original name',
+    ignoreProduct: 'Remove from tracking',
+    ignoreConfirm: 'Remove "{{name}}" from price tracking? You can restore it by resetting the alias later.',
     noProducts: 'No tracked products yet',
     showMore: '+{{count}} more',
     productsHint: 'Products are detected from receipt scans. Tap a product to rename it, or use Merge to combine variants of the same product.',

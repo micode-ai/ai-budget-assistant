@@ -15,6 +15,7 @@ interface PriceHistoryState {
   backfillWithAi: () => Promise<{ updatedCount: number }>;
   upsertAlias: (rawName: string, canonicalName: string) => Promise<void>;
   deleteAlias: (rawName: string) => Promise<void>;
+  ignoreProduct: (rawName: string) => Promise<void>;
   mergeProducts: (rawNames: string[], canonicalName: string) => Promise<void>;
   reset: () => void;
 }
@@ -75,6 +76,17 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
       await get().loadProducts();
     } catch (e) {
       console.warn('[priceHistoryStore] deleteAlias failed', e);
+      throw e;
+    }
+  },
+
+  ignoreProduct: async (rawName) => {
+    try {
+      await api.ignoreProduct(rawName);
+      await get().loadPriceHistory();
+      await get().loadProducts();
+    } catch (e) {
+      console.warn('[priceHistoryStore] ignoreProduct failed', e);
       throw e;
     }
   },
