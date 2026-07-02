@@ -2148,5 +2148,11 @@ export default {
     deleteAlias: 'Reset to original name',
     noProducts: 'No tracked products yet',
     showMore: '+{{count}} more',
+    productsHint: 'Products are detected from receipt scans. Tap a product to rename it, or use Merge to combine variants of the same product.',
+    resetAliasTitle: 'Reset name',
+    resetAliasBody: 'Reset to original name "{{name}}"?',
+    resetAlias: 'Reset',
+    mergeSelected: 'Merge {{count}} products',
+    purchasesCount: '{{count}} purchases',
   },
 } as const;

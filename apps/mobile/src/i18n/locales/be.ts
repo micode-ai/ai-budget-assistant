@@ -2108,5 +2108,11 @@ export default {
     deleteAlias: 'Аднавіць арыгінальную назву',
     noProducts: 'Няма адсочваемых тавараў',
     showMore: '+{{count}} яшчэ',
+    productsHint: 'Тавары выяўляюцца зі сканаў чэкаў. Тап на тавар, каб яго перайменаваць, ці выкарыстай Аб\'яднаць, каб скомбіняваць варыянты адного тавара.',
+    resetAliasTitle: 'Сбросіць назву',
+    resetAliasBody: 'Сбросіць на арыгінальную назву "{{name}}"?',
+    resetAlias: 'Сбросіць',
+    mergeSelected: 'Аб\'яднаць {{count}} тавараў',
+    purchasesCount: '{{count}} пакупак',
   },
 } as const;

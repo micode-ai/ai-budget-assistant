@@ -2137,5 +2137,11 @@ export default {
     deleteAlias: 'Originele naam herstellen',
     noProducts: 'Nog geen gevolgde producten',
     showMore: '+{{count}} meer',
+    productsHint: 'Producten worden gedetecteerd uit bonscans. Tik op een product om het een ander naam te geven of gebruik Samenvoegen om varianten van hetzelfde product te combineren.',
+    resetAliasTitle: 'Naam resetten',
+    resetAliasBody: 'Resetten naar originele naam "{{name}}"?',
+    resetAlias: 'Resetten',
+    mergeSelected: 'Samenvoegen {{count}} producten',
+    purchasesCount: '{{count}} aankopen',
   },
 } as const;

@@ -2140,5 +2140,11 @@ export default {
     deleteAlias: 'Przywróć oryginalną nazwę',
     noProducts: 'Brak śledzonych produktów',
     showMore: '+{{count}} więcej',
+    productsHint: 'Produkty są wykrywane ze skanów paragonów. Kliknij produkt, aby zmienić jego nazwę, lub użyj Scal, aby połączyć warianty tego samego produktu.',
+    resetAliasTitle: 'Zresetuj nazwę',
+    resetAliasBody: 'Zresetuj do oryginalnej nazwy "{{name}}"?',
+    resetAlias: 'Zresetuj',
+    mergeSelected: 'Scal {{count}} produktów',
+    purchasesCount: '{{count}} zakupów',
   },
 } as const;
