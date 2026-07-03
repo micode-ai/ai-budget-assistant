@@ -4,6 +4,7 @@ import { WhisperService } from './services/whisper.service';
 import { ChatService } from './services/chat.service';
 import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
+import { GeocodingService } from './services/geocoding.service';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { SplitSuggestionService } from './services/split-suggestion.service';
@@ -31,6 +32,7 @@ import { InsightsModule } from '../insights/insights.module';
     ChatService,
     CategorizationService,
     OcrService,
+    GeocodingService,
     TagSuggestionService,
     ProjectSuggestionService,
     SplitSuggestionService,

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Switch,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
@@ -21,6 +22,8 @@ import { useWalletStore } from '@/stores/walletStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useReportStore } from '@/stores/reportStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useLocationSettingsStore } from '@/stores/locationSettingsStore';
+import { requestLocationPermission } from '@/services/locationCapture';
 import { getLastSyncTime } from '@/db/syncMetadataRepository';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -31,6 +34,8 @@ export default function DataSettingsScreen() {
 
   const { preferences: reportPrefs, loadPreferences: loadReportPrefs, updatePreferences: updateReportPrefs, exportBackup, isExporting, restoreBackup, isRestoring } = useReportStore();
   const isBusinessTier = useSubscriptionStore((s) => s.isBusiness());
+  const captureEnabled = useLocationSettingsStore((s) => s.captureEnabled);
+  const setCaptureEnabled = useLocationSettingsStore((s) => s.setCaptureEnabled);
 
   const [lastSyncTime, setLastSyncTimeState] = useState<number | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -69,6 +74,19 @@ export default function DataSettingsScreen() {
     } finally {
       setIsSyncing(false);
     }
+  };
+
+  const handleToggleLocation = async (value: boolean) => {
+    if (!value) {
+      setCaptureEnabled(false);
+      return;
+    }
+    const granted = await requestLocationPermission();
+    if (!granted) {
+      showAlert(t('location.sectionTitle'), t('location.permissionDenied'));
+      return;
+    }
+    setCaptureEnabled(true);
   };
 
   const WEEK_DAYS = [
@@ -220,6 +238,26 @@ export default function DataSettingsScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Location */}
+        {Platform.OS !== 'web' && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('location.sectionTitle')}</Text>
+            <View style={styles.card}>
+              <View style={styles.fieldRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.fieldLabel}>{t('location.attachToggle')}</Text>
+                  <Text style={styles.fieldDesc}>{t('location.attachToggleDesc')}</Text>
+                </View>
+                <Switch
+                  value={captureEnabled}
+                  onValueChange={handleToggleLocation}
+                  trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                />
+              </View>
+            </View>
+          </View>
+        )}
 
         {/* Reports & Email */}
         <View style={styles.section}>

@@ -24,6 +24,7 @@ import { useMerchantRulesStore } from '@/stores/merchantRulesStore';
 import { useAuthStore } from '@/stores/authStore';
 import { sha256SimpleHex } from './dedup';
 import { contentMatchesExisting } from './contentMatch';
+import { captureCurrentLocation } from '@/services/locationCapture';
 
 /** In-app toast callback — injected by the settings screen / app root to avoid hard dep on UI. */
 let _toastHandler: ((message: string, expenseId: string) => void) | null = null;
@@ -137,6 +138,7 @@ async function handleBankNotification(payload: BankNotificationPayload): Promise
 
       // --- Create expense (offline-first) ---
       const userId = useAuthStore.getState().user?.id ?? '';
+      const capturedLocation = await captureCurrentLocation();
       const expense = await useExpenseStore.getState().addExpense({
         userId,
         amount,
@@ -152,6 +154,7 @@ async function handleBankNotification(payload: BankNotificationPayload): Promise
         isRecurring: false,
         isDebt: false,
         isDebtRepayment: false,
+        location: capturedLocation ?? undefined,
       });
 
       // --- UX feedback: in-app toast ---

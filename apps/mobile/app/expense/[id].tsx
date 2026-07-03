@@ -19,6 +19,7 @@ import {
 } from './components/ExpenseDetailsCard';
 import { ExpenseItemsSection } from './components/ExpenseItemsSection';
 import { ReceiptSection } from './components/ReceiptSection';
+import { LocationSection } from './components/LocationSection';
 
 export default function ExpenseDetailScreen() {
   const { t } = useTranslation();
@@ -274,6 +275,9 @@ export default function ExpenseDetailScreen() {
 
         {/* Receipt Image */}
         <ReceiptSection expenseId={id!} />
+
+        {/* Location (map card / add-location affordance) */}
+        <LocationSection expense={expense} canEdit={canEdit} />
 
         {/* Actions */}
         <View style={styles.actionsContainer}>

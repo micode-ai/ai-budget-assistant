@@ -35,6 +35,11 @@ export interface SyncExpensePayload {
   tagIds?: string[];
   projectId?: string | null;
   date: string;
+  location?: {
+    lat: number;
+    lng: number;
+    name?: string;
+  } | null;
   source?: string;
   isDebt?: boolean;
   isDebtRepayment?: boolean;

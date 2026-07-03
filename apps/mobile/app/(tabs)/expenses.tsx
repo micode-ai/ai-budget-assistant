@@ -11,7 +11,7 @@ import {
   Modal,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -32,15 +32,18 @@ import { ExpenseListItem } from '@/components/expenses/ExpenseListItem';
 import { IncomeListItem } from '@/components/expenses/IncomeListItem';
 import { ExpenseFilterBar } from '@/components/expenses/ExpenseFilterBar';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
+import { ExpenseMapView } from '@/components/map/ExpenseMapView';
+import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
 
 type ActiveTab = 'expenses' | 'income';
 
 export default function ExpensesScreen() {
   const { t } = useTranslation();
-  const { tab } = useLocalSearchParams<{ tab?: string }>();
+  const { tab, view, mapKey } = useLocalSearchParams<{ tab?: string; view?: string; mapKey?: string }>();
   const [refreshing, setRefreshing] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('expenses');
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<TextInput>(null);
@@ -63,6 +66,10 @@ export default function ExpensesScreen() {
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const expenses = getFilteredExpenses();
   const incomes = getFilteredIncomes();
+  const { points: mapPoints, missingCount } = useMemo(
+    () => buildExpenseMapPoints(expenses),
+    [expenses],
+  );
   const rates = useExchangeRateStore((s) => s.rates);
   const baseCurrencyRaw = useExchangeRateStore((s) => s.baseCurrency);
   const baseCurrency = baseCurrencyRaw || 'USD';
@@ -95,6 +102,13 @@ export default function ExpensesScreen() {
       setActiveTab(tab);
     }
   }, [tab]);
+
+  useEffect(() => {
+    if (view === 'map') {
+      setActiveTab('expenses');
+      setViewMode('map');
+    }
+  }, [view, mapKey]);
 
   useEffect(() => {
     if (currentAccountId) {
@@ -329,6 +343,19 @@ export default function ExpensesScreen() {
               </Text>
             </TouchableOpacity>
           </View>
+          {activeTab === 'expenses' && (
+            <TouchableOpacity
+              onPress={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
+              style={styles.searchToggleButton}
+              accessibilityLabel={viewMode === 'map' ? t('map.listView') : t('map.mapView')}
+            >
+              <Ionicons
+                name={viewMode === 'map' ? 'list-outline' : 'map-outline'}
+                size={20}
+                color={viewMode === 'map' ? theme.colors.primary : theme.colors.textSecondary}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={toggleSearch} style={styles.searchToggleButton}>
             <Ionicons
               name={searchVisible ? 'close' : 'search'}
@@ -377,7 +404,22 @@ export default function ExpensesScreen() {
       />
 
       {/* Transaction list */}
-      {activeTab === 'expenses' ? (
+      {activeTab === 'expenses' && viewMode === 'map' ? (
+        <View style={styles.mapContainer}>
+          {missingCount > 0 && (
+            <View style={styles.mapBanner}>
+              <Ionicons name="information-circle-outline" size={16} color={theme.colors.textSecondary} />
+              <Text style={styles.mapBannerText}>{t('map.noLocationCount', { count: missingCount })}</Text>
+            </View>
+          )}
+          <ExpenseMapView
+            points={mapPoints}
+            openLabel={t('map.open')}
+            onPointPress={(pointId) => router.push(`/expense/${pointId}`)}
+            style={styles.map}
+          />
+        </View>
+      ) : activeTab === 'expenses' ? (
         <FlatList
           data={expenses}
           renderItem={renderExpenseItem}
@@ -936,4 +978,15 @@ const createStyles = (theme: Theme) => ({
     textAlign: 'center' as const,
     paddingVertical: theme.spacing[4],
   },
+  mapContainer: { flex: 1 },
+  map: { flex: 1 },
+  mapBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  mapBannerText: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
 });

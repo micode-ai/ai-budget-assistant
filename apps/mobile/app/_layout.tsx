@@ -313,6 +313,14 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="expense/location"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: t('location.pickerTitle'),
+          }}
+        />
+        <Stack.Screen
           name="expense/voice"
           options={{
             presentation: 'modal',

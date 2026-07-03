@@ -392,6 +392,7 @@ model Expense {
   time         String?
   locationLat  Decimal? @map("location_lat") @db.Decimal(10, 8)
   locationLng  Decimal? @map("location_lng") @db.Decimal(11, 8)
+  locationName String?  @map("location_name")
   receiptUrl   String?  @map("receipt_url")
   isRecurring     Boolean  @default(false) @map("is_recurring")
   recurringId     String?  @map("recurring_id")
@@ -1724,4 +1725,19 @@ model SettleUpTransaction {
 
   @@index([accountId])
   @@map("settle_up_transactions")
+}
+
+// Server-side geocoding cache (ABA — expense geo-location). Global, NOT account-scoped:
+// an address resolves identically for everyone and no user data is stored.
+// Rows with lat/lng = NULL are NEGATIVE cache entries ("address not found") so
+// unfindable addresses are never re-queried against Nominatim.
+model GeocodeCache {
+  id              String   @id @default(uuid())
+  queryNormalized String   @unique @map("query_normalized")
+  lat             Decimal? @db.Decimal(10, 8)
+  lng             Decimal? @db.Decimal(11, 8)
+  displayName     String?  @map("display_name")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("geocode_cache")
 }

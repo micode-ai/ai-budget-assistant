@@ -22,6 +22,7 @@ export interface ScannedReceipt {
   date: string | null;
   confidence: number;
   receiptItems: ReceiptItem[];
+  location: { lat: number; lng: number; name: string } | null;
 }
 
 export interface ReceiptScannerState {

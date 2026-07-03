@@ -9,6 +9,7 @@ import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { GeocodingService } from './geocoding.service';
 
 export interface ReceiptItem {
   description: string;
@@ -79,6 +80,7 @@ export interface ReceiptExpense {
   date: string | null;
   confidence: number;
   receiptItems: ReceiptItem[];
+  location: { lat: number; lng: number; name: string } | null;
 }
 
 interface CategoryWithName {
@@ -172,6 +174,7 @@ export class OcrService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly geocoding: GeocodingService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -297,10 +300,10 @@ Important:
     return prompt;
   }
 
-  private buildReceiptExpense(
+  private async buildReceiptExpense(
     parsed: ParsedReceipt & { suggestedCategory?: string },
     categories: CategoryWithName[],
-  ): ReceiptExpense {
+  ): Promise<ReceiptExpense> {
     const matchedCategory = categories.find(
       (c: CategoryWithName) => c.name.toLowerCase() === parsed.suggestedCategory?.toLowerCase(),
     );
@@ -318,6 +321,15 @@ Important:
       description = 'Receipt expense';
     }
 
+    let location: ReceiptExpense['location'] = null;
+    if (parsed.merchantAddress) {
+      const geo = await this.geocoding.geocode(parsed.merchantAddress);
+      if (geo) {
+        // name = the raw address the user saw printed on the receipt
+        location = { lat: geo.lat, lng: geo.lng, name: parsed.merchantAddress };
+      }
+    }
+
     return {
       amount: parsed.total || 0,
       discountAmount: parsed.discount || null,
@@ -329,6 +341,7 @@ Important:
       date: parsed.date,
       confidence: parsed.confidence || 0.7,
       receiptItems: parsed.items || [],
+      location,
     };
   }
 
@@ -546,7 +559,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+    return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
   }
 
   async parseReceiptPdf(
@@ -596,7 +609,7 @@ Important:
         if (!content) throw new Error('No response from AI');
 
         const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-        return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+        return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
       }
 
       // Scanned PDF — send the full PDF as a file
@@ -681,7 +694,7 @@ Important:
       this.logger.log(`[PDF-File] GPT response (fallback): ${content}`);
       if (!content) throw new Error('No response from AI');
       const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-      return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+      return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
     }
 
     const response = await this.openai.chat.completions.create({
@@ -703,7 +716,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+    return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {

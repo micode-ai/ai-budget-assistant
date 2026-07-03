@@ -51,15 +51,18 @@ export interface Expense {
   category?: Category | null;
   date: Date;
   time?: string;
+  /** `null` is an explicit clear signal on update (mirrors `UpdateExpenseDto.location`); reads never return `null`, only `undefined`. */
   location?: {
     lat: number;
     lng: number;
     name?: string;
-  };
+  } | null;
   /** Separate lat column as returned by the API (server uses locationLat/locationLng, not a location object). */
   locationLat?: number | null;
   /** Separate lng column as returned by the API. */
   locationLng?: number | null;
+  /** Separate name column as returned by the API. */
+  locationName?: string | null;
   receiptUrl?: string;
   isRecurring: boolean;
   recurringId?: string;
