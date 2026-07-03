@@ -9,6 +9,7 @@ import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { resolveShares } from './trip-share-calculator';
+import { buildLocationColumns } from './expense-location.util';
 
 @Injectable()
 export class ExpensesService {
@@ -175,8 +176,7 @@ export class ExpensesService {
         categoryId: resolvedCategoryId,
         date: new Date(dto.date),
         time: dto.time,
-        locationLat: dto.location?.lat,
-        locationLng: dto.location?.lng,
+        ...buildLocationColumns(dto.location),
         source: dto.source,
         receiptImage,
         receiptMimeType,
@@ -204,6 +204,7 @@ export class ExpensesService {
           merchant: dto.merchant,
           categoryId: resolvedCategoryId,
           date: new Date(dto.date),
+          ...buildLocationColumns(dto.location),
           source: dto.source,
           receiptImage,
           receiptMimeType,
@@ -424,6 +425,7 @@ export class ExpensesService {
           time: true,
           locationLat: true,
           locationLng: true,
+          locationName: true,
           receiptUrl: true,
           isRecurring: true,
           recurringId: true,
@@ -520,8 +522,7 @@ export class ExpensesService {
           categoryId: resolvedCategoryId,
           date: dto.date ? new Date(dto.date) : undefined,
           time: dto.time,
-          locationLat: dto.location?.lat,
-          locationLng: dto.location?.lng,
+          ...buildLocationColumns(dto.location),
           isRecurring: dto.isRecurring,
           recurringId: dto.recurringId,
           recurringPeriod: dto.recurringPeriod,

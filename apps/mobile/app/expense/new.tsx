@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -37,6 +37,7 @@ import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { MerchantInput } from '@/components/MerchantInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 
 function getContrastTextColor(hexColor: string | undefined): string {
   if (!hexColor || typeof hexColor !== 'string') return '#ffffff';
@@ -73,6 +74,11 @@ export default function NewExpenseScreen() {
   const { getExpenseCategories, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   const { loadTags } = useTagStore();
   const { loadProjects } = useProjectStore();
+
+  const gpsLocationRef = useRef<CapturedLocation | null>(null);
+  useEffect(() => {
+    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
+  }, []);
 
   // Trip Expense Splitting (Group Trip Wallet): only relevant for `trip`
   // accounts — a complete no-op (no extra state used, no extra fields sent)
@@ -181,6 +187,7 @@ export default function NewExpenseScreen() {
         relatedDebtIncomeId: isDebtRepayment ? params.relatedDebtIncomeId : undefined,
         splits: splitsPayload,
         ...(isTripAccount ? { splitType, shares } : {}),
+        location: gpsLocationRef.current ?? undefined,
       });
 
       // Save category splits locally

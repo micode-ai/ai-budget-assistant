@@ -28,6 +28,7 @@ import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
+import { parseServerLocation } from '@/utils/location';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
@@ -78,6 +79,9 @@ export async function syncPendingExpenses(
             debtContactName: expense.debtContactName,
             amount: expense.amount,
             discountAmount: expense.discountAmount,
+            locationName: expense.location?.name,
+            locationLat: expense.location?.lat,
+            locationLng: expense.location?.lng,
           },
           expense.accountId,
         );
@@ -90,6 +94,16 @@ export async function syncPendingExpenses(
         description: encPayload.description ?? expense.description,
         notes: encPayload.notes ?? expense.notes,
         merchant: encPayload.merchant ?? expense.merchant,
+        // For E2EE accounts the encrypted plaintext comes back zeroed (numbers) /
+        // nulled (strings) — use encPayload values directly, never fall back to the
+        // plaintext name (that would leak an encrypted field).
+        location: expense.location
+          ? {
+              lat: (encPayload.locationLat as number | undefined) ?? expense.location.lat,
+              lng: (encPayload.locationLng as number | undefined) ?? expense.location.lng,
+              name: (encPayload.locationName as string | null | undefined) ?? undefined,
+            }
+          : undefined,
         categoryId: expense.categoryId || undefined,
         tagIds: localTags.length > 0 ? localTags.map((t) => t.id) : undefined,
         projectId: localProjectId || undefined,
@@ -311,6 +325,7 @@ async function _doPullAndMerge(
           categoryId: serverCategoryId || localExpense?.categoryId,
           date: new Date(decrypted.date),
           time: decrypted.time ?? undefined,
+          location: parseServerLocation(decrypted),
           projectId: serverProjectId || localExpense?.projectId,
           source: decrypted.source || 'manual',
           isRecurring: decrypted.isRecurring || false,

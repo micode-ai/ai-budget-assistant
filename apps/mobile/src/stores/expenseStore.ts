@@ -246,6 +246,9 @@ export const useExpenseStore = create<ExpenseState>()(
         amount: newExpense.amount,
         discountAmount: newExpense.discountAmount,
         debtContactName: newExpense.debtContactName,
+        locationName: newExpense.location?.name,
+        locationLat: newExpense.location?.lat,
+        locationLng: newExpense.location?.lng,
       }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
         return api.createExpense({
           localId: id,
@@ -255,6 +258,16 @@ export const useExpenseStore = create<ExpenseState>()(
           description: encPayload.description ?? newExpense.description,
           notes: encPayload.notes ?? newExpense.notes,
           merchant: encPayload.merchant ?? newExpense.merchant,
+          // For E2EE accounts the encrypted plaintext comes back zeroed (numbers) /
+          // nulled (strings) — use encPayload values directly, never fall back to the
+          // plaintext name (that would leak an encrypted field).
+          location: newExpense.location
+            ? {
+                lat: (encPayload.locationLat as number | undefined) ?? newExpense.location.lat,
+                lng: (encPayload.locationLng as number | undefined) ?? newExpense.location.lng,
+                name: (encPayload.locationName as string | null | undefined) ?? undefined,
+              }
+            : undefined,
           categoryId: resolveCatId(newExpense.categoryId),
           tagIds: tagIds?.length ? tagIds : undefined,
           projectId: projectId || undefined,

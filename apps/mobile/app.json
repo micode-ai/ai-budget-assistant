@@ -22,7 +22,8 @@
       "bundleIdentifier": "com.budget.assistant",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "This app needs access to your microphone to record voice expenses.",
-        "NSFaceIDUsageDescription": "This app uses Face ID to secure your financial data."
+        "NSFaceIDUsageDescription": "This app uses Face ID to secure your financial data.",
+        "NSLocationWhenInUseUsageDescription": "This app can attach your current location to expenses you add, so you can see them on a map. Optional and off by default."
       }
     },
     "android": {
@@ -38,6 +39,8 @@
       "googleServicesFile": "./google-services.json",
       "package": "com.budget.assistant",
       "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
         "RECORD_AUDIO",
         "USE_BIOMETRIC",
         "USE_FINGERPRINT",
@@ -58,6 +61,7 @@
       "expo-router",
       "expo-secure-store",
       "expo-local-authentication",
+      "expo-location",
       [
         "expo-av",
         {

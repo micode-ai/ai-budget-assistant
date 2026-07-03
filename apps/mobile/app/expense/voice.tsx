@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
+import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 
 export default function VoiceExpenseScreen() {
   const { t } = useTranslation();
@@ -36,6 +37,11 @@ export default function VoiceExpenseScreen() {
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { user } = useAuthStore();
   const { getExpenseCategories, getCategoryByName, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
+
+  const gpsLocationRef = useRef<CapturedLocation | null>(null);
+  useEffect(() => {
+    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
+  }, []);
 
   // Editable fields
   const [editAmount, setEditAmount] = useState('');
@@ -128,6 +134,7 @@ export default function VoiceExpenseScreen() {
         isRecurring: false,
         isDebt: false,
         isDebtRepayment: false,
+        location: gpsLocationRef.current ?? undefined,
       });
 
       showAlert(t('common.success'), t('voice.success'), [

@@ -126,7 +126,7 @@ export const PORTFOLIO_CHART_COLORS = [
 export const ENCRYPTION_FIELDS: Record<string, { tier1: string[]; tier2: string[] }> = {
   expense: {
     tier1: ['description', 'notes', 'merchant', 'locationName', 'receiptUrl', 'receiptImageBase64', 'debtContactName'],
-    tier2: ['amount', 'discountAmount'],
+    tier2: ['amount', 'discountAmount', 'locationLat', 'locationLng'],
   },
   expense_item: {
     tier1: ['description'],

@@ -300,6 +300,19 @@ export default function AccountDetailScreen() {
                 <Text style={styles.tripActionText}>{t('trip.paymentSettingsTitle')}</Text>
                 <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
               </TouchableOpacity>
+              <View style={styles.divider} />
+              <TouchableOpacity
+                style={styles.tripActionRow}
+                onPress={async () => {
+                  const { currentAccountId, switchAccount } = useAccountStore.getState();
+                  if (id && id !== currentAccountId) await switchAccount(id);
+                  router.push({ pathname: '/(tabs)/expenses', params: { view: 'map', mapKey: Date.now().toString() } });
+                }}
+              >
+                <Ionicons name="map-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.tripActionText}>{t('trip.tripMap')}</Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
             </View>
           </View>
         )}

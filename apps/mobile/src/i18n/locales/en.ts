@@ -1478,6 +1478,7 @@ export default {
     archiveTripUnconfirmedWarning:
       'There are unconfirmed settle-up payments. Archive anyway?',
     archiveTripForce: 'Archive Anyway',
+    tripMap: 'Trip map',
   },
   gamification: {
     title: 'Achievements',
@@ -1788,6 +1789,26 @@ export default {
     and: 'and',
     bySubscribing: 'By subscribing, you agree to our',
     mustAcceptTerms: 'You must accept the Terms and Privacy Policy',
+  },
+  location: {
+    sectionTitle: 'Location',
+    attachToggle: 'Attach location to new expenses',
+    attachToggleDesc: 'Saves your GPS position when you add an expense on the spot',
+    permissionDenied: 'Location permission is required. Enable it in system settings.',
+    title: 'Location',
+    addLocation: 'Add location',
+    editLocation: 'Edit location',
+    removeLocation: 'Remove location',
+    myLocation: 'My location',
+    tapToPlace: 'Tap the map to place the pin',
+    pickerTitle: 'Expense location',
+  },
+  map: {
+    mapView: 'Map',
+    listView: 'List',
+    noLocationCount_one: '{{count}} expense without location',
+    noLocationCount_other: '{{count}} expenses without location',
+    open: 'Open',
   },
   debt: {
     debtsAndLoans: 'Debts & Loans',

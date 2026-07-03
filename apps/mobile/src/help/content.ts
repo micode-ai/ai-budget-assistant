@@ -3955,6 +3955,63 @@ Only receipts scanned with the camera (OCR) contribute to the index. Manually en
 All price history is stored in your account on the server. It is not shared across accounts or used to build any shared product catalog. If you delete your account, all price history is deleted with it.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Expense Map`,
+      description: ``,
+      body: `# Expense Map
+
+See your spending on a map. Expenses can carry a location — taken from the store address printed on a scanned receipt, from your phone's GPS at the moment you add an expense, or placed by hand — and the app can show any filtered list of expenses as clickable pins on a map.
+
+## Where Locations Come From
+
+An expense gets its location from one of three sources (higher wins):
+
+1. **Manual pin** — you place or move the pin yourself on the expense's location screen.
+2. **Receipt address** — when you scan a receipt, the app reads the store address printed on it and converts it to map coordinates automatically. This works even if you scan the receipt at home later.
+3. **GPS at entry time** — optionally, the app can silently attach your current position when you add an expense on the spot (manual entry, voice entry, or automatic bank-notification capture).
+
+Imported transactions (bank CSV/PDF files) do not get a location.
+
+## Turning On GPS Capture
+
+GPS capture is **off by default**. To enable it:
+
+1. Open **Settings → Data & Reports**.
+2. In the **Location** section, turn on **Attach location to new expenses**.
+3. Allow the location permission when the system asks.
+
+When enabled, new expenses you add on the go get your current position automatically. You can always see and remove an expense's location, and you can turn the toggle off at any time.
+
+## Map View on the Expenses Tab
+
+On the **Expenses** tab, tap the map icon next to the search icon to switch from the list to a map. The map shows the same expenses as the list — your period, category, and merchant filters all apply. Tap the icon again to return to the list.
+
+- Nearby expenses are grouped into numbered clusters; tap a cluster to zoom in.
+- Tap a pin to see the merchant and amount; tap **Open** to jump to that expense.
+- If some filtered expenses have no location, a small banner shows how many.
+
+## Location on the Expense Screen
+
+When an expense has a location, its detail screen shows a small map with the pin and the address (or coordinates). From there you can:
+
+- **Edit location** — opens a full-screen map where you can tap to place the pin, drag it, or use **My location** to jump to where you are.
+- **Remove location** — the trash icon next to the map removes the pin in one tap.
+
+An expense without a location shows an **Add location** button instead (editors only).
+
+## Trip Map
+
+Trip accounts get a dedicated entry point: open the trip account and tap **Trip map**. The app switches to that trip and opens the Expenses tab in map mode — a visual diary of where the trip's money went. Combined with receipt scanning and GPS capture, most trip expenses land on the map automatically.
+
+## Privacy
+
+- GPS capture is strictly opt-in and off by default; the permission is only requested when you enable the toggle.
+- The receipt-address lookup uses only the address printed on the receipt — no phone location is involved.
+- A location is part of the expense record: members of a shared account who can see the expense also see its location.
+- You can remove any expense's location at any time.
+`,
+    },
   ],
   ru: [
     {
@@ -7887,6 +7944,63 @@ AI Budget Assistant предлагает три уровня подписки. �
 Вся история цен хранится в вашем аккаунте на сервере. Она не передаётся между аккаунтами и не используется для создания общего каталога товаров. При удалении аккаунта вся история цен также удаляется.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Карта расходов`,
+      description: ``,
+      body: `# Карта расходов
+
+Смотрите свои расходы на карте. У расходов может быть указана локация — взятая из адреса магазина, напечатанного на отсканированном чеке, из GPS вашего телефона в момент добавления расхода, или установленная вручную — и приложение может показать любой отфильтрованный список расходов в виде кликабельных меток на карте.
+
+## Откуда берутся локации
+
+Расход получает свою локацию из одного из трёх источников (более приоритетный побеждает):
+
+1. **Ручная метка** — вы сами размещаете или перемещаете метку на экране локации расхода.
+2. **Адрес с чека** — когда вы сканируете чек, приложение считывает напечатанный на нём адрес магазина и автоматически преобразует его в координаты на карте. Это работает, даже если вы отсканируете чек позже, дома.
+3. **GPS в момент добавления** — по желанию приложение может незаметно прикрепить вашу текущую позицию, когда вы добавляете расход на месте (ручной ввод, голосовой ввод или автоматическое распознавание банковского уведомления).
+
+Импортированные транзакции (банковские CSV/PDF-файлы) не получают локацию.
+
+## Включение захвата GPS
+
+Захват GPS **по умолчанию отключён**. Чтобы включить его:
+
+1. Откройте **Настройки → Данные и отчёты**.
+2. В разделе **Локация** включите **Прикреплять локацию к новым расходам**.
+3. Разрешите доступ к геолокации, когда система запросит это.
+
+После включения новые расходы, которые вы добавляете на ходу, автоматически получают вашу текущую позицию. Вы всегда можете посмотреть и удалить локацию расхода, а переключатель можно отключить в любой момент.
+
+## Режим карты на вкладке «Расходы»
+
+На вкладке **Расходы** нажмите на значок карты рядом со значком поиска, чтобы переключиться со списка на карту. Карта показывает те же расходы, что и список — применяются ваши фильтры по периоду, категории и продавцу. Нажмите на значок ещё раз, чтобы вернуться к списку.
+
+- Расположенные рядом расходы группируются в пронумерованные кластеры; нажмите на кластер, чтобы приблизить карту.
+- Нажмите на метку, чтобы увидеть продавца и сумму; нажмите **Открыть**, чтобы перейти к этому расходу.
+- Если у части отфильтрованных расходов нет локации, небольшой баннер покажет, сколько их.
+
+## Локация на экране расхода
+
+Когда у расхода есть локация, на экране его деталей отображается небольшая карта с меткой и адресом (или координатами). Оттуда вы можете:
+
+- **Изменить локацию** — открывает карту на весь экран, где можно нажатием разместить метку, перетащить её или воспользоваться кнопкой **Моё местоположение**, чтобы перейти туда, где вы находитесь.
+- **Удалить локацию** — значок корзины рядом с картой удаляет метку одним нажатием.
+
+У расхода без локации вместо этого показывается кнопка **Добавить локацию** (только для редакторов).
+
+## Карта поездки
+
+У аккаунтов поездки есть отдельная точка входа: откройте аккаунт поездки и нажмите **Карта поездки**. Приложение переключается на эту поездку и открывает вкладку «Расходы» в режиме карты — визуальный дневник того, куда ушли деньги в поездке. В сочетании со сканированием чеков и захватом GPS большинство расходов поездки попадают на карту автоматически.
+
+## Конфиденциальность
+
+- Захват GPS строго добровольный и по умолчанию отключён; разрешение запрашивается только при включении переключателя.
+- Определение адреса по чеку использует только адрес, напечатанный на чеке, — местоположение телефона при этом не задействуется.
+- Локация — часть записи о расходе: участники общего аккаунта, которые видят расход, видят и его локацию.
+- Вы можете удалить локацию любого расхода в любой момент.
+`,
+    },
   ],
   ua: [
     {
@@ -11789,6 +11903,63 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 Уся історія цін зберігається у вашому обліковому записі на сервері. Вона не передається між обліковими записами і не використовується для створення спільного каталогу товарів. При видаленні облікового запису вся історія цін також видаляється.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Карта витрат`,
+      description: ``,
+      body: `# Карта витрат
+
+Перегляньте свої витрати на карті. Витрати можуть мати локацію — узяту з адреси магазину, надрукованої на відсканованому чеку, з GPS вашого телефону в момент додавання витрати, або встановлену вручну — і застосунок може показати будь-який відфільтрований список витрат у вигляді клікабельних міток на карті.
+
+## Звідки беруться локації
+
+Витрата отримує свою локацію з одного з трьох джерел (пріоритетніше джерело перемагає):
+
+1. **Ручна мітка** — ви самі розміщуєте або переміщуєте мітку на екрані локації витрати.
+2. **Адреса з чека** — коли ви скануєте чек, застосунок зчитує надруковану на ньому адресу магазину і автоматично перетворює її на координати на карті. Це працює, навіть якщо ви відскануєте чек пізніше, вдома.
+3. **GPS у момент додавання** — за бажанням застосунок може непомітно прикріпити вашу поточну позицію, коли ви додаєте витрату на місці (ручне введення, голосове введення або автоматичне розпізнавання банківського сповіщення).
+
+Імпортовані транзакції (банківські CSV/PDF-файли) не отримують локацію.
+
+## Увімкнення захоплення GPS
+
+Захоплення GPS **вимкнене за замовчуванням**. Щоб увімкнути його:
+
+1. Відкрийте **Налаштування → Дані та звіти**.
+2. У розділі **Локація** увімкніть **Прикріплювати локацію до нових витрат**.
+3. Дозвольте доступ до геолокації, коли система запитає про це.
+
+Після увімкнення нові витрати, які ви додаєте на ходу, автоматично отримують вашу поточну позицію. Ви завжди можете переглянути й видалити локацію витрати, а перемикач можна вимкнути в будь-який момент.
+
+## Режим карти на вкладці «Витрати»
+
+На вкладці **Витрати** натисніть на значок карти поруч зі значком пошуку, щоб перемкнутися зі списку на карту. Карта показує ті самі витрати, що й список — застосовуються ваші фільтри за періодом, категорією та продавцем. Натисніть на значок ще раз, щоб повернутися до списку.
+
+- Розташовані поруч витрати групуються в пронумеровані кластери; натисніть на кластер, щоб наблизити карту.
+- Натисніть на мітку, щоб побачити продавця і суму; натисніть **Відкрити**, щоб перейти до цієї витрати.
+- Якщо частина відфільтрованих витрат не має локації, невеликий банер покаже, скільки саме.
+
+## Локація на екрані витрати
+
+Коли витрата має локацію, на екрані її деталей відображається невелика карта з міткою й адресою (або координатами). Звідти ви можете:
+
+- **Змінити локацію** — відкриває карту на весь екран, де можна дотиком розмістити мітку, перетягнути її або скористатися кнопкою **Моє місцезнаходження**, щоб перейти туди, де ви перебуваєте.
+- **Видалити локацію** — значок кошика поруч із картою видаляє мітку одним дотиком.
+
+У витрати без локації натомість показується кнопка **Додати локацію** (лише для редакторів).
+
+## Карта подорожі
+
+Облікові записи подорожі мають окрему точку входу: відкрийте обліковий запис подорожі й натисніть **Карта подорожі**. Застосунок перемикається на цю подорож і відкриває вкладку «Витрати» в режимі карти — візуальний щоденник того, куди пішли гроші під час подорожі. У поєднанні зі скануванням чеків і захопленням GPS більшість витрат подорожі потрапляють на карту автоматично.
+
+## Конфіденційність
+
+- Захоплення GPS суворо добровільне і вимкнене за замовчуванням; дозвіл запитується лише після увімкнення перемикача.
+- Визначення адреси за чеком використовує лише адресу, надруковану на чеку, — місцезнаходження телефону при цьому не задіюється.
+- Локація — частина запису про витрату: учасники спільного облікового запису, які бачать витрату, бачать і її локацію.
+- Ви можете видалити локацію будь-якої витрати в будь-який момент.
+`,
+    },
   ],
   pl: [
     {
@@ -15676,6 +15847,63 @@ Do wskaźnika przyczyniają się tylko paragony skanowane aparatem (OCR). Ręczn
 Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udostępniana między kontami ani nie służy do budowania żadnego wspólnego katalogu produktów. Jeśli usuniesz konto, cała historia cen zostanie usunięta razem z nim.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Mapa wydatków`,
+      description: ``,
+      body: `# Mapa wydatków
+
+Zobacz swoje wydatki na mapie. Wydatki mogą mieć przypisaną lokalizację — pobraną z adresu sklepu wydrukowanego na zeskanowanym paragonie, z GPS Twojego telefonu w momencie dodawania wydatku, lub ustawioną ręcznie — a aplikacja może pokazać dowolną przefiltrowaną listę wydatków jako klikalne pinezki na mapie.
+
+## Skąd biorą się lokalizacje
+
+Wydatek otrzymuje swoją lokalizację z jednego z trzech źródeł (wyższe wygrywa):
+
+1. **Ręczna pinezka** — samodzielnie umieszczasz lub przesuwasz pinezkę na ekranie lokalizacji wydatku.
+2. **Adres z paragonu** — gdy skanujesz paragon, aplikacja odczytuje wydrukowany na nim adres sklepu i automatycznie przelicza go na współrzędne mapy. Działa to nawet wtedy, gdy zeskanujesz paragon później, w domu.
+3. **GPS w momencie dodania** — opcjonalnie aplikacja może po cichu dołączyć Twoją aktualną pozycję, gdy dodajesz wydatek na miejscu (wpis ręczny, wpis głosowy lub automatyczne przechwytywanie z powiadomienia bankowego).
+
+Zaimportowane transakcje (pliki bankowe CSV/PDF) nie otrzymują lokalizacji.
+
+## Włączanie przechwytywania GPS
+
+Przechwytywanie GPS jest **domyślnie wyłączone**. Aby je włączyć:
+
+1. Otwórz **Ustawienia → Dane i raporty**.
+2. W sekcji **Lokalizacja** włącz opcję **Dołączaj lokalizację do nowych wydatków**.
+3. Zezwól na uprawnienie lokalizacji, gdy zapyta o to system.
+
+Po włączeniu nowe wydatki dodawane w terenie automatycznie otrzymują Twoją aktualną pozycję. Zawsze możesz zobaczyć i usunąć lokalizację wydatku, a przełącznik możesz wyłączyć w dowolnym momencie.
+
+## Widok mapy na karcie Wydatki
+
+Na karcie **Wydatki** stuknij ikonę mapy obok ikony wyszukiwania, aby przełączyć się z listy na mapę. Mapa pokazuje te same wydatki co lista — obowiązują Twoje filtry okresu, kategorii i sprzedawcy. Stuknij ikonę ponownie, aby wrócić do listy.
+
+- Bliskie sobie wydatki są grupowane w ponumerowane klastry; stuknij klaster, aby przybliżyć.
+- Stuknij pinezkę, aby zobaczyć sprzedawcę i kwotę; stuknij **Otwórz**, aby przejść do tego wydatku.
+- Jeśli część przefiltrowanych wydatków nie ma lokalizacji, mały baner pokazuje ile.
+
+## Lokalizacja na ekranie wydatku
+
+Gdy wydatek ma lokalizację, jego ekran szczegółów pokazuje małą mapę z pinezką i adresem (lub współrzędnymi). Stąd możesz:
+
+- **Edytuj lokalizację** — otwiera mapę na pełnym ekranie, na której możesz stuknięciem umieścić pinezkę, przeciągnąć ją lub użyć opcji **Moja lokalizacja**, aby przejść do miejsca, w którym się znajdujesz.
+- **Usuń lokalizację** — ikona kosza obok mapy usuwa pinezkę jednym stuknięciem.
+
+Wydatek bez lokalizacji pokazuje zamiast tego przycisk **Dodaj lokalizację** (tylko dla edytorów).
+
+## Mapa podróży
+
+Konta podróży mają dedykowany punkt wejścia: otwórz konto podróży i stuknij **Mapa podróży**. Aplikacja przełącza się na tę podróż i otwiera kartę Wydatki w trybie mapy — wizualny dziennik tego, na co poszły pieniądze w trakcie podróży. W połączeniu ze skanowaniem paragonów i przechwytywaniem GPS większość wydatków z podróży trafia na mapę automatycznie.
+
+## Prywatność
+
+- Przechwytywanie GPS jest ściśle opcjonalne i domyślnie wyłączone; uprawnienie jest wymagane dopiero po włączeniu przełącznika.
+- Wyszukiwanie adresu z paragonu wykorzystuje wyłącznie adres wydrukowany na paragonie — lokalizacja telefonu nie jest w to zaangażowana.
+- Lokalizacja jest częścią rekordu wydatku: członkowie wspólnego konta, którzy widzą dany wydatek, widzą też jego lokalizację.
+- W każdej chwili możesz usunąć lokalizację dowolnego wydatku.
+`,
+    },
   ],
   de: [
     {
@@ -19538,6 +19766,63 @@ Nur mit der Kamera gescannte Kassenbons (OCR) fließen in den Index ein. Manuell
 Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wird nicht kontoübergreifend geteilt und nicht zur Erstellung eines gemeinsamen Produktkatalogs verwendet. Wenn du dein Konto löschst, wird der gesamte Preisverlauf damit gelöscht.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Ausgabenkarte`,
+      description: ``,
+      body: `# Ausgabenkarte
+
+Sieh deine Ausgaben auf einer Karte. Ausgaben können einen Standort tragen — entnommen aus der auf einem gescannten Kassenbon aufgedruckten Filialadresse, vom GPS deines Telefons im Moment der Ausgabenerfassung, oder manuell gesetzt — und die App kann jede gefilterte Ausgabenliste als anklickbare Pins auf einer Karte anzeigen.
+
+## Woher die Standorte stammen
+
+Eine Ausgabe erhält ihren Standort aus einer von drei Quellen (die höherwertige gewinnt):
+
+1. **Manueller Pin** — du platzierst oder verschiebst den Pin selbst auf dem Standort-Bildschirm der Ausgabe.
+2. **Kassenbon-Adresse** — wenn du einen Kassenbon scannst, liest die App die darauf aufgedruckte Filialadresse und wandelt sie automatisch in Kartenkoordinaten um. Das funktioniert auch, wenn du den Beleg erst später zu Hause scannst.
+3. **GPS zum Erfassungszeitpunkt** — optional kann die App im Hintergrund deine aktuelle Position anhängen, wenn du eine Ausgabe direkt vor Ort erfasst (manuelle Eingabe, Spracheingabe oder automatische Erfassung per Bank-Benachrichtigung).
+
+Importierte Transaktionen (Bank-CSV-/PDF-Dateien) erhalten keinen Standort.
+
+## GPS-Erfassung aktivieren
+
+Die GPS-Erfassung ist **standardmäßig ausgeschaltet**. So aktivierst du sie:
+
+1. Öffne **Einstellungen → Daten & Berichte**.
+2. Schalte im Bereich **Standort** die Option **Standort an neue Ausgaben anhängen** ein.
+3. Erlaube die Standortberechtigung, wenn das System danach fragt.
+
+Ist die Option aktiviert, erhalten neue Ausgaben, die du unterwegs erfasst, automatisch deine aktuelle Position. Du kannst den Standort einer Ausgabe jederzeit einsehen und entfernen und den Schalter jederzeit wieder ausschalten.
+
+## Kartenansicht im Tab „Ausgaben"
+
+Tippe im Tab **Ausgaben** auf das Kartensymbol neben dem Suchsymbol, um von der Liste zur Karte zu wechseln. Die Karte zeigt dieselben Ausgaben wie die Liste — deine Zeitraum-, Kategorie- und Händlerfilter gelten weiterhin. Tippe erneut auf das Symbol, um zur Liste zurückzukehren.
+
+- Nahe beieinanderliegende Ausgaben werden zu nummerierten Clustern gruppiert; tippe auf einen Cluster, um hineinzuzoomen.
+- Tippe auf einen Pin, um Händler und Betrag zu sehen; tippe auf **Öffnen**, um zu dieser Ausgabe zu springen.
+- Wenn einige gefilterte Ausgaben keinen Standort haben, zeigt ein kleiner Banner an, wie viele es sind.
+
+## Standort im Ausgaben-Bildschirm
+
+Hat eine Ausgabe einen Standort, zeigt ihr Detailbildschirm eine kleine Karte mit dem Pin und der Adresse (oder den Koordinaten). Von dort aus kannst du:
+
+- **Standort bearbeiten** — öffnet eine Vollbildkarte, auf der du durch Antippen den Pin platzieren, ihn ziehen oder **Mein Standort** verwenden kannst, um zu deinem aktuellen Ort zu springen.
+- **Standort entfernen** — das Papierkorb-Symbol neben der Karte entfernt den Pin mit einem Tipp.
+
+Eine Ausgabe ohne Standort zeigt stattdessen eine Schaltfläche **Standort hinzufügen** (nur für Bearbeiter).
+
+## Reisekarte
+
+Reisekonten erhalten einen eigenen Einstiegspunkt: Öffne das Reisekonto und tippe auf **Reisekarte**. Die App wechselt zu dieser Reise und öffnet den Tab „Ausgaben" im Kartenmodus — ein visuelles Tagebuch, wohin das Geld der Reise geflossen ist. Kombiniert mit Kassenbon-Scan und GPS-Erfassung landen die meisten Reiseausgaben automatisch auf der Karte.
+
+## Datenschutz
+
+- Die GPS-Erfassung ist strikt Opt-in und standardmäßig ausgeschaltet; die Berechtigung wird erst angefragt, wenn du den Schalter aktivierst.
+- Die Adresserkennung aus dem Kassenbon nutzt ausschließlich die auf dem Beleg aufgedruckte Adresse — dein Standort wird dabei nicht verwendet.
+- Ein Standort ist Teil des Ausgabendatensatzes: Mitglieder eines gemeinsamen Kontos, die die Ausgabe sehen können, sehen auch ihren Standort.
+- Du kannst den Standort jeder Ausgabe jederzeit entfernen.
+`,
+    },
   ],
   es: [
     {
@@ -23389,6 +23674,63 @@ Solo los tiques escaneados con la cámara (OCR) contribuyen al índice. Los gast
 Todo el historial de precios se almacena en tu cuenta en el servidor. No se comparte entre cuentas ni se utiliza para construir ningún catálogo de productos compartido. Si eliminas tu cuenta, todo el historial de precios se elimina con ella.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Mapa de Gastos`,
+      description: ``,
+      body: `# Mapa de Gastos
+
+Consulta tus gastos en un mapa. Los gastos pueden llevar una ubicación — tomada de la dirección del establecimiento impresa en un tique escaneado, del GPS de tu teléfono en el momento de añadir un gasto, o colocada manualmente — y la app puede mostrar cualquier lista filtrada de gastos como chinchetas pulsables en un mapa.
+
+## De dónde vienen las ubicaciones
+
+Un gasto obtiene su ubicación de una de tres fuentes (la de mayor prioridad gana):
+
+1. **Chincheta manual** — tú colocas o mueves la chincheta en la pantalla de ubicación del gasto.
+2. **Dirección del tique** — cuando escaneas un tique, la app lee la dirección del establecimiento impresa en él y la convierte automáticamente en coordenadas de mapa. Esto funciona incluso si escaneas el tique más tarde, en casa.
+3. **GPS en el momento de la entrada** — opcionalmente, la app puede adjuntar en silencio tu posición actual cuando añades un gasto sobre la marcha (entrada manual, entrada por voz o captura automática por notificación bancaria).
+
+Las transacciones importadas (archivos CSV/PDF del banco) no reciben ubicación.
+
+## Activar la captura por GPS
+
+La captura por GPS está **desactivada de forma predeterminada**. Para activarla:
+
+1. Abre **Ajustes → Datos e informes**.
+2. En la sección **Ubicación**, activa **Adjuntar ubicación a nuevos gastos**.
+3. Concede el permiso de ubicación cuando el sistema lo solicite.
+
+Una vez activada, los nuevos gastos que añadas sobre la marcha obtienen tu posición actual automáticamente. Siempre puedes ver y eliminar la ubicación de un gasto, y puedes desactivar el interruptor en cualquier momento.
+
+## Vista de mapa en la pestaña Gastos
+
+En la pestaña **Gastos**, toca el icono de mapa junto al icono de búsqueda para pasar de la lista al mapa. El mapa muestra los mismos gastos que la lista — se aplican tus filtros de período, categoría y comercio. Toca el icono de nuevo para volver a la lista.
+
+- Los gastos cercanos se agrupan en clústeres numerados; toca un clúster para hacer zoom.
+- Toca una chincheta para ver el comercio y el importe; toca **Abrir** para ir a ese gasto.
+- Si algunos gastos filtrados no tienen ubicación, un pequeño aviso muestra cuántos son.
+
+## Ubicación en la pantalla del gasto
+
+Cuando un gasto tiene ubicación, su pantalla de detalle muestra un pequeño mapa con la chincheta y la dirección (o las coordenadas). Desde ahí puedes:
+
+- **Editar ubicación** — abre un mapa a pantalla completa donde puedes tocar para colocar la chincheta, arrastrarla o usar **Mi ubicación** para saltar a donde te encuentras.
+- **Eliminar ubicación** — el icono de papelera junto al mapa elimina la chincheta con un solo toque.
+
+Un gasto sin ubicación muestra en su lugar un botón **Añadir ubicación** (solo para editores).
+
+## Mapa del viaje
+
+Las cuentas de viaje tienen un punto de acceso propio: abre la cuenta de viaje y toca **Mapa del viaje**. La app cambia a ese viaje y abre la pestaña Gastos en modo mapa — un diario visual de adónde fue el dinero del viaje. Combinado con el escaneo de tiques y la captura por GPS, la mayoría de los gastos del viaje aparecen en el mapa automáticamente.
+
+## Privacidad
+
+- La captura por GPS es estrictamente opcional y está desactivada de forma predeterminada; el permiso solo se solicita cuando activas el interruptor.
+- La búsqueda de dirección del tique usa únicamente la dirección impresa en el recibo — no interviene la ubicación del teléfono.
+- La ubicación forma parte del registro del gasto: los miembros de una cuenta compartida que pueden ver el gasto también ven su ubicación.
+- Puedes eliminar la ubicación de cualquier gasto en cualquier momento.
+`,
+    },
   ],
   fr: [
     {
@@ -27238,6 +27580,63 @@ Seuls les tickets scannés avec l'appareil photo (OCR) contribuent à l'indice. 
 Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'est pas partagé entre comptes et n'est pas utilisé pour construire un catalogue de produits commun. Si vous supprimez votre compte, tout l'historique des prix est supprimé avec lui.
 `,
     },
+    {
+      id: '37-expense-map',
+      title: `Carte des Dépenses`,
+      description: ``,
+      body: `# Carte des Dépenses
+
+Consultez vos dépenses sur une carte. Les dépenses peuvent porter une localisation — reprise de l'adresse du magasin imprimée sur un ticket de caisse scanné, du GPS de votre téléphone au moment où vous ajoutez une dépense, ou placée manuellement — et l'application peut afficher n'importe quelle liste filtrée de dépenses sous forme d'épingles cliquables sur une carte.
+
+## D'où viennent les localisations
+
+Une dépense obtient sa localisation à partir de l'une de ces trois sources (la priorité la plus haute l'emporte) :
+
+1. **Épingle manuelle** — vous placez ou déplacez vous-même l'épingle sur l'écran de localisation de la dépense.
+2. **Adresse du ticket** — lorsque vous scannez un ticket de caisse, l'application lit l'adresse du magasin qui y est imprimée et la convertit automatiquement en coordonnées cartographiques. Cela fonctionne même si vous scannez le ticket plus tard, chez vous.
+3. **GPS au moment de la saisie** — en option, l'application peut joindre silencieusement votre position actuelle lorsque vous ajoutez une dépense sur place (saisie manuelle, saisie vocale ou capture automatique par notification bancaire).
+
+Les transactions importées (fichiers CSV/PDF bancaires) n'obtiennent pas de localisation.
+
+## Activer la capture GPS
+
+La capture GPS est **désactivée par défaut**. Pour l'activer :
+
+1. Ouvrez **Paramètres → Données et rapports**.
+2. Dans la section **Localisation**, activez **Joindre la localisation aux nouvelles dépenses**.
+3. Autorisez la permission de localisation lorsque le système la demande.
+
+Une fois activée, les nouvelles dépenses que vous ajoutez en déplacement récupèrent automatiquement votre position actuelle. Vous pouvez toujours consulter et supprimer la localisation d'une dépense, et désactiver l'interrupteur à tout moment.
+
+## Vue carte dans l'onglet Dépenses
+
+Dans l'onglet **Dépenses**, appuyez sur l'icône de carte à côté de l'icône de recherche pour passer de la liste à la carte. La carte affiche les mêmes dépenses que la liste — vos filtres de période, de catégorie et de marchand s'appliquent tous. Appuyez de nouveau sur l'icône pour revenir à la liste.
+
+- Les dépenses proches sont regroupées en clusters numérotés ; appuyez sur un cluster pour zoomer.
+- Appuyez sur une épingle pour voir le marchand et le montant ; appuyez sur **Ouvrir** pour accéder à cette dépense.
+- Si certaines dépenses filtrées n'ont pas de localisation, une petite bannière indique combien.
+
+## Localisation sur l'écran de la dépense
+
+Lorsqu'une dépense a une localisation, son écran de détail affiche une petite carte avec l'épingle et l'adresse (ou les coordonnées). Depuis là, vous pouvez :
+
+- **Modifier la localisation** — ouvre une carte en plein écran où vous pouvez appuyer pour placer l'épingle, la faire glisser, ou utiliser **Ma position** pour vous rendre à l'endroit où vous êtes.
+- **Supprimer la localisation** — l'icône de corbeille à côté de la carte supprime l'épingle en un seul geste.
+
+Une dépense sans localisation affiche à la place un bouton **Ajouter une localisation** (éditeurs uniquement).
+
+## Carte du voyage
+
+Les comptes voyage disposent d'un point d'accès dédié : ouvrez le compte voyage et appuyez sur **Carte du voyage**. L'application bascule sur ce voyage et ouvre l'onglet Dépenses en mode carte — un journal visuel de l'endroit où l'argent du voyage a été dépensé. Combiné au scan de tickets et à la capture GPS, la plupart des dépenses de voyage se retrouvent automatiquement sur la carte.
+
+## Confidentialité
+
+- La capture GPS est strictement optionnelle et désactivée par défaut ; la permission n'est demandée que lorsque vous activez l'interrupteur.
+- La recherche d'adresse à partir du ticket utilise uniquement l'adresse imprimée sur le reçu — aucune localisation du téléphone n'est impliquée.
+- Une localisation fait partie de l'enregistrement de la dépense : les membres d'un compte partagé qui peuvent voir la dépense voient aussi sa localisation.
+- Vous pouvez supprimer la localisation de n'importe quelle dépense à tout moment.
+`,
+    },
   ],
   be: [
     {
@@ -31045,6 +31444,63 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Канфідэнцыяльнасць
 
 Уся гісторыя цэн захоўваецца ў вашым уліковым запісе на серверы. Яна не перадаецца паміж уліковымі запісамі і не выкарыстоўваецца для стварэння агульнага каталога тавараў. Пры выдаленні ўліковага запісу ўся гісторыя цэн таксама выдаляецца.
+`,
+    },
+    {
+      id: '37-expense-map',
+      title: `Карта выдаткаў`,
+      description: ``,
+      body: `# Карта выдаткаў
+
+Глядзіце свае выдаткі на карце. Выдаткі могуць мець лакацыю — узятую з адрасу крамы, надрукаванага на сканаваным чэку, з GPS вашага тэлефона ў момант дадавання выдатку, або ўстаноўленую ўручную — і праграма можа паказаць любы адфільтраваны спіс выдаткаў у выглядзе клікабельных пазнак на карце.
+
+## Адкуль бяруцца лакацыі
+
+Выдатак атрымлівае сваю лакацыю з аднаго з трох крыніц (прыярытэтнейшая перамагае):
+
+1. **Ручная пазнака** — вы самі размяшчаеце або перамяшчаеце пазнаку на экране лакацыі выдатку.
+2. **Адрас з чэка** — калі вы скануеце чэк, праграма счытвае надрукаваны на ім адрас крамы і аўтаматычна пераўтварае яго ў каардынаты на карце. Гэта працуе, нават калі вы адскануеце чэк пазней, дома.
+3. **GPS у момант дадання** — па жаданні праграма можа непрыкметна далучыць вашу бягучую пазіцыю, калі вы дадаеце выдатак на месцы (ручное ўвядзенне, галасавое ўвядзенне або аўтаматычнае распазнаванне банкаўскага апавяшчэння).
+
+Імпартаваныя транзакцыі (банкаўскія CSV/PDF-файлы) не атрымліваюць лакацыю.
+
+## Уключэнне захопу GPS
+
+Захоп GPS **выключаны па змаўчанні**. Каб уключыць яго:
+
+1. Адкрыйце **Налады → Даныя і справаздачы**.
+2. У раздзеле **Лакацыя** ўключыце **Прымацоўваць лакацыю да новых выдаткаў**.
+3. Дазвольце доступ да геалакацыі, калі сістэма запытае гэта.
+
+Пасля ўключэння новыя выдаткі, якія вы дадаяце на хаду, аўтаматычна атрымліваюць вашу бягучую пазіцыю. Вы заўсёды можаце паглядзець і выдаліць лакацыю выдатку, а пераключальнік можна выключыць у любы момант.
+
+## Рэжым карты на ўкладцы «Выдаткі»
+
+На ўкладцы **Выдаткі** націсніце на значок карты побач са значком пошуку, каб пераключыцца са спіса на карту. Карта паказвае тыя ж выдаткі, што і спіс — прымяняюцца вашы фільтры па перыядзе, катэгорыі і прадаўцы. Націсніце на значок яшчэ раз, каб вярнуцца да спіса.
+
+- Размешчаныя побач выдаткі групуюцца ў пранумараваныя кластары; націсніце на кластар, каб наблізіць карту.
+- Націсніце на пазнаку, каб убачыць прадаўца і суму; націсніце **Адкрыць**, каб перайсці да гэтага выдатку.
+- Калі частка адфільтраваных выдаткаў не мае лакацыі, невялікі банер пакажа, колькі менавіта.
+
+## Лакацыя на экране выдатку
+
+Калі выдатак мае лакацыю, на экране яго дэталяў адлюстроўваецца невялікая карта з пазнакай і адрасам (або каардынатамі). Адсюль вы можаце:
+
+- **Змяніць лакацыю** — адкрывае карту на ўвесь экран, дзе можна дотыкам размясціць пазнаку, перацягнуць яе або скарыстацца кнопкай **Маё месцазнаходжанне**, каб перайсці туды, дзе вы знаходзіцеся.
+- **Выдаліць лакацыю** — значок кошыка побач з картай выдаляе пазнаку адным дотыкам.
+
+У выдатку без лакацыі замест гэтага паказваецца кнопка **Дадаць лакацыю** (толькі для рэдактараў).
+
+## Карта паездкі
+
+Уліковыя запісы паездкі маюць асобны пункт уваходу: адкрыйце ўліковы запіс паездкі і націсніце **Карта паездкі**. Праграма пераключаецца на гэтую паездку і адкрывае ўкладку «Выдаткі» ў рэжыме карты — візуальны дзённік таго, куды пайшлі грошы падчас паездкі. У спалучэнні са сканаваннем чэкаў і захопам GPS большасць выдаткаў паездкі трапляюць на карту аўтаматычна.
+
+## Прыватнасць
+
+- Захоп GPS строга добраахвотны і выключаны па змаўчанні; дазвол запытваецца толькі пасля ўключэння пераключальніка.
+- Вызначэнне адраса па чэку выкарыстоўвае толькі адрас, надрукаваны на чэку, — месцазнаходжанне тэлефона пры гэтым не задзейнічана.
+- Лакацыя — частка запісу пра выдатак: удзельнікі агульнага ўліковага запісу, якія бачаць выдатак, бачаць і яго лакацыю.
+- Вы можаце выдаліць лакацыю любога выдатку ў любы момант.
 `,
     },
   ],
@@ -34973,6 +35429,63 @@ Alleen bonnetjes die met de camera zijn gescand (OCR) dragen bij aan de index. H
 ## Privacy
 
 Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd.
+`,
+    },
+    {
+      id: '37-expense-map',
+      title: `Uitgavenkaart`,
+      description: ``,
+      body: `# Uitgavenkaart
+
+Bekijk je uitgaven op een kaart. Uitgaven kunnen een locatie hebben — overgenomen van het winkeladres dat op een gescande bon staat, van de gps van je telefoon op het moment dat je een uitgave toevoegt, of handmatig geplaatst — en de app kan elke gefilterde lijst met uitgaven tonen als aanklikbare pins op een kaart.
+
+## Waar locaties vandaan komen
+
+Een uitgave krijgt zijn locatie uit een van drie bronnen (de hoogste wint):
+
+1. **Handmatige pin** — je plaatst of verplaatst de pin zelf op het locatiescherm van de uitgave.
+2. **Bonadres** — wanneer je een bon scant, leest de app het erop afgedrukte winkeladres en zet dit automatisch om in kaartcoördinaten. Dit werkt ook als je de bon pas later thuis scant.
+3. **Gps op het moment van invoer** — optioneel kan de app stilletjes je huidige positie toevoegen wanneer je ter plekke een uitgave toevoegt (handmatige invoer, spraakinvoer of automatische vastlegging via bankmeldingen).
+
+Geïmporteerde transacties (bank-CSV/PDF-bestanden) krijgen geen locatie.
+
+## Gps-registratie inschakelen
+
+Gps-registratie staat **standaard uit**. Om het in te schakelen:
+
+1. Open **Instellingen → Gegevens & rapporten**.
+2. Zet in de sectie **Locatie** de optie **Locatie toevoegen aan nieuwe uitgaven** aan.
+3. Sta de locatietoestemming toe wanneer het systeem hierom vraagt.
+
+Wanneer dit is ingeschakeld, krijgen nieuwe uitgaven die je onderweg toevoegt automatisch je huidige positie. Je kunt de locatie van een uitgave altijd bekijken en verwijderen, en je kunt de schakelaar op elk moment uitzetten.
+
+## Kaartweergave op het tabblad Uitgaven
+
+Tik op het tabblad **Uitgaven** op het kaartpictogram naast het zoekpictogram om van de lijst naar een kaart te schakelen. De kaart toont dezelfde uitgaven als de lijst — je filters voor periode, categorie en winkel blijven van toepassing. Tik nogmaals op het pictogram om terug te gaan naar de lijst.
+
+- Uitgaven die dicht bij elkaar liggen, worden gegroepeerd in genummerde clusters; tik op een cluster om in te zoomen.
+- Tik op een pin om de winkel en het bedrag te zien; tik op **Openen** om naar die uitgave te springen.
+- Als sommige gefilterde uitgaven geen locatie hebben, toont een klein bannertje hoeveel dat er zijn.
+
+## Locatie op het uitgavenscherm
+
+Wanneer een uitgave een locatie heeft, toont het detailscherm een kleine kaart met de pin en het adres (of de coördinaten). Van daaruit kun je:
+
+- **Locatie bewerken** — opent een kaart op volledig scherm waar je door te tikken de pin kunt plaatsen, verslepen, of **Mijn locatie** kunt gebruiken om naar je huidige plek te springen.
+- **Locatie verwijderen** — het prullenbakpictogram naast de kaart verwijdert de pin met één tik.
+
+Een uitgave zonder locatie toont in plaats daarvan een knop **Locatie toevoegen** (alleen voor bewerkers).
+
+## Reiskaart
+
+Reisaccounts hebben een eigen toegangspunt: open het reisaccount en tik op **Reiskaart**. De app schakelt over naar die reis en opent het tabblad Uitgaven in kaartmodus — een visueel dagboek van waar het geld van de reis naartoe ging. In combinatie met bonscans en gps-registratie belanden de meeste reisuitgaven automatisch op de kaart.
+
+## Privacy
+
+- Gps-registratie is strikt opt-in en standaard uitgeschakeld; de toestemming wordt pas gevraagd wanneer je de schakelaar inschakelt.
+- De bonadresherkenning gebruikt alleen het op de bon afgedrukte adres — er komt geen telefoonlocatie aan te pas.
+- Een locatie maakt deel uit van de uitgavengegevens: leden van een gedeelde account die de uitgave kunnen zien, zien ook de locatie ervan.
+- Je kunt de locatie van elke uitgave op elk moment verwijderen.
 `,
     },
   ],

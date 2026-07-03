@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { getIntlLocale } from '@/i18n';
+import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 
 async function compressAndEncodeImage(uri: string): Promise<string> {
   const result = await ImageManipulator.manipulateAsync(
@@ -48,6 +49,11 @@ export default function ReceiptExpenseScreen() {
   const { addExpense } = useExpenseStore();
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { user } = useAuthStore();
+
+  const gpsLocationRef = useRef<CapturedLocation | null>(null);
+  useEffect(() => {
+    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
+  }, []);
 
   const {
     isProcessing,
@@ -143,6 +149,7 @@ export default function ReceiptExpenseScreen() {
         isDebtRepayment: false,
         items,
         receiptImageBase64,
+        location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
       });
 
       showAlert(t('common.success'), t('receipt.success'), [

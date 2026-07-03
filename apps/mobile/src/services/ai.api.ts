@@ -151,6 +151,7 @@ export const aiApi = {
         unitPrice?: number;
         totalPrice: number;
       }[];
+      location: { lat: number; lng: number; name: string } | null;
     }>('/ai/scan-receipt', {
       method: 'POST',
       body: JSON.stringify({

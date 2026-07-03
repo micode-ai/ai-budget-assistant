@@ -284,7 +284,7 @@ export class UpdateExpenseDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => LocationDto)
-  location?: LocationDto;
+  location?: LocationDto | null;
 
   @IsOptional()
   @IsArray()
