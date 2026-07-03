@@ -111,7 +111,10 @@ export default function ProductsSettingsScreen() {
         {
           text: t('priceHistory.resetAlias'),
           onPress: async () => {
-            try { await deleteAlias(item.rawName); } catch { /* warn'd */ }
+            // Delete all aliases in this group (merged products share a canonicalName)
+            try {
+              await Promise.all(item.rawNames.map((rn) => deleteAlias(rn)));
+            } catch { /* warn'd */ }
           },
         },
       ],
@@ -135,8 +138,12 @@ export default function ProductsSettingsScreen() {
     if (!mergeSources) return;
     const target = mergeName.trim();
     if (!target) return;
+    // Expand each selected primary rawName to all rawNames in its group
+    const allRawNames = mergeSources.flatMap(
+      (primaryRaw) => products.find((p) => p.rawName === primaryRaw)?.rawNames ?? [primaryRaw],
+    );
     setSaving(true);
-    try { await mergeProducts(mergeSources, target); } catch { /* warn'd */ }
+    try { await mergeProducts(allRawNames, target); } catch { /* warn'd */ }
     setSaving(false);
     closeMerge();
     exitSelect();
@@ -390,7 +397,9 @@ export default function ProductsSettingsScreen() {
                           style: 'destructive',
                           onPress: async () => {
                             closeRename();
-                            try { await ignoreProduct(item.rawName); } catch { /* warn'd */ }
+                            try {
+                              await Promise.all(item.rawNames.map((rn) => ignoreProduct(rn)));
+                            } catch { /* warn'd */ }
                           },
                         },
                       ],
