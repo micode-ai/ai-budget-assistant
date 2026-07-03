@@ -41,10 +41,15 @@ export function InflationIndexSection() {
   const canEdit = useAccountStore((s) => s.canEdit());
 
   const [showAll, setShowAll] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<PriceHistoryProduct | null>(null);
+  const [selectedRawName, setSelectedRawName] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const [isRenaming, setIsRenaming] = useState(false);
   const [isDeletingPoint, setIsDeletingPoint] = useState(false);
+
+  // Derive selectedProduct live from history so the table refreshes after deletion
+  const selectedProduct = selectedRawName
+    ? (history?.products.find((p) => p.rawName === selectedRawName) ?? null)
+    : null;
 
   const handlePeriodChange = useCallback(
     (p: Period) => {
@@ -54,12 +59,12 @@ export function InflationIndexSection() {
   );
 
   const openProduct = useCallback((product: PriceHistoryProduct) => {
-    setSelectedProduct(product);
+    setSelectedRawName(product.rawName);
     setRenameValue(product.canonicalName);
   }, []);
 
   const closeSheet = useCallback(() => {
-    setSelectedProduct(null);
+    setSelectedRawName(null);
   }, []);
 
   const handleRename = useCallback(async () => {
@@ -67,7 +72,7 @@ export function InflationIndexSection() {
     setIsRenaming(true);
     try {
       await upsertAlias(selectedProduct.rawName, renameValue.trim());
-      setSelectedProduct(null);
+      setSelectedRawName(null);
     } catch {
       // warn already logged in store
     } finally {
