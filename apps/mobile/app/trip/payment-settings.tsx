@@ -92,7 +92,7 @@ export default function PaymentSettingsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         <Text style={styles.label}>{t('trip.paymentMethod')}</Text>
         <View style={styles.methodRow}>

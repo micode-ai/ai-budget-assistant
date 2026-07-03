@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   label: { fontSize: 14, fontWeight: '600', marginBottom: 8 },
   memberRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
   memberChip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, borderWidth: 1 },
-  splitTypeRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
+  splitTypeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
   splitTypeChip: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8 },
   valueRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   valueInput: {

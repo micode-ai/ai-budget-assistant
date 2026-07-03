@@ -56,7 +56,7 @@ export default function CreateAccountScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Account Name */}
         <Text style={styles.label}>{t('accounts.name')}</Text>
