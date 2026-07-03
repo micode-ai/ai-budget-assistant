@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useContentWidth } from '@/hooks/useContentWidth';
 import { LineChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
@@ -56,19 +56,24 @@ export function InteractiveLineChart({
     value: point.value,
     label: point.label,
     dataPointText: formatValue(point.value),
-    onPress: () => handlePointPress(point, index),
     customDataPoint: () => (
-      <View
-        style={[
-          styles.dataPoint,
-          {
-            backgroundColor:
-              selectedIndex === index
-                ? theme.colors.primaryDark
-                : resolvedLineColor,
-          },
-        ]}
-      />
+      <TouchableOpacity
+        onPress={() => handlePointPress(point, index)}
+        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        activeOpacity={0.7}
+      >
+        <View
+          style={[
+            styles.dataPoint,
+            {
+              backgroundColor:
+                selectedIndex === index
+                  ? theme.colors.primaryDark
+                  : resolvedLineColor,
+            },
+          ]}
+        />
+      </TouchableOpacity>
     ),
   }));
 
