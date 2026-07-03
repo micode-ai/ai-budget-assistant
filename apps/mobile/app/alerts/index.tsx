@@ -8,12 +8,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { showAlert } from '@/utils/alert';
+import { useInvitationStore } from '@/stores/invitationStore';
+import { InvitationCard } from '@/components/alerts/InvitationCard';
 import type { AnomalyAlert } from '@budget/shared-types';
 
 const TYPE_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -31,11 +34,38 @@ export default function AlertsScreen() {
 
   const { alerts, isLoading, unreadCount, loadAlerts, markRead, markAllRead, dismiss } =
     useAlertStore();
+  const params = useLocalSearchParams<{ tab?: string }>();
+  const [activeTab, setActiveTab] = React.useState<'alerts' | 'invitations'>(
+    params.tab === 'invitations' ? 'invitations' : 'alerts',
+  );
+  const { invitations, isLoading: invitationsLoading, loadInvitations, respond } = useInvitationStore();
   const canEdit = useAccountStore((s) => s.canEdit());
 
   useEffect(() => {
     loadAlerts();
   }, [loadAlerts]);
+
+  useEffect(() => {
+    loadInvitations();
+  }, [loadInvitations]);
+
+  const handleAccept = async (id: string) => {
+    try {
+      await respond(id, 'accept');
+      const { loadAccounts } = useAccountStore.getState();
+      await loadAccounts();
+    } catch (e) {
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
+  const handleDecline = async (id: string) => {
+    try {
+      await respond(id, 'decline');
+    } catch (e) {
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
 
   const renderBody = useCallback(
     (alert: AnomalyAlert): { title: string; body: string } => {
@@ -177,7 +207,52 @@ export default function AlertsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen options={{ headerRight }} />
-      {isLoading && alerts.length === 0 ? (
+      <View style={styles.tabRow}>
+        <TouchableOpacity
+          style={[styles.tabButton, activeTab === 'alerts' && styles.tabButtonActive]}
+          onPress={() => setActiveTab('alerts')}
+        >
+          <Text style={[styles.tabText, activeTab === 'alerts' && styles.tabTextActive]}>
+            {t('alerts.tabAlerts')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tabButton, activeTab === 'invitations' && styles.tabButtonActive]}
+          onPress={() => setActiveTab('invitations')}
+        >
+          <Text style={[styles.tabText, activeTab === 'invitations' && styles.tabTextActive]}>
+            {t('alerts.tabInvitations')}
+            {invitations.length > 0 ? ` (${invitations.length})` : ''}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {activeTab === 'invitations' ? (
+        invitationsLoading && invitations.length === 0 ? (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        ) : invitations.length === 0 ? (
+          <View style={styles.center}>
+            <Ionicons name="mail-open-outline" size={56} color={theme.colors.textTertiary} />
+            <Text style={styles.emptyText}>{t('alerts.invitationsEmpty')}</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={invitations}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <InvitationCard
+                invitation={item}
+                onAccept={() => handleAccept(item.id)}
+                onDecline={() => handleDecline(item.id)}
+              />
+            )}
+            contentContainerStyle={styles.listContent}
+            refreshControl={<RefreshControl refreshing={invitationsLoading} onRefresh={loadInvitations} />}
+            showsVerticalScrollIndicator={false}
+          />
+        )
+      ) : isLoading && alerts.length === 0 ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
@@ -204,6 +279,30 @@ const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  tabRow: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[4],
+    paddingTop: theme.spacing[3],
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.lg,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+  },
+  tabButtonActive: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  tabText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+  },
+  tabTextActive: {
+    color: theme.colors.primary,
+    fontWeight: '600' as const,
   },
   center: {
     flex: 1,

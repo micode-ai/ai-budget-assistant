@@ -35,6 +35,26 @@ export class UsersService {
     });
   }
 
+  async search(callerId: string, query: string) {
+    const q = query?.trim() ?? '';
+    if (q.length < 2) return [];
+
+    const users = await this.prisma.user.findMany({
+      where: {
+        id: { not: callerId },
+        isActive: true,
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { email: { contains: q, mode: 'insensitive' } },
+        ],
+      },
+      select: { id: true, name: true, email: true },
+      take: 20,
+    });
+
+    return users;
+  }
+
   async findById(id: string) {
     return this.prisma.user.findUnique({
       where: { id },

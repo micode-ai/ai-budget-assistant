@@ -57,7 +57,14 @@ Sur l'écran d'accueil, la façon la plus rapide est la **pastille de devise** d
 
 ## Rejoindre un compte
 
-Si quelqu'un vous a invite a rejoindre son compte :
+Si quelqu'un vous a trouve par recherche et invite directement, vous n'avez pas besoin de code :
+
+1. Vous recevrez une notification push des l'arrivee de l'invitation
+2. Appuyez dessus (ou ouvrez les **Alertes** et passez a l'onglet **Invitations**)
+3. Appuyez sur **Accepter** pour rejoindre, ou **Refuser** pour l'ignorer
+4. Les invitations acceptees ajoutent immediatement le compte a votre liste
+
+Si vous avez plutot recu un code ou un lien d'invitation :
 
 1. Appuyez sur **Rejoindre un compte** dans la liste des comptes
 2. Entrez le **code d'invitation** que vous avez recu
@@ -84,6 +91,7 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 1. Ouvrez les Parametres du compte concerne
 2. Appuyez sur l'**icone d'invitation** (icone personne+ en haut a droite de la section Membres)
 3. Choisissez la methode d'invitation :
+   - **Rechercher un utilisateur** — si la personne a deja l'application, recherchez-la par nom ou e-mail, selectionnez-la dans les resultats, choisissez son role et appuyez sur **Envoyer l'invitation**. Elle recoit une notification push immediatement — aucun code necessaire.
    - **Par e-mail** — entrez l'adresse e-mail de la personne, selectionnez son role (Editeur ou Observateur), appuyez sur **Envoyer l'invitation**
    - **Par lien** — un code est genere que vous pouvez partager. Appuyez pour copier ou partager via des applications de messagerie
 

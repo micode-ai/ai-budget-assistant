@@ -57,7 +57,14 @@ Auf dem Hauptbildschirm geht es am schnellsten über die eigene **Währungsschal
 
 ## Konto beitreten
 
-Wenn dich jemand zu seinem Konto eingeladen hat:
+Wenn dich jemand per Suche gefunden und direkt eingeladen hat, brauchst du keinen Code:
+
+1. Du erhaltst eine Push-Benachrichtigung, sobald die Einladung eintrifft
+2. Tippe darauf (oder offne die **Benachrichtigungen** und wechsle zum Tab **Einladungen**)
+3. Tippe auf **Annehmen**, um beizutreten, oder auf **Ablehnen**, um sie zu verwerfen
+4. Angenommene Einladungen fugen das Konto sofort deiner Kontoliste hinzu
+
+Wenn du stattdessen einen Einladungscode oder -link erhalten hast:
 
 1. Tippe auf **Konto beitreten** in der Kontoliste
 2. Gib den **Einladungscode** ein, den du erhalten hast
@@ -84,6 +91,7 @@ Tippe auf ein beliebiges Konto, um seine Einstellungen zu offnen:
 1. Offne die Kontoeinstellungen fur das Konto
 2. Tippe auf das **Einladungssymbol** (Person+-Symbol oben rechts im Mitgliederbereich)
 3. Wahle die Einladungsmethode:
+   - **Nutzer finden** — falls die Person die App bereits hat, suche sie nach Name oder E-Mail, wahle sie aus den Ergebnissen, lege ihre Rolle fest und tippe auf **Einladung senden**. Sie erhalt sofort eine Push-Benachrichtigung — kein Code notig.
    - **Per E-Mail** — gib die E-Mail-Adresse der Person ein, wahle ihre Rolle (Bearbeiter oder Betrachter), tippe auf **Einladung senden**
    - **Per Link** — ein Code wird generiert, den du teilen kannst. Tippe zum Kopieren oder Teilen uber Messenger-Apps
 

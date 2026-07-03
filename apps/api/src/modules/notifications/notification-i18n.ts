@@ -115,6 +115,14 @@ interface TripSettleUpParams {
   tripName: string;
 }
 
+interface AccountInvitationParams {
+  inviterName: string;
+}
+
+interface AccountInvitationBodyParams {
+  accountName: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -172,6 +180,8 @@ const translations: Record<string, {
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
   tripSettleUpBody: (p: TripSettleUpParams) => string;
+  accountInvitationTitle: (p: AccountInvitationParams) => string;
+  accountInvitationBody: (p: AccountInvitationBodyParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -249,6 +259,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
     tripSettleUpTitle: ({ tripName }) => `${tripName} has ended`,
     tripSettleUpBody: () => 'Time to settle up with your trip group',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} invited you`,
+    accountInvitationBody: ({ accountName }) => `Join "${accountName}" — tap to accept or decline.`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -326,6 +338,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
     tripSettleUpTitle: ({ tripName }) => `Поездка "${tripName}" завершена`,
     tripSettleUpBody: () => 'Пора рассчитаться с группой поездки',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} пригласил вас`,
+    accountInvitationBody: ({ accountName }) => `Присоединяйтесь к «${accountName}» — нажмите, чтобы принять или отклонить.`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -403,6 +417,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
     tripSettleUpTitle: ({ tripName }) => `Поїздка "${tripName}" завершена`,
     tripSettleUpBody: () => 'Час розрахуватися з групою поїздки',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} запросив вас`,
+    accountInvitationBody: ({ accountName }) => `Приєднайтесь до «${accountName}» — торкніться, щоб прийняти або відхилити.`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -480,6 +496,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
     tripSettleUpTitle: ({ tripName }) => `Wyjazd "${tripName}" się zakończył`,
     tripSettleUpBody: () => 'Czas rozliczyć się z grupą wyjazdową',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} zaprosił(a) Cię`,
+    accountInvitationBody: ({ accountName }) => `Dołącz do "${accountName}" — dotknij, aby zaakceptować lub odrzucić.`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -557,6 +575,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
     tripSettleUpTitle: ({ tripName }) => `El viaje "${tripName}" ha terminado`,
     tripSettleUpBody: () => 'Es hora de saldar cuentas con tu grupo de viaje',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} te ha invitado`,
+    accountInvitationBody: ({ accountName }) => `Únete a "${accountName}" — toca para aceptar o rechazar.`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -634,6 +654,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
     tripSettleUpTitle: ({ tripName }) => `Le voyage "${tripName}" est terminé`,
     tripSettleUpBody: () => 'Il est temps de faire les comptes avec votre groupe de voyage',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} vous a invité(e)`,
+    accountInvitationBody: ({ accountName }) => `Rejoignez "${accountName}" — appuyez pour accepter ou refuser.`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -711,6 +733,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
     tripSettleUpTitle: ({ tripName }) => `Die Reise "${tripName}" ist zu Ende`,
     tripSettleUpBody: () => 'Zeit, mit deiner Reisegruppe abzurechnen',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} hat dich eingeladen`,
+    accountInvitationBody: ({ accountName }) => `Tritt "${accountName}" bei — tippen zum Annehmen oder Ablehnen.`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -788,6 +812,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
     tripSettleUpTitle: ({ tripName }) => `Паездка "${tripName}" завершана`,
     tripSettleUpBody: () => 'Час разлічыцца з групай паездкі',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} запрасіў(ла) вас`,
+    accountInvitationBody: ({ accountName }) => `Далучайцеся да «${accountName}» — націсніце, каб прыняць ці адхіліць.`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -865,6 +891,8 @@ const translations: Record<string, {
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
     tripSettleUpTitle: ({ tripName }) => `Reis "${tripName}" is afgelopen`,
     tripSettleUpBody: () => 'Tijd om af te rekenen met je reisgroep',
+    accountInvitationTitle: ({ inviterName }) => `${inviterName} heeft je uitgenodigd`,
+    accountInvitationBody: ({ accountName }) => `Word lid van "${accountName}" — tik om te accepteren of te weigeren.`,
   },
 };
 
@@ -1052,6 +1080,14 @@ export function tripSettleUpTitle(lang: Lang, params: TripSettleUpParams): strin
 
 export function tripSettleUpBody(lang: Lang, params: TripSettleUpParams): string {
   return t(lang).tripSettleUpBody(params);
+}
+
+export function accountInvitationTitle(lang: Lang, params: AccountInvitationParams): string {
+  return t(lang).accountInvitationTitle(params);
+}
+
+export function accountInvitationBody(lang: Lang, params: AccountInvitationBodyParams): string {
+  return t(lang).accountInvitationBody(params);
 }
 
 export function budgetCategoryThresholdTitle(lang: Lang, params: BudgetCategoryThresholdParams): string {

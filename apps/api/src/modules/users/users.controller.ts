@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Patch, Delete, Body, UseGuards, Req, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException } from '@nestjs/common';
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
@@ -43,6 +44,13 @@ export class UsersController {
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
+  }
+
+  @Get('search')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async search(@Req() req: AuthenticatedRequest, @Query('q') q: string) {
+    return this.usersService.search(req.user.id, q ?? '');
   }
 
   @Patch('me')

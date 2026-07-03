@@ -57,7 +57,14 @@ Na ekranie głównym najszybszym sposobem jest dedykowany **przycisk waluty** ob
 
 ## Dolaczanie do konta
 
-Jezeli ktos zaprosi Cie do swojego konta:
+Jesli ktos znalazl Cie przez wyszukiwanie i zaprosil bezposrednio, nie potrzebujesz kodu:
+
+1. Otrzymasz powiadomienie push, gdy tylko zaproszenie dotrze
+2. Dotknij go (lub otworz **Alerty** i przelacz sie na zakladke **Zaproszenia**)
+3. Dotknij **Akceptuj**, aby dolaczyc, lub **Odrzuc**, aby je odrzucic
+4. Zaakceptowane zaproszenia od razu dodaja konto do Twojej listy
+
+Jesli zamiast tego otrzymales kod lub link zaproszenia:
 
 1. Dotknij **Dolacz do konta** na liscie kont
 2. Wprowadz **kod zaproszenia**, ktory otrzymales
@@ -84,6 +91,7 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 1. Otworz Ustawienia konta dla danego konta
 2. Dotknij **ikone zaproszenia** (ikona osoba+ w prawym gornym rogu sekcji Czlonkowie)
 3. Wybierz metode zaproszenia:
+   - **Znajdz uzytkownika** — jesli osoba ma juz aplikacje, wyszukaj ja po imieniu lub e-mailu, wybierz z wynikow, ustal jej role i dotknij **Wyslij zaproszenie**. Od razu otrzyma powiadomienie push — kod nie jest potrzebny.
    - **Przez email** — wprowadz adres e-mail osoby, wybierz jej role (Edytor lub Obserwator), dotknij **Wyslij zaproszenie**
    - **Przez link** — generowany jest kod, ktory mozesz udostepnic. Dotknij, aby skopiowac lub udostepnic przez komunikatory
 

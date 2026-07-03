@@ -9,6 +9,16 @@ import type {
 } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
+export interface MyInvitation {
+  id: string;
+  accountId: string;
+  accountName: string;
+  accountType: string;
+  inviterName: string;
+  role: string;
+  createdAt: string;
+}
+
 export const accountsApi = {
   getAccounts() {
     return httpClient.request<Account[]>('/accounts');
@@ -82,6 +92,17 @@ export const accountsApi = {
       method: 'POST',
       body: JSON.stringify({ inviteCode }),
     });
+  },
+
+  getMyInvitations() {
+    return httpClient.request<MyInvitation[]>('/accounts/invitations/mine');
+  },
+
+  respondToInvitation(id: string, action: 'accept' | 'decline') {
+    return httpClient.request<{ member: AccountMember; account: Account } | AccountInvitation>(
+      `/accounts/invitations/${id}/respond`,
+      { method: 'PATCH', body: JSON.stringify({ action }) },
+    );
   },
 
   getAccountTransfers() {

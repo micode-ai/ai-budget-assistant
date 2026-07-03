@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import type { AccountRole } from '@budget/shared-types';
 import * as Clipboard from 'expo-clipboard';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useUpgradeStore } from '@/stores/upgradeStore';
+import { api } from '@/services/api';
 
 const ROLES: { role: AccountRole; icon: keyof typeof Ionicons.glyphMap }[] = [
   { role: 'editor', icon: 'pencil-outline' },
@@ -31,12 +32,33 @@ export default function InviteScreen() {
   const styles = useStyles(createStyles);
   const { inviteMember } = useAccountStore();
 
-  const [mode, setMode] = useState<'email' | 'link'>('link');
+  const [mode, setMode] = useState<'email' | 'link' | 'search'>('link');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<{ id: string; name: string; email: string }[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<{ id: string; name: string; email: string } | null>(null);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<AccountRole>('editor');
   const [isLoading, setIsLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState<string | null>(null);
+  const [searchInviteSent, setSearchInviteSent] = useState(false);
   const showUpgrade = useUpgradeStore((s) => s.show);
+
+  useEffect(() => {
+    if (mode !== 'search' || searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    const handle = setTimeout(() => {
+      api
+        .searchUsers(searchQuery.trim())
+        .then(setSearchResults)
+        .catch(() => setSearchResults([]))
+        .finally(() => setIsSearching(false));
+    }, 300);
+    return () => clearTimeout(handle);
+  }, [mode, searchQuery]);
 
   const handleInvite = async () => {
     if (!accountId) return;
@@ -45,14 +67,23 @@ export default function InviteScreen() {
       showAlert(t('errors.error'), t('accounts.emailRequired'));
       return;
     }
+    if (mode === 'search' && !selectedUser) {
+      showAlert(t('errors.error'), t('accounts.selectUserRequired'));
+      return;
+    }
 
     setIsLoading(true);
     try {
       const invitation = await inviteMember(accountId, {
         email: mode === 'email' ? email.trim() : undefined,
+        invitedUserId: mode === 'search' ? selectedUser!.id : undefined,
         role,
       });
-      setInviteCode(invitation.inviteCode);
+      if (mode === 'search') {
+        setSearchInviteSent(true);
+      } else {
+        setInviteCode(invitation.inviteCode);
+      }
     } catch (e) {
       if ((e as { status?: number }).status === 403) {
         showUpgrade(t('subscription.limitReachedBody'), 'pro');
@@ -78,6 +109,23 @@ export default function InviteScreen() {
       });
     }
   };
+
+  if (searchInviteSent) {
+    return (
+      <SafeAreaView style={styles.container} edges={[]}>
+        <View style={styles.successContainer}>
+          <Ionicons name="checkmark-circle" size={64} color={theme.colors.primary} />
+          <Text style={styles.successTitle}>{t('accounts.inviteSent')}</Text>
+          <Text style={styles.successSubtitle}>
+            {t('accounts.inviteSentPush', { name: selectedUser?.name })}
+          </Text>
+          <TouchableOpacity style={styles.doneButton} onPress={() => router.back()}>
+            <Text style={styles.doneButtonText}>{t('common.done')}</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (inviteCode) {
     return (
@@ -148,6 +196,19 @@ export default function InviteScreen() {
               {t('accounts.inviteByEmail')}
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.modeButton, mode === 'search' && styles.modeButtonActive]}
+            onPress={() => setMode('search')}
+          >
+            <Ionicons
+              name="search-outline"
+              size={20}
+              color={mode === 'search' ? theme.colors.primary : theme.colors.textTertiary}
+            />
+            <Text style={[styles.modeText, mode === 'search' && styles.modeTextActive]}>
+              {t('accounts.inviteBySearch')}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Email Input */}
@@ -166,50 +227,94 @@ export default function InviteScreen() {
           </>
         )}
 
-        {/* Role Selector */}
-        <Text style={styles.label}>{t('accounts.inviteRole')}</Text>
-        <View style={styles.roleRow}>
-          {ROLES.map((item) => (
-            <TouchableOpacity
-              key={item.role}
-              style={[
-                styles.roleCard,
-                role === item.role && styles.roleCardActive,
-              ]}
-              onPress={() => setRole(item.role)}
-            >
-              <Ionicons
-                name={item.icon}
-                size={24}
-                color={role === item.role ? theme.colors.primary : theme.colors.textTertiary}
-              />
-              <Text
-                style={[
-                  styles.roleLabel,
-                  role === item.role && styles.roleLabelActive,
-                ]}
+        {/* Search Input */}
+        {mode === 'search' && (
+          <>
+            <Text style={styles.label}>{t('accounts.searchLabel')}</Text>
+            <TextInput
+              style={styles.input}
+              value={searchQuery}
+              onChangeText={(text) => {
+                setSearchQuery(text);
+                setSelectedUser(null);
+              }}
+              placeholder={t('accounts.searchPlaceholder')}
+              placeholderTextColor={theme.colors.textTertiary}
+              autoCapitalize="none"
+            />
+            {isSearching && <ActivityIndicator style={{ marginTop: theme.spacing[3] }} color={theme.colors.primary} />}
+            {!isSearching && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
+              <Text style={styles.searchEmptyText}>{t('accounts.searchNoResults')}</Text>
+            )}
+            {searchResults.map((u) => (
+              <TouchableOpacity
+                key={u.id}
+                style={[styles.searchResultRow, selectedUser?.id === u.id && styles.searchResultRowActive]}
+                onPress={() => setSelectedUser(u)}
               >
-                {t(`accounts.roles.${item.role}`)}
-              </Text>
-              <Text style={styles.roleDescription}>
-                {t(`accounts.roleDescriptions.${item.role}`)}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+                <View style={styles.searchResultAvatar}>
+                  <Text style={styles.searchResultAvatarText}>{u.name[0]?.toUpperCase()}</Text>
+                </View>
+                <View>
+                  <Text style={styles.searchResultName}>{u.name}</Text>
+                  <Text style={styles.searchResultEmail}>{u.email}</Text>
+                </View>
+                {selectedUser?.id === u.id && (
+                  <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} style={{ marginLeft: 'auto' }} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
 
-        {/* Submit */}
-        <TouchableOpacity
-          style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-          onPress={handleInvite}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color={theme.colors.textInverse} />
-          ) : (
-            <Text style={styles.submitButtonText}>{t('accounts.sendInvite')}</Text>
-          )}
-        </TouchableOpacity>
+        {(mode !== 'search' || selectedUser) && (
+          <>
+            {/* Role Selector */}
+            <Text style={styles.label}>{t('accounts.inviteRole')}</Text>
+            <View style={styles.roleRow}>
+              {ROLES.map((item) => (
+                <TouchableOpacity
+                  key={item.role}
+                  style={[
+                    styles.roleCard,
+                    role === item.role && styles.roleCardActive,
+                  ]}
+                  onPress={() => setRole(item.role)}
+                >
+                  <Ionicons
+                    name={item.icon}
+                    size={24}
+                    color={role === item.role ? theme.colors.primary : theme.colors.textTertiary}
+                  />
+                  <Text
+                    style={[
+                      styles.roleLabel,
+                      role === item.role && styles.roleLabelActive,
+                    ]}
+                  >
+                    {t(`accounts.roles.${item.role}`)}
+                  </Text>
+                  <Text style={styles.roleDescription}>
+                    {t(`accounts.roleDescriptions.${item.role}`)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Submit */}
+            <TouchableOpacity
+              style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
+              onPress={handleInvite}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color={theme.colors.textInverse} />
+              ) : (
+                <Text style={styles.submitButtonText}>{t('accounts.sendInvite')}</Text>
+              )}
+            </TouchableOpacity>
+          </>
+        )}
       </KeyboardAwareScreen>
     </SafeAreaView>
   );
@@ -269,6 +374,47 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     borderWidth: 1,
     borderColor: theme.colors.border,
+  },
+  searchEmptyText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[3],
+    textAlign: 'center' as const,
+  },
+  searchResultRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3],
+    marginTop: theme.spacing[2],
+    gap: theme.spacing[3],
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+  },
+  searchResultRowActive: {
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  searchResultAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  searchResultAvatarText: {
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
+  },
+  searchResultName: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+  },
+  searchResultEmail: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   roleRow: {
     flexDirection: 'row' as const,

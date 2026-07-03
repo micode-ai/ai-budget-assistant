@@ -133,6 +133,9 @@ export function handleNotificationResponse(
     case 'spending_anomaly':
       router.push('/alerts' as any);
       break;
+    case 'account_invitation':
+      router.push({ pathname: '/alerts', params: { tab: 'invitations' } } as any);
+      break;
     default:
       break;
   }
