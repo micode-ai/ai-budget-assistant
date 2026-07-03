@@ -62,7 +62,7 @@ export default function NewTripScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Trip Name */}
         <Text style={styles.label}>{t('trip.tripName')}</Text>
