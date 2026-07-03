@@ -319,23 +319,25 @@ model AccountMember {
 }
 
 model AccountInvitation {
-  id           String           @id @default(uuid())
-  accountId    String           @map("account_id")
-  invitedBy    String           @map("invited_by")
-  invitedEmail String?          @map("invited_email")
-  inviteCode   String           @unique @map("invite_code")
-  role         AccountRole      @default(editor)
-  status       InvitationStatus @default(pending)
-  expiresAt    DateTime         @map("expires_at")
-  acceptedBy   String?          @map("accepted_by")
-  createdAt    DateTime         @default(now()) @map("created_at")
-  updatedAt    DateTime         @updatedAt @map("updated_at")
+  id            String           @id @default(uuid())
+  accountId     String           @map("account_id")
+  invitedBy     String           @map("invited_by")
+  invitedEmail  String?          @map("invited_email")
+  invitedUserId String?          @map("invited_user_id")
+  inviteCode    String           @unique @map("invite_code")
+  role          AccountRole      @default(editor)
+  status        InvitationStatus @default(pending)
+  expiresAt     DateTime         @map("expires_at")
+  acceptedBy    String?          @map("accepted_by")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
 
   // Relations
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([inviteCode])
   @@index([invitedEmail])
+  @@index([invitedUserId])
   @@map("account_invitations")
 }
 

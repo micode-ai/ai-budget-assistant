@@ -18,6 +18,7 @@ import {
   UpdateAccountDto,
   CreateInvitationDto,
   AcceptInvitationDto,
+  RespondToInvitationDto,
   UpdateMemberRoleDto,
   AccountMemberPaymentInfoDto,
 } from './dto';
@@ -76,6 +77,20 @@ export class AccountsController {
   @Get(':id/invitations')
   async getInvitations(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.accountsService.getInvitations(id, req.user.id);
+  }
+
+  @Get('invitations/mine')
+  async getMyInvitations(@Req() req: AuthenticatedRequest) {
+    return this.accountsService.getMyInvitations(req.user.id);
+  }
+
+  @Patch('invitations/:id/respond')
+  async respondToInvitation(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: RespondToInvitationDto,
+  ) {
+    return this.accountsService.respondToInvitation(id, req.user.id, dto.action);
   }
 
   @Delete(':id/invitations/:invitationId')

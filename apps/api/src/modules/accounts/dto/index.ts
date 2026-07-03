@@ -57,6 +57,10 @@ export class CreateInvitationDto {
   email?: string;
 
   @IsOptional()
+  @IsString()
+  invitedUserId?: string;
+
+  @IsOptional()
   @IsEnum(['editor', 'viewer'])
   role?: 'editor' | 'viewer';
 
@@ -70,6 +74,11 @@ export class CreateInvitationDto {
 export class AcceptInvitationDto {
   @IsString()
   inviteCode: string;
+}
+
+export class RespondToInvitationDto {
+  @IsIn(['accept', 'decline'])
+  action: 'accept' | 'decline';
 }
 
 export class UpdateMemberRoleDto {

@@ -57,7 +57,14 @@ Op het startscherm gaat het het snelst via de speciale **valutaknop** naast de a
 
 ## Lid worden van een account
 
-Als iemand je voor zijn account heeft uitgenodigd:
+Als iemand je via zoeken heeft gevonden en direct heeft uitgenodigd, heb je geen code nodig:
+
+1. Je krijgt een pushmelding zodra de uitnodiging binnenkomt
+2. Tik erop (of open **Meldingen** en schakel over naar het tabblad **Uitnodigingen**)
+3. Tik op **Accepteren** om lid te worden, of op **Weigeren** om het af te wijzen
+4. Geaccepteerde uitnodigingen voegen het account meteen toe aan je lijst
+
+Als je in plaats daarvan een uitnodigingscode of -link hebt ontvangen:
 
 1. Tik op **Lid worden van account** in de accountlijst
 2. Voer de **uitnodigingscode** in die je hebt ontvangen
@@ -84,6 +91,7 @@ Tik op een account om de instellingen ervan te openen:
 1. Open de Accountinstellingen voor het account
 2. Tik op het **uitnodigingspictogram** (persoon+-pictogram rechtsboven in de sectie Leden)
 3. Kies een uitnodigingsmethode:
+   - **Gebruiker zoeken** — als de persoon de app al heeft, zoek hem op naam of e-mail, selecteer hem uit de resultaten, kies zijn rol en tik op **Uitnodiging verzenden**. Hij krijgt meteen een pushmelding — geen code nodig.
    - **Per e-mail** — voer het e-mailadres van de persoon in, selecteer zijn rol (Bewerker of Kijker), tik op **Uitnodiging verzenden**
    - **Per link** — er wordt een code gegenereerd die je kunt delen. Tik om te kopiëren of te delen via berichten-apps
 

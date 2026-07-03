@@ -57,7 +57,14 @@ En la pantalla de inicio, la forma más rápida es la **pastilla de moneda** ded
 
 ## Unirse a una cuenta
 
-Si alguien te ha invitado a su cuenta:
+Si alguien te encontro mediante busqueda y te invito directamente, no necesitas ningun codigo:
+
+1. Recibiras una notificacion push en cuanto llegue la invitacion
+2. Tocala (o abre las **Alertas** y cambia a la pestana **Invitaciones**)
+3. Toca **Aceptar** para unirte, o **Rechazar** para descartarla
+4. Las invitaciones aceptadas anaden la cuenta a tu lista de inmediato
+
+Si en cambio recibiste un codigo o enlace de invitacion:
 
 1. Toca **Unirse a cuenta** en la lista de Cuentas
 2. Introduce el **codigo de invitacion** que recibiste
@@ -84,6 +91,7 @@ Toca cualquier cuenta para abrir sus ajustes:
 1. Abre los Ajustes de la cuenta
 2. Toca el **icono de invitacion** (icono de persona+ en la esquina superior derecha de la seccion de Miembros)
 3. Elige el metodo de invitacion:
+   - **Buscar usuario** — si la persona ya tiene la app, buscala por nombre o correo, selecciona sus resultados, elige su rol y toca **Enviar invitacion**. Recibira una notificacion push al instante — sin necesidad de codigo.
    - **Por correo electronico** — introduce la direccion de correo electronico de la persona, selecciona su rol (Editor u Observador), toca **Enviar invitacion**
    - **Por enlace** — se genera un codigo que puedes compartir. Toca para copiar o compartir a traves de aplicaciones de mensajeria
 

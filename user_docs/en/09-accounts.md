@@ -57,7 +57,14 @@ On the home screen, the fastest way is the dedicated **currency pill** next to t
 
 ## Joining an Account
 
-If someone has invited you to their account:
+If someone found you by search and invited you directly, you don't need a code:
+
+1. You'll get a push notification when the invitation arrives
+2. Tap it (or open the **Alerts** bell and switch to the **Invitations** tab)
+3. Tap **Accept** to join, or **Decline** to dismiss it
+4. Accepted invitations add the account to your account list right away
+
+If you received an invitation code or link instead:
 
 1. Tap **Join Account** on the Accounts list
 2. Enter the **invitation code** you received
@@ -84,6 +91,7 @@ Tap any account to open its settings:
 1. Open Account Settings for the account
 2. Tap the **invite icon** (person+ icon at the top-right of the Members section)
 3. Choose invitation method:
+   - **Find User** — if the person already has the app, search for them by name or email, select them from the results, choose their role, and tap **Send Invitation**. They get a push notification right away — no code needed.
    - **By Email** — enter the person's email address, select their role (Editor or Viewer), tap **Send Invitation**
    - **By Link** — a code is generated that you can share. Tap to copy or share via messaging apps
 

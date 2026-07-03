@@ -32,6 +32,7 @@ export interface AccountInvitation {
   accountId: string;
   invitedBy: string;
   invitedEmail?: string;
+  invitedUserId?: string;
   inviteCode: string;
   role: AccountRole;
   status: InvitationStatus;

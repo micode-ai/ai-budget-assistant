@@ -17,6 +17,7 @@ export interface UpdateAccountDto {
 
 export interface CreateInvitationDto {
   email?: string;
+  invitedUserId?: string;
   role?: AccountRole;
   expiresInDays?: number;
 }

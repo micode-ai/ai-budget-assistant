@@ -1237,7 +1237,14 @@ On the home screen, the fastest way is the dedicated **currency pill** next to t
 
 ## Joining an Account
 
-If someone has invited you to their account:
+If someone found you by search and invited you directly, you don't need a code:
+
+1. You'll get a push notification when the invitation arrives
+2. Tap it (or open the **Alerts** bell and switch to the **Invitations** tab)
+3. Tap **Accept** to join, or **Decline** to dismiss it
+4. Accepted invitations add the account to your account list right away
+
+If you received an invitation code or link instead:
 
 1. Tap **Join Account** on the Accounts list
 2. Enter the **invitation code** you received
@@ -1264,6 +1271,7 @@ Tap any account to open its settings:
 1. Open Account Settings for the account
 2. Tap the **invite icon** (person+ icon at the top-right of the Members section)
 3. Choose invitation method:
+   - **Find User** — if the person already has the app, search for them by name or email, select them from the results, choose their role, and tap **Send Invitation**. They get a push notification right away — no code needed.
    - **By Email** — enter the person's email address, select their role (Editor or Viewer), tap **Send Invitation**
    - **By Link** — a code is generated that you can share. Tap to copy or share via messaging apps
 
@@ -5174,7 +5182,14 @@ iOS, Android, Web
 
 ## Присоединение к счёту
 
-Если вас пригласили в чужой счёт:
+Если вас нашли через поиск и пригласили напрямую, код не нужен:
+
+1. Вы получите push-уведомление, как только приглашение придёт
+2. Нажмите на него (или откройте **Алерты** и переключитесь на вкладку **Приглашения**)
+3. Нажмите **Принять**, чтобы присоединиться, или **Отклонить**, чтобы отклонить
+4. Принятые приглашения сразу добавляют счёт в ваш список
+
+Если вместо этого вы получили код или ссылку-приглашение:
 
 1. Нажмите **Присоединиться к счёту** в списке счетов
 2. Введите **код приглашения**, который вы получили
@@ -5201,6 +5216,7 @@ iOS, Android, Web
 1. Откройте Настройки счёта
 2. Нажмите **значок приглашения** (значок «человек+» вверху справа в секции Участники)
 3. Выберите способ приглашения:
+   - **Найти пользователя** — если у человека уже есть приложение, найдите его по имени или email, выберите из результатов, укажите роль и нажмите **Отправить приглашение**. Он сразу получит push-уведомление — код не нужен.
    - **По email** — введите email-адрес приглашаемого, выберите роль (Редактор или Наблюдатель), нажмите **Отправить приглашение**
    - **По ссылке** — генерируется код, которым можно поделиться. Нажмите, чтобы скопировать или отправить через мессенджеры
 
@@ -9111,7 +9127,14 @@ iOS, Android, Web
 
 ## Приєднання до рахунку
 
-Якщо хтось запросив вас до свого рахунку:
+Якщо вас знайшли через пошук і запросили напряму, код не потрібен:
+
+1. Ви отримаєте push-сповіщення, щойно надійде запрошення
+2. Торкніться його (або відкрийте **Сповіщення** і перейдіть на вкладку **Запрошення**)
+3. Торкніться **Прийняти**, щоб приєднатися, або **Відхилити**, щоб відхилити його
+4. Прийняті запрошення одразу додають рахунок до вашого списку
+
+Якщо ж ви отримали код або посилання-запрошення:
 
 1. Натисніть **Приєднатися до рахунку** у списку рахунків
 2. Введіть **код запрошення**, який ви отримали
@@ -9138,6 +9161,7 @@ iOS, Android, Web
 1. Відкрийте Налаштування рахунку для потрібного рахунку
 2. Натисніть **іконку запрошення** (іконка особи+ у верхньому правому куті розділу Учасники)
 3. Оберіть спосіб запрошення:
+   - **Знайти користувача** — якщо особа вже має додаток, знайдіть її за ім'ям або email, оберіть із результатів, вкажіть роль і натисніть **Надіслати запрошення**. Вона одразу отримає push-сповіщення — код не потрібен.
    - **За email** — введіть email адресу особи, оберіть роль (Редактор або Спостерігач), натисніть **Надіслати запрошення**
    - **За посиланням** — генерується код, який ви можете поділитися. Натисніть, щоб скопіювати або поділитися через месенджери
 
@@ -12992,7 +13016,14 @@ Na ekranie głównym najszybszym sposobem jest dedykowany **przycisk waluty** ob
 
 ## Dolaczanie do konta
 
-Jezeli ktos zaprosi Cie do swojego konta:
+Jesli ktos znalazl Cie przez wyszukiwanie i zaprosil bezposrednio, nie potrzebujesz kodu:
+
+1. Otrzymasz powiadomienie push, gdy tylko zaproszenie dotrze
+2. Dotknij go (lub otworz **Alerty** i przelacz sie na zakladke **Zaproszenia**)
+3. Dotknij **Akceptuj**, aby dolaczyc, lub **Odrzuc**, aby je odrzucic
+4. Zaakceptowane zaproszenia od razu dodaja konto do Twojej listy
+
+Jesli zamiast tego otrzymales kod lub link zaproszenia:
 
 1. Dotknij **Dolacz do konta** na liscie kont
 2. Wprowadz **kod zaproszenia**, ktory otrzymales
@@ -13019,6 +13050,7 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 1. Otworz Ustawienia konta dla danego konta
 2. Dotknij **ikone zaproszenia** (ikona osoba+ w prawym gornym rogu sekcji Czlonkowie)
 3. Wybierz metode zaproszenia:
+   - **Znajdz uzytkownika** — jesli osoba ma juz aplikacje, wyszukaj ja po imieniu lub e-mailu, wybierz z wynikow, ustal jej role i dotknij **Wyslij zaproszenie**. Od razu otrzyma powiadomienie push — kod nie jest potrzebny.
    - **Przez email** — wprowadz adres e-mail osoby, wybierz jej role (Edytor lub Obserwator), dotknij **Wyslij zaproszenie**
    - **Przez link** — generowany jest kod, ktory mozesz udostepnic. Dotknij, aby skopiowac lub udostepnic przez komunikatory
 
@@ -16871,7 +16903,14 @@ Auf dem Hauptbildschirm geht es am schnellsten über die eigene **Währungsschal
 
 ## Konto beitreten
 
-Wenn dich jemand zu seinem Konto eingeladen hat:
+Wenn dich jemand per Suche gefunden und direkt eingeladen hat, brauchst du keinen Code:
+
+1. Du erhaltst eine Push-Benachrichtigung, sobald die Einladung eintrifft
+2. Tippe darauf (oder offne die **Benachrichtigungen** und wechsle zum Tab **Einladungen**)
+3. Tippe auf **Annehmen**, um beizutreten, oder auf **Ablehnen**, um sie zu verwerfen
+4. Angenommene Einladungen fugen das Konto sofort deiner Kontoliste hinzu
+
+Wenn du stattdessen einen Einladungscode oder -link erhalten hast:
 
 1. Tippe auf **Konto beitreten** in der Kontoliste
 2. Gib den **Einladungscode** ein, den du erhalten hast
@@ -16898,6 +16937,7 @@ Tippe auf ein beliebiges Konto, um seine Einstellungen zu offnen:
 1. Offne die Kontoeinstellungen fur das Konto
 2. Tippe auf das **Einladungssymbol** (Person+-Symbol oben rechts im Mitgliederbereich)
 3. Wahle die Einladungsmethode:
+   - **Nutzer finden** — falls die Person die App bereits hat, suche sie nach Name oder E-Mail, wahle sie aus den Ergebnissen, lege ihre Rolle fest und tippe auf **Einladung senden**. Sie erhalt sofort eine Push-Benachrichtigung — kein Code notig.
    - **Per E-Mail** — gib die E-Mail-Adresse der Person ein, wahle ihre Rolle (Bearbeiter oder Betrachter), tippe auf **Einladung senden**
    - **Per Link** — ein Code wird generiert, den du teilen kannst. Tippe zum Kopieren oder Teilen uber Messenger-Apps
 
@@ -20725,7 +20765,14 @@ En la pantalla de inicio, la forma más rápida es la **pastilla de moneda** ded
 
 ## Unirse a una cuenta
 
-Si alguien te ha invitado a su cuenta:
+Si alguien te encontro mediante busqueda y te invito directamente, no necesitas ningun codigo:
+
+1. Recibiras una notificacion push en cuanto llegue la invitacion
+2. Tocala (o abre las **Alertas** y cambia a la pestana **Invitaciones**)
+3. Toca **Aceptar** para unirte, o **Rechazar** para descartarla
+4. Las invitaciones aceptadas anaden la cuenta a tu lista de inmediato
+
+Si en cambio recibiste un codigo o enlace de invitacion:
 
 1. Toca **Unirse a cuenta** en la lista de Cuentas
 2. Introduce el **codigo de invitacion** que recibiste
@@ -20752,6 +20799,7 @@ Toca cualquier cuenta para abrir sus ajustes:
 1. Abre los Ajustes de la cuenta
 2. Toca el **icono de invitacion** (icono de persona+ en la esquina superior derecha de la seccion de Miembros)
 3. Elige el metodo de invitacion:
+   - **Buscar usuario** — si la persona ya tiene la app, buscala por nombre o correo, selecciona sus resultados, elige su rol y toca **Enviar invitacion**. Recibira una notificacion push al instante — sin necesidad de codigo.
    - **Por correo electronico** — introduce la direccion de correo electronico de la persona, selecciona su rol (Editor u Observador), toca **Enviar invitacion**
    - **Por enlace** — se genera un codigo que puedes compartir. Toca para copiar o compartir a traves de aplicaciones de mensajeria
 
@@ -24568,7 +24616,14 @@ Sur l'écran d'accueil, la façon la plus rapide est la **pastille de devise** d
 
 ## Rejoindre un compte
 
-Si quelqu'un vous a invite a rejoindre son compte :
+Si quelqu'un vous a trouve par recherche et invite directement, vous n'avez pas besoin de code :
+
+1. Vous recevrez une notification push des l'arrivee de l'invitation
+2. Appuyez dessus (ou ouvrez les **Alertes** et passez a l'onglet **Invitations**)
+3. Appuyez sur **Accepter** pour rejoindre, ou **Refuser** pour l'ignorer
+4. Les invitations acceptees ajoutent immediatement le compte a votre liste
+
+Si vous avez plutot recu un code ou un lien d'invitation :
 
 1. Appuyez sur **Rejoindre un compte** dans la liste des comptes
 2. Entrez le **code d'invitation** que vous avez recu
@@ -24595,6 +24650,7 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 1. Ouvrez les Parametres du compte concerne
 2. Appuyez sur l'**icone d'invitation** (icone personne+ en haut a droite de la section Membres)
 3. Choisissez la methode d'invitation :
+   - **Rechercher un utilisateur** — si la personne a deja l'application, recherchez-la par nom ou e-mail, selectionnez-la dans les resultats, choisissez son role et appuyez sur **Envoyer l'invitation**. Elle recoit une notification push immediatement — aucun code necessaire.
    - **Par e-mail** — entrez l'adresse e-mail de la personne, selectionnez son role (Editeur ou Observateur), appuyez sur **Envoyer l'invitation**
    - **Par lien** — un code est genere que vous pouvez partager. Appuyez pour copier ou partager via des applications de messagerie
 
@@ -28409,7 +28465,14 @@ iOS, Android, Web
 
 ## Далучэнне да рахунку
 
-Калі вас запрасілі ў чужы рахунак:
+Калі вас знайшлі праз пошук і запрасілі напрамую, код не патрэбны:
+
+1. Вы атрымаеце push-апавяшчэнне, як толькі прыйдзе запрашэнне
+2. Націсніце на яго (або адкрыйце **Апавяшчэнні** і пераключыцеся на ўкладку **Запрашэнні**)
+3. Націсніце **Прыняць**, каб далучыцца, або **Адхіліць**, каб адхіліць яго
+4. Прынятыя запрашэнні адразу дадаюць рахунак у ваш спіс
+
+Калі ж вы атрымалі код ці спасылку-запрашэнне:
 
 1. Націсніце **Далучыцца да рахунку** ў спісе рахункаў
 2. Увядзіце **код запрашэння**, які вы атрымалі
@@ -28436,6 +28499,7 @@ iOS, Android, Web
 1. Адкрыйце Налады рахунку
 2. Націсніце **значок запрашэння** (значок «чалавек+» уверсе справа ў секцыі Удзельнікі)
 3. Выберыце спосаб запрашэння:
+   - **Знайсці карыстальніка** — калі ў чалавека ўжо ёсць праграма, знайдзіце яго па імені ці email, выберыце з вынікаў, вызначце ролю і націсніце **Адправіць запрашэнне**. Ён адразу атрымае push-апавяшчэнне — код не патрэбны.
    - **Па email** — увядзіце email-адрас запрашанага, выберыце ролю (Рэдактар або Назіральнік), націсніце **Адправіць запрашэнне**
    - **Па спасылцы** — генеруецца код, якім можна падзяліцца. Націсніце, каб скапіраваць або адправіць праз месенджары
 
@@ -32210,7 +32274,14 @@ Op het startscherm gaat het het snelst via de speciale **valutaknop** naast de a
 
 ## Lid worden van een account
 
-Als iemand je voor zijn account heeft uitgenodigd:
+Als iemand je via zoeken heeft gevonden en direct heeft uitgenodigd, heb je geen code nodig:
+
+1. Je krijgt een pushmelding zodra de uitnodiging binnenkomt
+2. Tik erop (of open **Meldingen** en schakel over naar het tabblad **Uitnodigingen**)
+3. Tik op **Accepteren** om lid te worden, of op **Weigeren** om het af te wijzen
+4. Geaccepteerde uitnodigingen voegen het account meteen toe aan je lijst
+
+Als je in plaats daarvan een uitnodigingscode of -link hebt ontvangen:
 
 1. Tik op **Lid worden van account** in de accountlijst
 2. Voer de **uitnodigingscode** in die je hebt ontvangen
@@ -32237,6 +32308,7 @@ Tik op een account om de instellingen ervan te openen:
 1. Open de Accountinstellingen voor het account
 2. Tik op het **uitnodigingspictogram** (persoon+-pictogram rechtsboven in de sectie Leden)
 3. Kies een uitnodigingsmethode:
+   - **Gebruiker zoeken** — als de persoon de app al heeft, zoek hem op naam of e-mail, selecteer hem uit de resultaten, kies zijn rol en tik op **Uitnodiging verzenden**. Hij krijgt meteen een pushmelding — geen code nodig.
    - **Per e-mail** — voer het e-mailadres van de persoon in, selecteer zijn rol (Bewerker of Kijker), tik op **Uitnodiging verzenden**
    - **Per link** — er wordt een code gegenereerd die je kunt delen. Tik om te kopiëren of te delen via berichten-apps
 

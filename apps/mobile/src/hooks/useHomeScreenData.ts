@@ -12,6 +12,7 @@ import { useDebtStore } from '@/stores/debtStore';
 import { useWidgetVisibilityStore } from '@/stores/widgetVisibilityStore';
 import { useQuickActionStore } from '@/stores/quickActionStore';
 import { useAlertStore } from '@/stores/alertStore';
+import { useInvitationStore } from '@/stores/invitationStore';
 import { useSafeToSpend } from '@/features/insights/useSafeToSpend';
 
 /**
@@ -34,7 +35,7 @@ export function useHomeScreenData() {
   const currentAccountType = useAccountStore((s) => s.accounts.find((a) => a.id === s.currentAccountId)?.type);
   const { visibility: widgetVisibility, order: widgetOrder } = useWidgetVisibilityStore();
   const { visibility: quickActionVisibility, order: quickActionOrder } = useQuickActionStore();
-  const unreadAlertCount = useAlertStore((s) => s.unreadCount);
+  const unreadAlertCount = useAlertStore((s) => s.unreadCount) + useInvitationStore((s) => s.invitations.length);
   const loadAlerts = useAlertStore((s) => s.loadAlerts);
   const { data: safeToSpendData, hasEnoughData: hasSafeToSpend } = useSafeToSpend();
 
@@ -73,6 +74,7 @@ export function useHomeScreenData() {
     useCallback(() => {
       if (!currentAccountId) return;
       loadAlerts();
+      useInvitationStore.getState().loadInvitations();
       const t = setTimeout(() => loadAlerts(), 2500);
       return () => clearTimeout(t);
     }, [loadAlerts, currentAccountId]),
@@ -86,7 +88,13 @@ export function useHomeScreenData() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const promises: Promise<any>[] = [loadWallet(), loadRates(), loadProfile(), loadAlerts()];
+      const promises: Promise<any>[] = [
+        loadWallet(),
+        loadRates(),
+        loadProfile(),
+        loadAlerts(),
+        useInvitationStore.getState().loadInvitations(),
+      ];
       if (currentAccountType === 'investment') {
         promises.push(loadInvestmentSummary());
       }

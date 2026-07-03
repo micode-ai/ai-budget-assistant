@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
 import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
 import { useAlertStore } from '@/stores/alertStore';
+import { useInvitationStore } from '@/stores/invitationStore';
 import { useTheme } from '@/theme';
 import { HydrationProgressBar } from '@/components/HydrationProgressBar';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
@@ -22,7 +23,7 @@ const tabIcons = {
 function TabHeader({ title }: { title: string }) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const unreadAlertCount = useAlertStore((s) => s.unreadCount);
+  const unreadAlertCount = useAlertStore((s) => s.unreadCount) + useInvitationStore((s) => s.invitations.length);
 
   const btn = {
     width: 34,

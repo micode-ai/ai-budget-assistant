@@ -6,6 +6,12 @@ export const usersApi = {
     return httpClient.request<any>('/users/me');
   },
 
+  searchUsers(query: string) {
+    return httpClient.request<{ id: string; name: string; email: string }[]>(
+      `/users/search?q=${encodeURIComponent(query)}`,
+    );
+  },
+
   updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string }) {
     return httpClient.request<any>('/users/me', {
       method: 'PATCH',
