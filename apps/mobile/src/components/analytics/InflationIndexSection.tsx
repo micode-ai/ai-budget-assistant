@@ -44,7 +44,6 @@ export function InflationIndexSection() {
   const [selectedProduct, setSelectedProduct] = useState<PriceHistoryProduct | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const [isRenaming, setIsRenaming] = useState(false);
-  const [selectedPointIndex, setSelectedPointIndex] = useState<number | null>(null);
   const [isDeletingPoint, setIsDeletingPoint] = useState(false);
 
   const handlePeriodChange = useCallback(
@@ -61,7 +60,6 @@ export function InflationIndexSection() {
 
   const closeSheet = useCallback(() => {
     setSelectedProduct(null);
-    setSelectedPointIndex(null);
   }, []);
 
   const handleRename = useCallback(async () => {
@@ -231,45 +229,59 @@ export function InflationIndexSection() {
                 height={180}
                 lineColor={theme.colors.primary}
                 formatValue={(v) => v.toFixed(2)}
-                onPointPress={(_item, index) => setSelectedPointIndex(index)}
               />
-              {canEdit && selectedPointIndex !== null && selectedProduct.pricePoints[selectedPointIndex] && (
-                <TouchableOpacity
-                  style={[styles.removePriceBtn, isDeletingPoint && styles.ctaButtonDisabled]}
-                  disabled={isDeletingPoint}
-                  onPress={async () => {
-                    const point = selectedProduct.pricePoints[selectedPointIndex];
-                    Alert.alert(
-                      t('priceHistory.removePrice'),
-                      t('priceHistory.removePriceConfirm', {
-                        date: point.date,
-                        price: `${point.price.toFixed(2)} ${selectedProduct.currency}`,
-                      }),
-                      [
-                        { text: t('common.cancel'), style: 'cancel' },
-                        {
-                          text: t('priceHistory.removePrice'),
-                          style: 'destructive',
-                          onPress: async () => {
-                            setIsDeletingPoint(true);
-                            try {
-                              await deletePricePoint(point.itemId);
-                              setSelectedPointIndex(null);
-                            } catch {
-                              // warn'd in store
-                            } finally {
-                              setIsDeletingPoint(false);
-                            }
-                          },
-                        },
-                      ],
-                    );
-                  }}
-                >
-                  <Ionicons name="trash-outline" size={14} color={theme.colors.danger} />
-                  <Text style={styles.removePriceBtnText}>{t('priceHistory.removePrice')}</Text>
-                </TouchableOpacity>
-              )}
+
+              {/* Price points table */}
+              {selectedProduct.pricePoints.map((point) => (
+                <View key={point.itemId} style={styles.priceRow}>
+                  <View style={styles.priceRowLeft}>
+                    <Text style={styles.priceRowDate}>{point.date}</Text>
+                    <Text style={styles.priceRowMerchant} numberOfLines={1}>{point.merchant}</Text>
+                  </View>
+                  <Text style={styles.priceRowValue}>
+                    {point.price.toFixed(2)} {selectedProduct.currency}
+                  </Text>
+                  {canEdit && (
+                    <TouchableOpacity
+                      style={styles.priceRowDelete}
+                      disabled={isDeletingPoint}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                      onPress={() => {
+                        Alert.alert(
+                          t('priceHistory.removePrice'),
+                          t('priceHistory.removePriceConfirm', {
+                            date: point.date,
+                            price: `${point.price.toFixed(2)} ${selectedProduct.currency}`,
+                          }),
+                          [
+                            { text: t('common.cancel'), style: 'cancel' },
+                            {
+                              text: t('priceHistory.removePrice'),
+                              style: 'destructive',
+                              onPress: async () => {
+                                setIsDeletingPoint(true);
+                                try {
+                                  await deletePricePoint(point.itemId);
+                                } catch {
+                                  // warn'd in store
+                                } finally {
+                                  setIsDeletingPoint(false);
+                                }
+                              },
+                            },
+                          ],
+                        );
+                      }}
+                    >
+                      <Ionicons
+                        name="trash-outline"
+                        size={16}
+                        color={isDeletingPoint ? theme.colors.textTertiary : theme.colors.danger}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              ))}
 
               {/* Store comparison — sorted cheapest-first */}
               <Text style={styles.sheetSubtitle}>{t('priceHistory.storeComparison')}</Text>
@@ -438,17 +450,32 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     color: '#fff',
   },
-  removePriceBtn: {
+  priceRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    gap: theme.spacing[1],
-    alignSelf: 'flex-start' as const,
-    marginTop: theme.spacing[2],
-    paddingVertical: theme.spacing[1],
+    paddingVertical: theme.spacing[2],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.borderLight,
+    gap: theme.spacing[2],
   },
-  removePriceBtnText: {
+  priceRowLeft: {
+    flex: 1,
+  },
+  priceRowDate: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textPrimary,
+  },
+  priceRowMerchant: {
     ...theme.textStyles.caption,
-    color: theme.colors.danger,
+    color: theme.colors.textTertiary,
+    marginTop: 1,
+  },
+  priceRowValue: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+  },
+  priceRowDelete: {
+    padding: theme.spacing[1],
   },
   overlay: {
     flex: 1,
