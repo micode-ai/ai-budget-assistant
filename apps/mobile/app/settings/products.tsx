@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
-  ScrollView,
+  FlatList,
   TouchableOpacity,
   Modal,
   TextInput,
@@ -150,191 +150,213 @@ export default function ProductsSettingsScreen() {
     showAlert('', t('priceHistory.merged'));
   };
 
+  const q = searchQuery.trim().toLowerCase();
+  const filteredProducts = useMemo(
+    () =>
+      q
+        ? products.filter(
+            (p) =>
+              p.canonicalName.toLowerCase().includes(q) ||
+              p.rawName.toLowerCase().includes(q),
+          )
+        : products,
+    [products, q],
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: typeof filteredProducts[0]; index: number }) => {
+      const isFirst = index === 0;
+      const isLast = index === filteredProducts.length - 1;
+      const isSelected = selected.has(item.rawName);
+      const hasAlias = item.rawName !== item.canonicalName;
+      return (
+        <View
+          style={[
+            styles.itemWrap,
+            isFirst && styles.itemWrapFirst,
+            isLast && styles.itemWrapLast,
+          ]}
+        >
+          <View style={styles.row}>
+            {selecting ? (
+              <TouchableOpacity
+                style={styles.rowInner}
+                onPress={() => toggleSelect(item.rawName)}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={isSelected ? 'checkbox' : 'square-outline'}
+                  size={22}
+                  color={isSelected ? theme.colors.primary : theme.colors.textTertiary}
+                />
+                <View style={styles.nameWrap}>
+                  <Text style={styles.productName} numberOfLines={2}>{item.canonicalName}</Text>
+                  {hasAlias && (
+                    <Text style={styles.productSub} numberOfLines={1}>{item.rawName}</Text>
+                  )}
+                </View>
+                <Text style={styles.countBadge}>{item.purchaseCount}×</Text>
+              </TouchableOpacity>
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={styles.rowInner}
+                  onPress={canEdit ? () => openRename(item) : undefined}
+                  activeOpacity={canEdit ? 0.7 : 1}
+                >
+                  <View style={styles.iconCircle}>
+                    <Ionicons name="bar-chart-outline" size={16} color={theme.colors.primary} />
+                  </View>
+                  <View style={styles.nameWrap}>
+                    <Text style={styles.productName} numberOfLines={2}>{item.canonicalName}</Text>
+                    {hasAlias ? (
+                      <Text style={styles.productSub} numberOfLines={1}>{item.rawName}</Text>
+                    ) : (
+                      <Text style={styles.productSub}>
+                        {t('priceHistory.purchasesCount', { count: item.purchaseCount })}
+                      </Text>
+                    )}
+                  </View>
+                  {canEdit && (
+                    <Ionicons name="create-outline" size={17} color={theme.colors.textTertiary} />
+                  )}
+                </TouchableOpacity>
+                {canEdit && hasAlias && (
+                  <TouchableOpacity
+                    onPress={() => handleResetAlias(item)}
+                    hitSlop={10}
+                    style={styles.resetBtn}
+                  >
+                    <Ionicons name="close-circle-outline" size={20} color={theme.colors.danger} />
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+          </View>
+        </View>
+      );
+    },
+    [filteredProducts.length, selected, selecting, canEdit, toggleSelect, openRename, handleResetAlias, t, theme, styles],
+  );
+
+  const ListHeader = useMemo(
+    () => (
+      <View style={styles.listHeaderContainer}>
+        {!selecting && (
+          <>
+            <View style={styles.hintCard}>
+              <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+              <Text style={styles.hintText}>{t('priceHistory.productsHint')}</Text>
+            </View>
+            {canEdit && products.length > 0 && (
+              <TouchableOpacity
+                style={styles.aiButton}
+                onPress={handleBackfill}
+                disabled={isBackfilling}
+                activeOpacity={0.75}
+              >
+                {isBackfilling ? (
+                  <ActivityIndicator size="small" color={theme.colors.textInverse} />
+                ) : (
+                  <Ionicons name="sparkles-outline" size={16} color={theme.colors.textInverse} />
+                )}
+                <Text style={styles.aiButtonText}>
+                  {isBackfilling ? t('priceHistory.reanalyzing') : t('priceHistory.reanalyzeWithAi')}
+                </Text>
+              </TouchableOpacity>
+            )}
+            {canEdit && products.length > 1 && (
+              <TouchableOpacity
+                style={styles.mergeButton}
+                onPress={() => setSelecting(true)}
+                activeOpacity={0.75}
+              >
+                <Ionicons name="git-merge-outline" size={16} color={theme.colors.primary} />
+                <Text style={styles.mergeButtonText}>{t('priceHistory.mergeProducts')}</Text>
+              </TouchableOpacity>
+            )}
+          </>
+        )}
+        <View style={styles.sectionHeader}>
+          {selecting ? (
+            <>
+              <Text style={styles.sectionTitle}>
+                {t('merchants.selected', { count: selected.size })}
+              </Text>
+              <TouchableOpacity onPress={exitSelect} hitSlop={8}>
+                <Text style={styles.headerAction}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <Text style={styles.sectionTitle}>{t('priceHistory.manageProducts')}</Text>
+          )}
+        </View>
+        {products.length > 0 && (
+          <View style={styles.searchRow}>
+            <Ionicons name="search-outline" size={16} color={theme.colors.textTertiary} style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder={t('common.search')}
+              placeholderTextColor={theme.colors.textTertiary}
+              returnKeyType="search"
+              clearButtonMode="while-editing"
+              autoCorrect={false}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={8}>
+                <Ionicons name="close-circle" size={16} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+      </View>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selecting, selected.size, canEdit, products.length, isBackfilling, searchQuery, t, theme, styles],
+  );
+
+  const ListEmpty = useMemo(
+    () => (
+      <View style={styles.card}>
+        {isLoadingProducts ? (
+          <ActivityIndicator color={theme.colors.primary} style={{ paddingVertical: theme.spacing[6] }} />
+        ) : (
+          <View style={styles.emptyWrap}>
+            <Ionicons name="bar-chart-outline" size={32} color={theme.colors.textTertiary} />
+            <Text style={styles.emptyText}>
+              {q ? t('common.noResults') : t('priceHistory.noProducts')}
+            </Text>
+          </View>
+        )}
+      </View>
+    ),
+    [isLoadingProducts, q, t, theme, styles],
+  );
+
   return (
     <>
       <Stack.Screen options={{ title: t('priceHistory.manageProducts') }} />
       <SafeAreaView style={styles.container} edges={[]}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={[styles.content, { paddingBottom: theme.spacing[10] + insets.bottom }]}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Hint + AI re-analyze */}
-          {!selecting && (
-            <>
-              <View style={styles.hintCard}>
-                <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
-                <Text style={styles.hintText}>{t('priceHistory.productsHint')}</Text>
-              </View>
-              {canEdit && products.length > 0 && (
-                <TouchableOpacity
-                  style={styles.aiButton}
-                  onPress={handleBackfill}
-                  disabled={isBackfilling}
-                  activeOpacity={0.75}
-                >
-                  {isBackfilling ? (
-                    <ActivityIndicator size="small" color={theme.colors.textInverse} />
-                  ) : (
-                    <Ionicons name="sparkles-outline" size={16} color={theme.colors.textInverse} />
-                  )}
-                  <Text style={styles.aiButtonText}>
-                    {isBackfilling
-                      ? t('priceHistory.reanalyzing')
-                      : t('priceHistory.reanalyzeWithAi')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              {canEdit && products.length > 1 && (
-                <TouchableOpacity
-                  style={styles.mergeButton}
-                  onPress={() => setSelecting(true)}
-                  activeOpacity={0.75}
-                >
-                  <Ionicons name="git-merge-outline" size={16} color={theme.colors.primary} />
-                  <Text style={styles.mergeButtonText}>{t('priceHistory.mergeProducts')}</Text>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-
-          {/* Section header */}
-          <View style={styles.sectionHeader}>
-            {selecting ? (
-              <>
-                <Text style={styles.sectionTitle}>
-                  {t('merchants.selected', { count: selected.size })}
-                </Text>
-                <TouchableOpacity onPress={exitSelect} hitSlop={8}>
-                  <Text style={styles.headerAction}>{t('common.cancel')}</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <Text style={styles.sectionTitle}>{t('priceHistory.manageProducts')}</Text>
-            )}
-          </View>
-
-          {/* Search */}
-          {products.length > 0 && (
-            <View style={styles.searchRow}>
-              <Ionicons name="search-outline" size={16} color={theme.colors.textTertiary} style={styles.searchIcon} />
-              <TextInput
-                style={styles.searchInput}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                placeholder={t('common.search')}
-                placeholderTextColor={theme.colors.textTertiary}
-                returnKeyType="search"
-                clearButtonMode="while-editing"
-                autoCorrect={false}
-              />
-              {searchQuery.length > 0 && (
-                <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={8}>
-                  <Ionicons name="close-circle" size={16} color={theme.colors.textTertiary} />
-                </TouchableOpacity>
-              )}
+        <FlatList
+          data={isLoadingProducts ? [] : filteredProducts}
+          keyExtractor={(item) => item.rawName}
+          renderItem={renderItem}
+          ListHeaderComponent={ListHeader}
+          ListEmptyComponent={ListEmpty}
+          ItemSeparatorComponent={() => (
+            <View style={{ backgroundColor: theme.colors.surface }}>
+              <View style={styles.itemSeparator} />
             </View>
           )}
-
-          {/* List */}
-          {(() => {
-            const q = searchQuery.trim().toLowerCase();
-            const filteredProducts = q
-              ? products.filter(
-                  (p) =>
-                    p.canonicalName.toLowerCase().includes(q) ||
-                    p.rawName.toLowerCase().includes(q),
-                )
-              : products;
-            return (
-          <View style={styles.card}>
-            {isLoadingProducts ? (
-              <ActivityIndicator
-                color={theme.colors.primary}
-                style={{ paddingVertical: theme.spacing[6] }}
-              />
-            ) : filteredProducts.length === 0 ? (
-              <View style={styles.emptyWrap}>
-                <Ionicons name="bar-chart-outline" size={32} color={theme.colors.textTertiary} />
-                <Text style={styles.emptyText}>
-                  {q ? t('common.noResults') : t('priceHistory.noProducts')}
-                </Text>
-              </View>
-            ) : (
-              filteredProducts.map((item, i) => {
-                const isSelected = selected.has(item.rawName);
-                const hasAlias = item.rawName !== item.canonicalName;
-                return (
-                  <React.Fragment key={item.rawName}>
-                    <View style={styles.row}>
-                      {selecting ? (
-                        <TouchableOpacity
-                          style={styles.rowInner}
-                          onPress={() => toggleSelect(item.rawName)}
-                          activeOpacity={0.7}
-                        >
-                          <Ionicons
-                            name={isSelected ? 'checkbox' : 'square-outline'}
-                            size={22}
-                            color={isSelected ? theme.colors.primary : theme.colors.textTertiary}
-                          />
-                          <View style={styles.nameWrap}>
-                            <Text style={styles.productName} numberOfLines={2}>{item.canonicalName}</Text>
-                            {hasAlias && (
-                              <Text style={styles.productSub} numberOfLines={1}>{item.rawName}</Text>
-                            )}
-                          </View>
-                          <Text style={styles.countBadge}>{item.purchaseCount}×</Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <>
-                          <TouchableOpacity
-                            style={styles.rowInner}
-                            onPress={canEdit ? () => openRename(item) : undefined}
-                            activeOpacity={canEdit ? 0.7 : 1}
-                          >
-                            <View style={styles.iconCircle}>
-                              <Ionicons name="bar-chart-outline" size={16} color={theme.colors.primary} />
-                            </View>
-                            <View style={styles.nameWrap}>
-                              <Text style={styles.productName} numberOfLines={2}>{item.canonicalName}</Text>
-                              {hasAlias ? (
-                                <Text style={styles.productSub} numberOfLines={1}>{item.rawName}</Text>
-                              ) : (
-                                <Text style={styles.productSub}>
-                                  {t('priceHistory.purchasesCount', { count: item.purchaseCount })}
-                                </Text>
-                              )}
-                            </View>
-                            {canEdit && (
-                              <Ionicons
-                                name="create-outline"
-                                size={17}
-                                color={theme.colors.textTertiary}
-                              />
-                            )}
-                          </TouchableOpacity>
-                          {canEdit && hasAlias && (
-                            <TouchableOpacity
-                              onPress={() => handleResetAlias(item)}
-                              hitSlop={10}
-                              style={styles.resetBtn}
-                            >
-                              <Ionicons name="close-circle-outline" size={20} color={theme.colors.danger} />
-                            </TouchableOpacity>
-                          )}
-                        </>
-                      )}
-                    </View>
-                    {i < filteredProducts.length - 1 && <View style={styles.divider} />}
-                  </React.Fragment>
-                );
-              })
-            )}
-          </View>
-            );
-          })()}
-        </ScrollView>
+          contentContainerStyle={[styles.content, { paddingBottom: theme.spacing[10] + insets.bottom }]}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={20}
+          maxToRenderPerBatch={20}
+          windowSize={5}
+          removeClippedSubviews
+        />
 
         {/* Bottom merge bar */}
         {selecting && (
@@ -457,8 +479,8 @@ export default function ProductsSettingsScreen() {
 
 const createStyles = (theme: Theme) => ({
   container: { flex: 1, backgroundColor: theme.colors.background },
-  scrollView: { flex: 1 },
-  content: { padding: theme.spacing[4], gap: theme.spacing[3] },
+  content: { padding: theme.spacing[4] },
+  listHeaderContainer: { gap: theme.spacing[3], marginBottom: theme.spacing[3] },
 
   hintCard: {
     flexDirection: 'row' as const,
@@ -524,6 +546,26 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.lg,
     paddingHorizontal: theme.spacing[4],
     paddingVertical: theme.spacing[2],
+  },
+  // Virtualized list items: each row carries the card background.
+  // First/last items get the card's border-radius corners.
+  itemWrap: {
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[4],
+  },
+  itemWrapFirst: {
+    borderTopLeftRadius: theme.borderRadius.lg,
+    borderTopRightRadius: theme.borderRadius.lg,
+    paddingTop: theme.spacing[1],
+  },
+  itemWrapLast: {
+    borderBottomLeftRadius: theme.borderRadius.lg,
+    borderBottomRightRadius: theme.borderRadius.lg,
+    paddingBottom: theme.spacing[1],
+  },
+  itemSeparator: {
+    height: 1,
+    backgroundColor: theme.colors.divider,
   },
   row: {
     flexDirection: 'row' as const,
