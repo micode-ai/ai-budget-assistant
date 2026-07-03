@@ -68,21 +68,41 @@ export class PriceHistoryService {
         select: { canonicalName: true, expense: { select: { date: true } } },
       });
 
-    const productMap = new Map<string, { count: number; lastSeen: Date }>();
+    // Accumulate by rawName first, then group by resolved canonicalName
+    const rawMap = new Map<string, { count: number; lastSeen: Date }>();
     for (const item of items) {
       const raw = item.canonicalName as string;
-      const existing = productMap.get(raw) ?? { count: 0, lastSeen: new Date(0) };
+      const existing = rawMap.get(raw) ?? { count: 0, lastSeen: new Date(0) };
       existing.count += 1;
       const expDate = (item as any).expense?.date ?? new Date(0);
       if (expDate > existing.lastSeen) existing.lastSeen = expDate;
-      productMap.set(raw, existing);
+      rawMap.set(raw, existing);
     }
 
-    return Array.from(productMap.entries())
-      .filter(([rawName]) => (aliases.get(rawName) ?? '') !== IGNORED_SENTINEL)
-      .map(([rawName, { count, lastSeen }]) => ({
-        rawName,
-        canonicalName: aliases.get(rawName) ?? rawName,
+    // Group by resolved canonicalName so merged products appear as one row
+    const canonicalMap = new Map<
+      string,
+      { rawNames: string[]; count: number; lastSeen: Date }
+    >();
+    for (const [rawName, stats] of rawMap.entries()) {
+      const resolved = aliases.get(rawName) ?? rawName;
+      if (resolved === IGNORED_SENTINEL) continue;
+      const existing = canonicalMap.get(resolved) ?? {
+        rawNames: [],
+        count: 0,
+        lastSeen: new Date(0),
+      };
+      existing.rawNames.push(rawName);
+      existing.count += stats.count;
+      if (stats.lastSeen > existing.lastSeen) existing.lastSeen = stats.lastSeen;
+      canonicalMap.set(resolved, existing);
+    }
+
+    return Array.from(canonicalMap.entries())
+      .map(([canonicalName, { rawNames, count, lastSeen }]) => ({
+        rawName: rawNames[0],
+        rawNames,
+        canonicalName,
         purchaseCount: count,
         lastSeen: lastSeen.toISOString().slice(0, 10),
       }))

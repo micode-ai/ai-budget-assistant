@@ -27,8 +27,9 @@ export interface PriceHistoryResponse {
 }
 
 export interface ProductListItem {
-  rawName: string;
-  canonicalName: string; // alias.canonicalName ?? rawName
+  rawName: string;        // primary key (rawNames[0]) — kept for backward compat
+  rawNames: string[];     // all underlying rawNames that share this canonicalName
+  canonicalName: string;  // alias.canonicalName ?? rawName
   purchaseCount: number;
   lastSeen: string; // ISO date
 }
