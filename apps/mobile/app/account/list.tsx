@@ -58,7 +58,7 @@ export default function AccountListScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={[]}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <FlatList
         data={accounts}
         keyExtractor={(item) => item.id}

@@ -55,7 +55,12 @@ export default function NewTripScreen() {
         tripEndDate.toISOString().slice(0, 10),
         currencyCode,
       );
-      router.replace(`/account/${account.id}`);
+      // This screen is a modal pushed on top of another modal
+      // (account/create). Replacing a modal-presented screen with a
+      // non-modal one in place is unreliable on native-stack — dismiss
+      // both modals first, then push the destination as a fresh card.
+      router.dismissAll();
+      router.push(`/account/${account.id}`);
     } catch (e) {
       showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
