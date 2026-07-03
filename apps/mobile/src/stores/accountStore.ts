@@ -325,10 +325,11 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         tripEndDate,
         tripStartDate,
       });
-      set((state) => ({
-        accounts: [...state.accounts, { ...account, myRole: 'owner' as AccountRole }],
-        isLoading: false,
-      }));
+      const userId = await getCurrentUserId();
+      await insertAccount(account, 'owner', userId ?? undefined);
+
+      const localAccounts = await loadAllAccounts(userId ?? undefined);
+      set({ accounts: localAccounts, isLoading: false });
       return account;
     } catch (error) {
       set({

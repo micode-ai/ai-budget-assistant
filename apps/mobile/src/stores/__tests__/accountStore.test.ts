@@ -1,6 +1,7 @@
 import { useAccountStore, getTripDaysLeft } from '../accountStore';
 import { api } from '../../services/api';
 import { tripApi } from '../../services/trip.api';
+import { loadAllAccounts, insertAccount } from '../../db/accountRepository';
 
 // Manual factory (not bare automock): automocking still `require()`s the real
 // module to infer its shape, which would pull in `./client` -> expo-sqlite's
@@ -98,6 +99,14 @@ describe('accountStore trip actions', () => {
       updatedAt: new Date(),
     };
     (api.createAccount as jest.Mock).mockResolvedValue(serverAccount);
+    // Mirrors what a real insertAccount + loadAllAccounts round trip through
+    // SQLite would return — the persisted source of truth loadAccounts()
+    // re-reads on every hydration cycle (app resume, tab focus, pull-to-
+    // refresh). Without insertAccount actually persisting the new trip
+    // account, the next such reload wiped it from the in-memory list.
+    (loadAllAccounts as jest.Mock).mockResolvedValue([
+      { ...serverAccount, myRole: 'owner' },
+    ]);
 
     const result = await useAccountStore
       .getState()
@@ -110,6 +119,7 @@ describe('accountStore trip actions', () => {
       tripEndDate: '2026-08-10',
       tripStartDate: '2026-08-01',
     });
+    expect(insertAccount).toHaveBeenCalledWith(serverAccount, 'owner', undefined);
     expect(result).toBe(serverAccount);
     expect(useAccountStore.getState().accounts).toHaveLength(1);
     expect(useAccountStore.getState().accounts[0]).toMatchObject({
