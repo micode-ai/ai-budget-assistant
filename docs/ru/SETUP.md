@@ -267,6 +267,8 @@ npm run build -w @budget/mobile
 
 > **Важно**: Приложение использует нативную сборку (`expo run:android`), а не Expo Go, так как требует разрешение `DETECT_SCREEN_CAPTURE` для Android 14+.
 
+> **Разрешение на геолокацию (ABA-310)**: приложение объявляет `ACCESS_COARSE_LOCATION`/`ACCESS_FINE_LOCATION` (Android) и `NSLocationWhenInUseUsageDescription` (iOS) через `expo-location` для опциональной функции «прикреплять локацию к новым расходам». По умолчанию выключено; разрешение запрашивается только когда пользователь включает переключатель (геокодированию адреса с чека разрешение устройства не нужно). Всё уже закоммичено в `android/app/src/main/AndroidManifest.xml` и `app.json` — случайный `expo prebuild` не должен их удалить.
+
 ### Сборка нативных приложений
 
 #### iOS
