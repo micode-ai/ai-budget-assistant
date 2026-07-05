@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
+import { useAccountStore } from './accountStore';
 import type { MyInvitation } from '@/services/accounts.api';
 
 interface InvitationState {
@@ -35,6 +36,16 @@ export const useInvitationStore = create<InvitationState>((set, get) => ({
     } catch (e) {
       set({ invitations: previous });
       throw e;
+    }
+    // Accepting adds a membership on the server — refresh the account list so the
+    // joined account (including trip accounts) appears immediately in the switcher.
+    // Best-effort: a reload failure must not undo the already-successful accept.
+    if (action === 'accept') {
+      try {
+        await useAccountStore.getState().loadAccountsFromServer();
+      } catch (e) {
+        console.warn('Failed to refresh accounts after accepting invitation:', e);
+      }
     }
   },
 }));
