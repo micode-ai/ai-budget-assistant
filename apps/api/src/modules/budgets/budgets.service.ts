@@ -62,51 +62,78 @@ export class BudgetsService {
     return resolved;
   }
 
-  async create(accountId: string, userId: string, dto: any) {
-    return this.prisma.$transaction(async (tx) => {
-      // Resolve category allocations before creating
-      const resolvedAllocations = dto.categories && dto.categories.length > 0
-        ? await this.resolveCategoryAllocations(dto.categories, accountId)
-        : [];
-
-      const budget = await tx.budget.create({
-        data: {
-          accountId,
-          userId,
-          clientId: dto.localId,
-          name: dto.name,
-          amount: dto.amount,
-          currencyCode: dto.currencyCode,
-          period: dto.period,
-          startDate: new Date(dto.startDate),
-          endDate: dto.endDate ? new Date(dto.endDate) : null,
-          alertThreshold: dto.alertThreshold || 80,
-        },
-      });
-
-      // Create category allocations if provided
-      if (resolvedAllocations.length > 0) {
-        await tx.budgetCategory.createMany({
-          data: resolvedAllocations.map((cat) => ({
-            budgetId: budget.id,
-            categoryId: cat.categoryId,
-            amount: cat.amount,
-          })),
-        });
-      }
-
-      const result = await tx.budget.findUnique({
-        where: { id: budget.id },
-        include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
-      });
-
-      // Fire-and-forget gamification check
-      this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
-
-      this.invalidateChatCache(accountId);
-
-      return result;
+  private findByClientId(accountId: string, clientId: string) {
+    return this.prisma.budget.findUnique({
+      where: { accountId_clientId: { accountId, clientId } },
+      include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
     });
+  }
+
+  async create(accountId: string, userId: string, dto: any) {
+    // Offline-first idempotency (ABA-316): the mobile client may resend the same
+    // create (sync retry, double-tap, lost response) with the same localId. A
+    // plain create then violates @@unique([accountId, clientId]) with P2002 and
+    // crashed POST /budgets — return the already-created budget instead.
+    if (dto.localId) {
+      const existing = await this.findByClientId(accountId, dto.localId);
+      if (existing) return existing;
+    }
+
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        // Resolve category allocations before creating
+        const resolvedAllocations = dto.categories && dto.categories.length > 0
+          ? await this.resolveCategoryAllocations(dto.categories, accountId)
+          : [];
+
+        const budget = await tx.budget.create({
+          data: {
+            accountId,
+            userId,
+            clientId: dto.localId,
+            name: dto.name,
+            amount: dto.amount,
+            currencyCode: dto.currencyCode,
+            period: dto.period,
+            startDate: new Date(dto.startDate),
+            endDate: dto.endDate ? new Date(dto.endDate) : null,
+            alertThreshold: dto.alertThreshold || 80,
+          },
+        });
+
+        // Create category allocations if provided
+        if (resolvedAllocations.length > 0) {
+          await tx.budgetCategory.createMany({
+            data: resolvedAllocations.map((cat) => ({
+              budgetId: budget.id,
+              categoryId: cat.categoryId,
+              amount: cat.amount,
+            })),
+          });
+        }
+
+        const result = await tx.budget.findUnique({
+          where: { id: budget.id },
+          include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
+        });
+
+        // Fire-and-forget gamification check
+        this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+
+        this.invalidateChatCache(accountId);
+
+        return result;
+      });
+    } catch (e: any) {
+      // A concurrent duplicate submit committed the row between the pre-check and
+      // the insert. Postgres poisons the transaction on the constraint violation
+      // (ABA-313), so it has rolled back — re-fetch OUTSIDE it and return the row.
+      if (e?.code === 'P2002' && dto.localId) {
+        const existing = await this.findByClientId(accountId, dto.localId);
+        if (existing) return existing;
+      }
+      throw e;
+    }
   }
 
   async findAll(accountId: string, filters: any = {}) {

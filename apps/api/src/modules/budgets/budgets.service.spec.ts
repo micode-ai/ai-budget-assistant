@@ -1,4 +1,4 @@
-import { computeBudgetPeriod } from './budgets.service';
+import { computeBudgetPeriod, BudgetsService } from './budgets.service';
 
 const fixedNow = new Date('2026-04-30T12:00:00.000Z');
 
@@ -81,5 +81,74 @@ describe('computeBudgetPeriod', () => {
     );
     expect(periodStart.getDate()).toBe(1);
     expect(periodStart.getMonth()).toBe(3); // April
+  });
+});
+
+describe('BudgetsService.create — offline-first idempotency (ABA-316)', () => {
+  const existingBudget = { id: 'b-1', clientId: 'local-1', name: 'Groceries', categoryAllocations: [] };
+  const dto = {
+    localId: 'local-1', name: 'Groceries', amount: 500,
+    currencyCode: 'PLN', period: 'monthly', startDate: '2026-07-01',
+  };
+
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  it('returns the existing budget on a resent create (pre-check hit) without inserting', async () => {
+    const create = jest.fn();
+    const prisma: any = {
+      budget: { findUnique: jest.fn().mockResolvedValue(existingBudget), create },
+      $transaction: jest.fn(),
+    };
+    const res = await makeService(prisma).create('acc-1', 'u1', dto);
+    expect(res).toBe(existingBudget);
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+    expect(prisma.budget.findUnique).toHaveBeenCalledWith({
+      where: { accountId_clientId: { accountId: 'acc-1', clientId: 'local-1' } },
+      include: expect.anything(),
+    });
+  });
+
+  it('recovers from a concurrent P2002 by re-fetching the committed budget', async () => {
+    const prisma: any = {
+      budget: {
+        findUnique: jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(existingBudget),
+      },
+      $transaction: jest.fn().mockRejectedValue(Object.assign(new Error('dup'), { code: 'P2002' })),
+    };
+    const res = await makeService(prisma).create('acc-1', 'u1', dto);
+    expect(res).toBe(existingBudget);
+    expect(prisma.budget.findUnique).toHaveBeenCalledTimes(2);
+  });
+
+  it('creates a new budget when none exists (happy path)', async () => {
+    const withAllocations = { id: 'b-new', name: 'Groceries', categoryAllocations: [] };
+    const tx = {
+      budget: {
+        create: jest.fn().mockResolvedValue({ id: 'b-new' }),
+        findUnique: jest.fn().mockResolvedValue(withAllocations),
+      },
+      budgetCategory: { createMany: jest.fn() },
+    };
+    const prisma: any = {
+      budget: { findUnique: jest.fn().mockResolvedValue(null) },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+    const res = await makeService(prisma).create('acc-1', 'u1', dto);
+    expect(res).toBe(withAllocations);
+    expect(tx.budget.create).toHaveBeenCalledTimes(1);
+  });
+
+  it('rethrows non-P2002 errors', async () => {
+    const boom = Object.assign(new Error('db down'), { code: 'P1001' });
+    const prisma: any = {
+      budget: { findUnique: jest.fn().mockResolvedValue(null) },
+      $transaction: jest.fn().mockRejectedValue(boom),
+    };
+    await expect(makeService(prisma).create('acc-1', 'u1', dto)).rejects.toBe(boom);
   });
 });
