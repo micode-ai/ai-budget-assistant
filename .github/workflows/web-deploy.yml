@@ -14,10 +14,15 @@ jobs:
     name: Build & deploy static web app
     runs-on: ubuntu-latest
     environment: production
+    env:
+      # IndexNow ownership key (public by design — served at /<key>.txt). Stable.
+      INDEXNOW_KEY: a7f3d9c1e5b84206f9c2a7e14d8b6035
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so the IndexNow step can diff the push range
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -60,6 +65,8 @@ jobs:
           test -f apex/blog/index.html  || { echo "::error::blog/index.html missing"; exit 1; }
           test -f apex/help/en/index.html || { echo "::error::help/en/index.html missing"; exit 1; }
           test -f apex/sitemap.xml      || { echo "::error::sitemap.xml missing"; exit 1; }
+          # IndexNow ownership key file, served at https://ai-budget.pl/<key>.txt
+          printf '%s' "$INDEXNOW_KEY" > "apex/${INDEXNOW_KEY}.txt"
           echo "apex tree: $(du -sh apex | cut -f1)"
 
       - name: Setup SSH
@@ -98,3 +105,17 @@ jobs:
           check https://ai-budget.pl/blog/
           check https://ai-budget.pl/help/en/
           check https://app.ai-budget.pl/
+
+      # Notify IndexNow (Bing/Yandex/Seznam) about the pages that changed in this
+      # push, so new/updated blog + landing + help URLs get discovered fast.
+      # Non-fatal: IndexNow issues warn, never fail the deploy.
+      - name: IndexNow ping (changed pages)
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || ! git rev-parse -q --verify "$BEFORE^{commit}" >/dev/null 2>&1; then
+            RANGE="HEAD~1..HEAD"
+          else
+            RANGE="${BEFORE}..${{ github.sha }}"
+          fi
+          echo "IndexNow range: $RANGE"
+          bash scripts/indexnow-ping.sh "$RANGE"
