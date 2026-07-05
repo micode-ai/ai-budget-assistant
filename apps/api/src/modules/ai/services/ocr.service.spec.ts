@@ -63,6 +63,10 @@ jest.mock('openai', () => ({
 const BASE_PARSED_RECEIPT: ParsedReceipt & { suggestedCategory?: string } = {
   merchantName: 'Test Store',
   merchantAddress: null,
+  merchantStreet: null,
+  merchantCity: null,
+  merchantPostalCode: null,
+  merchantCountry: null,
   date: '2026-01-15',
   time: '12:00',
   items: [{ description: 'Item', totalPrice: 10 }],
@@ -81,7 +85,7 @@ describe('OcrService', () => {
   let service: OcrService;
   let prisma: any;
   let configService: any;
-  let geocodingMock: { geocode: jest.Mock };
+  let geocodingMock: { geocode: jest.Mock; geocodeStructured: jest.Mock };
 
   beforeEach(() => {
     mockChatCreate.mockReset();
@@ -90,7 +94,10 @@ describe('OcrService', () => {
       user: { findUnique: jest.fn().mockResolvedValue({ aiModel: null, language: 'en', timezone: 'UTC' }) },
     };
     configService = { get: jest.fn().mockReturnValue('sk-test') };
-    geocodingMock = { geocode: jest.fn().mockResolvedValue(null) };
+    geocodingMock = {
+      geocode: jest.fn().mockResolvedValue(null),
+      geocodeStructured: jest.fn().mockResolvedValue(null),
+    };
     service = new OcrService(configService, prisma, geocodingMock as any);
   });
 
@@ -103,21 +110,51 @@ describe('OcrService', () => {
   }
 
   describe('receipt location (geocoding)', () => {
-    it('geocodes merchantAddress and attaches location with the raw address as name', async () => {
-      geocodingMock.geocode.mockResolvedValue({ lat: 52.23, lng: 21.01, displayName: 'Warszawa, PL' });
+    it('geocodes the STRUCTURED store address (not the noisy raw blob) and composes a clean display name', async () => {
+      geocodingMock.geocodeStructured.mockResolvedValue({ lat: 53.889, lng: 17.715, displayName: 'Brusy, PL' });
+      // merchantAddress deliberately contains the company registered seat (Jeronimo Martins, Kostrzyn)
+      // mashed in with the store address — exactly the string Nominatim could not resolve on prod.
+      const result = await runParseWithFixture({
+        merchantAddress: 'ul. Wojska Polskiego 1, 89-632 Brusy, Jeronimo Martins Polska S.A., 62-025 Kostrzyn',
+        merchantStreet: 'ul. Wojska Polskiego 1',
+        merchantCity: 'Brusy',
+        merchantPostalCode: '89-632',
+        merchantCountry: 'Poland',
+      });
+      expect(geocodingMock.geocodeStructured).toHaveBeenCalledWith({
+        street: 'ul. Wojska Polskiego 1',
+        city: 'Brusy',
+        postalCode: '89-632',
+        country: 'Poland',
+      });
+      // The noisy free-text path is NOT used when structured parts resolve.
+      expect(geocodingMock.geocode).not.toHaveBeenCalled();
+      // Display name is the clean composed store address, NOT the mashed raw blob.
+      expect(result.location).toEqual({
+        lat: 53.889,
+        lng: 17.715,
+        name: 'ul. Wojska Polskiego 1, 89-632 Brusy',
+      });
+    });
+
+    it('falls back to free-text geocoding when the receipt has no structured parts', async () => {
+      geocodingMock.geocode.mockResolvedValue({ lat: 52.23, lng: 21.01, displayName: 'Warszawa' });
       const result = await runParseWithFixture({ merchantAddress: 'ul. Marszałkowska 10, Warszawa' });
+      expect(geocodingMock.geocodeStructured).not.toHaveBeenCalled();
       expect(geocodingMock.geocode).toHaveBeenCalledWith('ul. Marszałkowska 10, Warszawa');
       expect(result.location).toEqual({ lat: 52.23, lng: 21.01, name: 'ul. Marszałkowska 10, Warszawa' });
     });
 
-    it('returns location: null when geocoding finds nothing', async () => {
-      geocodingMock.geocode.mockResolvedValue(null);
-      const result = await runParseWithFixture({ merchantAddress: 'ul. Marszałkowska 10, Warszawa' });
+    it('returns location: null when structured geocoding finds nothing and there is no free-text fallback', async () => {
+      const result = await runParseWithFixture({ merchantCity: 'Brusy', merchantPostalCode: '89-632' });
+      expect(geocodingMock.geocodeStructured).toHaveBeenCalled();
+      expect(geocodingMock.geocode).not.toHaveBeenCalled(); // merchantAddress is null
       expect(result.location).toBeNull();
     });
 
-    it('skips geocoding entirely when the receipt has no address', async () => {
-      const result = await runParseWithFixture({ merchantAddress: null });
+    it('skips geocoding entirely when the receipt has no address at all', async () => {
+      const result = await runParseWithFixture({});
+      expect(geocodingMock.geocodeStructured).not.toHaveBeenCalled();
       expect(geocodingMock.geocode).not.toHaveBeenCalled();
       expect(result.location).toBeNull();
     });

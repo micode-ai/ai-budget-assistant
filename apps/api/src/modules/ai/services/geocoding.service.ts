@@ -14,11 +14,39 @@ const REQUEST_TIMEOUT_MS = 5000;
 // Usage policy: max 1 request/second. Single API container → in-process limiter suffices.
 const MIN_REQUEST_GAP_MS = 1100;
 
+export interface StructuredAddress {
+  street?: string | null;
+  city?: string | null;
+  postalCode?: string | null;
+  country?: string | null;
+}
+
 /** Trim, collapse whitespace, lowercase. Null for unusably short input. */
 export function normalizeGeocodeQuery(address: string | null | undefined): string | null {
   if (!address) return null;
   const q = address.replace(/\s+/g, ' ').trim().toLowerCase();
   return q.length >= 5 ? q : null;
+}
+
+/** Trim + collapse whitespace on one structured component. Null when empty. */
+function cleanPart(s: string | null | undefined): string | null {
+  if (!s) return null;
+  const t = s.replace(/\s+/g, ' ').trim();
+  return t.length > 0 ? t : null;
+}
+
+// Leading street-type words/abbreviations (PL + UA/RU/BY). Nominatim's structured
+// `street` param expects "<number> <name>" WITHOUT the type prefix — e.g.
+// "ul. Wojska Polskiego 1" fails, "Wojska Polskiego 1" hits the exact building.
+const STREET_PREFIX_RE =
+  /^(?:ul|ulica|al|aleja|pl|plac|os|osiedle|вул|вулиця|ул|улица|пр|просп|проспект|пер|переулок|пров|провулок)\.?\s+/iu;
+
+/** Clean a street line and strip a leading street-type prefix for geocoding. */
+export function normalizeStreetForGeocode(s: string | null | undefined): string | null {
+  const base = cleanPart(s);
+  if (!base) return null;
+  const stripped = base.replace(STREET_PREFIX_RE, '').trim();
+  return stripped.length > 0 ? stripped : base;
 }
 
 @Injectable()
@@ -37,23 +65,84 @@ export class GeocodingService {
   async geocode(address: string): Promise<GeocodeResult | null> {
     const query = normalizeGeocodeQuery(address);
     if (!query) return null;
+    const url = `${NOMINATIM_URL}?format=json&limit=1&q=${encodeURIComponent(query)}`;
+    return this.resolve(query, url);
+  }
 
+  /**
+   * Geocode a STRUCTURED address via Nominatim's structured endpoint
+   * (street/city/postalcode/country params). Far more robust than free text on
+   * noisy receipts (e.g. Polish receipts that print the store address AND the
+   * company's registered seat) — the caller passes only the store's own parts,
+   * so unrelated tokens can't derail the match. Requires at least a city or a
+   * postal code (a street alone is too ambiguous). Same fail-silent + caching
+   * contract as {@link geocode}.
+   */
+  async geocodeStructured(parts: StructuredAddress): Promise<GeocodeResult | null> {
+    const street = normalizeStreetForGeocode(parts.street);
+    const city = cleanPart(parts.city);
+    const postalCode = cleanPart(parts.postalCode);
+    const country = cleanPart(parts.country);
+    if (!city && !postalCode) return null;
+
+    // Tier 1: full address (street + city/postcode). Nominatim returns the exact
+    // building when the street resolves.
+    if (street) {
+      const exact = await this.resolveStructured(street, city, postalCode, country);
+      if (exact) return exact;
+    }
+    // Tier 2: drop the street → town/postcode centroid. Guarantees a pin whenever
+    // the city or postal code is geocodable, which it almost always is.
+    return this.resolveStructured(null, city, postalCode, country);
+  }
+
+  private resolveStructured(
+    street: string | null,
+    city: string | null,
+    postalCode: string | null,
+    country: string | null,
+  ): Promise<GeocodeResult | null> {
+    const params = new URLSearchParams({ format: 'json', limit: '1' });
+    if (street) params.set('street', street);
+    if (city) params.set('city', city);
+    if (postalCode) params.set('postalcode', postalCode);
+    if (country) params.set('country', country);
+    const url = `${NOMINATIM_URL}?${params.toString()}`;
+
+    // Canonical, order-stable cache key; the `struct|` prefix keeps it disjoint
+    // from free-text keys (which are lowercased address strings).
+    const cacheKey =
+      `struct|street=${(street ?? '').toLowerCase()}` +
+      `|city=${(city ?? '').toLowerCase()}` +
+      `|postalcode=${(postalCode ?? '').toLowerCase()}` +
+      `|country=${(country ?? '').toLowerCase()}`;
+
+    return this.resolve(cacheKey, url);
+  }
+
+  /**
+   * Shared cache-read → throttled fetch → cache-write core for both the
+   * free-text and structured paths. Fail-silent: any error returns null.
+   * Negative results ("no match") ARE cached under `cacheKey`; transient
+   * errors are NOT.
+   */
+  private async resolve(cacheKey: string, url: string): Promise<GeocodeResult | null> {
     try {
       const cached = await this.prisma.geocodeCache.findUnique({
-        where: { queryNormalized: query },
+        where: { queryNormalized: cacheKey },
       });
       if (cached) {
         if (cached.lat == null || cached.lng == null) return null; // negative cache
         return { lat: Number(cached.lat), lng: Number(cached.lng), displayName: cached.displayName };
       }
 
-      const fetched = await this.throttled(() => this.queryNominatim(query));
+      const fetched = await this.throttled(() => this.fetchNominatim(url, cacheKey));
       if (fetched === 'error') return null; // transient — retryable next time, do not cache
 
       await this.prisma.geocodeCache.upsert({
-        where: { queryNormalized: query },
+        where: { queryNormalized: cacheKey },
         create: {
-          queryNormalized: query,
+          queryNormalized: cacheKey,
           lat: fetched?.lat ?? null,
           lng: fetched?.lng ?? null,
           displayName: fetched?.displayName ?? null,
@@ -62,7 +151,7 @@ export class GeocodingService {
       });
       return fetched;
     } catch (e) {
-      this.logger.warn(`geocode failed for "${query}": ${e}`);
+      this.logger.warn(`geocode failed for "${cacheKey}": ${e}`);
       return null;
     }
   }
@@ -84,15 +173,14 @@ export class GeocodingService {
   }
 
   /** null = confirmed no results (cacheable); 'error' = transient failure (not cacheable). */
-  private async queryNominatim(query: string): Promise<GeocodeResult | null | 'error'> {
+  private async fetchNominatim(url: string, label: string): Promise<GeocodeResult | null | 'error'> {
     try {
-      const url = `${NOMINATIM_URL}?format=json&limit=1&q=${encodeURIComponent(query)}`;
       const res = await fetch(url, {
         headers: { 'User-Agent': USER_AGENT },
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
       if (!res.ok) {
-        this.logger.warn(`Nominatim returned ${res.status} for "${query}"`);
+        this.logger.warn(`Nominatim returned ${res.status} for "${label}"`);
         return 'error';
       }
       const body = (await res.json()) as Array<{ lat: string; lon: string; display_name?: string }>;
@@ -102,7 +190,7 @@ export class GeocodingService {
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) return 'error';
       return { lat, lng, displayName: body[0].display_name ?? null };
     } catch (e) {
-      this.logger.warn(`Nominatim request failed for "${query}": ${e}`);
+      this.logger.warn(`Nominatim request failed for "${label}": ${e}`);
       return 'error';
     }
   }
