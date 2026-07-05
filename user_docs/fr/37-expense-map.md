@@ -1,5 +1,7 @@
 # Carte des Dépenses
 
+> Consultez vos dépenses sur une carte. Les tickets de caisse scannés sont placés selon l'adresse du magasin ; ajoutez votre position ou placez une épingle manuellement.
+
 Consultez vos dépenses sur une carte. Les dépenses peuvent porter une localisation — reprise de l'adresse du magasin imprimée sur un ticket de caisse scanné, du GPS de votre téléphone au moment où vous ajoutez une dépense, ou placée manuellement — et l'application peut afficher n'importe quelle liste filtrée de dépenses sous forme d'épingles cliquables sur une carte.
 
 ## D'où viennent les localisations

@@ -39,8 +39,10 @@ LANGS = ["en", "pl", "de", "es", "fr", "ru", "ua", "be", "nl"]  # en = x-default
 DEFAULT_LANG = "en"
 THIN_WORDS = 250  # below this a help page is noindex,follow and dropped from the sitemap
 
-# sections shown on the public help center — mirrors scripts/generate-help-content.js
-# SECTIONS minus 00-index (which seeds the index page, not a standalone page)
+# sections shown on the public help center — MUST mirror scripts/generate-help-content.js
+# SECTIONS minus 00-index (which seeds the index page, not a standalone page).
+# Keep this list in sync when adding a help section (25-whatsapp-bot / 26-wise-import
+# are intentionally absent — merged into 22-chat-bots / 27-bank-import).
 SECTIONS = [
     "01-getting-started", "02-dashboard", "03-expenses-and-income", "04-voice-and-receipt",
     "05-budgets", "06-analytics", "07-ai-chat", "08-spending-story", "09-accounts",
@@ -49,6 +51,8 @@ SECTIONS = [
     "18-savings-goals", "19-fat-finder", "20-ai-response-mode", "21-widgets",
     "22-chat-bots", "23-scenario-simulator", "24-referral", "27-bank-import",
     "28-reference-data", "29-subscription-manager", "30-web-app", "31-anomaly-alerts",
+    "32-safe-to-spend", "33-purchase-requests", "34-family-feed", "35-group-trip-wallet",
+    "36-personal-inflation-index", "37-expense-map",
 ]
 
 HELP_NAV = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",

@@ -1,5 +1,7 @@
 # Osobisty wskaźnik inflacji
 
+> Śledź, jak zmieniają się ceny, które faktycznie płacisz, wyliczane na podstawie zeskanowanych paragonów — bez kosztów AI.
+
 Osobisty wskaźnik inflacji pokazuje, jak zmieniły się ceny, które rzeczywiście płacisz — wyliczony na podstawie Twoich własnych skanów paragonów. W odróżnieniu od oficjalnych danych inflacyjnych, odzwierciedla Twój realny koszyk zakupów.
 
 ## Jak to działa

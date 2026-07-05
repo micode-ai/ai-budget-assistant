@@ -1,5 +1,7 @@
 # Purchase Requests
 
+> Propose a purchase on a shared account and let the group vote to approve or reject it before you buy — from the app or the Telegram/WhatsApp bots.
+
 Purchase Requests let any account member propose a purchase for group approval before it enters the budget. Other members vote directly in the app or through Telegram and WhatsApp; approved requests become planned expenses you can convert to real expenses with one tap.
 
 ## Creating a request

@@ -16,6 +16,7 @@ Aplikacja obsluguje wiele kont w celu oddzielenia roznych kontekstow finansowych
 | **Wspolne** | Ikona osob | Budzety rodzinne lub grupowe (np. "Rodzina") |
 | **Firmowe** | Ikona aktowki | Wydatki firmowe lub zespolowe (np. "MiCode") |
 | **Inwestycyjne** | Ikona trendu wzrostowego | Sledzenie portfeli inwestycyjnych i aktywow |
+| **Podróż** | Ikona samolotu | Tymczasowe wspólne konto na grupowy wyjazd — dzielcie wydatki między uczestnikami i rozliczajcie, kto komu jest winien ([Portfel podróży](./35-group-trip-wallet.md)) |
 
 Kazde konto wyswietla swoj typ i Twoja role (Wlasciciel, Edytor lub Obserwator).
 
@@ -49,7 +50,7 @@ Na ekranie głównym najszybszym sposobem jest dedykowany **przycisk waluty** ob
 1. Przejdz do listy kont (przez **Zarzadzaj kontami** lub z Ustawien)
 2. Dotknij **Utworz konto**
 3. Wprowadz **Nazwe konta** (np. "Moj budzet")
-4. Wybierz **Typ konta**: Osobiste, Wspolne, Firmowe lub Inwestycyjne
+4. Wybierz **Typ konta**: Osobiste, Wspolne, Firmowe, Inwestycyjne lub Podróż
 5. Wybierz **Walute** dla tego konta
 6. Dotknij **Utworz**
 

@@ -1,5 +1,7 @@
 # Familien-Feed
 
+> Ein Aktivitäts-Feed für gemeinsame Konten, der zeigt, was jeder hinzugefügt hat, gruppiert nach Person und Tag, mit Emoji-Reaktionen.
+
 Der Familien-Feed ist ein gemeinsamer Aktivitätsstrom für Familien- und Paar-Konten. Er zeigt, was jedes Mitglied ausgegeben und eingenommen hat, und ermöglicht Emoji-Reaktionen — gemeinsame Finanzen werden kollaborativer.
 
 ## Was im Feed erscheint

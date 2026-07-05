@@ -1,6 +1,6 @@
 # Reisekasse
 
-Ein Reisekonto ist ein temporäres gemeinsames Konto für eine Gruppenreise — mit Freunden oder als Paar. Alle erfassen Ausgaben, die App teilt sie auf, und am Ende rechnet ihr ab, wer wem etwas schuldet.
+> Ein temporäres gemeinsames Konto für eine Reisegruppe — teilt Ausgaben zwischen den Mitgliedern auf und rechnet am Ende der Reise ab, wer wem etwas schuldet.
 
 ## Reise erstellen
 

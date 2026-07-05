@@ -1,5 +1,7 @@
 # Gezinsfeed
 
+> Een activiteitenfeed voor gedeelde rekeningen die laat zien wat iedereen heeft toegevoegd, gegroepeerd per persoon en dag, met emoji-reacties.
+
 De Gezinsfeed is een gedeelde activiteitsstroom voor gezins- en koppelrekeningen. Het toont wat elk lid heeft uitgegeven en verdiend, en biedt de mogelijkheid te reageren met emoji — gedeelde financiën worden meer collaboratief.
 
 ## Wat verschijnt in de feed

@@ -1,5 +1,7 @@
 # Fil familial
 
+> Un fil d'activité pour les comptes partagés qui montre ce que chacun a ajouté, regroupé par membre et par jour, avec des réactions emoji.
+
 Le Fil familial est un flux d'activité partagé pour les comptes famille et couple. Il affiche ce que chaque membre a dépensé et gagné, et permet de réagir avec des emoji — les finances partagées deviennent plus collaboratives.
 
 ## Ce qui apparaît dans le fil

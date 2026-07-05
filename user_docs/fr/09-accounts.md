@@ -16,6 +16,7 @@ L'application prend en charge plusieurs comptes pour separer les differents cont
 | **Partage** | Icone de personnes | Budgets familiaux ou de groupe (par ex. "Famille") |
 | **Professionnel** | Icone de mallette | Depenses d'entreprise ou d'equipe (par ex. "MiCode") |
 | **Investissement** | Icone de tendance haussiere | Suivre les portefeuilles d'investissement et les actifs |
+| **Voyage** | Icône d'avion | Compte partagé temporaire pour un voyage en groupe — répartition des dépenses entre les membres et règlement de qui doit quoi à qui ([Portefeuille de voyage](./35-group-trip-wallet.md)) |
 
 Chaque compte affiche son type et votre role (Proprietaire, Editeur ou Observateur).
 
@@ -49,7 +50,7 @@ Sur l'écran d'accueil, la façon la plus rapide est la **pastille de devise** d
 1. Accedez a la liste des comptes (via **Gerer les comptes** ou depuis les Parametres)
 2. Appuyez sur **Creer un compte**
 3. Entrez un **Nom de compte** (par ex. "Mon Budget")
-4. Selectionnez le **Type de compte** : Personnel, Partage, Professionnel ou Investissement
+4. Selectionnez le **Type de compte** : Personnel, Partage, Professionnel, Investissement ou Voyage
 5. Selectionnez la **Devise** pour ce compte
 6. Appuyez sur **Creer**
 

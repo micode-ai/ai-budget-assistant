@@ -1,5 +1,7 @@
 # Persönlicher Inflationsindex
 
+> Verfolge, wie sich die Preise, die du tatsächlich zahlst, im Laufe der Zeit verändern, berechnet aus deinen gescannten Kassenbons — ohne KI-Kosten.
+
 Der persönliche Inflationsindex zeigt, wie sich die Preise, die du tatsächlich zahlst, im Laufe der Zeit verändert haben — berechnet aus deinen eigenen Kassenbonscans. Im Gegensatz zu offiziellen Inflationszahlen spiegelt er deinen echten Einkaufskorb wider.
 
 ## Wie es funktioniert

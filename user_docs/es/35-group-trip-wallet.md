@@ -1,6 +1,6 @@
 # Billetera de viaje
 
-Una cuenta de viaje es una cuenta compartida temporal para un viaje en grupo: con amigos o en pareja. Todos registran gastos, la app los divide, y al final liquidáis quién le debe a quién.
+> Una cuenta compartida temporal para un viaje en grupo — dividid los gastos entre los miembros y liquidad quién le debe a quién al final del viaje.
 
 ## Crear un viaje
 

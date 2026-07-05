@@ -1,5 +1,7 @@
 # Índice de Inflación Personal
 
+> Controla cómo cambian con el tiempo los precios que realmente pagas, calculado a partir de tus tiques escaneados — sin coste de IA.
+
 El Índice de Inflación Personal muestra cómo han cambiado con el tiempo los precios que realmente pagas — calculado a partir de tus propios escaneos de tiques. A diferencia de las cifras oficiales de inflación, refleja tu cesta de la compra real.
 
 ## Cómo funciona

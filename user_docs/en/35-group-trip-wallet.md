@@ -1,6 +1,6 @@
 # Group Trip Wallet
 
-A trip account is a temporary shared account for a group trip — friends or a couple traveling together. Everyone logs expenses, the app splits them, and at the end you settle up who owes whom.
+> A temporary shared account for a travel group — split expenses among members and settle up who owes whom at the end of the trip.
 
 ## Creating a trip
 

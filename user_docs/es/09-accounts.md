@@ -16,6 +16,7 @@ La aplicacion admite multiples cuentas para separar diferentes contextos financi
 | **Compartida** | Icono de personas | Presupuestos familiares o de grupo (por ejemplo, "Familia") |
 | **Empresa** | Icono de maletin | Gastos de la empresa o equipo (por ejemplo, "MiCodigo") |
 | **Inversion** | Icono de tendencia al alza | Seguimiento de carteras de inversion y activos |
+| **Viaje** | Icono de avión | Cuenta compartida temporal para un viaje en grupo — reparto de gastos entre los miembros y liquidación de quién debe a quién ([Billetera de viaje](./35-group-trip-wallet.md)) |
 
 Cada cuenta muestra su tipo y tu rol (Propietario, Editor u Observador).
 
@@ -49,7 +50,7 @@ En la pantalla de inicio, la forma más rápida es la **pastilla de moneda** ded
 1. Ve a la lista de Cuentas (a traves de **Gestionar cuentas** o desde Ajustes)
 2. Toca **Crear cuenta**
 3. Introduce un **Nombre de cuenta** (por ejemplo, "Mi presupuesto")
-4. Selecciona el **Tipo de cuenta**: Personal, Compartida, Empresa o Inversion
+4. Selecciona el **Tipo de cuenta**: Personal, Compartida, Empresa, Inversion o Viaje
 5. Selecciona la **Moneda** para esta cuenta
 6. Toca **Crear**
 

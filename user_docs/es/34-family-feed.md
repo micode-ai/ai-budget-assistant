@@ -1,5 +1,7 @@
 # Feed familiar
 
+> Un feed de actividad para cuentas compartidas que muestra lo que añadió cada miembro, agrupado por persona y día, con reacciones de emoji.
+
 El Feed familiar es un flujo de actividad compartido para cuentas de familia y pareja. Muestra lo que cada miembro ha gastado e ingresado, y permite reaccionar con emoji — las finanzas compartidas se vuelven más colaborativas.
 
 ## Qué aparece en el feed

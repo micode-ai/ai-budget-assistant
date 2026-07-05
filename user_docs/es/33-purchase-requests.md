@@ -1,5 +1,7 @@
 # Solicitudes de compra
 
+> Propón una compra en una cuenta compartida y deja que el grupo vote para aprobarla o rechazarla antes de comprar — desde la app o los bots de Telegram/WhatsApp.
+
 Las solicitudes de compra permiten que cualquier miembro de la cuenta proponga una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan directamente en la aplicación o a través de los bots de Telegram y WhatsApp; las solicitudes aprobadas se convierten en gastos planificados que puedes convertir en gastos reales con un solo toque.
 
 ## Crear una solicitud

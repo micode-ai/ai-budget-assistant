@@ -1,5 +1,7 @@
 # Wnioski zakupowe
 
+> Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować za zatwierdzeniem lub odrzuceniem, zanim kupisz — z aplikacji albo przez boty Telegram/WhatsApp.
+
 Wnioski zakupowe pozwalają każdemu członkowi konta zaproponować zakup do grupowego zatwierdzenia przed wejściem do budżetu. Inni członkowie głosują w aplikacji lub przez boty Telegram i WhatsApp; zatwierdzone wnioski stają się planowanymi wydatkami, które możesz jednym dotknięciem przekształcić w realne wydatki.
 
 ## Tworzenie wniosku

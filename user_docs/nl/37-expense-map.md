@@ -1,5 +1,7 @@
 # Uitgavenkaart
 
+> Bekijk je uitgaven op een kaart. Gescande bonnetjes worden geplaatst op basis van het winkeladres; voeg je locatie toe of plaats handmatig een pin.
+
 Bekijk je uitgaven op een kaart. Uitgaven kunnen een locatie hebben — overgenomen van het winkeladres dat op een gescande bon staat, van de gps van je telefoon op het moment dat je een uitgave toevoegt, of handmatig geplaatst — en de app kan elke gefilterde lijst met uitgaven tonen als aanklikbare pins op een kaart.
 
 ## Waar locaties vandaan komen

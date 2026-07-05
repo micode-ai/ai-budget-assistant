@@ -1,5 +1,7 @@
 # Persoonlijke Inflatie-index
 
+> Volg hoe de prijzen die je daadwerkelijk betaalt in de loop van de tijd veranderen, berekend op basis van je gescande bonnetjes — zonder AI-kosten.
+
 De Persoonlijke Inflatie-index laat zien hoe de prijzen die je daadwerkelijk betaalt in de loop van de tijd zijn veranderd — berekend op basis van je eigen bonnetjesscans. In tegenstelling tot officiële inflatiecijfers weerspiegelt dit jouw echte winkelmandje.
 
 ## Hoe het werkt
