@@ -812,7 +812,7 @@ def lp(lang):
     return f"{BASE}/{lang}/"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["budget", "ai-budget", "family", "shared-budget", "bank-import", "best-apps", "saving"]  # curated homepage -> article internal links (USP + high-intent topics first)
+FROM_BLOG_PAIRS = ["budget", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "best-apps", "saving"]  # curated homepage -> article internal links (USP + high-intent topics first)
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()

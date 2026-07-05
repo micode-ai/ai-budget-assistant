@@ -40,6 +40,14 @@ translation pipeline, hreflang-grouped by the `pair` key.
 | 11 | Family budget with kids | family | budżet domowy z dziećmi | family budgeting with kids | Shared accounts |
 | 12 | How AI helps you budget | ai-budget | AI w zarządzaniu finansami | how AI can help you budget | AI assistant (USP) |
 
+## Wave 3 — feature-led (2 topics, tied to the newest app features)
+| # | Topic | pair | PL keyword | EN keyword | Intent | App tie |
+|---|---|---|---|---|---|---|
+| 16 | **Your personal inflation rate** | inflation | osobista inflacja, jak obliczyć własną inflację | personal inflation rate | how-to | **Personal Inflation Index** (price history from receipts, per-store cheapest) |
+| 17 | **Map your spending** | expense-map | mapa wydatków, gdzie wydaję pieniądze | expense map | guide | **Expense map** (receipt geocoding + optional GPS + trip map) |
+
+Source files `16-*.md` / `17-*.md`; pairs `inflation` / `expense-map`. Published in all 9 languages. These are differentiated USP topics (few competitors offer a personal inflation index or a spending map), so they target low-competition long-tail queries with a natural CTA to the exact feature.
+
 ## Article conventions (per piece)
 - Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`.
 - One H1, several H2/H3, a 3-4 question **FAQ** (auto-emits FAQPage schema).
