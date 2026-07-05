@@ -607,7 +607,7 @@ export default {
     codeRequired: 'Voer een uitnodigingscode in',
     join: 'Deelnemen',
     joinedSuccess: 'Succesvol lid geworden!',
-    inviteBySearch: 'Gebruiker zoeken',
+    inviteBySearch: 'Zoeken',
     searchLabel: 'Zoeken op naam of e-mail',
     searchPlaceholder: 'Typ een naam of e-mail…',
     searchNoResults: 'Geen gebruikers gevonden.',

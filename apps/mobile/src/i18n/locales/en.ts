@@ -607,7 +607,7 @@ export default {
     codeRequired: 'Please enter an invitation code',
     join: 'Join',
     joinedSuccess: 'Successfully joined the account!',
-    inviteBySearch: 'Find User',
+    inviteBySearch: 'Search',
     searchLabel: 'Search by name or email',
     searchPlaceholder: 'Type a name or email…',
     searchNoResults: 'No matching users found.',

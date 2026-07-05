@@ -607,7 +607,7 @@ export default {
     codeRequired: 'Введите код приглашения',
     join: 'Присоединиться',
     joinedSuccess: 'Вы успешно присоединились!',
-    inviteBySearch: 'Найти пользователя',
+    inviteBySearch: 'Поиск',
     searchLabel: 'Поиск по имени или email',
     searchPlaceholder: 'Введите имя или email…',
     searchNoResults: 'Пользователи не найдены.',

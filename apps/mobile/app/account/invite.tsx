@@ -176,10 +176,10 @@ export default function InviteScreen() {
           >
             <Ionicons
               name="link-outline"
-              size={20}
+              size={18}
               color={mode === 'link' ? theme.colors.primary : theme.colors.textTertiary}
             />
-            <Text style={[styles.modeText, mode === 'link' && styles.modeTextActive]}>
+            <Text numberOfLines={1} style={[styles.modeText, mode === 'link' && styles.modeTextActive]}>
               {t('accounts.inviteByLink')}
             </Text>
           </TouchableOpacity>
@@ -189,10 +189,10 @@ export default function InviteScreen() {
           >
             <Ionicons
               name="mail-outline"
-              size={20}
+              size={18}
               color={mode === 'email' ? theme.colors.primary : theme.colors.textTertiary}
             />
-            <Text style={[styles.modeText, mode === 'email' && styles.modeTextActive]}>
+            <Text numberOfLines={1} style={[styles.modeText, mode === 'email' && styles.modeTextActive]}>
               {t('accounts.inviteByEmail')}
             </Text>
           </TouchableOpacity>
@@ -202,10 +202,10 @@ export default function InviteScreen() {
           >
             <Ionicons
               name="search-outline"
-              size={20}
+              size={18}
               color={mode === 'search' ? theme.colors.primary : theme.colors.textTertiary}
             />
-            <Text style={[styles.modeText, mode === 'search' && styles.modeTextActive]}>
+            <Text numberOfLines={1} style={[styles.modeText, mode === 'search' && styles.modeTextActive]}>
               {t('accounts.inviteBySearch')}
             </Text>
           </TouchableOpacity>
@@ -333,7 +333,10 @@ const createStyles = (theme: Theme) => ({
   },
   modeRow: {
     flexDirection: 'row' as const,
-    gap: theme.spacing[3],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[1],
+    gap: theme.spacing[1],
     marginBottom: theme.spacing[5],
   },
   modeButton: {
@@ -341,20 +344,19 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[3.5],
-    borderWidth: 2,
-    borderColor: theme.colors.border,
     gap: theme.spacing[1.5],
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[1],
+    borderRadius: theme.borderRadius.md,
   },
   modeButtonActive: {
-    borderColor: theme.colors.primary,
-    backgroundColor: theme.colors.primaryLight,
+    backgroundColor: theme.colors.surface,
+    ...theme.shadows.sm,
   },
   modeText: {
-    ...theme.textStyles.bodyMedium,
+    ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
+    fontWeight: '500' as const,
   },
   modeTextActive: {
     color: theme.colors.primary,
