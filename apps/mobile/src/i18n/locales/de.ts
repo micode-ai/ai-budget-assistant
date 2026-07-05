@@ -1790,6 +1790,8 @@ export default {
     removeLocation: 'Standort entfernen',
     myLocation: 'Mein Standort',
     tapToPlace: 'Tippe auf die Karte, um den Pin zu setzen',
+    searchPlaceholder: 'Adresse oder Ort suchen',
+    searchNoResults: 'Nichts gefunden',
     pickerTitle: 'Ort der Ausgabe',
   },
   map: {

@@ -1801,6 +1801,8 @@ export default {
     removeLocation: 'Remove location',
     myLocation: 'My location',
     tapToPlace: 'Tap the map to place the pin',
+    searchPlaceholder: 'Search address or place',
+    searchNoResults: 'Nothing found',
     pickerTitle: 'Expense location',
   },
   map: {

@@ -213,3 +213,68 @@ describe('GeocodingService.geocodeStructured', () => {
     expect(await service.geocodeStructured({ city: 'Brusy', postalCode: '89-632' })).toBeNull();
   });
 });
+
+describe('GeocodingService.search', () => {
+  let prisma: { geocodeCache: { findUnique: jest.Mock; upsert: jest.Mock } };
+  let cache: { get: jest.Mock; set: jest.Mock };
+  let service: GeocodingService;
+  let fetchMock: jest.Mock;
+
+  beforeEach(() => {
+    prisma = { geocodeCache: { findUnique: jest.fn(), upsert: jest.fn() } };
+    cache = { get: jest.fn().mockResolvedValue(null), set: jest.fn().mockResolvedValue(undefined) };
+    service = new GeocodingService(prisma as any, cache as any);
+    fetchMock = jest.fn();
+    global.fetch = fetchMock as any;
+  });
+
+  it('returns [] for queries shorter than 3 chars, without cache or network', async () => {
+    expect(await service.search('ab')).toEqual([]);
+    expect(cache.get).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('returns cached results without a network call', async () => {
+    cache.get.mockResolvedValue([{ lat: 1, lng: 2, name: 'X' }]);
+    expect(await service.search('Biedronka Gdansk')).toEqual([{ lat: 1, lng: 2, name: 'X' }]);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('cache miss queries Nominatim with limit=5, maps + caches the results', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => [
+        { lat: '54.35', lon: '18.64', display_name: 'Biedronka, Gdańsk' },
+        { lat: '54.40', lon: '18.60', display_name: 'Biedronka 2, Gdańsk' },
+      ],
+    });
+    const res = await service.search('Biedronka Gdansk');
+    expect(res).toEqual([
+      { lat: 54.35, lng: 18.64, name: 'Biedronka, Gdańsk' },
+      { lat: 54.40, lng: 18.60, name: 'Biedronka 2, Gdańsk' },
+    ]);
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toContain('limit=5');
+    expect(url).toContain(encodeURIComponent('Biedronka Gdansk'));
+    expect(init.headers['User-Agent']).toContain('ai-budget-assistant');
+    expect(cache.set).toHaveBeenCalledWith('geo:search:biedronka gdansk', res, 3600);
+  });
+
+  it('empty result array returns [] and IS cached', async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: async () => [] });
+    expect(await service.search('zzz qqq')).toEqual([]);
+    expect(cache.set).toHaveBeenCalledWith('geo:search:zzz qqq', [], 3600);
+  });
+
+  it('network error returns [] and does NOT cache (retryable)', async () => {
+    fetchMock.mockRejectedValue(new Error('ETIMEDOUT'));
+    expect(await service.search('Biedronka Gdansk')).toEqual([]);
+    expect(cache.set).not.toHaveBeenCalled();
+  });
+
+  it('works without a cache (optional dependency)', async () => {
+    const svc = new GeocodingService(prisma as any);
+    fetchMock.mockResolvedValue({ ok: true, json: async () => [{ lat: '1', lon: '2', display_name: 'Y' }] });
+    expect(await svc.search('Some place')).toEqual([{ lat: 1, lng: 2, name: 'Y' }]);
+  });
+});

@@ -243,4 +243,11 @@ export const aiApi = {
   getGoalContributions(id: string) {
     return httpClient.request<any[]>(`/ai/goals/${id}/contributions`);
   },
+
+  // Forward-geocode a typed query into candidate places for the location picker.
+  geocodeSearch(q: string) {
+    return httpClient.request<{ results: { lat: number; lng: number; name: string }[] }>(
+      `/ai/geocode/search?q=${encodeURIComponent(q)}`,
+    );
+  },
 };

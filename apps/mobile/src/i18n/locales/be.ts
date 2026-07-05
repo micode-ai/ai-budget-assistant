@@ -1761,6 +1761,8 @@ export default {
     removeLocation: 'Выдаліць лакацыю',
     myLocation: 'Маё месцазнаходжанне',
     tapToPlace: 'Краніце карту, каб паставіць пазнаку',
+    searchPlaceholder: 'Пошук адраса або месца',
+    searchNoResults: 'Нічога не знойдзена',
     pickerTitle: 'Лакацыя выдатку',
   },
   map: {
