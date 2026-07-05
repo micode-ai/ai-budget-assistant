@@ -9,6 +9,7 @@ const path = require('path');
 
 const nm = path.join(__dirname, '..', '..', '..', 'node_modules');
 const read = (p) => fs.readFileSync(path.join(nm, p), 'utf8');
+const readB64 = (p) => fs.readFileSync(path.join(nm, p)).toString('base64');
 
 const leafletJs = read('leaflet/dist/leaflet.js');
 const leafletCss = read('leaflet/dist/leaflet.css');
@@ -17,7 +18,23 @@ const clusterCss =
   read('leaflet.markercluster/dist/MarkerCluster.css') +
   read('leaflet.markercluster/dist/MarkerCluster.Default.css');
 
+// Default marker icon PNGs — embedded as data URIs (see icon fix in appJs below).
+const markerIcon = readB64('leaflet/dist/images/marker-icon.png');
+const markerIcon2x = readB64('leaflet/dist/images/marker-icon-2x.png');
+const markerShadow = readB64('leaflet/dist/images/marker-shadow.png');
+
 const appJs = `
+// Leaflet's default marker CSS references image files by relative URL, which do
+// not exist in this self-contained document — so markers render at the correct
+// spot but with NO icon image. Embed the PNGs as data URIs and point the default
+// icon at them. Must run before any L.marker is created.
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'data:image/png;base64,${markerIcon2x}',
+  iconUrl: 'data:image/png;base64,${markerIcon}',
+  shadowUrl: 'data:image/png;base64,${markerShadow}',
+});
+
 var map = L.map('map', { zoomControl: false }).setView([50, 15], 4);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
