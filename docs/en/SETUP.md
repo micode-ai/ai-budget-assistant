@@ -264,6 +264,8 @@ npm run build -w @budget/mobile
 
 > **Important**: The app uses native build (`expo run:android`), not Expo Go, because it requires the `DETECT_SCREEN_CAPTURE` permission for Android 14+.
 
+> **Location permission (ABA-310)**: the app declares `ACCESS_COARSE_LOCATION`/`ACCESS_FINE_LOCATION` (Android) and `NSLocationWhenInUseUsageDescription` (iOS) via `expo-location`, for the opt-in "attach location to new expenses" feature. It is off by default and the permission is requested only when the user enables the toggle (receipt-address geocoding needs no device permission). These are already committed in `android/app/src/main/AndroidManifest.xml` and `app.json` — a stray `expo prebuild` must not drop them.
+
 ### Building Native Apps
 
 #### iOS

@@ -473,6 +473,7 @@ X-Account-Id: <account-uuid>
       "time": "12:30",
       "locationLat": 40.7128,
       "locationLng": -74.0060,
+      "locationName": "Whole Foods, 123 Main St",
       "notes": "Business lunch",
       "receiptUrl": null,
       "isRecurring": false,
@@ -510,8 +511,7 @@ Content-Type: application/json
   "description": "Lunch at restaurant",
   "date": "2024-01-15",
   "time": "12:30",
-  "locationLat": 40.7128,
-  "locationLng": -74.0060,
+  "location": { "lat": 40.7128, "lng": -74.0060, "name": "Whole Foods, 123 Main St" },
   "notes": "Business lunch",
   "isRecurring": false,
   "source": "manual",
@@ -520,6 +520,8 @@ Content-Type: application/json
 ```
 
 **Note:** `tagIds` is optional. Tags will be associated with the expense automatically.
+
+**Location:** `location` is an optional `{ lat, lng, name? }` object (persisted as the flat `locationLat`/`locationLng`/`locationName` columns returned by read endpoints). On `PATCH /expenses/:id`, send `"location": null` to clear it. It is set automatically from a scanned receipt's store address (see [Scan Receipt](#scan-receipt)) or, when the user opts in, from the device's GPS at creation time.
 
 **Response** `201 Created`
 
@@ -2022,9 +2024,12 @@ Content-Type: application/json
   "receiptItems": [
     { "description": "Organic Apples", "quantity": 1, "unitPrice": 5.99, "totalPrice": 5.99 },
     { "description": "Almond Milk", "quantity": 1, "unitPrice": 4.49, "totalPrice": 4.49 }
-  ]
+  ],
+  "location": { "lat": 40.7484, "lng": -73.9857, "name": "123 Main St, New York" }
 }
 ```
+
+**`location`** is the store's geocoded position, derived from the address printed on the receipt, or `null` when the address is missing or cannot be resolved. The server extracts the store (point-of-sale) address — ignoring the seller company's registered office — and geocodes it via OpenStreetMap/Nominatim (structured query, results cached). The client attaches this `location` when creating the expense. Geocoding is fail-silent: a lookup failure never blocks receipt scanning.
 
 ### Suggest Tags
 
