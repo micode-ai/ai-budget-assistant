@@ -2031,6 +2031,28 @@ Content-Type: application/json
 
 **`location`** is the store's geocoded position, derived from the address printed on the receipt, or `null` when the address is missing or cannot be resolved. The server extracts the store (point-of-sale) address — ignoring the seller company's registered office — and geocodes it via OpenStreetMap/Nominatim (structured query, results cached). The client attaches this `location` when creating the expense. Geocoding is fail-silent: a lookup failure never blocks receipt scanning.
 
+### Geocode Search
+
+Forward-geocode a typed query into candidate places for the expense location picker. Free (not an OpenAI call — no AI-usage cost).
+
+```http
+GET /ai/geocode/search?q=Biedronka%20Gdańsk
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "results": [
+    { "lat": 54.3597, "lng": 18.5842, "name": "Biedronka, Piecewska, Gdańsk, Polska" },
+    { "lat": 54.3190, "lng": 18.5824, "name": "Biedronka, Kazimierza Porębskiego, Gdańsk, Polska" }
+  ]
+}
+```
+
+Up to 5 candidates from OpenStreetMap/Nominatim. A query shorter than 3 characters, or any lookup failure, returns `{ "results": [] }` (fail-silent). Results are cached in Redis (1 h).
+
 ### Suggest Tags
 
 ```http
