@@ -16,6 +16,7 @@ Die App unterstutzt mehrere Konten, um verschiedene finanzielle Kontexte zu tren
 | **Gemeinsam** | Gruppensymbol | Familien- oder Gruppenbudgets (z.B. "Familie") |
 | **Geschaftlich** | Aktenkoffersymbol | Firmen- oder Teamausgaben (z.B. "MiCode") |
 | **Investition** | Aufwartstrend-Symbol | Investmentportfolios und Vermogenswerte verfolgen |
+| **Reise** | Flugzeugsymbol | Temporäres gemeinsames Konto für eine Gruppenreise — Ausgaben zwischen den Mitgliedern aufteilen und abrechnen, wer wem etwas schuldet ([Reisekasse](./35-group-trip-wallet.md)) |
 
 Jedes Konto zeigt seinen Typ und deine Rolle (Eigentumer, Bearbeiter oder Betrachter).
 
@@ -49,7 +50,7 @@ Auf dem Hauptbildschirm geht es am schnellsten über die eigene **Währungsschal
 1. Gehe zur Kontoliste (uber **Konten verwalten** oder aus den Einstellungen)
 2. Tippe auf **Konto erstellen**
 3. Gib einen **Kontonamen** ein (z.B. "Mein Budget")
-4. Wahle den **Kontotyp**: Personlich, Gemeinsam, Geschaftlich oder Investition
+4. Wahle den **Kontotyp**: Personlich, Gemeinsam, Geschaftlich, Investition oder Reise
 5. Wahle die **Wahrung** fur dieses Konto
 6. Tippe auf **Erstellen**
 

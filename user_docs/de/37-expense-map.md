@@ -1,5 +1,7 @@
 # Ausgabenkarte
 
+> Sieh deine Ausgaben auf einer Karte. Gescannte Kassenbons werden anhand der Filialadresse platziert; füge deinen Standort hinzu oder setze manuell einen Pin.
+
 Sieh deine Ausgaben auf einer Karte. Ausgaben können einen Standort tragen — entnommen aus der auf einem gescannten Kassenbon aufgedruckten Filialadresse, vom GPS deines Telefons im Moment der Ausgabenerfassung, oder manuell gesetzt — und die App kann jede gefilterte Ausgabenliste als anklickbare Pins auf einer Karte anzeigen.
 
 ## Woher die Standorte stammen

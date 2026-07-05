@@ -1,5 +1,7 @@
 # Mapa de Gastos
 
+> Consulta tus gastos en un mapa. Los tiques escaneados se ubican según la dirección del establecimiento; añade tu ubicación o coloca una chincheta manualmente.
+
 Consulta tus gastos en un mapa. Los gastos pueden llevar una ubicación — tomada de la dirección del establecimiento impresa en un tique escaneado, del GPS de tu teléfono en el momento de añadir un gasto, o colocada manualmente — y la app puede mostrar cualquier lista filtrada de gastos como chinchetas pulsables en un mapa.
 
 ## De dónde vienen las ubicaciones

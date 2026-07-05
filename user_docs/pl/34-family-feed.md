@@ -1,5 +1,7 @@
 # Rodzinna tablica
 
+> Tablica aktywności dla kont wspólnych pokazująca, co dodał każdy członek, pogrupowana według osoby i dnia, z reakcjami emoji.
+
 Rodzinna tablica to wspólny strumień aktywności dla kont rodzinnych i par. Pokazuje wydatki i przychody każdego członka oraz umożliwia reagowanie emoji — wspólne finanse stają się bardziej angażujące.
 
 ## Co pojawia się w tablicy

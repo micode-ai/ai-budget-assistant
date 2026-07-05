@@ -1,5 +1,7 @@
 # Mapa wydatków
 
+> Zobacz swoje wydatki na mapie. Zeskanowane paragony są umieszczane według adresu sklepu; dodaj swoją lokalizację lub ustaw pinezkę ręcznie.
+
 Zobacz swoje wydatki na mapie. Wydatki mogą mieć przypisaną lokalizację — pobraną z adresu sklepu wydrukowanego na zeskanowanym paragonie, z GPS Twojego telefonu w momencie dodawania wydatku, lub ustawioną ręcznie — a aplikacja może pokazać dowolną przefiltrowaną listę wydatków jako klikalne pinezki na mapie.
 
 ## Skąd biorą się lokalizacje

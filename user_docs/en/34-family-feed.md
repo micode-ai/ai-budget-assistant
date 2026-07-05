@@ -1,5 +1,7 @@
 # Family Feed
 
+> An activity feed for shared accounts showing what everyone added, grouped by person and day, with emoji reactions.
+
 The Family Feed is a shared activity stream for family and couple accounts. It shows what each member has been spending and earning, and lets you react with emoji — making shared finances feel collaborative.
 
 ## What appears in the feed

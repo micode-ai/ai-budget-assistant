@@ -1,5 +1,7 @@
 # Aankoopverzoeken
 
+> Stel een aankoop voor op een gedeelde rekening en laat de groep stemmen om deze goed te keuren of af te wijzen voordat je koopt — via de app of de Telegram-/WhatsApp-bots.
+
 Met aankoopverzoeken kan elk accountlid een aankoop voorstellen voor groepsgoedkeuring voordat deze het budget ingaat. Andere leden stemmen direct in de app of via de Telegram- en WhatsApp-bots; goedgekeurde verzoeken worden geplande uitgaven die je met één tik kunt omzetten in echte uitgaven.
 
 ## Een verzoek aanmaken

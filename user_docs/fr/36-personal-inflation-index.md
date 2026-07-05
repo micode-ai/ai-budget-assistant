@@ -1,5 +1,7 @@
 # Indice d'Inflation Personnel
 
+> Suivez comment évoluent dans le temps les prix que vous payez réellement, calculé à partir de vos tickets de caisse scannés — sans coût d'IA.
+
 L'Indice d'Inflation Personnel montre comment les prix que vous payez réellement ont évolué dans le temps — calculé à partir de vos propres scans de tickets de caisse. Contrairement aux chiffres officiels d'inflation, il reflète votre panier d'achat réel.
 
 ## Fonctionnement

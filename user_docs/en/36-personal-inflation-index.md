@@ -1,5 +1,7 @@
 # Personal Inflation Index
 
+> Track how the prices you actually pay change over time, calculated from your scanned receipts — no AI cost.
+
 The Personal Inflation Index shows how the prices you actually pay have changed over time — calculated from your own receipt scans. Unlike official inflation figures, this reflects your real shopping basket.
 
 ## How It Works

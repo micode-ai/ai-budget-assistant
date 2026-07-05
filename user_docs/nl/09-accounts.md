@@ -16,6 +16,7 @@ De app ondersteunt meerdere accounts om verschillende financiële contexten te s
 | **Gedeeld** | Mensenpictogram | Gezins- of groepsbudgetten (bijv. "Familie") |
 | **Zakelijk** | Aktetaspictogram | Bedrijfs- of teamuitgaven (bijv. "MiCode") |
 | **Beleggingen** | Stijgende-trendpictogram | Beleggingsportefeuilles en -activa bijhouden |
+| **Reis** | Vliegtuigpictogram | Tijdelijk gedeeld account voor een groepsreis — verdeel uitgaven tussen de leden en reken af wie wie iets verschuldigd is ([Reisportemonnee](./35-group-trip-wallet.md)) |
 
 Elk account toont zijn type en jouw rol (Eigenaar, Bewerker of Kijker).
 
@@ -49,7 +50,7 @@ Op het startscherm gaat het het snelst via de speciale **valutaknop** naast de a
 1. Ga naar de accountlijst (via **Accounts beheren** of vanuit Instellingen)
 2. Tik op **Account aanmaken**
 3. Voer een **Accountnaam** in (bijv. "Mijn budget")
-4. Selecteer het **Accounttype**: Persoonlijk, Gedeeld, Zakelijk of Beleggingen
+4. Selecteer het **Accounttype**: Persoonlijk, Gedeeld, Zakelijk, Beleggingen of Reis
 5. Selecteer de **Valuta** voor dit account
 6. Tik op **Aanmaken**
 

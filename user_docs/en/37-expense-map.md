@@ -1,5 +1,7 @@
 # Expense Map
 
+> See your expenses on a map. Scanned receipts are placed by store address; add your location or drop a pin by hand.
+
 See your spending on a map. Expenses can carry a location — taken from the store address printed on a scanned receipt, from your phone's GPS at the moment you add an expense, or placed by hand — and the app can show any filtered list of expenses as clickable pins on a map.
 
 ## Where Locations Come From

@@ -1,5 +1,7 @@
 # Kaufanfragen
 
+> Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst — aus der App oder über die Telegram-/WhatsApp-Bots.
+
 Mit Kaufanfragen kann jedes Kontomitglied einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Andere Mitglieder stimmen direkt in der App oder über die Telegram- und WhatsApp-Bots ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp in echte Ausgaben umwandeln kannst.
 
 ## Anfrage erstellen

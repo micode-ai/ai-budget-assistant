@@ -1196,6 +1196,7 @@ The app supports multiple accounts to separate different financial contexts. Eac
 | **Shared** | People icon | Family or group budgets (e.g., "Family") |
 | **Business** | Briefcase icon | Company or team expenses (e.g., "MiCode") |
 | **Investment** | Trending-up icon | Track investment portfolios and assets |
+| **Trip** | Airplane icon | Temporary shared account for a travel group — split expenses among members and settle up who owes whom (Group Trip Wallet) |
 
 Each account shows its type and your role (Owner, Editor, or Viewer).
 
@@ -1229,7 +1230,7 @@ On the home screen, the fastest way is the dedicated **currency pill** next to t
 1. Go to the Accounts list (via **Manage Accounts** or from Settings)
 2. Tap **Create Account**
 3. Enter an **Account Name** (e.g., "My Budget")
-4. Select the **Account Type**: Personal, Shared, Business, or Investment
+4. Select the **Account Type**: Personal, Shared, Business, Investment, or Trip
 5. Select the **Currency** for this account
 6. Tap **Create**
 
@@ -3744,8 +3745,10 @@ Auto-capture is an Android feature. On iOS and web, this section does not appear
     {
       id: '33-purchase-requests',
       title: `Purchase Requests`,
-      description: ``,
+      description: `Propose a purchase on a shared account and let the group vote to approve or reject it before you buy — from the app or the Telegram/WhatsApp bots.`,
       body: `# Purchase Requests
+
+> Propose a purchase on a shared account and let the group vote to approve or reject it before you buy — from the app or the Telegram/WhatsApp bots.
 
 Purchase Requests let any account member propose a purchase for group approval before it enters the budget. Other members vote directly in the app or through Telegram and WhatsApp; approved requests become planned expenses you can convert to real expenses with one tap.
 
@@ -3792,8 +3795,10 @@ You can disable purchase request notifications under **Settings → Notification
     {
       id: '34-family-feed',
       title: `Family Feed`,
-      description: ``,
+      description: `An activity feed for shared accounts showing what everyone added, grouped by person and day, with emoji reactions.`,
       body: `# Family Feed
+
+> An activity feed for shared accounts showing what everyone added, grouped by person and day, with emoji reactions.
 
 The Family Feed is a shared activity stream for family and couple accounts. It shows what each member has been spending and earning, and lets you react with emoji — making shared finances feel collaborative.
 
@@ -3841,10 +3846,10 @@ Merchants and descriptions are intentionally omitted from feed cards (they may b
     {
       id: '35-group-trip-wallet',
       title: `Group Trip Wallet`,
-      description: ``,
+      description: `A temporary shared account for a travel group — split expenses among members and settle up who owes whom at the end of the trip.`,
       body: `# Group Trip Wallet
 
-A trip account is a temporary shared account for a group trip — friends or a couple traveling together. Everyone logs expenses, the app splits them, and at the end you settle up who owes whom.
+> A temporary shared account for a travel group — split expenses among members and settle up who owes whom at the end of the trip.
 
 ## Creating a trip
 
@@ -3891,8 +3896,10 @@ You'll get a reminder when a trip ends and it's time to settle up. You can turn 
     {
       id: '36-personal-inflation-index',
       title: `Personal Inflation Index`,
-      description: ``,
+      description: `Track how the prices you actually pay change over time, calculated from your scanned receipts — no AI cost.`,
       body: `# Personal Inflation Index
+
+> Track how the prices you actually pay change over time, calculated from your scanned receipts — no AI cost.
 
 The Personal Inflation Index shows how the prices you actually pay have changed over time — calculated from your own receipt scans. Unlike official inflation figures, this reflects your real shopping basket.
 
@@ -3958,8 +3965,10 @@ All price history is stored in your account on the server. It is not shared acro
     {
       id: '37-expense-map',
       title: `Expense Map`,
-      description: ``,
+      description: `See your expenses on a map. Scanned receipts are placed by store address; add your location or drop a pin by hand.`,
       body: `# Expense Map
+
+> See your expenses on a map. Scanned receipts are placed by store address; add your location or drop a pin by hand.
 
 See your spending on a map. Expenses can carry a location — taken from the store address printed on a scanned receipt, from your phone's GPS at the moment you add an expense, or placed by hand — and the app can show any filtered list of expenses as clickable pins on a map.
 
@@ -5198,6 +5207,7 @@ iOS, Android, Web
 | **Общий** | Значок людей | Семейные или групповые бюджеты (например, «Семья») |
 | **Бизнес** | Значок портфеля | Корпоративные или командные расходы (например, «MiCode») |
 | **Инвестиции** | Значок тренда вверх | Отслеживание инвестиционных портфелей и активов |
+| **Поездка** | Значок самолёта | Временный общий счёт для групповой поездки — делите расходы между участниками и рассчитывайтесь, кто кому должен (Кошелёк поездки) |
 
 Каждый счёт показывает свой тип и вашу роль (Владелец, Редактор или Наблюдатель).
 
@@ -5231,7 +5241,7 @@ iOS, Android, Web
 1. Перейдите к списку счетов (через **Управление счетами** или из Настроек)
 2. Нажмите **Создать счёт**
 3. Введите **Название счёта** (например, «Мой бюджет»)
-4. Выберите **Тип счёта**: Личный, Общий, Бизнес или Инвестиции
+4. Выберите **Тип счёта**: Личный, Общий, Бизнес, Инвестиции или Поездка
 5. Выберите **Валюту** для этого счёта
 6. Нажмите **Создать**
 
@@ -7735,8 +7745,10 @@ AI Budget Assistant предлагает три уровня подписки. �
     {
       id: '33-purchase-requests',
       title: `Запросы на покупку`,
-      description: ``,
+      description: `Предложите покупку на общем счёте и дайте группе проголосовать за одобрение или отклонение перед покупкой — в приложении или через ботов Telegram и WhatsApp.`,
       body: `# Запросы на покупку
+
+> Предложите покупку на общем счёте и дайте группе проголосовать за одобрение или отклонение перед покупкой — в приложении или через ботов Telegram и WhatsApp.
 
 Запросы на покупку позволяют любому участнику счёта предложить покупку для группового согласования до того, как она войдёт в бюджет. Другие участники голосуют прямо в приложении или через ботов Telegram и WhatsApp; одобренные запросы становятся запланированными расходами, которые можно превратить в реальные одним нажатием.
 
@@ -7783,8 +7795,10 @@ AI Budget Assistant предлагает три уровня подписки. �
     {
       id: '34-family-feed',
       title: `Семейная лента`,
-      description: ``,
+      description: `Лента активности для общих счетов: что добавил каждый участник, сгруппировано по человеку и дню, с реакциями эмодзи.`,
       body: `# Семейная лента
+
+> Лента активности для общих счетов: что добавил каждый участник, сгруппировано по человеку и дню, с реакциями эмодзи.
 
 Семейная лента — это общий поток активности для семейных и парных счетов. Она показывает, что каждый участник тратил и зарабатывал, и позволяет реагировать эмодзи — совместные финансы становятся более вовлекающими.
 
@@ -7830,10 +7844,10 @@ AI Budget Assistant предлагает три уровня подписки. �
     {
       id: '35-group-trip-wallet',
       title: `Кошелёк поездки`,
-      description: ``,
+      description: `Временный общий аккаунт для групповой поездки — делите траты между участниками и рассчитайтесь, кто кому должен, в конце поездки.`,
       body: `# Кошелёк поездки
 
-Аккаунт поездки — это временный общий аккаунт для совместной поездки: с друзьями или партнёром. Каждый добавляет траты, приложение делит их между участниками, а в конце вы рассчитываетесь, кто кому должен.
+> Временный общий аккаунт для групповой поездки — делите траты между участниками и рассчитайтесь, кто кому должен, в конце поездки.
 
 ## Создание поездки
 
@@ -7880,8 +7894,10 @@ AI Budget Assistant предлагает три уровня подписки. �
     {
       id: '36-personal-inflation-index',
       title: `Персональный индекс инфляции`,
-      description: ``,
+      description: `Отслеживайте, как меняются цены, которые вы реально платите, — рассчитано по вашим сканам чеков, без затрат на ИИ.`,
       body: `# Персональный индекс инфляции
+
+> Отслеживайте, как меняются цены, которые вы реально платите, — рассчитано по вашим сканам чеков, без затрат на ИИ.
 
 Персональный индекс инфляции показывает, как изменились цены, которые вы реально платите, — рассчитанный на основе ваших собственных сканов чеков. В отличие от официальных показателей инфляции, он отражает вашу реальную потребительскую корзину.
 
@@ -7947,8 +7963,10 @@ AI Budget Assistant предлагает три уровня подписки. �
     {
       id: '37-expense-map',
       title: `Карта расходов`,
-      description: ``,
+      description: `Смотрите свои расходы на карте. Отсканированные чеки размещаются по адресу магазина; добавьте свою локацию или поставьте метку вручную.`,
       body: `# Карта расходов
+
+> Смотрите свои расходы на карте. Отсканированные чеки размещаются по адресу магазина; добавьте свою локацию или поставьте метку вручную.
 
 Смотрите свои расходы на карте. У расходов может быть указана локация — взятая из адреса магазина, напечатанного на отсканированном чеке, из GPS вашего телефона в момент добавления расхода, или установленная вручную — и приложение может показать любой отфильтрованный список расходов в виде кликабельных меток на карте.
 
@@ -9198,6 +9216,7 @@ iOS, Android, Web
 | **Спільний** | Іконка людей | Сімейні або групові бюджети (наприклад, "Сім'я") |
 | **Бізнес** | Іконка портфеля | Витрати компанії або команди (наприклад, "MiCode") |
 | **Інвестиції** | Іконка тренду вгору | Відстеження інвестиційних портфелів та активів |
+| **Подорож** | Іконка літака | Тимчасовий спільний рахунок для групової подорожі — діліть витрати між учасниками та розраховуйтеся, хто кому винен (Гаманець подорожі) |
 
 Кожен рахунок показує свій тип та вашу роль (Власник, Редактор або Спостерігач).
 
@@ -9233,7 +9252,7 @@ iOS, Android, Web
 1. Перейдіть до списку рахунків (через **Керування рахунками** або з Налаштування)
 2. Натисніть **Створити рахунок**
 3. Введіть **Назва рахунку** (наприклад, "Мій бюджет")
-4. Оберіть **Тип рахунку**: Особистий, Спільний, Бізнес або Інвестиції
+4. Оберіть **Тип рахунку**: Особистий, Спільний, Бізнес, Інвестиції або Подорож
 5. Оберіть **Валюта** для цього рахунку
 6. Натисніть **Створити**
 
@@ -11694,8 +11713,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
     {
       id: '33-purchase-requests',
       title: `Запити на покупку`,
-      description: ``,
+      description: `Запропонуйте покупку на спільному рахунку і дайте групі проголосувати за схвалення чи відхилення перед покупкою — у застосунку або через боти Telegram і WhatsApp.`,
       body: `# Запити на покупку
+
+> Запропонуйте покупку на спільному рахунку і дайте групі проголосувати за схвалення чи відхилення перед покупкою — у застосунку або через боти Telegram і WhatsApp.
 
 Запити на покупку дозволяють будь-якому учаснику рахунку запропонувати покупку для групового погодження до того, як вона увійде до бюджету. Інші учасники голосують безпосередньо в додатку або через ботів Telegram і WhatsApp; схвалені запити стають запланованими витратами, які можна перетворити на реальні одним дотиком.
 
@@ -11742,8 +11763,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
     {
       id: '34-family-feed',
       title: `Сімейна стрічка`,
-      description: ``,
+      description: `Стрічка активності для спільних рахунків: що додав кожен учасник, згруповано за людиною і днем, з реакціями емодзі.`,
       body: `# Сімейна стрічка
+
+> Стрічка активності для спільних рахунків: що додав кожен учасник, згруповано за людиною і днем, з реакціями емодзі.
 
 Сімейна стрічка — це спільний потік активності для сімейних і парних рахунків. Вона показує, що кожен учасник витрачав і заробляв, та дозволяє реагувати емодзі — спільні фінанси стають більш залученими.
 
@@ -11789,10 +11812,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
     {
       id: '35-group-trip-wallet',
       title: `Гаманець подорожі`,
-      description: ``,
+      description: `Тимчасовий спільний обліковий запис для групової подорожі — діліть витрати між учасниками і розрахуйтеся, хто кому винен, наприкінці подорожі.`,
       body: `# Гаманець подорожі
 
-Обліковий запис подорожі — це тимчасовий спільний обліковий запис для спільної подорожі: з друзями чи партнером. Кожен додає витрати, застосунок ділить їх між учасниками, а наприкінці ви розраховуєтесь, хто кому винен.
+> Тимчасовий спільний обліковий запис для групової подорожі — діліть витрати між учасниками і розрахуйтеся, хто кому винен, наприкінці подорожі.
 
 ## Створення подорожі
 
@@ -11839,8 +11862,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
     {
       id: '36-personal-inflation-index',
       title: `Персональний індекс інфляції`,
-      description: ``,
+      description: `Відстежуйте, як змінюються ціни, які ви реально платите, — розраховано за вашими сканами чеків, без витрат на ШІ.`,
       body: `# Персональний індекс інфляції
+
+> Відстежуйте, як змінюються ціни, які ви реально платите, — розраховано за вашими сканами чеків, без витрат на ШІ.
 
 Персональний індекс інфляції показує, як змінилися ціни, які ви реально платите, — розрахований на основі ваших власних сканів чеків. На відміну від офіційних показників інфляції, він відображає вашу реальну споживчу корзину.
 
@@ -11906,8 +11931,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
     {
       id: '37-expense-map',
       title: `Карта витрат`,
-      description: ``,
+      description: `Перегляньте свої витрати на карті. Відскановані чеки розміщуються за адресою магазину; додайте свою локацію або поставте мітку вручну.`,
       body: `# Карта витрат
+
+> Перегляньте свої витрати на карті. Відскановані чеки розміщуються за адресою магазину; додайте свою локацію або поставте мітку вручну.
 
 Перегляньте свої витрати на карті. Витрати можуть мати локацію — узяту з адреси магазину, надрукованої на відсканованому чеку, з GPS вашого телефону в момент додавання витрати, або встановлену вручну — і застосунок може показати будь-який відфільтрований список витрат у вигляді клікабельних міток на карті.
 
@@ -13146,6 +13173,7 @@ Aplikacja obsluguje wiele kont w celu oddzielenia roznych kontekstow finansowych
 | **Wspolne** | Ikona osob | Budzety rodzinne lub grupowe (np. "Rodzina") |
 | **Firmowe** | Ikona aktowki | Wydatki firmowe lub zespolowe (np. "MiCode") |
 | **Inwestycyjne** | Ikona trendu wzrostowego | Sledzenie portfeli inwestycyjnych i aktywow |
+| **Podróż** | Ikona samolotu | Tymczasowe wspólne konto na grupowy wyjazd — dzielcie wydatki między uczestnikami i rozliczajcie, kto komu jest winien (Portfel podróży) |
 
 Kazde konto wyswietla swoj typ i Twoja role (Wlasciciel, Edytor lub Obserwator).
 
@@ -13179,7 +13207,7 @@ Na ekranie głównym najszybszym sposobem jest dedykowany **przycisk waluty** ob
 1. Przejdz do listy kont (przez **Zarzadzaj kontami** lub z Ustawien)
 2. Dotknij **Utworz konto**
 3. Wprowadz **Nazwe konta** (np. "Moj budzet")
-4. Wybierz **Typ konta**: Osobiste, Wspolne, Firmowe lub Inwestycyjne
+4. Wybierz **Typ konta**: Osobiste, Wspolne, Firmowe, Inwestycyjne lub Podróż
 5. Wybierz **Walute** dla tego konta
 6. Dotknij **Utworz**
 
@@ -15638,8 +15666,10 @@ Automatyczne przechwytywanie to funkcja Androida. Na iOS i w przeglądarce ta se
     {
       id: '33-purchase-requests',
       title: `Wnioski zakupowe`,
-      description: ``,
+      description: `Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować za zatwierdzeniem lub odrzuceniem, zanim kupisz — z aplikacji albo przez boty Telegram/WhatsApp.`,
       body: `# Wnioski zakupowe
+
+> Zaproponuj zakup na koncie wspólnym i pozwól grupie zagłosować za zatwierdzeniem lub odrzuceniem, zanim kupisz — z aplikacji albo przez boty Telegram/WhatsApp.
 
 Wnioski zakupowe pozwalają każdemu członkowi konta zaproponować zakup do grupowego zatwierdzenia przed wejściem do budżetu. Inni członkowie głosują w aplikacji lub przez boty Telegram i WhatsApp; zatwierdzone wnioski stają się planowanymi wydatkami, które możesz jednym dotknięciem przekształcić w realne wydatki.
 
@@ -15686,8 +15716,10 @@ Możesz wyłączyć powiadomienia o wnioskach zakupowych w **Ustawienia → Powi
     {
       id: '34-family-feed',
       title: `Rodzinna tablica`,
-      description: ``,
+      description: `Tablica aktywności dla kont wspólnych pokazująca, co dodał każdy członek, pogrupowana według osoby i dnia, z reakcjami emoji.`,
       body: `# Rodzinna tablica
+
+> Tablica aktywności dla kont wspólnych pokazująca, co dodał każdy członek, pogrupowana według osoby i dnia, z reakcjami emoji.
 
 Rodzinna tablica to wspólny strumień aktywności dla kont rodzinnych i par. Pokazuje wydatki i przychody każdego członka oraz umożliwia reagowanie emoji — wspólne finanse stają się bardziej angażujące.
 
@@ -15733,10 +15765,10 @@ Tablica pokazuje aktywność wszystkich członków konta wspólnego. Nazwy sprze
     {
       id: '35-group-trip-wallet',
       title: `Portfel podróży`,
-      description: ``,
+      description: `Tymczasowe konto wspólne dla grupy podróżującej razem — dzielcie wydatki między uczestników i rozliczcie się, kto komu jest winien, na koniec wyjazdu.`,
       body: `# Portfel podróży
 
-Konto podróży to tymczasowe konto wspólne na wspólny wyjazd — z przyjaciółmi lub partnerem. Każdy dodaje wydatki, aplikacja dzieli je między uczestników, a na koniec rozliczacie, kto komu jest winien.
+> Tymczasowe konto wspólne dla grupy podróżującej razem — dzielcie wydatki między uczestników i rozliczcie się, kto komu jest winien, na koniec wyjazdu.
 
 ## Tworzenie podróży
 
@@ -15783,8 +15815,10 @@ Otrzymasz przypomnienie, gdy podróż się zakończy i czas będzie się rozlicz
     {
       id: '36-personal-inflation-index',
       title: `Osobisty wskaźnik inflacji`,
-      description: ``,
+      description: `Śledź, jak zmieniają się ceny, które faktycznie płacisz, wyliczane na podstawie zeskanowanych paragonów — bez kosztów AI.`,
       body: `# Osobisty wskaźnik inflacji
+
+> Śledź, jak zmieniają się ceny, które faktycznie płacisz, wyliczane na podstawie zeskanowanych paragonów — bez kosztów AI.
 
 Osobisty wskaźnik inflacji pokazuje, jak zmieniły się ceny, które rzeczywiście płacisz — wyliczony na podstawie Twoich własnych skanów paragonów. W odróżnieniu od oficjalnych danych inflacyjnych, odzwierciedla Twój realny koszyk zakupów.
 
@@ -15850,8 +15884,10 @@ Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udos
     {
       id: '37-expense-map',
       title: `Mapa wydatków`,
-      description: ``,
+      description: `Zobacz swoje wydatki na mapie. Zeskanowane paragony są umieszczane według adresu sklepu; dodaj swoją lokalizację lub ustaw pinezkę ręcznie.`,
       body: `# Mapa wydatków
+
+> Zobacz swoje wydatki na mapie. Zeskanowane paragony są umieszczane według adresu sklepu; dodaj swoją lokalizację lub ustaw pinezkę ręcznie.
 
 Zobacz swoje wydatki na mapie. Wydatki mogą mieć przypisaną lokalizację — pobraną z adresu sklepu wydrukowanego na zeskanowanym paragonie, z GPS Twojego telefonu w momencie dodawania wydatku, lub ustawioną ręcznie — a aplikacja może pokazać dowolną przefiltrowaną listę wydatków jako klikalne pinezki na mapie.
 
@@ -17090,6 +17126,7 @@ Die App unterstutzt mehrere Konten, um verschiedene finanzielle Kontexte zu tren
 | **Gemeinsam** | Gruppensymbol | Familien- oder Gruppenbudgets (z.B. "Familie") |
 | **Geschaftlich** | Aktenkoffersymbol | Firmen- oder Teamausgaben (z.B. "MiCode") |
 | **Investition** | Aufwartstrend-Symbol | Investmentportfolios und Vermogenswerte verfolgen |
+| **Reise** | Flugzeugsymbol | Temporäres gemeinsames Konto für eine Gruppenreise — Ausgaben zwischen den Mitgliedern aufteilen und abrechnen, wer wem etwas schuldet (Reisekasse) |
 
 Jedes Konto zeigt seinen Typ und deine Rolle (Eigentumer, Bearbeiter oder Betrachter).
 
@@ -17123,7 +17160,7 @@ Auf dem Hauptbildschirm geht es am schnellsten über die eigene **Währungsschal
 1. Gehe zur Kontoliste (uber **Konten verwalten** oder aus den Einstellungen)
 2. Tippe auf **Konto erstellen**
 3. Gib einen **Kontonamen** ein (z.B. "Mein Budget")
-4. Wahle den **Kontotyp**: Personlich, Gemeinsam, Geschaftlich oder Investition
+4. Wahle den **Kontotyp**: Personlich, Gemeinsam, Geschaftlich, Investition oder Reise
 5. Wahle die **Wahrung** fur dieses Konto
 6. Tippe auf **Erstellen**
 
@@ -19557,8 +19594,10 @@ Die Auto-Erfassung ist eine Android-Funktion. Auf iOS und im Web erscheint diese
     {
       id: '33-purchase-requests',
       title: `Kaufanfragen`,
-      description: ``,
+      description: `Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst — aus der App oder über die Telegram-/WhatsApp-Bots.`,
       body: `# Kaufanfragen
+
+> Schlage einen Kauf auf einem gemeinsamen Konto vor und lass die Gruppe abstimmen, ob er genehmigt oder abgelehnt wird, bevor du kaufst — aus der App oder über die Telegram-/WhatsApp-Bots.
 
 Mit Kaufanfragen kann jedes Kontomitglied einen Kauf zur Gruppenfreigabe vorschlagen, bevor er in das Budget einfließt. Andere Mitglieder stimmen direkt in der App oder über die Telegram- und WhatsApp-Bots ab; genehmigte Anfragen werden zu geplanten Ausgaben, die du mit einem Tipp in echte Ausgaben umwandeln kannst.
 
@@ -19605,8 +19644,10 @@ Du kannst Kaufanfragen-Benachrichtigungen unter **Einstellungen → Benachrichti
     {
       id: '34-family-feed',
       title: `Familien-Feed`,
-      description: ``,
+      description: `Ein Aktivitäts-Feed für gemeinsame Konten, der zeigt, was jeder hinzugefügt hat, gruppiert nach Person und Tag, mit Emoji-Reaktionen.`,
       body: `# Familien-Feed
+
+> Ein Aktivitäts-Feed für gemeinsame Konten, der zeigt, was jeder hinzugefügt hat, gruppiert nach Person und Tag, mit Emoji-Reaktionen.
 
 Der Familien-Feed ist ein gemeinsamer Aktivitätsstrom für Familien- und Paar-Konten. Er zeigt, was jedes Mitglied ausgegeben und eingenommen hat, und ermöglicht Emoji-Reaktionen — gemeinsame Finanzen werden kollaborativer.
 
@@ -19652,10 +19693,10 @@ Der Feed zeigt Aktivitäten aller Mitglieder des gemeinsamen Kontos. Händlernam
     {
       id: '35-group-trip-wallet',
       title: `Reisekasse`,
-      description: ``,
+      description: `Ein temporäres gemeinsames Konto für eine Reisegruppe — teilt Ausgaben zwischen den Mitgliedern auf und rechnet am Ende der Reise ab, wer wem etwas schuldet.`,
       body: `# Reisekasse
 
-Ein Reisekonto ist ein temporäres gemeinsames Konto für eine Gruppenreise — mit Freunden oder als Paar. Alle erfassen Ausgaben, die App teilt sie auf, und am Ende rechnet ihr ab, wer wem etwas schuldet.
+> Ein temporäres gemeinsames Konto für eine Reisegruppe — teilt Ausgaben zwischen den Mitgliedern auf und rechnet am Ende der Reise ab, wer wem etwas schuldet.
 
 ## Reise erstellen
 
@@ -19702,8 +19743,10 @@ Du erhältst eine Erinnerung, wenn eine Reise endet und es Zeit zum Abrechnen is
     {
       id: '36-personal-inflation-index',
       title: `Persönlicher Inflationsindex`,
-      description: ``,
+      description: `Verfolge, wie sich die Preise, die du tatsächlich zahlst, im Laufe der Zeit verändern, berechnet aus deinen gescannten Kassenbons — ohne KI-Kosten.`,
       body: `# Persönlicher Inflationsindex
+
+> Verfolge, wie sich die Preise, die du tatsächlich zahlst, im Laufe der Zeit verändern, berechnet aus deinen gescannten Kassenbons — ohne KI-Kosten.
 
 Der persönliche Inflationsindex zeigt, wie sich die Preise, die du tatsächlich zahlst, im Laufe der Zeit verändert haben — berechnet aus deinen eigenen Kassenbonscans. Im Gegensatz zu offiziellen Inflationszahlen spiegelt er deinen echten Einkaufskorb wider.
 
@@ -19769,8 +19812,10 @@ Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wir
     {
       id: '37-expense-map',
       title: `Ausgabenkarte`,
-      description: ``,
+      description: `Sieh deine Ausgaben auf einer Karte. Gescannte Kassenbons werden anhand der Filialadresse platziert; füge deinen Standort hinzu oder setze manuell einen Pin.`,
       body: `# Ausgabenkarte
+
+> Sieh deine Ausgaben auf einer Karte. Gescannte Kassenbons werden anhand der Filialadresse platziert; füge deinen Standort hinzu oder setze manuell einen Pin.
 
 Sieh deine Ausgaben auf einer Karte. Ausgaben können einen Standort tragen — entnommen aus der auf einem gescannten Kassenbon aufgedruckten Filialadresse, vom GPS deines Telefons im Moment der Ausgabenerfassung, oder manuell gesetzt — und die App kann jede gefilterte Ausgabenliste als anklickbare Pins auf einer Karte anzeigen.
 
@@ -21009,6 +21054,7 @@ La aplicacion admite multiples cuentas para separar diferentes contextos financi
 | **Compartida** | Icono de personas | Presupuestos familiares o de grupo (por ejemplo, "Familia") |
 | **Empresa** | Icono de maletin | Gastos de la empresa o equipo (por ejemplo, "MiCodigo") |
 | **Inversion** | Icono de tendencia al alza | Seguimiento de carteras de inversion y activos |
+| **Viaje** | Icono de avión | Cuenta compartida temporal para un viaje en grupo — reparto de gastos entre los miembros y liquidación de quién debe a quién (Billetera de viaje) |
 
 Cada cuenta muestra su tipo y tu rol (Propietario, Editor u Observador).
 
@@ -21042,7 +21088,7 @@ En la pantalla de inicio, la forma más rápida es la **pastilla de moneda** ded
 1. Ve a la lista de Cuentas (a traves de **Gestionar cuentas** o desde Ajustes)
 2. Toca **Crear cuenta**
 3. Introduce un **Nombre de cuenta** (por ejemplo, "Mi presupuesto")
-4. Selecciona el **Tipo de cuenta**: Personal, Compartida, Empresa o Inversion
+4. Selecciona el **Tipo de cuenta**: Personal, Compartida, Empresa, Inversion o Viaje
 5. Selecciona la **Moneda** para esta cuenta
 6. Toca **Crear**
 
@@ -23465,8 +23511,10 @@ La captura automática es una función de Android. En iOS y web, esta sección n
     {
       id: '33-purchase-requests',
       title: `Solicitudes de compra`,
-      description: ``,
+      description: `Propón una compra en una cuenta compartida y deja que el grupo vote para aprobarla o rechazarla antes de comprar — desde la app o los bots de Telegram/WhatsApp.`,
       body: `# Solicitudes de compra
+
+> Propón una compra en una cuenta compartida y deja que el grupo vote para aprobarla o rechazarla antes de comprar — desde la app o los bots de Telegram/WhatsApp.
 
 Las solicitudes de compra permiten que cualquier miembro de la cuenta proponga una compra para aprobación grupal antes de que entre al presupuesto. Los demás miembros votan directamente en la aplicación o a través de los bots de Telegram y WhatsApp; las solicitudes aprobadas se convierten en gastos planificados que puedes convertir en gastos reales con un solo toque.
 
@@ -23513,8 +23561,10 @@ Puedes desactivar las notificaciones de solicitudes de compra en **Configuració
     {
       id: '34-family-feed',
       title: `Feed familiar`,
-      description: ``,
+      description: `Un feed de actividad para cuentas compartidas que muestra lo que añadió cada miembro, agrupado por persona y día, con reacciones de emoji.`,
       body: `# Feed familiar
+
+> Un feed de actividad para cuentas compartidas que muestra lo que añadió cada miembro, agrupado por persona y día, con reacciones de emoji.
 
 El Feed familiar es un flujo de actividad compartido para cuentas de familia y pareja. Muestra lo que cada miembro ha gastado e ingresado, y permite reaccionar con emoji — las finanzas compartidas se vuelven más colaborativas.
 
@@ -23560,10 +23610,10 @@ El feed muestra la actividad de todos los miembros de la cuenta compartida. Los 
     {
       id: '35-group-trip-wallet',
       title: `Billetera de viaje`,
-      description: ``,
+      description: `Una cuenta compartida temporal para un viaje en grupo — dividid los gastos entre los miembros y liquidad quién le debe a quién al final del viaje.`,
       body: `# Billetera de viaje
 
-Una cuenta de viaje es una cuenta compartida temporal para un viaje en grupo: con amigos o en pareja. Todos registran gastos, la app los divide, y al final liquidáis quién le debe a quién.
+> Una cuenta compartida temporal para un viaje en grupo — dividid los gastos entre los miembros y liquidad quién le debe a quién al final del viaje.
 
 ## Crear un viaje
 
@@ -23610,8 +23660,10 @@ Recibirás un recordatorio cuando un viaje termine y sea hora de liquidar cuenta
     {
       id: '36-personal-inflation-index',
       title: `Índice de Inflación Personal`,
-      description: ``,
+      description: `Controla cómo cambian con el tiempo los precios que realmente pagas, calculado a partir de tus tiques escaneados — sin coste de IA.`,
       body: `# Índice de Inflación Personal
+
+> Controla cómo cambian con el tiempo los precios que realmente pagas, calculado a partir de tus tiques escaneados — sin coste de IA.
 
 El Índice de Inflación Personal muestra cómo han cambiado con el tiempo los precios que realmente pagas — calculado a partir de tus propios escaneos de tiques. A diferencia de las cifras oficiales de inflación, refleja tu cesta de la compra real.
 
@@ -23677,8 +23729,10 @@ Todo el historial de precios se almacena en tu cuenta en el servidor. No se comp
     {
       id: '37-expense-map',
       title: `Mapa de Gastos`,
-      description: ``,
+      description: `Consulta tus gastos en un mapa. Los tiques escaneados se ubican según la dirección del establecimiento; añade tu ubicación o coloca una chincheta manualmente.`,
       body: `# Mapa de Gastos
+
+> Consulta tus gastos en un mapa. Los tiques escaneados se ubican según la dirección del establecimiento; añade tu ubicación o coloca una chincheta manualmente.
 
 Consulta tus gastos en un mapa. Los gastos pueden llevar una ubicación — tomada de la dirección del establecimiento impresa en un tique escaneado, del GPS de tu teléfono en el momento de añadir un gasto, o colocada manualmente — y la app puede mostrar cualquier lista filtrada de gastos como chinchetas pulsables en un mapa.
 
@@ -24917,6 +24971,7 @@ L'application prend en charge plusieurs comptes pour separer les differents cont
 | **Partage** | Icone de personnes | Budgets familiaux ou de groupe (par ex. "Famille") |
 | **Professionnel** | Icone de mallette | Depenses d'entreprise ou d'equipe (par ex. "MiCode") |
 | **Investissement** | Icone de tendance haussiere | Suivre les portefeuilles d'investissement et les actifs |
+| **Voyage** | Icône d'avion | Compte partagé temporaire pour un voyage en groupe — répartition des dépenses entre les membres et règlement de qui doit quoi à qui (Portefeuille de voyage) |
 
 Chaque compte affiche son type et votre role (Proprietaire, Editeur ou Observateur).
 
@@ -24950,7 +25005,7 @@ Sur l'écran d'accueil, la façon la plus rapide est la **pastille de devise** d
 1. Accedez a la liste des comptes (via **Gerer les comptes** ou depuis les Parametres)
 2. Appuyez sur **Creer un compte**
 3. Entrez un **Nom de compte** (par ex. "Mon Budget")
-4. Selectionnez le **Type de compte** : Personnel, Partage, Professionnel ou Investissement
+4. Selectionnez le **Type de compte** : Personnel, Partage, Professionnel, Investissement ou Voyage
 5. Selectionnez la **Devise** pour ce compte
 6. Appuyez sur **Creer**
 
@@ -27371,8 +27426,10 @@ La capture automatique est une fonctionnalité Android. Sur iOS et le web, cette
     {
       id: '33-purchase-requests',
       title: `Demandes d'achat`,
-      description: ``,
+      description: `Proposez un achat sur un compte partagé et laissez le groupe voter pour l'approuver ou le refuser avant l'achat — depuis l'application ou via les bots Telegram/WhatsApp.`,
       body: `# Demandes d'achat
+
+> Proposez un achat sur un compte partagé et laissez le groupe voter pour l'approuver ou le refuser avant l'achat — depuis l'application ou via les bots Telegram/WhatsApp.
 
 Les demandes d'achat permettent à n'importe quel membre du compte de proposer un achat pour approbation collective avant qu'il entre dans le budget. Les autres membres votent directement dans l'application ou via les bots Telegram et WhatsApp ; les demandes approuvées deviennent des dépenses planifiées que vous pouvez convertir en dépenses réelles en un seul geste.
 
@@ -27419,8 +27476,10 @@ Vous pouvez désactiver les notifications de demandes d'achat sous **Paramètres
     {
       id: '34-family-feed',
       title: `Fil familial`,
-      description: ``,
+      description: `Un fil d'activité pour les comptes partagés qui montre ce que chacun a ajouté, regroupé par membre et par jour, avec des réactions emoji.`,
       body: `# Fil familial
+
+> Un fil d'activité pour les comptes partagés qui montre ce que chacun a ajouté, regroupé par membre et par jour, avec des réactions emoji.
 
 Le Fil familial est un flux d'activité partagé pour les comptes famille et couple. Il affiche ce que chaque membre a dépensé et gagné, et permet de réagir avec des emoji — les finances partagées deviennent plus collaboratives.
 
@@ -27466,10 +27525,10 @@ Le fil affiche l'activité de tous les membres du compte partagé. Les noms de m
     {
       id: '35-group-trip-wallet',
       title: `Portefeuille de voyage`,
-      description: ``,
+      description: `Un compte partagé temporaire pour un voyage en groupe — répartissez les dépenses entre les membres et réglez qui doit quoi à qui à la fin du voyage.`,
       body: `# Portefeuille de voyage
 
-Un compte voyage est un compte partagé temporaire pour un voyage en groupe — entre amis ou en couple. Chacun enregistre ses dépenses, l'application les répartit, et à la fin vous réglez qui doit quoi à qui.
+> Un compte partagé temporaire pour un voyage en groupe — répartissez les dépenses entre les membres et réglez qui doit quoi à qui à la fin du voyage.
 
 ## Créer un voyage
 
@@ -27516,8 +27575,10 @@ Vous recevrez un rappel lorsqu'un voyage se termine et qu'il est temps de régle
     {
       id: '36-personal-inflation-index',
       title: `Indice d'Inflation Personnel`,
-      description: ``,
+      description: `Suivez comment évoluent dans le temps les prix que vous payez réellement, calculé à partir de vos tickets de caisse scannés — sans coût d'IA.`,
       body: `# Indice d'Inflation Personnel
+
+> Suivez comment évoluent dans le temps les prix que vous payez réellement, calculé à partir de vos tickets de caisse scannés — sans coût d'IA.
 
 L'Indice d'Inflation Personnel montre comment les prix que vous payez réellement ont évolué dans le temps — calculé à partir de vos propres scans de tickets de caisse. Contrairement aux chiffres officiels d'inflation, il reflète votre panier d'achat réel.
 
@@ -27583,8 +27644,10 @@ Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'es
     {
       id: '37-expense-map',
       title: `Carte des Dépenses`,
-      description: ``,
+      description: `Consultez vos dépenses sur une carte. Les tickets de caisse scannés sont placés selon l'adresse du magasin ; ajoutez votre position ou placez une épingle manuellement.`,
       body: `# Carte des Dépenses
+
+> Consultez vos dépenses sur une carte. Les tickets de caisse scannés sont placés selon l'adresse du magasin ; ajoutez votre position ou placez une épingle manuellement.
 
 Consultez vos dépenses sur une carte. Les dépenses peuvent porter une localisation — reprise de l'adresse du magasin imprimée sur un ticket de caisse scanné, du GPS de votre téléphone au moment où vous ajoutez une dépense, ou placée manuellement — et l'application peut afficher n'importe quelle liste filtrée de dépenses sous forme d'épingles cliquables sur une carte.
 
@@ -28823,6 +28886,7 @@ iOS, Android, Web
 | **Агульны** | Значок людзей | Сямейныя або групавыя бюджэты (напрыклад, «Сям'я») |
 | **Бізнес** | Значок партфеля | Карпаратыўныя або каманданыя выдаткі (напрыклад, «MiCode») |
 | **Інвестыцыі** | Значок трэнду ўверх | Адсочванне інвестыцыйных партфеляў і актываў |
+| **Паездка** | Значок самалёта | Часовы агульны рахунак для сумеснай паездкі — дзяліце выдаткі паміж удзельнікамі і разлічвайцеся, хто каму вінен (Кашалёк паездкі) |
 
 Кожны рахунак паказвае свой тып і вашу ролю (Уладальнік, Рэдактар або Назіральнік).
 
@@ -28856,7 +28920,7 @@ iOS, Android, Web
 1. Перайдзіце да спісу рахункаў (праз **Кіраванне рахункамі** або з Налад)
 2. Націсніце **Стварыць рахунак**
 3. Увядзіце **Назву рахунку** (напрыклад, «Мой бюджэт»)
-4. Выберыце **Тып рахунку**: Асабісты, Агульны, Бізнес або Інвестыцыі
+4. Выберыце **Тып рахунку**: Асабісты, Агульны, Бізнес, Інвестыцыі або Паездка
 5. Выберыце **Валюту** для гэтага рахунку (USD, EUR, PLN, GBP, UAH, RUB або BYN)
 6. Націсніце **Стварыць**
 
@@ -31237,8 +31301,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
     {
       id: '33-purchase-requests',
       title: `Запыты на пакупку`,
-      description: ``,
+      description: `Прапануйце пакупку на агульным рахунку і дайце групе прагаласаваць за зацвярджэнне ці адхіленне перад пакупкай — у дадатку або праз боты Telegram і WhatsApp.`,
       body: `# Запыты на пакупку
+
+> Прапануйце пакупку на агульным рахунку і дайце групе прагаласаваць за зацвярджэнне ці адхіленне перад пакупкай — у дадатку або праз боты Telegram і WhatsApp.
 
 Запыты на пакупку дазваляюць любому ўдзельніку рахунку прапанаваць пакупку для групавога ўзгаднення да таго, як яна ўвойдзе ў бюджэт. Іншыя ўдзельнікі галасуюць непасрэдна ў дадатку або праз боты Telegram і WhatsApp; зацверджаныя запыты становяцца запланаванымі выдаткамі, якія можна ператварыць у рэальныя адным дотыкам.
 
@@ -31285,8 +31351,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
     {
       id: '34-family-feed',
       title: `Сямейная стужка`,
-      description: ``,
+      description: `Стужка актыўнасці для агульных рахункаў: паказвае, што дадаў кожны ўдзельнік, згрупавана па чалавеку і дні, з рэакцыямі эмодзі.`,
       body: `# Сямейная стужка
+
+> Стужка актыўнасці для агульных рахункаў: паказвае, што дадаў кожны ўдзельнік, згрупавана па чалавеку і дні, з рэакцыямі эмодзі.
 
 Сямейная стужка — гэта агульны паток актыўнасці для сямейных і парных рахункаў. Яна паказвае, што кожны ўдзельнік тратіў і зарабляў, і дазваляе рэагаваць эмодзі — агульныя фінансы становяцца больш цікавымі.
 
@@ -31332,10 +31400,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
     {
       id: '35-group-trip-wallet',
       title: `Кашалёк паездкі`,
-      description: ``,
+      description: `Часовы агульны ўліковы запіс для групавой паездкі — дзяліце выдаткі паміж удзельнікамі і разлічыцеся, хто каму вінен, у канцы паездкі.`,
       body: `# Кашалёк паездкі
 
-Уліковы запіс паездкі — гэта часовы агульны ўліковы запіс для сумеснай паездкі: з сябрамі ці партнёрам. Кожны дадае выдаткі, праграма дзеліць іх паміж удзельнікамі, а ў канцы вы разлічваецеся, хто каму вінен.
+> Часовы агульны ўліковы запіс для групавой паездкі — дзяліце выдаткі паміж удзельнікамі і разлічыцеся, хто каму вінен, у канцы паездкі.
 
 ## Стварэнне паездкі
 
@@ -31382,8 +31450,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
     {
       id: '36-personal-inflation-index',
       title: `Персанальны індэкс інфляцыі`,
-      description: ``,
+      description: `Сачыце, як змяняюцца цэны, якія вы рэальна плаціце, — разлічана па вашых сканах чэкаў, без выдаткаў на ІІ.`,
       body: `# Персанальны індэкс інфляцыі
+
+> Сачыце, як змяняюцца цэны, якія вы рэальна плаціце, — разлічана па вашых сканах чэкаў, без выдаткаў на ІІ.
 
 Персанальны індэкс інфляцыі паказвае, як змяніліся цэны, якія вы рэальна плаціце, — разлічаны на аснове вашых уласных сканаў чэкаў. У адрозненне ад афіцыйных паказчыкаў інфляцыі, ён адлюстроўвае вашу рэальную спажывецкую кошык.
 
@@ -31449,8 +31519,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
     {
       id: '37-expense-map',
       title: `Карта выдаткаў`,
-      description: ``,
+      description: `Глядзіце свае выдаткі на карце. Сканаваныя чэкі размяшчаюцца па адрасе крамы; дадайце сваю лакацыю або пастаўце пазнаку ўручную.`,
       body: `# Карта выдаткаў
+
+> Глядзіце свае выдаткі на карце. Сканаваныя чэкі размяшчаюцца па адрасе крамы; дадайце сваю лакацыю або пастаўце пазнаку ўручную.
 
 Глядзіце свае выдаткі на карце. Выдаткі могуць мець лакацыю — узятую з адрасу крамы, надрукаванага на сканаваным чэку, з GPS вашага тэлефона ў момант дадавання выдатку, або ўстаноўленую ўручную — і праграма можа паказаць любы адфільтраваны спіс выдаткаў у выглядзе клікабельных пазнак на карце.
 
@@ -32689,6 +32761,7 @@ De app ondersteunt meerdere accounts om verschillende financiële contexten te s
 | **Gedeeld** | Mensenpictogram | Gezins- of groepsbudgetten (bijv. "Familie") |
 | **Zakelijk** | Aktetaspictogram | Bedrijfs- of teamuitgaven (bijv. "MiCode") |
 | **Beleggingen** | Stijgende-trendpictogram | Beleggingsportefeuilles en -activa bijhouden |
+| **Reis** | Vliegtuigpictogram | Tijdelijk gedeeld account voor een groepsreis — verdeel uitgaven tussen de leden en reken af wie wie iets verschuldigd is (Reisportemonnee) |
 
 Elk account toont zijn type en jouw rol (Eigenaar, Bewerker of Kijker).
 
@@ -32722,7 +32795,7 @@ Op het startscherm gaat het het snelst via de speciale **valutaknop** naast de a
 1. Ga naar de accountlijst (via **Accounts beheren** of vanuit Instellingen)
 2. Tik op **Account aanmaken**
 3. Voer een **Accountnaam** in (bijv. "Mijn budget")
-4. Selecteer het **Accounttype**: Persoonlijk, Gedeeld, Zakelijk of Beleggingen
+4. Selecteer het **Accounttype**: Persoonlijk, Gedeeld, Zakelijk, Beleggingen of Reis
 5. Selecteer de **Valuta** voor dit account
 6. Tik op **Aanmaken**
 
@@ -35222,8 +35295,10 @@ Automatisch vastleggen is een Android-functie. Op iOS en web verschijnt dit gede
     {
       id: '33-purchase-requests',
       title: `Aankoopverzoeken`,
-      description: ``,
+      description: `Stel een aankoop voor op een gedeelde rekening en laat de groep stemmen om deze goed te keuren of af te wijzen voordat je koopt — via de app of de Telegram-/WhatsApp-bots.`,
       body: `# Aankoopverzoeken
+
+> Stel een aankoop voor op een gedeelde rekening en laat de groep stemmen om deze goed te keuren of af te wijzen voordat je koopt — via de app of de Telegram-/WhatsApp-bots.
 
 Met aankoopverzoeken kan elk accountlid een aankoop voorstellen voor groepsgoedkeuring voordat deze het budget ingaat. Andere leden stemmen direct in de app of via de Telegram- en WhatsApp-bots; goedgekeurde verzoeken worden geplande uitgaven die je met één tik kunt omzetten in echte uitgaven.
 
@@ -35270,8 +35345,10 @@ Je kunt meldingen voor aankoopverzoeken uitschakelen via **Instellingen → Meld
     {
       id: '34-family-feed',
       title: `Gezinsfeed`,
-      description: ``,
+      description: `Een activiteitenfeed voor gedeelde rekeningen die laat zien wat iedereen heeft toegevoegd, gegroepeerd per persoon en dag, met emoji-reacties.`,
       body: `# Gezinsfeed
+
+> Een activiteitenfeed voor gedeelde rekeningen die laat zien wat iedereen heeft toegevoegd, gegroepeerd per persoon en dag, met emoji-reacties.
 
 De Gezinsfeed is een gedeelde activiteitsstroom voor gezins- en koppelrekeningen. Het toont wat elk lid heeft uitgegeven en verdiend, en biedt de mogelijkheid te reageren met emoji — gedeelde financiën worden meer collaboratief.
 
@@ -35317,10 +35394,10 @@ De feed toont de activiteit van alle leden van de gedeelde rekening. Namen van h
     {
       id: '35-group-trip-wallet',
       title: `Reisportemonnee`,
-      description: ``,
+      description: `Een tijdelijke gedeelde account voor een reisgroep — verdeel uitgaven tussen de leden en reken aan het einde van de reis af wie wie iets verschuldigd is.`,
       body: `# Reisportemonnee
 
-Een reisaccount is een tijdelijke gedeelde account voor een groepsreis — met vrienden of als koppel. Iedereen registreert uitgaven, de app verdeelt ze, en aan het einde reken je af wie wie iets verschuldigd is.
+> Een tijdelijke gedeelde account voor een reisgroep — verdeel uitgaven tussen de leden en reken aan het einde van de reis af wie wie iets verschuldigd is.
 
 ## Een reis aanmaken
 
@@ -35367,8 +35444,10 @@ Je krijgt een herinnering wanneer een reis eindigt en het tijd is om af te reken
     {
       id: '36-personal-inflation-index',
       title: `Persoonlijke Inflatie-index`,
-      description: ``,
+      description: `Volg hoe de prijzen die je daadwerkelijk betaalt in de loop van de tijd veranderen, berekend op basis van je gescande bonnetjes — zonder AI-kosten.`,
       body: `# Persoonlijke Inflatie-index
+
+> Volg hoe de prijzen die je daadwerkelijk betaalt in de loop van de tijd veranderen, berekend op basis van je gescande bonnetjes — zonder AI-kosten.
 
 De Persoonlijke Inflatie-index laat zien hoe de prijzen die je daadwerkelijk betaalt in de loop van de tijd zijn veranderd — berekend op basis van je eigen bonnetjesscans. In tegenstelling tot officiële inflatiecijfers weerspiegelt dit jouw echte winkelmandje.
 
@@ -35434,8 +35513,10 @@ Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt 
     {
       id: '37-expense-map',
       title: `Uitgavenkaart`,
-      description: ``,
+      description: `Bekijk je uitgaven op een kaart. Gescande bonnetjes worden geplaatst op basis van het winkeladres; voeg je locatie toe of plaats handmatig een pin.`,
       body: `# Uitgavenkaart
+
+> Bekijk je uitgaven op een kaart. Gescande bonnetjes worden geplaatst op basis van het winkeladres; voeg je locatie toe of plaats handmatig een pin.
 
 Bekijk je uitgaven op een kaart. Uitgaven kunnen een locatie hebben — overgenomen van het winkeladres dat op een gescande bon staat, van de gps van je telefoon op het moment dat je een uitgave toevoegt, of handmatig geplaatst — en de app kan elke gefilterde lijst met uitgaven tonen als aanklikbare pins op een kaart.
 

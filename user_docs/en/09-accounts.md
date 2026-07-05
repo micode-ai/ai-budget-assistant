@@ -16,6 +16,7 @@ The app supports multiple accounts to separate different financial contexts. Eac
 | **Shared** | People icon | Family or group budgets (e.g., "Family") |
 | **Business** | Briefcase icon | Company or team expenses (e.g., "MiCode") |
 | **Investment** | Trending-up icon | Track investment portfolios and assets |
+| **Trip** | Airplane icon | Temporary shared account for a travel group — split expenses among members and settle up who owes whom ([Group Trip Wallet](./35-group-trip-wallet.md)) |
 
 Each account shows its type and your role (Owner, Editor, or Viewer).
 
@@ -49,7 +50,7 @@ On the home screen, the fastest way is the dedicated **currency pill** next to t
 1. Go to the Accounts list (via **Manage Accounts** or from Settings)
 2. Tap **Create Account**
 3. Enter an **Account Name** (e.g., "My Budget")
-4. Select the **Account Type**: Personal, Shared, Business, or Investment
+4. Select the **Account Type**: Personal, Shared, Business, Investment, or Trip
 5. Select the **Currency** for this account
 6. Tap **Create**
 

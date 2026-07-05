@@ -1,6 +1,6 @@
 # Portfel podróży
 
-Konto podróży to tymczasowe konto wspólne na wspólny wyjazd — z przyjaciółmi lub partnerem. Każdy dodaje wydatki, aplikacja dzieli je między uczestników, a na koniec rozliczacie, kto komu jest winien.
+> Tymczasowe konto wspólne dla grupy podróżującej razem — dzielcie wydatki między uczestników i rozliczcie się, kto komu jest winien, na koniec wyjazdu.
 
 ## Tworzenie podróży
 

@@ -1,6 +1,6 @@
 # Reisportemonnee
 
-Een reisaccount is een tijdelijke gedeelde account voor een groepsreis — met vrienden of als koppel. Iedereen registreert uitgaven, de app verdeelt ze, en aan het einde reken je af wie wie iets verschuldigd is.
+> Een tijdelijke gedeelde account voor een reisgroep — verdeel uitgaven tussen de leden en reken aan het einde van de reis af wie wie iets verschuldigd is.
 
 ## Een reis aanmaken
 

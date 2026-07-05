@@ -1,5 +1,7 @@
 # Demandes d'achat
 
+> Proposez un achat sur un compte partagé et laissez le groupe voter pour l'approuver ou le refuser avant l'achat — depuis l'application ou via les bots Telegram/WhatsApp.
+
 Les demandes d'achat permettent à n'importe quel membre du compte de proposer un achat pour approbation collective avant qu'il entre dans le budget. Les autres membres votent directement dans l'application ou via les bots Telegram et WhatsApp ; les demandes approuvées deviennent des dépenses planifiées que vous pouvez convertir en dépenses réelles en un seul geste.
 
 ## Créer une demande

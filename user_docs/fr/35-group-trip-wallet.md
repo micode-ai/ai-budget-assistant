@@ -1,6 +1,6 @@
 # Portefeuille de voyage
 
-Un compte voyage est un compte partagé temporaire pour un voyage en groupe — entre amis ou en couple. Chacun enregistre ses dépenses, l'application les répartit, et à la fin vous réglez qui doit quoi à qui.
+> Un compte partagé temporaire pour un voyage en groupe — répartissez les dépenses entre les membres et réglez qui doit quoi à qui à la fin du voyage.
 
 ## Créer un voyage
 
