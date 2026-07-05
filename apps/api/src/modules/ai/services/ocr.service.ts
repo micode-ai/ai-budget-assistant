@@ -9,7 +9,7 @@ import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
-import { GeocodingService } from './geocoding.service';
+import { GeocodingService, GeocodeResult } from './geocoding.service';
 
 export interface ReceiptItem {
   description: string;
@@ -56,6 +56,12 @@ export function buildCanonicalNameFallback(description: string): string | null {
 export interface ParsedReceipt {
   merchantName: string | null;
   merchantAddress: string | null;
+  // Structured store address (the point of sale) — used for reliable geocoding.
+  // Deliberately excludes the seller company's registered seat / legal name.
+  merchantStreet?: string | null;
+  merchantCity?: string | null;
+  merchantPostalCode?: string | null;
+  merchantCountry?: string | null;
   date: string | null;
   time: string | null;
   items: ReceiptItem[];
@@ -220,7 +226,11 @@ ${receiptText}
 Return a JSON object with the following structure:
 {
   "merchantName": "store/restaurant name or null if not found",
-  "merchantAddress": "address or null",
+  "merchantAddress": "the STORE's own address on ONE line (street + building no, postal code, city) or null — see store-address rules below",
+  "merchantStreet": "the STORE's street name + building number only, or null",
+  "merchantCity": "the STORE's city/town, or null",
+  "merchantPostalCode": "the STORE's postal code, or null",
+  "merchantCountry": "country of the STORE as an English name or ISO code (infer from address/language/currency), or null",
   "date": "STRICT YYYY-MM-DD format only, or null. Use USER CONTEXT to pick the right format. Never invent the year — if year is unreadable, return null.",
   "time": "HH:MM format or null",
   "items": [
@@ -242,6 +252,13 @@ Return a JSON object with the following structure:
   "confidence": 0-1 confidence score,
   "rawText": "all readable text from receipt"
 }
+
+Store-address rules (merchantAddress / merchantStreet / merchantCity / merchantPostalCode / merchantCountry):
+- These describe the PHYSICAL STORE where the purchase happened (the point of sale) — NOT the seller company's registered office, head office, or legal seat.
+- Receipts (especially in Poland) frequently print BOTH the company's registered seat AND the store address. Example: a Biedronka receipt shows the store "89-632 Brusy, ul. Wojska Polskiego" alongside the company seat "Jeronimo Martins Polska S.A., 62-025 Kostrzyn, ul. Żniwna 5". ALWAYS pick the STORE address (Brusy) and IGNORE the registered seat (Kostrzyn) and the legal entity name.
+- Never mix two different addresses into one field. merchantStreet/merchantCity/merchantPostalCode must all refer to the SAME (store) location.
+- merchantAddress is the same store address as a single human-readable line; do NOT include the company legal name or the registered seat.
+- If only the company seat is printed and there is no distinct store address, return null for all five fields rather than guessing.
 
 Item name normalization rules for the "description" field:
 - IMPORTANT: Preserve the actual product name from the receipt — do NOT replace it with a different brand or product
@@ -322,12 +339,24 @@ Important:
     }
 
     let location: ReceiptExpense['location'] = null;
-    if (parsed.merchantAddress) {
-      const geo = await this.geocoding.geocode(parsed.merchantAddress);
-      if (geo) {
-        // name = the raw address the user saw printed on the receipt
-        location = { lat: geo.lat, lng: geo.lng, name: parsed.merchantAddress };
-      }
+    const hasStructured = !!(parsed.merchantStreet || parsed.merchantCity || parsed.merchantPostalCode);
+    let geo: GeocodeResult | null = null;
+    // Prefer the structured store address — the free-text merchantAddress often
+    // mixes the store with the company's registered seat, which Nominatim can't
+    // resolve. Fall back to free text only when no structured parts are present.
+    if (hasStructured) {
+      geo = await this.geocoding.geocodeStructured({
+        street: parsed.merchantStreet,
+        city: parsed.merchantCity,
+        postalCode: parsed.merchantPostalCode,
+        country: parsed.merchantCountry,
+      });
+    }
+    if (!geo && parsed.merchantAddress) {
+      geo = await this.geocoding.geocode(parsed.merchantAddress);
+    }
+    if (geo) {
+      location = { lat: geo.lat, lng: geo.lng, name: this.composeAddressName(parsed) };
     }
 
     return {
@@ -343,6 +372,20 @@ Important:
       receiptItems: parsed.items || [],
       location,
     };
+  }
+
+  /**
+   * Human-readable one-line store address for `location.name`. Prefers the clean
+   * structured parts ("street, postal city"); falls back to the raw
+   * merchantAddress only when no structured parts were extracted.
+   */
+  private composeAddressName(parsed: ParsedReceipt): string {
+    const cityLine = [parsed.merchantPostalCode, parsed.merchantCity]
+      .map((s) => s?.trim())
+      .filter(Boolean)
+      .join(' ');
+    const composed = [parsed.merchantStreet?.trim(), cityLine].filter(Boolean).join(', ');
+    return composed || parsed.merchantAddress?.trim() || '';
   }
 
   private async getExpenseCategories(accountId: string): Promise<CategoryWithName[]> {
