@@ -1790,6 +1790,8 @@ export default {
     removeLocation: 'Eliminar ubicación',
     myLocation: 'Mi ubicación',
     tapToPlace: 'Toca el mapa para colocar el marcador',
+    searchPlaceholder: 'Buscar dirección o lugar',
+    searchNoResults: 'No se encontró nada',
     pickerTitle: 'Ubicación del gasto',
   },
   map: {

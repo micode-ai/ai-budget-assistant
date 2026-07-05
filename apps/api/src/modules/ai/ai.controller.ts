@@ -24,6 +24,7 @@ import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { SplitSuggestionService } from './services/split-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
+import { GeocodingService } from './services/geocoding.service';
 import { ScanReceiptRequestSchema } from './utils/sanitize';
 
 @Controller('ai')
@@ -38,7 +39,16 @@ export class AiController {
     private readonly projectSuggestionService: ProjectSuggestionService,
     private readonly splitSuggestionService: SplitSuggestionService,
     private readonly goalPlannerService: GoalPlannerService,
+    private readonly geocodingService: GeocodingService,
   ) {}
+
+  // Forward-geocode a typed query into up to 5 candidate places for the expense
+  // location-picker search box. Free (not an OpenAI call), so no AiUsageGuard.
+  @Get('geocode/search')
+  async geocodeSearch(@Query('q') q?: string) {
+    const results = await this.geocodingService.search(typeof q === 'string' ? q : '');
+    return { results };
+  }
 
   @Post('transcribe')
   @UseGuards(AiUsageGuard)

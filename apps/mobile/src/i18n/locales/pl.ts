@@ -1793,6 +1793,8 @@ export default {
     removeLocation: 'Usuń lokalizację',
     myLocation: 'Moja lokalizacja',
     tapToPlace: 'Dotknij mapy, aby ustawić pinezkę',
+    searchPlaceholder: 'Szukaj adresu lub miejsca',
+    searchNoResults: 'Brak wyników',
     pickerTitle: 'Lokalizacja wydatku',
   },
   map: {

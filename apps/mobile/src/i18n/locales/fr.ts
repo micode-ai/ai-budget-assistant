@@ -1790,6 +1790,8 @@ export default {
     removeLocation: 'Supprimer la localisation',
     myLocation: 'Ma position',
     tapToPlace: 'Touchez la carte pour placer le repère',
+    searchPlaceholder: 'Rechercher une adresse ou un lieu',
+    searchNoResults: 'Aucun résultat',
     pickerTitle: 'Localisation de la dépense',
   },
   map: {

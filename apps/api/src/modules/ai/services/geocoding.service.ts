@@ -1,11 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { PrismaService } from '../../../database/prisma.service';
+import { CacheService } from '../../../common/cache/cache.service';
 
 export interface GeocodeResult {
   lat: number;
   lng: number;
   displayName: string | null;
 }
+
+export interface GeocodeSearchResult {
+  lat: number;
+  lng: number;
+  name: string;
+}
+
+const SEARCH_CACHE_TTL_S = 3600;
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 // Nominatim usage policy requires an identifying User-Agent.
@@ -55,7 +64,37 @@ export class GeocodingService {
   private lastRequestAt = 0;
   private chain: Promise<unknown> = Promise.resolve();
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly cache?: CacheService,
+  ) {}
+
+  /**
+   * Forward-geocode a free-text query into up to 5 candidate places (for the
+   * expense location-picker search box). Fail-silent: any failure / too-short
+   * query returns []. Results (incl. an empty "no matches" answer) are cached in
+   * Redis (the geocode_cache table holds one result per key, so it can't store a
+   * list); transient errors are NOT cached.
+   */
+  async search(query: string): Promise<GeocodeSearchResult[]> {
+    const q = (query || '').replace(/\s+/g, ' ').trim();
+    if (q.length < 3) return [];
+    const key = `geo:search:${q.toLowerCase()}`;
+    try {
+      if (this.cache) {
+        const cached = await this.cache.get<GeocodeSearchResult[]>(key);
+        if (cached) return cached;
+      }
+      const url = `${NOMINATIM_URL}?format=json&limit=5&q=${encodeURIComponent(q)}`;
+      const results = await this.throttled(() => this.fetchNominatimList(url, q));
+      if (results === 'error') return []; // transient — retryable, do not cache
+      if (this.cache) await this.cache.set(key, results, SEARCH_CACHE_TTL_S);
+      return results;
+    } catch (e) {
+      this.logger.warn(`geocode search failed for "${q}": ${e}`);
+      return [];
+    }
+  }
 
   /**
    * Geocode a free-text address. Fail-silent by design: any failure returns
@@ -191,6 +230,34 @@ export class GeocodingService {
       return { lat, lng, displayName: body[0].display_name ?? null };
     } catch (e) {
       this.logger.warn(`Nominatim request failed for "${label}": ${e}`);
+      return 'error';
+    }
+  }
+
+  /** Multi-result variant for search(). [] = no matches (cacheable); 'error' = transient. */
+  private async fetchNominatimList(url: string, label: string): Promise<GeocodeSearchResult[] | 'error'> {
+    try {
+      const res = await fetch(url, {
+        headers: { 'User-Agent': USER_AGENT },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
+      if (!res.ok) {
+        this.logger.warn(`Nominatim returned ${res.status} for "${label}"`);
+        return 'error';
+      }
+      const body = (await res.json()) as Array<{ lat: string; lon: string; display_name?: string }>;
+      if (!Array.isArray(body)) return 'error';
+      const out: GeocodeSearchResult[] = [];
+      for (const r of body) {
+        const lat = Number(r.lat);
+        const lng = Number(r.lon);
+        if (Number.isFinite(lat) && Number.isFinite(lng)) {
+          out.push({ lat, lng, name: r.display_name ?? '' });
+        }
+      }
+      return out;
+    } catch (e) {
+      this.logger.warn(`Nominatim search failed for "${label}": ${e}`);
       return 'error';
     }
   }

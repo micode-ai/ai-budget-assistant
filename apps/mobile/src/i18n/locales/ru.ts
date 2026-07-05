@@ -1793,6 +1793,8 @@ export default {
     removeLocation: 'Удалить локацию',
     myLocation: 'Моё местоположение',
     tapToPlace: 'Коснитесь карты, чтобы поставить метку',
+    searchPlaceholder: 'Поиск адреса или места',
+    searchNoResults: 'Ничего не найдено',
     pickerTitle: 'Локация расхода',
   },
   map: {
