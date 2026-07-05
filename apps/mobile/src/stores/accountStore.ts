@@ -192,6 +192,13 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
             ? savedAccountId
             : localAccounts[0]?.id || null,
       });
+
+      // Local-first paint above is instant; now reconcile with the server in the
+      // background so a membership added server-side (e.g. accepting an invitation,
+      // possibly on another device) appears without a manual sync — the previous
+      // behaviour only re-fetched when there were zero local accounts, so a newly
+      // joined account never showed up on restart.
+      void get().loadAccountsFromServer().catch(() => {});
     } catch (error) {
       console.error('Failed to load accounts from SQLite:', error);
     }

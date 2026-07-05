@@ -357,14 +357,14 @@ const createStyles = (theme: Theme) => ({
     flex: 1,
     backgroundColor: theme.colors.overlay,
     justifyContent: 'flex-start' as const,
-    paddingTop: 100,
+    paddingTop: 60,
   },
   dropdown: {
     marginHorizontal: theme.spacing[5],
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     paddingVertical: theme.spacing[4],
-    maxHeight: 440,
+    maxHeight: '82%' as const,
     ...theme.shadows.lg,
   },
   dropdownTitle: {
@@ -457,7 +457,7 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.primary,
   },
   accountList: {
-    maxHeight: 180,
+    maxHeight: 340,
   },
   currencySection: {
     paddingHorizontal: theme.spacing[5],
