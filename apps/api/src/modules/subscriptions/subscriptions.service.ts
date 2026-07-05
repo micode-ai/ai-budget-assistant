@@ -71,15 +71,28 @@ export class SubscriptionsService {
   // ---- Subscription CRUD ----
 
   async getOrCreateSubscription(userId: string): Promise<SubscriptionRecord> {
-    return this.prisma.subscription.upsert({
-      where: { userId },
-      create: {
-        userId,
-        tier: 'free',
-        status: 'active',
-      },
-      update: {},
-    });
+    try {
+      return await this.prisma.subscription.upsert({
+        where: { userId },
+        create: {
+          userId,
+          tier: 'free',
+          status: 'active',
+        },
+        update: {},
+      });
+    } catch (e: any) {
+      // Prisma's upsert is NOT atomic under concurrency (ABA-314): two first-time
+      // requests for the same user can both attempt the INSERT, and one loses on
+      // the unique userId with P2002. The row exists now — re-fetch it instead of
+      // crashing (this is a hot path: getCurrent/getUsageStats/limit checks all
+      // funnel through here, so a new user's parallel startup requests race).
+      if (e?.code === 'P2002') {
+        const existing = await this.prisma.subscription.findUnique({ where: { userId } });
+        if (existing) return existing;
+      }
+      throw e;
+    }
   }
 
   async getCurrent(userId: string) {

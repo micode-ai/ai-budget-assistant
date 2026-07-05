@@ -263,3 +263,41 @@ describe('SubscriptionsService — getPlans', () => {
     expect(plans.currency).toBe('USD');
   });
 });
+
+// ── getOrCreateSubscription (upsert race, ABA-314) ────────────────────────────
+
+describe('SubscriptionsService — getOrCreateSubscription (upsert race)', () => {
+  const p2002 = Object.assign(new Error('Unique constraint failed on the fields: (userId)'), {
+    code: 'P2002',
+  });
+
+  it('re-fetches instead of crashing when a concurrent request already created the row (P2002)', async () => {
+    const existing = { id: 'sub-x', userId: 'u1', tier: 'free', status: 'active' };
+    const { service, prisma } = makeService({
+      subscription: {
+        upsert: jest.fn().mockRejectedValue(p2002),
+        findUnique: jest.fn().mockResolvedValue(existing),
+      },
+    });
+    await expect(service.getOrCreateSubscription('u1')).resolves.toEqual(existing);
+    expect(prisma.subscription.findUnique).toHaveBeenCalledWith({ where: { userId: 'u1' } });
+  });
+
+  it('rethrows P2002 if the row still cannot be found afterwards', async () => {
+    const { service } = makeService({
+      subscription: {
+        upsert: jest.fn().mockRejectedValue(p2002),
+        findUnique: jest.fn().mockResolvedValue(null),
+      },
+    });
+    await expect(service.getOrCreateSubscription('u1')).rejects.toBe(p2002);
+  });
+
+  it('rethrows non-P2002 errors as-is', async () => {
+    const other = Object.assign(new Error('db down'), { code: 'P1001' });
+    const { service } = makeService({
+      subscription: { upsert: jest.fn().mockRejectedValue(other) },
+    });
+    await expect(service.getOrCreateSubscription('u1')).rejects.toBe(other);
+  });
+});
