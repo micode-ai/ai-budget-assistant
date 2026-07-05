@@ -396,10 +396,21 @@ export class ImportBankService {
     const source = `bank:${dto.bankId ?? 'universal'}`;
     const merchantRulesMap = await this.merchantRules.getRulesMap(accountId);
 
+    // Pre-filter duplicate externalRefs BEFORE opening the transaction (ABA-313).
+    // Postgres aborts the ENTIRE transaction on the first unique-constraint
+    // violation (`account_id, external_ref`); every subsequent statement then
+    // fails with 25P02 ("current transaction is aborted"). So catching P2002 and
+    // continuing inside the tx crashes the whole import. Removing duplicates up
+    // front — both already-in-DB and repeats within this batch — means the
+    // constraint never fires. (Covers the gaps the preview's alreadyImported flag
+    // misses: intra-file repeats, and rows imported between preview and commit.)
+    const rowsToInsert = await this.dropDuplicateRows(accountId, toImport);
+    skippedDuplicates += toImport.length - rowsToInsert.length;
+
     await this.prisma.$transaction(async (tx) => {
       batchId = await this.importBatches.createBatch(tx as any, { accountId, userId, source });
 
-      for (const row of toImport) {
+      for (const row of rowsToInsert) {
         try {
           if (row.kind === 'expense') {
             // Apply user's learned merchant rule (higher priority than parser-suggested category)
@@ -473,10 +484,11 @@ export class ImportBankService {
             createdExchanges++;
           }
         } catch (err: any) {
-          if (err?.code === 'P2002') {
-            skippedDuplicates++;
-            continue;
-          }
+          // A per-row failure poisons the whole Postgres transaction (25P02), so
+          // we cannot skip-and-continue — abort and roll back the import (no
+          // partial commit). Duplicates were already removed above, so a P2002
+          // here is only a rare concurrent double-commit race; the client can
+          // safely retry (the pre-filter will then skip the now-existing row).
           throw err;
         }
       }
@@ -511,6 +523,44 @@ export class ImportBankService {
       savedMappingId,
       batchId,
     };
+  }
+
+  /**
+   * Remove rows whose externalRef already exists in this account (expense /
+   * income / currency exchange) or repeats earlier in the same batch, so the
+   * unique `(account_id, external_ref)` constraint can't fire inside the commit
+   * transaction (which Postgres would otherwise abort wholesale — ABA-313). Rows
+   * without an externalRef are always kept (nothing to collide on).
+   */
+  private async dropDuplicateRows<T extends { externalRef?: string | null }>(
+    accountId: string,
+    rows: T[],
+  ): Promise<T[]> {
+    const refs = Array.from(
+      new Set(rows.map((r) => r.externalRef).filter((r): r is string => !!r)),
+    );
+    const existing = new Set<string>();
+    if (refs.length) {
+      const [exExp, exInc, exFx] = await Promise.all([
+        this.prisma.expense.findMany({ where: { accountId, externalRef: { in: refs } }, select: { externalRef: true } }),
+        this.prisma.income.findMany({ where: { accountId, externalRef: { in: refs } }, select: { externalRef: true } }),
+        this.prisma.currencyExchange.findMany({ where: { accountId, externalRef: { in: refs } }, select: { externalRef: true } }),
+      ]);
+      for (const e of [...exExp, ...exInc, ...exFx]) {
+        if (e.externalRef) existing.add(e.externalRef);
+      }
+    }
+    const seen = new Set<string>();
+    const out: T[] = [];
+    for (const row of rows) {
+      const ref = row.externalRef;
+      if (ref) {
+        if (existing.has(ref) || seen.has(ref)) continue;
+        seen.add(ref);
+      }
+      out.push(row);
+    }
+    return out;
   }
 
   private async resolveCategoryId(

@@ -5,6 +5,7 @@ import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
+import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 
 const MBANK_CSV = [
   '#Data operacji;#Data księgowania;#Opis operacji;#Tytuł;#Nadawca/Odbiorca;#Numer konta;#Kwota;#Saldo po operacji',
@@ -29,12 +30,14 @@ describe('ImportBankService.parsePreview', () => {
     finalizeBatch: jest.fn().mockResolvedValue(undefined),
   };
   const anomaly = { checkExpenseBatch: jest.fn().mockResolvedValue(undefined) };
+  const merchantRules = { getRulesMap: jest.fn().mockResolvedValue(new Map<string, string>()) };
 
   beforeEach(async () => {
     jest.clearAllMocks();
     prisma.expense.findMany.mockResolvedValue([]);
     prisma.income.findMany.mockResolvedValue([]);
     prisma.currencyExchange.findMany.mockResolvedValue([]);
+    merchantRules.getRulesMap.mockResolvedValue(new Map<string, string>());
     const mod = await Test.createTestingModule({
       providers: [
         ImportBankService,
@@ -43,6 +46,7 @@ describe('ImportBankService.parsePreview', () => {
         { provide: MappingService, useValue: mapping },
         { provide: TelegramService, useValue: telegram },
         { provide: AnomalyService, useValue: anomaly },
+        { provide: MerchantRulesService, useValue: merchantRules },
       ],
     }).compile();
     service = mod.get(ImportBankService);
@@ -128,5 +132,45 @@ describe('ImportBankService.parsePreview', () => {
     expect(res.ok).toBe(true);
     expect(telegram.sendMessage).toHaveBeenCalledTimes(1);
     expect(telegram.sendDocument).not.toHaveBeenCalled();
+  });
+
+  // Regression (ABA-313): a duplicate externalRef inside a Postgres $transaction
+  // aborts the whole transaction (25P02) and crashed the import. The fix removes
+  // duplicates — both already-in-DB and intra-batch repeats — BEFORE the tx.
+  it('commit pre-filters duplicate externalRefs (DB + intra-batch) so the constraint never fires', async () => {
+    // 'bank:x:exists' is already in the DB; the other findMany calls return none.
+    prisma.expense.findMany.mockImplementation((args: any) =>
+      Promise.resolve((args.where.externalRef?.in ?? []).includes('bank:x:exists') ? [{ externalRef: 'bank:x:exists' }] : []),
+    );
+    const txExpenseCreate = jest.fn().mockResolvedValue({ id: 'e-new' });
+    const tx = {
+      expense: { create: txExpenseCreate },
+      income: { create: jest.fn() },
+      currencyExchange: { create: jest.fn() },
+    };
+    (prisma as any).$transaction = jest.fn(async (cb: any) => cb(tx));
+
+    const row = (externalRef: string, amount: number) => ({
+      kind: 'expense' as const,
+      externalRef,
+      amount,
+      currencyCode: 'PLN',
+      description: 'x',
+      date: '2026-01-01',
+      alreadyImported: false,
+    });
+    const rows = [
+      row('bank:x:exists', 10), // already in DB -> skip
+      row('bank:x:dup', 20),    // first occurrence -> insert
+      row('bank:x:dup', 20),    // intra-batch repeat -> skip
+      row('bank:x:new', 30),    // unique -> insert
+    ];
+
+    const res = await service.commit('acc-1', 'user-1', { rows } as any);
+
+    // Only the two genuinely-new refs get inserted; no throw (the crash regression).
+    expect(txExpenseCreate).toHaveBeenCalledTimes(2);
+    expect(res.createdExpenses).toBe(2);
+    expect(res.skippedDuplicates).toBe(2);
   });
 });
