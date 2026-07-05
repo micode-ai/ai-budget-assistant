@@ -8,6 +8,29 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.11.0 — 2026-07-05
+
+**Group Trip Wallet**
+- **Split costs on a trip** — a new "Trip" account type for travel groups. Add shared expenses, choose who actually paid and how to split each one (equally, exact amounts, percentages, or shares), and the app tracks who owes whom. When the trip ends, a Settle Up screen shows the minimum set of payments to square up, with one-tap Revolut / PayPal / BLIK payment links; the person who receives a payment confirms it. Invite friends with a link, then archive the trip when everyone is settled (ABA-305).
+
+**Personal Inflation Index**
+- **Track your own inflation** — the Analytics tab now shows how the prices you actually pay have changed over time, computed from your scanned receipts (no AI cost). See per-product price history, compare stores cheapest-first, and rename or merge products. Pick a 3 / 6 / 12-month or all-time period (ABA-307).
+- **Cleaner product names & accuracy** — an optional "Re-analyze with AI" button regenerates tidy product names from messy receipt text; you can also ignore a product or delete individual price points to keep one-off discounts out of the index (ABA-307, ABA-308).
+
+**Budgets**
+- **Per-category budget alerts** — budgets with category limits now warn you when an individual category crosses 50%, 80% or 100% of its allocation, not just when the overall budget does (ABA-306).
+
+**Shared accounts**
+- **Invite existing users by search** — invite someone to a shared account by searching their name or email instead of typing the exact address; they get a "My Invitations" tab and a push notification to accept or decline (ABA-309).
+
+**Expense map & location**
+- **See where you spent** — expenses can now appear on a map. Scanned receipts are placed automatically from the store address printed on the receipt; you can also attach your current location to expenses you add on the spot (optional, off by default — enable in Settings → Data & Reports), or drop and adjust the pin by hand. The Expenses tab has a new List / Map toggle that respects your current period, category and merchant filters, and each pin opens the expense (ABA-310).
+- **Trip map** — trip accounts get a map of where the group's money went (ABA-310).
+- **Reliable store lookup** — receipt store addresses now resolve correctly even on receipts that print both the store address and the seller company's head office (common in Poland); the app geocodes the store address only (ABA-311).
+- Fix: map pins now show their marker icon (previously a pin could appear without an image).
+
+---
+
 ## 1.10.0 — 2026-06-30
 
 **Purchase Requests**
