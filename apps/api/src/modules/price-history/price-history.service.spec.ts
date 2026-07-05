@@ -61,4 +61,29 @@ describe('PriceHistoryService', () => {
       expect(result.productCount).toBe(2);
     });
   });
+
+  describe('backfillWithAi query (ABA-315)', () => {
+    const OLD = process.env.OPENAI_API_KEY;
+    afterEach(() => {
+      if (OLD === undefined) delete process.env.OPENAI_API_KEY;
+      else process.env.OPENAI_API_KEY = OLD;
+    });
+
+    it('filters ExpenseItem.description with { not: "" } — { not: null } is invalid on the non-nullable String', async () => {
+      process.env.OPENAI_API_KEY = 'sk-test';
+      const findMany = jest.fn().mockResolvedValue([]); // no items -> early return, no OpenAI call
+      const prisma: any = {
+        productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+        expenseItem: { findMany },
+      };
+      const svc = new PriceHistoryService(prisma, null as any);
+
+      const res = await svc.backfillWithAi('acc-1');
+
+      expect(res).toEqual({ updatedCount: 0 });
+      expect(findMany).toHaveBeenCalledTimes(1);
+      const where = findMany.mock.calls[0][0].where;
+      expect(where.description).toEqual({ not: '' });
+    });
+  });
 });

@@ -181,7 +181,11 @@ export class PriceHistoryService {
       await (this.prisma as any).expenseItem.findMany({
         where: {
           expense: { accountId, isDeleted: false },
-          description: { not: null },
+          // ExpenseItem.description is a required (non-nullable) String, so
+          // `{ not: null }` is a Prisma validation error ("Argument `not` must
+          // not be null") — it crashed backfill-ai (ABA-315). Skip empty
+          // descriptions (nothing usable to generate a canonical name from).
+          description: { not: '' },
           isDeleted: false,
           // Skip any item whose canonical_name is the key of a user alias
           ...(userAliasedNames.length > 0
