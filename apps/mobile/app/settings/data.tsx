@@ -16,6 +16,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { File } from 'expo-file-system';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useWalletStore } from '@/stores/walletStore';
@@ -60,6 +61,10 @@ export default function DataSettingsScreen() {
     setIsSyncing(true);
     try {
       await Promise.allSettled([
+        // Refresh the account list from the server too — otherwise an account
+        // joined server-side (e.g. accepting an invitation) has no manual way to
+        // appear on the current build (the list is otherwise local-first).
+        useAccountStore.getState().loadAccountsFromServer(),
         useExpenseStore.getState().loadExpenses({ force: true }),
         useIncomeStore.getState().loadIncomes({ force: true }),
         useCategoryStore.getState().loadCategories(),
