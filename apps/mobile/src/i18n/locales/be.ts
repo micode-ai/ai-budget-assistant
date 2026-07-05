@@ -605,7 +605,7 @@ export default {
     codeRequired: 'Увядзіце код запрашэння',
     join: 'Далучыцца',
     joinedSuccess: 'Вы паспяхова далучыліся!',
-    inviteBySearch: 'Знайсці карыстальніка',
+    inviteBySearch: 'Пошук',
     searchLabel: 'Пошук па імені ці email',
     searchPlaceholder: 'Увядзіце імя ці email…',
     searchNoResults: 'Карыстальнікаў не знойдзена.',

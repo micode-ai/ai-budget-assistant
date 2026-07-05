@@ -607,7 +607,7 @@ export default {
     codeRequired: 'Bitte geben Sie einen Einladungscode ein',
     join: 'Beitreten',
     joinedSuccess: 'Erfolgreich beigetreten!',
-    inviteBySearch: 'Nutzer finden',
+    inviteBySearch: 'Suche',
     searchLabel: 'Nach Name oder E-Mail suchen',
     searchPlaceholder: 'Name oder E-Mail eingeben…',
     searchNoResults: 'Keine passenden Nutzer gefunden.',

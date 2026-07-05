@@ -607,7 +607,7 @@ export default {
     codeRequired: 'Введіть код запрошення',
     join: 'Приєднатися',
     joinedSuccess: 'Ви успішно приєдналися!',
-    inviteBySearch: 'Знайти користувача',
+    inviteBySearch: 'Пошук',
     searchLabel: 'Пошук за ім\'ям або email',
     searchPlaceholder: 'Введіть ім\'я або email…',
     searchNoResults: 'Користувачів не знайдено.',
