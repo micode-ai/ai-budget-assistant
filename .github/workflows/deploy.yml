@@ -24,6 +24,16 @@ jobs:
     environment: production
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Block deploy if apps/api runtime-imports @budget/shared-utils — the API has
+      # no build step for workspace packages, so it loads the shared-utils TS barrel
+      # and the prod Node ESM runtime crash-loops on ERR_UNSUPPORTED_DIR_IMPORT
+      # (ABA-317; before that ABA-252/253 + the safe-to-spend regression).
+      - name: Guard — no runtime @budget/shared-utils import in apps/api
+        run: bash scripts/check-no-shared-utils-runtime-import.sh
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
