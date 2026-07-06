@@ -1,20 +1,33 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+/**
+ * Ops notifier for MiCode. Sends operational alerts (registrations, payments,
+ * referrals, request-a-bank) to the SEPARATE MiCode ops bot + channel
+ * (`OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID`) — NOT the user-facing
+ * assistant bot (`TELEGRAM_BOT_TOKEN`, handled by `TelegramBotService`). There
+ * is deliberately no fallback to the assistant bot: if the ops bot is not
+ * configured, ops notifications are skipped so they can never leak back to the
+ * bot end users talk to.
+ */
 @Injectable()
 export class TelegramService {
   private readonly logger = new Logger(TelegramService.name);
   private readonly botToken: string | undefined;
   private readonly chatId: string | undefined;
+  private readonly projectPrefix: string;
 
   constructor(private readonly config: ConfigService) {
-    this.botToken = this.config.get<string>('TELEGRAM_BOT_TOKEN');
-    this.chatId = this.config.get<string>('TELEGRAM_CHAT_ID');
+    this.botToken = this.config.get<string>('OPS_TELEGRAM_BOT_TOKEN');
+    this.chatId = this.config.get<string>('OPS_TELEGRAM_CHAT_ID');
+    // Optional label so a shared MiCode ops channel can tell projects apart.
+    const name = this.config.get<string>('OPS_PROJECT_NAME')?.trim();
+    this.projectPrefix = name ? `<b>[${name}]</b> ` : '';
 
     if (this.botToken && this.chatId) {
-      this.logger.log('Telegram notifications configured');
+      this.logger.log('Ops Telegram notifications configured');
     } else {
-      this.logger.warn('Telegram not configured — notifications will not be sent');
+      this.logger.warn('Ops Telegram bot not configured — ops notifications will not be sent');
     }
   }
 
@@ -31,7 +44,7 @@ export class TelegramService {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: this.chatId,
-          text,
+          text: `${this.projectPrefix}${text}`,
           parse_mode: 'HTML',
         }),
       });
@@ -60,8 +73,9 @@ export class TelegramService {
     try {
       const form = new FormData();
       form.append('chat_id', this.chatId);
-      if (caption) {
-        form.append('caption', caption.slice(0, 1024));
+      const cap = `${this.projectPrefix}${caption || ''}`.trim();
+      if (cap) {
+        form.append('caption', cap.slice(0, 1024));
         form.append('parse_mode', 'HTML');
       }
       form.append('document', new Blob([new Uint8Array(buffer)]), filename || 'document');

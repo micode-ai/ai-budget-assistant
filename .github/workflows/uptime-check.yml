@@ -64,8 +64,8 @@ jobs:
       - name: Notify Telegram on failure
         if: failure()
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_TELEGRAM_CHAT_ID }}
           LABEL: ${{ matrix.label }}
           URL: ${{ steps.probe.outputs.url }}
           CODE: ${{ steps.probe.outputs.http_code }}
@@ -78,7 +78,7 @@ jobs:
             echo "TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID secret missing — cannot alert" >&2
             exit 1
           fi
-          MESSAGE=$(printf '\xF0\x9F\x9A\xA8 *PROD %s DOWN* \xF0\x9F\x9A\xA8\n\n*URL*: `%s`\n*HTTP*: `%s`  *time*: `%ss`  *curl exit*: `%s`\n\n*Body* (first 500B):\n```\n%s\n```\n\n[GitHub run](%s)' \
+          MESSAGE=$(printf '*[AI Budget]* \xF0\x9F\x9A\xA8 *PROD %s DOWN* \xF0\x9F\x9A\xA8\n\n*URL*: `%s`\n*HTTP*: `%s`  *time*: `%ss`  *curl exit*: `%s`\n\n*Body* (first 500B):\n```\n%s\n```\n\n[GitHub run](%s)' \
             "$(echo "$LABEL" | tr '[:lower:]' '[:upper:]')" "$URL" "$CODE" "$TIME" "$CURL_EXIT" "${BODY:-(empty)}" "$RUN_URL")
           curl -sS -X POST \
             "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
