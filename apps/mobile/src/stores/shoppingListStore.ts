@@ -13,6 +13,7 @@ import {
   upsertShoppingList,
   deleteShoppingList,
   markShoppingListSynced,
+  markShoppingListPending,
 } from '@/db/shoppingListRepository';
 import type { ShoppingListLocal } from '@/db/shoppingListRepository';
 import {
@@ -126,7 +127,10 @@ export const useShoppingListStore = create<ShoppingListState>()(
 
       api.createList({ clientId: id, name }).catch((e) => {
         // Revert to pending so the next hydrate() pending-sweep retries.
-        upsertShoppingList({ ...newList, syncStatus: 'pending' }).catch(() => {});
+        // Targeted status patch (not a full-row overwrite) — the captured
+        // `newList` snapshot would resurrect the row (isDeleted:false) if
+        // the user deleted the list while the create request was in flight.
+        markShoppingListPending(id).catch(() => {});
         console.warn('Shopping list create sync deferred (offline?):', e);
       });
     },
@@ -214,7 +218,11 @@ export const useShoppingListStore = create<ShoppingListState>()(
           quantity,
         })
         .catch((e) => {
-          upsertShoppingListItem({ ...newItem, syncStatus: 'pending' }).catch(() => {});
+          // Targeted status patch (not a full-row overwrite) — an empty
+          // patch still sets sync_status='pending' + updated_at, without
+          // clobbering any edit (toggle/quantity/etc.) made while the
+          // create request was in flight.
+          updateShoppingListItem(id, {}).catch(() => {});
           console.warn('Shopping list item add sync deferred (offline?):', e);
         });
     },

@@ -17,6 +17,7 @@ import {
   deleteShoppingList,
   getPendingShoppingLists,
   markShoppingListSynced,
+  getShoppingListCreatedAtMap,
 } from '@/db/shoppingListRepository';
 import {
   getItemsForList,
@@ -24,6 +25,7 @@ import {
   softDeleteShoppingListItem,
   getPendingShoppingListItems,
   markShoppingListItemSynced,
+  getShoppingListItemCreatedAtMap,
 } from '@/db/shoppingListItemRepository';
 import type { ShoppingList, ShoppingListItem } from '@budget/shared-types';
 import { api } from '@/services/api';
@@ -194,10 +196,18 @@ async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> 
     const localItemsByList = new Map<string, ShoppingListItem[]>();
     for (const l of localLists) localItemsByList.set(l.clientId, l.items);
 
+    // clientId -> original local createdAt (ms), so the upserts below don't
+    // re-stamp createdAt on every merge for a row we've already seen.
+    const [listCreatedAtMap, itemCreatedAtMap] = await Promise.all([
+      getShoppingListCreatedAtMap(accountId),
+      getShoppingListItemCreatedAtMap(accountId),
+    ]);
+
     // 4. Merge inside a single transaction
     await withTransaction(async () => {
       for (const sl of listMerge.toUpsert) {
         const now = new Date();
+        const existingListCreatedAt = listCreatedAtMap.get(sl.clientId);
         await upsertShoppingList({
           id: sl.clientId,
           accountId,
@@ -211,7 +221,8 @@ async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> 
           isDeleted: false,
           syncStatus: 'synced',
           syncVersion: 0,
-          createdAt: now,
+          createdAt:
+            existingListCreatedAt !== undefined ? new Date(existingListCreatedAt) : now,
           updatedAt: now,
         });
 
@@ -224,6 +235,7 @@ async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> 
 
         for (const si of itemMerge.toUpsert) {
           const inow = new Date();
+          const existingItemCreatedAt = itemCreatedAtMap.get(si.clientId);
           await upsertShoppingListItem({
             id: si.clientId,
             accountId,
@@ -242,7 +254,8 @@ async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> 
             isDeleted: false,
             syncStatus: 'synced',
             syncVersion: 0,
-            createdAt: inow,
+            createdAt:
+              existingItemCreatedAt !== undefined ? new Date(existingItemCreatedAt) : inow,
             updatedAt: inow,
           });
         }
