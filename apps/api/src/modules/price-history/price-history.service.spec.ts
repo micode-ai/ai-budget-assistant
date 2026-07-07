@@ -86,4 +86,24 @@ describe('PriceHistoryService', () => {
       expect(where.description).toEqual({ not: '' });
     });
   });
+
+  describe('getBasketComparison', () => {
+    it('ranks stores by basket total', async () => {
+      const prisma: any = {
+        productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+        expenseItem: {
+          findMany: jest.fn().mockResolvedValue([
+            { id: '1', canonicalName: 'Milk', unitPrice: 3, quantity: 1, totalPrice: 3, expense: { date: new Date('2026-07-01'), merchant: 'Biedronka', currencyCode: 'PLN' } },
+            { id: '2', canonicalName: 'Milk', unitPrice: 2.5, quantity: 1, totalPrice: 2.5, expense: { date: new Date('2026-07-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+          ]),
+        },
+      };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      const res = await service.getBasketComparison('acc-1', [{ canonicalName: 'Milk', quantity: 1 }]);
+
+      expect(res.stores[0].merchantName).toBe('Lidl');
+      expect(res.stores.find((s) => s.isCheapest)?.merchantName).toBe('Lidl');
+    });
+  });
 });

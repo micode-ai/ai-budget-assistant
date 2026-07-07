@@ -2,12 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { computeBasket, BasketRow } from './basket-calculator';
 import type {
   PriceHistoryResponse,
   PriceHistoryProduct,
   PriceHistoryPeriod,
   ProductListItem,
   StoreLatestPrice,
+  BasketCompareItem,
+  BasketCompareResponse,
 } from '@budget/shared-types';
 
 type Period = PriceHistoryPeriod;
@@ -54,6 +57,11 @@ export class PriceHistoryService {
     const result: PriceHistoryResponse = { inflationIndex, period, productCount, currency, products };
     await this.cache.set(cacheKey, result, 300);
     return result;
+  }
+
+  async getBasketComparison(accountId: string, items: BasketCompareItem[]): Promise<BasketCompareResponse> {
+    const rows = await this.fetchRows(accountId); // RawItemRow[] is assignable to BasketRow
+    return computeBasket(rows as unknown as BasketRow[], items);
   }
 
   async listProducts(accountId: string): Promise<ProductListItem[]> {

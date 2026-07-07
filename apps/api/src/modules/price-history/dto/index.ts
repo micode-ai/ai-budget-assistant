@@ -1,4 +1,15 @@
-import { IsString, IsArray, ArrayNotEmpty, ArrayMaxSize, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsArray,
+  ArrayNotEmpty,
+  ArrayMaxSize,
+  IsNotEmpty,
+  IsNumber,
+  Min,
+  ArrayMinSize,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UpsertAliasDto {
   @IsString()
@@ -21,4 +32,22 @@ export class MergeProductsDto {
   @IsString()
   @IsNotEmpty()
   canonicalName: string;
+}
+
+class BasketItemDto {
+  @IsString()
+  canonicalName: string;
+
+  @IsNumber()
+  @Min(0.001)
+  quantity: number;
+}
+
+export class BasketCompareRequestDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @ValidateNested({ each: true })
+  @Type(() => BasketItemDto)
+  items: BasketItemDto[];
 }
