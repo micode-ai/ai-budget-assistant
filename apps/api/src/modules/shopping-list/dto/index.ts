@@ -1,8 +1,8 @@
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateListDto {
   @IsString() clientId: string;
-  @IsString() name: string;
+  @IsString() @IsNotEmpty() name: string;
 }
 export class UpdateListDto {
   @IsOptional() @IsString() name?: string;
@@ -12,7 +12,7 @@ export class UpdateListDto {
 export class CreateItemDto {
   @IsString() clientId: string;
   @IsOptional() @IsString() canonicalName?: string | null;
-  @IsString() rawLabel: string;
+  @IsString() @IsNotEmpty() rawLabel: string;
   @IsOptional() @IsNumber() @Min(0.001) quantity?: number;
   @IsOptional() @IsString() note?: string;
 }
