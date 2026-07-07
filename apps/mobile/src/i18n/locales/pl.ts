@@ -2196,4 +2196,7 @@ export default {
     reanalyzeSuccess: 'Zaktualizowano {{count}} produktów',
     reanalyzeConfirm: 'AI wygeneruje nowe nazwy produktów na podstawie opisów z paragonów. To może chwilę potrwać.',
   },
+  shoppingList: {
+    comparePaywall: 'Porównywanie cen koszyka między sklepami to funkcja Pro.',
+  },
 } as const;

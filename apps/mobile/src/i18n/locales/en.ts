@@ -2203,4 +2203,7 @@ export default {
     reanalyzeSuccess: 'Updated {{count}} products',
     reanalyzeConfirm: 'This will re-generate product names from your receipt descriptions using AI. This may take a moment.',
   },
+  shoppingList: {
+    comparePaywall: 'Comparing basket prices across stores is a Pro feature.',
+  },
 } as const;

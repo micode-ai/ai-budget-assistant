@@ -2192,4 +2192,7 @@ export default {
     reanalyzeSuccess: '{{count}} producten bijgewerkt',
     reanalyzeConfirm: 'AI genereert nieuwe productnamen op basis van je bonnetjesbeschrijvingen. Dit kan even duren.',
   },
+  shoppingList: {
+    comparePaywall: 'Prijzen van je boodschappenlijst vergelijken tussen winkels is een Pro-functie.',
+  },
 } as const;

@@ -2192,4 +2192,7 @@ export default {
     reanalyzeSuccess: '{{count}} Produkte aktualisiert',
     reanalyzeConfirm: 'KI generiert neue Produktnamen aus deinen Bon-Beschreibungen. Das kann einen Moment dauern.',
   },
+  shoppingList: {
+    comparePaywall: 'Der Preisvergleich zwischen Geschäften ist eine Pro-Funktion.',
+  },
 } as const;
