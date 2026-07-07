@@ -41,18 +41,37 @@ export class ShoppingListService {
       include: { items: itemsInclude },
     });
     if (lists.length === 0) {
-      const created = await this.prisma.shoppingList.create({
-        data: { accountId, clientId: `default-${accountId}`, name: 'My List', isDefault: true, createdByUserId: userId },
-        include: { items: itemsInclude },
-      });
-      lists = [created];
+      const defaultClientId = `default-${accountId}`;
+      try {
+        // upsert (not create) so an archived/soft-deleted default row is resurrected
+        // instead of colliding on the deterministic clientId; catch the concurrent
+        // P2002 race outside any transaction and re-fetch (ABA-314/ABA-316 pattern).
+        lists = [
+          await this.prisma.shoppingList.upsert({
+            where: { accountId_clientId: { accountId, clientId: defaultClientId } },
+            create: { accountId, clientId: defaultClientId, name: 'My List', isDefault: true, createdByUserId: userId },
+            update: { isArchived: false, isDeleted: false },
+            include: { items: itemsInclude },
+          }),
+        ];
+      } catch (e) {
+        if (!isP2002(e)) throw e;
+        const row = await this.prisma.shoppingList.findUnique({
+          where: { accountId_clientId: { accountId, clientId: defaultClientId } },
+          include: { items: itemsInclude },
+        });
+        if (row) lists = [row];
+      }
     }
     return lists.map(toList);
   }
 
   async createList(accountId: string, userId: string, dto: CreateShoppingListDto): Promise<ShoppingList> {
-    const existing = await this.prisma.shoppingList.findUnique({ where: { accountId_clientId: { accountId, clientId: dto.clientId } } });
-    if (existing) return toList({ ...existing, items: [] });
+    const existing = await this.prisma.shoppingList.findUnique({
+      where: { accountId_clientId: { accountId, clientId: dto.clientId } },
+      include: { items: { where: { isDeleted: false } } },
+    });
+    if (existing) return toList(existing);
     try {
       const created = await this.prisma.shoppingList.create({
         data: { accountId, clientId: dto.clientId, name: dto.name, createdByUserId: userId },
