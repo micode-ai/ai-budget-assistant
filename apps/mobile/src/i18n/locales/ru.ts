@@ -2196,4 +2196,7 @@ export default {
     reanalyzeSuccess: 'Обновлено {{count}} товаров',
     reanalyzeConfirm: 'AI сгенерирует новые названия товаров на основе описаний из чеков. Это может занять немного времени.',
   },
+  shoppingList: {
+    comparePaywall: 'Сравнение цен корзины по магазинам — функция Pro.',
+  },
 } as const;

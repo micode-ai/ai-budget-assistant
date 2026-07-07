@@ -2192,4 +2192,7 @@ export default {
     reanalyzeSuccess: '{{count}} productos actualizados',
     reanalyzeConfirm: 'La IA generará nuevos nombres de producto a partir de las descripciones de tus recibos. Puede tardar un momento.',
   },
+  shoppingList: {
+    comparePaywall: 'Comparar precios de la cesta entre tiendas es una función Pro.',
+  },
 } as const;

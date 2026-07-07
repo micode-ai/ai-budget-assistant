@@ -2164,4 +2164,7 @@ export default {
     reanalyzeSuccess: 'Абноўлена {{count}} тавараў',
     reanalyzeConfirm: 'AI згенеруе новыя назвы тавараў на аснове апісанняў з чэкаў.',
   },
+  shoppingList: {
+    comparePaywall: 'Параўнанне цэн кошыка па крамах — гэта функцыя Pro.',
+  },
 } as const;
