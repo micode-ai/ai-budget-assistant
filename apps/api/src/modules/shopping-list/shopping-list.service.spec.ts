@@ -68,11 +68,47 @@ describe('ShoppingListService', () => {
   });
 
   it('clearChecked soft-deletes checked items scoped to account+list', async () => {
+    prisma.shoppingList.findFirst.mockResolvedValue({ id: 'l1', accountId: 'a1' });
     prisma.shoppingListItem.updateMany.mockResolvedValue({ count: 3 });
     const res = await service.clearChecked('a1', 'l1');
     expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ accountId: 'a1', shoppingListId: 'l1', isChecked: true, isDeleted: false }) }),
     );
     expect(res.cleared).toBe(3);
+  });
+
+  it('clearChecked returns zero without touching items when the list cannot be resolved', async () => {
+    prisma.shoppingList.findFirst.mockResolvedValue(null);
+    const res = await service.clearChecked('a1', 'missing');
+    expect(prisma.shoppingListItem.updateMany).not.toHaveBeenCalled();
+    expect(res.cleared).toBe(0);
+  });
+
+  it('updateItem resolves an item by its clientId', async () => {
+    prisma.shoppingListItem.findFirst.mockResolvedValue({ id: 'srv-item', accountId: 'a1' });
+    prisma.shoppingListItem.update.mockResolvedValue({
+      id: 'srv-item', shoppingListId: 'l1', clientId: 'client-item', canonicalName: null,
+      rawLabel: 'Milk', quantity: 2, note: null, isChecked: true, addedByUserId: 'u1', sortOrder: 0,
+    });
+    const item = await service.updateItem('a1', 'client-item', { isChecked: true, quantity: 2 } as any);
+    expect(prisma.shoppingListItem.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ OR: [{ id: 'client-item' }, { clientId: 'client-item' }] }) }),
+    );
+    expect(prisma.shoppingListItem.update).toHaveBeenCalledWith(expect.objectContaining({ where: { id: 'srv-item' } }));
+    expect(item.id).toBe('srv-item');
+  });
+
+  it('addItem resolves the parent list by its clientId', async () => {
+    prisma.shoppingList.findFirst.mockResolvedValue({ id: 'srv-list', accountId: 'a1' });
+    prisma.shoppingListItem.findUnique.mockResolvedValue(null);
+    prisma.shoppingListItem.create.mockImplementation(({ data }: any) => Promise.resolve({
+      id: 'i1', shoppingListId: data.shoppingListId, clientId: data.clientId, canonicalName: null,
+      rawLabel: data.rawLabel, quantity: data.quantity, note: null, isChecked: false, addedByUserId: 'u1', sortOrder: 0,
+    }));
+    const item = await service.addItem('a1', 'u1', 'client-list', { clientId: 'c1', rawLabel: 'Milk' });
+    expect(prisma.shoppingList.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ OR: [{ id: 'client-list' }, { clientId: 'client-list' }] }) }),
+    );
+    expect(item.shoppingListId).toBe('srv-list');
   });
 });
