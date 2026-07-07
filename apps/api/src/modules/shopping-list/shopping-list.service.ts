@@ -87,11 +87,23 @@ export class ShoppingListService {
     }
   }
 
+  private async resolveList(accountId: string, idOrClientId: string) {
+    return this.prisma.shoppingList.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+    });
+  }
+
+  private async resolveItem(accountId: string, idOrClientId: string) {
+    return this.prisma.shoppingListItem.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+    });
+  }
+
   async updateList(accountId: string, id: string, dto: UpdateShoppingListDto): Promise<ShoppingList> {
-    const list = await this.prisma.shoppingList.findFirst({ where: { id, accountId, isDeleted: false } });
+    const list = await this.resolveList(accountId, id);
     if (!list) throw new NotFoundException('List not found');
     const updated = await this.prisma.shoppingList.update({
-      where: { id },
+      where: { id: list.id },
       data: { name: dto.name, isArchived: dto.isArchived, sortOrder: dto.sortOrder, syncVersion: { increment: 1 } },
       include: { items: { where: { isDeleted: false } } },
     });
@@ -99,16 +111,16 @@ export class ShoppingListService {
   }
 
   async deleteList(accountId: string, id: string): Promise<void> {
-    const list = await this.prisma.shoppingList.findFirst({ where: { id, accountId, isDeleted: false } });
+    const list = await this.resolveList(accountId, id);
     if (!list) throw new NotFoundException('List not found');
     await this.prisma.$transaction([
-      this.prisma.shoppingList.update({ where: { id }, data: { isDeleted: true, syncVersion: { increment: 1 } } }),
-      this.prisma.shoppingListItem.updateMany({ where: { accountId, shoppingListId: id, isDeleted: false }, data: { isDeleted: true, syncVersion: { increment: 1 } } }),
+      this.prisma.shoppingList.update({ where: { id: list.id }, data: { isDeleted: true, syncVersion: { increment: 1 } } }),
+      this.prisma.shoppingListItem.updateMany({ where: { accountId, shoppingListId: list.id, isDeleted: false }, data: { isDeleted: true, syncVersion: { increment: 1 } } }),
     ]);
   }
 
   async addItem(accountId: string, userId: string, listId: string, dto: CreateShoppingListItemDto): Promise<ShoppingListItem> {
-    const list = await this.prisma.shoppingList.findFirst({ where: { id: listId, accountId, isDeleted: false } });
+    const list = await this.resolveList(accountId, listId);
     if (!list) throw new NotFoundException('List not found');
     const existing = await this.prisma.shoppingListItem.findUnique({ where: { accountId_clientId: { accountId, clientId: dto.clientId } } });
     if (existing) {
@@ -121,7 +133,7 @@ export class ShoppingListService {
     try {
       const created = await this.prisma.shoppingListItem.create({
         data: {
-          accountId, shoppingListId: listId, clientId: dto.clientId,
+          accountId, shoppingListId: list.id, clientId: dto.clientId,
           canonicalName: dto.canonicalName ?? null, rawLabel: dto.rawLabel,
           quantity: dto.quantity ?? 1, note: dto.note ?? null, addedByUserId: userId,
         },
@@ -137,10 +149,10 @@ export class ShoppingListService {
   }
 
   async updateItem(accountId: string, itemId: string, dto: UpdateShoppingListItemDto): Promise<ShoppingListItem> {
-    const item = await this.prisma.shoppingListItem.findFirst({ where: { id: itemId, accountId, isDeleted: false } });
+    const item = await this.resolveItem(accountId, itemId);
     if (!item) throw new NotFoundException('Item not found');
     const updated = await this.prisma.shoppingListItem.update({
-      where: { id: itemId },
+      where: { id: item.id },
       data: {
         isChecked: dto.isChecked, quantity: dto.quantity, rawLabel: dto.rawLabel,
         note: dto.note, sortOrder: dto.sortOrder, syncVersion: { increment: 1 },
@@ -150,14 +162,16 @@ export class ShoppingListService {
   }
 
   async deleteItem(accountId: string, itemId: string): Promise<void> {
-    const item = await this.prisma.shoppingListItem.findFirst({ where: { id: itemId, accountId, isDeleted: false } });
+    const item = await this.resolveItem(accountId, itemId);
     if (!item) throw new NotFoundException('Item not found');
-    await this.prisma.shoppingListItem.update({ where: { id: itemId }, data: { isDeleted: true, syncVersion: { increment: 1 } } });
+    await this.prisma.shoppingListItem.update({ where: { id: item.id }, data: { isDeleted: true, syncVersion: { increment: 1 } } });
   }
 
   async clearChecked(accountId: string, listId: string): Promise<{ cleared: number }> {
+    const list = await this.resolveList(accountId, listId);
+    if (!list) return { cleared: 0 };
     const res = await this.prisma.shoppingListItem.updateMany({
-      where: { accountId, shoppingListId: listId, isChecked: true, isDeleted: false },
+      where: { accountId, shoppingListId: list.id, isChecked: true, isDeleted: false },
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
     return { cleared: res.count };
