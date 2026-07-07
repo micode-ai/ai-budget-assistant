@@ -1,7 +1,7 @@
 # AI Budget Assistant
 
 **AI-powered budget app for individuals and families.**
-Track expenses by voice or receipt photo, set budgets and savings goals, manage subscriptions, import bank statements, and budget together in real time.
+Track expenses by voice, receipt photo, or bank notifications, see where your money goes on a map, split trip costs, set budgets and savings goals, and budget together in real time.
 
 **[Open the app](https://app.ai-budget.pl)** · **[Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant)** · **[Website](https://ai-budget.pl)**
 
@@ -24,11 +24,14 @@ Track expenses by voice or receipt photo, set budgets and savings goals, manage 
 
 - **Voice capture** — say what you spent, AI logs it instantly via Whisper
 - **Receipt scanning** — photograph a receipt, AI extracts amount, merchant, and category
+- **Expense map** — see where your money goes on a map; scanned receipts are placed automatically from the store address on the receipt
 - **Bank notification capture** — Android intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials)
 - **Bank import** — Wise, mBank, PKO BP, Revolut, Erste, Alior, universal CSV/PDF
 - **AI chat** — ask financial questions or give commands in natural language (GPT-4)
-- **Shared accounts** — family budgeting with owner/editor/viewer roles, activity feed, group purchase voting
-- **Budgets & goals** — category budgets with history, savings goals with contribution log
+- **Shared accounts** — family budgeting with owner/editor/viewer roles, activity feed, group purchase voting, invite by name or email
+- **Group Trip Wallet** — shared accounts for travel: split costs (equally, exact, %, shares), track who owes whom, settle up with Revolut / PayPal / BLIK links
+- **Budgets & goals** — category budgets with history and per-category alerts, savings goals with contribution log
+- **Personal inflation index** — track how the prices you actually pay change over time, computed from your receipts (no AI cost)
 - **Subscription manager** — track recurring charges with renewal reminders
 - **Bots** — Telegram, WhatsApp, Slack: log expenses and chat with AI without opening the app
 - **Safe-to-spend** — daily spendable amount calculated from balance minus upcoming obligations
