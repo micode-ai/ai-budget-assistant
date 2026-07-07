@@ -88,4 +88,16 @@ describe('computeBasket', () => {
     const res = computeBasket([row('Milk', 'Lidl', 2.5)], [], NOW);
     expect(res.stores).toEqual([]);
   });
+
+  it('aggregates duplicate canonicalNames into one line (sums quantity, counts once)', () => {
+    const rows = [row('Milk', 'Lidl', 2.0)];
+    const res = computeBasket(rows, [
+      { canonicalName: 'Milk', quantity: 1 },
+      { canonicalName: 'Milk', quantity: 2 },
+    ], NOW);
+    expect(res.stores[0].totalItems).toBe(1);
+    expect(res.stores[0].coveredItems).toBe(1);
+    expect(res.stores[0].estimatedTotal).toBe(6.0); // 2.0 * (1 + 2)
+    expect(res.perItemCheapest).toHaveLength(1);
+  });
 });

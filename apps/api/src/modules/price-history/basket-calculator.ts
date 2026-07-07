@@ -13,22 +13,27 @@ const PARTIAL_COVERAGE = 0.8;
 const DAY_MS = 86_400_000;
 
 export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], now: Date = new Date()): BasketCompareResponse {
-  const names = new Set(basket.map((b) => b.canonicalName));
+  // Aggregate duplicate canonicalNames (a list can hold two rows resolving to the same
+  // product): sum quantities and treat as one line so coverage/total/estimate aren't double-counted.
+  const aggregated = new Map<string, number>();
+  for (const b of basket) aggregated.set(b.canonicalName, (aggregated.get(b.canonicalName) ?? 0) + b.quantity);
+  const items: BasketCompareItem[] = [...aggregated.entries()].map(([canonicalName, quantity]) => ({ canonicalName, quantity }));
+
+  const names = new Set(items.map((b) => b.canonicalName));
   const relevant = rows.filter((r) => names.has(r.resolvedName));
 
-  if (basket.length === 0 || relevant.length === 0) {
+  if (items.length === 0 || relevant.length === 0) {
     return {
       currency: majorityCurrency(relevant),
       stores: [],
-      perItemCheapest: basket.map((b) => ({ canonicalName: b.canonicalName, cheapestStore: null, price: null })),
-      missingEverywhere: basket.map((b) => b.canonicalName),
+      perItemCheapest: items.map((b) => ({ canonicalName: b.canonicalName, cheapestStore: null, price: null })),
+      missingEverywhere: items.map((b) => b.canonicalName),
     };
   }
 
   const currency = majorityCurrency(relevant);
   const filtered = relevant.filter((r) => r.currency === currency);
 
-  // latest price per (merchant -> product)
   const byStore = new Map<string, Map<string, { price: number; date: Date }>>();
   for (const r of filtered) {
     const store = byStore.get(r.merchant) ?? new Map<string, { price: number; date: Date }>();
@@ -37,8 +42,8 @@ export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], no
     byStore.set(r.merchant, store);
   }
 
-  const qtyByName = new Map(basket.map((b) => [b.canonicalName, b.quantity]));
-  const totalItems = basket.length;
+  const qtyByName = new Map(items.map((b) => [b.canonicalName, b.quantity]));
+  const totalItems = items.length;
   const staleThreshold = new Date(now.getTime() - STALE_DAYS * DAY_MS);
 
   const stores: BasketStoreResult[] = [];
@@ -47,7 +52,7 @@ export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], no
     let covered = 0;
     let hasStale = false;
     const missingItems: string[] = [];
-    for (const b of basket) {
+    for (const b of items) {
       const p = products.get(b.canonicalName);
       if (!p) { missingItems.push(b.canonicalName); continue; }
       covered += 1;
@@ -75,7 +80,7 @@ export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], no
     best.isCheapest = true;
   }
 
-  const perItemCheapest: BasketPerItemCheapest[] = basket.map((b) => {
+  const perItemCheapest: BasketPerItemCheapest[] = items.map((b) => {
     let cheapestStore: string | null = null;
     let price: number | null = null;
     for (const [merchant, products] of byStore.entries()) {

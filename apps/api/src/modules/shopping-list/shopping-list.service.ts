@@ -111,7 +111,13 @@ export class ShoppingListService {
     const list = await this.prisma.shoppingList.findFirst({ where: { id: listId, accountId, isDeleted: false } });
     if (!list) throw new NotFoundException('List not found');
     const existing = await this.prisma.shoppingListItem.findUnique({ where: { accountId_clientId: { accountId, clientId: dto.clientId } } });
-    if (existing) return toItem(existing);
+    if (existing) {
+      if (existing.isDeleted) {
+        const revived = await this.prisma.shoppingListItem.update({ where: { id: existing.id }, data: { isDeleted: false, syncVersion: { increment: 1 } } });
+        return toItem(revived);
+      }
+      return toItem(existing);
+    }
     try {
       const created = await this.prisma.shoppingListItem.create({
         data: {

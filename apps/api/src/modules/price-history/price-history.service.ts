@@ -278,6 +278,7 @@ export class PriceHistoryService {
         totalPrice: true,
         expense: { select: { date: true, merchant: true, currencyCode: true } },
       },
+      orderBy: [{ expense: { date: 'asc' } }, { id: 'asc' }],
     });
 
     return items

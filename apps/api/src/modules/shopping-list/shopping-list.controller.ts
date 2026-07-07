@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import { ShoppingListService } from './shopping-list.service';
 import { CreateListDto, UpdateListDto, CreateItemDto, UpdateItemDto } from './dto';
@@ -56,6 +57,7 @@ export class ShoppingListController {
 
   // DELETE /shopping-list/:id
   @Delete(':id')
+  @UseGuards(new ViewerBlockGuard())
   deleteList(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.service.deleteList(req.accountId, id);
   }

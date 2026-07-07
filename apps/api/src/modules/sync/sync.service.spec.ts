@@ -189,5 +189,15 @@ describe('SyncService', () => {
       );
       expect(res.status).toBe('success');
     });
+
+    it('shopping_list_item create returns error when the parent list is not found', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue(null);
+      const res = await (service as any).processChange('a1', 'u1', {
+        entityType: 'shopping_list_item', operation: 'create', entityId: 'ci-x', clientVersion: 0, accountId: 'a1',
+        payload: { shoppingListId: 'missing', rawLabel: 'Milk', localId: 'ci-x' },
+      });
+      expect(res.status).toBe('error');
+      expect(prisma.shoppingListItem.upsert).not.toHaveBeenCalled();
+    });
   });
 });

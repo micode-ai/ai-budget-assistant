@@ -36,6 +36,7 @@ export class MergeProductsDto {
 
 class BasketItemDto {
   @IsString()
+  @IsNotEmpty()
   canonicalName: string;
 
   @IsNumber()
