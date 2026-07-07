@@ -16,6 +16,20 @@ const mockPrisma: any = {
   accountMember: {
     findFirst: jest.fn(),
   },
+  shoppingList: {
+    upsert: jest.fn(),
+    findFirst: jest.fn(),
+    findMany: jest.fn(),
+    update: jest.fn(),
+    updateMany: jest.fn(),
+  },
+  shoppingListItem: {
+    upsert: jest.fn(),
+    findFirst: jest.fn(),
+    findMany: jest.fn(),
+    update: jest.fn(),
+    updateMany: jest.fn(),
+  },
 };
 
 const mockExpensesService = {
@@ -148,6 +162,32 @@ describe('SyncService', () => {
       });
       expect(result.status).toBe('error');
       expect(prisma.tripExpenseShare.upsert).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('processChange — shopping list', () => {
+    it('processChange upserts a shopping_list on create', async () => {
+      prisma.shoppingList.upsert.mockResolvedValue({ id: 'srv-1', syncVersion: 0 });
+      const res = await (service as any).processChange('a1', 'u1', {
+        entityType: 'shopping_list', operation: 'create', entityId: 'cli-1', clientVersion: 0, accountId: 'a1',
+        payload: { name: 'Weekly', localId: 'cli-1' },
+      });
+      expect(res.status).toBe('success');
+      expect(res.serverId).toBe('srv-1');
+    });
+
+    it('processChange resolves the item parent list by clientId', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue({ id: 'srv-list', accountId: 'a1' });
+      prisma.shoppingListItem.upsert.mockResolvedValue({ id: 'srv-item', syncVersion: 0 });
+      const res = await (service as any).processChange('a1', 'u1', {
+        entityType: 'shopping_list_item', operation: 'create', entityId: 'ci-1', clientVersion: 0, accountId: 'a1',
+        payload: { shoppingListId: 'cli-list', rawLabel: 'Milk', localId: 'ci-1' },
+      });
+      expect(prisma.shoppingList.findFirst).toHaveBeenCalled();
+      expect(prisma.shoppingListItem.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({ create: expect.objectContaining({ shoppingListId: 'srv-list' }) }),
+      );
+      expect(res.status).toBe('success');
     });
   });
 });
