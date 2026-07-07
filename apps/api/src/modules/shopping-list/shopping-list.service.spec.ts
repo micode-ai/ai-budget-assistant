@@ -10,6 +10,7 @@ describe('ShoppingListService', () => {
     prisma = {
       shoppingList: { findMany: jest.fn(), create: jest.fn(), findFirst: jest.fn(), findUnique: jest.fn(), update: jest.fn(), updateMany: jest.fn(), upsert: jest.fn() },
       shoppingListItem: { findUnique: jest.fn(), create: jest.fn(), findFirst: jest.fn(), update: jest.fn(), updateMany: jest.fn() },
+      $transaction: jest.fn(),
     };
     const mod = await Test.createTestingModule({
       providers: [ShoppingListService, { provide: PrismaService, useValue: prisma }],
@@ -110,5 +111,14 @@ describe('ShoppingListService', () => {
       expect.objectContaining({ where: expect.objectContaining({ OR: [{ id: 'client-list' }, { clientId: 'client-list' }] }) }),
     );
     expect(item.shoppingListId).toBe('srv-list');
+  });
+
+  it('deleteList scopes the child item soft-delete to the resolved list id when passed a clientId', async () => {
+    prisma.shoppingList.findFirst.mockResolvedValue({ id: 'srv-list', accountId: 'a1' });
+    prisma.$transaction.mockResolvedValue([]);
+    await service.deleteList('a1', 'client-list');
+    expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ shoppingListId: 'srv-list' }) }),
+    );
   });
 });
