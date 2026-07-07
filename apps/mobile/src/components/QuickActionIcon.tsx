@@ -96,6 +96,7 @@ const ICONS: Record<string, { xml: string; w: number; h: number }> = {
   converter: { xml: CONVERTER, w: 60, h: 48 },
   subscriptions: { xml: SUBSCRIPTIONS, w: 57, h: 46 },
   purchase_request: { xml: CART, w: 44, h: 40 },
+  shopping: { xml: CART, w: 44, h: 40 },
 };
 
 const BOX = 46;

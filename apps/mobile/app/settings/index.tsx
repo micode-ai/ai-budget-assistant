@@ -108,6 +108,12 @@ export default function SettingsIndexScreen() {
       badge: pendingCount > 0 ? pendingCount : undefined,
     },
     {
+      icon: 'basket-outline',
+      label: t('shoppingList.title'),
+      description: t('shoppingList.settingsSubtitle'),
+      route: '/shopping-list',
+    },
+    {
       icon: 'wallet-outline',
       label: t('settingsNav.wallet'),
       description: t('settingsNav.walletDesc'),

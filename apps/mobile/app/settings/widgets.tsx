@@ -38,6 +38,7 @@ export default function WidgetsSettingsScreen() {
     transfers: t('dashboard.transfers'),
     subscriptions: t('subscriptionManager.title'),
     purchase_request: t('dashboard.purchaseRequest'),
+    shopping: t('dashboard.shoppingList'),
   };
 
   const widgetLabels: Record<WidgetKey, string> = {
