@@ -24,12 +24,12 @@ const CURRENCIES: Record<
   string,
   { pro_monthly: number; pro_yearly: number; biz_monthly: number; biz_yearly: number }
 > = {
-  usd: { pro_monthly: 999,   pro_yearly: 9588,   biz_monthly: 1999,  biz_yearly: 19188  },
-  eur: { pro_monthly: 899,   pro_yearly: 8628,   biz_monthly: 1799,  biz_yearly: 17268  },
-  pln: { pro_monthly: 2999,  pro_yearly: 28788,  biz_monthly: 5999,  biz_yearly: 57588  },
-  gbp: { pro_monthly: 799,   pro_yearly: 7668,   biz_monthly: 1599,  biz_yearly: 15348  },
-  uah: { pro_monthly: 19900, pro_yearly: 190900, biz_monthly: 39900, biz_yearly: 382900 },
-  rub: { pro_monthly: 49900, pro_yearly: 478900, biz_monthly: 99900, biz_yearly: 958900 },
+  usd: { pro_monthly: 499,   pro_yearly: 2999,   biz_monthly: 1999,  biz_yearly: 19188  },
+  eur: { pro_monthly: 449,   pro_yearly: 2699,   biz_monthly: 1799,  biz_yearly: 17268  },
+  pln: { pro_monthly: 1499,  pro_yearly: 8999,   biz_monthly: 5999,  biz_yearly: 57588  },
+  gbp: { pro_monthly: 399,   pro_yearly: 2399,   biz_monthly: 1599,  biz_yearly: 15348  },
+  uah: { pro_monthly: 9900,  pro_yearly: 59900,  biz_monthly: 39900, biz_yearly: 382900 },
+  rub: { pro_monthly: 24900, pro_yearly: 149900, biz_monthly: 99900, biz_yearly: 958900 },
 };
 
 async function createPrices(
