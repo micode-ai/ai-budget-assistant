@@ -19,7 +19,9 @@ export type SyncEntityType =
   | 'expense_category_split'
   | 'portfolio_holding'
   | 'investment_transaction'
-  | 'tripExpenseShare';
+  | 'tripExpenseShare'
+  | 'shopping_list'
+  | 'shopping_list_item';
 
 // ---- Per-entity payload interfaces ----
 
@@ -122,6 +124,25 @@ export interface SyncTripExpenseSharePayload {
   shareAmount: number;
 }
 
+export interface SyncShoppingListPayload {
+  localId?: string;
+  name: string;
+  isDefault?: boolean;
+  isArchived?: boolean;
+  sortOrder?: number;
+}
+
+export interface SyncShoppingListItemPayload {
+  localId?: string;
+  shoppingListId: string; // the parent list's clientId (device-local id) OR server id
+  canonicalName?: string | null;
+  rawLabel: string;
+  quantity?: number;
+  note?: string | null;
+  isChecked?: boolean;
+  sortOrder?: number;
+}
+
 export interface SyncExpenseTagPayload {
   expenseId: string;
   tagId: string;
@@ -172,6 +193,8 @@ export type SyncChange =
   | (SyncChangeBase & { entityType: 'portfolio_holding'; payload: SyncPortfolioHoldingPayload })
   | (SyncChangeBase & { entityType: 'investment_transaction'; payload: SyncInvestmentTransactionPayload })
   | (SyncChangeBase & { entityType: 'tripExpenseShare'; payload: SyncTripExpenseSharePayload })
+  | (SyncChangeBase & { entityType: 'shopping_list'; payload: SyncShoppingListPayload })
+  | (SyncChangeBase & { entityType: 'shopping_list_item'; payload: SyncShoppingListItemPayload })
   | (SyncChangeBase & { entityType: 'expense_tag'; payload: SyncExpenseTagPayload })
   | (SyncChangeBase & { entityType: 'income_tag'; payload: SyncIncomeTagPayload })
   | (SyncChangeBase & { entityType: 'project_expense'; payload: SyncProjectExpensePayload })
