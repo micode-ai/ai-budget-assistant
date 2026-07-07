@@ -181,3 +181,18 @@ export async function markShoppingListItemSynced(id: string, serverId?: string):
     [serverId ?? null, id],
   );
 }
+
+// clientId -> created_at (ms epoch), for every local item row regardless of
+// deleted/sync_status. Used by the pull-merge to preserve a known row's
+// original createdAt instead of re-stamping it on every hydrate().
+export async function getShoppingListItemCreatedAtMap(
+  accountId: string,
+): Promise<Map<string, number>> {
+  const rows = await executeSql<{ client_id: string; created_at: number }>(
+    'SELECT client_id, created_at FROM shopping_list_items WHERE account_id = ?',
+    [accountId],
+  );
+  const map = new Map<string, number>();
+  for (const row of rows) map.set(row.client_id, row.created_at);
+  return map;
+}

@@ -124,3 +124,25 @@ export async function markShoppingListSynced(id: string, serverId?: string): Pro
     [serverId ?? null, id],
   );
 }
+
+export async function markShoppingListPending(id: string): Promise<void> {
+  await executeSql(
+    `UPDATE shopping_lists SET sync_status = 'pending', updated_at = ? WHERE id = ?`,
+    [Date.now(), id],
+  );
+}
+
+// clientId -> created_at (ms epoch), for every local list row regardless of
+// deleted/archived/sync_status. Used by the pull-merge to preserve a known
+// row's original createdAt instead of re-stamping it on every hydrate().
+export async function getShoppingListCreatedAtMap(
+  accountId: string,
+): Promise<Map<string, number>> {
+  const rows = await executeSql<{ client_id: string; created_at: number }>(
+    'SELECT client_id, created_at FROM shopping_lists WHERE account_id = ?',
+    [accountId],
+  );
+  const map = new Map<string, number>();
+  for (const row of rows) map.set(row.client_id, row.created_at);
+  return map;
+}
