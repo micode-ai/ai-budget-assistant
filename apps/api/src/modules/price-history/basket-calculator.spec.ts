@@ -27,7 +27,7 @@ describe('computeBasket', () => {
     expect(res.stores[0].estimatedTotal).toBe(6.0); // latest 3.0 * qty 2
   });
 
-  it('awards the badge to best >=80% partial when no store has full coverage', () => {
+  it('does not award a badge when no store reaches 80% coverage', () => {
     const rows = [row('Milk', 'Lidl', 2.5), row('Eggs', 'Lidl', 8.0), row('Milk', 'Biedronka', 3.0)];
     const basket = [
       { canonicalName: 'Milk', quantity: 1 }, { canonicalName: 'Eggs', quantity: 1 },
@@ -36,6 +36,32 @@ describe('computeBasket', () => {
     const res = computeBasket(rows, basket, NOW);
     // no store covers all 5; Lidl covers 2/5 = 40%, Biedronka 1/5 — none >=80%, so no badge
     expect(res.stores.every((s) => !s.isCheapest)).toBe(true);
+    expect(res.stores.find((s) => s.merchantName === 'Lidl')?.missingItems.slice().sort()).toEqual(['Bread', 'Butter', 'Ham']);
+  });
+
+  it('awards the badge to an eligible >=80% store over a cheaper store below 80%', () => {
+    const rows = [
+      row('A', 'StoreA', 5), row('B', 'StoreA', 5), row('C', 'StoreA', 5), row('D', 'StoreA', 5),
+      row('A', 'StoreB', 2), row('B', 'StoreB', 3),
+    ];
+    const basket = ['A', 'B', 'C', 'D', 'E'].map((n) => ({ canonicalName: n, quantity: 1 }));
+    const res = computeBasket(rows, basket, NOW);
+    expect(res.stores.find((s) => s.isCheapest)?.merchantName).toBe('StoreA'); // 4/5 = 80%, eligible
+    expect(res.stores.find((s) => s.merchantName === 'StoreB')?.isCheapest).toBe(false); // cheaper but 2/5 < 80%
+  });
+
+  it('perItemCheapest picks the cheaper store for an item priced at multiple stores', () => {
+    const rows = [row('Milk', 'Biedronka', 3.0), row('Milk', 'Lidl', 2.5)];
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW);
+    const milk = res.perItemCheapest.find((p) => p.canonicalName === 'Milk');
+    expect(milk?.cheapestStore).toBe('Lidl');
+    expect(milk?.price).toBe(2.5);
+  });
+
+  it('does not flag a price exactly 90 days old as stale', () => {
+    const rows = [row('Milk', 'Lidl', 2.5, '2026-04-08')];
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW);
+    expect(res.stores[0].hasStale).toBe(false);
   });
 
   it('flags stale prices older than 90 days', () => {
