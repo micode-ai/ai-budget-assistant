@@ -1,264 +1,294 @@
-# Smart Shopping List + "Where's Cheaper" — Design (v1)
+# Smart Shopping List + "Where's Cheaper" — Design (full scope)
 
 - **Date:** 2026-07-07
-- **Status:** Approved (design), pending spec review
-- **Builds on:** Personal Inflation Index (ABA-307), price-history module, receipt OCR line-items, Expense Map / geocoding (ABA-310/311)
+- **Status:** Approved (design), pending spec review — **full scope, nothing deferred**
+- **Builds on:** Personal Inflation Index (ABA-307), price-history module, receipt OCR line-items, Expense Map / geocoding (ABA-310/311), offline-first sync (SyncChange), notifications + crons
 - **Tracking issue:** ABA-{N} (to be created at finish)
 
 ## Summary
 
-Turn the receipt-derived price data we already collect into a money-saving planning
-tool. The user builds a shopping list; for every store they have personally shopped at,
-we estimate the basket total from **their own historical per-product prices** and
-highlight the cheapest store. No crowd-sourced averages — the moat is that the prices are
-the user's real, receipt-verified prices, which competitors cannot reproduce without the
-same receipt corpus.
+Turn the receipt-derived price data we already collect into a full money-saving planning
+tool. The user builds shared shopping lists; for every store they have personally shopped
+at, we estimate the basket total from **their own historical per-product prices**, rank
+stores (optionally by distance), predict what they're due to restock, and alert them when a
+staple gets cheaper. The moat is that every price is the user's real, receipt-verified
+price — competitors cannot reproduce it without the same receipt corpus.
 
-The core insight that shapes the architecture: the basket-comparison engine is
-**stateless** — it takes a set of products in the request body and returns ranked stores.
-It does not depend on the persisted shopping list. This cleanly separates two concerns:
-(1) the shared, persisted shopping list, and (2) the price-comparison engine, which works
-on any set of products.
+Two architectural spines:
+1. The **basket-comparison engine is stateless** — it takes a set of products (and optional
+   coordinates) in the request body and returns ranked stores. It does not depend on the
+   persisted list. This keeps the list and the price intelligence cleanly decoupled.
+2. The **list itself is offline-first** (SQLite + sync), because a shopping list is used
+   in-store where connectivity is poor. The price *comparison* stays online (needs the full
+   corpus and is Pro-gated), but the list, suggestions cache, and check-off work offline.
 
-## Product decisions (the four forks, approved)
+## Product decisions (approved)
 
 | Decision | Choice | Rationale |
 |---|---|---|
-| **MVP core** | Shopping list + "cheapest store for my basket" | Direct savings; reuses the already-built `StoreLatestPrice` (per-store latest price, cheapest-first). |
-| **Predictive "time to rebuy"** | Phase 2 | Needs a new per-product cadence detector — a separable chunk. v1 ships only a "frequently bought" quick-add from the existing `listProducts`. |
-| **Geo / "nearby" on map** | Phase 2 | Sparse data (not every expense has geo) + needs live GPS. Separate iteration. |
-| **List persistence** | Server-only + MMKV read-cache | The list is a shared household artifact needing cross-member consistency — the same class as `purchaseRequestStore` / `familyFeedStore` / `tripStore`, all documented as "server-only, not offline-first." Full offline-first write-sync is out of scope for v1. |
-| **Monetization** | List = **free**; basket comparison = **Pro** | The list grows the habit and the receipt-data moat (free). "Where's cheapest" is the premium magic and a natural free→paid hook, mirroring Story / Fat-Finder / AI-Insights (`@RequireTier('pro')`). |
-| **Viewer role** | Viewers **can** add/check/remove list items | A shopping list is collaborative and low-risk — same reasoning as purchase-request voting being intentionally not behind `ViewerBlockGuard`. The basket-compare endpoint stays Pro-gated (tier, not role). |
+| **Scope** | Everything below, built as milestones M1–M6 in order | User directive: defer nothing. Milestones = build sequence, not feature cuts. |
+| **List persistence** | **Offline-first** (SQLite mirror + SyncChange union + sync.service handlers) | A shopping list is used in-store offline. Mirrors the expense offline-first path. |
+| **Multiple lists** | Named lists, one auto-created default per account | Households keep "weekly shop", "party", etc. Active list selected client-side (MMKV). |
+| **Restock prediction** | Per-product median-gap detector + daily reminder push | Reuses the recurring-suggestion heuristic; surfaced as a suggestions strip **and** an opt-in push. |
+| **Geo / nearby** | Basket endpoint accepts coords → `distanceKm`/`nearby`; map surface reuses `ExpenseMapView` | Store coords derived from most-recent `locationLat/Lng` per merchant; live GPS via existing `captureCurrentLocation`. |
+| **Deal alerts** | Price-drop push when a tracked staple is cheaper than its recent average | New opportunity alert (distinct from Inflation Index / anomaly `price_increase`). |
+| **Monetization** | List + suggestions + reminders = **free**; basket compare + nearby map + deal alerts = **Pro** | Free tier grows the habit and the receipt-data moat; the *comparison intelligence* is the premium hook (mirrors Story / Fat-Finder / AI-Insights `@RequireTier('pro')`). |
+| **Viewer role** | Viewers can add/check/remove list items; compare/deals are tier-gated, not role-gated | Collaborative + low-risk, same as purchase-request voting being outside `ViewerBlockGuard`. |
 
-## Goals
+If any monetization or the multiple-lists call is wrong, say so — those are the two most
+adjustable product choices.
 
-- Persist a single shared shopping list per account; any member (incl. viewer) can add,
-  check off, edit quantity, and remove items.
-- Add items either from the user's tracked products (`GET /price-history/products`,
-  searchable, sorted by frequency, with a "frequently bought" strip) or as free text.
-- Given the current list, return each visited store's estimated basket total, coverage
-  (how many list items the store has a price for), missing items, and a per-item
-  "cheapest store" breakdown; highlight the cheapest store that covers the whole basket.
-- Pro-gate the comparison; surface the existing `Paywall` when a free user taps "Compare".
+## Milestones
 
-## Non-goals (explicitly deferred to Phase 2)
+Each milestone is independently shippable and testable; they are built in this order.
 
-- Predictive "time to rebuy" cadence detector (median-gap heuristic per product).
-- Geo "nearby" filtering + a "cheapest basket" overlay on the Expense Map.
-- Multiple named lists (v1 = one active list per account).
-- Push alert "a staple you buy got more expensive" (partially covered already by anomaly
-  `price_increase` + the Inflation Index).
-- SQLite mirror / offline-first write-sync for the list.
+### M1 — List + basket compare (the core loop)
+The persisted (offline-first) shared list and the stateless Pro `POST /price-history/basket`
+comparison. This alone delivers the headline value.
+
+### M2 — Offline-first sync for the list
+SQLite mirror + `SyncChange` union entries + `sync.service` handlers so the list survives
+offline and syncs across members/devices. (Folded tightly with M1's mobile store — the store
+is written offline-first from the start; M2 is the sync-plumbing half.)
+
+### M3 — Restock prediction (suggestions strip + reminder push)
+Per-product cadence detector; `GET /shopping-list/suggestions`; a "Time to restock" strip on
+the list screen; `shopping-reminder.cron.ts` daily push (opt-in preference).
+
+### M4 — Geo / "cheaper nearby"
+Store-coordinate derivation; basket endpoint accepts `{lat,lng}` → `distanceKm`/`nearby`;
+`app/shopping-list/map.tsx` reusing `ExpenseMapView` to plot candidate stores with basket
+totals in popups; "sort by cheapest / by nearby" toggle.
+
+### M5 — Multiple named lists
+`ShoppingList` parent table + FK; list switcher UI; auto-created default list; rename/delete/
+archive.
+
+### M6 — Deal alerts (staple price drops)
+Price-drop detector over recent per-store prices; `shopping_deal` push type + preference;
+folded into the reminder cron. Capped like anomaly pushes (≤3/day/account).
 
 ## Architecture
 
 ```
-┌─ shopping-list module (NEW) ─────────────┐   ┌─ price-history module (EXTEND) ─────┐
-│  Persisted shared list, scoped by         │   │  POST /price-history/basket          │
-│  accountId. CRUD only.                     │   │  body: { items:[{canonicalName,qty}]}│
-│  GET/POST/PATCH/DELETE /shopping-list      │   │  → ranked stores (stateless)          │
-│  JwtAuthGuard + AccountContextGuard        │   │  @RequireTier('pro')                  │
-│  (no ViewerBlockGuard — collaborative)     │   │  reuses fetchRows + per-store-latest  │
-└────────────────────────────────────────────┘   └──────────────────────────────────────┘
-                     │                                          │
-                     └──────────  mobile: shoppingListStore  ───┘
-                                  (calls both; store is just the UI's item set)
+┌─ shopping-list module (NEW) ─────────────────┐   ┌─ price-history module (EXTEND) ──────┐
+│  Lists + items, scoped by accountId.           │   │  POST /price-history/basket           │
+│  Offline-first (SQLite mirror + sync).          │   │  body:{items[],lat?,lng?} (stateless) │
+│  GET/POST/PATCH/DELETE /shopping-list[/items]   │   │  → ranked stores (+distance)          │
+│  GET /shopping-list/suggestions (restock)       │   │  @RequireTier('pro')                   │
+│  shopping-reminder.cron.ts (reminders + deals)  │   │  reuses fetchRows + per-store-latest   │
+│  JwtAuthGuard + AccountContextGuard             │   │  storeLocations from locationLat/Lng   │
+│  (no ViewerBlockGuard on item writes)           │   └────────────────────────────────────────┘
+└──────────────────────────────────────────────────┘                    │
+                     │                                                    │
+                     └──────────  mobile: shoppingListStore  ─────────────┘
+                                  (offline-first list; online Pro compare + map)
 ```
 
-The basket endpoint lives in **price-history** because it needs that module's data access
-(`fetchRows`, alias resolution, per-unit price derivation). The **shopping-list** module is
-pure CRUD and has no dependency on price-history — the mobile client is what joins them.
+`POST /price-history/basket` lives in **price-history** (it needs `fetchRows`, alias
+resolution, per-unit price, and store-location derivation). The **shopping-list** module owns
+lists, items, suggestions, and the cron. The mobile client joins them.
 
-### 1. Data model — new table `shopping_list_items`
+### 1. Data model (Prisma + SQLite mirror)
 
-One table, no parent `shopping_lists` table (one active list per account = YAGNI; multiple
-named lists is a Phase-2 concern). Prisma migration; **no SQLite mirror** (server-only).
+Two new tables. **Both are offline-first** → mirrored in `apps/mobile/src/db/schema` and wired
+into sync.
 
 ```prisma
-model ShoppingListItem {
+model ShoppingList {
   id            String   @id @default(uuid())
   accountId     String   @map("account_id")
   clientId      String   @map("client_id")
-  canonicalName String?  @map("canonical_name") // resolved tracked product; null = free text
-  rawLabel      String   @map("raw_label")       // what is displayed / what the user typed
-  quantity      Decimal  @default(1) @db.Decimal(10, 3)
-  note          String?
-  isChecked     Boolean  @default(false) @map("is_checked")
-  addedByUserId String   @map("added_by_user_id")
+  name          String
+  isDefault     Boolean  @default(false) @map("is_default")
+  isArchived    Boolean  @default(false) @map("is_archived")
   sortOrder     Int      @default(0) @map("sort_order")
+  createdByUserId String @map("created_by_user_id")
   isDeleted     Boolean  @default(false) @map("is_deleted")
   syncVersion   Int      @default(0) @map("sync_version")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  items   ShoppingListItem[]
 
   @@unique([accountId, clientId])
-  @@index([accountId, isChecked])
+  @@index([accountId, isArchived])
+  @@map("shopping_lists")
+}
+
+model ShoppingListItem {
+  id             String   @id @default(uuid())
+  accountId      String   @map("account_id")
+  shoppingListId String   @map("shopping_list_id")
+  clientId       String   @map("client_id")
+  canonicalName  String?  @map("canonical_name") // resolved tracked product; null = free text
+  rawLabel       String   @map("raw_label")
+  quantity       Decimal  @default(1) @db.Decimal(10, 3)
+  note           String?
+  isChecked      Boolean  @default(false) @map("is_checked")
+  addedByUserId  String   @map("added_by_user_id")
+  sortOrder      Int      @default(0) @map("sort_order")
+  isDeleted      Boolean  @default(false) @map("is_deleted")
+  syncVersion    Int      @default(0) @map("sync_version")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  account      Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  shoppingList ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, clientId])
+  @@index([shoppingListId, isChecked])
   @@map("shopping_list_items")
 }
 ```
 
-`clientId` + `@@unique([accountId, clientId])` supports idempotent create (the client
-resends the same create on retry — follow the ABA-316 pre-check + catch-P2002-outside-tx
-pattern). `Account` gets a `shoppingListItems ShoppingListItem[]` relation.
+`clientId` + `@@unique([accountId, clientId])` → idempotent create (ABA-316 pre-check +
+catch-P2002-outside-tx). A default list is auto-created lazily on first `GET /shopping-list`
+if the account has none. `Account` gets `shoppingLists` + `shoppingListItems` relations.
 
-### 2. Basket engine — pure function `computeBasket(rows, basket, now?)`
+### 2. Basket engine — pure function `computeBasket(rows, basket, storeCoords?, origin?, now?)`
 
-Standalone file `price-history/basket-calculator.ts` (mirrors `trip-share-calculator.ts` /
-`settle-up-calculator.ts` — pure + unit-tested, no Prisma). Input `rows` = the same
-`RawItemRow[]` that `fetchRows` already produces (alias-resolved, per-unit price).
+Standalone `price-history/basket-calculator.ts` (mirrors `trip-share-calculator.ts` — pure,
+unit-tested, no Prisma). Input `rows` = the `RawItemRow[]` `fetchRows` already produces.
 
-Logic:
-- Restrict to the majority/base currency (same approach as the inflation index — mixing
-  currencies in a single total is meaningless).
-- For each basket item, find the **latest** unit price per store (`merchant`), by date.
-- Per store: `estimatedTotal = Σ(latestPrice[store][item] × item.quantity)` over the items
-  that store has any price for.
-- **Coverage:** `coveredItems / totalItems`, plus `missingItems: string[]`. A store that
-  only prices 2 of 8 items must not win on a misleadingly small total — the "cheapest"
-  badge is awarded only among stores covering the whole basket (fall back to ≥80% coverage
-  if no store covers 100%, and label it "best partial").
-- **Freshness:** carry `latestDate` per price; set `hasStale: true` if any contributing
-  price is > 90 days old. Still used, but flagged in the UI.
+- Restrict to the majority/base currency (mixing currencies in a total is meaningless).
+- Per basket item → latest unit price per store, by date.
+- Per store: `estimatedTotal = Σ(latestPrice[store][item] × quantity)` over priced items.
+- **Coverage:** `coveredItems / totalItems` + `missingItems[]`. "Cheapest" badge awarded only
+  among stores covering the whole basket; if none, best ≥80% coverage ("best partial").
+- **Freshness:** `hasStale` if any contributing price > 90 days old.
+- **Distance (M4):** if `storeCoords[merchant]` and `origin` are present → `distanceKm`
+  (haversine) and `nearby` (≤ configurable radius, default 5 km). Response can be sorted by
+  price or by distance client-side.
 
-Output shape (see shared-types below): `{ currency, stores[], perItemCheapest[], missingEverywhere[] }`.
-`missingEverywhere` = free-text or never-purchased items no store can price (shown so the
-user understands why a store's coverage is < 100%).
+Output: `{ currency, stores[], perItemCheapest[], missingEverywhere[] }`.
 
-### 3. API endpoints
+### 3. Restock predictor — pure function `predictRestock(purchasesByProduct, now?)` (M3)
 
-**price-history module (extend):**
-- `POST /price-history/basket` — `JwtAuthGuard + AccountContextGuard + SubscriptionTierGuard`,
-  `@RequireTier('pro')`. Body `BasketCompareDto { items: { canonicalName: string; quantity: number }[] }`
-  (`class-validator`; 1–100 items). Loads rows via a reused/extracted `fetchRows`, calls
-  `computeBasket`, returns `BasketCompareResponse`. Declared **after** the existing static
-  routes but the path prefix `basket` does not collide with `products/*` or `price-points/*`.
+Standalone `shopping-list/restock-predictor.ts`. Input: per-canonicalName sorted purchase
+dates. Compute the **median gap** between consecutive purchases (need ≥3 purchases);
+`dueInDays = medianGap - daysSinceLastSeen`; `isDue = dueInDays <= 0`. Returns products
+sorted by most-overdue. Ignores products with < 3 purchases (not enough signal) and one-offs.
 
-**shopping-list module (new):** class-level `JwtAuthGuard + AccountContextGuard`, `accountId`
-and `userId` taken from `req` (never a client-supplied field):
-- `GET /shopping-list` — active (non-deleted) items, `sortOrder` then `createdAt`.
-- `POST /shopping-list` — add item (idempotent on `clientId`, ABA-316 pattern).
-- `PATCH /shopping-list/:id` — update `isChecked` / `quantity` / `rawLabel` / `note` / `sortOrder`.
-- `DELETE /shopping-list/:id` — soft-delete (`isDeleted = true`).
-- `POST /shopping-list/clear-checked` — soft-delete all checked items in one query
-  (declared before `:id` routes to avoid the `:id = "clear-checked"` shadow — ABA-166).
+### 4. Deal detector — pure function `detectDeals(rows, now?)` (M6)
 
-No `ViewerBlockGuard` on the shopping-list writes (collaborative, approved above).
+For each tracked product, compare the **latest** per-store price against the product's recent
+average (last 90 days, same currency); a store price meaningfully below average (e.g. ≥15%)
+→ a deal `{ canonicalName, store, price, avgPrice, dropPct }`. Feeds the reminder cron.
 
-### 4. Shared types (`packages/shared-types/src/dto/`)
+### 5. API endpoints
 
-New file `shopping-list.ts` (entities + DTOs) and additions to `price-history.ts`:
+**price-history (extend):**
+- `POST /price-history/basket` — `+ SubscriptionTierGuard @RequireTier('pro')`. Body
+  `BasketCompareDto { items:{canonicalName,quantity}[]; lat?:number; lng?:number }`
+  (`class-validator`, 1–100 items). → `BasketCompareResponse`.
 
-```ts
-// shopping-list.ts
-export interface ShoppingListItem {
-  id: string;
-  canonicalName: string | null;
-  rawLabel: string;
-  quantity: number;
-  note: string | null;
-  isChecked: boolean;
-  addedByUserId: string;
-  sortOrder: number;
-}
-export interface CreateShoppingListItemDto {
-  clientId: string; canonicalName?: string | null; rawLabel: string;
-  quantity?: number; note?: string;
-}
-export interface UpdateShoppingListItemDto {
-  isChecked?: boolean; quantity?: number; rawLabel?: string; note?: string | null; sortOrder?: number;
-}
+**shopping-list (new):** class-level `JwtAuthGuard + AccountContextGuard`; `accountId`/`userId`
+from `req` (never client-supplied):
+- `GET /shopping-list` — lists (non-archived) + their active items; lazily creates the default.
+- `POST /shopping-list` / `PATCH /shopping-list/:id` / `DELETE /shopping-list/:id` — list CRUD
+  (rename/archive/delete). Owner/editor for delete-list; add/rename allowed for all members.
+- `POST /shopping-list/:id/items` — add item (idempotent on `clientId`).
+- `PATCH /shopping-list/items/:itemId` — check / quantity / label / note / sortOrder.
+- `DELETE /shopping-list/items/:itemId` — soft-delete.
+- `POST /shopping-list/:id/clear-checked` — bulk soft-delete checked (declared before dynamic
+  `:id` collisions — ABA-166 ordering).
+- `GET /shopping-list/suggestions` — restock suggestions for the account (M3).
 
-// price-history.ts additions
-export interface BasketCompareDto { items: { canonicalName: string; quantity: number }[]; }
-export interface BasketStoreResult {
-  merchantName: string;
-  estimatedTotal: number;
-  coveredItems: number;
-  totalItems: number;
-  missingItems: string[]; // canonicalNames this store cannot price
-  hasStale: boolean;      // any contributing price > 90 days old
-  isCheapest: boolean;    // best store among those with full (or ≥80%) coverage
-}
-export interface BasketPerItemCheapest {
-  canonicalName: string; cheapestStore: string | null; price: number | null;
-}
-export interface BasketCompareResponse {
-  currency: string;
-  stores: BasketStoreResult[];            // sorted cheapest → most expensive
-  perItemCheapest: BasketPerItemCheapest[];
-  missingEverywhere: string[];            // items no visited store can price
-}
-```
+No `ViewerBlockGuard` on item writes (collaborative, approved).
 
-Reuse: `ProductListItem` (already exists) powers the "add item" picker; `StoreLatestPrice`
-logic is reused inside `computeBasket` but the response uses the richer types above.
+### 6. Cron — `shopping-reminder.cron.ts` (M3 + M6)
 
-### 5. Mobile (`apps/mobile/`)
+`@Cron('0 10 * * *')` daily. For each account with a default/active list: run `predictRestock`
+and `detectDeals`; send a `shopping_reminder` push (due items) and/or a `shopping_deal` push
+(price drops), each gated by its own user preference and capped ≤3/day/account (anomaly
+pattern). Localized via `notification-i18n.ts` (9 langs).
 
-- `src/stores/shoppingListStore.ts` — server-only, optimistic with rollback (mirrors
-  `purchaseRequestStore` / `priceHistoryStore`), MMKV read-cache so the last-loaded list is
-  visible offline. `basketResult` + `loadBasket()` state (calls `POST /price-history/basket`).
-- `src/services/shoppingList.api.ts` — CRUD + `compareBasket()`; registered in the `api` barrel.
-- `app/shopping-list/index.tsx` — the list: checkbox rows, quantity stepper, `+ Add` button,
-  a **"Compare prices"** CTA. Header registered (title + back — new-screen header rule).
-- Add-item bottom-sheet (or `app/shopping-list/add.tsx`) — searchable picker over
-  `GET /price-history/products` (sorted by `purchaseCount`) + a "Frequently bought" strip
-  (top N) + free-text add (→ `canonicalName: null`).
-- `app/shopping-list/compare.tsx` — ranked stores; cheapest highlighted; per store: total,
-  coverage `x/y`, missing items; a "per item — cheapest store" breakdown. Pro-gated: a free
-  user tapping "Compare" triggers `useUpgradeStore.getState().show(...)` and the mounted
-  `<UpgradeGate>` Paywall instead of navigating.
-- Entry points: (a) new home quick action `shopping` (add to `QUICK_ACTION_KEYS`, icon
-  `cart-outline`, default **on**); (b) a Settings-hub row; (c) a "Plan a shop" link from
-  `InflationIndexSection` in the Analytics tab.
-- `canEdit` gating is **not** applied to add/check/remove (viewers participate); it is not
-  relevant to compare (that's tier-gated).
+### 7. Shared types
 
-### 6. i18n
+- New `packages/shared-types/src/dto/shopping-list.ts`: `ShoppingList`, `ShoppingListItem`,
+  create/update DTOs, `RestockSuggestion`.
+- `price-history.ts` additions: `BasketCompareDto`, `BasketStoreResult` (`+distanceKm?`,
+  `nearby?`), `BasketPerItemCheapest`, `BasketCompareResponse`.
+- `sync.ts` **discriminated union**: add `shopping_list` + `shopping_list_item` `SyncChange`
+  members with their payload interfaces; `sync.service` handlers take `Extract<SyncChange,{...}>`.
+- Entities in `entities/index.ts` as needed. New `NotificationType` members
+  `'shopping_reminder' | 'shopping_deal'`; `NotificationPreferencesResponse` gains
+  `shoppingReminders` + `shoppingDeals`.
 
-New `shoppingList.*` key group in **all 9 locales** (`en/de/es/fr/pl/ru/ua/be/nl`) — list
-screen, add sheet, compare screen (cheapest badge, coverage "x of y", missing-items note,
-stale-price note, empty state), quick-action label, Settings-hub row. `en.ts` is the source
-of truth; run the i18n sync per the `i18n-add-strings` skill.
+### 8. Mobile (`apps/mobile/`)
 
-### 7. Testing
+- **DB:** `src/db/schema/index.ts` + two repositories `shoppingListRepository.ts`,
+  `shoppingListItemRepository.ts` (raw `executeSql`, soft-delete/timestamp conventions); SQLite
+  migrations in `client.native.ts`.
+- **Sync:** offline-first writes → SQLite first, queue `syncQueue`; pull-merge in the store.
+- **Store:** `src/stores/shoppingListStore.ts` — offline-first list/items + active-list id
+  (MMKV); online `basketResult`/`loadBasket(coords?)`, `suggestions`/`loadSuggestions()`.
+- **API:** `src/services/shoppingList.api.ts` (+ `compareBasket`); registered in the `api` barrel.
+- **Screens** (all with registered headers — new-screen rule):
+  - `app/shopping-list/index.tsx` — active list: checkbox rows, quantity stepper, `+ Add`, a
+    "Time to restock" suggestions strip (M3), list switcher (M5), **"Compare prices"** CTA.
+  - add-item bottom-sheet — searchable picker over `GET /price-history/products` (by frequency)
+    + "Frequently bought" strip + free-text add.
+  - `app/shopping-list/compare.tsx` — ranked stores, cheapest highlighted, coverage `x/y`,
+    missing items, per-item cheapest breakdown; Pro-gated via `useUpgradeStore`/`Paywall`.
+  - `app/shopping-list/map.tsx` (M4) — `ExpenseMapView` with candidate stores + basket totals in
+    popups; cheapest / nearby toggle; My-location via `captureCurrentLocation`.
+- **Entry points:** new home quick action `shopping` (`QUICK_ACTION_KEYS`, icon `cart-outline`,
+  default on); Settings-hub row; "Plan a shop" link from `InflationIndexSection` (Analytics);
+  push deep-links (`shopping_reminder`/`shopping_deal` → the list).
+- **Preferences:** toggles for `shoppingReminders` + `shoppingDeals` in
+  `settings/notifications.tsx`.
 
-- `basket-calculator.spec.ts` — pure-function coverage: cheapest selection, coverage math,
-  missing items, stale flag, single-store fallback, majority-currency filtering, quantity
-  scaling, empty basket.
-- `shopping-list.service.spec.ts` — account scoping, idempotent create (clientId), clear-checked,
-  soft-delete.
-- Controller routing spec for `clear-checked` declared before `:id` (ABA-166 regression guard).
+### 9. i18n
+
+New `shoppingList.*` group in **all 9 locales** (list, add sheet, suggestions strip, compare,
+map, list switcher, quick-action label, Settings row, empty/stale/coverage/deal copy) +
+`notification-i18n.ts` entries for the two push types. `en.ts` = source of truth; sync per the
+`i18n-add-strings` skill.
+
+### 10. Testing
+
+- `basket-calculator.spec.ts` — cheapest, coverage, missing, stale, single-store, currency
+  filter, quantity scaling, distance/nearby, empty basket.
+- `restock-predictor.spec.ts` — median gap, due/not-due, < 3 purchases ignored.
+- `deal-detector.spec.ts` — drop threshold, currency scoping, no-average edge.
+- `shopping-list.service.spec.ts` — account scoping, idempotent create, default-list
+  auto-create, clear-checked, soft-delete, suggestions.
+- Controller routing spec (`clear-checked` / static-before-dynamic — ABA-166).
+- `sync.service` handler coverage for the two new entity types.
 
 ## Dependency order (per CLAUDE.md)
 
-1. `packages/shared-types` — `shopping-list.ts` + `price-history.ts` basket DTOs.
-2. `apps/api/prisma/schema.prisma` — `ShoppingListItem` + `Account` relation → `migrate dev` + `generate`.
-3. `apps/api/src/modules/shopping-list/` — module/controller/service (+ `bootstrap-api-module` skill).
-4. `apps/api/src/modules/price-history/` — `basket-calculator.ts`, `POST /basket`, extract/reuse `fetchRows`.
-5. `apps/mobile` — api file → store → screens → quick action / Settings / Analytics link.
-6. `apps/mobile/src/i18n/locales/*` — all 9 files.
-7. Tests + docs (CLAUDE.md entry, `user_docs`) + ABA issue (finish-aba-task skill).
+1. `packages/shared-types` — `shopping-list.ts`, `price-history.ts` basket DTOs, `sync.ts` union,
+   `NotificationType`, entities.
+2. `apps/api/prisma/schema.prisma` — `ShoppingList` + `ShoppingListItem` + `Account` relations →
+   `migrate dev` + `generate`.
+3. `apps/api/src/modules/shopping-list/` — module/controller/service/dto, `restock-predictor.ts`,
+   `deal-detector.ts`, `shopping-reminder.cron.ts` (`bootstrap-api-module` skill).
+4. `apps/api/src/modules/price-history/` — `basket-calculator.ts`, `POST /basket`, store-coords
+   derivation; extract/reuse `fetchRows`.
+5. `apps/api/src/modules/sync/` — handlers for the two new entity types.
+6. `apps/api` notifications — new types + preference plumbing in `NotificationsService.sendToUser`.
+7. `apps/mobile` — schema → repositories → store → api → screens → quick action / Settings /
+   Analytics link / notification toggles.
+8. `apps/mobile/src/i18n/locales/*` — all 9 files + `notification-i18n.ts`.
+9. Tests + docs (CLAUDE.md entry, `user_docs`, full tech docs) + ABA issue (finish-aba-task).
 
 ## Risks / open questions
 
-- **Coverage vs. cheapest fairness.** The "cheapest badge only among full-coverage stores,
-  else best ≥80%" rule is a judgment call; the compare screen must always show coverage so
-  the number is never misleading. If most baskets have no full-coverage store, revisit the
-  threshold.
-- **Stale prices.** A 6-month-old price is a weak predictor. v1 flags but still uses them; if
-  this proves noisy, Phase 2 could down-weight or exclude prices older than the period.
-- **Free-text items** never price-compare (no `canonicalName`); they appear under
-  `missingEverywhere`. The UI must make clear these are informational, not a store failure.
-- **Product identity** relies on the existing canonical-name / alias machinery; garbage-in
-  (bad OCR names) surfaces here too. The existing rename/merge/backfill-ai tools mitigate it.
-
-## Phase 2 backlog (not in this spec)
-
-Predictive "time to rebuy" (per-product median-gap detector, surfaced as a suggestions strip
-and optional push) · geo "nearby" filter + Expense-Map "cheapest basket" overlay (derive
-store coordinates from the most-recent `locationLat/Lng` per merchant) · multiple named lists
-· staple-price-drop/increase push alerts · offline-first write-sync for the list.
+- **Scope.** This is large (6 milestones, offline-first sync, cron, geo, push). It is built and
+  reviewed milestone-by-milestone; M1+M2 must land as a coherent unit (offline-first list +
+  compare) before M3–M6.
+- **Coverage vs. cheapest fairness.** "Cheapest badge only among full-coverage stores, else best
+  ≥80%" is a judgment call; the compare screen always shows coverage so the number is never
+  misleading.
+- **Stale prices.** v1 flags but still uses prices > 90 days old; if noisy, down-weight later.
+- **Store coordinates are sparse** — only merchants with at least one geo-tagged expense get a
+  pin/distance. `nearby` silently omits stores without coords (documented in the UI).
+- **Restock false positives** — irregular buyers produce noisy medians; the ≥3-purchase gate and
+  median (not mean) reduce this; reminders are opt-in.
+- **Push fatigue** — reminder + deal pushes are per-type opt-in and capped ≤3/day/account.
+- **Free-text items** never price-compare (no `canonicalName`) → shown under `missingEverywhere`
+  as informational, not a store failure.
