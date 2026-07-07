@@ -273,7 +273,7 @@ export default function SubscriptionScreen() {
                       disabled={isLoading}
                     >
                       <Text style={[styles.planButtonText, styles.planButtonTextPrimary]}>
-                        {plan.yearly.display}/{t('subscription.year')} (-20%)
+                        {plan.yearly.display}/{t('subscription.year')} (-{Math.round((1 - plan.yearly.amount / (plan.monthly.amount * 12)) * 100)}%)
                       </Text>
                     </TouchableOpacity>
                   </View>
