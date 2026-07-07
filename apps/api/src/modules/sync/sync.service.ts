@@ -104,6 +104,10 @@ export class SyncService {
         return this.processInvestmentTransactionChange(accountId, userId, change);
       case 'tripExpenseShare':
         return this.processTripExpenseShareChange(accountId, change);
+      case 'shopping_list':
+        return this.processShoppingListChange(accountId, userId, change);
+      case 'shopping_list_item':
+        return this.processShoppingListItemChange(accountId, userId, change);
       default:
         return {
           entityId: change.entityId,
@@ -475,6 +479,93 @@ export class SyncService {
     return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
   }
 
+  private async processShoppingListChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'shopping_list' }>,
+  ): Promise<SyncResult> {
+    const { payload } = change;
+    const cid = payload.localId || change.entityId;
+    if (change.operation === 'create') {
+      const list = await this.prisma.shoppingList.upsert({
+        where: { accountId_clientId: { accountId, clientId: cid } },
+        create: {
+          accountId, clientId: cid, name: payload.name,
+          isDefault: payload.isDefault ?? false, isArchived: payload.isArchived ?? false,
+          sortOrder: payload.sortOrder ?? 0, createdByUserId: userId,
+        },
+        update: {
+          name: payload.name, isArchived: payload.isArchived ?? false,
+          sortOrder: payload.sortOrder ?? 0, isDeleted: false,
+        },
+      });
+      return { entityId: change.entityId, status: 'success', serverId: list.id, serverVersion: list.syncVersion };
+    }
+    if (change.operation === 'update') {
+      const list = await this.prisma.shoppingList.findFirst({ where: { accountId, OR: [{ id: change.entityId }, { clientId: cid }] } });
+      if (!list) return { entityId: change.entityId, status: 'error', error: 'List not found' };
+      const updated = await this.prisma.shoppingList.update({
+        where: { id: list.id },
+        data: { name: payload.name, isArchived: payload.isArchived ?? false, sortOrder: payload.sortOrder ?? 0, syncVersion: { increment: 1 } },
+      });
+      return { entityId: change.entityId, status: 'success', serverVersion: updated.syncVersion };
+    }
+    if (change.operation === 'delete') {
+      await this.prisma.shoppingList.updateMany({ where: { accountId, OR: [{ id: change.entityId }, { clientId: cid }] }, data: { isDeleted: true, syncVersion: { increment: 1 } } });
+      return { entityId: change.entityId, status: 'success' };
+    }
+    return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
+  }
+
+  private async processShoppingListItemChange(
+    accountId: string,
+    userId: string,
+    change: Extract<SyncChange, { entityType: 'shopping_list_item' }>,
+  ): Promise<SyncResult> {
+    const { payload } = change;
+    const cid = payload.localId || change.entityId;
+    if (change.operation === 'create') {
+      // Resolve the parent list by device clientId OR server id
+      const list = await this.prisma.shoppingList.findFirst({
+        where: { accountId, OR: [{ id: payload.shoppingListId }, { clientId: payload.shoppingListId }] },
+      });
+      if (!list) return { entityId: change.entityId, status: 'error', error: 'Parent list not found' };
+      const item = await this.prisma.shoppingListItem.upsert({
+        where: { accountId_clientId: { accountId, clientId: cid } },
+        create: {
+          accountId, shoppingListId: list.id, clientId: cid,
+          canonicalName: payload.canonicalName ?? null, rawLabel: payload.rawLabel,
+          quantity: payload.quantity ?? 1, note: payload.note ?? null,
+          isChecked: payload.isChecked ?? false, sortOrder: payload.sortOrder ?? 0, addedByUserId: userId,
+        },
+        update: {
+          canonicalName: payload.canonicalName ?? null, rawLabel: payload.rawLabel,
+          quantity: payload.quantity ?? 1, note: payload.note ?? null,
+          isChecked: payload.isChecked ?? false, sortOrder: payload.sortOrder ?? 0, isDeleted: false,
+        },
+      });
+      return { entityId: change.entityId, status: 'success', serverId: item.id, serverVersion: item.syncVersion };
+    }
+    if (change.operation === 'update') {
+      const item = await this.prisma.shoppingListItem.findFirst({ where: { accountId, OR: [{ id: change.entityId }, { clientId: cid }] } });
+      if (!item) return { entityId: change.entityId, status: 'error', error: 'Item not found' };
+      const updated = await this.prisma.shoppingListItem.update({
+        where: { id: item.id },
+        data: {
+          canonicalName: payload.canonicalName ?? null, rawLabel: payload.rawLabel,
+          quantity: payload.quantity ?? 1, note: payload.note ?? null,
+          isChecked: payload.isChecked ?? false, sortOrder: payload.sortOrder ?? 0, syncVersion: { increment: 1 },
+        },
+      });
+      return { entityId: change.entityId, status: 'success', serverVersion: updated.syncVersion };
+    }
+    if (change.operation === 'delete') {
+      await this.prisma.shoppingListItem.updateMany({ where: { accountId, OR: [{ id: change.entityId }, { clientId: cid }] }, data: { isDeleted: true, syncVersion: { increment: 1 } } });
+      return { entityId: change.entityId, status: 'success' };
+    }
+    return { entityId: change.entityId, status: 'error', error: 'Unknown operation' };
+  }
+
   private async processPortfolioHoldingChange(
     accountId: string,
     userId: string,
@@ -687,7 +778,7 @@ export class SyncService {
 
   async pullChanges(accountId: string, userId: string, since: Date) {
     // Get all entities updated since the given timestamp
-    const [expenses, expenseItems, budgets, categories, incomes, tags, projects, expenseTags, projectExpenses, categorySplits, portfolioHoldings, investmentTransactions] = await Promise.all([
+    const [expenses, expenseItems, budgets, categories, incomes, tags, projects, expenseTags, projectExpenses, categorySplits, portfolioHoldings, investmentTransactions, shoppingLists, shoppingListItems] = await Promise.all([
       this.prisma.expense.findMany({
         where: {
           accountId,
@@ -725,6 +816,8 @@ export class SyncService {
       this.prisma.expenseCategorySplit.findMany({ where: { updatedAt: { gt: since }, expense: { accountId } } }),
       this.prisma.portfolioHolding.findMany({ where: { accountId, updatedAt: { gt: since } }, include: { asset: true } }),
       this.prisma.investmentTransaction.findMany({ where: { accountId, updatedAt: { gt: since } } }),
+      this.prisma.shoppingList.findMany({ where: { accountId, updatedAt: { gt: since } } }),
+      this.prisma.shoppingListItem.findMany({ where: { accountId, updatedAt: { gt: since } }, include: { shoppingList: { select: { clientId: true } } } }),
     ]);
 
     const changes = [
@@ -823,6 +916,22 @@ export class SyncService {
         data: t,
         version: t.syncVersion,
         timestamp: t.updatedAt.toISOString(),
+      })),
+      ...shoppingLists.map((l: { clientId: string; isDeleted: boolean; syncVersion: number; updatedAt: Date }) => ({
+        entityType: 'shopping_list' as const,
+        entityId: l.clientId,
+        operation: l.isDeleted ? 'delete' as const : 'update' as const,
+        data: l,
+        version: l.syncVersion,
+        timestamp: l.updatedAt.toISOString(),
+      })),
+      ...shoppingListItems.map((it: { clientId: string; isDeleted: boolean; syncVersion: number; updatedAt: Date; shoppingList: { clientId: string } }) => ({
+        entityType: 'shopping_list_item' as const,
+        entityId: it.clientId,
+        operation: it.isDeleted ? 'delete' as const : 'update' as const,
+        data: { ...it, shoppingListId: it.shoppingList.clientId },
+        version: it.syncVersion,
+        timestamp: it.updatedAt.toISOString(),
       })),
     ];
 
