@@ -767,6 +767,20 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="shopping-list/index"
+          options={{
+            headerShown: true,
+            title: t('shoppingList.title'),
+          }}
+        />
+        <Stack.Screen
+          name="shopping-list/compare"
+          options={{
+            headerShown: true,
+            title: t('shoppingList.compareTitle'),
+          }}
+        />
+        <Stack.Screen
           name="investment/index"
           options={{
             headerShown: true,
