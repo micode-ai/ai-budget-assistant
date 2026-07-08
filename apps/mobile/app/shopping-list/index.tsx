@@ -22,6 +22,7 @@ import type {
   ShoppingListItem,
   ProductListItem,
   RestockSuggestion,
+  DealSuggestion,
 } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
@@ -40,6 +41,7 @@ export default function ShoppingListScreen() {
   const lists = useShoppingListStore((s) => s.lists);
   const activeListId = useShoppingListStore((s) => s.activeListId);
   const suggestions = useShoppingListStore((s) => s.suggestions);
+  const deals = useShoppingListStore((s) => s.deals);
   const isLoading = useShoppingListStore((s) => s.isLoading);
   const hydrate = useShoppingListStore((s) => s.hydrate);
   const addItem = useShoppingListStore((s) => s.addItem);
@@ -117,6 +119,11 @@ export default function ShoppingListScreen() {
   const handleAddSuggestion = (suggestion: RestockSuggestion) => {
     addItem(suggestion.canonicalName, suggestion.canonicalName, 1);
     dismissSuggestion(suggestion.canonicalName);
+  };
+
+  // ─── Deal suggestions strip (all members, not canEdit-gated) ──────────────
+  const handleAddDeal = (deal: DealSuggestion) => {
+    addItem(deal.canonicalName, deal.canonicalName, 1);
   };
 
   // ─── List switcher bottom sheet ────────────────────────────────────────────
@@ -293,6 +300,40 @@ export default function ShoppingListScreen() {
                   <Text style={styles.restockChipText} numberOfLines={1}>
                     {s.canonicalName}
                   </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {deals.length > 0 && (
+          <View style={styles.dealsSection}>
+            <Text style={styles.dealsTitle}>{t('shoppingList.dealsTitle')}</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.dealsRow}
+            >
+              {deals.map((d) => (
+                <TouchableOpacity
+                  key={`${d.canonicalName}-${d.merchant}`}
+                  style={styles.dealChip}
+                  onPress={() => handleAddDeal(d)}
+                >
+                  <View style={styles.dealChipTop}>
+                    <Ionicons name="pricetag-outline" size={14} color={theme.colors.success} />
+                    <Text style={styles.dealChipName} numberOfLines={1}>
+                      {d.canonicalName}
+                    </Text>
+                  </View>
+                  <View style={styles.dealChipBottom}>
+                    <Text style={styles.dealChipPct}>
+                      {t('shoppingList.dealDrop', { pct: d.dropPct })}
+                    </Text>
+                    <Text style={styles.dealChipMerchant} numberOfLines={1}>
+                      {d.merchant}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -604,6 +645,44 @@ const createStyles = (theme: Theme) => ({
     maxWidth: 180,
   },
   restockChipText: { ...theme.textStyles.bodySm, color: theme.colors.primary, fontWeight: '500' as const },
+
+  dealsSection: { marginBottom: theme.spacing[3] },
+  dealsTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+  },
+  dealsRow: { gap: theme.spacing[2], paddingBottom: theme.spacing[0.5] },
+  dealChip: {
+    backgroundColor: theme.colors.successLight,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    maxWidth: 200,
+    gap: theme.spacing[1],
+  },
+  dealChipTop: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+  },
+  dealChipName: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
+    flexShrink: 1,
+  },
+  dealChipBottom: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+  },
+  dealChipPct: { ...theme.textStyles.bodySm, color: theme.colors.success, fontWeight: '700' as const },
+  dealChipMerchant: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    flexShrink: 1,
+  },
 
   sectionHeader: {
     flexDirection: 'row' as const,

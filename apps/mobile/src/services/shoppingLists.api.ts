@@ -9,6 +9,7 @@ import type {
   BasketCompareResponse,
   BasketCompareItem,
   RestockSuggestion,
+  DealSuggestion,
 } from '@budget/shared-types';
 
 export const shoppingListsApi = {
@@ -67,5 +68,9 @@ export const shoppingListsApi = {
 
   getRestockSuggestions() {
     return httpClient.request<RestockSuggestion[]>('/shopping-list/suggestions');
+  },
+
+  getDeals() {
+    return httpClient.request<DealSuggestion[]>('/shopping-list/deals');
   },
 };
