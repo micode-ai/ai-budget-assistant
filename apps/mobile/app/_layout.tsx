@@ -16,6 +16,7 @@ import {
 } from '@expo-google-fonts/montserrat';
 import * as Notifications from 'expo-notifications';
 import { useAuthStore } from '@/stores/authStore';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { DatabaseProvider } from '@/db/DatabaseProvider';
 import { initializeDatabase } from '@/db/client';
 import { loadSavedLanguage } from '@/i18n';
@@ -88,6 +89,10 @@ function RootNavigator() {
   // dialog dismisses into a partially-mounted screen.
   useEffect(() => {
     if (!isAuthenticated) return;
+    // Load the subscription tier once, right after auth, so Pro-gates (shopping-list
+    // compare, Story/Fat-Finder/AI-Insights) don't false-paywall a paid user who
+    // reaches the feature before AiUsageBadge / the subscription screens have loaded it.
+    void useSubscriptionStore.getState().loadSubscription();
     const timer = setTimeout(() => {
       registerForPushNotifications();
       api.updateProfile({ language: i18n.language }).catch(() => {});

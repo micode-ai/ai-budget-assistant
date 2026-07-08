@@ -441,9 +441,15 @@ export const useShoppingListStore = create<ShoppingListState>()(
 
       if (items.length === 0) return;
 
+      // Ensure the subscription tier is loaded before paywalling — the store defaults
+      // to 'free', so a paid user who hasn't triggered a subscription load yet would
+      // otherwise be wrongly blocked here (the server tier guard would allow them).
       if (!useSubscriptionStore.getState().isPro()) {
-        useUpgradeStore.getState().show(i18n.t('shoppingList.comparePaywall'), 'pro');
-        return;
+        await useSubscriptionStore.getState().loadSubscription();
+        if (!useSubscriptionStore.getState().isPro()) {
+          useUpgradeStore.getState().show(i18n.t('shoppingList.comparePaywall'), 'pro');
+          return;
+        }
       }
 
       set({ isComparing: true });
