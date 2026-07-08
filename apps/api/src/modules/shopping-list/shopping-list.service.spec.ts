@@ -9,7 +9,9 @@ describe('ShoppingListService', () => {
   beforeEach(async () => {
     prisma = {
       shoppingList: { findMany: jest.fn(), create: jest.fn(), findFirst: jest.fn(), findUnique: jest.fn(), update: jest.fn(), updateMany: jest.fn(), upsert: jest.fn() },
-      shoppingListItem: { findUnique: jest.fn(), create: jest.fn(), findFirst: jest.fn(), update: jest.fn(), updateMany: jest.fn() },
+      shoppingListItem: { findUnique: jest.fn(), create: jest.fn(), findFirst: jest.fn(), update: jest.fn(), updateMany: jest.fn(), findMany: jest.fn() },
+      expenseItem: { findMany: jest.fn() },
+      productAlias: { findMany: jest.fn() },
       $transaction: jest.fn(),
     };
     const mod = await Test.createTestingModule({
@@ -120,5 +122,21 @@ describe('ShoppingListService', () => {
     expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ shoppingListId: 'srv-list' }) }),
     );
+  });
+
+  it('getRestockSuggestions returns due products excluding those already on a list', async () => {
+    prisma.productAlias.findMany.mockResolvedValue([]);
+    prisma.expenseItem.findMany.mockResolvedValue([
+      { canonicalName: 'Milk', expense: { date: new Date('2026-06-07') } },
+      { canonicalName: 'Milk', expense: { date: new Date('2026-06-14') } },
+      { canonicalName: 'Milk', expense: { date: new Date('2026-06-21') } },
+      { canonicalName: 'Bread', expense: { date: new Date('2026-06-01') } },
+      { canonicalName: 'Bread', expense: { date: new Date('2026-06-08') } },
+      { canonicalName: 'Bread', expense: { date: new Date('2026-06-15') } },
+    ]);
+    // Bread is already on a list → excluded
+    prisma.shoppingListItem.findMany.mockResolvedValue([{ canonicalName: 'Bread' }]);
+    const res = await service.getRestockSuggestions('a1');
+    expect(res.every((s) => s.canonicalName !== 'Bread')).toBe(true);
   });
 });
