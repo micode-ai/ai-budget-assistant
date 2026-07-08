@@ -176,6 +176,8 @@ const translations: Record<string, {
   subscriptionChargedBody: (p: SubscriptionRenewalParams) => string;
   trackingGapTitle: () => string;
   trackingGapBody: () => string;
+  shoppingReminderTitle: () => string;
+  shoppingReminderBody: (product: string, extraCount: number) => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
@@ -254,6 +256,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} added to your expenses for ${name}`,
     trackingGapTitle: () => 'Time to log your expenses!',
     trackingGapBody: () => "You haven't recorded anything in 3+ days. Add a transaction to keep your budget on track.",
+    shoppingReminderTitle: () => 'Time to restock?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `You usually rebuy ${product} and ${extraCount} more around now.`
+        : `You usually rebuy ${product} around now.`,
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
@@ -333,6 +340,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} добавлено в расходы за ${name}`,
     trackingGapTitle: () => 'Пора записать расходы!',
     trackingGapBody: () => 'Вы не записывали транзакции уже 3+ дня. Добавьте запись, чтобы бюджет был под контролем.',
+    shoppingReminderTitle: () => 'Пора пополнить запасы?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Обычно вы примерно сейчас покупаете ${product} и ещё ${extraCount}.`
+        : `Обычно вы примерно сейчас покупаете ${product}.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
@@ -412,6 +424,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} додано до витрат за ${name}`,
     trackingGapTitle: () => 'Час записати витрати!',
     trackingGapBody: () => 'Ви не записували транзакції вже 3+ дні. Додайте запис, щоб бюджет був під контролем.',
+    shoppingReminderTitle: () => 'Час поповнити запаси?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Зазвичай приблизно зараз ви купуєте ${product} і ще ${extraCount}.`
+        : `Зазвичай приблизно зараз ви купуєте ${product}.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
@@ -491,6 +508,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} dodano do wydatków za ${name}`,
     trackingGapTitle: () => 'Czas zapisać wydatki!',
     trackingGapBody: () => 'Nie rejestrowałeś transakcji od ponad 3 dni. Dodaj wpis, żeby budżet był pod kontrolą.',
+    shoppingReminderTitle: () => 'Czas na uzupełnienie zapasów?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Zwykle kupujesz teraz ${product} i jeszcze ${extraCount} innych produktów.`
+        : `Zwykle kupujesz teraz ${product}.`,
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
@@ -570,6 +592,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} añadido a tus gastos por ${name}`,
     trackingGapTitle: () => '¡Es hora de registrar tus gastos!',
     trackingGapBody: () => 'No has registrado transacciones en más de 3 días. Añade un registro para mantener tu presupuesto al día.',
+    shoppingReminderTitle: () => '¿Hora de reabastecer?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Sueles volver a comprar ${product} y ${extraCount} más por estas fechas.`
+        : `Sueles volver a comprar ${product} por estas fechas.`,
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
@@ -649,6 +676,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} ajouté à vos dépenses pour ${name}`,
     trackingGapTitle: () => "Il est temps d'enregistrer vos dépenses !",
     trackingGapBody: () => "Vous n'avez enregistré aucune transaction depuis plus de 3 jours. Ajoutez une entrée pour rester dans votre budget.",
+    shoppingReminderTitle: () => 'Temps de faire le plein ?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Vous rachetez généralement ${product} et ${extraCount} autre(s) article(s) vers cette période.`
+        : `Vous rachetez généralement ${product} vers cette période.`,
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
@@ -728,6 +760,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} zu deinen Ausgaben für ${name} hinzugefügt`,
     trackingGapTitle: () => 'Zeit, deine Ausgaben einzutragen!',
     trackingGapBody: () => 'Du hast seit über 3 Tagen keine Transaktionen erfasst. Trag eine ein, um dein Budget im Blick zu behalten.',
+    shoppingReminderTitle: () => 'Zeit zum Nachkaufen?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Du kaufst ${product} und ${extraCount} weitere Artikel normalerweise so langsam wieder.`
+        : `Du kaufst ${product} normalerweise so langsam wieder.`,
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
@@ -807,6 +844,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} дададзена ў выдаткі за ${name}`,
     trackingGapTitle: () => 'Час запісаць выдаткі!',
     trackingGapBody: () => 'Вы не запісвалі транзакцыі ўжо 3+ дні. Дадайце запіс, каб бюджэт быў пад кантролем.',
+    shoppingReminderTitle: () => 'Час папоўніць запасы?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Звычайна прыблізна цяпер вы купляеце ${product} і яшчэ ${extraCount}.`
+        : `Звычайна прыблізна цяпер вы купляеце ${product}.`,
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
@@ -886,6 +928,11 @@ const translations: Record<string, {
     subscriptionChargedBody: ({ name, amount, currencyCode }) => `${amount} ${currencyCode} toegevoegd aan je uitgaven voor ${name}`,
     trackingGapTitle: () => 'Tijd om je uitgaven bij te houden!',
     trackingGapBody: () => 'Je hebt al meer dan 3 dagen geen transacties geregistreerd. Voeg er een toe om je budget op koers te houden.',
+    shoppingReminderTitle: () => 'Tijd om bij te vullen?',
+    shoppingReminderBody: (product: string, extraCount: number) =>
+      extraCount > 0
+        ? `Je koopt ${product} en ${extraCount} andere artikelen meestal rond deze tijd opnieuw.`
+        : `Je koopt ${product} meestal rond deze tijd opnieuw.`,
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
@@ -1064,6 +1111,14 @@ export function trackingGapTitle(lang: Lang): string {
 
 export function trackingGapBody(lang: Lang): string {
   return t(lang).trackingGapBody();
+}
+
+export function shoppingReminderTitle(lang: Lang): string {
+  return t(lang).shoppingReminderTitle();
+}
+
+export function shoppingReminderBody(lang: Lang, product: string, extraCount: number): string {
+  return t(lang).shoppingReminderBody(product, extraCount);
 }
 
 export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {
