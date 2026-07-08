@@ -130,6 +130,7 @@ export class UsersService {
         notifyPurchaseRequests: true,
         notifyTripSettleUp: true,
         notifyShoppingReminders: true,
+        notifyShoppingDeals: true,
       },
     });
     return {
@@ -143,12 +144,13 @@ export class UsersService {
       purchaseRequests: user?.notifyPurchaseRequests ?? true,
       tripSettleUp: user?.notifyTripSettleUp ?? true,
       shoppingReminders: user?.notifyShoppingReminders ?? true,
+      shoppingDeals: user?.notifyShoppingDeals ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
@@ -161,6 +163,7 @@ export class UsersService {
     if (prefs.purchaseRequests !== undefined) data.notifyPurchaseRequests = prefs.purchaseRequests;
     if (prefs.tripSettleUp !== undefined) data.notifyTripSettleUp = prefs.tripSettleUp;
     if (prefs.shoppingReminders !== undefined) data.notifyShoppingReminders = prefs.shoppingReminders;
+    if (prefs.shoppingDeals !== undefined) data.notifyShoppingDeals = prefs.shoppingDeals;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);
