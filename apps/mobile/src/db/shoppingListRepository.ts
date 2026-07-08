@@ -125,6 +125,25 @@ export async function markShoppingListSynced(id: string, serverId?: string): Pro
   );
 }
 
+export async function updateShoppingList(
+  id: string,
+  patch: { name?: string; isArchived?: boolean },
+): Promise<void> {
+  const sets: string[] = [];
+  const params: (string | number)[] = [];
+  if (patch.name !== undefined) {
+    sets.push('name = ?');
+    params.push(patch.name);
+  }
+  if (patch.isArchived !== undefined) {
+    sets.push('is_archived = ?');
+    params.push(patch.isArchived ? 1 : 0);
+  }
+  sets.push("sync_status = 'pending'", 'updated_at = ?');
+  params.push(Date.now(), id);
+  await executeSql(`UPDATE shopping_lists SET ${sets.join(', ')} WHERE id = ?`, params);
+}
+
 export async function markShoppingListPending(id: string): Promise<void> {
   await executeSql(
     `UPDATE shopping_lists SET sync_status = 'pending', updated_at = ? WHERE id = ?`,
