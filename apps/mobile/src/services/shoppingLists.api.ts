@@ -58,10 +58,10 @@ export const shoppingListsApi = {
     });
   },
 
-  compareBasket(items: BasketCompareItem[]) {
+  compareBasket(items: BasketCompareItem[], origin?: { lat: number; lng: number }) {
     return httpClient.request<BasketCompareResponse>('/price-history/basket', {
       method: 'POST',
-      body: JSON.stringify({ items }),
+      body: JSON.stringify({ items, ...(origin ? { lat: origin.lat, lng: origin.lng } : {}) }),
     });
   },
 
