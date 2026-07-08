@@ -13,9 +13,11 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
+import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
+import { RequireTier } from '../subscriptions/decorators/require-tier.decorator';
 import { AuthenticatedRequest } from '../../common/types';
 import { PriceHistoryService } from './price-history.service';
-import { UpsertAliasDto, MergeProductsDto } from './dto';
+import { UpsertAliasDto, MergeProductsDto, BasketCompareRequestDto } from './dto';
 
 @Controller('price-history')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -81,5 +83,14 @@ export class PriceHistoryController {
   @UseGuards(new ViewerBlockGuard())
   backfillWithAi(@Req() req: AuthenticatedRequest) {
     return this.priceHistoryService.backfillWithAi(req.accountId);
+  }
+
+  // POST /price-history/basket — Pro-gated basket price comparison
+  @Post('basket')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('pro')
+  compareBasket(@Req() req: AuthenticatedRequest, @Body() dto: BasketCompareRequestDto) {
+    const origin = dto.lat != null && dto.lng != null ? { lat: dto.lat, lng: dto.lng } : undefined;
+    return this.priceHistoryService.getBasketComparison(req.accountId, dto.items, origin);
   }
 }

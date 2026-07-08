@@ -12,6 +12,8 @@ export interface UpdateNotificationPreferencesDto {
   trackingGap?: boolean;
   purchaseRequests?: boolean;
   tripSettleUp?: boolean;
+  shoppingReminders?: boolean;
+  shoppingDeals?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -24,4 +26,6 @@ export interface NotificationPreferencesResponse {
   trackingGap: boolean;
   purchaseRequests: boolean;
   tripSettleUp: boolean;
+  shoppingReminders: boolean;
+  shoppingDeals: boolean;
 }

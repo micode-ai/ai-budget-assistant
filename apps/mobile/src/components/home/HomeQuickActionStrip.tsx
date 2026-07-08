@@ -17,6 +17,7 @@ const quickActionRoutes: Record<QuickActionKey, string> = {
   transfers: '/wallet/transfer',
   subscriptions: '/subscriptions',
   purchase_request: '/purchase-requests',
+  shopping: '/shopping-list',
 };
 
 const quickActionLabelKey: Record<QuickActionKey, string> = {
@@ -30,6 +31,7 @@ const quickActionLabelKey: Record<QuickActionKey, string> = {
   transfers: 'dashboard.transfers',
   subscriptions: 'subscriptionManager.title',
   purchase_request: 'dashboard.purchaseRequest',
+  shopping: 'dashboard.shoppingList',
 };
 
 interface HomeQuickActionStripProps {
