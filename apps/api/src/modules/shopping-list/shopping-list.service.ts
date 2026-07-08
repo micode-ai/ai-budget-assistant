@@ -38,17 +38,20 @@ export class ShoppingListService {
   async getLists(accountId: string, userId: string): Promise<ShoppingList[]> {
     const itemsInclude = { where: { isDeleted: false }, orderBy: [{ sortOrder: 'asc' as const }, { createdAt: 'asc' as const }] };
     let lists = await this.prisma.shoppingList.findMany({
-      where: { accountId, isArchived: false, isDeleted: false },
+      where: { accountId, isDeleted: false },
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       include: { items: itemsInclude },
     });
-    if (lists.length === 0) {
+    if (lists.filter((l) => !l.isArchived).length === 0) {
       const defaultClientId = `default-${accountId}`;
       try {
         // upsert (not create) so an archived/soft-deleted default row is resurrected
         // instead of colliding on the deterministic clientId; catch the concurrent
         // P2002 race outside any transaction and re-fetch (ABA-314/ABA-316 pattern).
+        // Append (not replace) — `lists` may already contain archived rows from
+        // the findMany above, and those must survive in the response too.
         lists = [
+          ...lists,
           await this.prisma.shoppingList.upsert({
             where: { accountId_clientId: { accountId, clientId: defaultClientId } },
             create: { accountId, clientId: defaultClientId, name: 'My List', isDefault: true, createdByUserId: userId },
@@ -62,7 +65,7 @@ export class ShoppingListService {
           where: { accountId_clientId: { accountId, clientId: defaultClientId } },
           include: { items: itemsInclude },
         });
-        if (row) lists = [row];
+        if (row) lists = [...lists, row];
       }
     }
     return lists.map(toList);

@@ -31,6 +31,22 @@ describe('ShoppingListService', () => {
     expect(lists[0].isDefault).toBe(true);
   });
 
+  it('getLists returns archived lists (not just the active default) so cross-device archive is not mistaken for delete', async () => {
+    prisma.shoppingList.findMany.mockResolvedValue([
+      {
+        id: 'l1', accountId: 'a1', clientId: 'c1', name: 'Old',
+        isDefault: false, isArchived: true, sortOrder: 0, createdByUserId: 'u1', items: [],
+      },
+    ]);
+    prisma.shoppingList.upsert.mockResolvedValue({
+      id: 'l2', accountId: 'a1', clientId: 'default-a1', name: 'My List',
+      isDefault: true, isArchived: false, sortOrder: 0, createdByUserId: 'u1', items: [],
+    });
+    const res = await service.getLists('a1', 'u1');
+    expect(res.some((l) => l.isArchived)).toBe(true);
+    expect(prisma.shoppingList.upsert).toHaveBeenCalled();
+  });
+
   it('getLists upserts the default list with an un-archive update (resurrects an archived/colliding default instead of crashing)', async () => {
     prisma.shoppingList.findMany.mockResolvedValue([]);
     prisma.shoppingList.upsert.mockResolvedValue({

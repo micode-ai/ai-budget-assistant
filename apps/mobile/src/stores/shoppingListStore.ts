@@ -219,11 +219,28 @@ export const useShoppingListStore = create<ShoppingListState>()(
     },
 
     archiveList: async (id) => {
+      // Compute the remaining lists and the next active id UP FRONT and set
+      // BOTH `lists` and `activeListId` in one `set(...)` call, BEFORE the
+      // `await` below — mirrors deleteList's atomic pattern. Splitting these
+      // across an `await` boundary leaves a window where `activeListId`
+      // points to a list no longer in `lists`, flashing the active-list pill
+      // to a generic/fallback title.
       const wasActive = get().activeListId === id;
 
-      set((state) => ({
-        lists: state.lists.filter((l) => l.id !== id),
-      }));
+      set((state) => {
+        const remaining = state.lists.filter((l) => l.id !== id);
+        const activeListId = wasActive
+          ? (remaining[0]?.id ?? null)
+          : state.activeListId;
+        return { lists: remaining, activeListId };
+      });
+
+      const noListsRemain = wasActive && get().lists.length === 0;
+      if (wasActive) {
+        const nextActiveId = get().activeListId;
+        if (nextActiveId) mmkv.set(ACTIVE_LIST_KEY, nextActiveId);
+        else mmkv.delete(ACTIVE_LIST_KEY);
+      }
 
       try {
         await updateShoppingList(id, { isArchived: true });
@@ -242,17 +259,10 @@ export const useShoppingListStore = create<ShoppingListState>()(
           console.warn('Shopping list archive sync deferred (offline?):', e);
         });
 
-      if (wasActive) {
-        const remaining = get().lists;
-        if (remaining.length > 0) {
-          get().setActiveList(remaining[0].id);
-        } else {
-          // No lists remain locally — clear the stale pointer and re-hydrate
-          // to materialize a default list from the server.
-          set({ activeListId: null });
-          mmkv.delete(ACTIVE_LIST_KEY);
-          await get().hydrate();
-        }
+      if (noListsRemain) {
+        // No lists remain locally — re-hydrate to materialize a default list
+        // from the server (activeListId/lists were already cleared above).
+        await get().hydrate();
       }
     },
 

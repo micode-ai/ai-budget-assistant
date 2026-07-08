@@ -50,7 +50,11 @@ type StoreSet = (
  * Reconciles a local (SQLite) collection against the server's authoritative
  * collection, keyed by `clientId`.
  *
- * - `toUpsert` = every server row (the caller writes these to SQLite).
+ * - `toUpsert` = every server row EXCEPT one whose local counterpart is still
+ *   `syncStatus === 'pending'` (an unpushed local rename/archive/edit this
+ *   cycle) — upserting the server's stale value there would overwrite the
+ *   pending edit and falsely mark it synced, silently dropping it. A server
+ *   row with no local counterpart (new elsewhere) is always upserted.
  * - `toTombstone` = local rows whose `syncStatus === 'synced'` AND whose
  *   `clientId` is absent from the server set — i.e. the server no longer has
  *   them (deleted elsewhere), so the local copy should be soft-deleted too.
@@ -68,7 +72,12 @@ export function mergeServerLists<
   const toTombstone = local
     .filter((l) => l.syncStatus === 'synced' && !serverClientIds.has(l.clientId))
     .map((l) => l.clientId);
-  return { toUpsert: server, toTombstone };
+  const localByClientId = new Map(local.map((l) => [l.clientId, l]));
+  const toUpsert = server.filter((s) => {
+    const loc = localByClientId.get(s.clientId);
+    return !loc || loc.syncStatus !== 'pending';
+  });
+  return { toUpsert, toTombstone };
 }
 
 // ─── local helpers ───────────────────────────────────────────────────────────
