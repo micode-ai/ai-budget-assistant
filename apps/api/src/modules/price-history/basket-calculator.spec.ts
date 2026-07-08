@@ -101,3 +101,53 @@ describe('computeBasket', () => {
     expect(res.perItemCheapest).toHaveLength(1);
   });
 });
+
+describe('computeBasket geo', () => {
+  it('sets lat/lng, distanceKm and nearby when store coords + origin are given', () => {
+    const rows = [row('Milk', 'Lidl', 2.5)];
+    const coords = new Map([['Lidl', { lat: 52.23, lng: 21.01 }]]);
+    const origin = { lat: 52.24, lng: 21.02 }; // ~1.3 km away
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW, coords, origin);
+    const s = res.stores[0];
+    expect(s.lat).toBe(52.23);
+    expect(s.lng).toBe(21.01);
+    expect(s.distanceKm).toBeGreaterThan(0);
+    expect(s.distanceKm).toBeLessThan(5);
+    expect(s.nearby).toBe(true);
+  });
+
+  it('marks a far store as not nearby', () => {
+    const rows = [row('Milk', 'FarStore', 2.5)];
+    const coords = new Map([['FarStore', { lat: 50.06, lng: 19.94 }]]); // Kraków
+    const origin = { lat: 52.23, lng: 21.01 }; // Warsaw, ~250 km
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW, coords, origin);
+    expect(res.stores[0].nearby).toBe(false);
+    expect(res.stores[0].distanceKm).toBeGreaterThan(100);
+  });
+
+  it('sets lat/lng but leaves distance undefined when no origin', () => {
+    const rows = [row('Milk', 'Lidl', 2.5)];
+    const coords = new Map([['Lidl', { lat: 52.23, lng: 21.01 }]]);
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW, coords);
+    expect(res.stores[0].lat).toBe(52.23);
+    expect(res.stores[0].distanceKm).toBeUndefined();
+    expect(res.stores[0].nearby).toBeUndefined();
+  });
+
+  it('leaves geo fields undefined when the store has no coords', () => {
+    const rows = [row('Milk', 'Unknown', 2.5)];
+    const origin = { lat: 52.23, lng: 21.01 };
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW, new Map(), origin);
+    expect(res.stores[0].lat).toBeUndefined();
+    expect(res.stores[0].distanceKm).toBeUndefined();
+  });
+
+  it('ignores a (0,0) null-island store coord', () => {
+    const rows = [row('Milk', 'Lidl', 2.5)];
+    const coords = new Map([['Lidl', { lat: 0, lng: 0 }]]);
+    const origin = { lat: 52.23, lng: 21.01 };
+    const res = computeBasket(rows, [{ canonicalName: 'Milk', quantity: 1 }], NOW, coords, origin);
+    expect(res.stores[0].lat).toBeUndefined();
+    expect(res.stores[0].distanceKm).toBeUndefined();
+  });
+});
