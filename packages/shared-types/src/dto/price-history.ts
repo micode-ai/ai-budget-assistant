@@ -59,6 +59,8 @@ export interface BasketStoreResult {
   isCheapest: boolean;     // best store among full (or >=80%) coverage
   distanceKm?: number;     // populated in M4 (geo); undefined in this plan
   nearby?: boolean;        // populated in M4
+  lat?: number;            // store coordinates (from your geo-tagged expenses); M4
+  lng?: number;
 }
 
 export interface BasketPerItemCheapest {
