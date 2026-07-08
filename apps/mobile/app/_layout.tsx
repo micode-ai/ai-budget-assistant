@@ -781,6 +781,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="shopping-list/map"
+          options={{
+            headerShown: true,
+            title: t('shoppingList.mapTitle'),
+          }}
+        />
+        <Stack.Screen
           name="investment/index"
           options={{
             headerShown: true,
