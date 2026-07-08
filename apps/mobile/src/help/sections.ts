@@ -45,4 +45,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '35-group-trip-wallet', icon: 'airplane-outline', color: '#0891B2' },
   { id: '36-personal-inflation-index', icon: 'trending-up-outline', color: '#F97316' },
   { id: '37-expense-map', icon: 'map-outline', color: '#22C55E' },
+  { id: '38-shopping-list', icon: 'cart-outline', color: '#8B5CF6' },
 ];
