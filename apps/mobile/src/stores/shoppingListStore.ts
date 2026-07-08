@@ -6,6 +6,7 @@ import type {
   ShoppingListItem,
   BasketCompareItem,
   BasketCompareResponse,
+  RestockSuggestion,
 } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import i18n from '@/i18n';
@@ -36,12 +37,14 @@ interface ShoppingListState {
   lists: ShoppingList[];
   activeListId: string | null;
   items: ShoppingListItem[]; // derived: the active list's items, auto-recomputed below
+  suggestions: RestockSuggestion[];
   basketResult: BasketCompareResponse | null;
   isComparing: boolean;
   isLoading: boolean;
   error: string | null;
 
   hydrate: () => Promise<void>;
+  loadSuggestions: () => Promise<void>;
   addItem: (rawLabel: string, canonicalName?: string | null, quantity?: number) => Promise<void>;
   toggleChecked: (itemId: string) => void;
   updateQuantity: (itemId: string, qty: number) => void;
@@ -58,6 +61,7 @@ export const useShoppingListStore = create<ShoppingListState>()(
     lists: [],
     activeListId: mmkv.getString(ACTIVE_LIST_KEY) ?? null,
     items: [],
+    suggestions: [],
     basketResult: null,
     isComparing: false,
     isLoading: false,
@@ -79,6 +83,17 @@ export const useShoppingListStore = create<ShoppingListState>()(
       if (lists.length > 0 && (!activeListId || !lists.some((l) => l.id === activeListId))) {
         const def = lists.find((l) => l.isDefault) ?? lists[0];
         get().setActiveList(def.id);
+      }
+
+      get().loadSuggestions();
+    },
+
+    loadSuggestions: async () => {
+      try {
+        const suggestions = await api.getRestockSuggestions();
+        set({ suggestions });
+      } catch (e) {
+        console.warn('Failed to load restock suggestions:', e);
       }
     },
 

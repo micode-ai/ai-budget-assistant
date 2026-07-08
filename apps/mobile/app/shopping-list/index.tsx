@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '@/stores/shoppingListStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { api } from '@/services/api';
-import type { ShoppingListItem, ProductListItem } from '@budget/shared-types';
+import type { ShoppingListItem, ProductListItem, RestockSuggestion } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const FREQUENT_COUNT = 8;
@@ -34,6 +34,7 @@ export default function ShoppingListScreen() {
   const items = useShoppingListStore((s) => s.items);
   const lists = useShoppingListStore((s) => s.lists);
   const activeListId = useShoppingListStore((s) => s.activeListId);
+  const suggestions = useShoppingListStore((s) => s.suggestions);
   const isLoading = useShoppingListStore((s) => s.isLoading);
   const hydrate = useShoppingListStore((s) => s.hydrate);
   const addItem = useShoppingListStore((s) => s.addItem);
@@ -100,6 +101,11 @@ export default function ShoppingListScreen() {
     if (!trimmed) return;
     addItem(trimmed, null, 1);
     setQuery('');
+  };
+
+  // ─── Restock suggestions strip (all members, not canEdit-gated) ───────────
+  const handleAddSuggestion = (suggestion: RestockSuggestion) => {
+    addItem(suggestion.canonicalName, suggestion.canonicalName, 1);
   };
 
   const trimmedQuery = query.trim();
@@ -211,6 +217,30 @@ export default function ShoppingListScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        {suggestions.length > 0 && (
+          <View style={styles.restockSection}>
+            <Text style={styles.restockTitle}>{t('shoppingList.restockTitle')}</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.restockRow}
+            >
+              {suggestions.map((s) => (
+                <TouchableOpacity
+                  key={s.canonicalName}
+                  style={styles.restockChip}
+                  onPress={() => handleAddSuggestion(s)}
+                >
+                  <Ionicons name="refresh-outline" size={14} color={theme.colors.primary} />
+                  <Text style={styles.restockChipText} numberOfLines={1}>
+                    {s.canonicalName}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle} numberOfLines={1}>
             {activeListName}
@@ -364,6 +394,25 @@ const createStyles = (theme: Theme) => ({
   headerActions: { flexDirection: 'row' as const, alignItems: 'center' as const },
   headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
   headerDeleteBtn: { marginLeft: theme.spacing[3] },
+
+  restockSection: { marginBottom: theme.spacing[3] },
+  restockTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+  },
+  restockRow: { gap: theme.spacing[2], paddingBottom: theme.spacing[0.5] },
+  restockChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    backgroundColor: theme.colors.primaryLight,
+    borderRadius: theme.borderRadius.full,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    maxWidth: 180,
+  },
+  restockChipText: { ...theme.textStyles.bodySm, color: theme.colors.primary, fontWeight: '500' as const },
 
   sectionHeader: {
     flexDirection: 'row' as const,

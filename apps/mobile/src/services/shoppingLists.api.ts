@@ -8,6 +8,7 @@ import type {
   UpdateShoppingListItemDto,
   BasketCompareResponse,
   BasketCompareItem,
+  RestockSuggestion,
 } from '@budget/shared-types';
 
 export const shoppingListsApi = {
@@ -62,5 +63,9 @@ export const shoppingListsApi = {
       method: 'POST',
       body: JSON.stringify({ items }),
     });
+  },
+
+  getRestockSuggestions() {
+    return httpClient.request<RestockSuggestion[]>('/shopping-list/suggestions');
   },
 };
