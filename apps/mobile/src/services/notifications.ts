@@ -139,6 +139,9 @@ export function handleNotificationResponse(
     case 'shopping_reminder':
       router.push('/shopping-list' as any);
       break;
+    case 'shopping_deal':
+      router.push('/shopping-list' as any);
+      break;
     default:
       break;
   }

@@ -27,6 +27,7 @@ export default function NotificationsSettingsScreen() {
   const [notifPurchaseRequests, setNotifPurchaseRequests] = useState(true);
   const [notifTripSettleUp, setNotifTripSettleUp] = useState(true);
   const [notifShoppingReminders, setNotifShoppingReminders] = useState(true);
+  const [notifShoppingDeals, setNotifShoppingDeals] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   const loadNotificationPreferences = useCallback(async () => {
@@ -42,6 +43,7 @@ export default function NotificationsSettingsScreen() {
       setNotifPurchaseRequests(prefs.purchaseRequests ?? true);
       setNotifTripSettleUp(prefs.tripSettleUp ?? true);
       setNotifShoppingReminders(prefs.shoppingReminders ?? true);
+      setNotifShoppingDeals(prefs.shoppingDeals ?? true);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -153,6 +155,16 @@ export default function NotificationsSettingsScreen() {
     }
   };
 
+  const handleToggleShoppingDeals = async (value: boolean) => {
+    setNotifShoppingDeals(value);
+    try {
+      await api.updateNotificationPreferences({ shoppingDeals: value });
+    } catch (e) {
+      setNotifShoppingDeals(!value);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
@@ -164,8 +176,9 @@ export default function NotificationsSettingsScreen() {
     setNotifPurchaseRequests(value);
     setNotifTripSettleUp(value);
     setNotifShoppingReminders(value);
+    setNotifShoppingDeals(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value, purchaseRequests: value, tripSettleUp: value, shoppingReminders: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value, purchaseRequests: value, tripSettleUp: value, shoppingReminders: value, shoppingDeals: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
@@ -177,6 +190,7 @@ export default function NotificationsSettingsScreen() {
       setNotifPurchaseRequests(!value);
       setNotifTripSettleUp(!value);
       setNotifShoppingReminders(!value);
+      setNotifShoppingDeals(!value);
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -194,7 +208,7 @@ export default function NotificationsSettingsScreen() {
                 <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
               </View>
               <Switch
-                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap || notifPurchaseRequests || notifTripSettleUp || notifShoppingReminders}
+                value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap || notifPurchaseRequests || notifTripSettleUp || notifShoppingReminders || notifShoppingDeals}
                 onValueChange={handleToggleAllNotifications}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
@@ -346,6 +360,21 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 value={notifShoppingReminders}
                 onValueChange={handleToggleShoppingReminders}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+                disabled={notifLoading}
+              />
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('notifications.shoppingDeals')}</Text>
+                <Text style={styles.fieldDesc}>{t('notifications.shoppingDealsDesc')}</Text>
+              </View>
+              <Switch
+                value={notifShoppingDeals}
+                onValueChange={handleToggleShoppingDeals}
                 trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
                 disabled={notifLoading}
               />

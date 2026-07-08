@@ -7,6 +7,7 @@ import type {
   BasketCompareItem,
   BasketCompareResponse,
   RestockSuggestion,
+  DealSuggestion,
 } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import i18n from '@/i18n';
@@ -39,6 +40,7 @@ interface ShoppingListState {
   activeListId: string | null;
   items: ShoppingListItem[]; // derived: the active list's items, auto-recomputed below
   suggestions: RestockSuggestion[];
+  deals: DealSuggestion[];
   basketResult: BasketCompareResponse | null;
   isComparing: boolean;
   isLoading: boolean;
@@ -47,6 +49,7 @@ interface ShoppingListState {
   hydrate: () => Promise<void>;
   loadSuggestions: () => Promise<void>;
   dismissSuggestion: (canonicalName: string) => void;
+  loadDeals: () => Promise<void>;
   addItem: (rawLabel: string, canonicalName?: string | null, quantity?: number) => Promise<void>;
   toggleChecked: (itemId: string) => void;
   updateQuantity: (itemId: string, qty: number) => void;
@@ -66,13 +69,14 @@ export const useShoppingListStore = create<ShoppingListState>()(
     activeListId: mmkv.getString(ACTIVE_LIST_KEY) ?? null,
     items: [],
     suggestions: [],
+    deals: [],
     basketResult: null,
     isComparing: false,
     isLoading: false,
     error: null,
 
     hydrate: async () => {
-      set({ suggestions: [] });
+      set({ suggestions: [], deals: [] });
 
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) {
@@ -92,6 +96,7 @@ export const useShoppingListStore = create<ShoppingListState>()(
       }
 
       get().loadSuggestions();
+      get().loadDeals();
     },
 
     loadSuggestions: async () => {
@@ -107,6 +112,15 @@ export const useShoppingListStore = create<ShoppingListState>()(
       set((s) => ({
         suggestions: s.suggestions.filter((x) => x.canonicalName !== canonicalName),
       }));
+    },
+
+    loadDeals: async () => {
+      try {
+        const deals = await api.getDeals();
+        set({ deals });
+      } catch (e) {
+        console.warn('Failed to load deal suggestions:', e);
+      }
     },
 
     setActiveList: (id) => {
