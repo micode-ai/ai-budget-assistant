@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
+import { predictRestock } from './restock-predictor';
 import type {
   ShoppingList, ShoppingListItem,
   CreateShoppingListDto, UpdateShoppingListDto,
   CreateShoppingListItemDto, UpdateShoppingListItemDto,
+  RestockSuggestion,
 } from '@budget/shared-types';
 
 function isP2002(e: unknown): boolean {
@@ -175,5 +177,37 @@ export class ShoppingListService {
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
     return { cleared: res.count };
+  }
+
+  async getRestockSuggestions(accountId: string): Promise<RestockSuggestion[]> {
+    // Alias resolution (mirror price-history: alias.canonicalName overrides item.canonicalName)
+    const aliases: Array<{ rawName: string; canonicalName: string }> =
+      await (this.prisma as any).productAlias.findMany({ where: { accountId }, select: { rawName: true, canonicalName: true } });
+    const aliasMap = new Map(aliases.map((a) => [a.rawName, a.canonicalName]));
+
+    const items: Array<{ canonicalName: string; expense: { date: Date } }> =
+      await (this.prisma as any).expenseItem.findMany({
+        where: { expense: { accountId, isDeleted: false }, canonicalName: { not: null }, isDeleted: false },
+        select: { canonicalName: true, expense: { select: { date: true } } },
+      });
+
+    const byProduct = new Map<string, Date[]>();
+    for (const it of items) {
+      const resolved = aliasMap.get(it.canonicalName) ?? it.canonicalName;
+      if (resolved === '__ignored__') continue;
+      const arr = byProduct.get(resolved) ?? [];
+      arr.push(it.expense.date);
+      byProduct.set(resolved, arr);
+    }
+
+    // Exclude products already present as a non-deleted item on any list in this account
+    const onList: Array<{ canonicalName: string | null }> = await this.prisma.shoppingListItem.findMany({
+      where: { accountId, isDeleted: false, canonicalName: { not: null } },
+      select: { canonicalName: true },
+    });
+    const listed = new Set(onList.map((i) => i.canonicalName));
+
+    return predictRestock(byProduct)
+      .filter((s) => s.dueInDays <= 0 && !listed.has(s.canonicalName));
   }
 }
