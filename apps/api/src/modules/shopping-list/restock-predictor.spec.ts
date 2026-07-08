@@ -38,4 +38,23 @@ describe('predictRestock', () => {
     const res = predictRestock(map, NOW);
     expect(res[0].canonicalName).toBe('B');
   });
+
+  it('skips products whose median gap is zero (all-same-date purchases)', () => {
+    const map = new Map<string, Date[]>([['Eggs', [d('2026-06-01'), d('2026-06-01'), d('2026-06-01')]]]);
+    expect(predictRestock(map, NOW)).toEqual([]);
+  });
+
+  it('computes an even-count median gap as the average of the two middle gaps', () => {
+    // A: 06-24, 07-01, 07-07 → gaps 7 and 6 → median 6.5
+    const map = new Map<string, Date[]>([['A', [d('2026-06-24'), d('2026-07-01'), d('2026-07-07')]]]);
+    const res = predictRestock(map, NOW);
+    expect(res[0].medianGapDays).toBe(6.5);
+  });
+
+  it('handles out-of-order input dates by sorting internally', () => {
+    const map = new Map<string, Date[]>([['Milk', [d('2026-06-21'), d('2026-06-07'), d('2026-06-28'), d('2026-06-14')]]]);
+    const res = predictRestock(map, NOW);
+    expect(res[0].medianGapDays).toBe(7);
+    expect(res[0].purchaseCount).toBe(4);
+  });
 });
