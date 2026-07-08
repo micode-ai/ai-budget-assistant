@@ -154,6 +154,7 @@ model User {
   notifyTrackingGap       Boolean   @default(true) @map("notify_tracking_gap")
   notifyPurchaseRequests  Boolean   @default(true) @map("notify_purchase_requests")
   notifyTripSettleUp      Boolean   @default(true) @map("notify_trip_settle_up")
+  notifyShoppingReminders Boolean   @default(true) @map("notify_shopping_reminders")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
