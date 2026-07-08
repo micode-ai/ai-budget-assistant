@@ -49,7 +49,7 @@ interface ShoppingListState {
   hydrate: () => Promise<void>;
   loadSuggestions: () => Promise<void>;
   dismissSuggestion: (canonicalName: string) => void;
-  dismissDeal: (canonicalName: string) => void;
+  dismissDeal: (canonicalName: string, merchant: string) => void;
   loadDeals: () => Promise<void>;
   addItem: (rawLabel: string, canonicalName?: string | null, quantity?: number) => Promise<void>;
   toggleChecked: (itemId: string) => void;
@@ -115,9 +115,9 @@ export const useShoppingListStore = create<ShoppingListState>()(
       }));
     },
 
-    dismissDeal: (canonicalName) => {
+    dismissDeal: (canonicalName, merchant) => {
       set((s) => ({
-        deals: s.deals.filter((x) => x.canonicalName !== canonicalName),
+        deals: s.deals.filter((x) => !(x.canonicalName === canonicalName && x.merchant === merchant)),
       }));
     },
 
