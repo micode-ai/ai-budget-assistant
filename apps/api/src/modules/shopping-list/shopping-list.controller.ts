@@ -29,6 +29,12 @@ export class ShoppingListController {
     return this.service.getRestockSuggestions(req.accountId);
   }
 
+  // GET /shopping-list/deals — free, declared before dynamic :id GET routes (ABA-166 route-order pattern)
+  @Get('deals')
+  getDeals(@Req() req: AuthenticatedRequest) {
+    return this.service.getDeals(req.accountId);
+  }
+
   // --- item routes declared before dynamic :id so /items/:itemId never resolves as :id ---
 
   // PATCH /shopping-list/items/:itemId

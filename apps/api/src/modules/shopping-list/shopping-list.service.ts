@@ -2,11 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { predictRestock } from './restock-predictor';
+import { detectDeals, DealRow } from './deal-detector';
 import type {
   ShoppingList, ShoppingListItem,
   CreateShoppingListDto, UpdateShoppingListDto,
   CreateShoppingListItemDto, UpdateShoppingListItemDto,
   RestockSuggestion,
+  DealSuggestion,
 } from '@budget/shared-types';
 
 function isP2002(e: unknown): boolean {
@@ -212,5 +214,32 @@ export class ShoppingListService {
 
     return predictRestock(byProduct)
       .filter((s) => s.dueInDays <= 0 && !listed.has(s.canonicalName));
+  }
+
+  async getDeals(accountId: string): Promise<DealSuggestion[]> {
+    const aliases: Array<{ rawName: string; canonicalName: string }> =
+      await (this.prisma as any).productAlias.findMany({ where: { accountId }, select: { rawName: true, canonicalName: true } });
+    const aliasMap = new Map(aliases.map((a) => [a.rawName, a.canonicalName]));
+
+    const items: Array<{ canonicalName: string; unitPrice: number; quantity: number; totalPrice: number; expense: { date: Date; merchant: string | null; currencyCode: string } }> =
+      await (this.prisma as any).expenseItem.findMany({
+        where: { expense: { accountId, isDeleted: false }, canonicalName: { not: null }, isDeleted: false },
+        select: { canonicalName: true, unitPrice: true, quantity: true, totalPrice: true, expense: { select: { date: true, merchant: true, currencyCode: true } } },
+      });
+
+    const rows: DealRow[] = [];
+    for (const it of items) {
+      const resolved = aliasMap.get(it.canonicalName) ?? it.canonicalName;
+      if (resolved === '__ignored__') continue;
+      const q = Number(it.quantity);
+      rows.push({
+        resolvedName: resolved,
+        date: it.expense.date,
+        unitPrice: q > 1 ? Number(it.totalPrice) / q : Number(it.unitPrice),
+        merchant: it.expense.merchant ?? 'Unknown',
+        currency: it.expense.currencyCode ?? 'PLN',
+      });
+    }
+    return detectDeals(rows);
   }
 }
