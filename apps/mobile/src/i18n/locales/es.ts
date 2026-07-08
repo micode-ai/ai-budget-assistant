@@ -745,6 +745,8 @@ export default {
     trackingReminderDesc: 'Recibe una notificación cuando no hayas registrado gastos en 3+ días',
     shoppingReminder: 'Recordatorios de reposición',
     shoppingReminderDesc: 'Recibe un recordatorio cuando toque volver a comprar un artículo habitual',
+    shoppingDeals: 'Alertas de ofertas',
+    shoppingDealsDesc: 'Recibe una notificación cuando baje el precio de un artículo habitual',
   },
   alerts: {
     title: 'Alertas',
@@ -2233,5 +2235,7 @@ export default {
     noStoreLocations: 'Aún no hay ubicaciones de tiendas — aparecerán aquí cuando los recibos tengan direcciones',
     findNearby: 'Buscar cerca',
     distanceKm: 'A {{km}} km',
+    dealsTitle: 'Ofertas para ti',
+    dealDrop: '-{{pct}}%',
   },
 } as const;
