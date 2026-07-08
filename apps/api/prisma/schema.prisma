@@ -154,6 +154,8 @@ model User {
   notifyTrackingGap       Boolean   @default(true) @map("notify_tracking_gap")
   notifyPurchaseRequests  Boolean   @default(true) @map("notify_purchase_requests")
   notifyTripSettleUp      Boolean   @default(true) @map("notify_trip_settle_up")
+  notifyShoppingReminders Boolean   @default(true) @map("notify_shopping_reminders")
+  notifyShoppingDeals     Boolean   @default(true) @map("notify_shopping_deals")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
@@ -294,6 +296,8 @@ model Account {
   feedEvents              FamilyFeedEvent[]
   settleUpTransactions    SettleUpTransaction[]
   productAliases          ProductAlias[]
+  shoppingLists           ShoppingList[]
+  shoppingListItems       ShoppingListItem[]
 
   @@map("accounts")
 }
@@ -478,6 +482,53 @@ model ProductAlias {
   @@unique([accountId, rawName])
   @@index([accountId])
   @@map("product_aliases")
+}
+
+model ShoppingList {
+  id              String   @id @default(uuid())
+  accountId       String   @map("account_id")
+  clientId        String   @map("client_id")
+  name            String
+  isDefault       Boolean  @default(false) @map("is_default")
+  isArchived      Boolean  @default(false) @map("is_archived")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdByUserId String   @map("created_by_user_id")
+  isDeleted       Boolean  @default(false) @map("is_deleted")
+  syncVersion     Int      @default(0) @map("sync_version")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  account Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  items   ShoppingListItem[]
+
+  @@unique([accountId, clientId])
+  @@index([accountId, isArchived])
+  @@map("shopping_lists")
+}
+
+model ShoppingListItem {
+  id             String   @id @default(uuid())
+  accountId      String   @map("account_id")
+  shoppingListId String   @map("shopping_list_id")
+  clientId       String   @map("client_id")
+  canonicalName  String?  @map("canonical_name")
+  rawLabel       String   @map("raw_label")
+  quantity       Decimal  @default(1) @db.Decimal(10, 3)
+  note           String?
+  isChecked      Boolean  @default(false) @map("is_checked")
+  addedByUserId  String   @map("added_by_user_id")
+  sortOrder      Int      @default(0) @map("sort_order")
+  isDeleted      Boolean  @default(false) @map("is_deleted")
+  syncVersion    Int      @default(0) @map("sync_version")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  account      Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  shoppingList ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, clientId])
+  @@index([shoppingListId, isChecked])
+  @@map("shopping_list_items")
 }
 
 model Income {

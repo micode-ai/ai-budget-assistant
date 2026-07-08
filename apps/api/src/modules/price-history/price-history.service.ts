@@ -2,12 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { computeBasket, BasketRow } from './basket-calculator';
 import type {
   PriceHistoryResponse,
   PriceHistoryProduct,
   PriceHistoryPeriod,
   ProductListItem,
   StoreLatestPrice,
+  BasketCompareItem,
+  BasketCompareResponse,
 } from '@budget/shared-types';
 
 type Period = PriceHistoryPeriod;
@@ -24,6 +27,8 @@ interface RawItemRow {
   unitPrice: number;
   merchant: string;
   currency: string;
+  locationLat?: number | null;
+  locationLng?: number | null;
 }
 
 const AI_BACKFILL_BATCH = 50;
@@ -54,6 +59,23 @@ export class PriceHistoryService {
     const result: PriceHistoryResponse = { inflationIndex, period, productCount, currency, products };
     await this.cache.set(cacheKey, result, 300);
     return result;
+  }
+
+  async getBasketComparison(
+    accountId: string,
+    items: BasketCompareItem[],
+    origin?: { lat: number; lng: number },
+  ): Promise<BasketCompareResponse> {
+    const rows = await this.fetchRows(accountId);
+    // Most-recent geo-tagged expense per merchant → store coords
+    const storeCoords = new Map<string, { lat: number; lng: number; date: Date }>();
+    for (const r of rows) {
+      if (r.locationLat == null || r.locationLng == null) continue;
+      const cur = storeCoords.get(r.merchant);
+      if (!cur || r.date > cur.date) storeCoords.set(r.merchant, { lat: r.locationLat, lng: r.locationLng, date: r.date });
+    }
+    const coordMap = new Map([...storeCoords].map(([m, c]) => [m, { lat: c.lat, lng: c.lng }]));
+    return computeBasket(rows as unknown as BasketRow[], items, new Date(), coordMap, origin);
   }
 
   async listProducts(accountId: string): Promise<ProductListItem[]> {
@@ -255,7 +277,13 @@ export class PriceHistoryService {
       unitPrice: number;
       quantity: number;
       totalPrice: number;
-      expense: { date: Date; merchant: string | null; currencyCode: string };
+      expense: {
+        date: Date;
+        merchant: string | null;
+        currencyCode: string;
+        locationLat?: number | string | null;
+        locationLng?: number | string | null;
+      };
     }> = await (this.prisma as any).expenseItem.findMany({
       where: {
         expense: { accountId, isDeleted: false },
@@ -268,8 +296,11 @@ export class PriceHistoryService {
         unitPrice: true,
         quantity: true,
         totalPrice: true,
-        expense: { select: { date: true, merchant: true, currencyCode: true } },
+        expense: {
+          select: { date: true, merchant: true, currencyCode: true, locationLat: true, locationLng: true },
+        },
       },
+      orderBy: [{ expense: { date: 'asc' } }, { id: 'asc' }],
     });
 
     return items
@@ -287,6 +318,9 @@ export class PriceHistoryService {
             : Number(item.unitPrice),
         merchant: item.expense.merchant ?? 'Unknown',
         currency: item.expense.currencyCode ?? 'PLN',
+        // Decimal? columns → Number(...); null/undefined stay null
+        locationLat: item.expense.locationLat != null ? Number(item.expense.locationLat) : null,
+        locationLng: item.expense.locationLng != null ? Number(item.expense.locationLng) : null,
       }));
   }
 

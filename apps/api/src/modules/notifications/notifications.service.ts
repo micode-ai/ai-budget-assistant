@@ -46,6 +46,8 @@ export class NotificationsService {
         notifyTrackingGap: true,
         notifyPurchaseRequests: true,
         notifyTripSettleUp: true,
+        notifyShoppingReminders: true,
+        notifyShoppingDeals: true,
       },
     });
 
@@ -64,6 +66,8 @@ export class NotificationsService {
     if (notificationType === 'purchase_request_approved' && !user.notifyPurchaseRequests) return false;
     if (notificationType === 'purchase_request_rejected' && !user.notifyPurchaseRequests) return false;
     if (notificationType === 'trip_settle_up' && !user.notifyTripSettleUp) return false;
+    if (notificationType === 'shopping_reminder' && !user.notifyShoppingReminders) return false;
+    if (notificationType === 'shopping_deal' && !user.notifyShoppingDeals) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);

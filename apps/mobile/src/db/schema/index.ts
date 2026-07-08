@@ -275,6 +275,43 @@ export const tripExpenseShares = sqliteTable('trip_expense_shares', {
   syncVersion: integer('sync_version').default(0),
 });
 
+// Shopping lists table
+export const shoppingLists = sqliteTable('shopping_lists', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  clientId: text('client_id').notNull(),
+  name: text('name').notNull(),
+  isDefault: integer('is_default', { mode: 'boolean' }).default(false),
+  isArchived: integer('is_archived', { mode: 'boolean' }).default(false),
+  sortOrder: integer('sort_order').default(0),
+  createdByUserId: text('created_by_user_id'),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').default('pending'),
+  syncVersion: integer('sync_version').default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }),
+});
+
+// Shopping list items table
+export const shoppingListItems = sqliteTable('shopping_list_items', {
+  id: text('id').primaryKey(),
+  accountId: text('account_id').notNull(),
+  shoppingListId: text('shopping_list_id').notNull(),
+  clientId: text('client_id').notNull(),
+  canonicalName: text('canonical_name'),
+  rawLabel: text('raw_label').notNull(),
+  quantity: real('quantity').default(1),
+  note: text('note'),
+  isChecked: integer('is_checked', { mode: 'boolean' }).default(false),
+  addedByUserId: text('added_by_user_id'),
+  sortOrder: integer('sort_order').default(0),
+  isDeleted: integer('is_deleted', { mode: 'boolean' }).default(false),
+  syncStatus: text('sync_status').default('pending'),
+  syncVersion: integer('sync_version').default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }),
+});
+
 // Chat conversations table
 export const chatConversations = sqliteTable('chat_conversations', {
   id: text('id').primaryKey(),
@@ -406,3 +443,7 @@ export type ExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferSele
 export type NewExpenseCategorySplitRecord = typeof expenseCategorySplits.$inferInsert;
 export type TripExpenseShareRecord = typeof tripExpenseShares.$inferSelect;
 export type NewTripExpenseShareRecord = typeof tripExpenseShares.$inferInsert;
+export type ShoppingListRecord = typeof shoppingLists.$inferSelect;
+export type NewShoppingListRecord = typeof shoppingLists.$inferInsert;
+export type ShoppingListItemRecord = typeof shoppingListItems.$inferSelect;
+export type NewShoppingListItemRecord = typeof shoppingListItems.$inferInsert;

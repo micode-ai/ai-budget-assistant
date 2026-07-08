@@ -207,6 +207,13 @@ export function InflationIndexSection() {
         >
           <Text style={styles.manageLinkText}>{t('priceHistory.manageProducts')}</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.manageLink}
+          onPress={() => router.push('/shopping-list' as any)}
+        >
+          <Text style={styles.manageLinkText}>{t('shoppingList.planAShop')}</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Product detail bottom sheet */}

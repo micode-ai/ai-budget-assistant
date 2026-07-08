@@ -43,3 +43,35 @@ export interface MergeProductsDto {
   rawNames: string[];
   canonicalName: string;
 }
+
+export interface BasketCompareItem {
+  canonicalName: string;
+  quantity: number;
+}
+
+export interface BasketStoreResult {
+  merchantName: string;
+  estimatedTotal: number;
+  coveredItems: number;
+  totalItems: number;
+  missingItems: string[];  // canonicalNames this store cannot price
+  hasStale: boolean;       // any contributing price > 90 days old
+  isCheapest: boolean;     // best store among full (or >=80%) coverage
+  distanceKm?: number;     // populated in M4 (geo); undefined in this plan
+  nearby?: boolean;        // populated in M4
+  lat?: number;            // store coordinates (from your geo-tagged expenses); M4
+  lng?: number;
+}
+
+export interface BasketPerItemCheapest {
+  canonicalName: string;
+  cheapestStore: string | null;
+  price: number | null;
+}
+
+export interface BasketCompareResponse {
+  currency: string;
+  stores: BasketStoreResult[];         // sorted cheapest -> most expensive
+  perItemCheapest: BasketPerItemCheapest[];
+  missingEverywhere: string[];         // items no visited store can price
+}

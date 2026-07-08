@@ -376,6 +376,41 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
+    // Shopping lists tables
+    expoDb.execSync(`CREATE TABLE IF NOT EXISTS shopping_lists (
+      id TEXT PRIMARY KEY NOT NULL,
+      account_id TEXT NOT NULL,
+      client_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      is_default INTEGER DEFAULT 0,
+      is_archived INTEGER DEFAULT 0,
+      sort_order INTEGER DEFAULT 0,
+      created_by_user_id TEXT,
+      is_deleted INTEGER DEFAULT 0,
+      sync_status TEXT DEFAULT 'pending',
+      sync_version INTEGER DEFAULT 0,
+      created_at INTEGER,
+      updated_at INTEGER
+    )`);
+    expoDb.execSync(`CREATE TABLE IF NOT EXISTS shopping_list_items (
+      id TEXT PRIMARY KEY NOT NULL,
+      account_id TEXT NOT NULL,
+      shopping_list_id TEXT NOT NULL,
+      client_id TEXT NOT NULL,
+      canonical_name TEXT,
+      raw_label TEXT NOT NULL,
+      quantity REAL DEFAULT 1,
+      note TEXT,
+      is_checked INTEGER DEFAULT 0,
+      added_by_user_id TEXT,
+      sort_order INTEGER DEFAULT 0,
+      is_deleted INTEGER DEFAULT 0,
+      sync_status TEXT DEFAULT 'pending',
+      sync_version INTEGER DEFAULT 0,
+      created_at INTEGER,
+      updated_at INTEGER
+    )`);
+
     // Encryption keys table (local cache for E2EE account keys)
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS encryption_keys (
@@ -668,6 +703,9 @@ export async function initializeDatabase(): Promise<void> {
       'CREATE INDEX IF NOT EXISTS idx_investment_transactions_date ON investment_transactions(account_id, date DESC)',
       'CREATE INDEX IF NOT EXISTS idx_investment_transactions_sync ON investment_transactions(sync_status)',
       'CREATE INDEX IF NOT EXISTS idx_portfolio_holdings_sync ON portfolio_holdings(sync_status)',
+      // Shopping list indexes
+      'CREATE INDEX IF NOT EXISTS idx_shopping_lists_account ON shopping_lists(account_id, is_archived)',
+      'CREATE INDEX IF NOT EXISTS idx_shopping_list_items_list ON shopping_list_items(shopping_list_id, is_checked)',
     ];
 
     for (const indexSql of indexes) {
