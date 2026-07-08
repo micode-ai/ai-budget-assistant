@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Gastos inusuales, subidas de precio y cargos duplicados',
     trackingReminder: 'Recordatorio de seguimiento',
     trackingReminderDesc: 'Recibe una notificación cuando no hayas registrado gastos en 3+ días',
+    shoppingReminder: 'Recordatorios de reposición',
+    shoppingReminderDesc: 'Recibe un recordatorio cuando toque volver a comprar un artículo habitual',
   },
   alerts: {
     title: 'Alertas',
@@ -2218,5 +2220,6 @@ export default {
     deleteList: 'Eliminar lista',
     deleteListConfirm: '¿Eliminar esta lista y todos sus artículos?',
     quantity: 'Cantidad',
+    restockTitle: 'Hora de reponer',
   },
 } as const;

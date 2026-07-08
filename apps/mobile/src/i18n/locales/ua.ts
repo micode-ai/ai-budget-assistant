@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Незвичайні витрати, подорожчання та повторні платежі',
     trackingReminder: 'Нагадування про записи',
     trackingReminderDesc: 'Сповіщення, якщо ви не записували витрати 3+ дні',
+    shoppingReminder: 'Нагадування про поповнення запасів',
+    shoppingReminderDesc: 'Сповіщення, коли настав час знову купити звичний товар',
   },
   alerts: {
     title: 'Сповіщення',
@@ -2222,5 +2224,6 @@ export default {
     deleteList: 'Видалити список',
     deleteListConfirm: 'Видалити цей список і всі його товари?',
     quantity: 'Кількість',
+    restockTitle: 'Час поповнити запаси',
   },
 } as const;

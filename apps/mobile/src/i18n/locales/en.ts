@@ -744,6 +744,8 @@ export default {
     anomalyAlertsDesc: 'Unusual spending, price increases and duplicate charges',
     trackingReminder: 'Tracking Reminder',
     trackingReminderDesc: "Get notified when you haven't logged expenses in 3+ days",
+    shoppingReminder: 'Restock reminders',
+    shoppingReminderDesc: "Get reminded when you're due to rebuy a regular item",
   },
   alerts: {
     title: 'Alerts',
@@ -2229,5 +2231,6 @@ export default {
     deleteList: 'Delete list',
     deleteListConfirm: 'Delete this list and all its items?',
     quantity: 'Quantity',
+    restockTitle: 'Time to restock',
   },
 } as const;

@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Nietypowe wydatki, podwyżki cen i podwójne płatności',
     trackingReminder: 'Przypomnienie o śledzeniu',
     trackingReminderDesc: 'Otrzymuj powiadomienie, gdy nie zapisałeś wydatków przez 3+ dni',
+    shoppingReminder: 'Przypomnienia o uzupełnieniu zapasów',
+    shoppingReminderDesc: 'Otrzymuj przypomnienie, gdy nadejdzie czas na ponowny zakup stałego produktu',
   },
   alerts: {
     title: 'Alerty',
@@ -2222,5 +2224,6 @@ export default {
     deleteList: 'Usuń listę',
     deleteListConfirm: 'Usunąć tę listę i wszystkie jej produkty?',
     quantity: 'Ilość',
+    restockTitle: 'Czas na uzupełnienie zapasów',
   },
 } as const;

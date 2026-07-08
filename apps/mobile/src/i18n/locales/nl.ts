@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Ongewone uitgaven, prijsstijgingen en dubbele afschrijvingen',
     trackingReminder: 'Trackingherinnering',
     trackingReminderDesc: 'Ontvang een melding als je al 3+ dagen geen uitgaven hebt geregistreerd',
+    shoppingReminder: 'Herbevoorradingsherinneringen',
+    shoppingReminderDesc: 'Ontvang een herinnering wanneer het tijd is om een vast artikel opnieuw te kopen',
   },
   alerts: {
     title: 'Meldingen',
@@ -2218,5 +2220,6 @@ export default {
     deleteList: 'Lijst verwijderen',
     deleteListConfirm: 'Deze lijst en alle artikelen verwijderen?',
     quantity: 'Hoeveelheid',
+    restockTitle: 'Tijd om aan te vullen',
   },
 } as const;
