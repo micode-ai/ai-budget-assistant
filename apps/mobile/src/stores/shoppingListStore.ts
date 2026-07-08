@@ -54,7 +54,7 @@ interface ShoppingListState {
   createList: (name: string) => Promise<void>;
   deleteList: (id: string) => Promise<void>;
   setActiveList: (id: string) => void;
-  compareBasket: () => Promise<void>;
+  compareBasket: (origin?: { lat: number; lng: number }) => Promise<void>;
 }
 
 export const useShoppingListStore = create<ShoppingListState>()(
@@ -335,7 +335,7 @@ export const useShoppingListStore = create<ShoppingListState>()(
       );
     },
 
-    compareBasket: async () => {
+    compareBasket: async (origin?: { lat: number; lng: number }) => {
       const { lists, activeListId } = get();
       const list = lists.find((l) => l.id === activeListId);
       if (!list) return;
@@ -353,7 +353,7 @@ export const useShoppingListStore = create<ShoppingListState>()(
 
       set({ isComparing: true });
       try {
-        const result = await api.compareBasket(items);
+        const result = await api.compareBasket(items, origin);
         set({ basketResult: result, isComparing: false });
       } catch (e) {
         set({ isComparing: false });
