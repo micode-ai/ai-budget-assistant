@@ -48,24 +48,24 @@ export class ShoppingListService {
         // upsert (not create) so an archived/soft-deleted default row is resurrected
         // instead of colliding on the deterministic clientId; catch the concurrent
         // P2002 race outside any transaction and re-fetch (ABA-314/ABA-316 pattern).
-        // Append (not replace) — `lists` may already contain archived rows from
-        // the findMany above, and those must survive in the response too.
-        lists = [
-          ...lists,
-          await this.prisma.shoppingList.upsert({
-            where: { accountId_clientId: { accountId, clientId: defaultClientId } },
-            create: { accountId, clientId: defaultClientId, name: 'My List', isDefault: true, createdByUserId: userId },
-            update: { isArchived: false, isDeleted: false },
-            include: { items: itemsInclude },
-          }),
-        ];
+        // Replace (not append) — if the resurrected/created default row's id is
+        // already present in `lists` (e.g. the account's only list WAS the
+        // archived default, so findMany above already returned it stale), drop
+        // the stale copy so the response never has two entries with the same id.
+        const upserted = await this.prisma.shoppingList.upsert({
+          where: { accountId_clientId: { accountId, clientId: defaultClientId } },
+          create: { accountId, clientId: defaultClientId, name: 'My List', isDefault: true, createdByUserId: userId },
+          update: { isArchived: false, isDeleted: false },
+          include: { items: itemsInclude },
+        });
+        lists = [...lists.filter((l) => l.id !== upserted.id), upserted];
       } catch (e) {
         if (!isP2002(e)) throw e;
         const row = await this.prisma.shoppingList.findUnique({
           where: { accountId_clientId: { accountId, clientId: defaultClientId } },
           include: { items: itemsInclude },
         });
-        if (row) lists = [...lists, row];
+        if (row) lists = [...lists.filter((l) => l.id !== row.id), row];
       }
     }
     return lists.map(toList);

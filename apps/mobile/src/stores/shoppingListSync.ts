@@ -298,8 +298,11 @@ async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> 
     const merged = await loadLocalListsWithItems(accountId);
     if (useAccountStore.getState().currentAccountId !== accountId) return;
 
-    // Web (no real SQLite): fall back to the freshly-pulled server rows.
-    set({ lists: merged.length > 0 ? merged : serverLists });
+    // Web (no real SQLite): fall back to the freshly-pulled server rows, but
+    // filter out archived ones — native's `merged` path already excludes them
+    // (getAllShoppingLists filters is_archived=0), so the raw server fallback
+    // must match that behavior or archived lists leak into the live web UI.
+    set({ lists: merged.length > 0 ? merged : serverLists.filter((l) => !l.isArchived) });
   } catch (e) {
     console.error('Failed to load shopping lists from SQLite:', e);
     set({ error: 'Failed to load shopping lists', isLoading: false });
