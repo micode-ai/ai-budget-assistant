@@ -13,6 +13,7 @@ import i18n from '@/i18n';
 import {
   upsertShoppingList,
   deleteShoppingList,
+  updateShoppingList,
   markShoppingListSynced,
 } from '@/db/shoppingListRepository';
 import type { ShoppingListLocal } from '@/db/shoppingListRepository';
@@ -53,6 +54,8 @@ interface ShoppingListState {
   clearChecked: () => Promise<void>;
   createList: (name: string) => Promise<void>;
   deleteList: (id: string) => Promise<void>;
+  renameList: (id: string, name: string) => Promise<void>;
+  archiveList: (id: string) => Promise<void>;
   setActiveList: (id: string) => void;
   compareBasket: (origin?: { lat: number; lng: number }) => Promise<void>;
 }
@@ -190,6 +193,67 @@ export const useShoppingListStore = create<ShoppingListState>()(
       api.deleteList(id).catch((e) =>
         console.warn('Shopping list delete sync deferred (offline?):', e),
       );
+    },
+
+    renameList: async (id, name) => {
+      set((state) => ({
+        lists: state.lists.map((l) => (l.id === id ? { ...l, name } : l)),
+      }));
+
+      try {
+        await updateShoppingList(id, { name });
+      } catch (e) {
+        console.error('Failed to update shopping list in SQLite:', e);
+      }
+
+      // Row stays 'pending' until the server ack lands — see createList's
+      // comment above for why marking it 'synced' early is unsafe.
+      api
+        .updateList(id, { name })
+        .then(() => {
+          markShoppingListSynced(id).catch(() => {});
+        })
+        .catch((e) => {
+          console.warn('Shopping list rename sync deferred (offline?):', e);
+        });
+    },
+
+    archiveList: async (id) => {
+      const wasActive = get().activeListId === id;
+
+      set((state) => ({
+        lists: state.lists.filter((l) => l.id !== id),
+      }));
+
+      try {
+        await updateShoppingList(id, { isArchived: true });
+      } catch (e) {
+        console.error('Failed to update shopping list in SQLite:', e);
+      }
+
+      // Row stays 'pending' until the server ack lands — see createList's
+      // comment above for why marking it 'synced' early is unsafe.
+      api
+        .updateList(id, { isArchived: true })
+        .then(() => {
+          markShoppingListSynced(id).catch(() => {});
+        })
+        .catch((e) => {
+          console.warn('Shopping list archive sync deferred (offline?):', e);
+        });
+
+      if (wasActive) {
+        const remaining = get().lists;
+        if (remaining.length > 0) {
+          get().setActiveList(remaining[0].id);
+        } else {
+          // No lists remain locally — clear the stale pointer and re-hydrate
+          // to materialize a default list from the server.
+          set({ activeListId: null });
+          mmkv.delete(ACTIVE_LIST_KEY);
+          await get().hydrate();
+        }
+      }
     },
 
     addItem: async (rawLabel, canonicalName = null, quantity = 1) => {
