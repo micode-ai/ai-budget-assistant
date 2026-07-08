@@ -46,6 +46,7 @@ export default function ShoppingListScreen() {
   const hydrate = useShoppingListStore((s) => s.hydrate);
   const addItem = useShoppingListStore((s) => s.addItem);
   const dismissSuggestion = useShoppingListStore((s) => s.dismissSuggestion);
+  const dismissDeal = useShoppingListStore((s) => s.dismissDeal);
   const toggleChecked = useShoppingListStore((s) => s.toggleChecked);
   const updateQuantity = useShoppingListStore((s) => s.updateQuantity);
   const removeItem = useShoppingListStore((s) => s.removeItem);
@@ -124,6 +125,7 @@ export default function ShoppingListScreen() {
   // ─── Deal suggestions strip (all members, not canEdit-gated) ──────────────
   const handleAddDeal = (deal: DealSuggestion) => {
     addItem(deal.canonicalName, deal.canonicalName, 1);
+    dismissDeal(deal.canonicalName);
   };
 
   // ─── List switcher bottom sheet ────────────────────────────────────────────
