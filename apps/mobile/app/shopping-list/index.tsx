@@ -38,6 +38,7 @@ export default function ShoppingListScreen() {
   const isLoading = useShoppingListStore((s) => s.isLoading);
   const hydrate = useShoppingListStore((s) => s.hydrate);
   const addItem = useShoppingListStore((s) => s.addItem);
+  const dismissSuggestion = useShoppingListStore((s) => s.dismissSuggestion);
   const toggleChecked = useShoppingListStore((s) => s.toggleChecked);
   const updateQuantity = useShoppingListStore((s) => s.updateQuantity);
   const removeItem = useShoppingListStore((s) => s.removeItem);
@@ -106,6 +107,7 @@ export default function ShoppingListScreen() {
   // ─── Restock suggestions strip (all members, not canEdit-gated) ───────────
   const handleAddSuggestion = (suggestion: RestockSuggestion) => {
     addItem(suggestion.canonicalName, suggestion.canonicalName, 1);
+    dismissSuggestion(suggestion.canonicalName);
   };
 
   const trimmedQuery = query.trim();

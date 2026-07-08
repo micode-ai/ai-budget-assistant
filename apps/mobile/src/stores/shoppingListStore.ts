@@ -45,6 +45,7 @@ interface ShoppingListState {
 
   hydrate: () => Promise<void>;
   loadSuggestions: () => Promise<void>;
+  dismissSuggestion: (canonicalName: string) => void;
   addItem: (rawLabel: string, canonicalName?: string | null, quantity?: number) => Promise<void>;
   toggleChecked: (itemId: string) => void;
   updateQuantity: (itemId: string, qty: number) => void;
@@ -97,6 +98,12 @@ export const useShoppingListStore = create<ShoppingListState>()(
       } catch (e) {
         console.warn('Failed to load restock suggestions:', e);
       }
+    },
+
+    dismissSuggestion: (canonicalName) => {
+      set((s) => ({
+        suggestions: s.suggestions.filter((x) => x.canonicalName !== canonicalName),
+      }));
     },
 
     setActiveList: (id) => {
