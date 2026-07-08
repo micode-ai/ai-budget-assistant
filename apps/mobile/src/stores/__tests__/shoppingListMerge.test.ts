@@ -17,6 +17,7 @@ jest.mock('@/db/shoppingListRepository', () => ({
   deleteShoppingList: jest.fn().mockResolvedValue(undefined),
   getPendingShoppingLists: jest.fn().mockResolvedValue([]),
   markShoppingListSynced: jest.fn().mockResolvedValue(undefined),
+  getShoppingListCreatedAtMap: jest.fn().mockResolvedValue(new Map()),
 }));
 
 jest.mock('@/db/shoppingListItemRepository', () => ({
@@ -25,12 +26,14 @@ jest.mock('@/db/shoppingListItemRepository', () => ({
   softDeleteShoppingListItem: jest.fn().mockResolvedValue(undefined),
   getPendingShoppingListItems: jest.fn().mockResolvedValue([]),
   markShoppingListItemSynced: jest.fn().mockResolvedValue(undefined),
+  getShoppingListItemCreatedAtMap: jest.fn().mockResolvedValue(new Map()),
 }));
 
 jest.mock('@/services/api', () => ({
   api: {
     getLists: jest.fn().mockResolvedValue([]),
     createList: jest.fn().mockResolvedValue({}),
+    updateList: jest.fn().mockResolvedValue({}),
     deleteList: jest.fn().mockResolvedValue({}),
     addItem: jest.fn().mockResolvedValue({}),
     updateItem: jest.fn().mockResolvedValue({}),
@@ -44,7 +47,9 @@ jest.mock('../accountStore', () => ({
   },
 }));
 
-import { mergeServerLists } from '../shoppingListSync';
+import { mergeServerLists, pullAndMergeShoppingLists } from '../shoppingListSync';
+import { api } from '@/services/api';
+import { getPendingShoppingLists } from '@/db/shoppingListRepository';
 
 describe('mergeServerLists', () => {
   const local = [
@@ -61,5 +66,49 @@ describe('mergeServerLists', () => {
     expect(toUpsert.map((l) => l.clientId)).toEqual(['c1']);
     expect(toTombstone).toEqual(['c2']);                     // synced + server-absent → delete
     // c3 is pending → neither upserted from server nor tombstoned
+  });
+});
+
+// Regression test for the "offline rename/archive silently reverted" bug:
+// api.createList is idempotent on (accountId, clientId) — for a list the
+// server already has, it returns the EXISTING row UNCHANGED, ignoring a new
+// name. pushPendingLists (private, exercised here via pullAndMergeShoppingLists)
+// must follow up with api.updateList so a renamed/archived-but-already-synced
+// row's edits actually reach the server, instead of being falsely marked
+// synced and reverted by the next merge.
+describe('pushPendingLists (via pullAndMergeShoppingLists)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (api.getLists as jest.Mock).mockResolvedValue([]);
+    (getPendingShoppingLists as jest.Mock).mockResolvedValue([]);
+  });
+
+  it('pushes a renamed + archived pending list via updateList after createList', async () => {
+    const pendingList = {
+      id: 'list-1',
+      accountId: 'acc-1',
+      clientId: 'list-1',
+      name: 'Renamed Groceries',
+      isDefault: false,
+      isArchived: true,
+      sortOrder: 0,
+      createdByUserId: 'user-1',
+      items: [],
+      isDeleted: false,
+      syncStatus: 'pending',
+    } as any;
+    (getPendingShoppingLists as jest.Mock).mockResolvedValue([pendingList]);
+
+    const set = jest.fn();
+    await pullAndMergeShoppingLists('acc-1', set);
+
+    expect(api.createList).toHaveBeenCalledWith({
+      clientId: 'list-1',
+      name: 'Renamed Groceries',
+    });
+    expect(api.updateList).toHaveBeenCalledWith('list-1', {
+      name: 'Renamed Groceries',
+      isArchived: true,
+    });
   });
 });

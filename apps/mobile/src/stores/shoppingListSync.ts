@@ -92,7 +92,16 @@ async function pushPendingLists(accountId: string): Promise<void> {
       if (list.isDeleted) {
         await api.deleteList(list.clientId);
       } else {
+        // createList is idempotent on (accountId, clientId) — for a list the
+        // server already has, it returns the EXISTING row UNCHANGED. So an
+        // offline rename/archive (which only bumps sync_status to 'pending'
+        // on an already-synced row) would otherwise never reach the server.
+        // Always follow up with updateList so field edits propagate too.
         await api.createList({ clientId: list.clientId, name: list.name });
+        await api.updateList(list.clientId, {
+          name: list.name,
+          isArchived: list.isArchived,
+        });
       }
       await markShoppingListSynced(list.id);
     } catch (e) {
