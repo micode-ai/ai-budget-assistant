@@ -4021,6 +4021,96 @@ Trip accounts get a dedicated entry point: open the trip account and tap **Trip 
 - You can remove any expense's location at any time.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Smart Shopping List`,
+      description: `A shared shopping list that also tells you which store is cheapest for your basket — calculated from your own receipt prices, no AI cost.`,
+      body: `# Smart Shopping List
+
+> A shared shopping list that also tells you which store is cheapest for your basket — calculated from your own receipt prices, no AI cost.
+
+The Smart Shopping List is a shared checklist for your account. Unlike a plain list, it's connected to your **Personal Inflation Index** price history — every item you've bought and scanned has a known price at a known store, so the app can rank stores by your actual basket total, suggest what's due for a refill, and flag genuine price drops.
+
+## Where to Find It
+
+Open **Shopping list** from the home screen quick actions, or go to **Settings → Shopping list**. On a shared account, everyone sees and edits the same list.
+
+## Creating and Switching Lists
+
+Every account starts with a default list called "My List." You can keep multiple lists (e.g. "Groceries" and "Pharmacy") and switch between them.
+
+Tap the list name pill at the top of the screen to open **Manage lists**, where you can:
+
+- **Switch** — tap any list to make it active.
+- **Create** — tap **New list** and give it a name. Any account member can create a list.
+- **Rename** — tap the pencil icon on a list row. Any account member can rename a list.
+- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only.
+- **Delete** — permanently removes the list and all its items. Editors and the account owner only.
+
+Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
+
+## Adding Items
+
+Tap **Add item** to open the add sheet. You can add an item three ways:
+
+- **Search your tracked products** — start typing and matching products from your Personal Inflation Index history appear below the search box.
+- **Frequently bought** — when the search box is empty, a horizontal row shows your most-purchased products for one-tap adding.
+- **Free text** — if what you typed doesn't match a tracked product, tap **Add "…"** to add it as a plain text item. Free-text items aren't linked to price history, so they won't appear in price comparisons.
+
+Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
+
+## Compare Prices ("Where's cheapest")
+
+Tap **Compare prices** at the bottom of the list to see which store is cheapest for everything currently unchecked on your list.
+
+The app looks at the latest price you've paid for each list item at every store in your price history, and for each store shows:
+
+- The **estimated total** for your basket at that store.
+- A **coverage badge** ("5/7 items") showing how many of your list items have a known price there.
+- A **Cheapest** badge on the best-value store. A store only wins the badge if it covers all your items, or at least 80% of them when no store covers everything.
+- A **stale prices** warning if some of the prices used are more than 90 days old.
+- A count of items **not priced** at that store.
+
+Below the store cards, **Cheapest per item** breaks the comparison down item by item, showing the cheapest store and price for each — useful if no single store covers your whole basket.
+
+Only items with a matched product (added from your tracked products, not free text) are included in the comparison.
+
+> **Note:** Comparing prices across stores is a **Pro** feature. Free plan users see an upgrade prompt when they tap **Compare prices**.
+
+If you haven't scanned enough receipts yet, you'll see a prompt to scan a few first — the comparison needs price history to work from.
+
+## Store Map
+
+From the price comparison screen, tap the map icon (top-right) to open the **Store map**. It plots every store from your comparison that has a known location (captured automatically when you scan a receipt with an address, or add one manually).
+
+- **Cheapest / Nearby** toggle — sort the store list below the map either by estimated basket total or by distance from you.
+- Tap **Find nearby** to get your current location and show distances. This requires location permission; without it, stores still appear on the map but without distance labels.
+- Stores without a known address aren't shown on the map, and a banner tells you how many were skipped.
+
+## Time to Restock
+
+The app watches how often you buy each tracked product. Once it has seen at least 3 purchases of a product, it learns your typical repurchase gap (e.g. "you buy milk roughly every 6 days"). When a product is overdue based on that pattern — and isn't already on one of your lists — it appears as a chip in the **Time to restock** row at the top of the shopping list. Tap a chip to add that item straight to your list.
+
+You also get a daily push notification when something is due for restocking, once a day at most, summarizing the first overdue item ("Time to restock? Milk and 2 more").
+
+## Deal Alerts
+
+The app compares the price you've recently paid for a tracked product against its average price over the last 90 days. If a store's latest price for a product is meaningfully below that average, it shows up as a chip in the **Deals for you** row, with the store name and the discount percentage. Tap a chip to add the item to your list.
+
+Deals are also delivered as a daily push notification when a genuine drop is detected, so you don't have to open the app to catch a good price.
+
+## Managing Notifications
+
+Both notifications are on by default and can be turned off independently in **Settings → Notifications**:
+
+- **Restock reminder** — the daily "time to restock" push.
+- **Deal alerts** — the daily price-drop push.
+
+## Data Source
+
+Restock predictions, deal detection, and store price comparisons are all built from the line-item prices captured when you scan receipts with the camera (OCR) — the same data that powers your Personal Inflation Index. Manually entered expenses and bank imports don't include per-product prices, so they don't feed into these features. The more receipts you scan, the better the suggestions and comparisons get.
+`,
+    },
   ],
   ru: [
     {
@@ -8019,6 +8109,96 @@ AI Budget Assistant предлагает три уровня подписки. �
 - Вы можете удалить локацию любого расхода в любой момент.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Умный список покупок`,
+      description: `Общий список покупок, который к тому же подскажет, в каком магазине ваша корзина обойдётся дешевле всего — рассчитано по ценам из ваших собственных чеков, без затрат на ИИ.`,
+      body: `# Умный список покупок
+
+> Общий список покупок, который к тому же подскажет, в каком магазине ваша корзина обойдётся дешевле всего — рассчитано по ценам из ваших собственных чеков, без затрат на ИИ.
+
+Умный список покупок — это общий чек-лист для вашего счёта. В отличие от обычного списка, он связан с историей цен вашего **Персонального индекса инфляции**: у каждого купленного и отсканированного товара есть известная цена в известном магазине, поэтому приложение может ранжировать магазины по реальной сумме вашей корзины, подсказывать, что пора докупить, и отмечать настоящие снижения цен.
+
+## Где найти
+
+Откройте **Список покупок** из быстрых действий на главном экране или перейдите в **Настройки → Список покупок**. На общем счёте все участники видят один и тот же список и могут его редактировать.
+
+## Создание списков и переключение между ними
+
+У каждого счёта изначально есть список по умолчанию с названием "My List". Вы можете вести несколько списков (например, «Продукты» и «Аптека») и переключаться между ними.
+
+Нажмите на плашку с названием списка вверху экрана, чтобы открыть **Управление списками**. Здесь вы можете:
+
+- **Переключиться** — нажмите на любой список, чтобы сделать его активным.
+- **Создать** — нажмите **Новый список** и задайте ему название. Создать список может любой участник счёта.
+- **Переименовать** — нажмите на значок карандаша в строке списка. Переименовать список может любой участник счёта.
+- **Архивировать** — скрывает список без удаления (его товары сохраняются). Только для редакторов и владельца счёта.
+- **Удалить** — безвозвратно удаляет список и все его товары. Только для редакторов и владельца счёта.
+
+Наблюдатели могут просматривать списки, переключаться между ними, добавлять товары и отмечать их в любом списке, но не могут архивировать или удалять списки.
+
+## Добавление товаров
+
+Нажмите **Добавить товар**, чтобы открыть панель добавления. Товар можно добавить тремя способами:
+
+- **Поиск среди отслеживаемых товаров** — начните вводить название, и под строкой поиска появятся подходящие товары из истории вашего Персонального индекса инфляции.
+- **Часто покупаемое** — когда строка поиска пуста, в горизонтальном ряду показаны ваши самые часто покупаемые товары для добавления в одно нажатие.
+- **Произвольный текст** — если введённое не совпадает ни с одним отслеживаемым товаром, нажмите **Добавить «…»**, чтобы добавить его как обычный текстовый пункт. Такие пункты не связаны с историей цен, поэтому не будут участвовать в сравнении цен.
+
+У каждого товара в списке есть флажок, редактируемый счётчик количества и значок удаления. Отмеченные товары опускаются в конец списка. Используйте **Очистить отмеченные** (в правом верхнем углу экрана), чтобы одним нажатием убрать всё, что вы уже отметили.
+
+## Сравнение цен («Где дешевле»)
+
+Нажмите **Сравнить цены** внизу списка, чтобы узнать, в каком магазине дешевле всего обойдётся всё, что пока не отмечено в вашем списке.
+
+Приложение смотрит на последнюю цену, которую вы платили за каждый товар из списка в каждом магазине из вашей истории, и для каждого магазина показывает:
+
+- **Оценочную сумму** вашей корзины в этом магазине.
+- Значок **покрытия** («5/7 товаров»), показывающий, сколько ваших товаров имеет известную цену в этом магазине.
+- Значок **«Самый дешёвый»** у магазина с лучшим соотношением. Магазин получает этот значок, только если покрывает все ваши товары или как минимум 80% из них, если ни один магазин не покрывает все.
+- Предупреждение о **устаревших ценах**, если часть использованных цен старше 90 дней.
+- Количество товаров **без цены** в этом магазине.
+
+Под карточками магазинов раздел **«Самая низкая цена за товар»** разбивает сравнение по каждому товару отдельно, показывая самый дешёвый магазин и цену для каждого — полезно, если ни один магазин не покрывает всю вашу корзину.
+
+В сравнение включаются только товары, сопоставленные с отслеживаемым продуктом (добавленные из ваших отслеживаемых товаров, а не как произвольный текст).
+
+> **Примечание.** Сравнение цен по магазинам — функция **Pro**. Пользователи бесплатного плана при нажатии **Сравнить цены** увидят предложение перейти на платный план.
+
+Если вы ещё не отсканировали достаточно чеков, появится подсказка сначала отсканировать несколько — для сравнения нужна история цен, на которую можно опереться.
+
+## Карта магазинов
+
+На экране сравнения цен нажмите значок карты (в правом верхнем углу), чтобы открыть **Карту магазинов**. На ней отображается каждый магазин из вашего сравнения, у которого есть известное местоположение (автоматически сохраняется при сканировании чека с адресом или добавляется вручную).
+
+- Переключатель **«Дешевле» / «Ближе»** — сортирует список магазинов под картой либо по оценочной сумме корзины, либо по расстоянию до вас.
+- Нажмите **Найти поблизости**, чтобы определить ваше текущее местоположение и показать расстояния. Для этого нужно разрешение на геолокацию; без него магазины всё равно отображаются на карте, но без указания расстояния.
+- Магазины без известного адреса на карте не показываются, а баннер сообщает, сколько магазинов было пропущено.
+
+## Пора пополнить запасы
+
+Приложение отслеживает, как часто вы покупаете каждый отслеживаемый товар. Как только оно фиксирует минимум 3 покупки товара, оно вычисляет ваш типичный интервал повторной покупки (например, «вы покупаете молоко примерно каждые 6 дней»). Когда товар просрочен согласно этому паттерну — и его ещё нет ни в одном из ваших списков — он появляется в виде чипа в строке **«Пора пополнить запасы»** вверху списка покупок. Нажмите на чип, чтобы сразу добавить этот товар в список.
+
+Вы также получаете ежедневное push-уведомление, когда пора что-то докупить, максимум раз в день, с кратким описанием первого просроченного товара («Пора пополнить запасы? Молоко и ещё 2 товара»).
+
+## Скидки для вас
+
+Приложение сравнивает цену, которую вы недавно платили за отслеживаемый товар, со средней ценой за последние 90 дней. Если последняя цена товара в каком-либо магазине заметно ниже этой средней, она появляется в виде чипа в строке **«Скидки для вас»** с названием магазина и процентом скидки. Нажмите на чип, чтобы добавить товар в список.
+
+Скидки также приходят в виде ежедневного push-уведомления при обнаружении реального снижения цены, так что вам не нужно открывать приложение, чтобы не пропустить выгодную цену.
+
+## Управление уведомлениями
+
+Оба уведомления включены по умолчанию и отключаются независимо друг от друга в **Настройки → Уведомления**:
+
+- **Напоминания о пополнении запасов** — ежедневное push-уведомление «пора пополнить запасы».
+- **Уведомления о скидках** — ежедневное push-уведомление о снижении цены.
+
+## Источник данных
+
+Прогнозы пополнения запасов, обнаружение скидок и сравнение цен по магазинам строятся исключительно на ценах отдельных позиций, зафиксированных при сканировании чеков камерой (OCR), — на тех же данных, что питают ваш Персональный индекс инфляции. Вручную введённые расходы и банковские импорты не содержат цен на уровне товаров, поэтому не участвуют в этих функциях. Чем больше чеков вы сканируете, тем точнее становятся подсказки и сравнения.
+`,
+    },
   ],
   ua: [
     {
@@ -11987,6 +12167,96 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - Ви можете видалити локацію будь-якої витрати в будь-який момент.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Розумний список покупок`,
+      description: `Спільний список покупок, який ще й підказує, у якому магазині ваш кошик обійдеться найдешевше — розраховано за цінами з ваших власних чеків, без витрат на ШІ.`,
+      body: `# Розумний список покупок
+
+> Спільний список покупок, який ще й підказує, у якому магазині ваш кошик обійдеться найдешевше — розраховано за цінами з ваших власних чеків, без витрат на ШІ.
+
+Розумний список покупок — це спільний чек-лист для вашого рахунку. На відміну від звичайного списку, він пов'язаний з історією цін вашого **Персонального індексу інфляції**: кожен куплений і відсканований товар має відому ціну у відомому магазині, тож застосунок може ранжувати магазини за реальною сумою вашого кошика, підказувати, що варто докупити, і відзначати справжні зниження цін.
+
+## Де знайти
+
+Відкрийте **Список покупок** зі швидких дій на головному екрані або перейдіть у **Налаштування → Список покупок**. На спільному рахунку всі учасники бачать один і той самий список і можуть його редагувати.
+
+## Створення списків і перемикання між ними
+
+Кожен рахунок починається зі списку за замовчуванням із назвою "My List". Ви можете вести кілька списків (наприклад, «Продукти» та «Аптека») і перемикатися між ними.
+
+Натисніть на плашку з назвою списку вгорі екрана, щоб відкрити **Керування списками**. Тут ви можете:
+
+- **Перемкнутися** — натисніть на будь-який список, щоб зробити його активним.
+- **Створити** — натисніть **Новий список** і задайте йому назву. Створити список може будь-який учасник рахунку.
+- **Перейменувати** — натисніть на іконку олівця в рядку списку. Перейменувати список може будь-який учасник рахунку.
+- **Архівувати** — приховує список без видалення (його товари зберігаються). Тільки для редакторів і власника рахунку.
+- **Видалити** — остаточно видаляє список і всі його товари. Тільки для редакторів і власника рахунку.
+
+Спостерігачі можуть переглядати списки, перемикатися між ними, додавати товари та позначати їх у будь-якому списку, але не можуть архівувати чи видаляти списки.
+
+## Додавання товарів
+
+Натисніть **Додати товар**, щоб відкрити панель додавання. Товар можна додати трьома способами:
+
+- **Пошук серед відстежуваних товарів** — почніть вводити назву, і під рядком пошуку з'являться відповідні товари з історії вашого Персонального індексу інфляції.
+- **Часто куповане** — коли рядок пошуку порожній, у горизонтальному рядку показано ваші найчастіше куповані товари для додавання одним дотиком.
+- **Довільний текст** — якщо введене не збігається з жодним відстежуваним товаром, натисніть **Додати «…»**, щоб додати його як звичайний текстовий пункт. Такі пункти не пов'язані з історією цін, тому не братимуть участі в порівнянні цін.
+
+У кожного товару в списку є прапорець, редагований лічильник кількості та іконка видалення. Позначені товари опускаються в кінець списку. Використовуйте **Очистити позначені** (у правому верхньому куті екрана), щоб одним дотиком прибрати все, що ви вже позначили.
+
+## Порівняння цін («Де дешевше»)
+
+Натисніть **Порівняти ціни** внизу списку, щоб дізнатися, у якому магазині дешевше вийде все, що поки не позначено у вашому списку.
+
+Застосунок дивиться на останню ціну, яку ви платили за кожен товар зі списку в кожному магазині з вашої історії, і для кожного магазину показує:
+
+- **Орієнтовну суму** вашого кошика в цьому магазині.
+- Позначку **покриття** («5/7 товарів»), що показує, скільки ваших товарів мають відому ціну в цьому магазині.
+- Позначку **«Найдешевше»** біля магазину з найкращим співвідношенням. Магазин отримує цю позначку, лише якщо покриває всі ваші товари або щонайменше 80% з них, якщо жоден магазин не покриває їх усі.
+- Попередження про **застарілі ціни**, якщо частина використаних цін старша за 90 днів.
+- Кількість товарів **без ціни** у цьому магазині.
+
+Під картками магазинів розділ **«Найнижча ціна за товар»** розбиває порівняння по кожному товару окремо, показуючи найдешевший магазин і ціну для кожного — корисно, якщо жоден магазин не покриває весь ваш кошик.
+
+У порівняння включаються лише товари, зіставлені з відстежуваним продуктом (додані з ваших відстежуваних товарів, а не як довільний текст).
+
+> **Примітка.** Порівняння цін по магазинах — функція **Pro**. Користувачі безкоштовного плану після натискання **Порівняти ціни** побачать пропозицію перейти на платний план.
+
+Якщо ви ще не відсканували достатньо чеків, з'явиться підказка спочатку відсканувати кілька — для порівняння потрібна історія цін, на яку можна спертися.
+
+## Карта магазинів
+
+На екрані порівняння цін натисніть іконку карти (у правому верхньому куті), щоб відкрити **Карту магазинів**. На ній відображається кожен магазин з вашого порівняння, у якого є відоме місцезнаходження (автоматично зберігається під час сканування чека з адресою або додається вручну).
+
+- Перемикач **«Дешевше» / «Ближче»** — сортує список магазинів під картою або за орієнтовною сумою кошика, або за відстанню до вас.
+- Натисніть **Знайти поруч**, щоб визначити ваше поточне місцезнаходження та показати відстані. Для цього потрібен дозвіл на геолокацію; без нього магазини все одно показуються на карті, але без вказання відстані.
+- Магазини без відомої адреси на карті не показуються, а банер повідомляє, скільки магазинів було пропущено.
+
+## Час поповнити запаси
+
+Застосунок відстежує, як часто ви купуєте кожен відстежуваний товар. Щойно він фіксує щонайменше 3 покупки товару, він вивчає ваш типовий інтервал повторної покупки (наприклад, «ви купуєте молоко приблизно кожні 6 днів»). Коли товар прострочений згідно з цим патерном — і його ще немає в жодному з ваших списків — він з'являється у вигляді чипа в рядку **«Час поповнити запаси»** вгорі списку покупок. Натисніть на чип, щоб одразу додати цей товар до списку.
+
+Ви також отримуєте щоденне push-сповіщення, коли настав час щось докупити, максимум раз на день, із коротким описом першого простроченого товару («Час поповнити запаси? Молоко і ще 2 товари»).
+
+## Знижки для вас
+
+Застосунок порівнює ціну, яку ви нещодавно платили за відстежуваний товар, із середньою ціною за останні 90 днів. Якщо остання ціна товару в якомусь магазині помітно нижча за це середнє значення, вона з'являється у вигляді чипа в рядку **«Знижки для вас»**, з назвою магазину та відсотком знижки. Натисніть на чип, щоб додати товар до списку.
+
+Знижки також надходять у вигляді щоденного push-сповіщення, коли виявлено справжнє зниження ціни, тож вам не потрібно відкривати застосунок, щоб не пропустити вигідну ціну.
+
+## Керування сповіщеннями
+
+Обидва сповіщення увімкнені за замовчуванням і вимикаються незалежно одне від одного в **Налаштування → Сповіщення**:
+
+- **Нагадування про поповнення запасів** — щоденне push-сповіщення «час поповнити запаси».
+- **Сповіщення про знижки** — щоденне push-сповіщення про зниження ціни.
+
+## Джерело даних
+
+Прогнози поповнення запасів, виявлення знижок і порівняння цін по магазинах будуються виключно на цінах окремих позицій, зафіксованих під час сканування чеків камерою (OCR), — на тих самих даних, що живлять ваш Персональний індекс інфляції. Вручну введені витрати та банківські імпорти не містять цін на рівні товарів, тому не беруть участі в цих функціях. Що більше чеків ви скануєте, то точнішими стають підказки й порівняння.
+`,
+    },
   ],
   pl: [
     {
@@ -15940,6 +16210,96 @@ Konta podróży mają dedykowany punkt wejścia: otwórz konto podróży i stukn
 - W każdej chwili możesz usunąć lokalizację dowolnego wydatku.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Inteligentna lista zakupów`,
+      description: `Wspólna lista zakupów, która dodatkowo mówi Ci, który sklep jest najtańszy dla Twojego koszyka — wyliczone na podstawie cen z Twoich własnych paragonów, bez kosztów AI.`,
+      body: `# Inteligentna lista zakupów
+
+> Wspólna lista zakupów, która dodatkowo mówi Ci, który sklep jest najtańszy dla Twojego koszyka — wyliczone na podstawie cen z Twoich własnych paragonów, bez kosztów AI.
+
+Inteligentna lista zakupów to wspólna lista dla Twojego konta. W odróżnieniu od zwykłej listy jest połączona z historią cen z Twojego **Osobistego wskaźnika inflacji** — każdy zeskanowany i kupiony produkt ma znaną cenę w znanym sklepie, dzięki czemu aplikacja może uszeregować sklepy według rzeczywistej sumy Twojego koszyka, podpowiedzieć, co warto uzupełnić, i wychwycić realne obniżki cen.
+
+## Gdzie ją znaleźć
+
+Otwórz **Listę zakupów** z szybkich akcji na ekranie głównym albo przejdź do **Ustawienia → Lista zakupów**. Na koncie wspólnym wszyscy widzą tę samą listę i mogą ją edytować.
+
+## Tworzenie list i przełączanie między nimi
+
+Każde konto zaczyna z domyślną listą o nazwie "My List". Możesz prowadzić kilka list (np. "Spożywcze" i "Apteka") i przełączać się między nimi.
+
+Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj listami**. Stamtąd możesz:
+
+- **Przełączyć** — stuknij dowolną listę, aby uczynić ją aktywną.
+- **Utworzyć** — stuknij **Nowa lista** i nadaj jej nazwę. Każdy członek konta może utworzyć listę.
+- **Zmienić nazwę** — stuknij ikonę ołówka przy wierszu listy. Każdy członek konta może zmienić nazwę listy.
+- **Zarchiwizować** — ukrywa listę bez jej usuwania (jej produkty są zachowane). Tylko edytorzy i właściciel konta.
+- **Usunąć** — trwale usuwa listę i wszystkie jej produkty. Tylko edytorzy i właściciel konta.
+
+Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
+
+## Dodawanie produktów
+
+Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać na trzy sposoby:
+
+- **Wyszukaj wśród śledzonych produktów** — zacznij pisać, a pod polem wyszukiwania pojawią się pasujące produkty z historii Twojego Osobistego wskaźnika inflacji.
+- **Często kupowane** — gdy pole wyszukiwania jest puste, pozioma lista pokazuje Twoje najczęściej kupowane produkty do dodania jednym dotknięciem.
+- **Dowolny tekst** — jeśli to, co wpisałeś, nie pasuje do żadnego śledzonego produktu, stuknij **Dodaj "…"**, aby dodać go jako zwykły tekst. Pozycje dodane jako dowolny tekst nie są powiązane z historią cen, więc nie pojawią się w porównaniach cen.
+
+Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
+
+## Porównaj ceny ("Gdzie najtaniej")
+
+Stuknij **Porównaj ceny** na dole listy, aby zobaczyć, który sklep jest najtańszy dla wszystkiego, co jest obecnie niezaznaczone na Twojej liście.
+
+Aplikacja sprawdza ostatnią cenę, jaką zapłaciłeś za każdy produkt z listy w każdym sklepie z historii, i dla każdego sklepu pokazuje:
+
+- **Szacowaną sumę** koszyka w tym sklepie.
+- Odznakę **pokrycia** ("5/7 pozycji") pokazującą, ile produktów z Twojej listy ma tam znaną cenę.
+- Odznakę **Najtaniej** przy sklepie o najlepszej relacji ceny. Sklep zdobywa odznakę tylko wtedy, gdy pokrywa wszystkie Twoje produkty albo co najmniej 80% z nich, gdy żaden sklep nie pokrywa ich wszystkich.
+- Ostrzeżenie o **nieaktualnych cenach**, jeśli część wykorzystanych cen ma więcej niż 90 dni.
+- Liczbę produktów **bez ceny** w danym sklepie.
+
+Poniżej kart sklepów sekcja **Najniższa cena za produkt** przedstawia porównanie produkt po produkcie, pokazując najtańszy sklep i cenę dla każdego z nich — przydatne, gdy żaden sklep nie pokrywa całego koszyka.
+
+W porównaniu uwzględniane są wyłącznie produkty dopasowane do śledzonego produktu (dodane z listy śledzonych produktów, nie jako dowolny tekst).
+
+> **Uwaga:** Porównywanie cen między sklepami to funkcja **Pro**. Użytkownicy planu darmowego po dotknięciu **Porównaj ceny** zobaczą propozycję przejścia na wyższy plan.
+
+Jeśli nie zeskanowałeś jeszcze wystarczająco dużo paragonów, zobaczysz podpowiedź, aby najpierw zeskanować kilka — porównanie potrzebuje historii cen, na której może się oprzeć.
+
+## Mapa sklepów
+
+Na ekranie porównania cen stuknij ikonę mapy (w prawym górnym rogu), aby otworzyć **Mapę sklepów**. Nanosi ona każdy sklep z Twojego porównania, którego lokalizacja jest znana (przechwytywana automatycznie podczas skanowania paragonu z adresem albo dodawana ręcznie).
+
+- Przełącznik **Najtaniej / Najbliżej** — sortuje listę sklepów pod mapą według szacowanej sumy koszyka albo odległości od Ciebie.
+- Stuknij **Znajdź w pobliżu**, aby pobrać swoją bieżącą lokalizację i wyświetlić odległości. Wymaga to zgody na dostęp do lokalizacji; bez niej sklepy nadal pojawiają się na mapie, ale bez etykiet odległości.
+- Sklepy bez znanego adresu nie są pokazywane na mapie, a baner informuje, ile zostało pominiętych.
+
+## Czas na uzupełnienie zapasów
+
+Aplikacja obserwuje, jak często kupujesz każdy śledzony produkt. Gdy zauważy co najmniej 3 zakupy danego produktu, uczy się Twojego typowego odstępu między zakupami (np. "kupujesz mleko mniej więcej co 6 dni"). Kiedy produkt jest zaległy według tego wzorca — i nie znajduje się już na żadnej z Twoich list — pojawia się jako etykieta w wierszu **Czas na uzupełnienie zapasów** u góry listy zakupów. Stuknij etykietę, aby dodać ten produkt bezpośrednio do listy.
+
+Dostajesz też codzienne powiadomienie push, gdy coś wymaga uzupełnienia — co najwyżej raz dziennie, podsumowujące pierwszy zaległy produkt ("Czas na uzupełnienie zapasów? Mleko i jeszcze 2 produkty").
+
+## Promocje dla Ciebie
+
+Aplikacja porównuje cenę, jaką ostatnio zapłaciłeś za śledzony produkt, z jego średnią ceną z ostatnich 90 dni. Jeśli najnowsza cena danego produktu w jakimś sklepie jest wyraźnie niższa od tej średniej, pojawia się jako etykieta w wierszu **Promocje dla Ciebie**, z nazwą sklepu i procentem rabatu. Stuknij etykietę, aby dodać produkt do listy.
+
+Promocje są też dostarczane jako codzienne powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić.
+
+## Zarządzanie powiadomieniami
+
+Oba powiadomienia są domyślnie włączone i można je wyłączyć niezależnie w **Ustawienia → Powiadomienia**:
+
+- **Przypomnienia o uzupełnieniu zapasów** — codzienny push "czas na uzupełnienie zapasów".
+- **Powiadomienia o promocjach** — codzienny push o obniżce ceny.
+
+## Źródło danych
+
+Przewidywania uzupełnień, wykrywanie promocji i porównania cen między sklepami są budowane wyłącznie na podstawie cen poszczególnych pozycji przechwyconych podczas skanowania paragonów aparatem (OCR) — tych samych danych, które zasilają Twój Osobisty wskaźnik inflacji. Ręcznie wprowadzone wydatki i importy bankowe nie zawierają cen na poziomie produktów, więc nie zasilają tych funkcji. Im więcej paragonów zeskanujesz, tym lepsze będą podpowiedzi i porównania.
+`,
+    },
   ],
   de: [
     {
@@ -19868,6 +20228,96 @@ Reisekonten erhalten einen eigenen Einstiegspunkt: Öffne das Reisekonto und tip
 - Du kannst den Standort jeder Ausgabe jederzeit entfernen.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Intelligente Einkaufsliste`,
+      description: `Eine gemeinsame Einkaufsliste, die dir zusätzlich verrät, welcher Laden für deinen Einkaufskorb am günstigsten ist — berechnet aus den Preisen deiner eigenen Kassenbons, ohne KI-Kosten.`,
+      body: `# Intelligente Einkaufsliste
+
+> Eine gemeinsame Einkaufsliste, die dir zusätzlich verrät, welcher Laden für deinen Einkaufskorb am günstigsten ist — berechnet aus den Preisen deiner eigenen Kassenbons, ohne KI-Kosten.
+
+Die Intelligente Einkaufsliste ist eine gemeinsame Liste für dein Konto. Anders als eine gewöhnliche Liste ist sie mit dem Preisverlauf deines **Persönlichen Inflationsindex** verbunden — jeder Artikel, den du gekauft und gescannt hast, hat einen bekannten Preis in einem bekannten Geschäft. Dadurch kann die App Geschäfte nach deinem tatsächlichen Einkaufskorb-Gesamtbetrag einordnen, dir vorschlagen, was nachgekauft werden sollte, und echte Preissenkungen erkennen.
+
+## Wo du sie findest
+
+Öffne **Einkaufsliste** über die Schnellaktionen auf dem Startbildschirm oder gehe zu **Einstellungen → Einkaufsliste**. Auf einem gemeinsamen Konto sehen und bearbeiten alle dieselbe Liste.
+
+## Listen erstellen und wechseln
+
+Jedes Konto startet mit einer Standardliste namens „My List". Du kannst mehrere Listen führen (z. B. „Lebensmittel" und „Apotheke") und zwischen ihnen wechseln.
+
+Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen verwalten** zu öffnen. Dort kannst du:
+
+- **Wechseln** — tippe auf eine Liste, um sie zur aktiven Liste zu machen.
+- **Erstellen** — tippe auf **Neue Liste** und gib ihr einen Namen. Jedes Kontomitglied kann eine Liste erstellen.
+- **Umbenennen** — tippe auf das Stiftsymbol bei einer Listenzeile. Jedes Kontomitglied kann eine Liste umbenennen.
+- **Archivieren** — blendet die Liste aus, ohne sie zu löschen (ihre Artikel bleiben erhalten). Nur Bearbeiter und der Kontoinhaber.
+- **Löschen** — entfernt die Liste und alle ihre Artikel dauerhaft. Nur Bearbeiter und der Kontoinhaber.
+
+Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
+
+## Artikel hinzufügen
+
+Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kannst einen Artikel auf drei Arten hinzufügen:
+
+- **In deinen erfassten Produkten suchen** — tippe die ersten Buchstaben ein, passende Produkte aus deinem Verlauf des Persönlichen Inflationsindex erscheinen unter dem Suchfeld.
+- **Häufig gekauft** — wenn das Suchfeld leer ist, zeigt eine horizontale Zeile deine meistgekauften Produkte zum Hinzufügen mit einem Tipp.
+- **Freitext** — wenn das Eingegebene zu keinem erfassten Produkt passt, tippe auf **Hinzufügen „…"**, um es als reinen Textartikel hinzuzufügen. Freitext-Artikel sind nicht mit dem Preisverlauf verknüpft und erscheinen daher nicht in Preisvergleichen.
+
+Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
+
+## Preise vergleichen („Wo es am günstigsten ist")
+
+Tippe unten in der Liste auf **Preise vergleichen**, um zu sehen, welches Geschäft für alles, was auf deiner Liste noch nicht abgehakt ist, am günstigsten ist.
+
+Die App betrachtet den zuletzt gezahlten Preis für jeden Listenartikel in jedem Geschäft deines Preisverlaufs und zeigt für jedes Geschäft:
+
+- Den **geschätzten Gesamtbetrag** deines Einkaufskorbs in diesem Geschäft.
+- Ein **Abdeckungs**-Abzeichen („5/7 Artikel"), das zeigt, wie viele deiner Listenartikel dort einen bekannten Preis haben.
+- Ein **Am günstigsten**-Abzeichen beim Geschäft mit dem besten Preis-Leistungs-Verhältnis. Ein Geschäft erhält das Abzeichen nur, wenn es alle deine Artikel abdeckt oder mindestens 80 %, wenn kein Geschäft alle abdeckt.
+- Eine Warnung zu **veralteten Preisen**, wenn einige der verwendeten Preise älter als 90 Tage sind.
+- Eine Anzahl der Artikel **ohne Preis** in diesem Geschäft.
+
+Unter den Geschäftskarten schlüsselt **Günstigster Preis pro Artikel** den Vergleich artikelweise auf und zeigt für jeden Artikel das günstigste Geschäft und den Preis — nützlich, wenn kein einzelnes Geschäft deinen gesamten Einkaufskorb abdeckt.
+
+In den Vergleich fließen nur Artikel ein, die einem erfassten Produkt zugeordnet sind (aus deinen erfassten Produkten hinzugefügt, nicht als Freitext).
+
+> **Hinweis:** Der Preisvergleich zwischen Geschäften ist eine **Pro**-Funktion. Nutzer des kostenlosen Plans sehen beim Tippen auf **Preise vergleichen** eine Aufforderung zum Upgrade.
+
+Wenn du noch nicht genug Kassenbons gescannt hast, siehst du eine Aufforderung, zuerst ein paar zu scannen — der Vergleich braucht Preisverlaufsdaten, auf denen er aufbauen kann.
+
+## Geschäfte auf der Karte
+
+Tippe auf dem Preisvergleichsbildschirm auf das Kartensymbol (oben rechts), um die Ansicht **Geschäfte auf der Karte** zu öffnen. Sie zeigt jedes Geschäft aus deinem Vergleich mit bekanntem Standort (automatisch erfasst beim Scannen eines Kassenbons mit Adresse, oder manuell hinzugefügt).
+
+- Umschalter **Günstigste / In der Nähe** — sortiert die Geschäftsliste unter der Karte entweder nach geschätztem Gesamtbetrag oder nach Entfernung zu dir.
+- Tippe auf **In der Nähe finden**, um deinen aktuellen Standort abzurufen und Entfernungen anzuzeigen. Dafür ist die Standortberechtigung erforderlich; ohne sie erscheinen die Geschäfte trotzdem auf der Karte, aber ohne Entfernungsangaben.
+- Geschäfte ohne bekannte Adresse werden nicht auf der Karte angezeigt, ein Banner zeigt dir, wie viele übersprungen wurden.
+
+## Zeit zum Nachkaufen
+
+Die App beobachtet, wie oft du jedes erfasste Produkt kaufst. Sobald sie mindestens 3 Käufe eines Produkts gesehen hat, lernt sie deinen typischen Nachkauf-Abstand (z. B. „du kaufst Milch etwa alle 6 Tage"). Wenn ein Produkt laut diesem Muster fällig ist — und noch auf keiner deiner Listen steht — erscheint es als Chip in der Zeile **Zeit zum Nachkaufen** oben auf der Einkaufsliste. Tippe auf einen Chip, um den Artikel direkt zu deiner Liste hinzuzufügen.
+
+Du erhältst außerdem eine tägliche Push-Benachrichtigung, wenn etwas nachgekauft werden sollte — höchstens einmal pro Tag, mit einer Zusammenfassung des ersten fälligen Artikels („Zeit zum Nachkaufen? Milch und 2 weitere").
+
+## Angebote für dich
+
+Die App vergleicht den zuletzt gezahlten Preis für ein erfasstes Produkt mit dessen Durchschnittspreis der letzten 90 Tage. Liegt der neueste Preis eines Geschäfts für ein Produkt deutlich unter diesem Durchschnitt, erscheint er als Chip in der Zeile **Angebote für dich**, mit Geschäftsname und Rabatt in Prozent. Tippe auf einen Chip, um den Artikel zu deiner Liste hinzuzufügen.
+
+Angebote werden auch als tägliche Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen.
+
+## Benachrichtigungen verwalten
+
+Beide Benachrichtigungen sind standardmäßig aktiviert und können unabhängig voneinander unter **Einstellungen → Benachrichtigungen** deaktiviert werden:
+
+- **Nachkauf-Erinnerungen** — die tägliche „Zeit zum Nachkaufen"-Push-Benachrichtigung.
+- **Preissenkungs-Hinweise** — die tägliche Push-Benachrichtigung zu Preissenkungen.
+
+## Datenquelle
+
+Nachkauf-Prognosen, Angebotserkennung und Preisvergleiche zwischen Geschäften basieren allesamt auf den Positionspreisen, die beim Scannen von Kassenbons mit der Kamera (OCR) erfasst werden — denselben Daten, die auch deinen Persönlichen Inflationsindex speisen. Manuell erfasste Ausgaben und Bankimporte enthalten keine Preise pro Produkt und fließen daher nicht in diese Funktionen ein. Je mehr Kassenbons du scannst, desto besser werden die Vorschläge und Vergleiche.
+`,
+    },
   ],
   es: [
     {
@@ -23785,6 +24235,96 @@ Las cuentas de viaje tienen un punto de acceso propio: abre la cuenta de viaje y
 - Puedes eliminar la ubicación de cualquier gasto en cualquier momento.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Lista de la compra inteligente`,
+      description: `Una lista de la compra compartida que además te dice qué tienda es más barata para tu cesta — calculado a partir de los precios de tus propios tiques, sin coste de IA.`,
+      body: `# Lista de la compra inteligente
+
+> Una lista de la compra compartida que además te dice qué tienda es más barata para tu cesta — calculado a partir de los precios de tus propios tiques, sin coste de IA.
+
+La Lista de la compra inteligente es una lista compartida para tu cuenta. A diferencia de una lista normal, está conectada con el historial de precios de tu **Índice de Inflación Personal**: cada artículo que has comprado y escaneado tiene un precio conocido en una tienda conocida, así que la app puede clasificar las tiendas según el total real de tu cesta, sugerirte qué toca reponer y avisarte de bajadas de precio genuinas.
+
+## Dónde encontrarla
+
+Abre **Lista de la compra** desde los accesos rápidos de la pantalla de inicio, o ve a **Ajustes → Lista de la compra**. En una cuenta compartida, todos ven y editan la misma lista.
+
+## Crear y cambiar de lista
+
+Toda cuenta empieza con una lista predeterminada llamada "My List". Puedes mantener varias listas (por ejemplo "Supermercado" y "Farmacia") y cambiar entre ellas.
+
+Toca la píldora con el nombre de la lista en la parte superior de la pantalla para abrir **Gestionar listas**, donde puedes:
+
+- **Cambiar** — toca cualquier lista para hacerla la activa.
+- **Crear** — toca **Nueva lista** y ponle un nombre. Cualquier miembro de la cuenta puede crear una lista.
+- **Renombrar** — toca el icono de lápiz en una fila. Cualquier miembro de la cuenta puede renombrar una lista.
+- **Archivar** — oculta la lista sin eliminarla (sus artículos se conservan). Solo editores y el propietario de la cuenta.
+- **Eliminar** — borra la lista y todos sus artículos de forma permanente. Solo editores y el propietario de la cuenta.
+
+Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
+
+## Añadir artículos
+
+Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un artículo de tres formas:
+
+- **Buscar en tus productos rastreados** — empieza a escribir y aparecerán debajo los productos coincidentes de tu historial del Índice de Inflación Personal.
+- **Comprados con frecuencia** — cuando el campo de búsqueda está vacío, una fila horizontal muestra tus productos más comprados para añadirlos con un toque.
+- **Texto libre** — si lo que escribiste no coincide con ningún producto rastreado, toca **Añadir "…"** para añadirlo como un artículo de texto sin más. Los artículos de texto libre no están vinculados al historial de precios, así que no aparecerán en las comparaciones de precios.
+
+Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
+
+## Comparar precios ("Dónde es más barato")
+
+Toca **Comparar precios** al final de la lista para ver qué tienda es más barata para todo lo que sigue sin marcar en tu lista.
+
+La app mira el último precio que pagaste por cada artículo de la lista en cada tienda de tu historial, y para cada tienda muestra:
+
+- El **total estimado** de tu cesta en esa tienda.
+- Una insignia de **cobertura** ("5/7 artículos") que indica cuántos de tus artículos tienen precio conocido allí.
+- Una insignia **Más barato** en la tienda con mejor relación calidad-precio. Una tienda solo gana la insignia si cubre todos tus artículos, o al menos el 80 % cuando ninguna tienda los cubre todos.
+- Un aviso de **precios desactualizados** si algunos de los precios usados tienen más de 90 días.
+- Un recuento de artículos **sin precio** en esa tienda.
+
+Debajo de las tarjetas de tienda, **Precio más bajo por artículo** desglosa la comparación artículo por artículo, mostrando la tienda y el precio más bajo de cada uno — útil cuando ninguna tienda cubre toda tu cesta.
+
+Solo se incluyen en la comparación los artículos con un producto asociado (añadidos desde tus productos rastreados, no como texto libre).
+
+> **Nota:** Comparar precios entre tiendas es una función **Pro**. Los usuarios del plan gratuito ven un aviso para actualizar al tocar **Comparar precios**.
+
+Si aún no has escaneado suficientes tiques, verás un aviso para escanear algunos primero — la comparación necesita historial de precios del que partir.
+
+## Mapa de tiendas
+
+Desde la pantalla de comparación de precios, toca el icono del mapa (arriba a la derecha) para abrir el **Mapa de tiendas**. Muestra cada tienda de tu comparación que tenga una ubicación conocida (capturada automáticamente al escanear un tique con dirección, o añadida manualmente).
+
+- Selector **Más barato / Cercanas** — ordena la lista de tiendas bajo el mapa por el total estimado de la cesta o por la distancia hasta ti.
+- Toca **Buscar cerca** para obtener tu ubicación actual y mostrar distancias. Esto requiere permiso de ubicación; sin él, las tiendas siguen apareciendo en el mapa pero sin etiquetas de distancia.
+- Las tiendas sin dirección conocida no aparecen en el mapa, y un aviso te indica cuántas se han omitido.
+
+## Hora de reponer
+
+La app observa con qué frecuencia compras cada producto rastreado. Cuando ha visto al menos 3 compras de un producto, aprende tu patrón habitual de recompra (por ejemplo, "compras leche aproximadamente cada 6 días"). Cuando un producto está pendiente de reponer según ese patrón — y aún no está en ninguna de tus listas — aparece como un chip en la fila **Hora de reponer** en la parte superior de la lista de la compra. Toca un chip para añadir ese artículo directamente a tu lista.
+
+También recibes una notificación push diaria cuando algo está pendiente de reponer, como máximo una vez al día, resumiendo el primer artículo pendiente ("¿Hora de reabastecer? Leche y 2 más").
+
+## Ofertas para ti
+
+La app compara el precio que has pagado recientemente por un producto rastreado con su precio medio de los últimos 90 días. Si el último precio de una tienda para un producto está significativamente por debajo de esa media, aparece como un chip en la fila **Ofertas para ti**, con el nombre de la tienda y el porcentaje de descuento. Toca un chip para añadir el artículo a tu lista.
+
+Las ofertas también se envían como notificación push diaria cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela.
+
+## Gestionar notificaciones
+
+Ambas notificaciones están activadas por defecto y se pueden desactivar por separado en **Ajustes → Notificaciones**:
+
+- **Recordatorios de reposición** — el aviso push diario de "hora de reponer".
+- **Alertas de ofertas** — el aviso push diario de bajada de precio.
+
+## Origen de los datos
+
+Las predicciones de reposición, la detección de ofertas y las comparaciones de precios entre tiendas se construyen a partir de los precios por artículo capturados al escanear tiques con la cámara (OCR) — los mismos datos que alimentan tu Índice de Inflación Personal. Los gastos introducidos manualmente y las importaciones bancarias no incluyen precios por producto, así que no alimentan estas funciones. Cuantos más tiques escanees, mejores serán las sugerencias y comparaciones.
+`,
+    },
   ],
   fr: [
     {
@@ -27700,6 +28240,96 @@ Les comptes voyage disposent d'un point d'accès dédié : ouvrez le compte voya
 - Vous pouvez supprimer la localisation de n'importe quelle dépense à tout moment.
 `,
     },
+    {
+      id: '38-shopping-list',
+      title: `Liste de courses intelligente`,
+      description: `Une liste de courses partagée qui vous indique en plus quel magasin est le moins cher pour votre panier — calculé à partir des prix de vos propres tickets de caisse, sans coût d'IA.`,
+      body: `# Liste de courses intelligente
+
+> Une liste de courses partagée qui vous indique en plus quel magasin est le moins cher pour votre panier — calculé à partir des prix de vos propres tickets de caisse, sans coût d'IA.
+
+La Liste de courses intelligente est une liste partagée pour votre compte. Contrairement à une simple liste, elle est connectée à l'historique de prix de votre **Indice d'Inflation Personnel** : chaque article que vous avez acheté et scanné a un prix connu dans un magasin connu, ce qui permet à l'app de classer les magasins selon le total réel de votre panier, de suggérer ce qu'il faut racheter, et de signaler les vraies baisses de prix.
+
+## Où la trouver
+
+Ouvrez **Liste de courses** depuis les accès rapides de l'écran d'accueil, ou allez dans **Paramètres → Liste de courses**. Sur un compte partagé, tout le monde voit et modifie la même liste.
+
+## Créer et changer de liste
+
+Chaque compte démarre avec une liste par défaut nommée « My List ». Vous pouvez garder plusieurs listes (par exemple « Courses » et « Pharmacie ») et passer de l'une à l'autre.
+
+Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les listes**, où vous pouvez :
+
+- **Changer** — touchez une liste pour la rendre active.
+- **Créer** — touchez **Nouvelle liste** et donnez-lui un nom. N'importe quel membre du compte peut créer une liste.
+- **Renommer** — touchez l'icône crayon sur une ligne. N'importe quel membre du compte peut renommer une liste.
+- **Archiver** — masque la liste sans la supprimer (ses articles sont conservés). Réservé aux éditeurs et au propriétaire du compte.
+- **Supprimer** — supprime définitivement la liste et tous ses articles. Réservé aux éditeurs et au propriétaire du compte.
+
+Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
+
+## Ajouter des articles
+
+Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajouter un article de trois façons :
+
+- **Rechercher dans vos produits suivis** — commencez à taper, les produits correspondants de votre historique d'Indice d'Inflation Personnel apparaissent sous le champ de recherche.
+- **Achetés fréquemment** — quand le champ de recherche est vide, une ligne horizontale affiche vos produits les plus achetés pour un ajout en un geste.
+- **Texte libre** — si ce que vous avez tapé ne correspond à aucun produit suivi, touchez **Ajouter « … »** pour l'ajouter comme simple article texte. Les articles en texte libre ne sont pas reliés à l'historique de prix, donc ils n'apparaîtront pas dans les comparaisons de prix.
+
+Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
+
+## Comparer les prix (« Où est-ce le moins cher »)
+
+Touchez **Comparer les prix** en bas de la liste pour voir quel magasin est le moins cher pour tout ce qui n'est pas encore coché dans votre liste.
+
+L'app examine le dernier prix que vous avez payé pour chaque article de la liste dans chaque magasin de votre historique, et affiche pour chaque magasin :
+
+- Le **total estimé** de votre panier dans ce magasin.
+- Un badge de **couverture** (« 5/7 articles ») indiquant combien de vos articles ont un prix connu là-bas.
+- Un badge **Le moins cher** sur le magasin offrant le meilleur rapport prix. Un magasin ne remporte le badge que s'il couvre tous vos articles, ou au moins 80 % d'entre eux quand aucun magasin ne les couvre tous.
+- Un avertissement **prix anciens** si certains des prix utilisés datent de plus de 90 jours.
+- Un décompte des articles **sans prix** dans ce magasin.
+
+Sous les cartes de magasins, **Prix le plus bas par article** détaille la comparaison article par article, montrant le magasin et le prix les plus bas pour chacun — utile quand aucun magasin ne couvre l'intégralité de votre panier.
+
+Seuls les articles associés à un produit reconnu (ajoutés depuis vos produits suivis, pas en texte libre) sont inclus dans la comparaison.
+
+> **Remarque :** Comparer les prix entre magasins est une fonctionnalité **Pro**. Les utilisateurs du plan gratuit voient une invitation à passer à l'offre supérieure en touchant **Comparer les prix**.
+
+Si vous n'avez pas encore scanné assez de tickets, un message vous invite à en scanner quelques-uns d'abord — la comparaison a besoin d'un historique de prix pour fonctionner.
+
+## Carte des magasins
+
+Depuis l'écran de comparaison de prix, touchez l'icône de carte (en haut à droite) pour ouvrir la **Carte des magasins**. Elle affiche chaque magasin de votre comparaison dont l'emplacement est connu (capturé automatiquement lors du scan d'un ticket avec une adresse, ou ajouté manuellement).
+
+- Le sélecteur **Moins cher / À proximité** trie la liste de magasins sous la carte soit par total estimé du panier, soit par distance par rapport à vous.
+- Touchez **Trouver à proximité** pour obtenir votre position actuelle et afficher les distances. Cela nécessite l'autorisation de localisation ; sans elle, les magasins apparaissent quand même sur la carte, mais sans indication de distance.
+- Les magasins sans adresse connue n'apparaissent pas sur la carte, et une bannière vous indique combien ont été ignorés.
+
+## Il est temps de réapprovisionner
+
+L'app observe la fréquence à laquelle vous achetez chaque produit suivi. Dès qu'elle a repéré au moins 3 achats d'un produit, elle apprend votre intervalle de rachat habituel (par exemple, « vous achetez du lait environ tous les 6 jours »). Quand un produit est en retard selon ce schéma — et n'est pas déjà sur l'une de vos listes — il apparaît sous forme de puce dans la ligne **Il est temps de réapprovisionner** en haut de la liste de courses. Touchez une puce pour ajouter directement cet article à votre liste.
+
+Vous recevez aussi une notification push quotidienne quand quelque chose est à réapprovisionner, au maximum une fois par jour, résumant le premier article en retard (« Temps de faire le plein ? Lait et 2 autres »).
+
+## Promotions pour vous
+
+L'app compare le prix récemment payé pour un produit suivi à son prix moyen sur les 90 derniers jours. Si le dernier prix d'un magasin pour un produit est nettement inférieur à cette moyenne, il apparaît sous forme de puce dans la ligne **Promotions pour vous**, avec le nom du magasin et le pourcentage de réduction. Touchez une puce pour ajouter l'article à votre liste.
+
+Les promotions sont également envoyées sous forme de notification push quotidienne lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer.
+
+## Gérer les notifications
+
+Les deux notifications sont activées par défaut et peuvent être désactivées indépendamment dans **Paramètres → Notifications** :
+
+- **Rappels de réapprovisionnement** — la notification push quotidienne « il est temps de réapprovisionner ».
+- **Alertes promotions** — la notification push quotidienne de baisse de prix.
+
+## Source des données
+
+Les prédictions de réapprovisionnement, la détection de promotions et les comparaisons de prix entre magasins reposent toutes sur les prix par article capturés lors du scan de tickets avec l'appareil photo (OCR) — les mêmes données qui alimentent votre Indice d'Inflation Personnel. Les dépenses saisies manuellement et les imports bancaires ne contiennent pas de prix par produit, donc ils n'alimentent pas ces fonctionnalités. Plus vous scannez de tickets, meilleures sont les suggestions et les comparaisons.
+`,
+    },
   ],
   be: [
     {
@@ -31573,6 +32203,96 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - Вызначэнне адраса па чэку выкарыстоўвае толькі адрас, надрукаваны на чэку, — месцазнаходжанне тэлефона пры гэтым не задзейнічана.
 - Лакацыя — частка запісу пра выдатак: удзельнікі агульнага ўліковага запісу, якія бачаць выдатак, бачаць і яго лакацыю.
 - Вы можаце выдаліць лакацыю любога выдатку ў любы момант.
+`,
+    },
+    {
+      id: '38-shopping-list',
+      title: `Разумны спіс пакупак`,
+      description: `Агульны спіс пакупак, які яшчэ і падказвае, у якой краме ваш кошык абыдзецца танней за ўсё — разлічана па цэнах з вашых уласных чэкаў, без выдаткаў на ІІ.`,
+      body: `# Разумны спіс пакупак
+
+> Агульны спіс пакупак, які яшчэ і падказвае, у якой краме ваш кошык абыдзецца танней за ўсё — разлічана па цэнах з вашых уласных чэкаў, без выдаткаў на ІІ.
+
+Разумны спіс пакупак — гэта агульны чэк-ліст для вашага рахунку. У адрозненне ад звычайнага спісу, ён звязаны з гісторыяй цэн вашага **Персанальнага індэксу інфляцыі**: кожны куплены і адсканаваны тавар мае вядомую цану ў вядомай краме, таму праграма можа ранжыраваць крамы паводле рэальнай сумы вашага кошыка, падказваць, што варта дакупіць, і адзначаць сапраўдныя зніжэнні цэн.
+
+## Дзе знайсці
+
+Адкрыйце **Спіс пакупак** з хуткіх дзеянняў на галоўным экране альбо перайдзіце ў **Налады → Спіс пакупак**. На агульным рахунку ўсе ўдзельнікі бачаць адзін і той жа спіс і могуць яго рэдагаваць.
+
+## Стварэнне спісаў і пераключэнне паміж імі
+
+Кожны рахунак пачынаецца са спісу па змаўчанні з назвай "My List". Вы можаце весці некалькі спісаў (напрыклад, «Прадукты» і «Аптэка») і пераключацца паміж імі.
+
+Націсніце на плашку з назвай спісу ўверсе экрана, каб адкрыць **Кіраванне спісамі**. Тут вы можаце:
+
+- **Пераключыцца** — націсніце на любы спіс, каб зрабіць яго актыўным.
+- **Стварыць** — націсніце **Новы спіс** і задайце яму назву. Стварыць спіс можа любы ўдзельнік рахунку.
+- **Перайменаваць** — націсніце на значок алоўка ў радку спісу. Перайменаваць спіс можа любы ўдзельнік рахунку.
+- **Архіваваць** — хавае спіс без выдалення (яго тавары захоўваюцца). Толькі для рэдактараў і ўладальніка рахунку.
+- **Выдаліць** — незваротна выдаляе спіс і ўсе яго тавары. Толькі для рэдактараў і ўладальніка рахунку.
+
+Назіральнікі могуць праглядаць спісы, пераключацца паміж імі, дадаваць тавары і адзначаць іх у любым спісе, але не могуць архіваваць ці выдаляць спісы.
+
+## Даданне тавараў
+
+Націсніце **Дадаць тавар**, каб адкрыць панэль дадавання. Тавар можна дадаць трыма спосабамі:
+
+- **Пошук сярод адсочваемых тавараў** — пачніце ўводзіць назву, і пад радком пошуку з'явяцца адпаведныя тавары з гісторыі вашага Персанальнага індэксу інфляцыі.
+- **Часта купляемае** — калі радок пошуку пусты, у гарызантальным радзе паказаны вашы найбольш часта купляемыя тавары для дадавання адным дотыкам.
+- **Адвольны тэкст** — калі ўведзенае не супадае з ніводным адсочваемым таварам, націсніце **Дадаць «…»**, каб дадаць яго як звычайны тэкставы пункт. Такія пункты не звязаны з гісторыяй цэн, таму не будуць удзельнічаць у параўнанні цэн.
+
+У кожнага тавару ў спісе ёсць сцяжок, рэдагаваны лічыльнік колькасці і значок выдалення. Пазначаныя тавары апускаюцца ў канец спісу. Выкарыстоўвайце **Ачысціць пазначаныя** (у правым верхнім куце экрана), каб адным дотыкам прыбраць усё, што вы ўжо пазначылі.
+
+## Параўнанне цэн («Дзе танней»)
+
+Націсніце **Параўнаць цэны** ўнізе спісу, каб даведацца, у якой краме танней абыдзецца ўсё, што пакуль не пазначана ў вашым спісе.
+
+Праграма глядзіць на апошнюю цану, якую вы плацілі за кожны тавар са спісу ў кожнай краме з вашай гісторыі, і для кожнай крамы паказвае:
+
+- **Прыблізную суму** вашага кошыка ў гэтай краме.
+- Значок **ахопу** («5/7 тавараў»), які паказвае, колькі вашых тавараў маюць вядомую цану ў гэтай краме.
+- Значок **«Найтанней»** каля крамы з найлепшым суадносінамі. Крама атрымлівае гэты значок, толькі калі ахоплівае ўсе вашы тавары або прынамсі 80% з іх, калі ніводная крама не ахоплівае іх усе.
+- Папярэджанне пра **састарэлыя цэны**, калі частка выкарыстаных цэн старэйшая за 90 дзён.
+- Колькасць тавараў **без цаны** ў гэтай краме.
+
+Пад карткамі крам раздзел **«Самая нізкая цана за тавар»** разбівае параўнанне па кожным тавары асобна, паказваючы найтаннейшую краму і цану для кожнага — карысна, калі ніводная крама не ахоплівае ўвесь ваш кошык.
+
+У параўнанне ўключаюцца толькі тавары, супастаўленыя з адсочваемым прадуктам (дададзеныя з вашых адсочваемых тавараў, а не як адвольны тэкст).
+
+> **Заўвага.** Параўнанне цэн па крамах — функцыя **Pro**. Карыстальнікі бясплатнага плана пры націсканні **Параўнаць цэны** ўбачаць прапанову перайсці на платны план.
+
+Калі вы яшчэ не адсканавалі дастаткова чэкаў, з'явіцца падказка спачатку адсканаваць некалькі — параўнанню патрэбна гісторыя цэн, на якую можна абаперціся.
+
+## Карта крам
+
+На экране параўнання цэн націсніце значок карты (у правым верхнім куце), каб адкрыць **Карту крам**. На ёй адлюстроўваецца кожная крама з вашага параўнання, у якой ёсць вядомае месцазнаходжанне (аўтаматычна захоўваецца пры сканаванні чэка з адрасам альбо дадаецца ўручную).
+
+- Пераключальнік **«Танней» / «Бліжэй»** — сартуе спіс крам пад картай альбо па прыблізнай суме кошыка, альбо па адлегласці да вас.
+- Націсніце **Знайсці паблізу**, каб вызначыць ваша бягучае месцазнаходжанне і паказаць адлегласці. Для гэтага патрэбны дазвол на геалакацыю; без яго крамы ўсё роўна паказваюцца на карце, але без указання адлегласці.
+- Крамы без вядомага адрасу на карце не паказваюцца, а банер паведамляе, колькі крам было прапушчана.
+
+## Час папоўніць запасы
+
+Праграма адсочвае, як часта вы купляеце кожны адсочваемы тавар. Як толькі яна фіксуе прынамсі 3 пакупкі тавару, яна вылічае ваш тыповы інтэрвал паўторнай пакупкі (напрыклад, «вы купляеце малако прыблізна кожныя 6 дзён»). Калі тавар пратэрмінаваны паводле гэтага шаблону — і яго яшчэ няма ні ў адным з вашых спісаў — ён з'яўляецца ў выглядзе чыпа ў радку **«Час папоўніць запасы»** ўверсе спісу пакупак. Націсніце на чып, каб адразу дадаць гэты тавар у спіс.
+
+Вы таксама атрымліваеце штодзённае push-апавяшчэнне, калі прыйшоў час нешта дакупіць, максімум раз у дзень, з кароткім апісаннем першага пратэрмінаванага тавару («Час папоўніць запасы? Малако і яшчэ 2 тавары»).
+
+## Зніжкі для вас
+
+Праграма параўноўвае цану, якую вы нядаўна плацілі за адсочваемы тавар, з сярэдняй цаной за апошнія 90 дзён. Калі апошняя цана тавару ў якой-небудзь краме заўважна ніжэйшая за гэтую сярэднюю, яна з'яўляецца ў выглядзе чыпа ў радку **«Зніжкі для вас»**, з назвай крамы і працэнтам зніжкі. Націсніце на чып, каб дадаць тавар у спіс.
+
+Зніжкі таксама прыходзяць у выглядзе штодзённага push-апавяшчэння пры выяўленні сапраўднага зніжэння цаны, так што вам не трэба адкрываць праграму, каб не прапусціць выгадную цану.
+
+## Кіраванне апавяшчэннямі
+
+Абодва апавяшчэнні ўключаны па змаўчанні і выключаюцца незалежна адно ад аднаго ў **Налады → Апавяшчэнні**:
+
+- **Напаміны аб папаўненні запасаў** — штодзённае push-апавяшчэнне «час папоўніць запасы».
+- **Апавяшчэнні аб зніжках** — штодзённае push-апавяшчэнне пра зніжэнне цаны.
+
+## Крыніца дадзеных
+
+Прагнозы папаўнення запасаў, выяўленне зніжак і параўнанне цэн па крамах будуюцца выключна на цэнах асобных пазіцый, зафіксаваных пры сканаванні чэкаў камерай (OCR), — на тых жа дадзеных, што сілкуюць ваш Персанальны індэкс інфляцыі. Уручную ўведзеныя выдаткі і банкаўскія імпарты не змяшчаюць цэн на ўзроўні тавараў, таму не ўдзельнічаюць у гэтых функцыях. Чым больш чэкаў вы скануеце, тым дакладнейшымі становяцца падказкі і параўнанні.
 `,
     },
   ],
@@ -35567,6 +36287,96 @@ Reisaccounts hebben een eigen toegangspunt: open het reisaccount en tik op **Rei
 - De bonadresherkenning gebruikt alleen het op de bon afgedrukte adres — er komt geen telefoonlocatie aan te pas.
 - Een locatie maakt deel uit van de uitgavengegevens: leden van een gedeelde account die de uitgave kunnen zien, zien ook de locatie ervan.
 - Je kunt de locatie van elke uitgave op elk moment verwijderen.
+`,
+    },
+    {
+      id: '38-shopping-list',
+      title: `Slimme boodschappenlijst`,
+      description: `Een gedeelde boodschappenlijst die je ook nog vertelt welke winkel het goedkoopst is voor je mandje — berekend op basis van prijzen uit je eigen bonnetjes, zonder AI-kosten.`,
+      body: `# Slimme boodschappenlijst
+
+> Een gedeelde boodschappenlijst die je ook nog vertelt welke winkel het goedkoopst is voor je mandje — berekend op basis van prijzen uit je eigen bonnetjes, zonder AI-kosten.
+
+De Slimme boodschappenlijst is een gedeelde lijst voor je account. In tegenstelling tot een gewone lijst is hij gekoppeld aan de prijsgeschiedenis van je **Persoonlijke Inflatie-index**: elk artikel dat je hebt gekocht en gescand heeft een bekende prijs bij een bekende winkel, waardoor de app winkels kan rangschikken op basis van het werkelijke totaal van je mandje, kan voorstellen wat aangevuld moet worden, en echte prijsdalingen kan signaleren.
+
+## Waar je hem vindt
+
+Open **Boodschappenlijst** via de snelle acties op het startscherm, of ga naar **Instellingen → Boodschappenlijst**. Op een gedeeld account zien en bewerken alle leden dezelfde lijst.
+
+## Lijsten aanmaken en wisselen
+
+Elk account begint met een standaardlijst genaamd "My List". Je kunt meerdere lijsten bijhouden (bijvoorbeeld "Boodschappen" en "Apotheek") en ertussen wisselen.
+
+Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te openen. Daar kun je:
+
+- **Wisselen** — tik op een lijst om die actief te maken.
+- **Aanmaken** — tik op **Nieuwe lijst** en geef hem een naam. Elk accountlid kan een lijst aanmaken.
+- **Hernoemen** — tik op het potloodicoon bij een lijstregel. Elk accountlid kan een lijst hernoemen.
+- **Archiveren** — verbergt de lijst zonder hem te verwijderen (de artikelen blijven bewaard). Alleen voor bewerkers en de accounteigenaar.
+- **Verwijderen** — verwijdert de lijst en alle artikelen definitief. Alleen voor bewerkers en de accounteigenaar.
+
+Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
+
+## Artikelen toevoegen
+
+Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artikel op drie manieren toevoegen:
+
+- **Zoeken in je bijgehouden producten** — begin te typen en overeenkomende producten uit je geschiedenis van de Persoonlijke Inflatie-index verschijnen onder het zoekvak.
+- **Vaak gekocht** — als het zoekvak leeg is, toont een horizontale rij je meest gekochte producten om met één tik toe te voegen.
+- **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
+
+Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
+
+## Prijzen vergelijken ("Waar is het goedkoopst")
+
+Tik onderaan de lijst op **Prijzen vergelijken** om te zien welke winkel het goedkoopst is voor alles wat nog niet is aangevinkt op je lijst.
+
+De app kijkt naar de laatst betaalde prijs voor elk lijstartikel bij elke winkel in je geschiedenis en toont per winkel:
+
+- Het **geschatte totaal** van je mandje bij die winkel.
+- Een **dekkingsbadge** ("5/7 artikelen") die laat zien hoeveel van je lijstartikelen daar een bekende prijs hebben.
+- Een **Goedkoopst**-badge bij de winkel met de beste prijs-kwaliteitverhouding. Een winkel krijgt de badge alleen als hij al je artikelen dekt, of minstens 80% ervan als geen enkele winkel alles dekt.
+- Een waarschuwing voor **verouderde prijzen** als sommige gebruikte prijzen ouder zijn dan 90 dagen.
+- Een telling van artikelen **zonder prijs** bij die winkel.
+
+Onder de winkelkaarten splitst **Laagste prijs per artikel** de vergelijking artikel voor artikel uit, met de goedkoopste winkel en prijs per artikel — handig wanneer geen enkele winkel je hele mandje dekt.
+
+Alleen artikelen die zijn gekoppeld aan een bijgehouden product (toegevoegd vanuit je bijgehouden producten, niet als vrije tekst) worden meegenomen in de vergelijking.
+
+> **Let op:** Prijzen vergelijken tussen winkels is een **Pro**-functie. Gebruikers van het gratis abonnement zien een upgrademelding wanneer ze op **Prijzen vergelijken** tikken.
+
+Als je nog niet genoeg bonnetjes hebt gescand, zie je een melding om er eerst een paar te scannen — de vergelijking heeft prijsgeschiedenis nodig om op te bouwen.
+
+## Winkelkaart
+
+Tik op het scherm met de prijsvergelijking op het kaartpictogram (rechtsboven) om de **Winkelkaart** te openen. Deze toont elke winkel uit je vergelijking met een bekende locatie (automatisch vastgelegd bij het scannen van een bonnetje met adres, of handmatig toegevoegd).
+
+- Wisselknop **Goedkoopst / Dichtbij** — sorteert de winkellijst onder de kaart op geschat mandtotaal of op afstand tot jou.
+- Tik op **Zoek in de buurt** om je huidige locatie op te halen en afstanden te tonen. Dit vereist locatietoestemming; zonder die toestemming verschijnen winkels nog steeds op de kaart, maar zonder afstandslabels.
+- Winkels zonder bekend adres worden niet op de kaart getoond, en een banner laat zien hoeveel er zijn overgeslagen.
+
+## Tijd om aan te vullen
+
+De app houdt bij hoe vaak je elk bijgehouden product koopt. Zodra ze minstens 3 aankopen van een product heeft gezien, leert ze je gebruikelijke herhaalaankoopinterval (bijvoorbeeld "je koopt melk ongeveer elke 6 dagen"). Wanneer een product volgens dat patroon aan vervanging toe is — en nog niet op een van je lijsten staat — verschijnt het als chip in de rij **Tijd om aan te vullen** bovenaan de boodschappenlijst. Tik op een chip om dat artikel direct aan je lijst toe te voegen.
+
+Je krijgt ook een dagelijkse pushmelding wanneer iets aangevuld moet worden, maximaal één keer per dag, met een samenvatting van het eerste product dat aan vervanging toe is ("Tijd om bij te vullen? Melk en nog 2 andere").
+
+## Aanbiedingen voor jou
+
+De app vergelijkt de prijs die je onlangs betaalde voor een bijgehouden product met het gemiddelde van de afgelopen 90 dagen. Als de recentste prijs van een winkel voor een product duidelijk onder dat gemiddelde ligt, verschijnt hij als chip in de rij **Aanbiedingen voor jou**, met de winkelnaam en het kortingspercentage. Tik op een chip om het artikel aan je lijst toe te voegen.
+
+Aanbiedingen worden ook als dagelijkse pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen.
+
+## Meldingen beheren
+
+Beide meldingen staan standaard aan en kunnen onafhankelijk van elkaar worden uitgeschakeld via **Instellingen → Meldingen**:
+
+- **Herbevoorradingsherinneringen** — de dagelijkse "tijd om aan te vullen"-pushmelding.
+- **Aanbiedingsmeldingen** — de dagelijkse pushmelding bij prijsdalingen.
+
+## Gegevensbron
+
+Herbevoorradingsvoorspellingen, aanbiedingsdetectie en winkelprijsvergelijkingen worden allemaal opgebouwd uit de prijzen per artikel die worden vastgelegd wanneer je bonnetjes met de camera scant (OCR) — dezelfde gegevens die je Persoonlijke Inflatie-index voeden. Handmatig ingevoerde uitgaven en bankimporten bevatten geen prijzen per product, dus die dragen niet bij aan deze functies. Hoe meer bonnetjes je scant, hoe beter de suggesties en vergelijkingen worden.
 `,
     },
   ],
