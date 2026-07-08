@@ -178,6 +178,8 @@ const translations: Record<string, {
   trackingGapBody: () => string;
   shoppingReminderTitle: () => string;
   shoppingReminderBody: (product: string, extraCount: number) => string;
+  shoppingDealTitle: () => string;
+  shoppingDealBody: (product: string, merchant: string, dropPct: number) => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
@@ -261,6 +263,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `You usually rebuy ${product} and ${extraCount} more around now.`
         : `You usually rebuy ${product} around now.`,
+    shoppingDealTitle: () => 'Price drop!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `${product} is ${dropPct}% cheaper at ${merchant} right now.`,
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
@@ -345,6 +350,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Обычно вы примерно сейчас покупаете ${product} и ещё ${extraCount}.`
         : `Обычно вы примерно сейчас покупаете ${product}.`,
+    shoppingDealTitle: () => 'Снижение цены!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `Цена на "${product}" упала на ${dropPct}% в ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
@@ -429,6 +437,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Зазвичай приблизно зараз ви купуєте ${product} і ще ${extraCount}.`
         : `Зазвичай приблизно зараз ви купуєте ${product}.`,
+    shoppingDealTitle: () => 'Зниження ціни!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `Ціна на "${product}" впала на ${dropPct}% у ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
@@ -513,6 +524,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Zwykle kupujesz teraz ${product} i jeszcze ${extraCount} innych produktów.`
         : `Zwykle kupujesz teraz ${product}.`,
+    shoppingDealTitle: () => 'Obniżka ceny!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `Cena "${product}" spadła o ${dropPct}% w ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
@@ -597,6 +611,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Sueles volver a comprar ${product} y ${extraCount} más por estas fechas.`
         : `Sueles volver a comprar ${product} por estas fechas.`,
+    shoppingDealTitle: () => '¡Bajada de precio!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `El precio de "${product}" bajó un ${dropPct}% en ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
@@ -681,6 +698,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Vous rachetez généralement ${product} et ${extraCount} autre(s) article(s) vers cette période.`
         : `Vous rachetez généralement ${product} vers cette période.`,
+    shoppingDealTitle: () => 'Baisse de prix !',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `Le prix de "${product}" a baissé de ${dropPct}% chez ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
@@ -765,6 +785,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Du kaufst ${product} und ${extraCount} weitere Artikel normalerweise so langsam wieder.`
         : `Du kaufst ${product} normalerweise so langsam wieder.`,
+    shoppingDealTitle: () => 'Preissenkung!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `Der Preis für "${product}" ist bei ${merchant} um ${dropPct}% gesunken.`,
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
@@ -849,6 +872,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Звычайна прыблізна цяпер вы купляеце ${product} і яшчэ ${extraCount}.`
         : `Звычайна прыблізна цяпер вы купляеце ${product}.`,
+    shoppingDealTitle: () => 'Зніжэнне цаны!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `Цана на "${product}" упала на ${dropPct}% у ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
@@ -933,6 +959,9 @@ const translations: Record<string, {
       extraCount > 0
         ? `Je koopt ${product} en ${extraCount} andere artikelen meestal rond deze tijd opnieuw.`
         : `Je koopt ${product} meestal rond deze tijd opnieuw.`,
+    shoppingDealTitle: () => 'Prijsverlaging!',
+    shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
+      `De prijs van "${product}" is nu ${dropPct}% lager bij ${merchant}.`,
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
@@ -1119,6 +1148,14 @@ export function shoppingReminderTitle(lang: Lang): string {
 
 export function shoppingReminderBody(lang: Lang, product: string, extraCount: number): string {
   return t(lang).shoppingReminderBody(product, extraCount);
+}
+
+export function shoppingDealTitle(lang: Lang): string {
+  return t(lang).shoppingDealTitle();
+}
+
+export function shoppingDealBody(lang: Lang, product: string, merchant: string, dropPct: number): string {
+  return t(lang).shoppingDealBody(product, merchant, dropPct);
 }
 
 export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {
