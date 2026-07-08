@@ -49,3 +49,11 @@ export interface UpdateShoppingListItemDto {
   note?: string | null;
   sortOrder?: number;
 }
+
+export interface RestockSuggestion {
+  canonicalName: string;
+  lastPurchase: string;   // ISO date YYYY-MM-DD
+  medianGapDays: number;
+  dueInDays: number;      // <= 0 means due/overdue
+  purchaseCount: number;
+}
