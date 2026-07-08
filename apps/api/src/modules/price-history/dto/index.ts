@@ -5,6 +5,7 @@ import {
   ArrayMaxSize,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   Min,
   ArrayMinSize,
   ValidateNested,
@@ -51,4 +52,12 @@ export class BasketCompareRequestDto {
   @ValidateNested({ each: true })
   @Type(() => BasketItemDto)
   items: BasketItemDto[];
+
+  @IsOptional()
+  @IsNumber()
+  lat?: number;
+
+  @IsOptional()
+  @IsNumber()
+  lng?: number;
 }

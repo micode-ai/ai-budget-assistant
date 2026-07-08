@@ -90,6 +90,7 @@ export class PriceHistoryController {
   @UseGuards(SubscriptionTierGuard)
   @RequireTier('pro')
   compareBasket(@Req() req: AuthenticatedRequest, @Body() dto: BasketCompareRequestDto) {
-    return this.priceHistoryService.getBasketComparison(req.accountId, dto.items);
+    const origin = dto.lat != null && dto.lng != null ? { lat: dto.lat, lng: dto.lng } : undefined;
+    return this.priceHistoryService.getBasketComparison(req.accountId, dto.items, origin);
   }
 }
