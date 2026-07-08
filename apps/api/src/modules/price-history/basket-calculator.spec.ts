@@ -150,4 +150,15 @@ describe('computeBasket geo', () => {
     expect(res.stores[0].lat).toBeUndefined();
     expect(res.stores[0].distanceKm).toBeUndefined();
   });
+
+  it('respects a custom nearbyRadiusKm override', () => {
+    const rows = [row('Milk', 'Lidl', 2.5)];
+    const coords = new Map([['Lidl', { lat: 52.23, lng: 21.01 }]]);
+    const origin = { lat: 52.24, lng: 21.02 }; // ~1.3 km away
+    const item = [{ canonicalName: 'Milk', quantity: 1 }];
+    // default radius 5 → within → nearby
+    expect(computeBasket(rows, item, NOW, coords, origin, 5).stores[0].nearby).toBe(true);
+    // tightened radius 1 → 1.3 km is outside → not nearby (proves the param is actually used)
+    expect(computeBasket(rows, item, NOW, coords, origin, 1).stores[0].nearby).toBe(false);
+  });
 });
