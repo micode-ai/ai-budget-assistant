@@ -171,4 +171,15 @@ describe('ShoppingListService', () => {
     const res = await service.getRestockSuggestions('a1');
     expect(res.every((s) => s.canonicalName !== 'Bread')).toBe(true);
   });
+
+  it('getDeals flags a recent price drop', async () => {
+    prisma.productAlias.findMany.mockResolvedValue([]);
+    prisma.expenseItem.findMany.mockResolvedValue([
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-05-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-06-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+      { canonicalName: 'Milk', unitPrice: 3.5, quantity: 1, totalPrice: 3.5, expense: { date: new Date(Date.now() - 3 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
+    ]);
+    const deals = await service.getDeals('a1');
+    expect(deals.some((x) => x.canonicalName === 'Milk')).toBe(true);
+  });
 });
