@@ -263,7 +263,12 @@ export default function ShoppingListScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <TouchableOpacity style={styles.switcherPill} onPress={openSwitcher} hitSlop={8}>
+        <TouchableOpacity
+          style={styles.switcherPill}
+          onPress={openSwitcher}
+          hitSlop={8}
+          accessibilityLabel={t('shoppingList.switchList')}
+        >
           <Text style={styles.switcherPillText} numberOfLines={1}>
             {activeListName}
           </Text>
