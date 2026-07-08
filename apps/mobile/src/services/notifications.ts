@@ -136,6 +136,9 @@ export function handleNotificationResponse(
     case 'account_invitation':
       router.push({ pathname: '/alerts', params: { tab: 'invitations' } } as any);
       break;
+    case 'shopping_reminder':
+      router.push('/shopping-list' as any);
+      break;
     default:
       break;
   }
