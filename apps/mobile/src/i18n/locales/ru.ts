@@ -2225,5 +2225,11 @@ export default {
     deleteListConfirm: 'Удалить этот список и все его товары?',
     quantity: 'Количество',
     restockTitle: 'Пора пополнить запасы',
+    mapTitle: 'Карта магазинов',
+    sortCheapest: 'Дешевле',
+    sortNearby: 'Ближе',
+    noStoreLocations: 'Местоположений магазинов пока нет — они появятся здесь, как только в чеках будут адреса',
+    findNearby: 'Найти поблизости',
+    distanceKm: '{{km}} км от вас',
   },
 } as const;

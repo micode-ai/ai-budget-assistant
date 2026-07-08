@@ -2221,5 +2221,11 @@ export default {
     deleteListConfirm: 'Diese Liste und alle ihre Artikel löschen?',
     quantity: 'Menge',
     restockTitle: 'Zeit zum Nachkaufen',
+    mapTitle: 'Geschäfte auf der Karte',
+    sortCheapest: 'Günstigste',
+    sortNearby: 'In der Nähe',
+    noStoreLocations: 'Noch keine Standorte — deine Geschäfte erscheinen hier, sobald Kassenbons Adressen enthalten',
+    findNearby: 'In der Nähe finden',
+    distanceKm: '{{km}} km entfernt',
   },
 } as const;

@@ -2225,5 +2225,11 @@ export default {
     deleteListConfirm: 'Usunąć tę listę i wszystkie jej produkty?',
     quantity: 'Ilość',
     restockTitle: 'Czas na uzupełnienie zapasów',
+    mapTitle: 'Mapa sklepów',
+    sortCheapest: 'Najtaniej',
+    sortNearby: 'Najbliżej',
+    noStoreLocations: 'Brak lokalizacji sklepów — pojawią się tutaj, gdy paragony będą zawierać adresy',
+    findNearby: 'Znajdź w pobliżu',
+    distanceKm: '{{km}} km stąd',
   },
 } as const;
