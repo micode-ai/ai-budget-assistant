@@ -68,6 +68,8 @@ export const useShoppingListStore = create<ShoppingListState>()(
     error: null,
 
     hydrate: async () => {
+      set({ suggestions: [] });
+
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) {
         set({ lists: [], isLoading: false });
