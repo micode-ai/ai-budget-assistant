@@ -9,7 +9,7 @@ Bekijk je uitgaven op een kaart. Uitgaven kunnen een locatie hebben — overgeno
 Een uitgave krijgt zijn locatie uit een van drie bronnen (de hoogste wint):
 
 1. **Handmatige pin** — je plaatst of verplaatst de pin zelf op het locatiescherm van de uitgave.
-2. **Bonadres** — wanneer je een bon scant, leest de app het erop afgedrukte winkeladres en zet dit automatisch om in kaartcoördinaten. Dit werkt ook als je de bon pas later thuis scant.
+2. **Bonadres** — wanneer je een bon scant, leest de app het erop afgedrukte winkeladres en zet dit automatisch om in kaartcoördinaten. Dit werkt ook als je de bon pas later thuis scant. Bonnen die je naar de chatbots (Telegram, WhatsApp, Slack) stuurt, worden op dezelfde manier geplaatst.
 3. **Gps op het moment van invoer** — optioneel kan de app stilletjes je huidige positie toevoegen wanneer je ter plekke een uitgave toevoegt (handmatige invoer, spraakinvoer of automatische vastlegging via bankmeldingen).
 
 Geïmporteerde transacties (bank-CSV/PDF-bestanden) krijgen geen locatie.

@@ -18,6 +18,7 @@ interface PendingReceiptData {
   date: string | null;
   discountAmount: number | null;
   merchant: string | null;
+  location?: { lat: number; lng: number; name?: string } | null;
   items: Array<{
     description: string;
     quantity?: number;
@@ -87,6 +88,7 @@ export class PhotoHandler {
         date: receipt.date,
         discountAmount: receipt.discountAmount,
         merchant: receipt.merchant,
+        location: receipt.location,
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         receiptMimeType: mimeType || 'image/jpeg',
@@ -164,6 +166,7 @@ export class PhotoHandler {
         date: receipt.date,
         discountAmount: receipt.discountAmount,
         merchant: receipt.merchant,
+        location: receipt.location,
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         receiptMimeType: mimeType,
@@ -260,6 +263,7 @@ export class PhotoHandler {
         categoryId: data.categoryId || undefined,
         date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
         source: 'ocr',
+        location: data.location ?? undefined,
         receiptImageBase64: data.receiptImageBase64,
         receiptMimeType: data.receiptMimeType,
         items: data.items.map((item, index) => ({

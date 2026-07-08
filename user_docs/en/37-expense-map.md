@@ -9,7 +9,7 @@ See your spending on a map. Expenses can carry a location — taken from the sto
 An expense gets its location from one of three sources (higher wins):
 
 1. **Manual pin** — you place or move the pin yourself on the expense's location screen.
-2. **Receipt address** — when you scan a receipt, the app reads the store address printed on it and converts it to map coordinates automatically. This works even if you scan the receipt at home later.
+2. **Receipt address** — when you scan a receipt, the app reads the store address printed on it and converts it to map coordinates automatically. This works even if you scan the receipt at home later. Receipts you send to the chat bots (Telegram, WhatsApp, Slack) are placed the same way.
 3. **GPS at entry time** — optionally, the app can silently attach your current position when you add an expense on the spot (manual entry, voice entry, or automatic bank-notification capture).
 
 Imported transactions (bank CSV/PDF files) do not get a location.

@@ -9,7 +9,7 @@ Consulta tus gastos en un mapa. Los gastos pueden llevar una ubicación — toma
 Un gasto obtiene su ubicación de una de tres fuentes (la de mayor prioridad gana):
 
 1. **Chincheta manual** — tú colocas o mueves la chincheta en la pantalla de ubicación del gasto.
-2. **Dirección del tique** — cuando escaneas un tique, la app lee la dirección del establecimiento impresa en él y la convierte automáticamente en coordenadas de mapa. Esto funciona incluso si escaneas el tique más tarde, en casa.
+2. **Dirección del tique** — cuando escaneas un tique, la app lee la dirección del establecimiento impresa en él y la convierte automáticamente en coordenadas de mapa. Esto funciona incluso si escaneas el tique más tarde, en casa. Los tiques que envías a los bots de chat (Telegram, WhatsApp, Slack) se ubican de la misma forma.
 3. **GPS en el momento de la entrada** — opcionalmente, la app puede adjuntar en silencio tu posición actual cuando añades un gasto sobre la marcha (entrada manual, entrada por voz o captura automática por notificación bancaria).
 
 Las transacciones importadas (archivos CSV/PDF del banco) no reciben ubicación.

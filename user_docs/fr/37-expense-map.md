@@ -9,7 +9,7 @@ Consultez vos dépenses sur une carte. Les dépenses peuvent porter une localisa
 Une dépense obtient sa localisation à partir de l'une de ces trois sources (la priorité la plus haute l'emporte) :
 
 1. **Épingle manuelle** — vous placez ou déplacez vous-même l'épingle sur l'écran de localisation de la dépense.
-2. **Adresse du ticket** — lorsque vous scannez un ticket de caisse, l'application lit l'adresse du magasin qui y est imprimée et la convertit automatiquement en coordonnées cartographiques. Cela fonctionne même si vous scannez le ticket plus tard, chez vous.
+2. **Adresse du ticket** — lorsque vous scannez un ticket de caisse, l'application lit l'adresse du magasin qui y est imprimée et la convertit automatiquement en coordonnées cartographiques. Cela fonctionne même si vous scannez le ticket plus tard, chez vous. Les tickets que vous envoyez aux bots de chat (Telegram, WhatsApp, Slack) sont placés de la même manière.
 3. **GPS au moment de la saisie** — en option, l'application peut joindre silencieusement votre position actuelle lorsque vous ajoutez une dépense sur place (saisie manuelle, saisie vocale ou capture automatique par notification bancaire).
 
 Les transactions importées (fichiers CSV/PDF bancaires) n'obtiennent pas de localisation.
