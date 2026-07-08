@@ -23,6 +23,17 @@ export default function CompareBasketScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const headerRight = () =>
+    basketResult ? (
+      <TouchableOpacity
+        onPress={() => router.push('/shopping-list/map')}
+        hitSlop={8}
+        accessibilityLabel={t('shoppingList.mapTitle')}
+      >
+        <Ionicons name="map-outline" size={22} color={theme.colors.primary} />
+      </TouchableOpacity>
+    ) : null;
+
   const renderStoreCard = (store: BasketStoreResult) => (
     <View
       key={store.merchantName}
@@ -90,7 +101,7 @@ export default function CompareBasketScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <Stack.Screen options={{ title: t('shoppingList.compareTitle') }} />
+      <Stack.Screen options={{ title: t('shoppingList.compareTitle'), headerRight }} />
 
       {isComparing ? (
         <View style={styles.centered}>
