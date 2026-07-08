@@ -85,7 +85,9 @@ export default function ShoppingListMapScreen() {
         {store.distanceKm != null && (
           <View style={styles.distanceBadge}>
             <Ionicons name="navigate-outline" size={12} color={theme.colors.textSecondary} />
-            <Text style={styles.distanceText}>{store.distanceKm} km</Text>
+            <Text style={styles.distanceText}>
+              {t('shoppingList.distanceKm', { km: store.distanceKm })}
+            </Text>
           </View>
         )}
         <View style={styles.coverageBadge}>
