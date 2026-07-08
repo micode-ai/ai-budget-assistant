@@ -57,3 +57,12 @@ export interface RestockSuggestion {
   dueInDays: number;      // <= 0 means due/overdue
   purchaseCount: number;
 }
+
+export interface DealSuggestion {
+  canonicalName: string;
+  merchant: string;
+  price: number;      // the current (recent) low price
+  avgPrice: number;   // the 90-day average
+  dropPct: number;    // e.g. 18 = 18% below average
+  currency: string;
+}
