@@ -43,7 +43,7 @@ export class ShoppingReminderCron {
       if (!due.length && !deals.length) continue;
 
       const members = await this.prisma.accountMember.findMany({
-        where: { accountId: account.id, user: { notifyShoppingReminders: true, pushToken: { not: null }, isActive: true } },
+        where: { accountId: account.id, user: { pushToken: { not: null }, isActive: true } },
         select: { userId: true },
       });
 
