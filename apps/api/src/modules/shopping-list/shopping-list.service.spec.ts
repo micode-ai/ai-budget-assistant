@@ -63,6 +63,22 @@ describe('ShoppingListService', () => {
     expect(lists[0].isDefault).toBe(true);
   });
 
+  it('getLists de-dupes when the resurrected default list collides with an already-archived row of the same id', async () => {
+    prisma.shoppingList.findMany.mockResolvedValue([
+      {
+        id: 'l1', accountId: 'a1', clientId: 'default-a1', name: 'My List',
+        isDefault: true, isArchived: true, sortOrder: 0, createdByUserId: 'u1', items: [],
+      },
+    ]);
+    prisma.shoppingList.upsert.mockResolvedValue({
+      id: 'l1', accountId: 'a1', clientId: 'default-a1', name: 'My List',
+      isDefault: true, isArchived: false, sortOrder: 0, createdByUserId: 'u1', items: [],
+    });
+    const res = await service.getLists('a1', 'u1');
+    expect(res.filter((l) => l.id === 'l1').length).toBe(1);
+    expect(res.find((l) => l.id === 'l1')?.isArchived).toBe(false);
+  });
+
   it('createList idempotent replay returns the existing list WITH its items, not an empty array', async () => {
     prisma.shoppingList.findUnique.mockResolvedValue({
       id: 'l1', accountId: 'a1', clientId: 'c1', name: 'Weekly',
