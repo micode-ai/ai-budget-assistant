@@ -9,7 +9,7 @@ Zobacz swoje wydatki na mapie. Wydatki mogą mieć przypisaną lokalizację — 
 Wydatek otrzymuje swoją lokalizację z jednego z trzech źródeł (wyższe wygrywa):
 
 1. **Ręczna pinezka** — samodzielnie umieszczasz lub przesuwasz pinezkę na ekranie lokalizacji wydatku.
-2. **Adres z paragonu** — gdy skanujesz paragon, aplikacja odczytuje wydrukowany na nim adres sklepu i automatycznie przelicza go na współrzędne mapy. Działa to nawet wtedy, gdy zeskanujesz paragon później, w domu.
+2. **Adres z paragonu** — gdy skanujesz paragon, aplikacja odczytuje wydrukowany na nim adres sklepu i automatycznie przelicza go na współrzędne mapy. Działa to nawet wtedy, gdy zeskanujesz paragon później, w domu. Paragony wysłane do botów czatu (Telegram, WhatsApp, Slack) są umieszczane w ten sam sposób.
 3. **GPS w momencie dodania** — opcjonalnie aplikacja może po cichu dołączyć Twoją aktualną pozycję, gdy dodajesz wydatek na miejscu (wpis ręczny, wpis głosowy lub automatyczne przechwytywanie z powiadomienia bankowego).
 
 Zaimportowane transakcje (pliki bankowe CSV/PDF) nie otrzymują lokalizacji.

@@ -3977,7 +3977,7 @@ See your spending on a map. Expenses can carry a location — taken from the sto
 An expense gets its location from one of three sources (higher wins):
 
 1. **Manual pin** — you place or move the pin yourself on the expense's location screen.
-2. **Receipt address** — when you scan a receipt, the app reads the store address printed on it and converts it to map coordinates automatically. This works even if you scan the receipt at home later.
+2. **Receipt address** — when you scan a receipt, the app reads the store address printed on it and converts it to map coordinates automatically. This works even if you scan the receipt at home later. Receipts you send to the chat bots (Telegram, WhatsApp, Slack) are placed the same way.
 3. **GPS at entry time** — optionally, the app can silently attach your current position when you add an expense on the spot (manual entry, voice entry, or automatic bank-notification capture).
 
 Imported transactions (bank CSV/PDF files) do not get a location.
@@ -8065,7 +8065,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 Расход получает свою локацию из одного из трёх источников (более приоритетный побеждает):
 
 1. **Ручная метка** — вы сами размещаете или перемещаете метку на экране локации расхода.
-2. **Адрес с чека** — когда вы сканируете чек, приложение считывает напечатанный на нём адрес магазина и автоматически преобразует его в координаты на карте. Это работает, даже если вы отсканируете чек позже, дома.
+2. **Адрес с чека** — когда вы сканируете чек, приложение считывает напечатанный на нём адрес магазина и автоматически преобразует его в координаты на карте. Это работает, даже если вы отсканируете чек позже, дома. Чеки, отправленные чат-ботам (Telegram, WhatsApp, Slack), размещаются так же.
 3. **GPS в момент добавления** — по желанию приложение может незаметно прикрепить вашу текущую позицию, когда вы добавляете расход на месте (ручной ввод, голосовой ввод или автоматическое распознавание банковского уведомления).
 
 Импортированные транзакции (банковские CSV/PDF-файлы) не получают локацию.
@@ -12123,7 +12123,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 Витрата отримує свою локацію з одного з трьох джерел (пріоритетніше джерело перемагає):
 
 1. **Ручна мітка** — ви самі розміщуєте або переміщуєте мітку на екрані локації витрати.
-2. **Адреса з чека** — коли ви скануєте чек, застосунок зчитує надруковану на ньому адресу магазину і автоматично перетворює її на координати на карті. Це працює, навіть якщо ви відскануєте чек пізніше, вдома.
+2. **Адреса з чека** — коли ви скануєте чек, застосунок зчитує надруковану на ньому адресу магазину і автоматично перетворює її на координати на карті. Це працює, навіть якщо ви відскануєте чек пізніше, вдома. Чеки, надіслані чат-ботам (Telegram, WhatsApp, Slack), розміщуються так само.
 3. **GPS у момент додавання** — за бажанням застосунок може непомітно прикріпити вашу поточну позицію, коли ви додаєте витрату на місці (ручне введення, голосове введення або автоматичне розпізнавання банківського сповіщення).
 
 Імпортовані транзакції (банківські CSV/PDF-файли) не отримують локацію.
@@ -16166,7 +16166,7 @@ Zobacz swoje wydatki na mapie. Wydatki mogą mieć przypisaną lokalizację — 
 Wydatek otrzymuje swoją lokalizację z jednego z trzech źródeł (wyższe wygrywa):
 
 1. **Ręczna pinezka** — samodzielnie umieszczasz lub przesuwasz pinezkę na ekranie lokalizacji wydatku.
-2. **Adres z paragonu** — gdy skanujesz paragon, aplikacja odczytuje wydrukowany na nim adres sklepu i automatycznie przelicza go na współrzędne mapy. Działa to nawet wtedy, gdy zeskanujesz paragon później, w domu.
+2. **Adres z paragonu** — gdy skanujesz paragon, aplikacja odczytuje wydrukowany na nim adres sklepu i automatycznie przelicza go na współrzędne mapy. Działa to nawet wtedy, gdy zeskanujesz paragon później, w domu. Paragony wysłane do botów czatu (Telegram, WhatsApp, Slack) są umieszczane w ten sam sposób.
 3. **GPS w momencie dodania** — opcjonalnie aplikacja może po cichu dołączyć Twoją aktualną pozycję, gdy dodajesz wydatek na miejscu (wpis ręczny, wpis głosowy lub automatyczne przechwytywanie z powiadomienia bankowego).
 
 Zaimportowane transakcje (pliki bankowe CSV/PDF) nie otrzymują lokalizacji.
@@ -20184,7 +20184,7 @@ Sieh deine Ausgaben auf einer Karte. Ausgaben können einen Standort tragen — 
 Eine Ausgabe erhält ihren Standort aus einer von drei Quellen (die höherwertige gewinnt):
 
 1. **Manueller Pin** — du platzierst oder verschiebst den Pin selbst auf dem Standort-Bildschirm der Ausgabe.
-2. **Kassenbon-Adresse** — wenn du einen Kassenbon scannst, liest die App die darauf aufgedruckte Filialadresse und wandelt sie automatisch in Kartenkoordinaten um. Das funktioniert auch, wenn du den Beleg erst später zu Hause scannst.
+2. **Kassenbon-Adresse** — wenn du einen Kassenbon scannst, liest die App die darauf aufgedruckte Filialadresse und wandelt sie automatisch in Kartenkoordinaten um. Das funktioniert auch, wenn du den Beleg erst später zu Hause scannst. Belege, die du an die Chat-Bots (Telegram, WhatsApp, Slack) sendest, werden genauso platziert.
 3. **GPS zum Erfassungszeitpunkt** — optional kann die App im Hintergrund deine aktuelle Position anhängen, wenn du eine Ausgabe direkt vor Ort erfasst (manuelle Eingabe, Spracheingabe oder automatische Erfassung per Bank-Benachrichtigung).
 
 Importierte Transaktionen (Bank-CSV-/PDF-Dateien) erhalten keinen Standort.
@@ -24191,7 +24191,7 @@ Consulta tus gastos en un mapa. Los gastos pueden llevar una ubicación — toma
 Un gasto obtiene su ubicación de una de tres fuentes (la de mayor prioridad gana):
 
 1. **Chincheta manual** — tú colocas o mueves la chincheta en la pantalla de ubicación del gasto.
-2. **Dirección del tique** — cuando escaneas un tique, la app lee la dirección del establecimiento impresa en él y la convierte automáticamente en coordenadas de mapa. Esto funciona incluso si escaneas el tique más tarde, en casa.
+2. **Dirección del tique** — cuando escaneas un tique, la app lee la dirección del establecimiento impresa en él y la convierte automáticamente en coordenadas de mapa. Esto funciona incluso si escaneas el tique más tarde, en casa. Los tiques que envías a los bots de chat (Telegram, WhatsApp, Slack) se ubican de la misma forma.
 3. **GPS en el momento de la entrada** — opcionalmente, la app puede adjuntar en silencio tu posición actual cuando añades un gasto sobre la marcha (entrada manual, entrada por voz o captura automática por notificación bancaria).
 
 Las transacciones importadas (archivos CSV/PDF del banco) no reciben ubicación.
@@ -28196,7 +28196,7 @@ Consultez vos dépenses sur une carte. Les dépenses peuvent porter une localisa
 Une dépense obtient sa localisation à partir de l'une de ces trois sources (la priorité la plus haute l'emporte) :
 
 1. **Épingle manuelle** — vous placez ou déplacez vous-même l'épingle sur l'écran de localisation de la dépense.
-2. **Adresse du ticket** — lorsque vous scannez un ticket de caisse, l'application lit l'adresse du magasin qui y est imprimée et la convertit automatiquement en coordonnées cartographiques. Cela fonctionne même si vous scannez le ticket plus tard, chez vous.
+2. **Adresse du ticket** — lorsque vous scannez un ticket de caisse, l'application lit l'adresse du magasin qui y est imprimée et la convertit automatiquement en coordonnées cartographiques. Cela fonctionne même si vous scannez le ticket plus tard, chez vous. Les tickets que vous envoyez aux bots de chat (Telegram, WhatsApp, Slack) sont placés de la même manière.
 3. **GPS au moment de la saisie** — en option, l'application peut joindre silencieusement votre position actuelle lorsque vous ajoutez une dépense sur place (saisie manuelle, saisie vocale ou capture automatique par notification bancaire).
 
 Les transactions importées (fichiers CSV/PDF bancaires) n'obtiennent pas de localisation.
@@ -32161,7 +32161,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 Выдатак атрымлівае сваю лакацыю з аднаго з трох крыніц (прыярытэтнейшая перамагае):
 
 1. **Ручная пазнака** — вы самі размяшчаеце або перамяшчаеце пазнаку на экране лакацыі выдатку.
-2. **Адрас з чэка** — калі вы скануеце чэк, праграма счытвае надрукаваны на ім адрас крамы і аўтаматычна пераўтварае яго ў каардынаты на карце. Гэта працуе, нават калі вы адскануеце чэк пазней, дома.
+2. **Адрас з чэка** — калі вы скануеце чэк, праграма счытвае надрукаваны на ім адрас крамы і аўтаматычна пераўтварае яго ў каардынаты на карце. Гэта працуе, нават калі вы адскануеце чэк пазней, дома. Чэкі, дасланыя чат-ботам (Telegram, WhatsApp, Slack), размяшчаюцца гэтак жа.
 3. **GPS у момант дадання** — па жаданні праграма можа непрыкметна далучыць вашу бягучую пазіцыю, калі вы дадаеце выдатак на месцы (ручное ўвядзенне, галасавое ўвядзенне або аўтаматычнае распазнаванне банкаўскага апавяшчэння).
 
 Імпартаваныя транзакцыі (банкаўскія CSV/PDF-файлы) не атрымліваюць лакацыю.
@@ -36245,7 +36245,7 @@ Bekijk je uitgaven op een kaart. Uitgaven kunnen een locatie hebben — overgeno
 Een uitgave krijgt zijn locatie uit een van drie bronnen (de hoogste wint):
 
 1. **Handmatige pin** — je plaatst of verplaatst de pin zelf op het locatiescherm van de uitgave.
-2. **Bonadres** — wanneer je een bon scant, leest de app het erop afgedrukte winkeladres en zet dit automatisch om in kaartcoördinaten. Dit werkt ook als je de bon pas later thuis scant.
+2. **Bonadres** — wanneer je een bon scant, leest de app het erop afgedrukte winkeladres en zet dit automatisch om in kaartcoördinaten. Dit werkt ook als je de bon pas later thuis scant. Bonnen die je naar de chatbots (Telegram, WhatsApp, Slack) stuurt, worden op dezelfde manier geplaatst.
 3. **Gps op het moment van invoer** — optioneel kan de app stilletjes je huidige positie toevoegen wanneer je ter plekke een uitgave toevoegt (handmatige invoer, spraakinvoer of automatische vastlegging via bankmeldingen).
 
 Geïmporteerde transacties (bank-CSV/PDF-bestanden) krijgen geen locatie.

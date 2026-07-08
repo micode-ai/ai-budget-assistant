@@ -9,7 +9,7 @@ Sieh deine Ausgaben auf einer Karte. Ausgaben können einen Standort tragen — 
 Eine Ausgabe erhält ihren Standort aus einer von drei Quellen (die höherwertige gewinnt):
 
 1. **Manueller Pin** — du platzierst oder verschiebst den Pin selbst auf dem Standort-Bildschirm der Ausgabe.
-2. **Kassenbon-Adresse** — wenn du einen Kassenbon scannst, liest die App die darauf aufgedruckte Filialadresse und wandelt sie automatisch in Kartenkoordinaten um. Das funktioniert auch, wenn du den Beleg erst später zu Hause scannst.
+2. **Kassenbon-Adresse** — wenn du einen Kassenbon scannst, liest die App die darauf aufgedruckte Filialadresse und wandelt sie automatisch in Kartenkoordinaten um. Das funktioniert auch, wenn du den Beleg erst später zu Hause scannst. Belege, die du an die Chat-Bots (Telegram, WhatsApp, Slack) sendest, werden genauso platziert.
 3. **GPS zum Erfassungszeitpunkt** — optional kann die App im Hintergrund deine aktuelle Position anhängen, wenn du eine Ausgabe direkt vor Ort erfasst (manuelle Eingabe, Spracheingabe oder automatische Erfassung per Bank-Benachrichtigung).
 
 Importierte Transaktionen (Bank-CSV-/PDF-Dateien) erhalten keinen Standort.
