@@ -125,7 +125,7 @@ export default function ShoppingListScreen() {
   // ─── Deal suggestions strip (all members, not canEdit-gated) ──────────────
   const handleAddDeal = (deal: DealSuggestion) => {
     addItem(deal.canonicalName, deal.canonicalName, 1);
-    dismissDeal(deal.canonicalName);
+    dismissDeal(deal.canonicalName, deal.merchant);
   };
 
   // ─── List switcher bottom sheet ────────────────────────────────────────────

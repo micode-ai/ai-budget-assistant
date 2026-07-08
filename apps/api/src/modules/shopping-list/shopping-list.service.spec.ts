@@ -179,7 +179,21 @@ describe('ShoppingListService', () => {
       { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-06-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
       { canonicalName: 'Milk', unitPrice: 3.5, quantity: 1, totalPrice: 3.5, expense: { date: new Date(Date.now() - 3 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
     ]);
+    prisma.shoppingListItem.findMany.mockResolvedValue([]);
     const deals = await service.getDeals('a1');
     expect(deals.some((x) => x.canonicalName === 'Milk')).toBe(true);
+  });
+
+  it('getDeals excludes deals for products already on a list', async () => {
+    prisma.productAlias.findMany.mockResolvedValue([]);
+    prisma.expenseItem.findMany.mockResolvedValue([
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-05-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-06-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+      { canonicalName: 'Milk', unitPrice: 3.5, quantity: 1, totalPrice: 3.5, expense: { date: new Date(Date.now() - 3 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
+    ]);
+    // Milk is already on a list → its deal must be excluded
+    prisma.shoppingListItem.findMany.mockResolvedValue([{ canonicalName: 'Milk' }]);
+    const res = await service.getDeals('a1');
+    expect(res.every((d) => d.canonicalName !== 'Milk')).toBe(true);
   });
 });

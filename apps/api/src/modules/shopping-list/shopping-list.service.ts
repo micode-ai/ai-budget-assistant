@@ -240,6 +240,13 @@ export class ShoppingListService {
         currency: it.expense.currencyCode ?? 'PLN',
       });
     }
-    return detectDeals(rows);
+    // Exclude products already present as a non-deleted item on any list in this account
+    const onList: Array<{ canonicalName: string | null }> = await this.prisma.shoppingListItem.findMany({
+      where: { accountId, isDeleted: false, canonicalName: { not: null } },
+      select: { canonicalName: true },
+    });
+    const listed = new Set(onList.map((i) => i.canonicalName));
+
+    return detectDeals(rows).filter((deal) => !listed.has(deal.canonicalName));
   }
 }
