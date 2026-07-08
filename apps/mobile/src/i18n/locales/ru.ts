@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Необычные траты, подорожания и повторные платежи',
     trackingReminder: 'Напоминание о записях',
     trackingReminderDesc: 'Уведомление, если вы не записывали расходы 3+ дня',
+    shoppingReminder: 'Напоминания о пополнении запасов',
+    shoppingReminderDesc: 'Уведомление, когда пора снова купить привычный товар',
   },
   alerts: {
     title: 'Уведомления',
@@ -2222,5 +2224,6 @@ export default {
     deleteList: 'Удалить список',
     deleteListConfirm: 'Удалить этот список и все его товары?',
     quantity: 'Количество',
+    restockTitle: 'Пора пополнить запасы',
   },
 } as const;

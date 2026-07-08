@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Dépenses inhabituelles, hausses de prix et doubles prélèvements',
     trackingReminder: 'Rappel de suivi',
     trackingReminderDesc: "Recevez une notification si vous n'avez pas enregistré de dépenses depuis 3+ jours",
+    shoppingReminder: 'Rappels de réapprovisionnement',
+    shoppingReminderDesc: "Recevez un rappel lorsqu'il est temps de racheter un article habituel",
   },
   alerts: {
     title: 'Alertes',
@@ -2218,5 +2220,6 @@ export default {
     deleteList: 'Supprimer la liste',
     deleteListConfirm: 'Supprimer cette liste et tous ses articles ?',
     quantity: 'Quantité',
+    restockTitle: 'Il est temps de réapprovisionner',
   },
 } as const;

@@ -743,6 +743,8 @@ export default {
     anomalyAlertsDesc: 'Ungewöhnliche Ausgaben, Preiserhöhungen und doppelte Abbuchungen',
     trackingReminder: 'Tracking-Erinnerung',
     trackingReminderDesc: 'Benachrichtigung, wenn du seit 3+ Tagen keine Ausgaben eingetragen hast',
+    shoppingReminder: 'Nachkauf-Erinnerungen',
+    shoppingReminderDesc: 'Erhalte eine Erinnerung, wenn ein regelmäßiger Artikel nachgekauft werden sollte',
   },
   alerts: {
     title: 'Hinweise',
@@ -2218,5 +2220,6 @@ export default {
     deleteList: 'Liste löschen',
     deleteListConfirm: 'Diese Liste und alle ihre Artikel löschen?',
     quantity: 'Menge',
+    restockTitle: 'Zeit zum Nachkaufen',
   },
 } as const;
