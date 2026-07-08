@@ -2221,5 +2221,11 @@ export default {
     deleteListConfirm: 'Deze lijst en alle artikelen verwijderen?',
     quantity: 'Hoeveelheid',
     restockTitle: 'Tijd om aan te vullen',
+    mapTitle: 'Winkelkaart',
+    sortCheapest: 'Goedkoopst',
+    sortNearby: 'Dichtbij',
+    noStoreLocations: 'Nog geen winkellocaties — je winkels verschijnen hier zodra bonnetjes adressen bevatten',
+    findNearby: 'Zoek in de buurt',
+    distanceKm: '{{km}} km verderop',
   },
 } as const;

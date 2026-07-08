@@ -2225,5 +2225,11 @@ export default {
     deleteListConfirm: 'Видалити цей список і всі його товари?',
     quantity: 'Кількість',
     restockTitle: 'Час поповнити запаси',
+    mapTitle: 'Карта магазинів',
+    sortCheapest: 'Дешевше',
+    sortNearby: 'Ближче',
+    noStoreLocations: 'Місцезнаходжень магазинів ще немає — вони з’являться тут, щойно в чеках будуть адреси',
+    findNearby: 'Знайти поруч',
+    distanceKm: '{{km}} км від вас',
   },
 } as const;

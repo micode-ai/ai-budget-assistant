@@ -2232,5 +2232,11 @@ export default {
     deleteListConfirm: 'Delete this list and all its items?',
     quantity: 'Quantity',
     restockTitle: 'Time to restock',
+    mapTitle: 'Store map',
+    sortCheapest: 'Cheapest',
+    sortNearby: 'Nearby',
+    noStoreLocations: 'No store locations yet — your stores appear here once receipts have addresses',
+    findNearby: 'Find nearby',
+    distanceKm: '{{km}} km away',
   },
 } as const;

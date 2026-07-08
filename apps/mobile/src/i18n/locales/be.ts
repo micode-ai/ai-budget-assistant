@@ -2193,5 +2193,11 @@ export default {
     deleteListConfirm: 'Выдаліць гэты спіс і ўсе яго тавары?',
     quantity: 'Колькасць',
     restockTitle: 'Час папоўніць запасы',
+    mapTitle: 'Карта крам',
+    sortCheapest: 'Танней',
+    sortNearby: 'Бліжэй',
+    noStoreLocations: 'Месцазнаходжанняў крам пакуль няма — яны з’явяцца тут, як толькі ў чэках будуць адрасы',
+    findNearby: 'Знайсці паблізу',
+    distanceKm: '{{km}} км ад вас',
   },
 } as const;
