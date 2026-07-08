@@ -13,7 +13,6 @@ import {
   upsertShoppingList,
   deleteShoppingList,
   markShoppingListSynced,
-  markShoppingListPending,
 } from '@/db/shoppingListRepository';
 import type { ShoppingListLocal } from '@/db/shoppingListRepository';
 import {
@@ -121,18 +120,21 @@ export const useShoppingListStore = create<ShoppingListState>()(
         console.error('Failed to insert shopping list in SQLite:', e);
       }
 
-      // Mark synced immediately so a concurrent hydrate()'s pending-sweep
-      // can't double-push this row while the create request is in flight.
-      markShoppingListSynced(id).catch(() => {});
-
-      api.createList({ clientId: id, name }).catch((e) => {
-        // Revert to pending so the next hydrate() pending-sweep retries.
-        // Targeted status patch (not a full-row overwrite) — the captured
-        // `newList` snapshot would resurrect the row (isDeleted:false) if
-        // the user deleted the list while the create request was in flight.
-        markShoppingListPending(id).catch(() => {});
-        console.warn('Shopping list create sync deferred (offline?):', e);
-      });
+      // Row stays 'pending' (both in SQLite and in-memory) until the server
+      // ack lands — marking it 'synced' before that would let a concurrent
+      // hydrate()'s merge see a "synced" row absent from the server response
+      // (the server hasn't processed the create yet) and tombstone it,
+      // permanently deleting the list on the next pending-sweep push.
+      api
+        .createList({ clientId: id, name })
+        .then(() => {
+          markShoppingListSynced(id).catch(() => {});
+        })
+        .catch((e) => {
+          // Offline (or server error) — row stays 'pending' and retries on
+          // the next hydrate()'s pending-sweep. Do NOT revert/delete it.
+          console.warn('Shopping list create sync deferred (offline?):', e);
+        });
     },
 
     deleteList: async (id) => {
@@ -208,8 +210,8 @@ export const useShoppingListStore = create<ShoppingListState>()(
         console.error('Failed to insert shopping list item in SQLite:', e);
       }
 
-      markShoppingListItemSynced(id).catch(() => {});
-
+      // Row stays 'pending' until the server ack lands — see createList's
+      // comment above for why marking it 'synced' early is unsafe.
       api
         .addItem(listId, {
           clientId: id,
@@ -217,12 +219,12 @@ export const useShoppingListStore = create<ShoppingListState>()(
           rawLabel,
           quantity,
         })
+        .then(() => {
+          markShoppingListItemSynced(id).catch(() => {});
+        })
         .catch((e) => {
-          // Targeted status patch (not a full-row overwrite) — an empty
-          // patch still sets sync_status='pending' + updated_at, without
-          // clobbering any edit (toggle/quantity/etc.) made while the
-          // create request was in flight.
-          updateShoppingListItem(id, {}).catch(() => {});
+          // Offline (or server error) — row stays 'pending' and retries on
+          // the next hydrate()'s pending-sweep. Do NOT revert/delete it.
           console.warn('Shopping list item add sync deferred (offline?):', e);
         });
     },
