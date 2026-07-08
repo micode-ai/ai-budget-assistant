@@ -746,6 +746,8 @@ export default {
     trackingReminderDesc: "Get notified when you haven't logged expenses in 3+ days",
     shoppingReminder: 'Restock reminders',
     shoppingReminderDesc: "Get reminded when you're due to rebuy a regular item",
+    shoppingDeals: 'Deal alerts',
+    shoppingDealsDesc: 'Get notified when a regular item drops in price',
   },
   alerts: {
     title: 'Alerts',
@@ -2244,5 +2246,7 @@ export default {
     noStoreLocations: 'No store locations yet — your stores appear here once receipts have addresses',
     findNearby: 'Find nearby',
     distanceKm: '{{km}} km away',
+    dealsTitle: 'Deals for you',
+    dealDrop: '-{{pct}}%',
   },
 } as const;

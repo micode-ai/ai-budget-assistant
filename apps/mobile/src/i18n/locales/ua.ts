@@ -745,6 +745,8 @@ export default {
     trackingReminderDesc: 'Сповіщення, якщо ви не записували витрати 3+ дні',
     shoppingReminder: 'Нагадування про поповнення запасів',
     shoppingReminderDesc: 'Сповіщення, коли настав час знову купити звичний товар',
+    shoppingDeals: 'Сповіщення про знижки',
+    shoppingDealsDesc: 'Отримуйте сповіщення, коли звичний товар дешевшає',
   },
   alerts: {
     title: 'Сповіщення',
@@ -2237,5 +2239,7 @@ export default {
     noStoreLocations: 'Місцезнаходжень магазинів ще немає — вони з’являться тут, щойно в чеках будуть адреси',
     findNearby: 'Знайти поруч',
     distanceKm: '{{km}} км від вас',
+    dealsTitle: 'Знижки для вас',
+    dealDrop: '-{{pct}}%',
   },
 } as const;

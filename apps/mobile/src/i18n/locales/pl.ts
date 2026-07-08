@@ -745,6 +745,8 @@ export default {
     trackingReminderDesc: 'Otrzymuj powiadomienie, gdy nie zapisałeś wydatków przez 3+ dni',
     shoppingReminder: 'Przypomnienia o uzupełnieniu zapasów',
     shoppingReminderDesc: 'Otrzymuj przypomnienie, gdy nadejdzie czas na ponowny zakup stałego produktu',
+    shoppingDeals: 'Powiadomienia o promocjach',
+    shoppingDealsDesc: 'Otrzymuj powiadomienie, gdy cena stałego produktu spadnie',
   },
   alerts: {
     title: 'Alerty',
@@ -2237,5 +2239,7 @@ export default {
     noStoreLocations: 'Brak lokalizacji sklepów — pojawią się tutaj, gdy paragony będą zawierać adresy',
     findNearby: 'Znajdź w pobliżu',
     distanceKm: '{{km}} km stąd',
+    dealsTitle: 'Promocje dla Ciebie',
+    dealDrop: '-{{pct}}%',
   },
 } as const;

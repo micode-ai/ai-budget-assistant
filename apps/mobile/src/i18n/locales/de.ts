@@ -745,6 +745,8 @@ export default {
     trackingReminderDesc: 'Benachrichtigung, wenn du seit 3+ Tagen keine Ausgaben eingetragen hast',
     shoppingReminder: 'Nachkauf-Erinnerungen',
     shoppingReminderDesc: 'Erhalte eine Erinnerung, wenn ein regelmäßiger Artikel nachgekauft werden sollte',
+    shoppingDeals: 'Preissenkungs-Hinweise',
+    shoppingDealsDesc: 'Erhalte eine Benachrichtigung, wenn ein regelmäßiger Artikel im Preis fällt',
   },
   alerts: {
     title: 'Hinweise',
@@ -2233,5 +2235,7 @@ export default {
     noStoreLocations: 'Noch keine Standorte — deine Geschäfte erscheinen hier, sobald Kassenbons Adressen enthalten',
     findNearby: 'In der Nähe finden',
     distanceKm: '{{km}} km entfernt',
+    dealsTitle: 'Angebote für dich',
+    dealDrop: '-{{pct}}%',
   },
 } as const;

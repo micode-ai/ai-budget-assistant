@@ -745,6 +745,8 @@ export default {
     trackingReminderDesc: "Recevez une notification si vous n'avez pas enregistré de dépenses depuis 3+ jours",
     shoppingReminder: 'Rappels de réapprovisionnement',
     shoppingReminderDesc: "Recevez un rappel lorsqu'il est temps de racheter un article habituel",
+    shoppingDeals: 'Alertes promotions',
+    shoppingDealsDesc: 'Recevez une notification quand le prix d\'un article habituel baisse',
   },
   alerts: {
     title: 'Alertes',
@@ -2233,5 +2235,7 @@ export default {
     noStoreLocations: "Aucun emplacement de magasin pour l'instant — vos magasins apparaîtront ici dès que les tickets auront des adresses",
     findNearby: 'Trouver à proximité',
     distanceKm: 'À {{km}} km',
+    dealsTitle: 'Promotions pour vous',
+    dealDrop: '-{{pct}}%',
   },
 } as const;

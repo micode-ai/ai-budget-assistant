@@ -745,6 +745,8 @@ export default {
     trackingReminderDesc: 'Ontvang een melding als je al 3+ dagen geen uitgaven hebt geregistreerd',
     shoppingReminder: 'Herbevoorradingsherinneringen',
     shoppingReminderDesc: 'Ontvang een herinnering wanneer het tijd is om een vast artikel opnieuw te kopen',
+    shoppingDeals: 'Aanbiedingsmeldingen',
+    shoppingDealsDesc: 'Ontvang een melding wanneer een vast artikel in prijs daalt',
   },
   alerts: {
     title: 'Meldingen',
@@ -2233,5 +2235,7 @@ export default {
     noStoreLocations: 'Nog geen winkellocaties — je winkels verschijnen hier zodra bonnetjes adressen bevatten',
     findNearby: 'Zoek in de buurt',
     distanceKm: '{{km}} km verderop',
+    dealsTitle: 'Aanbiedingen voor jou',
+    dealDrop: '-{{pct}}%',
   },
 } as const;
