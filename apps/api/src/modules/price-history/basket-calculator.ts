@@ -12,7 +12,14 @@ const STALE_DAYS = 90;
 const PARTIAL_COVERAGE = 0.8;
 const DAY_MS = 86_400_000;
 
-export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], now: Date = new Date()): BasketCompareResponse {
+export function computeBasket(
+  rows: BasketRow[],
+  basket: BasketCompareItem[],
+  now: Date = new Date(),
+  storeCoords?: Map<string, { lat: number; lng: number }>,
+  origin?: { lat: number; lng: number },
+  nearbyRadiusKm = 5,
+): BasketCompareResponse {
   // Aggregate duplicate canonicalNames (a list can hold two rows resolving to the same
   // product): sum quantities and treat as one line so coverage/total/estimate aren't double-counted.
   const aggregated = new Map<string, number>();
@@ -60,6 +67,19 @@ export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], no
       if (p.date < staleThreshold) hasStale = true;
     }
     if (covered === 0) continue;
+    const coords = storeCoords?.get(merchant);
+    let lat: number | undefined;
+    let lng: number | undefined;
+    let distanceKm: number | undefined;
+    let nearby: boolean | undefined;
+    if (coords && !(coords.lat === 0 && coords.lng === 0)) {
+      lat = coords.lat;
+      lng = coords.lng;
+      if (origin) {
+        distanceKm = Math.round(haversineKm(origin, coords) * 10) / 10;
+        nearby = distanceKm <= nearbyRadiusKm;
+      }
+    }
     stores.push({
       merchantName: merchant,
       estimatedTotal: Math.round(estimatedTotal * 100) / 100,
@@ -68,6 +88,10 @@ export function computeBasket(rows: BasketRow[], basket: BasketCompareItem[], no
       missingItems,
       hasStale,
       isCheapest: false,
+      lat,
+      lng,
+      distanceKm,
+      nearby,
     });
   }
 
@@ -100,4 +124,17 @@ function majorityCurrency(rows: BasketRow[]): string {
   for (const r of rows) counts.set(r.currency, (counts.get(r.currency) ?? 0) + 1);
   if (counts.size === 0) return 'PLN';
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0];
+}
+
+function toRad(d: number): number {
+  return (d * Math.PI) / 180;
+}
+function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
+  const R = 6371;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
 }
