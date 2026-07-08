@@ -17,7 +17,12 @@ import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '@/stores/shoppingListStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { api } from '@/services/api';
-import type { ShoppingListItem, ProductListItem, RestockSuggestion } from '@budget/shared-types';
+import type {
+  ShoppingList,
+  ShoppingListItem,
+  ProductListItem,
+  RestockSuggestion,
+} from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const FREQUENT_COUNT = 8;
@@ -43,6 +48,10 @@ export default function ShoppingListScreen() {
   const updateQuantity = useShoppingListStore((s) => s.updateQuantity);
   const removeItem = useShoppingListStore((s) => s.removeItem);
   const clearChecked = useShoppingListStore((s) => s.clearChecked);
+  const setActiveList = useShoppingListStore((s) => s.setActiveList);
+  const createList = useShoppingListStore((s) => s.createList);
+  const renameList = useShoppingListStore((s) => s.renameList);
+  const archiveList = useShoppingListStore((s) => s.archiveList);
   const deleteList = useShoppingListStore((s) => s.deleteList);
 
   useEffect(() => {
@@ -110,6 +119,59 @@ export default function ShoppingListScreen() {
     dismissSuggestion(suggestion.canonicalName);
   };
 
+  // ─── List switcher bottom sheet ────────────────────────────────────────────
+  // Create + Rename: all members. Archive + Delete: canEdit only.
+  const [switcherVisible, setSwitcherVisible] = useState(false);
+  const [nameModal, setNameModal] = useState<
+    { mode: 'create' | 'rename'; id?: string; value: string } | null
+  >(null);
+
+  const openSwitcher = () => setSwitcherVisible(true);
+  const closeSwitcher = () => setSwitcherVisible(false);
+
+  const handleSelectList = (id: string) => {
+    setActiveList(id);
+    closeSwitcher();
+  };
+
+  const openCreateList = () => setNameModal({ mode: 'create', value: '' });
+  const openRenameList = (list: ShoppingList) =>
+    setNameModal({ mode: 'rename', id: list.id, value: list.name });
+  const closeNameModal = () => setNameModal(null);
+
+  const handleSaveNameModal = () => {
+    if (!nameModal) return;
+    const trimmed = nameModal.value.trim();
+    if (!trimmed) {
+      closeNameModal();
+      return;
+    }
+    if (nameModal.mode === 'create') {
+      createList(trimmed);
+    } else if (nameModal.id) {
+      renameList(nameModal.id, trimmed);
+    }
+    closeNameModal();
+  };
+
+  const handleArchiveList = (list: ShoppingList) => {
+    showAlert(t('shoppingList.archiveList'), t('shoppingList.archiveListConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('shoppingList.archiveList'),
+        style: 'destructive',
+        onPress: () => archiveList(list.id),
+      },
+    ]);
+  };
+
+  const handleDeleteListRow = (list: ShoppingList) => {
+    showAlert(t('shoppingList.deleteList'), t('shoppingList.deleteListConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('common.delete'), style: 'destructive', onPress: () => deleteList(list.id) },
+    ]);
+  };
+
   const trimmedQuery = query.trim();
   const lowerQuery = trimmedQuery.toLowerCase();
   const filteredProducts = useMemo(
@@ -125,29 +187,11 @@ export default function ShoppingListScreen() {
     [products, trimmedQuery, lowerQuery],
   );
 
-  // ─── Delete list (canEdit-gated; item ops below are NOT gated) ────────────
-  const handleDeleteList = () => {
-    if (!activeListId) return;
-    showAlert(t('shoppingList.deleteList'), t('shoppingList.deleteListConfirm'), [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('common.delete'),
-        style: 'destructive',
-        onPress: () => deleteList(activeListId),
-      },
-    ]);
-  };
-
   const headerRight = () => (
     <View style={styles.headerActions}>
       {checkedCount > 0 && (
         <TouchableOpacity onPress={() => clearChecked()} hitSlop={8}>
           <Text style={styles.headerAction}>{t('shoppingList.clearChecked')}</Text>
-        </TouchableOpacity>
-      )}
-      {canEdit && activeListId && (
-        <TouchableOpacity onPress={handleDeleteList} hitSlop={8} style={styles.headerDeleteBtn}>
-          <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
         </TouchableOpacity>
       )}
     </View>
@@ -219,6 +263,13 @@ export default function ShoppingListScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        <TouchableOpacity style={styles.switcherPill} onPress={openSwitcher} hitSlop={8}>
+          <Text style={styles.switcherPillText} numberOfLines={1}>
+            {activeListName}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
+        </TouchableOpacity>
+
         {suggestions.length > 0 && (
           <View style={styles.restockSection}>
             <Text style={styles.restockTitle}>{t('shoppingList.restockTitle')}</Text>
@@ -384,6 +435,119 @@ export default function ShoppingListScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      <Modal visible={switcherVisible} transparent animationType="slide" onRequestClose={closeSwitcher}>
+        <View style={styles.overlay}>
+          <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeSwitcher} />
+          <View
+            style={[
+              styles.sheet,
+              { paddingBottom: Math.max(insets.bottom, 24) + 16, maxHeight: '82%' },
+            ]}
+          >
+            <View style={styles.handle} />
+            <Text style={styles.modalTitle}>{t('shoppingList.manageLists')}</Text>
+
+            <ScrollView style={styles.modalScroll} keyboardShouldPersistTaps="handled">
+              {lists.map((list) => {
+                const isActive = list.id === activeListId;
+                return (
+                  <View key={list.id} style={styles.listRow}>
+                    <TouchableOpacity
+                      style={styles.listRowMain}
+                      onPress={() => handleSelectList(list.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[styles.listRowName, isActive && styles.listRowNameActive]}
+                        numberOfLines={1}
+                      >
+                        {list.name}
+                      </Text>
+                      {isActive && (
+                        <Ionicons name="checkmark-circle" size={18} color={theme.colors.primary} />
+                      )}
+                    </TouchableOpacity>
+                    <View style={styles.listRowActions}>
+                      <TouchableOpacity
+                        onPress={() => openRenameList(list)}
+                        hitSlop={8}
+                        style={styles.listActionBtn}
+                      >
+                        <Ionicons name="pencil-outline" size={18} color={theme.colors.textSecondary} />
+                      </TouchableOpacity>
+                      {canEdit && (
+                        <TouchableOpacity
+                          onPress={() => handleArchiveList(list)}
+                          hitSlop={8}
+                          style={styles.listActionBtn}
+                        >
+                          <Ionicons name="archive-outline" size={18} color={theme.colors.textSecondary} />
+                        </TouchableOpacity>
+                      )}
+                      {canEdit && (
+                        <TouchableOpacity
+                          onPress={() => handleDeleteListRow(list)}
+                          hitSlop={8}
+                          style={styles.listActionBtn}
+                        >
+                          <Ionicons name="trash-outline" size={18} color={theme.colors.danger} />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </View>
+                );
+              })}
+            </ScrollView>
+
+            <TouchableOpacity style={styles.newListRow} onPress={openCreateList}>
+              <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+              <Text style={styles.newListText}>{t('shoppingList.newList')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.doneButton} onPress={closeSwitcher}>
+              <Text style={styles.doneButtonText}>{t('common.done')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={nameModal !== null} transparent animationType="slide" onRequestClose={closeNameModal}>
+        <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
+          <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeNameModal} />
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
+            <View style={styles.handle} />
+            <Text style={styles.modalTitle}>
+              {nameModal?.mode === 'create'
+                ? t('shoppingList.newList')
+                : t('shoppingList.renameList')}
+            </Text>
+            <TextInput
+              style={styles.nameInput}
+              value={nameModal?.value ?? ''}
+              onChangeText={(text) => setNameModal((m) => (m ? { ...m, value: text } : m))}
+              placeholder={t('shoppingList.listName')}
+              placeholderTextColor={theme.colors.textTertiary}
+              autoFocus
+              autoCapitalize="words"
+              returnKeyType="done"
+              onSubmitEditing={handleSaveNameModal}
+            />
+            <View style={styles.nameModalActions}>
+              <TouchableOpacity style={styles.cancelBtn} onPress={closeNameModal}>
+                <Text style={styles.cancelText}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.saveBtn, !nameModal?.value.trim() && styles.saveBtnDisabled]}
+                onPress={handleSaveNameModal}
+                disabled={!nameModal?.value.trim()}
+              >
+                <Text style={styles.saveText}>{t('common.save')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -395,7 +559,27 @@ const createStyles = (theme: Theme) => ({
 
   headerActions: { flexDirection: 'row' as const, alignItems: 'center' as const },
   headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
-  headerDeleteBtn: { marginLeft: theme.spacing[3] },
+
+  switcherPill: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    alignSelf: 'flex-start' as const,
+    gap: theme.spacing[1.5],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.full,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    paddingHorizontal: theme.spacing[3.5],
+    paddingVertical: theme.spacing[2],
+    marginBottom: theme.spacing[3],
+    maxWidth: '100%' as const,
+  },
+  switcherPillText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
+    flexShrink: 1,
+  },
 
   restockSection: { marginBottom: theme.spacing[3] },
   restockTitle: {
@@ -579,6 +763,72 @@ const createStyles = (theme: Theme) => ({
     flexShrink: 0,
   },
   productName: { ...theme.textStyles.body, color: theme.colors.textPrimary, flex: 1 },
+
+  listRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[2],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.divider,
+  },
+  listRowMain: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  listRowName: { ...theme.textStyles.body, color: theme.colors.textPrimary, flexShrink: 1 },
+  listRowNameActive: { color: theme.colors.primary, fontWeight: '600' as const },
+  listRowActions: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    flexShrink: 0,
+  },
+  listActionBtn: { flexShrink: 0 },
+
+  newListRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    marginTop: theme.spacing[1],
+  },
+  newListText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+
+  nameInput: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[3],
+    marginBottom: theme.spacing[4],
+  },
+  nameModalActions: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  cancelBtn: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  cancelText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textPrimary },
+  saveBtn: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+  },
+  saveBtnDisabled: { opacity: 0.5 },
+  saveText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
 
   doneButton: {
     alignItems: 'center' as const,
