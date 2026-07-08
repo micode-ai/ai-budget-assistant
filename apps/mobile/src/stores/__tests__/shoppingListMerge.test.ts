@@ -67,6 +67,18 @@ describe('mergeServerLists', () => {
     expect(toTombstone).toEqual(['c2']);                     // synced + server-absent → delete
     // c3 is pending → neither upserted from server nor tombstoned
   });
+
+  it('does not overwrite a still-pending local edit with stale server data', () => {
+    const localWithPendingEdit = [
+      { clientId: 'c1', syncStatus: 'pending', name: 'Renamed Locally' }, // unpushed edit
+    ] as any[];
+    const serverStale = [
+      { clientId: 'c1', name: 'Old Server Name' },
+    ] as any[];
+    const { toUpsert } = mergeServerLists(localWithPendingEdit, serverStale);
+    expect(toUpsert.map((l) => l.clientId)).not.toContain('c1');
+    expect(toUpsert).toEqual([]);
+  });
 });
 
 // Regression test for the "offline rename/archive silently reverted" bug:
