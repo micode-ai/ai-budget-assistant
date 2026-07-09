@@ -137,6 +137,7 @@ export default {
     netCapitalSubtitle: 'Patrimonio total',
     purchaseRequest: 'Solicitud de compra',
     shoppingList: 'Compras',
+    shoppingListFull: 'Lista de compras',
   },
   expenses: {
     noExpenses: 'Aún no hay gastos',

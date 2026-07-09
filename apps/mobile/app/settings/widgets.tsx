@@ -37,8 +37,7 @@ export default function WidgetsSettingsScreen() {
     converter: t('dashboard.currencyConverter'),
     transfers: t('dashboard.transfers'),
     subscriptions: t('subscriptionManager.title'),
-    purchase_request: t('dashboard.purchaseRequest'),
-    shopping: t('dashboard.shoppingList'),
+    shopping_hub: t('dashboard.shoppingList'),
   };
 
   const widgetLabels: Record<WidgetKey, string> = {
