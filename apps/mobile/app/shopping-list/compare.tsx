@@ -110,6 +110,14 @@ export default function CompareBasketScreen() {
         </View>
       ) : basketResult ? (
         <ScrollView contentContainerStyle={styles.content}>
+          <TouchableOpacity
+            style={styles.mapButton}
+            onPress={() => router.push('/shopping-list/map')}
+          >
+            <Ionicons name="map-outline" size={18} color={theme.colors.textInverse} />
+            <Text style={styles.mapButtonText}>{t('shoppingList.mapTitle')}</Text>
+          </TouchableOpacity>
+
           <View style={styles.storesSection}>{basketResult.stores.map(renderStoreCard)}</View>
 
           {basketResult.perItemCheapest.length > 0 && (
@@ -166,6 +174,18 @@ const createStyles = (theme: Theme) => ({
     marginTop: theme.spacing[2],
   },
   scanButtonText: { fontSize: 15, fontWeight: '600' as const, color: theme.colors.textInverse },
+
+  mapButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing[4],
+  },
+  mapButtonText: { fontSize: 15, fontWeight: '600' as const, color: theme.colors.textInverse },
 
   storesSection: { gap: theme.spacing[3] },
   storeCard: {

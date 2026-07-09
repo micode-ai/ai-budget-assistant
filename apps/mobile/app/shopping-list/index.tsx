@@ -370,14 +370,23 @@ export default function ShoppingListScreen() {
 
       {items.length > 0 && (
         <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
-          <TouchableOpacity
-            style={[styles.compareBtn, comparableCount === 0 && styles.compareBtnDisabled]}
-            onPress={() => router.push('/shopping-list/compare')}
-            disabled={comparableCount === 0}
-          >
-            <Ionicons name="storefront-outline" size={18} color={theme.colors.textInverse} />
-            <Text style={styles.compareBtnText}>{t('shoppingList.compareCta')}</Text>
-          </TouchableOpacity>
+          <View style={styles.bottomBarRow}>
+            <TouchableOpacity
+              style={[styles.compareBtn, comparableCount === 0 && styles.compareBtnDisabled]}
+              onPress={() => router.push('/shopping-list/compare')}
+              disabled={comparableCount === 0}
+            >
+              <Ionicons name="storefront-outline" size={18} color={theme.colors.textInverse} />
+              <Text style={styles.compareBtnText}>{t('shoppingList.compareCta')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.mapIconBtn}
+              onPress={() => router.push('/shopping-list/map')}
+              accessibilityLabel={t('shoppingList.mapTitle')}
+            >
+              <Ionicons name="map-outline" size={22} color={theme.colors.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
       )}
 
@@ -762,7 +771,13 @@ const createStyles = (theme: Theme) => ({
     borderTopWidth: 1,
     borderTopColor: theme.colors.divider,
   },
+  bottomBarRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
   compareBtn: {
+    flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -773,6 +788,16 @@ const createStyles = (theme: Theme) => ({
   },
   compareBtnDisabled: { opacity: 0.45 },
   compareBtnText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
+  mapIconBtn: {
+    width: 48,
+    height: 48,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+  },
 
   overlay: { flex: 1, justifyContent: 'flex-end' as const },
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
