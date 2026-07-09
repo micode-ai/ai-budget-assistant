@@ -33,11 +33,10 @@ export default function ChatScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  const { currentAccount, isOwner, members, loadMembers } = useAccountStore();
+  const { currentAccount, members, loadMembers } = useAccountStore();
   const account = currentAccount();
   const accountMembers = account ? (members[account.id] ?? []) : [];
   const hasOtherMembers = accountMembers.length > 1;
-  const canToggleShared = isOwner() && hasOtherMembers;
   const userId = useAuthStore((s) => s.user?.id);
 
   const {
@@ -53,10 +52,16 @@ export default function ChatScreen() {
     loadConversations,
     loadConversation,
     currentIsShared,
+    currentIsOwner,
     setConversationShared,
     startPolling,
     stopPolling,
   } = useChatStore();
+
+  // Only the conversation's creator can toggle sharing, and only on a
+  // multi-member account. Any member (not just the account owner) may share a
+  // conversation they started.
+  const canToggleShared = hasOtherMembers && currentIsOwner;
 
   const { mentionCandidates, getActiveMentions, insertMention, resetMentions } = useMentionBar({
     inputText,
