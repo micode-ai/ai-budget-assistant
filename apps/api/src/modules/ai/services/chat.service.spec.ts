@@ -217,6 +217,7 @@ describe('ChatService', () => {
     it('executes check_affordability immediately and returns the verdict in actionResult', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
       deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice', currencyCode: 'USD' });
       const mockVerdict = {
         affordable: true,
         amount: 50,

@@ -223,7 +223,7 @@ export class ChatService {
         const r = await this.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
-      const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, user?.currencyCode);
+      const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, userId, user?.currencyCode);
       return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
     }
 
@@ -524,9 +524,10 @@ export class ChatService {
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
     userMessage: string,
     accountId?: string,
+    userId?: string,
     baseCurrency?: string | null,
   ) {
-    const result = await this.aiToolsService.executeWithCache(actionType, args, accountId || '', '', baseCurrency || undefined);
+    const result = await this.aiToolsService.executeWithCache(actionType, args, accountId || '', userId || '', baseCurrency || undefined);
 
     const toolResultJson = JSON.stringify(result.data || {});
     const followUpResponse = await this.openai.chat.completions.create({
