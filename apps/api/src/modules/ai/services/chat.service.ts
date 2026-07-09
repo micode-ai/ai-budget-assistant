@@ -101,7 +101,9 @@ export class ChatService {
     }
     if (!conversation) {
       conversation = await this.prisma.chatConversation.create({
-        data: { userId, accountId: accountId ?? null, isShared: accountRole === 'owner' && !!initialIsShared, title: message.slice(0, 100) },
+        // Any account member may start a shared conversation of their own (it's
+        // their conversation; sharing just makes it visible to co-members).
+        data: { userId, accountId: accountId ?? null, isShared: !!initialIsShared, title: message.slice(0, 100) },
         include: { messages: true },
       });
     }
@@ -417,13 +419,15 @@ export class ChatService {
     }));
   }
 
-  async setConversationShared(userId: string, conversationId: string, accountId: string | undefined, accountRole: string | undefined, isShared: boolean) {
-    if (accountRole !== 'owner') {
-      throw new ForbiddenException('Only the account owner can change sharing');
-    }
+  async setConversationShared(userId: string, conversationId: string, accountId: string | undefined, _accountRole: string | undefined, isShared: boolean) {
     const conversation = await this.prisma.chatConversation.findFirst({ where: { id: conversationId, accountId } });
     if (!conversation) {
       throw new NotFoundException('Conversation not found');
+    }
+    // Any account member may share/unshare a conversation THEY created — but not
+    // someone else's conversation, even an account owner's.
+    if (conversation.userId !== userId) {
+      throw new ForbiddenException('Only the conversation creator can change sharing');
     }
     const updated = await this.prisma.chatConversation.update({ where: { id: conversationId, accountId }, data: { isShared } });
     return { id: updated.id, isShared: updated.isShared };

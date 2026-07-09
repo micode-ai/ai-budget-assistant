@@ -167,14 +167,21 @@ describe('ChatService', () => {
   });
 
   describe('setConversationShared', () => {
-    it('flips isShared for an owner', async () => {
+    it('flips isShared for the creator', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1' });
       deps.prisma.chatConversation.update.mockResolvedValue({ id: 'c1', isShared: true });
       const r = await service.setConversationShared('owner-1', 'c1', 'acc-1', 'owner', true);
       expect(deps.prisma.chatConversation.update).toHaveBeenCalledWith({ where: { id: 'c1', accountId: 'acc-1' }, data: { isShared: true } });
       expect(r.isShared).toBe(true);
     });
-    it('rejects a non-owner', async () => {
+    it('flips isShared for a non-owner member who created the conversation', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'bob-1' });
+      deps.prisma.chatConversation.update.mockResolvedValue({ id: 'c1', isShared: true });
+      const r = await service.setConversationShared('bob-1', 'c1', 'acc-1', 'editor', true);
+      expect(r.isShared).toBe(true);
+    });
+    it('rejects a member who is not the conversation creator', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1' });
       await expect(service.setConversationShared('bob-1', 'c1', 'acc-1', 'editor', true)).rejects.toThrow(ForbiddenException);
     });
 
@@ -258,13 +265,13 @@ describe('ChatService', () => {
       await service.chat('owner-1', 'hello', undefined, 'acc-1', 'Family', 'owner', 'Alice', [], true);
       expect(deps.prisma.chatConversation.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ isShared: true }) }));
     });
-    it('does not create a shared conversation when a non-owner sets isShared', async () => {
+    it('creates a shared conversation when a non-owner member sets isShared', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
-      deps.prisma.chatConversation.create.mockResolvedValue({ id: 'new-2', userId: 'bob-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.chatConversation.create.mockResolvedValue({ id: 'new-2', userId: 'bob-1', accountId: 'acc-1', isShared: true, messages: [] });
       deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'bob-1', user: { name: 'Bob' } }]);
       mockChatCreate.mockResolvedValue({ choices: [{ message: { content: 'Hi' } }], usage: { total_tokens: 1 } });
       await service.chat('bob-1', 'hello', undefined, 'acc-1', 'Family', 'editor', 'Bob', [], true);
-      expect(deps.prisma.chatConversation.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ isShared: false }) }));
+      expect(deps.prisma.chatConversation.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ isShared: true }) }));
     });
   });
 });

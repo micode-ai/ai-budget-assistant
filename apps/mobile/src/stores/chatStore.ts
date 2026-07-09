@@ -33,6 +33,10 @@ interface ChatState {
   isConfirming: boolean;
   error: string | null;
   currentIsShared: boolean;
+  // Whether the current conversation was created by this user (only the creator
+  // may toggle its shared flag). True for a brand-new (unsaved) conversation.
+  currentIsOwner: boolean;
+  ownedConversationIds: string[];
   lastSyncedAt: string | null;
   isPolling: boolean;
 
@@ -60,6 +64,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   isConfirming: false,
   error: null,
   currentIsShared: false,
+  currentIsOwner: true,
+  ownedConversationIds: [],
   lastSyncedAt: null,
   isPolling: false,
 
@@ -90,14 +96,24 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         set({ currentConversationId: response.conversationId });
       }
 
-      set((state) => ({
-        messages: state.messages.map((m) =>
+      set((state) => {
+        const mapped = state.messages.map((m) =>
           m.id === tempId
             ? { ...m, id: response.userMessageId, conversationId: response.conversationId, createdAt: new Date(response.userMessageCreatedAt) }
             : m,
-        ),
-        lastSyncedAt: response.userMessageCreatedAt,
-      }));
+        );
+        // A concurrent poll may have already inserted the server copy of this
+        // message while our optimistic copy still had tempId. After remapping
+        // tempId -> userMessageId both would share an id — drop the duplicate so
+        // the sender doesn't see their own message twice.
+        const seen = new Set<string>();
+        const messages = mapped.filter((m) => {
+          if (seen.has(m.id)) return false;
+          seen.add(m.id);
+          return true;
+        });
+        return { messages, lastSyncedAt: response.userMessageCreatedAt };
+      });
 
       if (response.aiResponded) {
         const assistantMessage: ChatMessage = {
@@ -232,6 +248,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       messages: [],
       error: null,
       currentIsShared: false,
+      currentIsOwner: true,
       lastSyncedAt: null,
     });
   },
@@ -262,7 +279,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         updatedAt: new Date(c.updatedAt),
       }));
 
-      set({ conversations });
+      set({ conversations, ownedConversationIds: remote.filter((c) => c.isOwner).map((c) => c.id) });
 
       // Upsert into SQLite
       for (const conv of conversations) {
@@ -304,6 +321,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         conv = get().conversations.find((c) => c.id === conversationId);
       }
       const isShared = conv?.isShared ?? false;
+      const isOwner = get().ownedConversationIds.includes(conversationId);
 
       // Fetch from API (up to 50 messages, pending_action filtered server-side)
       const remote = await api.getChatConversationMessages(conversationId);
@@ -320,7 +338,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       }));
 
       const lastSyncedAt = messages.length > 0 ? messages[messages.length - 1].createdAt.toISOString() : null;
-      set({ messages, isLoading: false, currentIsShared: isShared, lastSyncedAt });
+      set({ messages, isLoading: false, currentIsShared: isShared, currentIsOwner: isOwner, lastSyncedAt });
 
       // Persist to SQLite (all API messages always have conversationId)
       for (const msg of messages) {
@@ -341,6 +359,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       messages: [],
       currentConversationId: null,
       currentIsShared: false,
+      currentIsOwner: true,
       lastSyncedAt: null,
     });
   },
@@ -363,25 +382,28 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   },
 
   pollNewMessages: async () => {
-    const { currentConversationId, lastSyncedAt, messages } = get();
+    const { currentConversationId, lastSyncedAt } = get();
     if (!currentConversationId) return;
     try {
       const remote = await api.pollChatMessages(currentConversationId, lastSyncedAt ?? undefined);
       if (remote.length === 0) return;
-      const existingIds = new Set(messages.map((m) => m.id));
-      const fresh = remote
-        .filter((m) => !existingIds.has(m.id))
-        .map((m) => ({
-          id: m.id,
-          conversationId: m.conversationId,
-          role: m.role as 'user' | 'assistant' | 'system',
-          content: m.content,
-          senderUserId: m.senderUserId ?? undefined,
-          senderName: m.senderName ?? undefined,
-          mentionedUserIds: m.mentionedUserIds,
-          tokensUsed: m.tokensUsed ?? undefined,
-          createdAt: new Date(m.createdAt),
-        }));
+      const mapped = remote.map((m) => ({
+        id: m.id,
+        conversationId: m.conversationId,
+        role: m.role as 'user' | 'assistant' | 'system',
+        content: m.content,
+        senderUserId: m.senderUserId ?? undefined,
+        senderName: m.senderName ?? undefined,
+        mentionedUserIds: m.mentionedUserIds,
+        tokensUsed: m.tokensUsed ?? undefined,
+        createdAt: new Date(m.createdAt),
+      }));
+      // Dedup against the state AS IT IS NOW (after the network await), not the
+      // snapshot taken before it. During the request, sendMessage may have
+      // reconciled the sender's optimistic tempId to its server id — filtering
+      // against the stale snapshot would re-add that message as a duplicate.
+      const existingIds = new Set(get().messages.map((m) => m.id));
+      const fresh = mapped.filter((m) => !existingIds.has(m.id));
       if (fresh.length === 0) return;
       const newest = remote[remote.length - 1].createdAt;
       set((state) => ({ messages: [...state.messages, ...fresh], lastSyncedAt: newest }));
