@@ -1809,6 +1809,7 @@ export default {
     tapToPlace: 'Tap the map to place the pin',
     searchPlaceholder: 'Search address or place',
     searchNoResults: 'Nothing found',
+    recentSearches: 'Recent',
     pickerTitle: 'Expense location',
   },
   map: {

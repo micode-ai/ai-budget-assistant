@@ -1801,6 +1801,7 @@ export default {
     tapToPlace: 'Торкніться карти, щоб поставити позначку',
     searchPlaceholder: 'Пошук адреси або місця',
     searchNoResults: 'Нічого не знайдено',
+    recentSearches: 'Нещодавні',
     pickerTitle: 'Локація витрати',
   },
   map: {

@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useRecentPlacesStore } from '@/stores/recentPlacesStore';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { captureCurrentLocation, requestLocationPermission } from '@/services/locationCapture';
 import { api } from '@/services/api';
@@ -19,6 +20,8 @@ export default function ExpenseLocationScreen() {
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { expenses, updateExpense } = useExpenseStore();
+  const recents = useRecentPlacesStore((s) => s.recents);
+  const addRecent = useRecentPlacesStore((s) => s.addRecent);
 
   // Same 4-way resolution as expense/[id].tsx (deep links may carry the server PK).
   const expense = expenses.find(
@@ -36,8 +39,22 @@ export default function ExpenseLocationScreen() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
+  // Current GPS, captured silently on open (only if permission is already
+  // granted) — used to center the map near the user and to bias search results.
+  const [myLocation, setMyLocation] = useState<{ lat: number; lng: number } | null>(null);
 
-  // Debounced forward-geocoding of the typed query.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const loc = await captureCurrentLocation({ force: true });
+      if (!cancelled && loc) setMyLocation(loc);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Debounced forward-geocoding of the typed query, biased toward the user.
   useEffect(() => {
     const q = query.trim();
     if (q.length < 3) {
@@ -48,7 +65,7 @@ export default function ExpenseLocationScreen() {
     setSearching(true);
     const timer = setTimeout(async () => {
       try {
-        const res = await api.geocodeSearch(q);
+        const res = await api.geocodeSearch(q, myLocation ?? undefined);
         setResults(res.results ?? []);
       } catch {
         setResults([]);
@@ -57,7 +74,7 @@ export default function ExpenseLocationScreen() {
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, myLocation]);
 
   if (!expense) {
     return (
@@ -70,9 +87,26 @@ export default function ExpenseLocationScreen() {
   const selectResult = (r: SearchResult) => {
     setPin({ lat: r.lat, lng: r.lng });
     setPinName(r.name || null);
+    if (r.name) addRecent({ lat: r.lat, lng: r.lng, name: r.name });
     setResults([]);
     setQuery('');
   };
+
+  // Recents show when the box is empty; while searching, any recent that matches
+  // the query is surfaced above the fresh Nominatim results.
+  const trimmedQuery = query.trim();
+  const lowerQuery = trimmedQuery.toLowerCase();
+  const isSearching = trimmedQuery.length >= 3;
+  const showRecents = !isSearching && recents.length > 0;
+  const matchingRecents = isSearching
+    ? recents.filter((r) => r.name.toLowerCase().includes(lowerQuery))
+    : [];
+  const searchRows: (SearchResult & { recent: boolean })[] = [
+    ...matchingRecents.map((r) => ({ ...r, recent: true })),
+    ...results
+      .filter((r) => !matchingRecents.some((m) => m.name.toLowerCase() === r.name.toLowerCase()))
+      .map((r) => ({ ...r, recent: false })),
+  ].slice(0, 6);
 
   const handleMyLocation = async () => {
     const granted = await requestLocationPermission();
@@ -122,18 +156,38 @@ export default function ExpenseLocationScreen() {
         )}
       </View>
 
-      {query.trim().length >= 3 && (results.length > 0 || !searching) && (
+      {showRecents && (
         <View style={styles.resultsCard}>
-          {results.length === 0 && !searching ? (
+          <Text style={styles.resultsHeader}>{t('location.recentSearches')}</Text>
+          {recents.map((r, i) => (
+            <TouchableOpacity
+              key={`recent-${r.name}-${i}`}
+              style={[styles.resultRow, i < recents.length - 1 && styles.resultDivider]}
+              onPress={() => selectResult(r)}
+            >
+              <Ionicons name="time-outline" size={18} color={theme.colors.textTertiary} />
+              <Text style={styles.resultText} numberOfLines={2}>{r.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+
+      {isSearching && (searchRows.length > 0 || !searching) && (
+        <View style={styles.resultsCard}>
+          {searchRows.length === 0 && !searching ? (
             <Text style={styles.resultEmpty}>{t('location.searchNoResults')}</Text>
           ) : (
-            results.map((r, i) => (
+            searchRows.map((r, i) => (
               <TouchableOpacity
                 key={`${r.lat},${r.lng},${i}`}
-                style={[styles.resultRow, i < results.length - 1 && styles.resultDivider]}
+                style={[styles.resultRow, i < searchRows.length - 1 && styles.resultDivider]}
                 onPress={() => selectResult(r)}
               >
-                <Ionicons name="location-outline" size={18} color={theme.colors.primary} />
+                <Ionicons
+                  name={r.recent ? 'time-outline' : 'location-outline'}
+                  size={18}
+                  color={r.recent ? theme.colors.textTertiary : theme.colors.primary}
+                />
                 <Text style={styles.resultText} numberOfLines={2}>{r.name}</Text>
               </TouchableOpacity>
             ))
@@ -148,7 +202,13 @@ export default function ExpenseLocationScreen() {
           setPin({ lat, lng });
           setPinName(null);
         }}
-        center={pin ? { lat: pin.lat, lng: pin.lng, zoom: 15 } : { lat: 50, lng: 15, zoom: 4 }}
+        center={
+          pin
+            ? { lat: pin.lat, lng: pin.lng, zoom: 15 }
+            : myLocation
+              ? { lat: myLocation.lat, lng: myLocation.lng, zoom: 14 }
+              : { lat: 50, lng: 15, zoom: 4 }
+        }
         style={styles.map}
       />
       <Text style={styles.hint}>{t('location.tapToPlace')}</Text>
@@ -200,6 +260,13 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.border,
     overflow: 'hidden' as const,
+  },
+  resultsHeader: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    paddingHorizontal: theme.spacing[3.5],
+    paddingTop: theme.spacing[2.5],
+    paddingBottom: theme.spacing[1],
   },
   resultRow: {
     flexDirection: 'row' as const,

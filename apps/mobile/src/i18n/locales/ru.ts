@@ -1801,6 +1801,7 @@ export default {
     tapToPlace: 'Коснитесь карты, чтобы поставить метку',
     searchPlaceholder: 'Поиск адреса или места',
     searchNoResults: 'Ничего не найдено',
+    recentSearches: 'Недавние',
     pickerTitle: 'Локация расхода',
   },
   map: {

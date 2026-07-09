@@ -1798,6 +1798,7 @@ export default {
     tapToPlace: 'Toca el mapa para colocar el marcador',
     searchPlaceholder: 'Buscar dirección o lugar',
     searchNoResults: 'No se encontró nada',
+    recentSearches: 'Recientes',
     pickerTitle: 'Ubicación del gasto',
   },
   map: {

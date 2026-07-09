@@ -1769,6 +1769,7 @@ export default {
     tapToPlace: 'Краніце карту, каб паставіць пазнаку',
     searchPlaceholder: 'Пошук адраса або месца',
     searchNoResults: 'Нічога не знойдзена',
+    recentSearches: 'Нядаўнія',
     pickerTitle: 'Лакацыя выдатку',
   },
   map: {

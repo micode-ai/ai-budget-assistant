@@ -1801,6 +1801,7 @@ export default {
     tapToPlace: 'Dotknij mapy, aby ustawić pinezkę',
     searchPlaceholder: 'Szukaj adresu lub miejsca',
     searchNoResults: 'Brak wyników',
+    recentSearches: 'Ostatnie',
     pickerTitle: 'Lokalizacja wydatku',
   },
   map: {
