@@ -1,11 +1,15 @@
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TouchableOpacity, Platform, Modal, Pressable } from 'react-native';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { QuickActionIcon } from '@/components/QuickActionIcon';
 import type { QuickActionKey } from '@/stores/quickActionStore';
 
 // Static maps — no render-time dependency, hoisted to module scope.
+// `shopping_hub` has no direct route: it opens a bottom-sheet menu instead.
 const quickActionRoutes: Record<QuickActionKey, string> = {
   add_expense: '/expense/new',
   scan_receipt: '/expense/receipt',
@@ -16,8 +20,7 @@ const quickActionRoutes: Record<QuickActionKey, string> = {
   converter: '/converter',
   transfers: '/wallet/transfer',
   subscriptions: '/subscriptions',
-  purchase_request: '/purchase-requests',
-  shopping: '/shopping-list',
+  shopping_hub: '',
 };
 
 const quickActionLabelKey: Record<QuickActionKey, string> = {
@@ -30,9 +33,14 @@ const quickActionLabelKey: Record<QuickActionKey, string> = {
   converter: 'dashboard.currencyConverter',
   transfers: 'dashboard.transfers',
   subscriptions: 'subscriptionManager.title',
-  purchase_request: 'dashboard.purchaseRequest',
-  shopping: 'dashboard.shoppingList',
+  shopping_hub: 'dashboard.shoppingList',
 };
+
+// The two actions merged behind the `shopping_hub` button.
+const shoppingHubItems: { labelKey: string; route: string; icon: keyof typeof Ionicons.glyphMap }[] = [
+  { labelKey: 'dashboard.shoppingListFull', route: '/shopping-list', icon: 'list-outline' },
+  { labelKey: 'dashboard.purchaseRequest', route: '/purchase-requests', icon: 'cart-outline' },
+];
 
 interface HomeQuickActionStripProps {
   visibleQuickActions: QuickActionKey[];
@@ -43,6 +51,8 @@ export function HomeQuickActionStrip({ visibleQuickActions, isDesktopWeb }: Home
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
+  const [hubOpen, setHubOpen] = useState(false);
 
   const renderQuickActionIcon = (key: QuickActionKey) => {
     // Income variants reuse the expense SVGs recolored green.
@@ -51,21 +61,64 @@ export function HomeQuickActionStrip({ visibleQuickActions, isDesktopWeb }: Home
     return <QuickActionIcon name={key} />;
   };
 
+  const onPressAction = (key: QuickActionKey) => {
+    if (key === 'shopping_hub') {
+      setHubOpen(true);
+      return;
+    }
+    router.push(quickActionRoutes[key] as any);
+  };
+
   return (
-    <View style={[styles.quickActionsGrid, Platform.OS === 'web' && styles.webCenterRow, isDesktopWeb && styles.quickActionsGridDesktop]}>
-      {visibleQuickActions.map((key) => (
-        <TouchableOpacity
-          key={key}
-          style={styles.quickActionButton}
-          onPress={() => router.push(quickActionRoutes[key] as any)}
-        >
-          {renderQuickActionIcon(key)}
-          <Text style={styles.quickActionText} numberOfLines={2}>
-            {t(quickActionLabelKey[key])}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+    <>
+      <View style={[styles.quickActionsGrid, Platform.OS === 'web' && styles.webCenterRow, isDesktopWeb && styles.quickActionsGridDesktop]}>
+        {visibleQuickActions.map((key) => (
+          <TouchableOpacity
+            key={key}
+            style={styles.quickActionButton}
+            onPress={() => onPressAction(key)}
+          >
+            {renderQuickActionIcon(key)}
+            <Text style={styles.quickActionText} numberOfLines={2}>
+              {t(quickActionLabelKey[key])}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Modal
+        visible={hubOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setHubOpen(false)}
+      >
+        <Pressable style={styles.backdrop} onPress={() => setHubOpen(false)}>
+          <Pressable
+            style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, theme.spacing[4]) }]}
+            onPress={() => {}}
+          >
+            <View style={styles.sheetHandle} />
+            <Text style={styles.sheetTitle}>{t('dashboard.shoppingList')}</Text>
+            {shoppingHubItems.map((item) => (
+              <TouchableOpacity
+                key={item.route}
+                style={styles.sheetRow}
+                onPress={() => {
+                  setHubOpen(false);
+                  router.push(item.route as any);
+                }}
+              >
+                <View style={styles.sheetIconWrap}>
+                  <Ionicons name={item.icon} size={22} color={theme.colors.primary} />
+                </View>
+                <Text style={styles.sheetRowText}>{t(item.labelKey)}</Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            ))}
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </>
   );
 }
 
@@ -102,5 +155,52 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textSecondary,
     textAlign: 'center' as const,
+  },
+
+  // Shopping hub bottom-sheet
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end' as const,
+  },
+  sheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    paddingHorizontal: theme.spacing[4],
+    paddingTop: theme.spacing[3],
+  },
+  sheetHandle: {
+    alignSelf: 'center' as const,
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.border,
+    marginBottom: theme.spacing[3],
+  },
+  sheetTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+  },
+  sheetRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    paddingVertical: theme.spacing[3.5],
+  },
+  sheetIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary + '14',
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  sheetRowText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
+    flex: 1,
   },
 });

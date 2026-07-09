@@ -135,6 +135,7 @@ export default {
     netCapitalSubtitle: 'Агульны стан',
     purchaseRequest: 'Запыт на пакупку',
     shoppingList: 'Пакупкі',
+    shoppingListFull: 'Спіс пакупак',
   },
   expenses: {
     noExpenses: 'Расходаў пакуль няма',

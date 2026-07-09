@@ -137,6 +137,7 @@ export default {
     netCapitalSubtitle: 'Totaal nettovermogen',
     purchaseRequest: 'Aankoopverzoek',
     shoppingList: 'Boodschappen',
+    shoppingListFull: 'Boodschappenlijst',
   },
   expenses: {
     noExpenses: 'Nog geen uitgaven',

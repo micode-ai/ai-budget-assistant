@@ -137,6 +137,7 @@ export default {
     netCapitalSubtitle: 'Total net worth',
     purchaseRequest: 'Purchase Request',
     shoppingList: 'Shopping',
+    shoppingListFull: 'Shopping list',
   },
   expenses: {
     noExpenses: 'No expenses yet',

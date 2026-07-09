@@ -137,6 +137,7 @@ export default {
     netCapitalSubtitle: 'Łączny majątek',
     purchaseRequest: 'Wniosek o zakup',
     shoppingList: 'Zakupy',
+    shoppingListFull: 'Lista zakupów',
   },
   expenses: {
     noExpenses: 'Brak wydatków',

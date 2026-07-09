@@ -16,6 +16,7 @@ describe('quickActionStore default resolution', () => {
     expect(vis.exchange).toBe(true);
     expect(vis.converter).toBe(true);
     expect(vis.transfers).toBe(true);
+    expect(vis.shopping_hub).toBe(true);
   });
 
   it('DEFAULT_VISIBILITY covers every key', () => {

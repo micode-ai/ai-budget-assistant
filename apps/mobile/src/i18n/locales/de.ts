@@ -137,6 +137,7 @@ export default {
     netCapitalSubtitle: 'Gesamtvermögen',
     purchaseRequest: 'Kaufantrag',
     shoppingList: 'Einkauf',
+    shoppingListFull: 'Einkaufsliste',
   },
   expenses: {
     noExpenses: 'Noch keine Ausgaben',
