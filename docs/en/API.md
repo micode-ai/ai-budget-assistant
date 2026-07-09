@@ -2036,10 +2036,17 @@ Content-Type: application/json
 Forward-geocode a typed query into candidate places for the expense location picker. Free (not an OpenAI call — no AI-usage cost).
 
 ```http
-GET /ai/geocode/search?q=Biedronka%20Gdańsk
+GET /ai/geocode/search?q=Biedronka%20Gdańsk&lat=54.35&lng=18.65
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+**Query Parameters**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `q` | string | Search text (required; queries shorter than 3 characters return `[]`) |
+| `lat` | number | Optional. Caller's latitude — biases results toward the user's position |
+| `lng` | number | Optional. Caller's longitude — biases results toward the user's position |
 
 **Response** `200 OK`
 ```json
@@ -2052,6 +2059,8 @@ X-Account-Id: <account-uuid>
 ```
 
 Up to 5 candidates from OpenStreetMap/Nominatim. A query shorter than 3 characters, or any lookup failure, returns `{ "results": [] }` (fail-silent). Results are cached in Redis (1 h).
+
+**Proximity bias:** when `lat` and `lng` are supplied (and are not `0,0`), the search is biased toward a ~150 km viewbox around that point (`bounded=0`, so far-away matches are still returned when nothing is nearby) and the returned candidates are re-sorted by distance to the origin before being trimmed to 5. The rounded origin is folded into the Redis cache key, so results are cached per location. Without `lat`/`lng` the behaviour is unchanged (backward compatible).
 
 ### Suggest Tags
 
@@ -2395,7 +2404,7 @@ X-Account-Id: <account-uuid>
 
 ### Toggle Conversation Sharing
 
-Marks a conversation as shared (visible to all account members) or private (creator-only). **Owner-only** — only an account `owner` may change the sharing flag.
+Marks a conversation as shared (visible to all account members) or private (creator-only). **Creator-only** — any account member may share/unshare a conversation **they created**; the endpoint checks `conversation.userId === caller`, not the account role, so a member cannot change the sharing flag on someone else's conversation, even an account `owner`'s. Returns `403 Forbidden` when the caller is not the creator.
 
 ```http
 PATCH /ai/chat/conversations/:id/shared
@@ -4258,6 +4267,253 @@ Content-Type: application/json
 ```
 
 **DTOs** (`packages/shared-types/src/dto/price-history.ts`): `PriceHistoryResponse`, `PriceHistoryProduct`, `StoreLatestPrice`, `ProductListItem`, `UpsertAliasDto`, `MergeProductsDto`.
+
+---
+
+## Shopping List
+
+Shared, offline-first shopping lists, plus restock/deal suggestions and a Pro-gated "where's cheapest" basket comparison built on the receipt price-history corpus (ABA-330). All endpoints require JWT + `X-Account-Id` header (`JwtAuthGuard + AccountContextGuard`).
+
+Lists and items are addressed by the **server PK or the mobile's local `clientId`** (resolved via `OR: [{ id }, { clientId }]`), so offline-first clients can act on rows they created before a sync round-trip. Item writes are collaborative — they are **not** `ViewerBlockGuard`-gated (viewers may check/add items); only `DELETE /shopping-list/:id` requires an editor or owner role.
+
+### List Lists
+
+```http
+GET /shopping-list
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Returns all non-deleted lists for the account, each with its non-deleted `items`. A default list is lazily materialized when the account has no non-archived list; **archived lists are included** (so a cross-device archive stays distinguishable from a delete).
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "accountId": "account-uuid",
+    "clientId": "default-account-uuid",
+    "name": "My List",
+    "isDefault": true,
+    "isArchived": false,
+    "sortOrder": 0,
+    "createdByUserId": "user-uuid",
+    "items": [
+      {
+        "id": "item-uuid",
+        "shoppingListId": "uuid",
+        "clientId": "client-item-uuid",
+        "canonicalName": "Milk 1L",
+        "rawLabel": "Milk",
+        "quantity": 1,
+        "note": null,
+        "isChecked": false,
+        "addedByUserId": "user-uuid",
+        "sortOrder": 0
+      }
+    ]
+  }
+]
+```
+
+### Create List
+
+```http
+POST /shopping-list
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "clientId": "client-generated-uuid", "name": "Groceries" }
+```
+
+Idempotent on `clientId` — a repeated create returns the existing list (offline-retry safe).
+
+**Response** `201 Created` — the created (or existing) list.
+
+### Update List
+
+```http
+PATCH /shopping-list/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "name": "Weekly Groceries", "isArchived": false, "sortOrder": 1 }
+```
+
+`:id` may be the server PK or the local `clientId`. All body fields are optional.
+
+### Delete List
+
+```http
+DELETE /shopping-list/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Soft-deletes the list and its items. **Viewer role blocked** (403, `ViewerBlockGuard`).
+
+### Add Item
+
+```http
+POST /shopping-list/:id/items
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "clientId": "client-item-uuid",
+  "rawLabel": "Milk",
+  "canonicalName": "Milk 1L",
+  "quantity": 1,
+  "note": "2% only"
+}
+```
+
+`:id` = list PK or `clientId`. Idempotent on the item `clientId` (revives a soft-deleted row). Collaborative — **not** viewer-blocked.
+
+**Response** `201 Created` — the created item.
+
+### Update Item
+
+```http
+PATCH /shopping-list/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "isChecked": true, "quantity": 2, "rawLabel": "Milk", "note": null, "sortOrder": 3 }
+```
+
+`:itemId` = item PK or `clientId`. All body fields optional. Collaborative — **not** viewer-blocked.
+
+### Delete Item
+
+```http
+DELETE /shopping-list/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Soft-deletes the item. Collaborative — **not** viewer-blocked.
+
+### Clear Checked Items
+
+```http
+POST /shopping-list/:id/clear-checked
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Soft-deletes all checked items on the list.
+
+**Response** `200 OK`
+```json
+{ "cleared": 3 }
+```
+
+### Restock Suggestions
+
+```http
+GET /shopping-list/suggestions
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Free.** Predicts which products are due for a re-buy from receipt purchase history — `predictRestock` computes the median gap between purchases of each canonical product (needs ≥3 purchases) and returns items whose next buy is due/overdue, excluding products already on a list.
+
+**Response** `200 OK`
+```json
+[
+  {
+    "canonicalName": "Milk 1L",
+    "lastPurchase": "2026-06-20",
+    "medianGapDays": 7,
+    "dueInDays": -2,
+    "purchaseCount": 9
+  }
+]
+```
+
+### Deals
+
+```http
+GET /shopping-list/deals
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Free.** Surfaces recent price drops — `detectDeals` flags a store whose recent unit price for a product is ≥15% below the product's 90-day average (within a 14-day window), excluding products already on a list.
+
+**Response** `200 OK`
+```json
+[
+  {
+    "canonicalName": "Coffee 500g",
+    "merchant": "Biedronka",
+    "price": 18.99,
+    "avgPrice": 23.50,
+    "dropPct": 19,
+    "currency": "PLN"
+  }
+]
+```
+
+### Basket Comparison (Pro)
+
+```http
+POST /price-history/basket
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "items": [
+    { "canonicalName": "Milk 1L", "quantity": 2 },
+    { "canonicalName": "Coffee 500g", "quantity": 1 }
+  ],
+  "lat": 52.2297,
+  "lng": 21.0122
+}
+```
+
+**Pro-gated** (`SubscriptionTierGuard` + `@RequireTier('pro')`; Business also passes). Prices the basket at every store the account has receipts from — `computeBasket` takes each store's latest unit price per product, gates the "cheapest" badge on coverage (full coverage, else the best store with ≥80% coverage), and flags stale prices. `lat`/`lng` are optional; when supplied (and not `0,0`), each store gets a `distanceKm` and a `nearby` flag via haversine, where the store coordinates come from the most-recent geo-tagged expense per merchant.
+
+**Body Parameters**
+| Field | Type | Description |
+|-------|------|-------------|
+| `items` | array | Required. 1–100 `{ canonicalName, quantity }` entries |
+| `lat` | number | Optional. Origin latitude (−90…90) for per-store distance |
+| `lng` | number | Optional. Origin longitude (−180…180) for per-store distance |
+
+**Response** `200 OK`
+```json
+{
+  "currency": "PLN",
+  "stores": [
+    {
+      "merchantName": "Biedronka",
+      "estimatedTotal": 41.37,
+      "coveredItems": 2,
+      "totalItems": 2,
+      "missingItems": [],
+      "hasStale": false,
+      "isCheapest": true,
+      "distanceKm": 1.3,
+      "nearby": true,
+      "lat": 52.231,
+      "lng": 21.010
+    }
+  ],
+  "perItemCheapest": [
+    { "canonicalName": "Milk 1L", "cheapestStore": "Biedronka", "price": 3.39 }
+  ],
+  "missingEverywhere": []
+}
+```
+
+**DTOs** (`packages/shared-types/src/dto/shopping-list.ts`, `.../price-history.ts`): `ShoppingList`, `ShoppingListItem`, `CreateShoppingListDto`, `UpdateShoppingListDto`, `CreateShoppingListItemDto`, `UpdateShoppingListItemDto`, `RestockSuggestion`, `DealSuggestion`, `BasketCompareRequestDto`, `BasketCompareResponse`.
 
 ---
 

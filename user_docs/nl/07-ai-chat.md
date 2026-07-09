@@ -73,7 +73,7 @@ Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:
 
 Als je een account met andere leden deelt, kun je een gesprek omzetten in een **gedeelde groepschat** waarin iedereen samen met de AI praat.
 
-- **Delen aan- of uitzetten:** de account**eigenaar** ziet bovenaan de chat een schakelaar **Gedeeld / Privé**. Tik erop om het huidige gesprek gedeeld te maken (zichtbaar voor alle leden) of weer privé. Alleen de eigenaar kan dit wijzigen; andere leden zien een alleen-lezen label "Gedeeld". De schakelaar verschijnt alleen wanneer het account meer dan één lid heeft.
+- **Delen aan- of uitzetten:** de persoon die een gesprek is begonnen ziet bovenaan de chat een schakelaar **Gedeeld / Privé**. Tik erop om dat gesprek gedeeld te maken (zichtbaar voor alle leden) of weer privé. Elk lid kan een gesprek delen dat het zelf heeft aangemaakt — niet alleen de accounteigenaar. Je kunt het delen van een gesprek dat iemand anders is begonnen niet wijzigen (daar zie je een alleen-lezen label "Gedeeld"). De schakelaar verschijnt alleen wanneer het account meer dan één lid heeft.
 - **Iedereen ziet het gesprek:** in een gedeeld gesprek verschijnen berichten van andere leden met hun naam, en nieuwe berichten verschijnen automatisch zolang je de chat open hebt.
 - **Een persoon aanspreken in plaats van de AI:** typ **@** en kies een lid om het te vermelden. Wanneer je een lid vermeldt, blijft de AI stil — het bericht is bedoeld voor die persoon, niet voor de assistent. Als je niemand vermeldt, antwoordt de AI zoals gewoonlijk.
 - **Meldingen:** als je een lid vermeldt dat de chat op dat moment niet bekijkt, krijgt deze een pushmelding zodat hij het niet mist. Dit respecteert je meldingsinstelling "Gedeelde activiteit".
