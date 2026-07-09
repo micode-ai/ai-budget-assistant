@@ -1798,6 +1798,7 @@ export default {
     tapToPlace: 'Touchez la carte pour placer le repère',
     searchPlaceholder: 'Rechercher une adresse ou un lieu',
     searchNoResults: 'Aucun résultat',
+    recentSearches: 'Récents',
     pickerTitle: 'Localisation de la dépense',
   },
   map: {

@@ -45,8 +45,17 @@ export class AiController {
   // Forward-geocode a typed query into up to 5 candidate places for the expense
   // location-picker search box. Free (not an OpenAI call), so no AiUsageGuard.
   @Get('geocode/search')
-  async geocodeSearch(@Query('q') q?: string) {
-    const results = await this.geocodingService.search(typeof q === 'string' ? q : '');
+  async geocodeSearch(
+    @Query('q') q?: string,
+    @Query('lat') lat?: string,
+    @Query('lng') lng?: string,
+  ) {
+    // Optional origin biases results toward (and sorts by proximity to) the user.
+    const latN = lat !== undefined ? parseFloat(lat) : NaN;
+    const lngN = lng !== undefined ? parseFloat(lng) : NaN;
+    const origin =
+      Number.isFinite(latN) && Number.isFinite(lngN) ? { lat: latN, lng: lngN } : undefined;
+    const results = await this.geocodingService.search(typeof q === 'string' ? q : '', origin);
     return { results };
   }
 

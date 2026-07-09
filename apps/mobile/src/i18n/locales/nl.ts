@@ -1798,6 +1798,7 @@ export default {
     tapToPlace: 'Tik op de kaart om de pin te plaatsen',
     searchPlaceholder: 'Zoek adres of plaats',
     searchNoResults: 'Niets gevonden',
+    recentSearches: 'Recent',
     pickerTitle: 'Locatie van uitgave',
   },
   map: {

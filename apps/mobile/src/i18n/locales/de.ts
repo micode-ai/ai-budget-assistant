@@ -1798,6 +1798,7 @@ export default {
     tapToPlace: 'Tippe auf die Karte, um den Pin zu setzen',
     searchPlaceholder: 'Adresse oder Ort suchen',
     searchNoResults: 'Nichts gefunden',
+    recentSearches: 'Zuletzt',
     pickerTitle: 'Ort der Ausgabe',
   },
   map: {

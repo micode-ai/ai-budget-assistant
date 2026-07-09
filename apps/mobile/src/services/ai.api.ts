@@ -245,9 +245,17 @@ export const aiApi = {
   },
 
   // Forward-geocode a typed query into candidate places for the location picker.
-  geocodeSearch(q: string) {
-    return httpClient.request<{ results: { lat: number; lng: number; name: string }[] }>(
-      `/ai/geocode/search?q=${encodeURIComponent(q)}`,
-    );
+  // Passing the user's position biases + sorts the results by proximity.
+  geocodeSearch(q: string, origin?: { lat: number; lng: number }) {
+    let url = `/ai/geocode/search?q=${encodeURIComponent(q)}`;
+    if (
+      origin &&
+      Number.isFinite(origin.lat) &&
+      Number.isFinite(origin.lng) &&
+      !(origin.lat === 0 && origin.lng === 0)
+    ) {
+      url += `&lat=${origin.lat}&lng=${origin.lng}`;
+    }
+    return httpClient.request<{ results: { lat: number; lng: number; name: string }[] }>(url);
   },
 };

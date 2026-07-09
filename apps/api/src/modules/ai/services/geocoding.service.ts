@@ -58,6 +58,19 @@ export function normalizeStreetForGeocode(s: string | null | undefined): string 
   return stripped.length > 0 ? stripped : base;
 }
 
+/**
+ * Cheap planar distance² for RANKING geocode candidates by proximity to the
+ * user (NOT a real distance). Longitude is scaled by cos(lat) so a degree of
+ * lng is comparable to a degree of lat at that latitude — good enough to order
+ * a handful of nearby candidates.
+ */
+function rankDistSq(a: { lat: number; lng: number }, o: { lat: number; lng: number }): number {
+  const cos = Math.cos((o.lat * Math.PI) / 180);
+  const dLat = a.lat - o.lat;
+  const dLng = (a.lng - o.lng) * cos;
+  return dLat * dLat + dLng * dLng;
+}
+
 @Injectable()
 export class GeocodingService {
   private readonly logger = new Logger(GeocodingService.name);
@@ -76,20 +89,40 @@ export class GeocodingService {
    * Redis (the geocode_cache table holds one result per key, so it can't store a
    * list); transient errors are NOT cached.
    */
-  async search(query: string): Promise<GeocodeSearchResult[]> {
+  async search(query: string, origin?: { lat: number; lng: number }): Promise<GeocodeSearchResult[]> {
     const q = (query || '').replace(/\s+/g, ' ').trim();
     if (q.length < 3) return [];
-    const key = `geo:search:${q.toLowerCase()}`;
+    const hasOrigin =
+      !!origin &&
+      Number.isFinite(origin.lat) &&
+      Number.isFinite(origin.lng) &&
+      !(origin.lat === 0 && origin.lng === 0);
+    // Origin-biased results are per-location, so the cache key must include it.
+    const originKey = hasOrigin ? `@${origin!.lat.toFixed(2)},${origin!.lng.toFixed(2)}` : '';
+    const key = `geo:search:${q.toLowerCase()}${originKey}`;
     try {
       if (this.cache) {
         const cached = await this.cache.get<GeocodeSearchResult[]>(key);
         if (cached) return cached;
       }
-      const url = `${NOMINATIM_URL}?format=json&limit=5&q=${encodeURIComponent(q)}`;
-      const results = await this.throttled(() => this.fetchNominatimList(url, q));
+      // With an origin, pull a few extra candidates so the proximity re-sort has
+      // something to reorder before we trim back to 5.
+      const limit = hasOrigin ? 8 : 5;
+      let url = `${NOMINATIM_URL}?format=json&limit=${limit}&q=${encodeURIComponent(q)}`;
+      if (hasOrigin) {
+        // Bias (not restrict) toward a ~150km box around the user so nearby places
+        // rank higher; bounded=0 still returns far matches when that's all there is.
+        const d = 0.7;
+        url += `&viewbox=${origin!.lng - d},${origin!.lat + d},${origin!.lng + d},${origin!.lat - d}&bounded=0`;
+      }
+      let results = await this.throttled(() => this.fetchNominatimList(url, q));
       if (results === 'error') return []; // transient — retryable, do not cache
-      if (this.cache) await this.cache.set(key, results, SEARCH_CACHE_TTL_S);
-      return results;
+      if (hasOrigin && results.length > 1) {
+        results = [...results].sort((a, b) => rankDistSq(a, origin!) - rankDistSq(b, origin!));
+      }
+      const top = results.slice(0, 5);
+      if (this.cache) await this.cache.set(key, top, SEARCH_CACHE_TTL_S);
+      return top;
     } catch (e) {
       this.logger.warn(`geocode search failed for "${q}": ${e}`);
       return [];
