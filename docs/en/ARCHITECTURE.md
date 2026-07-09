@@ -513,6 +513,13 @@ src/
 │   │   ├── price-history.module.ts
 │   │   ├── price-history.controller.ts
 │   │   └── price-history.service.ts
+│   ├── shopping-list/          # Smart Shopping List — shared offline-first lists + basket compare (ABA-330)
+│   │   ├── shopping-list.module.ts
+│   │   ├── shopping-list.controller.ts
+│   │   ├── shopping-list.service.ts
+│   │   ├── restock-predictor.ts     # pure predictRestock
+│   │   ├── deal-detector.ts         # pure detectDeals
+│   │   └── shopping-reminder.cron.ts
 │   └── whatsapp/               # WhatsApp Business Cloud bot
 │       ├── whatsapp-bot.service.ts
 │       ├── whatsapp-bot.controller.ts
@@ -1186,7 +1193,7 @@ User context is passed to the model as a structurally isolated JSON data block d
 
 Conversations support a per-conversation opt-in group mode for shared accounts. `ChatConversation` carries `accountId` + `isShared`; chat history is account-scoped (`accountId = X-Account-Id AND (isShared OR userId = me)`).
 
-- **Sharing toggle**: `isShared` is **owner-only** to set (via `PATCH /ai/chat/conversations/:id/shared` or `chat()`'s `initialIsShared`, gated on `accountRole === 'owner'`). Shared conversations are visible to all members; private ones stay creator-only
+- **Sharing toggle**: `isShared` is **creator-only** to set — any account member may share/unshare a conversation **they created** (via `PATCH /ai/chat/conversations/:id/shared` or `chat()`'s `initialIsShared`). The endpoint checks `conversation.userId === caller`, not the account role, so a member cannot change the sharing flag on someone else's conversation (even an owner's). Shared conversations are visible to all members; private ones stay creator-only
 - **Mentions**: a message that `@mentions` a member (`{userId}[]`, validated, self excluded) **silences the AI** and pushes a `chat_mention` notification (gated by `notifySharedActivity`) to each mentioned member who is not currently present; a message with no mention gets a normal AI reply
 - **Presence**: tracked in Redis under `chat:presence:{conversationId}:{userId}` (TTL 45s); mobile polls `…/poll?since=` every 4s while a shared conversation is focused and refreshes its own presence key
 - **AI history**: each member's message is prefixed with a sanitized `[Name]: ` so the model can attribute turns
@@ -1364,6 +1371,38 @@ The `price-history` module (ABA-307) computes a Laspeyres price index over the a
 ### API Endpoints
 
 `GET /price-history`, `GET /price-history/products`, `PATCH /price-history/products/alias`, `DELETE /price-history/products/alias/:rawName`, `POST /price-history/products/merge` — all behind `JwtAuthGuard + AccountContextGuard`; write endpoints guarded by `ViewerBlockGuard`. No `SubscriptionTierGuard` — available on the free plan.
+
+## Smart Shopping List
+
+The `shopping-list` module (ABA-330) provides shared, offline-first shopping lists plus a Pro-gated basket price comparison, all built on the receipt price-history corpus.
+
+### Offline-First Sync
+
+Unlike most entities, shopping lists do **not** use the generic `/sync/push|pull` machinery. The mobile app keeps its own SQLite mirror (`shopping_lists` / `shopping_list_items`, each row carrying a `sync_status`) and reconciles through the REST CRUD endpoints directly:
+
+1. Load local rows → paint the screen instantly.
+2. Push pending rows via `POST/PATCH/DELETE /shopping-list…` (create then update, so an offline rename/archive isn't reverted).
+3. Pull the full server state via `GET /shopping-list`, merge-upsert, and tombstone-by-absence.
+
+A local row's `id` is permanently its `clientId` (it never adopts the server PK), and a row is marked synced only on the server ack. The server CRUD resolves every list/item by `OR: [{ id }, { clientId }]`, and direct-POST creates are idempotent on `clientId`, so a retried or duplicated create returns the existing row instead of duplicating it. `getLists` also returns archived lists, so a cross-device archive is never mistaken for a delete.
+
+### Pure Calculators
+
+Three pure, unit-tested functions drive the intelligence (no AI cost):
+
+- **`computeBasket`** (`price-history/basket-calculator.ts`) — prices a basket per store from each store's latest unit price, coverage-gates the "cheapest" badge (full coverage, else the best store ≥80% covered), flags stale prices, and (with an optional origin) adds per-store `distanceKm` / `nearby` via haversine. Backs the Pro-gated `POST /price-history/basket`.
+- **`predictRestock`** (`shopping-list/restock-predictor.ts`) — median gap between purchases of a canonical product (≥3 points) → free `GET /shopping-list/suggestions`.
+- **`detectDeals`** (`shopping-list/deal-detector.ts`) — a store's recent unit price ≥15% below the product's 90-day average within a 14-day window → free `GET /shopping-list/deals`.
+
+A daily cron (`shopping-reminder.cron.ts`, `0 10 * * *`) pushes the top due restock (`shopping_reminder`) and the top price drop (`shopping_deal`) per account, each gated by its own preference (`notifyShoppingReminders` / `notifyShoppingDeals`).
+
+### Database Tables
+
+- `shopping_lists` / `shopping_list_items` — `@@unique([accountId, clientId])`, soft-delete + `sync_version`, cascade FKs (migration `20260707173751_add_shopping_lists`)
+
+### API Endpoints
+
+`GET/POST /shopping-list`, `PATCH/DELETE /shopping-list/:id`, `POST /shopping-list/:id/items`, `PATCH/DELETE /shopping-list/items/:itemId`, `POST /shopping-list/:id/clear-checked`, `GET /shopping-list/suggestions`, `GET /shopping-list/deals` — all behind `JwtAuthGuard + AccountContextGuard`. Item writes are collaborative (**not** `ViewerBlockGuard`-gated); only `DELETE /shopping-list/:id` requires an editor or owner role. The basket comparison `POST /price-history/basket` additionally carries `SubscriptionTierGuard` + `@RequireTier('pro')`.
 
 ## Expense Geo-Location & Map
 

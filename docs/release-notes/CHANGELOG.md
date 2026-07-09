@@ -8,6 +8,42 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.12.0 — 2026-07-09
+
+**Smart Shopping List**
+- **Shared shopping lists** — create shopping lists that sync across everyone on a shared account, fully offline-first (add items with no signal; they sync when you're back online). Keep several named lists and switch between them; archiving a list on one device no longer risks deleting it on another (ABA-330).
+- **Where's it cheapest? (Pro)** — compare your whole basket across the stores you actually shop at, using the prices from your own scanned receipts. See the cheapest store overall (coverage-aware, so a store that's missing half your items can't "win"), the cheapest store per item, and how fresh each price is. With location enabled you also get distance and a "nearby" filter (ABA-330).
+- **Store map** — see the stores from a basket comparison on a map, toggling between "cheapest" and "nearby" (ABA-330).
+- **Time to restock** — the app learns how often you rebuy staples and suggests adding them back before you run out (ABA-330).
+- **Deal alerts** — get notified when a store's recent price for something you buy drops well below its 90-day average (ABA-330).
+- Reachable from a home quick action, the Settings hub, a "Plan a shop" button in Analytics, and push deep-links. New notification toggles for restock reminders and deals.
+
+**Home screen**
+- **One shopping button** — the near-identical "Shopping" and "Purchase Request" quick actions are merged into a single button that opens a small menu with both, to declutter the strip (ABA-332).
+
+**Maps & location**
+- **Search near you** — the location picker's address search now prioritises places near you, and the map opens centred on your current position when you add a location (an existing location still opens on its own pin) (ABA-333).
+- **Recent places** — addresses you picked before are remembered and offered first, both in an empty search box and above fresh search results (ABA-333).
+- **Now works on the web** — near-me centring and proximity search work in the web app too (your browser asks for location permission once) (ABA-333).
+- **Bot-scanned receipts on the map** — receipts you scan through the Telegram / WhatsApp / Slack bots now appear on the expense map, placed from the store address printed on the receipt (ABA-321).
+
+**AI chat**
+- **Anyone can share a chat** — any member of a shared account can now make their own conversation shared for the group, not just the account owner (ABA-334).
+- Fix: your own sent message no longer occasionally shows up twice on your screen (it always looked correct to the other members) (ABA-334).
+
+**Subscription pricing**
+- **Lower Pro pricing** — Pro is now $4.99/month or $29.99/year (down from $9.99 / $95.88), matched across every supported currency, to make upgrading easier. Business is unchanged (ABA-320).
+
+**Fixes & reliability**
+- Fixed several crashes and glitches: bank-statement import when a row had already been imported (ABA-313); a rare startup race that could fail the subscription-status check for brand-new users (ABA-314); the AI "re-analyze product names" backfill (ABA-315); and budget creation when the app retried the same offline create (ABA-316).
+- Paid users are no longer briefly shown the upgrade paywall right after login while the subscription tier loads.
+- An account you've just been invited to now appears immediately after you accept (ABA-309).
+
+**Behind the scenes**
+- Operational alerts (new registrations, subscriptions, downtime) now go through a separate ops Telegram bot (ABA-319); the marketing blog gained feature-led articles on the Personal Inflation Index and expense map across all 9 languages (ABA-318); a pre-deploy guard blocks a class of production crash caused by runtime imports of shared utilities (ABA-317).
+
+---
+
 ## 1.11.0 — 2026-07-05
 
 **Group Trip Wallet**

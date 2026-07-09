@@ -503,6 +503,13 @@ src/
 │   │   ├── price-history.module.ts
 │   │   ├── price-history.controller.ts
 │   │   └── price-history.service.ts
+│   ├── shopping-list/          # Умный список покупок — общие offline-first списки + сравнение корзины (ABA-330)
+│   │   ├── shopping-list.module.ts
+│   │   ├── shopping-list.controller.ts
+│   │   ├── shopping-list.service.ts
+│   │   ├── restock-predictor.ts     # чистый predictRestock
+│   │   ├── deal-detector.ts         # чистый detectDeals
+│   │   └── shopping-reminder.cron.ts
 │   ├── telegram/                # Интеграция с Telegram ботом
 │   │   ├── telegram.service.ts
 │   │   ├── telegram-bot.service.ts
@@ -1201,7 +1208,7 @@ const context = {
 
 Диалоги поддерживают опциональный групповой режим для общих аккаунтов (per-conversation opt-in). `ChatConversation` несёт `accountId` + `isShared`; история чата ограничена аккаунтом (`accountId = X-Account-Id AND (isShared OR userId = me)`).
 
-- **Переключатель доступа**: `isShared` устанавливает **только владелец** (через `PATCH /ai/chat/conversations/:id/shared` или `initialIsShared` в `chat()`, при условии `accountRole === 'owner'`). Общие диалоги видны всем участникам; приватные остаются доступны только создателю
+- **Переключатель доступа**: `isShared` устанавливает **только создатель** — любой участник аккаунта может открыть/закрыть общий доступ к разговору, **который он создал** (через `PATCH /ai/chat/conversations/:id/shared` или `initialIsShared` в `chat()`). Эндпоинт проверяет `conversation.userId === вызывающий`, а не роль в аккаунте, поэтому изменить флаг чужого разговора нельзя (даже владельцу). Общие диалоги видны всем участникам; приватные остаются доступны только создателю
 - **Упоминания**: сообщение с `@упоминанием` участника (`{userId}[]`, валидируется, себя исключает) **отключает AI** и отправляет push `chat_mention` (с учётом `notifySharedActivity`) каждому упомянутому участнику, который сейчас отсутствует; сообщение без упоминания получает обычный ответ AI
 - **Присутствие**: отслеживается в Redis по ключу `chat:presence:{conversationId}:{userId}` (TTL 45с); мобильный опрашивает `…/poll?since=` каждые 4с, пока общий диалог в фокусе, и обновляет свой ключ присутствия
 - **История для AI**: сообщение каждого участника предваряется санированным `[Name]: `, чтобы модель различала участников
@@ -1325,6 +1332,38 @@ const context = {
 ### API эндпоинты
 
 `GET /price-history`, `GET /price-history/products`, `PATCH /price-history/products/alias`, `DELETE /price-history/products/alias/:rawName`, `POST /price-history/products/merge` — все под `JwtAuthGuard + AccountContextGuard`; операции записи защищены `ViewerBlockGuard`. `SubscriptionTierGuard` не используется — доступно на бесплатном тарифе.
+
+## Умный список покупок
+
+Модуль `shopping-list` (ABA-330) предоставляет общие offline-first списки покупок и Pro-функцию сравнения стоимости корзины, построенные на корпусе истории цен по чекам.
+
+### Offline-first синхронизация
+
+В отличие от большинства сущностей, списки покупок **не** используют общий механизм `/sync/push|pull`. Мобильное приложение держит собственную зеркальную копию в SQLite (`shopping_lists` / `shopping_list_items`, каждая строка со своим `sync_status`) и сверяется напрямую через REST CRUD эндпоинты:
+
+1. Загрузить локальные строки → мгновенно отрисовать экран.
+2. Отправить ожидающие строки через `POST/PATCH/DELETE /shopping-list…` (сначала create, затем update, чтобы offline-переименование/архивация не откатывались).
+3. Забрать полное состояние сервера через `GET /shopping-list`, слить upsert-ом и удалить отсутствующие (tombstone-by-absence).
+
+`id` локальной строки навсегда равен её `clientId` (она никогда не перенимает серверный PK), а синхронизированной строка помечается только по подтверждению сервера. Серверный CRUD разрешает каждый список/позицию по `OR: [{ id }, { clientId }]`, а прямые POST-создания идемпотентны по `clientId`, поэтому повторное или дублированное создание возвращает существующую строку, а не создаёт дубликат. `getLists` также возвращает архивированные списки, поэтому архивацию с другого устройства никогда не путают с удалением.
+
+### Чистые калькуляторы
+
+Три чистые, покрытые unit-тестами функции обеспечивают всю логику (без затрат на AI):
+
+- **`computeBasket`** (`price-history/basket-calculator.ts`) — оценивает стоимость корзины по каждому магазину, беря последнюю цену за единицу товара, выставляет бейдж «самый дешёвый» с учётом покрытия (полное покрытие, иначе лучший магазин с покрытием ≥80%), помечает устаревшие цены и (при переданной точке) добавляет `distanceKm` / `nearby` по каждому магазину через формулу гаверсинусов. Обслуживает Pro-эндпоинт `POST /price-history/basket`.
+- **`predictRestock`** (`shopping-list/restock-predictor.ts`) — медианный интервал между покупками канонического товара (≥3 точек) → бесплатный `GET /shopping-list/suggestions`.
+- **`detectDeals`** (`shopping-list/deal-detector.ts`) — недавняя цена за единицу товара в магазине на ≥15% ниже 90-дневного среднего в окне 14 дней → бесплатный `GET /shopping-list/deals`.
+
+Ежедневный cron (`shopping-reminder.cron.ts`, `0 10 * * *`) отправляет push с самым срочным напоминанием о покупке (`shopping_reminder`) и с наибольшим падением цены (`shopping_deal`) по каждому аккаунту, каждый с учётом своей настройки (`notifyShoppingReminders` / `notifyShoppingDeals`).
+
+### Таблицы базы данных
+
+- `shopping_lists` / `shopping_list_items` — `@@unique([accountId, clientId])`, мягкое удаление + `sync_version`, каскадные FK (миграция `20260707173751_add_shopping_lists`)
+
+### API эндпоинты
+
+`GET/POST /shopping-list`, `PATCH/DELETE /shopping-list/:id`, `POST /shopping-list/:id/items`, `PATCH/DELETE /shopping-list/items/:itemId`, `POST /shopping-list/:id/clear-checked`, `GET /shopping-list/suggestions`, `GET /shopping-list/deals` — все под `JwtAuthGuard + AccountContextGuard`. Запись позиций коллаборативна (**не** защищена `ViewerBlockGuard`); только `DELETE /shopping-list/:id` требует роль editor или owner. Сравнение корзины `POST /price-history/basket` дополнительно защищено `SubscriptionTierGuard` + `@RequireTier('pro')`.
 
 ## Геолокация расходов и карта
 

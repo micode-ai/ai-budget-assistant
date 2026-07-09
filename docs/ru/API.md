@@ -1972,10 +1972,17 @@ Content-Type: application/json
 Прямое геокодирование введённого запроса в список кандидатов для пикера локации расхода. Бесплатно (не вызов OpenAI — без учёта AI-стоимости).
 
 ```http
-GET /ai/geocode/search?q=Biedronka%20Gdańsk
+GET /ai/geocode/search?q=Biedronka%20Gdańsk&lat=54.35&lng=18.65
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+**Параметры запроса**
+| Параметр | Тип | Описание |
+|----------|-----|----------|
+| `q` | string | Текст поиска (обязателен; запрос короче 3 символов возвращает `[]`) |
+| `lat` | number | Опционально. Широта пользователя — смещает результаты ближе к его позиции |
+| `lng` | number | Опционально. Долгота пользователя — смещает результаты ближе к его позиции |
 
 **Ответ** `200 OK`
 ```json
@@ -1988,6 +1995,8 @@ X-Account-Id: <account-uuid>
 ```
 
 До 5 кандидатов из OpenStreetMap/Nominatim. Запрос короче 3 символов или любой сбой поиска возвращает `{ "results": [] }` (fail-silent). Результаты кэшируются в Redis (1 ч).
+
+**Смещение по близости:** когда переданы `lat` и `lng` (и они не `0,0`), поиск смещается к окну ~150 км вокруг этой точки (`bounded=0`, поэтому дальние совпадения всё равно возвращаются, если рядом ничего нет), а полученные кандидаты пересортировываются по расстоянию до точки перед обрезкой до 5. Округлённая точка входит в ключ кэша Redis, поэтому результаты кэшируются по местоположению. Без `lat`/`lng` поведение не меняется (обратно совместимо).
 
 ### Подсказки тегов
 
@@ -2331,7 +2340,7 @@ X-Account-Id: <account-uuid>
 
 ### Переключить общий доступ к разговору
 
-Помечает разговор как общий (виден всем участникам аккаунта) или приватный (только для создателя). **Только для владельца** — изменить флаг общего доступа может только `owner` аккаунта.
+Помечает разговор как общий (виден всем участникам аккаунта) или приватный (только для создателя). **Только создатель** — любой участник аккаунта может открыть/закрыть общий доступ к разговору, **который он создал**; эндпоинт проверяет `conversation.userId === вызывающий`, а не роль в аккаунте, поэтому изменить флаг общего доступа к чужому разговору нельзя — даже владельцу (`owner`) аккаунта. Возвращает `403 Forbidden`, если вызывающий не является создателем.
 
 ```http
 PATCH /ai/chat/conversations/:id/shared
@@ -4096,6 +4105,253 @@ Content-Type: application/json
 ```
 
 **DTO** (`packages/shared-types/src/dto/price-history.ts`): `PriceHistoryResponse`, `PriceHistoryProduct`, `StoreLatestPrice`, `ProductListItem`, `UpsertAliasDto`, `MergeProductsDto`.
+
+---
+
+## Список покупок
+
+Общие offline-first списки покупок, а также подсказки о повторной покупке/скидках и Pro-функция сравнения корзины «где дешевле», построенные на корпусе истории цен по чекам (ABA-330). Все эндпоинты требуют JWT + заголовок `X-Account-Id` (`JwtAuthGuard + AccountContextGuard`).
+
+Списки и позиции адресуются по **серверному PK или локальному `clientId`** мобильного клиента (разрешается через `OR: [{ id }, { clientId }]`), поэтому offline-first клиенты могут работать со строками, созданными до синхронизации. Запись позиций коллаборативна — она **не** защищена `ViewerBlockGuard` (наблюдатели могут отмечать/добавлять позиции); только `DELETE /shopping-list/:id` требует роль editor или owner.
+
+### Список списков
+
+```http
+GET /shopping-list
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Возвращает все неудалённые списки аккаунта, каждый с его неудалёнными `items`. Список по умолчанию лениво создаётся, когда у аккаунта нет неархивированного списка; **архивированные списки включаются** (чтобы архивацию с другого устройства можно было отличить от удаления).
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "accountId": "account-uuid",
+    "clientId": "default-account-uuid",
+    "name": "My List",
+    "isDefault": true,
+    "isArchived": false,
+    "sortOrder": 0,
+    "createdByUserId": "user-uuid",
+    "items": [
+      {
+        "id": "item-uuid",
+        "shoppingListId": "uuid",
+        "clientId": "client-item-uuid",
+        "canonicalName": "Milk 1L",
+        "rawLabel": "Milk",
+        "quantity": 1,
+        "note": null,
+        "isChecked": false,
+        "addedByUserId": "user-uuid",
+        "sortOrder": 0
+      }
+    ]
+  }
+]
+```
+
+### Создать список
+
+```http
+POST /shopping-list
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "clientId": "client-generated-uuid", "name": "Groceries" }
+```
+
+Идемпотентно по `clientId` — повторное создание возвращает существующий список (безопасно при offline-повторе).
+
+**Ответ** `201 Created` — созданный (или существующий) список.
+
+### Обновить список
+
+```http
+PATCH /shopping-list/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "name": "Weekly Groceries", "isArchived": false, "sortOrder": 1 }
+```
+
+`:id` может быть серверным PK или локальным `clientId`. Все поля тела опциональны.
+
+### Удалить список
+
+```http
+DELETE /shopping-list/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Мягко удаляет список и его позиции. **Роль viewer заблокирована** (403, `ViewerBlockGuard`).
+
+### Добавить позицию
+
+```http
+POST /shopping-list/:id/items
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "clientId": "client-item-uuid",
+  "rawLabel": "Milk",
+  "canonicalName": "Milk 1L",
+  "quantity": 1,
+  "note": "2% only"
+}
+```
+
+`:id` = PK списка или `clientId`. Идемпотентно по `clientId` позиции (восстанавливает мягко удалённую строку). Коллаборативно — **не** блокируется для viewer.
+
+**Ответ** `201 Created` — созданная позиция.
+
+### Обновить позицию
+
+```http
+PATCH /shopping-list/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "isChecked": true, "quantity": 2, "rawLabel": "Milk", "note": null, "sortOrder": 3 }
+```
+
+`:itemId` = PK позиции или `clientId`. Все поля тела опциональны. Коллаборативно — **не** блокируется для viewer.
+
+### Удалить позицию
+
+```http
+DELETE /shopping-list/items/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Мягко удаляет позицию. Коллаборативно — **не** блокируется для viewer.
+
+### Очистить отмеченные позиции
+
+```http
+POST /shopping-list/:id/clear-checked
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Мягко удаляет все отмеченные позиции списка.
+
+**Ответ** `200 OK`
+```json
+{ "cleared": 3 }
+```
+
+### Подсказки о повторной покупке
+
+```http
+GET /shopping-list/suggestions
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Бесплатно.** Предсказывает, какие товары пора купить снова, по истории покупок из чеков — `predictRestock` вычисляет медианный интервал между покупками каждого канонического товара (нужно ≥3 покупок) и возвращает товары, срок повторной покупки которых наступил/просрочен, исключая товары, уже находящиеся в каком-либо списке.
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "canonicalName": "Milk 1L",
+    "lastPurchase": "2026-06-20",
+    "medianGapDays": 7,
+    "dueInDays": -2,
+    "purchaseCount": 9
+  }
+]
+```
+
+### Скидки
+
+```http
+GET /shopping-list/deals
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Бесплатно.** Показывает недавние падения цен — `detectDeals` отмечает магазин, чья недавняя цена за единицу товара на ≥15% ниже 90-дневного среднего по этому товару (в окне 14 дней), исключая товары, уже находящиеся в каком-либо списке.
+
+**Ответ** `200 OK`
+```json
+[
+  {
+    "canonicalName": "Coffee 500g",
+    "merchant": "Biedronka",
+    "price": 18.99,
+    "avgPrice": 23.50,
+    "dropPct": 19,
+    "currency": "PLN"
+  }
+]
+```
+
+### Сравнение корзины (Pro)
+
+```http
+POST /price-history/basket
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "items": [
+    { "canonicalName": "Milk 1L", "quantity": 2 },
+    { "canonicalName": "Coffee 500g", "quantity": 1 }
+  ],
+  "lat": 52.2297,
+  "lng": 21.0122
+}
+```
+
+**Только для Pro** (`SubscriptionTierGuard` + `@RequireTier('pro')`; Business также проходит). Оценивает стоимость корзины в каждом магазине, по которому у аккаунта есть чеки — `computeBasket` берёт последнюю цену за единицу товара в каждом магазине, выставляет бейдж «самый дешёвый» с учётом покрытия (полное покрытие, иначе лучший магазин с покрытием ≥80%) и помечает устаревшие цены. `lat`/`lng` опциональны; когда переданы (и не `0,0`), каждый магазин получает `distanceKm` и флаг `nearby` через формулу гаверсинусов, где координаты магазина берутся из самого недавнего гео-помеченного расхода по этому продавцу.
+
+**Параметры тела**
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `items` | array | Обязательно. 1–100 записей `{ canonicalName, quantity }` |
+| `lat` | number | Опционально. Широта точки (−90…90) для расстояния до магазинов |
+| `lng` | number | Опционально. Долгота точки (−180…180) для расстояния до магазинов |
+
+**Ответ** `200 OK`
+```json
+{
+  "currency": "PLN",
+  "stores": [
+    {
+      "merchantName": "Biedronka",
+      "estimatedTotal": 41.37,
+      "coveredItems": 2,
+      "totalItems": 2,
+      "missingItems": [],
+      "hasStale": false,
+      "isCheapest": true,
+      "distanceKm": 1.3,
+      "nearby": true,
+      "lat": 52.231,
+      "lng": 21.010
+    }
+  ],
+  "perItemCheapest": [
+    { "canonicalName": "Milk 1L", "cheapestStore": "Biedronka", "price": 3.39 }
+  ],
+  "missingEverywhere": []
+}
+```
+
+**DTO** (`packages/shared-types/src/dto/shopping-list.ts`, `.../price-history.ts`): `ShoppingList`, `ShoppingListItem`, `CreateShoppingListDto`, `UpdateShoppingListDto`, `CreateShoppingListItemDto`, `UpdateShoppingListItemDto`, `RestockSuggestion`, `DealSuggestion`, `BasketCompareRequestDto`, `BasketCompareResponse`.
 
 ---
 

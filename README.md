@@ -32,6 +32,7 @@ Track expenses by voice, receipt photo, or bank notifications, see where your mo
 - **Group Trip Wallet** — shared accounts for travel: split costs (equally, exact, %, shares), track who owes whom, settle up with Revolut / PayPal / BLIK links
 - **Budgets & goals** — category budgets with history and per-category alerts, savings goals with contribution log
 - **Personal inflation index** — track how the prices you actually pay change over time, computed from your receipts (no AI cost)
+- **Smart shopping list** — shared offline-first lists with restock reminders and deal alerts; compare your basket to find the cheapest store from your own receipt prices (Pro)
 - **Subscription manager** — track recurring charges with renewal reminders
 - **Bots** — Telegram, WhatsApp, Slack: log expenses and chat with AI without opening the app
 - **Safe-to-spend** — daily spendable amount calculated from balance minus upcoming obligations
