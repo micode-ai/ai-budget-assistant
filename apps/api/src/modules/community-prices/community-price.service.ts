@@ -5,7 +5,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { GeocodingService } from '../ai/services/geocoding.service';
 import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
-import { mondayOfWeek, regionBucket, computeContributorKey } from './community-price.util';
+import { mondayOfWeek, regionBucket, computeContributorKey, isEligibleContributor } from './community-price.util';
 import { aggregateCommunityPrices, DEFAULT_K_ANONYMITY } from './community-price-calculator';
 import type {
   CommunityPriceResponse,
@@ -29,9 +29,12 @@ const READ_CACHE_TTL_SEC = 300;
 // broadcast free text cross-account. ('ocr' = mobile scan; the bot sources are
 // their photo handlers.)
 const RECEIPT_SOURCES = new Set(['ocr', 'telegram', 'whatsapp', 'slack']);
-// An account must be at least this old before its contributions count — a cheap
-// brake on freshly-minted Sybil accounts.
+// An account must be at least this old AND have this many real tracked expenses
+// before its contributions count — age alone is cheap to fake (register + wait);
+// requiring sustained real usage raises the per-identity cost of a Sybil fleet.
+// Both overridable via env (COMMUNITY_MIN_ACCOUNT_AGE_DAYS / COMMUNITY_MIN_CONTRIBUTOR_EXPENSES).
 const MIN_ACCOUNT_AGE_DAYS = 7;
+const MIN_CONTRIBUTOR_EXPENSES = 15;
 // Product/merchant labels beyond this are almost certainly not real names — cap
 // them so no oversized free-text string can reach the cross-account corpus.
 const MAX_LABEL_LEN = 64;
@@ -74,6 +77,12 @@ export class CommunityPriceService {
   private getK(): number {
     const raw = parseInt(this.config.get<string>('COMMUNITY_PRICE_K') ?? '', 10);
     return Number.isFinite(raw) && raw >= 2 ? raw : DEFAULT_K_ANONYMITY;
+  }
+
+  /** Read a non-negative int env override, else the given default. */
+  private intEnv(key: string, fallback: number): number {
+    const raw = parseInt(this.config.get<string>(key) ?? '', 10);
+    return Number.isFinite(raw) && raw >= 0 ? raw : fallback;
   }
 
   /**
@@ -209,11 +218,9 @@ export class CommunityPriceService {
 
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
-        select: { contributeCommunityPrices: true, createdAt: true },
+        select: { contributeCommunityPrices: true },
       });
       if (!user?.contributeCommunityPrices) return; // consent gate
-      // Anti-Sybil brake: a freshly-created account can't contribute yet.
-      if (Date.now() - user.createdAt.getTime() < MIN_ACCOUNT_AGE_DAYS * 86_400_000) return;
 
       const expense = await this.prisma.expense.findFirst({
         where: { id: expenseId, accountId, isDeleted: false },
@@ -224,7 +231,7 @@ export class CommunityPriceService {
           source: true,
           locationLat: true,
           locationLng: true,
-          account: { select: { encryptionEnabled: true } },
+          account: { select: { encryptionEnabled: true, createdAt: true } },
           items: {
             where: { isDeleted: false, canonicalName: { not: null } },
             select: { canonicalName: true, quantity: true, unitPrice: true, totalPrice: true },
@@ -239,6 +246,22 @@ export class CommunityPriceService {
       if (!expense.merchant) return;
       if (expense.items.length === 0) return;
       if (expense.locationLat == null || expense.locationLng == null) return; // no POS coords, skip
+
+      // Anti-Sybil eligibility: account must be old enough AND have real usage history.
+      const accountAgeDays = (Date.now() - expense.account.createdAt.getTime()) / 86_400_000;
+      const expenseCount = await this.prisma.expense.count({
+        where: { accountId, isDeleted: false },
+      });
+      if (
+        !isEligibleContributor(
+          accountAgeDays,
+          expenseCount,
+          this.intEnv('COMMUNITY_MIN_ACCOUNT_AGE_DAYS', MIN_ACCOUNT_AGE_DAYS),
+          this.intEnv('COMMUNITY_MIN_CONTRIBUTOR_EXPENSES', MIN_CONTRIBUTOR_EXPENSES),
+        )
+      ) {
+        return;
+      }
 
       const lat = Number(expense.locationLat);
       const lng = Number(expense.locationLng);
