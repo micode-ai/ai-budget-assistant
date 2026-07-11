@@ -2116,6 +2116,11 @@ export default {
     shareStreak: 'Langste reeks: {{count}} dagen',
     shareCta: 'Houd de jouwe bij → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Community-prijzen',
+    contributeToggle: 'Anonieme prijzen delen',
+    contributeToggleDesc: 'Deel geanonimiseerde productprijzen van je bonnetjes om iedereen te helpen de goedkoopste winkel te vinden. Er worden geen persoonlijke gegevens gedeeld.',
+  },
   safeToSpend: {
     title: 'Veilig te besteden',
     today: 'Veilig te besteden vandaag',

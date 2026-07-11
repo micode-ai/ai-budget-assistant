@@ -2120,6 +2120,11 @@ export default {
     shareStreak: 'Najdłuższa passa: {{count}} dni',
     shareCta: 'Śledź swój rok → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Ceny społeczności',
+    contributeToggle: 'Udostępniaj anonimowe ceny',
+    contributeToggleDesc: 'Przekazuj zanonimizowane ceny produktów z paragonów, aby pomóc innym znaleźć najtańszy sklep. Żadne dane osobowe nie są udostępniane.',
+  },
   safeToSpend: {
     title: 'Bezpieczne wydatki',
     today: 'Bezpieczne wydatki na dziś',

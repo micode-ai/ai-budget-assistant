@@ -2116,6 +2116,11 @@ export default {
     shareStreak: 'Längste Serie: {{count}} Tage',
     shareCta: 'Verfolge deine → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Community-Preise',
+    contributeToggle: 'Anonyme Preise teilen',
+    contributeToggleDesc: 'Teile anonymisierte Produktpreise von deinen Belegen, damit alle den günstigsten Laden finden. Es werden keine persönlichen Daten geteilt.',
+  },
   safeToSpend: {
     title: 'Sicher ausgeben',
     today: 'Heute sicher ausgebbar',

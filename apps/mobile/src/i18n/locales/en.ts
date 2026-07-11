@@ -2127,6 +2127,11 @@ export default {
     shareStreak: 'Longest streak: {{count}} days',
     shareCta: 'Track yours → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Community prices',
+    contributeToggle: 'Share anonymous prices',
+    contributeToggleDesc: 'Contribute anonymized product prices from your receipts to help everyone find the cheapest store. No personal data is shared.',
+  },
   safeToSpend: {
     title: 'Safe to Spend',
     today: 'Safe to spend today',

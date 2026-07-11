@@ -2088,6 +2088,11 @@ export default {
     shareStreak: 'Самая доўгая серыя: {{count}} дзён',
     shareCta: 'Адсочвайце свой год → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Цэны супольнасці',
+    contributeToggle: 'Дзяліцца ананімнымі цэнамі',
+    contributeToggleDesc: 'Дзяліцеся ананімнымі цэнамі тавараў з чэкаў, каб дапамагчы ўсім знаходзіць таннейшую краму. Асабістыя дадзеныя не перадаюцца.',
+  },
   safeToSpend: {
     title: 'Бяспечныя выдаткі',
     today: 'Бяспечна патраціць сёння',

@@ -2120,6 +2120,11 @@ export default {
     shareStreak: 'Найдовша серія: {{count}} днів',
     shareCta: 'Відстежуйте свій рік → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Ціни спільноти',
+    contributeToggle: 'Ділитися анонімними цінами',
+    contributeToggleDesc: 'Діліться анонімними цінами товарів із чеків, щоб допомогти всім знаходити найдешевший магазин. Особисті дані не передаються.',
+  },
   safeToSpend: {
     title: 'Безпечна трата',
     today: 'Безпечно витратити сьогодні',

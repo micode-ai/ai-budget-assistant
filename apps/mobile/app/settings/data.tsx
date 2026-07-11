@@ -24,6 +24,8 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useReportStore } from '@/stores/reportStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useLocationSettingsStore } from '@/stores/locationSettingsStore';
+import { useAuthStore } from '@/stores/authStore';
+import { api } from '@/services/api';
 import { requestLocationPermission } from '@/services/locationCapture';
 import { getLastSyncTime } from '@/db/syncMetadataRepository';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -37,6 +39,8 @@ export default function DataSettingsScreen() {
   const isBusinessTier = useSubscriptionStore((s) => s.isBusiness());
   const captureEnabled = useLocationSettingsStore((s) => s.captureEnabled);
   const setCaptureEnabled = useLocationSettingsStore((s) => s.setCaptureEnabled);
+  const contributeCommunityPrices = useAuthStore((s) => s.user?.contributeCommunityPrices ?? false);
+  const updateUser = useAuthStore((s) => s.updateUser);
 
   const [lastSyncTime, setLastSyncTimeState] = useState<number | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -93,6 +97,16 @@ export default function DataSettingsScreen() {
     }
     setCaptureEnabled(true);
   };
+
+  // Community price contribution is a server-stored consent flag (not a device
+  // setting), so it round-trips through the profile API. Optimistic + revert.
+  const handleToggleCommunityPrices = useCallback((value: boolean) => {
+    updateUser({ contributeCommunityPrices: value });
+    api.updateProfile({ contributeCommunityPrices: value }).catch((e) => {
+      console.warn('Failed to update community-price consent', e);
+      updateUser({ contributeCommunityPrices: !value });
+    });
+  }, [updateUser]);
 
   const WEEK_DAYS = [
     { value: 0, label: t('reports.sunday') },
@@ -263,6 +277,24 @@ export default function DataSettingsScreen() {
             </View>
           </View>
         )}
+
+        {/* Community prices (ABA-335) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('communityPrices.sectionTitle')}</Text>
+          <View style={styles.card}>
+            <View style={styles.fieldRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.fieldLabel}>{t('communityPrices.contributeToggle')}</Text>
+                <Text style={styles.fieldDesc}>{t('communityPrices.contributeToggleDesc')}</Text>
+              </View>
+              <Switch
+                value={contributeCommunityPrices}
+                onValueChange={handleToggleCommunityPrices}
+                trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              />
+            </View>
+          </View>
+        </View>
 
         {/* Reports & Email */}
         <View style={styles.section}>

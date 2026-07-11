@@ -2116,6 +2116,11 @@ export default {
     shareStreak: 'Racha más larga: {{count}} días',
     shareCta: 'Registra la tuya → ai-budget.pl',
   },
+  communityPrices: {
+    sectionTitle: 'Precios de la comunidad',
+    contributeToggle: 'Compartir precios anónimos',
+    contributeToggleDesc: 'Contribuye con precios de productos anonimizados de tus recibos para ayudar a todos a encontrar la tienda más barata. No se comparten datos personales.',
+  },
   safeToSpend: {
     title: 'Gasto seguro',
     today: 'Gasto seguro hoy',
