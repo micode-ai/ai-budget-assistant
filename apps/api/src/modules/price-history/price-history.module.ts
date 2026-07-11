@@ -7,5 +7,6 @@ import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
   imports: [SubscriptionsModule],
   controllers: [PriceHistoryController],
   providers: [PriceHistoryService],
+  exports: [PriceHistoryService],
 })
 export class PriceHistoryModule {}

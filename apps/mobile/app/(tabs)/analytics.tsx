@@ -131,6 +131,19 @@ export default function AnalyticsScreen() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.storyBanner}
+          onPress={() => router.push({ pathname: '/wrapped', params: { year: String(selectedYear) } })}
+        >
+          <Ionicons name="gift-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.storyBannerContent}>
+            <Text style={styles.storyBannerTitle}>{t('wrapped.title')}</Text>
+            <Text style={styles.storyBannerSubtext}>{t('wrapped.introSub')}</Text>
+          </View>
+          <Ionicons name="sparkles" size={16} color={theme.colors.warning} />
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
+
         <AiInsightsSection aiInsights={aiInsights} proGated={aiInsightsProGated} />
         <InflationIndexSection />
         {incomeByCategory.length > 0 && <IncomeCategoryBreakdown incomeByCategory={incomeByCategory} currency={currency} />}
