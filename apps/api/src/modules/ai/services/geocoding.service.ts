@@ -17,6 +17,7 @@ export interface GeocodeSearchResult {
 const SEARCH_CACHE_TTL_S = 3600;
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+const NOMINATIM_REVERSE_URL = 'https://nominatim.openstreetmap.org/reverse';
 // Nominatim usage policy requires an identifying User-Agent.
 const USER_AGENT = 'ai-budget-assistant/1.0 (https://ai-budget.pl)';
 const REQUEST_TIMEOUT_MS = 5000;
@@ -168,6 +169,42 @@ export class GeocodingService {
     return this.resolveStructured(null, city, postalCode, country);
   }
 
+  /**
+   * Reverse-geocode a coordinate pair into a city/town name (ABA-335, Community
+   * Price Map). Used to derive the anonymized `region` bucket for a store's
+   * point-of-sale location — never the contributor's own location. Coordinates
+   * are rounded to 3 decimals (~110m) before caching, so every POS coordinate is
+   * reverse-geocoded once ever across ALL accounts (near-zero Nominatim load).
+   * Same fail-silent + throttle + cache contract as {@link geocode}: returns
+   * null on any failure or "no match" — callers must fall back to a coordinate
+   * grid-cell bucket rather than block on this.
+   */
+  async reverseGeocode(lat: number, lng: number): Promise<string | null> {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+    if (lat === 0 && lng === 0) return null; // null-island convention — never a real location
+    const cacheKey = `rev|${lat.toFixed(3)}|${lng.toFixed(3)}`;
+    try {
+      const cached = await this.prisma.geocodeCache.findUnique({
+        where: { queryNormalized: cacheKey },
+      });
+      if (cached) return cached.displayName; // displayName holds the resolved city; null = negative cache
+
+      const url = `${NOMINATIM_REVERSE_URL}?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`;
+      const fetched = await this.throttled(() => this.fetchNominatimReverse(url, cacheKey));
+      if (fetched === 'error') return null; // transient — retryable, do not cache
+
+      await this.prisma.geocodeCache.upsert({
+        where: { queryNormalized: cacheKey },
+        create: { queryNormalized: cacheKey, lat, lng, displayName: fetched },
+        update: {},
+      });
+      return fetched;
+    } catch (e) {
+      this.logger.warn(`reverseGeocode failed for "${cacheKey}": ${e}`);
+      return null;
+    }
+  }
+
   private resolveStructured(
     street: string | null,
     city: string | null,
@@ -263,6 +300,36 @@ export class GeocodingService {
       return { lat, lng, displayName: body[0].display_name ?? null };
     } catch (e) {
       this.logger.warn(`Nominatim request failed for "${label}": ${e}`);
+      return 'error';
+    }
+  }
+
+  /**
+   * Reverse-geocode fetch. null = confirmed no address/city found (cacheable);
+   * 'error' = transient failure (not cacheable).
+   */
+  private async fetchNominatimReverse(url: string, label: string): Promise<string | null | 'error'> {
+    try {
+      const res = await fetch(url, {
+        headers: { 'User-Agent': USER_AGENT },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
+      if (!res.ok) {
+        this.logger.warn(`Nominatim reverse returned ${res.status} for "${label}"`);
+        return 'error';
+      }
+      const body = (await res.json()) as {
+        address?: Record<string, string>;
+        display_name?: string;
+        error?: string;
+      };
+      if (body?.error) return null; // Nominatim's own "Unable to geocode" response
+      const addr = body?.address;
+      const city =
+        addr?.city ?? addr?.town ?? addr?.village ?? addr?.municipality ?? addr?.county ?? null;
+      return city ? city : null;
+    } catch (e) {
+      this.logger.warn(`Nominatim reverse request failed for "${label}": ${e}`);
       return 'error';
     }
   }
