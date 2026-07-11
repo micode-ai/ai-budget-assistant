@@ -41,6 +41,7 @@ const SECTIONS = [
   '36-personal-inflation-index',
   '37-expense-map',
   '38-shopping-list',
+  '39-wrapped',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');
