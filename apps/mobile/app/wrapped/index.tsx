@@ -75,9 +75,13 @@ export default function WrappedScreen() {
     [intlLocale],
   );
 
-  const onScrollEnd = useCallback(
+  // Track the active card continuously (not just on momentum end, which fast
+  // swipes skip). Only re-render on an actual page change — returning `prev`
+  // makes React bail out, so the heavy card list isn't re-rendered every frame.
+  const updateIndex = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      setIndex(Math.round(e.nativeEvent.contentOffset.x / width));
+      const next = Math.round(e.nativeEvent.contentOffset.x / width);
+      setIndex((prev) => (next >= 0 && next !== prev ? next : prev));
     },
     [width],
   );
@@ -224,8 +228,11 @@ export default function WrappedScreen() {
         ref={scrollRef}
         horizontal
         pagingEnabled
+        disableIntervalMomentum
         showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={onScrollEnd}
+        scrollEventThrottle={16}
+        onScroll={updateIndex}
+        onMomentumScrollEnd={updateIndex}
       >
         {data.cards.map((card, i) => (
           <LinearGradient
