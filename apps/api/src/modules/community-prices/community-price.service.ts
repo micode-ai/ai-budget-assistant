@@ -1,9 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { createHash } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
 import { GeocodingService } from '../ai/services/geocoding.service';
 import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
 import { mondayOfWeek, regionBucket, computeContributorKey } from './community-price.util';
+import { aggregateCommunityPrices, DEFAULT_K_ANONYMITY } from './community-price-calculator';
+import type {
+  CommunityPriceResponse,
+  CommunityPricePeriod,
+  CommunityProductSearchItem,
+} from '@budget/shared-types';
+
+// Read-path cache: anonymous aggregate data, so the key is global (not per-account).
+const READ_CACHE_TTL_SEC = 300;
 
 // Sentinel stored in product_aliases.canonical_name to exclude a product from all
 // tracking — same convention as price-history.service.ts (kept as its own private
@@ -11,19 +22,19 @@ import { mondayOfWeek, regionBucket, computeContributorKey } from './community-p
 const IGNORED_SENTINEL = '__ignored__';
 
 /**
- * ABA-335 (Community Price Map), M1 — write pipeline only. Builds the
- * anonymized `community_price_observations` corpus from OCR'd receipt line
- * items. Fire-and-forget + fail-silent by contract: `recordContribution` must
- * NEVER throw into its caller (receipt/expense saving must never break because
- * of this), so every failure path is caught and logged with `Logger.warn`,
- * never `Logger.error`.
+ * ABA-335 (Community Price Map). M1 built the anonymized
+ * `community_price_observations` corpus from OCR'd receipt line items
+ * (`recordContribution`, fire-and-forget + fail-silent). M2 adds the
+ * k-anonymity-gated read path (`getCommunityPrices` / `searchProducts`), exposed
+ * only through the Pro-gated CommunityPriceController.
  *
  * Privacy invariants (see schema.prisma model doc for the full rationale):
  *  - No accountId, userId, or expenseId is ever written to the observation row.
  *  - No user/contributor coordinates are stored — only the STORE's (point-of-
  *    sale) region, reverse-geocoded or grid-bucketed, never the exact address.
  *  - `contributorKey` is a salted one-way hash of accountId — used only for the
- *    one-vote-per-account-per-week dedup; never exposed to any client.
+ *    one-vote-per-account-per-week dedup and the read-path k-anonymity gate;
+ *    never exposed to any client.
  *  - Encrypted (E2EE) accounts are skipped: `merchant`/`canonicalName` would be
  *    ciphertext, which is neither usable for aggregation nor safe to persist
  *    into a cross-account global table.
@@ -36,7 +47,122 @@ export class CommunityPriceService {
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly geocoding: GeocodingService,
+    private readonly cache: CacheService,
   ) {}
+
+  /** k-anonymity threshold, overridable via COMMUNITY_PRICE_K env (min 2). */
+  private getK(): number {
+    const raw = parseInt(this.config.get<string>('COMMUNITY_PRICE_K') ?? '', 10);
+    return Number.isFinite(raw) && raw >= 2 ? raw : DEFAULT_K_ANONYMITY;
+  }
+
+  /**
+   * GET /price-history/community — k-anonymity-gated per-store price points for a
+   * product, cheapest-first. `product` is an exact canonicalName (from the search
+   * endpoint). Optional `region` scopes to one area; omitted = national.
+   */
+  async getCommunityPrices(
+    product: string,
+    region: string | null,
+    period: CommunityPricePeriod,
+  ): Promise<CommunityPriceResponse> {
+    const normalizedProduct = product.trim();
+    const weeks = period === '4w' ? 4 : 1;
+    const cutoff = mondayOfWeek(new Date());
+    cutoff.setDate(cutoff.getDate() - (weeks - 1) * 7);
+    const weekLabel = cutoff.toISOString().slice(0, 10);
+
+    const empty: CommunityPriceResponse = {
+      product: normalizedProduct,
+      region: region ?? null,
+      currency: '',
+      period,
+      weekLabel,
+      stores: [],
+    };
+    if (!normalizedProduct) return empty;
+
+    const cacheKey = `cph:${createHash('sha1').update(normalizedProduct.toLowerCase()).digest('hex')}:${region ?? '*'}:${period}`;
+    const cached = await this.cache.get<CommunityPriceResponse>(cacheKey);
+    if (cached) return cached;
+
+    const rows = await this.prisma.communityPriceObservation.findMany({
+      where: {
+        canonicalName: normalizedProduct,
+        ...(region ? { region } : {}),
+        weekStart: { gte: cutoff },
+      },
+      select: { merchantNormalized: true, price: true, currencyCode: true, contributorKey: true },
+    });
+
+    const { currency, stores } = aggregateCommunityPrices(
+      rows.map((r) => ({
+        merchantNormalized: r.merchantNormalized,
+        price: Number(r.price),
+        currencyCode: r.currencyCode,
+        contributorKey: r.contributorKey,
+      })),
+      this.getK(),
+    );
+
+    const result: CommunityPriceResponse = {
+      product: normalizedProduct,
+      region: region ?? null,
+      currency,
+      period,
+      weekLabel,
+      stores,
+    };
+    await this.cache.set(cacheKey, result, READ_CACHE_TTL_SEC);
+    return result;
+  }
+
+  /**
+   * GET /price-history/community/products?q= — autocomplete over products that
+   * currently satisfy the K-gate in at least one region. Returns only products
+   * that are actually exposable, so the client never offers a dead query.
+   */
+  async searchProducts(q: string): Promise<CommunityProductSearchItem[]> {
+    const term = q.trim();
+    if (term.length < 2) return [];
+    const k = this.getK();
+
+    // One row per distinct (product, region, contributor). Nested maps count
+    // distinct contributors per (product, region) — no string-key separator to
+    // clash with product/region text.
+    const groups = await this.prisma.communityPriceObservation.groupBy({
+      by: ['canonicalName', 'region', 'contributorKey'],
+      where: { canonicalName: { contains: term, mode: 'insensitive' } },
+    });
+
+    const byProduct = new Map<string, Map<string, Set<string>>>();
+    for (const g of groups) {
+      let regions = byProduct.get(g.canonicalName);
+      if (!regions) {
+        regions = new Map();
+        byProduct.set(g.canonicalName, regions);
+      }
+      let contributors = regions.get(g.region);
+      if (!contributors) {
+        contributors = new Set();
+        regions.set(g.region, contributors);
+      }
+      contributors.add(g.contributorKey);
+    }
+
+    const items: CommunityProductSearchItem[] = [];
+    for (const [canonicalName, regions] of byProduct) {
+      let regionsAvailable = 0;
+      for (const contributors of regions.values()) {
+        if (contributors.size >= k) regionsAvailable += 1; // region clears the K-gate
+      }
+      if (regionsAvailable > 0) items.push({ canonicalName, regionsAvailable });
+    }
+
+    return items
+      .sort((a, b) => b.regionsAvailable - a.regionsAvailable || a.canonicalName.localeCompare(b.canonicalName))
+      .slice(0, 20);
+  }
 
   async recordContribution(accountId: string, userId: string, expenseId: string): Promise<void> {
     try {

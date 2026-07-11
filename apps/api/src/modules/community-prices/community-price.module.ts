@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CommunityPriceService } from './community-price.service';
+import { CommunityPriceController } from './community-price.controller';
 import { GeocodingService } from '../ai/services/geocoding.service';
+import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 
 // PrismaService + ConfigService are both @Global() — no explicit module import
 // needed for either.
@@ -15,6 +17,8 @@ import { GeocodingService } from '../ai/services/geocoding.service';
 // with AiModule's instance (acceptable: reverse-geocode calls are rare and
 // cached per-coordinate across ALL accounts).
 @Module({
+  imports: [SubscriptionsModule],
+  controllers: [CommunityPriceController],
   providers: [CommunityPriceService, GeocodingService],
   exports: [CommunityPriceService],
 })
