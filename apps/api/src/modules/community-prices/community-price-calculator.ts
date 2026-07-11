@@ -15,6 +15,10 @@ export interface CommunityObservationRow {
   price: number;
   currencyCode: string;
   contributorKey: string;
+  // Monday-of-week key ('YYYY-MM-DD') — used only for the multi-week persistence
+  // gate. Optional: when absent, every row counts as the same single week (so the
+  // persistence gate at minWeeks=1 is a no-op — backward-compatible).
+  weekStart?: string;
 }
 
 function round2(n: number): number {
@@ -65,12 +69,21 @@ function outlierFilter(prices: number[]): number[] {
  * - Picks the majority currency and drops rows of any other currency (never mix).
  * - Groups by store; a store is EXPOSED only if it has >= k DISTINCT contributor
  *   keys (accounts). Fewer → dropped entirely (never a single user's price).
+ * - Multi-week persistence (anti-Sybil, ABA-335): a store must also have data in
+ *   >= minWeeks DISTINCT weeks over the passed (lookback) rows, so a single-week
+ *   burst of K throwaway accounts can't surface a store. The displayed median/min
+ *   is computed only from rows in the display period (weekStart >= displayFromWeek),
+ *   while the K + persistence gates run over ALL passed rows (the lookback window).
  * - Outlier-filters prices, then reports median + min + counts per store.
  * - Marks the cheapest (lowest median) and sorts cheapest-first.
+ *
+ * Defaults (minWeeks=1, no displayFromWeek) reproduce the pre-persistence behavior.
  */
 export function aggregateCommunityPrices(
   rows: CommunityObservationRow[],
   k: number = DEFAULT_K_ANONYMITY,
+  minWeeks = 1,
+  displayFromWeek?: string,
 ): { currency: string; stores: CommunityPriceStore[] } {
   if (rows.length === 0) return { currency: '', stores: [] };
 
@@ -89,14 +102,22 @@ export function aggregateCommunityPrices(
     const distinctContributors = new Set(group.map((g) => g.contributorKey));
     if (distinctContributors.size < k) continue; // k-anonymity gate — never expose
 
-    const prices = outlierFilter(group.map((g) => g.price)).sort((a, b) => a - b);
-    if (prices.length === 0) continue;
+    const distinctWeeks = new Set(group.map((g) => g.weekStart ?? '')).size;
+    if (distinctWeeks < minWeeks) continue; // persistence gate — no single-week burst
+
+    // Displayed price comes from the requested period only; the gates above used
+    // the full lookback window.
+    const displayGroup = displayFromWeek
+      ? group.filter((g) => (g.weekStart ?? '') >= displayFromWeek)
+      : group;
+    const prices = outlierFilter(displayGroup.map((g) => g.price)).sort((a, b) => a - b);
+    if (prices.length === 0) continue; // established store but no price in the display period
 
     stores.push({
       merchantName: titleCase(merchant),
       medianPrice: round2(medianOf(prices)),
       minPrice: round2(prices[0]),
-      receiptCount: group.length,
+      receiptCount: displayGroup.length,
       contributorCount: distinctContributors.size,
       currencyCode: currency,
       isCheapest: false,
@@ -135,6 +156,8 @@ export interface CommunityMapAgg {
 export function aggregateCommunityMap(
   rows: CommunityMapRow[],
   k: number = DEFAULT_K_ANONYMITY,
+  minWeeks = 1,
+  displayFromWeek?: string,
 ): CommunityMapAgg[] {
   if (rows.length === 0) return [];
 
@@ -158,7 +181,12 @@ export function aggregateCommunityMap(
     for (const [region, group] of regions) {
       const distinctContributors = new Set(group.map((g) => g.contributorKey));
       if (distinctContributors.size < k) continue; // k-anonymity gate per (store, region)
-      const prices = outlierFilter(group.map((g) => g.price)).sort((a, b) => a - b);
+      const distinctWeeks = new Set(group.map((g) => g.weekStart ?? '')).size;
+      if (distinctWeeks < minWeeks) continue; // persistence gate — no single-week burst
+      const displayGroup = displayFromWeek
+        ? group.filter((g) => (g.weekStart ?? '') >= displayFromWeek)
+        : group;
+      const prices = outlierFilter(displayGroup.map((g) => g.price)).sort((a, b) => a - b);
       if (prices.length === 0) continue;
       out.push({
         merchantNormalized: merchant,
@@ -166,7 +194,7 @@ export function aggregateCommunityMap(
         region,
         medianPrice: round2(medianOf(prices)),
         currencyCode: currency,
-        receiptCount: group.length,
+        receiptCount: displayGroup.length,
         isCheapest: false,
       });
     }

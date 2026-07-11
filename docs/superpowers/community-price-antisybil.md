@@ -30,6 +30,7 @@ A bare distinct-count threshold cannot stop an adversary who mints identities.
 | Consent opt-in (default off) | `recordContribution` | Only opted-in accounts contribute. |
 | Receipt-source gate | `RECEIPT_SOURCES` | Only OCR / bot-photo-scanned expenses feed the corpus — a hand-typed / API-posted expense can't inject free text. |
 | Contributor eligibility | `isEligibleContributor` | Account must be ≥ 7 days old **and** have ≥ 15 real tracked expenses (both env-tunable). Forces a Sybil fleet to simulate sustained real usage per identity, not just register + wait. |
+| Multi-week persistence | `aggregateCommunityPrices`/`aggregateCommunityMap` + service lookback | A store is exposed only if backed across ≥ `COMMUNITY_MIN_PERSISTENCE_WEEKS` distinct weeks (default 2) over an 8-week lookback — blocks a single-week burst of K throwaway accounts. The displayed price still comes only from the requested 1w/4w period. |
 | Label-length caps | `MAX_LABEL_LEN`, DTO `@MaxLength` | No oversized free text reaches the cross-account corpus. |
 | One-vote-per-account-per-week | DB unique constraint | An account can't inflate its own weekly count. |
 | Outlier filter + median | `aggregateCommunityPrices` | A single poisoned price can't move the displayed median. |
@@ -57,11 +58,14 @@ Pick a policy (business/product decision — friction vs. corpus freshness):
    noisy K threshold, so reading back exact prices can't isolate one contributor.
    Strongest against deanonymization; costs some accuracy.
 4. **Raise K and/or require multi-week persistence** — a cell must clear K across
-   ≥ N distinct weeks, not a single burst. Cheap, meaningful against burst attacks.
+   ≥ N distinct weeks, not a single burst. ✅ **SHIPPED** (multi-week persistence,
+   default 2 distinct weeks over an 8-week lookback; raising K remains available
+   via `COMMUNITY_PRICE_K`).
 
-Recommended minimum before go-live: (2) velocity/correlation exclusion **and** (4)
-multi-week persistence, with (3) DP noise on the returned `median`/`min` if the
-read is ever made broadly (non-Pro) available.
+Recommended minimum before go-live: (4) multi-week persistence is now shipped, so
+the remaining minimum is **(2) cross-account velocity / correlation exclusion**,
+with **(3) DP noise** on the returned `median`/`min` if the read is ever made
+broadly (non-Pro) available.
 
 ## Operational note
 

@@ -39,6 +39,12 @@ const MIN_CONTRIBUTOR_EXPENSES = 15;
 // Product/merchant labels beyond this are almost certainly not real names — cap
 // them so no oversized free-text string can reach the cross-account corpus.
 const MAX_LABEL_LEN = 64;
+// Multi-week persistence (anti-Sybil): a store must have data in >= this many
+// DISTINCT weeks over the lookback window to be exposed — blocks a single-week
+// burst of K throwaway accounts. The displayed price still comes only from the
+// requested 1w/4w period; the gate runs over the wider lookback. Both env-tunable.
+const MIN_PERSISTENCE_WEEKS = 2;
+const PERSISTENCE_LOOKBACK_WEEKS = 8;
 
 // Sentinel stored in product_aliases.canonical_name to exclude a product from all
 // tracking — same convention as price-history.service.ts (kept as its own private
@@ -109,9 +115,10 @@ export class CommunityPriceService {
   ): Promise<CommunityPriceResponse> {
     const normalizedProduct = product.trim();
     const weeks = period === '4w' ? 4 : 1;
-    const cutoff = mondayOfWeek(new Date());
-    cutoff.setDate(cutoff.getDate() - (weeks - 1) * 7);
-    const weekLabel = cutoff.toISOString().slice(0, 10);
+    const displayCutoff = mondayOfWeek(new Date());
+    displayCutoff.setDate(displayCutoff.getDate() - (weeks - 1) * 7);
+    const displayFromWeek = displayCutoff.toISOString().slice(0, 10);
+    const weekLabel = displayFromWeek;
 
     const empty: CommunityPriceResponse = {
       product: normalizedProduct,
@@ -129,18 +136,26 @@ export class CommunityPriceService {
     const cached = await this.cache.get<CommunityPriceResponse>(cacheKey);
     if (cached) return cached;
 
-    // Upper bound: a future-dated expense must not match indefinitely (there's no
-    // future-date rejection on expense create) — cap at the end of the current week.
+    // Upper bound: a future-dated expense must not match indefinitely — cap at the
+    // end of the current week. The persistence gate needs a wider LOOKBACK window
+    // than the display period, so query from the lookback cutoff (display still
+    // filters to `displayFromWeek` inside the aggregator).
     const ceiling = mondayOfWeek(new Date());
     ceiling.setDate(ceiling.getDate() + 7);
+    const lookbackWeeks = Math.max(
+      this.intEnv('COMMUNITY_PERSISTENCE_LOOKBACK_WEEKS', PERSISTENCE_LOOKBACK_WEEKS),
+      weeks,
+    );
+    const lookbackCutoff = mondayOfWeek(new Date());
+    lookbackCutoff.setDate(lookbackCutoff.getDate() - (lookbackWeeks - 1) * 7);
 
     const rows = await this.prisma.communityPriceObservation.findMany({
       where: {
         canonicalName: normalizedProduct,
         ...(region ? { region } : {}),
-        weekStart: { gte: cutoff, lt: ceiling },
+        weekStart: { gte: lookbackCutoff, lt: ceiling },
       },
-      select: { merchantNormalized: true, price: true, currencyCode: true, contributorKey: true },
+      select: { merchantNormalized: true, price: true, currencyCode: true, contributorKey: true, weekStart: true },
     });
 
     const { currency, stores } = aggregateCommunityPrices(
@@ -149,8 +164,11 @@ export class CommunityPriceService {
         price: Number(r.price),
         currencyCode: r.currencyCode,
         contributorKey: r.contributorKey,
+        weekStart: r.weekStart.toISOString().slice(0, 10),
       })),
       this.getK(),
+      this.intEnv('COMMUNITY_MIN_PERSISTENCE_WEEKS', MIN_PERSISTENCE_WEEKS),
+      displayFromWeek,
     );
 
     const result: CommunityPriceResponse = {
@@ -231,16 +249,23 @@ export class CommunityPriceService {
     if (cached) return cached;
 
     const weeks = period === '4w' ? 4 : 1;
-    const cutoff = mondayOfWeek(new Date());
-    cutoff.setDate(cutoff.getDate() - (weeks - 1) * 7);
+    const displayCutoff = mondayOfWeek(new Date());
+    displayCutoff.setDate(displayCutoff.getDate() - (weeks - 1) * 7);
+    const displayFromWeek = displayCutoff.toISOString().slice(0, 10);
     const ceiling = mondayOfWeek(new Date());
     ceiling.setDate(ceiling.getDate() + 7);
+    const lookbackWeeks = Math.max(
+      this.intEnv('COMMUNITY_PERSISTENCE_LOOKBACK_WEEKS', PERSISTENCE_LOOKBACK_WEEKS),
+      weeks,
+    );
+    const lookbackCutoff = mondayOfWeek(new Date());
+    lookbackCutoff.setDate(lookbackCutoff.getDate() - (lookbackWeeks - 1) * 7);
 
     const rows = await this.prisma.communityPriceObservation.findMany({
       where: {
         canonicalName: normalizedProduct,
         ...(region ? { region } : {}),
-        weekStart: { gte: cutoff, lt: ceiling },
+        weekStart: { gte: lookbackCutoff, lt: ceiling },
       },
       select: {
         merchantNormalized: true,
@@ -248,6 +273,7 @@ export class CommunityPriceService {
         price: true,
         currencyCode: true,
         contributorKey: true,
+        weekStart: true,
       },
     });
 
@@ -258,8 +284,11 @@ export class CommunityPriceService {
         price: Number(r.price),
         currencyCode: r.currencyCode,
         contributorKey: r.contributorKey,
+        weekStart: r.weekStart.toISOString().slice(0, 10),
       })),
       this.getK(),
+      this.intEnv('COMMUNITY_MIN_PERSISTENCE_WEEKS', MIN_PERSISTENCE_WEEKS),
+      displayFromWeek,
     );
     if (aggs.length === 0) return [];
 
