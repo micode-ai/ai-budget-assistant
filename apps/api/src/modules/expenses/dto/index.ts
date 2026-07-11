@@ -39,6 +39,7 @@ export class CreateExpenseItemDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(120)
   canonicalName?: string;
 
   @IsOptional()

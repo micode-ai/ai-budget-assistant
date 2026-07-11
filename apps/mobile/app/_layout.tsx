@@ -669,6 +669,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="price-history/community"
+          options={{
+            headerShown: true,
+            title: t('communityPrices.screenTitle'),
+          }}
+        />
+        <Stack.Screen
           name="settings/change-email"
           options={{
             headerShown: true,
