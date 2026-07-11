@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
+import { CommunityPriceService } from '../community-prices/community-price.service';
 import type { SyncChange } from '@budget/shared-types';
 
 export interface SyncResult {
@@ -47,6 +48,7 @@ export class SyncService {
     private readonly prisma: PrismaService,
     private readonly expensesService: ExpensesService,
     private readonly incomesService: IncomesService,
+    @Optional() private readonly communityPrices?: CommunityPriceService,
   ) {}
 
   async pushChanges(accountId: string, userId: string, changes: SyncChange[]): Promise<SyncResult[]> {
@@ -81,7 +83,7 @@ export class SyncService {
       case 'expense':
         return this.processExpenseChange(accountId, userId, change);
       case 'expense_item':
-        return this.processExpenseItemChange(accountId, change);
+        return this.processExpenseItemChange(accountId, userId, change);
       case 'budget':
         return this.processBudgetChange(accountId, change);
       case 'category':
@@ -217,6 +219,7 @@ export class SyncService {
 
   private async processExpenseItemChange(
     accountId: string,
+    userId: string,
     change: Extract<SyncChange, { entityType: 'expense_item' }>,
   ): Promise<SyncResult> {
     const { operation, payload, clientVersion, entityId } = change;
@@ -258,6 +261,16 @@ export class SyncService {
         },
       });
 
+      // Sync parity (ABA-335): item-level sync writes canonicalName in a
+      // separate entity from the parent expense create, so the community-price
+      // hook in ExpensesService.create ran before this data existed. Fire the
+      // same contribution here for device-created receipts.
+      if (created.canonicalName) {
+        void this.communityPrices
+          ?.recordContribution(accountId, userId, created.expenseId)
+          .catch(() => {});
+      }
+
       return { entityId, status: 'success', serverId: created.id, serverVersion: created.syncVersion };
     }
 
@@ -284,6 +297,11 @@ export class SyncService {
           syncVersion: { increment: 1 },
         },
       });
+      if (updated.canonicalName) {
+        void this.communityPrices
+          ?.recordContribution(accountId, userId, updated.expenseId)
+          .catch(() => {});
+      }
       return { entityId, status: 'success', serverVersion: updated.syncVersion };
     }
 

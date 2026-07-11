@@ -19,6 +19,7 @@ export interface User {
   isVerified: boolean;
   aiResponseMode?: AiResponseMode;
   aiModel?: AiModel;
+  contributeCommunityPrices?: boolean;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;

@@ -41,6 +41,7 @@ export class UsersController {
       timezone: user.timezone,
       aiResponseMode: user.aiResponseMode,
       aiModel: user.aiModel,
+      contributeCommunityPrices: user.contributeCommunityPrices,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
@@ -54,7 +55,7 @@ export class UsersController {
   }
 
   @Patch('me')
-  async updateProfile(@Req() req: AuthenticatedRequest, @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string }) {
+  async updateProfile(@Req() req: AuthenticatedRequest, @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean }) {
     const user = await this.usersService.update(req.user.id, body);
     return {
       id: user.id,
@@ -62,6 +63,7 @@ export class UsersController {
       name: user.name,
       currencyCode: user.currencyCode,
       timezone: user.timezone,
+      contributeCommunityPrices: user.contributeCommunityPrices,
     };
   }
 

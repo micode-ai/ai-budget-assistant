@@ -8,6 +8,7 @@ import { AnomalyService } from '../anomaly/anomaly.service';
 import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
+import { CommunityPriceService } from '../community-prices/community-price.service';
 import { resolveShares } from './trip-share-calculator';
 import { buildLocationColumns } from './expense-location.util';
 
@@ -20,6 +21,7 @@ export class ExpensesService {
     private readonly anomalyService: AnomalyService,
     private readonly merchantRules: MerchantRulesService,
     @Optional() private readonly familyFeed?: FamilyFeedService,
+    @Optional() private readonly communityPrices?: CommunityPriceService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -369,6 +371,12 @@ export class ExpensesService {
           amount: Number(result.expense.amount),
           currency: result.expense.currencyCode,
         })
+        .catch(() => {});
+
+      // fire-and-forget: contribute to the community price corpus (ABA-335,
+      // consent + location + E2EE gated inside the service; never throws)
+      void this.communityPrices
+        ?.recordContribution(accountId, userId, result.expense.id)
         .catch(() => {});
     }
 
