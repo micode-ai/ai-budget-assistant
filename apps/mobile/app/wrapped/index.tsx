@@ -2,18 +2,30 @@ import { useCallback, useRef, useState } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   Share,
   Switch,
   Platform,
+  StyleSheet,
   useWindowDimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  Extrapolation,
+  Easing,
+  type SharedValue,
+} from 'react-native-reanimated';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -29,20 +41,34 @@ import {
 } from '@/components/wrapped/WrappedShareCard';
 import type { WrappedCard } from '@budget/shared-types';
 
-// Curated gradient per card type — gives the deck a lively, "wrapped" feel.
-const GRADIENTS: Record<WrappedCard['type'], [string, string]> = {
-  intro: ['#7C3AED', '#DB2777'],
-  total_tracked: ['#2563EB', '#0EA5E9'],
-  top_merchant: ['#DB2777', '#F97316'],
-  biggest_month: ['#7C3AED', '#2563EB'],
-  top_category: ['#059669', '#10B981'],
-  category_mix: ['#0891B2', '#22D3EE'],
-  receipts_scanned: ['#D97706', '#F59E0B'],
-  savings: ['#059669', '#14B8A6'],
-  personal_inflation: ['#DC2626', '#F97316'],
-  streak: ['#EA580C', '#F59E0B'],
-  outro: ['#7C3AED', '#DB2777'],
+const AnimatedGradient = Animated.createAnimatedComponent(LinearGradient);
+
+// Curated 3-stop gradient per card type — gives the deck a lively, "wrapped"
+// feel. Three stops read richer than two when a single gradient fills the whole
+// screen behind the content.
+const GRADIENTS: Record<WrappedCard['type'], [string, string, string]> = {
+  intro: ['#7C3AED', '#9333EA', '#DB2777'],
+  total_tracked: ['#1D4ED8', '#2563EB', '#0EA5E9'],
+  top_merchant: ['#DB2777', '#EC4899', '#F97316'],
+  biggest_month: ['#6D28D9', '#7C3AED', '#2563EB'],
+  top_category: ['#047857', '#059669', '#10B981'],
+  category_mix: ['#0E7490', '#0891B2', '#22D3EE'],
+  receipts_scanned: ['#B45309', '#D97706', '#F59E0B'],
+  savings: ['#047857', '#059669', '#14B8A6'],
+  personal_inflation: ['#B91C1C', '#DC2626', '#F97316'],
+  streak: ['#C2410C', '#EA580C', '#F59E0B'],
+  outro: ['#6D28D9', '#9333EA', '#DB2777'],
 };
+
+// Swipe commit thresholds — any gesture that clears either one advances by
+// exactly ONE card, never more, regardless of how fast/far the fling is.
+const COMMIT_DISTANCE_RATIO = 0.18; // fraction of screen width
+const COMMIT_VELOCITY = 450; // px/s
+
+function clampW(v: number, min: number, max: number) {
+  'worklet';
+  return Math.min(Math.max(v, min), max);
+}
 
 export default function WrappedScreen() {
   const { t } = useTranslation();
@@ -55,10 +81,18 @@ export default function WrappedScreen() {
   const year = params.year ? Number(params.year) : undefined;
 
   const { data, loading, error } = useWrapped(year);
-  const [index, setIndex] = useState(0);
   const [hideAmounts, setHideAmounts] = useState(false);
-  const scrollRef = useRef<ScrollView>(null);
   const shareCardRef = useRef<WrappedShareCardHandle>(null);
+
+  // Live horizontal offset of the card strip (px, ≤ 0). Drives the strip
+  // translation, the background cross-fade and the per-card parallax. Declared
+  // before any early return so hook order stays stable.
+  const translateX = useSharedValue(0);
+  const startX = useSharedValue(0);
+
+  const stripStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
 
   const baseCurrency = data?.baseCurrency ?? 'USD';
 
@@ -73,17 +107,6 @@ export default function WrappedScreen() {
       return `${name.charAt(0).toUpperCase()}${name.slice(1)} ${y}`;
     },
     [intlLocale],
-  );
-
-  // Track the active card continuously (not just on momentum end, which fast
-  // swipes skip). Only re-render on an actual page change — returning `prev`
-  // makes React bail out, so the heavy card list isn't re-rendered every frame.
-  const updateIndex = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const next = Math.round(e.nativeEvent.contentOffset.x / width);
-      setIndex((prev) => (next >= 0 && next !== prev ? next : prev));
-    },
-    [width],
   );
 
   const buildShareMessage = useCallback((): string => {
@@ -219,35 +242,58 @@ export default function WrappedScreen() {
     );
   }
 
-  const cardWidth = width;
-  const cardHeight = height;
+  const cards = data.cards;
+  const count = cards.length;
+  const minX = -(count - 1) * width;
+
+  // One-card-per-gesture pan. `activeOffsetX` keeps taps (close/share) and the
+  // outro Switch from arming a horizontal swipe; `failOffsetY` yields to any
+  // dominant vertical motion. On release we commit to cur±1 only — a fast fling
+  // can never skip a card.
+  const pan = Gesture.Pan()
+    .activeOffsetX([-14, 14])
+    .failOffsetY([-18, 18])
+    .onStart(() => {
+      startX.value = translateX.value;
+    })
+    .onUpdate((e) => {
+      translateX.value = clampW(startX.value + e.translationX, minX, 0);
+    })
+    .onEnd((e) => {
+      const cur = Math.round(-startX.value / width);
+      let target = cur;
+      if (e.translationX <= -width * COMMIT_DISTANCE_RATIO || e.velocityX <= -COMMIT_VELOCITY) {
+        target = cur + 1;
+      } else if (e.translationX >= width * COMMIT_DISTANCE_RATIO || e.velocityX >= COMMIT_VELOCITY) {
+        target = cur - 1;
+      }
+      target = clampW(target, 0, count - 1);
+      translateX.value = withTiming(-target * width, {
+        duration: 320,
+        easing: Easing.out(Easing.cubic),
+      });
+    });
 
   return (
-    <View style={styles.root}>
-      <ScrollView
-        ref={scrollRef}
-        horizontal
-        pagingEnabled
-        disableIntervalMomentum
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={updateIndex}
-        onMomentumScrollEnd={updateIndex}
-      >
-        {data.cards.map((card, i) => (
-          <LinearGradient
-            key={`${card.type}-${i}`}
-            colors={GRADIENTS[card.type]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={[styles.card, { width: cardWidth, height: cardHeight }]}
-          >
-            <SafeAreaView style={styles.cardSafe}>
-              <View style={styles.cardBody}>{renderCard(card, data.year)}</View>
-            </SafeAreaView>
-          </LinearGradient>
-        ))}
-      </ScrollView>
+    <GestureHandlerRootView style={styles.root}>
+      {/* Persistent, cross-fading background gradient. Each card's gradient is a
+          full-screen layer whose opacity tracks how close the strip is to that
+          card, so the background morphs smoothly as you swipe. */}
+      {cards.map((card, i) => (
+        <BgLayer key={`bg-${i}`} translateX={translateX} width={width} index={i} colors={GRADIENTS[card.type]} />
+      ))}
+
+      <GestureDetector gesture={pan}>
+        <Animated.View style={[styles.strip, { width: count * width }, stripStyle]}>
+          {cards.map((card, i) => (
+            <CardSlide key={`${card.type}-${i}`} translateX={translateX} width={width} index={i}>
+              <SafeAreaView style={[styles.cardSafe, { width, height }]}>
+                <View style={styles.cardBody}>{renderCard(card, data.year)}</View>
+              </SafeAreaView>
+            </CardSlide>
+          ))}
+        </Animated.View>
+      </GestureDetector>
 
       {/* Overlay chrome: close + progress dots */}
       <SafeAreaView style={styles.overlay} pointerEvents="box-none">
@@ -256,8 +302,8 @@ export default function WrappedScreen() {
             <Ionicons name="close" size={28} color="#fff" />
           </TouchableOpacity>
           <View style={styles.dots}>
-            {data.cards.map((_, i) => (
-              <View key={i} style={[styles.dot, i === index && styles.dotActive]} />
+            {cards.map((_, i) => (
+              <Dot key={i} translateX={translateX} width={width} index={i} />
             ))}
           </View>
           <View style={{ width: 28 }} />
@@ -266,7 +312,7 @@ export default function WrappedScreen() {
 
       {/* Hidden off-screen renderer for the "share as image" story card (native only). */}
       {Platform.OS !== 'web' && <WrappedShareCard ref={shareCardRef} />}
-    </View>
+    </GestureHandlerRootView>
   );
 
   // Renders the inner content for one card (icon + big value + label + sub).
@@ -408,6 +454,88 @@ export default function WrappedScreen() {
   }
 }
 
+// One full-screen background gradient whose opacity fades with the strip's
+// distance from `index`. Neighbouring layers always sum to ~1 opacity, so the
+// background morphs continuously and never shows the black root through a seam.
+function BgLayer({
+  translateX,
+  width,
+  index,
+  colors,
+}: {
+  translateX: SharedValue<number>;
+  width: number;
+  index: number;
+  colors: [string, string, string];
+}) {
+  const style = useAnimatedStyle(() => {
+    const progress = -translateX.value / width;
+    const d = Math.abs(progress - index);
+    return { opacity: d >= 1 ? 0 : 1 - d };
+  });
+  return (
+    <AnimatedGradient
+      colors={colors}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={[StyleSheet.absoluteFill, style]}
+    />
+  );
+}
+
+// A single card slide with a gentle depth effect: the centred card is full
+// size/opacity, neighbours scale down and fade — a subtle parallax that makes
+// the transition feel crafted rather than a flat pager.
+function CardSlide({
+  translateX,
+  width,
+  index,
+  children,
+}: {
+  translateX: SharedValue<number>;
+  width: number;
+  index: number;
+  children: React.ReactNode;
+}) {
+  const style = useAnimatedStyle(() => {
+    const progress = -translateX.value / width;
+    const d = progress - index;
+    const scale = interpolate(d, [-1, 0, 1], [0.88, 1, 0.88], Extrapolation.CLAMP);
+    const opacity = interpolate(d, [-0.85, 0, 0.85], [0.25, 1, 0.25], Extrapolation.CLAMP);
+    return { transform: [{ scale }], opacity };
+  });
+  return <Animated.View style={style}>{children}</Animated.View>;
+}
+
+// Progress dot that smoothly grows/brightens as its card becomes active,
+// instead of a hard on/off toggle.
+function Dot({
+  translateX,
+  width,
+  index,
+}: {
+  translateX: SharedValue<number>;
+  width: number;
+  index: number;
+}) {
+  const style = useAnimatedStyle(() => {
+    const progress = -translateX.value / width;
+    const d = Math.abs(progress - index);
+    const active = d >= 1 ? 0 : 1 - d;
+    return {
+      opacity: 0.4 + active * 0.6,
+      width: 7 + active * 5,
+    };
+  });
+  return <Animated.View style={[dotBase, style]} />;
+}
+
+const dotBase = {
+  height: 7,
+  borderRadius: 4,
+  backgroundColor: '#fff',
+};
+
 function Stat({ value, label, styles }: { value: string; label: string; styles: ReturnType<typeof createStyles> }) {
   return (
     <View style={styles.stat}>
@@ -418,7 +546,7 @@ function Stat({ value, label, styles }: { value: string; label: string; styles: 
 }
 
 const createStyles = (theme: Theme) => ({
-  root: { flex: 1, backgroundColor: '#000' },
+  root: { flex: 1, backgroundColor: '#000', overflow: 'hidden' as const },
   spinner: { color: theme.colors.primary },
   centered: {
     flex: 1,
@@ -431,7 +559,7 @@ const createStyles = (theme: Theme) => ({
   closeAbsolute: { position: 'absolute' as const, top: 48, left: 20 },
   emptyTitle: { fontSize: 20, fontWeight: '700' as const, color: theme.colors.textPrimary, textAlign: 'center' as const },
   emptyText: { fontSize: 15, color: theme.colors.textSecondary, textAlign: 'center' as const },
-  card: { flex: 1 },
+  strip: { flexDirection: 'row' as const, height: '100%' as const },
   cardSafe: { flex: 1 },
   cardBody: {
     flex: 1,
@@ -464,9 +592,7 @@ const createStyles = (theme: Theme) => ({
     paddingHorizontal: 20,
     paddingTop: 8,
   },
-  dots: { flexDirection: 'row' as const, gap: 6, flex: 1, justifyContent: 'center' as const, flexWrap: 'wrap' as const },
-  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: '#ffffff55' },
-  dotActive: { backgroundColor: '#fff', width: 9, height: 9, borderRadius: 5 },
+  dots: { flexDirection: 'row' as const, gap: 6, flex: 1, justifyContent: 'center' as const, alignItems: 'center' as const, flexWrap: 'wrap' as const },
   hideRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, marginTop: 16 },
   hideLabel: { fontSize: 15, color: '#fff', fontWeight: '600' as const },
   shareBtn: {
