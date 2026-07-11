@@ -1,6 +1,8 @@
 import {
   aggregateCommunityPrices,
+  aggregateCommunityMap,
   CommunityObservationRow,
+  CommunityMapRow,
   DEFAULT_K_ANONYMITY,
 } from './community-price-calculator';
 
@@ -83,5 +85,60 @@ describe('aggregateCommunityPrices', () => {
     expect(currency).toBe('PLN');
     expect(stores).toHaveLength(1);
     expect(stores[0].currencyCode).toBe('PLN');
+  });
+});
+
+describe('aggregateCommunityMap', () => {
+  function mrow(over: Partial<CommunityMapRow> = {}): CommunityMapRow {
+    return {
+      merchantNormalized: 'biedronka',
+      region: 'krakow',
+      price: 3.5,
+      currencyCode: 'PLN',
+      contributorKey: 'k1',
+      ...over,
+    };
+  }
+  function cell(merchant: string, region: string, prices: number[]): CommunityMapRow[] {
+    return prices.map((price, i) => mrow({ merchantNormalized: merchant, region, price, contributorKey: `${merchant}-${region}-c${i}` }));
+  }
+
+  it('returns empty for no rows', () => {
+    expect(aggregateCommunityMap([])).toEqual([]);
+  });
+
+  it('aggregates per (store, region) and gates each cell by K', () => {
+    const rows = [
+      ...cell('biedronka', 'krakow', [3.4, 3.5, 3.6]), // 3 contributors → passes K=3
+      ...cell('biedronka', 'warsaw', [4.0, 4.1]), // 2 contributors → dropped
+      ...cell('lidl', 'krakow', [2.0, 2.1, 2.2]), // 3 → passes
+    ];
+    const aggs = aggregateCommunityMap(rows, 3);
+    // krakow biedronka + krakow lidl survive; warsaw biedronka dropped
+    expect(aggs).toHaveLength(2);
+    const keys = aggs.map((a) => `${a.merchantName}/${a.region}`).sort();
+    expect(keys).toEqual(['Biedronka/krakow', 'Lidl/krakow']);
+  });
+
+  it('keeps the same store in two regions as two separate cells', () => {
+    const rows = [
+      ...cell('biedronka', 'krakow', [3.4, 3.5, 3.6]),
+      ...cell('biedronka', 'warsaw', [3.9, 4.0, 4.1]),
+    ];
+    const aggs = aggregateCommunityMap(rows, 3);
+    expect(aggs).toHaveLength(2);
+    expect(aggs.every((a) => a.merchantName === 'Biedronka')).toBe(true);
+    expect(aggs.map((a) => a.region).sort()).toEqual(['krakow', 'warsaw']);
+  });
+
+  it('marks the cheapest cell (lowest median)', () => {
+    const rows = [
+      ...cell('biedronka', 'krakow', [4.0, 4.0, 4.0]),
+      ...cell('lidl', 'krakow', [3.0, 3.0, 3.0]),
+    ];
+    const aggs = aggregateCommunityMap(rows, 3);
+    const cheapest = aggs.find((a) => a.isCheapest);
+    expect(cheapest?.merchantName).toBe('Lidl');
+    expect(aggs.filter((a) => a.isCheapest)).toHaveLength(1);
   });
 });

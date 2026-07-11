@@ -108,3 +108,71 @@ export function aggregateCommunityPrices(
 
   return { currency, stores };
 }
+
+/** Observation row for the map aggregator — same as above plus its region. */
+export interface CommunityMapRow extends CommunityObservationRow {
+  region: string;
+}
+
+export interface CommunityMapAgg {
+  merchantNormalized: string; // internal join key to community_store_geo (not exposed to clients)
+  merchantName: string;
+  region: string;
+  medianPrice: number;
+  currencyCode: string;
+  receiptCount: number;
+  isCheapest: boolean;
+}
+
+/**
+ * Map variant: aggregate per (store, region) instead of collapsing regions, so
+ * each surfaced store→region cell can carry its own coordinate. Same k-anonymity
+ * gate (a cell is exposed only with >= k distinct contributors), majority
+ * currency, outlier filter, and cheapest-marking as aggregateCommunityPrices.
+ * Pure + deterministic. The service joins `merchantNormalized`/`region` to the
+ * store-geo lookup and drops any cell without a known coordinate.
+ */
+export function aggregateCommunityMap(
+  rows: CommunityMapRow[],
+  k: number = DEFAULT_K_ANONYMITY,
+): CommunityMapAgg[] {
+  if (rows.length === 0) return [];
+
+  const currency = majorityCurrency(rows);
+  const filtered = rows.filter((r) => r.currencyCode === currency);
+
+  const byMerchant = new Map<string, Map<string, CommunityMapRow[]>>();
+  for (const r of filtered) {
+    let regions = byMerchant.get(r.merchantNormalized);
+    if (!regions) {
+      regions = new Map();
+      byMerchant.set(r.merchantNormalized, regions);
+    }
+    const arr = regions.get(r.region) ?? [];
+    arr.push(r);
+    regions.set(r.region, arr);
+  }
+
+  const out: CommunityMapAgg[] = [];
+  for (const [merchant, regions] of byMerchant) {
+    for (const [region, group] of regions) {
+      const distinctContributors = new Set(group.map((g) => g.contributorKey));
+      if (distinctContributors.size < k) continue; // k-anonymity gate per (store, region)
+      const prices = outlierFilter(group.map((g) => g.price)).sort((a, b) => a - b);
+      if (prices.length === 0) continue;
+      out.push({
+        merchantNormalized: merchant,
+        merchantName: titleCase(merchant),
+        region,
+        medianPrice: round2(medianOf(prices)),
+        currencyCode: currency,
+        receiptCount: group.length,
+        isCheapest: false,
+      });
+    }
+  }
+
+  out.sort((a, b) => a.medianPrice - b.medianPrice);
+  if (out.length > 0) out[0].isCheapest = true;
+  return out;
+}

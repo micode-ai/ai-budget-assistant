@@ -6,11 +6,12 @@ import { CacheService } from '../../common/cache/cache.service';
 import { GeocodingService } from '../ai/services/geocoding.service';
 import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
 import { mondayOfWeek, regionBucket, computeContributorKey, isEligibleContributor } from './community-price.util';
-import { aggregateCommunityPrices, DEFAULT_K_ANONYMITY } from './community-price-calculator';
+import { aggregateCommunityPrices, aggregateCommunityMap, DEFAULT_K_ANONYMITY } from './community-price-calculator';
 import type {
   CommunityPriceResponse,
   CommunityPricePeriod,
   CommunityProductSearchItem,
+  CommunityPriceMapPoint,
 } from '@budget/shared-types';
 
 // Read-path cache: anonymous aggregate data, so the key is global (not per-account).
@@ -211,6 +212,91 @@ export class CommunityPriceService {
       .slice(0, 20);
   }
 
+  /**
+   * GET /price-history/community/map — k-anonymity-gated store price points WITH
+   * coordinates for a product, for the map view. Only stores that clear the K-gate
+   * AND have a known coordinate (from the store-geo lookup) are returned. Coords are
+   * the STORE's public location, never a contributor's.
+   */
+  async getCommunityMap(
+    product: string,
+    region: string | null,
+    period: CommunityPricePeriod,
+  ): Promise<CommunityPriceMapPoint[]> {
+    const normalizedProduct = product.trim();
+    if (!normalizedProduct || !this.readEnabled()) return [];
+
+    const cacheKey = `cphmap:${createHash('sha1').update(normalizedProduct).digest('hex')}:${region ?? '*'}:${period}`;
+    const cached = await this.cache.get<CommunityPriceMapPoint[]>(cacheKey);
+    if (cached) return cached;
+
+    const weeks = period === '4w' ? 4 : 1;
+    const cutoff = mondayOfWeek(new Date());
+    cutoff.setDate(cutoff.getDate() - (weeks - 1) * 7);
+    const ceiling = mondayOfWeek(new Date());
+    ceiling.setDate(ceiling.getDate() + 7);
+
+    const rows = await this.prisma.communityPriceObservation.findMany({
+      where: {
+        canonicalName: normalizedProduct,
+        ...(region ? { region } : {}),
+        weekStart: { gte: cutoff, lt: ceiling },
+      },
+      select: {
+        merchantNormalized: true,
+        region: true,
+        price: true,
+        currencyCode: true,
+        contributorKey: true,
+      },
+    });
+
+    const aggs = aggregateCommunityMap(
+      rows.map((r) => ({
+        merchantNormalized: r.merchantNormalized,
+        region: r.region,
+        price: Number(r.price),
+        currencyCode: r.currencyCode,
+        contributorKey: r.contributorKey,
+      })),
+      this.getK(),
+    );
+    if (aggs.length === 0) return [];
+
+    // Batch-fetch store coordinates for the surfaced (merchant, region) cells.
+    const geos = await this.prisma.communityStoreGeo.findMany({
+      where: { OR: aggs.map((a) => ({ merchantNormalized: a.merchantNormalized, region: a.region })) },
+      select: { merchantNormalized: true, region: true, lat: true, lng: true },
+    });
+    const geoByKey = new Map(geos.map((g) => [`${g.merchantNormalized}|${g.region}`, g]));
+
+    const points: CommunityPriceMapPoint[] = [];
+    for (const a of aggs) {
+      const geo = geoByKey.get(`${a.merchantNormalized}|${a.region}`);
+      if (!geo) continue; // no known coordinate → not on the map
+      points.push({
+        merchantName: a.merchantName,
+        lat: Number(geo.lat),
+        lng: Number(geo.lng),
+        medianPrice: a.medianPrice,
+        currencyCode: a.currencyCode,
+        receiptCount: a.receiptCount,
+        isCheapest: false,
+      });
+    }
+
+    // Re-mark cheapest among the points that actually have a coordinate (the
+    // overall-cheapest cell may have been dropped for lacking geo).
+    let cheapestIdx = -1;
+    for (let i = 0; i < points.length; i++) {
+      if (cheapestIdx === -1 || points[i].medianPrice < points[cheapestIdx].medianPrice) cheapestIdx = i;
+    }
+    if (cheapestIdx >= 0) points[cheapestIdx].isCheapest = true;
+
+    await this.cache.set(cacheKey, points, READ_CACHE_TTL_SEC);
+    return points;
+  }
+
   async recordContribution(accountId: string, userId: string, expenseId: string): Promise<void> {
     try {
       const salt = this.config.get<string>('COMMUNITY_PRICE_SALT');
@@ -275,6 +361,17 @@ export class CommunityPriceService {
       const weekStart = mondayOfWeek(expense.date);
       const contributorKey = computeContributorKey(salt, accountId);
       const aliasMap = await this.getAliasMap(accountId);
+
+      // Store-location lookup for the community MAP (M4): the STORE's public
+      // coordinate keyed by (merchantNormalized, region) — no contributor linkage.
+      // Best-effort + fire-and-forget so it never blocks the observation writes.
+      this.prisma.communityStoreGeo
+        .upsert({
+          where: { community_store_geo_key: { merchantNormalized, region } },
+          create: { merchantNormalized, region, lat, lng },
+          update: { lat, lng },
+        })
+        .catch(() => {});
 
       for (const item of expense.items) {
         const rawName = item.canonicalName as string;

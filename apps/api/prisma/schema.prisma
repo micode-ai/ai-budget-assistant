@@ -519,6 +519,24 @@ model CommunityPriceObservation {
   @@map("community_price_observations")
 }
 
+// Store-location lookup for the community price MAP (ABA-335 M4). Holds ONLY the
+// STORE's public point-of-sale coordinate keyed by (merchantNormalized, region) —
+// NO accountId / userId / contributorKey / per-observation link. A store is a
+// public place, so this is not contributor PII; the map read only ever exposes a
+// pin for a store that has already cleared the k-anonymity gate. Populated
+// fire-and-forget from the same write path that records observations.
+model CommunityStoreGeo {
+  id                 String   @id @default(uuid())
+  merchantNormalized String   @map("merchant_normalized")
+  region             String
+  lat                Decimal  @db.Decimal(10, 7)
+  lng                Decimal  @db.Decimal(10, 7)
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@unique([merchantNormalized, region], name: "community_store_geo_key", map: "community_store_geo_key")
+  @@map("community_store_geo")
+}
+
 model ShoppingList {
   id              String   @id @default(uuid())
   accountId       String   @map("account_id")
