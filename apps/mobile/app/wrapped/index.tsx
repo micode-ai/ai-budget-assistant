@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Share,
   Switch,
+  Platform,
   useWindowDimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -20,6 +21,12 @@ import { useStyles, type Theme } from '@/theme';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useWrapped } from '@/features/insights/useWrapped';
+import {
+  WrappedShareCard,
+  type WrappedShareCardHandle,
+  type WrappedSharePayload,
+  type WrappedShareLine,
+} from '@/components/wrapped/WrappedShareCard';
 import type { WrappedCard } from '@budget/shared-types';
 
 // Curated gradient per card type — gives the deck a lively, "wrapped" feel.
@@ -51,6 +58,7 @@ export default function WrappedScreen() {
   const [index, setIndex] = useState(0);
   const [hideAmounts, setHideAmounts] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
+  const shareCardRef = useRef<WrappedShareCardHandle>(null);
 
   const baseCurrency = data?.baseCurrency ?? 'USD';
 
@@ -114,13 +122,76 @@ export default function WrappedScreen() {
     return lines.join('\n');
   }, [data, t, money, monthLabel]);
 
+  // Same per-card selection as buildShareMessage above, restructured into
+  // {emoji,label} rows for the rendered story-card image. `money()` already
+  // honors hideAmounts, so masked values flow through here identically to
+  // the text-share path.
+  const buildSharePayload = useCallback((): WrappedSharePayload | null => {
+    if (!data) return null;
+    const lines: WrappedShareLine[] = [];
+    const push = (emoji: string, label: string) => lines.push({ emoji, label, value: '' });
+    for (const c of data.cards) {
+      switch (c.type) {
+        case 'total_tracked':
+          push('💸', t('wrapped.shareSpent', { value: money(c.totalExpenses) }));
+          break;
+        case 'top_merchant':
+          push('🏪', t('wrapped.shareMerchant', { name: c.name, count: c.visits }));
+          break;
+        case 'biggest_month':
+          push('📅', t('wrapped.shareMonth', { month: monthLabel(c.monthIndex, data.year) }));
+          break;
+        case 'top_category':
+          push('🏆', t('wrapped.shareCategory', { name: c.name, percent: c.percentage }));
+          break;
+        case 'receipts_scanned':
+          push('🧾', t('wrapped.shareReceipts', { count: c.count }));
+          break;
+        case 'savings':
+          push('💰', t('wrapped.shareSaved', { value: money(c.netSavings) }));
+          break;
+        case 'personal_inflation':
+          if (c.indexPct != null) {
+            push('📈', t('wrapped.shareInflation', { percent: c.indexPct }));
+          }
+          break;
+        case 'streak':
+          push('🔥', t('wrapped.shareStreak', { count: c.longestStreak }));
+          break;
+        default:
+          break;
+      }
+    }
+    return {
+      year: data.year,
+      title: t('wrapped.shareTitle', { year: data.year }),
+      lines,
+      footer: t('wrapped.shareCta'),
+    };
+  }, [data, t, money, monthLabel]);
+
   const onShare = useCallback(async () => {
+    // Native: try the rendered PNG story card first; fall back to the text
+    // share on any failure so the button is never a dead end. Web keeps the
+    // text-only path — the WebView-canvas + expo-sharing file share is
+    // unreliable in a browser context.
+    if (Platform.OS !== 'web') {
+      const payload = buildSharePayload();
+      if (payload) {
+        try {
+          const ok = await shareCardRef.current?.share(payload);
+          if (ok) return;
+        } catch {
+          // fall through to text share
+        }
+      }
+    }
     try {
       await Share.share({ message: buildShareMessage() });
     } catch {
       // user dismissed / share unavailable — no-op
     }
-  }, [buildShareMessage]);
+  }, [buildShareMessage, buildSharePayload]);
 
   // ── Loading / error / empty states ──────────────────────
   if (loading) {
@@ -185,6 +256,9 @@ export default function WrappedScreen() {
           <View style={{ width: 28 }} />
         </View>
       </SafeAreaView>
+
+      {/* Hidden off-screen renderer for the "share as image" story card (native only). */}
+      {Platform.OS !== 'web' && <WrappedShareCard ref={shareCardRef} />}
     </View>
   );
 

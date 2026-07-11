@@ -4111,6 +4111,63 @@ Both notifications are on by default and can be turned off independently in **Se
 Restock predictions, deal detection, and store price comparisons are all built from the line-item prices captured when you scan receipts with the camera (OCR) — the same data that powers your Personal Inflation Index. Manually entered expenses and bank imports don't include per-product prices, so they don't feed into these features. The more receipts you scan, the better the suggestions and comparisons get.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Financial Wrapped — your year in money`,
+      description: `A shareable, Spotify-Wrapped-style look back at your year — your top merchant, biggest month, savings, personal inflation and more — built entirely from what you already tracked. Free for everyone.`,
+      body: `# Financial Wrapped — your year in money
+
+> A shareable, Spotify-Wrapped-style look back at your year — your top merchant, biggest month, savings, personal inflation and more — built entirely from what you already tracked. Free for everyone.
+
+## What it is
+
+Financial Wrapped turns a year of your expenses and income into a set of colorful, swipeable cards you can look through in a few seconds and share with a tap. Every number comes from data already in the app — nothing new to set up, and no AI cost.
+
+Cards you might see (only cards that have data are shown):
+
+- **Total tracked** — everything you spent and earned that year, plus how many transactions you logged.
+- **Top merchant** — the place you visited most, with the number of visits.
+- **Biggest month** — your highest-spending calendar month.
+- **Top category & category mix** — where your money actually went.
+- **Receipts scanned** — how many receipts you captured by photo or notification.
+- **Savings** — what you saved, your savings rate, and how it compares to last year.
+- **Personal inflation** — how your own prices changed over the year (from your receipts).
+- **Streak** — your longest tracking streak.
+
+## How to open it
+
+1. Go to the **Analytics** tab.
+2. Tap the **Wrapped** banner (the gift icon).
+3. The full-screen card deck opens for the selected year.
+
+## Swiping through your year
+
+The deck is a set of full-screen cards. **Swipe left and right** to move between them. The dots at the top show where you are in the deck. The last card is where you share.
+
+## Hide amounts before sharing
+
+On the final card there's a **Hide amounts** toggle. Turn it on to replace every money value with \`•••\` before you share — so you can post your merchant of the year, your streak, and your inflation number without revealing exact figures. The toggle affects both the shared image and the shared text.
+
+## Sharing
+
+Tap **Share** on the last card:
+
+- **On your phone** the app renders a story-style image and opens the normal share sheet, so you can post it to social apps or send it to a friend.
+- **Elsewhere (or if image sharing isn't available)** it falls back to a neatly formatted text summary with the same highlights and a link — so Share always works.
+
+Whatever you choose, the **Hide amounts** setting is respected.
+
+## Not enough data yet
+
+Wrapped needs a bit of history to be worth showing. If you've only tracked a few items, or the year you picked has little activity, you'll see a friendly "not enough data yet" message instead of the deck. Keep tracking and it fills in.
+
+## Notes
+
+- Wrapped is **free** — there's no Pro requirement.
+- It's assembled from existing data, so there's nothing to configure.
+- Accounts using full end-to-end encryption can't show amount-based cards, so Wrapped isn't available for them.
+`,
+    },
   ],
   ru: [
     {
@@ -8199,6 +8256,63 @@ AI Budget Assistant предлагает три уровня подписки. �
 Прогнозы пополнения запасов, обнаружение скидок и сравнение цен по магазинам строятся исключительно на ценах отдельных позиций, зафиксированных при сканировании чеков камерой (OCR), — на тех же данных, что питают ваш Персональный индекс инфляции. Вручную введённые расходы и банковские импорты не содержат цен на уровне товаров, поэтому не участвуют в этих функциях. Чем больше чеков вы сканируете, тем точнее становятся подсказки и сравнения.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Итоги года — ваш год в цифрах`,
+      description: `Итоги года, которыми можно поделиться, в стиле Spotify Wrapped — ваше любимое место, самый крупный месяц, сбережения, личная инфляция и многое другое, собранные целиком из того, что вы уже отслеживали. Бесплатно для всех.`,
+      body: `# Итоги года — ваш год в цифрах
+
+> Итоги года, которыми можно поделиться, в стиле Spotify Wrapped — ваше любимое место, самый крупный месяц, сбережения, личная инфляция и многое другое, собранные целиком из того, что вы уже отслеживали. Бесплатно для всех.
+
+## Что это такое
+
+Итоги года превращают ваш год расходов и доходов в набор ярких карточек, которые можно пролистать за несколько секунд и поделиться одним касанием. Каждая цифра берётся из данных, которые уже есть в приложении — ничего нового настраивать не нужно, и это не требует затрат на ИИ.
+
+Карточки, которые вы можете увидеть (показываются только те, для которых есть данные):
+
+- **Всего отслежено** — всё, что вы потратили и заработали за год, а также количество зафиксированных транзакций.
+- **Любимое место** — место, которое вы посещали чаще всего, с указанием числа посещений.
+- **Самый крупный месяц** — календарный месяц с наибольшими расходами.
+- **Топ категория и структура категорий** — куда на самом деле уходили ваши деньги.
+- **Отсканировано чеков** — сколько чеков вы зафиксировали по фото или по уведомлению.
+- **Сбережения** — сколько вы сэкономили, ваша норма сбережений и как она сравнивается с прошлым годом.
+- **Личная инфляция** — как менялись ваши собственные цены в течение года (на основе ваших чеков).
+- **Серия** — ваша самая долгая серия учёта.
+
+## Как открыть
+
+1. Перейдите на вкладку **Аналитика**.
+2. Нажмите на баннер **Итоги года** (иконка подарка).
+3. Откроется полноэкранная колода карточек за выбранный год.
+
+## Пролистывание года
+
+Колода — это набор полноэкранных карточек. **Проведите пальцем влево и вправо**, чтобы переключаться между ними. Точки вверху экрана показывают, в каком месте колоды вы находитесь. На последней карточке можно поделиться итогами.
+
+## Скрыть суммы перед публикацией
+
+На последней карточке есть переключатель **Скрыть суммы**. Включите его, чтобы перед публикацией заменить каждое денежное значение на \`•••\` — так вы сможете рассказать о любимом месте года, своей серии учёта и показателе инфляции, не раскрывая точные цифры. Переключатель влияет и на изображение, и на текст при публикации.
+
+## Публикация
+
+Нажмите **Поделиться** на последней карточке:
+
+- **На телефоне** приложение создаёт изображение в стиле истории и открывает обычное меню публикации, чтобы вы могли опубликовать его в соцсетях или отправить другу.
+- **В других случаях (или если публикация изображения недоступна)** приложение переключается на аккуратно оформленную текстовую сводку с теми же основными моментами и ссылкой — так что поделиться можно всегда.
+
+Что бы вы ни выбрали, настройка **Скрыть суммы** будет учтена.
+
+## Пока недостаточно данных
+
+Для того чтобы Итоги года имели смысл, нужна небольшая история. Если вы отследили всего несколько операций или выбранный год почти не содержит активности, вместо колоды карточек вы увидите дружелюбное сообщение «пока недостаточно данных». Продолжайте вести учёт — и итоги заполнятся.
+
+## Примечания
+
+- Итоги года — это **бесплатно**, подписка Pro не требуется.
+- Они собираются из уже существующих данных, поэтому настраивать нечего.
+- Аккаунты с полным сквозным шифрованием не могут показывать карточки, основанные на суммах, поэтому Итоги года для них недоступны.
+`,
+    },
   ],
   ua: [
     {
@@ -12257,6 +12371,63 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 Прогнози поповнення запасів, виявлення знижок і порівняння цін по магазинах будуються виключно на цінах окремих позицій, зафіксованих під час сканування чеків камерою (OCR), — на тих самих даних, що живлять ваш Персональний індекс інфляції. Вручну введені витрати та банківські імпорти не містять цін на рівні товарів, тому не беруть участі в цих функціях. Що більше чеків ви скануєте, то точнішими стають підказки й порівняння.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Підсумки року — ваш рік у цифрах`,
+      description: `Підсумки року, якими можна поділитися, у стилі Spotify Wrapped — ваше улюблене місце, найбільший місяць, заощадження, особиста інфляція та багато іншого, зібрані повністю з того, що ви вже відстежували. Безкоштовно для всіх.`,
+      body: `# Підсумки року — ваш рік у цифрах
+
+> Підсумки року, якими можна поділитися, у стилі Spotify Wrapped — ваше улюблене місце, найбільший місяць, заощадження, особиста інфляція та багато іншого, зібрані повністю з того, що ви вже відстежували. Безкоштовно для всіх.
+
+## Що це таке
+
+Підсумки року перетворюють рік ваших витрат і доходів на набір яскравих карток, які можна погортати за кілька секунд і поділитися одним дотиком. Кожна цифра береться з даних, які вже є в застосунку — нічого нового налаштовувати не потрібно, і це не потребує витрат на ШІ.
+
+Картки, які ви можете побачити (показуються лише ті, для яких є дані):
+
+- **Усього відстежено** — все, що ви витратили та заробили за рік, а також кількість зафіксованих транзакцій.
+- **Улюблене місце** — місце, яке ви відвідували найчастіше, із кількістю відвідувань.
+- **Найбільший місяць** — календарний місяць із найбільшими витратами.
+- **Топ категорія та структура категорій** — куди насправді йшли ваші гроші.
+- **Відскановано чеків** — скільки чеків ви зафіксували фото або через сповіщення.
+- **Заощадження** — скільки ви заощадили, ваша норма заощаджень і як вона порівнюється з минулим роком.
+- **Особиста інфляція** — як змінювалися ваші власні ціни протягом року (на основі ваших чеків).
+- **Серія** — ваша найдовша серія обліку.
+
+## Як відкрити
+
+1. Перейдіть на вкладку **Аналітика**.
+2. Торкніться банера **Підсумки року** (іконка подарунка).
+3. Відкриється повноекранна колода карток за обраний рік.
+
+## Гортання свого року
+
+Колода — це набір повноекранних карток. **Проведіть пальцем ліворуч і праворуч**, щоб перемикатися між ними. Крапки вгорі екрана показують, у якому місці колоди ви перебуваєте. На останній картці можна поділитися підсумками.
+
+## Приховати суми перед публікацією
+
+На останній картці є перемикач **Приховати суми**. Увімкніть його, щоб перед публікацією замінити кожну грошову суму на \`•••\` — так ви зможете розповісти про улюблене місце року, свою серію обліку та показник інфляції, не розкриваючи точні цифри. Перемикач впливає і на зображення, і на текст під час публікації.
+
+## Публікація
+
+Торкніться **Поділитися** на останній картці:
+
+- **На телефоні** застосунок створює зображення у стилі історії та відкриває звичайне меню публікації, щоб ви могли опублікувати його в соцмережах або надіслати другу.
+- **В інших випадках (або якщо публікація зображення недоступна)** застосунок переходить на акуратно оформлену текстову сводку з тими самими основними моментами та посиланням — тож поділитися можна завжди.
+
+Що б ви не обрали, налаштування **Приховати суми** буде враховано.
+
+## Поки що недостатньо даних
+
+Щоб Підсумки року мали сенс, потрібна невелика історія. Якщо ви відстежили лише кілька операцій або обраний рік містить мало активності, замість колоди карток ви побачите доброзичливе повідомлення «поки що недостатньо даних». Продовжуйте вести облік — і підсумки заповняться.
+
+## Примітки
+
+- Підсумки року — це **безкоштовно**, підписка Pro не потрібна.
+- Вони збираються з уже наявних даних, тож налаштовувати нічого.
+- Облікові записи з повним наскрізним шифруванням не можуть показувати картки, засновані на сумах, тому Підсумки року для них недоступні.
+`,
+    },
   ],
   pl: [
     {
@@ -16300,6 +16471,63 @@ Oba powiadomienia są domyślnie włączone i można je wyłączyć niezależnie
 Przewidywania uzupełnień, wykrywanie promocji i porównania cen między sklepami są budowane wyłącznie na podstawie cen poszczególnych pozycji przechwyconych podczas skanowania paragonów aparatem (OCR) — tych samych danych, które zasilają Twój Osobisty wskaźnik inflacji. Ręcznie wprowadzone wydatki i importy bankowe nie zawierają cen na poziomie produktów, więc nie zasilają tych funkcji. Im więcej paragonów zeskanujesz, tym lepsze będą podpowiedzi i porównania.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Podsumowanie roku — twój rok w liczbach`,
+      description: `Podsumowanie roku do udostępnienia w stylu Spotify Wrapped — twoje ulubione miejsce, najlepszy miesiąc, oszczędności, osobista inflacja i więcej, zbudowane w całości na podstawie tego, co już śledzisz. Darmowe dla wszystkich.`,
+      body: `# Podsumowanie roku — twój rok w liczbach
+
+> Podsumowanie roku do udostępnienia w stylu Spotify Wrapped — twoje ulubione miejsce, najlepszy miesiąc, oszczędności, osobista inflacja i więcej, zbudowane w całości na podstawie tego, co już śledzisz. Darmowe dla wszystkich.
+
+## Czym to jest
+
+Podsumowanie roku zamienia rok twoich wydatków i przychodów w zestaw kolorowych, przesuwalnych kart, które możesz przejrzeć w kilka sekund i udostępnić jednym dotknięciem. Każda liczba pochodzi z danych już zapisanych w aplikacji — nie musisz niczego konfigurować i nie generuje to kosztów AI.
+
+Karty, które możesz zobaczyć (widoczne są tylko te, dla których są dane):
+
+- **Łącznie zarejestrowano** — wszystko, co wydałeś i zarobiłeś w danym roku, plus liczba zarejestrowanych transakcji.
+- **Ulubione miejsce** — miejsce, które odwiedzałeś najczęściej, wraz z liczbą wizyt.
+- **Najlepszy miesiąc** — twój miesiąc kalendarzowy z najwyższymi wydatkami.
+- **Najczęstsza kategoria i podział kategorii** — na co naprawdę poszły twoje pieniądze.
+- **Zeskanowane paragony** — ile paragonów zarejestrowałeś zdjęciem lub powiadomieniem.
+- **Oszczędności** — ile zaoszczędziłeś, twoja stopa oszczędności i jak wypada w porównaniu z zeszłym rokiem.
+- **Osobista inflacja** — jak zmieniły się twoje własne ceny w ciągu roku (na podstawie paragonów).
+- **Passa** — twoja najdłuższa passa śledzenia wydatków.
+
+## Jak to otworzyć
+
+1. Przejdź do zakładki **Analityka**.
+2. Dotknij baneru **Podsumowanie roku** (ikona prezentu).
+3. Otworzy się pełnoekranowy zestaw kart dla wybranego roku.
+
+## Przesuwanie przez swój rok
+
+Zestaw to seria pełnoekranowych kart. **Przesuwaj palcem w lewo i w prawo**, aby przechodzić między nimi. Kropki na górze pokazują, w którym miejscu zestawu się znajdujesz. Ostatnia karta to miejsce, w którym udostępniasz podsumowanie.
+
+## Ukrywanie kwot przed udostępnieniem
+
+Na ostatniej karcie znajduje się przełącznik **Ukryj kwoty**. Włącz go, aby przed udostępnieniem zastąpić każdą kwotę symbolem \`•••\` — dzięki temu możesz opublikować swoje ulubione miejsce roku, passę czy wskaźnik inflacji, nie ujawniając dokładnych liczb. Przełącznik dotyczy zarówno udostępnianego obrazu, jak i tekstu.
+
+## Udostępnianie
+
+Dotknij **Udostępnij** na ostatniej karcie:
+
+- **Na telefonie** aplikacja tworzy obraz w stylu relacji (story) i otwiera zwykłe menu udostępniania, dzięki czemu możesz opublikować go w aplikacjach społecznościowych lub wysłać znajomemu.
+- **Gdzie indziej (lub gdy udostępnianie obrazu jest niedostępne)** aplikacja korzysta z zapasowego, starannie sformatowanego podsumowania tekstowego z tymi samymi najważniejszymi informacjami i linkiem — dzięki temu udostępnianie zawsze działa.
+
+Niezależnie od wyboru, ustawienie **Ukryj kwoty** jest respektowane.
+
+## Za mało danych
+
+Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetlanie. Jeśli zarejestrowałeś tylko kilka pozycji albo wybrany rok ma niewiele aktywności, zamiast zestawu kart zobaczysz przyjazny komunikat „wciąż za mało danych". Śledź dalej swoje finanse, a podsumowanie się uzupełni.
+
+## Uwagi
+
+- Podsumowanie roku jest **darmowe** — nie wymaga abonamentu Pro.
+- Jest tworzone na podstawie istniejących danych, więc nie ma nic do skonfigurowania.
+- Konta z pełnym szyfrowaniem end-to-end nie mogą wyświetlać kart opartych na kwotach, więc Podsumowanie roku nie jest dla nich dostępne.
+`,
+    },
   ],
   de: [
     {
@@ -20318,6 +20546,63 @@ Beide Benachrichtigungen sind standardmäßig aktiviert und können unabhängig 
 Nachkauf-Prognosen, Angebotserkennung und Preisvergleiche zwischen Geschäften basieren allesamt auf den Positionspreisen, die beim Scannen von Kassenbons mit der Kamera (OCR) erfasst werden — denselben Daten, die auch deinen Persönlichen Inflationsindex speisen. Manuell erfasste Ausgaben und Bankimporte enthalten keine Preise pro Produkt und fließen daher nicht in diese Funktionen ein. Je mehr Kassenbons du scannst, desto besser werden die Vorschläge und Vergleiche.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Jahresrückblick — dein Jahr in Zahlen`,
+      description: `Ein teilbarer Rückblick im Spotify-Wrapped-Stil — dein Lieblingsort, dein größter Monat, deine Ersparnisse, deine persönliche Inflation und mehr, komplett aus dem erstellt, was du bereits erfasst hast. Kostenlos für alle.`,
+      body: `# Jahresrückblick — dein Jahr in Zahlen
+
+> Ein teilbarer Rückblick im Spotify-Wrapped-Stil — dein Lieblingsort, dein größter Monat, deine Ersparnisse, deine persönliche Inflation und mehr, komplett aus dem erstellt, was du bereits erfasst hast. Kostenlos für alle.
+
+## Was es ist
+
+Der Jahresrückblick verwandelt ein Jahr deiner Ausgaben und Einnahmen in ein Set bunter, durchwischbarer Karten, die du in wenigen Sekunden durchsehen und mit einem Tipp teilen kannst. Jede Zahl stammt aus Daten, die bereits in der App vorhanden sind — es gibt nichts neu einzurichten, und es entstehen keine KI-Kosten.
+
+Karten, die dir begegnen können (nur Karten mit Daten werden angezeigt):
+
+- **Erfasst insgesamt** — alles, was du in diesem Jahr ausgegeben und eingenommen hast, plus die Anzahl deiner erfassten Transaktionen.
+- **Lieblingsort** — der Ort, den du am häufigsten besucht hast, mit der Anzahl der Besuche.
+- **Größter Monat** — dein ausgabenstärkster Kalendermonat.
+- **Top-Kategorie & Kategorie-Mix** — wohin dein Geld tatsächlich geflossen ist.
+- **Gescannte Belege** — wie viele Belege du per Foto oder Benachrichtigung erfasst hast.
+- **Ersparnisse** — was du gespart hast, deine Sparquote und wie sie sich mit dem Vorjahr vergleicht.
+- **Persönliche Inflation** — wie sich deine eigenen Preise im Laufe des Jahres verändert haben (aus deinen Belegen).
+- **Serie** — deine längste Tracking-Serie.
+
+## So öffnest du ihn
+
+1. Gehe zum Tab **Analysen**.
+2. Tippe auf das Banner **Jahresrückblick** (das Geschenk-Symbol).
+3. Der Kartenstapel öffnet sich im Vollbild für das ausgewählte Jahr.
+
+## Durch dein Jahr wischen
+
+Der Stapel besteht aus Vollbild-Karten. **Wische nach links und rechts**, um zwischen ihnen zu wechseln. Die Punkte oben zeigen, wo im Stapel du dich gerade befindest. Auf der letzten Karte teilst du deinen Rückblick.
+
+## Beträge vor dem Teilen ausblenden
+
+Auf der letzten Karte gibt es einen Schalter **Beträge ausblenden**. Aktiviere ihn, um jeden Geldbetrag vor dem Teilen durch \`•••\` zu ersetzen — so kannst du deinen Lieblingsort des Jahres, deine Serie und deine Inflationszahl posten, ohne genaue Zahlen preiszugeben. Der Schalter wirkt sich sowohl auf das geteilte Bild als auch auf den geteilten Text aus.
+
+## Teilen
+
+Tippe auf **Teilen** auf der letzten Karte:
+
+- **Auf deinem Handy** erstellt die App ein Story-artiges Bild und öffnet das normale Teilen-Menü, sodass du es in sozialen Apps posten oder an Freunde schicken kannst.
+- **An anderer Stelle (oder wenn das Teilen von Bildern nicht verfügbar ist)** greift die App auf eine übersichtlich formatierte Textzusammenfassung mit denselben Highlights und einem Link zurück — so funktioniert Teilen immer.
+
+Egal, wofür du dich entscheidest, die Einstellung **Beträge ausblenden** wird berücksichtigt.
+
+## Noch nicht genug Daten
+
+Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn du erst wenige Einträge erfasst hast oder das gewählte Jahr wenig Aktivität aufweist, siehst du statt des Kartenstapels eine freundliche Meldung „Noch nicht genug Daten". Erfasse weiter deine Finanzen, dann füllt er sich.
+
+## Hinweise
+
+- Der Jahresrückblick ist **kostenlos** — es ist kein Pro-Abo nötig.
+- Er wird aus vorhandenen Daten zusammengestellt, es gibt also nichts zu konfigurieren.
+- Konten mit vollständiger Ende-zu-Ende-Verschlüsselung können keine betragsbasierten Karten anzeigen, daher ist der Jahresrückblick für sie nicht verfügbar.
+`,
+    },
   ],
   es: [
     {
@@ -24325,6 +24610,63 @@ Ambas notificaciones están activadas por defecto y se pueden desactivar por sep
 Las predicciones de reposición, la detección de ofertas y las comparaciones de precios entre tiendas se construyen a partir de los precios por artículo capturados al escanear tiques con la cámara (OCR) — los mismos datos que alimentan tu Índice de Inflación Personal. Los gastos introducidos manualmente y las importaciones bancarias no incluyen precios por producto, así que no alimentan estas funciones. Cuantos más tiques escanees, mejores serán las sugerencias y comparaciones.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Resumen del año — tu año en cifras`,
+      description: `Un resumen anual compartible al estilo Spotify Wrapped — tu comercio favorito, tu mes más grande, tus ahorros, tu inflación personal y mucho más, creado enteramente a partir de lo que ya has registrado. Gratis para todos.`,
+      body: `# Resumen del año — tu año en cifras
+
+> Un resumen anual compartible al estilo Spotify Wrapped — tu comercio favorito, tu mes más grande, tus ahorros, tu inflación personal y mucho más, creado enteramente a partir de lo que ya has registrado. Gratis para todos.
+
+## Qué es
+
+El Resumen del año convierte un año de tus gastos e ingresos en un conjunto de tarjetas coloridas que puedes deslizar y repasar en unos segundos, y compartir con un toque. Cada dato proviene de información que ya está en la app: no hay nada nuevo que configurar y no genera coste de IA.
+
+Tarjetas que podrías ver (solo se muestran las que tienen datos):
+
+- **Total registrado** — todo lo que gastaste e ingresaste ese año, además del número de transacciones que registraste.
+- **Comercio favorito** — el lugar que más visitaste, con el número de visitas.
+- **Mes más grande** — tu mes calendario con mayor gasto.
+- **Categoría principal y mezcla de categorías** — a dónde fue realmente tu dinero.
+- **Recibos escaneados** — cuántos recibos capturaste por foto o notificación.
+- **Ahorros** — cuánto ahorraste, tu tasa de ahorro y cómo se compara con el año pasado.
+- **Inflación personal** — cómo cambiaron tus propios precios a lo largo del año (según tus recibos).
+- **Racha** — tu racha de seguimiento más larga.
+
+## Cómo abrirlo
+
+1. Ve a la pestaña **Análisis**.
+2. Toca el banner **Resumen del año** (el icono del regalo).
+3. Se abre el mazo de tarjetas a pantalla completa para el año seleccionado.
+
+## Desliza a través de tu año
+
+El mazo es un conjunto de tarjetas a pantalla completa. **Desliza a izquierda y derecha** para moverte entre ellas. Los puntos en la parte superior muestran en qué punto del mazo estás. La última tarjeta es donde compartes.
+
+## Ocultar cantidades antes de compartir
+
+En la última tarjeta hay un interruptor de **Ocultar cantidades**. Actívalo para reemplazar cada cifra monetaria por \`•••\` antes de compartir, así puedes publicar tu comercio del año, tu racha y tu cifra de inflación sin revelar los importes exactos. El interruptor afecta tanto a la imagen compartida como al texto compartido.
+
+## Compartir
+
+Toca **Compartir** en la última tarjeta:
+
+- **En tu teléfono**, la app genera una imagen estilo historia y abre el menú de compartir habitual, para que puedas publicarla en redes sociales o enviarla a un amigo.
+- **En otros casos (o si compartir imágenes no está disponible)**, recurre a un resumen de texto bien formateado con los mismos datos destacados y un enlace, así compartir siempre funciona.
+
+Elijas lo que elijas, se respeta la configuración de **Ocultar cantidades**.
+
+## Todavía no hay suficientes datos
+
+El Resumen del año necesita algo de historial para que merezca la pena mostrarlo. Si solo has registrado unos pocos movimientos, o el año que elegiste tiene poca actividad, verás un mensaje amistoso de "todavía no hay suficientes datos" en lugar del mazo de tarjetas. Sigue registrando y se irá completando.
+
+## Notas
+
+- El Resumen del año es **gratuito** — no requiere Pro.
+- Se genera a partir de datos ya existentes, así que no hay nada que configurar.
+- Las cuentas con cifrado de extremo a extremo completo no pueden mostrar tarjetas basadas en importes, por lo que el Resumen del año no está disponible para ellas.
+`,
+    },
   ],
   fr: [
     {
@@ -28330,6 +28672,63 @@ Les deux notifications sont activées par défaut et peuvent être désactivées
 Les prédictions de réapprovisionnement, la détection de promotions et les comparaisons de prix entre magasins reposent toutes sur les prix par article capturés lors du scan de tickets avec l'appareil photo (OCR) — les mêmes données qui alimentent votre Indice d'Inflation Personnel. Les dépenses saisies manuellement et les imports bancaires ne contiennent pas de prix par produit, donc ils n'alimentent pas ces fonctionnalités. Plus vous scannez de tickets, meilleures sont les suggestions et les comparaisons.
 `,
     },
+    {
+      id: '39-wrapped',
+      title: `Rétro de l'année — votre année en chiffres`,
+      description: `Un récapitulatif annuel partageable, façon Spotify Wrapped — votre commerçant préféré, votre plus gros mois, vos économies, votre inflation personnelle et bien plus, entièrement construit à partir de ce que vous avez déjà suivi. Gratuit pour tout le monde.`,
+      body: `# Rétro de l'année — votre année en chiffres
+
+> Un récapitulatif annuel partageable, façon Spotify Wrapped — votre commerçant préféré, votre plus gros mois, vos économies, votre inflation personnelle et bien plus, entièrement construit à partir de ce que vous avez déjà suivi. Gratuit pour tout le monde.
+
+## De quoi s'agit-il
+
+La Rétro de l'année transforme une année de vos dépenses et revenus en une série de cartes colorées et défilables que vous pouvez parcourir en quelques secondes et partager d'un geste. Chaque chiffre provient de données déjà présentes dans l'application — rien de nouveau à configurer, et aucun coût d'IA.
+
+Cartes que vous pourriez voir (seules les cartes contenant des données sont affichées) :
+
+- **Total suivi** — tout ce que vous avez dépensé et gagné cette année, ainsi que le nombre de transactions enregistrées.
+- **Commerçant préféré** — l'endroit que vous avez le plus visité, avec le nombre de visites.
+- **Plus gros mois** — votre mois calendaire avec les dépenses les plus élevées.
+- **Catégorie principale et répartition des catégories** — où votre argent est réellement parti.
+- **Reçus scannés** — combien de reçus vous avez capturés par photo ou notification.
+- **Économies** — ce que vous avez économisé, votre taux d'épargne, et comment il se compare à l'an dernier.
+- **Inflation personnelle** — comment vos propres prix ont évolué au cours de l'année (d'après vos reçus).
+- **Série** — votre plus longue série de suivi.
+
+## Comment l'ouvrir
+
+1. Allez dans l'onglet **Analyses**.
+2. Appuyez sur la bannière **Rétro de l'année** (l'icône cadeau).
+3. Le jeu de cartes plein écran s'ouvre pour l'année sélectionnée.
+
+## Parcourir votre année
+
+Le jeu est un ensemble de cartes plein écran. **Glissez vers la gauche et la droite** pour passer de l'une à l'autre. Les points en haut indiquent où vous en êtes dans le jeu. La dernière carte est celle où vous partagez.
+
+## Masquer les montants avant de partager
+
+Sur la dernière carte se trouve un interrupteur **Masquer les montants**. Activez-le pour remplacer chaque montant par \`•••\` avant de partager — vous pouvez ainsi publier votre commerçant de l'année, votre série et votre taux d'inflation sans révéler les chiffres exacts. L'interrupteur s'applique à la fois à l'image partagée et au texte partagé.
+
+## Partager
+
+Appuyez sur **Partager** sur la dernière carte :
+
+- **Sur votre téléphone**, l'application génère une image façon story et ouvre le menu de partage habituel, pour que vous puissiez la publier sur les réseaux sociaux ou l'envoyer à un ami.
+- **Ailleurs (ou si le partage d'image n'est pas disponible)**, elle bascule sur un résumé textuel bien mis en forme, avec les mêmes points forts et un lien — le partage fonctionne donc toujours.
+
+Quel que soit votre choix, le réglage **Masquer les montants** est respecté.
+
+## Pas encore assez de données
+
+La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée. Si vous n'avez suivi que quelques éléments, ou si l'année choisie a peu d'activité, vous verrez un message convivial « pas encore assez de données » à la place du jeu de cartes. Continuez à suivre vos finances, et elle se remplira.
+
+## À noter
+
+- La Rétro de l'année est **gratuite** — aucun abonnement Pro requis.
+- Elle est assemblée à partir de données existantes, il n'y a donc rien à configurer.
+- Les comptes utilisant le chiffrement de bout en bout complet ne peuvent pas afficher les cartes basées sur des montants, la Rétro n'est donc pas disponible pour eux.
+`,
+    },
   ],
   be: [
     {
@@ -32293,6 +32692,63 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Крыніца дадзеных
 
 Прагнозы папаўнення запасаў, выяўленне зніжак і параўнанне цэн па крамах будуюцца выключна на цэнах асобных пазіцый, зафіксаваных пры сканаванні чэкаў камерай (OCR), — на тых жа дадзеных, што сілкуюць ваш Персанальны індэкс інфляцыі. Уручную ўведзеныя выдаткі і банкаўскія імпарты не змяшчаюць цэн на ўзроўні тавараў, таму не ўдзельнічаюць у гэтых функцыях. Чым больш чэкаў вы скануеце, тым дакладнейшымі становяцца падказкі і параўнанні.
+`,
+    },
+    {
+      id: '39-wrapped',
+      title: `Вынікі году — ваш год у лічбах`,
+      description: `Вынікі году, якімі можна падзяліцца, у стылі Spotify Wrapped — ваша ўлюбёнае месца, найбольшы месяц, зберажэнні, асабістая інфляцыя і многае іншае, сабраныя цалкам з таго, што вы ўжо адсочвалі. Бясплатна для ўсіх.`,
+      body: `# Вынікі году — ваш год у лічбах
+
+> Вынікі году, якімі можна падзяліцца, у стылі Spotify Wrapped — ваша ўлюбёнае месца, найбольшы месяц, зберажэнні, асабістая інфляцыя і многае іншае, сабраныя цалкам з таго, што вы ўжо адсочвалі. Бясплатна для ўсіх.
+
+## Што гэта такое
+
+Вынікі году ператвараюць год вашых выдаткаў і прыбыткаў у набор яркіх картак, якія можна пагартаць за некалькі секунд і падзяліцца адным дотыкам. Кожная лічба бярэцца з дадзеных, якія ўжо ёсць у праграме — нічога новага наладжваць не трэба, і гэта не патрабуе выдаткаў на ШІ.
+
+Карткі, якія вы можаце ўбачыць (паказваюцца толькі тыя, для якіх ёсць дадзеныя):
+
+- **Усяго адсочана** — усё, што вы патрацілі і зарабілі за год, а таксама колькасць зафіксаваных транзакцый.
+- **Улюбёнае месца** — месца, якое вы наведвалі часцей за ўсё, з колькасцю наведванняў.
+- **Найбольшы месяц** — каляндарны месяц з найбольшымі выдаткамі.
+- **Топ катэгорыя і структура катэгорый** — куды сапраўды ішлі вашы грошы.
+- **Адсканавана чэкаў** — колькі чэкаў вы зафіксавалі фота або праз апавяшчэнне.
+- **Зберажэнні** — колькі вы зэканомілі, вашая норма зберажэнняў і як яна параўноўваецца з мінулым годам.
+- **Асабістая інфляцыя** — як змяняліся вашы ўласныя цэны на працягу году (на аснове вашых чэкаў).
+- **Серыя** — ваша самая доўгая серыя ўліку.
+
+## Як адкрыць
+
+1. Перайдзіце на ўкладку **Аналітыка**.
+2. Дакраніцеся да банера **Вынікі году** (іконка падарунка).
+3. Адкрыецца поўнаэкранная калода картак за абраны год.
+
+## Гартанне свайго году
+
+Калода — гэта набор поўнаэкранных картак. **Правядзіце пальцам улева і ўправа**, каб пераключацца паміж імі. Кропкі ўверсе экрана паказваюць, у якім месцы калоды вы знаходзіцеся. На апошняй картцы можна падзяліцца вынікамі.
+
+## Схаваць сумы перад публікацыяй
+
+На апошняй картцы ёсць пераключальнік **Схаваць сумы**. Уключыце яго, каб перад публікацыяй замяніць кожную грашовую суму на \`•••\` — так вы зможаце расказаць пра ўлюбёнае месца году, сваю серыю ўліку і паказчык інфляцыі, не раскрываючы дакладныя лічбы. Пераключальнік уплывае і на выяву, і на тэкст пры публікацыі.
+
+## Публікацыя
+
+Дакраніцеся да **Падзяліцца** на апошняй картцы:
+
+- **На тэлефоне** праграма стварае выяву ў стылі гісторыі і адкрывае звычайнае меню публікацыі, каб вы маглі апублікаваць яе ў сацсетках або даслаць сябру.
+- **У іншых выпадках (або калі публікацыя выявы недаступная)** праграма пераходзіць на акуратна аформленую тэкставую зводку з тымі ж асноўнымі момантамі і спасылкай — таму падзяліцца можна заўсёды.
+
+Што б вы ні абралі, налада **Схаваць сумы** будзе ўлічана.
+
+## Пакуль недастаткова дадзеных
+
+Каб Вынікі году мелі сэнс, патрэбна невялікая гісторыя. Калі вы адсачылі толькі некалькі аперацый, або абраны год мае мала актыўнасці, замест калоды картак вы ўбачыце прыязнае паведамленне «пакуль недастаткова дадзеных». Працягвайце весці ўлік — і вынікі запоўняцца.
+
+## Заўвагі
+
+- Вынікі году — гэта **бясплатна**, падпіска Pro не патрэбна.
+- Яны збіраюцца з ужо наяўных дадзеных, таму наладжваць няма чаго.
+- Улікова-выніковыя запісы з поўным скразным шыфраваннем не могуць паказваць карткі, заснаваныя на сумах, таму Вынікі году для іх недаступныя.
 `,
     },
   ],
@@ -36377,6 +36833,63 @@ Beide meldingen staan standaard aan en kunnen onafhankelijk van elkaar worden ui
 ## Gegevensbron
 
 Herbevoorradingsvoorspellingen, aanbiedingsdetectie en winkelprijsvergelijkingen worden allemaal opgebouwd uit de prijzen per artikel die worden vastgelegd wanneer je bonnetjes met de camera scant (OCR) — dezelfde gegevens die je Persoonlijke Inflatie-index voeden. Handmatig ingevoerde uitgaven en bankimporten bevatten geen prijzen per product, dus die dragen niet bij aan deze functies. Hoe meer bonnetjes je scant, hoe beter de suggesties en vergelijkingen worden.
+`,
+    },
+    {
+      id: '39-wrapped',
+      title: `Jaaroverzicht — jouw jaar in cijfers`,
+      description: `Een deelbaar jaaroverzicht in Spotify-Wrapped-stijl — jouw favoriete winkel, grootste maand, besparingen, persoonlijke inflatie en meer, volledig opgebouwd uit wat je al bijhoudt. Gratis voor iedereen.`,
+      body: `# Jaaroverzicht — jouw jaar in cijfers
+
+> Een deelbaar jaaroverzicht in Spotify-Wrapped-stijl — jouw favoriete winkel, grootste maand, besparingen, persoonlijke inflatie en meer, volledig opgebouwd uit wat je al bijhoudt. Gratis voor iedereen.
+
+## Wat het is
+
+Het Jaaroverzicht verandert een jaar aan uitgaven en inkomsten in een set kleurrijke, doorswipebare kaarten die je in een paar seconden kunt doorlopen en met één tik kunt delen. Elk getal komt uit gegevens die al in de app staan — niets nieuws om in te stellen, en geen AI-kosten.
+
+Kaarten die je kunt tegenkomen (alleen kaarten met data worden getoond):
+
+- **Totaal bijgehouden** — alles wat je dat jaar hebt uitgegeven en verdiend, plus het aantal transacties dat je hebt geregistreerd.
+- **Favoriete winkel** — de plek die je het vaakst bezocht, met het aantal bezoeken.
+- **Grootste maand** — je kalendermaand met de hoogste uitgaven.
+- **Topcategorie & categorieverdeling** — waar je geld echt naartoe ging.
+- **Gescande bonnetjes** — hoeveel bonnetjes je hebt vastgelegd via foto of melding.
+- **Besparingen** — wat je hebt bespaard, je spaarquote en hoe die zich verhoudt tot vorig jaar.
+- **Persoonlijke inflatie** — hoe jouw eigen prijzen dit jaar zijn veranderd (op basis van je bonnetjes).
+- **Reeks** — je langste bijhoudreeks.
+
+## Zo open je het
+
+1. Ga naar het tabblad **Analyse**.
+2. Tik op de banner **Jaaroverzicht** (het cadeau-icoon).
+3. De volledige-scherm kaartenstapel opent voor het geselecteerde jaar.
+
+## Door je jaar swipen
+
+De stapel bestaat uit kaarten die het hele scherm vullen. **Swipe naar links en rechts** om tussen kaarten te wisselen. De puntjes bovenaan tonen waar je je in de stapel bevindt. Op de laatste kaart kun je delen.
+
+## Bedragen verbergen vóór het delen
+
+Op de laatste kaart staat een schakelaar **Bedragen verbergen**. Zet die aan om elk bedrag te vervangen door \`•••\` voordat je deelt — zo kun je je winkel van het jaar, je reeks en je inflatiecijfer posten zonder exacte bedragen prijs te geven. De schakelaar geldt zowel voor de gedeelde afbeelding als voor de gedeelde tekst.
+
+## Delen
+
+Tik op **Delen** op de laatste kaart:
+
+- **Op je telefoon** genereert de app een story-achtige afbeelding en opent het gebruikelijke deelmenu, zodat je hem op social media kunt plaatsen of naar een vriend kunt sturen.
+- **Elders (of als afbeeldingen delen niet beschikbaar is)** valt de app terug op een nette tekstsamenvatting met dezelfde hoogtepunten en een link — zo werkt delen altijd.
+
+Wat je ook kiest, de instelling **Bedragen verbergen** wordt gerespecteerd.
+
+## Nog niet genoeg data
+
+Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als je slechts een paar dingen hebt bijgehouden, of het gekozen jaar heeft weinig activiteit, zie je in plaats van de kaartenstapel een vriendelijk bericht "nog niet genoeg data". Blijf bijhouden en het overzicht vult zich.
+
+## Opmerkingen
+
+- Het Jaaroverzicht is **gratis** — er is geen Pro-abonnement voor nodig.
+- Het wordt samengesteld uit bestaande data, dus er valt niets te configureren.
+- Accounts met volledige end-to-end-versleuteling kunnen geen op bedragen gebaseerde kaarten tonen, dus voor hen is het Jaaroverzicht niet beschikbaar.
 `,
     },
   ],

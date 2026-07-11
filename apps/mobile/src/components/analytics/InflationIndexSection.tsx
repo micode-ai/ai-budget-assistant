@@ -214,6 +214,22 @@ export function InflationIndexSection() {
         >
           <Text style={styles.manageLinkText}>{t('shoppingList.planAShop')}</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.communityBanner}
+          onPress={() => router.push('/price-history/community' as any)}
+        >
+          <View style={styles.communityBannerIcon}>
+            <Ionicons name="people-outline" size={18} color={theme.colors.primary} />
+          </View>
+          <View style={styles.communityBannerText}>
+            <Text style={styles.communityBannerTitle}>{t('communityPrices.entryTitle')}</Text>
+            <Text style={styles.communityBannerSubtitle}>
+              {t('communityPrices.entrySubtitle')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
       </View>
 
       {/* Product detail bottom sheet */}
@@ -447,6 +463,36 @@ const createStyles = (theme: Theme) => ({
   manageLinkText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.primary,
+  },
+  communityBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[4],
+    paddingTop: theme.spacing[4],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.borderLight,
+    gap: theme.spacing[3],
+  },
+  communityBannerIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.primary + '15',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    flexShrink: 0,
+  },
+  communityBannerText: {
+    flex: 1,
+  },
+  communityBannerTitle: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+  },
+  communityBannerSubtitle: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: 2,
   },
   ctaButton: {
     backgroundColor: theme.colors.primary,

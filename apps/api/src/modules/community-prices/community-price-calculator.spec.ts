@@ -1,6 +1,8 @@
 import {
   aggregateCommunityPrices,
+  aggregateCommunityMap,
   CommunityObservationRow,
+  CommunityMapRow,
   DEFAULT_K_ANONYMITY,
 } from './community-price-calculator';
 
@@ -83,5 +85,119 @@ describe('aggregateCommunityPrices', () => {
     expect(currency).toBe('PLN');
     expect(stores).toHaveLength(1);
     expect(stores[0].currencyCode).toBe('PLN');
+  });
+});
+
+describe('aggregateCommunityMap', () => {
+  function mrow(over: Partial<CommunityMapRow> = {}): CommunityMapRow {
+    return {
+      merchantNormalized: 'biedronka',
+      region: 'krakow',
+      price: 3.5,
+      currencyCode: 'PLN',
+      contributorKey: 'k1',
+      ...over,
+    };
+  }
+  function cell(merchant: string, region: string, prices: number[]): CommunityMapRow[] {
+    return prices.map((price, i) => mrow({ merchantNormalized: merchant, region, price, contributorKey: `${merchant}-${region}-c${i}` }));
+  }
+
+  it('returns empty for no rows', () => {
+    expect(aggregateCommunityMap([])).toEqual([]);
+  });
+
+  it('aggregates per (store, region) and gates each cell by K', () => {
+    const rows = [
+      ...cell('biedronka', 'krakow', [3.4, 3.5, 3.6]), // 3 contributors → passes K=3
+      ...cell('biedronka', 'warsaw', [4.0, 4.1]), // 2 contributors → dropped
+      ...cell('lidl', 'krakow', [2.0, 2.1, 2.2]), // 3 → passes
+    ];
+    const aggs = aggregateCommunityMap(rows, 3);
+    // krakow biedronka + krakow lidl survive; warsaw biedronka dropped
+    expect(aggs).toHaveLength(2);
+    const keys = aggs.map((a) => `${a.merchantName}/${a.region}`).sort();
+    expect(keys).toEqual(['Biedronka/krakow', 'Lidl/krakow']);
+  });
+
+  it('keeps the same store in two regions as two separate cells', () => {
+    const rows = [
+      ...cell('biedronka', 'krakow', [3.4, 3.5, 3.6]),
+      ...cell('biedronka', 'warsaw', [3.9, 4.0, 4.1]),
+    ];
+    const aggs = aggregateCommunityMap(rows, 3);
+    expect(aggs).toHaveLength(2);
+    expect(aggs.every((a) => a.merchantName === 'Biedronka')).toBe(true);
+    expect(aggs.map((a) => a.region).sort()).toEqual(['krakow', 'warsaw']);
+  });
+
+  it('marks the cheapest cell (lowest median)', () => {
+    const rows = [
+      ...cell('biedronka', 'krakow', [4.0, 4.0, 4.0]),
+      ...cell('lidl', 'krakow', [3.0, 3.0, 3.0]),
+    ];
+    const aggs = aggregateCommunityMap(rows, 3);
+    const cheapest = aggs.find((a) => a.isCheapest);
+    expect(cheapest?.merchantName).toBe('Lidl');
+    expect(aggs.filter((a) => a.isCheapest)).toHaveLength(1);
+  });
+});
+
+describe('aggregateCommunityPrices — multi-week persistence', () => {
+  function wrow(week: string, contributor: string, price = 3.5): CommunityObservationRow {
+    return { merchantNormalized: 'biedronka', price, currencyCode: 'PLN', contributorKey: contributor, weekStart: week };
+  }
+
+  it('rejects a single-week burst of K accounts when minWeeks=2', () => {
+    const rows = [wrow('2026-07-06', 'a'), wrow('2026-07-06', 'b'), wrow('2026-07-06', 'c')];
+    expect(aggregateCommunityPrices(rows, 3, 2).stores).toHaveLength(0);
+  });
+
+  it('accepts a store whose K contributors span >= 2 weeks', () => {
+    const rows = [wrow('2026-07-06', 'a'), wrow('2026-07-06', 'b'), wrow('2026-07-13', 'c')];
+    expect(aggregateCommunityPrices(rows, 3, 2).stores).toHaveLength(1);
+  });
+
+  it('displays the median only from the display period, gates over the full lookback', () => {
+    const rows = [
+      wrow('2026-07-06', 'a', 2.0), wrow('2026-07-06', 'b', 2.0), // older, cheaper week
+      wrow('2026-07-13', 'c', 5.0), wrow('2026-07-13', 'd', 5.0), wrow('2026-07-13', 'e', 5.0), // display week
+    ];
+    const { stores } = aggregateCommunityPrices(rows, 3, 2, '2026-07-13');
+    expect(stores).toHaveLength(1);
+    expect(stores[0].medianPrice).toBe(5.0); // older cheaper week excluded from the shown price
+    expect(stores[0].receiptCount).toBe(3); // display-period rows only
+    expect(stores[0].contributorCount).toBe(5); // K-gate counts the full lookback
+  });
+
+  it('drops an established store that has no price in the display period', () => {
+    const rows = [wrow('2026-06-01', 'a'), wrow('2026-06-08', 'b'), wrow('2026-06-15', 'c')];
+    expect(aggregateCommunityPrices(rows, 3, 2, '2026-07-13').stores).toHaveLength(0);
+  });
+
+  it('is a no-op at minWeeks=1 (backward compatible with weekStart-less rows)', () => {
+    // rows without weekStart still pass the single-week persistence default
+    const rows = [
+      { merchantNormalized: 'lidl', price: 3, currencyCode: 'PLN', contributorKey: 'a' },
+      { merchantNormalized: 'lidl', price: 3, currencyCode: 'PLN', contributorKey: 'b' },
+      { merchantNormalized: 'lidl', price: 3, currencyCode: 'PLN', contributorKey: 'c' },
+    ];
+    expect(aggregateCommunityPrices(rows, 3).stores).toHaveLength(1);
+  });
+});
+
+describe('aggregateCommunityMap — multi-week persistence', () => {
+  it('rejects a single-week burst and accepts a multi-week store', () => {
+    const burst: CommunityMapRow[] = ['a', 'b', 'c'].map((c) => ({
+      merchantNormalized: 'biedronka', region: 'krakow', price: 3.5, currencyCode: 'PLN', contributorKey: c, weekStart: '2026-07-06',
+    }));
+    expect(aggregateCommunityMap(burst, 3, 2)).toHaveLength(0);
+
+    const spread: CommunityMapRow[] = [
+      { merchantNormalized: 'biedronka', region: 'krakow', price: 3.5, currencyCode: 'PLN', contributorKey: 'a', weekStart: '2026-07-06' },
+      { merchantNormalized: 'biedronka', region: 'krakow', price: 3.5, currencyCode: 'PLN', contributorKey: 'b', weekStart: '2026-07-06' },
+      { merchantNormalized: 'biedronka', region: 'krakow', price: 3.5, currencyCode: 'PLN', contributorKey: 'c', weekStart: '2026-07-13' },
+    ];
+    expect(aggregateCommunityMap(spread, 3, 2)).toHaveLength(1);
   });
 });

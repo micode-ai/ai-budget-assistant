@@ -39,4 +39,20 @@ export class CommunityPriceController {
   async search(@Query('q') q?: string) {
     return this.service.searchProducts((q ?? '').toString());
   }
+
+  @Get('map')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('pro')
+  async map(
+    @Query('product') product?: string,
+    @Query('region') region?: string,
+    @Query('period') period?: string,
+  ) {
+    const p: CommunityPricePeriod = period === '4w' ? '4w' : '1w';
+    return this.service.getCommunityMap(
+      (product ?? '').toString(),
+      region ? region.toString() : null,
+      p,
+    );
+  }
 }

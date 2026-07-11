@@ -49,3 +49,21 @@ export function regionBucket(lat: number, lng: number, city?: string | null): st
 export function computeContributorKey(salt: string, accountId: string): string {
   return createHash('sha256').update(`${salt}:${accountId}`).digest('hex');
 }
+
+/**
+ * Contributor-eligibility gate (ABA-335 anti-Sybil, defense-in-depth). An account
+ * must be at least `minAgeDays` old AND have at least `minExpenses` real tracked
+ * expenses before its contributions count toward the k-anonymity corpus. Age alone
+ * is cheap to fake at scale (register + wait); requiring sustained real usage raises
+ * the per-identity cost of a Sybil fleet meaningfully. Pure so it's unit-testable;
+ * it does NOT fully solve Sybil (a scripted attacker can still simulate usage) — see
+ * docs/superpowers/community-price-antisybil.md for the residual risk + full path.
+ */
+export function isEligibleContributor(
+  accountAgeDays: number,
+  expenseCount: number,
+  minAgeDays: number,
+  minExpenses: number,
+): boolean {
+  return accountAgeDays >= minAgeDays && expenseCount >= minExpenses;
+}

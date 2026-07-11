@@ -1,4 +1,9 @@
-import { mondayOfWeek, regionBucket, computeContributorKey } from './community-price.util';
+import {
+  mondayOfWeek,
+  regionBucket,
+  computeContributorKey,
+  isEligibleContributor,
+} from './community-price.util';
 
 describe('mondayOfWeek', () => {
   it('returns the same date (midnight) when given a Monday', () => {
@@ -69,5 +74,30 @@ describe('computeContributorKey', () => {
     const accountId = 'account-abc-123';
     const key = computeContributorKey('salt-1', accountId);
     expect(key).not.toContain(accountId);
+  });
+});
+
+describe('isEligibleContributor', () => {
+  const MIN_AGE = 7;
+  const MIN_EXP = 15;
+
+  it('accepts an old account with enough history', () => {
+    expect(isEligibleContributor(30, 40, MIN_AGE, MIN_EXP)).toBe(true);
+  });
+
+  it('rejects a too-young account even with lots of expenses (Sybil register-and-spam)', () => {
+    expect(isEligibleContributor(2, 100, MIN_AGE, MIN_EXP)).toBe(false);
+  });
+
+  it('rejects an old account with too little real usage (aged-but-empty Sybil)', () => {
+    expect(isEligibleContributor(365, 3, MIN_AGE, MIN_EXP)).toBe(false);
+  });
+
+  it('is inclusive at the exact thresholds', () => {
+    expect(isEligibleContributor(7, 15, MIN_AGE, MIN_EXP)).toBe(true);
+  });
+
+  it('honors configurable thresholds (stricter policy rejects a borderline account)', () => {
+    expect(isEligibleContributor(10, 20, 14, 30)).toBe(false);
   });
 });

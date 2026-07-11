@@ -22,6 +22,7 @@ import { familyFeedApi } from './family-feed.api';
 import { tripApi } from './trip.api';
 import { priceHistoryApi } from './priceHistory.api';
 import { shoppingListsApi } from './shoppingLists.api';
+import { communityPricesApi } from './community-prices.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -49,6 +50,7 @@ export const api = {
   ...tripApi,
   ...priceHistoryApi,
   ...shoppingListsApi,
+  ...communityPricesApi,
 };
 
 export function getApiBaseUrl(): string {
