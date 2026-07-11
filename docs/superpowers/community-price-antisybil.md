@@ -31,6 +31,7 @@ A bare distinct-count threshold cannot stop an adversary who mints identities.
 | Receipt-source gate | `RECEIPT_SOURCES` | Only OCR / bot-photo-scanned expenses feed the corpus — a hand-typed / API-posted expense can't inject free text. |
 | Contributor eligibility | `isEligibleContributor` | Account must be ≥ 7 days old **and** have ≥ 15 real tracked expenses (both env-tunable). Forces a Sybil fleet to simulate sustained real usage per identity, not just register + wait. |
 | Multi-week persistence | `aggregateCommunityPrices`/`aggregateCommunityMap` + service lookback | A store is exposed only if backed across ≥ `COMMUNITY_MIN_PERSISTENCE_WEEKS` distinct weeks (default 2) over an 8-week lookback — blocks a single-week burst of K throwaway accounts. The displayed price still comes only from the requested 1w/4w period. |
+| Behavioral correlation clustering | `community-price-correlation.ts` + K-gate counts clusters | Contributors whose BROAD footprints (product×store×region×week cells over the lookback) are near-identical — a scripted ring posting the same fabricated basket — are union-find clustered, and the K-gate counts distinct CLUSTERS. A ring of K accounts collapses to one. Conservative (only clusters footprints ≥ `MIN_FOOTPRINT` cells at Jaccard ≥ `JACCARD_PCT`) so organic overlap on a popular cell never merges. **Flag `COMMUNITY_CORRELATION_ENABLED`, default OFF** until validated on real data. |
 | Label-length caps | `MAX_LABEL_LEN`, DTO `@MaxLength` | No oversized free text reaches the cross-account corpus. |
 | One-vote-per-account-per-week | DB unique constraint | An account can't inflate its own weekly count. |
 | Outlier filter + median | `aggregateCommunityPrices` | A single poisoned price can't move the displayed median. |
@@ -52,8 +53,17 @@ Pick a policy (business/product decision — friction vs. corpus freshness):
    by account tenure + verified activity (paid tier, linked bank import, push-token
    engagement), require a higher effective trust sum behind each exposed cell.
 2. **Cross-account velocity / correlation detection** — flag clusters of accounts
-   that contribute the same (product, store, region, week) in lockstep or share
-   signup fingerprints (IP, device, timing); exclude flagged clusters from the count.
+   that contribute the same cells in lockstep or share signup fingerprints (IP,
+   device, timing); exclude flagged clusters from the count.
+   - ✅ **Behavioral correlation SHIPPED** (`COMMUNITY_CORRELATION_ENABLED`, default
+     off): near-identical broad-footprint contributors are clustered and the K-gate
+     counts clusters (see the defenses table). Validate thresholds on real data
+     before enabling.
+   - ⏳ **Signup-fingerprint velocity NOT done, by design**: IP/device/timing are
+     not collected, and `contributorKey` is a one-way hash that cannot be reversed
+     to an account or its creation time — so this correlation axis is impossible
+     without adding new (PII-adjacent) data collection. That is a separate product
+     decision (what to collect, retention, privacy tradeoff), not a code follow-up.
 3. **Differential privacy** — add calibrated noise to displayed aggregates and/or a
    noisy K threshold, so reading back exact prices can't isolate one contributor.
    Strongest against deanonymization; costs some accuracy.
@@ -62,10 +72,16 @@ Pick a policy (business/product decision — friction vs. corpus freshness):
    default 2 distinct weeks over an 8-week lookback; raising K remains available
    via `COMMUNITY_PRICE_K`).
 
-Recommended minimum before go-live: (4) multi-week persistence is now shipped, so
-the remaining minimum is **(2) cross-account velocity / correlation exclusion**,
-with **(3) DP noise** on the returned `median`/`min` if the read is ever made
-broadly (non-Pro) available.
+Recommended minimum before go-live: (4) multi-week persistence and the behavioral
+half of (2) cross-account correlation are now shipped. Remaining before flipping
+`COMMUNITY_PRICE_READ_ENABLED=true`:
+- **Validate + enable** `COMMUNITY_CORRELATION_ENABLED` on real data (tune
+  `COMMUNITY_CORRELATION_JACCARD_PCT` / `_MIN_FOOTPRINT` so organic shoppers are
+  never clustered while scripted rings collapse).
+- **Decide on the signup-fingerprint velocity axis** (the ⏳ item above) — it needs
+  new data collection, so it's a product/privacy call, not just code.
+- **(3) DP noise** on the returned `median`/`min` if the read is ever made broadly
+  (non-Pro) available.
 
 ## Operational note
 

@@ -1,4 +1,5 @@
 import type { CommunityPriceStore } from '@budget/shared-types';
+import { distinctClusterCount } from './community-price-correlation';
 
 // Default k-anonymity threshold: a (product, store, region, week) price point is
 // only ever exposed when at least this many DISTINCT accounts contributed it.
@@ -84,6 +85,7 @@ export function aggregateCommunityPrices(
   k: number = DEFAULT_K_ANONYMITY,
   minWeeks = 1,
   displayFromWeek?: string,
+  clusterMap?: Map<string, string> | null,
 ): { currency: string; stores: CommunityPriceStore[] } {
   if (rows.length === 0) return { currency: '', stores: [] };
 
@@ -99,8 +101,13 @@ export function aggregateCommunityPrices(
 
   const stores: CommunityPriceStore[] = [];
   for (const [merchant, group] of byStore.entries()) {
-    const distinctContributors = new Set(group.map((g) => g.contributorKey));
-    if (distinctContributors.size < k) continue; // k-anonymity gate — never expose
+    // Count distinct CLUSTERS (a Sybil ring collapses to one) — with no cluster
+    // map this is the plain distinct-contributor count.
+    const distinctContributors = distinctClusterCount(
+      group.map((g) => g.contributorKey),
+      clusterMap,
+    );
+    if (distinctContributors < k) continue; // k-anonymity gate — never expose
 
     const distinctWeeks = new Set(group.map((g) => g.weekStart ?? '')).size;
     if (distinctWeeks < minWeeks) continue; // persistence gate — no single-week burst
@@ -118,7 +125,7 @@ export function aggregateCommunityPrices(
       medianPrice: round2(medianOf(prices)),
       minPrice: round2(prices[0]),
       receiptCount: displayGroup.length,
-      contributorCount: distinctContributors.size,
+      contributorCount: distinctContributors,
       currencyCode: currency,
       isCheapest: false,
     });
@@ -158,6 +165,7 @@ export function aggregateCommunityMap(
   k: number = DEFAULT_K_ANONYMITY,
   minWeeks = 1,
   displayFromWeek?: string,
+  clusterMap?: Map<string, string> | null,
 ): CommunityMapAgg[] {
   if (rows.length === 0) return [];
 
@@ -179,8 +187,9 @@ export function aggregateCommunityMap(
   const out: CommunityMapAgg[] = [];
   for (const [merchant, regions] of byMerchant) {
     for (const [region, group] of regions) {
-      const distinctContributors = new Set(group.map((g) => g.contributorKey));
-      if (distinctContributors.size < k) continue; // k-anonymity gate per (store, region)
+      // Distinct clusters (Sybil ring → one) — plain distinct count with no map.
+      const distinctContributors = distinctClusterCount(group.map((g) => g.contributorKey), clusterMap);
+      if (distinctContributors < k) continue; // k-anonymity gate per (store, region)
       const distinctWeeks = new Set(group.map((g) => g.weekStart ?? '')).size;
       if (distinctWeeks < minWeeks) continue; // persistence gate — no single-week burst
       const displayGroup = displayFromWeek
