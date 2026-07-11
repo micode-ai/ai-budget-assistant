@@ -7,6 +7,7 @@ import { GeocodingService } from '../ai/services/geocoding.service';
 import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
 import { mondayOfWeek, regionBucket, computeContributorKey, isEligibleContributor } from './community-price.util';
 import { aggregateCommunityPrices, aggregateCommunityMap, DEFAULT_K_ANONYMITY } from './community-price-calculator';
+import { clusterContributors, DEFAULT_CORRELATION } from './community-price-correlation';
 import type {
   CommunityPriceResponse,
   CommunityPricePeriod,
@@ -104,6 +105,55 @@ export class CommunityPriceService {
   }
 
   /**
+   * Behavioral correlation clustering (anti-Sybil). Default OFF — enable via
+   * COMMUNITY_CORRELATION_ENABLED=true after validating on real data, since a
+   * mis-tuned threshold could cluster organic shoppers. When off, buildClusterMap
+   * returns null and the K-gate counts raw distinct contributors (unchanged).
+   */
+  private correlationEnabled(): boolean {
+    return this.config.get<string>('COMMUNITY_CORRELATION_ENABLED') === 'true';
+  }
+
+  /**
+   * Cluster the given contributors by near-identical BROAD contribution footprints
+   * so a Sybil ring collapses to one effective contributor in the K-gate. Fetches
+   * each contributor's full footprint over the lookback (across all products) and
+   * clusters them; returns null when the feature is off (K-gate stays raw-count).
+   */
+  private async buildClusterMap(
+    contributorKeys: string[],
+    lookbackCutoff: Date,
+    ceiling: Date,
+  ): Promise<Map<string, string> | null> {
+    if (!this.correlationEnabled() || contributorKeys.length === 0) return null;
+    const rows = await this.prisma.communityPriceObservation.findMany({
+      where: { contributorKey: { in: contributorKeys }, weekStart: { gte: lookbackCutoff, lt: ceiling } },
+      select: {
+        contributorKey: true,
+        canonicalName: true,
+        merchantNormalized: true,
+        region: true,
+        weekStart: true,
+      },
+    });
+    const footprints = new Map<string, Set<string>>();
+    for (const r of rows) {
+      const cell = `${r.canonicalName}|${r.merchantNormalized}|${r.region}|${r.weekStart.toISOString().slice(0, 10)}`;
+      let set = footprints.get(r.contributorKey);
+      if (!set) {
+        set = new Set();
+        footprints.set(r.contributorKey, set);
+      }
+      set.add(cell);
+    }
+    return clusterContributors(footprints, {
+      minFootprint: this.intEnv('COMMUNITY_CORRELATION_MIN_FOOTPRINT', DEFAULT_CORRELATION.minFootprint),
+      jaccard:
+        this.intEnv('COMMUNITY_CORRELATION_JACCARD_PCT', Math.round(DEFAULT_CORRELATION.jaccard * 100)) / 100,
+    });
+  }
+
+  /**
    * GET /price-history/community — k-anonymity-gated per-store price points for a
    * product, cheapest-first. `product` is an exact canonicalName (from the search
    * endpoint). Optional `region` scopes to one area; omitted = national.
@@ -158,6 +208,12 @@ export class CommunityPriceService {
       select: { merchantNormalized: true, price: true, currencyCode: true, contributorKey: true, weekStart: true },
     });
 
+    const clusterMap = await this.buildClusterMap(
+      [...new Set(rows.map((r) => r.contributorKey))],
+      lookbackCutoff,
+      ceiling,
+    );
+
     const { currency, stores } = aggregateCommunityPrices(
       rows.map((r) => ({
         merchantNormalized: r.merchantNormalized,
@@ -169,6 +225,7 @@ export class CommunityPriceService {
       this.getK(),
       this.intEnv('COMMUNITY_MIN_PERSISTENCE_WEEKS', MIN_PERSISTENCE_WEEKS),
       displayFromWeek,
+      clusterMap,
     );
 
     const result: CommunityPriceResponse = {
@@ -277,6 +334,12 @@ export class CommunityPriceService {
       },
     });
 
+    const clusterMap = await this.buildClusterMap(
+      [...new Set(rows.map((r) => r.contributorKey))],
+      lookbackCutoff,
+      ceiling,
+    );
+
     const aggs = aggregateCommunityMap(
       rows.map((r) => ({
         merchantNormalized: r.merchantNormalized,
@@ -289,6 +352,7 @@ export class CommunityPriceService {
       this.getK(),
       this.intEnv('COMMUNITY_MIN_PERSISTENCE_WEEKS', MIN_PERSISTENCE_WEEKS),
       displayFromWeek,
+      clusterMap,
     );
     if (aggs.length === 0) return [];
 

@@ -201,3 +201,37 @@ describe('aggregateCommunityMap — multi-week persistence', () => {
     expect(aggregateCommunityMap(spread, 3, 2)).toHaveLength(1);
   });
 });
+
+describe('aggregateCommunityPrices — correlation cluster gate', () => {
+  const ring: CommunityObservationRow[] = ['a', 'b', 'c', 'd', 'e'].map((c) => ({
+    merchantNormalized: 'biedronka',
+    price: 3.5,
+    currencyCode: 'PLN',
+    contributorKey: c,
+  }));
+
+  it('passes the K-gate on 5 distinct contributors when uncorrelated', () => {
+    expect(aggregateCommunityPrices(ring, 5).stores).toHaveLength(1);
+  });
+
+  it('fails the K-gate when a cluster map collapses the ring to one contributor', () => {
+    const clusterMap = new Map(ring.map((r) => [r.contributorKey, 'ring']));
+    const { stores } = aggregateCommunityPrices(ring, 5, 1, undefined, clusterMap);
+    expect(stores).toHaveLength(0); // 5 accounts → 1 cluster → below K=5
+  });
+
+  it('reports contributorCount as the distinct-cluster count', () => {
+    // ring of 3 (one cluster) + 3 genuine independents = 4 effective contributors
+    const rows: CommunityObservationRow[] = [
+      ...['r1', 'r2', 'r3'].map((c) => ({ merchantNormalized: 'lidl', price: 3, currencyCode: 'PLN', contributorKey: c })),
+      ...['i1', 'i2', 'i3'].map((c) => ({ merchantNormalized: 'lidl', price: 3, currencyCode: 'PLN', contributorKey: c })),
+    ];
+    const clusterMap = new Map<string, string>([
+      ['r1', 'ring'], ['r2', 'ring'], ['r3', 'ring'],
+      ['i1', 'i1'], ['i2', 'i2'], ['i3', 'i3'],
+    ]);
+    const { stores } = aggregateCommunityPrices(rows, 4, 1, undefined, clusterMap);
+    expect(stores).toHaveLength(1);
+    expect(stores[0].contributorCount).toBe(4); // 1 ring + 3 independents
+  });
+});
