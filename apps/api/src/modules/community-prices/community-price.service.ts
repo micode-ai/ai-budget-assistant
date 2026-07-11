@@ -16,6 +16,26 @@ import type {
 // Read-path cache: anonymous aggregate data, so the key is global (not per-account).
 const READ_CACHE_TTL_SEC = 300;
 
+// ── Anti-abuse hardening (ABA-335 security audit) ────────────────────────────
+// The k-anonymity gate counts distinct contributor accounts, but nothing stops
+// an attacker from registering throwaway accounts and POSTing fabricated
+// expenses to mint "distinct" contributors (Sybil). These raise the cost of that
+// attack; they do NOT fully solve it — see the read kill-switch below and the
+// tracked follow-up. Full defense (trust scoring / DP noise) must land before
+// the read API is enabled for real users.
+//
+// Only receipt-SCANNED expenses feed the shared corpus — a manually-typed or
+// API-posted expense carries no AI/OCR-derived product name and must never
+// broadcast free text cross-account. ('ocr' = mobile scan; the bot sources are
+// their photo handlers.)
+const RECEIPT_SOURCES = new Set(['ocr', 'telegram', 'whatsapp', 'slack']);
+// An account must be at least this old before its contributions count — a cheap
+// brake on freshly-minted Sybil accounts.
+const MIN_ACCOUNT_AGE_DAYS = 7;
+// Product/merchant labels beyond this are almost certainly not real names — cap
+// them so no oversized free-text string can reach the cross-account corpus.
+const MAX_LABEL_LEN = 64;
+
 // Sentinel stored in product_aliases.canonical_name to exclude a product from all
 // tracking — same convention as price-history.service.ts (kept as its own private
 // copy there; not exported, so this is a deliberate local duplicate of the value).
@@ -57,6 +77,17 @@ export class CommunityPriceService {
   }
 
   /**
+   * Read kill-switch (defaults OFF). The k-anonymity gate does not by itself
+   * defend against a Sybil attacker who controls the write path, so the read API
+   * stays DARK until `COMMUNITY_PRICE_READ_ENABLED=true` is explicitly set — after
+   * the anti-Sybil design work lands. The write pipeline keeps filling the corpus
+   * in the meantime (itself gated on COMMUNITY_PRICE_SALT).
+   */
+  private readEnabled(): boolean {
+    return this.config.get<string>('COMMUNITY_PRICE_READ_ENABLED') === 'true';
+  }
+
+  /**
    * GET /price-history/community — k-anonymity-gated per-store price points for a
    * product, cheapest-first. `product` is an exact canonicalName (from the search
    * endpoint). Optional `region` scopes to one area; omitted = national.
@@ -80,17 +111,24 @@ export class CommunityPriceService {
       weekLabel,
       stores: [],
     };
-    if (!normalizedProduct) return empty;
+    if (!normalizedProduct || !this.readEnabled()) return empty;
 
-    const cacheKey = `cph:${createHash('sha1').update(normalizedProduct.toLowerCase()).digest('hex')}:${region ?? '*'}:${period}`;
+    // Cache key uses the exact (case-preserved) product so it can never collide
+    // with a different-case canonicalName the case-sensitive query wouldn't match.
+    const cacheKey = `cph:${createHash('sha1').update(normalizedProduct).digest('hex')}:${region ?? '*'}:${period}`;
     const cached = await this.cache.get<CommunityPriceResponse>(cacheKey);
     if (cached) return cached;
+
+    // Upper bound: a future-dated expense must not match indefinitely (there's no
+    // future-date rejection on expense create) — cap at the end of the current week.
+    const ceiling = mondayOfWeek(new Date());
+    ceiling.setDate(ceiling.getDate() + 7);
 
     const rows = await this.prisma.communityPriceObservation.findMany({
       where: {
         canonicalName: normalizedProduct,
         ...(region ? { region } : {}),
-        weekStart: { gte: cutoff },
+        weekStart: { gte: cutoff, lt: ceiling },
       },
       select: { merchantNormalized: true, price: true, currencyCode: true, contributorKey: true },
     });
@@ -124,7 +162,7 @@ export class CommunityPriceService {
    */
   async searchProducts(q: string): Promise<CommunityProductSearchItem[]> {
     const term = q.trim();
-    if (term.length < 2) return [];
+    if (term.length < 2 || !this.readEnabled()) return [];
     const k = this.getK();
 
     // One row per distinct (product, region, contributor). Nested maps count
@@ -171,9 +209,11 @@ export class CommunityPriceService {
 
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
-        select: { contributeCommunityPrices: true },
+        select: { contributeCommunityPrices: true, createdAt: true },
       });
       if (!user?.contributeCommunityPrices) return; // consent gate
+      // Anti-Sybil brake: a freshly-created account can't contribute yet.
+      if (Date.now() - user.createdAt.getTime() < MIN_ACCOUNT_AGE_DAYS * 86_400_000) return;
 
       const expense = await this.prisma.expense.findFirst({
         where: { id: expenseId, accountId, isDeleted: false },
@@ -181,6 +221,7 @@ export class CommunityPriceService {
           merchant: true,
           currencyCode: true,
           date: true,
+          source: true,
           locationLat: true,
           locationLng: true,
           account: { select: { encryptionEnabled: true } },
@@ -192,6 +233,9 @@ export class CommunityPriceService {
       });
       if (!expense) return;
       if (expense.account.encryptionEnabled) return; // merchant/canonicalName would be ciphertext
+      // Only receipt-scanned expenses feed the corpus — a manually-typed / API-posted
+      // expense carries no AI/OCR product name and must never broadcast free text.
+      if (!RECEIPT_SOURCES.has(expense.source)) return;
       if (!expense.merchant) return;
       if (expense.items.length === 0) return;
       if (expense.locationLat == null || expense.locationLng == null) return; // no POS coords, skip
@@ -201,7 +245,7 @@ export class CommunityPriceService {
       if (lat === 0 && lng === 0) return; // null-island convention (undecryptable/absent location)
 
       const merchantNormalized = normalizeMerchantPL(expense.merchant)?.trim().toLowerCase();
-      if (!merchantNormalized) return;
+      if (!merchantNormalized || merchantNormalized.length > MAX_LABEL_LEN) return;
 
       const city = await this.geocoding.reverseGeocode(lat, lng).catch(() => null);
       const region = regionBucket(lat, lng, city);
@@ -213,6 +257,7 @@ export class CommunityPriceService {
         const rawName = item.canonicalName as string;
         const canonicalName = aliasMap.get(rawName) ?? rawName;
         if (canonicalName === IGNORED_SENTINEL) continue;
+        if (canonicalName.length > MAX_LABEL_LEN) continue; // no oversized free text into the shared corpus
 
         const quantity = Number(item.quantity);
         const price =
@@ -250,7 +295,9 @@ export class CommunityPriceService {
         }
       }
     } catch (e) {
-      this.logger.warn(`recordContribution failed for expense ${expenseId}: ${e}`);
+      this.logger.warn(
+        `recordContribution failed for expense ${expenseId}: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   }
 
