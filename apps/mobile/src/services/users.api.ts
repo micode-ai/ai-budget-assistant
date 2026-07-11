@@ -12,7 +12,7 @@ export const usersApi = {
     );
   },
 
-  updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string }) {
+  updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean }) {
     return httpClient.request<any>('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(data),

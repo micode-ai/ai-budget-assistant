@@ -711,6 +711,14 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="wrapped/index"
+          options={{
+            headerShown: false,
+            presentation: 'fullScreenModal',
+            animation: 'fade',
+          }}
+        />
+        <Stack.Screen
           name="income/new"
           options={{
             presentation: 'modal',

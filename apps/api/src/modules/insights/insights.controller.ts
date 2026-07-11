@@ -4,6 +4,7 @@ import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
 import { SafeToSpendService } from './safe-to-spend.service';
+import { WrappedService } from './wrapped.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
@@ -19,6 +20,7 @@ export class InsightsController {
     private readonly storyService: StoryService,
     private readonly fatFinderService: FatFinderService,
     private readonly safeToSpendService: SafeToSpendService,
+    private readonly wrappedService: WrappedService,
   ) {}
 
   @Get()
@@ -37,6 +39,24 @@ export class InsightsController {
   async getSafeToSpend(@Req() req: AuthenticatedRequest) {
     const baseCurrency = req.user.currencyCode || 'USD';
     return this.safeToSpendService.compute(req.accountId, req.user.id, baseCurrency);
+  }
+
+  /**
+   * GET /insights/wrapped?year=YYYY
+   * Spotify-Wrapped-style year-in-review, assembled from existing data.
+   * No tier guard — FREE (a growth/shareability feature), same precedent as safe-to-spend.
+   * Defaults to the current year; clamps to a sane range.
+   */
+  @Get('wrapped')
+  async getWrapped(
+    @Req() req: AuthenticatedRequest,
+    @Query('year') year?: string,
+  ) {
+    const baseCurrency = req.user.currencyCode || 'USD';
+    const now = new Date().getFullYear();
+    let target = parseInt(year ?? '', 10);
+    if (!Number.isFinite(target) || target < 2000 || target > now) target = now;
+    return this.wrappedService.getWrapped(req.accountId, req.user.id, baseCurrency, target);
   }
 
   @Get('ai-charts')

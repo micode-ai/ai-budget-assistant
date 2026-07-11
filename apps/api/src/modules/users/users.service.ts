@@ -12,6 +12,7 @@ interface CreateUserData {
   isVerified?: boolean;
   emailVerificationCode?: string;
   emailVerificationExpiresAt?: Date;
+  contributeCommunityPrices?: boolean;
 }
 
 @Injectable()

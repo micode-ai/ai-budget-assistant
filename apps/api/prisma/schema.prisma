@@ -156,6 +156,11 @@ model User {
   notifyTripSettleUp      Boolean   @default(true) @map("notify_trip_settle_up")
   notifyShoppingReminders Boolean   @default(true) @map("notify_shopping_reminders")
   notifyShoppingDeals     Boolean   @default(true) @map("notify_shopping_deals")
+  // ABA-335 (Community Price Map, M1): personal, opt-in consent to contribute
+  // anonymized receipt price observations to the crowdsourced corpus. Default
+  // false (GDPR opt-in). Consent is personal (not an Account setting) — only
+  // the human who created a given expense can consent to sharing it.
+  contributeCommunityPrices Boolean @default(false) @map("contribute_community_prices")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
@@ -482,6 +487,36 @@ model ProductAlias {
   @@unique([accountId, rawName])
   @@index([accountId])
   @@map("product_aliases")
+}
+
+// Anonymized, k-anonymity-gated crowdsourced price observations (ABA-335, M1 —
+// write pipeline only; no read surface yet). One row per (contributing account,
+// product, store, region, ISO-week, currency) — the upsert on the unique key
+// below overwrites `price` on repeat purchases within the same week, so a
+// single user can't inflate the observation count or skew a future average.
+//
+// Deliberately holds NO accountId, NO userId, NO expenseId, and NO user
+// coordinates. `contributorKey` is a salted one-way hash of the contributing
+// accountId — used ONLY for the one-vote-per-account-per-week dedup (this
+// unique constraint) and, later, the read-path k-anonymity gate
+// (COUNT(DISTINCT contributor_key) >= K); it is never exposed to clients.
+// `region` is derived from the STORE's (point-of-sale) location via reverse
+// geocoding — never the contributor's own location.
+model CommunityPriceObservation {
+  id                 String   @id @default(uuid())
+  canonicalName      String   @map("canonical_name")
+  merchantNormalized String   @map("merchant_normalized")
+  region             String
+  weekStart          DateTime @map("week_start") @db.Date
+  currencyCode       String   @map("currency_code")
+  price              Decimal  @db.Decimal(12, 2)
+  contributorKey     String   @map("contributor_key")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@unique([canonicalName, merchantNormalized, region, weekStart, currencyCode, contributorKey], name: "community_obs_dedup", map: "community_obs_dedup_key")
+  @@index([canonicalName, region, weekStart], map: "community_obs_product_region_week_idx")
+  @@index([weekStart], map: "community_obs_week_start_idx")
+  @@map("community_price_observations")
 }
 
 model ShoppingList {

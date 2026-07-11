@@ -1,4 +1,4 @@
-import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse } from '@budget/shared-types';
+import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse, WrappedResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const analyticsApi = {
@@ -78,5 +78,10 @@ export const analyticsApi = {
 
   getSafeToSpend() {
     return httpClient.request<SafeToSpendResponse>('/insights/safe-to-spend');
+  },
+
+  getWrapped(year?: number) {
+    const params = year ? `?year=${year}` : '';
+    return httpClient.request<WrappedResponse>(`/insights/wrapped${params}`);
   },
 };

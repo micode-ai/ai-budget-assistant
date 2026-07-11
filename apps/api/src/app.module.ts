@@ -50,6 +50,7 @@ import { FamilyFeedModule } from './modules/family-feed/family-feed.module';
 import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.module';
 import { PriceHistoryModule } from './modules/price-history/price-history.module';
 import { ShoppingListModule } from './modules/shopping-list/shopping-list.module';
+import { CommunityPriceModule } from './modules/community-prices/community-price.module';
 
 @Module({
   imports: [
@@ -124,6 +125,7 @@ import { ShoppingListModule } from './modules/shopping-list/shopping-list.module
     TripSettleUpModule,
     PriceHistoryModule,
     ShoppingListModule,
+    CommunityPriceModule,
   ],
   providers: [
     {
