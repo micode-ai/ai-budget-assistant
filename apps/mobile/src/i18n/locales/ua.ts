@@ -2135,6 +2135,9 @@ export default {
     backedBy: '{{receipts}} чеків · {{contributors}} покупців',
     week1: '1 тиждень',
     week4: '4 тижні',
+    listView: 'Список',
+    mapView: 'Карта',
+    mapEmpty: 'Поки що немає магазинів на карті',
     paywall: 'Де найдешевше',
   },
   safeToSpend: {

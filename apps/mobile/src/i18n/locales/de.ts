@@ -2131,6 +2131,9 @@ export default {
     backedBy: '{{receipts}} Belege · {{contributors}} Nutzer',
     week1: '1 Woche',
     week4: '4 Wochen',
+    listView: 'Liste',
+    mapView: 'Karte',
+    mapEmpty: 'Noch keine Geschäfte auf der Karte',
     paywall: 'Wo ist es am günstigsten',
   },
   safeToSpend: {

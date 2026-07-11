@@ -2131,6 +2131,9 @@ export default {
     backedBy: '{{receipts}} bonnetjes · {{contributors}} kopers',
     week1: '1 week',
     week4: '4 weken',
+    listView: 'Lijst',
+    mapView: 'Kaart',
+    mapEmpty: 'Nog geen winkels op de kaart',
     paywall: 'Waar is het goedkoopst',
   },
   safeToSpend: {

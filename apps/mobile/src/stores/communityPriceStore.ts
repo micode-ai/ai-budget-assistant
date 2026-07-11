@@ -4,6 +4,7 @@ import i18n from '@/i18n';
 import { useUpgradeStore } from './upgradeStore';
 import type {
   CommunityPriceResponse,
+  CommunityPriceMapPoint,
   CommunityProductSearchItem,
   CommunityPricePeriod,
 } from '@budget/shared-types';
@@ -16,9 +17,12 @@ interface CommunityPriceState {
   result: CommunityPriceResponse | null;
   period: CommunityPricePeriod;
   isLoading: boolean;
+  mapPoints: CommunityPriceMapPoint[];
+  isLoadingMap: boolean;
 
   search: (q: string) => Promise<void>;
   loadPrices: (product: string, region: string | null, period?: CommunityPricePeriod) => Promise<void>;
+  loadMap: (product: string, region: string | null, period?: CommunityPricePeriod) => Promise<void>;
   setPeriod: (period: CommunityPricePeriod) => void;
   reset: () => void;
 }
@@ -33,6 +37,8 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
   result: null,
   period: '1w',
   isLoading: false,
+  mapPoints: [],
+  isLoadingMap: false,
 
   search: async (q) => {
     set({ searchTerm: q });
@@ -73,6 +79,23 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
     }
   },
 
+  loadMap: async (product, region, period) => {
+    const resolvedPeriod = period ?? get().period;
+    set({ isLoadingMap: true, selectedProduct: product, period: resolvedPeriod });
+    try {
+      const mapPoints = await api.getCommunityMap(product, region, resolvedPeriod);
+      set({ mapPoints, isLoadingMap: false });
+    } catch (e) {
+      set({ isLoadingMap: false });
+      const status = (e as { status?: number }).status;
+      if (status === 403) {
+        useUpgradeStore.getState().show(i18n.t('communityPrices.paywall'), 'pro');
+      } else {
+        console.warn('[communityPriceStore] loadMap failed', e);
+      }
+    }
+  },
+
   setPeriod: (period) => {
     set({ period });
     const { selectedProduct } = get();
@@ -90,5 +113,7 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
       result: null,
       period: '1w',
       isLoading: false,
+      mapPoints: [],
+      isLoadingMap: false,
     }),
 }));

@@ -2103,6 +2103,9 @@ export default {
     backedBy: '{{receipts}} чэкаў · {{contributors}} пакупнікоў',
     week1: '1 тыдзень',
     week4: '4 тыдні',
+    listView: 'Спіс',
+    mapView: 'Карта',
+    mapEmpty: 'Пакуль няма крам на карце',
     paywall: 'Дзе танней',
   },
   safeToSpend: {

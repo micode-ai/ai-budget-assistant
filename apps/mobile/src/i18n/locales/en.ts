@@ -2142,6 +2142,9 @@ export default {
     backedBy: '{{receipts}} receipts · {{contributors}} shoppers',
     week1: '1 week',
     week4: '4 weeks',
+    listView: 'List',
+    mapView: 'Map',
+    mapEmpty: 'No mapped stores yet',
     paywall: "Where's cheapest",
   },
   safeToSpend: {

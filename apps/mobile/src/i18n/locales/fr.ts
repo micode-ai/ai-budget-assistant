@@ -2131,6 +2131,9 @@ export default {
     backedBy: '{{receipts}} reçus · {{contributors}} acheteurs',
     week1: '1 semaine',
     week4: '4 semaines',
+    listView: 'Liste',
+    mapView: 'Carte',
+    mapEmpty: 'Aucun magasin sur la carte pour le moment',
     paywall: 'Où est-ce moins cher',
   },
   safeToSpend: {

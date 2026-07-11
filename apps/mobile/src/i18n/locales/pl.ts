@@ -2135,6 +2135,9 @@ export default {
     backedBy: '{{receipts}} paragonów · {{contributors}} osób',
     week1: '1 tydzień',
     week4: '4 tygodnie',
+    listView: 'Lista',
+    mapView: 'Mapa',
+    mapEmpty: 'Brak jeszcze sklepów na mapie',
     paywall: 'Gdzie najtaniej',
   },
   safeToSpend: {

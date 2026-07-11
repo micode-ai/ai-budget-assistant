@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useCommunityPriceStore } from '@/stores/communityPriceStore';
+import { ExpenseMapView } from '@/components/map/ExpenseMapView';
+import { buildCommunityMapPoints } from '@/components/map/buildCommunityMapPoints';
 import type { CommunityPricePeriod, CommunityProductSearchItem, CommunityPriceStore } from '@budget/shared-types';
 
 const PERIODS: CommunityPricePeriod[] = ['1w', '4w'];
@@ -21,6 +23,8 @@ const PERIOD_KEYS: Record<CommunityPricePeriod, string> = {
   '1w': 'communityPrices.week1',
   '4w': 'communityPrices.week4',
 };
+
+type ViewMode = 'list' | 'map';
 
 export default function CommunityPriceScreen() {
   const { t } = useTranslation();
@@ -35,11 +39,16 @@ export default function CommunityPriceScreen() {
     result,
     period,
     isLoading,
+    mapPoints,
+    isLoadingMap,
     search,
     loadPrices,
+    loadMap,
     setPeriod,
     reset,
   } = useCommunityPriceStore();
+
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -63,14 +72,27 @@ export default function CommunityPriceScreen() {
 
   const handleSelectProduct = useCallback(
     (item: CommunityProductSearchItem) => {
+      setViewMode('list');
       loadPrices(item.canonicalName, null, period);
     },
     [loadPrices, period],
   );
 
   const handleBackToSearch = useCallback(() => {
+    setViewMode('list');
     reset();
   }, [reset]);
+
+  // Load map points whenever the map tab is active and the selected product
+  // or period changes (mirrors the shopping-list store-map precedent).
+  useEffect(() => {
+    if (viewMode === 'map' && selectedProduct) {
+      loadMap(selectedProduct, null, period);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, selectedProduct, period]);
+
+  const mapPointsBuilt = useMemo(() => buildCommunityMapPoints(mapPoints, t), [mapPoints, t]);
 
   const renderSearchResult = useCallback(
     ({ item }: { item: CommunityProductSearchItem }) => (
@@ -131,23 +153,74 @@ export default function CommunityPriceScreen() {
             </Text>
           </TouchableOpacity>
 
-          <View style={styles.periodRow}>
-            {PERIODS.map((p) => (
+          <View style={styles.toggleRow}>
+            <View style={styles.periodRow}>
+              {PERIODS.map((p) => (
+                <TouchableOpacity
+                  key={p}
+                  style={[styles.periodChip, period === p && styles.periodChipActive]}
+                  onPress={() => setPeriod(p)}
+                >
+                  <Text
+                    style={[styles.periodChipText, period === p && styles.periodChipTextActive]}
+                  >
+                    {t(PERIOD_KEYS[p] as any)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.periodRow}>
               <TouchableOpacity
-                key={p}
-                style={[styles.periodChip, period === p && styles.periodChipActive]}
-                onPress={() => setPeriod(p)}
+                style={[styles.periodChip, viewMode === 'list' && styles.periodChipActive]}
+                onPress={() => setViewMode('list')}
               >
                 <Text
-                  style={[styles.periodChipText, period === p && styles.periodChipTextActive]}
+                  style={[
+                    styles.periodChipText,
+                    viewMode === 'list' && styles.periodChipTextActive,
+                  ]}
                 >
-                  {t(PERIOD_KEYS[p] as any)}
+                  {t('communityPrices.listView')}
                 </Text>
               </TouchableOpacity>
-            ))}
+              <TouchableOpacity
+                style={[styles.periodChip, viewMode === 'map' && styles.periodChipActive]}
+                onPress={() => setViewMode('map')}
+              >
+                <Text
+                  style={[
+                    styles.periodChipText,
+                    viewMode === 'map' && styles.periodChipTextActive,
+                  ]}
+                >
+                  {t('communityPrices.mapView')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          {isLoading ? (
+          {viewMode === 'map' ? (
+            isLoadingMap ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+              </View>
+            ) : mapPointsBuilt.length > 0 ? (
+              <View style={styles.mapWrap}>
+                <ExpenseMapView
+                  points={mapPointsBuilt}
+                  openLabel={t('map.open')}
+                  onPointPress={() => {}}
+                  style={styles.map}
+                />
+              </View>
+            ) : (
+              <View style={styles.emptyState}>
+                <Ionicons name="map-outline" size={48} color={theme.colors.textTertiary} />
+                <Text style={styles.emptyTitle}>{t('communityPrices.mapEmpty')}</Text>
+              </View>
+            )
+          ) : isLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
@@ -309,12 +382,28 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.primary,
     flexShrink: 1,
   },
+  toggleRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    flexWrap: 'wrap' as const,
+  },
   periodRow: {
     flexDirection: 'row' as const,
     gap: theme.spacing[2],
     paddingHorizontal: theme.spacing[4],
     paddingTop: theme.spacing[3],
     paddingBottom: theme.spacing[2],
+  },
+  mapWrap: {
+    flex: 1,
+    marginHorizontal: theme.spacing[4],
+    marginBottom: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden' as const,
+  },
+  map: {
+    flex: 1,
   },
   periodChip: {
     paddingHorizontal: theme.spacing[3],

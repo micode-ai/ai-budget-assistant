@@ -2135,6 +2135,9 @@ export default {
     backedBy: '{{receipts}} чеков · {{contributors}} покупателей',
     week1: '1 неделя',
     week4: '4 недели',
+    listView: 'Список',
+    mapView: 'Карта',
+    mapEmpty: 'Пока нет магазинов на карте',
     paywall: 'Где дешевле всего',
   },
   safeToSpend: {
