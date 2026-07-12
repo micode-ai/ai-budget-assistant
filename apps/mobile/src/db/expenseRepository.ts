@@ -260,6 +260,17 @@ export async function updateExpenseInDb(
   );
 }
 
+/**
+ * Persist the server PK for a locally-created row (matched by its local id/clientId).
+ * Anomaly-alert and push deep-links address expenses by their SERVER id, so without
+ * this a freshly-created expense stays unreachable from its own alert until the next
+ * full pull happens to backfill server_id. Targeted single-column update — no
+ * updated_at / sync_status side effects.
+ */
+export async function setExpenseServerId(id: string, serverId: string): Promise<void> {
+  await executeSql('UPDATE expenses SET server_id = ? WHERE id = ?', [serverId, id]);
+}
+
 export async function saveReceiptImageLocally(
   expenseId: string,
   imageBase64: string,

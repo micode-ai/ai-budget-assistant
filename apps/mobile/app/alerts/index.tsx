@@ -29,11 +29,9 @@ const TYPE_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
 };
 
 /**
- * An anomaly alert deep-links by the expense's SERVER PK. If the user has already
- * resolved the duplicate (deleted / merged the expense), that row is gone from the
- * local store, so the target screen would dead-end on "Expense not found". Check
- * the live local store here — same 4-way id resolution the detail/merge screens use —
- * so the alert handler can show an "already resolved" message instead of a dead-end.
+ * An anomaly alert deep-links by the expense's SERVER PK, but a locally-created row
+ * is keyed by its clientId and only learns its serverId once it has synced/pulled.
+ * Resolve against the live store the same 4-way way the detail/merge screens do.
  */
 function isExpenseResolvableLocally(id?: string | null): boolean {
   if (!id) return false;
@@ -44,15 +42,6 @@ function isExpenseResolvableLocally(id?: string | null): boolean {
         !e.isDeleted &&
         (e.id === id || e.serverId === id || e.clientId === id || e.localId === id),
     );
-}
-
-/**
- * Guards the "already resolved" shortcut: only conclude a target is gone once the
- * expense store actually holds rows. On a cold-start deep-link to /alerts the store
- * may not have hydrated yet — an empty store must not be read as "everything resolved".
- */
-function isExpenseStoreHydrated(): boolean {
-  return useExpenseStore.getState().expenses.length > 0;
 }
 
 export default function AlertsScreen() {
@@ -152,11 +141,37 @@ export default function AlertsScreen() {
     [t],
   );
 
-  // The user already resolved this duplicate (deleted/merged the expense), so the
-  // alert points at a row that no longer exists locally. Clear the stale alert and
-  // say so, instead of dropping the user on a confusing "Expense not found" screen.
-  const handleStaleAlert = useCallback(
-    (alert: AnomalyAlert) => {
+  // Alert id currently being resolved (waiting on a fresh expense pull) — drives a
+  // small inline spinner and blocks double-taps.
+  const [resolvingId, setResolvingId] = React.useState<string | null>(null);
+
+  /**
+   * Open the expense(s) an alert references. A locally-created row may not carry its
+   * serverId yet, so if the target isn't resolvable we force ONE fresh expense pull
+   * (which backfills serverId) and retry — only then, if it's still missing, do we
+   * conclude the duplicate was already resolved (deleted/merged) and clear the alert.
+   * This is what fixes "the expense won't open from the alert" for existing alerts.
+   */
+  const openAlertTargets = useCallback(
+    async (alert: AnomalyAlert, ids: (string | undefined)[], navigate: () => void) => {
+      const need = ids.filter((x): x is string => !!x);
+      if (need.every(isExpenseResolvableLocally)) {
+        navigate();
+        return;
+      }
+      setResolvingId(alert.id);
+      try {
+        await useExpenseStore.getState().loadExpenses({ force: true });
+      } catch {
+        // offline / pull failed — fall through to the post-pull check
+      }
+      setResolvingId(null);
+      if (need.every(isExpenseResolvableLocally)) {
+        navigate();
+        return;
+      }
+      // Still missing after a fresh pull → genuinely resolved/removed. Clear the stale
+      // alert instead of dropping the user on a confusing "Expense not found" screen.
       if (canEdit) dismiss(alert.id);
       showAlert(t('alerts.alreadyResolvedTitle'), t('alerts.alreadyResolvedBody'));
     },
@@ -165,6 +180,7 @@ export default function AlertsScreen() {
 
   const handlePress = useCallback(
     (alert: AnomalyAlert) => {
+      if (resolvingId) return; // a resolve pull is already in flight
       if (canEdit) markRead(alert.id); // write endpoints are viewer-blocked server-side
       if (alert.type === 'recurring_suggestion' && canEdit) {
         const p = alert.params as Record<string, string>;
@@ -178,23 +194,17 @@ export default function AlertsScreen() {
         // aId = the expense that triggered the alert; bId = the other candidate.
         const aId = p.expenseId ?? alert.expenseId ?? '';
         const bId = p.otherExpenseId ?? '';
-        // A merge needs BOTH rows; if either is already gone the pair is resolved.
-        // Only trust "gone" once the store has hydrated (a legit merge alert implies
-        // ≥2 expenses exist) — an empty store means "not loaded yet", not "resolved".
-        if (isExpenseStoreHydrated() && (!isExpenseResolvableLocally(aId) || !isExpenseResolvableLocally(bId))) {
-          handleStaleAlert(alert);
-          return;
-        }
-        router.push({ pathname: '/expense/merge' as any, params: { aId, bId } });
+        void openAlertTargets(alert, [aId, bId], () =>
+          router.push({ pathname: '/expense/merge' as any, params: { aId, bId } }),
+        );
       } else if (alert.expenseId) {
-        if (isExpenseStoreHydrated() && !isExpenseResolvableLocally(alert.expenseId)) {
-          handleStaleAlert(alert);
-          return;
-        }
-        router.push(`/expense/${alert.expenseId}` as any);
+        const targetId = alert.expenseId;
+        void openAlertTargets(alert, [targetId], () =>
+          router.push(`/expense/${targetId}` as any),
+        );
       }
     },
-    [markRead, canEdit, handleStaleAlert],
+    [markRead, canEdit, resolvingId, openAlertTargets],
   );
 
   const renderAlert = ({ item }: { item: AnomalyAlert }) => {
@@ -231,10 +241,14 @@ export default function AlertsScreen() {
               })}
             </Text>
           </View>
-          {canEdit && (
-            <TouchableOpacity style={styles.dismissBtn} hitSlop={8} onPress={() => dismiss(item.id)}>
-              <Ionicons name="close" size={18} color={theme.colors.textTertiary} />
-            </TouchableOpacity>
+          {resolvingId === item.id ? (
+            <ActivityIndicator size="small" color={theme.colors.primary} style={styles.dismissBtn} />
+          ) : (
+            canEdit && (
+              <TouchableOpacity style={styles.dismissBtn} hitSlop={8} onPress={() => dismiss(item.id)}>
+                <Ionicons name="close" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            )
           )}
         </View>
       </TouchableOpacity>

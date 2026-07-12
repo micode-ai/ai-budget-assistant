@@ -12,6 +12,7 @@ import {
   upsertExpense,
   softDeleteExpenseInDb,
   updateExpenseInDb,
+  setExpenseServerId,
 } from '@/db/expenseRepository';
 import {
   loadItemsByExpenseId,
@@ -86,7 +87,7 @@ export async function syncPendingExpenses(
           expense.accountId,
         );
 
-      await api.createExpense({
+      const created = await api.createExpense({
         localId: expense.localId || expense.id,
         amount: encPayload.amount ?? expense.amount,
         discountAmount: encPayload.discountAmount ?? expense.discountAmount,
@@ -124,6 +125,17 @@ export async function syncPendingExpenses(
         encryptedPayload,
         encryptionKeyVersion,
       } as any);
+      // Capture the server PK so alert / push deep-links can resolve this row before
+      // the next pull backfills it (same reason as addExpense).
+      const serverPk = (created as any)?.id;
+      if (serverPk && serverPk !== expense.id) {
+        _set((state) => ({
+          expenses: state.expenses.map((e) =>
+            e.id === expense.id ? { ...e, serverId: serverPk } : e,
+          ),
+        }));
+        await setExpenseServerId(expense.id, serverPk);
+      }
     } catch {
       // upsert handles duplicates; other errors skip silently (retry on next pull)
     }

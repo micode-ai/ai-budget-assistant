@@ -7,6 +7,7 @@ import i18n from '@/i18n';
 import {
   insertExpense,
   updateExpenseInDb,
+  setExpenseServerId,
   softDeleteExpenseInDb,
   saveReceiptImageLocally,
   getReceiptImageFromDb,
@@ -291,6 +292,19 @@ export const useExpenseStore = create<ExpenseState>()(
           encryptedPayload,
           encryptionKeyVersion,
         } as any);
+      }).then((created: any) => {
+        // Persist the server PK so anomaly-alert / push deep-links (which address the
+        // expense by its SERVER id) can resolve this locally-created row immediately,
+        // without waiting for the next full pull to backfill serverId.
+        const serverPk = created?.id;
+        if (serverPk && serverPk !== id) {
+          set((state) => ({
+            expenses: state.expenses.map((exp) =>
+              exp.id === id ? { ...exp, serverId: serverPk } : exp
+            ),
+          }));
+          setExpenseServerId(id, serverPk).catch(() => {});
+        }
       }).catch((e) => {
         // Revert to pending so syncPendingExpenses can retry later
         set((state) => ({
