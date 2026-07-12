@@ -23,4 +23,5 @@ Puedes activar o desactivar las notificaciones push de anomalías en **Ajustes �
 
 - La detección funciona automáticamente para gastos añadidos a mano, por voz, desde recibos, mediante bots de Telegram/WhatsApp/Slack y desde importaciones bancarias.
 - Cada anomalía se notifica una sola vez — no recibirás la misma alerta dos veces.
+- En cuanto resuelves un posible duplicado eliminando o combinando el gasto de más, su alerta desaparece sola. Si ya lo habías resuelto, al tocar la alerta solo indica que ya está resuelto, sin la confusa pantalla de «gasto no encontrado».
 - En cuentas compartidas, marcar alertas como leídas afecta a toda la cuenta; los observadores pueden leer el feed pero no modificarlo.

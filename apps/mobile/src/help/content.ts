@@ -3652,6 +3652,7 @@ You can turn anomaly push notifications on or off in **Settings → Notification
 
 - Detection works automatically for expenses added by hand, by voice, from receipts, via Telegram/WhatsApp/Slack bots, and from bank imports.
 - Each anomaly is reported only once — you won't get the same alert twice.
+- Once you handle a possible duplicate by deleting or merging the extra expense, its alert clears itself. If you already dealt with it, tapping the alert simply says it's resolved — no confusing "expense not found" screen.
 - In shared accounts, marking alerts as read affects the whole account; viewers can read the feed but not change it.
 `,
     },
@@ -7799,6 +7800,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 - Обнаружение работает автоматически для расходов, добавленных вручную, голосом, с чеков, через ботов Telegram/WhatsApp/Slack и из импорта банковских выписок.
 - Каждая аномалия сообщается только один раз — одно и то же оповещение не придёт дважды.
+- Как только вы разберётесь с возможным повтором — удалите или объедините лишний расход — его оповещение исчезнет само. Если вы уже всё сделали, при нажатии оповещение просто сообщит, что вопрос решён, без запутанного экрана «расход не найден».
 - В общих аккаунтах отметка «прочитано» действует на весь аккаунт; наблюдатели могут читать ленту, но не могут её изменять.
 `,
     },
@@ -11914,6 +11916,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 - Виявлення працює автоматично для витрат, доданих вручну, голосом, з чеків, через ботів Telegram/WhatsApp/Slack та з імпорту банківських виписок.
 - Кожна аномалія повідомляється лише один раз — те саме сповіщення не прийде двічі.
+- Щойно ви розберетеся з можливим повтором — видалите або об'єднаєте зайву витрату — його сповіщення зникне саме. Якщо ви вже все зробили, натискання сповіщення просто повідомить, що питання вирішено, без заплутаного екрана «витрату не знайдено».
 - У спільних облікових записах позначення «прочитано» впливає на весь обліковий запис; глядачі можуть читати стрічку, але не можуть її змінювати.
 `,
     },
@@ -16014,6 +16017,7 @@ Możesz włączyć lub wyłączyć powiadomienia push o anomaliach w **Ustawieni
 
 - Wykrywanie działa automatycznie dla wydatków dodanych ręcznie, głosowo, ze skanów paragonów, przez boty Telegram/WhatsApp/Slack oraz z importów bankowych.
 - Każda anomalia jest zgłaszana tylko raz — nie otrzymasz tego samego alertu dwa razy.
+- Gdy rozwiążesz możliwy duplikat, usuwając lub scalając nadmiarowy wydatek, jego alert znika sam. Jeśli już się tym zająłeś, dotknięcie alertu po prostu informuje, że sprawa jest załatwiona — bez mylącego ekranu „nie znaleziono wydatku”.
 - Na kontach współdzielonych oznaczenie alertów jako przeczytanych dotyczy całego konta; obserwatorzy mogą czytać kanał, ale nie mogą go zmieniać.
 `,
     },
@@ -20089,6 +20093,7 @@ Du kannst Anomalie-Push-Benachrichtigungen in **Einstellungen → Benachrichtigu
 
 - Die Erkennung funktioniert automatisch für Ausgaben, die manuell, per Sprache, von Belegen, über Telegram/WhatsApp/Slack-Bots und aus Bankimporten hinzugefügt wurden.
 - Jede Anomalie wird nur einmal gemeldet — du bekommst denselben Hinweis nicht zweimal.
+- Sobald du einen möglichen Doppeleintrag durch Löschen oder Zusammenführen der zusätzlichen Ausgabe erledigst, verschwindet der zugehörige Hinweis von selbst. Hast du ihn bereits erledigt, meldet ein Tippen nur „bereits erledigt“ — kein verwirrender „Ausgabe nicht gefunden“-Bildschirm.
 - In geteilten Konten wirkt das Markieren als gelesen auf das gesamte Konto; Betrachter können den Feed lesen, aber nicht ändern.
 `,
     },
@@ -24153,6 +24158,7 @@ Puedes activar o desactivar las notificaciones push de anomalías en **Ajustes �
 
 - La detección funciona automáticamente para gastos añadidos a mano, por voz, desde recibos, mediante bots de Telegram/WhatsApp/Slack y desde importaciones bancarias.
 - Cada anomalía se notifica una sola vez — no recibirás la misma alerta dos veces.
+- En cuanto resuelves un posible duplicado eliminando o combinando el gasto de más, su alerta desaparece sola. Si ya lo habías resuelto, al tocar la alerta solo indica que ya está resuelto, sin la confusa pantalla de «gasto no encontrado».
 - En cuentas compartidas, marcar alertas como leídas afecta a toda la cuenta; los observadores pueden leer el feed pero no modificarlo.
 `,
     },
@@ -28215,6 +28221,7 @@ Vous pouvez activer ou désactiver les notifications push d'anomalies dans **Par
 
 - La détection fonctionne automatiquement pour les dépenses ajoutées manuellement, par la voix, depuis des reçus, via les bots Telegram/WhatsApp/Slack et depuis les importations bancaires.
 - Chaque anomalie n'est signalée qu'une seule fois — vous ne recevrez pas deux fois la même alerte.
+- Dès que vous traitez un doublon possible en supprimant ou en fusionnant la dépense en trop, son alerte disparaît d'elle-même. Si vous l'avez déjà réglé, toucher l'alerte indique simplement que c'est résolu — pas d'écran déroutant « dépense introuvable ».
 - Dans les comptes partagés, marquer les alertes comme lues affecte l'ensemble du compte ; les observateurs peuvent lire le fil mais ne peuvent pas le modifier.
 `,
     },
@@ -32237,6 +32244,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 - Выяўленне працуе аўтаматычна для выдаткаў, дабаўленых уручную, голасам, з чэкаў, праз боты Telegram/WhatsApp/Slack і з імпарту банкаўскіх выпісак.
 - Кожная анамалія паведамляецца толькі адзін раз — адно і тое ж апавяшчэнне не прыйдзе двойчы.
+- Як толькі вы разбярэцеся з магчымым паўторам — выдаліце або аб'яднаеце лішнюю выдатку — яго апавяшчэнне знікне само. Калі вы ўжо ўсё зрабілі, націск на апавяшчэнне проста паведаміць, што пытанне вырашана, без заблытанага экрана «выдатак не знойдзены».
 - У агульных уліковых запісах пазначэнне «прачытана» ўплывае на ўвесь уліковы запіс; назіральнікі могуць чытаць стужку, але не могуць яе змяняць.
 `,
     },
@@ -36378,6 +36386,7 @@ Je kunt anomalie-pushmeldingen in- of uitschakelen via **Instellingen → Meldin
 
 - Detectie werkt automatisch voor uitgaven die handmatig, via spraak, van bonnen, via Telegram/WhatsApp/Slack-bots en via bankimports zijn toegevoegd.
 - Elke anomalie wordt slechts één keer gemeld — je ontvangt dezelfde melding niet twee keer.
+- Zodra je een mogelijke dubbele uitgave oplost door de extra uitgave te verwijderen of samen te voegen, verdwijnt de bijbehorende melding vanzelf. Heb je het al afgehandeld, dan zegt het tikken op de melding gewoon dat het is opgelost — geen verwarrend scherm 'uitgave niet gevonden'.
 - In gedeelde accounts heeft het als gelezen markeren van meldingen invloed op het hele account; kijkers kunnen de feed lezen maar niet wijzigen.
 `,
     },

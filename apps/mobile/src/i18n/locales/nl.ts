@@ -765,6 +765,8 @@ export default {
     cycleWeekly: 'wekelijks',
     mergeTitle: 'Zelfde aankoop, twee valuta?',
     mergeBody: '{{amountA}} {{currencyA}} en {{amountB}} {{currencyB}} bij {{merchant}} lijken dezelfde transactie. Samenvoegen?',
+    alreadyResolvedTitle: 'Al opgelost',
+    alreadyResolvedBody: 'Dit lijkt al afgehandeld — die uitgave staat er niet meer.',
     tabAlerts: 'Meldingen',
     tabInvitations: 'Uitnodigingen',
     invitationTitle: 'Uitnodiging om lid te worden van {{accountName}}',

@@ -24,7 +24,7 @@ describe('ExpensesService.bulkUpdate id resolution', () => {
       del: jest.fn().mockResolvedValue(undefined),
     };
     const gamificationService: any = {};
-    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
     const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
     const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
     return { service, prisma, tx };
@@ -143,7 +143,7 @@ function makeCreateService(overrides: {
     del: jest.fn().mockResolvedValue(undefined),
   };
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
-  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
   const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
   return { service, prisma, anomalyService, stubUpdateMock };
@@ -267,7 +267,7 @@ function makeTripShareCreateService() {
     del: jest.fn().mockResolvedValue(undefined),
   };
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
-  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
   const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
   return { service, tx, shareCreateMany, shareDeleteMany, upsertMock };
@@ -376,7 +376,7 @@ describe('create — trip expense shares', () => {
       del: jest.fn().mockResolvedValue(undefined),
     };
     const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
-    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
     const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
     const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
 
@@ -457,15 +457,15 @@ function makeMergeService(overrides: {
     del: jest.fn().mockResolvedValue(undefined),
   };
   const gamificationService: any = {};
-  const anomalyService: any = {};
+  const anomalyService: any = { dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = {};
   const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
-  return { service, prisma, tx, expenseUpdateMock, expenseTagUpsertMock, projectExpenseUpsertMock };
+  return { service, prisma, tx, anomalyService, expenseUpdateMock, expenseTagUpsertMock, projectExpenseUpsertMock };
 }
 
 describe('mergeExpenses (Tier 2)', () => {
   it('soft-deletes the secondary and bumps syncVersion, returns keptId/mergedId', async () => {
-    const { service, expenseUpdateMock } = makeMergeService();
+    const { service, anomalyService, expenseUpdateMock } = makeMergeService();
     const result = await service.mergeExpenses('acc-1', 'user-1', { keepId: 'keep-1', mergeId: 'merge-1' });
     expect(result).toEqual({ keptId: 'keep-1', mergedId: 'merge-1' });
     // merge-1 should be soft-deleted
@@ -475,6 +475,8 @@ describe('mergeExpenses (Tier 2)', () => {
     // keep-1 should have syncVersion bumped
     const keepCall = expenseUpdateMock.mock.calls.find((c: any) => c[0].where.id === 'keep-1');
     expect(keepCall[0].data.syncVersion).toEqual({ increment: 1 });
+    // the soft-deleted (merged) row's stale anomaly alert must be dismissed
+    expect(anomalyService.dismissForExpense).toHaveBeenCalledWith('acc-1', 'merge-1');
   });
 
   it('gap-fills merchant, notes, categoryId from the merged row into the survivor when survivor lacks them', async () => {

@@ -223,6 +223,36 @@ export class AnomalyService {
     return { success: true, updated: result.count };
   }
 
+  /**
+   * Resolve-on-delete cleanup: dismiss any active alert that deep-links to an
+   * expense that has just been soft-deleted (manual delete, merge, or
+   * notification-stub reconciliation). Without this a duplicate_charge /
+   * possible_merge alert keeps pointing at a row that no longer exists, and the
+   * deep-link dead-ends on "Expense not found" — the user has to hunt down and
+   * clean the duplicate by hand (the reported bug). Matches on the alert's
+   * top-level `expenseId` column OR on `params.otherExpenseId` (the paired row of
+   * a duplicate/merge alert) so deleting EITHER side of the pair clears the alert.
+   * Fire-and-forget; never throws.
+   */
+  async dismissForExpense(accountId: string, expenseId: string): Promise<void> {
+    if (!expenseId) return;
+    try {
+      await this.prisma.anomalyAlert.updateMany({
+        where: {
+          accountId,
+          dismissedAt: null,
+          OR: [
+            { expenseId },
+            { params: { path: ['otherExpenseId'], equals: expenseId } },
+          ],
+        },
+        data: { dismissedAt: new Date() },
+      });
+    } catch (error) {
+      this.logger.warn(`dismissForExpense failed: ${error}`);
+    }
+  }
+
   /** A tracked subscription or recurring series charged >10% more than before. */
   async detectPriceIncrease(accountId: string, userId: string, expense: DetectorExpense): Promise<void> {
     const amount = Number(expense.amount);

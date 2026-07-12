@@ -23,4 +23,5 @@ Możesz włączyć lub wyłączyć powiadomienia push o anomaliach w **Ustawieni
 
 - Wykrywanie działa automatycznie dla wydatków dodanych ręcznie, głosowo, ze skanów paragonów, przez boty Telegram/WhatsApp/Slack oraz z importów bankowych.
 - Każda anomalia jest zgłaszana tylko raz — nie otrzymasz tego samego alertu dwa razy.
+- Gdy rozwiążesz możliwy duplikat, usuwając lub scalając nadmiarowy wydatek, jego alert znika sam. Jeśli już się tym zająłeś, dotknięcie alertu po prostu informuje, że sprawa jest załatwiona — bez mylącego ekranu „nie znaleziono wydatku”.
 - Na kontach współdzielonych oznaczenie alertów jako przeczytanych dotyczy całego konta; obserwatorzy mogą czytać kanał, ale nie mogą go zmieniać.

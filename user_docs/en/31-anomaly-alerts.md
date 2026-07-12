@@ -23,4 +23,5 @@ You can turn anomaly push notifications on or off in **Settings → Notification
 
 - Detection works automatically for expenses added by hand, by voice, from receipts, via Telegram/WhatsApp/Slack bots, and from bank imports.
 - Each anomaly is reported only once — you won't get the same alert twice.
+- Once you handle a possible duplicate by deleting or merging the extra expense, its alert clears itself. If you already dealt with it, tapping the alert simply says it's resolved — no confusing "expense not found" screen.
 - In shared accounts, marking alerts as read affects the whole account; viewers can read the feed but not change it.

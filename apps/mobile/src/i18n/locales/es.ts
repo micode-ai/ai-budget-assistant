@@ -765,6 +765,8 @@ export default {
     cycleWeekly: 'semanalmente',
     mergeTitle: '¿Misma compra, dos monedas?',
     mergeBody: '{{amountA}} {{currencyA}} y {{amountB}} {{currencyB}} en {{merchant}} parecen la misma transacción. ¿Combinarlos?',
+    alreadyResolvedTitle: 'Ya resuelto',
+    alreadyResolvedBody: 'Parece que ya se resolvió: ese gasto ya no está aquí.',
     tabAlerts: 'Alertas',
     tabInvitations: 'Invitaciones',
     invitationTitle: 'Invitación para unirte a {{accountName}}',

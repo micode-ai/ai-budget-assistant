@@ -125,6 +125,34 @@ describe('createAlert', () => {
   });
 });
 
+describe('dismissForExpense', () => {
+  it('dismisses active alerts that reference the deleted expense on either side of the pair', async () => {
+    const { service, prisma } = makeService();
+    await service.dismissForExpense('acc-1', 'e-1');
+    expect(prisma.anomalyAlert.updateMany).toHaveBeenCalledTimes(1);
+    const arg = prisma.anomalyAlert.updateMany.mock.calls[0][0];
+    expect(arg.where.accountId).toBe('acc-1');
+    expect(arg.where.dismissedAt).toBeNull();
+    expect(arg.where.OR).toEqual([
+      { expenseId: 'e-1' },
+      { params: { path: ['otherExpenseId'], equals: 'e-1' } },
+    ]);
+    expect(arg.data.dismissedAt).toBeInstanceOf(Date);
+  });
+
+  it('no-ops on an empty expense id', async () => {
+    const { service, prisma } = makeService();
+    await service.dismissForExpense('acc-1', '');
+    expect(prisma.anomalyAlert.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('never throws when the update fails (fire-and-forget)', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.updateMany = jest.fn().mockRejectedValue(new Error('db down'));
+    await expect(service.dismissForExpense('acc-1', 'e-1')).resolves.toBeUndefined();
+  });
+});
+
 function expenseRow(overrides: Record<string, unknown> = {}) {
   return {
     id: 'e-new',

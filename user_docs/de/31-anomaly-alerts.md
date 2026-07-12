@@ -23,4 +23,5 @@ Du kannst Anomalie-Push-Benachrichtigungen in **Einstellungen → Benachrichtigu
 
 - Die Erkennung funktioniert automatisch für Ausgaben, die manuell, per Sprache, von Belegen, über Telegram/WhatsApp/Slack-Bots und aus Bankimporten hinzugefügt wurden.
 - Jede Anomalie wird nur einmal gemeldet — du bekommst denselben Hinweis nicht zweimal.
+- Sobald du einen möglichen Doppeleintrag durch Löschen oder Zusammenführen der zusätzlichen Ausgabe erledigst, verschwindet der zugehörige Hinweis von selbst. Hast du ihn bereits erledigt, meldet ein Tippen nur „bereits erledigt“ — kein verwirrender „Ausgabe nicht gefunden“-Bildschirm.
 - In geteilten Konten wirkt das Markieren als gelesen auf das gesamte Konto; Betrachter können den Feed lesen, aber nicht ändern.

@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useExpenseStore } from '@/stores/expenseStore';
 import { showAlert } from '@/utils/alert';
 import { useInvitationStore } from '@/stores/invitationStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
@@ -26,6 +27,33 @@ const TYPE_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   recurring_suggestion: 'repeat-outline',
   possible_merge: 'git-merge-outline',
 };
+
+/**
+ * An anomaly alert deep-links by the expense's SERVER PK. If the user has already
+ * resolved the duplicate (deleted / merged the expense), that row is gone from the
+ * local store, so the target screen would dead-end on "Expense not found". Check
+ * the live local store here — same 4-way id resolution the detail/merge screens use —
+ * so the alert handler can show an "already resolved" message instead of a dead-end.
+ */
+function isExpenseResolvableLocally(id?: string | null): boolean {
+  if (!id) return false;
+  return useExpenseStore
+    .getState()
+    .expenses.some(
+      (e) =>
+        !e.isDeleted &&
+        (e.id === id || e.serverId === id || e.clientId === id || e.localId === id),
+    );
+}
+
+/**
+ * Guards the "already resolved" shortcut: only conclude a target is gone once the
+ * expense store actually holds rows. On a cold-start deep-link to /alerts the store
+ * may not have hydrated yet — an empty store must not be read as "everything resolved".
+ */
+function isExpenseStoreHydrated(): boolean {
+  return useExpenseStore.getState().expenses.length > 0;
+}
 
 export default function AlertsScreen() {
   const { t, i18n } = useTranslation();
@@ -124,6 +152,17 @@ export default function AlertsScreen() {
     [t],
   );
 
+  // The user already resolved this duplicate (deleted/merged the expense), so the
+  // alert points at a row that no longer exists locally. Clear the stale alert and
+  // say so, instead of dropping the user on a confusing "Expense not found" screen.
+  const handleStaleAlert = useCallback(
+    (alert: AnomalyAlert) => {
+      if (canEdit) dismiss(alert.id);
+      showAlert(t('alerts.alreadyResolvedTitle'), t('alerts.alreadyResolvedBody'));
+    },
+    [canEdit, dismiss, t],
+  );
+
   const handlePress = useCallback(
     (alert: AnomalyAlert) => {
       if (canEdit) markRead(alert.id); // write endpoints are viewer-blocked server-side
@@ -137,18 +176,25 @@ export default function AlertsScreen() {
         const p = alert.params as Record<string, string>;
         // Navigate to the merge screen; both ids come from the alert params.
         // aId = the expense that triggered the alert; bId = the other candidate.
-        router.push({
-          pathname: '/expense/merge' as any,
-          params: {
-            aId: p.expenseId ?? alert.expenseId ?? '',
-            bId: p.otherExpenseId ?? '',
-          },
-        });
+        const aId = p.expenseId ?? alert.expenseId ?? '';
+        const bId = p.otherExpenseId ?? '';
+        // A merge needs BOTH rows; if either is already gone the pair is resolved.
+        // Only trust "gone" once the store has hydrated (a legit merge alert implies
+        // ≥2 expenses exist) — an empty store means "not loaded yet", not "resolved".
+        if (isExpenseStoreHydrated() && (!isExpenseResolvableLocally(aId) || !isExpenseResolvableLocally(bId))) {
+          handleStaleAlert(alert);
+          return;
+        }
+        router.push({ pathname: '/expense/merge' as any, params: { aId, bId } });
       } else if (alert.expenseId) {
+        if (isExpenseStoreHydrated() && !isExpenseResolvableLocally(alert.expenseId)) {
+          handleStaleAlert(alert);
+          return;
+        }
         router.push(`/expense/${alert.expenseId}` as any);
       }
     },
-    [markRead, canEdit],
+    [markRead, canEdit, handleStaleAlert],
   );
 
   const renderAlert = ({ item }: { item: AnomalyAlert }) => {

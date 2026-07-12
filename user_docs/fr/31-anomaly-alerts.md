@@ -23,4 +23,5 @@ Vous pouvez activer ou désactiver les notifications push d'anomalies dans **Par
 
 - La détection fonctionne automatiquement pour les dépenses ajoutées manuellement, par la voix, depuis des reçus, via les bots Telegram/WhatsApp/Slack et depuis les importations bancaires.
 - Chaque anomalie n'est signalée qu'une seule fois — vous ne recevrez pas deux fois la même alerte.
+- Dès que vous traitez un doublon possible en supprimant ou en fusionnant la dépense en trop, son alerte disparaît d'elle-même. Si vous l'avez déjà réglé, toucher l'alerte indique simplement que c'est résolu — pas d'écran déroutant « dépense introuvable ».
 - Dans les comptes partagés, marquer les alertes comme lues affecte l'ensemble du compte ; les observateurs peuvent lire le fil mais ne peuvent pas le modifier.

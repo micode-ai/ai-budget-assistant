@@ -96,6 +96,10 @@ export class ExpensesService {
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
 
+    // The stub may already carry a duplicate_charge alert — drop it so it doesn't
+    // dead-end on the now-deleted stub.
+    void this.anomalyService.dismissForExpense(accountId, stub.id);
+
     // Also invalidate the cache since we mutated a row outside the main transaction.
     await this.invalidateChatCache(accountId);
   }
@@ -657,6 +661,9 @@ export class ExpensesService {
     });
 
     this.invalidateChatCache(accountId).catch(() => undefined);
+    // Resolving a duplicate by deleting the expense must also clear any anomaly
+    // alert that deep-links to it, or the alert dead-ends on "Expense not found".
+    void this.anomalyService.dismissForExpense(accountId, expense.id);
 
     return { success: true };
   }
@@ -1011,6 +1018,9 @@ export class ExpensesService {
     });
 
     await this.invalidateChatCache(accountId);
+    // The merged (soft-deleted) row is what the possible_merge / duplicate_charge
+    // alert points at — dismiss it so a resolved pair leaves no dead alert behind.
+    void this.anomalyService.dismissForExpense(accountId, result.mergedId);
     return result;
   }
 }

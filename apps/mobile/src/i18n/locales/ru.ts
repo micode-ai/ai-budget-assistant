@@ -765,6 +765,8 @@ export default {
     cycleWeekly: 'еженедельно',
     mergeTitle: 'Одна покупка, две валюты?',
     mergeBody: '{{amountA}} {{currencyA}} и {{amountB}} {{currencyB}} у {{merchant}} похожи на одну транзакцию. Объединить?',
+    alreadyResolvedTitle: 'Уже решено',
+    alreadyResolvedBody: 'Похоже, это уже обработано — этого расхода больше нет.',
     tabAlerts: 'Уведомления',
     tabInvitations: 'Приглашения',
     invitationTitle: 'Приглашение присоединиться к {{accountName}}',
