@@ -17,6 +17,7 @@ import { AdminService } from './admin.service';
 import { AdminAnalyticsService } from './admin-analytics.service';
 import { AdminNotificationService } from './admin-notification.service';
 import { ReferralsService } from '../referrals/referrals.service';
+import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
 
 interface AdminRequest extends Request {
   user: { id: string; email: string; name: string };
@@ -30,6 +31,7 @@ export class AdminController {
     private readonly adminAnalyticsService: AdminAnalyticsService,
     private readonly adminNotificationService: AdminNotificationService,
     private readonly referralsService: ReferralsService,
+    private readonly investorMetricsService: AdminInvestorMetricsService,
   ) {}
 
   private getIp(req: Request): string | null {
@@ -46,6 +48,23 @@ export class AdminController {
     @Query('endDate') endDate?: string,
   ) {
     return this.adminAnalyticsService.getDashboard(startDate, endDate);
+  }
+
+  @Get('metrics/investor')
+  async getInvestorMetrics(
+    @Query('months') months?: string,
+    @Query('weeks') weeks?: string,
+    @Query('activationDays') activationDays?: string,
+  ) {
+    const clamp = (v: string | undefined, def: number, lo: number, hi: number) => {
+      const n = parseInt(v ?? '', 10);
+      return Number.isNaN(n) ? def : Math.min(hi, Math.max(lo, n));
+    };
+    return this.investorMetricsService.getInvestorMetrics({
+      months: clamp(months, 6, 1, 24),
+      weeks: clamp(weeks, 12, 1, 26),
+      activationDays: clamp(activationDays, 3, 1, 30),
+    });
   }
 
   // ─── Users ───────────────────────────────────────

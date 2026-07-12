@@ -18,6 +18,7 @@ export * from './encryption';
 export * from './report';
 export * from './debt';
 export * from './admin';
+export * from './admin-metrics';
 export * from './telegram';
 export * from './referral';
 export * from './app-version';
