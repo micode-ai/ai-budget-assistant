@@ -79,7 +79,13 @@ export class AccountsService {
     const memberships = await this.prisma.accountMember.findMany({
       where: {
         userId,
-        account: { isActive: true },
+        account: {
+          OR: [
+            { isActive: true },
+            // Include archived trips even if isActive was set to false during archiving
+            { type: 'trip', tripStatus: 'archived' },
+          ],
+        },
       },
       include: {
         account: true,
