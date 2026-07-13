@@ -31,6 +31,15 @@ Bevor du Produkte vergleichst, werde dir über die Kriterien klar. Die meisten M
 
 ## Die wichtigsten Typen von Haushaltsbuch Apps
 
+Im Überblick vergleichen sich die wichtigsten Kategorien so:
+
+| App-Typ | Am besten für | Hauptnachteil | Preis |
+|---|---|---|---|
+| Bank-eigen | Einen schnellen Blick auf ein Konto | Sieht nur diese Bank: kein Bargeld, kein Teilen, keine kontoübergreifenden Budgets | Kostenlos |
+| Tabelle | Wer volle manuelle Kontrolle mag | Jeder Eintrag manuell; kein Scannen, keine Sprache, kein einfaches Teilen in Echtzeit | Kostenlos |
+| Umschlagstil | Vielausgeber, die jeden Euro planen wollen | Verlangt Zero-Based-Disziplin; wirkt schwer beim lockeren Tracken | Kostenlos–kostenpflichtig |
+| KI-first / Alles-in-einem | Alle, die nach zwei Wochen aufhören zu erfassen | Neuer, mit kürzerer Erfolgsbilanz; auf Funktionsüberladung achten | Kostenlos–kostenpflichtig |
+
 ### Bank-eigene Apps
 
 Die meisten Banken liefern heute einen eingebauten Ausgaben-Tracker. Er ist kostenlos, schon verbunden und kategorisiert deine Kartentransaktionen automatisch.

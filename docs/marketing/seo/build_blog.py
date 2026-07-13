@@ -13,7 +13,7 @@ language URL; /blog/ is a noindex JS dispatcher (navigator.language) NOT in site
 Sources: docs/marketing/seo/*.md (pl) + docs/marketing/seo/<lang>/*.md (en/de/...);
 lang/pair/slug come from frontmatter. Run: python build_blog.py
 """
-import os, re, json, html, glob, shutil
+import os, re, json, html, glob, shutil, subprocess
 import markdown as md_lib
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
@@ -75,11 +75,52 @@ LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_
 LANG_NAMES = {"pl": "Polski", "en": "English", "de": "Deutsch", "es": "Español", "fr": "Français",
               "ru": "Русский", "ua": "Українська", "be": "Беларуская", "nl": "Nederlands"}
 
+# "ua" is our internal key + URL segment, but it is a COUNTRY code; the valid ISO 639-1
+# language tag for Ukrainian is "uk". Emit bcp47(lang) for <html lang>, hreflang and
+# JSON-LD inLanguage only — never for dict lookups or URL paths (which stay /ua/).
+BCP47 = {"ua": "uk"}
+def bcp47(l):
+    return BCP47.get(l, l)
+
+# visible "Updated <date>" byline label per language
+UPDATED = {"en": "Updated", "pl": "Zaktualizowano", "de": "Aktualisiert", "es": "Actualizado",
+           "fr": "Mis à jour", "ru": "Обновлено", "ua": "Оновлено", "be": "Абноўлена", "nl": "Bijgewerkt"}
+
+_date_cache = {}
+def git_date(path, fallback=PUBLISH_DATE):
+    """Last git commit date (YYYY-MM-DD) of a source file, for accurate sitemap <lastmod>
+    and Article dateModified. Falls back to PUBLISH_DATE if git is unavailable / untracked.
+    Deterministic (no wall-clock), so regenerating without content changes is a no-op diff."""
+    if not path:
+        return fallback
+    if path in _date_cache:
+        return _date_cache[path]
+    d = fallback
+    try:
+        r = subprocess.run(["git", "log", "-1", "--format=%cs", "--", path],
+                           cwd=os.path.dirname(os.path.abspath(path)) or ".",
+                           capture_output=True, text=True, timeout=5)
+        s = (r.stdout or "").strip()
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
+            d = s
+    except Exception:
+        pass
+    _date_cache[path] = d
+    return d
+
+def org_node():
+    """Shared Organization entity with a stable @id so every page references one node
+    (better Knowledge-Graph / AI-engine entity consolidation than ~500 inline duplicates)."""
+    return {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY,
+            "url": COMPANY_URL, "sameAs": SAMEAS,
+            "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg",
+                     "width": 512, "height": 512}}
+
 I18N = {
  "en": {"home": "Home", "blog": "Blog", "login": "Log in",
    "blogTitle": "Personal finance blog | AI Budget Assistant",
    "blogDesc": "Practical guides on budgeting, expense tracking and saving money with an AI assistant.",
-   "blogH1": "Blog", "blogIntro": "Guides on personal finance, budgeting and saving money.",
+   "blogH1": "Personal Finance Blog", "blogIntro": "Guides on personal finance, budgeting and saving money.",
    "related": "Related articles", "ctaTitle": "Manage your money with AI",
    "ctaText": "Add expenses by voice or a photo of a receipt, track budgets and savings, together with your family. Start free.",
    "btnWeb": "Open the app", "btnPlay": "Get it on Google Play",
@@ -87,7 +128,7 @@ I18N = {
  "pl": {"home": "Strona główna", "blog": "Blog", "login": "Zaloguj się",
    "blogTitle": "Blog o budżecie domowym i oszczędzaniu | AI Budget Assistant",
    "blogDesc": "Praktyczne poradniki: jak prowadzić budżet domowy, kontrolować wydatki i oszczędzać pieniądze.",
-   "blogH1": "Blog", "blogIntro": "Poradniki o finansach osobistych, budżecie domowym i oszczędzaniu.",
+   "blogH1": "Blog o budżecie domowym i oszczędzaniu", "blogIntro": "Poradniki o finansach osobistych, budżecie domowym i oszczędzaniu.",
    "related": "Powiązane artykuły", "ctaTitle": "Prowadź budżet domowy z AI",
    "ctaText": "Dodawaj wydatki głosem lub zdjęciem paragonu, śledź budżety i oszczędności, wspólnie z rodziną. Zacznij za darmo.",
    "btnWeb": "Otwórz aplikację", "btnPlay": "Pobierz z Google Play",
@@ -95,7 +136,7 @@ I18N = {
  "de": {"home": "Startseite", "blog": "Blog", "login": "Anmelden",
    "blogTitle": "Blog über Haushaltsbuch und Sparen | AI Budget Assistant",
    "blogDesc": "Praktische Ratgeber: Haushaltsbuch führen, Ausgaben tracken und Geld sparen mit einem KI-Assistenten.",
-   "blogH1": "Blog", "blogIntro": "Ratgeber zu persönlichen Finanzen, Haushaltsbuch und Sparen.",
+   "blogH1": "Blog über Haushaltsbuch und Sparen", "blogIntro": "Ratgeber zu persönlichen Finanzen, Haushaltsbuch und Sparen.",
    "related": "Ähnliche Artikel", "ctaTitle": "Verwalte dein Geld mit KI",
    "ctaText": "Erfasse Ausgaben per Sprache oder Beleg-Foto, behalte Budgets und Sparen im Blick, gemeinsam mit der Familie. Kostenlos starten.",
    "btnWeb": "App öffnen", "btnPlay": "Bei Google Play laden",
@@ -103,7 +144,7 @@ I18N = {
  "es": {"home": "Inicio", "blog": "Blog", "login": "Iniciar sesión",
    "blogTitle": "Blog sobre presupuesto y ahorro | AI Budget Assistant",
    "blogDesc": "Guías prácticas: cómo hacer un presupuesto, controlar gastos y ahorrar dinero con un asistente de IA.",
-   "blogH1": "Blog", "blogIntro": "Guías sobre finanzas personales, presupuesto y ahorro.",
+   "blogH1": "Blog sobre presupuesto y ahorro", "blogIntro": "Guías sobre finanzas personales, presupuesto y ahorro.",
    "related": "Artículos relacionados", "ctaTitle": "Gestiona tu dinero con IA",
    "ctaText": "Añade gastos por voz o foto del recibo, controla presupuestos y ahorro, en familia. Empieza gratis.",
    "btnWeb": "Abrir la app", "btnPlay": "Descargar en Google Play",
@@ -111,7 +152,7 @@ I18N = {
  "fr": {"home": "Accueil", "blog": "Blog", "login": "Se connecter",
    "blogTitle": "Blog sur le budget et l'épargne | AI Budget Assistant",
    "blogDesc": "Guides pratiques : faire un budget, suivre ses dépenses et économiser avec un assistant IA.",
-   "blogH1": "Blog", "blogIntro": "Guides sur les finances personnelles, le budget et l'épargne.",
+   "blogH1": "Blog sur le budget et l'épargne", "blogIntro": "Guides sur les finances personnelles, le budget et l'épargne.",
    "related": "Articles similaires", "ctaTitle": "Gérez votre argent avec l'IA",
    "ctaText": "Ajoutez des dépenses à la voix ou par photo de reçu, suivez budgets et épargne, en famille. Commencez gratuitement.",
    "btnWeb": "Ouvrir l'appli", "btnPlay": "Télécharger sur Google Play",
@@ -119,7 +160,7 @@ I18N = {
  "ru": {"home": "Главная", "blog": "Блог", "login": "Войти",
    "blogTitle": "Блог о бюджете и экономии | AI Budget Assistant",
    "blogDesc": "Практические гайды: как вести бюджет, учитывать расходы и экономить деньги с ИИ-ассистентом.",
-   "blogH1": "Блог", "blogIntro": "Гайды о личных финансах, бюджете и экономии.",
+   "blogH1": "Блог о бюджете и экономии", "blogIntro": "Гайды о личных финансах, бюджете и экономии.",
    "related": "Похожие статьи", "ctaTitle": "Управляйте деньгами с ИИ",
    "ctaText": "Добавляйте расходы голосом или фото чека, следите за бюджетами и накоплениями, вместе с семьёй. Начните бесплатно.",
    "btnWeb": "Открыть приложение", "btnPlay": "Скачать в Google Play",
@@ -127,7 +168,7 @@ I18N = {
  "ua": {"home": "Головна", "blog": "Блог", "login": "Увійти",
    "blogTitle": "Блог про бюджет та заощадження | AI Budget Assistant",
    "blogDesc": "Практичні гайди: як вести бюджет, обліковувати витрати та заощаджувати з ШІ-асистентом.",
-   "blogH1": "Блог", "blogIntro": "Гайди про особисті фінанси, бюджет та заощадження.",
+   "blogH1": "Блог про бюджет та заощадження", "blogIntro": "Гайди про особисті фінанси, бюджет та заощадження.",
    "related": "Схожі статті", "ctaTitle": "Керуйте грошима з ШІ",
    "ctaText": "Додавайте витрати голосом або фото чека, стежте за бюджетами та заощадженнями, разом із родиною. Почніть безкоштовно.",
    "btnWeb": "Відкрити застосунок", "btnPlay": "Завантажити в Google Play",
@@ -135,7 +176,7 @@ I18N = {
  "be": {"home": "Галоўная", "blog": "Блог", "login": "Увайсці",
    "blogTitle": "Блог пра бюджэт і эканомію | AI Budget Assistant",
    "blogDesc": "Практычныя гайды: як весці бюджэт, улічваць выдаткі і эканоміць з ШІ-памочнікам.",
-   "blogH1": "Блог", "blogIntro": "Гайды пра асабістыя фінансы, бюджэт і эканомію.",
+   "blogH1": "Блог пра бюджэт і эканомію", "blogIntro": "Гайды пра асабістыя фінансы, бюджэт і эканомію.",
    "related": "Падобныя артыкулы", "ctaTitle": "Кіруйце грашыма з ШІ",
    "ctaText": "Дадавайце выдаткі голасам або фота чэка, сачыце за бюджэтамі і зберажэннямі, разам з сям'ёй. Пачніце бясплатна.",
    "btnWeb": "Адкрыць дадатак", "btnPlay": "Спампаваць у Google Play",
@@ -143,7 +184,7 @@ I18N = {
  "nl": {"home": "Home", "blog": "Blog", "login": "Inloggen",
    "blogTitle": "Blog over budget en sparen | AI Budget Assistant",
    "blogDesc": "Praktische gidsen: een budget maken, uitgaven bijhouden en geld besparen met een AI-assistent.",
-   "blogH1": "Blog", "blogIntro": "Gidsen over persoonlijke financiën, budget en sparen.",
+   "blogH1": "Blog over budget en sparen", "blogIntro": "Gidsen over persoonlijke financiën, budget en sparen.",
    "related": "Gerelateerde artikelen", "ctaTitle": "Beheer je geld met AI",
    "ctaText": "Voeg uitgaven toe met spraak of een bonfoto, volg budgetten en sparen, samen met je gezin. Gratis te starten.",
    "btnWeb": "App openen", "btnPlay": "Download in Google Play",
@@ -174,6 +215,7 @@ nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(-
 article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
 article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
 article p,article li{font-size:17px;color:#27272e}article a{color:#c96a12}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
 article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
 .tablewrap{overflow-x:auto;margin:18px 0}
@@ -221,6 +263,9 @@ def to_html(body):
     # wrap tables so wide ones scroll horizontally on mobile (CSS .tablewrap)
     out = re.sub(r"<table>(.*?)</table>", r'<div class="tablewrap"><table>\1</table></div>',
                  out, flags=re.S)
+    # promote a standalone bold question (**...?**) to a semantic <h3> so FAQ questions
+    # are headings in the rendered DOM (a11y + extractability for crawlers / AI engines)
+    out = re.sub(r"<p><strong>([^<]+\?)</strong></p>", r"<h3>\1</h3>", out)
     return out
 
 _QLINE = re.compile(r"^\*\*(.+\?)\*\*\s*$")
@@ -296,10 +341,10 @@ def lang_menu(lang, alt_map, langs):
 
 def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type="article",
          robots="index,follow,max-image-preview:large"):
-    alt_tags = "\n".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alternates)
+    alt_tags = "\n".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alternates)
     t = I18N[lang]
     return f"""<!DOCTYPE html>
-<html lang="{lang}"><head>
+<html lang="{bcp47(lang)}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
@@ -337,15 +382,15 @@ def cta_block(lang):
             f'<a class="btn p" href="{APP}">{t["btnWeb"]}</a>'
             f'<a class="btn s" href="{PLAY}">{t["btnPlay"]}</a></aside>')
 
-def article_jsonld(lang, title, desc, url, og_path):
+def article_jsonld(lang, title, desc, url, og_path, src_path=None):
     t = I18N[lang]
     return {"@context": "https://schema.org", "@graph": [
-        {"@type": "Article", "headline": title, "description": desc, "inLanguage": lang,
-         "datePublished": PUBLISH_DATE, "dateModified": PUBLISH_DATE,
+        org_node(),
+        {"@type": "Article", "headline": title, "description": desc, "inLanguage": bcp47(lang),
+         "datePublished": PUBLISH_DATE, "dateModified": git_date(src_path),
          "mainEntityOfPage": {"@type": "WebPage", "@id": url},
-         "author": {"@type": "Organization", "name": "AI Budget Assistant"},
-         "publisher": {"@type": "Organization", "name": COMPANY, "url": COMPANY_URL, "sameAs": SAMEAS,
-                       "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg"}},
+         "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": f"{SITE}{about_url(lang)}"},
+         "publisher": {"@id": f"{SITE}/#organization"},
          "image": f"{SITE}{og_path}"},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": t["home"], "item": f"{SITE}/"},
@@ -387,7 +432,7 @@ def read_articles():
         meta, body = parse(path)
         if not meta.get("slug") or not meta.get("lang") or not meta.get("pair"):
             continue
-        arts.append({"m": meta, "body": body, "lang": meta["lang"]})
+        arts.append({"m": meta, "body": body, "lang": meta["lang"], "path": path})
     return arts
 
 def url_for(a):
@@ -423,14 +468,18 @@ def build():
         rel = "".join(f'<a href="/blog/{lang}/{s["m"]["slug"]}/">{html.escape(s["m"].get("title", ""))}</a>'
                       for s in siblings)
         t = I18N[lang]
-        ld = article_jsonld(lang, title, desc, url, og)
+        ld = article_jsonld(lang, title, desc, url, og, a["path"])
         faq = extract_faq(a["body"])
         if len(faq) >= 2:
             ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faq]})
+        body_html = to_html(a["body"])
+        byline = f'<p class="byline">AI Budget Assistant &middot; {UPDATED[lang]} {git_date(a["path"])}</p>'
+        body_html = (body_html.replace("</h1>", "</h1>" + byline, 1)
+                     if "</h1>" in body_html else byline + body_html)
         page = (head(lang, title, desc, url, ld, alts, og, menu)
-                + f'<main class="wrap"><nav class="crumb"><a href="{home_url(lang)}">{t["home"]}</a> / <a href="/blog/{lang}/">{t["blog"]}</a></nav>'
-                + f'<article>{to_html(a["body"])}</article>{cta_block(lang)}'
+                + f'<main class="wrap"><nav class="crumb"><a href="{home_url(lang)}">{t["home"]}</a> / <a href="/blog/{lang}/">{t["blog"]}</a> / <span>{html.escape(title)}</span></nav>'
+                + f'<article>{body_html}</article>{cta_block(lang)}'
                 + f'<section class="related"><h2>{t["related"]}</h2>{rel}</section></main>' + foot(lang))
         d = os.path.join(OUT, "blog", lang, m["slug"])
         os.makedirs(d, exist_ok=True)
@@ -447,10 +496,12 @@ def build():
         alt_map = {l: f"/blog/{l}/" for l in langs}
         menu = lang_menu(lang, alt_map, langs)
         ld = {"@context": "https://schema.org", "@type": "Blog", "name": t["blogTitle"],
-              "description": t["blogDesc"], "inLanguage": lang, "url": url,
+              "description": t["blogDesc"], "inLanguage": bcp47(lang), "url": url,
+              "publisher": {"@id": f"{SITE}/#organization"},
               "blogPost": [{"@type": "BlogPosting", "headline": a["m"].get("title", ""),
                             "url": f"{SITE}/blog/{lang}/{a['m']['slug']}/", "datePublished": PUBLISH_DATE,
-                            "inLanguage": lang} for a in items]}
+                            "dateModified": git_date(a["path"]),
+                            "inLanguage": bcp47(lang)} for a in items]}
         page = (head(lang, t["blogTitle"], t["blogDesc"], url, ld, alts, f"/blog/{lang}/assets/og-default.png", menu, og_type="website")
                 + f'<main class="wrap"><nav class="crumb"><a href="{home_url(lang)}">{t["home"]}</a> / {t["blog"]}</nav>'
                 + f'<h1>{t["blogH1"]}</h1><p>{t["blogIntro"]}</p>{cards}{cta_block(lang)}</main>' + foot(lang))
@@ -472,15 +523,18 @@ location.replace(L.indexOf(n)>=0?'/blog/'+n+'/':'/blog/{DEFAULT_LANG}/');}})();<
     os.makedirs(os.path.join(OUT, "blog"), exist_ok=True)
     open(os.path.join(OUT, "blog", "index.html"), "w", encoding="utf-8", newline="\n").write(disp)
 
-    # sitemap (NOT the dispatcher) + robots
-    urls = [(f"{SITE}/", "weekly", "1.0")]
+    # sitemap (NOT the dispatcher) + robots. lastmod = real git commit date of each
+    # article's source .md; the /blog/<lang>/ index inherits its newest article's date.
+    urls = [(f"{SITE}/", "weekly", "1.0", PUBLISH_DATE)]
     for lang in langs:
-        urls.append((f"{SITE}/blog/{lang}/", "weekly", "0.8"))
+        lang_arts = [a for a in arts if a["lang"] == lang]
+        idx_date = max((git_date(a["path"]) for a in lang_arts), default=PUBLISH_DATE)
+        urls.append((f"{SITE}/blog/{lang}/", "weekly", "0.8", idx_date))
     for a in arts:
-        urls.append((url_for(a), "monthly", "0.7"))
+        urls.append((url_for(a), "monthly", "0.7", git_date(a["path"])))
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for u, cf, pr in urls:
-        sm.append(f"<url><loc>{u}</loc><lastmod>{PUBLISH_DATE}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority></url>")
+    for u, cf, pr, lm in urls:
+        sm.append(f"<url><loc>{u}</loc><lastmod>{lm}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority></url>")
     sm.append("</urlset>")
     open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
     open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(

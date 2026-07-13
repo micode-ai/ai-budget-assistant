@@ -34,6 +34,7 @@
 
 ## Content
 
+- Full content (English markdown mirror): https://ai-budget.pl/llms-full.txt
 - Blog (9 languages): https://ai-budget.pl/blog/en/
 - Help center (9 languages): https://ai-budget.pl/help/en/
 - Sitemap: https://ai-budget.pl/sitemap.xml

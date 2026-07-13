@@ -31,6 +31,15 @@ Avant de comparer les produits, clarifiez les critères. La plupart des gens cho
 
 ## Les grands types d'applications de budget
 
+En un coup d'œil, voici comment se comparent les grandes catégories :
+
+| Type d'appli | Idéale pour | Principal inconvénient | Prix |
+|---|---|---|---|
+| Bancaire native | Un aperçu rapide d'un seul compte | Ne voit que cette banque : pas d'espèces, pas de partage, pas de budgets multi-comptes | Gratuit |
+| Tableur | Ceux qui aiment le contrôle manuel total | Chaque saisie est manuelle ; pas de scan, de voix ni de partage en temps réel | Gratuit |
+| Façon enveloppes | Ceux qui dépensent trop et veulent planifier chaque euro | Exige une discipline base zéro ; lourde pour un simple suivi | Gratuit–payant |
+| IA d'abord / tout-en-un | Ceux qui arrêtent de saisir après deux semaines | Plus récentes, historique plus court ; attention à la surcharge de fonctions | Gratuit–payant |
+
 ### Les applications bancaires natives
 
 La plupart des banques proposent désormais un suivi des dépenses intégré. C'est gratuit, c'est déjà connecté, et cela catégorise automatiquement vos transactions par carte.

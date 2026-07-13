@@ -31,6 +31,15 @@ Antes de comparar productos, ten claros los criterios. La mayoría de la gente e
 
 ## Los principales tipos de apps de presupuesto
 
+De un vistazo, así se comparan las principales categorías:
+
+| Tipo de app | Mejor para | Principal inconveniente | Precio |
+|---|---|---|---|
+| Del banco | Una mirada rápida a una cuenta | Solo ve ese banco: sin efectivo, sin compartir, sin presupuestos entre cuentas | Gratis |
+| Hoja de cálculo | Quien disfruta del control manual total | Cada entrada es manual; sin escaneo, voz ni compartir en tiempo real | Gratis |
+| Estilo sobres | Quien gasta de más y quiere planear cada euro | Exige disciplina de base cero; resulta pesada para un seguimiento ligero | Gratis–de pago |
+| Con IA / todo en uno | Quien deja de registrar a las dos semanas | Más nueva, con menos trayectoria; ojo con el exceso de funciones | Gratis–de pago |
+
 ### Apps del propio banco
 
 Casi todos los bancos incluyen ya un control de gastos integrado. Es gratis, ya está conectado y categoriza tus movimientos de tarjeta automáticamente.

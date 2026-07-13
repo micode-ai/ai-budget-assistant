@@ -31,6 +31,15 @@ Voordat je producten vergelijkt, wees helder over de criteria. De meeste mensen 
 
 ## De belangrijkste soorten budget-apps
 
+In één oogopslag: zo verhouden de belangrijkste categorieën zich.
+
+| Type app | Het best voor | Grootste nadeel | Prijs |
+|---|---|---|---|
+| Van je bank | Een snelle blik op één rekening | Ziet alleen die bank: geen contant geld, delen of budgetten over rekeningen | Gratis |
+| Spreadsheet | Wie volledige handmatige controle fijn vindt | Elke invoer is handmatig; geen scannen, spraak of makkelijk realtime delen | Gratis |
+| Enveloppen | Wie te veel uitgeeft en elke euro wil plannen | Vraagt zero-based-discipline; voelt zwaar bij licht bijhouden | Gratis–betaald |
+| AI-first / alles-in-een | Wie na twee weken stopt met bijhouden | Nieuwer, met kortere staat van dienst; let op te veel functies | Gratis–betaald |
+
 ### Apps van je bank
 
 De meeste banken leveren tegenwoordig een ingebouwde uitgaventracker mee. Hij is gratis, al gekoppeld, en categoriseert je pintransacties automatisch.

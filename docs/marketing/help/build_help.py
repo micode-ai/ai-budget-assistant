@@ -124,14 +124,14 @@ def transform(body, lang):
         return text  # unknown/removed section -> keep the words, drop the dead link
     return re.sub(r"\[([^\]]+)\]\(\./([0-9][^)]*)\.md\)", repl, body)
 
-def help_jsonld(lang, title, desc, url, og_path):
+def help_jsonld(lang, title, desc, url, og_path, src_path=None):
     return {"@context": "https://schema.org", "@graph": [
-        {"@type": "TechArticle", "headline": title, "description": desc, "inLanguage": lang,
-         "datePublished": bb.PUBLISH_DATE, "dateModified": bb.PUBLISH_DATE,
+        bb.org_node(),
+        {"@type": "TechArticle", "headline": title, "description": desc, "inLanguage": bb.bcp47(lang),
+         "datePublished": bb.PUBLISH_DATE, "dateModified": bb.git_date(src_path),
          "mainEntityOfPage": {"@type": "WebPage", "@id": url},
-         "author": {"@type": "Organization", "name": "AI Budget Assistant"},
-         "publisher": {"@type": "Organization", "name": bb.COMPANY, "url": bb.COMPANY_URL, "sameAs": bb.SAMEAS,
-                       "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg"}},
+         "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": f"{SITE}{bb.about_url(lang)}"},
+         "publisher": {"@id": f"{SITE}/#organization"},
          "image": f"{SITE}{og_path}"},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": bb.I18N[lang]["home"], "item": f"{SITE}/"},
@@ -153,7 +153,7 @@ def build():
             if not title:
                 continue
             arts.append({"lang": lang, "section": section, "slug": slug_of(section),
-                         "title": title, "desc": desc, "raw": raw, "words": word_count(raw)})
+                         "title": title, "desc": desc, "raw": raw, "words": word_count(raw), "path": p})
 
     by_slug = {}
     for a in arts:
@@ -183,13 +183,13 @@ def build():
         alts = alts + [("x-default", xdef)]
         alt_map = {l: u for l, u in alts if l != "x-default"}
         menu = bb.lang_menu(lang, alt_map, LANGS)
-        ld = help_jsonld(lang, title, desc, url, og)
+        ld = help_jsonld(lang, title, desc, url, og, a["path"])
         body = bb.to_html(transform(a["raw"], lang))
         # related = other sections in the same language
         sibs = [x for x in arts if x["lang"] == lang and x["slug"] != slug]
         rel = "".join(f'<a href="/help/{lang}/{s["slug"]}/">{html.escape(s["title"])}</a>' for s in sibs)
         crumb = (f'<nav class="crumb"><a href="{bb.home_url(lang)}">{bb.I18N[lang]["home"]}</a> / '
-                 f'<a href="/help/{lang}/">{HELP_NAV[lang]}</a></nav>')
+                 f'<a href="/help/{lang}/">{HELP_NAV[lang]}</a> / <span>{html.escape(a["title"])}</span></nav>')
         page = (bb.head(lang, title, desc, url, ld, alts, og, menu, robots=robots)
                 + f'<main class="wrap">{crumb}<article>{body}</article>{bb.cta_block(lang)}'
                 + f'<section class="related"><h2>{HELP_I18N[lang][4]}</h2>{rel}</section></main>'
@@ -212,7 +212,8 @@ def build():
         alt_map = {l: f"/help/{l}/" for l in LANGS}
         menu = bb.lang_menu(lang, alt_map, LANGS)
         ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": it,
-              "description": idesc, "inLanguage": lang, "url": url}
+              "description": idesc, "inLanguage": bb.bcp47(lang), "url": url,
+              "publisher": {"@id": f"{SITE}/#organization"}}
         crumb = f'<nav class="crumb"><a href="{bb.home_url(lang)}">{bb.I18N[lang]["home"]}</a> / {HELP_NAV[lang]}</nav>'
         page = (bb.head(lang, it, idesc, url, ld, alts, f"/help/{lang}/assets/og-default.png", menu, og_type="website")
                 + f'<main class="wrap">{crumb}<h1>{html.escape(ih1)}</h1><p>{html.escape(iintro)}</p>'
@@ -235,12 +236,20 @@ location.replace(L.indexOf(n)>=0?'/help/'+n+'/':'/help/{DEFAULT_LANG}/');}})();<
     os.makedirs(os.path.join(OUT, "help"), exist_ok=True)
     open(os.path.join(OUT, "help", "index.html"), "w", encoding="utf-8", newline="\n").write(disp)
 
-    # sitemap (index pages + indexable articles only; dispatcher + thin pages excluded)
-    urls = [(f"{SITE}/help/{l}/", "weekly", "0.6") for l in LANGS]
-    urls += [(f"{SITE}/help/{l}/{s}/", "monthly", "0.5") for (l, s, _t, _d) in indexable]
+    # sitemap (index pages + indexable articles only; dispatcher + thin pages excluded).
+    # lastmod = real git commit date of each doc's user_docs source; index inherits its
+    # language's newest doc date.
+    path_by = {(a["lang"], a["slug"]): a["path"] for a in arts}
+    urls = []
+    for l in LANGS:
+        l_docs = [a for a in arts if a["lang"] == l]
+        idx_date = max((bb.git_date(a["path"]) for a in l_docs), default=bb.PUBLISH_DATE)
+        urls.append((f"{SITE}/help/{l}/", "weekly", "0.6", idx_date))
+    urls += [(f"{SITE}/help/{l}/{s}/", "monthly", "0.5", bb.git_date(path_by.get((l, s))))
+             for (l, s, _t, _d) in indexable]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for u, cf, pr in urls:
-        sm.append(f"<url><loc>{u}</loc><lastmod>{bb.PUBLISH_DATE}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority></url>")
+    for u, cf, pr, lm in urls:
+        sm.append(f"<url><loc>{u}</loc><lastmod>{lm}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority></url>")
     sm.append("</urlset>")
     open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
 

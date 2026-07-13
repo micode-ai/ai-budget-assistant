@@ -31,6 +31,15 @@ Zanim porównasz produkty, ustal kryteria. Większość ludzi wybiera na podstaw
 
 ## Główne typy aplikacji do budżetu
 
+W skrócie, tak wypadają główne kategorie w porównaniu:
+
+| Typ aplikacji | Najlepsza dla | Główna wada | Cena |
+|---|---|---|---|
+| Bankowa | Pobieżnego spojrzenia na jedno konto | Widzi tylko ten bank: bez gotówki, współdzielenia i budżetów między kontami | Za darmo |
+| Arkusz kalkulacyjny | Osób lubiących pełną ręczną kontrolę | Każdy wpis ręczny; brak skanowania, głosu i łatwego współdzielenia na żywo | Za darmo |
+| Kopertowa | Osób przepłacających, chcących planować każdą złotówkę | Wymaga dyscypliny budżetu zerowego; ciężka przy lekkim śledzeniu | Za darmo–płatna |
+| Z AI / wszystko w jednym | Każdego, kto przestaje zapisywać po dwóch tygodniach | Nowsza, z krótszą historią; uważaj na przeładowanie funkcjami | Za darmo–płatna |
+
 ### Aplikacje bankowe
 
 Większość banków ma dziś wbudowany licznik wydatków. Jest darmowy, już podłączony i kategoryzuje transakcje kartą automatycznie.

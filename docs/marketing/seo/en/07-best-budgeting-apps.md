@@ -31,6 +31,15 @@ Before comparing products, get clear on the criteria. Most people pick on featur
 
 ## The Main Types of Budgeting Apps
 
+At a glance, here is how the main categories compare:
+
+| App type | Best for | Main downside | Cost |
+|---|---|---|---|
+| Bank-native | A quick glance at one account | Sees only that bank: no cash, no sharing, no cross-account budgets | Free |
+| Spreadsheet | People who enjoy full manual control | Every entry is manual; no scanning, voice or easy real-time sharing | Free |
+| Envelope-style | Overspenders who want to plan every dollar | Demands zero-based discipline; feels heavy for light trackers | Free–paid |
+| AI-first / all-in-one | Anyone who stops logging after two weeks | Newer, with shorter track records; watch for feature bloat | Free–paid |
+
 ### Bank-Native Apps
 
 Most banks now ship a built-in spending tracker. It's free, it's already connected, and it categorizes your card transactions automatically.

@@ -17,11 +17,20 @@ BASE/ROBOTS gate the noindex /preview build vs the apex cutover:
   preview: LANDING_BASE=preview ROBOTS="noindex,follow"
   cutover: LANDING_BASE=""      ROBOTS="index,follow,max-image-preview:large"
 """
-import os, re, json, html, glob, shutil
+import os, re, json, html, glob, shutil, sys
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "site")
+
+# reuse the blog/help generators: git_date + org_node + read_articles (blog markdown)
+# and build_help SECTIONS/DOCS (help markdown) for the llms-full.txt content mirror.
+sys.path.insert(0, os.path.join(ROOT, "..", "help"))
+sys.path.insert(0, os.path.join(ROOT, "..", "seo"))
+import build_blog as bb  # noqa: E402  (importing does not run build(); guarded by __main__)
+import build_help as bh  # noqa: E402
+bcp47 = bb.bcp47
+git_date = bb.git_date
 FEAT = os.path.join(ROOT, "..", "feature_graphics", "by-language")  # clean raw screenshots (no headline plaque)
 SITE = "https://ai-budget.pl"
 APP = "https://app.ai-budget.pl"
@@ -142,11 +151,25 @@ def tier_amounts(lang, tier):
     prefix = "pro" if tier == "pro" else "biz"
     return cur[f"{prefix}_m"], cur[f"{prefix}_y"]
 
+# per-currency display convention: symbol position + decimal separator. USD is the only
+# prefix+dot market; EUR/PLN/RUB/UAH put the symbol after the amount with a comma decimal.
+# (display only — the JSON-LD Offer price stays a machine-readable dot-decimal number.)
+CURRENCY_FORMAT = {
+    "USD": ("pre", "."), "EUR": ("post", ","), "PLN": ("post", ","),
+    "RUB": ("post", ","), "UAH": ("post", ","),
+}
+def fmt_price(cur, amount):
+    pos, dec = CURRENCY_FORMAT.get(cur, ("pre", "."))
+    sym = CURRENCY_PRICING[cur]["symbol"]
+    num = f"{amount:.2f}".replace(".", dec)
+    return f"{num} {sym}" if pos == "post" else f"{sym}{num}"
+
 def tier_price_display(lang, tier):
-    """Return (monthly, yearly) formatted price strings, e.g. ('$9.99', '$95.88')."""
-    sym = CURRENCY_PRICING[LANG_CURRENCY[lang]]["symbol"]
+    """Return (monthly, yearly) price strings in the market's convention, e.g.
+    ('$4.99', '$29.99') for USD or ('14,99 zł', '89,99 zł') for PLN."""
+    cur = LANG_CURRENCY[lang]
     m, y = tier_amounts(lang, tier)
-    return f"{sym}{m:.2f}", f"{sym}{y:.2f}"
+    return fmt_price(cur, m), fmt_price(cur, y)
 
 def pricing_url(lang):
     return "/pricing/" if lang == "pl" else f"/{lang}/pricing/"
@@ -577,7 +600,7 @@ C = {
    "footer": "AI Budget Assistant - app de finanzas todo en uno con asistente de IA.", "rights": "Todos los derechos reservados.",
  },
  "fr": {
-   "title": "AI Budget Assistant - suivi des depenses avec IA",
+   "title": "AI Budget Assistant - suivi des dépenses avec IA",
    "desc": "Appli de suivi des dépenses avec IA : ajoutez des dépenses à la voix ou par photo de reçu, gérez budgets et épargne, en famille. Gratuit.",
    "nav_blog": "Blog", "nav_login": "Se connecter",
    "hero_h1": "Suivi des dépenses avec un assistant IA",
@@ -697,7 +720,7 @@ C = {
    "desc": "Huishoudboekje-app met AI: voeg uitgaven toe met spraak of een bonfoto, beheer budgetten en sparen, samen met je gezin. Gratis te starten.",
    "nav_blog": "Blog", "nav_login": "Inloggen",
    "hero_h1": "Huishoudboekje met AI-assistent",
-   "hero_sub": "Uitgaven, budgetten, spaardoelen en gedeelde gezinsfinancien in een app. De AI doet het saaie werk. Gratis te starten.",
+   "hero_sub": "Uitgaven, budgetten, spaardoelen en gedeelde gezinsfinanciën in een app. De AI doet het saaie werk. Gratis te starten.",
    "cta_primary": "App openen", "cta_secondary": "Download in Google Play",
    "intro_title": "Uitgaven bijhouden zonder spreadsheets",
    "intro": "AI Budget Assistant is een huishoudboekje-app die uitgaven, budgetten, spaardoelen, schulden en bankimport op een plek samenbrengt. In plaats van elke bon in te typen, voeg je een uitgave toe met spraak of een foto, en de AI beantwoordt vragen over je geld in gewone taal. Beheer je budget alleen of samen met je gezin, in realtime, op telefoon, tablet en web.",
@@ -870,7 +893,8 @@ def footer_html(lang):
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
             f'<a href="{cookies_url(lang)}">{cl}</a>'
-            f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a></div>'
+            f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
+            f'<a href="/llms.txt">llms.txt</a></div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
             f'<img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; '
@@ -883,8 +907,8 @@ def cookies_page(lang):
     body = body.replace("__PRIV__", priv_url(lang)).replace("__TERMS__", terms_url(lang)).replace("__MAIL__", SUPPORT_EMAIL)
     url = SITE + cookies_url(lang)
     alts = [("pl", f"{SITE}/cookies/"), ("en", f"{SITE}/en/cookies/"), ("x-default", f"{SITE}/en/cookies/")]
-    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
-    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
+    return (f'<!DOCTYPE html><html lang="{bcp47(lang)}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
@@ -900,8 +924,8 @@ def about_page(lang):
     title, meta, h1, body = ABOUT[L]
     url = SITE + about_url(lang)
     alts = [(l, SITE + about_url(l)) for l in LANG_NAMES if l in ABOUT] + [("x-default", SITE + about_url("en"))]
-    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
-    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
+    return (f'<!DOCTYPE html><html lang="{bcp47(lang)}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
@@ -938,7 +962,7 @@ def pricing_page(lang):
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
     url = SITE + pricing_url(lang)
     alts = [(l, SITE + pricing_url(l)) for l in LANG_NAMES if l in PRICING] + [("x-default", SITE + pricing_url("en"))]
-    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
     og = f"{SITE}/blog/{lang}/assets/og-default.png"
     offers_jsonld = {"@context": "https://schema.org", "@graph": [
         {"@type": "Product", "name": f"AI Budget Assistant {TIER_NAMES[k]}",
@@ -949,7 +973,7 @@ def pricing_page(lang):
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
     ]}
-    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+    return (f'<!DOCTYPE html><html lang="{bcp47(lang)}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(t["title"])}</title><meta name="description" content="{html.escape(t["meta"])}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
@@ -977,11 +1001,14 @@ def jsonld(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
     og = f"{SITE}/blog/{lang}/assets/og-default.png"
     return {"@context": "https://schema.org", "@graph": [
-        {"@type": "WebSite", "name": "AI Budget Assistant", "url": url, "inLanguage": lang},
-        {"@type": "Organization", "name": COMPANY, "url": COMPANY_URL,
-         "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg"}, "sameAs": SAMEAS},
+        {"@type": "WebSite", "@id": f"{SITE}/#website", "name": "AI Budget Assistant", "url": url,
+         "inLanguage": bcp47(lang), "publisher": {"@id": f"{SITE}/#organization"}},
+        {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY, "url": COMPANY_URL,
+         "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg", "width": 512, "height": 512},
+         "sameAs": SAMEAS},
         {"@type": "SoftwareApplication", "name": "AI Budget Assistant", "applicationCategory": "FinanceApplication",
-         "operatingSystem": "Android, Web", "inLanguage": lang, "url": url, "image": og,
+         "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url, "image": og,
+         "publisher": {"@id": f"{SITE}/#organization"},
          "downloadUrl": PLAY, "sameAs": [PLAY],
          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
          "featureList": [
@@ -1015,10 +1042,10 @@ def jsonld(lang, langs):
 
 def head(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
-    alts = "".join(f'<link rel="alternate" hreflang="{l}" href="{SITE+lp(l)}">' for l in langs)
+    alts = "".join(f'<link rel="alternate" hreflang="{bcp47(l)}" href="{SITE+lp(l)}">' for l in langs)
     alts += f'<link rel="alternate" hreflang="x-default" href="{SITE + (lp("en") if "en" in langs else lp(lang))}">'
     og = f"{SITE}/blog/{lang}/assets/og-default.png"
-    return f"""<!DOCTYPE html><html lang="{lang}"><head>
+    return f"""<!DOCTYPE html><html lang="{bcp47(lang)}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(t['title'])}</title>
 <meta name="description" content="{html.escape(t['desc'])}">
@@ -1095,8 +1122,8 @@ def legal_page(lang, kind):
     pl_path = "/privacy/" if kind == "privacy" else "/terms/"
     en_path = "/en/privacy/" if kind == "privacy" else "/en/terms/"
     alts = [("pl", SITE + pl_path), ("en", SITE + en_path), ("x-default", SITE + en_path)]
-    alt_tags = "".join(f'<link rel="alternate" hreflang="{hl}" href="{href}">' for hl, href in alts)
-    return (f'<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">'
+    alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
+    return (f'<!DOCTYPE html><html lang="{bcp47(lang)}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
@@ -1105,6 +1132,41 @@ def legal_page(lang, kind):
             f'<nav class="nav"><a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal">{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
+
+def write_llms_full():
+    """llms-full.txt: an English markdown mirror of the blog + help content so AI answer
+    engines (ChatGPT / Perplexity / Claude / Gemini) can ground and cite answers. Built
+    from the same markdown sources on disk. English-only in v1 (per-language deferred)."""
+    def _strip(md):
+        md = re.sub(r"^#[^\n]*\n", "", md.lstrip(), count=1)   # drop the leading H1 (re-added as ## header)
+        md = re.sub(r"!\[[^\]]*\]\([^)]+\)\n?", "", md)        # drop image markdown
+        return md.strip()
+    out = ["# AI Budget Assistant - Full content (English)", "",
+           "> English markdown mirror of the ai-budget.pl blog and help center, for AI "
+           "answer engines. See llms.txt for the product summary.", "",
+           f"Source: {SITE}/llms.txt", ""]
+    try:
+        blog_en = sorted((a for a in bb.read_articles() if a["lang"] == "en"),
+                         key=lambda a: a["m"]["slug"])
+    except Exception:
+        blog_en = []
+    if blog_en:
+        out += ["", "# Blog", ""]
+        for a in blog_en:
+            out += [f"## {a['m'].get('title', a['m']['slug'])}",
+                    f"URL: {SITE}/blog/en/{a['m']['slug']}/", "", _strip(a["body"]), ""]
+    help_en = []
+    for section in bh.SECTIONS:
+        p = os.path.join(bh.DOCS, "en", f"{section}.md")
+        if os.path.isfile(p):
+            title, _desc, raw = bh.parse_doc(p)
+            if title:
+                help_en.append((bh.slug_of(section), title, raw))
+    if help_en:
+        out += ["", "# Help center", ""]
+        for slug, title, raw in help_en:
+            out += [f"## {title}", f"URL: {SITE}/help/en/{slug}/", "", _strip(raw), ""]
+    open(os.path.join(OUT, "llms-full.txt"), "w", encoding="utf-8", newline="\n").write("\n".join(out))
 
 def build():
     shutil.rmtree(OUT, ignore_errors=True)
@@ -1170,31 +1232,45 @@ def build():
         "document.getElementById('m').textContent='Tap to finish signing in';},1200);}"
         '</script></body></html>\n')
 
-    # apex cutover build (BASE==""): emit sitemap.xml (landing + blog) + robots.txt
+    # apex cutover build (BASE==""): emit sitemap.xml (landing + blog + help) + robots.txt
     if not BASE:
-        urls = [SITE + lp(l) for l in langs]
-        blog_sm = os.path.join(ROOT, "..", "seo", "site", "sitemap.xml")
-        if os.path.exists(blog_sm):
-            for loc in re.findall(r"<loc>([^<]+)</loc>", open(blog_sm, encoding="utf-8").read()):
-                if "/blog/" in loc:
-                    urls.append(loc)
-        help_sm = os.path.join(ROOT, "..", "help", "site", "sitemap.xml")
-        if os.path.exists(help_sm):
-            for loc in re.findall(r"<loc>([^<]+)</loc>", open(help_sm, encoding="utf-8").read()):
-                if "/help/" in loc:
-                    urls.append(loc)
-        urls += [SITE + about_url(l) for l in LANG_NAMES if l in ABOUT]  # About (9 langs)
-        urls += [SITE + pricing_url(l) for l in LANG_NAMES if l in PRICING]  # Pricing (9 langs)
+        landing_py = os.path.abspath(__file__)
+        lp_date = git_date(landing_py)  # landing/pricing/about pages share this generator
+        # landing-side entries: (url, lastmod, changefreq, priority)
+        entries = []
+        for l in langs:
+            u = SITE + lp(l)
+            entries.append((u, lp_date, "weekly", "1.0" if u == SITE + "/" else "0.8"))
+        entries += [(SITE + about_url(l), lp_date, "monthly", "0.5") for l in LANG_NAMES if l in ABOUT]
+        entries += [(SITE + pricing_url(l), lp_date, "monthly", "0.7") for l in LANG_NAMES if l in PRICING]
         for k in ("cookies", "privacy", "terms"):                        # legal (pl + en)
-            urls += [f"{SITE}/{k}/", f"{SITE}/en/{k}/"]
+            src = os.path.join(LEGAL_DIR, "en", k + ".html") if k in ("privacy", "terms") else landing_py
+            kdate = git_date(src, lp_date)
+            entries += [(f"{SITE}/{k}/", kdate, "yearly", "0.3"), (f"{SITE}/en/{k}/", kdate, "yearly", "0.3")]
         sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-        for u in urls:
-            sm.append(f'<url><loc>{u}</loc><lastmod>{PUBLISH_DATE}</lastmod>'
-                      f'<priority>{"1.0" if u == SITE + "/" else "0.7"}</priority></url>')
+        for u, lm, cf, pr in entries:
+            sm.append(f'<url><loc>{u}</loc><lastmod>{lm}</lastmod>'
+                      f'<changefreq>{cf}</changefreq><priority>{pr}</priority></url>')
+        # blog + help: carry their per-URL <lastmod>/<changefreq>/<priority> through verbatim
+        # (the blog/help generators compute real git dates; don't flatten them on merge)
+        for sub, needle in ((os.path.join(ROOT, "..", "seo", "site", "sitemap.xml"), "/blog/"),
+                            (os.path.join(ROOT, "..", "help", "site", "sitemap.xml"), "/help/")):
+            if os.path.exists(sub):
+                txt = open(sub, encoding="utf-8").read()
+                for m in re.finditer(r"<url>.*?</url>", txt, re.S):
+                    if needle in m.group(0):
+                        sm.append(m.group(0))
         sm.append('</urlset>')
         open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8", newline="\n").write("\n".join(sm))
-        open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(
-            f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+        # robots.txt — allow all, with explicit named AI-crawler groups (documents intent
+        # and prevents a future Disallow under User-agent:* from accidentally catching them).
+        ai_bots = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "anthropic-ai",
+                   "Claude-Web", "PerplexityBot", "Perplexity-User", "Google-Extended", "CCBot"]
+        rb = ["User-agent: *", "Allow: /", ""]
+        for bot in ai_bots:
+            rb += [f"User-agent: {bot}", "Allow: /", ""]
+        rb += [f"Sitemap: {SITE}/sitemap.xml", ""]
+        open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write("\n".join(rb))
         open(os.path.join(OUT, "llms.txt"), "w", encoding="utf-8", newline="\n").write(
             f"# AI Budget Assistant\n\n"
             f"> Free AI-powered budget app for individuals and families. "
@@ -1228,10 +1304,12 @@ def build():
             f"- Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations\n"
             f"- Anomaly detection: duplicate charges, price increases, spending spikes\n\n"
             f"## Content\n\n"
+            f"- Full content (English markdown mirror): {SITE}/llms-full.txt\n"
             f"- Blog (9 languages): {SITE}/blog/en/\n"
             f"- Help center (9 languages): {SITE}/help/en/\n"
             f"- Sitemap: {SITE}/sitemap.xml\n"
         )
+        write_llms_full()
         open(os.path.join(OUT, "404.html"), "w", encoding="utf-8", newline="\n").write(
             '<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
