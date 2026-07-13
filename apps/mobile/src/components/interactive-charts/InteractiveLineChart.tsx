@@ -144,6 +144,7 @@ export function InteractiveLineChart({
 const createStyles = (theme: Theme) => ({
   container: {
     width: '100%' as const,
+    paddingBottom: 4,
   },
   emptyText: {
     ...theme.textStyles.bodySm,
