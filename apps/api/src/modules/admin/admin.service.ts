@@ -150,7 +150,7 @@ export class AdminService {
         accountMembers: {
           select: {
             role: true,
-            account: { select: { id: true, name: true, type: true, currencyCode: true } },
+            account: { select: { id: true, name: true, type: true, currencyCode: true, isActive: true, tripStatus: true } },
           },
         },
       },
@@ -215,6 +215,8 @@ export class AdminService {
         type: m.account.type,
         role: m.role,
         currencyCode: m.account.currencyCode,
+        isActive: m.account.isActive,
+        tripStatus: m.account.tripStatus ?? null,
       })),
       accountMembers: undefined,
       aiUsage: {

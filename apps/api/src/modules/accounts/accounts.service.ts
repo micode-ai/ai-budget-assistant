@@ -77,7 +77,10 @@ export class AccountsService {
 
   async findAllForUser(userId: string) {
     const memberships = await this.prisma.accountMember.findMany({
-      where: { userId },
+      where: {
+        userId,
+        account: { isActive: true },
+      },
       include: {
         account: true,
       },

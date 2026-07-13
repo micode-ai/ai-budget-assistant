@@ -104,6 +104,8 @@ export interface AdminUserDetail {
     type: string;
     role: string;
     currencyCode: string;
+    isActive: boolean;
+    tripStatus: string | null;
   }>;
   aiUsage: AdminUserUsageItem;
   recentExpenses: Array<{

@@ -430,37 +430,95 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Accounts */}
-      {user.accounts && user.accounts.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Accounts ({user.accounts.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Currency</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {user.accounts.map((acc) => (
-                  <TableRow key={acc.id}>
-                    <TableCell className="font-medium">{acc.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">{acc.type}</Badge>
-                    </TableCell>
-                    <TableCell className="capitalize">{acc.role}</TableCell>
-                    <TableCell>{acc.currencyCode}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
+      {user.accounts && user.accounts.length > 0 && (() => {
+        const activeAccounts = user.accounts.filter(
+          (a) => a.isActive && !(a.type === 'trip' && a.tripStatus === 'archived'),
+        );
+        const archivedTrips = user.accounts.filter(
+          (a) => a.isActive && a.type === 'trip' && a.tripStatus === 'archived',
+        );
+        const inactiveAccounts = user.accounts.filter((a) => !a.isActive);
+
+        const renderAccountRows = (accs: typeof user.accounts) =>
+          accs.map((acc) => (
+            <TableRow key={acc.id}>
+              <TableCell className="font-medium">{acc.name}</TableCell>
+              <TableCell>
+                <Badge variant="outline" className="capitalize">{acc.type}</Badge>
+              </TableCell>
+              <TableCell className="capitalize">{acc.role}</TableCell>
+              <TableCell>{acc.currencyCode}</TableCell>
+            </TableRow>
+          ));
+
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Accounts ({activeAccounts.length} active{archivedTrips.length > 0 ? `, ${archivedTrips.length} archived trips` : ''}{inactiveAccounts.length > 0 ? `, ${inactiveAccounts.length} deleted` : ''})</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {activeAccounts.length > 0 && (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Currency</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>{renderAccountRows(activeAccounts)}</TableBody>
+                </Table>
+              )}
+
+              {archivedTrips.length > 0 && (
+                <>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide pt-2">Archived Trips</p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Currency</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>{renderAccountRows(archivedTrips)}</TableBody>
+                  </Table>
+                </>
+              )}
+
+              {inactiveAccounts.length > 0 && (
+                <>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide pt-2">Deleted Accounts</p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Currency</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {inactiveAccounts.map((acc) => (
+                        <TableRow key={acc.id} className="opacity-50">
+                          <TableCell className="font-medium line-through">{acc.name}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="capitalize">{acc.type}</Badge>
+                          </TableCell>
+                          <TableCell className="capitalize">{acc.role}</TableCell>
+                          <TableCell>{acc.currencyCode}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* AI Usage Chart */}
       {featureChartData.length > 0 && (
