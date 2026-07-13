@@ -99,10 +99,10 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing[4],
+    paddingBottom: theme.spacing[2],
     marginBottom: theme.spacing[5],
     borderWidth: 2,
     borderColor: theme.colors.borderLight,
-    overflow: 'hidden' as const,
   },
   headerRow: {
     flexDirection: 'row' as const,

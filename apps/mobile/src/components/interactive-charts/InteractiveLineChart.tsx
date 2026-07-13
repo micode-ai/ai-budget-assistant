@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useContentWidth } from '@/hooks/useContentWidth';
+import { View, Text, TouchableOpacity, LayoutChangeEvent } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -28,10 +27,14 @@ export function InteractiveLineChart({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const screenWidth = useContentWidth();
+  const [containerWidth, setContainerWidth] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const resolvedLineColor = lineColor ?? theme.colors.primary;
+
+  const handleLayout = useCallback((e: LayoutChangeEvent) => {
+    setContainerWidth(e.nativeEvent.layout.width);
+  }, []);
 
   const handlePointPress = useCallback(
     (item: ChartDataPoint, index: number) => {
@@ -43,14 +46,15 @@ export function InteractiveLineChart({
 
   if (data.length === 0) {
     return (
-      <View style={[styles.container, { height }]}>
+      <View style={[styles.container, { height }]} onLayout={handleLayout}>
         <Text style={styles.emptyText}>{t('drillDown.noDataAvailable')}</Text>
       </View>
     );
   }
 
-  // Account for card padding (16*2=32) + y-axis labels (~50px) + right padding for last label (~30px)
-  const chartWidth = screenWidth - 120;
+  // y-axis label area is ~50px wide; subtract it so the SVG fits exactly in the container
+  const yAxisLabelWidth = 50;
+  const chartWidth = containerWidth > 0 ? containerWidth - yAxisLabelWidth : 0;
 
   const lineData = data.map((point, index) => ({
     value: point.value,
@@ -88,7 +92,7 @@ export function InteractiveLineChart({
   const noOfSectionsBelowXAxis = hasNegative ? 4 : undefined;
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={handleLayout}>
       {selectedIndex !== null && data[selectedIndex] && (
         <View style={styles.tooltip}>
           <Text style={styles.tooltipLabel}>{data[selectedIndex].label}</Text>
@@ -97,46 +101,52 @@ export function InteractiveLineChart({
           </Text>
         </View>
       )}
-      <LineChart
-        data={lineData}
-        width={chartWidth}
-        height={height}
-        isAnimated={animate}
-        animationDuration={600}
-        curved
-        maxValue={maxValue}
-        noOfSections={4}
-        mostNegativeValue={mostNegativeValue}
-        noOfSectionsBelowXAxis={noOfSectionsBelowXAxis}
-        yAxisThickness={0}
-        xAxisThickness={1}
-        xAxisColor={theme.colors.border}
-        yAxisTextStyle={styles.axisText}
-        xAxisLabelTextStyle={styles.axisText}
-        rulesColor={theme.colors.borderLight}
-        rulesType="dashed"
-        color={resolvedLineColor}
-        thickness={2}
-        dataPointsColor={resolvedLineColor}
-        dataPointsRadius={4}
-        areaChart={areaChart}
-        startFillColor={resolvedLineColor}
-        startOpacity={0.2}
-        endFillColor={resolvedLineColor}
-        endOpacity={0.02}
-        textShiftY={-8}
-        textShiftX={-4}
-        textFontSize={10}
-        textColor={theme.colors.textSecondary}
-        hideDataPoints={false}
-        initialSpacing={8}
-        endSpacing={30}
-        spacing={
-          data.length > 1
-            ? Math.max(30, (chartWidth - 38) / (data.length - 1))
-            : chartWidth
-        }
-      />
+      {/* Clip the chart SVG to its own bounds — keeps the card clean without hiding content */}
+      <View style={[styles.chartClip, { height: height + 16 }]}>
+        {chartWidth > 0 && (
+          <LineChart
+            data={lineData}
+            width={chartWidth}
+            height={height}
+            overflowTop={16}
+            isAnimated={animate}
+            animationDuration={600}
+            curved
+            maxValue={maxValue}
+            noOfSections={4}
+            mostNegativeValue={mostNegativeValue}
+            noOfSectionsBelowXAxis={noOfSectionsBelowXAxis}
+            yAxisThickness={0}
+            xAxisThickness={1}
+            xAxisColor={theme.colors.border}
+            yAxisTextStyle={styles.axisText}
+            xAxisLabelTextStyle={styles.axisText}
+            rulesColor={theme.colors.borderLight}
+            rulesType="dashed"
+            color={resolvedLineColor}
+            thickness={2}
+            dataPointsColor={resolvedLineColor}
+            dataPointsRadius={4}
+            areaChart={areaChart}
+            startFillColor={resolvedLineColor}
+            startOpacity={0.2}
+            endFillColor={resolvedLineColor}
+            endOpacity={0.02}
+            textShiftY={-8}
+            textShiftX={-4}
+            textFontSize={10}
+            textColor={theme.colors.textSecondary}
+            hideDataPoints={false}
+            initialSpacing={8}
+            endSpacing={8}
+            spacing={
+              data.length > 1
+                ? Math.max(30, (chartWidth - 16) / (data.length - 1))
+                : chartWidth
+            }
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -144,6 +154,11 @@ export function InteractiveLineChart({
 const createStyles = (theme: Theme) => ({
   container: {
     width: '100%' as const,
+  },
+  // Explicit clip wrapper — only the chart SVG is clipped, not the card itself
+  chartClip: {
+    width: '100%' as const,
+    overflow: 'hidden' as const,
   },
   emptyText: {
     ...theme.textStyles.bodySm,
