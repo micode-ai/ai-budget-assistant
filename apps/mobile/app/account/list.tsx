@@ -237,7 +237,7 @@ const createStyles = (theme: Theme) => ({
     marginRight: theme.spacing[3],
   },
   accountIconArchived: {
-    backgroundColor: theme.colors.backgroundSecondary ?? theme.colors.background,
+    backgroundColor: theme.colors.background,
   },
   accountInfo: {
     flex: 1,
