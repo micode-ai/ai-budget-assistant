@@ -80,6 +80,16 @@ export interface MergeExpensesResponse {
   mergedId: string;
 }
 
+export interface MoveExpenseDto {
+  targetAccountId: string;
+}
+
+export interface MoveExpenseResponse {
+  id: string;
+  accountId: string;
+  categoryId: string | null;
+}
+
 export interface CreateExpenseCategorySplitDto {
   categoryId: string;
   amount: number;

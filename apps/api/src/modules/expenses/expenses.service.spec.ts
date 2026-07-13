@@ -1,5 +1,5 @@
 import { ExpensesService } from './expenses.service';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 
 // Regression for the bulk-delete bug: the mobile client uses local `clientId`s as
 // its expense ids (offline-first), so bulkUpdate must resolve `ids` against BOTH the
@@ -549,6 +549,147 @@ describe('mergeExpenses (Tier 2)', () => {
     await expect(service.mergeExpenses('acc-1', 'user-1', { keepId: 'other-acc-expense', mergeId: 'merge-1' }))
       .rejects.toThrow(NotFoundException);
     // The update must never have been called — nothing should be mutated.
+    expect(tx.expense.update).not.toHaveBeenCalled();
+  });
+});
+
+// Move an expense to another account. The caller is already a non-viewer member of the
+// SOURCE account (AccountContextGuard + ViewerBlockGuard); the service validates the
+// TARGET membership/role, remaps the category by name, and drops account-scoped links.
+describe('ExpensesService.moveToAccount', () => {
+  function makeService(opts: {
+    expense?: any;
+    targetMember?: { role: string } | null;
+    sourceCategoryName?: string | null;
+    targetCategoryMatch?: { id: string } | null;
+    clientIdClash?: { id: string } | null;
+  }) {
+    const tx = {
+      expenseTag: { updateMany: jest.fn().mockResolvedValue({}) },
+      projectExpense: { updateMany: jest.fn().mockResolvedValue({}) },
+      expenseCategorySplit: { updateMany: jest.fn().mockResolvedValue({}) },
+      tripExpenseShare: { deleteMany: jest.fn().mockResolvedValue({}) },
+      expense: { update: jest.fn().mockResolvedValue({}) },
+    };
+    const expense =
+      opts.expense === undefined
+        ? { id: 'srv-1', clientId: 'cli-1', categoryId: 'cat-src', encryptedPayload: null }
+        : opts.expense;
+    const prisma: any = {
+      expense: {
+        findFirst: jest
+          .fn()
+          // first call resolves the source expense; second (clientId clash check) if any
+          .mockResolvedValueOnce(expense)
+          .mockResolvedValueOnce(opts.clientIdClash ?? null),
+        update: jest.fn().mockResolvedValue({}),
+      },
+      accountMember: {
+        findUnique: jest.fn().mockResolvedValue(
+          opts.targetMember === undefined ? { role: 'editor' } : opts.targetMember,
+        ),
+      },
+      category: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue(
+            opts.sourceCategoryName === undefined ? { name: 'Food' } : { name: opts.sourceCategoryName },
+          ),
+        findFirst: jest
+          .fn()
+          .mockResolvedValue(opts.targetCategoryMatch === undefined ? { id: 'cat-dst' } : opts.targetCategoryMatch),
+      },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+    const cacheService: any = {
+      delByPrefix: jest.fn().mockResolvedValue(undefined),
+      del: jest.fn().mockResolvedValue(undefined),
+    };
+    const anomalyService: any = { dismissForExpense: jest.fn().mockResolvedValue(undefined) };
+    const service = new ExpensesService(prisma, {} as any, cacheService, anomalyService, {} as any);
+    return { service, prisma, tx };
+  }
+
+  it('reassigns accountId, remaps category by name, and drops account-scoped links', async () => {
+    const { service, tx } = makeService({});
+
+    const res = await service.moveToAccount('acc-src', 'user-1', 'cli-1', {
+      targetAccountId: 'acc-dst',
+    });
+
+    expect(res).toEqual({ id: 'srv-1', accountId: 'acc-dst', categoryId: 'cat-dst' });
+
+    const upd = tx.expense.update.mock.calls[0][0];
+    expect(upd.where).toEqual({ id: 'srv-1' });
+    expect(upd.data.accountId).toBe('acc-dst');
+    expect(upd.data.categoryId).toBe('cat-dst');
+    expect(upd.data.syncVersion).toEqual({ increment: 1 });
+
+    // Account-scoped associations are severed.
+    expect(tx.expenseTag.updateMany).toHaveBeenCalledTimes(1);
+    expect(tx.projectExpense.updateMany).toHaveBeenCalledTimes(1);
+    expect(tx.expenseCategorySplit.updateMany).toHaveBeenCalledTimes(1);
+    expect(tx.tripExpenseShare.deleteMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears the category when the target account has no same-named category', async () => {
+    const { service, tx } = makeService({ targetCategoryMatch: null });
+
+    const res = await service.moveToAccount('acc-src', 'user-1', 'cli-1', {
+      targetAccountId: 'acc-dst',
+    });
+
+    expect(res.categoryId).toBeNull();
+    expect(tx.expense.update.mock.calls[0][0].data.categoryId).toBeNull();
+  });
+
+  it('nulls the clientId when the target account already holds that clientId', async () => {
+    const { service, tx } = makeService({ clientIdClash: { id: 'other' } });
+
+    await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
+
+    expect(tx.expense.update.mock.calls[0][0].data.clientId).toBeNull();
+  });
+
+  it('rejects moving to the same account', async () => {
+    const { service, tx } = makeService({});
+    await expect(
+      service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-src' }),
+    ).rejects.toThrow(BadRequestException);
+    expect(tx.expense.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects an encrypted expense (payload cannot decrypt under the target key)', async () => {
+    const { service, tx } = makeService({
+      expense: { id: 'srv-1', clientId: 'cli-1', categoryId: null, encryptedPayload: 'enc' },
+    });
+    await expect(
+      service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' }),
+    ).rejects.toThrow(BadRequestException);
+    expect(tx.expense.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects when the caller is not a member of the target account', async () => {
+    const { service, tx } = makeService({ targetMember: null });
+    await expect(
+      service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' }),
+    ).rejects.toThrow(ForbiddenException);
+    expect(tx.expense.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects when the caller is only a viewer of the target account', async () => {
+    const { service, tx } = makeService({ targetMember: { role: 'viewer' } });
+    await expect(
+      service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' }),
+    ).rejects.toThrow(ForbiddenException);
+    expect(tx.expense.update).not.toHaveBeenCalled();
+  });
+
+  it('throws NotFound when the expense is missing from the source account', async () => {
+    const { service, tx } = makeService({ expense: null });
+    await expect(
+      service.moveToAccount('acc-src', 'user-1', 'nope', { targetAccountId: 'acc-dst' }),
+    ).rejects.toThrow(NotFoundException);
     expect(tx.expense.update).not.toHaveBeenCalled();
   });
 });

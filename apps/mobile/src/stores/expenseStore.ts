@@ -14,6 +14,7 @@ import {
   deleteReceiptImageLocally,
   bulkRenameMerchant,
   bulkMergeMerchants,
+  moveExpenseAccountInDb,
 } from '@/db/expenseRepository';
 import {
   loadItemsByExpenseId,
@@ -73,6 +74,7 @@ interface ExpenseState {
   deleteExpense: (id: string) => void;
   bulkUpdateExpenses: (ids: string[], patch: { categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }) => Promise<void>;
   mergeExpenses: (keepId: string, mergeId: string, fieldChoices?: MergeExpensesFieldChoices) => Promise<void>;
+  moveExpense: (id: string, targetAccountId: string) => Promise<void>;
   stopRecurringExpense: (id: string) => Promise<void>;
   setFilters: (filters: Partial<ExpenseFilters>) => void;
 
@@ -604,6 +606,32 @@ export const useExpenseStore = create<ExpenseState>()(
       // Re-encrypt E2EE fields (merchant, notes) on the modified survivor
       get().syncPendingExpenses().catch((e: unknown) =>
         console.warn('[expenseStore] mergeExpenses: syncPendingExpenses deferred (offline?):', e),
+      );
+    },
+
+    // Move an expense to another account. Server-authoritative (category remap +
+    // membership checks live on the server), so this is an ONLINE action: optimistic
+    // removal from the current list, rolled back if the server call fails.
+    moveExpense: async (id, targetAccountId) => {
+      if (!useAccountStore.getState().canEdit()) return;
+
+      const moving = get().expenses.find((e) => e.id === id);
+      if (!moving) return;
+
+      // Optimistic: drop from the current account's in-memory list.
+      set((state) => ({ expenses: state.expenses.filter((e) => e.id !== id) }));
+
+      try {
+        await api.moveExpense(id, targetAccountId);
+      } catch (e) {
+        // The move needs the server — restore the row so nothing is silently lost.
+        set((state) => ({ expenses: [moving, ...state.expenses.filter((x) => x.id !== id)] }));
+        throw e;
+      }
+
+      // Re-home the local row (server already reassigned accountId + remapped category).
+      await moveExpenseAccountInDb(id, targetAccountId).catch((err) =>
+        console.warn('[expenseStore] moveExpense: local re-home failed:', err),
       );
     },
 

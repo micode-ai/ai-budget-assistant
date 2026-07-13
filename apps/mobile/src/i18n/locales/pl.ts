@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Zapisz wydatek',
   },
   expenseDetail: {
+    moveTitle: 'Przenieś na konto',
+    moveSubtitle: 'Wybierz konto, na które przenieść ten wydatek. Tagi, projekt i kategoria nie zostaną przeniesione.',
+    moveSuccessTitle: 'Wydatek przeniesiony',
+    moveSuccess: 'Przeniesiono na {{account}}.',
+    moveError: 'Nie udało się przenieść wydatku. Spróbuj ponownie.',
     notFound: 'Nie znaleziono wydatku',
     amount: 'Kwota',
     noDescription: 'Brak opisu',

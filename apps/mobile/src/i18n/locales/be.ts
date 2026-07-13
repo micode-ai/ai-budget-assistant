@@ -351,6 +351,11 @@ export default {
     saveExpense: 'Захаваць расход',
   },
   expenseDetail: {
+    moveTitle: 'Перанесці на рахунак',
+    moveSubtitle: 'Выберыце рахунак, на які перанесці гэты выдатак. Тэгі, праект і катэгорыя не перанясуцца.',
+    moveSuccessTitle: 'Выдатак перанесены',
+    moveSuccess: 'Перанесена на «{{account}}».',
+    moveError: 'Не ўдалося перанесці выдатак. Паспрабуйце яшчэ раз.',
     notFound: 'Расход не знойдзены',
     amount: 'Сума',
     noDescription: 'Без апісання',

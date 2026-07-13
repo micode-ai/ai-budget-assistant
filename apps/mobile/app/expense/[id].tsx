@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Pressable, ScrollView } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,8 +29,10 @@ export default function ExpenseDetailScreen() {
   const currentAccount = useAccountStore((s) => s.currentAccount());
   const accountMembersMap = useAccountStore((s) => s.members);
   const loadMembers = useAccountStore((s) => s.loadMembers);
+  const accounts = useAccountStore((s) => s.accounts);
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const { id, edit } = useLocalSearchParams<{ id: string; edit?: string }>();
-  const { expenses, deleteExpense, stopRecurringExpense, updateExpense } = useExpenseStore();
+  const { expenses, deleteExpense, stopRecurringExpense, updateExpense, moveExpense } = useExpenseStore();
   const { loadProjects } = useProjectStore();
   const { loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
   // Match local id, the server PK (`serverId`), or the clientId — anomaly-alert
@@ -48,7 +50,12 @@ export default function ExpenseDetailScreen() {
     : null;
 
   const [isEditing, setIsEditing] = useState(false);
+  const [showMovePicker, setShowMovePicker] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
   const detailsCardRef = useRef<ExpenseDetailsCardHandle>(null);
+
+  // Accounts the caller can move this expense into (non-viewer, not the current one).
+  const moveTargets = accounts.filter((a) => a.id !== currentAccountId && a.myRole !== 'viewer');
 
   useEffect(() => {
     if (edit === 'true') setIsEditing(true);
@@ -144,6 +151,20 @@ export default function ExpenseDetailScreen() {
         },
       },
     ]);
+  };
+
+  const handleMove = async (targetAccountId: string, targetName: string) => {
+    setShowMovePicker(false);
+    setIsMoving(true);
+    try {
+      await moveExpense(expense.id, targetAccountId);
+      setIsMoving(false);
+      showAlert(t('expenseDetail.moveSuccessTitle'), t('expenseDetail.moveSuccess', { account: targetName }));
+      router.back();
+    } catch {
+      setIsMoving(false);
+      showAlert(t('common.error'), t('expenseDetail.moveError'));
+    }
   };
 
   const sourceLabel: Record<string, string> = {
@@ -307,6 +328,15 @@ export default function ExpenseDetailScreen() {
               <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
                 <Ionicons name="copy-outline" size={22} color={theme.colors.secondary} />
               </TouchableOpacity>
+              {canEdit && moveTargets.length > 0 && (
+                <TouchableOpacity
+                  style={styles.moveButton}
+                  onPress={() => setShowMovePicker(true)}
+                  disabled={isMoving}
+                >
+                  <Ionicons name="swap-horizontal" size={22} color={theme.colors.primary} />
+                </TouchableOpacity>
+              )}
               {canEdit && (
                 <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                   <Ionicons name="trash" size={22} color={theme.colors.danger} />
@@ -316,6 +346,35 @@ export default function ExpenseDetailScreen() {
           )}
         </View>
       </KeyboardAwareScreen>
+
+      {/* Move-to-account picker */}
+      <Modal
+        visible={showMovePicker}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowMovePicker(false)}
+      >
+        <Pressable style={styles.moveOverlay} onPress={() => setShowMovePicker(false)}>
+          <Pressable style={styles.moveSheet}>
+            <View style={styles.moveHandle} />
+            <Text style={styles.moveTitle}>{t('expenseDetail.moveTitle')}</Text>
+            <Text style={styles.moveSubtitle}>{t('expenseDetail.moveSubtitle')}</Text>
+            <ScrollView style={styles.moveList}>
+              {moveTargets.map((a) => (
+                <TouchableOpacity
+                  key={a.id}
+                  style={styles.moveRow}
+                  onPress={() => handleMove(a.id, a.name)}
+                >
+                  <Ionicons name="wallet-outline" size={20} color={theme.colors.primary} />
+                  <Text style={styles.moveRowText}>{a.name}</Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textDisabled} />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -413,6 +472,17 @@ const createStyles = (theme: Theme) => ({
     borderColor: theme.colors.secondary,
     gap: theme.spacing[2],
   },
+  moveButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    gap: theme.spacing[2],
+  },
   deleteButton: {
     flex: 1,
     flexDirection: 'row' as const,
@@ -423,6 +493,54 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 2,
     borderColor: theme.colors.danger,
     gap: theme.spacing[2],
+  },
+  moveOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end' as const,
+  },
+  moveSheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    paddingTop: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    paddingBottom: theme.spacing[6],
+    maxHeight: '70%' as const,
+  },
+  moveHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.borderLight,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  moveTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+  },
+  moveSubtitle: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[1],
+    marginBottom: theme.spacing[3],
+  },
+  moveList: {
+    flexGrow: 0,
+  },
+  moveRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    paddingVertical: theme.spacing[4],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.divider,
+  },
+  moveRowText: {
+    ...theme.textStyles.bodyLargeMedium,
+    color: theme.colors.textPrimary,
+    flex: 1,
   },
   cancelEditButton: {
     flex: 1,

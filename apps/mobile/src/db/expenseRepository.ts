@@ -271,6 +271,21 @@ export async function setExpenseServerId(id: string, serverId: string): Promise<
   await executeSql('UPDATE expenses SET server_id = ? WHERE id = ?', [serverId, id]);
 }
 
+/**
+ * Re-home a locally-cached expense to another account after a server-side move.
+ * The server has already reassigned accountId and remapped/cleared the category, so we
+ * mirror that locally (account_id → target, category_id cleared) and mark the row synced —
+ * it drops out of the current account's list and reappears (with the server's remapped
+ * category) when the target account next pulls. No sync push is queued; the move is
+ * server-authoritative.
+ */
+export async function moveExpenseAccountInDb(id: string, targetAccountId: string): Promise<void> {
+  await executeSql(
+    'UPDATE expenses SET account_id = ?, category_id = NULL, updated_at = ?, sync_status = ? WHERE id = ?',
+    [targetAccountId, Date.now(), 'synced', id],
+  );
+}
+
 export async function saveReceiptImageLocally(
   expenseId: string,
   imageBase64: string,

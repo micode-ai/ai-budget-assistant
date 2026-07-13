@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Uitgave opslaan',
   },
   expenseDetail: {
+    moveTitle: 'Naar account verplaatsen',
+    moveSubtitle: 'Kies het account waarnaar je deze uitgave wilt verplaatsen. Tags, project en categorie gaan niet mee.',
+    moveSuccessTitle: 'Uitgave verplaatst',
+    moveSuccess: 'Verplaatst naar {{account}}.',
+    moveError: 'Kon de uitgave niet verplaatsen. Probeer het opnieuw.',
     notFound: 'Uitgave niet gevonden',
     amount: 'Bedrag',
     noDescription: 'Geen omschrijving',

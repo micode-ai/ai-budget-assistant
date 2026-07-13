@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Guardar gasto',
   },
   expenseDetail: {
+    moveTitle: 'Mover a cuenta',
+    moveSubtitle: 'Elige la cuenta a la que mover este gasto. Las etiquetas, el proyecto y la categoría no se conservarán.',
+    moveSuccessTitle: 'Gasto movido',
+    moveSuccess: 'Movido a {{account}}.',
+    moveError: 'No se pudo mover el gasto. Inténtalo de nuevo.',
     notFound: 'Gasto no encontrado',
     amount: 'Importe',
     noDescription: 'Sin descripción',

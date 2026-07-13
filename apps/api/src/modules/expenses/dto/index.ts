@@ -436,6 +436,11 @@ export class MergeExpensesDto {
   fieldChoices?: MergeExpensesFieldChoicesDto;
 }
 
+export class MoveExpenseDto {
+  @IsUUID()
+  targetAccountId: string;
+}
+
 export class BulkUpdateExpensesDto {
   @IsArray()
   @IsString({ each: true })

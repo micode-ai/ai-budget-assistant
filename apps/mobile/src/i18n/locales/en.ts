@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Save Expense',
   },
   expenseDetail: {
+    moveTitle: 'Move to account',
+    moveSubtitle: 'Choose an account to move this expense to. Tags, project and category won\'t carry over.',
+    moveSuccessTitle: 'Expense moved',
+    moveSuccess: 'Moved to {{account}}.',
+    moveError: 'Couldn\'t move the expense. Please try again.',
     notFound: 'Expense not found',
     amount: 'Amount',
     noDescription: 'No description',

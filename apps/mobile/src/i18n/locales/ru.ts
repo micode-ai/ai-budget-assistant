@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Сохранить расход',
   },
   expenseDetail: {
+    moveTitle: 'Перенести на счёт',
+    moveSubtitle: 'Выберите счёт, на который перенести этот расход. Теги, проект и категория не перенесутся.',
+    moveSuccessTitle: 'Расход перенесён',
+    moveSuccess: 'Перенесено на «{{account}}».',
+    moveError: 'Не удалось перенести расход. Попробуйте ещё раз.',
     notFound: 'Расход не найден',
     amount: 'Сумма',
     noDescription: 'Без описания',

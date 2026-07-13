@@ -19,7 +19,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { TripArchivedGuard } from '../accounts/guards/trip-archived.guard';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto, MergeExpensesDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, SaveReceiptImageDto, BulkUpdateExpensesDto, MergeExpensesDto, MoveExpenseDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('expenses')
@@ -102,6 +102,18 @@ export class ExpensesController {
   @UseGuards(new ViewerBlockGuard())
   async stopRecurring(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.expensesService.stopRecurring(req.accountId, id);
+  }
+
+  // Move an expense to another account the caller can edit. Source-side viewer/trip
+  // guards apply here; the target-account membership + role is validated in the service.
+  @Post(':id/move')
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
+  async move(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: MoveExpenseDto,
+  ) {
+    return this.expensesService.moveToAccount(req.accountId, req.user.id, id, dto);
   }
 
   // ---- Expense Items ----

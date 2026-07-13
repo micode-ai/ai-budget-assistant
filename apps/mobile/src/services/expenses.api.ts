@@ -1,5 +1,5 @@
 import type { Expense, ExpenseItem, ExpenseCategorySplit } from '@budget/shared-types';
-import type { CreateExpenseDto, UpdateExpenseDto, MergeExpensesDto, MergeExpensesResponse } from '@budget/shared-types';
+import type { CreateExpenseDto, UpdateExpenseDto, MergeExpensesDto, MergeExpensesResponse, MoveExpenseResponse } from '@budget/shared-types';
 import type { PaginatedResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
@@ -112,6 +112,13 @@ export const expensesApi = {
     return httpClient.request<MergeExpensesResponse>('/expenses/merge', {
       method: 'POST',
       body: JSON.stringify(body),
+    });
+  },
+
+  moveExpense(id: string, targetAccountId: string): Promise<MoveExpenseResponse> {
+    return httpClient.request<MoveExpenseResponse>(`/expenses/${id}/move`, {
+      method: 'POST',
+      body: JSON.stringify({ targetAccountId }),
     });
   },
 };

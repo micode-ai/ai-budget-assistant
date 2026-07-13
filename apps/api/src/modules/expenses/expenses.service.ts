@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException, BadRequestException, Optional } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException, Optional } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto, MergeExpensesDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto, MergeExpensesDto, MoveExpenseDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
@@ -1022,5 +1022,123 @@ export class ExpensesService {
     // alert points at — dismiss it so a resolved pair leaves no dead alert behind.
     void this.anomalyService.dismissForExpense(accountId, result.mergedId);
     return result;
+  }
+
+  /**
+   * Move an expense from one account to another.
+   *
+   * `sourceAccountId` comes from the X-Account-Id context (the caller is already
+   * confirmed a non-viewer member of it by AccountContextGuard + ViewerBlockGuard).
+   * The caller must ALSO be a non-viewer member of the target account.
+   *
+   * Account-scoped associations do not travel across the boundary:
+   *  - category is remapped by (case-insensitive) name into the target account, else cleared
+   *  - tags, project links and category splits reference source-account rows → soft-deleted
+   *  - trip expense shares reference source-account members → deleted
+   * Amount / currency / description / merchant / notes / date / items / receipt travel with it.
+   *
+   * E2EE expenses are rejected: their encryptedPayload is sealed with the source
+   * account's key and would be undecryptable under the target account.
+   */
+  async moveToAccount(
+    sourceAccountId: string,
+    userId: string,
+    id: string,
+    dto: MoveExpenseDto,
+  ): Promise<{ id: string; accountId: string; categoryId: string | null }> {
+    const targetAccountId = dto.targetAccountId;
+    if (targetAccountId === sourceAccountId) {
+      throw new BadRequestException('Target account must differ from the current account');
+    }
+
+    // Resolve the expense within the source account (by server PK or clientId).
+    const expense = await this.prisma.expense.findFirst({
+      where: { accountId: sourceAccountId, isDeleted: false, OR: [{ id }, { clientId: id }] },
+      select: { id: true, clientId: true, categoryId: true, encryptedPayload: true },
+    });
+    if (!expense) throw new NotFoundException('Expense not found');
+
+    if (expense.encryptedPayload != null) {
+      throw new BadRequestException('Encrypted expenses cannot be moved between accounts');
+    }
+
+    // The caller must be a non-viewer member of the target account.
+    const membership = await this.prisma.accountMember.findUnique({
+      where: { accountId_userId: { accountId: targetAccountId, userId } },
+      select: { role: true },
+    });
+    if (!membership) {
+      throw new ForbiddenException('Not a member of the target account');
+    }
+    if (membership.role === 'viewer') {
+      throw new ForbiddenException('You have view-only access to the target account');
+    }
+
+    // Remap the category by name into the target account (else clear it).
+    let remappedCategoryId: string | null = null;
+    if (expense.categoryId) {
+      const source = await this.prisma.category.findUnique({
+        where: { id: expense.categoryId },
+        select: { name: true },
+      });
+      if (source?.name) {
+        const match = await this.prisma.category.findFirst({
+          where: {
+            accountId: targetAccountId,
+            isDeleted: false,
+            name: { equals: source.name, mode: 'insensitive' },
+          },
+          select: { id: true },
+        });
+        remappedCategoryId = match?.id ?? null;
+      }
+    }
+
+    // A clientId is unique per account — if the target already holds a row with the
+    // same clientId, drop ours to avoid the @@unique([accountId, clientId]) collision.
+    let keepClientId = true;
+    if (expense.clientId) {
+      const clash = await this.prisma.expense.findFirst({
+        where: { accountId: targetAccountId, clientId: expense.clientId, id: { not: expense.id } },
+        select: { id: true },
+      });
+      if (clash) keepClientId = false;
+    }
+
+    await this.prisma.$transaction(async (tx: PrismaClient) => {
+      // Drop account-scoped associations that don't belong in the target account.
+      await tx.expenseTag.updateMany({
+        where: { expenseId: expense.id, isDeleted: false },
+        data: { isDeleted: true },
+      });
+      await tx.projectExpense.updateMany({
+        where: { expenseId: expense.id, isDeleted: false },
+        data: { isDeleted: true },
+      });
+      await tx.expenseCategorySplit.updateMany({
+        where: { expenseId: expense.id, isDeleted: false },
+        data: { isDeleted: true },
+      });
+      await tx.tripExpenseShare.deleteMany({ where: { expenseId: expense.id } });
+
+      const moveData: Record<string, any> = {
+        accountId: targetAccountId,
+        categoryId: remappedCategoryId,
+        syncVersion: { increment: 1 },
+      };
+      if (!keepClientId) moveData.clientId = null;
+
+      await tx.expense.update({ where: { id: expense.id }, data: moveData });
+    });
+
+    // Both accounts' cached chat/tool results and UserContext are now stale.
+    await Promise.all([
+      this.invalidateChatCache(sourceAccountId),
+      this.invalidateChatCache(targetAccountId),
+    ]);
+    // Any anomaly alert deep-linking to this expense in the source account is stale.
+    void this.anomalyService.dismissForExpense(sourceAccountId, expense.id);
+
+    return { id: expense.id, accountId: targetAccountId, categoryId: remappedCategoryId };
   }
 }

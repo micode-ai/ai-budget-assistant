@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Enregistrer la dépense',
   },
   expenseDetail: {
+    moveTitle: 'Déplacer vers un compte',
+    moveSubtitle: 'Choisissez le compte vers lequel déplacer cette dépense. Les tags, le projet et la catégorie ne seront pas conservés.',
+    moveSuccessTitle: 'Dépense déplacée',
+    moveSuccess: 'Déplacée vers {{account}}.',
+    moveError: 'Impossible de déplacer la dépense. Veuillez réessayer.',
     notFound: 'Dépense introuvable',
     amount: 'Montant',
     noDescription: 'Aucune description',

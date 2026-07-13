@@ -353,6 +353,11 @@ export default {
     saveExpense: 'Ausgabe speichern',
   },
   expenseDetail: {
+    moveTitle: 'In Konto verschieben',
+    moveSubtitle: 'Wähle ein Konto, in das diese Ausgabe verschoben werden soll. Tags, Projekt und Kategorie werden nicht übernommen.',
+    moveSuccessTitle: 'Ausgabe verschoben',
+    moveSuccess: 'Nach {{account}} verschoben.',
+    moveError: 'Ausgabe konnte nicht verschoben werden. Bitte versuche es erneut.',
     notFound: 'Ausgabe nicht gefunden',
     amount: 'Betrag',
     noDescription: 'Keine Beschreibung',
