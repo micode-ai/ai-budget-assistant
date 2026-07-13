@@ -116,6 +116,24 @@ def org_node():
             "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg",
                      "width": 512, "height": 512}}
 
+# Cross-link blog <-> help so deep help pages gain inbound internal links (helps the
+# "Crawled - currently not indexed" cohort: give low-authority pages more internal PageRank).
+# blog article (by `pair`) -> the primary help section slug it maps to:
+PAIR_TO_HELP = {
+    "budget": "budgets", "expenses": "expenses-and-income", "saving": "savings-goals",
+    "shared-budget": "accounts", "envelope": "budgets", "rule-503020": "budgets",
+    "best-apps": "getting-started", "emergency-fund": "savings-goals",
+    "subscriptions": "subscription-manager", "groceries": "shopping-list",
+    "categories": "reference-data", "debt": "debts-and-loans", "bank-import": "bank-import",
+    "family": "family-feed", "ai-budget": "ai-chat", "inflation": "personal-inflation-index",
+    "expense-map": "expense-map",
+}
+HELP_CTA = {"en": "Step-by-step guide in the Help center", "pl": "Poradnik krok po kroku w Centrum pomocy",
+            "de": "Schritt-für-Schritt-Anleitung im Hilfebereich", "es": "Guía paso a paso en el Centro de ayuda",
+            "fr": "Guide pas à pas dans le centre d'aide", "ru": "Пошаговая инструкция в Справке",
+            "ua": "Покрокова інструкція в Довідці", "be": "Пакрокавая інструкцыя ў Даведцы",
+            "nl": "Stapsgewijze gids in het Helpcentrum"}
+
 I18N = {
  "en": {"home": "Home", "blog": "Blog", "login": "Log in",
    "blogTitle": "Personal finance blog | AI Budget Assistant",
@@ -435,6 +453,16 @@ def read_articles():
         arts.append({"m": meta, "body": body, "lang": meta["lang"], "path": path})
     return arts
 
+_blog_index_cache = None
+def blog_index():
+    """{(lang, pair): (slug, title)} — lets build_help link help pages to the matching
+    blog article (the reverse of PAIR_TO_HELP). Memoized; reads the same markdown sources."""
+    global _blog_index_cache
+    if _blog_index_cache is None:
+        _blog_index_cache = {(a["lang"], a["m"]["pair"]): (a["m"]["slug"], a["m"].get("title", ""))
+                             for a in read_articles()}
+    return _blog_index_cache
+
 def url_for(a):
     return f"{SITE}/blog/{a['lang']}/{a['m']['slug']}/"
 
@@ -467,6 +495,10 @@ def build():
         siblings = [x for x in arts if x["lang"] == lang and x is not a]
         rel = "".join(f'<a href="/blog/{lang}/{s["m"]["slug"]}/">{html.escape(s["m"].get("title", ""))}</a>'
                       for s in siblings)
+        # cross-link to the matching help section (inbound internal link for deep help pages)
+        help_slug = PAIR_TO_HELP.get(m["pair"])
+        if help_slug:
+            rel = f'<a href="/help/{lang}/{help_slug}/">{HELP_CTA[lang]} &rarr;</a>' + rel
         t = I18N[lang]
         ld = article_jsonld(lang, title, desc, url, og, a["path"])
         faq = extract_faq(a["body"])

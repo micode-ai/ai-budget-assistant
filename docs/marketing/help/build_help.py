@@ -88,6 +88,17 @@ HELP_I18N = {
         "Help en handleidingen", "Hoe je AI Budget Assistant gebruikt, functie voor functie.", "Meer help-onderwerpen"),
 }
 
+# help section slug -> the blog article `pair` it maps to (reverse of build_blog.PAIR_TO_HELP);
+# lets each help page carry an outbound link to the matching blog article (internal linking).
+HELP_TO_PAIR = {
+    "budgets": "budget", "expenses-and-income": "expenses", "savings-goals": "saving",
+    "accounts": "shared-budget", "subscription-manager": "subscriptions", "getting-started": "best-apps",
+    "shopping-list": "groceries", "reference-data": "categories", "debts-and-loans": "debt",
+    "bank-import": "bank-import", "family-feed": "family", "ai-chat": "ai-budget",
+    "personal-inflation-index": "inflation", "expense-map": "expense-map",
+    "voice-and-receipt": "expenses", "analytics": "expenses", "safe-to-spend": "budget",
+}
+
 def slug_of(section):
     return re.sub(r"^\d+-", "", section)
 
@@ -188,6 +199,11 @@ def build():
         # related = other sections in the same language
         sibs = [x for x in arts if x["lang"] == lang and x["slug"] != slug]
         rel = "".join(f'<a href="/help/{lang}/{s["slug"]}/">{html.escape(s["title"])}</a>' for s in sibs)
+        # cross-link to the matching blog article (inbound internal link for blog pages)
+        pair = HELP_TO_PAIR.get(slug)
+        blog = bb.blog_index().get((lang, pair)) if pair else None
+        if blog:
+            rel = f'<a href="/blog/{lang}/{blog[0]}/">{html.escape(blog[1])}</a>' + rel
         crumb = (f'<nav class="crumb"><a href="{bb.home_url(lang)}">{bb.I18N[lang]["home"]}</a> / '
                  f'<a href="/help/{lang}/">{HELP_NAV[lang]}</a> / <span>{html.escape(a["title"])}</span></nav>')
         page = (bb.head(lang, title, desc, url, ld, alts, og, menu, robots=robots)
