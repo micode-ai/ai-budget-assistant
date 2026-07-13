@@ -346,10 +346,6 @@ export default function ShoppingListScreen() {
           <Text style={styles.sectionTitle} numberOfLines={1}>
             {activeListName}
           </Text>
-          <TouchableOpacity onPress={openAddModal} hitSlop={8} style={styles.addRow}>
-            <Ionicons name="add-circle-outline" size={22} color={theme.colors.primary} />
-            <Text style={styles.addRowText}>{t('shoppingList.addItem')}</Text>
-          </TouchableOpacity>
         </View>
 
         {isLoading && items.length === 0 ? (
@@ -368,27 +364,33 @@ export default function ShoppingListScreen() {
         )}
       </ScrollView>
 
-      {items.length > 0 && (
-        <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
-          <View style={styles.bottomBarRow}>
-            <TouchableOpacity
-              style={[styles.compareBtn, comparableCount === 0 && styles.compareBtnDisabled]}
-              onPress={() => router.push('/shopping-list/compare')}
-              disabled={comparableCount === 0}
-            >
-              <Ionicons name="storefront-outline" size={18} color={theme.colors.textInverse} />
-              <Text style={styles.compareBtnText}>{t('shoppingList.compareCta')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.mapIconBtn}
-              onPress={() => router.push('/shopping-list/map')}
-              accessibilityLabel={t('shoppingList.mapTitle')}
-            >
-              <Ionicons name="map-outline" size={22} color={theme.colors.primary} />
-            </TouchableOpacity>
-          </View>
+      <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+        <View style={styles.bottomBarRow}>
+          <TouchableOpacity style={styles.addBtn} onPress={openAddModal}>
+            <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+            <Text style={styles.addBtnText}>{t('shoppingList.addItem')}</Text>
+          </TouchableOpacity>
+          {items.length > 0 && (
+            <>
+              <TouchableOpacity
+                style={[styles.compareBtn, comparableCount === 0 && styles.compareBtnDisabled]}
+                onPress={() => router.push('/shopping-list/compare')}
+                disabled={comparableCount === 0}
+              >
+                <Ionicons name="storefront-outline" size={18} color={theme.colors.textInverse} />
+                <Text style={styles.compareBtnText}>{t('shoppingList.compareCta')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mapIconBtn}
+                onPress={() => router.push('/shopping-list/map')}
+                accessibilityLabel={t('shoppingList.mapTitle')}
+              >
+                <Ionicons name="map-outline" size={22} color={theme.colors.primary} />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
-      )}
+      </View>
 
       <Modal visible={addModalVisible} transparent animationType="slide" onRequestClose={closeAddModal}>
         <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
@@ -714,6 +716,17 @@ const createStyles = (theme: Theme) => ({
     flexShrink: 0,
   },
   addRowText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  addBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  addBtnText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
 
   card: {
     backgroundColor: theme.colors.surface,
