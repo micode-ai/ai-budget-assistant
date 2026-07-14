@@ -11,6 +11,14 @@ import { resolveAiModel, resolveCheapModel } from './model-resolver';
 import { UserContextBuilder } from './user-context-builder.service';
 import { AiToolsService } from './ai-tools.service';
 import { PromptBuilder } from './prompt-builder.service';
+import {
+  buildCandidateLines,
+  parseMatchedIndices,
+  deterministicMatchIndices,
+  computeTotalsByCurrency,
+  computeCategoryTotals,
+  type FilterExpense,
+} from '../utils/semantic-filter';
 import type { ChatActionType, ChatPendingAction } from '@budget/shared-types';
 
 interface ChatMessageRecord {
@@ -517,57 +525,63 @@ export class ChatService {
 
   /**
    * Semantic expense filter: given a list of expenses and a user's natural-language
-   * keyword (in any language), ask the cheap model to return only the IDs of expenses
-   * that are semantically related to the keyword.
+   * keyword (in any language), return the set of expense IDs that are semantically
+   * related to the keyword.
+   *
+   * The cheap model is asked to return matching INDICES (small integers) rather than
+   * UUIDs — small models cannot reliably echo 36-char UUIDs and truncate long output,
+   * which silently dropped nearly every match. A deterministic substring pass is
+   * unioned in so exact / same-language matches never depend on the model, and is the
+   * safe fallback if the model call fails (we NEVER fall back to "return everything").
    *
    * This handles multilingual product names, brand variants, typos, and new products
    * without any stored mappings.
    */
-  private async semanticFilterExpenses(
-    expenses: Array<{ id: string; description: string; amount: number; currencyCode: string; category?: string; date: string }>,
-    keyword: string,
-  ): Promise<Set<string>> {
+  private async semanticFilterExpenses(expenses: FilterExpense[], keyword: string): Promise<Set<string>> {
     if (expenses.length === 0) return new Set();
 
-    // Build a compact list: "id: description" for the model to scan
-    const lines = expenses.map((e) => `${e.id}: ${e.description ?? '(no description)'}`).join('\n');
+    // Deterministic substring matches — always correct, zero model dependency.
+    const deterministic = deterministicMatchIndices(expenses, keyword);
 
+    const lines = buildCandidateLines(expenses);
     const prompt = `You are a semantic expense classifier. The user is looking for expenses related to: "${keyword}".
 
-Below is a list of expense entries in format "id: description".
-Return a JSON object with a single key "ids" containing an array of IDs for entries that are semantically related to the user's search term.
-Consider: synonyms, brand names, product variants, related items, multilingual equivalents.
-Be inclusive — if in doubt, include the entry.
-Return ONLY valid JSON like: {"ids": ["id1", "id2"]}
+Below is a numbered list of expense entries, one per line, in the format "N. description [merchant] (category)".
+Return a JSON object with a single key "indices" containing an array of the LINE NUMBERS (integers) of entries semantically related to the user's search term.
+Consider: synonyms, brand names, product variants, related items, and equivalents in ANY language (e.g. "пиво" = "beer" = "Żywiec").
+Be inclusive — if in doubt, include the entry. If none match, return {"indices": []}.
+Return ONLY valid JSON, e.g. {"indices": [1, 4, 7]}.
 
 Expenses:
 ${lines}`;
 
+    let llmIndices = new Set<number>();
     try {
       const response = await this.openai.chat.completions.create({
         model: resolveCheapModel(),
         messages: [{ role: 'user', content: prompt }],
         temperature: 0,
-        max_tokens: 500,
+        max_tokens: 2000,
         response_format: { type: 'json_object' },
       });
-
       const raw = response.choices[0]?.message?.content || '{}';
-      let ids: string[] = [];
-      try {
-        const parsed = JSON.parse(raw);
-        ids = Array.isArray(parsed.ids) ? parsed.ids : (Array.isArray(parsed) ? parsed : []);
-      } catch {
-        ids = (raw.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi) || []);
-      }
-
-      this.logger.log(`[ai/semantic-filter] keyword="${keyword}" total=${expenses.length} matched=${ids.length}`);
-      return new Set(ids.map(String));
+      llmIndices = parseMatchedIndices(raw, expenses.length);
     } catch (err) {
-      this.logger.warn(`[ai/semantic-filter] failed, returning all: ${err}`);
-      // On failure, return all IDs so the user still gets results
-      return new Set(expenses.map((e) => e.id));
+      // Degrade to deterministic-only matches (worst case: "none found"), never "all".
+      this.logger.warn(`[ai/semantic-filter] LLM failed, using substring matches only: ${err}`);
     }
+
+    // Union the two passes and map 1-based indices back to expense IDs.
+    const matchedIds = new Set<string>();
+    for (const idx of new Set([...deterministic, ...llmIndices])) {
+      const e = expenses[idx - 1];
+      if (e) matchedIds.add(e.id);
+    }
+
+    this.logger.log(
+      `[ai/semantic-filter] keyword="${keyword}" total=${expenses.length} llm=${llmIndices.size} substring=${deterministic.size} matched=${matchedIds.size}`,
+    );
+    return matchedIds;
   }
 
   private async handleReadAction(
@@ -586,7 +600,6 @@ ${lines}`;
 
     // Semantic filtering: when the user asked about a specific product/item,
     // use AI to match descriptions across all languages and product variants.
-    this.logger.log(`[ai/semantic-filter] check: actionType=${actionType} hasKeyword=${!!args.descriptionKeyword} hasData=${!!result.data} matchedExpenses=${Array.isArray((result.data as any)?.matchedExpenses) ? (result.data as any).matchedExpenses.length : 'none'}`);
     if (
       actionType === 'get_expenses' &&
       args.descriptionKeyword &&
@@ -594,30 +607,24 @@ ${lines}`;
       Array.isArray((result.data as any).matchedExpenses)
     ) {
       const keyword = String(args.descriptionKeyword);
-      // Deep-clone the data to avoid mutating the cached object
+      // Deep-clone the data to avoid mutating the cached object.
       const data = JSON.parse(JSON.stringify(result.data)) as Record<string, any>;
-      const allExpenses: Array<{ id: string; description: string; amount: number; currencyCode: string; category?: string; date: string }> =
-        data.matchedExpenses;
-
-      this.logger.log(`[ai/semantic-filter] starting for keyword="${keyword}" total=${allExpenses.length}`);
+      const allExpenses: FilterExpense[] = data.matchedExpenses;
 
       const matchedIds = await this.semanticFilterExpenses(allExpenses, keyword);
       const semanticMatched = allExpenses.filter((e) => matchedIds.has(e.id));
-      this.logger.log(`[ai/semantic-filter] result: ${semanticMatched.length} of ${allExpenses.length} matched`);
+      const totalsByCurrency = computeTotalsByCurrency(semanticMatched);
 
-      // Recompute totals from semantic matches
-      const totalsByCurrency: Record<string, number> = {};
-      for (const e of semanticMatched) {
-        const cur = e.currencyCode || 'USD';
-        totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
-      }
-
-      // Replace result with a new object (don't mutate the cached one)
+      // Single source of truth: the matched set drives matchedExpenses, recentExpenses,
+      // count AND totals — so the mobile card, the narration model, and the total can
+      // never disagree. categoryTotals is recomputed from the matched set too.
       result.data = {
         ...data,
         matchedExpenses: semanticMatched,
+        recentExpenses: semanticMatched.slice(0, 20),
         matchedByKeyword: keyword,
         totalsByCurrency,
+        categoryTotals: computeCategoryTotals(semanticMatched),
         count: semanticMatched.length,
       };
     }

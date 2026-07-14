@@ -275,4 +275,43 @@ describe('ChatService', () => {
       expect(deps.prisma.chatConversation.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ isShared: true }) }));
     });
   });
+
+  describe('semanticFilterExpenses (index-based matching)', () => {
+    // Mirrors the real prod failure: keyword "пиво" over a list where the only match is
+    // the English "Beer" row. The model returns the line NUMBER, not a UUID.
+    const list = [
+      { id: 'e1', description: 'Milk', merchant: null, category: 'Groceries', amount: 3, currencyCode: 'PLN' },
+      { id: 'e2', description: 'Beer', merchant: null, category: 'Groceries', amount: 8, currencyCode: 'PLN' },
+      { id: 'e3', description: 'Bread', merchant: null, category: 'Groceries', amount: 5, currencyCode: 'PLN' },
+    ];
+
+    it('maps model line-indices back to the correct expense IDs (cross-language)', async () => {
+      mockChatCreate.mockResolvedValueOnce({ choices: [{ message: { content: '{"indices":[2]}' } }] });
+      const ids = await (service as any).semanticFilterExpenses(list, 'пиво');
+      expect([...ids]).toEqual(['e2']);
+    });
+
+    it('unions deterministic substring matches even when the model returns none', async () => {
+      const withNetflix = [
+        { id: 'a', description: 'lunch', merchant: 'Netflix', category: null, amount: 40, currencyCode: 'PLN' },
+        { id: 'b', description: 'coffee', merchant: null, category: null, amount: 12, currencyCode: 'PLN' },
+      ];
+      mockChatCreate.mockResolvedValueOnce({ choices: [{ message: { content: '{"indices":[]}' } }] });
+      const ids = await (service as any).semanticFilterExpenses(withNetflix, 'netflix');
+      expect([...ids]).toEqual(['a']);
+    });
+
+    it('degrades to deterministic-only on model failure — never returns everything', async () => {
+      mockChatCreate.mockRejectedValueOnce(new Error('boom'));
+      // "пиво" has no substring match in the English list → empty, NOT all three ids.
+      const ids = await (service as any).semanticFilterExpenses(list, 'пиво');
+      expect(ids.size).toBe(0);
+    });
+
+    it('ignores hallucinated out-of-range indices', async () => {
+      mockChatCreate.mockResolvedValueOnce({ choices: [{ message: { content: '{"indices":[2,99,0]}' } }] });
+      const ids = await (service as any).semanticFilterExpenses(list, 'beer');
+      expect([...ids]).toEqual(['e2']); // 99 and 0 discarded; 2 → e2 (also a substring hit)
+    });
+  });
 });

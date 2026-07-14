@@ -135,12 +135,12 @@ export class AiToolsService {
           parameters: {
             type: 'object',
             properties: {
-              startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
-              endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD)' },
+              startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD). OMIT this for product/item/merchant questions ("how much did I spend on beer") unless the user names an explicit time period — the tool then searches the full history so older purchases are not missed.' },
+              endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD). OMIT together with startDate for un-scoped product/item questions; defaults to today.' },
               categoryName: { type: 'string', description: 'Filter by category name. ONLY set this when the user explicitly names a category to filter by. Never derive it from a speaker-name prefix like "[Name]:" in a shared conversation.' },
-              descriptionKeyword: { type: 'string', description: 'Keyword to search within expense descriptions/names. Use when the user asks about a specific product, merchant, or item (e.g. "beer", "coffee", "Netflix"). This does a case-insensitive substring match across all expense descriptions. Can be combined with categoryName.' },
+              descriptionKeyword: { type: 'string', description: 'Keyword for a specific product, merchant, or item the user asks about (e.g. "beer", "coffee", "Netflix", "пиво"). The server performs a semantic, language-aware match across all expenses in the range — not a plain substring — so it finds brand names and cross-language equivalents. Can be combined with categoryName.' },
             },
-            required: ['startDate', 'endDate'],
+            required: [],
           },
         },
       },
@@ -482,9 +482,21 @@ export class AiToolsService {
     accountId: string,
     baseCurrency?: string,
   ): Promise<ChatActionResult> {
+    // Product/item/merchant questions ("how much did I spend on beer") are almost always
+    // lifetime questions. If the model didn't scope an explicit period, search the full
+    // history so we never miss older purchases (the #1 cause of "found nothing"). An
+    // explicit date from the model is always respected.
+    const hasKeyword = !!data.descriptionKeyword;
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const endDate = data.endDate ? String(data.endDate) : todayIso;
+    const startDate = data.startDate
+      ? String(data.startDate)
+      : hasKeyword
+        ? '2000-01-01'
+        : `${todayIso.slice(0, 7)}-01`;
     const filters: ExpenseFiltersDto = {
-      startDate: String(data.startDate),
-      endDate: String(data.endDate),
+      startDate,
+      endDate,
       limit: 500,
     };
 
@@ -504,6 +516,7 @@ export class AiToolsService {
       amount: Number(e.amount),
       currencyCode: e.currencyCode,
       description: e.description,
+      merchant: e.merchant,
       category: e.category?.name,
       date: e.date,
     }));
@@ -563,8 +576,8 @@ export class AiToolsService {
         categoryTotals,
         totalsByCurrency,
         count: actualCount,
-        startDate: data.startDate,
-        endDate: data.endDate,
+        startDate,
+        endDate,
         ...(fxConverted ? { baseCurrency, fxConverted: true, fxApproximate: true } : {}),
       },
     };

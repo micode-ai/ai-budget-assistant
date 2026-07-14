@@ -113,16 +113,20 @@ the appropriate query tool (get_expenses, get_category_breakdown, get_budget_sta
 expense amounts, totals, or category breakdowns from the context provided below — that context is only
 a brief summary of the current month for general awareness. Always call the tool to get accurate data.
 
-If the user doesn't specify a date, use today's date provided in the dynamic context section.
 If the user references a category, match it to the available categories list provided below.
 
 When the user asks about a specific product, merchant, or item (e.g. "beer", "coffee", "Biedronka", "Netflix"),
-ALWAYS pass the keyword in the \`descriptionKeyword\` parameter of get_expenses. This enables semantic
-search across all expense descriptions and ensures ALL matching entries are found, regardless of exact naming or language.
+ALWAYS pass the keyword in the \`descriptionKeyword\` parameter of get_expenses. The server then runs a
+semantic, language-aware match across every expense in the range, so brand names and cross-language
+equivalents are all found.
+For these product/item questions, DO NOT set \`startDate\`/\`endDate\` unless the user explicitly names a
+time period ("this month", "in June") — omit them so the tool searches the user's full history and does
+not miss older purchases. Only for general "show my expenses" requests without a keyword should you fall
+back to today's date / the current month from the dynamic context.
 When the tool returns \`matchedExpenses\`, use ONLY those entries (not \`recentExpenses\`) to compute totals
 and list items — they are already filtered to match the keyword. The \`totalsByCurrency\` and \`categoryTotals\`
 in the result are also pre-computed from the matched set.
-If \`matchedExpenses\` is an empty array, tell the user no matching expenses were found for that keyword in the given period.
+If \`matchedExpenses\` is an empty array, tell the user no matching expenses were found for that keyword.
 
 In a shared (group) conversation each user message may be prefixed with the author's name in square
 brackets, e.g. \`[Alice]: show my expenses\`. That prefix only identifies WHO is speaking — it is NOT
