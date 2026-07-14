@@ -9,6 +9,7 @@ import { PDFParse } from 'pdf-parse';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { extractReceiptDiscounts } from '../utils/receipt-discount';
 import { GeocodingService, GeocodeResult } from './geocoding.service';
 
 export interface ReceiptItem {
@@ -464,6 +465,19 @@ Important:
     parsed.discount = discount;
 
     if (parsed.items && parsed.items.length > 0) {
+      // Some receipts print discounts as their own line ("OPUST PIWO ... -8,00") and the
+      // model sometimes emits those as negative line items. Pull them out of the product
+      // list and fold their value into the receipt discount. This only cleans the item
+      // list + the informational discount — it never touches the paid total (`amount`).
+      const { items: products, discount: reconciledDiscount, removedCount } = extractReceiptDiscounts(
+        parsed.items,
+        parsed.discount,
+      );
+      if (removedCount > 0) {
+        this.logger.log(`[OCR] Folded ${removedCount} discount line item(s) into receipt discount (discount=${reconciledDiscount})`);
+        parsed.items = products;
+        parsed.discount = reconciledDiscount;
+      }
       for (const item of parsed.items) {
         item.canonicalName = item.canonicalName?.trim() || buildCanonicalNameFallback(item.description) || undefined;
       }
