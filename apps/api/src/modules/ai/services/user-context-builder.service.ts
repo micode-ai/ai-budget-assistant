@@ -76,8 +76,13 @@ export class UserContextBuilder {
     });
 
     const totalSpent = expenses.reduce((sum: number, e: ExpenseWithCategory) => sum + Number(e.amount), 0);
+    // Sum ALL active monthly budgets. A budget's `amount` is its total whether or not it
+    // is split into per-category allocations, so category budgets (e.g. a "Life" budget
+    // with 8 allocations) must be counted too — excluding them made the context report
+    // "Monthly budget: Not set" for users who only have category-allocated budgets, and
+    // the model then wrongly told them they had no budget.
     const monthlyBudget = budgets
-      .filter((b: BudgetRecord) => b.period === 'monthly' && b.categoryAllocations.length === 0)
+      .filter((b: BudgetRecord) => b.period === 'monthly')
       .reduce((sum: number, b: BudgetRecord) => sum + Number(b.amount), 0);
 
     const categoryTotals = new Map<string, number>();
