@@ -13,7 +13,13 @@ import { DebtsService } from '../../debts/debts.service';
 import { ExchangeRateService } from '../../currency-exchange/exchange-rate.service';
 import { GoalPlannerService } from './goal-planner.service';
 import { SafeToSpendService } from '../../insights/safe-to-spend.service';
+import { buildSearchUnits } from '../utils/semantic-filter';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
+
+// Cap on the number of searchable units (expense-level rows + receipt line items)
+// sent to the semantic filter for a single keyword query. Generous enough to cover
+// full-history product searches while bounding token cost / latency.
+const SEARCH_UNIT_LIMIT = 1500;
 
 @Injectable()
 export class AiToolsService {
@@ -519,22 +525,48 @@ export class AiToolsService {
       merchant: e.merchant,
       category: e.category?.name,
       date: e.date,
+      items: Array.isArray(e.items)
+        ? e.items.map((it: { id: string; description?: string | null; canonicalName?: string | null; totalPrice: unknown }) => ({
+            id: it.id,
+            description: it.description,
+            canonicalName: it.canonicalName,
+            totalPrice: Number(it.totalPrice),
+          }))
+        : [],
     }));
 
     // Convert every amount into the user's display currency so the chat answers in one
     // currency. If rates are unavailable we keep native amounts (graceful fallback).
     const rates = await this.getRatesSafe(baseCurrency);
     let fxConverted = false;
-    const expenseList = rawList.map((e) => {
+    const convert = (amount: number, from: string | null | undefined): { amount: number; currencyCode: string } => {
       if (baseCurrency && rates) {
-        const conv = this.convertAmount(e.amount, e.currencyCode || baseCurrency, baseCurrency, rates);
+        const conv = this.convertAmount(amount, from || baseCurrency, baseCurrency, rates);
         if (conv != null) {
           fxConverted = true;
-          return { ...e, amount: conv, currencyCode: baseCurrency, originalAmount: e.amount, originalCurrencyCode: e.currencyCode };
+          return { amount: conv, currencyCode: baseCurrency };
         }
       }
-      return e;
+      return { amount, currencyCode: from || 'USD' };
+    };
+    const expenseList = rawList.map((e) => {
+      const c = convert(e.amount, e.currencyCode);
+      return c.currencyCode === baseCurrency && baseCurrency
+        ? { ...e, amount: c.amount, currencyCode: c.currencyCode, originalAmount: e.amount, originalCurrencyCode: e.currencyCode }
+        : e;
     });
+
+    // For product/item keyword queries, flatten receipts into searchable UNITS so the
+    // semantic filter can match a "beer" line item inside a grocery receipt (and count
+    // only that line's price), not just the receipt's top-level description.
+    let matchedUnits: ReturnType<typeof buildSearchUnits> | null = null;
+    if (hasKeyword) {
+      const units = buildSearchUnits(rawList, convert);
+      if (units.length > SEARCH_UNIT_LIMIT) {
+        this.logger.warn(`[chat] get_expenses keyword search: ${units.length} units exceeds cap ${SEARCH_UNIT_LIMIT}, truncating (newest first)`);
+      }
+      matchedUnits = units.slice(0, SEARCH_UNIT_LIMIT);
+    }
 
     const buildTotals = (list: typeof expenseList) => {
       const totalsByCurrency: Record<string, number> = {};
@@ -564,12 +596,13 @@ export class AiToolsService {
       success: true,
       data: {
         recentExpenses: expenseList.slice(0, 20),
-        // When descriptionKeyword is set, expose ALL expenses for semantic filtering
-        // in ChatService (AI-powered, language-agnostic). ChatService will replace
-        // matchedExpenses + totals with the semantically filtered subset.
-        ...(data.descriptionKeyword
+        // When descriptionKeyword is set, expose ALL searchable units (expense rows +
+        // receipt line items) for semantic filtering in ChatService (AI-powered,
+        // language-agnostic). ChatService replaces matchedExpenses + totals with the
+        // semantically filtered subset.
+        ...(hasKeyword && matchedUnits
           ? {
-              matchedExpenses: expenseList,
+              matchedExpenses: matchedUnits,
               matchedByKeyword: String(data.descriptionKeyword),
             }
           : {}),

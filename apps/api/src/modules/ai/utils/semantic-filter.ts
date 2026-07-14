@@ -21,6 +21,84 @@ export interface FilterExpense {
   currencyCode?: string | null;
 }
 
+export interface RawItem {
+  id: string;
+  description?: string | null;
+  canonicalName?: string | null;
+  totalPrice: number | string;
+}
+
+export interface RawExpenseForUnits {
+  id: string;
+  amount: number;
+  currencyCode?: string | null;
+  description?: string | null;
+  merchant?: string | null;
+  category?: string | null; // category NAME, not the relation object
+  date?: string;
+  items?: RawItem[] | null;
+}
+
+/** A searchable unit: either a whole (non-itemized) expense or a single receipt line item. */
+export interface SearchUnit extends FilterExpense {
+  expenseId: string;
+  isItem: boolean;
+  date?: string;
+}
+
+/**
+ * Flatten expenses into searchable units so a product query ("beer") can match line
+ * items *inside* a grocery receipt, not just the receipt's top-level description.
+ *
+ * - An expense WITH line items → one unit per item, amount = item.totalPrice. This is
+ *   what makes the total correct: a 150 zł Biedronka receipt contributes only its
+ *   49.90 zł beer line, never the whole receipt.
+ * - An expense WITHOUT items → one unit for the expense itself (amount = expense.amount),
+ *   so a standalone "Beer" expense still counts.
+ *
+ * `convert` applies FX so every unit lands in the display currency (same rates the
+ * caller already resolved). Kept pure/testable by injecting the converter.
+ */
+export function buildSearchUnits(
+  expenses: RawExpenseForUnits[],
+  convert: (amount: number, fromCurrency: string | null | undefined) => { amount: number; currencyCode: string },
+): SearchUnit[] {
+  const units: SearchUnit[] = [];
+  for (const e of expenses) {
+    const items = (e.items ?? []).filter((it): it is RawItem => it != null);
+    if (items.length > 0) {
+      for (const it of items) {
+        const c = convert(Number(it.totalPrice) || 0, e.currencyCode);
+        units.push({
+          id: it.id,
+          expenseId: e.id,
+          isItem: true,
+          description: (it.canonicalName && it.canonicalName.trim()) || it.description || null,
+          merchant: e.merchant ?? null,
+          category: e.category ?? null,
+          amount: c.amount,
+          currencyCode: c.currencyCode,
+          date: e.date,
+        });
+      }
+    } else {
+      const c = convert(Number(e.amount) || 0, e.currencyCode);
+      units.push({
+        id: e.id,
+        expenseId: e.id,
+        isItem: false,
+        description: e.description ?? null,
+        merchant: e.merchant ?? null,
+        category: e.category ?? null,
+        amount: c.amount,
+        currencyCode: c.currencyCode,
+        date: e.date,
+      });
+    }
+  }
+  return units;
+}
+
 /**
  * Build a compact, 1-based numbered candidate list for the model to scan:
  *   `1. Żywiec 6-pack [Biedronka] (Groceries)`

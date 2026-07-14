@@ -4,8 +4,14 @@ import {
   deterministicMatchIndices,
   selectByIndices,
   computeTotalsByCurrency,
+  buildSearchUnits,
   FilterExpense,
 } from './semantic-filter';
+
+const identityConvert = (amount: number, cur: string | null | undefined) => ({
+  amount,
+  currencyCode: cur || 'USD',
+});
 
 const exp = (over: Partial<FilterExpense>): FilterExpense => ({
   id: 'x',
@@ -94,6 +100,65 @@ describe('semantic-filter util', () => {
     it('selects by 1-based index preserving order', () => {
       const list = [exp({ id: 'a' }), exp({ id: 'b' }), exp({ id: 'c' })];
       expect(selectByIndices(list, new Set([1, 3])).map((e) => e.id)).toEqual(['a', 'c']);
+    });
+  });
+
+  describe('buildSearchUnits', () => {
+    it('expands an itemized receipt into one unit per line item (amount = item price)', () => {
+      const units = buildSearchUnits(
+        [
+          {
+            id: 'exp1',
+            amount: 150,
+            currencyCode: 'PLN',
+            description: 'Biedronka (15 items)',
+            merchant: 'Biedronka',
+            category: 'Groceries',
+            items: [
+              { id: 'i1', description: 'PIWO HEINEKEN 0,5B', canonicalName: null, totalPrice: 49.9 },
+              { id: 'i2', description: 'Mleko', canonicalName: 'Mleko', totalPrice: 4.5 },
+            ],
+          },
+        ],
+        identityConvert,
+      );
+      expect(units).toEqual([
+        { id: 'i1', expenseId: 'exp1', isItem: true, description: 'PIWO HEINEKEN 0,5B', merchant: 'Biedronka', category: 'Groceries', amount: 49.9, currencyCode: 'PLN', date: undefined },
+        { id: 'i2', expenseId: 'exp1', isItem: true, description: 'Mleko', merchant: 'Biedronka', category: 'Groceries', amount: 4.5, currencyCode: 'PLN', date: undefined },
+      ]);
+    });
+
+    it('prefers canonicalName over raw description for the item label', () => {
+      const units = buildSearchUnits(
+        [{ id: 'e', amount: 10, currencyCode: 'PLN', items: [{ id: 'i', description: 'PIWO ŻYW 0,5L PUSZ', canonicalName: 'Piwo Żywiec', totalPrice: 5 }] }],
+        identityConvert,
+      );
+      expect(units[0].description).toBe('Piwo Żywiec');
+    });
+
+    it('emits a single expense-level unit when there are no items', () => {
+      const units = buildSearchUnits(
+        [{ id: 'e', amount: 8, currencyCode: 'PLN', description: 'Beer', merchant: null, category: 'Alcohol', items: [] }],
+        identityConvert,
+      );
+      expect(units).toEqual([
+        { id: 'e', expenseId: 'e', isItem: false, description: 'Beer', merchant: null, category: 'Alcohol', amount: 8, currencyCode: 'PLN', date: undefined },
+      ]);
+    });
+
+    it('applies the FX converter to both expense- and item-level amounts', () => {
+      const half = (amount: number) => ({ amount: amount / 2, currencyCode: 'USD' });
+      const units = buildSearchUnits(
+        [
+          { id: 'e1', amount: 8, currencyCode: 'PLN', description: 'Beer', items: [] },
+          { id: 'e2', amount: 100, currencyCode: 'PLN', items: [{ id: 'i', description: 'Piwo', totalPrice: 20 }] },
+        ],
+        half,
+      );
+      expect(units.map((u) => [u.id, u.amount, u.currencyCode])).toEqual([
+        ['e1', 4, 'USD'],
+        ['i', 10, 'USD'],
+      ]);
     });
   });
 

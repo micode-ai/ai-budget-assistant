@@ -561,7 +561,7 @@ ${lines}`;
         model: resolveCheapModel(),
         messages: [{ role: 'user', content: prompt }],
         temperature: 0,
-        max_tokens: 2000,
+        max_tokens: 4096,
         response_format: { type: 'json_object' },
       });
       const raw = response.choices[0]?.message?.content || '{}';
