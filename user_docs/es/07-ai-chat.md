@@ -57,6 +57,15 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Cual es el estado de mi presupuesto?"
 - "Mostrar desglose por categorias de este mes"
 
+## Preguntar por un producto específico
+
+Puedes preguntar cuánto has gastado en un producto, marca o tienda concretos:
+
+- «¿Cuánto gasté en cerveza?»
+- «¿Cuánto en café este año?»
+
+El asistente busca **dentro de tus tickets escaneados**, no solo en el nombre del gasto — así, un producto comprado dentro de una compra grande también cuenta, y solo se suma el precio de ese artículo (no todo el ticket). Entiende **cualquier idioma, marcas y erratas** — por ejemplo, «пиво», «beer» o «cerveza» encuentran las mismas compras de cerveza. Si no indicas un periodo, busca en todo tu historial.
+
 ## Historial de conversaciones
 
 Puedes explorar y reabrir conversaciones anteriores en cualquier momento:

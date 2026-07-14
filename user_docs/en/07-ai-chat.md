@@ -57,6 +57,15 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+## Asking About a Specific Product
+
+You can ask how much you've spent on a particular product, brand, or shop:
+
+- "How much did I spend on beer?"
+- "How much on coffee this year?"
+
+The assistant searches **inside your scanned receipts**, not just the expense name — so a product bought as part of a big grocery run is still counted, and only that item's price is added up (not the whole receipt). It understands **any language, brand names, and typos** — for example "пиво", "beer", or "cerveza" all find the same beer purchases. If you don't mention a time period, it searches your whole history.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:

@@ -971,6 +971,15 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+## Asking About a Specific Product
+
+You can ask how much you've spent on a particular product, brand, or shop:
+
+- "How much did I spend on beer?"
+- "How much on coffee this year?"
+
+The assistant searches **inside your scanned receipts**, not just the expense name — so a product bought as part of a big grocery run is still counted, and only that item's price is added up (not the whole receipt). It understands **any language, brand names, and typos** — for example "пиво", "beer", or "cerveza" all find the same beer purchases. If you don't mention a time period, it searches your whole history.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:
@@ -5130,6 +5139,15 @@ iOS, Android, Web
 - «Какой статус моих бюджетов?»
 - «Покажи разбивку по категориям за этот месяц»
 
+## Вопрос о конкретном продукте
+
+Можно спросить, сколько вы потратили на конкретный продукт, бренд или магазин:
+
+- «Сколько я потратил на пиво?»
+- «Сколько на кофе в этом году?»
+
+Ассистент ищет **внутри отсканированных чеков**, а не только по названию расхода — поэтому продукт, купленный в рамках большой покупки, тоже учитывается, и суммируется только цена этой позиции (а не весь чек). Он понимает **любой язык, названия брендов и опечатки** — например, «пиво», «beer» или «cerveza» найдут одни и те же покупки пива. Если не указать период, поиск идёт по всей истории.
+
 ## История разговоров
 
 Вы можете просматривать и возвращаться к предыдущим разговорам с ИИ в любое время:
@@ -9287,6 +9305,15 @@ iOS, Android, Web
 - "Який статус моїх бюджетів?"
 - "Покажи розбивку за категоріями за цей місяць"
 
+## Запитання про конкретний продукт
+
+Можна запитати, скільки ви витратили на конкретний продукт, бренд чи магазин:
+
+- «Скільки я витратив на пиво?»
+- «Скільки на каву цього року?»
+
+Асистент шукає **всередині відсканованих чеків**, а не лише за назвою витрати — тож продукт, куплений під час великої покупки, теж враховується, і підсумовується лише ціна цієї позиції (а не весь чек). Він розуміє **будь-яку мову, назви брендів і одруки** — наприклад, «пиво», «beer» чи «cerveza» знайдуть однакові покупки пива. Якщо не вказати період, пошук іде по всій історії.
+
 ## Історія розмов
 
 Ви можете переглядати та повертатися до попередніх розмов з ШІ у будь-який час:
@@ -13392,6 +13419,15 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Jaki jest status mojego budzetu?"
 - "Pokaz podzial wedlug kategorii za ten miesiac"
 
+## Pytanie o konkretny produkt
+
+Możesz zapytać, ile wydałeś na konkretny produkt, markę lub sklep:
+
+- „Ile wydałem na piwo?"
+- „Ile na kawę w tym roku?"
+
+Asystent szuka **wewnątrz zeskanowanych paragonów**, a nie tylko w nazwie wydatku — produkt kupiony przy dużych zakupach też się liczy, a sumowana jest tylko cena tej pozycji (nie cały paragon). Rozumie **każdy język, nazwy marek i literówki** — na przykład „пиво", „beer" czy „cerveza" znajdą te same zakupy piwa. Jeśli nie podasz okresu, przeszuka całą historię.
+
 ## Historia rozmów
 
 Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
@@ -17493,6 +17529,15 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Wie ist mein Budget-Status?"
 - "Zeige Kategorie-Aufschlüsselung für diesen Monat"
 
+## Nach einem bestimmten Produkt fragen
+
+Du kannst fragen, wie viel du für ein bestimmtes Produkt, eine Marke oder ein Geschäft ausgegeben hast:
+
+- „Wie viel habe ich für Bier ausgegeben?"
+- „Wie viel für Kaffee dieses Jahr?"
+
+Der Assistent sucht **in deinen gescannten Belegen**, nicht nur im Namen der Ausgabe — ein Produkt, das Teil eines großen Einkaufs war, wird also mitgezählt, und nur der Preis dieses Artikels wird summiert (nicht der ganze Beleg). Er versteht **jede Sprache, Markennamen und Tippfehler** — zum Beispiel finden „пиво", „beer" oder „cerveza" alle dieselben Bierkäufe. Wenn du keinen Zeitraum nennst, wird deine gesamte Historie durchsucht.
+
 ## Gesprächsverlauf
 
 Du kannst frühere KI-Gespräche jederzeit aufrufen:
@@ -21569,6 +21614,15 @@ Toca cualquier boton para enviar esa pregunta al instante.
 - "Cual es el estado de mi presupuesto?"
 - "Mostrar desglose por categorias de este mes"
 
+## Preguntar por un producto específico
+
+Puedes preguntar cuánto has gastado en un producto, marca o tienda concretos:
+
+- «¿Cuánto gasté en cerveza?»
+- «¿Cuánto en café este año?»
+
+El asistente busca **dentro de tus tickets escaneados**, no solo en el nombre del gasto — así, un producto comprado dentro de una compra grande también cuenta, y solo se suma el precio de ese artículo (no todo el ticket). Entiende **cualquier idioma, marcas y erratas** — por ejemplo, «пиво», «beer» o «cerveza» encuentran las mismas compras de cerveza. Si no indicas un periodo, busca en todo tu historial.
+
 ## Historial de conversaciones
 
 Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
@@ -25634,6 +25688,15 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Quel est le statut de mon budget ?"
 - "Montrer la repartition par categories pour ce mois"
 
+## Poser une question sur un produit précis
+
+Vous pouvez demander combien vous avez dépensé pour un produit, une marque ou un magasin précis :
+
+- « Combien ai-je dépensé en bière ? »
+- « Combien en café cette année ? »
+
+L'assistant cherche **dans vos tickets scannés**, pas seulement dans le nom de la dépense — un produit acheté au sein d'un grand achat est donc bien compté, et seul le prix de cet article est additionné (pas tout le ticket). Il comprend **toutes les langues, les marques et les fautes de frappe** — par exemple « пиво », « beer » ou « cerveza » trouvent les mêmes achats de bière. Si vous n'indiquez pas de période, il cherche dans tout votre historique.
+
 ## Historique des conversations
 
 Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :
@@ -29697,6 +29760,15 @@ iOS, Android, Web
 - «Які статус маіх бюджэтаў?»
 - «Пакажы разбіўку па катэгорыях за гэты месяц»
 
+## Пытанне пра канкрэтны прадукт
+
+Можна спытаць, колькі вы выдаткавалі на канкрэтны прадукт, брэнд ці краму:
+
+- «Колькі я выдаткаваў на піва?»
+- «Колькі на каву сёлета?»
+
+Асістэнт шукае **усярэдзіне адсканаваных чэкаў**, а не толькі па назве выдатку — таму прадукт, куплены падчас вялікай пакупкі, таксама ўлічваецца, і сумуецца толькі цана гэтай пазіцыі (а не ўвесь чэк). Ён разумее **любую мову, назвы брэндаў і памылкі друку** — напрыклад, «піва», «beer» ці «cerveza» знойдуць адны і тыя ж пакупкі піва. Калі не пазначыць перыяд, пошук ідзе па ўсёй гісторыі.
+
 ## Гісторыя размоў
 
 Вы можаце праглядаць і вяртацца да папярэдніх размоў з ШІ у любы момант:
@@ -33719,6 +33791,15 @@ Tik op een knop om die vraag direct te verzenden.
 - "Toon mijn uitgaven van vorige week"
 - "Wat is mijn budgetstatus?"
 - "Toon categorie-uitsplitsing voor deze maand"
+
+## Vragen naar een specifiek product
+
+Je kunt vragen hoeveel je aan een bepaald product, merk of winkel hebt uitgegeven:
+
+- "Hoeveel heb ik aan bier uitgegeven?"
+- "Hoeveel aan koffie dit jaar?"
+
+De assistent zoekt **in je gescande bonnen**, niet alleen in de naam van de uitgave — een product dat deel uitmaakte van een grote boodschappenronde telt dus mee, en alleen de prijs van dat artikel wordt opgeteld (niet de hele bon). Hij begrijpt **elke taal, merknamen en typfouten** — zo vinden "пиво", "beer" of "cerveza" allemaal dezelfde bieraankopen. Als je geen periode noemt, doorzoekt hij je hele geschiedenis.
 
 ## Gespreksgeschiedenis
 

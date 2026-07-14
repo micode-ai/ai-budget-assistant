@@ -57,6 +57,15 @@ Dotknij dowolny przycisk, aby natychmiast wyslac to pytanie.
 - "Jaki jest status mojego budzetu?"
 - "Pokaz podzial wedlug kategorii za ten miesiac"
 
+## Pytanie o konkretny produkt
+
+Możesz zapytać, ile wydałeś na konkretny produkt, markę lub sklep:
+
+- „Ile wydałem na piwo?"
+- „Ile na kawę w tym roku?"
+
+Asystent szuka **wewnątrz zeskanowanych paragonów**, a nie tylko w nazwie wydatku — produkt kupiony przy dużych zakupach też się liczy, a sumowana jest tylko cena tej pozycji (nie cały paragon). Rozumie **każdy język, nazwy marek i literówki** — na przykład „пиво", „beer" czy „cerveza" znajdą te same zakupy piwa. Jeśli nie podasz okresu, przeszuka całą historię.
+
 ## Historia rozmów
 
 Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:

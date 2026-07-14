@@ -57,6 +57,15 @@ Appuyez sur n'importe quel bouton pour envoyer instantanement cette question.
 - "Quel est le statut de mon budget ?"
 - "Montrer la repartition par categories pour ce mois"
 
+## Poser une question sur un produit précis
+
+Vous pouvez demander combien vous avez dépensé pour un produit, une marque ou un magasin précis :
+
+- « Combien ai-je dépensé en bière ? »
+- « Combien en café cette année ? »
+
+L'assistant cherche **dans vos tickets scannés**, pas seulement dans le nom de la dépense — un produit acheté au sein d'un grand achat est donc bien compté, et seul le prix de cet article est additionné (pas tout le ticket). Il comprend **toutes les langues, les marques et les fautes de frappe** — par exemple « пиво », « beer » ou « cerveza » trouvent les mêmes achats de bière. Si vous n'indiquez pas de période, il cherche dans tout votre historique.
+
 ## Historique des conversations
 
 Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :

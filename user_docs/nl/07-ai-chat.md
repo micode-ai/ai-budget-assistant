@@ -57,6 +57,15 @@ Tik op een knop om die vraag direct te verzenden.
 - "Wat is mijn budgetstatus?"
 - "Toon categorie-uitsplitsing voor deze maand"
 
+## Vragen naar een specifiek product
+
+Je kunt vragen hoeveel je aan een bepaald product, merk of winkel hebt uitgegeven:
+
+- "Hoeveel heb ik aan bier uitgegeven?"
+- "Hoeveel aan koffie dit jaar?"
+
+De assistent zoekt **in je gescande bonnen**, niet alleen in de naam van de uitgave — een product dat deel uitmaakte van een grote boodschappenronde telt dus mee, en alleen de prijs van dat artikel wordt opgeteld (niet de hele bon). Hij begrijpt **elke taal, merknamen en typfouten** — zo vinden "пиво", "beer" of "cerveza" allemaal dezelfde bieraankopen. Als je geen periode noemt, doorzoekt hij je hele geschiedenis.
+
 ## Gespreksgeschiedenis
 
 Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:

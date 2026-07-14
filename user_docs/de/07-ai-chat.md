@@ -57,6 +57,15 @@ Tippe auf eine beliebige Schaltflache, um diese Frage sofort zu senden.
 - "Wie ist mein Budget-Status?"
 - "Zeige Kategorie-Aufschlüsselung für diesen Monat"
 
+## Nach einem bestimmten Produkt fragen
+
+Du kannst fragen, wie viel du für ein bestimmtes Produkt, eine Marke oder ein Geschäft ausgegeben hast:
+
+- „Wie viel habe ich für Bier ausgegeben?"
+- „Wie viel für Kaffee dieses Jahr?"
+
+Der Assistent sucht **in deinen gescannten Belegen**, nicht nur im Namen der Ausgabe — ein Produkt, das Teil eines großen Einkaufs war, wird also mitgezählt, und nur der Preis dieses Artikels wird summiert (nicht der ganze Beleg). Er versteht **jede Sprache, Markennamen und Tippfehler** — zum Beispiel finden „пиво", „beer" oder „cerveza" alle dieselben Bierkäufe. Wenn du keinen Zeitraum nennst, wird deine gesamte Historie durchsucht.
+
 ## Gesprächsverlauf
 
 Du kannst frühere KI-Gespräche jederzeit aufrufen:
