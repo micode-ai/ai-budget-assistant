@@ -122,6 +122,7 @@ search across all expense descriptions and ensures ALL matching entries are foun
 When the tool returns \`matchedExpenses\`, use ONLY those entries (not \`recentExpenses\`) to compute totals
 and list items — they are already filtered to match the keyword. The \`totalsByCurrency\` and \`categoryTotals\`
 in the result are also pre-computed from the matched set.
+If \`matchedExpenses\` is an empty array, tell the user no matching expenses were found for that keyword in the given period.
 
 In a shared (group) conversation each user message may be prefixed with the author's name in square
 brackets, e.g. \`[Alice]: show my expenses\`. That prefix only identifies WHO is speaking — it is NOT

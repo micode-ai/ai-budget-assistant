@@ -586,19 +586,24 @@ ${lines}`;
 
     // Semantic filtering: when the user asked about a specific product/item,
     // use AI to match descriptions across all languages and product variants.
+    this.logger.log(`[ai/semantic-filter] check: actionType=${actionType} hasKeyword=${!!args.descriptionKeyword} hasData=${!!result.data} matchedExpenses=${Array.isArray((result.data as any)?.matchedExpenses) ? (result.data as any).matchedExpenses.length : 'none'}`);
     if (
       actionType === 'get_expenses' &&
       args.descriptionKeyword &&
       result.data &&
-      Array.isArray((result.data as any).recentExpenses)
+      Array.isArray((result.data as any).matchedExpenses)
     ) {
       const keyword = String(args.descriptionKeyword);
+      // Deep-clone the data to avoid mutating the cached object
+      const data = JSON.parse(JSON.stringify(result.data)) as Record<string, any>;
       const allExpenses: Array<{ id: string; description: string; amount: number; currencyCode: string; category?: string; date: string }> =
-        (result.data as any).matchedExpenses ?? (result.data as any).recentExpenses;
+        data.matchedExpenses;
+
+      this.logger.log(`[ai/semantic-filter] starting for keyword="${keyword}" total=${allExpenses.length}`);
 
       const matchedIds = await this.semanticFilterExpenses(allExpenses, keyword);
-
       const semanticMatched = allExpenses.filter((e) => matchedIds.has(e.id));
+      this.logger.log(`[ai/semantic-filter] result: ${semanticMatched.length} of ${allExpenses.length} matched`);
 
       // Recompute totals from semantic matches
       const totalsByCurrency: Record<string, number> = {};
@@ -607,11 +612,14 @@ ${lines}`;
         totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
       }
 
-      // Inject back into result so narration model sees clean filtered data
-      (result.data as any).matchedExpenses = semanticMatched;
-      (result.data as any).matchedByKeyword = keyword;
-      (result.data as any).totalsByCurrency = totalsByCurrency;
-      (result.data as any).count = semanticMatched.length;
+      // Replace result with a new object (don't mutate the cached one)
+      result.data = {
+        ...data,
+        matchedExpenses: semanticMatched,
+        matchedByKeyword: keyword,
+        totalsByCurrency,
+        count: semanticMatched.length,
+      };
     }
 
     const toolResultJson = JSON.stringify(result.data || {});
