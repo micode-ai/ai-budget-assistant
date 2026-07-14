@@ -144,7 +144,7 @@ export class AiToolsService {
               startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD). OMIT this for product/item/merchant questions ("how much did I spend on beer") unless the user names an explicit time period — the tool then searches the full history so older purchases are not missed.' },
               endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD). OMIT together with startDate for un-scoped product/item questions; defaults to today.' },
               categoryName: { type: 'string', description: 'Filter by category name. ONLY set this when the user explicitly names a category to filter by. Never derive it from a speaker-name prefix like "[Name]:" in a shared conversation.' },
-              descriptionKeyword: { type: 'string', description: 'Keyword for a specific product, merchant, or item the user asks about (e.g. "beer", "coffee", "Netflix", "пиво"). The server performs a semantic, language-aware match across all expenses in the range — not a plain substring — so it finds brand names and cross-language equivalents. Can be combined with categoryName.' },
+              descriptionKeyword: { type: 'string', description: 'The product/merchant/item the user asks about, copied from their message in whatever language and spelling they used (e.g. "beer", "пиво", "пивка", "cerveza", a typo like "cofee"). The server performs a semantic, language- and typo-tolerant match across all expenses AND receipt line items in the range — not a plain substring — so it finds brand names, misspellings and cross-language equivalents. Do NOT translate or "correct" the term yourself; pass what the user wrote. Can be combined with categoryName.' },
             },
             required: [],
           },

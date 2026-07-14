@@ -546,9 +546,16 @@ export class ChatService {
     const lines = buildCandidateLines(expenses);
     const prompt = `You are a semantic expense classifier. The user is looking for expenses related to: "${keyword}".
 
+The search term may be written in ANY language and may contain typos, slang, abbreviations, or
+grammatical variants (declensions, plural/singular, cases). Interpret it forgivingly — figure out the
+intended product/category first, then match.
+
 Below is a numbered list of expense entries, one per line, in the format "N. description [merchant] (category)".
-Return a JSON object with a single key "indices" containing an array of the LINE NUMBERS (integers) of entries semantically related to the user's search term.
-Consider: synonyms, brand names, product variants, related items, and equivalents in ANY language (e.g. "пиво" = "beer" = "Żywiec").
+The descriptions can be in a DIFFERENT language than the search term (e.g. Polish receipts).
+Return a JSON object with a single key "indices" containing an array of the LINE NUMBERS (integers) of entries semantically related to the intended term.
+Consider: synonyms, brand names and sub-brands, product variants, related items, misspellings, and
+translations/equivalents in ANY language. Examples: "пиво"/"пивка"/"beeer"/"cerveza"/"biere" all mean beer,
+which matches "Piwo Żywiec", "Heineken", "Tyskie", "Lech".
 Be inclusive — if in doubt, include the entry. If none match, return {"indices": []}.
 Return ONLY valid JSON, e.g. {"indices": [1, 4, 7]}.
 
