@@ -515,6 +515,61 @@ export class ChatService {
     };
   }
 
+  /**
+   * Semantic expense filter: given a list of expenses and a user's natural-language
+   * keyword (in any language), ask the cheap model to return only the IDs of expenses
+   * that are semantically related to the keyword.
+   *
+   * This handles multilingual product names, brand variants, typos, and new products
+   * without any stored mappings.
+   */
+  private async semanticFilterExpenses(
+    expenses: Array<{ id: string; description: string; amount: number; currencyCode: string; category?: string; date: string }>,
+    keyword: string,
+  ): Promise<Set<string>> {
+    if (expenses.length === 0) return new Set();
+
+    // Build a compact list: "id: description" for the model to scan
+    const lines = expenses.map((e) => `${e.id}: ${e.description ?? '(no description)'}`).join('\n');
+
+    const prompt = `You are a semantic expense classifier. The user is looking for expenses related to: "${keyword}".
+
+Below is a list of expense entries in format "id: description".
+Return a JSON object with a single key "ids" containing an array of IDs for entries that are semantically related to the user's search term.
+Consider: synonyms, brand names, product variants, related items, multilingual equivalents.
+Be inclusive — if in doubt, include the entry.
+Return ONLY valid JSON like: {"ids": ["id1", "id2"]}
+
+Expenses:
+${lines}`;
+
+    try {
+      const response = await this.openai.chat.completions.create({
+        model: resolveCheapModel(),
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0,
+        max_tokens: 500,
+        response_format: { type: 'json_object' },
+      });
+
+      const raw = response.choices[0]?.message?.content || '{}';
+      let ids: string[] = [];
+      try {
+        const parsed = JSON.parse(raw);
+        ids = Array.isArray(parsed.ids) ? parsed.ids : (Array.isArray(parsed) ? parsed : []);
+      } catch {
+        ids = (raw.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi) || []);
+      }
+
+      this.logger.log(`[ai/semantic-filter] keyword="${keyword}" total=${expenses.length} matched=${ids.length}`);
+      return new Set(ids.map(String));
+    } catch (err) {
+      this.logger.warn(`[ai/semantic-filter] failed, returning all: ${err}`);
+      // On failure, return all IDs so the user still gets results
+      return new Set(expenses.map((e) => e.id));
+    }
+  }
+
   private async handleReadAction(
     conversation: { id: string },
     actionType: ChatActionType,
@@ -528,6 +583,36 @@ export class ChatService {
     baseCurrency?: string | null,
   ) {
     const result = await this.aiToolsService.executeWithCache(actionType, args, accountId || '', userId || '', baseCurrency || undefined);
+
+    // Semantic filtering: when the user asked about a specific product/item,
+    // use AI to match descriptions across all languages and product variants.
+    if (
+      actionType === 'get_expenses' &&
+      args.descriptionKeyword &&
+      result.data &&
+      Array.isArray((result.data as any).recentExpenses)
+    ) {
+      const keyword = String(args.descriptionKeyword);
+      const allExpenses: Array<{ id: string; description: string; amount: number; currencyCode: string; category?: string; date: string }> =
+        (result.data as any).matchedExpenses ?? (result.data as any).recentExpenses;
+
+      const matchedIds = await this.semanticFilterExpenses(allExpenses, keyword);
+
+      const semanticMatched = allExpenses.filter((e) => matchedIds.has(e.id));
+
+      // Recompute totals from semantic matches
+      const totalsByCurrency: Record<string, number> = {};
+      for (const e of semanticMatched) {
+        const cur = e.currencyCode || 'USD';
+        totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
+      }
+
+      // Inject back into result so narration model sees clean filtered data
+      (result.data as any).matchedExpenses = semanticMatched;
+      (result.data as any).matchedByKeyword = keyword;
+      (result.data as any).totalsByCurrency = totalsByCurrency;
+      (result.data as any).count = semanticMatched.length;
+    }
 
     const toolResultJson = JSON.stringify(result.data || {});
     const followUpResponse = await this.openai.chat.completions.create({

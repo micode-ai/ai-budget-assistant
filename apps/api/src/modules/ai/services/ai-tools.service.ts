@@ -138,6 +138,7 @@ export class AiToolsService {
               startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
               endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD)' },
               categoryName: { type: 'string', description: 'Filter by category name. ONLY set this when the user explicitly names a category to filter by. Never derive it from a speaker-name prefix like "[Name]:" in a shared conversation.' },
+              descriptionKeyword: { type: 'string', description: 'Keyword to search within expense descriptions/names. Use when the user asks about a specific product, merchant, or item (e.g. "beer", "coffee", "Netflix"). This does a case-insensitive substring match across all expense descriptions. Can be combined with categoryName.' },
             },
             required: ['startDate', 'endDate'],
           },
@@ -522,28 +523,27 @@ export class AiToolsService {
       return e;
     });
 
-    const totalsByCurrency: Record<string, number> = {};
-    for (const e of expenseList) {
-      const cur = e.currencyCode || 'USD';
-      totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
-    }
-
-    const categoryBreakdown: Record<string, { amount: number; count: number; currency: string }> = {};
-    for (const e of expenseList) {
-      const key = `${e.category || 'Uncategorized'}|${e.currencyCode || 'USD'}`;
-      if (!categoryBreakdown[key]) {
-        categoryBreakdown[key] = { amount: 0, count: 0, currency: e.currencyCode || 'USD' };
+    const buildTotals = (list: typeof expenseList) => {
+      const totalsByCurrency: Record<string, number> = {};
+      const categoryBreakdown: Record<string, { amount: number; count: number; currency: string }> = {};
+      for (const e of list) {
+        const cur = e.currencyCode || 'USD';
+        totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
+        const key = `${e.category || 'Uncategorized'}|${cur}`;
+        if (!categoryBreakdown[key]) categoryBreakdown[key] = { amount: 0, count: 0, currency: cur };
+        categoryBreakdown[key].amount += e.amount;
+        categoryBreakdown[key].count += 1;
       }
-      categoryBreakdown[key].amount += e.amount;
-      categoryBreakdown[key].count += 1;
-    }
-    const categoryTotals = Object.entries(categoryBreakdown).map(([key, val]) => ({
-      category: key.split('|')[0],
-      amount: Math.round(val.amount * 100) / 100,
-      count: val.count,
-      currencyCode: val.currency,
-    })).sort((a, b) => b.amount - a.amount);
+      const categoryTotals = Object.entries(categoryBreakdown).map(([key, val]) => ({
+        category: key.split('|')[0],
+        amount: Math.round(val.amount * 100) / 100,
+        count: val.count,
+        currencyCode: val.currency,
+      })).sort((a, b) => b.amount - a.amount);
+      return { totalsByCurrency, categoryTotals };
+    };
 
+    const { totalsByCurrency, categoryTotals } = buildTotals(expenseList);
     const actualCount = pagination?.total ?? expenseList.length;
 
     return {
@@ -551,6 +551,15 @@ export class AiToolsService {
       success: true,
       data: {
         recentExpenses: expenseList.slice(0, 20),
+        // When descriptionKeyword is set, expose ALL expenses for semantic filtering
+        // in ChatService (AI-powered, language-agnostic). ChatService will replace
+        // matchedExpenses + totals with the semantically filtered subset.
+        ...(data.descriptionKeyword
+          ? {
+              matchedExpenses: expenseList,
+              matchedByKeyword: String(data.descriptionKeyword),
+            }
+          : {}),
         categoryTotals,
         totalsByCurrency,
         count: actualCount,
