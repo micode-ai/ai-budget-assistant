@@ -17,7 +17,7 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 - **Switch** — tap any list to make it active.
 - **Create** — tap **New list** and give it a name. Any account member can create a list.
 - **Rename** — tap the pencil icon on a list row. Any account member can rename a list.
-- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only.
+- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only. If you archive your last remaining list, you'll see an empty "create a list" screen — the archived list stays archived and won't reappear.
 - **Delete** — permanently removes the list and all its items. Editors and the account owner only.
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
@@ -29,6 +29,8 @@ Tap **Add item** to open the add sheet. You can add an item three ways:
 - **Search your tracked products** — start typing and matching products from your Personal Inflation Index history appear below the search box.
 - **Frequently bought** — when the search box is empty, a horizontal row shows your most-purchased products for one-tap adding.
 - **Free text** — if what you typed doesn't match a tracked product, tap **Add "…"** to add it as a plain text item. Free-text items aren't linked to price history, so they won't appear in price comparisons.
+
+You can also **ask the AI assistant** to add items: open the **Chat** tab and say something like "add milk and bread to my shopping list." The items are added to your active list right away — no confirmation needed.
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 

@@ -4054,7 +4054,7 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 - **Switch** — tap any list to make it active.
 - **Create** — tap **New list** and give it a name. Any account member can create a list.
 - **Rename** — tap the pencil icon on a list row. Any account member can rename a list.
-- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only.
+- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only. If you archive your last remaining list, you'll see an empty "create a list" screen — the archived list stays archived and won't reappear.
 - **Delete** — permanently removes the list and all its items. Editors and the account owner only.
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
@@ -4066,6 +4066,8 @@ Tap **Add item** to open the add sheet. You can add an item three ways:
 - **Search your tracked products** — start typing and matching products from your Personal Inflation Index history appear below the search box.
 - **Frequently bought** — when the search box is empty, a horizontal row shows your most-purchased products for one-tap adding.
 - **Free text** — if what you typed doesn't match a tracked product, tap **Add "…"** to add it as a plain text item. Free-text items aren't linked to price history, so they won't appear in price comparisons.
+
+You can also **ask the AI assistant** to add items: open the **Chat** tab and say something like "add milk and bread to my shopping list." The items are added to your active list right away — no confirmation needed.
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 
@@ -8209,7 +8211,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 - **Переключиться** — нажмите на любой список, чтобы сделать его активным.
 - **Создать** — нажмите **Новый список** и задайте ему название. Создать список может любой участник счёта.
 - **Переименовать** — нажмите на значок карандаша в строке списка. Переименовать список может любой участник счёта.
-- **Архивировать** — скрывает список без удаления (его товары сохраняются). Только для редакторов и владельца счёта.
+- **Архивировать** — скрывает список без удаления (его товары сохраняются). Только для редакторов и владельца счёта. Если вы архивируете свой последний список, вы увидите пустой экран «создать список» — архивированный список остаётся в архиве и не появляется снова.
 - **Удалить** — безвозвратно удаляет список и все его товары. Только для редакторов и владельца счёта.
 
 Наблюдатели могут просматривать списки, переключаться между ними, добавлять товары и отмечать их в любом списке, но не могут архивировать или удалять списки.
@@ -8221,6 +8223,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 - **Поиск среди отслеживаемых товаров** — начните вводить название, и под строкой поиска появятся подходящие товары из истории вашего Персонального индекса инфляции.
 - **Часто покупаемое** — когда строка поиска пуста, в горизонтальном ряду показаны ваши самые часто покупаемые товары для добавления в одно нажатие.
 - **Произвольный текст** — если введённое не совпадает ни с одним отслеживаемым товаром, нажмите **Добавить «…»**, чтобы добавить его как обычный текстовый пункт. Такие пункты не связаны с историей цен, поэтому не будут участвовать в сравнении цен.
+
+Также можно **попросить ИИ-ассистента** добавить товары: откройте вкладку **Чат** и скажите, например, «добавь молоко и хлеб в список покупок». Товары сразу добавляются в активный список — без подтверждения.
 
 У каждого товара в списке есть флажок, редактируемый счётчик количества и значок удаления. Отмеченные товары опускаются в конец списка. Используйте **Очистить отмеченные** (в правом верхнем углу экрана), чтобы одним нажатием убрать всё, что вы уже отметили.
 
@@ -12334,7 +12338,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - **Перемкнутися** — натисніть на будь-який список, щоб зробити його активним.
 - **Створити** — натисніть **Новий список** і задайте йому назву. Створити список може будь-який учасник рахунку.
 - **Перейменувати** — натисніть на іконку олівця в рядку списку. Перейменувати список може будь-який учасник рахунку.
-- **Архівувати** — приховує список без видалення (його товари зберігаються). Тільки для редакторів і власника рахунку.
+- **Архівувати** — приховує список без видалення (його товари зберігаються). Тільки для редакторів і власника рахунку. Якщо ви архівуєте свій останній список, ви побачите порожній екран «створити список» — архівований список залишається в архіві й не з'являється знову.
 - **Видалити** — остаточно видаляє список і всі його товари. Тільки для редакторів і власника рахунку.
 
 Спостерігачі можуть переглядати списки, перемикатися між ними, додавати товари та позначати їх у будь-якому списку, але не можуть архівувати чи видаляти списки.
@@ -12346,6 +12350,8 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - **Пошук серед відстежуваних товарів** — почніть вводити назву, і під рядком пошуку з'являться відповідні товари з історії вашого Персонального індексу інфляції.
 - **Часто куповане** — коли рядок пошуку порожній, у горизонтальному рядку показано ваші найчастіше куповані товари для додавання одним дотиком.
 - **Довільний текст** — якщо введене не збігається з жодним відстежуваним товаром, натисніть **Додати «…»**, щоб додати його як звичайний текстовий пункт. Такі пункти не пов'язані з історією цін, тому не братимуть участі в порівнянні цін.
+
+Також можна **попросити ШІ-асистента** додати товари: відкрийте вкладку **Чат** і скажіть, наприклад, «додай молоко та хліб до списку покупок». Товари одразу додаються до активного списку — без підтвердження.
 
 У кожного товару в списку є прапорець, редагований лічильник кількості та іконка видалення. Позначені товари опускаються в кінець списку. Використовуйте **Очистити позначені** (у правому верхньому куті екрана), щоб одним дотиком прибрати все, що ви вже позначили.
 
@@ -16444,7 +16450,7 @@ Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj li
 - **Przełączyć** — stuknij dowolną listę, aby uczynić ją aktywną.
 - **Utworzyć** — stuknij **Nowa lista** i nadaj jej nazwę. Każdy członek konta może utworzyć listę.
 - **Zmienić nazwę** — stuknij ikonę ołówka przy wierszu listy. Każdy członek konta może zmienić nazwę listy.
-- **Zarchiwizować** — ukrywa listę bez jej usuwania (jej produkty są zachowane). Tylko edytorzy i właściciel konta.
+- **Zarchiwizować** — ukrywa listę bez jej usuwania (jej produkty są zachowane). Tylko edytorzy i właściciel konta. Jeśli zarchiwizujesz swoją ostatnią listę, zobaczysz pusty ekran „utwórz listę" — zarchiwizowana lista pozostaje zarchiwizowana i nie pojawia się ponownie.
 - **Usunąć** — trwale usuwa listę i wszystkie jej produkty. Tylko edytorzy i właściciel konta.
 
 Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
@@ -16456,6 +16462,8 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 - **Wyszukaj wśród śledzonych produktów** — zacznij pisać, a pod polem wyszukiwania pojawią się pasujące produkty z historii Twojego Osobistego wskaźnika inflacji.
 - **Często kupowane** — gdy pole wyszukiwania jest puste, pozioma lista pokazuje Twoje najczęściej kupowane produkty do dodania jednym dotknięciem.
 - **Dowolny tekst** — jeśli to, co wpisałeś, nie pasuje do żadnego śledzonego produktu, stuknij **Dodaj "…"**, aby dodać go jako zwykły tekst. Pozycje dodane jako dowolny tekst nie są powiązane z historią cen, więc nie pojawią się w porównaniach cen.
+
+Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
 
 Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
 
@@ -20529,7 +20537,7 @@ Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen ver
 - **Wechseln** — tippe auf eine Liste, um sie zur aktiven Liste zu machen.
 - **Erstellen** — tippe auf **Neue Liste** und gib ihr einen Namen. Jedes Kontomitglied kann eine Liste erstellen.
 - **Umbenennen** — tippe auf das Stiftsymbol bei einer Listenzeile. Jedes Kontomitglied kann eine Liste umbenennen.
-- **Archivieren** — blendet die Liste aus, ohne sie zu löschen (ihre Artikel bleiben erhalten). Nur Bearbeiter und der Kontoinhaber.
+- **Archivieren** — blendet die Liste aus, ohne sie zu löschen (ihre Artikel bleiben erhalten). Nur Bearbeiter und der Kontoinhaber. Wenn du deine letzte verbleibende Liste archivierst, siehst du einen leeren Bildschirm zum Erstellen einer Liste — die archivierte Liste bleibt archiviert und taucht nicht wieder auf.
 - **Löschen** — entfernt die Liste und alle ihre Artikel dauerhaft. Nur Bearbeiter und der Kontoinhaber.
 
 Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
@@ -20541,6 +20549,8 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 - **In deinen erfassten Produkten suchen** — tippe die ersten Buchstaben ein, passende Produkte aus deinem Verlauf des Persönlichen Inflationsindex erscheinen unter dem Suchfeld.
 - **Häufig gekauft** — wenn das Suchfeld leer ist, zeigt eine horizontale Zeile deine meistgekauften Produkte zum Hinzufügen mit einem Tipp.
 - **Freitext** — wenn das Eingegebene zu keinem erfassten Produkt passt, tippe auf **Hinzufügen „…"**, um es als reinen Textartikel hinzuzufügen. Freitext-Artikel sind nicht mit dem Preisverlauf verknüpft und erscheinen daher nicht in Preisvergleichen.
+
+Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
 
 Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
 
@@ -24603,7 +24613,7 @@ Toca la píldora con el nombre de la lista en la parte superior de la pantalla p
 - **Cambiar** — toca cualquier lista para hacerla la activa.
 - **Crear** — toca **Nueva lista** y ponle un nombre. Cualquier miembro de la cuenta puede crear una lista.
 - **Renombrar** — toca el icono de lápiz en una fila. Cualquier miembro de la cuenta puede renombrar una lista.
-- **Archivar** — oculta la lista sin eliminarla (sus artículos se conservan). Solo editores y el propietario de la cuenta.
+- **Archivar** — oculta la lista sin eliminarla (sus artículos se conservan). Solo editores y el propietario de la cuenta. Si archivas tu última lista, verás una pantalla vacía para «crear una lista»: la lista archivada permanece archivada y no reaparece.
 - **Eliminar** — borra la lista y todos sus artículos de forma permanente. Solo editores y el propietario de la cuenta.
 
 Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
@@ -24615,6 +24625,8 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 - **Buscar en tus productos rastreados** — empieza a escribir y aparecerán debajo los productos coincidentes de tu historial del Índice de Inflación Personal.
 - **Comprados con frecuencia** — cuando el campo de búsqueda está vacío, una fila horizontal muestra tus productos más comprados para añadirlos con un toque.
 - **Texto libre** — si lo que escribiste no coincide con ningún producto rastreado, toca **Añadir "…"** para añadirlo como un artículo de texto sin más. Los artículos de texto libre no están vinculados al historial de precios, así que no aparecerán en las comparaciones de precios.
+
+También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
 
 Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
 
@@ -28675,7 +28687,7 @@ Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les
 - **Changer** — touchez une liste pour la rendre active.
 - **Créer** — touchez **Nouvelle liste** et donnez-lui un nom. N'importe quel membre du compte peut créer une liste.
 - **Renommer** — touchez l'icône crayon sur une ligne. N'importe quel membre du compte peut renommer une liste.
-- **Archiver** — masque la liste sans la supprimer (ses articles sont conservés). Réservé aux éditeurs et au propriétaire du compte.
+- **Archiver** — masque la liste sans la supprimer (ses articles sont conservés). Réservé aux éditeurs et au propriétaire du compte. Si vous archivez votre dernière liste, vous verrez un écran vide « créer une liste » — la liste archivée reste archivée et ne réapparaît pas.
 - **Supprimer** — supprime définitivement la liste et tous ses articles. Réservé aux éditeurs et au propriétaire du compte.
 
 Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
@@ -28687,6 +28699,8 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 - **Rechercher dans vos produits suivis** — commencez à taper, les produits correspondants de votre historique d'Indice d'Inflation Personnel apparaissent sous le champ de recherche.
 - **Achetés fréquemment** — quand le champ de recherche est vide, une ligne horizontale affiche vos produits les plus achetés pour un ajout en un geste.
 - **Texte libre** — si ce que vous avez tapé ne correspond à aucun produit suivi, touchez **Ajouter « … »** pour l'ajouter comme simple article texte. Les articles en texte libre ne sont pas reliés à l'historique de prix, donc ils n'apparaîtront pas dans les comparaisons de prix.
+
+Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
 
 Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
 
@@ -32707,7 +32721,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Пераключыцца** — націсніце на любы спіс, каб зрабіць яго актыўным.
 - **Стварыць** — націсніце **Новы спіс** і задайце яму назву. Стварыць спіс можа любы ўдзельнік рахунку.
 - **Перайменаваць** — націсніце на значок алоўка ў радку спісу. Перайменаваць спіс можа любы ўдзельнік рахунку.
-- **Архіваваць** — хавае спіс без выдалення (яго тавары захоўваюцца). Толькі для рэдактараў і ўладальніка рахунку.
+- **Архіваваць** — хавае спіс без выдалення (яго тавары захоўваюцца). Толькі для рэдактараў і ўладальніка рахунку. Калі вы архівуеце свой апошні спіс, вы ўбачыце пусты экран «стварыць спіс» — архіваваны спіс застаецца ў архіве і не з'яўляецца зноў.
 - **Выдаліць** — незваротна выдаляе спіс і ўсе яго тавары. Толькі для рэдактараў і ўладальніка рахунку.
 
 Назіральнікі могуць праглядаць спісы, пераключацца паміж імі, дадаваць тавары і адзначаць іх у любым спісе, але не могуць архіваваць ці выдаляць спісы.
@@ -32719,6 +32733,8 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Пошук сярод адсочваемых тавараў** — пачніце ўводзіць назву, і пад радком пошуку з'явяцца адпаведныя тавары з гісторыі вашага Персанальнага індэксу інфляцыі.
 - **Часта купляемае** — калі радок пошуку пусты, у гарызантальным радзе паказаны вашы найбольш часта купляемыя тавары для дадавання адным дотыкам.
 - **Адвольны тэкст** — калі ўведзенае не супадае з ніводным адсочваемым таварам, націсніце **Дадаць «…»**, каб дадаць яго як звычайны тэкставы пункт. Такія пункты не звязаны з гісторыяй цэн, таму не будуць удзельнічаць у параўнанні цэн.
+
+Таксама можна **папрасіць ШІ-асістэнта** дадаць тавары: адкрыйце ўкладку **Чат** і скажыце, напрыклад, «дадай малако і хлеб у спіс пакупак». Тавары адразу дадаюцца ў актыўны спіс — без пацверджання.
 
 У кожнага тавару ў спісе ёсць сцяжок, рэдагаваны лічыльнік колькасці і значок выдалення. Пазначаныя тавары апускаюцца ў канец спісу. Выкарыстоўвайце **Ачысціць пазначаныя** (у правым верхнім куце экрана), каб адным дотыкам прыбраць усё, што вы ўжо пазначылі.
 
@@ -36858,7 +36874,7 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 - **Wisselen** — tik op een lijst om die actief te maken.
 - **Aanmaken** — tik op **Nieuwe lijst** en geef hem een naam. Elk accountlid kan een lijst aanmaken.
 - **Hernoemen** — tik op het potloodicoon bij een lijstregel. Elk accountlid kan een lijst hernoemen.
-- **Archiveren** — verbergt de lijst zonder hem te verwijderen (de artikelen blijven bewaard). Alleen voor bewerkers en de accounteigenaar.
+- **Archiveren** — verbergt de lijst zonder hem te verwijderen (de artikelen blijven bewaard). Alleen voor bewerkers en de accounteigenaar. Als je je laatste lijst archiveert, zie je een leeg "maak een lijst"-scherm — de gearchiveerde lijst blijft gearchiveerd en komt niet terug.
 - **Verwijderen** — verwijdert de lijst en alle artikelen definitief. Alleen voor bewerkers en de accounteigenaar.
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
@@ -36870,6 +36886,8 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Zoeken in je bijgehouden producten** — begin te typen en overeenkomende producten uit je geschiedenis van de Persoonlijke Inflatie-index verschijnen onder het zoekvak.
 - **Vaak gekocht** — als het zoekvak leeg is, toont een horizontale rij je meest gekochte producten om met één tik toe te voegen.
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
+
+Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
 
 Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
 

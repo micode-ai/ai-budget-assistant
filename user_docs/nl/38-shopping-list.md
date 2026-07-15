@@ -17,7 +17,7 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 - **Wisselen** — tik op een lijst om die actief te maken.
 - **Aanmaken** — tik op **Nieuwe lijst** en geef hem een naam. Elk accountlid kan een lijst aanmaken.
 - **Hernoemen** — tik op het potloodicoon bij een lijstregel. Elk accountlid kan een lijst hernoemen.
-- **Archiveren** — verbergt de lijst zonder hem te verwijderen (de artikelen blijven bewaard). Alleen voor bewerkers en de accounteigenaar.
+- **Archiveren** — verbergt de lijst zonder hem te verwijderen (de artikelen blijven bewaard). Alleen voor bewerkers en de accounteigenaar. Als je je laatste lijst archiveert, zie je een leeg "maak een lijst"-scherm — de gearchiveerde lijst blijft gearchiveerd en komt niet terug.
 - **Verwijderen** — verwijdert de lijst en alle artikelen definitief. Alleen voor bewerkers en de accounteigenaar.
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
@@ -29,6 +29,8 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Zoeken in je bijgehouden producten** — begin te typen en overeenkomende producten uit je geschiedenis van de Persoonlijke Inflatie-index verschijnen onder het zoekvak.
 - **Vaak gekocht** — als het zoekvak leeg is, toont een horizontale rij je meest gekochte producten om met één tik toe te voegen.
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
+
+Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
 
 Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
 

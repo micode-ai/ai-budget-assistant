@@ -17,7 +17,7 @@ Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen ver
 - **Wechseln** — tippe auf eine Liste, um sie zur aktiven Liste zu machen.
 - **Erstellen** — tippe auf **Neue Liste** und gib ihr einen Namen. Jedes Kontomitglied kann eine Liste erstellen.
 - **Umbenennen** — tippe auf das Stiftsymbol bei einer Listenzeile. Jedes Kontomitglied kann eine Liste umbenennen.
-- **Archivieren** — blendet die Liste aus, ohne sie zu löschen (ihre Artikel bleiben erhalten). Nur Bearbeiter und der Kontoinhaber.
+- **Archivieren** — blendet die Liste aus, ohne sie zu löschen (ihre Artikel bleiben erhalten). Nur Bearbeiter und der Kontoinhaber. Wenn du deine letzte verbleibende Liste archivierst, siehst du einen leeren Bildschirm zum Erstellen einer Liste — die archivierte Liste bleibt archiviert und taucht nicht wieder auf.
 - **Löschen** — entfernt die Liste und alle ihre Artikel dauerhaft. Nur Bearbeiter und der Kontoinhaber.
 
 Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
@@ -29,6 +29,8 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 - **In deinen erfassten Produkten suchen** — tippe die ersten Buchstaben ein, passende Produkte aus deinem Verlauf des Persönlichen Inflationsindex erscheinen unter dem Suchfeld.
 - **Häufig gekauft** — wenn das Suchfeld leer ist, zeigt eine horizontale Zeile deine meistgekauften Produkte zum Hinzufügen mit einem Tipp.
 - **Freitext** — wenn das Eingegebene zu keinem erfassten Produkt passt, tippe auf **Hinzufügen „…"**, um es als reinen Textartikel hinzuzufügen. Freitext-Artikel sind nicht mit dem Preisverlauf verknüpft und erscheinen daher nicht in Preisvergleichen.
+
+Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
 
 Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
 

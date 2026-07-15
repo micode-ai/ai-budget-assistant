@@ -200,6 +200,16 @@ export class ChatService {
       try { functionArgs = JSON.parse(toolCall.function.arguments); } catch { functionArgs = {}; }
       this.logger.log(`[ai/chat] tool=${functionName} argKeys=[${Object.keys(functionArgs).join(',')}]`);
 
+      // Shopping-list adds execute IMMEDIATELY (no confirmation card) — a
+      // low-stakes, reversible, collaborative write (item writes aren't
+      // ViewerBlockGuard-gated, so viewers may add too). It must NOT fall
+      // through to handleReadAction (which would cache the write and burn an
+      // extra narration call).
+      if (functionName === 'add_to_shopping_list') {
+        const r = await this.handleShoppingListAdd(conversation, functionArgs, history, message, accountId, userId, user?.language);
+        return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
+      }
+
       if (this.aiToolsService.isWriteAction(functionName)) {
         if (accountRole === 'viewer') {
           const lang = this.promptBuilder.detectLanguage(message);
@@ -589,6 +599,35 @@ ${lines}`;
       `[ai/semantic-filter] keyword="${keyword}" total=${expenses.length} llm=${llmIndices.size} substring=${deterministic.size} matched=${matchedIds.size}`,
     );
     return matchedIds;
+  }
+
+  private async handleShoppingListAdd(
+    conversation: { id: string },
+    args: Record<string, unknown>,
+    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
+    userMessage: string,
+    accountId?: string,
+    userId?: string,
+    uiLanguage?: string | null,
+  ) {
+    const result = await this.aiToolsService.executeAction('add_to_shopping_list', args, accountId || '', userId || '');
+    const lang = this.promptBuilder.detectUserLanguage(userMessage, history, uiLanguage);
+    const data = (result.data as { listName?: string; items?: string[] }) || {};
+    const text = result.success
+      ? this.promptBuilder.getShoppingListAddText(lang, data.listName ?? '', data.items ?? [])
+      : this.promptBuilder.getFailText(lang, result.errorMessage);
+
+    const assistantMsg = await this.prisma.chatMessage.create({
+      data: { conversationId: conversation.id, role: 'assistant', content: text, mentionedUserIds: [] },
+    });
+
+    return {
+      message: text,
+      conversationId: conversation.id,
+      actionResult: result,
+      assistantMessageId: assistantMsg.id,
+      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
+    };
   }
 
   private async handleReadAction(

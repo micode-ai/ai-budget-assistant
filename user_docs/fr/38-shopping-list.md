@@ -17,7 +17,7 @@ Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les
 - **Changer** — touchez une liste pour la rendre active.
 - **Créer** — touchez **Nouvelle liste** et donnez-lui un nom. N'importe quel membre du compte peut créer une liste.
 - **Renommer** — touchez l'icône crayon sur une ligne. N'importe quel membre du compte peut renommer une liste.
-- **Archiver** — masque la liste sans la supprimer (ses articles sont conservés). Réservé aux éditeurs et au propriétaire du compte.
+- **Archiver** — masque la liste sans la supprimer (ses articles sont conservés). Réservé aux éditeurs et au propriétaire du compte. Si vous archivez votre dernière liste, vous verrez un écran vide « créer une liste » — la liste archivée reste archivée et ne réapparaît pas.
 - **Supprimer** — supprime définitivement la liste et tous ses articles. Réservé aux éditeurs et au propriétaire du compte.
 
 Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
@@ -29,6 +29,8 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 - **Rechercher dans vos produits suivis** — commencez à taper, les produits correspondants de votre historique d'Indice d'Inflation Personnel apparaissent sous le champ de recherche.
 - **Achetés fréquemment** — quand le champ de recherche est vide, une ligne horizontale affiche vos produits les plus achetés pour un ajout en un geste.
 - **Texte libre** — si ce que vous avez tapé ne correspond à aucun produit suivi, touchez **Ajouter « … »** pour l'ajouter comme simple article texte. Les articles en texte libre ne sont pas reliés à l'historique de prix, donc ils n'apparaîtront pas dans les comparaisons de prix.
+
+Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
 
 Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
 

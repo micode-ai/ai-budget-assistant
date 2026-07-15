@@ -47,9 +47,39 @@ export function ActionResultCard({ actionResult }: ActionResultCardProps) {
       return <CreateSuccessResult actionType={actionResult.actionType} data={data} />;
     case 'check_affordability':
       return <AffordabilityResult data={data} />;
+    case 'add_to_shopping_list':
+      return <ShoppingAddResult data={data} />;
     default:
       return null;
   }
+}
+
+function ShoppingAddResult({ data }: { data: Record<string, unknown> }) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const items = (data.items as string[]) || [];
+  const listName = String(data.listName ?? '');
+
+  return (
+    <View style={[styles.card, styles.successCard]}>
+      <View style={styles.header}>
+        <Ionicons name="cart" size={18} color={theme.colors.success} />
+        <Text style={[styles.headerText, { color: theme.colors.success }]}>
+          {t('chat.actionAddShoppingList')}
+          {listName ? ` · ${listName}` : ''}
+        </Text>
+      </View>
+      {items.map((label, idx) => (
+        <View key={idx} style={styles.listItem}>
+          <Text style={styles.listItemText} numberOfLines={1}>
+            {label}
+          </Text>
+          <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
+        </View>
+      ))}
+    </View>
+  );
 }
 
 function ExpensesResult({ data }: { data: Record<string, unknown> }) {

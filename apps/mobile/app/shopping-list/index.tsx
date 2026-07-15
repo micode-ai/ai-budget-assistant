@@ -284,7 +284,7 @@ export default function ShoppingListScreen() {
           <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
         </TouchableOpacity>
 
-        {suggestions.length > 0 && (
+        {lists.length > 0 && suggestions.length > 0 && (
           <View style={styles.restockSection}>
             <Text style={styles.restockTitle}>{t('shoppingList.restockTitle')}</Text>
             <ScrollView
@@ -308,7 +308,7 @@ export default function ShoppingListScreen() {
           </View>
         )}
 
-        {deals.length > 0 && (
+        {lists.length > 0 && deals.length > 0 && (
           <View style={styles.dealsSection}>
             <Text style={styles.dealsTitle}>{t('shoppingList.dealsTitle')}</Text>
             <ScrollView
@@ -342,15 +342,29 @@ export default function ShoppingListScreen() {
           </View>
         )}
 
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle} numberOfLines={1}>
-            {activeListName}
-          </Text>
-        </View>
+        {lists.length > 0 && (
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle} numberOfLines={1}>
+              {activeListName}
+            </Text>
+          </View>
+        )}
 
         {isLoading && items.length === 0 ? (
           <View style={styles.emptyState}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        ) : lists.length === 0 ? (
+          // All lists archived/deleted — the server no longer resurrects one,
+          // so show a clean "create a list" state instead of silently
+          // reviving the archived list (ABA archive-reappears fix).
+          <View style={styles.emptyState}>
+            <Ionicons name="cart-outline" size={40} color={theme.colors.textTertiary} />
+            <Text style={styles.emptyText}>{t('shoppingList.noLists')}</Text>
+            <TouchableOpacity style={styles.createListBtn} onPress={openCreateList}>
+              <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+              <Text style={styles.createListBtnText}>{t('shoppingList.createFirstList')}</Text>
+            </TouchableOpacity>
           </View>
         ) : items.length === 0 ? (
           <View style={styles.emptyState}>
@@ -364,6 +378,7 @@ export default function ShoppingListScreen() {
         )}
       </ScrollView>
 
+      {lists.length > 0 && (
       <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
         <View style={styles.bottomBarRow}>
           <TouchableOpacity style={styles.addBtn} onPress={openAddModal}>
@@ -391,6 +406,7 @@ export default function ShoppingListScreen() {
           )}
         </View>
       </View>
+      )}
 
       <Modal visible={addModalVisible} transparent animationType="slide" onRequestClose={closeAddModal}>
         <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
@@ -776,6 +792,18 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   emptyText: { ...theme.textStyles.body, color: theme.colors.textTertiary, textAlign: 'center' as const },
+  createListBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    marginTop: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  createListBtnText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
 
   bottomBar: {
     paddingHorizontal: theme.spacing[4],

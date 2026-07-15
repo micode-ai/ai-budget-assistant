@@ -82,8 +82,11 @@ export function mergeServerLists<
 
 // ─── local helpers ───────────────────────────────────────────────────────────
 
-async function loadLocalListsWithItems(accountId: string): Promise<ShoppingList[]> {
-  const lists = await getAllShoppingLists(accountId);
+async function loadLocalListsWithItems(
+  accountId: string,
+  includeArchived = false,
+): Promise<ShoppingList[]> {
+  const lists = await getAllShoppingLists(accountId, includeArchived);
   const withItems: ShoppingList[] = [];
   // Sequential (not Promise.all) — avoids contending on the single SQLite
   // connection, same convention as hydrateTransactions.ts.
@@ -173,10 +176,13 @@ export function pullAndMergeShoppingLists(
 async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> {
   set({ isLoading: true, error: null });
   try {
-    // 1. Show local data immediately
-    const localLists = await loadLocalListsWithItems(accountId);
+    // 1. Show local data immediately. Load the FULL local set (archived
+    // included) for the merge context below, but only DISPLAY the
+    // non-archived subset — the merge needs archived rows so a pending
+    // local archive is protected from a stale server un-archive.
+    const localLists = await loadLocalListsWithItems(accountId, true);
     if (useAccountStore.getState().currentAccountId !== accountId) return;
-    set({ lists: localLists, isLoading: false });
+    set({ lists: localLists.filter((l) => !l.isArchived), isLoading: false });
 
     // 2. Push pending local → server (lists first — items need their parent
     // list to exist server-side before addItem can resolve it).

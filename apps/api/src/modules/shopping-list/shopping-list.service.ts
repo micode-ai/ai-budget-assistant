@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { predictRestock } from './restock-predictor';
 import { detectDeals, DealRow } from './deal-detector';
@@ -44,16 +45,19 @@ export class ShoppingListService {
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       include: { items: itemsInclude },
     });
-    if (lists.filter((l) => !l.isArchived).length === 0) {
+    // Materialize a default list ONLY for a brand-new account with NO lists at
+    // all (onboarding) — NOT when the account merely has zero *non-archived*
+    // lists. Archiving your last list is an explicit user action; resurrecting
+    // it here (via the un-archiving upsert below) made an archived list pop
+    // back with all its items on the next pull (ABA reported: "archive a list,
+    // it disappears then comes back"). Returning the archived rows without
+    // recreating a default lets the client show an empty "create a list" state.
+    if (lists.length === 0) {
       const defaultClientId = `default-${accountId}`;
       try {
-        // upsert (not create) so an archived/soft-deleted default row is resurrected
-        // instead of colliding on the deterministic clientId; catch the concurrent
+        // upsert (not create) so a soft-deleted default row is revived instead
+        // of colliding on the deterministic clientId; catch the concurrent
         // P2002 race outside any transaction and re-fetch (ABA-314/ABA-316 pattern).
-        // Replace (not append) — if the resurrected/created default row's id is
-        // already present in `lists` (e.g. the account's only list WAS the
-        // archived default, so findMany above already returned it stale), drop
-        // the stale copy so the response never has two entries with the same id.
         const upserted = await this.prisma.shoppingList.upsert({
           where: { accountId_clientId: { accountId, clientId: defaultClientId } },
           create: { accountId, clientId: defaultClientId, name: 'My List', isDefault: true, createdByUserId: userId },
@@ -151,6 +155,68 @@ export class ShoppingListService {
         const row = await this.prisma.shoppingListItem.findUnique({ where: { accountId_clientId: { accountId, clientId: dto.clientId } } });
         if (row) return toItem(row);
       }
+      throw e;
+    }
+  }
+
+  /**
+   * Add free-text items to the account's active/default shopping list, used by
+   * the AI chat `add_to_shopping_list` tool. Resolves the first non-archived
+   * list, or revives/creates the deterministic default when none exist (so
+   * asking the AI to add an item still works after the user archived every
+   * list). Each item gets a fresh server-generated clientId — the offline-first
+   * clients adopt these rows on their next pull, keyed by clientId.
+   */
+  async addItemsByName(
+    accountId: string,
+    userId: string,
+    names: string[],
+  ): Promise<{ listId: string; listName: string; addedLabels: string[] }> {
+    const cleaned = names
+      .map((n) => (typeof n === 'string' ? n.trim() : ''))
+      .filter((n) => n.length > 0)
+      .map((n) => n.slice(0, 120));
+    if (cleaned.length === 0) {
+      throw new NotFoundException('No items to add');
+    }
+    const list = await this.resolveOrCreateDefaultForAdd(accountId, userId);
+    const addedLabels: string[] = [];
+    for (const rawLabel of cleaned) {
+      await this.prisma.shoppingListItem.create({
+        data: {
+          accountId,
+          shoppingListId: list.id,
+          clientId: randomUUID(),
+          canonicalName: null,
+          rawLabel,
+          quantity: 1,
+          addedByUserId: userId,
+        },
+      });
+      addedLabels.push(rawLabel);
+    }
+    return { listId: list.id, listName: list.name, addedLabels };
+  }
+
+  private async resolveOrCreateDefaultForAdd(accountId: string, userId: string) {
+    const existing = await this.prisma.shoppingList.findFirst({
+      where: { accountId, isDeleted: false, isArchived: false },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    });
+    if (existing) return existing;
+    const defaultClientId = `default-${accountId}`;
+    try {
+      return await this.prisma.shoppingList.upsert({
+        where: { accountId_clientId: { accountId, clientId: defaultClientId } },
+        create: { accountId, clientId: defaultClientId, name: 'My List', isDefault: true, createdByUserId: userId },
+        update: { isArchived: false, isDeleted: false },
+      });
+    } catch (e) {
+      if (!isP2002(e)) throw e;
+      const row = await this.prisma.shoppingList.findUnique({
+        where: { accountId_clientId: { accountId, clientId: defaultClientId } },
+      });
+      if (row) return row;
       throw e;
     }
   }

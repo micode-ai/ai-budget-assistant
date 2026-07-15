@@ -95,9 +95,18 @@ export async function upsertShoppingList(list: ShoppingListLocal): Promise<void>
   );
 }
 
-export async function getAllShoppingLists(accountId: string): Promise<ShoppingList[]> {
+export async function getAllShoppingLists(
+  accountId: string,
+  includeArchived = false,
+): Promise<ShoppingList[]> {
+  // Display callers exclude archived (is_archived = 0). The pull-merge passes
+  // includeArchived=true so a locally-archived, not-yet-synced list is still
+  // present in the merge's local snapshot — otherwise it's invisible to the
+  // pending-protection in mergeServerLists and a racy/stale server copy could
+  // silently un-archive it (ABA: "archive a list, it comes back").
+  const archivedClause = includeArchived ? '' : ' AND is_archived = 0';
   const rows = await executeSql<ShoppingListRow>(
-    'SELECT * FROM shopping_lists WHERE account_id = ? AND is_deleted = 0 AND is_archived = 0 ORDER BY sort_order, created_at',
+    `SELECT * FROM shopping_lists WHERE account_id = ? AND is_deleted = 0${archivedClause} ORDER BY sort_order, created_at`,
     [accountId],
   );
   return rows.map(rowToShoppingList);

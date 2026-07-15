@@ -23,9 +23,10 @@ import { DebtsModule } from '../debts/debts.module';
 import { AccountsModule } from '../accounts/accounts.module';
 import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.module';
 import { InsightsModule } from '../insights/insights.module';
+import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 
 @Module({
-  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule],
+  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule],
   controllers: [AiController],
   providers: [
     WhisperService,

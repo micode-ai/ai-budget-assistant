@@ -49,7 +49,11 @@ jest.mock('../accountStore', () => ({
 
 import { mergeServerLists, pullAndMergeShoppingLists } from '../shoppingListSync';
 import { api } from '@/services/api';
-import { getPendingShoppingLists } from '@/db/shoppingListRepository';
+import {
+  getPendingShoppingLists,
+  getAllShoppingLists,
+  upsertShoppingList,
+} from '@/db/shoppingListRepository';
 
 describe('mergeServerLists', () => {
   const local = [
@@ -122,5 +126,36 @@ describe('pushPendingLists (via pullAndMergeShoppingLists)', () => {
       name: 'Renamed Groceries',
       isArchived: true,
     });
+  });
+
+  // Regression for the "archive a list, it comes back" bug: the pull-merge now
+  // feeds archived local rows (getAllShoppingLists includeArchived) into the
+  // merge, so a locally-archived, still-pending list is protected from a stale
+  // server copy that still reports it as un-archived.
+  it('does NOT un-archive a locally-archived pending list from a stale server copy', async () => {
+    const archived = {
+      id: 'c-arch',
+      accountId: 'acc-1',
+      clientId: 'c-arch',
+      name: 'Old',
+      isDefault: false,
+      isArchived: true,
+      sortOrder: 0,
+      createdByUserId: 'u1',
+      items: [],
+      isDeleted: false,
+      syncStatus: 'pending',
+    } as any;
+    (getAllShoppingLists as jest.Mock).mockResolvedValue([archived]); // Part B: archived included
+    (getPendingShoppingLists as jest.Mock).mockResolvedValue([archived]);
+    (api.getLists as jest.Mock).mockResolvedValue([{ ...archived, isArchived: false }]); // stale
+
+    const set = jest.fn();
+    await pullAndMergeShoppingLists('acc-1', set);
+
+    // The list is pending → mergeServerLists excludes it from toUpsert, so
+    // upsertShoppingList is never called to write isArchived:false back.
+    const upsertedClientIds = (upsertShoppingList as jest.Mock).mock.calls.map((c) => c[0]?.clientId);
+    expect(upsertedClientIds).not.toContain('c-arch');
   });
 });

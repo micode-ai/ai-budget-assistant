@@ -31,20 +31,20 @@ describe('ShoppingListService', () => {
     expect(lists[0].isDefault).toBe(true);
   });
 
-  it('getLists returns archived lists (not just the active default) so cross-device archive is not mistaken for delete', async () => {
+  it('getLists returns archived lists WITHOUT resurrecting a default when all lists are archived (archive-to-empty-state)', async () => {
+    // The account has one list, archived. The old behavior un-archived a default
+    // here, which made an archived list "come back". Now getLists returns the
+    // archived rows as-is and does NOT recreate a default — the client shows an
+    // empty "create a list" state.
     prisma.shoppingList.findMany.mockResolvedValue([
       {
         id: 'l1', accountId: 'a1', clientId: 'c1', name: 'Old',
         isDefault: false, isArchived: true, sortOrder: 0, createdByUserId: 'u1', items: [],
       },
     ]);
-    prisma.shoppingList.upsert.mockResolvedValue({
-      id: 'l2', accountId: 'a1', clientId: 'default-a1', name: 'My List',
-      isDefault: true, isArchived: false, sortOrder: 0, createdByUserId: 'u1', items: [],
-    });
     const res = await service.getLists('a1', 'u1');
     expect(res.some((l) => l.isArchived)).toBe(true);
-    expect(prisma.shoppingList.upsert).toHaveBeenCalled();
+    expect(prisma.shoppingList.upsert).not.toHaveBeenCalled();
   });
 
   it('getLists upserts the default list with an un-archive update (resurrects an archived/colliding default instead of crashing)', async () => {
@@ -63,20 +63,52 @@ describe('ShoppingListService', () => {
     expect(lists[0].isDefault).toBe(true);
   });
 
-  it('getLists de-dupes when the resurrected default list collides with an already-archived row of the same id', async () => {
+  it('getLists does NOT un-archive the archived default when it is the only (archived) list', async () => {
+    // The account's only list is an archived default. Archiving is an explicit
+    // user action — getLists must leave it archived, not resurrect it.
     prisma.shoppingList.findMany.mockResolvedValue([
       {
         id: 'l1', accountId: 'a1', clientId: 'default-a1', name: 'My List',
         isDefault: true, isArchived: true, sortOrder: 0, createdByUserId: 'u1', items: [],
       },
     ]);
-    prisma.shoppingList.upsert.mockResolvedValue({
-      id: 'l1', accountId: 'a1', clientId: 'default-a1', name: 'My List',
-      isDefault: true, isArchived: false, sortOrder: 0, createdByUserId: 'u1', items: [],
-    });
     const res = await service.getLists('a1', 'u1');
-    expect(res.filter((l) => l.id === 'l1').length).toBe(1);
-    expect(res.find((l) => l.id === 'l1')?.isArchived).toBe(false);
+    expect(prisma.shoppingList.upsert).not.toHaveBeenCalled();
+    expect(res.find((l) => l.id === 'l1')?.isArchived).toBe(true);
+  });
+
+  it('addItemsByName adds items to the existing active list', async () => {
+    prisma.shoppingList.findFirst.mockResolvedValue({ id: 'l1', accountId: 'a1', name: 'Groceries' });
+    prisma.shoppingListItem.create.mockResolvedValue({});
+    const res = await service.addItemsByName('a1', 'u1', ['Milk', '  Bread  ', '']);
+    expect(prisma.shoppingList.upsert).not.toHaveBeenCalled();
+    expect(prisma.shoppingListItem.create).toHaveBeenCalledTimes(2); // blank dropped
+    expect(res.listName).toBe('Groceries');
+    expect(res.addedLabels).toEqual(['Milk', 'Bread']); // trimmed
+    const firstArgs = prisma.shoppingListItem.create.mock.calls[0][0];
+    expect(firstArgs.data).toEqual(expect.objectContaining({ accountId: 'a1', shoppingListId: 'l1', rawLabel: 'Milk', quantity: 1, addedByUserId: 'u1' }));
+    expect(typeof firstArgs.data.clientId).toBe('string');
+  });
+
+  it('addItemsByName revives/creates the default list when none is active (e.g. after archiving all)', async () => {
+    prisma.shoppingList.findFirst.mockResolvedValue(null);
+    prisma.shoppingList.upsert.mockResolvedValue({ id: 'def', accountId: 'a1', name: 'My List' });
+    prisma.shoppingListItem.create.mockResolvedValue({});
+    const res = await service.addItemsByName('a1', 'u1', ['Eggs']);
+    expect(prisma.shoppingList.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId_clientId: { accountId: 'a1', clientId: 'default-a1' } },
+        update: expect.objectContaining({ isArchived: false, isDeleted: false }),
+      }),
+    );
+    expect(res.listId).toBe('def');
+    expect(res.addedLabels).toEqual(['Eggs']);
+  });
+
+  it('addItemsByName rejects an all-blank item list without touching the DB', async () => {
+    await expect(service.addItemsByName('a1', 'u1', ['   ', ''])).rejects.toThrow();
+    expect(prisma.shoppingList.findFirst).not.toHaveBeenCalled();
+    expect(prisma.shoppingListItem.create).not.toHaveBeenCalled();
   });
 
   it('createList idempotent replay returns the existing list WITH its items, not an empty array', async () => {

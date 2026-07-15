@@ -43,7 +43,8 @@ export type ChatActionType =
   | 'create_debt'
   | 'get_debt_summary'
   | 'update_goal_balance'
-  | 'check_affordability';
+  | 'check_affordability'
+  | 'add_to_shopping_list';
 
 export interface CreateExpenseActionData {
   amount: number;

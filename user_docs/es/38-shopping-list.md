@@ -17,7 +17,7 @@ Toca la píldora con el nombre de la lista en la parte superior de la pantalla p
 - **Cambiar** — toca cualquier lista para hacerla la activa.
 - **Crear** — toca **Nueva lista** y ponle un nombre. Cualquier miembro de la cuenta puede crear una lista.
 - **Renombrar** — toca el icono de lápiz en una fila. Cualquier miembro de la cuenta puede renombrar una lista.
-- **Archivar** — oculta la lista sin eliminarla (sus artículos se conservan). Solo editores y el propietario de la cuenta.
+- **Archivar** — oculta la lista sin eliminarla (sus artículos se conservan). Solo editores y el propietario de la cuenta. Si archivas tu última lista, verás una pantalla vacía para «crear una lista»: la lista archivada permanece archivada y no reaparece.
 - **Eliminar** — borra la lista y todos sus artículos de forma permanente. Solo editores y el propietario de la cuenta.
 
 Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
@@ -29,6 +29,8 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 - **Buscar en tus productos rastreados** — empieza a escribir y aparecerán debajo los productos coincidentes de tu historial del Índice de Inflación Personal.
 - **Comprados con frecuencia** — cuando el campo de búsqueda está vacío, una fila horizontal muestra tus productos más comprados para añadirlos con un toque.
 - **Texto libre** — si lo que escribiste no coincide con ningún producto rastreado, toca **Añadir "…"** para añadirlo como un artículo de texto sin más. Los artículos de texto libre no están vinculados al historial de precios, así que no aparecerán en las comparaciones de precios.
+
+También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
 
 Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
 

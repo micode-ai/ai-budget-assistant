@@ -13,6 +13,7 @@ import { DebtsService } from '../../debts/debts.service';
 import { ExchangeRateService } from '../../currency-exchange/exchange-rate.service';
 import { GoalPlannerService } from './goal-planner.service';
 import { SafeToSpendService } from '../../insights/safe-to-spend.service';
+import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { buildSearchUnits } from '../utils/semantic-filter';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
@@ -36,6 +37,7 @@ export class AiToolsService {
     private readonly goalPlannerService: GoalPlannerService,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly safeToSpendService: SafeToSpendService,
+    private readonly shoppingListService: ShoppingListService,
   ) {}
 
   /**
@@ -255,6 +257,24 @@ export class AiToolsService {
           },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'add_to_shopping_list',
+          description: 'Add one or more items to the user\'s shopping / grocery list. Use when the user asks to put something on their shopping list, add groceries to buy, or remember to buy something (e.g. "add milk and bread to my shopping list", "put eggs on the list", "добавь молоко и хлеб в список покупок"). This is NOT for recording money spent — that is create_expense.',
+          parameters: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'The product/item names to add, e.g. ["milk", "bread", "eggs"]. Copy each name from the user\'s message in their own language and spelling — do NOT translate or correct them.',
+              },
+            },
+            required: ['items'],
+          },
+        },
+      },
     ];
   }
 
@@ -312,6 +332,8 @@ export class AiToolsService {
           return await this.executeUpdateGoalBalance(data, accountId, userId);
         case 'check_affordability':
           return await this.executeCheckAffordability(data, accountId, userId, baseCurrency);
+        case 'add_to_shopping_list':
+          return await this.executeAddToShoppingList(data, accountId, userId);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -376,6 +398,30 @@ export class AiToolsService {
         category: expense.category?.name,
         date: expense.date,
       },
+    };
+  }
+
+  private async executeAddToShoppingList(
+    data: Record<string, unknown>,
+    accountId: string,
+    userId: string,
+  ): Promise<ChatActionResult> {
+    // Accept both `items: string[]` (the schema) and a lone `item: string`
+    // (some models emit the singular form) — normalize to a string array.
+    const raw = Array.isArray(data.items)
+      ? data.items
+      : data.item != null
+        ? [data.item]
+        : [];
+    const names = raw.map((x) => String(x));
+    if (names.filter((n) => n.trim().length > 0).length === 0) {
+      return { actionType: 'add_to_shopping_list', success: false, errorMessage: 'No items to add' };
+    }
+    const { listName, addedLabels } = await this.shoppingListService.addItemsByName(accountId, userId, names);
+    return {
+      actionType: 'add_to_shopping_list',
+      success: true,
+      data: { listName, items: addedLabels, count: addedLabels.length },
     };
   }
 

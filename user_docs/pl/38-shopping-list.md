@@ -17,7 +17,7 @@ Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj li
 - **Przełączyć** — stuknij dowolną listę, aby uczynić ją aktywną.
 - **Utworzyć** — stuknij **Nowa lista** i nadaj jej nazwę. Każdy członek konta może utworzyć listę.
 - **Zmienić nazwę** — stuknij ikonę ołówka przy wierszu listy. Każdy członek konta może zmienić nazwę listy.
-- **Zarchiwizować** — ukrywa listę bez jej usuwania (jej produkty są zachowane). Tylko edytorzy i właściciel konta.
+- **Zarchiwizować** — ukrywa listę bez jej usuwania (jej produkty są zachowane). Tylko edytorzy i właściciel konta. Jeśli zarchiwizujesz swoją ostatnią listę, zobaczysz pusty ekran „utwórz listę" — zarchiwizowana lista pozostaje zarchiwizowana i nie pojawia się ponownie.
 - **Usunąć** — trwale usuwa listę i wszystkie jej produkty. Tylko edytorzy i właściciel konta.
 
 Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
@@ -29,6 +29,8 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 - **Wyszukaj wśród śledzonych produktów** — zacznij pisać, a pod polem wyszukiwania pojawią się pasujące produkty z historii Twojego Osobistego wskaźnika inflacji.
 - **Często kupowane** — gdy pole wyszukiwania jest puste, pozioma lista pokazuje Twoje najczęściej kupowane produkty do dodania jednym dotknięciem.
 - **Dowolny tekst** — jeśli to, co wpisałeś, nie pasuje do żadnego śledzonego produktu, stuknij **Dodaj "…"**, aby dodać go jako zwykły tekst. Pozycje dodane jako dowolny tekst nie są powiązane z historią cen, więc nie pojawią się w porównaniach cen.
+
+Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
 
 Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
 
