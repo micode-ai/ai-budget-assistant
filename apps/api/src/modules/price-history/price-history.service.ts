@@ -31,6 +31,15 @@ interface RawItemRow {
   locationLng?: number | null;
 }
 
+export interface ProductTrendRow {
+  canonicalName: string;             // resolved name
+  currency: string;                  // native currency of the latest purchase
+  points: { date: string; price: number }[];   // sorted ascending by date
+  purchaseDates: Date[];             // sorted ascending
+  currentBestPrice: number;          // latest personal unit price (used as the current price for the forecast)
+  latestMerchant: string;
+}
+
 const AI_BACKFILL_BATCH = 50;
 const AI_BACKFILL_MAX_UNIQUE = 500;
 
@@ -59,6 +68,34 @@ export class PriceHistoryService {
     const result: PriceHistoryResponse = { inflationIndex, period, productCount, currency, products };
     await this.cache.set(cacheKey, result, 300);
     return result;
+  }
+
+  /**
+   * Per-product price series over the account's full history, for the Inflation
+   * Shield. Reuses fetchRows (alias resolution + per-unit price already handled).
+   */
+  async getProductTrends(accountId: string): Promise<ProductTrendRow[]> {
+    const rows = await this.fetchRows(accountId);
+    const byProduct = new Map<string, typeof rows>();
+    for (const r of rows) {
+      const arr = byProduct.get(r.resolvedName) ?? [];
+      arr.push(r);
+      byProduct.set(r.resolvedName, arr);
+    }
+    const out: ProductTrendRow[] = [];
+    for (const [name, items] of byProduct.entries()) {
+      const sorted = [...items].sort((a, b) => a.date.getTime() - b.date.getTime());
+      const latest = sorted[sorted.length - 1];
+      out.push({
+        canonicalName: name,
+        currency: latest.currency,
+        points: sorted.map((i) => ({ date: i.date.toISOString().slice(0, 10), price: i.unitPrice })),
+        purchaseDates: sorted.map((i) => i.date),
+        currentBestPrice: latest.unitPrice,
+        latestMerchant: latest.merchant,
+      });
+    }
+    return out;
   }
 
   async getBasketComparison(

@@ -1,0 +1,13 @@
+{
+  "name": "Pre-push API checks",
+  "version": "1.0.0",
+  "description": "Before git push, run TypeScript typecheck for apps/api and the shared-utils runtime import guard to catch build errors before CI",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": ["shell"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A shell command is about to run. Check if it is a `git push` command (it may contain 'git push' or 'push origin'). If it IS a git push, run these two checks in d:\\Work\\micode\\ai-budget-assistant BEFORE allowing the push:\n1. TypeScript typecheck: run `npx tsc --noEmit` in the `apps/api` directory\n2. CI guard: run `bash scripts/check-no-shared-utils-runtime-import.sh` in the workspace root\n\nIf either check fails, DO NOT proceed with the push — fix errors first.\nIf the command is NOT a git push (e.g. git add, git commit, git status, or any other command), allow it to proceed immediately without running any checks."
+  }
+}

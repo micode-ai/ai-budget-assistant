@@ -8,9 +8,10 @@ import { AnomalyModule } from '../anomaly/anomaly.module';
 import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
 import { FamilyFeedModule } from '../family-feed/family-feed.module';
 import { CommunityPriceModule } from '../community-prices/community-price.module';
+import { InflationShieldTrackingModule } from '../insights/inflation-shield-tracking.module';
 
 @Module({
-  imports: [BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule],
+  imports: [BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule],
   controllers: [ExpensesController],
   providers: [ExpensesService, ExpenseRecurringCron],
   exports: [ExpensesService],

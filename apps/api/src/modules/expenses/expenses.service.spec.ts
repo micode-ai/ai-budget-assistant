@@ -553,6 +553,118 @@ describe('mergeExpenses (Tier 2)', () => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// create() — inflation-shield reconcile hook (fire-and-forget)
+// ---------------------------------------------------------------------------
+
+/**
+ * Unlike makeCreateService (which only exercises the private reconcileNotificationStub
+ * method and never actually calls service.create() — its tx.expense.findUnique always
+ * resolves null, which would make the real create() crash on toExpenseResponse(null)),
+ * this factory mirrors makeTripShareCreateService's proven-working create() mock:
+ * findUnique resolves null on the existing-by-clientId check (isNew) then the full
+ * refetch row on the second call.
+ */
+function makeShieldReconcileCreateService() {
+  const findUniqueMock = jest
+    .fn()
+    .mockImplementationOnce(async () => null) // existing-by-clientId check -> not found (isNew)
+    .mockImplementationOnce(async () => ({
+      id: 'e-shield-1',
+      accountId: 'a1',
+      amount: 15,
+      currencyCode: 'PLN',
+      category: null,
+      merchant: null,
+      source: 'manual',
+      items: [],
+      expenseTags: [],
+      categorySplits: [],
+      projectExpenses: [],
+      user: { name: 'Alice' },
+    }));
+
+  const tx = {
+    expense: {
+      findUnique: findUniqueMock,
+      upsert: jest.fn().mockResolvedValue({ id: 'e-shield-1' }),
+    },
+    expenseItem: { createMany: jest.fn().mockResolvedValue({}) },
+    tag: { findMany: jest.fn().mockResolvedValue([]) },
+    expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
+    project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
+    projectExpense: { upsert: jest.fn().mockResolvedValue({}) },
+    expenseCategorySplit: { createMany: jest.fn().mockResolvedValue({}) },
+  };
+
+  const prisma: any = {
+    $transaction: jest.fn(async (cb: any) => cb(tx)),
+  };
+  const cacheService: any = {
+    delByPrefix: jest.fn().mockResolvedValue(undefined),
+    del: jest.fn().mockResolvedValue(undefined),
+  };
+  const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
+  const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+  const shieldTracking: any = { reconcilePurchase: jest.fn().mockResolvedValue(undefined) };
+
+  // shieldTracking is appended as the LAST constructor arg (mirrors familyFeed/
+  // communityPrices — both left undefined here, exercising the @Optional() no-op path).
+  const service = new ExpensesService(
+    prisma,
+    gamificationService,
+    cacheService,
+    anomalyService,
+    merchantRulesService,
+    undefined,
+    undefined,
+    shieldTracking,
+  );
+  return { service, shieldTracking, cacheService };
+}
+
+describe('create — inflation-shield reconcile hook', () => {
+  it('fires inflation-shield reconcilePurchase after creating a new expense', async () => {
+    const { service, shieldTracking } = makeShieldReconcileCreateService();
+
+    const { expense, isNew } = await service.create('a1', 'u1', {
+      localId: 'client-shield-1',
+      amount: 15,
+      currencyCode: 'PLN',
+      date: '2026-06-15',
+      source: 'manual',
+    } as any);
+
+    expect(isNew).toBe(true);
+
+    // fire-and-forget — allow the microtask to run
+    await new Promise((r) => setImmediate(r));
+
+    expect(shieldTracking.reconcilePurchase).toHaveBeenCalledWith('a1', expense.id);
+  });
+
+  it('invalidates the shield cache when a new expense is created', async () => {
+    const { service, cacheService } = makeShieldReconcileCreateService();
+
+    await service.create('a1', 'u1', {
+      localId: 'client-shield-2',
+      amount: 15,
+      currencyCode: 'PLN',
+      date: '2026-06-15',
+      source: 'manual',
+    } as any);
+
+    // fire-and-forget — allow the microtask to run
+    await new Promise((r) => setImmediate(r));
+
+    expect(cacheService.delByPrefix).toHaveBeenCalledWith('shield:a1:');
+    // The AI-chat layer caches the shield tool result in front of getShield, so
+    // its per-account cache must be busted too (final-review fix).
+    expect(cacheService.delByPrefix).toHaveBeenCalledWith('chat:get_inflation_shield:a1:');
+  });
+});
+
 // Move an expense to another account. The caller is already a non-viewer member of the
 // SOURCE account (AccountContextGuard + ViewerBlockGuard); the service validates the
 // TARGET membership/role, remaps the category by name, and drops account-scoped links.

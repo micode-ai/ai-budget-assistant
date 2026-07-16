@@ -5,6 +5,7 @@ import { StoryService } from './story.service';
 import { FatFinderService } from './fat-finder.service';
 import { SafeToSpendService } from './safe-to-spend.service';
 import { WrappedService } from './wrapped.service';
+import { InflationShieldService } from './inflation-shield.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
@@ -21,6 +22,7 @@ export class InsightsController {
     private readonly fatFinderService: FatFinderService,
     private readonly safeToSpendService: SafeToSpendService,
     private readonly wrappedService: WrappedService,
+    private readonly inflationShieldService: InflationShieldService,
   ) {}
 
   @Get()
@@ -57,6 +59,17 @@ export class InsightsController {
     let target = parseInt(year ?? '', 10);
     if (!Number.isFinite(target) || target < 2000 || target > now) target = now;
     return this.wrappedService.getWrapped(req.accountId, req.user.id, baseCurrency, target);
+  }
+
+  /**
+   * GET /insights/inflation-shield
+   * Forecasts per-product prices and recommends what to stock up on before it
+   * rises. No tier guard — FREE (retention/virality), same precedent as safe-to-spend.
+   */
+  @Get('inflation-shield')
+  async getInflationShield(@Req() req: AuthenticatedRequest) {
+    const baseCurrency = req.user.currencyCode || 'USD';
+    return this.inflationShieldService.getShield(req.accountId, req.user.id, baseCurrency);
   }
 
   @Get('ai-charts')

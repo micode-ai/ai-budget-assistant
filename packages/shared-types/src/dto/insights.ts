@@ -36,6 +36,33 @@ export interface AffordabilityVerdict {
   baseCurrency: string;
 }
 
+// ── Inflation Shield (Plan 1) ──────────────────────────────
+// Forecasts per-product prices from receipt history and recommends what to
+// stock up on before it rises. All amounts are in the user's display currency.
+
+export interface ShieldItem {
+  canonicalName: string;
+  monthlyChangePct: number;   // forecast, % per month (positive = rising)
+  currentPrice: number;       // best current unit price, in baseCurrency
+  projectedPrice: number;     // forecast unit price at the horizon, baseCurrency
+  quantity: number;           // units to stock up now
+  projectedSaving: number;    // (projectedPrice - currentPrice) * quantity, baseCurrency
+  store: string | null;       // cheapest store (community) or null in Plan 1
+  currencyOriginal: string;   // the product's native currency
+  affordableToday: boolean;   // stock-up outlay <= projectedAvailable (safe-to-spend)
+}
+
+export interface InflationShieldResponse {
+  baseCurrency: string;
+  items: ShieldItem[];
+  basketMonthlyForecastPct: number | null;  // weighted forecast across the basket
+  totalProjectedSaving: number;
+  savedSoFar: number;         // realized savings to date (0 until Plan 2 tracking ships)
+  hasEnoughData: boolean;     // false + empty items below the data threshold
+  fxApproximate: boolean;
+  computedAt: string;         // ISO datetime
+}
+
 // ── Financial Wrapped (ABA-336) ──────────────────────────────
 // A Spotify-Wrapped-style year-in-review assembled entirely from existing data.
 // Server returns numeric facts only; the mobile client narrates + composes the

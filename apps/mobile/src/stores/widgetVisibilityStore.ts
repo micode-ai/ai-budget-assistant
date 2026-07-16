@@ -4,6 +4,7 @@ import { MMKV } from 'react-native-mmkv';
 export const WIDGET_KEYS = [
   'familyFeed',
   'safeToSpend',
+  'inflationShield',
   'financialHealth',
   'gamification',
   'monthlyBudget',

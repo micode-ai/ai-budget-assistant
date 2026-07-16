@@ -97,6 +97,12 @@ enum SubscriptionStatus {
   paused
 }
 
+enum ShieldStatus {
+  active
+  acted
+  expired
+}
+
 enum AppPlatform {
   ios
   android
@@ -303,8 +309,30 @@ model Account {
   productAliases          ProductAlias[]
   shoppingLists           ShoppingList[]
   shoppingListItems       ShoppingListItem[]
+  inflationShieldRecommendations InflationShieldRecommendation[]
 
   @@map("accounts")
+}
+
+model InflationShieldRecommendation {
+  id              String       @id @default(uuid())
+  accountId       String       @map("account_id")
+  canonicalName   String       @map("canonical_name")
+  periodMonth     String       @map("period_month") // "YYYY-MM"
+  recommendedAt   DateTime     @default(now()) @map("recommended_at")
+  priceAtRec      Decimal      @map("price_at_rec") @db.Decimal(12, 2) // base currency
+  projectedPrice  Decimal      @map("projected_price") @db.Decimal(12, 2) // base currency
+  qty             Int
+  projectedSaving Decimal      @map("projected_saving") @db.Decimal(12, 2) // base currency
+  currencyCode    String       @map("currency_code") // base at rec time
+  status          ShieldStatus @default(active)
+  actedAt         DateTime?    @map("acted_at")
+  realizedSaving  Decimal?     @map("realized_saving") @db.Decimal(12, 2) // base currency
+  account         Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, canonicalName, periodMonth])
+  @@index([accountId, status])
+  @@map("inflation_shield_recommendations")
 }
 
 model AccountMember {

@@ -43,6 +43,7 @@ export default function WidgetsSettingsScreen() {
   const widgetLabels: Record<WidgetKey, string> = {
     safeToSpend: t('safeToSpend.widgetLabel'),
     familyFeed: t('familyFeed.title'),
+    inflationShield: t('inflationShield.title'),
     financialHealth: t('settings.widget.financialHealth'),
     gamification: t('settings.widget.gamification'),
     monthlyBudget: t('settings.widget.monthlyBudget'),

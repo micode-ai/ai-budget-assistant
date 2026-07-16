@@ -125,4 +125,28 @@ describe('PriceHistoryService', () => {
       expect(res.stores[0].nearby).toBe(true);
     });
   });
+
+  it('getProductTrends groups item rows into per-product price series', async () => {
+    const prisma: any = {
+      productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+      expenseItem: {
+        findMany: jest.fn().mockResolvedValue([
+          { id: 'i1', canonicalName: 'Masło', unitPrice: 5.0, quantity: 1, totalPrice: 5.0,
+            expense: { date: new Date('2026-06-05'), merchant: 'Lidl', currencyCode: 'PLN', locationLat: null, locationLng: null } },
+          { id: 'i2', canonicalName: 'Masło', unitPrice: 5.9, quantity: 1, totalPrice: 5.9,
+            expense: { date: new Date('2026-07-10'), merchant: 'Lidl', currencyCode: 'PLN', locationLat: null, locationLng: null } },
+        ]),
+      },
+    };
+    const service = new PriceHistoryService(prisma, null as any);
+
+    const trends = await service.getProductTrends('a1');
+    expect(trends).toHaveLength(1);
+    expect(trends[0].canonicalName).toBe('Masło');
+    expect(trends[0].points.map((p) => p.price)).toEqual([5.0, 5.9]);
+    expect(trends[0].currentBestPrice).toBe(5.9); // latest
+    expect(trends[0].currency).toBe('PLN');
+    expect(trends[0].latestMerchant).toBe('Lidl');
+    expect(trends[0].purchaseDates).toHaveLength(2);
+  });
 });

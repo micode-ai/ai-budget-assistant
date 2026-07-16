@@ -8,7 +8,7 @@ import type { DebtSummary } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { convertAmount } from '@/stores/exchangeRateStore';
-import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget, FamilyFeedWidget } from '@/components/widgets';
+import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget, FamilyFeedWidget, InflationShieldWidget } from '@/components/widgets';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import type { UseHomeScreenDataReturn } from '@/hooks/useHomeScreenData';
@@ -311,6 +311,9 @@ export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
       return widgetVisibility.familyFeed && currentAccountType !== 'personal'
         ? <FamilyFeedWidget key="familyFeed" />
         : null;
+
+    case 'inflationShield':
+      return widgetVisibility.inflationShield ? <InflationShieldWidget key="inflationShield" /> : null;
 
     case 'financialHealth':
       return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;

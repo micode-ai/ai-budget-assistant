@@ -13,6 +13,7 @@ import { DebtsService } from '../../debts/debts.service';
 import { ExchangeRateService } from '../../currency-exchange/exchange-rate.service';
 import { GoalPlannerService } from './goal-planner.service';
 import { SafeToSpendService } from '../../insights/safe-to-spend.service';
+import { InflationShieldService } from '../../insights/inflation-shield.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { buildSearchUnits } from '../utils/semantic-filter';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
@@ -38,6 +39,7 @@ export class AiToolsService {
     private readonly exchangeRateService: ExchangeRateService,
     private readonly safeToSpendService: SafeToSpendService,
     private readonly shoppingListService: ShoppingListService,
+    private readonly inflationShieldService: InflationShieldService,
   ) {}
 
   /**
@@ -275,6 +277,14 @@ export class AiToolsService {
           },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'get_inflation_shield',
+          description: 'Get the user\'s Inflation Shield: which of their regularly-bought products are rising in price and what to stock up on NOW to save money, plus how much the shield has saved them so far. Use when the user asks what to buy ahead / stock up on, what is getting more expensive, or how much they have saved by buying ahead. Read-only, no parameters.',
+          parameters: { type: 'object', properties: {} },
+        },
+      },
     ];
   }
 
@@ -334,6 +344,8 @@ export class AiToolsService {
           return await this.executeCheckAffordability(data, accountId, userId, baseCurrency);
         case 'add_to_shopping_list':
           return await this.executeAddToShoppingList(data, accountId, userId);
+        case 'get_inflation_shield':
+          return await this.executeGetInflationShield(accountId, userId, baseCurrency);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -816,6 +828,15 @@ export class AiToolsService {
         activeCount: activeDebts.length,
       },
     };
+  }
+
+  private async executeGetInflationShield(
+    accountId: string,
+    userId: string,
+    baseCurrency?: string,
+  ): Promise<ChatActionResult> {
+    const shield = await this.inflationShieldService.getShield(accountId, userId, baseCurrency || 'USD');
+    return { actionType: 'get_inflation_shield', success: true, data: shield as unknown as Record<string, unknown> };
   }
 
   private async executeRecordDebtRepayment(

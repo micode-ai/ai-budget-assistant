@@ -888,6 +888,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="inflation-shield/index"
+          options={{
+            headerShown: true,
+            title: t('inflationShield.title'),
+          }}
+        />
+        <Stack.Screen
           name="purchase-requests/new"
           options={{
             presentation: 'modal',

@@ -9,6 +9,7 @@ import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
+import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';
 import { resolveShares } from './trip-share-calculator';
 import { buildLocationColumns } from './expense-location.util';
 
@@ -22,6 +23,7 @@ export class ExpensesService {
     private readonly merchantRules: MerchantRulesService,
     @Optional() private readonly familyFeed?: FamilyFeedService,
     @Optional() private readonly communityPrices?: CommunityPriceService,
+    @Optional() private readonly shieldTracking?: InflationShieldTrackingService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -40,6 +42,10 @@ export class ExpensesService {
       this.cacheService.delByPrefix(`chat:get_expenses:${accountId}:`),
       this.cacheService.delByPrefix(`chat:get_budget_status:${accountId}:`),
       this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`),
+      // The AI-chat layer caches the shield tool result in FRONT of getShield, so
+      // the internal `shield:` bust (post-create block) isn't enough on the chat
+      // surface — bust the chat-layer shield cache on every expense mutation too.
+      this.cacheService.delByPrefix(`chat:get_inflation_shield:${accountId}:`),
       this.cacheService.del(`uc:${accountId}`),
     ]);
   }
@@ -382,6 +388,17 @@ export class ExpensesService {
       void this.communityPrices
         ?.recordContribution(accountId, userId, result.expense.id)
         .catch(() => {});
+
+      // fire-and-forget: credit any active inflation-shield recommendation this
+      // purchase acts on (realized-savings tracking). Never throws into create.
+      void this.shieldTracking
+        ?.reconcilePurchase(accountId, result.expense.id)
+        .catch(() => {});
+
+      // A new expense changes the shield's inputs (new price point) and may have
+      // just reconciled a recommendation — bust the cached shield so the next read
+      // recomputes. Fire-and-forget; never blocks create.
+      void this.cacheService.delByPrefix(`shield:${accountId}:`).catch(() => {});
     }
 
     return result;
