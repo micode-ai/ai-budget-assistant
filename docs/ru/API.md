@@ -1684,6 +1684,46 @@ X-Account-Id: <account-uuid>
 }
 ```
 
+### Получить Inflation Shield (щит от инфляции)
+
+Прогнозирует цену каждого отслеживаемого товара на основе истории чеков и рекомендует, что **закупить впрок прямо сейчас**, пока цена не выросла, а также показывает, сколько щит уже **сэкономил**. Детерминированный расчёт (без затрат на AI). Ограничений по тарифу нет — доступно на бесплатном тарифе. Кешируется в Redis под ключом `shield:{accountId}:{baseCurrency}` с TTL 1 час.
+
+```http
+GET /insights/inflation-shield
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK`
+```json
+{
+  "baseCurrency": "PLN",
+  "items": [
+    {
+      "canonicalName": "Кофе 500г",
+      "monthlyChangePct": 6.4,
+      "currentPrice": 24.99,
+      "projectedPrice": 27.10,
+      "quantity": 3,
+      "projectedSaving": 3.17,
+      "store": null,
+      "currencyOriginal": "PLN",
+      "affordableToday": true
+    }
+  ],
+  "basketMonthlyForecastPct": 4.1,
+  "totalProjectedSaving": 3.17,
+  "savedSoFar": 12.40,
+  "hasEnoughData": true,
+  "fxApproximate": false,
+  "computedAt": "2026-07-16T09:00:00Z"
+}
+```
+
+`items[].projectedSaving` — это оценка по модели «наполовину пройденной линейной рампы»: `(projectedPrice − currentPrice) / 2 × quantity`, а не полный разрыв на конец горизонта. `store` в Plan 1 равен `null` (только персональные данные; community-буст отложен). `savedSoFar` — реализованная экономия, засчитанная при фактической покупке рекомендованного товара, просуммированная с конвертацией валют в `baseCurrency`. При `hasEnoughData: false` возвращается пустой массив `items` — данных ниже порога (≥3 ценовые точки на товар).
+
+**DTO** (`packages/shared-types/src/dto/insights.ts`): `InflationShieldResponse`, `ShieldItem`.
+
 ---
 
 ## AI Инсайты
@@ -2177,6 +2217,7 @@ Content-Type: application/json
 - `get_expenses` — Запросить расходы (выполняется немедленно)
 - `get_budget_status` — Запросить статус бюджетов (выполняется немедленно)
 - `get_category_breakdown` — Запросить расходы по категориям (выполняется немедленно)
+- `get_inflation_shield` — Запросить рекомендации «что закупить впрок сейчас» и реализованную экономию от движка Inflation Shield (выполняется немедленно, без параметров)
 
 **Определение языка:**
 AI автоматически определяет язык пользователя из истории разговора и содержимого сообщения (русский, украинский, белорусский, немецкий, испанский, французский, польский, английский) и отвечает на том же языке.

@@ -1748,6 +1748,46 @@ X-Account-Id: <account-uuid>
 }
 ```
 
+### Get Inflation Shield
+
+Forecasts each tracked product's price from receipt history and recommends what to **stock up on now** before it rises, plus how much the shield has **saved so far**. Deterministic (no LLM cost). No tier guard — available on the free plan. Cached in Redis under `shield:{accountId}:{baseCurrency}` with a 1-hour TTL.
+
+```http
+GET /insights/inflation-shield
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "baseCurrency": "PLN",
+  "items": [
+    {
+      "canonicalName": "Coffee 500g",
+      "monthlyChangePct": 6.4,
+      "currentPrice": 24.99,
+      "projectedPrice": 27.10,
+      "quantity": 3,
+      "projectedSaving": 3.17,
+      "store": null,
+      "currencyOriginal": "PLN",
+      "affordableToday": true
+    }
+  ],
+  "basketMonthlyForecastPct": 4.1,
+  "totalProjectedSaving": 3.17,
+  "savedSoFar": 12.40,
+  "hasEnoughData": true,
+  "fxApproximate": false,
+  "computedAt": "2026-07-16T09:00:00Z"
+}
+```
+
+`items[].projectedSaving` is a halved linear-ramp estimate `(projectedPrice − currentPrice) / 2 × quantity`, not the full end-of-horizon gap. `store` is `null` in Plan 1 (personal-only; community-boost is deferred). `savedSoFar` is the realized saving credited when a recommended product was actually purchased, FX-summed into `baseCurrency`. `hasEnoughData: false` returns an empty `items` array below the data threshold (≥3 price points per product).
+
+**DTOs** (`packages/shared-types/src/dto/insights.ts`): `InflationShieldResponse`, `ShieldItem`.
+
 ---
 
 ## AI Insights
@@ -2241,6 +2281,7 @@ Content-Type: application/json
 - `get_expenses` — Query expenses (executes immediately)
 - `get_budget_status` — Query budget status (executes immediately)
 - `get_category_breakdown` — Query spending by category (executes immediately)
+- `get_inflation_shield` — Query stock-up-now recommendations and realized savings from the Inflation Shield engine (executes immediately, no parameters)
 
 **Language Detection:**
 The AI automatically detects the user's language from the conversation history and message content (Russian, Ukrainian, Belarusian, German, Spanish, French, Polish, English) and responds in the same language.

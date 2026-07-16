@@ -4180,6 +4180,54 @@ Wrapped needs a bit of history to be worth showing. If you've only tracked a few
 - Accounts using full end-to-end encryption can't show amount-based cards, so Wrapped isn't available for them.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Inflation Shield — stock up before prices rise`,
+      description: `A free tool that watches the prices of things you actually buy and tells you what to stock up on now, before they get more expensive — built entirely from your own scanned receipts, no AI required.`,
+      body: `# Inflation Shield — stock up before prices rise
+
+> A free tool that watches the prices of things you actually buy and tells you what to stock up on now, before they get more expensive — built entirely from your own scanned receipts, no AI required.
+
+## What it is
+
+Inflation Shield forecasts where the prices of your regular purchases are heading, based on your own buying history. When something you buy often is trending up, it suggests buying a bit extra now — how many, at which store, and roughly how much you'd save by not waiting. It also keeps a running total of how much the Shield has saved you so far.
+
+It's completely **free**, uses **no AI**, and works entirely from receipts you've already scanned — there's nothing extra to set up.
+
+## Where to find it
+
+- The **Inflation Shield** card on the **Home** screen shows a quick preview — tap it to open the full screen.
+- You can also just ask the AI chat things like *"What should I stock up on?"* or *"What's getting more expensive?"* and it will pull the same recommendations into the conversation.
+
+## What the screen shows
+
+- **Saved so far** — an estimate of how much the Shield has already saved you, at the top of the screen.
+- **Your basket's forecast** — where your typical spending on these products is headed next month.
+- **Buy-ahead cards**, one per product trending upward:
+  - the product, and how fast it's rising (e.g. **+8%/month**)
+  - a suggestion like **"Buy 4 — save ~12 zł"**
+  - the store where you usually buy it
+  - an **"affordable today"** badge when buying now fits your Safe-to-Spend budget
+
+## How it works
+
+Inflation Shield is built entirely from the line items on receipts you've scanned (by photo or bank-notification capture). You'll need a few receipts with the same product before it has enough history to spot a trend — the more you scan, the better the forecasts get.
+
+It's also selective: it only suggests stocking up on things that make sense to keep around for a while, like pantry staples and household goods. It won't tell you to hoard milk or anything else that spoils quickly.
+
+Every number you see — the trend, the suggested quantity, the savings — is a **forecast and an estimate**, not a guarantee. Real prices can move differently than predicted.
+
+## Sharing
+
+Tap **Share** to create a "My Inflation Shield" image (or a text summary if image sharing isn't available) highlighting what you're saving. A **Hide amounts** toggle masks your money figures first, in case you'd rather not show exact numbers.
+
+## Good to know
+
+- Inflation Shield is **free** for everyone — no Pro subscription needed.
+- Prices and savings are shown in your **display currency**.
+- Recommendations are based only on **your own purchase history** for now. Comparing prices across other users' purchases nearby, to suggest the cheapest store, is planned for a future update.
+`,
+    },
   ],
   ru: [
     {
@@ -8337,6 +8385,54 @@ AI Budget Assistant предлагает три уровня подписки. �
 - Аккаунты с полным сквозным шифрованием не могут показывать карточки, основанные на суммах, поэтому Итоги года для них недоступны.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Щит от инфляции — запаситесь, пока не подорожало`,
+      description: `Бесплатный инструмент, который следит за ценами на товары, которые вы действительно покупаете, и подсказывает, что запасти прямо сейчас, пока не подорожало — построен целиком на основе ваших отсканированных чеков, без использования ИИ.`,
+      body: `# Щит от инфляции — запаситесь, пока не подорожало
+
+> Бесплатный инструмент, который следит за ценами на товары, которые вы действительно покупаете, и подсказывает, что запасти прямо сейчас, пока не подорожало — построен целиком на основе ваших отсканированных чеков, без использования ИИ.
+
+## Что это такое
+
+Щит от инфляции прогнозирует, куда движутся цены на ваши регулярные покупки, опираясь на вашу собственную историю покупок. Когда что-то, что вы покупаете часто, начинает дорожать, приложение предлагает купить немного больше прямо сейчас — сколько штук, в каком магазине и примерно сколько вы сэкономите, не откладывая покупку. Также ведётся текущий счётчик того, сколько Щит уже сэкономил для вас.
+
+Функция полностью **бесплатна**, не использует **никакого ИИ** и работает исключительно на основе чеков, которые вы уже отсканировали — ничего дополнительно настраивать не нужно.
+
+## Где его найти
+
+- Карточка **Щит от инфляции** на **главном экране** показывает краткий предпросмотр — нажмите на неё, чтобы открыть полноэкранный вид.
+- Также можно просто спросить ИИ-чат, например: *«Что мне стоит запасти?»* или *«Что дорожает?»* — те же рекомендации появятся прямо в разговоре.
+
+## Что показывает экран
+
+- **Сэкономлено на данный момент** — оценка того, сколько Щит уже сэкономил для вас, в верхней части экрана.
+- **Прогноз для вашей корзины** — куда движутся ваши типичные расходы на эти товары в следующем месяце.
+- **Карточки «запаситесь»**, по одной на каждый дорожающий товар:
+  - товар и скорость роста его цены (например, **+8%/месяц**)
+  - подсказка вида **«Купите 4 — сэкономьте ~12 zł»**
+  - магазин, где вы обычно его покупаете
+  - значок **«доступно сегодня»**, если покупка сейчас укладывается в ваш бюджет Безопасных трат
+
+## Как это работает
+
+Щит от инфляции строится исключительно на позициях чеков, которые вы отсканировали (фото или через захват банковских уведомлений). Потребуется несколько чеков с одним и тем же товаром, прежде чем накопится достаточно истории, чтобы уловить тренд — чем больше вы сканируете, тем точнее прогнозы.
+
+Он также избирателен: предлагает запасаться только тем, что имеет смысл хранить какое-то время — например, продуктами длительного хранения и хозяйственными товарами. Он не посоветует вам закупать молоко впрок или что-то ещё, что быстро портится.
+
+Каждое число, которое вы видите — тренд, рекомендуемое количество, экономия — это **прогноз и оценка**, а не гарантия. Реальные цены могут измениться не так, как предполагалось.
+
+## Публикация
+
+Нажмите **Поделиться**, чтобы создать изображение «Мой Щит от инфляции» (или текстовую сводку, если публикация изображений недоступна), показывающее вашу экономию. Переключатель **Скрыть суммы** сначала замаскирует ваши денежные показатели, если вы не хотите показывать точные цифры.
+
+## Полезно знать
+
+- Щит от инфляции **бесплатен** для всех — подписка Pro не требуется.
+- Цены и экономия показываются в вашей **отображаемой валюте**.
+- Пока рекомендации основаны только на **вашей собственной истории покупок**. Сравнение цен на основе покупок других пользователей поблизости, чтобы подсказать самый дешёвый магазин, планируется в будущем обновлении.
+`,
+    },
   ],
   ua: [
     {
@@ -12464,6 +12560,54 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - Облікові записи з повним наскрізним шифруванням не можуть показувати картки, засновані на сумах, тому Підсумки року для них недоступні.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Щит від інфляції — запасайтеся, поки не подорожчало`,
+      description: `Безкоштовний інструмент, який стежить за цінами товарів, які ви справді купуєте, і підказує, що запасти прямо зараз, поки не подорожчало — побудований повністю на основі ваших відсканованих чеків, без використання ШІ.`,
+      body: `# Щит від інфляції — запасайтеся, поки не подорожчало
+
+> Безкоштовний інструмент, який стежить за цінами товарів, які ви справді купуєте, і підказує, що запасти прямо зараз, поки не подорожчало — побудований повністю на основі ваших відсканованих чеків, без використання ШІ.
+
+## Що це таке
+
+Щит від інфляції прогнозує, куди рухаються ціни на ваші регулярні покупки, спираючись на вашу власну історію покупок. Коли щось, що ви купуєте часто, починає дорожчати, застосунок пропонує купити трохи більше вже зараз — скільки штук, у якому магазині та приблизно скільки ви заощадите, не відкладаючи покупку. Також ведеться поточний лічильник того, скільки Щит уже заощадив для вас.
+
+Функція повністю **безкоштовна**, не використовує **жодного ШІ** і працює виключно на основі чеків, які ви вже відсканували — нічого додатково налаштовувати не потрібно.
+
+## Де його знайти
+
+- Картка **Щит від інфляції** на **головному екрані** показує швидкий попередній перегляд — торкніться її, щоб відкрити повноекранний вигляд.
+- Ви також можете просто запитати ШІ-чат, наприклад: *«Що мені варто запасти?»* або *«Що дорожчає?»* — ті самі рекомендації з'являться прямо в розмові.
+
+## Що показує екран
+
+- **Заощаджено дотепер** — оцінка того, скільки Щит уже заощадив для вас, у верхній частині екрана.
+- **Прогноз для вашого кошика** — куди рухаються ваші типові витрати на ці товари наступного місяця.
+- **Картки «запасайтеся»**, по одній на кожен товар, що дорожчає:
+  - товар і швидкість зростання його ціни (наприклад, **+8%/місяць**)
+  - підказка на кшталт **«Купіть 4 — заощадьте ~12 zł»**
+  - магазин, де ви зазвичай його купуєте
+  - позначка **«доступно сьогодні»**, коли покупка зараз вписується у ваш бюджет Безпечних витрат
+
+## Як це працює
+
+Щит від інфляції будується виключно на позиціях чеків, які ви відсканували (фото або через перехоплення банківських сповіщень). Потрібно кілька чеків з одним і тим самим товаром, перш ніж набереться достатньо історії, щоб виявити тренд — що більше ви скануєте, то точніші прогнози.
+
+Він також вибірковий: пропонує запасатися лише тим, що має сенс тримати про запас якийсь час — наприклад, продуктами тривалого зберігання та господарськими товарами. Він не порадить запасатися молоком чи будь-чим іншим, що швидко псується.
+
+Кожне число, яке ви бачите — тренд, рекомендована кількість, заощадження — це **прогноз і оцінка**, а не гарантія. Реальні ціни можуть змінюватися інакше, ніж передбачалося.
+
+## Публікація
+
+Торкніться **Поділитися**, щоб створити зображення «Мій Щит від інфляції» (або текстовий підсумок, якщо публікація зображення недоступна), що показує вашу економію. Перемикач **Приховати суми** спочатку замаскує ваші грошові показники, якщо ви не хочете показувати точні цифри.
+
+## Корисно знати
+
+- Щит від інфляції **безкоштовний** для всіх — підписка Pro не потрібна.
+- Ціни та заощадження показуються у вашій **валюті відображення**.
+- Наразі рекомендації базуються лише на **вашій власній історії покупок**. Порівняння цін на основі покупок інших користувачів поблизу, щоб підказати найдешевший магазин, заплановано на майбутнє оновлення.
+`,
+    },
   ],
   pl: [
     {
@@ -16576,6 +16720,54 @@ Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetla
 - Konta z pełnym szyfrowaniem end-to-end nie mogą wyświetlać kart opartych na kwotach, więc Podsumowanie roku nie jest dla nich dostępne.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Tarcza antyinflacyjna — zaopatrz się, zanim ceny wzrosną`,
+      description: `Darmowe narzędzie, które śledzi ceny produktów, które faktycznie kupujesz, i podpowiada, co zaopatrzyć teraz, zanim podrożeje — zbudowane w całości na podstawie Twoich zeskanowanych paragonów, bez użycia AI.`,
+      body: `# Tarcza antyinflacyjna — zaopatrz się, zanim ceny wzrosną
+
+> Darmowe narzędzie, które śledzi ceny produktów, które faktycznie kupujesz, i podpowiada, co zaopatrzyć teraz, zanim podrożeje — zbudowane w całości na podstawie Twoich zeskanowanych paragonów, bez użycia AI.
+
+## Czym to jest
+
+Tarcza antyinflacyjna prognozuje, w którą stronę zmierzają ceny Twoich regularnych zakupów, na podstawie Twojej własnej historii zakupów. Gdy coś, co kupujesz często, zaczyna drożeć, aplikacja podpowiada, żeby dokupić trochę więcej już teraz — ile sztuk, w którym sklepie i w przybliżeniu ile dzięki temu zaoszczędzisz, zamiast czekać. Prowadzi też bieżący licznik tego, ile Tarcza już dla Ciebie zaoszczędziła.
+
+Funkcja jest całkowicie **darmowa**, nie korzysta z **żadnego AI** i działa wyłącznie na podstawie paragonów, które już zeskanowałeś — nie musisz niczego dodatkowo konfigurować.
+
+## Gdzie ją znaleźć
+
+- Karta **Tarcza antyinflacyjna** na **ekranie głównym** pokazuje szybki podgląd — dotknij jej, aby otworzyć pełny ekran.
+- Możesz też po prostu zapytać czat AI, na przykład: *„Co powinienem/powinnam zaopatrzyć?"* albo *„Co drożeje?"* — dostaniesz te same podpowiedzi wprost w rozmowie.
+
+## Co pokazuje ekran
+
+- **Zaoszczędzono dotychczas** — szacunkowa kwota, którą Tarcza już dla Ciebie zaoszczędziła, na górze ekranu.
+- **Prognoza dla Twojego koszyka** — w którą stronę zmierzają Twoje typowe wydatki na te produkty w kolejnym miesiącu.
+- **Karty „zaopatrz się"**, po jednej na każdy drożejący produkt:
+  - nazwa produktu i tempo wzrostu ceny (np. **+8%/miesiąc**)
+  - podpowiedź w stylu **„Kup 4 — zaoszczędź ~12 zł"**
+  - sklep, w którym zwykle go kupujesz
+  - odznaka **„dostępne dzisiaj"**, gdy zakup teraz mieści się w Twoim budżecie Bezpiecznych wydatków
+
+## Jak to działa
+
+Tarcza antyinflacyjna jest budowana wyłącznie na podstawie pozycji z paragonów, które zeskanowałeś (zdjęciem lub przez przechwytywanie powiadomień bankowych). Potrzeba kilku paragonów z tym samym produktem, zanim aplikacja zbierze wystarczającą historię, by wychwycić trend — im więcej skanujesz, tym lepsze są prognozy.
+
+Jest też selektywna: podpowiada zaopatrzenie się tylko w rzeczy, które sensownie jest trzymać w zapasie przez jakiś czas, jak produkty spożywcze o długim terminie przydatności czy artykuły gospodarstwa domowego. Nie każe Ci gromadzić mleka ani niczego innego, co szybko się psuje.
+
+Każda liczba, którą widzisz — trend, sugerowana ilość, oszczędności — to **prognoza i szacunek**, a nie gwarancja. Rzeczywiste ceny mogą zmieniać się inaczej, niż przewidziano.
+
+## Udostępnianie
+
+Dotknij **Udostępnij**, aby utworzyć obraz „Moja Tarcza antyinflacyjna" (lub podsumowanie tekstowe, jeśli udostępnianie obrazu jest niedostępne), pokazujący, ile oszczędzasz. Przełącznik **Ukryj kwoty** najpierw zamaskuje Twoje kwoty pieniężne, jeśli wolisz nie pokazywać dokładnych liczb.
+
+## Warto wiedzieć
+
+- Tarcza antyinflacyjna jest **darmowa** dla wszystkich — nie wymaga abonamentu Pro.
+- Ceny i oszczędności są pokazywane w Twojej **walucie wyświetlania**.
+- Rekomendacje opierają się na razie wyłącznie na **Twojej własnej historii zakupów**. Porównywanie cen na podstawie zakupów innych użytkowników w pobliżu, żeby podpowiedzieć najtańszy sklep, jest planowane na przyszłość.
+`,
+    },
   ],
   de: [
     {
@@ -20663,6 +20855,54 @@ Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn d
 - Konten mit vollständiger Ende-zu-Ende-Verschlüsselung können keine betragsbasierten Karten anzeigen, daher ist der Jahresrückblick für sie nicht verfügbar.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Inflationsschutz — bevorrate dich, bevor die Preise steigen`,
+      description: `Ein kostenloses Tool, das die Preise der Dinge im Blick behält, die du wirklich kaufst, und dir sagt, was du jetzt bevorraten solltest, bevor es teurer wird — komplett aus deinen gescannten Kassenbons erstellt, ganz ohne KI.`,
+      body: `# Inflationsschutz — bevorrate dich, bevor die Preise steigen
+
+> Ein kostenloses Tool, das die Preise der Dinge im Blick behält, die du wirklich kaufst, und dir sagt, was du jetzt bevorraten solltest, bevor es teurer wird — komplett aus deinen gescannten Kassenbons erstellt, ganz ohne KI.
+
+## Was es ist
+
+Der Inflationsschutz sagt anhand deiner eigenen Kaufhistorie voraus, wohin sich die Preise deiner regelmäßigen Einkäufe entwickeln. Wenn etwas, das du oft kaufst, im Preis steigt, schlägt er vor, jetzt etwas mehr davon zu kaufen — wie viel, in welchem Geschäft, und ungefähr wie viel du sparst, wenn du nicht wartest. Außerdem behält er im Blick, wie viel dir der Schutz bereits insgesamt gespart hat.
+
+Die Funktion ist komplett **kostenlos**, verwendet **keine KI** und basiert ausschließlich auf Belegen, die du bereits gescannt hast — es gibt nichts zusätzlich einzurichten.
+
+## Wo du ihn findest
+
+- Die Karte **Inflationsschutz** auf dem **Startbildschirm** zeigt eine kurze Vorschau — tippe darauf, um die Vollbildansicht zu öffnen.
+- Du kannst den KI-Chat auch einfach fragen, z. B. *„Was sollte ich bevorraten?"* oder *„Was wird gerade teurer?"* — die gleichen Empfehlungen erscheinen dann direkt im Gespräch.
+
+## Was der Bildschirm zeigt
+
+- **Bisher gespart** — eine Schätzung, wie viel dir der Schutz bereits gespart hat, oben auf dem Bildschirm.
+- **Prognose für deinen Warenkorb** — wohin sich deine typischen monatlichen Ausgaben für diese Produkte im nächsten Monat entwickeln.
+- **Bevorratungs-Karten**, eine pro Produkt mit steigendem Preis:
+  - das Produkt und wie schnell der Preis steigt (z. B. **+8 %/Monat**)
+  - ein Vorschlag wie **„Kaufe 4 — spare ~12 zł"**
+  - das Geschäft, in dem du es normalerweise kaufst
+  - ein Abzeichen **„heute leistbar"**, wenn der Kauf jetzt in dein Safe-to-Spend-Budget passt
+
+## So funktioniert es
+
+Der Inflationsschutz basiert ausschließlich auf den Positionen der Belege, die du gescannt hast (per Foto oder per Erfassung von Bank-Benachrichtigungen). Du brauchst ein paar Belege mit demselben Produkt, bevor genug Verlauf da ist, um einen Trend zu erkennen — je mehr du scannst, desto besser werden die Prognosen.
+
+Er ist außerdem wählerisch: Er schlägt nur vor, Dinge zu bevorraten, die sich sinnvoll eine Weile aufheben lassen, etwa haltbare Grundnahrungsmittel und Haushaltsartikel. Er wird dir nicht raten, Milch oder anderes schnell Verderbliches zu horten.
+
+Jede Zahl, die du siehst — der Trend, die vorgeschlagene Menge, die Ersparnis — ist eine **Prognose und Schätzung**, keine Garantie. Die tatsächlichen Preise können sich anders entwickeln als vorhergesagt.
+
+## Teilen
+
+Tippe auf **Teilen**, um ein Bild „Mein Inflationsschutz" (oder eine Textzusammenfassung, falls das Teilen von Bildern nicht verfügbar ist) zu erstellen, das zeigt, was du sparst. Ein Schalter **Beträge ausblenden** maskiert vorher deine Geldbeträge, falls du keine genauen Zahlen zeigen möchtest.
+
+## Gut zu wissen
+
+- Der Inflationsschutz ist für alle **kostenlos** — es ist kein Pro-Abo nötig.
+- Preise und Ersparnisse werden in deiner **Anzeigewährung** angezeigt.
+- Empfehlungen basieren derzeit ausschließlich auf deiner **eigenen Kaufhistorie**. Der Vergleich von Preisen anhand der Käufe anderer Nutzer in deiner Nähe, um das günstigste Geschäft vorzuschlagen, ist für ein zukünftiges Update geplant.
+`,
+    },
   ],
   es: [
     {
@@ -24739,6 +24979,54 @@ El Resumen del año necesita algo de historial para que merezca la pena mostrarl
 - Las cuentas con cifrado de extremo a extremo completo no pueden mostrar tarjetas basadas en importes, por lo que el Resumen del año no está disponible para ellas.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Escudo contra la inflación — abastécete antes de que suban los precios`,
+      description: `Una herramienta gratuita que vigila los precios de lo que realmente compras y te dice qué abastecer ahora, antes de que se encarezca — creada enteramente a partir de tus recibos escaneados, sin usar IA.`,
+      body: `# Escudo contra la inflación — abastécete antes de que suban los precios
+
+> Una herramienta gratuita que vigila los precios de lo que realmente compras y te dice qué abastecer ahora, antes de que se encarezca — creada enteramente a partir de tus recibos escaneados, sin usar IA.
+
+## Qué es
+
+El Escudo contra la inflación predice hacia dónde se dirigen los precios de tus compras habituales, a partir de tu propio historial de compra. Cuando algo que compras a menudo empieza a subir de precio, te sugiere comprar un poco más ahora — cuánto, en qué comercio y aproximadamente cuánto ahorrarías por no esperar. También lleva un total acumulado de cuánto te ha ahorrado el Escudo hasta ahora.
+
+Es totalmente **gratuito**, no usa **ninguna IA** y funciona enteramente con recibos que ya has escaneado — no hay nada más que configurar.
+
+## Dónde encontrarlo
+
+- La tarjeta **Escudo contra la inflación** en la **pantalla de inicio** muestra una vista previa rápida — tócala para abrir la pantalla completa.
+- También puedes simplemente preguntarle al chat de IA cosas como *"¿Qué debería abastecer?"* o *"¿Qué está subiendo de precio?"* y te traerá las mismas recomendaciones a la conversación.
+
+## Qué muestra la pantalla
+
+- **Ahorrado hasta ahora** — una estimación de cuánto te ha ahorrado ya el Escudo, en la parte superior de la pantalla.
+- **Previsión de tu cesta** — hacia dónde se dirige tu gasto habitual en estos productos el próximo mes.
+- **Tarjetas de "abastécete"**, una por cada producto con tendencia al alza:
+  - el producto y la rapidez con la que sube (p. ej., **+8 %/mes**)
+  - una sugerencia como **"Compra 4 — ahorra ~12 zł"**
+  - el comercio donde sueles comprarlo
+  - una insignia de **"asequible hoy"** cuando comprarlo ahora encaja en tu presupuesto de Gasto Seguro
+
+## Cómo funciona
+
+El Escudo contra la inflación se construye enteramente a partir de las líneas de artículo de los recibos que has escaneado (por foto o por captura de notificaciones bancarias). Necesitarás unos cuantos recibos con el mismo producto antes de que haya suficiente historial para detectar una tendencia — cuantos más recibos escanees, mejores serán las previsiones.
+
+También es selectivo: solo sugiere abastecerte de cosas que tiene sentido guardar durante un tiempo, como productos básicos de despensa y artículos del hogar. No te dirá que acumules leche ni nada más que se estropee rápido.
+
+Cada cifra que ves —la tendencia, la cantidad sugerida, el ahorro— es una **previsión y una estimación**, no una garantía. Los precios reales pueden evolucionar de forma distinta a lo previsto.
+
+## Compartir
+
+Toca **Compartir** para crear una imagen "Mi Escudo contra la inflación" (o un resumen de texto si compartir imágenes no está disponible) que destaque lo que estás ahorrando. Un interruptor de **Ocultar cantidades** enmascara antes tus cifras monetarias, por si prefieres no mostrar los importes exactos.
+
+## Es bueno saber
+
+- El Escudo contra la inflación es **gratuito** para todos — no requiere Pro.
+- Los precios y los ahorros se muestran en tu **moneda de visualización**.
+- Por ahora, las recomendaciones se basan únicamente en **tu propio historial de compra**. Comparar precios con las compras de otros usuarios cercanos, para sugerir el comercio más barato, está previsto para una futura actualización.
+`,
+    },
   ],
   fr: [
     {
@@ -28813,6 +29101,54 @@ La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée.
 - Les comptes utilisant le chiffrement de bout en bout complet ne peuvent pas afficher les cartes basées sur des montants, la Rétro n'est donc pas disponible pour eux.
 `,
     },
+    {
+      id: '40-inflation-shield',
+      title: `Bouclier anti-inflation — faites vos réserves avant la hausse des prix`,
+      description: `Un outil gratuit qui surveille les prix des produits que vous achetez vraiment et vous indique quoi stocker dès maintenant, avant que ça n'augmente — entièrement construit à partir de vos tickets de caisse scannés, sans IA.`,
+      body: `# Bouclier anti-inflation — faites vos réserves avant la hausse des prix
+
+> Un outil gratuit qui surveille les prix des produits que vous achetez vraiment et vous indique quoi stocker dès maintenant, avant que ça n'augmente — entièrement construit à partir de vos tickets de caisse scannés, sans IA.
+
+## De quoi s'agit-il
+
+Le Bouclier anti-inflation prévoit l'évolution des prix de vos achats habituels, à partir de votre propre historique d'achats. Quand un produit que vous achetez souvent commence à augmenter, il vous suggère d'en acheter un peu plus dès maintenant — combien, dans quel magasin, et environ combien vous économiseriez en n'attendant pas. Il tient aussi un total cumulé de ce que le Bouclier vous a déjà fait économiser.
+
+C'est entièrement **gratuit**, ça n'utilise **aucune IA**, et ça fonctionne uniquement à partir des tickets que vous avez déjà scannés — rien de plus à configurer.
+
+## Où le trouver
+
+- La carte **Bouclier anti-inflation** sur l'**écran d'accueil** affiche un aperçu rapide — appuyez dessus pour ouvrir l'écran complet.
+- Vous pouvez aussi simplement demander au chat IA des choses comme *« Qu'est-ce que je devrais stocker ? »* ou *« Qu'est-ce qui augmente ? »* — les mêmes recommandations apparaîtront directement dans la conversation.
+
+## Ce que montre l'écran
+
+- **Économisé jusqu'ici** — une estimation de ce que le Bouclier vous a déjà fait économiser, en haut de l'écran.
+- **Prévision pour votre panier** — vers où se dirigent vos dépenses habituelles sur ces produits le mois prochain.
+- **Cartes « à stocker »**, une par produit en hausse :
+  - le produit et la vitesse à laquelle il augmente (par ex. **+8 %/mois**)
+  - une suggestion du type **« Achetez-en 4 — économisez ~12 zł »**
+  - le magasin où vous l'achetez habituellement
+  - un badge **« abordable aujourd'hui »** quand l'achat maintenant tient dans votre budget Dépense Sûre
+
+## Comment ça marche
+
+Le Bouclier anti-inflation est construit entièrement à partir des lignes d'articles des tickets que vous avez scannés (par photo ou par capture de notifications bancaires). Il faut quelques tickets avec le même produit avant d'avoir assez d'historique pour repérer une tendance — plus vous scannez, meilleures sont les prévisions.
+
+Il est aussi sélectif : il ne suggère de faire des réserves que pour des produits qu'il est logique de garder un moment, comme les produits d'épicerie non périssables et les articles ménagers. Il ne vous dira pas de stocker du lait ou tout autre produit qui se périme vite.
+
+Chaque chiffre affiché — la tendance, la quantité suggérée, les économies — est une **prévision et une estimation**, pas une garantie. Les prix réels peuvent évoluer différemment de ce qui était prévu.
+
+## Partager
+
+Appuyez sur **Partager** pour créer une image « Mon Bouclier anti-inflation » (ou un résumé texte si le partage d'image n'est pas disponible) mettant en avant vos économies. Un interrupteur **Masquer les montants** masque d'abord vos chiffres, si vous préférez ne pas montrer les montants exacts.
+
+## À noter
+
+- Le Bouclier anti-inflation est **gratuit** pour tout le monde — aucun abonnement Pro requis.
+- Les prix et les économies sont affichés dans votre **devise d'affichage**.
+- Pour l'instant, les recommandations se basent uniquement sur **votre propre historique d'achats**. Comparer les prix à partir des achats d'autres utilisateurs à proximité, pour suggérer le magasin le moins cher, est prévu pour une prochaine mise à jour.
+`,
+    },
   ],
   be: [
     {
@@ -32845,6 +33181,54 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - Вынікі году — гэта **бясплатна**, падпіска Pro не патрэбна.
 - Яны збіраюцца з ужо наяўных дадзеных, таму наладжваць няма чаго.
 - Улікова-выніковыя запісы з поўным скразным шыфраваннем не могуць паказваць карткі, заснаваныя на сумах, таму Вынікі году для іх недаступныя.
+`,
+    },
+    {
+      id: '40-inflation-shield',
+      title: `Шчыт ад інфляцыі — рабіце запасы, пакуль не падаражэла`,
+      description: `Бясплатны інструмент, які сочыць за цэнамі тавараў, якія вы сапраўды купляеце, і падказвае, што запасці прама зараз, пакуль не падаражэла — пабудаваны цалкам на аснове вашых сасканаваных чэкаў, без выкарыстання ІІ.`,
+      body: `# Шчыт ад інфляцыі — рабіце запасы, пакуль не падаражэла
+
+> Бясплатны інструмент, які сочыць за цэнамі тавараў, якія вы сапраўды купляеце, і падказвае, што запасці прама зараз, пакуль не падаражэла — пабудаваны цалкам на аснове вашых сасканаваных чэкаў, без выкарыстання ІІ.
+
+## Што гэта такое
+
+Шчыт ад інфляцыі прагназуе, куды рухаюцца цэны на вашы рэгулярныя пакупкі, абапіраючыся на вашу ўласную гісторыю пакупак. Калі нешта, што вы купляеце часта, пачынае даражэць, праграма прапануе купіць крыху больш прама зараз — колькі штук, у якой краме і прыблізна колькі вы зэканоміце, не адкладаючы пакупку. Таксама вядзецца бягучы лічыльнік таго, колькі Шчыт ужо зэканоміў для вас.
+
+Функцыя цалкам **бясплатная**, не выкарыстоўвае **ніякага ІІ** і працуе выключна на аснове чэкаў, якія вы ўжо сасканавалі — нічога дадаткова наладжваць не трэба.
+
+## Дзе яго знайсці
+
+- Картка **Шчыт ад інфляцыі** на **галоўным экране** паказвае хуткі папярэдні прагляд — дакраніцеся да яе, каб адкрыць поўнаэкранны выгляд.
+- Вы таксама можаце проста спытаць ІІ-чат, напрыклад: *«Што мне варта запасці?»* або *«Што даражэе?»* — тыя ж рэкамендацыі з'явяцца прама ў размове.
+
+## Што паказвае экран
+
+- **Зэканомлена дагэтуль** — ацэнка таго, колькі Шчыт ужо зэканоміў для вас, у верхняй частцы экрана.
+- **Прагноз для вашага кошыка** — куды рухаюцца вашы тыповыя выдаткі на гэтыя тавары ў наступным месяцы.
+- **Карткі «запасайцеся»**, па адной на кожны тавар, які даражэе:
+  - тавар і хуткасць росту яго цаны (напрыклад, **+8%/месяц**)
+  - падказка накшталт **«Купіце 4 — зэканомце ~12 zł»**
+  - крама, дзе вы звычайна яго купляеце
+  - значок **«даступна сёння»**, калі пакупка зараз упісваецца ў ваш бюджэт Бяспечных выдаткаў
+
+## Як гэта працуе
+
+Шчыт ад інфляцыі будуецца выключна на пазіцыях чэкаў, якія вы сасканавалі (фота або праз перахоп банкаўскіх апавяшчэнняў). Патрэбна некалькі чэкаў з адным і тым жа таварам, перш чым набярэцца дастаткова гісторыі, каб выявіць тэндэнцыю — чым больш вы сканіруеце, тым дакладнейшыя прагнозы.
+
+Ён таксама выбарчы: прапануе рабіць запасы толькі таго, што мае сэнс захоўваць нейкі час — напрыклад, прадуктаў доўгага захоўвання і гаспадарчых тавараў. Ён не параіць запасацца малаком ці чымсьці іншым, што хутка псуецца.
+
+Кожная лічба, якую вы бачыце — тэндэнцыя, рэкамендаваная колькасць, эканомія — гэта **прагноз і ацэнка**, а не гарантыя. Рэальныя цэны могуць мяняцца інакш, чым прадугледжвалася.
+
+## Публікацыя
+
+Дакраніцеся да **Падзяліцца**, каб стварыць выяву «Мой Шчыт ад інфляцыі» (або тэкставую зводку, калі публікацыя выявы недаступная), якая паказвае вашу эканомію. Пераключальнік **Схаваць сумы** спачатку замаскіруе вашы грашовыя паказчыкі, калі вы не хочаце паказваць дакладныя лічбы.
+
+## Карысна ведаць
+
+- Шчыт ад інфляцыі **бясплатны** для ўсіх — падпіска Pro не патрэбна.
+- Цэны і эканомія паказваюцца ў вашай **валюце адлюстравання**.
+- Пакуль рэкамендацыі грунтуюцца толькі на **вашай уласнай гісторыі пакупак**. Параўнанне цэн на аснове пакупак іншых карыстальнікаў паблізу, каб падказаць найдзяшоўшую краму, плануецца ў будучым абнаўленні.
 `,
     },
   ],
@@ -36998,6 +37382,54 @@ Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als j
 - Het Jaaroverzicht is **gratis** — er is geen Pro-abonnement voor nodig.
 - Het wordt samengesteld uit bestaande data, dus er valt niets te configureren.
 - Accounts met volledige end-to-end-versleuteling kunnen geen op bedragen gebaseerde kaarten tonen, dus voor hen is het Jaaroverzicht niet beschikbaar.
+`,
+    },
+    {
+      id: '40-inflation-shield',
+      title: `Inflatieschild — sla in voordat de prijzen stijgen`,
+      description: `Een gratis tool die de prijzen bijhoudt van dingen die je écht koopt en je vertelt wat je nu moet inslaan, voordat het duurder wordt — volledig opgebouwd uit je gescande bonnetjes, zonder AI.`,
+      body: `# Inflatieschild — sla in voordat de prijzen stijgen
+
+> Een gratis tool die de prijzen bijhoudt van dingen die je écht koopt en je vertelt wat je nu moet inslaan, voordat het duurder wordt — volledig opgebouwd uit je gescande bonnetjes, zonder AI.
+
+## Wat het is
+
+Inflatieschild voorspelt, op basis van je eigen aankoopgeschiedenis, waar de prijzen van je vaste boodschappen naartoe gaan. Wanneer iets dat je vaak koopt duurder begint te worden, stelt het voor om er nu wat extra van te kopen — hoeveel, in welke winkel, en ongeveer hoeveel je bespaart door niet te wachten. Het houdt ook een lopend totaal bij van hoeveel het Schild je al heeft bespaard.
+
+Het is volledig **gratis**, gebruikt **geen AI** en werkt uitsluitend met bonnetjes die je al hebt gescand — er is niets extra's in te stellen.
+
+## Waar je het vindt
+
+- De kaart **Inflatieschild** op het **startscherm** toont een snelle voorvertoning — tik erop om het volledige scherm te openen.
+- Je kunt de AI-chat ook gewoon dingen vragen zoals *"Wat moet ik inslaan?"* of *"Wat wordt duurder?"* — dezelfde aanbevelingen verschijnen dan direct in het gesprek.
+
+## Wat het scherm toont
+
+- **Tot nu toe bespaard** — een schatting van hoeveel het Schild je al heeft bespaard, bovenaan het scherm.
+- **Prognose voor je mandje** — waar je gebruikelijke uitgaven aan deze producten volgende maand naartoe gaan.
+- **Insla-kaarten**, één per product dat duurder wordt:
+  - het product en hoe snel het duurder wordt (bijv. **+8%/maand**)
+  - een suggestie zoals **"Koop er 4 — bespaar ~€12"**
+  - de winkel waar je het meestal koopt
+  - een badge **"vandaag betaalbaar"** wanneer nu kopen binnen je Veilig-uitgeven-budget past
+
+## Hoe het werkt
+
+Inflatieschild is volledig opgebouwd uit de regels op bonnetjes die je hebt gescand (via foto of via het opvangen van bankmeldingen). Je hebt een paar bonnetjes met hetzelfde product nodig voordat er genoeg geschiedenis is om een trend te herkennen — hoe meer je scant, hoe beter de voorspellingen worden.
+
+Het is ook selectief: het stelt alleen voor om dingen in te slaan die het zinnig is om een tijdje te bewaren, zoals houdbare basisproducten en huishoudartikelen. Het zal je niet aanraden om melk of iets anders dat snel bederft in te slaan.
+
+Elk getal dat je ziet — de trend, de voorgestelde hoeveelheid, de besparing — is een **prognose en een schatting**, geen garantie. De werkelijke prijzen kunnen anders uitpakken dan voorspeld.
+
+## Delen
+
+Tik op **Delen** om een afbeelding "Mijn Inflatieschild" te maken (of een tekstsamenvatting als het delen van afbeeldingen niet beschikbaar is) die laat zien wat je bespaart. Een schakelaar **Bedragen verbergen** maskeert eerst je geldbedragen, voor het geval je geen exacte cijfers wilt tonen.
+
+## Goed om te weten
+
+- Inflatieschild is **gratis** voor iedereen — er is geen Pro-abonnement voor nodig.
+- Prijzen en besparingen worden getoond in je **weergavevaluta**.
+- Aanbevelingen zijn voorlopig alleen gebaseerd op **je eigen aankoopgeschiedenis**. Prijzen vergelijken op basis van aankopen van andere gebruikers in de buurt, om de goedkoopste winkel voor te stellen, staat gepland voor een toekomstige update.
 `,
     },
   ],

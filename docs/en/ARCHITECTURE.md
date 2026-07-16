@@ -1372,6 +1372,47 @@ The `price-history` module (ABA-307) computes a Laspeyres price index over the a
 
 `GET /price-history`, `GET /price-history/products`, `PATCH /price-history/products/alias`, `DELETE /price-history/products/alias/:rawName`, `POST /price-history/products/merge` — all behind `JwtAuthGuard + AccountContextGuard`; write endpoints guarded by `ViewerBlockGuard`. No `SubscriptionTierGuard` — available on the free plan.
 
+## Inflation Shield
+
+The `insights` module (ABA-346) builds on the Personal Inflation Index's per-product price series to forecast which tracked products are about to get more expensive and recommends stocking up on them **now**, plus tracks how much money that advice has actually saved. Fully deterministic — no LLM cost.
+
+### How It Works
+
+1. **Forecast engine** (`inflation-shield.util.ts`, pure and unit-tested): `forecastProductTrend` runs a least-squares regression over a `SHIELD_FORECAST_LOOKBACK_WEEKS` (12) window, gated by a minimum time span (`minSpanDays`, 14) and a `hasSignal` flag for products with too little history. `estimateCadenceDays` derives how often a product is typically bought. `isStockpileable` conservatively excludes short-cadence perishables (e.g. milk) below `SHIELD_MIN_CADENCE_DAYS` (14) and stays silent on unknown cadence rather than guessing.
+2. **Recommendation**: `recommendStockUp` sizes the stock-up quantity as weekly consumption × `min(horizon, SHIELD_MAX_STOCK_WEEKS)` (8), capped at `SHIELD_MAX_UNITS` (12). `projectedSaving` is deliberately **halved** — a linear-ramp avoided-cost model `(projectedPrice − currentPrice) / 2 × quantity`, not the full end-of-horizon price gap, since the user won't hold every unit until the price fully rises.
+3. **Assembly**: `assembleShield` keeps only products that are rising at least `SHIELD_MIN_MONTHLY_RISE_PCT` (5%) per month, are stockpileable, and have ≥3 price points (`SHIELD_MIN_POINTS`). Every amount is FX-converted to the account's display currency (with an `fxApproximate` flag), and the basket-wide forecast percentage weights only products with `hasSignal: true`. All thresholds are env-tunable via `SHIELD_*` variables, with defaults in `SHIELD_DEFAULTS`.
+4. **Data sources**: `PriceHistoryService.getProductTrends(accountId)` supplies each product's price series (reusing the Personal Inflation Index's private row-fetching); `SafeToSpendService.compute` supplies each item's `affordableToday` flag (stock-up cost ≤ projected available safe-to-spend).
+5. **Scope**: Plan 1 is **personal-only** — the engine accepts an optional community `store`/`currentBestPrice` input, but the community-boost integration (resolving the cheapest store via `CommunityPriceService`) is deferred until the Community Price Map's anti-Sybil hardening is validated and its read kill-switch is turned on.
+
+### Realized Savings Tracking
+
+A separate leaf module, `InflationShieldTrackingService`, is Prisma-only (no service dependencies) and is imported by both `InsightsModule` and `ExpensesModule` to stay cycle-free:
+
+- **`recordRecommendations`**: snapshots the current recommendation set once per `(accountId, canonicalName, periodMonth)` — idempotent via create + catch-`P2002` outside any transaction, so the first snapshot of the month wins.
+- **`reconcilePurchase`**: fired from `ExpensesService.create`'s post-create hook (`@Optional()` injection, same fire-and-forget pattern as `familyFeed`/`communityPrices`) whenever a new expense is created. Matches an `active` recommendation by exact `canonicalName`, quantity ≥ half the recommended amount, and a calendar-day date gate (`expense.date >= floor(recommendedAt)`) — never a cross-currency price comparison. A match is marked `acted` and credits a proportional share of `projectedSaving` toward `savedSoFar`.
+- **`getShield`** fire-and-forgets `recordRecommendations` before populating the Redis cache, and returns a real FX-summed `savedSoFar` (flagging `fxApproximate` if any acted recommendation needed currency conversion).
+- **Cache invalidation**: a new expense busts both `shield:{accountId}:*` and the AI tool's `chat:get_inflation_shield:*` cache keys, so the shield is never served stale right after a stock-up purchase.
+
+### Database Tables
+
+- `inflation_shield_recommendations` — snapshot of recommendations per `(accountId, canonicalName, periodMonth)`, with a `ShieldStatus` enum (`active` | `acted` | `expired`).
+
+### AI Chat Integration
+
+`get_inflation_shield` is a **read** AI chat function (not in `isWriteAction` — it executes immediately through the cached/narrated read path, same as `get_expenses`/`get_budget_status`). It takes no parameters. The prompt instructs the model to report numbers verbatim, frame savings as an **estimate**, and always use the response's `baseCurrency` rather than each item's `currencyOriginal`.
+
+### Mobile Integration
+
+- **`inflationShieldStore`**: MMKV-cached, server-only Zustand store — paints instantly from cache, keeps the last known state on a fetch error, no upgrade gate (the feature is free).
+- **`useInflationShield`** hook + `api.getInflationShield()`.
+- **`InflationShieldWidget`**: home-screen widget (`WidgetKey: 'inflationShield'`, ordered after `safeToSpend`); hidden when there's no data.
+- **`app/inflation-shield/index.tsx`**: full screen — hero "saved so far" estimate, basket-wide forecast, buy-ahead cards with an affordability badge, pull-to-refresh, empty state.
+- **Share image**: `InflationShieldShareCard.tsx` mirrors the Financial Wrapped share card's architecture (an off-screen WebView renders an HTML/canvas story image, exported as PNG via `expo-sharing`) with a distinct green gradient; a `Share.share` text fallback covers web and any failure.
+
+### API Endpoints
+
+`GET /insights/inflation-shield` — behind `JwtAuthGuard + AccountContextGuard`. No `SubscriptionTierGuard` — available on the free plan (same precedent as Safe-to-Spend and Financial Wrapped).
+
 ## Smart Shopping List
 
 The `shopping-list` module (ABA-330) provides shared, offline-first shopping lists plus a Pro-gated basket price comparison, all built on the receipt price-history corpus.

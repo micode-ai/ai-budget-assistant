@@ -53,6 +53,7 @@ SECTIONS = [
     "28-reference-data", "29-subscription-manager", "30-web-app", "31-anomaly-alerts",
     "32-safe-to-spend", "33-purchase-requests", "34-family-feed", "35-group-trip-wallet",
     "36-personal-inflation-index", "37-expense-map", "38-shopping-list", "39-wrapped",
+    "40-inflation-shield",
 ]
 
 HELP_NAV = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",

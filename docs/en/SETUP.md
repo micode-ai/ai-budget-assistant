@@ -615,6 +615,15 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `WHATSAPP_BUSINESS_PHONE_NUMBER` | Phone number shown as a `wa.me` deep link in the app | optional |
 | `WHATSAPP_API_VERSION` | Meta Graph API version (e.g. `v21.0`) | optional |
 | `SENTRY_DSN` | Sentry DSN; absence makes the SDK a no-op | optional |
+| `SHIELD_MIN_MONTHLY_RISE_PCT` | Inflation Shield: minimum forecast monthly price rise (%) to recommend a product | `5` |
+| `SHIELD_MIN_CADENCE_DAYS` | Inflation Shield: minimum purchase cadence (days) for a product to be considered stockpileable | `14` |
+| `SHIELD_MAX_STOCK_WEEKS` | Inflation Shield: cap on the stock-up horizon (weeks) used to size a recommended quantity | `8` |
+| `SHIELD_MAX_UNITS` | Inflation Shield: hard cap on the recommended stock-up quantity per product | `12` |
+| `SHIELD_MIN_POINTS` | Inflation Shield: minimum price data points required before forecasting a product | `3` |
+| `SHIELD_FORECAST_LOOKBACK_WEEKS` | Inflation Shield: regression window (weeks) used to forecast a product's price trend | `12` |
+| `SHIELD_MIN_SPAN_DAYS` | Inflation Shield: minimum time span (days) covered by the lookback window for a forecast to be trusted | `14` |
+
+All `SHIELD_*` variables are optional overrides of `SHIELD_DEFAULTS` (`apps/api/src/modules/insights/inflation-shield.util.ts`) — set only when tuning the Inflation Shield engine.
 
 ### Mobile Configuration
 

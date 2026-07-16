@@ -620,6 +620,15 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `WHATSAPP_BUSINESS_PHONE_NUMBER` | Номер, показываемый как `wa.me` deep link в приложении | опционально |
 | `WHATSAPP_API_VERSION` | Версия Meta Graph API (напр. `v21.0`) | опционально |
 | `SENTRY_DSN` | DSN Sentry; без него SDK работает no-op | опционально |
+| `SHIELD_MIN_MONTHLY_RISE_PCT` | Inflation Shield: минимальный прогнозный рост цены в месяц (%) для рекомендации товара | `5` |
+| `SHIELD_MIN_CADENCE_DAYS` | Inflation Shield: минимальная периодичность покупки (дней), при которой товар считается пригодным для запаса впрок | `14` |
+| `SHIELD_MAX_STOCK_WEEKS` | Inflation Shield: ограничение горизонта закупки впрок (недель), используемое при расчёте рекомендованного количества | `8` |
+| `SHIELD_MAX_UNITS` | Inflation Shield: жёсткий предел рекомендованного количества для закупки впрок на один товар | `12` |
+| `SHIELD_MIN_POINTS` | Inflation Shield: минимальное число ценовых точек, необходимое перед прогнозированием товара | `3` |
+| `SHIELD_FORECAST_LOOKBACK_WEEKS` | Inflation Shield: окно регрессии (недель) для прогноза ценового тренда товара | `12` |
+| `SHIELD_MIN_SPAN_DAYS` | Inflation Shield: минимальный временной охват (дней) окна ретроспективы, при котором прогнозу можно доверять | `14` |
+
+Все переменные `SHIELD_*` опциональны и переопределяют `SHIELD_DEFAULTS` (`apps/api/src/modules/insights/inflation-shield.util.ts`) — задавайте их только при настройке движка Inflation Shield.
 
 ### Конфигурация мобильного приложения
 
