@@ -8,6 +8,42 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.13.0 — 2026-07-16
+
+**Inflation Shield**
+- **Know what's about to get pricier — and stock up first** — the app forecasts prices for the products you buy regularly, straight from your scanned receipts (no AI cost), and tells you what to stock up on now: how many to buy, at which store, and roughly how much you'd save. It also tracks how much it's saved you so far. New home widget, a full screen, and a shareable summary image. You can also just ask the AI chat "what should I stock up on?" (ABA-346).
+
+**Financial Wrapped**
+- **Your year in review** — a Spotify-Wrapped-style swipeable card deck built entirely from your own data: total tracked, top merchant, biggest month, top category, receipts scanned, savings, your personal inflation rate, and your tracking streak. Hide amounts before sharing, and share as text or as an image. Free — find it via a banner on the Analytics tab (ABA-336).
+
+**Community Price Map**
+- **See where it's cheapest, crowdsourced (Pro)** — search a product to see the cheapest nearby stores and their median prices, built from everyone's anonymized receipts. A store only shows up once enough independent shoppers have confirmed the price, to protect everyone's privacy. Includes a store map (ABA-335).
+
+**AI chat**
+- **Search your actual receipts, not just descriptions** — ask "how much did I spend on beer?" and the AI now searches the individual line items on your scanned receipts, tolerant of typos and any language, across your full history (ABA-343).
+- Discount lines on receipts (like "Lidl Plus coupon -6.87") are now folded into the receipt's total discount instead of showing up as an odd separate negative item (ABA-343).
+- Fix: the assistant no longer wrongly claims "you have no budget" when you only use category-level budgets — it now always checks your real budget status (ABA-344).
+- You can now ask the AI chat to add items to your shopping list (ABA-348).
+
+**Expenses**
+- **Move an expense to another account** — reassign an expense you added to the wrong account. Its category is matched by name in the new account (or cleared if there's no match); account-specific tags and project links don't carry over since they don't exist in the new account.
+
+**Accounts**
+- The account switcher now cleanly groups your accounts into Active, Archived, and Deleted, with one consistent filter on both mobile and web. Archived trips always show up under "Past trips," even if their internal status hadn't caught up yet.
+
+**Shopping list**
+- The "add item" button moved to a bottom bar for easier one-handed use (ABA-348).
+- Archiving your last shopping list now leaves a clean "create a list" screen instead of the list quietly reappearing later (ABA-348).
+
+**Fixes & reliability**
+- Unusual-activity alerts (duplicate charges, price jumps, etc.) now reliably open the expense they're about, even right after you create it; a duplicate/merge alert is automatically cleared once you delete or merge the expense (ABA-339).
+- Fixed the net-profit chart clipping and overflowing on the web app.
+
+**Behind the scenes**
+- New admin dashboard for investor metrics (cohort retention, activation, honest MRR, churn) with explanatory tooltips (ABA-340, ABA-341); marketing-site SEO improvements and better linking between the blog and help center (ABA-342); expanded technical and in-app help documentation.
+
+---
+
 ## 1.12.0 — 2026-07-09
 
 **Smart Shopping List**
