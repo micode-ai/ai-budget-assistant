@@ -2400,6 +2400,15 @@ Tap any button to instantly send that question.
 - "What's my budget status?"
 - "Show category breakdown for this month"
 
+## Asking About a Specific Product
+
+You can ask how much you've spent on a particular product, brand, or shop:
+
+- "How much did I spend on beer?"
+- "How much on coffee this year?"
+
+The assistant searches **inside your scanned receipts**, not just the expense name — so a product bought as part of a big grocery run is still counted, and only that item's price is added up (not the whole receipt). It understands **any language, brand names, and typos** — for example "пиво", "beer", or "cerveza" all find the same beer purchases. If you don't mention a time period, it searches your whole history.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:
@@ -5344,7 +5353,7 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 - **Switch** — tap any list to make it active.
 - **Create** — tap **New list** and give it a name. Any account member can create a list.
 - **Rename** — tap the pencil icon on a list row. Any account member can rename a list.
-- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only.
+- **Archive** — hides the list without deleting it (its items are preserved). Editors and the account owner only. If you archive your last remaining list, you'll see an empty "create a list" screen — the archived list stays archived and won't reappear.
 - **Delete** — permanently removes the list and all its items. Editors and the account owner only.
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
@@ -5356,6 +5365,8 @@ Tap **Add item** to open the add sheet. You can add an item three ways:
 - **Search your tracked products** — start typing and matching products from your Personal Inflation Index history appear below the search box.
 - **Frequently bought** — when the search box is empty, a horizontal row shows your most-purchased products for one-tap adding.
 - **Free text** — if what you typed doesn't match a tracked product, tap **Add "…"** to add it as a plain text item. Free-text items aren't linked to price history, so they won't appear in price comparisons.
+
+You can also **ask the AI assistant** to add items: open the **Chat** tab and say something like "add milk and bread to my shopping list." The items are added to your active list right away — no confirmation needed.
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 
@@ -5462,3 +5473,47 @@ Wrapped needs a bit of history to be worth showing. If you've only tracked a few
 - Wrapped is **free** — there's no Pro requirement.
 - It's assembled from existing data, so there's nothing to configure.
 - Accounts using full end-to-end encryption can't show amount-based cards, so Wrapped isn't available for them.
+
+## Inflation Shield — stock up before prices rise
+URL: https://ai-budget.pl/help/en/inflation-shield/
+
+> A free tool that watches the prices of things you actually buy and tells you what to stock up on now, before they get more expensive — built entirely from your own scanned receipts, no AI required.
+
+## What it is
+
+Inflation Shield forecasts where the prices of your regular purchases are heading, based on your own buying history. When something you buy often is trending up, it suggests buying a bit extra now — how many, at which store, and roughly how much you'd save by not waiting. It also keeps a running total of how much the Shield has saved you so far.
+
+It's completely **free**, uses **no AI**, and works entirely from receipts you've already scanned — there's nothing extra to set up.
+
+## Where to find it
+
+- The **Inflation Shield** card on the **Home** screen shows a quick preview — tap it to open the full screen.
+- You can also just ask the AI chat things like *"What should I stock up on?"* or *"What's getting more expensive?"* and it will pull the same recommendations into the conversation.
+
+## What the screen shows
+
+- **Saved so far** — an estimate of how much the Shield has already saved you, at the top of the screen.
+- **Your basket's forecast** — where your typical spending on these products is headed next month.
+- **Buy-ahead cards**, one per product trending upward:
+  - the product, and how fast it's rising (e.g. **+8%/month**)
+  - a suggestion like **"Buy 4 — save ~12 zł"**
+  - the store where you usually buy it
+  - an **"affordable today"** badge when buying now fits your Safe-to-Spend budget
+
+## How it works
+
+Inflation Shield is built entirely from the line items on receipts you've scanned (by photo or bank-notification capture). You'll need a few receipts with the same product before it has enough history to spot a trend — the more you scan, the better the forecasts get.
+
+It's also selective: it only suggests stocking up on things that make sense to keep around for a while, like pantry staples and household goods. It won't tell you to hoard milk or anything else that spoils quickly.
+
+Every number you see — the trend, the suggested quantity, the savings — is a **forecast and an estimate**, not a guarantee. Real prices can move differently than predicted.
+
+## Sharing
+
+Tap **Share** to create a "My Inflation Shield" image (or a text summary if image sharing isn't available) highlighting what you're saving. A **Hide amounts** toggle masks your money figures first, in case you'd rather not show exact numbers.
+
+## Good to know
+
+- Inflation Shield is **free** for everyone — no Pro subscription needed.
+- Prices and savings are shown in your **display currency**.
+- Recommendations are based only on **your own purchase history** for now. Comparing prices across other users' purchases nearby, to suggest the cheapest store, is planned for a future update.
