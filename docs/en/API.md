@@ -2273,14 +2273,20 @@ Content-Type: application/json
 }
 ```
 
-**AI Functions:**
+**AI Functions (14):**
 - `create_expense` — Create expense (requires confirmation)
 - `create_income` — Create income (requires confirmation)
 - `create_budget` — Create budget (requires confirmation)
 - `create_category` — Create expense/income category (requires confirmation)
-- `get_expenses` — Query expenses (executes immediately)
+- `get_expenses` — Query expenses; supports an optional `descriptionKeyword` for semantic product/line-item search, e.g. "how much did I spend on beer" (executes immediately)
 - `get_budget_status` — Query budget status (executes immediately)
 - `get_category_breakdown` — Query spending by category (executes immediately)
+- `record_debt_repayment` — Record a repayment against a debt (requires confirmation)
+- `create_debt` — Create a lent/borrowed debt record (requires confirmation)
+- `get_debt_summary` — Query active debts summary (executes immediately)
+- `update_goal_balance` — Update a savings goal's current balance (requires confirmation)
+- `check_affordability` — Affordability Oracle: deterministic afford/no-afford verdict from the Safe-to-Spend engine (executes immediately, no confirmation)
+- `add_to_shopping_list` — Add items to the shopping list (executes immediately, no confirmation)
 - `get_inflation_shield` — Query stock-up-now recommendations and realized savings from the Inflation Shield engine (executes immediately, no parameters)
 
 **Language Detection:**
@@ -2290,7 +2296,7 @@ The AI automatically detects the user's language from the conversation history a
 
 ### Confirm Chat Action
 
-Confirm a pending write action (create_expense, create_income, create_budget, create_category).
+Confirm a pending write action (create_expense, create_income, create_budget, create_category, create_debt, record_debt_repayment, update_goal_balance). Read actions (`get_*`, `check_affordability`) and `add_to_shopping_list` execute immediately and never reach this endpoint.
 
 ```http
 POST /ai/chat/confirm

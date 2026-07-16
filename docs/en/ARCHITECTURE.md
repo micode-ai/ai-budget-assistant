@@ -1345,6 +1345,63 @@ The `anomaly` module (37th API module) runs **rule-based on-write detection** an
 
 **API:** `GET /alerts`, `PATCH /alerts/read-all`, `PATCH /alerts/:id/read`, `DELETE /alerts/:id` — all behind `JwtAuthGuard + AccountContextGuard`; write endpoints guarded by `ViewerBlockGuard`.
 
+## Safe-to-Spend
+
+The `insights` module (ABA-293) computes a single "safe to spend today" number that powers both the home-screen hero figure and the `check_affordability` AI chat function — one formula, two consumers.
+
+### How It Works
+
+1. **Formula**: `safeToSpendToday = max(0, (walletBalance + expectedIncome − obligations − buffer) / daysRemaining)`, where `buffer` is `0` in v1.
+2. **Inputs**: current wallet balance (`WalletService.getSummary`), upcoming subscription charges (active `UserSubscription` rows projected forward within the horizon), upcoming recurring expenses (same grouping logic as the recurring-expense cron — latest row per `recurringId`, next due date), on-track goal contributions (linear pace to each goal's deadline), and inferred monthly income (a 25–35-day cadence heuristic over 90 days of income history — the same detector used by the `recurring_suggestion` anomaly).
+3. **Horizon**: `min(end of the current calendar month, next expected income date)`, clamped to a minimum of 1 day.
+4. **Currency**: every input is converted to the account's display currency via `getRatesSafe`/`convertAmount`, with an `fxApproximate` flag when a rate is stale or missing.
+5. **Sharing**: the pure formula helper (`computeSafeToSpend`) lives in `packages/shared-utils` so the mobile app's offline fallback can compute the same number locally without importing API code.
+
+### Caching
+
+Result is cached in Redis under `sts:{accountId}:{baseCurrency}`, TTL 300 s. No database migration — everything is computed from existing tables (wallet, subscriptions, recurring expenses, goals, income history).
+
+### AI Chat Integration
+
+`check_affordability(amount, currencyCode?, description?)` is a **read** AI chat function (no confirmation) that returns a deterministic `AffordabilityVerdict` — `affordable: boolean` plus a `reasonCode` (`within_safe`, `within_available_tight`, `over_available`, `delays_goal`, `wait_until_income`). The model narrates the verdict verbatim rather than computing its own judgment.
+
+### Mobile Integration
+
+- **`useSafeToSpend`** hook + MMKV-cached `insightsStore.loadSafeToSpend()` — paints instantly from cache.
+- **Home hero number**: tapping it opens a breakdown bottom sheet showing each input that fed the total.
+- **`safeToSpend`** home-screen widget (`WidgetKey`).
+- **`check_affordability`** chat result renders as a yes/no chip with the `reasonCode`.
+
+### API Endpoints
+
+`GET /insights/safe-to-spend` — behind `JwtAuthGuard + AccountContextGuard`. No `SubscriptionTierGuard` — available on the free plan.
+
+## Financial Wrapped
+
+The `insights` module (ABA-336) assembles a Spotify-Wrapped-style year-in-review entirely from existing data — no new tables, no LLM cost for the numbers themselves.
+
+### How It Works
+
+1. **Assembly**: the pure, unit-tested `assembleWrapped` (`wrapped.util.ts`, mirrors `safe-to-spend.util.ts`) builds an ordered discriminated-union list of `WrappedCard`s — `intro`, `total_tracked`, `top_merchant` (by visit count, tie-broken by spend), `biggest_month`, `top_category`, `category_mix`, `receipts_scanned` (OCR/notification-sourced expenses), `savings` (net + rate + year-over-year comparison), `personal_inflation` (reuses the Personal Inflation Index's rolling-12-month index, current/previous year only), and `streak` (from the gamification `StreakService`). Only cards backed by real data are included.
+2. **Data floor**: `hasEnoughData: false` (with an empty card list) when the account has fewer than 5 tracked rows for the year, or when the account uses full (tier-2) end-to-end encryption.
+3. **Currency**: every amount is FX-converted to the user's display currency via `getRatesSafe`/`convertAmount`, with an `fxApproximate` flag when a rate is unavailable (the amount is excluded from the affected sum rather than reported wrong).
+4. **`wrapped.service.ts`** is a thin IO wrapper around `assembleWrapped` — it fetches the raw rows and hands them to the pure function, keeping the interesting logic unit-testable without a database.
+
+### Caching
+
+Result is cached in Redis under `wrapped:{accountId}:{baseCurrency}:{year}`, TTL 3600 s. The `year` query param is clamped to `[2000, currentYear]`.
+
+### Mobile Integration
+
+- **`useWrapped`** hook + `api.getWrapped(year)`.
+- **`app/wrapped/index.tsx`**: a full-screen, swipeable gradient card deck — built with zero new native modules (a paging `ScrollView` + `expo-linear-gradient`), progress dots, and an amount-hiding toggle.
+- **Sharing**: a plain-text share (`Share.share`) composed from `wrapped.share*` i18n strings, plus a **shareable image** — `WrappedShareCard.tsx` renders a hidden `react-native-webview` hosting a self-contained HTML/canvas story card (1080×1920), exports it to PNG via `canvas.toDataURL`, and shares it through `expo-sharing`; falls back to the text share on web or on any failure.
+- **Entry point**: a banner in the Analytics tab.
+
+### API Endpoints
+
+`GET /insights/wrapped?year=YYYY` — behind `JwtAuthGuard + AccountContextGuard`. No `SubscriptionTierGuard` — free, for shareability (same precedent as Safe-to-Spend).
+
 ## Personal Inflation Index
 
 The `price-history` module (ABA-307) computes a Laspeyres price index over the account's receipt line items, enabling users to track how their personal "shopping basket" prices change over time without any AI cost.
