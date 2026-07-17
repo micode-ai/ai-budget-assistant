@@ -310,6 +310,7 @@ model Account {
   shoppingLists           ShoppingList[]
   shoppingListItems       ShoppingListItem[]
   inflationShieldRecommendations InflationShieldRecommendation[]
+  shoppingNotificationLogs ShoppingNotificationLog[]
 
   @@map("accounts")
 }
@@ -610,6 +611,20 @@ model ShoppingListItem {
   @@unique([accountId, clientId])
   @@index([shoppingListId, isChecked])
   @@map("shopping_list_items")
+}
+
+model ShoppingNotificationLog {
+  id        String   @id @default(uuid())
+  accountId String   @map("account_id")
+  type      String
+  dedupKey  String   @map("dedup_key")
+  sentAt    DateTime @default(now()) @map("sent_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, dedupKey])
+  @@index([accountId, type, sentAt])
+  @@map("shopping_notification_log")
 }
 
 model Income {
