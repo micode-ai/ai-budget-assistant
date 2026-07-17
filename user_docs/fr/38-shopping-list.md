@@ -66,20 +66,20 @@ Depuis l'écran de comparaison de prix, touchez l'icône de carte (en haut à dr
 
 L'app observe la fréquence à laquelle vous achetez chaque produit suivi. Dès qu'elle a repéré au moins 3 achats d'un produit, elle apprend votre intervalle de rachat habituel (par exemple, « vous achetez du lait environ tous les 6 jours »). Quand un produit est en retard selon ce schéma — et n'est pas déjà sur l'une de vos listes — il apparaît sous forme de puce dans la ligne **Il est temps de réapprovisionner** en haut de la liste de courses. Touchez une puce pour ajouter directement cet article à votre liste.
 
-Vous recevez aussi une notification push quotidienne quand quelque chose est à réapprovisionner, au maximum une fois par jour, résumant le premier article en retard (« Temps de faire le plein ? Lait et 2 autres »).
+Vous recevez aussi une notification push quand quelque chose est à réapprovisionner. Un même article n'est rappelé qu'une fois par cycle d'achat, pas tous les jours — dès que vous le rachetez, le rappel est réinitialisé et ne revient que la prochaine fois qu'il est à réapprovisionner. L'app envoie au maximum un rappel de réapprovisionnement tous les deux ou trois jours, résumant le premier article en retard (« Temps de faire le plein ? Lait et 2 autres »).
 
 ## Promotions pour vous
 
 L'app compare le prix récemment payé pour un produit suivi à son prix moyen sur les 90 derniers jours. Si le dernier prix d'un magasin pour un produit est nettement inférieur à cette moyenne, il apparaît sous forme de puce dans la ligne **Promotions pour vous**, avec le nom du magasin et le pourcentage de réduction. Touchez une puce pour ajouter l'article à votre liste.
 
-Les promotions sont également envoyées sous forme de notification push quotidienne lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer.
+Les promotions sont également envoyées sous forme de notification push lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer — mais une même baisse de prix ne vous sera pas signalée plus d'une fois par semaine, pour éviter de vous relancer sur la même chose.
 
 ## Gérer les notifications
 
 Les deux notifications sont activées par défaut et peuvent être désactivées indépendamment dans **Paramètres → Notifications** :
 
-- **Rappels de réapprovisionnement** — la notification push quotidienne « il est temps de réapprovisionner ».
-- **Alertes promotions** — la notification push quotidienne de baisse de prix.
+- **Rappels de réapprovisionnement** — la notification push « il est temps de réapprovisionner ».
+- **Alertes promotions** — la notification push de baisse de prix.
 
 ## Source des données
 

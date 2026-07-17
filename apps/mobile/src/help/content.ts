@@ -4103,20 +4103,20 @@ From the price comparison screen, tap the map icon (top-right) to open the **Sto
 
 The app watches how often you buy each tracked product. Once it has seen at least 3 purchases of a product, it learns your typical repurchase gap (e.g. "you buy milk roughly every 6 days"). When a product is overdue based on that pattern — and isn't already on one of your lists — it appears as a chip in the **Time to restock** row at the top of the shopping list. Tap a chip to add that item straight to your list.
 
-You also get a daily push notification when something is due for restocking, once a day at most, summarizing the first overdue item ("Time to restock? Milk and 2 more").
+You also get a push notification when something is due for restocking. A given item is only reminded once per shopping cycle, not every day — once you buy it again, the reminder resets and only comes back the next time it's due. The app sends at most one restock reminder every couple of days, summarizing the first overdue item ("Time to restock? Milk and 2 more").
 
 ## Deal Alerts
 
 The app compares the price you've recently paid for a tracked product against its average price over the last 90 days. If a store's latest price for a product is meaningfully below that average, it shows up as a chip in the **Deals for you** row, with the store name and the discount percentage. Tap a chip to add the item to your list.
 
-Deals are also delivered as a daily push notification when a genuine drop is detected, so you don't have to open the app to catch a good price.
+Deals are also delivered as a push notification when a genuine drop is detected, so you don't have to open the app to catch a good price — but the same price drop won't be pushed more than once a week, so you're not nudged about it repeatedly.
 
 ## Managing Notifications
 
 Both notifications are on by default and can be turned off independently in **Settings → Notifications**:
 
-- **Restock reminder** — the daily "time to restock" push.
-- **Deal alerts** — the daily price-drop push.
+- **Restock reminder** — the "time to restock" push.
+- **Deal alerts** — the price-drop push.
 
 ## Data Source
 
@@ -8308,20 +8308,20 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Приложение отслеживает, как часто вы покупаете каждый отслеживаемый товар. Как только оно фиксирует минимум 3 покупки товара, оно вычисляет ваш типичный интервал повторной покупки (например, «вы покупаете молоко примерно каждые 6 дней»). Когда товар просрочен согласно этому паттерну — и его ещё нет ни в одном из ваших списков — он появляется в виде чипа в строке **«Пора пополнить запасы»** вверху списка покупок. Нажмите на чип, чтобы сразу добавить этот товар в список.
 
-Вы также получаете ежедневное push-уведомление, когда пора что-то докупить, максимум раз в день, с кратким описанием первого просроченного товара («Пора пополнить запасы? Молоко и ещё 2 товара»).
+Вы также получаете push-уведомление, когда пора что-то докупить. Об одном и том же товаре напоминают только один раз за цикл покупок, а не каждый день — как только вы купите его снова, напоминание сбрасывается и вернётся только тогда, когда товар снова станет просроченным. Приложение отправляет не чаще одного напоминания о пополнении запасов раз в пару дней, с кратким описанием первого просроченного товара («Пора пополнить запасы? Молоко и ещё 2 товара»).
 
 ## Скидки для вас
 
 Приложение сравнивает цену, которую вы недавно платили за отслеживаемый товар, со средней ценой за последние 90 дней. Если последняя цена товара в каком-либо магазине заметно ниже этой средней, она появляется в виде чипа в строке **«Скидки для вас»** с названием магазина и процентом скидки. Нажмите на чип, чтобы добавить товар в список.
 
-Скидки также приходят в виде ежедневного push-уведомления при обнаружении реального снижения цены, так что вам не нужно открывать приложение, чтобы не пропустить выгодную цену.
+Скидки также приходят в виде push-уведомления при обнаружении реального снижения цены, так что вам не нужно открывать приложение, чтобы не пропустить выгодную цену — но об одной и той же скидке вам не будут сообщать чаще одного раза в неделю, чтобы не напоминать о ней постоянно.
 
 ## Управление уведомлениями
 
 Оба уведомления включены по умолчанию и отключаются независимо друг от друга в **Настройки → Уведомления**:
 
-- **Напоминания о пополнении запасов** — ежедневное push-уведомление «пора пополнить запасы».
-- **Уведомления о скидках** — ежедневное push-уведомление о снижении цены.
+- **Напоминания о пополнении запасов** — push-уведомление «пора пополнить запасы».
+- **Уведомления о скидках** — push-уведомление о снижении цены.
 
 ## Источник данных
 
@@ -12483,20 +12483,20 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Застосунок відстежує, як часто ви купуєте кожен відстежуваний товар. Щойно він фіксує щонайменше 3 покупки товару, він вивчає ваш типовий інтервал повторної покупки (наприклад, «ви купуєте молоко приблизно кожні 6 днів»). Коли товар прострочений згідно з цим патерном — і його ще немає в жодному з ваших списків — він з'являється у вигляді чипа в рядку **«Час поповнити запаси»** вгорі списку покупок. Натисніть на чип, щоб одразу додати цей товар до списку.
 
-Ви також отримуєте щоденне push-сповіщення, коли настав час щось докупити, максимум раз на день, із коротким описом першого простроченого товару («Час поповнити запаси? Молоко і ще 2 товари»).
+Ви також отримуєте push-сповіщення, коли настав час щось докупити. Про той самий товар нагадують лише один раз за цикл покупок, а не щодня — щойно ви купите його знову, нагадування скидається і повернеться лише тоді, коли товар знову стане простроченим. Застосунок надсилає не частіше одного нагадування про поповнення запасів раз на кілька днів, із коротким описом першого простроченого товару («Час поповнити запаси? Молоко і ще 2 товари»).
 
 ## Знижки для вас
 
 Застосунок порівнює ціну, яку ви нещодавно платили за відстежуваний товар, із середньою ціною за останні 90 днів. Якщо остання ціна товару в якомусь магазині помітно нижча за це середнє значення, вона з'являється у вигляді чипа в рядку **«Знижки для вас»**, з назвою магазину та відсотком знижки. Натисніть на чип, щоб додати товар до списку.
 
-Знижки також надходять у вигляді щоденного push-сповіщення, коли виявлено справжнє зниження ціни, тож вам не потрібно відкривати застосунок, щоб не пропустити вигідну ціну.
+Знижки також надходять у вигляді push-сповіщення, коли виявлено справжнє зниження ціни, тож вам не потрібно відкривати застосунок, щоб не пропустити вигідну ціну — але про ту саму знижку вам не повідомлятимуть частіше одного разу на тиждень, щоб не нагадувати про неї постійно.
 
 ## Керування сповіщеннями
 
 Обидва сповіщення увімкнені за замовчуванням і вимикаються незалежно одне від одного в **Налаштування → Сповіщення**:
 
-- **Нагадування про поповнення запасів** — щоденне push-сповіщення «час поповнити запаси».
-- **Сповіщення про знижки** — щоденне push-сповіщення про зниження ціни.
+- **Нагадування про поповнення запасів** — push-сповіщення «час поповнити запаси».
+- **Сповіщення про знижки** — push-сповіщення про зниження ціни.
 
 ## Джерело даних
 
@@ -16643,20 +16643,20 @@ Na ekranie porównania cen stuknij ikonę mapy (w prawym górnym rogu), aby otwo
 
 Aplikacja obserwuje, jak często kupujesz każdy śledzony produkt. Gdy zauważy co najmniej 3 zakupy danego produktu, uczy się Twojego typowego odstępu między zakupami (np. "kupujesz mleko mniej więcej co 6 dni"). Kiedy produkt jest zaległy według tego wzorca — i nie znajduje się już na żadnej z Twoich list — pojawia się jako etykieta w wierszu **Czas na uzupełnienie zapasów** u góry listy zakupów. Stuknij etykietę, aby dodać ten produkt bezpośrednio do listy.
 
-Dostajesz też codzienne powiadomienie push, gdy coś wymaga uzupełnienia — co najwyżej raz dziennie, podsumowujące pierwszy zaległy produkt ("Czas na uzupełnienie zapasów? Mleko i jeszcze 2 produkty").
+Dostajesz też powiadomienie push, gdy coś wymaga uzupełnienia. Dany produkt jest przypominany tylko raz na cykl zakupowy, a nie codziennie — gdy tylko kupisz go ponownie, przypomnienie się resetuje i wróci dopiero, gdy znów będzie zaległy. Aplikacja wysyła co najwyżej jedno przypomnienie o uzupełnieniu zapasów co kilka dni, podsumowujące pierwszy zaległy produkt ("Czas na uzupełnienie zapasów? Mleko i jeszcze 2 produkty").
 
 ## Promocje dla Ciebie
 
 Aplikacja porównuje cenę, jaką ostatnio zapłaciłeś za śledzony produkt, z jego średnią ceną z ostatnich 90 dni. Jeśli najnowsza cena danego produktu w jakimś sklepie jest wyraźnie niższa od tej średniej, pojawia się jako etykieta w wierszu **Promocje dla Ciebie**, z nazwą sklepu i procentem rabatu. Stuknij etykietę, aby dodać produkt do listy.
 
-Promocje są też dostarczane jako codzienne powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić.
+Promocje są też dostarczane jako powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić — ta sama obniżka ceny nie zostanie jednak wysłana częściej niż raz w tygodniu, więc nie będziesz o niej przypominany wielokrotnie.
 
 ## Zarządzanie powiadomieniami
 
 Oba powiadomienia są domyślnie włączone i można je wyłączyć niezależnie w **Ustawienia → Powiadomienia**:
 
-- **Przypomnienia o uzupełnieniu zapasów** — codzienny push "czas na uzupełnienie zapasów".
-- **Powiadomienia o promocjach** — codzienny push o obniżce ceny.
+- **Przypomnienia o uzupełnieniu zapasów** — push "czas na uzupełnienie zapasów".
+- **Powiadomienia o promocjach** — push o obniżce ceny.
 
 ## Źródło danych
 
@@ -20778,20 +20778,20 @@ Tippe auf dem Preisvergleichsbildschirm auf das Kartensymbol (oben rechts), um d
 
 Die App beobachtet, wie oft du jedes erfasste Produkt kaufst. Sobald sie mindestens 3 Käufe eines Produkts gesehen hat, lernt sie deinen typischen Nachkauf-Abstand (z. B. „du kaufst Milch etwa alle 6 Tage"). Wenn ein Produkt laut diesem Muster fällig ist — und noch auf keiner deiner Listen steht — erscheint es als Chip in der Zeile **Zeit zum Nachkaufen** oben auf der Einkaufsliste. Tippe auf einen Chip, um den Artikel direkt zu deiner Liste hinzuzufügen.
 
-Du erhältst außerdem eine tägliche Push-Benachrichtigung, wenn etwas nachgekauft werden sollte — höchstens einmal pro Tag, mit einer Zusammenfassung des ersten fälligen Artikels („Zeit zum Nachkaufen? Milch und 2 weitere").
+Du erhältst außerdem eine Push-Benachrichtigung, wenn etwas nachgekauft werden sollte. Ein Artikel wird dabei nur einmal pro Einkaufszyklus erinnert, nicht jeden Tag — sobald du ihn erneut kaufst, wird die Erinnerung zurückgesetzt und kehrt erst zurück, wenn er das nächste Mal fällig ist. Die App sendet höchstens alle paar Tage eine Nachkauf-Erinnerung, mit einer Zusammenfassung des ersten fälligen Artikels („Zeit zum Nachkaufen? Milch und 2 weitere").
 
 ## Angebote für dich
 
 Die App vergleicht den zuletzt gezahlten Preis für ein erfasstes Produkt mit dessen Durchschnittspreis der letzten 90 Tage. Liegt der neueste Preis eines Geschäfts für ein Produkt deutlich unter diesem Durchschnitt, erscheint er als Chip in der Zeile **Angebote für dich**, mit Geschäftsname und Rabatt in Prozent. Tippe auf einen Chip, um den Artikel zu deiner Liste hinzuzufügen.
 
-Angebote werden auch als tägliche Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen.
+Angebote werden ebenfalls als Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen — dieselbe Preissenkung wird jedoch höchstens einmal pro Woche gemeldet, damit du nicht wiederholt darauf hingewiesen wirst.
 
 ## Benachrichtigungen verwalten
 
 Beide Benachrichtigungen sind standardmäßig aktiviert und können unabhängig voneinander unter **Einstellungen → Benachrichtigungen** deaktiviert werden:
 
-- **Nachkauf-Erinnerungen** — die tägliche „Zeit zum Nachkaufen"-Push-Benachrichtigung.
-- **Preissenkungs-Hinweise** — die tägliche Push-Benachrichtigung zu Preissenkungen.
+- **Nachkauf-Erinnerungen** — die „Zeit zum Nachkaufen"-Push-Benachrichtigung.
+- **Preissenkungs-Hinweise** — die Push-Benachrichtigung zu Preissenkungen.
 
 ## Datenquelle
 
@@ -24902,20 +24902,20 @@ Desde la pantalla de comparación de precios, toca el icono del mapa (arriba a l
 
 La app observa con qué frecuencia compras cada producto rastreado. Cuando ha visto al menos 3 compras de un producto, aprende tu patrón habitual de recompra (por ejemplo, "compras leche aproximadamente cada 6 días"). Cuando un producto está pendiente de reponer según ese patrón — y aún no está en ninguna de tus listas — aparece como un chip en la fila **Hora de reponer** en la parte superior de la lista de la compra. Toca un chip para añadir ese artículo directamente a tu lista.
 
-También recibes una notificación push diaria cuando algo está pendiente de reponer, como máximo una vez al día, resumiendo el primer artículo pendiente ("¿Hora de reabastecer? Leche y 2 más").
+También recibes una notificación push cuando algo está pendiente de reponer. Un mismo artículo solo se recuerda una vez por ciclo de compra, no todos los días: en cuanto vuelves a comprarlo, el recordatorio se reinicia y no vuelve a aparecer hasta la próxima vez que toque reponerlo. La app envía como máximo un recordatorio de reposición cada par de días, resumiendo el primer artículo pendiente ("¿Hora de reabastecer? Leche y 2 más").
 
 ## Ofertas para ti
 
 La app compara el precio que has pagado recientemente por un producto rastreado con su precio medio de los últimos 90 días. Si el último precio de una tienda para un producto está significativamente por debajo de esa media, aparece como un chip en la fila **Ofertas para ti**, con el nombre de la tienda y el porcentaje de descuento. Toca un chip para añadir el artículo a tu lista.
 
-Las ofertas también se envían como notificación push diaria cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela.
+Las ofertas también se envían como notificación push cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela — pero la misma bajada de precio no se te enviará más de una vez por semana, para que no te avisen repetidamente de lo mismo.
 
 ## Gestionar notificaciones
 
 Ambas notificaciones están activadas por defecto y se pueden desactivar por separado en **Ajustes → Notificaciones**:
 
-- **Recordatorios de reposición** — el aviso push diario de "hora de reponer".
-- **Alertas de ofertas** — el aviso push diario de bajada de precio.
+- **Recordatorios de reposición** — el aviso push de "hora de reponer".
+- **Alertas de ofertas** — el aviso push de bajada de precio.
 
 ## Origen de los datos
 
@@ -29024,20 +29024,20 @@ Depuis l'écran de comparaison de prix, touchez l'icône de carte (en haut à dr
 
 L'app observe la fréquence à laquelle vous achetez chaque produit suivi. Dès qu'elle a repéré au moins 3 achats d'un produit, elle apprend votre intervalle de rachat habituel (par exemple, « vous achetez du lait environ tous les 6 jours »). Quand un produit est en retard selon ce schéma — et n'est pas déjà sur l'une de vos listes — il apparaît sous forme de puce dans la ligne **Il est temps de réapprovisionner** en haut de la liste de courses. Touchez une puce pour ajouter directement cet article à votre liste.
 
-Vous recevez aussi une notification push quotidienne quand quelque chose est à réapprovisionner, au maximum une fois par jour, résumant le premier article en retard (« Temps de faire le plein ? Lait et 2 autres »).
+Vous recevez aussi une notification push quand quelque chose est à réapprovisionner. Un même article n'est rappelé qu'une fois par cycle d'achat, pas tous les jours — dès que vous le rachetez, le rappel est réinitialisé et ne revient que la prochaine fois qu'il est à réapprovisionner. L'app envoie au maximum un rappel de réapprovisionnement tous les deux ou trois jours, résumant le premier article en retard (« Temps de faire le plein ? Lait et 2 autres »).
 
 ## Promotions pour vous
 
 L'app compare le prix récemment payé pour un produit suivi à son prix moyen sur les 90 derniers jours. Si le dernier prix d'un magasin pour un produit est nettement inférieur à cette moyenne, il apparaît sous forme de puce dans la ligne **Promotions pour vous**, avec le nom du magasin et le pourcentage de réduction. Touchez une puce pour ajouter l'article à votre liste.
 
-Les promotions sont également envoyées sous forme de notification push quotidienne lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer.
+Les promotions sont également envoyées sous forme de notification push lorsqu'une vraie baisse est détectée, pour que vous n'ayez pas besoin d'ouvrir l'app pour ne pas la manquer — mais une même baisse de prix ne vous sera pas signalée plus d'une fois par semaine, pour éviter de vous relancer sur la même chose.
 
 ## Gérer les notifications
 
 Les deux notifications sont activées par défaut et peuvent être désactivées indépendamment dans **Paramètres → Notifications** :
 
-- **Rappels de réapprovisionnement** — la notification push quotidienne « il est temps de réapprovisionner ».
-- **Alertes promotions** — la notification push quotidienne de baisse de prix.
+- **Rappels de réapprovisionnement** — la notification push « il est temps de réapprovisionner ».
+- **Alertes promotions** — la notification push de baisse de prix.
 
 ## Source des données
 
@@ -33106,20 +33106,20 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 Праграма адсочвае, як часта вы купляеце кожны адсочваемы тавар. Як толькі яна фіксуе прынамсі 3 пакупкі тавару, яна вылічае ваш тыповы інтэрвал паўторнай пакупкі (напрыклад, «вы купляеце малако прыблізна кожныя 6 дзён»). Калі тавар пратэрмінаваны паводле гэтага шаблону — і яго яшчэ няма ні ў адным з вашых спісаў — ён з'яўляецца ў выглядзе чыпа ў радку **«Час папоўніць запасы»** ўверсе спісу пакупак. Націсніце на чып, каб адразу дадаць гэты тавар у спіс.
 
-Вы таксама атрымліваеце штодзённае push-апавяшчэнне, калі прыйшоў час нешта дакупіць, максімум раз у дзень, з кароткім апісаннем першага пратэрмінаванага тавару («Час папоўніць запасы? Малако і яшчэ 2 тавары»).
+Вы таксама атрымліваеце push-апавяшчэнне, калі прыйшоў час нешта дакупіць. Пра адзін і той жа тавар нагадваюць толькі адзін раз за цыкл пакупак, а не штодня — як толькі вы купіце яго зноў, напамін скідаецца і вернецца толькі тады, калі тавар зноў стане пратэрмінаваным. Праграма адпраўляе не часцей за адно напамінанне аб папаўненні запасаў раз у пару дзён, з кароткім апісаннем першага пратэрмінаванага тавару («Час папоўніць запасы? Малако і яшчэ 2 тавары»).
 
 ## Зніжкі для вас
 
 Праграма параўноўвае цану, якую вы нядаўна плацілі за адсочваемы тавар, з сярэдняй цаной за апошнія 90 дзён. Калі апошняя цана тавару ў якой-небудзь краме заўважна ніжэйшая за гэтую сярэднюю, яна з'яўляецца ў выглядзе чыпа ў радку **«Зніжкі для вас»**, з назвай крамы і працэнтам зніжкі. Націсніце на чып, каб дадаць тавар у спіс.
 
-Зніжкі таксама прыходзяць у выглядзе штодзённага push-апавяшчэння пры выяўленні сапраўднага зніжэння цаны, так што вам не трэба адкрываць праграму, каб не прапусціць выгадную цану.
+Зніжкі таксама прыходзяць у выглядзе push-апавяшчэння пры выяўленні сапраўднага зніжэння цаны, так што вам не трэба адкрываць праграму, каб не прапусціць выгадную цану — але пра тую ж самую зніжку вам не будуць паведамляць часцей за адзін раз у тыдзень, каб не нагадваць пра яе пастаянна.
 
 ## Кіраванне апавяшчэннямі
 
 Абодва апавяшчэнні ўключаны па змаўчанні і выключаюцца незалежна адно ад аднаго ў **Налады → Апавяшчэнні**:
 
-- **Напаміны аб папаўненні запасаў** — штодзённае push-апавяшчэнне «час папоўніць запасы».
-- **Апавяшчэнні аб зніжках** — штодзённае push-апавяшчэнне пра зніжэнне цаны.
+- **Напаміны аб папаўненні запасаў** — push-апавяшчэнне «час папоўніць запасы».
+- **Апавяшчэнні аб зніжках** — push-апавяшчэнне пра зніжэнне цаны.
 
 ## Крыніца дадзеных
 
@@ -37307,20 +37307,20 @@ Tik op het scherm met de prijsvergelijking op het kaartpictogram (rechtsboven) o
 
 De app houdt bij hoe vaak je elk bijgehouden product koopt. Zodra ze minstens 3 aankopen van een product heeft gezien, leert ze je gebruikelijke herhaalaankoopinterval (bijvoorbeeld "je koopt melk ongeveer elke 6 dagen"). Wanneer een product volgens dat patroon aan vervanging toe is — en nog niet op een van je lijsten staat — verschijnt het als chip in de rij **Tijd om aan te vullen** bovenaan de boodschappenlijst. Tik op een chip om dat artikel direct aan je lijst toe te voegen.
 
-Je krijgt ook een dagelijkse pushmelding wanneer iets aangevuld moet worden, maximaal één keer per dag, met een samenvatting van het eerste product dat aan vervanging toe is ("Tijd om bij te vullen? Melk en nog 2 andere").
+Je krijgt ook een pushmelding wanneer iets aangevuld moet worden. Een bepaald product wordt maar één keer per aankoopcyclus opnieuw onder de aandacht gebracht, niet elke dag — zodra je het opnieuw koopt, wordt de herinnering gereset en komt hij pas terug wanneer het product weer aan vervanging toe is. De app stuurt hooguit om de paar dagen een herbevoorradingsherinnering, met een samenvatting van het eerste product dat aan vervanging toe is ("Tijd om bij te vullen? Melk en nog 2 andere").
 
 ## Aanbiedingen voor jou
 
 De app vergelijkt de prijs die je onlangs betaalde voor een bijgehouden product met het gemiddelde van de afgelopen 90 dagen. Als de recentste prijs van een winkel voor een product duidelijk onder dat gemiddelde ligt, verschijnt hij als chip in de rij **Aanbiedingen voor jou**, met de winkelnaam en het kortingspercentage. Tik op een chip om het artikel aan je lijst toe te voegen.
 
-Aanbiedingen worden ook als dagelijkse pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen.
+Aanbiedingen worden ook als pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen — dezelfde prijsdaling wordt echter niet vaker dan één keer per week gemeld, zodat je niet herhaaldelijk op hetzelfde wordt gewezen.
 
 ## Meldingen beheren
 
 Beide meldingen staan standaard aan en kunnen onafhankelijk van elkaar worden uitgeschakeld via **Instellingen → Meldingen**:
 
-- **Herbevoorradingsherinneringen** — de dagelijkse "tijd om aan te vullen"-pushmelding.
-- **Aanbiedingsmeldingen** — de dagelijkse pushmelding bij prijsdalingen.
+- **Herbevoorradingsherinneringen** — de "tijd om aan te vullen"-pushmelding.
+- **Aanbiedingsmeldingen** — de pushmelding bij prijsdalingen.
 
 ## Gegevensbron
 

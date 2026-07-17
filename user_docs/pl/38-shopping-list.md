@@ -66,20 +66,20 @@ Na ekranie porównania cen stuknij ikonę mapy (w prawym górnym rogu), aby otwo
 
 Aplikacja obserwuje, jak często kupujesz każdy śledzony produkt. Gdy zauważy co najmniej 3 zakupy danego produktu, uczy się Twojego typowego odstępu między zakupami (np. "kupujesz mleko mniej więcej co 6 dni"). Kiedy produkt jest zaległy według tego wzorca — i nie znajduje się już na żadnej z Twoich list — pojawia się jako etykieta w wierszu **Czas na uzupełnienie zapasów** u góry listy zakupów. Stuknij etykietę, aby dodać ten produkt bezpośrednio do listy.
 
-Dostajesz też codzienne powiadomienie push, gdy coś wymaga uzupełnienia — co najwyżej raz dziennie, podsumowujące pierwszy zaległy produkt ("Czas na uzupełnienie zapasów? Mleko i jeszcze 2 produkty").
+Dostajesz też powiadomienie push, gdy coś wymaga uzupełnienia. Dany produkt jest przypominany tylko raz na cykl zakupowy, a nie codziennie — gdy tylko kupisz go ponownie, przypomnienie się resetuje i wróci dopiero, gdy znów będzie zaległy. Aplikacja wysyła co najwyżej jedno przypomnienie o uzupełnieniu zapasów co kilka dni, podsumowujące pierwszy zaległy produkt ("Czas na uzupełnienie zapasów? Mleko i jeszcze 2 produkty").
 
 ## Promocje dla Ciebie
 
 Aplikacja porównuje cenę, jaką ostatnio zapłaciłeś za śledzony produkt, z jego średnią ceną z ostatnich 90 dni. Jeśli najnowsza cena danego produktu w jakimś sklepie jest wyraźnie niższa od tej średniej, pojawia się jako etykieta w wierszu **Promocje dla Ciebie**, z nazwą sklepu i procentem rabatu. Stuknij etykietę, aby dodać produkt do listy.
 
-Promocje są też dostarczane jako codzienne powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić.
+Promocje są też dostarczane jako powiadomienie push, gdy wykryta zostanie prawdziwa obniżka, więc nie musisz otwierać aplikacji, żeby jej nie przegapić — ta sama obniżka ceny nie zostanie jednak wysłana częściej niż raz w tygodniu, więc nie będziesz o niej przypominany wielokrotnie.
 
 ## Zarządzanie powiadomieniami
 
 Oba powiadomienia są domyślnie włączone i można je wyłączyć niezależnie w **Ustawienia → Powiadomienia**:
 
-- **Przypomnienia o uzupełnieniu zapasów** — codzienny push "czas na uzupełnienie zapasów".
-- **Powiadomienia o promocjach** — codzienny push o obniżce ceny.
+- **Przypomnienia o uzupełnieniu zapasów** — push "czas na uzupełnienie zapasów".
+- **Powiadomienia o promocjach** — push o obniżce ceny.
 
 ## Źródło danych
 

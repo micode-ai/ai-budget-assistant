@@ -66,20 +66,20 @@ Tik op het scherm met de prijsvergelijking op het kaartpictogram (rechtsboven) o
 
 De app houdt bij hoe vaak je elk bijgehouden product koopt. Zodra ze minstens 3 aankopen van een product heeft gezien, leert ze je gebruikelijke herhaalaankoopinterval (bijvoorbeeld "je koopt melk ongeveer elke 6 dagen"). Wanneer een product volgens dat patroon aan vervanging toe is — en nog niet op een van je lijsten staat — verschijnt het als chip in de rij **Tijd om aan te vullen** bovenaan de boodschappenlijst. Tik op een chip om dat artikel direct aan je lijst toe te voegen.
 
-Je krijgt ook een dagelijkse pushmelding wanneer iets aangevuld moet worden, maximaal één keer per dag, met een samenvatting van het eerste product dat aan vervanging toe is ("Tijd om bij te vullen? Melk en nog 2 andere").
+Je krijgt ook een pushmelding wanneer iets aangevuld moet worden. Een bepaald product wordt maar één keer per aankoopcyclus opnieuw onder de aandacht gebracht, niet elke dag — zodra je het opnieuw koopt, wordt de herinnering gereset en komt hij pas terug wanneer het product weer aan vervanging toe is. De app stuurt hooguit om de paar dagen een herbevoorradingsherinnering, met een samenvatting van het eerste product dat aan vervanging toe is ("Tijd om bij te vullen? Melk en nog 2 andere").
 
 ## Aanbiedingen voor jou
 
 De app vergelijkt de prijs die je onlangs betaalde voor een bijgehouden product met het gemiddelde van de afgelopen 90 dagen. Als de recentste prijs van een winkel voor een product duidelijk onder dat gemiddelde ligt, verschijnt hij als chip in de rij **Aanbiedingen voor jou**, met de winkelnaam en het kortingspercentage. Tik op een chip om het artikel aan je lijst toe te voegen.
 
-Aanbiedingen worden ook als dagelijkse pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen.
+Aanbiedingen worden ook als pushmelding bezorgd zodra een echte prijsdaling wordt gedetecteerd, zodat je de app niet hoeft te openen om een goede prijs niet te missen — dezelfde prijsdaling wordt echter niet vaker dan één keer per week gemeld, zodat je niet herhaaldelijk op hetzelfde wordt gewezen.
 
 ## Meldingen beheren
 
 Beide meldingen staan standaard aan en kunnen onafhankelijk van elkaar worden uitgeschakeld via **Instellingen → Meldingen**:
 
-- **Herbevoorradingsherinneringen** — de dagelijkse "tijd om aan te vullen"-pushmelding.
-- **Aanbiedingsmeldingen** — de dagelijkse pushmelding bij prijsdalingen.
+- **Herbevoorradingsherinneringen** — de "tijd om aan te vullen"-pushmelding.
+- **Aanbiedingsmeldingen** — de pushmelding bij prijsdalingen.
 
 ## Gegevensbron
 

@@ -66,20 +66,20 @@ Tippe auf dem Preisvergleichsbildschirm auf das Kartensymbol (oben rechts), um d
 
 Die App beobachtet, wie oft du jedes erfasste Produkt kaufst. Sobald sie mindestens 3 Käufe eines Produkts gesehen hat, lernt sie deinen typischen Nachkauf-Abstand (z. B. „du kaufst Milch etwa alle 6 Tage"). Wenn ein Produkt laut diesem Muster fällig ist — und noch auf keiner deiner Listen steht — erscheint es als Chip in der Zeile **Zeit zum Nachkaufen** oben auf der Einkaufsliste. Tippe auf einen Chip, um den Artikel direkt zu deiner Liste hinzuzufügen.
 
-Du erhältst außerdem eine tägliche Push-Benachrichtigung, wenn etwas nachgekauft werden sollte — höchstens einmal pro Tag, mit einer Zusammenfassung des ersten fälligen Artikels („Zeit zum Nachkaufen? Milch und 2 weitere").
+Du erhältst außerdem eine Push-Benachrichtigung, wenn etwas nachgekauft werden sollte. Ein Artikel wird dabei nur einmal pro Einkaufszyklus erinnert, nicht jeden Tag — sobald du ihn erneut kaufst, wird die Erinnerung zurückgesetzt und kehrt erst zurück, wenn er das nächste Mal fällig ist. Die App sendet höchstens alle paar Tage eine Nachkauf-Erinnerung, mit einer Zusammenfassung des ersten fälligen Artikels („Zeit zum Nachkaufen? Milch und 2 weitere").
 
 ## Angebote für dich
 
 Die App vergleicht den zuletzt gezahlten Preis für ein erfasstes Produkt mit dessen Durchschnittspreis der letzten 90 Tage. Liegt der neueste Preis eines Geschäfts für ein Produkt deutlich unter diesem Durchschnitt, erscheint er als Chip in der Zeile **Angebote für dich**, mit Geschäftsname und Rabatt in Prozent. Tippe auf einen Chip, um den Artikel zu deiner Liste hinzuzufügen.
 
-Angebote werden auch als tägliche Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen.
+Angebote werden ebenfalls als Push-Benachrichtigung zugestellt, sobald eine echte Preissenkung erkannt wird, damit du die App nicht öffnen musst, um ein gutes Angebot zu erwischen — dieselbe Preissenkung wird jedoch höchstens einmal pro Woche gemeldet, damit du nicht wiederholt darauf hingewiesen wirst.
 
 ## Benachrichtigungen verwalten
 
 Beide Benachrichtigungen sind standardmäßig aktiviert und können unabhängig voneinander unter **Einstellungen → Benachrichtigungen** deaktiviert werden:
 
-- **Nachkauf-Erinnerungen** — die tägliche „Zeit zum Nachkaufen"-Push-Benachrichtigung.
-- **Preissenkungs-Hinweise** — die tägliche Push-Benachrichtigung zu Preissenkungen.
+- **Nachkauf-Erinnerungen** — die „Zeit zum Nachkaufen"-Push-Benachrichtigung.
+- **Preissenkungs-Hinweise** — die Push-Benachrichtigung zu Preissenkungen.
 
 ## Datenquelle
 

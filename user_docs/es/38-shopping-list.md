@@ -66,20 +66,20 @@ Desde la pantalla de comparación de precios, toca el icono del mapa (arriba a l
 
 La app observa con qué frecuencia compras cada producto rastreado. Cuando ha visto al menos 3 compras de un producto, aprende tu patrón habitual de recompra (por ejemplo, "compras leche aproximadamente cada 6 días"). Cuando un producto está pendiente de reponer según ese patrón — y aún no está en ninguna de tus listas — aparece como un chip en la fila **Hora de reponer** en la parte superior de la lista de la compra. Toca un chip para añadir ese artículo directamente a tu lista.
 
-También recibes una notificación push diaria cuando algo está pendiente de reponer, como máximo una vez al día, resumiendo el primer artículo pendiente ("¿Hora de reabastecer? Leche y 2 más").
+También recibes una notificación push cuando algo está pendiente de reponer. Un mismo artículo solo se recuerda una vez por ciclo de compra, no todos los días: en cuanto vuelves a comprarlo, el recordatorio se reinicia y no vuelve a aparecer hasta la próxima vez que toque reponerlo. La app envía como máximo un recordatorio de reposición cada par de días, resumiendo el primer artículo pendiente ("¿Hora de reabastecer? Leche y 2 más").
 
 ## Ofertas para ti
 
 La app compara el precio que has pagado recientemente por un producto rastreado con su precio medio de los últimos 90 días. Si el último precio de una tienda para un producto está significativamente por debajo de esa media, aparece como un chip en la fila **Ofertas para ti**, con el nombre de la tienda y el porcentaje de descuento. Toca un chip para añadir el artículo a tu lista.
 
-Las ofertas también se envían como notificación push diaria cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela.
+Las ofertas también se envían como notificación push cuando se detecta una bajada genuina, para que no tengas que abrir la app para no perdértela — pero la misma bajada de precio no se te enviará más de una vez por semana, para que no te avisen repetidamente de lo mismo.
 
 ## Gestionar notificaciones
 
 Ambas notificaciones están activadas por defecto y se pueden desactivar por separado en **Ajustes → Notificaciones**:
 
-- **Recordatorios de reposición** — el aviso push diario de "hora de reponer".
-- **Alertas de ofertas** — el aviso push diario de bajada de precio.
+- **Recordatorios de reposición** — el aviso push de "hora de reponer".
+- **Alertas de ofertas** — el aviso push de bajada de precio.
 
 ## Origen de los datos
 

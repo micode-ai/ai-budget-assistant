@@ -66,20 +66,20 @@ From the price comparison screen, tap the map icon (top-right) to open the **Sto
 
 The app watches how often you buy each tracked product. Once it has seen at least 3 purchases of a product, it learns your typical repurchase gap (e.g. "you buy milk roughly every 6 days"). When a product is overdue based on that pattern — and isn't already on one of your lists — it appears as a chip in the **Time to restock** row at the top of the shopping list. Tap a chip to add that item straight to your list.
 
-You also get a daily push notification when something is due for restocking, once a day at most, summarizing the first overdue item ("Time to restock? Milk and 2 more").
+You also get a push notification when something is due for restocking. A given item is only reminded once per shopping cycle, not every day — once you buy it again, the reminder resets and only comes back the next time it's due. The app sends at most one restock reminder every couple of days, summarizing the first overdue item ("Time to restock? Milk and 2 more").
 
 ## Deal Alerts
 
 The app compares the price you've recently paid for a tracked product against its average price over the last 90 days. If a store's latest price for a product is meaningfully below that average, it shows up as a chip in the **Deals for you** row, with the store name and the discount percentage. Tap a chip to add the item to your list.
 
-Deals are also delivered as a daily push notification when a genuine drop is detected, so you don't have to open the app to catch a good price.
+Deals are also delivered as a push notification when a genuine drop is detected, so you don't have to open the app to catch a good price — but the same price drop won't be pushed more than once a week, so you're not nudged about it repeatedly.
 
 ## Managing Notifications
 
 Both notifications are on by default and can be turned off independently in **Settings → Notifications**:
 
-- **Restock reminder** — the daily "time to restock" push.
-- **Deal alerts** — the daily price-drop push.
+- **Restock reminder** — the "time to restock" push.
+- **Deal alerts** — the price-drop push.
 
 ## Data Source
 
