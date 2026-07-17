@@ -81,15 +81,22 @@ export function InteractiveLineChart({
     ),
   }));
 
-  // When the data contains negative values, gifted-charts allocates extra space below
-  // the x-axis beyond `height`. We must explicitly set mostNegativeValue +
-  // noOfSectionsBelowXAxis so the chart distributes sections within the given height.
+  // When the data contains negative values, gifted-charts renders an extra region BELOW
+  // the x-axis whose height is (noOfSectionsBelowXAxis * height / noOfSections) — i.e. it
+  // extends the chart *beyond* `height`. The wrapper is auto-height (see chartClip) so that
+  // region is shown, not vertically clipped. Keep the below-axis sections proportional to
+  // the most-negative point (1..noOfSections) so the card is only as tall as the data needs.
+  const noOfSections = 4;
   const hasNegative = data.some((d) => d.value < 0);
   const maxDataAbs = Math.max(...data.map((d) => Math.abs(d.value)), 1);
   const minDataValue = hasNegative ? Math.min(...data.map((d) => d.value)) : 0;
   const maxValue = maxDataAbs * 1.15;
   const mostNegativeValue = hasNegative ? minDataValue * 1.15 : undefined;
-  const noOfSectionsBelowXAxis = hasNegative ? 4 : undefined;
+  const stepValue = maxValue / noOfSections;
+  const noOfSectionsBelowXAxis =
+    hasNegative && mostNegativeValue !== undefined
+      ? Math.min(noOfSections, Math.max(1, Math.ceil(Math.abs(mostNegativeValue) / stepValue)))
+      : undefined;
 
   return (
     <View style={styles.container} onLayout={handleLayout}>
@@ -101,8 +108,10 @@ export function InteractiveLineChart({
           </Text>
         </View>
       )}
-      {/* Clip the chart SVG to its own bounds — keeps the card clean without hiding content */}
-      <View style={[styles.chartClip, { height: height + 16 }]}>
+      {/* Auto-height wrapper: overflow:hidden still trims any horizontal spill past the
+          right edge (the old bug), but no fixed height — so the below-x-axis negative
+          region (which gifted-charts draws beyond `height`) is shown, not clipped. */}
+      <View style={styles.chartClip}>
         {chartWidth > 0 && (
           <LineChart
             data={lineData}
@@ -113,7 +122,7 @@ export function InteractiveLineChart({
             animationDuration={600}
             curved
             maxValue={maxValue}
-            noOfSections={4}
+            noOfSections={noOfSections}
             mostNegativeValue={mostNegativeValue}
             noOfSectionsBelowXAxis={noOfSectionsBelowXAxis}
             yAxisThickness={0}
