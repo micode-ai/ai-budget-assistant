@@ -755,12 +755,20 @@ describe('ExpensesService.moveToAccount', () => {
     expect(tx.expense.update.mock.calls[0][0].data.categoryId).toBeNull();
   });
 
-  it('nulls the clientId when the target account already holds that clientId', async () => {
+  it('assigns a fresh non-null clientId when the target account already holds that clientId', async () => {
+    // clientId is a required (non-nullable) column, so it must NOT be set to null on a
+    // collision — that throws PrismaClientValidationError. A fresh unique id avoids both
+    // the @@unique([accountId, clientId]) collision and the schema violation.
     const { service, tx } = makeService({ clientIdClash: { id: 'other' } });
 
     await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
 
-    expect(tx.expense.update.mock.calls[0][0].data.clientId).toBeNull();
+    const newClientId = tx.expense.update.mock.calls[0][0].data.clientId;
+    expect(newClientId).toEqual(expect.any(String));
+    expect(newClientId).not.toBeNull();
+    expect(newClientId).not.toBe('cli-1');
+    // UUID v4 shape
+    expect(newClientId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
   });
 
   it('rejects moving to the same account', async () => {

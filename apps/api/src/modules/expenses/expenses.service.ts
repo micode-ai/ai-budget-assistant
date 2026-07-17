@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException, Optional } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto, MergeExpensesDto, MoveExpenseDto } from './dto';
@@ -1112,7 +1113,9 @@ export class ExpensesService {
     }
 
     // A clientId is unique per account — if the target already holds a row with the
-    // same clientId, drop ours to avoid the @@unique([accountId, clientId]) collision.
+    // same clientId, replace ours with a fresh id to avoid the @@unique([accountId,
+    // clientId]) collision. clientId is a required (non-nullable) column, so it MUST
+    // NOT be nulled here (that throws PrismaClientValidationError).
     let keepClientId = true;
     if (expense.clientId) {
       const clash = await this.prisma.expense.findFirst({
@@ -1143,7 +1146,7 @@ export class ExpensesService {
         categoryId: remappedCategoryId,
         syncVersion: { increment: 1 },
       };
-      if (!keepClientId) moveData.clientId = null;
+      if (!keepClientId) moveData.clientId = randomUUID();
 
       await tx.expense.update({ where: { id: expense.id }, data: moveData });
     });
