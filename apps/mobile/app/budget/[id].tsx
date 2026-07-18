@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,18 +23,44 @@ export default function BudgetDetailScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { budgets, deleteBudget, getBudgetProgress } = useBudgetStore();
-  const budget = budgets.find((b) => b.id === id);
+  const { budgets, deleteBudget, getBudgetProgress, loadBudgets, isLoading } = useBudgetStore();
+  // Deep-links (e.g. a `budget_alert` push) carry the SERVER budget id, but on a
+  // device the local row id is the clientId and the server PK lives in `serverId`.
+  // Match all four so tapping a budget notification resolves the budget instead of
+  // dead-ending on "Budget not found" (same fix class as the anomaly-alert
+  // expense deep-link, ABA-247/339).
+  const budget = budgets.find(
+    (b) => b.id === id || b.serverId === id || b.clientId === id || b.localId === id,
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const [referenceDate, setReferenceDate] = useState<Date>(new Date());
+  const [triedReload, setTriedReload] = useState(false);
   const progress = budget ? getBudgetProgress(budget.id, referenceDate) : null;
 
   useEffect(() => {
     setReferenceDate(new Date());
   }, [budget?.period]);
 
+  useEffect(() => {
+    // Cold-start from a push can mount this screen before the budget store is
+    // hydrated. Force one reload before concluding the budget is gone.
+    if (!budget && !triedReload) {
+      setTriedReload(true);
+      void loadBudgets();
+    }
+  }, [budget, triedReload, loadBudgets]);
+
   if (!budget) {
+    if (isLoading || !triedReload) {
+      return (
+        <SafeAreaView style={styles.container}>
+          <View style={styles.centered}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        </SafeAreaView>
+      );
+    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
