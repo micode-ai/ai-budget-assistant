@@ -10,27 +10,31 @@
  */
 
 import Stripe from 'stripe';
+import * as pricingData from '../pricing-data.json';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-01-28.clover',
 });
 
 /**
- * Multi-currency pricing table.
- * Amounts in smallest currency units (cents/groszy/kopecks).
- * Stripe requires lowercase currency codes.
+ * Multi-currency pricing table, derived from pricing-data.json (single
+ * source of truth — see tech-debt pricing-table-triple-copy). Stripe
+ * requires lowercase currency codes, so keys are lowercased here.
  */
 const CURRENCIES: Record<
   string,
   { pro_monthly: number; pro_yearly: number; biz_monthly: number; biz_yearly: number }
-> = {
-  usd: { pro_monthly: 499,   pro_yearly: 2999,   biz_monthly: 1999,  biz_yearly: 19188  },
-  eur: { pro_monthly: 449,   pro_yearly: 2699,   biz_monthly: 1799,  biz_yearly: 17268  },
-  pln: { pro_monthly: 1499,  pro_yearly: 8999,   biz_monthly: 5999,  biz_yearly: 57588  },
-  gbp: { pro_monthly: 399,   pro_yearly: 2399,   biz_monthly: 1599,  biz_yearly: 15348  },
-  uah: { pro_monthly: 9900,  pro_yearly: 59900,  biz_monthly: 39900, biz_yearly: 382900 },
-  rub: { pro_monthly: 24900, pro_yearly: 149900, biz_monthly: 99900, biz_yearly: 958900 },
-};
+> = Object.fromEntries(
+  Object.entries(pricingData.currencies).map(([code, amounts]) => [
+    code.toLowerCase(),
+    {
+      pro_monthly: amounts.pro_monthly,
+      pro_yearly: amounts.pro_yearly,
+      biz_monthly: amounts.biz_monthly,
+      biz_yearly: amounts.biz_yearly,
+    },
+  ]),
+);
 
 async function createPrices(
   productId: string,

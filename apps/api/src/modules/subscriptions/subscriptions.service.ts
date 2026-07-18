@@ -11,6 +11,7 @@ import { TelegramService } from '../telegram/telegram.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../mail/mail.service';
 import * as ni18n from '../notifications/notification-i18n';
+import * as pricingData from './pricing-data.json';
 
 type SubscriptionTier = 'free' | 'pro' | 'business';
 type SubscriptionRecord = NonNullable<Awaited<ReturnType<PrismaService['subscription']['findUnique']>>>;
@@ -34,21 +35,16 @@ const MEMBER_LIMITS: Record<SubscriptionTier, number> = {
 };
 
 /**
- * Multi-currency pricing table.
- * Amounts in smallest currency units (cents/groszy/kopecks).
- * PPP-adjusted for each market.
+ * Multi-currency pricing table (amounts + display symbol).
+ * Single source of truth is pricing-data.json (see tech-debt
+ * pricing-table-triple-copy) — also read by setup-stripe-products.ts and
+ * docs/marketing/landing/build_landing.py. Does NOT drive what Stripe
+ * actually charges (see resolvePriceId() below, which is env-driven).
  */
 const PRICING: Record<
   string,
   { symbol: string; pro_monthly: number; pro_yearly: number; biz_monthly: number; biz_yearly: number }
-> = {
-  USD: { symbol: '$',  pro_monthly: 499,   pro_yearly: 2999,   biz_monthly: 1999,  biz_yearly: 19188  },
-  EUR: { symbol: '€',  pro_monthly: 449,   pro_yearly: 2699,   biz_monthly: 1799,  biz_yearly: 17268  },
-  PLN: { symbol: 'zł', pro_monthly: 1499,  pro_yearly: 8999,   biz_monthly: 5999,  biz_yearly: 57588  },
-  GBP: { symbol: '£',  pro_monthly: 399,   pro_yearly: 2399,   biz_monthly: 1599,  biz_yearly: 15348  },
-  UAH: { symbol: '₴',  pro_monthly: 9900,  pro_yearly: 59900,  biz_monthly: 39900, biz_yearly: 382900 },
-  RUB: { symbol: '₽',  pro_monthly: 24900, pro_yearly: 149900, biz_monthly: 99900, biz_yearly: 958900 },
-};
+> = pricingData.currencies;
 
 @Injectable()
 export class SubscriptionsService {

@@ -1,5 +1,6 @@
 import { ForbiddenException } from '@nestjs/common';
 import { SubscriptionsService } from './subscriptions.service';
+import * as pricingData from './pricing-data.json';
 
 // Critical subscription paths:
 //   1. Tier gating — free users must be blocked at the AI request limit.
@@ -299,5 +300,40 @@ describe('SubscriptionsService — getOrCreateSubscription (upsert race)', () =>
       subscription: { upsert: jest.fn().mockRejectedValue(other) },
     });
     await expect(service.getOrCreateSubscription('u1')).rejects.toBe(other);
+  });
+});
+
+// pricing-data.json is the single source of truth for subscription pricing
+// (tech-debt pricing-table-triple-copy) — also read by setup-stripe-products.ts
+// and docs/marketing/landing/build_landing.py. This guards its shape so a bad
+// edit fails fast in CI instead of silently breaking getPlans()/checkout/the
+// landing page.
+describe('pricing-data.json', () => {
+  const REQUIRED_FIELDS = ['symbol', 'pro_monthly', 'pro_yearly', 'biz_monthly', 'biz_yearly'] as const;
+
+  it('has a USD entry (the universal fallback currency)', () => {
+    expect(pricingData.currencies.USD).toBeDefined();
+  });
+
+  it('every currency has all required numeric fields plus a symbol, and yearly < monthly*12', () => {
+    for (const [code, entry] of Object.entries(pricingData.currencies)) {
+      for (const field of REQUIRED_FIELDS) {
+        expect(entry).toHaveProperty(field);
+      }
+      expect(typeof entry.symbol).toBe('string');
+      expect(entry.symbol.length).toBeGreaterThan(0);
+      expect(entry.pro_yearly).toBeLessThan(entry.pro_monthly * 12);
+      expect(entry.biz_yearly).toBeLessThan(entry.biz_monthly * 12);
+      expect(code).toMatch(/^[A-Z]{3}$/);
+    }
+  });
+
+  it('drives getPlans() output (no independent copy left in subscriptions.service.ts)', () => {
+    const { service } = makeService();
+    const plans = service.getPlans('PLN');
+    const expected = pricingData.currencies.PLN;
+    expect(plans.symbol).toBe(expected.symbol);
+    expect(plans.plans[0].monthly.amount).toBe(expected.pro_monthly);
+    expect(plans.plans[1].yearly.amount).toBe(expected.biz_yearly);
   });
 });

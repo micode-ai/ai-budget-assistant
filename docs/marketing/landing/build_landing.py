@@ -125,14 +125,25 @@ ABOUT_LABELS = {"en": "About", "pl": "O nas", "de": "Über uns", "es": "Acerca d
 HELP_LABELS = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",
                "ru": "Помощь", "ua": "Довідка", "be": "Дапамога", "nl": "Help"}
 
-# Pricing (ABA landing pricing page): amounts must match PRICING in
-# apps/api/src/modules/subscriptions/subscriptions.service.ts exactly.
+# Pricing (ABA landing pricing page): single source of truth is
+# apps/api/src/modules/subscriptions/pricing-data.json (tech-debt
+# pricing-table-triple-copy) — the SAME file subscriptions.service.ts and
+# setup-stripe-products.ts import directly. Its amounts are ints in minor
+# units (cents/groszy/kopecks); convert to float major units for display.
+_PRICING_JSON_PATH = os.path.join(
+    ROOT, "..", "..", "..", "apps", "api", "src", "modules", "subscriptions", "pricing-data.json"
+)
+with open(_PRICING_JSON_PATH, encoding="utf-8") as _f:
+    _pricing_raw = json.load(_f)["currencies"]
 CURRENCY_PRICING = {
-    "USD": {"symbol": "$",  "pro_m": 4.99,   "pro_y": 29.99,   "biz_m": 19.99,  "biz_y": 191.88},
-    "EUR": {"symbol": "€",  "pro_m": 4.49,   "pro_y": 26.99,   "biz_m": 17.99,  "biz_y": 172.68},
-    "PLN": {"symbol": "zł", "pro_m": 14.99,  "pro_y": 89.99,   "biz_m": 59.99,  "biz_y": 575.88},
-    "RUB": {"symbol": "₽",  "pro_m": 249.00, "pro_y": 1499.00, "biz_m": 999.00, "biz_y": 9589.00},
-    "UAH": {"symbol": "₴",  "pro_m": 99.00,  "pro_y": 599.00,  "biz_m": 399.00, "biz_y": 3829.00},
+    code: {
+        "symbol": v["symbol"],
+        "pro_m": v["pro_monthly"] / 100,
+        "pro_y": v["pro_yearly"] / 100,
+        "biz_m": v["biz_monthly"] / 100,
+        "biz_y": v["biz_yearly"] / 100,
+    }
+    for code, v in _pricing_raw.items()
 }
 # be (Belarusian) has no BYN in CURRENCY_PRICING and no Stripe price for it,
 # so it falls back to USD display (confirmed intended behavior, not a bug).
