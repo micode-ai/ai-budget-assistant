@@ -1,47 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
-import { Linking, Platform } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import {
-  useFonts,
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_700Bold,
-} from '@expo-google-fonts/montserrat';
-import * as Notifications from 'expo-notifications';
 import { useAuthStore } from '@/stores/authStore';
-import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { DatabaseProvider } from '@/db/DatabaseProvider';
-import { initializeDatabase } from '@/db/client';
-import { loadSavedLanguage } from '@/i18n';
-import i18n from '@/i18n';
-import { api } from '@/services/api';
 import { ThemeProvider, useTheme } from '@/theme';
-import {
-  registerForPushNotifications,
-  setupNotificationListeners,
-  handleNotificationResponse,
-} from '@/services/notifications';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { UpgradeGate } from '@/components/UpgradeGate';
 import { WebShell } from '@/components/WebShell';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
-import {
-  subscribeToCapture,
-  unsubscribeFromCapture,
-} from '@/services/notificationCapture/captureService';
-import { isEnabled as isCaptureEnabled } from '@/services/notificationCapture';
-import { useAccountStore } from '@/stores/accountStore';
-import { extractTripInviteCode } from '@/utils/deepLink';
-import { showAlert } from '@/utils/alert';
+import { useAppBootstrap } from '@/hooks/useAppBootstrap';
+import { useColdStartGate } from '@/hooks/useColdStartGate';
+import { useBankNotificationCapture } from '@/hooks/useBankNotificationCapture';
+import { useAuthenticatedBootstrap } from '@/hooks/useAuthenticatedBootstrap';
+import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
+import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
+import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -56,230 +35,20 @@ const queryClient = new QueryClient({
 });
 
 function RootNavigator() {
-  const { isInitializing, isAuthenticated, initialize } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const { t } = useTranslation();
   const theme = useTheme();
 
   useOrientationLock();
 
-  const [fontsLoaded] = useFonts({
-    Montserrat_400Regular,
-    Montserrat_500Medium,
-    Montserrat_600SemiBold,
-    Montserrat_700Bold,
-  });
+  const { fontsLoaded, isInitializing } = useAppBootstrap();
+  const coldStartGateReady = useColdStartGate({ isInitializing, isAuthenticated, fontsLoaded });
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await initializeDatabase();
-        await loadSavedLanguage();
-        await initialize();
-      } catch (e) {
-        console.warn('Error initializing app:', e);
-      }
-    }
-
-    prepare();
-  }, [initialize]);
-
-  // Register push notifications and sync language when authenticated.
-  // Delay slightly so the navigation stack settles before the OS
-  // permission dialog appears — avoids a crash on Android when the
-  // dialog dismisses into a partially-mounted screen.
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    // Load the subscription tier once, right after auth, so Pro-gates (shopping-list
-    // compare, Story/Fat-Finder/AI-Insights) don't false-paywall a paid user who
-    // reaches the feature before AiUsageBadge / the subscription screens have loaded it.
-    void useSubscriptionStore.getState().loadSubscription();
-    const timer = setTimeout(() => {
-      registerForPushNotifications();
-      api.updateProfile({ language: i18n.language }).catch(() => {});
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [isAuthenticated]);
-
-  // Subscribe to bank-notification capture events as early as possible on Android.
-  // Previously gated on isAuthenticated+fontsLoaded+!isInitializing, which caused a
-  // startup race: a bank push that arrived during boot was emitted by Kotlin before JS
-  // registered its listener, and was silently dropped. Now we subscribe on mount (empty
-  // deps). Safety: Kotlin's onNotificationPosted checks the SharedPreferences flag
-  // FIRST, so no event is forwarded unless the user explicitly enabled capture.
-  // handleBankNotification returns early gracefully when auth isn't ready yet.
-  // iOS/web: subscribeToCapture() is a no-op (Platform.OS !== 'android' early-return).
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
-
-    let active = true;
-    isCaptureEnabled().then((enabled) => {
-      if (enabled && active) subscribeToCapture();
-    }).catch(() => {});
-
-    return () => {
-      active = false;
-      unsubscribeFromCapture();
-    };
-  }, []);
-
-  // A notification that cold-started the app (tapped while the app was killed).
-  // It must NOT be acted on until the navigation tree is mounted and the
-  // auth/account context is loaded — see the deferred-flush effect below.
-  const [pendingNotification, setPendingNotification] =
-    useState<Notifications.NotificationResponse | null>(null);
-
-  // Set up notification listeners
-  useEffect(() => {
-    const cleanup = setupNotificationListeners();
-
-    // Capture the notification that launched the app (cold start) — native only;
-    // expo-notifications throws "not available on web" otherwise. We only STORE it
-    // here; navigating now would target an unmounted <Stack> (RootNavigator still
-    // returns null while initializing) and switchAccount() would no-op against the
-    // not-yet-loaded accounts list, wedging the app on a blank screen.
-    if (Platform.OS !== 'web') {
-      Notifications.getLastNotificationResponseAsync().then((response) => {
-        if (response) {
-          setPendingNotification(response);
-        }
-      }).catch(() => {});
-    }
-
-    return cleanup;
-  }, []);
-
-  // Flush a cold-start notification deep-link once the app is fully ready, the
-  // same gate the Linking deep-link handler below uses. Depending on which
-  // settles last (init/auth vs the async getLastNotificationResponseAsync), this
-  // effect re-runs and navigates exactly once.
-  useEffect(() => {
-    if (isInitializing || !isAuthenticated || !fontsLoaded || !pendingNotification) return;
-    handleNotificationResponse(pendingNotification);
-    setPendingNotification(null);
-  }, [isInitializing, isAuthenticated, fontsLoaded, pendingNotification]);
-
-  // A trip-invite universal link (https://ai-budget.pl/trip-invite/<code>) that opened or
-  // cold-started the app. Same two-phase pattern as the notification handling above: this
-  // effect only CAPTURES the code (mount + warm 'url' events); it must NOT be acted on until
-  // the navigation tree is mounted and the auth/account context is loaded — see the
-  // deferred-flush effect below, gated identically to the notification flush.
-  const [pendingInviteCode, setPendingInviteCode] = useState<string | null>(null);
-
-  useEffect(() => {
-    const sub = Linking.addEventListener('url', (event) => {
-      const code = extractTripInviteCode(event.url);
-      if (code) setPendingInviteCode(code);
-    });
-
-    Linking.getInitialURL()
-      .then((url) => {
-        if (url) {
-          const code = extractTripInviteCode(url);
-          if (code) setPendingInviteCode(code);
-        }
-      })
-      .catch(() => {});
-
-    return () => sub.remove();
-  }, []);
-
-  // Flush a pending trip-invite auto-accept once the app is fully ready — the exact same
-  // gate as the notification flush effect above (`isInitializing || !isAuthenticated ||
-  // !fontsLoaded`), per the documented "keep the two deep-link paths gated symmetrically"
-  // rule. Auto-accepting (instead of routing to the manual account/join.tsx code-entry
-  // screen) uses the same acceptInvitation() the manual flow calls; the newly joined
-  // account is identified by diffing the account list before/after since acceptInvitation
-  // only resolves void (it already reloads accounts internally).
-  useEffect(() => {
-    if (isInitializing || !isAuthenticated || !fontsLoaded || !pendingInviteCode) return;
-    const beforeIds = new Set(useAccountStore.getState().accounts.map((a) => a.id));
-    useAccountStore
-      .getState()
-      .acceptInvitation(pendingInviteCode)
-      .then(() => {
-        const newAccount = useAccountStore
-          .getState()
-          .accounts.find((a) => !beforeIds.has(a.id));
-        if (newAccount) {
-          useAccountStore.getState().switchAccount(newAccount.id);
-        }
-        router.replace('/(tabs)');
-      })
-      .catch((e) => {
-        showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
-      });
-    setPendingInviteCode(null);
-  }, [isInitializing, isAuthenticated, fontsLoaded, pendingInviteCode, t]);
-
-  useEffect(() => {
-    if (!isInitializing && fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [isInitializing, fontsLoaded]);
-
-  // Handle deep links from widgets and external sources
-  const lastHandledUrl = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (isInitializing || !isAuthenticated) return;
-    // Web: the browser URL is already the route and Expo Router handles it
-    // natively. Running the custom-scheme deep-link logic here would treat the
-    // domain as a path segment (budget://expense/voice puts the first segment
-    // in URL.host), turning https://ai-budget.pl/expenses into a push to
-    // "/ai-budget.pl/expenses" → https://ai-budget.pl/ai-budget.pl/expenses.
-    if (Platform.OS === 'web') return;
-    function navigateToDeepLink(url: string) {
-      // Subscription deep links are handled by WebBrowser.openAuthSessionAsync — ignore here
-      if (url.includes('subscription/success') || url.includes('subscription/cancel')) return;
-
-      // Trip-invite links are handled by the dedicated capture/flush effects above —
-      // ignore here to avoid a duplicate push to an unmatched "/trip-invite/<code>" route.
-      if (url.includes('trip-invite/')) return;
-
-      // Prevent duplicate navigation for the same URL
-      if (lastHandledUrl.current === url) return;
-      lastHandledUrl.current = url;
-      // Reset after a short delay to allow re-tapping the same widget later
-      setTimeout(() => { lastHandledUrl.current = null; }, 1000);
-
-      // Parse path from custom scheme URI: budget:///expense/voice → /expense/voice
-      let fullPath: string | null = null;
-      try {
-        const parsed = new URL(url);
-        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-          // http(s) link (App Link / Universal Link): host is the domain, not a
-          // path segment — the pathname already IS the route.
-          const p = parsed.pathname + parsed.search;
-          if (p && p !== '/') fullPath = p;
-        } else {
-          // Custom scheme: budget://expense/voice has host="expense", path="/voice"
-          const path = parsed.pathname || parsed.host;
-          if (path && path !== '/') {
-            fullPath = parsed.host ? `/${parsed.host}${parsed.pathname}` : parsed.pathname;
-          }
-        }
-      } catch {
-        // Fallback: strip scheme manually
-        fullPath = url.replace(/^[^:]+:\/\/\/?/, '/');
-        if (fullPath === '/') fullPath = null;
-      }
-
-      if (fullPath) {
-        router.push(fullPath as any);
-      }
-    }
-
-    // Handle URL that launched the app (cold start)
-    Linking.getInitialURL().then((url) => {
-      if (url) navigateToDeepLink(url);
-    });
-
-    // Handle URLs when app is already running (warm start)
-    const sub = Linking.addEventListener('url', (event) => {
-      if (event.url) navigateToDeepLink(event.url);
-    });
-    return () => sub.remove();
-  }, [isInitializing, isAuthenticated]);
+  useAuthenticatedBootstrap(isAuthenticated);
+  useBankNotificationCapture();
+  useNotificationDeepLink(coldStartGateReady);
+  useTripInviteDeepLink(coldStartGateReady, t);
+  useGenericDeepLink(isInitializing, isAuthenticated);
 
   if (isInitializing || !fontsLoaded) {
     return null;
