@@ -30,6 +30,19 @@ const mockPrisma: any = {
     update: jest.fn(),
     updateMany: jest.fn(),
   },
+  tag: {
+    upsert: jest.fn(),
+    findFirst: jest.fn(),
+    update: jest.fn(),
+    updateMany: jest.fn(),
+  },
+  expenseTag: {
+    upsert: jest.fn(),
+    updateMany: jest.fn(),
+  },
+  user: {
+    update: jest.fn(),
+  },
 };
 
 const mockExpensesService = {
@@ -198,6 +211,381 @@ describe('SyncService', () => {
       });
       expect(res.status).toBe('error');
       expect(prisma.shoppingListItem.upsert).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('processChange — expense (highest-volume handler)', () => {
+    it('creates a new expense when none exists locally', async () => {
+      mockExpensesService.getByClientId.mockResolvedValue(null);
+      mockExpensesService.create.mockResolvedValue({ expense: { id: 'srv-exp-1', syncVersion: 1 } });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense',
+        entityId: 'client-exp-1',
+        operation: 'create',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { amount: 42, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({
+        entityId: 'client-exp-1',
+        status: 'success',
+        serverId: 'srv-exp-1',
+        serverVersion: 1,
+      });
+      expect(mockExpensesService.create).toHaveBeenCalledWith(
+        'acc-1',
+        'user-1',
+        expect.objectContaining({ localId: 'client-exp-1', amount: 42 }),
+      );
+    });
+
+    it('updates an existing expense when the client version matches', async () => {
+      mockExpensesService.getByClientId.mockResolvedValue({ id: 'srv-exp-1', syncVersion: 2 });
+      mockExpensesService.update.mockResolvedValue({ syncVersion: 3 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense',
+        entityId: 'client-exp-1',
+        operation: 'update',
+        clientVersion: 2,
+        accountId: 'acc-1',
+        payload: { amount: 50, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({ entityId: 'client-exp-1', status: 'success', serverVersion: 3 });
+      expect(mockExpensesService.update).toHaveBeenCalledWith('acc-1', 'srv-exp-1', expect.any(Object));
+    });
+
+    it('soft-deletes an existing expense', async () => {
+      mockExpensesService.getByClientId.mockResolvedValue({ id: 'srv-exp-1', syncVersion: 2 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense',
+        entityId: 'client-exp-1',
+        operation: 'delete',
+        clientVersion: 2,
+        accountId: 'acc-1',
+        payload: { amount: 42, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({ entityId: 'client-exp-1', status: 'success' });
+      expect(mockExpensesService.remove).toHaveBeenCalledWith('acc-1', 'srv-exp-1');
+    });
+
+    it('returns status:conflict with serverData when the server version has moved ahead', async () => {
+      const serverRow = { id: 'srv-exp-1', syncVersion: 5 };
+      mockExpensesService.getByClientId.mockResolvedValue(serverRow);
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense',
+        entityId: 'client-exp-1',
+        operation: 'update',
+        clientVersion: 3, // client is behind — someone else already pushed a newer version
+        accountId: 'acc-1',
+        payload: { amount: 42, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({
+        entityId: 'client-exp-1',
+        status: 'conflict',
+        serverVersion: 5,
+        serverData: serverRow,
+      });
+      expect(mockExpensesService.update).not.toHaveBeenCalled();
+    });
+
+    it('errors when updating an expense that does not exist server-side', async () => {
+      mockExpensesService.getByClientId.mockResolvedValue(null);
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense',
+        entityId: 'client-exp-1',
+        operation: 'update',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { amount: 42, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({ entityId: 'client-exp-1', status: 'error', error: 'Entity not found' });
+    });
+  });
+
+  describe('processChange — income (highest-volume handler)', () => {
+    it('creates a new income when none exists locally', async () => {
+      mockIncomesService.getByClientId.mockResolvedValue(null);
+      mockIncomesService.create.mockResolvedValue({ id: 'srv-inc-1', syncVersion: 1 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'income',
+        entityId: 'client-inc-1',
+        operation: 'create',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { amount: 1000, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({
+        entityId: 'client-inc-1',
+        status: 'success',
+        serverId: 'srv-inc-1',
+        serverVersion: 1,
+      });
+      expect(mockIncomesService.create).toHaveBeenCalledWith(
+        'acc-1',
+        'user-1',
+        expect.objectContaining({ localId: 'client-inc-1', amount: 1000 }),
+      );
+    });
+
+    it('updates an existing income when the client version matches', async () => {
+      mockIncomesService.getByClientId.mockResolvedValue({ id: 'srv-inc-1', syncVersion: 1 });
+      mockIncomesService.update.mockResolvedValue({ syncVersion: 2 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'income',
+        entityId: 'client-inc-1',
+        operation: 'update',
+        clientVersion: 1,
+        accountId: 'acc-1',
+        payload: { amount: 1200, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({ entityId: 'client-inc-1', status: 'success', serverVersion: 2 });
+      expect(mockIncomesService.update).toHaveBeenCalledWith('acc-1', 'srv-inc-1', expect.any(Object));
+    });
+
+    it('soft-deletes an existing income', async () => {
+      mockIncomesService.getByClientId.mockResolvedValue({ id: 'srv-inc-1', syncVersion: 1 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'income',
+        entityId: 'client-inc-1',
+        operation: 'delete',
+        clientVersion: 1,
+        accountId: 'acc-1',
+        payload: { amount: 1000, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({ entityId: 'client-inc-1', status: 'success' });
+      expect(mockIncomesService.remove).toHaveBeenCalledWith('acc-1', 'srv-inc-1');
+    });
+
+    it('returns status:conflict with serverData when the client is stale', async () => {
+      const serverRow = { id: 'srv-inc-1', syncVersion: 9 };
+      mockIncomesService.getByClientId.mockResolvedValue(serverRow);
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'income',
+        entityId: 'client-inc-1',
+        operation: 'update',
+        clientVersion: 1,
+        accountId: 'acc-1',
+        payload: { amount: 1000, currencyCode: 'PLN', date: '2026-07-01' },
+      });
+
+      expect(result).toEqual({
+        entityId: 'client-inc-1',
+        status: 'conflict',
+        serverVersion: 9,
+        serverData: serverRow,
+      });
+      expect(mockIncomesService.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('processChange — tag', () => {
+    it('upserts a tag scoped to (accountId, name) on create', async () => {
+      prisma.tag.upsert.mockResolvedValue({ id: 'srv-tag-1', syncVersion: 1 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'tag',
+        entityId: 'client-tag-1',
+        operation: 'create',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { name: 'Groceries' },
+      });
+
+      expect(result).toEqual({
+        entityId: 'client-tag-1',
+        status: 'success',
+        serverId: 'srv-tag-1',
+        serverVersion: 1,
+      });
+      expect(prisma.tag.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { accountId_name: { accountId: 'acc-1', name: 'Groceries' } } }),
+      );
+    });
+
+    it('updates an existing tag looked up scoped to the account', async () => {
+      prisma.tag.findFirst.mockResolvedValue({ id: 'srv-tag-1' });
+      prisma.tag.update.mockResolvedValue({ syncVersion: 2 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'tag',
+        entityId: 'srv-tag-1',
+        operation: 'update',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { name: 'Groceries & Household' },
+      });
+
+      expect(result).toEqual({ entityId: 'srv-tag-1', status: 'success', serverVersion: 2 });
+      expect(prisma.tag.findFirst).toHaveBeenCalledWith({ where: { id: 'srv-tag-1', accountId: 'acc-1' } });
+    });
+
+    it('errors updating a tag that does not belong to this account', async () => {
+      prisma.tag.findFirst.mockResolvedValue(null);
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'tag',
+        entityId: 'other-accounts-tag',
+        operation: 'update',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { name: 'Hijack attempt' },
+      });
+
+      expect(result).toEqual({ entityId: 'other-accounts-tag', status: 'error', error: 'Tag not found' });
+      expect(prisma.tag.update).not.toHaveBeenCalled();
+    });
+
+    it('soft-deletes a tag scoped to the account', async () => {
+      prisma.tag.updateMany.mockResolvedValue({ count: 1 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'tag',
+        entityId: 'srv-tag-1',
+        operation: 'delete',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { name: 'Groceries' },
+      });
+
+      expect(result).toEqual({ entityId: 'srv-tag-1', status: 'success' });
+      expect(prisma.tag.updateMany).toHaveBeenCalledWith({
+        where: { id: 'srv-tag-1', accountId: 'acc-1' },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+    });
+  });
+
+  describe('processChange — budget (unimplemented stub handler)', () => {
+    // processBudgetChange (and processCategoryChange) is an unimplemented
+    // stub that always returns success without writing anything to the
+    // database. This is not exercised in production today — the mobile app
+    // manages budgets/categories via their own dedicated REST endpoints and
+    // never emits 'budget'/'category' SyncChange entries through this push
+    // path — but pinning the current behavior here means a future attempt to
+    // route budget sync through this handler gets a loud, specific test
+    // failure the moment real persistence is expected, instead of silently
+    // reporting success while dropping the change on the floor (exactly the
+    // failure mode this tech-debt item warns about).
+    it('returns success without calling into Prisma', async () => {
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'budget',
+        entityId: 'client-budget-1',
+        operation: 'create',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: {},
+      });
+
+      expect(result).toEqual({ entityId: 'client-budget-1', status: 'success' });
+    });
+  });
+
+  describe('processChange — expense_tag relation (ABA-167 clientId resolution)', () => {
+    // Regression coverage: mobile tags/expenses resolve their local clientId
+    // to a server PK before the relation change is pushed, so the junction
+    // upsert must use the (already-resolved) expenseId/tagId in the payload
+    // verbatim — not the SyncChange's own entityId.
+    it('upserts the expense_tag junction using the ids from the payload', async () => {
+      prisma.expenseTag.upsert.mockResolvedValue({ id: 'et-1' });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense_tag',
+        entityId: 'client-et-1',
+        operation: 'create',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { expenseId: 'srv-exp-1', tagId: 'srv-tag-1' },
+      });
+
+      expect(result).toEqual({ entityId: 'client-et-1', status: 'success' });
+      expect(prisma.expenseTag.upsert).toHaveBeenCalledWith({
+        where: { expenseId_tagId: { expenseId: 'srv-exp-1', tagId: 'srv-tag-1' } },
+        create: { expenseId: 'srv-exp-1', tagId: 'srv-tag-1' },
+        update: { isDeleted: false },
+      });
+    });
+
+    it('soft-deletes the expense_tag row by its own id, not by expenseId/tagId', async () => {
+      prisma.expenseTag.updateMany.mockResolvedValue({ count: 1 });
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense_tag',
+        entityId: 'srv-et-1',
+        operation: 'delete',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { expenseId: 'srv-exp-1', tagId: 'srv-tag-1' },
+      });
+
+      expect(result).toEqual({ entityId: 'srv-et-1', status: 'success' });
+      expect(prisma.expenseTag.updateMany).toHaveBeenCalledWith({
+        where: { id: 'srv-et-1' },
+        data: { isDeleted: true },
+      });
+    });
+
+    it('returns a status:error result instead of throwing when the upsert fails', async () => {
+      prisma.expenseTag.upsert.mockRejectedValue(new Error('constraint violation'));
+
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'expense_tag',
+        entityId: 'client-et-1',
+        operation: 'create',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: { expenseId: 'srv-exp-1', tagId: 'srv-tag-1' },
+      });
+
+      expect(result.status).toBe('error');
+      expect(result.error).toContain('constraint violation');
+    });
+  });
+
+  describe('pushChanges', () => {
+    it('stamps the user lastSyncAt after processing the batch', async () => {
+      prisma.user.update.mockResolvedValue({});
+
+      await service.pushChanges('acc-1', 'user-1', []);
+
+      expect(prisma.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { lastSyncAt: expect.any(Date) },
+      });
+    });
+
+    it('converts a handler exception into a status:error result rather than rejecting the batch', async () => {
+      mockExpensesService.getByClientId.mockRejectedValue(new Error('db down'));
+      prisma.user.update.mockResolvedValue({});
+
+      const results = await service.pushChanges('acc-1', 'user-1', [
+        {
+          entityType: 'expense',
+          entityId: 'client-exp-1',
+          operation: 'create',
+          clientVersion: 0,
+          accountId: 'acc-1',
+          payload: { amount: 42, currencyCode: 'PLN', date: '2026-07-01' },
+        } as any,
+      ]);
+
+      expect(results).toEqual([{ entityId: 'client-exp-1', status: 'error', error: 'db down' }]);
     });
   });
 });
