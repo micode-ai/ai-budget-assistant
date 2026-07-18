@@ -37,6 +37,8 @@ function makeService(overrides: {
       }),
       findUnique: jest.fn().mockResolvedValue(null),
       update: jest.fn().mockResolvedValue({}),
+      findMany: jest.fn().mockResolvedValue([]),
+      count: jest.fn().mockResolvedValue(0),
     },
     $transaction: jest.fn(async (cb: any) => cb(txBase)),
   };
@@ -229,6 +231,61 @@ describe('IncomesService.create', () => {
         date: '2026-07-01',
       } as any),
     ).resolves.toBeDefined();
+  });
+});
+
+describe('IncomesService.findAll', () => {
+  it('builds the base where clause scoped to the account, excluding soft-deleted rows', async () => {
+    const { service, prisma } = makeService();
+
+    await service.findAll('acc-1', {} as any);
+
+    expect(prisma.income.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { accountId: 'acc-1', isDeleted: false } }),
+    );
+    expect(prisma.income.count).toHaveBeenCalledWith({ where: { accountId: 'acc-1', isDeleted: false } });
+  });
+
+  it('adds date range, category, search, and debt filters when provided', async () => {
+    const { service, prisma } = makeService();
+
+    await service.findAll('acc-1', {
+      startDate: '2026-01-01',
+      endDate: '2026-01-31',
+      categoryId: 'cat-1',
+      search: 'bonus',
+      isDebt: true,
+      isDebtRepayment: false,
+    } as any);
+
+    const where = prisma.income.findMany.mock.calls[0][0].where;
+    expect(where.date).toEqual({ gte: new Date('2026-01-01'), lte: new Date('2026-01-31') });
+    expect(where.categoryId).toBe('cat-1');
+    expect(where.OR).toEqual([
+      { description: { contains: 'bonus', mode: 'insensitive' } },
+      { notes: { contains: 'bonus', mode: 'insensitive' } },
+    ]);
+    expect(where.isDebt).toBe(true);
+    expect(where.isDebtRepayment).toBe(false);
+  });
+
+  it('paginates and flattens createdByUserName on each row', async () => {
+    const { service, prisma } = makeService();
+    prisma.income.findMany.mockResolvedValue([{ id: 'inc-1', amount: 10, user: { name: 'Alice' } }]);
+    prisma.income.count.mockResolvedValue(21);
+
+    const result = await service.findAll('acc-1', { page: 2, limit: 10 } as any);
+
+    expect(prisma.income.findMany).toHaveBeenCalledWith(expect.objectContaining({ skip: 10, take: 10 }));
+    expect(result.data).toEqual([expect.objectContaining({ id: 'inc-1', createdByUserName: 'Alice' })]);
+    expect(result.pagination).toEqual({
+      page: 2,
+      limit: 10,
+      total: 21,
+      totalPages: 3,
+      hasNext: true,
+      hasPrev: true,
+    });
   });
 });
 

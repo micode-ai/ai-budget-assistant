@@ -1,10 +1,20 @@
 import { Injectable, NotFoundException, Optional } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
+
+const incomeInclude = {
+  category: true,
+  incomeTags: { where: { isDeleted: false }, include: { tag: true } },
+  projectIncomes: { where: { isDeleted: false }, include: { project: true } },
+  user: { select: { name: true } },
+} satisfies Prisma.IncomeInclude;
+
+type IncomeWithRelations = Prisma.IncomeGetPayload<{ include: typeof incomeInclude }>;
+type IncomeResponse = Omit<IncomeWithRelations, 'user'> & { createdByUserName: string | null };
 
 @Injectable()
 export class IncomesService {
@@ -15,7 +25,7 @@ export class IncomesService {
     @Optional() private readonly familyFeed?: FamilyFeedService,
   ) {}
 
-  private toIncomeResponse(income: any) {
+  private toIncomeResponse(income: IncomeWithRelations): IncomeResponse {
     const { user, ...rest } = income;
     return { ...rest, createdByUserName: user?.name ?? null };
   }
@@ -155,12 +165,7 @@ export class IncomesService {
 
       const full = await tx.income.findUnique({
         where: { id: income.id },
-        include: {
-          category: true,
-          incomeTags: { where: { isDeleted: false }, include: { tag: true } },
-          projectIncomes: { where: { isDeleted: false }, include: { project: true } },
-          user: { select: { name: true } },
-        },
+        include: incomeInclude,
       });
       return full ? this.toIncomeResponse(full) : full;
     });
@@ -186,16 +191,16 @@ export class IncomesService {
     const { page = 1, limit = 20, startDate, endDate, categoryId, search } = filters;
     const skip = (page - 1) * limit;
 
-    const where: any = {
+    const where: Prisma.IncomeWhereInput = {
       accountId,
       isDeleted: false,
     };
 
-    if (startDate) {
-      where.date = { ...where.date, gte: new Date(startDate) };
-    }
-    if (endDate) {
-      where.date = { ...where.date, lte: new Date(endDate) };
+    if (startDate || endDate) {
+      const dateFilter: Prisma.DateTimeFilter = {};
+      if (startDate) dateFilter.gte = new Date(startDate);
+      if (endDate) dateFilter.lte = new Date(endDate);
+      where.date = dateFilter;
     }
     if (categoryId) {
       where.categoryId = categoryId;
@@ -216,12 +221,7 @@ export class IncomesService {
     const [incomes, total] = await Promise.all([
       this.prisma.income.findMany({
         where,
-        include: {
-          category: true,
-          incomeTags: { where: { isDeleted: false }, include: { tag: true } },
-          projectIncomes: { where: { isDeleted: false }, include: { project: true } },
-          user: { select: { name: true } },
-        },
+        include: incomeInclude,
         orderBy: { date: 'desc' },
         skip,
         take: limit,
@@ -249,12 +249,7 @@ export class IncomesService {
         isDeleted: false,
         OR: [{ id }, { clientId: id }],
       },
-      include: {
-        category: true,
-        incomeTags: { where: { isDeleted: false }, include: { tag: true } },
-        projectIncomes: { where: { isDeleted: false }, include: { project: true } },
-        user: { select: { name: true } },
-      },
+      include: incomeInclude,
     });
 
     if (!income) {
@@ -346,12 +341,7 @@ export class IncomesService {
 
       const updated = await tx.income.findUnique({
         where: { id: income.id },
-        include: {
-          category: true,
-          incomeTags: { where: { isDeleted: false }, include: { tag: true } },
-          projectIncomes: { where: { isDeleted: false }, include: { project: true } },
-          user: { select: { name: true } },
-        },
+        include: incomeInclude,
       });
       return updated ? this.toIncomeResponse(updated) : updated;
     });
