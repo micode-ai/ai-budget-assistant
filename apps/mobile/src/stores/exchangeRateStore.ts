@@ -69,9 +69,15 @@ export const useExchangeRateStore = create<ExchangeRateState>()(
 
     loadRates: async () => {
       set({ isLoading: true });
+      const useAuthStore = await getAuthStore();
+      const userCurrency = useAuthStore.getState().user?.currencyCode || 'USD';
+      // Set the base currency up front so the UI shows the correct currency
+      // label even if the rate fetch below fails (conversions then no-op, but a
+      // PLN account never falls back to a "$" label).
+      if (get().baseCurrency !== userCurrency) {
+        set({ baseCurrency: userCurrency });
+      }
       try {
-        const useAuthStore = await getAuthStore();
-        const userCurrency = useAuthStore.getState().user?.currencyCode || 'USD';
         const data = await api.getExchangeRates(userCurrency);
         set({
           rates: { ...data.rates, [userCurrency]: 1 },

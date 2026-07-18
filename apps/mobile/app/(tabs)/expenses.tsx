@@ -20,6 +20,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useAccountStore } from '@/stores/accountStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { sumConverted } from '@/utils/total';
@@ -72,7 +73,11 @@ export default function ExpensesScreen() {
   );
   const rates = useExchangeRateStore((s) => s.rates);
   const baseCurrencyRaw = useExchangeRateStore((s) => s.baseCurrency);
-  const baseCurrency = baseCurrencyRaw || 'USD';
+  const userCurrency = useAuthStore((s) => s.user?.currencyCode);
+  // Fall back to the user's display currency (not a hardcoded USD) when the
+  // exchange-rate store hasn't populated its baseCurrency yet — e.g. a slow or
+  // failed rate fetch. Otherwise a PLN account's total shows a "$" label.
+  const baseCurrency = baseCurrencyRaw || userCurrency || 'USD';
   const filteredTotal = sumConverted(activeTab === 'expenses' ? expenses : incomes, baseCurrency, rates);
   const allCategories = useCategoryStore((s) => s.categories);
   const categories = allCategories.filter(
