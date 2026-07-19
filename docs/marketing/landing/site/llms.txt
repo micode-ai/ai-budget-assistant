@@ -5,10 +5,6 @@
 ## Product
 
 - Name: AI Budget Assistant
-- URL: https://ai-budget.pl
-- App: https://app.ai-budget.pl
-- Google Play: https://play.google.com/store/apps/details?id=com.budget.assistant
-- Company: MICODE sp. z o.o. (https://mi-code.pl/)
 - Launched: April 2026
 - Pricing: Free core; Pro and Business subscription tiers
 - Platforms: Android, Web
@@ -32,9 +28,16 @@
 - Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations
 - Anomaly detection: duplicate charges, price increases, spending spikes
 
-## Content
+## Documentation
 
-- Full content (English markdown mirror): https://ai-budget.pl/llms-full.txt
-- Blog (9 languages): https://ai-budget.pl/blog/en/
-- Help center (9 languages): https://ai-budget.pl/help/en/
-- Sitemap: https://ai-budget.pl/sitemap.xml
+- [Blog](https://ai-budget.pl/blog/en/): budgeting, expense-tracking and saving guides in 9 languages
+- [Help center](https://ai-budget.pl/help/en/): how to use every feature of the app
+- [Pricing](https://ai-budget.pl/pricing/): Free, Pro and Business plans
+- [Full content for LLMs](https://ai-budget.pl/llms-full.txt): English markdown mirror of the blog and help center
+
+## Links
+
+- [Web app](https://app.ai-budget.pl): sign in and use AI Budget Assistant in the browser
+- [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): Android app
+- [Company: MICODE sp. z o.o.](https://mi-code.pl/): the company behind the app
+- [Sitemap](https://ai-budget.pl/sitemap.xml): all indexable URLs
