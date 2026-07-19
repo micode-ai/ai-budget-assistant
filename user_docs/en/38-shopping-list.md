@@ -34,6 +34,13 @@ You can also **ask the AI assistant** to add items: open the **Chat** tab and sa
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 
+## Managing the List by Chat
+
+Besides adding items, you can ask the assistant to:
+
+- **Remove an item** — "remove milk from my list" or "take eggs off, I already bought them." This takes the item off your list immediately, same as adding — no confirmation needed. It only removes items that aren't already checked off; to mark something as bought without deleting it, use the checkbox on the list itself.
+- **Ask what's running low or on sale** — "what am I running low on?" or "any deals right now?" The assistant answers with the same restock and deal information shown in the **Time to restock** and **Deals for you** rows below.
+
 ## Compare Prices ("Where's cheapest")
 
 Tap **Compare prices** at the bottom of the list to see which store is cheapest for everything currently unchecked on your list.

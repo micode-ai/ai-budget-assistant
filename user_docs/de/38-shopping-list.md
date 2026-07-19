@@ -32,6 +32,13 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 
 Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
 
+## Die Liste per Chat verwalten
+
+Neben dem Hinzufügen kannst du den Assistenten auch bitten:
+
+- **Einen Artikel zu entfernen** — „entferne Milch von meiner Liste" oder „nimm Eier weg, die habe ich schon gekauft." Der Artikel wird sofort entfernt, genau wie beim Hinzufügen — ohne Bestätigung. Es werden nur noch nicht abgehakte Artikel entfernt; um etwas als gekauft zu markieren, ohne es zu löschen, benutze das Kontrollkästchen in der Liste.
+- **Zu fragen, was knapp wird oder im Angebot ist** — „was geht mir aus?" oder „gibt es gerade Angebote?" Der Assistent antwortet mit denselben Informationen, die auch in den Zeilen **Zeit zum Nachkaufen** und **Angebote für dich** angezeigt werden.
+
 Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
 
 ## Preise vergleichen („Wo es am günstigsten ist")

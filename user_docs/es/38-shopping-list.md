@@ -32,6 +32,13 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
 
+## Gestionar la lista por chat
+
+Además de añadir, puedes pedirle al asistente que:
+
+- **Quite un artículo** — «quita la leche de mi lista» o «elimina los huevos, ya los compré». El artículo se elimina al instante, igual que al añadirlo, sin confirmación. Solo elimina artículos que aún no estén marcados; para marcar algo como comprado sin borrarlo, usa la casilla de la propia lista.
+- **Pregunte qué se está acabando o qué está en oferta** — «¿qué se me está acabando?» o «¿hay alguna oferta ahora?». El asistente responde con la misma información que aparece en las filas **Hora de reponer** y **Ofertas para ti**.
+
 Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
 
 ## Comparar precios ("Dónde es más barato")

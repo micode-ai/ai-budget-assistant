@@ -216,6 +216,60 @@ describe('ShoppingListService', () => {
     expect(deals.some((x) => x.canonicalName === 'Milk')).toBe(true);
   });
 
+  it('removeItemsByName soft-deletes a case-insensitive match among unchecked items', async () => {
+    prisma.shoppingListItem.findMany.mockResolvedValue([
+      { id: 'i1', rawLabel: 'Milk', canonicalName: null },
+      { id: 'i2', rawLabel: 'Bread', canonicalName: null },
+    ]);
+    prisma.shoppingListItem.update.mockResolvedValue({});
+    const res = await service.removeItemsByName('a1', ['MILK']);
+    expect(prisma.shoppingListItem.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'i1' }, data: expect.objectContaining({ isDeleted: true }) }),
+    );
+    expect(res.removedLabels).toEqual(['MILK']);
+    expect(res.notFoundLabels).toEqual([]);
+  });
+
+  it('removeItemsByName falls back to canonicalName when rawLabel differs', async () => {
+    prisma.shoppingListItem.findMany.mockResolvedValue([
+      { id: 'i1', rawLabel: 'Mleko 3.2% Łaciate', canonicalName: 'Milk' },
+    ]);
+    prisma.shoppingListItem.update.mockResolvedValue({});
+    const res = await service.removeItemsByName('a1', ['milk']);
+    expect(prisma.shoppingListItem.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'i1' } }),
+    );
+    expect(res.removedLabels).toEqual(['milk']);
+  });
+
+  it('removeItemsByName reports unmatched names without failing the rest', async () => {
+    prisma.shoppingListItem.findMany.mockResolvedValue([
+      { id: 'i1', rawLabel: 'Milk', canonicalName: null },
+    ]);
+    prisma.shoppingListItem.update.mockResolvedValue({});
+    const res = await service.removeItemsByName('a1', ['Milk', 'Nonexistent']);
+    expect(res.removedLabels).toEqual(['Milk']);
+    expect(res.notFoundLabels).toEqual(['Nonexistent']);
+  });
+
+  it('removeItemsByName never matches checked or deleted items (query scopes them out)', async () => {
+    // The service filters isChecked:false/isDeleted:false at the query level —
+    // simulate that by returning an empty candidate list.
+    prisma.shoppingListItem.findMany.mockResolvedValue([]);
+    const res = await service.removeItemsByName('a1', ['Milk']);
+    expect(prisma.shoppingListItem.update).not.toHaveBeenCalled();
+    expect(res.notFoundLabels).toEqual(['Milk']);
+    expect(prisma.shoppingListItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ isDeleted: false, isChecked: false }) }),
+    );
+  });
+
+  it('removeItemsByName returns all names as not-found when the account has zero lists', async () => {
+    prisma.shoppingListItem.findMany.mockResolvedValue([]);
+    const res = await service.removeItemsByName('a1', ['Milk', 'Bread']);
+    expect(res).toEqual({ removedLabels: [], notFoundLabels: ['Milk', 'Bread'] });
+  });
+
   it('getDeals excludes deals for products already on a list', async () => {
     prisma.productAlias.findMany.mockResolvedValue([]);
     prisma.expenseItem.findMany.mockResolvedValue([

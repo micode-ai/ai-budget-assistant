@@ -285,6 +285,32 @@ export class AiToolsService {
           parameters: { type: 'object', properties: {} },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'remove_from_shopping_list',
+          description: 'Remove one or more items from the user\'s shopping / grocery list, e.g. because they already bought it or added it by mistake. Use for "remove milk from my list", "take eggs off the shopping list", "убери молоко из списка покупок". Only removes items not yet checked off.',
+          parameters: {
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'The product/item names to remove, e.g. ["milk", "bread"]. Copy each name from the user\'s message in their own language and spelling — do NOT translate or correct them.',
+              },
+            },
+            required: ['items'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'get_shopping_suggestions',
+          description: 'Get what the user is running low on and due to restock, plus any current price deals on their regular purchases. Use for "what am I running low on", "what should I buy", "any deals right now". Read-only, no parameters.',
+          parameters: { type: 'object', properties: {} },
+        },
+      },
     ];
   }
 
@@ -346,6 +372,10 @@ export class AiToolsService {
           return await this.executeAddToShoppingList(data, accountId, userId);
         case 'get_inflation_shield':
           return await this.executeGetInflationShield(accountId, userId, baseCurrency);
+        case 'remove_from_shopping_list':
+          return await this.executeRemoveFromShoppingList(data, accountId);
+        case 'get_shopping_suggestions':
+          return await this.executeGetShoppingSuggestions(accountId);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -434,6 +464,51 @@ export class AiToolsService {
       actionType: 'add_to_shopping_list',
       success: true,
       data: { listName, items: addedLabels, count: addedLabels.length },
+    };
+  }
+
+  private async executeRemoveFromShoppingList(
+    data: Record<string, unknown>,
+    accountId: string,
+  ): Promise<ChatActionResult> {
+    // Accept both `items: string[]` (the schema) and a lone `item: string`
+    // (some models emit the singular form) — normalize to a string array,
+    // mirroring executeAddToShoppingList.
+    const raw = Array.isArray(data.items)
+      ? data.items
+      : data.item != null
+        ? [data.item]
+        : [];
+    const names = raw.map((x) => String(x));
+    if (names.filter((n) => n.trim().length > 0).length === 0) {
+      return { actionType: 'remove_from_shopping_list', success: false, errorMessage: 'No items to remove' };
+    }
+    const { removedLabels, notFoundLabels } = await this.shoppingListService.removeItemsByName(accountId, names);
+    return {
+      actionType: 'remove_from_shopping_list',
+      success: true,
+      data: { removedLabels, notFoundLabels },
+    };
+  }
+
+  /**
+   * READ action: what the user is running low on (restock) + current deals on
+   * their regular purchases. Executes immediately via executeWithCache (same
+   * treatment as get_inflation_shield), never a confirmation. Capped at the
+   * top 5 of each list — mirrors the mobile card's display limit.
+   */
+  private async executeGetShoppingSuggestions(accountId: string): Promise<ChatActionResult> {
+    const [restock, deals] = await Promise.all([
+      this.shoppingListService.getRestockSuggestions(accountId),
+      this.shoppingListService.getDeals(accountId),
+    ]);
+    return {
+      actionType: 'get_shopping_suggestions',
+      success: true,
+      data: {
+        restock: restock.slice(0, 5),
+        deals: deals.slice(0, 5),
+      },
     };
   }
 

@@ -198,6 +198,64 @@ export class ShoppingListService {
     return { listId: list.id, listName: list.name, addedLabels };
   }
 
+  /**
+   * Remove free-text items from the account's shopping list(s), used by the AI
+   * chat `remove_from_shopping_list` tool. Matches UNCHECKED, non-deleted items
+   * across ALL non-archived lists, case-insensitive against `rawLabel`
+   * (fallback `canonicalName`). First match per requested name is soft-deleted
+   * (same isDeleted/syncVersion convention as `deleteItem`). Names with no
+   * match are reported, never thrown as an error. Unlike `addItemsByName`,
+   * this never creates a list — a zero-list account simply yields every name
+   * in `notFoundLabels`.
+   */
+  async removeItemsByName(
+    accountId: string,
+    names: string[],
+  ): Promise<{ removedLabels: string[]; notFoundLabels: string[] }> {
+    const cleaned = names
+      .map((n) => (typeof n === 'string' ? n.trim() : ''))
+      .filter((n) => n.length > 0)
+      .map((n) => n.slice(0, 120));
+    if (cleaned.length === 0) {
+      return { removedLabels: [], notFoundLabels: [] };
+    }
+
+    const candidates: Array<{ id: string; rawLabel: string; canonicalName: string | null }> =
+      await this.prisma.shoppingListItem.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          isChecked: false,
+          shoppingList: { isArchived: false, isDeleted: false },
+        },
+        select: { id: true, rawLabel: true, canonicalName: true },
+      });
+
+    const consumed = new Set<string>();
+    const removedLabels: string[] = [];
+    const notFoundLabels: string[] = [];
+
+    for (const name of cleaned) {
+      const needle = name.toLowerCase();
+      const match = candidates.find((it) =>
+        !consumed.has(it.id) &&
+        (it.rawLabel.toLowerCase() === needle || (it.canonicalName ?? '').toLowerCase() === needle),
+      );
+      if (!match) {
+        notFoundLabels.push(name);
+        continue;
+      }
+      consumed.add(match.id);
+      await this.prisma.shoppingListItem.update({
+        where: { id: match.id },
+        data: { isDeleted: true, syncVersion: { increment: 1 } },
+      });
+      removedLabels.push(name);
+    }
+
+    return { removedLabels, notFoundLabels };
+  }
+
   private async resolveOrCreateDefaultForAdd(accountId: string, userId: string) {
     const existing = await this.prisma.shoppingList.findFirst({
       where: { accountId, isDeleted: false, isArchived: false },

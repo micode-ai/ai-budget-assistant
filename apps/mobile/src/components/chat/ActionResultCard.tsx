@@ -49,6 +49,10 @@ export function ActionResultCard({ actionResult }: ActionResultCardProps) {
       return <AffordabilityResult data={data} />;
     case 'add_to_shopping_list':
       return <ShoppingAddResult data={data} />;
+    case 'remove_from_shopping_list':
+      return <ShoppingRemoveResult data={data} />;
+    case 'get_shopping_suggestions':
+      return <ShoppingSuggestionsResult data={data} />;
     case 'get_inflation_shield':
       return <ShieldResult data={data} />;
     default:
@@ -112,6 +116,85 @@ function ShoppingAddResult({ data }: { data: Record<string, unknown> }) {
           <Ionicons name="add-circle-outline" size={16} color={theme.colors.primary} />
         </View>
       ))}
+    </View>
+  );
+}
+
+function ShoppingRemoveResult({ data }: { data: Record<string, unknown> }) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const removedLabels = (data.removedLabels as string[]) || [];
+  const notFoundLabels = (data.notFoundLabels as string[]) || [];
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.header}>
+        <Ionicons name="remove-circle-outline" size={18} color={theme.colors.danger} />
+        <Text style={styles.headerText}>{t('chat.actionRemoveShoppingList')}</Text>
+      </View>
+      {removedLabels.map((label, idx) => (
+        <View key={idx} style={styles.listItem}>
+          <Text style={styles.listItemText} numberOfLines={1}>
+            {label}
+          </Text>
+          <Ionicons name="remove-circle-outline" size={16} color={theme.colors.danger} />
+        </View>
+      ))}
+      {notFoundLabels.length > 0 && (
+        <Text style={styles.moreText}>
+          {t('chat.actionShoppingNotFound', { names: notFoundLabels.join(', ') })}
+        </Text>
+      )}
+    </View>
+  );
+}
+
+function ShoppingSuggestionsResult({ data }: { data: Record<string, unknown> }) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const restock = ((data.restock as any[]) || []).slice(0, 5);
+  const deals = ((data.deals as any[]) || []).slice(0, 5);
+  const restockTotal = (data.restock as any[])?.length || 0;
+  const dealsTotal = (data.deals as any[])?.length || 0;
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.header}>
+        <Ionicons name="basket-outline" size={18} color={theme.colors.primary} />
+        <Text style={styles.headerText}>{t('chat.actionShoppingSuggestions')}</Text>
+      </View>
+      {restock.length > 0 && (
+        <>
+          <Text style={styles.sectionLabel}>{t('chat.shoppingSuggestionsRestock')}</Text>
+          {restock.map((r: any, idx: number) => (
+            <View key={idx} style={styles.listItem}>
+              <Text style={styles.listItemText} numberOfLines={1}>
+                {r.canonicalName}
+              </Text>
+              <Text style={styles.listItemAmount}>{r.dueInDays}d</Text>
+            </View>
+          ))}
+          {restockTotal > 5 && <Text style={styles.moreText}>+{restockTotal - 5} more</Text>}
+        </>
+      )}
+      {deals.length > 0 && (
+        <>
+          <Text style={styles.sectionLabel}>{t('chat.shoppingSuggestionsDeals')}</Text>
+          {deals.map((d: any, idx: number) => (
+            <View key={idx} style={styles.listItem}>
+              <Text style={styles.listItemText} numberOfLines={1}>
+                {d.canonicalName}{d.merchant ? ` · ${d.merchant}` : ''}
+              </Text>
+              <Text style={styles.listItemAmount}>
+                -{Number(d.dropPct ?? 0).toFixed(0)}% · {Number(d.price ?? 0).toFixed(2)} {d.currency}
+              </Text>
+            </View>
+          ))}
+          {dealsTotal > 5 && <Text style={styles.moreText}>+{dealsTotal - 5} more</Text>}
+        </>
+      )}
     </View>
   );
 }
@@ -383,6 +466,12 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     textAlign: 'center' as const,
     paddingTop: theme.spacing[1],
+  },
+  sectionLabel: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[1],
+    marginBottom: theme.spacing[1],
   },
   totalRow: {
     flexDirection: 'row' as const,

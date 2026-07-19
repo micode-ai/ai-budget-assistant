@@ -47,7 +47,17 @@ describe('ChatService', () => {
         { provide: NotificationsService, useValue: deps.notifications },
         { provide: UserContextBuilder, useValue: { build: jest.fn().mockResolvedValue({}) } },
         { provide: AiToolsService, useValue: deps.aiTools },
-        { provide: PromptBuilder, useValue: { buildSystemPrompt: () => 'SYS', detectLanguage: () => 'English', buildActionSummary: () => 'summary', getConfirmText: () => 'ok', getFailText: () => 'fail', getRejectText: () => 'rejected' } },
+        { provide: PromptBuilder, useValue: {
+          buildSystemPrompt: () => 'SYS',
+          detectLanguage: () => 'English',
+          detectUserLanguage: () => 'English',
+          buildActionSummary: () => 'summary',
+          getConfirmText: () => 'ok',
+          getFailText: (_lang: string, err?: string) => `fail: ${err}`,
+          getRejectText: () => 'rejected',
+          getShoppingListAddText: (_lang: string, listName: string, labels: string[]) => `added ${labels.join(',')} to ${listName}`,
+          getShoppingListRemoveText: (_lang: string, removed: string[], notFound: string[]) => `removed ${removed.join(',')} notFound ${notFound.join(',')}`,
+        } },
       ],
     }).compile();
     service = moduleRef.get(ChatService);
@@ -254,6 +264,66 @@ describe('ChatService', () => {
       );
       // Must NOT have called executeAction for a write confirmation
       expect(deps.prisma.chatMessage.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('remove_from_shopping_list (immediate write, no confirmation)', () => {
+    it('executes immediately via executeAction and never routes through the write-confirmation path', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice', currencyCode: 'USD' });
+      deps.aiTools.isWriteAction = jest.fn().mockReturnValue(false);
+      deps.aiTools.executeAction = jest.fn().mockResolvedValue({
+        actionType: 'remove_from_shopping_list',
+        success: true,
+        data: { removedLabels: ['Milk'], notFoundLabels: [] },
+      });
+      mockChatCreate.mockResolvedValueOnce({
+        choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'remove_from_shopping_list', arguments: '{"items":["Milk"]}' } }] } }],
+        usage: { total_tokens: 10 },
+      });
+
+      const res = await service.chat('owner-1', 'remove milk from my list', 'conv-1', 'acc-1', 'Personal', 'owner', 'Alice', []);
+      expect(res.aiResponded).toBe(true);
+      expect(deps.aiTools.executeAction).toHaveBeenCalledWith('remove_from_shopping_list', { items: ['Milk'] }, 'acc-1', 'owner-1');
+      // A single tool round-trip only — no second (narration) OpenAI call like handleReadAction does.
+      expect(mockChatCreate).toHaveBeenCalledTimes(1);
+      expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ content: 'removed Milk notFound ' }) }),
+      );
+    });
+  });
+
+  describe('get_shopping_suggestions (read action, falls through to generic read path)', () => {
+    it('executes via executeWithCache like other read actions, no dedicated branch', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice', currencyCode: 'USD' });
+      deps.aiTools.isWriteAction = jest.fn().mockReturnValue(false);
+      deps.aiTools.executeWithCache = jest.fn().mockResolvedValue({
+        actionType: 'get_shopping_suggestions',
+        success: true,
+        data: { restock: [], deals: [] },
+      });
+      mockChatCreate
+        .mockResolvedValueOnce({
+          choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'get_shopping_suggestions', arguments: '{}' } }] } }],
+          usage: { total_tokens: 10 },
+        })
+        .mockResolvedValueOnce({
+          choices: [{ message: { content: 'You are not running low on anything right now.' } }],
+          usage: { total_tokens: 8 },
+        });
+
+      const res = await service.chat('owner-1', 'what am I running low on?', 'conv-1', 'acc-1', 'Personal', 'owner', 'Alice', []);
+      expect(res.aiResponded).toBe(true);
+      expect(deps.aiTools.executeWithCache).toHaveBeenCalledWith(
+        'get_shopping_suggestions',
+        expect.any(Object),
+        'acc-1',
+        'owner-1',
+        expect.any(String),
+      );
     });
   });
 

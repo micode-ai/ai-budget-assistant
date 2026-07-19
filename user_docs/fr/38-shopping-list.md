@@ -32,6 +32,13 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
 
+## Gérer la liste par chat
+
+En plus d'ajouter des articles, vous pouvez demander à l'assistant de :
+
+- **Retirer un article** — « retire le lait de ma liste » ou « enlève les œufs, je les ai déjà achetés ». L'article est retiré immédiatement, comme pour l'ajout, sans confirmation. Seuls les articles non cochés peuvent être retirés ; pour marquer un article comme acheté sans le supprimer, utilisez la case à cocher de la liste.
+- **Demander ce qui manque ou ce qui est en promotion** — « qu'est-ce qui me manque ? » ou « y a-t-il des promotions en ce moment ? ». L'assistant répond avec les mêmes informations que celles affichées dans les lignes **Il est temps de racheter** et **Promotions pour vous**.
+
 Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
 
 ## Comparer les prix (« Où est-ce le moins cher »)

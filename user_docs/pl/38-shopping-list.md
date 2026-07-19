@@ -32,6 +32,13 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 
 Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
 
+## Zarządzanie listą przez czat
+
+Oprócz dodawania możesz poprosić asystenta o:
+
+- **Usunięcie produktu** — „usuń mleko z mojej listy" albo „zdejmij jajka, już je kupiłem/-am". Produkt jest usuwany od razu, tak samo jak przy dodawaniu — bez potwierdzania. Usuwane są tylko produkty jeszcze nieodhaczone; aby oznaczyć coś jako kupione bez usuwania, użyj pola wyboru na samej liście.
+- **Zapytanie, czego brakuje albo co jest w promocji** — „czego mi brakuje?" albo „są jakieś promocje?". Asystent odpowie tymi samymi informacjami, które widać w wierszach **Czas na uzupełnienie zapasów** i **Promocje dla Ciebie**.
+
 Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
 
 ## Porównaj ceny ("Gdzie najtaniej")

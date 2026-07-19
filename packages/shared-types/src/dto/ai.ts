@@ -45,6 +45,8 @@ export type ChatActionType =
   | 'update_goal_balance'
   | 'check_affordability'
   | 'add_to_shopping_list'
+  | 'remove_from_shopping_list'
+  | 'get_shopping_suggestions'
   | 'get_inflation_shield';
 
 export interface CreateExpenseActionData {

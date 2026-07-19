@@ -210,6 +210,14 @@ export class ChatService {
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
 
+      // Shopping-list removes are the mirror-image write: immediate, no
+      // confirmation card (same rationale as add — low-stakes, reversible,
+      // collaborative). Must NOT fall through to handleReadAction either.
+      if (functionName === 'remove_from_shopping_list') {
+        const r = await this.handleShoppingListRemove(conversation, functionArgs, history, message, accountId, userId, user?.language);
+        return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
+      }
+
       if (this.aiToolsService.isWriteAction(functionName)) {
         if (accountRole === 'viewer') {
           const lang = this.promptBuilder.detectLanguage(message);
@@ -615,6 +623,35 @@ ${lines}`;
     const data = (result.data as { listName?: string; items?: string[] }) || {};
     const text = result.success
       ? this.promptBuilder.getShoppingListAddText(lang, data.listName ?? '', data.items ?? [])
+      : this.promptBuilder.getFailText(lang, result.errorMessage);
+
+    const assistantMsg = await this.prisma.chatMessage.create({
+      data: { conversationId: conversation.id, role: 'assistant', content: text, mentionedUserIds: [] },
+    });
+
+    return {
+      message: text,
+      conversationId: conversation.id,
+      actionResult: result,
+      assistantMessageId: assistantMsg.id,
+      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
+    };
+  }
+
+  private async handleShoppingListRemove(
+    conversation: { id: string },
+    args: Record<string, unknown>,
+    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
+    userMessage: string,
+    accountId?: string,
+    userId?: string,
+    uiLanguage?: string | null,
+  ) {
+    const result = await this.aiToolsService.executeAction('remove_from_shopping_list', args, accountId || '', userId || '');
+    const lang = this.promptBuilder.detectUserLanguage(userMessage, history, uiLanguage);
+    const data = (result.data as { removedLabels?: string[]; notFoundLabels?: string[] }) || {};
+    const text = result.success
+      ? this.promptBuilder.getShoppingListRemoveText(lang, data.removedLabels ?? [], data.notFoundLabels ?? [])
       : this.promptBuilder.getFailText(lang, result.errorMessage);
 
     const assistantMsg = await this.prisma.chatMessage.create({

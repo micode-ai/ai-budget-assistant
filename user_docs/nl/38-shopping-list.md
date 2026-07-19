@@ -32,6 +32,13 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
 
+## De lijst beheren via chat
+
+Naast toevoegen kun je de assistent ook vragen om:
+
+- **Een artikel te verwijderen** — "haal melk van mijn lijst" of "haal de eieren weg, die heb ik al gekocht." Het artikel wordt meteen verwijderd, net als bij toevoegen — zonder bevestiging. Alleen nog niet afgevinkte artikelen worden verwijderd; gebruik het selectievakje op de lijst zelf om iets als gekocht te markeren zonder het te verwijderen.
+- **Te vragen wat er bijna op is of in de aanbieding** — "wat heb ik bijna niet meer?" of "zijn er nu aanbiedingen?" De assistent antwoordt met dezelfde informatie die te zien is in de rijen **Tijd om aan te vullen** en **Aanbiedingen voor jou**.
+
 Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
 
 ## Prijzen vergelijken ("Waar is het goedkoopst")

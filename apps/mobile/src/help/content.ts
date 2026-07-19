@@ -4071,6 +4071,13 @@ You can also **ask the AI assistant** to add items: open the **Chat** tab and sa
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 
+## Managing the List by Chat
+
+Besides adding items, you can ask the assistant to:
+
+- **Remove an item** — "remove milk from my list" or "take eggs off, I already bought them." This takes the item off your list immediately, same as adding — no confirmation needed. It only removes items that aren't already checked off; to mark something as bought without deleting it, use the checkbox on the list itself.
+- **Ask what's running low or on sale** — "what am I running low on?" or "any deals right now?" The assistant answers with the same restock and deal information shown in the **Time to restock** and **Deals for you** rows below.
+
 ## Compare Prices ("Where's cheapest")
 
 Tap **Compare prices** at the bottom of the list to see which store is cheapest for everything currently unchecked on your list.
@@ -8274,6 +8281,13 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Также можно **попросить ИИ-ассистента** добавить товары: откройте вкладку **Чат** и скажите, например, «добавь молоко и хлеб в список покупок». Товары сразу добавляются в активный список — без подтверждения.
 
+## Управление списком через чат
+
+Кроме добавления, можно попросить ассистента:
+
+- **Убрать товар** — «убери молоко из моего списка» или «убери яйца, я их уже купил(а)». Товар убирается сразу же, так же как при добавлении — без подтверждения. Убираются только ещё не отмеченные товары; чтобы отметить товар как купленный, не удаляя его, используйте флажок в самом списке.
+- **Спросить, что заканчивается или на что есть скидки** — «что у меня заканчивается?» или «есть сейчас скидки?». Ассистент ответит той же информацией, что показана в строках **Пора пополнить запасы** и **Скидки для вас**.
+
 У каждого товара в списке есть флажок, редактируемый счётчик количества и значок удаления. Отмеченные товары опускаются в конец списка. Используйте **Очистить отмеченные** (в правом верхнем углу экрана), чтобы одним нажатием убрать всё, что вы уже отметили.
 
 ## Сравнение цен («Где дешевле»)
@@ -12449,6 +12463,13 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Також можна **попросити ШІ-асистента** додати товари: відкрийте вкладку **Чат** і скажіть, наприклад, «додай молоко та хліб до списку покупок». Товари одразу додаються до активного списку — без підтвердження.
 
+## Керування списком через чат
+
+Окрім додавання, можна попросити асистента:
+
+- **Прибрати товар** — «прибери молоко з мого списку» або «забери яйця, я вже їх купив(ла)». Товар прибирається одразу, так само як і при додаванні — без підтвердження. Прибираються лише ще не позначені товари; щоб позначити товар як куплений, не видаляючи його, скористайтеся прапорцем у самому списку.
+- **Запитати, чого бракує або що зі знижкою** — «чого мені бракує?» або «є зараз знижки?». Асистент відповість тією ж інформацією, що показана в рядках **Час поповнити запаси** і **Знижки для вас**.
+
 У кожного товару в списку є прапорець, редагований лічильник кількості та іконка видалення. Позначені товари опускаються в кінець списку. Використовуйте **Очистити позначені** (у правому верхньому куті екрана), щоб одним дотиком прибрати все, що ви вже позначили.
 
 ## Порівняння цін («Де дешевше»)
@@ -16609,6 +16630,13 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 
 Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
 
+## Zarządzanie listą przez czat
+
+Oprócz dodawania możesz poprosić asystenta o:
+
+- **Usunięcie produktu** — „usuń mleko z mojej listy" albo „zdejmij jajka, już je kupiłem/-am". Produkt jest usuwany od razu, tak samo jak przy dodawaniu — bez potwierdzania. Usuwane są tylko produkty jeszcze nieodhaczone; aby oznaczyć coś jako kupione bez usuwania, użyj pola wyboru na samej liście.
+- **Zapytanie, czego brakuje albo co jest w promocji** — „czego mi brakuje?" albo „są jakieś promocje?". Asystent odpowie tymi samymi informacjami, które widać w wierszach **Czas na uzupełnienie zapasów** i **Promocje dla Ciebie**.
+
 Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
 
 ## Porównaj ceny ("Gdzie najtaniej")
@@ -20744,6 +20772,13 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 
 Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
 
+## Die Liste per Chat verwalten
+
+Neben dem Hinzufügen kannst du den Assistenten auch bitten:
+
+- **Einen Artikel zu entfernen** — „entferne Milch von meiner Liste" oder „nimm Eier weg, die habe ich schon gekauft." Der Artikel wird sofort entfernt, genau wie beim Hinzufügen — ohne Bestätigung. Es werden nur noch nicht abgehakte Artikel entfernt; um etwas als gekauft zu markieren, ohne es zu löschen, benutze das Kontrollkästchen in der Liste.
+- **Zu fragen, was knapp wird oder im Angebot ist** — „was geht mir aus?" oder „gibt es gerade Angebote?" Der Assistent antwortet mit denselben Informationen, die auch in den Zeilen **Zeit zum Nachkaufen** und **Angebote für dich** angezeigt werden.
+
 Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
 
 ## Preise vergleichen („Wo es am günstigsten ist")
@@ -24868,6 +24903,13 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
 
+## Gestionar la lista por chat
+
+Además de añadir, puedes pedirle al asistente que:
+
+- **Quite un artículo** — «quita la leche de mi lista» o «elimina los huevos, ya los compré». El artículo se elimina al instante, igual que al añadirlo, sin confirmación. Solo elimina artículos que aún no estén marcados; para marcar algo como comprado sin borrarlo, usa la casilla de la propia lista.
+- **Pregunte qué se está acabando o qué está en oferta** — «¿qué se me está acabando?» o «¿hay alguna oferta ahora?». El asistente responde con la misma información que aparece en las filas **Hora de reponer** y **Ofertas para ti**.
+
 Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
 
 ## Comparar precios ("Dónde es más barato")
@@ -28990,6 +29032,13 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
 
+## Gérer la liste par chat
+
+En plus d'ajouter des articles, vous pouvez demander à l'assistant de :
+
+- **Retirer un article** — « retire le lait de ma liste » ou « enlève les œufs, je les ai déjà achetés ». L'article est retiré immédiatement, comme pour l'ajout, sans confirmation. Seuls les articles non cochés peuvent être retirés ; pour marquer un article comme acheté sans le supprimer, utilisez la case à cocher de la liste.
+- **Demander ce qui manque ou ce qui est en promotion** — « qu'est-ce qui me manque ? » ou « y a-t-il des promotions en ce moment ? ». L'assistant répond avec les mêmes informations que celles affichées dans les lignes **Il est temps de racheter** et **Promotions pour vous**.
+
 Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
 
 ## Comparer les prix (« Où est-ce le moins cher »)
@@ -33071,6 +33120,13 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Адвольны тэкст** — калі ўведзенае не супадае з ніводным адсочваемым таварам, націсніце **Дадаць «…»**, каб дадаць яго як звычайны тэкставы пункт. Такія пункты не звязаны з гісторыяй цэн, таму не будуць удзельнічаць у параўнанні цэн.
 
 Таксама можна **папрасіць ШІ-асістэнта** дадаць тавары: адкрыйце ўкладку **Чат** і скажыце, напрыклад, «дадай малако і хлеб у спіс пакупак». Тавары адразу дадаюцца ў актыўны спіс — без пацверджання.
+
+## Кіраванне спісам праз чат
+
+Акрамя дадавання, можна папрасіць асістэнта:
+
+- **Прыбраць тавар** — «прыбяры малако з майго спісу» ці «забяры яйкі, я ўжо іх купіў(ла)». Тавар прыбіраецца адразу, гэтак жа, як пры дадаванні — без пацверджання. Прыбіраюцца толькі яшчэ не пазначаныя тавары; каб пазначыць тавар як куплены, не выдаляючы яго, скарыстайцеся сцяжком у самім спісе.
+- **Спытаць, чаго не хапае альбо што са зніжкай** — «чаго мне не хапае?» ці «ёсць зараз зніжкі?». Асістэнт адкажа той жа інфармацыяй, што паказана ў радках **Час папоўніць запасы** і **Зніжкі для вас**.
 
 У кожнага тавару ў спісе ёсць сцяжок, рэдагаваны лічыльнік колькасці і значок выдалення. Пазначаныя тавары апускаюцца ў канец спісу. Выкарыстоўвайце **Ачысціць пазначаныя** (у правым верхнім куце экрана), каб адным дотыкам прыбраць усё, што вы ўжо пазначылі.
 
@@ -37272,6 +37328,13 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
+
+## De lijst beheren via chat
+
+Naast toevoegen kun je de assistent ook vragen om:
+
+- **Een artikel te verwijderen** — "haal melk van mijn lijst" of "haal de eieren weg, die heb ik al gekocht." Het artikel wordt meteen verwijderd, net als bij toevoegen — zonder bevestiging. Alleen nog niet afgevinkte artikelen worden verwijderd; gebruik het selectievakje op de lijst zelf om iets als gekocht te markeren zonder het te verwijderen.
+- **Te vragen wat er bijna op is of in de aanbieding** — "wat heb ik bijna niet meer?" of "zijn er nu aanbiedingen?" De assistent antwoordt met dezelfde informatie die te zien is in de rijen **Tijd om aan te vullen** en **Aanbiedingen voor jou**.
 
 Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
 
