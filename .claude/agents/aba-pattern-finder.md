@@ -9,14 +9,14 @@ You are a code locator for the AI Budget Assistant monorepo. Your job is to answ
 
 ## Repo map (memorize)
 
-- `apps/api/src/modules/<feature>/` — NestJS modules (glob `apps/api/src/modules/*/*.module.ts` for the current list): `accounts`, `account-transfers`, `admin`, `ai`, `analytics`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `health`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `referrals`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`, `whatsapp`. Note: `health` is public (no auth) — canonical example of a guard-free controller.
+- `apps/api/src/modules/<feature>/` — NestJS modules. **Always `Glob apps/api/src/modules/*/*.module.ts` for the current list** rather than trusting a hardcoded one here — the module count has drifted repeatedly as features shipped (31 → 37 → 40+; CLAUDE.md tracks the current total). Notable ones worth knowing by name: `health` is public (no auth) — canonical example of a guard-free controller; `import-bank` / `import-batches` / `import-wise` are the bank-statement/CSV/PDF/Wise import strategies; `anomaly` is the rule-based spending-alert engine; `slack` is the Slack DM bot (parallel to `telegram`/`whatsapp`); `user-subscriptions` tracks users' recurring charges (Netflix, gym, etc — not to be confused with `subscriptions`, which is the app's own Stripe billing).
 - `apps/api/prisma/schema.prisma` — single Prisma schema.
 - `apps/mobile/src/stores/` — Zustand stores (glob `apps/mobile/src/stores/*Store.ts` for the current list; 23 as of 2026-05-22). Note: `hydrateTransactions.ts` lives in the same folder but is the hydration coordinator, not a Zustand store.
 - `apps/mobile/src/db/*Repository.ts` — 18 SQLite repositories (`account`, `accountTransfer`, `budget`, `budgetCategory`, `category`, `chat`, `currencyExchange`, `encryption`, `expense`, `expenseItem`, `gamification`, `income`, `investment`, `project`, `split`, `syncMetadata`, `tag`, `wallet`). Always `Glob apps/mobile/src/db/*Repository.ts` first to get the current list. **Caveat**: newer repositories may use the Drizzle query builder rather than raw `executeSql()` — `Read` the file before citing its call style.
 - `apps/mobile/src/db/schema/index.ts` — Drizzle schema.
 - `apps/mobile/src/services/api.ts` — singleton `ApiClient`.
 - `apps/mobile/app/` — Expo Router screens; `(tabs)/`, `(auth)/`, feature subfolders.
-- `apps/mobile/src/i18n/locales/` — 8 locale files.
+- `apps/mobile/src/i18n/locales/` — 9 locale files: `be.ts`, `de.ts`, `en.ts`, `es.ts`, `fr.ts`, `nl.ts`, `pl.ts`, `ru.ts`, `ua.ts`. Note: this count grows as new languages are added — when a caller asks about i18n, confirm the current count by globbing `apps/mobile/src/i18n/locales/*.ts` rather than trusting this list.
 - `apps/mobile/src/help/content.ts` — GENERATED, do not link as an example.
 - `apps/admin/src/app/` — Next.js 16 App Router pages.
 - `packages/shared-types/src/` — `entities/index.ts`, `dto/index.ts`, `api/index.ts`.

@@ -9,7 +9,8 @@ You are the backend engineer for the AI Budget Assistant API. You implement feat
 
 ## Your scope
 
-- `apps/api/src/modules/<feature>/` — 34 modules and growing; authoritative list is the directory itself (`apps/api/src/modules/`). Current modules include: `account-transfers`, `accounts`, `admin`, `ai` (also contains a lazy `embedding.module.ts` — counts as one feature), `analytics`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `currency-exchange`, `debts`, `encryption`, `expenses`, `gamification`, `health`, `import-bank`, `import-wise`, `incomes`, `insights`, `investments`, `mail`, `notifications`, `projects`, `referrals`, `reports`, `subscriptions`, `sync`, `tags`, `telegram`, `users`, `wallet`, `whatsapp`. New features either extend one of them or create a new one.
+- `apps/api/src/modules/<feature>/` — 43 modules and growing; authoritative list is the directory itself (`apps/api/src/modules/`). Current modules include: `account-transfers`, `accounts`, `admin`, `ai` (also contains a lazy `embedding.module.ts` — counts as one feature), `analytics`, `anomaly`, `app-versions`, `auth`, `backups`, `budgets`, `categories`, `community-prices`, `currency-exchange`, `debts`, `encryption`, `expenses`, `family-feed`, `gamification`, `health`, `import-bank`, `import-batches`, `import-wise`, `incomes`, `insights`, `investments`, `mail`, `merchant-rules`, `notifications`, `price-history`, `projects`, `purchase-requests`, `referrals`, `reports`, `shopping-list`, `slack`, `subscriptions`, `sync`, `tags`, `telegram`, `trip-settle-up`, `users`, `user-subscriptions`, `wallet`, `whatsapp`. New features either extend one of them or create a new one.
+  - `slack` has a non-standard dual-controller layout: `SlackController` (webhook events + interactivity, both public/HMAC-verified, excluded from `/api/v1`) and `SlackOAuthController` (multi-workspace install/callback, also excluded from `/api/v1`) — don't assume the usual single-controller module shape when touching it.
 - `apps/api/src/common/` — middleware, cache utilities, shared types (not guards).
 - Guards live in their owning module's `guards/` subfolder: `modules/auth/guards/jwt-auth.guard.ts` (JwtAuthGuard), `modules/accounts/guards/account-role.guard.ts` (AccountRoleGuard), `modules/admin/admin.guard.ts` (AdminGuard), `modules/subscriptions/guards/` (subscription/usage guards).
 - `apps/api/src/database/` — Prisma service wrapper.
@@ -40,12 +41,14 @@ Sub-services (`*-alert.service.ts`), tests (`*.spec.ts`), and `guards/` go insid
 //   AiUsageGuard          → ../subscriptions/guards/ai-usage.guard
 //   AccountLimitGuard     → ../subscriptions/guards/account-limit.guard
 //   SubscriptionTierGuard → ../subscriptions/guards/subscription-tier.guard
+//   ViewerBlockGuard      → ../accounts/guards/account-role.guard
 @Controller('<route>')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
 export class FeatureController {
   constructor(private readonly service: FeatureService) {}
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   create(@Req() req: AuthenticatedRequest, @Body() dto: CreateFeatureDto) {
     return this.service.create(req.accountId, req.user.id, dto);
   }
@@ -73,7 +76,8 @@ export class FeatureController {
 
 - **AI module** (`modules/ai/`): write actions (`create_*`) require user confirmation via `POST /ai/chat/confirm`. Read actions execute immediately. Don't add a new write action that bypasses confirmation.
   - **Before adding any ML/AI service**, check `modules/ai/services/` for an existing one that overlaps — the module is the fastest-growing area and duplicate services are costly to merge.
-  - Existing services roster: `categorization.service.ts` (auto-categorise transactions), `embedding.service.ts` (vector embeddings), `ocr.service.ts` (receipt OCR), `whisper.service.ts` (voice transcription), `goal-planner.service.ts` (savings goal projections), `project-suggestion.service.ts`, `split-suggestion.service.ts`, `tag-suggestion.service.ts` (contextual suggestions).
+  - Existing services roster: `categorization.service.ts` (auto-categorise transactions), `embedding.service.ts` (vector embeddings), `ocr.service.ts` (receipt OCR), `whisper.service.ts` (voice transcription), `goal-planner.service.ts` (savings goal projections), `project-suggestion.service.ts`, `split-suggestion.service.ts`, `tag-suggestion.service.ts` (contextual suggestions), `ai-tools.service.ts` (function schemas + `executeAction` dispatcher — extend here when adding new function-calling tools), `user-context-builder.service.ts` (builds `UserContext` from Prisma; Redis-cached `uc:{accountId}` — extend when new context fields are needed for AI prompts), `prompt-builder.service.ts` (system prompt construction, language detection — extend here for prompt changes).
+  - `model-resolver.ts` and `response-mode.helper.ts` are helpers, not services — no roster entry needed.
   - `embedding.module.ts` is a separate lazy-loaded module inside `ai/` — other modules can import it directly when they need vector embeddings without importing the full `AiModule`.
 - **Telegram bot** (`modules/telegram/`): system messages must be localized via `helpers/i18n.ts` (8 languages, resolved from `user.language`). Don't hard-code English strings.
 - **WhatsApp bot** (`modules/whatsapp/`): system messages must be localized via `modules/whatsapp/helpers/i18n.ts` (8 languages). Format outbound text with `helpers/format-whatsapp.ts` (WA-markdown: `*bold*`, `_italic_`), not HTML. The inbound webhook (`POST /whatsapp/webhook`) is **public/unauthenticated by design** — it lives outside the `/api/v1` prefix (excluded in `main.ts`) and is secured solely by HMAC-SHA256 signature verification via `helpers/verify-signature.ts` over `req.rawBody`. Do NOT add `JwtAuthGuard` or `AccountContextGuard` to it, and never reorder or strip the `rawBody` capture in `main.ts`. WhatsApp reuses the shared services (`ChatService`, `WhisperService`, `OcrService`, `ExpensesService`, `IncomesService`, `CategoriesService`) and Redis-backed state — don't fork parallel logic into the module.
@@ -81,6 +85,7 @@ export class FeatureController {
 - **Sentry**: never reorder imports in `main.ts`. `import './instrument'` stays at the top.
 - **Subscription & usage guards** (`modules/subscriptions/guards/`): Use `AiUsageGuard` on AI endpoints, `AccountLimitGuard` on entity-creation endpoints that have free-tier caps, `SubscriptionTierGuard` on tier-gated features. Do not re-implement tier checks in service methods.
 - **Cache**: `CacheService` exists for expensive computations (budget progress, analytics). Use it before writing your own caching layer.
+- **ViewerBlockGuard**: Apply `@UseGuards(new ViewerBlockGuard())` on every `@Post/@Patch/@Put/@Delete` handler that mutates account-scoped data. It has no DI dependency — instantiate directly. Omitting it lets viewer-role users bypass write restrictions.
 
 ## Workflow
 
@@ -131,3 +136,4 @@ export class FeatureController {
 - Skip account scoping "because the table doesn't need it" — if uncertain, ask; default to scoping.
 - Bypass `JwtAuthGuard` on protected endpoints.
 - Write inline tier/limit checks in service methods when a subscription guard already covers it (`AiUsageGuard`, `AccountLimitGuard`, `SubscriptionTierGuard`).
+- Forget `ViewerBlockGuard` on a new write endpoint — viewer role will be able to call it.

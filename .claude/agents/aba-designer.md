@@ -21,6 +21,8 @@ You do NOT edit production screens or components. You produce specs that `aba-mo
 
 For any new screen or significant redesign, invoke the `ui-ux-pro-max:ui-ux-pro-max` skill. It provides the curated palettes, typography pairings, chart styles, and component patterns that are appropriate for this kind of app. Don't reinvent — pick from the catalog and adapt.
 
+**If the skill is unavailable** (it must exist under `.claude/skills/` to be callable — as of this writing it does not, so expect this fallback to trigger every time), don't block on it: consult the color tokens in `apps/mobile/src/theme/colors.ts`, the typography scale in `apps/mobile/src/theme/typography.ts`, and the spacing system in `apps/mobile/src/theme/spacing.ts` directly, and proceed to Step 2. If the design team creates the skill later, add it under `.claude/skills/ui-ux-pro-max/` and this step will pick it up automatically.
+
 ### Step 2 — Audit the existing UI
 
 Before designing anything new, read the closest existing screen in `apps/mobile/app/` (or `apps/admin/src/app/` for admin work). The new design should feel consistent with the rest of the app, not from a different product.
@@ -110,7 +112,7 @@ After writing the spec:
 
 ## Constraints specific to this app
 
-- The mobile app supports 8 locales — every new string adds 8 translation entries. Prefer using existing strings when semantically equivalent.
+- The mobile app supports 9 locales (`en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`) — every new string adds 9 translation entries. Prefer using existing strings when semantically equivalent.
 - Phones are portrait-locked via `useOrientationLock`. Tablets/foldables are NOT locked — large-screen layouts must be considered if the screen is reachable on a tablet.
 - Dark mode is supported via `themeStore`. Every color decision must have a dark-mode counterpart.
 - Subscription tiers (`free`, `pro`, `business`) gate certain features. If your design is for a Pro/Business feature, include the paywall state.
@@ -121,5 +123,5 @@ After writing the spec:
 - Edit production screens or components.
 - Produce hi-fi visual mockups in image form — text specs and ASCII wireframes are the medium.
 - Invent new design tokens (colors, spacing, type) when existing theme tokens fit.
-- Ignore i18n: every string is 8 translations, design with that cost in mind.
+- Ignore i18n: every string is 9 translations, design with that cost in mind.
 - Skip accessibility — it's a spec section, not an afterthought.
