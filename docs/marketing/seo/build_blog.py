@@ -214,7 +214,7 @@ OG_TEXT = {
 }
 
 CSS = """
-:root{--o:#F58320;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
 html,body{overflow-x:hidden}
 body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
@@ -232,7 +232,7 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
 article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
 article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
-article p,article li{font-size:17px;color:#27272e}article a{color:#c96a12}article ul{padding-left:22px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
 article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
 article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
 hr{border:0;border-top:1px solid var(--line);margin:32px 0}
@@ -249,7 +249,7 @@ article tbody tr:nth-child(even) td{background:#fafafb}
 .related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
 .card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
 .card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
-footer.site{border-top:1px solid var(--line);background:#fafafb;color:#8a8a93;font-size:14px;text-align:center;margin-top:48px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
 footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
@@ -258,7 +258,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
 .cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
-.cc .ok{background:#F58320;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
 .lang-short{display:none}
 @media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
 @media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
@@ -345,7 +345,7 @@ _CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
 
 def consent_html(lang):
     txt, ok, no = CONSENT.get(lang, CONSENT["en"])
-    txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320">'
+    txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320;text-decoration:underline">'
                 f'{html.escape(MORE.get(lang, MORE["en"]))}</a>')
     return (_CONSENT_TPL.replace("__TXT__", txt_html).replace("__OK__", html.escape(ok))
             .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID))

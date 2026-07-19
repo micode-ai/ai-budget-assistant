@@ -762,17 +762,17 @@ CSS = """
 a{text-decoration:none}.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
 header{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #ececf0;z-index:10}
 header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand{font-weight:800;font-size:19px;color:#1a1a1d}.brand span{color:#F58320}
+.brand{font-weight:800;font-size:19px;color:#1a1a1d}.brand span{color:#B45309}
 .nav{display:flex;align-items:center;gap:18px}.nav a{color:#5b5b66;font-weight:600;font-size:15px}
-.langs{display:flex;gap:8px}.langs a{font-size:13px;color:#9a9aa3}.langs a.active{color:#1a1a1d;font-weight:700}
+.langs{display:flex;gap:8px}.langs a{font-size:13px;color:#6b6b73}.langs a.active{color:#1a1a1d;font-weight:700}
 .btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:15px}
-.btn.p{background:#F58320;color:#fff}.btn.s{background:#fff;color:#1a1a1d;border:1px solid #e3e3e8}
+.btn.p{background:#B45309;color:#fff}.btn.s{background:#fff;color:#1a1a1d;border:1px solid #e3e3e8}
 .hero{background:radial-gradient(900px 400px at 80% -10%,rgba(245,131,42,.18),transparent),linear-gradient(180deg,#fffaf4,#fff)}
 .hero .wrap{padding:78px 22px 60px;text-align:center}
 .hero h1{font-size:46px;line-height:1.12;margin:0 0 18px;letter-spacing:-.5px}
 .hero p{font-size:20px;color:#4b4b55;max-width:700px;margin:0 auto 30px}.hero .btn{margin:6px}
 .sec{padding:60px 0}.sec h2{text-align:center;font-size:30px;margin:0 0 8px}
-.hint{text-align:center;color:#9a9aa3;font-size:14px;margin:0 0 30px}
+.hint{text-align:center;color:#6b6b73;font-size:14px;margin:0 0 30px}
 .intro p{font-size:18px;color:#3a3a42;max-width:760px;margin:18px auto 0;text-align:center}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .lang-short{display:none}
@@ -781,15 +781,15 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .card{display:block;padding:24px;border:1px solid #ececf0;border-radius:16px;background:#fff;transition:.15s;color:inherit;cursor:pointer}
 .card:hover{border-color:#F58320;box-shadow:0 8px 24px rgba(245,131,42,.12);transform:translateY(-2px)}
 .card .ic,.pcard .ic{width:42px;height:42px;border-radius:11px;background:#fff3e6;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-.card .ic b,.pcard .ic b{color:#F58320;font-size:20px}.card h3{margin:0 0 8px;font-size:18px}.card p{margin:0;color:#5b5b66;font-size:15px}
-.card .see{display:inline-block;margin-top:12px;color:#c96a12;font-weight:700;font-size:14px}
+.card .ic b,.pcard .ic b{color:#B45309;font-size:20px}.card h3{margin:0 0 8px;font-size:18px}.card p{margin:0;color:#5b5b66;font-size:15px}
+.card .see{display:inline-block;margin-top:12px;color:#B45309;font-weight:700;font-size:14px}
 .faq{max-width:760px;margin:30px auto 0}.faq .qa{padding:18px 0;border-bottom:1px solid #ececf0}
 .faq h3{margin:0 0 6px;font-size:18px}.faq p{margin:0;color:#5b5b66;font-size:16px}
-.blogcta{text-align:center;padding:0 0 60px}.blogcta a{color:#c96a12;font-weight:700;font-size:16px}
+.blogcta{text-align:center;padding:0 0 60px}.blogcta a{color:#B45309;font-weight:700;font-size:16px}
 .fromblog{list-style:none;max-width:760px;margin:0 auto;padding:0}.fromblog li{border-bottom:1px solid #ececf0}
 .fromblog a{display:block;padding:15px 2px;color:#1a1a1d;font-weight:600;font-size:17px}.fromblog a:hover{color:#F58320}
 .band{background:#1a1a1d;color:#fff;text-align:center}.band .wrap{padding:56px 22px}.band h2{font-size:28px;margin:0 0 22px}
-footer{border-top:1px solid #ececf0;background:#fafafb;color:#8a8a93;font-size:14px;text-align:center}
+footer{border-top:1px solid #ececf0;background:#fafafb;color:#63636b;font-size:14px;text-align:center}
 footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:#5b5b66;font-weight:600}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid #ececf0;padding-top:16px;width:100%}
@@ -798,7 +798,7 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .langmenu>summary::-webkit-details-marker{display:none}
 .langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid #ececf0;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
 .langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600}
-.langlist a:hover{background:#fff3e6}.langlist a.active{color:#F58320}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:#B45309}
 .lbcb{position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none}
 .lb{display:none;position:fixed;inset:0;background:rgba(10,10,12,.82);z-index:50;align-items:center;justify-content:center;padding:24px}
 .lbcb:checked + .lb{display:flex}.lb .bg{position:absolute;inset:0;cursor:default}
@@ -808,10 +808,10 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
 .cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
-.cc .ok{background:#F58320;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.cc .ok{background:#B45309;color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
 .legal{max-width:760px;padding:34px 22px 56px}.legal h1{font-size:34px;margin:0 0 18px}
 .legal h2{font-size:20px;margin:28px 0 8px}.legal p{font-size:16px;color:#3a3a42;margin:0 0 12px;line-height:1.7}
-.legal a{color:#c96a12}.legal code{background:#f3f3f5;padding:1px 5px;border-radius:4px;font-size:14px}
+.legal a{color:#B45309}.legal code{background:#f3f3f5;padding:1px 5px;border-radius:4px;font-size:14px}
 .legal h3{font-size:17px;margin:20px 0 6px}.legal ul{padding-left:22px;margin:0 0 12px}
 .legal li{font-size:16px;color:#3a3a42;margin:4px 0}.legal .updated{color:#888;font-size:14px;margin:-8px 0 24px}
 .legal strong{color:#1a1a1d}
@@ -819,17 +819,17 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 @media(max-width:760px){.pricing-grid{grid-template-columns:1fr}}
 .pcard{position:relative;padding:28px 24px;border:1px solid #ececf0;border-radius:16px;background:#fff}
 .pcard.pop{border-color:#F58320;box-shadow:0 8px 24px rgba(245,131,42,.16)}
-.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#F58320;color:#fff;font-size:12px;font-weight:800;letter-spacing:.4px;padding:5px 14px;border-radius:999px}
+.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#B45309;color:#fff;font-size:12px;font-weight:800;letter-spacing:.4px;padding:5px 14px;border-radius:999px}
 .pcard h3{margin:0 0 4px;font-size:20px}
 .psub{margin:0 0 18px;color:#5b5b66;font-size:14px}
 .price{margin:0 0 20px}
 .price-m,.price-y{font-size:34px;font-weight:800}
 .price-y{display:none}
-.price small{font-size:15px;font-weight:600;color:#9a9aa3;margin-left:4px}
+.price small{font-size:15px;font-weight:600;color:#6b6b73;margin-left:4px}
 .pfull{display:block;text-align:center;margin-bottom:20px}
 .pfeat{list-style:none;margin:0;padding:0}
 .pfeat li{position:relative;padding:7px 0 7px 28px;font-size:15px;color:#3a3a42}
-.pfeat li:before{content:"✓";position:absolute;left:0;top:7px;width:18px;height:18px;border-radius:50%;background:#fff3e6;color:#F58320;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.pfeat li:before{content:"✓";position:absolute;left:0;top:7px;width:18px;height:18px;border-radius:50%;background:#fff3e6;color:#B45309;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .billcb{position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none}
 .billwrap{text-align:center;margin-bottom:34px}
 .billswitch{display:inline-flex;padding:4px;background:#f3f3f5;border-radius:999px}
@@ -888,7 +888,7 @@ _CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
 
 def consent_html(lang):
     txt, ok, no = CONSENT.get(lang, CONSENT["en"])
-    txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320">'
+    txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320;text-decoration:underline">'
                 f'{html.escape(MORE.get(lang, MORE["en"]))}</a>')
     return (_CONSENT_TPL.replace("__TXT__", txt_html).replace("__OK__", html.escape(ok))
             .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID))
@@ -1070,6 +1070,23 @@ def head(lang, langs):
 <script type="application/ld+json">{json.dumps(jsonld(lang, langs), ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>"""
 
+_SHOT_DIMS = {}
+def shot_dims(lang, shot):
+    """Intrinsic (width, height) of the copied screenshot (copy_assets resizes to 540px wide),
+    so the lightbox <img> can declare width/height and avoid cumulative layout shift (CLS)."""
+    key = (lang, shot)
+    if key not in _SHOT_DIMS:
+        base = os.path.splitext(shot)[0]
+        src = next((os.path.join(FEAT, L, base + ".jpg") for L in (lang, "en", "pl")
+                    if os.path.exists(os.path.join(FEAT, L, base + ".jpg"))), None)
+        if src:
+            with Image.open(src) as im:
+                w, h = im.size
+            _SHOT_DIMS[key] = (540, round(h * 540 / w))
+        else:
+            _SHOT_DIMS[key] = (540, 1170)
+    return _SHOT_DIMS[key]
+
 def page(lang, langs):
     t = C[lang]
     blog = f"/blog/{lang}/"
@@ -1078,12 +1095,13 @@ def page(lang, langs):
     cards, lbs = "", ""
     for i, (h, p, shot) in enumerate(t["features"]):
         cid = f"cb{i+1}"
+        iw, ih = shot_dims(lang, shot)
         cards += (f'<label class="card" for="{cid}"><div class="ic"><b>{i+1}</b></div>'
                   f'<h3>{html.escape(h)}</h3><p>{html.escape(p)}</p>'
                   f'<span class="see">{html.escape(t["see"])} &rarr;</span></label>')
         lbs += (f'<input class="lbcb" type="checkbox" id="{cid}">'
                 f'<div class="lb"><label class="bg" for="{cid}"></label><label class="x" for="{cid}">&times;</label>'
-                f'<img loading="lazy" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></div>')
+                f'<img loading="lazy" width="{iw}" height="{ih}" src="{BASE}/assets/screens/{lang}/{shot}" alt="{html.escape(h)} - AI Budget Assistant"></div>')
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
     fb = "".join(
         f'<li><a href="/blog/{lang}/{BLOG_IDX[(lang, pr)][0]}/">{html.escape(BLOG_IDX[(lang, pr)][1])}</a></li>'
@@ -1093,7 +1111,7 @@ def page(lang, langs):
     return (head(lang, langs)
         + f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
           f'<nav class="nav">{langmenu}<a href="{blog}">{t["nav_blog"]}</a>'
-          f'<a class="btn p" href="{APP}">{t["nav_login"]}</a></nav></div></header>'
+          f'<a class="btn p" href="{APP}">{t["nav_login"]}</a></nav></div></header><main>'
         + f'<section class="hero"><div class="wrap"><h1>{html.escape(t["hero_h1"])}</h1>'
           f'<p>{html.escape(t["hero_sub"])}</p><a class="btn p" href="{APP}">{t["cta_primary"]}</a>'
           f'<a class="btn s" href="{PLAY}">{t["cta_secondary"]}</a></div></section>'
@@ -1105,7 +1123,7 @@ def page(lang, langs):
         + fromblog_sec
         + f'<div class="blogcta"><a href="{blog}">{t["blog_cta"]} &rarr;</a></div>'
         + f'<section class="band"><div class="wrap"><h2>{html.escape(t["cta_band"])}</h2>'
-          f'<a class="btn p" href="{APP}">{t["cta_band_btn"]}</a></div></section>'
+          f'<a class="btn p" href="{APP}">{t["cta_band_btn"]}</a></div></section></main>'
         + footer_html(lang)
         + lbs + consent_html(lang) + '</body></html>')
 
@@ -1328,7 +1346,7 @@ def build():
             '<style>body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;display:flex;'
             'min-height:100vh;align-items:center;justify-content:center;margin:0;text-align:center;color:#1a1a1d}'
             '.box{padding:24px}h1{font-size:72px;margin:0;color:#F58320}p{color:#5b5b66;font-size:18px}'
-            'a{color:#c96a12;font-weight:700;text-decoration:none;margin:0 10px}</style></head>'
+            'a{color:#B45309;font-weight:700;text-decoration:none;margin:0 10px}</style></head>'
             '<body><div class="box"><h1>404</h1><p>Strona nie znaleziona &middot; Page not found</p>'
             '<p><a href="/">Strona główna</a><a href="/blog/">Blog</a></p></div></body></html>\n')
     print(f"built SEO landing for {len(langs)} langs ({','.join(langs)}) BASE='{BASE}' ROBOTS='{ROBOTS}' -> {OUT}")
