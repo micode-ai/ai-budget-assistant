@@ -13,6 +13,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
+import { ExpenseBulkService } from './expense-bulk.service';
+import { ExpenseCrossAccountService } from './expense-cross-account.service';
 import { BudgetAlertService } from '../budgets/budget-alert.service';
 import { SharedActivityService } from '../notifications/shared-activity.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -29,6 +31,8 @@ export class ExpensesController {
 
   constructor(
     private readonly expensesService: ExpensesService,
+    private readonly expenseBulkService: ExpenseBulkService,
+    private readonly expenseCrossAccountService: ExpenseCrossAccountService,
     private readonly budgetAlertService: BudgetAlertService,
     private readonly sharedActivityService: SharedActivityService,
   ) {}
@@ -69,13 +73,13 @@ export class ExpensesController {
   @Patch('bulk')
   @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
   async bulkUpdate(@Req() req: AuthenticatedRequest, @Body() dto: BulkUpdateExpensesDto) {
-    return this.expensesService.bulkUpdate(req.accountId, dto);
+    return this.expenseBulkService.bulkUpdate(req.accountId, dto);
   }
 
   @Post('merge')
   @UseGuards(new ViewerBlockGuard())
   async mergeExpenses(@Req() req: AuthenticatedRequest, @Body() dto: MergeExpensesDto) {
-    return this.expensesService.mergeExpenses(req.accountId, req.user.id, dto);
+    return this.expenseCrossAccountService.mergeExpenses(req.accountId, req.user.id, dto);
   }
 
   @Patch(':id')
@@ -113,7 +117,7 @@ export class ExpensesController {
     @Param('id') id: string,
     @Body() dto: MoveExpenseDto,
   ) {
-    return this.expensesService.moveToAccount(req.accountId, req.user.id, id, dto);
+    return this.expenseCrossAccountService.moveToAccount(req.accountId, req.user.id, id, dto);
   }
 
   // ---- Expense Items ----

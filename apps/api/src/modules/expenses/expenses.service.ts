@@ -1,8 +1,7 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException, Optional } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto, BulkUpdateExpensesDto, MergeExpensesDto, MoveExpenseDto } from './dto';
+import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
@@ -13,6 +12,16 @@ import { CommunityPriceService } from '../community-prices/community-price.servi
 import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';
 import { resolveShares } from './trip-share-calculator';
 import { buildLocationColumns } from './expense-location.util';
+import { invalidateExpenseChatCache } from './expense-cache.util';
+import { resolveExpenseCategoryId } from './expense-category-resolver.util';
+
+/**
+ * CRUD + fire-and-forget-hooks orchestrator for expenses. `bulkUpdate` lives in
+ * ExpenseBulkService, and `mergeExpenses`/`moveToAccount` live in
+ * ExpenseCrossAccountService (see docs/tech-debt/expenses-service-god-file.md) —
+ * neither needed the gamification/anomaly/family-feed/community-price/shield hook
+ * chain this class owns for create/update/remove.
+ */
 
 @Injectable()
 export class ExpensesService {
@@ -38,17 +47,7 @@ export class ExpensesService {
    * `get_category_breakdown` all read from the expense table.
    */
   private async invalidateChatCache(accountId: string): Promise<void> {
-    if (!accountId) return;
-    await Promise.all([
-      this.cacheService.delByPrefix(`chat:get_expenses:${accountId}:`),
-      this.cacheService.delByPrefix(`chat:get_budget_status:${accountId}:`),
-      this.cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`),
-      // The AI-chat layer caches the shield tool result in FRONT of getShield, so
-      // the internal `shield:` bust (post-create block) isn't enough on the chat
-      // surface — bust the chat-layer shield cache on every expense mutation too.
-      this.cacheService.delByPrefix(`chat:get_inflation_shield:${accountId}:`),
-      this.cacheService.del(`uc:${accountId}`),
-    ]);
+    await invalidateExpenseChatCache(this.cacheService, accountId);
   }
 
   /**
@@ -117,47 +116,7 @@ export class ExpensesService {
    * If it's a mobile default ID (e.g. "default-exp-food---drinks"), extract name and fuzzy match.
    */
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
-    if (!categoryId) return null;
-    // UUID v4 pattern — validate ownership before trusting the id
-    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId)) {
-      const owned = await this.prisma.category.findUnique({
-        where: { id: categoryId },
-        select: { id: true, accountId: true },
-      });
-      return owned?.accountId === accountId ? owned.id : null;
-    }
-    // Try exact name match scoped to this account
-    const category = await this.prisma.category.findFirst({
-      where: { accountId, name: { equals: categoryId, mode: 'insensitive' } },
-    });
-    if (category) return category.id;
-
-    // Handle mobile default IDs (e.g. "default-exp-bills---utilities" → search "bills", "utilities")
-    const defaultMatch = categoryId.match(/^default-(?:exp|inc)-(.+)$/);
-    if (defaultMatch) {
-      const words = defaultMatch[1].split(/-+/).filter(w => w.length > 0);
-      if (words.length > 0) {
-        const matched = await this.prisma.category.findFirst({
-          where: {
-            accountId,
-            isDeleted: false,
-            AND: words.map(word => ({ name: { contains: word, mode: 'insensitive' as const } })),
-          },
-        });
-        if (matched) return matched.id;
-      }
-    }
-
-    // Auto-create category if it looks like a real name (not a default ID)
-    if (!categoryId.startsWith('default-')) {
-      const type = categoryId.toLowerCase().includes('income') ? 'income' : 'expense';
-      const created = await this.prisma.category.create({
-        data: { accountId, name: categoryId, type },
-      });
-      return created.id;
-    }
-
-    return null;
+    return resolveExpenseCategoryId(this.prisma, categoryId, accountId);
   }
 
   async create(accountId: string, userId: string, dto: CreateExpenseDto): Promise<{ expense: any; isNew: boolean }> {
@@ -686,69 +645,6 @@ export class ExpensesService {
     return { success: true };
   }
 
-  async bulkUpdate(accountId: string, dto: BulkUpdateExpensesDto): Promise<{ updated: number }> {
-    const { ids, categoryId, tagIds, isDeleted } = dto;
-
-    // IDs from the mobile client may be server PKs OR local clientIds (offline-first).
-    // Resolve against both — mirrors findOne()'s `OR: [{ id }, { clientId: id }]`.
-    // Matching only on `id` silently no-ops bulk delete/update for every synced expense.
-    const owned = await this.prisma.expense.findMany({
-      where: {
-        accountId,
-        isDeleted: false,
-        OR: [{ id: { in: ids } }, { clientId: { in: ids } }],
-      },
-      select: { id: true },
-    });
-    const ownedIds = owned.map((e) => e.id);
-    if (ownedIds.length === 0) return { updated: 0 };
-
-    const now = new Date();
-    const updateData: Record<string, any> = { updatedAt: now };
-
-    if (isDeleted === true) {
-      updateData.isDeleted = true;
-    } else {
-      if (categoryId !== undefined) {
-        if (categoryId === null) {
-          updateData.categoryId = null;
-        } else {
-          const resolved = await this.resolveCategoryId(categoryId, accountId);
-          updateData.categoryId = resolved;
-        }
-      }
-    }
-
-    await this.prisma.$transaction(async (tx) => {
-      await tx.expense.updateMany({
-        where: { id: { in: ownedIds }, accountId },
-        data: updateData,
-      });
-
-      if (!isDeleted && tagIds !== undefined && tagIds.length > 0) {
-        // tagIds may be server PKs or mobile clientIds — resolve both.
-        const validTags = await tx.tag.findMany({
-          where: { accountId, OR: [{ id: { in: tagIds } }, { clientId: { in: tagIds } }] },
-          select: { id: true },
-        });
-        const validTagIds = validTags.map((t) => t.id);
-
-        for (const expenseId of ownedIds) {
-          for (const tagId of validTagIds) {
-            await tx.expenseTag.upsert({
-              where: { expenseId_tagId: { expenseId, tagId } },
-              create: { expenseId, tagId },
-              update: {},
-            });
-          }
-        }
-      }
-    });
-
-    await this.invalidateChatCache(accountId);
-    return { updated: ownedIds.length };
-  }
-
   async stopRecurring(accountId: string, id: string) {
     const expense = await this.findOne(accountId, id);
     await this.prisma.expense.update({
@@ -932,233 +828,5 @@ export class ExpensesService {
     });
 
     return { success: true };
-  }
-
-  /**
-   * Tier 2 — user-confirmed cross-currency merge.
-   * Resolves both keepId and mergeId via OR:[{id},{clientId}] (mirrors bulkUpdate),
-   * gap-fills survivor fields from the merged row, unions tags, carries over the
-   * project association, then soft-deletes the secondary and bumps both syncVersions
-   * so the standard pull-merge propagates the change to all devices.
-   * Currency of the survivor is whatever the caller picked via keepId — no FX conversion.
-   */
-  async mergeExpenses(accountId: string, _userId: string, dto: MergeExpensesDto): Promise<{ keptId: string; mergedId: string }> {
-    const { keepId, mergeId, fieldChoices } = dto;
-    if (keepId === mergeId) {
-      throw new BadRequestException('keepId and mergeId must be different');
-    }
-
-    const result = await this.prisma.$transaction(async (tx: any) => {
-      // Resolve both ids by server PK or clientId, scoped to this account.
-      const [keepRow, mergeRow] = await Promise.all([
-        tx.expense.findFirst({
-          where: { accountId, isDeleted: false, OR: [{ id: keepId }, { clientId: keepId }] },
-          include: {
-            expenseTags: { where: { isDeleted: false }, select: { tagId: true } },
-            projectExpenses: { where: { isDeleted: false }, select: { projectId: true } },
-          },
-        }),
-        tx.expense.findFirst({
-          where: { accountId, isDeleted: false, OR: [{ id: mergeId }, { clientId: mergeId }] },
-          include: {
-            expenseTags: { where: { isDeleted: false }, select: { tagId: true } },
-            projectExpenses: { where: { isDeleted: false }, select: { projectId: true } },
-          },
-        }),
-      ]);
-
-      if (!keepRow) throw new NotFoundException(`Expense to keep not found: ${keepId}`);
-      if (!mergeRow) throw new NotFoundException(`Expense to merge not found: ${mergeId}`);
-
-      // Extra safety: both must be in this account (the query already scopes by accountId,
-      // but be explicit so a crafted mergeId from another account is rejected loudly).
-      if (keepRow.accountId !== accountId || mergeRow.accountId !== accountId) {
-        throw new NotFoundException('One or both expenses do not belong to this account');
-      }
-
-      const now = new Date();
-
-      // Gap-fill: carry over fields from the merged row if the survivor lacks them
-      // (or if the caller explicitly forced the field via fieldChoices).
-      const carriedFields: Record<string, any> = {};
-      if ((fieldChoices?.merchant === true || !keepRow.merchant) && mergeRow.merchant) {
-        carriedFields.merchant = mergeRow.merchant;
-      }
-      if ((fieldChoices?.notes === true || !keepRow.notes) && mergeRow.notes) {
-        carriedFields.notes = mergeRow.notes;
-      }
-      if ((fieldChoices?.categoryId === true || !keepRow.categoryId) && mergeRow.categoryId) {
-        carriedFields.categoryId = mergeRow.categoryId;
-      }
-      if ((fieldChoices?.receiptImage === true || !keepRow.receiptImage) && mergeRow.receiptImage) {
-        carriedFields.receiptImage = mergeRow.receiptImage;
-        carriedFields.receiptMimeType = mergeRow.receiptMimeType;
-      }
-
-      // Tags: union — upsert every tag from the merged row onto the survivor.
-      const existingTagIds = new Set(keepRow.expenseTags.map((et: any) => et.tagId));
-      for (const et of mergeRow.expenseTags) {
-        if (!existingTagIds.has(et.tagId)) {
-          await tx.expenseTag.upsert({
-            where: { expenseId_tagId: { expenseId: keepRow.id, tagId: et.tagId } },
-            create: { expenseId: keepRow.id, tagId: et.tagId },
-            update: {},
-          });
-        }
-      }
-
-      // Project carry-over: upsert the merge row's project association onto the survivor
-      // (only if the survivor doesn't already have a project association, or fieldChoices forces).
-      const keepHasProject = keepRow.projectExpenses.length > 0;
-      if ((fieldChoices?.projectId === true || !keepHasProject) && mergeRow.projectExpenses.length > 0) {
-        for (const pe of mergeRow.projectExpenses) {
-          await tx.projectExpense.upsert({
-            where: { projectId_expenseId: { projectId: pe.projectId, expenseId: keepRow.id } },
-            create: { projectId: pe.projectId, expenseId: keepRow.id },
-            update: { isDeleted: false },
-          });
-        }
-      }
-
-      // Soft-delete the secondary row and bump its syncVersion.
-      await tx.expense.update({
-        where: { id: mergeRow.id },
-        data: { isDeleted: true, syncVersion: { increment: 1 } },
-      });
-
-      // Enrich the survivor with any carried fields and bump its syncVersion.
-      await tx.expense.update({
-        where: { id: keepRow.id },
-        data: { ...carriedFields, syncVersion: { increment: 1 }, updatedAt: now },
-      });
-
-      return { keptId: keepRow.id, mergedId: mergeRow.id };
-    });
-
-    await this.invalidateChatCache(accountId);
-    // The merged (soft-deleted) row is what the possible_merge / duplicate_charge
-    // alert points at — dismiss it so a resolved pair leaves no dead alert behind.
-    void this.anomalyService.dismissForExpense(accountId, result.mergedId);
-    return result;
-  }
-
-  /**
-   * Move an expense from one account to another.
-   *
-   * `sourceAccountId` comes from the X-Account-Id context (the caller is already
-   * confirmed a non-viewer member of it by AccountContextGuard + ViewerBlockGuard).
-   * The caller must ALSO be a non-viewer member of the target account.
-   *
-   * Account-scoped associations do not travel across the boundary:
-   *  - category is remapped by (case-insensitive) name into the target account, else cleared
-   *  - tags, project links and category splits reference source-account rows → soft-deleted
-   *  - trip expense shares reference source-account members → deleted
-   * Amount / currency / description / merchant / notes / date / items / receipt travel with it.
-   *
-   * E2EE expenses are rejected: their encryptedPayload is sealed with the source
-   * account's key and would be undecryptable under the target account.
-   */
-  async moveToAccount(
-    sourceAccountId: string,
-    userId: string,
-    id: string,
-    dto: MoveExpenseDto,
-  ): Promise<{ id: string; accountId: string; categoryId: string | null }> {
-    const targetAccountId = dto.targetAccountId;
-    if (targetAccountId === sourceAccountId) {
-      throw new BadRequestException('Target account must differ from the current account');
-    }
-
-    // Resolve the expense within the source account (by server PK or clientId).
-    const expense = await this.prisma.expense.findFirst({
-      where: { accountId: sourceAccountId, isDeleted: false, OR: [{ id }, { clientId: id }] },
-      select: { id: true, clientId: true, categoryId: true, encryptedPayload: true },
-    });
-    if (!expense) throw new NotFoundException('Expense not found');
-
-    if (expense.encryptedPayload != null) {
-      throw new BadRequestException('Encrypted expenses cannot be moved between accounts');
-    }
-
-    // The caller must be a non-viewer member of the target account.
-    const membership = await this.prisma.accountMember.findUnique({
-      where: { accountId_userId: { accountId: targetAccountId, userId } },
-      select: { role: true },
-    });
-    if (!membership) {
-      throw new ForbiddenException('Not a member of the target account');
-    }
-    if (membership.role === 'viewer') {
-      throw new ForbiddenException('You have view-only access to the target account');
-    }
-
-    // Remap the category by name into the target account (else clear it).
-    let remappedCategoryId: string | null = null;
-    if (expense.categoryId) {
-      const source = await this.prisma.category.findUnique({
-        where: { id: expense.categoryId },
-        select: { name: true },
-      });
-      if (source?.name) {
-        const match = await this.prisma.category.findFirst({
-          where: {
-            accountId: targetAccountId,
-            isDeleted: false,
-            name: { equals: source.name, mode: 'insensitive' },
-          },
-          select: { id: true },
-        });
-        remappedCategoryId = match?.id ?? null;
-      }
-    }
-
-    // A clientId is unique per account — if the target already holds a row with the
-    // same clientId, replace ours with a fresh id to avoid the @@unique([accountId,
-    // clientId]) collision. clientId is a required (non-nullable) column, so it MUST
-    // NOT be nulled here (that throws PrismaClientValidationError).
-    let keepClientId = true;
-    if (expense.clientId) {
-      const clash = await this.prisma.expense.findFirst({
-        where: { accountId: targetAccountId, clientId: expense.clientId, id: { not: expense.id } },
-        select: { id: true },
-      });
-      if (clash) keepClientId = false;
-    }
-
-    await this.prisma.$transaction(async (tx: PrismaClient) => {
-      // Drop account-scoped associations that don't belong in the target account.
-      await tx.expenseTag.updateMany({
-        where: { expenseId: expense.id, isDeleted: false },
-        data: { isDeleted: true },
-      });
-      await tx.projectExpense.updateMany({
-        where: { expenseId: expense.id, isDeleted: false },
-        data: { isDeleted: true },
-      });
-      await tx.expenseCategorySplit.updateMany({
-        where: { expenseId: expense.id, isDeleted: false },
-        data: { isDeleted: true },
-      });
-      await tx.tripExpenseShare.deleteMany({ where: { expenseId: expense.id } });
-
-      const moveData: Record<string, any> = {
-        accountId: targetAccountId,
-        categoryId: remappedCategoryId,
-        syncVersion: { increment: 1 },
-      };
-      if (!keepClientId) moveData.clientId = randomUUID();
-
-      await tx.expense.update({ where: { id: expense.id }, data: moveData });
-    });
-
-    // Both accounts' cached chat/tool results and UserContext are now stale.
-    await Promise.all([
-      this.invalidateChatCache(sourceAccountId),
-      this.invalidateChatCache(targetAccountId),
-    ]);
-    // Any anomaly alert deep-linking to this expense in the source account is stale.
-    void this.anomalyService.dismissForExpense(sourceAccountId, expense.id);
-
-    return { id: expense.id, accountId: targetAccountId, categoryId: remappedCategoryId };
   }
 }

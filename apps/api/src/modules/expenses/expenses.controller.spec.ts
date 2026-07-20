@@ -3,6 +3,8 @@ import { INestApplication, ValidationPipe, CanActivate, ExecutionContext } from 
 import * as request from 'supertest';
 import { ExpensesController } from './expenses.controller';
 import { ExpensesService } from './expenses.service';
+import { ExpenseBulkService } from './expense-bulk.service';
+import { ExpenseCrossAccountService } from './expense-cross-account.service';
 import { BudgetAlertService } from '../budgets/budget-alert.service';
 import { SharedActivityService } from '../notifications/shared-activity.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -24,9 +26,15 @@ const passThroughGuard: CanActivate = {
 describe('ExpensesController routing', () => {
   let app: INestApplication;
   const expensesService = {
-    bulkUpdate: jest.fn().mockResolvedValue({ updated: 2 }),
     update: jest.fn().mockResolvedValue({ id: 'exp-123', currencyCode: 'PLN' }),
     findOne: jest.fn(),
+  };
+  const expenseBulkService = {
+    bulkUpdate: jest.fn().mockResolvedValue({ updated: 2 }),
+  };
+  const expenseCrossAccountService = {
+    mergeExpenses: jest.fn().mockResolvedValue({ keptId: 'a', mergedId: 'b' }),
+    moveToAccount: jest.fn().mockResolvedValue({ id: 'exp-1', accountId: 'acc-2', categoryId: null }),
   };
   const budgetAlertService = {
     checkBudgetsForAccount: jest.fn().mockResolvedValue(undefined),
@@ -40,6 +48,8 @@ describe('ExpensesController routing', () => {
       controllers: [ExpensesController],
       providers: [
         { provide: ExpensesService, useValue: expensesService },
+        { provide: ExpenseBulkService, useValue: expenseBulkService },
+        { provide: ExpenseCrossAccountService, useValue: expenseCrossAccountService },
         { provide: BudgetAlertService, useValue: budgetAlertService },
         { provide: SharedActivityService, useValue: sharedActivityService },
       ],
@@ -79,8 +89,8 @@ describe('ExpensesController routing', () => {
       .send({ ids: ['a', 'b'], isDeleted: true });
 
     expect(res.status).toBe(200);
-    expect(expensesService.bulkUpdate).toHaveBeenCalledTimes(1);
-    const [accountIdArg, dtoArg] = expensesService.bulkUpdate.mock.calls[0];
+    expect(expenseBulkService.bulkUpdate).toHaveBeenCalledTimes(1);
+    const [accountIdArg, dtoArg] = expenseBulkService.bulkUpdate.mock.calls[0];
     expect(accountIdArg).toBe('account-1');
     expect(dtoArg).toMatchObject({ ids: ['a', 'b'], isDeleted: true });
     expect(expensesService.update).not.toHaveBeenCalled();
@@ -94,6 +104,6 @@ describe('ExpensesController routing', () => {
     expect(res.status).toBe(200);
     expect(expensesService.update).toHaveBeenCalledTimes(1);
     expect(expensesService.update.mock.calls[0][1]).toBe('exp-123');
-    expect(expensesService.bulkUpdate).not.toHaveBeenCalled();
+    expect(expenseBulkService.bulkUpdate).not.toHaveBeenCalled();
   });
 });

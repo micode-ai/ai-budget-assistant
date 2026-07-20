@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ExpensesController } from './expenses.controller';
 import { ExpensesService } from './expenses.service';
+import { ExpenseBulkService } from './expense-bulk.service';
+import { ExpenseCrossAccountService } from './expense-cross-account.service';
 import { ExpenseRecurringCron } from './expense-recurring.cron';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { GamificationModule } from '../gamification/gamification.module';
@@ -13,7 +15,7 @@ import { InflationShieldTrackingModule } from '../insights/inflation-shield-trac
 @Module({
   imports: [BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule],
   controllers: [ExpensesController],
-  providers: [ExpensesService, ExpenseRecurringCron],
-  exports: [ExpensesService],
+  providers: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseRecurringCron],
+  exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService],
 })
 export class ExpensesModule {}
