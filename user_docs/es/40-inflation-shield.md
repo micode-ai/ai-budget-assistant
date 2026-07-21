@@ -35,6 +35,12 @@ Cada cifra que ves —la tendencia, la cantidad sugerida, el ahorro— es una **
 
 Toca **Compartir** para crear una imagen "Mi Escudo contra la inflación" (o un resumen de texto si compartir imágenes no está disponible) que destaque lo que estás ahorrando. Un interruptor de **Ocultar cantidades** enmascara antes tus cifras monetarias, por si prefieres no mostrar los importes exactos.
 
+## Notificaciones
+
+Recibirás un aviso push cuando el Escudo detecte un nuevo producto que conviene reponer, así no tienes que acordarte de revisar la pantalla. Para no saturarte, cada producto solo genera un aviso al mes, y el mensaje nunca indica el ahorro estimado exacto (ya que de por sí es una estimación conservadora) — solo el producto y aproximadamente a qué velocidad está subiendo su precio.
+
+Esto está activado por defecto y se puede desactivar por separado en **Ajustes → Notificaciones**, en **Alertas de reposición**.
+
 ## Es bueno saber
 
 - El Escudo contra la inflación es **gratuito** para todos — no requiere Pro.

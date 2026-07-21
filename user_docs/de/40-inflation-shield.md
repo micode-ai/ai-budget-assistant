@@ -35,6 +35,12 @@ Jede Zahl, die du siehst — der Trend, die vorgeschlagene Menge, die Ersparnis 
 
 Tippe auf **Teilen**, um ein Bild „Mein Inflationsschutz" (oder eine Textzusammenfassung, falls das Teilen von Bildern nicht verfügbar ist) zu erstellen, das zeigt, was du sparst. Ein Schalter **Beträge ausblenden** maskiert vorher deine Geldbeträge, falls du keine genauen Zahlen zeigen möchtest.
 
+## Benachrichtigungen
+
+Du erhältst eine Push-Benachrichtigung, wenn der Schutz ein neues Produkt entdeckt, bei dem sich ein Vorratskauf lohnt — so musst du nicht daran denken, den Bildschirm zu prüfen. Damit du nicht zugespamt wirst, löst jedes Produkt höchstens eine Benachrichtigung pro Monat aus, und die Nachricht nennt nie die genaue geschätzte Ersparnis (da sie ohnehin schon konservativ geschätzt ist) — nur das Produkt und ungefähr, wie schnell sein Preis steigt.
+
+Dies ist standardmäßig aktiviert und kann unabhängig unter **Einstellungen → Benachrichtigungen** bei **Vorratskauf-Hinweise** deaktiviert werden.
+
 ## Gut zu wissen
 
 - Der Inflationsschutz ist für alle **kostenlos** — es ist kein Pro-Abo nötig.

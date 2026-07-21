@@ -162,6 +162,7 @@ model User {
   notifyTripSettleUp      Boolean   @default(true) @map("notify_trip_settle_up")
   notifyShoppingReminders Boolean   @default(true) @map("notify_shopping_reminders")
   notifyShoppingDeals     Boolean   @default(true) @map("notify_shopping_deals")
+  notifyInflationShield   Boolean   @default(true) @map("notify_inflation_shield")
   // ABA-335 (Community Price Map, M1): personal, opt-in consent to contribute
   // anonymized receipt price observations to the crowdsourced corpus. Default
   // false (GDPR opt-in). Consent is personal (not an Account setting) — only
@@ -311,6 +312,7 @@ model Account {
   shoppingListItems       ShoppingListItem[]
   inflationShieldRecommendations InflationShieldRecommendation[]
   shoppingNotificationLogs ShoppingNotificationLog[]
+  insightNotificationLogs InsightNotificationLog[]
 
   @@map("accounts")
 }
@@ -625,6 +627,20 @@ model ShoppingNotificationLog {
   @@unique([accountId, dedupKey])
   @@index([accountId, type, sentAt])
   @@map("shopping_notification_log")
+}
+
+model InsightNotificationLog {
+  id        String   @id @default(uuid())
+  accountId String   @map("account_id")
+  type      String
+  dedupKey  String   @map("dedup_key")
+  sentAt    DateTime @default(now()) @map("sent_at")
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, dedupKey])
+  @@index([accountId, type, sentAt])
+  @@map("insight_notification_log")
 }
 
 model Income {

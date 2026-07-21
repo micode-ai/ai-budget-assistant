@@ -35,6 +35,12 @@ Chaque chiffre affiché — la tendance, la quantité suggérée, les économies
 
 Appuyez sur **Partager** pour créer une image « Mon Bouclier anti-inflation » (ou un résumé texte si le partage d'image n'est pas disponible) mettant en avant vos économies. Un interrupteur **Masquer les montants** masque d'abord vos chiffres, si vous préférez ne pas montrer les montants exacts.
 
+## Notifications
+
+Vous recevrez une notification push lorsque le Bouclier repère un nouveau produit qu'il vaut la peine de stocker à l'avance — pas besoin de penser à consulter l'écran. Pour éviter de vous submerger, chaque produit ne déclenche qu'une seule notification par mois, et le message n'indique jamais l'économie estimée exacte (puisqu'il s'agit déjà d'une estimation prudente) — seulement le produit et la vitesse approximative à laquelle son prix augmente.
+
+C'est activé par défaut et peut être désactivé indépendamment dans **Paramètres → Notifications**, sous **Alertes de stock**.
+
 ## À noter
 
 - Le Bouclier anti-inflation est **gratuit** pour tout le monde — aucun abonnement Pro requis.

@@ -760,6 +760,8 @@ export default {
     shoppingReminderDesc: 'Erhalte eine Erinnerung, wenn ein regelmäßiger Artikel nachgekauft werden sollte',
     shoppingDeals: 'Preissenkungs-Hinweise',
     shoppingDealsDesc: 'Erhalte eine Benachrichtigung, wenn ein regelmäßiger Artikel im Preis fällt',
+    inflationShield: 'Bevorratungs-Hinweise',
+    inflationShieldDesc: 'Erhalte eine Benachrichtigung, wenn ein regelmäßiger Artikel im Preis steigen wird',
   },
   alerts: {
     title: 'Hinweise',

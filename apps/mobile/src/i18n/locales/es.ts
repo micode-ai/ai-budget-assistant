@@ -760,6 +760,8 @@ export default {
     shoppingReminderDesc: 'Recibe un recordatorio cuando toque volver a comprar un artículo habitual',
     shoppingDeals: 'Alertas de ofertas',
     shoppingDealsDesc: 'Recibe una notificación cuando baje el precio de un artículo habitual',
+    inflationShield: 'Alertas de abastecimiento',
+    inflationShieldDesc: 'Recibe una notificación cuando el precio de un artículo habitual esté por subir',
   },
   alerts: {
     title: 'Alertas',

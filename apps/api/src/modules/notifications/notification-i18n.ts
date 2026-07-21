@@ -180,6 +180,8 @@ const translations: Record<string, {
   shoppingReminderBody: (product: string, extraCount: number) => string;
   shoppingDealTitle: () => string;
   shoppingDealBody: (product: string, merchant: string, dropPct: number) => string;
+  inflationShieldTitle: () => string;
+  inflationShieldBody: (product: string, monthlyChangePct: number) => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
@@ -266,6 +268,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Price drop!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `${product} is ${dropPct}% cheaper at ${merchant} right now.`,
+    inflationShieldTitle: () => 'Time to stock up?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `${product} prices are rising ~${monthlyChangePct}%/month — now's a good time to stock up.`,
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
@@ -353,6 +358,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Снижение цены!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `Цена на "${product}" упала на ${dropPct}% в ${merchant}.`,
+    inflationShieldTitle: () => 'Пора запастись?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Цены на ${product} растут примерно на ${monthlyChangePct}% в месяц — сейчас хорошее время запастись.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
@@ -440,6 +448,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Зниження ціни!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `Ціна на "${product}" впала на ${dropPct}% у ${merchant}.`,
+    inflationShieldTitle: () => 'Час запастися?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Ціни на ${product} зростають приблизно на ${monthlyChangePct}% на місяць — зараз гарний час запастися.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
@@ -527,6 +538,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Obniżka ceny!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `Cena "${product}" spadła o ${dropPct}% w ${merchant}.`,
+    inflationShieldTitle: () => 'Czas na zapasy?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Ceny "${product}" rosną o ok. ${monthlyChangePct}%/miesiąc — to dobry moment, żeby zrobić zapas.`,
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
@@ -614,6 +628,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => '¡Bajada de precio!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `El precio de "${product}" bajó un ${dropPct}% en ${merchant}.`,
+    inflationShieldTitle: () => '¿Hora de abastecerte?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Los precios de ${product} suben ~${monthlyChangePct}%/mes — es un buen momento para abastecerte.`,
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
@@ -701,6 +718,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Baisse de prix !',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `Le prix de "${product}" a baissé de ${dropPct}% chez ${merchant}.`,
+    inflationShieldTitle: () => 'Le moment de faire des stocks ?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Le prix de ${product} augmente d'environ ${monthlyChangePct}%/mois — c'est le bon moment pour faire des stocks.`,
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
@@ -788,6 +808,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Preissenkung!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `Der Preis für "${product}" ist bei ${merchant} um ${dropPct}% gesunken.`,
+    inflationShieldTitle: () => 'Zeit zum Bevorraten?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Die Preise für ${product} steigen um etwa ${monthlyChangePct}%/Monat — jetzt ist ein guter Zeitpunkt zum Bevorraten.`,
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
@@ -875,6 +898,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Зніжэнне цаны!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `Цана на "${product}" упала на ${dropPct}% у ${merchant}.`,
+    inflationShieldTitle: () => 'Час запасціся?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `Цэны на ${product} растуць прыблізна на ${monthlyChangePct}% у месяц — зараз добры час запасціся.`,
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
@@ -962,6 +988,9 @@ const translations: Record<string, {
     shoppingDealTitle: () => 'Prijsverlaging!',
     shoppingDealBody: (product: string, merchant: string, dropPct: number) =>
       `De prijs van "${product}" is nu ${dropPct}% lager bij ${merchant}.`,
+    inflationShieldTitle: () => 'Tijd om voorraad in te slaan?',
+    inflationShieldBody: (product: string, monthlyChangePct: number) =>
+      `De prijzen van ${product} stijgen ~${monthlyChangePct}%/maand — nu is een goed moment om voorraad in te slaan.`,
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
@@ -1156,6 +1185,14 @@ export function shoppingDealTitle(lang: Lang): string {
 
 export function shoppingDealBody(lang: Lang, product: string, merchant: string, dropPct: number): string {
   return t(lang).shoppingDealBody(product, merchant, dropPct);
+}
+
+export function inflationShieldTitle(lang: Lang): string {
+  return t(lang).inflationShieldTitle();
+}
+
+export function inflationShieldBody(lang: Lang, product: string, monthlyChangePct: number): string {
+  return t(lang).inflationShieldBody(product, monthlyChangePct);
 }
 
 export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {

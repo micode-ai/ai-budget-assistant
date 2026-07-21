@@ -4228,6 +4228,12 @@ Every number you see — the trend, the suggested quantity, the savings — is a
 
 Tap **Share** to create a "My Inflation Shield" image (or a text summary if image sharing isn't available) highlighting what you're saving. A **Hide amounts** toggle masks your money figures first, in case you'd rather not show exact numbers.
 
+## Notifications
+
+You'll get a push notification when the Shield spots a new product worth stocking up on — so you don't have to remember to check the screen. To avoid spamming you, each product only triggers one notification per month, and the message never states the exact estimated saving (since it's already a conservative estimate) — just the product and roughly how fast its price is rising.
+
+This is on by default and can be turned off independently in **Settings → Notifications** under **Stock-up alerts**.
+
 ## Good to know
 
 - Inflation Shield is **free** for everyone — no Pro subscription needed.
@@ -8440,6 +8446,12 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Нажмите **Поделиться**, чтобы создать изображение «Мой Щит от инфляции» (или текстовую сводку, если публикация изображений недоступна), показывающее вашу экономию. Переключатель **Скрыть суммы** сначала замаскирует ваши денежные показатели, если вы не хотите показывать точные цифры.
 
+## Уведомления
+
+Вы получите push-уведомление, когда Щит обнаружит новый товар, который стоит закупить впрок — так вам не нужно помнить о том, чтобы заглянуть на экран. Чтобы не заваливать вас уведомлениями, по каждому товару приходит не более одного уведомления в месяц, а в самом сообщении никогда не указывается точная сумма ожидаемой экономии (она и так уже консервативная оценка) — только товар и примерно то, насколько быстро растёт его цена.
+
+Это включено по умолчанию и отключается независимо в **Настройки → Уведомления**, в разделе **Уведомления о запасах**.
+
 ## Полезно знать
 
 - Щит от инфляции **бесплатен** для всех — подписка Pro не требуется.
@@ -12622,6 +12634,12 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Торкніться **Поділитися**, щоб створити зображення «Мій Щит від інфляції» (або текстовий підсумок, якщо публікація зображення недоступна), що показує вашу економію. Перемикач **Приховати суми** спочатку замаскує ваші грошові показники, якщо ви не хочете показувати точні цифри.
 
+## Сповіщення
+
+Ви отримаєте push-сповіщення, коли Щит виявить новий товар, який варто закупити наперед — так вам не потрібно пам'ятати про перевірку екрана. Щоб не завалювати вас сповіщеннями, кожен товар спричиняє не більше одного сповіщення на місяць, а саме повідомлення ніколи не вказує точну очікувану економію (вона й так уже консервативна оцінка) — лише товар і приблизно те, наскільки швидко зростає його ціна.
+
+Це увімкнено за замовчуванням і вимикається незалежно в **Налаштування → Сповіщення**, у розділі **Сповіщення про запаси**.
+
 ## Корисно знати
 
 - Щит від інфляції **безкоштовний** для всіх — підписка Pro не потрібна.
@@ -16789,6 +16807,12 @@ Każda liczba, którą widzisz — trend, sugerowana ilość, oszczędności —
 
 Dotknij **Udostępnij**, aby utworzyć obraz „Moja Tarcza antyinflacyjna" (lub podsumowanie tekstowe, jeśli udostępnianie obrazu jest niedostępne), pokazujący, ile oszczędzasz. Przełącznik **Ukryj kwoty** najpierw zamaskuje Twoje kwoty pieniężne, jeśli wolisz nie pokazywać dokładnych liczb.
 
+## Powiadomienia
+
+Otrzymasz powiadomienie push, gdy Tarcza wykryje nowy produkt, który warto wcześniej dokupić — dzięki temu nie musisz pamiętać o sprawdzaniu ekranu. Aby Cię nie zasypywać, każdy produkt uruchamia co najwyżej jedno powiadomienie miesięcznie, a wiadomość nigdy nie podaje dokładnej szacowanej oszczędności (bo i tak jest to ostrożny szacunek) — tylko nazwę produktu i w przybliżeniu, jak szybko rośnie jego cena.
+
+Jest to domyślnie włączone i można to wyłączyć niezależnie w **Ustawienia → Powiadomienia**, w sekcji **Powiadomienia o zapasach**.
+
 ## Warto wiedzieć
 
 - Tarcza antyinflacyjna jest **darmowa** dla wszystkich — nie wymaga abonamentu Pro.
@@ -20931,6 +20955,12 @@ Jede Zahl, die du siehst — der Trend, die vorgeschlagene Menge, die Ersparnis 
 
 Tippe auf **Teilen**, um ein Bild „Mein Inflationsschutz" (oder eine Textzusammenfassung, falls das Teilen von Bildern nicht verfügbar ist) zu erstellen, das zeigt, was du sparst. Ein Schalter **Beträge ausblenden** maskiert vorher deine Geldbeträge, falls du keine genauen Zahlen zeigen möchtest.
 
+## Benachrichtigungen
+
+Du erhältst eine Push-Benachrichtigung, wenn der Schutz ein neues Produkt entdeckt, bei dem sich ein Vorratskauf lohnt — so musst du nicht daran denken, den Bildschirm zu prüfen. Damit du nicht zugespamt wirst, löst jedes Produkt höchstens eine Benachrichtigung pro Monat aus, und die Nachricht nennt nie die genaue geschätzte Ersparnis (da sie ohnehin schon konservativ geschätzt ist) — nur das Produkt und ungefähr, wie schnell sein Preis steigt.
+
+Dies ist standardmäßig aktiviert und kann unabhängig unter **Einstellungen → Benachrichtigungen** bei **Vorratskauf-Hinweise** deaktiviert werden.
+
 ## Gut zu wissen
 
 - Der Inflationsschutz ist für alle **kostenlos** — es ist kein Pro-Abo nötig.
@@ -25062,6 +25092,12 @@ Cada cifra que ves —la tendencia, la cantidad sugerida, el ahorro— es una **
 
 Toca **Compartir** para crear una imagen "Mi Escudo contra la inflación" (o un resumen de texto si compartir imágenes no está disponible) que destaque lo que estás ahorrando. Un interruptor de **Ocultar cantidades** enmascara antes tus cifras monetarias, por si prefieres no mostrar los importes exactos.
 
+## Notificaciones
+
+Recibirás un aviso push cuando el Escudo detecte un nuevo producto que conviene reponer, así no tienes que acordarte de revisar la pantalla. Para no saturarte, cada producto solo genera un aviso al mes, y el mensaje nunca indica el ahorro estimado exacto (ya que de por sí es una estimación conservadora) — solo el producto y aproximadamente a qué velocidad está subiendo su precio.
+
+Esto está activado por defecto y se puede desactivar por separado en **Ajustes → Notificaciones**, en **Alertas de reposición**.
+
 ## Es bueno saber
 
 - El Escudo contra la inflación es **gratuito** para todos — no requiere Pro.
@@ -29191,6 +29227,12 @@ Chaque chiffre affiché — la tendance, la quantité suggérée, les économies
 
 Appuyez sur **Partager** pour créer une image « Mon Bouclier anti-inflation » (ou un résumé texte si le partage d'image n'est pas disponible) mettant en avant vos économies. Un interrupteur **Masquer les montants** masque d'abord vos chiffres, si vous préférez ne pas montrer les montants exacts.
 
+## Notifications
+
+Vous recevrez une notification push lorsque le Bouclier repère un nouveau produit qu'il vaut la peine de stocker à l'avance — pas besoin de penser à consulter l'écran. Pour éviter de vous submerger, chaque produit ne déclenche qu'une seule notification par mois, et le message n'indique jamais l'économie estimée exacte (puisqu'il s'agit déjà d'une estimation prudente) — seulement le produit et la vitesse approximative à laquelle son prix augmente.
+
+C'est activé par défaut et peut être désactivé indépendamment dans **Paramètres → Notifications**, sous **Alertes de stock**.
+
 ## À noter
 
 - Le Bouclier anti-inflation est **gratuit** pour tout le monde — aucun abonnement Pro requis.
@@ -33279,6 +33321,12 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Публікацыя
 
 Дакраніцеся да **Падзяліцца**, каб стварыць выяву «Мой Шчыт ад інфляцыі» (або тэкставую зводку, калі публікацыя выявы недаступная), якая паказвае вашу эканомію. Пераключальнік **Схаваць сумы** спачатку замаскіруе вашы грашовыя паказчыкі, калі вы не хочаце паказваць дакладныя лічбы.
+
+## Апавяшчэнні
+
+Вы атрымаеце push-апавяшчэнне, калі Шчыт выявіць новы тавар, які варта закупіць наперад — так вам не трэба памятаць пра праверку экрана. Каб не завальваць вас апавяшчэннямі, кожны тавар выклікае не больш за адно апавяшчэнне на месяц, а само паведамленне ніколі не паказвае дакладную ацэнку эканоміі (яна і так ужо кансерватыўная ацэнка) — толькі тавар і прыблізна тое, наколькі хутка расце яго цана.
+
+Гэта ўключана па змаўчанні і выключаецца незалежна ў **Налады → Апавяшчэнні**, у раздзеле **Апавяшчэнні аб запасах**.
 
 ## Карысна ведаць
 
@@ -37487,6 +37535,12 @@ Elk getal dat je ziet — de trend, de voorgestelde hoeveelheid, de besparing �
 ## Delen
 
 Tik op **Delen** om een afbeelding "Mijn Inflatieschild" te maken (of een tekstsamenvatting als het delen van afbeeldingen niet beschikbaar is) die laat zien wat je bespaart. Een schakelaar **Bedragen verbergen** maskeert eerst je geldbedragen, voor het geval je geen exacte cijfers wilt tonen.
+
+## Meldingen
+
+Je krijgt een pushmelding wanneer het Schild een nieuw product ontdekt waarvoor het de moeite waard is om voorraad in te slaan — zo hoef je niet te onthouden om het scherm te checken. Om je niet te overspoelen, veroorzaakt elk product maximaal één melding per maand, en het bericht noemt nooit het exacte geschatte besparingsbedrag (dat is toch al een conservatieve schatting) — alleen het product en ongeveer hoe snel de prijs stijgt.
+
+Dit staat standaard aan en kan apart worden uitgezet bij **Instellingen → Meldingen**, onder **Voorraadmeldingen**.
 
 ## Goed om te weten
 

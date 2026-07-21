@@ -751,6 +751,8 @@ export default {
     shoppingReminderDesc: 'Паведамленне, калі прыйшоў час зноў купіць звыклы тавар',
     shoppingDeals: 'Апавяшчэнні аб зніжках',
     shoppingDealsDesc: 'Атрымлівайце апавяшчэнне, калі звыклы тавар дэшавее',
+    inflationShield: 'Апавяшчэнні аб запасах',
+    inflationShieldDesc: 'Атрымлівайце апавяшчэнне, калі звыклы тавар неўзабаве падаражэе',
   },
   alerts: {
     title: 'Апавяшчэнні',

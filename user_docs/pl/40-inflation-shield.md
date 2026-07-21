@@ -35,6 +35,12 @@ Każda liczba, którą widzisz — trend, sugerowana ilość, oszczędności —
 
 Dotknij **Udostępnij**, aby utworzyć obraz „Moja Tarcza antyinflacyjna" (lub podsumowanie tekstowe, jeśli udostępnianie obrazu jest niedostępne), pokazujący, ile oszczędzasz. Przełącznik **Ukryj kwoty** najpierw zamaskuje Twoje kwoty pieniężne, jeśli wolisz nie pokazywać dokładnych liczb.
 
+## Powiadomienia
+
+Otrzymasz powiadomienie push, gdy Tarcza wykryje nowy produkt, który warto wcześniej dokupić — dzięki temu nie musisz pamiętać o sprawdzaniu ekranu. Aby Cię nie zasypywać, każdy produkt uruchamia co najwyżej jedno powiadomienie miesięcznie, a wiadomość nigdy nie podaje dokładnej szacowanej oszczędności (bo i tak jest to ostrożny szacunek) — tylko nazwę produktu i w przybliżeniu, jak szybko rośnie jego cena.
+
+Jest to domyślnie włączone i można to wyłączyć niezależnie w **Ustawienia → Powiadomienia**, w sekcji **Powiadomienia o zapasach**.
+
 ## Warto wiedzieć
 
 - Tarcza antyinflacyjna jest **darmowa** dla wszystkich — nie wymaga abonamentu Pro.

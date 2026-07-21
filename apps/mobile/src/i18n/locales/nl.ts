@@ -760,6 +760,8 @@ export default {
     shoppingReminderDesc: 'Ontvang een herinnering wanneer het tijd is om een vast artikel opnieuw te kopen',
     shoppingDeals: 'Aanbiedingsmeldingen',
     shoppingDealsDesc: 'Ontvang een melding wanneer een vast artikel in prijs daalt',
+    inflationShield: 'Voorraadmeldingen',
+    inflationShieldDesc: 'Ontvang een melding wanneer een vast artikel binnenkort duurder wordt',
   },
   alerts: {
     title: 'Meldingen',

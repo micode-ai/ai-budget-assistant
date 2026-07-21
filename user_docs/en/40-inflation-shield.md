@@ -35,6 +35,12 @@ Every number you see — the trend, the suggested quantity, the savings — is a
 
 Tap **Share** to create a "My Inflation Shield" image (or a text summary if image sharing isn't available) highlighting what you're saving. A **Hide amounts** toggle masks your money figures first, in case you'd rather not show exact numbers.
 
+## Notifications
+
+You'll get a push notification when the Shield spots a new product worth stocking up on — so you don't have to remember to check the screen. To avoid spamming you, each product only triggers one notification per month, and the message never states the exact estimated saving (since it's already a conservative estimate) — just the product and roughly how fast its price is rising.
+
+This is on by default and can be turned off independently in **Settings → Notifications** under **Stock-up alerts**.
+
 ## Good to know
 
 - Inflation Shield is **free** for everyone — no Pro subscription needed.

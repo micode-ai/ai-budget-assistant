@@ -14,6 +14,7 @@ export interface UpdateNotificationPreferencesDto {
   tripSettleUp?: boolean;
   shoppingReminders?: boolean;
   shoppingDeals?: boolean;
+  inflationShield?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -28,4 +29,5 @@ export interface NotificationPreferencesResponse {
   tripSettleUp: boolean;
   shoppingReminders: boolean;
   shoppingDeals: boolean;
+  inflationShield: boolean;
 }

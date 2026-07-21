@@ -760,6 +760,8 @@ export default {
     shoppingReminderDesc: 'Уведомление, когда пора снова купить привычный товар',
     shoppingDeals: 'Уведомления о скидках',
     shoppingDealsDesc: 'Получайте уведомление, когда привычный товар дешевеет',
+    inflationShield: 'Уведомления о запасах',
+    inflationShieldDesc: 'Получайте уведомление, когда привычный товар вот-вот подорожает',
   },
   alerts: {
     title: 'Уведомления',

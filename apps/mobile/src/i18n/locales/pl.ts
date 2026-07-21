@@ -760,6 +760,8 @@ export default {
     shoppingReminderDesc: 'Otrzymuj przypomnienie, gdy nadejdzie czas na ponowny zakup stałego produktu',
     shoppingDeals: 'Powiadomienia o promocjach',
     shoppingDealsDesc: 'Otrzymuj powiadomienie, gdy cena stałego produktu spadnie',
+    inflationShield: 'Powiadomienia o zapasach',
+    inflationShieldDesc: 'Otrzymuj powiadomienie, gdy cena stałego produktu ma wkrótce wzrosnąć',
   },
   alerts: {
     title: 'Alerty',

@@ -35,6 +35,12 @@ Elk getal dat je ziet — de trend, de voorgestelde hoeveelheid, de besparing �
 
 Tik op **Delen** om een afbeelding "Mijn Inflatieschild" te maken (of een tekstsamenvatting als het delen van afbeeldingen niet beschikbaar is) die laat zien wat je bespaart. Een schakelaar **Bedragen verbergen** maskeert eerst je geldbedragen, voor het geval je geen exacte cijfers wilt tonen.
 
+## Meldingen
+
+Je krijgt een pushmelding wanneer het Schild een nieuw product ontdekt waarvoor het de moeite waard is om voorraad in te slaan — zo hoef je niet te onthouden om het scherm te checken. Om je niet te overspoelen, veroorzaakt elk product maximaal één melding per maand, en het bericht noemt nooit het exacte geschatte besparingsbedrag (dat is toch al een conservatieve schatting) — alleen het product en ongeveer hoe snel de prijs stijgt.
+
+Dit staat standaard aan en kan apart worden uitgezet bij **Instellingen → Meldingen**, onder **Voorraadmeldingen**.
+
 ## Goed om te weten
 
 - Inflatieschild is **gratis** voor iedereen — er is geen Pro-abonnement voor nodig.

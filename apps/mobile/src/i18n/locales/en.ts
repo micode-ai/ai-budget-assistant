@@ -761,6 +761,8 @@ export default {
     shoppingReminderDesc: "Get reminded when you're due to rebuy a regular item",
     shoppingDeals: 'Deal alerts',
     shoppingDealsDesc: 'Get notified when a regular item drops in price',
+    inflationShield: 'Stock-up alerts',
+    inflationShieldDesc: 'Get notified when a regular item is about to rise in price',
   },
   alerts: {
     title: 'Alerts',

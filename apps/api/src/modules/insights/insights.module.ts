@@ -8,6 +8,8 @@ import { FatFinderService } from './fat-finder.service';
 import { SafeToSpendService } from './safe-to-spend.service';
 import { WrappedService } from './wrapped.service';
 import { InflationShieldService } from './inflation-shield.service';
+import { InsightNotificationLedger } from './insight-notification-ledger.service';
+import { InflationShieldNotifyCron } from './inflation-shield-notify.cron';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { WalletModule } from '../wallet/wallet.module';
@@ -28,7 +30,17 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     InflationShieldTrackingModule,
   ],
   controllers: [InsightsController],
-  providers: [InsightsService, AiInsightsService, StoryService, FatFinderService, SafeToSpendService, WrappedService, InflationShieldService],
+  providers: [
+    InsightsService,
+    AiInsightsService,
+    StoryService,
+    FatFinderService,
+    SafeToSpendService,
+    WrappedService,
+    InflationShieldService,
+    InsightNotificationLedger,
+    InflationShieldNotifyCron,
+  ],
   exports: [InsightsService, AiInsightsService, StoryService, FatFinderService, SafeToSpendService, WrappedService, InflationShieldService],
 })
 export class InsightsModule {}
