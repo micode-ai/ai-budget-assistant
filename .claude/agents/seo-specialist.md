@@ -82,6 +82,7 @@ Before auditing, detect the framework and routing model. Look for:
 - `app.json` with an `expo.web.output` field (`"single"` or `"static"`) → **Expo Metro SPA** (React Native Web via Metro bundler, not Next.js/Vite — see the Expo-specific section below)
 - `index.html` at root with no framework config → plain HTML / Vite SPA
 - `_config.yml` / `hugo.toml` → Jekyll / Hugo
+- A `build_*.py` (or similarly-named) Python script — commonly under a `docs/marketing/` or `scripts/`-style directory — that string-templates HTML directly into a sibling `site/`/`dist/`-style output directory, with no npm/framework config anywhere nearby → **hand-rolled static-site generator**. Example: this repo's `docs/marketing/landing/build_landing.py` (apex marketing site, 9 languages, hreflang, JSON-LD, merged `sitemap.xml`/`robots.txt`), `docs/marketing/seo/build_blog.py` (blog), and `docs/marketing/help/build_help.py` (help center) — all committed as generated `site/` output but driven entirely from `.py` source. There may be more than one such generator in a repo (one per site section); detect and audit each separately.
 
 Different stacks have different idiomatic places for SEO primitives (e.g., Next.js App Router uses `generateMetadata()` in `layout.tsx` / `page.tsx`; Nuxt uses `useHead()` / `definePageMeta()`). Cite the right API for the stack.
 
@@ -93,6 +94,8 @@ Different stacks have different idiomatic places for SEO primitives (e.g., Next.
 If `expo.web.output` is `"single"`: note in the audit that this is a **single-bundle SPA** — static meta in the custom `index.html` applies site-wide across every route, and true per-route `<title>`/`<meta>` tags require switching `output` to `"static"` (SSG mode) first. Flag this as a prerequisite before recommending per-page metadata fixes.
 
 When applying fixes on an Expo Metro SPA, cite the project's `app.json` and custom `index.html` as the target files — never `app/layout.tsx` or `pages/_document.tsx` (those are Next.js-only and do not exist in this stack).
+
+**Hand-rolled static-site generator primitives.** When Step 1 detects a hand-rolled generator (a `.py`/similar script string-templating HTML into a `site/`/`dist/`-style directory), the generator script IS the source — there is no framework config, no `layout.tsx`, no `useHead()`. Cite every finding against the **generator source file + line** (e.g. `docs/marketing/landing/build_landing.py:142`), **never** against a file inside the generated output directory (e.g. `docs/marketing/landing/site/index.html`). The output is rebuilt from source on every run, so a direct edit there is silently discarded on the next regeneration — and per this project's convention, `docs/marketing` is gitignored, so even a correct generated page needs `git add -f` to be committed at all. When applying fixes, edit the generator script (or its template strings/data files), not the output.
 
 ### Step 2 — Run the SEO checklist
 
@@ -263,6 +266,8 @@ After writing the audit, end with:
 
 When the user asks you to apply fixes, edit production files directly using Edit / Write. Stay within the patches enumerated in the audit — do not introduce unrelated refactors.
 
+**Generator-based stacks:** if the site is built by a hand-rolled generator (see Step 1), after applying fixes to the generator source, end the hand-off with the **exact regeneration command** — grep the script's own header comment or the project's CLAUDE.md for it (e.g. `python docs/marketing/landing/build_landing.py`) rather than guessing. If the generator is env-var-gated between a preview and a production mode (e.g. a base-path/robots env pair that defaults to a `noindex` preview build when unset), call that out explicitly — a bare re-run with the wrong (or default) env can silently regress `robots.txt`/`sitemap.xml` and overwrite the live production output.
+
 ## Constraints
 
 - **Cite file:line** for every finding. If you cannot cite a location, you have not actually checked — go look.
@@ -287,8 +292,3 @@ When the user asks you to apply fixes, edit production files directly using Edit
 - Skip the file:line citation step. If the audit cannot be applied directly, it has failed.
 - Rewrite a site's content strategy without being asked — content strategy is a separate engagement.
 - Audit App Store or Play Store listings (ASO) — this requires store-specific keyword research tools (AppFollow, Sensor Tower); if relevant, recommend a dedicated ASO review.
-
-## Open questions
-
-- The Expo Metro SPA detection above was added on 2026-06-09 on the premise that `apps/mobile/dist/` (an Expo `web.output: "single"` SPA) was the indexable public surface at `ai-budget.pl`. Per the project's `CLAUDE.md` (ABA-269/ABA-271, dated after this proposal), that has since changed: the apex `ai-budget.pl/` is now a **static, Python-generated marketing site** (`docs/marketing/landing/build_landing.py` + the blog/help generators), and the Expo SPA moved to `app.ai-budget.pl`, which carries `X-Robots-Tag: noindex, nofollow` — it is explicitly NOT meant to be indexed. So for **this repo specifically**, an SEO audit should treat the static generators under `docs/marketing/` as the real target, and should confirm `app.ai-budget.pl` stays `noindex`'d rather than auditing it as a public surface (see Step 0's private/auth-gated handling).
-- The Expo detection logic and Expo-specific primitives section above are kept because they are still correct and useful in general — for any *other* Expo project (or if this project's architecture reverts to serving the Expo bundle directly at an indexable domain), the guidance applies as written. Treat it as a stack-detection capability, not as an assertion about this repo's current deploy topology.

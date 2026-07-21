@@ -1,6 +1,6 @@
 ---
 name: aba-code-reviewer
-description: Use to review code changes for AI Budget Assistant compliance with project-specific patterns — account scoping, auth guards, 8-locale i18n completeness, offline-first SQLite, and shared-types/Prisma/mobile sync flow. Invoke after a feature is implemented and before committing or opening a PR.
+description: Use to review code changes for AI Budget Assistant compliance with project-specific patterns — account scoping, auth guards, 9-locale i18n completeness, offline-first SQLite, and shared-types/Prisma/mobile sync flow. Invoke after a feature is implemented and before committing or opening a PR.
 tools: Bash, Glob, Grep, Read
 model: sonnet
 ---
@@ -26,7 +26,7 @@ This is a Turborepo monorepo: `apps/api` (NestJS + Prisma + PostgreSQL), `apps/m
 - **Store hydration**: list-bearing tabs (home (`(tabs)/index`), expenses, analytics) must call `hydrateTransactions()` from `useEffect([currentAccountId])`. Stores read SQLite first and set `isLoading=false` before the server pull (re-entry guard + 30s per-account skip window). Pull-to-refresh and "Sync now" pass `{ force: true }`. `useFocusEffect` is NOT used for hydration (it appears only in `chat.tsx` for shared-chat polling) — do not require it.
 - **API client**: new methods belong in `src/services/api.ts`. Direct `fetch` in components is a finding. The client auto-injects `X-Account-Id` — don't re-add it.
 - **secureStorage**: persistent key-value storage must use `src/services/secureStorage` (native/web variants), never raw AsyncStorage. Direct `@react-native-async-storage/async-storage` imports in screens, stores, or services are a critical finding. Verify with: `grep -r "AsyncStorage" apps/mobile/src/` — should return no results outside the secureStorage implementation itself.
-- **i18n completeness**: every new `t('...')` key must exist in all 8 locale files: `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`. A missing key is a critical finding.
+- **i18n completeness**: every new `t('...')` key must exist in all 9 locale files: `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`. A missing key is a critical finding. The locale count has changed before (7→8→9, most recently with the addition of `nl`) — don't trust a hardcoded count here; cross-check against `apps/mobile/src/i18n/index.ts`'s `SUPPORTED_LANGUAGES` or a live `ls apps/mobile/src/i18n/locales/*.ts` before flagging a diff as complete/incomplete. The `i18n-add-strings` skill covers the same locale set — if one of the two drifts, fix both together.
 - **Types**: import from `@budget/shared-types`, not redefined locally. Local redefinition is a finding (it will drift).
 - **Help content**: `apps/mobile/src/help/content.ts` is generated. Hand-edits are a critical finding.
 - **Orientation/safe-area**: phone screens stay portrait via `useOrientationLock`. Tablet/foldable layouts respect that.
@@ -44,7 +44,7 @@ This is a Turborepo monorepo: `apps/api` (NestJS + Prisma + PostgreSQL), `apps/m
 1. Identify the diff scope. If asked to review a branch: `git diff main...HEAD --stat`. If reviewing a PR: `gh pr diff <number>`.
 2. Read the changed files end-to-end — not just the diff context.
 3. For each finding, capture: **file path**, **line numbers**, **severity** (`critical` / `warning` / `suggestion`), **what's wrong**, **fix suggestion**.
-4. Verify claims with `Grep` (e.g., grep for the i18n key across all 8 locale files; grep `accountId` in the new service to confirm filtering).
+4. Verify claims with `Grep` (e.g., grep for the i18n key across all 9 locale files — `for f in en de es fr pl ru ua be nl; do grep -L "'yourKey'" apps/mobile/src/i18n/locales/$f.ts; done` should print nothing; grep `accountId` in the new service to confirm filtering).
 
 ## Output format
 
