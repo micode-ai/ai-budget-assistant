@@ -8,6 +8,28 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.14.0 — 2026-07-21
+
+**AI chat**
+- **Manage your shopping list by chat** — you can now ask the assistant to take things off your shopping list ("I already bought milk, remove it") and to suggest what to restock or what's on a good deal right now (ABA-360).
+
+**Shopping reminders**
+- **No more "buy bread" every single morning** — restock reminders now fire once per purchase cycle (and again only after you actually rebuy), and deal alerts once per product per week, instead of repeating daily. A minimum gap between notifications keeps things calm (ABA-350).
+
+**Fixes & reliability**
+- Tapping a budget alert notification now reliably opens the right budget, even for a budget you just created (#364).
+- Your expenses total now shows your account's own currency instead of always displaying USD (#363).
+- The Net Profit chart now shows its below-zero region correctly instead of clipping negative months (ABA-352).
+- Fixed a crash that could happen when moving an expense to another account if it collided with an existing item there (ABA-351).
+
+**Behind the scenes**
+- Large internal refactors for maintainability: split the oversized expenses service and shopping-list screen into focused pieces, decomposed the app's root layout into small hooks, and extracted a shared share-image component (ABA-368, ABA-352, ABA-351, ABA-353).
+- Consolidated the subscription pricing table into a single source of truth so displayed prices can never drift (ABA-350).
+- Expanded automated test coverage across wallet, incomes, categories, debts, and the sync engine (ABA-370, ABA-359, ABA-358, ABA-356).
+- Marketing-site improvements: PageSpeed/accessibility fixes, spec-compliant `llms.txt`, and a Startup Fame badge (ABA-366, ABA-367).
+
+---
+
 ## 1.13.0 — 2026-07-16
 
 **Inflation Shield**
