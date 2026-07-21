@@ -131,6 +131,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             defaultAccountId: response.user.defaultAccountId,
             isVerified: !!response.user.isVerified,
+            themeMode: (response.user.themeMode as User['themeMode']) ?? 'system',
+            accentColor: (response.user.accentColor as string | null) ?? null,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -163,8 +165,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           // Fetch profile to get isAdmin flag
           try {
             const profile = await api.getProfile();
-            if (profile.isAdmin || profile.aiResponseMode || profile.aiModel) {
-              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced', aiModel: profile.aiModel || 'balanced' };
+            if (profile.isAdmin || profile.aiResponseMode || profile.aiModel || profile.themeMode || profile.accentColor !== undefined) {
+              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced', aiModel: profile.aiModel || 'balanced', themeMode: profile.themeMode ?? user.themeMode, accentColor: profile.accentColor ?? null };
               set({ user: updatedUser });
               await secureStorage.setItem('user', JSON.stringify(updatedUser));
             }
@@ -243,6 +245,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             defaultAccountId: response.user.defaultAccountId,
             isVerified: false,
+            themeMode: (response.user.themeMode as User['themeMode']) ?? 'system',
+            accentColor: (response.user.accentColor as string | null) ?? null,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -310,6 +314,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             defaultAccountId: response.user.defaultAccountId,
             isVerified: true,
+            themeMode: (response.user.themeMode as User['themeMode']) ?? 'system',
+            accentColor: (response.user.accentColor as string | null) ?? null,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -336,8 +342,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
           try {
             const profile = await api.getProfile();
-            if (profile.isAdmin || profile.aiResponseMode || profile.aiModel) {
-              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced', aiModel: profile.aiModel || 'balanced' };
+            if (profile.isAdmin || profile.aiResponseMode || profile.aiModel || profile.themeMode || profile.accentColor !== undefined) {
+              const updatedUser = { ...user, isAdmin: profile.isAdmin, aiResponseMode: profile.aiResponseMode || 'balanced', aiModel: profile.aiModel || 'balanced', themeMode: profile.themeMode ?? user.themeMode, accentColor: profile.accentColor ?? null };
               set({ user: updatedUser });
               await secureStorage.setItem('user', JSON.stringify(updatedUser));
             }
@@ -392,6 +398,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               isAdmin: profile.isAdmin,
               aiResponseMode: profile.aiResponseMode || 'balanced',
               aiModel: profile.aiModel || 'balanced',
+              themeMode: profile.themeMode ?? user.themeMode,
+              accentColor: profile.accentColor ?? null,
             };
             set({ user: updatedUser });
             await secureStorage.setItem('user', JSON.stringify(updatedUser));
@@ -536,6 +544,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
               defaultAccountId: response.user.defaultAccountId,
               isVerified: true,
+              themeMode: (response.user.themeMode as User['themeMode']) ?? 'system',
+              accentColor: (response.user.accentColor as string | null) ?? null,
               createdAt: new Date(),
               updatedAt: new Date(),
             };

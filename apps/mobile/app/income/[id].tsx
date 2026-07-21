@@ -288,7 +288,7 @@ export default function IncomeDetailScreen() {
                 <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+                <Ionicons name="checkmark" size={20} color={theme.colors.onSemantic} />
                 <Text style={styles.saveButtonText}>{t('common.save')}</Text>
               </TouchableOpacity>
             </>
@@ -466,7 +466,7 @@ const createStyles = (theme: Theme) => ({
   },
   saveButtonText: {
     ...theme.textStyles.button,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
   // Debt section
   debtSection: {

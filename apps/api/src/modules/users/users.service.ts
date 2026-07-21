@@ -13,6 +13,8 @@ interface CreateUserData {
   emailVerificationCode?: string;
   emailVerificationExpiresAt?: Date;
   contributeCommunityPrices?: boolean;
+  themeMode?: string;
+  accentColor?: string | null;
 }
 
 @Injectable()

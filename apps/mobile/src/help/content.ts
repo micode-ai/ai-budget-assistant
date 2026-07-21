@@ -1623,6 +1623,8 @@ Choose your theme:
 - **Light** — always use light theme
 - **Dark** — always use dark theme
 
+**Accent color** — pick the app's highlight color, used for buttons, links, and the active tab. Tap a preset swatch, or tap **Custom** to open the color picker and choose any color. Your accent works in both light and dark mode and is saved to your account, so it follows you across devices. Tap the default swatch to go back to the original color.
+
 ## AI Preferences
 
 ### AI Response Style
@@ -5856,6 +5858,8 @@ Email обновляется мгновенно, выдаются новые т�
 - **Светлая** — всегда использовать светлую тему
 - **Тёмная** — всегда использовать тёмную тему
 
+**Акцентный цвет** — выберите цвет выделения приложения, который используется для кнопок, ссылок и активной вкладки. Нажмите на один из готовых образцов или нажмите **Свой цвет**, чтобы открыть палитру и выбрать любой цвет. Ваш акцентный цвет работает как в светлой, так и в тёмной теме и сохраняется в вашем аккаунте, поэтому он остаётся с вами на всех устройствах. Нажмите на образец по умолчанию, чтобы вернуться к исходному цвету.
+
 ## Настройки ИИ
 
 ### Стиль ответов ИИ
@@ -10080,6 +10084,8 @@ iOS, Android, Web
 - **Світла** — завжди використовувати світлу тему
 - **Темна** — завжди використовувати темну тему
 
+**Акцентний колір** — виберіть колір виділення застосунку, який використовується для кнопок, посилань і активної вкладки. Торкніться одного з готових зразків або торкніться **Власний**, щоб відкрити палітру кольорів і вибрати будь-який колір. Ваш акцентний колір працює як у світлій, так і в темній темі та зберігається у вашому обліковому записі, тож він супроводжує вас на всіх пристроях. Торкніться зразка за замовчуванням, щоб повернутися до початкового кольору.
+
 ## Налаштування ШІ
 
 ### Стиль відповідей ШІ
@@ -14251,6 +14257,8 @@ Wybierz motyw:
 - **Jasny** — zawsze uzywa jasnego motywu
 - **Ciemny** — zawsze uzywa ciemnego motywu
 
+**Kolor akcentu** — wybierz kolor wyroznienia aplikacji, uzywany dla przyciskow, linkow i aktywnej zakladki. Dotknij gotowego koloru albo dotknij **Niestandardowy**, aby otworzyc wybor kolorow i wybrac dowolny kolor. Twoj akcent dziala zarowno w jasnym, jak i ciemnym motywie i jest zapisywany na Twoim koncie, dzieki czemu towarzyszy Ci na wszystkich urzadzeniach. Dotknij domyslnego koloru, aby wrocic do pierwotnego koloru.
+
 ## Preferencje AI
 
 ### Styl odpowiedzi AI
@@ -18421,6 +18429,8 @@ Wahle dein Design:
 - **Hell** — immer helles Design verwenden
 - **Dunkel** — immer dunkles Design verwenden
 
+**Akzentfarbe** — Wähle die Hervorhebungsfarbe der App, die für Schaltflächen, Links und den aktiven Tab verwendet wird. Tippe auf eine vorgegebene Farbe oder auf **Benutzerdefiniert**, um den Farbwähler zu öffnen und eine beliebige Farbe auszuwählen. Deine Akzentfarbe funktioniert sowohl im hellen als auch im dunklen Design und wird in deinem Konto gespeichert, sodass sie dich auf allen Geräten begleitet. Tippe auf die Standardfarbe, um zur ursprünglichen Farbe zurückzukehren.
+
 ## KI-Einstellungen
 
 ### KI-Antwortstil
@@ -22570,6 +22580,8 @@ Elige tu tema:
 - **Claro** — siempre usa el tema claro
 - **Oscuro** — siempre usa el tema oscuro
 
+**Color de acento** — elige el color de resalte de la app, usado en botones, enlaces y la pestaña activa. Toca una muestra predefinida, o toca **Personalizado** para abrir el selector de color y elegir cualquier color. Tu color de acento funciona tanto en modo claro como oscuro y se guarda en tu cuenta, por lo que te acompaña en todos tus dispositivos. Toca la muestra predeterminada para volver al color original.
+
 ## Preferencias de IA
 
 ### Estilo de respuesta de la IA
@@ -26704,6 +26716,8 @@ Choisissez votre theme :
 - **Systeme** — suit le mode clair/sombre de votre appareil
 - **Clair** — toujours utiliser le theme clair
 - **Sombre** — toujours utiliser le theme sombre
+
+**Couleur d'accent** — choisissez la couleur de mise en valeur de l'application, utilisee pour les boutons, les liens et l'onglet actif. Appuyez sur une couleur predefinie, ou sur **Personnalise** pour ouvrir le selecteur de couleurs et choisir n'importe quelle couleur. Votre couleur d'accent fonctionne a la fois en mode clair et sombre et est enregistree sur votre compte, elle vous suit donc sur tous vos appareils. Appuyez sur la couleur par defaut pour revenir a la couleur d'origine.
 
 ## Preferences IA
 
@@ -30842,6 +30856,8 @@ iOS, Android, Web
 - **Светлая** — заўсёды выкарыстоўваць светлую тэму
 - **Цёмная** — заўсёды выкарыстоўваць цёмную тэму
 
+**Акцэнтны колер** — выберыце колер вылучэння праграмы, які выкарыстоўваецца для кнопак, спасылак і актыўнай укладкі. Дакраніцеся да аднаго з гатовых узораў або дакраніцеся да **Уласны**, каб адкрыць палітру колераў і выбраць любы колер. Ваш акцэнтны колер працуе як у светлай, так і ў цёмнай тэме і захоўваецца ў вашым акаунце, таму суправаджае вас на ўсіх прыладах. Дакраніцеся да стандартнага ўзору, каб вярнуцца да пачатковага колеру.
+
 ## Пераважнасці ШІ
 
 ### Стыль адказаў ШІ
@@ -34947,6 +34963,8 @@ Kies je thema:
 - **Systeem** — volgt de licht/donker-instelling van je apparaat
 - **Licht** — gebruik altijd het lichte thema
 - **Donker** — gebruik altijd het donkere thema
+
+**Accentkleur** — kies de accentkleur van de app, gebruikt voor knoppen, links en het actieve tabblad. Tik op een voorinstelling, of tik op **Aangepast** om de kleurkiezer te openen en elke kleur te kiezen. Je accentkleur werkt zowel in het lichte als het donkere thema en wordt opgeslagen in je account, zodat hij je volgt op al je apparaten. Tik op de standaardkleur om terug te gaan naar de oorspronkelijke kleur.
 
 ## AI-voorkeuren
 

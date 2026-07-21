@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { useThemeStore } from '@/stores/themeStore';
+import { useAuthStore } from '@/stores/authStore';
 import { lightColors, darkColors, type ThemeColors } from './colors';
+import { deriveAccentColors } from './deriveAccent';
 import { shadows, darkShadows, type ShadowPresets } from './shadows';
 import { spacing } from './spacing';
 import { borderRadius } from './borderRadius';
@@ -30,20 +32,33 @@ const defaultTheme: Theme = {
 const ThemeContext = createContext<Theme>(defaultTheme);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { mode } = useThemeStore();
+  const localMode = useThemeStore((s) => s.mode);
+  const localAccent = useThemeStore((s) => s.accent);
+  const user = useAuthStore((s) => s.user);
   const systemScheme = useColorScheme();
+
+  // When authenticated, the user row is the sole source of truth; otherwise
+  // fall back to the local MMKV mirror (instant paint / pre-auth screens).
+  const mode = user?.themeMode ?? localMode ?? 'system';
+  const accent = user ? (user.accentColor ?? null) : (localAccent ?? null);
 
   const isDark = mode === 'system' ? systemScheme === 'dark' : mode === 'dark';
 
-  const theme = useMemo<Theme>(() => ({
-    colors: isDark ? darkColors : lightColors,
-    shadows: isDark ? darkShadows : shadows,
-    spacing,
-    borderRadius,
-    textStyles,
-    fonts: fontFamilies,
-    isDark,
-  }), [isDark]);
+  const theme = useMemo<Theme>(() => {
+    const base = isDark ? darkColors : lightColors;
+    const colors: ThemeColors = accent
+      ? { ...base, ...deriveAccentColors(base, accent, isDark) }
+      : base;
+    return {
+      colors,
+      shadows: isDark ? darkShadows : shadows,
+      spacing,
+      borderRadius,
+      textStyles,
+      fonts: fontFamilies,
+      isDark,
+    };
+  }, [isDark, accent]);
 
   return (
     <ThemeContext.Provider value={theme}>

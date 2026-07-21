@@ -187,7 +187,7 @@ export default function VoiceExpenseScreen() {
               <Ionicons
                 name={isRecording ? 'stop' : 'mic'}
                 size={48}
-                color={theme.colors.textInverse}
+                color={isRecording ? theme.colors.onSemantic : theme.colors.textInverse}
               />
             </TouchableOpacity>
           )}

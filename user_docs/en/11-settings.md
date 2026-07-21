@@ -79,6 +79,8 @@ Choose your theme:
 - **Light** — always use light theme
 - **Dark** — always use dark theme
 
+**Accent color** — pick the app's highlight color, used for buttons, links, and the active tab. Tap a preset swatch, or tap **Custom** to open the color picker and choose any color. Your accent works in both light and dark mode and is saved to your account, so it follows you across devices. Tap the default swatch to go back to the original color.
+
 ## AI Preferences
 
 ### AI Response Style

@@ -66,6 +66,8 @@ Wahle dein Design:
 - **Hell** — immer helles Design verwenden
 - **Dunkel** — immer dunkles Design verwenden
 
+**Akzentfarbe** — Wähle die Hervorhebungsfarbe der App, die für Schaltflächen, Links und den aktiven Tab verwendet wird. Tippe auf eine vorgegebene Farbe oder auf **Benutzerdefiniert**, um den Farbwähler zu öffnen und eine beliebige Farbe auszuwählen. Deine Akzentfarbe funktioniert sowohl im hellen als auch im dunklen Design und wird in deinem Konto gespeichert, sodass sie dich auf allen Geräten begleitet. Tippe auf die Standardfarbe, um zur ursprünglichen Farbe zurückzukehren.
+
 ## KI-Einstellungen
 
 ### KI-Antwortstil

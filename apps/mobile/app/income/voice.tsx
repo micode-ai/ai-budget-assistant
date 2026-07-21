@@ -205,7 +205,7 @@ export default function VoiceIncomeScreen() {
               <Ionicons
                 name={isRecording ? 'stop' : 'mic'}
                 size={48}
-                color={theme.colors.textInverse}
+                color={theme.colors.onSemantic}
               />
             </TouchableOpacity>
           )}
@@ -349,7 +349,7 @@ export default function VoiceIncomeScreen() {
 
             <View style={styles.confirmActions}>
               <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmIncome}>
-                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+                <Ionicons name="checkmark" size={20} color={theme.colors.onSemantic} />
                 <Text style={styles.confirmButtonText}>{t('incomeVoice.saveIncome')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
@@ -584,7 +584,7 @@ const createStyles = (theme: Theme) => ({
   },
   confirmButtonText: {
     ...theme.textStyles.button,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
   retryButton: {
     flexDirection: 'row' as const,

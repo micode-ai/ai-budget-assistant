@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -8,6 +8,9 @@ import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
+
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+const THEME_MODES = ['light', 'dark', 'system'];
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -42,6 +45,8 @@ export class UsersController {
       aiResponseMode: user.aiResponseMode,
       aiModel: user.aiModel,
       contributeCommunityPrices: user.contributeCommunityPrices,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
@@ -55,7 +60,16 @@ export class UsersController {
   }
 
   @Patch('me')
-  async updateProfile(@Req() req: AuthenticatedRequest, @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean }) {
+  async updateProfile(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null },
+  ) {
+    if (body.themeMode !== undefined && !THEME_MODES.includes(body.themeMode)) {
+      throw new BadRequestException('Invalid themeMode');
+    }
+    if (body.accentColor !== undefined && body.accentColor !== null && !HEX_COLOR.test(body.accentColor)) {
+      throw new BadRequestException('Invalid accentColor');
+    }
     const user = await this.usersService.update(req.user.id, body);
     return {
       id: user.id,
@@ -64,6 +78,8 @@ export class UsersController {
       currencyCode: user.currencyCode,
       timezone: user.timezone,
       contributeCommunityPrices: user.contributeCommunityPrices,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
     };
   }
 

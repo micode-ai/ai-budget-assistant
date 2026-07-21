@@ -307,7 +307,9 @@ export default function ExpensesScreen() {
           style={[styles.addButton, { backgroundColor: theme.colors.success }]}
           onPress={() => router.push('/income/new')}
         >
-          <Text style={styles.addButtonText}>{t('incomes.addIncome')}</Text>
+          <Text style={[styles.addButtonText, { color: theme.colors.onSemantic }]}>
+            {t('incomes.addIncome')}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -456,7 +458,7 @@ export default function ExpensesScreen() {
             onPress={() => router.push('/income/new')}
             activeOpacity={0.9}
           >
-            <Ionicons name="add" size={28} color={theme.colors.textInverse} />
+            <Ionicons name="add" size={28} color={theme.colors.onSemantic} />
           </TouchableOpacity>
         </View>
       )}

@@ -26,6 +26,7 @@ export interface ThemeColors {
   textSecondary: string;
   textTertiary: string;
   textInverse: string;
+  onSemantic: string;
   textLink: string;
   textDisabled: string;
 
@@ -78,6 +79,7 @@ export const lightColors: ThemeColors = {
   textSecondary: '#5E6272',
   textTertiary: '#9CA3B4',
   textInverse: '#FFFFFF',
+  onSemantic: '#FFFFFF',
   textLink: '#E37F2B',
   textDisabled: '#C5C9D6',
 
@@ -130,6 +132,7 @@ export const darkColors: ThemeColors = {
   textSecondary: '#A0A0A0',
   textTertiary: '#7F7F7C',
   textInverse: '#FFFFFF',
+  onSemantic: '#FFFFFF',
   textLink: '#E37F2B',
   textDisabled: '#4A4A4A',
 

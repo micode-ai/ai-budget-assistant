@@ -331,7 +331,7 @@ export default function NewIncomeScreen() {
             onPress={handleSubmit}
             disabled={isSubmitting}
           >
-            <Ionicons name="checkmark" size={22} color={theme.colors.textInverse} />
+            <Ionicons name="checkmark" size={22} color={theme.colors.onSemantic} />
             <Text style={styles.submitButtonText}>
               {isSubmitting ? t('incomeNew.saving') : t('incomeNew.saveIncome')}
             </Text>
@@ -489,7 +489,7 @@ const createStyles = (theme: Theme) => ({
   },
   submitButtonText: {
     ...theme.textStyles.h3,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
   // Debt styles
   debtBanner: {

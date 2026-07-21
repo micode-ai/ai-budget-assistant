@@ -1,4 +1,4 @@
-import type { Currency, Account } from '../entities';
+import type { Currency, ThemeMode, Account } from '../entities';
 
 export interface RegisterDto {
   email: string;
@@ -23,6 +23,8 @@ export interface AuthResponse {
     name: string;
     currencyCode: Currency;
     defaultAccountId?: string;
+    themeMode?: ThemeMode;
+    accentColor?: string | null;
   };
   accounts: Account[];
 }

@@ -122,6 +122,8 @@ export class AuthService {
         currencyCode: user.currencyCode,
         defaultAccountId: defaultAccount.id,
         isVerified: user.isVerified,
+        themeMode: user.themeMode,
+        accentColor: user.accentColor,
       },
       accounts: user.isVerified ? accounts : [],
     };
@@ -160,6 +162,8 @@ export class AuthService {
           currencyCode: user.currencyCode,
           defaultAccountId: defaultAccount?.id,
           isVerified: false,
+          themeMode: user.themeMode,
+          accentColor: user.accentColor,
         },
         accounts: [],
       };
@@ -187,6 +191,8 @@ export class AuthService {
         currencyCode: user.currencyCode,
         defaultAccountId: user.defaultAccountId,
         isVerified: true,
+        themeMode: user.themeMode,
+        accentColor: user.accentColor,
       },
       accounts,
     };
@@ -271,6 +277,8 @@ export class AuthService {
         currencyCode: user.currencyCode,
         defaultAccountId: user.defaultAccountId || createdAccountId,
         isVerified: true,
+        themeMode: user.themeMode,
+        accentColor: user.accentColor,
       },
       accounts,
     };
@@ -415,6 +423,8 @@ export class AuthService {
         currencyCode: user.currencyCode,
         defaultAccountId: user.defaultAccountId,
         isVerified: true,
+        themeMode: user.themeMode,
+        accentColor: user.accentColor,
       },
       accounts,
     };

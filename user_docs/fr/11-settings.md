@@ -66,6 +66,8 @@ Choisissez votre theme :
 - **Clair** — toujours utiliser le theme clair
 - **Sombre** — toujours utiliser le theme sombre
 
+**Couleur d'accent** — choisissez la couleur de mise en valeur de l'application, utilisee pour les boutons, les liens et l'onglet actif. Appuyez sur une couleur predefinie, ou sur **Personnalise** pour ouvrir le selecteur de couleurs et choisir n'importe quelle couleur. Votre couleur d'accent fonctionne a la fois en mode clair et sombre et est enregistree sur votre compte, elle vous suit donc sur tous vos appareils. Appuyez sur la couleur par defaut pour revenir a la couleur d'origine.
+
 ## Preferences IA
 
 ### Style de reponse de l'IA

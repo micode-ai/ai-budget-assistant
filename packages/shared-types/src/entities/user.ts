@@ -1,4 +1,4 @@
-import type { Currency, AiResponseMode, AiModel } from './primitives';
+import type { Currency, AiResponseMode, AiModel, ThemeMode } from './primitives';
 
 export interface NotificationPreferences {
   budgetAlerts: boolean;
@@ -20,6 +20,8 @@ export interface User {
   aiResponseMode?: AiResponseMode;
   aiModel?: AiModel;
   contributeCommunityPrices?: boolean;
+  themeMode?: ThemeMode;
+  accentColor?: string | null;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;

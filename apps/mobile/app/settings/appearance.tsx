@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '@/stores/themeStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
+import { DEFAULT_ACCENT, PRESET_ACCENTS } from '@/theme/presetAccents';
+import { ColorPicker } from '@/components/ColorPicker';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -13,7 +15,10 @@ export default function AppearanceSettingsScreen() {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { mode, setMode } = useThemeStore();
+  const { mode, setMode, accent, customAccent, setAccent, setCustomAccent } = useThemeStore();
+  const [pickerOpen, setPickerOpen] = React.useState(false);
+  const activeAccent = accent ?? DEFAULT_ACCENT;
+  const isCustom = accent !== null && !PRESET_ACCENTS.includes(accent);
 
   const handleLanguageChange = async (langCode: string) => {
     if (langCode === i18n.language) return;
@@ -66,6 +71,62 @@ export default function AppearanceSettingsScreen() {
             </TouchableOpacity>
           ))}
         </View>
+
+        {/* Accent */}
+        <Text style={styles.sectionTitle}>{t('settings.accentColor')}</Text>
+        <View style={styles.swatchGrid}>
+          {/* Default swatch */}
+          <TouchableOpacity
+            style={[styles.swatch, { backgroundColor: DEFAULT_ACCENT }, accent === null && styles.swatchActive]}
+            onPress={() => setAccent(null)}
+            accessibilityLabel={t('settings.accentDefault')}
+          >
+            {accent === null && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
+          </TouchableOpacity>
+
+          {/* Preset swatches */}
+          {PRESET_ACCENTS.map((hex) => (
+            <TouchableOpacity
+              key={hex}
+              style={[styles.swatch, { backgroundColor: hex }, accent === hex && styles.swatchActive]}
+              onPress={() => setAccent(hex)}
+            >
+              {accent === hex && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
+            </TouchableOpacity>
+          ))}
+
+          {/* Custom swatch */}
+          <TouchableOpacity
+            style={[
+              styles.swatch,
+              styles.customSwatch,
+              { backgroundColor: customAccent ?? theme.colors.surfaceSecondary },
+              isCustom && styles.swatchActive,
+            ]}
+            onPress={() => setPickerOpen(true)}
+            accessibilityLabel={t('settings.customColor')}
+          >
+            <Ionicons
+              name={isCustom ? 'checkmark' : 'add'}
+              size={16}
+              color={customAccent ? '#FFFFFF' : theme.colors.textSecondary}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <Modal visible={pickerOpen} transparent animationType="slide" onRequestClose={() => setPickerOpen(false)}>
+          <View style={styles.modalBackdrop}>
+            <View style={styles.modalSheet}>
+              <View style={styles.sheetHandle} />
+              <ColorPicker
+                initialColor={customAccent ?? activeAccent}
+                onApply={(hex) => { setCustomAccent(hex); setAccent(hex); }}
+                onReset={() => { setAccent(null); setPickerOpen(false); }}
+                onClose={() => setPickerOpen(false)}
+              />
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -147,5 +208,48 @@ const createStyles = (theme: Theme) => ({
   themeChipTextActive: {
     color: theme.colors.primary,
     fontWeight: '600' as const,
+  },
+  swatchGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[3],
+    marginTop: theme.spacing[1],
+  },
+  swatch: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  swatchActive: {
+    borderColor: theme.colors.textPrimary,
+  },
+  customSwatch: {
+    borderStyle: 'dashed' as const,
+    borderColor: theme.colors.border,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: theme.colors.overlay,
+    justifyContent: 'flex-end' as const,
+  },
+  modalSheet: {
+    backgroundColor: theme.colors.surfaceElevated,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[8],
+    gap: theme.spacing[3],
+  },
+  sheetHandle: {
+    alignSelf: 'center' as const,
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.border,
+    marginBottom: theme.spacing[2],
   },
 });

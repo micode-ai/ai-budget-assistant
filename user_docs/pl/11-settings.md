@@ -66,6 +66,8 @@ Wybierz motyw:
 - **Jasny** — zawsze uzywa jasnego motywu
 - **Ciemny** — zawsze uzywa ciemnego motywu
 
+**Kolor akcentu** — wybierz kolor wyroznienia aplikacji, uzywany dla przyciskow, linkow i aktywnej zakladki. Dotknij gotowego koloru albo dotknij **Niestandardowy**, aby otworzyc wybor kolorow i wybrac dowolny kolor. Twoj akcent dziala zarowno w jasnym, jak i ciemnym motywie i jest zapisywany na Twoim koncie, dzieki czemu towarzyszy Ci na wszystkich urzadzeniach. Dotknij domyslnego koloru, aby wrocic do pierwotnego koloru.
+
 ## Preferencje AI
 
 ### Styl odpowiedzi AI

@@ -168,6 +168,8 @@ model User {
   // false (GDPR opt-in). Consent is personal (not an Account setting) — only
   // the human who created a given expense can consent to sharing it.
   contributeCommunityPrices Boolean @default(false) @map("contribute_community_prices")
+  themeMode                 String  @default("system") @map("theme_mode")
+  accentColor               String? @map("accent_color")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")

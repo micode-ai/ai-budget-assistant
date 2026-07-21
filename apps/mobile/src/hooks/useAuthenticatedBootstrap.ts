@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { seedLegacyThemeFromLocal } from '@/stores/themeStore';
 import { registerForPushNotifications } from '@/services/notifications';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
@@ -22,6 +23,7 @@ export function useAuthenticatedBootstrap(isAuthenticated: boolean): void {
   useEffect(() => {
     if (!isAuthenticated) return;
     void useSubscriptionStore.getState().loadSubscription();
+    seedLegacyThemeFromLocal();
     const timer = setTimeout(() => {
       registerForPushNotifications();
       api.updateProfile({ language: i18n.language }).catch(() => {});

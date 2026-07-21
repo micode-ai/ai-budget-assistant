@@ -66,6 +66,8 @@ Elige tu tema:
 - **Claro** — siempre usa el tema claro
 - **Oscuro** — siempre usa el tema oscuro
 
+**Color de acento** — elige el color de resalte de la app, usado en botones, enlaces y la pestaña activa. Toca una muestra predefinida, o toca **Personalizado** para abrir el selector de color y elegir cualquier color. Tu color de acento funciona tanto en modo claro como oscuro y se guarda en tu cuenta, por lo que te acompaña en todos tus dispositivos. Toca la muestra predeterminada para volver al color original.
+
 ## Preferencias de IA
 
 ### Estilo de respuesta de la IA

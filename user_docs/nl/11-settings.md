@@ -79,6 +79,8 @@ Kies je thema:
 - **Licht** — gebruik altijd het lichte thema
 - **Donker** — gebruik altijd het donkere thema
 
+**Accentkleur** — kies de accentkleur van de app, gebruikt voor knoppen, links en het actieve tabblad. Tik op een voorinstelling, of tik op **Aangepast** om de kleurkiezer te openen en elke kleur te kiezen. Je accentkleur werkt zowel in het lichte als het donkere thema en wordt opgeslagen in je account, zodat hij je volgt op al je apparaten. Tik op de standaardkleur om terug te gaan naar de oorspronkelijke kleur.
+
 ## AI-voorkeuren
 
 ### AI-antwoordstijl

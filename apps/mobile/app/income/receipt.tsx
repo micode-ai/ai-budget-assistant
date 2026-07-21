@@ -170,7 +170,7 @@ export default function ReceiptIncomeScreen() {
                   onPress={() => pickFromCamera(userPrompt.trim() || undefined)}
                   activeOpacity={0.8}
                 >
-                  <Ionicons name="camera" size={32} color={theme.colors.textInverse} />
+                  <Ionicons name="camera" size={32} color={theme.colors.onSemantic} />
                   <Text style={styles.scanButtonText}>{t('incomeReceipt.takePhoto')}</Text>
                 </TouchableOpacity>
 
@@ -251,7 +251,7 @@ export default function ReceiptIncomeScreen() {
                 <Ionicons name="pencil" size={24} color={theme.colors.success} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmIncome}>
-                <Ionicons name="checkmark" size={24} color={theme.colors.textInverse} />
+                <Ionicons name="checkmark" size={24} color={theme.colors.onSemantic} />
               </TouchableOpacity>
             </View>
 
@@ -341,7 +341,7 @@ const createStyles = (theme: Theme) => ({
   },
   scanButtonText: {
     ...theme.textStyles.h3,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
   galleryButton: {
     flexDirection: 'row' as const,

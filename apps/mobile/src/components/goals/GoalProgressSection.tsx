@@ -62,7 +62,7 @@ export function GoalProgressSection({
 
       {goal.status === 'active' && (
         <TouchableOpacity style={styles.addFundsButton} onPress={onAddFunds}>
-          <Ionicons name="add-circle" size={20} color={theme.colors.textInverse} />
+          <Ionicons name="add-circle" size={20} color={theme.colors.onSemantic} />
           <Text style={styles.addFundsButtonText}>{t('goals.addFunds') || 'Add Funds'}</Text>
         </TouchableOpacity>
       )}
@@ -174,7 +174,7 @@ const createStyles = (theme: Theme) => ({
   addFundsButtonText: {
     fontSize: 16,
     fontWeight: '600' as const,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
   trackingInfo: {
     marginTop: theme.spacing[4],

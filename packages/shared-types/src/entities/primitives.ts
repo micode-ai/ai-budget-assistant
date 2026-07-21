@@ -40,6 +40,8 @@ export type AiResponseMode = 'simple' | 'balanced' | 'expert';
 
 export type AiModel = 'fast' | 'balanced' | 'quality';
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 export type GoalStatus = 'active' | 'paused' | 'completed' | 'failed';
 
 export type AssetType = 'stock' | 'crypto' | 'etf' | 'bond' | 'commodity';

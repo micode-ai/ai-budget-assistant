@@ -95,7 +95,7 @@ export function GoalAddFundsModal({
               disabled={isDisabled}
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color={theme.colors.textInverse} />
+                <ActivityIndicator size="small" color={theme.colors.onSemantic} />
               ) : (
                 <Text style={styles.confirmText}>
                   {t('goals.addFundsConfirm') || 'Add'}
@@ -197,6 +197,6 @@ const createStyles = (theme: Theme) => ({
   confirmText: {
     fontSize: 16,
     fontWeight: '600' as const,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
 });
