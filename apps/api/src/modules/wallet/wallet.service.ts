@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+import { SetWalletBalanceDto } from './dto';
 
 @Injectable()
 export class WalletService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async setBalance(accountId: string, userId: string, dto: any) {
+  async setBalance(accountId: string, userId: string, dto: SetWalletBalanceDto) {
     return this.prisma.walletBalance.upsert({
       where: {
         accountId_currencyCode: {
@@ -21,7 +23,7 @@ export class WalletService {
       create: {
         accountId,
         userId,
-        clientId: dto.localId,
+        clientId: dto.localId ?? randomUUID(),
         currencyCode: dto.currencyCode,
         initialAmount: dto.initialAmount,
       },
