@@ -8,6 +8,21 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.15.0 — 2026-07-23
+
+**Personalization**
+- **Make the app yours with an accent color** — on top of the light/dark theme you can now choose an accent color that recolors buttons, links, the active tab, quick actions and more. Pick from ready-made swatches or dial in any color with a built-in picker (hue, saturation/brightness, or hex). Your choice works in both light and dark mode and is saved to your account, so it follows you across devices (ABA-372).
+
+**Inflation Shield**
+- **A heads-up before prices rise** — Inflation Shield now proactively notifies you about the single product most worth stocking up on this month, so you can buy ahead before it gets pricier (ABA-371).
+
+**Fixes & reliability**
+- Existing light/dark preferences are preserved on upgrade, and semantic (success/danger) buttons keep their own color regardless of your accent.
+- Polished the accent color picker on Android so its buttons clear the navigation bar and the dimmed background covers the full screen (ABA-372).
+- Various stability improvements.
+
+---
+
 ## 1.14.0 — 2026-07-21
 
 **AI chat**
