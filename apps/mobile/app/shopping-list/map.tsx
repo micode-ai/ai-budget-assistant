@@ -74,7 +74,7 @@ export default function ShoppingListMapScreen() {
         </Text>
         {store.isCheapest && (
           <View style={styles.cheapestBadge}>
-            <Ionicons name="trophy" size={12} color={theme.colors.textInverse} />
+            <Ionicons name="trophy" size={12} color={theme.colors.onSemantic} />
             <Text style={styles.cheapestBadgeText}>{t('shoppingList.cheapest')}</Text>
           </View>
         )}
@@ -280,7 +280,7 @@ const createStyles = (theme: Theme) => ({
   cheapestBadgeText: {
     fontSize: 11,
     fontWeight: '700' as const,
-    color: theme.colors.textInverse,
+    color: theme.colors.onSemantic,
   },
   storeMetaRow: {
     flexDirection: 'row' as const,

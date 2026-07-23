@@ -380,7 +380,7 @@ export default function AccountDetailScreen() {
               invitations.map((invitation) => (
                 <View key={invitation.id} style={styles.memberCard}>
                   <View style={[styles.memberAvatar, { backgroundColor: '#F0AD4E' }]}>
-                    <Ionicons name="mail-outline" size={18} color={theme.colors.textInverse} />
+                    <Ionicons name="mail-outline" size={18} color={theme.colors.onSemantic} />
                   </View>
                   <View style={styles.memberInfo}>
                     <Text style={styles.memberName}>

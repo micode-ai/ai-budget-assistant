@@ -127,7 +127,7 @@ export function GoalAIPlan({ goal, isRegenerating, onRegenerate }: GoalAIPlanPro
                         ]}
                       >
                         {reached && (
-                          <Ionicons name="checkmark" size={10} color={theme.colors.textInverse} />
+                          <Ionicons name="checkmark" size={10} color={theme.colors.onSemantic} />
                         )}
                       </View>
                       {!isLast && (
