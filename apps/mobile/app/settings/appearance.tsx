@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '@/stores/themeStore';
@@ -16,6 +16,7 @@ export default function AppearanceSettingsScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { mode, setMode, accent, customAccent, setAccent, setCustomAccent } = useThemeStore();
+  const insets = useSafeAreaInsets();
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const activeAccent = accent ?? DEFAULT_ACCENT;
   const isCustom = accent !== null && !PRESET_ACCENTS.includes(accent);
@@ -114,9 +115,9 @@ export default function AppearanceSettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        <Modal visible={pickerOpen} transparent animationType="slide" onRequestClose={() => setPickerOpen(false)}>
+        <Modal visible={pickerOpen} transparent statusBarTranslucent animationType="slide" onRequestClose={() => setPickerOpen(false)}>
           <View style={styles.modalBackdrop}>
-            <View style={styles.modalSheet}>
+            <View style={[styles.modalSheet, { paddingBottom: insets.bottom + theme.spacing[4] }]}>
               <View style={styles.sheetHandle} />
               <ColorPicker
                 initialColor={customAccent ?? activeAccent}
@@ -241,7 +242,6 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     padding: theme.spacing[4],
-    paddingBottom: theme.spacing[8],
     gap: theme.spacing[3],
   },
   sheetHandle: {
