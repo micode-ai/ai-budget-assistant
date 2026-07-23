@@ -3,7 +3,11 @@ import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useTheme } from '@/theme';
 
-// Brand orange used by all the source SVGs (apps/mobile/assets/icons/*.svg).
+// Placeholder color baked into the source SVG strings below (from
+// apps/mobile/assets/icons/*.svg). It is NOT the rendered color — it's a
+// sentinel that QuickActionIcon replaces at render time with the resolved
+// icon color (the theme accent by default, or an explicit `color` prop),
+// so quick-action icons follow the user's accent (ABA-372).
 const ICON_COLOR = '#E37F2B';
 
 // Each entry is the SYMBOL only (the card frame is drawn uniformly by the
@@ -104,17 +108,18 @@ const BOX = 46;
 const SYMBOL = 28; // the longer symbol dimension fits to this
 
 /**
- * Quick-action icon: every symbol sits inside a uniform orange rounded-square
- * outline on a `surface` backing — the backing is near-invisible on the page
- * but keeps the icon readable where the first row overlaps the orange hero.
- * `color` recolors the whole icon (used for the green income/invoice variants).
+ * Quick-action icon: every symbol sits inside a uniform accent-colored
+ * rounded-square outline on a `surface` backing — the backing is near-invisible
+ * on the page but keeps the icon readable where the first row overlaps the hero.
+ * Defaults to the theme accent (`theme.colors.primary`, accent-derived per
+ * ABA-372); an explicit `color` prop overrides it (green income/invoice variants).
  */
 export function QuickActionIcon({ name, color }: { name: string; color?: string }) {
   const theme = useTheme();
   const def = ICONS[name];
   if (!def) return null;
-  const stroke = color ?? ICON_COLOR;
-  const xml = color ? def.xml.split(ICON_COLOR).join(color) : def.xml;
+  const iconColor = color ?? theme.colors.primary;
+  const xml = def.xml.split(ICON_COLOR).join(iconColor);
 
   // Render the SVG element at the symbol's real aspect ratio so it has no extra
   // internal padding; the flex container then centers it both ways.
@@ -129,7 +134,7 @@ export function QuickActionIcon({ name, color }: { name: string; color?: string 
         height: BOX,
         borderRadius: 12,
         borderWidth: 1.5,
-        borderColor: stroke,
+        borderColor: iconColor,
         backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',

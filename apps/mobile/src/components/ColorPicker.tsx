@@ -148,6 +148,9 @@ export function ColorPicker({ initialColor, onApply, onReset, onClose }: Props) 
             <Text style={{ color: readableOn(current), fontSize: 12, fontWeight: '600' }}>Aa</Text>
           </View>
           <View style={[styles.previewDot, { backgroundColor: current }]} />
+          <View style={[styles.previewBubble, { backgroundColor: current }]}>
+            <Text style={[styles.previewBubbleText, { color: readableOn(current) }]} numberOfLines={1}>Aa</Text>
+          </View>
         </View>
       </View>
       {!hexValid && <Text style={styles.invalid}>{t('settings.invalidColor')}</Text>}
@@ -184,6 +187,8 @@ const createStyles = (theme: Theme) => ({
   previewRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: theme.spacing[2] },
   previewBtn: { width: 40, height: 32, borderRadius: theme.borderRadius.md, alignItems: 'center' as const, justifyContent: 'center' as const },
   previewDot: { width: 16, height: 16, borderRadius: 8 },
+  previewBubble: { minWidth: 32, paddingHorizontal: theme.spacing[2], paddingVertical: theme.spacing[1], borderRadius: theme.borderRadius.lg, borderBottomRightRadius: 4, alignItems: 'center' as const, justifyContent: 'center' as const },
+  previewBubbleText: { ...theme.textStyles.bodySmMedium },
   invalid: { ...theme.textStyles.bodySmMedium, color: theme.colors.danger },
   actions: { flexDirection: 'row' as const, gap: theme.spacing[3], marginTop: theme.spacing[2] },
   secondaryBtn: { flex: 1, alignItems: 'center' as const, justifyContent: 'center' as const, paddingVertical: theme.spacing[3], borderRadius: theme.borderRadius.lg, borderWidth: 1, borderColor: theme.colors.border },
