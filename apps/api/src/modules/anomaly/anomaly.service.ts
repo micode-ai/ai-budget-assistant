@@ -1,8 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import type { AnomalyAlertType } from '@budget/shared-types';
+import type { AnomalyAlertType, PriceCheckSummary } from '@budget/shared-types';
 import * as ni18n from '../notifications/notification-i18n';
+import { PriceHistoryService } from '../price-history/price-history.service';
+import {
+  checkReceiptPrices,
+  perUnitPrice,
+  resolveReceiptCheckConfig,
+  type ReceiptCheckLine,
+} from '../price-history/receipt-check.util';
 
 const PUSH_DAILY_CAP = 3;
 export const PRICE_INCREASE_FACTOR = 1.1;
@@ -46,7 +54,7 @@ export function detectCycle(dates: Date[]): 'monthly' | 'weekly' | null {
   return null;
 }
 
-export interface CreateAlertInput {
+export interface CreateAlertBase {
   accountId: string;
   userId: string;
   type: AnomalyAlertType;
@@ -54,9 +62,19 @@ export interface CreateAlertInput {
   params: Record<string, unknown>;
   expenseId?: string;
   categoryId?: string;
-  pushTitle: (lang: string) => string;
-  pushBody: (lang: string) => string;
 }
+
+/**
+ * Discriminated on `skipPush` so a future detector that forgets pushTitle/
+ * pushBody for a pushing alert fails to COMPILE instead of silently never
+ * pushing. Feed-only alerts (currently only price_overcharge) explicitly opt
+ * out via `skipPush: true`; every other alert must supply both narrators.
+ */
+export type CreateAlertInput = CreateAlertBase &
+  (
+    | { skipPush: true; pushTitle?: never; pushBody?: never }
+    | { skipPush?: false; pushTitle: (lang: string) => string; pushBody: (lang: string) => string }
+  );
 
 /** The expense fields the detectors read — callers must pass a Prisma Expense row (or superset). */
 export interface DetectorExpense {
@@ -79,7 +97,19 @@ export class AnomalyService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    private readonly priceHistory: PriceHistoryService,
+    private readonly config: ConfigService,
   ) {}
+
+  /**
+   * Receipt price-check alert write gate (defaults OFF). The mobile card for the
+   * price_overcharge alert type ships in a later plan, and the alerts screen's
+   * default branch renders the raw type string — so an un-gated deploy would show
+   * already-installed apps a card titled "price_overcharge" with an empty body.
+   */
+  private receiptCheckAlertsEnabled(): boolean {
+    return this.config.get<string>('RECEIPT_CHECK_ALERTS_ENABLED') === 'true';
+  }
 
   /**
    * Insert a feed row (dedupKey collision = already alerted, silent skip) and
@@ -104,6 +134,8 @@ export class AnomalyService {
       if (err?.code === 'P2002') return; // already alerted for this dedupKey
       throw err;
     }
+
+    if (input.skipPush || !input.pushTitle || !input.pushBody) return;
 
     const todayStart = new Date();
     todayStart.setUTCHours(0, 0, 0, 0);
@@ -140,6 +172,8 @@ export class AnomalyService {
       await this.detectCategorySpike(accountId, userId, expense.categoryId, expense.currencyCode);
       // possible_merge is last — lower priority than genuine duplicate/price alerts
       await this.detectPossibleMerge(accountId, userId, expense as DetectorExpense);
+      // price_overcharge writes feed-only via skipPush: true, so it never touches the push budget.
+      await this.detectPriceOvercharge(accountId, userId, expense as DetectorExpense);
     } catch (error) {
       this.logger.error(`checkExpense failed: ${error}`);
     }
@@ -197,6 +231,37 @@ export class AnomalyService {
       }),
     ]);
     return { alerts, unreadCount };
+  }
+
+  /**
+   * How much the price check has FOUND above the user's usual prices since a
+   * given date. Per currency on purpose — this feature never converts between
+   * currencies, so a single blended figure would be a lie.
+   */
+  async getPriceCheckSummary(accountId: string, since: Date): Promise<PriceCheckSummary> {
+    const alerts = await this.prisma.anomalyAlert.findMany({
+      where: { accountId, type: 'price_overcharge', dismissedAt: null, createdAt: { gte: since } },
+      select: { params: true },
+    });
+
+    const totalsByCurrency: Record<string, number> = {};
+    for (const alert of alerts) {
+      const params = alert.params as { currencyCode?: unknown; findings?: unknown } | null;
+      const currency = typeof params?.currencyCode === 'string' ? params.currencyCode : null;
+      if (!currency || !Array.isArray(params?.findings)) continue;
+      for (const finding of params.findings as Array<{ overpaidAmount?: unknown }>) {
+        const amount = Number(finding?.overpaidAmount);
+        if (!Number.isFinite(amount) || amount <= 0) continue;
+        // Rounding per-iteration (not once at the end) looks like it violates this
+        // codebase's round-once convention, but it doesn't: every stored
+        // overpaidAmount is already 2 dp, so this round is only scrubbing float
+        // noise from the running sum, not re-deriving precision — it is
+        // bit-identical to rounding once after the loop. Do not "fix" this.
+        totalsByCurrency[currency] = Math.round(((totalsByCurrency[currency] ?? 0) + amount) * 100) / 100;
+      }
+    }
+
+    return { totalsByCurrency, alertCount: alerts.length, since: since.toISOString().slice(0, 10) };
   }
 
   async markRead(accountId: string, id: string) {
@@ -527,5 +592,98 @@ export class AnomalyService {
       pushTitle: (lang) => ni18n.possibleMergeTitle(lang, params),
       pushBody: (lang) => ni18n.possibleMergeBody(lang, params),
     });
+  }
+
+  /**
+   * Persists the receipt price check as one feed row per receipt. The same pure
+   * engine also runs inline at scan time; this pass exists because the expense
+   * (and therefore the dedup key) does not exist yet during the scan. Never
+   * pushes — a notification arriving after the user has left the store has
+   * nothing actionable in it.
+   */
+  private async detectPriceOvercharge(
+    accountId: string,
+    userId: string,
+    expense: DetectorExpense,
+  ): Promise<void> {
+    try {
+      const merchant = expense.merchant?.trim();
+      if (!merchant) return;
+
+      const items: Array<{
+        canonicalName: string | null;
+        quantity: number;
+        unitPrice: number;
+        totalPrice: number;
+      }> = await (this.prisma as any).expenseItem.findMany({
+        where: { expenseId: expense.id, isDeleted: false, canonicalName: { not: null } },
+        select: { canonicalName: true, quantity: true, unitPrice: true, totalPrice: true },
+      });
+      if (items.length === 0) return;
+
+      const lines: ReceiptCheckLine[] = items.map((item) => ({
+        canonicalName: item.canonicalName as string,
+        quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1,
+        unitPrice: perUnitPrice(item),
+      }));
+
+      const config = resolveReceiptCheckConfig(process.env);
+      const now = expense.date;
+      const since = new Date(now.getTime() - config.lookbackWeeks * 7 * DAY_MS);
+
+      // excludeExpenseId=expense.id: by the time this pass runs, this expense's
+      // own items are already committed (ExpensesService.create commits before
+      // firing checkExpense) — without this exclusion the receipt being checked
+      // would count as its own prior purchase, and this pass would disagree
+      // with OcrService.runPriceCheck's inline scan-time result even though both
+      // call the same deterministic engine.
+      const history = await this.priceHistory.getProductTrendsFor(
+        accountId,
+        lines.map((l) => l.canonicalName),
+        merchant.toLowerCase(),
+        since,
+        expense.currencyCode,
+        expense.id,
+      );
+
+      const { findings } = checkReceiptPrices({
+        lines,
+        history,
+        merchant,
+        currencyCode: expense.currencyCode,
+        now,
+        config,
+      });
+      if (findings.length === 0) return;
+
+      if (!this.receiptCheckAlertsEnabled()) {
+        const totalAmount = findings.reduce((sum, f) => sum + f.overpaidAmount, 0).toFixed(2);
+        this.logger.log(
+          `[PriceCheck] ${findings.length} line(s) above the usual price, total ${totalAmount} ${expense.currencyCode} — alert write disabled`,
+        );
+        return;
+      }
+
+      await this.createAlert({
+        accountId,
+        userId,
+        type: 'price_overcharge',
+        dedupKey: `overcharge:${expense.id}`,
+        expenseId: expense.id,
+        params: {
+          merchant,
+          currencyCode: expense.currencyCode,
+          totalAmount: findings.reduce((sum, f) => sum + f.overpaidAmount, 0).toFixed(2),
+          findings,
+        },
+        skipPush: true,
+      });
+    } catch (error) {
+      // Fail-silent, mirroring OcrService.runPriceCheck's own local catch: without
+      // this, a price-check failure here bubbles up into checkExpense's outer
+      // handler, which logs at `error` and blames "checkExpense failed" — masking
+      // that the actual fault was in this one detector.
+      this.logger.warn(`[PriceCheck] detectPriceOvercharge skipped: ${error}`);
+    }
   }
 }

@@ -23,6 +23,7 @@ import {
   InflationIndexSection,
 } from '@/components/analytics';
 import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
+import { useAlertStore } from '@/stores/alertStore';
 import type { Currency } from '@budget/shared-types';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -69,7 +70,11 @@ export default function AnalyticsScreen() {
     if (!currentAccountId) return;
     hydrateTransactions();
     usePriceHistoryStore.getState().reset();
+    useAlertStore.getState().clearPriceCheckSummary();
     usePriceHistoryStore.getState().loadPriceHistory();
+    // Decorative "found" total shown alongside the inflation index — same
+    // account-scoped refresh cadence as the price history it sits next to.
+    useAlertStore.getState().loadPriceCheckSummary();
   }, [currentAccountId]);
 
   const openDrillDown = useCallback(() => {

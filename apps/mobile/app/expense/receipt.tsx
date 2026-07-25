@@ -20,6 +20,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { MerchantInput } from '@/components/MerchantInput';
 import { resolveExistingMerchant } from '@/utils/merchant';
+import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { formatCurrency } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
@@ -365,6 +366,8 @@ export default function ReceiptExpenseScreen() {
                 </Text>
               </View>
             </View>
+
+            <PriceFindingsCard findings={scannedReceipt?.priceFindings ?? []} />
 
             {!isPdf && (
               <TouchableOpacity

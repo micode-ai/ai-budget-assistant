@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
+import type { PriceCheckSummary } from '@budget/shared-types';
 
 @Controller('alerts')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -15,8 +16,15 @@ export class AnomalyController {
     return this.service.findAll(req.accountId, unread === 'true');
   }
 
-  // `read-all` MUST be declared before the `:id` routes below — Express matches
-  // in declaration order (same lesson as /expenses/bulk, ABA-166).
+  // `price-check-summary` and `read-all` MUST be declared before the `:id`
+  // routes below — Express matches in declaration order (same lesson as
+  // /expenses/bulk, ABA-166).
+  @Get('price-check-summary')
+  async getPriceCheckSummary(@Req() req: AuthenticatedRequest): Promise<PriceCheckSummary> {
+    const since = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 1));
+    return this.service.getPriceCheckSummary(req.accountId, since);
+  }
+
   @Patch('read-all')
   @UseGuards(new ViewerBlockGuard())
   markAllRead(@Req() req: AuthenticatedRequest) {

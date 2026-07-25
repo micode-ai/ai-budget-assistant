@@ -795,6 +795,8 @@ export default {
     invitationAccept: 'Прийняти',
     invitationDecline: 'Відхилити',
     invitationsEmpty: 'Немає запрошень, що очікують',
+    priceCheckTitle: 'Варто перевірити цей чек',
+    priceCheckBody: 'У {{merchant}}: вище за звичайну ціну — товарів: {{count}}, різниця: приблизно {{amount}} {{currency}}.',
   },
   whatsappBot: {
     title: 'WhatsApp-бот',
@@ -2355,5 +2357,16 @@ export default {
     distanceKm: '{{km}} км від вас',
     dealsTitle: 'Знижки для вас',
     dealDrop: '-{{pct}}%',
+  },
+  receiptCheck: {
+    cardTitle_one: '{{count}} товар коштує дорожче, ніж зазвичай',
+    cardTitle_few: '{{count}} товари коштують дорожче, ніж зазвичай',
+    cardTitle_many: '{{count}} товарів коштують дорожче, ніж зазвичай',
+    cardSubtitle: 'Приблизно на {{amount}} більше, ніж ви зазвичай платите тут — варто перевірити чек.',
+    usually: 'зазвичай',
+    youPaid: 'ви заплатили',
+    difference: 'різниця',
+    lowConfidence: 'на основі лише двох попередніх покупок',
+    foundTotal: 'Знайдено {{amount}} понад ваші звичайні ціни цього року',
   },
 } as const;

@@ -795,6 +795,8 @@ export default {
     invitationAccept: 'Accepteren',
     invitationDecline: 'Weigeren',
     invitationsEmpty: 'Geen openstaande uitnodigingen',
+    priceCheckTitle: 'Dit bonnetje is het checken waard',
+    priceCheckBody: 'Bij {{merchant}}: boven de gebruikelijke prijs — artikelen: {{count}}, verschil: ongeveer {{amount}} {{currency}}.',
   },
   whatsappBot: {
     title: 'WhatsApp-bot',
@@ -2350,5 +2352,15 @@ export default {
     distanceKm: '{{km}} km verderop',
     dealsTitle: 'Aanbiedingen voor jou',
     dealDrop: '-{{pct}}%',
+  },
+  receiptCheck: {
+    cardTitle_one: '{{count}} artikel kost meer dan gebruikelijk',
+    cardTitle_other: '{{count}} artikelen kosten meer dan gebruikelijk',
+    cardSubtitle: 'Ongeveer {{amount}} meer dan je hier meestal betaalt — de moeite waard om het bonnetje te checken.',
+    usually: 'meestal',
+    youPaid: 'je hebt betaald',
+    difference: 'verschil',
+    lowConfidence: 'gebaseerd op slechts twee eerdere aankopen',
+    foundTotal: 'Dit jaar {{amount}} boven je gebruikelijke prijzen gevonden',
   },
 } as const;

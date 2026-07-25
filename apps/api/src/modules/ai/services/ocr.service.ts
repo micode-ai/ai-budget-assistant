@@ -11,6 +11,14 @@ import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { extractReceiptDiscounts } from '../utils/receipt-discount';
 import { GeocodingService, GeocodeResult } from './geocoding.service';
+import type { ReceiptCheckFinding } from '@budget/shared-types';
+import {
+  checkReceiptPrices,
+  perUnitPrice,
+  resolveReceiptCheckConfig,
+  type ReceiptCheckLine,
+} from '../../price-history/receipt-check.util';
+import { PriceHistoryService } from '../../price-history/price-history.service';
 
 export interface ReceiptItem {
   description: string;
@@ -88,6 +96,8 @@ export interface ReceiptExpense {
   confidence: number;
   receiptItems: ReceiptItem[];
   location: { lat: number; lng: number; name: string } | null;
+  /** Lines that cost more than usual for this user in this store. Always present; empty when nothing to report. */
+  priceFindings: ReceiptCheckFinding[];
 }
 
 interface CategoryWithName {
@@ -182,6 +192,7 @@ export class OcrService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly geocoding: GeocodingService,
+    private readonly priceHistory: PriceHistoryService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -372,7 +383,75 @@ Important:
       confidence: parsed.confidence || 0.7,
       receiptItems: parsed.items || [],
       location,
+      priceFindings: [],
     };
+  }
+
+  /**
+   * Compares each receipt line against the user's own price history for the
+   * same product in the same store. Fail-silent by contract: a receipt scan
+   * must never break because a price comparison failed.
+   */
+  private async runPriceCheck(accountId: string, receipt: ReceiptExpense): Promise<ReceiptCheckFinding[]> {
+    try {
+      const merchant = receipt.merchant?.trim();
+      if (!merchant) return [];
+
+      const lines: ReceiptCheckLine[] = (receipt.receiptItems ?? [])
+        .filter((item) => !!item.canonicalName?.trim())
+        .map((item) => ({
+          canonicalName: item.canonicalName as string,
+          quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1,
+          unitPrice: perUnitPrice(item),
+        }));
+      if (lines.length === 0) return [];
+
+      const config = resolveReceiptCheckConfig(process.env);
+      const now = receipt.date ? new Date(receipt.date) : new Date();
+      const since = new Date(now.getTime() - config.lookbackWeeks * 7 * 24 * 60 * 60 * 1000);
+
+      const history = await this.priceHistory.getProductTrendsFor(
+        accountId,
+        lines.map((l) => l.canonicalName),
+        merchant.toLowerCase(),
+        since,
+        receipt.currencyCode,
+      );
+
+      const result = checkReceiptPrices({
+        lines,
+        history,
+        merchant,
+        currencyCode: receipt.currencyCode,
+        now,
+        config,
+      });
+
+      if (result.stats.droppedByCap > 0) {
+        this.logger.log(
+          `[PriceCheck] evaluated ${result.stats.evaluated}, dropped ${result.stats.droppedByCap} by rise cap`,
+        );
+      }
+      return result.findings;
+    } catch (error) {
+      this.logger.warn(`[PriceCheck] skipped: ${error}`);
+      return [];
+    }
+  }
+
+  /**
+   * The single funnel for turning a parsed receipt into a ReceiptExpense.
+   * Every scan path must go through here so the price check cannot be
+   * forgotten when a new path is added.
+   */
+  private async finalizeReceipt(
+    parsed: ParsedReceipt & { suggestedCategory?: string },
+    categories: CategoryWithName[],
+    accountId: string,
+  ): Promise<ReceiptExpense> {
+    const receipt = await this.buildReceiptExpense(parsed, categories);
+    receipt.priceFindings = await this.runPriceCheck(accountId, receipt);
+    return receipt;
   }
 
   /**
@@ -616,7 +695,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+    return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
   }
 
   async parseReceiptPdf(
@@ -666,7 +745,7 @@ Important:
         if (!content) throw new Error('No response from AI');
 
         const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-        return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+        return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
       }
 
       // Scanned PDF — send the full PDF as a file
@@ -751,7 +830,7 @@ Important:
       this.logger.log(`[PDF-File] GPT response (fallback): ${content}`);
       if (!content) throw new Error('No response from AI');
       const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-      return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+      return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
     }
 
     const response = await this.openai.chat.completions.create({
@@ -773,7 +852,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return await this.buildReceiptExpense(this.validateAndNormalizeReceipt(parsed, context), categories);
+    return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {

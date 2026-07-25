@@ -12,6 +12,7 @@ import type {
   BasketCompareItem,
   BasketCompareResponse,
 } from '@budget/shared-types';
+import { perUnitPrice, type ReceiptCheckHistory } from './receipt-check.util';
 
 type Period = PriceHistoryPeriod;
 
@@ -96,6 +97,102 @@ export class PriceHistoryService {
       });
     }
     return out;
+  }
+
+  /**
+   * Narrowed sibling of getProductTrends for the receipt price check: only the
+   * products on one receipt, only that merchant, only inside the lookback
+   * window. getProductTrends reads the account's whole item history and must
+   * never be called on the scan hot path.
+   *
+   * `excludeExpenseId` excludes one expense's own items from the returned
+   * history. The persisted detector (AnomalyService.detectPriceOvercharge)
+   * runs AFTER the expense and its items are already committed, so without this
+   * exclusion the receipt being checked would count as its own prior purchase —
+   * the two passes (scan-time vs. persisted) would then disagree even though
+   * they're built on the same deterministic engine. OcrService's scan-time call
+   * never passes this: the expense doesn't exist yet at that point.
+   */
+  async getProductTrendsFor(
+    accountId: string,
+    canonicalNames: string[],
+    merchantNormalized: string,
+    since: Date,
+    currencyCode: string,
+    excludeExpenseId?: string,
+  ): Promise<ReceiptCheckHistory[]> {
+    if (canonicalNames.length === 0) return [];
+    const aliases = await this.getAliasMap(accountId);
+
+    const items: Array<{
+      canonicalName: string;
+      unitPrice: number;
+      quantity: number;
+      totalPrice: number;
+      expense: { date: Date; merchant: string | null; currencyCode: string };
+    }> = await (this.prisma as any).expenseItem.findMany({
+      where: {
+        expense: { accountId, isDeleted: false, date: { gte: since } },
+        canonicalName: { in: canonicalNames },
+        isDeleted: false,
+        ...(excludeExpenseId ? { expenseId: { not: excludeExpenseId } } : {}),
+      },
+      select: {
+        canonicalName: true,
+        unitPrice: true,
+        quantity: true,
+        totalPrice: true,
+        expense: { select: { date: true, merchant: true, currencyCode: true } },
+      },
+      orderBy: [{ expense: { date: 'asc' } }, { id: 'asc' }],
+    });
+
+    // Group by the resolved (alias-applied) canonical name so sibling raw names
+    // the user merged into one product on the products screen still combine
+    // into a single baseline — but track which raw names fed each group.
+    const groupByResolved = new Map<
+      string,
+      { points: ReceiptCheckHistory['points']; rawNames: Set<string> }
+    >();
+    for (const item of items) {
+      // Merchant is filtered in JS: the stored value is the display name, and the
+      // caller compares against its normalized form (same approach as the
+      // duplicate-charge detector, which matches payee labels in JS).
+      if ((item.expense.merchant ?? '').trim().toLowerCase() !== merchantNormalized) continue;
+      // Currency is filtered in JS too, beside the merchant check: this feature
+      // never compares or converts prices across currencies, and the receipt
+      // being checked has exactly one currency — so a row in any other
+      // currency is simply out of scope here, not converted or flagged.
+      if (item.expense.currencyCode !== currencyCode) continue;
+      const resolved = aliases.get(item.canonicalName) ?? item.canonicalName;
+      // Mirrors fetchRows: a product the user has explicitly ignored must not
+      // resurface here either.
+      if (resolved === IGNORED_SENTINEL) continue;
+      const price = perUnitPrice(item);
+      // A stored 0 (ExpenseItem.unitPrice defaults to 0) must never enter a
+      // median as if it were a real price point.
+      if (!Number.isFinite(price) || price <= 0) continue;
+
+      const group = groupByResolved.get(resolved) ?? { points: [], rawNames: new Set<string>() };
+      group.points.push({ date: item.expense.date.toISOString().slice(0, 10), price });
+      group.rawNames.add(item.canonicalName);
+      groupByResolved.set(resolved, group);
+    }
+
+    // Emit one entry per RAW name (not the resolved/alias name): the
+    // receipt-check engine indexes history by the receipt line's own raw
+    // canonicalName, so returning entries keyed by the alias-resolved name
+    // makes every aliased/merged product silently un-matchable forever. A
+    // resolved group whose raw names include several requested names is
+    // emitted once per raw name, each carrying the full combined point set.
+    const byRawName = new Map<string, ReceiptCheckHistory>();
+    for (const group of groupByResolved.values()) {
+      for (const rawName of group.rawNames) {
+        byRawName.set(rawName, { canonicalName: rawName, currency: currencyCode, points: [...group.points] });
+      }
+    }
+
+    return [...byRawName.values()];
   }
 
   async getBasketComparison(
@@ -348,11 +445,10 @@ export class PriceHistoryService {
         resolvedName: aliases.get(item.canonicalName) ?? item.canonicalName,
         date: item.expense.date,
         // When quantity > 1 (e.g. "JOGURT 2SZT 6.98"), derive per-unit price from totalPrice.
-        // When quantity <= 1 (single unit or weight-based), unitPrice is already correct.
-        unitPrice:
-          Number(item.quantity) > 1
-            ? Number(item.totalPrice) / Number(item.quantity)
-            : Number(item.unitPrice),
+        // When quantity <= 1 (single unit or weight-based), unitPrice is already correct —
+        // and falls back to totalPrice when unitPrice is missing/non-positive (perUnitPrice;
+        // previously a stored 0 unitPrice produced a literal 0 point here).
+        unitPrice: perUnitPrice(item),
         merchant: item.expense.merchant ?? 'Unknown',
         currency: item.expense.currencyCode ?? 'PLN',
         // Decimal? columns → Number(...); null/undefined stay null

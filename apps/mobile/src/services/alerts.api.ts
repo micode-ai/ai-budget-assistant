@@ -1,5 +1,5 @@
 import { httpClient } from './http-client';
-import type { AnomalyAlertListResponse } from '@budget/shared-types';
+import type { AnomalyAlertListResponse, PriceCheckSummary } from '@budget/shared-types';
 
 export const alertsApi = {
   listAlerts() {
@@ -16,5 +16,9 @@ export const alertsApi = {
 
   dismissAlert(id: string) {
     return httpClient.request<{ success: boolean; updated: number }>(`/alerts/${id}`, { method: 'DELETE' });
+  },
+
+  getPriceCheckSummary() {
+    return httpClient.request<PriceCheckSummary>('/alerts/price-check-summary');
   },
 };

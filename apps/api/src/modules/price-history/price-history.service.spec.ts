@@ -1,4 +1,5 @@
 import { PriceHistoryService } from './price-history.service';
+import { checkReceiptPrices } from './receipt-check.util';
 
 describe('PriceHistoryService', () => {
   describe('resolveMajorityCurrency', () => {
@@ -148,5 +149,256 @@ describe('PriceHistoryService', () => {
     expect(trends[0].currency).toBe('PLN');
     expect(trends[0].latestMerchant).toBe('Lidl');
     expect(trends[0].purchaseDates).toHaveLength(2);
+  });
+
+  it('fetchRows (via getProductTrends) falls back to totalPrice when unitPrice is a stored 0 (perUnitPrice, Fix 3a)', async () => {
+    // ExpenseItem.unitPrice defaults to 0 on the DB column. Before the shared
+    // perUnitPrice helper, fetchRows read `Number(item.unitPrice)` bare for a
+    // qty<=1 row, so a stored 0 produced a literal 0 price point — this is the
+    // one INTENDED behavior change from Fix 3(a): it now falls back to
+    // totalPrice, same as every other consumer of perUnitPrice.
+    const prisma: any = {
+      productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+      expenseItem: {
+        findMany: jest.fn().mockResolvedValue([
+          { id: 'i1', canonicalName: 'Chleb', unitPrice: 0, quantity: 1, totalPrice: 7.0,
+            expense: { date: new Date('2026-06-05'), merchant: 'Lidl', currencyCode: 'PLN', locationLat: null, locationLng: null } },
+        ]),
+      },
+    };
+    const service = new PriceHistoryService(prisma, null as any);
+
+    const trends = await service.getProductTrends('a1');
+    expect(trends).toHaveLength(1);
+    expect(trends[0].points.map((p) => p.price)).toEqual([7.0]);
+  });
+
+  describe('getProductTrendsFor', () => {
+    it('queries only the requested products, merchant and window, and returns per-unit series', async () => {
+      const prisma: any = {
+        productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+        expenseItem: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              id: 'i1',
+              canonicalName: 'Kawa',
+              unitPrice: 20,
+              quantity: 1,
+              totalPrice: 20,
+              size: null,
+              expense: { date: new Date('2026-07-01'), merchant: 'Biedronka', currencyCode: 'PLN' },
+            },
+            {
+              id: 'i2',
+              canonicalName: 'Kawa',
+              // quantity > 1 → per-unit price comes from totalPrice / quantity
+              unitPrice: 44,
+              quantity: 2,
+              totalPrice: 44,
+              size: null,
+              expense: { date: new Date('2026-07-08'), merchant: 'Biedronka', currencyCode: 'PLN' },
+            },
+            {
+              // Different merchant — deleting the JS merchant filter would leak this
+              // 99 price into the returned points (Defect 3 regression guard).
+              id: 'i3',
+              canonicalName: 'Kawa',
+              unitPrice: 99,
+              quantity: 1,
+              totalPrice: 99,
+              size: null,
+              expense: { date: new Date('2026-07-05'), merchant: 'Lidl', currencyCode: 'PLN' },
+            },
+          ]),
+        },
+      };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      const since = new Date('2026-05-01');
+      const out = await service.getProductTrendsFor('acc-1', ['Kawa'], 'biedronka', since, 'PLN');
+
+      const where = prisma.expenseItem.findMany.mock.calls[0][0].where;
+      expect(where.canonicalName.in).toEqual(['Kawa']);
+      expect(where.expense.date.gte).toBe(since);
+      expect(where.expense.accountId).toBe('acc-1');
+
+      expect(out).toHaveLength(1);
+      expect(out[0].currency).toBe('PLN');
+      // The Lidl row's 99 must be absent — only the two Biedronka prices survive.
+      expect(out[0].points.map((p) => p.price)).toEqual([20, 22]);
+    });
+
+    it('excludes a row in a different currency from the one requested', async () => {
+      const prisma: any = {
+        productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+        expenseItem: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              id: 'i1',
+              canonicalName: 'Kawa',
+              unitPrice: 20,
+              quantity: 1,
+              totalPrice: 20,
+              size: null,
+              expense: { date: new Date('2026-07-01'), merchant: 'Biedronka', currencyCode: 'PLN' },
+            },
+            {
+              // Same product + merchant, but a different currency — must never be
+              // mixed into a PLN baseline without conversion.
+              id: 'i2',
+              canonicalName: 'Kawa',
+              unitPrice: 5,
+              quantity: 1,
+              totalPrice: 5,
+              size: null,
+              expense: { date: new Date('2026-07-02'), merchant: 'Biedronka', currencyCode: 'EUR' },
+            },
+          ]),
+        },
+      };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      const out = await service.getProductTrendsFor(
+        'acc-1',
+        ['Kawa'],
+        'biedronka',
+        new Date('2026-05-01'),
+        'PLN',
+      );
+
+      expect(out).toHaveLength(1);
+      expect(out[0].currency).toBe('PLN');
+      // If the currency filter were removed, the EUR row's price (5) would leak
+      // in alongside the PLN one — the currency label alone can't catch that,
+      // since the returned currency is always the requested one by construction.
+      expect(out[0].points.map((p) => p.price)).toEqual([20]);
+    });
+
+    it('excludes a product whose alias resolves to the ignored sentinel', async () => {
+      const prisma: any = {
+        // 'Kawa' has been explicitly ignored via ignoreProduct(), which stores
+        // the '__ignored__' sentinel as its resolved canonical name.
+        productAlias: {
+          findMany: jest.fn().mockResolvedValue([{ rawName: 'Kawa', canonicalName: '__ignored__' }]),
+        },
+        expenseItem: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              id: 'i1',
+              canonicalName: 'Kawa',
+              unitPrice: 20,
+              quantity: 1,
+              totalPrice: 20,
+              size: null,
+              expense: { date: new Date('2026-07-01'), merchant: 'Biedronka', currencyCode: 'PLN' },
+            },
+          ]),
+        },
+      };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      const out = await service.getProductTrendsFor(
+        'acc-1',
+        ['Kawa'],
+        'biedronka',
+        new Date('2026-05-01'),
+        'PLN',
+      );
+
+      // If the ignore check were removed, this would resolve to one entry
+      // keyed by the literal string '__ignored__' with a price of 20.
+      expect(out).toEqual([]);
+    });
+
+    it('returns an empty array when no product names are requested', async () => {
+      const prisma: any = { expenseItem: { findMany: jest.fn() } };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      await expect(
+        service.getProductTrendsFor('acc-1', [], 'biedronka', new Date(), 'PLN'),
+      ).resolves.toEqual([]);
+      expect(prisma.expenseItem.findMany).not.toHaveBeenCalled();
+    });
+
+    it('excludes the given expenseId via the where clause (Fix 1: the detector must not count the receipt it is checking as its own history)', async () => {
+      const findMany = jest.fn().mockResolvedValue([]);
+      const prisma: any = { productAlias: { findMany: jest.fn().mockResolvedValue([]) }, expenseItem: { findMany } };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      await service.getProductTrendsFor('acc-1', ['Kawa'], 'biedronka', new Date('2026-05-01'), 'PLN', 'exp-self');
+
+      const where = findMany.mock.calls[0][0].where;
+      expect(where.expenseId).toEqual({ not: 'exp-self' });
+    });
+
+    it('omits the expenseId filter entirely when no exclusion is given (the OCR scan-time call path)', async () => {
+      const findMany = jest.fn().mockResolvedValue([]);
+      const prisma: any = { productAlias: { findMany: jest.fn().mockResolvedValue([]) }, expenseItem: { findMany } };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      await service.getProductTrendsFor('acc-1', ['Kawa'], 'biedronka', new Date('2026-05-01'), 'PLN');
+
+      const where = findMany.mock.calls[0][0].where;
+      expect(where.expenseId).toBeUndefined();
+    });
+
+    it('emits the entry under the RAW name the caller requested even when it is aliased (Fix 2), so the receipt-check engine — which looks up by the receipt line\'s raw name — still matches it and produces a finding', async () => {
+      // The user renamed/merged raw 'KAWA MIELONA' to canonical 'Kawa' on the products screen.
+      const prisma: any = {
+        productAlias: {
+          findMany: jest.fn().mockResolvedValue([{ rawName: 'KAWA MIELONA', canonicalName: 'Kawa' }]),
+        },
+        expenseItem: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              id: 'i1',
+              canonicalName: 'KAWA MIELONA', // raw name as stored on expense_items — what the caller requests
+              unitPrice: 20,
+              quantity: 1,
+              totalPrice: 20,
+              size: null,
+              expense: { date: new Date('2026-07-01'), merchant: 'Biedronka', currencyCode: 'PLN' },
+            },
+            {
+              id: 'i2',
+              canonicalName: 'KAWA MIELONA',
+              unitPrice: 20,
+              quantity: 1,
+              totalPrice: 20,
+              size: null,
+              expense: { date: new Date('2026-07-08'), merchant: 'Biedronka', currencyCode: 'PLN' },
+            },
+          ]),
+        },
+      };
+      const service = new PriceHistoryService(prisma, null as any);
+
+      const out = await service.getProductTrendsFor(
+        'acc-1',
+        ['KAWA MIELONA'], // the receipt line's raw canonicalName — this is what checkReceiptPrices looks up by
+        'biedronka',
+        new Date('2026-05-01'),
+        'PLN',
+      );
+
+      expect(out).toHaveLength(1);
+      // Emitted under the RAW name, not the alias-resolved 'Kawa' — returning the
+      // resolved name here is exactly the bug: the engine indexes history by the
+      // receipt line's own raw canonicalName, so it would silently never match.
+      expect(out[0].canonicalName).toBe('KAWA MIELONA');
+      expect(out[0].points.map((p) => p.price)).toEqual([20, 20]);
+
+      // Feed straight into the real engine to prove the fix produces an actual finding,
+      // not just a correctly-labelled-but-still-unused entry.
+      const result = checkReceiptPrices({
+        lines: [{ canonicalName: 'KAWA MIELONA', unitPrice: 30, quantity: 1 }],
+        history: out,
+        merchant: 'Biedronka',
+        currencyCode: 'PLN',
+        now: new Date('2026-07-25T12:00:00Z'),
+      });
+      expect(result.findings).toHaveLength(1);
+      expect(result.findings[0].baselineUnitPrice).toBe(20);
+    });
   });
 });

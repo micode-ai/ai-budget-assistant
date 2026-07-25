@@ -76,6 +76,17 @@ const messages: Record<string, Record<string, string>> = {
     be: '📄 *Чэк адсканаваны*',
     nl: '📄 *Bon gescand*',
   },
+  priceCheckSummary: {
+    en: '⚠️ Above your usual price — items: {{count}}, difference: about {{amount}}. Worth checking the receipt.',
+    ru: '⚠️ Дороже обычного — товаров: {{count}}, разница: около {{amount}}. Стоит проверить чек.',
+    ua: '⚠️ Дорожче, ніж зазвичай — товарів: {{count}}, різниця: приблизно {{amount}}. Варто перевірити чек.',
+    de: '⚠️ Teurer als üblich — Artikel: {{count}}, Differenz: etwa {{amount}}. Es lohnt sich, den Beleg zu prüfen.',
+    es: '⚠️ Más caro de lo habitual — artículos: {{count}}, diferencia: unos {{amount}}. Vale la pena revisar el recibo.',
+    fr: '⚠️ Plus cher que d\'habitude — articles : {{count}}, différence : environ {{amount}}. Mieux vaut vérifier le reçu.',
+    pl: '⚠️ Drożej niż zwykle — pozycje: {{count}}, różnica: około {{amount}}. Warto sprawdzić paragon.',
+    be: '⚠️ Даражэй, чым звычайна — тавараў: {{count}}, розніца: прыблізна {{amount}}. Варта праверыць чэк.',
+    nl: '⚠️ Duurder dan gebruikelijk — artikelen: {{count}}, verschil: ongeveer {{amount}}. Het is de moeite waard om de bon te controleren.',
+  },
   confirm: {
     en: '✅ Confirm',
     ru: '✅ Подтвердить',

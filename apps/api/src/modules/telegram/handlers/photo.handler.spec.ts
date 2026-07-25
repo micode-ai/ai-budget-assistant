@@ -81,3 +81,45 @@ describe('Telegram PhotoHandler — geocoded location wiring (ABA-310 bot photo 
     expect(dto.location).toBeUndefined();
   });
 });
+
+describe('Telegram PhotoHandler — buildPriceCheckLine (receipt price-check summary)', () => {
+  function setup() {
+    const ocr = { parseReceipt: jest.fn(), parseReceiptPdf: jest.fn() };
+    const expenses = { create: jest.fn() };
+    const subs = { trackAiUsage: jest.fn() };
+    return new PhotoHandler(ocr as never, expenses as never, subs as never);
+  }
+
+  it('appends a price-check line when the scan returned findings', async () => {
+    const handler = setup();
+    const summary = (handler as any).buildPriceCheckLine(
+      {
+        priceFindings: [
+          { canonicalName: 'Kawa', overpaidAmount: 4, currencyCode: 'PLN' },
+          { canonicalName: 'Mleko', overpaidAmount: 2, currencyCode: 'PLN' },
+        ],
+      } as any,
+      'en',
+    );
+    expect(summary).toContain('2');
+    expect(summary).toContain('6');
+  });
+
+  it('returns an empty string when there are no findings', () => {
+    const handler = setup();
+    expect((handler as any).buildPriceCheckLine({ priceFindings: [] } as any, 'en')).toBe('');
+  });
+
+  const findings = (n: number) =>
+    Array.from({ length: n }, () => ({ canonicalName: 'Kawa', overpaidAmount: 4, currencyCode: 'PLN' }));
+
+  // The old wording put the count directly before a noun, which is ungrammatical in
+  // Russian for most counts. Assert the count is NOT immediately followed by a word:
+  // it must be the last token of its clause, so no noun has to agree with it.
+  it.each([1, 2, 5])('keeps the count away from any agreeing noun (ru, count=%i)', (n) => {
+    const handler = setup();
+    const line = (handler as any).buildPriceCheckLine({ priceFindings: findings(n) } as any, 'ru');
+    expect(line).toMatch(new RegExp(`${n}\\s*(,|\\.|$)`));
+    expect(line).not.toMatch(new RegExp(`${n}\\s+\\p{L}`, 'u'));
+  });
+});

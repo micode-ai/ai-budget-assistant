@@ -16,9 +16,29 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStyles, useTheme, type Theme } from '@/theme';
 import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useAlertStore } from '@/stores/alertStore';
+import { useAuthStore } from '@/stores/authStore';
 import { InteractiveLineChart } from '@/components/interactive-charts';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
-import type { PriceHistoryProduct } from '@budget/shared-types';
+import { formatCurrency } from '@budget/shared-utils';
+import type { Currency, PriceHistoryProduct } from '@budget/shared-types';
+
+/**
+ * Picks ONE currency to show for the "found" total — the user's own display
+ * currency if the price check found anything in it, otherwise the largest
+ * single total. Never sums or converts across currencies: this feature
+ * forbids FX everywhere, so a blended figure would be fabricated.
+ */
+export function pickFoundTotal(
+  totalsByCurrency: Record<string, number>,
+  baseCurrency: string,
+): { amount: number; currency: string } | null {
+  const entries = Object.entries(totalsByCurrency).filter(([, v]) => v > 0);
+  if (entries.length === 0) return null;
+  const own = entries.find(([c]) => c === baseCurrency);
+  const [currency, amount] = own ?? entries.reduce((a, b) => (b[1] > a[1] ? b : a));
+  return { amount, currency };
+}
 
 type Period = '3m' | '6m' | '12m' | 'all';
 
@@ -39,6 +59,8 @@ export function InflationIndexSection() {
   const { history, isLoading, hasAttemptedLoad, selectedPeriod, loadPriceHistory, upsertAlias, deletePricePoint } =
     usePriceHistoryStore();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const priceCheckSummary = useAlertStore((s) => s.priceCheckSummary);
+  const user = useAuthStore((s) => s.user);
 
   const [showAll, setShowAll] = useState(false);
   const [selectedRawName, setSelectedRawName] = useState<string | null>(null);
@@ -161,6 +183,24 @@ export function InflationIndexSection() {
             </Text>
           </>
         )}
+
+        {(() => {
+          // Render only when there's something to report. `found === null` covers
+          // four different states (summary not loaded yet, fetch failed, the
+          // alert-write flag is off so totalsByCurrency is permanently {}, or
+          // genuinely nothing found) — a discovery feature that hasn't found
+          // anything needs no announcement, and a fixed "nothing yet" line would
+          // contradict the inline scan-time card in three of those four states.
+          const found = pickFoundTotal(priceCheckSummary?.totalsByCurrency ?? {}, user?.currencyCode ?? 'USD');
+          if (!found) return null;
+          return (
+            <Text style={styles.foundTotal}>
+              {t('receiptCheck.foundTotal', {
+                amount: formatCurrency(found.amount, found.currency as Currency),
+              })}
+            </Text>
+          );
+        })()}
 
         {/* Product list */}
         {displayProducts.map((product) => (
@@ -417,6 +457,12 @@ const createStyles = (theme: Theme) => ({
   },
   emptyText: {
     ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  foundTotal: {
+    ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
     textAlign: 'center' as const,
     marginBottom: theme.spacing[4],

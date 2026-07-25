@@ -26,6 +26,7 @@ const TYPE_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   category_spike: 'flame-outline',
   recurring_suggestion: 'repeat-outline',
   possible_merge: 'git-merge-outline',
+  price_overcharge: 'pricetag-outline',
 };
 
 /**
@@ -134,6 +135,20 @@ export default function AlertsScreen() {
               currencyB: p.currencyB,
             }),
           };
+        case 'price_overcharge': {
+          const findingCount = Array.isArray((alert.params as { findings?: unknown }).findings)
+            ? ((alert.params as { findings: unknown[] }).findings).length
+            : 0;
+          return {
+            title: t('alerts.priceCheckTitle'),
+            body: t('alerts.priceCheckBody', {
+              count: findingCount,
+              merchant: p.merchant,
+              amount: p.totalAmount,
+              currency: p.currencyCode,
+            }),
+          };
+        }
         default:
           return { title: String(alert.type), body: '' };
       }

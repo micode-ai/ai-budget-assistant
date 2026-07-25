@@ -2,6 +2,7 @@ import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import Redis from 'ioredis';
 import { OcrService } from '../../ai/services/ocr.service';
+import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
@@ -96,7 +97,11 @@ export class PhotoHandler {
       };
       await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
-      const summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
+      let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
+      const priceCheckLine = this.buildPriceCheckLine(receipt, language);
+      if (priceCheckLine) {
+        summary += `\n${priceCheckLine}`;
+      }
       await this.client.sendButtons(waPhoneNumber, summary, [
         { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
         { id: `receipt_date--${shortId}`, title: t('changeDate', language) },
@@ -174,7 +179,11 @@ export class PhotoHandler {
       };
       await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
 
-      const summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
+      let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
+      const priceCheckLine = this.buildPriceCheckLine(receipt, language);
+      if (priceCheckLine) {
+        summary += `\n${priceCheckLine}`;
+      }
       await this.client.sendButtons(waPhoneNumber, summary, [
         { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
         { id: `receipt_date--${shortId}`, title: t('changeDate', language) },
@@ -333,5 +342,22 @@ export class PhotoHandler {
       summary += `\n*Vendor:* ${merchant}`;
     }
     return summary;
+  }
+
+  /**
+   * One summary line reporting price-check findings — lines that cost
+   * measurably more than the user's usual price for that product in that
+   * store. Never phrased as an accusation (no "overcharged"/"scammed"/
+   * "promo not applied"); empty string when there is nothing to report so a
+   * clean receipt reads exactly as it did before this feature existed.
+   */
+  private buildPriceCheckLine(receipt: ReceiptExpense, lang: string): string {
+    const findings = receipt.priceFindings ?? [];
+    if (findings.length === 0) return '';
+    const total = findings.reduce((sum, f) => sum + f.overpaidAmount, 0);
+    return t('priceCheckSummary', lang, {
+      count: String(findings.length),
+      amount: `${total.toFixed(2)} ${findings[0].currencyCode}`,
+    });
   }
 }

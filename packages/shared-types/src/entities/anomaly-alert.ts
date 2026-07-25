@@ -3,7 +3,8 @@ export type AnomalyAlertType =
   | 'price_increase'
   | 'duplicate_charge'
   | 'recurring_suggestion'
-  | 'possible_merge';
+  | 'possible_merge'
+  | 'price_overcharge';
 
 export interface AnomalyAlert {
   id: string;

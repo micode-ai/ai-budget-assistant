@@ -1,16 +1,19 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
-import type { AnomalyAlert } from '@budget/shared-types';
+import type { AnomalyAlert, PriceCheckSummary } from '@budget/shared-types';
 
 interface AlertState {
   alerts: AnomalyAlert[];
   unreadCount: number;
   isLoading: boolean;
+  priceCheckSummary: PriceCheckSummary | null;
 
   loadAlerts: () => Promise<void>;
+  loadPriceCheckSummary: () => Promise<void>;
   markRead: (id: string) => Promise<void>;
   markAllRead: () => Promise<void>;
   dismiss: (id: string) => Promise<void>;
+  clearPriceCheckSummary: () => void;
   reset: () => void;
 }
 
@@ -18,6 +21,7 @@ export const useAlertStore = create<AlertState>((set, get) => ({
   alerts: [],
   unreadCount: 0,
   isLoading: false,
+  priceCheckSummary: null,
 
   async loadAlerts() {
     set({ isLoading: true });
@@ -28,6 +32,16 @@ export const useAlertStore = create<AlertState>((set, get) => ({
       // Offline or server error — keep whatever we had; feed is server-backed only.
       console.warn('Failed to load alerts:', e);
       set({ isLoading: false });
+    }
+  },
+
+  async loadPriceCheckSummary() {
+    try {
+      const summary = await api.getPriceCheckSummary();
+      set({ priceCheckSummary: summary });
+    } catch (error) {
+      // Non-critical decoration on the analytics screen — never surface it.
+      console.warn('[alertStore] price-check summary failed', error);
     }
   },
 
@@ -62,7 +76,11 @@ export const useAlertStore = create<AlertState>((set, get) => ({
     api.dismissAlert(id).catch((e) => console.warn('Failed to dismiss alert:', e));
   },
 
+  clearPriceCheckSummary() {
+    set({ priceCheckSummary: null });
+  },
+
   reset() {
-    set({ alerts: [], unreadCount: 0, isLoading: false });
+    set({ alerts: [], unreadCount: 0, isLoading: false, priceCheckSummary: null });
   },
 }));

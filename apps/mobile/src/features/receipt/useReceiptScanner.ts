@@ -3,6 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { uriToBase64 } from '@/utils/fileBase64';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
+import type { ReceiptCheckFinding } from '@budget/shared-types';
 
 export interface ReceiptItem {
   description: string;
@@ -23,6 +24,7 @@ export interface ScannedReceipt {
   confidence: number;
   receiptItems: ReceiptItem[];
   location: { lat: number; lng: number; name: string } | null;
+  priceFindings?: ReceiptCheckFinding[];
 }
 
 export interface ReceiptScannerState {

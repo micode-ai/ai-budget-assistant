@@ -795,6 +795,8 @@ export default {
     invitationAccept: 'Annehmen',
     invitationDecline: 'Ablehnen',
     invitationsEmpty: 'Keine offenen Einladungen',
+    priceCheckTitle: 'Dieser Kassenbon ist einen Blick wert',
+    priceCheckBody: 'Bei {{merchant}}: über dem üblichen Preis — Artikel: {{count}}, Differenz: etwa {{amount}} {{currency}}.',
   },
   whatsappBot: {
     title: 'WhatsApp-Bot',
@@ -2350,5 +2352,15 @@ export default {
     distanceKm: '{{km}} km entfernt',
     dealsTitle: 'Angebote für dich',
     dealDrop: '-{{pct}}%',
+  },
+  receiptCheck: {
+    cardTitle_one: '{{count}} Artikel kostet mehr als üblich',
+    cardTitle_other: '{{count}} Artikel kosten mehr als üblich',
+    cardSubtitle: 'Etwa {{amount}} mehr, als du hier normalerweise zahlst — ein Blick auf den Kassenbon lohnt sich.',
+    usually: 'normalerweise',
+    youPaid: 'du hast bezahlt',
+    difference: 'Differenz',
+    lowConfidence: 'basierend auf nur zwei früheren Käufen',
+    foundTotal: 'Dieses Jahr {{amount}} über deinen üblichen Preisen gefunden',
   },
 } as const;

@@ -1470,6 +1470,63 @@ A separate leaf module, `InflationShieldTrackingService`, is Prisma-only (no ser
 
 `GET /insights/inflation-shield` — behind `JwtAuthGuard + AccountContextGuard`. No `SubscriptionTierGuard` — available on the free plan (same precedent as Safe-to-Spend and Financial Wrapped).
 
+## Receipt Price Check
+
+ABA-373. A receipt-scan-time check that compares each line item against this user's own **median** price for that same product at that same store, and surfaces lines that cost measurably more — while the user is still standing at the register. Fully deterministic (no LLM cost) and required no database migration; it reads the same `expense_items.canonical_name` corpus the Personal Inflation Index already populates.
+
+### How It Works
+
+The entire comparison lives in one pure, unit-tested module: `modules/price-history/receipt-check.util.ts`, exporting `checkReceiptPrices(input)`.
+
+1. **Grouping**: `groupReceiptLines` collapses a receipt's line items by normalized product name into a quantity-weighted average unit price, so one product produces at most one finding even if a receipt lists it on several lines.
+2. **Baseline**: for each grouped line, `PriceHistoryService.getProductTrendsFor(accountId, canonicalNames, merchantNormalized, since, currencyCode, excludeExpenseId?)` fetches this account's own prior `ExpenseItem` rows for that exact product **at that exact merchant**, in the same currency, within a `RECEIPT_CHECK_LOOKBACK_WEEKS` (default 12) window. The baseline is the **median** of those prior unit prices — median rather than mean specifically to resist a single outlier purchase skewing the comparison.
+3. **Threshold**: a line is only reported when it costs at least `RECEIPT_CHECK_MIN_RISE_PCT` (default 15%) above the baseline **and** the absolute overpaid amount clears `RECEIPT_CHECK_MIN_AMOUNT` (default 1.0, in the receipt's own currency) — a 20% rise on a $0.10 item is not worth surfacing. A rise above `RECEIPT_CHECK_MAX_RISE_PCT` (default 100%) is dropped rather than reported: an enormous jump is far more likely to be a different product (or a misread OCR line) than a genuine price change, and reporting it would erode trust in every other finding.
+4. **Confidence**: a product needs at least `RECEIPT_CHECK_MIN_POINTS` (default 2) prior purchases at that store before it says anything at all. `confidence: 'low'` when the baseline rests on exactly the minimum (2 points); `'high'` on 3 or more. The mobile card renders a "based on only two earlier purchases" caveat on `'low'` findings.
+5. **Scope discipline**: the comparison is **same product, same store, same currency, always** — `getProductTrendsFor` filters both merchant and currency in JS before a price ever reaches the median calculation, and a product with history in a different currency than the current receipt is simply skipped, never converted. Different pack sizes are already different products, because the OCR-assigned `canonicalName` keeps the size in the string (e.g. `"Mleko Łaciate 3,2% 1L"` vs the 0.5 L variant) — no separate pack-size gate is needed.
+6. **Output cap**: at most `RECEIPT_CHECK_MAX_FINDINGS` (default 5) findings are returned per receipt, sorted by `overpaidAmount` descending.
+7. **Wording discipline**: `ReceiptCheckFinding` (`packages/shared-types/src/dto/receipt-check.ts`) and every consumer of it are deliberately framed as "this costs more than usual — worth checking the receipt", never as a claim that the user was overcharged or that a discount was withheld — a receipt cannot prove either of those, and a silently-unapplied promotion is the most common real cause. The response's running total is named `overpaidAmount`/"found", never "saved".
+8. **Community baseline (reserved, unused)**: the engine accepts an optional `community: CommunityBaseline[]` input as a fallback when personal history is too thin, but no caller supplies it yet — every finding today has `source: 'personal'`. This mirrors the same deferred-until-validated posture as the Inflation Shield's community-boost and the Community Price Map's anti-Sybil hardening.
+
+### Two Call Sites
+
+The same deterministic engine is called from exactly two places, for two different reasons:
+
+1. **Scan time** — `OcrService.finalizeReceipt()` (the single funnel every one of the four scan paths — mobile camera/gallery/PDF and all three chat bots — passes through before returning a `ReceiptExpense`) calls a private `runPriceCheck(accountId, receipt)` and sets `receipt.priceFindings`. This runs **before the expense exists**, so there is no expense id yet to build a dedup key from or to attach the finding to — the result is returned inline in the scan response and rendered immediately, without ever touching the database.
+2. **Post-create** — `AnomalyService.detectPriceOvercharge(accountId, userId, expense)`, called from `checkExpense()` alongside the other anomaly detectors once the expense (and its `ExpenseItem` rows) are committed. This pass persists one `price_overcharge` feed row per receipt (see **Feed & Summary** below) so the finding survives after the scan screen is closed and powers the Analytics-tab yearly total.
+
+Both call sites run the identical `checkReceiptPrices()` function, so they can never disagree about what counts as a finding — the only difference is what each does with the result (render vs. persist). **The post-create pass must exclude the receipt under examination from its own baseline**: by the time `detectPriceOvercharge` runs, `ExpensesService.create` has already committed the new expense's `ExpenseItem` rows, so without `excludeExpenseId: expense.id` on the `getProductTrendsFor` call, the receipt being checked would count as one of its own prior purchases — inflating (or in a single-prior-purchase case, fabricating) its own baseline and silently disagreeing with the scan-time result for the same receipt.
+
+### Feed & Summary
+
+- **Alert type**: `price_overcharge` is written via the same `AnomalyService.createAlert()` path as every other anomaly type, but with `skipPush: true` — it is feed-only and never sent as a push notification, because a push arriving after the user has left the store has nothing actionable in it. `params` holds `{ merchant, currencyCode, totalAmount, findings }`.
+- **Release gate**: `AnomalyService.receiptCheckAlertsEnabled()` reads `RECEIPT_CHECK_ALERTS_ENABLED` (default off). This gate covers **only the write** — when off, `detectPriceOvercharge` computes the findings, logs them, and returns without creating an alert row; the scan-time inline card and the bot summary line are unaffected, since neither goes through this gate. The gate exists because the alerts-feed UI for `price_overcharge` ships in a mobile release that must roll out first — turning the write on before that release reaches users would show already-installed apps a card titled with the raw `price_overcharge` type string and an empty body.
+- **Summary endpoint**: `GET /alerts/price-check-summary` (`AnomalyController`, declared before the `:id` routes — same ordering rule as `bulk`/`read-all` elsewhere in this codebase) sums `overpaidAmount` across all non-dismissed `price_overcharge` alerts created since the start of the current UTC calendar year, grouped **per currency** (never blended — this feature converts nothing). Powers the Analytics tab's "Found X above your usual prices this year" line, which itself picks a single currency to display (`pickFoundTotal`: the user's own display currency if anything was found in it, else the largest total) rather than ever summing across currencies.
+
+### Configuration
+
+All thresholds are env-tunable via `resolveReceiptCheckConfig(env)`, with defaults in `RECEIPT_CHECK_DEFAULTS`:
+
+| Env var | Default | Meaning |
+|---|---|---|
+| `RECEIPT_CHECK_LOOKBACK_WEEKS` | 12 | How far back prior purchases are pulled for the baseline |
+| `RECEIPT_CHECK_MIN_POINTS` | 2 | Minimum prior purchases at that store before any finding is reported |
+| `RECEIPT_CHECK_MIN_RISE_PCT` | 15 | Minimum % above the median baseline to qualify as a finding |
+| `RECEIPT_CHECK_MAX_RISE_PCT` | 100 | Rises above this are dropped as "probably a different product", not reported |
+| `RECEIPT_CHECK_MIN_AMOUNT` | 1.0 | Minimum absolute overpaid amount (receipt's own currency) to bother reporting |
+| `RECEIPT_CHECK_MAX_FINDINGS` | 5 | Cap on findings returned per receipt |
+| `RECEIPT_CHECK_ALERTS_ENABLED` | off | Release gate — see **Feed & Summary** above; a negative or malformed override is clamped to 0, never inverted |
+
+### Mobile & Bot Integration
+
+- **Scan-confirmation screen**: `PriceFindingsCard.tsx` renders a collapsed card ("N items cost more than usual · about X more") that expands to per-product rows (usual price, paid price, difference, and a low-confidence caveat where relevant). It is purely informational — it never blocks saving the receipt and never edits any amount.
+- **Chat bots** (Telegram, WhatsApp, Slack): each bot's `photo.handler.ts` calls a shared `buildPriceCheckLine(receipt, lang)` helper that appends one extra line to the receipt confirmation message when `receipt.priceFindings` is non-empty, worded identically to the mobile card's honest framing, localized via each bot's own `helpers/i18n.ts` (`priceCheckSummary` key, 9 languages).
+- **Alerts bell**: `app/alerts/index.tsx` renders `price_overcharge` alerts with title/body from `alerts.priceCheckTitle`/`alerts.priceCheckBody` — gated end-to-end by `RECEIPT_CHECK_ALERTS_ENABLED`, since no such alert rows exist while the gate is off.
+- **Analytics tab**: `InflationIndexSection.tsx` calls `GET /alerts/price-check-summary` and renders the yearly "found" total via `pickFoundTotal`, only when at least one currency has a positive total.
+
+### API Endpoints
+
+`GET /alerts/price-check-summary` — behind `JwtAuthGuard + AccountContextGuard`, no `ViewerBlockGuard` (reading the summary mutates nothing). See [API.md](./API.md#price-check-summary).
+
 ## Smart Shopping List
 
 The `shopping-list` module (ABA-330) provides shared, offline-first shopping lists plus a Pro-gated basket price comparison, all built on the receipt price-history corpus.

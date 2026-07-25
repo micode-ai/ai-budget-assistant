@@ -1,4 +1,5 @@
 import { httpClient } from './http-client';
+import type { ReceiptCheckFinding } from '@budget/shared-types';
 
 export const aiApi = {
   transcribeAudio(audioBase64: string, language?: string) {
@@ -152,6 +153,7 @@ export const aiApi = {
         totalPrice: number;
       }[];
       location: { lat: number; lng: number; name: string } | null;
+      priceFindings?: ReceiptCheckFinding[];
     }>('/ai/scan-receipt', {
       method: 'POST',
       body: JSON.stringify({

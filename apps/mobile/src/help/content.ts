@@ -4243,6 +4243,55 @@ This is on by default and can be turned off independently in **Settings → Noti
 - Recommendations are based only on **your own purchase history** for now. Comparing prices across other users' purchases nearby, to suggest the cheapest store, is planned for a future update.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Receipt Price Check — is this more than you usually pay?`,
+      description: `Right after you scan a receipt, each item is compared against the median price you've paid for that same product at that same store before — so you can catch a missed discount while you're still standing at the register.`,
+      body: `# Receipt Price Check — is this more than you usually pay?
+
+> Right after you scan a receipt, each item is compared against the median price you've paid for that same product at that same store before — so you can catch a missed discount while you're still standing at the register.
+
+## What it is
+
+Every receipt you scan is quietly checked against your own buying history: the median price you've paid for that exact product, at that exact store, over the last 12 weeks. When a line costs noticeably more than that, it's surfaced immediately — while you can still ask at the till or look in your bag, not buried in a report you'll never open.
+
+It's plain arithmetic on your own past receipts. No AI is involved, and there's nothing to turn on or set up.
+
+## What it never says
+
+This never claims you were overcharged, cheated, or that a discount was withheld — a receipt can't prove any of that. If no discount line is printed, nothing shows one was ever supposed to apply, so the app never accuses. The frame is always the same, honest one: **this costs more than usual — worth checking the receipt**. A promotion that silently failed to apply is the most common real cause, and this wording surfaces it without pointing a finger at the store.
+
+Anything the app shows you is what it has **found** above your usual prices — never what you **saved**, because there's no way to know whether you actually acted on any of it.
+
+## Where you'll see it
+
+- **Right after scanning a receipt** — a card like "2 items cost more than usual", with "About 6.20 zł more than you usually pay here — worth checking the receipt" underneath. Tap it open to see each flagged product with what you usually pay, what you paid this time, and the difference. It never blocks you from saving the receipt, and it never changes any amount for you — it's information, not an edit.
+- **In the chat bots** (Telegram, WhatsApp, Slack) — scanning a receipt through a bot adds one extra line to the confirmation message when something was found, since bot scans go through the exact same check as the app.
+- **In the Analytics tab** — a line reading "Found X above your usual prices this year", shown only once something has actually turned up.
+- **In your alerts** — each scanned receipt with a finding can also appear as one alert in your alerts bell, so you don't have to remember to check.
+
+## How much to trust a finding
+
+A product needs at least **two** earlier purchases at the same store before the check says anything about it, so it stays quiet for a while on a brand-new account — and gets sharper the more you scan. A finding based on exactly two earlier purchases is labelled **"based on only two earlier purchases"**, so you can weigh it accordingly; three or more prior purchases is a firmer signal.
+
+## What it compares — and what it deliberately won't
+
+- Only the **same product at the same store**. A price at one shop is never compared against the same product bought somewhere else.
+- Only **the same currency** — nothing is ever converted for this comparison.
+- Different pack sizes count as different products: the scanner keeps the size in the product name (for example "Mleko Łaciate 3,2% 1L"), so a 1 L and a 0.5 L bottle are tracked separately, exactly as they should be.
+- An enormous jump in price is deliberately ignored rather than reported — it's far more likely to be a different product (or a misread line) than a genuine price change.
+
+## The yearly total
+
+If anything has ever been found in more than one currency, the Analytics tab shows just one total — your own currency, if something turned up there, otherwise the largest single amount. Amounts are never added across currencies, since that would mean converting money this feature is careful never to convert.
+
+## Good to know
+
+- Works automatically on every scanned receipt — camera, gallery, PDF, and receipts scanned through Telegram, WhatsApp, or Slack.
+- A finding never blocks saving the receipt and never edits an amount for you.
+- Prices and differences are shown in the receipt's own currency.
+`,
+    },
   ],
   ru: [
     {
@@ -8463,6 +8512,55 @@ AI Budget Assistant предлагает три уровня подписки. �
 - Пока рекомендации основаны только на **вашей собственной истории покупок**. Сравнение цен на основе покупок других пользователей поблизости, чтобы подсказать самый дешёвый магазин, планируется в будущем обновлении.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Проверка цен по чеку — не дороже ли, чем обычно?`,
+      description: `Сразу после того как вы сканируете чек, каждая позиция сравнивается с медианной ценой, которую вы платили за этот же товар в этом же магазине раньше — чтобы вы могли заметить, что скидка не сработала, пока ещё стоите у кассы.`,
+      body: `# Проверка цен по чеку — не дороже ли, чем обычно?
+
+> Сразу после того как вы сканируете чек, каждая позиция сравнивается с медианной ценой, которую вы платили за этот же товар в этом же магазине раньше — чтобы вы могли заметить, что скидка не сработала, пока ещё стоите у кассы.
+
+## Что это такое
+
+Каждый отсканированный чек незаметно сверяется с вашей собственной историей покупок: медианной ценой, которую вы платили за этот конкретный товар в этом конкретном магазине за последние 12 недель. Если позиция стоит заметно дороже, это сразу показывается — пока вы ещё можете спросить на кассе или заглянуть в пакет, а не спрятано в отчёте, который вы никогда не откроете.
+
+Это обычная арифметика на основе ваших собственных прошлых чеков. ИИ здесь не участвует, и включать или настраивать ничего не нужно.
+
+## Чего эта функция никогда не скажет
+
+Она никогда не утверждает, что вас обманули, обсчитали или что скидку не применили нарочно — чек не может это доказать. Если на нём не напечатана строка скидки, ничто не подтверждает, что она вообще должна была быть, поэтому приложение никого не обвиняет. Формулировка всегда одна и та же, честная: **дороже обычного — стоит проверить чек**. Скидка, которая молча не применилась, — самая частая реальная причина, и такая формулировка указывает на неё, не обвиняя магазин.
+
+Всё, что показывает приложение, — это то, что оно **нашло** сверх ваших обычных цен, а не то, что вы **сэкономили**: узнать, воспользовались ли вы этим, невозможно.
+
+## Где вы это увидите
+
+- **Сразу после сканирования чека** — карточка вида «2 товара стоят дороже, чем обычно» с подписью «Примерно на 6,20 zł больше, чем вы обычно платите здесь — стоит проверить чек». Разверните её, чтобы увидеть каждый отмеченный товар: сколько вы обычно платите, сколько заплатили в этот раз, и разницу. Она никогда не мешает сохранить чек и никогда сама не меняет ни одну сумму — это просто информация, а не правка.
+- **В чат-ботах** (Telegram, WhatsApp, Slack) — сканирование чека через бота добавляет одну строку к сообщению-подтверждению, если что-то было найдено, ведь сканирование через бота проходит ту же самую проверку, что и в приложении.
+- **На вкладке Аналитика** — строка «Найдено X сверх ваших обычных цен в этом году», показывается только тогда, когда действительно что-то нашлось.
+- **В ваших оповещениях** — каждый отсканированный чек с находкой может также появиться отдельным оповещением в ленте у колокольчика, чтобы вам не пришлось об этом вспоминать.
+
+## Насколько доверять находке
+
+Товару нужно как минимум **две** предыдущие покупки в том же магазине, прежде чем проверка вообще что-то скажет о нём — поэтому на новом аккаунте она какое-то время молчит, а чем больше вы сканируете, тем точнее становится. Находка, основанная ровно на двух предыдущих покупках, помечается как **«на основе только двух предыдущих покупок»**, чтобы вы понимали, насколько ей доверять; три и более покупки — уже более надёжный сигнал.
+
+## Что сравнивается — и что принципиально нет
+
+- Только **тот же товар в том же магазине**. Цена в одном магазине никогда не сравнивается с той же покупкой в другом.
+- Только **одна и та же валюта** — для этого сравнения ничего никогда не конвертируется.
+- Разные объёмы упаковки считаются разными товарами: сканер сохраняет объём в названии товара (например, «Mleko Łaciate 3,2% 1L»), поэтому бутылка 1 л и 0,5 л отслеживаются отдельно — так и должно быть.
+- Огромный скачок цены намеренно игнорируется, а не сообщается — гораздо вероятнее, что это другой товар (или неверно распознанная строка), а не реальное изменение цены.
+
+## Итог за год
+
+Если находки когда-либо были в нескольких валютах, вкладка Аналитика показывает только один итог — вашу собственную валюту, если что-то нашлось именно в ней, иначе — наибольшую отдельную сумму. Суммы никогда не складываются между валютами, ведь это означало бы конвертацию, которую эта функция принципиально не делает.
+
+## Полезно знать
+
+- Работает автоматически при каждом сканировании чека — с камеры, из галереи, из PDF, а также при сканировании через Telegram, WhatsApp или Slack.
+- Находка никогда не мешает сохранить чек и никогда не меняет сумму за вас.
+- Цены и разницы показываются в валюте самого чека.
+`,
+    },
   ],
   ua: [
     {
@@ -12653,6 +12751,55 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - Наразі рекомендації базуються лише на **вашій власній історії покупок**. Порівняння цін на основі покупок інших користувачів поблизу, щоб підказати найдешевший магазин, заплановано на майбутнє оновлення.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Перевірка цін за чеком — чи не дорожче, ніж зазвичай?`,
+      description: `Одразу після сканування чека кожна позиція порівнюється з медіанною ціною, яку ви раніше платили за той самий товар у тому самому магазині — щоб ви могли помітити, що знижка не спрацювала, поки ще стоїте біля каси.`,
+      body: `# Перевірка цін за чеком — чи не дорожче, ніж зазвичай?
+
+> Одразу після сканування чека кожна позиція порівнюється з медіанною ціною, яку ви раніше платили за той самий товар у тому самому магазині — щоб ви могли помітити, що знижка не спрацювала, поки ще стоїте біля каси.
+
+## Що це таке
+
+Кожен відсканований чек тихо звіряється з вашою власною історією покупок: медіанною ціною, яку ви платили за цей конкретний товар у цьому конкретному магазині за останні 12 тижнів. Якщо позиція коштує помітно дорожче, це одразу показується — поки ви ще можете запитати на касі або зазирнути в пакет, а не сховано у звіті, який ви ніколи не відкриєте.
+
+Це звичайна арифметика на основі ваших власних попередніх чеків. ШІ тут не бере участі, і вмикати чи налаштовувати нічого не потрібно.
+
+## Чого ця функція ніколи не скаже
+
+Вона ніколи не стверджує, що вас обманули, ошукали чи навмисно не застосували знижку — чек не може цього довести. Якщо на ньому не надруковано рядок зі знижкою, ніщо не підтверджує, що вона взагалі мала з'явитися, тож застосунок нікого не звинувачує. Формулювання завжди те саме, чесне: **дорожче, ніж зазвичай — варто перевірити чек**. Акція, яка тихо не застосувалася, — найпоширеніша реальна причина, і таке формулювання вказує на неї, не звинувачуючи магазин.
+
+Усе, що показує застосунок, — це те, що він **знайшов** понад ваші звичайні ціни, а не те, що ви **заощадили**: дізнатися, чи скористалися ви цим, неможливо.
+
+## Де ви це побачите
+
+- **Одразу після сканування чека** — картка на кшталт «2 товари коштують дорожче, ніж зазвичай» із підписом «Приблизно на 6,20 zł більше, ніж ви зазвичай платите тут — варто перевірити чек» під нею. Розгорніть її, щоб побачити кожен позначений товар: скільки ви зазвичай платите, скільки заплатили цього разу, і різницю. Вона ніколи не заважає зберегти чек і ніколи сама не змінює жодну суму — це просто інформація, а не правка.
+- **У чат-ботах** (Telegram, WhatsApp, Slack) — сканування чека через бота додає один рядок до повідомлення-підтвердження, якщо щось знайдено, адже сканування через бота проходить точно ту саму перевірку, що й у застосунку.
+- **На вкладці Аналітика** — рядок «Знайдено X понад ваші звичайні ціни цього року», показується лише тоді, коли справді щось знайшлося.
+- **У ваших сповіщеннях** — кожен відсканований чек зі знахідкою також може з'явитися як окреме сповіщення у стрічці біля дзвіночка, щоб вам не довелося про це пам'ятати.
+
+## Наскільки довіряти знахідці
+
+Товару потрібно щонайменше **дві** попередні покупки в тому самому магазині, перш ніж перевірка взагалі щось про нього скаже — тому на новому акаунті вона деякий час мовчить, а що більше ви скануєте, то точнішою вона стає. Знахідка, заснована рівно на двох попередніх покупках, позначається як «**на основі лише двох попередніх покупок**», щоб ви розуміли, наскільки їй довіряти; три або більше попередніх покупок — уже надійніший сигнал.
+
+## Що порівнюється — і що принципово ні
+
+- Лише **той самий товар у тому самому магазині**. Ціна в одному магазині ніколи не порівнюється з тим самим товаром, купленим деінде.
+- Лише **та сама валюта** — для цього порівняння ніщо ніколи не конвертується.
+- Різні обсяги упаковки вважаються різними товарами: сканер зберігає обсяг у назві товару (наприклад, «Mleko Łaciate 3,2% 1L»), тож пляшка 1 л і 0,5 л відстежуються окремо — саме так, як і має бути.
+- Величезний стрибок ціни навмисно ігнорується, а не повідомляється — набагато ймовірніше, що це інший товар (або неправильно розпізнаний рядок), ніж справжня зміна ціни.
+
+## Річний підсумок
+
+Якщо колись щось знаходили в кількох валютах, вкладка Аналітика показує лише один підсумок — вашу власну валюту, якщо щось знайшлося саме в ній, інакше — найбільшу окрему суму. Суми ніколи не додаються між валютами, адже це означало б конвертацію, якої ця функція принципово ніколи не робить.
+
+## Корисно знати
+
+- Працює автоматично під час кожного сканування чека — з камери, з галереї, з PDF, а також під час сканування через Telegram, WhatsApp чи Slack.
+- Знахідка ніколи не заважає зберегти чек і ніколи не змінює суму за вас.
+- Ціни та різниці показуються у валюті самого чека.
+`,
+    },
   ],
   pl: [
     {
@@ -16828,6 +16975,55 @@ Jest to domyślnie włączone i można to wyłączyć niezależnie w **Ustawieni
 - Rekomendacje opierają się na razie wyłącznie na **Twojej własnej historii zakupów**. Porównywanie cen na podstawie zakupów innych użytkowników w pobliżu, żeby podpowiedzieć najtańszy sklep, jest planowane na przyszłość.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Sprawdzanie cen na paragonie — czy to drożej niż zwykle?`,
+      description: `Zaraz po zeskanowaniu paragonu każda pozycja jest porównywana z medianą ceny, którą wcześniej płaciłeś/płaciłaś za ten sam produkt w tym samym sklepie — żebyś mógł/mogła zauważyć niezadziałającą zniżkę, gdy jeszcze stoisz przy kasie.`,
+      body: `# Sprawdzanie cen na paragonie — czy to drożej niż zwykle?
+
+> Zaraz po zeskanowaniu paragonu każda pozycja jest porównywana z medianą ceny, którą wcześniej płaciłeś/płaciłaś za ten sam produkt w tym samym sklepie — żebyś mógł/mogła zauważyć niezadziałającą zniżkę, gdy jeszcze stoisz przy kasie.
+
+## Czym to jest
+
+Każdy zeskanowany paragon jest po cichu porównywany z Twoją własną historią zakupów: medianą ceny, którą płaciłeś/płaciłaś za dokładnie ten produkt, w dokładnie tym sklepie, w ciągu ostatnich 12 tygodni. Gdy pozycja kosztuje wyraźnie więcej, od razu to widać — gdy jeszcze możesz zapytać przy kasie albo zajrzeć do siatki, a nie ukryte w raporcie, którego nigdy nie otworzysz.
+
+To zwykła arytmetyka na Twoich własnych wcześniejszych paragonach. Nie korzysta z AI i nie ma nic do włączenia ani skonfigurowania.
+
+## Czego ta funkcja nigdy nie powie
+
+Nigdy nie twierdzi, że zostałeś/aś oszukany/a, obciążony/a zbyt wysoką kwotą czy że zniżka została celowo pominięta — paragon niczego takiego nie dowodzi. Jeśli nie ma na nim wydrukowanej linii ze zniżką, nic nie pokazuje, że w ogóle miała się pojawić, więc aplikacja nikogo nie oskarża. Sformułowanie jest zawsze to samo, uczciwe: **to kosztuje więcej niż zwykle — warto sprawdzić paragon**. Zniżka, która po cichu się nie naliczyła, to najczęstsza realna przyczyna, a takie sformułowanie ją ujawnia, nie wskazując palcem na sklep.
+
+To, co pokazuje aplikacja, to to, co **znalazła** powyżej Twoich zwykłych cen — nigdy to, co **zaoszczędziłeś/aś**, bo nie da się wiedzieć, czy faktycznie coś z tym zrobiłeś/aś.
+
+## Gdzie to zobaczysz
+
+- **Zaraz po zeskanowaniu paragonu** — karta w stylu „2 produkty kosztują więcej niż zwykle" z podpisem „Około 6,20 zł więcej niż zwykle płacisz tutaj — warto sprawdzić paragon". Rozwiń ją, żeby zobaczyć każdy oznaczony produkt: ile zwykle płacisz, ile zapłaciłeś/aś tym razem, i różnicę. Nigdy nie blokuje zapisania paragonu i nigdy sama nie zmienia żadnej kwoty — to tylko informacja, nie edycja.
+- **W botach czatu** (Telegram, WhatsApp, Slack) — zeskanowanie paragonu przez bota dodaje jedną dodatkową linijkę do wiadomości potwierdzającej, jeśli coś znaleziono, bo skany przez boty przechodzą dokładnie to samo sprawdzenie co w aplikacji.
+- **Na karcie Analityka** — linijka „Znaleziono X powyżej Twoich zwykłych cen w tym roku", pokazywana tylko wtedy, gdy rzeczywiście coś się znalazło.
+- **W Twoich alertach** — każdy zeskanowany paragon ze znaleziskiem może też pojawić się jako jeden alert w dzwonku, żebyś nie musiał/a o tym pamiętać.
+
+## Ile zaufania dać znalezisku
+
+Produkt potrzebuje co najmniej **dwóch** wcześniejszych zakupów w tym samym sklepie, zanim sprawdzenie w ogóle coś o nim powie — więc na nowym koncie milczy przez jakiś czas, a im więcej skanujesz, tym trafniejsze staje się porównanie. Znalezisko oparte dokładnie na dwóch wcześniejszych zakupach jest oznaczone jako „**na podstawie tylko dwóch wcześniejszych zakupów**", żebyś wiedział/a, ile mu ufać; trzy lub więcej wcześniejszych zakupów to już mocniejszy sygnał.
+
+## Co jest porównywane — a co celowo nie
+
+- Tylko **ten sam produkt w tym samym sklepie**. Cena w jednym sklepie nigdy nie jest porównywana z tym samym produktem kupionym gdzie indziej.
+- Tylko **ta sama waluta** — do tego porównania nic nigdy nie jest przeliczane.
+- Różne rozmiary opakowań liczą się jako różne produkty: skaner zachowuje rozmiar w nazwie produktu (np. „Mleko Łaciate 3,2% 1L"), więc butelka 1 l i 0,5 l są śledzone osobno — dokładnie tak, jak powinno być.
+- Ogromny skok ceny jest celowo pomijany, a nie zgłaszany — o wiele bardziej prawdopodobne, że to inny produkt (albo błędnie odczytana linijka), niż że to prawdziwa zmiana ceny.
+
+## Roczne podsumowanie
+
+Jeśli kiedykolwiek coś znaleziono w więcej niż jednej walucie, karta Analityka pokazuje tylko jedną sumę — Twoją własną walutę, jeśli coś się w niej znalazło, w przeciwnym razie największą pojedynczą kwotę. Kwoty nigdy nie są sumowane między walutami, bo to oznaczałoby przeliczanie, którego ta funkcja celowo nigdy nie robi.
+
+## Warto wiedzieć
+
+- Działa automatycznie przy każdym zeskanowanym paragonie — z aparatu, z galerii, z PDF-u, a także przy skanach przez Telegram, WhatsApp lub Slack.
+- Znalezisko nigdy nie blokuje zapisania paragonu i nigdy samo nie zmienia żadnej kwoty.
+- Ceny i różnice są pokazywane w walucie samego paragonu.
+`,
+    },
   ],
   de: [
     {
@@ -20978,6 +21174,55 @@ Dies ist standardmäßig aktiviert und kann unabhängig unter **Einstellungen �
 - Empfehlungen basieren derzeit ausschließlich auf deiner **eigenen Kaufhistorie**. Der Vergleich von Preisen anhand der Käufe anderer Nutzer in deiner Nähe, um das günstigste Geschäft vorzuschlagen, ist für ein zukünftiges Update geplant.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Kassenbon-Preischeck — kostet das mehr als sonst?`,
+      description: `Direkt nachdem du einen Kassenbon scannst, wird jede Position mit dem Medianpreis verglichen, den du für genau dieses Produkt in genau diesem Geschäft schon einmal bezahlt hast — damit dir ein nicht angewendeter Rabatt auffällt, während du noch an der Kasse stehst.`,
+      body: `# Kassenbon-Preischeck — kostet das mehr als sonst?
+
+> Direkt nachdem du einen Kassenbon scannst, wird jede Position mit dem Medianpreis verglichen, den du für genau dieses Produkt in genau diesem Geschäft schon einmal bezahlt hast — damit dir ein nicht angewendeter Rabatt auffällt, während du noch an der Kasse stehst.
+
+## Was es ist
+
+Jeder gescannte Kassenbon wird still mit deiner eigenen Kaufhistorie abgeglichen: dem Medianpreis, den du für genau dieses Produkt in genau diesem Geschäft in den letzten 12 Wochen bezahlt hast. Kostet eine Position spürbar mehr, wird das sofort angezeigt — während du an der Kasse noch nachfragen oder in die Tüte schauen kannst, statt in einem Bericht zu verschwinden, den du nie öffnen wirst.
+
+Das ist reine Rechenarbeit auf Basis deiner eigenen früheren Belege. Es steckt keine KI dahinter, und es gibt nichts einzuschalten oder einzurichten.
+
+## Was diese Funktion nie behauptet
+
+Sie behauptet nie, dass du übervorteilt oder betrogen wurdest oder dass dir absichtlich ein Rabatt vorenthalten wurde — das kann ein Kassenbon gar nicht beweisen. Steht keine Rabattzeile drauf, zeigt nichts, dass überhaupt einer hätte gelten sollen — die App klagt also niemanden an. Die Formulierung ist immer dieselbe, ehrliche: **teurer als üblich — ein Blick auf den Kassenbon lohnt sich**. Eine Aktion, die still nicht angewendet wurde, ist die häufigste echte Ursache, und diese Formulierung macht genau darauf aufmerksam, ohne mit dem Finger auf das Geschäft zu zeigen.
+
+Was die App dir zeigt, ist, was sie oberhalb deiner üblichen Preise **gefunden** hat — nie, was du **gespart** hast, denn ob du überhaupt etwas damit gemacht hast, lässt sich nicht wissen.
+
+## Wo du es siehst
+
+- **Direkt nach dem Scannen eines Kassenbons** — eine Karte wie „2 Artikel kosten mehr als üblich" mit dem Hinweis „Etwa 6,20 zł mehr, als du hier normalerweise zahlst — ein Blick auf den Kassenbon lohnt sich" darunter. Tippe sie auf, um jedes markierte Produkt zu sehen: was du normalerweise zahlst, was du diesmal gezahlt hast, und die Differenz. Sie hindert dich nie am Speichern des Belegs und ändert nie selbst einen Betrag — es ist eine Information, keine Korrektur.
+- **In den Chat-Bots** (Telegram, WhatsApp, Slack) — das Scannen eines Kassenbons über einen Bot fügt der Bestätigungsnachricht eine zusätzliche Zeile hinzu, wenn etwas gefunden wurde, denn Bot-Scans durchlaufen genau denselben Check wie die App.
+- **Im Tab Analyse** — eine Zeile „Dieses Jahr X über deinen üblichen Preisen gefunden", nur angezeigt, wenn tatsächlich etwas aufgetaucht ist.
+- **In deinen Hinweisen** — jeder gescannte Kassenbon mit einem Fund kann außerdem als ein Hinweis in deiner Glocke erscheinen, damit du nicht selbst daran denken musst.
+
+## Wie viel Vertrauen ein Fund verdient
+
+Ein Produkt braucht mindestens **zwei** frühere Käufe im selben Geschäft, bevor der Check überhaupt etwas dazu sagt — auf einem neuen Konto ist es deshalb erst einmal still, und je mehr du scannst, desto treffsicherer wird es. Ein Fund, der auf genau zwei früheren Käufen beruht, ist mit „**basierend auf nur zwei früheren Käufen**" gekennzeichnet, damit du weißt, wie viel Gewicht du ihm geben solltest; drei oder mehr frühere Käufe sind ein deutlich stärkeres Signal.
+
+## Was verglichen wird — und was ganz bewusst nicht
+
+- Nur **dasselbe Produkt im selben Geschäft**. Ein Preis in einem Laden wird nie mit demselben Produkt verglichen, das woanders gekauft wurde.
+- Nur **dieselbe Währung** — für diesen Vergleich wird nie etwas umgerechnet.
+- Unterschiedliche Packungsgrößen zählen als unterschiedliche Produkte: Der Scanner behält die Größe im Produktnamen (z. B. „Mleko Łaciate 3,2% 1L"), sodass eine 1-l- und eine 0,5-l-Flasche getrennt erfasst werden — genau wie es sein soll.
+- Ein riesiger Preissprung wird bewusst ignoriert statt gemeldet — viel wahrscheinlicher ist ein anderes Produkt (oder eine falsch gelesene Zeile) als eine echte Preisänderung.
+
+## Die Jahressumme
+
+Wurde jemals in mehr als einer Währung etwas gefunden, zeigt der Tab Analyse nur eine Summe — deine eigene Währung, falls dort etwas aufgetaucht ist, sonst den größten Einzelbetrag. Beträge werden nie über Währungen hinweg addiert, denn das würde eine Umrechnung bedeuten, die diese Funktion bewusst nie vornimmt.
+
+## Gut zu wissen
+
+- Funktioniert automatisch bei jedem gescannten Kassenbon — per Kamera, Galerie, PDF und bei Belegen, die über Telegram, WhatsApp oder Slack gescannt werden.
+- Ein Fund blockiert nie das Speichern des Belegs und ändert nie selbst einen Betrag.
+- Preise und Differenzen werden in der Währung des jeweiligen Belegs angezeigt.
+`,
+    },
   ],
   es: [
     {
@@ -25117,6 +25362,55 @@ Esto está activado por defecto y se puede desactivar por separado en **Ajustes 
 - Por ahora, las recomendaciones se basan únicamente en **tu propio historial de compra**. Comparar precios con las compras de otros usuarios cercanos, para sugerir el comercio más barato, está previsto para una futura actualización.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Comprobación de precios del recibo — ¿es más de lo habitual?`,
+      description: `Justo después de escanear un recibo, cada artículo se compara con la mediana de lo que has pagado antes por ese mismo producto en ese mismo comercio — para que puedas detectar un descuento que no se aplicó mientras todavía estás en la caja.`,
+      body: `# Comprobación de precios del recibo — ¿es más de lo habitual?
+
+> Justo después de escanear un recibo, cada artículo se compara con la mediana de lo que has pagado antes por ese mismo producto en ese mismo comercio — para que puedas detectar un descuento que no se aplicó mientras todavía estás en la caja.
+
+## Qué es
+
+Cada recibo que escaneas se compara discretamente con tu propio historial de compras: la mediana de lo que has pagado por ese producto exacto, en ese comercio exacto, durante las últimas 12 semanas. Cuando una línea cuesta notablemente más que eso, se muestra de inmediato — mientras todavía puedes preguntar en caja o mirar en la bolsa, no escondido en un informe que nunca abrirás.
+
+Es pura aritmética sobre tus propios recibos anteriores. No interviene ninguna IA, y no hay nada que activar ni configurar.
+
+## Lo que nunca dice
+
+Nunca afirma que te han cobrado de más, que te han estafado o que te negaron un descuento a propósito — un recibo no puede demostrar nada de eso. Si no aparece impresa una línea de descuento, nada indica que alguna vez debiera haberse aplicado, así que la app nunca acusa. El planteamiento es siempre el mismo, honesto: **esto cuesta más de lo habitual — vale la pena revisar el recibo**. Una promoción que silenciosamente no se aplicó es la causa real más habitual, y esta forma de decirlo lo saca a la luz sin señalar al comercio con el dedo.
+
+Lo que la app te muestra es lo que ha **encontrado** por encima de tus precios habituales — nunca lo que has **ahorrado**, porque no hay forma de saber si realmente actuaste al respecto.
+
+## Dónde lo verás
+
+- **Justo después de escanear un recibo** — una tarjeta como "2 artículos cuestan más de lo habitual", con "Unos 6,20 zł más de lo que sueles pagar aquí — vale la pena revisar el recibo" debajo. Tócala para ver cada producto marcado: lo que sueles pagar, lo que pagaste esta vez y la diferencia. Nunca impide guardar el recibo y nunca cambia ningún importe por ti — es información, no una edición.
+- **En los bots de chat** (Telegram, WhatsApp, Slack) — escanear un recibo a través de un bot añade una línea extra al mensaje de confirmación cuando se encuentra algo, ya que los escaneos por bot pasan exactamente por la misma comprobación que la app.
+- **En la pestaña Analítica** — una línea que dice "Encontrado X por encima de tus precios habituales este año", que solo aparece cuando realmente ha salido algo.
+- **En tus alertas** — cada recibo escaneado con un hallazgo también puede aparecer como una alerta en tu campana, para que no tengas que acordarte de comprobarlo.
+
+## Cuánto fiarte de un hallazgo
+
+Un producto necesita al menos **dos** compras anteriores en el mismo comercio antes de que la comprobación diga algo sobre él, así que se mantiene en silencio durante un tiempo en una cuenta nueva — y se afina cuanto más escaneas. Un hallazgo basado en exactamente dos compras anteriores se etiqueta como "**basado solo en dos compras anteriores**", para que sepas cuánto peso darle; tres compras anteriores o más son una señal más firme.
+
+## Qué compara — y qué no, a propósito
+
+- Solo **el mismo producto en el mismo comercio**. Un precio en una tienda nunca se compara con el mismo producto comprado en otro sitio.
+- Solo **la misma moneda** — nunca se convierte nada para esta comparación.
+- Distintos tamaños de envase cuentan como productos distintos: el escáner conserva el tamaño en el nombre del producto (por ejemplo, "Mleko Łaciate 3,2% 1L"), así que una botella de 1 L y una de 0,5 L se siguen por separado — tal y como debe ser.
+- Un salto de precio enorme se ignora a propósito en lugar de reportarse — es mucho más probable que sea un producto distinto (o una línea mal leída) que un cambio de precio real.
+
+## El total anual
+
+Si alguna vez se ha encontrado algo en más de una moneda, la pestaña Analítica muestra solo un total — tu propia moneda, si algo apareció en ella, o si no, el importe individual más alto. Los importes nunca se suman entre monedas, porque eso implicaría convertir dinero, algo que esta función se cuida mucho de no hacer nunca.
+
+## Es bueno saber
+
+- Funciona automáticamente en cada recibo escaneado — con cámara, desde la galería, en PDF, y en recibos escaneados a través de Telegram, WhatsApp o Slack.
+- Un hallazgo nunca impide guardar el recibo ni cambia ningún importe por ti.
+- Los precios y las diferencias se muestran en la moneda propia del recibo.
+`,
+    },
   ],
   fr: [
     {
@@ -29254,6 +29548,55 @@ C'est activé par défaut et peut être désactivé indépendamment dans **Param
 - Pour l'instant, les recommandations se basent uniquement sur **votre propre historique d'achats**. Comparer les prix à partir des achats d'autres utilisateurs à proximité, pour suggérer le magasin le moins cher, est prévu pour une prochaine mise à jour.
 `,
     },
+    {
+      id: '41-receipt-price-check',
+      title: `Vérification des prix du ticket — est-ce plus cher que d'habitude ?`,
+      description: `Juste après avoir scanné un ticket de caisse, chaque article est comparé au prix médian que vous avez déjà payé pour ce même produit dans ce même magasin — pour repérer une remise non appliquée pendant que vous êtes encore à la caisse.`,
+      body: `# Vérification des prix du ticket — est-ce plus cher que d'habitude ?
+
+> Juste après avoir scanné un ticket de caisse, chaque article est comparé au prix médian que vous avez déjà payé pour ce même produit dans ce même magasin — pour repérer une remise non appliquée pendant que vous êtes encore à la caisse.
+
+## De quoi s'agit-il
+
+Chaque ticket que vous scannez est discrètement comparé à votre propre historique d'achats : le prix médian que vous avez payé pour ce produit précis, dans ce magasin précis, au cours des 12 dernières semaines. Quand une ligne coûte nettement plus cher que ça, c'est signalé immédiatement — pendant que vous pouvez encore demander à la caisse ou regarder dans votre sac, pas enfoui dans un rapport que vous n'ouvrirez jamais.
+
+C'est du simple calcul sur vos propres tickets passés. Aucune IA n'intervient, et il n'y a rien à activer ni à configurer.
+
+## Ce que cette fonctionnalité ne dit jamais
+
+Elle n'affirme jamais que vous avez été surfacturé, arnaqué, ou qu'une remise vous a été délibérément refusée — un ticket ne peut rien prouver de tel. S'il n'y a aucune ligne de remise imprimée, rien n'indique qu'il devait y en avoir une, donc l'application n'accuse jamais. La formulation est toujours la même, honnête : **plus cher que d'habitude — ça vaut la peine de vérifier le ticket**. Une promotion qui ne s'est silencieusement pas appliquée est la cause réelle la plus fréquente, et cette formulation la met en lumière sans pointer du doigt le magasin.
+
+Ce que l'application vous montre, c'est ce qu'elle a **trouvé** au-dessus de vos prix habituels — jamais ce que vous avez **économisé**, car il n'y a aucun moyen de savoir si vous avez réellement agi en conséquence.
+
+## Où vous le verrez
+
+- **Juste après avoir scanné un ticket** — une carte du type « 2 articles coûtent plus cher que d'habitude », avec en dessous « Environ 6,20 zł de plus que ce que vous payez habituellement ici — ça vaut la peine de vérifier le ticket ». Appuyez dessus pour voir chaque produit signalé : ce que vous payez habituellement, ce que vous avez payé cette fois, et la différence. Cela ne vous empêche jamais d'enregistrer le ticket et ne modifie jamais un montant à votre place — c'est une information, pas une correction.
+- **Dans les bots de chat** (Telegram, WhatsApp, Slack) — scanner un ticket via un bot ajoute une ligne supplémentaire au message de confirmation quand quelque chose a été trouvé, car les scans par bot passent exactement par la même vérification que l'application.
+- **Dans l'onglet Analyse** — une ligne indiquant « Trouvé X au-dessus de vos prix habituels cette année », affichée uniquement quand quelque chose a effectivement été trouvé.
+- **Dans vos alertes** — chaque ticket scanné avec une découverte peut aussi apparaître comme une alerte dans votre cloche, pour que vous n'ayez pas à y penser vous-même.
+
+## Quelle confiance accorder à une découverte
+
+Un produit a besoin d'au moins **deux** achats précédents dans le même magasin avant que la vérification ne dise quoi que ce soit à son sujet — elle reste donc silencieuse un moment sur un compte tout neuf, et devient plus précise à mesure que vous scannez. Une découverte basée sur exactement deux achats précédents est signalée comme « **basé sur seulement deux achats précédents** », pour que vous sachiez quel poids lui accorder ; trois achats précédents ou plus constituent un signal plus solide.
+
+## Ce qui est comparé — et ce qui ne l'est délibérément pas
+
+- Seulement **le même produit dans le même magasin**. Un prix dans une boutique n'est jamais comparé au même produit acheté ailleurs.
+- Seulement **la même devise** — rien n'est jamais converti pour cette comparaison.
+- Des tailles de conditionnement différentes comptent comme des produits différents : le scanner conserve la taille dans le nom du produit (par exemple « Mleko Łaciate 3,2 % 1L »), donc une bouteille de 1 L et une de 0,5 L sont suivies séparément — exactement comme il se doit.
+- Un bond de prix énorme est délibérément ignoré plutôt que signalé — il est bien plus probable qu'il s'agisse d'un produit différent (ou d'une ligne mal lue) que d'un véritable changement de prix.
+
+## Le total annuel
+
+Si quelque chose a déjà été trouvé dans plusieurs devises, l'onglet Analyse n'affiche qu'un seul total — votre propre devise, si quelque chose y est apparu, sinon le montant unique le plus élevé. Les montants ne sont jamais additionnés entre devises, car cela impliquerait de convertir de l'argent, ce que cette fonctionnalité se garde bien de jamais faire.
+
+## À noter
+
+- Fonctionne automatiquement sur chaque ticket scanné — par appareil photo, depuis la galerie, en PDF, et sur les reçus scannés via Telegram, WhatsApp ou Slack.
+- Une découverte n'empêche jamais d'enregistrer le ticket et ne modifie jamais un montant à votre place.
+- Les prix et les différences sont affichés dans la devise propre du ticket.
+`,
+    },
   ],
   be: [
     {
@@ -33349,6 +33692,55 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - Шчыт ад інфляцыі **бясплатны** для ўсіх — падпіска Pro не патрэбна.
 - Цэны і эканомія паказваюцца ў вашай **валюце адлюстравання**.
 - Пакуль рэкамендацыі грунтуюцца толькі на **вашай уласнай гісторыі пакупак**. Параўнанне цэн на аснове пакупак іншых карыстальнікаў паблізу, каб падказаць найдзяшоўшую краму, плануецца ў будучым абнаўленні.
+`,
+    },
+    {
+      id: '41-receipt-price-check',
+      title: `Праверка цэн па чэку — ці не даражэй, чым звычайна?`,
+      description: `Адразу пасля сканавання чэка кожная пазіцыя параўноўваецца з медыяннай цаной, якую вы раней плацілі за гэты ж тавар у гэтай жа краме — каб вы маглі заўважыць, што зніжка не спрацавала, пакуль яшчэ стаіце ля касы.`,
+      body: `# Праверка цэн па чэку — ці не даражэй, чым звычайна?
+
+> Адразу пасля сканавання чэка кожная пазіцыя параўноўваецца з медыяннай цаной, якую вы раней плацілі за гэты ж тавар у гэтай жа краме — каб вы маглі заўважыць, што зніжка не спрацавала, пакуль яшчэ стаіце ля касы.
+
+## Што гэта такое
+
+Кожны сасканаваны чэк ціха звяраецца з вашай уласнай гісторыяй пакупак: медыяннай цаной, якую вы плацілі за гэты канкрэтны тавар у гэтай канкрэтнай краме за апошнія 12 тыдняў. Калі пазіцыя каштуе прыкметна даражэй, гэта адразу паказваецца — пакуль вы яшчэ можаце спытаць на касе ці зазірнуць у пакет, а не схавана ў справаздачы, якую вы ніколі не адкрыеце.
+
+Гэта звычайная арыфметыка на аснове вашых уласных папярэдніх чэкаў. ІІ тут не задзейнічаны, і ўключаць ці наладжваць нічога не трэба.
+
+## Чаго гэтая функцыя ніколі не скажа
+
+Яна ніколі не сцвярджае, што вас падманулі, ашукалі ці наўмысна не прымянілі зніжку — чэк не можа гэтага даказаць. Калі на ім не надрукаваны радок са зніжкай, нішто не пацвярджае, што яна ўвогуле мела з'явіцца, таму праграма нікога не абвінавачвае. Фармулёўка заўсёды адна і тая ж, сумленная: **даражэй, чым звычайна — варта праверыць чэк**. Акцыя, якая ціха не прымянілася, — самая частая рэальная прычына, і такая фармулёўка паказвае на яе, не абвінавачваючы краму.
+
+Усё, што паказвае праграма, — гэта тое, што яна **знайшла** звыш вашых звычайных цэн, а не тое, што вы **зэканомілі**: даведацца, ці скарысталіся вы гэтым, немагчыма.
+
+## Дзе вы гэта ўбачыце
+
+- **Адразу пасля сканавання чэка** — картка накшталт «2 тавары каштуюць даражэй, чым звычайна» з подпісам «Прыблізна на 6,20 zł больш, чым вы звычайна плаціце тут — варта праверыць чэк». Разгарніце яе, каб убачыць кожны пазначаны тавар: колькі вы звычайна плаціце, колькі заплацілі гэтым разам, і розніцу. Яна ніколі не перашкаджае захаваць чэк і ніколі сама не змяняе ніякую суму — гэта проста інфармацыя, а не праўка.
+- **У чат-ботах** (Telegram, WhatsApp, Slack) — сканаванне чэка праз бота дадае адзін радок да паведамлення-пацвярджэння, калі нешта знойдзена, бо сканаванне праз бота праходзіць дакладна тую ж праверку, што і ў праграме.
+- **На ўкладцы Аналітыка** — радок «Знойдзена X звыш вашых звычайных цэн у гэтым годзе», паказваецца толькі тады, калі сапраўды нешта знайшлося.
+- **У вашых апавяшчэннях** — кожны сасканаваны чэк са знаходкай таксама можа з'явіцца як асобнае апавяшчэнне ў стужцы каля званочка, каб вам не трэба было пра гэта памятаць.
+
+## Наколькі давяраць знаходцы
+
+Тавару патрэбны прынамсі **дзве** папярэднія пакупкі ў той жа краме, перш чым праверка ўвогуле нешта пра яго скажа — таму на новым уліковым запісе яна нейкі час маўчыць, а чым больш вы скануеце, тым дакладнейшай яна становіцца. Знаходка, заснаваная роўна на дзвюх папярэдніх пакупках, пазначаецца як «**на аснове толькі дзвюх папярэдніх пакупак**», каб вы разумелі, наколькі ёй давяраць; тры ці больш папярэдніх пакупак — ужо больш надзейны сігнал.
+
+## Што параўноўваецца — і што прынцыпова не
+
+- Толькі **той жа тавар у той жа краме**. Цана ў адной краме ніколі не параўноўваецца з тым жа таварам, купленым дзесьці яшчэ.
+- Толькі **тая ж валюта** — для гэтага параўнання нішто ніколі не канвертуецца.
+- Розныя аб'ёмы ўпакоўкі лічацца рознымі таварамі: сканер захоўвае аб'ём у назве тавару (напрыклад, «Mleko Łaciate 3,2% 1L»), таму бутэлька 1 л і 0,5 л адсочваюцца асобна — менавіта так, як і мае быць.
+- Велізарны скачок цаны наўмысна ігнаруецца, а не паведамляецца — значна больш верагодна, што гэта іншы тавар (або няправільна распазнаны радок), чым сапраўдная змена цаны.
+
+## Гадавы вынік
+
+Калі калі-небудзь нешта знаходзілі ў некалькіх валютах, укладка Аналітыка паказвае толькі адзін вынік — вашу ўласную валюту, калі нешта знайшлося менавіта ў ёй, інакш — найбольшую асобную суму. Сумы ніколі не складваюцца паміж валютамі, бо гэта азначала б канвертацыю, якой гэтая функцыя прынцыпова ніколі не робіць.
+
+## Карысна ведаць
+
+- Працуе аўтаматычна пры кожным сканаванні чэка — з камеры, з галерэі, з PDF, а таксама пры сканаванні праз Telegram, WhatsApp ці Slack.
+- Знаходка ніколі не перашкаджае захаваць чэк і ніколі не змяняе суму за вас.
+- Цэны і розніцы паказваюцца ў валюце самога чэка.
 `,
     },
   ],
@@ -37565,6 +37957,55 @@ Dit staat standaard aan en kan apart worden uitgezet bij **Instellingen → Meld
 - Inflatieschild is **gratis** voor iedereen — er is geen Pro-abonnement voor nodig.
 - Prijzen en besparingen worden getoond in je **weergavevaluta**.
 - Aanbevelingen zijn voorlopig alleen gebaseerd op **je eigen aankoopgeschiedenis**. Prijzen vergelijken op basis van aankopen van andere gebruikers in de buurt, om de goedkoopste winkel voor te stellen, staat gepland voor een toekomstige update.
+`,
+    },
+    {
+      id: '41-receipt-price-check',
+      title: `Bonnetje-prijscontrole — is dit duurder dan gebruikelijk?`,
+      description: `Direct nadat je een bonnetje scant, wordt elk artikel vergeleken met de mediaanprijs die je eerder voor datzelfde product in diezelfde winkel hebt betaald — zodat je een gemiste korting kunt opmerken terwijl je nog bij de kassa staat.`,
+      body: `# Bonnetje-prijscontrole — is dit duurder dan gebruikelijk?
+
+> Direct nadat je een bonnetje scant, wordt elk artikel vergeleken met de mediaanprijs die je eerder voor datzelfde product in diezelfde winkel hebt betaald — zodat je een gemiste korting kunt opmerken terwijl je nog bij de kassa staat.
+
+## Wat het is
+
+Elk bonnetje dat je scant, wordt stilletjes vergeleken met je eigen aankoopgeschiedenis: de mediaanprijs die je voor precies dat product, in precies die winkel, de afgelopen 12 weken hebt betaald. Kost een regel merkbaar meer, dan wordt dat meteen getoond — terwijl je nog bij de kassa kunt navragen of in je tas kunt kijken, in plaats van verstopt in een rapport dat je nooit opent.
+
+Het is gewone rekenkunde op basis van je eigen eerdere bonnetjes. Er komt geen AI aan te pas, en er is niets in te schakelen of in te stellen.
+
+## Wat het nooit beweert
+
+Het beweert nooit dat je te veel hebt betaald, bent opgelicht, of dat een korting je opzettelijk is onthouden — een bonnetje kan dat niet bewijzen. Staat er geen kortingsregel op afgedrukt, dan toont niets dat er ooit een had moeten zijn, dus de app beschuldigt nooit iemand. De formulering is altijd dezelfde, eerlijke: **duurder dan gebruikelijk — de moeite waard om het bonnetje te checken**. Een actie die stilletjes niet is toegepast, is de meest voorkomende echte oorzaak, en deze formulering brengt dat aan het licht zonder met een beschuldigende vinger naar de winkel te wijzen.
+
+Wat de app je laat zien, is wat het boven je gebruikelijke prijzen heeft **gevonden** — nooit wat je hebt **bespaard**, want er is geen manier om te weten of je er ook echt iets mee hebt gedaan.
+
+## Waar je het ziet
+
+- **Direct na het scannen van een bonnetje** — een kaart zoals "2 artikelen kosten meer dan gebruikelijk", met daaronder "Ongeveer €6,20 meer dan je hier meestal betaalt — de moeite waard om het bonnetje te checken". Tik hem open om elk gemarkeerd product te zien: wat je meestal betaalt, wat je deze keer betaalde, en het verschil. Het blokkeert nooit het opslaan van het bonnetje en verandert nooit zelf een bedrag — het is informatie, geen correctie.
+- **In de chatbots** (Telegram, WhatsApp, Slack) — een bonnetje scannen via een bot voegt één extra regel toe aan het bevestigingsbericht als er iets is gevonden, want bot-scans doorlopen precies dezelfde controle als de app.
+- **Op het tabblad Analyse** — een regel met "Dit jaar X boven je gebruikelijke prijzen gevonden", alleen getoond als er ook echt iets is opgedoken.
+- **In je meldingen** — elk gescand bonnetje met een bevinding kan ook als één melding in je meldingenbel verschijnen, zodat je er niet zelf aan hoeft te denken.
+
+## Hoeveel vertrouwen je een bevinding mag geven
+
+Een product heeft minstens **twee** eerdere aankopen in dezelfde winkel nodig voordat de controle er iets over zegt — op een gloednieuw account blijft het dus even stil, en hoe meer je scant, hoe scherper het wordt. Een bevinding op basis van precies twee eerdere aankopen krijgt het label "**gebaseerd op slechts twee eerdere aankopen**", zodat je weet hoeveel gewicht je eraan moet geven; drie of meer eerdere aankopen is een steviger signaal.
+
+## Wat er wordt vergeleken — en wat bewust niet
+
+- Alleen **hetzelfde product in dezelfde winkel**. Een prijs in de ene winkel wordt nooit vergeleken met hetzelfde product elders gekocht.
+- Alleen **dezelfde valuta** — er wordt voor deze vergelijking nooit iets omgerekend.
+- Verschillende verpakkingsgroottes tellen als verschillende producten: de scanner houdt de grootte in de productnaam (bijvoorbeeld "Mleko Łaciate 3,2% 1L"), dus een fles van 1 l en van 0,5 l worden apart bijgehouden — precies zoals het hoort.
+- Een enorme prijssprong wordt bewust genegeerd in plaats van gemeld — het is veel waarschijnlijker dat het een ander product is (of een verkeerd gelezen regel) dan een echte prijsverandering.
+
+## Het jaartotaal
+
+Als er ooit in meer dan één valuta iets is gevonden, toont het tabblad Analyse slechts één totaal — je eigen valuta, als daar iets is opgedoken, anders het grootste losse bedrag. Bedragen worden nooit opgeteld over valuta's heen, want dat zou omrekenen betekenen, en dat doet deze functie juist heel bewust nooit.
+
+## Goed om te weten
+
+- Werkt automatisch bij elk gescand bonnetje — via camera, galerij, PDF, en bonnetjes gescand via Telegram, WhatsApp of Slack.
+- Een bevinding blokkeert nooit het opslaan van het bonnetje en verandert nooit zelf een bedrag.
+- Prijzen en verschillen worden getoond in de valuta van het bonnetje zelf.
 `,
     },
   ],

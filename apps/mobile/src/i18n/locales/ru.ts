@@ -795,6 +795,8 @@ export default {
     invitationAccept: 'Принять',
     invitationDecline: 'Отклонить',
     invitationsEmpty: 'Нет ожидающих приглашений',
+    priceCheckTitle: 'Стоит проверить этот чек',
+    priceCheckBody: 'У {{merchant}}: выше обычной цены — товаров: {{count}}, разница: около {{amount}} {{currency}}.',
   },
   whatsappBot: {
     title: 'WhatsApp-бот',
@@ -2355,5 +2357,16 @@ export default {
     distanceKm: '{{km}} км от вас',
     dealsTitle: 'Скидки для вас',
     dealDrop: '-{{pct}}%',
+  },
+  receiptCheck: {
+    cardTitle_one: '{{count}} товар стоит дороже, чем обычно',
+    cardTitle_few: '{{count}} товара стоят дороже, чем обычно',
+    cardTitle_many: '{{count}} товаров стоят дороже, чем обычно',
+    cardSubtitle: 'Примерно на {{amount}} больше, чем вы обычно платите здесь — стоит проверить чек.',
+    usually: 'обычно',
+    youPaid: 'вы заплатили',
+    difference: 'разница',
+    lowConfidence: 'на основе только двух предыдущих покупок',
+    foundTotal: 'Найдено {{amount}} сверх ваших обычных цен в этом году',
   },
 } as const;

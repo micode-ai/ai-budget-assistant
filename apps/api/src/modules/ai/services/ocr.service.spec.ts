@@ -86,6 +86,7 @@ describe('OcrService', () => {
   let prisma: any;
   let configService: any;
   let geocodingMock: { geocode: jest.Mock; geocodeStructured: jest.Mock };
+  let priceHistoryMock: { getProductTrendsFor: jest.Mock };
 
   beforeEach(() => {
     mockChatCreate.mockReset();
@@ -98,7 +99,10 @@ describe('OcrService', () => {
       geocode: jest.fn().mockResolvedValue(null),
       geocodeStructured: jest.fn().mockResolvedValue(null),
     };
-    service = new OcrService(configService, prisma, geocodingMock as any);
+    priceHistoryMock = {
+      getProductTrendsFor: jest.fn().mockResolvedValue([]),
+    };
+    service = new OcrService(configService, prisma, geocodingMock as any, priceHistoryMock as any);
   });
 
   async function runParseWithFixture(overrides: Partial<ParsedReceipt> = {}) {
@@ -158,5 +162,62 @@ describe('OcrService', () => {
       expect(geocodingMock.geocode).not.toHaveBeenCalled();
       expect(result.location).toBeNull();
     });
+  });
+});
+
+describe('OcrService price check', () => {
+  const makeService = (getProductTrendsFor: jest.Mock) => {
+    const service = Object.create(OcrService.prototype) as any;
+    service.priceHistory = { getProductTrendsFor };
+    service.logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
+    return service;
+  };
+
+  const receipt = {
+    merchant: 'Biedronka',
+    currencyCode: 'PLN',
+    date: '2026-07-25',
+    receiptItems: [{ description: 'KAWA', canonicalName: 'Kawa', quantity: 1, unitPrice: 30, totalPrice: 30 }],
+  };
+
+  it('returns findings when a line is above the usual price', async () => {
+    const service = makeService(
+      jest.fn().mockResolvedValue([
+        {
+          canonicalName: 'Kawa',
+          currency: 'PLN',
+          points: [
+            { date: '2026-07-01', price: 20 },
+            { date: '2026-07-08', price: 20 },
+          ],
+        },
+      ]),
+    );
+    const findings = await service.runPriceCheck('acc-1', receipt);
+    expect(findings).toHaveLength(1);
+    expect(findings[0].canonicalName).toBe('Kawa');
+  });
+
+  it('returns an empty array — not undefined — when there is no merchant', async () => {
+    const service = makeService(jest.fn());
+    const findings = await service.runPriceCheck('acc-1', { ...receipt, merchant: null });
+    expect(findings).toEqual([]);
+    expect(service.priceHistory.getProductTrendsFor).not.toHaveBeenCalled();
+  });
+
+  it('is fail-silent: a thrown query still yields an empty array', async () => {
+    const service = makeService(jest.fn().mockRejectedValue(new Error('db down')));
+    await expect(service.runPriceCheck('acc-1', receipt)).resolves.toEqual([]);
+    expect(service.logger.warn).toHaveBeenCalled();
+  });
+
+  it('skips items without a canonical name', async () => {
+    const service = makeService(jest.fn());
+    const findings = await service.runPriceCheck('acc-1', {
+      ...receipt,
+      receiptItems: [{ description: 'COS', quantity: 1, unitPrice: 30, totalPrice: 30 }],
+    });
+    expect(findings).toEqual([]);
+    expect(service.priceHistory.getProductTrendsFor).not.toHaveBeenCalled();
   });
 });

@@ -796,6 +796,8 @@ export default {
     invitationAccept: 'Accept',
     invitationDecline: 'Decline',
     invitationsEmpty: 'No pending invitations',
+    priceCheckTitle: 'Worth checking this receipt',
+    priceCheckBody: 'At {{merchant}}: above the usual price — items: {{count}}, difference: about {{amount}} {{currency}}.',
   },
   whatsappBot: {
     title: 'WhatsApp Bot',
@@ -2361,5 +2363,15 @@ export default {
     distanceKm: '{{km}} km away',
     dealsTitle: 'Deals for you',
     dealDrop: '-{{pct}}%',
+  },
+  receiptCheck: {
+    cardTitle_one: '{{count}} item costs more than usual',
+    cardTitle_other: '{{count}} items cost more than usual',
+    cardSubtitle: 'About {{amount}} more than you usually pay here — worth checking the receipt.',
+    usually: 'usually',
+    youPaid: 'you paid',
+    difference: 'difference',
+    lowConfidence: 'based on only two earlier purchases',
+    foundTotal: 'Found {{amount}} above your usual prices this year',
   },
 } as const;

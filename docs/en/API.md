@@ -2065,11 +2065,31 @@ Content-Type: application/json
     { "description": "Organic Apples", "quantity": 1, "unitPrice": 5.99, "totalPrice": 5.99 },
     { "description": "Almond Milk", "quantity": 1, "unitPrice": 4.49, "totalPrice": 4.49 }
   ],
-  "location": { "lat": 40.7484, "lng": -73.9857, "name": "123 Main St, New York" }
+  "location": { "lat": 40.7484, "lng": -73.9857, "name": "123 Main St, New York" },
+  "priceFindings": []
 }
 ```
 
 **`location`** is the store's geocoded position, derived from the address printed on the receipt, or `null` when the address is missing or cannot be resolved. The server extracts the store (point-of-sale) address — ignoring the seller company's registered office — and geocodes it via OpenStreetMap/Nominatim (structured query, results cached). The client attaches this `location` when creating the expense. Geocoding is fail-silent: a lookup failure never blocks receipt scanning.
+
+**`priceFindings`** (ABA-373, receipt price check) — lines on this receipt that cost measurably more than this user's own **median** price for that exact product at that exact store, over the last 12 weeks. **Always present, never omitted; an empty array means there is nothing to report.** Each entry:
+
+```json
+{
+  "canonicalName": "Mleko Łaciate 3,2% 1L",
+  "merchant": "Biedronka",
+  "currencyCode": "PLN",
+  "paidUnitPrice": 5.49,
+  "baselineUnitPrice": 4.29,
+  "quantity": 2,
+  "changePct": 28.0,
+  "overpaidAmount": 2.40,
+  "source": "personal",
+  "confidence": "high"
+}
+```
+
+`baselineUnitPrice` is the median of the user's own prior purchases (`source: "personal"`; a `"community"` baseline is reserved for a future crowdsourced fallback and is not used yet). `confidence` is `"low"` when the baseline rests on exactly the minimum of 2 prior purchases, `"high"` on 3 or more — the client renders a "based on only two earlier purchases" caveat on `"low"` findings. `overpaidAmount = (paidUnitPrice − baselineUnitPrice) × quantity`. The comparison is **same product, same store, same currency only** — it is never converted or compared across stores or currencies, and a price rise larger than the configured cap is dropped as "probably a different product" rather than reported (see `RECEIPT_CHECK_MAX_RISE_PCT` in [ARCHITECTURE.md](./ARCHITECTURE.md#receipt-price-check)). This is deterministic arithmetic, not an AI call, and it never implies the user was overcharged or that a discount was withheld — only that the line costs more than usual and is worth a look.
 
 ### Geocode Search
 
@@ -4047,10 +4067,11 @@ Proactive anomaly alerts generated automatically on expense write events and aft
 | `price_increase` | A tracked subscription or `recurringId` series charged **>10%** more than before (same currency) |
 | `duplicate_charge` | Same payee (merchant, or description when no merchant) + amount + currency within **±1 calendar day** (same-import-batch pairs excluded) |
 | `recurring_suggestion` | 3+ same-amount charges from an untracked merchant on a regular cadence (monthly 25–35 d / weekly 6–8 d) — possible untracked subscription |
+| `price_overcharge` | A receipt line costs more than this user's own median price for that product at that store (ABA-373, receipt price check). **Feed-only — never pushed** (`skipPush: true`); written only when `RECEIPT_CHECK_ALERTS_ENABLED=true` (see [ARCHITECTURE.md](./ARCHITECTURE.md#receipt-price-check)) |
 
 **Generation:** Alerts are produced **fire-and-forget** on expense create (manual/voice/OCR and all bots, plus mobile sync) and after bank/Wise import commits. Each alert type uses a deterministic `dedupKey` (`@@unique([accountId, dedupKey])`) so the same event never produces duplicate rows.
 
-**Push notifications:** sent via the `spending_anomaly` notification type, gated by the `anomalyAlerts` user preference (`GET/PATCH /users/me/notification-preferences`), capped at 3 pushes per account per calendar day.
+**Push notifications:** sent via the `spending_anomaly` notification type, gated by the `anomalyAlerts` user preference (`GET/PATCH /users/me/notification-preferences`), capped at 3 pushes per account per calendar day. `price_overcharge` is the one exception — it is written to the feed but is never pushed, since a notification arriving after the user has left the store has nothing actionable in it.
 
 ### List Alerts
 
@@ -4099,6 +4120,32 @@ X-Account-Id: <account-uuid>
 | `price_increase` | `merchant`, `oldAmount`, `newAmount`, `currencyCode`, `percent` |
 | `duplicate_charge` | `merchant`, `amount`, `currencyCode`, `otherExpenseId` |
 | `recurring_suggestion` | `merchant`, `amount`, `currencyCode`, `cycle` (`monthly` \| `weekly`) |
+| `price_overcharge` | `merchant`, `currencyCode`, `totalAmount` (string, sum of this receipt's `findings`), `findings` (`ReceiptCheckFinding[]`, see [Scan Receipt](#scan-receipt)) |
+
+### Price Check Summary
+
+How much the receipt price check has **found** above the user's usual prices since the start of the current calendar year. Powers the Analytics tab's "Found X above your usual prices this year" line. Declared before the `:id` routes on this controller (same route-ordering rule as `bulk`/`read-all` elsewhere in this API).
+
+```http
+GET /alerts/price-check-summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK`
+```json
+{
+  "totalsByCurrency": { "PLN": 42.50, "EUR": 6.20 },
+  "alertCount": 5,
+  "since": "2026-01-01"
+}
+```
+
+- **`totalsByCurrency`** — sum of `overpaidAmount` across every non-dismissed `price_overcharge` alert created this year, keyed by currency code. **A per-currency map on purpose, not one number**: this feature never converts between currencies anywhere, so a single blended total would require an FX conversion it deliberately doesn't do — adding a PLN total to an EUR total would misrepresent both.
+- **`alertCount`** — the number of `price_overcharge` alerts counted (one per receipt; a receipt with several flagged lines still counts as one alert, since its `findings` array holds every line).
+- **`since`** — the window start: always `YYYY-01-01` for the current UTC calendar year, never a rolling 365-day window.
+
+Because `price_overcharge` alerts are only ever written when `RECEIPT_CHECK_ALERTS_ENABLED=true` (see [ARCHITECTURE.md](./ARCHITECTURE.md#receipt-price-check)), this endpoint returns `{ "totalsByCurrency": {}, "alertCount": 0, "since": "..." }` wherever that flag is off, even if receipts with findings were scanned — the findings still surface inline on the scan-confirmation screen and in the bot summary line regardless of the flag.
 
 ### Mark All Alerts Read
 
@@ -4184,6 +4231,8 @@ Content-Type: application/json
 ```
 
 **Response** `200 OK` — updated preferences object.
+
+**DTOs** (`packages/shared-types/src/dto/receipt-check.ts`): `ReceiptCheckFinding`, `PriceCheckSummary`.
 
 ---
 

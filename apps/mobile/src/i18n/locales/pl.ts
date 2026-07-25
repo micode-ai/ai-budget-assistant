@@ -795,6 +795,8 @@ export default {
     invitationAccept: 'Akceptuj',
     invitationDecline: 'Odrzuć',
     invitationsEmpty: 'Brak oczekujących zaproszeń',
+    priceCheckTitle: 'Warto sprawdzić ten paragon',
+    priceCheckBody: 'U {{merchant}}: powyżej zwykłej ceny — produkty: {{count}}, różnica: około {{amount}} {{currency}}.',
   },
   whatsappBot: {
     title: 'Bot WhatsApp',
@@ -2355,5 +2357,16 @@ export default {
     distanceKm: '{{km}} km stąd',
     dealsTitle: 'Promocje dla Ciebie',
     dealDrop: '-{{pct}}%',
+  },
+  receiptCheck: {
+    cardTitle_one: '{{count}} produkt kosztuje więcej niż zwykle',
+    cardTitle_few: '{{count}} produkty kosztują więcej niż zwykle',
+    cardTitle_many: '{{count}} produktów kosztuje więcej niż zwykle',
+    cardSubtitle: 'Około {{amount}} więcej niż zwykle płacisz tutaj — warto sprawdzić paragon.',
+    usually: 'zwykle',
+    youPaid: 'zapłacono',
+    difference: 'różnica',
+    lowConfidence: 'na podstawie tylko dwóch wcześniejszych zakupów',
+    foundTotal: 'Znaleziono {{amount}} powyżej Twoich zwykłych cen w tym roku',
   },
 } as const;
