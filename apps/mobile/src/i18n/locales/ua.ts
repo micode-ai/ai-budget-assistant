@@ -1501,6 +1501,11 @@ export default {
     pastTrips: 'Минулі подорожі',
     notifyTripSettleUp: 'Розрахунок за подорож',
     notifyTripSettleUpDesc: 'Нагадування про розрахунок балансів, коли подорож завершується',
+    archiveTrip: 'Архівувати подорож',
+    archiveTripConfirm: 'Архівувати цю подорож? Вона переміститься до Минулих подорожей і стане доступна лише для читання.',
+    archiveTripUnconfirmedWarning:
+      'Є непідтверджені розрахункові платежі. Все одно архівувати?',
+    archiveTripForce: 'Все одно архівувати',
     tripMap: 'Карта подорожі',
   },
   gamification: {

@@ -1498,6 +1498,11 @@ export default {
     pastTrips: 'Eerdere reizen',
     notifyTripSettleUp: 'Reisafrekening',
     notifyTripSettleUpDesc: 'Herinneringen om saldi af te rekenen wanneer een reis eindigt',
+    archiveTrip: 'Reis archiveren',
+    archiveTripConfirm: 'Deze reis archiveren? Deze wordt verplaatst naar Eerdere reizen en wordt alleen-lezen.',
+    archiveTripUnconfirmedWarning:
+      'Er zijn onbevestigde verrekeningsbetalingen. Toch archiveren?',
+    archiveTripForce: 'Toch archiveren',
     tripMap: 'Reiskaart',
   },
   gamification: {

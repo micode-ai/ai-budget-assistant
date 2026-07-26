@@ -1485,6 +1485,11 @@ export default {
     pastTrips: 'Мінулыя паездкі',
     notifyTripSettleUp: 'Разлік па паездцы',
     notifyTripSettleUpDesc: 'Напаміны пра разлік балансаў, калі паездка завяршаецца',
+    archiveTrip: 'Архіваваць паездку',
+    archiveTripConfirm: 'Архіваваць гэтую паездку? Яна пераместіцца ў Мінулыя паездкі і стане даступнай толькі для чытання.',
+    archiveTripUnconfirmedWarning:
+      'Ёсць непацверджаныя разліковыя плацяжы. Усё роўна архіваваць?',
+    archiveTripForce: 'Усё роўна архіваваць',
     tripMap: 'Карта паездкі',
   },
   gamification: {

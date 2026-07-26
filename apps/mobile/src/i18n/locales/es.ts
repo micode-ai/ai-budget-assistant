@@ -1498,6 +1498,11 @@ export default {
     pastTrips: 'Viajes pasados',
     notifyTripSettleUp: 'Liquidación de viaje',
     notifyTripSettleUpDesc: 'Recordatorios para saldar cuentas cuando termina un viaje',
+    archiveTrip: 'Archivar Viaje',
+    archiveTripConfirm: '¿Archivar este viaje? Se moverá a Viajes pasados y quedará de solo lectura.',
+    archiveTripUnconfirmedWarning:
+      'Hay pagos de liquidación sin confirmar. ¿Archivar de todos modos?',
+    archiveTripForce: 'Archivar de todos modos',
     tripMap: 'Mapa del viaje',
   },
   gamification: {

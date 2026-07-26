@@ -1498,6 +1498,11 @@ export default {
     pastTrips: 'Vergangene Reisen',
     notifyTripSettleUp: 'Reise-Abrechnung',
     notifyTripSettleUpDesc: 'Erinnerungen zum Ausgleichen der Salden, wenn eine Reise endet',
+    archiveTrip: 'Reise archivieren',
+    archiveTripConfirm: 'Diese Reise archivieren? Sie wird zu Vergangene Reisen verschoben und schreibgeschützt.',
+    archiveTripUnconfirmedWarning:
+      'Es gibt unbestätigte Ausgleichszahlungen. Trotzdem archivieren?',
+    archiveTripForce: 'Trotzdem archivieren',
     tripMap: 'Reisekarte',
   },
   gamification: {

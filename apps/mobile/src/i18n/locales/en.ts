@@ -1502,8 +1502,6 @@ export default {
     pastTrips: 'Past trips',
     notifyTripSettleUp: 'Trip Settle-Up',
     notifyTripSettleUpDesc: 'Reminders to settle balances when a trip ends',
-    // Task 32 follow-up (final-review-entrypoints-fix): archive-trip entry point had no
-    // UI caller. Added English-only for now — a full 9-locale pass wasn't in scope.
     archiveTrip: 'Archive Trip',
     archiveTripConfirm: 'Archive this trip? It will move to Past trips and become read-only.',
     archiveTripUnconfirmedWarning:

@@ -1498,6 +1498,11 @@ export default {
     pastTrips: 'Voyages passés',
     notifyTripSettleUp: 'Règlement de voyage',
     notifyTripSettleUpDesc: 'Rappels pour régler les soldes à la fin d’un voyage',
+    archiveTrip: 'Archiver le voyage',
+    archiveTripConfirm: 'Archiver ce voyage ? Il sera déplacé vers Voyages passés et deviendra en lecture seule.',
+    archiveTripUnconfirmedWarning:
+      'Il y a des paiements de règlement non confirmés. Archiver quand même ?',
+    archiveTripForce: 'Archiver quand même',
     tripMap: 'Carte du voyage',
   },
   gamification: {

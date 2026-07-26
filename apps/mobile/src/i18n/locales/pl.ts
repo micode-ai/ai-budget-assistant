@@ -1501,6 +1501,11 @@ export default {
     pastTrips: 'Poprzednie podróże',
     notifyTripSettleUp: 'Rozliczenie podróży',
     notifyTripSettleUpDesc: 'Przypomnienia o rozliczeniu sald, gdy podróż się kończy',
+    archiveTrip: 'Archiwizuj podróż',
+    archiveTripConfirm: 'Zarchiwizować tę podróż? Zostanie przeniesiona do Poprzednich podróży i stanie się tylko do odczytu.',
+    archiveTripUnconfirmedWarning:
+      'Są niepotwierdzone rozliczenia płatności. Zarchiwizować mimo to?',
+    archiveTripForce: 'Zarchiwizuj mimo to',
     tripMap: 'Mapa podróży',
   },
   gamification: {
