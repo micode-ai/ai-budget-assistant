@@ -36,3 +36,8 @@ jobs:
       - run: npx turbo lint --filter=@budget/mobile
 
       - run: npx turbo typecheck --filter=@budget/mobile
+
+      # Added after several suites were found to have been dead for months: they
+      # crashed at import on the eager SQLite open and reported "Tests: 0 total",
+      # and nothing noticed because this workflow only linted and typechecked.
+      - run: npx turbo test --filter=@budget/mobile
