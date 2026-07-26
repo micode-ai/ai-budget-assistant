@@ -42,8 +42,26 @@ export const SYMBOL_TO_ISO: Record<string, string> = {
   'RUB': 'RUB',
   'BYN': 'BYN',
   'Br': 'BYN', // Belarusian ruble abbreviation used in some apps
-  // Deliberately NOT mapping CHF, CZK, SEK, NOK, DKK, HUF — unsupported
+  // No unsupported currency is mapped here — this map is symbol → ISO for
+  // currencies the app can actually store. See DETECTABLE_UNSUPPORTED below for
+  // the ones we recognise only in order to say why we are skipping them.
 };
+
+/**
+ * Currencies the app cannot store, but still wants to *recognise* so the skip
+ * is diagnosable: `extractCurrency` reports them with `supported: false`, and
+ * `parseGeneric` logs which currency it refused before returning null. Without
+ * this, an unsupported-currency notification is indistinguishable from one
+ * where no currency was found at all, and a user in e.g. Switzerland just sees
+ * auto-capture silently do nothing.
+ *
+ * Kept to CHF and CZK on purpose. `CURRENCY_RE` is built without word
+ * boundaries, so every token here can also match inside an unrelated word —
+ * and a false match makes a perfectly good capture get skipped. `NOK` would hit
+ * "NOKIA", `SEK` would hit Polish "SEKTOR", and `RON` would hit "ELEKTRONIKA".
+ * Do not extend this list without first anchoring the regex on word boundaries.
+ */
+const DETECTABLE_UNSUPPORTED = ['CHF', 'CZK'];
 
 // ---------------------------------------------------------------------------
 // Amount extraction
@@ -63,7 +81,14 @@ export const SYMBOL_TO_ISO: Record<string, string> = {
  * always positive.
  */
 const AMOUNT_RE =
-  /(?:[-−–]\s*)?((?:\d{1,3}(?:[.\s]\d{3})*|\d+)[,.][\d]{1,2})(?!\d)/g;
+  // The thousands separator class must include the COMMA. Without it "1,234.56"
+  // could not be matched from its first digit — the group stopped at "1", the
+  // comma failed the `[.\s]` class, and the scan resumed mid-number and captured
+  // "234.56". A bank push for 1 234,56 was therefore captured as 234,56.
+  // Both orders stay correct with the comma allowed: "1,234.56" has no
+  // `,\d{1,2}$` tail so it takes the Anglo branch (strip commas → 1234.56), and
+  // "1.234,56" does, so it takes the European branch (strip dots → 1234.56).
+  /(?:[-−–]\s*)?((?:\d{1,3}(?:[.,\s]\d{3})*|\d+)[,.][\d]{1,2})(?!\d)/g;
 
 /**
  * Parse the first plausible monetary amount out of raw notification text.
@@ -108,7 +133,9 @@ export function extractAmount(text: string): number | null {
 
 // Build a sorted list: longer symbols/codes first to avoid partial matches
 // (e.g. "US$" before "$")
-const CURRENCY_TOKENS = Object.keys(SYMBOL_TO_ISO).sort((a, b) => b.length - a.length);
+const CURRENCY_TOKENS = [...Object.keys(SYMBOL_TO_ISO), ...DETECTABLE_UNSUPPORTED].sort(
+  (a, b) => b.length - a.length,
+);
 
 // Regex matching any known currency symbol or ISO code that may appear
 // adjacent to an amount (before or after, with optional whitespace).
