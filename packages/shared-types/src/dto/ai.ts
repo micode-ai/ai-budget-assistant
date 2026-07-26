@@ -112,8 +112,14 @@ export interface CreateDebtActionData {
   dueDate?: string;
 }
 
+// Deliberately empty: get_debt_summary takes no parameters, but this still
+// needs to be its own named member of the ChatActionData union below (not a
+// `type` alias of `{}`/Record<string, never>` — every other member here is an
+// `interface`, and consumers of the public ChatActionData union match on
+// these named members) so the rule is disabled for this one declaration
+// rather than the interface being deleted or reshaped.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface GetDebtSummaryActionData {
-  // No parameters needed
 }
 
 export interface UpdateGoalBalanceActionData {

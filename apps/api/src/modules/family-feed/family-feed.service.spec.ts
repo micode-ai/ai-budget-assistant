@@ -90,8 +90,23 @@ describe('FamilyFeedService', () => {
       ];
       const groups = service.groupEvents(events, 'u1');
       expect(groups).toHaveLength(2);
-      expect(groups[0].type).toBe('purchase_request_created');
+      // No prStatusMap entry for either PR, so groupEvents falls back to the
+      // type derived from the event itself: PURCHASE_REQUEST_CREATED -> PENDING.
+      expect(groups[0].type).toBe('purchase_request_pending');
       expect(groups[0].purchaseRequest?.title).toBe('Nike');
+    });
+
+    it('derives the card type from the live prStatusMap status, not the event type, when both are given', () => {
+      const events = [
+        makeEvent({ id: 'e1', type: 'PURCHASE_REQUEST_CREATED', entityId: 'pr1', metadata: { amount: 450, currency: 'PLN', title: 'Nike' } }),
+      ];
+      // The PR has since been rejected, but its feed event is still the
+      // original PURCHASE_REQUEST_CREATED — the live DB status must win.
+      const prStatusMap = new Map([['pr1', 'REJECTED']]);
+      const groups = service.groupEvents(events, 'u1', prStatusMap);
+      expect(groups).toHaveLength(1);
+      expect(groups[0].type).toBe('purchase_request_rejected');
+      expect(groups[0].purchaseRequest?.status).toBe('REJECTED');
     });
 
     it('sets myReaction to caller emoji when present', () => {

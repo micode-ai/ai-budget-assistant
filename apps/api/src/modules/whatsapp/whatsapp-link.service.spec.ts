@@ -36,6 +36,9 @@ function makePrismaMock() {
       update: jest.fn().mockResolvedValue(undefined),
       deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
     },
+    accountMember: {
+      findUnique: jest.fn(),
+    },
   };
 }
 
@@ -142,8 +145,14 @@ describe('WhatsAppLinkService', () => {
 
   describe('getLink', () => {
     it('filters by isActive: true and includes user + account', async () => {
-      prisma.whatsAppLink.findUnique.mockResolvedValue({} as any);
-      await service.getLink('+1');
+      prisma.whatsAppLink.findUnique.mockResolvedValue({
+        userId: 'user-1',
+        defaultAccountId: 'acct-1',
+      } as any);
+      prisma.accountMember.findUnique.mockResolvedValue({ role: 'editor' });
+
+      const result = await service.getLink('+1');
+
       expect(prisma.whatsAppLink.findUnique).toHaveBeenCalledWith({
         where: { waPhoneNumber: '+1', isActive: true },
         include: {
@@ -151,6 +160,14 @@ describe('WhatsAppLinkService', () => {
           account: { select: { id: true, name: true, currencyCode: true } },
         },
       });
+      // getLink looks up the caller's membership so bots can check the role
+      // before executing a write — assert the lookup args and that the role
+      // actually reaches the returned object.
+      expect(prisma.accountMember.findUnique).toHaveBeenCalledWith({
+        where: { accountId_userId: { accountId: 'acct-1', userId: 'user-1' } },
+        select: { role: true },
+      });
+      expect(result?.accountRole).toBe('editor');
     });
   });
 

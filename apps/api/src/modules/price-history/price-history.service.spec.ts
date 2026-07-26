@@ -32,13 +32,19 @@ describe('PriceHistoryService', () => {
     it('computes weighted index correctly', () => {
       const svc = makeSvc();
       const now = new Date('2026-07-02');
+      // For now=2026-07-02 & period=6m, lastDayOfMonthNBack gives
+      // baseStart=2026-01-31, periodStart=2026-04-30 — so the base window is
+      // [2026-01-31, 2026-04-30) (roughly Feb-Apr) and the current window is
+      // [2026-04-30, 2026-07-02]. Base-period purchases below land inside that
+      // Feb-Apr window (previously they were in early January, before
+      // baseStart, so no product ever had a qualifying base-period row).
       // 3 products, each doubling in price (+100%), weight proportional to base price
       const rows = [
-        { resolvedName: 'Mleko', date: new Date('2026-01-05'), unitPrice: 3.0, merchant: 'Biedronka', currency: 'PLN' },
+        { resolvedName: 'Mleko', date: new Date('2026-02-05'), unitPrice: 3.0, merchant: 'Biedronka', currency: 'PLN' },
         { resolvedName: 'Mleko', date: new Date('2026-07-01'), unitPrice: 6.0, merchant: 'Biedronka', currency: 'PLN' },
-        { resolvedName: 'Chleb', date: new Date('2026-01-10'), unitPrice: 4.0, merchant: 'Lidl', currency: 'PLN' },
+        { resolvedName: 'Chleb', date: new Date('2026-03-10'), unitPrice: 4.0, merchant: 'Lidl', currency: 'PLN' },
         { resolvedName: 'Chleb', date: new Date('2026-07-01'), unitPrice: 8.0, merchant: 'Lidl', currency: 'PLN' },
-        { resolvedName: 'Maslo', date: new Date('2026-01-15'), unitPrice: 7.0, merchant: 'Kaufland', currency: 'PLN' },
+        { resolvedName: 'Maslo', date: new Date('2026-04-15'), unitPrice: 7.0, merchant: 'Kaufland', currency: 'PLN' },
         { resolvedName: 'Maslo', date: new Date('2026-07-01'), unitPrice: 14.0, merchant: 'Kaufland', currency: 'PLN' },
       ];
       const result = (svc as any).computeInflationIndex(rows, '6m', now);
@@ -49,11 +55,15 @@ describe('PriceHistoryService', () => {
     it('excludes products without data in both periods', () => {
       const svc = makeSvc();
       const now = new Date('2026-07-02');
-      // Only 2 qualifying products (Maslo has data only in current period)
+      // Same base/current window as above (base=[2026-01-31, 2026-04-30),
+      // current=[2026-04-30, 2026-07-02]). Mleko/Chleb get a base-period row
+      // inside that window so they qualify; Maslo's only row (2026-06-01)
+      // falls in the current window, so it has no base-period data — only 2
+      // qualifying products, same intent as before.
       const rows = [
-        { resolvedName: 'Mleko', date: new Date('2026-01-05'), unitPrice: 3.0, merchant: 'B', currency: 'PLN' },
+        { resolvedName: 'Mleko', date: new Date('2026-02-05'), unitPrice: 3.0, merchant: 'B', currency: 'PLN' },
         { resolvedName: 'Mleko', date: new Date('2026-07-01'), unitPrice: 6.0, merchant: 'B', currency: 'PLN' },
-        { resolvedName: 'Chleb', date: new Date('2026-01-10'), unitPrice: 4.0, merchant: 'L', currency: 'PLN' },
+        { resolvedName: 'Chleb', date: new Date('2026-03-10'), unitPrice: 4.0, merchant: 'L', currency: 'PLN' },
         { resolvedName: 'Chleb', date: new Date('2026-07-01'), unitPrice: 8.0, merchant: 'L', currency: 'PLN' },
         { resolvedName: 'Maslo', date: new Date('2026-06-01'), unitPrice: 7.0, merchant: 'K', currency: 'PLN' },
       ];

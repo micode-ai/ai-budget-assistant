@@ -1,4 +1,4 @@
-import type { CategoryType, SyncStatus } from './primitives';
+import type { CategoryType } from './primitives';
 
 export interface Category {
   id: string;

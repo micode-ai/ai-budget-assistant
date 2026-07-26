@@ -1,4 +1,4 @@
-import type { EncryptionTier, KeyWrappingMethod } from './primitives';
+import type { KeyWrappingMethod } from './primitives';
 
 export interface EncryptedFieldValue {
   iv: string;
