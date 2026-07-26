@@ -682,7 +682,14 @@ export const useExpenseStore = create<ExpenseState>()(
                 await upsertExpenseItem(item);
               }
             }
-          } catch { /* offline */ }
+          } catch {
+            // Offline, or the expense hasn't reached the server yet — the create
+            // is fire-and-forget, so a just-scanned receipt 404s for a moment.
+            // On web there is no SQLite fallback, so overwriting with [] would
+            // drop the items `addExpense` just put in memory.
+            const cached = get().expenseItems[expenseId];
+            if (cached && cached.length > 0) return cached;
+          }
         }
 
         set((state) => ({

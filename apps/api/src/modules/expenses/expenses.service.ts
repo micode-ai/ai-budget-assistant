@@ -663,19 +663,40 @@ export class ExpensesService {
 
   // ---- Expense Items CRUD ----
 
+  /**
+   * Resolve an expense addressed by either its server PK or its `clientId`
+   * (mobile addresses every row by its LOCAL id) down to the server PK, while
+   * enforcing account ownership. `expense_items.expenseId` is an FK to
+   * `expenses.id`, so item queries MUST use the resolved PK — passing the raw
+   * route param silently returns nothing for every app-created expense.
+   * Mirrors the `OR:[{id},{clientId}]` lookup in `getReceiptImage`.
+   */
+  private async resolveExpensePk(accountId: string, id: string): Promise<string> {
+    const expense = await this.prisma.expense.findFirst({
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id }, { clientId: id }],
+      },
+      select: { id: true },
+    });
+    if (!expense) throw new NotFoundException('Expense not found');
+    return expense.id;
+  }
+
   async getItems(accountId: string, expenseId: string) {
-    await this.findOne(accountId, expenseId);
+    const expensePk = await this.resolveExpensePk(accountId, expenseId);
     return this.prisma.expenseItem.findMany({
-      where: { expenseId, isDeleted: false },
+      where: { expenseId: expensePk, isDeleted: false },
       orderBy: { sortOrder: 'asc' },
     });
   }
 
   async createItem(accountId: string, expenseId: string, dto: CreateExpenseItemDto) {
-    await this.findOne(accountId, expenseId);
+    const expensePk = await this.resolveExpensePk(accountId, expenseId);
     return this.prisma.expenseItem.create({
       data: {
-        expenseId,
+        expenseId: expensePk,
         description: dto.description,
         quantity: dto.quantity ?? 1,
         unitPrice: dto.unitPrice ?? 0,
@@ -686,9 +707,9 @@ export class ExpensesService {
   }
 
   async updateItem(accountId: string, expenseId: string, itemId: string, dto: UpdateExpenseItemDto) {
-    await this.findOne(accountId, expenseId);
+    const expensePk = await this.resolveExpensePk(accountId, expenseId);
     const item = await this.prisma.expenseItem.findFirst({
-      where: { id: itemId, expenseId, isDeleted: false },
+      where: { id: itemId, expenseId: expensePk, isDeleted: false },
     });
     if (!item) throw new NotFoundException('Expense item not found');
 
@@ -706,9 +727,9 @@ export class ExpensesService {
   }
 
   async removeItem(accountId: string, expenseId: string, itemId: string) {
-    await this.findOne(accountId, expenseId);
+    const expensePk = await this.resolveExpensePk(accountId, expenseId);
     const item = await this.prisma.expenseItem.findFirst({
-      where: { id: itemId, expenseId, isDeleted: false },
+      where: { id: itemId, expenseId: expensePk, isDeleted: false },
     });
     if (!item) throw new NotFoundException('Expense item not found');
 

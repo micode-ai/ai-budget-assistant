@@ -422,4 +422,107 @@ describe('create — inflation-shield reconcile hook', () => {
     // its per-account cache must be busted too (final-review fix).
     expect(cacheService.delByPrefix).toHaveBeenCalledWith('chat:get_inflation_shield:a1:');
   });
-});
+});
+// ---------------------------------------------------------------------------
+// Expense items CRUD — clientId resolution (ABA: web receipt items missing)
+//
+// The mobile client addresses an expense by its LOCAL id (= `clientId` on the
+// server), never the server PK. `expense_items.expense_id` is an FK to
+// `expenses.id`, so every item query must run against the RESOLVED server PK.
+// On native this was invisible (items are read from local SQLite first); on
+// web the SQLite layer is a no-op mock, so the API is the only source and the
+// receipt items silently vanished after opening the expense.
+// ---------------------------------------------------------------------------
+
+function makeItemsService(expense: { id: string; clientId: string }) {
+  const prisma: any = {
+    expense: {
+      findFirst: jest.fn().mockResolvedValue({
+        ...expense,
+        user: { name: 'Tester' },
+      }),
+    },
+    expenseItem: {
+      findMany: jest.fn().mockResolvedValue([]),
+      findFirst: jest.fn().mockResolvedValue({ id: 'item-1', expenseId: expense.id }),
+      create: jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ id: 'item-new', ...data })),
+      update: jest.fn().mockResolvedValue({ id: 'item-1' }),
+    },
+  };
+  const cacheService: any = { delByPrefix: jest.fn(), del: jest.fn() };
+  const service = new ExpensesService(
+    prisma,
+    {} as any,
+    cacheService,
+    {} as any,
+    {} as any,
+  );
+  return { service, prisma };
+}
+
+describe('expense items CRUD resolves clientId to the server PK', () => {
+  const expense = { id: 'server-pk-1', clientId: 'local-uuid-1' };
+
+  it('getItems queries expense_items by the server PK when addressed by clientId', async () => {
+    const { service, prisma } = makeItemsService(expense);
+
+    await service.getItems('acc-1', 'local-uuid-1');
+
+    expect(prisma.expenseItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ expenseId: 'server-pk-1', isDeleted: false }),
+      }),
+    );
+  });
+
+  it('createItem writes the server PK into expense_items.expenseId', async () => {
+    const { service, prisma } = makeItemsService(expense);
+
+    await service.createItem('acc-1', 'local-uuid-1', {
+      description: 'Piwo',
+      totalPrice: 9.99,
+    } as any);
+
+    expect(prisma.expenseItem.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ expenseId: 'server-pk-1' }),
+      }),
+    );
+  });
+
+  it('updateItem looks the item up by the server PK', async () => {
+    const { service, prisma } = makeItemsService(expense);
+
+    await service.updateItem('acc-1', 'local-uuid-1', 'item-1', { totalPrice: 5 } as any);
+
+    expect(prisma.expenseItem.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ id: 'item-1', expenseId: 'server-pk-1' }),
+      }),
+    );
+  });
+
+  it('removeItem looks the item up by the server PK', async () => {
+    const { service, prisma } = makeItemsService(expense);
+
+    await service.removeItem('acc-1', 'local-uuid-1', 'item-1');
+
+    expect(prisma.expenseItem.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ id: 'item-1', expenseId: 'server-pk-1' }),
+      }),
+    );
+  });
+
+  it('still works when addressed by the server PK directly', async () => {
+    const { service, prisma } = makeItemsService(expense);
+
+    await service.getItems('acc-1', 'server-pk-1');
+
+    expect(prisma.expenseItem.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ expenseId: 'server-pk-1' }),
+      }),
+    );
+  });
+});
