@@ -5,6 +5,14 @@ jest.mock('../../services/api', () => ({
   api: {
     getMyInvitations: jest.fn(),
     respondToInvitation: jest.fn(),
+    // Not used by these tests, but required for the suite to load at all:
+    // importing invitationStore pulls in accountStore and authStore, which wire
+    // themselves into the API client at MODULE scope (accountStore.ts calls
+    // setAccountIdGetter, authStore.ts calls setLogoutHandler). Omitting either
+    // makes the whole file fail with "is not a function" before a single test
+    // runs.
+    setAccountIdGetter: jest.fn(),
+    setLogoutHandler: jest.fn(),
   },
 }));
 
