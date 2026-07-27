@@ -8,7 +8,15 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
-## 1.15.0 — 2026-07-23
+## 1.15.0 — 2026-07-27
+
+**Receipt splitting**
+- **Split a bill with friends who don't have the app** — assign each line item on a scanned receipt to whoever had it, or just split the whole thing evenly, and the app creates one private link per friend. They open it, see only their own share and a payment button, and tap "I paid"; you confirm once the money actually arrives, which closes the debt (ABA-376).
+- **Get paid back on the spot** — add up to 5 payment methods to your profile. Revolut and PayPal show a ready-to-tap button with the amount already filled in; BLIK shows your number with instructions (it has no cross-bank link); cash and other show whatever details you typed, like an IBAN. Payment details are read the moment a friend opens the link, so updating them later also fixes links you already sent (ABA-376).
+- **Split with the same people again in a tap** — names of friends you've split a bill with before are suggested as chips, so you don't have to retype them (ABA-376).
+
+**Receipt price check**
+- **Flagged before you leave the register** — after you scan a receipt (in the app, or via the Telegram, WhatsApp, or Slack bot), any line that's more expensive than what you usually pay for that product at that store is called out as worth double-checking — right on the scan screen and in the bot's reply (ABA-373).
 
 **Personalization**
 - **Make the app yours with an accent color** — on top of the light/dark theme you can now choose an accent color that recolors buttons, links, the active tab, quick actions and more. Pick from ready-made swatches or dial in any color with a built-in picker (hue, saturation/brightness, or hex). Your choice works in both light and dark mode and is saved to your account, so it follows you across devices (ABA-372).
@@ -17,9 +25,15 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 - **A heads-up before prices rise** — Inflation Shield now proactively notifies you about the single product most worth stocking up on this month, so you can buy ahead before it gets pricier (ABA-371).
 
 **Fixes & reliability**
+- Receipt line items (the individual products on a scanned receipt) now show up correctly in the web app; they could previously appear empty even though the receipt scanned fine (ABA-374).
+- The archive-trip screen's confirmation text is now translated in all 8 non-English languages, instead of showing raw English on a destructive, irreversible action (ABA-375).
+- Bank-notification auto-capture now correctly reads amounts written with a thousands separator (e.g. "1,234.56"), and tells you when it hit a currency it can't handle instead of silently doing nothing.
 - Existing light/dark preferences are preserved on upgrade, and semantic (success/danger) buttons keep their own color regardless of your accent.
 - Polished the accent color picker on Android so its buttons clear the navigation bar and the dimmed background covers the full screen (ABA-372).
 - Various stability improvements.
+
+**Behind the scenes**
+- The mobile app's automated test suite now runs on every change (previously only lint and typecheck did), and several suites that had silently stopped running — or never ran at all — were repaired, along with a stale TypeScript conflict in the admin dashboard.
 
 ---
 
