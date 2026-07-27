@@ -37,6 +37,7 @@ import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { ParticipantChips, type ParticipantChipItem } from '@/components/split/ParticipantChips';
 import { validateSplit, MAX_SPLIT_PARTICIPANTS, type SplitParticipantCandidate } from '@/components/split/validateSplit';
 import { deriveSplitMode } from '@/components/split/deriveSplitMode';
+import { computeParticipantAssignmentSummaries } from '@/components/split/participantAssignmentSummary';
 import { showAlert } from '@/utils/alert';
 import { formatCurrency } from '@budget/shared-utils';
 import type { CreateSplitDto, SplitParticipantState, SplitParticipantStatus } from '@budget/shared-types';
@@ -173,6 +174,21 @@ export default function ReceiptSplitScreen() {
 
   const priceByItemId = useMemo(() => new Map(items.map((i) => [i.id, i.totalPrice])), [items]);
 
+  // Per-chip item count + CLIENT-SIDE subtotal (guidance only — see
+  // ParticipantChips.tsx's docstring). Item mode only: there is no
+  // per-person assignment concept in an equal split.
+  const assignmentSummaries = useMemo(
+    () =>
+      mode === 'items'
+        ? computeParticipantAssignmentSummaries(
+            participants.map((p) => p.id),
+            assignments,
+            priceByItemId,
+          )
+        : undefined,
+    [mode, participants, assignments, priceByItemId],
+  );
+
   function handleConfirmAddPerson() {
     const trimmed = newPersonName.trim();
     if (trimmed) {
@@ -230,11 +246,11 @@ export default function ReceiptSplitScreen() {
   const showOverBillHint =
     validationCandidates.reduce((sum, p) => sum + p.shareAmount, 0) > billTotal + OVER_BILL_TOLERANCE;
   // A named friend with nothing assigned resolves to a 0 share, which the server
-  // rejects outright. Say so, rather than leaving Create disabled with no reason.
-  const showUnassignedHint =
-    mode === 'items' &&
-    validationCandidates.length > 0 &&
-    validationCandidates.some((p) => p.shareAmount <= 0);
+  // rejects outright — that used to only surface as a single generic bottom-of-screen
+  // hint (`assignEveryone`, still in i18n but no longer rendered here). Each
+  // participant chip now shows its own "0 items" warning in-place (see
+  // ParticipantChips.tsx), which is more actionable — it names WHO still needs
+  // something assigned — so the generic hint would just be noise underneath it.
 
   async function handleCreate() {
     if (!expense || !canEdit || !isValid || isEncryptedAccount || isCreating) return;
@@ -520,6 +536,15 @@ export default function ReceiptSplitScreen() {
                     activeOpacity={canEdit ? 0.7 : 1}
                     disabled={!canEdit}
                   >
+                    {/* The thing that IS actually selected is THIS item, not any person
+                        chip — a radio-style icon makes that state unambiguous and gives
+                        it a visual language distinct from the chips' dashed tap-target
+                        outline below (see ParticipantChips.tsx's docstring). */}
+                    <Ionicons
+                      name={selected ? 'radio-button-on' : 'radio-button-off'}
+                      size={16}
+                      color={selected ? theme.colors.primary : theme.colors.textTertiary}
+                    />
                     <Text style={styles.itemDescription} numberOfLines={1}>
                       {item.description}
                     </Text>
@@ -543,9 +568,23 @@ export default function ReceiptSplitScreen() {
         )}
 
         <Text style={styles.sectionTitle}>{t('receiptSplit.title')}</Text>
+
+        {/* Only rendered while an item is genuinely awaiting a person — this
+            instruction, not a filled chip look, is what tells the payer what
+            to do next (see ParticipantChips.tsx's docstring for the full
+            rationale). */}
+        {mode === 'items' && !!selectedItemId && (
+          <View style={styles.tapHintRow}>
+            <Ionicons name="hand-left-outline" size={14} color={theme.colors.primary} />
+            <Text style={styles.tapHintText}>{t('receiptSplit.tapPersonHint')}</Text>
+          </View>
+        )}
+
         <ParticipantChips
           participants={participants}
           awaitingAssignment={mode === 'items' && !!selectedItemId}
+          assignmentSummaries={assignmentSummaries}
+          currencyCode={expense.currencyCode}
           onPress={handleSelectParticipant}
           onRemove={handleRemoveParticipant}
           onAddPress={() => setIsAddingPerson(true)}
@@ -572,9 +611,6 @@ export default function ReceiptSplitScreen() {
 
         {showTooManyHint && <Text style={styles.errorHint}>{t('receiptSplit.tooMany')}</Text>}
         {showOverBillHint && <Text style={styles.errorHint}>{t('receiptSplit.overBill')}</Text>}
-        {showUnassignedHint && (
-          <Text style={styles.errorHint}>{t('receiptSplit.assignEveryone')}</Text>
-        )}
       </KeyboardAwareScreen>
 
       {canEdit && (
@@ -807,6 +843,15 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.primary,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
+  },
+  tapHintRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+  },
+  tapHintText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.primary,
   },
   errorHint: {
     ...theme.textStyles.bodySm,
