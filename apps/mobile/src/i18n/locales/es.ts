@@ -1489,7 +1489,7 @@ export default {
     paymentMethodOther: 'Otro',
     paymentHandle: 'Identificador de pago',
     paymentHandleRequired: 'Introduce un identificador de pago',
-    paymentHandlePlaceholderRevolut: '@tu-usuario-revolut',
+    paymentHandlePlaceholderRevolut: 'tu-usuario-revolut',
     paymentHandlePlaceholderPaypal: 'tu-slug-paypal.me',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'p. ej. efectivo, en persona',

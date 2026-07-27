@@ -1489,7 +1489,7 @@ export default {
     paymentMethodOther: 'Autre',
     paymentHandle: 'Identifiant de paiement',
     paymentHandleRequired: 'Veuillez saisir un identifiant de paiement',
-    paymentHandlePlaceholderRevolut: '@votre-pseudo-revolut',
+    paymentHandlePlaceholderRevolut: 'votre-pseudo-revolut',
     paymentHandlePlaceholderPaypal: 'votre-slug-paypal.me',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'p. ex. espèces, en personne',

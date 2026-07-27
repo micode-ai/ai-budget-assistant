@@ -1489,7 +1489,7 @@ export default {
     paymentMethodOther: 'Andere',
     paymentHandle: 'Zahlungskennung',
     paymentHandleRequired: 'Bitte eine Zahlungskennung eingeben',
-    paymentHandlePlaceholderRevolut: '@dein-revolut-benutzername',
+    paymentHandlePlaceholderRevolut: 'dein-revolut-benutzername',
     paymentHandlePlaceholderPaypal: 'dein-paypal.me-slug',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'z. B. bar, persönlich',

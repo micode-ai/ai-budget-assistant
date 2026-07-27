@@ -1489,7 +1489,7 @@ export default {
     paymentMethodOther: 'Anders',
     paymentHandle: 'Betaalgegevens',
     paymentHandleRequired: 'Voer betaalgegevens in',
-    paymentHandlePlaceholderRevolut: '@jouw-revolut-gebruikersnaam',
+    paymentHandlePlaceholderRevolut: 'jouw-revolut-gebruikersnaam',
     paymentHandlePlaceholderPaypal: 'jouw-paypal.me-slug',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'bijv. contant, persoonlijk',

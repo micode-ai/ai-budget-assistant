@@ -1492,7 +1492,7 @@ export default {
     paymentMethodOther: 'Inne',
     paymentHandle: 'Identyfikator płatności',
     paymentHandleRequired: 'Podaj identyfikator płatności',
-    paymentHandlePlaceholderRevolut: '@twoja-nazwa-revolut',
+    paymentHandlePlaceholderRevolut: 'twoja-nazwa-revolut',
     paymentHandlePlaceholderPaypal: 'twoj-slug-paypal.me',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'np. gotówka, osobiście',

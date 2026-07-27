@@ -12,6 +12,22 @@ export function isValidPaymentHandle(handle: string): boolean {
   return PAYMENT_HANDLE_REGEX.test(handle);
 }
 
+/**
+ * Trims, and drops a single leading `@`.
+ *
+ * Revolut and PayPal both display usernames as `@name`, so that is what a user
+ * types — but the regex above rejects `@`, and it is right to: the guest page
+ * builds `revolut.me/${encodeURIComponent(handle)}`, so a stored `@name` would
+ * produce `revolut.me/%40name`, a dead link. Stripping it is friendlier than
+ * rejecting what the field's own placeholder used to suggest.
+ *
+ * Only the leading one — an `@` anywhere else is genuinely invalid and must
+ * still fail validation rather than be silently mangled.
+ */
+export function normalizePaymentHandle(raw: string): string {
+  return raw.trim().replace(/^@/, '');
+}
+
 export type PaymentConsequence = 'link' | 'manual' | 'none';
 
 /**
@@ -88,15 +104,16 @@ export function isValidPaymentMethodList(rows: PaymentMethodRow[]): boolean {
   const methods = rows.map((r) => r.method);
   if (new Set(methods).size !== methods.length) return false;
   return rows.every((r) => {
-    const trimmed = r.handle.trim();
-    return trimmed.length > 0 && isValidPaymentHandle(trimmed);
+    const normalized = normalizePaymentHandle(r.handle);
+    return normalized.length > 0 && isValidPaymentHandle(normalized);
   });
 }
 
-/** Trims every handle for the wire payload — the same trim `isValidPaymentMethodList`
- * validates against, so what's validated is exactly what gets sent. */
+/** Normalizes every handle for the wire payload — the SAME normalization
+ * `isValidPaymentMethodList` validates against, so what was validated is exactly what
+ * gets sent. Diverging here is how a locally-valid handle still 400s server-side. */
 export function toPaymentMethodPayload(rows: PaymentMethodRow[]): UserPaymentMethod[] {
-  return rows.map((r) => ({ method: r.method, handle: r.handle.trim() }));
+  return rows.map((r) => ({ method: r.method, handle: normalizePaymentHandle(r.handle) }));
 }
 
 /**

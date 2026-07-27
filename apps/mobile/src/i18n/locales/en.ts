@@ -1493,7 +1493,7 @@ export default {
     paymentMethodOther: 'Other',
     paymentHandle: 'Payment Handle',
     paymentHandleRequired: 'Please enter a payment handle',
-    paymentHandlePlaceholderRevolut: '@your-revolut-username',
+    paymentHandlePlaceholderRevolut: 'your-revolut-username',
     paymentHandlePlaceholderPaypal: 'your-paypal.me-slug',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'e.g. cash, in person',

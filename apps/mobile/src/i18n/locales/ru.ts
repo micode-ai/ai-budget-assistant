@@ -1492,7 +1492,7 @@ export default {
     paymentMethodOther: 'Другое',
     paymentHandle: 'Платёжный идентификатор',
     paymentHandleRequired: 'Введите платёжный идентификатор',
-    paymentHandlePlaceholderRevolut: '@ваш-ник-revolut',
+    paymentHandlePlaceholderRevolut: 'ваш-ник-revolut',
     paymentHandlePlaceholderPaypal: 'ваш-slug-paypal.me',
     paymentHandlePlaceholderBlik: '+48 XXX XXX XXX',
     paymentHandlePlaceholderGeneric: 'напр. наличными, лично',

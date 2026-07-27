@@ -20,6 +20,7 @@ import type { Currency, SettleMethod } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import {
   isValidPaymentHandle,
+  normalizePaymentHandle,
   getPaymentConsequence,
   getAvailableMethods,
   isValidPaymentMethodList,
@@ -268,7 +269,9 @@ export default function ProfileSettingsScreen() {
           <Text style={styles.paymentHint}>{t('settings.paymentConsequenceHint')}</Text>
 
           {paymentRows.map((row, index) => {
-            const trimmedHandle = row.handle.trim();
+            // Normalized, not merely trimmed: a user types the `@name` form both
+            // Revolut and PayPal display, and the stored handle must not carry it.
+            const trimmedHandle = normalizePaymentHandle(row.handle);
             const handleMissing = trimmedHandle.length === 0;
             const handleInvalid = !handleMissing && !isValidPaymentHandle(trimmedHandle);
             // Only methods not already claimed by a DIFFERENT row — the picker can

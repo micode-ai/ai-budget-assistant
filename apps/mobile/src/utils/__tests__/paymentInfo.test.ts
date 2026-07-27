@@ -1,5 +1,6 @@
 import {
   isValidPaymentHandle,
+  normalizePaymentHandle,
   getPaymentConsequence,
   applyPaymentInfoPatch,
   getAvailableMethods,
@@ -224,5 +225,43 @@ describe('applyPaymentMethodsPatch', () => {
     await Promise.resolve();
     await Promise.resolve();
     expect(onPersistError).toHaveBeenCalledWith(err);
+  });
+});
+
+describe('normalizePaymentHandle', () => {
+  // Revolut and PayPal both DISPLAY usernames as "@name", so that is what a user
+  // types — but the stored handle must not carry it: the guest page builds
+  // `revolut.me/${encodeURIComponent(handle)}`, so "@name" would yield
+  // revolut.me/%40name, a dead link. The field's placeholder used to suggest the
+  // "@" form, which made following it an instant validation error.
+  it('strips a single leading @', () => {
+    expect(normalizePaymentHandle('@mynick')).toBe('mynick');
+  });
+
+  it('trims surrounding whitespace', () => {
+    expect(normalizePaymentHandle('  mynick  ')).toBe('mynick');
+  });
+
+  it('strips the @ after trimming, not before', () => {
+    expect(normalizePaymentHandle('  @mynick ')).toBe('mynick');
+  });
+
+  it('leaves a handle without @ untouched', () => {
+    expect(normalizePaymentHandle('mynick')).toBe('mynick');
+  });
+
+  it('leaves a BLIK phone number intact, spaces and plus included', () => {
+    expect(normalizePaymentHandle(' +48 123 456 789 ')).toBe('+48 123 456 789');
+  });
+
+  it('strips only the FIRST @ — an inner one is genuinely invalid and must still fail validation', () => {
+    const out = normalizePaymentHandle('@my@nick');
+    expect(out).toBe('my@nick');
+    expect(isValidPaymentHandle(out)).toBe(false);
+  });
+
+  it('makes the placeholder form pass validation, which is the whole point', () => {
+    expect(isValidPaymentHandle('@your-revolut-username')).toBe(false);
+    expect(isValidPaymentHandle(normalizePaymentHandle('@your-revolut-username'))).toBe(true);
   });
 });
