@@ -1,4 +1,15 @@
-import { isValidPaymentHandle, getPaymentConsequence, applyPaymentInfoPatch } from '../paymentInfo';
+import {
+  isValidPaymentHandle,
+  getPaymentConsequence,
+  applyPaymentInfoPatch,
+  getAvailableMethods,
+  isValidPaymentMethodList,
+  toPaymentMethodPayload,
+  seedPaymentMethodRows,
+  applyPaymentMethodsPatch,
+  ALL_PAYMENT_METHODS,
+  type PaymentMethodRow,
+} from '../paymentInfo';
 
 describe('isValidPaymentHandle', () => {
   it('accepts a typical Revolut/PayPal-style handle', () => {
@@ -65,6 +76,151 @@ describe('applyPaymentInfoPatch', () => {
       { paymentMethod: 'blik', paymentHandle: '+48123123123' },
       { applyLocal: jest.fn(), persist, onPersistError },
     );
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(onPersistError).toHaveBeenCalledWith(err);
+  });
+});
+
+describe('getAvailableMethods', () => {
+  it('offers all 5 methods when the list is empty', () => {
+    expect(getAvailableMethods([], 0)).toEqual(ALL_PAYMENT_METHODS);
+  });
+
+  it('excludes a method already claimed by a different row', () => {
+    const rows: PaymentMethodRow[] = [
+      { method: 'revolut', handle: 'a' },
+      { method: 'blik', handle: 'b' },
+    ];
+    // Picking for a brand-new third row — both existing rows are "others".
+    expect(getAvailableMethods(rows, 2)).toEqual(['paypal', 'cash', 'other']);
+  });
+
+  it("keeps a row's OWN current method available when re-opening its own picker", () => {
+    const rows: PaymentMethodRow[] = [
+      { method: 'revolut', handle: 'a' },
+      { method: 'blik', handle: 'b' },
+    ];
+    // Row 0's own method ('revolut') must still be offered to row 0 itself.
+    expect(getAvailableMethods(rows, 0)).toEqual(['revolut', 'paypal', 'cash', 'other']);
+  });
+
+  it('offers nothing once all 5 methods are already used by other rows', () => {
+    const rows: PaymentMethodRow[] = ALL_PAYMENT_METHODS.map((method) => ({ method, handle: 'x' }));
+    expect(getAvailableMethods(rows, 5)).toEqual([]);
+  });
+});
+
+describe('isValidPaymentMethodList', () => {
+  it('accepts an empty list (clears every configured method)', () => {
+    expect(isValidPaymentMethodList([])).toBe(true);
+  });
+
+  it('accepts a full 5-row list with distinct methods and valid handles', () => {
+    const rows: PaymentMethodRow[] = ALL_PAYMENT_METHODS.map((method) => ({ method, handle: 'ok-handle' }));
+    expect(isValidPaymentMethodList(rows)).toBe(true);
+  });
+
+  it('rejects more than 5 rows', () => {
+    const rows: PaymentMethodRow[] = [
+      ...ALL_PAYMENT_METHODS.map((method) => ({ method, handle: 'ok' })),
+      { method: 'revolut', handle: 'dup' },
+    ];
+    expect(isValidPaymentMethodList(rows)).toBe(false);
+  });
+
+  it('rejects a duplicate method across two rows', () => {
+    const rows: PaymentMethodRow[] = [
+      { method: 'revolut', handle: 'a' },
+      { method: 'revolut', handle: 'b' },
+    ];
+    expect(isValidPaymentMethodList(rows)).toBe(false);
+  });
+
+  it('rejects a blank handle (whitespace-only counts as blank)', () => {
+    expect(isValidPaymentMethodList([{ method: 'revolut', handle: '   ' }])).toBe(false);
+  });
+
+  it('rejects a handle that fails isValidPaymentHandle', () => {
+    expect(isValidPaymentMethodList([{ method: 'paypal', handle: 'john@doe' }])).toBe(false);
+  });
+});
+
+describe('toPaymentMethodPayload', () => {
+  it('trims each handle', () => {
+    const rows: PaymentMethodRow[] = [{ method: 'revolut', handle: '  spaced-out  ' }];
+    expect(toPaymentMethodPayload(rows)).toEqual([{ method: 'revolut', handle: 'spaced-out' }]);
+  });
+
+  it('preserves row order', () => {
+    const rows: PaymentMethodRow[] = [
+      { method: 'blik', handle: '+48123123123' },
+      { method: 'revolut', handle: 'rev' },
+    ];
+    expect(toPaymentMethodPayload(rows)).toEqual([
+      { method: 'blik', handle: '+48123123123' },
+      { method: 'revolut', handle: 'rev' },
+    ]);
+  });
+});
+
+describe('seedPaymentMethodRows', () => {
+  it('seeds from paymentMethods when non-empty, ignoring the legacy pair even if also set', () => {
+    const rows = seedPaymentMethodRows({
+      paymentMethods: [{ method: 'blik', handle: 'list-blik' }],
+      paymentMethod: 'revolut',
+      paymentHandle: 'legacy-revolut',
+    });
+    expect(rows).toEqual([{ method: 'blik', handle: 'list-blik' }]);
+  });
+
+  it('falls back to the legacy pair as one pre-filled row when the list is empty', () => {
+    const rows = seedPaymentMethodRows({
+      paymentMethods: [],
+      paymentMethod: 'revolut',
+      paymentHandle: 'legacy-revolut',
+    });
+    expect(rows).toEqual([{ method: 'revolut', handle: 'legacy-revolut' }]);
+  });
+
+  it('returns an empty list when neither the list nor the legacy pair is set', () => {
+    expect(seedPaymentMethodRows({ paymentMethods: [], paymentMethod: null, paymentHandle: null })).toEqual([]);
+  });
+
+  it('returns an empty list for a null/undefined user', () => {
+    expect(seedPaymentMethodRows(null)).toEqual([]);
+    expect(seedPaymentMethodRows(undefined)).toEqual([]);
+  });
+
+  it('does not fall back to a half-set legacy pair (method without handle)', () => {
+    expect(seedPaymentMethodRows({ paymentMethods: [], paymentMethod: 'revolut', paymentHandle: null })).toEqual([]);
+  });
+});
+
+describe('applyPaymentMethodsPatch', () => {
+  it('always applies locally', () => {
+    const applyLocal = jest.fn();
+    const persist = jest.fn().mockResolvedValue(undefined);
+    const methods = [{ method: 'revolut' as const, handle: 'john' }];
+    applyPaymentMethodsPatch(methods, { applyLocal, persist });
+    expect(applyLocal).toHaveBeenCalledWith(methods);
+  });
+
+  it('persists the same list', () => {
+    const persist = jest.fn().mockResolvedValue(undefined);
+    applyPaymentMethodsPatch([], { applyLocal: jest.fn(), persist });
+    expect(persist).toHaveBeenCalledWith([]);
+  });
+
+  it('routes a rejected persist to onPersistError (non-fatal)', async () => {
+    const err = new Error('offline');
+    const persist = jest.fn().mockRejectedValue(err);
+    const onPersistError = jest.fn();
+    applyPaymentMethodsPatch([{ method: 'blik', handle: '+48123123123' }], {
+      applyLocal: jest.fn(),
+      persist,
+      onPersistError,
+    });
     await Promise.resolve();
     await Promise.resolve();
     expect(onPersistError).toHaveBeenCalledWith(err);

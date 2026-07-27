@@ -666,6 +666,7 @@ export default {
     invalidColor: 'Ongeldige kleur',
     paymentConsequenceHint: 'Revolut en PayPal voegen een echte betaalknop toe aan je splitlinks; BLIK toont in plaats daarvan je nummer met instructies (geen interbancaire link); Contant en Anders tonen geen betaalknop.',
     invalidPaymentHandle: 'Ongeldige betaalgegevens',
+    addPaymentMethod: 'Betaalmethode toevoegen',
     about: 'Over',
     version: 'Versie',
     support: 'Ondersteuning & feedback',

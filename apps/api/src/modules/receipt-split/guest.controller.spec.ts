@@ -3,6 +3,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { GuestController } from './guest.controller';
 import { renderGuestPage, GuestPageModel, GuestPaymentStatus } from './helpers/guest-page';
 import { getGuestPageStrings } from './helpers/guest-page-i18n';
+import { UsersService } from '../users/users.service';
 
 /**
  * Fixture for a single, valid, unexpired, non-cancelled split participant with a nested
@@ -297,6 +298,80 @@ describe('GuestController.guestPage — multi-method payment resolution order', 
       member: null,
     });
     const html = await controller.guestPage(participantFixture.token, {} as any);
+    const strings = getGuestPageStrings('en');
+    expect(html).toContain(strings.noPaymentInfo);
+  });
+});
+
+describe('Legacy pair clearing on PUT /users/me/payment-methods closes the stale-fallback trap', () => {
+  /**
+   * Drives BOTH `UsersService` (the write path behind the PUT) and `GuestController`
+   * (the read path the guest page uses) off ONE shared in-memory fake Prisma — proving
+   * the two genuinely interlock, not just that each unit-tests fine in isolation. The
+   * trap this guards: a payer with a legacy `revolut` value adds `blik` to the new
+   * list and saves; later they delete that one entry, leaving the list empty again.
+   * Before `replacePaymentMethods` cleared the legacy pair, the guest page would have
+   * silently fallen back to the old `revolut` handle the payer thought they'd removed.
+   */
+  it('after saving the list (then emptying it) via replacePaymentMethods, the guest page no longer falls back to the old legacy handle', async () => {
+    let legacy = { paymentMethod: 'revolut' as string | null, paymentHandle: 'legacy-revolut' as string | null };
+    let methodRows: { method: string; handle: string; sortOrder: number }[] = [];
+
+    const prisma: any = {
+      user: {
+        update: jest.fn(async ({ data }: any) => {
+          if ('paymentMethod' in data) legacy.paymentMethod = data.paymentMethod;
+          if ('paymentHandle' in data) legacy.paymentHandle = data.paymentHandle;
+          return { ...legacy };
+        }),
+        findUnique: jest.fn(async () => ({
+          name: 'Payer Pat',
+          paymentMethod: legacy.paymentMethod,
+          paymentHandle: legacy.paymentHandle,
+          paymentMethods: [...methodRows]
+            .sort((a, b) => a.sortOrder - b.sortOrder)
+            .map(({ method, handle }) => ({ method, handle })),
+        })),
+      },
+      userPaymentMethod: {
+        deleteMany: jest.fn(async () => {
+          methodRows = [];
+          return { count: 0 };
+        }),
+        createMany: jest.fn(async ({ data }: any) => {
+          methodRows = data;
+          return { count: data.length };
+        }),
+        findMany: jest.fn(async () =>
+          [...methodRows].sort((a, b) => a.sortOrder - b.sortOrder).map(({ method, handle }) => ({ method, handle })),
+        ),
+      },
+      $transaction: jest.fn(async (ops: Promise<unknown>[]) => Promise.all(ops)),
+      receiptSplitParticipant: {
+        findUnique: jest.fn().mockResolvedValue(participantFixture),
+        update: jest.fn().mockResolvedValue(undefined),
+      },
+      accountMember: { findFirst: jest.fn().mockResolvedValue(null) },
+    };
+
+    const usersService = new UsersService(prisma);
+    const notificationsService: any = { sendToUser: jest.fn().mockResolvedValue(true) };
+    const guestController = new GuestController(prisma, notificationsService);
+
+    // Step 1: the payer adds 'blik' via the new list editor and saves — the legacy
+    // pair is cleared server-side as part of this same call.
+    await usersService.replacePaymentMethods('payer-1', [{ method: 'blik' as any, handle: 'blik-x' }]);
+    expect(legacy).toEqual({ paymentMethod: null, paymentHandle: null });
+
+    // Step 2: later, they remove that one entry — the list is empty again.
+    await usersService.replacePaymentMethods('payer-1', []);
+
+    const html = await guestController.guestPage(participantFixture.token, {} as any);
+
+    // Must NOT resurrect the old 'legacy-revolut' handle — before the fix, an empty
+    // paymentMethods list with a still-populated legacy pair would have fallen back to it.
+    expect(html).not.toContain('legacy-revolut');
+    expect(html).not.toContain('revolut.me');
     const strings = getGuestPageStrings('en');
     expect(html).toContain(strings.noPaymentInfo);
   });

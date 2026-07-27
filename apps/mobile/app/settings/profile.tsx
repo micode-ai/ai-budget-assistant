@@ -18,11 +18,17 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import type { Currency, SettleMethod } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
-import { isValidPaymentHandle, getPaymentConsequence } from '@/utils/paymentInfo';
+import {
+  isValidPaymentHandle,
+  getPaymentConsequence,
+  getAvailableMethods,
+  isValidPaymentMethodList,
+  toPaymentMethodPayload,
+  seedPaymentMethodRows,
+  type PaymentMethodRow,
+} from '@/utils/paymentInfo';
 
 const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
-
-const PAYMENT_METHODS: SettleMethod[] = ['revolut', 'paypal', 'blik', 'cash', 'other'];
 
 const PAYMENT_METHOD_LABEL_KEYS: Record<SettleMethod, string> = {
   revolut: 'trip.paymentMethodRevolut',
@@ -74,7 +80,7 @@ export default function ProfileSettingsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { user, updateUser, setCurrency, setPaymentInfo } = useAuthStore();
+  const { user, updateUser, setCurrency, setPaymentMethods } = useAuthStore();
 
   const [name, setName] = useState(user?.name || '');
   const [editingName, setEditingName] = useState(false);
@@ -82,14 +88,11 @@ export default function ProfileSettingsScreen() {
   const [timezonePicker, setTimezonePicker] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState('');
 
-  const [paymentMethod, setPaymentMethod] = useState<SettleMethod | null>(user?.paymentMethod ?? null);
-  const [paymentHandle, setPaymentHandle] = useState(user?.paymentHandle ?? '');
+  // Seeded once on mount: `paymentMethods` when non-empty, else the legacy single
+  // pair as one pre-filled row, else empty — see seedPaymentMethodRows. Local edits
+  // (add/remove/change) accumulate here until Save persists the whole list in one call.
+  const [paymentRows, setPaymentRows] = useState<PaymentMethodRow[]>(() => seedPaymentMethodRows(user));
   const [paymentSaveAttempted, setPaymentSaveAttempted] = useState(false);
-
-  const trimmedPaymentHandle = paymentHandle.trim();
-  const paymentHandleMissing = paymentMethod !== null && trimmedPaymentHandle.length === 0;
-  const paymentHandleInvalid = trimmedPaymentHandle.length > 0 && !isValidPaymentHandle(trimmedPaymentHandle);
-  const canSavePayment = paymentMethod !== null && !paymentHandleMissing && !paymentHandleInvalid;
 
   const filteredTimezones = useMemo(() => {
     if (!timezoneSearch.trim()) return TIMEZONES;
@@ -137,24 +140,32 @@ export default function ProfileSettingsScreen() {
     }
   };
 
-  const handleSelectPaymentMethod = (method: SettleMethod) => {
-    setPaymentMethod(method);
+  const handleAddPaymentRow = () => {
+    const available = getAvailableMethods(paymentRows, paymentRows.length);
+    if (available.length === 0) return; // all 5 methods already used — Add is hidden in this case anyway
+    setPaymentRows((prev) => [...prev, { method: available[0], handle: '' }]);
     setPaymentSaveAttempted(false);
   };
 
-  const handleClearPaymentMethod = () => {
-    setPaymentMethod(null);
-    setPaymentHandle('');
+  const handleRemovePaymentRow = (index: number) => {
+    setPaymentRows((prev) => prev.filter((_, i) => i !== index));
     setPaymentSaveAttempted(false);
-    // A clear is a decisive action (mirrors the accent-color "Reset to
-    // default" precedent) — persist immediately rather than waiting for Save.
-    setPaymentInfo(null, null);
   };
 
-  const handleSavePaymentInfo = () => {
+  const handleSelectRowMethod = (index: number, method: SettleMethod) => {
+    setPaymentRows((prev) => prev.map((row, i) => (i === index ? { ...row, method } : row)));
+    setPaymentSaveAttempted(false);
+  };
+
+  const handleChangeRowHandle = (index: number, handle: string) => {
+    setPaymentRows((prev) => prev.map((row, i) => (i === index ? { ...row, handle } : row)));
+    setPaymentSaveAttempted(false);
+  };
+
+  const handleSavePaymentMethods = () => {
     setPaymentSaveAttempted(true);
-    if (!canSavePayment) return;
-    setPaymentInfo(paymentMethod, trimmedPaymentHandle);
+    if (!isValidPaymentMethodList(paymentRows)) return;
+    setPaymentMethods(toPaymentMethodPayload(paymentRows));
     showAlert(t('common.success'), t('trip.paymentInfoSaved'));
   };
 
@@ -249,61 +260,79 @@ export default function ProfileSettingsScreen() {
           ))}
         </View>
 
-        {/* Payment details for split links */}
+        {/* Payment details for split links — up to 5 methods, one handle each */}
         <Text style={[styles.fieldLabelOutside, { marginTop: theme.spacing[6] }]}>
           {t('trip.paymentSettingsTitle')}
         </Text>
         <View style={styles.card}>
           <Text style={styles.paymentHint}>{t('settings.paymentConsequenceHint')}</Text>
 
-          <Text style={[styles.fieldLabel, { marginTop: theme.spacing[3] }]}>{t('trip.paymentMethod')}</Text>
-          <View style={[styles.chipRow, { marginTop: theme.spacing[2] }]}>
-            {PAYMENT_METHODS.map((m) => (
-              <TouchableOpacity
-                key={m}
-                style={[styles.chip, paymentMethod === m && styles.chipActive]}
-                onPress={() => handleSelectPaymentMethod(m)}
-              >
-                <Text style={[styles.chipText, paymentMethod === m && styles.chipTextActive]}>
-                  {t(PAYMENT_METHOD_LABEL_KEYS[m])}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          {paymentRows.map((row, index) => {
+            const trimmedHandle = row.handle.trim();
+            const handleMissing = trimmedHandle.length === 0;
+            const handleInvalid = !handleMissing && !isValidPaymentHandle(trimmedHandle);
+            // Only methods not already claimed by a DIFFERENT row — the picker can
+            // never let this row duplicate a sibling's method (the DB's
+            // @@unique([userId, method]) would 400 on save otherwise).
+            const availableForRow = getAvailableMethods(paymentRows, index);
 
-          {paymentMethod !== null && (
-            <>
-              <View style={styles.paymentHandleHeaderRow}>
-                <Text style={styles.fieldLabel}>{t('trip.paymentHandle')}</Text>
-                <TouchableOpacity onPress={handleClearPaymentMethod}>
-                  <Text style={styles.clearLink}>{t('common.clear')}</Text>
-                </TouchableOpacity>
+            return (
+              <View key={index} style={styles.paymentRow}>
+                {index > 0 && <View style={styles.divider} />}
+                <View style={styles.paymentHandleHeaderRow}>
+                  <Text style={styles.fieldLabel}>{t('trip.paymentMethod')}</Text>
+                  <TouchableOpacity onPress={() => handleRemovePaymentRow(index)}>
+                    <Ionicons name="trash-outline" size={18} color={theme.colors.textTertiary} />
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.chipRow, { marginTop: theme.spacing[2] }]}>
+                  {availableForRow.map((m) => (
+                    <TouchableOpacity
+                      key={m}
+                      style={[styles.chip, row.method === m && styles.chipActive]}
+                      onPress={() => handleSelectRowMethod(index, m)}
+                    >
+                      <Text style={[styles.chipText, row.method === m && styles.chipTextActive]}>
+                        {t(PAYMENT_METHOD_LABEL_KEYS[m])}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <Text style={[styles.fieldLabel, { marginTop: theme.spacing[3] }]}>{t('trip.paymentHandle')}</Text>
+                <TextInput
+                  style={styles.paymentInput}
+                  value={row.handle}
+                  onChangeText={(v) => handleChangeRowHandle(index, v)}
+                  placeholder={t(PAYMENT_HANDLE_PLACEHOLDER_KEYS[row.method])}
+                  placeholderTextColor={theme.colors.textTertiary}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType={getPaymentConsequence(row.method) === 'manual' ? 'phone-pad' : 'default'}
+                />
+                {getPaymentConsequence(row.method) === 'manual' && (
+                  <Text style={styles.paymentSubHint}>{t('trip.paymentHandleBlikHint')}</Text>
+                )}
+                {paymentSaveAttempted && handleInvalid && (
+                  <Text style={styles.invalid}>{t('settings.invalidPaymentHandle')}</Text>
+                )}
+                {paymentSaveAttempted && handleMissing && (
+                  <Text style={styles.invalid}>{t('trip.paymentHandleRequired')}</Text>
+                )}
               </View>
-              <TextInput
-                style={styles.paymentInput}
-                value={paymentHandle}
-                onChangeText={(v) => { setPaymentHandle(v); setPaymentSaveAttempted(false); }}
-                placeholder={t(PAYMENT_HANDLE_PLACEHOLDER_KEYS[paymentMethod])}
-                placeholderTextColor={theme.colors.textTertiary}
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType={getPaymentConsequence(paymentMethod) === 'manual' ? 'phone-pad' : 'default'}
-              />
-              {getPaymentConsequence(paymentMethod) === 'manual' && (
-                <Text style={styles.paymentSubHint}>{t('trip.paymentHandleBlikHint')}</Text>
-              )}
-              {paymentSaveAttempted && paymentHandleInvalid && (
-                <Text style={styles.invalid}>{t('settings.invalidPaymentHandle')}</Text>
-              )}
-              {paymentSaveAttempted && paymentHandleMissing && !paymentHandleInvalid && (
-                <Text style={styles.invalid}>{t('trip.paymentHandleRequired')}</Text>
-              )}
+            );
+          })}
 
-              <TouchableOpacity style={styles.saveButtonFull} onPress={handleSavePaymentInfo}>
-                <Text style={styles.saveButtonFullText}>{t('common.save')}</Text>
-              </TouchableOpacity>
-            </>
+          {paymentRows.length < 5 && (
+            <TouchableOpacity style={styles.addPaymentMethodRow} onPress={handleAddPaymentRow}>
+              <Ionicons name="add-circle-outline" size={18} color={theme.colors.primary} />
+              <Text style={styles.addPaymentMethodText}>{t('settings.addPaymentMethod')}</Text>
+            </TouchableOpacity>
           )}
+
+          <TouchableOpacity style={styles.saveButtonFull} onPress={handleSavePaymentMethods}>
+            <Text style={styles.saveButtonFullText}>{t('common.save')}</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Subscription */}
@@ -508,15 +537,24 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
   },
+  paymentRow: {
+    marginTop: theme.spacing[4],
+  },
   paymentHandleHeaderRow: {
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
     alignItems: 'center' as const,
-    marginTop: theme.spacing[3],
   },
-  clearLink: {
+  addPaymentMethodRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+  },
+  addPaymentMethodText: {
     ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textSecondary,
+    color: theme.colors.primary,
   },
   paymentInput: {
     backgroundColor: theme.colors.surfaceSecondary,

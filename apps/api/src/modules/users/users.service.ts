@@ -226,12 +226,17 @@ export class UsersService {
 
   /**
    * Replaces the caller's whole payment-method list in one atomic delete-then-create
-   * transaction. `sortOrder` is assigned from array position (the order the caller sent).
-   * Nothing here can hit a unique-constraint P2002 in the normal case — the DTO already
-   * rejects a duplicate `method` before this runs — so there is no catch-and-recover to
-   * place outside the transaction (a poisoned-tx P2002 recovery only matters when a
-   * genuine race is possible, e.g. two concurrent replace calls; each such call fully
-   * replaces the set under its own transaction, so the last writer wins cleanly).
+   * transaction, AND clears the legacy `paymentMethod`/`paymentHandle` pair in the same
+   * transaction. Once a caller has saved through this endpoint (even to an empty list),
+   * the list is the sole source of truth — leaving the legacy pair populated would let
+   * `GuestController.resolvePayer`'s fallback silently resurrect a value the user
+   * believes they removed (e.g. they add `blik` to the list, later delete it, and the
+   * guest page falls back to a stale legacy `revolut` they never touched here). Nothing
+   * here can hit a unique-constraint P2002 in the normal case — the DTO already rejects
+   * a duplicate `method` before this runs — so there is no catch-and-recover to place
+   * outside the transaction (a poisoned-tx P2002 recovery only matters when a genuine
+   * race is possible, e.g. two concurrent replace calls; each such call fully replaces
+   * the set under its own transaction, so the last writer wins cleanly).
    */
   async replacePaymentMethods(
     userId: string,
@@ -246,6 +251,10 @@ export class UsersService {
           handle: m.handle,
           sortOrder: index,
         })),
+      }),
+      this.prisma.user.update({
+        where: { id: userId },
+        data: { paymentMethod: null, paymentHandle: null },
       }),
     ]);
     return this.getPaymentMethods(userId);

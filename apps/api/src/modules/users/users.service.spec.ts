@@ -107,6 +107,10 @@ describe('UsersService.search', () => {
 function makeInMemoryPaymentMethodPrisma() {
   let rows: { id: string; userId: string; method: string; handle: string; sortOrder: number }[] = [];
   let nextId = 0;
+  // Legacy single-pair state per userId, so a test can seed a pre-existing legacy
+  // value and then assert `replacePaymentMethods` actually nulled it out — a real
+  // mutation, not just a call-recording spy.
+  const legacyPairs = new Map<string, { paymentMethod: string | null; paymentHandle: string | null }>();
 
   const userPaymentMethod = {
     deleteMany: jest.fn(async ({ where }: { where: { userId: string } }) => {
@@ -128,10 +132,26 @@ function makeInMemoryPaymentMethodPrisma() {
     ),
   };
 
+  const user = {
+    update: jest.fn(async ({ where, data }: { where: { id: string }; data: { paymentMethod?: string | null; paymentHandle?: string | null } }) => {
+      const current = legacyPairs.get(where.id) ?? { paymentMethod: null, paymentHandle: null };
+      const next = {
+        paymentMethod: 'paymentMethod' in data ? data.paymentMethod ?? null : current.paymentMethod,
+        paymentHandle: 'paymentHandle' in data ? data.paymentHandle ?? null : current.paymentHandle,
+      };
+      legacyPairs.set(where.id, next);
+      return { id: where.id, ...next };
+    }),
+  };
+
   return {
     userPaymentMethod,
+    user,
     $transaction: jest.fn(async (ops: Promise<unknown>[]) => Promise.all(ops)),
     _rows: () => rows,
+    _seedLegacyPair: (userId: string, pair: { paymentMethod: string | null; paymentHandle: string | null }) =>
+      legacyPairs.set(userId, pair),
+    _legacyPair: (userId: string) => legacyPairs.get(userId) ?? { paymentMethod: null, paymentHandle: null },
   };
 }
 
@@ -195,5 +215,56 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
 
     expect(await service.getPaymentMethods('user-1')).toEqual([]);
     expect(await service.getPaymentMethods('user-2')).toEqual([{ method: 'paypal', handle: 'user2-pp' }]);
+  });
+
+  it('clears the legacy paymentMethod/paymentHandle pair in the same transaction — closes the stale-fallback trap', async () => {
+    const prisma = makeInMemoryPaymentMethodPrisma();
+    prisma._seedLegacyPair('user-1', { paymentMethod: 'revolut', paymentHandle: 'legacy-revolut' });
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    const service = module.get(UsersService);
+
+    await service.replacePaymentMethods('user-1', [{ method: 'blik' as any, handle: 'blik-x' }]);
+
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-1' },
+      data: { paymentMethod: null, paymentHandle: null },
+    });
+    expect(prisma._legacyPair('user-1')).toEqual({ paymentMethod: null, paymentHandle: null });
+    // The clear runs even though the new list is non-empty — the legacy pair must not
+    // survive ANY save through this endpoint, not just a save-to-empty.
+    expect(await service.getPaymentMethods('user-1')).toEqual([{ method: 'blik', handle: 'blik-x' }]);
+  });
+
+  it('the legacy-pair clear and the list write are in the SAME $transaction call (atomic, not a second write)', async () => {
+    const prisma = makeInMemoryPaymentMethodPrisma();
+    prisma._seedLegacyPair('user-1', { paymentMethod: 'revolut', paymentHandle: 'legacy-revolut' });
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    const service = module.get(UsersService);
+
+    await service.replacePaymentMethods('user-1', []);
+
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.$transaction.mock.calls[0][0]).toHaveLength(3);
+  });
+
+  it("clearing to an empty list also clears the legacy pair — a later delete of the last row can't resurrect it", async () => {
+    const prisma = makeInMemoryPaymentMethodPrisma();
+    prisma._seedLegacyPair('user-1', { paymentMethod: 'revolut', paymentHandle: 'legacy-revolut' });
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    const service = module.get(UsersService);
+
+    // Step 1: user adds one entry via the new list editor and saves.
+    await service.replacePaymentMethods('user-1', [{ method: 'blik' as any, handle: 'blik-x' }]);
+    // Step 2: later, they remove it — the list is now empty.
+    await service.replacePaymentMethods('user-1', []);
+
+    expect(await service.getPaymentMethods('user-1')).toEqual([]);
+    expect(prisma._legacyPair('user-1')).toEqual({ paymentMethod: null, paymentHandle: null });
   });
 });

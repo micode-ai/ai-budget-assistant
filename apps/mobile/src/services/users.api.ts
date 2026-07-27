@@ -1,4 +1,4 @@
-import type { TelegramLinkCodeResponse, TelegramLinkStatusResponse, SettleMethod } from '@budget/shared-types';
+import type { TelegramLinkCodeResponse, TelegramLinkStatusResponse, SettleMethod, UserPaymentMethod } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const usersApi = {
@@ -16,6 +16,15 @@ export const usersApi = {
     return httpClient.request<any>('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(data),
+    });
+  },
+
+  /** Replaces the caller's whole payment-method list in one call (up to 5 entries).
+   * Server clears the legacy paymentMethod/paymentHandle pair in the same transaction. */
+  replacePaymentMethods(paymentMethods: UserPaymentMethod[]) {
+    return httpClient.request<{ paymentMethods: UserPaymentMethod[] }>('/users/me/payment-methods', {
+      method: 'PUT',
+      body: JSON.stringify({ paymentMethods }),
     });
   },
 
