@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
+import { recordParticipants } from './receiptSplitParticipantIndex';
 import type { CreateSplitDto, SplitStateResponse } from '@budget/shared-types';
 
 /**
@@ -45,6 +46,11 @@ export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
       // navigated away from must not clobber whatever is current.
       if (get().expenseId !== expenseId) return;
       set({ split, isLoading: false });
+      // Re-affirms the participantId -> expenseId index (see
+      // receiptSplitParticipantIndex.ts) every time the payer views this
+      // split — defense in depth alongside create() below, e.g. after a
+      // reinstall that lost the locally-recorded mapping.
+      recordParticipants(expenseId, split.participants.map((p) => p.id));
     } catch (e: unknown) {
       if (get().expenseId !== expenseId) return;
 
@@ -68,6 +74,11 @@ export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
   create: async (expenseId, dto) => {
     const split = await api.createSplit(expenseId, dto);
     set({ expenseId, split });
+    // The payer's device is the only place a participant id is ever minted
+    // from — recording the mapping here means the `split_payment_claimed`
+    // push (which carries only `participantId`, no `expenseId`) can resolve
+    // its deep-link target long before any guest could claim their share.
+    recordParticipants(expenseId, split.participants.map((p) => p.id));
   },
 
   confirm: async (expenseId, participantId) => {

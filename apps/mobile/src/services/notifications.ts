@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import { router } from 'expo-router';
 import { api } from './api';
 import { useAccountStore } from '@/stores/accountStore';
+import { resolveExpenseIdForParticipant } from '@/stores/receiptSplitParticipantIndex';
 
 // Configure foreground notification display (native only — expo-notifications
 // throws "not available on web" for the handler API).
@@ -145,6 +146,22 @@ export function handleNotificationResponse(
     case 'inflation_shield':
       router.push('/inflation-shield' as any);
       break;
+    case 'split_payment_claimed': {
+      // The push payload carries only `participantId` (see
+      // guest.controller.ts) — no `expenseId` to deep-link with directly.
+      // Resolve it from the local index recorded by receiptSplitStore's
+      // create()/load() (see receiptSplitParticipantIndex.ts). If unknown
+      // (different device, reinstall), fall back to the expenses list rather
+      // than doing nothing — same precedent as the 'shared_expense' case.
+      const participantId = data.participantId ? String(data.participantId) : undefined;
+      const expenseId = participantId ? resolveExpenseIdForParticipant(participantId) : undefined;
+      if (expenseId) {
+        router.push({ pathname: '/expense/split', params: { expenseId } } as any);
+      } else {
+        router.push('/(tabs)/expenses');
+      }
+      break;
+    }
     default:
       break;
   }

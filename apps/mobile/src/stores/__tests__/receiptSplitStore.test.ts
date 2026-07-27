@@ -7,14 +7,20 @@ jest.mock('@/services/api', () => ({
   },
 }));
 
+jest.mock('../receiptSplitParticipantIndex', () => ({
+  recordParticipants: jest.fn(),
+}));
+
 import { useReceiptSplitStore } from '@/stores/receiptSplitStore';
 import { api } from '@/services/api';
+import { recordParticipants } from '../receiptSplitParticipantIndex';
 import type { SplitStateResponse } from '@budget/shared-types';
 
 const createSplit = jest.mocked(api.createSplit);
 const getSplit = jest.mocked(api.getSplit);
 const confirmSplitParticipant = jest.mocked(api.confirmSplitParticipant);
 const cancelSplit = jest.mocked(api.cancelSplit);
+const recordParticipantsMock = recordParticipants as jest.Mock;
 
 function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateResponse {
   return {
@@ -52,6 +58,10 @@ describe('receiptSplitStore', () => {
       expect(getSplit).toHaveBeenCalledWith('expense-1');
       expect(useReceiptSplitStore.getState().split).toEqual(split);
       expect(useReceiptSplitStore.getState().isLoading).toBe(false);
+      // Re-affirms the participantId -> expenseId index (see
+      // receiptSplitParticipantIndex.ts) so a later `split_payment_claimed`
+      // push can resolve its deep-link target.
+      expect(recordParticipantsMock).toHaveBeenCalledWith('expense-1', ['p1', 'p2']);
     });
 
     it('on a 404 (no split exists yet) sets split to null without warning', async () => {
@@ -126,6 +136,11 @@ describe('receiptSplitStore', () => {
         mode: 'equal',
       });
       expect(useReceiptSplitStore.getState().split).toEqual(split);
+      // The payer's device is the only place these participant ids are ever
+      // minted from — recording them here is what lets the
+      // `split_payment_claimed` push (participantId only, no expenseId)
+      // resolve its deep-link target.
+      expect(recordParticipantsMock).toHaveBeenCalledWith('expense-1', ['p1', 'p2']);
     });
   });
 
