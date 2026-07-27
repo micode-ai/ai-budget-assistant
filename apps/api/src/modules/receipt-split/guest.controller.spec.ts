@@ -755,3 +755,213 @@ describe('buildGuestPayLink — resolving a method+handle pair to a link or an i
     });
   });
 });
+
+/**
+ * Defect 1 (the pay button overflowing its card): the stylesheet had zero box-sizing
+ * declarations, so `.btn{width:100%;padding:14px}` rendered its own 28px of horizontal
+ * padding ON TOP of the card's content width. Fixed at the root with a universal
+ * `*,*::before,*::after{box-sizing:border-box}` reset rather than shaving `.btn`'s own
+ * padding, so the next full-width control added to this page inherits the fix for free.
+ */
+describe('renderGuestPage — box-sizing reset keeps the pay button inside its card', () => {
+  const strings = getGuestPageStrings('en');
+
+  it('the stylesheet carries a universal box-sizing:border-box reset, applied before every other rule', () => {
+    const html = renderGuestPage(
+      {
+        guestName: 'Alice',
+        merchant: 'Test Diner',
+        dateLabel: '2026-07-20',
+        payerName: 'Payer Pat',
+        amount: 25.5,
+        currencyCode: 'USD',
+        items: null,
+        status: 'sent',
+        paymentMethods: [],
+        postPaidAction: '/s/token/paid',
+      },
+      strings,
+    );
+    // Must be the FIRST rule in the <style> block — CSS is source-order-dependent, and a
+    // reset placed after `.btn` would not apply to anything declared above it.
+    const styleOpen = html.indexOf('<style>');
+    const resetIndex = html.indexOf('*,*::before,*::after{box-sizing:border-box}');
+    const btnRuleIndex = html.indexOf('.btn{');
+    expect(styleOpen).toBeGreaterThan(-1);
+    expect(resetIndex).toBe(styleOpen + '<style>'.length);
+    expect(resetIndex).toBeLessThan(btnRuleIndex);
+  });
+});
+
+/**
+ * Defect 2 (you cannot tell which button pays where): the pay button used to render
+ * `strings.payButton(model.payerName)` regardless of method — "Pay Mikhail" for BOTH a
+ * Revolut block and a PayPal block, with no way to tell which one led where. Each block
+ * now names its own destination method, and shows the raw handle right underneath.
+ */
+describe('renderGuestPage — each pay block now names its destination method and shows the handle', () => {
+  const strings = getGuestPageStrings('en');
+  const baseModel: GuestPageModel = {
+    guestName: 'Alice',
+    merchant: 'Test Diner',
+    dateLabel: '2026-07-20',
+    payerName: 'Payer Pat',
+    amount: 25.5,
+    currencyCode: 'USD',
+    items: null,
+    status: 'sent',
+    paymentMethods: [],
+    postPaidAction: '/s/token/paid',
+  };
+
+  it('a Revolut block\'s button says "Pay via Revolut" and shows the raw handle in a muted line underneath', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle?amount=25.5&currency=USD', instructions: null, handle: 'rev-handle' },
+        ],
+      },
+      strings,
+    );
+    expect(html).toContain('>Pay via Revolut<');
+    expect(html).toContain('<div class="pay-handle">rev-handle</div>');
+    // The button no longer repeats the payer's name — that's already stated in
+    // `paidByLine` above it on the card.
+    expect(html).not.toContain('>Pay Payer Pat<');
+  });
+
+  it('a PayPal block\'s button says "Pay via PayPal"', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [{ method: 'paypal', paymentLink: 'https://paypal.me/pp-handle/25.50', instructions: null, handle: 'pp-handle' }],
+      },
+      strings,
+    );
+    expect(html).toContain('>Pay via PayPal<');
+    expect(html).toContain('<div class="pay-handle">pp-handle</div>');
+  });
+
+  it('two link-capable methods together produce two DISTINGUISHABLE button labels, not two identical ones', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', instructions: null, handle: 'rev-handle' },
+          { method: 'paypal', paymentLink: 'https://paypal.me/pp-handle/25.50', instructions: null, handle: 'pp-handle' },
+        ],
+      },
+      strings,
+    );
+    expect(html).toContain('>Pay via Revolut<');
+    expect(html).toContain('>Pay via PayPal<');
+    expect(html).toContain('<div class="pay-handle">rev-handle</div>');
+    expect(html).toContain('<div class="pay-handle">pp-handle</div>');
+    // Genuinely different copy — not the old behavior where both buttons carried the
+    // exact same "Pay «Payer»" text regardless of which method they were for.
+    expect(strings.payButton(strings.methodLabel('revolut'))).not.toBe(strings.payButton(strings.methodLabel('paypal')));
+  });
+
+  it('escapes an HTML-bearing handle in both the button link (href) and the new handle line underneath it', () => {
+    const evilHandle = '<script>alert(1)</script>';
+    const { paymentLink } = buildGuestPayLink('revolut', evilHandle, 25.5, 'USD');
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'revolut', paymentLink, instructions: null, handle: evilHandle }] },
+      strings,
+    );
+    expect(html).not.toContain('<script>alert(1)</script>');
+    // The href carries the URL-encoded form of the handle (already neutralized by
+    // encodeURIComponent, then escaped again as defense in depth); the muted handle line
+    // carries the escaped RAW form. Neither ever emits a live tag.
+    expect(html).toContain(encodeURIComponent(evilHandle));
+    expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+  });
+
+  it('escapes the button href itself as defense-in-depth, independent of the URL-encoding buildGuestPayLink already applies to a real handle', () => {
+    // A real revolut/paypal handle is always run through encodeURIComponent first (see
+    // buildGuestPayLink), which already neutralizes `<`/`>`/`"` — so this exercises the
+    // renderer's OWN `escapeHtml(block.paymentLink)` call directly with a raw malicious
+    // link, independent of whether any real upstream caller could ever produce one.
+    const maliciousLink = 'https://revolut.me/x"><script>alert(1)</script>';
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'revolut', paymentLink: maliciousLink, instructions: null, handle: 'rev-handle' }] },
+      strings,
+    );
+    expect(html).not.toContain('<script>alert(1)</script>');
+    expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+  });
+
+  it('gives blik/other/cash instruction boxes the same method-name heading, so all three read apart at a glance', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [
+          { method: 'blik', paymentLink: null, instructions: 'blik', handle: 'blik-handle' },
+          { method: 'other', paymentLink: null, instructions: 'other', handle: 'PL61 1090 1014 0000 0712 1981 2874' },
+          { method: 'cash', paymentLink: null, instructions: 'cash', handle: 'in person, at the office' },
+        ],
+      },
+      strings,
+    );
+    expect(html).toContain('<div class="pay-method">BLIK</div>');
+    expect(html).toContain('<div class="pay-method">Other</div>');
+    expect(html).toContain('<div class="pay-method">Cash</div>');
+  });
+
+  it('does not render the destination markup at all once claimed or settled (no duplicate-payment invitation)', () => {
+    // Note: like `.btn-primary`/`.blik-box` before it (see the comment on the older
+    // "pay affordance suppressed once claimed" describe block above), the static
+    // `<style>` block unconditionally defines the `.pay-handle`/`.pay-method` CSS rules
+    // regardless of whether either element is ever rendered — so assertions match the
+    // actual element markup (`<div class="pay-handle">`), not the bare class-name
+    // substring, which the stylesheet itself would always satisfy.
+    for (const status of ['claimed', 'settled'] as GuestPaymentStatus[]) {
+      const html = renderGuestPage(
+        {
+          ...baseModel,
+          status,
+          paymentMethods: [
+            { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', instructions: null, handle: 'rev-handle' },
+            { method: 'blik', paymentLink: null, instructions: 'blik', handle: 'blik-handle' },
+          ],
+        },
+        strings,
+      );
+      expect(html).not.toContain('<div class="pay-handle">');
+      expect(html).not.toContain('<div class="pay-method">');
+      expect(html).not.toContain('rev-handle');
+      expect(html).not.toContain('blik-handle');
+      expect(html).not.toContain('Pay via Revolut');
+    }
+  });
+});
+
+/**
+ * Every one of the 9 supported languages must actually carry the two new strings
+ * (`methodLabel`, and the re-shaped `payButton`) — a locale silently falling back to
+ * `undefined`/a crash would only surface in production for that one language's guests.
+ */
+describe('guest-page-i18n — methodLabel + payButton exist and produce real text in all 9 languages', () => {
+  const langs = ['en', 'ru', 'ua', 'pl', 'es', 'fr', 'de', 'be', 'nl'];
+
+  it.each(langs)('lang "%s" resolves a non-empty method label and pay-button string for every method', (lang) => {
+    const strings = getGuestPageStrings(lang);
+    for (const method of ['revolut', 'paypal', 'blik', 'cash', 'other']) {
+      const label = strings.methodLabel(method);
+      expect(typeof label).toBe('string');
+      expect(label.length).toBeGreaterThan(0);
+      const button = strings.payButton(label);
+      expect(typeof button).toBe('string');
+      expect(button.length).toBeGreaterThan(0);
+      expect(button).toContain(label);
+    }
+  });
+
+  it.each(langs)('lang "%s" keeps the brand names Revolut/PayPal/BLIK untranslated, matching the untranslated pay-link shapes', (lang) => {
+    const strings = getGuestPageStrings(lang);
+    expect(strings.methodLabel('revolut')).toBe('Revolut');
+    expect(strings.methodLabel('paypal')).toBe('PayPal');
+    expect(strings.methodLabel('blik')).toBe('BLIK');
+  });
+});

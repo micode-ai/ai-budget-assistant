@@ -21,7 +21,30 @@ function pageShell(title: string, bodyHtml: string): string {
   // URL. Without this, tapping any outbound link (pay button, store badges)
   // would leak the full guest URL — including the token — to that link's
   // destination via the Referer header.
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:480px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}</style></head><body>${bodyHtml}</body></html>`;
+  //
+  // `*,*::before,*::after{box-sizing:border-box}` — the root fix for the pay button
+  // overflowing its card: `.btn{width:100%;padding:14px}` sits inside `.card{padding:20px}`
+  // inside `body{max-width:...px;padding:0 20px}`; under the default content-box every one
+  // of those paddings is ADDED on top of the element's own width, so `.btn`'s rendered
+  // width was the card's content width PLUS the button's own 28px of horizontal padding —
+  // hanging outside the card on every phone. Border-box folds an element's own padding (and
+  // border) back inside its declared width, so `width:100%` means "100% of the parent, pad
+  // included" everywhere on this page — the next full-width control added here inherits the
+  // fix for free instead of needing its own padding shaved by hand.
+  //
+  // Checked every other fixed-width/padded rule in this sheet against the reset:
+  // `.card`, `.blik-box`, `.items li`, `.footer` — none of them declare a `width` or
+  // `max-width`, only `padding`/`margin`, and an auto-width block's rendered size is
+  // identical under either box model (padding is already accounted for inside the
+  // available space the browser hands it) — so none of them shift by a pixel.
+  // `body` is the one exception: it combines `max-width` WITH `padding`, so border-box
+  // would have shrunk its usable content width by the 40px of padding on wide (desktop
+  // preview) viewports — invisible on an actual phone, where the viewport is already
+  // under 480px and `max-width` never binds, but a real behavior change on a wide screen.
+  // Compensated by widening `max-width` to 520px (480 + the 2×20px padding) so the
+  // rendered content width stays exactly 480px either way — pixel-identical to before on
+  // every viewport, not just phones.
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}</style></head><body>${bodyHtml}</body></html>`;
 }
 
 /**
@@ -169,22 +192,35 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
     // cash, each with its own copy — see `GuestPayInstructionKind`). A method that
     // resolves to neither (no handle set, or unrecognized) renders nothing and is
     // silently skipped — it is not "no payment info" on its own, only when EVERY method
-    // skips does that line appear. Each button reuses the same `payButton` text
-    // regardless of method; distinguishing multiple buttons by brand name would need new
-    // copy, which is out of scope here (i18n is owned elsewhere).
+    // skips does that line appear.
+    //
+    // Every block states its own destination method (`strings.methodLabel`, keyed off
+    // the enum-constrained `block.method` — a Prisma `SettleMethod` column, never
+    // attacker-controlled free text the way `handle` is) so two link-capable methods
+    // (e.g. Revolut + PayPal) render as two visually DIFFERENT buttons instead of two
+    // identical "Pay «Payer»" buttons with no way to tell which account either one
+    // pays into. The button no longer repeats the payer's name — `paidByLine` above it
+    // on the card already says who paid — which also removes the trailing-space
+    // artifact a bare `payButton(payerName)` produced whenever the payer's stored name
+    // itself had trailing whitespace. Each button is immediately followed by its own
+    // handle in a muted line right underneath, so the guest sees exactly which account
+    // a tap will pay before tapping. Instruction-only blocks (blik/other/cash) get the
+    // same method-name heading above their existing copy, so all three read apart at a
+    // glance too when more than one is offered together.
     const blocks = model.paymentMethods
       .map((block) => {
+        const methodLabel = strings.methodLabel(block.method);
         if (block.paymentLink) {
-          return `<a class="btn btn-primary" rel="noreferrer" href="${escapeHtml(block.paymentLink)}">${escapeHtml(strings.payButton(model.payerName))}</a>`;
+          return `<a class="btn btn-primary" rel="noreferrer" href="${escapeHtml(block.paymentLink)}">${escapeHtml(strings.payButton(methodLabel))}</a><div class="pay-handle">${escapeHtml(block.handle)}</div>`;
         }
         if (block.instructions === 'blik') {
-          return `<div class="blik-box">${escapeHtml(strings.blikInstructions(block.handle))}</div>`;
+          return `<div class="blik-box"><div class="pay-method">${escapeHtml(methodLabel)}</div><div>${escapeHtml(strings.blikInstructions(block.handle))}</div></div>`;
         }
         if (block.instructions === 'other') {
-          return `<div class="blik-box">${escapeHtml(strings.otherInstructions(block.handle))}</div>`;
+          return `<div class="blik-box"><div class="pay-method">${escapeHtml(methodLabel)}</div><div>${escapeHtml(strings.otherInstructions(block.handle))}</div></div>`;
         }
         if (block.instructions === 'cash') {
-          return `<div class="blik-box">${escapeHtml(strings.cashInstructions(block.handle))}</div>`;
+          return `<div class="blik-box"><div class="pay-method">${escapeHtml(methodLabel)}</div><div>${escapeHtml(strings.cashInstructions(block.handle))}</div></div>`;
         }
         return null;
       })

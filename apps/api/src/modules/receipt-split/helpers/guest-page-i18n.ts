@@ -24,7 +24,22 @@ export interface GuestPageStrings {
   /** Shown instead of an item list when the split has no assigned line items (equal mode). */
   equalShareNote: string;
   yourShareLabel: string;
-  payButton: (payerName: string) => string;
+  /** Button label naming the destination METHOD (e.g. "Pay via Revolut"), not the payer —
+   * the payer is already named in `paidByLine` above it on the card, so repeating it here
+   * would be redundant AND (with two link-capable methods configured) produce two
+   * identical-looking buttons with no way to tell which account either one pays into.
+   * Takes an already-resolved display name from `methodLabel` below, never a raw
+   * method key. */
+  payButton: (methodLabel: string) => string;
+  /** Short display name for one payment method — shown as the button label (via
+   * `payButton`) for link-capable methods, and as a heading above the instructions box
+   * for blik/other/cash, so multiple methods offered together read apart at a glance.
+   * Brand names (Revolut/PayPal/BLIK) are identical across every language by design —
+   * same precedent as the untranslated URL shapes in `buildGuestPayLink` — only 'cash'
+   * and 'other' are actually translated. Called with the enum-constrained `method` key
+   * from `GuestPaymentMethodBlock.method` (a Prisma `SettleMethod` column) — never
+   * free text a user typed, unlike `handle`. */
+  methodLabel: (method: string) => string;
   blikInstructions: (handle: string) => string;
   /** 'other' method — the handle is free-text payment details the payer typed (an
    * IBAN, a card number, a note). */
@@ -55,7 +70,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Your items',
     equalShareNote: 'Your equal share of the bill',
     yourShareLabel: 'Your share',
-    payButton: (payerName) => `Pay ${payerName}`,
+    payButton: (methodLabel) => `Pay via ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Cash', other: 'Other' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Send a BLIK payment to ${handle}`,
     otherInstructions: (handle) => `Pay directly: ${handle}`,
     cashInstructions: (handle) => `Settle in cash: ${handle}`,
@@ -77,7 +94,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Ваши позиции',
     equalShareNote: 'Ваша равная часть счёта',
     yourShareLabel: 'Ваша часть',
-    payButton: (payerName) => `Оплатить ${payerName}`,
+    payButton: (methodLabel) => `Оплатить через ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Наличные', other: 'Другое' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Отправьте платёж BLIK на ${handle}`,
     otherInstructions: (handle) => `Оплатите напрямую: ${handle}`,
     cashInstructions: (handle) => `Рассчитайтесь наличными: ${handle}`,
@@ -99,7 +118,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Ваші позиції',
     equalShareNote: 'Ваша рівна частка рахунку',
     yourShareLabel: 'Ваша частка',
-    payButton: (payerName) => `Оплатити ${payerName}`,
+    payButton: (methodLabel) => `Оплатити через ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Готівка', other: 'Інше' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Надішліть платіж BLIK на ${handle}`,
     otherInstructions: (handle) => `Оплатіть напряму: ${handle}`,
     cashInstructions: (handle) => `Розрахуйтеся готівкою: ${handle}`,
@@ -121,7 +142,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Twoje pozycje',
     equalShareNote: 'Twoja równa część rachunku',
     yourShareLabel: 'Twoja część',
-    payButton: (payerName) => `Zapłać ${payerName}`,
+    payButton: (methodLabel) => `Zapłać przez ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Gotówka', other: 'Inne' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Wyślij płatność BLIK na ${handle}`,
     otherInstructions: (handle) => `Zapłać bezpośrednio: ${handle}`,
     cashInstructions: (handle) => `Rozlicz się gotówką: ${handle}`,
@@ -143,7 +166,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Tus artículos',
     equalShareNote: 'Tu parte igual de la cuenta',
     yourShareLabel: 'Tu parte',
-    payButton: (payerName) => `Pagar a ${payerName}`,
+    payButton: (methodLabel) => `Pagar con ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Efectivo', other: 'Otro' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Envía un pago BLIK a ${handle}`,
     otherInstructions: (handle) => `Paga directamente: ${handle}`,
     cashInstructions: (handle) => `Paga en efectivo: ${handle}`,
@@ -165,7 +190,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Tes articles',
     equalShareNote: "Ta part égale de l'addition",
     yourShareLabel: 'Ta part',
-    payButton: (payerName) => `Payer ${payerName}`,
+    payButton: (methodLabel) => `Payer via ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Espèces', other: 'Autre' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Envoie un paiement BLIK à ${handle}`,
     otherInstructions: (handle) => `Paie directement : ${handle}`,
     cashInstructions: (handle) => `Règle en espèces : ${handle}`,
@@ -187,7 +214,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Deine Artikel',
     equalShareNote: 'Dein gleicher Anteil der Rechnung',
     yourShareLabel: 'Dein Anteil',
-    payButton: (payerName) => `${payerName} bezahlen`,
+    payButton: (methodLabel) => `Mit ${methodLabel} bezahlen`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Bargeld', other: 'Andere' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Sende eine BLIK-Zahlung an ${handle}`,
     otherInstructions: (handle) => `Zahle direkt: ${handle}`,
     cashInstructions: (handle) => `Begleiche bar: ${handle}`,
@@ -209,7 +238,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Вашы пазіцыі',
     equalShareNote: 'Ваша роўная частка рахунку',
     yourShareLabel: 'Ваша частка',
-    payButton: (payerName) => `Заплаціць ${payerName}`,
+    payButton: (methodLabel) => `Заплаціць праз ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Наяўныя', other: 'Іншае' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Адпраўце плацёж BLIK на ${handle}`,
     otherInstructions: (handle) => `Заплаціце напрамую: ${handle}`,
     cashInstructions: (handle) => `Разлічыцеся наяўнымі: ${handle}`,
@@ -231,7 +262,9 @@ const translations: Record<string, GuestPageStrings> = {
     yourItemsHeading: 'Jouw items',
     equalShareNote: 'Jouw gelijke deel van de rekening',
     yourShareLabel: 'Jouw deel',
-    payButton: (payerName) => `${payerName} betalen`,
+    payButton: (methodLabel) => `Betalen via ${methodLabel}`,
+    methodLabel: (method) =>
+      ({ revolut: 'Revolut', paypal: 'PayPal', blik: 'BLIK', cash: 'Contant', other: 'Anders' } as Record<string, string>)[method] ?? method,
     blikInstructions: (handle) => `Stuur een BLIK-betaling naar ${handle}`,
     otherInstructions: (handle) => `Betaal direct: ${handle}`,
     cashInstructions: (handle) => `Reken contant af: ${handle}`,
