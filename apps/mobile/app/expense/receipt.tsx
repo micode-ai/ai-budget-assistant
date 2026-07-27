@@ -112,6 +112,7 @@ export default function ReceiptExpenseScreen() {
       // Prepare receipt items
       const items = scannedReceipt.receiptItems?.map((item, index) => ({
         description: item.description,
+        canonicalName: item.canonicalName,
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         totalPrice: item.totalPrice,

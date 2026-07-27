@@ -7,6 +7,7 @@ import type { ReceiptCheckFinding } from '@budget/shared-types';
 
 export interface ReceiptItem {
   description: string;
+  canonicalName?: string;
   quantity?: number;
   unitPrice?: number;
   totalPrice: number;

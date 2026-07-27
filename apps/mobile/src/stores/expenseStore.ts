@@ -69,7 +69,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
@@ -203,6 +203,7 @@ export const useExpenseStore = create<ExpenseState>()(
           localId: generateUUID(),
           expenseId: id,
           description: item.description,
+          canonicalName: item.canonicalName,
           quantity: item.quantity ?? 1,
           unitPrice: item.unitPrice ?? 0,
           totalPrice: item.totalPrice,
@@ -224,6 +225,7 @@ export const useExpenseStore = create<ExpenseState>()(
       // Fire-and-forget server sync
       const sanitizedItems = items?.map((item) => ({
         description: item.description,
+        canonicalName: item.canonicalName,
         quantity: Math.max(0, item.quantity ?? 1),
         unitPrice: Math.max(0, item.unitPrice ?? 0),
         totalPrice: Math.max(0, item.totalPrice ?? 0),
@@ -669,6 +671,7 @@ export const useExpenseStore = create<ExpenseState>()(
                 localId: si.id,
                 expenseId,
                 description: si.description,
+                canonicalName: si.canonicalName ?? undefined,
                 quantity: si.quantity ?? 1,
                 unitPrice: Number(si.unitPrice ?? 0),
                 totalPrice: Number(si.totalPrice ?? 0),

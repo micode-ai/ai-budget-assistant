@@ -7,6 +7,12 @@ export interface ExpenseItem {
   localId: string;
   expenseId: string;
   description: string;
+  /**
+   * OCR-resolved canonical product name (e.g. "Mleko Łaciate 3,2% 1L"), used to
+   * match the same product across receipts for price-history tracking. `undefined`
+   * for manually-added items — never invent one on the client.
+   */
+  canonicalName?: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;

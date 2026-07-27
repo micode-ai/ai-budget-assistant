@@ -148,6 +148,7 @@ export const aiApi = {
       confidence: number;
       receiptItems: {
         description: string;
+        canonicalName?: string;
         quantity?: number;
         unitPrice?: number;
         totalPrice: number;

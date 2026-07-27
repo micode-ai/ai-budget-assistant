@@ -6,6 +6,7 @@ interface ExpenseItemRow {
   local_id: string;
   expense_id: string;
   description: string;
+  canonical_name: string | null;
   quantity: number;
   unit_price: number;
   total_price: number;
@@ -23,6 +24,7 @@ function rowToExpenseItem(row: ExpenseItemRow): ExpenseItem {
     localId: row.local_id,
     expenseId: row.expense_id,
     description: row.description,
+    canonicalName: row.canonical_name ?? undefined,
     quantity: row.quantity,
     unitPrice: row.unit_price,
     totalPrice: row.total_price,
@@ -41,6 +43,7 @@ function expenseItemToParams(item: ExpenseItem): (string | number | null)[] {
     item.localId,
     item.expenseId,
     item.description,
+    item.canonicalName ?? null,
     item.quantity,
     item.unitPrice,
     item.totalPrice,
@@ -64,10 +67,10 @@ export async function loadItemsByExpenseId(expenseId: string): Promise<ExpenseIt
 export async function insertExpenseItem(item: ExpenseItem): Promise<void> {
   await executeSql(
     `INSERT INTO expense_items (
-      id, local_id, expense_id, description, quantity, unit_price,
+      id, local_id, expense_id, description, canonical_name, quantity, unit_price,
       total_price, sort_order, is_deleted, sync_status, sync_version,
       created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseItemToParams(item),
   );
 }
@@ -90,6 +93,10 @@ export async function updateExpenseItemInDb(
   if (updates.description !== undefined) {
     setClauses.push('description = ?');
     params.push(updates.description);
+  }
+  if (updates.canonicalName !== undefined) {
+    setClauses.push('canonical_name = ?');
+    params.push(updates.canonicalName);
   }
   if (updates.quantity !== undefined) {
     setClauses.push('quantity = ?');
@@ -134,12 +141,13 @@ export async function softDeleteExpenseItemInDb(
 export async function upsertExpenseItem(item: ExpenseItem): Promise<void> {
   await executeSql(
     `INSERT INTO expense_items (
-      id, local_id, expense_id, description, quantity, unit_price,
+      id, local_id, expense_id, description, canonical_name, quantity, unit_price,
       total_price, sort_order, is_deleted, sync_status, sync_version,
       created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       description = excluded.description,
+      canonical_name = excluded.canonical_name,
       quantity = excluded.quantity,
       unit_price = excluded.unit_price,
       total_price = excluded.total_price,

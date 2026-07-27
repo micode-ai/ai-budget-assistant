@@ -48,6 +48,7 @@ jest.mock('../../services/api', () => ({
     updateExpense: jest.fn().mockResolvedValue({}),
     deleteExpense: jest.fn().mockResolvedValue({}),
     bulkUpdateExpenses: jest.fn().mockResolvedValue({}),
+    getExpenseItems: jest.fn().mockResolvedValue([]),
   },
 }));
 
@@ -101,6 +102,8 @@ jest.mock('../../services/widgetData', () => ({
 
 import { useExpenseStore, computeExpenseTotalsByCurrency } from '../expenseStore';
 import type { Expense } from '@budget/shared-types';
+import { api } from '../../services/api';
+import { loadItemsByExpenseId, upsertExpenseItem } from '../../db/expenseItemRepository';
 
 describe('expenseStore — trip shares', () => {
   beforeEach(() => {
@@ -272,5 +275,147 @@ describe('computeExpenseTotalsByCurrency — split-receivable exclusion', () => 
       expense({ amount: 40, isSplitReceivable: undefined }),
     ]);
     expect(totals.PLN).toBe(40);
+  });
+});
+
+describe('expenseStore — addExpense carries the OCR canonicalName to the server', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    useExpenseStore.setState({
+      expenses: [],
+      isLoading: false,
+      error: null,
+      expenseItems: {},
+    } as any);
+    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
+  // addExpense awaits the local SQLite writes but fires the encrypt+createExpense
+  // call as a detached promise chain ("Fire-and-forget server sync" in
+  // expenseStore.ts) — flush the microtask queue so it has actually run by the
+  // time we inspect the mock, same pattern as the updateExpense trip-share test
+  // above.
+  async function flushMicrotasks() {
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+  }
+
+  it('includes canonicalName in the wire payload when the scanned item had one', async () => {
+    await useExpenseStore.getState().addExpense({
+      amount: 12.5,
+      currencyCode: 'PLN',
+      date: '2026-07-24',
+      source: 'ocr',
+      items: [
+        { description: 'MLEKO ŁACIATE 1L', canonicalName: 'Mleko Łaciate 3,2% 1L', quantity: 1, unitPrice: 4.5, totalPrice: 4.5 },
+      ],
+    } as any);
+
+    await flushMicrotasks();
+
+    expect(api.createExpense).toHaveBeenCalled();
+    const sentPayload = (api.createExpense as jest.Mock).mock.calls[0][0];
+    expect(sentPayload.items).toHaveLength(1);
+    expect(sentPayload.items[0]).toMatchObject({
+      description: 'MLEKO ŁACIATE 1L',
+      canonicalName: 'Mleko Łaciate 3,2% 1L',
+    });
+  });
+
+  it('omits canonicalName cleanly when the item had none (manually-added item)', async () => {
+    await useExpenseStore.getState().addExpense({
+      amount: 9,
+      currencyCode: 'PLN',
+      date: '2026-07-24',
+      source: 'manual',
+      items: [
+        { description: 'Hand-typed item', quantity: 1, unitPrice: 9, totalPrice: 9 },
+      ],
+    } as any);
+
+    await flushMicrotasks();
+
+    expect(api.createExpense).toHaveBeenCalled();
+    const sentPayload = (api.createExpense as jest.Mock).mock.calls[0][0];
+    expect(sentPayload.items).toHaveLength(1);
+    expect(sentPayload.items[0].canonicalName).toBeUndefined();
+    expect(sentPayload.items[0].description).toBe('Hand-typed item');
+  });
+});
+
+describe('expenseStore — loadExpenseItems server-fetch mapper preserves canonicalName', () => {
+  beforeEach(() => {
+    // setState triggers the store's `expenses` subscribe listener, which
+    // debounces a refreshWidgetData() call via a real setTimeout — fake timers
+    // + the afterEach flush below keep that from firing after Jest tears down
+    // the environment (same reasoning as the "trip shares" describe above).
+    jest.useFakeTimers();
+    useExpenseStore.setState({
+      expenses: [],
+      isLoading: false,
+      error: null,
+      expenseItems: {},
+    } as any);
+    jest.clearAllMocks();
+    // Falls through to the server fetch only when there is nothing local yet.
+    (loadItemsByExpenseId as jest.Mock).mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
+  it('carries canonicalName from the API response into the returned items and the local cache', async () => {
+    (api.getExpenseItems as jest.Mock).mockResolvedValue([
+      {
+        id: 'server-item-1',
+        description: 'MLEKO ŁACIATE 1L',
+        canonicalName: 'Mleko Łaciate 3,2% 1L',
+        quantity: 1,
+        unitPrice: 4.5,
+        totalPrice: 4.5,
+        sortOrder: 0,
+        isDeleted: false,
+        syncVersion: 0,
+      },
+    ]);
+
+    const items = await useExpenseStore.getState().loadExpenseItems('exp-1');
+
+    expect(items).toHaveLength(1);
+    expect(items[0].canonicalName).toBe('Mleko Łaciate 3,2% 1L');
+
+    // It must also be what gets persisted back into local SQLite, or the value
+    // is lost again the next time this expense is opened offline.
+    expect(upsertExpenseItem).toHaveBeenCalled();
+    const persisted = (upsertExpenseItem as jest.Mock).mock.calls[0][0];
+    expect(persisted.canonicalName).toBe('Mleko Łaciate 3,2% 1L');
+  });
+
+  it('leaves canonicalName undefined when the server item has none', async () => {
+    (api.getExpenseItems as jest.Mock).mockResolvedValue([
+      {
+        id: 'server-item-2',
+        description: 'Hand-typed item',
+        quantity: 1,
+        unitPrice: 9,
+        totalPrice: 9,
+        sortOrder: 0,
+        isDeleted: false,
+        syncVersion: 0,
+      },
+    ]);
+
+    const items = await useExpenseStore.getState().loadExpenseItems('exp-1');
+
+    expect(items).toHaveLength(1);
+    expect(items[0].canonicalName).toBeUndefined();
   });
 });

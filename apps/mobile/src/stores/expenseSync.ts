@@ -389,6 +389,7 @@ async function _doPullAndMerge(
                   localId: si.id,
                   expenseId: expense.id,
                   description: si.description,
+                  canonicalName: si.canonicalName ?? undefined,
                   quantity: si.quantity ?? 1,
                   unitPrice: Number(si.unitPrice ?? 0),
                   totalPrice: Number(si.totalPrice ?? 0),
