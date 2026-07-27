@@ -28,6 +28,7 @@ import { insertIncome, softDeleteIncomeInDb } from '@/db/incomeRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
+import { filterConsumption } from '@/utils/consumption';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
 import { useExpenseStore } from './expenseStore';
@@ -663,7 +664,12 @@ export const useWalletStore = create<WalletState>()(
         // SQLite aggregate helpers are no-ops on web — derive the same totals
         // from the in-memory stores so balances reflect actual transactions
         // (otherwise currentBalance would just equal the initial amount).
-        const expenses = useExpenseStore.getState().expenses.filter((e) => !e.isDeleted);
+        // filterConsumption drops split-receivable debt rows — the money
+        // already left the account as the original receipt expense, so
+        // counting the receivable too would double the outflow. Mirrors the
+        // native path's `getExpenseTotalsByCurrency` SQL guard. See
+        // `src/utils/consumption.ts` for the full accounting rationale.
+        const expenses = filterConsumption(useExpenseStore.getState().expenses).filter((e) => !e.isDeleted);
         const incomes = useIncomeStore.getState().incomes.filter((i) => !i.isDeleted);
         const exchanges = get().exchanges.filter((x) => !x.isDeleted);
         const transfers = get().transfers.filter((t) => !t.isDeleted);

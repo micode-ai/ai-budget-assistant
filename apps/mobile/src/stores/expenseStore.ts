@@ -31,6 +31,7 @@ import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt } from '@/services/encryptionHelper';
 import { getDistinctMerchants as computeDistinctMerchants, getMerchantCounts as computeMerchantCounts } from '@/utils/merchant';
+import { filterConsumption } from '@/utils/consumption';
 import { pullAndMergeExpenses, syncPendingExpenses as doSync } from './expenseSync';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
@@ -1013,13 +1014,25 @@ export const useExpenseStore = create<ExpenseState>()(
   }))
 );
 
-function computeExpenseTotalsByCurrency(expenses: Expense[]): Record<string, number> {
+// Exported so this is directly unit-testable (see
+// `__tests__/expenseTotalsByCurrency.test.ts`) — the model is
+// `widgetData.test.ts`: call the real function and assert on what it produced,
+// so deleting the `filterConsumption` call below makes the test fail.
+export function computeExpenseTotalsByCurrency(expenses: Expense[]): Record<string, number> {
   const now = new Date();
   const startOfMonth = getStartOfMonth(now);
   const endOfMonth = getEndOfMonth(now);
 
   const totals: Record<string, number> = {};
-  expenses
+  // filterConsumption drops split-receivable debt rows — the money already
+  // left the account as the original receipt expense, so counting the
+  // receivable too would double the spend for one bill. This feeds
+  // `expenseTotalsByCurrency`/`totalThisMonth` -> `convertedExpenseTotal`,
+  // which drives the home "Total expenses" widget and the savings-rate
+  // calculation, so it must agree with the Analytics tab (which already goes
+  // through `filterConsumption` via `useFilteredTransactions`). See
+  // `src/utils/consumption.ts` for the full accounting rationale.
+  filterConsumption(expenses)
     .filter((e) => !e.isDeleted)
     .filter((e) => {
       const expenseDate = new Date(e.date);

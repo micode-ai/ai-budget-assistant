@@ -99,7 +99,8 @@ jest.mock('../../services/widgetData', () => ({
   refreshWidgetData: jest.fn(),
 }));
 
-import { useExpenseStore } from '../expenseStore';
+import { useExpenseStore, computeExpenseTotalsByCurrency } from '../expenseStore';
+import type { Expense } from '@budget/shared-types';
 
 describe('expenseStore — trip shares', () => {
   beforeEach(() => {
@@ -216,5 +217,60 @@ describe('expenseStore — trip shares', () => {
     expect(insertedShares).toHaveLength(2);
     expect(insertedShares[0]).toMatchObject({ userId: 'alice', shareType: 'equal' });
     expect(insertedShares[1]).toMatchObject({ userId: 'bob', shareType: 'equal' });
+  });
+});
+
+describe('computeExpenseTotalsByCurrency — split-receivable exclusion', () => {
+  // Dated "now" so every row falls inside the function's this-month window —
+  // computeExpenseTotalsByCurrency always aggregates the current calendar month.
+  const now = new Date().toISOString();
+
+  function expense(over: Record<string, unknown> = {}): Expense {
+    return {
+      id: 'e',
+      localId: 'e',
+      userId: 'u1',
+      accountId: 'acc-1',
+      amount: 0,
+      currencyCode: 'PLN',
+      date: new Date(now),
+      isRecurring: false,
+      source: 'manual',
+      isDebt: false,
+      isDebtRepayment: false,
+      createdAt: new Date(now),
+      updatedAt: new Date(now),
+      isDeleted: false,
+      syncStatus: 'synced',
+      syncVersion: 0,
+      ...over,
+    } as Expense;
+  }
+
+  it('counts a 200 bill split three ways once, not 350', () => {
+    const totals = computeExpenseTotalsByCurrency([
+      expense({ id: 'receipt', amount: 200 }),
+      expense({ id: 'd1', amount: 50, isDebt: true, isSplitReceivable: true }),
+      expense({ id: 'd2', amount: 50, isDebt: true, isSplitReceivable: true }),
+      expense({ id: 'd3', amount: 50, isDebt: true, isSplitReceivable: true }),
+    ]);
+
+    expect(totals.PLN).toBe(200);
+  });
+
+  it('still counts a standalone cash loan — that debt row is the real outflow', () => {
+    // Only `isSplitReceivable` may be excluded. Filtering on `isDebt` would erase
+    // the spending of every user who lends money without splitting a receipt.
+    const totals = computeExpenseTotalsByCurrency([
+      expense({ amount: 500, isDebt: true, debtContactName: 'Anna' }),
+    ]);
+    expect(totals.PLN).toBe(500);
+  });
+
+  it('treats an absent isSplitReceivable as false (nullable column on pre-existing rows)', () => {
+    const totals = computeExpenseTotalsByCurrency([
+      expense({ amount: 40, isSplitReceivable: undefined }),
+    ]);
+    expect(totals.PLN).toBe(40);
   });
 });

@@ -76,10 +76,18 @@ export async function clearAllWalletBalances(): Promise<void> {
 }
 
 export async function getExpenseTotalsByCurrency(accountId: string): Promise<Record<string, number>> {
+  // Excludes split-receivable rows (a receipt split's per-participant debt
+  // rows) the same way `is_planned` is excluded above `loadAllExpenses` —
+  // `is_split_receivable` is nullable on pre-existing rows, so `IS NULL OR = 0`
+  // covers "column absent" the same way `!e.isSplitReceivable` does client-side.
+  // The money already left the account as the original receipt expense; the
+  // debt rows are a receivable, not a second outflow. See
+  // `src/utils/consumption.ts` for the full accounting rationale — the server
+  // (`wallet.service.ts`'s `EXCLUDE_SPLIT_RECEIVABLE`) applies the same rule.
   const rows = await executeSql<{ currency_code: string; total: number }>(
     `SELECT currency_code, SUM(amount) as total
      FROM expenses
-     WHERE account_id = ? AND is_deleted = 0
+     WHERE account_id = ? AND is_deleted = 0 AND (is_split_receivable IS NULL OR is_split_receivable = 0)
      GROUP BY currency_code`,
     [accountId],
   );

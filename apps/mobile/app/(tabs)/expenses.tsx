@@ -24,6 +24,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { sumConverted } from '@/utils/total';
+import { filterConsumption } from '@/utils/consumption';
 import type { Expense, Income } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { TransactionActionSheet } from '@/components/TransactionActionSheet';
@@ -78,7 +79,16 @@ export default function ExpensesScreen() {
   // exchange-rate store hasn't populated its baseCurrency yet — e.g. a slow or
   // failed rate fetch. Otherwise a PLN account's total shows a "$" label.
   const baseCurrency = baseCurrencyRaw || userCurrency || 'USD';
-  const filteredTotal = sumConverted(activeTab === 'expenses' ? expenses : incomes, baseCurrency, rates);
+  // filterConsumption applies only to this aggregate, never to `expenses`
+  // itself — the split-receivable debt rows stay visible in the list (the
+  // design spec keeps them shown, exactly like a manually-tracked debt), only
+  // their contribution to this header total is wrong (the money already left
+  // as the original receipt expense). See `src/utils/consumption.ts`.
+  const filteredTotal = sumConverted(
+    activeTab === 'expenses' ? filterConsumption(expenses) : incomes,
+    baseCurrency,
+    rates,
+  );
   const allCategories = useCategoryStore((s) => s.categories);
   const categories = allCategories.filter(
     (c) => c.type === (activeTab === 'expenses' ? 'expense' : 'income') && !c.isDeleted
