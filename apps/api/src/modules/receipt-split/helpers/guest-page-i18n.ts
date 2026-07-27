@@ -26,6 +26,11 @@ export interface GuestPageStrings {
   yourShareLabel: string;
   payButton: (payerName: string) => string;
   blikInstructions: (handle: string) => string;
+  /** 'other' method — the handle is free-text payment details the payer typed (an
+   * IBAN, a card number, a note). */
+  otherInstructions: (handle: string) => string;
+  /** 'cash' method — the handle describes an in-person arrangement. */
+  cashInstructions: (handle: string) => string;
   /** The payer configured no payment method at all — shown instead of a pay button. */
   noPaymentInfo: string;
   iPaidButton: string;
@@ -52,6 +57,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Your share',
     payButton: (payerName) => `Pay ${payerName}`,
     blikInstructions: (handle) => `Send a BLIK payment to ${handle}`,
+    otherInstructions: (handle) => `Pay directly: ${handle}`,
+    cashInstructions: (handle) => `Settle in cash: ${handle}`,
     noPaymentInfo: 'No payment details have been shared yet.',
     iPaidButton: 'I already paid',
     claimedNotice: 'Marked as paid — thanks!',
@@ -72,6 +79,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Ваша часть',
     payButton: (payerName) => `Оплатить ${payerName}`,
     blikInstructions: (handle) => `Отправьте платёж BLIK на ${handle}`,
+    otherInstructions: (handle) => `Оплатите напрямую: ${handle}`,
+    cashInstructions: (handle) => `Рассчитайтесь наличными: ${handle}`,
     noPaymentInfo: 'Платёжные данные пока не указаны.',
     iPaidButton: 'Я уже оплатил(а)',
     claimedNotice: 'Отмечено как оплачено — спасибо!',
@@ -92,6 +101,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Ваша частка',
     payButton: (payerName) => `Оплатити ${payerName}`,
     blikInstructions: (handle) => `Надішліть платіж BLIK на ${handle}`,
+    otherInstructions: (handle) => `Оплатіть напряму: ${handle}`,
+    cashInstructions: (handle) => `Розрахуйтеся готівкою: ${handle}`,
     noPaymentInfo: 'Платіжні дані ще не вказано.',
     iPaidButton: 'Я вже оплатив(ла)',
     claimedNotice: 'Позначено як оплачено — дякуємо!',
@@ -112,6 +123,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Twoja część',
     payButton: (payerName) => `Zapłać ${payerName}`,
     blikInstructions: (handle) => `Wyślij płatność BLIK na ${handle}`,
+    otherInstructions: (handle) => `Zapłać bezpośrednio: ${handle}`,
+    cashInstructions: (handle) => `Rozlicz się gotówką: ${handle}`,
     noPaymentInfo: 'Nie udostępniono jeszcze danych do płatności.',
     iPaidButton: 'Już zapłaciłem(am)',
     claimedNotice: 'Oznaczono jako zapłacone — dziękujemy!',
@@ -132,6 +145,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Tu parte',
     payButton: (payerName) => `Pagar a ${payerName}`,
     blikInstructions: (handle) => `Envía un pago BLIK a ${handle}`,
+    otherInstructions: (handle) => `Paga directamente: ${handle}`,
+    cashInstructions: (handle) => `Paga en efectivo: ${handle}`,
     noPaymentInfo: 'Aún no se compartieron datos de pago.',
     iPaidButton: 'Ya pagué',
     claimedNotice: 'Marcado como pagado — ¡gracias!',
@@ -152,6 +167,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Ta part',
     payButton: (payerName) => `Payer ${payerName}`,
     blikInstructions: (handle) => `Envoie un paiement BLIK à ${handle}`,
+    otherInstructions: (handle) => `Paie directement : ${handle}`,
+    cashInstructions: (handle) => `Règle en espèces : ${handle}`,
     noPaymentInfo: 'Aucun moyen de paiement partagé pour le moment.',
     iPaidButton: "J'ai déjà payé",
     claimedNotice: 'Marqué comme payé — merci !',
@@ -172,6 +189,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Dein Anteil',
     payButton: (payerName) => `${payerName} bezahlen`,
     blikInstructions: (handle) => `Sende eine BLIK-Zahlung an ${handle}`,
+    otherInstructions: (handle) => `Zahle direkt: ${handle}`,
+    cashInstructions: (handle) => `Begleiche bar: ${handle}`,
     noPaymentInfo: 'Es wurden noch keine Zahlungsdetails hinterlegt.',
     iPaidButton: 'Ich habe bereits bezahlt',
     claimedNotice: 'Als bezahlt markiert — danke!',
@@ -192,6 +211,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Ваша частка',
     payButton: (payerName) => `Заплаціць ${payerName}`,
     blikInstructions: (handle) => `Адпраўце плацёж BLIK на ${handle}`,
+    otherInstructions: (handle) => `Заплаціце напрамую: ${handle}`,
+    cashInstructions: (handle) => `Разлічыцеся наяўнымі: ${handle}`,
     noPaymentInfo: 'Плацежныя дадзеныя пакуль не паказаны.',
     iPaidButton: 'Я ўжо заплаціў(ла)',
     claimedNotice: 'Пазначана як аплачана — дзякуй!',
@@ -212,6 +233,8 @@ const translations: Record<string, GuestPageStrings> = {
     yourShareLabel: 'Jouw deel',
     payButton: (payerName) => `${payerName} betalen`,
     blikInstructions: (handle) => `Stuur een BLIK-betaling naar ${handle}`,
+    otherInstructions: (handle) => `Betaal direct: ${handle}`,
+    cashInstructions: (handle) => `Reken contant af: ${handle}`,
     noPaymentInfo: 'Er zijn nog geen betaalgegevens gedeeld.',
     iPaidButton: 'Ik heb al betaald',
     claimedNotice: 'Gemarkeerd als betaald — bedankt!',

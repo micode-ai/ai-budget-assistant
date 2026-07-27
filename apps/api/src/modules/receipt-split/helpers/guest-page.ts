@@ -45,6 +45,13 @@ export interface GuestPageItem {
 export type GuestPaymentStatus = 'sent' | 'opened' | 'claimed' | 'settled';
 
 /**
+ * Which instruction text to render in the box below the (missing) pay button — one
+ * variant per method that has no tappable link, each with its own copy in
+ * `guest-page-i18n.ts` (`blikInstructions` / `otherInstructions` / `cashInstructions`).
+ */
+export type GuestPayInstructionKind = 'blik' | 'other' | 'cash';
+
+/**
  * One resolved payment method to render as its own block, in the order the caller
  * resolved them (DB `sortOrder`, or the single legacy pair). `handle` is free text the
  * payer typed — escaped by the renderer, never trusted as safe markup.
@@ -52,7 +59,9 @@ export type GuestPaymentStatus = 'sent' | 'opened' | 'claimed' | 'settled';
 export interface GuestPaymentMethodBlock {
   method: string;
   paymentLink: string | null;
-  manualInstructions: boolean;
+  /** null = this method resolved to nothing renderable (e.g. no handle set, or an
+   * unrecognized method) — the block is silently skipped. */
+  instructions: GuestPayInstructionKind | null;
   handle: string;
 }
 
@@ -77,32 +86,47 @@ export interface GuestPageModel {
 }
 
 /**
- * Pure link builder — mirrors trip-settle-up.service.ts's `createPayment` (lines ~177-184)
- * exactly: same revolut.me / paypal.me URL shapes, same encodeURIComponent'd handle+amount,
- * same "BLIK has no cross-bank deep link" manual-instructions fallback.
+ * Pure link builder — the revolut.me / paypal.me branches mirror trip-settle-up.service.ts's
+ * `createPayment` (lines ~177-184) exactly: same URL shapes, same encodeURIComponent'd
+ * handle+amount. trip-settle-up's `createPayment` stops there (plus its own BLIK
+ * manual-instructions fallback) — it does NOT have cash/other branches, so it no longer
+ * mirrors this function's full behavior; do not assume the two stay in lockstep beyond
+ * revolut/paypal/blik.
+ *
+ * blik/other/cash all have no tappable pay link, so each returns its own
+ * `GuestPayInstructionKind` for the renderer to look up the right instruction copy:
+ * BLIK has no cross-bank deep-link API (manual instructions), while 'other'/'cash' are
+ * free-text-only methods by design (an IBAN, a card number, an in-person arrangement —
+ * there is nothing to build a link from).
  */
 export function buildGuestPayLink(
   paymentMethod: string | null | undefined,
   paymentHandle: string | null | undefined,
   amount: number,
   currencyCode: string,
-): { paymentLink: string | null; manualInstructions: boolean } {
+): { paymentLink: string | null; instructions: GuestPayInstructionKind | null } {
   if (paymentMethod === 'revolut' && paymentHandle) {
     return {
       paymentLink: `https://revolut.me/${encodeURIComponent(paymentHandle)}?amount=${encodeURIComponent(String(amount))}&currency=${currencyCode}`,
-      manualInstructions: false,
+      instructions: null,
     };
   }
   if (paymentMethod === 'paypal' && paymentHandle) {
     return {
       paymentLink: `https://paypal.me/${encodeURIComponent(paymentHandle)}/${encodeURIComponent(String(amount))}${currencyCode}`,
-      manualInstructions: false,
+      instructions: null,
     };
   }
   if (paymentMethod === 'blik' && paymentHandle) {
-    return { paymentLink: null, manualInstructions: true };
+    return { paymentLink: null, instructions: 'blik' };
   }
-  return { paymentLink: null, manualInstructions: false };
+  if (paymentMethod === 'other' && paymentHandle) {
+    return { paymentLink: null, instructions: 'other' };
+  }
+  if (paymentMethod === 'cash' && paymentHandle) {
+    return { paymentLink: null, instructions: 'cash' };
+  }
+  return { paymentLink: null, instructions: null };
 }
 
 const STORE_URL_ANDROID = 'https://play.google.com/store/apps/details?id=com.budget.assistant';
@@ -141,19 +165,26 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
   let payHtml = '';
   if (!hasClaimedPayment) {
     // One block per resolved method, in order — a button for each link-capable method
-    // (revolut/paypal), the BLIK instructions box for BLIK. A method that resolves to
-    // neither (e.g. 'cash'/'other', which have no digital affordance to show) renders
-    // nothing and is silently skipped — it is not "no payment info" on its own, only
-    // when EVERY method skips does that line appear. Each button reuses the same
-    // `payButton` text regardless of method; distinguishing multiple buttons by brand
-    // name would need new copy, which is out of scope here (i18n is owned elsewhere).
+    // (revolut/paypal), an instructions box for every method that has none (blik/other/
+    // cash, each with its own copy — see `GuestPayInstructionKind`). A method that
+    // resolves to neither (no handle set, or unrecognized) renders nothing and is
+    // silently skipped — it is not "no payment info" on its own, only when EVERY method
+    // skips does that line appear. Each button reuses the same `payButton` text
+    // regardless of method; distinguishing multiple buttons by brand name would need new
+    // copy, which is out of scope here (i18n is owned elsewhere).
     const blocks = model.paymentMethods
       .map((block) => {
         if (block.paymentLink) {
           return `<a class="btn btn-primary" rel="noreferrer" href="${escapeHtml(block.paymentLink)}">${escapeHtml(strings.payButton(model.payerName))}</a>`;
         }
-        if (block.manualInstructions) {
+        if (block.instructions === 'blik') {
           return `<div class="blik-box">${escapeHtml(strings.blikInstructions(block.handle))}</div>`;
+        }
+        if (block.instructions === 'other') {
+          return `<div class="blik-box">${escapeHtml(strings.otherInstructions(block.handle))}</div>`;
+        }
+        if (block.instructions === 'cash') {
+          return `<div class="blik-box">${escapeHtml(strings.cashInstructions(block.handle))}</div>`;
         }
         return null;
       })

@@ -48,9 +48,12 @@ describe('getPaymentConsequence', () => {
     expect(getPaymentConsequence('blik')).toBe('manual');
   });
 
-  it('maps cash, other, and null (no method set) to "none"', () => {
-    expect(getPaymentConsequence('cash')).toBe('none');
-    expect(getPaymentConsequence('other')).toBe('none');
+  it('maps cash and other to "instructions" — they now render the handle as free-text instructions on the guest page, not nothing', () => {
+    expect(getPaymentConsequence('cash')).toBe('instructions');
+    expect(getPaymentConsequence('other')).toBe('instructions');
+  });
+
+  it('maps null (no method set at all) to "none"', () => {
     expect(getPaymentConsequence(null)).toBe('none');
   });
 });

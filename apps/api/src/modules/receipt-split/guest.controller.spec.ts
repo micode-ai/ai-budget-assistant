@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { GuestController } from './guest.controller';
-import { renderGuestPage, GuestPageModel, GuestPaymentStatus } from './helpers/guest-page';
+import { renderGuestPage, buildGuestPayLink, GuestPageModel, GuestPaymentStatus } from './helpers/guest-page';
 import { getGuestPageStrings } from './helpers/guest-page-i18n';
 import { UsersService } from '../users/users.service';
 
@@ -499,7 +499,7 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
       {
         method: 'revolut',
         paymentLink: 'https://revolut.me/payerpat?amount=25.5&currency=USD',
-        manualInstructions: false,
+        instructions: null,
         handle: 'payerpat',
       },
     ],
@@ -535,13 +535,34 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
       ...baseModel,
       status: 'claimed',
       paymentMethods: [
-        { method: 'blik', paymentLink: null, manualInstructions: true, handle: 'blik-handle' },
+        { method: 'blik', paymentLink: null, instructions: 'blik', handle: 'blik-handle' },
       ],
     };
     const html = renderGuestPage(model, strings);
     expect(html).not.toContain('<div class="blik-box">');
     expect(html).not.toContain('blik-handle');
   });
+
+  it.each<['other' | 'cash', GuestPaymentStatus]>([
+    ['other', 'claimed'],
+    ['other', 'settled'],
+    ['cash', 'claimed'],
+    ['cash', 'settled'],
+  ])(
+    'hides the "%s" instructions box too once status is "%s" — not just revolut/blik',
+    (method, status) => {
+      const model: GuestPageModel = {
+        ...baseModel,
+        status,
+        paymentMethods: [
+          { method, paymentLink: null, instructions: method, handle: 'a-handle' },
+        ],
+      };
+      const html = renderGuestPage(model, strings);
+      expect(html).not.toContain('<div class="blik-box">');
+      expect(html).not.toContain('a-handle');
+    },
+  );
 
   it('still shows the "marked as paid" confirmation once claimed (the pay button disappears, the notice does not)', () => {
     const html = renderGuestPage({ ...baseModel, status: 'claimed' }, strings);
@@ -569,8 +590,8 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
       {
         ...baseModel,
         paymentMethods: [
-          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', manualInstructions: false, handle: 'rev-handle' },
-          { method: 'paypal', paymentLink: 'https://paypal.me/pp-handle/25.50', manualInstructions: false, handle: 'pp-handle' },
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', instructions: null, handle: 'rev-handle' },
+          { method: 'paypal', paymentLink: 'https://paypal.me/pp-handle/25.50', instructions: null, handle: 'pp-handle' },
         ],
       },
       strings,
@@ -586,12 +607,41 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
 
   it('BLIK produces the instructions box, not a link button', () => {
     const html = renderGuestPage(
-      { ...baseModel, paymentMethods: [{ method: 'blik', paymentLink: null, manualInstructions: true, handle: 'blik-handle' }] },
+      { ...baseModel, paymentMethods: [{ method: 'blik', paymentLink: null, instructions: 'blik', handle: 'blik-handle' }] },
       strings,
     );
     expect(html).not.toContain('<a class="btn btn-primary"');
     expect(html).toContain('<div class="blik-box">');
-    expect(html).toContain('blik-handle');
+    expect(html).toContain(strings.blikInstructions('blik-handle'));
+  });
+
+  it('"other" with a handle produces its own instruction text — "Pay directly", not the BLIK line', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'other', paymentLink: null, instructions: 'other', handle: 'PL61 1090 1014 0000 0712 1981 2874' }] },
+      strings,
+    );
+    expect(html).not.toContain('<a class="btn btn-primary"');
+    expect(html).toContain('<div class="blik-box">');
+    expect(html).toContain(strings.otherInstructions('PL61 1090 1014 0000 0712 1981 2874'));
+    expect(html).not.toContain(strings.blikInstructions('PL61 1090 1014 0000 0712 1981 2874'));
+    expect(html).not.toContain(strings.cashInstructions('PL61 1090 1014 0000 0712 1981 2874'));
+  });
+
+  it('"cash" with a handle produces its own, different instruction text — "Settle in cash", not "other"\'s or BLIK\'s', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'cash', paymentLink: null, instructions: 'cash', handle: 'in person, at the office' }] },
+      strings,
+    );
+    expect(html).not.toContain('<a class="btn btn-primary"');
+    expect(html).toContain('<div class="blik-box">');
+    expect(html).toContain(strings.cashInstructions('in person, at the office'));
+    expect(html).not.toContain(strings.otherInstructions('in person, at the office'));
+    expect(html).not.toContain(strings.blikInstructions('in person, at the office'));
+    // Sanity: the three instruction strings are genuinely distinct copy, not the same
+    // text reused under three names (which would make the assertions above vacuous).
+    expect(strings.cashInstructions('x')).not.toBe(strings.otherInstructions('x'));
+    expect(strings.cashInstructions('x')).not.toBe(strings.blikInstructions('x'));
+    expect(strings.otherInstructions('x')).not.toBe(strings.blikInstructions('x'));
   });
 
   it('renders a button AND a box together when a link-capable method and BLIK are both offered', () => {
@@ -599,8 +649,8 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
       {
         ...baseModel,
         paymentMethods: [
-          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', manualInstructions: false, handle: 'rev-handle' },
-          { method: 'blik', paymentLink: null, manualInstructions: true, handle: 'blik-handle' },
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', instructions: null, handle: 'rev-handle' },
+          { method: 'blik', paymentLink: null, instructions: 'blik', handle: 'blik-handle' },
         ],
       },
       strings,
@@ -611,11 +661,29 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
 
   it('escapes every handle — including a BLIK handle rendered inside the instructions box', () => {
     const html = renderGuestPage(
-      { ...baseModel, paymentMethods: [{ method: 'blik', paymentLink: null, manualInstructions: true, handle: '<b>evil</b>' }] },
+      { ...baseModel, paymentMethods: [{ method: 'blik', paymentLink: null, instructions: 'blik', handle: '<b>evil</b>' }] },
       strings,
     );
     expect(html).not.toContain('<b>evil</b>');
     expect(html).toContain('&lt;b&gt;evil&lt;/b&gt;');
+  });
+
+  it('escapes an HTML-bearing handle for "other" too, not just BLIK', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'other', paymentLink: null, instructions: 'other', handle: '<img src=x onerror=alert(1)>' }] },
+      strings,
+    );
+    expect(html).not.toContain('<img src=x onerror=alert(1)>');
+    expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;');
+  });
+
+  it('escapes an HTML-bearing handle for "cash" too', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'cash', paymentLink: null, instructions: 'cash', handle: '<script>alert(1)</script>' }] },
+      strings,
+    );
+    expect(html).not.toContain('<script>alert(1)</script>');
+    expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
   });
 
   it('shows the "no payment info" line only when the method list is empty', () => {
@@ -625,12 +693,13 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
     expect(html).not.toContain('<div class="blik-box">');
   });
 
-  it('shows the "no payment info" line when every configured method resolves to nothing renderable (e.g. cash)', () => {
+  it('shows the "no payment info" line when every configured method resolves to nothing renderable (e.g. "other" with an empty handle)', () => {
     const html = renderGuestPage(
-      { ...baseModel, paymentMethods: [{ method: 'cash', paymentLink: null, manualInstructions: false, handle: 'n/a' }] },
+      { ...baseModel, paymentMethods: [{ method: 'other', paymentLink: null, instructions: null, handle: '' }] },
       strings,
     );
     expect(html).toContain(strings.noPaymentInfo);
+    expect(html).not.toContain('<div class="blik-box">');
   });
 
   it('does NOT show the "no payment info" line when at least one method rendered something', () => {
@@ -638,13 +707,51 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
       {
         ...baseModel,
         paymentMethods: [
-          { method: 'cash', paymentLink: null, manualInstructions: false, handle: 'n/a' },
-          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', manualInstructions: false, handle: 'rev-handle' },
+          { method: 'other', paymentLink: null, instructions: null, handle: '' },
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', instructions: null, handle: 'rev-handle' },
         ],
       },
       strings,
     );
     expect(html).not.toContain(strings.noPaymentInfo);
     expect(html).toContain('https://revolut.me/rev-handle');
+  });
+});
+
+describe('buildGuestPayLink — resolving a method+handle pair to a link or an instruction kind', () => {
+  it("resolves 'other' with a handle to the 'other' instruction kind, no link", () => {
+    const result = buildGuestPayLink('other', 'PL61 1090 1014 0000 0712 1981 2874', 25.5, 'USD');
+    expect(result).toEqual({ paymentLink: null, instructions: 'other' });
+  });
+
+  it("resolves 'cash' with a handle to the 'cash' instruction kind, no link", () => {
+    const result = buildGuestPayLink('cash', 'in person, at the office', 25.5, 'USD');
+    expect(result).toEqual({ paymentLink: null, instructions: 'cash' });
+  });
+
+  it("resolves 'blik' with a handle to the 'blik' instruction kind — unchanged", () => {
+    const result = buildGuestPayLink('blik', '+48123456789', 25.5, 'USD');
+    expect(result).toEqual({ paymentLink: null, instructions: 'blik' });
+  });
+
+  it("'other' with an EMPTY handle produces no payment affordance at all", () => {
+    const result = buildGuestPayLink('other', '', 25.5, 'USD');
+    expect(result).toEqual({ paymentLink: null, instructions: null });
+  });
+
+  it("'cash' with a null/undefined handle also produces no payment affordance", () => {
+    expect(buildGuestPayLink('cash', null, 25.5, 'USD')).toEqual({ paymentLink: null, instructions: null });
+    expect(buildGuestPayLink('cash', undefined, 25.5, 'USD')).toEqual({ paymentLink: null, instructions: null });
+  });
+
+  it('revolut and paypal are unaffected — still build a real link, not an instruction kind', () => {
+    expect(buildGuestPayLink('revolut', 'rev-handle', 25.5, 'USD')).toEqual({
+      paymentLink: 'https://revolut.me/rev-handle?amount=25.5&currency=USD',
+      instructions: null,
+    });
+    expect(buildGuestPayLink('paypal', 'pp-handle', 25.5, 'USD')).toEqual({
+      paymentLink: 'https://paypal.me/pp-handle/25.5USD',
+      instructions: null,
+    });
   });
 });

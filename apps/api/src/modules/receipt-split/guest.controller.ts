@@ -217,11 +217,12 @@ export class GuestController {
 
     // One block per resolved method, in the same order `payer.methods` arrived in
     // (sortOrder from the DB, or the single legacy pair). `buildGuestPayLink` is the
-    // untouched pure per-method builder — called once per method here, exactly as it
-    // was already designed to be called.
+    // pure per-method builder — called once per method here, exactly as it was already
+    // designed to be called (it now also resolves 'other'/'cash' to their own
+    // instruction copy, not just revolut/paypal/blik — see guest-page.ts).
     const paymentMethods: GuestPaymentMethodBlock[] = payer.methods.map((m) => {
-      const { paymentLink, manualInstructions } = buildGuestPayLink(m.method, m.handle, amount, participant.currencyCode);
-      return { method: m.method, paymentLink, manualInstructions, handle: m.handle };
+      const { paymentLink, instructions } = buildGuestPayLink(m.method, m.handle, amount, participant.currencyCode);
+      return { method: m.method, paymentLink, instructions, handle: m.handle };
     });
 
     return {

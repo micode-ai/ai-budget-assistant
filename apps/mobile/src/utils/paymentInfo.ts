@@ -28,19 +28,24 @@ export function normalizePaymentHandle(raw: string): string {
   return raw.trim().replace(/^@/, '');
 }
 
-export type PaymentConsequence = 'link' | 'manual' | 'none';
+export type PaymentConsequence = 'link' | 'manual' | 'instructions' | 'none';
 
 /**
  * Maps a payment method to what it actually produces on a receipt-split guest
  * link — mirrors apps/api/src/modules/receipt-split/helpers/guest-page.ts's
  * buildGuestPayLink: revolut/paypal build a real tappable pay link ('link'),
  * blik has no cross-bank deep link so the guest page shows manual
- * instructions instead ('manual'), and cash/other (or no method at all) show
- * no payment action ('none').
+ * instructions instead ('manual' — this is the ONLY value that should gate
+ * the phone-pad keyboard / "enter your phone number" hint below, since it's
+ * BLIK-specific), cash/other show the handle itself as free-text instructions
+ * ('instructions' — an IBAN, a card number, an in-person note; NOT a phone
+ * number, so must not be treated like 'manual'), and no method configured at
+ * all shows no payment action ('none').
  */
 export function getPaymentConsequence(method: SettleMethod | null): PaymentConsequence {
   if (method === 'revolut' || method === 'paypal') return 'link';
   if (method === 'blik') return 'manual';
+  if (method === 'cash' || method === 'other') return 'instructions';
   return 'none';
 }
 

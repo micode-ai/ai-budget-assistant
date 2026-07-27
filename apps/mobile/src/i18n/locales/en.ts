@@ -665,7 +665,7 @@ export default {
     applyColor: 'Apply',
     resetAccent: 'Reset to default',
     invalidColor: 'Invalid color',
-    paymentConsequenceHint: 'Revolut and PayPal add a real pay button to your split links; BLIK shows your number with instructions instead (no cross-bank link); Cash and Other show no payment button.',
+    paymentConsequenceHint: 'Revolut and PayPal add a real pay button to your split links; BLIK shows your number with instructions instead (no cross-bank link); Cash and Other show what you enter as instructions instead of a button.',
     invalidPaymentHandle: 'Invalid payment handle',
     addPaymentMethod: 'Add payment method',
     about: 'About',
