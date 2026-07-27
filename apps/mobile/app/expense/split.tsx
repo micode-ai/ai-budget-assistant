@@ -21,10 +21,10 @@
  * `src/components/split/validateSplit.ts`'s docstring for the one place a
  * client-side aggregate is computed, and why that number is validation-only.
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as Clipboard from 'expo-clipboard';
@@ -36,6 +36,7 @@ import { useEncryptionStore } from '@/stores/encryptionStore';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { ParticipantChips, type ParticipantChipItem } from '@/components/split/ParticipantChips';
 import { validateSplit, MAX_SPLIT_PARTICIPANTS, type SplitParticipantCandidate } from '@/components/split/validateSplit';
+import { deriveSplitMode } from '@/components/split/deriveSplitMode';
 import { showAlert } from '@/utils/alert';
 import { formatCurrency } from '@budget/shared-utils';
 import type { CreateSplitDto, SplitParticipantState, SplitParticipantStatus } from '@budget/shared-types';
@@ -60,7 +61,7 @@ export default function ReceiptSplitScreen() {
   const { expenseId: expenseIdParam } = useLocalSearchParams<{ expenseId?: string }>();
 
   const canEdit = useAccountStore((s) => s.canEdit());
-  const { expenses } = useExpenseStore();
+  const { expenses, expenseItems, loadExpenseItems } = useExpenseStore();
   const { split, isLoading, load, create, confirm, cancel } = useReceiptSplitStore();
 
   // Status→color, not status→label (that's STATUS_LABEL_KEYS above) — colors
@@ -88,17 +89,50 @@ export default function ReceiptSplitScreen() {
     [expenses, expenseIdParam],
   );
 
-  const items = useMemo(() => (expense?.items ?? []).filter((i) => !i.isDeleted), [expense]);
-  const mode: 'items' | 'equal' = items.length > 0 ? 'items' : 'equal';
+  // `expense.items` is never populated on a mobile expense object — it's an
+  // API-response-only field the SQLite `rowToExpense` mapper never sets. Line
+  // items live in the store's separate `expenseItems` map (same pattern as
+  // `ExpenseItemsSection.tsx`), hydrated on demand via `loadExpenseItems`.
+  const rawItems = expense ? expenseItems[expense.id] : undefined;
+  const items = useMemo(() => (rawItems ?? []).filter((i) => !i.isDeleted), [rawItems]);
+
+  // See deriveSplitMode.ts's docstring for the full "why" — in short, only
+  // server-synced items carry a real expense_item id, so a not-yet-synced
+  // receipt degrades to a safe whole-bill equal split rather than a failed
+  // (400) item-assignment request.
+  const { mode, hasUnsyncedItems } = useMemo(() => deriveSplitMode(items), [items]);
   const billTotal = expense?.amount ?? 0;
 
-  useEffect(() => {
-    if (expense) {
+  // Whether the initial item load for the CURRENT expense has settled. Gates
+  // the creation form below so a fast tap can never fire before we know
+  // whether this receipt actually has items — without this, `mode` starts as
+  // 'equal' (rawItems undefined until the load resolves) and a quick Create
+  // tap would silently whole-bill-split an itemized receipt.
+  const [itemsLoaded, setItemsLoaded] = useState(false);
+
+  // Single focus-driven refresh (mirrors app/family-feed/index.tsx): reloads
+  // both the split status (so a guest's "I paid" push is reflected the moment
+  // the payer returns to this screen — see Fix 6) and the line items (so a
+  // receipt that was still syncing on the last visit can flip into item mode
+  // once its items round-trip through the server).
+  useFocusEffect(
+    useCallback(() => {
+      if (!expense) return;
       void load(expense.id);
-    }
-    // Intentionally re-runs only when the resolved expense identity changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expense?.id]);
+
+      setItemsLoaded(false);
+      let cancelled = false;
+      void loadExpenseItems(expense.id).finally(() => {
+        if (!cancelled) setItemsLoaded(true);
+      });
+      return () => {
+        cancelled = true;
+      };
+      // Intentionally re-runs only when the resolved expense identity changes
+      // (same convention this effect replaced — see the file history).
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [expense?.id, load, loadExpenseItems]),
+  );
 
   // Proactive E2EE gate: a fully end-to-end encrypted (tier 2) account can't
   // be split because the server can never read the encrypted receipt items
@@ -321,7 +355,10 @@ export default function ReceiptSplitScreen() {
     );
   }
 
-  if (isLoading && !split) {
+  // Also gates on `itemsLoaded` — the creation form (and its `mode`) must
+  // never render before the item load has settled (see the mode-flip race
+  // note above `itemsLoaded`'s declaration).
+  if ((isLoading || !itemsLoaded) && !split) {
     return (
       <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.centered}>
@@ -449,7 +486,13 @@ export default function ReceiptSplitScreen() {
             <Ionicons name="information-circle-outline" size={16} color={theme.colors.info} />
             <View style={styles.hintTextWrap}>
               <Text style={styles.sectionTitle}>{t('receiptSplit.equalMode')}</Text>
-              <Text style={styles.hintText}>{t('receiptSplit.equalHint')}</Text>
+              {/* hasUnsyncedItems: real line items exist locally but haven't round-tripped
+                  through the server yet, so their ids aren't safe to submit — reusing
+                  `settings.syncing` ("Syncing...") rather than the "no line items" copy,
+                  which would be misleading here. No new i18n key. */}
+              <Text style={styles.hintText}>
+                {hasUnsyncedItems ? t('settings.syncing') : t('receiptSplit.equalHint')}
+              </Text>
             </View>
           </View>
         ) : (
