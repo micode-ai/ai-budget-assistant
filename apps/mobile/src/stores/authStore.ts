@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
-import type { User, Currency } from '@budget/shared-types';
+import type { User, Currency, SettleMethod } from '@budget/shared-types';
 import { useAccountStore } from './accountStore';
 import { useBudgetStore } from './budgetStore';
 import { useExpenseStore } from './expenseStore';
@@ -16,6 +16,7 @@ import { useInsightsStore } from './insightsStore';
 import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { applyCurrencyChange } from '../utils/currency';
+import { applyPaymentInfoPatch } from '../utils/paymentInfo';
 
 let isLoggingOut = false;
 
@@ -38,6 +39,7 @@ interface AuthState {
   logout: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
   setCurrency: (currencyCode: Currency) => void;
+  setPaymentInfo: (paymentMethod: SettleMethod | null, paymentHandle: string | null) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearError: () => void;
   forgotPassword: (email: string) => Promise<void>;
@@ -635,6 +637,19 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           onPersistError: (error) =>
             console.warn('Failed to persist currency change:', error),
         });
+      },
+
+      setPaymentInfo: (paymentMethod: SettleMethod | null, paymentHandle: string | null) => {
+        const { updateUser } = get();
+        applyPaymentInfoPatch(
+          { paymentMethod, paymentHandle },
+          {
+            applyLocal: (patch) => updateUser(patch),
+            persist: (patch) => api.updateProfile(patch),
+            onPersistError: (error) =>
+              console.warn('Failed to persist payment info:', error),
+          },
+        );
       },
 
       setTokens: (accessToken: string, refreshToken: string) => {

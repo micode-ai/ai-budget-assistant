@@ -1,4 +1,4 @@
-import type { TelegramLinkCodeResponse, TelegramLinkStatusResponse } from '@budget/shared-types';
+import type { TelegramLinkCodeResponse, TelegramLinkStatusResponse, SettleMethod } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const usersApi = {
@@ -12,7 +12,7 @@ export const usersApi = {
     );
   },
 
-  updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null }) {
+  updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null }) {
     return httpClient.request<any>('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(data),

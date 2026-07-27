@@ -664,6 +664,8 @@ export default {
     applyColor: 'Appliquer',
     resetAccent: 'Réinitialiser',
     invalidColor: 'Couleur invalide',
+    paymentConsequenceHint: 'Revolut et PayPal ajoutent un vrai bouton de paiement à vos liens de partage ; BLIK affiche votre numéro avec des instructions à la place (pas de lien interbancaire) ; Espèces et Autre n’affichent aucun bouton de paiement.',
+    invalidPaymentHandle: 'Identifiant de paiement invalide',
     about: 'À propos',
     version: 'Version',
     support: 'Support et commentaires',

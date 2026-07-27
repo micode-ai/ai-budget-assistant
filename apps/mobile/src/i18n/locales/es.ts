@@ -664,6 +664,8 @@ export default {
     applyColor: 'Aplicar',
     resetAccent: 'Restablecer',
     invalidColor: 'Color no válido',
+    paymentConsequenceHint: 'Revolut y PayPal añaden un botón de pago real a tus enlaces de reparto; BLIK muestra tu número con instrucciones en su lugar (sin enlace entre bancos); Efectivo y Otro no muestran ningún botón de pago.',
+    invalidPaymentHandle: 'Identificador de pago no válido',
     about: 'Acerca de',
     version: 'Versión',
     support: 'Soporte y comentarios',

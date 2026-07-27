@@ -664,6 +664,8 @@ export default {
     applyColor: 'Zastosuj',
     resetAccent: 'Przywróć domyślny',
     invalidColor: 'Nieprawidłowy kolor',
+    paymentConsequenceHint: 'Revolut i PayPal dodają prawdziwy przycisk płatności do Twoich linków podziału rachunku; BLIK pokazuje zamiast tego Twój numer wraz z instrukcją (brak linku międzybankowego); Gotówka i Inne nie pokazują przycisku płatności.',
+    invalidPaymentHandle: 'Nieprawidłowy identyfikator płatności',
     about: 'O aplikacji',
     version: 'Wersja',
     support: 'Wsparcie i opinie',

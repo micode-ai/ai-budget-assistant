@@ -16,10 +16,29 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
-import type { Currency } from '@budget/shared-types';
+import type { Currency, SettleMethod } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { isValidPaymentHandle, getPaymentConsequence } from '@/utils/paymentInfo';
 
 const CURRENCIES: Currency[] = SUPPORTED_CURRENCIES.map((c) => c.code);
+
+const PAYMENT_METHODS: SettleMethod[] = ['revolut', 'paypal', 'blik', 'cash', 'other'];
+
+const PAYMENT_METHOD_LABEL_KEYS: Record<SettleMethod, string> = {
+  revolut: 'trip.paymentMethodRevolut',
+  paypal: 'trip.paymentMethodPaypal',
+  blik: 'trip.paymentMethodBlik',
+  cash: 'trip.paymentMethodCash',
+  other: 'trip.paymentMethodOther',
+};
+
+const PAYMENT_HANDLE_PLACEHOLDER_KEYS: Record<SettleMethod, string> = {
+  revolut: 'trip.paymentHandlePlaceholderRevolut',
+  paypal: 'trip.paymentHandlePlaceholderPaypal',
+  blik: 'trip.paymentHandlePlaceholderBlik',
+  cash: 'trip.paymentHandlePlaceholderGeneric',
+  other: 'trip.paymentHandlePlaceholderGeneric',
+};
 const TIMEZONES: string[] = [
   'Africa/Abidjan', 'Africa/Accra', 'Africa/Algiers', 'Africa/Cairo', 'Africa/Casablanca',
   'Africa/Johannesburg', 'Africa/Lagos', 'Africa/Nairobi', 'Africa/Tunis',
@@ -55,13 +74,22 @@ export default function ProfileSettingsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { user, updateUser, setCurrency } = useAuthStore();
+  const { user, updateUser, setCurrency, setPaymentInfo } = useAuthStore();
 
   const [name, setName] = useState(user?.name || '');
   const [editingName, setEditingName] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [timezonePicker, setTimezonePicker] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState('');
+
+  const [paymentMethod, setPaymentMethod] = useState<SettleMethod | null>(user?.paymentMethod ?? null);
+  const [paymentHandle, setPaymentHandle] = useState(user?.paymentHandle ?? '');
+  const [paymentSaveAttempted, setPaymentSaveAttempted] = useState(false);
+
+  const trimmedPaymentHandle = paymentHandle.trim();
+  const paymentHandleMissing = paymentMethod !== null && trimmedPaymentHandle.length === 0;
+  const paymentHandleInvalid = trimmedPaymentHandle.length > 0 && !isValidPaymentHandle(trimmedPaymentHandle);
+  const canSavePayment = paymentMethod !== null && !paymentHandleMissing && !paymentHandleInvalid;
 
   const filteredTimezones = useMemo(() => {
     if (!timezoneSearch.trim()) return TIMEZONES;
@@ -107,6 +135,27 @@ export default function ProfileSettingsScreen() {
     } catch (e) {
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
+  };
+
+  const handleSelectPaymentMethod = (method: SettleMethod) => {
+    setPaymentMethod(method);
+    setPaymentSaveAttempted(false);
+  };
+
+  const handleClearPaymentMethod = () => {
+    setPaymentMethod(null);
+    setPaymentHandle('');
+    setPaymentSaveAttempted(false);
+    // A clear is a decisive action (mirrors the accent-color "Reset to
+    // default" precedent) — persist immediately rather than waiting for Save.
+    setPaymentInfo(null, null);
+  };
+
+  const handleSavePaymentInfo = () => {
+    setPaymentSaveAttempted(true);
+    if (!canSavePayment) return;
+    setPaymentInfo(paymentMethod, trimmedPaymentHandle);
+    showAlert(t('common.success'), t('trip.paymentInfoSaved'));
   };
 
   return (
@@ -198,6 +247,63 @@ export default function ProfileSettingsScreen() {
               </Text>
             </TouchableOpacity>
           ))}
+        </View>
+
+        {/* Payment details for split links */}
+        <Text style={[styles.fieldLabelOutside, { marginTop: theme.spacing[6] }]}>
+          {t('trip.paymentSettingsTitle')}
+        </Text>
+        <View style={styles.card}>
+          <Text style={styles.paymentHint}>{t('settings.paymentConsequenceHint')}</Text>
+
+          <Text style={[styles.fieldLabel, { marginTop: theme.spacing[3] }]}>{t('trip.paymentMethod')}</Text>
+          <View style={[styles.chipRow, { marginTop: theme.spacing[2] }]}>
+            {PAYMENT_METHODS.map((m) => (
+              <TouchableOpacity
+                key={m}
+                style={[styles.chip, paymentMethod === m && styles.chipActive]}
+                onPress={() => handleSelectPaymentMethod(m)}
+              >
+                <Text style={[styles.chipText, paymentMethod === m && styles.chipTextActive]}>
+                  {t(PAYMENT_METHOD_LABEL_KEYS[m])}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {paymentMethod !== null && (
+            <>
+              <View style={styles.paymentHandleHeaderRow}>
+                <Text style={styles.fieldLabel}>{t('trip.paymentHandle')}</Text>
+                <TouchableOpacity onPress={handleClearPaymentMethod}>
+                  <Text style={styles.clearLink}>{t('common.clear')}</Text>
+                </TouchableOpacity>
+              </View>
+              <TextInput
+                style={styles.paymentInput}
+                value={paymentHandle}
+                onChangeText={(v) => { setPaymentHandle(v); setPaymentSaveAttempted(false); }}
+                placeholder={t(PAYMENT_HANDLE_PLACEHOLDER_KEYS[paymentMethod])}
+                placeholderTextColor={theme.colors.textTertiary}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType={getPaymentConsequence(paymentMethod) === 'manual' ? 'phone-pad' : 'default'}
+              />
+              {getPaymentConsequence(paymentMethod) === 'manual' && (
+                <Text style={styles.paymentSubHint}>{t('trip.paymentHandleBlikHint')}</Text>
+              )}
+              {paymentSaveAttempted && paymentHandleInvalid && (
+                <Text style={styles.invalid}>{t('settings.invalidPaymentHandle')}</Text>
+              )}
+              {paymentSaveAttempted && paymentHandleMissing && !paymentHandleInvalid && (
+                <Text style={styles.invalid}>{t('trip.paymentHandleRequired')}</Text>
+              )}
+
+              <TouchableOpacity style={styles.saveButtonFull} onPress={handleSavePaymentInfo}>
+                <Text style={styles.saveButtonFullText}>{t('common.save')}</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
         {/* Subscription */}
@@ -397,6 +503,49 @@ const createStyles = (theme: Theme) => ({
   chipTextActive: {
     color: theme.colors.primary,
     fontWeight: '600' as const,
+  },
+  paymentHint: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+  },
+  paymentHandleHeaderRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[3],
+  },
+  clearLink: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+  },
+  paymentInput: {
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing[3],
+    fontSize: 15,
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing[2],
+  },
+  paymentSubHint: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1.5],
+  },
+  invalid: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.danger,
+    marginTop: theme.spacing[1.5],
+  },
+  saveButtonFull: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3.5],
+    alignItems: 'center' as const,
+    marginTop: theme.spacing[4],
+  },
+  saveButtonFullText: {
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
   },
   modalOverlay: {
     flex: 1,

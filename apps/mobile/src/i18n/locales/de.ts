@@ -664,6 +664,8 @@ export default {
     applyColor: 'Übernehmen',
     resetAccent: 'Auf Standard zurücksetzen',
     invalidColor: 'Ungültige Farbe',
+    paymentConsequenceHint: 'Revolut und PayPal fügen deinen Split-Links einen echten Zahlen-Button hinzu; BLIK zeigt stattdessen deine Nummer mit Anweisungen (kein bankübergreifender Link); Bargeld und Andere zeigen keinen Zahlungs-Button.',
+    invalidPaymentHandle: 'Ungültige Zahlungskennung',
     about: 'Über die App',
     version: 'Version',
     support: 'Support & Feedback',
