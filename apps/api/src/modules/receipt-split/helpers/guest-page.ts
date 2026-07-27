@@ -44,6 +44,18 @@ export interface GuestPageItem {
 
 export type GuestPaymentStatus = 'sent' | 'opened' | 'claimed' | 'settled';
 
+/**
+ * One resolved payment method to render as its own block, in the order the caller
+ * resolved them (DB `sortOrder`, or the single legacy pair). `handle` is free text the
+ * payer typed — escaped by the renderer, never trusted as safe markup.
+ */
+export interface GuestPaymentMethodBlock {
+  method: string;
+  paymentLink: string | null;
+  manualInstructions: boolean;
+  handle: string;
+}
+
 export interface GuestPageModel {
   /** The participant's own name — free text the payer typed. Escaped by the renderer. */
   guestName: string;
@@ -57,9 +69,9 @@ export interface GuestPageModel {
   /** null = equal-split mode (no line items assigned) — never another participant's items. */
   items: GuestPageItem[] | null;
   status: GuestPaymentStatus;
-  paymentLink: string | null;
-  manualInstructions: boolean;
-  paymentHandle: string | null;
+  /** Ordered — one block rendered per entry. Empty = the payer offered no payment
+   * method at all (renders the "no payment info" line instead). */
+  paymentMethods: GuestPaymentMethodBlock[];
   /** Relative path the "I paid" form posts to, e.g. `/s/<token>/paid`. */
   postPaidAction: string;
 }
@@ -128,13 +140,26 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
 
   let payHtml = '';
   if (!hasClaimedPayment) {
-    if (model.paymentLink) {
-      payHtml = `<a class="btn btn-primary" rel="noreferrer" href="${escapeHtml(model.paymentLink)}">${escapeHtml(strings.payButton(model.payerName))}</a>`;
-    } else if (model.manualInstructions && model.paymentHandle) {
-      payHtml = `<div class="blik-box">${escapeHtml(strings.blikInstructions(model.paymentHandle))}</div>`;
-    } else {
-      payHtml = `<p class="muted">${escapeHtml(strings.noPaymentInfo)}</p>`;
-    }
+    // One block per resolved method, in order — a button for each link-capable method
+    // (revolut/paypal), the BLIK instructions box for BLIK. A method that resolves to
+    // neither (e.g. 'cash'/'other', which have no digital affordance to show) renders
+    // nothing and is silently skipped — it is not "no payment info" on its own, only
+    // when EVERY method skips does that line appear. Each button reuses the same
+    // `payButton` text regardless of method; distinguishing multiple buttons by brand
+    // name would need new copy, which is out of scope here (i18n is owned elsewhere).
+    const blocks = model.paymentMethods
+      .map((block) => {
+        if (block.paymentLink) {
+          return `<a class="btn btn-primary" rel="noreferrer" href="${escapeHtml(block.paymentLink)}">${escapeHtml(strings.payButton(model.payerName))}</a>`;
+        }
+        if (block.manualInstructions) {
+          return `<div class="blik-box">${escapeHtml(strings.blikInstructions(block.handle))}</div>`;
+        }
+        return null;
+      })
+      .filter((html): html is string => html !== null);
+
+    payHtml = blocks.length > 0 ? blocks.join('') : `<p class="muted">${escapeHtml(strings.noPaymentInfo)}</p>`;
   }
 
   let actionHtml: string;

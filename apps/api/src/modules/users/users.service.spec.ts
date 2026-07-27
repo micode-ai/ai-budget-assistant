@@ -93,3 +93,107 @@ describe('UsersService.search', () => {
     expect(result).toEqual([{ id: 'user-2', name: 'Anna', email: 'anna@example.com' }]);
   });
 });
+
+/**
+ * A lightweight in-memory fake of the `userPaymentMethod` Prisma delegate — real
+ * mutation, not just call-recording — so "replacing truly removes the previous
+ * entries" is a falsifiable assertion on the resulting data, not a mock-call check
+ * that would still pass if the delete were silently dropped. `$transaction` here just
+ * awaits whatever array it's given; `deleteMany`/`createMany` mutate `rows`
+ * synchronously (no internal `await`) so by the time the transaction array literal is
+ * built, both operations have already run in delete-then-create order — mirroring how
+ * Prisma's real array-form `$transaction` executes its statements in sequence.
+ */
+function makeInMemoryPaymentMethodPrisma() {
+  let rows: { id: string; userId: string; method: string; handle: string; sortOrder: number }[] = [];
+  let nextId = 0;
+
+  const userPaymentMethod = {
+    deleteMany: jest.fn(async ({ where }: { where: { userId: string } }) => {
+      const before = rows.length;
+      rows = rows.filter((r) => r.userId !== where.userId);
+      return { count: before - rows.length };
+    }),
+    createMany: jest.fn(async ({ data }: { data: { userId: string; method: string; handle: string; sortOrder: number }[] }) => {
+      for (const d of data) {
+        rows.push({ id: `pm-${++nextId}`, ...d });
+      }
+      return { count: data.length };
+    }),
+    findMany: jest.fn(async ({ where }: { where: { userId: string } }) =>
+      rows
+        .filter((r) => r.userId === where.userId)
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map((r) => ({ method: r.method, handle: r.handle })),
+    ),
+  };
+
+  return {
+    userPaymentMethod,
+    $transaction: jest.fn(async (ops: Promise<unknown>[]) => Promise.all(ops)),
+    _rows: () => rows,
+  };
+}
+
+describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
+  it('happy path: stores the list in the order given and getPaymentMethods returns it ordered by sortOrder', async () => {
+    const prisma = makeInMemoryPaymentMethodPrisma();
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    const service = module.get(UsersService);
+
+    const result = await service.replacePaymentMethods('user-1', [
+      { method: 'revolut' as any, handle: 'rev-handle' },
+      { method: 'blik' as any, handle: '+48 123 456 789' },
+    ]);
+
+    expect(result).toEqual([
+      { method: 'revolut', handle: 'rev-handle' },
+      { method: 'blik', handle: '+48 123 456 789' },
+    ]);
+    expect(await service.getPaymentMethods('user-1')).toEqual(result);
+  });
+
+  it('replacing truly removes the previous entries — a second call with a disjoint list leaves none of the first list behind', async () => {
+    const prisma = makeInMemoryPaymentMethodPrisma();
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    const service = module.get(UsersService);
+
+    await service.replacePaymentMethods('user-1', [
+      { method: 'revolut' as any, handle: 'old-revolut' },
+      { method: 'paypal' as any, handle: 'old-paypal' },
+    ]);
+    expect(prisma._rows()).toHaveLength(2);
+
+    const second = await service.replacePaymentMethods('user-1', [{ method: 'blik' as any, handle: 'new-blik' }]);
+
+    expect(second).toEqual([{ method: 'blik', handle: 'new-blik' }]);
+    // The old rows are gone from the underlying store, not just absent from this response.
+    expect(prisma._rows()).toEqual([
+      expect.objectContaining({ userId: 'user-1', method: 'blik', handle: 'new-blik' }),
+    ]);
+    expect(prisma._rows().some((r) => r.handle === 'old-revolut' || r.handle === 'old-paypal')).toBe(false);
+
+    const fetched = await service.getPaymentMethods('user-1');
+    expect(fetched).toEqual([{ method: 'blik', handle: 'new-blik' }]);
+  });
+
+  it("replacing one user's list never touches another user's rows", async () => {
+    const prisma = makeInMemoryPaymentMethodPrisma();
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    const service = module.get(UsersService);
+
+    await service.replacePaymentMethods('user-1', [{ method: 'revolut' as any, handle: 'user1-rev' }]);
+    await service.replacePaymentMethods('user-2', [{ method: 'paypal' as any, handle: 'user2-pp' }]);
+
+    await service.replacePaymentMethods('user-1', []);
+
+    expect(await service.getPaymentMethods('user-1')).toEqual([]);
+    expect(await service.getPaymentMethods('user-2')).toEqual([{ method: 'paypal', handle: 'user2-pp' }]);
+  });
+});

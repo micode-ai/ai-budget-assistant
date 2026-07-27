@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -9,6 +9,7 @@ import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
 import type { SettleMethod } from '@budget/shared-types';
+import { ReplaceUserPaymentMethodsDto } from './dto';
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 const THEME_MODES = ['light', 'dark', 'system'];
@@ -43,6 +44,7 @@ export class UsersController {
       .split(',')
       .map((e) => e.trim().toLowerCase())
       .filter(Boolean);
+    const paymentMethods = await this.usersService.getPaymentMethods(user.id);
 
     return {
       id: user.id,
@@ -57,9 +59,25 @@ export class UsersController {
       accentColor: user.accentColor,
       paymentMethod: user.paymentMethod,
       paymentHandle: user.paymentHandle,
+      paymentMethods,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
+  }
+
+  /**
+   * Replaces the whole payment-method list in one call — what a list-editing UI wants.
+   * Guarded the same way as every other `/users/me` route (class-level `JwtAuthGuard`
+   * only — this is a personal preference, not account-scoped, same precedent as the
+   * legacy `paymentMethod`/`paymentHandle` pair on `PATCH me`).
+   */
+  @Put('me/payment-methods')
+  async replacePaymentMethods(@Req() req: AuthenticatedRequest, @Body() body: ReplaceUserPaymentMethodsDto) {
+    const paymentMethods = await this.usersService.replacePaymentMethods(
+      req.user.id,
+      body.paymentMethods.map((m) => ({ method: m.method, handle: m.handle })),
+    );
+    return { paymentMethods };
   }
 
   @Get('search')

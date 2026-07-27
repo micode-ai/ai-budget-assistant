@@ -214,4 +214,40 @@ export class UsersService {
       data: { isActive: false },
     });
   }
+
+  /** Ordered by `sortOrder` — the order the caller set via `replacePaymentMethods`. */
+  async getPaymentMethods(userId: string): Promise<{ method: SettleMethod; handle: string }[]> {
+    return this.prisma.userPaymentMethod.findMany({
+      where: { userId },
+      orderBy: { sortOrder: 'asc' },
+      select: { method: true, handle: true },
+    });
+  }
+
+  /**
+   * Replaces the caller's whole payment-method list in one atomic delete-then-create
+   * transaction. `sortOrder` is assigned from array position (the order the caller sent).
+   * Nothing here can hit a unique-constraint P2002 in the normal case — the DTO already
+   * rejects a duplicate `method` before this runs — so there is no catch-and-recover to
+   * place outside the transaction (a poisoned-tx P2002 recovery only matters when a
+   * genuine race is possible, e.g. two concurrent replace calls; each such call fully
+   * replaces the set under its own transaction, so the last writer wins cleanly).
+   */
+  async replacePaymentMethods(
+    userId: string,
+    methods: { method: SettleMethod; handle: string }[],
+  ): Promise<{ method: SettleMethod; handle: string }[]> {
+    await this.prisma.$transaction([
+      this.prisma.userPaymentMethod.deleteMany({ where: { userId } }),
+      this.prisma.userPaymentMethod.createMany({
+        data: methods.map((m, index) => ({
+          userId,
+          method: m.method,
+          handle: m.handle,
+          sortOrder: index,
+        })),
+      }),
+    ]);
+    return this.getPaymentMethods(userId);
+  }
 }

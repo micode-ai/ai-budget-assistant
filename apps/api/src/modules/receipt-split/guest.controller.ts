@@ -8,6 +8,7 @@ import {
   renderNotFoundPage,
   buildGuestPayLink,
   GuestPageModel,
+  GuestPaymentMethodBlock,
   GuestPaymentStatus,
 } from './helpers/guest-page';
 import { getGuestPageStrings, resolveGuestLang } from './helpers/guest-page-i18n';
@@ -36,10 +37,17 @@ interface GuestParticipantRow {
   expense: GuestExpenseView | null;
 }
 
+/** One method resolved for the payer — plain `{method, handle}` pairs, ordered. */
+interface ResolvedPaymentMethod {
+  method: string;
+  handle: string;
+}
+
 interface ResolvedPayer {
   name: string;
-  paymentMethod: string | null;
-  paymentHandle: string | null;
+  /** Ordered (sortOrder, or single-entry/empty for the legacy fallback). Empty = the
+   * payer offered no payment method at all. */
+  methods: ResolvedPaymentMethod[];
 }
 
 // Duplicated (deliberately) from ReceiptSplitService's private `statusFor` — 4 lines, not
@@ -151,9 +159,13 @@ export class GuestController {
   }
 
   /**
-   * Resolution order (binding, per the task brief): the payer's user-level
-   * paymentMethod/paymentHandle first; only if EITHER is missing there, fall back to
-   * their AccountMember-level pair (trip wallet's per-account Payment Settings).
+   * Resolution order (binding, per the task brief): the payer's `UserPaymentMethod`
+   * list first (ordered by `sortOrder`) — if it has any rows, those are the whole
+   * answer, full stop. Only when that list is EMPTY do we fall back to the legacy
+   * single-pair logic exactly as it was before this list existed: the payer's
+   * user-level paymentMethod/paymentHandle, then (only if EITHER is missing) their
+   * AccountMember-level pair (trip wallet's per-account Payment Settings). This way an
+   * existing user who never sets up the new list loses nothing.
    * "Payer" = `paidByUserId` ("who actually paid", defaults to the creator on every
    * expense — see expenses.service.ts) falling back to `userId` for pre-migration rows.
    */
@@ -161,9 +173,22 @@ export class GuestController {
     const payerId = expense.paidByUserId ?? expense.userId;
     const user = await this.prisma.user.findUnique({
       where: { id: payerId },
-      select: { name: true, paymentMethod: true, paymentHandle: true },
+      select: {
+        name: true,
+        paymentMethod: true,
+        paymentHandle: true,
+        paymentMethods: {
+          orderBy: { sortOrder: 'asc' },
+          select: { method: true, handle: true },
+        },
+      },
     });
 
+    if (user?.paymentMethods && user.paymentMethods.length > 0) {
+      return { name: user.name ?? '', methods: user.paymentMethods };
+    }
+
+    // Legacy fallback — unchanged behavior from before the multi-method list existed.
     let paymentMethod = user?.paymentMethod ?? null;
     let paymentHandle = user?.paymentHandle ?? null;
 
@@ -176,7 +201,8 @@ export class GuestController {
       paymentHandle = paymentHandle ?? member?.paymentHandle ?? null;
     }
 
-    return { name: user?.name ?? '', paymentMethod, paymentHandle };
+    const methods = paymentMethod && paymentHandle ? [{ method: paymentMethod, handle: paymentHandle }] : [];
+    return { name: user?.name ?? '', methods };
   }
 
   private buildModel(participant: GuestParticipantRow, payer: ResolvedPayer, token: string): GuestPageModel {
@@ -189,12 +215,14 @@ export class GuestController {
           .map((item) => ({ description: item.description ?? '', amount: Number(item.totalPrice) }))
       : null;
 
-    const { paymentLink, manualInstructions } = buildGuestPayLink(
-      payer.paymentMethod,
-      payer.paymentHandle,
-      amount,
-      participant.currencyCode,
-    );
+    // One block per resolved method, in the same order `payer.methods` arrived in
+    // (sortOrder from the DB, or the single legacy pair). `buildGuestPayLink` is the
+    // untouched pure per-method builder — called once per method here, exactly as it
+    // was already designed to be called.
+    const paymentMethods: GuestPaymentMethodBlock[] = payer.methods.map((m) => {
+      const { paymentLink, manualInstructions } = buildGuestPayLink(m.method, m.handle, amount, participant.currencyCode);
+      return { method: m.method, paymentLink, manualInstructions, handle: m.handle };
+    });
 
     return {
       guestName: participant.name,
@@ -205,9 +233,7 @@ export class GuestController {
       currencyCode: participant.currencyCode,
       items,
       status: statusFor(participant),
-      paymentLink,
-      manualInstructions,
-      paymentHandle: payer.paymentHandle,
+      paymentMethods,
       postPaidAction: `/s/${token}/paid`,
     };
   }

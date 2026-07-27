@@ -170,6 +170,10 @@ model User {
   contributeCommunityPrices Boolean @default(false) @map("contribute_community_prices")
   themeMode                 String  @default("system") @map("theme_mode")
   accentColor               String? @map("accent_color")
+  // LEGACY single-pair payment info (receipt-split guest page). `UserPaymentMethod`
+  // below is now the authoritative, multi-method source — this pair is kept only as a
+  // read-fallback for existing users' data (never dropped/backfilled) and is still
+  // mirrored on write so older clients/rows stay consistent. Do not add new callers.
   paymentMethod             SettleMethod? @map("payment_method")
   paymentHandle             String?       @map("payment_handle")
   isActive             Boolean   @default(true) @map("is_active")
@@ -248,8 +252,29 @@ model User {
   feedEvents            FamilyFeedEvent[]
   feedReactions         FeedReaction[]
   tripExpenseShares     TripExpenseShare[]
+  paymentMethods        UserPaymentMethod[]
 
   @@map("users")
+}
+
+// Lets a payer offer several payment methods (e.g. BLIK + Revolut + PayPal) on the
+// receipt-split guest page instead of exactly one. This table is the authoritative
+// source for a user's payment info; User.paymentMethod/paymentHandle above are a
+// legacy single-pair read-fallback for users who haven't set this up yet.
+model UserPaymentMethod {
+  id        String       @id @default(uuid())
+  userId    String       @map("user_id")
+  method    SettleMethod
+  handle    String
+  sortOrder Int          @default(0) @map("sort_order")
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, method])
+  @@index([userId])
+  @@map("user_payment_methods")
 }
 
 model Account {

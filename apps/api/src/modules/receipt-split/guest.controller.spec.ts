@@ -248,6 +248,60 @@ describe('GuestController.guestPage', () => {
   });
 });
 
+describe('GuestController.guestPage — multi-method payment resolution order', () => {
+  it('uses the UserPaymentMethod list first, ignoring the legacy single pair even when both are set', async () => {
+    const { controller, prisma } = buildController({
+      payerUser: {
+        name: 'Payer Pat',
+        paymentMethod: 'blik',
+        paymentHandle: 'legacy-blik-handle',
+        paymentMethods: [
+          { method: 'revolut', handle: 'listed-revolut' },
+          { method: 'paypal', handle: 'listed-paypal' },
+        ],
+      },
+    });
+    const html = await controller.guestPage(participantFixture.token, {} as any);
+
+    expect(html).toContain('https://revolut.me/listed-revolut');
+    expect(html).toContain('https://paypal.me/listed-paypal');
+    expect(html).not.toContain('legacy-blik-handle');
+    // The list alone answers it — no need to even consult the AccountMember fallback.
+    expect(prisma.accountMember.findFirst).not.toHaveBeenCalled();
+  });
+
+  it('falls back to the legacy single pair exactly as before when the list is empty', async () => {
+    const { controller } = buildController({
+      payerUser: { name: 'Payer Pat', paymentMethod: 'revolut', paymentHandle: 'payerpat', paymentMethods: [] },
+    });
+    const html = await controller.guestPage(participantFixture.token, {} as any);
+    expect(html).toContain('https://revolut.me/payerpat');
+  });
+
+  it('falls back to the AccountMember pair when the list is empty AND the legacy pair is unset', async () => {
+    const { controller, prisma } = buildController({
+      payerUser: { name: 'Payer Pat', paymentMethod: null, paymentHandle: null, paymentMethods: [] },
+      member: { paymentMethod: 'paypal', paymentHandle: 'payerpat-account' },
+    });
+    const html = await controller.guestPage(participantFixture.token, {} as any);
+    expect(prisma.accountMember.findFirst).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', userId: 'payer-1' },
+      select: { paymentMethod: true, paymentHandle: true },
+    });
+    expect(html).toContain('https://paypal.me/payerpat-account');
+  });
+
+  it('shows the "no payment info" line when the list is empty, the legacy pair is unset, and the account member has none either', async () => {
+    const { controller } = buildController({
+      payerUser: { name: 'Payer Pat', paymentMethod: null, paymentHandle: null, paymentMethods: [] },
+      member: null,
+    });
+    const html = await controller.guestPage(participantFixture.token, {} as any);
+    const strings = getGuestPageStrings('en');
+    expect(html).toContain(strings.noPaymentInfo);
+  });
+});
+
 describe('GuestController.markPaid', () => {
   it('is idempotent — a second call leaves claimedAt unchanged and sends only one notification', async () => {
     const { controller, prisma, notificationsService } = buildController({
@@ -366,9 +420,14 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
     currencyCode: 'USD',
     items: null,
     status: 'sent',
-    paymentLink: 'https://revolut.me/payerpat?amount=25.5&currency=USD',
-    manualInstructions: false,
-    paymentHandle: 'payerpat',
+    paymentMethods: [
+      {
+        method: 'revolut',
+        paymentLink: 'https://revolut.me/payerpat?amount=25.5&currency=USD',
+        manualInstructions: false,
+        handle: 'payerpat',
+      },
+    ],
     postPaidAction: '/s/token/paid',
   };
   const strings = getGuestPageStrings('en');
@@ -400,9 +459,9 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
     const model: GuestPageModel = {
       ...baseModel,
       status: 'claimed',
-      paymentLink: null,
-      manualInstructions: true,
-      paymentHandle: 'blik-handle',
+      paymentMethods: [
+        { method: 'blik', paymentLink: null, manualInstructions: true, handle: 'blik-handle' },
+      ],
     };
     const html = renderGuestPage(model, strings);
     expect(html).not.toContain('<div class="blik-box">');
@@ -412,5 +471,105 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
   it('still shows the "marked as paid" confirmation once claimed (the pay button disappears, the notice does not)', () => {
     const html = renderGuestPage({ ...baseModel, status: 'claimed' }, strings);
     expect(html).toContain(strings.claimedNotice);
+  });
+});
+
+describe('renderGuestPage — multiple payment methods (one block per method)', () => {
+  const strings = getGuestPageStrings('en');
+  const baseModel: GuestPageModel = {
+    guestName: 'Alice',
+    merchant: 'Test Diner',
+    dateLabel: '2026-07-20',
+    payerName: 'Payer Pat',
+    amount: 25.5,
+    currencyCode: 'USD',
+    items: null,
+    status: 'sent',
+    paymentMethods: [],
+    postPaidAction: '/s/token/paid',
+  };
+
+  it('renders one button per link-capable method, in order — two methods produce two buttons', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', manualInstructions: false, handle: 'rev-handle' },
+          { method: 'paypal', paymentLink: 'https://paypal.me/pp-handle/25.50', manualInstructions: false, handle: 'pp-handle' },
+        ],
+      },
+      strings,
+    );
+
+    const buttonCount = (html.match(/<a class="btn btn-primary"/g) ?? []).length;
+    expect(buttonCount).toBe(2);
+    expect(html).toContain('https://revolut.me/rev-handle');
+    expect(html).toContain('https://paypal.me/pp-handle/25.50');
+    // Order preserved: revolut's href appears before paypal's.
+    expect(html.indexOf('https://revolut.me/rev-handle')).toBeLessThan(html.indexOf('https://paypal.me/pp-handle/25.50'));
+  });
+
+  it('BLIK produces the instructions box, not a link button', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'blik', paymentLink: null, manualInstructions: true, handle: 'blik-handle' }] },
+      strings,
+    );
+    expect(html).not.toContain('<a class="btn btn-primary"');
+    expect(html).toContain('<div class="blik-box">');
+    expect(html).toContain('blik-handle');
+  });
+
+  it('renders a button AND a box together when a link-capable method and BLIK are both offered', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', manualInstructions: false, handle: 'rev-handle' },
+          { method: 'blik', paymentLink: null, manualInstructions: true, handle: 'blik-handle' },
+        ],
+      },
+      strings,
+    );
+    expect(html).toContain('<a class="btn btn-primary"');
+    expect(html).toContain('<div class="blik-box">');
+  });
+
+  it('escapes every handle — including a BLIK handle rendered inside the instructions box', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'blik', paymentLink: null, manualInstructions: true, handle: '<b>evil</b>' }] },
+      strings,
+    );
+    expect(html).not.toContain('<b>evil</b>');
+    expect(html).toContain('&lt;b&gt;evil&lt;/b&gt;');
+  });
+
+  it('shows the "no payment info" line only when the method list is empty', () => {
+    const html = renderGuestPage({ ...baseModel, paymentMethods: [] }, strings);
+    expect(html).toContain(strings.noPaymentInfo);
+    expect(html).not.toContain('<a class="btn btn-primary"');
+    expect(html).not.toContain('<div class="blik-box">');
+  });
+
+  it('shows the "no payment info" line when every configured method resolves to nothing renderable (e.g. cash)', () => {
+    const html = renderGuestPage(
+      { ...baseModel, paymentMethods: [{ method: 'cash', paymentLink: null, manualInstructions: false, handle: 'n/a' }] },
+      strings,
+    );
+    expect(html).toContain(strings.noPaymentInfo);
+  });
+
+  it('does NOT show the "no payment info" line when at least one method rendered something', () => {
+    const html = renderGuestPage(
+      {
+        ...baseModel,
+        paymentMethods: [
+          { method: 'cash', paymentLink: null, manualInstructions: false, handle: 'n/a' },
+          { method: 'revolut', paymentLink: 'https://revolut.me/rev-handle', manualInstructions: false, handle: 'rev-handle' },
+        ],
+      },
+      strings,
+    );
+    expect(html).not.toContain(strings.noPaymentInfo);
+    expect(html).toContain('https://revolut.me/rev-handle');
   });
 });
