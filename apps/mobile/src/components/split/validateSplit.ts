@@ -39,6 +39,14 @@ export function validateSplit(
   if (participants.length > MAX_SPLIT_PARTICIPANTS) return false;
   if (participants.some((p) => p.name.trim().length === 0)) return false;
 
+  // Mirrors the server's "Every participant must have a positive share" rule.
+  // In item mode a named friend with nothing assigned to them resolves to a 0
+  // share, which `createSplit` always rejects with a 400 — so without this the
+  // Create button stays enabled on a submission that cannot succeed, and the
+  // user gets a generic error instead of being told to finish assigning.
+  // Unreachable in equal mode, where everyone gets billTotal/(n+1).
+  if (participants.some((p) => p.shareAmount <= 0)) return false;
+
   const sum = participants.reduce((acc, p) => acc + p.shareAmount, 0);
   if (sum > billTotal + SHARE_TOLERANCE) return false;
 

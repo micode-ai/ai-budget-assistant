@@ -2382,6 +2382,7 @@ export default {
     addPerson: 'Dodaj osobę',
     personName: 'Imię',
     yourShare: 'Twój udział',
+    assignEveryone: 'Przypisz każdej osobie co najmniej jedną pozycję',
     assignHint: 'Dotknij pozycję, a potem osobę, która ją zamówiła',
     equalMode: 'Podziel po równo',
     equalHint: 'Ten wydatek nie ma pozycji, więc zostanie podzielony po równo.',

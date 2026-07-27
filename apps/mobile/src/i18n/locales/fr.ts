@@ -2376,6 +2376,7 @@ export default {
     addPerson: 'Ajouter une personne',
     personName: 'Nom',
     yourShare: 'Votre part',
+    assignEveryone: "Attribuez au moins un article à chaque personne",
     assignHint: "Appuyez sur un article, puis sur la personne qui l'a pris",
     equalMode: 'Diviser à parts égales',
     equalHint: "Cette dépense n'a pas d'articles, elle sera donc divisée à parts égales.",

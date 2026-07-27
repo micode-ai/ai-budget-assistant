@@ -2380,6 +2380,7 @@ export default {
     addPerson: 'Add person',
     personName: 'Name',
     yourShare: 'Your share',
+    assignEveryone: 'Assign at least one item to everyone',
     assignHint: 'Tap an item, then tap who had it',
     equalMode: 'Split equally',
     equalHint: 'This expense has no line items, so it will be divided equally.',

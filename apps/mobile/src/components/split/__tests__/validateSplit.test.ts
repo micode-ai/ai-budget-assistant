@@ -76,3 +76,36 @@ describe('validateSplit', () => {
     });
   });
 });
+
+describe('validateSplit — every participant needs a positive share', () => {
+  // The server rejects a 0 share outright ("Every participant must have a positive
+  // share"), so the client must refuse to submit it. This is reachable only in item
+  // mode: name a friend, assign them nothing, and their share resolves to 0.
+  it('rejects a participant with nothing assigned to them', () => {
+    expect(
+      validateSplit(
+        [
+          { name: 'Alice', shareAmount: 50 },
+          { name: 'Bob', shareAmount: 0 },
+        ],
+        200,
+      ),
+    ).toBe(false);
+  });
+
+  it('rejects a negative share', () => {
+    expect(validateSplit([{ name: 'Alice', shareAmount: -1 }], 200)).toBe(false);
+  });
+
+  it('accepts once everyone has something', () => {
+    expect(
+      validateSplit(
+        [
+          { name: 'Alice', shareAmount: 50 },
+          { name: 'Bob', shareAmount: 50 },
+        ],
+        200,
+      ),
+    ).toBe(true);
+  });
+});

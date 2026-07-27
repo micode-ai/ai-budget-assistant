@@ -229,6 +229,12 @@ export default function ReceiptSplitScreen() {
   const showTooManyHint = participants.length > MAX_SPLIT_PARTICIPANTS;
   const showOverBillHint =
     validationCandidates.reduce((sum, p) => sum + p.shareAmount, 0) > billTotal + OVER_BILL_TOLERANCE;
+  // A named friend with nothing assigned resolves to a 0 share, which the server
+  // rejects outright. Say so, rather than leaving Create disabled with no reason.
+  const showUnassignedHint =
+    mode === 'items' &&
+    validationCandidates.length > 0 &&
+    validationCandidates.some((p) => p.shareAmount <= 0);
 
   async function handleCreate() {
     if (!expense || !canEdit || !isValid || isEncryptedAccount || isCreating) return;
@@ -566,6 +572,9 @@ export default function ReceiptSplitScreen() {
 
         {showTooManyHint && <Text style={styles.errorHint}>{t('receiptSplit.tooMany')}</Text>}
         {showOverBillHint && <Text style={styles.errorHint}>{t('receiptSplit.overBill')}</Text>}
+        {showUnassignedHint && (
+          <Text style={styles.errorHint}>{t('receiptSplit.assignEveryone')}</Text>
+        )}
       </KeyboardAwareScreen>
 
       {canEdit && (

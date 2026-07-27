@@ -2376,6 +2376,7 @@ export default {
     addPerson: 'Persoon toevoegen',
     personName: 'Naam',
     yourShare: 'Jouw deel',
+    assignEveryone: 'Wijs iedereen minstens één product toe',
     assignHint: 'Tik op een product en dan op wie het had',
     equalMode: 'Gelijk verdelen',
     equalHint: 'Deze uitgave heeft geen producten, dus wordt hij gelijk verdeeld.',

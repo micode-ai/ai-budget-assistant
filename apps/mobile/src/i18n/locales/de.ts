@@ -2376,6 +2376,7 @@ export default {
     addPerson: 'Person hinzufügen',
     personName: 'Name',
     yourShare: 'Dein Anteil',
+    assignEveryone: 'Weise jeder Person mindestens eine Position zu',
     assignHint: 'Tippe auf eine Position und dann auf die Person, die sie hatte',
     equalMode: 'Gleichmäßig aufteilen',
     equalHint: 'Diese Ausgabe hat keine Positionen, daher wird sie gleichmäßig aufgeteilt.',
