@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import type { SettleMethod } from '@budget/shared-types';
 
 interface CreateUserData {
   email: string;
@@ -15,6 +16,8 @@ interface CreateUserData {
   contributeCommunityPrices?: boolean;
   themeMode?: string;
   accentColor?: string | null;
+  paymentMethod?: SettleMethod | null;
+  paymentHandle?: string | null;
 }
 
 @Injectable()

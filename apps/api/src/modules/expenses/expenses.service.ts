@@ -14,6 +14,7 @@ import { resolveShares } from './trip-share-calculator';
 import { buildLocationColumns } from './expense-location.util';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
+import { ReceiptSplitService } from '../receipt-split/receipt-split.service';
 
 /**
  * CRUD + fire-and-forget-hooks orchestrator for expenses. `bulkUpdate` lives in
@@ -31,6 +32,7 @@ export class ExpensesService {
     private readonly cacheService: CacheService,
     private readonly anomalyService: AnomalyService,
     private readonly merchantRules: MerchantRulesService,
+    private readonly receiptSplitService: ReceiptSplitService,
     @Optional() private readonly familyFeed?: FamilyFeedService,
     @Optional() private readonly communityPrices?: CommunityPriceService,
     @Optional() private readonly shieldTracking?: InflationShieldTrackingService,
@@ -420,8 +422,12 @@ export class ExpensesService {
           recurringId: true,
           recurringPeriod: true,
           source: true,
+          externalRef: true,
           isDebt: true,
           isDebtRepayment: true,
+          isPlanned: true,
+          isSplitReceivable: true,
+          paidByUserId: true,
           debtContactName: true,
           debtDueDate: true,
           relatedDebtIncomeId: true,
@@ -641,6 +647,15 @@ export class ExpensesService {
     // Resolving a duplicate by deleting the expense must also clear any anomaly
     // alert that deep-links to it, or the alert dead-ends on "Expense not found".
     void this.anomalyService.dismissForExpense(accountId, expense.id);
+    // A deleted receipt's guest split links must stop resolving. isDeleted does NOT
+    // fire the Prisma onDelete:Cascade (that only fires on a genuine hard delete),
+    // so the split's debt rows and participant expiry must be handled explicitly.
+    // No-ops when the expense was never split. void-and-never-throw, same shape as
+    // dismissForExpense above. Real DI (ExpensesModule imports ReceiptSplitModule;
+    // no cycle — see expenses.module.ts), not a standalone-function import: the
+    // module-cycle check confirmed DebtsModule (ReceiptSplitModule's only
+    // dependency) imports nothing, so there is no path back to ExpensesModule.
+    void this.receiptSplitService.expireForExpense(expense.id);
 
     return { success: true };
   }

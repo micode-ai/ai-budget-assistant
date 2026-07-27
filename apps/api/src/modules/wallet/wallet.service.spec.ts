@@ -154,6 +154,25 @@ describe('WalletService.getSummary', () => {
     const res = await service.getSummary('a1');
     expect(res.balances).toEqual([]);
   });
+
+  // Regression guard for the wallet double-counting bug: a receipt split's
+  // debt rows (isSplitReceivable: true) must be excluded from the wallet's
+  // expense total — that money already left as the original receipt expense.
+  // But NOT isDebt: for a standalone cash loan the debt row IS the outflow,
+  // so filtering on isDebt would wrongly zero out every user's tracked debts.
+  // Mirrors the same both-halves assertion in analytics.service.spec.ts,
+  // safe-to-spend.service.spec.ts, and budget-alert.service.spec.ts.
+  it('excludes split receivables from the expense total but still counts a standalone debt', async () => {
+    const service = makeService({});
+    await service.getSummary('a1');
+
+    const where = (service as any).prisma.expense.groupBy.mock.calls[0][0].where;
+    // The marker the split feature sets — must be filtered out.
+    expect(where.isSplitReceivable).toBe(false);
+    // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
+    // filtering on it would rewrite the numbers of every user tracking debts.
+    expect(where.isDebt).toBeUndefined();
+  });
 });
 
 describe('WalletService.getBalanceHistory', () => {

@@ -123,6 +123,15 @@ interface AccountInvitationBodyParams {
   accountName: string;
 }
 
+interface SplitPaymentClaimedTitleParams {
+  name: string;
+}
+
+interface SplitPaymentClaimedBodyParams {
+  amount: string;
+  currencyCode: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -188,6 +197,8 @@ const translations: Record<string, {
   tripSettleUpBody: (p: TripSettleUpParams) => string;
   accountInvitationTitle: (p: AccountInvitationParams) => string;
   accountInvitationBody: (p: AccountInvitationBodyParams) => string;
+  splitPaymentClaimedTitle: (p: SplitPaymentClaimedTitleParams) => string;
+  splitPaymentClaimedBody: (p: SplitPaymentClaimedBodyParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -278,6 +289,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Time to settle up with your trip group',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} invited you`,
     accountInvitationBody: ({ accountName }) => `Join "${accountName}" — tap to accept or decline.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} says they paid`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirm the ${amount} ${currencyCode} payment in the app.`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -368,6 +381,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Пора рассчитаться с группой поездки',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} пригласил вас`,
     accountInvitationBody: ({ accountName }) => `Присоединяйтесь к «${accountName}» — нажмите, чтобы принять или отклонить.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} говорит, что оплатил(а)`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Подтвердите платёж ${amount} ${currencyCode} в приложении.`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -458,6 +473,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Час розрахуватися з групою поїздки',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} запросив вас`,
     accountInvitationBody: ({ accountName }) => `Приєднайтесь до «${accountName}» — торкніться, щоб прийняти або відхилити.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} каже, що оплатив(ла)`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Підтвердьте платіж ${amount} ${currencyCode} у застосунку.`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -548,6 +565,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Czas rozliczyć się z grupą wyjazdową',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} zaprosił(a) Cię`,
     accountInvitationBody: ({ accountName }) => `Dołącz do "${accountName}" — dotknij, aby zaakceptować lub odrzucić.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} mówi, że zapłacił(a)`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Potwierdź płatność ${amount} ${currencyCode} w aplikacji.`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -638,6 +657,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Es hora de saldar cuentas con tu grupo de viaje',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} te ha invitado`,
     accountInvitationBody: ({ accountName }) => `Únete a "${accountName}" — toca para aceptar o rechazar.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} dice que pagó`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirma el pago de ${amount} ${currencyCode} en la app.`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -728,6 +749,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Il est temps de faire les comptes avec votre groupe de voyage',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} vous a invité(e)`,
     accountInvitationBody: ({ accountName }) => `Rejoignez "${accountName}" — appuyez pour accepter ou refuser.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} dit avoir payé`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirmez le paiement de ${amount} ${currencyCode} dans l'application.`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -818,6 +841,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Zeit, mit deiner Reisegruppe abzurechnen',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} hat dich eingeladen`,
     accountInvitationBody: ({ accountName }) => `Tritt "${accountName}" bei — tippen zum Annehmen oder Ablehnen.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} gibt an, bezahlt zu haben`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Bestätige die Zahlung von ${amount} ${currencyCode} in der App.`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -908,6 +933,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Час разлічыцца з групай паездкі',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} запрасіў(ла) вас`,
     accountInvitationBody: ({ accountName }) => `Далучайцеся да «${accountName}» — націсніце, каб прыняць ці адхіліць.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} кажа, што заплаціў(ла)`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Пацвердзіце плацёж ${amount} ${currencyCode} у дадатку.`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -998,6 +1025,8 @@ const translations: Record<string, {
     tripSettleUpBody: () => 'Tijd om af te rekenen met je reisgroep',
     accountInvitationTitle: ({ inviterName }) => `${inviterName} heeft je uitgenodigd`,
     accountInvitationBody: ({ accountName }) => `Word lid van "${accountName}" — tik om te accepteren of te weigeren.`,
+    splitPaymentClaimedTitle: ({ name }) => `${name} geeft aan te hebben betaald`,
+    splitPaymentClaimedBody: ({ amount, currencyCode }) => `Bevestig de betaling van ${amount} ${currencyCode} in de app.`,
   },
 };
 
@@ -1217,6 +1246,14 @@ export function accountInvitationTitle(lang: Lang, params: AccountInvitationPara
 
 export function accountInvitationBody(lang: Lang, params: AccountInvitationBodyParams): string {
   return t(lang).accountInvitationBody(params);
+}
+
+export function splitPaymentClaimedTitle(lang: Lang, params: SplitPaymentClaimedTitleParams): string {
+  return t(lang).splitPaymentClaimedTitle(params);
+}
+
+export function splitPaymentClaimedBody(lang: Lang, params: SplitPaymentClaimedBodyParams): string {
+  return t(lang).splitPaymentClaimedBody(params);
 }
 
 export function budgetCategoryThresholdTitle(lang: Lang, params: BudgetCategoryThresholdParams): string {

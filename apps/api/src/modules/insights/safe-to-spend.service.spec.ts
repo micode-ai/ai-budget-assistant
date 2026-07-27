@@ -203,6 +203,42 @@ describe('SafeToSpendService.compute', () => {
 });
 
 // ---------------------------------------------------------------------------
+// SafeToSpendService — split receivable filter
+// ---------------------------------------------------------------------------
+describe('SafeToSpendService — split receivable filter', () => {
+  it('excludes split receivables from spend but still counts a standalone debt', async () => {
+    // Built inline (not via makeService) because makeService doesn't expose
+    // the prisma mock needed to assert on the call's `where` clause.
+    const prisma: any = {
+      income: { findMany: jest.fn().mockResolvedValue([]) },
+      userSubscription: { findMany: jest.fn().mockResolvedValue([]) },
+      expense: { findMany: jest.fn().mockResolvedValue([]) },
+      savingsGoal: { findMany: jest.fn().mockResolvedValue([]) },
+    };
+    const walletService: any = {
+      getSummary: jest.fn().mockResolvedValue({ balances: [] }),
+    };
+    const exchangeRateService: any = {
+      getRates: jest.fn().mockRejectedValue(new Error('no rates')),
+    };
+    const cacheService: any = {
+      get: jest.fn().mockResolvedValue(null),
+      set: jest.fn().mockResolvedValue(undefined),
+    };
+
+    const service = new SafeToSpendService(prisma, walletService, exchangeRateService, cacheService);
+    await service.compute('acc-1', 'user-1', 'USD');
+
+    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
+    // The marker the split feature sets — must be filtered out.
+    expect(where.isSplitReceivable).toBe(false);
+    // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
+    // filtering on it would rewrite the numbers of every user tracking debts.
+    expect(where.isDebt).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // SafeToSpendService.checkAffordability tests
 // ---------------------------------------------------------------------------
 describe('SafeToSpendService.checkAffordability', () => {

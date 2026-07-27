@@ -23,6 +23,7 @@ import { tripApi } from './trip.api';
 import { priceHistoryApi } from './priceHistory.api';
 import { shoppingListsApi } from './shoppingLists.api';
 import { communityPricesApi } from './community-prices.api';
+import { receiptSplitApi } from './receiptSplit.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -51,6 +52,7 @@ export const api = {
   ...priceHistoryApi,
   ...shoppingListsApi,
   ...communityPricesApi,
+  ...receiptSplitApi,
 };
 
 export function getApiBaseUrl(): string {

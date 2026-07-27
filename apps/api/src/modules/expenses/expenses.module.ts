@@ -11,9 +11,15 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
 import { FamilyFeedModule } from '../family-feed/family-feed.module';
 import { CommunityPriceModule } from '../community-prices/community-price.module';
 import { InflationShieldTrackingModule } from '../insights/inflation-shield-tracking.module';
+import { ReceiptSplitModule } from '../receipt-split/receipt-split.module';
 
+// Module-cycle check (Fix 3, ABA receipt-split review): ReceiptSplitModule only
+// imports DebtsModule, and DebtsModule imports nothing at all (a true leaf on
+// the global PrismaService) — so ExpensesModule -> ReceiptSplitModule ->
+// DebtsModule is a one-way edge with no path back to ExpensesModule. Real DI is
+// safe here; do not revert to importing a standalone function.
 @Module({
-  imports: [BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule],
+  imports: [BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule],
   controllers: [ExpensesController],
   providers: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseRecurringCron],
   exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService],

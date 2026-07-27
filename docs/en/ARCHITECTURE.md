@@ -520,6 +520,13 @@ src/
 │   │   ├── restock-predictor.ts     # pure predictRestock
 │   │   ├── deal-detector.ts         # pure detectDeals
 │   │   └── shopping-reminder.cron.ts
+│   ├── receipt-split/          # Receipt splitting + public guest links
+│   │   ├── receipt-split.module.ts
+│   │   ├── receipt-split.controller.ts   # payer-facing /expenses/:id/receipt-split*
+│   │   ├── guest.controller.ts           # public, unauthenticated /s/:token*
+│   │   ├── receipt-split.service.ts
+│   │   ├── split-calculator.ts           # pure resolveItemSplit / resolveEqualSplit
+│   │   └── helpers/                      # guest-page.ts, guest-page-i18n.ts
 │   └── whatsapp/               # WhatsApp Business Cloud bot
 │       ├── whatsapp-bot.service.ts
 │       ├── whatsapp-bot.controller.ts
@@ -1558,6 +1565,33 @@ A daily cron (`shopping-reminder.cron.ts`, `0 10 * * *`) pushes the top due rest
 ### API Endpoints
 
 `GET/POST /shopping-list`, `PATCH/DELETE /shopping-list/:id`, `POST /shopping-list/:id/items`, `PATCH/DELETE /shopping-list/items/:itemId`, `POST /shopping-list/:id/clear-checked`, `GET /shopping-list/suggestions`, `GET /shopping-list/deals` — all behind `JwtAuthGuard + AccountContextGuard`. Item writes are collaborative (**not** `ViewerBlockGuard`-gated); only `DELETE /shopping-list/:id` requires an editor or owner role. The basket comparison `POST /price-history/basket` additionally carries `SubscriptionTierGuard` + `@RequireTier('pro')`.
+
+## Receipt Splitting
+
+The `receipt-split` module lets the payer of a shared bill split it among people who don't have the app, via a public, tokenized guest link — no account, no JWT, no `X-Account-Id`.
+
+### How It Works
+
+1. The payer assigns each scanned receipt's line items to a named participant, or splits the whole bill evenly when there are no line items, via `POST /expenses/:id/receipt-split`. The splitting math (`split-calculator.ts`'s pure `resolveItemSplit`/`resolveEqualSplit`) works in integer cents and always leaves the rounding remainder with the payer.
+2. That write creates one `receipt_split_participants` row **and** one `isDebt: true, isSplitReceivable: true` Expense per participant — the receivable — alongside the original receipt Expense (the outflow), all in a single transaction.
+3. Each participant gets their own 128-bit random token and a public URL: `GUEST_LINK_BASE + /s/<token>?lang=<payer's user.language>`. `GUEST_LINK_BASE` is `APP_PUBLIC_URL` if set, else `https://api.ai-budget.pl` (which already serves the route) — the pretty apex form needs a `location /s/` nginx block that does not ship with the code (see `docs/ops/receipt-split-rollout.md`).
+4. A guest opens `GET /s/:token` and sees only their own name, amount, assigned items, the payer's name, and a payment link/instructions — never another participant's data, the receipt image, or any account identifier. An unknown, expired, and cancelled token all produce byte-identical responses.
+5. The guest's `POST /s/:token/paid` flips their status to `claimed` and pushes `split_payment_claimed` to the payer. The payer reviews the per-participant status list (`sent → opened → claimed → settled`) and calls `PATCH /expenses/:id/receipt-split/:participantId/confirm`, which runs the debt through the exact same `DebtsService.recordRepayment` path a manual repayment takes, under an atomic `settledAt IS NULL` claim.
+
+### Accounting Correctness
+
+Splitting a 200 bill among three guests creates the 200 receipt Expense **plus** three 50 `isSplitReceivable` Expenses. Counting both would report 350 of spend for one dinner. `common/utils/expense-filters.ts` exports `EXCLUDE_SPLIT_RECEIVABLE = { isSplitReceivable: false }`, the single shared predicate spread into every user-facing total in `analytics.service.ts`, `budget-alert.service.ts`, `safe-to-spend.service.ts`, and `wallet.service.ts`. The filter is deliberately on `isSplitReceivable`, never `isDebt` — for a standalone cash loan the debt row IS the outflow, so filtering on `isDebt` would silently rewrite the numbers of every user who already tracks debts. Mobile mirrors this with `filterConsumption()` (`apps/mobile/src/utils/consumption.ts`), consumed by seven client-side surfaces (`NetProfitWidget`, `useFilteredTransactions`, `useSafeToSpend`, `useScenarioProjection`, `useCalendarData`, `widgetData`, `budgetStore`).
+
+### Database Tables
+
+- `receipt_split_participants` — `id`, `accountId`, `expenseId` (FK `onDelete: Cascade`, which only fires on a genuine hard delete — the app soft-deletes expenses, so `ExpensesService.remove` explicitly expires a deleted expense's split), `seq`, `name`, `token` (`@unique`), `amount`, `currencyCode`, `itemIds` (`Json?`), `debtExpenseId`, `openedAt`/`claimedAt`/`settledAt`/`cancelledAt`/`expiresAt` (migrations `20260726120000_add_receipt_split`, `20260726130000_add_receipt_split_cancelled_at`).
+- Partial unique index `receipt_split_live_slot` on `(expense_id, seq) WHERE cancelled_at IS NULL` (migration `20260727120000_add_receipt_split_participant_seq`) — enforces at most one **live** split per expense: a concurrent double-create collides on it (caught outside the `$transaction`), and a re-split after cancellation is free to reuse `seq 0` because the cancelled rows have dropped out of the index.
+- `expenses.is_split_receivable` (`Boolean @default(false)`) — marks a participant's receivable Expense so it can be excluded from totals (see Accounting Correctness above).
+- `users.payment_method` / `users.payment_handle` (`SettleMethod?` / `String?`) — added in the same first migration; the guest page's payment link resolves the payer's user-level payment info first, falling back to their `AccountMember`-level trip-wallet payment info when either is unset at the user level.
+
+### API Endpoints
+
+`POST/GET/PATCH/DELETE /expenses/:id/receipt-split*` — all behind `JwtAuthGuard + AccountContextGuard` (class) plus `ViewerBlockGuard` + `TripArchivedGuard` (route), including the `GET`. `GET /s/:token` and `POST /s/:token/paid` are the only unauthenticated surface in the app — both excluded from the `/api/v1` prefix in `main.ts`, throttled 20/60s and 10/60s per IP respectively. See [API.md](./API.md#receipt-splitting).
 
 ## Expense Geo-Location & Map
 

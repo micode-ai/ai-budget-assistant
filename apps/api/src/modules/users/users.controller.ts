@@ -8,9 +8,17 @@ import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
+import type { SettleMethod } from '@budget/shared-types';
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 const THEME_MODES = ['light', 'dark', 'system'];
+const PAYMENT_METHODS: SettleMethod[] = ['blik', 'revolut', 'paypal', 'cash', 'other'];
+// PAYMENT_METHODS above and this regex must both stay byte-for-byte identical to
+// AccountMemberPaymentInfoDto.paymentMethod's @IsIn list and .paymentHandle's
+// regex in modules/accounts/dto/index.ts (trip settle-up) so the two payment-handle
+// paths — user-level (this file) and account-member-level (trip wallet) — cannot
+// drift apart. `+` and space are deliberate: BLIK handles are phone numbers.
+const PAYMENT_HANDLE_REGEX = /^[A-Za-z0-9+ ._-]{1,50}$/;
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -47,6 +55,8 @@ export class UsersController {
       contributeCommunityPrices: user.contributeCommunityPrices,
       themeMode: user.themeMode,
       accentColor: user.accentColor,
+      paymentMethod: user.paymentMethod,
+      paymentHandle: user.paymentHandle,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
@@ -62,13 +72,19 @@ export class UsersController {
   @Patch('me')
   async updateProfile(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null },
+    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null },
   ) {
     if (body.themeMode !== undefined && !THEME_MODES.includes(body.themeMode)) {
       throw new BadRequestException('Invalid themeMode');
     }
     if (body.accentColor !== undefined && body.accentColor !== null && !HEX_COLOR.test(body.accentColor)) {
       throw new BadRequestException('Invalid accentColor');
+    }
+    if (body.paymentMethod !== undefined && body.paymentMethod !== null && !PAYMENT_METHODS.includes(body.paymentMethod)) {
+      throw new BadRequestException('Invalid paymentMethod');
+    }
+    if (body.paymentHandle !== undefined && body.paymentHandle !== null && !PAYMENT_HANDLE_REGEX.test(body.paymentHandle)) {
+      throw new BadRequestException('Invalid paymentHandle');
     }
     const user = await this.usersService.update(req.user.id, body);
     return {
@@ -80,6 +96,8 @@ export class UsersController {
       contributeCommunityPrices: user.contributeCommunityPrices,
       themeMode: user.themeMode,
       accentColor: user.accentColor,
+      paymentMethod: user.paymentMethod,
+      paymentHandle: user.paymentHandle,
     };
   }
 

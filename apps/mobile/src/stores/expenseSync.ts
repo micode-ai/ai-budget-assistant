@@ -346,6 +346,7 @@ async function _doPullAndMerge(
           isDebt: decrypted.isDebt || false,
           isDebtRepayment: decrypted.isDebtRepayment || false,
           isPlanned: decrypted.isPlanned || false,
+          isSplitReceivable: decrypted.isSplitReceivable || false,
           debtContactName: decrypted.debtContactName ?? undefined,
           debtDueDate: decrypted.debtDueDate
             ? new Date(decrypted.debtDueDate)

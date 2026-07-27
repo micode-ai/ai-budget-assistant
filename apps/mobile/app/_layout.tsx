@@ -126,6 +126,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="expense/split"
+          options={{
+            headerShown: true,
+            title: t('receiptSplit.title'),
+          }}
+        />
+        <Stack.Screen
           name="budget/new"
           options={{
             presentation: 'modal',

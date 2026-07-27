@@ -111,6 +111,18 @@ export interface Expense {
   relatedDebtIncomeId?: string;
   createdByUserName?: string | null;
   isPlanned?: boolean;
+  /**
+   * True for a debt receivable row created by a receipt split — excluded from
+   * spending totals since the money already left the account as the original
+   * receipt. The database column is `NOT NULL DEFAULT false`; it is optional
+   * here only because mobile builds partial Expense literals, exactly as
+   * `isPlanned` above does.
+   *
+   * Treat absent as false: filter with `!e.isSplitReceivable`, never with
+   * `e.isSplitReceivable === false`, which would wrongly drop every row that
+   * simply omitted the field.
+   */
+  isSplitReceivable?: boolean;
   paidByUserId?: string | null;
   /** E2EE encrypted payload field (present on API responses when encryption is enabled). */
   encryptedPayload?: string | null;

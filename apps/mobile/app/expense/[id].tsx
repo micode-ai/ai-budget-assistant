@@ -337,6 +337,27 @@ export default function ExpenseDetailScreen() {
                   <Ionicons name="swap-horizontal" size={22} color={theme.colors.primary} />
                 </TouchableOpacity>
               )}
+              {/* Splitting a split-generated receivable would ask a friend to pay
+                  their share of their own share. `canEdit` already covers both the
+                  viewer role and an archived trip. An end-to-end-encrypted account
+                  is NOT excluded here on purpose: the server rejects it, and the
+                  split screen says why with `receiptSplit.encrypted`, which teaches
+                  more than a button that silently does not exist. */}
+              {canEdit && !expense.isSplitReceivable && (
+                <TouchableOpacity
+                  style={styles.splitButton}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/expense/split',
+                      // The server resolves this by server PK or clientId, so a
+                      // device-created row's local id works unchanged.
+                      params: { expenseId: expense.id },
+                    })
+                  }
+                >
+                  <Ionicons name="people-outline" size={22} color={theme.colors.primary} />
+                </TouchableOpacity>
+              )}
               {canEdit && (
                 <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
                   <Ionicons name="trash" size={22} color={theme.colors.danger} />
@@ -473,6 +494,17 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
   },
   moveButton: {
+    flex: 1,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    gap: theme.spacing[2],
+  },
+  splitButton: {
     flex: 1,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

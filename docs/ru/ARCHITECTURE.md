@@ -510,6 +510,13 @@ src/
 │   │   ├── restock-predictor.ts     # чистый predictRestock
 │   │   ├── deal-detector.ts         # чистый detectDeals
 │   │   └── shopping-reminder.cron.ts
+│   ├── receipt-split/          # Разделение чека + публичные гостевые ссылки
+│   │   ├── receipt-split.module.ts
+│   │   ├── receipt-split.controller.ts   # эндпоинты плательщика /expenses/:id/receipt-split*
+│   │   ├── guest.controller.ts           # публичные, без аутентификации /s/:token*
+│   │   ├── receipt-split.service.ts
+│   │   ├── split-calculator.ts           # чистые resolveItemSplit / resolveEqualSplit
+│   │   └── helpers/                      # guest-page.ts, guest-page-i18n.ts
 │   ├── telegram/                # Интеграция с Telegram ботом
 │   │   ├── telegram.service.ts
 │   │   ├── telegram-bot.service.ts
@@ -1519,6 +1526,33 @@ ABA-373. Проверка, выполняемая в момент сканиро
 ### API эндпоинты
 
 `GET/POST /shopping-list`, `PATCH/DELETE /shopping-list/:id`, `POST /shopping-list/:id/items`, `PATCH/DELETE /shopping-list/items/:itemId`, `POST /shopping-list/:id/clear-checked`, `GET /shopping-list/suggestions`, `GET /shopping-list/deals` — все под `JwtAuthGuard + AccountContextGuard`. Запись позиций коллаборативна (**не** защищена `ViewerBlockGuard`); только `DELETE /shopping-list/:id` требует роль editor или owner. Сравнение корзины `POST /price-history/basket` дополнительно защищено `SubscriptionTierGuard` + `@RequireTier('pro')`.
+
+## Разделение чека
+
+Модуль `receipt-split` позволяет плательщику общего счёта разделить его между людьми, у которых нет приложения, через публичную токенизированную гостевую ссылку — без аккаунта, без JWT, без `X-Account-Id`.
+
+### Как это работает
+
+1. Плательщик назначает позиции отсканированного чека именованным участникам либо делит весь счёт поровну, если позиций нет, через `POST /expenses/:id/receipt-split`. Математика разделения (чистые `resolveItemSplit`/`resolveEqualSplit` из `split-calculator.ts`) работает в целых центах и всегда оставляет остаток округления плательщику.
+2. Эта запись создаёт одну строку `receipt_split_participants` **и** один расход `isDebt: true, isSplitReceivable: true` на каждого участника — дебиторскую задолженность — рядом с исходным расходом-чеком (реальным оттоком денег), всё в одной транзакции.
+3. Каждый участник получает свой 128-битный случайный токен и публичный URL: `GUEST_LINK_BASE + /s/<token>?lang=<user.language плательщика>`. `GUEST_LINK_BASE` — это `APP_PUBLIC_URL`, если задан, иначе `https://api.ai-budget.pl` (который уже обслуживает этот маршрут) — красивая форма на apex-домене требует nginx-блока `location /s/`, который не поставляется вместе с кодом (см. `docs/ops/receipt-split-rollout.md`).
+4. Гость открывает `GET /s/:token` и видит только своё имя, сумму, назначенные позиции, имя плательщика и платёжную ссылку/инструкции — никогда данные другого участника, изображение чека или какой-либо идентификатор аккаунта. Неизвестный, истёкший и отменённый токен дают идентичные по байтам ответы.
+5. `POST /s/:token/paid` гостя переводит его статус в `claimed` и отправляет push `split_payment_claimed` плательщику. Плательщик просматривает список статусов по каждому участнику (`sent → opened → claimed → settled`) и вызывает `PATCH /expenses/:id/receipt-split/:participantId/confirm`, который проводит долг ровно тем же путём `DebtsService.recordRepayment`, что и обычный ручной возврат, под атомарным захватом `settledAt IS NULL`.
+
+### Корректность учёта
+
+Разделение счёта на 200 между тремя гостями создаёт расход-чек на 200 **плюс** три расхода `isSplitReceivable` по 50. Учёт обоих дал бы 350 расходов за один ужин. `common/utils/expense-filters.ts` экспортирует `EXCLUDE_SPLIT_RECEIVABLE = { isSplitReceivable: false }` — единый общий предикат, подмешиваемый в каждый пользовательский итог в `analytics.service.ts`, `budget-alert.service.ts`, `safe-to-spend.service.ts` и `wallet.service.ts`. Фильтр намеренно построен на `isSplitReceivable`, никогда на `isDebt` — для обычного денежного займа сама строка долга И ЕСТЬ отток денег, поэтому фильтрация по `isDebt` незаметно исказила бы цифры у каждого пользователя, который уже отслеживает долги. Мобильное приложение зеркалит это через `filterConsumption()` (`apps/mobile/src/utils/consumption.ts`), которую используют семь клиентских поверхностей (`NetProfitWidget`, `useFilteredTransactions`, `useSafeToSpend`, `useScenarioProjection`, `useCalendarData`, `widgetData`, `budgetStore`).
+
+### Таблицы базы данных
+
+- `receipt_split_participants` — `id`, `accountId`, `expenseId` (FK `onDelete: Cascade`, который срабатывает только при настоящем жёстком удалении — приложение мягко удаляет расходы, поэтому `ExpensesService.remove` явно делает недействительным разделение удалённого расхода), `seq`, `name`, `token` (`@unique`), `amount`, `currencyCode`, `itemIds` (`Json?`), `debtExpenseId`, `openedAt`/`claimedAt`/`settledAt`/`cancelledAt`/`expiresAt` (миграции `20260726120000_add_receipt_split`, `20260726130000_add_receipt_split_cancelled_at`).
+- Частичный уникальный индекс `receipt_split_live_slot` на `(expense_id, seq) WHERE cancelled_at IS NULL` (миграция `20260727120000_add_receipt_split_participant_seq`) — обеспечивает не более одного **живого** разделения на расход: параллельное двойное создание сталкивается на нём (перехватывается вне `$transaction`), а повторное разделение после отмены свободно переиспользует `seq 0`, поскольку отменённые строки выпали из индекса.
+- `expenses.is_split_receivable` (`Boolean @default(false)`) — помечает расход-дебиторку участника, чтобы его можно было исключить из итогов (см. «Корректность учёта» выше).
+- `users.payment_method` / `users.payment_handle` (`SettleMethod?` / `String?`) — добавлены в той же первой миграции; платёжная ссылка гостевой страницы сначала разрешается через платёжные данные плательщика на уровне пользователя, откатываясь к его платёжным данным уровня `AccountMember` из trip wallet, если что-то из этого не задано на уровне пользователя.
+
+### API эндпоинты
+
+`POST/GET/PATCH/DELETE /expenses/:id/receipt-split*` — все под `JwtAuthGuard + AccountContextGuard` (на уровне класса) плюс `ViewerBlockGuard` + `TripArchivedGuard` (на маршруте), включая `GET`. `GET /s/:token` и `POST /s/:token/paid` — единственная неаутентифицированная поверхность в приложении: оба исключены из префикса `/api/v1` в `main.ts`, с ограничением частоты 20/60с и 10/60с по IP соответственно. См. [API.md](./API.md#разделение-чека).
 
 ## Геолокация расходов и карта
 

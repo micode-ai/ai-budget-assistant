@@ -10,6 +10,7 @@ import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore'
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { InteractiveLineChart } from '@/components/interactive-charts/InteractiveLineChart';
+import { filterConsumption } from '@/utils/consumption';
 import type { ChartDataPoint } from '@budget/shared-types';
 
 interface NetProfitWidgetProps {
@@ -21,7 +22,11 @@ export function NetProfitWidget({ refreshKey: _refreshKey = 0 }: NetProfitWidget
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { user } = useAuthStore();
-  const { expenses } = useExpenseStore();
+  const { expenses: rawExpenses } = useExpenseStore();
+  // Split-receivable debt rows are bookkeeping for a receivable, not consumption —
+  // the original receipt already carries the outflow. Net profit is a cash-flow
+  // surface, so it excludes them too (see docs/superpowers/specs/2026-07-24-receipt-split-guest-link-design.md).
+  const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
   const { incomes } = useIncomeStore();
   const { rates } = useExchangeRateStore();
   const displayCurrency = user?.currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';

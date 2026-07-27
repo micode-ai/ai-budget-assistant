@@ -4613,6 +4613,129 @@ Content-Type: application/json
 
 ---
 
+## Receipt Splitting
+
+Lets the payer of a shared bill split it among people who don't have the app. Each participant gets a public, unauthenticated link (`https://ai-budget.pl/s/<token>` once the guest-link nginx block exists on the VPS — see `docs/ops/receipt-split-rollout.md`; `https://api.ai-budget.pl/s/<token>` until then) showing only their own share and a payment deep-link. The payer sees each participant's status (`sent` → `opened` → `claimed` → `settled`) and confirms once the money actually arrives, which settles the underlying debt through the same path a manual repayment takes.
+
+The four endpoints below are payer-facing and require JWT + `X-Account-Id` (`JwtAuthGuard + AccountContextGuard`, class-level) plus `ViewerBlockGuard` + `TripArchivedGuard` on every route, **including the read** — a viewer cannot see the split any more than create one. The two guest endpoints that follow are **unauthenticated** — no `Authorization` header, no `X-Account-Id` — the only such surface in the app.
+
+### Create Split
+
+```http
+POST /expenses/:id/receipt-split
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "mode": "items",
+  "participants": [
+    { "name": "Anna", "itemIds": ["item-uuid-1"] },
+    { "name": "Marek", "itemIds": ["item-uuid-2", "item-uuid-3"] }
+  ]
+}
+```
+
+`:id` = expense server PK or the mobile's local `clientId`. `mode: "items"` assigns line items to participants (any item left unassigned stays with the payer); `mode: "equal"` divides the whole bill evenly among the payer plus every participant (`itemIds` is ignored in this mode). 1–20 participants, each name 1–60 characters, trimmed. **Idempotent**: a second call for an expense that already has a live split returns that existing split instead of minting a second set of tokens/rows. Rejected with `400` for a fully end-to-end encrypted (tier-2) account — the server cannot read encrypted line items to render a guest page.
+
+Writes one `receipt_split_participants` row plus one `isDebt: true, isSplitReceivable: true` Expense per participant (the receivable) alongside the original receipt Expense (the outflow), all in a single transaction.
+
+**Response** `200 OK`
+```json
+{
+  "expenseId": "expense-uuid",
+  "ownShare": 42.50,
+  "currencyCode": "PLN",
+  "participants": [
+    {
+      "id": "participant-uuid",
+      "name": "Anna",
+      "amount": 28.90,
+      "currencyCode": "PLN",
+      "status": "sent",
+      "url": "https://api.ai-budget.pl/s/3f9a2b7c1e4d5a6b7c8d9e0f1a2b3c4d?lang=en"
+    }
+  ]
+}
+```
+
+### Get Split
+
+```http
+GET /expenses/:id/receipt-split
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Returns the live split's current state — same response shape as Create Split. Every `amount`/`ownShare` value is exactly what was computed at creation time; the client never re-derives it.
+
+**404s when the expense has no split** — this is the normal state of every unsplit receipt, not an error condition.
+
+### Confirm Participant Paid
+
+```http
+PATCH /expenses/:id/receipt-split/:participantId/confirm
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+The payer's own verification step, meaningful once a guest has marked their share `claimed`. Runs the exact same path a manual debt repayment takes (`DebtsService.recordRepayment`), guarded by an atomic `settledAt IS NULL` claim so a double-tap or client retry can never record two repayments. `400` if the split was cancelled, this participant is already settled, or the participant has no linked debt row.
+
+**Response** `200 OK`
+```json
+{
+  "id": "participant-uuid",
+  "name": "Anna",
+  "amount": 28.90,
+  "currencyCode": "PLN",
+  "status": "settled",
+  "url": "https://api.ai-budget.pl/s/3f9a2b7c1e4d5a6b7c8d9e0f1a2b3c4d?lang=en"
+}
+```
+
+### Cancel Split
+
+```http
+DELETE /expenses/:id/receipt-split
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Soft-deletes every participant's linked receivable Expense and expires all of that split's guest links immediately. Unlike a split that merely aged past its 30-day `expiresAt` with debts still outstanding, a cancelled split is fully inert: a later `POST .../receipt-split` on the same expense starts a brand-new split rather than returning the dead one.
+
+**Response** `200 OK`
+```json
+{ "success": true }
+```
+
+### Guest Page — unauthenticated
+
+```http
+GET /s/:token
+```
+
+No `Authorization` header, no `X-Account-Id` — this route is excluded from the `/api/v1` prefix entirely (see `main.ts`). Renders a server-side HTML page (`Content-Type: text/html; charset=utf-8`, `Cache-Control: no-store`) showing only that one participant's name, amount, assigned items (if any), the payer's name, and a payment link or manual instructions derived from the payer's `paymentMethod`/`paymentHandle` (falling back to their trip-wallet `AccountMember`-level payment info when either is unset at the user level). An unknown token, an expired token, and a cancelled token all render an **identical** "link not found or expired" page — same status code, same body, same length — so neither a guest nor an attacker probing tokens can tell "never existed" apart from "used to exist." The first view stamps the participant `opened`. Page language resolves from `?lang=` (set server-side to the payer's own `user.language` when the link is built), then `Accept-Language`, then English — independent of the app's 9-locale i18n system.
+
+**Throttled** 20 requests / 60s (per IP, `ThrottlerGuard` default tracker).
+
+**Response** `200 OK` — HTML (guest page, or the not-found page if the token doesn't resolve).
+
+### Guest Marks Paid — unauthenticated
+
+```http
+POST /s/:token/paid
+```
+
+Also excluded from `/api/v1`. The guest's one write action: flips their participant to `claimed` (idempotent — a repeat call is a no-op, never fires the notification twice) and pushes `split_payment_claimed` to the payer, then re-renders the same guest page reflecting the new status.
+
+**Throttled** 10 requests / 60s (per IP).
+
+**Response** `200 OK` — HTML (same guest page).
+
+**DTOs** (`packages/shared-types/src/dto/receipt-split.ts`): `SplitParticipantInput`, `CreateSplitDto`, `SplitParticipantStatus`, `SplitParticipantState`, `SplitStateResponse`.
+
+---
+
 ## Error Responses
 
 ### Error Format

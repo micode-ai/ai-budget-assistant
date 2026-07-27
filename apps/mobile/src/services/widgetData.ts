@@ -2,6 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import type { Currency } from '@budget/shared-types';
 import { formatCurrency } from '@budget/shared-utils';
+import { filterConsumption } from '@/utils/consumption';
 
 /**
  * Widget data bridge — serializes financial summary data
@@ -238,7 +239,10 @@ export async function refreshWidgetData(): Promise<void> {
     const { useAccountStore } = require('@/stores/accountStore');
     const { useInsightsStore } = require('@/stores/insightsStore');
 
-    const expenses = useExpenseStore.getState().expenses.filter(
+    // Split-receivable debt rows are bookkeeping for a receivable already carried
+    // by the original receipt expense — exclude them so the home-widget totals
+    // don't double-count a split bill.
+    const expenses = filterConsumption(useExpenseStore.getState().expenses).filter(
       (e: any) => !e.isDeleted,
     );
     const account = useAccountStore.getState().currentAccount?.();

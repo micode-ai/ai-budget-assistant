@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { WalletService } from '../wallet/wallet.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { computeSafeToSpend } from './safe-to-spend.util';
 import type { SafeToSpendResponse, AffordabilityVerdict } from '@budget/shared-types';
 
@@ -293,6 +294,8 @@ export class SafeToSpendService {
         accountId,
         isRecurring: true,
         isDeleted: false,
+        // see common/utils/expense-filters.ts for the full rationale
+        ...EXCLUDE_SPLIT_RECEIVABLE,
         recurringId: { not: null },
         recurringPeriod: { not: null },
       },

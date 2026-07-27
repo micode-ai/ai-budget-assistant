@@ -1,4 +1,4 @@
-import { computeVsAverageFromTotals } from './analytics.service';
+import { computeVsAverageFromTotals, AnalyticsService } from './analytics.service';
 
 describe('computeVsAverageFromTotals', () => {
   it('returns 0 when all historical months are zero (new account)', () => {
@@ -43,5 +43,35 @@ describe('computeVsAverageFromTotals', () => {
     // current = 150 → +50 %
     const result = computeVsAverageFromTotals(150, [0, 0, 300]);
     expect(result).toBe(50);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// AnalyticsService.getSummary — split receivable filter
+// ---------------------------------------------------------------------------
+describe('AnalyticsService.getSummary', () => {
+  it('excludes split receivables from spend but still counts a standalone debt', async () => {
+    const prisma: any = {
+      account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
+      income: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }) },
+      expense: {
+        findMany: jest.fn().mockResolvedValue([]),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+      },
+    };
+    const cache: any = {
+      get: jest.fn().mockResolvedValue(null),
+      set: jest.fn().mockResolvedValue(undefined),
+    };
+
+    const service = new AnalyticsService(prisma, cache);
+    await service.getSummary('acc-1', new Date('2026-07-01'), new Date('2026-07-31'));
+
+    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
+    // The marker the split feature sets — must be filtered out.
+    expect(where.isSplitReceivable).toBe(false);
+    // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
+    // filtering on it would rewrite the numbers of every user tracking debts.
+    expect(where.isDebt).toBeUndefined();
   });
 });

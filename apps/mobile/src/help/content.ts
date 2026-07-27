@@ -4292,6 +4292,80 @@ If anything has ever been found in more than one currency, the Analytics tab sho
 - Prices and differences are shown in the receipt's own currency.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Receipt Split — get paid back by friends, no app required`,
+      description: `Assign a shared bill's items to the friends who had them, and each friend gets a private link to their own share — no app, no account, just a tap to say "I paid."`,
+      body: `# Receipt Split — get paid back by friends, no app required
+
+> Assign a shared bill's items to the friends who had them, and each friend gets a private link to their own share — no app, no account, just a tap to say "I paid."
+
+## What it is
+
+When you've paid a bill for a group — a restaurant tab, a shared grocery run — Receipt Split lets you divide it among the people who were there and send each one a private link. They open it, see only what they owe, and can tap a button to pay you back. You watch who's paid, and confirm the money once it actually arrives.
+
+## Where to find it
+
+Open the expense for the bill you paid and tap the **people icon** in the header. It only appears if you can edit the expense — viewers on a shared account won't see it — and you can't split a bill that was itself created by someone else's split.
+
+## Splitting a bill
+
+1. Tap **Add person** and type each friend's name (up to 20 people).
+2. **If the receipt has line items:** tap an item, then tap the friend who had it. Repeat for every item — tap an already-assigned item again to hand it to someone else. Anything you never assign stays as your own share.
+3. **If the receipt has no line items:** the whole bill is simply divided equally between you and everyone you've added.
+4. Tap **Create links**. The app works out everyone's share and gives you one private link per friend.
+
+The app won't let the assigned shares add up to more than what you actually paid — if they do, you'll see a warning before you can continue.
+
+## Sending the links
+
+Send each friend their link however you like — text message, WhatsApp, email, anything your phone can share to. There's also a **Copy all links** button that copies every friend's name and link at once. A friend never needs to install the app or create an account to use their link.
+
+## What your friend sees
+
+Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their assigned items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. The page opens in your app's language, not necessarily theirs.
+
+If you've added your payment details (Revolut, PayPal, or BLIK — set from a Group Trip account's Payment Settings screen) for the account this bill belongs to, a pay button appears that opens Revolut or PayPal with the amount already filled in, or shows BLIK instructions. If you haven't set anything up, your friend just sees the amount with no pay button, and you'll arrange payment another way.
+
+Either way, there's an **"I already paid"** button. Tapping it doesn't move any money — it just tells you they've paid.
+
+## Tracking who's paid
+
+Back in the app, each friend's row shows a status:
+
+- **Sent** — the link was created but hasn't been opened yet.
+- **Opened** — they've opened the link.
+- **Says they paid** — they tapped "I already paid."
+- **Settled** — you've confirmed the money actually arrived.
+
+A friend who hasn't paid yet simply stays at **Sent** or **Opened** — there's nothing more to it than that.
+
+## Confirming you've been paid
+
+Once a friend's status is **Says they paid**, a **Confirm received** button appears on their row. Tap it once the money has actually reached you. This records it as a repayment against that friend's share — the same way any repayment is recorded elsewhere in the app — and their row moves to **Settled**.
+
+Each friend's share also appears in your **Debts & Loans** screen under their name, just like any other money you've lent, until it's settled.
+
+## Your own share
+
+The amount labelled **Your share** at the top of the screen is whatever is left of the bill once every friend's share is subtracted — you never enter it yourself.
+
+## Cancelling a split
+
+Tap **Cancel split** to stop it. This immediately breaks every friend's link and removes the debts the split created — including any already marked as settled — so only cancel if you're sure. After cancelling, you can start a fresh split for the same bill at any time.
+
+## Links expire after 30 days
+
+A link that hasn't been used within 30 days of creation simply stops working. If a friend opens it after that — or after you've cancelled the split — they see a plain "this link isn't available" message instead of your bill.
+
+## Good to know
+
+- Not available on **fully end-to-end encrypted** accounts — the server needs to read the receipt to build your friends' pages, and encryption keeps that from happening.
+- Only account owners and editors can create, cancel, or confirm a split. Viewers don't see the split option.
+- You can't split a bill that was itself created by someone else's split.
+- Amounts are always shown in the bill's own currency — nothing is ever converted.
+`,
+    },
   ],
   ru: [
     {
@@ -8561,6 +8635,80 @@ AI Budget Assistant предлагает три уровня подписки. �
 - Цены и разницы показываются в валюте самого чека.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Разделить чек — получить деньги от друзей без установки приложения`,
+      description: `Распределите позиции общего счёта между друзьями, которые их заказали, и каждый получит личную ссылку на свою часть — без приложения, без аккаунта, достаточно нажать «я оплатил(а)».`,
+      body: `# Разделить чек — получить деньги от друзей без установки приложения
+
+> Распределите позиции общего счёта между друзьями, которые их заказали, и каждый получит личную ссылку на свою часть — без приложения, без аккаунта, достаточно нажать «я оплатил(а)».
+
+## Что это такое
+
+Когда вы оплатили счёт за компанию — в ресторане, при совместных покупках — «Разделить чек» позволяет разделить его между присутствовавшими и отправить каждому личную ссылку. Они открывают её, видят только то, что должны вам, и могут нажать кнопку, чтобы вернуть долг. Вы видите, кто заплатил, и подтверждаете, когда деньги действительно приходят.
+
+## Где это найти
+
+Откройте расход, соответствующий оплаченному счёту, и нажмите на **значок людей** в шапке. Он появляется, только если вы можете редактировать расход — наблюдатели на общем аккаунте его не увидят, — и вы не можете разделить чек, который сам возник из чужого разделения.
+
+## Разделение чека
+
+1. Нажмите **Добавить человека** и введите имя каждого друга (максимум 20 человек).
+2. **Если в чеке есть позиции:** нажмите на позицию, а затем на того, кто её заказал. Повторите для каждой позиции — нажмите на уже назначенную позицию ещё раз, чтобы передать её другому человеку. Всё, что вы не назначите, остаётся вашей собственной долей.
+3. **Если в чеке нет позиций:** весь счёт просто делится поровну между вами и всеми добавленными людьми.
+4. Нажмите **Создать ссылки**. Приложение рассчитывает долю каждого и выдаёт вам по одной личной ссылке на каждого друга.
+
+Приложение не позволит назначенным долям в сумме превысить то, что вы реально заплатили, — если так случится, вы увидите предупреждение, прежде чем сможете продолжить.
+
+## Отправка ссылок
+
+Отправьте каждому другу его ссылку как вам удобно — SMS, WhatsApp, email, чем угодно, чем умеет делиться ваш телефон. Есть также кнопка **Скопировать все ссылки**, которая копирует имя и ссылку каждого друга сразу. Другу никогда не нужно устанавливать приложение или создавать аккаунт, чтобы воспользоваться своей ссылкой.
+
+## Что видит ваш друг
+
+Открыв ссылку, он видит только свою собственную часть: магазин/заведение и дату, «*Вы* оплатили за всех», назначенные ему позиции (или его равную долю счёта, если позиций не было) и сумму, которую он вам должен, — в валюте счёта. Страница открывается на языке вашего приложения, не обязательно на его.
+
+Если вы указали свои платёжные данные (Revolut, PayPal или BLIK — настраиваются на экране настроек оплаты аккаунта группового путешествия) для аккаунта, к которому относится этот счёт, появляется кнопка оплаты, которая открывает Revolut или PayPal с уже заполненной суммой, либо показывает инструкцию по BLIK. Если вы ничего не настроили, друг видит только сумму без кнопки оплаты, и вам придётся договориться об оплате иначе.
+
+В любом случае есть кнопка «**Я уже оплатил(а)**». Нажатие на неё не переводит никаких денег — оно просто сообщает вам, что человек заплатил.
+
+## Отслеживание, кто заплатил
+
+В приложении строка каждого друга показывает статус:
+
+- **Отправлено** — ссылка создана, но ещё не открыта.
+- **Открыто** — он открыл ссылку.
+- **Говорит, что оплатил(а)** — он нажал «Я уже оплатил(а)».
+- **Рассчитано** — вы подтвердили, что деньги действительно пришли.
+
+Друг, который ещё не заплатил, просто остаётся на статусе **Отправлено** или **Открыто** — ничего больше за этим не стоит.
+
+## Подтверждение получения денег
+
+Как только статус друга становится **Говорит, что оплатил(а)**, в его строке появляется кнопка **Подтвердить получение**. Нажмите её, когда деньги действительно к вам поступят. Это фиксируется как погашение долга этого друга — точно так же, как любая другая оплата, зарегистрированная где-либо ещё в приложении, — и его строка переходит в статус **Рассчитано**.
+
+Доля каждого друга также отображается на экране **Долги и займы** под его именем, как и любые другие одолженные вами деньги, — пока не будет рассчитана.
+
+## Ваша собственная доля
+
+Сумма, обозначенная как **Ваша доля** вверху экрана, — это то, что остаётся от счёта после вычитания долей всех друзей; вы никогда не вводите её сами.
+
+## Отмена разделения
+
+Нажмите **Отменить разделение**, чтобы остановить его. Это сразу же обрывает ссылки всех друзей и удаляет долги, созданные этим разделением, — включая уже рассчитанные, — поэтому отменяйте, только если уверены. После отмены вы можете в любой момент создать новое разделение того же чека.
+
+## Ссылки действуют 30 дней
+
+Ссылка, которой не воспользовались в течение 30 дней с момента создания, просто перестаёт работать. Если друг откроет её позже — или после того, как вы отменили разделение, — он увидит простое сообщение «эта ссылка недоступна» вместо вашего счёта.
+
+## Полезно знать
+
+- Недоступно на аккаунтах с **полным сквозным шифрованием** — серверу нужно прочитать чек, чтобы построить страницу для ваших друзей, а шифрование этого не позволяет.
+- Создавать, отменять или подтверждать разделение может только владелец аккаунта и редакторы. Наблюдатели не видят этой опции.
+- Вы не можете разделить чек, который сам возник из чужого разделения.
+- Суммы всегда показываются в валюте самого счёта — ничего никогда не конвертируется.
+`,
+    },
   ],
   ua: [
     {
@@ -12800,6 +12948,80 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - Ціни та різниці показуються у валюті самого чека.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Розділити чек — отримати гроші від друзів без встановлення застосунку`,
+      description: `Розподіліть позиції спільного рахунку між друзями, які їх замовили, і кожен отримає особисте посилання на свою частку — без застосунку, без акаунта, достатньо натиснути «я заплатив(ла)».`,
+      body: `# Розділити чек — отримати гроші від друзів без встановлення застосунку
+
+> Розподіліть позиції спільного рахунку між друзями, які їх замовили, і кожен отримає особисте посилання на свою частку — без застосунку, без акаунта, достатньо натиснути «я заплатив(ла)».
+
+## Що це таке
+
+Коли ви оплатили рахунок за компанію — в ресторані, під час спільних покупок — «Розділити чек» дозволяє поділити його між присутніми й надіслати кожному особисте посилання. Вони відкривають його, бачать лише те, що винні вам, і можуть натиснути кнопку, щоб повернути борг. Ви бачите, хто заплатив, і підтверджуєте, коли гроші справді надходять.
+
+## Де це знайти
+
+Відкрийте витрату, що відповідає оплаченому рахунку, і торкніться **значка людей** у заголовку. Він з'являється, лише якщо ви можете редагувати витрату — глядачі спільного акаунту його не побачать, — і ви не можете розділити чек, який сам виник із чужого поділу.
+
+## Поділ рахунку
+
+1. Торкніться **Додати людину** і введіть ім'я кожного друга (максимум 20 осіб).
+2. **Якщо чек має позиції:** торкніться позиції, а потім того, хто її замовив. Повторіть для кожної позиції — торкніться вже призначеної позиції ще раз, щоб передати її іншій людині. Усе, що ви не призначите, залишається вашою власною часткою.
+3. **Якщо чек не має позицій:** увесь рахунок просто ділиться порівну між вами і всіма доданими людьми.
+4. Торкніться **Створити посилання**. Застосунок обчислює частку кожного і видає вам по одному особистому посиланню на кожного друга.
+
+Застосунок не дозволить призначеним часткам у сумі перевищити те, що ви реально заплатили, — якщо так станеться, ви побачите попередження, перш ніж зможете продовжити.
+
+## Надсилання посилань
+
+Надішліть кожному другові його посилання як вам зручно — SMS, WhatsApp, електронною поштою, будь-чим, чим уміє ділитися ваш телефон. Є також кнопка **Скопіювати всі посилання**, яка копіює ім'я та посилання кожного друга одразу. Другові ніколи не потрібно встановлювати застосунок чи створювати акаунт, щоб скористатися своїм посиланням.
+
+## Що бачить ваш друг
+
+Відкривши посилання, він бачить лише свою власну частку: заклад і дату, «*Ви* заплатили за всіх», призначені йому позиції (або його рівну частку рахунку, якщо позицій не було) і суму, яку він винен вам, — у валюті рахунку. Сторінка відкривається мовою вашого застосунку, не обов'язково його.
+
+Якщо ви вказали свої платіжні дані (Revolut, PayPal або BLIK — налаштовуються на екрані налаштувань оплати акаунту групової подорожі) для акаунту, до якого належить цей рахунок, з'являється кнопка оплати, яка відкриває Revolut або PayPal із вже заповненою сумою, або показує інструкцію BLIK. Якщо ви нічого не налаштували, друг бачить лише суму без кнопки оплати, і вам доведеться домовитися про оплату інакше.
+
+У будь-якому разі є кнопка «**Я вже заплатив(ла)**». Натискання на неї не переказує жодних грошей — воно просто повідомляє вам, що людина заплатила.
+
+## Відстеження, хто заплатив
+
+У застосунку рядок кожного друга показує статус:
+
+- **Надіслано** — посилання створено, але ще не відкрито.
+- **Відкрито** — він відкрив посилання.
+- **Каже, що заплатив(ла)** — він натиснув «Я вже заплатив(ла)».
+- **Розраховано** — ви підтвердили, що гроші справді надійшли.
+
+Друг, який ще не заплатив, просто залишається у статусі **Надіслано** або **Відкрито** — нічого більше за цим не стоїть.
+
+## Підтвердження отримання грошей
+
+Щойно статус друга стає **Каже, що заплатив(ла)**, у його рядку з'являється кнопка **Підтвердити отримання**. Натисніть її, коли гроші справді до вас надійдуть. Це фіксується як погашення боргу цього друга — точнісінько так само, як будь-яке інше погашення в застосунку, — і його рядок переходить у статус **Розраховано**.
+
+Частка кожного друга також з'являється на екрані **Борги та позики** під його ім'ям, як і будь-які інші позичені вами гроші, — доки її не розраховано.
+
+## Ваша власна частка
+
+Сума, позначена як **Ваша частка** вгорі екрана, — це те, що залишається від рахунку після віднімання часток усіх друзів; ви ніколи не вводите її самі.
+
+## Скасування поділу
+
+Торкніться **Скасувати поділ**, щоб зупинити його. Це негайно обриває посилання всіх друзів і видаляє борги, створені цим поділом, — включно з уже розрахованими, — тож скасовуйте, лише якщо впевнені. Після скасування ви можете будь-коли створити новий поділ того самого рахунку.
+
+## Посилання діють 30 днів
+
+Посилання, яким не скористалися протягом 30 днів від створення, просто перестає працювати. Якщо друг відкриє його пізніше — або після того, як ви скасували поділ, — він побачить просте повідомлення «це посилання недоступне» замість вашого рахунку.
+
+## Корисно знати
+
+- Недоступно на акаунтах із **повним наскрізним шифруванням** — серверу потрібно прочитати чек, щоб побудувати сторінку для ваших друзів, а шифрування цього не дозволяє.
+- Створювати, скасовувати чи підтверджувати поділ може лише власник акаунту та редактори. Глядачі не бачать цієї опції.
+- Ви не можете розділити чек, який сам виник із чужого поділу.
+- Суми завжди показуються у валюті самого рахунку — нічого ніколи не конвертується.
+`,
+    },
   ],
   pl: [
     {
@@ -17024,6 +17246,80 @@ Jeśli kiedykolwiek coś znaleziono w więcej niż jednej walucie, karta Anality
 - Ceny i różnice są pokazywane w walucie samego paragonu.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Podział paragonu — odbierz pieniądze od znajomych bez instalowania aplikacji`,
+      description: `Przypisz pozycje wspólnego rachunku znajomym, którzy je zamówili, a każdy z nich dostanie prywatny link do swojej części — bez aplikacji, bez konta, wystarczy jedno stuknięcie „zapłaciłem".`,
+      body: `# Podział paragonu — odbierz pieniądze od znajomych bez instalowania aplikacji
+
+> Przypisz pozycje wspólnego rachunku znajomym, którzy je zamówili, a każdy z nich dostanie prywatny link do swojej części — bez aplikacji, bez konta, wystarczy jedno stuknięcie „zapłaciłem".
+
+## Czym to jest
+
+Kiedy zapłaciłeś/aś rachunek za grupę — w restauracji, przy wspólnych zakupach — Podział paragonu pozwala rozdzielić go między osoby, które tam były, i wysłać każdej z nich prywatny link. Otwierają go i widzą tylko to, ile są winni, a stuknięcie w przycisk pozwala im to Tobie oddać. Ty widzisz, kto zapłacił, i potwierdzasz, gdy pieniądze faktycznie dotrą.
+
+## Gdzie to znaleźć
+
+Otwórz wydatek odpowiadający zapłaconemu rachunkowi i stuknij ikonę **osób** w nagłówku. Pojawia się tylko wtedy, gdy możesz edytować wydatek — widzowie na koncie współdzielonym jej nie zobaczą — i nie możesz podzielić rachunku, który sam powstał z podziału kogoś innego.
+
+## Dzielenie rachunku
+
+1. Stuknij **Dodaj osobę** i wpisz imię każdego znajomego (maksymalnie 20 osób).
+2. **Jeśli paragon ma pozycje:** dotknij pozycję, a potem osobę, która ją zamówiła. Powtórz dla każdej pozycji — dotknij ponownie już przypisaną pozycję, żeby oddać ją komuś innemu. Wszystko, czego nie przypiszesz, zostaje jako Twoja własna część.
+3. **Jeśli paragon nie ma pozycji:** cały rachunek zostaje po prostu podzielony po równo między Ciebie i wszystkich dodanych znajomych.
+4. Stuknij **Utwórz linki**. Aplikacja wylicza część każdej osoby i daje Ci jeden prywatny link na znajomego.
+
+Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, niż faktycznie zapłaciłeś/aś — jeśli tak się stanie, zobaczysz ostrzeżenie, zanim będziesz mógł/mogła kontynuować.
+
+## Wysyłanie linków
+
+Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp, mailem, czymkolwiek, czym Twój telefon potrafi się dzielić. Jest też przycisk **Skopiuj wszystkie linki**, który kopiuje imię i link każdego znajomego naraz. Znajomy nigdy nie musi instalować aplikacji ani zakładać konta, żeby skorzystać ze swojego linku.
+
+## Co widzi Twój znajomy
+
+Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
+
+Jeśli dodałeś/aś swoje dane do płatności (Revolut, PayPal albo BLIK — ustawiane z ekranu Ustawienia płatności konta podróży grupowej) dla konta, do którego należy ten rachunek, pojawia się przycisk płatności, który otwiera Revolut albo PayPal z wypełnioną kwotą, albo pokazuje instrukcję BLIK. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę bez przycisku płatności i musicie się rozliczyć w inny sposób.
+
+Tak czy inaczej, jest przycisk „**Już zapłaciłem/am**". Stuknięcie go nie przenosi żadnych pieniędzy — po prostu informuje Cię, że znajomy zapłacił.
+
+## Śledzenie, kto zapłacił
+
+W aplikacji wiersz każdego znajomego pokazuje status:
+
+- **Wysłano** — link został utworzony, ale jeszcze nie otwarty.
+- **Otwarto** — znajomy otworzył link.
+- **Mówi, że zapłacił(a)** — stuknął/ęła „Już zapłaciłem/am".
+- **Rozliczone** — potwierdziłeś/aś, że pieniądze faktycznie dotarły.
+
+Znajomy, który jeszcze nie zapłacił, po prostu zostaje przy statusie **Wysłano** albo **Otwarto** — nic więcej się z tym nie wiąże.
+
+## Potwierdzanie otrzymania pieniędzy
+
+Gdy status znajomego to **Mówi, że zapłacił(a)**, w jego wierszu pojawia się przycisk **Potwierdź otrzymanie**. Stuknij go, gdy pieniądze faktycznie do Ciebie dotrą. Zostaje to zapisane jako spłata długu tego znajomego — dokładnie tak samo, jak każda inna spłata w aplikacji — a jego wiersz zmienia się na **Rozliczone**.
+
+Część każdego znajomego pojawia się też na ekranie **Długi i pożyczki** pod jego imieniem, tak jak każde inne pożyczone przez Ciebie pieniądze — dopóki nie zostanie rozliczona.
+
+## Twoja część
+
+Kwota oznaczona jako **Twój udział** u góry ekranu to to, co zostaje z rachunku po odjęciu części wszystkich znajomych — nigdy nie wpisujesz jej sam/sama.
+
+## Anulowanie podziału
+
+Stuknij **Anuluj podział**, żeby go zatrzymać. Natychmiast przerywa to działanie linków wszystkich znajomych i usuwa długi utworzone przez ten podział — również te już oznaczone jako rozliczone — więc anuluj tylko wtedy, gdy jesteś pewien/pewna. Po anulowaniu możesz w dowolnej chwili utworzyć nowy podział tego samego rachunku.
+
+## Linki wygasają po 30 dniach
+
+Link, z którego nikt nie skorzystał w ciągu 30 dni od utworzenia, po prostu przestaje działać. Jeśli znajomy otworzy go później — albo po tym, jak anulowałeś/aś podział — zobaczy zwykły komunikat „ten link jest niedostępny" zamiast Twojego rachunku.
+
+## Warto wiedzieć
+
+- Niedostępne na kontach z **pełnym szyfrowaniem end-to-end** — serwer musi odczytać paragon, żeby zbudować stronę dla znajomych, a szyfrowanie mu na to nie pozwala.
+- Podział może utworzyć, anulować lub potwierdzić tylko właściciel konta i edytorzy. Widzowie nie widzą tej opcji.
+- Nie możesz podzielić rachunku, który sam powstał z podziału kogoś innego.
+- Kwoty są zawsze pokazywane w walucie rachunku — nic nigdy nie jest przeliczane.
+`,
+    },
   ],
   de: [
     {
@@ -21223,6 +21519,80 @@ Wurde jemals in mehr als einer Währung etwas gefunden, zeigt der Tab Analyse nu
 - Preise und Differenzen werden in der Währung des jeweiligen Belegs angezeigt.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Kassenbon aufteilen — von Freunden zurückbezahlt werden, ganz ohne App`,
+      description: `Weise die Positionen einer gemeinsamen Rechnung den Freunden zu, die sie hatten, und jeder bekommt einen privaten Link zu seinem Anteil — keine App, kein Konto, nur ein Tipp auf „Ich habe bezahlt".`,
+      body: `# Kassenbon aufteilen — von Freunden zurückbezahlt werden, ganz ohne App
+
+> Weise die Positionen einer gemeinsamen Rechnung den Freunden zu, die sie hatten, und jeder bekommt einen privaten Link zu seinem Anteil — keine App, kein Konto, nur ein Tipp auf „Ich habe bezahlt".
+
+## Was es ist
+
+Wenn du eine Rechnung für eine Gruppe bezahlt hast — eine Restaurantrechnung, einen gemeinsamen Einkauf — teilt „Kassenbon aufteilen" sie unter den Anwesenden auf und schickt jedem einen privaten Link. Sie öffnen ihn, sehen nur, was sie dir schulden, und können mit einem Tipp zurückzahlen. Du siehst, wer bezahlt hat, und bestätigst, sobald das Geld tatsächlich ankommt.
+
+## Wo du es findest
+
+Öffne die Ausgabe für die Rechnung, die du bezahlt hast, und tippe im Kopfbereich auf das **Personen-Symbol**. Es erscheint nur, wenn du die Ausgabe bearbeiten kannst — Betrachter eines gemeinsamen Kontos sehen es nicht —, und du kannst keine Rechnung aufteilen, die selbst schon aus der Aufteilung eines anderen entstanden ist.
+
+## Eine Rechnung aufteilen
+
+1. Tippe auf **Person hinzufügen** und gib den Namen jedes Freundes ein (bis zu 20 Personen).
+2. **Wenn der Kassenbon Positionen hat:** Tippe auf eine Position und dann auf die Person, die sie hatte. Wiederhole das für jede Position — tippe eine bereits zugewiesene Position erneut an, um sie jemand anderem zu geben. Alles, was du nicht zuweist, bleibt dein eigener Anteil.
+3. **Wenn der Kassenbon keine Positionen hat:** Die ganze Rechnung wird einfach gleichmäßig zwischen dir und allen hinzugefügten Personen aufgeteilt.
+4. Tippe auf **Links erstellen**. Die App berechnet den Anteil jeder Person und gibt dir für jeden Freund einen privaten Link.
+
+Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben, als du tatsächlich bezahlt hast — falls doch, siehst du eine Warnung, bevor du fortfahren kannst.
+
+## Links versenden
+
+Schick jedem Freund seinen Link, wie du möchtest — SMS, WhatsApp, E-Mail, alles, worüber dein Handy teilen kann. Es gibt außerdem den Button **Alle Links kopieren**, der Namen und Link jedes Freundes auf einmal kopiert. Ein Freund muss die App nie installieren oder ein Konto anlegen, um seinen Link zu nutzen.
+
+## Was dein Freund sieht
+
+Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine zugewiesenen Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
+
+Hast du deine Zahlungsdetails hinterlegt (Revolut, PayPal oder BLIK — einstellbar über die Zahlungseinstellungen eines Gruppenreise-Kontos) für das Konto, zu dem diese Rechnung gehört, erscheint ein Zahlen-Button, der Revolut oder PayPal mit bereits eingetragenem Betrag öffnet, oder eine BLIK-Anleitung zeigt. Hast du nichts hinterlegt, sieht dein Freund nur den Betrag ohne Zahlen-Button, und ihr müsst euch anders einigen.
+
+So oder so gibt es einen Button „**Ich habe bereits bezahlt**". Ein Tipp darauf bewegt kein Geld — er sagt dir nur, dass bezahlt wurde.
+
+## Verfolgen, wer bezahlt hat
+
+Zurück in der App zeigt die Zeile jedes Freundes einen Status:
+
+- **Gesendet** — der Link wurde erstellt, aber noch nicht geöffnet.
+- **Geöffnet** — er hat den Link geöffnet.
+- **Sagt, bezahlt zu haben** — er hat auf „Ich habe bereits bezahlt" getippt.
+- **Beglichen** — du hast bestätigt, dass das Geld tatsächlich angekommen ist.
+
+Ein Freund, der noch nicht bezahlt hat, bleibt einfach bei **Gesendet** oder **Geöffnet** — mehr steckt nicht dahinter.
+
+## Den Erhalt bestätigen
+
+Sobald der Status eines Freundes **Sagt, bezahlt zu haben** ist, erscheint in seiner Zeile der Button **Erhalt bestätigen**. Tippe ihn an, sobald das Geld wirklich bei dir angekommen ist. Das wird als Rückzahlung auf den Anteil dieses Freundes verbucht — genauso, wie jede andere Rückzahlung in der App erfasst wird —, und seine Zeile wechselt zu **Beglichen**.
+
+Der Anteil jedes Freundes erscheint außerdem unter seinem Namen im Bildschirm **Schulden & Kredite**, wie jedes andere Geld, das du verliehen hast — bis er beglichen ist.
+
+## Dein eigener Anteil
+
+Der oben als **Dein Anteil** bezeichnete Betrag ist das, was von der Rechnung übrig bleibt, nachdem der Anteil jedes Freundes abgezogen wurde — du trägst ihn nie selbst ein.
+
+## Eine Aufteilung abbrechen
+
+Tippe auf **Aufteilung abbrechen**, um sie zu beenden. Das deaktiviert sofort jeden Freundeslink und entfernt die durch die Aufteilung entstandenen Schulden — auch bereits beglichene —, brich also nur ab, wenn du dir sicher bist. Nach dem Abbrechen kannst du jederzeit eine neue Aufteilung für dieselbe Rechnung starten.
+
+## Links laufen nach 30 Tagen ab
+
+Ein Link, der 30 Tage nach Erstellung nicht genutzt wurde, funktioniert einfach nicht mehr. Öffnet ein Freund ihn danach — oder nachdem du die Aufteilung abgebrochen hast — sieht er nur eine schlichte Meldung „Dieser Link ist nicht verfügbar" statt deiner Rechnung.
+
+## Gut zu wissen
+
+- Nicht verfügbar bei Konten mit **vollständiger Ende-zu-Ende-Verschlüsselung** — der Server muss den Kassenbon lesen können, um die Seiten deiner Freunde zu erstellen, und Verschlüsselung verhindert das.
+- Nur Kontoinhaber und Bearbeiter können eine Aufteilung erstellen, abbrechen oder bestätigen. Betrachter sehen die Option nicht.
+- Du kannst keine Rechnung aufteilen, die selbst schon aus der Aufteilung eines anderen entstanden ist.
+- Beträge werden immer in der Währung der Rechnung angezeigt — es wird nie etwas umgerechnet.
+`,
+    },
   ],
   es: [
     {
@@ -25411,6 +25781,80 @@ Si alguna vez se ha encontrado algo en más de una moneda, la pestaña Analític
 - Los precios y las diferencias se muestran en la moneda propia del recibo.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Dividir un recibo — que tus amigos te devuelvan el dinero, sin necesitar la app`,
+      description: `Asigna los artículos de una cuenta compartida a los amigos que los pidieron, y cada uno recibe un enlace privado a su parte — sin app, sin cuenta, solo un toque para decir "ya pagué".`,
+      body: `# Dividir un recibo — que tus amigos te devuelvan el dinero, sin necesitar la app
+
+> Asigna los artículos de una cuenta compartida a los amigos que los pidieron, y cada uno recibe un enlace privado a su parte — sin app, sin cuenta, solo un toque para decir "ya pagué".
+
+## Qué es
+
+Cuando has pagado una cuenta para un grupo — la cuenta de un restaurante, una compra conjunta — Dividir recibo te permite repartirla entre las personas que estaban allí y enviarle a cada una un enlace privado. Lo abren, ven solo lo que te deben, y pueden tocar un botón para devolvértelo. Tú ves quién ha pagado y confirmas cuando el dinero llega de verdad.
+
+## Dónde encontrarlo
+
+Abre el gasto correspondiente a la cuenta que pagaste y toca el **icono de personas** en la cabecera. Solo aparece si puedes editar el gasto — los espectadores de una cuenta compartida no lo verán — y no puedes dividir una cuenta que ya se creó a partir de la división de otra persona.
+
+## Dividir una cuenta
+
+1. Toca **Añadir persona** y escribe el nombre de cada amigo (hasta 20 personas).
+2. **Si el recibo tiene artículos:** toca un artículo y luego toca a quién lo tomó. Repite para cada artículo — toca de nuevo un artículo ya asignado para dárselo a otra persona. Todo lo que no asignes se queda como tu propia parte.
+3. **Si el recibo no tiene artículos:** toda la cuenta se divide simplemente a partes iguales entre tú y todas las personas que has añadido.
+4. Toca **Crear enlaces**. La app calcula la parte de cada persona y te da un enlace privado por amigo.
+
+La app no deja que las partes asignadas sumen más de lo que realmente pagaste — si eso ocurre, verás un aviso antes de poder continuar.
+
+## Enviar los enlaces
+
+Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, correo, cualquier cosa con la que tu teléfono pueda compartir. También hay un botón **Copiar todos los enlaces** que copia el nombre y el enlace de cada amigo de una vez. Un amigo nunca necesita instalar la app ni crear una cuenta para usar su enlace.
+
+## Qué ve tu amigo
+
+Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos asignados (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.
+
+Si has añadido tus datos de pago (Revolut, PayPal o BLIK — se configuran desde la pantalla de Ajustes de pago de una cuenta de Viaje en grupo) para la cuenta a la que pertenece esta cuenta, aparece un botón de pago que abre Revolut o PayPal con el importe ya rellenado, o muestra las instrucciones de BLIK. Si no has configurado nada, tu amigo solo ve el importe sin botón de pago, y tendréis que arreglar el pago de otra forma.
+
+En cualquier caso, hay un botón "**Ya pagué**". Tocarlo no mueve ningún dinero — solo te avisa de que esa persona ha pagado.
+
+## Seguir quién ha pagado
+
+De vuelta en la app, la fila de cada amigo muestra un estado:
+
+- **Enviado** — el enlace se creó pero aún no se ha abierto.
+- **Abierto** — lo ha abierto.
+- **Dice que pagó** — ha tocado "Ya pagué".
+- **Saldado** — has confirmado que el dinero ha llegado de verdad.
+
+Un amigo que todavía no ha pagado simplemente se queda en **Enviado** u **Abierto** — no hay nada más detrás de eso.
+
+## Confirmar que has recibido el pago
+
+En cuanto el estado de un amigo sea **Dice que pagó**, aparece en su fila un botón **Confirmar recepción**. Tócalo cuando el dinero haya llegado de verdad. Esto se registra como un pago de la deuda de ese amigo — igual que cualquier otro pago que se registra en la app — y su fila pasa a **Saldado**.
+
+La parte de cada amigo también aparece en tu pantalla de **Deudas y préstamos** bajo su nombre, como cualquier otro dinero que hayas prestado, hasta que quede saldada.
+
+## Tu propia parte
+
+El importe indicado como **Tu parte** en la parte superior de la pantalla es lo que queda de la cuenta una vez restada la parte de cada amigo — nunca lo introduces tú.
+
+## Cancelar una división
+
+Toca **Cancelar división** para detenerla. Esto rompe de inmediato el enlace de cada amigo y elimina las deudas que creó la división — incluidas las que ya estaban saldadas —, así que cancela solo si estás seguro/a. Después de cancelar, puedes crear una nueva división para la misma cuenta cuando quieras.
+
+## Los enlaces caducan a los 30 días
+
+Un enlace que no se haya usado en los 30 días posteriores a su creación deja de funcionar. Si un amigo lo abre después de eso — o después de que hayas cancelado la división — verá un simple mensaje de "este enlace no está disponible" en lugar de tu cuenta.
+
+## Es bueno saber
+
+- No disponible en cuentas con **cifrado de extremo a extremo completo** — el servidor necesita leer el recibo para construir la página de tus amigos, y el cifrado se lo impide.
+- Solo el propietario de la cuenta y los editores pueden crear, cancelar o confirmar una división. Los espectadores no ven esta opción.
+- No puedes dividir una cuenta que ya se creó a partir de la división de otra persona.
+- Los importes siempre se muestran en la moneda propia de la cuenta — nunca se convierte nada.
+`,
+    },
   ],
   fr: [
     {
@@ -29597,6 +30041,80 @@ Si quelque chose a déjà été trouvé dans plusieurs devises, l'onglet Analyse
 - Les prix et les différences sont affichés dans la devise propre du ticket.
 `,
     },
+    {
+      id: '42-receipt-split',
+      title: `Diviser un ticket — se faire rembourser par des amis, sans application`,
+      description: `Attribuez les articles d'une addition partagée aux amis qui les ont pris, et chacun reçoit un lien privé vers sa part — sans application, sans compte, juste un geste pour dire « j'ai payé ».`,
+      body: `# Diviser un ticket — se faire rembourser par des amis, sans application
+
+> Attribuez les articles d'une addition partagée aux amis qui les ont pris, et chacun reçoit un lien privé vers sa part — sans application, sans compte, juste un geste pour dire « j'ai payé ».
+
+## De quoi s'agit-il
+
+Quand vous avez réglé une addition pour un groupe — au restaurant, lors de courses partagées —, Diviser un ticket vous permet de la répartir entre les personnes présentes et d'envoyer à chacune un lien privé. Elles l'ouvrent, ne voient que ce qu'elles vous doivent, et peuvent appuyer sur un bouton pour vous rembourser. Vous voyez qui a payé, et vous confirmez une fois l'argent réellement arrivé.
+
+## Où le trouver
+
+Ouvrez la dépense correspondant à l'addition que vous avez réglée et appuyez sur l'**icône des personnes** dans l'en-tête. Elle n'apparaît que si vous pouvez modifier la dépense — les observateurs d'un compte partagé ne la verront pas — et vous ne pouvez pas diviser une addition qui provient elle-même du partage de quelqu'un d'autre.
+
+## Diviser une addition
+
+1. Appuyez sur **Ajouter une personne** et saisissez le nom de chaque ami (jusqu'à 20 personnes).
+2. **Si le ticket comporte des articles :** appuyez sur un article, puis sur la personne qui l'a pris. Répétez pour chaque article — appuyez de nouveau sur un article déjà attribué pour le donner à quelqu'un d'autre. Tout ce que vous n'attribuez pas reste votre propre part.
+3. **Si le ticket ne comporte pas d'articles :** toute l'addition est simplement divisée à parts égales entre vous et toutes les personnes ajoutées.
+4. Appuyez sur **Créer les liens**. L'application calcule la part de chacun et vous donne un lien privé par ami.
+
+L'application ne laisse pas les parts attribuées dépasser, une fois additionnées, ce que vous avez réellement payé — si c'est le cas, un avertissement s'affiche avant que vous puissiez continuer.
+
+## Envoyer les liens
+
+Envoyez à chaque ami son lien comme vous le souhaitez — SMS, WhatsApp, e-mail, tout ce que votre téléphone sait partager. Il y a aussi un bouton **Copier tous les liens**, qui copie le nom et le lien de chaque ami en une fois. Un ami n'a jamais besoin d'installer l'application ni de créer un compte pour utiliser son lien.
+
+## Ce que voit votre ami
+
+En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles attribués (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
+
+Si vous avez renseigné vos informations de paiement (Revolut, PayPal ou BLIK — à définir depuis l'écran Paramètres de paiement d'un compte Voyage de groupe) pour le compte auquel appartient cette addition, un bouton de paiement apparaît : il ouvre Revolut ou PayPal avec le montant déjà rempli, ou affiche les instructions BLIK. Si vous n'avez rien renseigné, votre ami voit seulement le montant, sans bouton de paiement, et vous devrez vous arranger autrement.
+
+Dans tous les cas, il y a un bouton « **J'ai déjà payé** ». Appuyer dessus ne déplace aucun argent — cela vous indique simplement que la personne a payé.
+
+## Suivre qui a payé
+
+De retour dans l'application, la ligne de chaque ami affiche un statut :
+
+- **Envoyé** — le lien a été créé mais n'a pas encore été ouvert.
+- **Ouvert** — il a ouvert le lien.
+- **Dit avoir payé** — il a appuyé sur « J'ai déjà payé ».
+- **Réglé** — vous avez confirmé que l'argent est bien arrivé.
+
+Un ami qui n'a pas encore payé reste simplement à **Envoyé** ou **Ouvert** — il n'y a rien de plus à en dire.
+
+## Confirmer que vous avez été payé
+
+Dès que le statut d'un ami passe à **Dit avoir payé**, un bouton **Confirmer la réception** apparaît sur sa ligne. Appuyez dessus une fois l'argent réellement arrivé. Cela s'enregistre comme un remboursement de la part de cet ami — exactement comme n'importe quel autre remboursement enregistré ailleurs dans l'application — et sa ligne passe à **Réglé**.
+
+La part de chaque ami apparaît aussi dans votre écran **Dettes et prêts**, sous son nom, comme n'importe quel autre argent que vous avez prêté, jusqu'à ce qu'elle soit réglée.
+
+## Votre propre part
+
+Le montant indiqué comme **Votre part** en haut de l'écran est ce qu'il reste de l'addition une fois la part de chaque ami soustraite — vous ne le saisissez jamais vous-même.
+
+## Annuler un partage
+
+Appuyez sur **Annuler le partage** pour l'arrêter. Cela coupe immédiatement le lien de chaque ami et supprime les dettes créées par le partage — y compris celles déjà marquées comme réglées —, donc n'annulez que si vous êtes sûr(e). Après l'annulation, vous pouvez créer un nouveau partage pour la même addition à tout moment.
+
+## Les liens expirent au bout de 30 jours
+
+Un lien qui n'a pas été utilisé dans les 30 jours suivant sa création cesse simplement de fonctionner. Si un ami l'ouvre après ce délai — ou après que vous avez annulé le partage — il voit un simple message « ce lien n'est pas disponible » à la place de votre addition.
+
+## À noter
+
+- Non disponible sur les comptes **entièrement chiffrés de bout en bout** — le serveur doit pouvoir lire le ticket pour construire la page de vos amis, ce que le chiffrement empêche.
+- Seuls le propriétaire du compte et les éditeurs peuvent créer, annuler ou confirmer un partage. Les observateurs ne voient pas cette option.
+- Vous ne pouvez pas diviser une addition qui provient elle-même du partage de quelqu'un d'autre.
+- Les montants sont toujours affichés dans la devise propre de l'addition — rien n'est jamais converti.
+`,
+    },
   ],
   be: [
     {
@@ -33741,6 +34259,80 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - Працуе аўтаматычна пры кожным сканаванні чэка — з камеры, з галерэі, з PDF, а таксама пры сканаванні праз Telegram, WhatsApp ці Slack.
 - Знаходка ніколі не перашкаджае захаваць чэк і ніколі не змяняе суму за вас.
 - Цэны і розніцы паказваюцца ў валюце самога чэка.
+`,
+    },
+    {
+      id: '42-receipt-split',
+      title: `Падзяліць чэк — атрымаць грошы ад сяброў без усталявання праграмы`,
+      description: `Размяркуйце пазіцыі агульнага рахунку паміж сябрамі, якія іх заказалі, і кожны атрымае асабістую спасылку на сваю частку — без праграмы, без уліковага запісу, дастаткова націснуць «я заплаціў(ла)».`,
+      body: `# Падзяліць чэк — атрымаць грошы ад сяброў без усталявання праграмы
+
+> Размяркуйце пазіцыі агульнага рахунку паміж сябрамі, якія іх заказалі, і кожны атрымае асабістую спасылку на сваю частку — без праграмы, без уліковага запісу, дастаткова націснуць «я заплаціў(ла)».
+
+## Што гэта такое
+
+Калі вы аплацілі рахунак за кампанію — у рэстаране, падчас сумесных пакупак — «Падзяліць чэк» дазваляе падзяліць яго паміж прысутнымі і даслаць кожнаму асабістую спасылку. Яны адкрываюць яе, бачаць толькі тое, што вінны вам, і могуць націснуць кнопку, каб вярнуць доўг. Вы бачыце, хто заплаціў, і пацвярджаеце, калі грошы сапраўды прыходзяць.
+
+## Дзе гэта знайсці
+
+Адкрыйце выдатак, які адпавядае аплачанаму рахунку, і націсніце на **значок людзей** у загалоўку. Ён з'яўляецца толькі калі вы можаце рэдагаваць выдатак — назіральнікі агульнага ўліковага запісу яго не ўбачаць, — і вы не можаце падзяліць чэк, які сам узнік з чужога падзелу.
+
+## Падзел чэка
+
+1. Націсніце **Дадаць чалавека** і ўвядзіце імя кожнага сябра (максімум 20 чалавек).
+2. **Калі чэк мае пазіцыі:** націсніце на пазіцыю, а потым на таго, хто яе заказаў. Паўтарыце для кожнай пазіцыі — націсніце на ўжо прызначаную пазіцыю яшчэ раз, каб перадаць яе іншаму чалавеку. Усё, што вы не прызначыце, застаецца вашай уласнай доляй.
+3. **Калі чэк не мае пазіцый:** увесь рахунак проста дзеліцца пароўну паміж вамі і ўсімі дададзенымі людзьмі.
+4. Націсніце **Стварыць спасылкі**. Праграма вылічвае долю кожнага і выдае вам па адной асабістай спасылцы на кожнага сябра.
+
+Праграма не дазволіць прызначаным долям у суме перавысіць тое, што вы рэальна заплацілі, — калі так адбудзецца, вы ўбачыце папярэджанне, перш чым зможаце працягнуць.
+
+## Адпраўка спасылак
+
+Адпраўце кожнаму сябру яго спасылку так, як вам зручна — SMS, WhatsApp, электроннай поштай, чым заўгодна, чым умее дзяліцца ваш тэлефон. Ёсць таксама кнопка **Скапіраваць усе спасылкі**, якая капіруе імя і спасылку кожнага сябра адразу. Сябру ніколі не трэба ўсталёўваць праграму ці ствараць уліковы запіс, каб скарыстацца сваёй спасылкай.
+
+## Што бачыць ваш сябар
+
+Адкрыўшы спасылку, ён бачыць толькі сваю ўласную частку: установу і дату, «*Вы* заплацілі за ўсіх», прызначаныя яму пазіцыі (або яго роўную долю рахунку, калі пазіцый не было) і суму, якую ён вінны вам, — у валюце рахунку. Старонка адкрываецца на мове вашай праграмы, не абавязкова на яго.
+
+Калі вы ўказалі свае плацежныя дадзеныя (Revolut, PayPal або BLIK — наладжваюцца на экране налад аплаты ўліковага запісу групавой паездкі) для ўліковага запісу, да якога належыць гэты рахунак, з'яўляецца кнопка аплаты, якая адкрывае Revolut або PayPal з ужо запоўненай сумай, альбо паказвае інструкцыю BLIK. Калі вы нічога не наладзілі, сябар бачыць толькі суму без кнопкі аплаты, і вам давядзецца дамовіцца пра аплату іначай.
+
+У любым выпадку ёсць кнопка «**Я ўжо заплаціў(ла)**». Націск на яе не пераводзіць ніякіх грошай — ён проста паведамляе вам, што чалавек заплаціў.
+
+## Адсочванне, хто заплаціў
+
+У праграме радок кожнага сябра паказвае статус:
+
+- **Даслана** — спасылка створана, але яшчэ не адкрыта.
+- **Адкрыта** — ён адкрыў спасылку.
+- **Кажа, што заплаціў(ла)** — ён націснуў «Я ўжо заплаціў(ла)».
+- **Разлічана** — вы пацвердзілі, што грошы сапраўды прыйшлі.
+
+Сябар, які яшчэ не заплаціў, проста застаецца ў статусе **Даслана** або **Адкрыта** — нічога больш за гэтым не стаіць.
+
+## Пацвярджэнне атрымання грошай
+
+Як толькі статус сябра становіцца **Кажа, што заплаціў(ла)**, у яго радку з'яўляецца кнопка **Пацвердзіць атрыманне**. Націсніце яе, калі грошы сапраўды да вас паступяць. Гэта фіксуецца як пагашэнне доўгу гэтага сябра — гэтак жа, як любая іншая аплата, зарэгістраваная дзе-небудзь яшчэ ў праграме, — і яго радок пераходзіць у статус **Разлічана**.
+
+Доля кожнага сябра таксама адлюстроўваецца на экране **Даўгі і пазыкі** пад яго імем, як і любыя іншыя пазычаныя вамі грошы, — пакуль яна не будзе разлічана.
+
+## Ваша ўласная доля
+
+Сума, пазначаная як **Ваша доля** уверсе экрана, — гэта тое, што застаецца ад рахунку пасля вылічэння долей усіх сяброў; вы ніколі не ўводзіце яе самі.
+
+## Скасаванне падзелу
+
+Націсніце **Скасаваць падзел**, каб спыніць яго. Гэта адразу ж абрывае спасылкі ўсіх сяброў і выдаляе даўгі, створаныя гэтым падзелам, — уключаючы ўжо разлічаныя, — таму скасоўвайце, толькі калі ўпэўненыя. Пасля скасавання вы можаце ў любы момант стварыць новы падзел таго ж чэка.
+
+## Спасылкі дзейнічаюць 30 дзён
+
+Спасылка, якой не скарысталіся на працягу 30 дзён з моманту стварэння, проста перастае працаваць. Калі сябар адкрые яе пазней — або пасля таго, як вы скасавалі падзел, — ён убачыць простае паведамленне «гэтая спасылка недаступная» замест вашага рахунку.
+
+## Карысна ведаць
+
+- Недаступна на ўліковых запісах з **поўным скразным шыфраваннем** — серверу трэба прачытаць чэк, каб пабудаваць старонку для вашых сяброў, а шыфраванне гэтага не дазваляе.
+- Ствараць, скасоўваць ці пацвярджаць падзел можа толькі ўладальнік уліковага запісу і рэдактары. Назіральнікі не бачаць гэтай опцыі.
+- Вы не можаце падзяліць чэк, які сам узнік з чужога падзелу.
+- Сумы заўсёды паказваюцца ў валюце самога рахунку — нічога ніколі не канвертуецца.
 `,
     },
   ],
@@ -38006,6 +38598,80 @@ Als er ooit in meer dan één valuta iets is gevonden, toont het tabblad Analyse
 - Werkt automatisch bij elk gescand bonnetje — via camera, galerij, PDF, en bonnetjes gescand via Telegram, WhatsApp of Slack.
 - Een bevinding blokkeert nooit het opslaan van het bonnetje en verandert nooit zelf een bedrag.
 - Prijzen en verschillen worden getoond in de valuta van het bonnetje zelf.
+`,
+    },
+    {
+      id: '42-receipt-split',
+      title: `Bonnetje splitsen — laat vrienden je terugbetalen, zonder app`,
+      description: `Wijs de items van een gedeelde rekening toe aan de vrienden die ze hadden, en elke vriend krijgt een privélink naar zijn eigen deel — geen app, geen account, gewoon een tik om te zeggen "ik heb betaald".`,
+      body: `# Bonnetje splitsen — laat vrienden je terugbetalen, zonder app
+
+> Wijs de items van een gedeelde rekening toe aan de vrienden die ze hadden, en elke vriend krijgt een privélink naar zijn eigen deel — geen app, geen account, gewoon een tik om te zeggen "ik heb betaald".
+
+## Wat het is
+
+Als je een rekening voor een groep hebt betaald — een restaurantrekening, een gezamenlijke boodschappenrit — kun je die met Bonnetje splitsen verdelen onder de aanwezigen en iedereen een privélink sturen. Zij openen die en zien alleen wat ze jou schuldig zijn, en kunnen op een knop tikken om je terug te betalen. Jij ziet wie heeft betaald en bevestigt zodra het geld daadwerkelijk binnenkomt.
+
+## Waar je het vindt
+
+Open de uitgave voor de rekening die je hebt betaald en tik op het **personen-icoon** in de kop. Dit verschijnt alleen als je de uitgave kunt bewerken — kijkers op een gedeeld account zien het niet — en je kunt geen rekening splitsen die zelf al is ontstaan uit de splitsing van iemand anders.
+
+## Een rekening splitsen
+
+1. Tik op **Persoon toevoegen** en typ de naam van elke vriend (tot 20 personen).
+2. **Als het bonnetje items heeft:** tik op een item en dan op wie het had. Herhaal dit voor elk item — tik nogmaals op een al toegewezen item om het aan iemand anders te geven. Alles wat je niet toewijst, blijft je eigen deel.
+3. **Als het bonnetje geen items heeft:** de hele rekening wordt gewoon gelijk verdeeld tussen jou en alle toegevoegde personen.
+4. Tik op **Links maken**. De app berekent ieders deel en geeft je één privélink per vriend.
+
+De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkelijk hebt betaald — gebeurt dat toch, dan zie je een waarschuwing voordat je verder kunt.
+
+## Links versturen
+
+Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waarmee je telefoon kan delen. Er is ook een knop **Alle links kopiëren**, die de naam en link van elke vriend in één keer kopieert. Een vriend hoeft nooit de app te installeren of een account aan te maken om zijn link te gebruiken.
+
+## Wat je vriend ziet
+
+Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn toegewezen items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. De pagina opent in de taal van jouw app, niet per se in die van hem.
+
+Heb je je betaalgegevens toegevoegd (Revolut, PayPal of BLIK — in te stellen via het scherm Betaalinstellingen van een Groepsreis-account) voor het account waartoe deze rekening behoort, dan verschijnt er een betaalknop die Revolut of PayPal opent met het bedrag al ingevuld, of BLIK-instructies toont. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag zonder betaalknop, en moeten jullie het anders regelen.
+
+Hoe dan ook, er is een knop "**Ik heb al betaald**". Erop tikken verplaatst geen geld — het laat je alleen weten dat diegene heeft betaald.
+
+## Bijhouden wie heeft betaald
+
+Terug in de app toont de rij van elke vriend een status:
+
+- **Verstuurd** — de link is aangemaakt maar nog niet geopend.
+- **Geopend** — hij heeft de link geopend.
+- **Zegt te hebben betaald** — hij heeft op "Ik heb al betaald" getikt.
+- **Afgerekend** — jij hebt bevestigd dat het geld daadwerkelijk is binnengekomen.
+
+Een vriend die nog niet heeft betaald, blijft gewoon op **Verstuurd** of **Geopend** staan — meer zit daar niet achter.
+
+## Bevestigen dat je betaald bent
+
+Zodra de status van een vriend **Zegt te hebben betaald** is, verschijnt op zijn rij de knop **Ontvangst bevestigen**. Tik erop zodra het geld daadwerkelijk bij je is aangekomen. Dit wordt geregistreerd als een terugbetaling op het deel van die vriend — precies zoals elke andere terugbetaling elders in de app wordt vastgelegd — en zijn rij gaat naar **Afgerekend**.
+
+Het deel van elke vriend verschijnt ook onder zijn naam op je scherm **Schulden & Leningen**, net als elk ander geld dat je hebt uitgeleend, totdat het is afgerekend.
+
+## Jouw eigen deel
+
+Het bedrag met het label **Jouw deel** bovenaan het scherm is wat er van de rekening overblijft nadat het deel van elke vriend is afgetrokken — je vult het nooit zelf in.
+
+## Een splitsing annuleren
+
+Tik op **Splitsing annuleren** om ermee te stoppen. Dit verbreekt meteen de link van elke vriend en verwijdert de schulden die de splitsing heeft aangemaakt — inclusief die al zijn afgerekend — dus annuleer alleen als je het zeker weet. Na het annuleren kun je op elk moment een nieuwe splitsing voor dezelfde rekening starten.
+
+## Links verlopen na 30 dagen
+
+Een link die 30 dagen na het aanmaken niet is gebruikt, werkt gewoon niet meer. Opent een vriend hem daarna — of nadat jij de splitsing hebt geannuleerd — dan ziet hij een simpel bericht "deze link is niet beschikbaar" in plaats van je rekening.
+
+## Goed om te weten
+
+- Niet beschikbaar bij accounts met **volledige end-to-end-versleuteling** — de server moet het bonnetje kunnen lezen om de pagina's van je vrienden op te bouwen, en versleuteling voorkomt dat.
+- Alleen de accounteigenaar en bewerkers kunnen een splitsing aanmaken, annuleren of bevestigen. Kijkers zien deze optie niet.
+- Je kunt geen rekening splitsen die zelf al is ontstaan uit de splitsing van iemand anders.
+- Bedragen worden altijd getoond in de eigen valuta van de rekening — er wordt nooit iets omgerekend.
 `,
     },
   ],

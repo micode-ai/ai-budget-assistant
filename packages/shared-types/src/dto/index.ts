@@ -33,3 +33,4 @@ export * from './price-history';
 export * from './shopping-list';
 export * from './community-price';
 export * from './receipt-check';
+export * from './receipt-split';

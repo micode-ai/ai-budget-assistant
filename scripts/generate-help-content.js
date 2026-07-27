@@ -44,6 +44,7 @@ const SECTIONS = [
   '39-wrapped',
   '40-inflation-shield',
   '41-receipt-price-check',
+  '42-receipt-split',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

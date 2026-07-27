@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
 import { computeBudgetPeriod } from './budget-period.util';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 
 const THRESHOLDS = [50, 80, 100];
 
@@ -43,6 +44,8 @@ export class BudgetAlertService {
     const whereExpenses: any = {
       accountId,
       isDeleted: false,
+      // see common/utils/expense-filters.ts for the full rationale
+      ...EXCLUDE_SPLIT_RECEIVABLE,
       currencyCode: budget.currencyCode,
       date: { gte: periodStart, lte: periodEnd },
     };
@@ -160,6 +163,7 @@ export class BudgetAlertService {
         categoryId: { in: allocationCategoryIds },
         date: { gte: periodStart, lte: periodEnd },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
         currencyCode: budget.currencyCode,
       },
       _sum: { amount: true },

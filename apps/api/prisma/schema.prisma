@@ -170,6 +170,8 @@ model User {
   contributeCommunityPrices Boolean @default(false) @map("contribute_community_prices")
   themeMode                 String  @default("system") @map("theme_mode")
   accentColor               String? @map("accent_color")
+  paymentMethod             SettleMethod? @map("payment_method")
+  paymentHandle             String?       @map("payment_handle")
   isActive             Boolean   @default(true) @map("is_active")
   isVerified           Boolean   @default(false) @map("is_verified")
   emailVerificationCode      String?   @map("email_verification_code")
@@ -449,6 +451,7 @@ model Expense {
   relatedDebtIncomeId String? @map("related_debt_income_id")
   isDeleted    Boolean  @default(false) @map("is_deleted")
   isPlanned    Boolean  @default(false) @map("is_planned")
+  isSplitReceivable Boolean @default(false) @map("is_split_receivable")
   syncVersion  Int      @default(0) @map("sync_version")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -472,6 +475,7 @@ model Expense {
   projectExpenses  ProjectExpense[]
   purchaseRequest  PurchaseRequest? @relation("PlannedPurchase")
   shares           TripExpenseShare[]
+  splitParticipants ReceiptSplitParticipant[]
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -505,6 +509,55 @@ model ExpenseItem {
 
   @@index([expenseId])
   @@map("expense_items")
+}
+
+// Receipt split (ABA — see task-1 brief): the payer splits a receipt by line
+// item (or equally) and sends each participant a public, tokenized link
+// showing only their own share, with no account required. This table stores
+// only the link and its state — the actual receivable is a normal isDebt
+// Expense (debtContactName = participant's name), created by a later task.
+//
+// The FK's ON DELETE CASCADE only fires on a genuine hard delete. The app
+// soft-deletes expenses (isDeleted), which does NOT trigger it, so
+// ExpensesService.remove clears a split's debt rows and expires its
+// participants explicitly. Do not assume the cascade covers that path —
+// without the explicit cleanup, guest links stay live for a deleted receipt.
+model ReceiptSplitParticipant {
+  id            String    @id @default(uuid())
+  accountId     String    @map("account_id")
+  expenseId     String    @map("expense_id")
+  // Participant index within the create loop (0-based). Together with expenseId
+  // this backs a hand-written partial unique index (see the migration —
+  // `receipt_split_live_slot` on (expense_id, seq) WHERE cancelled_at IS NULL)
+  // that enforces "at most one live split per expense": a concurrent double-create
+  // collides here, and a re-split after cancel is free to reuse seq 0 because the
+  // old cancelled rows have dropped out of the index. Prisma cannot express a
+  // partial index, so there is deliberately no @@unique for it in this schema.
+  seq           Int
+  name          String
+  token         String    @unique
+  amount        Decimal   @db.Decimal(12, 2)
+  currencyCode  String    @map("currency_code")
+  itemIds       Json?     @map("item_ids")
+  debtExpenseId String?   @map("debt_expense_id")
+  openedAt      DateTime? @map("opened_at")
+  claimedAt     DateTime? @map("claimed_at")
+  settledAt     DateTime? @map("settled_at")
+  // Distinct from a naturally-expired split (expiresAt in the past, cancelledAt still
+  // null): a split the payer explicitly cancels must become fully inert (re-splittable,
+  // not reported as live, cannot be confirmed) while a split that merely aged past its
+  // 30-day expiresAt with debts still unsettled must remain visible to the createSplit
+  // idempotency check — otherwise re-splitting would mint a second set of debt rows for
+  // the same people. Do NOT collapse this into expiresAt.
+  cancelledAt   DateTime? @map("cancelled_at")
+  expiresAt     DateTime  @map("expires_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@index([expenseId])
+  @@map("receipt_split_participants")
 }
 
 model ProductAlias {

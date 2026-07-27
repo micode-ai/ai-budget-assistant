@@ -49,4 +49,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '39-wrapped', icon: 'gift-outline', color: '#DB2777' },
   { id: '40-inflation-shield', icon: 'shield-checkmark-outline', color: '#10B981' },
   { id: '41-receipt-price-check', icon: 'pricetag-outline', color: '#F59E0B' },
+  { id: '42-receipt-split', icon: 'people-circle-outline', color: '#06B6D4' },
 ];

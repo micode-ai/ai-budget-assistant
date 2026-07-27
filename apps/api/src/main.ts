@@ -8,6 +8,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
+  // The API runs behind nginx, which sets X-Forwarded-For. Without trusting the
+  // proxy, Express's req.ip (and req.ips, which ThrottlerGuard's default tracker
+  // reads) resolves to nginx's own address for every request, so ALL callers
+  // worldwide share one throttler bucket on every public/unauthenticated route
+  // (e.g. the receipt-split guest page GET /s/:token, GET /users/search) — a
+  // trivial denial of service. `1` trusts exactly one hop (the nginx reverse
+  // proxy in front of this container).
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   // Increase body size limit for base64 audio/image uploads
   // verify callback preserves rawBody for Stripe webhook signature verification
   app.use(
@@ -29,7 +38,7 @@ async function bootstrap() {
 
   // Global prefix (exclude webhook routes from versioning)
   app.setGlobalPrefix('api/v1', {
-    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook', 'slack/events', 'slack/interactivity', 'slack/install', 'slack/oauth/callback'],
+    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook', 'slack/events', 'slack/interactivity', 'slack/install', 'slack/oauth/callback', 's/:token', 's/:token/paid'],
   });
 
   // CORS — allow only explicitly configured origins; fall back to localhost for local dev

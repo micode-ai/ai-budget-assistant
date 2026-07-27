@@ -1,4 +1,4 @@
-import type { Currency, AiResponseMode, AiModel, ThemeMode } from './primitives';
+import type { Currency, AiResponseMode, AiModel, ThemeMode, SettleMethod } from './primitives';
 
 export interface NotificationPreferences {
   budgetAlerts: boolean;
@@ -22,6 +22,11 @@ export interface User {
   contributeCommunityPrices?: boolean;
   themeMode?: ThemeMode;
   accentColor?: string | null;
+  /** How the user prefers to be paid back — used to build the pay button on a
+  * receipt-split guest link. Falls back to the account-member handle (trip
+  * settle-up) when unset. */
+  paymentMethod?: SettleMethod | null;
+  paymentHandle?: string | null;
   createdAt: Date;
   updatedAt: Date;
   lastSyncAt?: Date;

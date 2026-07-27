@@ -1,5 +1,16 @@
 import { ExpensesService } from './expenses.service';
 
+/**
+ * Default stub for the DI-injected ReceiptSplitService (Fix 3 — receipt-split
+ * review: real DI, not a standalone-function import). Most tests in this file
+ * never call remove(), so expireForExpense is never invoked; the dedicated
+ * "remove — receipt-split cleanup" describe block below builds its own mock and
+ * asserts on it directly.
+ */
+function makeReceiptSplitServiceStub(): any {
+  return { expireForExpense: jest.fn().mockResolvedValue(undefined) };
+}
+
 // ---------------------------------------------------------------------------
 // reconcileNotificationStub (Tier 1 Case A)
 // ---------------------------------------------------------------------------
@@ -55,7 +66,7 @@ function makeCreateService(overrides: {
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
   const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
+  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService, makeReceiptSplitServiceStub());
   return { service, prisma, anomalyService, stubUpdateMock };
 }
 
@@ -179,7 +190,7 @@ function makeTripShareCreateService() {
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
   const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
+  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService, makeReceiptSplitServiceStub());
   return { service, tx, shareCreateMany, shareDeleteMany, upsertMock };
 }
 
@@ -288,7 +299,7 @@ describe('create — trip expense shares', () => {
     const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
     const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
     const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-    const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService);
+    const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService, makeReceiptSplitServiceStub());
 
     const dto = {
       localId: 'client-retry-1',
@@ -376,6 +387,7 @@ function makeShieldReconcileCreateService() {
     cacheService,
     anomalyService,
     merchantRulesService,
+    makeReceiptSplitServiceStub(),
     undefined,
     undefined,
     shieldTracking,
@@ -456,6 +468,7 @@ function makeItemsService(expense: { id: string; clientId: string }) {
     cacheService,
     {} as any,
     {} as any,
+    makeReceiptSplitServiceStub(),
   );
   return { service, prisma };
 }
@@ -524,5 +537,54 @@ describe('expense items CRUD resolves clientId to the server PK', () => {
         where: expect.objectContaining({ expenseId: 'server-pk-1' }),
       }),
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// remove() — receipt-split cleanup (a deleted receipt's guest links must die)
+//
+// ExpensesService.remove soft-deletes by setting isDeleted, which does NOT fire
+// the Prisma onDelete:Cascade on ReceiptSplitParticipant.expense (that only fires
+// on a genuine hard delete). So remove() must explicitly fire the split cleanup —
+// this test proves the wiring, not the cleanup's own internals (those are covered
+// by receipt-split.service.spec.ts's cancelSplit tests, which the cleanup function
+// shares its implementation with).
+// ---------------------------------------------------------------------------
+
+describe('remove — receipt-split cleanup', () => {
+  it('fires receiptSplitService.expireForExpense (real DI) with the resolved expense id when a receipt is deleted', async () => {
+    const prisma: any = {
+      expense: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'e-1',
+          accountId: 'acc-1',
+          category: null,
+          items: [],
+          expenseTags: [],
+          categorySplits: [],
+          projectExpenses: [],
+          user: { name: 'Alice' },
+        }),
+        update: jest.fn().mockResolvedValue({}),
+      },
+    };
+    const cacheService: any = { delByPrefix: jest.fn(), del: jest.fn().mockResolvedValue(undefined) };
+    const gamificationService: any = {};
+    const anomalyService: any = { dismissForExpense: jest.fn().mockResolvedValue(undefined) };
+    const merchantRulesService: any = {};
+    const receiptSplitService: any = { expireForExpense: jest.fn().mockResolvedValue(undefined) };
+
+    const service = new ExpensesService(
+      prisma,
+      gamificationService,
+      cacheService,
+      anomalyService,
+      merchantRulesService,
+      receiptSplitService,
+    );
+
+    await service.remove('acc-1', 'e-1');
+
+    expect(receiptSplitService.expireForExpense).toHaveBeenCalledWith('e-1');
   });
 });

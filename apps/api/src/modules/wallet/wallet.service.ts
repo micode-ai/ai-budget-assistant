@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { SetWalletBalanceDto } from './dto';
 
 @Injectable()
@@ -73,9 +74,12 @@ export class WalletService {
     });
 
     // Get expense totals grouped by currency
+    // isSplitReceivable: false excludes the debt rows a receipt split creates —
+    // that money already left as the original receipt expense. See
+    // common/utils/expense-filters.ts for the full accounting rationale.
     const expenseTotals = await this.prisma.expense.groupBy({
       by: ['currencyCode'],
-      where: { accountId, isDeleted: false },
+      where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
       _sum: { amount: true },
     });
 
@@ -189,7 +193,8 @@ export class WalletService {
           select: { date: true, amount: true, currencyCode: true },
         }),
         this.prisma.expense.findMany({
-          where: { accountId, isDeleted: false, date: { gte: startDate, lte: today } },
+          // isSplitReceivable: false — see common/utils/expense-filters.ts.
+          where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: startDate, lte: today } },
           select: { date: true, amount: true, currencyCode: true },
         }),
         this.prisma.currencyExchange.findMany({
@@ -290,7 +295,8 @@ export class WalletService {
         select: { date: true, amount: true, currencyCode: true },
       }),
       this.prisma.expense.findMany({
-        where: { accountId, isDeleted: false, date: { gte: start, lte: end } },
+        // isSplitReceivable: false — see common/utils/expense-filters.ts.
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: start, lte: end } },
         select: { date: true, amount: true, currencyCode: true },
       }),
       this.prisma.currencyExchange.findMany({

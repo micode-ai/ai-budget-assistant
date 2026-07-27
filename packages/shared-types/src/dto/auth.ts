@@ -1,4 +1,4 @@
-import type { Currency, ThemeMode, Account } from '../entities';
+import type { Currency, ThemeMode, SettleMethod, Account } from '../entities';
 
 export interface RegisterDto {
   email: string;
@@ -25,6 +25,11 @@ export interface AuthResponse {
     defaultAccountId?: string;
     themeMode?: ThemeMode;
     accentColor?: string | null;
+    /** How the user prefers to be paid back — used to build the pay button on a
+    * receipt-split guest link. Falls back to the account-member handle (trip
+    * settle-up) when unset. */
+    paymentMethod?: SettleMethod | null;
+    paymentHandle?: string | null;
   };
   accounts: Account[];
 }

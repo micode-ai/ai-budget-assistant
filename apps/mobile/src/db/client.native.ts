@@ -57,7 +57,8 @@ export async function initializeDatabase(): Promise<void> {
         updated_at INTEGER NOT NULL,
         is_deleted INTEGER DEFAULT 0,
         sync_status TEXT NOT NULL DEFAULT 'pending',
-        sync_version INTEGER DEFAULT 0
+        sync_version INTEGER DEFAULT 0,
+        is_split_receivable INTEGER DEFAULT 0
       );
 
       CREATE TABLE IF NOT EXISTS categories (
@@ -595,6 +596,11 @@ export async function initializeDatabase(): Promise<void> {
 
     // Planned expense flag (linked to an approved PurchaseRequest)
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN is_planned INTEGER DEFAULT 0`); } catch {}
+
+    // Split-receivable flag: true for a debt row created by a receipt split — excluded
+    // from client-computed spend totals since the money already left as the original
+    // receipt. Never filter on is_debt instead (see src/utils/consumption.ts).
+    try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN is_split_receivable INTEGER DEFAULT 0`); } catch {}
 
     // Transaction attribution: cache the creator's display name on each row so
     // shared-account screens can show "Added by …" without an extra user lookup.

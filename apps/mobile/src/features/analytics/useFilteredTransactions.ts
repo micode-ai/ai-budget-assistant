@@ -4,6 +4,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
+import { filterConsumption } from '@/utils/consumption';
 import type { TimeRange } from './useAnalytics';
 
 export function useFilteredTransactions(
@@ -12,7 +13,8 @@ export function useFilteredTransactions(
   selectedMonth?: number,
   selectedYear?: number,
 ) {
-  const { expenses } = useExpenseStore();
+  const { expenses: rawExpenses } = useExpenseStore();
+  const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
   const { incomes } = useIncomeStore();
   const { categories } = useCategoryStore();
   const { rates } = useExchangeRateStore();

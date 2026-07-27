@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
 
 interface ExpenseWithCategory {
@@ -34,6 +35,13 @@ export function computeVsAverageFromTotals(currentTotal: number, monthlyTotals: 
   return Math.round(((currentTotal - rollingAverage) / rollingAverage) * 10000) / 100;
 }
 
+/**
+ * Spend aggregations in this file all spread `EXCLUDE_SPLIT_RECEIVABLE` (see
+ * common/utils/expense-filters.ts for the full accounting rationale — the
+ * short version: a receipt split's debt rows are a receivable, not new spend,
+ * and are excluded everywhere a total is computed, including WalletService's
+ * cash-flow surfaces).
+ */
 @Injectable()
 export class AnalyticsService {
   constructor(
@@ -55,7 +63,7 @@ export class AnalyticsService {
     const start = new Date(year, month - 1, 1);
     const end = new Date(year, month, 1); // exclusive upper bound
     const agg = await this.prisma.expense.aggregate({
-      where: { accountId, date: { gte: start, lt: end }, isDeleted: false },
+      where: { accountId, date: { gte: start, lt: end }, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
       _sum: { amount: true },
     });
     const total = Number(agg._sum?.amount || 0);
@@ -111,7 +119,7 @@ export class AnalyticsService {
       }
 
       const agg = await this.prisma.expense.aggregate({
-        where: { accountId: { in: accountIds }, date: { gte: start, lt: end }, isDeleted: false },
+        where: { accountId: { in: accountIds }, date: { gte: start, lt: end }, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
         _sum: { amount: true },
       });
       const total = Number(agg._sum?.amount || 0);
@@ -174,6 +182,7 @@ export class AnalyticsService {
         accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       include: {
         category: true,
@@ -257,6 +266,7 @@ export class AnalyticsService {
         accountId,
         date: { gte: previousStartDate, lt: previousEndDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       _sum: { amount: true },
     });
@@ -295,6 +305,7 @@ export class AnalyticsService {
         accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
         source: 'ocr',
       },
       include: {
@@ -338,6 +349,7 @@ export class AnalyticsService {
         accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       orderBy: { date: 'asc' },
     });
@@ -406,6 +418,7 @@ export class AnalyticsService {
         accountId: { in: accountIds },
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       include: {
         category: true,
@@ -472,6 +485,7 @@ export class AnalyticsService {
         accountId: { in: accountIds },
         date: { gte: previousStartDate, lt: previousEndDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       _sum: { amount: true },
     });
@@ -526,6 +540,7 @@ export class AnalyticsService {
         where: {
           accountId,
           isDeleted: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
           date: { gte: startDate, lte: endDate },
           ...currencyFilter,
         },
@@ -562,6 +577,7 @@ export class AnalyticsService {
         where: {
           accountId,
           isDeleted: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
           date: { gte: startDate, lte: endDate },
           ...currencyFilter,
         },
@@ -606,6 +622,7 @@ export class AnalyticsService {
         where: {
           accountId,
           isDeleted: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
           date: { gte: startDate, lte: endDate },
           ...currencyFilter,
         },
@@ -648,6 +665,7 @@ export class AnalyticsService {
         where: {
           accountId,
           isDeleted: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
           date: { gte: startDate, lte: endDate },
           ...currencyFilter,
         },
@@ -706,6 +724,7 @@ export class AnalyticsService {
           accountId,
           date: { gte: startDate, lte: endDate },
           isDeleted: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
         },
       },
       include: {
@@ -744,7 +763,7 @@ export class AnalyticsService {
       where: { accountId, isDeleted: false },
       include: {
         projectExpenses: {
-          where: { isDeleted: false },
+          where: { isDeleted: false, expense: { ...EXCLUDE_SPLIT_RECEIVABLE } },
           include: { expense: { select: { amount: true, currencyCode: true } } },
         },
         projectIncomes: {

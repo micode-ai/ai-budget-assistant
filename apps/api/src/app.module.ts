@@ -51,6 +51,7 @@ import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.modu
 import { PriceHistoryModule } from './modules/price-history/price-history.module';
 import { ShoppingListModule } from './modules/shopping-list/shopping-list.module';
 import { CommunityPriceModule } from './modules/community-prices/community-price.module';
+import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module';
 
 @Module({
   imports: [
@@ -126,6 +127,11 @@ import { CommunityPriceModule } from './modules/community-prices/community-price
     PriceHistoryModule,
     ShoppingListModule,
     CommunityPriceModule,
+    // ReceiptSplitModule's controller adds /expenses/:id/receipt-split* routes.
+    // Declared after ExpensesModule so its routes register after the existing
+    // bulk/merge/:id declarations, per the ABA-166 discipline (no actual shadowing
+    // risk here — see receipt-split.controller.ts's doc comment).
+    ReceiptSplitModule,
   ],
   providers: [
     {

@@ -177,4 +177,35 @@ describe('BudgetAlertService — category thresholds', () => {
     expect(categoryCalls[0][3].categoryName).toBe('Food');
     expect(categoryCalls[0][3].thresholdPercentage).toBe(50);
   });
+
+  it('overall spend aggregate excludes split receivables but still counts a standalone debt', async () => {
+    mockPrisma.budget.findMany.mockResolvedValue([makeBudget()]);
+    mockPrisma.expense.aggregate.mockResolvedValue({ _sum: { amount: 0 } });
+    mockPrisma.expense.groupBy.mockResolvedValue([]);
+
+    await service.checkBudgetsForAccount('acc-1', 'PLN');
+
+    const where = (mockPrisma.expense.aggregate as jest.Mock).mock.calls[0][0].where;
+    // The marker the split feature sets — must be filtered out.
+    expect(where.isSplitReceivable).toBe(false);
+    // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
+    // filtering on it would rewrite the numbers of every user tracking debts.
+    expect(where.isDebt).toBeUndefined();
+  });
+
+  it('category spend groupBy excludes split receivables but still counts a standalone debt', async () => {
+    mockPrisma.budget.findMany.mockResolvedValue([makeBudget()]);
+    mockPrisma.expense.groupBy.mockResolvedValue([
+      { categoryId: 'cat-1', _sum: { amount: 0 } },
+    ]);
+
+    await service.checkBudgetsForAccount('acc-1', 'PLN');
+
+    const where = (mockPrisma.expense.groupBy as jest.Mock).mock.calls[0][0].where;
+    // The marker the split feature sets — must be filtered out.
+    expect(where.isSplitReceivable).toBe(false);
+    // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
+    // filtering on it would rewrite the numbers of every user tracking debts.
+    expect(where.isDebt).toBeUndefined();
+  });
 });

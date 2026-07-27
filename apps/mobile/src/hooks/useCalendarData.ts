@@ -7,6 +7,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useAuthStore } from '@/stores/authStore';
 import { getIntlLocale } from '@/i18n';
+import { filterConsumption } from '@/utils/consumption';
 
 export interface CalendarDay {
   date: number;
@@ -56,7 +57,11 @@ export function useCalendarData(
   selectedYear: number,
   selectedDay?: number | null,
 ): UseCalendarDataReturn {
-  const { expenses } = useExpenseStore();
+  const { expenses: rawExpenses } = useExpenseStore();
+  // Split-receivable debt rows are bookkeeping for a receivable already carried
+  // by the original receipt expense — exclude them so the calendar's totals,
+  // category breakdowns, and net profit don't double-count a split bill.
+  const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
   const { incomes } = useIncomeStore();
   const { categories } = useCategoryStore();
   const { rates } = useExchangeRateStore();

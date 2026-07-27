@@ -124,6 +124,8 @@ export class AuthService {
         isVerified: user.isVerified,
         themeMode: user.themeMode,
         accentColor: user.accentColor,
+        paymentMethod: user.paymentMethod,
+        paymentHandle: user.paymentHandle,
       },
       accounts: user.isVerified ? accounts : [],
     };
@@ -164,6 +166,8 @@ export class AuthService {
           isVerified: false,
           themeMode: user.themeMode,
           accentColor: user.accentColor,
+          paymentMethod: user.paymentMethod,
+          paymentHandle: user.paymentHandle,
         },
         accounts: [],
       };
@@ -193,6 +197,8 @@ export class AuthService {
         isVerified: true,
         themeMode: user.themeMode,
         accentColor: user.accentColor,
+        paymentMethod: user.paymentMethod,
+        paymentHandle: user.paymentHandle,
       },
       accounts,
     };
@@ -279,6 +285,8 @@ export class AuthService {
         isVerified: true,
         themeMode: user.themeMode,
         accentColor: user.accentColor,
+        paymentMethod: user.paymentMethod,
+        paymentHandle: user.paymentHandle,
       },
       accounts,
     };
@@ -425,6 +433,8 @@ export class AuthService {
         isVerified: true,
         themeMode: user.themeMode,
         accentColor: user.accentColor,
+        paymentMethod: user.paymentMethod,
+        paymentHandle: user.paymentHandle,
       },
       accounts,
     };

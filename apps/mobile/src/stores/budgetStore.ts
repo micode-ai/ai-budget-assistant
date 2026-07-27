@@ -8,6 +8,7 @@ import { useCategoryStore } from './categoryStore';
 import { useExchangeRateStore } from './exchangeRateStore';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
+import { filterConsumption } from '@/utils/consumption';
 import {
   loadAllBudgets,
   insertBudget,
@@ -446,7 +447,7 @@ export const useBudgetStore = create<BudgetState>()(
       const budget = get().budgets.find((b) => b.id === budgetId);
       if (!budget || budget.isDeleted) return null;
 
-      const expenses = useExpenseStore.getState().expenses.filter((e) => !e.isDeleted);
+      const expenses = filterConsumption(useExpenseStore.getState().expenses).filter((e) => !e.isDeleted);
 
       const now = referenceDate ?? new Date();
       const { periodStart, periodEnd } = computeBudgetPeriod(budget, now);

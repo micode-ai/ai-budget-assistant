@@ -1,6 +1,7 @@
 import { HttpException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcrypt';
+import { promises as dnsPromises } from 'dns';
 
 // Critical auth paths: password reset code flow and in-memory rate limiting.
 // The rate-limit Map lives on the AuthService instance, so a fresh service is
@@ -394,5 +395,103 @@ describe('AuthService — changeEmailRequest passwordless guard', () => {
     await expect(
       service.changeEmailRequest('u1', { newEmail: 'new@x.com', currentPassword: 'x' } as any),
     ).rejects.toThrow(BadRequestException);
+  });
+});
+
+// Regression guard for a class of bug this codebase has hit before: a user-level
+// preference field readable from getProfile but missing from one of the auth
+// response `user` blocks — appears after a profile fetch, vanishes after a fresh
+// login/register/refresh. Every response `user` block that echoes back user fields
+// (register, login x2, googleLogin, verifyEmail) must carry paymentMethod/paymentHandle.
+describe('AuthService — auth responses carry paymentMethod/paymentHandle', () => {
+  it('register(): included in the response user block', async () => {
+    const { service, usersService, accountsService } = makeService();
+    usersService.findByEmail.mockResolvedValue(null);
+    usersService.create.mockResolvedValue({
+      id: 'u1', email: 'new@x.com', name: 'New', isVerified: false, currencyCode: 'USD',
+      themeMode: 'system', accentColor: null,
+      paymentMethod: 'blik', paymentHandle: '+48 123 456 789',
+    });
+    accountsService.createDefaultAccount.mockResolvedValue({ id: 'acc-1' });
+
+    // register() calls dnsPromises.resolveMx internally to verify the email domain;
+    // stub it so the test doesn't depend on real DNS resolution.
+    jest.spyOn(dnsPromises, 'resolveMx').mockResolvedValueOnce([{ exchange: 'mx.x.com', priority: 10 }] as never);
+
+    const result = await service.register({
+      email: 'new@x.com', password: 'pw', name: 'New', currencyCode: 'USD',
+    } as any);
+
+    expect(result.user.paymentMethod).toBe('blik');
+    expect(result.user.paymentHandle).toBe('+48 123 456 789');
+  });
+
+  it('login(): unverified-path response includes the fields', async () => {
+    const { service, usersService, accountsService } = makeService();
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u1', email: 'u@x.com', name: 'User', isActive: true, isVerified: false,
+      passwordHash: 'hash', currencyCode: 'USD',
+      themeMode: 'system', accentColor: null,
+      paymentMethod: 'revolut', paymentHandle: '@myhandle',
+    });
+    jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true as never);
+    accountsService.findAllForUser.mockResolvedValue([{ id: 'acc-1', type: 'personal' }]);
+
+    const result = await service.login({ email: 'u@x.com', password: 'pw' });
+
+    expect(result.user.paymentMethod).toBe('revolut');
+    expect(result.user.paymentHandle).toBe('@myhandle');
+  });
+
+  it('login(): verified-path response includes the fields', async () => {
+    const { service, usersService } = makeService();
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u1', email: 'u@x.com', name: 'User', isActive: true, isVerified: true,
+      passwordHash: 'hash', currencyCode: 'USD', defaultAccountId: 'acc-1',
+      themeMode: 'system', accentColor: null,
+      paymentMethod: 'paypal', paymentHandle: 'user@paypal.com',
+    });
+    jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true as never);
+
+    const result = await service.login({ email: 'u@x.com', password: 'pw' });
+
+    expect(result.user.paymentMethod).toBe('paypal');
+    expect(result.user.paymentHandle).toBe('user@paypal.com');
+  });
+
+  it('googleLogin(): response includes the fields', async () => {
+    const { service, usersService, googleVerifier } = makeService();
+    googleVerifier.verify.mockResolvedValue({
+      sub: 'google-123', email: 'user@example.com', email_verified: true, name: 'Google User',
+    });
+    usersService.findByGoogleId.mockResolvedValue({
+      id: 'u1', email: 'user@example.com', name: 'Google User',
+      isActive: true, isVerified: true, currencyCode: 'USD', defaultAccountId: 'acc-1',
+      themeMode: 'system', accentColor: null,
+      paymentMethod: 'cash', paymentHandle: null,
+    });
+
+    const result = await service.googleLogin({ idToken: 'tok' });
+
+    expect(result.user.paymentMethod).toBe('cash');
+    expect(result.user.paymentHandle).toBeNull();
+  });
+
+  it('verifyEmail(): response includes the fields', async () => {
+    const { service, usersService } = makeService();
+    usersService.findByEmail.mockResolvedValue({
+      id: 'u1', email: 'u@x.com', name: 'User', isVerified: false,
+      emailVerificationCode: 'stored-hash',
+      emailVerificationExpiresAt: new Date(Date.now() + 60_000),
+      currencyCode: 'USD', defaultAccountId: 'acc-1',
+      themeMode: 'system', accentColor: null,
+      paymentMethod: 'other', paymentHandle: 'some-handle',
+    });
+    jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(true as never);
+
+    const result = await service.verifyEmail('u@x.com', '123456');
+
+    expect(result.user.paymentMethod).toBe('other');
+    expect(result.user.paymentHandle).toBe('some-handle');
   });
 });

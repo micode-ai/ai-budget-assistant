@@ -4,6 +4,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { filterConsumption } from '@/utils/consumption';
 import { useTranslation } from 'react-i18next';
 
 export interface CategoryAdjustment {
@@ -100,12 +101,17 @@ export function useScenarioProjection(
   horizon: 3 | 6 | 12,
 ): ScenarioProjection {
   const { t } = useTranslation();
-  const { expenses } = useExpenseStore();
+  const { expenses: rawExpenses } = useExpenseStore();
   const { incomes } = useIncomeStore();
   const { categories } = useCategoryStore();
   const { rates, baseCurrency } = useExchangeRateStore();
 
   const currency = baseCurrency || 'USD';
+
+  // Split-receivable debt rows are a receivable already carried by the original
+  // receipt expense — exclude them so the projected monthly average doesn't
+  // double-count a split bill.
+  const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
 
   return useMemo(() => {
     // --- Compute monthly averages ---
