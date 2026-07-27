@@ -27,7 +27,7 @@ Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, cor
 
 Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos asignados (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.
 
-Si has añadido tus datos de pago (Revolut, PayPal o BLIK — se configuran desde la pantalla de Ajustes de pago de una cuenta de Viaje en grupo) para la cuenta a la que pertenece esta cuenta, aparece un botón de pago que abre Revolut o PayPal con el importe ya rellenado, o muestra las instrucciones de BLIK. Si no has configurado nada, tu amigo solo ve el importe sin botón de pago, y tendréis que arreglar el pago de otra forma.
+Configura cómo quieres que te paguen en **Ajustes → Perfil → Ajustes de pago**. Puedes añadir hasta cinco métodos, y la página de tu amigo los muestra todos, para que use el que mejor le venga. Revolut y PayPal aparecen cada uno como un botón listo para tocar con el importe ya rellenado; BLIK no tiene forma de enlazar entre bancos, así que en su lugar muestra tu número con instrucciones; efectivo y otro no muestran ningún botón. Puedes configurarlo — o cambiarlo — en cualquier momento, incluso después de haber enviado ya un enlace, porque la página lee tus datos de pago de nuevo cada vez que tu amigo la abre. Si no has añadido nada, tu amigo solo ve el importe, sin botón de pago, y tendréis que arreglar el pago de otra forma.
 
 En cualquier caso, hay un botón "**Ya pagué**". Tocarlo no mueve ningún dinero — solo te avisa de que esa persona ha pagado.
 

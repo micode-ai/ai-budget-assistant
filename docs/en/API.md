@@ -169,10 +169,16 @@ Authorization: Bearer <token>
   "timezone": "UTC",
   "aiResponseMode": "balanced",
   "aiModel": "balanced",
+  "paymentMethods": [
+    { "method": "revolut", "handle": "johndoe" },
+    { "method": "blik", "handle": "+48123456789" }
+  ],
   "isAdmin": false,
   "createdAt": "2024-01-01T00:00:00Z"
 }
 ```
+
+`paymentMethods` is the ordered list (by `sortOrder`) a friend's [Receipt Splitting](#receipt-splitting) guest link offers as payment options; empty when the user hasn't set any up. See **Replace Payment Methods** below for how it's written.
 
 ### Update Profile
 
@@ -234,6 +240,35 @@ Content-Type: application/json
 **Response** `200 OK`
 ```json
 { "success": true, "model": "fast" }
+```
+
+### Replace Payment Methods
+
+```http
+PUT /users/me/payment-methods
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "paymentMethods": [
+    { "method": "revolut", "handle": "johndoe" },
+    { "method": "blik", "handle": "+48123456789" }
+  ]
+}
+```
+
+Replaces the caller's entire payment-method list in one atomic call — at most 5 entries, one per `method` (`blik`, `revolut`, `paypal`, `cash`, `other`; a duplicate method in the array is rejected with `400`), each `handle` validated against the same handle format used by the trip-wallet payment settings. An empty array is valid and clears the list. Also clears the legacy `paymentMethod`/`paymentHandle` pair on the user in the same transaction, so a value set before this endpoint existed can never resurface once the list has been saved (even saved empty).
+
+This is what a [Receipt Splitting](#receipt-splitting) guest link resolves first, at the moment the guest opens it, when deciding which pay button(s) to show — so changing it here also fixes links already sent out.
+
+**Response** `200 OK`
+```json
+{
+  "paymentMethods": [
+    { "method": "revolut", "handle": "johndoe" },
+    { "method": "blik", "handle": "+48123456789" }
+  ]
+}
 ```
 
 ---
@@ -4714,7 +4749,7 @@ Soft-deletes every participant's linked receivable Expense and expires all of th
 GET /s/:token
 ```
 
-No `Authorization` header, no `X-Account-Id` — this route is excluded from the `/api/v1` prefix entirely (see `main.ts`). Renders a server-side HTML page (`Content-Type: text/html; charset=utf-8`, `Cache-Control: no-store`) showing only that one participant's name, amount, assigned items (if any), the payer's name, and a payment link or manual instructions derived from the payer's `paymentMethod`/`paymentHandle` (falling back to their trip-wallet `AccountMember`-level payment info when either is unset at the user level). An unknown token, an expired token, and a cancelled token all render an **identical** "link not found or expired" page — same status code, same body, same length — so neither a guest nor an attacker probing tokens can tell "never existed" apart from "used to exist." The first view stamps the participant `opened`. Page language resolves from `?lang=` (set server-side to the payer's own `user.language` when the link is built), then `Accept-Language`, then English — independent of the app's 9-locale i18n system.
+No `Authorization` header, no `X-Account-Id` — this route is excluded from the `/api/v1` prefix entirely (see `main.ts`). Renders a server-side HTML page (`Content-Type: text/html; charset=utf-8`, `Cache-Control: no-store`) showing only that one participant's name, amount, assigned items (if any), the payer's name, and **one payment block per method** the payer has on file — resolved fresh on every request (never cached from link-creation time, so setting or changing this after a link was already sent still updates it): the payer's `paymentMethods` list (see **Replace Payment Methods** above) first, and only when that list is empty, the legacy single `paymentMethod`/`paymentHandle` pair, and only when that pair is also unset, their trip-wallet `AccountMember`-level payment info for the account the bill belongs to. Each resolved method renders as a tappable pay button (`revolut`, `paypal`), a BLIK instructions box, or nothing (`cash`, `other`); no method at all renders a plain "no payment info" line. An unknown token, an expired token, and a cancelled token all render an **identical** "link not found or expired" page — same status code, same body, same length — so neither a guest nor an attacker probing tokens can tell "never existed" apart from "used to exist." The first view stamps the participant `opened`. Page language resolves from `?lang=` (set server-side to the payer's own `user.language` when the link is built), then `Accept-Language`, then English — independent of the app's 9-locale i18n system.
 
 **Throttled** 20 requests / 60s (per IP, `ThrottlerGuard` default tracker).
 

@@ -27,7 +27,7 @@ Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waar
 
 Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn toegewezen items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. De pagina opent in de taal van jouw app, niet per se in die van hem.
 
-Heb je je betaalgegevens toegevoegd (Revolut, PayPal of BLIK — in te stellen via het scherm Betaalinstellingen van een Groepsreis-account) voor het account waartoe deze rekening behoort, dan verschijnt er een betaalknop die Revolut of PayPal opent met het bedrag al ingevuld, of BLIK-instructies toont. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag zonder betaalknop, en moeten jullie het anders regelen.
+Stel in hoe je terugbetaald wilt worden onder **Instellingen → Profiel → Betaalinstellingen**. Je kunt tot vijf methoden toevoegen, en de pagina van je vriend toont ze allemaal, zodat hij kan kiezen wat hem het beste uitkomt. Revolut en PayPal verschijnen allebei als een kant-en-klare knop met het bedrag al ingevuld; BLIK heeft geen manier om banken onderling te koppelen, dus toont het in plaats daarvan je nummer met instructies; contant en anders tonen helemaal geen knop. Je kunt dit op elk moment instellen — of wijzigen —, ook nadat je al een link hebt verstuurd, want de pagina leest je betaalgegevens elke keer opnieuw wanneer je vriend hem opent. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag, zonder betaalknop, en moeten jullie het anders regelen.
 
 Hoe dan ook, er is een knop "**Ik heb al betaald**". Erop tikken verplaatst geen geld — het laat je alleen weten dat diegene heeft betaald.
 

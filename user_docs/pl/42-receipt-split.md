@@ -27,7 +27,7 @@ Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp
 
 Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
 
-Jeśli dodałeś/aś swoje dane do płatności (Revolut, PayPal albo BLIK — ustawiane z ekranu Ustawienia płatności konta podróży grupowej) dla konta, do którego należy ten rachunek, pojawia się przycisk płatności, który otwiera Revolut albo PayPal z wypełnioną kwotą, albo pokazuje instrukcję BLIK. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę bez przycisku płatności i musicie się rozliczyć w inny sposób.
+Ustaw, jak chcesz otrzymywać zwrot pieniędzy, w **Ustawienia → Profil → Ustawienia płatności**. Możesz dodać do pięciu metod, a strona Twojego znajomego pokaże je wszystkie, żeby mógł wybrać tę, która mu odpowiada. Revolut i PayPal pojawiają się jako gotowy do stuknięcia przycisk z już wypełnioną kwotą; BLIK nie ma możliwości połączenia między bankami, więc zamiast tego pokazuje Twój numer wraz z instrukcją; gotówka i inne w ogóle nie pokazują przycisku. Możesz to ustawić — albo zmienić — w dowolnym momencie, nawet po wysłaniu linku, ponieważ strona za każdym razem odczytuje Twoje dane do płatności na nowo, gdy znajomy ją otwiera. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę, bez przycisku płatności, i musicie rozliczyć się w inny sposób.
 
 Tak czy inaczej, jest przycisk „**Już zapłaciłem/am**". Stuknięcie go nie przenosi żadnych pieniędzy — po prostu informuje Cię, że znajomy zapłacił.
 

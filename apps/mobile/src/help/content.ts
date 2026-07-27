@@ -4325,7 +4325,7 @@ Send each friend their link however you like — text message, WhatsApp, email, 
 
 Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their assigned items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. The page opens in your app's language, not necessarily theirs.
 
-If you've added your payment details (Revolut, PayPal, or BLIK — set from a Group Trip account's Payment Settings screen) for the account this bill belongs to, a pay button appears that opens Revolut or PayPal with the amount already filled in, or shows BLIK instructions. If you haven't set anything up, your friend just sees the amount with no pay button, and you'll arrange payment another way.
+Set up how you'd like to get paid under **Settings → Profile → Payment Settings**. You can add up to five methods, and your friend's page shows all of them, so they can use whichever suits them. Revolut and PayPal each appear as a ready-to-tap button with the amount already filled in; BLIK has no way to link across banks, so it shows your number with instructions instead; cash and other don't show a button at all. You can set this up — or change it — any time, even after you've already sent a link, since the page reads your payment details fresh each time your friend opens it. If you haven't added anything, your friend just sees the amount, with no pay button, and you'll arrange payment another way.
 
 Either way, there's an **"I already paid"** button. Tapping it doesn't move any money — it just tells you they've paid.
 
@@ -8668,7 +8668,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Открыв ссылку, он видит только свою собственную часть: магазин/заведение и дату, «*Вы* оплатили за всех», назначенные ему позиции (или его равную долю счёта, если позиций не было) и сумму, которую он вам должен, — в валюте счёта. Страница открывается на языке вашего приложения, не обязательно на его.
 
-Если вы указали свои платёжные данные (Revolut, PayPal или BLIK — настраиваются на экране настроек оплаты аккаунта группового путешествия) для аккаунта, к которому относится этот счёт, появляется кнопка оплаты, которая открывает Revolut или PayPal с уже заполненной суммой, либо показывает инструкцию по BLIK. Если вы ничего не настроили, друг видит только сумму без кнопки оплаты, и вам придётся договориться об оплате иначе.
+Настройте, как вы хотите получать оплату, в разделе **Настройки → Профиль → Настройки платежей**. Можно добавить до пяти способов, и на странице друга будут показаны все они — он сможет выбрать тот, который ему удобен. Revolut и PayPal отображаются как готовая кнопка с уже заполненной суммой; у BLIK нет способа связать разные банки, поэтому вместо кнопки показывается ваш номер с инструкцией; наличные и другое вообще не показывают кнопку. Настроить это — или изменить — можно в любой момент, даже после того как ссылка уже отправлена, потому что страница считывает ваши платёжные данные заново каждый раз, когда друг её открывает. Если вы ничего не указали, друг просто увидит сумму без кнопки оплаты, и вам придётся договориться об оплате иначе.
 
 В любом случае есть кнопка «**Я уже оплатил(а)**». Нажатие на неё не переводит никаких денег — оно просто сообщает вам, что человек заплатил.
 
@@ -12981,7 +12981,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Відкривши посилання, він бачить лише свою власну частку: заклад і дату, «*Ви* заплатили за всіх», призначені йому позиції (або його рівну частку рахунку, якщо позицій не було) і суму, яку він винен вам, — у валюті рахунку. Сторінка відкривається мовою вашого застосунку, не обов'язково його.
 
-Якщо ви вказали свої платіжні дані (Revolut, PayPal або BLIK — налаштовуються на екрані налаштувань оплати акаунту групової подорожі) для акаунту, до якого належить цей рахунок, з'являється кнопка оплати, яка відкриває Revolut або PayPal із вже заповненою сумою, або показує інструкцію BLIK. Якщо ви нічого не налаштували, друг бачить лише суму без кнопки оплати, і вам доведеться домовитися про оплату інакше.
+Налаштуйте, як ви хочете отримувати оплату, в розділі **Налаштування → Профіль → Налаштування платежів**. Можна додати до п'яти способів, і на сторінці друга буде показано всі вони — він зможе обрати той, який йому зручний. Revolut і PayPal відображаються як готова кнопка з уже заповненою сумою; у BLIK немає способу зв'язати різні банки, тому замість кнопки показується ваш номер з інструкцією; готівка та інше взагалі не показують кнопку. Налаштувати це — або змінити — можна в будь-який момент, навіть після того як посилання вже надіслано, бо сторінка зчитує ваші платіжні дані заново щоразу, коли друг її відкриває. Якщо ви нічого не вказали, друг просто побачить суму без кнопки оплати, і вам доведеться домовитися про оплату інакше.
 
 У будь-якому разі є кнопка «**Я вже заплатив(ла)**». Натискання на неї не переказує жодних грошей — воно просто повідомляє вам, що людина заплатила.
 
@@ -17279,7 +17279,7 @@ Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp
 
 Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
 
-Jeśli dodałeś/aś swoje dane do płatności (Revolut, PayPal albo BLIK — ustawiane z ekranu Ustawienia płatności konta podróży grupowej) dla konta, do którego należy ten rachunek, pojawia się przycisk płatności, który otwiera Revolut albo PayPal z wypełnioną kwotą, albo pokazuje instrukcję BLIK. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę bez przycisku płatności i musicie się rozliczyć w inny sposób.
+Ustaw, jak chcesz otrzymywać zwrot pieniędzy, w **Ustawienia → Profil → Ustawienia płatności**. Możesz dodać do pięciu metod, a strona Twojego znajomego pokaże je wszystkie, żeby mógł wybrać tę, która mu odpowiada. Revolut i PayPal pojawiają się jako gotowy do stuknięcia przycisk z już wypełnioną kwotą; BLIK nie ma możliwości połączenia między bankami, więc zamiast tego pokazuje Twój numer wraz z instrukcją; gotówka i inne w ogóle nie pokazują przycisku. Możesz to ustawić — albo zmienić — w dowolnym momencie, nawet po wysłaniu linku, ponieważ strona za każdym razem odczytuje Twoje dane do płatności na nowo, gdy znajomy ją otwiera. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę, bez przycisku płatności, i musicie rozliczyć się w inny sposób.
 
 Tak czy inaczej, jest przycisk „**Już zapłaciłem/am**". Stuknięcie go nie przenosi żadnych pieniędzy — po prostu informuje Cię, że znajomy zapłacił.
 
@@ -21552,7 +21552,7 @@ Schick jedem Freund seinen Link, wie du möchtest — SMS, WhatsApp, E-Mail, all
 
 Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine zugewiesenen Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
 
-Hast du deine Zahlungsdetails hinterlegt (Revolut, PayPal oder BLIK — einstellbar über die Zahlungseinstellungen eines Gruppenreise-Kontos) für das Konto, zu dem diese Rechnung gehört, erscheint ein Zahlen-Button, der Revolut oder PayPal mit bereits eingetragenem Betrag öffnet, oder eine BLIK-Anleitung zeigt. Hast du nichts hinterlegt, sieht dein Freund nur den Betrag ohne Zahlen-Button, und ihr müsst euch anders einigen.
+Richte unter **Einstellungen → Profil → Zahlungseinstellungen** ein, wie du bezahlt werden möchtest. Du kannst bis zu fünf Methoden hinterlegen, und die Seite deines Freundes zeigt sie alle an, sodass er die für ihn passende nutzen kann. Revolut und PayPal erscheinen jeweils als fertiger Zahlen-Button mit bereits eingetragenem Betrag; BLIK hat keine bankübergreifende Verknüpfung, deshalb zeigt es stattdessen deine Nummer mit einer Anleitung; Bargeld und Andere zeigen gar keinen Button. Du kannst das jederzeit einrichten oder ändern — auch nachdem du einen Link schon verschickt hast —, denn die Seite liest deine Zahlungsdetails jedes Mal neu, wenn dein Freund sie öffnet. Hast du nichts hinterlegt, sieht dein Freund nur den Betrag, ohne Zahlen-Button, und ihr müsst euch anders einigen.
 
 So oder so gibt es einen Button „**Ich habe bereits bezahlt**". Ein Tipp darauf bewegt kein Geld — er sagt dir nur, dass bezahlt wurde.
 
@@ -25814,7 +25814,7 @@ Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, cor
 
 Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos asignados (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.
 
-Si has añadido tus datos de pago (Revolut, PayPal o BLIK — se configuran desde la pantalla de Ajustes de pago de una cuenta de Viaje en grupo) para la cuenta a la que pertenece esta cuenta, aparece un botón de pago que abre Revolut o PayPal con el importe ya rellenado, o muestra las instrucciones de BLIK. Si no has configurado nada, tu amigo solo ve el importe sin botón de pago, y tendréis que arreglar el pago de otra forma.
+Configura cómo quieres que te paguen en **Ajustes → Perfil → Ajustes de pago**. Puedes añadir hasta cinco métodos, y la página de tu amigo los muestra todos, para que use el que mejor le venga. Revolut y PayPal aparecen cada uno como un botón listo para tocar con el importe ya rellenado; BLIK no tiene forma de enlazar entre bancos, así que en su lugar muestra tu número con instrucciones; efectivo y otro no muestran ningún botón. Puedes configurarlo — o cambiarlo — en cualquier momento, incluso después de haber enviado ya un enlace, porque la página lee tus datos de pago de nuevo cada vez que tu amigo la abre. Si no has añadido nada, tu amigo solo ve el importe, sin botón de pago, y tendréis que arreglar el pago de otra forma.
 
 En cualquier caso, hay un botón "**Ya pagué**". Tocarlo no mueve ningún dinero — solo te avisa de que esa persona ha pagado.
 
@@ -30074,7 +30074,7 @@ Envoyez à chaque ami son lien comme vous le souhaitez — SMS, WhatsApp, e-mail
 
 En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles attribués (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
 
-Si vous avez renseigné vos informations de paiement (Revolut, PayPal ou BLIK — à définir depuis l'écran Paramètres de paiement d'un compte Voyage de groupe) pour le compte auquel appartient cette addition, un bouton de paiement apparaît : il ouvre Revolut ou PayPal avec le montant déjà rempli, ou affiche les instructions BLIK. Si vous n'avez rien renseigné, votre ami voit seulement le montant, sans bouton de paiement, et vous devrez vous arranger autrement.
+Configurez comment vous souhaitez être remboursé(e) dans **Paramètres → Profil → Paramètres de paiement**. Vous pouvez ajouter jusqu'à cinq méthodes, et la page de votre ami les affiche toutes, pour qu'il utilise celle qui lui convient. Revolut et PayPal apparaissent chacun sous la forme d'un bouton prêt à l'emploi avec le montant déjà rempli ; BLIK n'a aucun moyen de créer un lien interbancaire, donc il affiche plutôt votre numéro avec des instructions ; espèces et autre n'affichent aucun bouton. Vous pouvez configurer — ou modifier — cela à tout moment, même après avoir déjà envoyé un lien, car la page relit vos informations de paiement à chaque fois que votre ami l'ouvre. Si vous n'avez rien renseigné, votre ami voit seulement le montant, sans bouton de paiement, et vous devrez vous arranger autrement.
 
 Dans tous les cas, il y a un bouton « **J'ai déjà payé** ». Appuyer dessus ne déplace aucun argent — cela vous indique simplement que la personne a payé.
 
@@ -34294,7 +34294,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 Адкрыўшы спасылку, ён бачыць толькі сваю ўласную частку: установу і дату, «*Вы* заплацілі за ўсіх», прызначаныя яму пазіцыі (або яго роўную долю рахунку, калі пазіцый не было) і суму, якую ён вінны вам, — у валюце рахунку. Старонка адкрываецца на мове вашай праграмы, не абавязкова на яго.
 
-Калі вы ўказалі свае плацежныя дадзеныя (Revolut, PayPal або BLIK — наладжваюцца на экране налад аплаты ўліковага запісу групавой паездкі) для ўліковага запісу, да якога належыць гэты рахунак, з'яўляецца кнопка аплаты, якая адкрывае Revolut або PayPal з ужо запоўненай сумай, альбо паказвае інструкцыю BLIK. Калі вы нічога не наладзілі, сябар бачыць толькі суму без кнопкі аплаты, і вам давядзецца дамовіцца пра аплату іначай.
+Наладзьце, як вы хочаце атрымліваць аплату, у раздзеле **Налады → Профіль → Налады плацяжоў**. Можна дадаць да пяці спосабаў, і на старонцы сябра будуць паказаны ўсе яны — ён зможа выбраць той, які яму зручны. Revolut і PayPal адлюстроўваюцца як гатовая кнопка з ужо запоўненай сумай; у BLIK няма магчымасці звязаць розныя банкі, таму замест кнопкі паказваецца ваш нумар з інструкцыяй; наяўныя і іншае наогул не паказваюць кнопку. Наладзіць гэта — ці змяніць — можна ў любы момант, нават пасля таго як спасылка ўжо адпраўленая, бо старонка счытвае вашы плацежныя дадзеныя нанова кожны раз, калі сябар яе адкрывае. Калі вы нічога не ўказалі, сябар проста ўбачыць суму без кнопкі аплаты, і вам давядзецца дамовіцца пра аплату іначай.
 
 У любым выпадку ёсць кнопка «**Я ўжо заплаціў(ла)**». Націск на яе не пераводзіць ніякіх грошай — ён проста паведамляе вам, што чалавек заплаціў.
 
@@ -38633,7 +38633,7 @@ Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waar
 
 Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn toegewezen items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. De pagina opent in de taal van jouw app, niet per se in die van hem.
 
-Heb je je betaalgegevens toegevoegd (Revolut, PayPal of BLIK — in te stellen via het scherm Betaalinstellingen van een Groepsreis-account) voor het account waartoe deze rekening behoort, dan verschijnt er een betaalknop die Revolut of PayPal opent met het bedrag al ingevuld, of BLIK-instructies toont. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag zonder betaalknop, en moeten jullie het anders regelen.
+Stel in hoe je terugbetaald wilt worden onder **Instellingen → Profiel → Betaalinstellingen**. Je kunt tot vijf methoden toevoegen, en de pagina van je vriend toont ze allemaal, zodat hij kan kiezen wat hem het beste uitkomt. Revolut en PayPal verschijnen allebei als een kant-en-klare knop met het bedrag al ingevuld; BLIK heeft geen manier om banken onderling te koppelen, dus toont het in plaats daarvan je nummer met instructies; contant en anders tonen helemaal geen knop. Je kunt dit op elk moment instellen — of wijzigen —, ook nadat je al een link hebt verstuurd, want de pagina leest je betaalgegevens elke keer opnieuw wanneer je vriend hem opent. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag, zonder betaalknop, en moeten jullie het anders regelen.
 
 Hoe dan ook, er is een knop "**Ik heb al betaald**". Erop tikken verplaatst geen geld — het laat je alleen weten dat diegene heeft betaald.
 
