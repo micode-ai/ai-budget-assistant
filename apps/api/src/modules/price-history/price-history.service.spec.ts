@@ -96,6 +96,60 @@ describe('PriceHistoryService', () => {
       const where = findMany.mock.calls[0][0].where;
       expect(where.description).toEqual({ not: '' });
     });
+
+    // Regression: the alias guard used to sit at the TOP level as
+    // `NOT: { canonicalName: { in: aliases } }`. That compiles to SQL
+    // `NOT (canonical_name IN (...))`, which is NULL — not TRUE — for a NULL
+    // canonical_name, so every row the backfill exists to fix was silently
+    // excluded the moment an account had a single alias. Production: the Family
+    // account had 103 aliases and 308 NULL-name items, and the endpoint answered
+    // `{ updatedCount: 0 }` with no error.
+    it('still matches NULL canonical names when the account has aliases', async () => {
+      process.env.OPENAI_API_KEY = 'sk-test';
+      const findMany = jest.fn().mockResolvedValue([]);
+      const prisma: any = {
+        productAlias: {
+          findMany: jest.fn().mockResolvedValue([{ rawName: 'Mleko' }, { rawName: 'Piwo' }]),
+        },
+        expenseItem: { findMany },
+      };
+      const svc = new PriceHistoryService(prisma, null as any);
+
+      await svc.backfillWithAi('acc-1');
+      const where = findMany.mock.calls[0][0].where;
+
+      // No top-level NOT — that is what swallowed the NULL rows.
+      expect(where.NOT).toBeUndefined();
+
+      // The NULL branch must be reachable and completely unguarded by aliases.
+      const nullBranch = where.OR.find(
+        (b: any) => Object.prototype.hasOwnProperty.call(b, 'canonicalName') && b.canonicalName === null,
+      );
+      expect(nullBranch).toEqual({ canonicalName: null });
+
+      // The alias guard must still protect the single-word branch.
+      const wordBranch = where.OR.find((b: any) => Array.isArray(b.AND));
+      expect(wordBranch.AND).toEqual(
+        expect.arrayContaining([{ canonicalName: { notIn: ['Mleko', 'Piwo'] } }]),
+      );
+    });
+
+    it('omits the alias guard entirely when the account has no aliases', async () => {
+      process.env.OPENAI_API_KEY = 'sk-test';
+      const findMany = jest.fn().mockResolvedValue([]);
+      const prisma: any = {
+        productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+        expenseItem: { findMany },
+      };
+      const svc = new PriceHistoryService(prisma, null as any);
+
+      await svc.backfillWithAi('acc-1');
+      const where = findMany.mock.calls[0][0].where;
+
+      expect(where.NOT).toBeUndefined();
+      const wordBranch = where.OR.find((b: any) => Array.isArray(b.AND));
+      expect(wordBranch.AND).toEqual([{ canonicalName: { not: { contains: ' ' } } }]);
+    });
   });
 
   describe('getBasketComparison', () => {

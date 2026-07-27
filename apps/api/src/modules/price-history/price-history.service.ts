@@ -343,14 +343,29 @@ export class PriceHistoryService {
           // descriptions (nothing usable to generate a canonical name from).
           description: { not: '' },
           isDeleted: false,
-          // Skip any item whose canonical_name is the key of a user alias
-          ...(userAliasedNames.length > 0
-            ? { NOT: { canonicalName: { in: userAliasedNames } } }
-            : {}),
+          // The alias guard applies ONLY to the single-word branch, and that is
+          // load-bearing. It used to sit at the top level as
+          // `NOT: { canonicalName: { in: userAliasedNames } }`, which compiles to
+          // SQL `NOT (canonical_name IN (...))` — and for a NULL canonical_name
+          // that evaluates to NULL, not TRUE, so three-valued logic silently
+          // dropped every row this backfill exists to fix. In production the
+          // Family account had 103 aliases and 308 NULL-name items, and the
+          // endpoint reported `{ updatedCount: 0 }` with no error at all.
+          //
+          // A NULL name cannot collide with an alias anyway: an alias key IS a
+          // concrete non-empty canonical_name string, so there is nothing to
+          // protect on the NULL branch.
           OR: [
             { canonicalName: null },
-            // Single-word names have no space — multi-word LLM names are preserved
-            { canonicalName: { not: { contains: ' ' } } },
+            {
+              AND: [
+                // Single-word names have no space — multi-word LLM names are preserved
+                { canonicalName: { not: { contains: ' ' } } },
+                ...(userAliasedNames.length > 0
+                  ? [{ canonicalName: { notIn: userAliasedNames } }]
+                  : []),
+              ],
+            },
           ],
         },
         select: { id: true, description: true, canonicalName: true },
