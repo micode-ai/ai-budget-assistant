@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { computeBasket, BasketRow } from './basket-calculator';
+import { parseCanonicalNameMap } from './canonical-name-parse.util';
 import type {
   PriceHistoryResponse,
   PriceHistoryProduct,
@@ -385,20 +386,27 @@ export class PriceHistoryService {
 
     const uniqueDescs = [...descToIds.keys()].slice(0, AI_BACKFILL_MAX_UNIQUE);
     let updatedCount = 0;
+    let skippedCount = 0;
 
     for (let i = 0; i < uniqueDescs.length; i += AI_BACKFILL_BATCH) {
       const batch = uniqueDescs.slice(i, i + AI_BACKFILL_BATCH);
-      let names: string[];
+      let names: Map<number, string>;
       try {
         names = await this.extractCanonicalNames(batch);
       } catch (err) {
         this.logger.warn('AI backfill batch failed', err);
+        skippedCount += batch.length;
         continue;
       }
 
       for (let j = 0; j < batch.length; j++) {
-        const name = names[j]?.trim();
-        if (!name) continue;
+        // 1-based: the prompt numbers the inputs from 1, so a returned key maps
+        // back to a known input rather than to a position in a possibly-shifted list.
+        const name = names.get(j + 1);
+        if (!name) {
+          skippedCount += 1;
+          continue;
+        }
         const ids = descToIds.get(batch[j]) ?? [];
         if (ids.length === 0) continue;
         const result = await (this.prisma as any).expenseItem.updateMany({
@@ -407,6 +415,15 @@ export class PriceHistoryService {
         });
         updatedCount += result.count;
       }
+    }
+
+    // Misses used to vanish into a bare `continue`, which is how a run could
+    // report success having filled a fraction of what it selected. One summary
+    // line, not one per item — a 500-description run would drown the log.
+    if (skippedCount > 0) {
+      this.logger.warn(
+        `AI backfill: ${skippedCount} of ${uniqueDescs.length} descriptions got no canonical name (updated ${updatedCount} items)`,
+      );
     }
 
     return { updatedCount };
@@ -608,34 +625,45 @@ export class PriceHistoryService {
     return { inflationIndex, productCount, products };
   }
 
-  private async extractCanonicalNames(descriptions: string[]): Promise<string[]> {
+  /**
+   * Maps 1-based input position → canonical name. Entries the model omitted are
+   * simply absent; see `parseCanonicalNameMap` for why this is keyed rather than
+   * positional.
+   */
+  private async extractCanonicalNames(descriptions: string[]): Promise<Map<number, string>> {
+    const numbered = descriptions.map((d, i) => `${i + 1}. ${d}`).join('\n');
+
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4o-mini',
       temperature: 0,
-      max_tokens: descriptions.length * 20,
+      // JSON keys, braces and quotes cost tokens the old line format did not, and
+      // Polish names with diacritics tokenize far above the previous 20/name
+      // budget ("Kiełbasa Filet z Kurczaka" alone is well into double digits).
+      // A truncated reply is indistinguishable from a model that skipped entries,
+      // so budget generously — this is gpt-4o-mini, the headroom is nearly free.
+      max_tokens: descriptions.length * 45 + 250,
+      response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
           content: `You extract clean canonical product names from grocery receipt OCR text.
+Reply with a JSON object mapping each input number to its canonical name, e.g. {"1": "Mleko Łaciate 3.2%", "2": "Heinz Ketchup"}.
 Rules:
 - Return ONLY brand + product variant (e.g. "Activia Truskawkowy", "Mleko Łaciate 3.2%", "Heinz Ketchup")
 - Remove: weight (125G, 500ML, 6SZT), unit prices (3,49), store codes, percentages that are nutrition specs unless they identify the product variant (e.g. 3.2% fat milk → keep 3.2%)
 - Keep: brand name, product type, key variant (flavor, key spec)
 - Use Title Case
-- One name per line, same order as input — no numbering, no extra lines
+- Include EVERY input number as a key, using the exact number given
 - Unknown/unclear → best guess product type`,
         },
         {
           role: 'user',
-          content: descriptions.join('\n'),
+          content: numbered,
         },
       ],
     });
 
     const content = response.choices[0]?.message?.content ?? '';
-    const lines = content.split('\n').map((l) => l.trim()).filter(Boolean);
-    // Ensure count matches input (pad with empty strings if response is short)
-    while (lines.length < descriptions.length) lines.push('');
-    return lines.slice(0, descriptions.length);
+    return parseCanonicalNameMap(content, descriptions.length);
   }
 }

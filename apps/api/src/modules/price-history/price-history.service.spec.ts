@@ -134,6 +134,57 @@ describe('PriceHistoryService', () => {
       );
     });
 
+    /**
+     * The caller must look names up BY KEY (`names.get(j + 1)`), not by position.
+     * Before the rewrite it read `names[j]` off a list padded with blanks, so a
+     * reply that omitted one entry shifted every later name onto the wrong
+     * product and wrote it to the price history with no log at all.
+     */
+    it('applies names by key, so an omitted entry cannot shift the rest', async () => {
+      process.env.OPENAI_API_KEY = 'sk-test';
+      const updateMany = jest.fn().mockResolvedValue({ count: 1 });
+      const prisma: any = {
+        productAlias: { findMany: jest.fn().mockResolvedValue([]) },
+        expenseItem: {
+          findMany: jest.fn().mockResolvedValue([
+            { id: 'i1', description: 'PIWO TYSKIE 0,5', canonicalName: null },
+            { id: 'i2', description: 'SERK DANI 4x130', canonicalName: null },
+            { id: 'i3', description: 'MALINA POL 200g', canonicalName: null },
+          ]),
+          updateMany,
+        },
+      };
+      const svc = new PriceHistoryService(prisma, null as any);
+      // Model answers for inputs 1 and 3 only — #2 is a genuine miss.
+      (svc as any).openai = {
+        chat: {
+          completions: {
+            create: jest.fn().mockResolvedValue({
+              choices: [{ message: { content: '{"1":"Piwo Tyskie","3":"Malina Polska"}' } }],
+            }),
+          },
+        },
+      };
+      const warn = jest.spyOn((svc as any).logger, 'warn').mockImplementation(() => undefined);
+
+      const res = await svc.backfillWithAi('acc-1');
+
+      expect(res).toEqual({ updatedCount: 2 });
+      expect(updateMany).toHaveBeenCalledTimes(2);
+
+      const byName = new Map(
+        updateMany.mock.calls.map((c: any[]) => [c[0].data.canonicalName, c[0].where.id.in]),
+      );
+      // #3's name landed on #3's row, NOT on #2's — that is the shift this guards.
+      expect(byName.get('Malina Polska')).toEqual(['i3']);
+      expect(byName.get('Piwo Tyskie')).toEqual(['i1']);
+      // The missed row was left alone rather than given someone else's name.
+      expect([...byName.values()].flat()).not.toContain('i2');
+
+      // And the miss is reported instead of vanishing into a bare `continue`.
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('1 of 3'));
+    });
+
     it('omits the alias guard entirely when the account has no aliases', async () => {
       process.env.OPENAI_API_KEY = 'sk-test';
       const findMany = jest.fn().mockResolvedValue([]);
