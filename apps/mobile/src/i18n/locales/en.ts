@@ -2379,6 +2379,7 @@ export default {
     title: 'Split this receipt',
     entryAction: 'Split',
     addPerson: 'Add person',
+    recentPeople: 'Recent',
     personName: 'Name',
     yourShare: 'Your share',
     assignEveryone: 'Assign at least one item to everyone',

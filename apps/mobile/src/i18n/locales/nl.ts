@@ -2375,6 +2375,7 @@ export default {
     title: 'Dit bonnetje splitsen',
     entryAction: 'Splitsen',
     addPerson: 'Persoon toevoegen',
+    recentPeople: 'Recent',
     personName: 'Naam',
     yourShare: 'Jouw deel',
     assignEveryone: 'Wijs iedereen minstens één product toe',

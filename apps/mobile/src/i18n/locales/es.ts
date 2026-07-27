@@ -2375,6 +2375,7 @@ export default {
     title: 'Dividir este recibo',
     entryAction: 'Dividir',
     addPerson: 'Añadir persona',
+    recentPeople: 'Recientes',
     personName: 'Nombre',
     yourShare: 'Tu parte',
     assignEveryone: 'Asigna al menos un artículo a cada persona',

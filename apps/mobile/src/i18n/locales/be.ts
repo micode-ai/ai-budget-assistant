@@ -2349,6 +2349,7 @@ export default {
     title: 'Падзяліць гэты чэк',
     entryAction: 'Падзяліць',
     addPerson: 'Дадаць чалавека',
+    recentPeople: 'Апошнія',
     personName: 'Імя',
     yourShare: 'Ваша доля',
     assignEveryone: 'Прызначце кожнаму хоць адну пазіцыю',

@@ -2381,6 +2381,7 @@ export default {
     title: 'Розділити цей чек',
     entryAction: 'Розділити',
     addPerson: 'Додати людину',
+    recentPeople: 'Останні',
     personName: "Ім'я",
     yourShare: 'Ваша частка',
     assignEveryone: 'Призначте кожному хоча б одну позицію',

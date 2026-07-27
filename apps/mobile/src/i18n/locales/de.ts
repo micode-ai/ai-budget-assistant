@@ -2375,6 +2375,7 @@ export default {
     title: 'Diesen Kassenbon aufteilen',
     entryAction: 'Aufteilen',
     addPerson: 'Person hinzufügen',
+    recentPeople: 'Zuletzt verwendet',
     personName: 'Name',
     yourShare: 'Dein Anteil',
     assignEveryone: 'Weise jeder Person mindestens eine Position zu',

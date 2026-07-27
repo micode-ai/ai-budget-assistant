@@ -1,5 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ReceiptSplitService } from './receipt-split.service';
+import { RECENT_PARTICIPANTS_OVERFETCH_MULTIPLIER } from './recent-participants.util';
 
 function makeExpense(overrides: Record<string, any> = {}) {
   return {
@@ -596,6 +597,73 @@ describe('ReceiptSplitService.confirmParticipant', () => {
       where: { id: 'p-1', settledAt: expect.any(Date) },
       data: { settledAt: null },
     });
+  });
+});
+
+describe('ReceiptSplitService.getRecentParticipantNames', () => {
+  it('is scoped to the given accountId — a name from another account is never returned', async () => {
+    const { service, prisma } = buildDeps();
+    // Models the DB's real behavior: only rows matching the passed accountId
+    // are returned. If the service ever queried without an accountId filter
+    // (or the wrong one), this fake would leak "Mallory" from acc-2 in.
+    const allRows = [
+      { name: 'Alice', createdAt: new Date('2026-01-05'), accountId: 'acc-1' },
+      { name: 'Mallory', createdAt: new Date('2026-01-06'), accountId: 'acc-2' },
+    ];
+    prisma.receiptSplitParticipant.findMany.mockImplementation(({ where }: any) =>
+      Promise.resolve(allRows.filter((r) => r.accountId === where.accountId)),
+    );
+
+    const result = await service.getRecentParticipantNames('acc-1');
+
+    expect(result.names).toEqual(['Alice']);
+    expect(result.names).not.toContain('Mallory');
+    // Proves the fix, not just the outcome — the WHERE actually carries the
+    // caller's accountId, not e.g. an unscoped query.
+    expect(prisma.receiptSplitParticipant.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { accountId: 'acc-1' } }),
+    );
+  });
+
+  it('caps the returned names at the requested limit and overfetches raw rows so dedupe has enough to work with', async () => {
+    const { service, prisma } = buildDeps();
+    prisma.receiptSplitParticipant.findMany.mockResolvedValue(
+      Array.from({ length: 5 }, (_, i) => ({ name: `P${i}`, createdAt: new Date(2026, 0, 10 - i) })),
+    );
+
+    const result = await service.getRecentParticipantNames('acc-1', '2');
+
+    expect(result.names).toEqual(['P0', 'P1']);
+    expect(prisma.receiptSplitParticipant.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ take: 2 * RECENT_PARTICIPANTS_OVERFETCH_MULTIPLIER }),
+    );
+  });
+
+  it('orders by createdAt DESC and dedupes a name reused across multiple splits down to its single most-recent entry', async () => {
+    const { service, prisma } = buildDeps();
+    prisma.receiptSplitParticipant.findMany.mockResolvedValue([
+      { name: 'Bob', createdAt: new Date('2026-02-01') },
+      { name: 'Alice', createdAt: new Date('2026-01-15') },
+      { name: 'Bob', createdAt: new Date('2026-01-01') }, // older repeat, must be dropped
+    ]);
+
+    const result = await service.getRecentParticipantNames('acc-1');
+
+    expect(result.names).toEqual(['Bob', 'Alice']);
+    expect(prisma.receiptSplitParticipant.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ orderBy: { createdAt: 'desc' } }),
+    );
+  });
+
+  it('falls back to the default limit for a missing/invalid `limit` param', async () => {
+    const { service, prisma } = buildDeps();
+    prisma.receiptSplitParticipant.findMany.mockResolvedValue([]);
+
+    await service.getRecentParticipantNames('acc-1', 'not-a-number');
+
+    expect(prisma.receiptSplitParticipant.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ take: 8 * RECENT_PARTICIPANTS_OVERFETCH_MULTIPLIER }),
+    );
   });
 });
 

@@ -30,3 +30,10 @@ export interface SplitStateResponse {
   currencyCode: string;
   participants: SplitParticipantState[];
 }
+
+/** Distinct names this account has split receipts with before, most-recent
+ * first — powers the mobile "people you've split with" suggestion chips on
+ * the assignment screen, so the payer can tap a name instead of retyping it. */
+export interface RecentSplitParticipantsResponse {
+  names: string[];
+}

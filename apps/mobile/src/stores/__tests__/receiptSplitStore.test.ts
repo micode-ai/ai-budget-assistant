@@ -4,6 +4,7 @@ jest.mock('@/services/api', () => ({
     getSplit: jest.fn(),
     confirmSplitParticipant: jest.fn(),
     cancelSplit: jest.fn(),
+    getRecentSplitParticipants: jest.fn(),
   },
 }));
 
@@ -20,6 +21,7 @@ const createSplit = jest.mocked(api.createSplit);
 const getSplit = jest.mocked(api.getSplit);
 const confirmSplitParticipant = jest.mocked(api.confirmSplitParticipant);
 const cancelSplit = jest.mocked(api.cancelSplit);
+const getRecentSplitParticipants = jest.mocked(api.getRecentSplitParticipants);
 const recordParticipantsMock = recordParticipants as jest.Mock;
 
 function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateResponse {
@@ -44,7 +46,12 @@ function httpError(status: number, message = 'Request failed'): Error {
 
 describe('receiptSplitStore', () => {
   beforeEach(() => {
-    useReceiptSplitStore.setState({ expenseId: null, split: null, isLoading: false });
+    useReceiptSplitStore.setState({
+      expenseId: null,
+      split: null,
+      isLoading: false,
+      recentParticipantNames: [],
+    });
     jest.clearAllMocks();
   });
 
@@ -200,6 +207,29 @@ describe('receiptSplitStore', () => {
 
       expect(cancelSplit).toHaveBeenCalledWith('expense-1');
       expect(useReceiptSplitStore.getState().split).toBeNull();
+    });
+  });
+
+  describe('loadRecentParticipantNames', () => {
+    it('populates recentParticipantNames from the API', async () => {
+      getRecentSplitParticipants.mockResolvedValue({ names: ['Alice', 'Bob'] });
+
+      await useReceiptSplitStore.getState().loadRecentParticipantNames();
+
+      expect(useReceiptSplitStore.getState().recentParticipantNames).toEqual(['Alice', 'Bob']);
+    });
+
+    it('warns (never throws or crashes) on failure and leaves the previous list untouched', async () => {
+      useReceiptSplitStore.setState({ recentParticipantNames: ['Alice'] });
+      getRecentSplitParticipants.mockRejectedValue(new Error('network'));
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await useReceiptSplitStore.getState().loadRecentParticipantNames();
+
+      expect(useReceiptSplitStore.getState().recentParticipantNames).toEqual(['Alice']);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+
+      warnSpy.mockRestore();
     });
   });
 });

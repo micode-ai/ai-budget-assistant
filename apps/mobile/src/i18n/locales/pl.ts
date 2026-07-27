@@ -2381,6 +2381,7 @@ export default {
     title: 'Podziel ten paragon',
     entryAction: 'Podziel',
     addPerson: 'Dodaj osobę',
+    recentPeople: 'Ostatnie',
     personName: 'Imię',
     yourShare: 'Twój udział',
     assignEveryone: 'Przypisz każdej osobie co najmniej jedną pozycję',

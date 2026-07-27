@@ -2375,6 +2375,7 @@ export default {
     title: 'Diviser ce ticket',
     entryAction: 'Diviser',
     addPerson: 'Ajouter une personne',
+    recentPeople: 'Récents',
     personName: 'Nom',
     yourShare: 'Votre part',
     assignEveryone: "Attribuez au moins un article à chaque personne",

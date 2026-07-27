@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, Query, Req, UseGuards } from '@nestjs/common';
 import { ReceiptSplitService } from './receipt-split.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
@@ -41,6 +41,24 @@ import { AuthenticatedRequest } from '../../common/types';
 @UseGuards(JwtAuthGuard, AccountContextGuard)
 export class ReceiptSplitController {
   constructor(private readonly receiptSplitService: ReceiptSplitService) {}
+
+  /**
+   * Distinct participant names this account has split with before, most
+   * recent first (the "people you've split with" suggestion chips on the
+   * mobile assignment screen). NOT itself an `:id/receipt-split` route — no
+   * specific expense is involved, this is an account-wide read.
+   *
+   * Safe from the ABA-166 route-shadowing class of bug regardless of
+   * declaration order: Express only matches a route when EVERY path segment
+   * agrees, and this route's second segment ("recent-participants") can
+   * never equal the literal "receipt-split" the `:id/receipt-split` GET
+   * below requires there.
+   */
+  @Get('receipt-split/recent-participants')
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
+  async recentParticipants(@Req() req: AuthenticatedRequest, @Query('limit') limit?: string) {
+    return this.receiptSplitService.getRecentParticipantNames(req.accountId, limit);
+  }
 
   @Post(':id/receipt-split')
   @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)

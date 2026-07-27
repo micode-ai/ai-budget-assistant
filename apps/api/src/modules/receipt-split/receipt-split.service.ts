@@ -4,8 +4,18 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { DebtsService } from '../debts/debts.service';
 import { resolveEqualSplit, resolveItemSplit } from './split-calculator';
+import {
+  dedupeRecentParticipantNames,
+  resolveRecentParticipantsLimit,
+  RECENT_PARTICIPANTS_OVERFETCH_MULTIPLIER,
+} from './recent-participants.util';
 import { CreateSplitDto } from './dto';
-import type { SplitParticipantState, SplitParticipantStatus, SplitStateResponse } from '@budget/shared-types';
+import type {
+  RecentSplitParticipantsResponse,
+  SplitParticipantState,
+  SplitParticipantStatus,
+  SplitStateResponse,
+} from '@budget/shared-types';
 
 /** 128 bits — do NOT copy the 8-hex invitation-code pattern; 32 bits is
  * brute-forceable for a public, payment-adjacent page. */
@@ -443,6 +453,41 @@ export class ReceiptSplitService {
       status: this.statusFor({ ...participant, settledAt: settledAtClaim }),
       url: this.buildGuestUrl(participant.token, lang),
     };
+  }
+
+  /**
+   * Distinct names this account has split receipts with before, most-recent
+   * first — powers the mobile "people you've split with" suggestion chips on
+   * the assignment screen (ParticipantChips.tsx / recentParticipants.ts), so
+   * the payer can tap a name instead of retyping it every time.
+   *
+   * Account-scoped by the plain `accountId` column on
+   * ReceiptSplitParticipant itself (no join, no expense lookup) — a name from
+   * another account can never be returned because the WHERE clause excludes
+   * every row outside this accountId. Deliberately not filtered on
+   * `cancelledAt` — a cancelled split still means this account really did
+   * split a receipt with that person before, which is exactly what this
+   * endpoint is suggesting.
+   *
+   * Dedup/cap logic is the pure, unit-tested `dedupeRecentParticipantNames`
+   * (recent-participants.util.ts) — this method only does the IO: fetch an
+   * overshoot of raw rows (a name reused across many splits collapses to one
+   * distinct entry, so the raw fetch must fetch more than `limit` rows to
+   * likely still return `limit` distinct names) and hand them to the pure
+   * function for the actual dedupe/cap.
+   */
+  async getRecentParticipantNames(
+    accountId: string,
+    limitParam?: string,
+  ): Promise<RecentSplitParticipantsResponse> {
+    const limit = resolveRecentParticipantsLimit(limitParam);
+    const rows = await this.prisma.receiptSplitParticipant.findMany({
+      where: { accountId },
+      select: { name: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      take: limit * RECENT_PARTICIPANTS_OVERFETCH_MULTIPLIER,
+    });
+    return { names: dedupeRecentParticipantNames(rows, limit) };
   }
 
   async cancelSplit(accountId: string, expenseId: string): Promise<{ success: true }> {

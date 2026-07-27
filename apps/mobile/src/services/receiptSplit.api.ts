@@ -1,5 +1,10 @@
 import { httpClient } from './http-client';
-import type { CreateSplitDto, SplitStateResponse, SplitParticipantState } from '@budget/shared-types';
+import type {
+  CreateSplitDto,
+  RecentSplitParticipantsResponse,
+  SplitStateResponse,
+  SplitParticipantState,
+} from '@budget/shared-types';
 
 // Payer-facing `/expenses/:id/receipt-split*` routes. Named `receipt-split`,
 // NOT `split` — `expenses.api.ts` already covers the unrelated category-splits
@@ -28,5 +33,15 @@ export const receiptSplitApi = {
     return httpClient.request<{ success: true }>(`/expenses/${expenseId}/receipt-split`, {
       method: 'DELETE',
     });
+  },
+
+  // Account-wide (not per-expense) — the "people you've split with before"
+  // suggestion chips on the assignment screen. Static route
+  // `/expenses/receipt-split/recent-participants`, not `/expenses/:id/...`.
+  getRecentSplitParticipants(limit?: number) {
+    const query = typeof limit === 'number' ? `?limit=${limit}` : '';
+    return httpClient.request<RecentSplitParticipantsResponse>(
+      `/expenses/receipt-split/recent-participants${query}`,
+    );
   },
 };

@@ -38,6 +38,7 @@ import { ParticipantChips, type ParticipantChipItem } from '@/components/split/P
 import { validateSplit, MAX_SPLIT_PARTICIPANTS, type SplitParticipantCandidate } from '@/components/split/validateSplit';
 import { deriveSplitMode } from '@/components/split/deriveSplitMode';
 import { computeParticipantAssignmentSummaries } from '@/components/split/participantAssignmentSummary';
+import { filterAvailableRecentNames } from '@/components/split/recentParticipants';
 import { showAlert } from '@/utils/alert';
 import { formatCurrency } from '@budget/shared-utils';
 import type { CreateSplitDto, SplitParticipantState, SplitParticipantStatus } from '@budget/shared-types';
@@ -63,7 +64,16 @@ export default function ReceiptSplitScreen() {
 
   const canEdit = useAccountStore((s) => s.canEdit());
   const { expenses, expenseItems, loadExpenseItems } = useExpenseStore();
-  const { split, isLoading, load, create, confirm, cancel } = useReceiptSplitStore();
+  const {
+    split,
+    isLoading,
+    load,
+    create,
+    confirm,
+    cancel,
+    recentParticipantNames,
+    loadRecentParticipantNames,
+  } = useReceiptSplitStore();
 
   // Status→color, not status→label (that's STATUS_LABEL_KEYS above) — colors
   // must read from the live theme (accent/light/dark), so this can't be a
@@ -121,6 +131,12 @@ export default function ReceiptSplitScreen() {
       if (!expense) return;
       void load(expense.id);
 
+      // Account-wide, not expense-scoped — only worth fetching while this
+      // screen can actually be used to CREATE a split (a viewer can't add
+      // participants, and the server's ViewerBlockGuard would just 403 this
+      // read the same way it blocks the write routes).
+      if (canEdit) void loadRecentParticipantNames();
+
       setItemsLoaded(false);
       let cancelled = false;
       void loadExpenseItems(expense.id).finally(() => {
@@ -132,7 +148,7 @@ export default function ReceiptSplitScreen() {
       // Intentionally re-runs only when the resolved expense identity changes
       // (same convention this effect replaced — see the file history).
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [expense?.id, load, loadExpenseItems]),
+    }, [expense?.id, load, loadExpenseItems, loadRecentParticipantNames, canEdit]),
   );
 
   // Proactive E2EE gate: a fully end-to-end encrypted (tier 2) account can't
@@ -189,11 +205,33 @@ export default function ReceiptSplitScreen() {
     [mode, participants, assignments, priceByItemId],
   );
 
+  // "People you've split with before" suggestion chips: server-recent names,
+  // narrowed to exclude anyone already added to THIS split and (while typing)
+  // to substring matches — mirrors app/expense/location.tsx's recents UX.
+  // Capped to 6 for layout, same convention as that screen's search results.
+  const availableRecentNames = useMemo(
+    () =>
+      filterAvailableRecentNames(
+        recentParticipantNames,
+        newPersonName,
+        participants.map((p) => p.name),
+      ).slice(0, 6),
+    [recentParticipantNames, newPersonName, participants],
+  );
+
   function handleConfirmAddPerson() {
     const trimmed = newPersonName.trim();
     if (trimmed) {
       setParticipants((prev) => [...prev, { id: `p-${Date.now()}-${prev.length}`, name: trimmed }]);
     }
+    setNewPersonName('');
+    setIsAddingPerson(false);
+  }
+
+  // Tapping a "people you've split with before" suggestion adds them directly
+  // — the whole point is to let the payer tap instead of retype.
+  function handleSelectRecentName(name: string) {
+    setParticipants((prev) => [...prev, { id: `p-${Date.now()}-${prev.length}`, name }]);
     setNewPersonName('');
     setIsAddingPerson(false);
   }
@@ -592,21 +630,47 @@ export default function ReceiptSplitScreen() {
         />
 
         {isAddingPerson && canEdit && (
-          <View style={styles.addPersonRow}>
-            <TextInput
-              style={styles.addPersonInput}
-              value={newPersonName}
-              onChangeText={setNewPersonName}
-              placeholder={t('receiptSplit.personName')}
-              placeholderTextColor={theme.colors.textTertiary}
-              autoFocus
-              returnKeyType="done"
-              onSubmitEditing={handleConfirmAddPerson}
-            />
-            <TouchableOpacity style={styles.addPersonConfirm} onPress={handleConfirmAddPerson}>
-              <Ionicons name="checkmark" size={18} color={theme.colors.textInverse} />
-            </TouchableOpacity>
-          </View>
+          <>
+            <View style={styles.addPersonRow}>
+              <TextInput
+                style={styles.addPersonInput}
+                value={newPersonName}
+                onChangeText={setNewPersonName}
+                placeholder={t('receiptSplit.personName')}
+                placeholderTextColor={theme.colors.textTertiary}
+                autoFocus
+                returnKeyType="done"
+                onSubmitEditing={handleConfirmAddPerson}
+              />
+              <TouchableOpacity style={styles.addPersonConfirm} onPress={handleConfirmAddPerson}>
+                <Ionicons name="checkmark" size={18} color={theme.colors.textInverse} />
+              </TouchableOpacity>
+            </View>
+
+            {/* "People you've split with before" — shown empty-box (all available
+                recents) and narrowed while typing, same UX as the "Recent" list in
+                app/expense/location.tsx. */}
+            {availableRecentNames.length > 0 && (
+              <View style={styles.recentNamesWrap}>
+                <Text style={styles.recentNamesLabel}>{t('receiptSplit.recentPeople')}</Text>
+                <View style={styles.recentNamesRow}>
+                  {availableRecentNames.map((name) => (
+                    <TouchableOpacity
+                      key={name}
+                      style={styles.recentNameChip}
+                      onPress={() => handleSelectRecentName(name)}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name="time-outline" size={12} color={theme.colors.textTertiary} />
+                      <Text style={styles.recentNameChipText} numberOfLines={1}>
+                        {name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
+          </>
         )}
 
         {showTooManyHint && <Text style={styles.errorHint}>{t('receiptSplit.tooMany')}</Text>}
@@ -852,6 +916,33 @@ const createStyles = (theme: Theme) => ({
   tapHintText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.primary,
+  },
+  recentNamesWrap: {
+    gap: theme.spacing[1.5],
+  },
+  recentNamesLabel: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+  },
+  recentNamesRow: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+  },
+  recentNameChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 4,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  recentNameChipText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textPrimary,
   },
   errorHint: {
     ...theme.textStyles.bodySm,

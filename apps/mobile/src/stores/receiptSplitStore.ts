@@ -14,17 +14,24 @@ interface ReceiptSplitState {
   expenseId: string | null;
   split: SplitStateResponse | null;
   isLoading: boolean;
+  /** Distinct names this account has split with before, most-recent first —
+   * server already dedupes/caps/orders these (see
+   * `GET /expenses/receipt-split/recent-participants`). Account-wide, not
+   * tied to `expenseId` — populated on demand by the split-creation screen. */
+  recentParticipantNames: string[];
 
   load: (expenseId: string) => Promise<void>;
   create: (expenseId: string, dto: CreateSplitDto) => Promise<void>;
   confirm: (expenseId: string, participantId: string) => Promise<void>;
   cancel: (expenseId: string) => Promise<void>;
+  loadRecentParticipantNames: () => Promise<void>;
 }
 
 export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
   expenseId: null,
   split: null,
   isLoading: false,
+  recentParticipantNames: [],
 
   load: async (expenseId) => {
     const isSameExpense = get().expenseId === expenseId;
@@ -114,5 +121,17 @@ export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
   cancel: async (expenseId) => {
     await api.cancelSplit(expenseId);
     set({ split: null });
+  },
+
+  loadRecentParticipantNames: async () => {
+    try {
+      const res = await api.getRecentSplitParticipants();
+      set({ recentParticipantNames: res.names });
+    } catch (e) {
+      // console.warn, never console.error — RN's LogBox renders console.error
+      // as a blocking full-screen red overlay. A failed suggestion fetch is
+      // not fatal — the payer just falls back to typing the name.
+      console.warn('[receiptSplitStore] loadRecentParticipantNames failed', e);
+    }
   },
 }));
