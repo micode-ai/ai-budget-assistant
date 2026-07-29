@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { DatePicker } from '@/components/DatePicker';
 import { useAccountStore } from '@/stores/accountStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -34,8 +34,10 @@ export default function NewTripScreen() {
   const [tripEndDate, setTripEndDate] = useState<Date>(DEFAULT_END_DATE);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const onDateChange = (_event: DateTimePickerEvent, selected?: Date) => {
-    if (Platform.OS === 'android') {
+  const onDateChange = (selected?: Date) => {
+    // `!== 'ios'` (not `=== 'android'`) so web closes too; iOS keeps the
+    // inline calendar open behind its own Done button.
+    if (Platform.OS !== 'ios') {
       setShowDatePicker(false);
     }
     if (selected) {
@@ -94,10 +96,9 @@ export default function NewTripScreen() {
         </TouchableOpacity>
 
         {showDatePicker && (
-          <DateTimePicker
+          <DatePicker
             value={tripEndDate}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            iosDisplay="inline"
             minimumDate={new Date()}
             onChange={onDateChange}
           />

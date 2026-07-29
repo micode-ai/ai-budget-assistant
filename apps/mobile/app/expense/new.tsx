@@ -37,7 +37,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { MerchantInput } from '@/components/MerchantInput';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { DatePicker } from '@/components/DatePicker';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 
 function getContrastTextColor(hexColor: string | undefined): string {
@@ -326,11 +326,9 @@ export default function NewExpenseScreen() {
               </Text>
             </TouchableOpacity>
             {showDatePicker && (
-              <DateTimePicker
+              <DatePicker
                 value={date}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={(_event, selectedDate) => {
+                onChange={(selectedDate) => {
                   setShowDatePicker(Platform.OS === 'ios');
                   if (selectedDate) setDate(selectedDate);
                 }}
@@ -484,13 +482,14 @@ export default function NewExpenseScreen() {
                     )}
                   </TouchableOpacity>
                   {showDebtDatePicker && (
-                    <DateTimePicker
+                    <DatePicker
                       value={debtDueDate || new Date(Date.now() + 30 * 86400000)}
-                      mode="date"
-                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                       minimumDate={new Date()}
-                      onChange={(_event, selectedDate) => {
-                        if (Platform.OS === 'android') setShowDebtDatePicker(false);
+                      onChange={(selectedDate) => {
+                        // `=== 'ios'` (not `!== 'android'`) so web closes on
+                        // pick/dismiss too — the old android-only check left the
+                        // web input stuck open.
+                        setShowDebtDatePicker(Platform.OS === 'ios');
                         if (selectedDate) setDebtDueDate(selectedDate);
                       }}
                     />

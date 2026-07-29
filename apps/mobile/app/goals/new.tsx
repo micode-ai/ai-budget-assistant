@@ -14,7 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { DatePicker } from '@/components/DatePicker';
+import { toDateInputValue } from '@/utils/dateInput';
 import { useGoalStore } from '@/stores/goalStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -46,10 +47,15 @@ export default function NewGoalScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const deadlineString = deadlineDate ? deadlineDate.toISOString().split('T')[0] : '';
+  // toISOString() converts to UTC, which shifts the calendar day for any
+  // positive offset (a deadline picked at local midnight in UTC+2 was sent as
+  // the PREVIOUS day). The deadline is a calendar day, so format it locally.
+  const deadlineString = deadlineDate ? toDateInputValue(deadlineDate) : '';
 
-  const onDateChange = (_event: DateTimePickerEvent, selected?: Date) => {
-    if (Platform.OS === 'android') {
+  const onDateChange = (selected?: Date) => {
+    // `!== 'ios'` (not `=== 'android'`) so web closes too; iOS keeps the
+    // inline calendar open behind its own Done button.
+    if (Platform.OS !== 'ios') {
       setShowDatePicker(false);
     }
     if (selected) {
@@ -198,10 +204,9 @@ export default function NewGoalScreen() {
             </TouchableOpacity>
 
             {showDatePicker && (
-              <DateTimePicker
+              <DatePicker
                 value={deadlineDate || new Date()}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'inline' : 'default'}
+                iosDisplay="inline"
                 minimumDate={new Date()}
                 onChange={onDateChange}
               />

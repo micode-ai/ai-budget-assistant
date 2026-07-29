@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { DatePicker } from '@/components/DatePicker';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
@@ -387,11 +387,9 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
                 </Text>
               </TouchableOpacity>
               {showDatePicker && (
-                <DateTimePicker
+                <DatePicker
                   value={editDate}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={(_event: any, selectedDate?: Date) => {
+                  onChange={(selectedDate) => {
                     setShowDatePicker(Platform.OS === 'ios');
                     if (selectedDate) setEditDate(selectedDate);
                   }}

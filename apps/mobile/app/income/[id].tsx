@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { DatePicker } from '@/components/DatePicker';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -151,10 +151,9 @@ export default function IncomeDetailScreen() {
                   <Text style={styles.detailValue}>{formatDate(editDate, undefined, getIntlLocale())}</Text>
                 </TouchableOpacity>
                 {showDatePicker && (
-                  <DateTimePicker
+                  <DatePicker
                     value={editDate}
-                    mode="date"
-                    onChange={(_, date) => {
+                    onChange={(date) => {
                       setShowDatePicker(Platform.OS === 'ios');
                       if (date) setEditDate(date);
                     }}

@@ -26,7 +26,7 @@ import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { DatePicker } from '@/components/DatePicker';
 
 export default function NewIncomeScreen() {
   const { t } = useTranslation();
@@ -193,11 +193,9 @@ export default function NewIncomeScreen() {
               </Text>
             </TouchableOpacity>
             {showDatePicker && (
-              <DateTimePicker
+              <DatePicker
                 value={date}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={(_event, selectedDate) => {
+                onChange={(selectedDate) => {
                   setShowDatePicker(Platform.OS === 'ios');
                   if (selectedDate) setDate(selectedDate);
                 }}
@@ -310,13 +308,12 @@ export default function NewIncomeScreen() {
                     )}
                   </TouchableOpacity>
                   {showDebtDatePicker && (
-                    <DateTimePicker
+                    <DatePicker
                       value={debtDueDate || new Date(Date.now() + 30 * 86400000)}
-                      mode="date"
-                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                       minimumDate={new Date()}
-                      onChange={(_event, selectedDate) => {
-                        if (Platform.OS === 'android') setShowDebtDatePicker(false);
+                      onChange={(selectedDate) => {
+                        // `=== 'ios'` (not `!== 'android'`) so web closes too.
+                        setShowDebtDatePicker(Platform.OS === 'ios');
                         if (selectedDate) setDebtDueDate(selectedDate);
                       }}
                     />
