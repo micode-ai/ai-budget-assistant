@@ -20,8 +20,9 @@ import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useTagStore } from '@/stores/tagStore';
 import { TagPicker } from '@/components/TagPicker';
-import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { SUPPORTED_CURRENCIES, formatDate } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
@@ -57,6 +58,10 @@ export default function NewIncomeScreen() {
     (params.currencyCode as Currency) || user?.currencyCode || 'USD',
   );
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  // Defaults to today (mirrors `expense/new.tsx`) so backdating an income no
+  // longer means saving it first and editing the date afterwards.
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
 
@@ -94,7 +99,7 @@ export default function NewIncomeScreen() {
         notes: notes.trim() || undefined,
         categoryId: selectedCategory || undefined,
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
-        date: new Date(),
+        date,
         isDebt: isDebt && !isDebtRepayment,
         isDebtRepayment,
         debtContactName: (isDebt || isDebtRepayment) ? debtContactName.trim() || undefined : undefined,
@@ -173,6 +178,31 @@ export default function NewIncomeScreen() {
               placeholder={t('incomeNew.descriptionPlaceholder')}
               placeholderTextColor={theme.colors.textTertiary}
             />
+          </View>
+
+          {/* Date — pre-filled with today; tap to backdate */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>{t('incomeNew.date')}</Text>
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+              <Text style={styles.dateButtonText}>
+                {formatDate(date, undefined, getIntlLocale())}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={(_event, selectedDate) => {
+                  setShowDatePicker(Platform.OS === 'ios');
+                  if (selectedDate) setDate(selectedDate);
+                }}
+              />
+            )}
           </View>
 
           {/* Category */}
@@ -415,6 +445,20 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.label,
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing[2],
+  },
+  dateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+  },
+  dateButtonText: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   textInput: {
     backgroundColor: theme.colors.surfaceSecondary,

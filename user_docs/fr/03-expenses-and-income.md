@@ -47,13 +47,14 @@ Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle tr
 3. Appuyez sur le symbole de devise pour changer de devise (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Entrez le **montant**
 5. Entrez une **Description** (par ex. "A quoi correspondait cette depense ?")
-6. Selectionnez une **Categorie** parmi les pastilles :
+6. Appuyez sur la **Date** — elle est pré-remplie avec aujourd'hui ; appuyez dessus pour enregistrer la dépense à une date antérieure
+7. Selectionnez une **Categorie** parmi les pastilles :
    - Alimentation, Courses, Transport, Shopping, Divertissement, Sante & Fitness, Factures & Services, Education, Voyage, Cafe & Boissons, Abonnements, Vetements, Soins personnels
    - Appuyez sur le bouton **+** pour creer une categorie personnalisee
-7. Recherchez et selectionnez des **Etiquettes** (par ex. #the, #biere, #supermarche) — optionnel
-8. Selectionnez **Ajouter a un projet** (par ex. "Vacances") — optionnel
-9. Appuyez sur **Diviser la depense** pour repartir la depense entre plusieurs categories — optionnel
-10. Appuyez sur **Enregistrer la depense**
+8. Recherchez et selectionnez des **Etiquettes** (par ex. #the, #biere, #supermarche) — optionnel
+9. Selectionnez **Ajouter a un projet** (par ex. "Vacances") — optionnel
+10. Appuyez sur **Diviser la depense** pour repartir la depense entre plusieurs categories — optionnel
+11. Appuyez sur **Enregistrer la depense**
 
 ### Categories
 
@@ -104,9 +105,10 @@ Repartissez une depense unique entre plusieurs categories :
 3. Appuyez sur le symbole de devise pour selectionner votre devise
 4. Entrez le **montant**
 5. Entrez une **Description** (par ex. "A quoi correspondait ce revenu ?")
-6. Selectionnez une **Categorie** : Salaire, Freelance, Investissements, Cadeaux ou Autres revenus
-7. Ajoutez des **Notes** optionnelles
-8. Appuyez sur **Enregistrer le revenu**
+6. Appuyez sur la **Date** — elle est pré-remplie avec aujourd'hui ; appuyez dessus pour enregistrer le revenu à une date antérieure
+7. Selectionnez une **Categorie** : Salaire, Freelance, Investissements, Cadeaux ou Autres revenus
+8. Ajoutez des **Notes** optionnelles
+9. Appuyez sur **Enregistrer le revenu**
 
 ## Details d'une depense
 
@@ -123,7 +125,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF affichent un aperçu du document à ouvrir. Si aucun reçu n'est encore joint, appuyez sur **Joindre un reçu** — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles ajoutées manuellement
 
 ### Actions sur les details de la depense :
-- **Modifier** — modifier la depense
+- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)
 - **Copier** — creer un doublon
 - **Supprimer** — supprimer la depense (avec confirmation)
 
@@ -137,7 +139,7 @@ Appuyez sur une entree de revenu pour afficher les details :
 ## FAQ
 
 - **Q : Puis-je ajouter des depenses dans differentes devises ?**
-  **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN.
+  **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN. Vous pouvez aussi changer la devise d'une dépense déjà enregistrée : appuyez sur **Modifier**, puis sur la puce de devise à côté du montant. Cela réétiquette seulement le montant, sans le convertir.
 
 - **Q : Comment modifier une depense existante ?**
   **R :** Appuyez sur la depense dans la liste pour ouvrir les details, puis appuyez sur **Modifier**.

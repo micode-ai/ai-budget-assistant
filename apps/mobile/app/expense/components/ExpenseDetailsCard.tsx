@@ -29,10 +29,10 @@ import {
 } from '@/components/expenses/TripExpenseSplitPicker';
 import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
-import { formatDate, formatCurrency, generateUUID } from '@budget/shared-utils';
+import { formatDate, formatCurrency, generateUUID, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import type { Expense, ExpenseCategorySplit, ShareType, Tag } from '@budget/shared-types';
+import type { Currency, Expense, ExpenseCategorySplit, ShareType, Tag } from '@budget/shared-types';
 
 export interface ExpenseDetailsCardHandle {
   triggerSave: () => Promise<void>;
@@ -63,6 +63,13 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
     // Edit form state
     const [editAmount, setEditAmount] = useState(expense?.amount?.toString() || '');
+    // Changing the currency RELABELS the expense — it never converts the amount
+    // (same rule as the two-expense merge screen: "the survivor keeps its own
+    // currency and amount"). Fixing a wrong currency is the whole point.
+    const [editCurrencyCode, setEditCurrencyCode] = useState<Currency>(
+      (expense?.currencyCode as Currency) || 'USD',
+    );
+    const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
     const [editDescription, setEditDescription] = useState(expense?.description || '');
     const [editCategory, setEditCategory] = useState(expense?.categoryId || '');
     const [editProjectId, setEditProjectId] = useState<string | null>(expense?.projectId ?? null);
@@ -114,6 +121,8 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
     useEffect(() => {
       if (!isEditing) {
         setEditAmount(expense?.amount?.toString() || '');
+        setEditCurrencyCode((expense?.currencyCode as Currency) || 'USD');
+        setShowCurrencyPicker(false);
         setEditDescription(expense?.description || '');
         setEditCategory(expense?.categoryId || '');
         setEditProjectId(expense?.projectId ?? null);
@@ -178,6 +187,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
         updateExpense(expense.id, {
           amount: numericAmount,
+          currencyCode: editCurrencyCode,
           description: editDescription.trim(),
           categoryId: editCategory || undefined,
           merchant: editMerchant.trim() === '' ? '' : editMerchant.trim(),
@@ -267,13 +277,54 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         {isEditing && (
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('expenseDetail.amount')}</Text>
-            <TextInput
-              style={styles.detailEditInput}
-              value={editAmount}
-              onChangeText={setEditAmount}
-              keyboardType="decimal-pad"
-              autoFocus
-            />
+            <View style={styles.amountEditRow}>
+              <TextInput
+                style={[styles.detailEditInput, styles.amountEditInput]}
+                value={editAmount}
+                onChangeText={setEditAmount}
+                keyboardType="decimal-pad"
+                autoFocus
+              />
+              <TouchableOpacity
+                style={styles.currencyChip}
+                onPress={() => setShowCurrencyPicker((v) => !v)}
+                accessibilityLabel={t('expenseDetail.currency')}
+              >
+                <Text style={styles.currencyChipText}>
+                  {SUPPORTED_CURRENCIES.find((c) => c.code === editCurrencyCode)?.symbol || '$'}{' '}
+                  {editCurrencyCode}
+                </Text>
+                <Ionicons
+                  name={showCurrencyPicker ? 'chevron-up' : 'chevron-down'}
+                  size={14}
+                  color={theme.colors.textSecondary}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {showCurrencyPicker && (
+              <View style={styles.pickerContainer}>
+                {SUPPORTED_CURRENCIES.map((currency) => (
+                  <TouchableOpacity
+                    key={currency.code}
+                    style={[
+                      styles.pickerItem,
+                      editCurrencyCode === currency.code && styles.pickerItemSelected,
+                    ]}
+                    onPress={() => {
+                      setEditCurrencyCode(currency.code as Currency);
+                      setShowCurrencyPicker(false);
+                    }}
+                  >
+                    <Text style={styles.pickerSymbol}>{currency.symbol}</Text>
+                    <Text style={styles.pickerLabel}>{currency.name}</Text>
+                    {editCurrencyCode === currency.code && (
+                      <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
           </View>
         )}
 
@@ -583,6 +634,55 @@ const createStyles = (theme: Theme) => ({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.primary,
     paddingVertical: theme.spacing[1],
+  },
+  amountEditRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+  },
+  amountEditInput: {
+    flex: 1,
+  },
+  currencyChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+  },
+  currencyChipText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  pickerContainer: {
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing[2],
+    overflow: 'hidden' as const,
+  },
+  pickerItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3.5],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  pickerItemSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  pickerSymbol: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    width: 30,
+  },
+  pickerLabel: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    flex: 1,
   },
   datePickerButton: {
     flexDirection: 'row' as const,

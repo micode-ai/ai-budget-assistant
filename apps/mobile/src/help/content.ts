@@ -382,13 +382,14 @@ Use the floating **+** button (bottom-right) to add a new transaction.
 3. Tap the currency symbol to change currency (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Enter the **amount**
 5. Enter a **Description** (e.g., "What was this expense for?")
-6. Select a **Category** from the chips:
+6. Tap the **Date** — it's pre-filled with today; tap it to log the expense on an earlier day
+7. Select a **Category** from the chips:
    - Food & Dining, Groceries, Transport, Shopping, Entertainment, Health & Fitness, Bills & Utilities, Education, Travel, Coffee & Drinks, Subscriptions, Clothing, Personal Care
    - Tap the **+** button to create a custom category
-7. Search and select **Tags** (e.g., #tea, #beer, #supermarket) — optional
-8. Select **Add to Project** (e.g., "Vacation") — optional
-9. Tap **Split Expense** to divide the expense across multiple categories — optional
-10. Tap **Save Expense**
+8. Search and select **Tags** (e.g., #tea, #beer, #supermarket) — optional
+9. Select **Add to Project** (e.g., "Vacation") — optional
+10. Tap **Split Expense** to divide the expense across multiple categories — optional
+11. Tap **Save Expense**
 
 ### Categories
 
@@ -439,9 +440,10 @@ Divide a single expense across multiple categories:
 3. Tap the currency symbol to select your currency
 4. Enter the **amount**
 5. Enter a **Description** (e.g., "What was this income for?")
-6. Select a **Category**: Salary, Freelance, Investments, Gifts, or Other Income
-7. Add optional **Notes**
-8. Tap **Save Income**
+6. Tap the **Date** — it's pre-filled with today; tap it to log the income on an earlier day
+7. Select a **Category**: Salary, Freelance, Investments, Gifts, or Other Income
+8. Add optional **Notes**
+9. Tap **Save Income**
 
 ## Expense Details
 
@@ -458,7 +460,7 @@ Tap any expense to view its full details:
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually
 
 ### Actions on expense details:
-- **Edit** — modify the expense
+- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
 - **Copy** — create a duplicate
 - **Delete** — remove the expense (with confirmation)
 
@@ -472,7 +474,7 @@ Tap any income entry to view details:
 ## FAQ
 
 - **Q: Can I add expenses in different currencies?**
-  **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN.
+  **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN. You can also change the currency of an expense you already saved — tap **Edit**, then tap the currency chip next to the amount. This only relabels the amount, it does not convert it.
 
 - **Q: How do I edit an existing expense?**
   **A:** Tap the expense in the list to open details, then tap **Edit**.
@@ -4738,13 +4740,14 @@ iOS, Android, Web
 3. Нажмите на символ валюты, чтобы сменить валюту (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Введите **сумму**
 5. Введите **Описание** (например, «На что был этот расход?»)
-6. Выберите **Категория** из чипов:
+6. Нажмите на **Дату** — по умолчанию подставлена сегодняшняя; нажмите, чтобы записать расход за прошедший день
+7. Выберите **Категория** из чипов:
    - Еда и рестораны, Продукты, Транспорт, Покупки, Развлечения, Здоровье и фитнес, Счета и коммунальные, Образование, Путешествия, Кофе и напитки, Подписки, Одежда, Личная гигиена
    - Нажмите кнопку **+**, чтобы создать пользовательскую категорию
-7. Найдите и выберите **Теги** (например, #чай, #пиво, #супермаркет) — необязательно
-8. Выберите **Добавить в проект** (например, «Отпуск») — необязательно
-9. Нажмите **Разделить расход**, чтобы разделить расход по нескольким категориям — необязательно
-10. Нажмите **Сохранить расход**
+8. Найдите и выберите **Теги** (например, #чай, #пиво, #супермаркет) — необязательно
+9. Выберите **Добавить в проект** (например, «Отпуск») — необязательно
+10. Нажмите **Разделить расход**, чтобы разделить расход по нескольким категориям — необязательно
+11. Нажмите **Сохранить расход**
 
 ### Категории
 
@@ -4795,9 +4798,10 @@ iOS, Android, Web
 3. Нажмите на символ валюты, чтобы выбрать валюту
 4. Введите **сумму**
 5. Введите **Описание** (например, «Откуда этот доход?»)
-6. Выберите **Категория**: Зарплата, Фриланс, Инвестиции, Подарки или Другой доход
-7. Добавьте необязательные **Заметки**
-8. Нажмите **Сохранить доход**
+6. Нажмите на **Дату** — по умолчанию подставлена сегодняшняя; нажмите, чтобы записать доход за прошедший день
+7. Выберите **Категория**: Зарплата, Фриланс, Инвестиции, Подарки или Другой доход
+8. Добавьте необязательные **Заметки**
+9. Нажмите **Сохранить доход**
 
 ## Детали расхода
 
@@ -4814,7 +4818,7 @@ iOS, Android, Web
 - **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите **Прикрепить чек** — выберите **Сфотографировать**, **Из галереи** или **Выбрать PDF**. Работает для любого расхода, в том числе добавленного вручную
 
 ### Действия с деталями расхода:
-- **Редактировать** — изменить расход
+- **Редактировать** — изменить расход, включая его **валюту** (нажмите на чип валюты рядом с суммой; сама сумма не пересчитывается, меняется только её обозначение)
 - **Копировать** — создать дубликат
 - **Удалить** — удалить расход (с подтверждением)
 
@@ -4828,7 +4832,7 @@ iOS, Android, Web
 ## Часто задаваемые вопросы
 
 - **В: Можно ли добавлять расходы в разных валютах?**
-  **О:** Да! Нажмите на символ валюты в форме расхода, чтобы переключиться между USD, EUR, PLN, GBP, UAH, RUB и BYN.
+  **О:** Да! Нажмите на символ валюты в форме расхода, чтобы переключиться между USD, EUR, PLN, GBP, UAH, RUB и BYN. Валюту уже сохранённого расхода тоже можно изменить — нажмите **Редактировать**, затем чип валюты рядом с суммой. Это меняет только обозначение суммы, но не пересчитывает её.
 
 - **В: Как отредактировать существующий расход?**
   **О:** Нажмите на расход в списке, чтобы открыть детали, затем нажмите **Редактировать**.
@@ -9092,13 +9096,14 @@ iOS, Android, Web
 3. Натисніть символ валюти, щоб змінити валюту (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Введіть **суму**
 5. Введіть **Опис** (наприклад, "На що була ця витрата?")
-6. Оберіть **Категорія** з доступних варіантів:
+6. Натисніть **Дату** — за замовчуванням підставлено сьогоднішню; натисніть, щоб записати витрату за минулий день
+7. Оберіть **Категорія** з доступних варіантів:
    - Їжа та ресторани, Продукти, Транспорт, Покупки, Розваги, Здоров'я та фітнес, Рахунки та комунальні, Освіта, Подорожі, Кава та напої, Підписки, Одяг, Особиста гігієна
    - Натисніть кнопку **+**, щоб створити власну категорію
-7. Знайдіть та оберіть **Теги** (наприклад, #чай, #пиво, #супермаркет) — за бажанням
-8. Оберіть **Додати до проєкту** (наприклад, "Відпустка") — за бажанням
-9. Натисніть **Розподілити витрату**, щоб розділити витрату між кількома категоріями — за бажанням
-10. Натисніть **Зберегти витрату**
+8. Знайдіть та оберіть **Теги** (наприклад, #чай, #пиво, #супермаркет) — за бажанням
+9. Оберіть **Додати до проєкту** (наприклад, "Відпустка") — за бажанням
+10. Натисніть **Розподілити витрату**, щоб розділити витрату між кількома категоріями — за бажанням
+11. Натисніть **Зберегти витрату**
 
 ### Категорії
 
@@ -9149,9 +9154,10 @@ iOS, Android, Web
 3. Натисніть символ валюти, щоб обрати валюту
 4. Введіть **суму**
 5. Введіть **Опис** (наприклад, "Звідки цей дохід?")
-6. Оберіть **Категорія**: Зарплата, Фріланс, Інвестиції, Подарунки або Інший дохід
-7. Додайте необов'язкові **Нотатки**
-8. Натисніть **Зберегти дохід**
+6. Натисніть **Дату** — за замовчуванням підставлено сьогоднішню; натисніть, щоб записати дохід за минулий день
+7. Оберіть **Категорія**: Зарплата, Фріланс, Інвестиції, Подарунки або Інший дохід
+8. Додайте необов'язкові **Нотатки**
+9. Натисніть **Зберегти дохід**
 
 ## Деталі витрати
 
@@ -9168,7 +9174,7 @@ iOS, Android, Web
 - **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки показуються як документ з можливістю відкриття. Якщо чек ще не додано, натисніть **Додати чек** — оберіть **Сфотографувати**, **З галереї** або **Обрати PDF**. Працює для будь-якої витрати, у тому числі доданої вручну
 
 ### Дії з деталями витрати:
-- **Редагувати** — змінити витрату
+- **Редагувати** — змінити витрату, включно з її **валютою** (натисніть чип валюти біля суми; сама сума не перераховується, змінюється лише її позначення)
 - **Копіювати** — створити дублікат
 - **Видалити** — видалити витрату (з підтвердженням)
 
@@ -9182,7 +9188,7 @@ iOS, Android, Web
 ## Часті запитання
 
 - **П:** Чи можу я додавати витрати в різних валютах?
-  **В:** Так! Натисніть символ валюти у формі витрати, щоб переключатися між USD, EUR, PLN, GBP, UAH, RUB та BYN.
+  **В:** Так! Натисніть символ валюти у формі витрати, щоб переключатися між USD, EUR, PLN, GBP, UAH, RUB та BYN. Валюту вже збереженої витрати також можна змінити — натисніть **Редагувати**, потім чип валюти біля суми. Це змінює лише позначення суми, а не перераховує її.
 
 - **П:** Як редагувати існуючу витрату?
   **В:** Натисніть витрату в списку, щоб відкрити деталі, потім натисніть **Редагувати**.
@@ -13394,13 +13400,14 @@ Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 3. Dotknij symbolu waluty, aby zmienic walute (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Wprowadz **kwote**
 5. Wprowadz **Opis** (np. "Na co byl ten wydatek?")
-6. Wybierz **Kategorie** z dostepnych elementow:
+6. Dotknij **Daty** — jest wypełniona dzisiejszą datą; dotknij jej, aby zapisać wydatek z wcześniejszego dnia
+7. Wybierz **Kategorie** z dostepnych elementow:
    - Jedzenie i restauracje, Artykuly spozywcze, Transport, Zakupy, Rozrywka, Zdrowie i fitness, Rachunki i media, Edukacja, Podroze, Kawa i napoje, Subskrypcje, Odziez, Higiena osobista
    - Dotknij przycisk **+**, aby utworzyc wlasna kategorie
-7. Wyszukaj i wybierz **Tagi** (np. #herbata, #piwo, #supermarket) — opcjonalnie
-8. Wybierz **Dodaj do projektu** (np. "Wakacje") — opcjonalnie
-9. Dotknij **Podziel wydatek**, aby rozdzielic wydatek miedzy wiele kategorii — opcjonalnie
-10. Dotknij **Zapisz wydatek**
+8. Wyszukaj i wybierz **Tagi** (np. #herbata, #piwo, #supermarket) — opcjonalnie
+9. Wybierz **Dodaj do projektu** (np. "Wakacje") — opcjonalnie
+10. Dotknij **Podziel wydatek**, aby rozdzielic wydatek miedzy wiele kategorii — opcjonalnie
+11. Dotknij **Zapisz wydatek**
 
 ### Kategorie
 
@@ -13451,9 +13458,10 @@ Rozdziel pojedynczy wydatek miedzy wiele kategorii:
 3. Dotknij symbolu waluty, aby wybrac walute
 4. Wprowadz **kwote**
 5. Wprowadz **Opis** (np. "Skad pochodzi ten przychod?")
-6. Wybierz **Kategorie**: Wynagrodzenie, Freelance, Inwestycje, Prezenty lub Inne przychody
-7. Dodaj opcjonalne **Notatki**
-8. Dotknij **Zapisz przychod**
+6. Dotknij **Daty** — jest wypełniona dzisiejszą datą; dotknij jej, aby zapisać przychód z wcześniejszego dnia
+7. Wybierz **Kategorie**: Wynagrodzenie, Freelance, Inwestycje, Prezenty lub Inne przychody
+8. Dodaj opcjonalne **Notatki**
+9. Dotknij **Zapisz przychod**
 
 ## Szczegoly wydatku
 
@@ -13470,7 +13478,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF pokazują podgląd dokumentu do otwarcia. Jeśli paragon nie jest jeszcze dołączony, dotknij **Dołącz paragon** — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, także dodanego ręcznie
 
 ### Dostepne akcje w szczegolach wydatku:
-- **Edytuj** — zmodyfikuj wydatek
+- **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)
 - **Kopiuj** — utworz duplikat
 - **Usun** — usun wydatek (z potwierdzeniem)
 
@@ -13484,7 +13492,7 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 ## FAQ
 
 - **P: Czy moge dodawac wydatki w roznych walutach?**
-  **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN.
+  **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN. Walutę już zapisanego wydatku też możesz zmienić — dotknij **Edytuj**, a następnie plakietki waluty obok kwoty. Zmienia to tylko oznaczenie kwoty, nie przelicza jej.
 
 - **P: Jak edytowac istniejacy wydatek?**
   **O:** Dotknij wydatek na liscie, aby otworzyc szczegoly, a nastepnie dotknij **Edytuj**.
@@ -17692,13 +17700,14 @@ Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transakt
 3. Tippe auf das Wahrungssymbol, um die Wahrung zu andern (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Gib den **Betrag** ein
 5. Gib eine **Beschreibung** ein (z.B. "Wofur war diese Ausgabe?")
-6. Wahle eine **Kategorie** aus den Chips:
+6. Tippe auf das **Datum** — es ist mit dem heutigen Tag vorbelegt; tippe darauf, um die Ausgabe auf einen früheren Tag zu buchen
+7. Wahle eine **Kategorie** aus den Chips:
    - Essen & Restaurants, Lebensmittel, Transport, Einkaufen, Unterhaltung, Gesundheit & Fitness, Rechnungen & Nebenkosten, Bildung, Reisen, Kaffee & Getranke, Abonnements, Kleidung, Korperpflege
    - Tippe auf die **+**-Schaltflache, um eine benutzerdefinierte Kategorie zu erstellen
-7. Suche und wahle **Tags** (z.B. #tee, #bier, #supermarkt) — optional
-8. Wahle **Zum Projekt hinzufugen** (z.B. "Urlaub") — optional
-9. Tippe auf **Ausgabe aufteilen**, um die Ausgabe auf mehrere Kategorien aufzuteilen — optional
-10. Tippe auf **Ausgabe speichern**
+8. Suche und wahle **Tags** (z.B. #tee, #bier, #supermarkt) — optional
+9. Wahle **Zum Projekt hinzufugen** (z.B. "Urlaub") — optional
+10. Tippe auf **Ausgabe aufteilen**, um die Ausgabe auf mehrere Kategorien aufzuteilen — optional
+11. Tippe auf **Ausgabe speichern**
 
 ### Kategorien
 
@@ -17749,9 +17758,10 @@ Teile eine einzelne Ausgabe auf mehrere Kategorien auf:
 3. Tippe auf das Wahrungssymbol, um deine Wahrung auszuwahlen
 4. Gib den **Betrag** ein
 5. Gib eine **Beschreibung** ein (z.B. "Woher stammt dieses Einkommen?")
-6. Wahle eine **Kategorie**: Gehalt, Freiberuflich, Investitionen, Geschenke oder Sonstiges Einkommen
-7. Fuge optionale **Notizen** hinzu
-8. Tippe auf **Einkommen speichern**
+6. Tippe auf das **Datum** — es ist mit dem heutigen Tag vorbelegt; tippe darauf, um die Einnahme auf einen früheren Tag zu buchen
+7. Wahle eine **Kategorie**: Gehalt, Freiberuflich, Investitionen, Geschenke oder Sonstiges Einkommen
+8. Fuge optionale **Notizen** hinzu
+9. Tippe auf **Einkommen speichern**
 
 ## Ausgabendetails
 
@@ -17768,7 +17778,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefugte
 
 ### Aktionen bei Ausgabendetails:
-- **Bearbeiten** — die Ausgabe andern
+- **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet)
 - **Kopieren** — ein Duplikat erstellen
 - **Loschen** — die Ausgabe entfernen (mit Bestatigung)
 
@@ -17782,7 +17792,7 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 ## FAQ
 
 - **F: Kann ich Ausgaben in verschiedenen Wahrungen hinzufugen?**
-  **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln.
+  **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln. Du kannst die Währung auch bei einer bereits gespeicherten Ausgabe ändern — tippe auf **Bearbeiten** und dann auf den Währungs-Chip neben dem Betrag. Das beschriftet den Betrag nur neu, es rechnet ihn nicht um.
 
 - **F: Wie bearbeite ich eine vorhandene Ausgabe?**
   **A:** Tippe auf die Ausgabe in der Liste, um die Details zu offnen, und tippe dann auf **Bearbeiten**.
@@ -21965,13 +21975,14 @@ Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva tr
 3. Toca el simbolo de moneda para cambiar la moneda (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Introduce el **importe**
 5. Introduce una **Descripcion** (por ejemplo, "Para que fue este gasto?")
-6. Selecciona una **Categoria** de las fichas:
+6. Toca la **Fecha** — viene rellenada con la de hoy; tócala para registrar el gasto en un día anterior
+7. Selecciona una **Categoria** de las fichas:
    - Comida y Restaurantes, Supermercado, Transporte, Compras, Entretenimiento, Salud y Fitness, Facturas y Servicios, Educacion, Viajes, Cafe y Bebidas, Suscripciones, Ropa, Cuidado personal
    - Toca el boton **+** para crear una categoria personalizada
-7. Busca y selecciona **Etiquetas** (por ejemplo, #te, #cerveza, #supermercado) — opcional
-8. Selecciona **Agregar a proyecto** (por ejemplo, "Vacaciones") — opcional
-9. Toca **Dividir gasto** para dividir el gasto entre multiples categorias — opcional
-10. Toca **Guardar gasto**
+8. Busca y selecciona **Etiquetas** (por ejemplo, #te, #cerveza, #supermercado) — opcional
+9. Selecciona **Agregar a proyecto** (por ejemplo, "Vacaciones") — opcional
+10. Toca **Dividir gasto** para dividir el gasto entre multiples categorias — opcional
+11. Toca **Guardar gasto**
 
 ### Categorias
 
@@ -22022,9 +22033,10 @@ Divide un gasto individual entre multiples categorias:
 3. Toca el simbolo de moneda para seleccionar tu moneda
 4. Introduce el **importe**
 5. Introduce una **Descripcion** (por ejemplo, "De donde proviene este ingreso?")
-6. Selecciona una **Categoria**: Salario, Freelance, Inversiones, Regalos u Otros ingresos
-7. Agrega **Notas** opcionales
-8. Toca **Guardar ingreso**
+6. Toca la **Fecha** — viene rellenada con la de hoy; tócala para registrar el ingreso en un día anterior
+7. Selecciona una **Categoria**: Salario, Freelance, Inversiones, Regalos u Otros ingresos
+8. Agrega **Notas** opcionales
+9. Toca **Guardar ingreso**
 
 ## Detalles del gasto
 
@@ -22041,7 +22053,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente
 
 ### Acciones en los detalles del gasto:
-- **Editar** — modificar el gasto
+- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)
 - **Copiar** — crear un duplicado
 - **Eliminar** — eliminar el gasto (con confirmacion)
 
@@ -22055,7 +22067,7 @@ Toca cualquier entrada de ingreso para ver los detalles:
 ## Preguntas frecuentes
 
 - **P: Puedo agregar gastos en diferentes monedas?**
-  **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN.
+  **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN. También puedes cambiar la moneda de un gasto ya guardado: toca **Editar** y luego el chip de moneda junto al importe. Esto solo reetiqueta el importe, no lo convierte.
 
 - **P: Como edito un gasto existente?**
   **R:** Toca el gasto en la lista para abrir los detalles, luego toca **Editar**.
@@ -26227,13 +26239,14 @@ Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle tr
 3. Appuyez sur le symbole de devise pour changer de devise (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Entrez le **montant**
 5. Entrez une **Description** (par ex. "A quoi correspondait cette depense ?")
-6. Selectionnez une **Categorie** parmi les pastilles :
+6. Appuyez sur la **Date** — elle est pré-remplie avec aujourd'hui ; appuyez dessus pour enregistrer la dépense à une date antérieure
+7. Selectionnez une **Categorie** parmi les pastilles :
    - Alimentation, Courses, Transport, Shopping, Divertissement, Sante & Fitness, Factures & Services, Education, Voyage, Cafe & Boissons, Abonnements, Vetements, Soins personnels
    - Appuyez sur le bouton **+** pour creer une categorie personnalisee
-7. Recherchez et selectionnez des **Etiquettes** (par ex. #the, #biere, #supermarche) — optionnel
-8. Selectionnez **Ajouter a un projet** (par ex. "Vacances") — optionnel
-9. Appuyez sur **Diviser la depense** pour repartir la depense entre plusieurs categories — optionnel
-10. Appuyez sur **Enregistrer la depense**
+8. Recherchez et selectionnez des **Etiquettes** (par ex. #the, #biere, #supermarche) — optionnel
+9. Selectionnez **Ajouter a un projet** (par ex. "Vacances") — optionnel
+10. Appuyez sur **Diviser la depense** pour repartir la depense entre plusieurs categories — optionnel
+11. Appuyez sur **Enregistrer la depense**
 
 ### Categories
 
@@ -26284,9 +26297,10 @@ Repartissez une depense unique entre plusieurs categories :
 3. Appuyez sur le symbole de devise pour selectionner votre devise
 4. Entrez le **montant**
 5. Entrez une **Description** (par ex. "A quoi correspondait ce revenu ?")
-6. Selectionnez une **Categorie** : Salaire, Freelance, Investissements, Cadeaux ou Autres revenus
-7. Ajoutez des **Notes** optionnelles
-8. Appuyez sur **Enregistrer le revenu**
+6. Appuyez sur la **Date** — elle est pré-remplie avec aujourd'hui ; appuyez dessus pour enregistrer le revenu à une date antérieure
+7. Selectionnez une **Categorie** : Salaire, Freelance, Investissements, Cadeaux ou Autres revenus
+8. Ajoutez des **Notes** optionnelles
+9. Appuyez sur **Enregistrer le revenu**
 
 ## Details d'une depense
 
@@ -26303,7 +26317,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF affichent un aperçu du document à ouvrir. Si aucun reçu n'est encore joint, appuyez sur **Joindre un reçu** — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles ajoutées manuellement
 
 ### Actions sur les details de la depense :
-- **Modifier** — modifier la depense
+- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)
 - **Copier** — creer un doublon
 - **Supprimer** — supprimer la depense (avec confirmation)
 
@@ -26317,7 +26331,7 @@ Appuyez sur une entree de revenu pour afficher les details :
 ## FAQ
 
 - **Q : Puis-je ajouter des depenses dans differentes devises ?**
-  **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN.
+  **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN. Vous pouvez aussi changer la devise d'une dépense déjà enregistrée : appuyez sur **Modifier**, puis sur la puce de devise à côté du montant. Cela réétiquette seulement le montant, sans le convertir.
 
 - **Q : Comment modifier une depense existante ?**
   **R :** Appuyez sur la depense dans la liste pour ouvrir les details, puis appuyez sur **Modifier**.
@@ -30487,13 +30501,14 @@ iOS, Android, Web
 3. Націсніце на сімвал валюты, каб змяніць валюту (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Увядзіце **суму**
 5. Увядзіце **Апісанне** (напрыклад, «На што быў гэты выдатак?»)
-6. Выберыце **Катэгорыя** з чыпаў:
+6. Націсніце **Дату** — па змаўчанні падстаўлена сённяшняя; націсніце, каб запісаць выдатак за мінулы дзень
+7. Выберыце **Катэгорыя** з чыпаў:
    - Ежа і рэстараны, Прадукты, Транспарт, Пакупкі, Забавы, Здароўе і фітнес, Рахункі і камунальныя, Адукацыя, Падарожжы, Кава і напоі, Падпіскі, Адзенне, Асабістая гігіена
    - Націсніце кнопку **+**, каб стварыць карыстальніцкую катэгорыю
-7. Знайдзіце і выберыце **Тэгі** (напрыклад, #чай, #піва, #супермаркет) — неабавязкова
-8. Выберыце **Дадаць у праект** (напрыклад, «Адпачынак») — неабавязкова
-9. Націсніце **Падзяліць выдатак**, каб падзяліць выдатак па некалькіх катэгорыях — неабавязкова
-10. Націсніце **Захаваць выдатак**
+8. Знайдзіце і выберыце **Тэгі** (напрыклад, #чай, #піва, #супермаркет) — неабавязкова
+9. Выберыце **Дадаць у праект** (напрыклад, «Адпачынак») — неабавязкова
+10. Націсніце **Падзяліць выдатак**, каб падзяліць выдатак па некалькіх катэгорыях — неабавязкова
+11. Націсніце **Захаваць выдатак**
 
 ### Катэгорыі
 
@@ -30544,9 +30559,10 @@ iOS, Android, Web
 3. Націсніце на сімвал валюты, каб выбраць валюту
 4. Увядзіце **суму**
 5. Увядзіце **Апісанне** (напрыклад, «Адкуль гэты даход?»)
-6. Выберыце **Катэгорыя**: Зарплата, Фрыланс, Інвестыцыі, Падарункі або Іншы даход
-7. Дадайце неабавязковыя **Нататкі**
-8. Націсніце **Захаваць даход**
+6. Націсніце **Дату** — па змаўчанні падстаўлена сённяшняя; націсніце, каб запісаць даход за мінулы дзень
+7. Выберыце **Катэгорыя**: Зарплата, Фрыланс, Інвестыцыі, Падарункі або Іншы даход
+8. Дадайце неабавязковыя **Нататкі**
+9. Націсніце **Захаваць даход**
 
 ## Дэталі выдатку
 
@@ -30563,7 +30579,7 @@ iOS, Android, Web
 - **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі паказваюцца як дакумент з магчымасцю адкрыцця. Калі чэк яшчэ не дададзены, націсніце **Дадаць чэк** — выберыце **Сфатаграфаваць**, **З галерэі** або **Выбраць PDF**. Працуе для любога выдатку, у тым ліку дададзенага ўручную
 
 ### Дзеянні з дэталямі выдатку:
-- **Рэдагаваць** — змяніць выдатак
+- **Рэдагаваць** — змяніць выдатак, разам з яго **валютай** (націсніце чып валюты побач з сумай; сама сума не пералічваецца, змяняецца толькі яе абазначэнне)
 - **Капіяваць** — стварыць дублікат
 - **Выдаліць** — выдаліць выдатак (з пацвярджэннем)
 
@@ -30577,7 +30593,7 @@ iOS, Android, Web
 ## Частыя пытанні
 
 - **П: Ці можна дадаваць выдаткі ў розных валютах?**
-  **А:** Так! Націсніце на сімвал валюты ў форме выдатку, каб пераключыцца паміж USD, EUR, PLN, GBP, UAH, RUB і BYN.
+  **А:** Так! Націсніце на сімвал валюты ў форме выдатку, каб пераключыцца паміж USD, EUR, PLN, GBP, UAH, RUB і BYN. Валюту ўжо збераганага выдатку таксама можна змяніць — націсніце **Рэдагаваць**, потым чып валюты побач з сумай. Гэта змяняе толькі абазначэнне сумы, а не пералічвае яе.
 
 - **П: Як адрэдагаваць існуючы выдатак?**
   **А:** Націсніце на выдатак у спісе, каб адкрыць дэталі, затым націсніце **Рэдагаваць**.
@@ -34707,13 +34723,14 @@ Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voe
 3. Tik op het valutasymbool om de valuta te wijzigen (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Voer het **bedrag** in
 5. Voer een **Omschrijving** in (bijv. "Waar was deze uitgave voor?")
-6. Selecteer een **Categorie** uit de chips:
+6. Tik op de **Datum** — deze is vooraf ingevuld met vandaag; tik erop om de uitgave op een eerdere dag te boeken
+7. Selecteer een **Categorie** uit de chips:
    - Eten & Uit eten, Boodschappen, Vervoer, Winkelen, Entertainment, Gezondheid & Fitness, Rekeningen & Nutsvoorzieningen, Onderwijs, Reizen, Koffie & Drankjes, Abonnementen, Kleding, Persoonlijke verzorging
    - Tik op de **+**-knop om een aangepaste categorie te maken
-7. Zoek en selecteer **Tags** (bijv. #thee, #bier, #supermarkt) — optioneel
-8. Selecteer **Aan project toevoegen** (bijv. "Vakantie") — optioneel
-9. Tik op **Uitgave splitsen** om de uitgave over meerdere categorieën te verdelen — optioneel
-10. Tik op **Uitgave opslaan**
+8. Zoek en selecteer **Tags** (bijv. #thee, #bier, #supermarkt) — optioneel
+9. Selecteer **Aan project toevoegen** (bijv. "Vakantie") — optioneel
+10. Tik op **Uitgave splitsen** om de uitgave over meerdere categorieën te verdelen — optioneel
+11. Tik op **Uitgave opslaan**
 
 ### Categorieën
 
@@ -34764,9 +34781,10 @@ Verdeel één uitgave over meerdere categorieën:
 3. Tik op het valutasymbool om je valuta te selecteren
 4. Voer het **bedrag** in
 5. Voer een **Omschrijving** in (bijv. "Waar waren deze inkomsten voor?")
-6. Selecteer een **Categorie**: Salaris, Freelance, Beleggingen, Geschenken of Overige inkomsten
-7. Voeg optionele **Notities** toe
-8. Tik op **Inkomsten opslaan**
+6. Tik op de **Datum** — deze is vooraf ingevuld met vandaag; tik erop om de inkomsten op een eerdere dag te boeken
+7. Selecteer een **Categorie**: Salaris, Freelance, Beleggingen, Geschenken of Overige inkomsten
+8. Voeg optionele **Notities** toe
+9. Tik op **Inkomsten opslaan**
 
 ## Uitgavedetails
 
@@ -34783,7 +34801,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde
 
 ### Acties op uitgavedetails:
-- **Bewerken** — de uitgave wijzigen
+- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)
 - **Kopiëren** — een duplicaat maken
 - **Verwijderen** — de uitgave verwijderen (met bevestiging)
 
@@ -34797,7 +34815,7 @@ Tik op een inkomstenpost om de details te bekijken:
 ## Veelgestelde vragen
 
 - **V: Kan ik uitgaven in verschillende valuta's toevoegen?**
-  **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN.
+  **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN. Je kunt de valuta van een al opgeslagen uitgave ook wijzigen: tik op **Bewerken** en daarna op de valutachip naast het bedrag. Dit labelt het bedrag alleen anders, het rekent niets om.
 
 - **V: Hoe bewerk ik een bestaande uitgave?**
   **A:** Tik op de uitgave in de lijst om de details te openen en tik vervolgens op **Bewerken**.

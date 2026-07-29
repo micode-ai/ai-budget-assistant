@@ -47,13 +47,14 @@ Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voe
 3. Tik op het valutasymbool om de valuta te wijzigen (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Voer het **bedrag** in
 5. Voer een **Omschrijving** in (bijv. "Waar was deze uitgave voor?")
-6. Selecteer een **Categorie** uit de chips:
+6. Tik op de **Datum** — deze is vooraf ingevuld met vandaag; tik erop om de uitgave op een eerdere dag te boeken
+7. Selecteer een **Categorie** uit de chips:
    - Eten & Uit eten, Boodschappen, Vervoer, Winkelen, Entertainment, Gezondheid & Fitness, Rekeningen & Nutsvoorzieningen, Onderwijs, Reizen, Koffie & Drankjes, Abonnementen, Kleding, Persoonlijke verzorging
    - Tik op de **+**-knop om een aangepaste categorie te maken
-7. Zoek en selecteer **Tags** (bijv. #thee, #bier, #supermarkt) — optioneel
-8. Selecteer **Aan project toevoegen** (bijv. "Vakantie") — optioneel
-9. Tik op **Uitgave splitsen** om de uitgave over meerdere categorieën te verdelen — optioneel
-10. Tik op **Uitgave opslaan**
+8. Zoek en selecteer **Tags** (bijv. #thee, #bier, #supermarkt) — optioneel
+9. Selecteer **Aan project toevoegen** (bijv. "Vakantie") — optioneel
+10. Tik op **Uitgave splitsen** om de uitgave over meerdere categorieën te verdelen — optioneel
+11. Tik op **Uitgave opslaan**
 
 ### Categorieën
 
@@ -104,9 +105,10 @@ Verdeel één uitgave over meerdere categorieën:
 3. Tik op het valutasymbool om je valuta te selecteren
 4. Voer het **bedrag** in
 5. Voer een **Omschrijving** in (bijv. "Waar waren deze inkomsten voor?")
-6. Selecteer een **Categorie**: Salaris, Freelance, Beleggingen, Geschenken of Overige inkomsten
-7. Voeg optionele **Notities** toe
-8. Tik op **Inkomsten opslaan**
+6. Tik op de **Datum** — deze is vooraf ingevuld met vandaag; tik erop om de inkomsten op een eerdere dag te boeken
+7. Selecteer een **Categorie**: Salaris, Freelance, Beleggingen, Geschenken of Overige inkomsten
+8. Voeg optionele **Notities** toe
+9. Tik op **Inkomsten opslaan**
 
 ## Uitgavedetails
 
@@ -123,7 +125,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde
 
 ### Acties op uitgavedetails:
-- **Bewerken** — de uitgave wijzigen
+- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)
 - **Kopiëren** — een duplicaat maken
 - **Verwijderen** — de uitgave verwijderen (met bevestiging)
 
@@ -137,7 +139,7 @@ Tik op een inkomstenpost om de details te bekijken:
 ## Veelgestelde vragen
 
 - **V: Kan ik uitgaven in verschillende valuta's toevoegen?**
-  **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN.
+  **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN. Je kunt de valuta van een al opgeslagen uitgave ook wijzigen: tik op **Bewerken** en daarna op de valutachip naast het bedrag. Dit labelt het bedrag alleen anders, het rekent niets om.
 
 - **V: Hoe bewerk ik een bestaande uitgave?**
   **A:** Tik op de uitgave in de lijst om de details te openen en tik vervolgens op **Bewerken**.

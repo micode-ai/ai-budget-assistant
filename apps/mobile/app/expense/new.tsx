@@ -30,8 +30,9 @@ import {
   type TripExpenseShareValue,
 } from '@/components/expenses/TripExpenseSplitPicker';
 import { insertSplit } from '@/db/splitRepository';
-import { SUPPORTED_CURRENCIES, generateUUID } from '@budget/shared-utils';
+import { SUPPORTED_CURRENCIES, generateUUID, formatDate } from '@budget/shared-utils';
 import type { Currency, ExpenseCategorySplit, RecurringPeriod, ShareType } from '@budget/shared-types';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
@@ -103,6 +104,12 @@ export default function NewExpenseScreen() {
     (params.currencyCode as Currency) || user?.currencyCode || 'USD',
   );
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  // Defaults to today, so the common case stays a zero-tap field; backdating an
+  // expense you forgot to log no longer requires saving it and then editing the
+  // date on the detail screen. Not clamped to the past — the edit-mode picker in
+  // `ExpenseDetailsCard` accepts any date and the two must agree.
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSplitEditor, setShowSplitEditor] = useState(false);
   const [pendingSplits, setPendingSplits] = useState<{ categoryId: string; categoryName: string; amount: number; percentage: number; notes?: string }[]>([]);
@@ -175,7 +182,7 @@ export default function NewExpenseScreen() {
         categoryId: selectedCategory || undefined,
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
         projectId: selectedProjectId || undefined,
-        date: new Date(),
+        date,
         source: 'manual',
         isRecurring,
         recurringId: isRecurring ? generateUUID() : undefined,
@@ -304,6 +311,31 @@ export default function NewExpenseScreen() {
           {/* Merchant */}
           <View style={styles.fieldContainer}>
             <MerchantInput value={merchant} onChangeText={setMerchant} />
+          </View>
+
+          {/* Date — pre-filled with today; tap to backdate */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>{t('expenseNew.date')}</Text>
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+              <Text style={styles.dateButtonText}>
+                {formatDate(date, undefined, getIntlLocale())}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={(_event, selectedDate) => {
+                  setShowDatePicker(Platform.OS === 'ios');
+                  if (selectedDate) setDate(selectedDate);
+                }}
+              />
+            )}
           </View>
 
           {/* Category */}
@@ -760,6 +792,20 @@ const createStyles = (theme: Theme) => ({
   debtFields: {
     marginTop: theme.spacing[3],
     gap: theme.spacing[3],
+  },
+  dateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+  },
+  dateButtonText: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
   },
   debtDateButton: {
     flexDirection: 'row' as const,

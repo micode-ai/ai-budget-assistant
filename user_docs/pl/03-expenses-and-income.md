@@ -47,13 +47,14 @@ Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 3. Dotknij symbolu waluty, aby zmienic walute (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Wprowadz **kwote**
 5. Wprowadz **Opis** (np. "Na co byl ten wydatek?")
-6. Wybierz **Kategorie** z dostepnych elementow:
+6. Dotknij **Daty** — jest wypełniona dzisiejszą datą; dotknij jej, aby zapisać wydatek z wcześniejszego dnia
+7. Wybierz **Kategorie** z dostepnych elementow:
    - Jedzenie i restauracje, Artykuly spozywcze, Transport, Zakupy, Rozrywka, Zdrowie i fitness, Rachunki i media, Edukacja, Podroze, Kawa i napoje, Subskrypcje, Odziez, Higiena osobista
    - Dotknij przycisk **+**, aby utworzyc wlasna kategorie
-7. Wyszukaj i wybierz **Tagi** (np. #herbata, #piwo, #supermarket) — opcjonalnie
-8. Wybierz **Dodaj do projektu** (np. "Wakacje") — opcjonalnie
-9. Dotknij **Podziel wydatek**, aby rozdzielic wydatek miedzy wiele kategorii — opcjonalnie
-10. Dotknij **Zapisz wydatek**
+8. Wyszukaj i wybierz **Tagi** (np. #herbata, #piwo, #supermarket) — opcjonalnie
+9. Wybierz **Dodaj do projektu** (np. "Wakacje") — opcjonalnie
+10. Dotknij **Podziel wydatek**, aby rozdzielic wydatek miedzy wiele kategorii — opcjonalnie
+11. Dotknij **Zapisz wydatek**
 
 ### Kategorie
 
@@ -104,9 +105,10 @@ Rozdziel pojedynczy wydatek miedzy wiele kategorii:
 3. Dotknij symbolu waluty, aby wybrac walute
 4. Wprowadz **kwote**
 5. Wprowadz **Opis** (np. "Skad pochodzi ten przychod?")
-6. Wybierz **Kategorie**: Wynagrodzenie, Freelance, Inwestycje, Prezenty lub Inne przychody
-7. Dodaj opcjonalne **Notatki**
-8. Dotknij **Zapisz przychod**
+6. Dotknij **Daty** — jest wypełniona dzisiejszą datą; dotknij jej, aby zapisać przychód z wcześniejszego dnia
+7. Wybierz **Kategorie**: Wynagrodzenie, Freelance, Inwestycje, Prezenty lub Inne przychody
+8. Dodaj opcjonalne **Notatki**
+9. Dotknij **Zapisz przychod**
 
 ## Szczegoly wydatku
 
@@ -123,7 +125,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF pokazują podgląd dokumentu do otwarcia. Jeśli paragon nie jest jeszcze dołączony, dotknij **Dołącz paragon** — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, także dodanego ręcznie
 
 ### Dostepne akcje w szczegolach wydatku:
-- **Edytuj** — zmodyfikuj wydatek
+- **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)
 - **Kopiuj** — utworz duplikat
 - **Usun** — usun wydatek (z potwierdzeniem)
 
@@ -137,7 +139,7 @@ Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 ## FAQ
 
 - **P: Czy moge dodawac wydatki w roznych walutach?**
-  **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN.
+  **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN. Walutę już zapisanego wydatku też możesz zmienić — dotknij **Edytuj**, a następnie plakietki waluty obok kwoty. Zmienia to tylko oznaczenie kwoty, nie przelicza jej.
 
 - **P: Jak edytowac istniejacy wydatek?**
   **O:** Dotknij wydatek na liscie, aby otworzyc szczegoly, a nastepnie dotknij **Edytuj**.

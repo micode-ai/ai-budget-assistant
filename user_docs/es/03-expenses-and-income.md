@@ -47,13 +47,14 @@ Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva tr
 3. Toca el simbolo de moneda para cambiar la moneda (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Introduce el **importe**
 5. Introduce una **Descripcion** (por ejemplo, "Para que fue este gasto?")
-6. Selecciona una **Categoria** de las fichas:
+6. Toca la **Fecha** — viene rellenada con la de hoy; tócala para registrar el gasto en un día anterior
+7. Selecciona una **Categoria** de las fichas:
    - Comida y Restaurantes, Supermercado, Transporte, Compras, Entretenimiento, Salud y Fitness, Facturas y Servicios, Educacion, Viajes, Cafe y Bebidas, Suscripciones, Ropa, Cuidado personal
    - Toca el boton **+** para crear una categoria personalizada
-7. Busca y selecciona **Etiquetas** (por ejemplo, #te, #cerveza, #supermercado) — opcional
-8. Selecciona **Agregar a proyecto** (por ejemplo, "Vacaciones") — opcional
-9. Toca **Dividir gasto** para dividir el gasto entre multiples categorias — opcional
-10. Toca **Guardar gasto**
+8. Busca y selecciona **Etiquetas** (por ejemplo, #te, #cerveza, #supermercado) — opcional
+9. Selecciona **Agregar a proyecto** (por ejemplo, "Vacaciones") — opcional
+10. Toca **Dividir gasto** para dividir el gasto entre multiples categorias — opcional
+11. Toca **Guardar gasto**
 
 ### Categorias
 
@@ -104,9 +105,10 @@ Divide un gasto individual entre multiples categorias:
 3. Toca el simbolo de moneda para seleccionar tu moneda
 4. Introduce el **importe**
 5. Introduce una **Descripcion** (por ejemplo, "De donde proviene este ingreso?")
-6. Selecciona una **Categoria**: Salario, Freelance, Inversiones, Regalos u Otros ingresos
-7. Agrega **Notas** opcionales
-8. Toca **Guardar ingreso**
+6. Toca la **Fecha** — viene rellenada con la de hoy; tócala para registrar el ingreso en un día anterior
+7. Selecciona una **Categoria**: Salario, Freelance, Inversiones, Regalos u Otros ingresos
+8. Agrega **Notas** opcionales
+9. Toca **Guardar ingreso**
 
 ## Detalles del gasto
 
@@ -123,7 +125,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente
 
 ### Acciones en los detalles del gasto:
-- **Editar** — modificar el gasto
+- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)
 - **Copiar** — crear un duplicado
 - **Eliminar** — eliminar el gasto (con confirmacion)
 
@@ -137,7 +139,7 @@ Toca cualquier entrada de ingreso para ver los detalles:
 ## Preguntas frecuentes
 
 - **P: Puedo agregar gastos en diferentes monedas?**
-  **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN.
+  **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN. También puedes cambiar la moneda de un gasto ya guardado: toca **Editar** y luego el chip de moneda junto al importe. Esto solo reetiqueta el importe, no lo convierte.
 
 - **P: Como edito un gasto existente?**
   **R:** Toca el gasto en la lista para abrir los detalles, luego toca **Editar**.

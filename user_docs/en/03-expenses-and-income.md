@@ -47,13 +47,14 @@ Use the floating **+** button (bottom-right) to add a new transaction.
 3. Tap the currency symbol to change currency (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Enter the **amount**
 5. Enter a **Description** (e.g., "What was this expense for?")
-6. Select a **Category** from the chips:
+6. Tap the **Date** — it's pre-filled with today; tap it to log the expense on an earlier day
+7. Select a **Category** from the chips:
    - Food & Dining, Groceries, Transport, Shopping, Entertainment, Health & Fitness, Bills & Utilities, Education, Travel, Coffee & Drinks, Subscriptions, Clothing, Personal Care
    - Tap the **+** button to create a custom category
-7. Search and select **Tags** (e.g., #tea, #beer, #supermarket) — optional
-8. Select **Add to Project** (e.g., "Vacation") — optional
-9. Tap **Split Expense** to divide the expense across multiple categories — optional
-10. Tap **Save Expense**
+8. Search and select **Tags** (e.g., #tea, #beer, #supermarket) — optional
+9. Select **Add to Project** (e.g., "Vacation") — optional
+10. Tap **Split Expense** to divide the expense across multiple categories — optional
+11. Tap **Save Expense**
 
 ### Categories
 
@@ -104,9 +105,10 @@ Divide a single expense across multiple categories:
 3. Tap the currency symbol to select your currency
 4. Enter the **amount**
 5. Enter a **Description** (e.g., "What was this income for?")
-6. Select a **Category**: Salary, Freelance, Investments, Gifts, or Other Income
-7. Add optional **Notes**
-8. Tap **Save Income**
+6. Tap the **Date** — it's pre-filled with today; tap it to log the income on an earlier day
+7. Select a **Category**: Salary, Freelance, Investments, Gifts, or Other Income
+8. Add optional **Notes**
+9. Tap **Save Income**
 
 ## Expense Details
 
@@ -123,7 +125,7 @@ Tap any expense to view its full details:
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually
 
 ### Actions on expense details:
-- **Edit** — modify the expense
+- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
 - **Copy** — create a duplicate
 - **Delete** — remove the expense (with confirmation)
 
@@ -137,7 +139,7 @@ Tap any income entry to view details:
 ## FAQ
 
 - **Q: Can I add expenses in different currencies?**
-  **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN.
+  **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN. You can also change the currency of an expense you already saved — tap **Edit**, then tap the currency chip next to the amount. This only relabels the amount, it does not convert it.
 
 - **Q: How do I edit an existing expense?**
   **A:** Tap the expense in the list to open details, then tap **Edit**.

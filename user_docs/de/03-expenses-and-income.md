@@ -47,13 +47,14 @@ Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transakt
 3. Tippe auf das Wahrungssymbol, um die Wahrung zu andern (USD, EUR, PLN, GBP, UAH, RUB, BYN)
 4. Gib den **Betrag** ein
 5. Gib eine **Beschreibung** ein (z.B. "Wofur war diese Ausgabe?")
-6. Wahle eine **Kategorie** aus den Chips:
+6. Tippe auf das **Datum** — es ist mit dem heutigen Tag vorbelegt; tippe darauf, um die Ausgabe auf einen früheren Tag zu buchen
+7. Wahle eine **Kategorie** aus den Chips:
    - Essen & Restaurants, Lebensmittel, Transport, Einkaufen, Unterhaltung, Gesundheit & Fitness, Rechnungen & Nebenkosten, Bildung, Reisen, Kaffee & Getranke, Abonnements, Kleidung, Korperpflege
    - Tippe auf die **+**-Schaltflache, um eine benutzerdefinierte Kategorie zu erstellen
-7. Suche und wahle **Tags** (z.B. #tee, #bier, #supermarkt) — optional
-8. Wahle **Zum Projekt hinzufugen** (z.B. "Urlaub") — optional
-9. Tippe auf **Ausgabe aufteilen**, um die Ausgabe auf mehrere Kategorien aufzuteilen — optional
-10. Tippe auf **Ausgabe speichern**
+8. Suche und wahle **Tags** (z.B. #tee, #bier, #supermarkt) — optional
+9. Wahle **Zum Projekt hinzufugen** (z.B. "Urlaub") — optional
+10. Tippe auf **Ausgabe aufteilen**, um die Ausgabe auf mehrere Kategorien aufzuteilen — optional
+11. Tippe auf **Ausgabe speichern**
 
 ### Kategorien
 
@@ -104,9 +105,10 @@ Teile eine einzelne Ausgabe auf mehrere Kategorien auf:
 3. Tippe auf das Wahrungssymbol, um deine Wahrung auszuwahlen
 4. Gib den **Betrag** ein
 5. Gib eine **Beschreibung** ein (z.B. "Woher stammt dieses Einkommen?")
-6. Wahle eine **Kategorie**: Gehalt, Freiberuflich, Investitionen, Geschenke oder Sonstiges Einkommen
-7. Fuge optionale **Notizen** hinzu
-8. Tippe auf **Einkommen speichern**
+6. Tippe auf das **Datum** — es ist mit dem heutigen Tag vorbelegt; tippe darauf, um die Einnahme auf einen früheren Tag zu buchen
+7. Wahle eine **Kategorie**: Gehalt, Freiberuflich, Investitionen, Geschenke oder Sonstiges Einkommen
+8. Fuge optionale **Notizen** hinzu
+9. Tippe auf **Einkommen speichern**
 
 ## Ausgabendetails
 
@@ -123,7 +125,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefugte
 
 ### Aktionen bei Ausgabendetails:
-- **Bearbeiten** — die Ausgabe andern
+- **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet)
 - **Kopieren** — ein Duplikat erstellen
 - **Loschen** — die Ausgabe entfernen (mit Bestatigung)
 
@@ -137,7 +139,7 @@ Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 ## FAQ
 
 - **F: Kann ich Ausgaben in verschiedenen Wahrungen hinzufugen?**
-  **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln.
+  **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln. Du kannst die Währung auch bei einer bereits gespeicherten Ausgabe ändern — tippe auf **Bearbeiten** und dann auf den Währungs-Chip neben dem Betrag. Das beschriftet den Betrag nur neu, es rechnet ihn nicht um.
 
 - **F: Wie bearbeite ich eine vorhandene Ausgabe?**
   **A:** Tippe auf die Ausgabe in der Liste, um die Details zu offnen, und tippe dann auf **Bearbeiten**.
