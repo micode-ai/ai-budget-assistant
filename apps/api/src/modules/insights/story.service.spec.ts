@@ -22,7 +22,10 @@ function buildDeps() {
     income: { findMany: jest.fn().mockResolvedValue([]) },
     budget: { findMany: jest.fn().mockResolvedValue([]) },
   };
-  const budgetsService = { getProgress: jest.fn() };
+  const budgetsService = {
+    getProgress: jest.fn(),
+    getAccountAnchorDay: jest.fn().mockResolvedValue(null),
+  };
   const subscriptionsService = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
   return { prisma, budgetsService, subscriptionsService };
 }
@@ -184,6 +187,41 @@ describe('StoryService', () => {
       expect(res.story.blocks).toEqual([]);
       expect(res.story.summary).toBe('');
       expect(deps.subscriptionsService.trackAiUsage).toHaveBeenCalled();
+    });
+  });
+
+  describe('budget anchor propagation', () => {
+    it('resolves the account anchor once and forwards it to every getProgress call, so the story agrees with GET /budgets/:id/progress', async () => {
+      deps.prisma.expense.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+      deps.prisma.income.findMany.mockResolvedValueOnce([]);
+      deps.prisma.budget.findMany.mockResolvedValueOnce([
+        { id: 'b1', name: 'Groceries', amount: '300' as any, currencyCode: 'USD' },
+        { id: 'b2', name: 'Transport', amount: '100' as any, currencyCode: 'EUR' },
+      ]);
+      deps.budgetsService.getAccountAnchorDay.mockResolvedValueOnce(15);
+      deps.budgetsService.getProgress
+        .mockResolvedValueOnce({ spent: 120, percentageUsed: 40 })
+        .mockResolvedValueOnce({ spent: 50, percentageUsed: 50 });
+      mockChatCreate.mockResolvedValueOnce({
+        choices: [{ message: { content: JSON.stringify({ blocks: [], summary: 'ok' }) } }],
+      });
+      deps.prisma.spendingStory.upsert.mockResolvedValueOnce({
+        id: 's5',
+        accountId: 'acc-1',
+        periodLabel: 'July 2026',
+        periodStart: new Date(2026, 6, 1),
+        periodEnd: new Date(2026, 7, 0),
+        blocks: [],
+        summary: 'ok',
+        createdAt: new Date('2026-07-18T00:00:00Z'),
+      });
+
+      await service.getSpendingStory('acc-1', 'month', true, 'en', 'user-1', 7, 2026);
+
+      expect(deps.budgetsService.getAccountAnchorDay).toHaveBeenCalledTimes(1);
+      expect(deps.budgetsService.getAccountAnchorDay).toHaveBeenCalledWith('acc-1');
+      expect(deps.budgetsService.getProgress).toHaveBeenNthCalledWith(1, 'acc-1', 'b1', 15);
+      expect(deps.budgetsService.getProgress).toHaveBeenNthCalledWith(2, 'acc-1', 'b2', 15);
     });
   });
 

@@ -17,7 +17,10 @@ function buildDeps() {
     expense: { findMany: jest.fn().mockResolvedValue([]) },
     budget: { findMany: jest.fn().mockResolvedValue([]) },
   };
-  const budgetsService: any = { getProgress: jest.fn() };
+  const budgetsService: any = {
+    getProgress: jest.fn(),
+    getAccountAnchorDay: jest.fn().mockResolvedValue(null),
+  };
   return { prisma, budgetsService };
 }
 
@@ -167,6 +170,24 @@ describe('InsightsService', () => {
       expect(predictions).toHaveLength(2);
       expect(predictions[0]).toMatchObject({ budgetId: 'b1', currencyCode: 'USD', dailyBurnRate: 5 });
       expect(predictions[1]).toMatchObject({ budgetId: 'b2', currencyCode: 'EUR', estimatedExhaustionDate: '2026-08-15' });
+    });
+
+    it('resolves the account anchor once and forwards it to every getProgress call, so predictions agree with GET /budgets/:id/progress', async () => {
+      deps.prisma.budget.findMany.mockResolvedValueOnce([
+        { id: 'b1', name: 'Groceries', currencyCode: 'USD' },
+        { id: 'b2', name: 'Transport', currencyCode: 'EUR' },
+      ]);
+      deps.budgetsService.getAccountAnchorDay.mockResolvedValueOnce(15);
+      deps.budgetsService.getProgress
+        .mockResolvedValueOnce({ estimatedExhaustionDate: undefined, dailyBurnRate: 5, daysRemaining: 10, projectedTotal: 150 })
+        .mockResolvedValueOnce({ estimatedExhaustionDate: '2026-08-15', dailyBurnRate: 2, daysRemaining: 20, projectedTotal: 40 });
+
+      await service.getBudgetPredictions('acc-1');
+
+      expect(deps.budgetsService.getAccountAnchorDay).toHaveBeenCalledTimes(1);
+      expect(deps.budgetsService.getAccountAnchorDay).toHaveBeenCalledWith('acc-1');
+      expect(deps.budgetsService.getProgress).toHaveBeenNthCalledWith(1, 'acc-1', 'b1', 15);
+      expect(deps.budgetsService.getProgress).toHaveBeenNthCalledWith(2, 'acc-1', 'b2', 15);
     });
 
     it('skips a budget whose getProgress call throws, without failing the whole batch', async () => {

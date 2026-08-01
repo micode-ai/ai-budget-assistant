@@ -232,10 +232,15 @@ export class StoryService {
       date: e.date.toISOString().split('T')[0],
     }));
 
+    // Resolve once per account (not per budget) so the story's budget figures
+    // agree with what GET /budgets/:id/progress reports for an anchored
+    // account — same reasoning as the AI chat tool dispatcher.
+    const anchorDay = await this.budgetsService.getAccountAnchorDay(accountId);
+
     const budgetData = [];
     for (const b of budgets) {
       try {
-        const progress = await this.budgetsService.getProgress(accountId, b.id);
+        const progress = await this.budgetsService.getProgress(accountId, b.id, anchorDay);
         budgetData.push({
           name: b.name,
           limit: Number(b.amount),
