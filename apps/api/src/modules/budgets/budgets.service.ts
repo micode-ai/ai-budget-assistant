@@ -225,7 +225,7 @@ export class BudgetsService {
     return { success: true };
   }
 
-  async getHistory(accountId: string, id: string, periods: number = 6) {
+  async getHistory(accountId: string, id: string, periods: number = 6, anchorDay: number | null = null) {
     const budget = await this.findOne(accountId, id);
     if (budget.period === 'custom') return [];
 
@@ -264,7 +264,7 @@ export class BudgetsService {
           break;
       }
 
-      const { periodStart, periodEnd } = computeBudgetPeriod(budget, ref);
+      const { periodStart, periodEnd } = computeBudgetPeriod(budget, ref, anchorDay);
 
       const whereExpenses: any = {
         accountId,
@@ -297,12 +297,12 @@ export class BudgetsService {
     return results.reverse();
   }
 
-  async getProgress(accountId: string, id: string) {
+  async getProgress(accountId: string, id: string, anchorDay: number | null = null) {
     const budget = await this.findOne(accountId, id);
 
     // Calculate spent amount for this budget period
     const now = new Date();
-    const { periodStart, periodEnd } = computeBudgetPeriod(budget, now);
+    const { periodStart, periodEnd } = computeBudgetPeriod(budget, now, anchorDay);
 
     // Determine which categories this budget covers
     const allocations = budget.categoryAllocations || [];

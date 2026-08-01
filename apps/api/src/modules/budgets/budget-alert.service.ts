@@ -27,6 +27,7 @@ export class BudgetAlertService {
         },
         include: {
           categoryAllocations: { where: { isDeleted: false }, include: { category: true } },
+          account: { select: { monthAnchorDay: true } },
         },
       });
 
@@ -39,7 +40,13 @@ export class BudgetAlertService {
   }
 
   private async checkBudgetThresholds(accountId: string, budget: any): Promise<void> {
-    const { periodStart, periodEnd } = computeBudgetPeriod(budget);
+    // Cron context — no HTTP request, so the anchor comes from the budget's own
+    // account relation (included above), not req.monthAnchorDay.
+    const { periodStart, periodEnd } = computeBudgetPeriod(
+      budget,
+      undefined,
+      budget.account?.monthAnchorDay ?? null,
+    );
 
     const whereExpenses: any = {
       accountId,

@@ -235,7 +235,8 @@ export class StoryService {
     const budgetData = [];
     for (const b of budgets) {
       try {
-        const progress = await this.budgetsService.getProgress(accountId, b.id);
+        // No HTTP request context here (spending-story assembly) — anchor unresolved, use calendar month.
+        const progress = await this.budgetsService.getProgress(accountId, b.id, null);
         budgetData.push({
           name: b.name,
           limit: Number(b.amount),

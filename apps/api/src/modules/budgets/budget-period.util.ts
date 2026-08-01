@@ -1,3 +1,5 @@
+import { financialMonth } from '../../common/utils/financial-month';
+
 function startOfWeek(date: Date): Date {
   const d = new Date(date);
   const day = d.getDay();
@@ -22,6 +24,7 @@ function endOfWeek(date: Date): Date {
 export function computeBudgetPeriod(
   budget: { period: string; startDate: Date; endDate: Date | null },
   now: Date = new Date(),
+  anchorDay: number | null = null,
 ): { periodStart: Date; periodEnd: Date } {
   switch (budget.period) {
     case 'daily': {
@@ -43,10 +46,7 @@ export function computeBudgetPeriod(
       };
     case 'monthly':
     default: {
-      const start = new Date(now.getFullYear(), now.getMonth(), 1);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      end.setHours(23, 59, 59, 999);
+      const { start, end } = financialMonth(now, anchorDay);
       return { periodStart: start, periodEnd: end };
     }
   }

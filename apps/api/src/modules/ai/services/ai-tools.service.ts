@@ -784,7 +784,8 @@ export class AiToolsService {
       targetBudgets.map(async (b: any) => {
         const cur = b.currencyCode;
         try {
-          const progress = await this.budgetsService.getProgress(accountId, b.id);
+          // No HTTP request context here (AI tool dispatch) — anchor unresolved, use calendar month.
+          const progress = await this.budgetsService.getProgress(accountId, b.id, null);
           return {
             name: b.name,
             amount: conv(Number(b.amount), cur).value,
