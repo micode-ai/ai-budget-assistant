@@ -450,7 +450,10 @@ export const useBudgetStore = create<BudgetState>()(
       const expenses = filterConsumption(useExpenseStore.getState().expenses).filter((e) => !e.isDeleted);
 
       const now = referenceDate ?? new Date();
-      const { periodStart, periodEnd } = computeBudgetPeriod(budget, now);
+      // Store, not a component — reads the anchor directly rather than via
+      // useFinancialMonth (accountStore's currentAccount is a selector method).
+      const anchorDay = useAccountStore.getState().currentAccount()?.monthAnchorDay ?? null;
+      const { periodStart, periodEnd } = computeBudgetPeriod(budget, now, anchorDay);
 
       // Filter expenses for this budget period and matching currency
       let periodExpenses = expenses.filter((e) => {
