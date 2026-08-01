@@ -1135,8 +1135,13 @@ git commit -m "feat(mobile): read budget periods through the financial month anc
 ### Task 9: Fix period navigation on the budget detail screen
 
 **Files:**
+- Create: `apps/mobile/src/features/budgets/periodNav.ts`
 - Modify: `apps/mobile/app/budget/[id].tsx` (`periodsMatch` ~line 88, `stepPeriod` ~line 106, `canGoBack` ~line 127, and the period label)
-- Test: `apps/mobile/app/budget/__tests__/budgetPeriodNav.test.ts` (create)
+- Test: `apps/mobile/src/features/budgets/__tests__/periodNav.test.ts` (create)
+
+The pure helper goes under `src/features/budgets/` — alongside the existing `src/features/analytics/`
+and `src/features/insights/` — not under `app/`. Every test in this repo lives in
+`src/**/__tests__/`; there are none under `app/`, which is Expo Router's route tree.
 
 **Interfaces:**
 - Consumes: `financialMonth`, `shiftFinancialMonth`, `formatFinancialMonth` (Task 2), `useFinancialMonth` (Task 8)
@@ -1154,7 +1159,7 @@ three separate ways, so it cannot be left for a later wave:
 
 - [ ] **Step 1: Extract the pure logic and write the failing test**
 
-Create `apps/mobile/app/budget/__tests__/budgetPeriodNav.test.ts`:
+Create `apps/mobile/src/features/budgets/__tests__/periodNav.test.ts`:
 
 ```ts
 import { isCurrentBudgetPeriod, stepBudgetPeriod } from '../periodNav';
@@ -1198,12 +1203,12 @@ describe('stepBudgetPeriod', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `cd apps/mobile && npx jest app/budget/__tests__/budgetPeriodNav.test.ts`
+Run: `cd apps/mobile && npx jest src/features/budgets`
 Expected: FAIL — `Cannot find module '../periodNav'`
 
 - [ ] **Step 3: Create the pure helper**
 
-Create `apps/mobile/app/budget/periodNav.ts`:
+Create `apps/mobile/src/features/budgets/periodNav.ts`:
 
 ```ts
 import { financialMonth, shiftFinancialMonth, getStartOfWeek } from '@budget/shared-utils';
@@ -1261,7 +1266,7 @@ export function stepBudgetPeriod(
 
 - [ ] **Step 4: Run the test to verify it passes**
 
-Run: `cd apps/mobile && npx jest app/budget/__tests__/budgetPeriodNav.test.ts`
+Run: `cd apps/mobile && npx jest src/features/budgets`
 Expected: PASS, 6 tests
 
 - [ ] **Step 5: Wire the screen to the helper**
