@@ -93,9 +93,19 @@ describe('financialMonth', () => {
   });
 
   it('clamps anchor 31 to the last day of February', () => {
-    const { start, end } = financialMonth(new Date(2026, 1, 15), 31);
+    // Feb 2026 has 28 days, so the anchor clamps to the 28th. Standing ON it,
+    // the period runs to the day before the next anchor (31 Mar).
+    const { start, end } = financialMonth(new Date(2026, 1, 28), 31);
     expect(start).toEqual(new Date(2026, 1, 28, 0, 0, 0, 0));
     expect(end).toEqual(new Date(2026, 2, 30, 23, 59, 59, 999));
+  });
+
+  it('before the clamped anchor, is still inside the January period', () => {
+    // 15 Feb is before the clamped 28 Feb anchor, so the live period is the
+    // one that opened on 31 Jan.
+    const { start, end } = financialMonth(new Date(2026, 1, 15), 31);
+    expect(start).toEqual(new Date(2026, 0, 31, 0, 0, 0, 0));
+    expect(end).toEqual(new Date(2026, 1, 27, 23, 59, 59, 999));
   });
 
   it('clamps anchor 31 to 29 February in a leap year', () => {
@@ -314,7 +324,7 @@ describe('financialMonth (shared-utils mirror)', () => {
   });
 
   it('clamps anchor 31 to the last day of February', () => {
-    const { start } = financialMonth(new Date(2026, 1, 15), 31);
+    const { start } = financialMonth(new Date(2026, 1, 28), 31);
     expect(start).toEqual(new Date(2026, 1, 28, 0, 0, 0, 0));
   });
 
