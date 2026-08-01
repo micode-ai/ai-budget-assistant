@@ -152,3 +152,41 @@ describe('BudgetsService.create — offline-first idempotency (ABA-316)', () => 
     await expect(makeService(prisma).create('acc-1', 'u1', dto)).rejects.toBe(boom);
   });
 });
+
+describe('getHistory month stepping', () => {
+  function makeHistoryService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('returns distinct consecutive months when run on the 31st', async () => {
+    jest.useFakeTimers().setSystemTime(new Date(2026, 2, 31, 10, 0, 0));
+
+    const budget = {
+      id: 'b1',
+      period: 'monthly',
+      amount: 100,
+      currencyCode: 'USD',
+      startDate: new Date(2026, 0, 1),
+      endDate: null,
+      categoryAllocations: [],
+    };
+
+    const prisma: any = {
+      expense: { aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }) },
+    };
+    const service = makeHistoryService(prisma);
+    jest.spyOn(service, 'findOne').mockResolvedValue(budget as any);
+
+    const history = await service.getHistory('acc1', 'b1', 3);
+
+    const starts = history.map((h) => new Date(h.periodStart).getMonth());
+    expect(starts).toEqual([0, 1, 2]); // January, February, March -- no repeats
+    expect(new Set(starts).size).toBe(3);
+  });
+});

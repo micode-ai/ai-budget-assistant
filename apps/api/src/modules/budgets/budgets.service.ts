@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { computeBudgetPeriod } from './budget-period.util';
+import { shiftFinancialMonth } from '../../common/utils/financial-month';
 
 export { computeBudgetPeriod };
 
@@ -247,20 +248,22 @@ export class BudgetsService {
     }[] = [];
 
     for (let i = 0; i < periodsCount; i++) {
-      // Compute reference date i steps back from now
-      const ref = new Date(now);
+      // Step back i periods. Never use setMonth() here: on the 31st it rolls
+      // forward into the next month and silently repeats a period.
+      let ref: Date;
       switch (budget.period) {
         case 'daily':
-          ref.setDate(ref.getDate() - i);
+          ref = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i, 12);
           break;
         case 'weekly':
-          ref.setDate(ref.getDate() - i * 7);
-          break;
-        case 'monthly':
-          ref.setMonth(ref.getMonth() - i);
+          ref = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i * 7, 12);
           break;
         case 'yearly':
-          ref.setFullYear(ref.getFullYear() - i);
+          ref = new Date(now.getFullYear() - i, now.getMonth(), 1, 12);
+          break;
+        case 'monthly':
+        default:
+          ref = shiftFinancialMonth(now, -i, anchorDay);
           break;
       }
 
