@@ -98,7 +98,7 @@ Par defaut, les budgets suivent le mois calendaire (du 1er au dernier jour). Si 
 >
 > Si vous choisissez un jour qui n'existe pas dans tous les mois (par exemple 31), la periode commence simplement le dernier jour des mois plus courts (par exemple le 28 ou le 29 en fevrier).
 
-Proprietaire uniquement — les Editeurs et Observateurs peuvent voir le reglage actuel mais ne peuvent pas le modifier.
+Seul le Proprietaire voit cette ligne — les Editeurs et Observateurs ne la voient pas du tout dans les Parametres du compte. Une fois configure, le mois financier continue neanmoins de determiner les periodes et l'historique de budget que tous les membres voient.
 
 ### Membres
 - Liste de tous les membres du compte avec leurs roles

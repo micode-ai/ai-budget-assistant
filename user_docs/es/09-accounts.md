@@ -98,7 +98,7 @@ Por defecto, los presupuestos siguen el mes natural (del 1 al ultimo dia). Si tu
 >
 > Si eliges un dia que no existe en todos los meses (por ejemplo, 31), el periodo simplemente comienza en el ultimo dia de los meses mas cortos (por ejemplo, el 28 o 29 en febrero).
 
-Solo el Propietario — Editores y Observadores pueden ver el ajuste actual pero no cambiarlo.
+Esta fila solo la ve el Propietario — Editores y Observadores no la ven en absoluto en los Ajustes de la cuenta. Una vez configurado, el mes financiero igualmente determina los periodos y el historial de presupuestos que ven todos los miembros.
 
 ### Miembros
 - Lista de todos los miembros de la cuenta con sus roles

@@ -1293,7 +1293,7 @@ By default, budgets run on the calendar month (1st to the last day). If your sal
 >
 > If you pick a day that doesn't exist in every month (e.g. 31), the period simply starts on the last day of shorter months (e.g. the 28th or 29th in February).
 
-Owner only — Editors and Viewers can see the current setting but can't change it.
+Visible only to the account Owner — Editors and Viewers don't see this row in Account Settings at all. Once it's set, though, the anchor still shapes the budget periods and history every member sees.
 
 ### Members
 - List of all account members with their roles
@@ -5672,7 +5672,7 @@ iOS, Android, Web
 >
 > Если вы выберете день, которого нет в каждом месяце (например, 31), период просто начнётся в последний день более коротких месяцев (например, 28 или 29 февраля).
 
-Только Владелец — Редакторы и Наблюдатели видят текущую настройку, но не могут её изменить.
+Эту строку видит только Владелец — Редакторы и Наблюдатели вообще не видят её в настройках счёта. При этом после настройки финансовый месяц всё равно влияет на периоды бюджетов и историю, которые видят все участники.
 
 ### Участники
 - Список всех участников счёта с их ролями
@@ -10051,7 +10051,7 @@ iOS, Android, Web
 >
 > Якщо ви оберете день, якого немає в кожному місяці (наприклад, 31), період просто почнеться в останній день коротших місяців (наприклад, 28 або 29 лютого).
 
-Лише Власник — Редактори та Спостерігачі бачать поточне налаштування, але не можуть його змінити.
+Цей рядок бачить лише Власник — Редактори та Спостерігачі взагалі не бачать його в налаштуваннях рахунку. Проте після налаштування фінансовий місяць все одно впливає на періоди бюджетів та історію, які бачать усі учасники.
 
 ### Учасники
 - Список усіх учасників рахунку з їхніми ролями
@@ -14374,7 +14374,7 @@ Domyslnie budzety dzialaja w miesiacu kalendarzowym (od 1. do ostatniego dnia). 
 >
 > Jesli wybierzesz dzien, ktory nie istnieje w kazdym miesiacu (np. 31), okres po prostu zacznie sie w ostatnim dniu krotszych miesiecy (np. 28 lub 29 lutego).
 
-Tylko Wlasciciel — Edytorzy i Obserwatorzy widza aktualne ustawienie, ale nie moga go zmienic.
+Ten wiersz widzi tylko Wlasciciel — Edytorzy i Obserwatorzy w ogole go nie widza w Ustawieniach konta. Po ustawieniu miesiac finansowy i tak wplywa na okresy budzetow i historie, ktore widza wszyscy czlonkowie.
 
 ### Czlonkowie
 - Lista wszystkich czlonkow konta z ich rolami
@@ -18695,7 +18695,7 @@ Budgets laufen standardmassig im Kalendermonat (1. bis zum letzten Tag). Wenn de
 >
 > Wahlst du einen Tag, den es nicht in jedem Monat gibt (z. B. 31), beginnt der Zeitraum in kurzeren Monaten einfach am letzten Tag (z. B. dem 28. oder 29. im Februar).
 
-Nur Eigentumer — Bearbeiter und Betrachter sehen die aktuelle Einstellung, konnen sie aber nicht andern.
+Nur der Eigentumer sieht diese Zeile — Bearbeiter und Betrachter sehen sie in den Kontoeinstellungen gar nicht. Einmal gesetzt, wirkt sich der Finanzmonat aber trotzdem auf die Budgetzeitraume und die Historie aus, die alle Mitglieder sehen.
 
 ### Mitglieder
 - Liste aller Kontomitglieder mit ihren Rollen
@@ -22991,7 +22991,7 @@ Por defecto, los presupuestos siguen el mes natural (del 1 al ultimo dia). Si tu
 >
 > Si eliges un dia que no existe en todos los meses (por ejemplo, 31), el periodo simplemente comienza en el ultimo dia de los meses mas cortos (por ejemplo, el 28 o 29 en febrero).
 
-Solo el Propietario — Editores y Observadores pueden ver el ajuste actual pero no cambiarlo.
+Esta fila solo la ve el Propietario — Editores y Observadores no la ven en absoluto en los Ajustes de la cuenta. Una vez configurado, el mes financiero igualmente determina los periodos y el historial de presupuestos que ven todos los miembros.
 
 ### Miembros
 - Lista de todos los miembros de la cuenta con sus roles
@@ -27276,7 +27276,7 @@ Par defaut, les budgets suivent le mois calendaire (du 1er au dernier jour). Si 
 >
 > Si vous choisissez un jour qui n'existe pas dans tous les mois (par exemple 31), la periode commence simplement le dernier jour des mois plus courts (par exemple le 28 ou le 29 en fevrier).
 
-Proprietaire uniquement — les Editeurs et Observateurs peuvent voir le reglage actuel mais ne peuvent pas le modifier.
+Seul le Proprietaire voit cette ligne — les Editeurs et Observateurs ne la voient pas du tout dans les Parametres du compte. Une fois configure, le mois financier continue neanmoins de determiner les periodes et l'historique de budget que tous les membres voient.
 
 ### Membres
 - Liste de tous les membres du compte avec leurs roles
@@ -31559,7 +31559,7 @@ iOS, Android, Web
 >
 > Калі вы абярэце дзень, якога няма ў кожным месяцы (напрыклад, 31), перыяд проста пачнецца ў апошні дзень карацейшых месяцаў (напрыклад, 28 або 29 лютага).
 
-Толькі Уладальнік — Рэдактары і Назіральнікі бачаць бягучую наладу, але не могуць яе змяніць.
+Гэты радок бачыць толькі Уладальнік — Рэдактары і Назіральнікі наогул не бачаць яго ў наладах рахунку. Пры гэтым пасля налады фінансавы месяц усё роўна ўплывае на перыяды бюджэтаў і гісторыю, якія бачаць усе ўдзельнікі.
 
 ### Удзельнікі
 - Спіс усіх удзельнікаў рахунку з іх ролямі
@@ -35802,7 +35802,7 @@ Standaard lopen budgetten op de kalendermaand (1e t/m de laatste dag). Als je sa
 >
 > Als je een dag kiest die niet in elke maand bestaat (bijvoorbeeld 31), begint de periode in kortere maanden gewoon op de laatste dag (bijvoorbeeld de 28e of 29e in februari).
 
-Alleen Eigenaar — Bewerkers en Kijkers zien de huidige instelling, maar kunnen deze niet wijzigen.
+Alleen de Eigenaar ziet deze rij — Bewerkers en Kijkers zien hem helemaal niet in de Accountinstellingen. Eenmaal ingesteld, bepaalt de financiële maand nog steeds de budgetperiodes en -geschiedenis die alle leden zien.
 
 ### Leden
 - Lijst van alle accountleden met hun rollen

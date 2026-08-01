@@ -98,7 +98,7 @@ By default, budgets run on the calendar month (1st to the last day). If your sal
 >
 > If you pick a day that doesn't exist in every month (e.g. 31), the period simply starts on the last day of shorter months (e.g. the 28th or 29th in February).
 
-Owner only — Editors and Viewers can see the current setting but can't change it.
+Visible only to the account Owner — Editors and Viewers don't see this row in Account Settings at all. Once it's set, though, the anchor still shapes the budget periods and history every member sees.
 
 ### Members
 - List of all account members with their roles

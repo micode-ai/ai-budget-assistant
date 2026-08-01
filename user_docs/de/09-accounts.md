@@ -98,7 +98,7 @@ Budgets laufen standardmassig im Kalendermonat (1. bis zum letzten Tag). Wenn de
 >
 > Wahlst du einen Tag, den es nicht in jedem Monat gibt (z. B. 31), beginnt der Zeitraum in kurzeren Monaten einfach am letzten Tag (z. B. dem 28. oder 29. im Februar).
 
-Nur Eigentumer — Bearbeiter und Betrachter sehen die aktuelle Einstellung, konnen sie aber nicht andern.
+Nur der Eigentumer sieht diese Zeile — Bearbeiter und Betrachter sehen sie in den Kontoeinstellungen gar nicht. Einmal gesetzt, wirkt sich der Finanzmonat aber trotzdem auf die Budgetzeitraume und die Historie aus, die alle Mitglieder sehen.
 
 ### Mitglieder
 - Liste aller Kontomitglieder mit ihren Rollen

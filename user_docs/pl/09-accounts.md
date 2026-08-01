@@ -98,7 +98,7 @@ Domyslnie budzety dzialaja w miesiacu kalendarzowym (od 1. do ostatniego dnia). 
 >
 > Jesli wybierzesz dzien, ktory nie istnieje w kazdym miesiacu (np. 31), okres po prostu zacznie sie w ostatnim dniu krotszych miesiecy (np. 28 lub 29 lutego).
 
-Tylko Wlasciciel — Edytorzy i Obserwatorzy widza aktualne ustawienie, ale nie moga go zmienic.
+Ten wiersz widzi tylko Wlasciciel — Edytorzy i Obserwatorzy w ogole go nie widza w Ustawieniach konta. Po ustawieniu miesiac finansowy i tak wplywa na okresy budzetow i historie, ktore widza wszyscy czlonkowie.
 
 ### Czlonkowie
 - Lista wszystkich czlonkow konta z ich rolami

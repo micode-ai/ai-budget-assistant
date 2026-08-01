@@ -98,7 +98,7 @@ Standaard lopen budgetten op de kalendermaand (1e t/m de laatste dag). Als je sa
 >
 > Als je een dag kiest die niet in elke maand bestaat (bijvoorbeeld 31), begint de periode in kortere maanden gewoon op de laatste dag (bijvoorbeeld de 28e of 29e in februari).
 
-Alleen Eigenaar — Bewerkers en Kijkers zien de huidige instelling, maar kunnen deze niet wijzigen.
+Alleen de Eigenaar ziet deze rij — Bewerkers en Kijkers zien hem helemaal niet in de Accountinstellingen. Eenmaal ingesteld, bepaalt de financiële maand nog steeds de budgetperiodes en -geschiedenis die alle leden zien.
 
 ### Leden
 - Lijst van alle accountleden met hun rollen
