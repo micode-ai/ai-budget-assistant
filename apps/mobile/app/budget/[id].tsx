@@ -12,14 +12,16 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
-import { formatCurrency, getStartOfWeek } from '@budget/shared-utils';
+import { formatCurrency, getStartOfWeek, financialMonth, formatFinancialMonth } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { BudgetEditForm } from '@/components/budget/BudgetEditForm';
 import { BudgetHistorySection } from '@/components/budget/BudgetHistorySection';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { isCurrentBudgetPeriod, stepBudgetPeriod } from '@/features/budgets/periodNav';
 
 export default function BudgetDetailScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -36,6 +38,7 @@ export default function BudgetDetailScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [referenceDate, setReferenceDate] = useState<Date>(new Date());
   const [triedReload, setTriedReload] = useState(false);
+  const { anchorDay } = useFinancialMonth();
   const progress = budget ? getBudgetProgress(budget.id, referenceDate) : null;
 
   useEffect(() => {
@@ -85,65 +88,20 @@ export default function BudgetDetailScreen() {
   }
 
   // --- Period navigation helpers ---
-  const periodsMatch = (period: string, a: Date, b: Date): boolean => {
-    switch (period) {
-      case 'daily':
-        return a.toDateString() === b.toDateString();
-      case 'weekly':
-        return getStartOfWeek(a).getTime() === getStartOfWeek(b).getTime();
-      case 'monthly':
-        return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
-      case 'yearly':
-        return a.getFullYear() === b.getFullYear();
-      default:
-        return true;
-    }
-  };
-
-  const isCurrentPeriod = periodsMatch(budget.period, referenceDate, new Date());
+  const isCurrentPeriod = isCurrentBudgetPeriod(budget.period, referenceDate, anchorDay);
 
   const stepPeriod = (delta: 1 | -1) => {
-    const d = new Date(referenceDate);
-    switch (budget.period) {
-      case 'daily':
-        d.setDate(d.getDate() + delta);
-        break;
-      case 'weekly':
-        d.setDate(d.getDate() + 7 * delta);
-        setReferenceDate(getStartOfWeek(d));
-        return;
-      case 'monthly':
-        d.setMonth(d.getMonth() + delta);
-        break;
-      case 'yearly':
-        d.setFullYear(d.getFullYear() + delta);
-        break;
-      default:
-        return;
-    }
-    setReferenceDate(d);
+    setReferenceDate(stepBudgetPeriod(budget.period, referenceDate, delta, anchorDay));
   };
 
   const canGoBack = (() => {
     if (budget.period === 'custom') return false;
-    let candidate = new Date(referenceDate);
-    switch (budget.period) {
-      case 'daily':
-        candidate.setDate(candidate.getDate() - 1);
-        break;
-      case 'weekly':
-        candidate.setDate(candidate.getDate() - 7);
-        candidate = getStartOfWeek(candidate);
-        break;
-      case 'monthly':
-        candidate.setMonth(candidate.getMonth() - 1);
-        break;
-      case 'yearly':
-        candidate.setFullYear(candidate.getFullYear() - 1);
-        break;
-    }
+    const candidate = stepBudgetPeriod(budget.period, referenceDate, -1, anchorDay);
     const budgetStart = new Date(budget.startDate);
-    return candidate >= budgetStart || periodsMatch(budget.period, candidate, budgetStart);
+    return (
+      candidate >= budgetStart ||
+      isCurrentBudgetPeriod(budget.period, candidate, anchorDay, budgetStart)
+    );
   })();
 
   const formatPeriodLabel = (): string => {
@@ -159,16 +117,22 @@ export default function BudgetDetailScreen() {
         const to = end.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
         return `${from} – ${to}`;
       }
-      case 'monthly': {
-        const name = referenceDate.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
-        return name.charAt(0).toUpperCase() + name.slice(1);
-      }
       case 'yearly':
         return String(referenceDate.getFullYear());
       default:
         return '';
     }
   };
+
+  // Monthly budgets get a two-line heading (label + exact anchored span) via
+  // formatFinancialMonth so an anchored period (e.g. 10 Aug - 9 Sep) reads
+  // correctly instead of just showing the calendar month name. Every other
+  // period keeps its existing single-line formatPeriodLabel() text.
+  const monthlyHeading = (() => {
+    if (budget.period !== 'monthly') return null;
+    const { start, end } = financialMonth(referenceDate, anchorDay);
+    return formatFinancialMonth(start, end, i18n.language);
+  })();
 
   const handleDelete = () => {
     showAlert(t('budgetDetail.deleteTitle'), t('budgetDetail.deleteConfirm'), [
@@ -214,7 +178,14 @@ export default function BudgetDetailScreen() {
                 color={canGoBack ? theme.colors.primary : theme.colors.textDisabled}
               />
             </TouchableOpacity>
-            <Text style={styles.periodNavLabel}>{formatPeriodLabel()}</Text>
+            {monthlyHeading ? (
+              <View style={styles.periodNavLabelContainer}>
+                <Text style={styles.periodNavLabel}>{monthlyHeading.label}</Text>
+                <Text style={styles.periodNavSubtitle}>{monthlyHeading.range}</Text>
+              </View>
+            ) : (
+              <Text style={styles.periodNavLabel}>{formatPeriodLabel()}</Text>
+            )}
             <TouchableOpacity onPress={() => stepPeriod(1)} disabled={isCurrentPeriod} hitSlop={8}>
               <Ionicons
                 name="chevron-forward"
@@ -574,6 +545,16 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
     minWidth: 160,
+    textAlign: 'center' as const,
+  },
+  periodNavLabelContainer: {
+    minWidth: 160,
+    alignItems: 'center' as const,
+  },
+  periodNavSubtitle: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[0.5],
     textAlign: 'center' as const,
   },
 });
