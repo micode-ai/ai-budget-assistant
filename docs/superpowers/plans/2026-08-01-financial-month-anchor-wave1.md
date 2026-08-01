@@ -251,7 +251,7 @@ export function shiftFinancialMonth(
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run: `cd apps/api && npx jest src/common/utils/financial-month.spec.ts`
-Expected: PASS, 17 tests
+Expected: PASS, 16 tests
 
 - [ ] **Step 5: Commit**
 
@@ -328,6 +328,12 @@ describe('financialMonth (shared-utils mirror)', () => {
     expect(start).toEqual(new Date(2026, 1, 28, 0, 0, 0, 0));
   });
 
+  it('before the clamped anchor, is still inside the January period', () => {
+    const { start, end } = financialMonth(new Date(2026, 1, 15), 31);
+    expect(start).toEqual(new Date(2026, 0, 31, 0, 0, 0, 0));
+    expect(end).toEqual(new Date(2026, 1, 27, 23, 59, 59, 999));
+  });
+
   it('crosses the year boundary backwards', () => {
     const { start } = financialMonth(new Date(2026, 0, 5), 10);
     expect(start).toEqual(new Date(2025, 11, 10, 0, 0, 0, 0));
@@ -369,10 +375,12 @@ describe('formatFinancialMonth', () => {
   });
 
   it('includes the year when the period is not in the current year', () => {
+    // `now` is injected so this does not silently start failing in 2024.
     const { label } = formatFinancialMonth(
       new Date(2024, 7, 10),
       new Date(2024, 8, 9),
       'en-US',
+      new Date(2026, 7, 1),
     );
     expect(label).toBe('August 2024');
   });
@@ -415,8 +423,9 @@ export function formatFinancialMonth(
   start: Date,
   end: Date,
   locale: string,
+  now: Date = new Date(),
 ): { label: string; range: string } {
-  const sameYear = start.getFullYear() === new Date().getFullYear();
+  const sameYear = start.getFullYear() === now.getFullYear();
   const label = new Intl.DateTimeFormat(locale, {
     month: 'long',
     ...(sameYear ? {} : { year: 'numeric' }),
@@ -441,7 +450,7 @@ export {
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run: `cd apps/mobile && npx jest src/utils/__tests__/financialMonth.test.ts`
-Expected: PASS, 9 tests — including the golden test proving `null` reproduces today's monthly window
+Expected: PASS, 13 tests — including the golden test proving `null` reproduces today's monthly window
 
 - [ ] **Step 5: Commit**
 
