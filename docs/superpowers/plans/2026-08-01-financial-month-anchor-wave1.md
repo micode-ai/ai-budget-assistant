@@ -340,6 +340,29 @@ describe('financialMonth (shared-utils mirror)', () => {
   });
 });
 
+  it('anchor 1 equals the calendar month', () => {
+    const cal = financialMonth(new Date(2026, 7, 15), null);
+    const anchored = financialMonth(new Date(2026, 7, 15), 1);
+    expect(anchored.start).toEqual(cal.start);
+    expect(anchored.end).toEqual(cal.end);
+  });
+
+  it('exactly on the anchor day, the period starts today', () => {
+    const { start } = financialMonth(new Date(2026, 7, 10, 0, 0, 0, 0), 10);
+    expect(start).toEqual(new Date(2026, 7, 10, 0, 0, 0, 0));
+  });
+
+  it('clamps anchor 31 to 29 February in a leap year', () => {
+    const { start } = financialMonth(new Date(2028, 1, 29), 31);
+    expect(start).toEqual(new Date(2028, 1, 29, 0, 0, 0, 0));
+  });
+
+  it('out-of-range anchor falls back to the calendar month', () => {
+    const { start } = financialMonth(new Date(2026, 7, 15), 99);
+    expect(start).toEqual(new Date(2026, 7, 1, 0, 0, 0, 0));
+  });
+});
+
 describe('shiftFinancialMonth (shared-utils mirror)', () => {
   it('steps back from the 31st without overflowing', () => {
     const ref = shiftFinancialMonth(new Date(2026, 2, 31), -1, null);
@@ -349,6 +372,16 @@ describe('shiftFinancialMonth (shared-utils mirror)', () => {
   it('steps back one anchored period', () => {
     const ref = shiftFinancialMonth(new Date(2026, 7, 15), -1, 10);
     expect(financialMonth(ref, 10).start).toEqual(new Date(2026, 6, 10, 0, 0, 0, 0));
+  });
+
+  it('steps forward across the year boundary', () => {
+    const ref = shiftFinancialMonth(new Date(2026, 11, 20), 1, 10);
+    expect(financialMonth(ref, 10).start).toEqual(new Date(2027, 0, 10, 0, 0, 0, 0));
+  });
+
+  it('delta 0 stays in the same period', () => {
+    const ref = shiftFinancialMonth(new Date(2026, 7, 15), 0, 10);
+    expect(financialMonth(ref, 10).start).toEqual(new Date(2026, 7, 10, 0, 0, 0, 0));
   });
 });
 
