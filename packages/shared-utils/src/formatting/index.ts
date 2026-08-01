@@ -220,6 +220,14 @@ export function sanitizeForPrompt(text: string, maxLength = 200): string {
     .trim();
 }
 
+// Financial month utilities
+export {
+  normalizeAnchorDay,
+  financialMonth,
+  shiftFinancialMonth,
+  formatFinancialMonth,
+} from './financial-month';
+
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile
 // offline fallback — must stay pure / no I/O).
