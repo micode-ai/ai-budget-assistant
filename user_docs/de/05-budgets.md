@@ -82,6 +82,10 @@ Die **Verlauf**-Karte zeigt, wie du dein Budget in den letzten 6 Zeiträumen ein
 
 > **Tipp:** Nutze die Verlaufskarte, um wiederkehrende Ausgabenmuster zu erkennen. Wenn du 3–4 rote Balken in Folge siehst, solltest du das Limit erhöhen oder deine Gewohnheiten in dieser Kategorie anpassen.
 
+## Finanzmonat (individueller Zeitraumbeginn)
+
+Standardmäßig laufen monatliche Budgets im Kalendermonat. Wenn dein Einkommen mitten im Monat eingeht, kann der Konto-Eigentümer stattdessen den Starttag verschieben — Tag 10 lässt den Zeitraum eines monatlichen Budgets z. B. vom 10. bis zum 9. des Folgemonats laufen. Stelle das unter **Kontoeinstellungen → Finanzmonat** ein (siehe [Konten](./09-accounts.md)). Die Änderung gilt rückwirkend für vergangene Zeiträume und die Historie, ohne dass Ausgaben- oder Einnahmedaten verändert werden.
+
 ## Budget bearbeiten
 
 Tippe auf das **Bleistift-Symbol** auf dem Budgetdetailbildschirm, um in den Bearbeitungsmodus zu wechseln:

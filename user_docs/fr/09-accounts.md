@@ -82,6 +82,23 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 ### Details
 - **Nom** du compte (modifiable par le Proprietaire)
 - **Type** et **devise** du compte (affichage uniquement)
+- **Mois financier** (Proprietaire uniquement) — change ce que "ce mois-ci" signifie pour vos budgets
+
+### Mois financier
+
+Par defaut, les budgets suivent le mois calendaire (du 1er au dernier jour). Si votre salaire arrive un autre jour du mois — par exemple le 10 — vous pouvez faire suivre vos budgets sur ce jour a la place :
+
+1. Ouvrez les Parametres du compte et appuyez sur la ligne **Mois financier** (affiche "Mois calendaire" ou "Le mois commence le jour N")
+2. Dans la feuille qui s'ouvre, choisissez **Mois calendaire** pour reinitialiser, ou un jour entre **1 et 31**
+3. Appuyez sur **Enregistrer**
+
+> **Remarque :** Pour l'instant, cela n'affecte que les **budgets** — la maniere dont leurs periodes sont calculees et quelles depenses comptent pour chacune. Les analyses, rapports et autres vues basees sur le mois utilisent toujours le mois calendaire.
+>
+> Le changement est retroactif : les periodes et l'historique des budgets passes sont recalcules en consequence, sans modifier aucune donnee de depenses ou de revenus.
+>
+> Si vous choisissez un jour qui n'existe pas dans tous les mois (par exemple 31), la periode commence simplement le dernier jour des mois plus courts (par exemple le 28 ou le 29 en fevrier).
+
+Proprietaire uniquement — les Editeurs et Observateurs peuvent voir le reglage actuel mais ne peuvent pas le modifier.
 
 ### Membres
 - Liste de tous les membres du compte avec leurs roles

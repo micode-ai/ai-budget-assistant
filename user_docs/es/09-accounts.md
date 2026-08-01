@@ -82,6 +82,23 @@ Toca cualquier cuenta para abrir sus ajustes:
 ### Detalles
 - **Nombre** de la cuenta (editable por el Propietario)
 - **Tipo** de cuenta y **moneda** (solo visualizacion)
+- **Mes financiero** (solo Propietario) — cambia lo que "este mes" significa para tus presupuestos
+
+### Mes financiero
+
+Por defecto, los presupuestos siguen el mes natural (del 1 al ultimo dia). Si tu salario llega en otro dia del mes — por ejemplo, el 10 — puedes hacer que los presupuestos sigan ese dia en su lugar:
+
+1. Abre los Ajustes de la cuenta y toca la fila **Mes financiero** (muestra "Mes natural" o "El mes comienza el dia N")
+2. En la hoja que se abre, elige **Mes natural** para restablecer, o un dia del **1 al 31**
+3. Toca **Guardar**
+
+> **Nota:** Por ahora esto solo afecta a los **presupuestos** — como se calculan sus periodos y que gastos cuentan en cada uno. Analitica, informes y otras vistas basadas en meses siguen usando el mes natural.
+>
+> El cambio es retroactivo: los periodos y el historial de presupuestos pasados se recalculan, sin modificar ningun dato de gastos o ingresos.
+>
+> Si eliges un dia que no existe en todos los meses (por ejemplo, 31), el periodo simplemente comienza en el ultimo dia de los meses mas cortos (por ejemplo, el 28 o 29 en febrero).
+
+Solo el Propietario — Editores y Observadores pueden ver el ajuste actual pero no cambiarlo.
 
 ### Miembros
 - Lista de todos los miembros de la cuenta con sus roles

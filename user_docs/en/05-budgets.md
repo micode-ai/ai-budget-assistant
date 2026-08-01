@@ -82,6 +82,10 @@ The **History** card shows how you've performed against this budget over the las
 
 > **Tip:** Use the history card to spot recurring overspend patterns. If you see 3–4 red bars in a row, consider raising the limit or adjusting your habits for that category.
 
+## Financial Month (Custom Period Start)
+
+By default, Monthly budgets run on the calendar month. If your income arrives mid-month, the account Owner can shift the start day instead — e.g. day 10 makes a monthly budget's period run the 10th to the 9th of the next month. Set it under **Account Settings → Financial Month** (see [Accounts](./09-accounts.md)). The change applies retroactively to past periods and history, without altering any expense or income data.
+
 ## Editing a Budget
 
 Tap the **pencil icon** on the budget detail screen to switch to edit mode:

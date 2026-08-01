@@ -82,6 +82,23 @@ Tippe auf ein beliebiges Konto, um seine Einstellungen zu offnen:
 ### Details
 - Konto-**Name** (vom Eigentumer bearbeitbar)
 - Konto-**Typ** und **Wahrung** (nur Anzeige)
+- **Finanzmonat** (nur Eigentumer) — andert, was "dieser Monat" fur deine Budgets bedeutet
+
+### Finanzmonat
+
+Budgets laufen standardmassig im Kalendermonat (1. bis zum letzten Tag). Wenn dein Gehalt an einem anderen Tag eingeht — zum Beispiel am 10. — kannst du Budgets stattdessen daran ausrichten:
+
+1. Offne die Kontoeinstellungen und tippe auf die Zeile **Finanzmonat** (zeigt "Kalendermonat" oder "Monat beginnt an Tag N")
+2. Wahle im sich offnenden Sheet **Kalendermonat** zum Zurucksetzen oder einen Tag von **1-31**
+3. Tippe auf **Speichern**
+
+> **Hinweis:** Das betrifft vorerst nur **Budgets** — wie ihre Zeitraume berechnet werden und welche Ausgaben mitgezahlt werden. Analysen, Berichte und andere monatsbasierte Ansichten nutzen weiterhin den Kalendermonat.
+>
+> Die Anderung wirkt ruckwirkend: vergangene Budgetzeitraume und die Historie werden entsprechend neu berechnet, ohne dass Ausgaben- oder Einnahmedaten verandert werden.
+>
+> Wahlst du einen Tag, den es nicht in jedem Monat gibt (z. B. 31), beginnt der Zeitraum in kurzeren Monaten einfach am letzten Tag (z. B. dem 28. oder 29. im Februar).
+
+Nur Eigentumer — Bearbeiter und Betrachter sehen die aktuelle Einstellung, konnen sie aber nicht andern.
 
 ### Mitglieder
 - Liste aller Kontomitglieder mit ihren Rollen

@@ -82,6 +82,23 @@ Tik op een account om de instellingen ervan te openen:
 ### Details
 - Account**naam** (bewerkbaar door de Eigenaar)
 - Account**type** en **valuta** (alleen weergave)
+- **Financiële maand** (alleen Eigenaar) — verandert wat "deze maand" betekent voor je budgetten
+
+### Financiële maand
+
+Standaard lopen budgetten op de kalendermaand (1e t/m de laatste dag). Als je salaris op een andere dag van de maand binnenkomt — bijvoorbeeld de 10e — kun je budgetten daar in plaats daarvan op laten aansluiten:
+
+1. Open Accountinstellingen en tik op de rij **Financiële maand** (toont "Kalendermaand" of "Maand begint op dag N")
+2. Kies in het geopende venster **Kalendermaand** om te resetten, of een dag van **1 tot en met 31**
+3. Tik op **Opslaan**
+
+> **Let op:** Dit heeft voorlopig alleen invloed op **budgetten** — hoe hun periodes worden berekend en welke uitgaven daarin meetellen. Analyses, rapporten en andere weergaven op maandbasis gebruiken nog steeds de kalendermaand.
+>
+> De wijziging werkt met terugwerkende kracht: eerdere budgetperiodes en de geschiedenis worden dienovereenkomstig herberekend, zonder dat er uitgave- of inkomstengegevens veranderen.
+>
+> Als je een dag kiest die niet in elke maand bestaat (bijvoorbeeld 31), begint de periode in kortere maanden gewoon op de laatste dag (bijvoorbeeld de 28e of 29e in februari).
+
+Alleen Eigenaar — Bewerkers en Kijkers zien de huidige instelling, maar kunnen deze niet wijzigen.
 
 ### Leden
 - Lijst van alle accountleden met hun rollen

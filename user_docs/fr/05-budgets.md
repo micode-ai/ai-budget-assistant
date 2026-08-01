@@ -82,6 +82,10 @@ La carte **Historique** affiche votre respect du budget sur les 6 dernières pé
 
 > **Conseil :** Utilisez la carte historique pour repérer les dépassements récurrents. Si vous voyez 3 à 4 barres rouges consécutives, envisagez d'augmenter la limite ou d'ajuster vos habitudes dans cette catégorie.
 
+## Mois financier (début de période personnalisé)
+
+Par défaut, les budgets mensuels suivent le mois calendaire. Si vos revenus arrivent en milieu de mois, le Propriétaire du compte peut décaler le jour de départ à la place — le jour 10, par exemple, fait courir la période d'un budget mensuel du 10 au 9 du mois suivant. Réglez cela dans **Paramètres du compte → Mois financier** (voir [Comptes](./09-accounts.md)). Le changement est rétroactif pour les périodes et l'historique passés, sans modifier aucune donnée de dépenses ou de revenus.
+
 ## Modifier un budget
 
 Appuyez sur l'**icône crayon** sur l'écran de détails du budget pour passer en mode édition :
