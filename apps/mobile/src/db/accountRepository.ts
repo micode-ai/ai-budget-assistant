@@ -13,6 +13,7 @@ interface AccountRow {
   trip_status: string | null;
   trip_start_date: number | null;
   trip_end_date: number | null;
+  month_anchor_day: number | null;
   created_at: number;
   updated_at: number;
 }
@@ -39,6 +40,7 @@ function rowToAccount(row: AccountRow): Account & { myRole: AccountRole } {
     tripStatus: row.trip_status ? (row.trip_status as TripStatus) : undefined,
     tripStartDate: row.trip_start_date ? new Date(row.trip_start_date).toISOString() : undefined,
     tripEndDate: row.trip_end_date ? new Date(row.trip_end_date).toISOString() : undefined,
+    monthAnchorDay: row.month_anchor_day ?? null,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
     myRole: row.my_role as AccountRole,
@@ -90,8 +92,8 @@ export async function insertAccount(
   await executeSql(
     `INSERT OR REPLACE INTO accounts (
       id, name, type, currency_code, owner_id, icon, is_active, my_role,
-      trip_status, trip_start_date, trip_end_date, created_at, updated_at, session_user_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      trip_status, trip_start_date, trip_end_date, month_anchor_day, created_at, updated_at, session_user_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       account.id,
       account.name,
@@ -104,6 +106,7 @@ export async function insertAccount(
       account.tripStatus ?? null,
       account.tripStartDate ? new Date(account.tripStartDate).getTime() : null,
       account.tripEndDate ? new Date(account.tripEndDate).getTime() : null,
+      account.monthAnchorDay ?? null,
       account.createdAt instanceof Date ? account.createdAt.getTime() : account.createdAt,
       account.updatedAt instanceof Date ? account.updatedAt.getTime() : account.updatedAt,
       sessionUserId ?? '',
@@ -145,6 +148,10 @@ export async function updateAccountInDb(
   if (updates.tripEndDate !== undefined) {
     setClauses.push('trip_end_date = ?');
     params.push(updates.tripEndDate ? new Date(updates.tripEndDate).getTime() : null);
+  }
+  if (updates.monthAnchorDay !== undefined) {
+    setClauses.push('month_anchor_day = ?');
+    params.push(updates.monthAnchorDay ?? null);
   }
 
   if (setClauses.length === 0) return;

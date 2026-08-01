@@ -627,6 +627,9 @@ export async function initializeDatabase(): Promise<void> {
     try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_start_date INTEGER`); } catch {}
     try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN trip_end_date INTEGER`); } catch {}
 
+    // Financial month anchor: null = calendar month
+    try { expoDb.execSync(`ALTER TABLE accounts ADD COLUMN month_anchor_day INTEGER`); } catch {}
+
     // Personal inflation index: canonical product name resolved from alias table
     try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN canonical_name TEXT`); } catch {}
 
