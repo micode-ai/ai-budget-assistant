@@ -1181,8 +1181,10 @@ export function resolveFinancialMonth(
  * one-file change if the anchor ever moves.
  */
 export function useFinancialMonth() {
-  const currentAccount = useAccountStore((s) => s.currentAccount);
-  const anchorRaw = currentAccount?.monthAnchorDay ?? null;
+  // currentAccount is a selector METHOD on accountStore, not a field -- every
+  // consumer calls it as s.currentAccount(). Reading it without the parens
+  // yields a function, so the anchor would silently resolve to null forever.
+  const anchorRaw = useAccountStore((s) => s.currentAccount()?.monthAnchorDay ?? null);
 
   return useMemo(
     () => resolveFinancialMonth({ monthAnchorDay: anchorRaw }, new Date()),
@@ -1196,7 +1198,7 @@ export function useFinancialMonth() {
 At `apps/mobile/src/stores/budgetStore.ts:453`, pass the anchor as the third argument. The store is not a component, so it reads the account directly:
 
 ```ts
-      const anchorDay = useAccountStore.getState().currentAccount?.monthAnchorDay ?? null;
+      const anchorDay = useAccountStore.getState().currentAccount()?.monthAnchorDay ?? null;
       const { periodStart, periodEnd } = computeBudgetPeriod(budget, now, anchorDay);
 ```
 
