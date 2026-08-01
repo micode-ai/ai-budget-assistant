@@ -1,9 +1,11 @@
 import { Test } from '@nestjs/testing';
+import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 import { AccountsService } from './accounts.service';
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { CreateAccountDto } from './dto';
+import { CreateAccountDto, UpdateAccountDto } from './dto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma: any = {
@@ -383,5 +385,28 @@ describe('AccountsService', () => {
       });
       expect(result).toHaveProperty('member');
     });
+  });
+});
+
+describe('UpdateAccountDto.monthAnchorDay', () => {
+  const check = async (value: unknown) => {
+    const dto = plainToInstance(UpdateAccountDto, { monthAnchorDay: value });
+    return validate(dto);
+  };
+
+  it('accepts 1, 10 and 31', async () => {
+    expect(await check(1)).toHaveLength(0);
+    expect(await check(10)).toHaveLength(0);
+    expect(await check(31)).toHaveLength(0);
+  });
+
+  it('accepts null to reset to the calendar month', async () => {
+    expect(await check(null)).toHaveLength(0);
+  });
+
+  it('rejects 0, 32 and non-integers', async () => {
+    expect((await check(0)).length).toBeGreaterThan(0);
+    expect((await check(32)).length).toBeGreaterThan(0);
+    expect((await check(10.5)).length).toBeGreaterThan(0);
   });
 });

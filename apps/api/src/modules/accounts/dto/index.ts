@@ -4,12 +4,14 @@ import {
   IsEnum,
   IsEmail,
   IsNumber,
+  IsInt,
   IsDateString,
   IsIn,
   MaxLength,
   Matches,
   Min,
   Max,
+  ValidateIf,
 } from 'class-validator';
 import type { SettleMethod } from '@budget/shared-types';
 
@@ -49,6 +51,14 @@ export class UpdateAccountDto {
   @IsOptional()
   @IsString()
   icon?: string;
+
+  /** 1..31, or explicit null to go back to the calendar month. */
+  @IsOptional()
+  @ValidateIf((_, value) => value !== null)
+  @IsInt()
+  @Min(1)
+  @Max(31)
+  monthAnchorDay?: number | null;
 }
 
 export class CreateInvitationDto {

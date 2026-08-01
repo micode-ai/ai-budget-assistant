@@ -12,6 +12,8 @@ export interface Account {
   tripStartDate?: string;
   tripEndDate?: string;
   tripStatus?: TripStatus;
+  /** 1..31, or null/undefined for the calendar month. See the financial-month util. */
+  monthAnchorDay?: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
