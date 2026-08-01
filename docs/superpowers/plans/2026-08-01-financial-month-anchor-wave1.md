@@ -515,17 +515,49 @@ In `apps/api/prisma/schema.prisma`, inside `model Account`, directly below `purc
   monthAnchorDay       Int?         @map("month_anchor_day")
 ```
 
-- [ ] **Step 2: Generate the migration**
+- [ ] **Step 2: Generate the migration WITHOUT a database**
 
-Run: `cd apps/api && npx prisma migrate dev --name add_account_month_anchor`
+**Do not run `prisma migrate dev`.** There is no local database in this repo — `apps/api/.env`
+points `DATABASE_URL` at `127.0.0.1:5433` and nothing listens there, so `migrate dev` fails with
+`P1001`. Migrations here are authored DB-free and applied against production by the deploy
+`migrator` (same approach as the `inflation_shield_recommendations` migration).
 
-Confirm the generated SQL is exactly one nullable column and no backfill:
+Generate the SQL by diffing the committed schema against your edited one — this needs no database:
 
-```sql
-ALTER TABLE "accounts" ADD COLUMN "month_anchor_day" INTEGER;
+```bash
+cd apps/api
+git show HEAD:apps/api/prisma/schema.prisma > /tmp/schema-old.prisma   # from repo root path
+npx prisma migrate diff \
+  --from-schema-datamodel /tmp/schema-old.prisma \
+  --to-schema-datamodel prisma/schema.prisma \
+  --script
 ```
 
-If it contains anything else, stop and investigate — a backfill would change existing accounts' behaviour, which this design forbids.
+This has been verified to output exactly:
+
+```sql
+-- AlterTable
+ALTER TABLE "accounts" ADD COLUMN     "month_anchor_day" INTEGER;
+```
+
+If it outputs anything else — especially a backfill, a `NOT NULL`, or a default — stop and report
+it. A backfill would change existing accounts' behaviour, which this design forbids.
+
+Create the migration directory by hand, following the naming of its neighbours in
+`apps/api/prisma/migrations/` (`<UTC timestamp>_<snake_case name>`), and write that SQL into it:
+
+```
+apps/api/prisma/migrations/20260801120000_add_account_month_anchor/migration.sql
+```
+
+Use a timestamp later than the newest existing migration (`20260727130000_add_user_payment_methods`).
+
+- [ ] **Step 2b: Regenerate the Prisma client**
+
+Run: `cd apps/api && npx prisma generate`
+
+This works without a database and is required — later tasks read `account.monthAnchorDay`
+through the typed client, and without this the field will not exist on the generated types.
 
 - [ ] **Step 3: Add the field to shared-types**
 
