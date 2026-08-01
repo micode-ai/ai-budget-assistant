@@ -410,3 +410,57 @@ describe('UpdateAccountDto.monthAnchorDay', () => {
     expect((await check(10.5)).length).toBeGreaterThan(0);
   });
 });
+
+// The semantic heart of "reset to calendar month": AccountsService.update()
+// forwards `dto.monthAnchorDay` straight into the Prisma `data` payload
+// (accounts.service.ts, no field-by-field truthy filtering). A well-meaning
+// tidy-up that swapped that passthrough for a `if (dto.monthAnchorDay) ...`
+// guard would silently treat an explicit `null` as "field not sent" --
+// undefined is a Prisma no-op (anchor preserved), null clears the column --
+// and every other test in this file would stay green. These two assert the
+// actual `data` payload reaching Prisma, not just the DTO's own validation.
+describe('AccountsService.update — monthAnchorDay Prisma payload', () => {
+  let service: AccountsService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        AccountsService,
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: MailService, useValue: mockMailService },
+        { provide: NotificationsService, useValue: mockNotificationsService },
+      ],
+    }).compile();
+    service = module.get(AccountsService);
+
+    jest.clearAllMocks();
+    mockPrisma.accountMember.findUnique.mockResolvedValue({
+      accountId: 'account-1',
+      userId: 'user-1',
+      role: 'owner',
+    });
+    mockPrisma.account.update.mockResolvedValue({ id: 'account-1' });
+  });
+
+  it('omitting monthAnchorDay from the DTO sends undefined -- a Prisma no-op that preserves the existing anchor', async () => {
+    const dto = plainToInstance(UpdateAccountDto, { name: 'Renamed account' });
+    expect(dto.monthAnchorDay).toBeUndefined();
+
+    await service.update('account-1', 'user-1', dto);
+
+    expect(mockPrisma.account.update).toHaveBeenCalledTimes(1);
+    const { data } = mockPrisma.account.update.mock.calls[0][0];
+    expect(data.monthAnchorDay).toBeUndefined();
+  });
+
+  it('an explicit null in the DTO sends data.monthAnchorDay === null -- clears the anchor back to the calendar month', async () => {
+    const dto = plainToInstance(UpdateAccountDto, { monthAnchorDay: null });
+    expect(dto.monthAnchorDay).toBeNull();
+
+    await service.update('account-1', 'user-1', dto);
+
+    expect(mockPrisma.account.update).toHaveBeenCalledTimes(1);
+    const { data } = mockPrisma.account.update.mock.calls[0][0];
+    expect(data.monthAnchorDay).toBeNull();
+  });
+});
