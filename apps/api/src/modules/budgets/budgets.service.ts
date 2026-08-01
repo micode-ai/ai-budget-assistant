@@ -297,6 +297,19 @@ export class BudgetsService {
     return results.reverse();
   }
 
+  /**
+   * Resolves an account's financial-month anchor day straight from the DB, for
+   * callers that have an accountId but no HTTP request in scope (e.g. the AI
+   * chat tool dispatcher) and so cannot read req.monthAnchorDay.
+   */
+  async getAccountAnchorDay(accountId: string): Promise<number | null> {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { monthAnchorDay: true },
+    });
+    return account?.monthAnchorDay ?? null;
+  }
+
   async getProgress(accountId: string, id: string, anchorDay: number | null = null) {
     const budget = await this.findOne(accountId, id);
 

@@ -780,12 +780,16 @@ export class AiToolsService {
       return { value: val, currency: from };
     };
 
+    // No HTTP request reaches this dispatcher, so the anchor is resolved from
+    // the account row directly — same reasoning as BudgetAlertService — so the
+    // chat answer agrees with what the budget screen shows for an anchored account.
+    const anchorDay = await this.budgetsService.getAccountAnchorDay(accountId);
+
     const progressList = await Promise.all(
       targetBudgets.map(async (b: any) => {
         const cur = b.currencyCode;
         try {
-          // No HTTP request context here (AI tool dispatch) — anchor unresolved, use calendar month.
-          const progress = await this.budgetsService.getProgress(accountId, b.id, null);
+          const progress = await this.budgetsService.getProgress(accountId, b.id, anchorDay);
           return {
             name: b.name,
             amount: conv(Number(b.amount), cur).value,

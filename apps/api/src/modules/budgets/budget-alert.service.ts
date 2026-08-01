@@ -40,8 +40,9 @@ export class BudgetAlertService {
   }
 
   private async checkBudgetThresholds(accountId: string, budget: any): Promise<void> {
-    // Cron context — no HTTP request, so the anchor comes from the budget's own
-    // account relation (included above), not req.monthAnchorDay.
+    // No request is threaded into this method (it's invoked fire-and-forget
+    // from ExpensesController, not from a @Cron job), so the anchor comes from
+    // the budget's own account relation (included above), not req.monthAnchorDay.
     const { periodStart, periodEnd } = computeBudgetPeriod(
       budget,
       undefined,

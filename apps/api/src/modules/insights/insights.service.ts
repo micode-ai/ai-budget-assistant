@@ -139,8 +139,7 @@ export class InsightsService {
 
     for (const budget of budgets) {
       try {
-        // No HTTP request context here (batch prediction job) — anchor unresolved, use calendar month.
-        const progress = await this.budgetsService.getProgress(accountId, budget.id, null);
+        const progress = await this.budgetsService.getProgress(accountId, budget.id);
         predictions.push({
           budgetId: budget.id,
           budgetName: budget.name,
