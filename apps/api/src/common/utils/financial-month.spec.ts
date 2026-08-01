@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { financialMonth, shiftFinancialMonth, normalizeAnchorDay } from './financial-month';
 
 describe('normalizeAnchorDay', () => {
@@ -108,5 +110,100 @@ describe('shiftFinancialMonth', () => {
     const ref = shiftFinancialMonth(new Date(2026, 7, 15), 0, 10);
     const { start } = financialMonth(ref, 10);
     expect(start).toEqual(new Date(2026, 7, 10, 0, 0, 0, 0));
+  });
+});
+
+describe('mirror drift guard (apps/api vs packages/shared-utils)', () => {
+  // This file and packages/shared-utils/src/formatting/financial-month.ts are
+  // deliberate copies -- the API cannot import shared-utils at runtime (see
+  // this file's header + scripts/check-no-shared-utils-runtime-import.sh), so
+  // mobile gets its own copy. They must stay identical from
+  // `export function normalizeAnchorDay` through the end of
+  // `shiftFinancialMonth`; the shared-utils copy is then allowed to append a
+  // mobile-only `formatFinancialMonth`, and the two header comments are
+  // allowed to word their cross-reference differently.
+  //
+  // Reading both files with `fs` here is a test-time file read, not a runtime
+  // import of @budget/shared-utils -- it does not violate the
+  // no-shared-utils-runtime-import rule, which only forbids the application
+  // code importing the package.
+  //
+  // Nothing else catches drift mechanically today: this wave already shipped
+  // a mirror whose test table had 13 cases against the API's 16, caught only
+  // by a human reviewer. This test exists so the NEXT drift fails CI instead.
+
+  const API_FILE = path.resolve(__dirname, 'financial-month.ts');
+  const SHARED_UTILS_FILE = path.resolve(
+    __dirname,
+    '../../../../../packages/shared-utils/src/formatting/financial-month.ts',
+  );
+
+  const START_MARKER = 'export function normalizeAnchorDay';
+  const END_FN_MARKER = 'export function shiftFinancialMonth';
+
+  /**
+   * Slices out the shared portion of a financial-month.ts source: from the
+   * start of `normalizeAnchorDay` through the matching closing brace of
+   * `shiftFinancialMonth`. A brace-depth scan (rather than a fixed line range
+   * or a second string marker) keeps this correct regardless of what either
+   * file has before or after that block -- including the shared-utils file's
+   * trailing `formatFinancialMonth`.
+   */
+  function extractSharedPortion(source: string, label: string): string {
+    const startIdx = source.indexOf(START_MARKER);
+    if (startIdx === -1) {
+      throw new Error(`${label}: could not find "${START_MARKER}" -- has it been renamed?`);
+    }
+
+    const shiftIdx = source.indexOf(END_FN_MARKER, startIdx);
+    if (shiftIdx === -1) {
+      throw new Error(`${label}: could not find "${END_FN_MARKER}" -- has it been renamed?`);
+    }
+
+    const braceStart = source.indexOf('{', shiftIdx);
+    if (braceStart === -1) {
+      throw new Error(`${label}: "${END_FN_MARKER}" has no function body`);
+    }
+
+    let depth = 0;
+    let i = braceStart;
+    for (; i < source.length; i++) {
+      if (source[i] === '{') depth++;
+      else if (source[i] === '}') {
+        depth--;
+        if (depth === 0) break;
+      }
+    }
+    if (depth !== 0) {
+      throw new Error(`${label}: unbalanced braces while scanning "${END_FN_MARKER}"`);
+    }
+
+    return source.slice(startIdx, i + 1);
+  }
+
+  it('keeps normalizeAnchorDay..shiftFinancialMonth byte-identical between apps/api and packages/shared-utils', () => {
+    // Normalize CRLF -> LF before comparing: on a Windows checkout with
+    // core.autocrlf=true, one file can legitimately end up with different
+    // on-disk line endings than the other (git's diff/status normalize this
+    // transparently; a raw fs.readFileSync here does not) even though there
+    // is no real content drift. Comparing line endings would make this test
+    // flaky across OSes/checkout settings instead of catching real drift.
+    const apiSource = fs.readFileSync(API_FILE, 'utf8').replace(/\r\n/g, '\n');
+    const sharedUtilsSource = fs.readFileSync(SHARED_UTILS_FILE, 'utf8').replace(/\r\n/g, '\n');
+
+    const apiShared = extractSharedPortion(apiSource, 'apps/api copy');
+    const sharedUtilsShared = extractSharedPortion(sharedUtilsSource, 'shared-utils copy');
+
+    if (apiShared !== sharedUtilsShared) {
+      throw new Error(
+        'financial-month.ts mirrors have drifted: ' +
+          'apps/api/src/common/utils/financial-month.ts and ' +
+          'packages/shared-utils/src/formatting/financial-month.ts must be ' +
+          'byte-identical from "export function normalizeAnchorDay" through the ' +
+          'end of "shiftFinancialMonth". Update BOTH copies together.',
+      );
+    }
+
+    expect(apiShared).toBe(sharedUtilsShared);
   });
 });

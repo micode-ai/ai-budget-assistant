@@ -4,11 +4,14 @@
  * month runs 10 Aug - 9 Sep).
  *
  * MIRROR: packages/shared-utils/src/formatting/financial-month.ts holds a
- * byte-identical copy for mobile. The API cannot import shared-utils at
- * runtime (no build step; prod Node throws ERR_UNSUPPORTED_DIR_IMPORT -- see
- * ABA-252/253 and scripts/check-no-shared-utils-runtime-import.sh), so the
- * duplication is deliberate. Both copies are covered by the same case table;
- * change one, change the other.
+ * copy for mobile that is identical through the end of shiftFinancialMonth()
+ * (it then appends a mobile-only formatFinancialMonth() with no equivalent
+ * here). The API cannot import shared-utils at runtime (no build step; prod
+ * Node throws ERR_UNSUPPORTED_DIR_IMPORT -- see ABA-252/253 and
+ * scripts/check-no-shared-utils-runtime-import.sh), so the duplication is
+ * deliberate. Both copies are covered by the same case table through
+ * shiftFinancialMonth(); change one, change the other -- financial-month.spec.ts
+ * has a drift guard that fails CI if they diverge.
  *
  * All math is local-time on purpose. Moving to UTC would shift day boundaries.
  */
