@@ -29,6 +29,7 @@ export class AccountContextGuard implements CanActivate {
       where: {
         accountId_userId: { accountId, userId: req.user.id },
       },
+      include: { account: { select: { monthAnchorDay: true } } },
     });
 
     if (!membership) {
@@ -37,6 +38,9 @@ export class AccountContextGuard implements CanActivate {
 
     req.accountId = accountId;
     req.accountRole = membership.role as 'owner' | 'editor' | 'viewer';
+    // One indexed-FK join for one small column, so no service has to fetch the
+    // anchor itself. Crons have no request and read it from the account row.
+    req.monthAnchorDay = membership.account?.monthAnchorDay ?? null;
 
     return true;
   }

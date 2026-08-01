@@ -14,4 +14,6 @@ export interface AuthenticatedRequest extends Request {
   user: AuthenticatedUser;
   accountId: string;
   accountRole: AccountRole;
+  /** 1..31, or null for the calendar month. Set by AccountContextGuard. */
+  monthAnchorDay: number | null;
 }
