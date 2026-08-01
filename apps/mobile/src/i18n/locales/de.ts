@@ -645,6 +645,13 @@ export default {
       editor: 'Kann Ausgaben hinzufügen und bearbeiten',
       viewer: 'Kann nur Daten anzeigen',
     },
+    financialMonth: 'Finanzmonat',
+    financialMonthStartsOn: 'Monat beginnt an Tag {{day}}',
+    financialMonthCalendar: 'Kalendermonat (1.)',
+    financialMonthPickerTitle: 'Finanzmonat beginnt am',
+    financialMonthHint:
+      'Wenn dein Gehalt am 10. eingeht, wähle 10 — Budgets und Berichte laufen dann vom 10. bis zum 9. des Folgemonats. Vergangene Zeiträume werden ebenfalls neu gruppiert; es werden keine Daten verändert.',
+    financialMonthClamped: 'In kürzeren Monaten beginnt der Zeitraum am letzten Tag.',
   },
   settings: {
     title: 'Einstellungen',

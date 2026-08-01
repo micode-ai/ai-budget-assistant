@@ -646,6 +646,13 @@ export default {
       editor: 'Can add and edit expenses',
       viewer: 'Can only view data',
     },
+    financialMonth: 'Financial month',
+    financialMonthStartsOn: 'Month starts on day {{day}}',
+    financialMonthCalendar: 'Calendar month (1st)',
+    financialMonthPickerTitle: 'Financial month starts on',
+    financialMonthHint:
+      'If your salary arrives on the 10th, set 10 — budgets and reports will run from the 10th to the 9th. Past periods are regrouped too; no data is changed.',
+    financialMonthClamped: 'In shorter months the period starts on the last day.',
   },
   settings: {
     title: 'Settings',

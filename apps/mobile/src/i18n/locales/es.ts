@@ -645,6 +645,13 @@ export default {
       editor: 'Puede agregar y editar gastos',
       viewer: 'Solo puede ver los datos',
     },
+    financialMonth: 'Mes financiero',
+    financialMonthStartsOn: 'El mes comienza el día {{day}}',
+    financialMonthCalendar: 'Mes calendario (día 1)',
+    financialMonthPickerTitle: 'El mes financiero comienza el',
+    financialMonthHint:
+      'Si tu salario llega el día 10, elige 10 — los presupuestos e informes irán del 10 al 9. Los períodos pasados también se reagrupan; no se modifica ningún dato.',
+    financialMonthClamped: 'En los meses más cortos, el período comienza el último día.',
   },
   settings: {
     title: 'Ajustes',
