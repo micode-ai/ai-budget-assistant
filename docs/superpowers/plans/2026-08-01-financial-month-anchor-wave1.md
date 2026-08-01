@@ -19,6 +19,7 @@
 - **Never use `date.setMonth(date.getMonth() + n)` to step months.** It overflows on the 29th–31st. Build the target explicitly from `(year, monthIndex + n)`.
 - **i18n keys go into all 9 locale files** (`en, de, es, fr, pl, ru, ua, be, nl`).
 - Wave 1 touches budgets only. Do not modify analytics, home screen, story, fat-finder, or reports — those are waves 2 and 3.
+- **AMENDED 2026-08-01, after the final whole-branch review, with the human owner'''s explicit approval:** the two `budgetsService.getProgress` call sites in `insights.service.ts` and `story.service.ts` ARE in scope after all. They are not an analytics aggregate — they are literally the same method on the same budget as `GET /budgets/:id/progress`, so leaving them on calendar months is the cardinal "a single number must never be half-migrated" violation, not scope discipline. Everything else in those two files remains out of scope.
 
 ---
 
