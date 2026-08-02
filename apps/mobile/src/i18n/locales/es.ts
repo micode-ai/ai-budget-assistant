@@ -1965,6 +1965,7 @@ export default {
     merchantsDesc: 'Renombrar, fusionar o eliminar comercios',
     referenceData: 'Datos de referencia',
     referenceDataDesc: 'Categorías, comercios, etiquetas y proyectos',
+    accountsDesc: 'Cambiar de cuenta, miembros, mes financiero',
     tags: 'Etiquetas',
     tagsDesc: 'Crear, renombrar o eliminar etiquetas',
     projects: 'Proyectos',

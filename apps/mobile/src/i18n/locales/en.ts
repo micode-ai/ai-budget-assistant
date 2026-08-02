@@ -1969,6 +1969,7 @@ export default {
     merchantsDesc: 'Rename, merge, or remove merchants',
     referenceData: 'Reference data',
     referenceDataDesc: 'Categories, merchants, tags and projects',
+    accountsDesc: 'Switch accounts, invite members, financial month',
     tags: 'Tags',
     tagsDesc: 'Create, rename, or remove tags',
     projects: 'Projects',
