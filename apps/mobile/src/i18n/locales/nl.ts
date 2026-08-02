@@ -1965,6 +1965,7 @@ export default {
     merchantsDesc: 'Verkopers hernoemen, samenvoegen of verwijderen',
     referenceData: 'Referentiegegevens',
     referenceDataDesc: 'Categorieën, verkopers, tags en projecten',
+    accountsDesc: 'Wisselen van account, leden, financiële maand',
     tags: 'Tags',
     tagsDesc: 'Tags aanmaken, hernoemen of verwijderen',
     projects: 'Projecten',

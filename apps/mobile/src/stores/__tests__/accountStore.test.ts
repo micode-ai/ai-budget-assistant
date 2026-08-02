@@ -41,6 +41,8 @@ jest.mock('../../services/secureStorage', () => ({
 jest.mock('../../services/api', () => ({
   api: {
     createAccount: jest.fn(),
+    updateAccount: jest.fn(),
+    deleteAccount: jest.fn(),
     setAccountIdGetter: jest.fn(),
   },
 }));
@@ -256,5 +258,86 @@ describe('accountStore canEdit', () => {
   it('is unaffected by tripStatus on non-trip accounts (field is undefined)', () => {
     setCurrentAccount({ type: 'shared', myRole: 'editor', tripStatus: undefined });
     expect(useAccountStore.getState().canEdit()).toBe(true);
+  });
+});
+
+// The SQLite read-back after a write returns nothing on web, where the DB client
+// is an in-memory no-op mock. Assigning that straight into state blanked the
+// account list and stranded the user on "Account not found" right after saving.
+// `loadAllAccounts` is already mocked to resolve `[]` here, so these tests run
+// under exactly that condition.
+describe('accountStore write paths survive an empty SQLite read-back (web)', () => {
+  const seeded = {
+    id: 'acc-1',
+    name: 'Personal',
+    type: 'personal',
+    currencyCode: 'PLN',
+    ownerId: 'user-1',
+    isActive: true,
+    myRole: 'owner',
+    monthAnchorDay: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (loadAllAccounts as jest.Mock).mockResolvedValue([]);
+    useAccountStore.setState({
+      accounts: [{ ...seeded } as any],
+      currentAccountId: 'acc-1',
+      members: {},
+      isLoading: false,
+      error: null,
+    });
+  });
+
+  it('keeps the account and applies the change after updateAccount', async () => {
+    (api.updateAccount as jest.Mock).mockResolvedValue({ ...seeded, monthAnchorDay: 10 });
+
+    await useAccountStore.getState().updateAccount('acc-1', { monthAnchorDay: 10 } as any);
+
+    const { accounts } = useAccountStore.getState();
+    expect(accounts).toHaveLength(1);
+    expect(accounts[0].id).toBe('acc-1');
+    expect((accounts[0] as any).monthAnchorDay).toBe(10);
+    expect(accounts[0].myRole).toBe('owner');
+  });
+
+  it('keeps the other accounts after deleteAccount removes one', async () => {
+    useAccountStore.setState({
+      accounts: [{ ...seeded } as any, { ...seeded, id: 'acc-2', name: 'Family' } as any],
+      currentAccountId: 'acc-1',
+    });
+    (api.deleteAccount as jest.Mock).mockResolvedValue(undefined);
+
+    await useAccountStore.getState().deleteAccount('acc-2');
+
+    const { accounts } = useAccountStore.getState();
+    expect(accounts.map((a) => a.id)).toEqual(['acc-1']);
+  });
+
+  it('adds the new account after createAccount instead of blanking the list', async () => {
+    (api.createAccount as jest.Mock).mockResolvedValue({
+      ...seeded,
+      id: 'acc-3',
+      name: 'Business',
+    });
+
+    await useAccountStore.getState().createAccount({ name: 'Business' } as any);
+
+    const { accounts } = useAccountStore.getState();
+    expect(accounts.map((a) => a.id).sort()).toEqual(['acc-1', 'acc-3']);
+  });
+
+  it('still prefers SQLite when it actually returns rows (native)', async () => {
+    (loadAllAccounts as jest.Mock).mockResolvedValue([
+      { ...seeded, name: 'From SQLite', monthAnchorDay: 10 },
+    ]);
+    (api.updateAccount as jest.Mock).mockResolvedValue({ ...seeded, monthAnchorDay: 10 });
+
+    await useAccountStore.getState().updateAccount('acc-1', { monthAnchorDay: 10 } as any);
+
+    expect(useAccountStore.getState().accounts[0].name).toBe('From SQLite');
   });
 });

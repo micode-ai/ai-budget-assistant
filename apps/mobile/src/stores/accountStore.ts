@@ -101,6 +101,27 @@ function toAccountWithRole(
   };
 }
 
+/**
+ * Read the account list back from SQLite after a write.
+ *
+ * On web `db/client.web.ts` is an in-memory no-op mock, so the read-back comes
+ * back empty no matter what was just written. Assigning that straight into
+ * state blanks the account list — which is what stranded users on
+ * "Account not found" immediately after saving an account setting. Every write
+ * path here has that shape, so they all go through this.
+ *
+ * `whenEmpty` is the caller's own answer for that case, built from what it
+ * already knows: the row the API just returned, or the previous list with the
+ * write applied.
+ */
+async function readBackAccounts(
+  userId: string | undefined,
+  whenEmpty: () => (Account & { myRole: AccountRole })[],
+): Promise<(Account & { myRole: AccountRole })[]> {
+  const local = await loadAllAccounts(userId);
+  return local.length > 0 ? local : whenEmpty();
+}
+
 // Pure helper: days remaining until an active trip's end date. Returns null
 // for non-trip accounts, non-active trips, or accounts missing tripEndDate.
 export function getTripDaysLeft(account: {
@@ -250,7 +271,10 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       const userId = await getCurrentUserId();
       await insertAccount(newAccount, 'owner', userId ?? undefined);
 
-      const localAccounts = await loadAllAccounts(userId ?? undefined);
+      const localAccounts = await readBackAccounts(userId ?? undefined, () => [
+        ...get().accounts,
+        toAccountWithRole({ ...newAccount, myRole: 'owner' }, userId),
+      ]);
       set({ accounts: localAccounts, isLoading: false });
 
       return newAccount;
@@ -270,7 +294,11 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       await updateAccountInDb(id, updated);
 
       const userId = await getCurrentUserId();
-      const localAccounts = await loadAllAccounts(userId ?? undefined);
+      const localAccounts = await readBackAccounts(userId ?? undefined, () =>
+        get().accounts.map((a) =>
+          a.id === id ? toAccountWithRole({ ...updated, myRole: a.myRole }, userId) : a,
+        ),
+      );
       set({ accounts: localAccounts, isLoading: false });
     } catch (error) {
       set({
@@ -288,7 +316,9 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       await deleteAccountFromDb(id);
 
       const userId = await getCurrentUserId();
-      const localAccounts = await loadAllAccounts(userId ?? undefined);
+      const localAccounts = await readBackAccounts(userId ?? undefined, () =>
+        get().accounts.filter((a) => a.id !== id),
+      );
       const { currentAccountId } = get();
 
       set({
@@ -335,7 +365,10 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       const userId = await getCurrentUserId();
       await insertAccount(account, 'owner', userId ?? undefined);
 
-      const localAccounts = await loadAllAccounts(userId ?? undefined);
+      const localAccounts = await readBackAccounts(userId ?? undefined, () => [
+        ...get().accounts,
+        toAccountWithRole({ ...account, myRole: 'owner' }, userId),
+      ]);
       set({ accounts: localAccounts, isLoading: false });
       return account;
     } catch (error) {
@@ -448,7 +481,9 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     await deleteAccountFromDb(accountId);
 
     const userId = await getCurrentUserId();
-    const localAccounts = await loadAllAccounts(userId ?? undefined);
+    const localAccounts = await readBackAccounts(userId ?? undefined, () =>
+      get().accounts.filter((a) => a.id !== accountId),
+    );
     const { currentAccountId } = get();
 
     set({

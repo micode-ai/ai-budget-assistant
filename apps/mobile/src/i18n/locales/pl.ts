@@ -1969,6 +1969,7 @@ export default {
     merchantsDesc: 'Zmień nazwy, scal lub usuń sprzedawców',
     referenceData: 'Słowniki',
     referenceDataDesc: 'Kategorie, sprzedawcy, tagi i projekty',
+    accountsDesc: 'Przełączanie kont, członkowie, miesiąc finansowy',
     tags: 'Tagi',
     tagsDesc: 'Twórz, zmieniaj nazwy lub usuwaj tagi',
     projects: 'Projekty',

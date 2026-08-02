@@ -40,6 +40,15 @@ export default function SettingsIndexScreen() {
       route: '/settings/profile',
     },
     {
+      // Until this row existed, the accounts screen — and with it the financial
+      // month setting — was reachable only by opening the account pill in the
+      // header, which does not read as navigation.
+      icon: 'albums-outline',
+      label: t('accounts.manage'),
+      description: t('settingsNav.accountsDesc'),
+      route: '/account/list',
+    },
+    {
       icon: 'diamond-outline',
       label: t('subscription.managePlan'),
       description: t('settingsNav.subscriptionDesc'),
