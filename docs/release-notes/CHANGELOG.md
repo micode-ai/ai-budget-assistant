@@ -8,6 +8,28 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.16.0 — 2026-08-02
+
+**Financial month**
+- **Your month can now start on payday** — if your salary arrives on the 10th, set your account's financial month to start on the 10th and budgets run from the 10th to the 9th instead of the calendar month. Set it in Settings -> Accounts -> pick an account -> Financial Month. Account owners only, and each account has its own (ABA-383).
+- Budgets, their history, their alerts and the AI chat's budget answers all follow the same window, so they agree with each other.
+- The change is retroactive and purely a lens: past budget periods regroup to match, but none of your expense or income data is altered. Pick a day that some months don't have, like the 31st, and those months simply start on their last day.
+- **Fixed: budget history could skip a month.** Opening a budget's history on the 29th-31st dropped one month and showed the next one twice. This affected everyone, not just people using the new setting (ABA-383).
+
+**Adding transactions**
+- **Set the date while adding** — the new expense and new income forms now have a date field. Before, everything was saved as today and you had to open the transaction afterwards to correct the date (ABA-380).
+- **Change an expense's currency** — the amount row on an expense is now a value plus a currency chip, so you can relabel a transaction that was recorded in the wrong currency. It relabels; it never converts the amount (ABA-379).
+- **Fixed: every date picker was dead in the web app.** Tapping a date field did nothing at all on the web — new expense, new income, goal deadline, trip dates. All of them work now (ABA-381).
+
+**Fixes & reliability**
+- **Fixed: saving an account setting on the web emptied your account list** and left you on "Account not found". The same flaw affected creating, deleting and leaving accounts (ABA-385).
+- **Accounts are now in Settings.** The accounts screen was reachable only through the account name in the header, which made account settings hard to find at all (ABA-385).
+- The home budget card now shows which dates it covers, but only if your account uses a financial month other than the calendar one (ABA-385).
+- Product names read from scanned receipts now reach the server intact, so price history and the inflation index group the same product correctly instead of splitting it.
+- The AI backfill that tidies up product names now also sees items that never got a name, and matches its answers by product rather than by position in the list — which could previously attach the wrong name to a product.
+
+---
+
 ## 1.15.0 — 2026-07-27
 
 **Receipt splitting**
