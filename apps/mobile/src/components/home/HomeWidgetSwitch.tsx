@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Platform, ScrollView } from 'react-native
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, formatFinancialMonth } from '@budget/shared-utils';
 import type { WidgetKey } from '@/stores/widgetVisibilityStore';
 import type { DebtSummary } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -12,6 +12,7 @@ import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidge
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import type { UseHomeScreenDataReturn } from '@/hooks/useHomeScreenData';
+import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 
 export interface HomeWidgetContext {
   widgetVisibility: UseHomeScreenDataReturn['widgetVisibility'];
@@ -131,6 +132,17 @@ function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
   const styles = useStyles(createStyles);
   const { remaining, currency, totalBudget, budgetUsedPercent } = ctx;
 
+  // This card's figures already follow the account's financial month, but
+  // nothing said so — on an anchored account "monthly budget" silently meant
+  // something other than the calendar month. Label it, and only when the
+  // account actually departs from the calendar, so the common case gains no
+  // extra chrome.
+  const { anchorDay, current } = useFinancialMonth();
+  const periodRange =
+    anchorDay === null
+      ? null
+      : formatFinancialMonth(current.start, current.end, getIntlLocale()).range;
+
   const progressColor = budgetUsedPercent > 90
     ? theme.colors.danger
     : budgetUsedPercent > 70
@@ -143,7 +155,10 @@ function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
         <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
       </View>
       <View style={styles.cardHeader}>
-        <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
+        <View>
+          <Text style={styles.cardTitle}>{t('dashboard.monthlyBudget')}</Text>
+          {periodRange && <Text style={styles.cardSubtitle}>{periodRange}</Text>}
+        </View>
       </View>
       <View style={styles.budgetOverview}>
         <View style={styles.budgetAmount}>
@@ -381,6 +396,11 @@ const createStyles = (theme: Theme) => ({
   cardTitle: {
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
+  },
+  cardSubtitle: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: 2,
   },
   incomeExpenseRow: {
     flexDirection: 'row' as const,
