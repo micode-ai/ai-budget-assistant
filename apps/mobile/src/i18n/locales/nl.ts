@@ -645,6 +645,13 @@ export default {
       editor: 'Kan uitgaven toevoegen en bewerken',
       viewer: 'Kan alleen gegevens bekijken',
     },
+    financialMonth: 'Financiële maand',
+    financialMonthStartsOn: 'Maand begint op dag {{day}}',
+    financialMonthCalendar: 'Kalendermaand (1e)',
+    financialMonthPickerTitle: 'Financiële maand begint op',
+    financialMonthHint:
+      'Als je salaris op de 10e binnenkomt, kies dan 10 — budgetten en rapporten lopen dan van de 10e tot de 9e. Eerdere periodes worden ook opnieuw ingedeeld; er verandert geen data.',
+    financialMonthClamped: 'In kortere maanden begint de periode op de laatste dag.',
   },
   settings: {
     title: 'Instellingen',

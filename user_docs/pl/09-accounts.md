@@ -82,6 +82,23 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 ### Szczegoly
 - **Nazwa** konta (edytowalna przez Wlasciciela)
 - **Typ** i **waluta** konta (tylko do odczytu)
+- **Miesiac finansowy** (tylko Wlasciciel) — zmienia, co oznacza "ten miesiac" dla Twoich budzetow
+
+### Miesiac finansowy
+
+Domyslnie budzety dzialaja w miesiacu kalendarzowym (od 1. do ostatniego dnia). Jesli Twoja wyplata wplywa innego dnia miesiaca — na przyklad 10. — mozesz sprawic, by budzety podazaly za tym dniem:
+
+1. Otworz Ustawienia konta i dotknij wiersza **Miesiac finansowy** (pokazuje "Miesiac kalendarzowy" lub "Miesiac zaczyna sie dnia N")
+2. W otwartym arkuszu wybierz **Miesiac kalendarzowy**, aby zresetowac, lub dzien od **1 do 31**
+3. Dotknij **Zapisz**
+
+> **Uwaga:** Na razie dotyczy to tylko **budzetow** — sposobu obliczania ich okresow i tego, jakie wydatki sie do nich licza. Analityka, raporty i inne widoki oparte na miesiacach nadal uzywaja miesiaca kalendarzowego.
+>
+> Zmiana dziala wstecz: przeszle okresy budzetow i historia zostana odpowiednio przeliczone, bez zmiany danych wydatkow czy przychodow.
+>
+> Jesli wybierzesz dzien, ktory nie istnieje w kazdym miesiacu (np. 31), okres po prostu zacznie sie w ostatnim dniu krotszych miesiecy (np. 28 lub 29 lutego).
+
+Ten wiersz widzi tylko Wlasciciel — Edytorzy i Obserwatorzy w ogole go nie widza w Ustawieniach konta. Po ustawieniu miesiac finansowy i tak wplywa na okresy budzetow i historie, ktore widza wszyscy czlonkowie.
 
 ### Czlonkowie
 - Lista wszystkich czlonkow konta z ich rolami

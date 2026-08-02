@@ -1,9 +1,11 @@
 import { Test } from '@nestjs/testing';
+import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 import { AccountsService } from './accounts.service';
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { CreateAccountDto } from './dto';
+import { CreateAccountDto, UpdateAccountDto } from './dto';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockPrisma: any = {
@@ -383,5 +385,82 @@ describe('AccountsService', () => {
       });
       expect(result).toHaveProperty('member');
     });
+  });
+});
+
+describe('UpdateAccountDto.monthAnchorDay', () => {
+  const check = async (value: unknown) => {
+    const dto = plainToInstance(UpdateAccountDto, { monthAnchorDay: value });
+    return validate(dto);
+  };
+
+  it('accepts 1, 10 and 31', async () => {
+    expect(await check(1)).toHaveLength(0);
+    expect(await check(10)).toHaveLength(0);
+    expect(await check(31)).toHaveLength(0);
+  });
+
+  it('accepts null to reset to the calendar month', async () => {
+    expect(await check(null)).toHaveLength(0);
+  });
+
+  it('rejects 0, 32 and non-integers', async () => {
+    expect((await check(0)).length).toBeGreaterThan(0);
+    expect((await check(32)).length).toBeGreaterThan(0);
+    expect((await check(10.5)).length).toBeGreaterThan(0);
+  });
+});
+
+// The semantic heart of "reset to calendar month": AccountsService.update()
+// forwards `dto.monthAnchorDay` straight into the Prisma `data` payload
+// (accounts.service.ts, no field-by-field truthy filtering). A well-meaning
+// tidy-up that swapped that passthrough for a `if (dto.monthAnchorDay) ...`
+// guard would silently treat an explicit `null` as "field not sent" --
+// undefined is a Prisma no-op (anchor preserved), null clears the column --
+// and every other test in this file would stay green. These two assert the
+// actual `data` payload reaching Prisma, not just the DTO's own validation.
+describe('AccountsService.update — monthAnchorDay Prisma payload', () => {
+  let service: AccountsService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        AccountsService,
+        { provide: PrismaService, useValue: mockPrisma },
+        { provide: MailService, useValue: mockMailService },
+        { provide: NotificationsService, useValue: mockNotificationsService },
+      ],
+    }).compile();
+    service = module.get(AccountsService);
+
+    jest.clearAllMocks();
+    mockPrisma.accountMember.findUnique.mockResolvedValue({
+      accountId: 'account-1',
+      userId: 'user-1',
+      role: 'owner',
+    });
+    mockPrisma.account.update.mockResolvedValue({ id: 'account-1' });
+  });
+
+  it('omitting monthAnchorDay from the DTO sends undefined -- a Prisma no-op that preserves the existing anchor', async () => {
+    const dto = plainToInstance(UpdateAccountDto, { name: 'Renamed account' });
+    expect(dto.monthAnchorDay).toBeUndefined();
+
+    await service.update('account-1', 'user-1', dto);
+
+    expect(mockPrisma.account.update).toHaveBeenCalledTimes(1);
+    const { data } = mockPrisma.account.update.mock.calls[0][0];
+    expect(data.monthAnchorDay).toBeUndefined();
+  });
+
+  it('an explicit null in the DTO sends data.monthAnchorDay === null -- clears the anchor back to the calendar month', async () => {
+    const dto = plainToInstance(UpdateAccountDto, { monthAnchorDay: null });
+    expect(dto.monthAnchorDay).toBeNull();
+
+    await service.update('account-1', 'user-1', dto);
+
+    expect(mockPrisma.account.update).toHaveBeenCalledTimes(1);
+    const { data } = mockPrisma.account.update.mock.calls[0][0];
+    expect(data.monthAnchorDay).toBeNull();
   });
 });

@@ -82,6 +82,23 @@ Tap any account to open its settings:
 ### Details
 - Account **name** (editable by Owner)
 - Account **type** and **currency** (display only)
+- **Financial Month** (Owner only) — shift what "this month" means for your budgets
+
+### Financial Month
+
+By default, budgets run on the calendar month (1st to the last day). If your salary or main income arrives on a different day — say the 10th — you can make budgets follow that instead:
+
+1. Open Account Settings and tap the **Financial Month** row (shows "Calendar month" or "Month starts on day N")
+2. In the sheet that opens, pick **Calendar month** to reset, or a day from **1–31**
+3. Tap **Save**
+
+> **Note:** This only affects **budgets** for now — how their periods are calculated and which spending counts toward each one. Analytics, reports, and other month-based views still use the calendar month.
+>
+> Changing the day is retroactive: past budget periods and history are recalculated to match, but no expense or income data changes.
+>
+> If you pick a day that doesn't exist in every month (e.g. 31), the period simply starts on the last day of shorter months (e.g. the 28th or 29th in February).
+
+Visible only to the account Owner — Editors and Viewers don't see this row in Account Settings at all. Once it's set, though, the anchor still shapes the budget periods and history every member sees.
 
 ### Members
 - List of all account members with their roles

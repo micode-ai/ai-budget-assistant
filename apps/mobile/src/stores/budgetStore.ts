@@ -8,6 +8,7 @@ import { useCategoryStore } from './categoryStore';
 import { useExchangeRateStore } from './exchangeRateStore';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
+import { readAnchorDay } from '@/hooks/useFinancialMonth';
 import { filterConsumption } from '@/utils/consumption';
 import {
   loadAllBudgets,
@@ -450,7 +451,10 @@ export const useBudgetStore = create<BudgetState>()(
       const expenses = filterConsumption(useExpenseStore.getState().expenses).filter((e) => !e.isDeleted);
 
       const now = referenceDate ?? new Date();
-      const { periodStart, periodEnd } = computeBudgetPeriod(budget, now);
+      // Store, not a component — reads the anchor via the shared, unit-tested
+      // readAnchorDay() helper rather than useFinancialMonth (which is a hook).
+      const anchorDay = readAnchorDay();
+      const { periodStart, periodEnd } = computeBudgetPeriod(budget, now, anchorDay);
 
       // Filter expenses for this budget period and matching currency
       let periodExpenses = expenses.filter((e) => {

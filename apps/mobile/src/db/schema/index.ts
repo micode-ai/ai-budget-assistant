@@ -13,6 +13,7 @@ export const accounts = sqliteTable('accounts', {
   tripStatus: text('trip_status'), // 'active' | 'settling' | 'archived' (trip accounts only)
   tripStartDate: integer('trip_start_date', { mode: 'timestamp' }),
   tripEndDate: integer('trip_end_date', { mode: 'timestamp' }),
+  monthAnchorDay: integer('month_anchor_day'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });

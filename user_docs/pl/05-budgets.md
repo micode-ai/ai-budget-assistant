@@ -82,6 +82,10 @@ Karta **Historia** pokazuje, jak przestrzegałeś budżetu przez ostatnie 6 okre
 
 > **Wskazówka:** Używaj karty historii, aby wykryć powtarzające się wzorce nadmiernych wydatków. Jeśli widzisz 3–4 czerwone słupki z rzędu, rozważ podwyższenie limitu lub zmianę nawyków w tej kategorii.
 
+## Miesiąc finansowy (własny początek okresu)
+
+Domyślnie budżety miesięczne działają w miesiącu kalendarzowym. Jeśli Twój dochód wpływa w środku miesiąca, Właściciel konta może zamiast tego przesunąć dzień początkowy — np. dzień 10 sprawia, że okres budżetu miesięcznego biegnie od 10. do 9. dnia następnego miesiąca. Ustaw to w **Ustawienia konta → Miesiąc finansowy** (zobacz [Konta](./09-accounts.md)). Zmiana działa wstecz dla przeszłych okresów i historii, bez zmiany danych wydatków czy przychodów.
+
 ## Edytowanie budżetu
 
 Dotknij **ikony ołówka** na ekranie szczegółów budżetu, aby przejść do trybu edycji:

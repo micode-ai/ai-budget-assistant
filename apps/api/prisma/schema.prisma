@@ -291,6 +291,7 @@ model Account {
   createdAt         DateTime    @default(now()) @map("created_at")
   updatedAt         DateTime    @updatedAt @map("updated_at")
   purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
+  monthAnchorDay       Int?         @map("month_anchor_day")
   tripStartDate DateTime?   @db.Date @map("trip_start_date")
   tripEndDate   DateTime?   @db.Date @map("trip_end_date")
   tripStatus    TripStatus? @map("trip_status")

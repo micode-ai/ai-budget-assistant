@@ -13,6 +13,8 @@ export interface UpdateAccountDto {
   name?: string;
   currencyCode?: Currency;
   icon?: string;
+  /** 1..31, or explicit null to reset to the calendar month. See the financial-month util. */
+  monthAnchorDay?: number | null;
 }
 
 export interface CreateInvitationDto {

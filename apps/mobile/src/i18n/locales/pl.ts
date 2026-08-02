@@ -645,6 +645,13 @@ export default {
       editor: 'Może dodawać i edytować wydatki',
       viewer: 'Może tylko przeglądać dane',
     },
+    financialMonth: 'Miesiąc finansowy',
+    financialMonthStartsOn: 'Miesiąc zaczyna się {{day}}. dnia',
+    financialMonthCalendar: 'Miesiąc kalendarzowy (od 1.)',
+    financialMonthPickerTitle: 'Miesiąc finansowy zaczyna się',
+    financialMonthHint:
+      'Jeśli wypłata wpływa 10. dnia miesiąca, ustaw 10 — budżety i raporty będą liczone od 10. do 9. dnia następnego miesiąca. Poprzednie okresy również zostaną przeliczone; dane pozostają bez zmian.',
+    financialMonthClamped: 'W krótszych miesiącach okres zacznie się w ostatnim dniu.',
   },
   settings: {
     title: 'Ustawienia',

@@ -735,6 +735,10 @@ The **History** card shows how you've performed against this budget over the las
 
 > **Tip:** Use the history card to spot recurring overspend patterns. If you see 3–4 red bars in a row, consider raising the limit or adjusting your habits for that category.
 
+## Financial Month (Custom Period Start)
+
+By default, Monthly budgets run on the calendar month. If your income arrives mid-month, the account Owner can shift the start day instead — e.g. day 10 makes a monthly budget's period run the 10th to the 9th of the next month. Set it under **Account Settings → Financial Month** (see Accounts). The change applies retroactively to past periods and history, without altering any expense or income data.
+
 ## Editing a Budget
 
 Tap the **pencil icon** on the budget detail screen to switch to edit mode:
@@ -1273,6 +1277,23 @@ Tap any account to open its settings:
 ### Details
 - Account **name** (editable by Owner)
 - Account **type** and **currency** (display only)
+- **Financial Month** (Owner only) — shift what "this month" means for your budgets
+
+### Financial Month
+
+By default, budgets run on the calendar month (1st to the last day). If your salary or main income arrives on a different day — say the 10th — you can make budgets follow that instead:
+
+1. Open Account Settings and tap the **Financial Month** row (shows "Calendar month" or "Month starts on day N")
+2. In the sheet that opens, pick **Calendar month** to reset, or a day from **1–31**
+3. Tap **Save**
+
+> **Note:** This only affects **budgets** for now — how their periods are calculated and which spending counts toward each one. Analytics, reports, and other month-based views still use the calendar month.
+>
+> Changing the day is retroactive: past budget periods and history are recalculated to match, but no expense or income data changes.
+>
+> If you pick a day that doesn't exist in every month (e.g. 31), the period simply starts on the last day of shorter months (e.g. the 28th or 29th in February).
+
+Visible only to the account Owner — Editors and Viewers don't see this row in Account Settings at all. Once it's set, though, the anchor still shapes the budget periods and history every member sees.
 
 ### Members
 - List of all account members with their roles
@@ -5093,6 +5114,10 @@ iOS, Android, Web
 
 > **Совет:** Используйте карточку истории для выявления повторяющихся перерасходов. Если вы видите 3–4 красных столбца подряд, подумайте о повышении лимита или корректировке привычек для этой категории.
 
+## Финансовый месяц (свой день начала периода)
+
+По умолчанию месячные бюджеты считаются по календарному месяцу. Если доход приходит в середине месяца, Владелец счёта может сдвинуть день начала — например, день 10 сделает так, что период месячного бюджета будет идти с 10-го по 9-е число следующего месяца. Настройте это в **Настройках счёта → Финансовый месяц** (см. Счета). Изменение действует задним числом для прошлых периодов и истории, не меняя данные о расходах или доходах.
+
 ## Редактирование бюджета
 
 Нажмите **значок карандаша** на экране деталей бюджета для перехода в режим редактирования:
@@ -5631,6 +5656,23 @@ iOS, Android, Web
 ### Детали
 - **Название** счёта (редактируется Владельцем)
 - **Тип** счёта и **валюта** (только для просмотра)
+- **Финансовый месяц** (только Владелец) — меняет, что означает «этот месяц» для ваших бюджетов
+
+### Финансовый месяц
+
+По умолчанию бюджеты считаются по календарному месяцу (с 1-го по последний день). Если зарплата приходит в другой день месяца — например, 10-го — вы можете сделать так, чтобы бюджеты ориентировались на этот день:
+
+1. Откройте настройки счёта и нажмите на строку **Финансовый месяц** (показывает «Календарный месяц» или «Месяц начинается N-го числа»)
+2. В открывшемся окне выберите **Календарный месяц**, чтобы сбросить, или день от **1 до 31**
+3. Нажмите **Сохранить**
+
+> **Примечание:** Пока это влияет только на **бюджеты** — на то, как считаются их периоды и какие траты в них попадают. Аналитика, отчёты и другие представления по месяцам по-прежнему используют календарный месяц.
+>
+> Изменение действует задним числом: прошлые периоды бюджетов и история пересчитываются соответственно, но данные о расходах и доходах не меняются.
+>
+> Если вы выберете день, которого нет в каждом месяце (например, 31), период просто начнётся в последний день более коротких месяцев (например, 28 или 29 февраля).
+
+Эту строку видит только Владелец — Редакторы и Наблюдатели вообще не видят её в настройках счёта. При этом после настройки финансовый месяц всё равно влияет на периоды бюджетов и историю, которые видят все участники.
 
 ### Участники
 - Список всех участников счёта с их ролями
@@ -9449,6 +9491,10 @@ iOS, Android, Web
 
 > **Порада:** Використовуйте картку історії для виявлення повторюваних перевитрат. Якщо ви бачите 3–4 червоних стовпці поспіль, подумайте про підвищення ліміту або коригування звичок для цієї категорії.
 
+## Фінансовий місяць (власний початок періоду)
+
+За замовчуванням місячні бюджети рахуються за календарним місяцем. Якщо ваш дохід надходить у середині місяця, Власник рахунку може натомість зсунути день початку — наприклад, день 10 зробить так, що період місячного бюджету йтиме з 10-го по 9-е число наступного місяця. Налаштуйте це в **Налаштування рахунку → Фінансовий місяць** (див. Рахунки). Зміна діє заднім числом для минулих періодів та історії, не змінюючи дані про витрати чи доходи.
+
 ## Редагування бюджету
 
 Натисніть **іконку олівця** на екрані деталей бюджету для переходу в режим редагування:
@@ -9989,6 +10035,23 @@ iOS, Android, Web
 ### Деталі
 - **Назва** рахунку (може редагувати Власник)
 - **Тип** та **Валюта** рахунку (лише перегляд)
+- **Фінансовий місяць** (лише Власник) — змінює, що означає «цей місяць» для ваших бюджетів
+
+### Фінансовий місяць
+
+За замовчуванням бюджети рахуються за календарним місяцем (з 1-го по останній день). Якщо зарплата надходить в інший день місяця — наприклад, 10-го — ви можете зробити так, щоб бюджети орієнтувалися на цей день:
+
+1. Відкрийте налаштування рахунку і торкніться рядка **Фінансовий місяць** (показує «Календарний місяць» або «Місяць починається N-го числа»)
+2. У вікні, що відкриється, оберіть **Календарний місяць**, щоб скинути, або день від **1 до 31**
+3. Торкніться **Зберегти**
+
+> **Примітка:** Наразі це впливає лише на **бюджети** — на те, як рахуються їхні періоди і які витрати до них потрапляють. Аналітика, звіти та інші представлення за місяцями й надалі використовують календарний місяць.
+>
+> Зміна діє заднім числом: минулі періоди бюджетів та історія перераховуються відповідно, але дані про витрати й доходи не змінюються.
+>
+> Якщо ви оберете день, якого немає в кожному місяці (наприклад, 31), період просто почнеться в останній день коротших місяців (наприклад, 28 або 29 лютого).
+
+Цей рядок бачить лише Власник — Редактори та Спостерігачі взагалі не бачать його в налаштуваннях рахунку. Проте після налаштування фінансовий місяць все одно впливає на періоди бюджетів та історію, які бачать усі учасники.
 
 ### Учасники
 - Список усіх учасників рахунку з їхніми ролями
@@ -13753,6 +13816,10 @@ Karta **Historia** pokazuje, jak przestrzegałeś budżetu przez ostatnie 6 okre
 
 > **Wskazówka:** Używaj karty historii, aby wykryć powtarzające się wzorce nadmiernych wydatków. Jeśli widzisz 3–4 czerwone słupki z rzędu, rozważ podwyższenie limitu lub zmianę nawyków w tej kategorii.
 
+## Miesiąc finansowy (własny początek okresu)
+
+Domyślnie budżety miesięczne działają w miesiącu kalendarzowym. Jeśli Twój dochód wpływa w środku miesiąca, Właściciel konta może zamiast tego przesunąć dzień początkowy — np. dzień 10 sprawia, że okres budżetu miesięcznego biegnie od 10. do 9. dnia następnego miesiąca. Ustaw to w **Ustawienia konta → Miesiąc finansowy** (zobacz Konta). Zmiana działa wstecz dla przeszłych okresów i historii, bez zmiany danych wydatków czy przychodów.
+
 ## Edytowanie budżetu
 
 Dotknij **ikony ołówka** na ekranie szczegółów budżetu, aby przejść do trybu edycji:
@@ -14291,6 +14358,23 @@ Dotknij dowolne konto, aby otworzyc jego ustawienia:
 ### Szczegoly
 - **Nazwa** konta (edytowalna przez Wlasciciela)
 - **Typ** i **waluta** konta (tylko do odczytu)
+- **Miesiac finansowy** (tylko Wlasciciel) — zmienia, co oznacza "ten miesiac" dla Twoich budzetow
+
+### Miesiac finansowy
+
+Domyslnie budzety dzialaja w miesiacu kalendarzowym (od 1. do ostatniego dnia). Jesli Twoja wyplata wplywa innego dnia miesiaca — na przyklad 10. — mozesz sprawic, by budzety podazaly za tym dniem:
+
+1. Otworz Ustawienia konta i dotknij wiersza **Miesiac finansowy** (pokazuje "Miesiac kalendarzowy" lub "Miesiac zaczyna sie dnia N")
+2. W otwartym arkuszu wybierz **Miesiac kalendarzowy**, aby zresetowac, lub dzien od **1 do 31**
+3. Dotknij **Zapisz**
+
+> **Uwaga:** Na razie dotyczy to tylko **budzetow** — sposobu obliczania ich okresow i tego, jakie wydatki sie do nich licza. Analityka, raporty i inne widoki oparte na miesiacach nadal uzywaja miesiaca kalendarzowego.
+>
+> Zmiana dziala wstecz: przeszle okresy budzetow i historia zostana odpowiednio przeliczone, bez zmiany danych wydatkow czy przychodow.
+>
+> Jesli wybierzesz dzien, ktory nie istnieje w kazdym miesiacu (np. 31), okres po prostu zacznie sie w ostatnim dniu krotszych miesiecy (np. 28 lub 29 lutego).
+
+Ten wiersz widzi tylko Wlasciciel — Edytorzy i Obserwatorzy w ogole go nie widza w Ustawieniach konta. Po ustawieniu miesiac finansowy i tak wplywa na okresy budzetow i historie, ktore widza wszyscy czlonkowie.
 
 ### Czlonkowie
 - Lista wszystkich czlonkow konta z ich rolami
@@ -18053,6 +18137,10 @@ Die **Verlauf**-Karte zeigt, wie du dein Budget in den letzten 6 Zeiträumen ein
 
 > **Tipp:** Nutze die Verlaufskarte, um wiederkehrende Ausgabenmuster zu erkennen. Wenn du 3–4 rote Balken in Folge siehst, solltest du das Limit erhöhen oder deine Gewohnheiten in dieser Kategorie anpassen.
 
+## Finanzmonat (individueller Zeitraumbeginn)
+
+Standardmäßig laufen monatliche Budgets im Kalendermonat. Wenn dein Einkommen mitten im Monat eingeht, kann der Konto-Eigentümer stattdessen den Starttag verschieben — Tag 10 lässt den Zeitraum eines monatlichen Budgets z. B. vom 10. bis zum 9. des Folgemonats laufen. Stelle das unter **Kontoeinstellungen → Finanzmonat** ein (siehe Konten). Die Änderung gilt rückwirkend für vergangene Zeiträume und die Historie, ohne dass Ausgaben- oder Einnahmedaten verändert werden.
+
 ## Budget bearbeiten
 
 Tippe auf das **Bleistift-Symbol** auf dem Budgetdetailbildschirm, um in den Bearbeitungsmodus zu wechseln:
@@ -18591,6 +18679,23 @@ Tippe auf ein beliebiges Konto, um seine Einstellungen zu offnen:
 ### Details
 - Konto-**Name** (vom Eigentumer bearbeitbar)
 - Konto-**Typ** und **Wahrung** (nur Anzeige)
+- **Finanzmonat** (nur Eigentumer) — andert, was "dieser Monat" fur deine Budgets bedeutet
+
+### Finanzmonat
+
+Budgets laufen standardmassig im Kalendermonat (1. bis zum letzten Tag). Wenn dein Gehalt an einem anderen Tag eingeht — zum Beispiel am 10. — kannst du Budgets stattdessen daran ausrichten:
+
+1. Offne die Kontoeinstellungen und tippe auf die Zeile **Finanzmonat** (zeigt "Kalendermonat" oder "Monat beginnt an Tag N")
+2. Wahle im sich offnenden Sheet **Kalendermonat** zum Zurucksetzen oder einen Tag von **1-31**
+3. Tippe auf **Speichern**
+
+> **Hinweis:** Das betrifft vorerst nur **Budgets** — wie ihre Zeitraume berechnet werden und welche Ausgaben mitgezahlt werden. Analysen, Berichte und andere monatsbasierte Ansichten nutzen weiterhin den Kalendermonat.
+>
+> Die Anderung wirkt ruckwirkend: vergangene Budgetzeitraume und die Historie werden entsprechend neu berechnet, ohne dass Ausgaben- oder Einnahmedaten verandert werden.
+>
+> Wahlst du einen Tag, den es nicht in jedem Monat gibt (z. B. 31), beginnt der Zeitraum in kurzeren Monaten einfach am letzten Tag (z. B. dem 28. oder 29. im Februar).
+
+Nur der Eigentumer sieht diese Zeile — Bearbeiter und Betrachter sehen sie in den Kontoeinstellungen gar nicht. Einmal gesetzt, wirkt sich der Finanzmonat aber trotzdem auf die Budgetzeitraume und die Historie aus, die alle Mitglieder sehen.
 
 ### Mitglieder
 - Liste aller Kontomitglieder mit ihren Rollen
@@ -22328,6 +22433,10 @@ La tarjeta **Historial** muestra cómo has cumplido tu presupuesto durante los �
 
 > **Consejo:** Usa la tarjeta de historial para detectar patrones de gasto excesivo recurrentes. Si ves 3–4 barras rojas seguidas, considera aumentar el límite o ajustar tus hábitos en esa categoría.
 
+## Mes financiero (inicio de período personalizado)
+
+Por defecto, los presupuestos mensuales siguen el mes natural. Si tus ingresos llegan a mitad de mes, el Propietario de la cuenta puede desplazar el día de inicio en su lugar — por ejemplo, el día 10 hace que el período de un presupuesto mensual vaya del 10 al 9 del mes siguiente. Configúralo en **Ajustes de la cuenta → Mes financiero** (ver Cuentas). El cambio es retroactivo para los períodos e historial pasados, sin alterar ningún dato de gastos o ingresos.
+
 ## Editar un presupuesto
 
 Toca el **icono de lápiz** en la pantalla de detalles del presupuesto para cambiar al modo de edición:
@@ -22866,6 +22975,23 @@ Toca cualquier cuenta para abrir sus ajustes:
 ### Detalles
 - **Nombre** de la cuenta (editable por el Propietario)
 - **Tipo** de cuenta y **moneda** (solo visualizacion)
+- **Mes financiero** (solo Propietario) — cambia lo que "este mes" significa para tus presupuestos
+
+### Mes financiero
+
+Por defecto, los presupuestos siguen el mes natural (del 1 al ultimo dia). Si tu salario llega en otro dia del mes — por ejemplo, el 10 — puedes hacer que los presupuestos sigan ese dia en su lugar:
+
+1. Abre los Ajustes de la cuenta y toca la fila **Mes financiero** (muestra "Mes natural" o "El mes comienza el dia N")
+2. En la hoja que se abre, elige **Mes natural** para restablecer, o un dia del **1 al 31**
+3. Toca **Guardar**
+
+> **Nota:** Por ahora esto solo afecta a los **presupuestos** — como se calculan sus periodos y que gastos cuentan en cada uno. Analitica, informes y otras vistas basadas en meses siguen usando el mes natural.
+>
+> El cambio es retroactivo: los periodos y el historial de presupuestos pasados se recalculan, sin modificar ningun dato de gastos o ingresos.
+>
+> Si eliges un dia que no existe en todos los meses (por ejemplo, 31), el periodo simplemente comienza en el ultimo dia de los meses mas cortos (por ejemplo, el 28 o 29 en febrero).
+
+Esta fila solo la ve el Propietario — Editores y Observadores no la ven en absoluto en los Ajustes de la cuenta. Una vez configurado, el mes financiero igualmente determina los periodos y el historial de presupuestos que ven todos los miembros.
 
 ### Miembros
 - Lista de todos los miembros de la cuenta con sus roles
@@ -26592,6 +26718,10 @@ La carte **Historique** affiche votre respect du budget sur les 6 dernières pé
 
 > **Conseil :** Utilisez la carte historique pour repérer les dépassements récurrents. Si vous voyez 3 à 4 barres rouges consécutives, envisagez d'augmenter la limite ou d'ajuster vos habitudes dans cette catégorie.
 
+## Mois financier (début de période personnalisé)
+
+Par défaut, les budgets mensuels suivent le mois calendaire. Si vos revenus arrivent en milieu de mois, le Propriétaire du compte peut décaler le jour de départ à la place — le jour 10, par exemple, fait courir la période d'un budget mensuel du 10 au 9 du mois suivant. Réglez cela dans **Paramètres du compte → Mois financier** (voir Comptes). Le changement est rétroactif pour les périodes et l'historique passés, sans modifier aucune donnée de dépenses ou de revenus.
+
 ## Modifier un budget
 
 Appuyez sur l'**icône crayon** sur l'écran de détails du budget pour passer en mode édition :
@@ -27130,6 +27260,23 @@ Appuyez sur n'importe quel compte pour ouvrir ses parametres :
 ### Details
 - **Nom** du compte (modifiable par le Proprietaire)
 - **Type** et **devise** du compte (affichage uniquement)
+- **Mois financier** (Proprietaire uniquement) — change ce que "ce mois-ci" signifie pour vos budgets
+
+### Mois financier
+
+Par defaut, les budgets suivent le mois calendaire (du 1er au dernier jour). Si votre salaire arrive un autre jour du mois — par exemple le 10 — vous pouvez faire suivre vos budgets sur ce jour a la place :
+
+1. Ouvrez les Parametres du compte et appuyez sur la ligne **Mois financier** (affiche "Mois calendaire" ou "Le mois commence le jour N")
+2. Dans la feuille qui s'ouvre, choisissez **Mois calendaire** pour reinitialiser, ou un jour entre **1 et 31**
+3. Appuyez sur **Enregistrer**
+
+> **Remarque :** Pour l'instant, cela n'affecte que les **budgets** — la maniere dont leurs periodes sont calculees et quelles depenses comptent pour chacune. Les analyses, rapports et autres vues basees sur le mois utilisent toujours le mois calendaire.
+>
+> Le changement est retroactif : les periodes et l'historique des budgets passes sont recalcules en consequence, sans modifier aucune donnee de depenses ou de revenus.
+>
+> Si vous choisissez un jour qui n'existe pas dans tous les mois (par exemple 31), la periode commence simplement le dernier jour des mois plus courts (par exemple le 28 ou le 29 en fevrier).
+
+Seul le Proprietaire voit cette ligne — les Editeurs et Observateurs ne la voient pas du tout dans les Parametres du compte. Une fois configure, le mois financier continue neanmoins de determiner les periodes et l'historique de budget que tous les membres voient.
 
 ### Membres
 - Liste de tous les membres du compte avec leurs roles
@@ -30854,6 +31001,10 @@ iOS, Android, Web
 
 > **Парада:** Выкарыстоўвайце картку гісторыі для выяўлення паўтаральных перавыдаткаў. Калі вы бачыце 3–4 чырвоных слупкі запар, падумайце аб павышэнні ліміту або карэкціроўцы звычак для гэтай катэгорыі.
 
+## Фінансавы месяц (уласны пачатак перыяду)
+
+Па змаўчанні месячныя бюджэты лічацца па каляндарным месяцы. Калі ваш даход прыходзіць у сярэдзіне месяца, Уладальнік рахунку можа замест гэтага зрушыць дзень пачатку — напрыклад, дзень 10 зробіць так, што перыяд месячнага бюджэту будзе ісці з 10-га па 9-е лік наступнага месяца. Наладзьце гэта ў **Наладах рахунку → Фінансавы месяц** (гл. Рахункі). Змена дзейнічае заднім лікам для мінулых перыядаў і гісторыі, не змяняючы даныя пра выдаткі ці даходы.
+
 ## Рэдагаванне бюджэту
 
 Націсніце **значок аловак** на экране дэталей бюджэту для пераходу ў рэжым рэдагавання:
@@ -31392,6 +31543,23 @@ iOS, Android, Web
 ### Дэталі
 - **Назва** рахунку (рэдагуецца Уладальнікам)
 - **Тып** рахунку і **валюта** (толькі для прагляду)
+- **Фінансавы месяц** (толькі Уладальнік) — змяняе, што азначае «гэты месяц» для вашых бюджэтаў
+
+### Фінансавы месяц
+
+Па змаўчанні бюджэты лічацца па каляндарным месяцы (з 1-га па апошні дзень). Калі зарплата прыходзіць у іншы дзень месяца — напрыклад, 10-га — вы можаце зрабіць так, каб бюджэты арыентаваліся на гэты дзень:
+
+1. Адкрыйце налады рахунку і націсніце на радок **Фінансавы месяц** (паказвае «Каляндарны месяц» або «Месяц пачынаецца N-га ліку»)
+2. У акне, якое адкрыецца, абярыце **Каляндарны месяц**, каб скінуць, або дзень ад **1 да 31**
+3. Націсніце **Захаваць**
+
+> **Заўвага:** Пакуль гэта тычыцца толькі **бюджэтаў** — таго, як лічацца іх перыяды і якія выдаткі ў іх трапляюць. Аналітыка, справаздачы і іншыя прадстаўленні па месяцах па-ранейшаму выкарыстоўваюць каляндарны месяц.
+>
+> Змена дзейнічае заднім лікам: мінулыя перыяды бюджэтаў і гісторыя пераразлічваюцца адпаведна, але даныя пра выдаткі і даходы не змяняюцца.
+>
+> Калі вы абярэце дзень, якога няма ў кожным месяцы (напрыклад, 31), перыяд проста пачнецца ў апошні дзень карацейшых месяцаў (напрыклад, 28 або 29 лютага).
+
+Гэты радок бачыць толькі Уладальнік — Рэдактары і Назіральнікі наогул не бачаць яго ў наладах рахунку. Пры гэтым пасля налады фінансавы месяц усё роўна ўплывае на перыяды бюджэтаў і гісторыю, якія бачаць усе ўдзельнікі.
 
 ### Удзельнікі
 - Спіс усіх удзельнікаў рахунку з іх ролямі
@@ -35076,6 +35244,10 @@ De kaart **Geschiedenis** toont hoe je het de afgelopen 6 perioden hebt gedaan t
 
 > **Tip:** Gebruik de geschiedeniskaart om terugkerende patronen van te veel uitgeven op te sporen. Als je 3–4 rode staven op rij ziet, overweeg dan de limiet te verhogen of je gewoonten voor die categorie aan te passen.
 
+## Financiële maand (eigen startdag van de periode)
+
+Standaard lopen maandelijkse budgetten op de kalendermaand. Als je inkomen halverwege de maand binnenkomt, kan de Eigenaar van het account in plaats daarvan de startdag verschuiven — dag 10 zorgt er bijvoorbeeld voor dat de periode van een maandelijks budget loopt van de 10e tot de 9e van de volgende maand. Stel dit in bij **Accountinstellingen → Financiële maand** (zie Accounts). De wijziging werkt met terugwerkende kracht voor eerdere periodes en de geschiedenis, zonder uitgave- of inkomstengegevens te veranderen.
+
 ## Een budget bewerken
 
 Tik op het **potloodpictogram** op het budgetdetailscherm om naar de bewerkmodus te schakelen:
@@ -35614,6 +35786,23 @@ Tik op een account om de instellingen ervan te openen:
 ### Details
 - Account**naam** (bewerkbaar door de Eigenaar)
 - Account**type** en **valuta** (alleen weergave)
+- **Financiële maand** (alleen Eigenaar) — verandert wat "deze maand" betekent voor je budgetten
+
+### Financiële maand
+
+Standaard lopen budgetten op de kalendermaand (1e t/m de laatste dag). Als je salaris op een andere dag van de maand binnenkomt — bijvoorbeeld de 10e — kun je budgetten daar in plaats daarvan op laten aansluiten:
+
+1. Open Accountinstellingen en tik op de rij **Financiële maand** (toont "Kalendermaand" of "Maand begint op dag N")
+2. Kies in het geopende venster **Kalendermaand** om te resetten, of een dag van **1 tot en met 31**
+3. Tik op **Opslaan**
+
+> **Let op:** Dit heeft voorlopig alleen invloed op **budgetten** — hoe hun periodes worden berekend en welke uitgaven daarin meetellen. Analyses, rapporten en andere weergaven op maandbasis gebruiken nog steeds de kalendermaand.
+>
+> De wijziging werkt met terugwerkende kracht: eerdere budgetperiodes en de geschiedenis worden dienovereenkomstig herberekend, zonder dat er uitgave- of inkomstengegevens veranderen.
+>
+> Als je een dag kiest die niet in elke maand bestaat (bijvoorbeeld 31), begint de periode in kortere maanden gewoon op de laatste dag (bijvoorbeeld de 28e of 29e in februari).
+
+Alleen de Eigenaar ziet deze rij — Bewerkers en Kijkers zien hem helemaal niet in de Accountinstellingen. Eenmaal ingesteld, bepaalt de financiële maand nog steeds de budgetperiodes en -geschiedenis die alle leden zien.
 
 ### Leden
 - Lijst van alle accountleden met hun rollen

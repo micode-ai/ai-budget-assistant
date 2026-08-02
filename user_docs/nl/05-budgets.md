@@ -82,6 +82,10 @@ De kaart **Geschiedenis** toont hoe je het de afgelopen 6 perioden hebt gedaan t
 
 > **Tip:** Gebruik de geschiedeniskaart om terugkerende patronen van te veel uitgeven op te sporen. Als je 3–4 rode staven op rij ziet, overweeg dan de limiet te verhogen of je gewoonten voor die categorie aan te passen.
 
+## Financiële maand (eigen startdag van de periode)
+
+Standaard lopen maandelijkse budgetten op de kalendermaand. Als je inkomen halverwege de maand binnenkomt, kan de Eigenaar van het account in plaats daarvan de startdag verschuiven — dag 10 zorgt er bijvoorbeeld voor dat de periode van een maandelijks budget loopt van de 10e tot de 9e van de volgende maand. Stel dit in bij **Accountinstellingen → Financiële maand** (zie [Accounts](./09-accounts.md)). De wijziging werkt met terugwerkende kracht voor eerdere periodes en de geschiedenis, zonder uitgave- of inkomstengegevens te veranderen.
+
 ## Een budget bewerken
 
 Tik op het **potloodpictogram** op het budgetdetailscherm om naar de bewerkmodus te schakelen:

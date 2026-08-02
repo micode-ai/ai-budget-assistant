@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
@@ -17,11 +19,16 @@ import type { AccountRole, AccountMember, AccountInvitation } from '@budget/shar
 import { api } from '@/services/api';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 
+// 1..31 — every possible financial-month anchor day. "Calendar month" (null)
+// is rendered as its own row above this list, not as a 0th entry here.
+const ANCHOR_DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+
 export default function AccountDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const {
     accounts,
     members,
@@ -47,6 +54,9 @@ export default function AccountDetailScreen() {
   const [name, setName] = useState(account?.name || '');
   const [invitations, setInvitations] = useState<AccountInvitation[]>([]);
   const [loadingInvitations, setLoadingInvitations] = useState(false);
+  const [showAnchorSheet, setShowAnchorSheet] = useState(false);
+  const [pendingAnchorDay, setPendingAnchorDay] = useState<number | null>(null);
+  const [savingAnchor, setSavingAnchor] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -82,6 +92,24 @@ export default function AccountDetailScreen() {
   }
 
   const isOwner = account.myRole === 'owner';
+
+  const openAnchorSheet = () => {
+    setPendingAnchorDay(account.monthAnchorDay ?? null);
+    setShowAnchorSheet(true);
+  };
+
+  const handleSaveAnchor = async () => {
+    if (!id) return;
+    setSavingAnchor(true);
+    try {
+      await updateAccount(id, { monthAnchorDay: pendingAnchorDay });
+      setShowAnchorSheet(false);
+    } catch (e) {
+      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    } finally {
+      setSavingAnchor(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!name.trim() || !id) return;
@@ -278,6 +306,28 @@ export default function AccountDetailScreen() {
           </View>
         </View>
 
+        {/* Financial month anchor (owner-only) */}
+        {isOwner && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('accounts.financialMonth')}</Text>
+            <View style={styles.card}>
+              <TouchableOpacity
+                style={styles.tripActionRow}
+                onPress={openAnchorSheet}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.tripActionText}>
+                  {account.monthAnchorDay
+                    ? t('accounts.financialMonthStartsOn', { day: account.monthAnchorDay })
+                    : t('accounts.financialMonthCalendar')}
+                </Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
         {/* Trip actions (only for trip accounts) */}
         {account.type === 'trip' && (
           <View style={styles.section}>
@@ -425,6 +475,73 @@ export default function AccountDetailScreen() {
           )}
         </View>
       </KeyboardAwareScreen>
+
+      {/* Financial month anchor picker */}
+      <Modal
+        visible={showAnchorSheet}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowAnchorSheet(false)}
+      >
+        <View style={styles.anchorOverlay}>
+          <TouchableOpacity
+            style={styles.anchorBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowAnchorSheet(false)}
+          />
+          <View style={[styles.anchorSheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
+            <View style={styles.anchorHandle} />
+            <Text style={styles.anchorTitle}>{t('accounts.financialMonthPickerTitle')}</Text>
+            <Text style={styles.anchorHint}>{t('accounts.financialMonthHint')}</Text>
+            {pendingAnchorDay !== null && pendingAnchorDay > 28 && (
+              <Text style={styles.anchorClamped}>{t('accounts.financialMonthClamped')}</Text>
+            )}
+            <ScrollView style={styles.anchorList} showsVerticalScrollIndicator={false}>
+              <TouchableOpacity
+                style={styles.anchorOption}
+                onPress={() => setPendingAnchorDay(null)}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.anchorOptionText}>{t('accounts.financialMonthCalendar')}</Text>
+                {pendingAnchorDay === null && (
+                  <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                )}
+              </TouchableOpacity>
+              <View style={styles.divider} />
+              {ANCHOR_DAYS.map((day) => (
+                <React.Fragment key={day}>
+                  <TouchableOpacity
+                    style={styles.anchorOption}
+                    onPress={() => setPendingAnchorDay(day)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.anchorOptionText}>{day}</Text>
+                    {pendingAnchorDay === day && (
+                      <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                  {day < 31 && <View style={styles.divider} />}
+                </React.Fragment>
+              ))}
+            </ScrollView>
+            <View style={styles.anchorActions}>
+              <TouchableOpacity
+                style={styles.anchorCancelButton}
+                onPress={() => setShowAnchorSheet(false)}
+              >
+                <Text style={styles.anchorCancelText}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.anchorSaveButton, savingAnchor && styles.anchorSaveButtonDisabled]}
+                onPress={handleSaveAnchor}
+                disabled={savingAnchor}
+              >
+                <Text style={styles.anchorSaveText}>{t('common.save')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -588,5 +705,92 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     textAlign: 'center' as const,
     paddingVertical: theme.spacing[3],
+  },
+
+  // Financial month anchor sheet
+  anchorOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end' as const,
+  },
+  anchorBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  anchorSheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius['2xl'],
+    borderTopRightRadius: theme.borderRadius['2xl'],
+    padding: theme.spacing[6],
+    maxHeight: '80%' as const,
+  },
+  anchorHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.border,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  anchorTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[2],
+  },
+  anchorHint: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[3],
+  },
+  anchorClamped: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.warning,
+    marginBottom: theme.spacing[3],
+  },
+  anchorList: {
+    marginBottom: theme.spacing[4],
+  },
+  anchorOption: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+  },
+  anchorOptionText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+  },
+  anchorActions: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  anchorCancelButton: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  anchorCancelText: {
+    fontSize: 16,
+    fontWeight: '500' as const,
+    color: theme.colors.textSecondary,
+  },
+  anchorSaveButton: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+  },
+  anchorSaveButtonDisabled: {
+    opacity: 0.6,
+  },
+  anchorSaveText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textInverse,
   },
 });

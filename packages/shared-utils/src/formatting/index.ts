@@ -1,4 +1,5 @@
 import type { Currency } from '@budget/shared-types';
+import { financialMonth } from './financial-month';
 
 // Currency formatting
 const currencyConfig: Record<Currency, { symbol: string; locale: string; position: 'before' | 'after' }> = {
@@ -173,6 +174,7 @@ export function formatCompactNumber(value: number): string {
 export function computeBudgetPeriod(
   budget: { period: string; startDate: Date | string; endDate?: Date | string | null },
   now: Date = new Date(),
+  anchorDay: number | null = null,
 ): { periodStart: Date; periodEnd: Date } {
   switch (budget.period) {
     case 'daily': {
@@ -193,8 +195,10 @@ export function computeBudgetPeriod(
         periodEnd: budget.endDate ? new Date(budget.endDate) : now,
       };
     case 'monthly':
-    default:
-      return { periodStart: getStartOfMonth(now), periodEnd: getEndOfMonth(now) };
+    default: {
+      const { start, end } = financialMonth(now, anchorDay);
+      return { periodStart: start, periodEnd: end };
+    }
   }
 }
 
@@ -219,6 +223,14 @@ export function sanitizeForPrompt(text: string, maxLength = 200): string {
     .replace(/\s{2,}/g, ' ')
     .trim();
 }
+
+// Financial month utilities
+export {
+  normalizeAnchorDay,
+  financialMonth,
+  shiftFinancialMonth,
+  formatFinancialMonth,
+} from './financial-month';
 
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile

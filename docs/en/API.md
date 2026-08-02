@@ -344,9 +344,12 @@ Content-Type: application/json
 
 {
   "name": "Updated Name",
-  "icon": "wallet"
+  "icon": "wallet",
+  "monthAnchorDay": 10
 }
 ```
+
+**Owner-only.** `monthAnchorDay` (1..31, or explicit `null` to reset) shifts the account's "financial month" for budget periods — e.g. `10` makes a budget's monthly period run the 10th to the 9th instead of the 1st to the last day. `null`/omitted means the calendar month. Setting it is retroactive: it re-buckets budget history for past periods too without changing any expense/income data. Anchor days above what a given month has (e.g. 31 in February) clamp to that month's last day. As of Wave 1 this only affects budgets (`GET /budgets/:id/progress`, `GET /budgets/:id/history`) — analytics, reports, and other month-based views still use the calendar month.
 
 ### Delete Account
 

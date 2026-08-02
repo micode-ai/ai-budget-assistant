@@ -82,6 +82,10 @@ La tarjeta **Historial** muestra cómo has cumplido tu presupuesto durante los �
 
 > **Consejo:** Usa la tarjeta de historial para detectar patrones de gasto excesivo recurrentes. Si ves 3–4 barras rojas seguidas, considera aumentar el límite o ajustar tus hábitos en esa categoría.
 
+## Mes financiero (inicio de período personalizado)
+
+Por defecto, los presupuestos mensuales siguen el mes natural. Si tus ingresos llegan a mitad de mes, el Propietario de la cuenta puede desplazar el día de inicio en su lugar — por ejemplo, el día 10 hace que el período de un presupuesto mensual vaya del 10 al 9 del mes siguiente. Configúralo en **Ajustes de la cuenta → Mes financiero** (ver [Cuentas](./09-accounts.md)). El cambio es retroactivo para los períodos e historial pasados, sin alterar ningún dato de gastos o ingresos.
+
 ## Editar un presupuesto
 
 Toca el **icono de lápiz** en la pantalla de detalles del presupuesto para cambiar al modo de edición:

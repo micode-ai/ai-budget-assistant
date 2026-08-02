@@ -133,6 +133,7 @@ export class AccountsService {
         name: dto.name,
         currencyCode: dto.currencyCode,
         icon: dto.icon,
+        monthAnchorDay: dto.monthAnchorDay,
       },
     });
   }

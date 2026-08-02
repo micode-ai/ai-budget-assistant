@@ -137,9 +137,14 @@ export class InsightsService {
       currencyCode: string;
     }> = [];
 
+    // Resolve once per account (not per budget) so every prediction in this
+    // list agrees with what GET /budgets/:id/progress reports for an
+    // anchored account — same reasoning as the AI chat tool dispatcher.
+    const anchorDay = await this.budgetsService.getAccountAnchorDay(accountId);
+
     for (const budget of budgets) {
       try {
-        const progress = await this.budgetsService.getProgress(accountId, budget.id);
+        const progress = await this.budgetsService.getProgress(accountId, budget.id, anchorDay);
         predictions.push({
           budgetId: budget.id,
           budgetName: budget.name,

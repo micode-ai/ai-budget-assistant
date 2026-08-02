@@ -44,12 +44,17 @@ export class BudgetsController {
     @Param('id') id: string,
     @Query('periods') periods?: string,
   ) {
-    return this.budgetsService.getHistory(req.accountId, id, periods ? parseInt(periods, 10) : 6);
+    return this.budgetsService.getHistory(
+      req.accountId,
+      id,
+      periods ? parseInt(periods, 10) : 6,
+      req.monthAnchorDay,
+    );
   }
 
   @Get(':id/progress')
   async getProgress(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.budgetsService.getProgress(req.accountId, id);
+    return this.budgetsService.getProgress(req.accountId, id, req.monthAnchorDay);
   }
 
   @Patch(':id')
