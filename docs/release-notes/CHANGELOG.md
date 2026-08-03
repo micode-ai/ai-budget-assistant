@@ -8,6 +8,15 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.16.1 — 2026-08-03
+
+**Fixes**
+- **Fixed: the spending audit and the spending story could be shown in the wrong currency.** Both picked the currency of a single transaction — the most recent one for the audit, the largest one for the story — so one small charge in another currency could make a whole zloty account read in dollars, with amounts of different currencies added together. Both now use your display currency (the pill on the home screen) and convert every amount into it first, so the totals actually add up. A report that was already generated in the wrong currency is rebuilt the next time you open it (ABA-386, ABA-387).
+- **Fixed: bank notification auto-capture invented expenses.** Any push from a connected bank app that merely contained a number and a currency became an expense — a crypto price alert like "up 5.32% in the past 2 hours, it's now $59,123.45" was booked as a 5.32 USD expense with the merchant "The Past 2 Hours. It's Now". Auto-capture now requires the notification to actually be about money leaving your account, ignores percentages, and skips declined payments, balance updates and rate alerts (ABA-387).
+- **Auto-capture now recognises "EUR"** written as a code and not as the € symbol, so card payments from banks outside Poland are captured instead of being silently ignored (ABA-387).
+
+---
+
 ## 1.16.0 — 2026-08-02
 
 **Financial month**
