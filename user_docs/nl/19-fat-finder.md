@@ -50,6 +50,10 @@ Elke bevindingskaart bevat:
 - **Actiesuggestie** — een concrete aanbeveling van één zin
 - **Gerelateerde uitgaven** — uitklapbare lijst van specifieke transacties die deze bevinding hebben veroorzaakt
 
+## Valuta
+
+Alle bedragen in de audit staan in je **weergavevaluta** — die je kiest in de valutachip op het startscherm. Uitgaven die in andere valuta zijn vastgelegd, worden voor de analyse tegen de koers van vandaag omgerekend, zodat het totaal en de besparingen vergelijkbaar zijn; het rapport meldt wanneer bedragen zijn omgerekend en dus benaderend zijn. Een enkele afschrijving in een andere valuta verandert niet langer de valuta van de hele audit: een account dat in zloty uitgeeft, wordt in zloty geauditeerd. Wijzig je je weergavevaluta, dan wordt de audit in de nieuwe valuta opnieuw gemaakt.
+
 ## Acties
 
 - **Opnieuw genereren** — forceer een nieuwe analyse met de nieuwste gegevens (kost 3 AI-verzoeken)

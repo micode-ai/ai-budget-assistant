@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Expenses & Income | AI Budget Assistant", "description": "View, add, and manage all your transactions. Switch between Expenses and Income tabs, with support for multiple currencies, categories, tags, projects, and expense splits.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-05-30", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Expenses & Income | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Expenses & Income | AI Budget Assistant", "description": "View, add, and manage all your transactions. Switch between Expenses and Income tabs, with support for multiple currencies, categories, tags, projects, and expense splits.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-07-29", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Expenses & Income | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -112,6 +112,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Tap the currency symbol to change currency (USD, EUR, PLN, GBP, UAH, RUB, BYN)</li>
 <li>Enter the <strong>amount</strong></li>
 <li>Enter a <strong>Description</strong> (e.g., &ldquo;What was this expense for?&rdquo;)</li>
+<li>Tap the <strong>Date</strong> — it&rsquo;s pre-filled with today; tap it to log the expense on an earlier day</li>
 <li>Select a <strong>Category</strong> from the chips:
    - Food &amp; Dining, Groceries, Transport, Shopping, Entertainment, Health &amp; Fitness, Bills &amp; Utilities, Education, Travel, Coffee &amp; Drinks, Subscriptions, Clothing, Personal Care
    - Tap the <strong>+</strong> button to create a custom category</li>
@@ -159,6 +160,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Tap the currency symbol to select your currency</li>
 <li>Enter the <strong>amount</strong></li>
 <li>Enter a <strong>Description</strong> (e.g., &ldquo;What was this income for?&rdquo;)</li>
+<li>Tap the <strong>Date</strong> — it&rsquo;s pre-filled with today; tap it to log the income on an earlier day</li>
 <li>Select a <strong>Category</strong>: Salary, Freelance, Investments, Gifts, or Other Income</li>
 <li>Add optional <strong>Notes</strong></li>
 <li>Tap <strong>Save Income</strong></li>
@@ -178,7 +180,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ul>
 <h3>Actions on expense details:</h3>
 <ul>
-<li><strong>Edit</strong> — modify the expense</li>
+<li><strong>Edit</strong> — modify the expense, including its <strong>currency</strong> (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)</li>
 <li><strong>Copy</strong> — create a duplicate</li>
 <li><strong>Delete</strong> — remove the expense (with confirmation)</li>
 </ul>
@@ -191,7 +193,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>
 <p><strong>Q: Can I add expenses in different currencies?</strong>
-  <strong>A:</strong> Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN.</p>
+  <strong>A:</strong> Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN. You can also change the currency of an expense you already saved — tap <strong>Edit</strong>, then tap the currency chip next to the amount. This only relabels the amount, it does not convert it.</p>
 </li>
 <li>
 <p><strong>Q: How do I edit an existing expense?</strong>

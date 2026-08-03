@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/accounts/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/accounts/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/accounts/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Konta | AI Budget Assistant", "description": "Organizuj swoje finanse za pomoca oddzielnych kont. Uzyj konta Osobistego do indywidualnego sledzenia, Wspolnego do budzetow rodzinnych i Firmowego do wydatkow sluzbowych. Zapraszaj czlonkow z kontrola dostepu oparta na rolach.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-07-05", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Konta | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/accounts/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Konta | AI Budget Assistant", "description": "Organizuj swoje finanse za pomoca oddzielnych kont. Uzyj konta Osobistego do indywidualnego sledzenia, Wspolnego do budzetow rodzinnych i Firmowego do wydatkow sluzbowych. Zapraszaj czlonkow z kontrola dostepu oparta na rolach.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-08-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Konta | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/accounts/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -176,7 +176,21 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li><strong>Nazwa</strong> konta (edytowalna przez Wlasciciela)</li>
 <li><strong>Typ</strong> i <strong>waluta</strong> konta (tylko do odczytu)</li>
+<li><strong>Miesiac finansowy</strong> (tylko Wlasciciel) — zmienia, co oznacza &ldquo;ten miesiac&rdquo; dla Twoich budzetow</li>
 </ul>
+<h3>Miesiac finansowy</h3>
+<p>Domyslnie budzety dzialaja w miesiacu kalendarzowym (od 1. do ostatniego dnia). Jesli Twoja wyplata wplywa innego dnia miesiaca — na przyklad 10. — mozesz sprawic, by budzety podazaly za tym dniem:</p>
+<ol>
+<li>Otworz Ustawienia konta i dotknij wiersza <strong>Miesiac finansowy</strong> (pokazuje &ldquo;Miesiac kalendarzowy&rdquo; lub &ldquo;Miesiac zaczyna sie dnia N&rdquo;)</li>
+<li>W otwartym arkuszu wybierz <strong>Miesiac kalendarzowy</strong>, aby zresetowac, lub dzien od <strong>1 do 31</strong></li>
+<li>Dotknij <strong>Zapisz</strong></li>
+</ol>
+<blockquote>
+<p><strong>Uwaga:</strong> Na razie dotyczy to tylko <strong>budzetow</strong> — sposobu obliczania ich okresow i tego, jakie wydatki sie do nich licza. Analityka, raporty i inne widoki oparte na miesiacach nadal uzywaja miesiaca kalendarzowego.</p>
+<p>Zmiana dziala wstecz: przeszle okresy budzetow i historia zostana odpowiednio przeliczone, bez zmiany danych wydatkow czy przychodow.</p>
+<p>Jesli wybierzesz dzien, ktory nie istnieje w kazdym miesiacu (np. 31), okres po prostu zacznie sie w ostatnim dniu krotszych miesiecy (np. 28 lub 29 lutego).</p>
+</blockquote>
+<p>Ten wiersz widzi tylko Wlasciciel — Edytorzy i Obserwatorzy w ogole go nie widza w Ustawieniach konta. Po ustawieniu miesiac finansowy i tak wplywa na okresy budzetow i historie, ktore widza wszyscy czlonkowie.</p>
 <h3>Czlonkowie</h3>
 <ul>
 <li>Lista wszystkich czlonkow konta z ich rolami</li>

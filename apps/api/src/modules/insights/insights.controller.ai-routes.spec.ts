@@ -60,7 +60,18 @@ describe('InsightsController — AI route dispatch', () => {
       storyService: { getSpendingStory: jest.fn().mockResolvedValue({ story: {}, isStale: false }) },
     });
     await ctrl.getSpendingStory(req, { period: undefined as any, forceRegenerate: true, language: 'ru', month: 7, year: 2026 });
-    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', true, 'ru', 'user-1', 7, 2026);
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', true, 'ru', 'user-1', 7, 2026, 'USD');
+  });
+
+  // ABA-387: the story is narrated in the caller's display currency, never in the
+  // currency of whichever expense row happened to be largest.
+  it('POST /insights/story forwards the user display currency', async () => {
+    const { ctrl, storyService } = buildController({
+      storyService: { getSpendingStory: jest.fn().mockResolvedValue({ story: {}, isStale: false }) },
+    });
+    const plReq: any = { accountId: 'acc-1', user: { id: 'user-1', currencyCode: 'PLN' } };
+    await ctrl.getSpendingStory(plReq, { period: 'month' });
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'month', undefined, undefined, 'user-1', undefined, undefined, 'PLN');
   });
 
   it('POST /insights/story passes through an explicit period', async () => {
@@ -68,7 +79,7 @@ describe('InsightsController — AI route dispatch', () => {
       storyService: { getSpendingStory: jest.fn().mockResolvedValue({ story: {}, isStale: false }) },
     });
     await ctrl.getSpendingStory(req, { period: 'week', forceRegenerate: false, language: 'en' });
-    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'week', false, 'en', 'user-1', undefined, undefined);
+    expect(storyService.getSpendingStory).toHaveBeenCalledWith('acc-1', 'week', false, 'en', 'user-1', undefined, undefined, 'USD');
   });
 
   it('POST /insights/fat-finder dispatches to FatFinderService.generateReport', async () => {
@@ -76,7 +87,18 @@ describe('InsightsController — AI route dispatch', () => {
       fatFinderService: { generateReport: jest.fn().mockResolvedValue({ report: {}, isStale: false }) },
     });
     await ctrl.getFatFinderReport(req, { forceRegenerate: true, language: 'de', month: 3, year: 2025 });
-    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', 'de', true, 'user-1', 3, 2025);
+    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', 'de', true, 'user-1', 3, 2025, 'USD');
+  });
+
+  // ABA-386: the audit must be labelled in the caller's display currency, never in the
+  // currency of whichever expense row happened to be newest.
+  it('POST /insights/fat-finder forwards the user display currency', async () => {
+    const { ctrl, fatFinderService } = buildController({
+      fatFinderService: { generateReport: jest.fn().mockResolvedValue({ report: {}, isStale: false }) },
+    });
+    const plReq: any = { accountId: 'acc-1', user: { id: 'user-1', currencyCode: 'PLN' } };
+    await ctrl.getFatFinderReport(plReq, {});
+    expect(fatFinderService.generateReport).toHaveBeenCalledWith('acc-1', undefined, undefined, 'user-1', undefined, undefined, 'PLN');
   });
 
   it('routes are independent — calling one AI route never touches the others', async () => {

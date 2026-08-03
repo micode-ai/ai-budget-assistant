@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Wydatki i przychody | AI Budget Assistant", "description": "Przegladaj, dodawaj i zarzadzaj wszystkimi transakcjami. Przelaczaj miedzy zakladkami Wydatki i Przychody, z obsluga wielu walut, kategorii, tagow, projektow i podzialu wydatkow.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-05-30", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Wydatki i przychody | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Wydatki i przychody | AI Budget Assistant", "description": "Przegladaj, dodawaj i zarzadzaj wszystkimi transakcjami. Przelaczaj miedzy zakladkami Wydatki i Przychody, z obsluga wielu walut, kategorii, tagow, projektow i podzialu wydatkow.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-07-29", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Wydatki i przychody | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -112,6 +112,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Dotknij symbolu waluty, aby zmienic walute (USD, EUR, PLN, GBP, UAH, RUB, BYN)</li>
 <li>Wprowadz <strong>kwote</strong></li>
 <li>Wprowadz <strong>Opis</strong> (np. &ldquo;Na co byl ten wydatek?&rdquo;)</li>
+<li>Dotknij <strong>Daty</strong> — jest wypełniona dzisiejszą datą; dotknij jej, aby zapisać wydatek z wcześniejszego dnia</li>
 <li>Wybierz <strong>Kategorie</strong> z dostepnych elementow:
    - Jedzenie i restauracje, Artykuly spozywcze, Transport, Zakupy, Rozrywka, Zdrowie i fitness, Rachunki i media, Edukacja, Podroze, Kawa i napoje, Subskrypcje, Odziez, Higiena osobista
    - Dotknij przycisk <strong>+</strong>, aby utworzyc wlasna kategorie</li>
@@ -159,6 +160,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Dotknij symbolu waluty, aby wybrac walute</li>
 <li>Wprowadz <strong>kwote</strong></li>
 <li>Wprowadz <strong>Opis</strong> (np. &ldquo;Skad pochodzi ten przychod?&rdquo;)</li>
+<li>Dotknij <strong>Daty</strong> — jest wypełniona dzisiejszą datą; dotknij jej, aby zapisać przychód z wcześniejszego dnia</li>
 <li>Wybierz <strong>Kategorie</strong>: Wynagrodzenie, Freelance, Inwestycje, Prezenty lub Inne przychody</li>
 <li>Dodaj opcjonalne <strong>Notatki</strong></li>
 <li>Dotknij <strong>Zapisz przychod</strong></li>
@@ -178,7 +180,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ul>
 <h3>Dostepne akcje w szczegolach wydatku:</h3>
 <ul>
-<li><strong>Edytuj</strong> — zmodyfikuj wydatek</li>
+<li><strong>Edytuj</strong> — zmodyfikuj wydatek, w tym jego <strong>walutę</strong> (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)</li>
 <li><strong>Kopiuj</strong> — utworz duplikat</li>
 <li><strong>Usun</strong> — usun wydatek (z potwierdzeniem)</li>
 </ul>
@@ -191,7 +193,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>
 <p><strong>P: Czy moge dodawac wydatki w roznych walutach?</strong>
-  <strong>O:</strong> Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN.</p>
+  <strong>O:</strong> Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN. Walutę już zapisanego wydatku też możesz zmienić — dotknij <strong>Edytuj</strong>, a następnie plakietki waluty obok kwoty. Zmienia to tylko oznaczenie kwoty, nie przelicza jej.</p>
 </li>
 <li>
 <p><strong>P: Jak edytowac istniejacy wydatek?</strong>

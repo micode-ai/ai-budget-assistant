@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Gastos e Ingresos | AI Budget Assistant", "description": "Visualiza, agrega y gestiona todas tus transacciones. Alterna entre las pestanas de Gastos e Ingresos, con soporte para multiples monedas, categorias, etiquetas, proyectos y division de gastos.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-05-30", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Gastos e Ingresos | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Gastos e Ingresos | AI Budget Assistant", "description": "Visualiza, agrega y gestiona todas tus transacciones. Alterna entre las pestanas de Gastos e Ingresos, con soporte para multiples monedas, categorias, etiquetas, proyectos y division de gastos.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-07-29", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Gastos e Ingresos | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -112,6 +112,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Toca el simbolo de moneda para cambiar la moneda (USD, EUR, PLN, GBP, UAH, RUB, BYN)</li>
 <li>Introduce el <strong>importe</strong></li>
 <li>Introduce una <strong>Descripcion</strong> (por ejemplo, &ldquo;Para que fue este gasto?&rdquo;)</li>
+<li>Toca la <strong>Fecha</strong> — viene rellenada con la de hoy; tócala para registrar el gasto en un día anterior</li>
 <li>Selecciona una <strong>Categoria</strong> de las fichas:
    - Comida y Restaurantes, Supermercado, Transporte, Compras, Entretenimiento, Salud y Fitness, Facturas y Servicios, Educacion, Viajes, Cafe y Bebidas, Suscripciones, Ropa, Cuidado personal
    - Toca el boton <strong>+</strong> para crear una categoria personalizada</li>
@@ -159,6 +160,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Toca el simbolo de moneda para seleccionar tu moneda</li>
 <li>Introduce el <strong>importe</strong></li>
 <li>Introduce una <strong>Descripcion</strong> (por ejemplo, &ldquo;De donde proviene este ingreso?&rdquo;)</li>
+<li>Toca la <strong>Fecha</strong> — viene rellenada con la de hoy; tócala para registrar el ingreso en un día anterior</li>
 <li>Selecciona una <strong>Categoria</strong>: Salario, Freelance, Inversiones, Regalos u Otros ingresos</li>
 <li>Agrega <strong>Notas</strong> opcionales</li>
 <li>Toca <strong>Guardar ingreso</strong></li>
@@ -178,7 +180,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ul>
 <h3>Acciones en los detalles del gasto:</h3>
 <ul>
-<li><strong>Editar</strong> — modificar el gasto</li>
+<li><strong>Editar</strong> — modificar el gasto, incluida su <strong>moneda</strong> (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)</li>
 <li><strong>Copiar</strong> — crear un duplicado</li>
 <li><strong>Eliminar</strong> — eliminar el gasto (con confirmacion)</li>
 </ul>
@@ -191,7 +193,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>
 <p><strong>P: Puedo agregar gastos en diferentes monedas?</strong>
-  <strong>R:</strong> Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN.</p>
+  <strong>R:</strong> Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN. También puedes cambiar la moneda de un gasto ya guardado: toca <strong>Editar</strong> y luego el chip de moneda junto al importe. Esto solo reetiqueta el importe, no lo convierte.</p>
 </li>
 <li>
 <p><strong>P: Como edito un gasto existente?</strong>

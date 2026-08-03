@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/accounts/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/accounts/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/accounts/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Accounts | AI Budget Assistant", "description": "Organize your finances with separate accounts. Use Personal for individual tracking, Shared for family budgets, and Business for company expenses. Invite members with role-based access control.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-07-05", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Accounts | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/accounts/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Accounts | AI Budget Assistant", "description": "Organize your finances with separate accounts. Use Personal for individual tracking, Shared for family budgets, and Business for company expenses. Invite members with role-based access control.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-08-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Accounts | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/accounts/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -176,7 +176,21 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li>Account <strong>name</strong> (editable by Owner)</li>
 <li>Account <strong>type</strong> and <strong>currency</strong> (display only)</li>
+<li><strong>Financial Month</strong> (Owner only) — shift what &ldquo;this month&rdquo; means for your budgets</li>
 </ul>
+<h3>Financial Month</h3>
+<p>By default, budgets run on the calendar month (1st to the last day). If your salary or main income arrives on a different day — say the 10th — you can make budgets follow that instead:</p>
+<ol>
+<li>Open Account Settings and tap the <strong>Financial Month</strong> row (shows &ldquo;Calendar month&rdquo; or &ldquo;Month starts on day N&rdquo;)</li>
+<li>In the sheet that opens, pick <strong>Calendar month</strong> to reset, or a day from <strong>1–31</strong></li>
+<li>Tap <strong>Save</strong></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> This only affects <strong>budgets</strong> for now — how their periods are calculated and which spending counts toward each one. Analytics, reports, and other month-based views still use the calendar month.</p>
+<p>Changing the day is retroactive: past budget periods and history are recalculated to match, but no expense or income data changes.</p>
+<p>If you pick a day that doesn&rsquo;t exist in every month (e.g. 31), the period simply starts on the last day of shorter months (e.g. the 28th or 29th in February).</p>
+</blockquote>
+<p>Visible only to the account Owner — Editors and Viewers don&rsquo;t see this row in Account Settings at all. Once it&rsquo;s set, though, the anchor still shapes the budget periods and history every member sees.</p>
 <h3>Members</h3>
 <ul>
 <li>List of all account members with their roles</li>

@@ -47,6 +47,10 @@ L'IA genere differents types de blocs d'aperçus :
 - **Aperçus comparatifs** avec les periodes precedentes
 - **Graphiques et visualisations** integres dans l'histoire
 
+## Devise
+
+L'histoire est racontee dans votre **devise d'affichage**, celle choisie dans la pastille de devise de l'ecran d'accueil. Les depenses, revenus et montants de budget enregistres dans d'autres devises y sont convertis au taux du jour avant la redaction, afin que les totaux soient coherents ; l'histoire signale quand les montants sont convertis et donc approximatifs. Une seule grosse operation dans une autre devise ne decide plus de la devise de toute l'histoire. Si vous changez de devise d'affichage, l'histoire est regeneree dans la nouvelle.
+
 ## Actions
 
 - **Regenerer** — appuyez pour generer une nouvelle histoire avec les donnees mises a jour

@@ -22,7 +22,7 @@ import {
   normalizeMerchantWithPLOverride,
   suggestCategoryFromMerchantPL,
 } from './merchants-pl';
-import { parseGeneric } from './generic';
+import { parseGeneric, looksLikeSpendNotification, maskPercentages } from './generic';
 
 export interface ParsedNotification {
   /** Numeric amount (always positive). */
@@ -58,6 +58,12 @@ export function parseNotification(
     const fullText = `${title}\n${text}`.trim();
     const template = TEMPLATES[packageName];
 
+    // The allow-list is per app, not per notification: a bank app also pushes price
+    // alerts, balance updates, marketing and declined-transaction notices. Gate BOTH
+    // paths here — six of the templates match any decimal number in the text, so a
+    // loan ad's "RRSO 8,99%" became an expense (ABA-387).
+    if (!looksLikeSpendNotification(fullText)) return null;
+
     let amount: number;
     let currencyCode: string;
     let merchant: string | null = null;
@@ -66,7 +72,9 @@ export function parseNotification(
       // ---------------------------------------------------------------
       // Path A: package-specific PL template
       // ---------------------------------------------------------------
-      const amountMatch = fullText.match(template.amountRegex);
+      // Percentages are masked out of the amount lookup only — merchant and currency
+      // matching below still read the original text.
+      const amountMatch = maskPercentages(fullText).match(template.amountRegex);
       if (!amountMatch || !amountMatch[1]) {
         // Template exists but didn't match — fall through to generic
         return _parseWithGeneric(title, text, postedAt);

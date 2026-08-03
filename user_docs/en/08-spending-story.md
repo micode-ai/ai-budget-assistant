@@ -47,6 +47,10 @@ The AI generates various types of insight blocks:
 - **Comparison insights** vs. previous periods
 - **Charts and visualizations** embedded in the story
 
+## Currency
+
+The story is told in your **display currency** — the one picked in the currency pill on the home screen. Expenses, income and budget figures recorded in other currencies are converted into it at today's rate before the story is written, so the totals add up; the story notes when figures are converted and therefore approximate. A single large charge in another currency no longer decides the currency of the whole story. Changing your display currency regenerates the story in the new one.
+
 ## Actions
 
 - **Regenerate** — tap to request a freshly generated story with updated data

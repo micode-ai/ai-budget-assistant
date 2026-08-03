@@ -50,6 +50,10 @@ Kazda karta odkrycia zawiera:
 - **Sugestia dzialania** — konkretna, jednozdaniowa rekomendacja
 - **Powiazane wydatki** — rozwijana lista konkretnych transakcji, ktore wywolaly to odkrycie
 
+## Waluta
+
+Wszystkie kwoty w audycie sa pokazywane w Twojej **walucie wyswietlania** — tej wybranej w chipie waluty na ekranie glownym. Wydatki zapisane w innych walutach sa przed analiza przeliczane na nia po dzisiejszym kursie, aby suma i oszczednosci byly porownywalne; raport zaznacza, kiedy kwoty sa przeliczone i tym samym przyblizone. Jedna transakcja w innej walucie nie zmienia juz waluty calego audytu — konto, ktore wydaje w zlotych, jest audytowane w zlotych. Zmiana waluty wyswietlania powoduje wygenerowanie audytu w nowej walucie.
+
 ## Akcje
 
 - **Wygeneruj ponownie** — wymus nowa analize z najnowszymi danymi (kosztuje 3 zapytania AI)

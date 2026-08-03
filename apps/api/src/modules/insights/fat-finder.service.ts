@@ -5,6 +5,26 @@ import { PrismaService } from '../../database/prisma.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
 import { getAiCostMultiplier } from '../ai/services/model-resolver';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { getRatesSafe, convertAmount } from '../../common/utils/fx';
+
+/** Mirrors FatFinderResponse in @budget/shared-types (which the API cannot import at runtime). */
+export interface FatFinderReportResult {
+  report: {
+    id: string;
+    accountId: string;
+    periodStart: string;
+    periodEnd: string;
+    findings: any[];
+    totalPotentialSavings: number;
+    currencyCode: string;
+    generatedAt: string;
+  };
+  isStale: boolean;
+  encryptionRestricted?: boolean;
+  fxConverted?: boolean;
+  fxApproximate?: boolean;
+}
 
 @Injectable()
 export class FatFinderService {
@@ -25,11 +45,13 @@ export class FatFinderService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly exchangeRateService: ExchangeRateService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
   }
+
 
   private async getEncryptionTier(accountId: string): Promise<number> {
     const account = await this.prisma.account.findUnique({
@@ -39,7 +61,21 @@ export class FatFinderService {
     return account?.encryptionTier ?? 0;
   }
 
-  async generateReport(accountId: string, language?: string, forceRegenerate = false, userId?: string, month?: number, year?: number) {
+  /**
+   * `baseCurrency` is the caller's display currency (user.currencyCode) — the report is
+   * labelled AND computed in it, with every expense FX-converted first. It must never be
+   * inferred from a single expense row: an account with 226 PLN charges and one 5 USD
+   * charge would otherwise be audited "in dollars" with the amounts summed blind (ABA-386).
+   */
+  async generateReport(
+    accountId: string,
+    language?: string,
+    forceRegenerate = false,
+    userId?: string,
+    month?: number,
+    year?: number,
+    baseCurrency = 'USD',
+  ): Promise<FatFinderReportResult> {
     const encryptionTier = await this.getEncryptionTier(accountId);
     if (encryptionTier >= 2) {
       return {
@@ -51,7 +87,7 @@ export class FatFinderService {
           periodEnd: new Date().toISOString(),
           findings: [],
           totalPotentialSavings: 0,
-          currencyCode: 'USD',
+          currencyCode: baseCurrency,
           generatedAt: new Date().toISOString(),
         },
         isStale: false,
@@ -76,7 +112,9 @@ export class FatFinderService {
         },
       });
 
-      if (cached && cached.expiresAt > now) {
+      // A report cached under a different display currency must be regenerated, not
+      // served — otherwise the caller reads someone else's currency label (ABA-386).
+      if (cached && cached.expiresAt > now && cached.currencyCode === baseCurrency) {
         return {
           report: this.mapReport(cached),
           isStale: false,
@@ -100,35 +138,67 @@ export class FatFinderService {
       orderBy: { date: 'desc' },
     });
 
+    const emptyReport = (fxApproximate: boolean) => ({
+      report: {
+        id: '',
+        accountId,
+        periodStart: currentMonthStart.toISOString(),
+        periodEnd: currentMonthEnd.toISOString(),
+        findings: [],
+        totalPotentialSavings: 0,
+        currencyCode: baseCurrency,
+        generatedAt: now.toISOString(),
+      },
+      isStale: false,
+      fxApproximate,
+    });
+
     if (expenses.length === 0) {
-      return {
-        report: {
-          id: '',
-          accountId,
-          periodStart: currentMonthStart.toISOString(),
-          periodEnd: currentMonthEnd.toISOString(),
-          findings: [],
-          totalPotentialSavings: 0,
-          currencyCode: 'USD',
-          generatedAt: now.toISOString(),
-        },
-        isStale: false,
-      };
+      return emptyReport(false);
+    }
+
+    // Normalize every amount into the display currency BEFORE any aggregation — the
+    // account may mix PLN/EUR/USD and the LLM only ever sees one currency label.
+    const needsFx = expenses.some(e => e.currencyCode !== baseCurrency);
+    const rates = needsFx ? await getRatesSafe(this.exchangeRateService, baseCurrency) : null;
+    let fxApproximate = false;
+    let fxConverted = false;
+
+    const analysis: { description: string; amount: number; date: Date; category: string }[] = [];
+    for (const e of expenses) {
+      const native = Number(e.amount);
+      const converted = convertAmount(native, e.currencyCode, baseCurrency, rates);
+      if (converted === null) {
+        // Unknown rate: exclude rather than mislabel it (wrapped/safe-to-spend convention).
+        fxApproximate = true;
+        continue;
+      }
+      if (e.currencyCode !== baseCurrency) fxConverted = true;
+      analysis.push({
+        description: e.description || 'Expense',
+        amount: converted,
+        date: e.date,
+        category: (e as any).category?.name || 'Uncategorized',
+      });
+    }
+
+    if (analysis.length === 0) {
+      return emptyReport(fxApproximate);
     }
 
     // Pre-detect patterns
-    const currentMonthExpenses = expenses.filter(e => e.date >= currentMonthStart);
-    const previousExpenses = expenses.filter(e => e.date < currentMonthStart);
-    const currencyCode = expenses[0].currencyCode;
+    const currentMonthExpenses = analysis.filter(e => e.date >= currentMonthStart);
+    const previousExpenses = analysis.filter(e => e.date < currentMonthStart);
+    const currencyCode = baseCurrency;
 
     // Detect possible subscriptions: same description recurring monthly
     const descriptionCounts = new Map<string, { count: number; amounts: number[]; dates: Date[] }>();
-    for (const e of expenses) {
-      const key = (e.description || '').toLowerCase().trim();
+    for (const e of analysis) {
+      const key = e.description.toLowerCase().trim();
       if (!key) continue;
       const existing = descriptionCounts.get(key) || { count: 0, amounts: [], dates: [] };
       existing.count++;
-      existing.amounts.push(Number(e.amount));
+      existing.amounts.push(e.amount);
       existing.dates.push(e.date);
       descriptionCounts.set(key, existing);
     }
@@ -149,14 +219,14 @@ export class FatFinderService {
       .slice(0, 10);
 
     // Detect large one-off expenses (> 2x average transaction)
-    const avgTransaction = expenses.reduce((sum, e) => sum + Number(e.amount), 0) / expenses.length;
+    const avgTransaction = analysis.reduce((sum, e) => sum + e.amount, 0) / analysis.length;
     const largeExpenses = currentMonthExpenses
-      .filter(e => Number(e.amount) > avgTransaction * 2)
+      .filter(e => e.amount > avgTransaction * 2)
       .map(e => ({
-        description: e.description || 'Expense',
-        amount: Number(e.amount),
+        description: e.description,
+        amount: e.amount,
         date: e.date.toISOString().split('T')[0],
-        category: (e as any).category?.name || 'Uncategorized',
+        category: e.category,
       }))
       .slice(0, 10);
 
@@ -164,13 +234,11 @@ export class FatFinderService {
     const monthsOfPrevData = Math.max(1, Math.ceil((currentMonthStart.getTime() - threeMonthsAgo.getTime()) / (30 * 24 * 60 * 60 * 1000)));
     const prevCategoryTotals = new Map<string, number>();
     for (const e of previousExpenses) {
-      const cat = (e as any).category?.name || 'Uncategorized';
-      prevCategoryTotals.set(cat, (prevCategoryTotals.get(cat) || 0) + Number(e.amount));
+      prevCategoryTotals.set(e.category, (prevCategoryTotals.get(e.category) || 0) + e.amount);
     }
     const currCategoryTotals = new Map<string, number>();
     for (const e of currentMonthExpenses) {
-      const cat = (e as any).category?.name || 'Uncategorized';
-      currCategoryTotals.set(cat, (currCategoryTotals.get(cat) || 0) + Number(e.amount));
+      currCategoryTotals.set(e.category, (currCategoryTotals.get(e.category) || 0) + e.amount);
     }
 
     const categoryTrends = Array.from(currCategoryTotals.entries())
@@ -184,14 +252,13 @@ export class FatFinderService {
     // Build grouped expenses by category
     const expensesByCategory = new Map<string, { description: string; amount: number; date: string }[]>();
     for (const e of currentMonthExpenses) {
-      const cat = (e as any).category?.name || 'Uncategorized';
-      const items = expensesByCategory.get(cat) || [];
-      items.push({ description: e.description || 'Expense', amount: Number(e.amount), date: e.date.toISOString().split('T')[0] });
-      expensesByCategory.set(cat, items);
+      const items = expensesByCategory.get(e.category) || [];
+      items.push({ description: e.description, amount: e.amount, date: e.date.toISOString().split('T')[0] });
+      expensesByCategory.set(e.category, items);
     }
 
-    const totalCurrentMonth = currentMonthExpenses.reduce((s, e) => s + Number(e.amount), 0);
-    const avgMonthly = expenses.reduce((s, e) => s + Number(e.amount), 0) / Math.max(1, Math.ceil((now.getTime() - threeMonthsAgo.getTime()) / (30 * 24 * 60 * 60 * 1000)));
+    const totalCurrentMonth = currentMonthExpenses.reduce((s, e) => s + e.amount, 0);
+    const avgMonthly = analysis.reduce((s, e) => s + e.amount, 0) / Math.max(1, Math.ceil((now.getTime() - threeMonthsAgo.getTime()) / (30 * 24 * 60 * 60 * 1000)));
 
     const languageName = FatFinderService.LANGUAGE_NAMES[language || 'en'] || 'English';
     const responseModeInstruction = getResponseModeInstruction(responseMode);
@@ -200,11 +267,24 @@ export class FatFinderService {
       ? '\nNOTE: This account has text-level encryption. Expense descriptions are encrypted. Focus on amounts and categories only.\n'
       : '';
 
+    const currencyNotice = [
+      `IMPORTANT: EVERY amount below is already expressed in ${currencyCode}. Write every amount you output in ${currencyCode} too — never relabel it as another currency and never use a currency symbol that does not belong to ${currencyCode}.`,
+      fxConverted
+        ? `Amounts originally recorded in other currencies were converted into ${currencyCode} at today's rate — note once that converted figures are approximate.`
+        : '',
+      fxApproximate
+        ? 'A few expenses were left out because no exchange rate was available for their currency — note once that the audit may be incomplete.'
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
+
     const prompt = `You are a personal finance advisor doing a monthly spending audit.
 ${encryptionNotice}
 ${responseModeInstruction}
 
 IMPORTANT: Write ALL content in ${languageName}.
+${currencyNotice}
 
 Analysis period: ${currentMonthStart.toISOString().split('T')[0]} to ${currentMonthEnd.toISOString().split('T')[0]}
 Total spent this month: ${totalCurrentMonth.toFixed(2)} ${currencyCode}
@@ -295,6 +375,8 @@ Return ONLY valid JSON: { "findings": [...], "totalPotentialSavings": number }`;
       return {
         report: this.mapReport(saved),
         isStale: false,
+        fxConverted,
+        fxApproximate,
       };
     } catch (error) {
       this.logger.error(`Failed to generate fat finder report: ${error}`);
@@ -310,6 +392,8 @@ Return ONLY valid JSON: { "findings": [...], "totalPotentialSavings": number }`;
           generatedAt: now.toISOString(),
         },
         isStale: false,
+        fxConverted,
+        fxApproximate,
       };
     }
   }

@@ -50,6 +50,10 @@ Each finding card includes:
 - **Action suggestion** — a concrete, one-sentence recommendation
 - **Related expenses** — expandable list of specific transactions that triggered this finding
 
+## Currency
+
+All amounts in the audit are shown in your **display currency** — the one picked in the currency pill on the home screen. Expenses recorded in other currencies are converted into it at today's rate before the analysis, so the total and the savings are comparable; the report says when figures are converted and therefore approximate. A single charge in another currency no longer relabels the whole audit — an account that spends in zlotys is audited in zlotys. Changing your display currency regenerates the audit in the new one.
+
 ## Actions
 
 - **Regenerate** — force a new analysis with the latest data (costs 3 AI requests)

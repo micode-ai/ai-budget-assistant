@@ -47,6 +47,10 @@ La IA genera varios tipos de bloques de informacion:
 - **Informacion comparativa** vs. periodos anteriores
 - **Graficos y visualizaciones** integrados en la historia
 
+## Moneda
+
+La historia se cuenta en tu **moneda de visualizacion**, la que eliges en el selector de moneda de la pantalla de inicio. Los gastos, ingresos y cifras de presupuesto registrados en otras monedas se convierten a ella al tipo de cambio de hoy antes de escribir la historia, para que los totales cuadren; la historia indica cuando las cifras estan convertidas y por tanto son aproximadas. Un solo cargo grande en otra moneda ya no decide la moneda de toda la historia. Si cambias tu moneda de visualizacion, la historia se regenera en la nueva.
+
 ## Acciones
 
 - **Regenerar** — toca para solicitar una historia recien generada con datos actualizados

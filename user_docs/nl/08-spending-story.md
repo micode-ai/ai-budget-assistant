@@ -47,6 +47,10 @@ De AI genereert verschillende soorten inzichtblokken:
 - **Vergelijkingsinzichten** ten opzichte van eerdere perioden
 - **Grafieken en visualisaties** ingebed in het verhaal
 
+## Valuta
+
+Het verhaal wordt verteld in je **weergavevaluta** — die je kiest in de valutachip op het startscherm. Uitgaven, inkomsten en budgetbedragen die in andere valuta zijn vastgelegd, worden voor het schrijven tegen de koers van vandaag omgerekend, zodat de totalen kloppen; het verhaal meldt wanneer bedragen zijn omgerekend en dus benaderend zijn. Een enkele grote afschrijving in een andere valuta bepaalt niet langer de valuta van het hele verhaal. Wijzig je je weergavevaluta, dan wordt het verhaal in de nieuwe valuta opnieuw gemaakt.
+
 ## Acties
 
 - **Opnieuw genereren** — tik om een vers gegenereerd verhaal met bijgewerkte gegevens aan te vragen

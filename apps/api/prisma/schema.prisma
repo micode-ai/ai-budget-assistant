@@ -1071,6 +1071,9 @@ model SpendingStory {
   periodEnd   DateTime @map("period_end") @db.Date
   blocks      Json     @db.JsonB
   summary     String
+  /// Display currency the narrated amounts are expressed in. Null on rows written
+  /// before ABA-387; such a row is regenerated instead of served from cache.
+  currencyCode String? @map("currency_code")
   createdAt   DateTime @default(now()) @map("created_at")
   expiresAt   DateTime @map("expires_at")
 

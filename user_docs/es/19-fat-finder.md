@@ -50,6 +50,10 @@ Cada tarjeta de hallazgo incluye:
 - **Sugerencia de accion** — una recomendacion concreta en una frase
 - **Gastos relacionados** — lista expandible de transacciones especificas que activaron este hallazgo
 
+## Moneda
+
+Todos los importes del informe se muestran en tu **moneda de visualizacion**, la que eliges en el selector de moneda de la pantalla de inicio. Los gastos registrados en otras monedas se convierten a ella al tipo de cambio de hoy antes del analisis, para que el total y los ahorros sean comparables; el informe indica cuando las cifras estan convertidas y por tanto son aproximadas. Un solo cargo en otra moneda ya no cambia la moneda de todo el informe: una cuenta que gasta en zlotys se audita en zlotys. Si cambias tu moneda de visualizacion, el informe se regenera en la nueva.
+
 ## Acciones
 
 - **Regenerar** — fuerza un nuevo analisis con los datos mas recientes (cuesta 3 solicitudes de IA)

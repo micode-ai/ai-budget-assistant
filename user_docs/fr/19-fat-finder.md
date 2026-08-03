@@ -50,6 +50,10 @@ Chaque carte de constat comprend :
 - **Suggestion d'action** — une recommandation concrete en une phrase
 - **Depenses associees** — liste depliable des transactions specifiques ayant declenche ce constat
 
+## Devise
+
+Tous les montants de l'audit s'affichent dans votre **devise d'affichage**, celle choisie dans la pastille de devise de l'ecran d'accueil. Les depenses enregistrees dans d'autres devises y sont converties au taux du jour avant l'analyse, afin que le total et les economies soient comparables ; le rapport signale quand les montants sont convertis et donc approximatifs. Une seule operation dans une autre devise ne change plus la devise de tout l'audit : un compte qui depense en zlotys est audite en zlotys. Si vous changez de devise d'affichage, l'audit est regenere dans la nouvelle.
+
 ## Actions
 
 - **Regenerer** — forcer une nouvelle analyse avec les donnees les plus recentes (coute 3 requetes IA)

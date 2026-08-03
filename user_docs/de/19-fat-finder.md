@@ -50,6 +50,10 @@ Jede Befundkarte enthalt:
 - **Handlungsempfehlung** — eine konkrete, einzeilige Empfehlung
 - **Zugehorige Ausgaben** — aufklappbare Liste der spezifischen Transaktionen, die diesen Befund ausgelost haben
 
+## Wahrung
+
+Alle Betrage im Audit erscheinen in deiner **Anzeigewahrung** — der Wahrung, die du im Wahrungs-Chip auf dem Startbildschirm auswahlst. Ausgaben in anderen Wahrungen werden vor der Analyse zum heutigen Kurs umgerechnet, damit Summe und Einsparungen vergleichbar sind; der Bericht weist darauf hin, wenn Betrage umgerechnet und daher ungefahr sind. Eine einzelne Buchung in einer anderen Wahrung andert nicht mehr die Wahrung des gesamten Audits — ein Konto, das in Zloty ausgibt, wird in Zloty gepruft. Wenn du die Anzeigewahrung anderst, wird das Audit in der neuen Wahrung neu erstellt.
+
 ## Aktionen
 
 - **Neu generieren** — erzwinge eine neue Analyse mit den aktuellen Daten (kostet 3 KI-Anfragen)

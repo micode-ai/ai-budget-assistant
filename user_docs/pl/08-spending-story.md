@@ -47,6 +47,10 @@ AI generuje rozne typy blokow z wnioskami:
 - **Wnioski porownawcze** w stosunku do poprzednich okresow
 - **Wykresy i wizualizacje** wbudowane w historie
 
+## Waluta
+
+Historia jest opowiadana w Twojej **walucie wyswietlania** — tej wybranej w chipie waluty na ekranie glownym. Wydatki, przychody i kwoty budzetow zapisane w innych walutach sa przed napisaniem historii przeliczane na nia po dzisiejszym kursie, aby sumy sie zgadzaly; historia zaznacza, kiedy kwoty sa przeliczone i tym samym przyblizone. Jedna duza transakcja w innej walucie nie decyduje juz o walucie calej historii. Zmiana waluty wyswietlania powoduje wygenerowanie historii w nowej walucie.
+
 ## Akcje
 
 - **Odswierz** — dotknij, aby wygenerowac nowa historie z aktualnymi danymi

@@ -47,6 +47,10 @@ Die KI generiert verschiedene Arten von Einblicksblocken:
 - **Vergleichseinblicke** im Vergleich zu vorherigen Zeitraumen
 - **Diagramme und Visualisierungen**, die in die Geschichte eingebettet sind
 
+## Wahrung
+
+Die Story wird in deiner **Anzeigewahrung** erzahlt — der Wahrung, die du im Wahrungs-Chip auf dem Startbildschirm auswahlst. Ausgaben, Einnahmen und Budgetwerte in anderen Wahrungen werden vor dem Schreiben der Story zum heutigen Kurs umgerechnet, damit die Summen stimmen; die Story weist darauf hin, wenn Betrage umgerechnet und daher ungefahr sind. Eine einzelne grosse Buchung in einer anderen Wahrung bestimmt nicht mehr die Wahrung der ganzen Story. Wenn du die Anzeigewahrung anderst, wird die Story in der neuen Wahrung neu erstellt.
+
 ## Aktionen
 
 - **Aktualisieren** — tippe, um eine frisch generierte Geschichte mit aktualisierten Daten anzufordern

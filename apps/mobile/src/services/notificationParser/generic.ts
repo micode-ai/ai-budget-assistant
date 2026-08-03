@@ -28,6 +28,10 @@ export const SUPPORTED_CURRENCIES = new Set<string>([
 // ---------------------------------------------------------------------------
 export const SYMBOL_TO_ISO: Record<string, string> = {
   '€': 'EUR',
+  // The ISO code matters as much as the symbol: most non-PL European banks write
+  // "12,34 EUR", not "€12,34". Without this entry every such push was dropped for
+  // "no currency detected" (ABA-387).
+  'EUR': 'EUR',
   '$': 'USD',
   'US$': 'USD',
   'zł': 'PLN',
@@ -91,18 +95,59 @@ const AMOUNT_RE =
   /(?:[-−–]\s*)?((?:\d{1,3}(?:[.,\s]\d{3})*|\d+)[,.][\d]{1,2})(?!\d)/g;
 
 /**
+ * Percentages are never monetary amounts. A Revolut crypto price alert ("Bitcoin is
+ * up 5.32% in the past 2 hours…") and a loan ad ("RRSO 7,25%") both contain a
+ * decimal number that `AMOUNT_RE` happily reads as an amount — that is how eight
+ * phantom USD expenses reached production (ABA-387). Masking them out is done on
+ * the text used for AMOUNT matching only; currency and merchant still see the
+ * original text.
+ *
+ * Internal whitespace is deliberately NOT allowed between the digits and the `%`
+ * so that "12,34 PLN … 10%" cannot swallow the real amount.
+ */
+const PERCENT_RE = /\d[\d.,]*\s*%/g;
+
+export function maskPercentages(text: string): string {
+  return text.replace(PERCENT_RE, ' ');
+}
+
+/**
+ * Parse the first plausible monetary amount, reporting whether it carried an
+ * explicit debit sign (−/-/–). The sign is the strongest "this is a real charge"
+ * signal a terse bank push gives us — see `looksLikeSpendNotification`.
+ */
+export function extractAmountSigned(text: string): { value: number; negative: boolean } | null {
+  const masked = maskPercentages(text);
+  AMOUNT_RE.lastIndex = 0;
+
+  let match: RegExpExecArray | null;
+  while ((match = AMOUNT_RE.exec(masked)) !== null) {
+    const raw = match[1];
+    const normalized = /,\d{1,2}$/.test(raw)
+      ? raw.replace(/[\s.]/g, '').replace(',', '.')
+      : raw.replace(/,/g, '');
+    const value = parseFloat(normalized);
+    if (isFinite(value) && value > 0) {
+      return { value, negative: /^[-−–]/.test(match[0]) };
+    }
+  }
+  return null;
+}
+
+/**
  * Parse the first plausible monetary amount out of raw notification text.
  * Returns a positive JS number, or null if none found or the result is
  * non-finite / zero.
  */
 export function extractAmount(text: string): number | null {
+  const masked = maskPercentages(text);
   // Reset lastIndex before each use (global regex)
   AMOUNT_RE.lastIndex = 0;
 
   let best: number | null = null;
   let match: RegExpExecArray | null;
 
-  while ((match = AMOUNT_RE.exec(text)) !== null) {
+  while ((match = AMOUNT_RE.exec(masked)) !== null) {
     const raw = match[1];
 
     // Determine decimal style
@@ -131,17 +176,30 @@ export function extractAmount(text: string): number | null {
 // Currency extraction
 // ---------------------------------------------------------------------------
 
-// Build a sorted list: longer symbols/codes first to avoid partial matches
-// (e.g. "US$" before "$")
-const CURRENCY_TOKENS = [...Object.keys(SYMBOL_TO_ISO), ...DETECTABLE_UNSUPPORTED].sort(
-  (a, b) => b.length - a.length,
+const ALL_CURRENCY_TOKENS = [...Object.keys(SYMBOL_TO_ISO), ...DETECTABLE_UNSUPPORTED];
+
+const escapeRe = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Symbols and non-ASCII abbreviations (€, $, zł, грн, руб …) are matched anywhere —
+ * they cannot occur inside an ordinary word.
+ * ASCII letter codes (PLN, EUR, USD, Br …) are matched on **word boundaries**: the
+ * old boundary-less regex made `Br` match the "br" inside "brutto" and report BYN,
+ * and the same trap is why NOK/SEK/RON are still absent from DETECTABLE_UNSUPPORTED
+ * (they would hit "NOKIA", "SEKTOR", "ELEKTRONIKA").
+ */
+const ASCII_WORD_TOKENS = ALL_CURRENCY_TOKENS.filter((t) => /^[A-Za-z]+$/.test(t));
+const SYMBOL_TOKENS = ALL_CURRENCY_TOKENS.filter((t) => !/^[A-Za-z]+$/.test(t)).sort(
+  (a, b) => b.length - a.length, // longer first: "US$" before "$"
 );
 
 // Regex matching any known currency symbol or ISO code that may appear
 // adjacent to an amount (before or after, with optional whitespace).
 // We test the full text because the currency can appear anywhere.
 const CURRENCY_RE = new RegExp(
-  '(' + CURRENCY_TOKENS.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')',
+  '(' +
+    [...SYMBOL_TOKENS.map(escapeRe), '\\b(?:' + ASCII_WORD_TOKENS.map(escapeRe).join('|') + ')\\b'].join('|') +
+    ')',
   'i',
 );
 
@@ -159,6 +217,54 @@ export function extractCurrency(text: string): { code: string; supported: boolea
   // Try exact match first, then uppercase
   const iso = SYMBOL_TO_ISO[token] ?? SYMBOL_TO_ISO[token.toUpperCase()] ?? token.toUpperCase();
   return { code: iso, supported: SUPPORTED_CURRENCIES.has(iso) };
+}
+
+// ---------------------------------------------------------------------------
+// Transaction intent
+// ---------------------------------------------------------------------------
+
+/**
+ * The native allow-list is per **app**, not per **notification** — a bank app also
+ * pushes price alerts, balance updates, rate alerts, marketing and login codes. Any
+ * of those containing a number and a currency used to become an expense, which is
+ * how "The Past 2 Hours. It's Now — 5.32 USD" was booked as spending (ABA-387).
+ *
+ * Words a debit notification actually uses, in the languages the app supports. The
+ * Polish/German/etc. terms deliberately match the keywords the per-bank templates in
+ * templates.pl.ts already anchor on, so gating on this never rejects a push those
+ * templates were written for. Diacritics are optional throughout ([ea] classes)
+ * because notification text is inconsistent about them.
+ */
+const SPEND_INTENT_RE =
+  /(?:paid|pay(?:ment|ing)?|spent|spend|purchase|charged?|withdraw(?:al|n)?|debit(?:ed)?|transaction|p[łl]atno[śs][ćc]|zap[łl]aco|obci[ąa][żz]eni|op[łl]at|wyp[łl]at|przelew|wydatek|transakcj|zakup|zahlung|bezahlt|abbuchung|belastung|umsatz|pago|pagado|compra|cargo|paiement|pay[ée]|achat|pr[ée]l[èe]vement|betaling|betaald|afschrijving|platb|zaplac|опла|списан|покупк|плат[её]ж|перевод|спіс|платіж|переказ|аплат|пакупк)/iu;
+
+/**
+ * A declined / rejected / cancelled attempt moved no money. Checked BEFORE the
+ * intent words, because such a push usually contains one ("transaction declined").
+ */
+const DECLINED_RE =
+  /(?:declin|reject|refus|fail|cancell?ed|insufficient|odrzucon|nieudan|odmow|anulowan|abgelehnt|fehlgeschlagen|rechazad|geweigerd|отклон|отказ|неудач|відхилен|відмов|адхілен)/iu;
+
+export function hasSpendIntent(text: string): boolean {
+  return SPEND_INTENT_RE.test(text);
+}
+
+export function isDeclined(text: string): boolean {
+  return DECLINED_RE.test(text);
+}
+
+/**
+ * Whether a notification looks like money actually leaving the account.
+ * Accepts either explicit spend wording or an explicit debit sign on the amount
+ * (terse pushes like "-12,34 EUR ALBERT HEIJN" carry no keyword at all, while a
+ * price/balance/rate alert never shows a minus in front of its number).
+ *
+ * Shared by BOTH parse paths — see parseNotification in ./index.ts.
+ */
+export function looksLikeSpendNotification(text: string): boolean {
+  if (isDeclined(text)) return false;
+  if (hasSpendIntent(text)) return true;
+  return /[-−–]\s*\d/.test(maskPercentages(text));
 }
 
 // ---------------------------------------------------------------------------
@@ -306,6 +412,13 @@ export function parseGeneric(title: string, text: string): GenericParseResult | 
     );
     return null;
   }
+
+  // --- Is this a spend at all? ---
+  // Rejects price alerts, balance updates, rate alerts and declined attempts (ABA-387).
+  // Deliberately AFTER the currency check: an unsupported-currency notification must
+  // still emit its diagnostic warn even in a language whose spend keywords we don't
+  // carry (e.g. Czech), otherwise the currency-support gap becomes invisible.
+  if (!looksLikeSpendNotification(fullText)) return null;
 
   // --- Merchant (best-effort, may be null) ---
   const rawMerchant = extractMerchantRaw(fullText);

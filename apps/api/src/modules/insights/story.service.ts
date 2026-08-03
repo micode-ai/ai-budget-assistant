@@ -7,6 +7,26 @@ import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { translateUncategorized, localizeStoryBlocks } from '../../common/utils/translate';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
 import { getAiCostMultiplier } from '../ai/services/model-resolver';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { getRatesSafe, convertAmount } from '../../common/utils/fx';
+
+/** Mirrors SpendingStoryResponse in @budget/shared-types (not importable at runtime). */
+export interface SpendingStoryResult {
+  story: {
+    id: string;
+    accountId: string;
+    periodLabel: string;
+    periodStart: string;
+    periodEnd: string;
+    blocks: any[];
+    summary: string;
+    generatedAt: string;
+  };
+  isStale: boolean;
+  encryptionRestricted?: boolean;
+  fxConverted?: boolean;
+  fxApproximate?: boolean;
+}
 
 @Injectable()
 export class StoryService {
@@ -18,6 +38,7 @@ export class StoryService {
     private readonly prisma: PrismaService,
     private readonly budgetsService: BudgetsService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly exchangeRateService: ExchangeRateService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -35,6 +56,13 @@ export class StoryService {
     return account?.encryptionTier ?? 0;
   }
 
+  /**
+   * `baseCurrency` is the caller's display currency (user.currencyCode) — the story is
+   * narrated AND computed in it, with every amount FX-converted first. It must never be
+   * inferred from a single expense row (ABA-386/387): the expense query is ordered by
+   * amount desc, so one large charge in another currency used to relabel the whole story
+   * while amounts of every currency were summed under that one label.
+   */
   async getSpendingStory(
     accountId: string,
     period: 'week' | 'month',
@@ -43,7 +71,8 @@ export class StoryService {
     userId?: string,
     month?: number,
     year?: number,
-  ) {
+    baseCurrency = 'USD',
+  ): Promise<SpendingStoryResult> {
     // Tier 2 (full encryption): amounts are encrypted, stories cannot be generated
     const encryptionTier = await this.getEncryptionTier(accountId);
     if (encryptionTier >= 2) {
@@ -81,7 +110,15 @@ export class StoryService {
         },
       });
 
-      if (cached && cached.expiresAt > now && cached.periodLabel === periodLabel) {
+      // A story cached under a different display currency must be regenerated, not
+      // served — its narrated amounts are in that other currency (ABA-387). Rows
+      // written before the column existed carry null and are regenerated once.
+      if (
+        cached &&
+        cached.expiresAt > now &&
+        cached.periodLabel === periodLabel &&
+        cached.currencyCode === baseCurrency
+      ) {
         return {
           story: {
             id: cached.id,
@@ -105,7 +142,7 @@ export class StoryService {
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
     }
 
-    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId);
+    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId, baseCurrency);
   }
 
   private static readonly LOCALE_MAP: Record<string, string> = {
@@ -162,7 +199,8 @@ export class StoryService {
     encryptionTier = 0,
     responseMode: AiResponseMode = 'balanced',
     userId?: string,
-  ) {
+    baseCurrency = 'USD',
+  ): Promise<SpendingStoryResult> {
     // Gather comprehensive data
     const previousPeriodStart = new Date(periodStart);
     previousPeriodStart.setMonth(previousPeriodStart.getMonth() - 1);
@@ -190,22 +228,62 @@ export class StoryService {
       }),
     ]);
 
+    // Normalize every amount into the display currency BEFORE aggregating: the account
+    // may mix PLN/EUR/USD and the narrative only ever names one currency (ABA-387).
+    // An amount with no known rate is excluded rather than mislabelled, and flags the
+    // story as approximate (wrapped/safe-to-spend convention).
+    const currencyCode = baseCurrency;
+    const needsFx =
+      currentExpenses.some((e) => e.currencyCode !== baseCurrency) ||
+      previousExpenses.some((e) => e.currencyCode !== baseCurrency) ||
+      incomes.some((i) => i.currencyCode !== baseCurrency) ||
+      budgets.some((b) => b.currencyCode !== baseCurrency);
+    const rates = needsFx ? await getRatesSafe(this.exchangeRateService, baseCurrency) : null;
+    let fxApproximate = false;
+    let fxConverted = false;
+
+    const toBase = (amount: number, from: string): number | null => {
+      const converted = convertAmount(amount, from, baseCurrency, rates);
+      if (converted === null) {
+        fxApproximate = true;
+        return null;
+      }
+      if (from !== baseCurrency) fxConverted = true;
+      return converted;
+    };
+
     // Compute aggregates
     type ExpenseWithCategory = typeof currentExpenses[number];
     type IncomeRecord = typeof incomes[number];
-    const totalExpenses = currentExpenses.reduce((s: number, e: ExpenseWithCategory) => s + Number(e.amount), 0);
-    const totalPrevExpenses = previousExpenses.reduce((s: number, e: ExpenseWithCategory) => s + Number(e.amount), 0);
-    const totalIncome = incomes.reduce((s: number, i: IncomeRecord) => s + Number(i.amount), 0);
+
+    const currentConverted: { row: ExpenseWithCategory; amount: number }[] = [];
+    for (const e of currentExpenses) {
+      const amount = toBase(Number(e.amount), e.currencyCode);
+      if (amount !== null) currentConverted.push({ row: e, amount });
+    }
+    // Re-sort: the query orders by native amount, which is meaningless once mixed
+    // currencies are normalized (10 USD outranks 100 PLN only after conversion).
+    currentConverted.sort((a, b) => b.amount - a.amount);
+
+    const totalExpenses = currentConverted.reduce((s: number, e) => s + e.amount, 0);
+    const totalPrevExpenses = previousExpenses.reduce((s: number, e: ExpenseWithCategory) => {
+      const amount = toBase(Number(e.amount), e.currencyCode);
+      return amount === null ? s : s + amount;
+    }, 0);
+    const totalIncome = incomes.reduce((s: number, i: IncomeRecord) => {
+      const amount = toBase(Number(i.amount), i.currencyCode);
+      return amount === null ? s : s + amount;
+    }, 0);
     const netSavings = totalIncome - totalExpenses;
 
     const byCategory = new Map<string, { name: string; amount: number; count: number; color?: string }>();
-    for (const e of currentExpenses) {
+    for (const { row: e, amount } of currentConverted) {
       const catId = e.categoryId || 'uncategorized';
       const catName = e.category?.name || translateUncategorized(language);
       const cur = byCategory.get(catId) || { name: catName, amount: 0, count: 0, color: e.category?.color || undefined };
       byCategory.set(catId, {
         name: catName,
-        amount: cur.amount + Number(e.amount),
+        amount: cur.amount + amount,
         count: cur.count + 1,
         color: cur.color,
       });
@@ -217,17 +295,17 @@ export class StoryService {
 
     const dailyTotals: Array<{ date: string; amount: number }> = [];
     const dailyMap = new Map<string, number>();
-    for (const e of currentExpenses) {
+    for (const { row: e, amount } of currentConverted) {
       const dk = e.date.toISOString().split('T')[0];
-      dailyMap.set(dk, (dailyMap.get(dk) || 0) + Number(e.amount));
+      dailyMap.set(dk, (dailyMap.get(dk) || 0) + amount);
     }
     for (const [date, amount] of Array.from(dailyMap.entries()).sort(([a], [b]) => a.localeCompare(b))) {
       dailyTotals.push({ date, amount: Math.round(amount * 100) / 100 });
     }
 
-    const topExpenses = currentExpenses.slice(0, 5).map((e: ExpenseWithCategory) => ({
+    const topExpenses = currentConverted.slice(0, 5).map(({ row: e, amount }) => ({
       description: encryptionTier >= 1 ? 'Expense' : (e.description || 'Expense'),
-      amount: Number(e.amount),
+      amount,
       category: e.category?.name || translateUncategorized(language),
       date: e.date.toISOString().split('T')[0],
     }));
@@ -241,10 +319,15 @@ export class StoryService {
     for (const b of budgets) {
       try {
         const progress = await this.budgetsService.getProgress(accountId, b.id, anchorDay);
+        // getProgress reports in the BUDGET's currency (it filters expenses by it),
+        // so both figures need converting; percentUsed is a ratio and needs none.
+        const limit = toBase(Number(b.amount), b.currencyCode);
+        const spent = toBase(progress.spent, b.currencyCode);
+        if (limit === null || spent === null) continue;
         budgetData.push({
           name: b.name,
-          limit: Number(b.amount),
-          spent: progress.spent,
+          limit,
+          spent,
           percentUsed: progress.percentageUsed,
         });
       } catch {
@@ -255,8 +338,6 @@ export class StoryService {
     const changeVsPrev = totalPrevExpenses > 0
       ? Math.round(((totalExpenses - totalPrevExpenses) / totalPrevExpenses) * 100)
       : 0;
-
-    const currencyCode = currentExpenses[0]?.currencyCode || budgets[0]?.currencyCode || 'USD';
 
     // Build GPT prompt
     const languageName = StoryService.LANGUAGE_NAMES[language || 'en'] || 'English';
@@ -272,6 +353,16 @@ ${encryptionNotice}
 ${responseModeInstruction}
 
 IMPORTANT: Write ALL content in ${languageName}. This includes titles, descriptions, narrative text, metric labels, chart data labels (like category names, axis labels, legend entries), achievement texts, callout texts, and the summary. Everything the user will see must be in ${languageName}. Do NOT use English words like "Total", "Other", "Uncategorized" — translate them to ${languageName}.
+
+EVERY amount below is already expressed in ${currencyCode} — write every amount in ${currencyCode}, never relabel it as another currency and never use a currency symbol that does not belong to ${currencyCode}.${
+      fxConverted
+        ? `\nAmounts originally recorded in other currencies were converted into ${currencyCode} at today's rate — mention once that converted figures are approximate.`
+        : ''
+    }${
+      fxApproximate
+        ? '\nA few amounts were left out because no exchange rate was available for their currency — mention once that the picture may be incomplete.'
+        : ''
+    }
 
 Data:
 - Currency: ${currencyCode}
@@ -360,12 +451,14 @@ Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
           periodEnd,
           blocks: parsed.blocks,
           summary: parsed.summary || '',
+          currencyCode,
           expiresAt,
         },
         update: {
           blocks: parsed.blocks,
           summary: parsed.summary || '',
           periodLabel,
+          currencyCode,
           expiresAt,
           createdAt: new Date(),
         },
@@ -383,6 +476,8 @@ Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
           generatedAt: saved.createdAt.toISOString(),
         },
         isStale: false,
+        fxConverted,
+        fxApproximate,
       };
     } catch (error) {
       this.logger.error(`Failed to generate story: ${error}`);

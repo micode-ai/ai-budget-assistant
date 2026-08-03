@@ -1164,6 +1164,10 @@ The AI generates various types of insight blocks:
 - **Comparison insights** vs. previous periods
 - **Charts and visualizations** embedded in the story
 
+## Currency
+
+The story is told in your **display currency** — the one picked in the currency pill on the home screen. Expenses, income and budget figures recorded in other currencies are converted into it at today's rate before the story is written, so the totals add up; the story notes when figures are converted and therefore approximate. A single large charge in another currency no longer decides the currency of the whole story. Changing your display currency regenerates the story in the new one.
+
 ## Actions
 
 - **Regenerate** — tap to request a freshly generated story with updated data
@@ -2803,6 +2807,10 @@ Each finding card includes:
 - **Potential savings** — how much you'd save per month
 - **Action suggestion** — a concrete, one-sentence recommendation
 - **Related expenses** — expandable list of specific transactions that triggered this finding
+
+## Currency
+
+All amounts in the audit are shown in your **display currency** — the one picked in the currency pill on the home screen. Expenses recorded in other currencies are converted into it at today's rate before the analysis, so the total and the savings are comparable; the report says when figures are converted and therefore approximate. A single charge in another currency no longer relabels the whole audit — an account that spends in zlotys is audited in zlotys. Changing your display currency regenerates the audit in the new one.
 
 ## Actions
 
@@ -5543,6 +5551,10 @@ iOS, Android, Web
 - **Сравнительные инсайты** относительно предыдущих периодов
 - **Графики и визуализации**, встроенные в историю
 
+## Валюта
+
+История рассказывается в вашей **валюте отображения** — той, что выбрана в чипе валюты на главном экране. Расходы, доходы и суммы бюджетов, записанные в других валютах, перед составлением истории пересчитываются в неё по текущему курсу, чтобы итоги сходились; история отмечает, когда суммы пересчитаны и потому приблизительны. Одна крупная операция в другой валюте больше не определяет валюту всей истории. Если сменить валюту отображения, история будет создана заново в новой валюте.
+
 ## Действия
 
 - **Обновить** — нажмите, чтобы запросить свежую историю с обновлёнными данными
@@ -7184,6 +7196,10 @@ AI Budget Assistant предлагает три уровня подписки. �
 - **Потенциальная экономия** — сколько вы сэкономите в месяц
 - **Рекомендация** — конкретный совет в одном предложении
 - **Связанные расходы** — раскрываемый список конкретных транзакций, ставших причиной этой находки
+
+## Валюта
+
+Все суммы в аудите показываются в вашей **валюте отображения** — той, что выбрана в чипе валюты на главном экране. Расходы, записанные в других валютах, перед анализом пересчитываются в неё по текущему курсу, чтобы итог и экономия были сопоставимы; отчёт отмечает, когда суммы пересчитаны и потому приблизительны. Одна операция в другой валюте больше не меняет валюту всего аудита — счёт, где траты в злотых, проверяется в злотых. Если сменить валюту отображения, аудит будет создан заново в новой валюте.
 
 ## Действия
 
@@ -9920,6 +9936,10 @@ iOS, Android, Web
 - **Порівняльні інсайти** з попередніми періодами
 - **Графіки та візуалізації**, вбудовані в історію
 
+## Валюта
+
+Історія розповідається у вашій **валюті відображення** — тій, що вибрана в чипі валюти на головному екрані. Витрати, доходи та суми бюджетів, записані в інших валютах, перед складанням історії переводяться в неї за поточним курсом, щоб підсумки збігалися; історія зазначає, коли суми переведені й тому приблизні. Одна велика операція в іншій валюті більше не визначає валюту всієї історії. Якщо змінити валюту відображення, історія буде створена заново в новій валюті.
+
 ## Дії
 
 - **Оновити** — натисніть, щоб створити нову історію з оновленими даними
@@ -11554,6 +11574,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - **Потенційна економія** — скільки ви заощадите на місяць
 - **Рекомендація** — конкретна порада в одному реченні
 - **Пов'язані витрати** — розкривний список конкретних транзакцій, що стали причиною цієї знахідки
+
+## Валюта
+
+Усі суми в аудиті показуються у вашій **валюті відображення** — тій, що вибрана в чипі валюти на головному екрані. Витрати, записані в інших валютах, перед аналізом переводяться в неї за поточним курсом, щоб підсумок і економія були порівнянні; звіт зазначає, коли суми переведені й тому приблизні. Одна операція в іншій валюті більше не змінює валюту всього аудиту — рахунок, де витрати у злотих, перевіряється у злотих. Якщо змінити валюту відображення, аудит буде створено заново в новій валюті.
 
 ## Дії
 
@@ -14245,6 +14269,10 @@ AI generuje rozne typy blokow z wnioskami:
 - **Wnioski porownawcze** w stosunku do poprzednich okresow
 - **Wykresy i wizualizacje** wbudowane w historie
 
+## Waluta
+
+Historia jest opowiadana w Twojej **walucie wyswietlania** — tej wybranej w chipie waluty na ekranie glownym. Wydatki, przychody i kwoty budzetow zapisane w innych walutach sa przed napisaniem historii przeliczane na nia po dzisiejszym kursie, aby sumy sie zgadzaly; historia zaznacza, kiedy kwoty sa przeliczone i tym samym przyblizone. Jedna duza transakcja w innej walucie nie decyduje juz o walucie calej historii. Zmiana waluty wyswietlania powoduje wygenerowanie historii w nowej walucie.
+
 ## Akcje
 
 - **Odswierz** — dotknij, aby wygenerowac nowa historie z aktualnymi danymi
@@ -15874,6 +15902,10 @@ Kazda karta odkrycia zawiera:
 - **Potencjalna oszczednosc** — ile zaoszczedzisz miesiecznie
 - **Sugestia dzialania** — konkretna, jednozdaniowa rekomendacja
 - **Powiazane wydatki** — rozwijana lista konkretnych transakcji, ktore wywolaly to odkrycie
+
+## Waluta
+
+Wszystkie kwoty w audycie sa pokazywane w Twojej **walucie wyswietlania** — tej wybranej w chipie waluty na ekranie glownym. Wydatki zapisane w innych walutach sa przed analiza przeliczane na nia po dzisiejszym kursie, aby suma i oszczednosci byly porownywalne; raport zaznacza, kiedy kwoty sa przeliczone i tym samym przyblizone. Jedna transakcja w innej walucie nie zmienia juz waluty calego audytu — konto, ktore wydaje w zlotych, jest audytowane w zlotych. Zmiana waluty wyswietlania powoduje wygenerowanie audytu w nowej walucie.
 
 ## Akcje
 
@@ -18566,6 +18598,10 @@ Die KI generiert verschiedene Arten von Einblicksblocken:
 - **Vergleichseinblicke** im Vergleich zu vorherigen Zeitraumen
 - **Diagramme und Visualisierungen**, die in die Geschichte eingebettet sind
 
+## Wahrung
+
+Die Story wird in deiner **Anzeigewahrung** erzahlt — der Wahrung, die du im Wahrungs-Chip auf dem Startbildschirm auswahlst. Ausgaben, Einnahmen und Budgetwerte in anderen Wahrungen werden vor dem Schreiben der Story zum heutigen Kurs umgerechnet, damit die Summen stimmen; die Story weist darauf hin, wenn Betrage umgerechnet und daher ungefahr sind. Eine einzelne grosse Buchung in einer anderen Wahrung bestimmt nicht mehr die Wahrung der ganzen Story. Wenn du die Anzeigewahrung anderst, wird die Story in der neuen Wahrung neu erstellt.
+
 ## Aktionen
 
 - **Aktualisieren** — tippe, um eine frisch generierte Geschichte mit aktualisierten Daten anzufordern
@@ -20193,6 +20229,10 @@ Jede Befundkarte enthalt:
 - **Einsparpotenzial** — wie viel du pro Monat sparen wurdest
 - **Handlungsempfehlung** — eine konkrete, einzeilige Empfehlung
 - **Zugehorige Ausgaben** — aufklappbare Liste der spezifischen Transaktionen, die diesen Befund ausgelost haben
+
+## Wahrung
+
+Alle Betrage im Audit erscheinen in deiner **Anzeigewahrung** — der Wahrung, die du im Wahrungs-Chip auf dem Startbildschirm auswahlst. Ausgaben in anderen Wahrungen werden vor der Analyse zum heutigen Kurs umgerechnet, damit Summe und Einsparungen vergleichbar sind; der Bericht weist darauf hin, wenn Betrage umgerechnet und daher ungefahr sind. Eine einzelne Buchung in einer anderen Wahrung andert nicht mehr die Wahrung des gesamten Audits — ein Konto, das in Zloty ausgibt, wird in Zloty gepruft. Wenn du die Anzeigewahrung anderst, wird das Audit in der neuen Wahrung neu erstellt.
 
 ## Aktionen
 
@@ -22862,6 +22902,10 @@ La IA genera varios tipos de bloques de informacion:
 - **Informacion comparativa** vs. periodos anteriores
 - **Graficos y visualizaciones** integrados en la historia
 
+## Moneda
+
+La historia se cuenta en tu **moneda de visualizacion**, la que eliges en el selector de moneda de la pantalla de inicio. Los gastos, ingresos y cifras de presupuesto registrados en otras monedas se convierten a ella al tipo de cambio de hoy antes de escribir la historia, para que los totales cuadren; la historia indica cuando las cifras estan convertidas y por tanto son aproximadas. Un solo cargo grande en otra moneda ya no decide la moneda de toda la historia. Si cambias tu moneda de visualizacion, la historia se regenera en la nueva.
+
 ## Acciones
 
 - **Regenerar** — toca para solicitar una historia recien generada con datos actualizados
@@ -24489,6 +24533,10 @@ Cada tarjeta de hallazgo incluye:
 - **Ahorro potencial** — cuanto ahorrarias por mes
 - **Sugerencia de accion** — una recomendacion concreta en una frase
 - **Gastos relacionados** — lista expandible de transacciones especificas que activaron este hallazgo
+
+## Moneda
+
+Todos los importes del informe se muestran en tu **moneda de visualizacion**, la que eliges en el selector de moneda de la pantalla de inicio. Los gastos registrados en otras monedas se convierten a ella al tipo de cambio de hoy antes del analisis, para que el total y los ahorros sean comparables; el informe indica cuando las cifras estan convertidas y por tanto son aproximadas. Un solo cargo en otra moneda ya no cambia la moneda de todo el informe: una cuenta que gasta en zlotys se audita en zlotys. Si cambias tu moneda de visualizacion, el informe se regenera en la nueva.
 
 ## Acciones
 
@@ -27147,6 +27195,10 @@ L'IA genere differents types de blocs d'aperçus :
 - **Aperçus comparatifs** avec les periodes precedentes
 - **Graphiques et visualisations** integres dans l'histoire
 
+## Devise
+
+L'histoire est racontee dans votre **devise d'affichage**, celle choisie dans la pastille de devise de l'ecran d'accueil. Les depenses, revenus et montants de budget enregistres dans d'autres devises y sont convertis au taux du jour avant la redaction, afin que les totaux soient coherents ; l'histoire signale quand les montants sont convertis et donc approximatifs. Une seule grosse operation dans une autre devise ne decide plus de la devise de toute l'histoire. Si vous changez de devise d'affichage, l'histoire est regeneree dans la nouvelle.
+
 ## Actions
 
 - **Regenerer** — appuyez pour generer une nouvelle histoire avec les donnees mises a jour
@@ -28772,6 +28824,10 @@ Chaque carte de constat comprend :
 - **Economies potentielles** — combien vous economiseriez par mois
 - **Suggestion d'action** — une recommandation concrete en une phrase
 - **Depenses associees** — liste depliable des transactions specifiques ayant declenche ce constat
+
+## Devise
+
+Tous les montants de l'audit s'affichent dans votre **devise d'affichage**, celle choisie dans la pastille de devise de l'ecran d'accueil. Les depenses enregistrees dans d'autres devises y sont converties au taux du jour avant l'analyse, afin que le total et les economies soient comparables ; le rapport signale quand les montants sont convertis et donc approximatifs. Une seule operation dans une autre devise ne change plus la devise de tout l'audit : un compte qui depense en zlotys est audite en zlotys. Si vous changez de devise d'affichage, l'audit est regenere dans la nouvelle.
 
 ## Actions
 
@@ -31430,6 +31486,10 @@ iOS, Android, Web
 - **Параўнальныя інсайты** адносна папярэдніх перыядаў
 - **Графікі і візуалізацыі**, убудаваныя ў гісторыю
 
+## Валюта
+
+Гісторыя расказваецца ў вашай **валюце адлюстравання** — той, што выбрана ў чыпе валюты на галоўным экране. Выдаткі, даходы і сумы бюджэтаў, запісаныя ў іншых валютах, перад складаннем гісторыі пераводзяцца ў яе па сённяшнім курсе, каб вынікі сыходзіліся; гісторыя пазначае, калі сумы пераведзены і таму прыблізныя. Адна вялікая аперацыя ў іншай валюце больш не вызначае валюту ўсёй гісторыі. Калі змяніць валюту адлюстравання, гісторыя будзе створана нанова ў новай валюце.
+
 ## Дзеянні
 
 - **Абнавіць** — націсніце, каб запытаць свежую гісторыю з абноўленымі данымі
@@ -33059,6 +33119,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Патэнцыйная эканомія** — колькі вы зэканоміце за месяц
 - **Рэкамендацыя** — канкрэтная парада ў адным сказе
 - **Звязаныя выдаткі** — раскрываемы спіс канкрэтных транзакцый, якія сталі прычынай гэтай знаходкі
+
+## Валюта
+
+Усе сумы ў аўдыце паказваюцца ў вашай **валюце адлюстравання** — той, што выбрана ў чыпе валюты на галоўным экране. Выдаткі, запісаныя ў іншых валютах, перад аналізам пераводзяцца ў яе па сённяшнім курсе, каб выніковая сума і эканомія былі супастаўныя; справаздача пазначае, калі сумы пераведзены і таму прыблізныя. Адна аперацыя ў іншай валюце больш не змяняе валюту ўсяго аўдыту — рахунак, дзе выдаткі ў злотых, праверяецца ў злотых. Калі змяніць валюту адлюстравання, аўдыт будзе створаны нанова ў новай валюце.
 
 ## Дзеянні
 
@@ -35673,6 +35737,10 @@ De AI genereert verschillende soorten inzichtblokken:
 - **Vergelijkingsinzichten** ten opzichte van eerdere perioden
 - **Grafieken en visualisaties** ingebed in het verhaal
 
+## Valuta
+
+Het verhaal wordt verteld in je **weergavevaluta** — die je kiest in de valutachip op het startscherm. Uitgaven, inkomsten en budgetbedragen die in andere valuta zijn vastgelegd, worden voor het schrijven tegen de koers van vandaag omgerekend, zodat de totalen kloppen; het verhaal meldt wanneer bedragen zijn omgerekend en dus benaderend zijn. Een enkele grote afschrijving in een andere valuta bepaalt niet langer de valuta van het hele verhaal. Wijzig je je weergavevaluta, dan wordt het verhaal in de nieuwe valuta opnieuw gemaakt.
+
 ## Acties
 
 - **Opnieuw genereren** — tik om een vers gegenereerd verhaal met bijgewerkte gegevens aan te vragen
@@ -37308,6 +37376,10 @@ Elke bevindingskaart bevat:
 - **Potentiële besparing** — hoeveel je per maand zou besparen
 - **Actiesuggestie** — een concrete aanbeveling van één zin
 - **Gerelateerde uitgaven** — uitklapbare lijst van specifieke transacties die deze bevinding hebben veroorzaakt
+
+## Valuta
+
+Alle bedragen in de audit staan in je **weergavevaluta** — die je kiest in de valutachip op het startscherm. Uitgaven die in andere valuta zijn vastgelegd, worden voor de analyse tegen de koers van vandaag omgerekend, zodat het totaal en de besparingen vergelijkbaar zijn; het rapport meldt wanneer bedragen zijn omgerekend en dus benaderend zijn. Een enkele afschrijving in een andere valuta verandert niet langer de valuta van de hele audit: een account dat in zloty uitgeeft, wordt in zloty geauditeerd. Wijzig je je weergavevaluta, dan wordt de audit in de nieuwe valuta opnieuw gemaakt.
 
 ## Acties
 

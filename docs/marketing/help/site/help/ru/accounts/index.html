@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/accounts/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/accounts/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/accounts/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Счета | AI Budget Assistant", "description": "Организуйте свои финансы с помощью отдельных счетов. Используйте Личный для индивидуального учёта, Общий для семейных бюджетов и Бизнес для корпоративных расходов. Приглашайте участников с ролевым разграничением доступа.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-07-05", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Счета | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/accounts/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Счета | AI Budget Assistant", "description": "Организуйте свои финансы с помощью отдельных счетов. Используйте Личный для индивидуального учёта, Общий для семейных бюджетов и Бизнес для корпоративных расходов. Приглашайте участников с ролевым разграничением доступа.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-08-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Счета | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/accounts/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -176,7 +176,21 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li><strong>Название</strong> счёта (редактируется Владельцем)</li>
 <li><strong>Тип</strong> счёта и <strong>валюта</strong> (только для просмотра)</li>
+<li><strong>Финансовый месяц</strong> (только Владелец) — меняет, что означает «этот месяц» для ваших бюджетов</li>
 </ul>
+<h3>Финансовый месяц</h3>
+<p>По умолчанию бюджеты считаются по календарному месяцу (с 1-го по последний день). Если зарплата приходит в другой день месяца — например, 10-го — вы можете сделать так, чтобы бюджеты ориентировались на этот день:</p>
+<ol>
+<li>Откройте настройки счёта и нажмите на строку <strong>Финансовый месяц</strong> (показывает «Календарный месяц» или «Месяц начинается N-го числа»)</li>
+<li>В открывшемся окне выберите <strong>Календарный месяц</strong>, чтобы сбросить, или день от <strong>1 до 31</strong></li>
+<li>Нажмите <strong>Сохранить</strong></li>
+</ol>
+<blockquote>
+<p><strong>Примечание:</strong> Пока это влияет только на <strong>бюджеты</strong> — на то, как считаются их периоды и какие траты в них попадают. Аналитика, отчёты и другие представления по месяцам по-прежнему используют календарный месяц.</p>
+<p>Изменение действует задним числом: прошлые периоды бюджетов и история пересчитываются соответственно, но данные о расходах и доходах не меняются.</p>
+<p>Если вы выберете день, которого нет в каждом месяце (например, 31), период просто начнётся в последний день более коротких месяцев (например, 28 или 29 февраля).</p>
+</blockquote>
+<p>Эту строку видит только Владелец — Редакторы и Наблюдатели вообще не видят её в настройках счёта. При этом после настройки финансовый месяц всё равно влияет на периоды бюджетов и историю, которые видят все участники.</p>
 <h3>Участники</h3>
 <ul>
 <li>Список всех участников счёта с их ролями</li>

@@ -89,6 +89,7 @@ export class InsightsController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { period: 'week' | 'month'; forceRegenerate?: boolean; language?: string; month?: number; year?: number },
   ) {
+    // baseCurrency from user.currencyCode — the story is narrated in it (ABA-387).
     return this.storyService.getSpendingStory(
       req.accountId,
       body.period || 'month',
@@ -97,6 +98,7 @@ export class InsightsController {
       req.user.id,
       body.month,
       body.year,
+      req.user.currencyCode || 'USD',
     );
   }
 
@@ -107,6 +109,8 @@ export class InsightsController {
     @Req() req: AuthenticatedRequest,
     @Body() body: { forceRegenerate?: boolean; language?: string; month?: number; year?: number },
   ) {
+    // baseCurrency resolved from user.currencyCode — same pattern as safe-to-spend/wrapped.
+    // The report is labelled and computed in it; never inferred from an expense row (ABA-386).
     return this.fatFinderService.generateReport(
       req.accountId,
       body.language,
@@ -114,6 +118,7 @@ export class InsightsController {
       req.user.id,
       body.month,
       body.year,
+      req.user.currencyCode || 'USD',
     );
   }
 }

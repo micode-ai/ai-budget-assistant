@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/accounts/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/accounts/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/accounts/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Cuentas | AI Budget Assistant", "description": "Organiza tus finanzas con cuentas separadas. Usa Personal para seguimiento individual, Compartida para presupuestos familiares y Empresa para gastos corporativos. Invita miembros con control de acceso basado en roles.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-07-05", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Cuentas | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/accounts/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Cuentas | AI Budget Assistant", "description": "Organiza tus finanzas con cuentas separadas. Usa Personal para seguimiento individual, Compartida para presupuestos familiares y Empresa para gastos corporativos. Invita miembros con control de acceso basado en roles.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-08-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/accounts/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Cuentas | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/accounts/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -176,7 +176,21 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <ul>
 <li><strong>Nombre</strong> de la cuenta (editable por el Propietario)</li>
 <li><strong>Tipo</strong> de cuenta y <strong>moneda</strong> (solo visualizacion)</li>
+<li><strong>Mes financiero</strong> (solo Propietario) — cambia lo que &ldquo;este mes&rdquo; significa para tus presupuestos</li>
 </ul>
+<h3>Mes financiero</h3>
+<p>Por defecto, los presupuestos siguen el mes natural (del 1 al ultimo dia). Si tu salario llega en otro dia del mes — por ejemplo, el 10 — puedes hacer que los presupuestos sigan ese dia en su lugar:</p>
+<ol>
+<li>Abre los Ajustes de la cuenta y toca la fila <strong>Mes financiero</strong> (muestra &ldquo;Mes natural&rdquo; o &ldquo;El mes comienza el dia N&rdquo;)</li>
+<li>En la hoja que se abre, elige <strong>Mes natural</strong> para restablecer, o un dia del <strong>1 al 31</strong></li>
+<li>Toca <strong>Guardar</strong></li>
+</ol>
+<blockquote>
+<p><strong>Nota:</strong> Por ahora esto solo afecta a los <strong>presupuestos</strong> — como se calculan sus periodos y que gastos cuentan en cada uno. Analitica, informes y otras vistas basadas en meses siguen usando el mes natural.</p>
+<p>El cambio es retroactivo: los periodos y el historial de presupuestos pasados se recalculan, sin modificar ningun dato de gastos o ingresos.</p>
+<p>Si eliges un dia que no existe en todos los meses (por ejemplo, 31), el periodo simplemente comienza en el ultimo dia de los meses mas cortos (por ejemplo, el 28 o 29 en febrero).</p>
+</blockquote>
+<p>Esta fila solo la ve el Propietario — Editores y Observadores no la ven en absoluto en los Ajustes de la cuenta. Una vez configurado, el mes financiero igualmente determina los periodos y el historial de presupuestos que ven todos los miembros.</p>
 <h3>Miembros</h3>
 <ul>
 <li>Lista de todos los miembros de la cuenta con sus roles</li>
