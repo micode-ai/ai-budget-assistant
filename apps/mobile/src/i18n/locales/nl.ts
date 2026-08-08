@@ -1011,6 +1011,10 @@ export default {
     periodThisYear: 'Dit jaar',
     noTransfers: 'Geen overboekingen',
     noTransfersHint: 'Overboekingen tussen je accounts verschijnen hier',
+    frequent: 'Frequent',
+    available: 'Beschikbaar:',
+    max: 'Max',
+    insufficientHint: 'Bedrag overschrijdt het bekende saldo van deze rekening',
   },
   errors: {
     error: 'Fout',

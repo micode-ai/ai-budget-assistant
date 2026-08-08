@@ -356,3 +356,126 @@ describe('WalletService.remove', () => {
     expect(res).toEqual({ success: true });
   });
 });
+
+describe('WalletService.getSummariesForAccounts', () => {
+  function makeService(data: {
+    memberships?: unknown[];
+    walletBalances?: unknown[];
+    incomeTotals?: unknown[];
+    expenseTotals?: unknown[];
+    exchangeOut?: unknown[];
+    exchangeIn?: unknown[];
+    transfersOut?: unknown[];
+    transfersIn?: unknown[];
+  }) {
+    const prisma = {
+      accountMember: { findMany: jest.fn().mockResolvedValue(data.memberships ?? []) },
+      walletBalance: { findMany: jest.fn().mockResolvedValue(data.walletBalances ?? []) },
+      income: { groupBy: jest.fn().mockResolvedValue(data.incomeTotals ?? []) },
+      expense: { groupBy: jest.fn().mockResolvedValue(data.expenseTotals ?? []) },
+      currencyExchange: {
+        groupBy: jest
+          .fn()
+          .mockResolvedValueOnce(data.exchangeOut ?? [])
+          .mockResolvedValueOnce(data.exchangeIn ?? []),
+      },
+      accountTransfer: {
+        groupBy: jest
+          .fn()
+          .mockResolvedValueOnce(data.transfersOut ?? [])
+          .mockResolvedValueOnce(data.transfersIn ?? []),
+      },
+    };
+    return { service: new WalletService(prisma as never), prisma };
+  }
+
+  it('returns an empty list and touches nothing else when the user has no accounts', async () => {
+    const { service, prisma } = makeService({ memberships: [] });
+
+    await expect(service.getSummariesForAccounts('u1')).resolves.toEqual({ accounts: [] });
+    expect(prisma.walletBalance.findMany).not.toHaveBeenCalled();
+  });
+
+  it('keeps each account’s totals separate', async () => {
+    const { service } = makeService({
+      memberships: [{ accountId: 'a1' }, { accountId: 'a2' }],
+      walletBalances: [
+        { accountId: 'a1', currencyCode: 'PLN', initialAmount: 1000 },
+        { accountId: 'a2', currencyCode: 'PLN', initialAmount: 50 },
+      ],
+      incomeTotals: [{ accountId: 'a1', currencyCode: 'PLN', _sum: { amount: 200 } }],
+      expenseTotals: [{ accountId: 'a2', currencyCode: 'PLN', _sum: { amount: 20 } }],
+      transfersOut: [{ fromAccountId: 'a1', fromCurrency: 'PLN', _sum: { fromAmount: 300 } }],
+      transfersIn: [{ toAccountId: 'a2', toCurrency: 'PLN', _sum: { toAmount: 300 } }],
+    });
+
+    const res = await service.getSummariesForAccounts('u1');
+
+    const a1 = res.accounts.find((a) => a.accountId === 'a1');
+    const a2 = res.accounts.find((a) => a.accountId === 'a2');
+    // a1: 1000 + 200 income - 300 transferred out
+    expect(a1?.balances[0].currentBalance).toBe(900);
+    // a2: 50 - 20 spent + 300 transferred in
+    expect(a2?.balances[0].currentBalance).toBe(330);
+  });
+
+  it('does not leak one account’s totals into another account with the same currency', async () => {
+    const { service } = makeService({
+      memberships: [{ accountId: 'a1' }, { accountId: 'a2' }],
+      walletBalances: [
+        { accountId: 'a1', currencyCode: 'EUR', initialAmount: 0 },
+        { accountId: 'a2', currencyCode: 'EUR', initialAmount: 0 },
+      ],
+      incomeTotals: [{ accountId: 'a1', currencyCode: 'EUR', _sum: { amount: 500 } }],
+    });
+
+    const res = await service.getSummariesForAccounts('u1');
+
+    expect(res.accounts.find((a) => a.accountId === 'a1')?.balances[0].currentBalance).toBe(500);
+    expect(res.accounts.find((a) => a.accountId === 'a2')?.balances[0].currentBalance).toBe(0);
+  });
+
+  it('lists an account with no wallet balance rows rather than dropping it', async () => {
+    const { service } = makeService({
+      memberships: [{ accountId: 'a1' }, { accountId: 'empty' }],
+      walletBalances: [{ accountId: 'a1', currencyCode: 'PLN', initialAmount: 10 }],
+    });
+
+    const res = await service.getSummariesForAccounts('u1');
+
+    expect(res.accounts).toHaveLength(2);
+    expect(res.accounts.find((a) => a.accountId === 'empty')?.balances).toEqual([]);
+  });
+
+  it('excludes split-receivable expenses and income-counted incoming transfers', async () => {
+    const { service, prisma } = makeService({ memberships: [{ accountId: 'a1' }] });
+
+    await service.getSummariesForAccounts('u1');
+
+    expect(prisma.expense.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ isSplitReceivable: false }) }),
+    );
+    // Second accountTransfer.groupBy call is the incoming side.
+    expect(prisma.accountTransfer.groupBy).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ where: expect.objectContaining({ countAsIncome: false }) }),
+    );
+  });
+
+  it('supports multiple currencies on one account', async () => {
+    const { service } = makeService({
+      memberships: [{ accountId: 'a1' }],
+      walletBalances: [
+        { accountId: 'a1', currencyCode: 'PLN', initialAmount: 100 },
+        { accountId: 'a1', currencyCode: 'EUR', initialAmount: 40 },
+      ],
+      expenseTotals: [{ accountId: 'a1', currencyCode: 'EUR', _sum: { amount: 15 } }],
+    });
+
+    const res = await service.getSummariesForAccounts('u1');
+    const balances = res.accounts[0].balances;
+
+    expect(balances.find((b) => b.currencyCode === 'PLN')?.currentBalance).toBe(100);
+    expect(balances.find((b) => b.currencyCode === 'EUR')?.currentBalance).toBe(25);
+  });
+});

@@ -1013,6 +1013,10 @@ export default {
     periodThisYear: 'Этот год',
     noTransfers: 'Нет переводов',
     noTransfersHint: 'Переводы между вашими счетами будут здесь',
+    frequent: 'Частые',
+    available: 'Доступно:',
+    max: 'Всё',
+    insufficientHint: 'Сумма больше известного остатка на этом счёте',
   },
   errors: {
     error: 'Ошибка',

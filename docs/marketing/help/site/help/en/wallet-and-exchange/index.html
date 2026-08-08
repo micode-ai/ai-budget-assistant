@@ -198,14 +198,20 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <h3>Step-by-step</h3>
 <ol>
 <li>Go to <strong>Settings</strong> &gt; <strong>Wallet</strong> &gt; <strong>Transfer</strong></li>
-<li>Select the <strong>From Account</strong> (the source account)</li>
+<li>Select the <strong>From Account</strong> (the source account) — each account chip shows its current balance</li>
 <li>Select the <strong>To Account</strong> (the destination account)</li>
 <li>Choose the <strong>Currency</strong></li>
-<li>Enter the <strong>Amount</strong> to transfer</li>
+<li>Enter the <strong>Amount</strong> to transfer. <strong>Available:</strong> below the field shows the source account&rsquo;s balance in the currency you picked — tap <strong>Max</strong> to fill in all of it</li>
 <li>If the accounts use different currencies, an <strong>Exchange Rate</strong> field appears — adjust it if your actual rate differs</li>
+<li>Pick the <strong>Date</strong> — it defaults to today, so tap it to record a transfer you made earlier</li>
 <li>Add optional <strong>Notes</strong> (e.g., &ldquo;Monthly savings&rdquo; or &ldquo;Reimbursement&rdquo;)</li>
 <li>Tap <strong>Transfer</strong> to complete</li>
 </ol>
+<p>If the amount is larger than the balance the app knows about, you&rsquo;ll see a warning — but the transfer is still saved. It is never blocked, because you may be entering a transfer after the fact, or the account&rsquo;s initial balance may never have been set.</p>
+<p>A dash (—) instead of a balance means the app has no figure for that account yet. Balances of accounts other than the one you&rsquo;re currently working in come from the server, so they can be missing the first time you open the form offline.</p>
+<h3>Frequent Transfers</h3>
+<p>If you have transferred money before, a <strong>Frequent</strong> row appears at the top of the form with your most-used routes (for example, <em>Personal → Savings 2000 PLN</em>). Tap one and the form fills in — accounts, currencies and the amount from the last time you used that route. Change anything you like before saving.</p>
+<p>Routes involving an account you no longer have access to are not offered.</p>
 <h3>Recent Transfers</h3>
 <p>Below the transfer form, you&rsquo;ll find the 5 most recent account transfers with:
 - Source and destination accounts (From → To)
@@ -219,6 +225,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Available filters:
 - <strong>Account</strong> — filter by a specific source or destination account
 - <strong>Period</strong> — choose from <strong>All time</strong>, <strong>This month</strong>, <strong>Last 3 months</strong>, or <strong>This year</strong></p>
+<h3>Editing a Transfer</h3>
+<p>Open a transfer from <strong>Recent Transfers</strong> or the Transfer History screen and tap <strong>Edit</strong>. You can change:
+- Both accounts — the source and the destination
+- The amounts and the exchange rate
+- The date
+- Notes and the <strong>Count as income</strong> option</p>
+<p>Changing an account also switches that side of the transfer to the account&rsquo;s own currency. If <strong>Count as income</strong> is on, the matching income record moves to the new destination account as well.</p>
+<p>One of the two accounts must remain the account you&rsquo;re currently working in — otherwise the transfer would vanish from the history of both sides.</p>
 <h2>Supported Currencies</h2>
 <div class="tablewrap"><table>
 <thead>

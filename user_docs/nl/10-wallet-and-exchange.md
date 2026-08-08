@@ -116,13 +116,24 @@ Met accountoverboekingen kun je geld tussen verschillende accounts verplaatsen �
 ### Stap voor stap
 
 1. Ga naar **Instellingen** > **Portemonnee** > **Overboeking**
-2. Selecteer het **Van account** (het bronaccount)
+2. Selecteer het **Van account** (het bronaccount) — elke accountchip toont het huidige saldo
 3. Selecteer het **Naar account** (het doelaccount)
 4. Kies de **Valuta**
-5. Voer het **Bedrag** in dat je wilt overboeken
+5. Voer het **Bedrag** in dat je wilt overboeken. Onder het veld toont **Beschikbaar:** het saldo van het bronaccount in de gekozen valuta — tik op **Max** om alles in te vullen
 6. Als de accounts verschillende valuta's gebruiken, verschijnt er een veld **Wisselkoers** — pas het aan als je werkelijke koers afwijkt
-7. Voeg optionele **Notities** toe (bijv. "Maandelijks sparen" of "Vergoeding")
-8. Tik op **Overboeken** om af te ronden
+7. Kies de **Datum** — standaard vandaag; tik erop om een eerdere overboeking vast te leggen
+8. Voeg optionele **Notities** toe (bijv. "Maandelijks sparen" of "Vergoeding")
+9. Tik op **Overboeken** om af te ronden
+
+Is het bedrag hoger dan het saldo dat de app kent, dan zie je een waarschuwing — maar de overboeking wordt gewoon opgeslagen. Ze wordt nooit geblokkeerd: je legt de overboeking misschien achteraf vast, of het beginsaldo van het account is nooit ingesteld.
+
+Een streepje (—) in plaats van een saldo betekent dat de app dat cijfer nog niet heeft. Saldi van andere accounts dan het huidige komen van de server en kunnen dus ontbreken als je het formulier voor het eerst offline opent.
+
+### Frequente overboekingen
+
+Heb je eerder geld overgeboekt, dan verschijnt bovenaan het formulier een rij **Frequent** met je meestgebruikte routes (bijv. *Persoonlijk → Sparen 2000 PLN*). Tik erop en het formulier wordt ingevuld: accounts, valuta's en het bedrag van de vorige keer op die route. Voor het opslaan kun je alles nog aanpassen.
+
+Routes met een account waartoe je geen toegang meer hebt, worden niet aangeboden.
 
 ### Recente overboekingen
 
@@ -142,6 +153,18 @@ Het scherm **Overboekingsgeschiedenis** toont een volledige lijst van al je acco
 Beschikbare filters:
 - **Account** — filter op een specifiek bron- of doelaccount
 - **Periode** — kies uit **Alle tijd**, **Deze maand**, **Laatste 3 maanden** of **Dit jaar**
+
+### Een overboeking bewerken
+
+Open een overboeking via **Recente overboekingen** of de geschiedenis en tik op **Bewerken**. Je kunt wijzigen:
+- Beide accounts — bron en doel
+- De bedragen en de wisselkoers
+- De datum
+- Notities en de optie **Tellen als inkomsten**
+
+Een account wijzigen zet die kant van de overboeking ook om naar de valuta van dat account. Staat **Tellen als inkomsten** aan, dan verhuist de bijbehorende inkomstenpost mee naar het nieuwe doelaccount.
+
+Een van de twee accounts moet het account blijven waarin je nu werkt — anders zou de overboeking uit de geschiedenis van beide kanten verdwijnen.
 
 ## Ondersteunde valuta's
 

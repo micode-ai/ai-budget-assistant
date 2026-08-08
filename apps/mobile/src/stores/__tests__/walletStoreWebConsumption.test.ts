@@ -8,6 +8,20 @@
  */
 jest.mock('react-native', () => ({ Platform: { OS: 'web' } }));
 
+// walletStore caches cross-account balances in MMKV, which has no jest-native
+// binding — mock it with an in-memory map (same shape as inflationShieldStore.test).
+jest.mock('react-native-mmkv', () => {
+  const store = new Map<string, string | number>();
+  return {
+    MMKV: jest.fn().mockImplementation(() => ({
+      getString: (k: string) => (store.has(k) ? String(store.get(k)) : undefined),
+      getNumber: (k: string) => (typeof store.get(k) === 'number' ? (store.get(k) as number) : undefined),
+      set: (k: string, v: string | number) => store.set(k, v),
+      delete: (k: string) => store.delete(k),
+    })),
+  };
+});
+
 jest.mock('@/db/walletRepository', () => ({
   loadAllWalletBalances: jest.fn().mockResolvedValue([]),
   upsertWalletBalance: jest.fn().mockResolvedValue(undefined),

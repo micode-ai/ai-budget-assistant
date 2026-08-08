@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { accountCurrencyKey, buildWalletBalanceRow } from './wallet-balance.util';
 import { SetWalletBalanceDto } from './dto';
 
 @Injectable()
@@ -146,32 +147,155 @@ export class WalletService {
     }
 
     // Compute balances
-    const balances = walletBalances.map((wb: typeof walletBalances[number]) => {
-      const initialAmount = Number(wb.initialAmount);
-      const totalIncomes = incomeMap.get(wb.currencyCode) || 0;
-      const totalExpenses = expenseMap.get(wb.currencyCode) || 0;
-      const totalExchangedIn = exchangeInMap.get(wb.currencyCode) || 0;
-      const totalExchangedOut = exchangeOutMap.get(wb.currencyCode) || 0;
-      const totalTransferredIn = transferInMap.get(wb.currencyCode) || 0;
-      const totalTransferredOut = transferOutMap.get(wb.currencyCode) || 0;
-      const currentBalance = initialAmount + totalIncomes - totalExpenses
-        + totalExchangedIn - totalExchangedOut
-        + totalTransferredIn - totalTransferredOut;
-
-      return {
-        currencyCode: wb.currencyCode,
-        initialAmount,
-        totalIncomes,
-        totalExpenses,
-        totalExchangedIn,
-        totalExchangedOut,
-        totalTransferredIn,
-        totalTransferredOut,
-        currentBalance,
-      };
-    });
+    const balances = walletBalances.map((wb: typeof walletBalances[number]) =>
+      buildWalletBalanceRow(wb.currencyCode, Number(wb.initialAmount), {
+        totalIncomes: incomeMap.get(wb.currencyCode) || 0,
+        totalExpenses: expenseMap.get(wb.currencyCode) || 0,
+        totalExchangedIn: exchangeInMap.get(wb.currencyCode) || 0,
+        totalExchangedOut: exchangeOutMap.get(wb.currencyCode) || 0,
+        totalTransferredIn: transferInMap.get(wb.currencyCode) || 0,
+        totalTransferredOut: transferOutMap.get(wb.currencyCode) || 0,
+      }),
+    );
 
     return { balances };
+  }
+
+  /**
+   * Wallet balances for every account the user belongs to, in one round trip.
+   *
+   * Mirrors `getSummary` exactly — same six aggregates, same exclusions — but grouped
+   * by `accountId + currencyCode` so the transfer form can show the balance of an
+   * account other than the selected one. Six queries total regardless of how many
+   * accounts the user has, rather than six per account.
+   */
+  async getSummariesForAccounts(userId: string) {
+    const memberships = await this.prisma.accountMember.findMany({
+      where: { userId },
+      select: { accountId: true },
+    });
+    const accountIds = memberships.map((m: { accountId: string }) => m.accountId);
+    if (accountIds.length === 0) return { accounts: [] };
+
+    const [
+      walletBalances,
+      incomeTotals,
+      expenseTotals,
+      exchangeOut,
+      exchangeIn,
+      transfersOut,
+      transfersIn,
+    ] = await Promise.all([
+      this.prisma.walletBalance.findMany({
+        where: { accountId: { in: accountIds }, isDeleted: false },
+      }),
+      this.prisma.income.groupBy({
+        by: ['accountId', 'currencyCode'],
+        where: { accountId: { in: accountIds }, isDeleted: false },
+        _sum: { amount: true },
+      }),
+      // isSplitReceivable: false — see common/utils/expense-filters.ts.
+      this.prisma.expense.groupBy({
+        by: ['accountId', 'currencyCode'],
+        where: { accountId: { in: accountIds }, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
+        _sum: { amount: true },
+      }),
+      this.prisma.currencyExchange.groupBy({
+        by: ['accountId', 'fromCurrency'],
+        where: { accountId: { in: accountIds }, isDeleted: false },
+        _sum: { fromAmount: true },
+      }),
+      this.prisma.currencyExchange.groupBy({
+        by: ['accountId', 'toCurrency'],
+        where: { accountId: { in: accountIds }, isDeleted: false },
+        _sum: { toAmount: true },
+      }),
+      this.prisma.accountTransfer.groupBy({
+        by: ['fromAccountId', 'fromCurrency'],
+        where: { fromAccountId: { in: accountIds }, isDeleted: false },
+        _sum: { fromAmount: true },
+      }),
+      // countAsIncome transfers are already counted through their linked Income row.
+      this.prisma.accountTransfer.groupBy({
+        by: ['toAccountId', 'toCurrency'],
+        where: { toAccountId: { in: accountIds }, isDeleted: false, countAsIncome: false },
+        _sum: { toAmount: true },
+      }),
+    ]);
+
+    const toMap = <T>(
+      rows: T[],
+      accountOf: (row: T) => string,
+      currencyOf: (row: T) => string,
+      amountOf: (row: T) => unknown,
+    ) => {
+      const map = new Map<string, number>();
+      for (const row of rows) {
+        map.set(accountCurrencyKey(accountOf(row), currencyOf(row)), Number(amountOf(row) || 0));
+      }
+      return map;
+    };
+
+    type Grouped = Record<string, unknown> & { _sum: Record<string, unknown> };
+    const incomeMap = toMap(
+      incomeTotals as unknown as Grouped[],
+      (r) => r.accountId as string,
+      (r) => r.currencyCode as string,
+      (r) => r._sum.amount,
+    );
+    const expenseMap = toMap(
+      expenseTotals as unknown as Grouped[],
+      (r) => r.accountId as string,
+      (r) => r.currencyCode as string,
+      (r) => r._sum.amount,
+    );
+    const exchangeOutMap = toMap(
+      exchangeOut as unknown as Grouped[],
+      (r) => r.accountId as string,
+      (r) => r.fromCurrency as string,
+      (r) => r._sum.fromAmount,
+    );
+    const exchangeInMap = toMap(
+      exchangeIn as unknown as Grouped[],
+      (r) => r.accountId as string,
+      (r) => r.toCurrency as string,
+      (r) => r._sum.toAmount,
+    );
+    const transferOutMap = toMap(
+      transfersOut as unknown as Grouped[],
+      (r) => r.fromAccountId as string,
+      (r) => r.fromCurrency as string,
+      (r) => r._sum.fromAmount,
+    );
+    const transferInMap = toMap(
+      transfersIn as unknown as Grouped[],
+      (r) => r.toAccountId as string,
+      (r) => r.toCurrency as string,
+      (r) => r._sum.toAmount,
+    );
+
+    const byAccount = new Map<string, ReturnType<typeof buildWalletBalanceRow>[]>();
+    for (const accountId of accountIds) byAccount.set(accountId, []);
+
+    for (const wb of walletBalances) {
+      const key = accountCurrencyKey(wb.accountId, wb.currencyCode);
+      const row = buildWalletBalanceRow(wb.currencyCode, Number(wb.initialAmount), {
+        totalIncomes: incomeMap.get(key) || 0,
+        totalExpenses: expenseMap.get(key) || 0,
+        totalExchangedIn: exchangeInMap.get(key) || 0,
+        totalExchangedOut: exchangeOutMap.get(key) || 0,
+        totalTransferredIn: transferInMap.get(key) || 0,
+        totalTransferredOut: transferOutMap.get(key) || 0,
+      });
+      byAccount.get(wb.accountId)?.push(row);
+    }
+
+    return {
+      accounts: accountIds.map((accountId) => ({
+        accountId,
+        balances: byAccount.get(accountId) ?? [],
+      })),
+    };
   }
 
   async getBalanceHistory(accountId: string, days: number) {

@@ -65,13 +65,24 @@ En la parte superior de la pantalla de Billetera, la tarjeta **Historial de sald
 Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Personal):
 
 1. Ve a **Billetera** > **Transferencia**
-2. Selecciona la **Cuenta origen** — la cuenta desde la que envias el dinero
+2. Selecciona la **Cuenta origen** — la cuenta desde la que envias el dinero. Cada ficha de cuenta muestra su saldo actual
 3. Selecciona la **Cuenta destino** — la cuenta que recibira el dinero
 4. Selecciona la **Moneda**
-5. Introduce el **Importe**
+5. Introduce el **Importe**. Debajo del campo, **Disponible:** muestra el saldo de la cuenta origen en la moneda elegida — toca **Max** para usarlo todo
 6. Si las monedas de las cuentas difieren, ajusta la **Tasa de cambio** (se obtiene automaticamente)
-7. Opcionalmente agrega **Notas** (por ejemplo, "Reembolso de gastos" o "Ahorro mensual")
-8. Toca **Transferir** para completar
+7. Elige la **Fecha** — por defecto es hoy; tocala para registrar una transferencia anterior
+8. Opcionalmente agrega **Notas** (por ejemplo, "Reembolso de gastos" o "Ahorro mensual")
+9. Toca **Transferir** para completar
+
+Si el importe supera el saldo que la app conoce, veras un aviso, pero la transferencia se guarda igualmente. Nunca se bloquea: puedes estar registrando una transferencia posterior o quiza nunca se fijo el saldo inicial de la cuenta.
+
+Un guion (—) en lugar del saldo significa que la app aun no tiene esa cifra. Los saldos de cuentas distintas de la actual vienen del servidor, asi que pueden faltar la primera vez que abres el formulario sin conexion.
+
+### Transferencias frecuentes
+
+Si ya has transferido dinero antes, aparece una fila **Frecuentes** en la parte superior del formulario con tus rutas mas usadas (por ejemplo, *Personal → Ahorros 2000 PLN*). Toca una y el formulario se rellena: cuentas, monedas y el importe de la ultima vez que usaste esa ruta. Puedes cambiar lo que quieras antes de guardar.
+
+No se ofrecen rutas con cuentas a las que ya no tienes acceso.
 
 ### Transferencias recientes
 
@@ -91,6 +102,18 @@ La pantalla **Historial de transferencias** muestra una lista completa de todas 
 Filtros disponibles:
 - **Cuenta** — filtrar por una cuenta de origen o destino especifica
 - **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
+
+### Editar una transferencia
+
+Abre una transferencia desde **Transferencias recientes** o desde el historial y toca **Editar**. Puedes cambiar:
+- Ambas cuentas — origen y destino
+- Los importes y la tasa de cambio
+- La fecha
+- Las notas y la opcion **Contar como ingreso**
+
+Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de esa cuenta. Si **Contar como ingreso** esta activo, el registro de ingreso correspondiente se mueve tambien a la nueva cuenta destino.
+
+Una de las dos cuentas debe seguir siendo la cuenta en la que estas trabajando; de lo contrario la transferencia desapareceria del historial de ambas partes.
 
 ## Cambio de divisa
 

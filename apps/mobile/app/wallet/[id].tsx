@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
+import { DatePicker } from '@/components/DatePicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
 import { useAccountStore } from '@/stores/accountStore';
+import type { Currency } from '@budget/shared-types';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -28,6 +30,10 @@ export default function TransferDetailScreen() {
   const [editExchangeRate, setEditExchangeRate] = useState(transfer?.exchangeRate?.toString() || '');
   const [editNotes, setEditNotes] = useState(transfer?.notes || '');
   const [editCountAsIncome, setEditCountAsIncome] = useState(transfer?.countAsIncome || false);
+  const [editFromAccountId, setEditFromAccountId] = useState(transfer?.fromAccountId || '');
+  const [editToAccountId, setEditToAccountId] = useState(transfer?.toAccountId || '');
+  const [editDate, setEditDate] = useState(transfer ? new Date(transfer.date) : new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   if (!transfer) {
     return (
@@ -44,10 +50,32 @@ export default function TransferDetailScreen() {
   const fromAccount = accounts.find((a) => a.id === transfer.fromAccountId);
   const toAccount = accounts.find((a) => a.id === transfer.toAccountId);
 
+  // Accounts the user may pay from. A viewer cannot be the source of a transfer,
+  // which the server enforces too.
+  const payableAccounts = accounts.filter((a) => a.myRole !== 'viewer');
+
+  // Currency follows the account, exactly as it does in the create form. Re-homing
+  // a transfer while keeping the old currency would store a meaningless row.
+  const currencyOf = (accountId: string, fallback: Currency): Currency =>
+    (accounts.find((a) => a.id === accountId)?.currencyCode as Currency) ?? fallback;
+  const editFromCurrency =
+    editFromAccountId === transfer.fromAccountId
+      ? transfer.fromCurrency
+      : currencyOf(editFromAccountId, transfer.fromCurrency);
+  const editToCurrency =
+    editToAccountId === transfer.toAccountId
+      ? transfer.toCurrency
+      : currencyOf(editToAccountId, transfer.toCurrency);
+
   const handleSave = () => {
     const from = parseAmount(editFromAmount);
     const to = parseAmount(editToAmount);
     const rate = parseAmount(editExchangeRate);
+
+    if (!editFromAccountId || !editToAccountId || editFromAccountId === editToAccountId) {
+      showAlert(t('common.error'), t('transfer.sameAccountError'));
+      return;
+    }
 
     if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
       showAlert(t('common.error'), t('validation.invalidAmount'));
@@ -55,9 +83,14 @@ export default function TransferDetailScreen() {
     }
 
     updateTransfer(transfer.id, {
+      fromAccountId: editFromAccountId,
+      toAccountId: editToAccountId,
+      fromCurrency: editFromCurrency,
+      toCurrency: editToCurrency,
       fromAmount: from,
       toAmount: to,
       exchangeRate: rate,
+      date: editDate,
       notes: editNotes.trim() || undefined,
       countAsIncome: editCountAsIncome,
     });
@@ -71,6 +104,10 @@ export default function TransferDetailScreen() {
     setEditExchangeRate(transfer.exchangeRate.toString());
     setEditNotes(transfer.notes || '');
     setEditCountAsIncome(transfer.countAsIncome);
+    setEditFromAccountId(transfer.fromAccountId);
+    setEditToAccountId(transfer.toAccountId);
+    setEditDate(new Date(transfer.date));
+    setShowDatePicker(false);
   };
 
   const handleDelete = () => {
@@ -108,13 +145,81 @@ export default function TransferDetailScreen() {
       <KeyboardAwareScreen contentContainerStyle={styles.scrollContent}>
         {/* Amount Card */}
         <View style={styles.amountCard}>
-          <Text style={styles.accountLabel}>
-            {fromAccount?.name || '...'} → {toAccount?.name || '...'}
-          </Text>
+          {isEditing ? (
+            <>
+              <Text style={styles.editPickerLabel}>{t('transfer.fromAccount')}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editPickerRow}>
+                {payableAccounts.map((account) => (
+                  <TouchableOpacity
+                    key={account.id}
+                    style={[
+                      styles.editAccountChip,
+                      editFromAccountId === account.id && styles.editAccountChipActive,
+                    ]}
+                    onPress={() => setEditFromAccountId(account.id)}
+                  >
+                    <Text
+                      style={[
+                        styles.editAccountChipText,
+                        editFromAccountId === account.id && styles.editAccountChipTextActive,
+                      ]}
+                    >
+                      {account.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.editAccountChipSub,
+                        editFromAccountId === account.id && styles.editAccountChipTextActive,
+                      ]}
+                    >
+                      {account.currencyCode}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              <Text style={styles.editPickerLabel}>{t('transfer.toAccount')}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editPickerRow}>
+                {accounts
+                  .filter((a) => a.id !== editFromAccountId)
+                  .map((account) => (
+                    <TouchableOpacity
+                      key={account.id}
+                      style={[
+                        styles.editAccountChip,
+                        editToAccountId === account.id && styles.editAccountChipActive,
+                      ]}
+                      onPress={() => setEditToAccountId(account.id)}
+                    >
+                      <Text
+                        style={[
+                          styles.editAccountChipText,
+                          editToAccountId === account.id && styles.editAccountChipTextActive,
+                        ]}
+                      >
+                        {account.name}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.editAccountChipSub,
+                          editToAccountId === account.id && styles.editAccountChipTextActive,
+                        ]}
+                      >
+                        {account.currencyCode}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            </>
+          ) : (
+            <Text style={styles.accountLabel}>
+              {fromAccount?.name || '...'} → {toAccount?.name || '...'}
+            </Text>
+          )}
           {isEditing ? (
             <View style={styles.amountEditRow}>
               <View style={styles.amountEditCol}>
-                <Text style={styles.amountCurrencyLabel}>{transfer.fromCurrency}</Text>
+                <Text style={styles.amountCurrencyLabel}>{editFromCurrency}</Text>
                 <TextInput
                   style={styles.amountEditInput}
                   value={editFromAmount}
@@ -124,7 +229,7 @@ export default function TransferDetailScreen() {
               </View>
               <Ionicons name="arrow-forward" size={20} color={theme.colors.textTertiary} />
               <View style={styles.amountEditCol}>
-                <Text style={styles.amountCurrencyLabel}>{transfer.toCurrency}</Text>
+                <Text style={styles.amountCurrencyLabel}>{editToCurrency}</Text>
                 <TextInput
                   style={styles.amountEditInput}
                   value={editToAmount}
@@ -150,24 +255,45 @@ export default function TransferDetailScreen() {
         <View style={styles.detailsCard}>
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('transfer.date')}</Text>
-            <Text style={styles.detailValue}>
-              {new Date(transfer.date).toLocaleDateString(getIntlLocale())}
-            </Text>
+            {isEditing ? (
+              <TouchableOpacity
+                style={styles.dateButton}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Ionicons name="calendar-outline" size={16} color={theme.colors.primary} />
+                <Text style={styles.dateButtonText}>
+                  {editDate.toLocaleDateString(getIntlLocale())}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.detailValue}>
+                {new Date(transfer.date).toLocaleDateString(getIntlLocale())}
+              </Text>
+            )}
           </View>
+          {isEditing && showDatePicker && (
+            <DatePicker
+              value={editDate}
+              onChange={(selectedDate) => {
+                setShowDatePicker(Platform.OS === 'ios');
+                if (selectedDate) setEditDate(selectedDate);
+              }}
+            />
+          )}
 
-          {transfer.fromCurrency !== transfer.toCurrency && (
+          {(isEditing ? editFromCurrency !== editToCurrency : transfer.fromCurrency !== transfer.toCurrency) && (
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>{t('transfer.rate')}</Text>
               {isEditing ? (
                 <View style={styles.rateRow}>
-                  <Text style={styles.rateLabel}>1 {transfer.fromCurrency} =</Text>
+                  <Text style={styles.rateLabel}>1 {editFromCurrency} =</Text>
                   <TextInput
                     style={styles.rateEditInput}
                     value={editExchangeRate}
                     onChangeText={setEditExchangeRate}
                     keyboardType="decimal-pad"
                   />
-                  <Text style={styles.rateLabel}>{transfer.toCurrency}</Text>
+                  <Text style={styles.rateLabel}>{editToCurrency}</Text>
                 </View>
               ) : (
                 <Text style={styles.detailValue}>
@@ -289,6 +415,55 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing[3],
+  },
+  editPickerLabel: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+  },
+  editPickerRow: {
+    flexDirection: 'row' as const,
+    marginBottom: theme.spacing[3],
+  },
+  editAccountChip: {
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.background,
+    marginRight: theme.spacing[2],
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    alignItems: 'center' as const,
+  },
+  editAccountChipActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  editAccountChipText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textSecondary,
+  },
+  editAccountChipSub: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    fontSize: 10,
+  },
+  editAccountChipTextActive: {
+    color: '#FFFFFF',
+  },
+  dateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.md,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+  },
+  dateButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
   },
   amountDisplayRow: {
     flexDirection: 'row' as const,

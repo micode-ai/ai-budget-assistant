@@ -116,13 +116,24 @@ Account transfers let you move money between different accounts — for example,
 ### Step-by-step
 
 1. Go to **Settings** > **Wallet** > **Transfer**
-2. Select the **From Account** (the source account)
+2. Select the **From Account** (the source account) — each account chip shows its current balance
 3. Select the **To Account** (the destination account)
 4. Choose the **Currency**
-5. Enter the **Amount** to transfer
+5. Enter the **Amount** to transfer. **Available:** below the field shows the source account's balance in the currency you picked — tap **Max** to fill in all of it
 6. If the accounts use different currencies, an **Exchange Rate** field appears — adjust it if your actual rate differs
-7. Add optional **Notes** (e.g., "Monthly savings" or "Reimbursement")
-8. Tap **Transfer** to complete
+7. Pick the **Date** — it defaults to today, so tap it to record a transfer you made earlier
+8. Add optional **Notes** (e.g., "Monthly savings" or "Reimbursement")
+9. Tap **Transfer** to complete
+
+If the amount is larger than the balance the app knows about, you'll see a warning — but the transfer is still saved. It is never blocked, because you may be entering a transfer after the fact, or the account's initial balance may never have been set.
+
+A dash (—) instead of a balance means the app has no figure for that account yet. Balances of accounts other than the one you're currently working in come from the server, so they can be missing the first time you open the form offline.
+
+### Frequent Transfers
+
+If you have transferred money before, a **Frequent** row appears at the top of the form with your most-used routes (for example, *Personal → Savings 2000 PLN*). Tap one and the form fills in — accounts, currencies and the amount from the last time you used that route. Change anything you like before saving.
+
+Routes involving an account you no longer have access to are not offered.
 
 ### Recent Transfers
 
@@ -142,6 +153,18 @@ The **Transfer History** screen displays a complete list of all your account tra
 Available filters:
 - **Account** — filter by a specific source or destination account
 - **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
+
+### Editing a Transfer
+
+Open a transfer from **Recent Transfers** or the Transfer History screen and tap **Edit**. You can change:
+- Both accounts — the source and the destination
+- The amounts and the exchange rate
+- The date
+- Notes and the **Count as income** option
+
+Changing an account also switches that side of the transfer to the account's own currency. If **Count as income** is on, the matching income record moves to the new destination account as well.
+
+One of the two accounts must remain the account you're currently working in — otherwise the transfer would vanish from the history of both sides.
 
 ## Supported Currencies
 

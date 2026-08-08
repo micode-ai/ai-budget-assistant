@@ -1504,13 +1504,24 @@ Account transfers let you move money between different accounts — for example,
 ### Step-by-step
 
 1. Go to **Settings** > **Wallet** > **Transfer**
-2. Select the **From Account** (the source account)
+2. Select the **From Account** (the source account) — each account chip shows its current balance
 3. Select the **To Account** (the destination account)
 4. Choose the **Currency**
-5. Enter the **Amount** to transfer
+5. Enter the **Amount** to transfer. **Available:** below the field shows the source account's balance in the currency you picked — tap **Max** to fill in all of it
 6. If the accounts use different currencies, an **Exchange Rate** field appears — adjust it if your actual rate differs
-7. Add optional **Notes** (e.g., "Monthly savings" or "Reimbursement")
-8. Tap **Transfer** to complete
+7. Pick the **Date** — it defaults to today, so tap it to record a transfer you made earlier
+8. Add optional **Notes** (e.g., "Monthly savings" or "Reimbursement")
+9. Tap **Transfer** to complete
+
+If the amount is larger than the balance the app knows about, you'll see a warning — but the transfer is still saved. It is never blocked, because you may be entering a transfer after the fact, or the account's initial balance may never have been set.
+
+A dash (—) instead of a balance means the app has no figure for that account yet. Balances of accounts other than the one you're currently working in come from the server, so they can be missing the first time you open the form offline.
+
+### Frequent Transfers
+
+If you have transferred money before, a **Frequent** row appears at the top of the form with your most-used routes (for example, *Personal → Savings 2000 PLN*). Tap one and the form fills in — accounts, currencies and the amount from the last time you used that route. Change anything you like before saving.
+
+Routes involving an account you no longer have access to are not offered.
 
 ### Recent Transfers
 
@@ -1530,6 +1541,18 @@ The **Transfer History** screen displays a complete list of all your account tra
 Available filters:
 - **Account** — filter by a specific source or destination account
 - **Period** — choose from **All time**, **This month**, **Last 3 months**, or **This year**
+
+### Editing a Transfer
+
+Open a transfer from **Recent Transfers** or the Transfer History screen and tap **Edit**. You can change:
+- Both accounts — the source and the destination
+- The amounts and the exchange rate
+- The date
+- Notes and the **Count as income** option
+
+Changing an account also switches that side of the transfer to the account's own currency. If **Count as income** is on, the matching income record moves to the new destination account as well.
+
+One of the two accounts must remain the account you're currently working in — otherwise the transfer would vanish from the history of both sides.
 
 ## Supported Currencies
 
@@ -5893,13 +5916,24 @@ iOS, Android, Web
 ### Пошагово: Перевод между счетами
 
 1. Перейдите в **Настройки** > **Кошелёк** > **Перевод**
-2. Выберите **Счёт-отправитель** — счёт, с которого вы отправляете средства
+2. Выберите **Счёт-отправитель** — счёт, с которого вы отправляете средства. На каждом чипе счёта показан его текущий остаток
 3. Выберите **Счёт-получатель** — счёт, на который вы переводите средства
 4. Выберите **Валюту** перевода
-5. Введите **Сумму** перевода
+5. Введите **Сумму** перевода. Под полем строка **Доступно:** показывает остаток счёта-отправителя в выбранной валюте — нажмите **Всё**, чтобы подставить его целиком
 6. Если валюты счетов различаются, укажите **Курс обмена** — он загружается автоматически, но можно скорректировать вручную
-7. При необходимости добавьте **Заметки** (например, «Пополнение личного счёта» или «Возврат средств»)
-8. Нажмите **Перевести** для завершения
+7. Выберите **Дату** — по умолчанию сегодняшняя; нажмите на неё, чтобы записать перевод задним числом
+8. При необходимости добавьте **Заметки** (например, «Пополнение личного счёта» или «Возврат средств»)
+9. Нажмите **Перевести** для завершения
+
+Если сумма больше известного приложению остатка, появится предупреждение — но перевод всё равно сохранится. Он никогда не блокируется: вы можете вносить перевод задним числом, а начальный остаток счёта мог вообще не задаваться.
+
+Прочерк (—) вместо остатка означает, что у приложения пока нет этой цифры. Остатки счетов, отличных от текущего, приходят с сервера, поэтому при первом открытии формы без интернета их может не быть.
+
+### Частые переводы
+
+Если вы уже делали переводы, вверху формы появится строка **Частые** с самыми используемыми направлениями (например, *Личный → Накопления 2000 PLN*). Нажмите на чип — форма заполнится сама: счета, валюты и сумма последнего перевода по этому направлению. Перед сохранением можно изменить что угодно.
+
+Направления со счетами, к которым у вас больше нет доступа, не предлагаются.
 
 ### Последние переводы
 
@@ -5919,6 +5953,18 @@ iOS, Android, Web
 Доступные фильтры:
 - **Счёт** — фильтр по конкретному счёту-отправителю или получателю
 - **Период** — выберите из: **За всё время**, **Этот месяц**, **Последние 3 месяца** или **Этот год**
+
+### Редактирование перевода
+
+Откройте перевод из раздела **Последние переводы** или из истории и нажмите **Изменить**. Можно поменять:
+- Оба счёта — отправителя и получателя
+- Суммы и курс обмена
+- Дату
+- Заметки и опцию **Считать доходом**
+
+Смена счёта переводит эту сторону операции и на валюту выбранного счёта. Если включено **Считать доходом**, связанная запись дохода тоже переезжает на новый счёт-получатель.
+
+Один из двух счетов должен остаться тем счётом, в котором вы сейчас работаете, — иначе перевод пропал бы из истории обеих сторон.
 
 ## Поддерживаемые валюты
 
@@ -10286,13 +10332,24 @@ iOS, Android, Web
 ### Покроково: Переказати кошти
 
 1. Перейдіть до **Налаштування** > **Гаманець** > **Переказ**
-2. Оберіть **Рахунок-відправник** — рахунок, з якого будуть списані кошти
+2. Оберіть **Рахунок-відправник** — рахунок, з якого будуть списані кошти. На кожному чіпі рахунку показано його поточний залишок
 3. Оберіть **Рахунок-отримувач** — рахунок, на який надійдуть кошти
 4. Оберіть **Валюту** переказу
-5. Введіть **Суму** переказу
+5. Введіть **Суму** переказу. Під полем рядок **Доступно:** показує залишок рахунку-відправника в обраній валюті — натисніть **Усе**, щоб підставити його повністю
 6. Якщо валюти рахунків різні — вкажіть **Курс обміну** (отримується автоматично, можна змінити вручну)
-7. За бажанням додайте **Нотатки** (наприклад, "Поповнення особистого рахунку")
-8. Натисніть **Переказати** для завершення
+7. Оберіть **Дату** — за замовчуванням сьогоднішня; натисніть на неї, щоб записати переказ заднім числом
+8. За бажанням додайте **Нотатки** (наприклад, "Поповнення особистого рахунку")
+9. Натисніть **Переказати** для завершення
+
+Якщо сума перевищує відомий застосунку залишок, з'явиться попередження — але переказ усе одно збережеться. Він ніколи не блокується: ви можете вносити переказ заднім числом, а початковий залишок рахунку міг взагалі не задаватися.
+
+Прочерк (—) замість залишку означає, що застосунок ще не має цієї цифри. Залишки рахунків, відмінних від поточного, надходять із сервера, тому їх може не бути під час першого відкриття форми без інтернету.
+
+### Часті перекази
+
+Якщо ви вже робили перекази, угорі форми з'явиться рядок **Часті** з найуживанішими напрямками (наприклад, *Особистий → Заощадження 2000 PLN*). Натисніть чіп — форма заповниться сама: рахунки, валюти та сума останнього переказу цим напрямком. Перед збереженням можна змінити будь-що.
+
+Напрямки з рахунками, до яких ви більше не маєте доступу, не пропонуються.
 
 ### Останні перекази
 
@@ -10312,6 +10369,18 @@ iOS, Android, Web
 Доступні фільтри:
 - **Рахунок** — фільтр за конкретним рахунком-відправником або отримувачем
 - **Період** — оберіть з: **За весь час**, **Цей місяць**, **Останні 3 місяці** або **Цей рік**
+
+### Редагування переказу
+
+Відкрийте переказ із розділу **Останні перекази** або з історії та натисніть **Редагувати**. Можна змінити:
+- Обидва рахунки — відправника й отримувача
+- Суми та курс обміну
+- Дату
+- Нотатки та опцію **Рахувати як дохід**
+
+Зміна рахунку переводить цю сторону операції і на валюту обраного рахунку. Якщо увімкнено **Рахувати як дохід**, пов'язаний запис доходу теж переїжджає на новий рахунок-отримувач.
+
+Один із двох рахунків має залишитися тим рахунком, у якому ви зараз працюєте, — інакше переказ зник би з історії обох сторін.
 
 ## Підтримувані валюти
 
@@ -14613,13 +14682,24 @@ Przelewaj pieniądze między swoimi kontami (np. z Biznesowego na Osobiste). Prz
 ### Krok po kroku
 
 1. Przejdź do **Ustawienia** > **Portfel** > **Przelew**
-2. Wybierz **Konto źródłowe** — konto, z którego wysyłasz środki
+2. Wybierz **Konto źródłowe** — konto, z którego wysyłasz środki. Każdy element konta pokazuje jego aktualne saldo
 3. Wybierz **Konto docelowe** — konto, na które trafiają środki
 4. Wybierz **Walutę** przelewu
-5. Wprowadź **Kwotę**
+5. Wprowadź **Kwotę**. Pod polem **Dostępne:** pokazuje saldo konta źródłowego w wybranej walucie — dotknij **Maks**, aby wstawić całość
 6. Jeśli waluty kont się różnią, podaj **Kurs wymiany** — aplikacja zasugeruje aktualny kurs, ale możesz go zmienić ręcznie
-7. Opcjonalnie dodaj **Notatki** (np. "Zwrot za zakupy" lub "Przeniesienie oszczędności")
-8. Dotknij **Przelej**, aby zatwierdzić
+7. Wybierz **Datę** — domyślnie dzisiejsza; dotknij ją, aby zapisać przelew z przeszłości
+8. Opcjonalnie dodaj **Notatki** (np. "Zwrot za zakupy" lub "Przeniesienie oszczędności")
+9. Dotknij **Przelej**, aby zatwierdzić
+
+Jeśli kwota przekracza znane aplikacji saldo, zobaczysz ostrzeżenie — ale przelew i tak zostanie zapisany. Nigdy nie jest blokowany: możesz zapisywać przelew po fakcie albo saldo początkowe konta nigdy nie zostało ustawione.
+
+Myślnik (—) zamiast salda oznacza, że aplikacja nie zna jeszcze tej kwoty. Salda kont innych niż bieżące pochodzą z serwera, więc mogą być niedostępne przy pierwszym otwarciu formularza offline.
+
+### Częste przelewy
+
+Jeśli robiłeś już przelewy, na górze formularza pojawi się wiersz **Częste** z najczęściej używanymi trasami (np. *Osobiste → Oszczędności 2000 PLN*). Dotknij jedną, a formularz wypełni się sam: konta, waluty i kwota z ostatniego przelewu na tej trasie. Przed zapisem możesz wszystko zmienić.
+
+Trasy z kontami, do których nie masz już dostępu, nie są proponowane.
 
 ### Ostatnie przelewy
 
@@ -14639,6 +14719,18 @@ Ekran **Historia przelewów** wyświetla kompletną listę wszystkich Twoich prz
 Dostępne filtry:
 - **Konto** — filtruj według konkretnego konta źródłowego lub docelowego
 - **Okres** — wybierz z: **Cały czas**, **Ten miesiąc**, **Ostatnie 3 miesiące** lub **Ten rok**
+
+### Edycja przelewu
+
+Otwórz przelew z sekcji **Ostatnie przelewy** lub z historii i dotknij **Edytuj**. Możesz zmienić:
+- Oba konta — źródłowe i docelowe
+- Kwoty i kurs wymiany
+- Datę
+- Notatki i opcję **Licz jako przychód**
+
+Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. Jeśli opcja **Licz jako przychód** jest włączona, powiązany wpis przychodu przenosi się na nowe konto docelowe.
+
+Jedno z dwóch kont musi pozostać kontem, na którym aktualnie pracujesz — inaczej przelew zniknąłby z historii obu stron.
 
 ## Obslugiwane waluty
 
@@ -18939,13 +19031,24 @@ Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberwei
 
 ### Schritt fur Schritt
 
-1. Wahle das **Von-Konto** — das Konto, von dem das Geld abgebucht wird
+1. Wahle das **Von-Konto** — das Konto, von dem das Geld abgebucht wird. Jeder Konto-Chip zeigt seinen aktuellen Saldo
 2. Wahle das **An-Konto** — das Konto, auf das das Geld gutgeschrieben wird
 3. Wahle die **Wahrung** der Uberweisung
-4. Gib den **Betrag** ein
+4. Gib den **Betrag** ein. **Verfugbar:** unter dem Feld zeigt den Saldo des Quellkontos in der gewahlten Wahrung — tippe auf **Max**, um alles einzusetzen
 5. Falls die Konten unterschiedliche Wahrungen verwenden, wird ein **Wechselkurs** angezeigt, den du anpassen kannst
-6. Fuge optionale **Notizen** hinzu (z.B. "Monatsbudget" oder "Ruckzahlung")
-7. Tippe auf **Ubertragen**, um abzuschliessen
+6. Wahle das **Datum** — standardmassig heute; tippe darauf, um eine fruhere Uberweisung nachzutragen
+7. Fuge optionale **Notizen** hinzu (z.B. "Monatsbudget" oder "Ruckzahlung")
+8. Tippe auf **Ubertragen**, um abzuschliessen
+
+Ist der Betrag hoher als der bekannte Saldo, erscheint ein Hinweis — die Uberweisung wird trotzdem gespeichert. Sie wird nie blockiert, denn du tragst sie vielleicht nachtraglich ein oder der Anfangssaldo des Kontos wurde nie gesetzt.
+
+Ein Gedankenstrich (—) statt eines Saldos bedeutet, dass die App noch keinen Wert fur dieses Konto hat. Salden anderer Konten kommen vom Server und konnen daher fehlen, wenn du das Formular offline zum ersten Mal offnest.
+
+### Haufige Uberweisungen
+
+Hast du schon einmal Geld ubertragen, erscheint oben im Formular eine Zeile **Haufig** mit deinen meistgenutzten Wegen (z.B. *Privat → Sparen 2000 PLN*). Ein Tipp darauf fullt das Formular aus — Konten, Wahrungen und der Betrag der letzten Uberweisung auf diesem Weg. Du kannst vor dem Speichern alles andern.
+
+Wege zu Konten, auf die du keinen Zugriff mehr hast, werden nicht angeboten.
 
 ### Letzte Uberweisungen
 
@@ -18965,6 +19068,18 @@ Der **Uberweisungsverlauf**-Bildschirm zeigt eine vollstandige Liste aller deine
 Verfugbare Filter:
 - **Konto** — nach einem bestimmten Quell- oder Zielkonto filtern
 - **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
+
+### Eine Uberweisung bearbeiten
+
+Offne eine Uberweisung uber **Letzte Uberweisungen** oder den Uberweisungsverlauf und tippe auf **Bearbeiten**. Anderbar sind:
+- Beide Konten — Quelle und Ziel
+- Betrage und Wechselkurs
+- Das Datum
+- Notizen und die Option **Als Einnahme zahlen**
+
+Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahrung des Kontos. Ist **Als Einnahme zahlen** aktiv, wandert der zugehorige Einnahmeeintrag ebenfalls auf das neue Zielkonto.
+
+Eines der beiden Konten muss das Konto bleiben, in dem du gerade arbeitest — sonst wurde die Uberweisung aus dem Verlauf beider Seiten verschwinden.
 
 ## Unterstutzte Wahrungen
 
@@ -23191,13 +23306,24 @@ En la parte superior de la pantalla de Billetera, la tarjeta **Historial de sald
 Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Personal):
 
 1. Ve a **Billetera** > **Transferencia**
-2. Selecciona la **Cuenta origen** — la cuenta desde la que envias el dinero
+2. Selecciona la **Cuenta origen** — la cuenta desde la que envias el dinero. Cada ficha de cuenta muestra su saldo actual
 3. Selecciona la **Cuenta destino** — la cuenta que recibira el dinero
 4. Selecciona la **Moneda**
-5. Introduce el **Importe**
+5. Introduce el **Importe**. Debajo del campo, **Disponible:** muestra el saldo de la cuenta origen en la moneda elegida — toca **Max** para usarlo todo
 6. Si las monedas de las cuentas difieren, ajusta la **Tasa de cambio** (se obtiene automaticamente)
-7. Opcionalmente agrega **Notas** (por ejemplo, "Reembolso de gastos" o "Ahorro mensual")
-8. Toca **Transferir** para completar
+7. Elige la **Fecha** — por defecto es hoy; tocala para registrar una transferencia anterior
+8. Opcionalmente agrega **Notas** (por ejemplo, "Reembolso de gastos" o "Ahorro mensual")
+9. Toca **Transferir** para completar
+
+Si el importe supera el saldo que la app conoce, veras un aviso, pero la transferencia se guarda igualmente. Nunca se bloquea: puedes estar registrando una transferencia posterior o quiza nunca se fijo el saldo inicial de la cuenta.
+
+Un guion (—) en lugar del saldo significa que la app aun no tiene esa cifra. Los saldos de cuentas distintas de la actual vienen del servidor, asi que pueden faltar la primera vez que abres el formulario sin conexion.
+
+### Transferencias frecuentes
+
+Si ya has transferido dinero antes, aparece una fila **Frecuentes** en la parte superior del formulario con tus rutas mas usadas (por ejemplo, *Personal → Ahorros 2000 PLN*). Toca una y el formulario se rellena: cuentas, monedas y el importe de la ultima vez que usaste esa ruta. Puedes cambiar lo que quieras antes de guardar.
+
+No se ofrecen rutas con cuentas a las que ya no tienes acceso.
 
 ### Transferencias recientes
 
@@ -23217,6 +23343,18 @@ La pantalla **Historial de transferencias** muestra una lista completa de todas 
 Filtros disponibles:
 - **Cuenta** — filtrar por una cuenta de origen o destino especifica
 - **Periodo** — elige entre: **Todo el tiempo**, **Este mes**, **Ultimos 3 meses** o **Este ano**
+
+### Editar una transferencia
+
+Abre una transferencia desde **Transferencias recientes** o desde el historial y toca **Editar**. Puedes cambiar:
+- Ambas cuentas — origen y destino
+- Los importes y la tasa de cambio
+- La fecha
+- Las notas y la opcion **Contar como ingreso**
+
+Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de esa cuenta. Si **Contar como ingreso** esta activo, el registro de ingreso correspondiente se mueve tambien a la nueva cuenta destino.
+
+Una de las dos cuentas debe seguir siendo la cuenta en la que estas trabajando; de lo contrario la transferencia desapareceria del historial de ambas partes.
 
 ## Cambio de divisa
 
@@ -27535,13 +27673,24 @@ Transferez de l'argent entre vos differents comptes (par ex. de Entreprise a Per
 ### Etape par etape
 
 1. Allez dans **Parametres** > **Portefeuille** > **Transfert**
-2. Selectionnez le **Compte source** — le compte d'ou l'argent sera debite
+2. Selectionnez le **Compte source** — le compte d'ou l'argent sera debite. Chaque pastille de compte affiche son solde actuel
 3. Selectionnez le **Compte destination** — le compte qui recevra l'argent
 4. Selectionnez la **Devise** du transfert
-5. Entrez le **Montant** a transferer
+5. Entrez le **Montant** a transferer. Sous le champ, **Disponible :** indique le solde du compte source dans la devise choisie — appuyez sur **Max** pour tout utiliser
 6. Si les comptes utilisent des devises differentes, un **Taux de change** sera propose automatiquement — vous pouvez le modifier manuellement
-7. Ajoutez des **Notes** optionnelles (par ex. "Remboursement frais pro" ou "Epargne mensuelle")
-8. Appuyez sur **Transferer** pour finaliser
+7. Choisissez la **Date** — aujourd'hui par defaut ; appuyez dessus pour enregistrer un transfert passe
+8. Ajoutez des **Notes** optionnelles (par ex. "Remboursement frais pro" ou "Epargne mensuelle")
+9. Appuyez sur **Transferer** pour finaliser
+
+Si le montant depasse le solde connu de l'application, un avertissement s'affiche, mais le transfert est quand meme enregistre. Il n'est jamais bloque : vous saisissez peut-etre un transfert apres coup, ou le solde initial du compte n'a jamais ete defini.
+
+Un tiret (—) a la place du solde signifie que l'application n'a pas encore ce chiffre. Les soldes des comptes autres que celui en cours viennent du serveur et peuvent donc manquer la premiere fois que vous ouvrez le formulaire hors ligne.
+
+### Transferts frequents
+
+Si vous avez deja effectue des transferts, une ligne **Frequents** apparait en haut du formulaire avec vos trajets les plus utilises (par ex. *Personnel → Epargne 2000 PLN*). Appuyez dessus et le formulaire se remplit : comptes, devises et montant du dernier transfert sur ce trajet. Vous pouvez tout modifier avant d'enregistrer.
+
+Les trajets impliquant un compte auquel vous n'avez plus acces ne sont pas proposes.
 
 ### Transferts recents
 
@@ -27561,6 +27710,18 @@ L'ecran **Historique des transferts** affiche la liste complete de tous vos tran
 Filtres disponibles :
 - **Compte** — filtrer par un compte source ou destination specifique
 - **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
+
+### Modifier un transfert
+
+Ouvrez un transfert depuis **Transferts recents** ou l'historique, puis appuyez sur **Modifier**. Vous pouvez changer :
+- Les deux comptes — source et destination
+- Les montants et le taux de change
+- La date
+- Les notes et l'option **Compter comme revenu**
+
+Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte. Si **Compter comme revenu** est active, l'ecriture de revenu correspondante est deplacee vers le nouveau compte destination.
+
+L'un des deux comptes doit rester le compte dans lequel vous travaillez, sinon le transfert disparaitrait de l'historique des deux cotes.
 
 ## Devises prises en charge
 
@@ -31828,13 +31989,24 @@ iOS, Android, Web
 ### Пакрокава: Перавод паміж рахункамі
 
 1. Перайдзіце ў **Налады** > **Кашалёк** > **Перавод**
-2. Выберыце **Рахунак-адпраўнік** — рахунак, з якога вы адпраўляеце сродкі
+2. Выберыце **Рахунак-адпраўнік** — рахунак, з якога вы адпраўляеце сродкі. На кожным чыпе рахунку паказаны яго бягучы астатак
 3. Выберыце **Рахунак-атрымальнік** — рахунак, на які вы пераводзіце сродкі
 4. Выберыце **Валюту** пераводу
-5. Увядзіце **Суму** пераводу
+5. Увядзіце **Суму** пераводу. Пад полем радок **Даступна:** паказвае астатак рахунку-адпраўніка ў выбранай валюце — націсніце **Усё**, каб падставіць яго цалкам
 6. Калі валюты рахункаў адрозніваюцца, укажыце **Курс абмену** — ён загружаецца аўтаматычна, але можна скарэкціраваць уручную
-7. Пры неабходнасці дадайце **Нататкі** (напрыклад, «Папаўненне асабістага рахунку» або «Вяртанне сродкаў»)
-8. Націсніце **Перавесці** для завяршэння
+7. Выберыце **Дату** — па змаўчанні сённяшняя; націсніце на яе, каб запісаць перавод заднім чыслом
+8. Пры неабходнасці дадайце **Нататкі** (напрыклад, «Папаўненне асабістага рахунку» або «Вяртанне сродкаў»)
+9. Націсніце **Перавесці** для завяршэння
+
+Калі сума большая за вядомы праграме астатак, з'явіцца папярэджанне — але перавод усё роўна захаваецца. Ён ніколі не блакуецца: вы можаце ўносіць перавод заднім чыслом, а пачатковы астатак рахунку мог наогул не задавацца.
+
+Працяжнік (—) замест астатку азначае, што праграма пакуль не мае гэтай лічбы. Астаткі рахункаў, адрозных ад бягучага, прыходзяць з сервера, таму пры першым адкрыцці формы без інтэрнэту іх можа не быць.
+
+### Частыя пераводы
+
+Калі вы ўжо рабілі пераводы, уверсе формы з'явіцца радок **Частыя** з найбольш ужыванымі напрамкамі (напрыклад, *Асабісты → Назапашванні 2000 PLN*). Націсніце чып — форма запоўніцца сама: рахункі, валюты і сума апошняга пераводу па гэтым напрамку. Перад захаваннем можна змяніць што заўгодна.
+
+Напрамкі з рахункамі, да якіх у вас больш няма доступу, не прапануюцца.
 
 ### Апошнія пераводы
 
@@ -31854,6 +32026,18 @@ iOS, Android, Web
 Даступныя фільтры:
 - **Рахунак** — фільтр па канкрэтным рахунку-адпраўніку або атрымальніку
 - **Перыяд** — выберыце з: **За ўвесь час**, **Гэты месяц**, **Апошнія 3 месяцы** або **Гэты год**
+
+### Рэдагаванне пераводу
+
+Адкрыйце перавод з раздзела **Апошнія пераводы** або з гісторыі і націсніце **Змяніць**. Можна памяняць:
+- Абодва рахункі — адпраўніка і атрымальніка
+- Сумы і курс абмену
+- Дату
+- Нататкі і опцыю **Лічыць даходам**
+
+Змена рахунку пераводзіць гэты бок аперацыі і на валюту выбранага рахунку. Калі ўключана **Лічыць даходам**, звязаны запіс даходу таксама пераязджае на новы рахунак-атрымальнік.
+
+Адзін з двух рахункаў павінен застацца тым рахункам, у якім вы зараз працуеце, — інакш перавод знік бы з гісторыі абодвух бакоў.
 
 ## Падтрыманыя валюты
 
@@ -36077,13 +36261,24 @@ Met accountoverboekingen kun je geld tussen verschillende accounts verplaatsen �
 ### Stap voor stap
 
 1. Ga naar **Instellingen** > **Portemonnee** > **Overboeking**
-2. Selecteer het **Van account** (het bronaccount)
+2. Selecteer het **Van account** (het bronaccount) — elke accountchip toont het huidige saldo
 3. Selecteer het **Naar account** (het doelaccount)
 4. Kies de **Valuta**
-5. Voer het **Bedrag** in dat je wilt overboeken
+5. Voer het **Bedrag** in dat je wilt overboeken. Onder het veld toont **Beschikbaar:** het saldo van het bronaccount in de gekozen valuta — tik op **Max** om alles in te vullen
 6. Als de accounts verschillende valuta's gebruiken, verschijnt er een veld **Wisselkoers** — pas het aan als je werkelijke koers afwijkt
-7. Voeg optionele **Notities** toe (bijv. "Maandelijks sparen" of "Vergoeding")
-8. Tik op **Overboeken** om af te ronden
+7. Kies de **Datum** — standaard vandaag; tik erop om een eerdere overboeking vast te leggen
+8. Voeg optionele **Notities** toe (bijv. "Maandelijks sparen" of "Vergoeding")
+9. Tik op **Overboeken** om af te ronden
+
+Is het bedrag hoger dan het saldo dat de app kent, dan zie je een waarschuwing — maar de overboeking wordt gewoon opgeslagen. Ze wordt nooit geblokkeerd: je legt de overboeking misschien achteraf vast, of het beginsaldo van het account is nooit ingesteld.
+
+Een streepje (—) in plaats van een saldo betekent dat de app dat cijfer nog niet heeft. Saldi van andere accounts dan het huidige komen van de server en kunnen dus ontbreken als je het formulier voor het eerst offline opent.
+
+### Frequente overboekingen
+
+Heb je eerder geld overgeboekt, dan verschijnt bovenaan het formulier een rij **Frequent** met je meestgebruikte routes (bijv. *Persoonlijk → Sparen 2000 PLN*). Tik erop en het formulier wordt ingevuld: accounts, valuta's en het bedrag van de vorige keer op die route. Voor het opslaan kun je alles nog aanpassen.
+
+Routes met een account waartoe je geen toegang meer hebt, worden niet aangeboden.
 
 ### Recente overboekingen
 
@@ -36103,6 +36298,18 @@ Het scherm **Overboekingsgeschiedenis** toont een volledige lijst van al je acco
 Beschikbare filters:
 - **Account** — filter op een specifiek bron- of doelaccount
 - **Periode** — kies uit **Alle tijd**, **Deze maand**, **Laatste 3 maanden** of **Dit jaar**
+
+### Een overboeking bewerken
+
+Open een overboeking via **Recente overboekingen** of de geschiedenis en tik op **Bewerken**. Je kunt wijzigen:
+- Beide accounts — bron en doel
+- De bedragen en de wisselkoers
+- De datum
+- Notities en de optie **Tellen als inkomsten**
+
+Een account wijzigen zet die kant van de overboeking ook om naar de valuta van dat account. Staat **Tellen als inkomsten** aan, dan verhuist de bijbehorende inkomstenpost mee naar het nieuwe doelaccount.
+
+Een van de twee accounts moet het account blijven waarin je nu werkt — anders zou de overboeking uit de geschiedenis van beide kanten verdwijnen.
 
 ## Ondersteunde valuta's
 

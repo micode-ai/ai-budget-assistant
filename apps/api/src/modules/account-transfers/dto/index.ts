@@ -51,6 +51,25 @@ export class CreateAccountTransferDto {
 }
 
 export class UpdateAccountTransferDto {
+  // Re-homing a transfer. Currencies travel with the accounts: keeping the old
+  // currency after moving a transfer to an account denominated in another one
+  // would store a row that means nothing.
+  @IsOptional()
+  @IsUUID()
+  fromAccountId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  toAccountId?: string;
+
+  @IsOptional()
+  @IsString()
+  fromCurrency?: string;
+
+  @IsOptional()
+  @IsString()
+  toCurrency?: string;
+
   @IsOptional()
   @IsNumber()
   @Min(0)

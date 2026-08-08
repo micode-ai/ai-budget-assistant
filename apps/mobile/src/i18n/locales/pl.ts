@@ -1013,6 +1013,10 @@ export default {
     periodThisYear: 'Ten rok',
     noTransfers: 'Brak przelewów',
     noTransfersHint: 'Przelewy między kontami pojawią się tutaj',
+    frequent: 'Częste',
+    available: 'Dostępne:',
+    max: 'Maks',
+    insufficientHint: 'Kwota przekracza znane saldo tego konta',
   },
   errors: {
     error: 'Błąd',

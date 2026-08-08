@@ -1013,6 +1013,10 @@ export default {
     periodThisYear: 'Цей рік',
     noTransfers: 'Немає переказів',
     noTransfersHint: 'Перекази між вашими рахунками будуть тут',
+    frequent: 'Часті',
+    available: 'Доступно:',
+    max: 'Усе',
+    insufficientHint: 'Сума перевищує відомий залишок на цьому рахунку',
   },
   errors: {
     error: 'Помилка',

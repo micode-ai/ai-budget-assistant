@@ -4,6 +4,7 @@ import type {
   CreateCurrencyExchangeDto,
   UpdateCurrencyExchangeDto,
   WalletSummaryResponse,
+  AllWalletSummariesResponse,
   WalletMonthlyHistoryResponse,
   ExchangeRatesResponse,
   DebtSummaryResponse,
@@ -17,6 +18,11 @@ export const walletApi = {
 
   getWalletSummary() {
     return httpClient.request<WalletSummaryResponse>('/wallet/summary');
+  },
+
+  /** Balances for every account the user belongs to — the transfer form needs the other side too. */
+  getAllWalletSummaries() {
+    return httpClient.request<AllWalletSummariesResponse>('/wallet/summaries');
   },
 
   setWalletBalance(data: CreateWalletBalanceDto) {

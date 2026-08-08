@@ -109,6 +109,22 @@ export async function updateTransferInDb(
   const setClauses: string[] = [];
   const params: (string | number | null)[] = [];
 
+  if (updates.fromAccountId !== undefined) {
+    setClauses.push('from_account_id = ?');
+    params.push(updates.fromAccountId);
+  }
+  if (updates.toAccountId !== undefined) {
+    setClauses.push('to_account_id = ?');
+    params.push(updates.toAccountId);
+  }
+  if (updates.fromCurrency !== undefined) {
+    setClauses.push('from_currency = ?');
+    params.push(updates.fromCurrency);
+  }
+  if (updates.toCurrency !== undefined) {
+    setClauses.push('to_currency = ?');
+    params.push(updates.toCurrency);
+  }
   if (updates.fromAmount !== undefined) {
     setClauses.push('from_amount = ?');
     params.push(updates.fromAmount);

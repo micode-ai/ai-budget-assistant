@@ -198,14 +198,20 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <h3>Etape par etape</h3>
 <ol>
 <li>Allez dans <strong>Parametres</strong> &gt; <strong>Portefeuille</strong> &gt; <strong>Transfert</strong></li>
-<li>Selectionnez le <strong>Compte source</strong> — le compte d&rsquo;ou l&rsquo;argent sera debite</li>
+<li>Selectionnez le <strong>Compte source</strong> — le compte d&rsquo;ou l&rsquo;argent sera debite. Chaque pastille de compte affiche son solde actuel</li>
 <li>Selectionnez le <strong>Compte destination</strong> — le compte qui recevra l&rsquo;argent</li>
 <li>Selectionnez la <strong>Devise</strong> du transfert</li>
-<li>Entrez le <strong>Montant</strong> a transferer</li>
+<li>Entrez le <strong>Montant</strong> a transferer. Sous le champ, <strong>Disponible :</strong> indique le solde du compte source dans la devise choisie — appuyez sur <strong>Max</strong> pour tout utiliser</li>
 <li>Si les comptes utilisent des devises differentes, un <strong>Taux de change</strong> sera propose automatiquement — vous pouvez le modifier manuellement</li>
+<li>Choisissez la <strong>Date</strong> — aujourd&rsquo;hui par defaut ; appuyez dessus pour enregistrer un transfert passe</li>
 <li>Ajoutez des <strong>Notes</strong> optionnelles (par ex. &ldquo;Remboursement frais pro&rdquo; ou &ldquo;Epargne mensuelle&rdquo;)</li>
 <li>Appuyez sur <strong>Transferer</strong> pour finaliser</li>
 </ol>
+<p>Si le montant depasse le solde connu de l&rsquo;application, un avertissement s&rsquo;affiche, mais le transfert est quand meme enregistre. Il n&rsquo;est jamais bloque : vous saisissez peut-etre un transfert apres coup, ou le solde initial du compte n&rsquo;a jamais ete defini.</p>
+<p>Un tiret (—) a la place du solde signifie que l&rsquo;application n&rsquo;a pas encore ce chiffre. Les soldes des comptes autres que celui en cours viennent du serveur et peuvent donc manquer la premiere fois que vous ouvrez le formulaire hors ligne.</p>
+<h3>Transferts frequents</h3>
+<p>Si vous avez deja effectue des transferts, une ligne <strong>Frequents</strong> apparait en haut du formulaire avec vos trajets les plus utilises (par ex. <em>Personnel → Epargne 2000 PLN</em>). Appuyez dessus et le formulaire se remplit : comptes, devises et montant du dernier transfert sur ce trajet. Vous pouvez tout modifier avant d&rsquo;enregistrer.</p>
+<p>Les trajets impliquant un compte auquel vous n&rsquo;avez plus acces ne sont pas proposes.</p>
 <h3>Transferts recents</h3>
 <p>Sous le formulaire de transfert, vous trouverez les 5 transferts les plus recents avec :
 - Compte source et compte destination
@@ -219,6 +225,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Filtres disponibles :
 - <strong>Compte</strong> — filtrer par un compte source ou destination specifique
 - <strong>Periode</strong> — choisissez parmi : <strong>Tout le temps</strong>, <strong>Ce mois-ci</strong>, <strong>3 derniers mois</strong> ou <strong>Cette annee</strong></p>
+<h3>Modifier un transfert</h3>
+<p>Ouvrez un transfert depuis <strong>Transferts recents</strong> ou l&rsquo;historique, puis appuyez sur <strong>Modifier</strong>. Vous pouvez changer :
+- Les deux comptes — source et destination
+- Les montants et le taux de change
+- La date
+- Les notes et l&rsquo;option <strong>Compter comme revenu</strong></p>
+<p>Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte. Si <strong>Compter comme revenu</strong> est active, l&rsquo;ecriture de revenu correspondante est deplacee vers le nouveau compte destination.</p>
+<p>L&rsquo;un des deux comptes doit rester le compte dans lequel vous travaillez, sinon le transfert disparaitrait de l&rsquo;historique des deux cotes.</p>
 <h2>Devises prises en charge</h2>
 <div class="tablewrap"><table>
 <thead>

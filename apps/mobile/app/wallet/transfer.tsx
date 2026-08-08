@@ -1,8 +1,9 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
-import { useState, useEffect } from 'react';
+import { DatePicker } from '@/components/DatePicker';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,14 +11,25 @@ import { useWalletStore } from '@/stores/walletStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
+import { formatCurrency, formatDate } from '@budget/shared-utils';
+import {
+  buildFrequentTransfers,
+  type FrequentTransfer,
+} from '@/features/wallet/frequentTransfers';
+import { exceedsAvailable, resolveAccountBalance } from '@/features/wallet/transferBalances';
 import { useTranslation } from 'react-i18next';
+import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
 
 export default function TransferScreen() {
   const { t } = useTranslation();
-  const { addTransfer } = useWalletStore();
+  const addTransfer = useWalletStore((s) => s.addTransfer);
+  const transfers = useWalletStore((s) => s.transfers);
+  const walletSummary = useWalletStore((s) => s.walletSummary);
+  const accountSummaries = useWalletStore((s) => s.accountSummaries);
+  const loadAccountSummaries = useWalletStore((s) => s.loadAccountSummaries);
   const accounts = useAccountStore((s) => s.accounts);
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const theme = useTheme();
@@ -33,15 +45,38 @@ export default function TransferScreen() {
   const [notes, setNotes] = useState('');
   const [countAsIncome, setCountAsIncome] = useState(false);
   const [loadingRate, setLoadingRate] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // A frequent-transfer chip carries its own currencies. Without these guards the
+  // account-change effects below would immediately overwrite them with each
+  // account's default currency, silently discarding what the chip restored.
+  const prefillFromRef = useRef(false);
+  const prefillToRef = useRef(false);
+
+  // Balances of the *other* accounts are server-side only — the local SQLite
+  // mirror holds nothing for an account the user has never opened.
+  useEffect(() => {
+    loadAccountSummaries();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Set default currencies from selected accounts
   useEffect(() => {
+    if (prefillFromRef.current) {
+      prefillFromRef.current = false;
+      return;
+    }
     const fromAccount = accounts.find((a) => a.id === fromAccountId);
     if (fromAccount) setFromCurrency(fromAccount.currencyCode as Currency);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromAccountId]);
 
   useEffect(() => {
+    if (prefillToRef.current) {
+      prefillToRef.current = false;
+      return;
+    }
     const toAccount = accounts.find((a) => a.id === toAccountId);
     if (toAccount) setToCurrency(toAccount.currencyCode as Currency);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,6 +136,48 @@ export default function TransferScreen() {
     }
   };
 
+  const balanceSources = useMemo(
+    () => ({ accountSummaries, localSummary: walletSummary, currentAccountId }),
+    [accountSummaries, walletSummary, currentAccountId],
+  );
+
+  const payableAccounts = useMemo(
+    () => accounts.filter((a) => a.myRole !== 'viewer'),
+    [accounts],
+  );
+
+  const frequentTransfers = useMemo(
+    () =>
+      buildFrequentTransfers(transfers, {
+        eligibleAccountIds: accounts.map((a) => a.id),
+        readOnlyAccountIds: accounts.filter((a) => a.myRole === 'viewer').map((a) => a.id),
+      }),
+    [transfers, accounts],
+  );
+
+  const accountName = (id: string) => accounts.find((a) => a.id === id)?.name ?? '…';
+
+  /** Balance shown under an account chip, in that account's own currency. */
+  const chipBalance = (id: string, currencyCode: string) =>
+    resolveAccountBalance(balanceSources, id, currencyCode);
+
+  // Keyed to the *selected* transfer currency, not the account's default: the
+  // amount is entered in `fromCurrency`, so that is the balance that constrains it.
+  const availableFrom = resolveAccountBalance(balanceSources, fromAccountId, fromCurrency);
+  const isOverBalance = exceedsAvailable(parseAmount(fromAmount), availableFrom);
+
+  const applyFrequentTransfer = (f: FrequentTransfer) => {
+    if (f.fromAccountId !== fromAccountId) prefillFromRef.current = true;
+    if (f.toAccountId !== toAccountId) prefillToRef.current = true;
+    setFromAccountId(f.fromAccountId);
+    setToAccountId(f.toAccountId);
+    setFromCurrency(f.fromCurrency);
+    setToCurrency(f.toCurrency);
+    setExchangeRate(String(f.exchangeRate));
+    setFromAmount(String(f.fromAmount));
+    setToAmount(String(f.toAmount));
+  };
+
   const handleSubmit = () => {
     if (!fromAccountId || !toAccountId) {
       showAlert(t('common.error'), t('transfer.sameAccountError'));
@@ -128,7 +205,7 @@ export default function TransferScreen() {
       toCurrency,
       toAmount: to,
       exchangeRate: rate,
-      date: new Date(),
+      date,
       notes: notes || undefined,
       countAsIncome,
     });
@@ -155,24 +232,54 @@ export default function TransferScreen() {
         }}
       />
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
+        {/* Routes the user has moved money along before — one tap refills the form. */}
+        {frequentTransfers.length > 0 && (
+          <View style={styles.frequentSection}>
+            <Text style={styles.label}>{t('transfer.frequent')}</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {frequentTransfers.map((f) => (
+                <TouchableOpacity
+                  key={f.key}
+                  style={styles.frequentChip}
+                  onPress={() => applyFrequentTransfer(f)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.frequentChipRoute} numberOfLines={1}>
+                    {accountName(f.fromAccountId)} → {accountName(f.toAccountId)}
+                  </Text>
+                  <Text style={styles.frequentChipAmount}>
+                    {formatCurrency(f.fromAmount, f.fromCurrency)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
         {/* From Account */}
         <View style={styles.card}>
           <Text style={styles.label}>{t('transfer.fromAccount')}</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.accountPicker}>
-            {accounts.filter((a) => a.myRole !== 'viewer').map((account) => (
-              <TouchableOpacity
-                key={account.id}
-                style={[styles.accountChip, fromAccountId === account.id && styles.accountChipActive]}
-                onPress={() => setFromAccountId(account.id)}
-              >
-                <Text style={[styles.accountChipText, fromAccountId === account.id && styles.accountChipTextActive]}>
-                  {account.name}
-                </Text>
-                <Text style={[styles.accountChipType, fromAccountId === account.id && styles.accountChipTextActive]}>
-                  {account.currencyCode}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {payableAccounts.map((account) => {
+              const balance = chipBalance(account.id, account.currencyCode);
+              const active = fromAccountId === account.id;
+              return (
+                <TouchableOpacity
+                  key={account.id}
+                  style={[styles.accountChip, active && styles.accountChipActive]}
+                  onPress={() => setFromAccountId(account.id)}
+                >
+                  <Text style={[styles.accountChipText, active && styles.accountChipTextActive]}>
+                    {account.name}
+                  </Text>
+                  <Text style={[styles.accountChipType, active && styles.accountChipTextActive]}>
+                    {balance === null
+                      ? account.currencyCode
+                      : formatCurrency(balance, account.currencyCode)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
 
           <Text style={[styles.label, { marginTop: theme.spacing[3] }]}>{t('wallet.currency')}</Text>
@@ -196,6 +303,31 @@ export default function TransferScreen() {
             placeholderTextColor={theme.colors.textTertiary}
             keyboardType="decimal-pad"
           />
+
+          <View style={styles.availableRow}>
+            <Text style={styles.availableText}>
+              {t('transfer.available')}{' '}
+              {availableFrom === null ? '—' : formatCurrency(availableFrom, fromCurrency)}
+            </Text>
+            {availableFrom !== null && availableFrom > 0 && (
+              <TouchableOpacity
+                style={styles.maxButton}
+                onPress={() => onFromAmountChange(availableFrom.toFixed(2))}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              >
+                <Text style={styles.maxButtonText}>{t('transfer.max')}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* A warning, never a block: transfers get entered after the fact and an
+              account whose initial balance was never set looks emptier than it is. */}
+          {isOverBalance && (
+            <View style={styles.warningRow}>
+              <Ionicons name="alert-circle-outline" size={16} color={theme.colors.warning} />
+              <Text style={styles.warningText}>{t('transfer.insufficientHint')}</Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.swapContainer}>
@@ -206,20 +338,26 @@ export default function TransferScreen() {
         <View style={styles.card}>
           <Text style={styles.label}>{t('transfer.toAccount')}</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.accountPicker}>
-            {otherAccounts.map((account) => (
-              <TouchableOpacity
-                key={account.id}
-                style={[styles.accountChip, toAccountId === account.id && styles.accountChipActive]}
-                onPress={() => setToAccountId(account.id)}
-              >
-                <Text style={[styles.accountChipText, toAccountId === account.id && styles.accountChipTextActive]}>
-                  {account.name}
-                </Text>
-                <Text style={[styles.accountChipType, toAccountId === account.id && styles.accountChipTextActive]}>
-                  {account.currencyCode}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {otherAccounts.map((account) => {
+              const balance = chipBalance(account.id, account.currencyCode);
+              const active = toAccountId === account.id;
+              return (
+                <TouchableOpacity
+                  key={account.id}
+                  style={[styles.accountChip, active && styles.accountChipActive]}
+                  onPress={() => setToAccountId(account.id)}
+                >
+                  <Text style={[styles.accountChipText, active && styles.accountChipTextActive]}>
+                    {account.name}
+                  </Text>
+                  <Text style={[styles.accountChipType, active && styles.accountChipTextActive]}>
+                    {balance === null
+                      ? account.currencyCode
+                      : formatCurrency(balance, account.currencyCode)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
 
           {fromCurrency !== toCurrency && (
@@ -269,6 +407,24 @@ export default function TransferScreen() {
             </View>
           </View>
         )}
+
+        {/* Date — pre-filled with today; tap to record a past transfer */}
+        <View style={styles.card}>
+          <Text style={styles.label}>{t('transfer.date')}</Text>
+          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+            <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+            <Text style={styles.dateButtonText}>{formatDate(date, undefined, getIntlLocale())}</Text>
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DatePicker
+              value={date}
+              onChange={(selectedDate) => {
+                setShowDatePicker(Platform.OS === 'ios');
+                if (selectedDate) setDate(selectedDate);
+              }}
+            />
+          )}
+        </View>
 
         {/* Notes */}
         <View style={styles.card}>
@@ -393,6 +549,75 @@ const createStyles = (theme: Theme) => ({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
     paddingVertical: theme.spacing[2],
+  },
+  frequentSection: {
+    marginBottom: theme.spacing[4],
+  },
+  frequentChip: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    marginRight: theme.spacing[2],
+    maxWidth: 220,
+  },
+  frequentChipRoute: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+  },
+  frequentChipAmount: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.primary,
+    marginTop: 2,
+  },
+  availableRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    marginTop: theme.spacing[2],
+  },
+  availableText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+  },
+  maxButton: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1],
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.background,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  maxButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
+  },
+  warningRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    marginTop: theme.spacing[2],
+  },
+  warningText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.warning,
+    flex: 1,
+  },
+  dateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[3],
+  },
+  dateButtonText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
   },
   swapContainer: {
     alignSelf: 'center' as const,

@@ -1,4 +1,9 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateAccountTransferDto, UpdateAccountTransferDto } from './dto';
 
@@ -12,20 +17,7 @@ export class AccountTransferService {
       throw new ForbiddenException('Current account must be a party to the transfer');
     }
 
-    // Validate user is member of both accounts
-    const fromMembership = await this.prisma.accountMember.findUnique({
-      where: { accountId_userId: { accountId: dto.fromAccountId, userId } },
-    });
-    const toMembership = await this.prisma.accountMember.findUnique({
-      where: { accountId_userId: { accountId: dto.toAccountId, userId } },
-    });
-
-    if (!fromMembership || !toMembership) {
-      throw new ForbiddenException('You must be a member of both accounts');
-    }
-    if (fromMembership.role === 'viewer') {
-      throw new ForbiddenException('Viewers cannot create transfers');
-    }
+    await this.assertCanTransferBetween(userId, dto.fromAccountId, dto.toAccountId);
 
     const countAsIncome = dto.countAsIncome ?? false;
 
@@ -90,6 +82,23 @@ export class AccountTransferService {
     });
     if (!transfer) throw new NotFoundException('Transfer not found');
 
+    const nextFromAccountId = dto.fromAccountId ?? transfer.fromAccountId;
+    const nextToAccountId = dto.toAccountId ?? transfer.toAccountId;
+    const nextToCurrency = dto.toCurrency ?? transfer.toCurrency;
+
+    if (nextFromAccountId !== transfer.fromAccountId || nextToAccountId !== transfer.toAccountId) {
+      if (nextFromAccountId === nextToAccountId) {
+        throw new BadRequestException('Cannot transfer to the same account');
+      }
+      // The request's account must stay a party to the transfer: findAll filters on
+      // fromAccountId/toAccountId, so re-homing both sides away would make the row
+      // invisible to the very account that edited it.
+      if (nextFromAccountId !== accountId && nextToAccountId !== accountId) {
+        throw new ForbiddenException('Current account must be a party to the transfer');
+      }
+      await this.assertCanTransferBetween(userId, nextFromAccountId, nextToAccountId);
+    }
+
     return this.prisma.$transaction(async (tx) => {
       const countAsIncome = dto.countAsIncome ?? transfer.countAsIncome;
 
@@ -97,11 +106,11 @@ export class AccountTransferService {
         // Turned ON: create linked income
         const income = await tx.income.create({
           data: {
-            accountId: transfer.toAccountId,
+            accountId: nextToAccountId,
             userId,
             clientId: `transfer-income-${transfer.clientId}`,
             amount: dto.toAmount ?? transfer.toAmount,
-            currencyCode: transfer.toCurrency,
+            currencyCode: nextToCurrency,
             description: 'Transfer from account',
             notes: dto.notes ?? transfer.notes ?? undefined,
             date: dto.date ? new Date(dto.date) : transfer.date,
@@ -132,11 +141,16 @@ export class AccountTransferService {
           },
         });
       } else {
-        // No toggle — update fields; keep linked income in sync if present
+        // No toggle — update fields; keep linked income in sync if present.
+        // The income lives on the receiving account, so re-homing the transfer has
+        // to move it too, or the money lands on an account that is no longer part
+        // of the transfer.
         if (transfer.linkedIncomeId && countAsIncome) {
           await tx.income.update({
             where: { id: transfer.linkedIncomeId },
             data: {
+              accountId: nextToAccountId,
+              currencyCode: nextToCurrency,
               amount: dto.toAmount ?? transfer.toAmount,
               notes: dto.notes !== undefined ? (dto.notes || undefined) : undefined,
               date: dto.date ? new Date(dto.date) : undefined,
@@ -156,8 +170,39 @@ export class AccountTransferService {
     });
   }
 
+  /**
+   * The caller must be a member of both accounts and may not be a viewer on the
+   * paying side. Shared by create and by the account-change path in update, so the
+   * two can't drift into different permission rules.
+   */
+  private async assertCanTransferBetween(
+    userId: string,
+    fromAccountId: string,
+    toAccountId: string,
+  ) {
+    const [fromMembership, toMembership] = await Promise.all([
+      this.prisma.accountMember.findUnique({
+        where: { accountId_userId: { accountId: fromAccountId, userId } },
+      }),
+      this.prisma.accountMember.findUnique({
+        where: { accountId_userId: { accountId: toAccountId, userId } },
+      }),
+    ]);
+
+    if (!fromMembership || !toMembership) {
+      throw new ForbiddenException('You must be a member of both accounts');
+    }
+    if (fromMembership.role === 'viewer') {
+      throw new ForbiddenException('Viewers cannot create transfers');
+    }
+  }
+
   private buildUpdateData(dto: UpdateAccountTransferDto) {
     const data: Record<string, unknown> = {};
+    if (dto.fromAccountId !== undefined) data.fromAccountId = dto.fromAccountId;
+    if (dto.toAccountId !== undefined) data.toAccountId = dto.toAccountId;
+    if (dto.fromCurrency !== undefined) data.fromCurrency = dto.fromCurrency;
+    if (dto.toCurrency !== undefined) data.toCurrency = dto.toCurrency;
     if (dto.fromAmount !== undefined) data.fromAmount = dto.fromAmount;
     if (dto.toAmount !== undefined) data.toAmount = dto.toAmount;
     if (dto.exchangeRate !== undefined) data.exchangeRate = dto.exchangeRate;

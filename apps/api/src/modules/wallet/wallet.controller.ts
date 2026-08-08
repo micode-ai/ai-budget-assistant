@@ -37,6 +37,15 @@ export class WalletController {
     return this.walletService.getSummary(req.accountId);
   }
 
+  /**
+   * Balances for every account the caller belongs to. Deliberately ignores
+   * `req.accountId` — the transfer form needs the *other* account's balance too.
+   */
+  @Get('summaries')
+  async getAllSummaries(@Req() req: AuthenticatedRequest) {
+    return this.walletService.getSummariesForAccounts(req.user.id);
+  }
+
   @Get('balance-history')
   async getBalanceHistory(
     @Req() req: AuthenticatedRequest,

@@ -48,6 +48,17 @@ export interface CreateAccountTransferDto {
 }
 
 export interface UpdateAccountTransferDto {
+  /**
+   * Re-homing a transfer. `fromAccountId`/`toAccountId` and their currencies travel
+   * together: editing a transfer into "Personal (PLN) -> Vacation (EUR)" while keeping
+   * the old currency would store a nonsense row. The server re-validates membership on
+   * whichever side changed and requires the request's account to stay a party to the
+   * transfer, since `findAll` filters on `fromAccountId`/`toAccountId`.
+   */
+  fromAccountId?: string;
+  toAccountId?: string;
+  fromCurrency?: Currency;
+  toCurrency?: Currency;
   fromAmount?: number;
   toAmount?: number;
   exchangeRate?: number;
@@ -89,6 +100,22 @@ export interface WalletSummaryResponse {
     totalTransferredOut: number;
     currentBalance: number;
   }>;
+}
+
+export interface AccountWalletSummary {
+  accountId: string;
+  balances: WalletSummaryResponse['balances'];
+}
+
+/**
+ * Wallet balances for every account the caller is a member of, in one round trip.
+ * Feeds the transfer form, which has to show the balance of an account other than
+ * the currently selected one — something `GET /wallet/summary` cannot do, and the
+ * mobile SQLite mirror cannot answer either (an account the user has never opened
+ * has no local rows, so a locally computed balance would silently read too low).
+ */
+export interface AllWalletSummariesResponse {
+  accounts: AccountWalletSummary[];
 }
 
 export interface ExchangeRatesResponse {

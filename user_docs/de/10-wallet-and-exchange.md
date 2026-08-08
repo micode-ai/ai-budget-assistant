@@ -117,13 +117,24 @@ Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberwei
 
 ### Schritt fur Schritt
 
-1. Wahle das **Von-Konto** — das Konto, von dem das Geld abgebucht wird
+1. Wahle das **Von-Konto** — das Konto, von dem das Geld abgebucht wird. Jeder Konto-Chip zeigt seinen aktuellen Saldo
 2. Wahle das **An-Konto** — das Konto, auf das das Geld gutgeschrieben wird
 3. Wahle die **Wahrung** der Uberweisung
-4. Gib den **Betrag** ein
+4. Gib den **Betrag** ein. **Verfugbar:** unter dem Feld zeigt den Saldo des Quellkontos in der gewahlten Wahrung — tippe auf **Max**, um alles einzusetzen
 5. Falls die Konten unterschiedliche Wahrungen verwenden, wird ein **Wechselkurs** angezeigt, den du anpassen kannst
-6. Fuge optionale **Notizen** hinzu (z.B. "Monatsbudget" oder "Ruckzahlung")
-7. Tippe auf **Ubertragen**, um abzuschliessen
+6. Wahle das **Datum** — standardmassig heute; tippe darauf, um eine fruhere Uberweisung nachzutragen
+7. Fuge optionale **Notizen** hinzu (z.B. "Monatsbudget" oder "Ruckzahlung")
+8. Tippe auf **Ubertragen**, um abzuschliessen
+
+Ist der Betrag hoher als der bekannte Saldo, erscheint ein Hinweis — die Uberweisung wird trotzdem gespeichert. Sie wird nie blockiert, denn du tragst sie vielleicht nachtraglich ein oder der Anfangssaldo des Kontos wurde nie gesetzt.
+
+Ein Gedankenstrich (—) statt eines Saldos bedeutet, dass die App noch keinen Wert fur dieses Konto hat. Salden anderer Konten kommen vom Server und konnen daher fehlen, wenn du das Formular offline zum ersten Mal offnest.
+
+### Haufige Uberweisungen
+
+Hast du schon einmal Geld ubertragen, erscheint oben im Formular eine Zeile **Haufig** mit deinen meistgenutzten Wegen (z.B. *Privat → Sparen 2000 PLN*). Ein Tipp darauf fullt das Formular aus — Konten, Wahrungen und der Betrag der letzten Uberweisung auf diesem Weg. Du kannst vor dem Speichern alles andern.
+
+Wege zu Konten, auf die du keinen Zugriff mehr hast, werden nicht angeboten.
 
 ### Letzte Uberweisungen
 
@@ -143,6 +154,18 @@ Der **Uberweisungsverlauf**-Bildschirm zeigt eine vollstandige Liste aller deine
 Verfugbare Filter:
 - **Konto** — nach einem bestimmten Quell- oder Zielkonto filtern
 - **Zeitraum** — wahle aus: **Gesamter Zeitraum**, **Dieser Monat**, **Letzte 3 Monate** oder **Dieses Jahr**
+
+### Eine Uberweisung bearbeiten
+
+Offne eine Uberweisung uber **Letzte Uberweisungen** oder den Uberweisungsverlauf und tippe auf **Bearbeiten**. Anderbar sind:
+- Beide Konten — Quelle und Ziel
+- Betrage und Wechselkurs
+- Das Datum
+- Notizen und die Option **Als Einnahme zahlen**
+
+Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahrung des Kontos. Ist **Als Einnahme zahlen** aktiv, wandert der zugehorige Einnahmeeintrag ebenfalls auf das neue Zielkonto.
+
+Eines der beiden Konten muss das Konto bleiben, in dem du gerade arbeitest — sonst wurde die Uberweisung aus dem Verlauf beider Seiten verschwinden.
 
 ## Unterstutzte Wahrungen
 

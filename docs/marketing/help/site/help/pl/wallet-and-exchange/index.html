@@ -203,14 +203,20 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <h3>Krok po kroku</h3>
 <ol>
 <li>Przejdź do <strong>Ustawienia</strong> &gt; <strong>Portfel</strong> &gt; <strong>Przelew</strong></li>
-<li>Wybierz <strong>Konto źródłowe</strong> — konto, z którego wysyłasz środki</li>
+<li>Wybierz <strong>Konto źródłowe</strong> — konto, z którego wysyłasz środki. Każdy element konta pokazuje jego aktualne saldo</li>
 <li>Wybierz <strong>Konto docelowe</strong> — konto, na które trafiają środki</li>
 <li>Wybierz <strong>Walutę</strong> przelewu</li>
-<li>Wprowadź <strong>Kwotę</strong></li>
+<li>Wprowadź <strong>Kwotę</strong>. Pod polem <strong>Dostępne:</strong> pokazuje saldo konta źródłowego w wybranej walucie — dotknij <strong>Maks</strong>, aby wstawić całość</li>
 <li>Jeśli waluty kont się różnią, podaj <strong>Kurs wymiany</strong> — aplikacja zasugeruje aktualny kurs, ale możesz go zmienić ręcznie</li>
+<li>Wybierz <strong>Datę</strong> — domyślnie dzisiejsza; dotknij ją, aby zapisać przelew z przeszłości</li>
 <li>Opcjonalnie dodaj <strong>Notatki</strong> (np. &ldquo;Zwrot za zakupy&rdquo; lub &ldquo;Przeniesienie oszczędności&rdquo;)</li>
 <li>Dotknij <strong>Przelej</strong>, aby zatwierdzić</li>
 </ol>
+<p>Jeśli kwota przekracza znane aplikacji saldo, zobaczysz ostrzeżenie — ale przelew i tak zostanie zapisany. Nigdy nie jest blokowany: możesz zapisywać przelew po fakcie albo saldo początkowe konta nigdy nie zostało ustawione.</p>
+<p>Myślnik (—) zamiast salda oznacza, że aplikacja nie zna jeszcze tej kwoty. Salda kont innych niż bieżące pochodzą z serwera, więc mogą być niedostępne przy pierwszym otwarciu formularza offline.</p>
+<h3>Częste przelewy</h3>
+<p>Jeśli robiłeś już przelewy, na górze formularza pojawi się wiersz <strong>Częste</strong> z najczęściej używanymi trasami (np. <em>Osobiste → Oszczędności 2000 PLN</em>). Dotknij jedną, a formularz wypełni się sam: konta, waluty i kwota z ostatniego przelewu na tej trasie. Przed zapisem możesz wszystko zmienić.</p>
+<p>Trasy z kontami, do których nie masz już dostępu, nie są proponowane.</p>
 <h3>Ostatnie przelewy</h3>
 <p>Poniżej formularza przelewu znajdziesz 5 ostatnich przelewów między kontami z:
 - Kontem źródłowym i docelowym
@@ -224,6 +230,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Dostępne filtry:
 - <strong>Konto</strong> — filtruj według konkretnego konta źródłowego lub docelowego
 - <strong>Okres</strong> — wybierz z: <strong>Cały czas</strong>, <strong>Ten miesiąc</strong>, <strong>Ostatnie 3 miesiące</strong> lub <strong>Ten rok</strong></p>
+<h3>Edycja przelewu</h3>
+<p>Otwórz przelew z sekcji <strong>Ostatnie przelewy</strong> lub z historii i dotknij <strong>Edytuj</strong>. Możesz zmienić:
+- Oba konta — źródłowe i docelowe
+- Kwoty i kurs wymiany
+- Datę
+- Notatki i opcję <strong>Licz jako przychód</strong></p>
+<p>Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. Jeśli opcja <strong>Licz jako przychód</strong> jest włączona, powiązany wpis przychodu przenosi się na nowe konto docelowe.</p>
+<p>Jedno z dwóch kont musi pozostać kontem, na którym aktualnie pracujesz — inaczej przelew zniknąłby z historii obu stron.</p>
 <h2>Obslugiwane waluty</h2>
 <div class="tablewrap"><table>
 <thead>

@@ -198,14 +198,20 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <h3>Stap voor stap</h3>
 <ol>
 <li>Ga naar <strong>Instellingen</strong> &gt; <strong>Portemonnee</strong> &gt; <strong>Overboeking</strong></li>
-<li>Selecteer het <strong>Van account</strong> (het bronaccount)</li>
+<li>Selecteer het <strong>Van account</strong> (het bronaccount) — elke accountchip toont het huidige saldo</li>
 <li>Selecteer het <strong>Naar account</strong> (het doelaccount)</li>
 <li>Kies de <strong>Valuta</strong></li>
-<li>Voer het <strong>Bedrag</strong> in dat je wilt overboeken</li>
+<li>Voer het <strong>Bedrag</strong> in dat je wilt overboeken. Onder het veld toont <strong>Beschikbaar:</strong> het saldo van het bronaccount in de gekozen valuta — tik op <strong>Max</strong> om alles in te vullen</li>
 <li>Als de accounts verschillende valuta&rsquo;s gebruiken, verschijnt er een veld <strong>Wisselkoers</strong> — pas het aan als je werkelijke koers afwijkt</li>
+<li>Kies de <strong>Datum</strong> — standaard vandaag; tik erop om een eerdere overboeking vast te leggen</li>
 <li>Voeg optionele <strong>Notities</strong> toe (bijv. &ldquo;Maandelijks sparen&rdquo; of &ldquo;Vergoeding&rdquo;)</li>
 <li>Tik op <strong>Overboeken</strong> om af te ronden</li>
 </ol>
+<p>Is het bedrag hoger dan het saldo dat de app kent, dan zie je een waarschuwing — maar de overboeking wordt gewoon opgeslagen. Ze wordt nooit geblokkeerd: je legt de overboeking misschien achteraf vast, of het beginsaldo van het account is nooit ingesteld.</p>
+<p>Een streepje (—) in plaats van een saldo betekent dat de app dat cijfer nog niet heeft. Saldi van andere accounts dan het huidige komen van de server en kunnen dus ontbreken als je het formulier voor het eerst offline opent.</p>
+<h3>Frequente overboekingen</h3>
+<p>Heb je eerder geld overgeboekt, dan verschijnt bovenaan het formulier een rij <strong>Frequent</strong> met je meestgebruikte routes (bijv. <em>Persoonlijk → Sparen 2000 PLN</em>). Tik erop en het formulier wordt ingevuld: accounts, valuta&rsquo;s en het bedrag van de vorige keer op die route. Voor het opslaan kun je alles nog aanpassen.</p>
+<p>Routes met een account waartoe je geen toegang meer hebt, worden niet aangeboden.</p>
 <h3>Recente overboekingen</h3>
 <p>Onder het overboekingsformulier vind je de 5 meest recente accountoverboekingen met:
 - Bron- en doelaccounts (Van → Naar)
@@ -219,6 +225,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Beschikbare filters:
 - <strong>Account</strong> — filter op een specifiek bron- of doelaccount
 - <strong>Periode</strong> — kies uit <strong>Alle tijd</strong>, <strong>Deze maand</strong>, <strong>Laatste 3 maanden</strong> of <strong>Dit jaar</strong></p>
+<h3>Een overboeking bewerken</h3>
+<p>Open een overboeking via <strong>Recente overboekingen</strong> of de geschiedenis en tik op <strong>Bewerken</strong>. Je kunt wijzigen:
+- Beide accounts — bron en doel
+- De bedragen en de wisselkoers
+- De datum
+- Notities en de optie <strong>Tellen als inkomsten</strong></p>
+<p>Een account wijzigen zet die kant van de overboeking ook om naar de valuta van dat account. Staat <strong>Tellen als inkomsten</strong> aan, dan verhuist de bijbehorende inkomstenpost mee naar het nieuwe doelaccount.</p>
+<p>Een van de twee accounts moet het account blijven waarin je nu werkt — anders zou de overboeking uit de geschiedenis van beide kanten verdwijnen.</p>
 <h2>Ondersteunde valuta&rsquo;s</h2>
 <div class="tablewrap"><table>
 <thead>

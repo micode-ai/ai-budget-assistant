@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Platform } from 'react-native';
+import { MMKV } from 'react-native-mmkv';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { WalletBalance, CurrencyExchange, AccountTransfer, Income, WalletSummary, Currency, SyncStatus, WalletMonthlyDeltaPoint } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
@@ -49,11 +50,27 @@ function sumByCurrency<T>(
   return out;
 }
 
+// Balances of *other* accounts, for the transfer form. Cached in MMKV so the form
+// paints numbers on open instead of after a round trip. The current account is not
+// served from here — `walletSummary` below is computed locally and is exact.
+const accountSummariesStorage = new MMKV({ id: 'wallet-account-summaries' });
+const ACCOUNT_SUMMARIES_KEY = 'account_summaries';
+
+function loadCachedAccountSummaries(): Record<string, WalletSummary[]> {
+  try {
+    const raw = accountSummariesStorage.getString(ACCOUNT_SUMMARIES_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, WalletSummary[]>) : {};
+  } catch {
+    return {};
+  }
+}
+
 interface WalletState {
   walletBalances: WalletBalance[];
   exchanges: CurrencyExchange[];
   transfers: AccountTransfer[];
   walletSummary: WalletSummary[];
+  accountSummaries: Record<string, WalletSummary[]>;
   monthlyHistory: WalletMonthlyDeltaPoint[];
   selectedMonths: 6 | 12;
   isHistoryLoading: boolean;
@@ -62,6 +79,7 @@ interface WalletState {
 
   // Actions
   loadWallet: () => Promise<void>;
+  loadAccountSummaries: () => Promise<void>;
   loadMonthlyHistory: (months: 6 | 12) => Promise<void>;
   setInitialBalance: (currencyCode: Currency, amount: number) => WalletBalance;
   updateInitialBalance: (id: string, amount: number) => void;
@@ -105,11 +123,28 @@ export const useWalletStore = create<WalletState>()(
     exchanges: [],
     transfers: [],
     walletSummary: [],
+    accountSummaries: loadCachedAccountSummaries(),
     monthlyHistory: [],
     selectedMonths: 6,
     isHistoryLoading: false,
     isLoading: false,
     error: null,
+
+    loadAccountSummaries: async () => {
+      try {
+        const result = await api.getAllWalletSummaries();
+        const map: Record<string, WalletSummary[]> = {};
+        for (const entry of result.accounts) {
+          map[entry.accountId] = entry.balances as WalletSummary[];
+        }
+        accountSummariesStorage.set(ACCOUNT_SUMMARIES_KEY, JSON.stringify(map));
+        set({ accountSummaries: map });
+      } catch (e) {
+        // Offline or server hiccup: keep whatever is cached. The form shows a dash
+        // for accounts it has no figure for rather than a made-up zero.
+        console.warn('Failed to load account wallet summaries:', e);
+      }
+    },
 
     loadMonthlyHistory: async (months) => {
       set({ isHistoryLoading: true, selectedMonths: months });
@@ -607,6 +642,10 @@ export const useWalletStore = create<WalletState>()(
 
         const serverIdForUpdate = updatedTransfer.serverId || id;
         api.updateAccountTransfer(serverIdForUpdate, {
+          fromAccountId: updates.fromAccountId,
+          toAccountId: updates.toAccountId,
+          fromCurrency: updates.fromCurrency,
+          toCurrency: updates.toCurrency,
           fromAmount: updates.fromAmount,
           toAmount: updates.toAmount,
           exchangeRate: updates.exchangeRate,
@@ -614,7 +653,9 @@ export const useWalletStore = create<WalletState>()(
           notes: updates.notes,
           countAsIncome: updates.countAsIncome,
         }).catch((e) =>
-          console.error('Failed to update transfer on server:', e),
+          // Expected while offline: the row stays `pending` and re-syncs later.
+          // console.error would raise a full-screen LogBox overlay (ABA-157).
+          console.warn('Failed to update transfer on server:', e),
         );
       }
 
@@ -727,6 +768,11 @@ export const useWalletStore = create<WalletState>()(
       return summary?.currentBalance ?? 0;
     },
 
-    reset: () => set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null }),
+    reset: () => {
+      // Drop the cached cross-account balances too — reset runs on logout, and the
+      // next user must not see the previous one's figures.
+      accountSummariesStorage.delete(ACCOUNT_SUMMARIES_KEY);
+      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null });
+    },
   })),
 );

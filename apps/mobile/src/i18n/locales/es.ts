@@ -1011,6 +1011,10 @@ export default {
     periodThisYear: 'Este año',
     noTransfers: 'Sin transferencias',
     noTransfersHint: 'Las transferencias entre sus cuentas aparecerán aquí',
+    frequent: 'Frecuentes',
+    available: 'Disponible:',
+    max: 'Máx',
+    insufficientHint: 'El importe supera el saldo conocido de esta cuenta',
   },
   errors: {
     error: 'Error',

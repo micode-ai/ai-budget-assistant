@@ -1012,6 +1012,10 @@ export default {
     periodThisYear: 'This year',
     noTransfers: 'No transfers',
     noTransfersHint: 'Transfers between your accounts will appear here',
+    frequent: 'Frequent',
+    available: 'Available:',
+    max: 'Max',
+    insufficientHint: 'Amount exceeds the known balance of this account',
   },
   errors: {
     error: 'Error',

@@ -161,14 +161,20 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Transfiere dinero entre tus diferentes cuentas (por ejemplo, de Negocio a Personal):</p>
 <ol>
 <li>Ve a <strong>Billetera</strong> &gt; <strong>Transferencia</strong></li>
-<li>Selecciona la <strong>Cuenta origen</strong> — la cuenta desde la que envias el dinero</li>
+<li>Selecciona la <strong>Cuenta origen</strong> — la cuenta desde la que envias el dinero. Cada ficha de cuenta muestra su saldo actual</li>
 <li>Selecciona la <strong>Cuenta destino</strong> — la cuenta que recibira el dinero</li>
 <li>Selecciona la <strong>Moneda</strong></li>
-<li>Introduce el <strong>Importe</strong></li>
+<li>Introduce el <strong>Importe</strong>. Debajo del campo, <strong>Disponible:</strong> muestra el saldo de la cuenta origen en la moneda elegida — toca <strong>Max</strong> para usarlo todo</li>
 <li>Si las monedas de las cuentas difieren, ajusta la <strong>Tasa de cambio</strong> (se obtiene automaticamente)</li>
+<li>Elige la <strong>Fecha</strong> — por defecto es hoy; tocala para registrar una transferencia anterior</li>
 <li>Opcionalmente agrega <strong>Notas</strong> (por ejemplo, &ldquo;Reembolso de gastos&rdquo; o &ldquo;Ahorro mensual&rdquo;)</li>
 <li>Toca <strong>Transferir</strong> para completar</li>
 </ol>
+<p>Si el importe supera el saldo que la app conoce, veras un aviso, pero la transferencia se guarda igualmente. Nunca se bloquea: puedes estar registrando una transferencia posterior o quiza nunca se fijo el saldo inicial de la cuenta.</p>
+<p>Un guion (—) en lugar del saldo significa que la app aun no tiene esa cifra. Los saldos de cuentas distintas de la actual vienen del servidor, asi que pueden faltar la primera vez que abres el formulario sin conexion.</p>
+<h3>Transferencias frecuentes</h3>
+<p>Si ya has transferido dinero antes, aparece una fila <strong>Frecuentes</strong> en la parte superior del formulario con tus rutas mas usadas (por ejemplo, <em>Personal → Ahorros 2000 PLN</em>). Toca una y el formulario se rellena: cuentas, monedas y el importe de la ultima vez que usaste esa ruta. Puedes cambiar lo que quieras antes de guardar.</p>
+<p>No se ofrecen rutas con cuentas a las que ya no tienes acceso.</p>
 <h3>Transferencias recientes</h3>
 <p>Debajo del formulario de transferencia, encontraras las 5 transferencias mas recientes con:
 - Cuenta origen y cuenta destino
@@ -182,6 +188,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Filtros disponibles:
 - <strong>Cuenta</strong> — filtrar por una cuenta de origen o destino especifica
 - <strong>Periodo</strong> — elige entre: <strong>Todo el tiempo</strong>, <strong>Este mes</strong>, <strong>Ultimos 3 meses</strong> o <strong>Este ano</strong></p>
+<h3>Editar una transferencia</h3>
+<p>Abre una transferencia desde <strong>Transferencias recientes</strong> o desde el historial y toca <strong>Editar</strong>. Puedes cambiar:
+- Ambas cuentas — origen y destino
+- Los importes y la tasa de cambio
+- La fecha
+- Las notas y la opcion <strong>Contar como ingreso</strong></p>
+<p>Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de esa cuenta. Si <strong>Contar como ingreso</strong> esta activo, el registro de ingreso correspondiente se mueve tambien a la nueva cuenta destino.</p>
+<p>Una de las dos cuentas debe seguir siendo la cuenta en la que estas trabajando; de lo contrario la transferencia desapareceria del historial de ambas partes.</p>
 <h2>Cambio de divisa</h2>
 <p><img alt="Pantalla de Cambio de divisa" src="/help/assets/img/exchange.jpg" /></p>
 <p>Cambia dinero entre tus billeteras de diferentes monedas:</p>

@@ -116,13 +116,24 @@ Transferez de l'argent entre vos differents comptes (par ex. de Entreprise a Per
 ### Etape par etape
 
 1. Allez dans **Parametres** > **Portefeuille** > **Transfert**
-2. Selectionnez le **Compte source** — le compte d'ou l'argent sera debite
+2. Selectionnez le **Compte source** — le compte d'ou l'argent sera debite. Chaque pastille de compte affiche son solde actuel
 3. Selectionnez le **Compte destination** — le compte qui recevra l'argent
 4. Selectionnez la **Devise** du transfert
-5. Entrez le **Montant** a transferer
+5. Entrez le **Montant** a transferer. Sous le champ, **Disponible :** indique le solde du compte source dans la devise choisie — appuyez sur **Max** pour tout utiliser
 6. Si les comptes utilisent des devises differentes, un **Taux de change** sera propose automatiquement — vous pouvez le modifier manuellement
-7. Ajoutez des **Notes** optionnelles (par ex. "Remboursement frais pro" ou "Epargne mensuelle")
-8. Appuyez sur **Transferer** pour finaliser
+7. Choisissez la **Date** — aujourd'hui par defaut ; appuyez dessus pour enregistrer un transfert passe
+8. Ajoutez des **Notes** optionnelles (par ex. "Remboursement frais pro" ou "Epargne mensuelle")
+9. Appuyez sur **Transferer** pour finaliser
+
+Si le montant depasse le solde connu de l'application, un avertissement s'affiche, mais le transfert est quand meme enregistre. Il n'est jamais bloque : vous saisissez peut-etre un transfert apres coup, ou le solde initial du compte n'a jamais ete defini.
+
+Un tiret (—) a la place du solde signifie que l'application n'a pas encore ce chiffre. Les soldes des comptes autres que celui en cours viennent du serveur et peuvent donc manquer la premiere fois que vous ouvrez le formulaire hors ligne.
+
+### Transferts frequents
+
+Si vous avez deja effectue des transferts, une ligne **Frequents** apparait en haut du formulaire avec vos trajets les plus utilises (par ex. *Personnel → Epargne 2000 PLN*). Appuyez dessus et le formulaire se remplit : comptes, devises et montant du dernier transfert sur ce trajet. Vous pouvez tout modifier avant d'enregistrer.
+
+Les trajets impliquant un compte auquel vous n'avez plus acces ne sont pas proposes.
 
 ### Transferts recents
 
@@ -142,6 +153,18 @@ L'ecran **Historique des transferts** affiche la liste complete de tous vos tran
 Filtres disponibles :
 - **Compte** — filtrer par un compte source ou destination specifique
 - **Periode** — choisissez parmi : **Tout le temps**, **Ce mois-ci**, **3 derniers mois** ou **Cette annee**
+
+### Modifier un transfert
+
+Ouvrez un transfert depuis **Transferts recents** ou l'historique, puis appuyez sur **Modifier**. Vous pouvez changer :
+- Les deux comptes — source et destination
+- Les montants et le taux de change
+- La date
+- Les notes et l'option **Compter comme revenu**
+
+Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte. Si **Compter comme revenu** est active, l'ecriture de revenu correspondante est deplacee vers le nouveau compte destination.
+
+L'un des deux comptes doit rester le compte dans lequel vous travaillez, sinon le transfert disparaitrait de l'historique des deux cotes.
 
 ## Devises prises en charge
 

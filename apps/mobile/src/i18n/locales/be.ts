@@ -998,6 +998,10 @@ export default {
     periodThisYear: 'Гэты год',
     noTransfers: 'Няма пераказаў',
     noTransfersHint: 'Пераказы паміж вашымі рахункамі будуць тут',
+    frequent: 'Частыя',
+    available: 'Даступна:',
+    max: 'Усё',
+    insufficientHint: 'Сума перавышае вядомы астатак на гэтым рахунку',
   },
   errors: {
     error: 'Памылка',

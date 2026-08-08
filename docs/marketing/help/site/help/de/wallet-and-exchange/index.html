@@ -198,14 +198,20 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Ubertrage Geld zwischen deinen Konten (z.B. Geschafts- auf Privatkonto). Uberweisungen verschieben Geld zwischen Konten, nicht zwischen Wahrungen.</p>
 <h3>Schritt fur Schritt</h3>
 <ol>
-<li>Wahle das <strong>Von-Konto</strong> — das Konto, von dem das Geld abgebucht wird</li>
+<li>Wahle das <strong>Von-Konto</strong> — das Konto, von dem das Geld abgebucht wird. Jeder Konto-Chip zeigt seinen aktuellen Saldo</li>
 <li>Wahle das <strong>An-Konto</strong> — das Konto, auf das das Geld gutgeschrieben wird</li>
 <li>Wahle die <strong>Wahrung</strong> der Uberweisung</li>
-<li>Gib den <strong>Betrag</strong> ein</li>
+<li>Gib den <strong>Betrag</strong> ein. <strong>Verfugbar:</strong> unter dem Feld zeigt den Saldo des Quellkontos in der gewahlten Wahrung — tippe auf <strong>Max</strong>, um alles einzusetzen</li>
 <li>Falls die Konten unterschiedliche Wahrungen verwenden, wird ein <strong>Wechselkurs</strong> angezeigt, den du anpassen kannst</li>
+<li>Wahle das <strong>Datum</strong> — standardmassig heute; tippe darauf, um eine fruhere Uberweisung nachzutragen</li>
 <li>Fuge optionale <strong>Notizen</strong> hinzu (z.B. &ldquo;Monatsbudget&rdquo; oder &ldquo;Ruckzahlung&rdquo;)</li>
 <li>Tippe auf <strong>Ubertragen</strong>, um abzuschliessen</li>
 </ol>
+<p>Ist der Betrag hoher als der bekannte Saldo, erscheint ein Hinweis — die Uberweisung wird trotzdem gespeichert. Sie wird nie blockiert, denn du tragst sie vielleicht nachtraglich ein oder der Anfangssaldo des Kontos wurde nie gesetzt.</p>
+<p>Ein Gedankenstrich (—) statt eines Saldos bedeutet, dass die App noch keinen Wert fur dieses Konto hat. Salden anderer Konten kommen vom Server und konnen daher fehlen, wenn du das Formular offline zum ersten Mal offnest.</p>
+<h3>Haufige Uberweisungen</h3>
+<p>Hast du schon einmal Geld ubertragen, erscheint oben im Formular eine Zeile <strong>Haufig</strong> mit deinen meistgenutzten Wegen (z.B. <em>Privat → Sparen 2000 PLN</em>). Ein Tipp darauf fullt das Formular aus — Konten, Wahrungen und der Betrag der letzten Uberweisung auf diesem Weg. Du kannst vor dem Speichern alles andern.</p>
+<p>Wege zu Konten, auf die du keinen Zugriff mehr hast, werden nicht angeboten.</p>
 <h3>Letzte Uberweisungen</h3>
 <p>Unterhalb des Uberweisungsformulars findest du die 5 letzten Uberweisungen mit:
 - Von-Konto und An-Konto
@@ -219,6 +225,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <p>Verfugbare Filter:
 - <strong>Konto</strong> — nach einem bestimmten Quell- oder Zielkonto filtern
 - <strong>Zeitraum</strong> — wahle aus: <strong>Gesamter Zeitraum</strong>, <strong>Dieser Monat</strong>, <strong>Letzte 3 Monate</strong> oder <strong>Dieses Jahr</strong></p>
+<h3>Eine Uberweisung bearbeiten</h3>
+<p>Offne eine Uberweisung uber <strong>Letzte Uberweisungen</strong> oder den Uberweisungsverlauf und tippe auf <strong>Bearbeiten</strong>. Anderbar sind:
+- Beide Konten — Quelle und Ziel
+- Betrage und Wechselkurs
+- Das Datum
+- Notizen und die Option <strong>Als Einnahme zahlen</strong></p>
+<p>Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahrung des Kontos. Ist <strong>Als Einnahme zahlen</strong> aktiv, wandert der zugehorige Einnahmeeintrag ebenfalls auf das neue Zielkonto.</p>
+<p>Eines der beiden Konten muss das Konto bleiben, in dem du gerade arbeitest — sonst wurde die Uberweisung aus dem Verlauf beider Seiten verschwinden.</p>
 <h2>Unterstutzte Wahrungen</h2>
 <div class="tablewrap"><table>
 <thead>

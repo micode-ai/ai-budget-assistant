@@ -1011,6 +1011,10 @@ export default {
     periodThisYear: 'Cette année',
     noTransfers: 'Aucun virement',
     noTransfersHint: 'Les virements entre vos comptes apparaîtront ici',
+    frequent: 'Fréquents',
+    available: 'Disponible :',
+    max: 'Max',
+    insufficientHint: 'Le montant dépasse le solde connu de ce compte',
   },
   errors: {
     error: 'Erreur',

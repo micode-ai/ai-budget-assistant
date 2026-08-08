@@ -120,13 +120,24 @@ Przelewaj pieniądze między swoimi kontami (np. z Biznesowego na Osobiste). Prz
 ### Krok po kroku
 
 1. Przejdź do **Ustawienia** > **Portfel** > **Przelew**
-2. Wybierz **Konto źródłowe** — konto, z którego wysyłasz środki
+2. Wybierz **Konto źródłowe** — konto, z którego wysyłasz środki. Każdy element konta pokazuje jego aktualne saldo
 3. Wybierz **Konto docelowe** — konto, na które trafiają środki
 4. Wybierz **Walutę** przelewu
-5. Wprowadź **Kwotę**
+5. Wprowadź **Kwotę**. Pod polem **Dostępne:** pokazuje saldo konta źródłowego w wybranej walucie — dotknij **Maks**, aby wstawić całość
 6. Jeśli waluty kont się różnią, podaj **Kurs wymiany** — aplikacja zasugeruje aktualny kurs, ale możesz go zmienić ręcznie
-7. Opcjonalnie dodaj **Notatki** (np. "Zwrot za zakupy" lub "Przeniesienie oszczędności")
-8. Dotknij **Przelej**, aby zatwierdzić
+7. Wybierz **Datę** — domyślnie dzisiejsza; dotknij ją, aby zapisać przelew z przeszłości
+8. Opcjonalnie dodaj **Notatki** (np. "Zwrot za zakupy" lub "Przeniesienie oszczędności")
+9. Dotknij **Przelej**, aby zatwierdzić
+
+Jeśli kwota przekracza znane aplikacji saldo, zobaczysz ostrzeżenie — ale przelew i tak zostanie zapisany. Nigdy nie jest blokowany: możesz zapisywać przelew po fakcie albo saldo początkowe konta nigdy nie zostało ustawione.
+
+Myślnik (—) zamiast salda oznacza, że aplikacja nie zna jeszcze tej kwoty. Salda kont innych niż bieżące pochodzą z serwera, więc mogą być niedostępne przy pierwszym otwarciu formularza offline.
+
+### Częste przelewy
+
+Jeśli robiłeś już przelewy, na górze formularza pojawi się wiersz **Częste** z najczęściej używanymi trasami (np. *Osobiste → Oszczędności 2000 PLN*). Dotknij jedną, a formularz wypełni się sam: konta, waluty i kwota z ostatniego przelewu na tej trasie. Przed zapisem możesz wszystko zmienić.
+
+Trasy z kontami, do których nie masz już dostępu, nie są proponowane.
 
 ### Ostatnie przelewy
 
@@ -146,6 +157,18 @@ Ekran **Historia przelewów** wyświetla kompletną listę wszystkich Twoich prz
 Dostępne filtry:
 - **Konto** — filtruj według konkretnego konta źródłowego lub docelowego
 - **Okres** — wybierz z: **Cały czas**, **Ten miesiąc**, **Ostatnie 3 miesiące** lub **Ten rok**
+
+### Edycja przelewu
+
+Otwórz przelew z sekcji **Ostatnie przelewy** lub z historii i dotknij **Edytuj**. Możesz zmienić:
+- Oba konta — źródłowe i docelowe
+- Kwoty i kurs wymiany
+- Datę
+- Notatki i opcję **Licz jako przychód**
+
+Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. Jeśli opcja **Licz jako przychód** jest włączona, powiązany wpis przychodu przenosi się na nowe konto docelowe.
+
+Jedno z dwóch kont musi pozostać kontem, na którym aktualnie pracujesz — inaczej przelew zniknąłby z historii obu stron.
 
 ## Obslugiwane waluty
 

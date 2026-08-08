@@ -1011,6 +1011,10 @@ export default {
     periodThisYear: 'Dieses Jahr',
     noTransfers: 'Keine Überweisungen',
     noTransfersHint: 'Überweisungen zwischen Ihren Konten werden hier angezeigt',
+    frequent: 'Häufig',
+    available: 'Verfügbar:',
+    max: 'Max',
+    insufficientHint: 'Betrag übersteigt den bekannten Kontostand',
   },
   errors: {
     error: 'Fehler',
