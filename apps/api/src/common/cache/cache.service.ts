@@ -40,6 +40,25 @@ export class CacheService implements OnModuleDestroy {
     }
   }
 
+  /**
+   * Atomic `SET key 1 EX ttl NX`. Returns true only when THIS caller created the
+   * key — i.e. the previous window had expired (or never existed). Use it as a
+   * "do this at most once per window" throttle where two concurrent requests must
+   * not both win.
+   *
+   * Returns false when Redis is unavailable: callers are opportunistic side
+   * effects, and skipping one is always safer than doing it on every request.
+   */
+  async setIfAbsent(key: string, ttlSec: number): Promise<boolean> {
+    try {
+      const res = await this.redis.set(key, '1', 'EX', ttlSec, 'NX');
+      return res === 'OK';
+    } catch (err) {
+      this.logger.warn(`cache setIfAbsent failed for ${key}: ${(err as Error).message}`);
+      return false;
+    }
+  }
+
   async del(...keys: string[]): Promise<void> {
     if (keys.length === 0) return;
     try {

@@ -22,7 +22,7 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 1. **Share your code** — send it to friends via any messenger or social media
 2. **Friend registers** — they enter your code during registration (optional field)
 3. **7-day waiting period** — the referral stays in "Pending" status
-4. **Friend uses the app** — they must actively use the app (sync data) within 7 days
+4. **Friend uses the app** — they must actively use the app (open it and add expenses) within 7 days
 5. **Referral becomes Active** — you receive **+30 AI requests** as a bonus
 
 ## Referral Statuses
@@ -71,7 +71,7 @@ Friends who register with your referral code receive:
   **A:** Go to Settings → Invite Friends. Your code is shown at the top.
 
 - **Q: Why is my referral still "Pending"?**
-  **A:** Referrals stay pending for at least 7 days. The friend must also actively use the app (add expenses, sync data) during that period.
+  **A:** Referrals stay pending for at least 7 days. The friend must also actively use the app (open it, add expenses) during that period.
 
 - **Q: When does a referral expire?**
   **A:** If the referred friend doesn't become an active user within 30 days, the referral expires.

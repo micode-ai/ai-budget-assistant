@@ -38,8 +38,8 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    // Update last active timestamp on every profile fetch (covers biometric login)
-    this.usersService.updateLastSync(req.user.id).catch(() => null);
+    // `lastSyncAt` is stamped for every authenticated request by JwtStrategy →
+    // LastActiveService (throttled), so this route no longer stamps it itself.
     const adminEmails = (process.env.ADMIN_EMAILS || '')
       .split(',')
       .map((e) => e.trim().toLowerCase())

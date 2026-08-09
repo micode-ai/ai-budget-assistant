@@ -22,7 +22,7 @@ Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontr
 1. **Comparte tu código** — envíalo a amigos por mensajería o redes sociales
 2. **El amigo se registra** — ingresa tu código durante el registro (campo opcional)
 3. **Período de espera de 7 días** — el referido permanece en estado "Pendiente"
-4. **El amigo usa la app** — debe usar activamente la app (sincronizar datos) durante 7 días
+4. **El amigo usa la app** — debe usar activamente la app (abrirla y añadir gastos) durante 7 días
 5. **El referido se activa** — recibes **+30 solicitudes AI** como bonificación
 
 ## Estados de los referidos

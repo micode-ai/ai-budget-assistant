@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
+import { LastActiveService } from '../../users/last-active.service';
 
 interface JwtPayload {
   sub: string;
@@ -14,6 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
+    private readonly lastActive: LastActiveService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -28,6 +30,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user || !user.isActive) {
       throw new UnauthorizedException();
     }
+
+    // Any authenticated request counts as activity. Throttled inside the service
+    // and fire-and-forget so it can neither delay nor fail the request.
+    void this.lastActive.touch(user.id).catch(() => undefined);
 
     return {
       id: user.id,

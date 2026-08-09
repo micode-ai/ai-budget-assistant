@@ -140,7 +140,9 @@ export default function UsersPage() {
                   <TableHead>Status</TableHead>
                   <TableHead>AI Requests</TableHead>
                   <SortableHead field="createdAt" label="Registered" />
-                  <SortableHead field="lastSyncAt" label="Last Login" />
+                  {/* lastSyncAt is a last-*activity* stamp (any authenticated
+                      request), not a login event — label it for what it is. */}
+                  <SortableHead field="lastSyncAt" label="Last Active" />
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -22,7 +22,7 @@ Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie
 1. **Udostępnij swój kod** — wyślij go znajomym przez komunikator lub media społecznościowe
 2. **Znajomy się rejestruje** — wpisuje twój kod podczas rejestracji (pole opcjonalne)
 3. **7-dniowy okres oczekiwania** — polecenie pozostaje w statusie „Oczekujące"
-4. **Znajomy korzysta z aplikacji** — musi aktywnie używać aplikacji (synchronizować dane) przez 7 dni
+4. **Znajomy korzysta z aplikacji** — musi aktywnie używać aplikacji (otworzyć ją i dodawać wydatki) przez 7 dni
 5. **Polecenie staje się Aktywne** — otrzymujesz **+30 zapytań AI** jako bonus
 
 ## Statusy poleceń

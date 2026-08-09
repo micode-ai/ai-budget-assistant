@@ -22,7 +22,7 @@ Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op h
 1. **Deel je code** — stuur deze naar vrienden via een messenger of sociale media
 2. **Vriend registreert** — ze voeren jouw code in tijdens de registratie (optioneel veld)
 3. **Wachtperiode van 7 dagen** — de verwijzing blijft in de status "In behandeling"
-4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (gegevens synchroniseren)
+4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (openen en uitgaven toevoegen)
 5. **Verwijzing wordt Actief** — je ontvangt **+30 AI-verzoeken** als bonus
 
 ## Verwijzingsstatussen
@@ -71,7 +71,7 @@ Vrienden die zich registreren met jouw verwijzingscode ontvangen:
   **A:** Ga naar Instellingen → Vrienden uitnodigen. Je code wordt bovenaan weergegeven.
 
 - **V: Waarom staat mijn verwijzing nog op "In behandeling"?**
-  **A:** Verwijzingen blijven minstens 7 dagen in behandeling. De vriend moet de app in die periode ook actief gebruiken (uitgaven toevoegen, gegevens synchroniseren).
+  **A:** Verwijzingen blijven minstens 7 dagen in behandeling. De vriend moet de app in die periode ook actief gebruiken (openen, uitgaven toevoegen).
 
 - **V: Wanneer verloopt een verwijzing?**
   **A:** Als de verwezen vriend niet binnen 30 dagen een actieve gebruiker wordt, verloopt de verwijzing.

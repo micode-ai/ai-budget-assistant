@@ -22,7 +22,7 @@ Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous 
 1. **Partagez votre code** — envoyez-le à vos amis par messagerie ou réseaux sociaux
 2. **L'ami s'inscrit** — il saisit votre code lors de l'inscription (champ facultatif)
 3. **Période d'attente de 7 jours** — le parrainage reste en statut « En attente »
-4. **L'ami utilise l'application** — il doit utiliser activement l'appli (synchroniser les données) pendant 7 jours
+4. **L'ami utilise l'application** — il doit utiliser activement l'appli (l'ouvrir et ajouter des dépenses) pendant 7 jours
 5. **Le parrainage devient Actif** — vous recevez **+30 requêtes AI** en bonus
 
 ## Statuts des parrainages

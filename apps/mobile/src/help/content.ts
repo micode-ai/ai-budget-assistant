@@ -3343,7 +3343,7 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 1. **Share your code** — send it to friends via any messenger or social media
 2. **Friend registers** — they enter your code during registration (optional field)
 3. **7-day waiting period** — the referral stays in "Pending" status
-4. **Friend uses the app** — they must actively use the app (sync data) within 7 days
+4. **Friend uses the app** — they must actively use the app (open it and add expenses) within 7 days
 5. **Referral becomes Active** — you receive **+30 AI requests** as a bonus
 
 ## Referral Statuses
@@ -3392,7 +3392,7 @@ Friends who register with your referral code receive:
   **A:** Go to Settings → Invite Friends. Your code is shown at the top.
 
 - **Q: Why is my referral still "Pending"?**
-  **A:** Referrals stay pending for at least 7 days. The friend must also actively use the app (add expenses, sync data) during that period.
+  **A:** Referrals stay pending for at least 7 days. The friend must also actively use the app (open it, add expenses) during that period.
 
 - **Q: When does a referral expire?**
   **A:** If the referred friend doesn't become an active user within 30 days, the referral expires.
@@ -7748,7 +7748,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 1. **Поделитесь кодом** — отправьте его друзьям через мессенджер или соцсети
 2. **Друг регистрируется** — вводит ваш код при регистрации (необязательное поле)
 3. **7-дневный период ожидания** — реферал остаётся в статусе «Ожидает»
-4. **Друг пользуется приложением** — он должен активно использовать приложение (синхронизировать данные) в течение 7 дней
+4. **Друг пользуется приложением** — он должен активно использовать приложение (открывать его и добавлять расходы) в течение 7 дней
 5. **Реферал становится Активным** — вы получаете **+30 AI запросов** в качестве бонуса
 
 ## Статусы рефералов
@@ -7797,7 +7797,7 @@ AI Budget Assistant предлагает три уровня подписки. �
   **О:** Перейдите в Настройки → Пригласить друзей. Код отображается вверху экрана.
 
 - **В: Почему мой реферал всё ещё «Ожидает»?**
-  **О:** Рефералы остаются в ожидании минимум 7 дней. Друг также должен активно пользоваться приложением (добавлять расходы, синхронизировать данные) в этот период.
+  **О:** Рефералы остаются в ожидании минимум 7 дней. Друг также должен активно пользоваться приложением (открывать его, добавлять расходы) в этот период.
 
 - **В: Когда реферал истекает?**
   **О:** Если приглашённый друг не станет активным пользователем в течение 30 дней, реферал истекает.
@@ -12125,7 +12125,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 1. **Поділіться кодом** — надішліть його друзям через месенджер або соцмережі
 2. **Друг реєструється** — вводить ваш код при реєстрації (необов'язкове поле)
 3. **7-денний період очікування** — реферал залишається у статусі «Очікує»
-4. **Друг користується додатком** — він повинен активно використовувати додаток (синхронізувати дані) протягом 7 днів
+4. **Друг користується додатком** — він повинен активно використовувати додаток (відкривати його та додавати витрати) протягом 7 днів
 5. **Реферал стає Активним** — ви отримуєте **+30 AI запитів** як бонус
 
 ## Статуси рефералів
@@ -12174,7 +12174,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
   **В:** Перейдіть до Налаштування → Запросити друзів. Код відображається вгорі екрана.
 
 - **П: Чому мій реферал досі «Очікує»?**
-  **В:** Реферали залишаються в очікуванні мінімум 7 днів. Друг також повинен активно користуватися додатком (додавати витрати, синхронізувати дані) протягом цього періоду.
+  **В:** Реферали залишаються в очікуванні мінімум 7 днів. Друг також повинен активно користуватися додатком (відкривати його, додавати витрати) протягом цього періоду.
 
 - **П: Коли реферал закінчується?**
   **В:** Якщо запрошений друг не стане активним користувачем протягом 30 днів, реферал закінчується.
@@ -16471,7 +16471,7 @@ Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie
 1. **Udostępnij swój kod** — wyślij go znajomym przez komunikator lub media społecznościowe
 2. **Znajomy się rejestruje** — wpisuje twój kod podczas rejestracji (pole opcjonalne)
 3. **7-dniowy okres oczekiwania** — polecenie pozostaje w statusie „Oczekujące"
-4. **Znajomy korzysta z aplikacji** — musi aktywnie używać aplikacji (synchronizować dane) przez 7 dni
+4. **Znajomy korzysta z aplikacji** — musi aktywnie używać aplikacji (otworzyć ją i dodawać wydatki) przez 7 dni
 5. **Polecenie staje się Aktywne** — otrzymujesz **+30 zapytań AI** jako bonus
 
 ## Statusy poleceń
@@ -20811,7 +20811,7 @@ Jeder Benutzer hat einen einzigartigen 6-stelligen Empfehlungscode. Du findest i
 1. **Teile deinen Code** — sende ihn per Messenger oder Social Media an Freunde
 2. **Freund registriert sich** — gibt deinen Code bei der Registrierung ein (optionales Feld)
 3. **7-tägige Wartezeit** — die Empfehlung bleibt im Status „Ausstehend"
-4. **Freund nutzt die App** — muss die App aktiv nutzen (Daten synchronisieren) innerhalb von 7 Tagen
+4. **Freund nutzt die App** — muss die App aktiv nutzen (öffnen und Ausgaben erfassen) innerhalb von 7 Tagen
 5. **Empfehlung wird Aktiv** — du erhältst **+30 AI-Anfragen** als Bonus
 
 ## Empfehlungsstatus
@@ -25128,7 +25128,7 @@ Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontr
 1. **Comparte tu código** — envíalo a amigos por mensajería o redes sociales
 2. **El amigo se registra** — ingresa tu código durante el registro (campo opcional)
 3. **Período de espera de 7 días** — el referido permanece en estado "Pendiente"
-4. **El amigo usa la app** — debe usar activamente la app (sincronizar datos) durante 7 días
+4. **El amigo usa la app** — debe usar activamente la app (abrirla y añadir gastos) durante 7 días
 5. **El referido se activa** — recibes **+30 solicitudes AI** como bonificación
 
 ## Estados de los referidos
@@ -29442,7 +29442,7 @@ Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous 
 1. **Partagez votre code** — envoyez-le à vos amis par messagerie ou réseaux sociaux
 2. **L'ami s'inscrit** — il saisit votre code lors de l'inscription (champ facultatif)
 3. **Période d'attente de 7 jours** — le parrainage reste en statut « En attente »
-4. **L'ami utilise l'application** — il doit utiliser activement l'appli (synchroniser les données) pendant 7 jours
+4. **L'ami utilise l'application** — il doit utiliser activement l'appli (l'ouvrir et ajouter des dépenses) pendant 7 jours
 5. **Le parrainage devient Actif** — vous recevez **+30 requêtes AI** en bonus
 
 ## Statuts des parrainages
@@ -33744,7 +33744,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 1. **Падзяліцеся кодам** — адпраўце яго сябрам праз месенджар або сацсеткі
 2. **Сябар рэгіструецца** — уводзіць ваш код пры рэгістрацыі (неабавязковае поле)
 3. **7-дзённы перыяд чакання** — рэферал застаецца ў статусе «Чакае»
-4. **Сябар карыстаецца дадаткам** — ён павінен актыўна выкарыстоўваць дадатак (сінхранізаваць дадзеныя) на працягу 7 дзён
+4. **Сябар карыстаецца дадаткам** — ён павінен актыўна выкарыстоўваць дадатак (адкрываць яго і дадаваць выдаткі) на працягу 7 дзён
 5. **Рэферал становіцца Актыўным** — вы атрымліваеце **+30 AI запытаў** як бонус
 
 ## Статусы рэфералаў
@@ -33793,7 +33793,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
   **А:** Перайдзіце ў Налады → Запрасіць сяброў. Код адлюстроўваецца ўверсе экрана.
 
 - **П: Чаму мой рэферал яшчэ «Чакае»?**
-  **А:** Рэфералы застаюцца ў чаканні мінімум 7 дзён. Сябар таксама павінен актыўна карыстацца дадаткам (дадаваць выдаткі, сінхранізаваць дадзеныя) на працягу гэтага перыяду.
+  **А:** Рэфералы застаюцца ў чаканні мінімум 7 дзён. Сябар таксама павінен актыўна карыстацца дадаткам (адкрываць яго, дадаваць выдаткі) на працягу гэтага перыяду.
 
 - **П: Калі рэферал скончваецца?**
   **А:** Калі запрошаны сябар не стане актыўным карыстальнікам на працягу 30 дзён, рэферал скончваецца.
@@ -38096,7 +38096,7 @@ Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op h
 1. **Deel je code** — stuur deze naar vrienden via een messenger of sociale media
 2. **Vriend registreert** — ze voeren jouw code in tijdens de registratie (optioneel veld)
 3. **Wachtperiode van 7 dagen** — de verwijzing blijft in de status "In behandeling"
-4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (gegevens synchroniseren)
+4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (openen en uitgaven toevoegen)
 5. **Verwijzing wordt Actief** — je ontvangt **+30 AI-verzoeken** als bonus
 
 ## Verwijzingsstatussen
@@ -38145,7 +38145,7 @@ Vrienden die zich registreren met jouw verwijzingscode ontvangen:
   **A:** Ga naar Instellingen → Vrienden uitnodigen. Je code wordt bovenaan weergegeven.
 
 - **V: Waarom staat mijn verwijzing nog op "In behandeling"?**
-  **A:** Verwijzingen blijven minstens 7 dagen in behandeling. De vriend moet de app in die periode ook actief gebruiken (uitgaven toevoegen, gegevens synchroniseren).
+  **A:** Verwijzingen blijven minstens 7 dagen in behandeling. De vriend moet de app in die periode ook actief gebruiken (openen, uitgaven toevoegen).
 
 - **V: Wanneer verloopt een verwijzing?**
   **A:** Als de verwezen vriend niet binnen 30 dagen een actieve gebruiker wordt, verloopt de verwijzing.
