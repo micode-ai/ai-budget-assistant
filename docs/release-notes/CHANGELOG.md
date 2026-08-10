@@ -8,6 +8,14 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.17.2 — 2026-08-10
+
+**Fixes**
+- **Fixed: choosing a file left the import screen looking dead.** Reading a statement we don't recognise takes a while — around half a minute the first time, because the format has to be worked out and then checked against what you already have. Nothing on screen said so, so the obvious conclusion was that the tap hadn't registered. The bank list is now replaced by "Reading your statement…" while it works, which also stops a second tap starting a second read.
+- **Fixed: undoing an import made the same file un-importable.** Rows from an undone import were still counted as transactions you already had, so re-importing that file came back with almost every row ticked off as a duplicate and nothing left to import. Undo and re-import now work as a pair. *Shipped server-side — it took effect for everyone without an app update.*
+
+---
+
 ## 1.17.1 — 2026-08-10
 
 **Fixes**
