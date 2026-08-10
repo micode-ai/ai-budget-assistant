@@ -867,6 +867,7 @@ export default {
     subtitle: 'Імпортувати CSV з вашого банку',
     quickImportHeader: 'Швидкий імпорт',
     autoDetect: 'Визначити автоматично (будь-який банк)',
+    analysing: 'Читаємо вашу виписку…',
     savedMappingsHeader: 'Збережені відповідності',
     noSavedMappings: 'Немає збережених відповідностей',
     detectedBank: 'Визначено: {{name}}',

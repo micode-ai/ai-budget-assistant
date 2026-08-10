@@ -867,6 +867,7 @@ export default {
     subtitle: 'Importer un CSV depuis votre banque',
     quickImportHeader: 'Import rapide',
     autoDetect: 'Détection automatique (toute banque)',
+    analysing: 'Lecture de votre relevé…',
     savedMappingsHeader: 'Mappages enregistrés',
     noSavedMappings: 'Aucun mappage enregistré pour l\'instant',
     detectedBank: 'Détecté : {{name}}',

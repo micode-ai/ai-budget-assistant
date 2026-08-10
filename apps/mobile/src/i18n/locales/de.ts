@@ -867,6 +867,7 @@ export default {
     subtitle: 'CSV-Datei Ihrer Bank importieren',
     quickImportHeader: 'Schnellimport',
     autoDetect: 'Automatisch erkennen (jede Bank)',
+    analysing: 'Kontoauszug wird gelesen…',
     savedMappingsHeader: 'Gespeicherte Zuordnungen',
     noSavedMappings: 'Noch keine gespeicherten Zuordnungen',
     detectedBank: 'Erkannt: {{name}}',

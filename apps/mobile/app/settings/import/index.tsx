@@ -31,6 +31,11 @@ export default function ImportHubScreen() {
   const [loading, setLoading] = useState(true);
   const [batches, setBatches] = useState<ImportBatchDto[]>([]);
   const [batchesLoading, setBatchesLoading] = useState(true);
+  // The preview request can take tens of seconds on the AI path — one LLM call
+  // for a format we have never seen, plus the dedup queries. Without this the
+  // screen sat completely inert after the file was chosen, so the only
+  // reasonable reading was that the tap had done nothing.
+  const [previewing, setPreviewing] = useState(false);
   const reset = useImportStore((s) => s.reset);
   const setFileAsset = useImportStore((s) => s.setFileAsset);
   const setPickedBankId = useImportStore((s) => s.setPickedBankId);
@@ -112,6 +117,7 @@ export default function ImportHubScreen() {
     setPickedBankId(bankId ?? null);
     setPickedMappingId(mappingId ?? null);
 
+    setPreviewing(true);
     try {
       const preview = await api.importBankPreview(file, { bankId, mappingId });
       useImportStore.getState().setPreview(preview);
@@ -125,6 +131,8 @@ export default function ImportHubScreen() {
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),
       );
+    } finally {
+      setPreviewing(false);
     }
   };
 
@@ -182,18 +190,25 @@ export default function ImportHubScreen() {
         ListHeaderComponent={
           <>
             <Text style={styles.sectionHeader}>{t('bankImport.quickImportHeader')}</Text>
-            {IMPORT_ENTRIES.map((e) => (
-              <TouchableOpacity
-                key={e.id ?? 'auto'}
-                style={styles.row}
-                onPress={() => pickAndPreview(e.id)}
-                activeOpacity={0.7}
-              >
-                <Ionicons name={e.icon} size={20} color={theme.colors.primary} />
-                <Text style={styles.rowLabel}>{e.labelKey ? t(e.labelKey) : e.label}</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-              </TouchableOpacity>
-            ))}
+            {previewing ? (
+              <View style={styles.row}>
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+                <Text style={styles.rowLabel}>{t('bankImport.analysing')}</Text>
+              </View>
+            ) : (
+              IMPORT_ENTRIES.map((e) => (
+                <TouchableOpacity
+                  key={e.id ?? 'auto'}
+                  style={styles.row}
+                  onPress={() => pickAndPreview(e.id)}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name={e.icon} size={20} color={theme.colors.primary} />
+                  <Text style={styles.rowLabel}>{e.labelKey ? t(e.labelKey) : e.label}</Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              ))
+            )}
 
             <Text style={styles.sectionHeader}>{t('bankImport.savedMappingsHeader')}</Text>
             {loading ? (

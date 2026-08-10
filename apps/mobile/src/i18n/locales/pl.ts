@@ -867,6 +867,7 @@ export default {
     subtitle: 'Importuj plik CSV ze swojego banku',
     quickImportHeader: 'Szybki import',
     autoDetect: 'Rozpoznaj automatycznie (dowolny bank)',
+    analysing: 'Czytamy Twój wyciąg…',
     savedMappingsHeader: 'Zapisane mapowania',
     noSavedMappings: 'Brak zapisanych mapowań',
     detectedBank: 'Wykryto: {{name}}',

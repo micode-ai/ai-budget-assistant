@@ -867,6 +867,7 @@ export default {
     subtitle: 'Importeer een CSV van je bank',
     quickImportHeader: 'Snel importeren',
     autoDetect: 'Automatisch herkennen (elke bank)',
+    analysing: 'We lezen je afschrift…',
     savedMappingsHeader: 'Opgeslagen koppelingen',
     noSavedMappings: 'Nog geen opgeslagen koppelingen',
     detectedBank: 'Gedetecteerd: {{name}}',
