@@ -8,6 +8,16 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.17.1 — 2026-08-10
+
+**Fixes**
+- **Fixed: the new import-from-any-bank could not be reached.** Every row under Settings -> Import transactions named a specific bank, and choosing one told the server to use that bank's parser — so a statement from a bank we have no parser for was still routed into one, and the AI path introduced in 1.17.0 never ran. Import now leads with **Detect automatically (any bank)**, which is the row to use when your bank isn't listed. It is also the better default for a listed bank: a recognised format still uses its own parser (ABA-390, ABA-391).
+- The same gap had made the older "pick your bank from a list" fallback screen unreachable as well; it works again.
+
+1.17.0 shipped the feature itself but not a way to open it, so if you never saw the new import, this is why.
+
+---
+
 ## 1.17.0 — 2026-08-10
 
 **Import from any bank**
