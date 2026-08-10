@@ -48,4 +48,19 @@ export class MappingService {
     if (!existing) throw new NotFoundException('Mapping not found');
     await this.prisma.csvImportMapping.delete({ where: { id } });
   }
+
+  /**
+   * Re-key a saved mapping onto a different headerFingerprint. Used by
+   * ImportBankService's legacy-fingerprint fallback: a mapping saved before
+   * delimiter sniffing existed was fingerprinted on a single merged header
+   * cell (peekHeaders hardcoded ';'). Once found under that legacy key, it is
+   * moved onto the correctly-sniffed fingerprint, so the fallback lookup is
+   * needed only once per mapping.
+   */
+  async rekey(id: string, headerFingerprint: string): Promise<void> {
+    await this.prisma.csvImportMapping.update({
+      where: { id },
+      data: { headerFingerprint },
+    });
+  }
 }

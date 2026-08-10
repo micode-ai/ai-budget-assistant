@@ -5,6 +5,12 @@ export interface ParserOptions {
   amountFormat?: 'polish' | 'standard';
   dateFormat?: 'auto' | 'DD.MM.YYYY' | 'DD-MM-YYYY' | 'YYYY-MM-DD';
   delimiter?: string;
+  /**
+   * Currency to stamp on a row when the mapping has no `currency` column.
+   * Defaults to `'PLN'` when omitted — every existing caller omits it, so
+   * that default preserves UniversalParser's pre-existing behaviour.
+   */
+  defaultCurrency?: string;
 }
 
 export interface ParserResult {
@@ -13,7 +19,7 @@ export interface ParserResult {
 }
 
 export interface BankParser {
-  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal';
+  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal' | 'ai';
   displayName: string;
   /**
    * Input format the parser consumes. 'csv' parsers receive decoded CSV text;

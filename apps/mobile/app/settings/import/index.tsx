@@ -12,6 +12,8 @@ import { api } from '@/services/api';
 import { useImportStore } from '@/stores/importStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
+import { isTierRequiredError } from '@/services/importErrors';
+import { useUpgradeStore } from '@/stores/upgradeStore';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
@@ -89,7 +91,14 @@ export default function ImportHubScreen() {
     let picked: DocumentPicker.DocumentPickerResult;
     try {
       picked = await DocumentPicker.getDocumentAsync({
-        type: ['text/csv', 'text/comma-separated-values', 'application/pdf', '*/*'],
+        type: [
+          'text/csv',
+          'text/comma-separated-values',
+          'application/pdf',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel',
+          '*/*',
+        ],
         copyToCacheDirectory: true,
       });
     } catch (err) {
@@ -111,6 +120,7 @@ export default function ImportHubScreen() {
     const file = {
       uri: asset.uri,
       name: asset.name ?? (isPdf ? 'statement.pdf' : 'bank.csv'),
+      // Server sniffs the buffer (XLSX zip magic) and never trusts this label, so we don't need to add XLSX MIME types here.
       type: isPdf ? 'application/pdf' : 'text/csv',
     };
 
@@ -123,6 +133,10 @@ export default function ImportHubScreen() {
       useImportStore.getState().setPreview(preview);
       router.push('/settings/import/preview');
     } catch (err) {
+      if (isTierRequiredError(err)) {
+        useUpgradeStore.getState().show(t('bankImport.aiPdfPaywall'), err.requiredTier ?? 'pro');
+        return;
+      }
       showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),

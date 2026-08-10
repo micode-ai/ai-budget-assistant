@@ -34,4 +34,36 @@ describe('UniversalParser', () => {
   it('throws when columnMapping is missing', () => {
     expect(() => parser.parse('a;b\n1;2')).toThrow(/columnMapping/);
   });
+
+  it('stamps rows with defaultCurrency when the mapping has no currency column', () => {
+    const text = 'Data;Kwota;Opis\n15.01.2026;1500,00;Wynagrodzenie';
+    const { rows } = parser.parse(text, {
+      columnMapping: { date: 'Data', amount: 'Kwota', description: 'Opis' },
+      amountFormat: 'polish',
+      dateFormat: 'DD.MM.YYYY',
+      defaultCurrency: 'EUR',
+    });
+    expect(rows[0].currencyCode).toBe('EUR');
+  });
+
+  it('falls back to PLN when defaultCurrency is omitted (pre-existing behaviour, unchanged)', () => {
+    const text = 'Data;Kwota;Opis\n15.01.2026;1500,00;Wynagrodzenie';
+    const { rows } = parser.parse(text, {
+      columnMapping: { date: 'Data', amount: 'Kwota', description: 'Opis' },
+      amountFormat: 'polish',
+      dateFormat: 'DD.MM.YYYY',
+    });
+    expect(rows[0].currencyCode).toBe('PLN');
+  });
+
+  it('a mapped currency column still wins over defaultCurrency', () => {
+    const text = 'Data;Kwota;Waluta;Opis\n15.01.2026;1500,00;USD;Wynagrodzenie';
+    const { rows } = parser.parse(text, {
+      columnMapping: { date: 'Data', amount: 'Kwota', currency: 'Waluta', description: 'Opis' },
+      amountFormat: 'polish',
+      dateFormat: 'DD.MM.YYYY',
+      defaultCurrency: 'EUR',
+    });
+    expect(rows[0].currencyCode).toBe('USD');
+  });
 });

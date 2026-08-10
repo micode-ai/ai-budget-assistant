@@ -20,6 +20,7 @@ export class UniversalParser implements BankParser {
     const delimiter = opts?.delimiter ?? ';';
     const amountFormat = opts?.amountFormat ?? 'polish';
     const dateFormat = opts?.dateFormat ?? 'auto';
+    const defaultCurrency = opts?.defaultCurrency ?? 'PLN';
 
     const result = Papa.parse<Record<string, string>>(text, {
       header: true,
@@ -29,7 +30,7 @@ export class UniversalParser implements BankParser {
     const headers = result.meta.fields ?? [];
 
     const rows = result.data
-      .map((r, i) => this.toRow(r, i, mapping, amountFormat, dateFormat))
+      .map((r, i) => this.toRow(r, i, mapping, amountFormat, dateFormat, defaultCurrency))
       .filter((r): r is NonNullable<ReturnType<typeof this.toRow>> => r != null);
 
     return { rows, detectedHeaders: headers };
@@ -41,6 +42,7 @@ export class UniversalParser implements BankParser {
     mapping: NonNullable<ParserOptions['columnMapping']>,
     amountFormat: 'polish' | 'standard',
     dateFormat: 'auto' | 'DD.MM.YYYY' | 'DD-MM-YYYY' | 'YYYY-MM-DD',
+    defaultCurrency: string,
   ) {
     const date = parsePolishDate(r[mapping.date] || '', dateFormat);
     if (!date) return null;
@@ -69,7 +71,7 @@ export class UniversalParser implements BankParser {
 
     const description = (r[mapping.description] || '').trim();
     const counterparty = mapping.counterparty ? (r[mapping.counterparty] || '').trim() : undefined;
-    const currencyCode = mapping.currency ? (r[mapping.currency] || 'PLN').trim() : 'PLN';
+    const currencyCode = mapping.currency ? (r[mapping.currency] || defaultCurrency).trim() : defaultCurrency;
 
     return {
       idx,

@@ -1,4 +1,5 @@
 import { httpClient } from './http-client';
+import { ImportRequestError } from './importErrors';
 import type {
   BankImportPreviewResponse,
   BankImportCommitDto,
@@ -53,7 +54,7 @@ export const importBankApi = {
     if (!response.ok) {
       const err = await response.json().catch(() => ({ message: 'Request failed' }));
       const message = Array.isArray(err.message) ? err.message.join('\n') : err.message || `HTTP ${response.status}`;
-      throw new Error(message);
+      throw new ImportRequestError(message, response.status, err.code, err.requiredTier);
     }
     return response.json();
   },
@@ -125,8 +126,18 @@ export const importBankApi = {
     if (!response.ok) {
       const err = await response.json().catch(() => ({ message: 'Request failed' }));
       const message = Array.isArray(err.message) ? err.message.join('\n') : err.message || `HTTP ${response.status}`;
-      throw new Error(message);
+      throw new ImportRequestError(message, response.status, err.code, err.requiredTier);
     }
     return response.json();
+  },
+
+  /**
+   * Records the account's one-time consent to send statement fragments to the
+   * AI provider. Viewer-blocked and throttled server-side. The client must call
+   * this before re-requesting a preview that returned `needs_ai_consent` —
+   * there is no per-request consent flag.
+   */
+  grantAiImportConsent(): Promise<{ ok: boolean }> {
+    return httpClient.request<{ ok: boolean }>('/import/bank/ai-consent', { method: 'POST' });
   },
 };

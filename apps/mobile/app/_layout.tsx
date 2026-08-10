@@ -403,6 +403,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/import/ai-consent"
+          options={{
+            headerShown: true,
+            title: t('bankImport.aiConsentTitle'),
+          }}
+        />
+        <Stack.Screen
           name="settings/import/request-bank"
           options={{
             headerShown: true,

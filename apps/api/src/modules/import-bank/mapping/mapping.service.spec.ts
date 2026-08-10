@@ -10,6 +10,7 @@ describe('MappingService', () => {
       findFirst: jest.fn(),
       create: jest.fn(),
       delete: jest.fn(),
+      update: jest.fn(),
     },
   };
 
@@ -70,5 +71,14 @@ describe('MappingService', () => {
   it('delete throws NotFound when mapping not owned by account', async () => {
     prisma.csvImportMapping.findFirst.mockResolvedValue(null);
     await expect(service.delete('acc-1', 'm1')).rejects.toThrow(/not found/i);
+  });
+
+  it('rekey updates the stored headerFingerprint by id', async () => {
+    prisma.csvImportMapping.update.mockResolvedValue({});
+    await service.rekey('m1', 'new-fp');
+    expect(prisma.csvImportMapping.update).toHaveBeenCalledWith({
+      where: { id: 'm1' },
+      data: { headerFingerprint: 'new-fp' },
+    });
   });
 });

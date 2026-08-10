@@ -8,6 +8,7 @@ import { PekaoParser } from './pekao.parser';
 import { ErsteParser } from './erste.parser';
 import { AliorParser } from './alior.parser';
 import { UniversalParser } from './universal.parser';
+import { AiStatementParser } from './ai-statement.parser';
 
 export const PARSERS: BankParser[] = [
   new MBankParser(),
@@ -19,6 +20,7 @@ export const PARSERS: BankParser[] = [
   new ErsteParser(),
   new AliorParser(),
   new UniversalParser(),
+  new AiStatementParser(),
 ];
 
 const parserFormat = (p: BankParser): 'csv' | 'pdf' => p.format ?? 'csv';
@@ -36,5 +38,7 @@ export function detectParser(headers: string[], sampleRows: string[][] = []): Ba
 
 /** Auto-detect a PDF bank parser from extracted statement text lines. */
 export function detectPdfParser(lines: string[]): BankParser | undefined {
-  return PARSERS.find((p) => parserFormat(p) === 'pdf' && p.detect(lines, []));
+  return PARSERS.find(
+    (p) => p.id !== 'ai' && parserFormat(p) === 'pdf' && p.detect(lines, []),
+  );
 }

@@ -4759,7 +4759,7 @@ Friends who register with your referral code receive:
 ## Importing transactions from your bank
 URL: https://ai-budget.pl/help/en/bank-import/
 
-> Import transactions from a CSV or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.
+> Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.
 
 ## Supported banks
 
@@ -4770,6 +4770,7 @@ URL: https://ai-budget.pl/help/en/bank-import/
 - **Revolut** — CSV export
 - **Wise** — CSV export (multi-currency, FX conversions detected automatically)
 - **Other** — any bank, via the universal column mapper (CSV)
+- **Spreadsheets** — XLSX statements work too; the app reads the first sheet
 
 More banks are added over time. If yours isn't listed yet, use **Other** and map the columns yourself.
 
@@ -4809,6 +4810,25 @@ Each row becomes an Expense, an Income, or a Currency Exchange. Categories are s
 ## "Other" — universal CSV mapper
 
 If your bank isn't in the list, pick **Other (custom CSV)**. The app shows a preview of your file and asks you to point at which column holds the date, amount, and description. Save this mapping with a name and the next CSV with the same column layout is imported automatically.
+
+## When nothing recognises your statement
+
+If none of the banks above fit and the file isn't a simple column layout the app can guess on its own, it can ask an AI model to work out the columns for you — which one is the date, which is the amount, and so on.
+
+**Before anything is sent, you're asked once.** The first time this happens for an account, you'll see a screen explaining what leaves your device: for a CSV or spreadsheet, only the header row plus up to 10 sample rows — never the whole file. For a PDF statement, it's the first 20 lines of extracted text. You decide once per account; after that, the app remembers your choice.
+
+- **Accept**, and the file is re-read with the columns the model worked out.
+- **Decline**, and you go straight to the manual mapper described above — pre-filled with whatever the model had already figured out, so you're not starting from a blank form.
+
+**The result is shown, not assumed.** When the AI matching succeeds, the preview shows a row of chips above your transactions — something like `Date → Data operacji`, `Amount → Kwota` — along with its guess at which bank this is. This is a best guess, not a certainty: tap the row any time to open the mapper and correct a column it got wrong.
+
+**A few things are flagged for you to check, not silently assumed:**
+- If the file has no currency column at all, every row is read in your own account currency, and a notice tells you so — tap it to change the currency before importing, and the change applies to the whole file.
+- Reading numbers out of a PDF is harder to double-check than a CSV, so the app tries to confirm that what it found adds up to the statement's closing balance. When it can't confirm that, you'll see a notice asking you to review the list. This isn't an error — it's simply the normal case whenever a statement doesn't print a running balance to check against, or when the check doesn't line up.
+
+**PDF statements need a Pro plan.** Reading a PDF with AI takes more processing than a CSV, so it's a Pro feature — a free account sees an upgrade screen there instead of a failure message.
+
+Banks already listed above (mBank, PKO BP, Erste, Alior, Revolut, Wise) are unaffected by any of this — they import exactly as described earlier on this page.
 
 ## Past imports & Undo
 

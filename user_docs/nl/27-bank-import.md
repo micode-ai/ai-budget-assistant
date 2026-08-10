@@ -1,6 +1,6 @@
 # Transacties importeren vanaf je bank
 
-> Importeer transacties uit een CSV- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.
+> Importeer transacties uit een CSV-, XLSX- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.
 
 ## Ondersteunde banken
 
@@ -11,6 +11,7 @@
 - **Revolut** — CSV-export
 - **Wise** — CSV-export (meerdere valuta's, FX-conversies automatisch gedetecteerd)
 - **Overig** — elke bank, via de universele kolomtoewijzer (CSV)
+- **Spreadsheets** — XLSX-afschriften werken ook; de app leest het eerste blad
 
 Er worden in de loop van de tijd meer banken toegevoegd. Als die van jou er nog niet bij staat, gebruik dan **Overig** en wijs de kolommen zelf toe.
 
@@ -50,6 +51,25 @@ Elke rij wordt een Uitgave, Inkomsten of Valutawissel. Categorieën worden autom
 ## "Overig" — universele CSV-toewijzer
 
 Als je bank niet in de lijst staat, kies dan **Overig (eigen CSV)**. De app toont een voorbeeld van je bestand en vraagt je aan te wijzen welke kolom de datum, het bedrag en de omschrijving bevat. Sla deze toewijzing op met een naam en de volgende CSV met dezelfde kolomindeling wordt automatisch geïmporteerd.
+
+## Als niets je afschrift herkent
+
+Als geen van de bovenstaande banken past en het bestand geen eenvoudige kolomindeling heeft die de app zelf kan raden, kan de app een AI-model vragen om de kolommen voor je te bepalen — welke de datum is, welke het bedrag, enzovoort.
+
+**Voordat er iets wordt verzonden, wordt het je één keer gevraagd.** De eerste keer dat dit gebeurt voor een account, zie je een scherm dat uitlegt wat je apparaat verlaat: voor een CSV of spreadsheet alleen de kopregel plus maximaal 10 voorbeeldrijen — nooit het hele bestand. Voor een PDF-afschrift zijn het de eerste 20 regels geëxtraheerde tekst. Je beslist één keer per account; daarna onthoudt de app je keuze.
+
+- **Accepteer**, en het bestand wordt opnieuw ingelezen met de kolommen die het model heeft bepaald.
+- **Weiger**, en je komt direct bij de hierboven beschreven handmatige toewijzer terecht. Weigeren gebeurt voordat er iets is geanalyseerd, dus er is nog niets om vooraf in te vullen — je wijst de kolommen op dezelfde manier toe als bij elke andere niet-ondersteunde bank.
+
+**Het resultaat wordt getoond, niet aangenomen.** Wanneer de AI-toewijzing lukt, toont de voorvertoning een rij chips boven je transacties — zoiets als `Datum → Data operacji`, `Bedrag → Kwota` — samen met een gok naar welke bank dit is. Dit is een goede gok, geen zekerheid: tik op de rij om op elk moment de toewijzer te openen en een verkeerd herkende kolom te corrigeren.
+
+**Een paar dingen worden gemarkeerd om te controleren, niet stilzwijgend aangenomen:**
+- Als het bestand helemaal geen valutakolom heeft, wordt elke rij gelezen in de valuta van je eigen account, en een melding vertelt je dat — tik erop om de valuta te wijzigen vóór het importeren; de wijziging geldt voor het hele bestand.
+- Cijfers uit een PDF lezen is lastiger te controleren dan bij een CSV, dus probeert de app te bevestigen dat wat er gevonden is optelt tot het eindsaldo van het afschrift. Als dat niet kan worden bevestigd, zie je een melding die je vraagt de lijst te controleren. Dit is geen fout — het is gewoon het normale geval wanneer een afschrift geen lopend saldo afdrukt om mee te vergelijken, of wanneer de controle niet klopt.
+
+**PDF-afschriften vereisen een Pro-abonnement.** Een PDF met AI lezen kost meer verwerking dan een CSV, dus het is een Pro-functie — een gratis account ziet daar een upgradescherm in plaats van een foutmelding.
+
+Banken die hierboven al vermeld staan (mBank, PKO BP, Erste, Alior, Revolut, Wise) worden hier niet door beïnvloed — die worden precies zo geïmporteerd als eerder op deze pagina beschreven.
 
 ## Eerdere imports & ongedaan maken
 

@@ -292,6 +292,7 @@ model Account {
   updatedAt         DateTime    @updatedAt @map("updated_at")
   purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
   monthAnchorDay       Int?         @map("month_anchor_day")
+  aiImportConsentAt    DateTime?    @map("ai_import_consent_at")
   tripStartDate DateTime?   @db.Date @map("trip_start_date")
   tripEndDate   DateTime?   @db.Date @map("trip_end_date")
   tripStatus    TripStatus? @map("trip_status")
@@ -1838,6 +1839,22 @@ model CsvImportMapping {
   @@unique([accountId, headerFingerprint])
   @@index([accountId])
   @@map("csv_import_mappings")
+}
+
+model BankStatementSignature {
+  id                String   @id @default(uuid())
+  headerFingerprint String   @unique @map("header_fingerprint")
+  mapping           Json
+  delimiter         String?
+  amountFormat      String?  @map("amount_format")
+  dateFormat        String?  @map("date_format")
+  bankLabel         String?  @map("bank_label")
+  confirmedCount    Int      @default(0) @map("confirmed_count")
+  correctedCount    Int      @default(0) @map("corrected_count")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("bank_statement_signatures")
 }
 
 model MerchantCategoryRule {

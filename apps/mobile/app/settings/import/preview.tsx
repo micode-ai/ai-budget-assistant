@@ -1,33 +1,89 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Modal } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import type { ImportRow } from '@budget/shared-types';
-import { formatCurrency, formatDate } from '@budget/shared-utils';
+import { formatCurrency, formatDate, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { useImportStore } from '@/stores/importStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { getIntlLocale } from '@/i18n';
+import AiMappingChips from '@/components/import/AiMappingChips';
+import ImportNoticeBanner from '@/components/import/ImportNoticeBanner';
+import { buildPreviewNotices } from '@/features/import/previewNotices';
+import { applyCurrencyOverride } from '@/features/import/applyCurrencyOverride';
+import { buildCommitMappingContext } from '@/features/import/buildCommitMappingContext';
+import { isTierRequiredError } from '@/services/importErrors';
+import { useUpgradeStore } from '@/stores/upgradeStore';
+
+/** Every non-`alreadyImported` row checked — the initial/re-seeded default. */
+function seedSelected(rowsForSeed: ImportRow[]): Set<number> {
+  return new Set(rowsForSeed.filter((r) => !r.alreadyImported).map((r) => r.idx));
+}
 
 export default function ImportPreviewScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const preview = useImportStore((s) => s.previewData);
   const file = useImportStore((s) => s.fileAsset);
   const setPreview = useImportStore((s) => s.setPreview);
   const setBankId = useImportStore((s) => s.setPickedBankId);
   const [committing, setCommitting] = useState(false);
-  const [selected, setSelected] = useState<Set<number>>(() =>
-    new Set(preview?.rows?.filter((r) => !r.alreadyImported).map((r) => r.idx) ?? []),
-  );
+
+  // Currency correction for an AI-assumed currency (see buildPreviewNotices).
+  // These hooks — and `rows`/`effectiveRows` below — are declared
+  // unconditionally, ABOVE every early return in this component: `preview`
+  // (and therefore which branch renders) can change on a re-render of this
+  // same mounted screen (e.g. the needs_picker branch below calls
+  // `setPreview` without navigating away), so a hook declared after one of
+  // the early returns would be called on some renders and not others —
+  // a Rules-of-Hooks violation, not just a style nit.
+  const [currencyOverride, setCurrencyOverride] = useState<string | null>(null);
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
 
   const locale = getIntlLocale();
+
+  const rows = useMemo<ImportRow[]>(
+    () => (preview?.status === 'parsed' ? (preview.rows ?? []) : []),
+    [preview],
+  );
+
+  const [selected, setSelected] = useState<Set<number>>(() => seedSelected(rows));
+
+  // Re-seed `selected` whenever a NEW preview's rows arrive — including the
+  // in-place needs_picker -> parsed transition, where the bank-picker retry
+  // below calls setPreview() on this SAME mounted screen without navigating.
+  // The useState initializer above only runs once, at mount, against
+  // whatever `preview` was at that instant — for that transition it was
+  // still needs_picker (no rows), so without this effect the freshly-parsed
+  // rows would render with nothing checked and Import permanently disabled.
+  //
+  // `rows` is a `useMemo` keyed only on `preview`, so its identity is stable
+  // across every OTHER re-render this screen goes through — toggling a
+  // checkbox, opening the currency picker, applying a currency override —
+  // none of those touch `preview`, so none of them change `rows`'s identity,
+  // so this effect cannot fire on them and cannot clobber a user's manual
+  // selection. It fires exactly when a genuinely new preview (and therefore
+  // a new row set) arrives, which is also when re-seeding is correct: a new
+  // file or a new parse is a fresh list, not a continuation of the old one.
+  useEffect(() => {
+    setSelected(seedSelected(rows));
+  }, [rows]);
+
+  // The commit payload IS `rows` (each carrying its own currencyCode) — so a
+  // user's currency correction is applied here, before anything downstream
+  // (list rendering, selection, commit) ever reads `rows` again.
+  const effectiveRows = useMemo(
+    () => applyCurrencyOverride(rows, currencyOverride),
+    [rows, currencyOverride],
+  );
 
   if (!preview) {
     return (
@@ -60,6 +116,10 @@ export default function ImportPreviewScreen() {
                 const res = await api.importBankPreview(file, { bankId: b.id });
                 setPreview(res);
               } catch (err) {
+                if (isTierRequiredError(err)) {
+                  useUpgradeStore.getState().show(t('bankImport.aiPdfPaywall'), err.requiredTier ?? 'pro');
+                  return;
+                }
                 showAlert(
                   t('bankImport.error.parseFailed'),
                   err instanceof Error ? err.message : String(err),
@@ -76,13 +136,17 @@ export default function ImportPreviewScreen() {
     );
   }
 
+  if (preview.status === 'needs_ai_consent') {
+    router.replace('/settings/import/ai-consent');
+    return null;
+  }
+
   if (preview.status === 'needs_mapping') {
     router.replace('/settings/import/mapper');
     return null;
   }
 
-  // status === 'parsed'
-  const rows = preview.rows ?? [];
+  // status === 'parsed' (rows / effectiveRows are computed above, unconditionally)
 
   const toggle = (idx: number) =>
     setSelected((prev) => {
@@ -98,25 +162,14 @@ export default function ImportPreviewScreen() {
   const handleImport = async () => {
     setCommitting(true);
     try {
-      const rowsToCommit = rows.filter((r) => selected.has(r.idx) && !r.alreadyImported);
+      const rowsToCommit = effectiveRows.filter((r) => selected.has(r.idx) && !r.alreadyImported);
       const state = useImportStore.getState();
       const pending = state.pendingMapping;
-      const fp = preview.headerFingerprint;
       const bankId = state.pickedBankId;
 
       const result = await api.importBankCommit({
         rows: rowsToCommit,
-        ...(pending && fp
-          ? {
-              bankId: (bankId ?? 'universal') as 'mbank' | 'pko' | 'ing' | 'millennium' | 'pekao' | 'universal',
-              headerFingerprint: fp,
-              mapping: pending.mapping,
-              delimiter: pending.delimiter,
-              encoding: pending.encoding,
-              amountFormat: pending.amountFormat,
-              dateFormat: pending.dateFormat,
-            }
-          : {}),
+        ...buildCommitMappingContext(preview, pending, bankId),
       });
 
       await useExpenseStore.getState().loadExpenses({ force: true });
@@ -282,6 +335,28 @@ export default function ImportPreviewScreen() {
         </View>
       )}
 
+      {buildPreviewNotices({ ...preview, currencyAssumed: currencyOverride ?? preview.currencyAssumed })
+        .map((n) =>
+          n.key === 'bankImport.aiCurrencyAssumed' ? (
+            <ImportNoticeBanner
+              key={n.key}
+              notice={n}
+              actionLabel={t('bankImport.aiCurrencyFix')}
+              onAction={() => setShowCurrencyPicker(true)}
+            />
+          ) : (
+            <ImportNoticeBanner key={n.key} notice={n} />
+          ),
+        )}
+
+      {preview.aiInferred && preview.aiMapping ? (
+        <AiMappingChips
+          mapping={preview.aiMapping}
+          bankLabel={preview.aiBankLabel}
+          onEdit={() => router.push('/settings/import/mapper')}
+        />
+      ) : null}
+
       {/* Preview header with selection count */}
       <View style={styles.previewHeader}>
         <Text style={styles.previewHeaderText}>
@@ -295,7 +370,7 @@ export default function ImportPreviewScreen() {
       </View>
 
       <FlatList
-        data={rows}
+        data={effectiveRows}
         keyExtractor={(r) => String(r.idx)}
         renderItem={renderRow}
         contentContainerStyle={styles.listContent}
@@ -318,6 +393,46 @@ export default function ImportPreviewScreen() {
           )}
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={showCurrencyPicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowCurrencyPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.backdrop}
+            activeOpacity={1}
+            onPress={() => setShowCurrencyPicker(false)}
+          />
+          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
+            <View style={styles.handle} />
+            <Text style={styles.modalTitle}>{t('bankImport.aiCurrencyFix')}</Text>
+            <FlatList
+              data={SUPPORTED_CURRENCIES}
+              keyExtractor={(c) => c.code}
+              style={styles.currencyList}
+              renderItem={({ item: currency }) => {
+                const isSelected = (currencyOverride ?? preview.currencyAssumed) === currency.code;
+                return (
+                  <TouchableOpacity
+                    style={[styles.currencyItem, isSelected && styles.currencyItemSelected]}
+                    onPress={() => {
+                      setCurrencyOverride(currency.code);
+                      setShowCurrencyPicker(false);
+                    }}
+                  >
+                    <Text style={styles.currencySymbol}>{currency.symbol}</Text>
+                    <Text style={styles.currencyLabel}>{currency.name}</Text>
+                    {isSelected && <Ionicons name="checkmark" size={20} color={theme.colors.primary} />}
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -550,6 +665,60 @@ const createStyles = (theme: Theme) => ({
   },
   rowLabel: {
     ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+
+  // Currency-correction bottom sheet
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end' as const,
+  },
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  sheet: {
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius['2xl'],
+    borderTopRightRadius: theme.borderRadius['2xl'],
+    padding: theme.spacing[6],
+  },
+  handle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.border,
+    alignSelf: 'center' as const,
+    marginBottom: theme.spacing[4],
+  },
+  modalTitle: {
+    ...theme.textStyles.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[4],
+  },
+  currencyList: {
+    maxHeight: 360,
+  },
+  currencyItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    gap: theme.spacing[2],
+  },
+  currencyItemSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  currencySymbol: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    width: 30,
+  },
+  currencyLabel: {
+    fontSize: 16,
     color: theme.colors.textPrimary,
     flex: 1,
   },

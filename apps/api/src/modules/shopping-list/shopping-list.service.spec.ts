@@ -207,8 +207,12 @@ describe('ShoppingListService', () => {
   it('getDeals flags a recent price drop', async () => {
     prisma.productAlias.findMany.mockResolvedValue([]);
     prisma.expenseItem.findMany.mockResolvedValue([
-      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-05-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
-      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-06-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+      // Baseline points are relative, like the drop below: they must stay
+      // inside detectDeals' 90-day window and outside its 14-day "recent" one.
+      // Hardcoded dates rot silently — once one fell past 90 days the product
+      // dropped under MIN_POINTS=3 and no deal was produced at all.
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date(Date.now() - 60 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date(Date.now() - 30 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
       { canonicalName: 'Milk', unitPrice: 3.5, quantity: 1, totalPrice: 3.5, expense: { date: new Date(Date.now() - 3 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
     ]);
     prisma.shoppingListItem.findMany.mockResolvedValue([]);
@@ -273,8 +277,12 @@ describe('ShoppingListService', () => {
   it('getDeals excludes deals for products already on a list', async () => {
     prisma.productAlias.findMany.mockResolvedValue([]);
     prisma.expenseItem.findMany.mockResolvedValue([
-      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-05-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
-      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date('2026-06-01'), merchant: 'Lidl', currencyCode: 'PLN' } },
+      // Baseline points are relative, like the drop below: they must stay
+      // inside detectDeals' 90-day window and outside its 14-day "recent" one.
+      // Hardcoded dates rot silently — once one fell past 90 days the product
+      // dropped under MIN_POINTS=3 and no deal was produced at all.
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date(Date.now() - 60 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
+      { canonicalName: 'Milk', unitPrice: 5, quantity: 1, totalPrice: 5, expense: { date: new Date(Date.now() - 30 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
       { canonicalName: 'Milk', unitPrice: 3.5, quantity: 1, totalPrice: 3.5, expense: { date: new Date(Date.now() - 3 * 86400000), merchant: 'Lidl', currencyCode: 'PLN' } },
     ]);
     // Milk is already on a list → its deal must be excluded

@@ -3411,10 +3411,10 @@ Friends who register with your referral code receive:
     {
       id: '27-bank-import',
       title: `Importing transactions from your bank`,
-      description: `Import transactions from a CSV or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.`,
+      description: `Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.`,
       body: `# Importing transactions from your bank
 
-> Import transactions from a CSV or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.
+> Import transactions from a CSV, XLSX or PDF statement of your bank. Supports mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise, and any other bank via the universal column mapper.
 
 ## Supported banks
 
@@ -3425,6 +3425,7 @@ Friends who register with your referral code receive:
 - **Revolut** — CSV export
 - **Wise** — CSV export (multi-currency, FX conversions detected automatically)
 - **Other** — any bank, via the universal column mapper (CSV)
+- **Spreadsheets** — XLSX statements work too; the app reads the first sheet
 
 More banks are added over time. If yours isn't listed yet, use **Other** and map the columns yourself.
 
@@ -3464,6 +3465,25 @@ Each row becomes an Expense, an Income, or a Currency Exchange. Categories are s
 ## "Other" — universal CSV mapper
 
 If your bank isn't in the list, pick **Other (custom CSV)**. The app shows a preview of your file and asks you to point at which column holds the date, amount, and description. Save this mapping with a name and the next CSV with the same column layout is imported automatically.
+
+## When nothing recognises your statement
+
+If none of the banks above fit and the file isn't a simple column layout the app can guess on its own, it can ask an AI model to work out the columns for you — which one is the date, which is the amount, and so on.
+
+**Before anything is sent, you're asked once.** The first time this happens for an account, you'll see a screen explaining what leaves your device: for a CSV or spreadsheet, only the header row plus up to 10 sample rows — never the whole file. For a PDF statement, it's the first 20 lines of extracted text. You decide once per account; after that, the app remembers your choice.
+
+- **Accept**, and the file is re-read with the columns the model worked out.
+- **Decline**, and you go straight to the manual mapper described above. Declining happens before anything is analysed, so there's nothing to pre-fill yet — you map the columns the same way as for any other unsupported bank.
+
+**The result is shown, not assumed.** When the AI matching succeeds, the preview shows a row of chips above your transactions — something like \`Date → Data operacji\`, \`Amount → Kwota\` — along with its guess at which bank this is. This is a best guess, not a certainty: tap the row any time to open the mapper and correct a column it got wrong.
+
+**A few things are flagged for you to check, not silently assumed:**
+- If the file has no currency column at all, every row is read in your own account currency, and a notice tells you so — tap it to change the currency before importing, and the change applies to the whole file.
+- Reading numbers out of a PDF is harder to double-check than a CSV, so the app tries to confirm that what it found adds up to the statement's closing balance. When it can't confirm that, you'll see a notice asking you to review the list. This isn't an error — it's simply the normal case whenever a statement doesn't print a running balance to check against, or when the check doesn't line up.
+
+**PDF statements need a Pro plan.** Reading a PDF with AI takes more processing than a CSV, so it's a Pro feature — a free account sees an upgrade screen there instead of a failure message.
+
+Banks already listed above (mBank, PKO BP, Erste, Alior, Revolut, Wise) are unaffected by any of this — they import exactly as described earlier on this page.
 
 ## Past imports & Undo
 
@@ -7816,10 +7836,10 @@ AI Budget Assistant предлагает три уровня подписки. �
     {
       id: '27-bank-import',
       title: `Импорт транзакций из банка`,
-      description: `Импортируйте транзакции из CSV или PDF-выписки вашего банка. Поддерживаются mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise и любой другой банк через универсальный маппер колонок.`,
+      description: `Импортируйте транзакции из CSV, XLSX или PDF-выписки вашего банка. Поддерживаются mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise и любой другой банк через универсальный маппер колонок.`,
       body: `# Импорт транзакций из банка
 
-> Импортируйте транзакции из CSV или PDF-выписки вашего банка. Поддерживаются mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise и любой другой банк через универсальный маппер колонок.
+> Импортируйте транзакции из CSV, XLSX или PDF-выписки вашего банка. Поддерживаются mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise и любой другой банк через универсальный маппер колонок.
 
 ## Поддерживаемые банки
 
@@ -7830,6 +7850,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 - **Revolut** — экспорт CSV
 - **Wise** — экспорт CSV (мультивалютный, конвертации определяются автоматически)
 - **Другой** — любой банк, через универсальный маппер колонок (CSV)
+- **Таблицы** — выписки в формате XLSX тоже работают; приложение читает первый лист
 
 ## Как импортировать
 
@@ -7867,6 +7888,25 @@ AI Budget Assistant предлагает три уровня подписки. �
 ## «Другой» — универсальный маппер
 
 Если вашего банка нет в списке, выберите **Другой (CSV)**. Приложение покажет предпросмотр файла и попросит указать, в каком столбце находятся дата, сумма и описание. Сохраните маппинг — следующий CSV с той же структурой импортируется автоматически.
+
+## Если ничего не распознаёт вашу выписку
+
+Если ни один из перечисленных выше банков не подходит, а файл не имеет простой структуры колонок, которую приложение может угадать само, оно может попросить AI-модель определить колонки за вас — какая из них дата, какая сумма и так далее.
+
+**Прежде чем что-либо отправить, вас спросят один раз.** В первый раз для аккаунта вы увидите экран, объясняющий, что покидает ваше устройство: для CSV или таблицы — только строка заголовков и до 10 примерных строк, никогда весь файл целиком. Для PDF-выписки — первые 20 строк извлечённого текста. Вы решаете один раз на аккаунт; после этого приложение запомнит ваш выбор.
+
+- **Принять** — и файл будет прочитан заново с колонками, которые определила модель.
+- **Отклонить** — и вы сразу попадёте в описанный выше ручной маппер. Отказ происходит до того, как что-либо проанализировано, так что заполнять пока нечем — вы сопоставляете колонки так же, как для любого другого неподдерживаемого банка.
+
+**Результат показывается, а не принимается на веру.** Когда сопоставление через AI прошло успешно, в предпросмотре над транзакциями появляется ряд подсказок — что-то вроде \`Дата → Data operacji\`, \`Сумма → Kwota\` — вместе с догадкой о том, какой это банк. Это лучшее предположение, а не гарантия: в любой момент нажмите на этот ряд, чтобы открыть маппер и исправить неверно определённую колонку.
+
+**Некоторые моменты помечаются для проверки, а не принимаются молча:**
+- Если в файле вообще нет столбца с валютой, каждая строка читается в валюте вашего аккаунта, о чём сообщает уведомление — нажмите на него, чтобы изменить валюту перед импортом; изменение применяется ко всему файлу.
+- Считать числа из PDF сложнее перепроверить, чем из CSV, поэтому приложение пытается подтвердить, что найденные суммы сходятся с конечным балансом выписки. Если подтвердить это не удаётся, вы увидите уведомление с просьбой проверить список. Это не ошибка — это обычная ситуация, когда выписка не печатает текущий баланс для сверки или когда сверка не сходится.
+
+**Для PDF-выписок нужен план Pro.** Чтение PDF с помощью AI требует больше вычислений, чем CSV, поэтому это функция Pro — бесплатный аккаунт увидит там экран повышения плана вместо сообщения об ошибке.
+
+Уже перечисленные выше банки (mBank, PKO BP, Erste, Alior, Revolut, Wise) это не затрагивает — они импортируются точно так же, как описано ранее на этой странице.
 
 ## История импортов и Отмена
 
@@ -12193,10 +12233,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
     {
       id: '27-bank-import',
       title: `Імпорт транзакцій з банку`,
-      description: `Імпортуйте транзакції з CSV або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise та будь-який інший банк через універсальний маппер колонок.`,
+      description: `Імпортуйте транзакції з CSV, XLSX або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise та будь-який інший банк через універсальний маппер колонок.`,
       body: `# Імпорт транзакцій з банку
 
-> Імпортуйте транзакції з CSV або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise та будь-який інший банк через універсальний маппер колонок.
+> Імпортуйте транзакції з CSV, XLSX або PDF-виписки вашого банку. Підтримуються mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise та будь-який інший банк через універсальний маппер колонок.
 
 ## Підтримувані банки
 
@@ -12207,6 +12247,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - **Revolut** — експорт CSV
 - **Wise** — експорт CSV (мультивалютний, конвертації визначаються автоматично)
 - **Інший** — будь-який банк, через універсальний маппер колонок (CSV)
+- **Таблиці** — виписки у форматі XLSX теж працюють; застосунок читає перший аркуш
 
 ## Як імпортувати
 
@@ -12242,6 +12283,25 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 ## «Інший» — універсальний маппер
 
 Якщо вашого банку немає в списку, виберіть **Інший (CSV)**. Застосунок покаже попередній перегляд файлу і попросить вказати, в якому стовпці знаходяться дата, сума та опис. Збережіть маппінг для автоматичного використання надалі.
+
+## Якщо нічого не розпізнає вашу виписку
+
+Якщо жоден з перелічених вище банків не підходить, а файл не має простої структури колонок, яку застосунок може вгадати сам, він може попросити AI-модель визначити колонки за вас — яка з них дата, яка сума і так далі.
+
+**Перш ніж щось надіслати, вас запитають один раз.** Уперше для облікового запису ви побачите екран, що пояснює, що залишає ваш пристрій: для CSV або таблиці — лише рядок заголовків і до 10 прикладових рядків, ніколи весь файл цілком. Для PDF-виписки — перші 20 рядків видобутого тексту. Ви вирішуєте один раз на обліковий запис; після цього застосунок запам'ятає ваш вибір.
+
+- **Прийняти** — і файл буде прочитано заново з колонками, які визначила модель.
+- **Відхилити** — і ви одразу потрапите до описаного вище ручного маппера. Відмова відбувається до того, як щось проаналізовано, тож заповнювати поки нічим — ви зіставляєте колонки так само, як для будь-якого іншого непідтримуваного банку.
+
+**Результат показується, а не приймається на віру.** Коли зіставлення через AI пройшло успішно, у попередньому перегляді над транзакціями з'являється ряд підказок — щось на кшталт \`Дата → Data operacji\`, \`Сума → Kwota\` — разом із здогадкою про те, який це банк. Це найкраще припущення, а не гарантія: у будь-який момент натисніть на цей ряд, щоб відкрити маппер і виправити неправильно визначену колонку.
+
+**Деякі моменти позначаються для перевірки, а не приймаються мовчки:**
+- Якщо у файлі взагалі немає стовпця з валютою, кожен рядок читається у валюті вашого облікового запису, про що повідомляє сповіщення — натисніть на нього, щоб змінити валюту перед імпортом; зміна застосовується до всього файлу.
+- Зчитувати числа з PDF складніше перевірити, ніж із CSV, тому застосунок намагається підтвердити, що знайдені суми збігаються з кінцевим балансом виписки. Якщо підтвердити це не вдається, ви побачите сповіщення з проханням перевірити список. Це не помилка — це звичайна ситуація, коли виписка не друкує поточний баланс для звірки або коли звірка не сходиться.
+
+**Для PDF-виписок потрібен план Pro.** Читання PDF за допомогою AI вимагає більше обчислень, ніж CSV, тому це функція Pro — безкоштовний обліковий запис побачить там екран підвищення плану замість повідомлення про помилку.
+
+Банки, вже перелічені вище (mBank, PKO BP, Erste, Alior, Revolut, Wise), це не стосується — вони імпортуються точно так само, як описано раніше на цій сторінці.
 
 ## Історія імпортів та Скасування
 
@@ -16539,10 +16599,10 @@ Znajomi, którzy zarejestrują się z twoim kodem polecenia, otrzymują:
     {
       id: '27-bank-import',
       title: `Importowanie transakcji z banku`,
-      description: `Importuj transakcje z wyciągu CSV lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise oraz dowolny bank przez uniwersalny mapper kolumn.`,
+      description: `Importuj transakcje z wyciągu CSV, XLSX lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise oraz dowolny bank przez uniwersalny mapper kolumn.`,
       body: `# Importowanie transakcji z banku
 
-> Importuj transakcje z wyciągu CSV lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise oraz dowolny bank przez uniwersalny mapper kolumn.
+> Importuj transakcje z wyciągu CSV, XLSX lub PDF swojego banku. Obsługiwane: mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise oraz dowolny bank przez uniwersalny mapper kolumn.
 
 ## Obsługiwane banki
 
@@ -16553,6 +16613,7 @@ Znajomi, którzy zarejestrują się z twoim kodem polecenia, otrzymują:
 - **Revolut** — eksport CSV
 - **Wise** — eksport CSV (wielowalutowy, konwersje wykrywane automatycznie)
 - **Inny** — dowolny bank, przez uniwersalny mapper kolumn (CSV)
+- **Arkusze** — wyciągi XLSX też działają; aplikacja czyta pierwszy arkusz
 
 ## Jak importować
 
@@ -16590,6 +16651,25 @@ Każdy wiersz staje się Wydatkiem, Dochodem lub Wymianą walut. Kategorie są s
 ## „Inny" — uniwersalny mapper
 
 Jeśli Twojego banku nie ma na liście, wybierz **Inny (CSV)**. Aplikacja pokaże podgląd pliku i poprosi o wskazanie kolumn z datą, kwotą i opisem. Zapisz to mapowanie — kolejny CSV z takim samym układem kolumn zostanie zaimportowany automatycznie.
+
+## Gdy nic nie rozpoznaje Twojego wyciągu
+
+Jeśli żaden z powyższych banków nie pasuje, a plik nie ma prostego układu kolumn, który aplikacja mogłaby sama odgadnąć, może poprosić model AI o rozpoznanie kolumn za Ciebie — która jest datą, która kwotą i tak dalej.
+
+**Zanim cokolwiek zostanie wysłane, zostaniesz zapytany raz.** Za pierwszym razem dla danego konta zobaczysz ekran wyjaśniający, co opuszcza Twoje urządzenie: dla CSV lub arkusza — tylko wiersz nagłówka plus do 10 przykładowych wierszy, nigdy cały plik. Dla wyciągu PDF — pierwsze 20 linijek wyodrębnionego tekstu. Decydujesz raz na konto; potem aplikacja pamięta Twój wybór.
+
+- **Zaakceptuj**, a plik zostanie odczytany ponownie z kolumnami ustalonymi przez model.
+- **Odrzuć**, a trafisz od razu do opisanego wyżej ręcznego mappera. Odrzucenie następuje, zanim cokolwiek zostanie przeanalizowane, więc nie ma jeszcze czego wypełnić — mapujesz kolumny tak samo, jak w przypadku każdego innego nieobsługiwanego banku.
+
+**Wynik jest pokazany, a nie zakładany.** Gdy dopasowanie przez AI się powiedzie, podgląd pokazuje rząd „chipów" nad transakcjami — coś w rodzaju \`Data → Data operacji\`, \`Kwota → Kwota\` — razem z odgadniętą nazwą banku. To najlepsza próba, nie pewność: dotknij tego rzędu w dowolnej chwili, aby otworzyć mapper i poprawić źle rozpoznaną kolumnę.
+
+**Kilka rzeczy jest oznaczanych do sprawdzenia, a nie po cichu zakładanych:**
+- Jeśli plik w ogóle nie ma kolumny z walutą, każdy wiersz jest odczytywany w walucie Twojego konta, o czym informuje powiadomienie — dotknij go, aby zmienić walutę przed importem; zmiana obejmuje cały plik.
+- Odczytanie liczb z PDF trudniej zweryfikować niż z CSV, więc aplikacja próbuje potwierdzić, że znalezione kwoty sumują się do salda końcowego wyciągu. Gdy nie może tego potwierdzić, zobaczysz powiadomienie z prośbą o sprawdzenie listy. To nie błąd — to po prostu normalna sytuacja, gdy wyciąg nie drukuje salda bieżącego do porównania albo gdy sprawdzenie się nie zgadza.
+
+**Wyciągi PDF wymagają planu Pro.** Odczyt PDF przez AI wymaga więcej obliczeń niż CSV, więc jest to funkcja Pro — konto darmowe zobaczy tam ekran podniesienia planu zamiast komunikatu o błędzie.
+
+Banki wymienione wyżej (mBank, PKO BP, Erste, Alior, Revolut, Wise) nie są tym objęte — importują się dokładnie tak, jak opisano wcześniej na tej stronie.
 
 ## Historia importów i Cofnięcie
 
@@ -20879,10 +20959,10 @@ Freunde, die sich mit deinem Empfehlungscode registrieren, erhalten:
     {
       id: '27-bank-import',
       title: `Transaktionen aus deiner Bank importieren`,
-      description: `Importiere Transaktionen aus einem CSV- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.`,
+      description: `Importiere Transaktionen aus einem CSV-, XLSX- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.`,
       body: `# Transaktionen aus deiner Bank importieren
 
-> Importiere Transaktionen aus einem CSV- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.
+> Importiere Transaktionen aus einem CSV-, XLSX- oder PDF-Kontoauszug. Unterstützt werden mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise und jede andere Bank über den universellen Spalten-Mapper.
 
 ## Unterstützte Banken
 
@@ -20893,6 +20973,7 @@ Freunde, die sich mit deinem Empfehlungscode registrieren, erhalten:
 - **Revolut** — CSV-Export
 - **Wise** — CSV-Export (mehrsprachig, FX-Konversionen werden automatisch erkannt)
 - **Andere** — beliebige Bank, über den universellen Spalten-Mapper (CSV)
+- **Tabellen** — XLSX-Kontoauszüge funktionieren ebenfalls; die App liest das erste Blatt
 
 ## So importierst du
 
@@ -20926,6 +21007,25 @@ Jede Zeile wird zu einer Ausgabe, Einnahme oder Währungsumrechnung. Kategorien 
 ## „Andere" — universeller Mapper
 
 Wenn deine Bank nicht in der Liste ist, wähle **Andere (CSV)**. Die App zeigt eine Dateivorschau und fragt, welche Spalte Datum, Betrag und Beschreibung enthält. Speichere diese Zuordnung für den nächsten Import.
+
+## Wenn nichts deinen Kontoauszug erkennt
+
+Wenn keine der oben genannten Banken passt und die Datei kein einfaches Spaltenlayout hat, das die App selbst erraten kann, kann sie ein KI-Modell bitten, die Spalten für dich herauszufinden — welche das Datum ist, welche der Betrag, und so weiter.
+
+**Bevor irgendetwas gesendet wird, wirst du einmal gefragt.** Beim ersten Mal für ein Konto siehst du einen Bildschirm, der erklärt, was dein Gerät verlässt: bei einer CSV- oder Tabellendatei nur die Kopfzeile plus bis zu 10 Beispielzeilen — nie die ganze Datei. Bei einem PDF-Kontoauszug sind es die ersten 20 Textzeilen. Du entscheidest einmal pro Konto; danach merkt sich die App deine Wahl.
+
+- **Annehmen**, und die Datei wird mit den vom Modell ermittelten Spalten neu gelesen.
+- **Ablehnen**, und du gelangst direkt zum oben beschriebenen manuellen Mapper. Das Ablehnen geschieht, bevor überhaupt etwas analysiert wurde — es gibt also noch nichts zum Vorausfüllen, du ordnest die Spalten genauso zu wie bei jeder anderen nicht unterstützten Bank.
+
+**Das Ergebnis wird gezeigt, nicht einfach angenommen.** Wenn die KI-Zuordnung gelingt, zeigt die Vorschau eine Reihe von Chips über deinen Transaktionen — etwa \`Datum → Data operacji\`, \`Betrag → Kwota\` — zusammen mit ihrer Vermutung, um welche Bank es sich handelt. Das ist eine gute Vermutung, keine Gewissheit: Tippe jederzeit auf die Zeile, um den Mapper zu öffnen und eine falsch erkannte Spalte zu korrigieren.
+
+**Ein paar Dinge werden zur Prüfung markiert, nicht einfach angenommen:**
+- Wenn die Datei überhaupt keine Währungsspalte hat, wird jede Zeile in deiner eigenen Kontowährung gelesen, und ein Hinweis sagt dir das — tippe darauf, um die Währung vor dem Import zu ändern; die Änderung gilt für die ganze Datei.
+- Zahlen aus einem PDF zu lesen ist schwerer zu überprüfen als bei einer CSV, daher versucht die App zu bestätigen, dass die gefundenen Beträge mit dem Endsaldo des Kontoauszugs übereinstimmen. Wenn das nicht bestätigt werden kann, siehst du einen Hinweis, die Liste zu überprüfen. Das ist kein Fehler — es ist einfach der normale Fall, wenn ein Kontoauszug keinen laufenden Saldo zum Abgleich aufdruckt, oder wenn der Abgleich nicht passt.
+
+**PDF-Kontoauszüge benötigen ein Pro-Abo.** Ein PDF mit KI zu lesen braucht mehr Rechenleistung als eine CSV, daher ist es eine Pro-Funktion — ein kostenloses Konto sieht dort einen Upgrade-Bildschirm statt einer Fehlermeldung.
+
+Bereits oben aufgeführte Banken (mBank, PKO BP, Erste, Alior, Revolut, Wise) sind davon nicht betroffen — sie werden genau so importiert wie weiter oben auf dieser Seite beschrieben.
 
 ## Importverlauf & Rückgängig
 
@@ -25196,10 +25296,10 @@ Los amigos que se registran con tu código de referido reciben:
     {
       id: '27-bank-import',
       title: `Importar transacciones desde tu banco`,
-      description: `Importa transacciones desde un extracto CSV o PDF de tu banco. Compatible con mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise y cualquier otro banco mediante el mapeador universal de columnas.`,
+      description: `Importa transacciones desde un extracto CSV, XLSX o PDF de tu banco. Compatible con mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise y cualquier otro banco mediante el mapeador universal de columnas.`,
       body: `# Importar transacciones desde tu banco
 
-> Importa transacciones desde un extracto CSV o PDF de tu banco. Compatible con mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise y cualquier otro banco mediante el mapeador universal de columnas.
+> Importa transacciones desde un extracto CSV, XLSX o PDF de tu banco. Compatible con mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise y cualquier otro banco mediante el mapeador universal de columnas.
 
 ## Bancos compatibles
 
@@ -25210,6 +25310,7 @@ Los amigos que se registran con tu código de referido reciben:
 - **Revolut** — exportación CSV
 - **Wise** — exportación CSV (multidivisa, conversiones FX detectadas automáticamente)
 - **Otro** — cualquier banco, mediante el mapeador universal de columnas (CSV)
+- **Hojas de cálculo** — los extractos XLSX también funcionan; la app lee la primera hoja
 
 ## Cómo importar
 
@@ -25243,6 +25344,25 @@ Cada fila se convierte en un Gasto, Ingreso o Cambio de divisa. Las categorías 
 ## «Otro» — mapeador universal
 
 Si tu banco no está en la lista, elige **Otro (CSV)**. La app muestra una vista previa y te pide indicar qué columna contiene la fecha, el importe y la descripción. Guarda este mapeo para importaciones futuras.
+
+## Cuando nada reconoce tu extracto
+
+Si ninguno de los bancos anteriores encaja y el archivo no tiene un diseño de columnas simple que la app pueda adivinar por sí sola, puede pedirle a un modelo de IA que determine las columnas por ti: cuál es la fecha, cuál es el importe, etc.
+
+**Antes de enviar nada, se te pregunta una vez.** La primera vez que esto ocurre en una cuenta, verás una pantalla que explica qué sale de tu dispositivo: para un CSV o una hoja de cálculo, solo la fila de encabezado y hasta 10 filas de ejemplo — nunca el archivo completo. Para un extracto en PDF, son las primeras 20 líneas de texto extraído. Decides una vez por cuenta; después, la app recuerda tu elección.
+
+- **Acepta**, y el archivo se vuelve a leer con las columnas que determinó el modelo.
+- **Rechaza**, y pasas directamente al mapeador manual descrito arriba. Rechazar ocurre antes de que se analice nada, así que todavía no hay nada que rellenar — asignas las columnas igual que con cualquier otro banco no compatible.
+
+**El resultado se muestra, no se da por hecho.** Cuando la correspondencia por IA tiene éxito, la vista previa muestra una fila de chips sobre tus transacciones — algo como \`Fecha → Data operacji\`, \`Importe → Kwota\` — junto con su suposición sobre qué banco es. Es una suposición fundamentada, no una certeza: toca la fila en cualquier momento para abrir el mapeador y corregir una columna que haya identificado mal.
+
+**Hay algunas cosas que se señalan para que las revises, no que se asuman en silencio:**
+- Si el archivo no tiene ninguna columna de divisa, cada fila se interpreta en la divisa de tu propia cuenta, y un aviso te lo indica — tócalo para cambiar la divisa antes de importar; el cambio se aplica a todo el archivo.
+- Leer números de un PDF es más difícil de verificar que en un CSV, así que la app intenta confirmar que lo encontrado cuadra con el saldo final del extracto. Cuando no puede confirmarlo, verás un aviso pidiéndote que revises la lista. Esto no es un error: es simplemente el caso habitual cuando un extracto no imprime un saldo corriente con el que comparar, o cuando la comprobación no cuadra.
+
+**Los extractos en PDF requieren un plan Pro.** Leer un PDF con IA exige más procesamiento que un CSV, así que es una función Pro: una cuenta gratuita ve ahí una pantalla de mejora de plan en lugar de un mensaje de error.
+
+Los bancos ya listados arriba (mBank, PKO BP, Erste, Alior, Revolut, Wise) no se ven afectados por nada de esto — se importan exactamente como se describe antes en esta página.
 
 ## Historial de importaciones y Deshacer
 
@@ -29510,10 +29630,10 @@ Les amis qui s'inscrivent avec votre code de parrainage reçoivent :
     {
       id: '27-bank-import',
       title: `Importer des transactions depuis votre banque`,
-      description: `Importez des transactions depuis un relevé CSV ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise et toute autre banque via le mappeur universel de colonnes.`,
+      description: `Importez des transactions depuis un relevé CSV, XLSX ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise et toute autre banque via le mappeur universel de colonnes.`,
       body: `# Importer des transactions depuis votre banque
 
-> Importez des transactions depuis un relevé CSV ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise et toute autre banque via le mappeur universel de colonnes.
+> Importez des transactions depuis un relevé CSV, XLSX ou PDF de votre banque. Compatible avec mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise et toute autre banque via le mappeur universel de colonnes.
 
 ## Banques prises en charge
 
@@ -29524,6 +29644,7 @@ Les amis qui s'inscrivent avec votre code de parrainage reçoivent :
 - **Revolut** — export CSV
 - **Wise** — export CSV (multi-devises, conversions FX détectées automatiquement)
 - **Autre** — toute banque, via le mappeur universel de colonnes (CSV)
+- **Tableurs** — les relevés XLSX fonctionnent aussi ; l'app lit la première feuille
 
 ## Comment importer
 
@@ -29557,6 +29678,25 @@ Chaque ligne devient une Dépense, un Revenu ou un Échange de devises. Les cat�
 ## « Autre » — mappeur universel
 
 Si votre banque n'est pas dans la liste, choisissez **Autre (CSV)**. L'application affiche un aperçu du fichier et vous demande d'indiquer quelle colonne contient la date, le montant et la description. Enregistrez ce mappage pour une utilisation future.
+
+## Quand rien ne reconnaît votre relevé
+
+Si aucune des banques ci-dessus ne correspond et que le fichier n'a pas une disposition de colonnes simple que l'application peut deviner seule, elle peut demander à un modèle d'IA de déterminer les colonnes à votre place — laquelle est la date, laquelle est le montant, etc.
+
+**Avant tout envoi, on vous demande une seule fois.** La première fois que cela se produit pour un compte, un écran vous explique ce qui quitte votre appareil : pour un CSV ou un tableur, seulement la ligne d'en-tête plus jusqu'à 10 lignes d'exemple — jamais le fichier entier. Pour un relevé PDF, ce sont les 20 premières lignes de texte extrait. Vous décidez une fois par compte ; ensuite, l'application se souvient de votre choix.
+
+- **Acceptez**, et le fichier est relu avec les colonnes déterminées par le modèle.
+- **Refusez**, et vous passez directement au mappeur manuel décrit ci-dessus. Le refus intervient avant toute analyse, il n'y a donc encore rien à pré-remplir — vous associez les colonnes comme pour toute autre banque non prise en charge.
+
+**Le résultat est affiché, pas supposé.** Quand la correspondance par IA réussit, l'aperçu affiche une rangée de puces au-dessus de vos transactions — quelque chose comme \`Date → Data operacji\`, \`Montant → Kwota\` — avec son estimation de la banque concernée. C'est une estimation, pas une certitude : touchez la rangée à tout moment pour ouvrir le mappeur et corriger une colonne mal identifiée.
+
+**Quelques éléments sont signalés pour vérification, jamais supposés silencieusement :**
+- Si le fichier n'a aucune colonne de devise, chaque ligne est lue dans la devise de votre propre compte, et une notification vous le signale — touchez-la pour changer la devise avant l'import ; le changement s'applique à tout le fichier.
+- Lire des nombres dans un PDF est plus difficile à vérifier que dans un CSV, donc l'application essaie de confirmer que ce qu'elle a trouvé correspond au solde de clôture du relevé. Quand elle ne peut pas le confirmer, vous verrez une notification vous demandant de vérifier la liste. Ce n'est pas une erreur — c'est simplement le cas normal lorsqu'un relevé n'imprime pas de solde courant auquel se comparer, ou lorsque la vérification ne correspond pas.
+
+**Les relevés PDF nécessitent un forfait Pro.** Lire un PDF avec l'IA demande plus de traitement qu'un CSV, c'est donc une fonctionnalité Pro — un compte gratuit y voit un écran de mise à niveau plutôt qu'un message d'échec.
+
+Les banques déjà listées ci-dessus (mBank, PKO BP, Erste, Alior, Revolut, Wise) ne sont pas concernées par tout ceci — elles s'importent exactement comme décrit plus haut sur cette page.
 
 ## Historique des imports et Annuler
 
@@ -33812,10 +33952,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
     {
       id: '27-bank-import',
       title: `Імпарт транзакцый з банка`,
-      description: `Імпартуйце транзакцыі з CSV або PDF-выпіскі вашага банка. Падтрымліваюцца mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise і любы іншы банк праз універсальны маппер калонак.`,
+      description: `Імпартуйце транзакцыі з CSV, XLSX або PDF-выпіскі вашага банка. Падтрымліваюцца mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise і любы іншы банк праз універсальны маппер калонак.`,
       body: `# Імпарт транзакцый з банка
 
-> Імпартуйце транзакцыі з CSV або PDF-выпіскі вашага банка. Падтрымліваюцца mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise і любы іншы банк праз універсальны маппер калонак.
+> Імпартуйце транзакцыі з CSV, XLSX або PDF-выпіскі вашага банка. Падтрымліваюцца mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise і любы іншы банк праз універсальны маппер калонак.
 
 ## Падтрымліваемыя банкі
 
@@ -33826,6 +33966,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Revolut** — экспарт CSV
 - **Wise** — экспарт CSV (мультывалютны, канвертацыі вызначаюцца аўтаматычна)
 - **Іншы** — любы банк, праз маппер калонак (CSV)
+- **Табліцы** — выпіскі ў фармаце XLSX таксама працуюць; праграма чытае першы аркуш
 
 ## Як імпартаваць
 
@@ -33844,6 +33985,22 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 **Revolut**: прыкладанне Revolut → Statements → выберыце дыяпазон дат → CSV → Download
 
 **Wise**: wise.com → Transactions → Statements and Reports → выберыце дыяпазон дат → CSV → выберыце валюту → Download
+
+## Калі нічога не распазнае вашу выпіску
+
+Калі ніводны з банкаў вышэй не падыходзіць, а файл не мае простай структуры калонак, праграма можа папрасіць AI-мадэль вызначыць калонкі за вас — якая з іх дата, якая сума і гэтак далей.
+
+**Перш чым нешта адправіць, вас спытаюць адзін раз.** Упершыню для аккаўнта вы ўбачыце экран, які тлумачыць, што пакідае прыладу: для CSV ці табліцы — толькі радок загалоўкаў і да 10 прыкладных радкоў, ніколі ўвесь файл. Для PDF-выпіскі — першыя 20 радкоў здабытага тэксту. Вы вырашаеце адзін раз на аккаўнт; пасля праграма запомніць ваш выбар.
+
+**Прыняць** — файл будзе прачытаны нанова з калонкамі, якія вызначыла мадэль. **Адхіліць** — вы адразу трапіце ў ручны маппер, апісаны вышэй. Адмова адбываецца да таго, як што-небудзь прааналізавана, так што пакуль няма чаго запаўняць — вы супастаўляеце калонкі гэтак жа, як для любога іншага непадтрымліванага банка.
+
+**Вынік паказваецца, а не прымаецца на веру.** Калі супастаўленне праз AI прайшло паспяхова, у папярэднім праглядзе над транзакцыямі з'яўляецца рад падказак кшталту \`Дата → Data operacji\`, \`Сума → Kwota\`, разам з здагадкай пра тое, які гэта банк. Гэта найлепшае меркаванне, а не гарантыя: у любы момант націсніце на гэты рад, каб адкрыць маппер і выправіць няправільна вызначаную калонку.
+
+**Некаторыя моманты пазначаюцца для праверкі, а не прымаюцца моўчкі:**
+- Калі ў файле наогул няма слупка з валютай, кожны радок счытваецца ў валюце вашага аккаўнта, пра што паведамляе нагадванне — націсніце на яго, каб змяніць валюту перад імпартам; змена датычыцца ўсяго файла.
+- Счытваць лічбы з PDF складаней пераправерыць, чым з CSV, таму праграма спрабуе пацвердзіць, што знойдзеныя сумы супадаюць з канчатковым балансам выпіскі. Калі пацвердзіць гэта не выходзіць, вы ўбачыце нагадванне з просьбай праверыць спіс. Гэта не памылка — гэта звычайная сітуацыя, калі выпіска не друкуе бягучы баланс для зверкі або калі зверка не супадае.
+
+**Для PDF-выпісак патрэбны план Pro.** Чытанне PDF з дапамогай AI патрабуе больш вылічэнняў, чым CSV, таму гэта функцыя Pro — бясплатны аккаўнт убачыць там экран павышэння плана замест паведамлення пра памылку.
 
 ## Гісторыя імпартаў і Адмена
 
@@ -38164,10 +38321,10 @@ Vrienden die zich registreren met jouw verwijzingscode ontvangen:
     {
       id: '27-bank-import',
       title: `Transacties importeren vanaf je bank`,
-      description: `Importeer transacties uit een CSV- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.`,
+      description: `Importeer transacties uit een CSV-, XLSX- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.`,
       body: `# Transacties importeren vanaf je bank
 
-> Importeer transacties uit een CSV- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.
+> Importeer transacties uit een CSV-, XLSX- of PDF-afschrift van je bank. Ondersteunt mBank, PKO BP, Erste Bank, Alior Bank, Revolut, Wise en elke andere bank via de universele kolomtoewijzer.
 
 ## Ondersteunde banken
 
@@ -38178,6 +38335,7 @@ Vrienden die zich registreren met jouw verwijzingscode ontvangen:
 - **Revolut** — CSV-export
 - **Wise** — CSV-export (meerdere valuta's, FX-conversies automatisch gedetecteerd)
 - **Overig** — elke bank, via de universele kolomtoewijzer (CSV)
+- **Spreadsheets** — XLSX-afschriften werken ook; de app leest het eerste blad
 
 Er worden in de loop van de tijd meer banken toegevoegd. Als die van jou er nog niet bij staat, gebruik dan **Overig** en wijs de kolommen zelf toe.
 
@@ -38217,6 +38375,25 @@ Elke rij wordt een Uitgave, Inkomsten of Valutawissel. Categorieën worden autom
 ## "Overig" — universele CSV-toewijzer
 
 Als je bank niet in de lijst staat, kies dan **Overig (eigen CSV)**. De app toont een voorbeeld van je bestand en vraagt je aan te wijzen welke kolom de datum, het bedrag en de omschrijving bevat. Sla deze toewijzing op met een naam en de volgende CSV met dezelfde kolomindeling wordt automatisch geïmporteerd.
+
+## Als niets je afschrift herkent
+
+Als geen van de bovenstaande banken past en het bestand geen eenvoudige kolomindeling heeft die de app zelf kan raden, kan de app een AI-model vragen om de kolommen voor je te bepalen — welke de datum is, welke het bedrag, enzovoort.
+
+**Voordat er iets wordt verzonden, wordt het je één keer gevraagd.** De eerste keer dat dit gebeurt voor een account, zie je een scherm dat uitlegt wat je apparaat verlaat: voor een CSV of spreadsheet alleen de kopregel plus maximaal 10 voorbeeldrijen — nooit het hele bestand. Voor een PDF-afschrift zijn het de eerste 20 regels geëxtraheerde tekst. Je beslist één keer per account; daarna onthoudt de app je keuze.
+
+- **Accepteer**, en het bestand wordt opnieuw ingelezen met de kolommen die het model heeft bepaald.
+- **Weiger**, en je komt direct bij de hierboven beschreven handmatige toewijzer terecht. Weigeren gebeurt voordat er iets is geanalyseerd, dus er is nog niets om vooraf in te vullen — je wijst de kolommen op dezelfde manier toe als bij elke andere niet-ondersteunde bank.
+
+**Het resultaat wordt getoond, niet aangenomen.** Wanneer de AI-toewijzing lukt, toont de voorvertoning een rij chips boven je transacties — zoiets als \`Datum → Data operacji\`, \`Bedrag → Kwota\` — samen met een gok naar welke bank dit is. Dit is een goede gok, geen zekerheid: tik op de rij om op elk moment de toewijzer te openen en een verkeerd herkende kolom te corrigeren.
+
+**Een paar dingen worden gemarkeerd om te controleren, niet stilzwijgend aangenomen:**
+- Als het bestand helemaal geen valutakolom heeft, wordt elke rij gelezen in de valuta van je eigen account, en een melding vertelt je dat — tik erop om de valuta te wijzigen vóór het importeren; de wijziging geldt voor het hele bestand.
+- Cijfers uit een PDF lezen is lastiger te controleren dan bij een CSV, dus probeert de app te bevestigen dat wat er gevonden is optelt tot het eindsaldo van het afschrift. Als dat niet kan worden bevestigd, zie je een melding die je vraagt de lijst te controleren. Dit is geen fout — het is gewoon het normale geval wanneer een afschrift geen lopend saldo afdrukt om mee te vergelijken, of wanneer de controle niet klopt.
+
+**PDF-afschriften vereisen een Pro-abonnement.** Een PDF met AI lezen kost meer verwerking dan een CSV, dus het is een Pro-functie — een gratis account ziet daar een upgradescherm in plaats van een foutmelding.
+
+Banken die hierboven al vermeld staan (mBank, PKO BP, Erste, Alior, Revolut, Wise) worden hier niet door beïnvloed — die worden precies zo geïmporteerd als eerder op deze pagina beschreven.
 
 ## Eerdere imports & ongedaan maken
 

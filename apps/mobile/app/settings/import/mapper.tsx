@@ -8,10 +8,10 @@ import type { ColumnMapping } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { api } from '@/services/api';
 import { useImportStore } from '@/stores/importStore';
-
-type AmountFormat = 'polish' | 'standard';
-type DateFormat = 'auto' | 'DD.MM.YYYY' | 'DD-MM-YYYY' | 'YYYY-MM-DD';
-type Encoding = 'auto' | 'utf-8' | 'windows-1250';
+import { isTierRequiredError } from '@/services/importErrors';
+import { useUpgradeStore } from '@/stores/upgradeStore';
+import { resolveMapperInitialState } from '@/features/import/resolveMapperInitialState';
+import type { MapperAmountFormat as AmountFormat, MapperDateFormat as DateFormat, MapperEncoding as Encoding } from '@/features/import/resolveMapperInitialState';
 
 export default function ColumnMapperScreen() {
   const { t } = useTranslation();
@@ -26,18 +26,23 @@ export default function ColumnMapperScreen() {
   const headers = preview?.headers ?? [];
   const sample = preview?.sampleRows ?? [];
 
-  const [dateCol, setDateCol] = useState(headers[0] ?? '');
-  const [splitDebitCredit, setSplitDebitCredit] = useState(false);
-  const [amountCol, setAmountCol] = useState(headers[1] ?? '');
-  const [debitCol, setDebitCol] = useState('');
-  const [creditCol, setCreditCol] = useState('');
-  const [descCol, setDescCol] = useState(headers[2] ?? '');
-  const [currencyCol, setCurrencyCol] = useState('');
-  const [counterpartyCol, setCounterpartyCol] = useState('');
-  const [delimiter, setDelimiter] = useState(';');
-  const [encoding, setEncoding] = useState<Encoding>('auto');
-  const [amountFormat, setAmountFormat] = useState<AmountFormat>('polish');
-  const [dateFormat, setDateFormat] = useState<DateFormat>('auto');
+  // Computed fresh each render (cheap, pure) but only ever CONSUMED by the
+  // useState calls below, which — like any React state initializer — use it
+  // once, at mount, and ignore it on every later render.
+  const initial = resolveMapperInitialState(preview, headers);
+
+  const [dateCol, setDateCol] = useState(initial.dateCol);
+  const [splitDebitCredit, setSplitDebitCredit] = useState(initial.splitDebitCredit);
+  const [amountCol, setAmountCol] = useState(initial.amountCol);
+  const [debitCol, setDebitCol] = useState(initial.debitCol);
+  const [creditCol, setCreditCol] = useState(initial.creditCol);
+  const [descCol, setDescCol] = useState(initial.descCol);
+  const [currencyCol, setCurrencyCol] = useState(initial.currencyCol);
+  const [counterpartyCol, setCounterpartyCol] = useState(initial.counterpartyCol);
+  const [delimiter, setDelimiter] = useState(initial.delimiter);
+  const [encoding, setEncoding] = useState<Encoding>(initial.encoding);
+  const [amountFormat, setAmountFormat] = useState<AmountFormat>(initial.amountFormat);
+  const [dateFormat, setDateFormat] = useState<DateFormat>(initial.dateFormat);
 
   const mapping = useMemo<ColumnMapping>(
     () => ({
@@ -69,6 +74,14 @@ export default function ColumnMapperScreen() {
       setPreview(res);
       router.replace('/settings/import/preview');
     } catch (err) {
+      // The AI-consent decline flow routes here with the original file still
+      // in the store — if it was a PDF, the server re-detects it by magic
+      // bytes regardless of the `bankId: 'universal'` sent below, and can
+      // still 403 with TIER_REQUIRED (see ImportBankService.parsePreview).
+      if (isTierRequiredError(err)) {
+        useUpgradeStore.getState().show(t('bankImport.aiPdfPaywall'), err.requiredTier ?? 'pro');
+        return;
+      }
       showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),

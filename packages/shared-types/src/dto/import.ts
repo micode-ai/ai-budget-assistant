@@ -45,7 +45,7 @@ export type ImportPreviewResponse = WiseImportPreviewResponse;
 
 // Bank Import — new types
 export interface BankParserDescriptor {
-  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal';
+  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal' | 'ai';
   displayName: string;
 }
 
@@ -59,7 +59,9 @@ export interface ColumnMapping {
   counterparty?: string;
 }
 
-export type BankImportPreviewStatus = 'parsed' | 'needs_mapping' | 'needs_picker';
+export type BankImportPreviewStatus = 'parsed' | 'needs_mapping' | 'needs_picker' | 'needs_ai_consent';
+
+export type ExtractionWarning = 'balance_mismatch' | 'no_balance' | 'pages_truncated';
 
 export interface BankImportPreviewResponse {
   status: BankImportPreviewStatus;
@@ -73,6 +75,33 @@ export interface BankImportPreviewResponse {
   sampleRows?: string[][];
   headerFingerprint?: string;
   supportedBanks?: BankParserDescriptor[];
+  /** True when the mapping came from LLM inference rather than a parser or a saved mapping. */
+  aiInferred?: boolean;
+  /** The inferred mapping, echoed back so the client can display and edit it. */
+  aiMapping?: ColumnMapping;
+  /** The model's guess at the bank name — display only, never used for logic. */
+  aiBankLabel?: string;
+  /**
+   * Set when the statement had no currency column and this currency was
+   * assumed for every row (the user's own display currency). Unset when the
+   * file carries a currency column and its values were used instead.
+   */
+  currencyAssumed?: string;
+  /** Set on the PDF extraction path when completeness could not be confirmed. */
+  extractionWarning?: ExtractionWarning;
+  /** Pages beyond AI_IMPORT_MAX_PDF_PAGES that were not read. */
+  droppedPages?: number;
+  /**
+   * The parse context that produced this preview — the sniffed delimiter and
+   * the amount/date format used, present on the two AI-success paths
+   * (signature-dictionary hit and fresh inference) alongside `aiMapping` so a
+   * client can re-open its manual mapper (e.g. the "Wrong? Tap to fix" chip
+   * row) without losing what was already inferred. Absent on the non-AI
+   * `parsed` response, which never changed shape.
+   */
+  delimiter?: string;
+  amountFormat?: 'polish' | 'standard';
+  dateFormat?: 'auto' | 'DD.MM.YYYY' | 'DD-MM-YYYY' | 'YYYY-MM-DD';
 }
 
 export interface BankImportCommitDto {
