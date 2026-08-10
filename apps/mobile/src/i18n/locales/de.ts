@@ -866,6 +866,7 @@ export default {
     title: 'Transaktionen importieren',
     subtitle: 'CSV-Datei Ihrer Bank importieren',
     quickImportHeader: 'Schnellimport',
+    autoDetect: 'Automatisch erkennen (jede Bank)',
     savedMappingsHeader: 'Gespeicherte Zuordnungen',
     noSavedMappings: 'Noch keine gespeicherten Zuordnungen',
     detectedBank: 'Erkannt: {{name}}',

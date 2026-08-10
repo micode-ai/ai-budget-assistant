@@ -866,6 +866,7 @@ export default {
     title: 'Importar transacciones',
     subtitle: 'Importa un CSV de tu banco',
     quickImportHeader: 'Importación rápida',
+    autoDetect: 'Detectar automáticamente (cualquier banco)',
     savedMappingsHeader: 'Asignaciones guardadas',
     noSavedMappings: 'Aún no hay asignaciones guardadas',
     detectedBank: 'Detectado: {{name}}',

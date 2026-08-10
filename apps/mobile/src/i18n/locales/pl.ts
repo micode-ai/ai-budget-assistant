@@ -866,6 +866,7 @@ export default {
     title: 'Importuj transakcje',
     subtitle: 'Importuj plik CSV ze swojego banku',
     quickImportHeader: 'Szybki import',
+    autoDetect: 'Rozpoznaj automatycznie (dowolny bank)',
     savedMappingsHeader: 'Zapisane mapowania',
     noSavedMappings: 'Brak zapisanych mapowań',
     detectedBank: 'Wykryto: {{name}}',

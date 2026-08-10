@@ -867,6 +867,7 @@ export default {
     title: 'Import transactions',
     subtitle: 'Import a CSV from your bank',
     quickImportHeader: 'Quick import',
+    autoDetect: 'Detect automatically (any bank)',
     savedMappingsHeader: 'Saved mappings',
     noSavedMappings: 'No saved mappings yet',
     detectedBank: 'Detected: {{name}}',

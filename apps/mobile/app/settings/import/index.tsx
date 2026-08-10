@@ -14,30 +14,14 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { isTierRequiredError } from '@/services/importErrors';
 import { useUpgradeStore } from '@/stores/upgradeStore';
+import { IMPORT_ENTRIES, importSourceLabel } from '@/features/import/importEntries';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
 // registry) until validated against real CSVs. Erste accepts a PDF statement,
 // the rest take CSV. See ABA-126.
-const BANKS = [
-  { id: 'wise', label: 'Wise' },
-  { id: 'mbank', label: 'mBank' },
-  { id: 'pko', label: 'PKO BP' },
-  { id: 'revolut', label: 'Revolut' },
-  { id: 'erste', label: 'Erste Bank (PDF)' },
-  { id: 'alior', label: 'Alior Bank (PDF)' },
-  { id: 'universal', label: 'Other (custom CSV)' },
-];
-
-function getBatchSourceLabel(source: string): string {
-  if (source === 'wise') return 'Wise';
-  if (source.startsWith('bank:')) {
-    const bankId = source.slice(5);
-    const bank = BANKS.find((b) => b.id === bankId);
-    return bank?.label ?? bankId;
-  }
-  return source;
-}
+// Rows and their source labels live in src/features/import/importEntries.ts —
+// see the comment there for why the first row deliberately carries no id.
 
 export default function ImportHubScreen() {
   const { t } = useTranslation();
@@ -198,15 +182,15 @@ export default function ImportHubScreen() {
         ListHeaderComponent={
           <>
             <Text style={styles.sectionHeader}>{t('bankImport.quickImportHeader')}</Text>
-            {BANKS.map((b) => (
+            {IMPORT_ENTRIES.map((e) => (
               <TouchableOpacity
-                key={b.id}
+                key={e.id ?? 'auto'}
                 style={styles.row}
-                onPress={() => pickAndPreview(b.id)}
+                onPress={() => pickAndPreview(e.id)}
                 activeOpacity={0.7}
               >
-                <Ionicons name="business-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.rowLabel}>{b.label}</Text>
+                <Ionicons name={e.icon} size={20} color={theme.colors.primary} />
+                <Text style={styles.rowLabel}>{e.labelKey ? t(e.labelKey) : e.label}</Text>
                 <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
               </TouchableOpacity>
             ))}
@@ -276,7 +260,7 @@ export default function ImportHubScreen() {
                       color={batch.status === 'rolled_back' ? theme.colors.textTertiary : theme.colors.success}
                     />
                     <View style={{ flex: 1 }}>
-                      <Text style={styles.rowLabel}>{getBatchSourceLabel(batch.source)}</Text>
+                      <Text style={styles.rowLabel}>{importSourceLabel(batch.source)}</Text>
                       <Text style={styles.batchMeta}>
                         {new Date(batch.importedAt).toLocaleDateString()}
                         {' · '}

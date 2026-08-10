@@ -857,6 +857,7 @@ export default {
     title: 'Імпарт транзакцый',
     subtitle: 'Імпартаваць CSV з вашага банка',
     quickImportHeader: 'Хуткі імпарт',
+    autoDetect: 'Вызначыць аўтаматычна (любы банк)',
     savedMappingsHeader: 'Захаваныя супастаўленні',
     noSavedMappings: 'Няма захаваных супастаўленняў',
     detectedBank: 'Вызначана: {{name}}',
