@@ -142,6 +142,32 @@ describe('ImportBankService.parsePreview', () => {
     expect(res.skipped).toBe(1);
   });
 
+  it('ignores rolled-back rows in content dedup, so an undone import can be redone', async () => {
+    // Rolling back an import sets { isDeleted: true, externalRef: null } — the
+    // null ref is deliberate, so layer 1 stops matching and the file can be
+    // imported again. Layer 2 must not resurrect those rows, or the rollback
+    // feature is defeated: re-importing the same file comes back with almost
+    // everything flagged already-imported and unchecked.
+    //
+    // The mock models the database honestly: a query that filters
+    // isDeleted: false does not see the soft-deleted row.
+    prisma.expense.findMany.mockImplementation((args: any) =>
+      Promise.resolve(
+        args?.select?.externalRef
+          ? []
+          : args?.where?.isDeleted === false
+            ? []
+            : [{ date: new Date('2026-01-16'), amount: 87.45, currencyCode: 'PLN' }],
+      ),
+    );
+
+    const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(MBANK_CSV, 'utf-8'), {});
+    expect(res.rows).toHaveLength(1);
+    expect(res.rows![0].alreadyImported).toBe(false);
+    expect(res.importable).toBe(1);
+    expect(res.skipped).toBe(0);
+  });
+
   it('requestBank forwards bank name + sample file to the ops Telegram chat', async () => {
     const file = { originalname: 'wyciag.pdf', size: 2048, buffer: Buffer.from('%PDF-1.7') } as any;
     const res = await service.requestBank(

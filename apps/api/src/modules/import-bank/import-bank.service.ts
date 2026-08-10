@@ -703,13 +703,23 @@ export class ImportBankService {
     if (isoDates.length === 0) return;
 
     const dateFilter = { in: isoDates.map((d) => new Date(d)) };
+    // isDeleted: false is load-bearing, and it is why this differs from the
+    // externalRef queries above, which must NOT filter it. Rolling back an
+    // import sets { isDeleted: true, externalRef: null }: the null ref is
+    // deliberate, so layer 1 stops matching and the file can be imported again.
+    // Without this filter layer 2 resurrects those rows and flags nearly every
+    // row of the re-imported file as already-imported, defeating the rollback.
+    // The externalRef queries are the opposite case — @@unique([accountId,
+    // externalRef]) covers soft-deleted rows too, so they have to keep seeing
+    // them or the insert violates the constraint and poisons the transaction
+    // (ABA-313). Same for flagPossibleMerges, which already filters this.
     const [exps, incs] = await Promise.all([
       this.prisma.expense.findMany({
-        where: { accountId, date: dateFilter },
+        where: { accountId, isDeleted: false, date: dateFilter },
         select: { date: true, amount: true, currencyCode: true },
       }),
       this.prisma.income.findMany({
-        where: { accountId, date: dateFilter },
+        where: { accountId, isDeleted: false, date: dateFilter },
         select: { date: true, amount: true, currencyCode: true },
       }),
     ]);
