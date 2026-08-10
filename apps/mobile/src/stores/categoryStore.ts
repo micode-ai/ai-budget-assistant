@@ -194,6 +194,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const userId = useAuthStore.getState().user?.id;
     if (!accountId || !userId) throw new Error('No account or user');
 
+    // The server enforces a (accountId, name, type) unique and the POST below is
+    // fire-and-forget with its result discarded, so a duplicate name would leave
+    // a local row the server never accepted — permanently, since Category has no
+    // clientId for a pull to reconcile it by. Return the one that already exists,
+    // which is also what the server now does for a duplicate create.
+    const existing = get().getCategoryByName(name, type);
+    if (existing) return existing;
+
     const now = new Date();
     const id = generateUUID();
 

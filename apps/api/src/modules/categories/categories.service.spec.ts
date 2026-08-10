@@ -49,8 +49,10 @@ describe('CategoriesService.create', () => {
     const dto = { name: 'Groceries', type: 'expense', icon: 'cart', color: '#fff', parentId: null };
     const result = await service.create('acc-1', 'user-1', dto);
 
+    // Deliberately NOT filtered by isDeleted: the unique covers soft-deleted
+    // rows too, so a live duplicate has to be found by this same lookup.
     expect(prisma.category.findFirst).toHaveBeenCalledWith({
-      where: { accountId: 'acc-1', name: 'Groceries', type: 'expense', isDeleted: true },
+      where: { accountId: 'acc-1', name: 'Groceries', type: 'expense' },
     });
     expect(prisma.category.update).toHaveBeenCalledWith({
       where: { id: 'cat-old' },
@@ -74,6 +76,56 @@ describe('CategoriesService.create', () => {
     });
     expect(embeddingService.embedAndStore).toHaveBeenCalledWith('category', 'new-cat-id', 'Entertainment');
     expect(result).toEqual(expect.objectContaining({ id: 'new-cat-id', name: 'Entertainment' }));
+  });
+
+  it('returns the existing LIVE category instead of throwing on the (accountId,name,type) unique', async () => {
+    const live = { id: 'cat-live', name: 'Groceries', type: 'expense', isDeleted: false, color: '#custom' };
+    const { service, prisma } = makeService({ findFirstResult: live });
+
+    // A different color on the way in must NOT restyle the category the user
+    // already customised.
+    const result = await service.create('acc-1', 'user-1', {
+      name: 'Groceries',
+      type: 'expense',
+      color: '#999',
+    });
+
+    expect(result).toBe(live);
+    expect(prisma.category.create).not.toHaveBeenCalled();
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('reuses the row a concurrent request inserted when create() hits P2002', async () => {
+    const { service, prisma } = makeService({ findFirstResult: null });
+    const raced = { id: 'cat-raced', name: 'Fuel', type: 'expense', isDeleted: false };
+    prisma.category.create.mockRejectedValueOnce({ code: 'P2002' });
+    prisma.category.findFirst.mockResolvedValueOnce(null).mockResolvedValueOnce(raced);
+
+    const result = await service.create('acc-1', 'user-1', { name: 'Fuel', type: 'expense' });
+
+    expect(result).toBe(raced);
+  });
+
+  it('rethrows a non-P2002 create failure', async () => {
+    const { service, prisma } = makeService({ findFirstResult: null });
+    prisma.category.create.mockRejectedValueOnce({ code: 'P1001', message: 'db unreachable' });
+
+    await expect(service.create('acc-1', 'user-1', { name: 'Fuel', type: 'expense' })).rejects.toEqual(
+      expect.objectContaining({ code: 'P1001' }),
+    );
+  });
+
+  it('defaults a missing type to expense so the lookup cannot match the other type', async () => {
+    const { service, prisma } = makeService({ findFirstResult: null });
+
+    await service.create('acc-1', 'user-1', { name: 'Bonus' });
+
+    expect(prisma.category.findFirst).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', name: 'Bonus', type: 'expense' },
+    });
+    expect(prisma.category.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ type: 'expense' }),
+    });
   });
 });
 
