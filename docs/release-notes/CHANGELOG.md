@@ -8,6 +8,31 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.17.0 — 2026-08-10
+
+**Import from any bank**
+- **A statement we don't recognise can now be imported anyway.** Until now, import worked only for the handful of banks we had written a parser for; everyone else landed in a column mapper most people never finished. Now, when the format is unfamiliar, AI works out which column holds the date, the amount and the description, and your device does the rest (ABA-390, ABA-391).
+- **You are asked once per account before anything is sent**, and the screen states exactly what goes: the header row plus a few example rows from your file, or the first lines of text from a PDF. You can always map the columns yourself instead.
+- **You can see and fix what it matched.** The preview shows which column it used for each field — tap to correct one without re-mapping the whole file. It can get a column wrong, which is exactly why it is shown.
+- **Spreadsheet (XLSX) statements are now accepted**, not just CSV and PDF.
+- **If the statement has no currency column**, every row is read in your own currency and the preview says so — and lets you change it before importing.
+- **Reading PDF statements with AI requires Pro.** CSV and spreadsheet import is free.
+- After a PDF, the preview says whether it could confirm that every transaction was found. Most statements print no closing balance to check against, so this note is normal rather than a problem — it is a prompt to glance over the list.
+- **Fixed: Revolut CSV exports were never detected automatically.** You had to pick Revolut from the list by hand; the format is now recognised on its own (ABA-390).
+- **Fixed: after picking your bank from the list, nothing was ticked** and the Import button stayed disabled until you tapped every row (ABA-391).
+
+**Transfers between accounts**
+- **Both balances are now shown while you set up a transfer**, along with an `Available` line and a `Max` button for the currency you are typing in (ABA-388).
+- **Frequent routes appear as chips** — the account pairs you move money between most often, each with its balance.
+- **A date field**, so a transfer made yesterday is not recorded as today.
+- **An existing transfer's accounts can be changed**, not only its amount.
+- Going over the balance shows a warning but never blocks you: an account whose starting balance was never set looks emptier than it is.
+
+**Internal**
+- Fixed the admin dashboard showing "Never" under Last Login for users who were clearly active (ABA-389).
+
+---
+
 ## 1.16.1 — 2026-08-03
 
 **Fixes**
